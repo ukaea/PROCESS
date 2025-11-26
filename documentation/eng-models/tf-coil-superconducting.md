@@ -237,7 +237,7 @@ The toroidal field falls off at a rate $1/R$, with the peak value occurring at t
 
 Three constraints are relevant to the operating current density $J_{\mbox{op}}$ in the TF coils.
 
-- Criticial current (`constraint 33`): $J_{\mbox{op}}$ must not exceed the critical value $J_{\mbox{crit}}$. 
+- Criticial current (`constraint 33`): $f_{\text{iooic}}J_{\mbox{op}}$ must not exceed the critical value $J_{\mbox{crit}}$ where `fiooic` is a margin on the constraint that defaults to `0.7`.
 
 - Temperature margin (`constraint 36`) -- The critical current density $J_{\mbox{crit}}$ falls with 
   the temperature of the superconductor. The temperature margin $\Delta T$ is the difference between the current sharing temperature (at which $J_{\mbox{crit}}$ would be equal to $J_{\mbox{op}}$) and the operating temperature. The minimum allowed $\Delta T$

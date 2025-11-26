@@ -46,6 +46,7 @@ nsweep: int = None
 <LI> 11 beta_norm_max
 <LI> 12 f_c_plasma_bootstrap_max
 <LI> 13 boundu(10: hfact)
+<LI> 14 fiooic
 <LI> 16 rmajor
 <LI> 17 b_tf_inboard_max
 <LI> 18 eta_cd_norm_hcd_primary_max

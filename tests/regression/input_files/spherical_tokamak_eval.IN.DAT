@@ -97,6 +97,7 @@ i_bldgs_size = 0 * switch between routines estimating building sizes (0 = defaul
 
 
 *---------------Constraint Variables---------------*
+fiooic   = 0.9942981023320613 * margin for TF coil operating current / critical current ratio
 fradpwr  = 0.7109311818294267 * radiation power upper limit constraint scale (constraint equation 17)
 pflux_fw_rad_max = 1.2 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 f_fw_rad_max = 1.0 * peaking factor for radiation wall load (`constraint equation 67`)

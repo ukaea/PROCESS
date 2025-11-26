@@ -2355,17 +2355,11 @@ class PFCoil:
                 if (
                     abs(pfcoil_variables.j_cs_flat_top_end)
                     > 0.99e0
-                    * abs(
-                        # numerics.boundu[fjohc] * (which should have been 1)
-                        pfcoil_variables.j_cs_critical_flat_top_end
-                    )
+                    * abs(ctv.fjohc * pfcoil_variables.j_cs_critical_flat_top_end)
                 ) or (
                     abs(pfcoil_variables.j_cs_pulse_start)
                     > 0.99e0
-                    * abs(
-                        # numerics.boundu[fjohc0] * (which should have been 1)
-                        pfcoil_variables.j_cs_critical_pulse_start
-                    )
+                    * abs(ctv.fjohc0 * pfcoil_variables.j_cs_critical_pulse_start)
                 ):
                     pfcoil_variables.cslimit = True
 

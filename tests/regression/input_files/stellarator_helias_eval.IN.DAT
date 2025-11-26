@@ -79,6 +79,7 @@ dz_xpoint_divertor = 0. * vertical gap between x-point and divertor (m) (if = 0;
 
 *---------------Constraint Variables---------------*
 
+fiooic   = 0.9 * margin for TF coil operating current / critical current ratio
 big_q_plasma_min  = 1 * minimum fusion gain Q (`constraint equation 28`)
 pflux_fw_rad_max = 1 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 p_plant_electric_net_required_mw = 1000 * required net electric power (MW) (`constraint equation 16`)
