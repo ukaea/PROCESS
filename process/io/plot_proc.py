@@ -46,7 +46,10 @@ from process.geometry.firstwall_geometry import (
     first_wall_geometry_double_null,
     first_wall_geometry_single_null,
 )
-from process.geometry.pfcoil_geometry import pfcoil_geometry
+from process.geometry.pfcoil_geometry import (
+    cs_geometry,
+    pfcoil_geometry,
+)
 from process.geometry.plasma_geometry import plasma_geometry
 from process.geometry.shield_geometry import (
     shield_geometry_double_null,
@@ -2709,7 +2712,7 @@ def plot_main_plasma_information(
     # Add divertor information
     textstr_div = (
         f"\n$P_{{\\text{{sep}}}}$: {mfile_data.data['p_plasma_separatrix_mw'].get_scan(scan):.2f} MW           \n"
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['p_plasma_separatrix_mw/rmajor'].get_scan(scan):.2f} MW/m               \n"
+        f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile_data.data['pdiv_over_r'].get_scan(scan):.2f} MW/m               \n"
         f"$\\frac{{P_{{\\text{{sep}}}}}}{{B_T  q_a  R}}$: {mfile_data.data['pdivtbt_over_qar'].get_scan(scan):.2f} MW T/m               "
     )
 
@@ -6992,23 +6995,39 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
             "linewidth": 2,
         },
     )
-
-    textstr_superconductor = (
-        f"$\\mathbf{{Superconductor:}}$\n \n"
-        f"Superconductor used: {sctf.SUPERCONDUCTING_TF_TYPES[mfile_data.data['i_tf_sc_mat'].get_scan(scan)]}\n"
-        f"Critical field at zero \ntemperature and strain: {mfile_data.data['b_tf_superconductor_critical_zero_temp_strain'].get_scan(scan):.4f} T\n"
-        f"Critical temperature at \nzero field and strain: {mfile_data.data['temp_tf_superconductor_critical_zero_field_strain'].get_scan(scan):.4f} K\n"
-        f"Temperature at conductor: {mfile_data.data['tftmp'].get_scan(scan):.4f} K\n"
-        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile_data.data['c_turn_cables_critical'].get_scan(scan):,.2f} A\n"
-        f"$I_{{\\text{{TF,turn}}}}$: {mfile_data.data['c_tf_turn'].get_scan(scan):,.2f} A\n"
-        f"Critcal current ratio: {mfile_data.data['f_c_tf_turn_operating_critical'].get_scan(scan):,.4f}\n"
-        f"Superconductor temperature \nmargin: {mfile_data.data['temp_tf_superconductor_margin'].get_scan(scan):,.4f} K\n"
-        f"\n$\\mathbf{{Quench:}}$\n \n"
-        f"Quench dump time: {mfile_data.data['t_tf_superconductor_quench'].get_scan(scan):.4e} s\n"
-        f"Quench detection time: {mfile_data.data['t_tf_quench_detection'].get_scan(scan):.4e} s\n"
-        f"User input max temperature \nduring quench: {mfile_data.data['temp_tf_conductor_quench_max'].get_scan(scan):.2f} K\n"
-        f"Required maxium WP current \ndensity for heat protection:\n{mfile_data.data['j_tf_wp_quench_heat_max'].get_scan(scan):.2e} A/m$^2$\n"
-    )
+    if mfile_data.data["i_tf_sc_mat"].get_scan(scan) > 5:
+        textstr_superconductor = (
+            f"$\\mathbf{{Superconductor:}}$\n \n"
+            f"Superconductor used: {sctf.SUPERCONDUCTING_TF_TYPES[mfile_data.data['i_tf_sc_mat'].get_scan(scan)]}\n"
+            f"Critical field at zero \ntemperature and strain: {mfile_data.data['b_tf_superconductor_critical_zero_temp_strain'].get_scan(scan):.4f} T\n"
+            f"Critical temperature at \nzero field and strain: {mfile_data.data['temp_tf_superconductor_critical_zero_field_strain'].get_scan(scan):.4f} K\n"
+            f"Temperature at conductor: {mfile_data.data['tftmp'].get_scan(scan):.4f} K\n"
+            f"$I_{{\\text{{TF,turn critical}}}}$: {mfile_data.data['c_turn_cables_critical'].get_scan(scan):,.2f} A\n"
+            f"$I_{{\\text{{TF,turn}}}}$: {mfile_data.data['c_tf_turn'].get_scan(scan):,.2f} A\n"
+            f"Critcal current ratio: {mfile_data.data['f_c_tf_turn_operating_critical'].get_scan(scan):,.4f}\n"
+            f"Superconductor temperature \nmargin: {mfile_data.data['temp_tf_superconductor_margin'].get_scan(scan):,.4f} K\n"
+            f"\n$\\mathbf{{Quench:}}$\n \n"
+            f"Quench dump time: {mfile_data.data['t_tf_superconductor_quench'].get_scan(scan):.4e} s\n"
+            f"Quench detection time: {mfile_data.data['t_tf_quench_detection'].get_scan(scan):.4e} s\n"
+            f"Required maxium WP current \ndensity for heat protection:\n{mfile_data.data['j_tf_wp_quench_heat_max'].get_scan(scan):.2e} A/m$^2$\n"
+        )
+    else:
+        textstr_superconductor = (
+            f"$\\mathbf{{Superconductor:}}$\n \n"
+            f"Superconductor used: {sctf.SUPERCONDUCTING_TF_TYPES[mfile_data.data['i_tf_sc_mat'].get_scan(scan)]}\n"
+            f"Critical field at zero \ntemperature and strain: {mfile_data.data['b_tf_superconductor_critical_zero_temp_strain'].get_scan(scan):.4f} T\n"
+            f"Critical temperature at \nzero field and strain: {mfile_data.data['temp_tf_superconductor_critical_zero_field_strain'].get_scan(scan):.4f} K\n"
+            f"Temperature at conductor: {mfile_data.data['tftmp'].get_scan(scan):.4f} K\n"
+            f"$I_{{\\text{{TF,turn critical}}}}$: {mfile_data.data['c_turn_cables_critical'].get_scan(scan):,.2f} A\n"
+            f"$I_{{\\text{{TF,turn}}}}$: {mfile_data.data['c_tf_turn'].get_scan(scan):,.2f} A\n"
+            f"Critcal current ratio: {mfile_data.data['f_c_tf_turn_operating_critical'].get_scan(scan):,.4f}\n"
+            f"Superconductor temperature \nmargin: {mfile_data.data['temp_tf_superconductor_margin'].get_scan(scan):,.4f} K\n"
+            f"\n$\\mathbf{{Quench:}}$\n \n"
+            f"Quench dump time: {mfile_data.data['t_tf_superconductor_quench'].get_scan(scan):.4e} s\n"
+            f"Quench detection time: {mfile_data.data['t_tf_quench_detection'].get_scan(scan):.4e} s\n"
+            f"User input max temperature \nduring quench: {mfile_data.data['temp_tf_conductor_quench_max'].get_scan(scan):.2f} K\n"
+            f"Required maxium WP current \ndensity for heat protection:\n{mfile_data.data['j_tf_wp_quench_heat_max'].get_scan(scan):.2e} A/m$^2$\n"
+        )
     axis.text(
         0.75,
         0.9,
@@ -7130,18 +7149,19 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     coils_dz = []
     coil_text = []
 
+    # Check for Central Solenoid
+    iohcl = mfile_data.data["iohcl"].get_scan(scan) if "iohcl" in mfile_data.data else 1
+
     dr_bore = mfile_data.data["dr_bore"].get_scan(scan)
-    dr_cs = mfile_data.data["dr_cs"].get_scan(scan)
-    dz_cs_full = mfile_data.data["dz_cs_full"].get_scan(scan)
+    if iohcl == 1:
+        dr_cs = mfile_data.data["dr_cs"].get_scan(scan)
+        dz_cs_full = mfile_data.data["dz_cs_full"].get_scan(scan)
 
     # Number of coils, both PF and CS
     number_of_coils = 0
     for item in mfile_data.data:
         if "r_pf_coil_middle[" in item:
             number_of_coils += 1
-
-    # Check for Central Solenoid
-    iohcl = mfile_data.data["iohcl"].get_scan(scan) if "iohcl" in mfile_data.data else 1
 
     # If Central Solenoid present, ignore last entry in for loop
     # The last entry will be the OH coil in this case
@@ -7154,28 +7174,32 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
         coils_dz.append(mfile_data.data[f"pfdz({coil:01})"].get_scan(scan))
         coil_text.append(str(coil + 1))
 
-    r_points, z_points, central_coil = pfcoil_geometry(
+    r_points, z_points = pfcoil_geometry(
         coils_r=coils_r,
         coils_z=coils_z,
         coils_dr=coils_dr,
         coils_dz=coils_dz,
-        dr_bore=dr_bore,
-        dr_cs=dr_cs,
-        ohdz=dz_cs_full,
     )
 
-    # Plot CS compression structure
-    r_precomp_outer, r_precomp_inner = cumulative_radial_build2(
-        "dr_cs_precomp", mfile_data, scan
-    )
-    axis.add_patch(
-        patches.Rectangle(
-            xy=(r_precomp_inner, central_coil.anchor_z),
-            width=r_precomp_outer - r_precomp_inner,
-            height=central_coil.height,
-            facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1],
+    if iohcl == 1:
+        central_coil = cs_geometry(
+            dr_bore=dr_bore,
+            dr_cs=dr_cs,
+            ohdz=dz_cs_full,
         )
-    )
+
+        # Plot CS compression structure
+        r_precomp_outer, r_precomp_inner = cumulative_radial_build2(
+            "dr_cs_precomp", mfile_data, scan
+        )
+        axis.add_patch(
+            patches.Rectangle(
+                xy=(r_precomp_inner, central_coil.anchor_z),
+                width=r_precomp_outer - r_precomp_inner,
+                height=central_coil.height,
+                facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1],
+            )
+        )
 
     # Get axis height for fontsize scaling
     bbox = axis.get_window_extent().transformed(axis.figure.dpi_scale_trans.inverted())
@@ -7193,14 +7217,15 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
             va="center",
             fontsize=fontsize,
         )
-    axis.add_patch(
-        patches.Rectangle(
-            xy=(central_coil.anchor_x, central_coil.anchor_z),
-            width=central_coil.width,
-            height=central_coil.height,
-            facecolor=SOLENOID_COLOUR[colour_scheme - 1],
+    if iohcl == 1:
+        axis.add_patch(
+            patches.Rectangle(
+                xy=(central_coil.anchor_x, central_coil.anchor_z),
+                width=central_coil.width,
+                height=central_coil.height,
+                facecolor=SOLENOID_COLOUR[colour_scheme - 1],
+            )
         )
-    )
 
 
 def plot_info(axis, data, mfile_data, scan):
@@ -7595,24 +7620,49 @@ def plot_magnetics_info(axis, mfile_data, scan):
     ].get_scan(scan)
 
     if i_tf_sup == 1:
-        data = [
-            (pf_info[0][0], pf_info[0][1], "MA"),
-            (pf_info[1][0], pf_info[1][1], "MA"),
-            (pf_info_3_a, pf_info_3_b, "MA"),
-            (vssoft, "Startup flux swing", "Wb"),
-            ("vs_cs_pf_total_pulse", "Available flux swing", "Wb"),
-            (t_plant_pulse_burn, "Burn time", "hrs"),
-            ("", "", ""),
-            (f"#TF coil type is {tftype}", "", ""),
-            ("b_tf_inboard_peak_with_ripple", "Peak field at conductor (w. rip.)", "T"),
-            ("f_c_tf_turn_operating_critical", r"I/I$_{\mathrm{crit}}$", ""),
-            ("temp_tf_superconductor_margin", "TF Temperature margin", "K"),
-            ("temp_cs_superconductor_margin", "CS Temperature margin", "K"),
-            (sig_cond, "TF Cond max TRESCA stress", "MPa"),
-            (sig_case, "TF Case max TRESCA stress", "MPa"),
-            ("m_tf_coils_total/n_tf_coils", "Mass per TF coil", "kg"),
-        ]
-
+        if mfile_data.data["iohcl"].get_scan(scan) == 1:
+            data = [
+                (pf_info[0][0], pf_info[0][1], "MA"),
+                (pf_info[1][0], pf_info[1][1], "MA"),
+                (pf_info_3_a, pf_info_3_b, "MA"),
+                (vssoft, "Startup flux swing", "Wb"),
+                ("vs_cs_pf_total_pulse", "Available flux swing", "Wb"),
+                (t_plant_pulse_burn, "Burn time", "hrs"),
+                ("", "", ""),
+                (f"#TF coil type is {tftype}", "", ""),
+                (
+                    "b_tf_inboard_peak_with_ripple",
+                    "Peak field at conductor (w. rip.)",
+                    "T",
+                ),
+                ("f_c_tf_turn_operating_critical", r"I/I$_{\mathrm{crit}}$", ""),
+                ("temp_tf_superconductor_margin", "TF Temperature margin", "K"),
+                ("temp_cs_superconductor_margin", "CS Temperature margin", "K"),
+                (sig_cond, "TF Cond max TRESCA stress", "MPa"),
+                (sig_case, "TF Case max TRESCA stress", "MPa"),
+                ("m_tf_coils_total/n_tf_coils", "Mass per TF coil", "kg"),
+            ]
+        else:
+            data = [
+                (pf_info[0][0], pf_info[0][1], "MA"),
+                (pf_info[1][0], pf_info[1][1], "MA"),
+                (pf_info_3_a, pf_info_3_b, "MA"),
+                (vssoft, "Startup flux swing", "Wb"),
+                ("vs_cs_pf_total_pulse", "Available flux swing", "Wb"),
+                (t_plant_pulse_burn, "Burn time", "hrs"),
+                ("", "", ""),
+                (f"#TF coil type is {tftype}", "", ""),
+                (
+                    "b_tf_inboard_peak_with_ripple",
+                    "Peak field at conductor (w. rip.)",
+                    "T",
+                ),
+                ("f_c_tf_turn_operating_critical", r"I/I$_{\mathrm{crit}}$", ""),
+                ("temp_tf_superconductor_margin", "TF Temperature margin", "K"),
+                (sig_cond, "TF Cond max TRESCA stress", "MPa"),
+                (sig_case, "TF Case max TRESCA stress", "MPa"),
+                ("m_tf_coils_total/n_tf_coils", "Mass per TF coil", "kg"),
+            ]
     else:
         p_cp_resistive = 1.0e-6 * mfile_data.data["p_cp_resistive"].get_scan(scan)
         p_tf_leg_resistive = 1.0e-6 * mfile_data.data["p_tf_leg_resistive"].get_scan(
@@ -12678,13 +12728,13 @@ def main_plot(
     plot_density_limit_comparison(fig20.add_subplot(221), m_file_data, scan)
     plot_confinement_time_comparison(fig20.add_subplot(224), m_file_data, scan)
     plot_current_profiles_over_time(fig21.add_subplot(111), m_file_data, scan)
-
-    plot_cs_coil_structure(
-        fig22.add_subplot(121, aspect="equal"), fig22, m_file_data, scan
-    )
-    plot_cs_turn_structure(
-        fig22.add_subplot(224, aspect="equal"), fig22, m_file_data, scan
-    )
+    if m_file_data.data["iohcl"].get_scan(scan) == 1:
+        plot_cs_coil_structure(
+            fig22.add_subplot(121, aspect="equal"), fig22, m_file_data, scan
+        )
+        plot_cs_turn_structure(
+            fig22.add_subplot(224, aspect="equal"), fig22, m_file_data, scan
+        )
 
     plot_first_wall_top_down_cross_section(
         fig23.add_subplot(221, aspect="equal"), m_file_data, scan
@@ -12967,7 +13017,7 @@ def main(args=None):
     if int(m_file.data["i_single_null"].get_scan(scan)) == 0:
         vertical_upper = [
             "z_plasma_xpoint_upper",
-            "dz_fw_plasma_gap",
+            "dz_xpoint_divertor",
             "dz_divertor",
             "dz_shld_upper",
             "dz_vv_upper",
@@ -12975,6 +13025,7 @@ def main(args=None):
             "dz_shld_thermal",
             "dr_tf_shld_gap",
             "dr_tf_inboard",
+            "dz_tf_cryostat",
         ]
     else:
         vertical_upper = [
