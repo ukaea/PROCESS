@@ -12,9 +12,6 @@ def pfcoil_geometry(
     coils_z: list[float],
     coils_dr: list[float],
     coils_dz: list[float],
-    dr_bore: float,
-    dr_cs: float,
-    ohdz: float,
 ) -> tuple[np.ndarray, np.ndarray, RectangleGeometry]:
     """Calculates radial and vertical distances for the geometry of the pf coils and central coil
 
@@ -26,12 +23,6 @@ def pfcoil_geometry(
     :type coils_dr: List[float]
     :param coils_dz: list of pf coil vertical thicknesses
     :type coils_dz: List[float]
-    :param dr_bore: central solenoid inboard radius
-    :type dr_bore: float
-    :param dr_cs: central solenoid thickness
-    :type dr_cs: float
-    :param ohdz: central solenoid vertical thickness
-    :type ohdz: float
     :return: tuple containing radial and vertical coordinates for pf coils, and dataclass returning coordinates representing a rectangular geometry used to plot the central coil
     :rtype: Tuple[np.ndarray, np.ndarray, RectangleGeometry]
     """
@@ -44,9 +35,25 @@ def pfcoil_geometry(
         r_2 = float(coils_r[i]) + 0.5 * float(coils_dr[i])
         r_points.append([r_1, r_1, r_2, r_2, r_1])
         z_points.append([z_1, z_2, z_2, z_1, z_1])
+    return r_points, z_points
 
-    central_coil = RectangleGeometry(
+
+def cs_geometry(
+    dr_bore: float,
+    dr_cs: float,
+    ohdz: float,
+) -> RectangleGeometry:
+    """Calculates radial and vertical distances for the geometry of the central coil
+
+    :param dr_bore: central solenoid inboard radius
+    :type dr_bore: float
+    :param dr_cs: central solenoid thickness
+    :type dr_cs: float
+    :param ohdz: central solenoid vertical thickness
+    :type ohdz: float
+    :return: Dataclass returning coordinates representing a rectangular geometry used to plot the central coil
+    :rtype: RectangleGeometry
+    """
+    return RectangleGeometry(
         anchor_x=dr_bore, anchor_z=(-ohdz / 2), width=dr_cs, height=ohdz
     )
-
-    return r_points, z_points, central_coil
