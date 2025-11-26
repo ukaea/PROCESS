@@ -299,8 +299,8 @@ using `f_j_cs_start_pulse_end_flat_top` (iteration variable no. 41). The current
 calculated by taking into account the flux swing necessary to initiate and maintain plasma current.
 
 The current density in the central solenoid can be limited at BOP and at EOF. To limit the current 
-density at BOP, use constraint equation no. 27. To 
-limit the current density at the EOF, constraint equation no. 26 should be turned on.
+density at BOP, use constraint equation no. 27 (with a margin set by `fjohc0`). To 
+limit the current density at the EOF, constraint equation no. 26 should be turned on (with a margin set by `fjohc`).
 
 The critical current density *J*<sub>crit</sub> is a function of the temperature of the superconductor. 
 The temperature margin $\Delta$*T* is the difference between the current sharing temperature and the 
@@ -310,6 +310,9 @@ set using input parameter `tmargmin` together with constraint equation no. 60.
 
 It is recommended that EITHER the temperature margin constraint (60), OR the current density 
 constraints (26 and 27) are activated.
+
+!!! tip "Recommended maximum current ratio"
+    For engineering feasibility, the currents at end of flat-top and beginning of pulse (set by the `fjohc` and `fjohc0` margins, respectively) shouldn't be set above 0.7.
 
 !!! note "Central solenoid current over time"
     A plot of how the central solenoid current varies over time can be found [here](../physics-models/pulsed-plant.md#burn-time)

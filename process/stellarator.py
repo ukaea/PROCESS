@@ -2633,7 +2633,7 @@ class Stellarator:
             )  # Get here a temperature margin of 1.5K.
 
         # The operation current density weighted with the global iop/icrit fraction
-        lhs[:] = jcrit_vector
+        lhs[:] = constraint_variables.fiooic * jcrit_vector
 
         # Conduct fraction of conduit * Superconductor fraction in conductor
         f_scu = (

@@ -21,9 +21,25 @@ fradpwr: float = None
 """Scaling value for radiation power upper limit (constraint equation 17)"""
 
 
+fiooic: float = None
+"""Constraint margin for TF coil operating current / critical current ratio
+(`constraint equation 33`)
+"""
+
 q95_fixed: float = None
 """fixed safety factor q at 95% flux surface
 (`constraint equation 68`)
+"""
+
+fjohc: float = None
+"""Constraint margin for central solenoid current at end-of-flattop
+(`constraint equation 26`)
+"""
+
+
+fjohc0: float = None
+"""Constraint margin for central solenoid current at beginning of pulse
+(`constraint equation 27`)
 """
 
 eta_cd_norm_hcd_primary_max: float = None
@@ -115,7 +131,10 @@ def init_constraint_variables():
     global b_tf_inboard_max
     global fdene
     global fradpwr
+    global fiooic
     global q95_fixed
+    global fjohc
+    global fjohc0
     global eta_cd_norm_hcd_primary_max
     global i_q95_fixed
     global pflux_fw_rad_max
@@ -145,7 +164,10 @@ def init_constraint_variables():
     b_tf_inboard_max = 12.0
     fdene = 1.0
     fradpwr = 1.0
+    fiooic = 0.7
     q95_fixed = 3.0
+    fjohc = 0.7
+    fjohc0 = 0.7
     eta_cd_norm_hcd_primary_max = 2.0
     i_q95_fixed = 0
     pflux_fw_rad_max = 1.0

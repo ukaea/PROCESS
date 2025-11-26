@@ -893,6 +893,10 @@ icc = 33
 * JUSTIFICATION: A quench must be avoided
 * VARIABLES:     j_tf_wp & j_tf_wp_critical (critical current) calculated in-situ
 
+fiooic = 0.7
+* DESCRIPTION:   Constraint margin for TF superconductor operating current / critical current density
+* JUSTIFICATION: Margin of 0.7 for engineering reliability
+
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *icc = 35

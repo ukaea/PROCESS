@@ -55,6 +55,7 @@ SCAN_VARIABLES = {
     11: ScanVariable("beta_norm_max", "Beta_coefficient"),
     12: ScanVariable("f_c_plasma_bootstrap_max", "Bootstrap_fraction"),
     13: ScanVariable("boundu(10)", "H_factor_upper_bound"),
+    14: ScanVariable("fiooic", "TFC_Iop_/_Icrit_f-value"),
     16: ScanVariable("rmajor", "Plasma_major_radius_(m)"),
     17: ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)"),
     18: ScanVariable("eta_cd_norm_hcd_primary_max", "Maximum_CD_gamma"),
