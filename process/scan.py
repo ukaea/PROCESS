@@ -141,6 +141,8 @@ SCAN_VARIABLES = {
     ),
     80: ScanVariable("fcoolcp", "Coolant fraction of TF"),
     81: ScanVariable("n_tf_coil_turns", "Number of turns in TF"),
+    82: ScanVariable("fradpwr", "Max Radiation fraction"),
+    83: ScanVariable("boundl(9)", "f-value GW lower limit")
 }
 
 
@@ -1087,6 +1089,10 @@ class Scan:
                 tfcoil_variables.fcoolcp = swp[iscn - 1]
             case 81:
                 tfcoil_variables.n_tf_coil_turns = swp[iscn - 1]
+            case 82:
+                constraint_variables.fradpwr = swp[iscn - 1]
+            case 83:
+                numerics.boundl[9] = swp[iscn - 1]
             case _:
                 raise ProcessValueError("Illegal scan variable number", nwp=nwp)
 
