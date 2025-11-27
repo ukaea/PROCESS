@@ -551,15 +551,18 @@ def constraint_equation_13():
 
 @ConstraintManager.register_constraint(15, "MW", ">=")
 def constraint_equation_15():
-    """Equation for L-H power threshold limit
+    """Equation for L-H power threshold limit to enforce H-mode
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fl_h_threshold: a factor tolerance on the constraint
+    fl_h_threshold: a margin on the constraint
     p_l_h_threshold_mw: L-H mode power threshold (MW)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
 
-    Setting fl_h_threshold != 1.0 enforces a constraint on a factor of the p_plasma_separatrix_mw
+    Setting fl_h_threshold != 1.0 enforces a margin on the constraint:
     I.e. fl_h_threshold * p_plasma_separatrix_mw >= p_l_h_threshold_mw
+
+    For example, fl_h_threshold = 0.8 will ensure that p_plasma_separatrix_mw
+    is at least 25% above the threshold (in H-mode).
     """
     return ConstraintResult(
         1.0
@@ -569,6 +572,33 @@ def constraint_equation_15():
         data_structure.physics_variables.p_l_h_threshold_mw,
         data_structure.physics_variables.p_l_h_threshold_mw
         - data_structure.physics_variables.p_plasma_separatrix_mw
+        / data_structure.constraint_variables.fl_h_threshold,
+    )
+
+
+@ConstraintManager.register_constraint(22, "MW", ">=")
+def constraint_equation_22():
+    """Equation for L-H power threshold limit to enforce L-mode
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    fl_h_threshold: a margin on the constraint
+    p_l_h_threshold_mw: L-H mode power threshold (MW)
+    p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
+
+    Setting fl_h_threshold != 1.0 enforces a margin on the constraint:
+    I.e. fl_h_threshold * p_l_h_threshold_mw >= p_plasma_separatrix_mw
+
+    For example, fl_h_threshold = 1.2 will ensure that p_plasma_separatrix_mw
+    is at least 20% below the threshold (in L-mode).
+    """
+    return ConstraintResult(
+        1.0
+        - data_structure.constraint_variables.fl_h_threshold
+        * data_structure.physics_variables.p_l_h_threshold_mw
+        / data_structure.physics_variables.p_plasma_separatrix_mw,
+        data_structure.physics_variables.p_plasma_separatrix_mw,
+        data_structure.physics_variables.p_plasma_separatrix_mw
+        - data_structure.physics_variables.p_l_h_threshold_mw
         / data_structure.constraint_variables.fl_h_threshold,
     )
 
