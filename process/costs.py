@@ -1690,7 +1690,8 @@ class Costs:
         for i in range(pfcoil_variables.n_cs_pf_coils):
             pfwndl = (
                 pfwndl
-                + constants.TWOPI
+                + 2.0
+                * np.pi
                 * pfcoil_variables.r_pf_coil_middle[i]
                 * pfcoil_variables.n_pf_coil_turns[i]
             )
@@ -1787,7 +1788,8 @@ class Costs:
 
             cost_variables.c22221 = cost_variables.c22221 + (
                 1.0e-6
-                * constants.TWOPI
+                * 2.0
+                * np.pi
                 * pfcoil_variables.r_pf_coil_middle[i]
                 * pfcoil_variables.n_pf_coil_turns[i]
                 * cpfconpm
@@ -1865,7 +1867,8 @@ class Costs:
 
             cost_variables.c22221 = cost_variables.c22221 + (
                 1.0e-6
-                * constants.TWOPI
+                * 2.0
+                * np.pi
                 * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
                 * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
                 * cpfconpm

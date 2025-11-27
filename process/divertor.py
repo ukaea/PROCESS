@@ -1,5 +1,7 @@
 import math
 
+import numpy as np
+
 from process import constants
 from process import process_output as po
 from process.data_structure import build_variables as bv
@@ -153,11 +155,11 @@ class Divertor:
 
         #  Vertical plate area
 
-        a1 = 2.0e0 * constants.PI * r1 * dz_divertor
+        a1 = 2.0e0 * np.pi * r1 * dz_divertor
 
         #  Horizontal plate area
 
-        a2 = constants.PI * (r2 * r2 - r1 * r1)
+        a2 = np.pi * (r2 * r2 - r1 * r1)
 
         #  Diagonal plate area
 
@@ -323,12 +325,7 @@ class Divertor:
 
         # Wetted area
         area_wetted = (
-            2
-            * constants.PI
-            * rmajor
-            * lambda_int
-            * f_div_flux_expansion
-            * math.sin(theta_div)
+            2 * np.pi * rmajor * lambda_int * f_div_flux_expansion * math.sin(theta_div)
         )
 
         # Divertor heat load
