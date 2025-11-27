@@ -23,25 +23,23 @@ There are two separate constraint equations for enforcing the L-H threshold.
 
 ### Use the full divertor power
 
-This constraint can be activated by stating `icc = 15` in the input file.
+There are two constraints that can be used to enforce L-mode or H-mode.
 
-The input `fl_h_threshold` can be set not equal to 1 to provide a margin around the threshold.
+Constraint 15 (`icc = 15`) with `fl_h_threshold <= 1.0` ensures that the power reaching the divertor is at least equal to the threshold power calculated for the chosen scaling, which is a necessary condition for H-mode. 
 
 $$
-1.0 - \mathtt{fl\_h\_threshold} \times \frac{\overbrace{\mathtt{p\_l\_h\_threshold\_mw}}^{\text{Power from scaling}}}{\mathtt{p_plasma_separatrix_mw}}
+\mathtt{fl\_h\_threshold} \times \mathtt{p\_plasma\_separatrix\_mw} >= \underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}
 $$
 
+`fl_h_threshold` can be used to add a margin to the constraint. For example, `fl_h_threshold = 0.8` ensures that `p_plasma_separatrix_mw` is at least 25% greater than the threshold power.
 
+Constraint 22 (`icc = 22`) with `fl_h_threshold >= 1.0` is the opposite of constraint 15 and ensures that the power reaching the divertor is less than the threshold by some margin. 
 
-For an H-mode plasma, `icc = 15` with `fl_h_threshold >= 1.0` will ensure
-that the power reaching the divertor is at least equal to the threshold power
-calculated for the chosen scaling, which is a necessary condition for
-H-mode. 
+$$
+\mathtt{fl\_h\_threshold} \times \underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}  >= \mathtt{p\_plasma\_separatrix\_mw} 
+$$
 
-For an L-mode plasma, `icc = 15` should be turned on with `fl_h_threshold < 1.0` to ensure that the power does not exceed the calculated threshold, 
-and therefore the machine remains in L-mode.
-
-**Therefore it is recommended to always use `icc = 15` if trying to simulate a plasma scenario specifically in L or H-mode**
+Again, `fl_h_threshold` can be used to add a margin to the constraint. For example, `fl_h_threshold = 1.25` ensures that `p_plasma_separatrix_mw` is at least 25% less than the threshold power.
 
 -------
 
