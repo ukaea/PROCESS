@@ -7,7 +7,7 @@ There are many valuable contributions that can be made to PROCESS:
 
 When contributing to this repository, please first discuss the change you wish to make via [issue](https://github.com/ukaea/PROCESS/issues), [discussion](https://github.com/ukaea/PROCESS/discussions), [email](https://github.com/ukaea/PROCESS#contacts), or any other method with the owners of this repository before making a change.
 
-Please remember that all contributions and communication regarding PROCESS are subject to our [Code of Concut](https://github.com/ukaea/PROCESS/blob/main/CODE_OF_CONDUCT.md).
+Please remember that all contributions and communication regarding PROCESS are subject to our [Code of Conduct](https://github.com/ukaea/PROCESS/blob/main/CODE_OF_CONDUCT.md).
 
 ## Creating an issue
 Issues can be used to report bugs or request features and improvements. We ask you help us manage our issues by:
