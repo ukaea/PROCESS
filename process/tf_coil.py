@@ -5066,9 +5066,9 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     # out of numba, running the code, and then copying the result
     # back in. This means that the linear algebra solve is not compiled and runs
     # as if it were written in normal Python.
-    # This is necessary because numba compiles against the SciPy algebra library,
-    # not the Numpy one. There are differences in the Scipy solvers depending on
-    # operating system/architecture/Scipy version that cause tests to fail.
+    # This is done because numba compiles against the SciPy algebra library,
+    # not the Numpy one. We have observed some odd behaviour when using the SciPy library
+    # for this specific problem and so opt for using the numpy library instead.
     # https://github.com/ukaea/PROCESS/issues/3027
     # https://github.com/scipy/scipy/issues/23639
     with numba.objmode(cc="float64[:]"):
@@ -5078,8 +5078,11 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
         # Here, we scale aa such that the largest element on a given row is 1.0. This does not
         # change the solution provided each element of a given row is scaled by the same scalar
         # and the corresponding entry in bb is also scaled the same amount.
+        # NOTE: this does not entirely solve the numerical instability and you can get above-floating point
+        # differences in the result of this function depending on system.
         row_scale = np.max(np.abs(aa), axis=1)
-        aa /= np.repeat(row_scale[:, np.newaxis], aa.shape[0], axis=1)
+        # The transpose below ensures the scale is repeated along the row, not the column
+        aa /= np.broadcast_to(row_scale, aa.shape).T
         bb /= row_scale
 
         cc = np.linalg.solve(aa, bb)
