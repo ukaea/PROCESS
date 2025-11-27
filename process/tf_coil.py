@@ -2209,9 +2209,7 @@ class TFCoil:
         )  # Cooling cross-sectional area
         dcool = 2.0e0 * tfcoil_variables.rcool  # Diameter
         lcool = 2.0e0 * (bv.z_tf_inside_half + bv.dr_tf_outboard)  # Length
-        tfcoil_variables.ncool = acool / (
-            constants.PI * tfcoil_variables.rcool**2
-        )  # Number
+        tfcoil_variables.ncool = acool / (np.pi * tfcoil_variables.rcool**2)  # Number
 
         # Average conductor cross-sectional area to cool (with cooling area)
         acpav = (
@@ -2220,7 +2218,7 @@ class TFCoil:
             / (bv.z_tf_inside_half + bv.dr_tf_outboard)
             + acool
         )
-        ro = (acpav / (constants.PI * tfcoil_variables.ncool)) ** 0.5
+        ro = (acpav / (np.pi * tfcoil_variables.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
         ptot = tfcoil_variables.p_cp_resistive + fwbs_variables.pnuc_cp_tf * 1.0e6
@@ -2307,12 +2305,7 @@ class TFCoil:
         nuselt = 0.023e0 * reyn**0.8e0 * prndtl**0.4e0
         h = nuselt * coolant_th_cond / dcool
         dtfilmav = ptot / (
-            h
-            * 2.0e0
-            * constants.PI
-            * tfcoil_variables.rcool
-            * tfcoil_variables.ncool
-            * lcool
+            h * 2.0e0 * np.pi * tfcoil_variables.rcool * tfcoil_variables.ncool * lcool
         )
 
         # Average film temperature (in contact with te conductor)
@@ -3094,7 +3087,7 @@ class TFCoil:
             ind_tf_coil = (
                 (z_tf_inside_half + dr_tf_outboard)
                 * constants.RMU0
-                / constants.PI
+                / np.pi
                 * np.log(r_tf_outboard_mid / r_tf_inboard_mid)
             )
 
@@ -3124,7 +3117,8 @@ class TFCoil:
         tfcoil_variables.tfcryoarea = (
             2.0e0
             * tfcoil_variables.len_tf_coil
-            * constants.TWOPI
+            * 2.0
+            * np.pi
             * 0.5e0
             * (build_variables.r_tf_inboard_mid + build_variables.r_tf_outboard_mid)
         )

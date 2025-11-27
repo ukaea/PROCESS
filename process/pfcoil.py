@@ -605,8 +605,8 @@ class PFCoil:
 
             ddics = (
                 4.0e-7
-                * constants.PI
-                * constants.PI
+                * np.pi
+                * np.pi
                 * (
                     (bv.dr_bore * bv.dr_bore)
                     + (bv.dr_cs * bv.dr_cs) / 6.0e0
@@ -862,7 +862,7 @@ class PFCoil:
 
                 rll = (
                     2.0e0
-                    * constants.PI
+                    * np.pi
                     * pfcoil_variables.r_pf_coil_middle[i]
                     * pfcoil_variables.n_pf_coil_turns[i]
                 )
@@ -960,7 +960,7 @@ class PFCoil:
                 pfcoil_variables.m_pf_coil_structure[i] = (
                     areaspf
                     * 2.0e0
-                    * constants.PI
+                    * np.pi
                     * pfcoil_variables.r_pf_coil_middle[i]
                     * fwbsv.den_steel
                 )
@@ -1939,7 +1939,7 @@ class PFCoil:
                     rl = abs(
                         pfcoil_variables.z_pf_coil_upper[k]
                         - pfcoil_variables.z_pf_coil_lower[k]
-                    ) / math.sqrt(constants.PI)
+                    ) / math.sqrt(np.pi)
                     pfcoil_variables.ind_pf_cs_plasma_mutual[k, k] = (
                         constants.RMU0
                         * pfcoil_variables.n_pf_coil_turns[k] ** 2
@@ -3085,17 +3085,15 @@ class CSCoil:
         dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn
 
         # Calculate radius of cable space in CS turn
-        radius_cs_turn_cable_space = -(
-            (dr_cs_turn - dz_cs_turn) / constants.PI
-        ) + math.sqrt(
-            (((dr_cs_turn - dz_cs_turn) / constants.PI) ** 2)
+        radius_cs_turn_cable_space = -((dr_cs_turn - dz_cs_turn) / np.pi) + math.sqrt(
+            (((dr_cs_turn - dz_cs_turn) / np.pi) ** 2)
             + (
                 (
                     (dr_cs_turn * dz_cs_turn)
-                    - (4 - constants.PI) * (radius_cs_turn_corners**2)
+                    - (4 - np.pi) * (radius_cs_turn_corners**2)
                     - (a_cs_turn * f_a_cs_turn_steel)
                 )
-                / constants.PI
+                / np.pi
             )
         )
 
@@ -3416,7 +3414,7 @@ class CSCoil:
         pfcoil_variables.m_pf_coil_structure[pfcoil_variables.n_cs_pf_coils - 1] = (
             areaspf
             * 2.0e0
-            * constants.PI
+            * np.pi
             * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
             * fwbsv.den_steel
         )
@@ -3437,7 +3435,7 @@ class CSCoil:
                 pfcoil_variables.awpoh
                 * (1.0e0 - pfcoil_variables.f_a_cs_void)
                 * 2.0e0
-                * constants.PI
+                * np.pi
                 * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
                 * tfv.dcond[pfcoil_variables.i_cs_superconductor - 1]
             )
@@ -3446,7 +3444,7 @@ class CSCoil:
                 pfcoil_variables.awpoh
                 * (1.0e0 - pfcoil_variables.f_a_cs_void)
                 * 2.0e0
-                * constants.PI
+                * np.pi
                 * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
                 * constants.den_copper
             )
@@ -3538,7 +3536,7 @@ class CSCoil:
 
             pfcoil_variables.p_cs_resistive_flat_top = (
                 2.0e0
-                * constants.PI
+                * np.pi
                 * pfcoil_variables.r_cs_middle
                 * pfcoil_variables.rho_pf_coil
                 / (
@@ -3763,7 +3761,7 @@ class CSCoil:
         forc_z_cs_self_peak_midplane = axial_term_1 * (axial_term_2 - axial_term_3)
 
         # axial area [m2]
-        area_ax = constants.PI * (r_cs_outer**2 - r_cs_inner**2)
+        area_ax = np.pi * (r_cs_outer**2 - r_cs_inner**2)
 
         # Calculate unsmeared axial stress
         # Average axial stress at the interface of each half of the coil

@@ -452,7 +452,8 @@ class PlasmaGeom:
 
         rc = rmajor - rminor + xi
         vin = (
-            constants.TWOPI
+            2.0
+            * np.pi
             * xi
             * (
                 rc**2 * np.sin(thetai)
@@ -465,7 +466,8 @@ class PlasmaGeom:
 
         rc = rmajor + rminor - xo
         vout = (
-            constants.TWOPI
+            2.0
+            * np.pi
             * xo
             * (
                 rc**2 * np.sin(thetao)

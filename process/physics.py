@@ -3924,7 +3924,7 @@ class Physics:
         # Main plasma current calculation using the fq value from the different settings
         if i_plasma_current != 2:
             plasma_current = (
-                (constants.TWOPI / constants.RMU0)
+                (2.0 * np.pi / constants.RMU0)
                 * rminor**2
                 / (rmajor * q95)
                 * fq

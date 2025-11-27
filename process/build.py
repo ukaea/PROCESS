@@ -80,7 +80,7 @@ class Build:
         # Have kept the single letter variable names to match the original code and documentation diagram.
         radius_beam_tangency = f_radius_beam_tangency_rmajor * rmajor
 
-        omega = constants.TWOPI / n_tf_coils
+        omega = 2.0 * np.pi / n_tf_coils
 
         a = 0.5e0 * dx_tf_inboard_out_toroidal
         try:

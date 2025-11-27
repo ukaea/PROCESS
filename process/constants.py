@@ -270,12 +270,8 @@ TEMP_ROOM = 293.15
 Assume the room is at 20 degrees Celsius
 """
 
-PI = 3.1415926535897932
-
 RMU0 = 1.256637062e-6
 """permeability of free space  [H/m]"""
-
-TWOPI = 6.2831853071795862
 
 UMASS = 1.660538921e-27
 """unified atomic mass unit [kg]"""
