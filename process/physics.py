@@ -5890,15 +5890,15 @@ class Physics:
             # Double null divertor configuration
             po.ovarre(
                 self.outfile,
-                "Pdivt / R ratio (MW/m) (On peak divertor)",
-                "(p_div_separatrix_max_mw/physics_variables.rmajor)",
+                "p_plasma_separatrix_mw / R ratio (MW/m) (On peak divertor)",
+                "(pdiv_over_r)",
                 physics_variables.p_div_separatrix_max_mw / physics_variables.rmajor,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Pdivt Bt / qAR ratio (MWT/m) (On peak divertor)",
-                "(pdivmaxbt/qar)",
+                "p_div_separatrix_max_mw * Bt / q A R ratio (MWT/m) (On peak divertor)",
+                "(pdivtbt_over_qar)",
                 (
                     (
                         physics_variables.p_div_separatrix_max_mw
@@ -5916,14 +5916,14 @@ class Physics:
             # Single null divertor configuration
             po.ovarre(
                 self.outfile,
-                "Psep / R ratio (MW/m)",
-                "(p_plasma_separatrix_mw/rmajor)",
+                "p_plasma_separatrix_mw / R ratio (MW/m)",
+                "(pdiv_over_r)",
                 physics_variables.p_plasma_separatrix_mw / physics_variables.rmajor,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Psep Bt / qAR ratio (MWT/m)",
+                "p_div_separatrix_max_mw * Bt / q A R ratio (MWT/m)",
                 "(pdivtbt_over_qar)",
                 (
                     (

@@ -802,7 +802,6 @@ class Build:
                 self.outfile,
                 "\n*Cryostat roof allowance includes uppermost PF coil and outer thermal shield.\n*Cryostat floor allowance includes lowermost PF coil, outer thermal shield and gravity support.",
             )
-
         # Output the cdivertor geometry
         divht = self.divgeom(output)
         # Issue #481 Remove build_variables.vgaptf
@@ -864,6 +863,14 @@ class Build:
         TART option: Peng SOFT paper
         """
         if physics_variables.itart == 1:
+            if output:
+                po.ovarrf(
+                    self.outfile,
+                    "TF coil vertical offset (m)",
+                    "(dz_tf_plasma_centre_offset)",
+                    build_variables.dz_tf_plasma_centre_offset,
+                    "OP ",
+                )
             return 1.75e0 * physics_variables.rminor
         #  Conventional tokamak divertor model
         #  options for seperate upper and lower physics_variables.triangularity
@@ -985,7 +992,6 @@ class Build:
         )
 
         divht = max(zplti, zplto) - min(zplbo, zplbi)
-
         if output:
             if physics_variables.n_divertors == 1:
                 po.oheadr(self.outfile, "Divertor build and plasma position")
