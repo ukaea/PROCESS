@@ -4248,6 +4248,24 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         mfile_data.data["f_nd_impurity_electrons(14)"].get_scan(scan),
     ])
 
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+    alphan = mfile_data.data["alphan"].get_scan(scan)
+    alphat = mfile_data.data["alphat"].get_scan(scan)
+    nd_plasma_electron_on_axis = mfile_data.data["nd_plasma_electron_on_axis"].get_scan(
+        scan
+    )
+    temp_plasma_electron_on_axis_kev = mfile_data.data[
+        "temp_plasma_electron_on_axis_kev"
+    ].get_scan(scan)
+    radius_plasma_pedestal_density_norm = mfile_data.data[
+        "radius_plasma_pedestal_density_norm"
+    ].get_scan(scan)
+    radius_plasma_pedestal_temp_norm = mfile_data.data[
+        "radius_plasma_pedestal_temp_norm"
+    ].get_scan(scan)
+
     if i_plasma_pedestal == 0:
         # Intialise the radius
         rho = np.linspace(0, 1.0)
@@ -4258,22 +4276,22 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         # The temperature profile
         te = te0 * (1 - rho**2) ** alphat
 
+    if i_plasma_pedestal == 0:
+        # Intialise the radius
+        rho = np.linspace(0, 1.0, n_plasma_profile_elements)
+
+        # The density profile
+        ne = nd_plasma_electron_on_axis * (1 - rho**2) ** alphan
+
+        # The temperature profile
+        te = temp_plasma_electron_on_axis_kev * (1 - rho**2) ** alphat
+
     if i_plasma_pedestal == 1:
-        # Intialise the normalised radius
-        rhoped = (
-            radius_plasma_pedestal_density_norm + radius_plasma_pedestal_temp_norm
-        ) / 2.0
-        rhocore1 = np.linspace(0, 0.95 * rhoped)
-        rhocore2 = np.linspace(0.95 * rhoped, rhoped)
-        rhocore = np.append(rhocore1, rhocore2)
-        rhosep = np.linspace(rhoped, 1)
-        rho = np.append(rhocore, rhosep)
+        rho = np.linspace(0, 1, n_plasma_profile_elements)
 
         # The density and temperature profile
-        # done in such away as to allow for plotting pedestals
-        # with different radius_plasma_pedestal_density_norm and radius_plasma_pedestal_temp_norm
-        ne = np.zeros(rho.shape[0])
-        te = np.zeros(rho.shape[0])
+        ne = np.zeros_like(rho)
+        te = np.zeros_like(rho)
         for q in range(rho.shape[0]):
             if rho[q] <= radius_plasma_pedestal_density_norm:
                 ne[q] = (
@@ -4285,9 +4303,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
             else:
                 ne[q] = nd_plasma_separatrix_electron + (
                     nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
-                ) * (1 - rho[q]) / (
-                    1 - min(0.9999, radius_plasma_pedestal_density_norm)
-                )
+                ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_density_norm)
 
             if rho[q] <= radius_plasma_pedestal_temp_norm:
                 te[q] = (
@@ -4299,7 +4315,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
             else:
                 te[q] = temp_plasma_separatrix_kev + (
                     temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
-                ) * (1 - rho[q]) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
+                ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_temp_norm)
 
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
@@ -4451,9 +4467,7 @@ def plot_rad_contour(axis, mfile_data, scan, impp):
             else:
                 ne[q] = nd_plasma_separatrix_electron + (
                     nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
-                ) * (1 - rho[q]) / (
-                    1 - min(0.9999, radius_plasma_pedestal_density_norm)
-                )
+                ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_density_norm)
 
             if rho[q] <= radius_plasma_pedestal_temp_norm:
                 te[q] = (
@@ -4465,7 +4479,7 @@ def plot_rad_contour(axis, mfile_data, scan, impp):
             else:
                 te[q] = temp_plasma_separatrix_kev + (
                     temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
-                ) * (1 - rho[q]) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
+                ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_temp_norm)
 
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
