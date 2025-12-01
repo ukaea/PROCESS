@@ -4268,16 +4268,6 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
     if i_plasma_pedestal == 0:
         # Intialise the radius
-        rho = np.linspace(0, 1.0)
-
-        # The density profile
-        ne = ne0 * (1 - rho**2) ** alphan
-
-        # The temperature profile
-        te = te0 * (1 - rho**2) ** alphat
-
-    if i_plasma_pedestal == 0:
-        # Intialise the radius
         rho = np.linspace(0, 1.0, n_plasma_profile_elements)
 
         # The density profile
@@ -4542,6 +4532,16 @@ def plot_rad_contour(axis, mfile_data, scan, impp):
     axis.grid(True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1)
 
     axis.grid(True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1)
+    props_core_reduce = {"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8}
+    axis.text(
+        0.02,
+        0.02,
+        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}",
+        transform=axis.transAxes,
+        fontsize=8,
+        verticalalignment="bottom",
+        bbox=props_core_reduce,
+    )
     # make minor ticks visible on all sides and draw ticks inward for compact look
     axis.tick_params(which="both", direction="in", top=True, right=True)
 
@@ -12717,14 +12717,26 @@ def main_plot(
 
     plot_plasma_effective_charge_profile(fig5.add_subplot(221), m_file_data, scan)
     plot_ion_charge_profile(fig5.add_subplot(223), m_file_data, scan)
-    plot_rad_contour(fig5.add_subplot(122), m_file_data, scan, imp)
+
+    if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
+        plot_rad_contour(fig5.add_subplot(122), m_file_data, scan, imp)
+
+    i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
+    if i_shape != 1:
+        msg = (
+            "Radiation contour plots require a closed (Sauter) plasma boundary "
+            "(i_plasma_shape == 1). "
+            f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
+            "see the 1D radiation plots for available information."
+        )
+        # Add explanatory text to both figures reserved for contour outputs
+        fig5.text(0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
     plot_fusion_rate_profiles(fig6.add_subplot(122), fig6, m_file_data, scan)
 
     if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
         plot_fusion_rate_contours(fig7, fig8, m_file_data, scan)
 
-    i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
     if i_shape != 1:
         msg = (
             "Fusion-rate contour plots require a closed (Sauter) plasma boundary "
