@@ -4384,6 +4384,154 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     # ---
 
 
+def plot_rad_contour(axis, mfile_data, scan, impp):
+    # read in the impurity data
+    imp_data = read_imprad_data(2, impp)
+
+    # find impurity densities
+    imp_frac = np.array([
+        mfile_data.data["f_nd_impurity_electrons(01)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(02)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(03)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(04)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(05)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(06)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(07)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(08)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(09)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(10)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(11)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(12)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(13)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(14)"].get_scan(scan),
+    ])
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+    alphan = mfile_data.data["alphan"].get_scan(scan)
+    alphat = mfile_data.data["alphat"].get_scan(scan)
+    nd_plasma_electron_on_axis = mfile_data.data["nd_plasma_electron_on_axis"].get_scan(
+        scan
+    )
+    temp_plasma_electron_on_axis_kev = mfile_data.data[
+        "temp_plasma_electron_on_axis_kev"
+    ].get_scan(scan)
+    radius_plasma_pedestal_density_norm = mfile_data.data[
+        "radius_plasma_pedestal_density_norm"
+    ].get_scan(scan)
+    radius_plasma_pedestal_temp_norm = mfile_data.data[
+        "radius_plasma_pedestal_temp_norm"
+    ].get_scan(scan)
+
+    if i_plasma_pedestal == 0:
+        # Intialise the radius
+        rho = np.linspace(0, 1.0, n_plasma_profile_elements)
+
+        # The density profile
+        ne = nd_plasma_electron_on_axis * (1 - rho**2) ** alphan
+
+        # The temperature profile
+        te = temp_plasma_electron_on_axis_kev * (1 - rho**2) ** alphat
+
+    if i_plasma_pedestal == 1:
+        rho = np.linspace(0, 1, n_plasma_profile_elements)
+
+        # The density and temperature profile
+        ne = np.zeros_like(rho)
+        te = np.zeros_like(rho)
+        for q in range(rho.shape[0]):
+            if rho[q] <= radius_plasma_pedestal_density_norm:
+                ne[q] = (
+                    nd_plasma_pedestal_electron
+                    + (ne0 - nd_plasma_pedestal_electron)
+                    * (1 - rho[q] ** 2 / radius_plasma_pedestal_density_norm**2)
+                    ** alphan
+                )
+            else:
+                ne[q] = nd_plasma_separatrix_electron + (
+                    nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
+                ) * (1 - rho[q]) / (
+                    1 - min(0.9999, radius_plasma_pedestal_density_norm)
+                )
+
+            if rho[q] <= radius_plasma_pedestal_temp_norm:
+                te[q] = (
+                    temp_plasma_pedestal_kev
+                    + (te0 - temp_plasma_pedestal_kev)
+                    * (1 - (rho[q] / radius_plasma_pedestal_temp_norm) ** tbeta)
+                    ** alphat
+                )
+            else:
+                te[q] = temp_plasma_separatrix_kev + (
+                    temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+                ) * (1 - rho[q]) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
+
+    # Intailise the radiation profile arrays
+    pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
+    lz = np.zeros([imp_data.shape[0], te.shape[0]])
+    prad = np.zeros(te.shape[0])
+
+    # Intailise the impurity radiation profile
+    for k in range(te.shape[0]):
+        for i in range(imp_data.shape[0]):
+            if te[k] <= imp_data[i][0][0]:
+                lz[i][k] = imp_data[i][0][1]
+            elif te[k] >= imp_data[i][imp_data.shape[1] - 1][0]:
+                lz[i][k] = imp_data[i][imp_data.shape[1] - 1][1]
+            else:
+                # Use np.interp for log-log interpolation
+                log_te_data = np.log([row[0] for row in imp_data[i]])
+                log_lz_data = np.log([row[1] for row in imp_data[i]])
+                lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
+            pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
+
+        for l in range(imp_data.shape[0]):  # noqa: E741
+            prad[k] = prad[k] + pimpden[l][k] * 1.0e-6
+
+    p_rad_grid, r_grid, z_grid = interp1d_profile(prad, mfile_data, scan)
+
+    # Plot the upper half contour
+    p_rad_upper = axis.contourf(
+        r_grid, z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2
+    )
+    # Plot the lower half contour (mirror)
+    axis.contourf(r_grid, -z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2)
+
+    axis.figure.colorbar(
+        p_rad_upper,
+        ax=axis,
+        label=r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    axis.set_xlabel("R [m]")
+    axis.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    axis.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Line & Bremsstrahlung Radiation Density Contours")
+    axis.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    # enable minor ticks and grid for clearer reading
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1)
+
+    axis.grid(True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1)
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    axis.tick_params(which="both", direction="in", top=True, right=True)
+
+
 def plot_vacuum_vessel_and_divertor(axis, mfile_data, scan, colour_scheme):
     """Function to plot vacuum vessel and divertor boxes
 
@@ -12555,6 +12703,7 @@ def main_plot(
 
     plot_plasma_effective_charge_profile(fig5.add_subplot(221), m_file_data, scan)
     plot_ion_charge_profile(fig5.add_subplot(223), m_file_data, scan)
+    plot_rad_contour(fig5.add_subplot(122), m_file_data, scan, imp)
 
     plot_fusion_rate_profiles(fig6.add_subplot(122), fig6, m_file_data, scan)
 
