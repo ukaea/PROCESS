@@ -2052,9 +2052,12 @@ class Physics:
             )
         )
 
-        current_drive_variables.f_c_plasma_bootstrap_sauter = (
+        (
+            current_drive_variables.f_c_plasma_bootstrap_sauter,
+            physics_variables.j_plasma_bootstrap_sauter_profile,
+        ) = self.bootstrap_fraction_sauter(self.plasma_profile)
+        current_drive_variables.f_c_plasma_bootstrap_sauter *= (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_sauter(self.plasma_profile)
         )
 
         current_drive_variables.f_c_plasma_bootstrap_sakai = (
@@ -6540,7 +6543,7 @@ class Physics:
             ):
                 po.ovarrf(
                     self.mfile,
-                    "Sauter et al bootstrap current density profile at point",
+                    f"Sauter et al bootstrap current density profile at point {point}",
                     f"(j_plasma_bootstrap_sauter_profile{point})",
                     physics_variables.j_plasma_bootstrap_sauter_profile[point],
                     "OP ",
@@ -7244,7 +7247,7 @@ class Physics:
         dlogti_drho = np.gradient(np.log(tempi), rho)[radial_elements - 1]
         dlogne_drho = np.gradient(np.log(ne), rho)[radial_elements - 1]
 
-        jboot = physics_variables.j_plasma_bootstrap_sauter_profile = (
+        jboot = (
             0.5
             * (
                 _calculate_l31_coefficient(
@@ -7307,7 +7310,7 @@ class Physics:
             )
         )  # A/m2
 
-        return np.sum(da * jboot, axis=0) / physics_variables.plasma_current
+        return (np.sum(da * jboot, axis=0) / physics_variables.plasma_current), jboot
 
     @staticmethod
     def bootstrap_fraction_sakai(

@@ -563,7 +563,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics_variables, "alphat", bootstrapfractionsauterparam.alphat
     )
     physics.plasma_profile.run()
-    bfs = physics.bootstrap_fraction_sauter(physics.plasma_profile)
+    bfs, _ = physics.bootstrap_fraction_sauter(physics.plasma_profile)
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
 
