@@ -96,6 +96,8 @@ class DCLL(BlanketLibrary):
             fwbs_variables.radius_blkt_channel_180_bend,
         ) = self.calculate_pipe_bend_radius(i_ps=1)
 
+        self.set_blanket_module_geometry()
+
         self.primary_coolant_properties(output=output)
         self.liquid_breeder_properties(output=output)
         self.dcll_neutronics_and_power(output=output)

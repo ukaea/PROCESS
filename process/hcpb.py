@@ -53,6 +53,8 @@ class CCFE_HCPB(BlanketLibrary):
             fwbs_variables.radius_blkt_channel_180_bend,
         ) = self.calculate_pipe_bend_radius(i_ps=1)
 
+        self.set_blanket_module_geometry()
+
         # Centrepost neutronics
         if physics_variables.itart == 1:
             # CP radius at the point of maximum sield radius [m]

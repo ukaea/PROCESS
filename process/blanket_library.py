@@ -1921,7 +1921,6 @@ class BlanketLibrary:
 
         # load in pressures if primary pumping == 2
         if fwbs_variables.i_p_coolant_pumping == 2:
-            self.set_blanket_module_geometry()
             deltap = self.thermo_hydraulic_model_pressure_drop_calculations(
                 output=output
             )
@@ -3226,6 +3225,8 @@ class OutboardBlanket(BlanketLibrary):
             fwbs_variables.radius_blkt_channel_180_bend,
         ) = self.calculate_pipe_bend_radius(i_ps=1)
 
+        self.set_blanket_module_geometry()
+
 
 class InboardBlanket(BlanketLibrary):
     def calculate_basic_geometry(self):
@@ -3237,3 +3238,5 @@ class InboardBlanket(BlanketLibrary):
             fwbs_variables.radius_blkt_channel_90_bend,
             fwbs_variables.radius_blkt_channel_180_bend,
         ) = self.calculate_pipe_bend_radius(i_ps=1)
+
+        self.set_blanket_module_geometry()
