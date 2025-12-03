@@ -2978,35 +2978,71 @@ class BlanketLibrary:
         return pumppower
 
 
-def set_pumping_powers_as_fractions():
-    # User sets mechanical pumping power as a fraction of thermal power in component
+def set_pumping_powers_as_fractions(
+    f_p_fw_coolant_pump_total_heat: float,
+    f_p_blkt_coolant_pump_total_heat: float,
+    f_p_shld_coolant_pump_total_heat: float,
+    f_p_div_coolant_pump_total_heat: float,
+    p_fw_nuclear_heat_total_mw: float,
+    psurffwi: float,
+    psurffwo: float,
+    p_blkt_nuclear_heat_total_mw: float,
+    p_shld_nuclear_heat_mw: float,
+    p_cp_shield_nuclear_heat_mw: float,
+    p_plasma_separatrix_mw: float,
+    p_div_nuclear_heat_total_mw: float,
+    p_div_rad_total_mw: float,
+) -> tuple[float, float, float, float]:
+    """
+    Calculate mechanical pumping powers as fractions of thermal power in each component.
 
-    heat_transport_variables.p_fw_coolant_pump_mw = (
-        heat_transport_variables.f_p_fw_coolant_pump_total_heat
-        * (
-            fwbs_variables.p_fw_nuclear_heat_total_mw
-            + fwbs_variables.psurffwi
-            + fwbs_variables.psurffwo
-        )
+    :param f_p_fw_coolant_pump_total_heat: Fraction for FW coolant pump.
+    :type f_p_fw_coolant_pump_total_heat: float
+    :param f_p_blkt_coolant_pump_total_heat: Fraction for blanket coolant pump.
+    :type f_p_blkt_coolant_pump_total_heat: float
+    :param f_p_shld_coolant_pump_total_heat: Fraction for shield coolant pump.
+    :type f_p_shld_coolant_pump_total_heat: float
+    :param f_p_div_coolant_pump_total_heat: Fraction for divertor coolant pump.
+    :type f_p_div_coolant_pump_total_heat: float
+    :param p_fw_nuclear_heat_total_mw: Total FW nuclear heating (MW).
+    :type p_fw_nuclear_heat_total_mw: float
+    :param psurffwi: Inboard FW surface heating (MW).
+    :type psurffwi: float
+    :param psurffwo: Outboard FW surface heating (MW).
+    :type psurffwo: float
+    :param p_blkt_nuclear_heat_total_mw: Total blanket nuclear heating (MW).
+    :type p_blkt_nuclear_heat_total_mw: float
+    :param p_shld_nuclear_heat_mw: Shield nuclear heating (MW).
+    :type p_shld_nuclear_heat_mw: float
+    :param p_cp_shield_nuclear_heat_mw: CP shield nuclear heating (MW).
+    :type p_cp_shield_nuclear_heat_mw: float
+    :param p_plasma_separatrix_mw: Plasma separatrix power (MW).
+    :type p_plasma_separatrix_mw: float
+    :param p_div_nuclear_heat_total_mw: Divertor nuclear heating (MW).
+    :type p_div_nuclear_heat_total_mw: float
+    :param p_div_rad_total_mw: Divertor radiative power (MW).
+    :type p_div_rad_total_mw: float
+
+    :return: Tuple of pumping powers (MW) for FW, blanket, shield, and divertor.
+    :rtype: tuple[float, float, float, float]
+    """
+    p_fw_coolant_pump_mw = f_p_fw_coolant_pump_total_heat * (
+        p_fw_nuclear_heat_total_mw + psurffwi + psurffwo
     )
-    heat_transport_variables.p_blkt_coolant_pump_mw = (
-        heat_transport_variables.f_p_blkt_coolant_pump_total_heat
-        * fwbs_variables.p_blkt_nuclear_heat_total_mw
+    p_blkt_coolant_pump_mw = (
+        f_p_blkt_coolant_pump_total_heat * p_blkt_nuclear_heat_total_mw
     )
-    heat_transport_variables.p_shld_coolant_pump_mw = (
-        heat_transport_variables.f_p_shld_coolant_pump_total_heat
-        * (
-            fwbs_variables.p_shld_nuclear_heat_mw
-            + fwbs_variables.p_cp_shield_nuclear_heat_mw
-        )
+    p_shld_coolant_pump_mw = f_p_shld_coolant_pump_total_heat * (
+        p_shld_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw
     )
-    heat_transport_variables.p_div_coolant_pump_mw = (
-        heat_transport_variables.f_p_div_coolant_pump_total_heat
-        * (
-            physics_variables.p_plasma_separatrix_mw
-            + fwbs_variables.p_div_nuclear_heat_total_mw
-            + fwbs_variables.p_div_rad_total_mw
-        )
+    p_div_coolant_pump_mw = f_p_div_coolant_pump_total_heat * (
+        p_plasma_separatrix_mw + p_div_nuclear_heat_total_mw + p_div_rad_total_mw
+    )
+    return (
+        p_fw_coolant_pump_mw,
+        p_blkt_coolant_pump_mw,
+        p_shld_coolant_pump_mw,
+        p_div_coolant_pump_mw,
     )
 
 

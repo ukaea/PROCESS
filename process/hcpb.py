@@ -813,7 +813,26 @@ class CCFE_HCPB(BlanketLibrary):
 
         if fwbs_variables.i_p_coolant_pumping == 1:
             # User sets mechanical pumping power directly
-            blanket_library.set_pumping_powers_as_fractions()
+            (
+                heat_transport_variables.p_fw_coolant_pump_mw,
+                heat_transport_variables.p_blkt_coolant_pump_mw,
+                heat_transport_variables.p_shld_coolant_pump_mw,
+                heat_transport_variables.p_div_coolant_pump_mw,
+            ) = blanket_library.set_pumping_powers_as_fractions(
+                f_p_fw_coolant_pump_total_heat=heat_transport_variables.f_p_fw_coolant_pump_total_heat,
+                f_p_blkt_coolant_pump_total_heat=heat_transport_variables.f_p_blkt_coolant_pump_total_heat,
+                f_p_shld_coolant_pump_total_heat=heat_transport_variables.f_p_shld_coolant_pump_total_heat,
+                f_p_div_coolant_pump_total_heat=heat_transport_variables.f_p_div_coolant_pump_total_heat,
+                p_fw_nuclear_heat_total_mw=fwbs_variables.p_fw_nuclear_heat_total_mw,
+                psurffwi=fwbs_variables.psurffwi,
+                psurffwo=fwbs_variables.psurffwo,
+                p_blkt_nuclear_heat_total_mw=fwbs_variables.p_blkt_nuclear_heat_total_mw,
+                p_shld_nuclear_heat_mw=heat_transport_variables.p_shld_nuclear_heat_mw,
+                p_cp_shield_nuclear_heat_mw=fwbs_variables.p_cp_shield_nuclear_heat_mw,
+                p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+                p_div_nuclear_heat_total_mw=fwbs_variables.p_div_nuclear_heat_total_mw,
+                p_div_rad_total_mw=fwbs_variables.p_div_rad_total_mw,
+            )
 
         elif fwbs_variables.i_p_coolant_pumping == 2:
             # Calculate the required material properties of the FW and BB coolant.
