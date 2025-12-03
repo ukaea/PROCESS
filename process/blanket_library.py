@@ -3177,3 +3177,27 @@ def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
     vout = v2 - v1
 
     return vin, vout, vin + vout
+
+
+class OutboardBlanket(BlanketLibrary):
+    def calculate_basic_geometry(self):
+        self.component_volumes()
+
+        dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
+        fwbs_variables.radius_blkt_channel = dia_blkt_channel / 2
+        (
+            fwbs_variables.radius_blkt_channel_90_bend,
+            fwbs_variables.radius_blkt_channel_180_bend,
+        ) = self.calculate_pipe_bend_radius(i_ps=1)
+
+
+class InboardBlanket(BlanketLibrary):
+    def calculate_basic_geometry(self):
+        self.component_volumes()
+
+        dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
+        fwbs_variables.radius_blkt_channel = dia_blkt_channel / 2
+        (
+            fwbs_variables.radius_blkt_channel_90_bend,
+            fwbs_variables.radius_blkt_channel_180_bend,
+        ) = self.calculate_pipe_bend_radius(i_ps=1)
