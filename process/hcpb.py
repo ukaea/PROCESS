@@ -8,7 +8,7 @@ from process import constants
 from process import (
     process_output as po,
 )
-from process.blanket_library import BlanketLibrary
+from process.blanket_library import InboardBlanket, OutboardBlanket
 from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     build_variables,
@@ -27,7 +27,7 @@ from process.exceptions import ProcessValueError
 logger = logging.getLogger(__name__)
 
 
-class CCFE_HCPB(BlanketLibrary):
+class CCFE_HCPB(OutboardBlanket, InboardBlanket):
     """This module contains the PROCESS CCFE HCPB blanket model
     based on CCFE HCPB model from the PROCESS engineering paper
     PROCESS Engineering paper (M. Kovari et al.)

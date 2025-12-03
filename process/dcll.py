@@ -3,7 +3,7 @@ from process import constants
 from process import (
     process_output as po,
 )
-from process.blanket_library import BlanketLibrary
+from process.blanket_library import InboardBlanket, OutboardBlanket
 from process.data_structure import (
     build_variables,
     current_drive_variables,
@@ -15,7 +15,7 @@ from process.data_structure import (
 )
 
 
-class DCLL(BlanketLibrary):
+class DCLL(InboardBlanket, OutboardBlanket):
     """This module contains the Dual Coolant Lead Lithium (DCLL) specific submods of PROCESSS.
 
     author: G. Graham, CCFE
