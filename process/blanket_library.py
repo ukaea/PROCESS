@@ -630,30 +630,6 @@ class BlanketLibrary:
             fwbs_variables.n_blkt_inboard_modules_poloidal = 1
             fwbs_variables.n_blkt_outboard_modules_poloidal = 1
 
-        # Calculate mid-plane toroidal circumference and segment
-        # of inboard blanket
-        blanket_library.len_blkt_inboard_segment_toroidal = (
-            2.0e0
-            * np.pi
-            * (
-                physics_variables.rmajor
-                - physics_variables.rminor
-                - build_variables.dr_fw_plasma_gap_inboard
-            )
-        ) / fwbs_variables.n_blkt_inboard_modules_toroidal
-
-        # Calculate mid-plane toroidal circumference and segment
-        # of outboard blanke
-        blanket_library.len_blkt_outboard_segment_toroidal = (
-            2.0e0
-            * np.pi
-            * (
-                physics_variables.rmajor
-                + physics_variables.rminor
-                + build_variables.dr_fw_plasma_gap_outboard
-            )
-        ) / fwbs_variables.n_blkt_outboard_modules_toroidal
-
         # Calculate poloidal height of blanket modules
         self.blanket_module_poloidal_height()
 
@@ -3225,7 +3201,30 @@ class OutboardBlanket(BlanketLibrary):
             fwbs_variables.radius_blkt_channel_180_bend,
         ) = self.calculate_pipe_bend_radius(i_ps=1)
 
-        self.set_blanket_module_geometry()
+    def set_blanket_outboard_module_geometry(
+        self,
+        n_blkt_outboard_modules_toroidal: int,
+        rmajor: float,
+        rminor: float,
+        dr_fw_plasma_gap_outboard: float,
+    ) -> float:
+        """
+        Calculate the mid-plane toroidal circumference and segment length of the outboard blanket.
+
+        :param n_blkt_outboard_modules_toroidal: Number of outboard blanket modules in the toroidal direction.
+        :type n_blkt_outboard_modules_toroidal: int
+        :param rmajor: Major radius (m).
+        :type rmajor: float
+        :param rminor: Minor radius (m).
+        :type rminor: float
+        :param dr_fw_plasma_gap_outboard: Outboard first wall to plasma gap (m).
+        :type dr_fw_plasma_gap_outboard: float
+        :return: Length of outboard blanket segment in the toroidal direction (m).
+        :rtype: float
+        """
+        return (
+            2.0 * np.pi * (rmajor + rminor + dr_fw_plasma_gap_outboard)
+        ) / n_blkt_outboard_modules_toroidal
 
 
 class InboardBlanket(BlanketLibrary):
@@ -3240,3 +3239,28 @@ class InboardBlanket(BlanketLibrary):
         ) = self.calculate_pipe_bend_radius(i_ps=1)
 
         self.set_blanket_module_geometry()
+
+    def set_blanket_inboard_module_geometry(
+        self,
+        n_blkt_inboard_modules_toroidal: int,
+        rmajor: float,
+        rminor: float,
+        dr_fw_plasma_gap_inboard: float,
+    ) -> float:
+        """
+        Calculate the mid-plane toroidal circumference and segment length of the inboard blanket.
+
+        :param n_blkt_inboard_modules_toroidal: Number of inboard blanket modules in the toroidal direction.
+        :type n_blkt_inboard_modules_toroidal: int
+        :param rmajor: Major radius (m).
+        :type rmajor: float
+        :param rminor: Minor radius (m).
+        :type rminor: float
+        :param dr_fw_plasma_gap_inboard: Inboard first wall to plasma gap (m).
+        :type dr_fw_plasma_gap_inboard: float
+        :return: Length of inboard blanket segment in the toroidal direction (m).
+        :rtype: float
+        """
+        return (
+            2.0 * np.pi * (rmajor + rminor + dr_fw_plasma_gap_inboard)
+        ) / n_blkt_inboard_modules_toroidal
