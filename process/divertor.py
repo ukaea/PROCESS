@@ -6,6 +6,7 @@ from process import constants
 from process import process_output as po
 from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as dv
+from process.data_structure import fwbs_variables as fwbs
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.exceptions import ProcessValueError
@@ -34,6 +35,19 @@ class Divertor:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
+
+        fwbs.p_div_nuclear_heat_total_mw = self.set_incident_neutron_power(
+            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=pv.n_divertors,
+        )
+
+        fwbs.p_div_rad_total_mw = self.set_incident_radiation_power(
+            p_plasma_rad_mw=pv.p_plasma_rad_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=pv.n_divertors,
+        )
+
         if dv.i_div_heat_load == 0 and output:
             po.ovarre(
                 self.outfile,
@@ -362,3 +376,31 @@ class Divertor:
                 dv.pflux_div_heat_load_mw,
             )
         return dv.pflux_div_heat_load_mw
+
+    def set_incident_radiation_power(
+        self,
+        p_plasma_rad_mw: float,
+        f_ster_div_single: float,
+        n_divertors: int,
+    ) -> float:
+        """Set incident radiation on divertor box"""
+
+        return p_plasma_rad_mw * f_ster_div_single * n_divertors
+
+    def set_incident_neutron_power(
+        self,
+        p_plasma_neutron_mw: float,
+        f_ster_div_single: float,
+        n_divertors: int,
+    ) -> float:
+        """Set incident neutron power on divertor box"""
+
+        return p_plasma_neutron_mw * f_ster_div_single * n_divertors
+
+
+class LowerDivertor(Divertor):
+    """Module containing lower divertor routines"""
+
+
+class UpperDivertor(Divertor):
+    """Module containing upper divertor routines"""
