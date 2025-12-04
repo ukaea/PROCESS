@@ -12458,7 +12458,7 @@ def plot_ebw_ecrh_coupling_graph(axis, mfile_data, scan):
                 / 1e20,
                 b_plasma_toroidal_on_axis=b,
                 n_ecrh_harmonic=n_harmonic,
-                xi_ebw=0.8,
+                xi_ebw=mfile_data.data["xi_ebw"].get_scan(scan),
             )
             eta_ecrh_omode = ecrg.electron_cyclotron_freethy(
                 te=mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan),
@@ -12603,7 +12603,7 @@ def main_plot(
     plot_power_info(fig1.add_subplot(235), m_file_data, scan)
 
     # Current drive
-    plot_current_drive_info(fig1.add_subplot(236), m_file_data, scan)
+    # plot_current_drive_info(fig1.add_subplot(236), m_file_data, scan)
     fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
     ax7 = fig2.add_subplot(121)

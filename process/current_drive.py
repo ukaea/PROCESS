@@ -2136,6 +2136,12 @@ class CurrentDrive:
                 "(n_ecrh_harmonic)",
                 current_drive_variables.n_ecrh_harmonic,
             )
+            po.ovarre(
+                self.outfile,
+                "EBW coupling efficiency",
+                "(xi_ebw)",
+                current_drive_variables.xi_ebw,
+            )
         if current_drive_variables.i_hcd_primary == 13:
             po.ovarin(
                 self.outfile,
