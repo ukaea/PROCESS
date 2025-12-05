@@ -803,7 +803,7 @@ class ElectronCyclotron:
             1
             / (2 * np.pi)
             * np.sqrt(
-                (nd_plasma_electrons_vol_avg / 1.0e19)
+                (nd_plasma_electrons_vol_avg)
                 * constants.ELECTRON_CHARGE**2
                 / (constants.ELECTRON_MASS * constants.EPSILON0)
             )
@@ -2135,6 +2135,12 @@ class CurrentDrive:
                 "ECRH / EBW harmonic number",
                 "(n_ecrh_harmonic)",
                 current_drive_variables.n_ecrh_harmonic,
+            )
+            po.ovarre(
+                self.outfile,
+                "EBW coupling efficiency",
+                "(xi_ebw)",
+                current_drive_variables.xi_ebw,
             )
         if current_drive_variables.i_hcd_primary == 13:
             po.ovarin(
