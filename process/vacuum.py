@@ -5,7 +5,7 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
-from process.blanket_library import dshellvol
+from process.blanket_library import dshellvol, eshellvol
 from process.data_structure import blanket_library as blanket_library
 from process.data_structure import build_variables as buv
 from process.data_structure import divertor_variables as dv
@@ -770,7 +770,7 @@ class VacuumVessel:
         dr_vv_outboard: float,
         dz_vv_upper: float,
         dz_vv_lower: float,
-    ) -> None:
+    ) -> tuple[float, float, float]:
         """Calculate volumes of D-shaped vacuum vessel segments"""
 
         r_1 = rsldi
@@ -789,4 +789,41 @@ class VacuumVessel:
             dz=(dz_vv_upper + dz_vv_lower) / 2,
         )
 
+        return vol_vv_inboard, vol_vv_outboard, vol_vv
+
+    def calculate_elliptical_vessel_volumes(
+        self,
+        rmajor: float,
+        rminor: float,
+        triang: float,
+        rsldi: float,
+        rsldo: float,
+        dz_vv_half: float,
+        dr_vv_inboard: float,
+        dr_vv_outboard: float,
+        dz_vv_upper: float,
+        dz_vv_lower: float,
+    ) -> tuple[float, float, float]:
+        # Major radius to centre of inboard and outboard ellipses (m)
+        # (coincident in radius with top of plasma)
+        r_1 = rmajor - rminor * triang
+
+        # Calculate distance between r1 and outer edge of inboard ...
+        # ... section (m)
+        r_2 = r_1 - rsldi
+        r_3 = rsldo - r_1
+
+        (
+            vol_vv_inboard,
+            vol_vv_outboard,
+            vol_vv,
+        ) = eshellvol(
+            r_1,
+            r_2,
+            r_3,
+            dz_vv_half,
+            dr_vv_inboard,
+            dr_vv_outboard,
+            (dz_vv_upper + dz_vv_lower) / 2,
+        )
         return vol_vv_inboard, vol_vv_outboard, vol_vv
