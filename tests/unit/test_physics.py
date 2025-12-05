@@ -341,7 +341,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     q0: Any = None
 
-    m_fuel_amu: Any = None
+    m_ions_total_amu: Any = None
 
     zeff: Any = None
 
@@ -394,7 +394,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             temp_plasma_ion_vol_avg_kev=12.570861186498382,
             triang=0.5,
             q0=1,
-            m_fuel_amu=2.5,
+            m_ions_total_amu=2.5,
             zeff=2.5211399464385624,
             radius_plasma_pedestal_density_norm=0.9400000000000001,
             b_plasma_toroidal_on_axis=5.326133750416047,
@@ -414,7 +414,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             alphan=1,
             radius_plasma_pedestal_temp_norm=0.9400000000000001,
             alphat=1.45,
-            expected_bfs=0.4110838247346975,
+            expected_bfs=0.4052168782500341,
         ),
     ),
 )
@@ -460,7 +460,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     monkeypatch.setattr(physics_variables, "q0", bootstrapfractionsauterparam.q0)
 
     monkeypatch.setattr(
-        physics_variables, "m_fuel_amu", bootstrapfractionsauterparam.m_fuel_amu
+        physics_variables,
+        "m_ions_total_amu",
+        bootstrapfractionsauterparam.m_ions_total_amu,
     )
 
     monkeypatch.setattr(
@@ -561,7 +563,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics_variables, "alphat", bootstrapfractionsauterparam.alphat
     )
     physics.plasma_profile.run()
-    bfs = physics.bootstrap_fraction_sauter(physics.plasma_profile)
+    bfs, _ = physics.bootstrap_fraction_sauter(physics.plasma_profile)
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
 
