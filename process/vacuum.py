@@ -5,9 +5,11 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
+from process.blanket_library import dshellvol
 from process.data_structure import blanket_library as blanket_library
 from process.data_structure import build_variables as buv
 from process.data_structure import divertor_variables as dv
+from process.data_structure import fwbs_variables as fwbs_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
@@ -708,6 +710,20 @@ class VacuumVessel:
             dr_fw_outboard=buv.dr_fw_outboard,
         )
 
+        (
+            blanket_library.vol_vv_inboard,
+            blanket_library.vol_vv_outboard,
+            fwbs_variables.vol_vv,
+        ) = self.calculate_dshaped_vessel_volumes(
+            rsldi=buv.rsldi,
+            rsldo=buv.rsldo,
+            dz_vv_half=blanket_library.dz_vv_half,
+            dr_vv_inboard=buv.dr_vv_inboard,
+            dr_vv_outboard=buv.dr_vv_outboard,
+            dz_vv_upper=buv.dz_vv_upper,
+            dz_vv_lower=buv.dz_vv_lower,
+        )
+
     def calculate_vessel_half_height(
         self,
         z_tf_inside_half: float,
@@ -742,3 +758,33 @@ class VacuumVessel:
 
         # Average of top and bottom (m)
         return 0.5 * (z_top + z_bottom)
+
+    def calculate_dshaped_vessel_volumes(
+        self,
+        rsldi: float,
+        rsldo: float,
+        dz_vv_half: float,
+        dr_vv_inboard: float,
+        dr_vv_outboard: float,
+        dz_vv_upper: float,
+        dz_vv_lower: float,
+    ) -> None:
+        """Calculate volumes of D-shaped vacuum vessel segments"""
+
+        r_1 = rsldi
+        r_2 = rsldo - r_1
+
+        (
+            vol_vv_inboard,
+            vol_vv_outboard,
+            vol_vv,
+        ) = dshellvol(
+            rmajor=r_1,
+            rminor=r_2,
+            zminor=dz_vv_half,
+            drin=dr_vv_inboard,
+            drout=dr_vv_outboard,
+            dz=(dz_vv_upper + dz_vv_lower) / 2,
+        )
+
+        return vol_vv_inboard, vol_vv_outboard, vol_vv
