@@ -3201,7 +3201,7 @@ class OutboardBlanket(BlanketLibrary):
             fwbs_variables.radius_blkt_channel_180_bend,
         ) = self.calculate_pipe_bend_radius(i_ps=1)
 
-    def set_blanket_outboard_module_geometry(
+    def calculate_blanket_outboard_module_geometry(
         self,
         n_blkt_outboard_modules_toroidal: int,
         rmajor: float,
@@ -3240,7 +3240,7 @@ class InboardBlanket(BlanketLibrary):
 
         self.set_blanket_module_geometry()
 
-    def set_blanket_inboard_module_geometry(
+    def calculate_blanket_inboard_module_geometry(
         self,
         n_blkt_inboard_modules_toroidal: int,
         rmajor: float,

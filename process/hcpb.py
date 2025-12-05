@@ -55,13 +55,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         self.set_blanket_module_geometry()
 
-        blanket_library.len_blkt_inboard_segment_toroidal = self.set_blanket_inboard_module_geometry(
+        blanket_library.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
             n_blkt_inboard_modules_toroidal=fwbs_variables.n_blkt_inboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
             dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
         )
-        blanket_library.len_blkt_outboard_segment_toroidal = self.set_blanket_outboard_module_geometry(
+        blanket_library.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
             n_blkt_outboard_modules_toroidal=fwbs_variables.n_blkt_outboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
