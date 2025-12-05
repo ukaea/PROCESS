@@ -102,3 +102,43 @@ class TestDivertor:
         )
 
         assert pflux_div_heat_load_mw == pytest.approx(expected_pflux_div_heat_load_mw)
+
+
+@pytest.mark.parametrize(
+    "p_plasma_rad_mw, f_ster_div_single, n_divertors, expected",
+    [
+        (10.0, 0.5, 2, 10.0),
+        (0.0, 1.0, 1, 0.0),
+        (5.5, 0.2, 3, 3.3),
+        (100.0, 0.0, 5, 0.0),
+        (7.0, 0.25, 4, 7.0),
+    ],
+)
+def test_set_incident_radiation_power(
+    p_plasma_rad_mw, f_ster_div_single, n_divertors, expected
+):
+    divertor = Divertor()
+    result = divertor.set_incident_radiation_power(
+        p_plasma_rad_mw, f_ster_div_single, n_divertors
+    )
+    assert result == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "p_plasma_neutron_mw, f_ster_div_single, n_divertors, expected",
+    [
+        (20.0, 0.5, 2, 20.0),
+        (0.0, 1.0, 1, 0.0),
+        (8.0, 0.25, 4, 8.0),
+        (50.0, 0.0, 3, 0.0),
+        (12.5, 0.4, 2, 10.0),
+    ],
+)
+def test_set_incident_neutron_power(
+    p_plasma_neutron_mw, f_ster_div_single, n_divertors, expected
+):
+    divertor = Divertor()
+    result = divertor.set_incident_neutron_power(
+        p_plasma_neutron_mw, f_ster_div_single, n_divertors
+    )
+    assert result == pytest.approx(expected)
