@@ -338,7 +338,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 psurffwi=fwbs_variables.psurffwi,
                 psurffwo=fwbs_variables.psurffwo,
                 p_blkt_nuclear_heat_total_mw=fwbs_variables.p_blkt_nuclear_heat_total_mw,
-                p_shld_nuclear_heat_mw=heat_transport_variables.p_shld_nuclear_heat_mw,
+                p_shld_nuclear_heat_mw=fwbs_variables.p_shld_nuclear_heat_mw,
                 p_cp_shield_nuclear_heat_mw=fwbs_variables.p_cp_shield_nuclear_heat_mw,
                 p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
                 p_div_nuclear_heat_total_mw=fwbs_variables.p_div_nuclear_heat_total_mw,
