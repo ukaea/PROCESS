@@ -43,7 +43,7 @@ pre-commit -h
 If pre-commit is not installed, then it can be installed by running:
 
 ```bash
-pip install -r requirements_dev.txt
+pip install '.[lint]'
 ```
 
 in your environment, which will install all development dependencies including pre-commit. 
