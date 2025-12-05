@@ -5,6 +5,7 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
+from process.data_structure import blanket_library as blanket_library
 from process.data_structure import build_variables as buv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import physics_variables as pv
@@ -686,3 +687,60 @@ class Vacuum:
             )
 
         return pumpn, nduct, dlscalc, mvdsh, dimax
+
+
+class VacuumVessel:
+    """Class containing vacuum vessel routines"""
+
+    def __init__(self) -> None:
+        pass
+
+    def run(self) -> None:
+        blanket_library.dz_vv_half = self.calculate_vessel_half_height(
+            z_tf_inside_half=buv.z_tf_inside_half,
+            dz_shld_vv_gap=buv.dz_shld_vv_gap,
+            dz_vv_lower=buv.dz_vv_lower,
+            n_divertors=pv.n_divertors,
+            dz_blkt_upper=buv.dz_blkt_upper,
+            dz_shld_upper=buv.dz_shld_upper,
+            z_plasma_xpoint_upper=buv.z_plasma_xpoint_upper,
+            dr_fw_plasma_gap_inboard=buv.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_outboard=buv.dr_fw_plasma_gap_outboard,
+            dr_fw_inboard=buv.dr_fw_inboard,
+            dr_fw_outboard=buv.dr_fw_outboard,
+        )
+
+    def calculate_vessel_half_height(
+        self,
+        z_tf_inside_half: float,
+        dz_shld_vv_gap: float,
+        dz_vv_lower: float,
+        n_divertors: int,
+        dz_blkt_upper: float,
+        dz_shld_upper: float,
+        z_plasma_xpoint_upper: float,
+        dr_fw_plasma_gap_inboard: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_inboard: float,
+        dr_fw_outboard: float,
+    ) -> float:
+        """Calculate vacuum vessel internal half-height (m)"""
+
+        z_bottom = z_tf_inside_half - dz_shld_vv_gap - dz_vv_lower
+
+        # Calculate component internal upper half-height (m)
+        # If a double null machine then symmetric
+        if n_divertors == 2:
+            z_top = z_bottom
+        else:
+            z_top = z_plasma_xpoint_upper + 0.5 * (
+                dr_fw_plasma_gap_inboard
+                + dr_fw_plasma_gap_outboard
+                + dr_fw_inboard
+                + dr_fw_outboard
+                + dz_blkt_upper
+                + dz_shld_upper
+            )
+
+        # Average of top and bottom (m)
+        return 0.5 * (z_top + z_bottom)

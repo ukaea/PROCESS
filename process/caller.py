@@ -276,6 +276,8 @@ class Caller:
         # First wall model
         self.models.fw.run()
 
+        self.models.vacuum_vessel.run()
+
         # Blanket model
         """Blanket switch values
         No.  |  model
