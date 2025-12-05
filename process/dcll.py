@@ -3,7 +3,7 @@ from process import constants
 from process import (
     process_output as po,
 )
-from process.blanket_library import BlanketLibrary
+from process.blanket_library import InboardBlanket, OutboardBlanket
 from process.data_structure import (
     build_variables,
     current_drive_variables,
@@ -15,7 +15,7 @@ from process.data_structure import (
 )
 
 
-class DCLL(BlanketLibrary):
+class DCLL(InboardBlanket, OutboardBlanket):
     """This module contains the Dual Coolant Lead Lithium (DCLL) specific submods of PROCESSS.
 
     author: G. Graham, CCFE
@@ -95,6 +95,21 @@ class DCLL(BlanketLibrary):
             fwbs_variables.radius_blkt_channel_90_bend,
             fwbs_variables.radius_blkt_channel_180_bend,
         ) = self.calculate_pipe_bend_radius(i_ps=1)
+
+        self.set_blanket_module_geometry()
+
+        blanket_library.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
+            n_blkt_inboard_modules_toroidal=fwbs_variables.n_blkt_inboard_modules_toroidal,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+        )
+        blanket_library.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
+            n_blkt_outboard_modules_toroidal=fwbs_variables.n_blkt_outboard_modules_toroidal,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+        )
 
         self.primary_coolant_properties(output=output)
         self.liquid_breeder_properties(output=output)
@@ -309,7 +324,26 @@ class DCLL(BlanketLibrary):
 
         if fwbs_variables.i_p_coolant_pumping == 1:
             # User sets mechanical pumping power directly
-            blanket_library.set_pumping_powers_as_fractions()
+            (
+                heat_transport_variables.p_fw_coolant_pump_mw,
+                heat_transport_variables.p_blkt_coolant_pump_mw,
+                heat_transport_variables.p_shld_coolant_pump_mw,
+                heat_transport_variables.p_div_coolant_pump_mw,
+            ) = blanket_library.set_pumping_powers_as_fractions(
+                f_p_fw_coolant_pump_total_heat=heat_transport_variables.f_p_fw_coolant_pump_total_heat,
+                f_p_blkt_coolant_pump_total_heat=heat_transport_variables.f_p_blkt_coolant_pump_total_heat,
+                f_p_shld_coolant_pump_total_heat=heat_transport_variables.f_p_shld_coolant_pump_total_heat,
+                f_p_div_coolant_pump_total_heat=heat_transport_variables.f_p_div_coolant_pump_total_heat,
+                p_fw_nuclear_heat_total_mw=fwbs_variables.p_fw_nuclear_heat_total_mw,
+                psurffwi=fwbs_variables.psurffwi,
+                psurffwo=fwbs_variables.psurffwo,
+                p_blkt_nuclear_heat_total_mw=fwbs_variables.p_blkt_nuclear_heat_total_mw,
+                p_shld_nuclear_heat_mw=fwbs_variables.p_shld_nuclear_heat_mw,
+                p_cp_shield_nuclear_heat_mw=fwbs_variables.p_cp_shield_nuclear_heat_mw,
+                p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+                p_div_nuclear_heat_total_mw=fwbs_variables.p_div_nuclear_heat_total_mw,
+                p_div_rad_total_mw=fwbs_variables.p_div_rad_total_mw,
+            )
 
         elif fwbs_variables.i_p_coolant_pumping in [2, 3]:
             # Mechanical pumping power is calculated for first wall and blanket
