@@ -172,31 +172,6 @@ class DCLL(InboardBlanket, OutboardBlanket):
             * covf
         )
 
-        # Divertor
-
-        if physics_variables.n_divertors == 2:
-            # Double null configuration
-            # Nuclear heating in the divertor (MW), neutron power times f_ster_div_single
-            fwbs_variables.p_div_nuclear_heat_total_mw = (
-                physics_variables.p_neutron_total_mw
-                * 2
-                * fwbs_variables.f_ster_div_single
-            )
-            # Radiation power incident on divertor (MW)
-            fwbs_variables.p_div_rad_total_mw = (
-                physics_variables.p_plasma_rad_mw * 2 * fwbs_variables.f_ster_div_single
-            )
-        else:
-            # Single null configuration
-            # Nuclear heating in the divertor (MW), neutron power times f_ster_div_single
-            fwbs_variables.p_div_nuclear_heat_total_mw = (
-                physics_variables.p_neutron_total_mw * fwbs_variables.f_ster_div_single
-            )
-            # Radiation power incident on divertor (MW)
-            fwbs_variables.p_div_rad_total_mw = (
-                physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
-            )
-
         # HCD Apperatus
 
         # No nuclear heating of the H & CD
