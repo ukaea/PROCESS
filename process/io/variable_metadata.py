@@ -69,7 +69,7 @@ var_dicts = {
         description="Outer FW to plasma gap",
         units="m",
     ),
-    "vforce": VariableMetadata(
+    "force_tf_coil_inboard_vertical": VariableMetadata(
         latex=r"$F_\mathrm{z}^\mathrm{in}$ [$N$]",
         description="TF coil vertical force",
         units="N",

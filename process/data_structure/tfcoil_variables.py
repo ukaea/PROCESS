@@ -174,8 +174,8 @@ cdtfleg: float = None
 """TF outboard leg current density (A/m2) (resistive coils only)"""
 
 
-cforce: float = None
-"""centering force on inboard leg (per coil) (N/m)"""
+force_tf_coil_inboard_centering: float = None
+"""Centering force on inboard leg (per coil) (N)"""
 
 
 cplen: float = None
@@ -841,17 +841,17 @@ v_tf_coil_dump_quench_max_kv: float = None
 """max voltage across TF coil during quench (kV) (`iteration variable 52`)"""
 
 
-vforce: float = None
-"""vertical tension on inboard leg/coil (N)"""
+force_tf_coil_inboard_vertical: float = None
+"""Vertical tension on  inboard leg of TF coil (N)"""
 
 
-f_vforce_inboard: float = None
+f_force_tf_coil_inboard_vertical: float = None
 """Fraction of the total vertical force taken by the TF inboard leg tension
 Not used for resistive `itart=1` (sliding joints)
 """
 
 
-vforce_outboard: float = None
+force_tf_coil_outboard_vertical: float = None
 """Vertical tension on outboard leg/coil (N)"""
 
 
@@ -1121,7 +1121,7 @@ def init_tfcoil_variables():
     global i_dx_tf_turn_cable_space_general_input
     global acs
     global cdtfleg
-    global cforce
+    global force_tf_coil_inboard_centering
     global cplen
     global c_tf_turn
     global c_tf_turn_max
@@ -1249,9 +1249,9 @@ def init_tfcoil_variables():
     global temp_tf_cryo
     global n_tf_coil_turns
     global v_tf_coil_dump_quench_max_kv
-    global vforce
-    global f_vforce_inboard
-    global vforce_outboard
+    global force_tf_coil_inboard_vertical
+    global f_force_tf_coil_inboard_vertical
+    global force_tf_coil_outboard_vertical
     global f_a_tf_turn_cable_space_extra_void
     global voltfleg
     global vtfkv
@@ -1337,7 +1337,7 @@ def init_tfcoil_variables():
     t_turn_tf_max = 0.05
     acs = 0.0
     cdtfleg = 0.0
-    cforce = 0.0
+    force_tf_coil_inboard_centering = 0.0
     cplen = 0.0
     c_tf_turn = 7.0e4
     c_tf_turn_max = 9.0e4
@@ -1484,9 +1484,9 @@ def init_tfcoil_variables():
     temp_tf_cryo = 4.5
     n_tf_coil_turns = 0.0
     v_tf_coil_dump_quench_max_kv = 20.0
-    vforce = 0.0
-    f_vforce_inboard = 0.5
-    vforce_outboard = 0.0
+    force_tf_coil_inboard_vertical = 0.0
+    f_force_tf_coil_inboard_vertical = 0.5
+    force_tf_coil_outboard_vertical = 0.0
     f_a_tf_turn_cable_space_extra_void = 0.4
     voltfleg = 0.0
     vtfkv = 0.0
