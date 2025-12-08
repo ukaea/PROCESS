@@ -9230,7 +9230,7 @@ class DetailedPhysics:
         :returns: de Broglie wavelength in meters.
         :rtype: float
         """
-        return constants.PLANCK_CONSTANT / (mass * velocity)
+        return (constants.PLANCK_CONSTANT / (2 * np.pi)) / (mass * velocity)
 
     def calculate_plasma_frequency(
         self, nd_particle: float, m_particle: float, z_particle: float

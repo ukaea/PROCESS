@@ -12276,15 +12276,21 @@ def plot_debye_length_profile(axis, mfile_data, scan):
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
+    # Convert to micrometres (1e-6 m)
+    len_plasma_debye_electron_profile_um = [
+        length * 1e6 for length in len_plasma_debye_electron_profile
+    ]
+
     axis.plot(
-        np.linspace(0, 1, len(len_plasma_debye_electron_profile)),
-        len_plasma_debye_electron_profile,
+        np.linspace(0, 1, len(len_plasma_debye_electron_profile_um)),
+        len_plasma_debye_electron_profile_um,
         color="blue",
         linestyle="-",
         label=r"$\lambda_{Debye,e}$",
     )
 
-    axis.set_ylabel("Debye Length [m]")
+    axis.set_ylabel(r"Debye Length [$\mu$m]")
+
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
@@ -12547,9 +12553,14 @@ def main_plot(
     plot_density_limit_comparison(figs[13].add_subplot(221), m_file, scan)
     plot_confinement_time_comparison(figs[13].add_subplot(224), m_file, scan)
 
+    plot_debye_length_profile(figs[14].add_subplot(232), m_file, scan)
+    plot_velocity_profile(figs[14].add_subplot(233), m_file, scan)
+    plot_frequency_profile(figs[14].add_subplot(212), m_file, scan)
+    plot_plasma_coloumb_logarithms(figs[14].add_subplot(231), m_file, scan)
+
     # Plot poloidal cross-section
     poloidal_cross_section(
-        figs[14].add_subplot(121, aspect="equal"),
+        figs[15].add_subplot(121, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -12559,7 +12570,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        figs[14].add_subplot(122, aspect="equal"),
+        figs[15].add_subplot(122, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -12567,19 +12578,19 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = figs[14].add_subplot(222)
+    ax17 = figs[15].add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
-    ax18 = figs[15].add_subplot(211)
+    ax18 = figs[16].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = figs[16].add_subplot(211)
+    ax185 = figs[17].add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = figs[16].add_subplot(212)
+    ax18b = figs[17].add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
@@ -12587,50 +12598,54 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == 1:
         # TF coil with WP
-        ax19 = figs[17].add_subplot(221, aspect="equal")
-        # Half height, a bit wider, top left
-        ax19.set_position([0.025, 0.45, 0.5, 0.5])
-        plot_superconducting_tf_wp(ax19, m_file, scan, figs[17])
+        ax19 = figs[18].add_subplot(221, aspect="equal")
+        ax19.set_position([
+            0.025,
+            0.45,
+            0.5,
+            0.5,
+        ])  # Half height, a bit wider, top left
+        plot_superconducting_tf_wp(ax19, m_file, scan, figs[18])
 
         # TF coil turn structure
-        ax20 = figs[18].add_subplot(325, aspect="equal")
+        ax20 = figs[19].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[18], m_file, scan)
-        plot_205 = figs[18].add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, figs[19], m_file, scan)
+        plot_205 = figs[19].add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, figs[18], m_file, scan)
+        plot_cable_in_conduit_cable(plot_205, figs[19], m_file, scan)
     else:
-        ax19 = figs[17].add_subplot(211, aspect="equal")
+        ax19 = figs[18].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file, scan, figs[17])
-
+        plot_resistive_tf_wp(ax19, m_file, scan, figs[18])
     plot_tf_coil_structure(
-        figs[19].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[20].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(figs[20], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[21], m_file, scan)
 
-    plot_tf_stress(figs[21].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    axes = figs[22].subplots(nrows=3, ncols=1, sharex=True).flatten()
+    plot_tf_stress(axes)
 
-    plot_current_profiles_over_time(figs[22].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[23].add_subplot(111), m_file, scan)
 
     plot_cs_coil_structure(
-        figs[23].add_subplot(121, aspect="equal"), figs[23], m_file, scan
+        figs[24].add_subplot(121, aspect="equal"), figs[24], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[23].add_subplot(224, aspect="equal"), figs[23], m_file, scan
+        figs[24].add_subplot(224, aspect="equal"), figs[24], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[24].add_subplot(221, aspect="equal"), m_file, scan
+        figs[25].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[24].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[24].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[25].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[25].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[25], m_file, scan)
-    ax_blanket = figs[25].add_subplot(122, aspect="equal")
-    plot_blanket(ax_blanket, m_file, scan, radial_build, colour_scheme)
-    plot_firstwall(ax_blanket, m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[26], m_file, scan)
+    ax_blanket = figs[26].add_subplot(122, aspect="equal")
+    plot_blanket(ax_blanket, m_file_data, scan, radial_build, colour_scheme)
+    plot_firstwall(ax_blanket, m_file_data, scan, radial_build, colour_scheme)
     ax_blanket.set_xlabel("Radial position [m]")
     ax_blanket.set_ylabel("Vertical position [m]")
     ax_blanket.set_title("Blanket and First Wall Poloidal Cross-Section")
@@ -12671,16 +12686,231 @@ def main_plot(
     )
 
     plot_main_power_flow(
-        figs[26].add_subplot(111, aspect="equal"), m_file, scan, figs[26]
+        figs[27].add_subplot(111, aspect="equal"), m_file, scan, figs[27]
     )
 
-    ax24 = figs[27].add_subplot(111)
+    ax24 = figs[28].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[27])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[28])
 
+def main(args=None):
+    # TODO The use of globals here isn't ideal, but is required to get main()
+    # working with minimal changes. Should be converted to class structure
+    args = parse_args(args)
+    colour_scheme = int(args.colour)
+    # read MFILE
+    m_file = mf.MFile(args.f) if args.f != "" else mf.MFile("MFILE.DAT")
 
-def create_thickness_builds(m_file, scan: int):
+    global m_file_name
+    m_file_name = args.f if args.f != "" else "MFILE.DAT"
+
+    scan = args.n if args.n else -1
+
+    demo_ranges = bool(args.DEMO_ranges)
+
+    # Check for Copper magnets
+    if "i_tf_sup" in m_file.data:
+        i_tf_sup = int(m_file.data["i_tf_sup"].get_scan(scan))
+    else:
+        i_tf_sup = 1
+
+    # Check WP configuration
+    if "i_tf_wp_geom" in m_file.data:
+        i_tf_wp_geom = int(m_file.data["i_tf_wp_geom"].get_scan(scan))
+    else:
+        i_tf_wp_geom = 0
+
+    global dr_bore
+    global dr_cs
+    global dr_cs_tf_gap
+    global dr_tf_inboard
+    global dr_shld_vv_gap_inboard
+    global ddwi
+    global dr_shld_inboard
+    global dr_blkt_inboard
+    global dr_fw_inboard
+    global dr_fw_plasma_gap_inboard
+    global rmajor
+    global rminor
+    global dr_fw_plasma_gap_outboard
+    global dr_fw_outboard
+    global dr_blkt_outboard
+    global dr_shld_outboard
+    global ddwi
+    global dr_shld_vv_gap_outboard
+    global dr_tf_outboard
+    global r_cryostat_inboard
+    global z_cryostat_half_inside
+    global dr_cryostat
+    global j_plasma_0
+
+    dr_bore = m_file.data["dr_bore"].get_scan(scan)
+    dr_cs = m_file.data["dr_cs"].get_scan(scan)
+    dr_cs_tf_gap = m_file.data["dr_cs_tf_gap"].get_scan(scan)
+    dr_tf_inboard = m_file.data["dr_tf_inboard"].get_scan(scan)
+    dr_shld_vv_gap_inboard = m_file.data["dr_shld_vv_gap_inboard"].get_scan(scan)
+    dr_shld_inboard = m_file.data["dr_shld_inboard"].get_scan(scan)
+    dr_blkt_inboard = m_file.data["dr_blkt_inboard"].get_scan(scan)
+    dr_fw_inboard = m_file.data["dr_fw_inboard"].get_scan(scan)
+    dr_fw_plasma_gap_inboard = m_file.data["dr_fw_plasma_gap_inboard"].get_scan(scan)
+    rmajor = m_file.data["rmajor"].get_scan(scan)
+    rminor = m_file.data["rminor"].get_scan(scan)
+    dr_fw_plasma_gap_outboard = m_file.data["dr_fw_plasma_gap_outboard"].get_scan(scan)
+    dr_fw_outboard = m_file.data["dr_fw_outboard"].get_scan(scan)
+    dr_blkt_outboard = m_file.data["dr_blkt_outboard"].get_scan(scan)
+    dr_shld_outboard = m_file.data["dr_shld_outboard"].get_scan(scan)
+    dr_shld_vv_gap_outboard = m_file.data["dr_shld_vv_gap_outboard"].get_scan(scan)
+    dr_tf_outboard = m_file.data["dr_tf_outboard"].get_scan(scan)
+    r_cryostat_inboard = m_file.data["r_cryostat_inboard"].get_scan(scan)
+    z_cryostat_half_inside = m_file.data["z_cryostat_half_inside"].get_scan(scan)
+    dr_cryostat = m_file.data["dr_cryostat"].get_scan(scan)
+    j_plasma_0 = m_file.data["j_plasma_on_axis"].get_scan(scan)
+
+    # Magnets related
+    global n_tf_coils
+    global dx_tf_wp_primary_toroidal
+    global dx_tf_wp_secondary_toroidal
+    global dr_tf_wp_with_insulation
+    global dx_tf_wp_insulation
+    global dr_tf_nose_case
+    global dr_tf_plasma_case
+
+    n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
+    if i_tf_sup == 1:  # If superconducting magnets
+        dx_tf_wp_primary_toroidal = m_file.data["dx_tf_wp_primary_toroidal"].get_scan(
+            scan
+        )
+        if i_tf_wp_geom == 1:
+            dx_tf_wp_secondary_toroidal = m_file.data[
+                "dx_tf_wp_secondary_toroidal"
+            ].get_scan(scan)
+        dr_tf_wp_with_insulation = m_file.data["dr_tf_wp_with_insulation"].get_scan(
+            scan
+        )
+        dx_tf_wp_insulation = m_file.data["dx_tf_wp_insulation"].get_scan(scan)
+        dr_tf_nose_case = m_file.data["dr_tf_nose_case"].get_scan(scan)
+
+        # To be re-inergrated to resistives when in-plane stresses is integrated
+        dr_tf_plasma_case = m_file.data["dr_tf_plasma_case"].get_scan(scan)
+
+    global dx_beam_shield
+    global radius_beam_tangency
+    global radius_beam_tangency_max
+    global dx_beam_duct
+
+    i_hcd_primary = int(m_file.data["i_hcd_primary"].get_scan(scan))
+    i_hcd_secondary = int(m_file.data["i_hcd_secondary"].get_scan(scan))
+
+    if (i_hcd_primary in [5, 8]) or (i_hcd_secondary in [5, 8]):
+        dx_beam_shield = m_file.data["dx_beam_shield"].get_scan(scan)
+        radius_beam_tangency = m_file.data["radius_beam_tangency"].get_scan(scan)
+        radius_beam_tangency_max = m_file.data["radius_beam_tangency_max"].get_scan(
+            scan
+        )
+        dx_beam_duct = m_file.data["dx_beam_duct"].get_scan(scan)
+    else:
+        dx_beam_shield = radius_beam_tangency = radius_beam_tangency_max = (
+            dx_beam_duct
+        ) = 0.0
+
+    # Pedestal profile parameters
+    global i_plasma_pedestal
+    global nd_plasma_pedestal_electron
+    global nd_plasma_separatrix_electron
+    global radius_plasma_pedestal_density_norm
+    global radius_plasma_pedestal_temp_norm
+    global tbeta
+    global temp_plasma_pedestal_kev
+    global temp_plasma_separatrix_kev
+    global alphan
+    global alphat
+    global ne0
+    global nd_plasma_fuel_ions_vol_avg
+    global nd_plasma_electrons_vol_avg
+    global te0
+    global ti
+    global te
+    global fgwped_out
+    global fgwsep_out
+    global f_temp_plasma_ion_electron
+
+    i_plasma_pedestal = m_file.data["i_plasma_pedestal"].get_scan(scan)
+    nd_plasma_pedestal_electron = m_file.data["nd_plasma_pedestal_electron"].get_scan(
+        scan
+    )
+    nd_plasma_separatrix_electron = m_file.data[
+        "nd_plasma_separatrix_electron"
+    ].get_scan(scan)
+    radius_plasma_pedestal_density_norm = m_file.data[
+        "radius_plasma_pedestal_density_norm"
+    ].get_scan(scan)
+    radius_plasma_pedestal_temp_norm = m_file.data[
+        "radius_plasma_pedestal_temp_norm"
+    ].get_scan(scan)
+    tbeta = m_file.data["tbeta"].get_scan(scan)
+    temp_plasma_pedestal_kev = m_file.data["temp_plasma_pedestal_kev"].get_scan(scan)
+    temp_plasma_separatrix_kev = m_file.data["temp_plasma_separatrix_kev"].get_scan(
+        scan
+    )
+    alphan = m_file.data["alphan"].get_scan(scan)
+    alphat = m_file.data["alphat"].get_scan(scan)
+    ne0 = m_file.data["nd_plasma_electron_on_axis"].get_scan(scan)
+    nd_plasma_fuel_ions_vol_avg = m_file.data["nd_plasma_fuel_ions_vol_avg"].get_scan(
+        scan
+    )
+    nd_plasma_electrons_vol_avg = m_file.data["nd_plasma_electrons_vol_avg"].get_scan(
+        scan
+    )
+    te0 = m_file.data["temp_plasma_electron_on_axis_kev"].get_scan(scan)
+    ti = m_file.data["temp_plasma_ion_vol_avg_kev"].get_scan(scan)
+    te = m_file.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
+    fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
+    fgwsep_out = m_file.data["fgwsep_out"].get_scan(scan)
+    f_temp_plasma_ion_electron = m_file.data["f_temp_plasma_ion_electron"].get_scan(
+        scan
+    )
+
+    # Plasma
+    global triang
+    global alphaj
+    global q0
+    global q95
+    global plasma_current_MA
+    global a_plasma_poloidal
+
+    triang = m_file.data["triang95"].get_scan(scan)
+    alphaj = m_file.data["alphaj"].get_scan(scan)
+    q0 = m_file.data["q0"].get_scan(scan)
+    q95 = m_file.data["q95"].get_scan(scan)
+    plasma_current_MA = m_file.data["plasma_current_ma"].get_scan(scan)
+    a_plasma_poloidal = m_file.data["a_plasma_poloidal"].get_scan(scan)
+
+    # Radial position  -- 0
+    # Electron density -- 1
+    # Electron temperature -- 2
+    # Ion temperature -- 3
+    # Deuterium density -- 4
+    # Tritium density -- 5
+    # BS current density(MA/m^2) -- 6
+    # CD current dens(MA/m^2) -- 7
+    # Total current dens(MA/m^2) -- 8
+    # Poloidal current(R*Bp)(T.m) -- 9
+    # Safety factor q -- 10
+    # Volume (m^3) -- 11
+    # dVolume/dr (m^2) -- 12
+    # Plasma conductivity(MA/(V.m) -- 13
+    # Alpha press(keV*10^10 m^-3) -- 14
+    # Ion dens(10^19 m^-3) -- 15
+    # Poloidal flux (Wb) -- 16
+    # rad profile
+    global f_sync_reflect
+    global b_plasma_toroidal_on_axis
+    global vol_plasma
+    f_sync_reflect = m_file.data["f_sync_reflect"].get_scan(scan)
+    b_plasma_toroidal_on_axis = m_file.data["b_plasma_toroidal_on_axis"].get_scan(scan)
+    vol_plasma = m_file.data["vol_plasma"].get_scan(scan)
+
     # Build the dictionaries of radial and vertical build values and cumulative values
     if int(m_file.get("i_single_null", scan=scan)) == 0:
         vertical_upper = [
