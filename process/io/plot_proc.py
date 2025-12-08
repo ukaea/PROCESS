@@ -12549,15 +12549,21 @@ def plot_debye_length_profile(axis, mfile_data, scan):
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
+    # Convert to micrometres (1e-6 m)
+    len_plasma_debye_electron_profile_um = [
+        length * 1e6 for length in len_plasma_debye_electron_profile
+    ]
+
     axis.plot(
-        np.linspace(0, 1, len(len_plasma_debye_electron_profile)),
-        len_plasma_debye_electron_profile,
+        np.linspace(0, 1, len(len_plasma_debye_electron_profile_um)),
+        len_plasma_debye_electron_profile_um,
         color="blue",
         linestyle="-",
         label=r"$\lambda_{Debye,e}$",
     )
 
-    axis.set_ylabel("Debye Length [m]")
+    axis.set_ylabel(r"Debye Length [$\mu$m]")
+
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
@@ -12678,6 +12684,7 @@ def main_plot(
     fig25,
     fig26,
     fig27,
+    fig28,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -12827,9 +12834,14 @@ def main_plot(
     plot_density_limit_comparison(fig13.add_subplot(221), m_file_data, scan)
     plot_confinement_time_comparison(fig13.add_subplot(224), m_file_data, scan)
 
+    plot_debye_length_profile(fig14.add_subplot(232), m_file_data, scan)
+    plot_velocity_profile(fig14.add_subplot(233), m_file_data, scan)
+    plot_frequency_profile(fig14.add_subplot(212), m_file_data, scan)
+    plot_plasma_coloumb_logarithms(fig14.add_subplot(231), m_file_data, scan)
+
     # Plot poloidal cross-section
     poloidal_cross_section(
-        fig14.add_subplot(121, aspect="equal"),
+        fig15.add_subplot(121, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -12838,7 +12850,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        fig14.add_subplot(122, aspect="equal"),
+        fig15.add_subplot(122, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -12846,19 +12858,19 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = fig14.add_subplot(222)
+    ax17 = fig15.add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file_data, scan, colour_scheme)
 
-    ax18 = fig15.add_subplot(211)
+    ax18 = fig16.add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file_data, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = fig16.add_subplot(211)
+    ax185 = fig17.add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = fig16.add_subplot(212)
+    ax18b = fig17.add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file_data, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file_data, colour_scheme)
@@ -12866,53 +12878,53 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        ax19 = fig17.add_subplot(221, aspect="equal")
+        ax19 = fig18.add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig17)
+        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig18)
 
         # TF coil turn structure
-        ax20 = fig18.add_subplot(325, aspect="equal")
+        ax20 = fig19.add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, fig18, m_file_data, scan)
-        plot_205 = fig18.add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, fig19, m_file_data, scan)
+        plot_205 = fig19.add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, fig18, m_file_data, scan)
+        plot_cable_in_conduit_cable(plot_205, fig19, m_file_data, scan)
     else:
-        ax19 = fig17.add_subplot(211, aspect="equal")
+        ax19 = fig18.add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file_data, scan, fig17)
+        plot_resistive_tf_wp(ax19, m_file_data, scan, fig18)
 
     plot_tf_coil_structure(
-        fig19.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
+        fig20.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(fig20, m_file_data, scan)
+    plot_plasma_outboard_toroidal_ripple_map(fig21, m_file_data, scan)
 
-    axes = fig21.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig22.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_current_profiles_over_time(fig22.add_subplot(111), m_file_data, scan)
+    plot_current_profiles_over_time(fig23.add_subplot(111), m_file_data, scan)
 
     plot_cs_coil_structure(
-        fig23.add_subplot(121, aspect="equal"), fig23, m_file_data, scan
+        fig24.add_subplot(121, aspect="equal"), fig24, m_file_data, scan
     )
     plot_cs_turn_structure(
-        fig23.add_subplot(224, aspect="equal"), fig23, m_file_data, scan
+        fig24.add_subplot(224, aspect="equal"), fig24, m_file_data, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        fig24.add_subplot(221, aspect="equal"), m_file_data, scan
+        fig25.add_subplot(221, aspect="equal"), m_file_data, scan
     )
-    plot_first_wall_poloidal_cross_section(fig24.add_subplot(122), m_file_data, scan)
-    plot_fw_90_deg_pipe_bend(fig24.add_subplot(337), m_file_data, scan)
+    plot_first_wall_poloidal_cross_section(fig25.add_subplot(122), m_file_data, scan)
+    plot_fw_90_deg_pipe_bend(fig25.add_subplot(337), m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig25, m_file_data, scan)
-    ax_blanket = fig25.add_subplot(122, aspect="equal")
+    plot_blkt_pipe_bends(fig26, m_file_data, scan)
+    ax_blanket = fig26.add_subplot(122, aspect="equal")
     plot_blanket(ax_blanket, m_file_data, scan, colour_scheme)
     plot_firstwall(ax_blanket, m_file_data, scan, colour_scheme)
     ax_blanket.set_xlabel("Radial position [m]")
@@ -12955,13 +12967,13 @@ def main_plot(
     )
 
     plot_main_power_flow(
-        fig26.add_subplot(111, aspect="equal"), m_file_data, scan, fig26
+        fig27.add_subplot(111, aspect="equal"), m_file_data, scan, fig27
     )
 
-    ax24 = fig27.add_subplot(111)
+    ax24 = fig28.add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig27)
+    plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig28)
 
 
 def main(args=None):
@@ -13282,6 +13294,7 @@ def main(args=None):
     page25 = plt.figure(figsize=(12, 9), dpi=80)
     page26 = plt.figure(figsize=(12, 9), dpi=80)
     page27 = plt.figure(figsize=(12, 9), dpi=80)
+    page28 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -13313,6 +13326,7 @@ def main(args=None):
         page25,
         page26,
         page27,
+        page28,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -13349,6 +13363,7 @@ def main(args=None):
         pdf.savefig(page25)
         pdf.savefig(page26)
         pdf.savefig(page27)
+        pdf.savefig(page28)
 
     # show fig if option used
     if args.show:
@@ -13382,6 +13397,7 @@ def main(args=None):
     plt.close(page25)
     plt.close(page26)
     plt.close(page27)
+    plt.close(page28)
 
 
 if __name__ == "__main__":
