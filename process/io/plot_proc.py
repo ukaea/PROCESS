@@ -12484,7 +12484,9 @@ def plot_ebw_ecrh_coupling_graph(axis, mfile_data, scan):
             )
             eta_ecrh_omode = ecrg.electron_cyclotron_freethy(
                 te=mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan),
-                zeff=mfile_data.data["zeff"].get_scan(scan),
+                zeff=mfile_data.data["n_charge_plasma_effective_vol_avg"].get_scan(
+                    scan
+                ),
                 rmajor=mfile_data.data["rmajor"].get_scan(scan),
                 nd_plasma_electrons_vol_avg=mfile_data.data[
                     "nd_plasma_electrons_vol_avg"
@@ -12495,7 +12497,9 @@ def plot_ebw_ecrh_coupling_graph(axis, mfile_data, scan):
             )
             eta_ecrh_xmode = ecrg.electron_cyclotron_freethy(
                 te=mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan),
-                zeff=mfile_data.data["zeff"].get_scan(scan),
+                zeff=mfile_data.data["n_charge_plasma_effective_vol_avg"].get_scan(
+                    scan
+                ),
                 rmajor=mfile_data.data["rmajor"].get_scan(scan),
                 nd_plasma_electrons_vol_avg=mfile_data.data[
                     "nd_plasma_electrons_vol_avg"
