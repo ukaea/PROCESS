@@ -19,6 +19,7 @@ import os
 import textwrap
 from argparse import RawTextHelpFormatter
 from importlib import resources
+from typing import Any
 
 import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
@@ -4251,52 +4252,47 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     prof.set_title("Raw Data: Line & Bremsstrahlung radiation profile")
 
     # read in the impurity data
-    imp_data = read_imprad_data(2, impp)
+    imp_data = read_imprad_data(_skiprows=2, data_path=impp)
 
     # find impurity densities
     imp_frac = np.array([
-        mfile_data.data["f_nd_impurity_electrons(01)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(02)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(03)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(04)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(05)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(06)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(07)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(08)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(09)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(10)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(11)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(12)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(13)"].get_scan(scan),
-        mfile_data.data["f_nd_impurity_electrons(14)"].get_scan(scan),
+        mfile_data.data[f"f_nd_impurity_electrons({i:02d})"].get_scan(scan)
+        for i in range(1, 15)
     ])
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+    alphan = mfile_data.data["alphan"].get_scan(scan)
+    alphat = mfile_data.data["alphat"].get_scan(scan)
+    nd_plasma_electron_on_axis = mfile_data.data["nd_plasma_electron_on_axis"].get_scan(
+        scan
+    )
+    temp_plasma_electron_on_axis_kev = mfile_data.data[
+        "temp_plasma_electron_on_axis_kev"
+    ].get_scan(scan)
+    radius_plasma_pedestal_density_norm = mfile_data.data[
+        "radius_plasma_pedestal_density_norm"
+    ].get_scan(scan)
+    radius_plasma_pedestal_temp_norm = mfile_data.data[
+        "radius_plasma_pedestal_temp_norm"
+    ].get_scan(scan)
+
+    rho = np.linspace(0, 1.0, n_plasma_profile_elements)
 
     if i_plasma_pedestal == 0:
         # Intialise the radius
-        rho = np.linspace(0, 1.0)
 
         # The density profile
-        ne = ne0 * (1 - rho**2) ** alphan
+        ne = nd_plasma_electron_on_axis * (1 - rho**2) ** alphan
 
         # The temperature profile
-        te = te0 * (1 - rho**2) ** alphat
+        te = temp_plasma_electron_on_axis_kev * (1 - rho**2) ** alphat
 
     if i_plasma_pedestal == 1:
-        # Intialise the normalised radius
-        rhoped = (
-            radius_plasma_pedestal_density_norm + radius_plasma_pedestal_temp_norm
-        ) / 2.0
-        rhocore1 = np.linspace(0, 0.95 * rhoped)
-        rhocore2 = np.linspace(0.95 * rhoped, rhoped)
-        rhocore = np.append(rhocore1, rhocore2)
-        rhosep = np.linspace(rhoped, 1)
-        rho = np.append(rhocore, rhosep)
-
         # The density and temperature profile
-        # done in such away as to allow for plotting pedestals
-        # with different radius_plasma_pedestal_density_norm and radius_plasma_pedestal_temp_norm
-        ne = np.zeros(rho.shape[0])
-        te = np.zeros(rho.shape[0])
+        ne = np.zeros_like(rho)
+        te = np.zeros_like(rho)
         for q in range(rho.shape[0]):
             if rho[q] <= radius_plasma_pedestal_density_norm:
                 ne[q] = (
@@ -4308,9 +4304,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
             else:
                 ne[q] = nd_plasma_separatrix_electron + (
                     nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
-                ) * (1 - rho[q]) / (
-                    1 - min(0.9999, radius_plasma_pedestal_density_norm)
-                )
+                ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_density_norm)
 
             if rho[q] <= radius_plasma_pedestal_temp_norm:
                 te[q] = (
@@ -4322,7 +4316,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
             else:
                 te[q] = temp_plasma_separatrix_kev + (
                     temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
-                ) * (1 - rho[q]) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
+                ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_temp_norm)
 
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
@@ -4405,6 +4399,201 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     else:
         prof.set_ylim([1e-6, prof.get_ylim()[1]])
     # ---
+
+
+def plot_rad_contour(
+    axis: "mpl.axes.Axes", mfile_data: "Any", scan: int, impp: int
+) -> None:
+    """
+    Plots the contour of line and bremsstrahlung radiation density for a plasma cross-section.
+
+    This function reads impurity and plasma profile data, computes the radiation density profile,
+    interpolates it onto a 2D grid, and plots the upper and lower half contours on the provided axis.
+
+    Parameters
+    ----------
+    axis : matplotlib.axes.Axes
+        The matplotlib axis object to plot the contours on.
+    mfile_data : Any
+        Data object containing plasma and impurity profile information.
+    scan : int
+        The scan index to extract profile data for plotting.
+    impp : int
+        The impurity index to select the relevant impurity radiation data.
+
+    Returns
+    -------
+    None
+        This function modifies the provided axis in-place and does not return any value.
+
+    Notes
+    -----
+    - The function assumes the existence of several global or previously defined variables and functions,
+        such as `read_imprad_data`, `interp1d_profile`, and plasma pedestal parameters.
+    - The plotted contours represent the radiation density in units of MW.m^-3.
+    - The function adds colorbar, axis labels, title, and core reduction annotation to the plot.
+    """
+    # Read in the impurity data
+    imp_data = read_imprad_data(2, impp)
+    # imp data is a 3D array with shape (num_impurities, num_temp_points, (temp, lz, zav))
+
+    # Find the relative number density of each impurity
+    imp_frac = np.array([
+        mfile_data.data[f"f_nd_impurity_electrons({i:02d})"].get_scan(scan)
+        for i in range(1, 15)
+    ])
+
+    # Get necessary plasma profile parameters
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+    alphan = mfile_data.data["alphan"].get_scan(scan)
+    alphat = mfile_data.data["alphat"].get_scan(scan)
+    nd_plasma_electron_on_axis = mfile_data.data["nd_plasma_electron_on_axis"].get_scan(
+        scan
+    )
+    temp_plasma_electron_on_axis_kev = mfile_data.data[
+        "temp_plasma_electron_on_axis_kev"
+    ].get_scan(scan)
+    radius_plasma_pedestal_density_norm = mfile_data.data[
+        "radius_plasma_pedestal_density_norm"
+    ].get_scan(scan)
+    radius_plasma_pedestal_temp_norm = mfile_data.data[
+        "radius_plasma_pedestal_temp_norm"
+    ].get_scan(scan)
+
+    # Initialize the radius
+    rho = np.linspace(0, 1.0, n_plasma_profile_elements)
+
+    # Re-construct te and ne profiles based on pedestal settings
+    # Parabolic profiles if no pedestal
+    if i_plasma_pedestal == 0:
+        # The density profile
+        ne = nd_plasma_electron_on_axis * (1 - rho**2) ** alphan
+
+        # The temperature profile
+        te = temp_plasma_electron_on_axis_kev * (1 - rho**2) ** alphat
+
+    # Profiles with pedestal
+    if i_plasma_pedestal == 1:
+        # The density and temperature profile
+        # Initiliase empty normalised array with zeros
+        ne = np.zeros_like(rho)
+        te = np.zeros_like(rho)
+        # Reconstruct the temperature and density profiles with pedestal
+        for q in range(rho.shape[0]):
+            # Core density region
+            if rho[q] <= radius_plasma_pedestal_density_norm:
+                ne[q] = (
+                    nd_plasma_pedestal_electron
+                    + (ne0 - nd_plasma_pedestal_electron)
+                    * (1 - rho[q] ** 2 / radius_plasma_pedestal_density_norm**2)
+                    ** alphan
+                )
+            else:
+                # Pedestal density region
+                ne[q] = nd_plasma_separatrix_electron + (
+                    nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
+                ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_density_norm)
+
+            # Core temperature region
+            if rho[q] <= radius_plasma_pedestal_temp_norm:
+                te[q] = (
+                    temp_plasma_pedestal_kev
+                    + (te0 - temp_plasma_pedestal_kev)
+                    * (1 - (rho[q] / radius_plasma_pedestal_temp_norm) ** tbeta)
+                    ** alphat
+                )
+            else:
+                # Pedestal temperature region
+                te[q] = temp_plasma_separatrix_kev + (
+                    temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+                ) * (1 - rho[q]) / (1 - radius_plasma_pedestal_temp_norm)
+
+    # Intailise the radiation profile arrays
+    pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
+    lz = np.zeros([imp_data.shape[0], te.shape[0]])
+    prad = np.zeros(te.shape[0])
+
+    # Intailise the impurity radiation profile
+    for rho in range(te.shape[0]):
+        # imp data is a 3D array with shape (num_impurities, num_temp_points, (temp, lz, zav))
+        for impurity in range(imp_data.shape[0]):
+            # Check if profile temperature is lower than dataset minimum.
+            # If so, use the minimum loss function value
+            if te[rho] <= imp_data[impurity][0][0]:
+                lz[impurity][rho] = imp_data[impurity][0][1]
+
+            # Check if profile temperature is higher than dataset maximum.
+            # If so, use the maximum loss function value
+            elif te[rho] >= imp_data[impurity][imp_data.shape[1] - 1][0]:
+                lz[impurity][rho] = imp_data[impurity][imp_data.shape[1] - 1][1]
+            else:
+                # If profile valie is within dataset range, use log-log interpolation to find value for loss function
+                log_te_data = np.log([row[0] for row in imp_data[impurity]])
+                log_lz_data = np.log([row[1] for row in imp_data[impurity]])
+                lz[impurity][rho] = np.exp(
+                    np.interp(np.log(te[rho]), log_te_data, log_lz_data)
+                )
+            # Find the power density for each impurity at each rho
+            pimpden[impurity][rho] = (
+                imp_frac[impurity] * ne[rho] * ne[rho] * lz[impurity][rho]
+            )
+
+        for impurity in range(imp_data.shape[0]):
+            prad[rho] = prad[rho] + pimpden[impurity][rho] * 1.0e-6
+
+    p_rad_grid, r_grid, z_grid = interp1d_profile(prad, mfile_data, scan)
+
+    # Plot the upper half contour
+    p_rad_upper = axis.contourf(
+        r_grid, z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2
+    )
+    # Plot the lower half contour (mirror)
+    axis.contourf(r_grid, -z_grid, p_rad_grid, levels=50, cmap="plasma", zorder=2)
+
+    axis.figure.colorbar(
+        p_rad_upper,
+        ax=axis,
+        label=r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    axis.set_xlabel("R [m]")
+    axis.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    axis.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Line & Bremsstrahlung Radiation Density Contours")
+    axis.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    # enable minor ticks and grid for clearer reading
+    axis.minorticks_on()
+    axis.grid(True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1)
+
+    axis.grid(True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1)
+    props_core_reduce = {"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8}
+    axis.text(
+        0.02,
+        0.02,
+        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}",
+        transform=axis.transAxes,
+        fontsize=8,
+        verticalalignment="bottom",
+        bbox=props_core_reduce,
+    )
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    axis.tick_params(which="both", direction="in", top=True, right=True)
 
 
 def plot_vacuum_vessel_and_divertor(axis, mfile_data, scan, colour_scheme):
@@ -12602,7 +12791,7 @@ def main_plot(
             "\033[91m Warning : Impossible to recover impurity data, try running the macro in the main/utility folder"
         )
         print("          -> No impurity plot done\033[0m")
-
+    i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
 
@@ -12665,12 +12854,24 @@ def main_plot(
     plot_plasma_effective_charge_profile(fig5.add_subplot(221), m_file_data, scan)
     plot_ion_charge_profile(fig5.add_subplot(223), m_file_data, scan)
 
+    if i_shape == 1:
+        plot_rad_contour(fig5.add_subplot(122), m_file_data, scan, imp)
+
+    if i_shape != 1:
+        msg = (
+            "Radiation contour plots require a closed (Sauter) plasma boundary "
+            "(i_plasma_shape == 1). "
+            f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
+            "see the 1D radiation plots for available information."
+        )
+        # Add explanatory text to both figures reserved for contour outputs
+        fig5.text(0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+
     plot_fusion_rate_profiles(fig6.add_subplot(122), fig6, m_file_data, scan)
 
     if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
         plot_fusion_rate_contours(fig7, fig8, m_file_data, scan)
 
-    i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
     if i_shape != 1:
         msg = (
             "Fusion-rate contour plots require a closed (Sauter) plasma boundary "
@@ -12685,7 +12886,7 @@ def main_plot(
     plot_plasma_pressure_profiles(fig9.add_subplot(222), m_file_data, scan)
     plot_plasma_pressure_gradient_profiles(fig9.add_subplot(224), m_file_data, scan)
     # Currently only works with Sauter geometry as plasma has a closed surface
-    i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
+
     if i_shape == 1:
         plot_plasma_poloidal_pressure_contours(
             fig9.add_subplot(121, aspect="equal"), m_file_data, scan
