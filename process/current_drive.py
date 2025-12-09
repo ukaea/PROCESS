@@ -1305,6 +1305,7 @@ class CurrentDrive:
         electron_bernstein: ElectronBernstein,
     ):
         self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.electron_cyclotron = electron_cyclotron
         self.ion_cyclotron = ion_cyclotron
@@ -2077,6 +2078,12 @@ class CurrentDrive:
             "(eta_cd_dimensionless_hcd_primary)",
             current_drive_variables.eta_cd_dimensionless_hcd_primary,
             "OP ",
+        )
+        po.ovarre(
+            self.mfile,
+            "EBW coupling efficiency",
+            "(xi_ebw)",
+            current_drive_variables.xi_ebw,
         )
         if current_drive_variables.i_hcd_primary == 10:
             po.ovarre(
