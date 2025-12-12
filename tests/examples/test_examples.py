@@ -44,7 +44,23 @@ def test_examples(examples_temp_data):
     """
     example_notebook_location = examples_temp_data / "examples.ipynb"
     with testbook(example_notebook_location, execute=True, timeout=600):
-        pass
+        # Check csv file is created
+        assert os.path.exists(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
+
+        # Read in the csv file created by test and check it contains positive floats
+        readcsv = pd.read_csv(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
+        value_array = np.array(readcsv["Value"])
+        check_float = False
+        check_positive = False
+        value_array_type = value_array.dtype
+        if value_array_type.kind == "f":
+            check_float = True
+        assert check_float
+
+        check_positive_count = np.sum(value_array > 0)
+        if check_positive_count == len(value_array):
+            check_positive = True
+        assert check_positive
 
 
 def test_scan(examples_temp_data):
@@ -59,36 +75,6 @@ def test_scan(examples_temp_data):
     with testbook(scan_notebook_location, execute=True, timeout=1200):
         # Run entire scan.ipynb notebook and assert an MFILE is created
         assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
-
-
-def test_csv(examples_temp_data):
-    """Run csv_output.ipynb, check no exceptions are raised, check a csv file exists and check the csv file contains data.
-
-    csv_output.ipynb intentionally produces files when running the notebook, but remove
-    them when testing.
-    :param examples_temp_data: temporary dir containing examples files
-    :type examples_temp_data: Path
-    """
-    csv_notebook_location = examples_temp_data / "csv_output.ipynb"
-    with testbook(csv_notebook_location, execute=True, timeout=600):
-        # Check csv file is created
-        assert os.path.exists(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
-
-        # Read in the csv file created by test and check it contains positive floats
-        readcsv = pd.read_csv(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
-        values = readcsv["Value"]
-        value_array = np.array(values)
-        check_float = False
-        check_positive = False
-        value_array_type = value_array.dtype
-        if value_array_type.kind == "f":
-            check_float = True
-        assert check_float
-
-        check_positive_count = np.sum(value_array > 0)
-        if check_positive_count == len(value_array):
-            check_positive = True
-        assert check_positive
 
 
 def test_plot_solutions(examples_temp_data):
