@@ -42,7 +42,7 @@ setup_kwargs = {
     ],
     "extras_require": {
         "test": ["pytest>=5.4.1", "requests>=2.30", "testbook>=0.4"],
-        "examples": ["pillow>=5.1.0", "jupyter==1.0.0", "pdf2image==1.16.0"],
+        "examples": ["pillow>=5.1.0", "jupyter==1.0.0"],
         "plotly": ["plotly>=5.15.0,<6"],
     },
     "entry_points": {"console_scripts": ["process=process.main:main"]},
