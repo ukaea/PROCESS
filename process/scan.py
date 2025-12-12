@@ -388,12 +388,14 @@ class Scan:
 
                 if numerics.xcm[i] < xminn:
                     location, bound = "below", "lower"
+                    bounds = numerics.itv_scaled_lower_bounds
                 else:
                     location, bound = "above", "upper"
+                    bounds = numerics.itv_scaled_upper_bounds
                 process_output.write(
                     constants.NOUT,
                     f"   {name:<30}= {xcval} is at or {location} its {bound} bound:"
-                    f" {numerics.itv_scaled_upper_bounds[i] * numerics.scafc[i]}",
+                    f" {bounds[i] * numerics.scafc[i]}",
                 )
 
             # Write optimisation parameters to mfile
