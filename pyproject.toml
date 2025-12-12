@@ -59,7 +59,7 @@ test = [
   "pytest-cov>=3.0.0",
   "pytest-xdist>=2.5.0"
 ]
-examples = ["pillow>=5.1.0", "jupyter==1.0.0", "pdf2image==1.16.0"]
+examples = ["pillow>=5.1.0", "jupyter==1.0.0"]
 plotly = ["plotly>=5.15.0,<6"]
 docs = [
   "mkdocs>=1.1",
