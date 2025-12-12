@@ -4,3 +4,4 @@ plot_proc_*.png
 !large_tokamak_eval_IN.DAT
 !large_tokamak_nof*_MFILE.DAT
 *.csv
+page*.png
