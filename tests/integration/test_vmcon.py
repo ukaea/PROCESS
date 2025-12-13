@@ -577,6 +577,10 @@ def get_case5():
     case.solver_args.x = np.array([
         5.0
     ])  # Try different values, e.g. 5.0, 2.0, 1.0, 0.0...
+    case.solver_args.bndl = np.zeros(1)
+    case.solver_args.bndu = np.full(1, 5.0)
+    case.solver_args.ilower = np.zeros(1)
+    case.solver_args.iupper = np.zeros(1)
 
     # Expected values
     case.exp.x = np.array([3.0])

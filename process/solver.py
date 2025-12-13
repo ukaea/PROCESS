@@ -15,6 +15,9 @@ from pyvmcon import (
     solve,
 )
 from scipy.optimize import fsolve
+import nlopt
+import time
+from scipy import optimize
 
 from process.data_structure import global_variables, numerics
 from process.evaluators import Evaluators
@@ -321,6 +324,334 @@ class FSolve(_Solver):
         return self.info
 
 
+class SLSQP(_Solver):
+    def obj_func(self, x, grad):
+        # Must be passed these args from nlopt requirements
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x, self.ifail)
+        self.constr_res = np.sqrt(
+            np.sum(np.square(conf[: self.meq]))
+        )  # only for equality constraints
+
+        if grad.size > 0:
+            # Gradient required by solver; modify grad in-place
+            fgrd, cnorm = self.evaluators.fcnvmc2(self.n, self.m, x, self.lcnorm)
+            grad[...] = fgrd
+
+        self.eval_count += 1
+        status = (
+            f"Evaluation {self.eval_count}, objective function = {objf:.5}, "
+            f"constraint residuals = {self.constr_res:.3e}"
+        )
+        print(status)
+        logger.info(status)
+        return objf
+
+    def constraint_eq_vec(self, result, x, grad):
+        # i is no. of constraint
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x, self.ifail)
+        self.constr_res = np.sqrt(
+            np.sum(np.square(conf[: self.meq]))
+        )  # only for equality constraints
+
+        # Check if constraints are below tolerance yet
+        # conf_gt_tol = np.sum((np.abs(conf[:meq]) > CONSTR_TOL))
+        # if conf_gt_tol == 0:
+        #     logger.info("Constraints are all below tolerance")
+        # else:
+        #     logger.info(f"Constraints above tolerance: {conf_gt_tol=}")
+
+        if grad.size > 0:
+            # Gradient required by solver; modify grad in-place
+            fgrd, cnorm = self.evaluators.fcnvmc2(self.n, self.m, x, self.lcnorm)
+            if cnorm.ndim == 1:
+                # 1 constraint, 1 optimisation parameter (used in tests)
+                # TODO Add np.newaxis to fcnvmc2 to avoid this
+                grad[...] = -cnorm[:]
+            else:
+                grad[...] = np.transpose(-cnorm[: x.shape[0], : self.meq])
+
+        # Negative conf and cnorm: nlopt requires opposite formulation of
+        # VMCON's (and Process's) constraint form
+        result[...] = -conf[: self.meq]
+
+    def constraint_ineq_vec(self, result, x, grad):
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x, self.ifail)
+        if grad.size > 0:
+            # Gradient required by solver; modify grad in-place
+            fgrd, cnorm = self.evaluators.fcnvmc2(self.n, self.m, x, self.lcnorm)
+            if cnorm.ndim == 1:
+                # 1 constraint, 1 optimisation parameter (used in tests)
+                # TODO Add np.newaxis to fcnvmc2 to avoid this
+                grad[...] = -cnorm[0]
+            else:
+                grad[...] = np.transpose(-cnorm[: x.shape[0], self.meq : self.m])
+
+        # Negative conf and cnorm: nlopt requires opposite formulation of
+        # VMCON's (and Process's) constraint form
+        result[...] = -conf[self.meq : self.m]
+
+    def solve(self) -> int:
+        """Try running nlopt."""
+        print("Using SLSQP")
+        self.eval_count = 0
+        self.constr_res = 0.0
+
+        self.n = self.x_0.shape[0]
+        self.lcnorm = 176  # (ippnvars + 1), but could just be n!
+
+        # Solver tolerances (high)
+        MAIN_TOL = 1e-8
+        # LOCAL_TOL = 1e-8 # for AUGLAG method only
+        CONSTR_TOL = 1e-10
+
+        # Set up optimiser object
+        # opt = nlopt.opt(nlopt.AUGLAG, n)
+        opt = nlopt.opt(nlopt.LD_SLSQP, self.n)
+
+        # Set subsidiary optimiser
+        # For AUGLAG only
+        # local_opt = nlopt.opt(nlopt.LD_SLSQP, n)
+
+        opt_name = opt.get_algorithm_name()
+        # local_opt_name = local_opt.get_algorithm_name()
+        # logger.info(f"{opt_name=}, {local_opt_name=}")
+        logger.info(f"{opt_name=}")
+        logger.info(f"{MAIN_TOL=:.3e}, {CONSTR_TOL=:.3e}")
+        # logger.info(f"{MAIN_TOL=:.3e}, {LOCAL_TOL=:.3e}, {CONSTR_TOL=:.3e}")
+
+        # Define tolerances
+        opt.set_ftol_rel(MAIN_TOL)
+        # local_opt.set_ftol_rel(LOCAL_TOL)
+
+        # Need to terminate in solver test case 3!
+        opt.set_maxeval(1000)
+
+        # opt.set_local_optimizer(local_opt)
+
+        # if self.maximise:
+        #     # Maximisation required for test case 5
+        #     opt.set_max_objective(self.obj_func)
+        # else:
+        opt.set_min_objective(self.obj_func)
+
+        # Check bounds are activated for all optimisation parameters (default case)
+        # If not, handle it
+        if not (np.all(self.ilower) and np.all(self.iupper)):
+            # Some bounds are inactive: used e.g. in solver integration tests
+            for i in range(self.ilower.shape[0]):
+                if self.ilower[i] == 0:
+                    # Inactive lower bound: set to -inf
+                    self.bndl[i] = -np.inf
+
+            for i in range(self.iupper.shape[0]):
+                if self.iupper[i] == 0:
+                    # Inactive upper bound: set to +inf
+                    self.bndu[i] = np.inf
+
+        opt.set_lower_bounds(self.bndl)
+        opt.set_upper_bounds(self.bndu)
+
+        # Kludge initial normalised x into the normalised bounds range if required
+        for i in range(self.x_0.shape[0]):
+            if self.x_0[i] < self.bndl[i]:
+                self.x_0[i] = self.bndl[i]
+            elif self.x_0[i] > self.bndu[i]:
+                self.x_0[i] = self.bndu[i]
+
+        # Constraints
+        if self.meq > 0:
+            eq_constr_tols = np.full(self.meq, CONSTR_TOL)
+            opt.add_equality_mconstraint(self.constraint_eq_vec, eq_constr_tols)
+        if self.meq < self.m:
+            ineq_constr_tols = np.full((self.m - self.meq), CONSTR_TOL)
+            opt.add_inequality_mconstraint(self.constraint_ineq_vec, ineq_constr_tols)
+
+        start_time = time.time()
+        x_opt = opt.optimize(self.x_0)
+        end_time = time.time()
+        duration = end_time - start_time
+
+        opt_val = opt.last_optimum_value()
+        return_value = opt.last_optimize_result()
+
+        # Main opt iterations
+        main_opt_evals = opt.get_numevals()
+
+        if return_value < 0:
+            raise RuntimeError("nlopt didn't converge")
+        elif return_value == nlopt.MAXEVAL_REACHED:
+            # For giving up in int test 3
+            # TODO Reconcile MAXEVAL with above exception: int case 3 needs to pass
+            info = 5
+        elif return_value > 0:
+            # TODO Might want to be aware of other return values
+            info = 1
+
+        print(f"{return_value=}")
+
+        # Recalculate conf at optimum x
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x_opt, self.ifail)
+        self.constr_res = np.sqrt(
+            np.sum(np.square(conf[: self.meq]))
+        )  # only for equality constraints
+
+        logger.info(f"Main opt evaluations = {main_opt_evals}")
+        logger.info(f"{opt_val=:.3e}, {self.constr_res=:.3e}")
+        logger.info(f"{duration=:.1f}\n")
+        logger.info(f"{conf[:self.meq]=}")
+
+        print(f"{self.constr_res=:.3e}")
+
+        # Check how many conf elements are above tolerance
+        conf_gt_tol = np.sum((np.abs(conf[: self.meq]) > CONSTR_TOL))
+        logger.info(f"Constraints above tolerance: {conf_gt_tol}")
+
+        # Store required results on object
+        self.objf = objf
+        self.conf = conf
+        self.x = x_opt
+
+        return info
+
+
+class Scipy_SLSQP(_Solver):
+    """Minimise using scipy's SLSQP."""
+
+    print("Running scipy's SLSQP")
+    SOLVER_TOL = 1e-6
+    EQ_CONSTRAINT_TOL = 1e-8
+
+    def obj_func(self, x):
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x, self.ifail)
+        # constr_res = np.sqrt(
+        #     np.sum(np.square(conf[:meq]))
+        # )  # only for equality constraints
+        # logger.debug(f"Constraint residuals: {constr_res:.3e}")
+
+        # print(
+        #     f"Evaluation {eval_count}, objective function = {objf:.5}, "
+        #     f"constraint residuals = {constr_res:.3e}"
+        # )
+        return objf
+
+    def constraint_eq_vec(self, x):
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x, self.ifail)
+        # constr_res = np.sqrt(
+        #     np.sum(np.square(conf[:meq]))
+        # )  # only to equality constraints
+
+        return conf[: self.meq]
+
+    def constraint_ineq_vec(self, x):
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, x, self.ifail)
+        conf_gt_tol = np.sum((conf[self.meq :] < 0.0))
+        logger.info(f"{conf_gt_tol} inequality constraints above 0.0")
+        return conf[self.meq : self.m]
+
+    def convergence_progress(self, x_current):
+        eqs = self.constraint_eq_vec(x_current)
+        ineqs = self.constraint_ineq_vec(x_current)
+        cons = np.concatenate((eqs, ineqs))
+        print("\nIteration results:")
+        ineqs_rms = np.sqrt(np.mean(np.square(ineqs[ineqs < 0.0])))
+        print(f"{ineqs_rms = :.3e}")
+
+        # Print constraints sorted by value (most negative (most violated) first)
+        sorted_con_indexes = cons.argsort()
+        for i in sorted_con_indexes:
+            print(f"Constraint {numerics.icc[i]} = {cons[i]:.3e}")
+
+    def solve(self):
+        self.n = self.x_0.shape[0]
+
+        # Check bounds are activated for all optimisation parameters (default case)
+        # If not, handle it
+        if not (np.all(self.ilower) and np.all(self.iupper)):
+            # Some bounds are inactive: used e.g. in solver integration tests
+            for i in range(self.ilower.shape[0]):
+                if self.ilower[i] == 0:
+                    # Inactive lower bound: set to -inf
+                    self.bndl[i] = -np.inf
+
+            for i in range(self.iupper.shape[0]):
+                if self.iupper[i] == 0:
+                    # Inactive upper bound: set to +inf
+                    self.bndu[i] = np.inf
+
+        # Kludge initial normalised x into the normalised bounds range if required
+        for i in range(self.n):
+            if self.x_0[i] < self.bndl[i]:
+                self.x_0[i] = self.bndl[i]
+            elif self.x_0[i] > self.bndu[i]:
+                self.x_0[i] = self.bndu[i]
+
+        bounds = optimize.Bounds(lb=self.bndl, ub=self.bndu)
+
+        constraints = []
+        if self.meq > 0:
+            eq_constraints = optimize.NonlinearConstraint(
+                self.constraint_eq_vec, -self.EQ_CONSTRAINT_TOL, self.EQ_CONSTRAINT_TOL
+            )
+            constraints.append(eq_constraints)
+
+        if self.meq < self.m:
+            ineq_constraints = optimize.NonlinearConstraint(
+                self.constraint_ineq_vec,
+                0.0,
+                np.inf,
+            )
+            constraints.append(ineq_constraints)
+
+        start_time = time.time()
+
+        result = optimize.minimize(
+            self.obj_func,
+            self.x_0,
+            method="SLSQP",
+            jac=None,
+            bounds=bounds,
+            constraints=constraints,
+            tol=self.SOLVER_TOL,
+            callback=self.convergence_progress,
+            options={"disp": True, "eps": numerics.epsfcn},
+        )
+        end_time = time.time()
+        duration = end_time - start_time
+
+        # Log stuff
+        logger.info(f"{self.SOLVER_TOL=}, {self.EQ_CONSTRAINT_TOL=}")
+        logger.info(f"Iterations: {result.nit}")
+        logger.info(f"Evaluations: {result.nfev}")
+        logger.info(f"Duration: {duration:.3}")
+
+        # Recalculate constraints at optimium x
+        objf, conf = self.evaluators.fcnvmc1(self.n, self.m, result.x, self.ifail)
+
+        # Check if constraints are all below tolerance
+        conf_gt_tol = np.sum((conf[self.meq :] < 0.0))
+        logger.info(f"{conf_gt_tol} inequality constraints violated")
+        logger.info(f"Constraint residuals: {conf}")
+
+        # constr_res = np.sqrt(
+        #     np.sum(np.square(conf[: self.meq]))
+        # )  # only for equality constraints
+        # logger.info(f"Constraint residuals: {constr_res:.3e}")
+        # logger.info(f"{conf=}")
+
+        if result.success:
+            info = 1
+        else:
+            # Want to write error code to MFILE
+            # raise RuntimeError("scipy failed to converge")
+            info = 2
+
+        self.objf = result.fun
+        self.conf = conf
+        self.x = result.x
+
+        return info
+
+
 def get_solver(solver_name: str = "vmcon") -> _Solver:
     """Return a solver instance.
 
@@ -337,6 +668,10 @@ def get_solver(solver_name: str = "vmcon") -> _Solver:
         solver = VmconBounded()
     elif solver_name == "fsolve":
         solver = FSolve()
+    elif solver_name == "slsqp":
+        solver = SLSQP()
+    elif solver_name == "scipy_slsqp":
+        solver = Scipy_SLSQP()
     else:
         try:
             solver = load_external_solver(solver_name)
