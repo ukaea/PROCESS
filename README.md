@@ -19,6 +19,7 @@ Please see the [installation guide](https://ukaea.github.io/PROCESS/installation
 
 If you wish to run the examples before installing, you can click on the `binder` badge at the top of the README, or 
 can click [here](https://mybinder.org/v2/gh/ukaea/PROCESS/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2F). Once loaded, you wil be able to run the PROCESS examples in your web browser.
+Click on the `File Browser` tab on the left hand side to access the example notebooks.
 
 
 ## Documentation
