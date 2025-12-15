@@ -15,6 +15,11 @@
 python process/io/plot_proc.py -f path/to/MFILE.DAT
 ```
 
+or through PROCESS's main CLI:
+
+```bash
+process -i path/to/IN.DAT --full-output
+``` 
 
 An example of a plot proc output PDF for the large tokamak regression test is shown below:
 <embed src="../../images/plot_proc.pdf" type="application/pdf" width="100%" height="600">
