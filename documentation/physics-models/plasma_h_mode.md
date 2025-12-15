@@ -25,21 +25,22 @@ There are two separate constraint equations for enforcing the L-H threshold.
 
 There are two constraints that can be used to enforce L-mode or H-mode.
 
-Constraint 15 (`icc = 15`) with `fl_h_threshold <= 1.0` ensures that the power reaching the divertor is at least equal to the threshold power calculated for the chosen scaling, which is a necessary condition for H-mode. 
+Constraint 15 (`icc = 15`) is used to enforce H-mode by mandating that the plasma at the separatrix is greater than or equal to the L-H threshold power, a necessary condition for H-mode. `h_mode_threshold_margin >= 1.0` can be used to ensure the separatrix power exceeds the threshold by some margin. 
 
 $$
-\mathtt{fl\_h\_threshold} \times \mathtt{p\_plasma\_separatrix\_mw} \ge \underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}
+\mathtt{p\_plasma\_separatrix\_mw} \ge \mathtt{h\_mode\_threshold\_margin} \times \underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}
 $$
 
-`fl_h_threshold` can be used to add a margin to the constraint. For example, `fl_h_threshold = 0.8` ensures that `p_plasma_separatrix_mw` is at least 25% greater than the threshold power.
+For example, `h_mode_threshold_margin = 1.2` ensures that `p_plasma_separatrix_mw` is at least $1.2\times$ greater than the threshold power `p_l_h_threshold_mw`.
 
-Constraint 22 (`icc = 22`) with `fl_h_threshold >= 1.0` is the opposite of constraint 15 and ensures that the power reaching the divertor is less than the threshold by some margin. 
+
+Constraint 22 (`icc = 22`) is the opposite of constraint 15 and ensures that the power reaching the divertor is less than or equal to the L-H threshold power. `l_mode_threshold_margin >= 1.0` can be used to ensure that the threshold power is greater than the separatrix power by some margin.
 
 $$
-\mathtt{fl\_h\_threshold} \times \underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}  \ge \mathtt{p\_plasma\_separatrix\_mw} 
+\mathtt{l\_mode\_threshold\_margin} \times \underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}  \ge \mathtt{p\_plasma\_separatrix\_mw} 
 $$
 
-Again, `fl_h_threshold` can be used to add a margin to the constraint. For example, `fl_h_threshold = 1.25` ensures that `p_plasma_separatrix_mw` is at least 25% less than the threshold power.
+For example, `l_mode_threshold_margin = 1.2` ensures that `p_l_h_threshold_mw` is at least $1.2\times$ greater than the separatrix power `p_plasma_separatrix_mw`.
 
 -------
 

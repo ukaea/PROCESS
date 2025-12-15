@@ -575,25 +575,27 @@ def constraint_equation_15():
     """Equation for L-H power threshold limit to enforce H-mode
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fl_h_threshold: a margin on the constraint
+    h_mode_threshold_margin: a margin on the constraint
     p_l_h_threshold_mw: L-H mode power threshold (MW)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
 
-    Setting fl_h_threshold != 1.0 enforces a margin on the constraint:
-    I.e. fl_h_threshold * p_plasma_separatrix_mw >= p_l_h_threshold_mw
+    Setting h_mode_threshold_margin != 1.0 enforces a margin on the constraint:
+    I.e.  p_plasma_separatrix_mw >= h_mode_threshold_margin * p_l_h_threshold_mw
 
-    For example, fl_h_threshold = 0.8 will ensure that p_plasma_separatrix_mw
-    is at least 25% above the threshold (in H-mode).
+    For example, h_mode_threshold_margin = 1.2 gives a 20% margin and will ensure that
+    p_plasma_separatrix_mw is at least 1.2*p_l_h_threshold_mw (ie in H-mode).
     """
     return ConstraintResult(
         1.0
-        - data_structure.constraint_variables.fl_h_threshold
-        * data_structure.physics_variables.p_plasma_separatrix_mw
-        / data_structure.physics_variables.p_l_h_threshold_mw,
-        data_structure.physics_variables.p_l_h_threshold_mw,
-        data_structure.physics_variables.p_l_h_threshold_mw
         - data_structure.physics_variables.p_plasma_separatrix_mw
-        / data_structure.constraint_variables.fl_h_threshold,
+        / (
+            data_structure.physics_variables.p_l_h_threshold_mw
+            * data_structure.constraint_variables.h_mode_threshold_margin
+        ),
+        data_structure.physics_variables.p_l_h_threshold_mw,
+        data_structure.constraint_variables.h_mode_threshold_margin
+        * data_structure.physics_variables.p_l_h_threshold_mw
+        - data_structure.physics_variables.p_plasma_separatrix_mw,
     )
 
 
@@ -739,25 +741,25 @@ def constraint_equation_22():
     """Equation for L-H power threshold limit to enforce L-mode
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fl_h_threshold: a margin on the constraint
+    l_mode_threshold_margin: a margin on the constraint
     p_l_h_threshold_mw: L-H mode power threshold (MW)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
 
-    Setting fl_h_threshold != 1.0 enforces a margin on the constraint:
-    I.e. fl_h_threshold * p_l_h_threshold_mw >= p_plasma_separatrix_mw
+    Setting l_mode_threshold_margin != 1.0 enforces a margin on the constraint:
+    I.e. l_mode_threshold_margin * p_l_h_threshold_mw >= p_plasma_separatrix_mw
 
-    For example, fl_h_threshold = 1.2 will ensure that p_plasma_separatrix_mw
-    is at least 20% below the threshold (in L-mode).
+    For example, l_mode_threshold_margin = 0.8 gives at 20% margin and will ensure that
+    p_plasma_separatrix_mw can never be more than 0.8*p_l_h_threshold_mw (ie in L-mode).
     """
     return ConstraintResult(
         1.0
-        - data_structure.constraint_variables.fl_h_threshold
+        - data_structure.constraint_variables.l_mode_threshold_margin
         * data_structure.physics_variables.p_l_h_threshold_mw
         / data_structure.physics_variables.p_plasma_separatrix_mw,
         data_structure.physics_variables.p_plasma_separatrix_mw,
         data_structure.physics_variables.p_plasma_separatrix_mw
         - data_structure.physics_variables.p_l_h_threshold_mw
-        / data_structure.constraint_variables.fl_h_threshold,
+        / data_structure.constraint_variables.l_mode_threshold_margin,
     )
 
 

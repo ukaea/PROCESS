@@ -192,7 +192,6 @@ OBS_VARS = {
     "jbus": "j_tf_bus",
     "fcoolleg": "f_a_tf_cooil_outboard",
     "rhotfbus": "rho_tf_bus",
-    "flhthresh": "fl_h_threshold",
     "ilhthresh": "i_l_h_threshold",
     "rli": "ind_plasma_internal_norm",
     "gamma": "ejima_coeff",
@@ -448,12 +447,17 @@ OBS_VARS = {
     "tcoolin": "temp_cp_coolant_inlet",
     "vcool": "vel_cp_coolant_midplane",
     "rcool": "radius_cp_coolant_channel",
+    "fl_h_threshold": None,
 }
 
 OBS_VARS_HELP = {
     "iculdl": "(use IDENSL=3 for equivalent model to ICULDL=0). ",
     "dz_blkt_upper": "WARNING. BLNKTTH is now always calculated rather than input - please remove it from the input file. ",
     "iprofile": "Use i_beta_norm_max, i_alphaj and i_ind_plasma_internal_norm instead. See docs for setup. ",
+    "fl_h_threshold": (
+        "fl_h_threshold has been replaced by h_mode_threshold_margin/l_mode_threshold_margin"
+        " please check the docstring for constraint 15/22 to find the appropriate variable"
+    ),
 }
 
 kallenbach_list = [

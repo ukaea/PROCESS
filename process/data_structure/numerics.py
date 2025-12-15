@@ -258,7 +258,7 @@ lablxc: list[str] = None
 * (100) NOT USED
 * (101) NOT USED
 * (102) f_nd_impurity_electronsvar # OBSOLETE
-* (103) fl_h_threshold (f-value for equation 15)
+* (103) NOT USED
 * (108) breeder_f: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
 * (109) f_nd_alpha_electron: thermal alpha density / electron density
 * (114) len_fw_channel: Length of a single first wall channel
