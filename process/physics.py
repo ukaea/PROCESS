@@ -2881,7 +2881,8 @@ class Physics:
             # calculate separatrix temperature, if Reinke criterion is used
             physics_variables.temp_plasma_separatrix_kev = reinke_tsep(
                 physics_variables.b_plasma_toroidal_on_axis,
-                constraint_variables.fl_h_threshold,
+                physics_variables.p_plasma_separatrix_mw
+                / physics_variables.p_l_h_threshold_mw,
                 physics_variables.q95,
                 physics_variables.rmajor,
                 physics_variables.eps,

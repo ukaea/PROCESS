@@ -116,10 +116,16 @@ times (`constraint equation 62`)
 zeff_max: float = None
 """maximum value for Zeff (`constraint equation 64`)"""
 
-fl_h_threshold: float = None
+h_mode_threshold_margin: float = None
+"""Sets the constraint bound of the L-H power threshold limit for H-mode
+
+I.e. p_plasma_separatrix_mw / p_l_h_threshold_mw >= h_mode_threshold_margin
+"""
+
+l_mode_threshold_margin: float = None
 """Sets the constraint bound of the L-H power threshold limit.
 
-I.e. fl_h_threshold >= p_l_h_threshold_mw / p_plasma_separatrix_mw
+I.e. l_mode_threshold_margin >= p_plasma_separatrix_mw / p_l_h_threshold_mw
 """
 
 
@@ -157,7 +163,8 @@ def init_constraint_variables():
         pflux_fw_neutron_max_mw, \
         f_alpha_energy_confinement_min, \
         zeff_max, \
-        fl_h_threshold
+        l_mode_threshold_margin, \
+        h_mode_threshold_margin
 
     p_hcd_injected_min_mw = 0.1
     beta_poloidal_max = 0.19
@@ -190,4 +197,5 @@ def init_constraint_variables():
     pflux_fw_neutron_max_mw = 1.0
     f_alpha_energy_confinement_min = 5.0
     zeff_max = 3.6
-    fl_h_threshold = 1.0
+    l_mode_threshold_margin = 1.0
+    h_mode_threshold_margin = 1.0
