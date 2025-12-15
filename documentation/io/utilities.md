@@ -74,7 +74,7 @@ A utility to produce a summary of the output from PROCESS, including the major p
 ### Usage
 
 ```bash
-python process/io/plot_proc.py [-h] [-f path/to/MFILE.DAT] [-s] [-n N] [-d] [-c COLOUR] [-o OUTPUT_FORMAT]
+python process/io/plot_proc.py [-h] [-f path/to/MFILE.DAT] [-s] [-n N] [-d] [-c COLOUR] [-o OUTPUT-FORMAT]
 ```
 
 If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the current directory.
@@ -86,9 +86,9 @@ If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the cu
 | `-f FILENAME`         | Specify input/output file path                                                                 |
 | `-s, --show`          | Show plot                                                                                      |
 | `-n, N`               | Which scan number to plot                                                                      |
-| `-d, --DEMO_ranges`   | Uses the DEMO dimensions as ranges for all graphics                                            |
+| `-d, --DEMO-ranges`   | Uses the DEMO dimensions as ranges for all graphics                                            |
 | `-c, COLOUR`          | Which colour scheme to use for cross-section plots; 1: Original PROCESS (default), 2: BLUEMIRA |
-| `-o, --output_format` | The format for the output from `plot_proc`; pdf (default) or png                               |
+| `-o, --output-format` | The format for the output from `plot_proc`; pdf (default) or png                               |
 
 ### Output
 Produces a three-page PDF file in the same directory as the input MFILE. The PDF file name has the same prefix as the input MFILE but ending in `SUMMARY.pdf` 

@@ -101,7 +101,7 @@ def parse_args(args):
 
     parser.add_argument(
         "-d",
-        "--DEMO_ranges",
+        "--DEMO-ranges",
         help="Uses the DEMO dimensions as ranges for all graphics",
         action="store_true",
     )
@@ -119,7 +119,7 @@ def parse_args(args):
     )
     parser.add_argument(
         "-o",
-        "--output_format",
+        "--output-format",
         type=str,
         help=("Output file format\npdf: pdf output (default)\npng: png output"),
         default="pdf",
@@ -13354,8 +13354,7 @@ def main(args=None):
             for p in pages:
                 pdf.savefig(p)
     else:
-        folder_name = pathlib.Path(args.f.removesuffix(".DAT") + "_SUMMARY")
-        folder = pathlib.Path(folder_name)
+        folder = pathlib.Path(args.f.removesuffix(".DAT") + "_SUMMARY")
         folder.mkdir(parents=True, exist_ok=True)
         for no, page in enumerate(pages):
             page.savefig(pathlib.Path(folder, f"page{no}.png"), format="png")
