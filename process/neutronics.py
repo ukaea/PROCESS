@@ -527,6 +527,55 @@ class NeutronFluxProfile:
         weighted_mean[first_bin] = init_neutron_e
         return weighted_mean, incident_neutron_group
 
+    def _groupwise_cs_values_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> tuple[float, float] | tuple[npt.NDArray, npt.NDArray]:
+        """
+        Calculate the num_layer-th layer n-th basis function at the specified
+        x position(s).
+        """
+        abs_x = abs(x)
+        if self.l2[num_layer, n] > 0:
+            l = np.sqrt(self.l2[num_layer, n])
+            c, s = np.cosh, np.sinh
+        else:
+            l = np.sqrt(-self.l2[num_layer, n])
+            c, s = np.cos, np.sin
+        return c(abs_x / l), s(abs_x / l)
+
+    def _groupwise_cs_differential_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> tuple[float, float] | tuple[npt.NDArray, npt.NDArray]:
+        """
+        Differentiate the num_layer-th layer n-th basis function, and evaluate
+        it at position(s) x.
+        """
+        abs_x = abs(x)
+        if self.l2[num_layer, n] > 0:
+            l = np.sqrt(self.l2[num_layer, n])
+            return np.sinh(abs_x / l) / l, np.cosh(abs_x / l) / l
+        l = np.sqrt(-self.l2[num_layer, n])
+        return -np.sin(abs_x / l) / l, np.cos(abs_x / l) / l
+
+    def _groupwise_cs_definite_integral_in_layer(
+        self, n: int, num_layer: int, x_lower: float | npt.NDArray, x_upper
+    ) -> tuple[float, float] | tuple[npt.NDArray, npt.NDArray]:
+        """
+        Integrate the num_layer-th layer n-th basis function
+        from x_lower to x_upper.
+        """
+        if self.l2[num_layer, n] > 0:
+            l = np.sqrt(self.l2[num_layer, n])
+            return (
+                l * (np.sinh(x_upper / l) - np.sinh(x_lower / l)),
+                l * (np.cosh(x_upper / l) - np.cosh(x_lower / l))
+            )
+        l = np.sqrt(-self.l2[num_layer, n])
+        return (
+            l * (np.sin(x_upper / l) - np.sin(x_lower / l)),
+            l * (np.cos(x_lower / l) - np.cos(x_upper / l))  # reverse sign
+        )
+
     def solve_lowest_group(self) -> None:
         """
         Solve the highest-energy (lowest-lethargy)-group's neutron diffusion equation.
@@ -793,20 +842,10 @@ class NeutronFluxProfile:
                 n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
             )
         trig_funcs = []
-        abs_x = abs(x)
         for g in range(n + 1):
-            if self.l2[num_layer, g] > 0:
-                c, s = np.cosh, np.sinh
-                l = np.sqrt(self.l2[num_layer, g])
-            else:
-                c, s = np.cos, np.sin
-                l = np.sqrt(-self.l2[num_layer, g])
-            trig_funcs.append(
-                self.coefficients[num_layer, n].c[g] * c(abs_x / l)
-            )
-            trig_funcs.append(
-                self.coefficients[num_layer, n].s[g] * s(abs_x / l)
-            )
+            c_val, s_val = self._groupwise_cs_values_in_layer(g, num_layer, x)
+            trig_funcs.append(self.coefficients[num_layer, n].c[g] * c_val)
+            trig_funcs.append(self.coefficients[num_layer, n].s[g] * s_val)
         return np.sum(trig_funcs, axis=0)
 
     @summarize_values
@@ -933,33 +972,12 @@ class NeutronFluxProfile:
                 n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
             )
         differentials = []
-        abs_x = abs(x)
         for g in range(n + 1):
-            l2g = self.l2[num_layer, g]
-            if l2g > 0:
-                l = np.sqrt(l2g)
-                differentials.append(
-                    self.coefficients[num_layer, n].c[g]
-                    / l
-                    * np.sinh(abs_x / l)
-                )
-                differentials.append(
-                    self.coefficients[num_layer, n].s[g]
-                    / l
-                    * np.cosh(abs_x / l)
-                )
-            else:
-                l = np.sqrt(-l2g)
-                differentials.append(
-                    -self.coefficients[num_layer, n].c[g]
-                    / l
-                    * np.sin(abs_x / l)
-                )
-                differentials.append(
-                    self.coefficients[num_layer, n].s[g]
-                    / l
-                    * np.cos(abs_x / l)
-                )
+            c_diff, s_diff = self._groupwise_cs_differential_in_layer(
+                g, num_layer, x
+            )
+            differentials.append(self.coefficients[num_layer, n].c[g] * c_diff)
+            differentials.append(self.coefficients[num_layer, n].s[g] * s_diff)
 
         return (
             -self.diffusion_const[num_layer, n]
@@ -1085,31 +1103,11 @@ class NeutronFluxProfile:
         x_end = self.layer_x[num_layer]
 
         for g in range(n + 1):
-            l2g = self.l2[num_layer, g]
-            if l2g > 0:
-                l = np.sqrt(l2g)
-                integrals.append(
-                    l
-                    * self.coefficients[num_layer, n].c[g]
-                    * (np.sinh(x_end / l) - np.sinh(x_start / l))
-                )
-                integrals.append(
-                    l
-                    * self.coefficients[num_layer, n].s[g]
-                    * (np.cosh(x_end / l) - np.cosh(x_start / l))
-                )
-            else:
-                l = np.sqrt(-l2g)
-                integrals.append(
-                    l
-                    * self.coefficients[num_layer, n].c[g]
-                    * (np.sin(x_end / l) - np.sin(x_start / l))
-                )
-                integrals.append(
-                    -l
-                    * self.coefficients[num_layer, n].s[g]
-                    * (np.cos(x_end / l) - np.cos(x_start / l))
-                )
+            c_int, s_int = self._groupwise_cs_definite_integral_in_layer(
+                g, num_layer, x_start, x_end
+            )
+            integrals.append(self.coefficients[num_layer, n].c[g] * c_int)
+            integrals.append(self.coefficients[num_layer, n].s[g] * s_int)
         return np.sum(integrals, axis=0)
 
     @summarize_values
