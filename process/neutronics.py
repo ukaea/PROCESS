@@ -209,10 +209,14 @@ class AutoPopulatingDict:
         """Check if key 'i' is in the dictionary or not."""
         return i in self._dict
 
+    def __len__(self):
+        """Return the number of items in the """
+        return len(self._dict)
+
     def __setitem__(self, i: int, value: float):
         """Check if dict i is in the index or not."""
         if hasattr(value, "validate_length"):
-            value.validate_length(i + 1, parent_name=self.name)
+            value.validate_length(len(self) + 1, parent_name=self.name)
         self._dict[i] = value
         self._attempting_to_access.discard(i)
 
