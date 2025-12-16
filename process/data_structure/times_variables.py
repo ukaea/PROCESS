@@ -55,21 +55,22 @@ t_plant_pulse_coil_precharge: float = None
 
 def init_times_variables():
     """Initialise plasma pulse timing variables"""
-    global pulsetimings
-    global t_plant_pulse_burn
-    global t_burn_0
-    global t_plant_pulse_total
-    global t_plant_pulse_no_burn
-    global t_plant_pulse_dwell
-    global t_plant_pulse_fusion_ramp
-    global t_pulse_cumulative
-    global timelabel
-    global intervallabel
-    global t_plant_pulse_plasma_current_ramp_up
-    global i_t_current_ramp_up
-    global t_plant_pulse_plasma_present
-    global t_plant_pulse_plasma_current_ramp_down
-    global t_plant_pulse_coil_precharge
+    global \
+        pulsetimings, \
+        t_plant_pulse_burn, \
+        t_burn_0, \
+        t_plant_pulse_total, \
+        t_plant_pulse_no_burn, \
+        t_plant_pulse_dwell, \
+        t_plant_pulse_fusion_ramp, \
+        t_pulse_cumulative, \
+        timelabel, \
+        intervallabel, \
+        t_plant_pulse_plasma_current_ramp_up, \
+        i_t_current_ramp_up, \
+        t_plant_pulse_plasma_present, \
+        t_plant_pulse_plasma_current_ramp_down, \
+        t_plant_pulse_coil_precharge
 
     pulsetimings = 1.0
     t_plant_pulse_burn = np.array(1000.0, dtype=np.float64)

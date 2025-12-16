@@ -140,16 +140,8 @@ divertor_source = ColumnDataSource(
         "y": [
             -(kappa.value * a.value + plasma_divertor_gap.value),
             -(kappa.value * a.value + plasma_divertor_gap.value),
-            -(
-                kappa.value * a.value
-                + plasma_divertor_gap.value
-                + divertor_height.value
-            ),
-            -(
-                kappa.value * a.value
-                + plasma_divertor_gap.value
-                + divertor_height.value
-            ),
+            -(kappa.value * a.value + plasma_divertor_gap.value + divertor_height.value),
+            -(kappa.value * a.value + plasma_divertor_gap.value + divertor_height.value),
         ],
     }
 )

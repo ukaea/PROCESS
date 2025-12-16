@@ -36,17 +36,18 @@ f_p_fw_blkt_pump: float = None
 
 def init_primary_pumping_variables():
     """Initialise primary pumping variables"""
-    global gamma_he
-    global t_in_bb
-    global t_out_bb
-    global p_he
-    global dp_he
-    global dp_fw_blkt
-    global dp_fw
-    global dp_blkt
-    global dp_liq
-    global p_fw_blkt_coolant_pump_mw
-    global f_p_fw_blkt_pump
+    global \
+        gamma_he, \
+        t_in_bb, \
+        t_out_bb, \
+        p_he, \
+        dp_he, \
+        dp_fw_blkt, \
+        dp_fw, \
+        dp_blkt, \
+        dp_liq, \
+        p_fw_blkt_coolant_pump_mw, \
+        f_p_fw_blkt_pump
 
     gamma_he = 1.667  # Ratio of specific heats  Helium
     t_in_bb = 573.13  # K

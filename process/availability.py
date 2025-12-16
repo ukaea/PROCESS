@@ -1356,9 +1356,7 @@ class Availability:
         # Rem : only the TF maximum fluence is considered for now
         if tfv.i_tf_sup == 1:
             cplife = min(
-                (
-                    ctv.nflutfmax / (np.asarray(fwbsv.neut_flux_cp) * YEAR_SECONDS)
-                ).item(),
+                (ctv.nflutfmax / (np.asarray(fwbsv.neut_flux_cp) * YEAR_SECONDS)).item(),
                 cv.life_plant,
             )
 

@@ -55,8 +55,9 @@ class RegressionTestAssetCollector:
             if (mf.scenario_name == scenario_name and target_hash is None) or (
                 mf.scenario_name == scenario_name and target_hash == mf.hash
             ):
-                with open(reference_mfile_location, "w") as f:
-                    f.write(requests.get(mf.download_link).content.decode())
+                Path(reference_mfile_location).write_text(
+                    requests.get(mf.download_link).content.decode()
+                )
 
                 logger.info(f"Reference MFile found for commit {mf.hash}")
                 return reference_mfile_location

@@ -235,13 +235,9 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         dcllneutronicsandpowerparam.p_fw_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(
-        fwbs_variables, "psurffwi", dcllneutronicsandpowerparam.psurffwi
-    )
+    monkeypatch.setattr(fwbs_variables, "psurffwi", dcllneutronicsandpowerparam.psurffwi)
 
-    monkeypatch.setattr(
-        fwbs_variables, "psurffwo", dcllneutronicsandpowerparam.psurffwo
-    )
+    monkeypatch.setattr(fwbs_variables, "psurffwo", dcllneutronicsandpowerparam.psurffwo)
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -854,13 +850,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcllmassesparam.a_plasma_surface_outboard,
     )
 
-    monkeypatch.setattr(
-        fwbs_variables, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard
-    )
+    monkeypatch.setattr(fwbs_variables, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard)
 
-    monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_total", dcllmassesparam.vol_blkt_total
-    )
+    monkeypatch.setattr(fwbs_variables, "vol_blkt_total", dcllmassesparam.vol_blkt_total)
 
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_inboard", dcllmassesparam.vol_blkt_inboard
@@ -880,9 +872,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         fwbs_variables, "fw_armour_thickness", dcllmassesparam.fw_armour_thickness
     )
 
-    monkeypatch.setattr(
-        fwbs_variables, "fw_armour_mass", dcllmassesparam.fw_armour_mass
-    )
+    monkeypatch.setattr(fwbs_variables, "fw_armour_mass", dcllmassesparam.fw_armour_mass)
 
     monkeypatch.setattr(fwbs_variables, "vol_fw_total", dcllmassesparam.vol_fw_total)
 
@@ -926,9 +916,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         fwbs_variables, "i_blkt_dual_coolant", dcllmassesparam.i_blkt_dual_coolant
     )
 
-    monkeypatch.setattr(
-        fwbs_variables, "den_fw_coolant", dcllmassesparam.den_fw_coolant
-    )
+    monkeypatch.setattr(fwbs_variables, "den_fw_coolant", dcllmassesparam.den_fw_coolant)
 
     monkeypatch.setattr(
         fwbs_variables, "den_blkt_coolant", dcllmassesparam.den_blkt_coolant
@@ -972,9 +960,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcll_variables, "f_vol_mfbss_stl", dcllmassesparam.f_vol_mfbss_stl
     )
 
-    monkeypatch.setattr(
-        dcll_variables, "f_vol_mfbss_he", dcllmassesparam.f_vol_mfbss_he
-    )
+    monkeypatch.setattr(dcll_variables, "f_vol_mfbss_he", dcllmassesparam.f_vol_mfbss_he)
 
     monkeypatch.setattr(
         dcll_variables, "f_vol_mfbss_pbli", dcllmassesparam.f_vol_mfbss_pbli
@@ -996,9 +982,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(dcll_variables, "wht_cer", dcllmassesparam.wht_cer)
 
-    monkeypatch.setattr(
-        dcll_variables, "wht_stl_struct", dcllmassesparam.wht_stl_struct
-    )
+    monkeypatch.setattr(dcll_variables, "wht_stl_struct", dcllmassesparam.wht_stl_struct)
 
     monkeypatch.setattr(
         dcll_variables, "wht_cool_struct", dcllmassesparam.wht_cool_struct
@@ -1010,13 +994,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(dcll_variables, "wht_mfbss_stl", dcllmassesparam.wht_mfbss_stl)
 
-    monkeypatch.setattr(
-        dcll_variables, "wht_mfbss_cool", dcllmassesparam.wht_mfbss_cool
-    )
+    monkeypatch.setattr(dcll_variables, "wht_mfbss_cool", dcllmassesparam.wht_mfbss_cool)
 
-    monkeypatch.setattr(
-        dcll_variables, "wht_mfbss_pbli", dcllmassesparam.wht_mfbss_pbli
-    )
+    monkeypatch.setattr(dcll_variables, "wht_mfbss_pbli", dcllmassesparam.wht_mfbss_pbli)
 
     monkeypatch.setattr(dcll_variables, "fwmass_stl", dcllmassesparam.fwmass_stl)
 

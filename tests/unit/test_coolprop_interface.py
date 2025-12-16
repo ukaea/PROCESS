@@ -25,8 +25,7 @@ def test_water_with_pressure_temp():
     # calculated
     assert pytest.approx(fluid_properties.density, rel=1e-3) == WATER_PROPERTIES.density
     assert (
-        pytest.approx(fluid_properties.viscosity, rel=1e-3)
-        == WATER_PROPERTIES.viscosity
+        pytest.approx(fluid_properties.viscosity, rel=1e-3) == WATER_PROPERTIES.viscosity
     )
     assert (
         pytest.approx(fluid_properties.enthalpy, rel=1e-3) == WATER_PROPERTIES.enthalpy

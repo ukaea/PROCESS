@@ -545,7 +545,7 @@ class PFCoil:
 
                 pv.b_plasma_vertical_required = bzin[0]
 
-                ssqef, pfcoil_variables.ccls0 = self.efc(
+                _ssqef, pfcoil_variables.ccls0 = self.efc(
                     npts0,
                     rpts,
                     zpts,
@@ -822,7 +822,7 @@ class PFCoil:
 
                 if ij == 0:
                     # Index args +1ed
-                    bri, bro, bzi, bzo = peak_b_field_at_pf_coil(
+                    _bri, _bro, _bzi, _bzo = peak_b_field_at_pf_coil(
                         n_coil=i + 1, n_coil_group=iii + 1, t_b_field_peak=it
                     )  # returns b_pf_coil_peak, bpf2
 
@@ -834,7 +834,7 @@ class PFCoil:
                         abs(pfcoil_variables.bpf2[i]),
                     )
 
-                    pfcoil_variables.j_pf_wp_critical[i], jstrand, jsc, tmarg = (
+                    pfcoil_variables.j_pf_wp_critical[i], _jstrand, jsc, _tmarg = (
                         superconpf(
                             bmax,
                             pfcoil_variables.f_a_pf_coil_void[i],
@@ -1262,9 +1262,7 @@ class PFCoil:
             )
             # Coil radius is constant / stacked for picture frame TF or if placement switch is set
             if i_tf_shape == 2 or i_r_pf_outside_tf_placement == 1:
-                r_pf_coil_middle_group_array[n_pf_group, coil] = (
-                    r_pf_outside_tf_midplane
-                )
+                r_pf_coil_middle_group_array[n_pf_group, coil] = r_pf_outside_tf_midplane
             else:
                 # Coil radius follows TF coil curve for TF (D-shape)
                 r_pf_coil_middle_group_array[n_pf_group, coil] = math.sqrt(
@@ -1452,7 +1450,7 @@ class PFCoil:
         )
 
         # Calculate the norm of the residual vectors
-        brssq, brnrm, bzssq, bznrm, ssq = rsid(
+        _brssq, _brnrm, _bzssq, _bznrm, ssq = rsid(
             npts, brin, bzin, nfix, int(n_pf_coil_groups), ccls, bfix, gmat
         )
 
@@ -1683,9 +1681,9 @@ class PFCoil:
         nohmax = 200
         nplas = 1
 
-        br = 0.0
-        bz = 0.0
-        psi = 0.0
+        _br = 0.0
+        _bz = 0.0
+        _psi = 0.0
         rc = np.zeros(pfcoil_variables.NGC2 + nohmax)
         zc = np.zeros(pfcoil_variables.NGC2 + nohmax)
         xc = np.zeros(pfcoil_variables.NGC2 + nohmax)
@@ -1703,16 +1701,12 @@ class PFCoil:
         # than each segment is tall, i.e. the segments are pancake-like,
         # for the benefit of the mutual inductance calculations later
 
-        noh = int(
-            math.ceil(
-                2.0e0
-                * pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
-                / (
-                    pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1]
-                    - pfcoil_variables.r_pf_coil_inner[
-                        pfcoil_variables.n_cs_pf_coils - 1
-                    ]
-                )
+        noh = math.ceil(
+            2.0e0
+            * pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
+            / (
+                pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1]
+                - pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1]
             )
         )
 
@@ -1777,14 +1771,14 @@ class PFCoil:
 
                 reqv = rp * (1.0e0 + delzoh**2 / (24.0e0 * rp**2))
 
-                xcin, br, bz, psi = calculate_b_field_at_point(
+                xcin, _br, _bz, _psi = calculate_b_field_at_point(
                     r_current_loop=rc,
                     z_current_loop=zc,
                     c_current_loop=cc,
                     r_test_point=reqv - deltar,
                     z_test_point=zp,
                 )
-                xcout, br, bz, psi = calculate_b_field_at_point(
+                xcout, _br, _bz, _psi = calculate_b_field_at_point(
                     r_current_loop=rc,
                     z_current_loop=zc,
                     c_current_loop=cc,
@@ -1826,7 +1820,7 @@ class PFCoil:
             ncoils = ncoils + pfcoil_variables.n_pf_coils_in_group[i]
             rp = pfcoil_variables.r_pf_coil_middle[ncoils - 1]
             zp = pfcoil_variables.z_pf_coil_middle[ncoils - 1]
-            xc, br, bz, psi = calculate_b_field_at_point(
+            xc, _br, _bz, _psi = calculate_b_field_at_point(
                 r_current_loop=rc,
                 z_current_loop=zc,
                 c_current_loop=cc,
@@ -1878,7 +1872,7 @@ class PFCoil:
                 ncoils = ncoils + pfcoil_variables.n_pf_coils_in_group[i]
                 rp = pfcoil_variables.r_pf_coil_middle[ncoils - 1]
                 zp = pfcoil_variables.z_pf_coil_middle[ncoils - 1]
-                xc, br, bz, psi = calculate_b_field_at_point(
+                xc, _br, _bz, _psi = calculate_b_field_at_point(
                     r_current_loop=rc,
                     z_current_loop=zc,
                     c_current_loop=cc,
@@ -1921,7 +1915,7 @@ class PFCoil:
 
             rp = pfcoil_variables.r_pf_coil_middle[i]
             zp = pfcoil_variables.z_pf_coil_middle[i]
-            xc, br, bz, psi = calculate_b_field_at_point(
+            xc, _br, _bz, _psi = calculate_b_field_at_point(
                 r_current_loop=rc,
                 z_current_loop=zc,
                 c_current_loop=cc,
@@ -2365,8 +2359,7 @@ class PFCoil:
                     abs(pfcoil_variables.j_cs_flat_top_end)
                     > 0.99e0
                     * abs(
-                        numerics.boundu[37]
-                        * pfcoil_variables.j_cs_critical_flat_top_end
+                        numerics.boundu[37] * pfcoil_variables.j_cs_critical_flat_top_end
                     )
                 ) or (
                     abs(pfcoil_variables.j_cs_pulse_start)
@@ -3285,7 +3278,7 @@ class CSCoil:
 
         # Peak field due to other PF coils plus plasma
         timepoint = 5
-        bri, bro, bzi, bzo = peak_b_field_at_pf_coil(
+        _bri, _bro, bzi, bzo = peak_b_field_at_pf_coil(
             n_coil=pfcoil_variables.n_cs_pf_coils,
             n_coil_group=99,
             t_b_field_peak=timepoint,
@@ -3314,7 +3307,7 @@ class CSCoil:
             )
         )
         timepoint = 2
-        bri, bro, bzi, bzo = peak_b_field_at_pf_coil(
+        _bri, _bro, bzi, bzo = peak_b_field_at_pf_coil(
             n_coil=pfcoil_variables.n_cs_pf_coils,
             n_coil_group=99,
             t_b_field_peak=timepoint,
@@ -3377,9 +3370,7 @@ class CSCoil:
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = (
-                pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
-            )
+            areaspf = pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
 
             if pfcoil_variables.i_cs_stress == 1:
                 pfcoil_variables.s_shear_cs_peak = max(
@@ -3907,8 +3898,7 @@ def peak_b_field_at_pf_coil(
         else:
             sgn = (
                 1.0
-                if pfcoil_variables.j_cs_pulse_start
-                > pfcoil_variables.j_cs_flat_top_end
+                if pfcoil_variables.j_cs_pulse_start > pfcoil_variables.j_cs_flat_top_end
                 else -1.0
             )
 
@@ -4025,7 +4015,7 @@ def peak_b_field_at_pf_coil(
 
     # Calculate the field at the inner and outer edges
     # of the coil of interest
-    pfcoil_variables.xind[:kk], b_pf_inner_radial, b_pf_inner_vertical, psi = (
+    pfcoil_variables.xind[:kk], b_pf_inner_radial, b_pf_inner_vertical, _psi = (
         calculate_b_field_at_point(
             r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
             z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
@@ -4034,7 +4024,7 @@ def peak_b_field_at_pf_coil(
             z_test_point=pfcoil_variables.z_pf_coil_middle[n_coil - 1],
         )
     )
-    pfcoil_variables.xind[:kk], b_pf_outer_radial, b_pf_outer_vertical, psi = (
+    pfcoil_variables.xind[:kk], b_pf_outer_radial, b_pf_outer_vertical, _psi = (
         calculate_b_field_at_point(
             r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
             z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
@@ -4248,7 +4238,7 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
             arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
 
         another_estimate = 2 * thelium
-        t_zero_margin, root_result = optimize.newton(
+        t_zero_margin, _root_result = optimize.newton(
             superconductors.superconductor_current_density_margin,
             thelium,
             fprime=None,
@@ -4378,10 +4368,7 @@ def calculate_b_field_at_point(
             * c_current_loop[i]
             * dz
             / (2 * np.pi * r_test_point * sd)
-            * (
-                -xk
-                + (r_current_loop[i] ** 2 + r_test_point**2 + zs) / (dr**2 + zs) * xe
-            )
+            * (-xk + (r_current_loop[i] ** 2 + r_test_point**2 + zs) / (dr**2 + zs) * xe)
         )
         bzx = (
             constants.RMU0

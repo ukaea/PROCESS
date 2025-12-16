@@ -65,9 +65,7 @@ class Config:
         if isinstance(objekt, list):
             return [self._lowercase(item) for item in objekt]
         if isinstance(objekt, dict):
-            return {
-                key.lower(): self._lowercase(value) for key, value in objekt.items()
-            }
+            return {key.lower(): self._lowercase(value) for key, value in objekt.items()}
         return objekt
 
     def _search_config_for(self, config, *keys):

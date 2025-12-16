@@ -4,9 +4,7 @@ from bokeh.models import ColumnDataSource, CustomJS, Slider
 from bokeh.plotting import figure, output_file, save
 
 T0 = Slider(start=0.1, end=10, value=10.0, step=0.1, title="Plasma centre value | T0")
-alpha = Slider(
-    start=0.01, end=10, value=2.0, step=0.01, title="Profile Index  | alphan"
-)
+alpha = Slider(start=0.01, end=10, value=2.0, step=0.01, title="Profile Index  | alphan")
 Trho = Slider(start=0.1, end=1, value=0.9, step=0.01, title="Pedestal position | Trho")
 Tped = Slider(start=0.01, end=10, value=2.0, step=0.01, title="Pedestal value  | Tped")
 Tsep = Slider(start=0.1, end=10, value=0.5, step=0.1, title="Separatrix value | Tsep")

@@ -27,11 +27,7 @@ i_pulsed_plant: int = None
 
 def init_pulse_variables():
     """Initialise the pulse variables"""
-    global bctmp
-    global dtstor
-    global istore
-    global itcycl
-    global i_pulsed_plant
+    global bctmp, dtstor, istore, itcycl, i_pulsed_plant
 
     bctmp = 320.0
     dtstor = 300.0

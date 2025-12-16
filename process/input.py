@@ -200,9 +200,7 @@ INPUT_VARIABLES = {
     "anginc": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
     ),
-    "aplasmin": InputVariable(
-        data_structure.build_variables, float, range=(0.01, 10.0)
-    ),
+    "aplasmin": InputVariable(data_structure.build_variables, float, range=(0.01, 10.0)),
     "aux_build_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -231,9 +229,7 @@ INPUT_VARIABLES = {
     "p_plant_electric_base": InputVariable(
         data_structure.heat_transport_variables, float, range=(1000000.0, 10000000000.0)
     ),
-    "bcritsc": InputVariable(
-        data_structure.tfcoil_variables, float, range=(10.0, 50.0)
-    ),
+    "bcritsc": InputVariable(data_structure.tfcoil_variables, float, range=(10.0, 50.0)),
     "bctmp": InputVariable(data_structure.pulse_variables, float, range=(1.0, 800.0)),
     "e_beam_kev": InputVariable(
         data_structure.current_drive_variables, float, range=(1.0, 1000000.0)
@@ -316,12 +312,8 @@ INPUT_VARIABLES = {
         data_structure.current_drive_variables, float, range=(0.0, 10.0)
     ),
     "cconfix": InputVariable(data_structure.cost_variables, float, range=(50.0, 200.0)),
-    "cconshpf": InputVariable(
-        data_structure.cost_variables, float, range=(50.0, 200.0)
-    ),
-    "cconshtf": InputVariable(
-        data_structure.cost_variables, float, range=(50.0, 200.0)
-    ),
+    "cconshpf": InputVariable(data_structure.cost_variables, float, range=(50.0, 200.0)),
+    "cconshtf": InputVariable(data_structure.cost_variables, float, range=(50.0, 200.0)),
     "cdriv0": InputVariable(data_structure.ife_variables, float, range=(50.0, 500.0)),
     "cdriv1": InputVariable(data_structure.ife_variables, float, range=(50.0, 500.0)),
     "cdriv2": InputVariable(data_structure.ife_variables, float, range=(50.0, 500.0)),
@@ -449,9 +441,7 @@ INPUT_VARIABLES = {
         data_structure.heat_transport_variables, float, range=(0.01, 200.0)
     ),
     "csi": InputVariable(data_structure.cost_variables, float, range=(1.0, 100.0)),
-    "cturbb": InputVariable(
-        data_structure.cost_variables, float, range=(100.0, 1000.0)
-    ),
+    "cturbb": InputVariable(data_structure.cost_variables, float, range=(100.0, 1000.0)),
     "dz_vv_lower": InputVariable(
         data_structure.build_variables, float, range=(0.0, 10.0)
     ),
@@ -659,9 +649,7 @@ INPUT_VARIABLES = {
     "eta_turbine": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 1.0)
     ),
-    "eyoung_al": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
-    ),
+    "eyoung_al": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
     "eyoung_cond_axial": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 10000000000000.0)
     ),
@@ -698,9 +686,7 @@ INPUT_VARIABLES = {
     "f_crypmw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "f_fw_peak": InputVariable(
-        data_structure.fwbs_variables, float, range=(1.0, 100.0)
-    ),
+    "f_fw_peak": InputVariable(data_structure.fwbs_variables, float, range=(1.0, 100.0)),
     "f_fw_rad_max": InputVariable(
         data_structure.constraint_variables, float, range=(0.1, 10)
     ),
@@ -1115,9 +1101,7 @@ INPUT_VARIABLES = {
     "p_fw_coolant_pump_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
-    "htpmw_ife": InputVariable(
-        data_structure.ife_variables, float, range=(0.0, 1000.0)
-    ),
+    "htpmw_ife": InputVariable(data_structure.ife_variables, float, range=(0.0, 1000.0)),
     "p_shld_coolant_pump_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
@@ -1167,12 +1151,8 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(10000.0, 100000000.0)
     ),
     "kappa": InputVariable(data_structure.physics_variables, float, range=(0.99, 5.0)),
-    "kappa95": InputVariable(
-        data_structure.physics_variables, float, range=(0.99, 5.0)
-    ),
-    "layer_ins": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
-    ),
+    "kappa95": InputVariable(data_structure.physics_variables, float, range=(0.99, 5.0)),
+    "layer_ins": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 0.1)),
     "f_dr_dz_cs_turn": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 5.0)
     ),
@@ -1186,9 +1166,7 @@ INPUT_VARIABLES = {
     "f_blkt_li6_enrichment": InputVariable(
         data_structure.fwbs_variables, float, range=(7.4, 100.0)
     ),
-    "life_dpa": InputVariable(
-        data_structure.cost_variables, float, range=(10.0, 100.0)
-    ),
+    "life_dpa": InputVariable(data_structure.cost_variables, float, range=(10.0, 100.0)),
     "llw_storage_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -1248,9 +1226,7 @@ INPUT_VARIABLES = {
     "pflux_fw_rad_max": InputVariable(
         data_structure.constraint_variables, float, range=(0.1, 10.0)
     ),
-    "mbvfac": InputVariable(
-        data_structure.buildings_variables, float, range=(0.9, 3.0)
-    ),
+    "mbvfac": InputVariable(data_structure.buildings_variables, float, range=(0.9, 3.0)),
     "mcdriv": InputVariable(data_structure.ife_variables, float, range=(0.1, 10.0)),
     "mvalim": InputVariable(
         data_structure.constraint_variables, float, range=(0.0, 1000.0)
@@ -1435,9 +1411,7 @@ INPUT_VARIABLES = {
         data_structure.vacuum_variables, float, range=(1e-10, 1e-06)
     ),
     "rbrt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "rbvfac": InputVariable(
-        data_structure.buildings_variables, float, range=(0.9, 3.0)
-    ),
+    "rbvfac": InputVariable(data_structure.buildings_variables, float, range=(0.9, 3.0)),
     "rbwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "rcool": InputVariable(data_structure.tfcoil_variables, float, range=(1e-06, 1.0)),
     "reactor_clrnc": InputVariable(
@@ -1681,9 +1655,7 @@ INPUT_VARIABLES = {
     "tcoolin": InputVariable(
         data_structure.tfcoil_variables, float, range=(4.0, 373.15)
     ),
-    "tcritsc": InputVariable(
-        data_structure.tfcoil_variables, float, range=(1.0, 300.0)
-    ),
+    "tcritsc": InputVariable(data_structure.tfcoil_variables, float, range=(1.0, 300.0)),
     "t_cycle_min": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 2000000.0)
     ),
@@ -1760,9 +1732,7 @@ INPUT_VARIABLES = {
         data_structure.cost_variables, float, range=(1.0, 100.0)
     ),
     "tmain": InputVariable(data_structure.cost_variables, float, range=(0.0, 100.0)),
-    "tmargmin": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.0, 20.0)
-    ),
+    "tmargmin": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 20.0)),
     "temp_cs_superconductor_margin_min": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 20.0)
     ),
@@ -1792,9 +1762,7 @@ INPUT_VARIABLES = {
     ),
     "trcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "triang": InputVariable(data_structure.physics_variables, float, range=(-1.0, 1.0)),
-    "triang95": InputVariable(
-        data_structure.physics_variables, float, range=(0.0, 1.0)
-    ),
+    "triang95": InputVariable(data_structure.physics_variables, float, range=(0.0, 1.0)),
     "p_tritium_plant_electric_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
@@ -1826,9 +1794,7 @@ INPUT_VARIABLES = {
     "ucblbreed": InputVariable(
         data_structure.cost_variables, float, range=(1.0, 1000.0)
     ),
-    "ucblli": InputVariable(
-        data_structure.cost_variables, float, range=(10.0, 10000.0)
-    ),
+    "ucblli": InputVariable(data_structure.cost_variables, float, range=(10.0, 10000.0)),
     "ucblli2o": InputVariable(
         data_structure.cost_variables, float, range=(100.0, 10000.0)
     ),
@@ -1836,9 +1802,7 @@ INPUT_VARIABLES = {
         data_structure.cost_variables, float, range=(100.0, 10000.0)
     ),
     "ucblss": InputVariable(data_structure.cost_variables, float, range=(10.0, 1000.0)),
-    "ucblvd": InputVariable(
-        data_structure.cost_variables, float, range=(100.0, 1000.0)
-    ),
+    "ucblvd": InputVariable(data_structure.cost_variables, float, range=(100.0, 1000.0)),
     "ucbus": InputVariable(data_structure.cost_variables, float, range=(0.01, 10.0)),
     "uccarb": InputVariable(data_structure.ife_variables, float, range=(10.0, 1000.0)),
     "uccase": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
@@ -1928,9 +1892,7 @@ INPUT_VARIABLES = {
     "vachtmw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "vcool": InputVariable(
-        data_structure.tfcoil_variables, float, range=(0.001, 100.0)
-    ),
+    "vcool": InputVariable(data_structure.tfcoil_variables, float, range=(0.001, 100.0)),
     "v_tf_coil_dump_quench_max_kv": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 100.0)
     ),
@@ -2001,9 +1963,7 @@ INPUT_VARIABLES = {
     "workshop_w": InputVariable(
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "wsvfac": InputVariable(
-        data_structure.buildings_variables, float, range=(0.9, 3.0)
-    ),
+    "wsvfac": InputVariable(data_structure.buildings_variables, float, range=(0.9, 3.0)),
     "xi_ebw": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
@@ -2087,9 +2047,7 @@ INPUT_VARIABLES = {
     "i_plasma_wall_gap": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1]
     ),
-    "i_pulsed_plant": InputVariable(
-        data_structure.pulse_variables, int, choices=[0, 1]
-    ),
+    "i_pulsed_plant": InputVariable(data_structure.pulse_variables, int, choices=[0, 1]),
     "i_q95_fixed": InputVariable(
         data_structure.constraint_variables, int, choices=[0, 1]
     ),
@@ -2116,9 +2074,7 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, int, choices=[0, 1]
     ),
     "i_tf_sc_mat": InputVariable(data_structure.tfcoil_variables, int, range=(1, 9)),
-    "i_tf_shape": InputVariable(
-        data_structure.tfcoil_variables, int, choices=[0, 1, 2]
-    ),
+    "i_tf_shape": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1, 2]),
     "i_tf_stress_model": InputVariable(
         data_structure.tfcoil_variables, int, choices=[0, 1, 2]
     ),
@@ -2258,9 +2214,7 @@ INPUT_VARIABLES = {
     "supercond_cost_model": InputVariable(
         data_structure.cost_variables, int, choices=[0, 1]
     ),
-    "i_tf_inside_cs": InputVariable(
-        data_structure.build_variables, int, choices=[0, 1]
-    ),
+    "i_tf_inside_cs": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
     "i_ecrh_wave_mode": InputVariable(
         data_structure.current_drive_variables, int, choices=[0, 1]
     ),

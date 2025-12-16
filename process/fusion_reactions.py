@@ -749,10 +749,7 @@ def bosch_hale_reactivity(
         * (
             reaction_constants.cc2
             + ion_temperature_profile
-            * (
-                reaction_constants.cc4
-                + ion_temperature_profile * reaction_constants.cc6
-            )
+            * (reaction_constants.cc4 + ion_temperature_profile * reaction_constants.cc6)
         )
         / (
             1.0
@@ -1362,9 +1359,7 @@ def beam_reaction_rate(
     )
 
     relative_velocity = beam_velocity / critical_velocity
-    integral_coefficient = (
-        3.0 * critical_velocity / np.log(1.0 + (relative_velocity**3))
-    )
+    integral_coefficient = 3.0 * critical_velocity / np.log(1.0 + (relative_velocity**3))
 
     fusion_integral = integrate.quad(
         _hot_beam_fusion_reaction_rate_integrand,

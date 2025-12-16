@@ -235,9 +235,7 @@ class Structure:
                 clgsmass,
                 "OP ",
             )
-            po.ovarre(
-                self.outfile, "Torus leg support mass (kg)", "(gsm1)", gsm1, "OP "
-            )
+            po.ovarre(self.outfile, "Torus leg support mass (kg)", "(gsm1)", gsm1, "OP ")
             po.ovarre(self.outfile, "Ring beam mass (kg)", "(gsm2)", gsm2, "OP ")
             po.ovarre(self.outfile, "Ring legs mass (kg)", "(gsm3)", gsm3, "OP ")
 

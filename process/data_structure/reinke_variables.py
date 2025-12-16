@@ -23,11 +23,7 @@ reinke_mode: int = None
 
 def init_reinke_variables():
     """Initialise Reinke criterion variables"""
-    global impvardiv
-    global lhat
-    global fzmin
-    global fzactual
-    global reinke_mode
+    global impvardiv, lhat, fzmin, fzactual, reinke_mode
 
     impvardiv = 9
     lhat = 4.33
