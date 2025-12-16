@@ -125,7 +125,7 @@ I.e. p_plasma_separatrix_mw / p_l_h_threshold_mw >= h_mode_threshold_margin
 l_mode_threshold_margin: float = None
 """Sets the constraint bound of the L-H power threshold limit.
 
-I.e. l_mode_threshold_margin >= p_plasma_separatrix_mw / p_l_h_threshold_mw
+I.e. p_l_h_threshold_mw / p_plasma_separatrix_mw >= l_mode_threshold_margin
 """
 
 
