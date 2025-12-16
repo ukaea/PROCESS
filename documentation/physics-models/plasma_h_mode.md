@@ -25,7 +25,7 @@ There are two separate constraint equations for enforcing the L-H threshold.
 
 There are two constraints that can be used to enforce L-mode or H-mode.
 
-Constraint 15 (`icc = 15`) is used to enforce H-mode by mandating that the plasma at the separatrix is greater than or equal to the L-H threshold power, a necessary condition for H-mode. `h_mode_threshold_margin >= 1.0` can be used to ensure the separatrix power exceeds the threshold by some margin. 
+Constraint 15 (`icc = 15`) is used to enforce H-mode by mandating that the power transported through the separatrix is greater than or equal to the L-H threshold power, a necessary condition for H-mode. `h_mode_threshold_margin >= 1.0` can be used to ensure the separatrix power exceeds the threshold by some margin. 
 
 $$
 \mathtt{p\_plasma\_separatrix\_mw} \ge \mathtt{h\_mode\_threshold\_margin} \times \underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}
@@ -34,10 +34,10 @@ $$
 For example, `h_mode_threshold_margin = 1.2` ensures that `p_plasma_separatrix_mw` is at least $1.2\times$ greater than the threshold power `p_l_h_threshold_mw`.
 
 
-Constraint 22 (`icc = 22`) is the opposite of constraint 15 and ensures that the power reaching the divertor is less than or equal to the L-H threshold power. `l_mode_threshold_margin >= 1.0` can be used to ensure that the threshold power is greater than the separatrix power by some margin.
+Constraint 22 (`icc = 22`) is the opposite of constraint 15 and ensures that the power transported through the separatrix is less than or equal to the L-H threshold power. `l_mode_threshold_margin >= 1.0` can be used to ensure that the threshold power is greater than the separatrix power by some margin.
 
 $$
-\mathtt{l\_mode\_threshold\_margin} \times \underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}  \ge \mathtt{p\_plasma\_separatrix\_mw} 
+\underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}  \ge \mathtt{l\_mode\_threshold\_margin} \times \mathtt{p\_plasma\_separatrix\_mw} 
 $$
 
 For example, `l_mode_threshold_margin = 1.2` ensures that `p_l_h_threshold_mw` is at least $1.2\times$ greater than the separatrix power `p_plasma_separatrix_mw`.
