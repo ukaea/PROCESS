@@ -34,7 +34,7 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 
-class MFileVariable(dict):
+class MFileVariable(dict):  # noqa: FURB189
     """Class for containing a single mfile variable"""
 
     def __init__(
@@ -278,7 +278,7 @@ class MFile:
         var_key = des.lower().replace("_", " ") if name == "" else name.lower()
 
         if var_key in self.data:
-            scan_num = scan if scan else (self.data[var_key].get_number_of_scans() + 1)
+            scan_num = scan or (self.data[var_key].get_number_of_scans() + 1)
 
             # Check for duplicate entries per scan point if there are scans and no scans
             a = len(self.data[var_key].get_scans())
@@ -310,10 +310,7 @@ class MFile:
             for i in range(self.data["rmajor"].get_number_of_scans()):
                 sub_dict = {}
                 for item in keys_to_write:
-                    if self.data[item].get_number_of_scans() == 1:
-                        dat_key = -1
-                    else:
-                        dat_key = i + 1
+                    dat_key = -1 if self.data[item].get_number_of_scans() == 1 else i + 1
                     data = self.data[item].get_scan(dat_key)
                     des = self.data[item].var_description.replace("_", " ")
                     entry = {"value": data, "description": des} if verbose else data

@@ -437,9 +437,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.nd_plasma_ions_total_vol_avg,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "rminor", bootstrapfractionsauterparam.rminor
-    )
+    monkeypatch.setattr(physics_variables, "rminor", bootstrapfractionsauterparam.rminor)
 
     monkeypatch.setattr(
         physics_variables,
@@ -453,9 +451,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.temp_plasma_ion_vol_avg_kev,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "triang", bootstrapfractionsauterparam.triang
-    )
+    monkeypatch.setattr(physics_variables, "triang", bootstrapfractionsauterparam.triang)
 
     monkeypatch.setattr(physics_variables, "q0", bootstrapfractionsauterparam.q0)
 
@@ -517,9 +513,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.te,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "rmajor", bootstrapfractionsauterparam.rmajor
-    )
+    monkeypatch.setattr(physics_variables, "rmajor", bootstrapfractionsauterparam.rmajor)
 
     monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsauterparam.q95)
 
@@ -549,9 +543,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.nd_plasma_electron_on_axis,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "alphan", bootstrapfractionsauterparam.alphan
-    )
+    monkeypatch.setattr(physics_variables, "alphan", bootstrapfractionsauterparam.alphan)
 
     monkeypatch.setattr(
         physics_variables,
@@ -559,9 +551,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.radius_plasma_pedestal_temp_norm,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "alphat", bootstrapfractionsauterparam.alphat
-    )
+    monkeypatch.setattr(physics_variables, "alphat", bootstrapfractionsauterparam.alphat)
     physics.plasma_profile.run()
     bfs, _ = physics.bootstrap_fraction_sauter(physics.plasma_profile)
 
@@ -1228,9 +1218,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         plasmacurrentparam.beta_norm_total,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta
-    )
+    monkeypatch.setattr(physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta)
 
     b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
         i_plasma_current=plasmacurrentparam.i_plasma_current,
@@ -2278,7 +2266,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     (
         burnup,
         ntau,
-        nTtau,
+        _nTtau,
         figmer,
         fusrat,
         molflow_plasma_fuelling_required,
@@ -2313,9 +2301,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     assert rndfuel == pytest.approx(phyauxparam.expected_rndfuel)
 
-    assert t_alpha_confinement == pytest.approx(
-        phyauxparam.expected_t_alpha_confinement
-    )
+    assert t_alpha_confinement == pytest.approx(phyauxparam.expected_t_alpha_confinement)
 
 
 def test_rether():
@@ -2410,9 +2396,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
         zeff=pohmparam.zeff,
     )
 
-    assert pden_plasma_ohmic_mw == pytest.approx(
-        pohmparam.expected_pden_plasma_ohmic_mw
-    )
+    assert pden_plasma_ohmic_mw == pytest.approx(pohmparam.expected_pden_plasma_ohmic_mw)
 
     assert p_plasma_ohmic_mw == pytest.approx(pohmparam.expected_p_plasma_ohmic_mw)
 
@@ -3294,9 +3278,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        physics_variables, "i_rad_loss", confinementtimeparam.i_rad_loss
-    )
+    monkeypatch.setattr(physics_variables, "i_rad_loss", confinementtimeparam.i_rad_loss)
 
     monkeypatch.setattr(physics_variables, "tauee_in", confinementtimeparam.tauee_in)
 

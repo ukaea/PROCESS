@@ -41,9 +41,7 @@ class Buildings:
             build_variables.dr_tf_outboard * 0.5e0
         )
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
-        tfri = build_variables.r_tf_inboard_mid - (
-            build_variables.dr_tf_inboard * 0.5e0
-        )
+        tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_inboard * 0.5e0)
 
         # Find width, in radial dimension, of TF coil (m)
         tf_radial_dim = tfro - tfri
@@ -318,9 +316,7 @@ class Buildings:
         buildings_variables.convol = buildings_variables.conv
 
         # Total volume of nuclear buildings
-        buildings_variables.volnucb = (
-            vrci + rmbv + wsv + buildings_variables.triv + cryv
-        )
+        buildings_variables.volnucb = vrci + rmbv + wsv + buildings_variables.triv + cryv
 
         # Output !
         # !!!!!!!!!
@@ -680,9 +676,9 @@ class Buildings:
         hotcell_w = hotcell_l
 
         # external dimensions include same wall and roof thicknesses as reactor building
-        hotcell_area_ext = (
-            hotcell_l + 2.0e0 * buildings_variables.reactor_wall_thk
-        ) * (hotcell_w + 2.0e0 * buildings_variables.reactor_wall_thk)
+        hotcell_area_ext = (hotcell_l + 2.0e0 * buildings_variables.reactor_wall_thk) * (
+            hotcell_w + 2.0e0 * buildings_variables.reactor_wall_thk
+        )
         hotcell_vol_ext = hotcell_area_ext * (
             buildings_variables.hotcell_h
             + buildings_variables.reactor_roof_thk
@@ -736,9 +732,7 @@ class Buildings:
         magnet_pulse_vol = magnet_pulse_area * buildings_variables.magnet_pulse_h
 
         # Total power buildings areas and volumes
-        power_buildings_area = (
-            hcd_building_area + magnet_trains_area + magnet_pulse_area
-        )
+        power_buildings_area = hcd_building_area + magnet_trains_area + magnet_pulse_area
         power_buildings_vol = hcd_building_vol + magnet_trains_vol + magnet_pulse_vol
 
         buildings_total_vol = buildings_total_vol + power_buildings_vol
@@ -925,8 +919,7 @@ class Buildings:
         # Respiratory Protective Equipment cleaning; industrial drains & sewage
         # process and discharge; these values amalgamate multiple individual buildings.
         water_buildings_area = (
-            buildings_variables.water_buildings_l
-            * buildings_variables.water_buildings_w
+            buildings_variables.water_buildings_l * buildings_variables.water_buildings_w
         )
         water_buildings_vol = (
             water_buildings_area * buildings_variables.water_buildings_h

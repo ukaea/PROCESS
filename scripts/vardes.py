@@ -66,8 +66,6 @@ if __name__ == "__main__":
 
     vardes_template = env.get_template("vardes.jinja2")
 
-    with open(
-        Path(__file__).resolve().parent / "../documentation/io/vardes.md",
-        "w",
-    ) as f:
-        f.write(vardes_template.render(mods=mods))
+    (Path(__file__).resolve().parent / "../documentation/io/vardes.md").write_text(
+        vardes_template.render(mods=mods)
+    )

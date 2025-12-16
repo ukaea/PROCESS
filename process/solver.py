@@ -304,7 +304,7 @@ class FSolve(_Solver):
         :rtype: int
         """
         print("Solving equality constraints using fsolve")
-        self.x, info, err, msg = fsolve(
+        self.x, _info, err, msg = fsolve(
             self.evaluate_eq_cons, self.x_0, full_output=True
         )
 

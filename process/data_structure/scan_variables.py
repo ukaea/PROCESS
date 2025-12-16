@@ -138,15 +138,16 @@ first_call_2d: bool = None
 
 def init_scan_variables():
     """Initialise the scan module"""
-    global scan_dim
-    global isweep
-    global isweep_2
-    global nsweep
-    global nsweep_2
-    global sweep
-    global sweep_2
-    global first_call_1d
-    global first_call_2d
+    global \
+        scan_dim, \
+        isweep, \
+        isweep_2, \
+        nsweep, \
+        nsweep_2, \
+        sweep, \
+        sweep_2, \
+        first_call_1d, \
+        first_call_2d
 
     scan_dim = 1
     isweep = 0

@@ -44,44 +44,34 @@ def tfcoil_geometry_rectangular_shape(
     :return: list of RectangleGeometry - dataclass returning rectangular geometry parameters
     :rtype: List[RectangleGeometry]
     """
-    return_rects = []
     # In this geometry, the tf coil is represented by 4 rectangular sections as follows:
-
-    # rectangle representing the inboard part of the tf coil
-    return_rects.append(
+    return [
+        # rectangle representing the inboard part of the tf coil
         RectangleGeometry(
             anchor_x=x5 - dr_tf_inboard + offset_in,
             anchor_z=y5 - dr_tf_inboard,
             width=dr_tf_inboard,
             height=(y1 - y5 + 2.0 * dr_tf_inboard),
-        )
-    )
-    # rectangle representing the outboard part of the tf coil
-    return_rects.append(
+        ),
+        # rectangle representing the outboard part of the tf coil
         RectangleGeometry(
             anchor_x=x4 - offset_in,
             anchor_z=y4 - dr_tf_inboard,
             width=dr_tf_inboard,
             height=(y2 - y4 + 2.0 * dr_tf_inboard),
-        )
-    )
-    # rectangle representing the lower horizontal part of the tf coil
-    return_rects.append(
+        ),
+        # rectangle representing the lower horizontal part of the tf coil
         RectangleGeometry(
             anchor_x=x5,
             anchor_z=y5 - dr_tf_inboard + offset_in,
             width=x4 - x5,
             height=dr_tf_inboard,
-        )
-    )
-    # rectangle representing the upper horizontal part of the tf coil
-    return_rects.append(
+        ),
+        # rectangle representing the upper horizontal part of the tf coil
         RectangleGeometry(
             anchor_x=x1, anchor_z=y1 - offset_in, width=(x2 - x1), height=dr_tf_inboard
-        )
-    )
-
-    return return_rects
+        ),
+    ]
 
 
 def tfcoil_geometry_d_shape(

@@ -81,29 +81,30 @@ r_eff: float = None
 
 
 def init_neoclassics_variables():
-    global densities
-    global temperatures
-    global dr_densities
-    global dr_temperatures
-    global roots
-    global weights
-    global nu
-    global nu_star
-    global nu_star_averaged
-    global vd
-    global kt
-    global er
-    global iota
-    global d11_mono
-    global d11_plateau
-    global d111
-    global d112
-    global d113
-    global q_flux
-    global gamma_flux
-    global d31_mono
-    global eps_eff
-    global r_eff
+    global \
+        densities, \
+        temperatures, \
+        dr_densities, \
+        dr_temperatures, \
+        roots, \
+        weights, \
+        nu, \
+        nu_star, \
+        nu_star_averaged, \
+        vd, \
+        kt, \
+        er, \
+        iota, \
+        d11_mono, \
+        d11_plateau, \
+        d111, \
+        d112, \
+        d113, \
+        q_flux, \
+        gamma_flux, \
+        d31_mono, \
+        eps_eff, \
+        r_eff
 
     densities = np.zeros(4)
     temperatures = np.zeros(4)

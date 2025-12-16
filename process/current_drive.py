@@ -937,8 +937,7 @@ class IonCyclotron:
         """
 
         return (
-            (0.63e0 * 0.1e0 * temp_plasma_electron_density_weighted_kev)
-            / (2.0e0 + zeff)
+            (0.63e0 * 0.1e0 * temp_plasma_electron_density_weighted_kev) / (2.0e0 + zeff)
         ) / (rmajor * dene20)
 
 
@@ -1500,8 +1499,7 @@ class CurrentDrive:
                 rmajor=physics_variables.rmajor,
                 temp_plasma_electron_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
                 c_hcd_driven=current_drive_variables.c_hcd_primary_driven,
-                p_hcd_injected=current_drive_variables.p_hcd_primary_injected_mw
-                * 1.0e6,
+                p_hcd_injected=current_drive_variables.p_hcd_primary_injected_mw * 1.0e6,
             )
 
             if current_drive_variables.p_hcd_secondary_injected_mw > 0.0:
@@ -1547,7 +1545,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Ion cyclotron cases
-            if current_drive_variables.i_hcd_secondary in [2]:
+            if current_drive_variables.i_hcd_secondary == 2:
                 # Injected power
                 p_hcd_secondary_ions_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1599,7 +1597,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Electron berstein cases
-            if current_drive_variables.i_hcd_secondary in [12]:
+            if current_drive_variables.i_hcd_secondary == 12:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1736,7 +1734,7 @@ class CurrentDrive:
             # ===========================================================
 
             # Ion cyclotron cases
-            if current_drive_variables.i_hcd_primary in [2]:
+            if current_drive_variables.i_hcd_primary == 2:
                 p_hcd_primary_ions_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -1799,7 +1797,7 @@ class CurrentDrive:
 
             # Electron bernstein cases
 
-            if current_drive_variables.i_hcd_primary in [12]:
+            if current_drive_variables.i_hcd_primary == 12:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_ebw_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw

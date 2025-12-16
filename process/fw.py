@@ -220,9 +220,7 @@ class Fw:
         # This heat starts off spread over width = 'dx_fw_module'.
         # It ends up spread over one half the circumference.
         # Use the mean of these values.
-        mean_width = (
-            fwbs_variables.dx_fw_module + np.pi * radius_fw_channel
-        ) / 2  # (m)
+        mean_width = (fwbs_variables.dx_fw_module + np.pi * radius_fw_channel) / 2  # (m)
 
         # As before, use a combined load 'onedload'
         # Temperature drop in first-wall material (K)

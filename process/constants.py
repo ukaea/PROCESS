@@ -308,8 +308,7 @@ ACCELERATION_GRAVITY = 9.81
 
 
 def init_constants():
-    global den_copper
-    global den_aluminium
+    global den_copper, den_aluminium
 
     den_copper = 8900.0
     den_aluminium = 2700.0

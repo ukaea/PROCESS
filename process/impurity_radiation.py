@@ -325,12 +325,8 @@ def init_imp_element(
             f"Cannot locate Zav for infinite confinement data in {z_file}"
         )
 
-    impurity_radiation_module.temp_impurity_keV_array[n_species_index - 1, :] = (
-        Te * 1e-3
-    )
-    impurity_radiation_module.pden_impurity_lz_nd_temp_array[n_species_index - 1, :] = (
-        lz
-    )
+    impurity_radiation_module.temp_impurity_keV_array[n_species_index - 1, :] = Te * 1e-3
+    impurity_radiation_module.pden_impurity_lz_nd_temp_array[n_species_index - 1, :] = lz
     impurity_radiation_module.impurity_arr_zav[n_species_index - 1, :] = zav
 
 

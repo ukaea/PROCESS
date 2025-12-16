@@ -109,9 +109,7 @@ class Costs2015:
 
         # Levelized cost of electricity (LCOE) ($/MWh)
         if cost_2015_variables.annual_electric_output > 0.00001:
-            cost_variables.coe = (
-                1.0e0 / cost_2015_variables.annual_electric_output
-            ) * (
+            cost_variables.coe = (1.0e0 / cost_2015_variables.annual_electric_output) * (
                 cost_2015_variables.total_costs / cost_variables.amortization
                 + cost_2015_variables.maintenance
             )
@@ -169,19 +167,13 @@ class Costs2015:
         # Built-in test
         if global_variables.run_tests == 1:
             product_li6 = 0.3
-            feed_to_product_mass_ratio = (product_li6 - tail_li6) / (
-                feed_li6 - tail_li6
-            )
-            tail_to_product_mass_ratio = (product_li6 - feed_li6) / (
-                feed_li6 - tail_li6
-            )
+            feed_to_product_mass_ratio = (product_li6 - tail_li6) / (feed_li6 - tail_li6)
+            tail_to_product_mass_ratio = (product_li6 - feed_li6) / (feed_li6 - tail_li6)
             p_v = self.value_function(product_li6)
             t_v = self.value_function(tail_li6)
             f_v = self.value_function(feed_li6)
             swu = (
-                p_v
-                + tail_to_product_mass_ratio * t_v
-                - feed_to_product_mass_ratio * f_v
+                p_v + tail_to_product_mass_ratio * t_v - feed_to_product_mass_ratio * f_v
             )
             if abs(swu - 2.66e0) < 2.0e-2:
                 po.ocmmnt(
@@ -222,14 +214,10 @@ class Costs2015:
             # SWU will be calculated for a unit mass of product (P=1)
 
             # Feed to product mass ratio
-            feed_to_product_mass_ratio = (product_li6 - tail_li6) / (
-                feed_li6 - tail_li6
-            )
+            feed_to_product_mass_ratio = (product_li6 - tail_li6) / (feed_li6 - tail_li6)
 
             # Tail to product mass ratio
-            tail_to_product_mass_ratio = (product_li6 - feed_li6) / (
-                feed_li6 - tail_li6
-            )
+            tail_to_product_mass_ratio = (product_li6 - feed_li6) / (feed_li6 - tail_li6)
 
             # Calculate value functions
             p_v = self.value_function(product_li6)
@@ -238,9 +226,7 @@ class Costs2015:
 
             # Calculate separative work units per kg
             swu = (
-                p_v
-                + tail_to_product_mass_ratio * t_v
-                - feed_to_product_mass_ratio * f_v
+                p_v + tail_to_product_mass_ratio * t_v - feed_to_product_mass_ratio * f_v
             )
 
             # Mass of lithium (kg).  Lithium orthosilicate is 22% lithium by mass.
@@ -900,9 +886,7 @@ class Costs2015:
             ** cost_variables.costexp
         )
 
-        cost_2015_variables.s_label[33] = (
-            "Total liquid nitrogen plant and vacuum vessel"
-        )
+        cost_2015_variables.s_label[33] = "Total liquid nitrogen plant and vacuum vessel"
         cost_2015_variables.s_cost[33] = 0.0e0
         for j in range(31, 33):
             cost_2015_variables.s_cost[33] = (
@@ -1148,9 +1132,7 @@ class Costs2015:
         #  For ITER value see
         #  K:\Power Plant Physics and Technology\PROCESS\PROCESS documentation papers\resistive diffusion time.xmcd or pdf
         cost_2015_variables.s_k[51] = (
-            pf_power_variables.ensxpfm
-            * 1.0e6
-            / physics_variables.t_plasma_res_diffusion
+            pf_power_variables.ensxpfm * 1.0e6 / physics_variables.t_plasma_res_diffusion
         )
         cost_2015_variables.s_kref[51] = 8.0e9 / 953.0e0
         cost_2015_variables.s_cost[51] = (
@@ -1160,9 +1142,7 @@ class Costs2015:
             ** cost_variables.costexp
         )
 
-        cost_2015_variables.s_label[52] = (
-            "Neutral beam heating and current drive system"
-        )
+        cost_2015_variables.s_label[52] = "Neutral beam heating and current drive system"
         #  Cost of ITER NB H and CD
         cost_2015_variables.s_cref[52] = 814.0e6
         #  Scale with total auxiliary injected power (MW)

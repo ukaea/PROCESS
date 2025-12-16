@@ -84,16 +84,12 @@ class CoolingTowersParam(NamedTuple):
 )
 def test_cooling_towers(coolingtowersparam, monkeypatch, water_use):
     monkeypatch.setattr(water_usage_variables, "airtemp", coolingtowersparam.airtemp)
-    monkeypatch.setattr(
-        water_usage_variables, "waterdens", coolingtowersparam.waterdens
-    )
+    monkeypatch.setattr(water_usage_variables, "waterdens", coolingtowersparam.waterdens)
     monkeypatch.setattr(
         water_usage_variables, "latentheat", coolingtowersparam.latentheat
     )
     monkeypatch.setattr(water_usage_variables, "volheat", coolingtowersparam.volheat)
-    monkeypatch.setattr(
-        water_usage_variables, "evapratio", coolingtowersparam.evapratio
-    )
+    monkeypatch.setattr(water_usage_variables, "evapratio", coolingtowersparam.evapratio)
     monkeypatch.setattr(water_usage_variables, "evapvol", coolingtowersparam.evapvol)
     monkeypatch.setattr(
         water_usage_variables, "energypervol", coolingtowersparam.energypervol

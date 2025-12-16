@@ -199,9 +199,7 @@ class Costs:
             "(fkind)",
             cost_variables.fkind,
         )
-        po.ovarin(
-            self.outfile, "Level of Safety Assurance", "(lsa)", cost_variables.lsa
-        )
+        po.ovarin(self.outfile, "Level of Safety Assurance", "(lsa)", cost_variables.lsa)
         po.oblnkl(self.outfile)
         po.oshead(self.outfile, "Structures and Site Facilities")
         po.ocosts(
@@ -1949,8 +1947,7 @@ class Costs:
             cost_variables.c2231 = (
                 1.0e-6
                 * cost_variables.ucech
-                * (1.0e6 * current_drive_variables.p_hcd_ecrh_injected_total_mw)
-                ** exprf
+                * (1.0e6 * current_drive_variables.p_hcd_ecrh_injected_total_mw) ** exprf
             )
 
             if cost_variables.ifueltyp == 1:
@@ -2879,9 +2876,7 @@ class Costs:
 
         #  Interest on construction costs
 
-        cost_variables.moneyint = cost_variables.concost * (
-            cost_variables.fcap0 - 1.0e0
-        )
+        cost_variables.moneyint = cost_variables.concost * (cost_variables.fcap0 - 1.0e0)
 
         #  Capital costs
 

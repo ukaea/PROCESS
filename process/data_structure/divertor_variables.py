@@ -58,24 +58,25 @@ xpertin: float = None
 
 
 def init_divertor_variables():
-    global anginc
-    global deg_div_field_plate
-    global betai
-    global betao
-    global f_vol_div_coolant
-    global den_div_structure
-    global dz_divertor
-    global m_div_plate
-    global dx_div_plate
-    global a_div_surface_total
-    global fdiva
-    global f_div_flux_expansion
-    global pflux_div_heat_load_mw
-    global i_div_heat_load
-    global pflux_div_heat_load_max_mw
-    global prn1
-    global tdiv
-    global xpertin
+    global \
+        anginc, \
+        deg_div_field_plate, \
+        betai, \
+        betao, \
+        f_vol_div_coolant, \
+        den_div_structure, \
+        dz_divertor, \
+        m_div_plate, \
+        dx_div_plate, \
+        a_div_surface_total, \
+        fdiva, \
+        f_div_flux_expansion, \
+        pflux_div_heat_load_mw, \
+        i_div_heat_load, \
+        pflux_div_heat_load_max_mw, \
+        prn1, \
+        tdiv, \
+        xpertin
 
     anginc = 0.262
     deg_div_field_plate = 1.0

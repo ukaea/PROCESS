@@ -36,19 +36,20 @@ convergence_parameter: int = None
 
 
 def init_global_variables():
-    global icase
-    global runtitle
-    global run_tests
-    global verbose
-    global maxcal
-    global fileprefix
-    global output_prefix
-    global xlabel
-    global vlabel
-    global xlabel_2
-    global vlabel_2
-    global iscan_global
-    global convergence_parameter
+    global \
+        icase, \
+        runtitle, \
+        run_tests, \
+        verbose, \
+        maxcal, \
+        fileprefix, \
+        output_prefix, \
+        xlabel, \
+        vlabel, \
+        xlabel_2, \
+        vlabel_2, \
+        iscan_global, \
+        convergence_parameter
 
     icase = "Steady-state tokamak model"
     runtitle = "Run Title (change this line using input variable 'runtitle')"

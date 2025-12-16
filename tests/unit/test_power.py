@@ -1877,9 +1877,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     power.pfpwr(output=False)
 
-    assert heat_transport_variables.peakmva == pytest.approx(
-        pfpwrparam.expected_peakmva
-    )
+    assert heat_transport_variables.peakmva == pytest.approx(pfpwrparam.expected_peakmva)
 
     assert pf_power_variables.pfckts == pytest.approx(pfpwrparam.expected_pfckts)
 
@@ -2743,9 +2741,7 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_coolant_pump_elec_total_mw,
     )
 
-    monkeypatch.setattr(
-        heat_transport_variables, "eta_turbine", power2param.eta_turbine
-    )
+    monkeypatch.setattr(heat_transport_variables, "eta_turbine", power2param.eta_turbine)
 
     monkeypatch.setattr(
         heat_transport_variables,

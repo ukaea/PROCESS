@@ -16,11 +16,7 @@ gsmass: float = None
 
 def init_structure_variables():
     """Initialise structure variables"""
-    global aintmass
-    global clgsmass
-    global coldmass
-    global fncmass
-    global gsmass
+    global aintmass, clgsmass, coldmass, fncmass, gsmass
 
     aintmass = 0.0
     clgsmass = 0.0

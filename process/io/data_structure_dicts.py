@@ -28,6 +28,7 @@ NON_F_VALUES = [
     "feffcd",
     "f_a_tf_turn_cable_copper",
 ]
+logger = logging.getLogger(__name__)
 
 output_dict = {}
 # Dict of nested dicts e.g. output_dict['DICT_DESCRIPTIONS'] =
@@ -131,7 +132,7 @@ def grep(file, regexp, flags=re.UNICODE):
             lines = [line for line in file_open if re.search(regexp, line, flags)]
 
     except OSError:
-        logging.warning("File : %s not found\n", file)
+        logger.warning("File : %s not found\n", file)
     return lines
 
 
@@ -158,7 +159,7 @@ def slice_file(file, re1, re2):
             start = i
             break
     if start is None:
-        logging.warning("Could not match %s in file %s\n", re1, file)
+        logger.warning("Could not match %s in file %s\n", re1, file)
         return ""
     end = None
     for i in range(start, len(filetext)):
@@ -167,7 +168,7 @@ def slice_file(file, re1, re2):
             end = i
             break
     if end is None:
-        logging.warning("Could not match %s in file %s\n", re2, file)
+        logger.warning("Could not match %s in file %s\n", re2, file)
         return ""
     # return slice
     return filetext[start : end + 1]

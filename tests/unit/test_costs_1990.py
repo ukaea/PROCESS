@@ -470,9 +470,7 @@ def test_acc242(monkeypatch, costs):
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(heat_transport_variables, "pacpmw", 630.0)
-    monkeypatch.setattr(
-        heat_transport_variables, "p_plant_electric_base_total_mw", 65.0
-    )
+    monkeypatch.setattr(heat_transport_variables, "p_plant_electric_base_total_mw", 65.0)
     monkeypatch.setattr(cost_variables, "c242", 0)
 
     costs.acc242()

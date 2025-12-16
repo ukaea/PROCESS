@@ -1309,8 +1309,7 @@ class TFCoil:
                 # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.a_tf_wp_coolant_channels/ap)',a_tf_wp_coolant_channels/ap, 'OP ')
                 ap = (
                     tfcoil_variables.a_tf_wp_conductor
-                    + tfcoil_variables.n_tf_coil_turns
-                    * tfcoil_variables.a_tf_turn_steel
+                    + tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
                     + tfcoil_variables.a_tf_coil_wp_turn_insulation
                     + tfcoil_variables.a_tf_wp_extra_void
                     + tfcoil_variables.a_tf_wp_coolant_channels
@@ -2023,9 +2022,7 @@ class TFCoil:
 
         # Radial build consistency check
         if (
-            abs(
-                radius - build_variables.r_tf_inboard_in - build_variables.dr_tf_inboard
-            )
+            abs(radius - build_variables.r_tf_inboard_in - build_variables.dr_tf_inboard)
             < 10.0e0 * np.finfo(float(radius)).eps
         ):
             po.ocmmnt(self.outfile, "TF coil dimensions are consistent")
@@ -2620,12 +2617,8 @@ class TFCoil:
                 r_tf_wp_inboard_inner + dx_tf_wp_insulation + dx_tf_wp_insertion_gap
             )
         else:
-            r_tf_wp_inboard_outer_conductor = (
-                r_tf_wp_inboard_outer - dx_tf_wp_insulation
-            )
-            r_tf_wp_inboard_inner_conductor = (
-                r_tf_wp_inboard_inner + dx_tf_wp_insulation
-            )
+            r_tf_wp_inboard_outer_conductor = r_tf_wp_inboard_outer - dx_tf_wp_insulation
+            r_tf_wp_inboard_inner_conductor = r_tf_wp_inboard_inner + dx_tf_wp_insulation
 
         # Associated WP thickness
         dr_tf_wp_inboard_conductor = (
@@ -2688,8 +2681,7 @@ class TFCoil:
                 * (
                     r_tf_wp_inboard_outer_conductor
                     * np.log(
-                        r_tf_wp_inboard_inner_conductor
-                        / r_tf_wp_inboard_outer_conductor
+                        r_tf_wp_inboard_inner_conductor / r_tf_wp_inboard_outer_conductor
                     )
                     + r_tf_wp_outboard_inner_conductor
                     * np.log(
@@ -2712,8 +2704,7 @@ class TFCoil:
                     2.0e0
                     * r_tf_wp_inboard_outer_conductor**2
                     * np.log(
-                        r_tf_wp_inboard_outer_conductor
-                        / r_tf_wp_inboard_inner_conductor
+                        r_tf_wp_inboard_outer_conductor / r_tf_wp_inboard_inner_conductor
                     )
                     + 2.0e0
                     * dr_tf_wp_inboard_conductor**2
@@ -2726,8 +2717,7 @@ class TFCoil:
                     * dr_tf_wp_inboard_conductor
                     * r_tf_wp_inboard_outer_conductor
                     * np.log(
-                        r_tf_wp_inboard_inner_conductor
-                        / r_tf_wp_inboard_outer_conductor
+                        r_tf_wp_inboard_inner_conductor / r_tf_wp_inboard_outer_conductor
                     )
                 )
             )
@@ -3099,9 +3089,7 @@ class TFCoil:
         # Surface areas (for cryo system) [m²]
         wbtf = (
             build_variables.r_tf_inboard_out
-            * np.sin(
-                superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half
-            )
+            * np.sin(superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half)
             - build_variables.r_tf_inboard_in
             * superconducting_tf_coil_variables.tan_theta_coil
         )
@@ -4740,10 +4728,7 @@ def extended_plane_strain(
     # Axial stiffness products
     ey_bar_z_area = np.pi * sum(
         ey_bar_z[nonslip_layer - 1 : nlayers]
-        * (
-            rad[nonslip_layer : nlayers + 1] ** 2
-            - rad[nonslip_layer - 1 : nlayers] ** 2
-        )
+        * (rad[nonslip_layer : nlayers + 1] ** 2 - rad[nonslip_layer - 1 : nlayers] ** 2)
     )
     ey_bar_z_area_slip = np.pi * sum(
         ey_bar_z[: nonslip_layer - 1]

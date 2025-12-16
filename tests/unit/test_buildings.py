@@ -952,9 +952,7 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "wgt", bldgsparam.wgt)
     monkeypatch.setattr(buildings_variables, "shmf", bldgsparam.shmf)
     monkeypatch.setattr(buildings_variables, "clh2", bldgsparam.clh2)
-    monkeypatch.setattr(
-        buildings_variables, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat
-    )
+    monkeypatch.setattr(buildings_variables, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat)
     monkeypatch.setattr(buildings_variables, "stcl", bldgsparam.stcl)
     monkeypatch.setattr(buildings_variables, "rbvfac", bldgsparam.rbvfac)
     monkeypatch.setattr(buildings_variables, "rbwt", bldgsparam.rbwt)
