@@ -582,7 +582,7 @@ def constraint_equation_15():
     Setting h_mode_threshold_margin != 1.0 enforces a margin on the constraint:
     I.e.  p_plasma_separatrix_mw >= h_mode_threshold_margin * p_l_h_threshold_mw
 
-    For example, h_mode_threshold_margin = 1.2 gives a 20% margin and will ensure that
+    For example, h_mode_threshold_margin = 1.2 will ensure that
     p_plasma_separatrix_mw is at least 1.2*p_l_h_threshold_mw (ie in H-mode).
     """
     return ConstraintResult(
@@ -739,23 +739,24 @@ def constraint_equation_21():
 @ConstraintManager.register_constraint(22, "MW", ">=")
 def constraint_equation_22():
     """Equation for L-H power threshold limit to enforce L-mode
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     l_mode_threshold_margin: a margin on the constraint
     p_l_h_threshold_mw: L-H mode power threshold (MW)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
 
     Setting l_mode_threshold_margin != 1.0 enforces a margin on the constraint:
-    I.e. l_mode_threshold_margin * p_l_h_threshold_mw >= p_plasma_separatrix_mw
+    I.e.  p_l_h_threshold_mw >= l_mode_threshold_margin * p_plasma_separatrix_mw
 
-    For example, l_mode_threshold_margin = 0.8 gives at 20% margin and will ensure that
-    p_plasma_separatrix_mw can never be more than 0.8*p_l_h_threshold_mw (ie in L-mode).
+    For example, l_mode_threshold_margin = 1.2 will ensure that
+    p_l_h_threshold_mw is at least 1.2*p_plasma_separatrix_mw (ie in L-mode).
     """
     return ConstraintResult(
         1.0
-        - data_structure.constraint_variables.l_mode_threshold_margin
-        * data_structure.physics_variables.p_l_h_threshold_mw
-        / data_structure.physics_variables.p_plasma_separatrix_mw,
+        - data_structure.physics_variables.p_l_h_threshold_mw
+        / (
+            data_structure.constraint_variables.l_mode_threshold_margin
+            * data_structure.physics_variables.p_plasma_separatrix_mw
+        ),
         data_structure.physics_variables.p_plasma_separatrix_mw,
         data_structure.physics_variables.p_plasma_separatrix_mw
         - data_structure.physics_variables.p_l_h_threshold_mw
