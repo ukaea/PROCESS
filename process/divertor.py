@@ -36,13 +36,13 @@ class Divertor:
         :type output: boolean
         """
 
-        fwbs.p_div_nuclear_heat_total_mw = self.set_incident_neutron_power(
+        fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
             f_ster_div_single=fwbs.f_ster_div_single,
             n_divertors=pv.n_divertors,
         )
 
-        fwbs.p_div_rad_total_mw = self.set_incident_radiation_power(
+        fwbs.p_div_rad_total_mw = self.incident_radiation_power(
             p_plasma_rad_mw=pv.p_plasma_rad_mw,
             f_ster_div_single=fwbs.f_ster_div_single,
             n_divertors=pv.n_divertors,
@@ -377,23 +377,45 @@ class Divertor:
             )
         return dv.pflux_div_heat_load_mw
 
-    def set_incident_radiation_power(
+    def incident_radiation_power(
         self,
         p_plasma_rad_mw: float,
         f_ster_div_single: float,
         n_divertors: int,
     ) -> float:
-        """Set incident radiation on divertor box"""
+        """
+        Calculates the total incident radiation power on the divertor box.
+
+        :param p_plasma_rad_mw: Total plasma radiated power in megawatts (MW).
+        :type p_plasma_rad_mw: float
+        :param f_ster_div_single: Fraction of the solid angle subtended by a single divertor.
+        :type f_ster_div_single: float
+        :param n_divertors: Number of divertors.
+        :type n_divertors: int
+        :returns: Total incident radiation power on the divertor box in megawatts (MW).
+        :rtype: float
+        """
 
         return p_plasma_rad_mw * f_ster_div_single * n_divertors
 
-    def set_incident_neutron_power(
+    def incident_neutron_power(
         self,
         p_plasma_neutron_mw: float,
         f_ster_div_single: float,
         n_divertors: int,
     ) -> float:
-        """Set incident neutron power on divertor box"""
+        """
+        Calculates the total incident neutron power on the divertor box.
+
+        :param p_plasma_neutron_mw: Total plasma neutron power in megawatts (MW).
+        :type p_plasma_neutron_mw: float
+        :param f_ster_div_single: Fraction of the solid angle subtended by a single divertor.
+        :type f_ster_div_single: float
+        :param n_divertors: Number of divertors.
+        :type n_divertors: int
+        :returns: Total incident radiation power on the divertor box in megawatts (MW).
+        :rtype: float
+        """
 
         return p_plasma_neutron_mw * f_ster_div_single * n_divertors
 

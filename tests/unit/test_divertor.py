@@ -115,10 +115,9 @@ class TestDivertor:
     ],
 )
 def test_set_incident_radiation_power(
-    p_plasma_rad_mw, f_ster_div_single, n_divertors, expected
+    divertor, p_plasma_rad_mw, f_ster_div_single, n_divertors, expected
 ):
-    divertor = Divertor()
-    result = divertor.set_incident_radiation_power(
+    result = divertor.incident_radiation_power(
         p_plasma_rad_mw, f_ster_div_single, n_divertors
     )
     assert result == pytest.approx(expected)
@@ -135,10 +134,9 @@ def test_set_incident_radiation_power(
     ],
 )
 def test_set_incident_neutron_power(
-    p_plasma_neutron_mw, f_ster_div_single, n_divertors, expected
+    divertor, p_plasma_neutron_mw, f_ster_div_single, n_divertors, expected
 ):
-    divertor = Divertor()
-    result = divertor.set_incident_neutron_power(
+    result = divertor.incident_neutron_power(
         p_plasma_neutron_mw, f_ster_div_single, n_divertors
     )
     assert result == pytest.approx(expected)
