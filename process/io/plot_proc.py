@@ -12800,7 +12800,7 @@ def main_plot(
     plot_power_info(figs[1].add_subplot(235), m_file_data, scan)
 
     # Current drive
-    plot_current_drive_info(figs[1].add_subplot(236), m_file_data, scan)
+    # plot_current_drive_info(figs[1].add_subplot(236), m_file_data, scan)
     figs[1].subplots_adjust(wspace=0.25, hspace=0.25)
 
     ax7 = figs[2].add_subplot(121)
