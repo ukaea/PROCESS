@@ -2209,7 +2209,7 @@ class TFCoil:
         )  # Cooling cross-sectional area
         dcool = 2.0e0 * tfcoil_variables.radius_cp_coolant_channel  # Diameter
         lcool = 2.0e0 * (bv.z_tf_inside_half + bv.dr_tf_outboard)  # Length
-        tfcoil_variables.ncool = acool / (
+        tfcoil_variables.n_cp_coolant_channels_total = acool / (
             np.pi * tfcoil_variables.radius_cp_coolant_channel**2
         )  # Number
 
@@ -2220,7 +2220,7 @@ class TFCoil:
             / (bv.z_tf_inside_half + bv.dr_tf_outboard)
             + acool
         )
-        ro = (acpav / (np.pi * tfcoil_variables.ncool)) ** 0.5
+        ro = (acpav / (np.pi * tfcoil_variables.n_cp_coolant_channels_total)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
         ptot = tfcoil_variables.p_cp_resistive + fwbs_variables.pnuc_cp_tf * 1.0e6
@@ -2324,7 +2324,7 @@ class TFCoil:
             * 2.0e0
             * np.pi
             * tfcoil_variables.radius_cp_coolant_channel
-            * tfcoil_variables.ncool
+            * tfcoil_variables.n_cp_coolant_channels_total
             * lcool
         )
 
@@ -2496,8 +2496,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Number of coolant tubes",
-                "(ncool)",
-                tfcoil_variables.ncool,
+                "(n_cp_coolant_channels_total)",
+                tfcoil_variables.n_cp_coolant_channels_total,
             )
             po.ovarre(self.outfile, "Reynolds number", "(reyn)", reyn)
             po.ovarre(self.outfile, "Prandtl number", "(prndtl)", prndtl)

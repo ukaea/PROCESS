@@ -991,7 +991,7 @@ a_cp_cool: float = None
 """Centrepost cooling area toroidal cross-section (constant over the whole CP)"""
 
 
-ncool: float = None
+n_cp_coolant_channels_total: float = None
 """number of centrepost coolant tubes"""
 
 
@@ -1281,7 +1281,7 @@ def init_tfcoil_variables():
     global fcoolcp
     global f_a_tf_cool_outboard
     global a_cp_cool
-    global ncool
+    global n_cp_coolant_channels_total
     global p_cp_coolant_pump_elec
     global p_cp_resistive
     global p_tf_leg_resistive
@@ -1516,7 +1516,7 @@ def init_tfcoil_variables():
     fcoolcp = 0.3
     f_a_tf_cool_outboard = 0.2
     a_cp_cool = 0.0
-    ncool = 0.0
+    n_cp_coolant_channels_total = 0.0
     p_cp_coolant_pump_elec = 0.0
     p_cp_resistive = 0.0
     p_tf_leg_resistive = 0.0
