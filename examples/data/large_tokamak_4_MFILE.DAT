@@ -7531,7 +7531,7 @@ Resistive_losses_in_current_leads_(MW)___________________________________ (qcl/1
 45%_allowance_for_heat_loads_in_transfer_lines,_storage_tanks_etc_(MW)___ (qmisc/1.0d6)__________________ 2.96747670762382149e-02 OP 
 Sum_=_Total_heat_removal_at_cryogenic_temperatures_(temp_tf_cryo_&_tcoolin)_(MW)_ (helpow_+_helpow_cryal/1.0d6)__ 9.56186939123231522e-02 OP 
 Temperature_of_cryogenic_superconducting_components_(K)__________________ (temp_tf_cryo)_________________ 4.50000000000000000e+00 
-Temperature_of_cryogenic_aluminium_components_(K)________________________ (tcoolin)______________________ 3.13149999999999977e+02 
+Temperature_of_cryogenic_aluminium_components_(K)________________________ (temp_cp_coolant_inlet)______________________ 3.13149999999999977e+02 
 Electric_power_for_cryogenic_plant_(MW)__________________________________ (p_cryo_plant_electric_mw)_____ 4.71800615346873045e+01 OP 
 # Plant Heat Transport Balance #
 Neutronic_nuclear_heat_deposited_in_FW_[MW]______________________________ (p_fw_nuclear_heat_total_mw)___ 1.87203899318251160e+02 

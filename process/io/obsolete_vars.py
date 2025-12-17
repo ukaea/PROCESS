@@ -475,6 +475,7 @@ OBS_VARS = {
     "tdivrepl": "t_div_replace_yrs",
     "tlife": "life_plant",
     "iavail": "i_plant_availability",
+    "tcoolin": "temp_cp_coolant_inlet",
 }
 
 OBS_VARS_HELP = {

@@ -1519,7 +1519,7 @@ tftmp = 20.0
 * DESCRIPTION:   Average Radius of Coolant Channel for CP (m) 
 * JUSTIFICATION: Assumed
 
-* tcoolin = 20.0 
+* temp_cp_coolant_inlet = 20.0 
 * DESCRIPTION:   Centrepost Coolant Inlet Temperature (K) 
 * JUSTIFICATION: Choosen to be optimal after a scan ranging from 15 to 30 K (G. Voss and S. Kahn)
 

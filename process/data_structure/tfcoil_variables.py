@@ -1017,7 +1017,7 @@ rcool: float = None
 """average radius of coolant channel (m) (`iteration variable 69`)"""
 
 
-tcoolin: float = None
+temp_cp_coolant_inlet: float = None
 """centrepost coolant inlet temperature (K)"""
 
 
@@ -1287,7 +1287,7 @@ def init_tfcoil_variables():
     global p_tf_leg_resistive
     global temp_cp_max
     global rcool
-    global tcoolin
+    global temp_cp_coolant_inlet
     global dtiocool
     global temp_cp_average
     global tcpav2
@@ -1522,7 +1522,7 @@ def init_tfcoil_variables():
     p_tf_leg_resistive = 0.0
     temp_cp_max = 473.15  # 200 C
     rcool = 0.005
-    tcoolin = 313.15  # 40 C
+    temp_cp_coolant_inlet = 313.15  # 40 C
     dtiocool = 0.0
     temp_cp_average = 373.15  # 100 C
     tcpav2 = 0.0
