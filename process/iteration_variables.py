@@ -170,7 +170,9 @@ ITERATION_VARIABLES = {
     ),
     68: IterationVariable("fptemp", data_structure.constraint_variables, 0.001, 1.0),
     69: IterationVariable("rcool", data_structure.tfcoil_variables, 0.001, 0.010),
-    70: IterationVariable("vcool", data_structure.tfcoil_variables, 1.0, 1.0e2),
+    70: IterationVariable(
+        "vel_cp_coolant_midplane", data_structure.tfcoil_variables, 1.0, 1.0e2
+    ),
     71: IterationVariable("fq95_min", data_structure.constraint_variables, 0.001, 1.0),
     72: IterationVariable("fipir", data_structure.constraint_variables, 0.001, 1.0),
     73: IterationVariable(

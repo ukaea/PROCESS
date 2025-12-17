@@ -1425,7 +1425,7 @@ tftmp = 20.0
 * JUSTIFICATION: Not set, using default
 
 *ixc = 70
-*vcool = 10.0 
+*vel_cp_coolant_midplane = 10.0 
 *boundl(70) = 9.0
 *boundu(70) = 10.0
 * DESCRIPTION:   Max Centrepost Coolant Flow Speed (m/s)

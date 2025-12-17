@@ -1892,7 +1892,9 @@ INPUT_VARIABLES = {
     "vachtmw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "vcool": InputVariable(data_structure.tfcoil_variables, float, range=(0.001, 100.0)),
+    "vel_cp_coolant_midplane": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.001, 100.0)
+    ),
     "v_tf_coil_dump_quench_max_kv": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 100.0)
     ),

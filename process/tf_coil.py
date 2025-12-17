@@ -2234,13 +2234,15 @@ class TFCoil:
             coolant_th_cond = constants.KH2O
 
             # Mass flow rate [kg/s]
-            cool_mass_flow = acool * coolant_density * tfcoil_variables.vcool
+            cool_mass_flow = (
+                acool * coolant_density * tfcoil_variables.vel_cp_coolant_midplane
+            )
 
             # Water temperature rise
             tfcoil_variables.dtiocool = ptot / (cool_mass_flow * coolant_cp)
 
             # Constant coolant velocity
-            vcool_max = tfcoil_variables.vcool
+            vcool_max = tfcoil_variables.vel_cp_coolant_midplane
             # --------------
 
         # Helium coolant
@@ -2250,7 +2252,9 @@ class TFCoil:
             coolant_density = self.he_density(tfcoil_variables.temp_cp_coolant_inlet)
 
             # Mass flow rate [kg/s]
-            cool_mass_flow = acool * coolant_density * tfcoil_variables.vcool
+            cool_mass_flow = (
+                acool * coolant_density * tfcoil_variables.vel_cp_coolant_midplane
+            )
 
             # Infinitesimal power deposition used in the integral
             dptot = ptot / n_tcool_it
@@ -2291,7 +2295,12 @@ class TFCoil:
             coolant_visco = self.he_visco(tcool_av)
 
         # Reynolds number
-        reyn = coolant_density * tfcoil_variables.vcool * dcool / coolant_visco
+        reyn = (
+            coolant_density
+            * tfcoil_variables.vel_cp_coolant_midplane
+            * dcool
+            / coolant_visco
+        )
 
         # Helium thermal conductivity [W/(m.K)]
         if tfcoil_variables.i_tf_sup == 2:
@@ -2407,10 +2416,13 @@ class TFCoil:
             * (lcool / dcool)
             * coolant_density
             * 0.5e0
-            * tfcoil_variables.vcool**2
+            * tfcoil_variables.vel_cp_coolant_midplane**2
         )
         tfcoil_variables.p_cp_coolant_pump_elec = (
-            dpres * acool * tfcoil_variables.vcool / tfcoil_variables.etapump
+            dpres
+            * acool
+            * tfcoil_variables.vel_cp_coolant_midplane
+            / tfcoil_variables.etapump
         )
 
         # Critical pressure in saturation pressure calculations (Pa)
@@ -2452,8 +2464,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Inlet coolant flow speed (m/s)",
-                "(vcool)",
-                tfcoil_variables.vcool,
+                "(vel_cp_coolant_midplane)",
+                tfcoil_variables.vel_cp_coolant_midplane,
             )
             po.ovarre(
                 self.outfile,
