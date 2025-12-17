@@ -121,8 +121,11 @@ def parse_args(args):
         "-o",
         "--output-format",
         type=str,
-        help=("Output file format\npdf: pdf output (default)\npng: png output"),
+        help=(
+            "Output file format\npdf: pdf output (default)\npng: png output\nnone: no output file written"
+        ),
         default="pdf",
+        choices=["pdf", "png", "none"],
     )
 
     return parser.parse_args(args)
@@ -13353,7 +13356,7 @@ def main(args=None):
         with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
             for p in pages:
                 pdf.savefig(p)
-    else:
+    elif args.output_format == "png":
         folder = pathlib.Path(args.f.removesuffix(".DAT") + "_SUMMARY")
         folder.mkdir(parents=True, exist_ok=True)
         for no, page in enumerate(pages):
