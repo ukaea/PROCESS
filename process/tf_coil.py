@@ -2247,7 +2247,7 @@ class TFCoil:
         # --------------
         elif tfcoil_variables.i_tf_sup == 2:
             # Inlet coolant density [kg/m3]
-            coolant_density = self.he_density(tfcoil_variables.tcoolin)
+            coolant_density = self.he_density(tfcoil_variables.temp_cp_coolant_inlet)
 
             # Mass flow rate [kg/s]
             cool_mass_flow = acool * coolant_density * tfcoil_variables.vcool
@@ -2255,7 +2255,7 @@ class TFCoil:
             # Infinitesimal power deposition used in the integral
             dptot = ptot / n_tcool_it
 
-            tcool_calc = copy.copy(tfcoil_variables.tcoolin)  # K
+            tcool_calc = copy.copy(tfcoil_variables.temp_cp_coolant_inlet)  # K
             for _i in range(n_tcool_it):
                 # Thermal capacity Cp
                 coolant_cp = self.he_cp(tcool_calc)
@@ -2270,11 +2270,15 @@ class TFCoil:
             vcool_max = cool_mass_flow / (acool * coolant_density)
 
             # Getting the global in-outlet temperature increase
-            tfcoil_variables.dtiocool = tcool_calc - tfcoil_variables.tcoolin
+            tfcoil_variables.dtiocool = (
+                tcool_calc - tfcoil_variables.temp_cp_coolant_inlet
+            )
         # --------------
 
         # Average coolant temperature
-        tcool_av = tfcoil_variables.tcoolin + 0.5e0 * tfcoil_variables.dtiocool
+        tcool_av = (
+            tfcoil_variables.temp_cp_coolant_inlet + 0.5e0 * tfcoil_variables.dtiocool
+        )
         # **********************************************
 
         # Film temperature rise
@@ -2356,7 +2360,7 @@ class TFCoil:
 
         # Average conductor temperature
         tfcoil_variables.tcpav2 = (
-            tfcoil_variables.tcoolin
+            tfcoil_variables.temp_cp_coolant_inlet
             + dtcncpav
             + dtfilmav
             + 0.5e0 * tfcoil_variables.dtiocool
@@ -2364,9 +2368,16 @@ class TFCoil:
 
         # Peak wall temperature
         tfcoil_variables.temp_cp_peak = (
-            tfcoil_variables.tcoolin + tfcoil_variables.dtiocool + dtfilmav + dtconcpmx
+            tfcoil_variables.temp_cp_coolant_inlet
+            + tfcoil_variables.dtiocool
+            + dtfilmav
+            + dtconcpmx
         )
-        tcoolmx = tfcoil_variables.tcoolin + tfcoil_variables.dtiocool + dtfilmav
+        tcoolmx = (
+            tfcoil_variables.temp_cp_coolant_inlet
+            + tfcoil_variables.dtiocool
+            + dtfilmav
+        )
         # -------------------------
 
         # Thermal hydraulics: friction factor from Z. Olujic, Chemical
@@ -2491,8 +2502,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Input coolant temperature (K)",
-                "(tfcoil_variables.tcoolin)",
-                tfcoil_variables.tcoolin,
+                "(tfcoil_variables.temp_cp_coolant_inlet)",
+                tfcoil_variables.temp_cp_coolant_inlet,
             )
             po.ovarre(
                 self.outfile,

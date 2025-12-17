@@ -1652,7 +1652,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 2.0)
     ),
     "tcomrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
-    "tcoolin": InputVariable(
+    "temp_cp_coolant_inlet": InputVariable(
         data_structure.tfcoil_variables, float, range=(4.0, 373.15)
     ),
     "tcritsc": InputVariable(data_structure.tfcoil_variables, float, range=(1.0, 300.0)),

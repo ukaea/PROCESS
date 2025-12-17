@@ -83,7 +83,7 @@ helpow: float = None
 
 
 helpow_cryal: float = None
-"""Heat removal at cryogenic temperature tcoolin (W)"""
+"""Heat removal at cryogenic temperature temp_cp_coolant_inlet (W)"""
 
 
 p_coolant_pump_elec_total_mw: float = None

@@ -777,7 +777,7 @@ class Power:
         # Rem : Nuclear heating on the outer legs assumed to be negligible
         # Rem : To be updated with 2 cooling loops for TART designs
         if tfcoil_variables.i_tf_sup == 2:
-            # Heat removal power at cryogenic temperature tfcoil_variables.tcoolin (W)
+            # Heat removal power at cryogenic temperature tfcoil_variables.temp_cp_coolant_inlet (W)
             heat_transport_variables.helpow_cryal = (
                 tfcoil_variables.p_cp_resistive
                 + tfcoil_variables.p_tf_leg_resistive
@@ -785,11 +785,14 @@ class Power:
                 + fwbs_variables.pnuc_cp_tf * 1.0e6
             )
 
-            # Calculate electric power requirement for cryogenic plant at tfcoil_variables.tcoolin (MW)
+            # Calculate electric power requirement for cryogenic plant at tfcoil_variables.temp_cp_coolant_inlet (MW)
             p_tf_cryoal_cryo = (
                 1.0e-6
-                * (constants.TEMP_ROOM - tfcoil_variables.tcoolin)
-                / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
+                * (constants.TEMP_ROOM - tfcoil_variables.temp_cp_coolant_inlet)
+                / (
+                    tfcoil_variables.eff_tf_cryo
+                    * tfcoil_variables.temp_cp_coolant_inlet
+                )
                 * heat_transport_variables.helpow_cryal
             )
 
@@ -804,7 +807,7 @@ class Power:
             * ((293 / tfcoil_variables.temp_tf_cryo) - 1)
             / ((293 / 4.5) - 1)
             + heat_transport_variables.helpow_cryal
-            * ((293 / tfcoil_variables.tcoolin) - 1)
+            * ((293 / tfcoil_variables.temp_cp_coolant_inlet) - 1)
             / ((293 / 4.5) - 1)
         ) / 1.0e3
 
@@ -1573,7 +1576,7 @@ class Power:
 
         po.ovarre(
             self.outfile,
-            "Sum = Total heat removal at cryogenic temperatures (temp_tf_cryo & tcoolin) (MW)",
+            "Sum = Total heat removal at cryogenic temperatures (temp_tf_cryo & temp_cp_coolant_inlet) (MW)",
             "(helpow + helpow_cryal/1.0d6)",
             (heat_transport_variables.helpow + heat_transport_variables.helpow_cryal)
             * 1.0e-6,
@@ -1588,8 +1591,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Temperature of cryogenic aluminium components (K)",
-            "(tcoolin)",
-            tfcoil_variables.tcoolin,
+            "(temp_cp_coolant_inlet)",
+            tfcoil_variables.temp_cp_coolant_inlet,
         )
         po.ovarre(
             self.outfile,

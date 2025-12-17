@@ -159,8 +159,8 @@ class CntrpstTestAsset(NamedTuple):
 
     :i_tf_sup: value for tfcoil_variables.i_tf_sup to be mocked with (0=Copper, 2=Cryogenic aluminium)
     :type i_tf_sup: integer
-    :tcoolin: value for tfcoil_variables.tcoolin to be mocked with (centrepost coolant inlet temperature)
-    :type tcoolin: float
+    :temp_cp_coolant_inlet: value for tfcoil_variables.temp_cp_coolant_inlet to be mocked with (centrepost coolant inlet temperature)
+    :type temp_cp_coolant_inlet: float
 
     :expected_dtiocool: expected value of tfcoil_variables.dtiocool after tfcoil.cntrpst routine has run
     :type expected_dtiocool: float
@@ -173,7 +173,7 @@ class CntrpstTestAsset(NamedTuple):
     """
 
     i_tf_sup: int
-    tcoolin: float
+    temp_cp_coolant_inlet: float
     expected_dtiocool: float
     expected_tcpav2: float
     expected_temp_cp_peak: float
@@ -220,7 +220,9 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     monkeypatch.setattr(tfcoil_variables, "vol_cond_cp", 2)
     monkeypatch.setattr(tfcoil_variables, "p_cp_resistive", 1)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", cntrpst_asset.i_tf_sup)
-    monkeypatch.setattr(tfcoil_variables, "tcoolin", cntrpst_asset.tcoolin)
+    monkeypatch.setattr(
+        tfcoil_variables, "temp_cp_coolant_inlet", cntrpst_asset.temp_cp_coolant_inlet
+    )
     monkeypatch.setattr(fwbs_variables, "pnuc_cp_tf", 1)
     monkeypatch.setattr(build_variables, "z_tf_inside_half", 1)
     monkeypatch.setattr(build_variables, "dr_tf_outboard", 0.5)
