@@ -152,6 +152,22 @@ class Coefficients:
     c: Iterable[float]
     s: Iterable[float]
 
+    @property
+    def num_coef_pairs(self) -> int:
+        """
+        The length of .c and .s, which should be the same.
+        Raises
+        ------
+        ValueError:
+            If .c and .s do not match in length, then we have a problem.
+        """
+        if len(self.c)!=len(self.s):
+            raise ValueError(
+                "Mismatched lengths between "
+                f"c ({len(self.c)}) and s ({len(self.s)})"
+            )
+        return len(self.c)
+
     def validate_length(self, exp_len: int, parent_name: str):
         """Validate that all fields has the correct length."""
         for const_name, const_value in asdict(self).items():
