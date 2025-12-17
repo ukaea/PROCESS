@@ -476,6 +476,7 @@ OBS_VARS = {
     "tlife": "life_plant",
     "iavail": "i_plant_availability",
     "tcoolin": "temp_cp_coolant_inlet",
+    "vcool": "vel_cp_coolant_midplane",
 }
 
 OBS_VARS_HELP = {

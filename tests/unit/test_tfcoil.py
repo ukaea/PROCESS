@@ -216,7 +216,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     monkeypatch.setattr(tfcoil_variables, "a_cp_cool", 1)
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 16)
     monkeypatch.setattr(tfcoil_variables, "rcool", 0.005)
-    monkeypatch.setattr(tfcoil_variables, "vcool", 20.0)
+    monkeypatch.setattr(tfcoil_variables, "vel_cp_coolant_midplane", 20.0)
     monkeypatch.setattr(tfcoil_variables, "vol_cond_cp", 2)
     monkeypatch.setattr(tfcoil_variables, "p_cp_resistive", 1)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", cntrpst_asset.i_tf_sup)

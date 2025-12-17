@@ -7851,7 +7851,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
-            ("vcool", "Maximum coolant flow speed", "ms$^{-1}$"),
+            ("vel_cp_coolant_midplane", "Maximum coolant flow speed", "ms$^{-1}$"),
             (p_cp_resistive, "CP Resisitive heating", "MW"),
             (
                 p_tf_leg_resistive,

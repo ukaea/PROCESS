@@ -1046,7 +1046,7 @@ temp_cp_peak: float = None
 """peak centrepost temperature (K)"""
 
 
-vcool: float = None
+vel_cp_coolant_midplane: float = None
 """inlet centrepost coolant flow speed at midplane (m/s) (`iteration variable 70`)"""
 
 
@@ -1293,7 +1293,7 @@ def init_tfcoil_variables():
     global tcpav2
     global temp_tf_legs_outboard
     global temp_cp_peak
-    global vcool
+    global vel_cp_coolant_midplane
     global vol_cond_cp
     global whtcp
     global whttflgs
@@ -1528,7 +1528,7 @@ def init_tfcoil_variables():
     tcpav2 = 0.0
     temp_tf_legs_outboard = -1.0
     temp_cp_peak = 0.0
-    vcool = 20.0
+    vel_cp_coolant_midplane = 20.0
     vol_cond_cp = 0.0
     whtcp = 0.0
     whttflgs = 0.0

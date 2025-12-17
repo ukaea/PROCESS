@@ -266,7 +266,7 @@ lablxc: list[str] = None
 * (67) ft_cycle_min (f-value for equation 42)
 * (68) fptemp (f-value for equation 44)
 * (69) rcool
-* (70) vcool
+* (70) vel_cp_coolant_midplane
 * (71) fq95_min (f-value for equation 45)
 * (72) fipir (f-value for equation 46)
 * (73) dr_fw_plasma_gap_inboard
