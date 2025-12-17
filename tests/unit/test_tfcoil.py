@@ -230,7 +230,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     tfcoil.cntrpst()
 
     # appears to be the same for all cases?
-    assert pytest.approx(tfcoil_variables.ncool) == 203718.3271576
+    assert pytest.approx(tfcoil_variables.n_cp_coolant_channels_total) == 203718.3271576
 
     assert (
         pytest.approx(tfcoil_variables.dtiocool, abs=1e-8)
