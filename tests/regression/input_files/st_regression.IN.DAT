@@ -1515,7 +1515,7 @@ tftmp = 20.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* rcool = 3.0E-3 
+* radius_cp_coolant_channel = 3.0E-3 
 * DESCRIPTION:   Average Radius of Coolant Channel for CP (m) 
 * JUSTIFICATION: Assumed
 

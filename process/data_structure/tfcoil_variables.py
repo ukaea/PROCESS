@@ -1013,7 +1013,7 @@ temp_cp_max: float = None
 """maximum peak centrepost temperature (K) (`constraint equation 44`)"""
 
 
-rcool: float = None
+radius_cp_coolant_channel: float = None
 """average radius of coolant channel (m) (`iteration variable 69`)"""
 
 
@@ -1286,7 +1286,7 @@ def init_tfcoil_variables():
     global p_cp_resistive
     global p_tf_leg_resistive
     global temp_cp_max
-    global rcool
+    global radius_cp_coolant_channel
     global temp_cp_coolant_inlet
     global dtiocool
     global temp_cp_average
@@ -1521,7 +1521,7 @@ def init_tfcoil_variables():
     p_cp_resistive = 0.0
     p_tf_leg_resistive = 0.0
     temp_cp_max = 473.15  # 200 C
-    rcool = 0.005
+    radius_cp_coolant_channel = 0.005
     temp_cp_coolant_inlet = 313.15  # 40 C
     dtiocool = 0.0
     temp_cp_average = 373.15  # 100 C
