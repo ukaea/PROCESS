@@ -68,8 +68,6 @@ from process.io.mfile import MFileErrorClass
 from process.objectives import OBJECTIVE_NAMES
 from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 
-if os.name == "posix" and "DISPLAY" not in os.environ:
-    mpl.use("Agg")
 mpl.rcParams["figure.max_open_warning"] = 40
 
 

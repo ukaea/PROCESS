@@ -14,10 +14,7 @@ import os
 from argparse import RawTextHelpFormatter
 from pathlib import Path
 
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-
-mpl.use("Agg")
 
 
 def main(args=None):
