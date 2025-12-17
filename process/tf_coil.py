@@ -2204,9 +2204,11 @@ class TFCoil:
         acool = (
             tfcoil_variables.a_cp_cool * tfcoil_variables.n_tf_coils
         )  # Cooling cross-sectional area
-        dcool = 2.0e0 * tfcoil_variables.rcool  # Diameter
+        dcool = 2.0e0 * tfcoil_variables.radius_cp_coolant_channel  # Diameter
         lcool = 2.0e0 * (bv.z_tf_inside_half + bv.dr_tf_outboard)  # Length
-        tfcoil_variables.ncool = acool / (np.pi * tfcoil_variables.rcool**2)  # Number
+        tfcoil_variables.ncool = acool / (
+            np.pi * tfcoil_variables.radius_cp_coolant_channel**2
+        )  # Number
 
         # Average conductor cross-sectional area to cool (with cooling area)
         acpav = (
@@ -2315,7 +2317,12 @@ class TFCoil:
         nuselt = 0.023e0 * reyn**0.8e0 * prndtl**0.4e0
         h = nuselt * coolant_th_cond / dcool
         dtfilmav = ptot / (
-            h * 2.0e0 * np.pi * tfcoil_variables.rcool * tfcoil_variables.ncool * lcool
+            h
+            * 2.0e0
+            * np.pi
+            * tfcoil_variables.radius_cp_coolant_channel
+            * tfcoil_variables.ncool
+            * lcool
         )
 
         # Average film temperature (in contact with te conductor)
@@ -2338,12 +2345,16 @@ class TFCoil:
         # Average temperature rise : To be changed with Garry Voss' better documented formula ?
         dtcncpav = (
             (ptot / tfcoil_variables.vol_cond_cp)
-            / (2.0e0 * conductor_th_cond * (ro**2 - tfcoil_variables.rcool**2))
+            / (
+                2.0e0
+                * conductor_th_cond
+                * (ro**2 - tfcoil_variables.radius_cp_coolant_channel**2)
+            )
             * (
-                ro**2 * tfcoil_variables.rcool**2
-                - 0.25e0 * tfcoil_variables.rcool**4
+                ro**2 * tfcoil_variables.radius_cp_coolant_channel**2
+                - 0.25e0 * tfcoil_variables.radius_cp_coolant_channel**4
                 - 0.75e0 * ro**4
-                + ro**4 * np.log(ro / tfcoil_variables.rcool)
+                + ro**4 * np.log(ro / tfcoil_variables.radius_cp_coolant_channel)
             )
         )
 
@@ -2352,8 +2363,8 @@ class TFCoil:
             (ptot / tfcoil_variables.vol_cond_cp)
             / (2.0e0 * conductor_th_cond)
             * (
-                (tfcoil_variables.rcool**2 - ro**2) / 2.0e0
-                + ro**2 * np.log(ro / tfcoil_variables.rcool)
+                (tfcoil_variables.radius_cp_coolant_channel**2 - ro**2) / 2.0e0
+                + ro**2 * np.log(ro / tfcoil_variables.radius_cp_coolant_channel)
             )
         )
 

@@ -6565,6 +6565,28 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
         bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 1.0, "linewidth": 2},
     )
 
+    # Add info about the Winding Pack
+    textstr_cooling = (
+        f"$\\mathbf{{Cooling \\ info:}}$\n \n"
+        f"Coolant inlet temperature: {mfile_data.data['temp_cp_coolant_inlet'].get_scan(scan):.2f} K\n"
+        f"Coolant velocity: {mfile_data.data['vel_cp_coolant_midplane'].get_scan(scan):.2f}K\n"
+    )
+    axis.text(
+        0.55,
+        0.35,
+        textstr_cooling,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
     axis.minorticks_on()
     axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
     axis.set_ylim((y14[-1] * 1.65), (-y14[-1] * 1.65))

@@ -265,7 +265,7 @@ lablxc: list[str] = None
 * (66) ft_current_ramp_up (f-value for equation 41)
 * (67) ft_cycle_min (f-value for equation 42)
 * (68) fptemp (f-value for equation 44)
-* (69) rcool
+* (69) radius_cp_coolant_channel
 * (70) vel_cp_coolant_midplane
 * (71) fq95_min (f-value for equation 45)
 * (72) fipir (f-value for equation 46)

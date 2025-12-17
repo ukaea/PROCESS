@@ -477,6 +477,7 @@ OBS_VARS = {
     "iavail": "i_plant_availability",
     "tcoolin": "temp_cp_coolant_inlet",
     "vcool": "vel_cp_coolant_midplane",
+    "rcool": "radius_cp_coolant_channel",
 }
 
 OBS_VARS_HELP = {

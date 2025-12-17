@@ -1035,7 +1035,7 @@ def check_process(inputs):  # noqa: ARG001
                     data_structure.tfcoil_variables.dx_tf_turn_insulation
                     + data_structure.tfcoil_variables.dx_tf_wp_insulation
                 )
-                + 4.0 * data_structure.tfcoil_variables.rcool
+                + 4.0 * data_structure.tfcoil_variables.radius_cp_coolant_channel
             )
 
         if data_structure.numerics.boundl[139] < dr_tf_wp_min:
