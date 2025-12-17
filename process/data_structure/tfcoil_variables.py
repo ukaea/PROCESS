@@ -1498,6 +1498,7 @@ def init_tfcoil_variables():
     whtconal = 0.0
     m_tf_coil_wp_turn_insulation = 0.0
     m_tf_coil_superconductor = 0.0
+    m_tf_wp_steel_conduit = 0.0
     m_tf_coil_wp_insulation = 0.0
     m_tf_coils_total = 0.0
     dx_tf_wp_primary_toroidal = 0.0
