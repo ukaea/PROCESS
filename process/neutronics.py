@@ -152,22 +152,6 @@ class Coefficients:
     c: Iterable[float]
     s: Iterable[float]
 
-    @property
-    def num_coef_pairs(self) -> int:
-        """
-        The length of .c and .s, which should be the same.
-        Raises
-        ------
-        ValueError:
-            If .c and .s do not match in length, then we have a problem.
-        """
-        if len(self.c)!=len(self.s):
-            raise ValueError(
-                "Mismatched lengths between "
-                f"c ({len(self.c)}) and s ({len(self.s)})"
-            )
-        return len(self.c)
-
     def validate_length(self, exp_len: int, parent_name: str):
         """Validate that all fields has the correct length."""
         for const_name, const_value in asdict(self).items():
@@ -545,7 +529,7 @@ class NeutronFluxProfile:
 
     def _groupwise_cs_values_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
-    ) -> tuple[float, float] | tuple[npt.NDArray, npt.NDArray]:
+    ) -> npt.NDArray:
         """
         Calculate the num_layer-th layer n-th basis function at the specified
         x position(s).
@@ -557,7 +541,7 @@ class NeutronFluxProfile:
         else:
             l = np.sqrt(-self.l2[num_layer, n])
             c, s = np.cos, np.sin
-        return c(abs_x / l), s(abs_x / l)
+        return np.array([c(abs_x / l), s(abs_x / l)])
 
     def _groupwise_cs_differential_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
@@ -569,9 +553,9 @@ class NeutronFluxProfile:
         abs_x = abs(x)
         if self.l2[num_layer, n] > 0:
             l = np.sqrt(self.l2[num_layer, n])
-            return np.sinh(abs_x / l) / l, np.cosh(abs_x / l) / l
+            return np.array([np.sinh(abs_x / l) / l, np.cosh(abs_x / l) / l])
         l = np.sqrt(-self.l2[num_layer, n])
-        return -np.sin(abs_x / l) / l, np.cos(abs_x / l) / l
+        return np.array([-np.sin(abs_x / l) / l, np.cos(abs_x / l) / l])
 
     def _groupwise_cs_definite_integral_in_layer(
         self, n: int, num_layer: int, x_lower: float | npt.NDArray, x_upper
@@ -582,15 +566,15 @@ class NeutronFluxProfile:
         """
         if self.l2[num_layer, n] > 0:
             l = np.sqrt(self.l2[num_layer, n])
-            return (
+            return np.array([
                 l * (np.sinh(x_upper / l) - np.sinh(x_lower / l)),
                 l * (np.cosh(x_upper / l) - np.cosh(x_lower / l))
-            )
+            ])
         l = np.sqrt(-self.l2[num_layer, n])
-        return (
+        return np.array([
             l * (np.sin(x_upper / l) - np.sin(x_lower / l)),
             l * (np.cos(x_lower / l) - np.cos(x_upper / l))  # reverse sign
-        )
+        ])
 
     def solve_lowest_group(self) -> None:
         """
@@ -666,8 +650,61 @@ class NeutronFluxProfile:
                 [bz_c_factor], [bz_s_factor]
             )
         else:
-            raise NotImplementedError("Only implemented 2 groups so far.")
+            return NotImplemented
         return
+
+    def _get_propagation_matrix_and_offset_vec(n: int, num_layer: int):
+        """
+        Infer this layer's main basis functions' coefficients (.c[n] and .s[n])
+        using using the previous layer's basis functions.
+        """
+        x_j = self.interface_x[num_layer]
+        coefs_in = np.array(astuple(self.coefficients[num_layer - 1, n])).T
+        coefs_jn = np.array(astuple(self.coefficients[num_layer, n])).T
+        d_in = self.diffusion_const[num_layer-1, n]
+        d_jn = self.diffusion_const[num_layer, n]
+        l_in = self.l2[num_layer-1, n]
+        l_jn = self.l2[num_layer, n]
+
+        diff_residual_flux = (sum(
+                cs_coef_pair @ self._groupwise_cs_values_in_layer(
+                    g, num_layer - 1, x_j
+                )
+                for g, cs_coef_pair in enumerate(coefs_in) if g!=n
+            ) - sum(
+                cs_coef_pair @ self._groupwise_cs_values_in_layer(
+                    g, num_layer, x_j
+                )
+                for g, cs_coef_pair in enumerate(coefs_jn) if g!=n
+            )
+        )
+        diff_residual_current = l_jn * (
+            - d_in/d_jn * sum(
+                cs_coef_pair @ self._groupwise_cs_differential_in_layer(
+                    g, num_layer - 1, x_j
+                )
+                for g, cs_coef_pair in enumerate(coefs_in) if g!=n
+            )
+            + sum(
+                cs_coef_pair @ self._groupwise_cs_differential_in_layer(
+                    g, num_layer, x_j
+                )
+                for g, cs_coef_pair in enumerate(coefs_jn) if g!=n
+            )
+        )
+        shift_vector = np.array([diff_residual_flux, diff_residual_current])
+
+        transformation_matrix = np.array([
+            self._groupwise_cs_values_in_layer(n, num_layer - 1, x_j),
+            -l_jn / d_jn * d_in / l_in * (
+                self._groupwise_cs_differential_in_layer(n, num_layer - 1, x_j)
+            ),
+        ])
+        A = np.array([
+            self._groupwise_cs_values_in_layer(n, num_layer, x_j),
+            -self._groupwise_cs_differential_in_layer(n, num_layer, x_j),
+        ])
+        return A @ transformation_matrix, A @ shift_vector
 
     def solve_group_n(self, n: int) -> None:
         """
@@ -761,8 +798,8 @@ class NeutronFluxProfile:
                     )
                     * scale_factor
                 )
-            _coefs[num_layer, n].c[n] = sum(skipped_c_coefs)
-            _coefs[num_layer, n].s[n] = sum(skipped_s_coefs)
+            _coefs[num_layer, n].c[n] = ... - sum(skipped_c_coefs)
+            _coefs[num_layer, n].s[n] = ... - sum(skipped_s_coefs)
 
             self.coefficients[num_layer, n] = _coefs
 
