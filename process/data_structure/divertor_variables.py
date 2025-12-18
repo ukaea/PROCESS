@@ -62,6 +62,9 @@ p_div_lower_nuclear_heat_mw: float = None
 p_div_upper_nuclear_heat_mw: float = None
 """Upper divertor neutron nuclear heat load on (MW)"""
 
+p_div_upper_rad_mw: float = None
+"""Upper divertor incident radiation power radiation power (MW)"""
+
 
 def init_divertor_variables():
     global \
@@ -84,7 +87,8 @@ def init_divertor_variables():
         tdiv, \
         xpertin, \
         p_div_lower_nuclear_heat_mw, \
-        p_div_upper_nuclear_heat_mw
+        p_div_upper_nuclear_heat_mw, \
+        p_div_upper_rad_mw
 
     anginc = 0.262
     deg_div_field_plate = 1.0
@@ -106,3 +110,4 @@ def init_divertor_variables():
     xpertin = 2.0
     p_div_lower_nuclear_heat_mw = 0.0
     p_div_upper_nuclear_heat_mw = 0.0
+    p_div_upper_rad_mw = 0.0
