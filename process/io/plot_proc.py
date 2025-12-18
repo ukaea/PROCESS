@@ -2200,7 +2200,7 @@ def plot_main_power_flow(
     # TF coil power box
     axis.text(
         0.325,
-        0.05,
+        0.075,
         f"TF coils:\n{mfile.get('p_tf_electric_supplies_mw', scan=scan):.3f} MWe",
         fontsize=9,
         verticalalignment="bottom",
@@ -2264,7 +2264,7 @@ def plot_main_power_flow(
     # Recirculated power to TF
     axis.annotate(
         "",
-        xy=(0.35, 0.075),
+        xy=(0.35, 0.1),
         xytext=(0.35, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={
@@ -6569,7 +6569,15 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
     textstr_cooling = (
         f"$\\mathbf{{Cooling \\ info:}}$\n \n"
         f"Coolant inlet temperature: {mfile_data.data['temp_cp_coolant_inlet'].get_scan(scan):.2f} K\n"
-        f"Coolant velocity: {mfile_data.data['vel_cp_coolant_midplane'].get_scan(scan):.2f}K\n"
+        f"Coolant temperature rise: {mfile_data.data['dtiocool'].get_scan(scan):.2f} K\n"
+        f"Coolant velocity: {mfile_data.data['vel_cp_coolant_midplane'].get_scan(scan):.2f} $\\mathrm{{ms^{{-1}}}}$\n\n"
+        f"Average CP temperature: {mfile_data.data['temp_cp_average'].get_scan(scan):.2f} K\n"
+        f"CP resistivity: {mfile_data.data['rho_cp'].get_scan(scan):.2e} $\\Omega \\mathrm{{m}}$\n"
+        f"Leg resistivity: {mfile_data.data['rho_tf_leg'].get_scan(scan):.2e} $\\Omega \\mathrm{{m}}$\n"
+        f"Leg resistance: {mfile_data.data['res_tf_leg'].get_scan(scan):.2e} $\\Omega$\n"
+        f"CP resistive losses: {mfile_data.data['p_cp_resistive'].get_scan(scan):,.2f} $\\mathrm{{W}}$\n"
+        f"Leg resistive losses: {mfile_data.data['p_tf_leg_resistive'].get_scan(scan):,.2f} $\\mathrm{{W}}$\n"
+        f"Joints resistive losses: {mfile_data.data['p_tf_joints_resistive'].get_scan(scan):,.2f} $\\mathrm{{W}}$\n"
     )
     axis.text(
         0.55,

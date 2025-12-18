@@ -77,7 +77,7 @@ ITERATION_VARIABLES = {
         "e_beam_kev", data_structure.current_drive_variables, 1.0, 1.0e6
     ),
     20: IterationVariable(
-        "temp_cp_average", data_structure.tfcoil_variables, 40.00, 3.0e2
+        "temp_cp_average", data_structure.tfcoil_variables, 40.00, 573.0
     ),
     21: IterationVariable(
         "ft_burn_min", data_structure.constraint_variables, 0.001, 1.0
