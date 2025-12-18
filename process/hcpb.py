@@ -177,7 +177,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Solid angle fraction taken by the breeding blankets/shields
         f_geom_blanket = (
             1
-            - physics_variables.n_divertors * fwbs_variables.f_ster_div_single
+            - divertor_variables.n_divertors * fwbs_variables.f_ster_div_single
             - f_geom_cp
         )
 
@@ -323,7 +323,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             * physics_variables.rmajor
             * physics_variables.rminor
         )
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             divertor_variables.a_div_surface_total = (
                 divertor_variables.a_div_surface_total * 2.0
             )
