@@ -308,7 +308,7 @@ f_a_cs_turn_steel = 7.59774321758659110e-01
 
 ixc = 135
 * Replaced 'fimp' with 'f_nd_impurity_electrons'
-f_nd_impurity_electrons(13) = 3.98953113774451788e-04
+f_nd_impurity_electrons(13) = 1.5e-04
 * DESCRIPTION:   Xenon Impurity Concentration
 * JUSTIFICATION: Xenon impurity used based on DEMO-2018
 
