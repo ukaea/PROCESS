@@ -1613,30 +1613,60 @@ class SuperconductingTFCoil(TFCoil):
                     tc0m,
                 )
 
-            another_estimate = 2 * temp_tf_coolant_peak_field
-            (
-                t_zero_margin,
-                _root_result,
-            ) = optimize.newton(
-                superconductors.superconductor_current_density_margin,
-                temp_tf_coolant_peak_field,
-                fprime=None,
-                args=arguments,
-                tol=1.0e-06,
-                maxiter=50,
-                fprime2=None,
-                x1=another_estimate,
-                rtol=1.0e-6,
-                full_output=True,
-                disp=True,
-            )
+            temp_tf_superconductor_margin = -1.0e0  # Default value in case of exception
+            try:
+                another_estimate = 2 * temp_tf_coolant_peak_field
+                # Use brentq for robust root finding if possible
+                # Try to bracket the root between coolant temp and a higher temp
+                bracket_low = temp_tf_coolant_peak_field
+                bracket_high = another_estimate
+
+                # Define a wrapper for the margin function
+                def margin_func(temp, *args):
+                    return superconductors.superconductor_current_density_margin(
+                        temp, *args
+                    )
+
+                # Try brentq first, fallback to newton if ValueError (e.g. not bracketed)
+                try:
+                    t_zero_margin = optimize.brentq(
+                        margin_func,
+                        bracket_low,
+                        bracket_high,
+                        args=arguments,
+                        xtol=1.0e-6,
+                        rtol=1.0e-6,
+                        maxiter=50,
+                        full_output=False,
+                        disp=True,
+                    )
+                except ValueError:
+                    # If brentq fails (e.g. not bracketed), fallback to newton
+                    t_zero_margin = optimize.newton(
+                        margin_func,
+                        temp_tf_coolant_peak_field,
+                        fprime=None,
+                        args=arguments,
+                        tol=1.0e-06,
+                        maxiter=50,
+                        fprime2=None,
+                        x1=another_estimate,
+                        rtol=1.0e-6,
+                        full_output=False,
+                        disp=True,
+                    )
+                temp_tf_superconductor_margin = (
+                    t_zero_margin - temp_tf_coolant_peak_field
+                )
+                tfcoil_variables.temp_margin = temp_tf_superconductor_margin
+            except (ProcessValueError, RuntimeError) as e:
+                logger.error(f"Error calculating superconductor temperature margin: {e}")
+                tfcoil_variables.temp_margin = -1.0e0
             # print(root_result)  # Diagnostic for newton method
-            temp_tf_superconductor_margin = t_zero_margin - temp_tf_coolant_peak_field
-            tfcoil_variables.temp_margin = temp_tf_superconductor_margin
 
             if temp_tf_superconductor_margin <= 0.0e0:
                 logger.error(
-                    """Negative TFC temperature margin
+                    f"""Negative TFC temperature margin
                 temp_tf_superconductor_margin: {temp_tf_superconductor_margin}
                 b_tf_inboard_peak: {b_tf_inboard_peak}
                 j_superconductor: {j_superconductor}
