@@ -38,6 +38,7 @@ import json
 import logging
 import math
 import pathlib
+from pathlib import Path
 from typing import ClassVar
 
 import git
@@ -522,8 +523,7 @@ def write_tracking_html_file(database, output, tracking_variables_file):
 
     tracking_html = plot_tracking_data(database, tracked_variables)
 
-    with open(output, "w") as f:
-        f.write(tracking_html)
+    Path(output).write_text(tracking_html)
 
 
 def track_entrypoint(arguments):

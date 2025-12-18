@@ -11227,9 +11227,9 @@ def test_eyoung_t_nested_squares(eyoungtnestedsquaresparam, monkeypatch):
     """
 
     (
-        eyoung_j_out,
-        l_out,
-        poisson_j_perp_out,
+        _eyoung_j_out,
+        _l_out,
+        _poisson_j_perp_out,
         eyoung_stiffest,
     ) = tfcoil_module.eyoung_t_nested_squares(
         n=eyoungtnestedsquaresparam.n,
@@ -11306,9 +11306,7 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch):
 
     assert l_3 == pytest.approx(eyoungseriesparam.expected_l_3)
 
-    assert poisson_j_perp_3 == pytest.approx(
-        eyoungseriesparam.expected_poisson_j_perp_3
-    )
+    assert poisson_j_perp_3 == pytest.approx(eyoungseriesparam.expected_poisson_j_perp_3)
 
 
 @pytest.mark.parametrize(

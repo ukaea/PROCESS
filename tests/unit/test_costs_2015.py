@@ -16044,9 +16044,7 @@ class CalcRemainingSubsystemsParam(NamedTuple):
         ),
     ),
 )
-def test_calc_remaining_subsystems(
-    calcremainingsubsystemsparam, monkeypatch, costs2015
-):
+def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, costs2015):
     """
     Automatically generated Regression Unit Test for calc_remaining_subsystems.
 

@@ -749,9 +749,7 @@ def check_process(inputs):  # noqa: ARG001
         # Checking the CP TF top radius
         if (
             abs(data_structure.build_variables.r_cp_top) > 0
-            or (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 174
-            ).any()
+            or (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 174).any()
         ) and data_structure.build_variables.i_r_cp_top != 1:
             raise ProcessValidationError(
                 "To set the TF CP top value, you must use i_r_cp_top = 1"
@@ -826,9 +824,7 @@ def check_process(inputs):  # noqa: ARG001
     if (
         (
             not (
-                (
-                    data_structure.numerics.ixc[: data_structure.numerics.nvar] == 16
-                ).any()
+                (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 16).any()
                 or (
                     data_structure.numerics.ixc[: data_structure.numerics.nvar] == 29
                 ).any()
@@ -1021,14 +1017,11 @@ def check_process(inputs):  # noqa: ARG001
             )
 
             # Steel conduit thickness (can be an iteration variable)
-            if (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58
-            ).any():
+            if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58).any():
                 dr_tf_wp_min = dr_tf_wp_min + 2.0 * data_structure.numerics.boundl[57]
             else:
                 dr_tf_wp_min = (
-                    dr_tf_wp_min
-                    + 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
+                    dr_tf_wp_min + 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
                 )
 
         # Minimal conductor layer thickness
@@ -1253,13 +1246,9 @@ def set_active_constraints():
 
     if data_structure.numerics.neqns == 0:
         # The value of neqns has not been set in the input file.  Default = 0.
-        data_structure.numerics.neqns = (
-            num_constraints - data_structure.numerics.nineqns
-        )
+        data_structure.numerics.neqns = num_constraints - data_structure.numerics.nineqns
     else:
-        data_structure.numerics.nineqns = (
-            num_constraints - data_structure.numerics.neqns
-        )
+        data_structure.numerics.nineqns = num_constraints - data_structure.numerics.neqns
 
 
 def set_device_type():

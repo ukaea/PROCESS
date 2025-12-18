@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -9,8 +11,7 @@ from process.exceptions import ProcessValidationError
 
 def _create_input_file(directory, content: str):
     file_location = directory / "IN.DAT"
-    with open(file_location, "w") as f:
-        f.write(content)
+    Path(file_location).write_text(content)
 
     return str(file_location)
 

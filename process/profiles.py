@@ -158,8 +158,7 @@ class NeProfile(Profile):
         self.profile_y[rho_index] = (
             nped
             + (n0 - nped)
-            * (1 - (rho[rho_index] / radius_plasma_pedestal_density_norm) ** 2)
-            ** alphan
+            * (1 - (rho[rho_index] / radius_plasma_pedestal_density_norm) ** 2) ** alphan
         )
         # Invert the rho_index
         self.profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (

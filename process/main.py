@@ -307,14 +307,14 @@ class VaryRun:
         init.init_all_module_vars()
         init.init_process()
 
-        neqns, itervars = get_neqns_itervars()
+        _neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
 
         # If config file contains WDIR, use that. Otherwise, use the directory
         # containing the config file (used when running regression tests in
         # temp dirs)
         # TODO Not sure this is required any more
-        wdir = config.wdir if config.wdir else Path(self.config_file).parent
+        wdir = config.wdir or Path(self.config_file).parent
 
         # Check IN.DAT exists
         if not input_path.exists():

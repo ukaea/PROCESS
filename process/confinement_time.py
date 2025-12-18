@@ -168,11 +168,7 @@ def kaye_goldston_confinement_time(
         * n20**0.26e0
         * rmajor**1.65e0
         * np.sqrt(afuel / 1.5e0)
-        / (
-            b_plasma_toroidal_on_axis**0.09e0
-            * rminor**0.49e0
-            * p_plasma_loss_mw**0.58e0
-        )
+        / (b_plasma_toroidal_on_axis**0.09e0 * rminor**0.49e0 * p_plasma_loss_mw**0.58e0)
     )
 
 
@@ -877,7 +873,7 @@ def gyro_reduced_bohm_confinement_time(
     Notes:
 
     References:
-        - Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. µ B/B as the Cause of Transport in Tokamaks."
+        - Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. μ B/B as the Cause of Transport in Tokamaks."
           Bull. Am. Phys. Soc 34 (1989): 1964.
     """
     return (

@@ -46,9 +46,7 @@ plt.savefig("2nd_gen_rebco_zero_strain.png", dpi=1000)
 
 # Convert the data to a format suitable for Plotly
 fig_plotly = go.Figure(
-    data=[
-        go.Surface(z=j_scaling, x=temp_conductor, y=b_conductor, colorscale="Viridis")
-    ]
+    data=[go.Surface(z=j_scaling, x=temp_conductor, y=b_conductor, colorscale="Viridis")]
 )
 
 # Update layout for better visualization

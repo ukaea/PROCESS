@@ -415,8 +415,7 @@ def plot_main_power_flow(
     axis.text(
         0.22,
         0.75,
-        "$P_{{fus}}$\n"
-        f"{mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{{{fus}}}}$\n{mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -666,9 +665,7 @@ def plot_main_power_flow(
     )
     new_ax.imshow(hcd_injector_1)
     new_ax.axis("off")
-    new_ax = axis.inset_axes(
-        [-0.2, 0.5, 0.15, 0.5], transform=axis.transAxes, zorder=10
-    )
+    new_ax = axis.inset_axes([-0.2, 0.5, 0.15, 0.5], transform=axis.transAxes, zorder=10)
     new_ax.imshow(hcd_injector_2)
     new_ax.axis("off")
 
@@ -931,9 +928,7 @@ def plot_main_power_flow(
         turbine = mpimg.imread(img_path.open("rb"))
 
     # Display the turbine image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        [1.1, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10
-    )
+    new_ax = axis.inset_axes([1.1, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10)
     new_ax.imshow(turbine)
     new_ax.axis("off")
 
@@ -1267,9 +1262,7 @@ def plot_main_power_flow(
         fw = mpimg.imread(img_path.open("rb"))
 
     # Display the first wall image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        [0.4, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
-    )
+    new_ax = axis.inset_axes([0.4, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10)
     new_ax.imshow(fw)
     new_ax.axis("off")
 
@@ -2785,9 +2778,7 @@ def plot_main_plasma_information(
     # =========================================
 
     # Load the neutron image
-    with resources.path(
-        "process.io", "alpha_particle.png"
-    ) as alpha_particle_image_path:
+    with resources.path("process.io", "alpha_particle.png") as alpha_particle_image_path:
         # Use importlib.resources to locate the image
         alpha_particle = mpimg.imread(alpha_particle_image_path.open("rb"))
 
@@ -3263,9 +3254,9 @@ def plot_system_power_profiles_over_time(
     """
 
     t_precharge = mfile_data.data["t_plant_pulse_coil_precharge"].get_scan(scan)
-    t_current_ramp_up = mfile_data.data[
-        "t_plant_pulse_plasma_current_ramp_up"
-    ].get_scan(scan)
+    t_current_ramp_up = mfile_data.data["t_plant_pulse_plasma_current_ramp_up"].get_scan(
+        scan
+    )
     t_fusion_ramp = mfile_data.data["t_plant_pulse_fusion_ramp"].get_scan(scan)
     t_burn = mfile_data.data["t_plant_pulse_burn"].get_scan(scan)
     t_ramp_down = mfile_data.data["t_plant_pulse_plasma_current_ramp_down"].get_scan(
@@ -3477,8 +3468,10 @@ def color_key(axis, mfile_data, scan, colour_scheme):
     if (mfile_data.data["i_hcd_primary"].get_scan(scan) in [5, 8]) or (
         mfile_data.data["i_hcd_secondary"].get_scan(scan) in [5, 8]
     ):
-        labels.append(("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]))
-        labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
+        labels.extend((
+            ("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]),
+            ("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]),
+        ))
     else:
         labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
 
@@ -3584,8 +3577,8 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     ang = i * spacing
     angl = ang - spacing / 2
     angu = ang + spacing / 2
-    r1, null = cumulative_radial_build2("dr_cs_tf_gap", mfile_data, scan)
-    r2, null = cumulative_radial_build2("dr_tf_inboard", mfile_data, scan)
+    r1, _null = cumulative_radial_build2("dr_cs_tf_gap", mfile_data, scan)
+    r2, _null = cumulative_radial_build2("dr_tf_inboard", mfile_data, scan)
     r4, r3 = cumulative_radial_build2("dr_tf_outboard", mfile_data, scan)
 
     # Coil width
@@ -3868,7 +3861,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     )
 
     # make legend use multiple columns (up to 4) and place it to the right to avoid overlapping the plots
-    handles, labels = prof.get_legend_handles_labels()
+    _handles, labels = prof.get_legend_handles_labels()
     ncol = min(4, max(1, len(labels)))
     prof.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=ncol)
 
@@ -5316,9 +5309,7 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
     x5 = mfile_data.data["r_tf_arc(5)"].get_scan(scan)
     y5 = mfile_data.data["z_tf_arc(5)"].get_scan(scan)
     dr_shld_thermal_inboard = mfile_data.data["dr_shld_thermal_inboard"].get_scan(scan)
-    dr_shld_thermal_outboard = mfile_data.data["dr_shld_thermal_outboard"].get_scan(
-        scan
-    )
+    dr_shld_thermal_outboard = mfile_data.data["dr_shld_thermal_outboard"].get_scan(scan)
     dr_tf_shld_gap = mfile_data.data["dr_tf_shld_gap"].get_scan(scan)
     if y3 != 0:
         print("TF coil geometry: The value of z_tf_arc(3) is not zero, but should be.")
@@ -5419,9 +5410,7 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     dx_tf_wp_secondary_toroidal = mfile_data.data[
         "dx_tf_wp_secondary_toroidal"
     ].get_scan(scan)
-    dr_tf_wp_with_insulation = mfile_data.data["dr_tf_wp_with_insulation"].get_scan(
-        scan
-    )
+    dr_tf_wp_with_insulation = mfile_data.data["dr_tf_wp_with_insulation"].get_scan(scan)
     r_tf_wp_inboard_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
     dx_tf_wp_insulation = mfile_data.data["dx_tf_wp_insulation"].get_scan(scan)
     n_tf_coil_turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
@@ -6711,10 +6700,7 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                 candidate_y = y_pos
 
                 # Check if within bounds
-                if (
-                    candidate_x > x + width - radius
-                    or candidate_y > y + height - radius
-                ):
+                if candidate_x > x + width - radius or candidate_y > y + height - radius:
                     continue
 
                 # Check collision with cooling pipe
@@ -6779,8 +6765,7 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                 collision = False
                 for existing_x, existing_y in placed_strands:
                     distance = np.sqrt(
-                        (candidate_x - existing_x) ** 2
-                        + (candidate_y - existing_y) ** 2
+                        (candidate_x - existing_x) ** 2 + (candidate_y - existing_y) ** 2
                     )
                     if distance < strand_diameter:
                         collision = True
@@ -6847,9 +6832,7 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         "radius_tf_turn_cable_space_corners"
     ].get_scan(scan)
 
-    a_tf_wp_coolant_channels = mfile_data.data["a_tf_wp_coolant_channels"].get_scan(
-        scan
-    )
+    a_tf_wp_coolant_channels = mfile_data.data["a_tf_wp_coolant_channels"].get_scan(scan)
 
     f_a_tf_turn_cable_space_extra_void = mfile_data.data[
         "f_a_tf_turn_cable_space_extra_void"
@@ -6942,7 +6925,7 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
 
         # Pack strands if significant void fraction
         if void_fraction > 0.001:
-            n_strands, attempts = _pack_strands_rectangular_with_obstacles(
+            _n_strands, _attempts = _pack_strands_rectangular_with_obstacles(
                 cable_space_bounds=cable_bounds,
                 pipe_center=(
                     turn_width / 2,
@@ -7247,9 +7230,7 @@ def plot_cable_in_conduit_cable(axis, fig, mfile_data, scan: int) -> None:
     dia_tf_turn_superconducting_cable = mfile_data.data[
         "dia_tf_turn_superconducting_cable"
     ].get_scan(scan)
-    f_a_tf_turn_cable_copper = mfile_data.data["f_a_tf_turn_cable_copper"].get_scan(
-        scan
-    )
+    f_a_tf_turn_cable_copper = mfile_data.data["f_a_tf_turn_cable_copper"].get_scan(scan)
 
     # Convert to mm
     dia_mm = dia_tf_turn_superconducting_cable * 1000
@@ -7627,9 +7608,9 @@ def plot_geometry_info(axis, mfile_data, scan):
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
 
-    in_blanket_thk = mfile_data.data["dr_shld_inboard"].get_scan(
-        scan
-    ) + mfile_data.data["dr_blkt_inboard"].get_scan(scan)
+    in_blanket_thk = mfile_data.data["dr_shld_inboard"].get_scan(scan) + mfile_data.data[
+        "dr_blkt_inboard"
+    ].get_scan(scan)
     out_blanket_thk = mfile_data.data["dr_shld_outboard"].get_scan(
         scan
     ) + mfile_data.data["dr_blkt_outboard"].get_scan(scan)
@@ -7803,9 +7784,9 @@ def plot_magnetics_info(axis, mfile_data, scan):
     sig_case = 1.0e-6 * mfile_data.data[f"s_shear_tf_peak({i_tf_bucking})"].get_scan(
         scan
     )
-    sig_cond = 1.0e-6 * mfile_data.data[
-        f"s_shear_tf_peak({i_tf_bucking + 1})"
-    ].get_scan(scan)
+    sig_cond = 1.0e-6 * mfile_data.data[f"s_shear_tf_peak({i_tf_bucking + 1})"].get_scan(
+        scan
+    )
 
     if i_tf_sup == 1:
         data = [
@@ -7925,9 +7906,7 @@ def plot_power_info(axis, mfile_data, scan):
         ped_height = ("", "No pedestal model used", "")
         ped_pos = ("", "", "")
 
-    p_cryo_plant_electric_mw = mfile_data.data["p_cryo_plant_electric_mw"].get_scan(
-        scan
-    )
+    p_cryo_plant_electric_mw = mfile_data.data["p_cryo_plant_electric_mw"].get_scan(scan)
 
     data = [
         ("pflux_fw_neutron_mw", "Nominal neutron wall load", "MW m$^{-2}$"),
@@ -10388,14 +10367,10 @@ def plot_tf_stress(axis):
             sig_file_data["Von-Mises stress (MPa)"][(ii + 1) * n_radial_array_layer - 1]
         )
         bound_tresca_stress.append(
-            sig_file_data["CEA Tresca stress (MPa)"][
-                (ii + 1) * n_radial_array_layer - 1
-            ]
+            sig_file_data["CEA Tresca stress (MPa)"][(ii + 1) * n_radial_array_layer - 1]
         )
         bound_cea_tresca_stress.append(
-            sig_file_data["CEA Tresca stress (MPa)"][
-                (ii + 1) * n_radial_array_layer - 1
-            ]
+            sig_file_data["CEA Tresca stress (MPa)"][(ii + 1) * n_radial_array_layer - 1]
         )
         bound_radial_displacement.append(
             sig_file_data["rad. displacement (mm)"][(ii + 1) * n_radial_array_layer - 1]
@@ -10405,17 +10380,16 @@ def plot_tf_stress(axis):
     for ii in range(n_layers):
         tresca_smeared_stress.append([])
 
-        bound_tresca_smeared_stress.append(
+        bound_tresca_smeared_stress.extend([
             max(abs(radial_smeared_stress[ii][0]), abs(toroidal_smeared_stress[ii][0]))
-            + vertical_smeared_stress[ii][0]
-        )
-        bound_tresca_smeared_stress.append(
+            + vertical_smeared_stress[ii][0],
             max(
                 abs(radial_smeared_stress[ii][n_radial_array_layer - 1]),
                 abs(toroidal_smeared_stress[ii][n_radial_array_layer - 1]),
             )
-            + vertical_smeared_stress[ii][n_radial_array_layer - 1]
-        )
+            + vertical_smeared_stress[ii][n_radial_array_layer - 1],
+        ])
+
         for jj in range(n_radial_array_layer):
             tresca_smeared_stress[ii].append(
                 max(
@@ -10432,24 +10406,19 @@ def plot_tf_stress(axis):
             toroidal_strain.append([])
             vertical_strain.append([])
 
-            bound_radial_strain.append(
-                sig_file_data["Radial strain"][ii * n_radial_array_layer]
-            )
-            bound_toroidal_strain.append(
-                sig_file_data["Toroidal strain"][ii * n_radial_array_layer]
-            )
-            bound_vertical_strain.append(
-                sig_file_data["Vertical strain"][ii * n_radial_array_layer]
-            )
-            bound_radial_strain.append(
-                sig_file_data["Radial strain"][(ii + 1) * n_radial_array_layer - 1]
-            )
-            bound_toroidal_strain.append(
-                sig_file_data["Toroidal strain"][(ii + 1) * n_radial_array_layer - 1]
-            )
-            bound_vertical_strain.append(
-                sig_file_data["Vertical strain"][(ii + 1) * n_radial_array_layer - 1]
-            )
+            bound_radial_strain.extend([
+                sig_file_data["Radial strain"][ii * n_radial_array_layer],
+                sig_file_data["Radial strain"][(ii + 1) * n_radial_array_layer - 1],
+            ])
+            bound_toroidal_strain.extend([
+                sig_file_data["Toroidal strain"][ii * n_radial_array_layer],
+                sig_file_data["Toroidal strain"][(ii + 1) * n_radial_array_layer - 1],
+            ])
+            bound_vertical_strain.extend([
+                sig_file_data["Vertical strain"][ii * n_radial_array_layer],
+                sig_file_data["Vertical strain"][(ii + 1) * n_radial_array_layer - 1],
+            ])
+
             for jj in range(n_radial_array_layer):
                 radial_strain[ii].append(
                     sig_file_data["Radial strain"][ii * n_radial_array_layer + jj]
@@ -10568,9 +10537,7 @@ def plot_tf_stress(axis):
         markersize=mark_size,
         color="crimson",
     )
-    ax.plot(
-        bound_radius, bound_vm_stress, "|", markersize=mark_size, color="darkviolet"
-    )
+    ax.plot(bound_radius, bound_vm_stress, "|", markersize=mark_size, color="darkviolet")
     ax.grid(True)
     ax.set_ylabel(r"$\sigma$ [$MPa$]", fontsize=axis_tick_size)
     ax.set_title("Structure Stress Summary")
@@ -11547,9 +11514,7 @@ def plot_plasma_poloidal_pressure_contours(
     ]
 
     # Convert pressure to kPa
-    pres_plasma_electron_profile_kpa = [
-        p / 1000.0 for p in pres_plasma_electron_profile
-    ]
+    pres_plasma_electron_profile_kpa = [p / 1000.0 for p in pres_plasma_electron_profile]
     pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
     pres_plasma_profile = [
         e + i
@@ -11832,9 +11797,7 @@ def plot_fusion_rate_contours(
     )
     # enable minor ticks and grid for clearer reading
     dt_axes.minorticks_on()
-    dt_axes.grid(
-        True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1
-    )
+    dt_axes.grid(True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1)
     dt_axes.grid(True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1)
     # make minor ticks visible on all sides and draw ticks inward for compact look
     dt_axes.tick_params(which="both", direction="in", top=True, right=True)
@@ -12674,9 +12637,7 @@ def plot_ebw_ecrh_coupling_graph(axis, mfile_data, scan):
             )
             eta_ecrh_omode = ecrg.electron_cyclotron_freethy(
                 te=mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan),
-                zeff=mfile_data.data["n_charge_plasma_effective_vol_avg"].get_scan(
-                    scan
-                ),
+                zeff=mfile_data.data["n_charge_plasma_effective_vol_avg"].get_scan(scan),
                 rmajor=mfile_data.data["rmajor"].get_scan(scan),
                 nd_plasma_electrons_vol_avg=mfile_data.data[
                     "nd_plasma_electrons_vol_avg"
@@ -12687,9 +12648,7 @@ def plot_ebw_ecrh_coupling_graph(axis, mfile_data, scan):
             )
             eta_ecrh_xmode = ecrg.electron_cyclotron_freethy(
                 te=mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan),
-                zeff=mfile_data.data["n_charge_plasma_effective_vol_avg"].get_scan(
-                    scan
-                ),
+                zeff=mfile_data.data["n_charge_plasma_effective_vol_avg"].get_scan(scan),
                 rmajor=mfile_data.data["rmajor"].get_scan(scan),
                 nd_plasma_electrons_vol_avg=mfile_data.data[
                     "nd_plasma_electrons_vol_avg"
@@ -13074,7 +13033,7 @@ def main(args=None):
     global m_file_name
     m_file_name = args.f if args.f != "" else "MFILE.DAT"
 
-    scan = args.n if args.n else -1
+    scan = args.n or -1
 
     demo_ranges = bool(args.DEMO_ranges)
 
@@ -13090,29 +13049,30 @@ def main(args=None):
     else:
         i_tf_wp_geom = 0
 
-    global dr_bore
-    global dr_cs
-    global dr_cs_tf_gap
-    global dr_tf_inboard
-    global dr_shld_vv_gap_inboard
-    global ddwi
-    global dr_shld_inboard
-    global dr_blkt_inboard
-    global dr_fw_inboard
-    global dr_fw_plasma_gap_inboard
-    global rmajor
-    global rminor
-    global dr_fw_plasma_gap_outboard
-    global dr_fw_outboard
-    global dr_blkt_outboard
-    global dr_shld_outboard
-    global ddwi
-    global dr_shld_vv_gap_outboard
-    global dr_tf_outboard
-    global r_cryostat_inboard
-    global z_cryostat_half_inside
-    global dr_cryostat
-    global j_plasma_0
+    global \
+        dr_bore, \
+        dr_cs, \
+        dr_cs_tf_gap, \
+        dr_tf_inboard, \
+        dr_shld_vv_gap_inboard, \
+        ddwi, \
+        dr_shld_inboard, \
+        dr_blkt_inboard, \
+        dr_fw_inboard, \
+        dr_fw_plasma_gap_inboard, \
+        rmajor, \
+        rminor, \
+        dr_fw_plasma_gap_outboard, \
+        dr_fw_outboard, \
+        dr_blkt_outboard, \
+        dr_shld_outboard, \
+        ddwi, \
+        dr_shld_vv_gap_outboard, \
+        dr_tf_outboard, \
+        r_cryostat_inboard, \
+        z_cryostat_half_inside, \
+        dr_cryostat, \
+        j_plasma_0
 
     dr_bore = m_file.data["dr_bore"].get_scan(scan)
     dr_cs = m_file.data["dr_cs"].get_scan(scan)
@@ -13137,13 +13097,14 @@ def main(args=None):
     j_plasma_0 = m_file.data["j_plasma_on_axis"].get_scan(scan)
 
     # Magnets related
-    global n_tf_coils
-    global dx_tf_wp_primary_toroidal
-    global dx_tf_wp_secondary_toroidal
-    global dr_tf_wp_with_insulation
-    global dx_tf_wp_insulation
-    global dr_tf_nose_case
-    global dr_tf_plasma_case
+    global \
+        n_tf_coils, \
+        dx_tf_wp_primary_toroidal, \
+        dx_tf_wp_secondary_toroidal, \
+        dr_tf_wp_with_insulation, \
+        dx_tf_wp_insulation, \
+        dr_tf_nose_case, \
+        dr_tf_plasma_case
 
     n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
     if i_tf_sup == 1:  # If superconducting magnets
@@ -13154,19 +13115,14 @@ def main(args=None):
             dx_tf_wp_secondary_toroidal = m_file.data[
                 "dx_tf_wp_secondary_toroidal"
             ].get_scan(scan)
-        dr_tf_wp_with_insulation = m_file.data["dr_tf_wp_with_insulation"].get_scan(
-            scan
-        )
+        dr_tf_wp_with_insulation = m_file.data["dr_tf_wp_with_insulation"].get_scan(scan)
         dx_tf_wp_insulation = m_file.data["dx_tf_wp_insulation"].get_scan(scan)
         dr_tf_nose_case = m_file.data["dr_tf_nose_case"].get_scan(scan)
 
         # To be re-inergrated to resistives when in-plane stresses is integrated
         dr_tf_plasma_case = m_file.data["dr_tf_plasma_case"].get_scan(scan)
 
-    global dx_beam_shield
-    global radius_beam_tangency
-    global radius_beam_tangency_max
-    global dx_beam_duct
+    global dx_beam_shield, radius_beam_tangency, radius_beam_tangency_max, dx_beam_duct
 
     i_hcd_primary = int(m_file.data["i_hcd_primary"].get_scan(scan))
     i_hcd_secondary = int(m_file.data["i_hcd_secondary"].get_scan(scan))
@@ -13174,9 +13130,7 @@ def main(args=None):
     if (i_hcd_primary in [5, 8]) or (i_hcd_secondary in [5, 8]):
         dx_beam_shield = m_file.data["dx_beam_shield"].get_scan(scan)
         radius_beam_tangency = m_file.data["radius_beam_tangency"].get_scan(scan)
-        radius_beam_tangency_max = m_file.data["radius_beam_tangency_max"].get_scan(
-            scan
-        )
+        radius_beam_tangency_max = m_file.data["radius_beam_tangency_max"].get_scan(scan)
         dx_beam_duct = m_file.data["dx_beam_duct"].get_scan(scan)
     else:
         dx_beam_shield = radius_beam_tangency = radius_beam_tangency_max = (
@@ -13184,25 +13138,26 @@ def main(args=None):
         ) = 0.0
 
     # Pedestal profile parameters
-    global i_plasma_pedestal
-    global nd_plasma_pedestal_electron
-    global nd_plasma_separatrix_electron
-    global radius_plasma_pedestal_density_norm
-    global radius_plasma_pedestal_temp_norm
-    global tbeta
-    global temp_plasma_pedestal_kev
-    global temp_plasma_separatrix_kev
-    global alphan
-    global alphat
-    global ne0
-    global nd_plasma_fuel_ions_vol_avg
-    global nd_plasma_electrons_vol_avg
-    global te0
-    global ti
-    global te
-    global fgwped_out
-    global fgwsep_out
-    global f_temp_plasma_ion_electron
+    global \
+        i_plasma_pedestal, \
+        nd_plasma_pedestal_electron, \
+        nd_plasma_separatrix_electron, \
+        radius_plasma_pedestal_density_norm, \
+        radius_plasma_pedestal_temp_norm, \
+        tbeta, \
+        temp_plasma_pedestal_kev, \
+        temp_plasma_separatrix_kev, \
+        alphan, \
+        alphat, \
+        ne0, \
+        nd_plasma_fuel_ions_vol_avg, \
+        nd_plasma_electrons_vol_avg, \
+        te0, \
+        ti, \
+        te, \
+        fgwped_out, \
+        fgwsep_out, \
+        f_temp_plasma_ion_electron
 
     i_plasma_pedestal = m_file.data["i_plasma_pedestal"].get_scan(scan)
     nd_plasma_pedestal_electron = m_file.data["nd_plasma_pedestal_electron"].get_scan(
@@ -13219,9 +13174,7 @@ def main(args=None):
     ].get_scan(scan)
     tbeta = m_file.data["tbeta"].get_scan(scan)
     temp_plasma_pedestal_kev = m_file.data["temp_plasma_pedestal_kev"].get_scan(scan)
-    temp_plasma_separatrix_kev = m_file.data["temp_plasma_separatrix_kev"].get_scan(
-        scan
-    )
+    temp_plasma_separatrix_kev = m_file.data["temp_plasma_separatrix_kev"].get_scan(scan)
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["nd_plasma_electron_on_axis"].get_scan(scan)
@@ -13236,17 +13189,10 @@ def main(args=None):
     te = m_file.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
     fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
     fgwsep_out = m_file.data["fgwsep_out"].get_scan(scan)
-    f_temp_plasma_ion_electron = m_file.data["f_temp_plasma_ion_electron"].get_scan(
-        scan
-    )
+    f_temp_plasma_ion_electron = m_file.data["f_temp_plasma_ion_electron"].get_scan(scan)
 
     # Plasma
-    global triang
-    global alphaj
-    global q0
-    global q95
-    global plasma_current_MA
-    global a_plasma_poloidal
+    global triang, alphaj, q0, q95, plasma_current_MA, a_plasma_poloidal
 
     triang = m_file.data["triang95"].get_scan(scan)
     alphaj = m_file.data["alphaj"].get_scan(scan)
@@ -13273,9 +13219,7 @@ def main(args=None):
     # Ion dens(10^19 m^-3) -- 15
     # Poloidal flux (Wb) -- 16
     # rad profile
-    global f_sync_reflect
-    global b_plasma_toroidal_on_axis
-    global vol_plasma
+    global f_sync_reflect, b_plasma_toroidal_on_axis, vol_plasma
     f_sync_reflect = m_file.data["f_sync_reflect"].get_scan(scan)
     b_plasma_toroidal_on_axis = m_file.data["b_plasma_toroidal_on_axis"].get_scan(scan)
     vol_plasma = m_file.data["vol_plasma"].get_scan(scan)
@@ -13328,8 +13272,7 @@ def main(args=None):
     subtotal += build
     cumulative_radial[item] = subtotal
 
-    global upper
-    global cumulative_upper
+    global upper, cumulative_upper
     upper = {}
     cumulative_upper = {}
     subtotal = 0
@@ -13338,8 +13281,7 @@ def main(args=None):
         subtotal += upper[item]
         cumulative_upper[item] = subtotal
 
-    global lower
-    global cumulative_lower
+    global lower, cumulative_lower
     lower = {}
     cumulative_lower = {}
     subtotal = 0

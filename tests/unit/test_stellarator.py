@@ -3058,9 +3058,7 @@ def test_sctfcoil_nuclear_heating_iter90(
         p_tf_nuclear_heat_mw,
     ) = stellarator.sctfcoil_nuclear_heating_iter90()
 
-    assert coilhtmx == pytest.approx(
-        sctfcoilnuclearheatingiter90param.expected_coilhtmx
-    )
+    assert coilhtmx == pytest.approx(sctfcoilnuclearheatingiter90param.expected_coilhtmx)
     assert dpacop == pytest.approx(sctfcoilnuclearheatingiter90param.expected_dpacop)
     assert htheci == pytest.approx(sctfcoilnuclearheatingiter90param.expected_htheci)
     assert nflutf == pytest.approx(sctfcoilnuclearheatingiter90param.expected_nflutf)

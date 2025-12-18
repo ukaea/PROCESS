@@ -82,9 +82,7 @@ class InitNeoclassicsParam(NamedTuple):
             ti=5.7180500000000007,
             nd_plasma_electrons_vol_avg=2.07086e20,
             nd_plasma_fuel_ions_vol_avg=1.47415411616e20,
-            densities=np.array(
-                np.array((0, 0, 0, 0), order="F"), order="F"
-            ).transpose(),
+            densities=np.array(np.array((0, 0, 0, 0), order="F"), order="F").transpose(),
             temperatures=np.array(
                 np.array((0, 0, 0, 0), order="F"), order="F"
             ).transpose(),

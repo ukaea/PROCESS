@@ -1734,12 +1734,8 @@ def test_liquid_breeder_properties(
         "b_plasma_toroidal_on_axis",
         liquidbreederpropertiesparam.b_plasma_toroidal_on_axis,
     )
-    monkeypatch.setattr(
-        physics_variables, "aspect", liquidbreederpropertiesparam.aspect
-    )
-    monkeypatch.setattr(
-        physics_variables, "rmajor", liquidbreederpropertiesparam.rmajor
-    )
+    monkeypatch.setattr(physics_variables, "aspect", liquidbreederpropertiesparam.aspect)
+    monkeypatch.setattr(physics_variables, "rmajor", liquidbreederpropertiesparam.rmajor)
     monkeypatch.setattr(
         build_variables, "dr_blkt_inboard", liquidbreederpropertiesparam.dr_blkt_inboard
     )

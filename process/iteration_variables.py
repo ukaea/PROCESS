@@ -138,9 +138,7 @@ ITERATION_VARIABLES = {
     56: IterationVariable(
         "t_tf_superconductor_quench", data_structure.tfcoil_variables, 0.1, 100.0
     ),
-    57: IterationVariable(
-        "dr_tf_nose_case", data_structure.tfcoil_variables, 0.05, 1.0
-    ),
+    57: IterationVariable("dr_tf_nose_case", data_structure.tfcoil_variables, 0.05, 1.0),
     58: IterationVariable(
         "dx_tf_turn_steel", data_structure.tfcoil_variables, 0.001, 0.1
     ),
@@ -213,9 +211,7 @@ ITERATION_VARIABLES = {
         "fl_h_threshold", data_structure.constraint_variables, 0.001, 1.0
     ),
     104: IterationVariable("fcwr", data_structure.constraint_variables, 0.001, 1.0),
-    105: IterationVariable(
-        "fnbshinef", data_structure.constraint_variables, 0.001, 1.0
-    ),
+    105: IterationVariable("fnbshinef", data_structure.constraint_variables, 0.001, 1.0),
     106: IterationVariable("ftmargoh", data_structure.constraint_variables, 0.001, 1.0),
     107: IterationVariable("favail", data_structure.cost_variables, 0.001, 1.0),
     108: IterationVariable("breeder_f", data_structure.fwbs_variables, 0.060, 1.0),
@@ -228,9 +224,7 @@ ITERATION_VARIABLES = {
     111: IterationVariable(
         "fniterpump", data_structure.constraint_variables, 0.001, 1.0
     ),
-    112: IterationVariable(
-        "fzeff_max", data_structure.constraint_variables, 0.001, 1.0
-    ),
+    112: IterationVariable("fzeff_max", data_structure.constraint_variables, 0.001, 1.0),
     113: IterationVariable(
         "fmaxvvstress", data_structure.constraint_variables, 0.001, 1.0
     ),
@@ -243,9 +237,7 @@ ITERATION_VARIABLES = {
     116: IterationVariable(
         "fpflux_fw_rad_max", data_structure.constraint_variables, 0.001, 1.0
     ),
-    117: IterationVariable(
-        "fpsepbqar", data_structure.constraint_variables, 0.001, 1.0
-    ),
+    117: IterationVariable("fpsepbqar", data_structure.constraint_variables, 0.001, 1.0),
     119: IterationVariable(
         "temp_plasma_separatrix_kev", data_structure.physics_variables, 0.0, 1.0e1
     ),
@@ -397,13 +389,9 @@ ITERATION_VARIABLES = {
     158: IterationVariable(
         "dx_croco_strand_copper", data_structure.rebco_variables, 1.0e-3, 1.0e-1
     ),
-    159: IterationVariable(
-        "ftoroidalgap", data_structure.tfcoil_variables, 1.0e-4, 1.0
-    ),
+    159: IterationVariable("ftoroidalgap", data_structure.tfcoil_variables, 1.0e-4, 1.0),
     160: IterationVariable("f_avspace", data_structure.build_variables, 0.010, 1.0),
-    161: IterationVariable(
-        "fbeta_min", data_structure.constraint_variables, 0.010, 1.0
-    ),
+    161: IterationVariable("fbeta_min", data_structure.constraint_variables, 0.010, 1.0),
     162: IterationVariable("r_cp_top", data_structure.build_variables, 0.0010, 10.0),
     163: IterationVariable(
         "f_t_turn_tf", data_structure.tfcoil_variables, 0.0010, 1000.0
@@ -412,9 +400,7 @@ ITERATION_VARIABLES = {
         "f_crypmw", data_structure.heat_transport_variables, 0.001, 1.0
     ),
     165: IterationVariable("fstr_wp", data_structure.constraint_variables, 1.0e-9, 1.0),
-    166: IterationVariable(
-        "f_copperaoh_m2", data_structure.rebco_variables, 0.001, 1.0
-    ),
+    166: IterationVariable("f_copperaoh_m2", data_structure.rebco_variables, 0.001, 1.0),
     167: IterationVariable("fncycle", data_structure.constraint_variables, 1.0e-8, 1.0),
     168: IterationVariable(
         "fecrh_ignition", data_structure.constraint_variables, 0.010, 2.0

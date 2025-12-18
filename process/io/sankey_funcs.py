@@ -537,9 +537,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     fdiv_2 = m_file.data["2*f_ster_div_single"].get_scan(
         -1
     )  # Area fraction taken up by double null divertor
-    if (
-        fdiv_2 > 0
-    ):  # Takes into account old MFILE representation of double null divertor
+    if fdiv_2 > 0:  # Takes into account old MFILE representation of double null divertor
         f_ster_div_single = fdiv_2
     p_div_rad_total_mw = (
         p_plasma_rad_mw * f_ster_div_single
@@ -581,9 +579,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
     p_fw_alpha_mw = p_alpha_total_mw * (
         1 - f_p_alpha_plasma_deposited
     )  # Alpha power hitting 1st wall (MW)
-    itart = m_file.data["itart"].get_scan(
-        -1
-    )  # switch for spherical tokamak (ST) models
+    itart = m_file.data["itart"].get_scan(-1)  # switch for spherical tokamak (ST) models
 
     # Power deposited on divertor (MW)
     totaldivetc = (
@@ -928,9 +924,6 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                     pos[0] + 0.15,
                     pos[1]
                     - 0.5
-                    * (
-                        (p_hcd_electric_total_mw - p_hcd_injected_total_mw)
-                        / totalplasma
-                    )
+                    * ((p_hcd_electric_total_mw - p_hcd_injected_total_mw) / totalplasma)
                     - 0.2,
                 ))

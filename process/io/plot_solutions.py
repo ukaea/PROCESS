@@ -215,9 +215,7 @@ def _create_df_from_run_metadata(runs_metadata: Sequence[RunMetadata]) -> pd.Dat
         if Path(run_metadata.mfile_path).exists():
             mfile_data = _extract_mfile_data(run_metadata.mfile_path)
         else:
-            raise FileNotFoundError(
-                f"The MFILE {run_metadata.mfile_path} doesn't exist"
-            )
+            raise FileNotFoundError(f"The MFILE {run_metadata.mfile_path} doesn't exist")
         # Merge each run's metadata and results into one dict
         results.append({**asdict(run_metadata), **mfile_data})
 
@@ -416,9 +414,7 @@ def _plot_solutions(
     objf_name = str(objf_list[0])
 
     # Now separate optimisation parameter values from their names
-    opt_params_values_df = opt_params_df.filter(
-        regex=f"{opt_param_value_pattern}|{TAG}"
-    )
+    opt_params_values_df = opt_params_df.filter(regex=f"{opt_param_value_pattern}|{TAG}")
     opt_params_names_df = opt_params_df.filter(regex=NORM_OPT_PARAM_NAME_REGEX)
 
     # Replace xcm--- optimisation parameter column headers with actual var names
