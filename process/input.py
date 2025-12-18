@@ -1439,7 +1439,9 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(0.9, 3.0)
     ),
     "rbwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "rcool": InputVariable(data_structure.tfcoil_variables, float, range=(1e-06, 1.0)),
+    "radius_cp_coolant_channel": InputVariable(
+        data_structure.tfcoil_variables, float, range=(1e-06, 1.0)
+    ),
     "reactor_clrnc": InputVariable(
         data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
@@ -1678,7 +1680,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 2.0)
     ),
     "tcomrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
-    "tcoolin": InputVariable(
+    "temp_cp_coolant_inlet": InputVariable(
         data_structure.tfcoil_variables, float, range=(4.0, 373.15)
     ),
     "tcritsc": InputVariable(
@@ -1928,7 +1930,7 @@ INPUT_VARIABLES = {
     "vachtmw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "vcool": InputVariable(
+    "vel_cp_coolant_midplane": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.001, 100.0)
     ),
     "v_tf_coil_dump_quench_max_kv": InputVariable(

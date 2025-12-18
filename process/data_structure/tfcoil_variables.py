@@ -991,7 +991,7 @@ a_cp_cool: float = None
 """Centrepost cooling area toroidal cross-section (constant over the whole CP)"""
 
 
-ncool: float = None
+n_cp_coolant_channels_total: float = None
 """number of centrepost coolant tubes"""
 
 
@@ -1013,15 +1013,15 @@ temp_cp_max: float = None
 """maximum peak centrepost temperature (K) (`constraint equation 44`)"""
 
 
-rcool: float = None
+radius_cp_coolant_channel: float = None
 """average radius of coolant channel (m) (`iteration variable 69`)"""
 
 
-tcoolin: float = None
+temp_cp_coolant_inlet: float = None
 """centrepost coolant inlet temperature (K)"""
 
 
-dtiocool: float = None
+dtemp_cp_coolant: float = None
 """inlet / outlet TF coil coolant temperature rise (K)"""
 
 
@@ -1046,7 +1046,7 @@ temp_cp_peak: float = None
 """peak centrepost temperature (K)"""
 
 
-vcool: float = None
+vel_cp_coolant_midplane: float = None
 """inlet centrepost coolant flow speed at midplane (m/s) (`iteration variable 70`)"""
 
 
@@ -1281,19 +1281,19 @@ def init_tfcoil_variables():
     global fcoolcp
     global f_a_tf_cool_outboard
     global a_cp_cool
-    global ncool
+    global n_cp_coolant_channels_total
     global p_cp_coolant_pump_elec
     global p_cp_resistive
     global p_tf_leg_resistive
     global temp_cp_max
-    global rcool
-    global tcoolin
-    global dtiocool
+    global radius_cp_coolant_channel
+    global temp_cp_coolant_inlet
+    global dtemp_cp_coolant
     global temp_cp_average
     global tcpav2
     global temp_tf_legs_outboard
     global temp_cp_peak
-    global vcool
+    global vel_cp_coolant_midplane
     global vol_cond_cp
     global whtcp
     global whttflgs
@@ -1497,6 +1497,7 @@ def init_tfcoil_variables():
     whtconal = 0.0
     m_tf_coil_wp_turn_insulation = 0.0
     m_tf_coil_superconductor = 0.0
+    m_tf_wp_steel_conduit = 0.0
     m_tf_coil_wp_insulation = 0.0
     m_tf_coils_total = 0.0
     dx_tf_wp_primary_toroidal = 0.0
@@ -1515,19 +1516,19 @@ def init_tfcoil_variables():
     fcoolcp = 0.3
     f_a_tf_cool_outboard = 0.2
     a_cp_cool = 0.0
-    ncool = 0.0
+    n_cp_coolant_channels_total = 0.0
     p_cp_coolant_pump_elec = 0.0
     p_cp_resistive = 0.0
     p_tf_leg_resistive = 0.0
     temp_cp_max = 473.15  # 200 C
-    rcool = 0.005
-    tcoolin = 313.15  # 40 C
-    dtiocool = 0.0
+    radius_cp_coolant_channel = 0.005
+    temp_cp_coolant_inlet = 313.15  # 40 C
+    dtemp_cp_coolant = 0.0
     temp_cp_average = 373.15  # 100 C
     tcpav2 = 0.0
     temp_tf_legs_outboard = -1.0
     temp_cp_peak = 0.0
-    vcool = 20.0
+    vel_cp_coolant_midplane = 20.0
     vol_cond_cp = 0.0
     whtcp = 0.0
     whttflgs = 0.0
