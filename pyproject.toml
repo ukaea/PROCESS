@@ -9,9 +9,6 @@ fallback-version = "0.0.0"
 [tool.hatch.build.hooks.vcs]
 version-file = "process/_version.py"
 
-[tool.hatch.metadata]
-allow-direct-references = true  # remove after reference published
-
 [project]
 name = "process"
 authors = [{ name = "UKAEA" }]
@@ -33,7 +30,7 @@ dependencies = [
     "seaborn>=0.12.2",
     "tabulate",
    ]
-keywords = []  # TODO
+keywords = ['fusion', 'optimisation']
 classifiers = [
   "Programming Language :: Python",
   "Development Status :: 4 - Beta",
@@ -59,7 +56,7 @@ test = [
   "pytest-cov>=3.0.0",
   "pytest-xdist>=2.5.0"
 ]
-examples = ["pillow>=5.1.0", "jupyter==1.0.0", "pdf2image==1.16.0"]
+examples = ["jupyter==1.0.0"]
 plotly = ["plotly>=5.15.0,<6"]
 docs = [
   "mkdocs>=1.1",
@@ -122,7 +119,7 @@ output-format = "concise"
 
 [tool.ruff]
 target-version = "py310"
-line-length = 89
+line-length = 88
 output-format = "concise"
 extend-exclude = ["env", ".env"]
 
@@ -154,7 +151,7 @@ max-args = 17
 max-locals = 17
 
 [tool.ruff.lint]
-preview = true
+preview = false
 extend-select = [
     "A",
     "ARG",

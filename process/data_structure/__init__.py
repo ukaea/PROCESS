@@ -1,4 +1,4 @@
-from . import (
+from process.data_structure import (
     blanket_library,
     build_variables,
     buildings_variables,
