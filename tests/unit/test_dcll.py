@@ -6,6 +6,7 @@ from process.data_structure import (
     build_variables,
     current_drive_variables,
     dcll_variables,
+    divertor_variables,
     fwbs_variables,
     physics_variables,
 )
@@ -268,7 +269,7 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        physics_variables, "n_divertors", dcllneutronicsandpowerparam.n_divertors
+        divertor_variables, "n_divertors", dcllneutronicsandpowerparam.n_divertors
     )
 
     monkeypatch.setattr(

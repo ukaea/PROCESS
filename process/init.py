@@ -600,7 +600,7 @@ def check_process(inputs):  # noqa: ARG001
             )
 
     if data_structure.physics_variables.i_single_null == 0:
-        data_structure.physics_variables.n_divertors = 2
+        data_structure.divertor_variables.n_divertors = 2
         data_structure.build_variables.dz_fw_plasma_gap = (
             data_structure.build_variables.dz_xpoint_divertor
         )
@@ -612,7 +612,7 @@ def check_process(inputs):  # noqa: ARG001
         )
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
-        data_structure.physics_variables.n_divertors = 1
+        data_structure.divertor_variables.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
     if data_structure.physics_variables.itart == 1:

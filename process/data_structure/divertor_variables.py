@@ -68,6 +68,9 @@ p_div_upper_rad_mw: float = None
 p_div_lower_rad_mw: float = None
 """Lower divertor incident radiation power radiation power (MW)"""
 
+n_divertors: int = None
+"""Number of divertors (calculated from `i_single_null`)"""
+
 
 def init_divertor_variables():
     global \
@@ -92,7 +95,8 @@ def init_divertor_variables():
         p_div_lower_nuclear_heat_mw, \
         p_div_upper_nuclear_heat_mw, \
         p_div_upper_rad_mw, \
-        p_div_lower_rad_mw
+        p_div_lower_rad_mw, \
+        n_divertors
 
     anginc = 0.262
     deg_div_field_plate = 1.0
@@ -116,3 +120,4 @@ def init_divertor_variables():
     p_div_upper_nuclear_heat_mw = 0.0
     p_div_upper_rad_mw = 0.0
     p_div_lower_rad_mw = 0.0
+    n_divertors = 2
