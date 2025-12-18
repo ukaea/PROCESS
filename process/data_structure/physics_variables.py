@@ -1320,6 +1320,24 @@ n_charge_plasma_effective_profile: list[float] = None
 n_charge_plasma_effective_mass_weighted_vol_avg: float = None
 """Plasma mass-weighted volume averaged plasma effective charge"""
 
+len_plasma_debye_electron_profile: list[float] = None
+"""Profile of electron Debye length in plasma (m)"""
+
+len_plasma_debye_electron_vol_avg: float = None
+"""Volume averaged electron Debye length in plasma (m)"""
+
+vel_plasma_electron_profile: list[float] = None
+"""Profile of electron thermal velocity in plasma (m/s)"""
+
+plasma_coulomb_log_electron_electron_profile: list[float] = None
+"""Profile of electron-electron Coulomb logarithm in plasma"""
+
+freq_plasma_electron_profile: list[float] = None
+"""Electron plasma frequency profile (Hz)"""
+
+freq_plasma_larmor_toroidal_electron_profile: list[float] = None
+"""Profile of electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1638,6 +1656,12 @@ def init_physics_variables():
     global n_charge_plasma_effective_vol_avg
     global n_charge_plasma_effective_profile
     global n_charge_plasma_effective_mass_weighted_vol_avg
+    global len_plasma_debye_electron_profile
+    global len_plasma_debye_electron_vol_avg
+    global vel_plasma_electron_profile
+    global plasma_coulomb_log_electron_electron_profile
+    global freq_plasma_electron_profile
+    global freq_plasma_larmor_toroidal_electron_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1898,3 +1922,9 @@ def init_physics_variables():
     n_charge_plasma_effective_vol_avg = 0.0
     n_charge_plasma_effective_profile = []
     n_charge_plasma_effective_mass_weighted_vol_avg = 0.0
+    len_plasma_debye_electron_profile = []
+    len_plasma_debye_electron_vol_avg = 0.0
+    vel_plasma_electron_profile = []
+    plasma_coulomb_log_electron_electron_profile = []
+    freq_plasma_electron_profile = []
+    freq_plasma_larmor_toroidal_electron_profile = []
