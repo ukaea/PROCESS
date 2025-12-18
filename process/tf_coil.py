@@ -2241,7 +2241,7 @@ class TFCoil:
             )
 
             # Water temperature rise
-            tfcoil_variables.dtiocool = ptot / (cool_mass_flow * coolant_cp)
+            tfcoil_variables.dtemp_cp_coolant = ptot / (cool_mass_flow * coolant_cp)
 
             # Constant coolant velocity
             vcool_max = tfcoil_variables.vel_cp_coolant_midplane
@@ -2276,14 +2276,15 @@ class TFCoil:
             vcool_max = cool_mass_flow / (acool * coolant_density)
 
             # Getting the global in-outlet temperature increase
-            tfcoil_variables.dtiocool = (
+            tfcoil_variables.dtemp_cp_coolant = (
                 tcool_calc - tfcoil_variables.temp_cp_coolant_inlet
             )
         # --------------
 
         # Average coolant temperature
         tcool_av = (
-            tfcoil_variables.temp_cp_coolant_inlet + 0.5e0 * tfcoil_variables.dtiocool
+            tfcoil_variables.temp_cp_coolant_inlet
+            + 0.5e0 * tfcoil_variables.dtemp_cp_coolant
         )
         # **********************************************
 
@@ -2383,19 +2384,19 @@ class TFCoil:
             tfcoil_variables.temp_cp_coolant_inlet
             + dtcncpav
             + dtfilmav
-            + 0.5e0 * tfcoil_variables.dtiocool
+            + 0.5e0 * tfcoil_variables.dtemp_cp_coolant
         )
 
         # Peak wall temperature
         tfcoil_variables.temp_cp_peak = (
             tfcoil_variables.temp_cp_coolant_inlet
-            + tfcoil_variables.dtiocool
+            + tfcoil_variables.dtemp_cp_coolant
             + dtfilmav
             + dtconcpmx
         )
         tcoolmx = (
             tfcoil_variables.temp_cp_coolant_inlet
-            + tfcoil_variables.dtiocool
+            + tfcoil_variables.dtemp_cp_coolant
             + dtfilmav
         )
         # -------------------------
@@ -2531,8 +2532,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Input-output coolant temperature rise (K)",
-                "(dtiocool)",
-                tfcoil_variables.dtiocool,
+                "(dtemp_cp_coolant)",
+                tfcoil_variables.dtemp_cp_coolant,
             )
             po.ovarre(self.outfile, "Film temperature rise (K)", "(dtfilmav)", dtfilmav)
             po.ovarre(

@@ -6569,7 +6569,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
     textstr_cooling = (
         f"$\\mathbf{{Cooling \\ info:}}$\n \n"
         f"Coolant inlet temperature: {mfile_data.data['temp_cp_coolant_inlet'].get_scan(scan):.2f} K\n"
-        f"Coolant temperature rise: {mfile_data.data['dtiocool'].get_scan(scan):.2f} K\n"
+        f"Coolant temperature rise: {mfile_data.data['dtemp_cp_coolant'].get_scan(scan):.2f} K\n"
         f"Coolant velocity: {mfile_data.data['vel_cp_coolant_midplane'].get_scan(scan):.2f} $\\mathrm{{ms^{{-1}}}}$\n\n"
         f"Average CP temperature: {mfile_data.data['temp_cp_average'].get_scan(scan):.2f} K\n"
         f"CP resistivity: {mfile_data.data['rho_cp'].get_scan(scan):.2e} $\\Omega \\mathrm{{m}}$\n"

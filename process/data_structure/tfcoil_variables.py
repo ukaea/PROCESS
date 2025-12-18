@@ -1021,7 +1021,7 @@ temp_cp_coolant_inlet: float = None
 """centrepost coolant inlet temperature (K)"""
 
 
-dtiocool: float = None
+dtemp_cp_coolant: float = None
 """inlet / outlet TF coil coolant temperature rise (K)"""
 
 
@@ -1289,7 +1289,7 @@ def init_tfcoil_variables():
         temp_cp_max, \
         radius_cp_coolant_channel, \
         temp_cp_coolant_inlet, \
-        dtiocool, \
+        dtemp_cp_coolant, \
         temp_cp_average, \
         tcpav2, \
         temp_tf_legs_outboard, \
@@ -1524,7 +1524,7 @@ def init_tfcoil_variables():
     temp_cp_max = 473.15  # 200 C
     radius_cp_coolant_channel = 0.005
     temp_cp_coolant_inlet = 313.15  # 40 C
-    dtiocool = 0.0
+    dtemp_cp_coolant = 0.0
     temp_cp_average = 373.15  # 100 C
     tcpav2 = 0.0
     temp_tf_legs_outboard = -1.0
