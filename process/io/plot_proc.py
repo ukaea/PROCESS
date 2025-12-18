@@ -2642,7 +2642,7 @@ def plot_main_plasma_information(
 
     axis.text(
         0.025,
-        0.95,
+        0.96,
         textstr_beta,
         fontsize=9,
         verticalalignment="top",
@@ -2658,7 +2658,7 @@ def plot_main_plasma_information(
     # Add beta label
     axis.text(
         0.215,
-        0.925,
+        0.94,
         "$\\beta$",
         fontsize=23,
         verticalalignment="top",
@@ -2672,6 +2672,7 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Volt-second \\ requirements:}}$\n \n"
         f"Total volt-second consumption: {mfile_data.data['vs_plasma_total_required'].get_scan(scan):.4f} Vs                \n"
         f"  - Internal volt-seconds: {mfile_data.data['vs_plasma_internal'].get_scan(scan):.4f} Vs\n"
+        f"  - Volt-seconds needed for ramp: {mfile_data.data['vs_plasma_ramp_required'].get_scan(scan):.4f} Vs | $C_{{\\text{{ejima}}}}$: {mfile_data.data['ejima_coeff'].get_scan(scan):.4f}\n"
         f"  - Volt-seconds needed for burn: {mfile_data.data['vs_plasma_burn_required'].get_scan(scan):.4f} Vs\n"
         f"$V_{{\\text{{loop}}}}$: {mfile_data.data['v_plasma_loop_burn'].get_scan(scan):.4f} V\n"
         f"$\\Omega_{{\\text{{p}}}}$: {mfile_data.data['res_plasma'].get_scan(scan):.4e} $\\Omega$\n"
@@ -2683,7 +2684,7 @@ def plot_main_plasma_information(
 
     axis.text(
         0.025,
-        0.77,
+        0.785,
         textstr_volt_second,
         fontsize=9,
         verticalalignment="top",
@@ -2698,8 +2699,8 @@ def plot_main_plasma_information(
 
     # Add volt second label
     axis.text(
-        0.27,
-        0.75,
+        0.30,
+        0.77,
         "Vs",
         fontsize=23,
         verticalalignment="top",
