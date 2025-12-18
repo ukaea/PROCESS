@@ -1,4 +1,4 @@
-# Utilities
+# Plotting
 
 ## Plotting an MFILE
 
@@ -9,16 +9,16 @@
 
 ### Summary document | `plot_proc.py`
 
-`plot_proc` is used for plotting an overview of the results from an MFILE. It can be run using its own CLI:
+`plot_proc` is used for plotting an overview of the results from an MFILE. It can be run using its own CLI (see [here](https://ukaea.github.io/PROCESS/io/utilities/) for full details):
 
 ```bash
 python process/io/plot_proc.py -f path/to/MFILE.DAT
 ```
 
-or through Process's main CLI (working, but still in development):
+or through PROCESS's main CLI:
 
 ```bash
-process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
+process -i path/to/IN.DAT --full-output
 ``` 
 
 An example of a plot proc output PDF for the large tokamak regression test is shown below:

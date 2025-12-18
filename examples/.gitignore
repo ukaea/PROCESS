@@ -1,6 +1,6 @@
-plot_proc_*.png
 !large_tokamak_?_MFILE.DAT
 !csv_output_large_tokamak_MFILE.DAT
 !large_tokamak_eval_IN.DAT
 !large_tokamak_nof*_MFILE.DAT
 *.csv
+*.png

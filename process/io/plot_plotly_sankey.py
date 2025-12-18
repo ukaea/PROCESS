@@ -2,8 +2,6 @@ import argparse
 import pathlib
 import re
 
-import matplotlib as mpl
-
 try:
     import plotly.graph_objects as go
 
@@ -12,8 +10,6 @@ except ImportError:
     PLOT_SANKEY = False
 
 from process.io.mfile import MFile
-
-mpl.use("Agg")
 
 
 def main(args=None):
