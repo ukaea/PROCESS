@@ -423,6 +423,36 @@ class Divertor:
 class LowerDivertor(Divertor):
     """Module containing lower divertor routines"""
 
+    def run(self, output: bool) -> None:
+        super().run(output=output)
+
+        dv.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
+
+        dv.p_div_lower_rad_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=pv.p_plasma_rad_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
+
 
 class UpperDivertor(Divertor):
     """Module containing upper divertor routines"""
+
+    def run(self, output: bool) -> None:
+        super().run(output=output)
+
+        dv.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
+
+        dv.p_div_upper_rad_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=pv.p_plasma_rad_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
