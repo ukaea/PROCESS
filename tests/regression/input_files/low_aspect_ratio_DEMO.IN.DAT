@@ -1,0 +1,1049 @@
+*************************************************************************
+*****                                                               *****
+*****                       Run Summary                             *****
+*****                         EU-DEMO                               *****
+*****            R=8.6m, A=2.8, Pfus= 1.6GW, Paux=50 MW               *****
+*****         Nb3Sn TF Coils, He blanket coolant, ERCH              ***** 
+*****                                                               *****
+*****                                                               *****
+*************************************************************************
+
+*----------------------------Global Variables---------------------------*
+
+maxcal = 1000
+* DESCRIPTION:   Maximum number of VMCON iterations
+* JUSTIFICATION: default
+
+runtitle = EU-DEMO LAR 2023 baseline
+* DESCRIPTION:   Short descriptive title for the run
+* JUSTIFICATION: 
+
+*--------------------------Numerics Variables---------------------------*
+
+epsvmc   = 1.0e-8 
+* DESCRIPTION:   Error tolerance for VMCON
+* JUSTIFICATION: Same tolerance as used on on previous DEMO
+
+ioptimz  = 1 
+* DESCRIPTION:   Code operation switch (1: VMCON)
+* JUSTIFICATION: Optimised run
+
+minmax   = -14 * Switch for figure-of-merit (see lablmm for descriptions)
+* 14: pulse legnth
+* DESCRIPTION:   Switch for Figure-of-Merit (1: Minimise major radius)
+* JUSTIFICATION: Aim to minimise major radius
+
+neqns = 3 
+* DESCRIPTION:   No of equality constraints
+* JUSTIFICATION: 
+
+*--------------------------Constraint Equations-------------------------*
+
+icc = 1 
+* DESCRIPTION:   Beta Consistency
+* JUSTIFICATION: Consistency equations should always be on
+
+icc = 2 
+* DESCRIPTION:   Global Power Balance Consistency
+* JUSTIFICATION: Consistency equations should always be on
+
+icc = 11 * Radial build
+* DESCRIPTION:   Radial Build Consistency
+* JUSTIFICATION: Consistency equations should always be on
+
+icc = 5 
+* DESCRIPTION:   Density Upper Limit
+* JUSTIFICATION: Used to enforce Greenwald limit
+
+icc = 8 
+* DESCRIPTION:   Neutron wall load upper limit
+* JUSTIFICATION: To keep component lifetime acceptable
+
+*icc = 12
+* DESCRIPTION:   Volt-second capability lower limit
+* JUSTIFICATION: Consistency equation 
+
+icc = 13
+* DESCRIPTION:   Burn time lower limit
+* JUSTIFICATION: Required minimum burn time 
+
+icc = 15 
+* DESCRIPTION:   L-H Power Threshold Limit
+* JUSTIFICATION: Required to be in H-mode
+
+icc = 16 
+* DESCRIPTION:   Net electric power lower limit
+* JUSTIFICATION: Required to generate 300-500MW
+
+icc = 24 
+* DESCRIPTION:   Beta Upper Limit
+* JUSTIFICATION: Limit for plasma stability
+
+*icc = 25 * Max TF field
+* DESCRIPTION:   Max TF field
+* JUSTIFICATION: switch off
+
+icc = 26
+* DESCRIPTION:   Central solenoid EOF current density upper limit
+* JUSTIFICATION: enforce current limits on inductive current drive
+
+icc = 27
+* DESCRIPTION:   Central solenoid BOP current density upper limit
+* JUSTIFICATION: enforce current limits on inductive current drive
+
+icc = 30 
+* DESCRIPTION:   Injection Power Upper Limit
+* JUSTIFICATION: Limit for plasma stability
+
+icc = 31 
+* DESCRIPTION:   TF coil case stress upper limit
+* JUSTIFICATION: The support structure must hold
+
+icc = 32 
+* DESCRIPTION:   TF WP steel jacket/conduit stress upper limit
+* JUSTIFICATION: The turn support structure must hold
+
+icc = 33 
+* DESCRIPTION:   TF superconductor operating current / critical current density
+* JUSTIFICATION: A quench must be avoided
+
+icc = 34
+* DESCRIPTION:   Dump voltage upper limit
+* JUSTIFICATION: Quench protection constraint
+
+icc = 35
+* DESCRIPTION:   J_winding pack
+* JUSTIFICATION: Constraint of TF engineering desgin
+
+icc = 36
+* DESCRIPTION:   TF temp marg
+* JUSTIFICATION: Constraint of TF engineering desgin
+
+icc = 60
+* DESCRIPTION:   OH coil temp margin
+* JUSTIFICATION: Constraint of CS engineering desgin
+
+icc = 62
+* DESCRIPTION:   taup/taueff ratio of particle to energy confinement times
+* JUSTIFICATION: Used to constrain helium fraction
+
+icc = 65
+* DESCRIPTION:   dump time by VV stresses
+* JUSTIFICATION: Quench protection constraint
+
+icc = 68
+* DESCRIPTION:   Pseparatrix Bt / q A R upper limit
+* JUSTIFICATION: Divertor protection
+
+icc = 72
+* DESCRIPTION:   OH stress limit
+* JUSTIFICATION: CS coil structure must hold
+
+icc = 81
+* DESCRIPTION:   ne(0) > ne(ped) constraint
+* JUSTIFICATION: Prevents unrealistic density profiles
+
+icc = 90
+* DESCRIPTION:   CS fatigue constraints
+* JUSTIFICATION: Enforce number of cycles over lifetime
+
+*--------------------------Iteration Variables--------------------------*
+                    
+ixc= 2 
+* Replaced 'bt' with 'b_plasma_toroidal_on_axis'
+b_plasma_toroidal_on_axis = 4.39689204035314951
+boundu(2) = 20.0
+* DESCRIPTION:   Toroidal field on axis (T)
+* JUSTIFICATION: Constrained to stop unrealistic solutions
+
+ixc = 3
+rmajor = 8.6
+boundu(3) = 8.60
+boundl(3) = 8.00
+* DESCRIPTION:   Plasma major radius
+* JUSTIFICATION: Constrained to stop unrealistic solutions
+
+ixc = 4
+* Replaced 'te' with 'temp_plasma_electron_vol_avg_kev'
+temp_plasma_electron_vol_avg_kev = 1.10022098489434761e+01
+boundu(4) = 150.0
+* DESCRIPTION:   Volume averaged electron temperature (keV)
+* JUSTIFICATION: Iterate temperature to get solution
+
+ixc = 5 
+* Replaced 'beta' with 'beta_total_vol_avg'
+beta_total_vol_avg = 3.71965626913446160e-02
+* DESCRIPTION:   Total Plasma Beta
+* JUSTIFICATION: Beta is limited by dnbeta
+
+ixc = 6
+* Replaced 'dene' with 'nd_plasma_electrons_vol_avg'
+nd_plasma_electrons_vol_avg = 6.88360041658364314e+19
+* DESCRIPTION:   Electron density (/m3)
+* JUSTIFICATION: Density is constrained by fdene
+
+*ixc = 9
+fdene = 1.2
+*boundu(9) = 1.2
+* DESCRIPTION:   f-value for density limit (used to set max greenwald fraction)
+* JUSTIFICATION: Used with icc=5 to enforce density limit
+
+*ixc = 11 * pheat
+* Replaced 'pheat' with 'p_hcd_primary_extra_heat_mw'
+p_hcd_primary_extra_heat_mw = 10.0
+* DESCRIPTION:   heating power not used for current drive (MW)
+* JUSTIFICATION: Allows for optimsing curretn drive - helps with convergance   
+
+ixc = 13 * dr_tf_inboard
+dr_tf_inboard = 9.99806743174200929e-01
+boundl(13) = 0.3
+* DESCRIPTION:   inboard TF coil thickness
+* JUSTIFICATION: Used to find radial build (icc=11). Minimum value from WPMAG
+
+ixc = 16 * dr_cs
+dr_cs =  6.48277393698976745e-01
+boundl(16) = 0.1
+* DESCRIPTION:   Central solenoid thickness (m)
+* JUSTIFICATION: Used to find radial build (icc=11).
+
+ixc = 18 * q95
+q95 = 3.6
+boundl(18) = 3.6
+* DESCRIPTION:   Safety factor at 95% flux surface
+* JUSTIFICATION: Lower bound for plasma stability
+
+ixc = 29 * dr_bore
+dr_bore = 2.02666557515659962
+boundl(29) = 0.1
+* DESCRIPTION:   central solenoid inboard radius (m)
+* JUSTIFICATION: Used to find radial build (icc=11).
+
+ixc = 37 * j_cs_flat_top_end
+j_cs_flat_top_end = 1.63489745103531945e+07
+* DESCRIPTION:   Central solenoid overall current density at end of flat-top (A/m2)
+* JUSTIFICATION: 
+
+ixc = 41 * f_j_cs_start_pulse_end_flat_top
+f_j_cs_start_pulse_end_flat_top = 8.51353969062653704e-01
+*boundu(41) = 0.77
+* DESCRIPTION:   ratio of central solenoid overall current density at beginning of pulse / end of flat-top
+* JUSTIFICATION: 
+
+*ixc = 42 * dr_cs_tf_gap
+dr_cs_tf_gap = 0.05
+*boundl(42) = 0.05
+*boundu(42) = 0.1
+* DESCRIPTION:   gap between central solenoid and TF coil (m)
+* JUSTIFICATION: Used to find radial build (icc=11).
+
+ixc = 44 * fvsbrnni
+f_c_plasma_non_inductive = 4.92677875380845121e-01
+* DESCRIPTION:   fraction of the plasma current produced by non-inductive means
+* JUSTIFICATION: We have a pulsed reactor so this can vary 
+
+ixc = 50
+fiooic = 0.752489
+*boundu(50) = 1.0
+* DESCRIPTION:   f-value for TF coil operating current / critical current density ratio
+* JUSTIFICATION: Constraint equation 33 is used
+
+ixc = 56 * tdmptf
+* Replaced 'tdmptf' with 't_tf_superconductor_quench'
+t_tf_superconductor_quench = 2.31918863248734901e+01
+* DESCRIPTION:   fast discharge time for TF coil in event of quench (s)
+* JUSTIFICATION: Used with icc=65 as limit for TF dump time
+
+ixc = 57 * thkcas
+* Replaced 'thkcas' with 'dr_tf_nose_case'
+dr_tf_nose_case = 2.59061366797427028e-01
+* DESCRIPTION:   inboard TF coil case outer (non-plasma side) thickness (m) 
+* JUSTIFICATION: Used to find radial build (icc=11).
+
+ixc = 58 * thwcndut
+* Replaced 'thwcndut' with 'dx_tf_turn_steel'
+dx_tf_turn_steel = 8.00000000000000017e-03
+boundl(58) = 8.0d-3
+* DESCRIPTION:   TF coil conduit case thickness (m)
+* JUSTIFICATION: Used to find radial build (icc=11).
+
+ixc = 59 
+* Replaced 'fcutfsu' with 'f_a_tf_turn_cable_copper'
+f_a_tf_turn_cable_copper = 9.04807349488859880e-01
+boundl(59) = 0.50
+boundu(59) = 0.94
+* DESCRIPTION:   copper fraction of cable conductor (TF coils)
+* JUSTIFICATION:
+
+ixc = 60
+* Replaced 'cpttf' with 'c_tf_turn'
+c_tf_turn = 6.5e4 *5.90832367922454432e+04
+boundl(60) = 5.9e4
+boundu(60) = 9.0e4
+* DESCRIPTION:   Max TF coil current per turn [A]
+* JUSTIFICATION: Calculate turn area consistent with TF currents 
+
+*ixc = 61 * dr_shld_vv_gap_inboard
+dr_shld_vv_gap_inboard = 0.02
+*boundl(61) = 0.02
+* DESCRIPTION:   gap between inboard vacuum vessel and thermal shield (m)
+* JUSTIFICATION: Used to find radial build (icc=11).
+
+*ixc = 103 
+fl_h_threshold = 0.9090 *1.1
+*boundl(103) = 1.1
+*boundu(103) = 1.2
+* DESCRIPTION:   f-value for L-H Power Threshold (now used to set lower bound)
+* JUSTIFICATION: Used with icc=15 to enforce H-mode
+
+ixc = 109
+f_nd_alpha_electron = 6.14955494147856815e-02
+* DESCRIPTION:   Thermal alpha density / electron density
+* JUSTIFICATION: Calculate He fraction consistent with tau ratio
+
+ixc = 122
+* Replaced 'f_a_cs_steel' with 'f_a_cs_turn_steel'
+f_a_cs_turn_steel = 7.59774321758659110e-01
+* DESCRIPTION:   central solenoid steel fraction
+* JUSTIFICATION:
+
+ixc = 135
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(13) = 3.98953113774451788e-04
+* DESCRIPTION:   Xenon Impurity Concentration
+* JUSTIFICATION: Xenon impurity used based on DEMO-2018
+
+*scan_dim = 1
+
+*isweep = 11
+*nsweep = 82
+*sweep = 20.0, 19.0, 18.0, 17.0, 16.0, 15.0, 14.0, 13.0, 12.0, 11.0, 10.0 
+
+
+
+
+*---------------------------Physics Variables---------------------------*
+
+*iteration variables rmajor, bt, dene, te, fvsbrnni, q, and ralpne
+
+alphan   = 1.00
+* DESCRIPTION:   Density Profile Index
+* JUSTIFICATION: 
+
+alphat   = 1.45
+* DESCRIPTION:   Temperature Profile Index
+* JUSTIFICATION: 
+
+aspect   = 2.8
+* DESCRIPTION:   Aspect ratio
+* JUSTIFICATION: Chosen design point
+
+beta_norm_max = 3.0
+* DESCRIPTION:   (troyon-like) coefficient for beta scaling;
+* JUSTIFICATION: Enforces the limit of beta limit  (icc=24)
+
+fkzohm = 1.0245
+* DESCRIPTION:   Zohm elongation scaling adjustment factor (ishape=2; 3)
+* JUSTIFICATION: Not used in the ishape=10 calculation (not used in this file???)
+
+ejima_coeff = 0.2
+* DESCRIPTION:   Ejima coefficient for resistive startup v-s formula
+* JUSTIFICATION:
+
+hfact = 1.1 
+* DESCRIPTION:   H factor on energy confinement times (ixc=10)
+* JUSTIFICATION:
+
+i_bootstrap_current = 4
+* DESCRIPTION:   Switch for Bootstrap Current Scaling
+* JUSTIFICATION: Enforce Sauter scaling
+
+i_beta_component = 1 
+* DESCRIPTION:   Switch for beta limit scaling (icc=24)
+* JUSTIFICATION: Beta limit is applied to the thermal beta only
+
+i_plasma_current = 4
+* DESCRIPTION:   Switch for plasma current scaling to use
+* JUSTIFICATION: revised ITER scaling (IPDG89)
+
+i_density_limit = 7
+* DESCRIPTION:   Switch for density limit to enforce (icc=5);
+* JUSTIFICATION: Use Greenwald density limit
+
+i_beta_fast_alpha = 1
+* DESCRIPTION:   Switch for fast alpha pressure calculation
+* JUSTIFICATION: Use modified fit (D. Ward) - better at high temperature
+
+* Obsolete: iprofile = 1
+* DESCRIPTION:   Switch for current profile consistency
+* JUSTIFICATION: Make these consistent with input q, q_0 values 
+
+i_confinement_time = 34
+* DESCRIPTION:   Switch for energy confinement time scaling law
+* JUSTIFICATION: Use IPB98(y,2), ELMy H-mode scaling
+
+i_plasma_geometry = 10
+* DESCRIPTION:   Switch for plasma cross-sectional shape calculation: 
+* JUSTIFICATION: calcuatle kappa from aspect ratio and m_s_limit
+
+m_s_limit = 0.2
+* DESCRIPTION:   margin to vertical stability
+* JUSTIFICATION: assumes in vessel coils 
+
+kappa = 1.848
+* DESCRIPTION:   Plasma separatrix elongation
+* JUSTIFICATION: This is overwritten 
+
+triang = 0.5
+* DESCRIPTION:   Plasma separatrix triangularity
+* JUSTIFICATION:
+
+q0 = 1.0
+* DESCRIPTION:   Safety factor on axis
+* JUSTIFICATION: Greater than 1 for plasma stability
+
+i_single_null = 1
+* DESCRIPTION:   Switch for Divertor Configuration (Single-Null)
+* JUSTIFICATION: Design choice
+
+f_sync_reflect = 0.6
+* DESCRIPTION:   Synchrotron wall reflectivity factor
+* JUSTIFICATION: 
+
+plasma_res_factor = 0.66
+* DESCRIPTION:   plasma resistivity pre-factor
+* JUSTIFICATION:
+
+*--------------------------Pedestal Variables---------------------------*
+
+* Replaced 'ipedestal' with 'i_plasma_pedestal'
+i_plasma_pedestal = 1
+* DESCRIPTION:   Switch for Pedestal Profiles 
+* JUSTIFICATION: H-mode run not using PLASMOD 
+
+* ieped = 1 * depratced - will set the t_ped manually 
+* DESCRIPTION:   EPED pedestal temperature scaling
+* JUSTIFICATION: Saarelma 6-parameter pedestal temperature scaling
+
+* Replaced 'fgwped' with 'f_nd_plasma_pedestal_greenwald'
+f_nd_plasma_pedestal_greenwald = 0.85
+* DESCRIPTION:   Fraction of Greenwald density to set as pedestal-top density
+* JUSTIFICATION: 
+
+* Replaced 'neped' with 'nd_plasma_pedestal_electron'
+nd_plasma_pedestal_electron = 0.678e20  
+* DESCRIPTION:   Electron density of pedestal (/m3)
+* JUSTIFICATION: 
+
+* Replaced 'nesep' with 'nd_plasma_separatrix_electron'
+nd_plasma_separatrix_electron = 0.2e20
+* DESCRIPTION:   Electron density at separatrix (/m3)
+* JUSTIFICATION: 
+
+* Replaced 'rhopedn' with 'radius_plasma_pedestal_density_norm'
+radius_plasma_pedestal_density_norm = 0.94
+* DESCRIPTION:   R/a of density pedestal
+* JUSTIFICATION: 
+
+* Replaced 'rhopedt' with 'radius_plasma_pedestal_temp_norm'
+radius_plasma_pedestal_temp_norm = 0.94
+* DESCRIPTION:   R/a of temperature pedestal
+* JUSTIFICATION: 
+
+tbeta = 2.0
+* DESCRIPTION:   Temperature profile index beta
+* JUSTIFICATION: 
+
+* Replaced 'teped' with 'temp_plasma_pedestal_kev'
+temp_plasma_pedestal_kev = 4.199 
+* DESCRIPTION:   Electron temperature of pedestal (kev)
+* JUSTIFICATION: Initial value - then over written by ieped=1 scaling 
+
+* Replaced 'tesep' with 'temp_plasma_separatrix_kev'
+temp_plasma_separatrix_kev = 0.1
+* DESCRIPTION:   Electron temperature at separatrix (kev)
+* JUSTIFICATION: 
+
+*--------------------------Constraint Variables-------------------------*
+
+*iteration variables: fbetatry, fdene, fjohc, fjohc0, fjprot, 
+*flhthresh, fvdump, fwalld, ftburn, fpnetel
+
+* Replaced 'ffuspow' with 'fp_fusion_total_max_mw'
+fp_fusion_total_max_mw  = 1
+* DESCRIPTION:   F-value for maximum fusion power
+* JUSTIFICATION: 
+
+* Replaced 'fpinj' with 'fp_hcd_injected_max'
+fp_hcd_injected_max    = 1.0
+* DESCRIPTION:   F-value for injection power (icc=30)
+* JUSTIFICATION: Used with icc=30 to enforce max injection power
+
+* Replaced 'fpeakb' with 'fb_tf_inboard_max'
+fb_tf_inboard_max = 1.0
+* DESCRIPTION:   f-value for maximum toroidal field (icc=25)
+* JUSTIFICATION: Used with icc=25 to enforce maximum toroidal field
+
+* Replaced 'pnetelin' with 'p_plant_electric_net_required_mw'
+p_plant_electric_net_required_mw = 350.0
+* DESCRIPTION:   Required net electric power (MW) (icc=16)
+* JUSTIFICATION: Used with icc=16 to set the enforced net electric power 
+
+t_burn_min = 5e3
+* DESCRIPTION:   Minimum burn time (s) (icc=13)
+* JUSTIFICATION: Used with icc=13 to set the enforced minimum burn time
+
+* Replaced 'walalw' with 'pflux_fw_neutron_max_mw'
+pflux_fw_neutron_max_mw = 8.0
+* DESCRIPTION:   Allowable wall-load (mw/m2) (icc=8)
+* JUSTIFICATION: Used with icc=8 to set the enforced max allowable wall load
+
+psepbqarmax = 6.0
+* DESCRIPTION:   maximum ratio of Psep*Bt/qAR (MWT/m) (icc=68)
+* JUSTIFICATION: 
+
+sig_tf_case_max = 5.8E8 
+* DESCRIPTION:   Allowable Tresca stress in TF coil structural material (Pa) (icc=32)
+* JUSTIFICATION: 
+
+sig_tf_wp_max = 5.8E8
+* DESCRIPTION:   Allowable Tresca stress in TF coil winding pack (Pa) (icc=33)
+* JUSTIFICATION: 
+
+alstroh = 6.6D8 
+* DESCRIPTION:   Allowable hoop stress in CS coil (Pa) (icc=72)
+* JUSTIFICATION: 
+
+* Replaced 'bmxlim' with 'b_tf_inboard_max'
+b_tf_inboard_max = 11.2
+* DESCRIPTION:   Maximum peak toroidal field (T)
+* JUSTIFICATION: not used here
+
+i_q95_fixed = 1
+* DESCRIPTION:   Switch that allows for fixing q95 only in this constraint equation 68
+* JUSTIFICATION: Fixed in baseline to allow for scanning q95
+
+q95_fixed = 3.3
+* DESCRIPTION:   Fixed safet factor q at 95% flux surface
+* JUSTIFICATION: Fixed in baseline to allow for scanning q95
+
+
+*----------------------------Build Variables----------------------------*
+
+* NOTE: The following build sections are in geometric order
+
+*~~~~~~~~~~~~~~~~~~~~~~~~~Inboard Radial Build~~~~~~~~~~~~~~~~~~~~~~~~~~*
+
+*bore, ohcth, gapoh, thkcas, gapds are iteration variables 
+
+dr_tf_shld_gap = 0.05
+* DESCRIPTION:   manufacturing/thermal expansion gap between TF and thermal shield (m)
+* JUSTIFICATION: Aim is to achieve deltf = 0.133 m by increasing tftsgap by 0.029 m
+
+dr_vv_inboard = 0.30 
+* DESCRIPTION:   Inboard vacuum vessel thickness (tf coil / shield) (m)
+* JUSTIFICATION:
+
+dr_shld_inboard = 0.30 
+* DESCRIPTION:   Inboard shield thickness (m)
+* JUSTIFICATION:
+
+dr_shld_blkt_gap = 0.02 
+* DESCRIPTION:   gap between vacuum vessel and blanket (m)
+* JUSTIFICATION:
+
+dr_blkt_inboard = 0.755 
+* DESCRIPTION:   Inboard blanket thickness (m)
+* JUSTIFICATION:
+
+dr_fw_plasma_gap_inboard = 0.225 
+* DESCRIPTION:   Gap between plasma and first wall; inboard side (m)
+* JUSTIFICATION:
+
+*~~~~~~~~~~~~~~~~~~~~~~Outboard Radial Build~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+
+dr_fw_plasma_gap_outboard = 0.225
+* DESCRIPTION:   Gap between plasma and first wall; outboard side (m)
+* JUSTIFICATION:
+
+dr_blkt_outboard = 0.982 
+* DESCRIPTION:   Outboard blanket thickness (m)
+* JUSTIFICATION:
+
+dr_shld_outboard = 0.80 
+* DESCRIPTION:   Outboard shield thickness (m)
+* JUSTIFICATION:
+
+dr_vv_outboard = 0.30 
+* DESCRIPTION:   Outboard vacuum vessel thickness (tf coil / shield) (m)
+* JUSTIFICATION:
+
+dr_cryostat = 0.15 
+* DESCRIPTION:   Cryostat thickness (m)
+* JUSTIFICATION:
+
+gapomin  = 0.20 
+* DESCRIPTION:   Minimum gap between outboard vacuum vessel and tf coil (m)
+* JUSTIFICATION:
+
+*~~~~~~~~~~~~~~~~~~~~~~~~~~~Vertical Build~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+
+dz_vv_upper = 0.30
+* DESCRIPTION:   Topside vacuum vessel thickness (tf coil / shield) (m)
+* JUSTIFICATION:
+
+dz_shld_vv_gap = 0.05  
+* DESCRIPTION:   Vertical gap between vacuum vessel and tf coil (m)
+* JUSTIFICATION:
+
+dz_shld_upper  = 0.30 
+* DESCRIPTION:   Upper/lower shield thickness (m);
+* JUSTIFICATION:
+
+dz_divertor   = 0.621
+* DESCRIPTION:   Divertor Structure Vertical Thickness (m)
+* JUSTIFICATION: 
+
+dz_vv_lower = 0.30
+* DESCRIPTION:   Underside vacuum vessel thickness (tf coil / shield) (m)
+* JUSTIFICATION:
+
+*----------------------------Cost Variables-----------------------------*
+
+output_costs = 0
+* DESCRIPTION:   Switch for costs output
+* JUSTIFICATION: Do not print to OUT.DAT all accounts 
+
+cost_model = 0
+* DESCRIPTION:   Switch for Cost Model
+* JUSTIFICATION: Use $ 1990 PROCESS model
+
+abktflnc = 15
+* DESCRIPTION:   Allowable first wall/blanket neutron
+* JUSTIFICATION:
+
+adivflnc = 20.0
+* DESCRIPTION:   Allowable divertor heat fluence (mw-yr/m2)
+* JUSTIFICATION:
+
+* Replaced 'cfactr' with 'f_t_plant_available'
+f_t_plant_available = 0.75
+* DESCRIPTION:   Total plant availability fraction
+* JUSTIFICATION:
+
+dintrt = 0.00
+* DESCRIPTION:   Diff between borrowing and saving interest rates
+* JUSTIFICATION:
+
+fcap0 = 1.15 
+* DESCRIPTION:   Average cost of money for construction of plant
+* JUSTIFICATION:
+
+fcap0cp  = 1.06
+* DESCRIPTION:   Average cost of money for replaceable components
+* JUSTIFICATION:
+
+fcontng = 0.15
+* DESCRIPTION:   Project contingency factor
+* JUSTIFICATION:
+
+fcr0 = 0.065
+* DESCRIPTION:   Fixed charge rate during construction
+* JUSTIFICATION:
+
+fkind = 1.0
+* DESCRIPTION:   Multiplier for nth of a kind costs
+* JUSTIFICATION:
+
+* Replaced 'iavail' with 'i_plant_availability'
+i_plant_availability = 0
+* DESCRIPTION:   Switch for plant availability model
+* JUSTIFICATION: Uses input value for cfactr
+
+ibkt_life = 1
+* DESCRIPTION:   Switch for plant blanket lifetime model
+* JUSTIFICATION: Model built for DEMO design point
+
+life_dpa = 70.0
+* DESCRIPTION:   Allowable DPA from DEMO fw/blanket lifetime calculation in availability module
+* JUSTIFICATION: Takne from default reference point: EFDA_D_2NUZCR (HCPB blanket)
+
+bkt_life_csf = 1
+* DESCRIPTION:   Switch for whether blanket model feeds n_cycle_min
+* JUSTIFICATION: choose to make the constraint on blanket and CS the same 
+
+ifueltyp = 1
+* DESCRIPTION:   Switch (1: Treat Blanket, Diverto,r FW and CD Equipment as fuel cost)
+* JUSTIFICATION: for LCOE calucation (we should switch this too ifueltyp=2?)
+
+lsa = 2
+* DESCRIPTION:   Level of safety assurance switch 
+* JUSTIFICATION: Same as PPCS
+
+discount_rate = 0.06
+* DESCRIPTION:   Effective cost of money in constant dollars
+* JUSTIFICATION:
+
+* Replaced 'tlife' with 'life_plant'
+life_plant = 40
+* DESCRIPTION:   Plant life (years)
+* JUSTIFICATION: Design Choice 
+
+ucblvd = 280.0
+* DESCRIPTION:   Unit cost for blanket vanadium ($/kg)
+* JUSTIFICATION:
+
+ucdiv = 5.0d5 
+* DESCRIPTION:   Cost of divertor blade ($)
+* JUSTIFICATION:
+
+ucme = 3.0d8
+* DESCRIPTION:   Unit cost of maintenance equipment ($/w**0;3)
+* JUSTIFICATION:
+
+*------------------------Current Drive Variables------------------------*
+
+* Replaced 'bootstrap_current_fraction_max' with 'f_c_plasma_bootstrap_max'
+f_c_plasma_bootstrap_max = 0.99
+* DESCRIPTION:   Maximum fraction of plasma current from bootstrap
+* JUSTIFICATION: No upper limit set 
+
+* Replaced 'iefrf' with 'i_hcd_primary'
+i_hcd_primary = 10
+* DESCRIPTION:   Switch for current drive efficiency model - ECRH user input gamma
+* JUSTIFICATION: Design choice
+
+* Replaced 'gamma_ecrh' with 'eta_cd_norm_ecrh'
+eta_cd_norm_ecrh = 0.30
+* DESCRIPTION:   ECRH gamma_CD (user input)
+* JUSTIFICATION: Setup to arrive at 5% efficiency
+
+* Replaced 'etaech' with 'eta_ecrh_injector_wall_plug'
+eta_ecrh_injector_wall_plug = 0.4
+* DESCRIPTION:   ECRH wall-plug efficiency
+* JUSTIFICATION:
+
+* Replaced 'pinjalw' with 'p_hcd_injected_max'
+p_hcd_injected_max = 50.0
+* DESCRIPTION:   Maximum allowable value for injected power (MW)
+* JUSTIFICATION:
+
+*----------------Divertor Variables----------------*
+
+*** pretty sure this is all deprecated ****
+
+* Obsolete: divdum   = 1 * Switch for divertor zeff model; 0=calc; 1=input
+* Replaced 'hldivlim' with 'pflux_div_heat_load_max_mw'
+pflux_div_heat_load_max_mw = 10 * Heat load limit (mw/m2)
+* Obsolete: ksic     = 1.4 * Power fraction for outboard double-null scrape-off plasma
+prn1     = 0.4 * N-scrape-off / n-average plasma;
+* Obsolete: zeffdiv  = 3.5 * Zeff in the divertor region (if divdum /= 0)
+
+*-----------------------------FWBS Variables----------------------------*
+
+vfshld   = 0.60
+* DESCRIPTION:   coolant void fraction in shield
+* JUSTIFICATION:
+
+dp_he = 2.68E+5
+* DESCRIPTION:   BB pressure drop
+* JUSTIFICATION: https://idm.euro-fusion.org/?uid=2NV9LP from page 51 to 56. 
+
+f_p_fw_blkt_pump = 0.26666667
+* DESCRIPTION:   Pumping power for FW and Blanket multiplier factor
+* JUSTIFICATION: 
+
+*--------------------------Heat Transport Variables---------------------*
+
+
+ipowerflow = 0
+* DESCRIPTION:   Switch for power flow model;  HAS NO EFFECT?
+* JUSTIFICATION:
+
+* Replaced 'emult' with 'f_p_blkt_multiplication'
+f_p_blkt_multiplication = 1.2 * 1.343
+* DESCRIPTION:   HCPB energy multiplication factor
+* JUSTIFICATION: https://idm.euro-fusion.org/?uid=2Q3PUA 
+
+t_out_bb = 793.15
+* DESCRIPTION:   HCPB BB outlet temperature
+* JUSTIFICATION: https://idm.euro-fusion.org/?uid=2NXLFV
+
+* Replaced 'i_coolant_pumping' with 'i_p_coolant_pumping'
+i_p_coolant_pumping = 3
+* DESCRIPTION:   Switch for Pumping Power for Primary Coolant (3: Calculated using pressure drop)
+* JUSTIFICATION: Used for He cooling. 
+
+* Replaced 'etahtp' with 'eta_coolant_pump_electric'
+eta_coolant_pump_electric = 0.9 
+* DESCRIPTION:   electrical efficiency of FW and blanket coolant pumps
+* JUSTIFICATION: https://idm.euro-fusion.org/?uid=2NV9LP
+
+etaiso = 0.85 
+* DESCRIPTION:   isentropic efficiency of FW and blanket coolant pumps
+* JUSTIFICATION: https://idm.euro-fusion.org/?uid=2NV9LP
+
+i_thermal_electric_conversion = 2 
+* DESCRIPTION:   Switch for Power Conversion Cycle (2: User Input Thermal-Electric Efficiency)
+* JUSTIFICATION: Chosen to use input efficiency due to uncertainty in other models
+
+* Replaced 'iprimshld' with 'i_shld_primary_heat'
+i_shld_primary_heat = 1 
+* DESCRIPTION:   switch for shield thermal power destiny: = 1 contributes to energy generation cycle
+* JUSTIFICATION:
+
+* Replaced 'etath' with 'eta_turbine'
+eta_turbine = 0.316D0  * thermal to electric conversion efficiency
+* DESCRIPTION:   thermal to electric conversion efficiency
+* JUSTIFICATION: https://idm.euro-fusion.org/?uid=2R26RN page 7 (reasonable average)
+
+i_blanket_type = 1
+* DESCRIPTION:   Switch for blanket model: (1=CCFE HCPB model)
+* JUSTIFICATION: Design choice for HCPB model
+
+*-----------------------Impurity Radiation Variables--------------------*
+
+radius_plasma_core_norm = 0.75
+* DESCRIPTION:   Normalised Radius Defining the 'Core' Region
+* JUSTIFICATION: Based on ASTRA/TGLF simulations for DEMO
+
+* Replaced 'coreradiationfraction' with 'f_p_plasma_core_rad_reduction'
+f_p_plasma_core_rad_reduction = 0.6
+* DESCRIPTION:   Fraction of Radiation from Core Region Lost
+* JUSTIFICATION: Based on ASTRA/TGLF simulations for DEMO
+
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(1)  = 1.0      *Hydrogen (fraction calculated by code)
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(2)  = 0.1      *Helium (fraction calculated by code)
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(3)  = 0.0      *Beryllium
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(4)  = 0.0      *Carbon
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(5)  = 0.0      *Nitrogen
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(6)  = 0.0      *Oxygen
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(7)  = 0.0      *Neon
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(8)  = 0.0      *Silicon
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(9)  = 0.0      *Argon
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(10) = 0.0      *Iron
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(11) = 0.0      *Nickel
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(12) = 0.0      *Krypton
+*fimp(13)  ITV      *Xenon
+* Replaced 'fimp' with 'f_nd_impurity_electrons'
+f_nd_impurity_electrons(14) = 5e-05    *Tungsten
+* DESCRIPTION:   Density Fractions Relative to Electron Density
+* JUSTIFICATION: Xenon iteration variable, tungsten same as DEMO-2018
+
+*----------------------------PF Coil Variables--------------------------*
+
+*iteration variables - j_cs_flat_top_end, f_j_cs_start_pulse_end_flat_top and f_a_cs_steel
+
+iohcl    = 1 * Switch for existence of central solenoid;
+* DESCRIPTION:   Switch for existence of central solenoid
+* JUSTIFICATION: Inductive machine - use CS for startup
+
+c_pf_coil_turn_peak_input = 4.22e4, 4.22e4, 4.22e4, 4.22e4, 4.3e4, 4.3e4, 4.3e4, 4.3e4
+* DESCRIPTION:   Peak current per turn input for pf coil i (A)
+* JUSTIFICATION:  
+
+i_pf_location = 2,2,3,3
+* DESCRIPTION:   Switch for Locating Scheme of PF Coil Group i
+* JUSTIFICATION: Design choice
+
+i_pf_superconductor = 3
+* DESCRIPTION:   Switch for superconductor material in PF coils (NbTi)
+* JUSTIFICATION: Design choice, superconducting PF coils
+
+n_pf_coils_in_group = 1,1,2,2
+* DESCRIPTION:   Number of pf coils in group j
+* JUSTIFICATION: Design choice, asymmetric as single null machine
+
+n_pf_coil_groups = 4
+* DESCRIPTION:   Number of groups of PF coils
+* JUSTIFICATION: Design choice
+
+f_z_cs_tf_internal = 0.9
+* DESCRIPTION:   Central solenoid height / tf coil internal height
+* JUSTIFICATION: 
+
+j_pf_coil_wp_peak = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6
+* DESCRIPTION:   Average Winding Pack Current Density of PF Coil i (A/m2)
+* JUSTIFICATION: 
+
+rpf2  = -1.825
+* DESCRIPTION:   Offset (m) of Radial Position of ipfloc=2 PF coils From Being at Rmajor
+* JUSTIFICATION: 
+
+zref(1) = 3.6
+zref(2) = 1.2
+zref(3) = 1.0
+zref(4) = 2.8
+zref(5) = 1.0
+zref(6) = 1.0
+zref(7) = 1.0
+zref(8) = 1.0
+* DESCRIPTION:   PF Coil Vertical Positioning Adjuster
+* JUSTIFICATION: Coils placed at arbitrarily sensible locations
+
+fcuohsu = 0.70
+* DESCRIPTION:   copper fraction of strand in central solenoid cable
+* JUSTIFICATION: 
+
+i_cs_superconductor = 5
+* DESCRIPTION:   Switch for Superconductor Material in CS Coil (Nb3Sn)
+* JUSTIFICATION: Design choice, superconducting CS coil
+
+t_crack_vertical = 0.65D-3
+* DESCRIPTION:   Inital vertical crack size (m)
+* JUSTIFICATION: Intial crack area 1 mm2
+
+sf_vertical_crack = 1.0
+* DESCRIPTION:   Inital vertical crack size (m)
+* JUSTIFICATION: No safety factor 
+
+sf_radial_crack = 1.0
+* DESCRIPTION:   Inital vertical crack size (m)
+* JUSTIFICATION: No safety factor 
+
+sf_fast_fracture = 1.0
+* DESCRIPTION:   Inital vertical crack size (m)
+* JUSTIFICATION: No safety factor 
+
+residual_sig_hoop = 1.50e8
+* DESCRIPTION:   Inital vertical crack size (m)
+* JUSTIFICATION: Intial crack area 1 mm2
+
+paris_coefficient = 3.86e-11
+* DESCRIPTION:   Paris equation material coefficient (-)
+* JUSTIFICATION: 316LN (ITER DDD TF p. 83)
+
+paris_power_law = 2.394
+* DESCRIPTION:   Paris equation material power law (-)
+* JUSTIFICATION: 316LN (ITER DDD TF p. 83)
+
+walker_coefficient = 0.5
+* DESCRIPTION:   walker coefficent (-)
+* JUSTIFICATION: 
+
+fracture_toughness = 150.0
+* DESCRIPTION:   fracture toughness (MPa m^1/2) * fix the units of this not is typical process formatc
+* JUSTIFICATION: EFDA_D_2PBDRG v1.0
+
+*----------------------------Times Variables----------------------------*
+i_pulsed_plant = 1
+* DESCRIPTION:   i_pulsed_plant = 1 pulsed machine. i_pulsed_plant = 0 steady state machine
+* JUSTIFICATION: default is pulsed machine
+
+* Replaced 't_between_pulse' with 't_plant_pulse_dwell'
+t_plant_pulse_dwell = 0
+* DESCRIPTION:   Time Between Pulses in a Pulsed Reactor (s)
+* JUSTIFICATION: Steady-state device, assumed
+
+pulsetimings = 0
+* DESCRIPTION:   Switch for pulse timings (if i_pulsed_plant=1):
+* JUSTIFICATION: Plasma current ramp-up time calculated
+
+* Replaced 't_precharge' with 't_plant_pulse_coil_precharge'
+t_plant_pulse_coil_precharge = 500.0
+* DESCRIPTION:   Initial charge time for CS from zero current (s) 
+* JUSTIFICATION: 
+
+*----------------------------TF Coil Variables--------------------------*
+
+*iteration variable - cpttf, tdmptf, thkcas, thwcndut, vdalw
+
+n_tf_coils = 16 
+* DESCRIPTION:   Number of TF Coils 
+* JUSTIFICATION: Design choice
+
+i_tf_sc_mat = 5
+* DESCRIPTION:   Switch for superconductor material in TF coils (Nb3Sn)
+* JUSTIFICATION: Design choice
+
+* Replaced 'casthi' with 'dr_tf_plasma_case'
+dr_tf_plasma_case = 0.06
+* DESCRIPTION:   Inboard tf coil case inner \(plasma side) thickness (m)
+* JUSTIFICATION: 
+
+* Replaced 'casths' with 'dx_tf_side_case_min'
+dx_tf_side_case_min = 0.05
+* DESCRIPTION:   Inboard tf coil sidewall case thickness (m)
+* JUSTIFICATION: 
+
+* Replaced 'ripmax' with 'ripple_b_tf_plasma_edge_max'
+ripple_b_tf_plasma_edge_max = 0.6
+* DESCRIPTION:   Maximum allowable toroidal field ripple amplitude
+* JUSTIFICATION: 
+
+* Replaced 'dhecoil' with 'dia_tf_turn_coolant_channel'
+dia_tf_turn_coolant_channel = 0.010
+* DESCRIPTION:   diameter of He coil in TF winding (m)
+* JUSTIFICATION: 
+
+tftmp = 4.750
+* DESCRIPTION:   Peak helium coolant temperature in tf coils and pf coils (k)
+* JUSTIFICATION: 
+
+* Replaced 'thicndut' with 'dx_tf_turn_insulation'
+dx_tf_turn_insulation = 2.0d-3
+* DESCRIPTION:   Conduit insulation thickness (m)
+* JUSTIFICATION: 
+
+* Replaced 'tinstf' with 'dx_tf_wp_insulation'
+dx_tf_wp_insulation   = 0.008
+* DESCRIPTION:   Ground insulation thickness surrounding winding pack (m)
+* JUSTIFICATION: 
+
+tmargmin = 1.500
+* DESCRIPTION:   Minimum allowable temperature margin (cs and tf coils) (k)
+* JUSTIFICATION: 
+
+*t_margmin_cs = 1.500
+* DESCRIPTION:   Minimum allowable temperature margin (cs and tf coils) (k)
+* JUSTIFICATION: 
+
+* Replaced 'vftf' with 'f_a_tf_turn_cable_space_extra_void'
+f_a_tf_turn_cable_space_extra_void = 0.300
+* DESCRIPTION:   Coolant fraction of tfc 'cable' (i_tf_sup=1); or of tfc leg (i_tf_sup=0)
+* JUSTIFICATION: 
+
+i_tf_turns_integer = 1
+* DESCRIPTION:   Switch for TF coil integer/non-integer turns (1-integer turns)
+* JUSTIFICATION: 
+
+* Replaced 'n_pancake' with 'n_tf_wp_pancakes'
+n_tf_wp_pancakes = 20
+* DESCRIPTION:   Number of pancakes in TF coil
+* JUSTIFICATION: Used in integer turn model
+
+* Replaced 'n_layer' with 'n_tf_wp_layers'
+n_tf_wp_layers = 10
+* DESCRIPTION:   Number of layers in TF coil
+* JUSTIFICATION: Used in integer turn model
+
+inuclear = 1
+* DESCRIPTION:   switch for nuclear heating in the coils
+* JUSTIFICATION: qnuc set as user input
+
+qnuc = 1.292E4
+* DESCRIPTION:   Nuclear heating of cryogenic components
+* JUSTIFICATION: Intial value chosen to help convergence
+
+* Replaced 'vdalw' with 'v_tf_coil_dump_quench_max_kv'
+v_tf_coil_dump_quench_max_kv    = 10.00 
+* DESCRIPTION:   Max voltage across tf coil during quench (kv)
+* JUSTIFICATION: 
+
+
+*cpttf    = 6.5e+04 * Tf coil current per turn (a);
+*tdmptf   = 30.0 * Dump time for tf coil (s)
+*strncon = -0.0066
+*thkcas   = 0.495 * Inboard tf coil case outer (non-plasma side) thickness (m)
+*thwcndut = 0.008 * Tf coil conduit case thickness (m)
