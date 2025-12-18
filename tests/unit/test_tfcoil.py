@@ -162,7 +162,7 @@ class CntrpstTestAsset(NamedTuple):
     :temp_cp_coolant_inlet: value for tfcoil_variables.temp_cp_coolant_inlet to be mocked with (centrepost coolant inlet temperature)
     :type temp_cp_coolant_inlet: float
 
-    :expected_dtiocool: expected value of tfcoil_variables.dtiocool after tfcoil.cntrpst routine has run
+    :expected_dtiocool: expected value of tfcoil_variables.dtemp_cp_coolant after tfcoil.cntrpst routine has run
     :type expected_dtiocool: float
     :expected_tcpav2: expected value of tfcoil_variables.tcpav2 after tfcoil.cntrpst routine has run
     :type expected_tcpav2: float
@@ -196,7 +196,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     """Integration test for cntrpst
 
     Testing tfcoil module variables being set:
-        - dtiocool
+        - dtemp_cp_coolant
         - tcpav2
         - temp_cp_peak
         - p_cp_coolant_pump_elec
@@ -233,7 +233,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     assert pytest.approx(tfcoil_variables.n_cp_coolant_channels_total) == 203718.3271576
 
     assert (
-        pytest.approx(tfcoil_variables.dtiocool, abs=1e-8)
+        pytest.approx(tfcoil_variables.dtemp_cp_coolant, abs=1e-8)
         == cntrpst_asset.expected_dtiocool
     )
     assert pytest.approx(tfcoil_variables.tcpav2) == cntrpst_asset.expected_tcpav2
