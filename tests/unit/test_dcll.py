@@ -72,10 +72,6 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_fw_alpha_mw: Any = None
 
-    expected_p_div_rad_total_mw: Any = None
-
-    expected_p_div_nuclear_heat_total_mw: Any = None
-
     expected_p_fw_rad_total_mw: Any = None
 
     expected_p_fw_nuclear_heat_total_mw: Any = None
@@ -93,8 +89,8 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             a_fw_total=1601.1595634509963,
             p_beam_orbit_loss_mw=0,
             f_ster_div_single=0.115,
-            p_div_rad_total_mw=0,
-            p_div_nuclear_heat_total_mw=0,
+            p_div_rad_total_mw=33.056596978820579,
+            p_div_nuclear_heat_total_mw=182.58994516305046,
             f_a_fw_outboard_hcd=0,
             p_fw_hcd_rad_total_mw=0,
             p_fw_hcd_nuclear_heat_mw=0,
@@ -113,8 +109,6 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_neutron_total_mw=1587.7386535917431,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.835845058655043,
-            expected_p_div_rad_total_mw=33.056596978820579,
-            expected_p_div_nuclear_heat_total_mw=182.58994516305046,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_p_fw_nuclear_heat_total_mw=196.72081918001697,
             expected_p_blkt_nuclear_heat_total_mw=1533.4949914565693,
@@ -145,8 +139,6 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_neutron_total_mw=1587.2430556964196,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.829653483586444,
-            expected_p_div_rad_total_mw=33.056596978820579,
-            expected_p_div_nuclear_heat_total_mw=182.53295140508826,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_p_fw_nuclear_heat_total_mw=196.65941460078642,
             expected_p_blkt_nuclear_heat_total_mw=1533.0163252173013,
@@ -300,14 +292,6 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     dcll.dcll_neutronics_and_power(False)
-
-    assert fwbs_variables.p_div_rad_total_mw == pytest.approx(
-        dcllneutronicsandpowerparam.expected_p_div_rad_total_mw
-    )
-
-    assert fwbs_variables.p_div_nuclear_heat_total_mw == pytest.approx(
-        dcllneutronicsandpowerparam.expected_p_div_nuclear_heat_total_mw
-    )
 
     assert fwbs_variables.p_fw_rad_total_mw == pytest.approx(
         dcllneutronicsandpowerparam.expected_p_fw_rad_total_mw
