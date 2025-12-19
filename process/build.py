@@ -1532,7 +1532,7 @@ class Build:
         i_tf_sup: int,
         dx_tf_wp_insulation: float,
         dx_tf_wp_insertion_gap: float,
-    ) -> float:
+    ) -> tuple[float, float, int]:
         """
         Plasma outboard toroidal field (TF) ripple calculation.
 
