@@ -14,6 +14,7 @@ Revised by Michael Kovari, 7/1/2016
 """
 
 import argparse
+import logging
 import json
 import os
 import pathlib
@@ -68,10 +69,16 @@ from process.geometry.vacuum_vessel_geometry import (
 from process.impurity_radiation import read_impurity_file
 from process.io.mfile import MFileErrorClass
 from process.objectives import OBJECTIVE_NAMES
+
+# Local imports.
+from process.physics import (
+    DoubleNull,
+    SingleNull,
+)
 from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 
 mpl.rcParams["figure.max_open_warning"] = 40
-
+logger = logging.getLogger(__name__)
 
 @dataclass
 class RadialBuild:
@@ -12297,6 +12304,99 @@ def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.minorticks_on()
 
 
+def plot_analytic_equilibrium(axis, mfile_data, scan, fig):
+    i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
+
+    if i_single_null == 1:
+        plasma = SingleNull(
+            rmajor=mfile_data.data["rmajor"].get_scan(scan),
+            pressure_parameter=0.2,
+            eps=1/mfile_data.data["aspect"].get_scan(scan),
+            elongation=mfile_data.data["kappa"].get_scan(scan),
+            triangularity=mfile_data.data["triang"].get_scan(scan),
+            b_plasma_toroidal_on_axis=mfile_data.data[
+                "b_plasma_toroidal_on_axis"
+            ].get_scan(scan),
+            c_plasma_ma=mfile_data.data["plasma_current_ma"].get_scan(scan),
+            kink_safety_factor=None,
+        )
+    else:
+        plasma = DoubleNull(
+            rmajor=mfile_data.data["rmajor"].get_scan(scan),
+            pressure_parameter=0.2,
+            eps=mfile_data.data["eps"].get_scan(scan),
+            elongation=mfile_data.data["kappa"].get_scan(scan),
+            triangularity=mfile_data.data["triang"].get_scan(scan),
+            b_plasma_toroidal_on_axis=mfile_data.data[
+                "b_plasma_toroidal_on_axis"
+            ].get_scan(scan),
+            c_plasma_ma=mfile_data.data["c_plasma_ma"].get_scan(scan),
+            kink_safety_factor=None,
+        )
+
+    # Plot pressure and F functions at the midplane.
+    R_plot, Z_plot = plasma.plotting_rz_arrays()
+
+    psiN_midplane = plasma.psi_norm(R_plot, 0)
+    
+
+    axis.set_xlabel(r"Radius [m]")
+    axis.set_ylabel(r"Height [m]")
+    axis.set_aspect("equal")
+
+    psiN = plasma.psi_norm(*np.meshgrid(R_plot, Z_plot, indexing="ij"))
+
+    # Plot contours of normalised poloidal flux.
+    c = axis.contourf(R_plot, Z_plot, psiN.T, levels=np.linspace(0, 1.2, 13))
+    axis.contour(
+        R_plot, Z_plot, psiN.T, colors="black", levels=np.linspace(0.1, 1, 10)
+    )
+
+    # Mark magnetic axis location.
+    axis.scatter(*plasma.magnetic_axis, color="black", marker="x")
+
+    #fig.colorbar(c, ax=axis, label="Normalised Poloidal Flux")
+    #fig.tight_layout()
+
+
+    # Show key 0D plasma parameters in an on-figure info box
+    textstr = (
+        f"Major radius [m] = {plasma.rmajor:.2f}\n"
+        f"Inverse aspect ratio = {plasma.eps:.2f}\n"
+        f"Upper elongation = {plasma.upper_elongation:.2f}\n"
+        f"Lower elongation = {plasma.lower_elongation:.2f}\n"
+        f"Upper triangularity = {plasma.upper_triangularity:.2f}\n"
+        f"Lower triangularity = {plasma.lower_triangularity:.2f}\n"
+        f"Reference B [T] = {plasma.b_plasma_toroidal_on_axis:.2f}\n"
+        f"Plasma current [MA] = {plasma.c_plasma_ma:.2f}\n"
+        f"Kink safety factor = {plasma.kink_safety_factor:.3f}\n"
+        f"Normalised circumference = {plasma.normalised_circumference:.3f}\n"
+        f"Normalised volume = {plasma.normalised_volume:.3f}\n"
+        f"Beta poloidal = {plasma.beta_poloidal:.3f}\n"
+        f"Beta toroidal = {plasma.beta_toroidal:.4f}\n"
+        f"Beta total = {plasma.beta_total:.4f}\n"
+        f"Beta normalised [%] = {100 * plasma.beta_normalised:.2f}\n"
+        f"Pressure parameter = {plasma.pressure_parameter:.3f}\n"
+        f"Psi0 = {plasma.psi_0:.3f} Wb\n"
+        f"Psi axis = {plasma.psi_axis:.3f} Wb\n"
+        f"Magnetic axis = ({plasma.magnetic_axis[0]:.3f}, {plasma.magnetic_axis[1]:.3f}) m\n"
+        f"Shafranov shift [m] = {plasma.shafranov_shift:.3f}"
+    )
+
+    # Place the info box in the top-left of the axis
+    fig.text(
+        0.2,
+        0.7,
+        textstr,
+        fontsize=11,
+        va="top",
+        ha="left",
+        bbox={"boxstyle": "round", "facecolor": "lightyellow", "alpha": 0.95},
+    )
+
+    psiN_midplane = plasma.psi_norm(R_plot, 0)
+
+
 def main_plot(
     figs: list[Axes],
     m_file: mf.MFile,
@@ -12600,6 +12700,9 @@ def main_plot(
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[27])
 
+    ax25 = figs[28].add_subplot(122, aspect="equal")
+    plot_analytic_equilibrium(ax25, m_file_data, scan, figs[28])
+
 
 def create_thickness_builds(m_file, scan: int):
     # Build the dictionaries of radial and vertical build values and cumulative values
@@ -12675,7 +12778,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(28)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(29)]
 
     # run main_plot
     main_plot(
