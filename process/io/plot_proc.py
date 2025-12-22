@@ -14,8 +14,8 @@ Revised by Michael Kovari, 7/1/2016
 """
 
 import argparse
-import logging
 import json
+import logging
 import os
 import pathlib
 import textwrap
@@ -79,6 +79,7 @@ from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 
 mpl.rcParams["figure.max_open_warning"] = 40
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class RadialBuild:
@@ -12304,97 +12305,304 @@ def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.minorticks_on()
 
 
-def plot_analytic_equilibrium(axis, mfile_data, scan, fig):
-    i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
+def plot_analytic_equilibrium(
+    axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Figure
+):
+    i_single_null = mfile.get("i_single_null", scan=scan)
+    beta_thermal_toroidal_vol_avg = mfile.get(
+        "beta_thermal_toroidal_vol_avg", scan=scan
+    )
+    beta_thermal_poloidal_vol_avg = mfile.get(
+        "beta_thermal_poloidal_vol_avg", scan=scan
+    )
+    beta_thermal_vol_avg = mfile.get("beta_thermal_vol_avg", scan=scan)
+    beta_norm_thermal = mfile.get("beta_norm_thermal", scan=scan)
 
-    if i_single_null == 1:
-        plasma = SingleNull(
-            rmajor=mfile_data.data["rmajor"].get_scan(scan),
-            pressure_parameter=0.2,
-            eps=1/mfile_data.data["aspect"].get_scan(scan),
-            elongation=mfile_data.data["kappa"].get_scan(scan),
-            triangularity=mfile_data.data["triang"].get_scan(scan),
-            b_plasma_toroidal_on_axis=mfile_data.data[
-                "b_plasma_toroidal_on_axis"
-            ].get_scan(scan),
-            c_plasma_ma=mfile_data.data["plasma_current_ma"].get_scan(scan),
-            kink_safety_factor=None,
-        )
+    n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
+
+    pres_plasma_thermal_total_profile = [
+        mfile.get(f"pres_plasma_thermal_total_profile{i}", scan=scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+    rminor = mfile.get("rminor", scan=scan)
+
+    # Helper to build plasma object for a given pressure_parameter
+    def make_plasma(p_param):
+        common_kwargs = {
+            "rmajor": mfile.get("rmajor", scan=scan),
+            "pressure_parameter": p_param,
+            "elongation": mfile.get("kappa", scan=scan),
+            "triangularity": mfile.get("triang", scan=scan),
+            "b_plasma_toroidal_on_axis": mfile.get(
+                "b_plasma_toroidal_on_axis", scan=scan
+            ),
+            "c_plasma_ma": mfile.get("plasma_current_ma", scan=scan),
+            "kink_safety_factor": None,
+        }
+        if i_single_null == 1:
+            # SingleNull expects eps expressed as 1/aspect in original code path
+            common_kwargs["eps"] = 1.0 / mfile.get("aspect", scan=scan)
+            # provide elongation fields explicitly if SingleNull needs separate upper/lower;
+            # constructor used previously only passed 'elongation' and 'triangularity'
+            return SingleNull(**common_kwargs)
+        # DoubleNull uses eps directly from data in original code
+        common_kwargs["eps"] = 1.0 / mfile.get("aspect", scan=scan)
+        return DoubleNull(**common_kwargs)
+
+    # Solve for pressure_parameter such that plasma.beta_toroidal == beta_thermal_toroidal_vol_avg
+    target = float(beta_thermal_toroidal_vol_avg)
+
+    # If target is NaN or zero-ish, skip solving and use a modest default
+    if not np.isfinite(target) or abs(target) < 1e-15:
+        p_opt = 0.2  # fallback default used previously
     else:
-        plasma = DoubleNull(
-            rmajor=mfile_data.data["rmajor"].get_scan(scan),
-            pressure_parameter=0.2,
-            eps=mfile_data.data["eps"].get_scan(scan),
-            elongation=mfile_data.data["kappa"].get_scan(scan),
-            triangularity=mfile_data.data["triang"].get_scan(scan),
-            b_plasma_toroidal_on_axis=mfile_data.data[
-                "b_plasma_toroidal_on_axis"
-            ].get_scan(scan),
-            c_plasma_ma=mfile_data.data["c_plasma_ma"].get_scan(scan),
-            kink_safety_factor=None,
-        )
+
+        def beta_diff(p):
+            try:
+                pl = make_plasma(p)
+                return float(pl.beta_toroidal) - target
+            except (ValueError, TypeError, ArithmeticError):
+                # If construction fails for this p, return large positive diff to force bracket expansion
+                return np.inf
+
+        # Bracket search
+        low = 1e-8
+        high = 1.0
+        f_low = beta_diff(low)
+        f_high = beta_diff(high)
+
+        # Expand high until we bracket a sign change or reach a max
+        max_expand = 50
+        expand_iter = 0
+        while (
+            not (np.isfinite(f_low) and np.isfinite(f_high) and f_low * f_high <= 0)
+            and expand_iter < max_expand
+        ):
+            if not np.isfinite(f_low):
+                low = max(low * 0.1, 1e-12)
+                f_low = beta_diff(low)
+            if not np.isfinite(f_high) or (f_low * f_high > 0):
+                high *= 2.0
+                f_high = beta_diff(high)
+            expand_iter += 1
+
+        # If still not bracketed, try symmetric contraction around estimate 0.2
+        if not (np.isfinite(f_low) and np.isfinite(f_high) and f_low * f_high <= 0):
+            # try scanning a grid and pick p with minimal absolute diff
+            p_grid = np.logspace(-8, 3, 200)
+            diffs = []
+            for p in p_grid:
+                d = beta_diff(p)
+                diffs.append(np.abs(d) if np.isfinite(d) else np.inf)
+            idx = int(np.argmin(diffs))
+            p_opt = float(p_grid[idx])
+        else:
+            # Bisection
+            tol = 1e-8
+            max_iter = 80
+            for _ in range(max_iter):
+                mid = 0.5 * (low + high)
+                f_mid = beta_diff(mid)
+                if not np.isfinite(f_mid):
+                    # shrink interval conservatively
+                    high = 0.5 * (mid + high)
+                    continue
+                if abs(f_mid) < tol:
+                    p_opt = mid
+                    break
+                if f_low * f_mid <= 0:
+                    high = mid
+                    f_high = f_mid
+                else:
+                    low = mid
+                    f_low = f_mid
+            else:
+                # fallback to midpoint if loop exits without break
+                p_opt = mid
+
+    # Build the plasma object with the solved pressure parameter
+    plasma = make_plasma(p_opt)
 
     # Plot pressure and F functions at the midplane.
-    R_plot, Z_plot = plasma.plotting_rz_arrays()
+    r_plot, z_plot = plasma.plotting_rz_arrays()
 
-    psiN_midplane = plasma.psi_norm(R_plot, 0)
-    
+    psi_n_midplane = plasma.psi_norm(r_plot, 0)
 
     axis.set_xlabel(r"Radius [m]")
     axis.set_ylabel(r"Height [m]")
     axis.set_aspect("equal")
 
-    psiN = plasma.psi_norm(*np.meshgrid(R_plot, Z_plot, indexing="ij"))
+    psi_n = plasma.psi_norm(*np.meshgrid(r_plot, z_plot, indexing="ij"))
 
     # Plot contours of normalised poloidal flux.
-    c = axis.contourf(R_plot, Z_plot, psiN.T, levels=np.linspace(0, 1.2, 13))
+    c = axis.contourf(
+        r_plot, z_plot, psi_n.T, levels=np.linspace(0, 1.2, 13), cmap="plasma"
+    )
     axis.contour(
-        R_plot, Z_plot, psiN.T, colors="black", levels=np.linspace(0.1, 1, 10)
+        r_plot, z_plot, psi_n.T, colors="black", levels=np.linspace(0.1, 1, 10)
+    )
+    fig.colorbar(c, ax=axis, label="Normalised Poloidal Flux")
+
+    ax_equil_full = fig.add_subplot(231)
+    # ax_equil_full.set_position([0.1, 0.55, 0.6, 0.35])
+    psi = plasma.psi(*np.meshgrid(r_plot, z_plot, indexing="ij"))
+    # Mask out non-negative flux so only psi < 0 is plotted
+    psi_masked = np.ma.masked_where(psi >= 0.0, psi)
+
+    if psi_masked.mask.all():
+        # Nothing negative to plot — show a message instead of an empty contour
+        ax_equil_full.text(
+            0.5,
+            0.5,
+            "No negative flux values to display",
+            ha="center",
+            va="center",
+            transform=ax_equil_full.transAxes,
+        )
+    else:
+        # build levels from the minimum negative value up to 0
+        levels = np.linspace(float(psi_masked.min()), 0.0, 50)
+        c_full = ax_equil_full.contourf(
+            r_plot, z_plot, psi_masked.T, levels=levels, cmap="viridis"
+        )
+        fig.colorbar(c_full, ax=ax_equil_full, label="Poloidal Flux [Wb]")
+
+    # keep existing normalized-psi contours (if desired)
+    ax_equil_full.contour(
+        r_plot, z_plot, psi_n.T, colors="black", levels=np.linspace(0.1, 1, 10)
     )
 
-    # Mark magnetic axis location.
-    axis.scatter(*plasma.magnetic_axis, color="black", marker="x")
+    ax_equil_full.set_xlabel(r"Radius [m]")
+    ax_equil_full.set_ylabel(r"Height [m]")
+    ax_equil_full.set_aspect("equal")
+    ax_equil_full.minorticks_on()
+    ax_equil_full.grid(True, linestyle="--", alpha=0.5)
 
-    #fig.colorbar(c, ax=axis, label="Normalised Poloidal Flux")
-    #fig.tight_layout()
+    ax_q_profile = fig.add_subplot(4, 2, 7)
+    ax_q_profile.plot(np.linspace(0, 1, len(plasma.q_profile)), plasma.q_profile)
+    ax_q_profile.set_xlabel(r"Normalised Radius $\rho$")
+    ax_q_profile.set_ylabel("Safety Factor $q$")
+    ax_q_profile.set_title("Equilibrium Safety Factor Profile")
+    ax_q_profile.grid(True, linestyle="--", alpha=0.5)
+    ax_q_profile.minorticks_on()
+    ax_q_profile.set_xlim(0, 1)
 
+    ax_equil_pressure = fig.add_subplot(4, 2, 5)
+    ax_equil_pressure.plot(
+        r_plot,
+        plasma.pressure_kpa(psi_n_midplane),
+        color="black",
+        label="Equilibrium Solved",
+    )
+    ax_equil_pressure.set_xlabel("Radius [m]")
+    ax_equil_pressure.set_ylabel("Pressure [kPa]")
+    ax_equil_pressure.set_title("Equilibrium Pressure Profile")
+    ax_equil_pressure.grid(True, linestyle="--", alpha=0.5)
+    ax_equil_pressure.minorticks_on()
+    # overplot PROCESS pressure profile for comparison
+    rho_profile = np.linspace(0, 1, n_plasma_profile_elements)
+    r_profile = rminor * rho_profile + plasma.rmajor
+    ax_equil_pressure.plot(
+        r_profile,
+        np.array(pres_plasma_thermal_total_profile) / 1e3,
+        color="red",
+        linestyle="--",
+        label="PROCESS Profile",
+    )
+    ax_equil_pressure.legend()
 
     # Show key 0D plasma parameters in an on-figure info box
+    # compute relative and percentage differences (showing explicit + / -)
+    if (
+        np.isfinite(beta_thermal_poloidal_vol_avg)
+        and abs(beta_thermal_poloidal_vol_avg) > 0
+    ):
+        rel_diff_bp = (
+            plasma.beta_poloidal - beta_thermal_poloidal_vol_avg
+        ) / beta_thermal_poloidal_vol_avg
+    else:
+        rel_diff_bp = np.nan
+    pct_diff_bp = rel_diff_bp * 100 if np.isfinite(rel_diff_bp) else np.nan
+
+    if (
+        np.isfinite(beta_thermal_toroidal_vol_avg)
+        and abs(beta_thermal_toroidal_vol_avg) > 0
+    ):
+        rel_diff_bt = (
+            plasma.beta_toroidal - beta_thermal_toroidal_vol_avg
+        ) / beta_thermal_toroidal_vol_avg
+    else:
+        rel_diff_bt = np.nan
+    pct_diff_bt = rel_diff_bt * 100 if np.isfinite(rel_diff_bt) else np.nan
+
+    # Use PROCESS reported total beta as the reference
+    if np.isfinite(beta_thermal_vol_avg) and abs(beta_thermal_vol_avg) > 0:
+        rel_diff_btot = (
+            plasma.beta_total - beta_thermal_vol_avg
+        ) / beta_thermal_vol_avg
+    else:
+        rel_diff_btot = np.nan
+    pct_diff_btot = rel_diff_btot * 100 if np.isfinite(rel_diff_btot) else np.nan
+
+    if np.isfinite(beta_norm_thermal * 100) and abs(beta_norm_thermal) > 0:
+        rel_diff_bnorm = (
+            plasma.beta_normalised * 100 - beta_norm_thermal
+        ) / beta_norm_thermal
+    else:
+        rel_diff_bnorm = np.nan
+    pct_diff_bnorm = rel_diff_bnorm * 100 if np.isfinite(rel_diff_bnorm) else np.nan
+
     textstr = (
-        f"Major radius [m] = {plasma.rmajor:.2f}\n"
-        f"Inverse aspect ratio = {plasma.eps:.2f}\n"
-        f"Upper elongation = {plasma.upper_elongation:.2f}\n"
-        f"Lower elongation = {plasma.lower_elongation:.2f}\n"
-        f"Upper triangularity = {plasma.upper_triangularity:.2f}\n"
-        f"Lower triangularity = {plasma.lower_triangularity:.2f}\n"
-        f"Reference B [T] = {plasma.b_plasma_toroidal_on_axis:.2f}\n"
-        f"Plasma current [MA] = {plasma.c_plasma_ma:.2f}\n"
-        f"Kink safety factor = {plasma.kink_safety_factor:.3f}\n"
+        f"Resolved pressure_parameter, $A$ = {p_opt:.3f}\n"
+        f"Resolved kink safety factor = {plasma.kink_safety_factor:.3f}\n"
         f"Normalised circumference = {plasma.normalised_circumference:.3f}\n"
         f"Normalised volume = {plasma.normalised_volume:.3f}\n"
-        f"Beta poloidal = {plasma.beta_poloidal:.3f}\n"
-        f"Beta toroidal = {plasma.beta_toroidal:.4f}\n"
-        f"Beta total = {plasma.beta_total:.4f}\n"
-        f"Beta normalised [%] = {100 * plasma.beta_normalised:.2f}\n"
-        f"Pressure parameter = {plasma.pressure_parameter:.3f}\n"
-        f"Psi0 = {plasma.psi_0:.3f} Wb\n"
-        f"Psi axis = {plasma.psi_axis:.3f} Wb\n"
+        # show beta poloidal and the signed relative & percentage difference vs PROCESS value
+        f"Equilibria Beta poloidal = {plasma.beta_poloidal:.6f}\n"
+        f"  Relative to PROCESS poloidal = {rel_diff_bp:+.3f}  ({pct_diff_bp:+.2f}%)\n"
+        f"Equilibria Beta toroidal = {plasma.beta_toroidal:.6f}\n"
+        f"  Relative to PROCESS toroidal = {rel_diff_bt:+.3f}  ({pct_diff_bt:+.2f}%)\n"
+        f"Equilibria Beta total = {plasma.beta_total:.6f}\n"
+        f"  Relative to PROCESS total = {rel_diff_btot:+.3f}  ({pct_diff_btot:+.2f}%)\n"
+        f"Beta normalised = {plasma.beta_normalised:.6f}\n"
+        f"  Relative to PROCESS normalised = {rel_diff_bnorm:+.3f}  ({pct_diff_bnorm:+.2f}%)\n"
+        f"$\\Psi_0$ = {plasma.psi_0:.3f} Wb\n"
+        f"$\\Psi_{{axis}}$ = {plasma.psi_axis:.3f} Wb\n"
         f"Magnetic axis = ({plasma.magnetic_axis[0]:.3f}, {plasma.magnetic_axis[1]:.3f}) m\n"
-        f"Shafranov shift [m] = {plasma.shafranov_shift:.3f}"
+        f"Shafranov shift [m] = {plasma.dr_shafranov:.3f}"
     )
 
     # Place the info box in the top-left of the axis
     fig.text(
-        0.2,
-        0.7,
+        0.6,
+        0.3,
         textstr,
-        fontsize=11,
+        fontsize=9,
         va="top",
         ha="left",
         bbox={"boxstyle": "round", "facecolor": "lightyellow", "alpha": 0.95},
     )
 
-    psiN_midplane = plasma.psi_norm(R_plot, 0)
+    # mark major radius and magnetic axis
+    axis.axvline(
+        plasma.rmajor,
+        color="black",
+        linestyle="--",
+        linewidth=1.2,
+        label="Major radius $R_0$",
+        zorder=150,
+    )
+    axis.scatter(
+        plasma.magnetic_axis[0],
+        plasma.magnetic_axis[1],
+        color="red",
+        s=50,
+        edgecolor="black",
+        linewidth=0.6,
+        zorder=200,
+        label="Magnetic axis",
+    )
+    axis.legend(loc="upper right", fontsize=8)
 
 
 def main_plot(
@@ -12700,8 +12908,8 @@ def main_plot(
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[27])
 
-    ax25 = figs[28].add_subplot(122, aspect="equal")
-    plot_analytic_equilibrium(ax25, m_file_data, scan, figs[28])
+    ax25 = figs[28].add_subplot(232, aspect="equal")
+    plot_analytic_equilibrium(ax25, m_file, scan, figs[28])
 
 
 def create_thickness_builds(m_file, scan: int):

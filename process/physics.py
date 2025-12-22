@@ -9076,7 +9076,7 @@ class ExtremalPoint:
     ):
         self._elongation = float(elongation)
         self._triangularity = float(triangularity)
-        self._x_point = x_point == True
+        self._x_point = bool(x_point)
         self._squareness = float(squareness)
 
         if self.elongation <= 0:
@@ -9117,7 +9117,7 @@ class ExtremalPoint:
         return self._triangularity
 
     @property
-    def x_point(self) -> float:
+    def get_x_point(self) -> float:
         return self._x_point
 
     @property
@@ -9179,7 +9179,7 @@ class AnalyticGradShafranovSolution:
         lower_point: ExtremalPoint,
         b_plasma_toroidal_on_axis: float,
         c_plasma_ma: float,
-        kink_safety_factor: float = None,
+        kink_safety_factor: float | None = None,
         c_plasma_anticlockwise: bool = True,
         toroidal_field_anticlockwise: bool = True,
         use_d_shaped_model: bool = False,
@@ -9226,8 +9226,8 @@ class AnalyticGradShafranovSolution:
         if not self.toroidal_field_anticlockwise:
             self.b_plasma_toroidal_on_axis *= -1
 
-        # Solve for the weighting coefficients for each of the polynomials.
-        self.calculate_coefficients()
+        # Solve for the weighting coefficients for each of the psi polynomials.
+        self.calculate_polynomial_psi_coefficients()
 
         # Calculate magnetic axis location.
         self.calculate_magnetic_axis()
@@ -9240,7 +9240,7 @@ class AnalyticGradShafranovSolution:
 
         # Use either the plasma current or kink safety factor to calculate the other.
         e, b_plasma_toroidal_on_axis = self.eps, self.b_plasma_toroidal_on_axis
-        rmajor, Cp = self.rmajor, self.normalised_circumference
+        rmajor, len_plasma_poloidal_norm = self.rmajor, self.normalised_circumference
 
         if kink_safety_factor is None:
             self.c_plasma_ma: float = abs(float(c_plasma_ma))
@@ -9248,7 +9248,7 @@ class AnalyticGradShafranovSolution:
                 e
                 * b_plasma_toroidal_on_axis
                 * rmajor
-                * Cp
+                * len_plasma_poloidal_norm
                 / const.mu_0
                 / (1e6 * self.c_plasma_ma)
             )
@@ -9258,7 +9258,7 @@ class AnalyticGradShafranovSolution:
                 e
                 * b_plasma_toroidal_on_axis
                 * rmajor
-                * Cp
+                * len_plasma_poloidal_norm
                 / const.mu_0
                 / self.kink_safety_factor
             )
@@ -9338,15 +9338,21 @@ class AnalyticGradShafranovSolution:
         )
 
     @staticmethod
-    def psi_homogenous_dx(x: float, y: float) -> tuple[float]:
-        """First derivative of the homogeneous polynomials with respect to x."""
-        dp1_dx = 0
-        dp2_dx = 2 * x
-        dp3_dx = -x * (1 + 2 * np.log(x))
-        dp4_dx = x * (4 * x**2 - 8 * y**2)
-        dp5_dx = 3 * x * ((4 * x**2 - 8 * y**2) * np.log(x) + x**2 - 10 * y**2)
-        dp6_dx = x * (6 * x**4 - 48 * x**2 * y**2 + 16 * y**4)
-        dp7_dx = (
+    def psi_polynomials_dx(x: float, y: float) -> tuple[float]:
+        """
+        First derivative with respect to x of homogeneous polynomials (psi terms) that
+        solve the Grad-Shafranov equation.
+
+        :Notes: Polynomial derivatives not given in reference. Manually derived.
+        """
+
+        dpsi_1_dx = 0
+        dpsi_2_dx = 2 * x
+        dpsi_3_dx = -x * (1 + 2 * np.log(x))
+        dpsi_4_dx = x * (4 * x**2 - 8 * y**2)
+        dpsi_5_dx = 3 * x * ((4 * x**2 - 8 * y**2) * np.log(x) + x**2 - 10 * y**2)
+        dpsi_6_dx = x * (6 * x**4 - 48 * x**2 * y**2 + 16 * y**4)
+        dpsi_7_dx = (
             -5
             * x
             * (
@@ -9356,161 +9362,185 @@ class AnalyticGradShafranovSolution:
                 + 80 * y**4
             )
         )
-        dp8_dx = 0
-        dp9_dx = 2 * x * y
-        dp10_dx = -3 * x * y * (2 * np.log(x) + 1)
-        dp11_dx = x * y * (12 * x**2 - 8 * y**2)
-        dp12_dx = 40 * x * y * ((6 * x**2 - 4 * y**2) * np.log(x) - 3 * x**2 - 2 * y**2)
-
+        dpsi_8_dx = 0
+        dpsi_9_dx = 2 * x * y
+        dpsi_10_dx = -3 * x * y * (2 * np.log(x) + 1)
+        dpsi_11_dx = x * y * (12 * x**2 - 8 * y**2)
+        dpsi_12_dx = (
+            40 * x * y * ((6 * x**2 - 4 * y**2) * np.log(x) - 3 * x**2 - 2 * y**2)
+        )
         return (
-            dp1_dx,
-            dp2_dx,
-            dp3_dx,
-            dp4_dx,
-            dp5_dx,
-            dp6_dx,
-            dp7_dx,
-            dp8_dx,
-            dp9_dx,
-            dp10_dx,
-            dp11_dx,
-            dp12_dx,
+            dpsi_1_dx,
+            dpsi_2_dx,
+            dpsi_3_dx,
+            dpsi_4_dx,
+            dpsi_5_dx,
+            dpsi_6_dx,
+            dpsi_7_dx,
+            dpsi_8_dx,
+            dpsi_9_dx,
+            dpsi_10_dx,
+            dpsi_11_dx,
+            dpsi_12_dx,
         )
 
     @staticmethod
-    def psi_homogenous_dy(x: float, y: float) -> tuple[float]:
-        """First derivative of the homogeneous polynomials with respect to y."""
-        x2, y2, ln_x = x**2, y**2, np.log(x)
-        x4, y4 = x2**2, y2**2
+    def psi_polynomials_dy(x: float, y: float) -> tuple[float]:
+        """
+        First derivative with respect to y of homogeneous polynomials (psi terms) that
+        solve the Grad-Shafranov equation.
 
-        dp1_dy = 0
-        dp2_dy = 0
-        dp3_dy = 2 * y
-        dp4_dy = -8 * x2 * y
-        dp5_dy = y * (8 * y2 - x2 * (18 + 24 * ln_x))
-        dp6_dy = y * (-24 * x4 + 32 * x2 * y2)
-        dp7_dy = y * (48 * y4 - (480 * ln_x + 560) * x2 * y2 + (360 * ln_x + 150) * x4)
-        dp8_dy = 1
-        dp9_dy = x2
-        dp10_dy = 3 * (y2 - x2 * ln_x)
-        dp11_dy = x2 * (3 * x2 - 12 * y2)
-        dp12_dy = 40 * y4 + 15 * x2 * ((-16 * y2 + 4 * x2) * ln_x - 3 * x2)
-
+        :Notes: Polynomial derivatives not given in reference. Manually derived.
+        """
+        dpsi_1_dy = 0
+        dpsi_2_dy = 0
+        dpsi_3_dy = 2 * y
+        dpsi_4_dy = -8 * (x**2) * y
+        dpsi_5_dy = y * (8 * (y**2) - (x**2) * (18 + 24 * np.log(x)))
+        dpsi_6_dy = y * (-24 * (x**4) + 32 * (x**2) * (y**2))
+        dpsi_7_dy = y * (
+            48 * (y**4)
+            - (480 * np.log(x) + 560) * (x**2) * (y**2)
+            + (360 * np.log(x) + 150) * (x**4)
+        )
+        dpsi_8_dy = 1
+        dpsi_9_dy = x**2
+        dpsi_10_dy = 3 * ((y**2) - (x**2) * np.log(x))
+        dpsi_11_dy = (x**2) * (3 * (x**2) - 12 * (y**2))
+        dpsi_12_dy = 40 * (y**4) + 15 * (x**2) * (
+            ((-16 * (y**2) + 4 * (x**2)) * np.log(x)) - 3 * (x**2)
+        )
         return (
-            dp1_dy,
-            dp2_dy,
-            dp3_dy,
-            dp4_dy,
-            dp5_dy,
-            dp6_dy,
-            dp7_dy,
-            dp8_dy,
-            dp9_dy,
-            dp10_dy,
-            dp11_dy,
-            dp12_dy,
+            dpsi_1_dy,
+            dpsi_2_dy,
+            dpsi_3_dy,
+            dpsi_4_dy,
+            dpsi_5_dy,
+            dpsi_6_dy,
+            dpsi_7_dy,
+            dpsi_8_dy,
+            dpsi_9_dy,
+            dpsi_10_dy,
+            dpsi_11_dy,
+            dpsi_12_dy,
         )
 
     @staticmethod
-    def psi_homogenous_dx2(x: float, y: float) -> tuple[float]:
-        """Second derivative of the homogeneous polynomials with respect to x."""
-        x2, y2, ln_x = x**2, y**2, np.log(x)
-        x4, y4 = x2**2, y2**2
+    def psi_polynomials_dx2(x: float, y: float) -> tuple[float]:
+        """
+        Second derivative with respect to x of homogeneous polynomials (psi terms) that
+        solve the Grad-Shafranov equation.
 
-        d2p1_dx2 = 0
-        d2p2_dx2 = 2
-        d2p3_dx2 = -3 - 2 * ln_x
-        d2p4_dx2 = 12 * x2 - 8 * y2
-        d2p5_dx2 = (36 * x2 - 24 * y2) * ln_x + 21 * x2 - 54 * y2
-        d2p6_dx2 = 30 * x4 - 144 * x2 * y2 + 16 * y4
-        d2p7_dx2 = (
-            (-450 * x4 + 2160 * x2 * y2 - 240 * y4) * ln_x
-            - 165 * x4
-            + 2160 * x2 * y2
-            - 640 * y4
+        :Notes: Polynomial derivatives not given in reference. Manually derived.
+        """
+
+        d2_psi_1_dx2 = 0
+        d2_psi_2_dx2 = 2
+        d2_psi_3_dx2 = -3 - 2 * np.log(x)
+        d2_psi_4_dx2 = 12 * x**2 - 8 * y**2
+        d2_psi_5_dx2 = (36 * x**2 - 24 * y**2) * np.log(x) + 21 * x**2 - 54 * y**2
+        d2_psi_6_dx2 = 30 * x**4 - 144 * x**2 * y**2 + 16 * y**4
+        d2_psi_7_dx2 = (
+            (-450 * x**4 + 2160 * x**2 * y**2 - 240 * y**4) * np.log(x)
+            - 165 * x**4
+            + 2160 * x**2 * y**2
+            - 640 * y**4
         )
-        d2p8_dx2 = 0
-        d2p9_dx2 = 2 * y
-        d2p10_dx2 = -3 * y * (2 * ln_x + 3)
-        d2p11_dx2 = y * (36 * x2 - 8 * y2)
-        d2p12_dx2 = y * ((720 * x2 - 160 * y2) * ln_x - 120 * x2 - 240 * y2)
-
+        d2_psi_8_dx2 = 0
+        d2_psi_9_dx2 = 2 * y
+        d2_psi_10_dx2 = -3 * y * (2 * np.log(x) + 3)
+        d2_psi_11_dx2 = y * (36 * x**2 - 8 * y**2)
+        d2_psi_12_dx2 = y * (
+            (720 * x**2 - 160 * y**2) * np.log(x) - 120 * x**2 - 240 * y**2
+        )
         return (
-            d2p1_dx2,
-            d2p2_dx2,
-            d2p3_dx2,
-            d2p4_dx2,
-            d2p5_dx2,
-            d2p6_dx2,
-            d2p7_dx2,
-            d2p8_dx2,
-            d2p9_dx2,
-            d2p10_dx2,
-            d2p11_dx2,
-            d2p12_dx2,
+            d2_psi_1_dx2,
+            d2_psi_2_dx2,
+            d2_psi_3_dx2,
+            d2_psi_4_dx2,
+            d2_psi_5_dx2,
+            d2_psi_6_dx2,
+            d2_psi_7_dx2,
+            d2_psi_8_dx2,
+            d2_psi_9_dx2,
+            d2_psi_10_dx2,
+            d2_psi_11_dx2,
+            d2_psi_12_dx2,
         )
 
     @staticmethod
-    def psi_homogenous_dy2(x: float, y: float) -> tuple[float]:
-        """Second derivative of the homogeneous polynomials with respect to x."""
-        x2, y2, ln_x = x**2, y**2, np.log(x)
-        x4, y4 = x2**2, y2**2
+    def psi_polynomials_dy2(x: float, y: float) -> tuple[float]:
+        """
+        Second derivative with respect to y of homogeneous polynomials (psi terms) that
+        solve the Grad-Shafranov equation.
 
-        d2p1_dy2 = 0
-        d2p2_dy2 = 0
-        d2p3_dy2 = 2
-        d2p4_dy2 = -8 * x2
-        d2p5_dy2 = 24 * y2 - x2 * (18 + 24 * ln_x)
-        d2p6_dy2 = x2 * (-24 * x2 + 96 * y2)
-        d2p7_dy2 = 240 * y4 - (1440 * ln_x + 1680) * x2 * y2 + (360 * ln_x + 150) * x4
-        d2p8_dy2 = 0
-        d2p9_dy2 = 0
-        d2p10_dy2 = 6 * y
-        d2p11_dy2 = -24 * x2 * y
-        d2p12_dy2 = y * (160 * y2 - 480 * x2 * ln_x)
-
+        :Notes: Polynomial derivatives not given in reference. Manually derived.
+        """
+        d2_psi_1_dy2 = 0
+        d2_psi_2_dy2 = 0
+        d2_psi_3_dy2 = 2
+        d2_psi_4_dy2 = -8 * x**2
+        d2_psi_5_dy2 = 24 * y**2 - x**2 * (18 + 24 * np.log(x))
+        d2_psi_6_dy2 = x**2 * (-24 * x**2 + 96 * y**2)
+        d2_psi_7_dy2 = (
+            240 * y**4
+            - (1440 * np.log(x) + 1680) * x**2 * y**2
+            + (360 * np.log(x) + 150) * x**4
+        )
+        d2_psi_8_dy2 = 0
+        d2_psi_9_dy2 = 0
+        d2_psi_10_dy2 = 6 * y
+        d2_psi_11_dy2 = -24 * x**2 * y
+        d2_psi_12_dy2 = y * (160 * y**2 - 480 * x**2 * np.log(x))
         return (
-            d2p1_dy2,
-            d2p2_dy2,
-            d2p3_dy2,
-            d2p4_dy2,
-            d2p5_dy2,
-            d2p6_dy2,
-            d2p7_dy2,
-            d2p8_dy2,
-            d2p9_dy2,
-            d2p10_dy2,
-            d2p11_dy2,
-            d2p12_dy2,
+            d2_psi_1_dy2,
+            d2_psi_2_dy2,
+            d2_psi_3_dy2,
+            d2_psi_4_dy2,
+            d2_psi_5_dy2,
+            d2_psi_6_dy2,
+            d2_psi_7_dy2,
+            d2_psi_8_dy2,
+            d2_psi_9_dy2,
+            d2_psi_10_dy2,
+            d2_psi_11_dy2,
+            d2_psi_12_dy2,
         )
 
     def psi_particular(self, x: float, y: float) -> float:
         """
         Particular solution of the normalised Grad-Shafranov equation. x = r / rmajor and y = z / rmajor are
         the radius r and height z normalised to the major radius rmajor.
+
+        :Notes: Equation 6 of Cerfon and Freidberg (2010).
         """
-        pressure_parameter = self.pressure_parameter
-        x2, ln_x = x**2, np.log(x)
-        x4 = x2**2
-        return 0.5 * pressure_parameter * x2 * ln_x - (x4 / 8) * (
-            1 + pressure_parameter
+        return 0.5 * self.pressure_parameter * x**2 * np.log(x) - (x**4 / 8.0) * (
+            1.0 + self.pressure_parameter
         )
 
     def psi_particular_dx(self, x: float, y: float) -> float:
-        """First derivative of the particular solution with respect to x."""
-        pressure_parameter = self.pressure_parameter
-        x2, ln_x = x**2, np.log(x)
+        """First derivative of the particular solution with respect to x.
+
+        :Notes: Manually derived.
+        """
         return (
             0.5
             * x
-            * (pressure_parameter * (2 * ln_x + 1) - x2 * (1 + pressure_parameter))
+            * (
+                self.pressure_parameter * (2 * np.log(x) + 1)
+                - x**2 * (1 + self.pressure_parameter)
+            )
         )
 
     def psi_particular_dx2(self, x: float, y: float) -> float:
-        """Second derivative of the particular solution with respect to x."""
-        x2, ln_x = x**2, np.log(x)
-        pressure_parameter = self.pressure_parameter
-        return pressure_parameter * (1.5 + ln_x) - 1.5 * (1 + pressure_parameter) * x2
+        """Second derivative of the particular solution with respect to x.
+        :Notes: Manually derived.
+        """
+
+        return (
+            self.pressure_parameter * (1.5 + np.log(x))
+            - 1.5 * (1.0 + self.pressure_parameter) * x**2
+        )
 
     def psi_bar(self, x: float, y: float) -> float:
         """
@@ -9530,7 +9560,7 @@ class AnalyticGradShafranovSolution:
         psi_dx = self.psi_particular_dx(x, y)
 
         # Add weighted sum of the homogeneous solutions.
-        for c, p in zip(self.coefficients, self.psi_homogenous_dx(x, y), strict=False):
+        for c, p in zip(self.coefficients, self.psi_polynomials_dx(x, y), strict=False):
             psi_dx += c * p
 
         return psi_dx
@@ -9540,7 +9570,7 @@ class AnalyticGradShafranovSolution:
         psi_dy = 0
 
         # Add weighted sum of the homogeneous solutions.
-        for c, p in zip(self.coefficients, self.psi_homogenous_dy(x, y), strict=False):
+        for c, p in zip(self.coefficients, self.psi_polynomials_dy(x, y), strict=False):
             psi_dy += c * p
 
         return psi_dy
@@ -9550,7 +9580,9 @@ class AnalyticGradShafranovSolution:
         psi_dx2 = self.psi_particular_dx2(x, y)
 
         # Add weighted sum of the homogeneous solutions.
-        for c, p in zip(self.coefficients, self.psi_homogenous_dx2(x, y), strict=False):
+        for c, p in zip(
+            self.coefficients, self.psi_polynomials_dx2(x, y), strict=False
+        ):
             psi_dx2 += c * p
 
         return psi_dx2
@@ -9560,7 +9592,9 @@ class AnalyticGradShafranovSolution:
         psi_dy2 = 0
 
         # Add weighted sum of the homogeneous solutions.
-        for c, p in zip(self.coefficients, self.psi_homogenous_dy2(x, y), strict=False):
+        for c, p in zip(
+            self.coefficients, self.psi_polynomials_dy2(x, y), strict=False
+        ):
             psi_dy2 += c * p
 
         return psi_dy2
@@ -9570,12 +9604,12 @@ class AnalyticGradShafranovSolution:
         rmajor = self.rmajor
         return self.psi_0 * self.psi_bar(r / rmajor, z / rmajor)
 
-    def psi_dR(self, r: float, z: float) -> float:
+    def psi_dr(self, r: float, z: float) -> float:
         """First derivative of the poloidal flux function with respect to r [Wb / m]."""
         rmajor = self.rmajor
         return self.psi_0 * self.psi_bar_dx(r / rmajor, z / rmajor) / rmajor
 
-    def psi_dZ(self, r: float, z: float) -> float:
+    def psi_dz(self, r: float, z: float) -> float:
         """First derivative of the poloidal flux function with respect to z [Wb / m]."""
         rmajor = self.rmajor
         return self.psi_0 * self.psi_bar_dy(r / rmajor, z / rmajor) / rmajor
@@ -9588,29 +9622,30 @@ class AnalyticGradShafranovSolution:
         """(r, phi, z) components of the magnetic field [T]."""
         psi_norm = self.psi_norm(r, z)
         # NOTE: Need a test for this!
-        B_R = self.psi_dZ(r, z) / r
-        B_Z = -self.psi_dR(r, z) / r
+        b_r = self.psi_dz(r, z) / r
+        b_z = -self.psi_dr(r, z) / r
 
         # We account for the direction of the toroidal field in f_function.
-        B_toroidal = self.f_function(psi_norm) / r
-
+        b_toroidal = self.f_function(psi_norm) / r
         # If plasma current is negative poloidal field reverses sign.
         if not self.c_plasma_anticlockwise:
-            B_R *= -1
-            B_z *= -1
+            b_r *= -1
 
-        return B_R, B_toroidal, B_Z
+        return b_r, b_toroidal, b_z
 
-    def calculate_coefficients(self):
+    def calculate_polynomial_psi_coefficients(self):
         """
-        Solve for the weighting coefficients of the polynomials defining Ψ. We fit to a d shaped contour with the
+        Solve for the weighted coefficients of the polynomials defining Ψ. We fit to a d shaped contour with the
         required geometry factors at 3 points:
             Inner equatorial point: point of minimum r at midplane (z=0) on the boundary contour.
             Outer equatorial point: point of minimum r at midplane (z=0) on the boundary contour.
             High point: point of maximum z on the boundary contour.
             Upper X point: point of maximum z on the boundary contour.
+
+        :Notes: Equations given as Equations 10, 11 and 12 in Cerfon and Freidberg (2010).
+
         """
-        rmajor, e = self.rmajor, self.eps
+        e = self.eps
 
         # Some coefficients from D shaped model. Use average elongation, triangularity and squareness at midplane.
 
@@ -9618,57 +9653,57 @@ class AnalyticGradShafranovSolution:
         d_mid = 0.5 * (self.upper_triangularity + self.lower_triangularity)
         s_mid = 0.5 * (self.upper_squareness + self.lower_squareness)
         alpha_mid = np.arcsin(d_mid)
-        N1_mid = -((1 + alpha_mid) ** 2) / e / k_mid**2 / (1 + 2 * s_mid**2)
-        N2_mid = (1 - alpha_mid) ** 2 / e / k_mid**2 / (1 + 2 * s_mid**2)
+        n1_mid = -((1 + alpha_mid) ** 2) / self.eps / k_mid**2 / (1 + 2 * s_mid**2)
+        n2_mid = (1 - alpha_mid) ** 2 / self.eps / k_mid**2 / (1 + 2 * s_mid**2)
 
         # Points to fit D shaped model at.
-        self.equatorial_point_inner_xy = (1 - e, 0)
-        self.equatorial_point_outer_xy = (1 + e, 0)
+        self.equatorial_point_inner_xy = (1 - self.eps, 0)
+        self.equatorial_point_outer_xy = (1 + self.eps, 0)
 
         # We solve the system y = Mx to find the coefficient vector x.
-        M = np.zeros((12, 12))
+        matrix = np.zeros((12, 12))
         y = np.zeros(12)
 
-        # Outer equatorial point (psi = 0).
-        M[0] = self.psi_polynomials(*self.equatorial_point_outer_xy)
+        # Outer equatorial point (Ψ = 0).
+        matrix[0] = self.psi_polynomials(*self.equatorial_point_outer_xy)
         y[0] = -self.psi_particular(*self.equatorial_point_outer_xy)
 
-        # Inner equatorial point (psi = 0).
-        M[1] = self.psi_polynomials(*self.equatorial_point_inner_xy)
+        # Inner equatorial point (Ψ = 0).
+        matrix[1] = self.psi_polynomials(*self.equatorial_point_inner_xy)
         y[1] = -self.psi_particular(*self.equatorial_point_inner_xy)
 
-        # Outer equatorial point up down symmetry (d(psi)/dy = 0).
-        M[2] = self.psi_homogenous_dy(*self.equatorial_point_outer_xy)
+        # Outer equatorial point up down symmetry (d(Ψ)/dy = 0).
+        matrix[2] = self.psi_polynomials_dy(*self.equatorial_point_outer_xy)
 
-        # Inner equatorial point up down symmetry (d(psi)/dy = 0).
-        M[3] = self.psi_homogenous_dy(*self.equatorial_point_inner_xy)
+        # Inner equatorial point up down symmetry (d(Ψ)/dy = 0).
+        matrix[3] = self.psi_polynomials_dy(*self.equatorial_point_inner_xy)
 
-        # Outer equatorial point curvature (d^2(psi)/dy^2 + N1 * d(psi)/dx = 0).
-        M[4] = np.array(
-            self.psi_homogenous_dy2(*self.equatorial_point_outer_xy)
-        ) + N1_mid * np.array(self.psi_homogenous_dx(*self.equatorial_point_outer_xy))
-        y[4] = -N1_mid * self.psi_particular_dx(*self.equatorial_point_outer_xy)
+        # Outer equatorial point curvature (d^2(Ψ)/dy^2 + N1 * d(Ψ)/dx = 0).
+        matrix[4] = np.array(
+            self.psi_polynomials_dy2(*self.equatorial_point_outer_xy)
+        ) + n1_mid * np.array(self.psi_polynomials_dx(*self.equatorial_point_outer_xy))
+        y[4] = -n1_mid * self.psi_particular_dx(*self.equatorial_point_outer_xy)
 
-        # Inner equatorial point curvature (d^2(psi)/dy^2 + N2 * d(psi)/dx = 0).
-        M[5] = np.array(
-            self.psi_homogenous_dy2(*self.equatorial_point_inner_xy)
-        ) + N2_mid * np.array(self.psi_homogenous_dx(*self.equatorial_point_inner_xy))
-        y[5] = -N2_mid * self.psi_particular_dx(*self.equatorial_point_inner_xy)
+        # Inner equatorial point curvature (d^2(Ψ)/dy^2 + N2 * d(Ψ)/dx = 0).
+        matrix[5] = np.array(
+            self.psi_polynomials_dy2(*self.equatorial_point_inner_xy)
+        ) + n2_mid * np.array(self.psi_polynomials_dx(*self.equatorial_point_inner_xy))
+        y[5] = -n2_mid * self.psi_particular_dx(*self.equatorial_point_inner_xy)
 
-        if self.upper_point.x_point:
+        if self.upper_point.get_x_point:
             k, d = self.upper_elongation, self.upper_triangularity
-            self.upper_point_xy = (1 - 1.1 * d * e, 1.1 * k * e)
+            self.upper_point_xy = (1 - 1.1 * d * self.eps, 1.1 * k * self.eps)
 
-            # Upper X point (psi = 0).
-            M[6] = self.psi_polynomials(*self.upper_point_xy)
+            # Upper X point (Ψ = 0).
+            matrix[6] = self.psi_polynomials(*self.upper_point_xy)
             y[6] = -self.psi_particular(*self.upper_point_xy)
 
-            # B poloidal = 0 at upper X point (d(psi)/dx = 0).
-            M[7] = self.psi_homogenous_dx(*self.upper_point_xy)
+            # B poloidal = 0 at upper X point (d(Ψ)/dx = 0).
+            matrix[7] = self.psi_polynomials_dx(*self.upper_point_xy)
             y[7] = -self.psi_particular_dx(*self.upper_point_xy)
 
-            # B poloidal = 0 at upper X point (d(psi)/dy = 0).
-            M[8] = self.psi_homogenous_dy(*self.upper_point_xy)
+            # B poloidal = 0 at upper X point (d(Ψ)/dy = 0).
+            matrix[8] = self.psi_polynomials_dy(*self.upper_point_xy)
         else:
             # Upper high point.
             k, d, s = (
@@ -9676,37 +9711,37 @@ class AnalyticGradShafranovSolution:
                 self.upper_triangularity,
                 self.upper_squareness,
             )
-            N3 = -k * (1 - 2 * s**2) / e / (1 - d**2)
-            self.upper_point_xy = (1 - d * e, k * e)
+            n_3 = -k * (1 - 2 * s**2) / e / (1 - d**2)
+            self.upper_point_xy = (1 - d * self.eps, k * self.eps)
 
-            # Upper high point (psi = 0).
-            M[6] = self.psi_polynomials(*self.upper_point_xy)
+            # Upper high point (Ψ = 0).
+            matrix[6] = self.psi_polynomials(*self.upper_point_xy)
             y[6] = -self.psi_particular(*self.upper_point_xy)
 
-            # Upper high point maximum (d(psi)/dx = 0).
-            M[7] = self.psi_homogenous_dx(*self.upper_point_xy)
+            # Upper high point maximum (d(Ψ)/dx = 0).
+            matrix[7] = self.psi_polynomials_dx(*self.upper_point_xy)
             y[7] = -self.psi_particular_dx(*self.upper_point_xy)
 
-            # Upper high point curvature (d^2(psi)/dx^2 + N3 * d(psi)/dy = 0).
-            M[8] = np.array(
-                self.psi_homogenous_dx2(*self.upper_point_xy)
-            ) + N3 * np.array(self.psi_homogenous_dy(*self.upper_point_xy))
+            # Upper high point curvature (d^2(Ψ)/dx^2 + n_3 * d(Ψ)/dy = 0).
+            matrix[8] = np.array(
+                self.psi_polynomials_dx2(*self.upper_point_xy)
+            ) + n_3 * np.array(self.psi_polynomials_dy(*self.upper_point_xy))
             y[8] = -self.psi_particular_dx2(*self.upper_point_xy)
 
-        if self.lower_point.x_point:
+        if self.lower_point.get_x_point:
             k, d = self.lower_elongation, self.lower_triangularity
-            self.lower_point_xy = (1 - 1.1 * d * e, -1.1 * k * e)
+            self.lower_point_xy = (1 - 1.1 * d * self.eps, -1.1 * k * self.eps)
 
-            # Lower X point (psi = 0).
-            M[9] = self.psi_polynomials(*self.lower_point_xy)
+            # Lower X point (Ψ = 0).
+            matrix[9] = self.psi_polynomials(*self.lower_point_xy)
             y[9] = -self.psi_particular(*self.lower_point_xy)
 
-            # B poloidal = 0 at lower X point (d(psi)/dx = 0).
-            M[10] = self.psi_homogenous_dx(*self.lower_point_xy)
+            # B poloidal = 0 at lower X point (d(Ψ)/dx = 0).
+            matrix[10] = self.psi_polynomials_dx(*self.lower_point_xy)
             y[10] = -self.psi_particular_dx(*self.lower_point_xy)
 
-            # B poloidal = 0 at lower X point (d(psi)/dy = 0).
-            M[11] = self.psi_homogenous_dy(*self.lower_point_xy)
+            # B poloidal = 0 at lower X point (d(Ψ)/dy = 0).
+            matrix[11] = self.psi_polynomials_dy(*self.lower_point_xy)
         else:
             # Lower high point.
             k, d, s = (
@@ -9714,53 +9749,81 @@ class AnalyticGradShafranovSolution:
                 self.lower_triangularity,
                 self.lower_squareness,
             )
-            N3 = k * (1 - 2 * s**2) / e / (1 - d**2)
-            self.lower_point_xy = (1 - d * e, -k * e)
+            n_3 = k * (1 - 2 * s**2) / self.eps / (1 - d**2)
+            self.lower_point_xy = (1 - d * self.eps, -k * self.eps)
 
-            # Lower high point (psi = 0).
-            M[9] = self.psi_polynomials(*self.lower_point_xy)
+            # Lower high point (Ψ = 0).
+            matrix[9] = self.psi_polynomials(*self.lower_point_xy)
             y[9] = -self.psi_particular(*self.lower_point_xy)
 
-            # Lower high point maximum (d(psi)/dx = 0).
-            M[10] = self.psi_homogenous_dx(*self.lower_point_xy)
+            # Lower high point maximum (d(Ψ)/dx = 0).
+            matrix[10] = self.psi_polynomials_dx(*self.lower_point_xy)
             y[10] = -self.psi_particular_dx(*self.lower_point_xy)
 
-            # Lower high point curvature (d^2(psi)/dx^2 + N3 * d(psi)/dy = 0).
-            M[11] = np.array(
-                self.psi_homogenous_dx2(*self.lower_point_xy)
-            ) + N3 * np.array(self.psi_homogenous_dy(*self.lower_point_xy))
+            # Lower high point curvature (d^2(Ψ)/dx^2 + n_3 * d(Ψ)/dy = 0).
+            matrix[11] = np.array(
+                self.psi_polynomials_dx2(*self.lower_point_xy)
+            ) + n_3 * np.array(self.psi_polynomials_dy(*self.lower_point_xy))
             y[11] = -self.psi_particular_dx2(*self.lower_point_xy)
 
-        self.coefficients = np.linalg.solve(M, y)
+        self.coefficients = np.linalg.solve(matrix, y)
 
     def calculate_magnetic_axis(
-        self, tolerance: float = 1.0e-4, max_iterations: int = 100
+        self, tolerance: float = 1.0e-6, max_iterations: int = 100
     ):
-        # Find value of psi on magnetic axis. Know it lies near (x, y) = (1, 0) so use Netwon's method to find where d(psi)/dx = 0 and d(psi)/dy = 0.
+        """
+        Calculate the magnetic axis using Newton's method.
+
+        This method finds the location of the magnetic axis by solving for the point
+        where the gradient of the poloidal flux (d(psi)/dx and d(psi)/dy) is zero.
+
+        Args:
+            tolerance (float): Convergence tolerance for the Newton's method.
+            max_iterations (int): Maximum number of iterations allowed.
+
+        Returns:
+            None: Updates the `self.magnetic_axis` attribute with the calculated position.
+        """
+        # Initial guess for the magnetic axis (near the geometric center).
         magnetic_axis = np.array([1.0, 0.0])
-        correction = np.zeros(2)
 
         for i in range(max_iterations):
+            # Compute the gradient and Hessian components of psi_bar at the current point.
             psi_dx = self.psi_bar_dx(*magnetic_axis)
             psi_dy = self.psi_bar_dy(*magnetic_axis)
             psi_dx2 = self.psi_bar_dx2(*magnetic_axis)
             psi_dy2 = self.psi_bar_dy2(*magnetic_axis)
+            psi_dxy = (
+                self.psi_bar_dx(magnetic_axis[0], magnetic_axis[1] + 1e-6) - psi_dx
+            ) / 1e-6
 
-            correction[:] = (psi_dx / psi_dx2), (psi_dy / psi_dy2)
-            magnetic_axis -= correction
+            # Construct the Hessian matrix and gradient vector.
+            hessian = np.array([[psi_dx2, psi_dxy], [psi_dxy, psi_dy2]])
+            gradient = np.array([psi_dx, psi_dy])
 
-            if np.linalg.norm(correction) < tolerance:
-                logger.info(f"Found magnetic axis in {i + 1} iterations.")
-                self.magnetic_axis = magnetic_axis * self.rmajor
+            # Solve for the correction using the inverse of the Hessian.
+            try:
+                correction = np.linalg.solve(hessian, gradient)
+            except np.linalg.LinAlgError:
+                logger.error("Hessian is singular; cannot find magnetic axis.")
                 break
 
-        if i == max_iterations - 1:
-            logger.error(
-                f"Failed to find magnetic axis within {max_iterations} iterations."
-            )
+            # Update the magnetic axis position.
+            magnetic_axis -= correction
+
+            # Check for convergence.
+            if np.linalg.norm(correction) < tolerance:
+                logger.info(f"Magnetic axis found in {i + 1} iterations.")
+                self.magnetic_axis = magnetic_axis * self.rmajor
+                return
+
+        logger.error(
+            "Failed to find magnetic axis within the maximum number of iterations."
+        )
 
     @property
-    def shafranov_shift(self) -> float:
+    def dr_shafranov(self) -> float:
+        """Shafranov shift: radial distance between magnetic axis and geometric centre."""
         return self.magnetic_axis[0] - self.rmajor
 
     def d_shape_boundary(self, theta: float) -> float:
@@ -9769,11 +9832,9 @@ class AnalyticGradShafranovSolution:
         x, y = np.zeros_like(theta), np.zeros_like(theta)
         mask = np.logical_and(theta >= 0, theta <= np.pi)
 
-        e = self.eps
-
         def d_shape(theta, k, alpha, s):
-            x = 1 + e * np.cos(theta + alpha * np.sin(theta))
-            y = e * k * np.sin(theta + s * np.sin(2 * theta))
+            x = 1 + self.eps * np.cos(theta + alpha * np.sin(theta))
+            y = self.eps * k * np.sin(theta + s * np.sin(2 * theta))
             return x, y
 
         # Above midplane.
@@ -9823,7 +9884,7 @@ class AnalyticGradShafranovSolution:
         self,
         n_points: int = 101,
         psi_norm_threshold: float = 1.0e-3,
-        max_iterations: int = 100,
+        max_iterations: int = 100000,
     ):
         """Calculate boundary contour of psi map using Newton's method"""
         # Calculate the extremal value of psi so we can calculate psi norm.
@@ -9876,17 +9937,17 @@ class AnalyticGradShafranovSolution:
             circumference = 0
             volume = 0
 
-            for dR, dZ in zip(
+            for dr, dz in zip(
                 np.diff(self.boundary_radius),
                 np.diff(self.boundary_height),
                 strict=False,
             ):
-                circumference += (dR**2 + dZ**2) ** 0.5
+                circumference += (dr**2 + dz**2) ** 0.5
 
             for i in range(len(self.boundary_radius) - 1):
-                R1, Z1 = self.boundary_radius[i], self.boundary_height[i]
-                R2, Z2 = self.boundary_radius[i + 1], self.boundary_height[i + 1]
-                volume += 0.5 * (R1 * Z1 + R2 * Z2) * (R2 - R1)
+                r_1, z_1 = self.boundary_radius[i], self.boundary_height[i]
+                r_2, z_2 = self.boundary_radius[i + 1], self.boundary_height[i + 1]
+                volume += 0.5 * (r_1 * z_1 + r_2 * z_2) * (r_2 - r_1)
 
             self.normalised_circumference = circumference / self.rmajor
             self.normalised_volume = -volume / self.rmajor**3
@@ -9910,8 +9971,11 @@ class AnalyticGradShafranovSolution:
         Calculate the poloidal flux coordinate normalisation (psi_0) and the plasma 'figures of merit':
         beta_poloidal, beta_toroidal, beta_total and beta_normalised.
         """
-        e = self.eps
-        Cp, V = self.normalised_circumference, self.normalised_volume
+
+        len_plasma_poloidal_norm, vol_plasma_norm = (
+            self.normalised_circumference,
+            self.normalised_volume,
+        )
         rmajor, b_plasma_toroidal_on_axis = self.rmajor, self.b_plasma_toroidal_on_axis
         pressure_parameter, qstar = self.pressure_parameter, self.kink_safety_factor
 
@@ -9925,9 +9989,9 @@ class AnalyticGradShafranovSolution:
         mask = psi_bar < 0
 
         # This is proportional to the total plasma current.
-        Ip_integrand = (pressure_parameter / x_grid) - (1 + pressure_parameter) * x_grid
-        Ip_integrand[mask] = 0
-        Ip_integral = np.sum(Ip_integrand) * dxdy
+        ip_integrand = (pressure_parameter / x_grid) - (1 + pressure_parameter) * x_grid
+        ip_integrand[mask] = 0
+        ip_integral = np.sum(ip_integrand) * dxdy
 
         # This is proportional to the average plasma pressure.
         psix_integrand = psi_bar * x_grid
@@ -9936,18 +10000,25 @@ class AnalyticGradShafranovSolution:
 
         # Calculate beta of plasma.
         self.beta_poloidal = (
-            (2 * Cp**2 * (1 + pressure_parameter) / V) * psix_integral / Ip_integral**2
+            (
+                2
+                * len_plasma_poloidal_norm**2
+                * (1 + pressure_parameter)
+                / vol_plasma_norm
+            )
+            * psix_integral
+            / ip_integral**2
         )
-        self.beta_toroidal = self.beta_poloidal * e**2 / qstar**2
-        self.beta_total = self.beta_poloidal * e**2 / (e**2 + qstar**2)
+        self.beta_toroidal = self.beta_poloidal * self.eps**2 / qstar**2
+        self.beta_total = self.beta_poloidal * self.eps**2 / (self.eps**2 + qstar**2)
         self.beta_normalised = (
-            e * rmajor * abs(b_plasma_toroidal_on_axis) / abs(self.c_plasma_ma)
+            self.eps * rmajor * abs(b_plasma_toroidal_on_axis) / abs(self.c_plasma_ma)
         ) * self.beta_total
 
         # Calculate value of psi at magnetic axis for given plasma current.
         # Enforce psi to be increasing with minor radius.
         self.psi_0 = -abs(
-            self.c_plasma_ma * 1e6 * const.mu_0 * self.rmajor / Ip_integral
+            self.c_plasma_ma * 1e6 * const.mu_0 * self.rmajor / ip_integral
         )
 
         # Evaluate value of psi_norm at the magnetic axis.
@@ -10006,21 +10077,20 @@ class AnalyticGradShafranovSolution:
 
             # F function is a flux function so we can move it out the integral (F / r is toroidal field).
             # As we are COCOS 11 q > 0 so take absolute value of F.
-            F = abs(self.f_function(psi_norm))
+            f = abs(self.f_function(psi_norm))
 
             # Integrate using trapezium rule.
             lp = rmajor * calculate_arclength(x, y)  # Poloidal arclength [m].
-            q_profile[i] = F * np.trapz(integrand(x, y), lp)
-
+            q_profile[i] = f * np.trapz(integrand(x, y), lp)
         # Use pre-computed boundary contour for separatrix. As there is a
         # saddle point the matplotlib contours will sometimes follow the contours
         # towards the divertor instead of following the high field side boundary.
         x_bdy, y_bdy = self.boundary_radius / rmajor, self.boundary_height / rmajor
 
         # Integrate using trapezium rule. As we are COCOS 11 q > 0 so take absolute value of F.
-        F = abs(self.f_function(1))
+        f = abs(self.f_function(1))
         lp = rmajor * calculate_arclength(x_bdy, y_bdy)  # Poloidal arclength [m].
-        q_profile[-1] = F * np.trapz(integrand(x_bdy, y_bdy), lp)
+        q_profile[-1] = f * np.trapz(integrand(x_bdy, y_bdy), lp)
 
         # Scale q profile by 2*pi to match definition of poloidal flux function psi.
         q_profile /= 2 * np.pi
@@ -10088,7 +10158,7 @@ class AnalyticGradShafranovSolution:
         psi_poloidal = self.toroidal_to_poloidal_flux(psi_toroidal)
         return 1 - (psi_poloidal / self.psi_axis)
 
-    def pressure_kPa(self, psi_norm: float):
+    def pressure_kpa(self, psi_norm: float):
         """Plasma pressure as a function of the normalised poloidal flux [kPa]."""
         pressure_parameter = self.pressure_parameter
         # Clip psi to 0 so there is not negative pressure.
@@ -10121,19 +10191,16 @@ class AnalyticGradShafranovSolution:
 
         return f
 
-    def toroidal_current_density_ka_per_m2(self, r, z):
+    def toroidal_current_density_ka_per_m2(self, r) -> float:
         """Toroidal current density [kA m^-2]."""
-        rmajor, psi0, pressure_parameter = (
-            self.rmajor,
-            self.psi_0,
-            self.pressure_parameter,
-        )
-        x = r / rmajor
         return (
             1e-3
-            * psi0
-            * (pressure_parameter / x - (1 + pressure_parameter) * x**2)
-            / (const.mu_0 * rmajor**3)
+            * self.psi_0
+            * (
+                self.pressure_parameter / (r / self.rmajor)
+                - (1.0 + self.pressure_parameter) * (r / self.rmajor) ** 2
+            )
+            / (const.mu_0 * self.rmajor**3)
         )
 
     def plotting_xy_arrays(self, padding=1.05, n_points: int = 100):
@@ -10162,7 +10229,7 @@ class Limiter(AnalyticGradShafranovSolution):
         triangularity: float,
         b_plasma_toroidal_on_axis: float,
         c_plasma_ma: float,
-        kink_safety_factor: float = None,
+        kink_safety_factor,
         squareness: float = 0.0,
         c_plasma_anticlockwise: bool = True,
         toroidal_field_anticlockwise: bool = True,
