@@ -21,7 +21,7 @@ jobs:
       - name: Install PROCESS
         # Editable install to match default install
         run: |
-          pip install -e '.[lint, test, examples]'
+          pip install -e '.[test]'
       - name: Run unit tests
         run: |
           pytest --cov=process tests/unit -v \
@@ -43,7 +43,7 @@ jobs:
       - name: Install PROCESS
         # Editable install to match default install
         run: |
-          pip install -e '.[docs, test, lint]'
+          pip install -e '.[test]'
       - name: Install poppler
         run: |
           sudo apt update
@@ -61,7 +61,7 @@ jobs:
       - name: Install PROCESS
         # Editable install to match default install
         run: |
-          pip install -e '.[docs, test, lint, examples]'
+          pip install -e '.[test, examples]'
       - name: Install poppler
         run: |
           sudo apt update
@@ -88,7 +88,7 @@ jobs:
       - name: Install PROCESS
         # Editable install to match default install
         run: |
-          pip install -e '.[docs, test, lint]'
+          pip install -e '.[test]'
       - name: Allow git commands to be run
         run: git config --global --add safe.directory '*'
       - name: Run regression tests
