@@ -469,6 +469,8 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "rminor", plasmaprofilesparam.rminor)
 
+    monkeypatch.setattr(physics_variables, "a_plasma_poloidal", 4.0)
+
     plasmaprofile = PlasmaProfile()
     plasmaprofile.run()
 

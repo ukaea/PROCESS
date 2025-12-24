@@ -1,7 +1,6 @@
 import logging
 import math
 
-import numpy as np
 from scipy.special import comb as combinations
 
 from process import constants
@@ -110,9 +109,13 @@ class Availability:
                 # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
                 # or DEMO fusion power model (ibkt_life=1)
                 if cv.ibkt_life == 0:
-                    fwbsv.life_blkt_fpy = min(
-                        (cv.abktflnc / np.asarray(pv.pflux_fw_neutron_mw)).item(),
-                        cv.life_plant,
+                    fwbsv.life_blkt_fpy = (
+                        cv.life_plant
+                        if pv.pflux_fw_neutron_mw == 0.0
+                        else min(
+                            (cv.abktflnc / pv.pflux_fw_neutron_mw),
+                            cv.life_plant,
+                        )
                     )
                 else:
                     fwbsv.life_blkt_fpy = min(
@@ -1355,11 +1358,13 @@ class Availability:
         # SC magnets CP lifetime
         # Rem : only the TF maximum fluence is considered for now
         if tfv.i_tf_sup == 1:
-            cplife = min(
-                (
-                    ctv.nflutfmax / (np.asarray(fwbsv.neut_flux_cp) * YEAR_SECONDS)
-                ).item(),
-                cv.life_plant,
+            cplife = (
+                cv.life_plant
+                if fwbsv.neut_flux_cp <= 0.0
+                else min(
+                    (ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS)),
+                    cv.life_plant,
+                )
             )
 
         # Aluminium/Copper magnets CP lifetime
