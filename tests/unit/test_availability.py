@@ -99,6 +99,7 @@ def test_avail_1(monkeypatch, availability):
     monkeypatch.setattr(cv, "uufw", 0.8)
     monkeypatch.setattr(cv, "uumag", 0.9)
     monkeypatch.setattr(cv, "uuves", 0.11)
+    monkeypatch.setattr(tv, "t_plant_pulse_total", 1e4)
 
     availability.avail(output=False)
     cfactr_obs = cv.f_t_plant_available
@@ -221,6 +222,7 @@ def calc_u_planned_fix(request, monkeypatch):
     monkeypatch.setattr(cv, "cplife", 0.0)
     monkeypatch.setattr(cv, "cpstflnc", param["cpstflnc"])
     monkeypatch.setattr(cv, "num_rh_systems", param["num_rh_systems"])
+    monkeypatch.setattr(fwbsv, "neut_flux_cp", 1e18)
 
     # Return the expected result for the given parameter list
     return param["expected"]

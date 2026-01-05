@@ -150,6 +150,8 @@ def test_cudriv_primary_neutral_beam(current_drive):
     physics_variables.m_beam_amu = 2.0
     physics_variables.temp_plasma_electron_density_weighted_kev = 10.0
     physics_variables.n_charge_plasma_effective_vol_avg = 2.0
+    physics_variables.dlamie = 1.0
+    physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg = 0.4
     current_drive.cudriv()
 
     assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
