@@ -7406,7 +7406,7 @@ def plot_info(axis: plt.Axes, data, mfile: mf.MFile, scan: int):
                         va="center",
                     )
                 else:
-                    mfile.get(data[i][0], -1)
+                    mfile.get(data[i][0], scan=-1)
                     axis.text(
                         eqpos,
                         -i,
@@ -7449,15 +7449,15 @@ def plot_header(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.set_autoscalex_on(False)
 
     data2 = [
-        (f"!{mfile.get('runtitle', -1)}", "Run title", ""),
-        (f"!{mfile.get('procver', -1)}", "PROCESS Version", ""),
-        (f"!{mfile.get('date', -1)}", "Date:", ""),
-        (f"!{mfile.get('time', -1)}", "Time:", ""),
-        (f"!{mfile.get('username', -1)}", "User:", ""),
+        (f"!{mfile.get('runtitle', scan=-1)}", "Run title", ""),
+        (f"!{mfile.get('procver', scan=-1)}", "PROCESS Version", ""),
+        (f"!{mfile.get('date', scan=-1)}", "Date:", ""),
+        (f"!{mfile.get('time', scan=-1)}", "Time:", ""),
+        (f"!{mfile.get('username', scan=-1)}", "User:", ""),
         ("!Evaluation", "Run type", "")
         if isinstance(mfile.data["minmax"], MFileErrorClass)
         else (
-            f"!{OBJECTIVE_NAMES[abs(int(mfile.get('minmax', -1)))]}",
+            f"!{OBJECTIVE_NAMES[abs(int(mfile.get('minmax', scan=-1)))]}",
             "Optimising:",
             "",
         ),
@@ -8750,14 +8750,14 @@ def plot_radial_build(
         "dr_tf_shld_gap",
         "dr_tf_outboard",
     ]
-    if int(mfile.get("i_tf_inside_cs", -1)) == 1:
+    if int(mfile.get("i_tf_inside_cs", scan=-1)) == 1:
         radial_variables[1] = "dr_tf_inboard"
         radial_variables[2] = "dr_cs_tf_gap"
         radial_variables[3] = "dr_cs"
         radial_variables[4] = "dr_cs_precomp"
         radial_variables[5] = "dr_tf_shld_gap"
 
-    radial_build = [[mfile.get(rl, -1) for rl in radial_variables]]
+    radial_build = [[mfile.get(rl, scan=-1) for rl in radial_variables]]
 
     radial_build = np.array(radial_build)
 
@@ -8794,7 +8794,7 @@ def plot_radial_build(
         "Gap",
         "TF Coil Outboard Leg",
     ]
-    if int(mfile.get("i_tf_inside_cs", -1)) == 1:
+    if int(mfile.get("i_tf_inside_cs", scan=-1)) == 1:
         radial_labels[1] = "TF Coil Inboard Leg"
         radial_labels[2] = "CS Coil gap"
         radial_labels[3] = "Central Solenoid"
@@ -8828,7 +8828,7 @@ def plot_radial_build(
         "white",
         TFC_COLOUR[colour_scheme - 1],
     ]
-    if int(mfile.get("i_tf_inside_cs", -1)) == 1:
+    if int(mfile.get("i_tf_inside_cs", scan=-1)) == 1:
         radial_color[1] = TFC_COLOUR[colour_scheme - 1]
         radial_color[2] = "white"
         radial_color[3] = SOLENOID_COLOUR[colour_scheme - 1]
@@ -8858,7 +8858,7 @@ def plot_radial_build(
     )
     # Plot a vertical dashed line at rmajor
     axis.axvline(
-        mfile.get("rmajor", -1),
+        mfile.get("rmajor", scan=-1),
         color="black",
         linestyle="--",
         linewidth=1.2,
@@ -8913,7 +8913,7 @@ def plot_lower_vertical_build(
         "dz_tf_cryostat",
     ]
 
-    lower_vertical_build = [[mfile.get(rl, -1) for rl in lower_vertical_variables]]
+    lower_vertical_build = [[mfile.get(rl, scan=-1) for rl in lower_vertical_variables]]
 
     lower_vertical_build = np.array(lower_vertical_build)
 
@@ -9007,7 +9007,7 @@ def plot_upper_vertical_build(
     - Components with zero thickness are omitted from the plot.
     - The legend displays the name and thickness (in meters) of each component.
     """
-    if mfile.get("i_single_null", -1) == 1:
+    if mfile.get("i_single_null", scan=-1) == 1:
         upper_vertical_variables = [
             "z_plasma_xpoint_upper",
             "dz_fw_plasma_gap",
@@ -9091,7 +9091,7 @@ def plot_upper_vertical_build(
 
     # Get thicknesses for each layer
     upper_vertical_build = np.array([
-        mfile.get(rl, -1) for rl in upper_vertical_variables
+        mfile.get(rl, scan=-1) for rl in upper_vertical_variables
     ])
 
     # Remove build parts equal to zero
@@ -11040,26 +11040,26 @@ def plot_cover_page(
         fig (plt.Figure): The matplotlib figure object for additional annotations.
     """
     axis.axis("off")
-    title = mfile.get("runtitle", -1)
-    date = mfile.get("date", -1)
-    time = mfile.get("time", -1)
-    user = mfile.get("username", -1)
-    procver = mfile.get("procver", -1)
-    tagno = mfile.get("tagno", -1)
-    branch_name = mfile.get("branch_name", -1)
-    fileprefix = mfile.get("fileprefix", -1)
-    optmisation_switch = mfile.get("ioptimz", -1)
-    minmax_switch = mfile.get("minmax", -1) or "N/A"
-    ifail = mfile.get("ifail", -1)
-    nvars = mfile.get("nvar", -1)
+    title = mfile.get("runtitle", scan=-1)
+    date = mfile.get("date", scan=-1)
+    time = mfile.get("time", scan=-1)
+    user = mfile.get("username", scan=-1)
+    procver = mfile.get("procver", scan=-1)
+    tagno = mfile.get("tagno", scan=-1)
+    branch_name = mfile.get("branch_name", scan=-1)
+    fileprefix = mfile.get("fileprefix", scan=-1)
+    optmisation_switch = mfile.get("ioptimz", scan=-1)
+    minmax_switch = mfile.get("minmax", scan=-1) or "N/A"
+    ifail = mfile.get("ifail", scan=-1)
+    nvars = mfile.get("nvar", scan=-1)
     # Objective_function_name
-    objf_name = mfile.get("objf_name", -1)
+    objf_name = mfile.get("objf_name", scan=-1)
     # Square_root_of_the_sum_of_squares_of_the_constraint_residuals
-    sqsumsq = mfile.get("sqsumsq", -1)
+    sqsumsq = mfile.get("sqsumsq", scan=-1)
     # VMCON_convergence_parameter
-    convergence_parameter = mfile.get("convergence_parameter", -1) or "N/A"
+    convergence_parameter = mfile.get("convergence_parameter", scan=-1) or "N/A"
     # Number_of_optimising_solver_iterations
-    nviter = int(mfile.get("nviter", -1)) or "N/A"
+    nviter = int(mfile.get("nviter", scan=-1)) or "N/A"
 
     # Objective name with minimising/maximising
     if isinstance(minmax_switch, str):
