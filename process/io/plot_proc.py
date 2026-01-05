@@ -12653,7 +12653,7 @@ def main(args=None):
     main_plot(
         pages,
         mf.MFile(args.f) if args.f != "" else mf.MFile("MFILE.DAT"),
-        scan=args.n if args.n else -1,
+        scan=args.n or -1,
         demo_ranges=bool(args.DEMO_ranges),
         colour_scheme=int(args.colour),
     )
