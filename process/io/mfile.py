@@ -209,11 +209,11 @@ class MFile:
             self.open_mfile()
             self.parse_mfile()
 
-    def get_variables(self, *variables: str, scan: int) -> list[Any]:
+    def get_variables(self, *variables: str, scan: int = -1) -> list[Any]:
         """Get a number of variables from a single scan"""
         return [self.get(v, scan=scan) for v in variables]
 
-    def get(self, variable: str, *, scan: int) -> Any:
+    def get(self, variable: str, *, scan: int = -1) -> Any:
         """Get variable data from a given scan"""
         return self.data[variable].get_scan(scan)
 
