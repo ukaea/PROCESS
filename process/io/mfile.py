@@ -210,7 +210,7 @@ class MFile:
             self.parse_mfile()
 
     def get_variables(self, *variables: str, scan: int) -> list[Any]:
-        return [self.data[v].get_scan(scan) for v in variables]
+        return [self.get(v, scan) for v in variables]
 
     def get(self, variable: str, scan: int) -> Any:
         return self.data[variable].get_scan(scan)
