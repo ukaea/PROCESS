@@ -29,6 +29,7 @@ Compatible with PROCESS version 286
 import json
 import logging
 from collections import OrderedDict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -207,6 +208,14 @@ class MFile:
         if filename is not None:
             self.open_mfile()
             self.parse_mfile()
+
+    def get_variables(self, *variables: str, scan: int = -1) -> list[Any]:
+        """Get a number of variables from a single scan"""
+        return [self.get(v, scan=scan) for v in variables]
+
+    def get(self, variable: str, *, scan: int = -1) -> Any:
+        """Get variable data from a given scan"""
+        return self.data[variable].get_scan(scan)
 
     def open_mfile(self):
         """Function to open MFILE.DAT"""
