@@ -213,7 +213,7 @@ class MFile:
         """Get a number of variables from a single scan"""
         return [self.get(v, scan=scan) for v in variables]
 
-    def get(self, variable: str, scan: int) -> Any:
+    def get(self, variable: str, *, scan: int) -> Any:
         """Get variable data from a given scan"""
         return self.data[variable].get_scan(scan)
 
