@@ -9062,15 +9062,15 @@ class DetailedPhysics:
         #  Debye length calculation
         # ---------------------------
 
-        physics_variables.len_plasma_debye_electron_vol_avg = self.calculate_debye_length_profile(
-            temp_plasma_species_profile_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
-            nd_plasma_species_profile=physics_variables.nd_plasma_electrons_vol_avg,
+        physics_variables.len_plasma_debye_electron_vol_avg = self.calculate_debye_length(
+            temp_plasma_species_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_species=physics_variables.nd_plasma_electrons_vol_avg,
         )
 
         physics_variables.len_plasma_debye_electron_profile = (
-            self.calculate_debye_length_profile(
-                temp_plasma_species_profile_kev=self.plasma_profile.teprofile.profile_y,
-                nd_plasma_species_profile=self.plasma_profile.neprofile.profile_y,
+            self.calculate_debye_length(
+                temp_plasma_species_kev=self.plasma_profile.teprofile.profile_y,
+                nd_plasma_species=self.plasma_profile.neprofile.profile_y,
             )
         )
 
@@ -9153,18 +9153,6 @@ class DetailedPhysics:
             (constants.EPSILON0 * temp_plasma_species_kev * constants.KILOELECTRON_VOLT)
             / (nd_plasma_species * constants.ELECTRON_CHARGE**2)
         ) ** 0.5
-
-    def calculate_debye_length_profile(
-        self,
-        temp_plasma_species_profile_kev: np.ndarray,
-        nd_plasma_species_profile: np.ndarray,
-    ) -> np.ndarray:
-        """
-        Calculate the Debye length profile for a plasma.
-        """
-        return self.calculate_debye_length(
-            temp_plasma_species_profile_kev, nd_plasma_species_profile
-        )
 
     def calculate_lorentz_factor(self, velocity: float) -> float:
         """
@@ -9290,7 +9278,7 @@ class DetailedPhysics:
             po.ovarre(
                 self.mfile,
                 f"Plasma electron Debye length at point {i}",
-                f"len_plasma_debye_electron_profile{i}",
+                f"(len_plasma_debye_electron_profile{i})",
                 physics_variables.len_plasma_debye_electron_profile[i],
             )
 
@@ -9300,7 +9288,7 @@ class DetailedPhysics:
             po.ovarre(
                 self.mfile,
                 f"Plasma electron thermal velocity at point {i}",
-                f"vel_plasma_electron_profile{i}",
+                f"(vel_plasma_electron_profile{i})",
                 physics_variables.vel_plasma_electron_profile[i],
             )
 
@@ -9310,7 +9298,7 @@ class DetailedPhysics:
             po.ovarre(
                 self.mfile,
                 f"Plasma electron frequency at point {i}",
-                f"freq_plasma_electron_profile{i}",
+                f"(freq_plasma_electron_profile{i})",
                 physics_variables.freq_plasma_electron_profile[i],
             )
         for i in range(
@@ -9319,7 +9307,7 @@ class DetailedPhysics:
             po.ovarre(
                 self.mfile,
                 f"Plasma electron Larmor frequency at point {i}",
-                f"freq_plasma_larmor_toroidal_electron_profile{i}",
+                f"(freq_plasma_larmor_toroidal_electron_profile{i})",
                 physics_variables.freq_plasma_larmor_toroidal_electron_profile[i],
             )
 
@@ -9331,6 +9319,6 @@ class DetailedPhysics:
             po.ovarre(
                 self.mfile,
                 f"Electron-electron Coulomb log at point {i}",
-                f"plasma_coulomb_log_electron_electron_profile{i}",
+                f"(plasma_coulomb_log_electron_electron_profile{i})",
                 physics_variables.plasma_coulomb_log_electron_electron_profile[i],
             )

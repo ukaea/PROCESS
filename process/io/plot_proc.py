@@ -12624,8 +12624,7 @@ def main_plot(
 
     plot_plasma_outboard_toroidal_ripple_map(figs[21], m_file, scan)
 
-    axes = figs[22].subplots(nrows=3, ncols=1, sharex=True).flatten()
-    plot_tf_stress(axes)
+    plot_tf_stress(figs[22].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
     plot_current_profiles_over_time(figs[23].add_subplot(111), m_file, scan)
 
@@ -12644,8 +12643,8 @@ def main_plot(
 
     plot_blkt_pipe_bends(figs[26], m_file, scan)
     ax_blanket = figs[26].add_subplot(122, aspect="equal")
-    plot_blanket(ax_blanket, m_file_data, scan, radial_build, colour_scheme)
-    plot_firstwall(ax_blanket, m_file_data, scan, radial_build, colour_scheme)
+    plot_blanket(ax_blanket, m_file, scan, radial_build, colour_scheme)
+    plot_firstwall(ax_blanket, m_file, scan, radial_build, colour_scheme)
     ax_blanket.set_xlabel("Radial position [m]")
     ax_blanket.set_ylabel("Vertical position [m]")
     ax_blanket.set_title("Blanket and First Wall Poloidal Cross-Section")
@@ -12694,223 +12693,8 @@ def main_plot(
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[28])
 
-def main(args=None):
-    # TODO The use of globals here isn't ideal, but is required to get main()
-    # working with minimal changes. Should be converted to class structure
-    args = parse_args(args)
-    colour_scheme = int(args.colour)
-    # read MFILE
-    m_file = mf.MFile(args.f) if args.f != "" else mf.MFile("MFILE.DAT")
 
-    global m_file_name
-    m_file_name = args.f if args.f != "" else "MFILE.DAT"
-
-    scan = args.n if args.n else -1
-
-    demo_ranges = bool(args.DEMO_ranges)
-
-    # Check for Copper magnets
-    if "i_tf_sup" in m_file.data:
-        i_tf_sup = int(m_file.data["i_tf_sup"].get_scan(scan))
-    else:
-        i_tf_sup = 1
-
-    # Check WP configuration
-    if "i_tf_wp_geom" in m_file.data:
-        i_tf_wp_geom = int(m_file.data["i_tf_wp_geom"].get_scan(scan))
-    else:
-        i_tf_wp_geom = 0
-
-    global dr_bore
-    global dr_cs
-    global dr_cs_tf_gap
-    global dr_tf_inboard
-    global dr_shld_vv_gap_inboard
-    global ddwi
-    global dr_shld_inboard
-    global dr_blkt_inboard
-    global dr_fw_inboard
-    global dr_fw_plasma_gap_inboard
-    global rmajor
-    global rminor
-    global dr_fw_plasma_gap_outboard
-    global dr_fw_outboard
-    global dr_blkt_outboard
-    global dr_shld_outboard
-    global ddwi
-    global dr_shld_vv_gap_outboard
-    global dr_tf_outboard
-    global r_cryostat_inboard
-    global z_cryostat_half_inside
-    global dr_cryostat
-    global j_plasma_0
-
-    dr_bore = m_file.data["dr_bore"].get_scan(scan)
-    dr_cs = m_file.data["dr_cs"].get_scan(scan)
-    dr_cs_tf_gap = m_file.data["dr_cs_tf_gap"].get_scan(scan)
-    dr_tf_inboard = m_file.data["dr_tf_inboard"].get_scan(scan)
-    dr_shld_vv_gap_inboard = m_file.data["dr_shld_vv_gap_inboard"].get_scan(scan)
-    dr_shld_inboard = m_file.data["dr_shld_inboard"].get_scan(scan)
-    dr_blkt_inboard = m_file.data["dr_blkt_inboard"].get_scan(scan)
-    dr_fw_inboard = m_file.data["dr_fw_inboard"].get_scan(scan)
-    dr_fw_plasma_gap_inboard = m_file.data["dr_fw_plasma_gap_inboard"].get_scan(scan)
-    rmajor = m_file.data["rmajor"].get_scan(scan)
-    rminor = m_file.data["rminor"].get_scan(scan)
-    dr_fw_plasma_gap_outboard = m_file.data["dr_fw_plasma_gap_outboard"].get_scan(scan)
-    dr_fw_outboard = m_file.data["dr_fw_outboard"].get_scan(scan)
-    dr_blkt_outboard = m_file.data["dr_blkt_outboard"].get_scan(scan)
-    dr_shld_outboard = m_file.data["dr_shld_outboard"].get_scan(scan)
-    dr_shld_vv_gap_outboard = m_file.data["dr_shld_vv_gap_outboard"].get_scan(scan)
-    dr_tf_outboard = m_file.data["dr_tf_outboard"].get_scan(scan)
-    r_cryostat_inboard = m_file.data["r_cryostat_inboard"].get_scan(scan)
-    z_cryostat_half_inside = m_file.data["z_cryostat_half_inside"].get_scan(scan)
-    dr_cryostat = m_file.data["dr_cryostat"].get_scan(scan)
-    j_plasma_0 = m_file.data["j_plasma_on_axis"].get_scan(scan)
-
-    # Magnets related
-    global n_tf_coils
-    global dx_tf_wp_primary_toroidal
-    global dx_tf_wp_secondary_toroidal
-    global dr_tf_wp_with_insulation
-    global dx_tf_wp_insulation
-    global dr_tf_nose_case
-    global dr_tf_plasma_case
-
-    n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
-    if i_tf_sup == 1:  # If superconducting magnets
-        dx_tf_wp_primary_toroidal = m_file.data["dx_tf_wp_primary_toroidal"].get_scan(
-            scan
-        )
-        if i_tf_wp_geom == 1:
-            dx_tf_wp_secondary_toroidal = m_file.data[
-                "dx_tf_wp_secondary_toroidal"
-            ].get_scan(scan)
-        dr_tf_wp_with_insulation = m_file.data["dr_tf_wp_with_insulation"].get_scan(
-            scan
-        )
-        dx_tf_wp_insulation = m_file.data["dx_tf_wp_insulation"].get_scan(scan)
-        dr_tf_nose_case = m_file.data["dr_tf_nose_case"].get_scan(scan)
-
-        # To be re-inergrated to resistives when in-plane stresses is integrated
-        dr_tf_plasma_case = m_file.data["dr_tf_plasma_case"].get_scan(scan)
-
-    global dx_beam_shield
-    global radius_beam_tangency
-    global radius_beam_tangency_max
-    global dx_beam_duct
-
-    i_hcd_primary = int(m_file.data["i_hcd_primary"].get_scan(scan))
-    i_hcd_secondary = int(m_file.data["i_hcd_secondary"].get_scan(scan))
-
-    if (i_hcd_primary in [5, 8]) or (i_hcd_secondary in [5, 8]):
-        dx_beam_shield = m_file.data["dx_beam_shield"].get_scan(scan)
-        radius_beam_tangency = m_file.data["radius_beam_tangency"].get_scan(scan)
-        radius_beam_tangency_max = m_file.data["radius_beam_tangency_max"].get_scan(
-            scan
-        )
-        dx_beam_duct = m_file.data["dx_beam_duct"].get_scan(scan)
-    else:
-        dx_beam_shield = radius_beam_tangency = radius_beam_tangency_max = (
-            dx_beam_duct
-        ) = 0.0
-
-    # Pedestal profile parameters
-    global i_plasma_pedestal
-    global nd_plasma_pedestal_electron
-    global nd_plasma_separatrix_electron
-    global radius_plasma_pedestal_density_norm
-    global radius_plasma_pedestal_temp_norm
-    global tbeta
-    global temp_plasma_pedestal_kev
-    global temp_plasma_separatrix_kev
-    global alphan
-    global alphat
-    global ne0
-    global nd_plasma_fuel_ions_vol_avg
-    global nd_plasma_electrons_vol_avg
-    global te0
-    global ti
-    global te
-    global fgwped_out
-    global fgwsep_out
-    global f_temp_plasma_ion_electron
-
-    i_plasma_pedestal = m_file.data["i_plasma_pedestal"].get_scan(scan)
-    nd_plasma_pedestal_electron = m_file.data["nd_plasma_pedestal_electron"].get_scan(
-        scan
-    )
-    nd_plasma_separatrix_electron = m_file.data[
-        "nd_plasma_separatrix_electron"
-    ].get_scan(scan)
-    radius_plasma_pedestal_density_norm = m_file.data[
-        "radius_plasma_pedestal_density_norm"
-    ].get_scan(scan)
-    radius_plasma_pedestal_temp_norm = m_file.data[
-        "radius_plasma_pedestal_temp_norm"
-    ].get_scan(scan)
-    tbeta = m_file.data["tbeta"].get_scan(scan)
-    temp_plasma_pedestal_kev = m_file.data["temp_plasma_pedestal_kev"].get_scan(scan)
-    temp_plasma_separatrix_kev = m_file.data["temp_plasma_separatrix_kev"].get_scan(
-        scan
-    )
-    alphan = m_file.data["alphan"].get_scan(scan)
-    alphat = m_file.data["alphat"].get_scan(scan)
-    ne0 = m_file.data["nd_plasma_electron_on_axis"].get_scan(scan)
-    nd_plasma_fuel_ions_vol_avg = m_file.data["nd_plasma_fuel_ions_vol_avg"].get_scan(
-        scan
-    )
-    nd_plasma_electrons_vol_avg = m_file.data["nd_plasma_electrons_vol_avg"].get_scan(
-        scan
-    )
-    te0 = m_file.data["temp_plasma_electron_on_axis_kev"].get_scan(scan)
-    ti = m_file.data["temp_plasma_ion_vol_avg_kev"].get_scan(scan)
-    te = m_file.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
-    fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
-    fgwsep_out = m_file.data["fgwsep_out"].get_scan(scan)
-    f_temp_plasma_ion_electron = m_file.data["f_temp_plasma_ion_electron"].get_scan(
-        scan
-    )
-
-    # Plasma
-    global triang
-    global alphaj
-    global q0
-    global q95
-    global plasma_current_MA
-    global a_plasma_poloidal
-
-    triang = m_file.data["triang95"].get_scan(scan)
-    alphaj = m_file.data["alphaj"].get_scan(scan)
-    q0 = m_file.data["q0"].get_scan(scan)
-    q95 = m_file.data["q95"].get_scan(scan)
-    plasma_current_MA = m_file.data["plasma_current_ma"].get_scan(scan)
-    a_plasma_poloidal = m_file.data["a_plasma_poloidal"].get_scan(scan)
-
-    # Radial position  -- 0
-    # Electron density -- 1
-    # Electron temperature -- 2
-    # Ion temperature -- 3
-    # Deuterium density -- 4
-    # Tritium density -- 5
-    # BS current density(MA/m^2) -- 6
-    # CD current dens(MA/m^2) -- 7
-    # Total current dens(MA/m^2) -- 8
-    # Poloidal current(R*Bp)(T.m) -- 9
-    # Safety factor q -- 10
-    # Volume (m^3) -- 11
-    # dVolume/dr (m^2) -- 12
-    # Plasma conductivity(MA/(V.m) -- 13
-    # Alpha press(keV*10^10 m^-3) -- 14
-    # Ion dens(10^19 m^-3) -- 15
-    # Poloidal flux (Wb) -- 16
-    # rad profile
-    global f_sync_reflect
-    global b_plasma_toroidal_on_axis
-    global vol_plasma
-    f_sync_reflect = m_file.data["f_sync_reflect"].get_scan(scan)
-    b_plasma_toroidal_on_axis = m_file.data["b_plasma_toroidal_on_axis"].get_scan(scan)
-    vol_plasma = m_file.data["vol_plasma"].get_scan(scan)
-
+def create_thickness_builds(m_file, scan: int):
     # Build the dictionaries of radial and vertical build values and cumulative values
     if int(m_file.get("i_single_null", scan=scan)) == 0:
         vertical_upper = [
@@ -12984,7 +12768,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(28)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(29)]
 
     # run main_plot
     main_plot(
