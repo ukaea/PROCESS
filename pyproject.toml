@@ -29,6 +29,7 @@ dependencies = [
     "matplotlib>=2.1.1",
     "seaborn>=0.12.2",
     "tabulate",
+    "pyyaml",  # just used for mfile yml outputting
    ]
 keywords = ['fusion', 'optimisation']
 classifiers = [
