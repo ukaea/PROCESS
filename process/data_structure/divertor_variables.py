@@ -56,6 +56,21 @@ tdiv: float = None
 xpertin: float = None
 """perpendicular heat transport coefficient (m2/s)"""
 
+p_div_lower_nuclear_heat_mw: float = None
+"""Lower divertor neutron nuclear heat load on (MW)"""
+
+p_div_upper_nuclear_heat_mw: float = None
+"""Upper divertor neutron nuclear heat load on (MW)"""
+
+p_div_upper_rad_mw: float = None
+"""Upper divertor incident radiation power radiation power (MW)"""
+
+p_div_lower_rad_mw: float = None
+"""Lower divertor incident radiation power radiation power (MW)"""
+
+n_divertors: int = None
+"""Number of divertors (calculated from `i_single_null`)"""
+
 
 def init_divertor_variables():
     global anginc
@@ -76,6 +91,11 @@ def init_divertor_variables():
     global prn1
     global tdiv
     global xpertin
+    global p_div_lower_nuclear_heat_mw
+    global p_div_upper_nuclear_heat_mw
+    global p_div_upper_rad_mw
+    global p_div_lower_rad_mw
+    global n_divertors
 
     anginc = 0.262
     deg_div_field_plate = 1.0
@@ -95,3 +115,8 @@ def init_divertor_variables():
     prn1 = 0.285
     tdiv = 2.0
     xpertin = 2.0
+    p_div_lower_nuclear_heat_mw = 0.0
+    p_div_upper_nuclear_heat_mw = 0.0
+    p_div_upper_rad_mw = 0.0
+    p_div_lower_rad_mw = 0.0
+    n_divertors = 2
