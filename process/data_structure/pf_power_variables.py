@@ -45,17 +45,18 @@ poloidalpower: list[float] = None
 
 def init_pf_power_variables():
     """Initialise PF coil power variables"""
-    global acptmax
-    global ensxpfm
-    global i_pf_energy_storage_source
-    global pfckts
-    global spfbusl
-    global spsmva
-    global srcktpm
-    global vpfskv
-    global peakpoloidalpower
-    global maxpoloidalpower
-    global poloidalpower
+    global \
+        acptmax, \
+        ensxpfm, \
+        i_pf_energy_storage_source, \
+        pfckts, \
+        spfbusl, \
+        spsmva, \
+        srcktpm, \
+        vpfskv, \
+        peakpoloidalpower, \
+        maxpoloidalpower, \
+        poloidalpower
 
     acptmax = 0.0
     ensxpfm = 0.0

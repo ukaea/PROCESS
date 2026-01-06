@@ -383,9 +383,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         superconparam.b_tf_inboard_peak_with_ripple,
     )
 
-    monkeypatch.setattr(
-        tfcoil_variables, "str_tf_con_res", superconparam.str_tf_con_res
-    )
+    monkeypatch.setattr(tfcoil_variables, "str_tf_con_res", superconparam.str_tf_con_res)
 
     monkeypatch.setattr(
         tfcoil_variables, "b_crit_upper_nbti", superconparam.b_crit_upper_nbti
@@ -1422,7 +1420,7 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
         t_conductor,
         radius_tf_turn_cable_space_corners,
         dx_tf_turn_cable_space_average,
-        a_tf_turn_cable_space_effective,
+        _a_tf_turn_cable_space_effective,
         f_a_tf_turn_cable_space_cooling,
     ) = sctfcoil.tf_cable_in_conduit_averaged_turn_geometry(
         j_tf_wp=tfaveragedturngeomparam.j_tf_wp,

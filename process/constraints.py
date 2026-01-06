@@ -439,9 +439,7 @@ def constraint_equation_7():
     nd_beam_ions: hot beam ion density, variable (/m3)
     """
     if data_structure.physics_variables.i_plasma_ignited == 1:
-        raise ProcessValueError(
-            "Do not use constraint equation 7 if i_plasma_ignited=1"
-        )
+        raise ProcessValueError("Do not use constraint equation 7 if i_plasma_ignited=1")
 
     cc = (
         1.0
@@ -1950,10 +1948,7 @@ def constraint_equation_76():
         5.9
         * data_structure.physics_variables.alpha_crit
         * (data_structure.physics_variables.aspect ** (-2.0 / 7.0))
-        * (
-            ((1.0 + (data_structure.physics_variables.kappa**2.0)) / 2.0)
-            ** (-6.0 / 7.0)
-        )
+        * (((1.0 + (data_structure.physics_variables.kappa**2.0)) / 2.0) ** (-6.0 / 7.0))
         * (
             (data_structure.physics_variables.p_plasma_separatrix_mw * 1.0e6)
             ** (-11.0 / 70.0)

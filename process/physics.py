@@ -819,9 +819,7 @@ def _coulomb_logarithm_sauter(
       pp. 1-32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
     """
     return (
-        15.9
-        - 0.5 * np.log(ne[radial_elements - 1])
-        + np.log(tempe[radial_elements - 1])
+        15.9 - 0.5 * np.log(ne[radial_elements - 1]) + np.log(tempe[radial_elements - 1])
     )
 
 
@@ -2680,12 +2678,10 @@ class Physics:
         )
 
         # E. Tholerus scaling law
-        physics_variables.beta_norm_max_thloreus = (
-            self.calculate_beta_norm_max_thloreus(
-                c_beta=physics_variables.c_beta,
-                pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
-                pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
-            )
+        physics_variables.beta_norm_max_thloreus = self.calculate_beta_norm_max_thloreus(
+            c_beta=physics_variables.c_beta,
+            pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
+            pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
         )
 
         # R. D. Stambaugh scaling law
@@ -2868,8 +2864,7 @@ class Physics:
             * physics_variables.rad_fraction_sol
         )
         physics_variables.pradsolmw = (
-            physics_variables.rad_fraction_sol
-            * physics_variables.p_plasma_separatrix_mw
+            physics_variables.rad_fraction_sol * physics_variables.p_plasma_separatrix_mw
         )
 
         if 78 in numerics.icc:
@@ -4163,9 +4158,7 @@ class Physics:
             po.osubhd(self.outfile, "Classic PROCESS plasma shape model is used :")
         elif physics_variables.i_plasma_shape == 1:
             po.osubhd(self.outfile, "Sauter plasma shape model is used :")
-        po.ovarrf(
-            self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor
-        )
+        po.ovarrf(self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor)
         po.ovarrf(
             self.outfile,
             "Minor radius (m)",
@@ -5880,9 +5873,7 @@ class Physics:
             po.ocmmnt(
                 self.outfile, "  BEWARE: possible problem with high radiation power"
             )
-            po.ocmmnt(
-                self.outfile, "          Power into divertor zone is unrealistic;"
-            )
+            po.ocmmnt(self.outfile, "          Power into divertor zone is unrealistic;")
             po.ocmmnt(self.outfile, "          divertor calculations will be nonsense#")
             po.ocmmnt(
                 self.outfile, "  Set constraint 17 (Radiation fraction upper limit)."
@@ -6538,9 +6529,7 @@ class Physics:
                 current_drive_variables.f_c_plasma_bootstrap_sauter,
                 "OP ",
             )
-            for point in range(
-                len(physics_variables.j_plasma_bootstrap_sauter_profile)
-            ):
+            for point in range(len(physics_variables.j_plasma_bootstrap_sauter_profile)):
                 po.ovarrf(
                     self.mfile,
                     f"Sauter et al bootstrap current density profile at point {point}",

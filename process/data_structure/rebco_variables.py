@@ -67,28 +67,29 @@ a_croco_strand: float = None
 
 def init_rebco_variables():
     """Initialise the REBCO variables"""
-    global dx_hts_tape_rebco
-    global dx_hts_tape_copper
-    global dx_hts_tape_hastelloy
-    global dr_hts_tape
-    global dia_croco_strand
-    global dia_croco_strand_tape_region
-    global dx_croco_strand_copper
-    global copper_rrr
-    global coppera_m2_max
-    global f_coppera_m2
-    global dx_hts_tape_total
-    global dx_croco_strand_tape_stack
-    global n_croco_strand_hts_tapes
-    global a_croco_strand_rebco
-    global a_croco_strand_copper_total
-    global a_croco_strand_hastelloy
-    global a_croco_strand_solder
-    global a_croco_strand
-    global copperA_m2
-    global copperaoh_m2_max
-    global f_copperaoh_m2
-    global copperaoh_m2
+    global \
+        dx_hts_tape_rebco, \
+        dx_hts_tape_copper, \
+        dx_hts_tape_hastelloy, \
+        dr_hts_tape, \
+        dia_croco_strand, \
+        dia_croco_strand_tape_region, \
+        dx_croco_strand_copper, \
+        copper_rrr, \
+        coppera_m2_max, \
+        f_coppera_m2, \
+        dx_hts_tape_total, \
+        dx_croco_strand_tape_stack, \
+        n_croco_strand_hts_tapes, \
+        a_croco_strand_rebco, \
+        a_croco_strand_copper_total, \
+        a_croco_strand_hastelloy, \
+        a_croco_strand_solder, \
+        a_croco_strand, \
+        copperA_m2, \
+        copperaoh_m2_max, \
+        f_copperaoh_m2, \
+        copperaoh_m2
 
     dx_hts_tape_rebco = 1.0e-6
     dx_hts_tape_copper = 100.0e-6

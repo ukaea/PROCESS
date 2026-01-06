@@ -94,33 +94,34 @@ powerscaling_constraint: float = None
 
 
 def init_stellarator_variables():
-    global first_call
-    global first_call_stfwbs
-    global f_n
-    global f_r
-    global f_a
-    global f_b
-    global f_i
-    global istell
-    global bmn
-    global f_asym
-    global f_rad
-    global f_w
-    global fdivwet
-    global flpitch
-    global hportamax
-    global hportpmax
-    global hporttmax
-    global iotabar
-    global isthtr
-    global m_res
-    global n_res
-    global shear
-    global vportamax
-    global vportpmax
-    global vporttmax
-    global max_gyrotron_frequency
-    global te0_ecrh_achievable
+    global \
+        first_call, \
+        first_call_stfwbs, \
+        f_n, \
+        f_r, \
+        f_a, \
+        f_b, \
+        f_i, \
+        istell, \
+        bmn, \
+        f_asym, \
+        f_rad, \
+        f_w, \
+        fdivwet, \
+        flpitch, \
+        hportamax, \
+        hportpmax, \
+        hporttmax, \
+        iotabar, \
+        isthtr, \
+        m_res, \
+        n_res, \
+        shear, \
+        vportamax, \
+        vportpmax, \
+        vporttmax, \
+        max_gyrotron_frequency, \
+        te0_ecrh_achievable
 
     first_call = True
     first_call_stfwbs = True

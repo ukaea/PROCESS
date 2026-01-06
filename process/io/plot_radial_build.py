@@ -72,8 +72,6 @@ def get_radial_build(m_file):
     isweep = int(m_file.data["isweep"].get_scan(-1))
     if isweep == 0:
         isweep = 1
-    else:
-        pass
 
     radial_labels = [
         "dr_bore",
@@ -325,8 +323,6 @@ def main(args=None):
     axis_font_size = 16
     if scan_var_name != "Null":
         ind = [y for y, _ in enumerate(scan_points)]
-    else:
-        pass
     end_scan = radial_labels.index("Plasma") if args.inboard else len(radial_build)
     plt.figure(figsize=(8, 6))
     for kk in range(len(radial_build[:end_scan, 0])):

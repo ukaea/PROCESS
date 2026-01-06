@@ -99,9 +99,7 @@ SCAN_VARIABLES = {
     57: ScanVariable("boundl(2)", "b_plasma_toroidal_on_axis minimum"),
     58: ScanVariable("dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"),
     59: ScanVariable("dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"),
-    60: ScanVariable(
-        "sig_tf_wp_max", "Allowable_stress_in_tf_coil_conduit_Tresca_(pa)"
-    ),
+    60: ScanVariable("sig_tf_wp_max", "Allowable_stress_in_tf_coil_conduit_Tresca_(pa)"),
     61: ScanVariable("copperaoh_m2_max", "Max CS coil current / copper area"),
     62: ScanVariable("coheof", "CS coil current density at EOF (A/m2)"),
     63: ScanVariable("dr_cs", "CS coil thickness (m)"),
@@ -553,9 +551,7 @@ class Scan:
         """
         if ifail == -1:
             process_output.ocmmnt(constants.NOUT, "User-terminated execution of VMCON.")
-            process_output.ocmmnt(
-                constants.IOTTY, "User-terminated execution of VMCON."
-            )
+            process_output.ocmmnt(constants.IOTTY, "User-terminated execution of VMCON.")
         elif ifail == 0:
             process_output.ocmmnt(
                 constants.NOUT, "Improper input parameters to the VMCON routine."

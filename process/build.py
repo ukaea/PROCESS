@@ -388,9 +388,7 @@ class Build:
                     vertical_build_upper - build_variables.dz_shld_lower
                 )
 
-                vertical_build_upper = (
-                    vertical_build_upper - build_variables.dz_vv_lower
-                )
+                vertical_build_upper = vertical_build_upper - build_variables.dz_vv_lower
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
@@ -2099,9 +2097,8 @@ class Build:
                     - fwbs_variables.f_a_fw_outboard_hcd
                 )
             )
-            build_variables.a_fw_inboard = (
-                build_variables.a_fw_inboard_full_coverage
-                * (1.0e0 - 2.0e0 * fwbs_variables.f_ster_div_single)
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard_full_coverage * (
+                1.0e0 - 2.0e0 * fwbs_variables.f_ster_div_single
             )
         else:
             # Single null configuration
@@ -2113,9 +2110,8 @@ class Build:
                     - fwbs_variables.f_a_fw_outboard_hcd
                 )
             )
-            build_variables.a_fw_inboard = (
-                build_variables.a_fw_inboard_full_coverage
-                * (1.0e0 - fwbs_variables.f_ster_div_single)
+            build_variables.a_fw_inboard = build_variables.a_fw_inboard_full_coverage * (
+                1.0e0 - fwbs_variables.f_ster_div_single
             )
 
         build_variables.a_fw_total = (
@@ -2224,8 +2220,7 @@ class Build:
                     radius,
                 ])
             elif (
-                build_variables.i_tf_inside_cs == 1
-                and tfcoil_variables.i_tf_bucking < 2
+                build_variables.i_tf_inside_cs == 1 and tfcoil_variables.i_tf_bucking < 2
             ):
                 radius = radius + build_variables.dr_bore
                 radial_build_data.append([

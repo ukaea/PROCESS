@@ -718,9 +718,7 @@ def main(args=None):
                             axs[output_names.index(output_name)].set_ylim(
                                 y_range[0], y_range[1]
                             )
-                            axs[
-                                output_names.index(output_name)
-                            ].yaxis.set_major_locator(
+                            axs[output_names.index(output_name)].yaxis.set_major_locator(
                                 mtick.MultipleLocator(y_divisions)
                             )
                         if x_axis_range != []:
@@ -744,9 +742,7 @@ def main(args=None):
                             if x_axis_percentage is False:
                                 x_range = x_axis_range
                             plt.xlim(x_range[0], x_range[1])
-                            axs[
-                                output_names.index(output_name)
-                            ].xaxis.set_major_locator(
+                            axs[output_names.index(output_name)].xaxis.set_major_locator(
                                 mtick.MultipleLocator(x_divisions)
                             )
                         plt.rc("xtick", labelsize=axis_tick_size)
@@ -911,17 +907,11 @@ def main(args=None):
                 plt.tight_layout()
                 ymin, ymax = axs[output_names.index(output_name)].get_ylim()
                 if ymin < 0 and ymax > 0:
-                    axs[output_names.index(output_name)].set_ylim(
-                        ymin * 1.1, ymax * 1.1
-                    )
+                    axs[output_names.index(output_name)].set_ylim(ymin * 1.1, ymax * 1.1)
                 elif ymin >= 0:
-                    axs[output_names.index(output_name)].set_ylim(
-                        ymin * 0.9, ymax * 1.1
-                    )
+                    axs[output_names.index(output_name)].set_ylim(ymin * 0.9, ymax * 1.1)
                 else:
-                    axs[output_names.index(output_name)].set_ylim(
-                        ymin * 1.1, ymax * 0.9
-                    )
+                    axs[output_names.index(output_name)].set_ylim(ymin * 1.1, ymax * 0.9)
             else:
                 plt.grid(True)
                 plt.ylabel(
@@ -1018,8 +1008,7 @@ def main(args=None):
             if two_dimensional_contour:
                 output_contour_z = np.zeros((n_scan_1, n_scan_2))
                 x_contour = [
-                    m_file.data[scan_2_var_name].get_scan(i + 1)
-                    for i in range(n_scan_2)
+                    m_file.data[scan_2_var_name].get_scan(i + 1) for i in range(n_scan_2)
                 ]
                 y_contour = [
                     m_file.data[scan_var_name].get_scan(i + 1)
@@ -1080,9 +1069,7 @@ def main(args=None):
                         y_max[index] = max(np.abs(y_contour))
                     yticks = mtick.PercentFormatter(y_max[index])
                     if y_axis_range != []:
-                        y_divisions = (
-                            5 * math.ceil(y_divisions / 5) * y_max[index] / 100
-                        )
+                        y_divisions = 5 * math.ceil(y_divisions / 5) * y_max[index] / 100
                         y_range = (
                             y_axis_range[0] * y_max[index] / 100,
                             y_axis_range[1] * y_max[index] / 100,
@@ -1100,9 +1087,7 @@ def main(args=None):
                         x_max[index] = max(np.abs(x_contour))
                     xticks = mtick.PercentFormatter(x_max[index])
                     if x_axis_range != []:
-                        x_divisions = (
-                            5 * math.ceil(x_divisions / 5) * x_max[index] / 100
-                        )
+                        x_divisions = 5 * math.ceil(x_divisions / 5) * x_max[index] / 100
                         x_range = (
                             x_axis_range[0] * x_max[index] / 100,
                             x_axis_range[1] * x_max[index] / 100,
@@ -1176,9 +1161,7 @@ def main(args=None):
                         y_max[index] = max(np.abs(y_data))
                     yticks = mtick.PercentFormatter(y_max[index])
                     if y_axis_range != []:
-                        y_divisions = (
-                            5 * math.ceil(y_divisions / 5) * y_max[index] / 100
-                        )
+                        y_divisions = 5 * math.ceil(y_divisions / 5) * y_max[index] / 100
                         y_range = (
                             y_axis_range[0] * y_max[index] / 100,
                             y_axis_range[1] * y_max[index] / 100,
@@ -1190,8 +1173,7 @@ def main(args=None):
                     ax.set_ylim(y_range[0], y_range[1])
                     ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
                 x_data = [
-                    m_file.data[scan_2_var_name].get_scan(i + 1)
-                    for i in range(n_scan_2)
+                    m_file.data[scan_2_var_name].get_scan(i + 1) for i in range(n_scan_2)
                 ]
                 if x_axis_range != []:
                     x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
@@ -1200,9 +1182,7 @@ def main(args=None):
                         x_max[index] = max(np.abs(x_data))
                     xticks = mtick.PercentFormatter(x_max[index])
                     if x_axis_range != []:
-                        x_divisions = (
-                            5 * math.ceil(x_divisions / 5) * x_max[index] / 100
-                        )
+                        x_divisions = 5 * math.ceil(x_divisions / 5) * x_max[index] / 100
                         x_range = (
                             x_axis_range[0] * x_max[index] / 100,
                             x_axis_range[1] * x_max[index] / 100,

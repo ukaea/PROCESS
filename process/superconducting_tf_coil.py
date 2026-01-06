@@ -235,9 +235,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             tfcoil_variables.casestr = (
-                tfcoil_variables.casestr
-                if tfcoil_variables.casestr is None
-                else casestr
+                tfcoil_variables.casestr if tfcoil_variables.casestr is None else casestr
             )
 
             tfcoil_variables.insstrain = (
@@ -1038,9 +1036,7 @@ class SuperconductingTFCoil(TFCoil):
                 temp_conductor=temp_tf_coolant_peak_field,
                 f_strain=f_strain_scale,
             )
-            j_superconductor_critical = j_crit_cable / (
-                1.0e0 - f_a_tf_turn_cable_copper
-            )
+            j_superconductor_critical = j_crit_cable / (1.0e0 - f_a_tf_turn_cable_copper)
             #  Critical current in cable
             c_turn_cables_critical = (
                 j_crit_cable * a_tf_turn_cable_space * f_a_tf_turn_cable_space_conductor
@@ -1618,7 +1614,10 @@ class SuperconductingTFCoil(TFCoil):
                 )
 
             another_estimate = 2 * temp_tf_coolant_peak_field
-            t_zero_margin, root_result = optimize.newton(
+            (
+                t_zero_margin,
+                _root_result,
+            ) = optimize.newton(
                 superconductors.superconductor_current_density_margin,
                 temp_tf_coolant_peak_field,
                 fprime=None,
@@ -1769,9 +1768,7 @@ class SuperconductingTFCoil(TFCoil):
         # Assume the radius of the first ellipse of the VV is in the same proportion to
         # that of the plasma facing radii of the two structures
         tf_vv_frac = build_variables.r_tf_inboard_out / build_variables.r_vv_inboard_out
-        rm_vv = build_variables.r_vv_inboard_out + (
-            tfcoil_variables.tfa[0] * tf_vv_frac
-        )
+        rm_vv = build_variables.r_vv_inboard_out + (tfcoil_variables.tfa[0] * tf_vv_frac)
 
         superconducting_tf_coil_variables.vv_stress_quench = vv_stress_on_quench(
             # TF shape

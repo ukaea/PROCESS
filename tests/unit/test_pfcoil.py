@@ -2287,8 +2287,8 @@ def test_calculate_cs_turn_geometry_eu_demo_zero_corner(
         dz_cs_turn,
         dr_cs_turn,
         radius_cs_turn_cable_space,
-        dr_cs_turn_conduit,
-        dz_cs_turn_conduit,
+        _dr_cs_turn_conduit,
+        _dz_cs_turn_conduit,
     ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
@@ -2311,8 +2311,8 @@ def test_calculate_cs_turn_geometry_eu_demo_high_aspect(
         dz_cs_turn,
         dr_cs_turn,
         radius_cs_turn_cable_space,
-        dr_cs_turn_conduit,
-        dz_cs_turn_conduit,
+        _dr_cs_turn_conduit,
+        _dz_cs_turn_conduit,
     ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
     )
@@ -2332,9 +2332,9 @@ def test_calculate_cs_turn_geometry_eu_demo_output_consistency(
     # Check that the sum of cable space and conduit thicknesses does not exceed half-width
     (
         dz_cs_turn,
-        dr_cs_turn,
+        _dr_cs_turn,
         radius_cs_turn_cable_space,
-        dr_cs_turn_conduit,
+        _dr_cs_turn_conduit,
         dz_cs_turn_conduit,
     ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
         a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel

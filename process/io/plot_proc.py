@@ -701,9 +701,7 @@ def plot_main_power_flow(
     )
     new_ax.imshow(hcd_injector_1)
     new_ax.axis("off")
-    new_ax = axis.inset_axes(
-        [-0.2, 0.5, 0.15, 0.5], transform=axis.transAxes, zorder=10
-    )
+    new_ax = axis.inset_axes([-0.2, 0.5, 0.15, 0.5], transform=axis.transAxes, zorder=10)
     new_ax.imshow(hcd_injector_2)
     new_ax.axis("off")
 
@@ -966,9 +964,7 @@ def plot_main_power_flow(
         turbine = mpimg.imread(img_path.open("rb"))
 
     # Display the turbine image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        [1.1, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10
-    )
+    new_ax = axis.inset_axes([1.1, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10)
     new_ax.imshow(turbine)
     new_ax.axis("off")
 
@@ -1302,9 +1298,7 @@ def plot_main_power_flow(
         fw = mpimg.imread(img_path.open("rb"))
 
     # Display the first wall image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        [0.4, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
-    )
+    new_ax = axis.inset_axes([0.4, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10)
     new_ax.imshow(fw)
     new_ax.axis("off")
 
@@ -2824,9 +2818,7 @@ def plot_main_plasma_information(
     # =========================================
 
     # Load the neutron image
-    with resources.path(
-        "process.io", "alpha_particle.png"
-    ) as alpha_particle_image_path:
+    with resources.path("process.io", "alpha_particle.png") as alpha_particle_image_path:
         # Use importlib.resources to locate the image
         alpha_particle = mpimg.imread(alpha_particle_image_path.open("rb"))
 
@@ -3489,8 +3481,10 @@ def color_key(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal
     if (mfile.get("i_hcd_primary", scan=scan) in [5, 8]) or (
         mfile.get("i_hcd_secondary", scan=scan) in [5, 8]
     ):
-        labels.append(("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]))
-        labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
+        labels.extend((
+            ("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]),
+            ("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]),
+        ))
     else:
         labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
 
@@ -3786,9 +3780,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     fgwsep_out = mfile.get("fgwsep_out", scan=scan)
     nd_plasma_electrons_vol_avg = mfile.get("nd_plasma_electrons_vol_avg", scan=scan)
 
-    nd_plasma_separatrix_electron = mfile.get(
-        "nd_plasma_separatrix_electron", scan=scan
-    )
+    nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"$n \ [10^{19}\ \mathrm{m}^{-3}]$")
@@ -4302,9 +4294,7 @@ def profiles_with_pedestal(mfile, scan: int):
     )
     ne0 = mfile.get("nd_plasma_electron_on_axis", scan=scan)
     rho = np.linspace(0, 1.0, n_plasma_profile_elements)
-    nd_plasma_separatrix_electron = mfile.get(
-        "nd_plasma_separatrix_electron", scan=scan
-    )
+    nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
     temp_plasma_pedestal_kev = mfile.get("temp_plasma_pedestal_kev", scan=scan)
     temp_plasma_separatrix_kev = mfile.get("temp_plasma_separatrix_kev", scan=scan)
     tbeta = mfile.get("tbeta", scan=scan)
@@ -4794,9 +4784,7 @@ def plot_vacuum_vessel_and_divertor(
         )
 
 
-def plot_shield(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour_scheme
-):
+def plot_shield(axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour_scheme):
     """Function to plot shield
 
     Arguments:
@@ -5446,9 +5434,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) 
     i_tf_case_geom = mfile.get("i_tf_case_geom", scan=scan)
     i_tf_turns_integer = mfile.get("i_tf_turns_integer", scan=scan)
     b_tf_inboard_peak_symmetric = mfile.get("b_tf_inboard_peak_symmetric", scan=scan)
-    b_tf_inboard_peak_with_ripple = mfile.get(
-        "b_tf_inboard_peak_with_ripple", scan=scan
-    )
+    b_tf_inboard_peak_with_ripple = mfile.get("b_tf_inboard_peak_with_ripple", scan=scan)
     f_b_tf_inboard_peak_ripple_symmetric = mfile.get(
         "f_b_tf_inboard_peak_ripple_symmetric", scan=scan
     )
@@ -6670,10 +6656,7 @@ def plot_tf_cable_in_conduit_turn(
                 candidate_y = y_pos
 
                 # Check if within bounds
-                if (
-                    candidate_x > x + width - radius
-                    or candidate_y > y + height - radius
-                ):
+                if candidate_x > x + width - radius or candidate_y > y + height - radius:
                     continue
 
                 # Check collision with cooling pipe
@@ -6738,8 +6721,7 @@ def plot_tf_cable_in_conduit_turn(
                 collision = False
                 for existing_x, existing_y in placed_strands:
                     distance = np.sqrt(
-                        (candidate_x - existing_x) ** 2
-                        + (candidate_y - existing_y) ** 2
+                        (candidate_x - existing_x) ** 2 + (candidate_y - existing_y) ** 2
                     )
                     if distance < strand_diameter:
                         collision = True
@@ -6793,9 +6775,7 @@ def plot_tf_cable_in_conduit_turn(
     steel_thickness = mfile.get("dx_tf_turn_steel", scan=scan)
     insulation_thickness = mfile.get("dx_tf_turn_insulation", scan=scan)
 
-    a_tf_turn_cable_space_no_void = mfile.get(
-        "a_tf_turn_cable_space_no_void", scan=scan
-    )
+    a_tf_turn_cable_space_no_void = mfile.get("a_tf_turn_cable_space_no_void", scan=scan)
     radius_tf_turn_cable_space_corners = mfile.get(
         "radius_tf_turn_cable_space_corners", scan=scan
     )
@@ -7178,9 +7158,7 @@ def plot_tf_cable_in_conduit_turn(
     )
 
 
-def plot_cable_in_conduit_cable(
-    axis: plt.Axes, fig, mfile: mf.MFile, scan: int
-) -> None:
+def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int) -> None:
     """
     Plots TF coil CICC cable cross-section.
     """
@@ -10367,9 +10345,7 @@ def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
         markersize=mark_size,
         color="crimson",
     )
-    ax.plot(
-        bound_radius, bound_vm_stress, "|", markersize=mark_size, color="darkviolet"
-    )
+    ax.plot(bound_radius, bound_vm_stress, "|", markersize=mark_size, color="darkviolet")
     ax.grid(True)
     ax.set_ylabel(r"$\sigma$ [$MPa$]", fontsize=axis_tick_size)
     ax.set_title("Structure Stress Summary")
@@ -11348,9 +11324,7 @@ def plot_plasma_poloidal_pressure_contours(
     ]
 
     # Convert pressure to kPa
-    pres_plasma_electron_profile_kpa = [
-        p / 1000.0 for p in pres_plasma_electron_profile
-    ]
+    pres_plasma_electron_profile_kpa = [p / 1000.0 for p in pres_plasma_electron_profile]
     pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
     pres_plasma_profile = [
         e + i
@@ -11658,9 +11632,7 @@ def plot_fusion_rate_contours(
     dd_helion_grid, _r_grid, _z_grid = interp1d_profile(
         fusrat_plasma_dd_helion_profile, mfile, scan
     )
-    dhe3_grid, r_grid, z_grid = interp1d_profile(
-        fusrat_plasma_dhe3_profile, mfile, scan
-    )
+    dhe3_grid, r_grid, z_grid = interp1d_profile(fusrat_plasma_dhe3_profile, mfile, scan)
 
     dt_axes = fig1.add_subplot(121, aspect="equal")
     dd_triton_axes = fig1.add_subplot(122, aspect="equal")
@@ -12681,7 +12653,7 @@ def main(args=None):
     main_plot(
         pages,
         mf.MFile(args.f) if args.f != "" else mf.MFile("MFILE.DAT"),
-        scan=args.n if args.n else -1,
+        scan=args.n or -1,
         demo_ranges=bool(args.DEMO_ranges),
         colour_scheme=int(args.colour),
     )

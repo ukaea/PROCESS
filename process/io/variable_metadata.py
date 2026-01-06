@@ -149,9 +149,7 @@ var_dicts = {
         description="Maximum divertor heat load",
         units="MW.m^{-2}",
     ),
-    "hfact": VariableMetadata(
-        latex=r"$f_\mathrm{H}$", description="H-factor", units=""
-    ),
+    "hfact": VariableMetadata(latex=r"$f_\mathrm{H}$", description="H-factor", units=""),
     "kappa": VariableMetadata(
         latex=r"$\kappa_\mathrm{sep}$", description="Elongation", units=""
     ),

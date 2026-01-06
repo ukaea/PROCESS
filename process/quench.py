@@ -340,9 +340,7 @@ def calculate_quench_protection_current_density(
 
     f_cond = 1.0 - f_he  # Fraction of the cable XS area that is not helium
     f_cu_cable = f_cond * f_cu  # Fraction of the cable XS that is copper
-    f_sc_cable = f_cond * (
-        1.0 - f_cu
-    )  # Fraction of the cable XS that is superconductor
+    f_sc_cable = f_cond * (1.0 - f_cu)  # Fraction of the cable XS that is superconductor
 
     factor = 1.0 / (0.5 * tau_discharge + detection_time)
     total_integral = f_he * i_he + f_cu_cable * i_cu + f_sc_cable * i_sc

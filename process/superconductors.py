@@ -99,7 +99,7 @@ def current_sharing_rebco(bfield, j):
 
     estimate = 10.0
     another_estimate = 20.0
-    current_sharing_t, root_result = optimize.newton(
+    current_sharing_t, _root_result = optimize.newton(
         deltaj_rebco,
         estimate,
         tol=1e-6,
@@ -981,9 +981,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     conductor_critical_current = croco_strand_critical_current * 6.0
     # Area of core = area of strand
     conductor_copper_bar_area = a_croco_strand
-    conductor_copper_area = (
-        a_croco_strand_copper_total * 6.0 + conductor_copper_bar_area
-    )
+    conductor_copper_area = a_croco_strand_copper_total * 6.0 + conductor_copper_bar_area
     conductor_copper_fraction = conductor_copper_area / conductor_area
 
     # Helium area is set by the user.
@@ -1064,15 +1062,9 @@ def superconductor_current_density_margin(
         9: High current density REBCO
     """
     material_functions = {
-        1: lambda: itersc(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[
-            0
-        ],
-        3: lambda: jcrit_nbti(temp_superconductor, b_superconductor, c0, bc20m, tc0m)[
-            0
-        ],
-        4: lambda: itersc(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[
-            0
-        ],
+        1: lambda: itersc(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[0],
+        3: lambda: jcrit_nbti(temp_superconductor, b_superconductor, c0, bc20m, tc0m)[0],
+        4: lambda: itersc(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[0],
         5: lambda: western_superconducting_nb3sn(
             temp_superconductor, b_superconductor, strain, bc20m, tc0m
         )[0],

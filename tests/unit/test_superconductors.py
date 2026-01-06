@@ -221,9 +221,7 @@ def test_hijc_rebco():
                 pytest.approx(
                     1.5989918329615573e-05, rel=1e-3
                 ),  # a_croco_strand_hastelloy
-                pytest.approx(
-                    1.8285645798205533e-05, rel=1e-3
-                ),  # a_croco_strand_solder
+                pytest.approx(1.8285645798205533e-05, rel=1e-3),  # a_croco_strand_solder
                 pytest.approx(5.329972776538525e-06, rel=1e-3),  # a_croco_strand_rebco
                 pytest.approx(7.85398e-5, rel=1e-3),  # croco_strand_area
                 pytest.approx(5.5556e-3, rel=1e-3),  # dr_hts_tape
