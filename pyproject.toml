@@ -84,7 +84,7 @@ artifacts = [
 ]
 
 [tool.hatch.envs.default]
-features = ["dev", "test", "docs", "lint"]
+features = ["test", "docs", "lint"]
 
 [tool.hatch.envs.test]
 features = ["test"]

@@ -77,13 +77,12 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Setup python and hatch
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
           python-version: '3.10'
-      - name: Install PROCESS
-        run: pip install -e '.[lint, docs, test]'
       - name: Run regression input files
-        run: python tracking/run_tracking_inputs.py run tests/regression/input_files
+        run: hatch run python tracking/run_tracking_inputs.py run tests/regression/input_files
       - name: Move other files
         run: mv tests/regression/input_files/*.json tracking/
       - name: Archive tracked MFILEs
@@ -119,11 +118,10 @@ jobs:
       COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Setup python and hatch
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
           python-version: '3.10'
-      - name: Install PROCESS
-        run: pip install -e '.[test, docs, lint]'
       - name: Setup SSH identity
         uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -140,9 +138,9 @@ jobs:
         run: |
           MSG=$(printf "%q " $COMMIT_MESSAGE)
           git config --global --add safe.directory '*'
-          python tracking/run_tracking_inputs.py track process-tracking-data "${MSG}" ${{ github.sha }}
+          hatch run python tracking/run_tracking_inputs.py track process-tracking-data "${MSG}" ${{ github.sha }}
       - name: Create the tracking dashboard
-        run: python tracking/tracking_data.py plot process-tracking-data --out tracking.html
+        run: hatch run python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
         uses: actions/upload-artifact@v4
         with:
@@ -170,12 +168,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v4
+      - name: Setup python and hatch
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
           python-version: '3.10'
-      - name: Install PROCESS
-        run: pip install -e '.[test, lint, docs]'
-      - run: python scripts/vardes.py
+      - run: hatch run python scripts/vardes.py
       - run: git config --global --add safe.directory '*'
       - name: Download STF_TF.json files
         uses: actions/download-artifact@v4
@@ -189,10 +186,10 @@ jobs:
           path: tracking/
       - run: mv tracking/large_tokamak_nof.SIG_TF.json tracking/large_tokamak_nof_SIG_TF.json
       - name: Create an example plot proc
-        run: python process/io/plot_proc.py -f tracking/large_tokamak_nof_MFILE.DAT
+        run: hatch run python process/io/plot_proc.py -f tracking/large_tokamak_nof_MFILE.DAT
       - name: Move plot proc file to docs images
         run: mv tracking/large_tokamak_nof_MFILE.DATSUMMARY.pdf documentation/images/plot_proc.pdf
-      - run: mkdocs build
+      - run: hatch run docs:build
       - name: Download tracking html
         uses: actions/download-artifact@v4
         with:
