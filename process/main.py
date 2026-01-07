@@ -679,7 +679,7 @@ class Models:
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )
         self.physics_detailed = DetailedPhysics(
-            plasma_profile=self.plasma_profile, current_drive=self.current_drive
+            plasma_profile=self.plasma_profile,
         )
         self.neoclassics = Neoclassics()
         self.stellarator = Stellarator(

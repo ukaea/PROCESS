@@ -9051,11 +9051,10 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
 class DetailedPhysics:
     """Class to hold detailed physics models for plasma processing."""
 
-    def __init__(self, plasma_profile, current_drive):
+    def __init__(self, plasma_profile):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
-        self.current_drive = current_drive
 
     def run(self):
         # ---------------------------
@@ -9090,12 +9089,10 @@ class DetailedPhysics:
         # Plasma frequencies
         # ============================
 
-        physics_variables.freq_plasma_electron_profile = (
-            self.calculate_plasma_frequency(
-                nd_particle=self.plasma_profile.neprofile.profile_y,
-                m_particle=constants.ELECTRON_MASS,
-                z_particle=1.0,
-            )
+        physics_variables.freq_plasma_electron_profile = self.calculate_plasma_frequency(
+            nd_particle=self.plasma_profile.neprofile.profile_y,
+            m_particle=constants.ELECTRON_MASS,
+            z_particle=1.0,
         )
 
         # ============================
@@ -9133,8 +9130,8 @@ class DetailedPhysics:
             for i in range(len(physics_variables.len_plasma_debye_electron_profile))
         ])
 
+    @staticmethod
     def calculate_debye_length(
-        self,
         temp_plasma_species_kev: float,
         nd_plasma_species: float,
     ) -> float:
@@ -9154,7 +9151,8 @@ class DetailedPhysics:
             / (nd_plasma_species * constants.ELECTRON_CHARGE**2)
         ) ** 0.5
 
-    def calculate_lorentz_factor(self, velocity: float) -> float:
+    @staticmethod
+    def calculate_lorentz_factor(velocity: float) -> float:
         """
         Calculate the Lorentz factor for a given velocity.
         :param velocity: Velocity in m/s.
@@ -9164,9 +9162,8 @@ class DetailedPhysics:
         """
         return 1 / (1 - (velocity / constants.SPEED_LIGHT) ** 2) ** 0.5
 
-    def calculate_relativistic_particle_speed(
-        self, e_kinetic: float, mass: float
-    ) -> float:
+    @staticmethod
+    def calculate_relativistic_particle_speed(e_kinetic: float, mass: float) -> float:
         """
         Calculate the speed of a particle given its kinetic energy and mass using relativistic mechanics.
         :param e_kinetic: Kinetic energy in Joules.
@@ -9196,8 +9193,8 @@ class DetailedPhysics:
         """
         return np.log(impact_param_max / impact_param_min)
 
+    @staticmethod
     def calculate_classical_distance_of_closest_approach(
-        self,
         charge1: float,
         charge2: float,
         e_kinetic: float,
@@ -9208,7 +9205,8 @@ class DetailedPhysics:
             4 * np.pi * constants.EPSILON0 * e_kinetic
         )
 
-    def calculate_debroglie_wavelength(self, mass: float, velocity: float) -> float:
+    @staticmethod
+    def calculate_debroglie_wavelength(mass: float, velocity: float) -> float:
         """
         Calculate the de Broglie wavelength of a particle.
         :param mass: Mass of the particle in kg.
@@ -9217,11 +9215,14 @@ class DetailedPhysics:
         :type velocity: float
         :returns: de Broglie wavelength in meters.
         :rtype: float
+
+        :note: Reduced Planck constant (h-bar) is used in the calculation as this is for scattering.
         """
         return (constants.PLANCK_CONSTANT / (2 * np.pi)) / (mass * velocity)
 
+    @staticmethod
     def calculate_plasma_frequency(
-        self, nd_particle: float, m_particle: float, z_particle: float
+        nd_particle: float, m_particle: float, z_particle: float
     ) -> float:
         """
         Calculate the plasma frequency for a particle species.
@@ -9242,8 +9243,9 @@ class DetailedPhysics:
             ** 0.5
         ) / (2 * np.pi)
 
+    @staticmethod
     def calculate_larmor_frequency(
-        self, b_field: float, m_particle: float, z_particle: float
+        b_field: float, m_particle: float, z_particle: float
     ) -> float:
         """
         Calculate the Larmor frequency for a particle species.

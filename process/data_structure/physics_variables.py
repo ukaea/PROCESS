@@ -1657,13 +1657,13 @@ def init_physics_variables():
         a_plasma_poloidal, \
         n_charge_plasma_effective_vol_avg, \
         n_charge_plasma_effective_profile, \
-        n_charge_plasma_effective_mass_weighted_vol_avg
-    global len_plasma_debye_electron_profile
-    global len_plasma_debye_electron_vol_avg
-    global vel_plasma_electron_profile
-    global plasma_coulomb_log_electron_electron_profile
-    global freq_plasma_electron_profile
-    global freq_plasma_larmor_toroidal_electron_profile
+        n_charge_plasma_effective_mass_weighted_vol_avg, \
+        len_plasma_debye_electron_profile, \
+        len_plasma_debye_electron_vol_avg, \
+        vel_plasma_electron_profile, \
+        plasma_coulomb_log_electron_electron_profile, \
+        freq_plasma_electron_profile, \
+        freq_plasma_larmor_toroidal_electron_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
