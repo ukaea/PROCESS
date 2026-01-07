@@ -101,13 +101,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Setup python and hatch
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
           python-version: '3.10'
-      - name: Install dev dependencies
-        run: pip install '.[lint]'
       - name: Run pre-commit
-        run: pre-commit run --all-files
+        run: hatch run lint:fmt
 
   tracking:
     concurrency:
