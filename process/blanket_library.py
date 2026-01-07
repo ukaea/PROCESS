@@ -57,24 +57,16 @@ class BlanketLibrary:
         blanket_library.dz_blkt_half = self.component_half_height(icomponent=0)
         # Shield
         blanket_library.dz_shld_half = self.component_half_height(icomponent=1)
-        # Vacuum Vessel
-        blanket_library.dz_vv_half = self.component_half_height(icomponent=2)
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
-            for icomponent in range(3):
+            for icomponent in range(2):
                 self.dshaped_component(icomponent)
 
         # Elliptical blanket and shield
         else:
-            for icomponent in range(3):
+            for icomponent in range(2):
                 self.elliptical_component(icomponent)
-
-            # This will fail the hts_REBCO and 2D_scan regression tests,
-            # the number of VMCON iterations (nviter) is different.
-            # Seems to be because in the blanket calculations (icomponent=0):
-            # r2 = 1.3836567143743970 rather than old value of r2 = 1.3836567143743972,
-            # r3 = 3.7009701431231936 rather than r3 = 3.7009701431231923.
 
         # Apply coverage factors to volumes and surface areas
         self.apply_coverage_factors()
@@ -109,7 +101,7 @@ class BlanketLibrary:
                 - build_variables.dz_vv_lower
             )
         else:
-            raise ProcessValueError(f"{icomponent=} is invalid, it must be either 0,1,2")
+            raise ProcessValueError(f"{icomponent=} is invalid, it must be either 0,1")
 
         # Calculate component internal upper half-height (m)
         # If a double null machine then symmetric
@@ -126,11 +118,6 @@ class BlanketLibrary:
             # Shield
             if icomponent == 1:
                 htop = htop + build_variables.dz_blkt_upper
-            # Vacuum Vessel
-            if icomponent == 2:
-                htop = (
-                    htop + build_variables.dz_blkt_upper + build_variables.dz_shld_upper
-                )
 
         # Average of top and bottom (m)
         return 0.5 * (htop + hbot)
@@ -209,19 +196,6 @@ class BlanketLibrary:
                 build_variables.dr_shld_outboard,
                 build_variables.dz_shld_upper,
             )
-        elif icomponent == 2:
-            (
-                blanket_library.vol_vv_inboard,
-                blanket_library.vol_vv_outboard,
-                fwbs_variables.vol_vv,
-            ) = dshellvol(
-                r1,
-                r2,
-                blanket_library.dz_vv_half,
-                build_variables.dr_vv_inboard,
-                build_variables.dr_vv_outboard,
-                (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
-            )
 
     def elliptical_component(self, icomponent: int):
         """Calculate component surface area and volume using elliptical scheme
@@ -299,20 +273,6 @@ class BlanketLibrary:
                 build_variables.dr_shld_outboard,
                 build_variables.dz_shld_upper,
             )
-        if icomponent == 2:
-            (
-                blanket_library.vol_vv_inboard,
-                blanket_library.vol_vv_outboard,
-                fwbs_variables.vol_vv,
-            ) = eshellvol(
-                r1,
-                r2,
-                r3,
-                blanket_library.dz_vv_half,
-                build_variables.dr_vv_inboard,
-                build_variables.dr_vv_outboard,
-                (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
-            )
 
     def apply_coverage_factors(self):
         """Apply coverage factors to volumes
@@ -382,11 +342,6 @@ class BlanketLibrary:
         fwbs_variables.vol_shld_total = (
             blanket_library.vol_shld_inboard + blanket_library.vol_shld_outboard
         )
-
-        # Apply vacuum vessel coverage factor
-        # moved from dshaped_* and elliptical_* to keep coverage factor
-        # changes in the same location.
-        fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
 
     def primary_coolant_properties(self, output: bool):
         """Calculates the fluid properties of the Primary Coolant in the FW and BZ.

@@ -9,7 +9,9 @@ from process.blanket_library import dshellvol, eshellvol
 from process.data_structure import blanket_library as blanket_library
 from process.data_structure import build_variables as buv
 from process.data_structure import divertor_variables as dv
+from process.data_structure import ccfe_hcpb_module as ccfe_hcpb_module
 from process.data_structure import fwbs_variables as fwbs_variables
+from process.data_structure import physics_variables as physics_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
@@ -711,20 +713,45 @@ class VacuumVessel:
             dr_fw_inboard=buv.dr_fw_inboard,
             dr_fw_outboard=buv.dr_fw_outboard,
         )
+        # D-shaped blanket and shield
+        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+            (
+                blanket_library.vol_vv_inboard,
+                blanket_library.vol_vv_outboard,
+                fwbs_variables.vol_vv,
+            ) = self.calculate_dshaped_vessel_volumes(
+                rsldi=buv.rsldi,
+                rsldo=buv.rsldo,
+                dz_vv_half=blanket_library.dz_vv_half,
+                dr_vv_inboard=buv.dr_vv_inboard,
+                dr_vv_outboard=buv.dr_vv_outboard,
+                dz_vv_upper=buv.dz_vv_upper,
+                dz_vv_lower=buv.dz_vv_lower,
+            )
+        else:
+            (
+                blanket_library.vol_vv_inboard,
+                blanket_library.vol_vv_outboard,
+                fwbs_variables.vol_vv,
+            ) = self.calculate_elliptical_vessel_volumes(
+                rmajor=pv.rmajor,
+                rminor=pv.rminor,
+                triang=pv.triang,
+                rsldi=buv.rsldi,
+                rsldo=buv.rsldo,
+                dz_vv_half=blanket_library.dz_vv_half,
+                dr_vv_inboard=buv.dr_vv_inboard,
+                dr_vv_outboard=buv.dr_vv_outboard,
+                dz_vv_upper=buv.dz_vv_upper,
+                dz_vv_lower=buv.dz_vv_lower,
+            )
 
-        (
-            blanket_library.vol_vv_inboard,
-            blanket_library.vol_vv_outboard,
-            fwbs_variables.vol_vv,
-        ) = self.calculate_dshaped_vessel_volumes(
-            rsldi=buv.rsldi,
-            rsldo=buv.rsldo,
-            dz_vv_half=blanket_library.dz_vv_half,
-            dr_vv_inboard=buv.dr_vv_inboard,
-            dr_vv_outboard=buv.dr_vv_outboard,
-            dz_vv_upper=buv.dz_vv_upper,
-            dz_vv_lower=buv.dz_vv_lower,
-        )
+        # Apply vacuum vessel coverage factor
+        # moved from dshaped_* and elliptical_* to keep coverage factor
+        # changes in the same location.
+        fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
+
+        ccfe_hcpb_module.vv_density = fwbs_variables.m_vv / fwbs_variables.vol_vv
 
     def calculate_vessel_half_height(
         self,
@@ -754,9 +781,8 @@ class VacuumVessel:
                 + dr_fw_plasma_gap_outboard
                 + dr_fw_inboard
                 + dr_fw_outboard
-                + dz_blkt_upper
-                + dz_shld_upper
             )
+        z_top = z_top + dz_blkt_upper + dz_shld_upper
 
         # Average of top and bottom (m)
         return 0.5 * (z_top + z_bottom)
