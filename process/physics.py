@@ -9132,19 +9132,19 @@ class DetailedPhysics:
 
     @staticmethod
     def calculate_debye_length(
-        temp_plasma_species_kev: float,
-        nd_plasma_species: float,
-    ) -> float:
+        temp_plasma_species_kev: float | np.ndarray,
+        nd_plasma_species: float | np.ndarray,
+    ) -> float | np.ndarray:
         """
         Calculate the Debye length for a plasma.
 
         :param temp_plasma_species_kev: Species temperature in keV.
-        :type temp_plasma_species_kev: float
+        :type temp_plasma_species_kev: float | np.ndarray
         :param nd_plasma_species: Species number density (/m^3).
-        :type nd_plasma_species: float
+        :type nd_plasma_species: float | np.ndarray
 
         :returns: Debye length in meters.
-        :rtype: float
+        :rtype: float | np.ndarray
         """
         return (
             (constants.EPSILON0 * temp_plasma_species_kev * constants.KILOELECTRON_VOLT)
@@ -9152,26 +9152,28 @@ class DetailedPhysics:
         ) ** 0.5
 
     @staticmethod
-    def calculate_lorentz_factor(velocity: float) -> float:
+    def calculate_lorentz_factor(velocity: float | np.ndarray) -> float | np.ndarray:
         """
         Calculate the Lorentz factor for a given velocity.
         :param velocity: Velocity in m/s.
-        :type velocity: float
+        :type velocity: float | np.ndarray
         :returns: Lorentz factor (dimensionless).
-        :rtype: float
+        :rtype: float | np.ndarray
         """
         return 1 / (1 - (velocity / constants.SPEED_LIGHT) ** 2) ** 0.5
 
     @staticmethod
-    def calculate_relativistic_particle_speed(e_kinetic: float, mass: float) -> float:
+    def calculate_relativistic_particle_speed(
+        e_kinetic: float | np.ndarray, mass: float
+    ) -> float | np.ndarray:
         """
         Calculate the speed of a particle given its kinetic energy and mass using relativistic mechanics.
         :param e_kinetic: Kinetic energy in Joules.
-        :type e_kinetic: float
+        :type e_kinetic: float | np.ndarray
         :param mass: Mass of the particle in kg.
         :type mass: float
         :returns: Speed of the particle in m/s.
-        :rtype: float
+        :rtype: float | np.ndarray
         """
         return (
             constants.SPEED_LIGHT
@@ -9197,24 +9199,37 @@ class DetailedPhysics:
     def calculate_classical_distance_of_closest_approach(
         charge1: float,
         charge2: float,
-        e_kinetic: float,
-    ) -> float:
-        """ """
+        e_kinetic: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """
+        Calculate the classical distance of closest approach for two charged particles.
+
+        :param charge1: Charge of particle 1 in units of elementary charge.
+        :type charge1: float
+        :param charge2: Charge of particle 2 in units of elementary charge.
+        :type charge2: float
+        :param e_kinetic: Kinetic energy of the particles in Joules.
+        :type e_kinetic: float | np.ndarray
+        :returns: Distance of closest approach in meters.
+        :rtype: float | np.ndarray
+        """
 
         return (charge1 * charge2 * constants.ELECTRON_CHARGE**2) / (
             4 * np.pi * constants.EPSILON0 * e_kinetic
         )
 
     @staticmethod
-    def calculate_debroglie_wavelength(mass: float, velocity: float) -> float:
+    def calculate_debroglie_wavelength(
+        mass: float, velocity: float | np.ndarray
+    ) -> float | np.ndarray:
         """
         Calculate the de Broglie wavelength of a particle.
         :param mass: Mass of the particle in kg.
         :type mass: float
         :param velocity: Velocity of the particle in m/s.
-        :type velocity: float
+        :type velocity: float | np.ndarray
         :returns: de Broglie wavelength in meters.
-        :rtype: float
+        :rtype: float | np.ndarray
 
         :note: Reduced Planck constant (h-bar) is used in the calculation as this is for scattering.
         """
@@ -9222,18 +9237,18 @@ class DetailedPhysics:
 
     @staticmethod
     def calculate_plasma_frequency(
-        nd_particle: float, m_particle: float, z_particle: float
-    ) -> float:
+        nd_particle: float | np.ndarray, m_particle: float, z_particle: float
+    ) -> float | np.ndarray:
         """
         Calculate the plasma frequency for a particle species.
         :param nd_particle: Number density of the particle species (/m^3).
-        :type nd_particle: float
+        :type nd_particle: float | np.ndarray
         :param m_particle: Mass of the particle species (kg).
         :type m_particle: float
         :param Z_particle: Charge state of the particle species (dimensionless).
         :type Z_particle: float
         :returns: Plasma frequency in Hz.
-        :rtype: float
+        :rtype: float | np.ndarray
         """
         return (
             (
@@ -9245,18 +9260,18 @@ class DetailedPhysics:
 
     @staticmethod
     def calculate_larmor_frequency(
-        b_field: float, m_particle: float, z_particle: float
-    ) -> float:
+        b_field: float | np.ndarray, m_particle: float, z_particle: float
+    ) -> float | np.ndarray:
         """
         Calculate the Larmor frequency for a particle species.
         :param b_field: Magnetic field strength (T).
-        :type b_field: float
+        :type b_field: float | np.ndarray
         :param m_particle: Mass of the particle species (kg).
         :type m_particle: float
         :param Z_particle: Charge state of the particle species (dimensionless).
         :type Z_particle: float
         :returns: Larmor frequency in Hz.
-        :rtype: float
+        :rtype: float | np.ndarray
         """
         return (z_particle * constants.ELECTRON_CHARGE * b_field) / (
             2 * np.pi * m_particle
