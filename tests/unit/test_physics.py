@@ -21,6 +21,7 @@ from process.data_structure import (
 )
 from process.impurity_radiation import initialise_imprad
 from process.physics import (
+    DetailedPhysics,
     Physics,
     calculate_beta_limit,
     calculate_current_coefficient_hastie,
@@ -3466,3 +3467,168 @@ def test_calculate_internal_inductance_iter_3():
         b_plasma_poloidal_vol_avg=1.0, c_plasma=1.5e7, vol_plasma=1000.0, rmajor=6.2
     )
     assert result == pytest.approx(0.9078959099585583, abs=0.00001)
+
+
+@pytest.mark.parametrize(
+    "b_field, m_particle, z_particle, expected",
+    [
+        (
+            1.0,
+            constants.ELECTRON_MASS,
+            1.0,
+            2.799249e10,
+        ),  # typical electron in 1T field
+        (2.0, constants.ELECTRON_MASS, 1.0, 5.598498e10),  # double field
+        (1.0, constants.PROTON_MASS, 1.0, 15245186.43761083),  # proton in 1T field
+        (0.5, constants.ELECTRON_MASS, 2.0, 2.799249e10),  # half field, double charge
+        (0.0, constants.ELECTRON_MASS, 1.0, 0.0),  # zero field
+    ],
+)
+def test_calculate_larmor_frequency(b_field, m_particle, z_particle, expected):
+    """Test calculate_larmor_frequency for various particles and fields."""
+    result = DetailedPhysics.calculate_larmor_frequency(
+        b_field=b_field, m_particle=m_particle, z_particle=z_particle
+    )
+    assert result == pytest.approx(expected, rel=1e-5)
+
+
+@pytest.mark.parametrize(
+    "nd_particle,m_particle,z_particle, expected",
+    (
+        (1.0e20, constants.ELECTRON_MASS, 1.0, 89786628157.96086),
+        (1.0e19, constants.PROTON_MASS, 1.0, 662608904.2919972),
+        (5.0e19, constants.PROTON_MASS, 2.0, 2963277104.987116),
+        (0.0, constants.ELECTRON_MASS, 1.0, 0.0),
+    ),
+)
+def test_calculate_plasma_frequency(nd_particle, m_particle, z_particle, expected):
+    """Parametrised tests for DetailedPhysics.calculate_plasma_frequency()."""
+
+    result = DetailedPhysics.calculate_plasma_frequency(
+        nd_particle, m_particle, z_particle
+    )
+    assert result == pytest.approx(expected, rel=1e-12, abs=1e-12)
+
+
+@pytest.mark.parametrize(
+    "mass,velocity,expected",
+    (
+        (
+            constants.ELECTRON_MASS,
+            constants.SPEED_LIGHT * 0.1,
+            3.861592674352376e-12,
+        ),
+        (
+            constants.PROTON_MASS,
+            constants.SPEED_LIGHT * 0.5,
+            4.2061782010279145e-16,
+        ),
+        (
+            constants.PROTON_MASS,
+            1e3,
+            6.304902508360882e-11,
+        ),
+    ),
+)
+def test_calculate_debroglie_wavelength(mass, velocity, expected):
+    """Test DetailedPhysics.calculate_debroglie_wavelength with several parameters."""
+    result = DetailedPhysics.calculate_debroglie_wavelength(mass, velocity)
+    assert result == pytest.approx(expected, rel=1e-12)
+
+
+@pytest.mark.parametrize(
+    "e_kev, mass, expected",
+    (
+        (0.0, constants.ELECTRON_MASS, 0.0),
+        (1.6e-19, constants.ELECTRON_MASS, 592693.0770572403),
+        (1.0e-13, constants.ELECTRON_MASS, 267699064.11978555),
+        (1.0e-10, constants.PROTON_MASS, 239716127.82335472),
+    ),
+)
+def test_calculate_relativistic_particle_speed(e_kev, mass, expected):
+    """Parametrised tests for DetailedPhysics.calculate_relativistic_particle_speed"""
+
+    result = DetailedPhysics.calculate_relativistic_particle_speed(
+        e_kinetic=e_kev, mass=mass
+    )
+    assert result == pytest.approx(expected, rel=1e-5)
+
+
+@pytest.mark.parametrize(
+    "velocity, expected_gamma",
+    (
+        (0.0, 1.0),
+        (0.6 * constants.SPEED_LIGHT, 1.25),
+        (0.99 * constants.SPEED_LIGHT, 7.088812050083354),
+    ),
+)
+def test_calculate_lorentz_factor(velocity, expected_gamma):
+    """Test DetailedPhysics.calculate_lorentz_factor for several velocities."""
+
+    result = DetailedPhysics.calculate_lorentz_factor(velocity=velocity)
+    assert result == pytest.approx(expected_gamma, rel=1e-12)
+
+
+@pytest.mark.parametrize(
+    "temp_keV, nd, expected",
+    (
+        (1.0, 1e19, 7.433941993525029e-05),
+        (10.0, 1e20, 7.433941993525029e-05),
+        (0.1, 1e18, 7.433941993525029e-05),
+    ),
+)
+def test_calculate_debye_length_parametrized(temp_keV, nd, expected):
+    """Parametrized test for DetailedPhysics.calculate_debye_length."""
+    result = DetailedPhysics.calculate_debye_length(temp_keV, nd)
+    assert result == pytest.approx(expected, rel=1e-12)
+
+
+def test_detailed_physics_run_computes_profiles():
+    # Minimal plasma profile
+    plasma = PlasmaProfile()
+    plasma.teprofile.profile_x = np.array([0.0, 0.5, 1.0])
+    plasma.teprofile.profile_y = np.array([1.0, 2.0, 3.0])  # keV
+    plasma.neprofile.profile_x = plasma.teprofile.profile_x
+    plasma.neprofile.profile_y = np.array([1.0e19, 2.0e19, 3.0e19])  # m^-3
+
+    # Set global physics variables required by DetailedPhysics.run
+    physics_variables.temp_plasma_electron_vol_avg_kev = float(
+        np.mean(plasma.teprofile.profile_y)
+    )
+    physics_variables.nd_plasma_electrons_vol_avg = float(
+        np.mean(plasma.neprofile.profile_y)
+    )
+    # toroidal field profile for larmor frequency calc
+    physics_variables.b_plasma_toroidal_profile = (
+        np.ones_like(plasma.neprofile.profile_y) * 5.0
+    )
+
+    dp = DetailedPhysics(plasma)
+
+    # Run should complete without error and populate physics_variables
+    dp.run()
+
+    n = len(plasma.teprofile.profile_y)
+    assert physics_variables.len_plasma_debye_electron_vol_avg > 0
+    assert hasattr(physics_variables, "len_plasma_debye_electron_profile")
+    assert np.shape(physics_variables.len_plasma_debye_electron_profile)[0] == n
+
+    assert np.shape(physics_variables.vel_plasma_electron_profile)[0] == n
+    assert np.all(np.isfinite(physics_variables.vel_plasma_electron_profile))
+
+    assert np.shape(physics_variables.freq_plasma_electron_profile)[0] == n
+    assert np.all(np.isfinite(physics_variables.freq_plasma_electron_profile))
+
+    assert (
+        np.shape(physics_variables.freq_plasma_larmor_toroidal_electron_profile)[0] == n
+    )
+    assert np.all(
+        np.isfinite(physics_variables.freq_plasma_larmor_toroidal_electron_profile)
+    )
+
+    assert (
+        np.shape(physics_variables.plasma_coulomb_log_electron_electron_profile)[0] == n
+    )
+    assert np.all(
+        np.isfinite(physics_variables.plasma_coulomb_log_electron_electron_profile)
+    )

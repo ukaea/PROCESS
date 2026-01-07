@@ -9046,3 +9046,296 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
         * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
         * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
     )
+
+
+class DetailedPhysics:
+    """Class to hold detailed physics models for plasma processing."""
+
+    def __init__(self, plasma_profile):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+        self.plasma_profile = plasma_profile
+
+    def run(self):
+        # ---------------------------
+        #  Debye length calculation
+        # ---------------------------
+
+        physics_variables.len_plasma_debye_electron_vol_avg = self.calculate_debye_length(
+            temp_plasma_species_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_species=physics_variables.nd_plasma_electrons_vol_avg,
+        )
+
+        physics_variables.len_plasma_debye_electron_profile = (
+            self.calculate_debye_length(
+                temp_plasma_species_kev=self.plasma_profile.teprofile.profile_y,
+                nd_plasma_species=self.plasma_profile.neprofile.profile_y,
+            )
+        )
+
+        # ============================
+        # Particle relativistic speeds
+        # ============================
+
+        physics_variables.vel_plasma_electron_profile = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
+                mass=constants.ELECTRON_MASS,
+            )
+        )
+
+        # ============================
+        # Plasma frequencies
+        # ============================
+
+        physics_variables.freq_plasma_electron_profile = self.calculate_plasma_frequency(
+            nd_particle=self.plasma_profile.neprofile.profile_y,
+            m_particle=constants.ELECTRON_MASS,
+            z_particle=1.0,
+        )
+
+        # ============================
+        # Larmor frequencies
+        # ============================
+
+        physics_variables.freq_plasma_larmor_toroidal_electron_profile = (
+            self.calculate_larmor_frequency(
+                b_field=physics_variables.b_plasma_toroidal_profile,
+                m_particle=constants.ELECTRON_MASS,
+                z_particle=1.0,
+            )
+        )
+
+        # ============================
+        # Coulomb logarithm
+        # ============================
+
+        physics_variables.plasma_coulomb_log_electron_electron_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        e_kinetic=self.plasma_profile.teprofile.profile_y[i]
+                        * constants.KILOELECTRON_VOLT,
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=constants.ELECTRON_MASS,
+                        velocity=physics_variables.vel_plasma_electron_profile[i],
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
+    @staticmethod
+    def calculate_debye_length(
+        temp_plasma_species_kev: float | np.ndarray,
+        nd_plasma_species: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """
+        Calculate the Debye length for a plasma.
+
+        :param temp_plasma_species_kev: Species temperature in keV.
+        :type temp_plasma_species_kev: float | np.ndarray
+        :param nd_plasma_species: Species number density (/m^3).
+        :type nd_plasma_species: float | np.ndarray
+
+        :returns: Debye length in meters.
+        :rtype: float | np.ndarray
+        """
+        return (
+            (constants.EPSILON0 * temp_plasma_species_kev * constants.KILOELECTRON_VOLT)
+            / (nd_plasma_species * constants.ELECTRON_CHARGE**2)
+        ) ** 0.5
+
+    @staticmethod
+    def calculate_lorentz_factor(velocity: float | np.ndarray) -> float | np.ndarray:
+        """
+        Calculate the Lorentz factor for a given velocity.
+        :param velocity: Velocity in m/s.
+        :type velocity: float | np.ndarray
+        :returns: Lorentz factor (dimensionless).
+        :rtype: float | np.ndarray
+        """
+        return 1 / (1 - (velocity / constants.SPEED_LIGHT) ** 2) ** 0.5
+
+    @staticmethod
+    def calculate_relativistic_particle_speed(
+        e_kinetic: float | np.ndarray, mass: float
+    ) -> float | np.ndarray:
+        """
+        Calculate the speed of a particle given its kinetic energy and mass using relativistic mechanics.
+        :param e_kinetic: Kinetic energy in Joules.
+        :type e_kinetic: float | np.ndarray
+        :param mass: Mass of the particle in kg.
+        :type mass: float
+        :returns: Speed of the particle in m/s.
+        :rtype: float | np.ndarray
+        """
+        return (
+            constants.SPEED_LIGHT
+            * (1 - (1 / ((e_kinetic / (mass * constants.SPEED_LIGHT**2)) + 1) ** 2))
+            ** 0.5
+        )
+
+    def calculate_coulomb_log_from_impact(
+        self, impact_param_max: float, impact_param_min: float
+    ) -> float:
+        """
+        Calculate the Coulomb logarithm from maximum and minimum impact parameters.
+        :param impact_param_max: Maximum impact parameter in meters.
+        :type impact_param_max: float
+        :param impact_param_min: Minimum impact parameter in meters.
+        :type impact_param_min: float
+        :returns: Coulomb logarithm (dimensionless).
+        :rtype: float
+        """
+        return np.log(impact_param_max / impact_param_min)
+
+    @staticmethod
+    def calculate_classical_distance_of_closest_approach(
+        charge1: float,
+        charge2: float,
+        e_kinetic: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """
+        Calculate the classical distance of closest approach for two charged particles.
+
+        :param charge1: Charge of particle 1 in units of elementary charge.
+        :type charge1: float
+        :param charge2: Charge of particle 2 in units of elementary charge.
+        :type charge2: float
+        :param e_kinetic: Kinetic energy of the particles in Joules.
+        :type e_kinetic: float | np.ndarray
+        :returns: Distance of closest approach in meters.
+        :rtype: float | np.ndarray
+        """
+
+        return (charge1 * charge2 * constants.ELECTRON_CHARGE**2) / (
+            4 * np.pi * constants.EPSILON0 * e_kinetic
+        )
+
+    @staticmethod
+    def calculate_debroglie_wavelength(
+        mass: float, velocity: float | np.ndarray
+    ) -> float | np.ndarray:
+        """
+        Calculate the de Broglie wavelength of a particle.
+        :param mass: Mass of the particle in kg.
+        :type mass: float
+        :param velocity: Velocity of the particle in m/s.
+        :type velocity: float | np.ndarray
+        :returns: de Broglie wavelength in meters.
+        :rtype: float | np.ndarray
+
+        :note: Reduced Planck constant (h-bar) is used in the calculation as this is for scattering.
+        """
+        return (constants.PLANCK_CONSTANT / (2 * np.pi)) / (mass * velocity)
+
+    @staticmethod
+    def calculate_plasma_frequency(
+        nd_particle: float | np.ndarray, m_particle: float, z_particle: float
+    ) -> float | np.ndarray:
+        """
+        Calculate the plasma frequency for a particle species.
+        :param nd_particle: Number density of the particle species (/m^3).
+        :type nd_particle: float | np.ndarray
+        :param m_particle: Mass of the particle species (kg).
+        :type m_particle: float
+        :param Z_particle: Charge state of the particle species (dimensionless).
+        :type Z_particle: float
+        :returns: Plasma frequency in Hz.
+        :rtype: float | np.ndarray
+        """
+        return (
+            (
+                (nd_particle * z_particle**2 * constants.ELECTRON_CHARGE**2)
+                / (m_particle * constants.EPSILON0)
+            )
+            ** 0.5
+        ) / (2 * np.pi)
+
+    @staticmethod
+    def calculate_larmor_frequency(
+        b_field: float | np.ndarray, m_particle: float, z_particle: float
+    ) -> float | np.ndarray:
+        """
+        Calculate the Larmor frequency for a particle species.
+        :param b_field: Magnetic field strength (T).
+        :type b_field: float | np.ndarray
+        :param m_particle: Mass of the particle species (kg).
+        :type m_particle: float
+        :param Z_particle: Charge state of the particle species (dimensionless).
+        :type Z_particle: float
+        :returns: Larmor frequency in Hz.
+        :rtype: float | np.ndarray
+        """
+        return (z_particle * constants.ELECTRON_CHARGE * b_field) / (
+            2 * np.pi * m_particle
+        )
+
+    def output_detailed_physics(self):
+        """Outputs detailed physics variables to file."""
+
+        po.oheadr(self.outfile, "Detailed Plasma")
+
+        po.osubhd(self.outfile, "Debye lengths:")
+
+        po.ovarrf(
+            self.outfile,
+            "Plasma volume averaged electron Debye length (m)",
+            "(len_plasma_debye_electron_vol_avg)",
+            physics_variables.len_plasma_debye_electron_vol_avg,
+            "OP ",
+        )
+        for i in range(len(physics_variables.len_plasma_debye_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron Debye length at point {i}",
+                f"(len_plasma_debye_electron_profile{i})",
+                physics_variables.len_plasma_debye_electron_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Velocities:")
+
+        for i in range(len(physics_variables.vel_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron thermal velocity at point {i}",
+                f"(vel_plasma_electron_profile{i})",
+                physics_variables.vel_plasma_electron_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Frequencies:")
+
+        for i in range(len(physics_variables.freq_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron frequency at point {i}",
+                f"(freq_plasma_electron_profile{i})",
+                physics_variables.freq_plasma_electron_profile[i],
+            )
+        for i in range(
+            len(physics_variables.freq_plasma_larmor_toroidal_electron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron Larmor frequency at point {i}",
+                f"(freq_plasma_larmor_toroidal_electron_profile{i})",
+                physics_variables.freq_plasma_larmor_toroidal_electron_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Coulomb Logarithms:")
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_electron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-electron Coulomb log at point {i}",
+                f"(plasma_coulomb_log_electron_electron_profile{i})",
+                physics_variables.plasma_coulomb_log_electron_electron_profile[i],
+            )
