@@ -61,7 +61,7 @@ jobs:
       - name: Install PROCESS
         # Editable install to match default install
         run: |
-          pip install -e '.[test, examples]'
+          pip install -e '.[test]'
       - name: Install poppler
         run: |
           sudo apt update

@@ -55,7 +55,8 @@ test = [
   "requests>=2.30",
   "testbook>=0.4",
   "pytest-cov>=3.0.0",
-  "pytest-xdist>=2.5.0"
+  "pytest-xdist>=2.5.0",
+  "process[examples]"
 ]
 examples = ["jupyter==1.0.0"]
 plotly = ["plotly>=5.15.0,<6"]
