@@ -301,7 +301,10 @@ class TeProfile(Profile):
             tbeta (float): Second temperature exponent.
         """
         if physics_variables.i_plasma_pedestal == 0:
-            self.profile_y = t0 * (1 - rho**2) ** alphat
+            # profile values of 0 cause divide by 0 errors so ensure the profile value is at least 1e-8
+            # which is small enough that it won't make a difference to any calculations
+            self.profile_y = np.maximum(t0 * (1 - rho**2) ** alphat, 1e-8)
+            return
 
         if t0 < temp_plasma_pedestal_kev:
             logger.info(
