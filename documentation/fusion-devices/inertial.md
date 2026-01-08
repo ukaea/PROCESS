@@ -28,7 +28,7 @@ Switch `ifetyp` defines the type of device that is assumed; this varies widely b
 
 Switch `ifedrv` defines how the code calculates the drivers efficiency and target gain - these are the primary outputs required from the physics part of the model. For the SOMBRERO and OSIRIS cases (`ifedrv = 1` and `ifedrv = 2`, respectively) the driver efficiency and gain are calculated from curves of these parameters as functions of the driver energy, via the two arrays`etaxe(1:10)` and `gainve(1:10)` respectively; the element number corresponds to the driver energy in MJ, and outside the range 1-10 MJ the curves are extrapolated linearly. Finally, for the `ifedrv = 0` case, the user inputs single values for the driver efficiency (`drveff`) and target gain (`tgain`).
 
-Constraint equation no. 50 can be turned on to enable the ignition repetition rate to remain below a user-specified upper limit (`rrmax`); iteration variable no. 86 (`frrmax`) is the associated f-value. The other iteration variables relevant for the IFE model are nos. 81-85 (`edrive`, `drveff`, `tgain`, `chrad` and `pdrive`).
+Constraint equation no. 50 can be turned on to enable the ignition repetition rate to remain below a user-specified upper limit (`rrmax`). The other iteration variables relevant for the IFE model are nos. 81-85 (`edrive`, `drveff`, `tgain`, `chrad` and `pdrive`).
 
 [^1]: P. J. Knight, *"PROCESS 3009: Incorporation of Inertial Fusion Energy Model"*, Work File Note F/MI/PJK/PROCESS/CODE/032
 [^2]: Bourque et al., *"Overview of the OSIRIS IFE Reactor Conceptual Design"*, Fusion Technology **21** (1992) 1465

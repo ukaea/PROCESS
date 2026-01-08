@@ -1846,7 +1846,7 @@ class TFCoil:
                     self.outfile,
                     "Actual TF coil current / copper area (A/m2)",
                     "(copperA_m2)",
-                    rebco_variables.copperA_m2,
+                    rebco_variables.coppera_m2,
                 )
 
         # TF coil radial build

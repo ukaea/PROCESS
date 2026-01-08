@@ -121,7 +121,9 @@ def init_stellarator_variables():
         vportpmax, \
         vporttmax, \
         max_gyrotron_frequency, \
-        te0_ecrh_achievable
+        te0_ecrh_achievable, \
+        powerht_constraint, \
+        powerscaling_constraint
 
     first_call = True
     first_call_stfwbs = True
@@ -150,3 +152,5 @@ def init_stellarator_variables():
     vporttmax = 0.0
     max_gyrotron_frequency = 1.0e9
     te0_ecrh_achievable = 1.0e2
+    powerht_constraint = 0.0
+    powerscaling_constraint = 0.0
