@@ -214,6 +214,9 @@ class Process:
         self.args = parser.parse_args(args)
         # Store namespace object of the args
 
+        wkdir_path_length = len(self.args.input.lower().replace("in.dat", ""))
+        setup_loggers(Path(self.args.input[:wkdir_path_length]))
+
     def run_mode(self):
         """Determine how to run Process."""
         if self.args.version:
@@ -729,15 +732,27 @@ logging_model_handler.setLevel(logging.WARNING)
 logging_model_handler.setFormatter(logging_formatter)
 
 
-def setup_loggers():
+def setup_loggers(process_working_directory: Path | None = None):
     """A function that adds our handlers to the appropriate logger object."""
     # Only add our handlers if PROCESS is being run as an application
     # This should allow it to be used as a package (e.g. people import models that log)
     # without creating a process.log file... people can then handle our logs as they wish.
+
+    # These are the list of handlers to add only if a root logger has not already been created.
+    handlers = [logging_stream_handler, logging_file_handler]
+
+    if process_working_directory is not None:
+        logging_file_input_location_handler = logging.FileHandler(
+            f"{process_working_directory.as_posix()}process.log", mode="w"
+        )
+        logging_file_input_location_handler.setLevel(logging.INFO)
+        logging_file_input_location_handler.setFormatter(logging_formatter)
+        handlers.append(logging_file_input_location_handler)
+
     # Using basicConfig adds these handlers to the root logger iff the root logger has not
     # been setup yet. This means that during testing these hanlders won't be present, which
     # will ensure they do not conflict with the pytest handlers.
-    logging.basicConfig(handlers=[logging_stream_handler, logging_file_handler])
+    logging.basicConfig(handlers=handlers)
 
     # However, this handler we know to be safe and necessary so we add it to the root logger
     # regardless of whether it has already been created.
@@ -756,8 +771,6 @@ def main(args=None):
     :param args: Arguments to parse, defaults to None
     :type args: list, optional
     """
-
-    setup_loggers()
 
     Process(args)
 
