@@ -42,6 +42,9 @@ $$
 
 For example, `l_mode_threshold_margin = 1.2` ensures that `p_l_h_threshold_mw` is at least $1.2\times$ greater than the separatrix power `p_plasma_separatrix_mw`.
 
+
+**It is recommended to use the H-mode constraint `icc = 15` at all times unless explicitly trying to enforce L-mode in which case `icc = 22` is used.**
+
 -------
 
 ### Use the injected power reduced divertor power.
