@@ -12389,7 +12389,7 @@ def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.minorticks_on()
 
 
-def plot_debye_length_profile(axis, mfile_data, scan):
+def plot_debye_length_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
     """Plot the Debye length profile on the given axis."""
     len_plasma_debye_electron_profile = [
         mfile_data.data[f"len_plasma_debye_electron_profile{i}"].get_scan(scan)
@@ -12453,7 +12453,7 @@ def plot_velocity_profile(axis, mfile_data, scan):
     axis.legend()
 
 
-def plot_frequency_profile(axis, mfile_data, scan):
+def plot_electron_frequency_profile(axis, mfile_data, scan):
     """Plot the electron thermal frequency profile on the given axis."""
     freq_plasma_electron_profile = [
         mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
@@ -12484,6 +12484,30 @@ def plot_frequency_profile(axis, mfile_data, scan):
     axis.set_xlim(-1.025, 1.025)
 
     axis.set_ylabel("Frequency [GHz]")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+
+    axis.legend()
+
+
+def plot_ion_frequency_profile(axis, mfile_data, scan):
+    freq_plasma_larmor_toroidal_deuteron_profile = [
+        mfile_data.data[f"freq_plasma_larmor_toroidal_deuteron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
+
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_deuteron_profile)),
+        np.array(freq_plasma_larmor_toroidal_deuteron_profile) / 1e6,
+        color="red",
+        linestyle="-",
+        label=r"$f_{Larmor,toroidal,D}$",
+    )
+
+    axis.set_ylabel("Frequency [MHz]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.minorticks_on()
@@ -12951,7 +12975,14 @@ def main_plot(
 
     plot_debye_length_profile(figs[15].add_subplot(232), m_file, scan)
     plot_velocity_profile(figs[15].add_subplot(233), m_file, scan)
-    plot_frequency_profile(figs[15].add_subplot(212), m_file, scan)
+
+    ax_ion = figs[15].add_subplot(414)
+    ax_electron = figs[15].add_subplot(413, sharex=ax_ion)
+
+    plot_electron_frequency_profile(ax_electron, m_file, scan)
+
+    plot_ion_frequency_profile(ax_ion, m_file, scan)
+
     plot_plasma_coloumb_logarithms(figs[15].add_subplot(231), m_file, scan)
 
     # Plot poloidal cross-section
