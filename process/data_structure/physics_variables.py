@@ -1329,6 +1329,9 @@ freq_plasma_electron_profile: list[float] = None
 freq_plasma_larmor_toroidal_electron_profile: list[float] = None
 """Profile of electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
+freq_plasma_larmor_toroidal_deuteron_profile: list[float] = None
+"""Profile of deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1653,7 +1656,8 @@ def init_physics_variables():
         plasma_coulomb_log_electron_electron_profile, \
         plasma_coulomb_log_electron_deuteron_profile, \
         freq_plasma_electron_profile, \
-        freq_plasma_larmor_toroidal_electron_profile
+        freq_plasma_larmor_toroidal_electron_profile, \
+        freq_plasma_larmor_toroidal_deuteron_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1919,3 +1923,4 @@ def init_physics_variables():
     plasma_coulomb_log_electron_deuteron_profile = []
     freq_plasma_electron_profile = []
     freq_plasma_larmor_toroidal_electron_profile = []
+    freq_plasma_larmor_toroidal_deuteron_profile = []
