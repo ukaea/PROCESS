@@ -9332,8 +9332,45 @@ class DetailedPhysics:
                         ),
                     ),
                     self.calculate_debroglie_wavelength(
-                        mass=constants.ELECTRON_MASS,
-                        velocity=physics_variables.vel_plasma_electron_profile[i],
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
+        physics_variables.plasma_coulomb_log_electron_deuteron_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.DEUTERON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_deuteron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.DEUTERON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_deuteron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
                     ),
                 ),
             )
@@ -9586,4 +9623,14 @@ class DetailedPhysics:
                 f"Electron-electron Coulomb log at point {i}",
                 f"(plasma_coulomb_log_electron_electron_profile{i})",
                 physics_variables.plasma_coulomb_log_electron_electron_profile[i],
+            )
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_deuteron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-deuteron Coulomb log at point {i}",
+                f"(plasma_coulomb_log_electron_deuteron_profile{i})",
+                physics_variables.plasma_coulomb_log_electron_deuteron_profile[i],
             )

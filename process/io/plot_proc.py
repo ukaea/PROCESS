@@ -12499,12 +12499,27 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
+    plasma_coulomb_log_electron_deuteron_profile = [
+        mfile_data.data[f"plasma_coulomb_log_electron_deuteron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
     axis.plot(
         np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
         plasma_coulomb_log_electron_electron_profile,
         color="blue",
         linestyle="-",
         label=r"$ln \Lambda_{e-e}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_electron_deuteron_profile)),
+        plasma_coulomb_log_electron_deuteron_profile,
+        color="red",
+        linestyle="-",
+        label=r"$ln \Lambda_{e-D}$",
     )
 
     axis.set_ylabel("Coulomb Logarithm")
