@@ -12424,6 +12424,10 @@ def plot_velocity_profile(axis, mfile_data, scan):
         mfile_data.data[f"vel_plasma_electron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
+    vel_plasma_deuteron_profile = [
+        mfile_data.data[f"vel_plasma_deuteron_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
 
     axis.plot(
         np.linspace(0, 1, len(vel_plasma_electron_profile)),
@@ -12432,7 +12436,15 @@ def plot_velocity_profile(axis, mfile_data, scan):
         linestyle="-",
         label=r"$v_{e}$",
     )
+    axis.plot(
+        np.linspace(0, 1, len(vel_plasma_deuteron_profile)),
+        vel_plasma_deuteron_profile,
+        color="red",
+        linestyle="-",
+        label=r"$v_{D}$",
+    )
 
+    axis.set_yscale("log")
     axis.set_ylabel("Velocity [m/s]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
