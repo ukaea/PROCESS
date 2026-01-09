@@ -31,7 +31,10 @@ class Build:
         self.calculate_radial_build(output=False)
         self.calculate_vertical_build(output=False)
 
-        self.calculate_beam_port_size(
+        (
+            current_drive_variables.radius_beam_tangency,
+            current_drive_variables.radius_beam_tangency_max,
+        ) = self.calculate_beam_port_size(
             f_radius_beam_tangency_rmajor=current_drive_variables.f_radius_beam_tangency_rmajor,
             rmajor=physics_variables.rmajor,
             n_tf_coils=tfcoil_variables.n_tf_coils,
