@@ -9472,6 +9472,19 @@ class DetailedPhysics:
             2 * np.pi * m_particle
         )
 
+    @staticmethod
+    def calculate_reduced_mass(mass1: float, mass2: float) -> float:
+        """
+        Calculate the reduced mass of two particles.
+        :param mass1: Mass of particle 1 (kg).
+        :type mass1: float
+        :param mass2: Mass of particle 2 (kg).
+        :type mass2: float
+        :returns: Reduced mass (kg).
+        :rtype: float
+        """
+        return (mass1 * mass2) / (mass1 + mass2)
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
 
