@@ -9317,7 +9317,10 @@ class DetailedPhysics:
                             mass1=constants.ELECTRON_MASS,
                             mass2=constants.ELECTRON_MASS,
                         ),
-                        vel_relative=physics_variables.vel_plasma_electron_profile[i],
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
                     ),
                     self.calculate_debroglie_wavelength(
                         mass=constants.ELECTRON_MASS,
@@ -9490,6 +9493,21 @@ class DetailedPhysics:
         :rtype: float
         """
         return (mass1 * mass2) / (mass1 + mass2)
+
+    @staticmethod
+    def calculate_average_relative_velocity(
+        velocity_1: float | np.ndarray, velocity_2: float | np.ndarray
+    ) -> float | np.ndarray:
+        """
+        Calculate the average relative velocity between two particles.
+        :param velocity_1: Velocity of particle 1 (m/s).
+        :type velocity_1: float | np.ndarray
+        :param velocity_2: Velocity of particle 2 (m/s).
+        :type velocity_2: float | np.ndarray
+        :returns: Average relative velocity (m/s).
+        :rtype: float | np.ndarray
+        """
+        return np.sqrt(velocity_1**2 + velocity_2**2)
 
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
