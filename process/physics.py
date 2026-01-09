@@ -9313,8 +9313,11 @@ class DetailedPhysics:
                     self.calculate_classical_distance_of_closest_approach(
                         charge1=1,
                         charge2=1,
-                        e_kinetic=self.plasma_profile.teprofile.profile_y[i]
-                        * constants.KILOELECTRON_VOLT,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        vel_relative=physics_variables.vel_plasma_electron_profile[i],
                     ),
                     self.calculate_debroglie_wavelength(
                         mass=constants.ELECTRON_MASS,
@@ -9394,7 +9397,8 @@ class DetailedPhysics:
     def calculate_classical_distance_of_closest_approach(
         charge1: float,
         charge2: float,
-        e_kinetic: float | np.ndarray,
+        m_reduced: float,
+        vel_relative: float | np.ndarray = None,
     ) -> float | np.ndarray:
         """
         Calculate the classical distance of closest approach for two charged particles.
@@ -9403,14 +9407,16 @@ class DetailedPhysics:
         :type charge1: float
         :param charge2: Charge of particle 2 in units of elementary charge.
         :type charge2: float
-        :param e_kinetic: Kinetic energy of the particles in Joules.
-        :type e_kinetic: float | np.ndarray
+        :param m_reduced: Reduced mass of the two-particle system in kg.
+        :type m_reduced: float
+        :param vel_relative: Relative velocity of the two particles in m/s.
+        :type vel_relative: float | np.ndarray
         :returns: Distance of closest approach in meters.
         :rtype: float | np.ndarray
         """
 
         return (charge1 * charge2 * constants.ELECTRON_CHARGE**2) / (
-            4 * np.pi * constants.EPSILON0 * e_kinetic
+            2 * np.pi * constants.EPSILON0 * m_reduced * vel_relative**2
         )
 
     @staticmethod
