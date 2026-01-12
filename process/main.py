@@ -214,9 +214,6 @@ class Process:
         self.args = parser.parse_args(args)
         # Store namespace object of the args
 
-        wkdir_path_length = len(self.args.input.lower().replace("in.dat", ""))
-        setup_loggers(Path(self.args.input[:wkdir_path_length]))
-
     def run_mode(self):
         """Determine how to run Process."""
         if self.args.version:
@@ -306,6 +303,8 @@ class VaryRun:
         # Something changes working dir in config lines below
         config = RunProcessConfig(self.config_file)
         config.setup()
+
+        setup_loggers(config.wdir / "process.log")
 
         init.init_all_module_vars()
         init.init_process()
@@ -446,9 +445,12 @@ class SingleRun:
         """Set the mfile filename."""
         self.mfile_path = Path(self.filename_prefix + "MFILE.DAT")
 
-    @staticmethod
-    def initialise():
+    def initialise(self):
         """Run the init module to call all initialisation routines."""
+        setup_loggers(
+            Path(self.output_path.as_posix().replace("OUT.DAT", "process.log"))
+        )
+
         initialise_imprad()
         # Reads in input file
         init.init_process()
@@ -732,7 +734,7 @@ logging_model_handler.setLevel(logging.WARNING)
 logging_model_handler.setFormatter(logging_formatter)
 
 
-def setup_loggers(process_working_directory: Path | None = None):
+def setup_loggers(working_directory_log_path: Path | None = None):
     """A function that adds our handlers to the appropriate logger object."""
     # Only add our handlers if PROCESS is being run as an application
     # This should allow it to be used as a package (e.g. people import models that log)
@@ -741,9 +743,9 @@ def setup_loggers(process_working_directory: Path | None = None):
     # These are the list of handlers to add only if a root logger has not already been created.
     handlers = [logging_stream_handler, logging_file_handler]
 
-    if process_working_directory is not None:
+    if working_directory_log_path is not None:
         logging_file_input_location_handler = logging.FileHandler(
-            f"{process_working_directory.as_posix()}process.log", mode="w"
+            working_directory_log_path.as_posix(), mode="w"
         )
         logging_file_input_location_handler.setLevel(logging.INFO)
         logging_file_input_location_handler.setFormatter(logging_formatter)
