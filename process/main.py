@@ -304,7 +304,7 @@ class VaryRun:
         config = RunProcessConfig(self.config_file)
         config.setup()
 
-        setup_loggers(config.wdir / "process.log")
+        setup_loggers(Path(config.wdir) / "process.log")
 
         init.init_all_module_vars()
         init.init_process()
