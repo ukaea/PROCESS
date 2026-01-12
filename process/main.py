@@ -726,7 +726,7 @@ logging_stream_handler = logging.StreamHandler()
 logging_stream_handler.setLevel(logging.CRITICAL)
 logging_stream_handler.setFormatter(logging_formatter)
 
-logging_file_handler = logging.FileHandler("process.log", mode="w")
+logging_file_handler = logging.FileHandler("process.log", mode="a")
 logging_file_handler.setLevel(logging.INFO)
 logging_file_handler.setFormatter(logging_formatter)
 
