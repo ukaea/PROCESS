@@ -9653,7 +9653,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
-        zorder=100,  # Ensure label is on top of all plots
+        zorder=101,  # Ensure label is on top of all plots
     )
 
     # ==========================================================
@@ -9780,6 +9780,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         xy=(r_tf_inboard_in, 0.0),
         xytext=(r_tf_outboard_in + dr_tf_outboard, 0.0),
         arrowprops={"arrowstyle": "<|-|>", "color": "black"},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # Add a label for the full coil width
@@ -9792,6 +9793,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # =============================================================
@@ -9864,6 +9866,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         color="black",
         verticalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # ==============================================================
@@ -9899,6 +9902,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=101,  # Ensure label is on top of all plots
     )
 
     # =============================================================
