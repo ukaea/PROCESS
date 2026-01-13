@@ -5339,6 +5339,7 @@ def plot_tf_coils(
     y5 = mfile.get("z_tf_arc(5)", scan=scan)
 
     dr_tf_inboard = mfile.get("dr_tf_inboard", scan=scan)
+    dr_tf_outboard = mfile.get("dr_tf_outboard", scan=scan)
     dr_shld_thermal_inboard = mfile.get("dr_shld_thermal_inboard", scan=scan)
     dr_shld_thermal_outboard = mfile.get("dr_shld_thermal_outboard", scan=scan)
     dr_tf_shld_gap = mfile.get("dr_tf_shld_gap", scan=scan)
@@ -5381,6 +5382,7 @@ def plot_tf_coils(
                 y4=y4,
                 y5=y5,
                 dr_tf_inboard=dr_tf_inboard,
+                dr_tf_outboard=dr_tf_outboard,
                 offset_in=offset,
             )
 

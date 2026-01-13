@@ -16,6 +16,7 @@ def tfcoil_geometry_rectangular_shape(
     y4: float,
     y5: float,
     dr_tf_inboard: float,
+    dr_tf_outboard: float,
     *,
     offset_in: float = 0.0,
 ) -> list[RectangleGeometry]:
@@ -57,7 +58,7 @@ def tfcoil_geometry_rectangular_shape(
         RectangleGeometry(
             anchor_x=x4 - offset_in,
             anchor_z=y4 - dr_tf_inboard,
-            width=dr_tf_inboard,
+            width=dr_tf_outboard,
             height=(y2 - y4 + 2.0 * dr_tf_inboard),
         ),
         # rectangle representing the lower horizontal part of the tf coil
