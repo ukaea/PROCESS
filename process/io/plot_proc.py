@@ -3468,7 +3468,12 @@ def color_key(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal
     labels = [
         ("CS coil", SOLENOID_COLOUR[colour_scheme - 1]),
         ("CS comp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
-        ("TF coil", TFC_COLOUR[colour_scheme - 1]),
+        (
+            "TF coil",
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
+        ),
         ("Thermal shield", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
         ("VV & shield", VESSEL_COLOUR[colour_scheme - 1]),
         ("Blanket", BLANKET_COLOUR[colour_scheme - 1]),
@@ -3549,7 +3554,12 @@ def toroidal_cross_section(
     for v, colours in [
         ("dr_cs", SOLENOID_COLOUR[colour_scheme - 1]),
         ("dr_cs_precomp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
-        ("dr_tf_inboard", TFC_COLOUR[colour_scheme - 1]),
+        (
+            "dr_tf_inboard",
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
+        ),
         ("dr_shld_thermal_inboard", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
         ("dr_vv_inboard", VESSEL_COLOUR[colour_scheme - 1]),
         ("dr_shld_inboard", VESSEL_COLOUR[colour_scheme - 1]),
@@ -3620,7 +3630,9 @@ def toroidal_cross_section(
             r3=r3,
             r4=r4,
             w=w,
-            facecolor=TFC_COLOUR[colour_scheme - 1],
+            facecolor=TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
         )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
@@ -5345,7 +5357,12 @@ def plot_tf_coils(
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         ),
         (dr_tf_shld_gap, "white"),
-        (0.0, TFC_COLOUR[colour_scheme - 1]),
+        (
+            0.0,
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
+        ),
     ):
         # Check for TF coil shape
         if "i_tf_shape" in mfile.data:
@@ -6568,16 +6585,16 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
     # Add info about the Winding Pack
     textstr_cooling = (
         f"$\\mathbf{{Cooling \\ info:}}$\n \n"
-        f"Coolant inlet temperature: {mfile_data.data['temp_cp_coolant_inlet'].get_scan(scan):.2f} K\n"
-        f"Coolant temperature rise: {mfile_data.data['dtemp_cp_coolant'].get_scan(scan):.2f} K\n"
-        f"Coolant velocity: {mfile_data.data['vel_cp_coolant_midplane'].get_scan(scan):.2f} $\\mathrm{{ms^{{-1}}}}$\n\n"
-        f"Average CP temperature: {mfile_data.data['temp_cp_average'].get_scan(scan):.2f} K\n"
-        f"CP resistivity: {mfile_data.data['rho_cp'].get_scan(scan):.2e} $\\Omega \\mathrm{{m}}$\n"
-        f"Leg resistivity: {mfile_data.data['rho_tf_leg'].get_scan(scan):.2e} $\\Omega \\mathrm{{m}}$\n"
-        f"Leg resistance: {mfile_data.data['res_tf_leg'].get_scan(scan):.2e} $\\Omega$\n"
-        f"CP resistive losses: {mfile_data.data['p_cp_resistive'].get_scan(scan):,.2f} $\\mathrm{{W}}$\n"
-        f"Leg resistive losses: {mfile_data.data['p_tf_leg_resistive'].get_scan(scan):,.2f} $\\mathrm{{W}}$\n"
-        f"Joints resistive losses: {mfile_data.data['p_tf_joints_resistive'].get_scan(scan):,.2f} $\\mathrm{{W}}$\n"
+        f"Coolant inlet temperature: {mfile.get('temp_cp_coolant_inlet', scan=scan):.2f} K\n"
+        f"Coolant temperature rise: {mfile.get('dtemp_cp_coolant', scan=scan):.2f} K\n"
+        f"Coolant velocity: {mfile.get('vel_cp_coolant_midplane', scan=scan):.2f} $\\mathrm{{ms^{{-1}}}}$\n\n"
+        f"Average CP temperature: {mfile.get('temp_cp_average', scan=scan):.2f} K\n"
+        f"CP resistivity: {mfile.get('rho_cp', scan=scan):.2e} $\\Omega \\mathrm{{m}}$\n"
+        f"Leg resistivity: {mfile.get('rho_tf_leg', scan=scan):.2e} $\\Omega \\mathrm{{m}}$\n"
+        f"Leg resistance: {mfile.get('res_tf_leg', scan=scan):.2e} $\\Omega$\n"
+        f"CP resistive losses: {mfile.get('p_cp_resistive', scan=scan):,.2f} $\\mathrm{{W}}$\n"
+        f"Leg resistive losses: {mfile.get('p_tf_leg_resistive', scan=scan):,.2f} $\\mathrm{{W}}$\n"
+        f"Joints resistive losses: {mfile.get('p_tf_joints_resistive', scan=scan):,.2f} $\\mathrm{{W}}$\n"
     )
     axis.text(
         0.55,
@@ -8814,7 +8831,9 @@ def plot_radial_build(
         SOLENOID_COLOUR[colour_scheme - 1],
         CSCOMPRESSION_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1],
+        TFC_COLOUR[colour_scheme - 1]
+        if mfile.get("i_tf_sup", scan=-1) != 0
+        else "#b87333",
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
@@ -8834,10 +8853,16 @@ def plot_radial_build(
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1],
+        TFC_COLOUR[colour_scheme - 1]
+        if mfile.get("i_tf_sup", scan=-1) != 0
+        else "#b87333",
     ]
     if int(mfile.get("i_tf_inside_cs", scan=-1)) == 1:
-        radial_color[1] = TFC_COLOUR[colour_scheme - 1]
+        radial_color[1] = (
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333"
+        )
         radial_color[2] = "white"
         radial_color[3] = SOLENOID_COLOUR[colour_scheme - 1]
         radial_color[4] = CSCOMPRESSION_COLOUR[colour_scheme - 1]
@@ -8949,7 +8974,9 @@ def plot_lower_vertical_build(
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1],
+        TFC_COLOUR[colour_scheme - 1]
+        if mfile.get("i_tf_sup", scan=-1) != 0
+        else "#b87333",
         "white",
     ]
 
@@ -9055,7 +9082,9 @@ def plot_upper_vertical_build(
             "white",
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
             "white",
-            TFC_COLOUR[colour_scheme - 1],
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333",
             "white",
         ]
     # Double null case
@@ -9093,7 +9122,9 @@ def plot_upper_vertical_build(
             "white",
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
             "white",
-            TFC_COLOUR[colour_scheme - 1],
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333",
             "white",
         ]
 

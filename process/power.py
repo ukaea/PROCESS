@@ -789,10 +789,7 @@ class Power:
             p_tf_cryoal_cryo = (
                 1.0e-6
                 * (constants.TEMP_ROOM - tfcoil_variables.temp_cp_coolant_inlet)
-                / (
-                    tfcoil_variables.eff_tf_cryo
-                    * tfcoil_variables.temp_cp_coolant_inlet
-                )
+                / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_cp_coolant_inlet)
                 * heat_transport_variables.helpow_cryal
             )
 
