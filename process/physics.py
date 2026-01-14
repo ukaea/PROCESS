@@ -5293,14 +5293,6 @@ class Physics:
                 physics_variables.nd_plasma_electrons_max,
                 "OP ",
             )
-            if (numerics.ioptimz > 0) and (numerics.active_constraints[4]):
-                po.ovarre(
-                    self.outfile,
-                    "Density limit (enforced) (/m3)",
-                    "(boundu(9)*nd_plasma_electrons_max)",
-                    numerics.boundu[8] * physics_variables.nd_plasma_electrons_max,
-                    "OP ",
-                )
 
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
