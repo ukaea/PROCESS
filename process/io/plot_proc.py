@@ -2707,6 +2707,7 @@ def plot_main_plasma_information(
         f"Total volt-second consumption: {mfile.get('vs_plasma_total_required', scan=scan):.4f} Vs                \n"
         f"  - Internal volt-seconds: {mfile.get('vs_plasma_internal', scan=scan):.4f} Vs\n"
         f"  - Volt-seconds needed for burn: {mfile.get('vs_plasma_burn_required', scan=scan):.4f} Vs\n"
+        f"  - Volt-seconds needed for ramp: {mfile.get('vs_plasma_ramp_required', scan=scan):.4f} Vs | $C_{{\\text{{ejima}}}}$: {mfile.get('ejima_coeff', scan=scan):.4f}\n"
         f"$V_{{\\text{{loop}}}}$: {mfile.get('v_plasma_loop_burn', scan=scan):.4f} V\n"
         f"$\\Omega_{{\\text{{p}}}}$: {mfile.get('res_plasma', scan=scan):.4e} $\\Omega$\n"
         f"Plasma resistive diffusion time: {mfile.get('t_plasma_res_diffusion', scan=scan):,.4f} s\n"
