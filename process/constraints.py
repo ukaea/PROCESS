@@ -371,6 +371,7 @@ def constraint_equation_5():
 
     fdene scales the constraint such that:
     nd_plasma_electrons_vol_avg / nd_plasma_electrons_max <= fdene.
+    (Except when i_density_limit=7 when nd_plasma_electron_line is used, not nd_plasma_electrons_vol_avg)
     """
     # Apply Greenwald limit to line-averaged density
     if data_structure.physics_variables.i_density_limit == 7:
