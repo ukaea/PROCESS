@@ -357,7 +357,7 @@ class VaryRun:
             else:
                 print("PROCESS has stopped without finishing!")
 
-            vary_iteration_variables(itervars, lbs, ubs)
+            vary_iteration_variables(itervars, lbs, ubs, config.generator)
 
         config.error_status2readme()
 
