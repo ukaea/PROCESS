@@ -273,7 +273,7 @@ dz_vv_upper = 0.3
 * Underside vacuum vessel radial thickness [m]
 dz_vv_lower = 0.3
 
-* Inboard inboard shield thickness [m]
+* Inboard shield thickness [m]
 dr_shld_inboard = 0.3
 
 * Gap between vacuum vessel and blanket [m]

@@ -455,7 +455,7 @@ OBS_VARS_HELP = {
     "dz_blkt_upper": "WARNING. BLNKTTH is now always calculated rather than input - please remove it from the input file. ",
     "iprofile": "Use i_beta_norm_max, i_alphaj and i_ind_plasma_internal_norm instead. See docs for setup. ",
     "fl_h_threshold": (
-        "fl_h_threshold has been replaced by h_mode_threshold_margin/l_mode_threshold_margin"
+        "fl_h_threshold has been replaced by f_h_mode_margin/f_l_mode_margin"
         " please check the docstring for constraint 15/22 to find the appropriate variable"
     ),
 }

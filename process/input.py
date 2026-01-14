@@ -773,10 +773,10 @@ INPUT_VARIABLES = {
     "fhole": InputVariable(data_structure.fwbs_variables, float, range=(0.0, 1.0)),
     "fhts": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 1.0)),
     "fkind": InputVariable(data_structure.cost_variables, float, range=(0.5, 1.0)),
-    "h_mode_threshold_margin": InputVariable(
+    "f_h_mode_margin": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 1000000.0)
     ),
-    "l_mode_threshold_margin": InputVariable(
+    "f_l_mode_margin": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 1000000.0)
     ),
     "flirad": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
