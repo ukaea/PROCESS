@@ -111,7 +111,7 @@ from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("process")
 
 
 class Process:
@@ -736,12 +736,13 @@ logging_model_handler.setFormatter(logging_formatter)
 
 def setup_loggers(working_directory_log_path: Path | None = None):
     """A function that adds our handlers to the appropriate logger object."""
-    # Only add our handlers if PROCESS is being run as an application
-    # This should allow it to be used as a package (e.g. people import models that log)
-    # without creating a process.log file... people can then handle our logs as they wish.
+    # Remove all of the existing handlers from the 'process' package logger
+    logger.handlers.clear()
 
-    # These are the list of handlers to add only if a root logger has not already been created.
-    handlers = [logging_stream_handler, logging_file_handler]
+    # (Re)add the loggers to the 'process' package logger (and its children)
+    logger.addHandler(logging_stream_handler)
+    logger.addHandler(logging_file_handler)
+    logger.addHandler(logging_model_handler)
 
     if working_directory_log_path is not None:
         logging_file_input_location_handler = logging.FileHandler(
@@ -749,17 +750,7 @@ def setup_loggers(working_directory_log_path: Path | None = None):
         )
         logging_file_input_location_handler.setLevel(logging.INFO)
         logging_file_input_location_handler.setFormatter(logging_formatter)
-        handlers.append(logging_file_input_location_handler)
-
-    # Using basicConfig adds these handlers to the root logger iff the root logger has not
-    # been setup yet. This means that during testing these hanlders won't be present, which
-    # will ensure they do not conflict with the pytest handlers.
-    logging.basicConfig(handlers=handlers)
-
-    # However, this handler we know to be safe and necessary so we add it to the root logger
-    # regardless of whether it has already been created.
-    root_logger = logging.getLogger()
-    root_logger.addHandler(logging_model_handler)
+        logger.addHandler(logging_file_input_location_handler)
 
 
 def main(args=None):
