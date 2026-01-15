@@ -1,27 +1,41 @@
-import os
-import re
+"""It is well-known at this point that PROCESS produces ever so slight different results depending upon
+the operating system, system architecture, and the software versions installed on the system. This is
+not surprising nor massively concerning for numeric scientific software. However, it can be problematic
+for tests where the results we assert on change from system to system.
+
+We identify systems that will be succeptible to these tiny changes and skip the tests so as not to
+create failures. We do this by checking the users systems results on an algorithm compared to some
+known result.
+This algorithm solves a system of equations that is very ill-conditioned where tiny numeric differences
+can be identified and compared against a known system.
+"""
+
+import numpy as np
+
+
+def _hilbert_matrix(n):
+    """A matrix that is known to be ill-conditioned"""
+    return np.array(
+        [[1.0 / (i + j + 1) for j in range(n)] for i in range(n)], dtype=np.float64
+    )
 
 
 def system_compatible():
-    """Check the system compatibility to ensure tests are not
-    overwritten with inaccurate data caused by floating point differences in
-    dynamically linked libraries provided by the OS.
+    """Check the system compatibility with numerically unstable tests."""
+    # create an ill-conditioned system
+    a = _hilbert_matrix(10)
+    b = np.ones(10)
 
-    :return: is the system compatible with the test suite, and can it update the test
-    assets?
-    :rtype: boolean
-    """
-    try:
-        shell_stream = os.popen("ldd --version")
+    # solve the ill-conditioned system
+    x = np.linalg.solve(a, b)
 
-        ldd_version = re.search(r"^ldd .+ (2.[0-9.]+).*", shell_stream.read()).group(1)
-        ldd_version_array = ldd_version.split(".")
-        major = ldd_version_array[0]
-        minor = ldd_version_array[1]
+    # create a similar ill-conditioned system
+    a_perturbed = a.copy()
+    a_perturbed[0, 0] += np.finfo(float).eps
+    x_perturbed = np.linalg.solve(a_perturbed, b)
 
-        if int(major) < 2 or (int(major) == 2 and int(minor) < 31):
-            return False
-    except AttributeError:
-        return False
+    # return the relative difference between the two solutions
+    rel_diff = np.linalg.norm(x - x_perturbed) / np.linalg.norm(x)
 
-    return True
+    # check that relative difference against a known solution
+    return rel_diff == 5.8813403984318865e-05
