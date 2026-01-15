@@ -5,7 +5,7 @@ calculated in routine `calculate_density_limit()`, which is called by `physics`.
 
 This constraint can be activated by stating `icc = 5` in the input file.
 
-The value of `i_density_limit` can be set to apply the relevant limit. The variable `fdene` can be set to scale the constraint bound: `nd_plasma_electrons_vol_avg` / `nd_plasma_electrons_max` <= `fdene`.
+The value of `i_density_limit` can be set to apply the relevant limit. The variable `fdene` can be set to scale the constraint bound: `nd_plasma_electrons_vol_avg` / `nd_plasma_electrons_max` <= `fdene` (or `nd_plasma_electron_line` / `nd_plasma_electrons_max` <= `fdene` if `i_density_limit = 7`).
 
 For the `i_density_limit = 1-5,8` scalings we scale the function output by the separatrix to volume averaged electron density so that we can set the limit on the volume averaged. **Therefore it is recommended to only use these scalings with an H-mode profile (`i_plasma_pedestal == 1`) otherwise the separatrix density (`nd_plasma_separatrix_electron`) will not be calculated.**
 

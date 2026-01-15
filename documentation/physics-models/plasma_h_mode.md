@@ -52,8 +52,8 @@ For example, `f_l_mode_margin = 1.2` ensures that `p_l_h_threshold_mw` is at lea
 This constraint can be activated by stating `icc = 73` in the input file.
 
 $$
-1.0 - \frac{\mathtt{p_plasma_separatrix_mw}}{
-\underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}+ P_{\text{HCD}}}
+1.0 - \frac{\texttt{p_plasma_separatrix_mw}}{
+\underbrace{\texttt{p_l_h_threshold_mw}}_{\text{Power from scaling}}+ P_{\text{HCD}}}
 $$
 
 
