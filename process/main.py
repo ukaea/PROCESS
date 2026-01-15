@@ -111,6 +111,8 @@ from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
+PACKAGE_LOGGING = True
+"""Can be set False to disable package-level logging, e.g. in the test suite"""
 logger = logging.getLogger("process")
 
 
@@ -737,12 +739,19 @@ logging_model_handler.setFormatter(logging_formatter)
 def setup_loggers(working_directory_log_path: Path | None = None):
     """A function that adds our handlers to the appropriate logger object."""
     # Remove all of the existing handlers from the 'process' package logger
+
     logger.handlers.clear()
+
+    # we always want to add this handler because otherwise PROCESS' error
+    # handling system won't work properly
+    logger.addHandler(logging_model_handler)
+
+    if not PACKAGE_LOGGING:
+        return
 
     # (Re)add the loggers to the 'process' package logger (and its children)
     logger.addHandler(logging_stream_handler)
     logger.addHandler(logging_file_handler)
-    logger.addHandler(logging_model_handler)
 
     if working_directory_log_path is not None:
         logging_file_input_location_handler = logging.FileHandler(
