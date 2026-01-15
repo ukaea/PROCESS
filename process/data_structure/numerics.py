@@ -169,6 +169,7 @@ lablcc: list[str] = None
 * (71) ensure that neomp = separatrix density (nd_plasma_separatrix_electron) x neratio
 * (72) central solenoid shear stress limit (Tresca yield criterion)
 * (73) Psep >= Plh + Paux
+* (74) TFC quench < temp_croco_quench_max
 * (75) TFC current/copper area < Maximum
 * (76) Eich critical separatrix density
 * (77) TF coil current per turn upper limit
@@ -203,28 +204,53 @@ lablxc: list[str] = None
 * ( 5) beta_total_vol_avg
 * ( 6) nd_plasma_electrons_vol_avg
 * ( 7) f_nd_beam_electron
+* ( 8) NOT USED
+* ( 9) NOT USED
 * (10) hfact
 * (11) p_hcd_primary_extra_heat_mw
 * (12) oacdcp
 * (13) dr_tf_inboard (NOT RECOMMENDED)
+* (14) NOT USED
+* (15) NOT USED
 * (16) dr_cs
 * (17) t_plant_pulse_dwell
 * (18) q
 * (19) e_beam_kev
 * (20) temp_cp_average
+* (21) NOT USED
 * (22) NOT USED
 * (23) fcoolcp
 * (24) NOT USED
+* (25) NOT USED
+* (26) NOT USED
+* (27) NOT USED
+* (28) NOT USED
 * (29) dr_bore
+* (30) NOT USED
 * (31) gapomin
+* (32) NOT USED
+* (33) NOT USED
 * (34) NOT USED
+* (35) NOT USED
+* (36) NOT USED
 * (37) j_cs_flat_top_end
+* (38) NOT USED
+* (39) NOT USED
+* (40) NOT USED
 * (41) f_j_cs_start_pulse_end_flat_top
 * (42) dr_cs_tf_gap
 * (43) NOT USED
 * (44) f_c_plasma_non_inductive
+* (45) NOT USED
+* (46) NOT USED
 * (47) feffcd
+* (48) NOT USED
+* (49) NOT USED
+* (50) NOT USED
+* (51) NOT USED
 * (52) NOT USED
+* (53) NOT USED
+* (54) NOT USED
 * (55) NOT USED
 * (56) t_tf_superconductor_quench
 * (57) dr_tf_nose_case
@@ -232,40 +258,67 @@ lablxc: list[str] = None
 * (59) f_a_tf_turn_cable_copper
 * (60) c_tf_turn
 * (61) dr_shld_vv_gap_inboard
+* (62) NOT USED
+* (63) NOT USED
+* (64) NOT USED
 * (65) t_plant_pulse_plasma_current_ramp_up
+* (66) NOT USED
+* (67) NOT USED
+* (68) NOT USED
 * (69) radius_cp_coolant_channel
 * (70) vel_cp_coolant_midplane
+* (71) NOT USED
+* (72) NOT USED
 * (73) dr_fw_plasma_gap_inboard
 * (74) dr_fw_plasma_gap_outboard
 * (75) f_dr_tf_outboard_inboard
 * (76) NOT USED
 * (77) NOT USED
 * (78) NOT USED
+* (79) NOT USED
 * (80) NOT USED
 * (81) edrive
 * (82) drveff
 * (83) tgain
 * (84) chrad
 * (85) pdrive
+* (86) NOT USED
 * (87) NOT USED
 * (88) NOT USED
+* (89) NOT USED
 * (90) blbuith
 * (91) blbuoth
+* (92) NOT USED
 * (93) dr_shld_inboard
 * (94) dr_shld_outboard
+* (95) NOT USED
+* (96) NOT USED
+* (97) NOT USED
 * (98) f_blkt_li6_enrichment
 * (99) NOT USED
 * (100) NOT USED
 * (101) NOT USED
 * (102) f_nd_impurity_electronsvar # OBSOLETE
 * (103) NOT USED
+* (104) NOT USED
+* (105) NOT USED
+* (106) NOT USED
+* (107) NOT USED
 * (108) breeder_f: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
 * (109) f_nd_alpha_electron: thermal alpha density / electron density
+* (110) NOT USED
+* (111) NOT USED
+* (112) NOT USED
+* (113) NOT USED
 * (114) len_fw_channel: Length of a single first wall channel
+* (115) NOT USED
+* (116) NOT USED
+* (117) NOT USED
 * (119) temp_plasma_separatrix_kev:  separatrix temperature calculated by the Kallenbach divertor model
 * (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
 * (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
 * (122) f_a_cs_turn_steel : streel fraction of Central Solenoid
+* (123) NOT USED
 * (124) qtargettotal : Power density on target including surface recombination [W/m2]
 * (125) f_nd_impurity_electrons(3) :  Beryllium density fraction relative to electron density
 * (126) f_nd_impurity_electrons(4) :  Carbon density fraction relative to electron density
@@ -279,27 +332,45 @@ lablxc: list[str] = None
 * (134) f_nd_impurity_electrons(12) :  Krypton density fraction relative to electron density
 * (135) f_nd_impurity_electrons(13) :  Xenon density fraction relative to electron density
 * (136) f_nd_impurity_electrons(14) :  Tungsten density fraction relative to electron density
+* (137) NOT USED
 * (138) dx_hts_tape_rebco : thickness of REBCO layer in tape (m)
 * (139) dx_hts_tape_copper : thickness of copper layer in tape (m)
 * (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
+* (141) NOT USED
 * (142) nd_plasma_separatrix_electron : electron density at separatrix [m-3]
 * (143) f_copperA_m2 : TF coil current / copper area < Maximum value
+* (144) NOT USED
 * (145) f_nd_plasma_pedestal_greenwald :  fraction of Greenwald density to set as pedestal-top density
+* (146) NOT USED
+* (147) NOT USED
 * (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
-* (150) REMOVED
-* (151) REMOVED
+* (149) NOT USED
+* (150) NOT USED
+* (151) NOT USED
 * (152) f_nd_plasma_separatrix_greenwald : Ratio of separatrix density to Greenwald density
+* (153) NOT USED
+* (154) NOT USED
 * (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)
 * (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)
+* (157) NOT USED
 * (158) dx_croco_strand_copper : Thickness of CroCo copper tube (m)
+* (159) NOT USED
+* (160) NOT USED
+* (161) NOT USED
 * (162) r_cp_top : Top outer radius of the centropost (ST only) (m)
+* (163) NOT USED
+* (164) NOT USED
+* (165) NOT USED
+* (166) NOT USED
+* (167) NOT USED
+* (168) NOT USED
 * (169) te0_ecrh_achievable: Max. achievable electron temperature at ignition point
 * (170) deg_div_field_plate : field line angle wrt divertor target plate (degrees)
 * (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
 * (172) dx_tf_side_case_min : TF side case thickness [m]
 * (173) f_plasma_fuel_deuterium : Deuterium fraction in fuel
-* (174) EMPTY : Description
-* (175) EMPTY : Description
+* (174) NOT USED
+* (175) NOT USED
 """
 # Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
 
