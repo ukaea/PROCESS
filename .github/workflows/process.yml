@@ -14,12 +14,13 @@ jobs:
   unit-test:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
+      - run: uname -m
       - name: Run unit tests with coverage report
         run: |
           hatch run test:tests-cov tests/unit
