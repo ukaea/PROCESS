@@ -6495,6 +6495,28 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
     axis.axvline(x=r_tf_wp_inboard_centre, **x_kwargs)
     axis.axvline(x=r_tf_inboard_out, **x_kwargs)
 
+    axis.minorticks_on()
+    axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
+    axis.set_ylim((y14[-1] * 1.65), (-y14[-1] * 1.65))
+
+    axis.set_title("Top-down view of inboard TF coil at midplane")
+    axis.set_xlabel("Radial distance [m]")
+    axis.set_ylabel("Toroidal distance [m]")
+    axis.legend(loc="upper left")
+
+    axis.text(
+        0.05,
+        0.975,
+        "*Turn insulation and cooling pipes not shown",
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        color="black",
+        transform=fig.transFigure,
+    )
+
+
+def plot_resistive_tf_info(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> None:
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
         f"$\\mathbf{{Casing:}}$\n \n"
@@ -6612,26 +6634,6 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
             "alpha": 1.0,
             "linewidth": 2,
         },
-    )
-
-    axis.minorticks_on()
-    axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
-    axis.set_ylim((y14[-1] * 1.65), (-y14[-1] * 1.65))
-
-    axis.set_title("Top-down view of inboard TF coil at midplane")
-    axis.set_xlabel("Radial distance [m]")
-    axis.set_ylabel("Toroidal distance [m]")
-    axis.legend(loc="upper left")
-
-    axis.text(
-        0.05,
-        0.975,
-        "*Turn insulation and cooling pipes not shown",
-        fontsize=9,
-        verticalalignment="top",
-        horizontalalignment="left",
-        color="black",
-        transform=fig.transFigure,
     )
 
 
@@ -12685,6 +12687,7 @@ def main_plot(
         ax19 = figs[18].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(ax19, m_file, scan, figs[18])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[18])
     plot_tf_coil_structure(
         figs[20].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
