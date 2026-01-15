@@ -645,10 +645,10 @@ def check_process(inputs):  # noqa: ARG001
         # Water cooled copper magnets initalisation / checks
         if data_structure.tfcoil_variables.i_tf_sup == 0:
             # Check if the initial centrepost coolant loop adapted to the magnet technology
-            # Ice cannot flow so tcoolin > 273.15 K
-            if data_structure.tfcoil_variables.tcoolin < 273.15:
+            # Ice cannot flow so temp_cp_coolant_inlet > 273.15 K
+            if data_structure.tfcoil_variables.temp_cp_coolant_inlet < 273.15:
                 raise ProcessValidationError(
-                    "Coolant temperature (tcoolin) cannot be < 0 C (273.15 K) for water cooled copper magents"
+                    "Coolant temperature (temp_cp_coolant_inlet) cannot be < 0 C (273.15 K) for water cooled copper magents"
                 )
 
             # Temperature of the TF legs cannot be cooled down
@@ -680,9 +680,9 @@ def check_process(inputs):  # noqa: ARG001
         elif data_structure.tfcoil_variables.i_tf_sup == 2:
             # Call a lvl 3 error if the inlet coolant temperature is too large
             # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
-            if data_structure.tfcoil_variables.tcoolin > 40.0:
+            if data_structure.tfcoil_variables.temp_cp_coolant_inlet > 40.0:
                 raise ProcessValidationError(
-                    "Coolant temperature (tcoolin) should be < 40 K for the cryo-al resistivity to be defined"
+                    "Coolant temperature (temp_cp_coolant_inlet) should be < 40 K for the cryo-al resistivity to be defined"
                 )
 
             # Check if the leg average temperature is low enough for the resisitivity fit
@@ -701,7 +701,7 @@ def check_process(inputs):  # noqa: ARG001
 
             # Otherwise intitialise the average conductor temperature at
             data_structure.tfcoil_variables.temp_cp_average = (
-                data_structure.tfcoil_variables.tcoolin
+                data_structure.tfcoil_variables.temp_cp_coolant_inlet
             )
 
         # Check if the boostrap current selection is addapted to ST
@@ -1035,7 +1035,7 @@ def check_process(inputs):  # noqa: ARG001
                     data_structure.tfcoil_variables.dx_tf_turn_insulation
                     + data_structure.tfcoil_variables.dx_tf_wp_insulation
                 )
-                + 4.0 * data_structure.tfcoil_variables.rcool
+                + 4.0 * data_structure.tfcoil_variables.radius_cp_coolant_channel
             )
 
         if data_structure.numerics.boundl[139] < dr_tf_wp_min:

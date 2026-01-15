@@ -2200,7 +2200,7 @@ def plot_main_power_flow(
     # TF coil power box
     axis.text(
         0.325,
-        0.05,
+        0.075,
         f"TF coils:\n{mfile.get('p_tf_electric_supplies_mw', scan=scan):.3f} MWe",
         fontsize=9,
         verticalalignment="bottom",
@@ -2264,7 +2264,7 @@ def plot_main_power_flow(
     # Recirculated power to TF
     axis.annotate(
         "",
-        xy=(0.35, 0.075),
+        xy=(0.35, 0.1),
         xytext=(0.35, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={
@@ -3469,7 +3469,12 @@ def color_key(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal
     labels = [
         ("CS coil", SOLENOID_COLOUR[colour_scheme - 1]),
         ("CS comp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
-        ("TF coil", TFC_COLOUR[colour_scheme - 1]),
+        (
+            "TF coil",
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
+        ),
         ("Thermal shield", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
         ("VV & shield", VESSEL_COLOUR[colour_scheme - 1]),
         ("Blanket", BLANKET_COLOUR[colour_scheme - 1]),
@@ -3550,7 +3555,12 @@ def toroidal_cross_section(
     for v, colours in [
         ("dr_cs", SOLENOID_COLOUR[colour_scheme - 1]),
         ("dr_cs_precomp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
-        ("dr_tf_inboard", TFC_COLOUR[colour_scheme - 1]),
+        (
+            "dr_tf_inboard",
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
+        ),
         ("dr_shld_thermal_inboard", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
         ("dr_vv_inboard", VESSEL_COLOUR[colour_scheme - 1]),
         ("dr_shld_inboard", VESSEL_COLOUR[colour_scheme - 1]),
@@ -3621,7 +3631,9 @@ def toroidal_cross_section(
             r3=r3,
             r4=r4,
             w=w,
-            facecolor=TFC_COLOUR[colour_scheme - 1],
+            facecolor=TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
         )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
@@ -5328,6 +5340,7 @@ def plot_tf_coils(
     y5 = mfile.get("z_tf_arc(5)", scan=scan)
 
     dr_tf_inboard = mfile.get("dr_tf_inboard", scan=scan)
+    dr_tf_outboard = mfile.get("dr_tf_outboard", scan=scan)
     dr_shld_thermal_inboard = mfile.get("dr_shld_thermal_inboard", scan=scan)
     dr_shld_thermal_outboard = mfile.get("dr_shld_thermal_outboard", scan=scan)
     dr_tf_shld_gap = mfile.get("dr_tf_shld_gap", scan=scan)
@@ -5346,7 +5359,12 @@ def plot_tf_coils(
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         ),
         (dr_tf_shld_gap, "white"),
-        (0.0, TFC_COLOUR[colour_scheme - 1]),
+        (
+            0.0,
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
+        ),
     ):
         # Check for TF coil shape
         if "i_tf_shape" in mfile.data:
@@ -5365,6 +5383,7 @@ def plot_tf_coils(
                 y4=y4,
                 y5=y5,
                 dr_tf_inboard=dr_tf_inboard,
+                dr_tf_outboard=dr_tf_outboard,
                 offset_in=offset,
             )
 
@@ -6477,6 +6496,28 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
     axis.axvline(x=r_tf_wp_inboard_centre, **x_kwargs)
     axis.axvline(x=r_tf_inboard_out, **x_kwargs)
 
+    axis.minorticks_on()
+    axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
+    axis.set_ylim((y14[-1] * 1.65), (-y14[-1] * 1.65))
+
+    axis.set_title("Top-down view of inboard TF coil at midplane")
+    axis.set_xlabel("Radial distance [m]")
+    axis.set_ylabel("Toroidal distance [m]")
+    axis.legend(loc="upper left")
+
+    axis.text(
+        0.05,
+        0.975,
+        "*Turn insulation and cooling pipes not shown",
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        color="black",
+        transform=fig.transFigure,
+    )
+
+
+def plot_resistive_tf_info(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> None:
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
         f"$\\mathbf{{Casing:}}$\n \n"
@@ -6566,24 +6607,34 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
         bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 1.0, "linewidth": 2},
     )
 
-    axis.minorticks_on()
-    axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
-    axis.set_ylim((y14[-1] * 1.65), (-y14[-1] * 1.65))
-
-    axis.set_title("Top-down view of inboard TF coil at midplane")
-    axis.set_xlabel("Radial distance [m]")
-    axis.set_ylabel("Toroidal distance [m]")
-    axis.legend(loc="upper left")
-
+    # Add info about the Winding Pack
+    textstr_cooling = (
+        f"$\\mathbf{{Cooling \\ info:}}$\n \n"
+        f"Coolant inlet temperature: {mfile.get('temp_cp_coolant_inlet', scan=scan):.2f} K\n"
+        f"Coolant temperature rise: {mfile.get('dtemp_cp_coolant', scan=scan):.2f} K\n"
+        f"Coolant velocity: {mfile.get('vel_cp_coolant_midplane', scan=scan):.2f} $\\mathrm{{ms^{{-1}}}}$\n\n"
+        f"Average CP temperature: {mfile.get('temp_cp_average', scan=scan):.2f} K\n"
+        f"CP resistivity: {mfile.get('rho_cp', scan=scan):.2e} $\\Omega \\mathrm{{m}}$\n"
+        f"Leg resistivity: {mfile.get('rho_tf_leg', scan=scan):.2e} $\\Omega \\mathrm{{m}}$\n"
+        f"Leg resistance: {mfile.get('res_tf_leg', scan=scan):.2e} $\\Omega$\n"
+        f"CP resistive losses: {mfile.get('p_cp_resistive', scan=scan):,.2f} $\\mathrm{{W}}$\n"
+        f"Leg resistive losses: {mfile.get('p_tf_leg_resistive', scan=scan):,.2f} $\\mathrm{{W}}$\n"
+        f"Joints resistive losses: {mfile.get('p_tf_joints_resistive', scan=scan):,.2f} $\\mathrm{{W}}$\n"
+    )
     axis.text(
-        0.05,
-        0.975,
-        "*Turn insulation and cooling pipes not shown",
+        0.55,
+        0.35,
+        textstr_cooling,
         fontsize=9,
         verticalalignment="top",
         horizontalalignment="left",
-        color="black",
         transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
     )
 
 
@@ -7757,7 +7808,7 @@ def plot_magnetics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
-            ("vcool", "Maximum coolant flow speed", "ms$^{-1}$"),
+            ("vel_cp_coolant_midplane", "Maximum coolant flow speed", "ms$^{-1}$"),
             (p_cp_resistive, "CP Resisitive heating", "MW"),
             (
                 p_tf_leg_resistive,
@@ -8785,7 +8836,9 @@ def plot_radial_build(
         SOLENOID_COLOUR[colour_scheme - 1],
         CSCOMPRESSION_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1],
+        TFC_COLOUR[colour_scheme - 1]
+        if mfile.get("i_tf_sup", scan=-1) != 0
+        else "#b87333",
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
@@ -8805,10 +8858,16 @@ def plot_radial_build(
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1],
+        TFC_COLOUR[colour_scheme - 1]
+        if mfile.get("i_tf_sup", scan=-1) != 0
+        else "#b87333",
     ]
     if int(mfile.get("i_tf_inside_cs", scan=-1)) == 1:
-        radial_color[1] = TFC_COLOUR[colour_scheme - 1]
+        radial_color[1] = (
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333"
+        )
         radial_color[2] = "white"
         radial_color[3] = SOLENOID_COLOUR[colour_scheme - 1]
         radial_color[4] = CSCOMPRESSION_COLOUR[colour_scheme - 1]
@@ -8920,7 +8979,9 @@ def plot_lower_vertical_build(
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1],
+        TFC_COLOUR[colour_scheme - 1]
+        if mfile.get("i_tf_sup", scan=-1) != 0
+        else "#b87333",
         "white",
     ]
 
@@ -9026,7 +9087,9 @@ def plot_upper_vertical_build(
             "white",
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
             "white",
-            TFC_COLOUR[colour_scheme - 1],
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333",
             "white",
         ]
     # Double null case
@@ -9064,7 +9127,9 @@ def plot_upper_vertical_build(
             "white",
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
             "white",
-            TFC_COLOUR[colour_scheme - 1],
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333",
             "white",
         ]
 
@@ -9591,7 +9656,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
-        zorder=100,  # Ensure label is on top of all plots
+        zorder=101,  # Ensure label is on top of all plots
     )
 
     # ==========================================================
@@ -9718,6 +9783,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         xy=(r_tf_inboard_in, 0.0),
         xytext=(r_tf_outboard_in + dr_tf_outboard, 0.0),
         arrowprops={"arrowstyle": "<|-|>", "color": "black"},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # Add a label for the full coil width
@@ -9730,6 +9796,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # =============================================================
@@ -9802,6 +9869,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         color="black",
         verticalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # ==============================================================
@@ -9837,6 +9905,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=101,  # Ensure label is on top of all plots
     )
 
     # =============================================================
@@ -12619,6 +12688,7 @@ def main_plot(
         ax19 = figs[18].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(ax19, m_file, scan, figs[18])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[18])
     plot_tf_coil_structure(
         figs[20].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )

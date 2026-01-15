@@ -259,7 +259,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.sig_tf_case = 0.0e0
                 tfcoil_variables.sig_tf_wp = 0.0e0
         if output:
-            self.outtf(0)
+            self.outtf()
 
     def res_tf_internal_geom(self):
         """

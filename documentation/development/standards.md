@@ -362,6 +362,12 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Temperature Changes
+
+- Relative rises or falls in temperatures should start with the `dtemp_` prefix
+
+---------------------
+
 ##### Times
 
 - Times should start with the `t_` prefix

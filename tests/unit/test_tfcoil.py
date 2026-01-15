@@ -159,10 +159,10 @@ class CntrpstTestAsset(NamedTuple):
 
     :i_tf_sup: value for tfcoil_variables.i_tf_sup to be mocked with (0=Copper, 2=Cryogenic aluminium)
     :type i_tf_sup: integer
-    :tcoolin: value for tfcoil_variables.tcoolin to be mocked with (centrepost coolant inlet temperature)
-    :type tcoolin: float
+    :temp_cp_coolant_inlet: value for tfcoil_variables.temp_cp_coolant_inlet to be mocked with (centrepost coolant inlet temperature)
+    :type temp_cp_coolant_inlet: float
 
-    :expected_dtiocool: expected value of tfcoil_variables.dtiocool after tfcoil.cntrpst routine has run
+    :expected_dtiocool: expected value of tfcoil_variables.dtemp_cp_coolant after tfcoil.cntrpst routine has run
     :type expected_dtiocool: float
     :expected_tcpav2: expected value of tfcoil_variables.tcpav2 after tfcoil.cntrpst routine has run
     :type expected_tcpav2: float
@@ -173,7 +173,7 @@ class CntrpstTestAsset(NamedTuple):
     """
 
     i_tf_sup: int
-    tcoolin: float
+    temp_cp_coolant_inlet: float
     expected_dtiocool: float
     expected_tcpav2: float
     expected_temp_cp_peak: float
@@ -196,7 +196,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     """Integration test for cntrpst
 
     Testing tfcoil module variables being set:
-        - dtiocool
+        - dtemp_cp_coolant
         - tcpav2
         - temp_cp_peak
         - p_cp_coolant_pump_elec
@@ -215,12 +215,14 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     """
     monkeypatch.setattr(tfcoil_variables, "a_cp_cool", 1)
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 16)
-    monkeypatch.setattr(tfcoil_variables, "rcool", 0.005)
-    monkeypatch.setattr(tfcoil_variables, "vcool", 20.0)
+    monkeypatch.setattr(tfcoil_variables, "radius_cp_coolant_channel", 0.005)
+    monkeypatch.setattr(tfcoil_variables, "vel_cp_coolant_midplane", 20.0)
     monkeypatch.setattr(tfcoil_variables, "vol_cond_cp", 2)
     monkeypatch.setattr(tfcoil_variables, "p_cp_resistive", 1)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", cntrpst_asset.i_tf_sup)
-    monkeypatch.setattr(tfcoil_variables, "tcoolin", cntrpst_asset.tcoolin)
+    monkeypatch.setattr(
+        tfcoil_variables, "temp_cp_coolant_inlet", cntrpst_asset.temp_cp_coolant_inlet
+    )
     monkeypatch.setattr(fwbs_variables, "pnuc_cp_tf", 1)
     monkeypatch.setattr(build_variables, "z_tf_inside_half", 1)
     monkeypatch.setattr(build_variables, "dr_tf_outboard", 0.5)
@@ -228,10 +230,10 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     tfcoil.cntrpst()
 
     # appears to be the same for all cases?
-    assert pytest.approx(tfcoil_variables.ncool) == 203718.3271576
+    assert pytest.approx(tfcoil_variables.n_cp_coolant_channels_total) == 203718.3271576
 
     assert (
-        pytest.approx(tfcoil_variables.dtiocool, abs=1e-8)
+        pytest.approx(tfcoil_variables.dtemp_cp_coolant, abs=1e-8)
         == cntrpst_asset.expected_dtiocool
     )
     assert pytest.approx(tfcoil_variables.tcpav2) == cntrpst_asset.expected_tcpav2
