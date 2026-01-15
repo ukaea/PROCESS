@@ -6147,13 +6147,6 @@ class Physics:
             if (numerics.ioptimz > 0) and (numerics.active_constraints[14]):
                 po.ovarre(
                     self.outfile,
-                    "L-H threshold power (enforced) (MW)",
-                    "(boundl(103)*p_l_h_threshold_mw)",
-                    numerics.boundl[102] * physics_variables.p_l_h_threshold_mw,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
                     "L-H threshold power (MW)",
                     "(p_l_h_threshold_mw)",
                     physics_variables.p_l_h_threshold_mw,
