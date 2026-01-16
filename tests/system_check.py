@@ -11,6 +11,7 @@ can be identified and compared against a known system.
 """
 
 import numpy as np
+import pytest
 
 
 def _hilbert_matrix(n):
@@ -38,4 +39,4 @@ def system_compatible():
     rel_diff = np.linalg.norm(x - x_perturbed) / np.linalg.norm(x)
 
     # check that relative difference against a known solution
-    return rel_diff == 5.8813403984318865e-05
+    return rel_diff == pytest.approx(5.8813403984318865e-05)
