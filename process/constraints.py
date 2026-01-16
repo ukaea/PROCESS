@@ -355,7 +355,7 @@ def constraint_equation_5():
     """Equation for density upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fdene: f-value for density limit
+    fdene: density limit scale
     nd_plasma_electrons_vol_avg: electron density (/m3)
     nd_plasma_electrons_max: density limit (/m3)
     nd_plasma_electron_line: line averaged electron density (m-3)
@@ -368,13 +368,17 @@ def constraint_equation_5():
     - 5 JET simplified;
     - 6 Hugill-Murakami Mq limit;
     - 7 Greenwald limit
+
+    fdene scales the constraint such that:
+    nd_plasma_electrons_vol_avg / nd_plasma_electrons_max <= fdene.
+    (Except when i_density_limit=7 when nd_plasma_electron_line is used, not nd_plasma_electrons_vol_avg)
     """
     # Apply Greenwald limit to line-averaged density
     if data_structure.physics_variables.i_density_limit == 7:
         return ConstraintResult(
             data_structure.physics_variables.nd_plasma_electron_line
             / data_structure.physics_variables.nd_plasma_electrons_max
-            - 1.0 * data_structure.constraint_variables.fdene,
+            - data_structure.constraint_variables.fdene,
             data_structure.constraint_variables.fdene
             * data_structure.physics_variables.nd_plasma_electrons_max,
             data_structure.constraint_variables.fdene
@@ -385,7 +389,7 @@ def constraint_equation_5():
     cc = (
         data_structure.physics_variables.nd_plasma_electrons_vol_avg
         / data_structure.physics_variables.nd_plasma_electrons_max
-        - 1.0 * data_structure.constraint_variables.fdene
+        - data_structure.constraint_variables.fdene
     )
     return ConstraintResult(
         cc,
@@ -399,19 +403,14 @@ def constraint_equation_6():
     """Equation for epsilon beta-poloidal upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fbeta_poloidal_eps: f-value for epsilon beta-poloidal
     beta_poloidal_eps_max: maximum (eps*beta_poloidal)
     eps: inverse aspect ratio
     beta_poloidal: poloidal beta
     """
     cc = (
-        (
-            data_structure.physics_variables.eps
-            * data_structure.physics_variables.beta_poloidal_vol_avg
-        )
-        / data_structure.physics_variables.beta_poloidal_eps_max
-        - 1.0 * data_structure.constraint_variables.fbeta_poloidal_eps
-    )
+        data_structure.physics_variables.eps
+        * data_structure.physics_variables.beta_poloidal_vol_avg
+    ) / data_structure.physics_variables.beta_poloidal_eps_max - 1.0
     return ConstraintResult(
         cc,
         data_structure.physics_variables.beta_poloidal_eps_max * (1.0 - cc),
@@ -430,8 +429,7 @@ def constraint_equation_7():
     i_plasma_ignited: switch for ignition assumption:
     - 0 do not assume plasma ignition
     - 1 assume ignited (but include auxiliary power in costs)
-    O
-    bviously, i_plasma_ignited must be zero if current drive is required.
+    Obviously, i_plasma_ignited must be zero if current drive is required.
     If i_plasma_ignited=1, any auxiliary power is assumed to be used only
     during plasma start-up, and is excluded from all steady-state
     power balance calculations.
@@ -457,7 +455,6 @@ def constraint_equation_7():
 def constraint_equation_8():
     """Equation for neutron wall load upper limit
 
-    fpflux_fw_neutron_max_mw: f-value for maximum wall load
     pflux_fw_neutron_max_mw: allowable wall-load (MW/m2)
     pflux_fw_neutron_mw: average neutron wall load (MW/m2)
     """
@@ -465,12 +462,10 @@ def constraint_equation_8():
         (
             data_structure.physics_variables.pflux_fw_neutron_mw
             / data_structure.constraint_variables.pflux_fw_neutron_max_mw
-            - 1.0 * data_structure.constraint_variables.fpflux_fw_neutron_max_mw
+            - 1.0
         ),
-        data_structure.constraint_variables.fpflux_fw_neutron_max_mw
-        * data_structure.constraint_variables.pflux_fw_neutron_max_mw,
-        data_structure.constraint_variables.fpflux_fw_neutron_max_mw
-        * data_structure.constraint_variables.pflux_fw_neutron_max_mw
+        data_structure.constraint_variables.pflux_fw_neutron_max_mw,
+        data_structure.constraint_variables.pflux_fw_neutron_max_mw
         - data_structure.physics_variables.pflux_fw_neutron_mw,
     )
 
@@ -479,14 +474,13 @@ def constraint_equation_8():
 def constraint_equation_9():
     """Equation for fusion power upper limit
 
-    fp_fusion_total_max_mw: f-value for maximum fusion power
     p_fusion_total_max_mw: maximum fusion power (MW)
     p_fusion_total_mw: fusion power (MW)
     """
     cc = (
         data_structure.physics_variables.p_fusion_total_mw
         / data_structure.constraint_variables.p_fusion_total_max_mw
-        - 1.0 * data_structure.constraint_variables.fp_fusion_total_max_mw
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -521,14 +515,12 @@ def constraint_equation_12():
 
     vs_plasma_total_required: total V-s needed (Wb)
     vs_plasma_total_required (lower limit) is positive; vs_cs_pf_total_pulse (available) is negative
-    fvs_plasma_total_required: f-value for flux-swing (V-s) requirement (STEADY STATE)
     vs_cs_pf_total_pulse: total flux swing for pulse (Wb)
     """
     # vs_cs_pf_total_pulse is negative, requires sign change
     cc = (
         1.0
-        - data_structure.constraint_variables.fvs_plasma_total_required
-        * (-data_structure.pfcoil_variables.vs_cs_pf_total_pulse)
+        - (-data_structure.pfcoil_variables.vs_cs_pf_total_pulse)
         / data_structure.physics_variables.vs_plasma_total_required
     )
 
@@ -545,62 +537,16 @@ def constraint_equation_13():
 
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ft_burn_min: f-value for minimum burn time
     t_plant_pulse_burn: burn time (s) (calculated if i_pulsed_plant=1)
     t_burn_min: minimum burn time (s)
     """
     return ConstraintResult(
         1.0
-        - data_structure.constraint_variables.ft_burn_min
-        * data_structure.times_variables.t_plant_pulse_burn
+        - data_structure.times_variables.t_plant_pulse_burn
         / data_structure.constraint_variables.t_burn_min,
+        data_structure.constraint_variables.t_burn_min,
         data_structure.constraint_variables.t_burn_min
-        / data_structure.constraint_variables.ft_burn_min,
-        data_structure.constraint_variables.t_burn_min
-        / data_structure.constraint_variables.ft_burn_min
         - data_structure.times_variables.t_plant_pulse_burn,
-    )
-
-
-@ConstraintManager.register_constraint(15, "MW", ">=")
-def constraint_equation_15():
-    """Equation for L-H power threshold limit
-    author: P B Lloyd, CCFE, Culham Science Centre
-
-    fl_h_threshold: f-value for L-H power threshold
-    p_l_h_threshold_mw: L-H mode power threshold (MW)
-    p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
-    """
-    return ConstraintResult(
-        1.0
-        - data_structure.constraint_variables.fl_h_threshold
-        * data_structure.physics_variables.p_plasma_separatrix_mw
-        / data_structure.physics_variables.p_l_h_threshold_mw,
-        data_structure.physics_variables.p_l_h_threshold_mw,
-        data_structure.physics_variables.p_l_h_threshold_mw
-        - data_structure.physics_variables.p_plasma_separatrix_mw
-        / data_structure.constraint_variables.fl_h_threshold,
-    )
-
-
-@ConstraintManager.register_constraint(16, "MW", ">=")
-def constraint_equation_16():
-    """Equation for net electric power lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
-
-    fp_plant_electric_net_required_mw: f-value for net electric power
-    p_plant_electric_net_mw: net electric power (MW)
-    p_plant_electric_net_required_mw: required net electric power (MW)
-    """
-    return ConstraintResult(
-        1.0
-        - data_structure.constraint_variables.fp_plant_electric_net_required_mw
-        * data_structure.heat_transport_variables.p_plant_electric_net_mw
-        / data_structure.constraint_variables.p_plant_electric_net_required_mw,
-        data_structure.constraint_variables.p_plant_electric_net_required_mw,
-        data_structure.heat_transport_variables.p_plant_electric_net_mw
-        - data_structure.constraint_variables.p_plant_electric_net_required_mw
-        / data_structure.constraint_variables.fp_plant_electric_net_required_mw,
     )
 
 
@@ -625,6 +571,53 @@ def constraint_equation_14():
     )
 
 
+@ConstraintManager.register_constraint(15, "MW", ">=")
+def constraint_equation_15():
+    """Equation for L-H power threshold limit to enforce H-mode
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    f_h_mode_margin: a margin on the constraint
+    p_l_h_threshold_mw: L-H mode power threshold (MW)
+    p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
+
+    Setting f_h_mode_margin != 1.0 enforces a margin on the constraint:
+    I.e.  p_plasma_separatrix_mw >= f_h_mode_margin * p_l_h_threshold_mw
+
+    For example, f_h_mode_margin = 1.2 will ensure that
+    p_plasma_separatrix_mw is at least 1.2*p_l_h_threshold_mw (ie in H-mode).
+    """
+    return ConstraintResult(
+        1.0
+        - data_structure.physics_variables.p_plasma_separatrix_mw
+        / (
+            data_structure.physics_variables.p_l_h_threshold_mw
+            * data_structure.constraint_variables.f_h_mode_margin
+        ),
+        data_structure.physics_variables.p_l_h_threshold_mw,
+        data_structure.constraint_variables.f_h_mode_margin
+        * data_structure.physics_variables.p_l_h_threshold_mw
+        - data_structure.physics_variables.p_plasma_separatrix_mw,
+    )
+
+
+@ConstraintManager.register_constraint(16, "MW", ">=")
+def constraint_equation_16():
+    """Equation for net electric power lower limit
+    author: P B Lloyd, CCFE, Culham Science Centre
+
+    p_plant_electric_net_mw: net electric power (MW)
+    p_plant_electric_net_required_mw: required net electric power (MW)
+    """
+    return ConstraintResult(
+        1.0
+        - data_structure.heat_transport_variables.p_plant_electric_net_mw
+        / data_structure.constraint_variables.p_plant_electric_net_required_mw,
+        data_structure.constraint_variables.p_plant_electric_net_required_mw,
+        data_structure.heat_transport_variables.p_plant_electric_net_mw
+        - data_structure.constraint_variables.p_plant_electric_net_required_mw,
+    )
+
+
 @ConstraintManager.register_constraint(17, "MW/m3", "<=")
 def constraint_equation_17():
     """Equation for radiation power upper limit
@@ -636,8 +629,12 @@ def constraint_equation_17():
     pden_alpha_total_mw: alpha power per volume (MW/m3)
     pden_non_alpha_charged_mw: non-alpha charged particle fusion power per volume (MW/m3)
     pden_plasma_ohmic_mw: ohmic heating power per volume (MW/m3)
-    fradpwr: f-value for core radiation power limit
     pden_plasma_rad_mw: total radiation power per volume (MW/m3)
+    fradpwr: core radiation power limit scale
+
+    fradpwr scales the constraint such that
+
+    pden_plasma_rad_mw / pradmaxpv <= fradpwr
     """
     # Maximum possible power/vol_plasma that can be radiated (local)
     pradmaxpv = (
@@ -651,7 +648,7 @@ def constraint_equation_17():
 
     cc = (
         data_structure.physics_variables.pden_plasma_rad_mw / pradmaxpv
-        - 1.0 * data_structure.constraint_variables.fradpwr
+        - data_structure.constraint_variables.fradpwr
     )
     return ConstraintResult(
         cc,
@@ -665,14 +662,13 @@ def constraint_equation_18():
     """Equation for divertor heat load upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fpflux_div_heat_load_mw: f-value for divertor heat load
     pflux_div_heat_load_max_mw: heat load limit (MW/m2)
     pflux_div_heat_load_mw: divertor heat load (MW/m2)
     """
     cc = (
         data_structure.divertor_variables.pflux_div_heat_load_mw
         / data_structure.divertor_variables.pflux_div_heat_load_max_mw
-        - 1.0 * data_structure.constraint_variables.fpflux_div_heat_load_mw
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -688,7 +684,6 @@ def constraint_equation_19():
 
     p_cp_resistive_mw: peak resistive TF coil inboard leg power (total) (MW)
     p_tf_leg_resistive_mw: TF coil outboard leg resistive power (total) (MW)
-    fmva: f-value for maximum MVA
     mvalim: MVA limit for resistive TF coil set (total) (MW)
     """
     totmva = (
@@ -696,11 +691,8 @@ def constraint_equation_19():
         + data_structure.tfcoil_variables.p_tf_leg_resistive_mw
     )
 
-    cc = (
-        totmva / data_structure.constraint_variables.mvalim
-        - 1.0 * data_structure.constraint_variables.fmva
-    )
-    return ConstraintManager(
+    cc = totmva / data_structure.constraint_variables.mvalim - 1.0
+    return ConstraintResult(
         cc, data_structure.constraint_variables.mvalim * (1.0 - cc), totmva * cc
     )
 
@@ -710,14 +702,13 @@ def constraint_equation_20():
     """Equation for neutral beam tangency radius upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fradius_beam_tangency: f-value for neutral beam tangency radius limit
     radius_beam_tangency_max: maximum tangency radius for centreline of beam (m)
     radius_beam_tangency: neutral beam centreline tangency radius (m)
     """
     cc = (
         data_structure.current_drive_variables.radius_beam_tangency
         / data_structure.current_drive_variables.radius_beam_tangency_max
-        - 1.0 * data_structure.constraint_variables.fradius_beam_tangency
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -731,20 +722,46 @@ def constraint_equation_21():
     """Equation for minor radius lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    frminor: f-value for minor radius limit
     rminor: plasma minor radius (m)
     aplasmin: minimum minor radius (m)
     """
     cc = (
         1.0
-        - data_structure.constraint_variables.frminor
-        * data_structure.physics_variables.rminor
+        - data_structure.physics_variables.rminor
         / data_structure.build_variables.aplasmin
     )
     return ConstraintResult(
         cc,
         data_structure.build_variables.aplasmin * (1.0 - cc),
         data_structure.build_variables.aplasmin * cc,
+    )
+
+
+@ConstraintManager.register_constraint(22, "MW", ">=")
+def constraint_equation_22():
+    """Equation for L-H power threshold limit to enforce L-mode
+
+    f_l_mode_margin: a margin on the constraint
+    p_l_h_threshold_mw: L-H mode power threshold (MW)
+    p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
+
+    Setting f_l_mode_margin != 1.0 enforces a margin on the constraint:
+    I.e.  p_l_h_threshold_mw >= f_l_mode_margin * p_plasma_separatrix_mw
+
+    For example, f_l_mode_margin = 1.2 will ensure that
+    p_l_h_threshold_mw is at least 1.2*p_plasma_separatrix_mw (ie in L-mode).
+    """
+    return ConstraintResult(
+        1.0
+        - data_structure.physics_variables.p_l_h_threshold_mw
+        / (
+            data_structure.constraint_variables.f_l_mode_margin
+            * data_structure.physics_variables.p_plasma_separatrix_mw
+        ),
+        data_structure.physics_variables.p_plasma_separatrix_mw,
+        data_structure.physics_variables.p_plasma_separatrix_mw
+        - data_structure.physics_variables.p_l_h_threshold_mw
+        / data_structure.constraint_variables.f_l_mode_margin,
     )
 
 
@@ -757,7 +774,6 @@ def constraint_equation_23():
     dr_fw_plasma_gap_outboard: gap between plasma and first wall, outboard side (m)
     dr_fw_outboard: outboard first wall thickness, initial estimate (m)
     dr_blkt_outboard: outboard blanket thickness (m)
-    fr_conducting_wall: f-value for conducting wall radius / rminor limit
     f_r_conducting_wall: maximum ratio of conducting wall distance to plasma minor radius for vertical stability
     """
     # conducting shell radius (m)
@@ -774,7 +790,7 @@ def constraint_equation_23():
             data_structure.physics_variables.f_r_conducting_wall
             * data_structure.physics_variables.rminor
         )
-        - 1.0 * data_structure.constraint_variables.fr_conducting_wall
+        - 1.0
     )
     return ConstraintManager(
         cc,
@@ -795,10 +811,9 @@ def constraint_equation_24():
     - 1 apply limit to thermal beta;
     - 2 apply limit to thermal + neutral beam beta
     - 3 apply limit to toroidal beta
-    istell: switch for stellarator option (set via <CODE>device.dat</CODE>):
+    istell: switch for stellarator option:
     - 0 use tokamak model;
     - 1 use stellarator model
-    fbeta_max: f-value for beta limit
     beta_vol_avg_max: allowable beta
     beta_total_vol_avg: total plasma beta (calculated if i_plasma_pedestal =3)
     beta_fast_alpha: fast alpha beta component
@@ -814,45 +829,32 @@ def constraint_equation_24():
         cc = (
             data_structure.physics_variables.beta_total_vol_avg
             / data_structure.physics_variables.beta_vol_avg_max
-            - 1.0 * data_structure.constraint_variables.fbeta_max
+            - 1.0
         )
         con = data_structure.physics_variables.beta_vol_avg_max
         err = (
             data_structure.physics_variables.beta_vol_avg_max
             - data_structure.physics_variables.beta_total_vol_avg
-            / data_structure.constraint_variables.fbeta_max
         )
     # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
     elif data_structure.physics_variables.i_beta_component == 1:
         cc = (
-            (
-                data_structure.physics_variables.beta_total_vol_avg
-                - data_structure.physics_variables.beta_fast_alpha
-                - data_structure.physics_variables.beta_beam
-            )
-            / data_structure.physics_variables.beta_vol_avg_max
-            - 1.0 * data_structure.constraint_variables.fbeta_max
-        )
+            data_structure.physics_variables.beta_total_vol_avg
+            - data_structure.physics_variables.beta_fast_alpha
+            - data_structure.physics_variables.beta_beam
+        ) / data_structure.physics_variables.beta_vol_avg_max - 1.0
         con = data_structure.physics_variables.beta_vol_avg_max
-        err = (
-            data_structure.physics_variables.beta_vol_avg_max
-            - (
-                data_structure.physics_variables.beta_total_vol_avg
-                - data_structure.physics_variables.beta_fast_alpha
-                - data_structure.physics_variables.beta_beam
-            )
-            / data_structure.constraint_variables.fbeta_max
+        err = data_structure.physics_variables.beta_vol_avg_max - (
+            data_structure.physics_variables.beta_total_vol_avg
+            - data_structure.physics_variables.beta_fast_alpha
+            - data_structure.physics_variables.beta_beam
         )
     # Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
     elif data_structure.physics_variables.i_beta_component == 2:
         cc = (
-            (
-                data_structure.physics_variables.beta_total_vol_avg
-                - data_structure.physics_variables.beta_fast_alpha
-            )
-            / data_structure.physics_variables.beta_vol_avg_max
-            - 1.0 * data_structure.constraint_variables.fbeta_max
-        )
+            data_structure.physics_variables.beta_total_vol_avg
+            - data_structure.physics_variables.beta_fast_alpha
+        ) / data_structure.physics_variables.beta_vol_avg_max - 1.0
         con = data_structure.physics_variables.beta_vol_avg_max * (1.0 - cc)
         err = (
             data_structure.physics_variables.beta_total_vol_avg
@@ -861,29 +863,21 @@ def constraint_equation_24():
     # Beta limit applies to toroidal beta
     elif data_structure.physics_variables.i_beta_component == 3:
         cc = (
-            (
-                data_structure.physics_variables.beta_total_vol_avg
-                * (
-                    data_structure.physics_variables.b_plasma_total
-                    / data_structure.physics_variables.b_plasma_toroidal_on_axis
-                )
-                ** 2
+            data_structure.physics_variables.beta_total_vol_avg
+            * (
+                data_structure.physics_variables.b_plasma_total
+                / data_structure.physics_variables.b_plasma_toroidal_on_axis
             )
-            / data_structure.physics_variables.beta_vol_avg_max
-            - 1.0 * data_structure.constraint_variables.fbeta_max
-        )
+            ** 2
+        ) / data_structure.physics_variables.beta_vol_avg_max - 1.0
         con = data_structure.physics_variables.beta_vol_avg_max
-        err = (
-            data_structure.physics_variables.beta_vol_avg_max
-            - (
-                data_structure.physics_variables.beta_total_vol_avg
-                * (
-                    data_structure.physics_variables.b_plasma_total
-                    / data_structure.physics_variables.b_plasma_toroidal_on_axis
-                )
-                ** 2
+        err = data_structure.physics_variables.beta_vol_avg_max - (
+            data_structure.physics_variables.beta_total_vol_avg
+            * (
+                data_structure.physics_variables.b_plasma_total
+                / data_structure.physics_variables.b_plasma_toroidal_on_axis
             )
-            / data_structure.constraint_variables.fbeta_max
+            ** 2
         )
 
     return ConstraintResult(cc, con, err)
@@ -894,14 +888,13 @@ def constraint_equation_25():
     """Equation for peak toroidal field upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fb_tf_inboard_max: f-value for maximum toroidal field
     b_tf_inboard_max: maximum peak toroidal field (T)
     b_tf_inboard_peak_symmetric: mean peak field at TF coil (T)
     """
     cc = (
         data_structure.tfcoil_variables.b_tf_inboard_peak_symmetric
         / data_structure.constraint_variables.b_tf_inboard_max
-        - 1.0 * data_structure.constraint_variables.fb_tf_inboard_max
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -915,14 +908,14 @@ def constraint_equation_26():
     """Equation for Central Solenoid current density upper limit at EOF
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fjohcreal: f-value for central solenoid current at end-of-flattop
+    fjohc: margin for central solenoid current at end-of-flattop
     j_cs_critical_flat_top_end: allowable central solenoid current density at end of flat-top (A/m2)
     j_cs_flat_top_end: central solenoid overall current density at end of flat-top (A/m2)
     """
     return ConstraintResult(
         data_structure.pfcoil_variables.j_cs_flat_top_end
         / data_structure.pfcoil_variables.j_cs_critical_flat_top_end
-        - 1.0 * data_structure.constraint_variables.fjohc,
+        - data_structure.constraint_variables.fjohc,
         data_structure.pfcoil_variables.j_cs_critical_flat_top_end,
         data_structure.pfcoil_variables.j_cs_critical_flat_top_end
         - data_structure.pfcoil_variables.j_cs_flat_top_end
@@ -935,14 +928,14 @@ def constraint_equation_27():
     """Equation for Central Solenoid current density upper limit at BOP
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fjohc0: f-value for central solenoid current at beginning of pulse
+    fjohc0: margin for central solenoid current at beginning of pulse
     j_cs_critical_pulse_start: allowable central solenoid current density at beginning of pulse (A/m2)
     j_cs_pulse_start: central solenoid overall current density at beginning of pulse (A/m2)
     """
     return ConstraintResult(
         data_structure.pfcoil_variables.j_cs_pulse_start
         / data_structure.pfcoil_variables.j_cs_critical_pulse_start
-        - 1.0 * data_structure.constraint_variables.fjohc0,
+        - data_structure.constraint_variables.fjohc0,
         data_structure.pfcoil_variables.j_cs_critical_pulse_start,
         data_structure.pfcoil_variables.j_cs_critical_pulse_start
         - data_structure.pfcoil_variables.j_cs_pulse_start
@@ -955,7 +948,6 @@ def constraint_equation_28():
     """Equation for fusion gain (big Q) lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fbig_q_plasma_min: pf-value for Q
     big_q_plasma: Fusion gain; P_fusion / (P_injection + P_ohmic)
     big_q_plasma_min: minimum fusion gain Q
     i_plasma_ignited : input integer : switch for ignition assumption:
@@ -971,8 +963,7 @@ def constraint_equation_28():
 
     cc = (
         1.0
-        - data_structure.constraint_variables.fbig_q_plasma_min
-        * data_structure.current_drive_variables.big_q_plasma
+        - data_structure.current_drive_variables.big_q_plasma
         / data_structure.constraint_variables.big_q_plasma_min
     )
     return ConstraintResult(
@@ -1012,17 +1003,15 @@ def constraint_equation_30():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
-    fp_hcd_injected_max: f-value for injection power
     p_hcd_injected_max: Maximum allowable value for injected power (MW)
     """
     return ConstraintResult(
         data_structure.current_drive_variables.p_hcd_injected_total_mw
         / data_structure.current_drive_variables.p_hcd_injected_max
-        - 1.0 * data_structure.constraint_variables.fp_hcd_injected_max,
+        - 1.0,
         data_structure.current_drive_variables.p_hcd_injected_max,
         data_structure.current_drive_variables.p_hcd_injected_max
-        - data_structure.current_drive_variables.p_hcd_injected_total_mw
-        / data_structure.constraint_variables.fp_hcd_injected_max,
+        - data_structure.current_drive_variables.p_hcd_injected_total_mw,
     )
 
 
@@ -1031,18 +1020,16 @@ def constraint_equation_31():
     """Equation for TF coil case stress upper limit (SCTF)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fstrcase: f-value for TF coil case stress
     sig_tf_case_max: Allowable maximum shear stress in TF coil case (Tresca criterion) (Pa)
     sig_tf_case: Constrained stress in TF coil case (Pa)
     """
     return ConstraintResult(
         data_structure.tfcoil_variables.sig_tf_case
         / data_structure.tfcoil_variables.sig_tf_case_max
-        - 1.0 * data_structure.constraint_variables.fstrcase,
+        - 1.0,
         data_structure.tfcoil_variables.sig_tf_case_max,
         data_structure.tfcoil_variables.sig_tf_case_max
-        - data_structure.tfcoil_variables.sig_tf_case
-        / data_structure.constraint_variables.fstrcase,
+        - data_structure.tfcoil_variables.sig_tf_case,
     )
 
 
@@ -1051,18 +1038,16 @@ def constraint_equation_32():
     """Equation for TF coil conduit stress upper limit (SCTF)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fstrcond: f-value for TF coil conduit stress
     sig_tf_wp_max: Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)
     sig_tf_wp: Constrained stress in TF conductor conduit (Pa)
     """
     return ConstraintResult(
         data_structure.tfcoil_variables.sig_tf_wp
         / data_structure.tfcoil_variables.sig_tf_wp_max
-        - 1.0 * data_structure.constraint_variables.fstrcond,
+        - 1.0,
         data_structure.tfcoil_variables.sig_tf_wp_max,
         data_structure.tfcoil_variables.sig_tf_wp_max
-        - data_structure.tfcoil_variables.sig_tf_wp
-        / data_structure.constraint_variables.fstrcond,
+        - data_structure.tfcoil_variables.sig_tf_wp,
     )
 
 
@@ -1072,17 +1057,18 @@ def constraint_equation_33():
     author: P B Lloyd, CCFE, Culham Science Centre
     args : output structure : residual error; constraint value;
 
-    fiooic: f-value for TF coil operating current / critical
+    fiooic: margin for TF coil operating current / critical
     j_tf_wp_critical: critical current density for winding pack (A/m2)
     j_tf_wp: winding pack current density (A/m2)
+
+    fiooic scales the constraint such that:
+    j_tf_wp / j_tf_wp_critical <= fiooic.
     """
-    if data_structure.constraint_variables.fiooic > 0.7:
-        logger.error("fiooic shouldn't be above 0.7 for engineering reliability")
 
     cc = (
         data_structure.tfcoil_variables.j_tf_wp
         / data_structure.tfcoil_variables.j_tf_wp_critical
-        - 1.0 * data_structure.constraint_variables.fiooic
+        - data_structure.constraint_variables.fiooic
     )
     return ConstraintResult(
         cc,
@@ -1096,14 +1082,13 @@ def constraint_equation_34():
     """Equation for TF coil dump voltage upper limit (SCTF)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fvdump: f-value for dump voltage
     v_tf_coil_dump_quench_max_kv: max voltage across TF coil during quench (kV)
     v_tf_coil_dump_quench_kv: voltage across a TF coil during quench (kV)
     """
     return ConstraintResult(
         data_structure.tfcoil_variables.v_tf_coil_dump_quench_kv
         / data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv
-        - 1.0 * data_structure.constraint_variables.fvdump,
+        - 1.0,
         data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv,
         data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv
         - data_structure.tfcoil_variables.v_tf_coil_dump_quench_kv,
@@ -1115,7 +1100,6 @@ def constraint_equation_35():
     """Equation for TF coil J_wp/J_prot upper limit (SCTF)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fjprot: f-value for TF coil winding pack current density
     j_tf_wp_quench_heat_max: allowable TF coil winding pack current density, for dump temperature
     rise protection (A/m2)
     j_tf_wp: winding pack current density (A/m2)
@@ -1123,7 +1107,7 @@ def constraint_equation_35():
     return ConstraintResult(
         data_structure.tfcoil_variables.j_tf_wp
         / data_structure.tfcoil_variables.j_tf_wp_quench_heat_max
-        - 1.0 * data_structure.constraint_variables.fjprot,
+        - 1.0,
         data_structure.tfcoil_variables.j_tf_wp_quench_heat_max,
         data_structure.tfcoil_variables.j_tf_wp
         - data_structure.tfcoil_variables.j_tf_wp_quench_heat_max,
@@ -1135,14 +1119,12 @@ def constraint_equation_36():
     """Equation for TF coil s/c temperature margin lower limit (SCTF)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ftmargtf: f-value for TF coil temperature margin
     temp_tf_superconductor_margin: TF coil temperature margin (K)
     temp_tf_superconductor_margin_min: minimum allowable temperature margin : TF coils (K)
     """
     return ConstraintResult(
         1.0
-        - data_structure.constraint_variables.ftmargtf
-        * data_structure.tfcoil_variables.temp_tf_superconductor_margin
+        - data_structure.tfcoil_variables.temp_tf_superconductor_margin
         / data_structure.tfcoil_variables.temp_tf_superconductor_margin_min,
         data_structure.tfcoil_variables.temp_tf_superconductor_margin_min,
         data_structure.tfcoil_variables.temp_tf_superconductor_margin_min
@@ -1155,14 +1137,13 @@ def constraint_equation_37():
     """Equation for current drive gamma upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    feta_cd_norm_hcd_primary_max: f-value for current drive gamma
     eta_cd_norm_hcd_primary_max: maximum current drive gamma
     eta_cd_norm_hcd_primary: normalised current drive efficiency (1.0e20 A/W-m2)
     """
     cc = (
         data_structure.current_drive_variables.eta_cd_norm_hcd_primary
         / data_structure.constraint_variables.eta_cd_norm_hcd_primary_max
-        - 1.0 * data_structure.constraint_variables.feta_cd_norm_hcd_primary_max
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1176,7 +1157,6 @@ def constraint_equation_39():
     """Equation for first wall temperature upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ftemp_fw_max: f-value for first wall peak temperature
     temp_fw_max: maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
     temp_fw_peak: peak first wall temperature (K)
     """
@@ -1187,7 +1167,7 @@ def constraint_equation_39():
     cc = (
         data_structure.fwbs_variables.temp_fw_peak
         / data_structure.fwbs_variables.temp_fw_max
-        - 1.0 * data_structure.constraint_variables.ftemp_fw_max
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1201,14 +1181,12 @@ def constraint_equation_40():
     """Equation for auxiliary power lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fp_hcd_injected_min_mw: f-value for minimum auxiliary power
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
     p_hcd_injected_min_mw: minimum auxiliary power (MW)
     """
     cc = (
         1.0
-        - data_structure.constraint_variables.fp_hcd_injected_min_mw
-        * data_structure.current_drive_variables.p_hcd_injected_total_mw
+        - data_structure.current_drive_variables.p_hcd_injected_total_mw
         / data_structure.constraint_variables.p_hcd_injected_min_mw
     )
     return ConstraintResult(
@@ -1223,14 +1201,12 @@ def constraint_equation_41():
     """Equation for plasma current ramp-up time lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ft_current_ramp_up: f-value for plasma current ramp-up time
     t_plant_pulse_plasma_current_ramp_up: plasma current ramp-up time for current initiation (s)
     t_current_ramp_up_min: minimum plasma current ramp-up time (s)
     """
     cc = (
         1.0
-        - data_structure.constraint_variables.ft_current_ramp_up
-        * data_structure.times_variables.t_plant_pulse_plasma_current_ramp_up
+        - data_structure.times_variables.t_plant_pulse_plasma_current_ramp_up
         / data_structure.constraint_variables.t_current_ramp_up_min
     )
     return ConstraintResult(
@@ -1245,7 +1221,6 @@ def constraint_equation_42():
     """Equation for cycle time lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ft_cycle_min: f-value for cycle time
     t_plant_pulse_total: full cycle time (s)
     t_cycle_min: minimum cycle time (s)
     """
@@ -1256,8 +1231,7 @@ def constraint_equation_42():
 
     cc = (
         1.0
-        - data_structure.constraint_variables.ft_cycle_min
-        * data_structure.times_variables.t_plant_pulse_total
+        - data_structure.times_variables.t_plant_pulse_total
         / data_structure.constraint_variables.t_cycle_min
     )
     return ConstraintResult(
@@ -1298,7 +1272,6 @@ def constraint_equation_44():
     """Equation for centrepost temperature upper limit (TART)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fptemp: f-value for peak centrepost temperature
     temp_cp_max: maximum peak centrepost temperature (K)
     temp_cp_peak: peak centrepost temperature (K)
     itart: switch for spherical tokamak (ST) models:
@@ -1315,7 +1288,7 @@ def constraint_equation_44():
         temp_cp_max = data_structure.tfcoil_variables.temp_cp_max
         temp_cp_peak = data_structure.tfcoil_variables.temp_cp_peak
 
-    cc = temp_cp_peak / temp_cp_max - 1.0 * data_structure.constraint_variables.fptemp
+    cc = temp_cp_peak / temp_cp_max - 1.0
     return ConstraintResult(cc, temp_cp_max * (1.0 - cc), temp_cp_peak * cc)
 
 
@@ -1324,7 +1297,6 @@ def constraint_manager_45():
     """Equation for edge safety factor lower limit (TART)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fq95_min: f-value for edge safety factor
     q95 : safety factor 'near' plasma edge
     (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
     q95_min: lower limit for edge safety factor
@@ -1336,9 +1308,7 @@ def constraint_manager_45():
 
     cc = (
         1.0
-        - data_structure.constraint_variables.fq95_min
-        * data_structure.physics_variables.q95
-        / data_structure.physics_variables.q95_min
+        - data_structure.physics_variables.q95 / data_structure.physics_variables.q95_min
     )
     return ConstraintResult(
         cc,
@@ -1353,7 +1323,6 @@ def constraint_equation_46():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     eps: inverse aspect ratio
-    fipir: f-value for Ip/Irod upper limit
     c_tf_total: total (summed) current in TF coils (A)
     plasma_current: plasma current (A)
     itart: switch for spherical tokamak (ST) models:
@@ -1368,7 +1337,7 @@ def constraint_equation_46():
     cc = (
         data_structure.physics_variables.plasma_current
         / data_structure.tfcoil_variables.c_tf_total
-    ) / cratmx - 1.0 * data_structure.constraint_variables.fipir
+    ) / cratmx - 1.0
 
     return ConstraintResult(
         cc,
@@ -1384,14 +1353,13 @@ def constraint_equation_48():
     """Equation for poloidal beta upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fbeta_poloidal: rf-value for poloidal beta
     beta_poloidal_max: maximum poloidal beta
     beta_poloidal: poloidal beta
     """
     cc = (
         data_structure.physics_variables.beta_poloidal_vol_avg
         / data_structure.constraint_variables.beta_poloidal_max
-        - 1.0 * data_structure.constraint_variables.fbeta_poloidal
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1406,10 +1374,7 @@ def constraint_equation_50():
     author: P B Lloyd, CCFE, Culham Science Centre
     author: S I Muldrew, CCFE, Culham Science Centre
     """
-    cc = (
-        data_structure.ife_variables.reprat / data_structure.ife_variables.rrmax
-        - 1.0 * data_structure.ife_variables.frrmax
-    )
+    cc = data_structure.ife_variables.reprat / data_structure.ife_variables.rrmax - 1.0
     return ConstraintResult(
         cc,
         data_structure.ife_variables.rrmax * (1.0 - cc),
@@ -1426,7 +1391,7 @@ def constraint_equation_51():
     vs_plasma_ind_ramp: internal and external plasma inductance V-s (Wb))
     vs_cs_pf_total_ramp: total flux swing for startup (Wb)
     """
-    cc = 1.0 - data_structure.pfcoil_variables.fvs_cs_pf_total_ramp * abs(
+    cc = 1.0 - abs(
         (
             data_structure.physics_variables.vs_plasma_res_ramp
             + data_structure.physics_variables.vs_plasma_ind_ramp
@@ -1445,15 +1410,12 @@ def constraint_equation_52():
     """Equation for tritium breeding ratio lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ftbr: f-value for minimum tritium breeding ratio
     tbr: tritium breeding ratio (i_blanket_type=2,3 (KIT HCPB/HCLL))
     tbrmin: minimum tritium breeding ratio (If i_blanket_type=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio)
     """
     cc = (
         1.0
-        - data_structure.constraint_variables.ftbr
-        * data_structure.fwbs_variables.tbr
-        / data_structure.constraint_variables.tbrmin
+        - data_structure.fwbs_variables.tbr / data_structure.constraint_variables.tbrmin
     )
     return ConstraintResult(
         cc,
@@ -1467,14 +1429,13 @@ def constraint_equation_53():
     """Equation for fast neutron fluence on TF coil upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fflutf: f-value for maximum TF coil nuclear heating
     nflutfmax: max fast neutron fluence on TF coil (n/m2)
     nflutf: peak fast neutron fluence on TF coil superconductor (n/m2)
     """
     cc = (
         data_structure.fwbs_variables.nflutf
         / data_structure.constraint_variables.nflutfmax
-        - 1.0 * data_structure.constraint_variables.fflutf
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1488,14 +1449,13 @@ def constraint_equation_54():
     """Equation for peak TF coil nuclear heating upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fptfnuc: f-value for maximum TF coil nuclear heating
     ptfnucmax: maximum nuclear heating in TF coil (MW/m3)
     ptfnucpm3: nuclear heating in the TF coil (MW/m3) (blktmodel>0)
     """
     cc = (
         data_structure.fwbs_variables.ptfnucpm3
         / data_structure.constraint_variables.ptfnucmax
-        - 1.0 * data_structure.constraint_variables.fptfnuc
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1509,19 +1469,14 @@ def constraint_equation_56():
     """Equation for power through separatrix / major radius upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fpsepr: f-value for maximum Psep/R limit
     pseprmax: maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
     p_plasma_separatrix_mw: power to be conducted to the divertor region (MW)
     rmajor: plasma major radius (m)
     """
     cc = (
-        (
-            data_structure.physics_variables.p_plasma_separatrix_mw
-            / data_structure.physics_variables.rmajor
-        )
-        / data_structure.constraint_variables.pseprmax
-        - 1.0 * data_structure.constraint_variables.fpsepr
-    )
+        data_structure.physics_variables.p_plasma_separatrix_mw
+        / data_structure.physics_variables.rmajor
+    ) / data_structure.constraint_variables.pseprmax - 1.0
     return ConstraintResult(
         cc,
         data_structure.constraint_variables.pseprmax * (1.0 - cc),
@@ -1538,14 +1493,13 @@ def constraint_equation_59():
     """Equation for neutral beam shine-through fraction upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fnbshinef: f-value for maximum neutral beam shine-through fraction
     f_p_beam_shine_through_max: maximum neutral beam shine-through fraction
     f_p_beam_shine_through: neutral beam shine-through fraction
     """
     cc = (
         data_structure.current_drive_variables.f_p_beam_shine_through
         / data_structure.constraint_variables.f_p_beam_shine_through_max
-        - 1.0 * data_structure.constraint_variables.fnbshinef
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1559,14 +1513,12 @@ def constraint_equation_60():
     """Equation for Central Solenoid s/c temperature margin lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ftmargoh: f-value for central solenoid temperature margin
     temp_cs_superconductor_margin: Central solenoid temperature margin (K)
     temp_cs_superconductor_margin_min: Minimum allowable temperature margin : CS (K)
     """
     return ConstraintResult(
         1.0
-        - data_structure.constraint_variables.ftmargoh
-        * data_structure.pfcoil_variables.temp_cs_superconductor_margin
+        - data_structure.pfcoil_variables.temp_cs_superconductor_margin
         / data_structure.tfcoil_variables.temp_cs_superconductor_margin_min,
         data_structure.tfcoil_variables.temp_cs_superconductor_margin_min,
         data_structure.tfcoil_variables.temp_cs_superconductor_margin_min
@@ -1579,14 +1531,12 @@ def constraint_equation_61():
     """Equation for availability lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    favail: F-value for minimum availability
     f_t_plant_available: Total plant availability fraction
     avail_min: Minimum availability
     """
     cc = (
         1.0
-        - data_structure.cost_variables.favail
-        * data_structure.cost_variables.f_t_plant_available
+        - data_structure.cost_variables.f_t_plant_available
         / data_structure.cost_variables.avail_min
     )
     return ConstraintResult(
@@ -1601,15 +1551,13 @@ def constraint_equation_62():
     """Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    falpha_energy_confinement: f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement
     t_alpha_confinement: alpha particle confinement time (s)
     t_energy_confinement: global thermal energy confinement time (sec)
     f_alpha_energy_confinement_min: Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
     """
     cc = (
         1.0
-        - data_structure.constraint_variables.falpha_energy_confinement
-        * (
+        - (
             data_structure.physics_variables.t_alpha_confinement
             / data_structure.physics_variables.t_energy_confinement
         )
@@ -1631,14 +1579,13 @@ def constraint_equation_63():
     """Upper limit on n_iter_vacuum_pumps (i_vacuum_pumping = simple)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fniterpump: f-value for constraint that number of pumps < tfno
     tfno: number of TF coils (default = 50 for stellarators)
     n_iter_vacuum_pumps: number of high vacuum pumps (real number), each with the throughput
     """
     cc = (
         data_structure.vacuum_variables.n_iter_vacuum_pumps
         / data_structure.tfcoil_variables.n_tf_coils
-        - 1.0 * data_structure.constraint_variables.fniterpump
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1652,19 +1599,18 @@ def constraint_equation_64():
     """Upper limit on Zeff
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fzeff_max: f-value for maximum n_charge_plasma_effective_vol_avg
     zeff_max: maximum value for Zeff
     n_charge_plasma_effective_vol_avg: plasma effective charge
     """
     cc = (
         data_structure.physics_variables.n_charge_plasma_effective_vol_avg
         / data_structure.constraint_variables.zeff_max
-        - 1.0 * data_structure.constraint_variables.fzeff_max
+        - 1.0
     )
     return ConstraintResult(
         cc,
-        data_structure.constraint_variables.fzeff_max,
-        data_structure.constraint_variables.fzeff_max * cc,
+        data_structure.constraint_variables.zeff_max,
+        data_structure.constraint_variables.zeff_max * cc,
     )
 
 
@@ -1673,14 +1619,13 @@ def constraint_equation_65():
     """Upper limit on stress of the vacuum vessel that occurs when the TF coil quenches.
     author: Timothy Nunn, UKAEA
 
-    fmaxvvstress: f-value for constraint on maximum VV stress
     max_vv_stress: Maximum permitted stress of the VV (Pa)
     vv_stress_quench: Stress of the VV (Pa)
     """
     cc = (
         data_structure.superconducting_tf_coil_variables.vv_stress_quench
         / data_structure.tfcoil_variables.max_vv_stress
-        - 1.0 * data_structure.constraint_variables.fmaxvvstress
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1694,14 +1639,13 @@ def constrain_equation_66():
     """Upper limit on rate of change of energy in poloidal field
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fpoloidalpower: f-value for constraint on rate of change of energy in poloidal field
     maxpoloidalpower: Maximum permitted absolute rate of change of stored energy in poloidal field (MW)
     peakpoloidalpower: Peak absolute rate of change of stored energy in poloidal field (MW) (11/01/16)
     """
     cc = (
         data_structure.pf_power_variables.peakpoloidalpower
         / data_structure.pf_power_variables.maxpoloidalpower
-        - 1.0 * data_structure.constraint_variables.fpoloidalpower
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1715,14 +1659,13 @@ def constraint_equation_67():
     """Simple upper limit on radiation wall load
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fpflux_fw_rad_max: f-value for upper limit on radiation wall load
     pflux_fw_rad_max: Maximum permitted radiation wall load (MW/m^2)
     pflux_fw_rad_max_mw: Peak radiation wall load (MW/m^2)
     """
     cc = (
         data_structure.constraint_variables.pflux_fw_rad_max_mw
         / data_structure.constraint_variables.pflux_fw_rad_max
-        - 1.0 * data_structure.constraint_variables.fpflux_fw_rad_max
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1736,7 +1679,6 @@ def constraint_equation_68():
     """Upper limit on Psep scaling (PsepB/qAR)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fpsepbqar: f-value for upper limit on psepbqar, maximum Psep*Bt/qAR limit
     psepbqarmax: maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
     p_plasma_separatrix_mw: Power to conducted to the divertor region (MW)
     b_plasma_toroidal_on_axis: toroidal field on axis (T) (iteration variable 2)
@@ -1749,19 +1691,15 @@ def constraint_equation_68():
     if data_structure.constraint_variables.i_q95_fixed == 1:
         cc = (
             (
-                (
-                    data_structure.physics_variables.p_plasma_separatrix_mw
-                    * data_structure.physics_variables.b_plasma_toroidal_on_axis
-                )
-                / (
-                    data_structure.constraint_variables.q95_fixed
-                    * data_structure.physics_variables.aspect
-                    * data_structure.physics_variables.rmajor
-                )
+                data_structure.physics_variables.p_plasma_separatrix_mw
+                * data_structure.physics_variables.b_plasma_toroidal_on_axis
             )
-            / data_structure.constraint_variables.psepbqarmax
-            - 1.0 * data_structure.constraint_variables.fpsepbqar
-        )
+            / (
+                data_structure.constraint_variables.q95_fixed
+                * data_structure.physics_variables.aspect
+                * data_structure.physics_variables.rmajor
+            )
+        ) / data_structure.constraint_variables.psepbqarmax - 1.0
         err = (
             data_structure.physics_variables.p_plasma_separatrix_mw
             * data_structure.physics_variables.b_plasma_toroidal_on_axis
@@ -1773,19 +1711,15 @@ def constraint_equation_68():
     else:
         cc = (
             (
-                (
-                    data_structure.physics_variables.p_plasma_separatrix_mw
-                    * data_structure.physics_variables.b_plasma_toroidal_on_axis
-                )
-                / (
-                    data_structure.physics_variables.q95
-                    * data_structure.physics_variables.aspect
-                    * data_structure.physics_variables.rmajor
-                )
+                data_structure.physics_variables.p_plasma_separatrix_mw
+                * data_structure.physics_variables.b_plasma_toroidal_on_axis
             )
-            / data_structure.constraint_variables.psepbqarmax
-            - 1.0 * data_structure.constraint_variables.fpsepbqar
-        )
+            / (
+                data_structure.physics_variables.q95
+                * data_structure.physics_variables.aspect
+                * data_structure.physics_variables.rmajor
+            )
+        ) / data_structure.constraint_variables.psepbqarmax - 1.0
         err = (
             data_structure.physics_variables.p_plasma_separatrix_mw
             * data_structure.physics_variables.b_plasma_toroidal_on_axis
@@ -1813,7 +1747,6 @@ def constraint_equation_72():
     Reverse the sign so it works as an inequality constraint (tmp_cc > 0)
     This will have no effect if it is used as an equality constraint because it will be squared.
 
-    foh_stress: f-value for Tresca yield criterion in Central Solenoid
     alstroh: allowable hoop stress in Central Solenoid structural material (Pa)
     s_shear_cs_peak: Maximum shear stress coils/central solenoid (Pa)
     sig_tf_cs_bucked: Maximum shear stress in CS case at flux swing (no current in CS)
@@ -1831,7 +1764,7 @@ def constraint_equation_72():
                 data_structure.tfcoil_variables.sig_tf_cs_bucked,
             )
             / data_structure.pfcoil_variables.alstroh
-            - 1.0 * data_structure.constraint_variables.foh_stress
+            - 1.0
         )
         err = data_structure.pfcoil_variables.alstroh - max(
             data_structure.pfcoil_variables.s_shear_cs_peak,
@@ -1842,7 +1775,7 @@ def constraint_equation_72():
         cc = (
             data_structure.pfcoil_variables.s_shear_cs_peak
             / data_structure.pfcoil_variables.alstroh
-            - 1.0 * data_structure.constraint_variables.foh_stress
+            - 1.0
         )
         err = (
             data_structure.pfcoil_variables.alstroh
@@ -1858,19 +1791,13 @@ def constraint_equation_73():
     Related to constraint 15
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fplhsep: F-value for Psep >= Plh + Paux : for consistency of two values of separatrix power
     p_l_h_threshold_mw: L-H mode power threshold (MW)
     p_plasma_separatrix_mw: power to be conducted to the divertor region (MW)
     p_hcd_injected_total_mw : inout real : total auxiliary injected power (MW)
     """
-    cc = (
-        1.0
-        - data_structure.physics_variables.fplhsep
-        * data_structure.physics_variables.p_plasma_separatrix_mw
-        / (
-            data_structure.physics_variables.p_l_h_threshold_mw
-            + data_structure.current_drive_variables.p_hcd_injected_total_mw
-        )
+    cc = 1.0 - data_structure.physics_variables.p_plasma_separatrix_mw / (
+        data_structure.physics_variables.p_l_h_threshold_mw
+        + data_structure.current_drive_variables.p_hcd_injected_total_mw
     )
     return ConstraintResult(
         cc,
@@ -1885,14 +1812,13 @@ def constraint_equation_74():
     ONLY used for croco HTS coil
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ftemp_croco_quench_max: f-value: TF coil quench temparature remains below temp_croco_quench_max
     temp_croco_quench: CroCo strand: Actual temp reached during a quench (K)
     temp_croco_quench_max: CroCo strand: maximum permitted temp during a quench (K)
     """
     cc = (
         data_structure.tfcoil_variables.temp_croco_quench
         / data_structure.tfcoil_variables.temp_croco_quench_max
-        - 1.0 * data_structure.constraint_variables.ftemp_croco_quench_max
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1909,12 +1835,11 @@ def constraint_equation_75():
 
     copperA_m2: TF coil current / copper area (A/m2)
     copperA_m2_max: Maximum TF coil current / copper area (A/m2)
-    f_coppera_m2: f-value for TF coil current / copper area < copperA_m2_max
     """
     cc = (
         data_structure.rebco_variables.coppera_m2
         / data_structure.rebco_variables.coppera_m2_max
-        - 1.0 * data_structure.rebco_variables.f_coppera_m2
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1938,7 +1863,6 @@ def constraint_equation_76():
     aspect: aspect ratio (iteration variable 1)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
     nd_plasma_electron_max_array(7)array : density limit (/m3) as calculated using various models
-    fnesep: f-value for Eich critical separatrix density
     """
     # TODO: why on earth are these variables being set here!? Should they be local?
     data_structure.physics_variables.alpha_crit = (
@@ -1959,7 +1883,7 @@ def constraint_equation_76():
     cc = (
         data_structure.physics_variables.nd_plasma_separatrix_electron
         / data_structure.physics_variables.nd_plasma_separatrix_electron_eich_max
-        - 1.0 * data_structure.constraint_variables.fnesep
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1973,14 +1897,13 @@ def constraint_equation_77():
     """Equation for maximum TF current per turn upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fc_tf_turn_max: f-value for TF coil current per turn
     c_tf_turn_max : allowable TF coil current per turn [A/turn]
     c_tf_turn : TF coil current per turn [A/turn]
     """
     cc = (
         data_structure.tfcoil_variables.c_tf_turn
         / data_structure.tfcoil_variables.c_tf_turn_max
-        - 1.0 * data_structure.constraint_variables.fc_tf_turn_max
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -1994,14 +1917,12 @@ def constraint_equation_78():
     """Equation for Reinke criterion, divertor impurity fraction lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    freinke : input : f-value for Reinke criterion (itv 147)
     fzmin : input : minimum impurity fraction from Reinke model
     fzactual : input : actual impurity fraction
     """
     cc = (
         1.0
-        - data_structure.constraint_variables.freinke
-        * data_structure.reinke_variables.fzactual
+        - data_structure.reinke_variables.fzactual
         / data_structure.reinke_variables.fzmin
     )
     return ConstraintResult(
@@ -2016,7 +1937,6 @@ def constraint_equation_79():
     """Equation for maximum CS field
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fb_cs_limit_max: F-value for CS mmax field (cons. 79, itvar 149)
     b_cs_limit_max: Central solenoid max field limit [T]
     b_cs_peak_pulse_start: maximum field in central solenoid at beginning of pulse (T)
     b_cs_peak_flat_top_end: maximum field in central solenoid at end of flat-top (EoF) (T)
@@ -2028,7 +1948,7 @@ def constraint_equation_79():
             data_structure.pfcoil_variables.b_cs_peak_pulse_start,
         )
         / data_structure.pfcoil_variables.b_cs_limit_max
-        - 1.0 * data_structure.pfcoil_variables.fb_cs_limit_max
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -2048,17 +1968,13 @@ def constraint_equation_80():
     args : output structure : residual error; constraint value; residual error in physical units;
     output string; units string
     Lower limit p_plasma_separatrix_mw
-    #=# physics
-    #=#=# fp_plasma_separatrix_min_mw, p_plasma_separatrix_mw
-    Logic change during pre-factoring: err, symbol, units will be assigned only if present.
-    fp_plasma_separatrix_min_mw : input : F-value for lower limit on p_plasma_separatrix_mw (cons. 80, itvar 153)
+
     p_plasma_separatrix_min_mw : input : Minimum power crossing separatrix p_plasma_separatrix_mw [MW]
     p_plasma_separatrix_mw : input : Power crossing separatrix [MW]
     """
     cc = (
         1.0
-        - data_structure.physics_variables.fp_plasma_separatrix_min_mw
-        * data_structure.physics_variables.p_plasma_separatrix_mw
+        - data_structure.physics_variables.p_plasma_separatrix_mw
         / data_structure.constraint_variables.p_plasma_separatrix_min_mw
     )
     return ConstraintResult(
@@ -2075,24 +1991,22 @@ def constraint_equation_81():
     args : output structure : residual error; constraint value;
     residual error in physical units; output string; units string
     Lower limit nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
-    !#=# physics
-    !#=#=# nd_plasma_electron_on_axis, nd_plasma_pedestal_electron
-    Logic change during pre-factoring: err, symbol, units will be
-    assigned only if present.
-    fne0  : input : F-value for constraint on nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
+
     nd_plasma_electron_on_axis   : input : Central electron density [m-3]
     nd_plasma_pedestal_electron : input : Electron density at pedestal [m-3]
     """
     cc = (
         1.0
-        - data_structure.physics_variables.fne0
-        * data_structure.physics_variables.nd_plasma_electron_on_axis
+        - data_structure.physics_variables.nd_plasma_electron_on_axis
         / data_structure.physics_variables.nd_plasma_pedestal_electron
     )
     return ConstraintResult(
         cc,
-        data_structure.physics_variables.fne0,
-        data_structure.physics_variables.fne0 * cc,
+        data_structure.physics_variables.nd_plasma_electron_on_axis,
+        (
+            data_structure.physics_variables.nd_plasma_electron_on_axis
+            - data_structure.physics_variables.nd_plasma_pedestal_electron
+        ),
     )
 
 
@@ -2101,19 +2015,16 @@ def constraint_equation_82():
     """Equation for toroidal consistency of stellarator build
     author: J Lion, IPP Greifswald
 
-    ftoroidalgap: f-value for constraint toroidalgap > dx_tf_inboard_out_toroidal
     toroidalgap: minimal gap between two stellarator coils
     dx_tf_inboard_out_toroidal: total toroidal width of a tf coil
     """
     return ConstraintResult(
         1.0
-        - data_structure.tfcoil_variables.ftoroidalgap
-        * data_structure.tfcoil_variables.toroidalgap
+        - data_structure.tfcoil_variables.toroidalgap
         / data_structure.tfcoil_variables.dx_tf_inboard_out_toroidal,
         data_structure.tfcoil_variables.toroidalgap,
         data_structure.tfcoil_variables.toroidalgap
-        - data_structure.tfcoil_variables.dx_tf_inboard_out_toroidal
-        / data_structure.tfcoil_variables.ftoroidalgap,
+        - data_structure.tfcoil_variables.dx_tf_inboard_out_toroidal,
     )
 
 
@@ -2122,14 +2033,12 @@ def constraint_equation_83():
     """Equation for radial consistency of stellarator build
     author: J Lion, IPP Greifswald
 
-    f_avspace: f-value for constraint available_radial_space > required_radial_space
     available_radial_space: avaible space in radial direction as given by each s.-configuration
     required_radial_space: required space in radial direction
     """
     cc = (
         1.0
-        - data_structure.build_variables.f_avspace
-        * data_structure.build_variables.available_radial_space
+        - data_structure.build_variables.available_radial_space
         / data_structure.build_variables.required_radial_space
     )
     return ConstraintResult(
@@ -2144,14 +2053,12 @@ def constraint_equation_84():
     """Equation for the lower limit of beta
     author: J Lion, IPP Greifswald
 
-    fbeta_min: f-value for constraint beta-beta_fast_alpha > beta_vol_avg_min
     beta_vol_avg_min: Lower limit for beta
     beta: plasma beta
     """
     cc = (
         1.0
-        - data_structure.constraint_variables.fbeta_min
-        * data_structure.physics_variables.beta_total_vol_avg
+        - data_structure.physics_variables.beta_total_vol_avg
         / data_structure.physics_variables.beta_vol_avg_min
     )
     return ConstraintResult(
@@ -2221,13 +2128,12 @@ def constraint_equation_86():
     Author : S Kahn
 
     dx_tf_turn_general: TF coil turn edge length including turn insulation [m]
-    f_t_turn_tf: f-value for TF turn edge length constraint
     t_turn_tf_max: TF turn edge length including turn insulation upper limit [m]
     """
     cc = (
         data_structure.tfcoil_variables.dx_tf_turn_general
         / data_structure.tfcoil_variables.t_turn_tf_max
-        - 1.0 * data_structure.tfcoil_variables.f_t_turn_tf
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -2242,13 +2148,12 @@ def constraint_equation_87():
     author: S. Kahn, CCFE, Culham Science Centre
 
     p_cryo_plant_electric_mw: cryogenic plant power (MW)
-    f_crypmw: f-value for maximum cryogenic plant power
     p_cryo_plant_electric_max_mw: Maximum cryogenic plant power (MW)
     """
     cc = (
         data_structure.heat_transport_variables.p_cryo_plant_electric_mw
         / data_structure.heat_transport_variables.p_cryo_plant_electric_max_mw
-        - 1.0 * data_structure.heat_transport_variables.f_crypmw
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -2263,18 +2168,16 @@ def constraint_equation_88():
     """Equation for TF coil vertical strain upper limit (absolute value)
     author: CPS Swanson, PPPL, USA
 
-    fstr_wp: f-value for TF coil strain
     str_wp_max: Allowable maximum TF coil vertical strain
     str_wp: Constrained TF coil vertical strain
     """
     return ConstraintResult(
         abs(data_structure.tfcoil_variables.str_wp)
         / data_structure.tfcoil_variables.str_wp_max
-        - 1.0 * data_structure.constraint_variables.fstr_wp,
+        - 1.0,
         data_structure.tfcoil_variables.str_wp_max,
         data_structure.tfcoil_variables.str_wp_max
-        - abs(data_structure.tfcoil_variables.str_wp)
-        / data_structure.constraint_variables.fstr_wp,
+        - abs(data_structure.tfcoil_variables.str_wp),
     )
 
 
@@ -2285,12 +2188,11 @@ def constraint_equation_89():
 
     copperaoh_m2: CS coil current at EOF / copper area [A/m2]
     copperaoh_m2_max: maximum coil current / copper area [A/m2]
-    f_copperaoh_m2: f-value for CS coil current / copper area
     """
     cc = (
         data_structure.rebco_variables.copperaoh_m2
         / data_structure.rebco_variables.copperaoh_m2_max
-        - 1.0 * data_structure.rebco_variables.f_copperaoh_m2
+        - 1.0
     )
     return ConstraintResult(
         cc,
@@ -2304,7 +2206,6 @@ def constraint_equation_90():
     """Lower limit for CS coil stress load cycles
     author: A. Pearce, G Turkington CCFE, Culham Science Centre
 
-    fncycle: f-value for constraint n_cycle > n_cycle_min
     n_cycle: Allowable number of cycles for CS
     n_cycle_min: Minimum required cycles for CS
     """
@@ -2318,8 +2219,7 @@ def constraint_equation_90():
 
     cc = (
         1.0
-        - data_structure.constraint_variables.fncycle
-        * data_structure.cs_fatigue_variables.n_cycle
+        - data_structure.cs_fatigue_variables.n_cycle
         / data_structure.cs_fatigue_variables.n_cycle_min
     )
     return ConstraintResult(
@@ -2336,7 +2236,6 @@ def constraint_equation_91():
     stellarators only (but in principle usable also for tokamaks).
     author: J Lion, IPP Greifswald
 
-    fecrh_ignition: f-value for constraint powerht_local > powerscaling
     max_gyrotron_frequency: Max. av. gyrotron frequency
     te0_ecrh_achievable: Max. achievable electron temperature at ignition point
     """
@@ -2344,8 +2243,7 @@ def constraint_equation_91():
     if data_structure.physics_variables.i_plasma_ignited == 0:
         cc = (
             1.0
-            - data_structure.constraint_variables.fecrh_ignition
-            * (
+            - (
                 data_structure.stellarator_variables.powerht_constraint
                 + data_structure.current_drive_variables.p_hcd_primary_extra_heat_mw
             )
@@ -2354,8 +2252,7 @@ def constraint_equation_91():
     else:
         cc = (
             1.0
-            - data_structure.constraint_variables.fecrh_ignition
-            * data_structure.stellarator_variables.powerht_constraint
+            - data_structure.stellarator_variables.powerht_constraint
             / data_structure.stellarator_variables.powerscaling_constraint
         )
 

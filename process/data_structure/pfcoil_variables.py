@@ -175,10 +175,6 @@ fcupfsu: float = None
 """copper fraction of cable conductor (PF coils)"""
 
 
-fvs_cs_pf_total_ramp: float = None
-"""F-value for `constraint equation 51`"""
-
-
 i_pf_location: list[int] = None
 """Switch for location of PF coil group i:
 - =1 PF coil on top of central solenoid (flux ramp only)
@@ -535,10 +531,6 @@ b_cs_limit_max: float = None
 """Central solenoid max field limit [T]"""
 
 
-fb_cs_limit_max: float = None
-"""F-value for CS mmax field (`cons. 79`, `itvar 149`)"""
-
-
 f_dr_dz_cs_turn: float = None
 """Ratio of CS coil turn conduit length to depth"""
 
@@ -632,7 +624,6 @@ def init_pfcoil_variables():
         f_j_cs_start_pulse_end_flat_top, \
         fcuohsu, \
         fcupfsu, \
-        fvs_cs_pf_total_ramp, \
         i_pf_location, \
         i_pf_conductor, \
         itr_sum, \
@@ -703,7 +694,6 @@ def init_pfcoil_variables():
         z_pf_coil_middle, \
         zref, \
         b_cs_limit_max, \
-        fb_cs_limit_max, \
         f_dr_dz_cs_turn, \
         dr_cs_turn, \
         dr_cs_full, \
@@ -734,7 +724,6 @@ def init_pfcoil_variables():
     f_j_cs_start_pulse_end_flat_top = 0.9
     fcuohsu = 0.7
     fcupfsu = 0.69
-    fvs_cs_pf_total_ramp = 1.0
     i_pf_location = np.array([2, 2, 3, 0, 0, 0, 0, 0, 0, 0])
     i_pf_conductor = 0
     itr_sum = 0.0
@@ -805,7 +794,6 @@ def init_pfcoil_variables():
     z_pf_coil_middle = np.zeros(NGC2)
     zref = np.array([3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     b_cs_limit_max = 13.0
-    fb_cs_limit_max = 1.0
     f_dr_dz_cs_turn = 70.0 / 22.0
     dr_cs_turn = 0.0
     dr_cs_full = 0.0

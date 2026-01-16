@@ -44,9 +44,6 @@ equation 2. A comment on the same line is recommended:
 icc = 2 * Global power balance (consistency equation)
 ```
 
-Some constraints have `f-value` variables. These must be set as iteration variables, 
-which are discussed below.
-
 
 !!! Info "Constraints"  
     A full list of constraints is given on the variable description page in the row labelled 

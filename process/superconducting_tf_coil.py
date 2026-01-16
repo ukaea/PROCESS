@@ -1515,6 +1515,11 @@ class SuperconductingTFCoil(TFCoil):
             superconducting_tf_coil_variables.f_c_tf_turn_operating_critical,
             "OP ",
         )
+        if superconducting_tf_coil_variables.f_c_tf_turn_operating_critical > 0.7:
+            logger.error(
+                "f_c_tf_turn_operating_critical shouldn't be above 0.7 for engineering reliability"
+            )
+
         po.ovarre(
             self.outfile,
             "TF Superconductor quench dump time (s)",

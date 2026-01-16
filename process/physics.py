@@ -2881,7 +2881,8 @@ class Physics:
             # calculate separatrix temperature, if Reinke criterion is used
             physics_variables.temp_plasma_separatrix_kev = reinke_tsep(
                 physics_variables.b_plasma_toroidal_on_axis,
-                constraint_variables.fl_h_threshold,
+                physics_variables.p_plasma_separatrix_mw
+                / physics_variables.p_l_h_threshold_mw,
                 physics_variables.q95,
                 physics_variables.rmajor,
                 physics_variables.eps,
@@ -5292,14 +5293,6 @@ class Physics:
                 physics_variables.nd_plasma_electrons_max,
                 "OP ",
             )
-            if (numerics.ioptimz > 0) and (numerics.active_constraints[4]):
-                po.ovarre(
-                    self.outfile,
-                    "Density limit (enforced) (/m3)",
-                    "(boundu(9)*nd_plasma_electrons_max)",
-                    numerics.boundu[8] * physics_variables.nd_plasma_electrons_max,
-                    "OP ",
-                )
 
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
@@ -6152,13 +6145,6 @@ class Physics:
                 logger.warning("Closed divertor only. Limited data used in Snipes fit")
 
             if (numerics.ioptimz > 0) and (numerics.active_constraints[14]):
-                po.ovarre(
-                    self.outfile,
-                    "L-H threshold power (enforced) (MW)",
-                    "(boundl(103)*p_l_h_threshold_mw)",
-                    numerics.boundl[102] * physics_variables.p_l_h_threshold_mw,
-                    "OP ",
-                )
                 po.ovarre(
                     self.outfile,
                     "L-H threshold power (MW)",

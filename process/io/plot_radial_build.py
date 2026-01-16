@@ -146,14 +146,12 @@ def main(args=None):
         "oacdcp",
         "pflux_fw_neutron_max_mw",
         "beamfus0",
-        "fbig_q_plasma_min",
         "temp_plasma_electron_vol_avg_kev",
         "boundu(15)",
         "beta_norm_max",
         "f_c_plasma_bootstrap_max",
         "boundu(10)",
         "fiooic",
-        "fjprot",
         "rmajor",
         "b_tf_inboard_peak_symmetric",  # b_tf_inboard_max the maximum T field upper limit is the scan variable
         "eta_cd_norm_hcd_primary_max",
@@ -215,7 +213,6 @@ def main(args=None):
         "",
         "",
         "",
-        "fvs_plasma_total_required",  # actaully lower bound fvs_plasma_total_required
         "v_plasma_loop_burn",
         "res_plasma",
     ]

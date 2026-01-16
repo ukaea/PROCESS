@@ -320,7 +320,8 @@ def init_superconducting_tf_coil_variables():
         temp_tf_superconductor_critical_zero_field_strain, \
         f_a_tf_turn_cable_space_cooling, \
         c_tf_turn_cables_critical, \
-        j_tf_superconductor
+        j_tf_superconductor, \
+        vv_stress_quench
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -381,3 +382,4 @@ def init_superconducting_tf_coil_variables():
     f_a_tf_turn_cable_space_cooling = 0.0
     c_tf_turn_cables_critical = 0.0
     j_tf_superconductor = 0.0
+    vv_stress_quench = 0.0

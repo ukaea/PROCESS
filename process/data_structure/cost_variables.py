@@ -476,10 +476,6 @@ light_build_cost_per_vol: float = None
 """Unit cost for unshielded non-active buildings ($/m3)"""
 
 
-favail: float = None
-"""F-value for minimum availability (`constraint equation 61`)"""
-
-
 num_rh_systems: int = None
 """Number of remote handling systems (1-10)"""
 
@@ -1286,9 +1282,9 @@ def init_cost_variables():
         cconshtf, \
         cdcost, \
         cdirt, \
-        life_hcd_fpy, \
+        cdrlife, \
         cdrlife_cal, \
-        f_t_plant_available, \
+        cfactr, \
         cpfact, \
         cfind, \
         cland, \
@@ -1324,8 +1320,8 @@ def init_cost_variables():
         decomf, \
         dintrt, \
         divcst, \
-        life_div_fpy, \
-        life_div, \
+        divlife, \
+        divlife_cal, \
         dtlife, \
         fcap0, \
         fcap0cp, \
@@ -1334,14 +1330,13 @@ def init_cost_variables():
         fcr0, \
         fkind, \
         fwallcst, \
-        i_plant_availability, \
+        iavail, \
         ibkt_life, \
         life_dpa, \
         bktcycles, \
         avail_min, \
         tok_build_cost_per_vol, \
         light_build_cost_per_vol, \
-        favail, \
         num_rh_systems, \
         conf_mag, \
         div_prob_fail, \
@@ -1354,10 +1349,10 @@ def init_cost_variables():
         fwbs_umain_time, \
         redun_vacp, \
         redun_vac, \
-        t_plant_operational_total_yrs, \
-        t_blkt_replace_yrs, \
+        t_operation, \
+        tbktrepl, \
         tcomrepl, \
-        t_div_replace_yrs, \
+        tdivrepl, \
         uubop, \
         uucd, \
         uudiv, \
@@ -1375,7 +1370,7 @@ def init_cost_variables():
         startupratio, \
         startuppwr, \
         supercond_cost_model, \
-        life_plant, \
+        tlife, \
         tmain, \
         u_unplanned_cp, \
         ucblbe, \
@@ -1430,7 +1425,16 @@ def init_cost_variables():
         ucwindtf, \
         ucws, \
         ucwst, \
-        ucpfic
+        ucpfic, \
+        life_hcd_fpy, \
+        f_t_plant_available, \
+        life_div_fpy, \
+        life_div, \
+        i_plant_availability, \
+        t_plant_operational_total_yrs, \
+        t_blkt_replace_yrs, \
+        t_div_replace_yrs, \
+        life_plant
 
     abktflnc = 5.0
     adivflnc = 7.0
@@ -1496,7 +1500,6 @@ def init_cost_variables():
     avail_min = 0.75
     tok_build_cost_per_vol = 1283.0
     light_build_cost_per_vol = 270.0
-    favail = 1.0
     num_rh_systems = 4
     conf_mag = 0.99
     div_prob_fail = 0.0002

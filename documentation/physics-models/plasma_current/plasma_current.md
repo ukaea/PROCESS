@@ -677,7 +677,7 @@ $$
 
 This constraint can be activated by stating `icc = 41` in the input file.
 
-The value of `tohsm` can be set to the required minimum plasma current ramp up time at the start of a pulse. The scaling value `ft_current_ramp_up` can be varied also
+The value of `tohsm` can be set to the required minimum plasma current ramp up time at the start of a pulse.
 
 The calculated plasma current ramp up time `t_plant_pulse_plasma_current_ramp_up` is dictated by the [pulsed plant operation configuration](../pulsed-plant.md).
 
@@ -696,7 +696,7 @@ $$
 $$
 
 In this case $I_{\text{cp}}$ is the total current going up the centrepost in a spherical tokamak.
-This constraint was initially though to prevent instabilities and act as a guideline to limit power dissipation when generating new designs. The scaling value for the constraint, `fipir` can be varied also.
+This constraint was initially though to prevent instabilities and act as a guideline to limit power dissipation when generating new designs.
 
  The origins of the relation should be seen in early spherical tokamak papers not yet referenced here.
 
