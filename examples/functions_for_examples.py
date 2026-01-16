@@ -55,13 +55,10 @@ def get_initial_values(file_path):
     iteration_variable_names = []
     iteration_variable_values = []
 
-    print(data_structure.numerics.nvar)
-
     for i in range(data_structure.numerics.nvar):
         ivar = data_structure.numerics.ixc[i].item()
 
         itv = iteration_variables.ITERATION_VARIABLES[ivar]
-        print(i, itv.name)
 
         iteration_variable_names.append(itv.name)
         if array := re.match(r"(\w+)\(([0-9]+)\)", itv.name):
@@ -72,8 +69,5 @@ def get_initial_values(file_path):
             )
         else:
             iteration_variable_values.append(getattr(itv.module, itv.name))
-
-    print(f"{iteration_variable_names=}")
-    print(f"{iteration_variable_values=}")
 
     return iteration_variable_names, iteration_variable_values
