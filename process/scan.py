@@ -482,6 +482,26 @@ class Scan:
                 con1[i],
             )
 
+            process_output.ovarre(
+                constants.MFILE,
+                f"{name:<33} residual",
+                f"(res_eq_con{numerics.icc[i]:03d})",
+                err[i],
+            )
+            process_output.ovarre(
+                constants.MFILE,
+                f"{name} constraint value",
+                f"(val_eq_con{numerics.icc[i]:03d})",
+                con2[i],
+            )
+
+            process_output.ovarre(
+                constants.MFILE,
+                f"{name} units",
+                f"(eq_units_con{numerics.icc[i]:03d})",
+                f"'{lab[i]}'",
+            )
+
         # Write equality constraints to output file
         process_output.write(
             constants.NOUT,
@@ -511,17 +531,59 @@ class Scan:
 
             for i in range(numerics.neqns, numerics.neqns + numerics.nineqns):
                 name = numerics.lablcc[numerics.icc[i] - 1]
+                constraint_bound = con2[i]
+
+                # assumes f-value is 1
+                # -cc because sign is reversed in constraint_eqns
+                if sym[i] == ">=":
+                    constraint_value = constraint_bound * (1 - -numerics.rcm[i])
+                elif sym[i] == "<=":
+                    constraint_value = constraint_bound * (-numerics.rcm[i] + 1)
+                else:
+                    raise ProcessValueError(
+                        f"Unknown constraint direction '{sym[i]}' for inequality constraint"
+                    )
+
                 inequality_constraint_table.append([
                     name,
+                    f"{constraint_value} {lab[i]}",
                     sym[i],
                     f"{con2[i]} {lab[i]}",
                     f"{err[i]} {lab[i]}",
+                    f"{numerics.rcm[i]}",
                 ])
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} normalised residue",
                     f"(ineq_con{numerics.icc[i]:03d})",
                     numerics.rcm[i],
+                )
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} physical value",
+                    f"(ineq_value_con{numerics.icc[i]:03d})",
+                    constraint_value,
+                )
+
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} symbol",
+                    f"(ineq_symbol_con{numerics.icc[i]:03d})",
+                    f"'{sym[i]}'",
+                )
+
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} units",
+                    f"(ineq_units_con{numerics.icc[i]:03d})",
+                    f"'{lab[i]}'",
+                )
+
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} physical bound",
+                    f"(ineq_bound_con{numerics.icc[i]:03d})",
+                    constraint_bound,
                 )
 
             process_output.write(
@@ -532,6 +594,8 @@ class Scan:
                         "",
                         "",
                         "Physical constraint",
+                        "",
+                        "Physical constraint bound",
                         "Constraint residue",
                     ],
                     numalign="left",
