@@ -101,7 +101,7 @@ def skip_if_incompatible_system():
     if not system_compatible():
         pytest.skip(
             "This test could fail on your system due to differences caused by "
-            "floating-point rounding error"
+            "floating-point rounding differences in np.linalg.solve"
         )
 
 
