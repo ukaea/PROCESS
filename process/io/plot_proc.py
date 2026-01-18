@@ -9994,6 +9994,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
         itvar_final = m_file.get(f"itvar{n:03d}", scan=scan)
         itvar_upper = m_file.get(f"boundu{n:03d}", scan=scan)
         itvar_lower = m_file.get(f"boundl{n:03d}", scan=scan)
+        itvar_relative_change = m_file.get(f"xcm{n:03d}", scan=scan)
 
         # Use the variable name if available, else fallback to "itvarXXX"
         var_label = itvar_names.get(n, f"itvar{n:03d}")
@@ -10004,6 +10005,14 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
             if itvar_final != itvar_lower
             else 0
         )
+
+        norm_relative_change = (
+            ((itvar_final / itvar_relative_change) - itvar_lower)
+            / (itvar_upper - itvar_lower)
+            if itvar_final != itvar_lower
+            else 0
+        )
+
         if np.isclose(norm_final, 1.0, atol=1e-6):
             # Plot the lower bound at x=0
             axis.plot(
@@ -10030,26 +10039,78 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
                 n_plot,
                 norm_final,
                 left=0,
-                height=0.8,
-                color="blue",
+                height=1.0,
+                color="cyan",
+                edgecolor="black",
+                linewidth=1.5,
                 alpha=0.7,
                 label="Final Value" if n_plot == 0 else "",
             )
+
+        # Plot scatter point for normalized relative change
+        axis.scatter(
+            norm_relative_change,
+            n_plot,
+            color="black",
+            marker="|",
+            s=400,
+            linewidths=2,
+            alpha=1.0,
+            label="Initial Value" if n_plot == 0 else "",
+        )
+
+        # Draw a dashed line between the initial and final value
+        axis.plot(
+            [norm_relative_change, norm_final],
+            [n_plot, n_plot],
+            color="black",
+            linestyle="--",
+            linewidth=1.0,
+            alpha=0.6,
+        )
         # Plot the value as a number at x = 0.5
         axis.text(
             0.5,
             n_plot,
-            f"{itvar_final:.8g}",
+            f"{itvar_final:,.8g}",
             va="center",
             ha="center",
             fontsize=10,
             color="black",
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "white",
+                "alpha": 0.8,
+                "edgecolor": "white",
+                "linewidth": 1,
+            },
         )
+        # Plot the relative change and absolute change beside the value
+        if itvar_relative_change != 0:
+            abs_change = itvar_final - (itvar_final / itvar_relative_change)
+            rel_change_pct = (abs_change / (itvar_final / itvar_relative_change)) * 100
+            sign = "+" if rel_change_pct >= 0 else ""
+            axis.text(
+                0.65,
+                n_plot,
+                f"({sign}{rel_change_pct:,.2f}%, Δ={abs_change:,.3g})",
+                va="center",
+                ha="left",
+                fontsize=9,
+                color="darkgreen" if rel_change_pct >= 0 else "darkred",
+                bbox={
+                    "boxstyle": "round",
+                    "facecolor": "white",
+                    "alpha": 0.8,
+                    "edgecolor": "white",
+                    "linewidth": 1,
+                },
+            )
         # Plot the value of the upper bound to the right of x=1
         axis.text(
             1.05,
             n_plot,
-            f"{itvar_upper:.3g}",
+            f"{itvar_upper:,.3g}",
             va="center",
             ha="left",
             fontsize=10,
@@ -10059,7 +10120,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
         axis.text(
             -0.05,
             n_plot,
-            f"{itvar_lower:.3g}",
+            f"{itvar_lower:,.3g}",
             va="center",
             ha="right",
             fontsize=10,
@@ -10075,8 +10136,12 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
     axis.set_yticklabels(y_labels)
     axis.set_xticks([])
     axis.set_xticklabels([])
+    axis.set_facecolor("#f5f5f5")
     axis.set_xlim(-0.2, 1.2)  # Normalised bounds
-    axis.set_title("Iteration Variables Final Values and Bounds")
+    axis.set_title("Iteration Variables Bounds")
+    axis.set_xticks(np.arange(0, 1.0, 0.1))
+    axis.grid(True, axis="x", linestyle="--", alpha=0.3)
+    axis.legend(loc="upper left", bbox_to_anchor=(-0.15, 1.05), ncol=1)
 
 
 def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
@@ -12660,6 +12725,8 @@ def plot_inequality_constraint_equations(axis, m_file_data, scan):
     axis.set_title("Inequality Constraint Equations")
     axis.set_xlim(-0.3, 1.275)
     axis.set_xticks([])
+    axis.set_xticks(np.arange(0, 1.0, 0.1))
+    axis.grid(True, axis="x", linestyle="--", alpha=0.3)
     axis.set_xticklabels([])
 
 
@@ -12731,10 +12798,10 @@ def main_plot(
     plot_iteration_variables(ax7, m_file, scan)
 
     ax7_5 = figs[3].add_subplot(313)
-    ax7_5.set_position([0.3, 0.1, 0.6, 0.2])
+    ax7_5.set_position([0.3, 0.1, 0.6, 0.1])
     plot_equality_constraint_equations(ax7_5, m_file, scan)
     ax7_6 = figs[3].add_subplot(111)
-    ax7_6.set_position([0.3, 0.35, 0.65, 0.6])
+    ax7_6.set_position([0.3, 0.25, 0.65, 0.7])
     plot_inequality_constraint_equations(ax7_6, m_file, scan)
 
     # Plot main plasma information
