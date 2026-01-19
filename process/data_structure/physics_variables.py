@@ -549,6 +549,10 @@ hfact: float = None
 """H factor on energy confinement times, radiation corrected (`iteration variable 10`)."""
 
 
+hstar : float = None
+"""H* non-radiation corrected H factor on energy confinement times"""
+
+
 t_plasma_energy_confinement_max: float = None
 """Maximum allowed energy confinement time (s)"""
 
@@ -1483,6 +1487,7 @@ def init_physics_variables():
         f_beta_alpha_beam_thermal, \
         hfac, \
         hfact, \
+        hstar, \
         t_plasma_energy_confinement_max, \
         i_bootstrap_current, \
         i_beta_component, \
@@ -1746,6 +1751,7 @@ def init_physics_variables():
     f_beta_alpha_beam_thermal = 0.0
     hfac = np.zeros(N_CONFINEMENT_SCALINGS, dtype=np.float64)
     hfact = 1.0
+    hstar = 1.0
     t_plasma_energy_confinement_max = 10.0
     i_bootstrap_current = 3
     i_beta_component = 0
