@@ -8149,12 +8149,30 @@ class Physics:
         # Calculate H* non-radiation corrected H factor
         # Note: we will assume the IPB-98y2 scaling.
         if physics_variables.i_rad_loss == 1:
-            physics_variables.hstar = hfact * ( p_plasma_loss_mw / ( p_plasma_loss_mw
+            physics_variables.hstar = (
+                hfact
+                * (
+                    p_plasma_loss_mw
+                    / (
+                        p_plasma_loss_mw
                         + physics_variables.pden_plasma_sync_mw * vol_plasma
-                        + physics_variables.p_plasma_inner_rad_mw ) ) ** 0.31
+                        + physics_variables.p_plasma_inner_rad_mw
+                    )
+                )
+                ** 0.31
+            )
         elif physics_variables.i_rad_loss == 0:
-            physics_variables.hstar = hfact * ( p_plasma_loss_mw / ( p_plasma_loss_mw
-                        + physics_variables.pden_plasma_rad_mw * vol_plasma ) ) ** 0.31
+            physics_variables.hstar = (
+                hfact
+                * (
+                    p_plasma_loss_mw
+                    / (
+                        p_plasma_loss_mw
+                        + physics_variables.pden_plasma_rad_mw * vol_plasma
+                    )
+                )
+                ** 0.31
+            )
         elif physics_variables.i_rad_loss == 2:
             physics_variables.hstar = hfact
 
