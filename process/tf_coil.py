@@ -1565,8 +1565,7 @@ class TFCoil:
 
                 ap = (
                     tfcoil_variables.a_tf_wp_conductor
-                    + tfcoil_variables.n_tf_coil_turns
-                    * tfcoil_variables.a_tf_turn_steel
+                    + tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
                     + tfcoil_variables.a_tf_coil_wp_turn_insulation
                     + tfcoil_variables.a_tf_wp_extra_void
                     + tfcoil_variables.a_tf_wp_coolant_channels

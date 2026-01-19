@@ -2346,34 +2346,27 @@ class SuperconductingTFCoil(TFCoil):
             if i_tf_turns_integer == 0:
                 # Non-integer number of turns
                 (
-                    tfcoil_variables.a_tf_turn_cable_space_no_void,
-                    tfcoil_variables.a_tf_turn_steel,
-                    tfcoil_variables.a_tf_turn_insulation,
-                    tfcoil_variables.n_tf_coil_turns,
-                    tfcoil_variables.dx_tf_turn_general,
-                    tfcoil_variables.c_tf_turn,
-                    tfcoil_variables.dx_tf_turn_general,
                     superconducting_tf_coil_variables.dr_tf_turn,
                     superconducting_tf_coil_variables.dx_tf_turn,
-                    tfcoil_variables.t_conductor,
-                    superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners,
-                    superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
-                    superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
-                    superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
+                    tfcoil_variables.c_tf_turn,
+                    tfcoil_variables.n_tf_coil_turns,
+                    superconducting_tf_coil_variables.dr_tf_turn_stabiliser,
+                    superconducting_tf_coil_variables.dx_tf_turn_stabiliser,
+                    superconducting_tf_coil_variables.x_tf_turn_coolant_channel_centre,
+                    superconducting_tf_coil_variables.dr_tf_turn_tape_stack,
+                    superconducting_tf_coil_variables.dx_tf_turn_tape_stack,
+                    superconducting_tf_coil_variables.a_tf_turn_tape_stack,
+                    tfcoil_variables.a_tf_turn_insulation,
+                    superconducting_tf_coil_variables.a_tf_turn_stabiliser,
                 ) = self.tf_step_vertical_tape_averaged_turn_geometry(
                     j_tf_wp=tfcoil_variables.j_tf_wp,
-                    dx_tf_turn_steel=tfcoil_variables.dx_tf_turn_steel,
                     dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
-                    i_tf_sc_mat=tfcoil_variables.i_tf_sc_mat,
                     dx_tf_turn_general=tfcoil_variables.dx_tf_turn_general,
                     c_tf_turn=tfcoil_variables.c_tf_turn,
                     i_dx_tf_turn_general_input=tfcoil_variables.i_dx_tf_turn_general_input,
-                    i_dx_tf_turn_cable_space_general_input=tfcoil_variables.i_dx_tf_turn_cable_space_general_input,
-                    dx_tf_turn_cable_space_general=tfcoil_variables.dx_tf_turn_cable_space_general,
-                    layer_ins=tfcoil_variables.layer_ins,
-                    a_tf_wp_no_insulation=superconducting_tf_coil_variables.a_tf_wp_no_insulation,
                     dia_tf_turn_coolant_channel=tfcoil_variables.dia_tf_turn_coolant_channel,
-                    f_a_tf_turn_cable_space_extra_void=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
+                    c_tf_coil=superconducting_tf_coil_variables.c_tf_coil,
+                    a_tf_wp_no_insulation=superconducting_tf_coil_variables.a_tf_wp_no_insulation,
                 )
 
             else:
@@ -3228,9 +3221,7 @@ class SuperconductingTFCoil(TFCoil):
         a_tf_turn_stabiliser = (
             dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
             - a_tf_turn_tape_stack
-            - (np.pi / 4.0e0)
-            * dia_tf_turn_coolant_channel
-            * dia_tf_turn_coolant_channel
+            - (np.pi / 4.0e0) * dia_tf_turn_coolant_channel * dia_tf_turn_coolant_channel
         )
 
         return (
@@ -3610,9 +3601,7 @@ class SuperconductingTFCoil(TFCoil):
         a_tf_turn_stabiliser = (
             dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
             - a_tf_turn_tape_stack
-            - (np.pi / 4.0e0)
-            * dia_tf_turn_coolant_channel
-            * dia_tf_turn_coolant_channel
+            - (np.pi / 4.0e0) * dia_tf_turn_coolant_channel * dia_tf_turn_coolant_channel
         )
 
         return (

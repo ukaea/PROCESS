@@ -2638,9 +2638,7 @@ def test_tf_step_vertical_tape_averaged_turn_geometry_consistency(params):
     assert x_tf_turn_coolant_channel_centre == pytest.approx(expected_x, rel=1e-12)
 
     # tape stack dims and area relation
-    assert dr_tf_turn_tape_stack == pytest.approx(
-        dr_tf_turn_stabiliser * 0.8, rel=1e-12
-    )
+    assert dr_tf_turn_tape_stack == pytest.approx(dr_tf_turn_stabiliser * 0.8, rel=1e-12)
     expected_dx_tape = (dx_tf_turn / 2.0) - (dx_ins + (0.1 * dx_tf_turn_stabiliser))
     assert dx_tf_turn_tape_stack == pytest.approx(expected_dx_tape, rel=1e-12)
     assert a_tf_turn_tape_stack == pytest.approx(
