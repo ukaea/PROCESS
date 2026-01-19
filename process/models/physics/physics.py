@@ -8150,7 +8150,7 @@ class Physics:
         # Note: we will assume the IPB-98y2 scaling.
         if physics_variables.i_rad_loss == 1:
             physics_variables.hstar = hfact * ( p_plasma_loss_mw / ( p_plasma_loss_mw
-                        + physics_variables.pden_plasma_sync_mw
+                        + physics_variables.pden_plasma_sync_mw * vol_plasma
                         + physics_variables.p_plasma_inner_rad_mw ) ) ** 0.31
         elif physics_variables.i_rad_loss == 0:
             physics_variables.hstar = hfact * ( p_plasma_loss_mw / ( p_plasma_loss_mw
