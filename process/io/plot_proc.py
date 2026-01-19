@@ -9975,8 +9975,10 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
     axis.legend(labels, loc="upper center", bbox_to_anchor=(1.01, 0.85), ncol=1)
 
 
-def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
-    """Plot the iteration variables for a given figure."""
+def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
+    """Plot the iteration variables and where they lay in their bounds on a given axes"""
+
+    # Get total number of iteration variables
     n_itvars = int(m_file.get("nvar", scan=scan))
 
     y_labels = []
@@ -9991,6 +9993,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
             itvar_names[idx] = m_file.data[var].var_description
 
     for n_plot, n in enumerate(range(1, n_itvars + 1)):
+        # Get the final value of the iteration variable, its bounds, and relative change
         itvar_final = m_file.get(f"itvar{n:03d}", scan=scan)
         itvar_upper = m_file.get(f"boundu{n:03d}", scan=scan)
         itvar_lower = m_file.get(f"boundl{n:03d}", scan=scan)
@@ -9999,7 +10002,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
         # Use the variable name if available, else fallback to "itvarXXX"
         var_label = itvar_names.get(n, f"itvar{n:03d}")
 
-        # Plot the final value as a vertical marker, normalised to upper bound
+        # Find the normlaised final value and initial value (relative change)
         norm_final = (
             (itvar_final - itvar_lower) / (itvar_upper - itvar_lower)
             if itvar_final != itvar_lower
@@ -10013,8 +10016,8 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
             else 0
         )
 
+        # Plot square marker at the final value if at bounds
         if np.isclose(norm_final, 1.0, atol=1e-6):
-            # Plot the lower bound at x=0
             axis.plot(
                 1,
                 n_plot,
@@ -10024,7 +10027,6 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
                 label="Lower Bound" if n_plot == 0 else "",
             )
         elif np.isclose(norm_final, 0.0, atol=1e-6):
-            # Plot the upper bound at x=1
             axis.plot(
                 0,
                 n_plot,
@@ -12517,10 +12519,8 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
     axis.legend()
 
 
-def plot_equality_constraint_equations(axis, m_file_data, scan):
-    """Plot the constaint equations for a given figure."""
-
-    # n_constraints = int(m_file_data.data["neqns+nineqns"].get_scan(scan))
+def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, scan: int):
+    """Plot the equality constraints for a solution and their normalised residuals"""
 
     y_labels = []
     y_pos = []
@@ -12536,12 +12536,16 @@ def plot_equality_constraint_equations(axis, m_file_data, scan):
             con_numbers[idx] = idx
 
     for n_plot, n in enumerate(con_numbers.values()):
+        # Constraint value needed
         con_value = m_file_data.data[f"val_eq_con{n:03d}"].get_scan(scan)
 
         # Use the variable name if available, else fallback to "eq_conXXX"
         var_label = con_names.get(n, f"eq_con{n:03d}")
 
+        # Normalized residual of the constraint
         con_norm_residual = m_file_data.data[f"eq_con{n:03d}"].get_scan(scan)
+
+        # Unit type of the constraint
         con_units = m_file_data.data[f"eq_units_con{n:03d}"].get_scan(scan).strip("'`")
 
         # Remove '_normalised_residue' from the label if present
@@ -12594,10 +12598,8 @@ def plot_equality_constraint_equations(axis, m_file_data, scan):
     axis.legend()
 
 
-def plot_inequality_constraint_equations(axis, m_file_data, scan):
-    """Plot the constaint equations for a given figure."""
-
-    # n_constraints = int(m_file_data.data["neqns+nineqns"].get_scan(scan))
+def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan: int):
+    """Plot the inequality constraints for a solution and where they lay within their bounds"""
 
     y_labels = []
     y_pos = []
@@ -12606,38 +12608,38 @@ def plot_inequality_constraint_equations(axis, m_file_data, scan):
     # Build a mapping from itvar index to its name (description)
     con_names = {}
     con_numbers = {}
-    for var in m_file_data.data:
+    for var in m_file.data:
         if var.startswith("ineq_con"):
-            idx = int(var[8:])  # e.g. "itvar001" -> 1
-            con_names[idx] = m_file_data.data[var].var_description
+            idx = int(var[8:])  # e.g. "ineq_con001" -> 1
+            con_names[idx] = m_file.data[var].var_description
             con_numbers[idx] = idx
 
     for n_plot, n in enumerate(con_numbers.values()):
-        # Constraint value
-        con_bound = m_file_data.data[f"ineq_bound_con{n:03d}"].get_scan(scan)
+        # Constraint value/bound
+        con_bound = m_file.data[f"ineq_bound_con{n:03d}"].get_scan(scan)
 
-        # Value
-        con_value = m_file_data.data[f"ineq_value_con{n:03d}"].get_scan(scan)
+        # Value of constraint variable
+        con_value = m_file.data[f"ineq_value_con{n:03d}"].get_scan(scan)
 
         # Constraint symbol can be `<=` for an upper limit or `>=` for a lower limit
-        con_symbol = m_file_data.data[f"ineq_symbol_con{n:03d}"].get_scan(scan)
+        con_symbol = m_file.data[f"ineq_symbol_con{n:03d}"].get_scan(scan)
 
         # Use the variable name if available, else fallback to "ineq_conXXX"
         var_label = con_names.get(n, f"ineq_con{n:03d}")
 
-        con_units = m_file_data.data[f"ineq_units_con{n:03d}"].get_scan(scan).strip("'`")
+        # Unit type of the constraint
+        con_units = m_file.data[f"ineq_units_con{n:03d}"].get_scan(scan).strip("'`")
 
-        # Add a vertical line at the normalized constraint bound
+        # Add a vertical line at the normalized constraint bounds of 0 and 1
         axis.axvline(
-            0.0,  # Normalized bound is always at 1.0
+            0.0,
             color="red",
             linestyle="--",
             linewidth=1.5,
         )
 
-        # Add a vertical line at the normalized constraint bound
         axis.axvline(
-            1.0,  # Normalized bound is always at 1.0
+            1.0,
             color="red",
             linestyle="--",
             linewidth=1.5,
@@ -12648,15 +12650,17 @@ def plot_inequality_constraint_equations(axis, m_file_data, scan):
             var_label = var_label.replace("_normalised_residue", "")
             var_label = var_label.rstrip("_").replace("_", " ")
 
-        # Normalize the bar width against the constraint bound
+        # Calculate the normalised constraint threshold depending if the constraint is an upper
+        # or lower limit
         if con_symbol == "'<='":
             normalized_value = con_value / con_bound if con_bound != 0 else 0
         else:
             normalized_value = (
                 (con_value - con_bound) / con_bound if con_bound != 0 else 0
             )
-        if np.isclose(normalized_value, 1.0, atol=1e-6):
-            # Plot the lower bound at x=0
+
+        # If the constraint value is very close to the bound then plot a square marker at the bound
+        if np.isclose(normalized_value, 1.0, atol=1e-3):
             axis.plot(
                 1,
                 n_plot,
@@ -12665,7 +12669,6 @@ def plot_inequality_constraint_equations(axis, m_file_data, scan):
                 markersize=8,
             )
         elif np.isclose(normalized_value, 0.0, atol=1e-3):
-            # Plot the upper bound at x=1
             axis.plot(
                 0,
                 n_plot,
@@ -12674,7 +12677,7 @@ def plot_inequality_constraint_equations(axis, m_file_data, scan):
                 markersize=8,
             )
         else:
-            # Plot a horizontal bar for the constraint
+            # If constraint value is not very close to bound then plot bar as normal
             axis.barh(
                 n_plot,
                 normalized_value,
@@ -12694,7 +12697,7 @@ def plot_inequality_constraint_equations(axis, m_file_data, scan):
                 fontsize=8,
                 color="white",
             )
-
+        # Annoate the bound value depending if it is an upper or lower limit
         if con_symbol == "'<='":
             # Add the constraint symbol and bound as text
             axis.text(
