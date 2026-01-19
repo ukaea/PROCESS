@@ -5731,48 +5731,13 @@ class Physics:
                 0.0e0,
             )
             po.ocmmnt(self.outfile, "  (No radiation correction applied)")
-        if physics_variables.i_rad_loss == 1:
-            po.ovarrf(
-                self.outfile,
-                "H* non-radiation corrected",
-                "(hstar)",
-                physics_variables.hfact
-                * (
-                    physics_variables.p_plasma_loss_mw
-                    / (
-                        physics_variables.p_plasma_loss_mw
-                        + physics_variables.pden_plasma_sync_mw
-                        + physics_variables.p_plasma_inner_rad_mw
-                    )
-                )
-                ** 0.31,
-                "OP",
-            )
-        elif physics_variables.i_rad_loss == 0:
-            po.ovarrf(
-                self.outfile,
-                "H* non-radiation corrected",
-                "(hstar)",
-                physics_variables.hfact
-                * (
-                    physics_variables.p_plasma_loss_mw
-                    / (
-                        physics_variables.p_plasma_loss_mw
-                        + physics_variables.pden_plasma_rad_mw
-                        * physics_variables.vol_plasma
-                    )
-                )
-                ** 0.31,
-                "OP",
-            )
-        elif physics_variables.i_rad_loss == 2:
-            po.ovarrf(
-                self.outfile,
-                "H* non-radiation corrected",
-                "(hstar)",
-                physics_variables.hfact,
-                "OP",
-            )
+        po.ovarrf(
+            self.outfile,
+            "H* non-radiation corrected",
+            "(hstar)",
+            physics_variables.hstar,
+            "OP",
+        )
         po.ocmmnt(self.outfile, "  (H* assumes IPB98(y,2), ELMy H-mode scaling)")
         po.ovarrf(
             self.outfile,
@@ -8180,6 +8145,18 @@ class Physics:
 
         # Ion energy confinement time
         t_ion_energy_confinement = t_electron_energy_confinement
+
+        # Calculate H* non-radiation corrected H factor
+        # Note: we will assume the IPB-98y2 scaling.
+        if physics_variables.i_rad_loss == 1:
+            physics_variables.hstar = hfact * ( p_plasma_loss_mw / ( p_plasma_loss_mw
+                        + physics_variables.pden_plasma_sync_mw
+                        + physics_variables.p_plasma_inner_rad_mw ) ) ** 0.31
+        elif physics_variables.i_rad_loss == 0:
+            physics_variables.hstar = hfact * ( p_plasma_loss_mw / ( p_plasma_loss_mw
+                        + physics_variables.pden_plasma_rad_mw * vol_plasma ) ) ** 0.31
+        elif physics_variables.i_rad_loss == 2:
+            physics_variables.hstar = hfact
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
