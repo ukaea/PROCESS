@@ -782,7 +782,8 @@ class VacuumVessel:
                 + dr_fw_inboard
                 + dr_fw_outboard
             )
-        z_top = z_top + dz_blkt_upper + dz_shld_upper
+
+            z_top = z_top + dz_blkt_upper + dz_shld_upper
 
         # Average of top and bottom (m)
         return 0.5 * (z_top + z_bottom)
