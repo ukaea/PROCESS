@@ -1022,58 +1022,6 @@ class EllipticalComponentParam(NamedTuple):
             expected_vol_vv_outboard=0,
             expected_icomponent=1,
         ),
-        EllipticalComponentParam(
-            rsldi=4.0833333333333339,
-            dr_shld_inboard=0.30000000000000004,
-            dr_blkt_inboard=0.70000000000000007,
-            rsldo=12.716666666666667,
-            dr_shld_outboard=0.80000000000000004,
-            dr_blkt_outboard=1,
-            a_blkt_inboard_surface=664.9687712975541,
-            a_blkt_outboard_surface=1101.3666396424403,
-            a_blkt_total_surface=1766.3354109399943,
-            dz_blkt_upper=0.85000000000000009,
-            a_shld_inboard_surface=700.06731267447844,
-            a_shld_outboard_surface=1344.1106481995357,
-            a_shld_total_surface=2044.1779608740142,
-            dz_shld_upper=0.59999999999999998,
-            dr_vv_inboard=0.30000000000000004,
-            dr_vv_outboard=0.30000000000000004,
-            dz_vv_upper=0.30000000000000004,
-            dz_vv_lower=0.30000000000000004,
-            vol_blkt_inboard=315.83946385183026,
-            vol_blkt_outboard=1020.3677420460117,
-            vol_blkt_total=1336.207205897842,
-            vol_shld_total=1124.4621612595051,
-            vol_vv=0,
-            rmajor=8,
-            rminor=2.6666666666666665,
-            triang=0.5,
-            vol_shld_inboard=177.89822933168091,
-            vol_shld_outboard=946.56393192782434,
-            vol_vv_inboard=0,
-            vol_vv_outboard=0,
-            dz_blkt_half=5.9532752487304119,
-            dz_shld_half=6.8032752487304133,
-            dz_vv_half=7.5032752487304135,
-            icomponent=2,
-            expected_a_blkt_inboard_surface=664.9687712975541,
-            expected_a_blkt_outboard_surface=1101.3666396424403,
-            expected_a_blkt_total_surface=1766.3354109399943,
-            expected_a_shld_inboard_surface=700.06731267447844,
-            expected_a_shld_outboard_surface=1344.1106481995357,
-            expected_a_shld_total_surface=2044.1779608740142,
-            expected_vol_blkt_inboard=315.83946385183026,
-            expected_vol_blkt_outboard=1020.3677420460117,
-            expected_volblkt=1336.207205897842,
-            expected_vol_shld_total=1124.4621612595051,
-            expected_vol_vv=584.07334775041659,
-            expected_vol_shld_inboard=177.89822933168091,
-            expected_vol_shld_outboard=946.56393192782434,
-            expected_vol_vv_inboard=143.03162449152501,
-            expected_vol_vv_outboard=441.04172325889158,
-            expected_icomponent=2,
-        ),
     ),
 )
 def test_elliptical_component(
@@ -1141,18 +1089,6 @@ def test_elliptical_component(
         build_variables, "dz_shld_upper", ellipticalcomponentparam.dz_shld_upper
     )
     monkeypatch.setattr(
-        build_variables, "dr_vv_inboard", ellipticalcomponentparam.dr_vv_inboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_vv_outboard", ellipticalcomponentparam.dr_vv_outboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_vv_upper", ellipticalcomponentparam.dz_vv_upper
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_vv_lower", ellipticalcomponentparam.dz_vv_lower
-    )
-    monkeypatch.setattr(
         fwbs_variables, "vol_blkt_inboard", ellipticalcomponentparam.vol_blkt_inboard
     )
     monkeypatch.setattr(
@@ -1164,7 +1100,6 @@ def test_elliptical_component(
     monkeypatch.setattr(
         fwbs_variables, "vol_shld_total", ellipticalcomponentparam.vol_shld_total
     )
-    monkeypatch.setattr(fwbs_variables, "vol_vv", ellipticalcomponentparam.vol_vv)
     monkeypatch.setattr(physics_variables, "rmajor", ellipticalcomponentparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", ellipticalcomponentparam.rminor)
     monkeypatch.setattr(physics_variables, "triang", ellipticalcomponentparam.triang)
@@ -1175,19 +1110,10 @@ def test_elliptical_component(
         blanket_library, "vol_shld_outboard", ellipticalcomponentparam.vol_shld_outboard
     )
     monkeypatch.setattr(
-        blanket_library, "vol_vv_inboard", ellipticalcomponentparam.vol_vv_inboard
-    )
-    monkeypatch.setattr(
-        blanket_library, "vol_vv_outboard", ellipticalcomponentparam.vol_vv_outboard
-    )
-    monkeypatch.setattr(
         blanket_library, "dz_blkt_half", ellipticalcomponentparam.dz_blkt_half
     )
     monkeypatch.setattr(
         blanket_library, "dz_shld_half", ellipticalcomponentparam.dz_shld_half
-    )
-    monkeypatch.setattr(
-        blanket_library, "dz_vv_half", ellipticalcomponentparam.dz_vv_half
     )
 
     blanket_library_fixture.elliptical_component(ellipticalcomponentparam.icomponent)
@@ -1222,20 +1148,11 @@ def test_elliptical_component(
     assert fwbs_variables.vol_shld_total == pytest.approx(
         ellipticalcomponentparam.expected_vol_shld_total
     )
-    assert fwbs_variables.vol_vv == pytest.approx(
-        ellipticalcomponentparam.expected_vol_vv
-    )
     assert blanket_library.vol_shld_inboard == pytest.approx(
         ellipticalcomponentparam.expected_vol_shld_inboard
     )
     assert blanket_library.vol_shld_outboard == pytest.approx(
         ellipticalcomponentparam.expected_vol_shld_outboard
-    )
-    assert blanket_library.vol_vv_inboard == pytest.approx(
-        ellipticalcomponentparam.expected_vol_vv_inboard
-    )
-    assert blanket_library.vol_vv_outboard == pytest.approx(
-        ellipticalcomponentparam.expected_vol_vv_outboard
     )
 
 
@@ -1254,8 +1171,6 @@ class ApplyCoverageFactorsParam(NamedTuple):
     fvolsi: Any = None
     fvolso: Any = None
     vol_shld_total: Any = None
-    vol_vv: Any = None
-    fvoldw: Any = None
     n_divertors: Any = None
     vol_shld_inboard: Any = None
     vol_shld_outboard: Any = None
@@ -1288,8 +1203,6 @@ class ApplyCoverageFactorsParam(NamedTuple):
             fvolsi=1,
             fvolso=0.64000000000000001,
             vol_shld_total=1124.4621612595051,
-            vol_vv=584.07334775041659,
-            fvoldw=1.74,
             n_divertors=1,
             vol_shld_inboard=177.89822933168091,
             vol_shld_outboard=946.56393192782434,
@@ -1371,8 +1284,6 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(
         fwbs_variables, "vol_shld_total", applycoveragefactorsparam.vol_shld_total
     )
-    monkeypatch.setattr(fwbs_variables, "vol_vv", applycoveragefactorsparam.vol_vv)
-    monkeypatch.setattr(fwbs_variables, "fvoldw", applycoveragefactorsparam.fvoldw)
     monkeypatch.setattr(
         divertor_variables, "n_divertors", applycoveragefactorsparam.n_divertors
     )
@@ -1407,9 +1318,6 @@ def test_apply_coverage_factors(
     )
     assert fwbs_variables.vol_shld_total == pytest.approx(
         applycoveragefactorsparam.expected_vol_shld_total
-    )
-    assert fwbs_variables.vol_vv == pytest.approx(
-        applycoveragefactorsparam.expected_vol_vv
     )
     assert blanket_library.vol_shld_outboard == pytest.approx(
         applycoveragefactorsparam.expected_vol_shld_outboard
