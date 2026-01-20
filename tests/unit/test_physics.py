@@ -3474,6 +3474,17 @@ def test_calculate_normalised_beta():
     assert result == pytest.approx(3.3333333333333335, abs=1e-6)
 
 
+def test_calculate_plasma_energy_from_beta():
+    """Test calculate_plasma_energy_from_beta()"""
+    beta = 0.02
+    b_field = 5.3
+    vol_plasma = 1000.0
+    result = PlasmaBeta.calculate_plasma_energy_from_beta(
+        beta=beta, b_field=b_field, vol_plasma=vol_plasma
+    )
+    assert result == pytest.approx(335299676.2083403, rel=0.01)
+
+
 @pytest.mark.parametrize(
     "b_field, m_particle, z_particle, expected",
     [
