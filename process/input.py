@@ -1076,7 +1076,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, float, range=(0.0, 1e21)
     ),
     "nflutfmax": InputVariable(
-        data_structure.constraint_variables, float, range=(1e20, 1e24)
+        data_structure.constraint_variables, float, range=(0.0, 1e24)
     ),
     "oacdcp": InputVariable(
         data_structure.tfcoil_variables, float, range=(10000.0, 1000000000.0)
