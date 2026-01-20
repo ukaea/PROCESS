@@ -58,7 +58,7 @@ icc = 15
 * Net electric power lower limit *
 *--------------------------------*
 icc = 16
-* Minimum allowable value for net eletric power [MW]
+* Minimum allowable value for net electric power [MW]
 p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
@@ -74,15 +74,18 @@ b_tf_inboard_max = 14.0
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
 icc = 26
+fjohc = 0.7
 
 * Central solenoid BOP current density upper limit *
 *--------------------------------------------------*
 icc = 27
 f_j_cs_start_pulse_end_flat_top = 1.0
+fjohc = 0.7
 
 * I_op/I_Crit TF coil limit *
 *---------------------------*
 icc = 33
+fiooic = 0.70 * margin for TF coil operating current / critical current ratio
 
 * Dump voltage upper limit *
 *--------------------------*
@@ -142,6 +145,7 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 *---------------------*
 icc = 5
 ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
+fdene = 1.2 * density limit constraint scale (constraint equation 5)
 nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
@@ -273,7 +277,7 @@ dz_vv_upper = 0.3
 * Underside vacuum vessel radial thickness [m]
 dz_vv_lower = 0.3
 
-* Inboard shield thickness [m]
+* Inboard radiation shield radial thickness [m]
 dr_shld_inboard = 0.3
 
 * Gap between vacuum vessel and blanket [m]

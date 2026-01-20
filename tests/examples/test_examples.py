@@ -111,3 +111,16 @@ def test_varyrun_example(examples_temp_data):
     varyrun_example_notebook_location = examples_temp_data / "vary_run_example.ipynb"
     with testbook(varyrun_example_notebook_location, execute=True, timeout=600):
         pass
+
+
+def test_optimum_solution_comparison_example(examples_temp_data):
+    """Run optimum_solutions_comparison.ipynb and check no exceptions are raised.
+
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
+    """
+    optimum_solution_notebook_location = (
+        examples_temp_data / "optimum_solutions_comparison.ipynb"
+    )
+    with testbook(optimum_solution_notebook_location, execute=True, timeout=600):
+        pass

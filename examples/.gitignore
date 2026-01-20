@@ -6,3 +6,5 @@
 *.csv
 *.png
 data/README.txt
+!large_tokamak_varied_min_net_electric_MFILE.DAT
+!large_tokamak_MFILE.DAT
