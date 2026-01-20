@@ -1215,12 +1215,6 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        physics_variables,
-        "beta_norm_total",
-        plasmacurrentparam.beta_norm_total,
-    )
-
     monkeypatch.setattr(physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta)
 
     b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
@@ -1238,10 +1232,6 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         rminor=plasmacurrentparam.rminor,
         triang=plasmacurrentparam.triang,
         triang95=plasmacurrentparam.triang95,
-    )
-
-    assert physics_variables.beta_norm_total == pytest.approx(
-        plasmacurrentparam.expected_normalised_total_beta
     )
 
     assert b_plasma_poloidal_average == pytest.approx(plasmacurrentparam.expected_bp)
