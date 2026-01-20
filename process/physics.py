@@ -9046,6 +9046,30 @@ class PlasmaBeta:
             / (aspect**0.5523 * np.tanh((1.8524 + (0.2319 * kappa)) / aspect**0.6163))
         )
 
+    @staticmethod
+    def calculate_normalised_beta(
+        beta: float, rminor: float, c_plasma: float, b_field: float
+    ) -> float:
+        """Calculate normalised beta (β_N).
+
+        :param beta: Plasma beta (fraction).
+        :type beta: float
+        :param rminor: Plasma minor radius (m).
+        :type rminor: float
+        :param c_plasma: Plasma current (A).
+        :type c_plasma: float
+        :param b_field: Magnetic field (T).
+        :type b_field: float
+        :return: Normalised beta.
+        :rtype: float
+
+        :Notes:
+            - 1.0e8 is a conversion factor to get beta_N in standard units, as plasma current is normally in MA and
+             beta is in percentage instead of fraction.
+        """
+
+        return 1.0e8 * (beta * rminor * b_field) / c_plasma
+
 
 class DetailedPhysics:
     """Class to hold detailed physics models for plasma processing."""
