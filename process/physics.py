@@ -2664,30 +2664,34 @@ class Physics:
 
         # Define beta_norm_max calculations
 
-        physics_variables.beta_norm_max_wesson = self.calculate_beta_norm_max_wesson(
-            ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
+        physics_variables.beta_norm_max_wesson = (
+            self.beta.calculate_beta_norm_max_wesson(
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
+            )
         )
 
         # Original scaling law
         physics_variables.beta_norm_max_original_scaling = (
-            self.calculate_beta_norm_max_original(eps=physics_variables.eps)
+            self.beta.calculate_beta_norm_max_original(eps=physics_variables.eps)
         )
 
         # J. Menard scaling law
-        physics_variables.beta_norm_max_menard = self.calculate_beta_norm_max_menard(
-            eps=physics_variables.eps
+        physics_variables.beta_norm_max_menard = (
+            self.beta.calculate_beta_norm_max_menard(eps=physics_variables.eps)
         )
 
         # E. Tholerus scaling law
-        physics_variables.beta_norm_max_thloreus = self.calculate_beta_norm_max_thloreus(
-            c_beta=physics_variables.c_beta,
-            pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
-            pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
+        physics_variables.beta_norm_max_thloreus = (
+            self.beta.calculate_beta_norm_max_thloreus(
+                c_beta=physics_variables.c_beta,
+                pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
+                pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
+            )
         )
 
         # R. D. Stambaugh scaling law
         physics_variables.beta_norm_max_stambaugh = (
-            self.calculate_beta_norm_max_stambaugh(
+            self.beta.calculate_beta_norm_max_stambaugh(
                 f_c_plasma_bootstrap=current_drive_variables.f_c_plasma_bootstrap,
                 kappa=physics_variables.kappa,
                 aspect=physics_variables.aspect,
@@ -2952,143 +2956,6 @@ class Physics:
             International Series of Monographs on Physics, Volume 149.
         """
         return np.log(1.65 + 0.89 * alphaj)
-
-    @staticmethod
-    def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
-        """
-        Calculate the Wesson normalsied beta upper limit.
-
-        :param ind_plasma_internal_norm: Plasma normalised internal inductance
-        :type ind_plasma_internal_norm: float
-
-        :return: The Wesson normalised beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - It is recommended to use this method with the other Wesson relations for normalsied internal
-            inductance and current profile index.
-            - This fit is derived from the DIII-D database for β_N >= 2.5
-
-        :References:
-            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
-            International Series of Monographs on Physics, Volume 149.
-
-            - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
-            Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
-        """
-        return 4 * ind_plasma_internal_norm
-
-    @staticmethod
-    def calculate_beta_norm_max_original(eps: float) -> float:
-        """
-        Calculate the original scaling law normalsied beta upper limit.
-
-        :param eps: Plasma normalised internal inductance
-        :type eps: float
-
-        :return: The original scaling law normalised beta upper limit.
-        :rtype: float
-
-        :Notes:
-
-        :References:
-
-        """
-        return 2.7 * (1.0 + 5.0 * eps**3.5)
-
-    @staticmethod
-    def calculate_beta_norm_max_menard(eps: float) -> float:
-        """
-        Calculate the Menard normalsied beta upper limit.
-
-        :param eps: Plasma normalised internal inductance
-        :type eps: float
-
-        :return: The Menard normalised beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - Found as a reasonable fit to the computed no wall limit at f_BS ≈ 50%
-            - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
-              β_T data from DIII-D at A = 2.9 and high κ.
-
-        :References:
-            - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
-
-        """
-        return 3.12 + 3.5 * eps**1.7
-
-    @staticmethod
-    def calculate_beta_norm_max_thloreus(
-        c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
-    ) -> float:
-        """
-        Calculate the E. Tholerus normalized beta upper limit.
-
-        :param c_beta: Pressure peaking factor coefficient.
-        :type c_beta: float
-        :param pres_plasma_on_axis: Central plasma pressure (Pa).
-        :type pres_plasma_on_axis: float
-        :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
-        :type pres_plasma_vol_avg: float
-
-        :return: The E. Tholerus normalized beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
-              which is defined as the ratio of the peak pressure to the average pressure.
-            - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
-
-        :References:
-            - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
-              Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
-        """
-        return 3.7 + (
-            (c_beta / (pres_plasma_on_axis / pres_plasma_vol_avg))
-            * (12.5 - 3.5 * (pres_plasma_on_axis / pres_plasma_vol_avg))
-        )
-
-    @staticmethod
-    def calculate_beta_norm_max_stambaugh(
-        f_c_plasma_bootstrap: float,
-        kappa: float,
-        aspect: float,
-    ) -> float:
-        """
-        Calculate the Stambaugh normalized beta upper limit.
-
-        :param f_c_plasma_bootstrap: Bootstrap current fraction.
-        :type f_c_plasma_bootstrap: float
-        :param kappa: Plasma separatrix elongation.
-        :type kappa: float
-        :param aspect: Plasma aspect ratio.
-        :type aspect: float
-
-        :return: The Stambaugh normalized beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
-            - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
-
-        :References:
-            - R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
-              Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
-              doi: https://doi.org/10.13182/fst59-279.
-
-            - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
-              Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
-              doi: https://doi.org/10.1088/0029-5515/44/4/009.
-        """
-        return (
-            f_c_plasma_bootstrap
-            * 10
-            * (-0.7748 + (1.2869 * kappa) - (0.2921 * kappa**2) + (0.0197 * kappa**3))
-            / (aspect**0.5523 * np.tanh((1.8524 + (0.2319 * kappa)) / aspect**0.6163))
-        )
 
     @staticmethod
     def calculate_internal_inductance_menard(kappa: float) -> float:
@@ -9041,6 +8908,143 @@ class PlasmaBeta:
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    @staticmethod
+    def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
+        """
+        Calculate the Wesson normalsied beta upper limit.
+
+        :param ind_plasma_internal_norm: Plasma normalised internal inductance
+        :type ind_plasma_internal_norm: float
+
+        :return: The Wesson normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - It is recommended to use this method with the other Wesson relations for normalsied internal
+            inductance and current profile index.
+            - This fit is derived from the DIII-D database for β_N >= 2.5
+
+        :References:
+            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+            International Series of Monographs on Physics, Volume 149.
+
+            - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
+            Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+        """
+        return 4 * ind_plasma_internal_norm
+
+    @staticmethod
+    def calculate_beta_norm_max_original(eps: float) -> float:
+        """
+        Calculate the original scaling law normalsied beta upper limit.
+
+        :param eps: Plasma normalised internal inductance
+        :type eps: float
+
+        :return: The original scaling law normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+
+        :References:
+
+        """
+        return 2.7 * (1.0 + 5.0 * eps**3.5)
+
+    @staticmethod
+    def calculate_beta_norm_max_menard(eps: float) -> float:
+        """
+        Calculate the Menard normalsied beta upper limit.
+
+        :param eps: Plasma normalised internal inductance
+        :type eps: float
+
+        :return: The Menard normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - Found as a reasonable fit to the computed no wall limit at f_BS ≈ 50%
+            - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
+              β_T data from DIII-D at A = 2.9 and high κ.
+
+        :References:
+            - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+
+        """
+        return 3.12 + 3.5 * eps**1.7
+
+    @staticmethod
+    def calculate_beta_norm_max_thloreus(
+        c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
+    ) -> float:
+        """
+        Calculate the E. Tholerus normalized beta upper limit.
+
+        :param c_beta: Pressure peaking factor coefficient.
+        :type c_beta: float
+        :param pres_plasma_on_axis: Central plasma pressure (Pa).
+        :type pres_plasma_on_axis: float
+        :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
+        :type pres_plasma_vol_avg: float
+
+        :return: The E. Tholerus normalized beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
+              which is defined as the ratio of the peak pressure to the average pressure.
+            - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
+
+        :References:
+            - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
+              Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+        """
+        return 3.7 + (
+            (c_beta / (pres_plasma_on_axis / pres_plasma_vol_avg))
+            * (12.5 - 3.5 * (pres_plasma_on_axis / pres_plasma_vol_avg))
+        )
+
+    @staticmethod
+    def calculate_beta_norm_max_stambaugh(
+        f_c_plasma_bootstrap: float,
+        kappa: float,
+        aspect: float,
+    ) -> float:
+        """
+        Calculate the Stambaugh normalized beta upper limit.
+
+        :param f_c_plasma_bootstrap: Bootstrap current fraction.
+        :type f_c_plasma_bootstrap: float
+        :param kappa: Plasma separatrix elongation.
+        :type kappa: float
+        :param aspect: Plasma aspect ratio.
+        :type aspect: float
+
+        :return: The Stambaugh normalized beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
+            - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
+
+        :References:
+            - R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
+              Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
+              doi: https://doi.org/10.13182/fst59-279.
+
+            - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
+              Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
+              doi: https://doi.org/10.1088/0029-5515/44/4/009.
+        """
+        return (
+            f_c_plasma_bootstrap
+            * 10
+            * (-0.7748 + (1.2869 * kappa) - (0.2921 * kappa**2) + (0.0197 * kappa**3))
+            / (aspect**0.5523 * np.tanh((1.8524 + (0.2319 * kappa)) / aspect**0.6163))
+        )
 
 
 class DetailedPhysics:
