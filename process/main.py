@@ -703,6 +703,7 @@ class Models:
             current_drive=self.current_drive,
             physics=self.physics,
             neoclassics=self.neoclassics,
+            plasma_beta=self.plasma_beta,
         )
         self.dcll = DCLL(fw=self.fw)
 

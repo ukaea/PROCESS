@@ -66,6 +66,7 @@ class Stellarator:
         current_drive,
         physics,
         neoclassics,
+        plasma_beta,
     ) -> None:
         """Initialises the Stellarator model's variables
 
@@ -102,6 +103,7 @@ class Stellarator:
         self.current_drive = current_drive
         self.physics = physics
         self.neoclassics = neoclassics
+        self.beta = plasma_beta
 
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
@@ -4379,7 +4381,7 @@ class Stellarator:
             physics_variables.pden_plasma_alpha_mw,
         )
 
-        physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
+        physics_variables.beta_fast_alpha = self.beta.fast_alpha_beta(
             physics_variables.b_plasma_poloidal_average,
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_plasma_electrons_vol_avg,

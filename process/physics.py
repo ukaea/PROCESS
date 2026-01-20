@@ -2354,17 +2354,17 @@ class Physics:
             physics_variables.pden_plasma_alpha_mw,
         )
 
-        physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
-            physics_variables.b_plasma_poloidal_average,
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_plasma_fuel_ions_vol_avg,
-            physics_variables.nd_plasma_ions_total_vol_avg,
-            physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.temp_plasma_ion_density_weighted_kev,
-            physics_variables.pden_alpha_total_mw,
-            physics_variables.pden_plasma_alpha_mw,
-            physics_variables.i_beta_fast_alpha,
+        physics_variables.beta_fast_alpha = self.beta.fast_alpha_beta(
+            b_plasma_poloidal_average=physics_variables.b_plasma_poloidal_average,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+            nd_plasma_fuel_ions_vol_avg=physics_variables.nd_plasma_fuel_ions_vol_avg,
+            nd_plasma_ions_total_vol_avg=physics_variables.nd_plasma_ions_total_vol_avg,
+            temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
+            temp_plasma_ion_density_weighted_kev=physics_variables.temp_plasma_ion_density_weighted_kev,
+            pden_alpha_total_mw=physics_variables.pden_alpha_total_mw,
+            pden_plasma_alpha_mw=physics_variables.pden_plasma_alpha_mw,
+            i_beta_fast_alpha=physics_variables.i_beta_fast_alpha,
         )
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
@@ -8841,6 +8841,123 @@ class PlasmaBeta:
         """
 
         return (1.5e0 * beta * b_field**2) / (2.0e0 * constants.RMU0) * vol_plasma
+
+    @staticmethod
+    def fast_alpha_beta(
+        b_plasma_poloidal_average: float,
+        b_plasma_toroidal_on_axis: float,
+        nd_plasma_electrons_vol_avg: float,
+        nd_plasma_fuel_ions_vol_avg: float,
+        nd_plasma_ions_total_vol_avg: float,
+        temp_plasma_electron_density_weighted_kev: float,
+        temp_plasma_ion_density_weighted_kev: float,
+        pden_alpha_total_mw: float,
+        pden_plasma_alpha_mw: float,
+        i_beta_fast_alpha: int,
+    ) -> float:
+        """
+        Calculate the fast alpha beta component.
+
+        This function computes the fast alpha beta contribution based on the provided plasma parameters.
+
+        :param b_plasma_poloidal_average: Poloidal field (T).
+        :type b_plasma_poloidal_average: float
+        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
+        :type b_plasma_toroidal_on_axis: float
+        :param nd_plasma_electrons_vol_avg: Electron density (m^-3).
+        :type nd_plasma_electrons_vol_avg: float
+        :param nd_plasma_fuel_ions_vol_avg: Fuel ion density (m^-3).
+        :type nd_plasma_fuel_ions_vol_avg: float
+        :param nd_plasma_ions_total_vol_avg: Total ion density (m^-3).
+        :type nd_plasma_ions_total_vol_avg: float
+        :param temp_plasma_electron_density_weighted_kev: Density-weighted electron temperature (keV).
+        :type temp_plasma_electron_density_weighted_kev: float
+        :param temp_plasma_ion_density_weighted_kev: Density-weighted ion temperature (keV).
+        :type temp_plasma_ion_density_weighted_kev: float
+        :param pden_alpha_total_mw: Alpha power per unit volume, from beams and plasma (MW/m^3).
+        :type pden_alpha_total_mw: float
+        :param pden_plasma_alpha_mw: Alpha power per unit volume just from plasma (MW/m^3).
+        :type pden_plasma_alpha_mw: float
+        :param i_beta_fast_alpha: Switch for fast alpha pressure method.
+        :type i_beta_fast_alpha: int
+
+        :return: Fast alpha beta component.
+        :rtype: float
+
+        :Notes:
+            - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, <T> = 5-20 keV
+
+
+        :References:
+            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+            https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+
+            - Uckan, N. A., Tolliver, J. S., Houlberg, W. A., and Attenberger, S. E.
+            Influence of fast alpha diffusion and thermal alpha buildup on tokamak reactor performance.
+            United States: N. p., 1987. Web.https://www.osti.gov/servlets/purl/5611706
+
+        """
+
+        # Determine average fast alpha density
+        if physics_variables.f_plasma_fuel_deuterium < 1.0:
+            beta_thermal = (
+                2.0
+                * constants.RMU0
+                * constants.KILOELECTRON_VOLT
+                * (
+                    nd_plasma_electrons_vol_avg
+                    * temp_plasma_electron_density_weighted_kev
+                    + nd_plasma_ions_total_vol_avg * temp_plasma_ion_density_weighted_kev
+                )
+                / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
+            )
+
+            # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
+            # IPDG89 fast alpha scaling
+            if i_beta_fast_alpha == 0:
+                fact = min(
+                    0.3,
+                    0.29
+                    * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg) ** 2
+                    * (
+                        (
+                            temp_plasma_electron_density_weighted_kev
+                            + temp_plasma_ion_density_weighted_kev
+                        )
+                        / 20.0
+                        - 0.37
+                    ),
+                )
+
+            # Modified scaling, D J Ward
+            else:
+                fact = min(
+                    0.30,
+                    0.26
+                    * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg) ** 2
+                    * np.sqrt(
+                        max(
+                            0.0,
+                            (
+                                (
+                                    temp_plasma_electron_density_weighted_kev
+                                    + temp_plasma_ion_density_weighted_kev
+                                )
+                                / 20.0
+                                - 0.65
+                            ),
+                        )
+                    ),
+                )
+
+            fact = max(fact, 0.0)
+            fact2 = pden_alpha_total_mw / pden_plasma_alpha_mw
+            beta_fast_alpha = beta_thermal * fact * fact2
+
+        else:  # negligible alpha production, alpha_power_density = p_beam_alpha_mw = 0
+            beta_fast_alpha = 0.0
+
+        return beta_fast_alpha
 
     def output_beta_information(self):
         """Output beta information to file."""
