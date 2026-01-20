@@ -615,10 +615,6 @@ i_density_limit: int = None
 """
 
 
-n_divertors: int = None
-"""number of divertors (calculated from `i_single_null`)"""
-
-
 i_beta_fast_alpha: int = None
 """switch for fast alpha pressure calculation
 - =0 ITER physics rules (Uckan) fit
@@ -1489,7 +1485,6 @@ def init_physics_variables():
         i_plasma_current, \
         i_diamagnetic_current, \
         i_density_limit, \
-        n_divertors, \
         i_beta_fast_alpha, \
         i_plasma_ignited, \
         i_plasma_pedestal, \
@@ -1752,7 +1747,6 @@ def init_physics_variables():
     i_plasma_current = 4
     i_diamagnetic_current = 0
     i_density_limit = 8
-    n_divertors = 2
     i_beta_fast_alpha = 1
     i_plasma_ignited = 0
     i_plasma_pedestal = 1

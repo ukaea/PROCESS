@@ -997,7 +997,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.f_p_div_coolant_pump_total_heat,
     )
 
-    monkeypatch.setattr(physics_variables, "n_divertors", powerflowcalcparam.n_divertors)
+    monkeypatch.setattr(
+        divertor_variables, "n_divertors", powerflowcalcparam.n_divertors
+    )
 
     monkeypatch.setattr(
         physics_variables, "p_plasma_rad_mw", powerflowcalcparam.p_plasma_rad_mw
@@ -1461,7 +1463,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
     monkeypatch.setattr(
-        physics_variables, "n_divertors", componentmassesparam.n_divertors
+        divertor_variables, "n_divertors", componentmassesparam.n_divertors
     )
     monkeypatch.setattr(
         physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface

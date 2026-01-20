@@ -988,7 +988,7 @@ class Build:
         divht = max(zplti, zplto) - min(zplbo, zplbi)
 
         if output:
-            if physics_variables.n_divertors == 1:
+            if divertor_variables.n_divertors == 1:
                 po.oheadr(self.outfile, "Divertor build and plasma position")
                 po.ocmmnt(self.outfile, "Divertor Configuration = Single Null Divertor")
                 po.oblnkl(self.outfile)
@@ -1201,7 +1201,7 @@ class Build:
                     "OP ",
                 )
 
-            elif physics_variables.n_divertors == 2:
+            elif divertor_variables.n_divertors == 2:
                 po.oheadr(self.outfile, "Divertor build and plasma position")
                 po.ocmmnt(self.outfile, "Divertor Configuration = Double Null Divertor")
                 po.oblnkl(self.outfile)
@@ -2019,7 +2019,7 @@ class Build:
             - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
         if (
-            physics_variables.n_divertors == 2
+            divertor_variables.n_divertors == 2
         ):  # (i.e. physics_variables.i_single_null=0)
             htop = hbot
         else:
@@ -2090,7 +2090,7 @@ class Build:
 
         #  Apply area coverage factor
 
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             # Double null configuration
             build_variables.a_fw_outboard = (
                 build_variables.a_fw_outboard_full_coverage

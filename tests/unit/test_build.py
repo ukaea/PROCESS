@@ -141,7 +141,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
 
     monkeypatch.setattr(physics_variables, "rminor", divgeomparam.rminor)
 
-    monkeypatch.setattr(physics_variables, "n_divertors", divgeomparam.n_divertors)
+    monkeypatch.setattr(divertor_variables, "n_divertors", divgeomparam.n_divertors)
 
     monkeypatch.setattr(physics_variables, "kappa", divgeomparam.kappa)
 

@@ -113,7 +113,7 @@ class BlanketLibrary:
 
         # Calculate component internal upper half-height (m)
         # If a double null machine then symmetric
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             htop = hbot
         else:
             # Blanket
@@ -320,7 +320,7 @@ class BlanketLibrary:
         Apply coverage factors to volumes
         """
         # Apply blanket coverage factors
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             # double null configuration
             build_variables.a_blkt_outboard_surface = (
                 build_variables.a_blkt_total_surface
@@ -1188,7 +1188,7 @@ class BlanketLibrary:
 
             # Calculate blanket poloidal length and segment, subtracting divertor length (m)
             # kit hcll version only had the single null option
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 # Double null configuration
                 blanket_library.len_blkt_outboard_segment_poloidal = (
                     0.5
@@ -1230,7 +1230,7 @@ class BlanketLibrary:
             # Assume divertor lies between the two ellipses, so fraction f_ster_div_single still applies
 
             # kit hcll version only had the single null option
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 # Double null configuration
                 blanket_library.len_blkt_inboard_segment_poloidal = (
                     0.5
@@ -1260,7 +1260,7 @@ class BlanketLibrary:
 
             # kit hcll version only had the single null option
             # Calculate outboard blanket poloidal length and segment, subtracting divertor length (m)
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 # Double null configuration
                 blanket_library.len_blkt_outboard_segment_poloidal = (
                     0.5

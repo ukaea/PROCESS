@@ -8,6 +8,7 @@ from process.data_structure import (
     build_variables,
     current_drive_variables,
     dcll_variables,
+    divertor_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
@@ -134,7 +135,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
              - f_nuc_pow_bz_liq
         """
 
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             # Double null configuration
             covf = (
                 1

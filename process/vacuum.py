@@ -6,6 +6,7 @@ import numpy as np
 from process import constants
 from process import process_output as po
 from process.data_structure import build_variables as buv
+from process.data_structure import divertor_variables as dv
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
@@ -71,7 +72,7 @@ class Vacuum:
                 tfv.n_tf_coils,
                 tv.t_plant_pulse_dwell,
                 pv.nd_plasma_electrons_vol_avg,
-                pv.n_divertors,
+                dv.n_divertors,
                 qtorus,
                 gasld,
                 output=output,
