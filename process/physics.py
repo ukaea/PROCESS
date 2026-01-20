@@ -1881,22 +1881,18 @@ class Physics:
 
         # Plasma thermal energy derived from the thermal beta
         physics_variables.e_plasma_beta_thermal = (
-            1.5e0
-            * physics_variables.beta_thermal_vol_avg
-            * physics_variables.b_plasma_total
-            * physics_variables.b_plasma_total
-            / (2.0e0 * constants.RMU0)
-            * physics_variables.vol_plasma
+            self.beta.calculate_plasma_energy_from_beta(
+                beta=physics_variables.beta_thermal_vol_avg,
+                b_field=physics_variables.b_plasma_total,
+                vol_plasma=physics_variables.vol_plasma,
+            )
         )
 
         # Plasma thermal energy derived from the total beta
-        physics_variables.e_plasma_beta = (
-            1.5e0
-            * physics_variables.beta_total_vol_avg
-            * physics_variables.b_plasma_total
-            * physics_variables.b_plasma_total
-            / (2.0e0 * constants.RMU0)
-            * physics_variables.vol_plasma
+        physics_variables.e_plasma_beta = self.beta.calculate_plasma_energy_from_beta(
+            beta=physics_variables.beta_total_vol_avg,
+            b_field=physics_variables.b_plasma_total,
+            vol_plasma=physics_variables.vol_plasma,
         )
 
         # =======================================================
