@@ -93,13 +93,6 @@ class BlanketLibrary:
                 + build_variables.dz_xpoint_divertor
                 + divertor_variables.dz_divertor
             )
-        # Vacuum vessel
-        elif icomponent == 2:
-            hbot = (
-                build_variables.z_tf_inside_half
-                - build_variables.dz_shld_vv_gap
-                - build_variables.dz_vv_lower
-            )
         else:
             raise ProcessValueError(f"{icomponent=} is invalid, it must be either 0,1")
 
@@ -151,9 +144,6 @@ class BlanketLibrary:
         # Sheild
         if icomponent == 1:
             r2 = build_variables.dr_blkt_inboard + r2 + build_variables.dr_blkt_outboard
-        # Vaccum Vessel
-        if icomponent == 2:
-            r2 = build_variables.r_shld_outboard_outer - r1
 
         # Calculate surface area, assuming 100% coverage
         if icomponent == 0:
