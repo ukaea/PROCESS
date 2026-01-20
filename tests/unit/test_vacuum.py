@@ -187,3 +187,59 @@ def test_elliptical_vessel_volumes(vacuum_vessel, elliptical_vessel_volumes, exp
     assert vol_vv_inboard == expected[0]
     assert vol_vv_outboard == expected[1]
     assert vol_vv == expected[2]
+
+
+class DShapedVesselVolumes(NamedTuple):
+    rsldi: Any = None
+    rsldo: Any = None
+    dz_vv_half: Any = None
+    dr_vv_inboard: Any = None
+    dr_vv_outboard: Any = None
+    dz_vv_upper: Any = None
+    dz_vv_lower: Any = None
+
+
+@pytest.mark.parametrize(
+    "dshaped_vessel_volumes, expected",
+    [
+        (
+            DShapedVesselVolumes(
+                rsldi=1.5,
+                rsldo=8.4000000000000004,
+                dz_vv_half=9.4349999999999987,
+                dr_vv_inboard=0.20000000000000001,
+                dr_vv_outboard=0.30000000000000004,
+                dz_vv_upper=0.30000000000000004,
+                dz_vv_lower=0.30000000000000004,
+            ),
+            (
+                pytest.approx(34.253413020620215),
+                pytest.approx(306.20028292282814),
+                pytest.approx(340.45369594344834),
+            ),
+        )
+    ],
+)
+def test_dshaped_vessel_volumes(vacuum_vessel, dshaped_vessel_volumes, expected):
+    """Tests `dshaped_vessel_volumes` function.
+
+    :param dshaped_vessel_volumes: input parameters for the function
+    :type dshaped_vessel_volumes: DShapedVesselVolumes
+
+    """
+
+    vol_vv_inboard, vol_vv_outboard, vol_vv = (
+        vacuum_vessel.calculate_dshaped_vessel_volumes(
+            rsldi=dshaped_vessel_volumes.rsldi,
+            rsldo=dshaped_vessel_volumes.rsldo,
+            dz_vv_half=dshaped_vessel_volumes.dz_vv_half,
+            dr_vv_inboard=dshaped_vessel_volumes.dr_vv_inboard,
+            dr_vv_outboard=dshaped_vessel_volumes.dr_vv_outboard,
+            dz_vv_upper=dshaped_vessel_volumes.dz_vv_upper,
+            dz_vv_lower=dshaped_vessel_volumes.dz_vv_lower,
+        )
+    )
+
+    assert vol_vv_inboard == expected[0]
+    assert vol_vv_outboard == expected[1]
+    assert vol_vv == expected[2]
