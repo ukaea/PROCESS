@@ -4381,253 +4381,9 @@ class Physics:
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
-        po.osubhd(self.outfile, "Beta Information :")
-        if physics_variables.i_beta_component == 0:
-            po.ovarrf(
-                self.outfile,
-                "Upper limit on total beta",
-                "(beta_vol_avg_max)",
-                physics_variables.beta_vol_avg_max,
-                "OP ",
-            )
-        elif physics_variables.i_beta_component == 1:
-            po.ovarrf(
-                self.outfile,
-                "Upper limit on thermal beta",
-                "(beta_vol_avg_max)",
-                physics_variables.beta_vol_avg_max,
-                "OP ",
-            )
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Upper limit on thermal + NB beta",
-                "(beta_vol_avg_max)",
-                physics_variables.beta_vol_avg_max,
-                "OP ",
-            )
 
-        po.ovarre(
-            self.outfile,
-            "Total plasma beta",
-            "(beta_total_vol_avg)",
-            physics_variables.beta_total_vol_avg,
-        )
-        if physics_variables.i_beta_component == 0:
-            po.ovarrf(
-                self.outfile,
-                "Lower limit on total beta",
-                "(beta_vol_avg_min)",
-                physics_variables.beta_vol_avg_min,
-                "IP",
-            )
-        elif physics_variables.i_beta_component == 1:
-            po.ovarrf(
-                self.outfile,
-                "Lower limit on thermal beta",
-                "(beta_vol_avg_min)",
-                physics_variables.beta_vol_avg_min,
-                "IP",
-            )
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Lower limit on thermal + NB beta",
-                "(beta_vol_avg_min)",
-                physics_variables.beta_vol_avg_min,
-                "IP",
-            )
-        po.ovarre(
-            self.outfile,
-            "Upper limit on poloidal beta",
-            "(beta_poloidal_max)",
-            constraint_variables.beta_poloidal_max,
-            "IP",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total poloidal beta",
-            "(beta_poloidal_vol_avg)",
-            physics_variables.beta_poloidal_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Volume averaged toroidal beta",
-            "(beta_toroidal_vol_avg)",
-            physics_variables.beta_toroidal_vol_avg,
-            "OP ",
-        )
-        for i in range(len(physics_variables.beta_thermal_toroidal_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Beta toroidal profile at point {i}",
-                f"beta_thermal_toroidal_profile{i}",
-                physics_variables.beta_thermal_toroidal_profile[i],
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Fast alpha beta",
-            "(beta_fast_alpha)",
-            physics_variables.beta_fast_alpha,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Neutral Beam ion beta",
-            "(beta_beam)",
-            physics_variables.beta_beam,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Ratio of fast alpha and beam beta to thermal beta",
-            "(f_beta_alpha_beam_thermal)",
-            physics_variables.f_beta_alpha_beam_thermal,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Volume averaged thermal beta",
-            "(beta_thermal_vol_avg)",
-            physics_variables.beta_thermal_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Thermal poloidal beta",
-            "(beta_thermal_poloidal_vol_avg)",
-            physics_variables.beta_thermal_poloidal_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Thermal toroidal beta",
-            "(beta_thermal_toroidal_vol_avg)",
-            physics_variables.beta_thermal_toroidal_vol_avg,
-            "OP ",
-        )
-
-        po.ovarrf(
-            self.outfile,
-            "Poloidal beta and inverse aspect ratio",
-            "(beta_poloidal_eps)",
-            physics_variables.beta_poloidal_eps,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Poloidal beta and inverse aspect ratio upper limit",
-            "(beta_poloidal_eps_max)",
-            physics_variables.beta_poloidal_eps_max,
-        )
-        po.osubhd(self.outfile, "Normalised Beta Information :")
-        if stellarator_variables.istell == 0:
-            if physics_variables.i_beta_norm_max != 0:
-                po.ovarrf(
-                    self.outfile,
-                    "Beta g coefficient",
-                    "(beta_norm_max)",
-                    physics_variables.beta_norm_max,
-                    "OP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Beta g coefficient",
-                    "(beta_norm_max)",
-                    physics_variables.beta_norm_max,
-                )
-            po.ovarrf(
-                self.outfile,
-                "Normalised total beta",
-                "(beta_norm_total)",
-                physics_variables.beta_norm_total,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Normalised thermal beta",
-                "(beta_norm_thermal) ",
-                physics_variables.beta_norm_thermal,
-                "OP ",
-            )
-
-            po.ovarrf(
-                self.outfile,
-                "Normalised toroidal beta",
-                "(beta_norm_toroidal) ",
-                physics_variables.beta_norm_toroidal,
-                "OP ",
-            )
-
-            po.ovarrf(
-                self.outfile,
-                "Normalised poloidal beta",
-                "(beta_norm_poloidal) ",
-                physics_variables.beta_norm_poloidal,
-                "OP ",
-            )
-
-            po.osubhd(self.outfile, "Maximum normalised beta scalings :")
-            po.ovarrf(
-                self.outfile,
-                "J. Wesson normalised beta upper limit",
-                "(beta_norm_max_wesson) ",
-                physics_variables.beta_norm_max_wesson,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Original normalsied beta upper limit",
-                "(beta_norm_max_original_scaling) ",
-                physics_variables.beta_norm_max_original_scaling,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "J. Menard normalised beta upper limit",
-                "(beta_norm_max_menard) ",
-                physics_variables.beta_norm_max_menard,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "E. Thloreus normalised beta upper limit",
-                "(beta_norm_max_thloreus) ",
-                physics_variables.beta_norm_max_thloreus,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "R. Stambaugh normalised beta upper limit",
-                "(beta_norm_max_stambaugh) ",
-                physics_variables.beta_norm_max_stambaugh,
-                "OP ",
-            )
-
-        po.osubhd(self.outfile, "Plasma energies derived from beta :")
-        po.ovarre(
-            self.outfile,
-            "Plasma thermal energy derived from thermal beta (J)",
-            "(e_plasma_beta_thermal) ",
-            physics_variables.e_plasma_beta_thermal,
-            "OP",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Plasma thermal energy derived from the total beta (J)",
-            "(e_plasma_beta)",
-            physics_variables.e_plasma_beta,
-            "OP",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
+        # Output beta information
+        self.beta.output_beta_information()
 
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
@@ -9069,6 +8825,257 @@ class PlasmaBeta:
         """
 
         return 1.0e8 * (beta * rminor * b_field) / c_plasma
+
+    def output_beta_information(self):
+        """Output beta information to file."""
+
+        po.osubhd(self.outfile, "Beta Information :")
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on total beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on thermal beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on thermal + NB beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Total plasma beta",
+            "(beta_total_vol_avg)",
+            physics_variables.beta_total_vol_avg,
+        )
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on total beta",
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
+                "IP",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal beta",
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
+                "IP",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal + NB beta",
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
+                "IP",
+            )
+        po.ovarre(
+            self.outfile,
+            "Upper limit on poloidal beta",
+            "(beta_poloidal_max)",
+            constraint_variables.beta_poloidal_max,
+            "IP",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total poloidal beta",
+            "(beta_poloidal_vol_avg)",
+            physics_variables.beta_poloidal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged toroidal beta",
+            "(beta_toroidal_vol_avg)",
+            physics_variables.beta_toroidal_vol_avg,
+            "OP ",
+        )
+        for i in range(len(physics_variables.beta_thermal_toroidal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Beta toroidal profile at point {i}",
+                f"beta_thermal_toroidal_profile{i}",
+                physics_variables.beta_thermal_toroidal_profile[i],
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Fast alpha beta",
+            "(beta_fast_alpha)",
+            physics_variables.beta_fast_alpha,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutral Beam ion beta",
+            "(beta_beam)",
+            physics_variables.beta_beam,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Ratio of fast alpha and beam beta to thermal beta",
+            "(f_beta_alpha_beam_thermal)",
+            physics_variables.f_beta_alpha_beam_thermal,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged thermal beta",
+            "(beta_thermal_vol_avg)",
+            physics_variables.beta_thermal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermal poloidal beta",
+            "(beta_thermal_poloidal_vol_avg)",
+            physics_variables.beta_thermal_poloidal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermal toroidal beta",
+            "(beta_thermal_toroidal_vol_avg)",
+            physics_variables.beta_thermal_toroidal_vol_avg,
+            "OP ",
+        )
+
+        po.ovarrf(
+            self.outfile,
+            "Poloidal beta and inverse aspect ratio",
+            "(beta_poloidal_eps)",
+            physics_variables.beta_poloidal_eps,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Poloidal beta and inverse aspect ratio upper limit",
+            "(beta_poloidal_eps_max)",
+            physics_variables.beta_poloidal_eps_max,
+        )
+        po.osubhd(self.outfile, "Normalised Beta Information :")
+        if stellarator_variables.istell == 0:
+            if physics_variables.i_beta_norm_max != 0:
+                po.ovarrf(
+                    self.outfile,
+                    "Beta g coefficient",
+                    "(beta_norm_max)",
+                    physics_variables.beta_norm_max,
+                    "OP ",
+                )
+            else:
+                po.ovarrf(
+                    self.outfile,
+                    "Beta g coefficient",
+                    "(beta_norm_max)",
+                    physics_variables.beta_norm_max,
+                )
+            po.ovarrf(
+                self.outfile,
+                "Normalised total beta",
+                "(beta_norm_total)",
+                physics_variables.beta_norm_total,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Normalised thermal beta",
+                "(beta_norm_thermal) ",
+                physics_variables.beta_norm_thermal,
+                "OP ",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Normalised toroidal beta",
+                "(beta_norm_toroidal) ",
+                physics_variables.beta_norm_toroidal,
+                "OP ",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Normalised poloidal beta",
+                "(beta_norm_poloidal) ",
+                physics_variables.beta_norm_poloidal,
+                "OP ",
+            )
+
+            po.osubhd(self.outfile, "Maximum normalised beta scalings :")
+            po.ovarrf(
+                self.outfile,
+                "J. Wesson normalised beta upper limit",
+                "(beta_norm_max_wesson) ",
+                physics_variables.beta_norm_max_wesson,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Original normalsied beta upper limit",
+                "(beta_norm_max_original_scaling) ",
+                physics_variables.beta_norm_max_original_scaling,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "J. Menard normalised beta upper limit",
+                "(beta_norm_max_menard) ",
+                physics_variables.beta_norm_max_menard,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "E. Thloreus normalised beta upper limit",
+                "(beta_norm_max_thloreus) ",
+                physics_variables.beta_norm_max_thloreus,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "R. Stambaugh normalised beta upper limit",
+                "(beta_norm_max_stambaugh) ",
+                physics_variables.beta_norm_max_stambaugh,
+                "OP ",
+            )
+
+        po.osubhd(self.outfile, "Plasma energies derived from beta :")
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy derived from thermal beta (J)",
+            "(e_plasma_beta_thermal) ",
+            physics_variables.e_plasma_beta_thermal,
+            "OP",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy derived from the total beta (J)",
+            "(e_plasma_beta)",
+            physics_variables.e_plasma_beta,
+            "OP",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
 
 class DetailedPhysics:
