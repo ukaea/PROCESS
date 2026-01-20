@@ -8825,6 +8825,27 @@ class PlasmaBeta:
 
         return 1.0e8 * (beta * rminor * b_field) / c_plasma
 
+    @staticmethod
+    def calculate_plasma_energy_from_beta(
+        beta: float, b_field: float, vol_plasma: float
+    ) -> float:
+        """Calculate plasma thermal energy from beta.
+
+        E_plasma = 1.5 * β * B² / (2 * μ_0) * V
+
+        :param beta: Plasma beta (fraction).
+        :type beta: float
+        :param b_field: Magnetic field (T).
+        :type b_field: float
+        :param vol_plasma: Plasma volume (m³).
+        :type vol_plasma: float
+        :return: Plasma energy (J).
+        :rtype: float
+
+        """
+
+        return (1.5e0 * beta * b_field**2) / (2.0e0 * constants.RMU0) * vol_plasma
+
     def output_beta_information(self):
         """Output beta information to file."""
 
