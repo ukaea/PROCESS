@@ -23,6 +23,7 @@ from process.impurity_radiation import initialise_imprad
 from process.physics import (
     DetailedPhysics,
     Physics,
+    PlasmaBeta,
     calculate_beta_limit,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,
@@ -55,6 +56,7 @@ def physics():
             electron_bernstein=ElectronBernstein(plasma_profile=PlasmaProfile()),
             lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
         ),
+        PlasmaBeta(),
     )
 
 
@@ -3421,21 +3423,21 @@ def test_calculate_internal_inductance_menard():
 def test_calculate_beta_norm_max_wesson():
     """Test calculate_beta_norm_max_wesson()."""
     ind_plasma_internal_norm = 1.5
-    result = Physics.calculate_beta_norm_max_wesson(ind_plasma_internal_norm)
+    result = PlasmaBeta.calculate_beta_norm_max_wesson(ind_plasma_internal_norm)
     assert result == pytest.approx(6.0, abs=0.001)
 
 
 def test_calculate_beta_norm_max_original():
     """Test calculate_beta_norm_max_original()"""
     eps = 0.5
-    result = Physics.calculate_beta_norm_max_original(eps)
+    result = PlasmaBeta.calculate_beta_norm_max_original(eps)
     assert result == pytest.approx(3.8932426932522994, abs=0.00001)
 
 
 def test_calculate_beta_norm_max_menard():
     """Test calculate_beta_norm_max_menard()."""
     eps = 0.5
-    result = Physics.calculate_beta_norm_max_menard(eps)
+    result = PlasmaBeta.calculate_beta_norm_max_menard(eps)
     assert result == pytest.approx(4.197251361676802, abs=0.000001)
 
 
@@ -3444,7 +3446,7 @@ def test_calculate_beta_norm_max_thloreus():
     c_beta = 0.5
     pres_plasma_on_axis = 2.0
     pres_plasma_vol_avg = 1.0
-    result = Physics.calculate_beta_norm_max_thloreus(
+    result = PlasmaBeta.calculate_beta_norm_max_thloreus(
         c_beta, pres_plasma_on_axis, pres_plasma_vol_avg
     )
     assert result == pytest.approx(5.075, abs=0.00001)
@@ -3455,7 +3457,7 @@ def test_calculate_beta_norm_max_stambaugh():
     f_c_plasma_bootstrap = 0.7
     kappa = 2.0
     aspect = 2.5
-    result = Physics.calculate_beta_norm_max_stambaugh(
+    result = PlasmaBeta.calculate_beta_norm_max_stambaugh(
         f_c_plasma_bootstrap, kappa, aspect
     )
     assert result == pytest.approx(3.840954484207041, abs=0.00001)
@@ -3467,6 +3469,19 @@ def test_calculate_internal_inductance_iter_3():
         b_plasma_poloidal_vol_avg=1.0, c_plasma=1.5e7, vol_plasma=1000.0, rmajor=6.2
     )
     assert result == pytest.approx(0.9078959099585583, abs=0.00001)
+
+
+def test_calculate_normalised_beta():
+    """Test calculate_normalised_beta()"""
+    beta = 0.05
+    rminor = 2.0
+    c_plasma = 15.0e6
+    b_field = 5.0
+
+    result = PlasmaBeta.calculate_normalised_beta(
+        beta=beta, rminor=rminor, c_plasma=c_plasma, b_field=b_field
+    )
+    assert result == pytest.approx(3.3333333333333335, abs=1e-6)
 
 
 @pytest.mark.parametrize(
