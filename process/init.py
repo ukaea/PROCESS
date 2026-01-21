@@ -329,6 +329,22 @@ def check_process(inputs):  # noqa: ARG001
             "Iteration variables 13 and 140 cannot be used simultaneously",
         )
 
+    # Can't use c_tf_turn as interation var, constraint or input if i_tf_turns_integer == 1
+    if (
+        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 60
+    ).any() and data_structure.tfcoil_variables.i_tf_turns_integer == 1:
+        raise ProcessValidationError(
+            "Iteration variable 60 (TF current per turn, c_tf_turn) cannot be used with the TF coil integer turn model (i_tf_turns_integer == 1) as it is a calculated output instead for this model. However, the maximum current per turn can be constrained with constraint 77."
+        )
+
+    # Can't have icc 77 and ixc 60 at the same time
+    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 60).any() and (
+        data_structure.numerics.icc[: data_structure.numerics.nvar] == 77
+    ).any():
+        raise ProcessValidationError(
+            "Cannot use iteration variable 60 (TF coil current per turn, c_tf_turn) and constraint 77 (maximum TF current per turn) simultaneously."
+        )
+
     if (
         data_structure.numerics.icc[
             : data_structure.numerics.neqns + data_structure.numerics.nineqns
