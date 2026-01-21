@@ -201,57 +201,6 @@ def calculate_volt_second_requirements(
     )
 
 
-@nb.jit(nopython=True, cache=True)
-def calculate_beta_limit(
-    b_plasma_toroidal_on_axis: float,
-    beta_norm_max: float,
-    plasma_current: float,
-    rminor: float,
-) -> float:
-    """
-    Calculate the beta scaling limit.
-
-    :param b_plasma_toroidal_on_axis: Toroidal B-field on plasma axis [T].
-    :type b_plasma_toroidal_on_axis: float
-    :param beta_norm_max: Troyon-like g coefficient.
-    :type beta_norm_max: float
-    :param plasma_current: Plasma current [A].
-    :type plasma_current: float
-    :param rminor: Plasma minor axis [m].
-    :type rminor: float
-    :return: Beta limit as defined below.
-    :rtype: float
-
-    This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
-    The limit applies to beta defined with respect to the total B-field.
-    Switch i_beta_component determines which components of beta to include.
-
-    Notes:
-        - If i_beta_component = 0, then the limit is applied to the total beta.
-        - If i_beta_component = 1, then the limit is applied to the thermal beta only.
-        - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
-        - If i_beta_component = 3, then the limit is applied to the toroidal beta.
-
-        - The default value for the g coefficient is beta_norm_max = 3.5.
-
-    References:
-        - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
-          Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
-          doi: https://doi.org/10.1088/0741-3335/30/11/019.
-
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
-
-    """
-
-    # Multiplied by 0.01 to convert from % to fraction
-    return (
-        0.01
-        * beta_norm_max
-        * (plasma_current / 1.0e6)
-        / (rminor * b_plasma_toroidal_on_axis)
-    )
-
-
 # -----------------------------------------------------
 # Plasma Current & Poloidal Field Calculations
 # -----------------------------------------------------
@@ -2724,11 +2673,11 @@ class Physics:
             )
 
         # calculate_beta_limit() returns the beta_vol_avg_max for beta
-        physics_variables.beta_vol_avg_max = calculate_beta_limit(
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.beta_norm_max,
-            physics_variables.plasma_current,
-            physics_variables.rminor,
+        physics_variables.beta_vol_avg_max = self.beta.calculate_beta_limit_from_norm(
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            beta_norm_max=physics_variables.beta_norm_max,
+            plasma_current=physics_variables.plasma_current,
+            rminor=physics_variables.rminor,
         )
 
         # ============================================================
@@ -8843,6 +8792,56 @@ class PlasmaBeta:
         return (1.5e0 * beta * b_field**2) / (2.0e0 * constants.RMU0) * vol_plasma
 
     @staticmethod
+    def calculate_beta_limit_from_norm(
+        b_plasma_toroidal_on_axis: float,
+        beta_norm_max: float,
+        plasma_current: float,
+        rminor: float,
+    ) -> float:
+        """
+        Calculate the maximum allowed beta (β) from a given normalised (β_N).
+
+        :param b_plasma_toroidal_on_axis: Toroidal B-field on plasma axis [T].
+        :type b_plasma_toroidal_on_axis: float
+        :param beta_norm_max: Troyon-like g coefficient.
+        :type beta_norm_max: float
+        :param plasma_current: Plasma current [A].
+        :type plasma_current: float
+        :param rminor: Plasma minor axis [m].
+        :type rminor: float
+        :return: Beta limit as defined below.
+        :rtype: float
+
+        This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
+        The limit applies to beta defined with respect to the total B-field.
+        Switch i_beta_component determines which components of beta to include.
+
+        Notes:
+            - If i_beta_component = 0, then the limit is applied to the total beta.
+            - If i_beta_component = 1, then the limit is applied to the thermal beta only.
+            - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
+            - If i_beta_component = 3, then the limit is applied to the toroidal beta.
+
+            - The default value for the g coefficient is beta_norm_max = 3.5.
+
+        References:
+            - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
+            Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
+            doi: https://doi.org/10.1088/0741-3335/30/11/019.
+
+            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
+        """
+
+        # Multiplied by 0.01 to convert from % to fraction
+        return (
+            0.01
+            * beta_norm_max
+            * (plasma_current / 1.0e6)
+            / (rminor * b_plasma_toroidal_on_axis)
+        )
+
+    @staticmethod
     def fast_alpha_beta(
         b_plasma_poloidal_average: float,
         b_plasma_toroidal_on_axis: float,
@@ -8856,7 +8855,7 @@ class PlasmaBeta:
         i_beta_fast_alpha: int,
     ) -> float:
         """
-        Calculate the fast alpha beta component.
+        Calculate the fast alpha beta (β_fast_alpha) component.
 
         This function computes the fast alpha beta contribution based on the provided plasma parameters.
 
@@ -8864,19 +8863,19 @@ class PlasmaBeta:
         :type b_plasma_poloidal_average: float
         :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
         :type b_plasma_toroidal_on_axis: float
-        :param nd_plasma_electrons_vol_avg: Electron density (m^-3).
+        :param nd_plasma_electrons_vol_avg: Electron density (m⁻³).
         :type nd_plasma_electrons_vol_avg: float
-        :param nd_plasma_fuel_ions_vol_avg: Fuel ion density (m^-3).
+        :param nd_plasma_fuel_ions_vol_avg: Fuel ion density (m⁻³).
         :type nd_plasma_fuel_ions_vol_avg: float
-        :param nd_plasma_ions_total_vol_avg: Total ion density (m^-3).
+        :param nd_plasma_ions_total_vol_avg: Total ion density (m⁻³).
         :type nd_plasma_ions_total_vol_avg: float
         :param temp_plasma_electron_density_weighted_kev: Density-weighted electron temperature (keV).
         :type temp_plasma_electron_density_weighted_kev: float
         :param temp_plasma_ion_density_weighted_kev: Density-weighted ion temperature (keV).
         :type temp_plasma_ion_density_weighted_kev: float
-        :param pden_alpha_total_mw: Alpha power per unit volume, from beams and plasma (MW/m^3).
+        :param pden_alpha_total_mw: Alpha power per unit volume, from beams and plasma (MW/m³).
         :type pden_alpha_total_mw: float
-        :param pden_plasma_alpha_mw: Alpha power per unit volume just from plasma (MW/m^3).
+        :param pden_plasma_alpha_mw: Alpha power per unit volume just from plasma (MW/m³).
         :type pden_plasma_alpha_mw: float
         :param i_beta_fast_alpha: Switch for fast alpha pressure method.
         :type i_beta_fast_alpha: int
@@ -8885,7 +8884,7 @@ class PlasmaBeta:
         :rtype: float
 
         :Notes:
-            - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, <T> = 5-20 keV
+            - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, 〈T〉 = 5-20 keV
 
 
         :References:
