@@ -12529,7 +12529,8 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, sc
         con_norm_residual = m_file_data.data[f"eq_con{n:03d}"].get_scan(scan)
 
         # Unit type of the constraint
-        con_units = m_file_data.data[f"eq_units_con{n:03d}"].get_scan(scan).strip("'`")
+        con_units_raw = m_file_data.data[f"eq_units_con{n:03d}"].get_scan(scan)
+        con_units = str(con_units_raw).strip("'`")
 
         # Remove '_normalised_residue' from the label if present
         if isinstance(var_label, str) and var_label.endswith("_normalised_residue"):
