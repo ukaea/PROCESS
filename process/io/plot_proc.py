@@ -10042,7 +10042,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
                 norm_final,
                 left=0,
                 height=1.0,
-                color="cyan",
+                color="blue",
                 edgecolor="black",
                 linewidth=1.5,
                 alpha=0.7,
@@ -10054,21 +10054,24 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
             norm_relative_change,
             n_plot,
             color="black",
-            marker="|",
-            s=400,
+            marker="o",
             linewidths=2,
             alpha=1.0,
             label="Initial Value" if n_plot == 0 else "",
         )
 
-        # Draw a dashed line between the initial and final value
-        axis.plot(
-            [norm_relative_change, norm_final],
-            [n_plot, n_plot],
-            color="black",
-            linestyle="--",
-            linewidth=1.0,
-            alpha=0.6,
+        # Draw an arrow from the initial value to the final value
+        axis.annotate(
+            "",
+            xy=(norm_final, n_plot),
+            xytext=(norm_relative_change, n_plot),
+            arrowprops={
+                "arrowstyle": "->",
+                "color": "black",
+                "linestyle": "--",
+                "linewidth": 1.0,
+                "alpha": 0.6,
+            },
         )
         # Plot the value as a number at x = 0.5
         axis.text(
@@ -10087,27 +10090,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
                 "linewidth": 1,
             },
         )
-        # Plot the relative change and absolute change beside the value
-        if itvar_relative_change != 0:
-            abs_change = itvar_final - (itvar_final / itvar_relative_change)
-            rel_change_pct = (abs_change / (itvar_final / itvar_relative_change)) * 100
-            sign = "+" if rel_change_pct >= 0 else ""
-            axis.text(
-                0.65,
-                n_plot,
-                f"({sign}{rel_change_pct:,.2f}%, Δ={abs_change:,.3g})",
-                va="center",
-                ha="left",
-                fontsize=9,
-                color="darkgreen" if rel_change_pct >= 0 else "darkred",
-                bbox={
-                    "boxstyle": "round",
-                    "facecolor": "white",
-                    "alpha": 0.8,
-                    "edgecolor": "white",
-                    "linewidth": 1,
-                },
-            )
+
         # Plot the value of the upper bound to the right of x=1
         axis.text(
             1.05,
@@ -12595,6 +12578,7 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, sc
     axis.set_yticklabels(y_labels)
     axis.set_xlim(-0.4, 1.2)  # Normalised bounds
     axis.set_title("Equality Constraint Equations")
+    axis.set_xticks([])
     axis.legend()
 
 
