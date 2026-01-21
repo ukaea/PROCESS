@@ -26,7 +26,6 @@ from process.physics import (
     PlasmaBeta,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,
-    calculate_poloidal_beta,
     calculate_poloidal_field,
     calculate_volt_second_requirements,
     diamagnetic_fraction_hender,
@@ -61,7 +60,7 @@ def physics():
 
 def test_calculate_poloidal_beta():
     """Test calculate_poloidal_beta()"""
-    beta_poloidal = calculate_poloidal_beta(5.347, 0.852, 0.0307)
+    beta_poloidal = PlasmaBeta.calculate_poloidal_beta(5.347, 0.852, 0.0307)
     assert beta_poloidal == pytest.approx(1.209, abs=0.001)
 
 
