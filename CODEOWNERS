@@ -1,0 +1,5 @@
+# PROCESS codeowners file
+
+# All PRs need to be approved by at least 1 member of process-maintainers
+
+*       @ukaea/PROCESS-maintainers
