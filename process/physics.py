@@ -1800,13 +1800,13 @@ class Physics:
 
         # =======================================================
 
-        physics_variables.beta_norm_thermal = (
-            1.0e8
-            * physics_variables.beta_thermal_vol_avg
-            * physics_variables.rminor
-            * physics_variables.b_plasma_toroidal_on_axis
-            / physics_variables.plasma_current
+        physics_variables.beta_norm_thermal = self.beta.calculate_normalised_beta(
+            beta=physics_variables.beta_thermal_vol_avg,
+            rminor=physics_variables.rminor,
+            c_plasma=physics_variables.plasma_current,
+            b_field=physics_variables.b_plasma_toroidal_on_axis,
         )
+
         physics_variables.beta_norm_toroidal = (
             physics_variables.beta_norm_total
             * (
