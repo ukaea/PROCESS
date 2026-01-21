@@ -1749,10 +1749,10 @@ class Physics:
         )
 
         # Calculate physics_variables.beta poloidal [-]
-        physics_variables.beta_poloidal_vol_avg = calculate_poloidal_beta(
-            physics_variables.b_plasma_total,
-            physics_variables.b_plasma_poloidal_average,
-            physics_variables.beta_total_vol_avg,
+        physics_variables.beta_poloidal_vol_avg = self.beta.calculate_poloidal_beta(
+            b_plasma_total=physics_variables.b_plasma_total,
+            b_plasma_poloidal_average=physics_variables.b_plasma_poloidal_average,
+            beta=physics_variables.beta_total_vol_avg,
         )
 
         physics_variables.beta_thermal_vol_avg = (
@@ -8340,21 +8340,6 @@ class Physics:
         )
 
 
-def calculate_poloidal_beta(b_plasma_total, b_plasma_poloidal_average, beta):
-    """Calculates total poloidal beta
-
-    Author: James Morris (UKAEA)
-
-    J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
-    Page 270 ISBN 0521851076
-
-    :param b_plasma_total: sum of the toroidal and poloidal fields (T)
-    :param b_plasma_poloidal_average: poloidal field (T)
-    :param beta: total plasma beta
-    """
-    return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
-
-
 def res_diff_time(rmajor, res_plasma, kappa95):
     """Calculates resistive diffusion time
 
@@ -8840,6 +8825,27 @@ class PlasmaBeta:
             * (plasma_current / 1.0e6)
             / (rminor * b_plasma_toroidal_on_axis)
         )
+
+    @staticmethod
+    def calculate_poloidal_beta(
+        b_plasma_total: float, b_plasma_poloidal_average: float, beta: float
+    ) -> float:
+        """Calculates total poloidal beta (β_p)
+
+        :type b_plasma_total: float
+        :param b_plasma_poloidal_average: The average poloidal magnetic field of the plasma (in Tesla).
+        :type b_plasma_poloidal_average: float
+        :param beta: The plasma beta, a dimensionless parameter representing the ratio of plasma pressure to magnetic pressure.
+        :type beta: float
+        :return: The calculated total poloidal beta.
+        :rtype: float
+
+        :references:
+            - J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
+        Page 270 ISBN 0521851076
+
+        """
+        return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
 
     @staticmethod
     def fast_alpha_beta(
