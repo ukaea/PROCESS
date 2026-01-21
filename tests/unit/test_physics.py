@@ -24,7 +24,6 @@ from process.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
-    calculate_beta_limit,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,
     calculate_poloidal_beta,
@@ -1329,7 +1328,9 @@ def test_calculate_poloidal_field(arguments, expected):
 
 
 def test_calculate_beta_limit():
-    assert calculate_beta_limit(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
+    assert PlasmaBeta.calculate_beta_limit_from_norm(
+        12, 4.879, 18300000, 2.5
+    ) == pytest.approx(0.0297619)
 
 
 def test_conhas():
