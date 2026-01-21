@@ -1,5 +1,6 @@
 import logging
 import math
+from enum import IntEnum
 
 import numba as nb
 import numpy as np
@@ -2652,15 +2653,14 @@ class Physics:
         )
 
         # Calculate beta_norm_max based on i_beta_norm_max
-        if int(physics_variables.i_beta_norm_max) in self.beta.beta_norm_max_model_map:
-            physics_variables.beta_norm_max = self.beta.beta_norm_max_model_map[
-                int(physics_variables.i_beta_norm_max)
-            ]
-        else:
+        try:
+            model = BetaNormMaxModel(int(physics_variables.i_beta_norm_max))
+            physics_variables.beta_norm_max = self.beta.get_beta_norm_max_value(model)
+        except ValueError:
             raise ProcessValueError(
                 "Illegal value of i_beta_norm_max",
                 i_beta_norm_max=physics_variables.i_beta_norm_max,
-            )
+            ) from None
 
         # calculate_beta_limit() returns the beta_vol_avg_max for beta
         physics_variables.beta_vol_avg_max = self.beta.calculate_beta_limit_from_norm(
@@ -8577,6 +8577,17 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
     )
 
 
+class BetaNormMaxModel(IntEnum):
+    """Beta norm max (β_N_max) model types"""
+
+    USER_INPUT = 0
+    WESSON = 1
+    ORIGINAL_SCALING = 2
+    MENARD = 3
+    THLOREUS = 4
+    STAMBAUGH = 5
+
+
 class PlasmaBeta:
     """Class to hold plasma beta calculations for plasma processing."""
 
@@ -8584,17 +8595,17 @@ class PlasmaBeta:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
-    @property
-    def beta_norm_max_model_map(self):
-        """Mapping of beta norm max model indices to their calculated values."""
-        return {
-            0: physics_variables.beta_norm_max,
-            1: physics_variables.beta_norm_max_wesson,
-            2: physics_variables.beta_norm_max_original_scaling,
-            3: physics_variables.beta_norm_max_menard,
-            4: physics_variables.beta_norm_max_thloreus,
-            5: physics_variables.beta_norm_max_stambaugh,
+    def get_beta_norm_max_value(self, model: BetaNormMaxModel) -> float:
+        """Get the beta norm max value (β_N_max) for the specified model."""
+        model_map = {
+            BetaNormMaxModel.USER_INPUT: physics_variables.beta_norm_max,
+            BetaNormMaxModel.WESSON: physics_variables.beta_norm_max_wesson,
+            BetaNormMaxModel.ORIGINAL_SCALING: physics_variables.beta_norm_max_original_scaling,
+            BetaNormMaxModel.MENARD: physics_variables.beta_norm_max_menard,
+            BetaNormMaxModel.THLOREUS: physics_variables.beta_norm_max_thloreus,
+            BetaNormMaxModel.STAMBAUGH: physics_variables.beta_norm_max_stambaugh,
         }
+        return model_map[model]
 
     @staticmethod
     def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
