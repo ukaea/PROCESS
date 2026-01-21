@@ -2651,19 +2651,9 @@ class Physics:
             )
         )
 
-        # Map calculation methods to a dictionary
-        beta_norm_max_calculations = {
-            0: physics_variables.beta_norm_max,
-            1: physics_variables.beta_norm_max_wesson,
-            2: physics_variables.beta_norm_max_original_scaling,
-            3: physics_variables.beta_norm_max_menard,
-            4: physics_variables.beta_norm_max_thloreus,
-            5: physics_variables.beta_norm_max_stambaugh,
-        }
-
         # Calculate beta_norm_max based on i_beta_norm_max
-        if int(physics_variables.i_beta_norm_max) in beta_norm_max_calculations:
-            physics_variables.beta_norm_max = beta_norm_max_calculations[
+        if int(physics_variables.i_beta_norm_max) in self.beta.beta_norm_max_model_map:
+            physics_variables.beta_norm_max = self.beta.beta_norm_max_model_map[
                 int(physics_variables.i_beta_norm_max)
             ]
         else:
@@ -8593,6 +8583,18 @@ class PlasmaBeta:
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    @property
+    def beta_norm_max_model_map(self):
+        """Mapping of beta norm max model indices to their calculated values."""
+        return {
+            0: physics_variables.beta_norm_max,
+            1: physics_variables.beta_norm_max_wesson,
+            2: physics_variables.beta_norm_max_original_scaling,
+            3: physics_variables.beta_norm_max_menard,
+            4: physics_variables.beta_norm_max_thloreus,
+            5: physics_variables.beta_norm_max_stambaugh,
+        }
 
     @staticmethod
     def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
