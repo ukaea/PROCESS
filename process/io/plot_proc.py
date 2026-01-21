@@ -10017,7 +10017,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
         )
 
         # Plot square marker at the final value if at bounds
-        if np.isclose(norm_final, 1.0, atol=1e-6):
+        if np.isclose(norm_final, 1.0, atol=1e-3):
             axis.plot(
                 1,
                 n_plot,
@@ -10026,7 +10026,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
                 markersize=8,
                 label="Lower Bound" if n_plot == 0 else "",
             )
-        elif np.isclose(norm_final, 0.0, atol=1e-6):
+        elif np.isclose(norm_final, 0.0, atol=1e-3):
             axis.plot(
                 0,
                 n_plot,
@@ -10070,7 +10070,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
                 "color": "black",
                 "linestyle": "--",
                 "linewidth": 1.0,
-                "alpha": 0.6,
+                "alpha": 0.9,
             },
         )
         # Plot the value as a number at x = 0.5
@@ -10081,7 +10081,12 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
             va="center",
             ha="center",
             fontsize=10,
-            color="black",
+            color=(
+                "orange"
+                if np.isclose(norm_final, 1.0, atol=1e-3)
+                or np.isclose(norm_final, 0.0, atol=1e-3)
+                else "green"
+            ),
             bbox={
                 "boxstyle": "round",
                 "facecolor": "white",
