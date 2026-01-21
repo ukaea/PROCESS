@@ -12626,6 +12626,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
             color="red",
             linestyle="--",
             linewidth=1.5,
+            zorder=0,
         )
 
         axis.axvline(
@@ -12633,6 +12634,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
             color="red",
             linestyle="--",
             linewidth=1.5,
+            zorder=0,
         )
 
         # Remove '_normalised_residue' from the label if present
@@ -12657,6 +12659,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
                 "s",
                 color="black",
                 markersize=8,
+                zorder=5,
             )
         elif np.isclose(normalized_value, 0.0, atol=1e-3):
             axis.plot(
@@ -12665,7 +12668,9 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
                 "s",
                 color="black",
                 markersize=8,
+                zorder=5,
             )
+
         else:
             # If constraint value is not very close to bound then plot bar as normal
             axis.barh(
@@ -12673,20 +12678,34 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
                 normalized_value,
                 color="blue",
                 edgecolor="black",
-                height=0.6,
+                linewidth=1.5,
+                height=1.0,
+                alpha=0.7,
                 label="Constraint Value" if n_plot == 0 else "",
             )
 
-            # Plot the con_value inside the bar
-            axis.text(
-                normalized_value / 2,  # Position the text at the center of the bar
-                n_plot,
-                f"{con_value:,.8g} {con_units}",
-                va="center",
-                ha="center",
-                fontsize=8,
-                color="white",
-            )
+        # Plot the value as a number at x = 0.5
+        axis.text(
+            0.5,
+            n_plot,
+            f"{con_value:,.8g} {con_units}",
+            va="center",
+            ha="center",
+            fontsize=8,
+            color=(
+                "orange"
+                if np.isclose(normalized_value, 1.0, atol=1e-3)
+                or np.isclose(normalized_value, 0.0, atol=1e-3)
+                else "green"
+            ),
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "white",
+                "alpha": 0.8,
+                "edgecolor": "white",
+                "linewidth": 1,
+            },
+        )
         # Annoate the bound value depending if it is an upper or lower limit
         if con_symbol == "'<='":
             # Add the constraint symbol and bound as text
@@ -12718,6 +12737,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
     axis.set_title("Inequality Constraint Equations")
     axis.set_xlim(-0.3, 1.275)
     axis.set_xticks([])
+    axis.set_facecolor("#f5f5f5")
     axis.set_xticks(np.arange(0, 1.0, 0.1))
     axis.grid(True, axis="x", linestyle="--", alpha=0.3)
     axis.set_xticklabels([])
