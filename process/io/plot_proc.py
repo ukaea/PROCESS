@@ -12643,8 +12643,12 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
         # or lower limit
         if con_symbol == "'<='":
             normalized_value = 1 - con_residual_norm
+            bar_left = normalized_value
+            bar_width = 1 - normalized_value
         else:
             normalized_value = con_residual_norm
+            bar_left = 0
+            bar_width = normalized_value
 
         # If the constraint value is very close to the bound then plot a square marker at the bound
         if np.isclose(normalized_value, 1.0, atol=1e-3):
@@ -12670,7 +12674,8 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
             # If constraint value is not very close to bound then plot bar as normal
             axis.barh(
                 n_plot,
-                normalized_value,
+                bar_width,
+                left=bar_left,
                 color="blue",
                 edgecolor="black",
                 linewidth=1.5,
