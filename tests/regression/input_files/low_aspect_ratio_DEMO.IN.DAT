@@ -268,10 +268,7 @@ boundu(59) = 0.94
 * DESCRIPTION:   copper fraction of cable conductor (TF coils)
 * JUSTIFICATION:
 
-ixc = 60
 c_tf_turn = 6.5e4 *5.90832367922454432e+04
-boundl(60) = 5.9e4
-boundu(60) = 9.0e4
 * DESCRIPTION:   Max TF coil current per turn [A]
 * JUSTIFICATION: Calculate turn area consistent with TF currents 
 
