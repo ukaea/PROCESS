@@ -77,7 +77,6 @@ from process.io import (
     mfile,
     plot_plotly_sankey,
     plot_proc,
-    plot_radial_build,
 )
 from process.io import obsolete_vars as ov
 
@@ -250,8 +249,6 @@ class Process:
             print(f"Plotting mfile {mfile_str}")
             if mfile_path.exists():
                 plot_proc.main(args=["-f", mfile_str])
-                plot_radial_build.main(args=["-f", mfile_str, "-nm"])
-
                 plot_plotly_sankey.main(args=["-m", mfile_str])
 
             else:

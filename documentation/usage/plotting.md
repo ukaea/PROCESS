@@ -46,20 +46,6 @@ python process/io/plot_scans.py -f path/to/MFILE.DAT
 
 ----------------
 
-### Radial build
-
-`plot_radial_build` is to plot the radial build of the machine in terms of bar segments. It can be run as follows:
-
-```bash
-python process/io/plot_radial_build.py -f path/to/MFILE.DAT
-```
-<figure markdown>
-![radial_build_plot](../images/radial_build_plot.png){ width="100%"}
-<figcaption>Figure 12: Simple radial build plot </figcaption>
-</figure>
-
----------------
-
 ### Interactive Sankey diagram
 
 `plot_plotly_sankey` is to plot an interactive `.html` Sankey diagram for looking at the plants power balance. It can be run as follows:
