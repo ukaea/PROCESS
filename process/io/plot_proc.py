@@ -9998,16 +9998,10 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
         itvar_upper = m_file.get(f"boundu{n:03d}", scan=scan)
         itvar_lower = m_file.get(f"boundl{n:03d}", scan=scan)
         itvar_relative_change = m_file.get(f"xcm{n:03d}", scan=scan)
+        final_value_normalised = m_file.get(f"nitvar{n:03d}", scan=scan)
 
         # Use the variable name if available, else fallback to "itvarXXX"
         var_label = itvar_names.get(n, f"itvar{n:03d}")
-
-        # Find the normlaised final value and initial value (relative change)
-        norm_final = (
-            (itvar_final - itvar_lower) / (itvar_upper - itvar_lower)
-            if itvar_final != itvar_lower
-            else 0
-        )
 
         norm_relative_change = (
             ((itvar_final / itvar_relative_change) - itvar_lower)
@@ -10017,7 +10011,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
         )
 
         # Plot square marker at the final value if at bounds
-        if np.isclose(norm_final, 1.0, atol=1e-3):
+        if np.isclose(final_value_normalised, 1.0, atol=1e-3):
             axis.plot(
                 1,
                 n_plot,
@@ -10026,7 +10020,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
                 markersize=8,
                 label="Lower Bound" if n_plot == 0 else "",
             )
-        elif np.isclose(norm_final, 0.0, atol=1e-3):
+        elif np.isclose(final_value_normalised, 0.0, atol=1e-3):
             axis.plot(
                 0,
                 n_plot,
@@ -10039,7 +10033,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
         else:
             axis.barh(
                 n_plot,
-                norm_final,
+                final_value_normalised,
                 left=0,
                 height=1.0,
                 color="blue",
@@ -10063,7 +10057,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
         # Draw an arrow from the initial value to the final value
         axis.annotate(
             "",
-            xy=(norm_final, n_plot),
+            xy=(final_value_normalised, n_plot),
             xytext=(norm_relative_change, n_plot),
             arrowprops={
                 "arrowstyle": "->",
@@ -10083,8 +10077,8 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
             fontsize=10,
             color=(
                 "orange"
-                if np.isclose(norm_final, 1.0, atol=1e-3)
-                or np.isclose(norm_final, 0.0, atol=1e-3)
+                if np.isclose(final_value_normalised, 1.0, atol=1e-3)
+                or np.isclose(final_value_normalised, 0.0, atol=1e-3)
                 else "green"
             ),
             bbox={
@@ -12617,6 +12611,9 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
         # Use the variable name if available, else fallback to "ineq_conXXX"
         var_label = con_names.get(n, f"ineq_con{n:03d}")
 
+        # Normalized residual of the constraint
+        con_residual_norm = m_file.data[f"ineq_con{n:03d}"].get_scan(scan)
+
         # Unit type of the constraint
         con_units = m_file.data[f"ineq_units_con{n:03d}"].get_scan(scan).strip("'`")
 
@@ -12645,11 +12642,9 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
         # Calculate the normalised constraint threshold depending if the constraint is an upper
         # or lower limit
         if con_symbol == "'<='":
-            normalized_value = con_value / con_bound if con_bound != 0 else 0
+            normalized_value = 1 - con_residual_norm
         else:
-            normalized_value = (
-                (con_value - con_bound) / con_bound if con_bound != 0 else 0
-            )
+            normalized_value = con_residual_norm
 
         # If the constraint value is very close to the bound then plot a square marker at the bound
         if np.isclose(normalized_value, 1.0, atol=1e-3):
