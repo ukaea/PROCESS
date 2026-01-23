@@ -1,6 +1,6 @@
 import logging
 
-from process.blanket_library import dshellvol
+from process.blanket_library import dshellarea, dshellvol
 
 logger = logging.getLogger(__name__)
 
@@ -88,3 +88,37 @@ class Shield:
         )
 
         return vol_shld_inboard, vol_shld_outboard, vol_shld_total
+
+    @staticmethod
+    def calculate_dshaped_shield_areas(
+        rsldi: float,
+        dr_shld_inboard: float,
+        dr_fw_inboard: float,
+        dr_fw_plasma_gap_inboard: float,
+        rminor: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_outboard: float,
+        dr_blkt_inboard: float,
+        dr_blkt_outboard: float,
+        dz_shld_half: float,
+    ) -> tuple[float, float, float]:
+        """Calculate areas of D-shaped shield segments."""
+
+        r_1 = rsldi + dr_shld_inboard
+        r_2 = (
+            dr_fw_inboard
+            + dr_fw_plasma_gap_inboard
+            + 2.0 * rminor
+            + dr_fw_plasma_gap_outboard
+            + dr_fw_outboard
+        )
+
+        r_2 = dr_blkt_inboard + r_2 + dr_blkt_outboard
+
+        (
+            a_shld_inboard_surface,
+            a_shld_outboard_surface,
+            a_shld_total_surface,
+        ) = dshellarea(rmajor=r_1, rminor=r_2, zminor=dz_shld_half)
+
+        return a_shld_inboard_surface, a_shld_outboard_surface, a_shld_total_surface
