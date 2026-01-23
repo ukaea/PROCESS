@@ -212,3 +212,69 @@ def test_dshaped_shield_volumes(shield, dshaped_shield_volumes, expected):
     assert vol_shield_inboard == expected[0]
     assert vol_shield_outboard == expected[1]
     assert vol_shield == expected[2]
+
+
+class DShapedShieldAreas(NamedTuple):
+    rminor: Any = None
+    rsldi: Any = None
+    dr_shld_inboard: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
+    dr_fw_inboard: Any = None
+    dr_fw_outboard: Any = None
+    dr_blkt_inboard: Any = None
+    dr_blkt_outboard: Any = None
+    dz_shld_half: Any = None
+
+
+@pytest.mark.parametrize(
+    "dshaped_shield_areas, expected",
+    [
+        (
+            DShapedShieldAreas(
+                rminor=2.5,
+                dr_shld_inboard=0.40000000000000002,
+                rsldi=1.5,
+                dr_fw_plasma_gap_inboard=0.10000000000000001,
+                dr_fw_plasma_gap_outboard=0.10000000000000001,
+                dr_fw_inboard=0.018000000000000002,
+                dr_fw_outboard=0.018000000000000002,
+                dr_blkt_inboard=0.0,
+                dr_blkt_outboard=1.0,
+                dz_shld_half=8.75,
+            ),
+            (
+                pytest.approx(208.91591146372122),
+                pytest.approx(1013.8483589087293),
+                pytest.approx(1222.7642703724505),
+            ),
+        )
+    ],
+)
+def test_dshaped_shield_areas(shield, dshaped_shield_areas, expected):
+    """Tests `dshaped_shield_areas` function.
+
+    :param dshaped_shield_areas: input parameters for the function
+    :type dshaped_shield_areas: DShapedShieldAreas
+
+
+    """
+
+    a_shield_inboard, a_shield_outboard, a_shield = (
+        shield.calculate_dshaped_shield_areas(
+            rsldi=dshaped_shield_areas.rsldi,
+            dr_shld_inboard=dshaped_shield_areas.dr_shld_inboard,
+            dr_fw_inboard=dshaped_shield_areas.dr_fw_inboard,
+            dr_fw_plasma_gap_inboard=dshaped_shield_areas.dr_fw_plasma_gap_inboard,
+            rminor=dshaped_shield_areas.rminor,
+            dr_fw_plasma_gap_outboard=dshaped_shield_areas.dr_fw_plasma_gap_outboard,
+            dr_fw_outboard=dshaped_shield_areas.dr_fw_outboard,
+            dr_blkt_inboard=dshaped_shield_areas.dr_blkt_inboard,
+            dr_blkt_outboard=dshaped_shield_areas.dr_blkt_outboard,
+            dz_shld_half=dshaped_shield_areas.dz_shld_half,
+        )
+    )
+
+    assert a_shield_inboard == expected[0]
+    assert a_shield_outboard == expected[1]
+    assert a_shield == expected[2]
