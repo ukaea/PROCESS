@@ -1,6 +1,6 @@
 import logging
 
-from process.blanket_library import dshellarea, dshellvol
+from process.blanket_library import dshellarea, dshellvol, eshellvol
 
 logger = logging.getLogger(__name__)
 
@@ -122,3 +122,43 @@ class Shield:
         ) = dshellarea(rmajor=r_1, rminor=r_2, zminor=dz_shld_half)
 
         return a_shld_inboard_surface, a_shld_outboard_surface, a_shld_total_surface
+
+    @staticmethod
+    def calculate_elliptical_shield_volumes(
+        rsldi: float,
+        rsldo: float,
+        rmajor: float,
+        triang: float,
+        dr_shld_inboard: float,
+        rminor: float,
+        dz_shld_half: float,
+        dr_shld_outboard: float,
+        dz_shld_upper: float,
+    ) -> tuple[float, float, float]:
+        """Calculate volumes of elliptical shield segments."""
+
+        # Major radius to centre of inboard and outboard ellipses (m)
+        # (coincident in radius with top of plasma)
+        r_1 = rmajor - rminor * triang
+        r_2 = r_1 - rsldi
+
+        r_2 = r_2 - dr_shld_inboard
+
+        r_3 = rsldo - r_1
+        r_3 = r_3 - dr_shld_outboard
+
+        (
+            vol_shld_inboard,
+            vol_shld_outboard,
+            vol_shld_total,
+        ) = eshellvol(
+            rshell=r_1,
+            rmini=r_2,
+            rmino=r_3,
+            zminor=dz_shld_half,
+            drin=dr_shld_inboard,
+            drout=dr_shld_outboard,
+            dz=dz_shld_upper,
+        )
+
+        return vol_shld_inboard, vol_shld_outboard, vol_shld_total
