@@ -198,9 +198,7 @@ class Stellarator:
         # If physics_variables.aspect ratio is not in numerics.ixc set it to default value
         # Or when you call it the first time
         if 1 not in numerics.ixc:
-            physics_variables.aspect = (
-                stellarator_configuration.stella_config_aspect_ref
-            )
+            physics_variables.aspect = stellarator_configuration.stella_config_aspect_ref
 
         # Set the physics_variables.rminor radius as result here.
         physics_variables.rminor = physics_variables.rmajor / physics_variables.aspect
@@ -213,17 +211,14 @@ class Stellarator:
 
         #  Factors used to scale the reference point.
         stellarator_variables.f_r = (
-            physics_variables.rmajor
-            / stellarator_configuration.stella_config_rmajor_ref
+            physics_variables.rmajor / stellarator_configuration.stella_config_rmajor_ref
         )  # Size scaling factor with respect to the reference calculation
         stellarator_variables.f_a = (
-            physics_variables.rminor
-            / stellarator_configuration.stella_config_rminor_ref
+            physics_variables.rminor / stellarator_configuration.stella_config_rminor_ref
         )  # Size scaling factor with respect to the reference calculation
 
         stellarator_variables.f_aspect = (
-            physics_variables.aspect
-            / stellarator_configuration.stella_config_aspect_ref
+            physics_variables.aspect / stellarator_configuration.stella_config_aspect_ref
         )
         stellarator_variables.f_n = tfcoil_variables.n_tf_coils / (
             stellarator_configuration.stella_config_coilspermodule
@@ -496,9 +491,6 @@ class Stellarator:
                 "Req. Space (m)",
                 "(required_radial_space)",
                 build_variables.required_radial_space,
-            )
-            po.ovarre(
-                self.outfile, "f value: ", "(f_avspace)", build_variables.f_avspace
             )
 
             #     po.write(self.outfile,10)
@@ -879,9 +871,7 @@ class Stellarator:
 
         #  Length 'along' plasma (m)
 
-        l_p = (
-            2 * np.pi * r * (stellarator_variables.m_res) / stellarator_variables.n_res
-        )
+        l_p = 2 * np.pi * r * (stellarator_variables.m_res) / stellarator_variables.n_res
 
         #  Connection length from X-point to divertor plate (m)
 
@@ -1012,9 +1002,7 @@ class Stellarator:
             po.ovarre(self.outfile, "Divertor plate length (m)", "(L_d)", l_d)
             po.ovarre(self.outfile, "Divertor plate width (m)", "(L_w)", l_w)
             po.ovarre(self.outfile, "Flux channel broadening factor", "(F_x)", f_x)
-            po.ovarre(
-                self.outfile, "Power decay width (cm)", "(100*l_q)", 100.0e0 * l_q
-            )
+            po.ovarre(self.outfile, "Power decay width (cm)", "(100*l_q)", 100.0e0 * l_q)
             po.ovarre(self.outfile, "Island width (m)", "(w_r)", w_r)
             po.ovarre(
                 self.outfile,
@@ -1357,9 +1345,7 @@ class Stellarator:
                     pnucfwbs * build_variables.a_fw_inboard / build_variables.a_fw_total
                 )
                 pnucfwbso = (
-                    pnucfwbs
-                    * build_variables.a_fw_outboard
-                    / build_variables.a_fw_total
+                    pnucfwbs * build_variables.a_fw_outboard / build_variables.a_fw_total
                 )
 
                 #  Radiation power incident on divertor (MW)
@@ -2662,9 +2648,7 @@ class Stellarator:
             ) ** 2  # If REBCO, : start at smaller winding pack ratios
 
         # Find the intersection between LHS and RHS (or: how much awp do I need to get to the desired coil current)
-        wp_width_r_min = self.intersect(
-            wp_width_r, lhs, wp_width_r, rhs, wp_width_r_min
-        )
+        wp_width_r_min = self.intersect(wp_width_r, lhs, wp_width_r, rhs, wp_width_r_min)
 
         # Maximum field at superconductor surface (T)
         wp_width_r_min = max(tfcoil_variables.dx_tf_turn_general**2, wp_width_r_min)
@@ -2968,17 +2952,15 @@ class Stellarator:
         )
         # [kg] mass of Superconductor
         tfcoil_variables.m_tf_coil_superconductor = (
-            (
-                tfcoil_variables.len_tf_coil
-                * tfcoil_variables.n_tf_coil_turns
-                * tfcoil_variables.a_tf_turn_cable_space_no_void
-                * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
-                * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
-                - tfcoil_variables.len_tf_coil
-                * tfcoil_variables.a_tf_wp_coolant_channels
-            )
-            * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
-        )  # a_tf_wp_coolant_channels is 0 for a stellarator. but keep this term for now.
+            tfcoil_variables.len_tf_coil
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.a_tf_turn_cable_space_no_void
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
+        ) * tfcoil_variables.dcond[
+            tfcoil_variables.i_tf_sc_mat - 1
+        ]  # a_tf_wp_coolant_channels is 0 for a stellarator. but keep this term for now.
         # [kg] mass of Copper in conductor
         tfcoil_variables.m_tf_coil_copper = (
             tfcoil_variables.len_tf_coil
@@ -3202,7 +3184,6 @@ class Stellarator:
                 rebco_variables.coppera_m2_max,
                 f_scu,
                 f_vv_actual,
-                constraint_variables.fiooic,
                 inductance,
                 tfcoil_variables.max_force_density,
                 max_force_density_mnm,
@@ -3303,8 +3284,8 @@ class Stellarator:
             else:
                 (
                     j_crit_sc,
-                    bcrit,
-                    tcrit,
+                    _bcrit,
+                    _tcrit,
                 ) = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
 
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -3327,11 +3308,10 @@ class Stellarator:
             #  jstrand = 0  # as far as I can tell this will always be 0
             #  because jwp was never set in fortran (so 0)
 
-            j_crit_cable, tmarg = superconductors.bi2212(
+            j_crit_cable, _tmarg = superconductors.bi2212(
                 bmax, jstrand, thelium, fhts
             )  # bi2212 outputs j_crit_cable
             j_crit_sc = j_crit_cable / (1 - fcu)
-            tcrit = thelium + tmarg
         elif i_tf_sc_mat == 3:  # NbTi data
             bc20m = 15.0
             tc0m = 9.3
@@ -3340,14 +3320,13 @@ class Stellarator:
             if bmax > bc20m:
                 j_crit_sc = 1.0e-9  # Set to a small nonzero value
             else:
-                j_crit_sc, tcrit = superconductors.jcrit_nbti(
+                j_crit_sc, _tcrit = superconductors.jcrit_nbti(
                     thelium,
                     bmax,
                     c0,
                     bc20m,
                     tc0m,
                 )
-                # I dont need tcrit here so dont use it.
 
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
@@ -3358,7 +3337,7 @@ class Stellarator:
         elif i_tf_sc_mat == 4:  # As (1), but user-defined parameters
             bc20m = bcritsc
             tc0m = tcritsc
-            j_crit_sc, bcrit, tcrit = superconductors.itersc(
+            j_crit_sc, _bcrit, _tcrit = superconductors.itersc(
                 thelium, bmax, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -3370,7 +3349,7 @@ class Stellarator:
             #  j_crit_sc returned by itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
 
-            j_crit_sc, bcrit, tcrit = superconductors.western_superconducting_nb3sn(
+            j_crit_sc, _bcrit, _tcrit = superconductors.western_superconducting_nb3sn(
                 thelium,
                 bmax,
                 strain,
@@ -3382,7 +3361,7 @@ class Stellarator:
         elif (
             i_tf_sc_mat == 6
         ):  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
-            j_crit_sc, validity = superconductors.jcrit_rebco(thelium, bmax, 0)
+            j_crit_sc, _validity = superconductors.jcrit_rebco(thelium, bmax, 0)
             j_crit_sc = max(1.0e-9, j_crit_sc)
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
@@ -3390,7 +3369,7 @@ class Stellarator:
         elif i_tf_sc_mat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
             bc20m = b_crit_upper_nbti
             tc0m = t_crit_nbti
-            j_crit_sc, bcrit, tcrit = superconductors.gl_nbti(
+            j_crit_sc, _bcrit, _tcrit = superconductors.gl_nbti(
                 thelium, bmax, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -3398,7 +3377,7 @@ class Stellarator:
         elif i_tf_sc_mat == 8:
             bc20m = 429
             tc0m = 185
-            j_crit_sc, bcrit, tcrit = superconductors.gl_rebco(
+            j_crit_sc, _bcrit, _tcrit = superconductors.gl_rebco(
                 thelium, bmax, strain, bc20m, tc0m
             )
             # A0 calculated for tape cross section already
@@ -3710,7 +3689,6 @@ class Stellarator:
         coppera_m2_max,
         f_scu,
         f_vv_actual,
-        fiooic,
         inductance,
         max_force_density,
         max_force_density_mnm,
@@ -3854,9 +3832,7 @@ class Stellarator:
             "(e_tf_magnetic_stored_total_gj)",
             tfcoil_variables.e_tf_magnetic_stored_total_gj,
         )
-        po.ovarre(
-            self.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance
-        )
+        po.ovarre(self.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance)
         po.ovarre(
             self.outfile,
             "Total mass of coils (kg)",
@@ -4010,7 +3986,6 @@ class Stellarator:
             "(c_tf_turn)",
             tfcoil_variables.c_tf_turn,
         )
-        po.ovarre(self.outfile, "jop/jcrit", "(fiooic)", fiooic)
         po.ovarre(
             self.outfile,
             "Current density in conductor area (A/m2)",
@@ -4477,9 +4452,7 @@ class Stellarator:
         )
         physics_variables.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
         physics_variables.pden_plasma_core_rad_mw = radpwr_data.pden_plasma_core_rad_mw
-        physics_variables.pden_plasma_outer_rad_mw = (
-            radpwr_data.pden_plasma_outer_rad_mw
-        )
+        physics_variables.pden_plasma_outer_rad_mw = radpwr_data.pden_plasma_outer_rad_mw
         physics_variables.pden_plasma_rad_mw = radpwr_data.pden_plasma_rad_mw
 
         physics_variables.pden_plasma_core_rad_mw = max(
@@ -4522,9 +4495,7 @@ class Stellarator:
 
         # Here the implementation sometimes leaves the accessible regime when p_plasma_rad_mw> powht which is unphysical and
         # is not taken care of by the rad module. We restrict the radiation power here by the heating power:
-        physics_variables.p_plasma_rad_mw = max(
-            0.0e0, physics_variables.p_plasma_rad_mw
-        )
+        physics_variables.p_plasma_rad_mw = max(0.0e0, physics_variables.p_plasma_rad_mw)
 
         #  Power to divertor, = (1-stellarator_variables.f_rad)*Psol
 
@@ -4650,7 +4621,7 @@ class Stellarator:
             physics_variables.ntau,
             physics_variables.nTtau,
             physics_variables.figmer,
-            fusrat,
+            _fusrat,
             physics_variables.molflow_plasma_fuelling_required,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
@@ -4676,24 +4647,24 @@ class Stellarator:
         (
             q_PROCESS,
             q_PROCESS_r1,
-            q_neo,
-            gamma_neo,
-            total_q_neo,
+            _q_neo,
+            _gamma_neo,
+            _total_q_neo,
             total_q_neo_e,
             q_neo_e,
-            q_neo_D,
-            q_neo_a,
-            q_neo_T,
+            _q_neo_D,
+            _q_neo_a,
+            _q_neo_T,
             g_neo_e,
-            g_neo_D,
-            g_neo_a,
-            g_neo_T,
+            _g_neo_D,
+            _g_neo_a,
+            _g_neo_T,
             dndt_neo_e,
-            dndt_neo_D,
-            dndt_neo_a,
-            dndt_neo_T,
-            dndt_neo_fuel,
-            dmdt_neo_fuel,
+            _dndt_neo_D,
+            _dndt_neo_a,
+            _dndt_neo_T,
+            _dndt_neo_fuel,
+            _dmdt_neo_fuel,
             dmdt_neo_fuel_from_e,
             chi_neo_e,
             chi_PROCESS_e,
@@ -4972,11 +4943,9 @@ class Stellarator:
 
         chi_neo_e = -(
             neoclassics_variables.q_flux[0]
-            + neoclassics_variables.gamma_flux[0]
-            * neoclassics_variables.temperatures[0]
+            + neoclassics_variables.gamma_flux[0] * neoclassics_variables.temperatures[0]
         ) / (
-            neoclassics_variables.densities[0]
-            * neoclassics_variables.dr_temperatures[0]
+            neoclassics_variables.densities[0] * neoclassics_variables.dr_temperatures[0]
             + neoclassics_variables.temperatures[0]
             * neoclassics_variables.dr_densities[0]
         )
@@ -5103,13 +5072,13 @@ class Stellarator:
             current_drive_variables.eta_hcd_primary_injector_wall_plug = (
                 current_drive_variables.eta_lowhyb_injector_wall_plug
             )
-            current_drive_variables.p_hcd_electric_total_mw = (
+            heat_transport_variables.p_hcd_electric_total_mw = (
                 current_drive_variables.p_hcd_injected_ions_mw
                 + current_drive_variables.p_hcd_injected_electrons_mw
             ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 3:
             (
-                effnbss,
+                _effnbss,
                 f_p_beam_injected_ions,
                 current_drive_variables.f_p_beam_shine_through,
             ) = self.current_drive.culnbi()
@@ -5542,9 +5511,7 @@ class Neoclassics:
             32.2
             - 1.15 * np.log10(neoclassics_variables.densities[0])
             + 2.3
-            * np.log10(
-                neoclassics_variables.temperatures[0] / constants.ELECTRON_CHARGE
-            )
+            * np.log10(neoclassics_variables.temperatures[0] / constants.ELECTRON_CHARGE)
         )
 
         neoclassics_calc_nu = np.zeros((4, self.no_roots), order="F")
@@ -5757,34 +5724,22 @@ class Neoclassics:
         v = np.empty((4, self.no_roots))
         v[0, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
-            - (
-                neoclassics_variables.kt[0, :] / (mass[0] * constants.SPEED_LIGHT**2)
-                + 1
-            )
+            - (neoclassics_variables.kt[0, :] / (mass[0] * constants.SPEED_LIGHT**2) + 1)
             ** (-1)
         )
         v[1, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
-            - (
-                neoclassics_variables.kt[1, :] / (mass[1] * constants.SPEED_LIGHT**2)
-                + 1
-            )
+            - (neoclassics_variables.kt[1, :] / (mass[1] * constants.SPEED_LIGHT**2) + 1)
             ** (-1)
         )
         v[2, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
-            - (
-                neoclassics_variables.kt[2, :] / (mass[2] * constants.SPEED_LIGHT**2)
-                + 1
-            )
+            - (neoclassics_variables.kt[2, :] / (mass[2] * constants.SPEED_LIGHT**2) + 1)
             ** (-1)
         )
         v[3, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
-            - (
-                neoclassics_variables.kt[3, :] / (mass[3] * constants.SPEED_LIGHT**2)
-                + 1
-            )
+            - (neoclassics_variables.kt[3, :] / (mass[3] * constants.SPEED_LIGHT**2) + 1)
             ** (-1)
         )
 

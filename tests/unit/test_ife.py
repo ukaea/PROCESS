@@ -1580,9 +1580,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     monkeypatch.setattr(fwbs_variables, "m_fw_total", ifefbsparam.m_fw_total)
     monkeypatch.setattr(fwbs_variables, "m_blkt_total", ifefbsparam.m_blkt_total)
     monkeypatch.setattr(fwbs_variables, "whtshld", ifefbsparam.whtshld)
-    monkeypatch.setattr(
-        fwbs_variables, "m_blkt_beryllium", ifefbsparam.m_blkt_beryllium
-    )
+    monkeypatch.setattr(fwbs_variables, "m_blkt_beryllium", ifefbsparam.m_blkt_beryllium)
     monkeypatch.setattr(fwbs_variables, "m_blkt_vanadium", ifefbsparam.m_blkt_vanadium)
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_steel_total", ifefbsparam.m_blkt_steel_total
@@ -3147,9 +3145,7 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
         "p_plant_primary_heat_mw",
         ifepw2param.p_plant_primary_heat_mw,
     )
-    monkeypatch.setattr(
-        heat_transport_variables, "eta_turbine", ifepw2param.eta_turbine
-    )
+    monkeypatch.setattr(heat_transport_variables, "eta_turbine", ifepw2param.eta_turbine)
     monkeypatch.setattr(heat_transport_variables, "fgrosbop", ifepw2param.fgrosbop)
     monkeypatch.setattr(
         heat_transport_variables,

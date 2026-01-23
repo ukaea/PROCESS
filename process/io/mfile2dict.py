@@ -15,6 +15,7 @@ import logging
 import os
 import re
 from collections import OrderedDict, abc
+from pathlib import Path
 from typing import Any
 
 MFILE_END = "# Copy of PROCESS Input Follows #"
@@ -42,7 +43,7 @@ class MFILEParser(abc.MutableMapping):
             yield from self._mfile_data[group]
 
     def __len__(self):
-        return sum([len(self._mfile_data[g]) for g in self._mfile_data])
+        return sum(len(self._mfile_data[g]) for g in self._mfile_data)
 
     def items(self):
         for group in self._mfile_data:
@@ -145,65 +146,63 @@ class MFILEParser(abc.MutableMapping):
         """
         # Compile regex for converting underscores which are spaces into
         # a space character
-        _space_re = r"(\_{5,})"
-        _var_re = r"(\([a-z0-9\-\+\*\/\_\%\]\[]+\))"
-
+        space_re = r"(\_{5,})"
+        var_re = r"(\([a-z0-9\-\+\*\/\_\%\]\[]+\))"
+        # TODO remove underscores
         # Extract lines from the given line set that follow the variable
         # statement convention of 'desc_______(varname)________ value'
-        _lines = [line for line in lines if re.findall(_var_re, line)]
+        lines_ = [line for line in lines if re.findall(var_re, line)]
 
         # Remove extra symbols such as quotation marks and split line into
         # the three required components using regex
-        _lines = [
+        lines_ = [
             [
                 i.replace('"', "").replace("`", "").strip()
-                for i in re.split(_space_re, line)
-                if not (re.findall(_space_re, i)) and i.strip()
+                for i in re.split(space_re, line)
+                if not (re.findall(space_re, i)) and i.strip()
             ]
-            for line in _lines
+            for line in lines_
         ]
 
         # If there are not three components in a given line, try splitting
         # the components present by ' ' instead and append
-        for i, line in enumerate(_lines):
+        for i, line in enumerate(lines_):
             if len(line) != 3:
-                _new_line = []
+                new_line = []
                 for element in line:
                     if " " in element:
-                        _new_line += element.split(" ")
+                        new_line += element.split(" ")
                     else:
-                        _new_line += element
-                _lines[i] = _new_line[:3]
+                        new_line += element
+                lines_[i] = new_line[:3]
 
         # Use an ordered dictionary to match ordering in MFILE
-        _vars_dict = OrderedDict()
+        vars_dict = OrderedDict()
 
         # Iterate through the resultant line sets and tidy them a little
         # finally creating a dictionary entry for each with the required
         # information
-        for line in _lines:
-            _var_key = line[1][1:-1]
-            _var_key = _var_key.replace("%", ".")
-            if not _var_key:
+        for line in lines_:
+            var_key = line[1][1:-1]
+            var_key = var_key.replace("%", ".")
+            if not var_key:
                 continue
-            _value = line[2]
-            _desc = line[0].replace("_-_", "-").replace("_", " ")
-            _desc = _desc.title().strip()
-            _desc = _desc.replace('"', "")
-            _desc = re.sub(r"\s{2,}", " ", _desc)
-            if _var_key in _vars_dict:
-                if not isinstance(_vars_dict[_var_key], list):
-                    _vars_dict[_var_key]["value"] = [_vars_dict[_var_key]["value"]]
-                _vars_dict[_var_key]["value"].append(
-                    self._find_var_val_from_str(_value)
-                )
+            value = line[2]
+            desc = line[0].replace("_-_", "-").replace("_", " ")
+            desc = desc.title().strip()
+            desc = desc.replace('"', "")
+            desc = re.sub(r"\s{2,}", " ", desc)
+            if var_key in vars_dict:
+                if not isinstance(vars_dict[var_key], list):
+                    vars_dict[var_key]["value"] = [vars_dict[var_key]["value"]]
+                vars_dict[var_key]["value"].append(self._find_var_val_from_str(value))
             else:
-                _vars_dict[_var_key] = {
-                    "description": _desc,
-                    "value": self._find_var_val_from_str(_value),
+                vars_dict[var_key] = {
+                    "description": desc,
+                    "value": self._find_var_val_from_str(value),
                 }
 
-        return _vars_dict
+        return vars_dict
 
     def parse(self, mfile_addr: str) -> dict:
         """Parse an MFILE and extract output values.
@@ -231,81 +230,80 @@ class MFILEParser(abc.MutableMapping):
         self._logger.info("Parsing MFILE: %s", mfile_addr)
 
         with open(mfile_addr) as f:
-            _lines = f.readlines()
+            lines = f.readlines()
 
-        _end_of_output = self._line_string_search(_lines, MFILE_END)[0]
+        end_of_output = self._line_string_search(lines, MFILE_END)[0]
 
         self._logger.info("Extracting file headers")
-        _header_indexes = [
-            i for i, line in enumerate(_lines) if line.strip() and i < _end_of_output
+        header_indexes = [
+            i for i, line in enumerate(lines) if line.strip() and i < end_of_output
         ]
 
-        _header_indexes = [
+        header_indexes = [
             i
-            for i in _header_indexes
-            if _lines[i].strip()[0] == "#"
-            and not any(k in _lines[i] for k in VETO_LIST)
+            for i in header_indexes
+            if lines[i].strip()[0] == "#" and not any(k in lines[i] for k in VETO_LIST)
         ]
 
         # Gets rid of multi-headers, taking the last one
-        _header_indexes = [i for i in _header_indexes if i + 1 not in _header_indexes]
+        header_indexes = [i for i in header_indexes if i + 1 not in header_indexes]
 
         self._logger.info("Retrieving output variable values")
         # Iterate through the file headers processing the "block" between them
         # extracting variable values. Where duplicate headers are found assume
         # that a parameter sweep is occuring and append values in lists
-        for i in range(len(_header_indexes) - 1):
-            _key = _lines[_header_indexes[i]].replace("#", "").strip()
+        for i in range(len(header_indexes) - 1):
+            key = lines[header_indexes[i]].replace("#", "").strip()
 
-            _new_vals = self._get_values(
-                _lines[_header_indexes[i] + 1 : _header_indexes[i + 1]]
+            new_vals = self._get_values(
+                lines[header_indexes[i] + 1 : header_indexes[i + 1]]
             )
 
             # The iscan variable is always present at start of sweep
             # no matter what the first header in an iteration is
             # need to move it into metadata
-            _first_key = _lines[_header_indexes[0]]
-            _check_iscan = self._mfile_data and "iscan" in _new_vals
-            _check_iscan = _check_iscan and _key != _first_key
-            if _check_iscan:
-                _first_key = _first_key.replace("#", "").strip()
-                _iscan_var = self._mfile_data[_first_key]["iscan"]["value"]
-                if not isinstance(_iscan_var, list):
-                    self._mfile_data[_first_key]["iscan"]["value"] = [_iscan_var]
-                self._mfile_data[_first_key]["iscan"]["value"].append(
-                    _new_vals["iscan"]["value"]
+            first_key = lines[header_indexes[0]]
+            check_iscan = self._mfile_data and "iscan" in new_vals
+            check_iscan = check_iscan and key != first_key
+            if check_iscan:
+                first_key = first_key.replace("#", "").strip()
+                iscan_var = self._mfile_data[first_key]["iscan"]["value"]
+                if not isinstance(iscan_var, list):
+                    self._mfile_data[first_key]["iscan"]["value"] = [iscan_var]
+                self._mfile_data[first_key]["iscan"]["value"].append(
+                    new_vals["iscan"]["value"]
                 )
-                del _new_vals["iscan"]
+                del new_vals["iscan"]
 
             # Add header to dictionary of not present
-            if _key not in self._mfile_data:
-                self._mfile_data[_key] = _new_vals
+            if key not in self._mfile_data:
+                self._mfile_data[key] = new_vals
 
             # If header already present, iterate through member parameters
             # appending the new values to each
             else:
-                for param, var_dict in self._mfile_data[_key].items():
-                    if param not in _new_vals:
+                for param, var_dict in self._mfile_data[key].items():
+                    if param not in new_vals:
                         self._logger.warning(
                             f"Expected parameter '{param}' in sweep, "
                             "but could not find entry"
                             " for this iteration"
                         )
                         continue
-                    _value = _new_vals[param]["value"]
+                    value = new_vals[param]["value"]
                     if not isinstance(var_dict["value"], list):
-                        self._mfile_data[_key][param]["value"] = [
-                            self._mfile_data[_key][param]["value"],
-                            _value,
+                        self._mfile_data[key][param]["value"] = [
+                            self._mfile_data[key][param]["value"],
+                            value,
                         ]
                     else:
                         # Need to check if the find variables function
                         # returned a single value for the parameter or multiple
                         # and handle the cases
-                        if not isinstance(_new_vals[param]["value"], list):
-                            self._mfile_data[_key][param]["value"].append(_value)
+                        if not isinstance(new_vals[param]["value"], list):
+                            self._mfile_data[key][param]["value"].append(value)
                         else:
-                            self._mfile_data[_key][param]["value"] += _value
+                            self._mfile_data[key][param]["value"] += value
 
         self._logger.info("Creating output dictionaries")
         # Remove any cases where there are no parameters under a given header
@@ -313,11 +311,11 @@ class MFILEParser(abc.MutableMapping):
 
         # Use underscore keys and tidy them to be more computationally friendly
         def _key_update(key):
-            _key = key.lower()
-            _key = _key.replace(" ", "_")
+            key_ = key.lower()
+            key_ = key_.replace(" ", "_")
             for sym in [":", "(", ")", "/"]:
-                _key = _key.replace(sym, "")
-            return _key.replace("__", "_")
+                key_ = key_.replace(sym, "")
+            return key_.replace("__", "_")
 
         # Apply header mappings and tidy headers
         self._mfile_data = {
@@ -330,16 +328,16 @@ class MFILEParser(abc.MutableMapping):
 
         # Only run iscan check if iscan exists
         try:
-            _first_key = next(iter(self._mfile_data.keys()))
-            _second_key = list(self._mfile_data.keys())[1]
-            _second_key_fp = list(self._mfile_data[_second_key])[8]
-            _iscan_arr = self._mfile_data[_first_key]["iscan"]["value"]
-            _test_param = self._mfile_data[_second_key][_second_key_fp]["value"]
-            if len(_test_param) != _iscan_arr[-1]:
-                print(_test_param)
+            first_key = next(iter(self._mfile_data.keys()))
+            second_key = list(self._mfile_data.keys())[1]
+            second_key_fp = list(self._mfile_data[second_key])[8]
+            iscan_arr = self._mfile_data[first_key]["iscan"]["value"]
+            test_param = self._mfile_data[second_key][second_key_fp]["value"]
+            if len(test_param) != iscan_arr[-1]:
+                print(test_param)
                 raise AssertionError(
                     "Failed to retrieve all parameter sweep values, "
-                    f"expected {_iscan_arr[-1]} values for '{_second_key}:{_second_key_fp}' and got {len(_test_param)}"
+                    f"expected {iscan_arr[-1]} values for '{second_key}:{second_key_fp}' and got {len(test_param)}"
                 )
         except KeyError:
             pass
@@ -358,9 +356,9 @@ class MFILEParser(abc.MutableMapping):
         """
         self._logger.info("Writing to output file '%s'", output_filename)
 
-        _suffix = os.path.splitext(output_filename)[1].lower()
+        suffix = os.path.splitext(output_filename)[1].lower()
 
-        if _suffix == ".toml":
+        if suffix == ".toml":
             self._logger.info("Output will be TOML file.")
             try:
                 import tomlkit
@@ -378,44 +376,43 @@ class MFILEParser(abc.MutableMapping):
 
             # If TOMLKit is present, write TOML file as normal but add in
             # descriptions as docstrings instead and format
-            _doc = tomlkit.document()
-            _doc.add(tomlkit.comment("PROCESS Run Output"))
+            doc = tomlkit.document()
+            doc.add(tomlkit.comment("PROCESS Run Output"))
             for group_name, data in self._mfile_data.items():
-                _new_dict = {}
+                new_dict = {}
                 for var_name, var_data in data.items():
-                    _new_dict[var_name] = var_data["value"]
-                _header = group_name.replace("_", " ").title()
-                _ls = int((75 - len(_header)) / 2)
-                _rs = 75 - len(_header) - _ls
-                _header = _ls * "-" + " " + _header + " " + _rs * "-"
-                _doc.add(tomlkit.comment(_header))
-                _doc.add(group_name, _new_dict)
-                _doc.add(tomlkit.nl())
-                _doc.add(tomlkit.nl())
+                    new_dict[var_name] = var_data["value"]
+                header = group_name.replace("_", " ").title()
+                ls = int((75 - len(header)) / 2)
+                rs = 75 - len(header) - ls
+                header = ls * "-" + " " + header + " " + rs * "-"
+                doc.add(tomlkit.comment(header))
+                doc.add(group_name, new_dict)
+                doc.add(tomlkit.nl())
+                doc.add(tomlkit.nl())
 
             for group_name, data in self._mfile_data.items():
                 for var_name in data:
-                    _doc[group_name][var_name].comment(
+                    doc[group_name][var_name].comment(
                         self._mfile_data[group_name][var_name]["description"]
                     )
 
-            with open(output_filename, "w") as f:
-                f.write(tomlkit.dumps(_doc))
-        elif _suffix == ".json":
+            Path(output_filename).write_text(tomlkit.dumps(doc))
+        elif suffix == ".json":
             # If file suffix is JSON
             self._logger.info("Output will be JSON file.")
             import json
 
             with open(output_filename, "w") as file:
                 json.dump(self._mfile_data, file)
-        elif _suffix in [".yml", ".yaml"]:
+        elif suffix in [".yml", ".yaml"]:
             self._logger.info("Output will be YAML file.")
             # If file suffix is YAML
             import yaml
 
             with open(output_filename, "w") as file:
                 yaml.dump(self._mfile_data, file)
-        elif _suffix == ".pckl":
+        elif suffix == ".pckl":
             self._logger.info("Output will be Pickle file.")
             # If file suffix is Pickle
             import pickle
@@ -423,7 +420,7 @@ class MFILEParser(abc.MutableMapping):
             with open(output_filename, "wb") as file:
                 pickle.dump(self._mfile_data, file)
         else:
-            raise RuntimeError(f"Unrecognised file format '{_suffix}'")
+            raise RuntimeError(f"Unrecognised file format '{suffix}'")
 
         self._logger.info("File was written successfully.")
 

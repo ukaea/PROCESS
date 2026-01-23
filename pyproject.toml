@@ -56,7 +56,8 @@ test = [
   "requests>=2.30",
   "testbook>=0.4",
   "pytest-cov>=3.0.0",
-  "pytest-xdist>=2.5.0"
+  "pytest-xdist>=2.5.0",
+  "process[examples]"
 ]
 examples = ["jupyter==1.0.0"]
 plotly = ["plotly>=5.15.0,<6"]
@@ -84,16 +85,22 @@ artifacts = [
 ]
 
 [tool.hatch.envs.default]
-features = ["dev", "test", "docs", "lint"]
+features = ["test", "docs", "lint"]
 
 [tool.hatch.envs.test]
 features = ["test"]
 [[tool.hatch.envs.test.matrix]]
 python = ["3.10", "3.11", "3.12", "3.13"]
 [tool.hatch.envs.test.scripts]
-tests      = "pytest {args:tests}"
+tests      = "pytest -n auto -v {args:tests}"
 tests-cov  = "pytest --cov process  --cov-report html:htmlcov --cov-report xml {args:tests}"
 tests-cov-private  = "pytest --private --cov process --cov-report html:htmlcov --cov-report xml {args:tests}"
+
+[tool.hatch.envs.test-default]
+template="test"
+[[tool.hatch.envs.test-default.matrix]]
+python = ["3.10"]
+
 
 [tool.hatch.envs.docs]
 features = ["docs"]
@@ -121,7 +128,7 @@ output-format = "concise"
 
 [tool.ruff]
 target-version = "py310"
-line-length = 88
+line-length = 89
 output-format = "concise"
 extend-exclude = ["env", ".env"]
 
@@ -153,7 +160,7 @@ max-args = 17
 max-locals = 17
 
 [tool.ruff.lint]
-preview = false
+preview = true
 extend-select = [
     "A",
     "ARG",

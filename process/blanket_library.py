@@ -109,13 +109,11 @@ class BlanketLibrary:
                 - build_variables.dz_vv_lower
             )
         else:
-            raise ProcessValueError(
-                f"{icomponent=} is invalid, it must be either 0,1,2"
-            )
+            raise ProcessValueError(f"{icomponent=} is invalid, it must be either 0,1,2")
 
         # Calculate component internal upper half-height (m)
         # If a double null machine then symmetric
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             htop = hbot
         else:
             # Blanket
@@ -256,9 +254,7 @@ class BlanketLibrary:
             r3 = r3 - build_variables.dr_shld_outboard
         # ... blanket (m)
         if icomponent == 0:
-            r3 = (
-                r3 - build_variables.dr_shld_outboard - build_variables.dr_blkt_outboard
-            )
+            r3 = r3 - build_variables.dr_shld_outboard - build_variables.dr_blkt_outboard
 
         # Calculate surface area, assuming 100% coverage
         if icomponent == 0:
@@ -324,7 +320,7 @@ class BlanketLibrary:
         Apply coverage factors to volumes
         """
         # Apply blanket coverage factors
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             # double null configuration
             build_variables.a_blkt_outboard_surface = (
                 build_variables.a_blkt_total_surface
@@ -1192,7 +1188,7 @@ class BlanketLibrary:
 
             # Calculate blanket poloidal length and segment, subtracting divertor length (m)
             # kit hcll version only had the single null option
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 # Double null configuration
                 blanket_library.len_blkt_outboard_segment_poloidal = (
                     0.5
@@ -1234,7 +1230,7 @@ class BlanketLibrary:
             # Assume divertor lies between the two ellipses, so fraction f_ster_div_single still applies
 
             # kit hcll version only had the single null option
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 # Double null configuration
                 blanket_library.len_blkt_inboard_segment_poloidal = (
                     0.5
@@ -1264,7 +1260,7 @@ class BlanketLibrary:
 
             # kit hcll version only had the single null option
             # Calculate outboard blanket poloidal length and segment, subtracting divertor length (m)
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 # Double null configuration
                 blanket_library.len_blkt_outboard_segment_poloidal = (
                     0.5
@@ -1758,8 +1754,8 @@ class BlanketLibrary:
         )
         (
             blanket_library.temp_fw_outboard_peak,
-            cf,
-            rhof,
+            _cf,
+            _rhof,
             blanket_library.mflow_fw_outboard_coolant_channel,
         ) = self.fw.fw_temp(
             output,
@@ -1988,21 +1984,19 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.p_blkt_coolant_pump_mw = (
-                self.coolant_pumping_power(
-                    output=output,
-                    i_liquid_breeder=1,
-                    temp_coolant_pump_outlet=fwbs_variables.temp_blkt_coolant_in,
-                    temp_coolant_pump_inlet=fwbs_variables.temp_blkt_coolant_out,
-                    pres_coolant_pump_inlet=fwbs_variables.pres_blkt_coolant,
-                    dpres_coolant=deltap_blkt,
-                    mflow_coolant_total=blanket_library.mflow_blkt_coolant_total,
-                    primary_coolant_switch=(
-                        "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
-                    ),
-                    den_coolant=fwbs_variables.den_blkt_coolant,
-                    label="Blanket",
-                )
+            heat_transport_variables.p_blkt_coolant_pump_mw = self.coolant_pumping_power(
+                output=output,
+                i_liquid_breeder=1,
+                temp_coolant_pump_outlet=fwbs_variables.temp_blkt_coolant_in,
+                temp_coolant_pump_inlet=fwbs_variables.temp_blkt_coolant_out,
+                pres_coolant_pump_inlet=fwbs_variables.pres_blkt_coolant,
+                dpres_coolant=deltap_blkt,
+                mflow_coolant_total=blanket_library.mflow_blkt_coolant_total,
+                primary_coolant_switch=(
+                    "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
+                ),
+                den_coolant=fwbs_variables.den_blkt_coolant,
+                label="Blanket",
             )
 
             # Total mechanical pumping power (MW)
@@ -2027,21 +2021,19 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.p_blkt_breeder_pump_mw = (
-                self.coolant_pumping_power(
-                    output=output,
-                    i_liquid_breeder=2,
-                    temp_coolant_pump_outlet=fwbs_variables.inlet_temp_liq,
-                    temp_coolant_pump_inlet=fwbs_variables.outlet_temp_liq,
-                    pres_coolant_pump_inlet=fwbs_variables.blpressure_liq,
-                    dpres_coolant=deltap_bl_liq,
-                    mflow_coolant_total=blanket_library.mfblkt_liq,
-                    primary_coolant_switch=(
-                        "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
-                    ),
-                    den_coolant=fwbs_variables.den_liq,
-                    label="Liquid Metal Breeder/Coolant",
-                )
+            heat_transport_variables.p_blkt_breeder_pump_mw = self.coolant_pumping_power(
+                output=output,
+                i_liquid_breeder=2,
+                temp_coolant_pump_outlet=fwbs_variables.inlet_temp_liq,
+                temp_coolant_pump_inlet=fwbs_variables.outlet_temp_liq,
+                pres_coolant_pump_inlet=fwbs_variables.blpressure_liq,
+                dpres_coolant=deltap_bl_liq,
+                mflow_coolant_total=blanket_library.mfblkt_liq,
+                primary_coolant_switch=(
+                    "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
+                ),
+                den_coolant=fwbs_variables.den_liq,
+                label="Liquid Metal Breeder/Coolant",
             )
 
             heat_transport_variables.htpmw_blkt_tot = (
@@ -2050,9 +2042,7 @@ class BlanketLibrary:
             )
 
         if output:
-            po.oheadr(
-                self.outfile, "Summary of first wall and blanket thermohydraulics"
-            )
+            po.oheadr(self.outfile, "Summary of first wall and blanket thermohydraulics")
 
             # FW
             po.osubhd(self.outfile, "First wall: ")
@@ -2189,9 +2179,7 @@ class BlanketLibrary:
                     fwbs_variables.i_blkt_liquid_breeder_type,
                 )
                 if fwbs_variables.i_blkt_dual_coolant == 2:
-                    po.ocmmnt(
-                        self.outfile, "Dual-coolant BB, i.e. self-cooled breeder."
-                    )
+                    po.ocmmnt(self.outfile, "Dual-coolant BB, i.e. self-cooled breeder.")
                     po.ovarrf(
                         self.outfile,
                         "Inlet temperature of blanket liquid breeder (K)",

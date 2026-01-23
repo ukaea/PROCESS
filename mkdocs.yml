@@ -70,6 +70,7 @@ nav:
               - Confinement time: physics-models/plasma_confinement.md
               - L-H transition: physics-models/plasma_h_mode.md
               - Plasma Core Power Balance: physics-models/plasma_power_balance.md
+              - Detailed Plasma Physics: physics-models/detailed_physics.md
           - Pulsed Plant Operation: physics-models/pulsed-plant.md
       - Engineering Models:
           - Machine Build: eng-models/machine-build.md

@@ -1224,9 +1224,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
         pfcoil_variables, "c_pf_cs_coils_peak_ma", tohswgparam.c_pf_cs_coils_peak_ma
     )
 
-    monkeypatch.setattr(
-        pfcoil_variables, "n_pf_coil_turns", tohswgparam.n_pf_coil_turns
-    )
+    monkeypatch.setattr(pfcoil_variables, "n_pf_coil_turns", tohswgparam.n_pf_coil_turns)
 
     monkeypatch.setattr(
         pfcoil_variables,

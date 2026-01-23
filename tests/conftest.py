@@ -10,6 +10,7 @@ import pytest
 from _pytest.fixtures import SubRequest
 from system_check import system_compatible
 
+from process import main
 from process.log import logging_model_handler
 
 
@@ -100,7 +101,7 @@ def skip_if_incompatible_system():
     if not system_compatible():
         pytest.skip(
             "This test could fail on your system due to differences caused by "
-            "floating-point rounding error"
+            "floating-point rounding differences in np.linalg.solve"
         )
 
 
@@ -157,3 +158,12 @@ def return_to_root():
     cwd = os.getcwd()
     yield
     os.chdir(cwd)
+
+
+@pytest.fixture(autouse=True)
+def disable_package_logger(monkeypatch):
+    """Various parts of PROCESS change directories and do not always change back.
+    This fixture ensures that, at the end of each test, the cwd is reset to what it
+    was at the beginning of the test.
+    """
+    monkeypatch.setattr(main, "PACKAGE_LOGGING", False)

@@ -659,7 +659,7 @@ and `ixc = 152` respectively
 
 This constraint can be activated by stating `icc = 81` in the input file
 
-To prevent unrealistic profiles when iterating the values of `nd_plasma_electron_on_axis, nd_plasma_separatrix_electron, nd_plasma_pedestal_electron` etc, this constraint ensures that the value of `nd_plasma_electron_on_axis` is always higher that `nd_plasma_pedestal_electron` to get a converged solution. This can be scaled with `fne0`
+To prevent unrealistic profiles when iterating the values of `nd_plasma_electron_on_axis, nd_plasma_separatrix_electron, nd_plasma_pedestal_electron` etc, this constraint ensures that the value of `nd_plasma_electron_on_axis` is always higher that `nd_plasma_pedestal_electron` to get a converged solution.
 
 -------
 
@@ -687,7 +687,7 @@ $$
 
 Where $A$ is the plasma aspect ratio, $P_{\text{sep}}$ is the power crossing the separatrix and is the heating power minus the radiated power in this case, $n_{\text{GW}}$ is the Greenwald density limit.
 
-The value of `nd_plasma_separatrix_electron` is check to make sure that it does not go higher than $n_{\text{sep}}^{\text{crit}}$. This can be scaled with `fnesep`
+The value of `nd_plasma_separatrix_electron` is check to make sure that it does not go higher than $n_{\text{sep}}^{\text{crit}}$.
 
 [^1]: M. Bernert et al. Plasma Phys. Control. Fus. **57** (2015) 014038
 [^2]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',

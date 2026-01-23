@@ -10,7 +10,7 @@ from process.data_structure import numerics
 from process.objectives import objective_function
 
 
-def finalise(models, ifail: int, non_idempotent_msg: None | str = None):
+def finalise(models, ifail: int, non_idempotent_msg: str | None = None):
     """Routine to print out the final point in the scan.
 
     Writes to OUT.DAT and MFILE.DAT.
@@ -48,9 +48,7 @@ def output_evaluation():
 
     # Evaluate objective function
     norm_objf = objective_function(numerics.minmax)
-    po.ovarre(
-        constants.MFILE, "Normalised objective function", "(norm_objf)", norm_objf
-    )
+    po.ovarre(constants.MFILE, "Normalised objective function", "(norm_objf)", norm_objf)
 
     # Print the residuals of the constraint equations
 

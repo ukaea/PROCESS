@@ -23,25 +23,27 @@ There are two separate constraint equations for enforcing the L-H threshold.
 
 ### Use the full divertor power
 
-This constraint can be activated by stating `icc = 15` in the input file.
+There are two constraints that can be used to enforce L-mode or H-mode.
 
-The scaling value `fl_h_threshold (ixc=103)` can be varied to set the required margin around the threshold.
+Constraint 15 (`icc = 15`) is used to enforce H-mode by mandating that the power transported through the separatrix is greater than or equal to the L-H threshold power, a necessary condition for H-mode. `f_h_mode_margin >= 1.0` can be used to ensure the separatrix power exceeds the threshold by some margin. 
 
 $$
-1.0 - \mathtt{fl\_h\_threshold} \times \frac{\overbrace{\mathtt{p\_l\_h\_threshold\_mw}}^{\text{Power from scaling}}}{\mathtt{p_plasma_separatrix_mw}}
+\texttt{p_plasma_separatrix_mw} \ge \texttt{f_h_mode_margin} \times \underbrace{\texttt{p_l_h_threshold_mw}}_{\text{Power from scaling}}
 $$
 
+For example, `f_h_mode_margin = 1.2` ensures that `p_plasma_separatrix_mw` is at least $1.2\times$ greater than the threshold power `p_l_h_threshold_mw`.
 
 
-For an H-mode plasma, `icc = 15` and `fl_h_threshold (ixc=103)` by default will ensure
-that the power reaching the divertor is at least equal to the threshold power
-calculated for the chosen scaling, which is a necessary condition for
-H-mode. 
+Constraint 22 (`icc = 22`) is the opposite of constraint 15 and ensures that the power transported through the separatrix is less than or equal to the L-H threshold power. `f_l_mode_margin >= 1.0` can be used to ensure that the threshold power is greater than the separatrix power by some margin.
 
-For an L-mode plasma, `icc = 15` should be turned on but the bounds for `fl_h_threshold (ixc=103)` should be set to `boundl(103) = 0.001` and `boundu(103) = 1.0` to ensure that the power does not exceed the calculated threshold, 
-and therefore the machine remains in L-mode.
+$$
+\underbrace{\texttt{p_l_h_threshold_mw}}_{\text{Power from scaling}}  \ge \texttt{f_l_mode_margin} \times \texttt{p_plasma_separatrix_mw} 
+$$
 
-**Therefore it is recommended to always use `icc = 15` if trying to simulate a plasma scenario specifically in L or H-mode**
+For example, `f_l_mode_margin = 1.2` ensures that `p_l_h_threshold_mw` is at least $1.2\times$ greater than the separatrix power `p_plasma_separatrix_mw`.
+
+
+**It is recommended to use the H-mode constraint `icc = 15` at all times unless explicitly trying to enforce L-mode in which case `icc = 22` is used.**
 
 -------
 
@@ -50,11 +52,9 @@ and therefore the machine remains in L-mode.
 This constraint can be activated by stating `icc = 73` in the input file.
 
 $$
-1.0 - \mathtt{fplhsep} \times \frac{\mathtt{p_plasma_separatrix_mw}}{
-\underbrace{\mathtt{p\_l\_h\_threshold\_mw}}_{\text{Power from scaling}}+ P_{\text{HCD}}}
+1.0 - \frac{\texttt{p_plasma_separatrix_mw}}{
+\underbrace{\texttt{p_l_h_threshold_mw}}_{\text{Power from scaling}}+ P_{\text{HCD}}}
 $$
-
-The scaling value `fplhsep (ixc=137)` can be varied to set the required margin around the threshold.
 
 
 --------------------

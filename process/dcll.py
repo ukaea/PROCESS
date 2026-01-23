@@ -8,6 +8,7 @@ from process.data_structure import (
     build_variables,
     current_drive_variables,
     dcll_variables,
+    divertor_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
@@ -134,7 +135,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
              - f_nuc_pow_bz_liq
         """
 
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             # Double null configuration
             covf = (
                 1
@@ -144,9 +145,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
         else:
             # Single null configuration
             covf = (
-                1
-                - fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_outboard_hcd
+                1 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_outboard_hcd
             )
 
         # Nuclear heating in the first wall (MW)
@@ -651,12 +650,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
             * dcll_variables.vol_bz_struct
         )
         fwbs_variables.wht_liq = fwbs_variables.den_liq * dcll_variables.vol_bz_liq
-        fwbs_variables.wht_liq_ib = (
-            fwbs_variables.den_liq * dcll_variables.vol_bz_liq_ib
-        )
-        fwbs_variables.wht_liq_ob = (
-            fwbs_variables.den_liq * dcll_variables.vol_bz_liq_ob
-        )
+        fwbs_variables.wht_liq_ib = fwbs_variables.den_liq * dcll_variables.vol_bz_liq_ib
+        fwbs_variables.wht_liq_ob = fwbs_variables.den_liq * dcll_variables.vol_bz_liq_ob
         dcll_variables.wht_cer = fwbs_variables.den_ceramic * dcll_variables.vol_fci
         # Back Wall
         dcll_variables.wht_bw_stl = (

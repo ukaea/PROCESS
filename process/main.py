@@ -77,7 +77,6 @@ from process.io import (
     mfile,
     plot_plotly_sankey,
     plot_proc,
-    plot_radial_build,
 )
 from process.io import obsolete_vars as ov
 
@@ -94,7 +93,7 @@ from process.io.process_funcs import (
 )
 from process.log import logging_model_handler, show_errors
 from process.pfcoil import PFCoil
-from process.physics import Physics
+from process.physics import DetailedPhysics, Physics
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
@@ -111,7 +110,9 @@ from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
-logger = logging.getLogger(__name__)
+PACKAGE_LOGGING = True
+"""Can be set False to disable package-level logging, e.g. in the test suite"""
+logger = logging.getLogger("process")
 
 
 class Process:
@@ -248,8 +249,6 @@ class Process:
             print(f"Plotting mfile {mfile_str}")
             if mfile_path.exists():
                 plot_proc.main(args=["-f", mfile_str])
-                plot_radial_build.main(args=["-f", mfile_str, "-nm"])
-
                 plot_plotly_sankey.main(args=["-m", mfile_str])
 
             else:
@@ -304,17 +303,19 @@ class VaryRun:
         config = RunProcessConfig(self.config_file)
         config.setup()
 
+        setup_loggers(Path(config.wdir) / "process.log")
+
         init.init_all_module_vars()
         init.init_process()
 
-        neqns, itervars = get_neqns_itervars()
+        _neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
 
         # If config file contains WDIR, use that. Otherwise, use the directory
         # containing the config file (used when running regression tests in
         # temp dirs)
         # TODO Not sure this is required any more
-        wdir = config.wdir if config.wdir else Path(self.config_file).parent
+        wdir = config.wdir or Path(self.config_file).parent
 
         # Check IN.DAT exists
         if not input_path.exists():
@@ -357,7 +358,7 @@ class VaryRun:
             else:
                 print("PROCESS has stopped without finishing!")
 
-            vary_iteration_variables(itervars, lbs, ubs)
+            vary_iteration_variables(itervars, lbs, ubs, config.generator)
 
         config.error_status2readme()
 
@@ -443,9 +444,12 @@ class SingleRun:
         """Set the mfile filename."""
         self.mfile_path = Path(self.filename_prefix + "MFILE.DAT")
 
-    @staticmethod
-    def initialise():
+    def initialise(self):
         """Run the init module to call all initialisation routines."""
+        setup_loggers(
+            Path(self.output_path.as_posix().replace("OUT.DAT", "process.log"))
+        )
+
         initialise_imprad()
         # Reads in input file
         init.init_process()
@@ -678,6 +682,9 @@ class Models:
         self.physics = Physics(
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )
+        self.physics_detailed = DetailedPhysics(
+            plasma_profile=self.plasma_profile,
+        )
         self.neoclassics = Neoclassics()
         self.stellarator = Stellarator(
             availability=self.availability,
@@ -718,7 +725,7 @@ logging_stream_handler = logging.StreamHandler()
 logging_stream_handler.setLevel(logging.CRITICAL)
 logging_stream_handler.setFormatter(logging_formatter)
 
-logging_file_handler = logging.FileHandler("process.log", mode="w")
+logging_file_handler = logging.FileHandler("process.log", mode="a")
 logging_file_handler.setLevel(logging.INFO)
 logging_file_handler.setFormatter(logging_formatter)
 
@@ -726,20 +733,30 @@ logging_model_handler.setLevel(logging.WARNING)
 logging_model_handler.setFormatter(logging_formatter)
 
 
-def setup_loggers():
+def setup_loggers(working_directory_log_path: Path | None = None):
     """A function that adds our handlers to the appropriate logger object."""
-    # Only add our handlers if PROCESS is being run as an application
-    # This should allow it to be used as a package (e.g. people import models that log)
-    # without creating a process.log file... people can then handle our logs as they wish.
-    # Using basicConfig adds these handlers to the root logger iff the root logger has not
-    # been setup yet. This means that during testing these hanlders won't be present, which
-    # will ensure they do not conflict with the pytest handlers.
-    logging.basicConfig(handlers=[logging_stream_handler, logging_file_handler])
+    # Remove all of the existing handlers from the 'process' package logger
 
-    # However, this handler we know to be safe and necessary so we add it to the root logger
-    # regardless of whether it has already been created.
-    root_logger = logging.getLogger()
-    root_logger.addHandler(logging_model_handler)
+    logger.handlers.clear()
+
+    # we always want to add this handler because otherwise PROCESS' error
+    # handling system won't work properly
+    logger.addHandler(logging_model_handler)
+
+    if not PACKAGE_LOGGING:
+        return
+
+    # (Re)add the loggers to the 'process' package logger (and its children)
+    logger.addHandler(logging_stream_handler)
+    logger.addHandler(logging_file_handler)
+
+    if working_directory_log_path is not None:
+        logging_file_input_location_handler = logging.FileHandler(
+            working_directory_log_path.as_posix(), mode="w"
+        )
+        logging_file_input_location_handler.setLevel(logging.INFO)
+        logging_file_input_location_handler.setFormatter(logging_formatter)
+        logger.addHandler(logging_file_input_location_handler)
 
 
 def main(args=None):
@@ -753,8 +770,6 @@ def main(args=None):
     :param args: Arguments to parse, defaults to None
     :type args: list, optional
     """
-
-    setup_loggers()
 
     Process(args)
 

@@ -12,7 +12,7 @@ cases, as even a steady-state reactor has to be started up.
 ## Start-up power requirements
 
 The auxiliary power reaching the plasma can be constrained to be more than the minimum allowable 
-value `p_hcd_injected_min_mw` by turning on constraint equation no. 40 with iteration variable no. 64 (`fp_hcd_injected_min_mw`). 
+value `p_hcd_injected_min_mw` by turning on constraint equation no. 40. 
 The value of `p_hcd_injected_min_mw` is set in the input file.
 
 The auxiliary power required during the start-up and ramp-up phase is not calculated.  (The code 
@@ -41,7 +41,7 @@ can be set as an iteration variable (65). The ramp-up and shutdown time in the p
 equal to `t_plant_pulse_plasma_current_ramp_up`. To ensure that the plasma current ramp rate during start-up is prevented from being 
 too high, as governed by the requirement to maintain plasma stability by ensuring that the induced 
 current has time to diffuse into the body of the plasma, constraint equation no. 41 should be 
-turned on with iteration variable no. 66 `ft_current_ramp_up` and input `t_current_ramp_up_min`, the minimum plasma current 
+turned on with input `t_current_ramp_up_min`, the minimum plasma current 
 ramp-up time.
 
 ## Burn time
@@ -49,7 +49,7 @@ ramp-up time.
 The length of the burn time is calculated from the surplus volt-seconds available from the Central 
 Solenoid and the other PF coils during the plasma burn phase, after the flux required during the 
 plasma start-up is taken into account. A minimum burn time (`t_burn_min`) can be enforced via 
-constraint equation no. 13 and iteration variable no 21 (`ft_burn_min`).
+constraint equation no. 13.
 
 ## Currents over time
 

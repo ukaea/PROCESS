@@ -175,10 +175,6 @@ fcupfsu: float = None
 """copper fraction of cable conductor (PF coils)"""
 
 
-fvs_cs_pf_total_ramp: float = None
-"""F-value for `constraint equation 51`"""
-
-
 i_pf_location: list[int] = None
 """Switch for location of PF coil group i:
 - =1 PF coil on top of central solenoid (flux ramp only)
@@ -535,10 +531,6 @@ b_cs_limit_max: float = None
 """Central solenoid max field limit [T]"""
 
 
-fb_cs_limit_max: float = None
-"""F-value for CS mmax field (`cons. 79`, `itvar 149`)"""
-
-
 f_dr_dz_cs_turn: float = None
 """Ratio of CS coil turn conduit length to depth"""
 
@@ -563,25 +555,26 @@ radius_cs_turn_cable_space: float = None
 
 
 def init_pfcoil_module():
-    global first_call
-    global cslimit
-    global nef
-    global nfxf
-    global ricpf
-    global ssq0
-    global stress_z_cs_self_peak_midplane
-    global sig_hoop
-    global forc_z_cs_self_peak_midplane
-    global r_pf_cs_current_filaments
-    global z_pf_cs_current_filaments
-    global c_pf_cs_current_filaments
-    global xind
-    global r_pf_coil_middle_group_array
-    global z_pf_coil_middle_group_array
-    global ccls
-    global ccl0
-    global bpf2
-    global vsdum
+    global \
+        first_call, \
+        cslimit, \
+        nef, \
+        nfxf, \
+        ricpf, \
+        ssq0, \
+        stress_z_cs_self_peak_midplane, \
+        sig_hoop, \
+        forc_z_cs_self_peak_midplane, \
+        r_pf_cs_current_filaments, \
+        z_pf_cs_current_filaments, \
+        c_pf_cs_current_filaments, \
+        xind, \
+        r_pf_coil_middle_group_array, \
+        z_pf_coil_middle_group_array, \
+        ccls, \
+        ccl0, \
+        bpf2, \
+        vsdum
 
     first_call = True
     cslimit = False
@@ -607,107 +600,106 @@ def init_pfcoil_module():
 
 def init_pfcoil_variables():
     """Initialise the PF coil variables"""
-    global alfapf
-    global alstroh
-    global i_cs_stress
-    global a_cs_poloidal
-    global a_cs_turn
-    global awpoh
-    global b_cs_peak_flat_top_end
-    global b_cs_peak_pulse_start
-    global b_pf_coil_peak
-    global ccl0_ma
-    global ccls_ma
-    global j_cs_pulse_start
-    global j_cs_flat_top_end
-    global c_pf_coil_turn
-    global c_pf_coil_turn_peak_input
-    global c_pf_cs_coil_pulse_start_ma
-    global c_pf_cs_coil_flat_top_ma
-    global c_pf_cs_coil_pulse_end_ma
-    global etapsu
-    global f_j_cs_start_end_flat_top
-    global f_j_cs_start_pulse_end_flat_top
-    global fcuohsu
-    global fcupfsu
-    global fvs_cs_pf_total_ramp
-    global i_pf_location
-    global i_pf_conductor
-    global itr_sum
-    global i_cs_superconductor
-    global i_pf_superconductor
-    global j_crit_str_cs
-    global j_crit_str_pf
-    global i_pf_current
-    global i_r_pf_outside_tf_placement
-    global j_cs_conductor_critical_pulse_start
-    global j_cs_conductor_critical_flat_top_end
-    global jcableoh_bop
-    global jcableoh_eof
-    global n_pf_cs_plasma_circuits
-    global n_pf_coils_in_group
-    global n_cs_current_filaments
-    global n_pf_coil_groups
-    global n_cs_pf_coils
-    global f_z_cs_tf_internal
-    global f_a_cs_turn_steel
-    global pf_current_safety_factor
-    global pfcaseth
-    global rho_pf_coil
-    global rhopfbus
-    global m_pf_coil_max
-    global r_pf_coil_outer_max
-    global p_pf_electric_supplies_mw
-    global p_cs_resistive_flat_top
-    global p_pf_coil_resistive_total_flat_top
-    global r_pf_coil_inner
-    global r_pf_coil_outer
-    global c_pf_cs_coils_peak_ma
-    global j_pf_coil_wp_peak
-    global j_cs_critical_flat_top_end
-    global j_cs_critical_pulse_start
-    global j_pf_wp_critical
-    global r_cs_middle
-    global dz_cs_full
-    global dr_pf_tf_outboard_out_offset
-    global r_pf_coil_middle
-    global dr_pf_cs_middle_offset
-    global rpf2
-    global rref
-    global s_shear_cs_peak
-    global sigpfcalw
-    global sigpfcf
-    global ind_pf_cs_plasma_mutual
-    global temp_cs_superconductor_margin
-    global n_pf_coil_turns
-    global f_a_pf_coil_void
-    global f_a_cs_void
-    global vs_cs_pf_total_burn
-    global vs_pf_coils_total_burn
-    global vs_pf_coils_total_ramp
-    global vs_pf_coils_total_pulse
-    global vs_cs_total_pulse
-    global vs_cs_burn
-    global vs_cs_ramp
-    global vs_cs_pf_total_ramp
-    global vs_cs_pf_total_pulse
-    global f_c_pf_cs_peak_time_array
-    global m_pf_coil_conductor_total
-    global m_pf_coil_structure_total
-    global m_pf_coil_conductor
-    global m_pf_coil_structure
-    global z_pf_coil_upper
-    global z_pf_coil_lower
-    global z_pf_coil_middle
-    global zref
-    global b_cs_limit_max
-    global fb_cs_limit_max
-    global f_dr_dz_cs_turn
-    global dr_cs_turn
-    global dr_cs_full
-    global dz_cs_turn
-    global radius_cs_turn_corners
-    global radius_cs_turn_cable_space
+    global \
+        alfapf, \
+        alstroh, \
+        i_cs_stress, \
+        a_cs_poloidal, \
+        a_cs_turn, \
+        awpoh, \
+        b_cs_peak_flat_top_end, \
+        b_cs_peak_pulse_start, \
+        b_pf_coil_peak, \
+        ccl0_ma, \
+        ccls_ma, \
+        j_cs_pulse_start, \
+        j_cs_flat_top_end, \
+        c_pf_coil_turn, \
+        c_pf_coil_turn_peak_input, \
+        c_pf_cs_coil_pulse_start_ma, \
+        c_pf_cs_coil_flat_top_ma, \
+        c_pf_cs_coil_pulse_end_ma, \
+        etapsu, \
+        f_j_cs_start_end_flat_top, \
+        f_j_cs_start_pulse_end_flat_top, \
+        fcuohsu, \
+        fcupfsu, \
+        i_pf_location, \
+        i_pf_conductor, \
+        itr_sum, \
+        i_cs_superconductor, \
+        i_pf_superconductor, \
+        j_crit_str_cs, \
+        j_crit_str_pf, \
+        i_pf_current, \
+        i_r_pf_outside_tf_placement, \
+        j_cs_conductor_critical_pulse_start, \
+        j_cs_conductor_critical_flat_top_end, \
+        jcableoh_bop, \
+        jcableoh_eof, \
+        n_pf_cs_plasma_circuits, \
+        n_pf_coils_in_group, \
+        n_cs_current_filaments, \
+        n_pf_coil_groups, \
+        n_cs_pf_coils, \
+        f_z_cs_tf_internal, \
+        f_a_cs_turn_steel, \
+        pf_current_safety_factor, \
+        pfcaseth, \
+        rho_pf_coil, \
+        rhopfbus, \
+        m_pf_coil_max, \
+        r_pf_coil_outer_max, \
+        p_pf_electric_supplies_mw, \
+        p_cs_resistive_flat_top, \
+        p_pf_coil_resistive_total_flat_top, \
+        r_pf_coil_inner, \
+        r_pf_coil_outer, \
+        c_pf_cs_coils_peak_ma, \
+        j_pf_coil_wp_peak, \
+        j_cs_critical_flat_top_end, \
+        j_cs_critical_pulse_start, \
+        j_pf_wp_critical, \
+        r_cs_middle, \
+        dz_cs_full, \
+        dr_pf_tf_outboard_out_offset, \
+        r_pf_coil_middle, \
+        dr_pf_cs_middle_offset, \
+        rpf2, \
+        rref, \
+        s_shear_cs_peak, \
+        sigpfcalw, \
+        sigpfcf, \
+        ind_pf_cs_plasma_mutual, \
+        temp_cs_superconductor_margin, \
+        n_pf_coil_turns, \
+        f_a_pf_coil_void, \
+        f_a_cs_void, \
+        vs_cs_pf_total_burn, \
+        vs_pf_coils_total_burn, \
+        vs_pf_coils_total_ramp, \
+        vs_pf_coils_total_pulse, \
+        vs_cs_total_pulse, \
+        vs_cs_burn, \
+        vs_cs_ramp, \
+        vs_cs_pf_total_ramp, \
+        vs_cs_pf_total_pulse, \
+        f_c_pf_cs_peak_time_array, \
+        m_pf_coil_conductor_total, \
+        m_pf_coil_structure_total, \
+        m_pf_coil_conductor, \
+        m_pf_coil_structure, \
+        z_pf_coil_upper, \
+        z_pf_coil_lower, \
+        z_pf_coil_middle, \
+        zref, \
+        b_cs_limit_max, \
+        f_dr_dz_cs_turn, \
+        dr_cs_turn, \
+        dr_cs_full, \
+        dz_cs_turn, \
+        radius_cs_turn_corners, \
+        radius_cs_turn_cable_space
 
     alfapf = 5e-10
     alstroh = 4.0e8
@@ -732,7 +724,6 @@ def init_pfcoil_variables():
     f_j_cs_start_pulse_end_flat_top = 0.9
     fcuohsu = 0.7
     fcupfsu = 0.69
-    fvs_cs_pf_total_ramp = 1.0
     i_pf_location = np.array([2, 2, 3, 0, 0, 0, 0, 0, 0, 0])
     i_pf_conductor = 0
     itr_sum = 0.0
@@ -803,7 +794,6 @@ def init_pfcoil_variables():
     z_pf_coil_middle = np.zeros(NGC2)
     zref = np.array([3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     b_cs_limit_max = 13.0
-    fb_cs_limit_max = 1.0
     f_dr_dz_cs_turn = 70.0 / 22.0
     dr_cs_turn = 0.0
     dr_cs_full = 0.0

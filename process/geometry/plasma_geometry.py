@@ -102,8 +102,7 @@ def plasma_geometry(
 
         # Sauter
         return PlasmaGeometry(
-            rs=rmajor
-            + rminor * np.cos(x + triang * np.sin(x) - square * np.sin(2 * x)),
+            rs=rmajor + rminor * np.cos(x + triang * np.sin(x) - square * np.sin(2 * x)),
             zs=kappa * rminor * np.sin(x + square * np.sin(2 * x)),
             kappa=kappa,
         )

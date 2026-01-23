@@ -16,8 +16,6 @@ from pathlib import Path
 from sys import stderr
 from time import sleep
 
-from numpy.random import default_rng
-
 from process.data_structure import numerics
 from process.io.data_structure_dicts import get_dicts
 from process.io.in_dat import InDat
@@ -350,20 +348,20 @@ def no_unfeasible_mfile(wdir="."):
 ################################
 
 
-def vary_iteration_variables(itervars, lbs, ubs, u_seed=None):
+def vary_iteration_variables(itervars, lbs, ubs, generator):
     """
     Routine to change the iteration variables in IN.DAT
     within given bounds.
-    itervars - string list of all iteration variable names
-    lbs      - float list of lower bounds for variables
-    ubs      - float list of upper bounds for variables
+    itervars  - string list of all iteration variable names
+    lbs       - float list of lower bounds for variables
+    ubs       - float list of upper bounds for variables
+    generator - Generator numpy generator to create random numbers
     """
 
     in_dat = InDat()
 
     new_values = []
 
-    generator = default_rng(seed=u_seed)
     for varname, lbnd, ubnd in zip(itervars, lbs, ubs, strict=False):
         new_value = generator.uniform(lbnd, ubnd)
         new_values += [new_value]

@@ -998,7 +998,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        physics_variables, "n_divertors", powerflowcalcparam.n_divertors
+        divertor_variables, "n_divertors", powerflowcalcparam.n_divertors
     )
 
     monkeypatch.setattr(
@@ -1023,9 +1023,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         primary_pumping_variables, "gamma_he", powerflowcalcparam.gamma_he
     )
 
-    monkeypatch.setattr(
-        primary_pumping_variables, "t_in_bb", powerflowcalcparam.t_in_bb
-    )
+    monkeypatch.setattr(primary_pumping_variables, "t_in_bb", powerflowcalcparam.t_in_bb)
 
     monkeypatch.setattr(
         primary_pumping_variables, "t_out_bb", powerflowcalcparam.t_out_bb
@@ -1043,13 +1041,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.expected_p_fw_rad_total_mw
     )
 
-    assert fwbs_variables.psurffwi == pytest.approx(
-        powerflowcalcparam.expected_psurffwi
-    )
+    assert fwbs_variables.psurffwi == pytest.approx(powerflowcalcparam.expected_psurffwi)
 
-    assert fwbs_variables.psurffwo == pytest.approx(
-        powerflowcalcparam.expected_psurffwo
-    )
+    assert fwbs_variables.psurffwo == pytest.approx(powerflowcalcparam.expected_psurffwo)
 
     assert heat_transport_variables.p_shld_coolant_pump_mw == pytest.approx(
         powerflowcalcparam.expected_p_shld_coolant_pump_mw
@@ -1469,7 +1463,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
     monkeypatch.setattr(
-        physics_variables, "n_divertors", componentmassesparam.n_divertors
+        divertor_variables, "n_divertors", componentmassesparam.n_divertors
     )
     monkeypatch.setattr(
         physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface
@@ -1629,9 +1623,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.m_blkt_li2o == pytest.approx(
         componentmassesparam.expected_m_blkt_li2o
     )
-    assert fwbs_variables.whtshld == pytest.approx(
-        componentmassesparam.expected_whtshld
-    )
+    assert fwbs_variables.whtshld == pytest.approx(componentmassesparam.expected_whtshld)
     assert fwbs_variables.wpenshld == pytest.approx(
         componentmassesparam.expected_wpenshld
     )

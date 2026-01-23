@@ -709,9 +709,7 @@ def plot_main_power_flow(
     )
     new_ax.imshow(hcd_injector_1)
     new_ax.axis("off")
-    new_ax = axis.inset_axes(
-        [-0.2, 0.5, 0.15, 0.5], transform=axis.transAxes, zorder=10
-    )
+    new_ax = axis.inset_axes([-0.2, 0.5, 0.15, 0.5], transform=axis.transAxes, zorder=10)
     new_ax.imshow(hcd_injector_2)
     new_ax.axis("off")
 
@@ -974,9 +972,7 @@ def plot_main_power_flow(
         turbine = mpimg.imread(img_path.open("rb"))
 
     # Display the turbine image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        [1.1, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10
-    )
+    new_ax = axis.inset_axes([1.1, 0.0, 0.15, 0.15], transform=axis.transAxes, zorder=10)
     new_ax.imshow(turbine)
     new_ax.axis("off")
 
@@ -1310,9 +1306,7 @@ def plot_main_power_flow(
         fw = mpimg.imread(img_path.open("rb"))
 
     # Display the first wall image over the figure, not the axes
-    new_ax = axis.inset_axes(
-        [0.4, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10
-    )
+    new_ax = axis.inset_axes([0.4, 0.625, 0.4, 0.4], transform=axis.transAxes, zorder=10)
     new_ax.imshow(fw)
     new_ax.axis("off")
 
@@ -2214,7 +2208,7 @@ def plot_main_power_flow(
     # TF coil power box
     axis.text(
         0.325,
-        0.05,
+        0.075,
         f"TF coils:\n{mfile.get('p_tf_electric_supplies_mw', scan=scan):.3f} MWe",
         fontsize=9,
         verticalalignment="bottom",
@@ -2278,7 +2272,7 @@ def plot_main_power_flow(
     # Recirculated power to TF
     axis.annotate(
         "",
-        xy=(0.35, 0.075),
+        xy=(0.35, 0.1),
         xytext=(0.35, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={
@@ -2721,6 +2715,7 @@ def plot_main_plasma_information(
         f"Total volt-second consumption: {mfile.get('vs_plasma_total_required', scan=scan):.4f} Vs                \n"
         f"  - Internal volt-seconds: {mfile.get('vs_plasma_internal', scan=scan):.4f} Vs\n"
         f"  - Volt-seconds needed for burn: {mfile.get('vs_plasma_burn_required', scan=scan):.4f} Vs\n"
+        f"  - Volt-seconds needed for ramp: {mfile.get('vs_plasma_ramp_required', scan=scan):.4f} Vs | $C_{{\\text{{ejima}}}}$: {mfile.get('ejima_coeff', scan=scan):.4f}\n"
         f"$V_{{\\text{{loop}}}}$: {mfile.get('v_plasma_loop_burn', scan=scan):.4f} V\n"
         f"$\\Omega_{{\\text{{p}}}}$: {mfile.get('res_plasma', scan=scan):.4e} $\\Omega$\n"
         f"Plasma resistive diffusion time: {mfile.get('t_plasma_res_diffusion', scan=scan):,.4f} s\n"
@@ -2832,9 +2827,7 @@ def plot_main_plasma_information(
     # =========================================
 
     # Load the neutron image
-    with resources.path(
-        "process.io", "alpha_particle.png"
-    ) as alpha_particle_image_path:
+    with resources.path("process.io", "alpha_particle.png") as alpha_particle_image_path:
         # Use importlib.resources to locate the image
         alpha_particle = mpimg.imread(alpha_particle_image_path.open("rb"))
 
@@ -3484,7 +3477,12 @@ def color_key(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal
     labels = [
         ("CS coil", SOLENOID_COLOUR[colour_scheme - 1]),
         ("CS comp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
-        ("TF coil", TFC_COLOUR[colour_scheme - 1]),
+        (
+            "TF coil",
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
+        ),
         ("Thermal shield", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
         ("VV & shield", VESSEL_COLOUR[colour_scheme - 1]),
         ("Blanket", BLANKET_COLOUR[colour_scheme - 1]),
@@ -3497,8 +3495,10 @@ def color_key(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal
     if (mfile.get("i_hcd_primary", scan=scan) in [5, 8]) or (
         mfile.get("i_hcd_secondary", scan=scan) in [5, 8]
     ):
-        labels.append(("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]))
-        labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
+        labels.extend((
+            ("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]),
+            ("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]),
+        ))
     else:
         labels.append(("Cryostat", CRYOSTAT_COLOUR[colour_scheme - 1]))
 
@@ -3563,7 +3563,12 @@ def toroidal_cross_section(
     for v, colours in [
         ("dr_cs", SOLENOID_COLOUR[colour_scheme - 1]),
         ("dr_cs_precomp", CSCOMPRESSION_COLOUR[colour_scheme - 1]),
-        ("dr_tf_inboard", TFC_COLOUR[colour_scheme - 1]),
+        (
+            "dr_tf_inboard",
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
+        ),
         ("dr_shld_thermal_inboard", THERMAL_SHIELD_COLOUR[colour_scheme - 1]),
         ("dr_vv_inboard", VESSEL_COLOUR[colour_scheme - 1]),
         ("dr_shld_inboard", VESSEL_COLOUR[colour_scheme - 1]),
@@ -3634,7 +3639,9 @@ def toroidal_cross_section(
             r3=r3,
             r4=r4,
             w=w,
-            facecolor=TFC_COLOUR[colour_scheme - 1],
+            facecolor=TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
         )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
@@ -3794,9 +3801,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     fgwsep_out = mfile.get("fgwsep_out", scan=scan)
     nd_plasma_electrons_vol_avg = mfile.get("nd_plasma_electrons_vol_avg", scan=scan)
 
-    nd_plasma_separatrix_electron = mfile.get(
-        "nd_plasma_separatrix_electron", scan=scan
-    )
+    nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"$n \ [10^{19}\ \mathrm{m}^{-3}]$")
@@ -4310,9 +4315,7 @@ def profiles_with_pedestal(mfile, scan: int):
     )
     ne0 = mfile.get("nd_plasma_electron_on_axis", scan=scan)
     rho = np.linspace(0, 1.0, n_plasma_profile_elements)
-    nd_plasma_separatrix_electron = mfile.get(
-        "nd_plasma_separatrix_electron", scan=scan
-    )
+    nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
     temp_plasma_pedestal_kev = mfile.get("temp_plasma_pedestal_kev", scan=scan)
     temp_plasma_separatrix_kev = mfile.get("temp_plasma_separatrix_kev", scan=scan)
     tbeta = mfile.get("tbeta", scan=scan)
@@ -4802,9 +4805,7 @@ def plot_vacuum_vessel_and_divertor(
         )
 
 
-def plot_shield(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour_scheme
-):
+def plot_shield(axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour_scheme):
     """Function to plot shield
 
     Arguments:
@@ -5347,6 +5348,7 @@ def plot_tf_coils(
     y5 = mfile.get("z_tf_arc(5)", scan=scan)
 
     dr_tf_inboard = mfile.get("dr_tf_inboard", scan=scan)
+    dr_tf_outboard = mfile.get("dr_tf_outboard", scan=scan)
     dr_shld_thermal_inboard = mfile.get("dr_shld_thermal_inboard", scan=scan)
     dr_shld_thermal_outboard = mfile.get("dr_shld_thermal_outboard", scan=scan)
     dr_tf_shld_gap = mfile.get("dr_tf_shld_gap", scan=scan)
@@ -5365,7 +5367,12 @@ def plot_tf_coils(
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         ),
         (dr_tf_shld_gap, "white"),
-        (0.0, TFC_COLOUR[colour_scheme - 1]),
+        (
+            0.0,
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=scan) != 0
+            else "#b87333",
+        ),
     ):
         # Check for TF coil shape
         if "i_tf_shape" in mfile.data:
@@ -5384,6 +5391,7 @@ def plot_tf_coils(
                 y4=y4,
                 y5=y5,
                 dr_tf_inboard=dr_tf_inboard,
+                dr_tf_outboard=dr_tf_outboard,
                 offset_in=offset,
             )
 
@@ -5454,9 +5462,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) 
     i_tf_case_geom = mfile.get("i_tf_case_geom", scan=scan)
     i_tf_turns_integer = mfile.get("i_tf_turns_integer", scan=scan)
     b_tf_inboard_peak_symmetric = mfile.get("b_tf_inboard_peak_symmetric", scan=scan)
-    b_tf_inboard_peak_with_ripple = mfile.get(
-        "b_tf_inboard_peak_with_ripple", scan=scan
-    )
+    b_tf_inboard_peak_with_ripple = mfile.get("b_tf_inboard_peak_with_ripple", scan=scan)
     f_b_tf_inboard_peak_ripple_symmetric = mfile.get(
         "f_b_tf_inboard_peak_ripple_symmetric", scan=scan
     )
@@ -6498,6 +6504,28 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
     axis.axvline(x=r_tf_wp_inboard_centre, **x_kwargs)
     axis.axvline(x=r_tf_inboard_out, **x_kwargs)
 
+    axis.minorticks_on()
+    axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
+    axis.set_ylim((y14[-1] * 1.65), (-y14[-1] * 1.65))
+
+    axis.set_title("Top-down view of inboard TF coil at midplane")
+    axis.set_xlabel("Radial distance [m]")
+    axis.set_ylabel("Toroidal distance [m]")
+    axis.legend(loc="upper left")
+
+    axis.text(
+        0.05,
+        0.975,
+        "*Turn insulation and cooling pipes not shown",
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        color="black",
+        transform=fig.transFigure,
+    )
+
+
+def plot_resistive_tf_info(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> None:
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
         f"$\\mathbf{{Casing:}}$\n \n"
@@ -6587,24 +6615,34 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
         bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 1.0, "linewidth": 2},
     )
 
-    axis.minorticks_on()
-    axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
-    axis.set_ylim((y14[-1] * 1.65), (-y14[-1] * 1.65))
-
-    axis.set_title("Top-down view of inboard TF coil at midplane")
-    axis.set_xlabel("Radial distance [m]")
-    axis.set_ylabel("Toroidal distance [m]")
-    axis.legend(loc="upper left")
-
+    # Add info about the Winding Pack
+    textstr_cooling = (
+        f"$\\mathbf{{Cooling \\ info:}}$\n \n"
+        f"Coolant inlet temperature: {mfile.get('temp_cp_coolant_inlet', scan=scan):.2f} K\n"
+        f"Coolant temperature rise: {mfile.get('dtemp_cp_coolant', scan=scan):.2f} K\n"
+        f"Coolant velocity: {mfile.get('vel_cp_coolant_midplane', scan=scan):.2f} $\\mathrm{{ms^{{-1}}}}$\n\n"
+        f"Average CP temperature: {mfile.get('temp_cp_average', scan=scan):.2f} K\n"
+        f"CP resistivity: {mfile.get('rho_cp', scan=scan):.2e} $\\Omega \\mathrm{{m}}$\n"
+        f"Leg resistivity: {mfile.get('rho_tf_leg', scan=scan):.2e} $\\Omega \\mathrm{{m}}$\n"
+        f"Leg resistance: {mfile.get('res_tf_leg', scan=scan):.2e} $\\Omega$\n"
+        f"CP resistive losses: {mfile.get('p_cp_resistive', scan=scan):,.2f} $\\mathrm{{W}}$\n"
+        f"Leg resistive losses: {mfile.get('p_tf_leg_resistive', scan=scan):,.2f} $\\mathrm{{W}}$\n"
+        f"Joints resistive losses: {mfile.get('p_tf_joints_resistive', scan=scan):,.2f} $\\mathrm{{W}}$\n"
+    )
     axis.text(
-        0.05,
-        0.975,
-        "*Turn insulation and cooling pipes not shown",
+        0.55,
+        0.35,
+        textstr_cooling,
         fontsize=9,
         verticalalignment="top",
         horizontalalignment="left",
-        color="black",
         transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
     )
 
 
@@ -6678,10 +6716,7 @@ def plot_tf_cable_in_conduit_turn(
                 candidate_y = y_pos
 
                 # Check if within bounds
-                if (
-                    candidate_x > x + width - radius
-                    or candidate_y > y + height - radius
-                ):
+                if candidate_x > x + width - radius or candidate_y > y + height - radius:
                     continue
 
                 # Check collision with cooling pipe
@@ -6746,8 +6781,7 @@ def plot_tf_cable_in_conduit_turn(
                 collision = False
                 for existing_x, existing_y in placed_strands:
                     distance = np.sqrt(
-                        (candidate_x - existing_x) ** 2
-                        + (candidate_y - existing_y) ** 2
+                        (candidate_x - existing_x) ** 2 + (candidate_y - existing_y) ** 2
                     )
                     if distance < strand_diameter:
                         collision = True
@@ -6801,9 +6835,7 @@ def plot_tf_cable_in_conduit_turn(
     steel_thickness = mfile.get("dx_tf_turn_steel", scan=scan)
     insulation_thickness = mfile.get("dx_tf_turn_insulation", scan=scan)
 
-    a_tf_turn_cable_space_no_void = mfile.get(
-        "a_tf_turn_cable_space_no_void", scan=scan
-    )
+    a_tf_turn_cable_space_no_void = mfile.get("a_tf_turn_cable_space_no_void", scan=scan)
     radius_tf_turn_cable_space_corners = mfile.get(
         "radius_tf_turn_cable_space_corners", scan=scan
     )
@@ -7186,9 +7218,7 @@ def plot_tf_cable_in_conduit_turn(
     )
 
 
-def plot_cable_in_conduit_cable(
-    axis: plt.Axes, fig, mfile: mf.MFile, scan: int
-) -> None:
+def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int) -> None:
     """
     Plots TF coil CICC cable cross-section.
     """
@@ -7786,7 +7816,7 @@ def plot_magnetics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
             (sig_cond, "TF conductor max TRESCA stress", "MPa"),
             (sig_case, "TF bucking max TRESCA stress", "MPa"),
             (fcoolcp, "CP cooling fraction", "%"),
-            ("vcool", "Maximum coolant flow speed", "ms$^{-1}$"),
+            ("vel_cp_coolant_midplane", "Maximum coolant flow speed", "ms$^{-1}$"),
             (p_cp_resistive, "CP Resisitive heating", "MW"),
             (
                 p_tf_leg_resistive,
@@ -8814,7 +8844,9 @@ def plot_radial_build(
         SOLENOID_COLOUR[colour_scheme - 1],
         CSCOMPRESSION_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1],
+        TFC_COLOUR[colour_scheme - 1]
+        if mfile.get("i_tf_sup", scan=-1) != 0
+        else "#b87333",
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
@@ -8834,10 +8866,16 @@ def plot_radial_build(
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1],
+        TFC_COLOUR[colour_scheme - 1]
+        if mfile.get("i_tf_sup", scan=-1) != 0
+        else "#b87333",
     ]
     if int(mfile.get("i_tf_inside_cs", scan=-1)) == 1:
-        radial_color[1] = TFC_COLOUR[colour_scheme - 1]
+        radial_color[1] = (
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333"
+        )
         radial_color[2] = "white"
         radial_color[3] = SOLENOID_COLOUR[colour_scheme - 1]
         radial_color[4] = CSCOMPRESSION_COLOUR[colour_scheme - 1]
@@ -8949,7 +8987,9 @@ def plot_lower_vertical_build(
         "white",
         THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        TFC_COLOUR[colour_scheme - 1],
+        TFC_COLOUR[colour_scheme - 1]
+        if mfile.get("i_tf_sup", scan=-1) != 0
+        else "#b87333",
         "white",
     ]
 
@@ -9055,7 +9095,9 @@ def plot_upper_vertical_build(
             "white",
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
             "white",
-            TFC_COLOUR[colour_scheme - 1],
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333",
             "white",
         ]
     # Double null case
@@ -9093,7 +9135,9 @@ def plot_upper_vertical_build(
             "white",
             THERMAL_SHIELD_COLOUR[colour_scheme - 1],
             "white",
-            TFC_COLOUR[colour_scheme - 1],
+            TFC_COLOUR[colour_scheme - 1]
+            if mfile.get("i_tf_sup", scan=-1) != 0
+            else "#b87333",
             "white",
         ]
 
@@ -9620,7 +9664,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
-        zorder=100,  # Ensure label is on top of all plots
+        zorder=101,  # Ensure label is on top of all plots
     )
 
     # ==========================================================
@@ -9747,6 +9791,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         xy=(r_tf_inboard_in, 0.0),
         xytext=(r_tf_outboard_in + dr_tf_outboard, 0.0),
         arrowprops={"arrowstyle": "<|-|>", "color": "black"},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # Add a label for the full coil width
@@ -9759,6 +9804,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # =============================================================
@@ -9831,6 +9877,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         color="black",
         verticalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # ==============================================================
@@ -9866,6 +9913,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=101,  # Ensure label is on top of all plots
     )
 
     # =============================================================
@@ -10375,9 +10423,7 @@ def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
         markersize=mark_size,
         color="crimson",
     )
-    ax.plot(
-        bound_radius, bound_vm_stress, "|", markersize=mark_size, color="darkviolet"
-    )
+    ax.plot(bound_radius, bound_vm_stress, "|", markersize=mark_size, color="darkviolet")
     ax.grid(True)
     ax.set_ylabel(r"$\sigma$ [$MPa$]", fontsize=axis_tick_size)
     ax.set_title("Structure Stress Summary")
@@ -11356,9 +11402,7 @@ def plot_plasma_poloidal_pressure_contours(
     ]
 
     # Convert pressure to kPa
-    pres_plasma_electron_profile_kpa = [
-        p / 1000.0 for p in pres_plasma_electron_profile
-    ]
+    pres_plasma_electron_profile_kpa = [p / 1000.0 for p in pres_plasma_electron_profile]
     pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
     pres_plasma_profile = [
         e + i
@@ -11666,9 +11710,7 @@ def plot_fusion_rate_contours(
     dd_helion_grid, _r_grid, _z_grid = interp1d_profile(
         fusrat_plasma_dd_helion_profile, mfile, scan
     )
-    dhe3_grid, r_grid, z_grid = interp1d_profile(
-        fusrat_plasma_dhe3_profile, mfile, scan
-    )
+    dhe3_grid, r_grid, z_grid = interp1d_profile(fusrat_plasma_dhe3_profile, mfile, scan)
 
     dt_axes = fig1.add_subplot(121, aspect="equal")
     dd_triton_axes = fig1.add_subplot(122, aspect="equal")
@@ -12305,16 +12347,125 @@ def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.minorticks_on()
 
 
+def plot_debye_length_profile(axis, mfile_data, scan):
+    """Plot the Debye length profile on the given axis."""
+    len_plasma_debye_electron_profile = [
+        mfile_data.data[f"len_plasma_debye_electron_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    # Convert to micrometres (1e-6 m)
+    len_plasma_debye_electron_profile_um = [
+        length * 1e6 for length in len_plasma_debye_electron_profile
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(len_plasma_debye_electron_profile_um)),
+        len_plasma_debye_electron_profile_um,
+        color="blue",
+        linestyle="-",
+        label=r"$\lambda_{Debye,e}$",
+    )
+
+    axis.set_ylabel(r"Debye Length [$\mu$m]")
+
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.set_xlim([0, 1.025])
+    axis.minorticks_on()
+    axis.legend()
+
+
+def plot_velocity_profile(axis, mfile_data, scan):
+    """Plot the electron thermal velocity profile on the given axis."""
+    vel_plasma_electron_profile = [
+        mfile_data.data[f"vel_plasma_electron_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(vel_plasma_electron_profile)),
+        vel_plasma_electron_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$v_{e}$",
+    )
+
+    axis.set_ylabel("Velocity [m/s]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.set_xlim([0, 1.025])
+    axis.minorticks_on()
+    axis.legend()
+
+
+def plot_frequency_profile(axis, mfile_data, scan):
+    """Plot the electron thermal frequency profile on the given axis."""
+    freq_plasma_electron_profile = [
+        mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+    freq_plasma_larmor_toroidal_electron_profile = [
+        mfile_data.data[f"freq_plasma_larmor_toroidal_electron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
+
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+        np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+        color="red",
+        linestyle="-",
+        label=r"$f_{Larmor,toroidal,e}$",
+    )
+    x = np.linspace(0, 1, len(freq_plasma_electron_profile))
+    y = np.array(freq_plasma_electron_profile) / 1e9
+    # original curve
+    axis.plot(x, y, color="blue", linestyle="-", label=r"$\omega_{p,e}$")
+    # mirrored across the y-axis (drawn at negative rho)
+    axis.plot(-x, y, color="blue", linestyle="-", label="_nolegend_")
+    axis.set_xlim(-1.025, 1.025)
+
+    axis.set_ylabel("Frequency [GHz]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
+def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
+    """Plot the plasma coloumb logarithms on the given axis."""
+    plasma_coulomb_log_electron_electron_profile = [
+        mfile_data.data[f"plasma_coulomb_log_electron_electron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
+        plasma_coulomb_log_electron_electron_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$ln \Lambda_{e-e}$",
+    )
+
+    axis.set_ylabel("Coulomb Logarithm")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
 def plot_analytic_equilibrium(
     axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Figure
 ):
     i_single_null = mfile.get("i_single_null", scan=scan)
-    beta_thermal_toroidal_vol_avg = mfile.get(
-        "beta_thermal_toroidal_vol_avg", scan=scan
-    )
-    beta_thermal_poloidal_vol_avg = mfile.get(
-        "beta_thermal_poloidal_vol_avg", scan=scan
-    )
+    beta_thermal_toroidal_vol_avg = mfile.get("beta_thermal_toroidal_vol_avg", scan=scan)
+    beta_thermal_poloidal_vol_avg = mfile.get("beta_thermal_poloidal_vol_avg", scan=scan)
     beta_thermal_vol_avg = mfile.get("beta_thermal_vol_avg", scan=scan)
     beta_norm_thermal = mfile.get("beta_norm_thermal", scan=scan)
 
@@ -12438,9 +12589,7 @@ def plot_analytic_equilibrium(
     c = axis.contourf(
         r_plot, z_plot, psi_n.T, levels=np.linspace(0, 1.2, 13), cmap="plasma"
     )
-    axis.contour(
-        r_plot, z_plot, psi_n.T, colors="black", levels=np.linspace(0.1, 1, 10)
-    )
+    axis.contour(r_plot, z_plot, psi_n.T, colors="black", levels=np.linspace(0.1, 1, 10))
     fig.colorbar(c, ax=axis, label="Normalised Poloidal Flux")
 
     ax_equil_full = fig.add_subplot(2, 4, 1, aspect="equal")
@@ -12570,9 +12719,7 @@ def plot_analytic_equilibrium(
 
     # Use PROCESS reported total beta as the reference
     if np.isfinite(beta_thermal_vol_avg) and abs(beta_thermal_vol_avg) > 0:
-        rel_diff_btot = (
-            plasma.beta_total - beta_thermal_vol_avg
-        ) / beta_thermal_vol_avg
+        rel_diff_btot = (plasma.beta_total - beta_thermal_vol_avg) / beta_thermal_vol_avg
     else:
         rel_diff_btot = np.nan
     pct_diff_btot = rel_diff_btot * 100 if np.isfinite(rel_diff_btot) else np.nan
@@ -12636,6 +12783,47 @@ def plot_analytic_equilibrium(
         label="Magnetic axis",
     )
     axis.legend(loc="upper right", fontsize=8)
+
+    ax_poloidal_field = fig.add_subplot(4, 2, 6)
+    ax_poloidal_field.set_position([
+        0.6,
+        0.3,
+        0.35,
+        0.15,
+    ])  # [left, bottom, width, height]
+
+    ax_poloidal_field.plot(
+        r_plot,
+        plasma.toroidal_current_density_ka_per_m2(r=r_plot),
+        color="black",
+        label="Equilibrium Solved",
+    )
+    ax_poloidal_field.set_xlabel("Radius [m]")
+    ax_poloidal_field.grid(True, linestyle="--", alpha=0.5)
+    ax_poloidal_field.minorticks_on()
+    ax_poloidal_field.set_ylabel("Toroidal Current Density [kA/m$^2$]")
+    ax_poloidal_field.set_title("Equilibrium Toroidal Current Density Profile")
+
+    ax_toroidal_field = fig.add_subplot(4, 2, 8)
+    ax_toroidal_field.set_position([
+        0.6,
+        0.1,
+        0.35,
+        0.15,
+    ])  # [left, bottom, width, height]
+
+    ax_toroidal_field.plot(
+        r_plot,
+        plasma.toroidal_field(r=r_plot, psi_norm=psi_n_midplane),
+        color="black",
+    )
+    ax_toroidal_field.set_xlabel("Radius [m]")
+    ax_toroidal_field.grid(True, linestyle="--", alpha=0.5)
+    ax_toroidal_field.minorticks_on()
+    ax_toroidal_field.set_ylabel("Toroidal Magnetic Field [T]")
+
+    # Add title to the equilibrium analysis page
+    fig.suptitle("Solov'ev Profiles Equilibrium Analysis", fontsize=16, y=0.95)
 
 
 def main_plot(
@@ -12809,9 +12997,14 @@ def main_plot(
     plot_density_limit_comparison(figs[13].add_subplot(221), m_file, scan)
     plot_confinement_time_comparison(figs[13].add_subplot(224), m_file, scan)
 
+    plot_debye_length_profile(figs[14].add_subplot(232), m_file, scan)
+    plot_velocity_profile(figs[14].add_subplot(233), m_file, scan)
+    plot_frequency_profile(figs[14].add_subplot(212), m_file, scan)
+    plot_plasma_coloumb_logarithms(figs[14].add_subplot(231), m_file, scan)
+
     # Plot poloidal cross-section
     poloidal_cross_section(
-        figs[14].add_subplot(121, aspect="equal"),
+        figs[15].add_subplot(121, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -12821,7 +13014,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        figs[14].add_subplot(122, aspect="equal"),
+        figs[15].add_subplot(122, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -12829,19 +13022,19 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = figs[14].add_subplot(222)
+    ax17 = figs[15].add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
-    ax18 = figs[15].add_subplot(211)
+    ax18 = figs[16].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = figs[16].add_subplot(211)
+    ax185 = figs[17].add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = figs[16].add_subplot(212)
+    ax18b = figs[17].add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
@@ -12849,48 +13042,52 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == 1:
         # TF coil with WP
-        ax19 = figs[17].add_subplot(221, aspect="equal")
-        # Half height, a bit wider, top left
-        ax19.set_position([0.025, 0.45, 0.5, 0.5])
-        plot_superconducting_tf_wp(ax19, m_file, scan, figs[17])
+        ax19 = figs[18].add_subplot(221, aspect="equal")
+        ax19.set_position([
+            0.025,
+            0.45,
+            0.5,
+            0.5,
+        ])  # Half height, a bit wider, top left
+        plot_superconducting_tf_wp(ax19, m_file, scan, figs[18])
 
         # TF coil turn structure
-        ax20 = figs[18].add_subplot(325, aspect="equal")
+        ax20 = figs[19].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[18], m_file, scan)
-        plot_205 = figs[18].add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, figs[19], m_file, scan)
+        plot_205 = figs[19].add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, figs[18], m_file, scan)
+        plot_cable_in_conduit_cable(plot_205, figs[19], m_file, scan)
     else:
-        ax19 = figs[17].add_subplot(211, aspect="equal")
+        ax19 = figs[18].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file, scan, figs[17])
-
+        plot_resistive_tf_wp(ax19, m_file, scan, figs[18])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[18])
     plot_tf_coil_structure(
-        figs[19].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[20].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(figs[20], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[21], m_file, scan)
 
-    plot_tf_stress(figs[21].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    plot_tf_stress(figs[22].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
-    plot_current_profiles_over_time(figs[22].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[23].add_subplot(111), m_file, scan)
 
     plot_cs_coil_structure(
-        figs[23].add_subplot(121, aspect="equal"), figs[23], m_file, scan
+        figs[24].add_subplot(121, aspect="equal"), figs[24], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[23].add_subplot(224, aspect="equal"), figs[23], m_file, scan
+        figs[24].add_subplot(224, aspect="equal"), figs[24], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[24].add_subplot(221, aspect="equal"), m_file, scan
+        figs[25].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[24].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[24].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[25].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[25].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[25], m_file, scan)
-    ax_blanket = figs[25].add_subplot(122, aspect="equal")
+    plot_blkt_pipe_bends(figs[26], m_file, scan)
+    ax_blanket = figs[26].add_subplot(122, aspect="equal")
     plot_blanket(ax_blanket, m_file, scan, radial_build, colour_scheme)
     plot_firstwall(ax_blanket, m_file, scan, radial_build, colour_scheme)
     ax_blanket.set_xlabel("Radial position [m]")
@@ -12933,17 +13130,17 @@ def main_plot(
     )
 
     plot_main_power_flow(
-        figs[26].add_subplot(111, aspect="equal"), m_file, scan, figs[26]
+        figs[27].add_subplot(111, aspect="equal"), m_file, scan, figs[27]
     )
 
-    ax24 = figs[27].add_subplot(111)
+    ax24 = figs[28].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[27])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[28])
 
-    ax25 = figs[28].add_subplot(222, aspect="equal")
+    ax25 = figs[29].add_subplot(222, aspect="equal")
     ax25.set_position([0.6, 0.55, 0.45, 0.45])
-    plot_analytic_equilibrium(ax25, m_file, scan, figs[28])
+    plot_analytic_equilibrium(ax25, m_file, scan, figs[29])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -13020,13 +13217,13 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(29)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(30)]
 
     # run main_plot
     main_plot(
         pages,
         mf.MFile(args.f) if args.f != "" else mf.MFile("MFILE.DAT"),
-        scan=args.n if args.n else -1,
+        scan=args.n or -1,
         demo_ranges=bool(args.DEMO_ranges),
         colour_scheme=int(args.colour),
     )

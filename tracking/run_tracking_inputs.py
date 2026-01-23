@@ -1,3 +1,4 @@
+#!python
 """Run the tracked files and move into tracking directory."""
 
 import argparse

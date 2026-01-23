@@ -39,15 +39,11 @@ def shield_geometry_single_null(
     # Upper shield
     # Side furthest from plasma
     kapx = cumulative_upper["dz_shld_upper"] / rminx_far
-    rs_upper_outboard, zs_upper_outboard = dh_vertices(
-        radx_far, rminx_far, triang, kapx
-    )
+    rs_upper_outboard, zs_upper_outboard = dh_vertices(radx_far, rminx_far, triang, kapx)
 
     # Side nearest to plasma
     kapx = (cumulative_upper["dr_shld_blkt_gap"]) / rminx_near
-    rs_upper_inboard, zs_upper_inboard = dh_vertices(
-        radx_near, rminx_near, triang, kapx
-    )
+    rs_upper_inboard, zs_upper_inboard = dh_vertices(radx_near, rminx_near, triang, kapx)
 
     # Lower shield
     (
@@ -109,15 +105,11 @@ def shield_geometry_lower(
     """
     # Side furthest from plasma
     kapx = cumulative_lower["dz_shld_lower"] / rminx_far
-    rs_lower_outboard, zs_lower_outboard = dh_vertices(
-        radx_far, rminx_far, triang, kapx
-    )
+    rs_lower_outboard, zs_lower_outboard = dh_vertices(radx_far, rminx_far, triang, kapx)
 
     # Side nearest to plasma
     kapx = (cumulative_lower["dz_divertor"]) / rminx_near
-    rs_lower_inboard, zs_lower_inboard = dh_vertices(
-        radx_near, rminx_near, triang, kapx
-    )
+    rs_lower_inboard, zs_lower_inboard = dh_vertices(radx_near, rminx_near, triang, kapx)
 
     return rs_lower_outboard, zs_lower_outboard, rs_lower_inboard, zs_lower_inboard
 

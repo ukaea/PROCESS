@@ -291,8 +291,6 @@ class StbildParam(NamedTuple):
 
     available_radial_space: Any = None
 
-    f_avspace: Any = None
-
     required_radial_space: Any = None
 
     radius_fw_channel: Any = None
@@ -398,7 +396,6 @@ class StbildParam(NamedTuple):
             dr_tf_inboard=0.78058448071757114,
             dr_tf_outboard=0.78058448071757114,
             available_radial_space=0,
-            f_avspace=1,
             required_radial_space=0,
             radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
@@ -468,7 +465,6 @@ class StbildParam(NamedTuple):
             dr_tf_inboard=0.78058448071757114,
             dr_tf_outboard=0.78058448071757114,
             available_radial_space=1.8828828828828827,
-            f_avspace=1,
             required_radial_space=2.0332922403587861,
             radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
@@ -607,8 +603,6 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     monkeypatch.setattr(
         build_variables, "available_radial_space", stbildparam.available_radial_space
     )
-
-    monkeypatch.setattr(build_variables, "f_avspace", stbildparam.f_avspace)
 
     monkeypatch.setattr(
         build_variables, "required_radial_space", stbildparam.required_radial_space
@@ -3058,9 +3052,7 @@ def test_sctfcoil_nuclear_heating_iter90(
         p_tf_nuclear_heat_mw,
     ) = stellarator.sctfcoil_nuclear_heating_iter90()
 
-    assert coilhtmx == pytest.approx(
-        sctfcoilnuclearheatingiter90param.expected_coilhtmx
-    )
+    assert coilhtmx == pytest.approx(sctfcoilnuclearheatingiter90param.expected_coilhtmx)
     assert dpacop == pytest.approx(sctfcoilnuclearheatingiter90param.expected_dpacop)
     assert htheci == pytest.approx(sctfcoilnuclearheatingiter90param.expected_htheci)
     assert nflutf == pytest.approx(sctfcoilnuclearheatingiter90param.expected_nflutf)

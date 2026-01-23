@@ -362,6 +362,12 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Temperature Changes
+
+- Relative rises or falls in temperatures should start with the `dtemp_` prefix
+
+---------------------
+
 ##### Times
 
 - Times should start with the `t_` prefix
@@ -506,11 +512,6 @@ If a variable is intended to represent an engineering efficiency then it should 
 
 ---------------------
 
-##### F-values
-
-Variables used within constraint equations to scale iteration variables (f-values) should start with the `f` prefix without an underscore before the next word.
-
----------------------
 
 ### Variable Length
 
