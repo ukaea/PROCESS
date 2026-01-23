@@ -101,6 +101,7 @@ from process.process_output import OutputFileManager, oheadr
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
+from process.shield import Shield
 from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
 from process.superconducting_tf_coil import SuperconductingTFCoil
@@ -667,6 +668,7 @@ class Models:
         self.vacuum_vessel = VacuumVessel()
         self.water_use = WaterUse()
         self.pulse = Pulse()
+        self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
         self.plasma_profile = PlasmaProfile()
         self.fw = Fw()
