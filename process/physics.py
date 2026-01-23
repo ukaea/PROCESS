@@ -9884,7 +9884,6 @@ class AnalyticGradShafranovSolution:
         self,
         n_points: int = 101,
         psi_norm_threshold: float = 1.0e-3,
-        max_iterations: int = 100000,
     ):
         """Calculate boundary contour of psi map using Newton's method"""
         # Calculate the extremal value of psi so we can calculate psi norm.
@@ -9896,26 +9895,22 @@ class AnalyticGradShafranovSolution:
         x_boundary, y_boundary = np.copy(x_d_shape), np.copy(y_d_shape)
 
         for i, t in enumerate(theta):
-            for j in range(max_iterations):
-                psi_bar = self.psi_bar(x_boundary[i], y_boundary[i])
-                psi_norm = psi_bar / psi_bar_0
+            psi_bar = self.psi_bar(x_boundary[i], y_boundary[i])
+            psi_norm = psi_bar / psi_bar_0
 
-                # If psi norm is close enough to zero, break.
-                if abs(psi_norm) < psi_norm_threshold:
-                    break
+            # If psi norm is close enough to zero, break.
+            if abs(psi_norm) < psi_norm_threshold:
+                break
 
-                # Use Netwon's method to update boundary position.
-                dpsi_dx = self.psi_bar_dx(x_boundary[i], y_boundary[i])
-                dpsi_dy = self.psi_bar_dy(x_boundary[i], y_boundary[i])
+            # Use Netwon's method to update boundary position.
+            dpsi_dx = self.psi_bar_dx(x_boundary[i], y_boundary[i])
+            dpsi_dy = self.psi_bar_dy(x_boundary[i], y_boundary[i])
 
-                cos_t, sin_t = np.cos(t), np.sin(t)
-                dpsi_dv = cos_t * dpsi_dx + sin_t * dpsi_dy
+            cos_t, sin_t = np.cos(t), np.sin(t)
+            dpsi_dv = cos_t * dpsi_dx + sin_t * dpsi_dy
 
-                x_boundary[i] -= cos_t * psi_bar / dpsi_dv
-                y_boundary[i] -= sin_t * psi_bar / dpsi_dv
-
-            if j == max_iterations - 1:
-                raise ValueError("Too many iterations to calculate boundary contour.")
+            x_boundary[i] -= cos_t * psi_bar / dpsi_dv
+            y_boundary[i] -= sin_t * psi_bar / dpsi_dv
 
         self.boundary_radius = x_boundary * self.rmajor
         self.boundary_height = y_boundary * self.rmajor

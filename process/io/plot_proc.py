@@ -12443,8 +12443,7 @@ def plot_analytic_equilibrium(
     )
     fig.colorbar(c, ax=axis, label="Normalised Poloidal Flux")
 
-    ax_equil_full = fig.add_subplot(231)
-    # ax_equil_full.set_position([0.1, 0.55, 0.6, 0.35])
+    ax_equil_full = fig.add_subplot(2, 4, 1, aspect="equal")
     psi = plasma.psi(*np.meshgrid(r_plot, z_plot, indexing="ij"))
     # Mask out non-negative flux so only psi < 0 is plotted
     psi_masked = np.ma.masked_where(psi >= 0.0, psi)
@@ -12474,11 +12473,31 @@ def plot_analytic_equilibrium(
 
     ax_equil_full.set_xlabel(r"Radius [m]")
     ax_equil_full.set_ylabel(r"Height [m]")
-    ax_equil_full.set_aspect("equal")
     ax_equil_full.minorticks_on()
+    # mark major radius and magnetic axis
+    ax_equil_full.axvline(
+        plasma.rmajor,
+        color="black",
+        linestyle="--",
+        linewidth=1.2,
+        label="Major radius $R_0$",
+        zorder=150,
+    )
+    ax_equil_full.scatter(
+        plasma.magnetic_axis[0],
+        plasma.magnetic_axis[1],
+        color="red",
+        s=50,
+        edgecolor="black",
+        linewidth=0.6,
+        zorder=200,
+        label="Magnetic axis",
+    )
+    ax_equil_full.legend(loc="upper right", fontsize=8)
     ax_equil_full.grid(True, linestyle="--", alpha=0.5)
 
     ax_q_profile = fig.add_subplot(4, 2, 7)
+    ax_q_profile.set_position([0.1, 0.075, 0.35, 0.15])  # [left, bottom, width, height]
     ax_q_profile.plot(np.linspace(0, 1, len(plasma.q_profile)), plasma.q_profile)
     ax_q_profile.set_xlabel(r"Normalised Radius $\rho$")
     ax_q_profile.set_ylabel("Safety Factor $q$")
@@ -12488,6 +12507,12 @@ def plot_analytic_equilibrium(
     ax_q_profile.set_xlim(0, 1)
 
     ax_equil_pressure = fig.add_subplot(4, 2, 5)
+    ax_equil_pressure.set_position([
+        0.1,
+        0.3,
+        0.35,
+        0.15,
+    ])  # [left, bottom, width, height]
     ax_equil_pressure.plot(
         r_plot,
         plasma.pressure_kpa(psi_n_midplane),
@@ -12509,6 +12534,14 @@ def plot_analytic_equilibrium(
         linestyle="--",
         label="PROCESS Profile",
     )
+    # Mirror the plot in the x axis
+    ax_equil_pressure.plot(
+        2 * plasma.rmajor - r_profile,
+        np.array(pres_plasma_thermal_total_profile) / 1e3,
+        color="red",
+        linestyle="--",
+    )
+
     ax_equil_pressure.legend()
 
     # Show key 0D plasma parameters in an on-figure info box
@@ -12574,8 +12607,8 @@ def plot_analytic_equilibrium(
 
     # Place the info box in the top-left of the axis
     fig.text(
-        0.6,
-        0.3,
+        0.35,
+        0.85,
         textstr,
         fontsize=9,
         va="top",
@@ -12908,7 +12941,8 @@ def main_plot(
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[27])
 
-    ax25 = figs[28].add_subplot(232, aspect="equal")
+    ax25 = figs[28].add_subplot(222, aspect="equal")
+    ax25.set_position([0.6, 0.55, 0.45, 0.45])
     plot_analytic_equilibrium(ax25, m_file, scan, figs[28])
 
 
