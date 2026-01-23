@@ -1,5 +1,7 @@
 import logging
 
+from process.blanket_library import dshellvol
+
 logger = logging.getLogger(__name__)
 
 
@@ -43,3 +45,46 @@ class Shield:
 
         # Average of top and bottom (m)
         return 0.5 * (z_top + z_bottom)
+
+    @staticmethod
+    def calculate_dshaped_shield_volumes(
+        rsldi: float,
+        dr_shld_inboard: float,
+        dr_fw_inboard: float,
+        dr_fw_plasma_gap_inboard: float,
+        rminor: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_outboard: float,
+        dr_blkt_inboard: float,
+        dr_blkt_outboard: float,
+        dz_shld_half: float,
+        dr_shld_outboard: float,
+        dz_shld_upper: float,
+    ) -> tuple[float, float, float]:
+        """Calculate volumes of D-shaped shield segments."""
+
+        r_1 = rsldi + dr_shld_inboard
+        r_2 = (
+            dr_fw_inboard
+            + dr_fw_plasma_gap_inboard
+            + 2.0 * rminor
+            + dr_fw_plasma_gap_outboard
+            + dr_fw_outboard
+        )
+
+        r_2 = dr_blkt_inboard + r_2 + dr_blkt_outboard
+
+        (
+            vol_shld_inboard,
+            vol_shld_outboard,
+            vol_shld_total,
+        ) = dshellvol(
+            rmajor=r_1,
+            rminor=r_2,
+            zminor=dz_shld_half,
+            drin=dr_shld_inboard,
+            drout=dr_shld_outboard,
+            dz=dz_shld_upper,
+        )
+
+        return vol_shld_inboard, vol_shld_outboard, vol_shld_total
