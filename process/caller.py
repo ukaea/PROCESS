@@ -296,6 +296,7 @@ class Caller:
             # DCLL model
             self.models.dcll.run(output=False)
 
+        self.models.shield.run()
         self.models.vacuum_vessel.run()
 
         self.models.divertor.run(output=False)
