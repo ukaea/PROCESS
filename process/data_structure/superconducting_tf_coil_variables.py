@@ -216,6 +216,33 @@ c_tf_turn_cables_critical: float = None
 j_tf_superconductor: float = None
 """Current density in the superconducting cable [A/m^2]"""
 
+i_tf_turn_type: int = None
+"""Switch for TF turn geometry type"""
+
+dx_tf_turn_tape_stack: float = None
+"""Thickness of the tape stack in the TF turn [m]"""
+
+dr_tf_turn_tape_stack: float = None
+"""Radial thickness of the tape stack in the TF turn [m]"""
+
+a_tf_turn_tape_stack: float = None
+"""Cross-sectional area of the tape stack in the TF turn [m^2]"""
+
+n_tf_turn_superconducting_strands: int = None
+"""Number of superconducting strands in the TF turn"""
+
+x_tf_turn_coolant_channel_centre: float = None
+"""Vertical centre position of the coolant channel in the TF turn [m]"""
+
+dr_tf_turn_stabiliser: float = None
+"""Radial thickness of the stabiliser in the TF turn [m]"""
+
+dx_tf_turn_stabiliser: float = None
+"""Toroidal thickness of the stabiliser in the TF turn [m]"""
+
+a_tf_turn_stabiliser: float = None
+"""Cross-sectional area of the stabiliser in the TF turn [m^2]"""
+
 # Vacuum Vessel stress on TF coil quench
 
 vv_stress_quench: float = None
@@ -321,7 +348,16 @@ def init_superconducting_tf_coil_variables():
         f_a_tf_turn_cable_space_cooling, \
         c_tf_turn_cables_critical, \
         j_tf_superconductor, \
-        vv_stress_quench
+        vv_stress_quench, \
+        i_tf_turn_type, \
+        dx_tf_turn_tape_stack, \
+        dr_tf_turn_tape_stack, \
+        a_tf_turn_tape_stack, \
+        n_tf_turn_superconducting_strands, \
+        x_tf_turn_coolant_channel_centre, \
+        dr_tf_turn_stabiliser, \
+        dx_tf_turn_stabiliser, \
+        a_tf_turn_stabiliser
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -383,3 +419,12 @@ def init_superconducting_tf_coil_variables():
     c_tf_turn_cables_critical = 0.0
     j_tf_superconductor = 0.0
     vv_stress_quench = 0.0
+    i_tf_turn_type = 0
+    dx_tf_turn_tape_stack = 0.0
+    dr_tf_turn_tape_stack = 0.0
+    a_tf_turn_tape_stack = 0.0
+    n_tf_turn_superconducting_strands = 0
+    x_tf_turn_coolant_channel_centre = 0.0
+    dr_tf_turn_stabiliser = 0.0
+    dx_tf_turn_stabiliser = 0.0
+    a_tf_turn_stabiliser = 0.0

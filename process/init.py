@@ -8,6 +8,7 @@ from warnings import warn
 import process
 import process.iteration_variables as iteration_variables
 import process.process_output as process_output
+import process.superconducting_tf_coil as superconducting_tf_coil_module
 from process import constants, data_structure
 from process.constraints import ConstraintManager
 from process.data_structure.blanket_library import init_blanket_library
@@ -824,6 +825,15 @@ def check_process(inputs):  # noqa: ARG001
             raise ProcessValidationError(
                 "Constraint equation 10 (CP lifetime) to used with ST desing (itart=1)"
             )
+
+    if (
+        data_structure.superconducting_tf_coil_variables.i_tf_turn_type == 0
+        and data_structure.tfcoil_variables.i_tf_sup
+        not in superconducting_tf_coil_module.CABLE_SUPERCONDUCTORS
+    ):
+        raise ProcessValidationError(
+            "i_tf_turn_type = 0 can only be used with cable type superconductors"
+        )
 
     #  Pulsed power plant model
     if data_structure.pulse_variables.i_pulsed_plant == 1:

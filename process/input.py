@@ -1990,6 +1990,9 @@ INPUT_VARIABLES = {
     "n_tf_wp_pancakes": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 100)
     ),
+    "i_tf_turn_type": InputVariable(
+        data_structure.superconducting_tf_coil_variables, int, choices=[0, 1, 2]
+    ),
     "n_rad_per_layer": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 500)
     ),
