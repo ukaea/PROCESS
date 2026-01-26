@@ -131,8 +131,6 @@ class ResistiveTFCoil(TFCoil):
                 int(tfcoil_variables.i_tf_bucking),
                 float(build_variables.r_tf_inboard_in),
                 build_variables.dr_bore,
-                build_variables.z_tf_inside_half,
-                pfcoil_variables.f_z_cs_tf_internal,
                 build_variables.dr_cs,
                 build_variables.i_tf_inside_cs,
                 build_variables.dr_tf_inboard,
@@ -192,6 +190,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.a_tf_coil_inboard_case,
                 tfcoil_variables.vforce,
                 tfcoil_variables.a_tf_turn_steel,
+                pfcoil_variables.a_cs_poloidal,
             )
 
             tfcoil_variables.sig_tf_case = (
