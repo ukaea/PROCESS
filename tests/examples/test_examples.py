@@ -106,7 +106,7 @@ def test_varyrun_example(examples_temp_data):
     """Run vary_run_example.ipynb and check no exceptions are raised.
 
     :param examples_temp_data: temporary dir containing examples files
-     :type examples_temp_data: Path
+    :type examples_temp_data: Path
     """
     varyrun_example_notebook_location = examples_temp_data / "vary_run_example.ipynb"
     with testbook(varyrun_example_notebook_location, execute=True, timeout=600):
