@@ -3026,7 +3026,8 @@ class Costs:
         #  Annual cost of operation and maintenance
 
         annoam = cost_variables.ucoam[cost_variables.lsa - 1] * np.sqrt(
-            heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
+            np.clip(heat_transport_variables.p_plant_electric_net_mw, 0, np.inf)
+            / 1200.0e0
         )
 
         #  Additional cost due to pulsed reactor thermal storage
@@ -3097,7 +3098,8 @@ class Costs:
         #  Annual cost of waste disposal
 
         annwst = cost_variables.ucwst[cost_variables.lsa - 1] * np.sqrt(
-            heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
+            np.clip(heat_transport_variables.p_plant_electric_net_mw, 0, np.inf)
+            / 1200.0e0
         )
 
         #  Cost of electricity due to waste disposal
