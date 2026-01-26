@@ -55,6 +55,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.i_tf_wp_geom,
             tfcoil_variables.i_tf_case_geom,
             tfcoil_variables.i_tf_turns_integer,
+            i_tf_sc_mat=tfcoil_variables.i_tf_sc_mat,
         )
 
         tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
@@ -351,16 +352,17 @@ class SuperconductingTFCoil(TFCoil):
         else:
             strain = tfcoil_variables.str_wp
 
-        tfcoil_variables.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(
-            i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
-            j_superconductor=superconducting_tf_coil_variables.j_tf_superconductor,
-            b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
-            strain=strain,
-            bc20m=superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain,
-            tc0m=superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
-            c0=1.0e10,
-            temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
-        )
+        if tfcoil_variables.i_tf_sc_mat != 6:
+            tfcoil_variables.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(
+                i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
+                j_superconductor=superconducting_tf_coil_variables.j_tf_superconductor,
+                b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
+                strain=strain,
+                bc20m=superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain,
+                tc0m=superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
+                c0=1.0e10,
+                temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
+            )
 
         # Do current density protection calculation
         # Only setup for Nb3Sn at present.
@@ -1915,7 +1917,9 @@ class SuperconductingTFCoil(TFCoil):
             * b_tf_inboard_peak_symmetric
         )
 
-    def sc_tf_internal_geom(self, i_tf_wp_geom, i_tf_case_geom, i_tf_turns_integer):
+    def sc_tf_internal_geom(
+        self, i_tf_wp_geom, i_tf_case_geom, i_tf_turns_integer, i_tf_sc_mat
+    ):
         """
         Author : S. Kahn, CCFE
         Seting the WP, case and turns geometry for SC magnets
@@ -1976,37 +1980,63 @@ class SuperconductingTFCoil(TFCoil):
 
         # Setting the WP turn geometry / areas
         if i_tf_turns_integer == 0:
-            # Non-ingeger number of turns
-            (
-                tfcoil_variables.a_tf_turn_cable_space_no_void,
-                tfcoil_variables.a_tf_turn_steel,
-                tfcoil_variables.a_tf_turn_insulation,
-                tfcoil_variables.n_tf_coil_turns,
-                tfcoil_variables.dx_tf_turn_general,
-                tfcoil_variables.c_tf_turn,
-                tfcoil_variables.dx_tf_turn_general,
-                superconducting_tf_coil_variables.dr_tf_turn,
-                superconducting_tf_coil_variables.dx_tf_turn,
-                tfcoil_variables.t_conductor,
-                superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners,
-                superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
-                superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
-                superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
-            ) = self.tf_cable_in_conduit_averaged_turn_geometry(
-                j_tf_wp=tfcoil_variables.j_tf_wp,
-                dx_tf_turn_steel=tfcoil_variables.dx_tf_turn_steel,
-                dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
-                i_tf_sc_mat=tfcoil_variables.i_tf_sc_mat,
-                dx_tf_turn_general=tfcoil_variables.dx_tf_turn_general,
-                c_tf_turn=tfcoil_variables.c_tf_turn,
-                i_dx_tf_turn_general_input=tfcoil_variables.i_dx_tf_turn_general_input,
-                i_dx_tf_turn_cable_space_general_input=tfcoil_variables.i_dx_tf_turn_cable_space_general_input,
-                dx_tf_turn_cable_space_general=tfcoil_variables.dx_tf_turn_cable_space_general,
-                layer_ins=tfcoil_variables.layer_ins,
-                a_tf_wp_no_insulation=superconducting_tf_coil_variables.a_tf_wp_no_insulation,
-                dia_tf_turn_coolant_channel=tfcoil_variables.dia_tf_turn_coolant_channel,
-                f_a_tf_turn_cable_space_extra_void=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
-            )
+            # Non-integer number of turns
+            if i_tf_sc_mat == 6:
+                # Specific case for REBCO
+                (
+                    tfcoil_variables.a_tf_turn_cable_space_no_void,
+                    tfcoil_variables.a_tf_turn_steel,
+                    tfcoil_variables.a_tf_turn_insulation,
+                    tfcoil_variables.n_tf_coil_turns,
+                    tfcoil_variables.dx_tf_turn_general,
+                    tfcoil_variables.c_tf_turn,
+                    tfcoil_variables.dx_tf_turn_general,
+                    superconducting_tf_coil_variables.dr_tf_turn,
+                    superconducting_tf_coil_variables.dx_tf_turn,
+                    tfcoil_variables.t_conductor,
+                    superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
+                ) = self.tf_croco_averaged_turn_geometry(
+                    j_tf_wp=tfcoil_variables.j_tf_wp,
+                    dx_tf_turn_steel=tfcoil_variables.dx_tf_turn_steel,
+                    dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
+                    dx_tf_turn_general=tfcoil_variables.dx_tf_turn_general,
+                    c_tf_turn=tfcoil_variables.c_tf_turn,
+                    i_dx_tf_turn_general_input=tfcoil_variables.i_dx_tf_turn_general_input,
+                    i_dx_tf_turn_cable_space_general_input=tfcoil_variables.i_dx_tf_turn_cable_space_general_input,
+                    dx_tf_turn_cable_space_general=tfcoil_variables.dx_tf_turn_cable_space_general,
+                    layer_ins=tfcoil_variables.layer_ins,
+                    a_tf_wp_no_insulation=superconducting_tf_coil_variables.a_tf_wp_no_insulation,
+                )
+            elif i_tf_sc_mat != 6:
+                (
+                    tfcoil_variables.a_tf_turn_cable_space_no_void,
+                    tfcoil_variables.a_tf_turn_steel,
+                    tfcoil_variables.a_tf_turn_insulation,
+                    tfcoil_variables.n_tf_coil_turns,
+                    tfcoil_variables.dx_tf_turn_general,
+                    tfcoil_variables.c_tf_turn,
+                    tfcoil_variables.dx_tf_turn_general,
+                    superconducting_tf_coil_variables.dr_tf_turn,
+                    superconducting_tf_coil_variables.dx_tf_turn,
+                    tfcoil_variables.t_conductor,
+                    superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners,
+                    superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
+                    superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
+                    superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
+                ) = self.tf_cable_in_conduit_averaged_turn_geometry(
+                    j_tf_wp=tfcoil_variables.j_tf_wp,
+                    dx_tf_turn_steel=tfcoil_variables.dx_tf_turn_steel,
+                    dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
+                    dx_tf_turn_general=tfcoil_variables.dx_tf_turn_general,
+                    c_tf_turn=tfcoil_variables.c_tf_turn,
+                    i_dx_tf_turn_general_input=tfcoil_variables.i_dx_tf_turn_general_input,
+                    i_dx_tf_turn_cable_space_general_input=tfcoil_variables.i_dx_tf_turn_cable_space_general_input,
+                    dx_tf_turn_cable_space_general=tfcoil_variables.dx_tf_turn_cable_space_general,
+                    layer_ins=tfcoil_variables.layer_ins,
+                    a_tf_wp_no_insulation=superconducting_tf_coil_variables.a_tf_wp_no_insulation,
+                    dia_tf_turn_coolant_channel=tfcoil_variables.dia_tf_turn_coolant_channel,
+                    f_a_tf_turn_cable_space_extra_void=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
+                )
 
         else:
             # Integer number of turns
@@ -2728,12 +2758,110 @@ class SuperconductingTFCoil(TFCoil):
             ),
         )
 
+    def tf_croco_averaged_turn_geometry(
+        self,
+        j_tf_wp,
+        dx_tf_turn_steel,
+        dx_tf_turn_insulation,
+        dx_tf_turn_general,
+        c_tf_turn,
+        i_dx_tf_turn_general_input,
+        i_dx_tf_turn_cable_space_general_input,
+        dx_tf_turn_cable_space_general,
+        layer_ins,
+        a_tf_wp_no_insulation,
+    ):
+        """
+        subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
+        Authors : J. Morris, CCFE
+        Authors : S. Kahn, CCFE
+        Setting the TF WP turn geometry for SC magnets from the number
+        the current per turn.
+        This calculation has two purposes, first to check if a turn can exist
+        (positive cable space) and the second to provide its dimensions,
+        areas and the (float) number of turns
+        """
+
+        # Turn dimension is a an input
+        if i_dx_tf_turn_general_input:
+            # Turn area [m2]
+            a_tf_turn = dx_tf_turn_general**2
+
+            # Current per turn [A]
+            c_tf_turn = a_tf_turn * j_tf_wp
+
+        # Turn cable dimension is an input
+        elif i_dx_tf_turn_cable_space_general_input:
+            # Turn squared dimension [m]
+            dx_tf_turn_general = dx_tf_turn_cable_space_general + 2.0e0 * (
+                dx_tf_turn_insulation + dx_tf_turn_steel
+            )
+
+            # Turn area [m2]
+            a_tf_turn = dx_tf_turn_general**2
+
+            # Current per turn [A]
+            c_tf_turn = a_tf_turn * j_tf_wp
+
+        # Current per turn is an input
+        else:
+            # Turn area [m2]
+            # Allow for additional inter-layer insulation MDK 13/11/18
+            # Area of turn including conduit and inter-layer insulation
+            a_tf_turn = c_tf_turn / j_tf_wp
+
+            # Dimension of square cross-section of each turn including inter-turn insulation [m]
+            dx_tf_turn_general = np.sqrt(a_tf_turn)
+
+        # Square turn assumption
+        dr_tf_turn = dx_tf_turn_general
+        dx_tf_turn = dx_tf_turn_general
+
+        # See derivation in the following document
+        # k:\power plant physics and technology\process\hts\hts coil module for process.docx
+        t_conductor = (
+            -layer_ins + np.sqrt(layer_ins**2 + 4.0e00 * a_tf_turn)
+        ) / 2 - 2.0e0 * dx_tf_turn_insulation
+
+        # Total number of turns per TF coil (not required to be an integer)
+        n_tf_coil_turns = a_tf_wp_no_insulation / a_tf_turn
+
+        # Area of inter-turn insulation: single turn [m2]
+        a_tf_turn_insulation = a_tf_turn - t_conductor**2
+
+        # NOTE: Fortran has a_tf_turn_cable_space_no_void as an intent(out) variable that was outputting
+        # into tfcoil_variables.a_tf_turn_cable_space_no_void. The local variable, however, appears to
+        # initially hold the value of tfcoil_variables.a_tf_turn_cable_space_no_void despite not being
+        # intent(in). I have replicated this behaviour in Python for now.
+        a_tf_turn_cable_space_no_void = copy.copy(
+            tfcoil_variables.a_tf_turn_cable_space_no_void
+        )
+
+        # Diameter of circular cable space inside conduit [m]
+        dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
+
+        # Cross-sectional area of conduit jacket per turn [m2]
+        a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
+
+        return (
+            a_tf_turn_cable_space_no_void,
+            a_tf_turn_steel,
+            a_tf_turn_insulation,
+            n_tf_coil_turns,
+            dx_tf_turn_general,
+            c_tf_turn,
+            dx_tf_turn_general,
+            dr_tf_turn,
+            dx_tf_turn,
+            t_conductor,
+            dx_tf_turn_cable_space_average,
+        )
+
     def tf_cable_in_conduit_averaged_turn_geometry(
         self,
         j_tf_wp,
         dx_tf_turn_steel,
         dx_tf_turn_insulation,
-        i_tf_sc_mat,
         dx_tf_turn_general,
         c_tf_turn,
         i_dx_tf_turn_general_input,
@@ -2810,65 +2938,55 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.a_tf_turn_cable_space_no_void
         )
 
-        # ITER like turn structure
-        if i_tf_sc_mat != 6:
-            # Radius of rounded corners of cable space inside conduit [m]
-            radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
+        # Radius of rounded corners of cable space inside conduit [m]
+        radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
 
-            # Dimension of square cable space inside conduit [m]
-            dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
+        # Dimension of square cable space inside conduit [m]
+        dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
 
-            # Cross-sectional area of cable space per turn
-            # taking account of rounded inside corners [m2]
-            a_tf_turn_cable_space_no_void = (
-                dx_tf_turn_cable_space_average**2
-                - (4.0e0 - np.pi) * radius_tf_turn_cable_space_corners**2
+        # Cross-sectional area of cable space per turn
+        # taking account of rounded inside corners [m2]
+        a_tf_turn_cable_space_no_void = (
+            dx_tf_turn_cable_space_average**2
+            - (4.0e0 - np.pi) * radius_tf_turn_cable_space_corners**2
+        )
+
+        # Calculate the true effective cable space by taking away the cooling
+        # channel and the extra void fraction
+
+        a_tf_turn_cable_space_effective = (
+            a_tf_turn_cable_space_no_void
+            -
+            # Coolant channel area
+            (
+                (np.pi / 4.0e0)
+                * dia_tf_turn_coolant_channel
+                * dia_tf_turn_coolant_channel
             )
+            # Additional void area deduction
+            - (a_tf_turn_cable_space_no_void * f_a_tf_turn_cable_space_extra_void)
+        )
 
-            # Calculate the true effective cable space by taking away the cooling
-            # channel and the extra void fraction
+        f_a_tf_turn_cable_space_cooling = 1 - (
+            a_tf_turn_cable_space_effective / a_tf_turn_cable_space_no_void
+        )
 
-            a_tf_turn_cable_space_effective = (
-                a_tf_turn_cable_space_no_void
-                -
-                # Coolant channel area
-                (
-                    (np.pi / 4.0e0)
-                    * dia_tf_turn_coolant_channel
-                    * dia_tf_turn_coolant_channel
+        if a_tf_turn_cable_space_no_void <= 0.0e0:
+            if t_conductor < 0.0e0:
+                logger.error(
+                    f"Negative cable space dimension. {a_tf_turn_cable_space_no_void=} "
+                    f"{dx_tf_turn_cable_space_average=}"
                 )
-                # Additional void area deduction
-                - (a_tf_turn_cable_space_no_void * f_a_tf_turn_cable_space_extra_void)
-            )
+            else:
+                logger.error(
+                    "Cable space area problem; artificially set rounded corner radius to 0. "
+                    f"{a_tf_turn_cable_space_no_void=} {dx_tf_turn_cable_space_average=}"
+                )
+                radius_tf_turn_cable_space_corners = 0.0e0
+                a_tf_turn_cable_space_no_void = dx_tf_turn_cable_space_average**2
 
-            f_a_tf_turn_cable_space_cooling = 1 - (
-                a_tf_turn_cable_space_effective / a_tf_turn_cable_space_no_void
-            )
-
-            if a_tf_turn_cable_space_no_void <= 0.0e0:
-                if t_conductor < 0.0e0:
-                    logger.error(
-                        f"Negative cable space dimension. {a_tf_turn_cable_space_no_void=} "
-                        f"{dx_tf_turn_cable_space_average=}"
-                    )
-                else:
-                    logger.error(
-                        "Cable space area problem; artificially set rounded corner radius to 0. "
-                        f"{a_tf_turn_cable_space_no_void=} {dx_tf_turn_cable_space_average=}"
-                    )
-                    radius_tf_turn_cable_space_corners = 0.0e0
-                    a_tf_turn_cable_space_no_void = dx_tf_turn_cable_space_average**2
-
-            # Cross-sectional area of conduit jacket per turn [m2]
-            a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
-
-        # REBCO turn structure
-        elif i_tf_sc_mat == 6:
-            # Diameter of circular cable space inside conduit [m]
-            dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
-
-            # Cross-sectional area of conduit jacket per turn [m2]
-            a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
+        # Cross-sectional area of conduit jacket per turn [m2]
+        a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
 
         return (
             a_tf_turn_cable_space_no_void,
