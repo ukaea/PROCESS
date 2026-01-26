@@ -1618,37 +1618,77 @@ class SuperconductingTFCoil(TFCoil):
                     tc0m,
                 )
 
-            another_estimate = 2 * temp_tf_coolant_peak_field
-            (
-                t_zero_margin,
-                _root_result,
-            ) = optimize.newton(
-                superconductors.superconductor_current_density_margin,
-                temp_tf_coolant_peak_field,
-                fprime=None,
-                args=arguments,
-                tol=1.0e-06,
-                maxiter=50,
-                fprime2=None,
-                x1=another_estimate,
-                rtol=1.0e-6,
-                full_output=True,
-                disp=True,
-            )
-            # print(root_result)  # Diagnostic for newton method
-            temp_tf_superconductor_margin = t_zero_margin - temp_tf_coolant_peak_field
-            tfcoil_variables.temp_margin = temp_tf_superconductor_margin
+            try:
+                another_estimate = 2 * temp_tf_coolant_peak_field
+                # Use brentq for robust root finding if possible
+                # Try to bracket the root between coolant temp and a higher temp
+                bracket_low = temp_tf_coolant_peak_field
+                bracket_high = another_estimate
 
-            if temp_tf_superconductor_margin <= 0.0e0:
+                # Define a wrapper for the margin function
+                def margin_func(temp, *args):
+                    return superconductors.superconductor_current_density_margin(
+                        temp, *args
+                    )
+
+                # Try brentq first, fallback to newton if ValueError (e.g. not bracketed)
+                try:
+                    t_zero_margin = optimize.brentq(
+                        margin_func,
+                        bracket_low,
+                        bracket_high,
+                        args=arguments,
+                        xtol=1.0e-6,
+                        rtol=1.0e-6,
+                        maxiter=50,
+                        full_output=False,
+                        disp=True,
+                    )
+                except ValueError:
+                    # If brentq fails (e.g. not bracketed), fallback to newton
+                    t_zero_margin = optimize.newton(
+                        margin_func,
+                        temp_tf_coolant_peak_field,
+                        fprime=None,
+                        args=arguments,
+                        tol=1.0e-06,
+                        maxiter=50,
+                        fprime2=None,
+                        x1=another_estimate,
+                        rtol=1.0e-6,
+                        full_output=False,
+                        disp=True,
+                    )
+                temp_tf_superconductor_margin = (
+                    t_zero_margin - temp_tf_coolant_peak_field
+                )
+                tfcoil_variables.temp_margin = temp_tf_superconductor_margin
+            except (ProcessValueError, RuntimeError) as e:
+                logger.error(f"Error calculating superconductor temperature margin: {e}")
+                # See https://github.com/ukaea/PROCESS/issues/3674 for a graph but negative temp in the `margin_func` produce a NaN.
+                # Given we have failed the newton and the brentq there is no root for a positive temp.
+                # We can guesstimate the negative temperature where the root will be by assuming a linear fit for negative temp
+
+                # intercept at ~0 (evaluating at 0 gives a NaN!)
+                margin_func0 = margin_func(1e-6, *arguments)
+                # find the gradient very close to zero (backward finite difference)
+                gradient_margin_func = (
+                    margin_func(2e-6, *arguments) - margin_func0
+                ) / 1e-6
+
+                # find the approximate x-intercept
+                tfcoil_variables.temp_margin = -margin_func0 / gradient_margin_func
+
+            if tfcoil_variables.temp_margin <= 0.0e0:
                 logger.error(
-                    """Negative TFC temperature margin
-                temp_tf_superconductor_margin: {temp_tf_superconductor_margin}
+                    f"""Negative TFC temperature margin
+                temp_tf_superconductor_margin: {tfcoil_variables.temp_margin}
                 b_tf_inboard_peak: {b_tf_inboard_peak}
                 j_superconductor: {j_superconductor}
                 """
                 )
 
-        return temp_tf_superconductor_margin
+        return tfcoil_variables.temp_margin
 
     def quench_heat_protection_current_density(
         self,
