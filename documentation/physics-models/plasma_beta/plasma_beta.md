@@ -170,7 +170,7 @@ beta_norm_max = 3.0
 
 ---------
 
-#### Wesson Relation
+#### Wesson Relation | `calculate_beta_norm_max_wesson()`
 
 This can be activated by stating `i_beta_norm_max = 1` in the input file.
 
@@ -188,7 +188,7 @@ This is only recommended for high aspect ratio tokamaks[^3].
 
 ---------
 
-#### Original Scaling Law
+#### Original Scaling Law | `calculate_beta_norm_max_original()`
 
 This can be activated by stating `i_beta_norm_max = 2` in the input file.
 
@@ -263,7 +263,7 @@ $$
 
 ---------
 
-#### Menard Beta Relation
+#### Menard Beta Relation | `calculate_beta_norm_max_menard()`
 
 This can be activated by stating `i_beta_norm_max = 3` in the input file.
 
@@ -345,7 +345,7 @@ Found as a reasonable fit to the computed no wall limit at $f_{\text{BS}} \appro
 
 ---------
 
-#### Tholerus Relation
+#### Tholerus Relation | `calculate_beta_norm_max_thloreus()`
 
 This can be activated by stating `i_beta_norm_max = 4` in the input file.
 
@@ -362,7 +362,7 @@ where $F_p$ is the pressure peaking, $F_p = p_{\text{ax}} / \langle p \rangle$ a
 
 -------------
 
-#### Stambaugh Relation
+#### Stambaugh Relation | `calculate_beta_norm_max_stambaugh()`
 
 This can be activated by stating `i_beta_norm_max = 5` in the input file.
 
@@ -377,13 +377,24 @@ This fit was done for $A = 1.2 -7.0, \kappa = 1.5-6.0$ with $\delta = 0.5$ for n
 
 ---------
 
+## Stored energy | `calculate_plasma_energy_from_beta()`
+
+As the $\beta$ metric is simply the ratio between the kinetic pressure of the plasma and the magnetic pressure, $\beta$ can be used to get the total kinetic energy of the plasma (assuming the total $\beta$ is used).
+
+
+$$
+E_{\text{plasma}} \approx \frac{3}{2}\frac{\beta B^2}{2\mu_0}V_{\text{plasma}}
+$$
+
+---------------
+
 ## Key Constraints
 
 ### Beta consistency
 
 This constraint can be activated by stating `icc = 1` in the input file.
 
-Ensures the relationship between $\beta$, density, temperature and total magnetic field is withheld by checking the fixed input or iteration variable $\mathtt{beta}$ is consistent in value with the rest of the physics parameters
+Ensures the relationship between $\beta$, density, temperature and total magnetic field is withheld by checking the fixed input or iteration variable $\texttt{beta}$ is consistent in value with the rest of the physics parameters
 
 $$
 \texttt{beta_total_vol_avg} \equiv \frac{2\mu_0 \langle n_{\text{e}}T_{\text{e}}+n_{\text{i}}T_{\text{i}}\rangle}{B^2} + \beta_{\alpha} + \beta_{\text{beam}}
