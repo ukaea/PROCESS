@@ -5,8 +5,13 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
+from process.blanket_library import dshellvol, eshellvol
+from process.data_structure import blanket_library as blanket_library
 from process.data_structure import build_variables as buv
+from process.data_structure import ccfe_hcpb_module as ccfe_hcpb_module
 from process.data_structure import divertor_variables as dv
+from process.data_structure import fwbs_variables as fwbs_variables
+from process.data_structure import physics_variables as physics_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
@@ -684,3 +689,166 @@ class Vacuum:
             )
 
         return pumpn, nduct, dlscalc, mvdsh, dimax
+
+
+class VacuumVessel:
+    """Class containing vacuum vessel routines"""
+
+    def __init__(self) -> None:
+        pass
+
+    def run(self) -> None:
+        blanket_library.dz_vv_half = self.calculate_vessel_half_height(
+            z_tf_inside_half=buv.z_tf_inside_half,
+            dz_shld_vv_gap=buv.dz_shld_vv_gap,
+            dz_vv_lower=buv.dz_vv_lower,
+            n_divertors=dv.n_divertors,
+            dz_blkt_upper=buv.dz_blkt_upper,
+            dz_shld_upper=buv.dz_shld_upper,
+            z_plasma_xpoint_upper=buv.z_plasma_xpoint_upper,
+            dr_fw_plasma_gap_inboard=buv.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_outboard=buv.dr_fw_plasma_gap_outboard,
+            dr_fw_inboard=buv.dr_fw_inboard,
+            dr_fw_outboard=buv.dr_fw_outboard,
+        )
+        # D-shaped blanket and shield
+        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+            (
+                blanket_library.vol_vv_inboard,
+                blanket_library.vol_vv_outboard,
+                fwbs_variables.vol_vv,
+            ) = self.calculate_dshaped_vessel_volumes(
+                rsldi=buv.rsldi,
+                rsldo=buv.rsldo,
+                dz_vv_half=blanket_library.dz_vv_half,
+                dr_vv_inboard=buv.dr_vv_inboard,
+                dr_vv_outboard=buv.dr_vv_outboard,
+                dz_vv_upper=buv.dz_vv_upper,
+                dz_vv_lower=buv.dz_vv_lower,
+            )
+        else:
+            (
+                blanket_library.vol_vv_inboard,
+                blanket_library.vol_vv_outboard,
+                fwbs_variables.vol_vv,
+            ) = self.calculate_elliptical_vessel_volumes(
+                rmajor=pv.rmajor,
+                rminor=pv.rminor,
+                triang=pv.triang,
+                rsldi=buv.rsldi,
+                rsldo=buv.rsldo,
+                dz_vv_half=blanket_library.dz_vv_half,
+                dr_vv_inboard=buv.dr_vv_inboard,
+                dr_vv_outboard=buv.dr_vv_outboard,
+                dz_vv_upper=buv.dz_vv_upper,
+                dz_vv_lower=buv.dz_vv_lower,
+            )
+
+        # Apply vacuum vessel coverage factor
+        # moved from dshaped_* and elliptical_* to keep coverage factor
+        # changes in the same location.
+        fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
+
+        ccfe_hcpb_module.vv_density = fwbs_variables.m_vv / fwbs_variables.vol_vv
+
+    def calculate_vessel_half_height(
+        self,
+        z_tf_inside_half: float,
+        dz_shld_vv_gap: float,
+        dz_vv_lower: float,
+        n_divertors: int,
+        dz_blkt_upper: float,
+        dz_shld_upper: float,
+        z_plasma_xpoint_upper: float,
+        dr_fw_plasma_gap_inboard: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_inboard: float,
+        dr_fw_outboard: float,
+    ) -> float:
+        """Calculate vacuum vessel internal half-height (m)"""
+
+        z_bottom = z_tf_inside_half - dz_shld_vv_gap - dz_vv_lower
+
+        # Calculate component internal upper half-height (m)
+        # If a double null machine then symmetric
+        if n_divertors == 2:
+            z_top = z_bottom
+        else:
+            z_top = z_plasma_xpoint_upper + 0.5 * (
+                dr_fw_plasma_gap_inboard
+                + dr_fw_plasma_gap_outboard
+                + dr_fw_inboard
+                + dr_fw_outboard
+            )
+
+            z_top = z_top + dz_blkt_upper + dz_shld_upper
+
+        # Average of top and bottom (m)
+        return 0.5 * (z_top + z_bottom)
+
+    def calculate_dshaped_vessel_volumes(
+        self,
+        rsldi: float,
+        rsldo: float,
+        dz_vv_half: float,
+        dr_vv_inboard: float,
+        dr_vv_outboard: float,
+        dz_vv_upper: float,
+        dz_vv_lower: float,
+    ) -> tuple[float, float, float]:
+        """Calculate volumes of D-shaped vacuum vessel segments"""
+
+        r_1 = rsldi
+        r_2 = rsldo - r_1
+
+        (
+            vol_vv_inboard,
+            vol_vv_outboard,
+            vol_vv,
+        ) = dshellvol(
+            rmajor=r_1,
+            rminor=r_2,
+            zminor=dz_vv_half,
+            drin=dr_vv_inboard,
+            drout=dr_vv_outboard,
+            dz=(dz_vv_upper + dz_vv_lower) / 2,
+        )
+
+        return vol_vv_inboard, vol_vv_outboard, vol_vv
+
+    def calculate_elliptical_vessel_volumes(
+        self,
+        rmajor: float,
+        rminor: float,
+        triang: float,
+        rsldi: float,
+        rsldo: float,
+        dz_vv_half: float,
+        dr_vv_inboard: float,
+        dr_vv_outboard: float,
+        dz_vv_upper: float,
+        dz_vv_lower: float,
+    ) -> tuple[float, float, float]:
+        # Major radius to centre of inboard and outboard ellipses (m)
+        # (coincident in radius with top of plasma)
+        r_1 = rmajor - rminor * triang
+
+        # Calculate distance between r1 and outer edge of inboard ...
+        # ... section (m)
+        r_2 = r_1 - rsldi
+        r_3 = rsldo - r_1
+
+        (
+            vol_vv_inboard,
+            vol_vv_outboard,
+            vol_vv,
+        ) = eshellvol(
+            r_1,
+            r_2,
+            r_3,
+            dz_vv_half,
+            dr_vv_inboard,
+            dr_vv_outboard,
+            (dz_vv_upper + dz_vv_lower) / 2,
+        )
+        return vol_vv_inboard, vol_vv_outboard, vol_vv
