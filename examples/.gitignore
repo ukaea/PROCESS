@@ -2,5 +2,7 @@
 !csv_output_large_tokamak_MFILE.DAT
 !large_tokamak_eval_IN.DAT
 !large_tokamak_nof*_MFILE.DAT
+!large_tokamak_varyrun_IN.DAT
 *.csv
 *.png
+data/README.txt
