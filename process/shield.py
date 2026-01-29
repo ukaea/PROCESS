@@ -20,7 +20,7 @@ class Shield:
             z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
             dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
             dz_divertor=divertor_variables.dz_divertor,
-            n_divertors=physics_variables.n_divertors,
+            n_divertors=divertor_variables.n_divertors,
             z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
             dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
             dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
@@ -31,9 +31,9 @@ class Shield:
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
             (
-                blanket_library.a_shld_inboard_surface,
-                blanket_library.a_shld_outboard_surface,
-                blanket_library.a_shld_total_surface,
+                build_variables.a_shld_inboard_surface,
+                build_variables.a_shld_outboard_surface,
+                build_variables.a_shld_total_surface,
             ) = self.calculate_dshaped_shield_areas(
                 rsldi=build_variables.rsldi,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
@@ -50,7 +50,7 @@ class Shield:
             (
                 blanket_library.vol_shld_inboard,
                 blanket_library.vol_shld_outboard,
-                blanket_library.vol_shld_total,
+                fwbs_variables.vol_shld_total,
             ) = self.calculate_dshaped_shield_volumes(
                 rsldi=build_variables.rsldi,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
@@ -83,9 +83,9 @@ class Shield:
             )
 
             (
-                build_variables.vol_shld_inboard,
-                build_variables.vol_shld_outboard,
-                build_variables.vol_shld_total,
+                blanket_library.vol_shld_inboard,
+                blanket_library.vol_shld_outboard,
+                fwbs_variables.vol_shld_total,
             ) = self.calculate_elliptical_shield_volumes(
                 rsldi=build_variables.rsldi,
                 rsldo=build_variables.rsldo,
@@ -97,6 +97,28 @@ class Shield:
                 dr_shld_outboard=build_variables.dr_shld_outboard,
                 dz_shld_upper=build_variables.dz_shld_upper,
             )
+
+        # Apply shield coverage factors
+        build_variables.a_shld_inboard_surface = (
+            fwbs_variables.fvolsi * build_variables.a_shld_inboard_surface
+        )
+        build_variables.a_shld_outboard_surface = (
+            fwbs_variables.fvolso * build_variables.a_shld_outboard_surface
+        )
+        build_variables.a_shld_total_surface = (
+            build_variables.a_shld_inboard_surface
+            + build_variables.a_shld_outboard_surface
+        )
+
+        blanket_library.vol_shld_inboard = (
+            fwbs_variables.fvolsi * blanket_library.vol_shld_inboard
+        )
+        blanket_library.vol_shld_outboard = (
+            fwbs_variables.fvolso * blanket_library.vol_shld_outboard
+        )
+        fwbs_variables.vol_shld_total = (
+            blanket_library.vol_shld_inboard + blanket_library.vol_shld_outboard
+        )
 
     @staticmethod
     def calculate_shield_half_height(

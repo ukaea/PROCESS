@@ -276,6 +276,10 @@ class Caller:
         # First wall model
         self.models.fw.run()
 
+        self.models.shield.run()
+
+        self.models.vacuum_vessel.run()
+
         # Blanket model
         """Blanket switch values
         No.  |  model
@@ -295,9 +299,6 @@ class Caller:
         elif data_structure.fwbs_variables.i_blanket_type == 5:
             # DCLL model
             self.models.dcll.run(output=False)
-
-        self.models.shield.run()
-        self.models.vacuum_vessel.run()
 
         self.models.divertor.run(output=False)
 

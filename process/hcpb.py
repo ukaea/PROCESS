@@ -474,6 +474,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         if build_variables.dr_vv_outboard > d_vv_all:
             d_vv_all = build_variables.dr_vv_outboard
 
+        if d_vv_all > 1.0e-6:
+            ccfe_hcpb_module.vv_density = fwbs_variables.m_vv / fwbs_variables.vol_vv
+        else:
+            ccfe_hcpb_module.vv_density = 0.0
+
         # Calculation of average blanket/shield thickness [m]
         if physics_variables.itart == 1:
             # There is no inner blanket for TART design [m]

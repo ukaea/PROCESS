@@ -253,28 +253,6 @@ class BlanketLibrary:
             fwbs_variables.vol_blkt_inboard + fwbs_variables.vol_blkt_outboard
         )
 
-        # Apply shield coverage factors
-        build_variables.a_shld_inboard_surface = (
-            fwbs_variables.fvolsi * build_variables.a_shld_inboard_surface
-        )
-        build_variables.a_shld_outboard_surface = (
-            fwbs_variables.fvolso * build_variables.a_shld_outboard_surface
-        )
-        build_variables.a_shld_total_surface = (
-            build_variables.a_shld_inboard_surface
-            + build_variables.a_shld_outboard_surface
-        )
-
-        blanket_library.vol_shld_inboard = (
-            fwbs_variables.fvolsi * blanket_library.vol_shld_inboard
-        )
-        blanket_library.vol_shld_outboard = (
-            fwbs_variables.fvolso * blanket_library.vol_shld_outboard
-        )
-        fwbs_variables.vol_shld_total = (
-            blanket_library.vol_shld_inboard + blanket_library.vol_shld_outboard
-        )
-
     def primary_coolant_properties(self, output: bool):
         """Calculates the fluid properties of the Primary Coolant in the FW and BZ.
         Uses middle value of input and output temperatures of coolant.

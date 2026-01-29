@@ -8,8 +8,8 @@ from process import process_output as po
 from process.blanket_library import dshellvol, eshellvol
 from process.data_structure import blanket_library as blanket_library
 from process.data_structure import build_variables as buv
-from process.data_structure import divertor_variables as dv
 from process.data_structure import ccfe_hcpb_module as ccfe_hcpb_module
+from process.data_structure import divertor_variables as dv
 from process.data_structure import fwbs_variables as fwbs_variables
 from process.data_structure import physics_variables as physics_variables
 from process.data_structure import physics_variables as pv
@@ -704,7 +704,7 @@ class VacuumVessel:
             z_tf_inside_half=buv.z_tf_inside_half,
             dz_shld_vv_gap=buv.dz_shld_vv_gap,
             dz_vv_lower=buv.dz_vv_lower,
-            n_divertors=pv.n_divertors,
+            n_divertors=dv.n_divertors,
             dz_blkt_upper=buv.dz_blkt_upper,
             dz_shld_upper=buv.dz_shld_upper,
             z_plasma_xpoint_upper=buv.z_plasma_xpoint_upper,
@@ -750,8 +750,6 @@ class VacuumVessel:
         # moved from dshaped_* and elliptical_* to keep coverage factor
         # changes in the same location.
         fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
-
-        ccfe_hcpb_module.vv_density = fwbs_variables.m_vv / fwbs_variables.vol_vv
 
     def calculate_vessel_half_height(
         self,
