@@ -9246,7 +9246,7 @@ def test_calc_remote_handling_costs(
 
 
 class CalcNPlantAndVvCostsParam(NamedTuple):
-    rsldo: Any = None
+    r_shld_outboard_outer: Any = None
 
     dr_vv_outboard: Any = None
 
@@ -9281,7 +9281,7 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
     "calcnplantandvvcostsparam",
     (
         CalcNPlantAndVvCostsParam(
-            rsldo=13.471451612903225,
+            r_shld_outboard_outer=13.471451612903225,
             dr_vv_outboard=0.32000000000000006,
             helpow=142703.41458500578,
             cost_factor_vv=1,
@@ -10368,7 +10368,7 @@ class CalcNPlantAndVvCostsParam(NamedTuple):
             ).transpose(),
         ),
         CalcNPlantAndVvCostsParam(
-            rsldo=13.459451612903226,
+            r_shld_outboard_outer=13.459451612903226,
             dr_vv_outboard=0.32000000000000006,
             helpow=823308.59959198488,
             cost_factor_vv=1,
@@ -11469,7 +11469,11 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "rsldo", calcnplantandvvcostsparam.rsldo)
+    monkeypatch.setattr(
+        build_variables,
+        "r_shld_outboard_outer",
+        calcnplantandvvcostsparam.r_shld_outboard_outer,
+    )
 
     monkeypatch.setattr(
         build_variables, "dr_vv_outboard", calcnplantandvvcostsparam.dr_vv_outboard

@@ -208,7 +208,7 @@ r_shld_inboard_inner: float = None
 """radius to inboard shield (inside point) (m)"""
 
 
-rsldo: float = None
+r_shld_outboard_outer: float = None
 """radius to outboard shield (outside point) (m)"""
 
 
@@ -451,7 +451,7 @@ def init_build_variables():
         required_radial_space, \
         rinboard, \
         r_shld_inboard_inner, \
-        rsldo, \
+        r_shld_outboard_outer, \
         r_vv_inboard_out, \
         r_sh_inboard_in, \
         r_sh_inboard_out, \
@@ -545,7 +545,7 @@ def init_build_variables():
     required_radial_space = 0.0
     rinboard = 0.651
     r_shld_inboard_inner = 0.0
-    rsldo = 0.0
+    r_shld_outboard_outer = 0.0
     r_vv_inboard_out = 0.0
     r_sh_inboard_out = 0.0
     r_tf_inboard_in = 0.0

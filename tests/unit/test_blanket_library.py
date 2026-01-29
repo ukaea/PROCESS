@@ -519,7 +519,7 @@ class DshapedComponentParam(NamedTuple):
     a_shld_total_surface: Any = None
     dr_shld_outboard: Any = None
     dz_shld_upper: Any = None
-    rsldo: Any = None
+    r_shld_outboard_outer: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
     dz_vv_upper: Any = None
@@ -576,7 +576,7 @@ class DshapedComponentParam(NamedTuple):
             a_shld_total_surface=0,
             dr_shld_outboard=0.30000000000000004,
             dz_shld_upper=0.60000000000000009,
-            rsldo=8.4000000000000004,
+            r_shld_outboard_outer=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
             dz_vv_upper=0.30000000000000004,
@@ -629,7 +629,7 @@ class DshapedComponentParam(NamedTuple):
             a_shld_total_surface=0,
             dr_shld_outboard=0.30000000000000004,
             dz_shld_upper=0.60000000000000009,
-            rsldo=8.4000000000000004,
+            r_shld_outboard_outer=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
             dz_vv_upper=0.30000000000000004,
@@ -682,7 +682,7 @@ class DshapedComponentParam(NamedTuple):
             a_shld_total_surface=1222.7642703724505,
             dr_shld_outboard=0.30000000000000004,
             dz_shld_upper=0.60000000000000009,
-            rsldo=8.4000000000000004,
+            r_shld_outboard_outer=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
             dz_vv_upper=0.30000000000000004,
@@ -800,7 +800,11 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         build_variables, "dz_shld_upper", dshapedcomponentparam.dz_shld_upper
     )
-    monkeypatch.setattr(build_variables, "rsldo", dshapedcomponentparam.rsldo)
+    monkeypatch.setattr(
+        build_variables,
+        "r_shld_outboard_outer",
+        dshapedcomponentparam.r_shld_outboard_outer,
+    )
     monkeypatch.setattr(
         build_variables, "dr_vv_inboard", dshapedcomponentparam.dr_vv_inboard
     )
@@ -870,7 +874,7 @@ class EllipticalComponentParam(NamedTuple):
     r_shld_inboard_inner: Any = None
     dr_shld_inboard: Any = None
     dr_blkt_inboard: Any = None
-    rsldo: Any = None
+    r_shld_outboard_outer: Any = None
     dr_shld_outboard: Any = None
     dr_blkt_outboard: Any = None
     a_blkt_inboard_surface: Any = None
@@ -926,7 +930,7 @@ class EllipticalComponentParam(NamedTuple):
             r_shld_inboard_inner=4.0833333333333339,
             dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
-            rsldo=12.716666666666667,
+            r_shld_outboard_outer=12.716666666666667,
             dr_shld_outboard=0.80000000000000004,
             dr_blkt_outboard=1,
             a_blkt_inboard_surface=0,
@@ -978,7 +982,7 @@ class EllipticalComponentParam(NamedTuple):
             r_shld_inboard_inner=4.0833333333333339,
             dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
-            rsldo=12.716666666666667,
+            r_shld_outboard_outer=12.716666666666667,
             dr_shld_outboard=0.80000000000000004,
             dr_blkt_outboard=1,
             a_blkt_inboard_surface=664.9687712975541,
@@ -1030,7 +1034,7 @@ class EllipticalComponentParam(NamedTuple):
             r_shld_inboard_inner=4.0833333333333339,
             dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
-            rsldo=12.716666666666667,
+            r_shld_outboard_outer=12.716666666666667,
             dr_shld_outboard=0.80000000000000004,
             dr_blkt_outboard=1,
             a_blkt_inboard_surface=664.9687712975541,
@@ -1105,7 +1109,11 @@ def test_elliptical_component(
     monkeypatch.setattr(
         build_variables, "dr_blkt_inboard", ellipticalcomponentparam.dr_blkt_inboard
     )
-    monkeypatch.setattr(build_variables, "rsldo", ellipticalcomponentparam.rsldo)
+    monkeypatch.setattr(
+        build_variables,
+        "r_shld_outboard_outer",
+        ellipticalcomponentparam.r_shld_outboard_outer,
+    )
     monkeypatch.setattr(
         build_variables, "dr_shld_outboard", ellipticalcomponentparam.dr_shld_outboard
     )

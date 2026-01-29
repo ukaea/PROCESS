@@ -1916,7 +1916,7 @@ class Build:
         )
 
         #  Radius to outer edge of outboard shield
-        build_variables.rsldo = (
+        build_variables.r_shld_outboard_outer = (
             physics_variables.rmajor
             + physics_variables.rminor
             + build_variables.dr_fw_plasma_gap_outboard
@@ -1935,7 +1935,7 @@ class Build:
 
         #  Radius to centre of outboard TF coil legs
         build_variables.r_tf_outboard_mid = (
-            build_variables.rsldo
+            build_variables.r_shld_outboard_outer
             + build_variables.dr_shld_blkt_gap
             + build_variables.dr_vv_outboard
             + build_variables.gapomin
@@ -1976,7 +1976,7 @@ class Build:
                 build_variables.r_tf_outboard_mid
                 - 0.5e0 * build_variables.dr_tf_outboard
                 - build_variables.dr_vv_outboard
-                - build_variables.rsldo
+                - build_variables.r_shld_outboard_outer
                 - build_variables.dr_shld_thermal_outboard
                 - build_variables.dr_tf_shld_gap
                 - build_variables.dr_shld_blkt_gap
