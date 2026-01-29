@@ -9,6 +9,9 @@ available_radial_space: float = None
 a_blkt_total_surface: float = None
 """blanket total surface area (m2)"""
 
+a_blkt_total_surface_full_coverage: float = None
+"""Blanket(s) total surface area with no holes or ports (toroidally continuous) (m²)"""
+
 
 a_blkt_inboard_surface: float = None
 """inboard blanket surface area (m2)"""
@@ -410,6 +413,7 @@ def init_build_variables():
         aplasmin, \
         available_radial_space, \
         a_blkt_total_surface, \
+        a_blkt_total_surface_full_coverage, \
         a_blkt_inboard_surface, \
         a_blkt_inboard_surface_full_coverage, \
         a_blkt_outboard_surface, \
@@ -506,6 +510,7 @@ def init_build_variables():
     aplasmin = 0.25
     available_radial_space = 0.0
     a_blkt_total_surface = 0.0
+    a_blkt_total_surface_full_coverage = 0.0
     a_blkt_inboard_surface = 0.0
     a_blkt_inboard_surface_full_coverage = 0.0
     a_blkt_outboard_surface = 0.0
