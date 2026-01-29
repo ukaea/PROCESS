@@ -535,6 +535,9 @@ vfshld: float = None
 vol_blkt_total: float = None
 """volume of blanket [m^3]"""
 
+vol_blkt_total_full_coverage: float = None
+"""Volume of blanket with no holes or ports (toroidally continuous) [m³]"""
+
 
 vol_blkt_inboard: float = None
 """volume of inboard blanket [m^3]"""
@@ -1023,6 +1026,7 @@ def init_fwbs_variables():
         vol_vv, \
         vfshld, \
         vol_blkt_total, \
+        vol_blkt_total_full_coverage, \
         vol_blkt_inboard, \
         vol_blkt_inboard_full_coverage, \
         vol_blkt_outboard, \
@@ -1217,6 +1221,7 @@ def init_fwbs_variables():
     vol_vv = 0.0
     vfshld = 0.25
     vol_blkt_total = 0.0
+    vol_blkt_total_full_coverage = 0.0
     vol_blkt_inboard = 0.0
     vol_blkt_inboard_full_coverage = 0.0
     vol_blkt_outboard = 0.0
