@@ -720,8 +720,8 @@ class VacuumVessel:
                 blanket_library.vol_vv_outboard,
                 fwbs_variables.vol_vv,
             ) = self.calculate_dshaped_vessel_volumes(
-                rsldi=buv.rsldi,
-                rsldo=buv.rsldo,
+                r_shld_inboard_inner=buv.r_shld_inboard_inner,
+                r_shld_outboard_outer=buv.r_shld_outboard_outer,
                 dz_vv_half=blanket_library.dz_vv_half,
                 dr_vv_inboard=buv.dr_vv_inboard,
                 dr_vv_outboard=buv.dr_vv_outboard,
@@ -737,8 +737,8 @@ class VacuumVessel:
                 rmajor=pv.rmajor,
                 rminor=pv.rminor,
                 triang=pv.triang,
-                rsldi=buv.rsldi,
-                rsldo=buv.rsldo,
+                r_shld_inboard_inner=buv.r_shld_inboard_inner,
+                r_shld_outboard_outer=buv.r_shld_outboard_outer,
                 dz_vv_half=blanket_library.dz_vv_half,
                 dr_vv_inboard=buv.dr_vv_inboard,
                 dr_vv_outboard=buv.dr_vv_outboard,
@@ -788,8 +788,8 @@ class VacuumVessel:
 
     def calculate_dshaped_vessel_volumes(
         self,
-        rsldi: float,
-        rsldo: float,
+        r_shld_inboard_inner: float,
+        r_shld_outboard_outer: float,
         dz_vv_half: float,
         dr_vv_inboard: float,
         dr_vv_outboard: float,
@@ -798,8 +798,8 @@ class VacuumVessel:
     ) -> tuple[float, float, float]:
         """Calculate volumes of D-shaped vacuum vessel segments"""
 
-        r_1 = rsldi
-        r_2 = rsldo - r_1
+        r_1 = r_shld_inboard_inner
+        r_2 = r_shld_outboard_outer - r_1
 
         (
             vol_vv_inboard,
@@ -821,8 +821,8 @@ class VacuumVessel:
         rmajor: float,
         rminor: float,
         triang: float,
-        rsldi: float,
-        rsldo: float,
+        r_shld_inboard_inner: float,
+        r_shld_outboard_outer: float,
         dz_vv_half: float,
         dr_vv_inboard: float,
         dr_vv_outboard: float,
@@ -835,8 +835,8 @@ class VacuumVessel:
 
         # Calculate distance between r1 and outer edge of inboard ...
         # ... section (m)
-        r_2 = r_1 - rsldi
-        r_3 = rsldo - r_1
+        r_2 = r_1 - r_shld_inboard_inner
+        r_3 = r_shld_outboard_outer - r_1
 
         (
             vol_vv_inboard,

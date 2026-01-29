@@ -1018,9 +1018,6 @@ class ApplyCoverageFactorsParam(NamedTuple):
     a_blkt_outboard_surface: Any = None
     a_blkt_total_surface: Any = None
     a_blkt_inboard_surface: Any = None
-    a_shld_inboard_surface: Any = None
-    a_shld_outboard_surface: Any = None
-    a_shld_total_surface: Any = None
     f_ster_div_single: Any = None
     f_a_fw_outboard_hcd: Any = None
     vol_blkt_outboard: Any = None
@@ -1034,13 +1031,9 @@ class ApplyCoverageFactorsParam(NamedTuple):
     vol_shld_outboard: Any = None
     expected_a_blkt_outboard_surface: Any = None
     expected_a_blkt_total_surface: Any = None
-    expected_a_shld_outboard_surface: Any = None
-    expected_a_shld_total_surface: Any = None
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
-    expected_vol_shld_total: Any = None
     expected_vol_vv: Any = None
-    expected_vol_shld_outboard: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1050,9 +1043,6 @@ class ApplyCoverageFactorsParam(NamedTuple):
             a_blkt_outboard_surface=1101.3666396424403,
             a_blkt_total_surface=1766.3354109399943,
             a_blkt_inboard_surface=664.9687712975541,
-            a_shld_inboard_surface=700.06731267447844,
-            a_shld_outboard_surface=1344.1106481995357,
-            a_shld_total_surface=2044.1779608740142,
             f_ster_div_single=0.115,
             f_a_fw_outboard_hcd=0,
             vol_blkt_outboard=1020.3677420460117,
@@ -1060,19 +1050,12 @@ class ApplyCoverageFactorsParam(NamedTuple):
             vol_blkt_total=1336.207205897842,
             fvolsi=1,
             fvolso=0.64000000000000001,
-            vol_shld_total=1124.4621612595051,
             n_divertors=1,
-            vol_shld_inboard=177.89822933168091,
-            vol_shld_outboard=946.56393192782434,
             expected_a_blkt_outboard_surface=898.23806738434075,
             expected_a_blkt_total_surface=1563.2068386818949,
-            expected_a_shld_outboard_surface=860.23081484770285,
-            expected_a_shld_total_surface=1560.2981275221814,
             expected_vol_blkt_outboard=866.70391336775992,
             expected_volblkt=1182.5433772195902,
-            expected_vol_shld_total=783.69914576548854,
             expected_vol_vv=1016.2876250857248,
-            expected_vol_shld_outboard=605.80091643380763,
         ),
     ),
 )
@@ -1106,21 +1089,6 @@ def test_apply_coverage_factors(
         applycoveragefactorsparam.a_blkt_inboard_surface,
     )
     monkeypatch.setattr(
-        build_variables,
-        "a_shld_inboard_surface",
-        applycoveragefactorsparam.a_shld_inboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_shld_outboard_surface",
-        applycoveragefactorsparam.a_shld_outboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_shld_total_surface",
-        applycoveragefactorsparam.a_shld_total_surface,
-    )
-    monkeypatch.setattr(
         fwbs_variables, "f_ster_div_single", applycoveragefactorsparam.f_ster_div_single
     )
     monkeypatch.setattr(
@@ -1140,18 +1108,7 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(fwbs_variables, "fvolsi", applycoveragefactorsparam.fvolsi)
     monkeypatch.setattr(fwbs_variables, "fvolso", applycoveragefactorsparam.fvolso)
     monkeypatch.setattr(
-        fwbs_variables, "vol_shld_total", applycoveragefactorsparam.vol_shld_total
-    )
-    monkeypatch.setattr(
         divertor_variables, "n_divertors", applycoveragefactorsparam.n_divertors
-    )
-    monkeypatch.setattr(
-        blanket_library, "vol_shld_inboard", applycoveragefactorsparam.vol_shld_inboard
-    )
-    monkeypatch.setattr(
-        blanket_library,
-        "vol_shld_outboard",
-        applycoveragefactorsparam.vol_shld_outboard,
     )
 
     blanket_library_fixture.apply_coverage_factors()
@@ -1162,23 +1119,11 @@ def test_apply_coverage_factors(
     assert build_variables.a_blkt_total_surface == pytest.approx(
         applycoveragefactorsparam.expected_a_blkt_total_surface
     )
-    assert build_variables.a_shld_outboard_surface == pytest.approx(
-        applycoveragefactorsparam.expected_a_shld_outboard_surface
-    )
-    assert build_variables.a_shld_total_surface == pytest.approx(
-        applycoveragefactorsparam.expected_a_shld_total_surface
-    )
     assert fwbs_variables.vol_blkt_outboard == pytest.approx(
         applycoveragefactorsparam.expected_vol_blkt_outboard
     )
     assert fwbs_variables.vol_blkt_total == pytest.approx(
         applycoveragefactorsparam.expected_volblkt
-    )
-    assert fwbs_variables.vol_shld_total == pytest.approx(
-        applycoveragefactorsparam.expected_vol_shld_total
-    )
-    assert blanket_library.vol_shld_outboard == pytest.approx(
-        applycoveragefactorsparam.expected_vol_shld_outboard
     )
 
 

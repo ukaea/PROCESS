@@ -127,8 +127,8 @@ class EllipticalVesselVolumes(NamedTuple):
     rmajor: Any = None
     rminor: Any = None
     triang: Any = None
-    rsldi: Any = None
-    rsldo: Any = None
+    r_shld_inboard_inner: Any = None
+    r_shld_outboard_outer: Any = None
     dz_vv_half: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
@@ -144,8 +144,8 @@ class EllipticalVesselVolumes(NamedTuple):
                 rmajor=8,
                 rminor=2.6666666666666665,
                 triang=0.5,
-                rsldi=4.083333333333334,
-                rsldo=12.716666666666667,
+                r_shld_inboard_inner=4.083333333333334,
+                r_shld_outboard_outer=12.716666666666667,
                 dz_vv_half=7.5032752487304135,
                 dr_vv_inboard=0.30000000000000004,
                 dr_vv_outboard=0.30000000000000004,
@@ -174,8 +174,8 @@ def test_elliptical_vessel_volumes(vacuum_vessel, elliptical_vessel_volumes, exp
             rmajor=elliptical_vessel_volumes.rmajor,
             rminor=elliptical_vessel_volumes.rminor,
             triang=elliptical_vessel_volumes.triang,
-            rsldi=elliptical_vessel_volumes.rsldi,
-            rsldo=elliptical_vessel_volumes.rsldo,
+            r_shld_inboard_inner=elliptical_vessel_volumes.r_shld_inboard_inner,
+            r_shld_outboard_outer=elliptical_vessel_volumes.r_shld_outboard_outer,
             dz_vv_half=elliptical_vessel_volumes.dz_vv_half,
             dr_vv_inboard=elliptical_vessel_volumes.dr_vv_inboard,
             dr_vv_outboard=elliptical_vessel_volumes.dr_vv_outboard,
@@ -190,8 +190,8 @@ def test_elliptical_vessel_volumes(vacuum_vessel, elliptical_vessel_volumes, exp
 
 
 class DShapedVesselVolumes(NamedTuple):
-    rsldi: Any = None
-    rsldo: Any = None
+    r_shld_inboard_inner: Any = None
+    r_shld_outboard_outer: Any = None
     dz_vv_half: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
@@ -204,8 +204,8 @@ class DShapedVesselVolumes(NamedTuple):
     [
         (
             DShapedVesselVolumes(
-                rsldi=1.5,
-                rsldo=8.4000000000000004,
+                r_shld_inboard_inner=1.5,
+                r_shld_outboard_outer=8.4000000000000004,
                 dz_vv_half=9.4349999999999987,
                 dr_vv_inboard=0.20000000000000001,
                 dr_vv_outboard=0.30000000000000004,
@@ -230,8 +230,8 @@ def test_dshaped_vessel_volumes(vacuum_vessel, dshaped_vessel_volumes, expected)
 
     vol_vv_inboard, vol_vv_outboard, vol_vv = (
         vacuum_vessel.calculate_dshaped_vessel_volumes(
-            rsldi=dshaped_vessel_volumes.rsldi,
-            rsldo=dshaped_vessel_volumes.rsldo,
+            r_shld_inboard_inner=dshaped_vessel_volumes.r_shld_inboard_inner,
+            r_shld_outboard_outer=dshaped_vessel_volumes.r_shld_outboard_outer,
             dz_vv_half=dshaped_vessel_volumes.dz_vv_half,
             dr_vv_inboard=dshaped_vessel_volumes.dr_vv_inboard,
             dr_vv_outboard=dshaped_vessel_volumes.dr_vv_outboard,

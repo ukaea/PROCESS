@@ -35,7 +35,7 @@ class Shield:
                 build_variables.a_shld_outboard_surface,
                 build_variables.a_shld_total_surface,
             ) = self.calculate_dshaped_shield_areas(
-                rsldi=build_variables.rsldi,
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
                 dr_fw_inboard=build_variables.dr_fw_inboard,
                 dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
@@ -52,7 +52,7 @@ class Shield:
                 blanket_library.vol_shld_outboard,
                 fwbs_variables.vol_shld_total,
             ) = self.calculate_dshaped_shield_volumes(
-                rsldi=build_variables.rsldi,
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
                 dr_fw_inboard=build_variables.dr_fw_inboard,
                 dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
@@ -72,8 +72,8 @@ class Shield:
                 build_variables.a_shld_outboard_surface,
                 build_variables.a_shld_total_surface,
             ) = self.calculate_elliptical_shield_areas(
-                rsldi=build_variables.rsldi,
-                rsldo=build_variables.rsldo,
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
+                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
                 rmajor=physics_variables.rmajor,
                 triang=physics_variables.triang,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
@@ -87,8 +87,8 @@ class Shield:
                 blanket_library.vol_shld_outboard,
                 fwbs_variables.vol_shld_total,
             ) = self.calculate_elliptical_shield_volumes(
-                rsldi=build_variables.rsldi,
-                rsldo=build_variables.rsldo,
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
+                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
                 rmajor=physics_variables.rmajor,
                 triang=physics_variables.triang,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
@@ -156,7 +156,7 @@ class Shield:
 
     @staticmethod
     def calculate_dshaped_shield_volumes(
-        rsldi: float,
+        r_shld_inboard_inner: float,
         dr_shld_inboard: float,
         dr_fw_inboard: float,
         dr_fw_plasma_gap_inboard: float,
@@ -171,7 +171,7 @@ class Shield:
     ) -> tuple[float, float, float]:
         """Calculate volumes of D-shaped shield segments."""
 
-        r_1 = rsldi + dr_shld_inboard
+        r_1 = r_shld_inboard_inner + dr_shld_inboard
         r_2 = (
             dr_fw_inboard
             + dr_fw_plasma_gap_inboard
@@ -199,7 +199,7 @@ class Shield:
 
     @staticmethod
     def calculate_dshaped_shield_areas(
-        rsldi: float,
+        r_shld_inboard_inner: float,
         dr_shld_inboard: float,
         dr_fw_inboard: float,
         dr_fw_plasma_gap_inboard: float,
@@ -212,7 +212,7 @@ class Shield:
     ) -> tuple[float, float, float]:
         """Calculate areas of D-shaped shield segments."""
 
-        r_1 = rsldi + dr_shld_inboard
+        r_1 = r_shld_inboard_inner + dr_shld_inboard
         r_2 = (
             dr_fw_inboard
             + dr_fw_plasma_gap_inboard
@@ -233,8 +233,8 @@ class Shield:
 
     @staticmethod
     def calculate_elliptical_shield_volumes(
-        rsldi: float,
-        rsldo: float,
+        r_shld_inboard_inner: float,
+        r_shld_outboard_outer: float,
         rmajor: float,
         triang: float,
         dr_shld_inboard: float,
@@ -248,11 +248,11 @@ class Shield:
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
         r_1 = rmajor - rminor * triang
-        r_2 = r_1 - rsldi
+        r_2 = r_1 - r_shld_inboard_inner
 
         r_2 = r_2 - dr_shld_inboard
 
-        r_3 = rsldo - r_1
+        r_3 = r_shld_outboard_outer - r_1
         r_3 = r_3 - dr_shld_outboard
 
         (
@@ -273,8 +273,8 @@ class Shield:
 
     @staticmethod
     def calculate_elliptical_shield_areas(
-        rsldi: float,
-        rsldo: float,
+        r_shld_inboard_inner: float,
+        r_shld_outboard_outer: float,
         rmajor: float,
         triang: float,
         dr_shld_inboard: float,
@@ -287,11 +287,11 @@ class Shield:
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
         r_1 = rmajor - rminor * triang
-        r_2 = r_1 - rsldi
+        r_2 = r_1 - r_shld_inboard_inner
 
         r_2 = r_2 - dr_shld_inboard
 
-        r_3 = rsldo - r_1
+        r_3 = r_shld_outboard_outer - r_1
         r_3 = r_3 - dr_shld_outboard
 
         (

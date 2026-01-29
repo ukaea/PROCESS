@@ -19,8 +19,8 @@ class EllipticalShieldVolumes(NamedTuple):
     rmajor: Any = None
     rminor: Any = None
     triang: Any = None
-    rsldi: Any = None
-    rsldo: Any = None
+    r_shld_inboard_inner: Any = None
+    r_shld_outboard_outer: Any = None
     dz_shield_half: Any = None
     dr_shield_inboard: Any = None
     dr_shield_outboard: Any = None
@@ -36,8 +36,8 @@ class EllipticalShieldVolumes(NamedTuple):
                 rmajor=8,
                 rminor=2.6666666666666665,
                 triang=0.5,
-                rsldi=4.083333333333334,
-                rsldo=12.716666666666667,
+                r_shld_inboard_inner=4.083333333333334,
+                r_shld_outboard_outer=12.716666666666667,
                 dz_shield_half=6.8032752487304133,
                 dr_shield_inboard=0.30000000000000004,
                 dr_shield_outboard=0.80000000000000004,
@@ -63,8 +63,8 @@ def test_elliptical_shield_volumes(shield, elliptical_shield_volumes, expected):
 
     vol_shield_inboard, vol_shield_outboard, vol_shield = (
         shield.calculate_elliptical_shield_volumes(
-            rsldi=elliptical_shield_volumes.rsldi,
-            rsldo=elliptical_shield_volumes.rsldo,
+            r_shld_inboard_inner=elliptical_shield_volumes.r_shld_inboard_inner,
+            r_shld_outboard_outer=elliptical_shield_volumes.r_shld_outboard_outer,
             rmajor=elliptical_shield_volumes.rmajor,
             triang=elliptical_shield_volumes.triang,
             dr_shld_inboard=elliptical_shield_volumes.dr_shield_inboard,
@@ -84,8 +84,8 @@ class EllipticalShieldAreas(NamedTuple):
     rmajor: Any = None
     rminor: Any = None
     triang: Any = None
-    rsldi: Any = None
-    rsldo: Any = None
+    r_shld_inboard_inner: Any = None
+    r_shld_outboard_outer: Any = None
     dz_shield_half: Any = None
     dr_shield_inboard: Any = None
     dr_shield_outboard: Any = None
@@ -101,8 +101,8 @@ class EllipticalShieldAreas(NamedTuple):
                 rmajor=8,
                 rminor=2.6666666666666665,
                 triang=0.5,
-                rsldi=4.083333333333334,
-                rsldo=12.716666666666667,
+                r_shld_inboard_inner=4.083333333333334,
+                r_shld_outboard_outer=12.716666666666667,
                 dz_shield_half=6.8032752487304133,
                 dr_shield_inboard=0.30000000000000004,
                 dr_shield_outboard=0.80000000000000004,
@@ -126,8 +126,8 @@ def test_elliptical_shield_areas(shield, elliptical_shield_areas, expected):
 
     a_shield_inboard, a_shield_outboard, a_shield = (
         shield.calculate_elliptical_shield_areas(
-            rsldi=elliptical_shield_areas.rsldi,
-            rsldo=elliptical_shield_areas.rsldo,
+            r_shld_inboard_inner=elliptical_shield_areas.r_shld_inboard_inner,
+            r_shld_outboard_outer=elliptical_shield_areas.r_shld_outboard_outer,
             rmajor=elliptical_shield_areas.rmajor,
             triang=elliptical_shield_areas.triang,
             dr_shld_inboard=elliptical_shield_areas.dr_shield_inboard,
@@ -144,7 +144,7 @@ def test_elliptical_shield_areas(shield, elliptical_shield_areas, expected):
 
 class DShapedShieldVolumes(NamedTuple):
     rminor: Any = None
-    rsldi: Any = None
+    r_shld_inboard_inner: Any = None
     dr_shld_inboard: Any = None
     dr_fw_plasma_gap_inboard: Any = None
     dr_fw_plasma_gap_outboard: Any = None
@@ -164,7 +164,7 @@ class DShapedShieldVolumes(NamedTuple):
             DShapedShieldVolumes(
                 rminor=2.5,
                 dr_shld_inboard=0.40000000000000002,
-                rsldi=1.5,
+                r_shld_inboard_inner=1.5,
                 dr_fw_plasma_gap_inboard=0.10000000000000001,
                 dr_fw_plasma_gap_outboard=0.10000000000000001,
                 dr_fw_inboard=0.018000000000000002,
@@ -194,7 +194,7 @@ def test_dshaped_shield_volumes(shield, dshaped_shield_volumes, expected):
 
     vol_shield_inboard, vol_shield_outboard, vol_shield = (
         shield.calculate_dshaped_shield_volumes(
-            rsldi=dshaped_shield_volumes.rsldi,
+            r_shld_inboard_inner=dshaped_shield_volumes.r_shld_inboard_inner,
             dr_shld_inboard=dshaped_shield_volumes.dr_shld_inboard,
             dr_fw_inboard=dshaped_shield_volumes.dr_fw_inboard,
             dr_fw_plasma_gap_inboard=dshaped_shield_volumes.dr_fw_plasma_gap_inboard,
@@ -216,7 +216,7 @@ def test_dshaped_shield_volumes(shield, dshaped_shield_volumes, expected):
 
 class DShapedShieldAreas(NamedTuple):
     rminor: Any = None
-    rsldi: Any = None
+    r_shld_inboard_inner: Any = None
     dr_shld_inboard: Any = None
     dr_fw_plasma_gap_inboard: Any = None
     dr_fw_plasma_gap_outboard: Any = None
@@ -234,7 +234,7 @@ class DShapedShieldAreas(NamedTuple):
             DShapedShieldAreas(
                 rminor=2.5,
                 dr_shld_inboard=0.40000000000000002,
-                rsldi=1.5,
+                r_shld_inboard_inner=1.5,
                 dr_fw_plasma_gap_inboard=0.10000000000000001,
                 dr_fw_plasma_gap_outboard=0.10000000000000001,
                 dr_fw_inboard=0.018000000000000002,
@@ -262,7 +262,7 @@ def test_dshaped_shield_areas(shield, dshaped_shield_areas, expected):
 
     a_shield_inboard, a_shield_outboard, a_shield = (
         shield.calculate_dshaped_shield_areas(
-            rsldi=dshaped_shield_areas.rsldi,
+            r_shld_inboard_inner=dshaped_shield_areas.r_shld_inboard_inner,
             dr_shld_inboard=dshaped_shield_areas.dr_shld_inboard,
             dr_fw_inboard=dshaped_shield_areas.dr_fw_inboard,
             dr_fw_plasma_gap_inboard=dshaped_shield_areas.dr_fw_plasma_gap_inboard,
