@@ -1618,37 +1618,49 @@ class SuperconductingTFCoil(TFCoil):
                     tc0m,
                 )
 
-            another_estimate = 2 * temp_tf_coolant_peak_field
-            (
-                t_zero_margin,
-                _root_result,
-            ) = optimize.newton(
-                superconductors.superconductor_current_density_margin,
-                temp_tf_coolant_peak_field,
-                fprime=None,
-                args=arguments,
-                tol=1.0e-06,
-                maxiter=50,
-                fprime2=None,
-                x1=another_estimate,
-                rtol=1.0e-6,
-                full_output=True,
-                disp=True,
-            )
-
-            temp_tf_superconductor_margin = t_zero_margin - temp_tf_coolant_peak_field
-            tfcoil_variables.temp_margin = temp_tf_superconductor_margin
-
-            if temp_tf_superconductor_margin <= 0.0e0:
+            try:
+                t_zero_margin = optimize.brentq(
+                    f=superconductors.superconductor_current_density_margin,
+                    a=1e-8,  # weird behaviour at exactly 0
+                    b=2 * temp_tf_coolant_peak_field,
+                    args=arguments,
+                    xtol=1.0e-06,
+                    disp=True,
+                )
+            except ValueError:
+                # ValueError occurs when no root exists for positive conductor temps
+                # try and find a root for negative temperatures
+                # this is not physical but will give a negative current density which indicates via any
+                # constraints that this point is not physically possible
                 logger.error(
-                    """Negative TFC temperature margin
-                temp_tf_superconductor_margin: {temp_tf_superconductor_margin}
+                    "No t_zero_margin exists for positive temperatures."
+                    " Using a kludge to find a negative conductor temperature (not physical since this is in Kelvin)."
+                    " The temperature margin will be negative to indicate no conductor temperature is sufficient."
+                )
+                t_zero_margin = optimize.brentq(
+                    f=lambda t, *args: (
+                        np.sign(t)
+                        * superconductors.superconductor_current_density_margin(t, *args)
+                    ),
+                    a=1e8,
+                    b=-2 * temp_tf_coolant_peak_field,
+                    args=arguments,
+                    xtol=1.0e-06,
+                    disp=True,
+                )
+
+            tfcoil_variables.temp_margin = t_zero_margin - temp_tf_coolant_peak_field
+
+            if tfcoil_variables.temp_margin <= 0.0e0:
+                logger.error(
+                    f"""Negative TFC temperature margin
+                temp_tf_superconductor_margin: {tfcoil_variables.temp_margin}
                 b_tf_inboard_peak: {b_tf_inboard_peak}
                 j_superconductor: {j_superconductor}
                 """
                 )
 
-        return temp_tf_superconductor_margin
+        return tfcoil_variables.temp_margin
 
     def quench_heat_protection_current_density(
         self,
