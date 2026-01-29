@@ -534,7 +534,9 @@ class Scan:
                 # Equality constraint bound/value required
                 constraint_bound = con2[i]
 
-                # -cc because sign is reversed in constraint_eqns
+                # Normally, a negative normalised constraint residual indicates that a constraint is feasible.
+                # However, at the end of the PROCESS constraint handler the sign is flipped.
+                # Therefore, we flip the sign back here by using -rcm
                 if sym[i] == ">=":
                     constraint_value = constraint_bound * (1 - -numerics.rcm[i])
                 elif sym[i] == "<=":
