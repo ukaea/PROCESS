@@ -9975,8 +9975,10 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
     axis.legend(labels, loc="upper center", bbox_to_anchor=(1.01, 0.85), ncol=1)
 
 
-def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
-    """Plot the iteration variables for a given figure."""
+def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
+    """Plot the iteration variables and where they lay in their bounds on a given axes"""
+
+    # Get total number of iteration variables
     n_itvars = int(m_file.get("nvar", scan=scan))
 
     y_labels = []
@@ -9991,21 +9993,25 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
             itvar_names[idx] = m_file.data[var].var_description
 
     for n_plot, n in enumerate(range(1, n_itvars + 1)):
+        # Get the final value of the iteration variable, its bounds, and relative change
         itvar_final = m_file.get(f"itvar{n:03d}", scan=scan)
         itvar_upper = m_file.get(f"boundu{n:03d}", scan=scan)
         itvar_lower = m_file.get(f"boundl{n:03d}", scan=scan)
+        itvar_relative_change = m_file.get(f"xcm{n:03d}", scan=scan)
+        final_value_normalised = m_file.get(f"nitvar{n:03d}", scan=scan)
 
         # Use the variable name if available, else fallback to "itvarXXX"
         var_label = itvar_names.get(n, f"itvar{n:03d}")
 
-        # Plot the final value as a vertical marker, normalised to upper bound
-        norm_final = (
-            (itvar_final - itvar_lower) / (itvar_upper - itvar_lower)
+        norm_relative_change = (
+            ((itvar_final / itvar_relative_change) - itvar_lower)
+            / (itvar_upper - itvar_lower)
             if itvar_final != itvar_lower
             else 0
         )
-        if np.isclose(norm_final, 1.0, atol=1e-6):
-            # Plot the lower bound at x=0
+
+        # Plot square marker at the final value if at bounds
+        if np.isclose(final_value_normalised, 1.0, atol=1e-3):
             axis.plot(
                 1,
                 n_plot,
@@ -10014,8 +10020,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
                 markersize=8,
                 label="Lower Bound" if n_plot == 0 else "",
             )
-        elif np.isclose(norm_final, 0.0, atol=1e-6):
-            # Plot the upper bound at x=1
+        elif np.isclose(final_value_normalised, 0.0, atol=1e-3):
             axis.plot(
                 0,
                 n_plot,
@@ -10028,41 +10033,81 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
         else:
             axis.barh(
                 n_plot,
-                norm_final,
+                final_value_normalised,
                 left=0,
-                height=0.8,
+                height=1.0,
                 color="blue",
+                edgecolor="black",
+                linewidth=1.5,
                 alpha=0.7,
                 label="Final Value" if n_plot == 0 else "",
             )
+
+        # Plot scatter point for normalized relative change
+        axis.scatter(
+            norm_relative_change,
+            n_plot,
+            color="black",
+            marker="o",
+            linewidths=2,
+            alpha=1.0,
+            label="Initial Value" if n_plot == 0 else "",
+        )
+
+        # Draw an arrow from the initial value to the final value
+        axis.annotate(
+            "",
+            xy=(final_value_normalised, n_plot),
+            xytext=(norm_relative_change, n_plot),
+            arrowprops={
+                "arrowstyle": "->",
+                "color": "black",
+                "linestyle": "--",
+                "linewidth": 1.0,
+                "alpha": 0.9,
+            },
+        )
         # Plot the value as a number at x = 0.5
         axis.text(
             0.5,
             n_plot,
-            f"{itvar_final:.8g}",
+            f"{itvar_final:,.8g}",
             va="center",
             ha="center",
-            fontsize=8,
-            color="black",
+            fontsize=10,
+            color=(
+                "orange"
+                if np.isclose(final_value_normalised, 1.0, atol=1e-3)
+                or np.isclose(final_value_normalised, 0.0, atol=1e-3)
+                else "green"
+            ),
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "white",
+                "alpha": 0.8,
+                "edgecolor": "white",
+                "linewidth": 1,
+            },
         )
+
         # Plot the value of the upper bound to the right of x=1
         axis.text(
             1.05,
             n_plot,
-            f"{itvar_upper:.3g}",
+            f"{itvar_upper:,.3g}",
             va="center",
             ha="left",
-            fontsize=8,
+            fontsize=10,
             color="gray",
         )
         # Plot the value of the lower bound to the left of x=0
         axis.text(
             -0.05,
             n_plot,
-            f"{itvar_lower:.3g}",
+            f"{itvar_lower:,.3g}",
             va="center",
             ha="right",
-            fontsize=8,
+            fontsize=10,
             color="gray",
         )
         y_labels.append(var_label)
@@ -10075,8 +10120,12 @@ def plot_iteration_variables(axis: plt.Axes, m_file, scan: int):
     axis.set_yticklabels(y_labels)
     axis.set_xticks([])
     axis.set_xticklabels([])
+    axis.set_facecolor("#f5f5f5")
     axis.set_xlim(-0.2, 1.2)  # Normalised bounds
-    axis.set_title("Iteration Variables Final Values and Bounds")
+    axis.set_title("Iteration Variables Bounds")
+    axis.set_xticks(np.arange(0, 1.0, 0.1))
+    axis.grid(True, axis="x", linestyle="--", alpha=0.3)
+    axis.legend(loc="upper left", bbox_to_anchor=(-0.15, 1.05), ncol=1)
 
 
 def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
@@ -12452,6 +12501,248 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
     axis.legend()
 
 
+def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, scan: int):
+    """Plot the equality constraints for a solution and their normalised residuals"""
+
+    y_labels = []
+    y_pos = []
+    n_plot = 0
+
+    # Build a mapping from itvar index to its name (description)
+    con_names = {}
+    con_numbers = {}
+    for var in m_file_data.data:
+        if var.startswith("eq_con"):
+            idx = int(var[6:])  # e.g. "itvar001" -> 1
+            con_names[idx] = m_file_data.data[var].var_description
+            con_numbers[idx] = idx
+
+    for n_plot, n in enumerate(con_numbers.values()):
+        # Constraint value needed
+        con_value = m_file_data.data[f"val_eq_con{n:03d}"].get_scan(scan)
+
+        # Use the variable name if available, else fallback to "eq_conXXX"
+        var_label = con_names.get(n, f"eq_con{n:03d}")
+
+        # Normalized residual of the constraint
+        con_norm_residual = m_file_data.data[f"eq_con{n:03d}"].get_scan(scan)
+
+        # Unit type of the constraint
+        con_units_raw = m_file_data.data[f"eq_units_con{n:03d}"].get_scan(scan)
+        con_units = str(con_units_raw).strip("'`")
+
+        # Remove '_normalised_residue' from the label if present
+        if isinstance(var_label, str) and var_label.endswith("_normalised_residue"):
+            var_label = var_label.replace("_normalised_residue", "")
+
+            # Remove trailing underscores and replace underscores between words with spaces
+            var_label = var_label.rstrip("_").replace("_", " ")
+
+        # Plot the normalized residual as a bar
+        axis.barh(
+            n_plot,
+            con_norm_residual,
+            height=0.6,
+            color="blue",
+            label="Normalized Residual" if n_plot == 0 else "",
+            align="center",
+        )
+
+        # Add the value as a number to the right of the bar
+        axis.text(
+            con_norm_residual + 0.02,
+            n_plot,
+            f"{con_norm_residual:.8g}",
+            va="center",
+            ha="left",
+            fontsize=8,
+            color="blue",
+        )
+
+        # Add the constraint value as text to the left of the y-axis
+        axis.text(
+            -0.05,
+            n_plot,
+            f"{con_value:.8g} {con_units}",
+            va="center",
+            ha="right",
+            fontsize=10,
+            color="black",
+        )
+
+        y_labels.append(var_label)
+        y_pos.append(n_plot)
+
+    axis.axvline(0, color="red", linewidth=2, zorder=0)
+    axis.set_yticks(y_pos)
+    axis.set_yticklabels(y_labels)
+    axis.set_xlim(-0.4, 1.2)  # Normalised bounds
+    axis.set_title("Equality Constraint Equations")
+    axis.set_xticks([])
+    axis.legend()
+
+
+def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan: int):
+    """Plot the inequality constraints for a solution and where they lay within their bounds"""
+
+    y_labels = []
+    y_pos = []
+    n_plot = 0
+
+    # Build a mapping from itvar index to its name (description)
+    con_names = {}
+    con_numbers = {}
+    for var in m_file.data:
+        if var.startswith("ineq_con"):
+            idx = int(var[8:])  # e.g. "ineq_con001" -> 1
+            con_names[idx] = m_file.data[var].var_description
+            con_numbers[idx] = idx
+
+    for n_plot, n in enumerate(con_numbers.values()):
+        # Constraint value/bound
+        con_bound = m_file.data[f"ineq_bound_con{n:03d}"].get_scan(scan)
+
+        # Value of constraint variable
+        con_value = m_file.data[f"ineq_value_con{n:03d}"].get_scan(scan)
+
+        # Constraint symbol can be `<=` for an upper limit or `>=` for a lower limit
+        con_symbol = m_file.data[f"ineq_symbol_con{n:03d}"].get_scan(scan)
+
+        # Use the variable name if available, else fallback to "ineq_conXXX"
+        var_label = con_names.get(n, f"ineq_con{n:03d}")
+
+        # Normalized residual of the constraint
+        con_residual_norm = m_file.data[f"ineq_con{n:03d}"].get_scan(scan)
+
+        # Unit type of the constraint
+        con_units = m_file.data[f"ineq_units_con{n:03d}"].get_scan(scan).strip("'`")
+
+        # Add a vertical line at the normalized constraint bounds of 0 and 1
+        axis.axvline(
+            0.0,
+            color="red",
+            linestyle="--",
+            linewidth=1.5,
+            zorder=0,
+        )
+
+        axis.axvline(
+            1.0,
+            color="red",
+            linestyle="--",
+            linewidth=1.5,
+            zorder=0,
+        )
+
+        # Remove '_normalised_residue' from the label if present
+        if isinstance(var_label, str) and var_label.endswith("_normalised_residue"):
+            var_label = var_label.replace("_normalised_residue", "")
+            var_label = var_label.rstrip("_").replace("_", " ")
+
+        # Calculate the normalised constraint threshold depending if the constraint is an upper
+        # or lower limit
+        if con_symbol == "'<='":
+            normalized_value = 1 - con_residual_norm
+            bar_left = normalized_value
+            bar_width = 1 - normalized_value
+        else:
+            normalized_value = con_residual_norm
+            bar_left = 0
+            bar_width = normalized_value
+
+        # If the constraint value is very close to the bound then plot a square marker at the bound
+        if np.isclose(normalized_value, 1.0, atol=1e-3):
+            axis.plot(
+                1,
+                n_plot,
+                "s",
+                color="black",
+                markersize=8,
+                zorder=5,
+            )
+        elif np.isclose(normalized_value, 0.0, atol=1e-3):
+            axis.plot(
+                0,
+                n_plot,
+                "s",
+                color="black",
+                markersize=8,
+                zorder=5,
+            )
+
+        else:
+            # If constraint value is not very close to bound then plot bar as normal
+            axis.barh(
+                n_plot,
+                bar_width,
+                left=bar_left,
+                color="blue",
+                edgecolor="black",
+                linewidth=1.5,
+                height=1.0,
+                alpha=0.7,
+                label="Constraint Value" if n_plot == 0 else "",
+            )
+
+        # Plot the value as a number at x = 0.5
+        axis.text(
+            0.5,
+            n_plot,
+            f"{con_value:,.8g} {con_units}",
+            va="center",
+            ha="center",
+            fontsize=8,
+            color=(
+                "orange"
+                if np.isclose(normalized_value, 1.0, atol=1e-3)
+                or np.isclose(normalized_value, 0.0, atol=1e-3)
+                else "green"
+            ),
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "white",
+                "alpha": 0.8,
+                "edgecolor": "white",
+                "linewidth": 1,
+            },
+        )
+        # Annoate the bound value depending if it is an upper or lower limit
+        if con_symbol == "'<='":
+            # Add the constraint symbol and bound as text
+            axis.text(
+                1.02,  # Position text slightly to the right of the normalized bound
+                n_plot,
+                f"$\\leq$ {con_bound:,.8g} {con_units}",
+                va="center",
+                ha="left",
+                fontsize=8,
+                color="black",
+            )
+        else:  # con_symbol == ">="
+            axis.text(
+                -0.025,  # Position text slightly to the left of the normalized bound
+                n_plot,
+                f"$\\geq$ {con_bound:,.8g} {con_units}",
+                va="center",
+                ha="right",
+                fontsize=8,
+                color="black",
+            )
+
+        y_labels.append(var_label)
+        y_pos.append(n_plot)
+
+    axis.set_yticks(y_pos)
+    axis.set_yticklabels(y_labels)
+    axis.set_title("Inequality Constraint Equations")
+    axis.set_xlim(-0.3, 1.275)
+    axis.set_xticks([])
+    axis.set_facecolor("#f5f5f5")
+    axis.set_xticks(np.arange(0, 1.0, 0.1))
+    axis.grid(True, axis="x", linestyle="--", alpha=0.3)
+    axis.set_xticklabels([])
+
+
 def main_plot(
     figs: list[Axes],
     m_file: mf.MFile,
@@ -12515,49 +12806,56 @@ def main_plot(
     # plot_current_drive_info(figs[1].add_subplot(236), m_file_data, scan)
     figs[1].subplots_adjust(wspace=0.25, hspace=0.25)
 
-    ax7 = figs[2].add_subplot(121)
-    ax7.set_position([0.175, 0.1, 0.35, 0.8])  # Move plot slightly to the right
+    ax7 = figs[2].add_subplot(111)
+    ax7.set_position([0.25, 0.1, 0.7, 0.8])  # Move plot slightly to the right
     plot_iteration_variables(ax7, m_file, scan)
+
+    ax7_5 = figs[3].add_subplot(313)
+    ax7_5.set_position([0.3, 0.1, 0.6, 0.1])
+    plot_equality_constraint_equations(ax7_5, m_file, scan)
+    ax7_6 = figs[3].add_subplot(111)
+    ax7_6.set_position([0.3, 0.25, 0.65, 0.7])
+    plot_inequality_constraint_equations(ax7_6, m_file, scan)
 
     # Plot main plasma information
     plot_main_plasma_information(
-        figs[3].add_subplot(111, aspect="equal"),
+        figs[4].add_subplot(111, aspect="equal"),
         m_file,
         scan,
         colour_scheme,
-        figs[3],
+        figs[4],
     )
 
     # Plot density profiles
-    ax9 = figs[4].add_subplot(231)
+    ax9 = figs[5].add_subplot(231)
     ax9.set_position([0.075, 0.55, 0.25, 0.4])
     plot_n_profiles(ax9, demo_ranges, m_file, scan)
 
     # Plot temperature profiles
-    ax10 = figs[4].add_subplot(232)
+    ax10 = figs[5].add_subplot(232)
     ax10.set_position([0.375, 0.55, 0.25, 0.4])
     plot_t_profiles(ax10, demo_ranges, m_file, scan)
 
     # Plot impurity profiles
-    ax11 = figs[4].add_subplot(233)
+    ax11 = figs[5].add_subplot(233)
     ax11.set_position([0.7, 0.45, 0.25, 0.5])
     plot_radprofile(ax11, m_file, scan, imp, demo_ranges)
 
     # Plot current density profile
-    ax12 = figs[4].add_subplot(4, 3, 10)
+    ax12 = figs[5].add_subplot(4, 3, 10)
     ax12.set_position([0.075, 0.105, 0.25, 0.15])
     plot_jprofile(ax12, m_file, scan)
 
     # Plot q profile
-    ax13 = figs[4].add_subplot(4, 3, 12)
+    ax13 = figs[5].add_subplot(4, 3, 12)
     ax13.set_position([0.7, 0.125, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
-    plot_plasma_effective_charge_profile(figs[5].add_subplot(221), m_file, scan)
-    plot_ion_charge_profile(figs[5].add_subplot(223), m_file, scan)
+    plot_plasma_effective_charge_profile(figs[6].add_subplot(221), m_file, scan)
+    plot_ion_charge_profile(figs[6].add_subplot(223), m_file, scan)
 
     if i_shape == 1:
-        plot_rad_contour(figs[5].add_subplot(122), m_file, scan, imp)
+        plot_rad_contour(figs[6].add_subplot(122), m_file, scan, imp)
 
     if i_shape != 1:
         msg = (
@@ -12567,12 +12865,12 @@ def main_plot(
             "see the 1D radiation plots for available information."
         )
         # Add explanatory text to both figures reserved for contour outputs
-        figs[5].text(0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        figs[6].text(0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    plot_fusion_rate_profiles(figs[6].add_subplot(122), figs[6], m_file, scan)
+    plot_fusion_rate_profiles(figs[7].add_subplot(122), figs[7], m_file, scan)
 
     if m_file.get("i_plasma_shape", scan=scan) == 1:
-        plot_fusion_rate_contours(figs[7], figs[8], m_file, scan)
+        plot_fusion_rate_contours(figs[8], figs[9], m_file, scan)
 
     if i_shape != 1:
         msg = (
@@ -12582,19 +12880,19 @@ def main_plot(
             "see the 1D fusion rate/profile plots for available information."
         )
         # Add explanatory text to both figures reserved for contour outputs
-        figs[7].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
         figs[8].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        figs[9].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    plot_plasma_pressure_profiles(figs[9].add_subplot(222), m_file, scan)
-    plot_plasma_pressure_gradient_profiles(figs[9].add_subplot(224), m_file, scan)
+    plot_plasma_pressure_profiles(figs[10].add_subplot(222), m_file, scan)
+    plot_plasma_pressure_gradient_profiles(figs[10].add_subplot(224), m_file, scan)
     # Currently only works with Sauter geometry as plasma has a closed surface
 
     if i_shape == 1:
         plot_plasma_poloidal_pressure_contours(
-            figs[9].add_subplot(121, aspect="equal"), m_file, scan
+            figs[10].add_subplot(121, aspect="equal"), m_file, scan
         )
     else:
-        ax = figs[9].add_subplot(131, aspect="equal")
+        ax = figs[10].add_subplot(131, aspect="equal")
         msg = (
             "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
             "(i_plasma_shape == 1). "
@@ -12613,24 +12911,24 @@ def main_plot(
         )
         ax.axis("off")
 
-    plot_magnetic_fields_in_plasma(figs[10].add_subplot(122), m_file, scan)
-    plot_beta_profiles(figs[10].add_subplot(221), m_file, scan)
+    plot_magnetic_fields_in_plasma(figs[11].add_subplot(122), m_file, scan)
+    plot_beta_profiles(figs[11].add_subplot(221), m_file, scan)
 
-    plot_ebw_ecrh_coupling_graph(figs[11].add_subplot(111), m_file, scan)
+    plot_ebw_ecrh_coupling_graph(figs[12].add_subplot(111), m_file, scan)
 
-    plot_bootstrap_comparison(figs[12].add_subplot(221), m_file, scan)
-    plot_h_threshold_comparison(figs[12].add_subplot(224), m_file, scan)
-    plot_density_limit_comparison(figs[13].add_subplot(221), m_file, scan)
-    plot_confinement_time_comparison(figs[13].add_subplot(224), m_file, scan)
+    plot_bootstrap_comparison(figs[13].add_subplot(221), m_file, scan)
+    plot_h_threshold_comparison(figs[13].add_subplot(224), m_file, scan)
+    plot_density_limit_comparison(figs[14].add_subplot(221), m_file, scan)
+    plot_confinement_time_comparison(figs[14].add_subplot(224), m_file, scan)
 
-    plot_debye_length_profile(figs[14].add_subplot(232), m_file, scan)
-    plot_velocity_profile(figs[14].add_subplot(233), m_file, scan)
-    plot_frequency_profile(figs[14].add_subplot(212), m_file, scan)
-    plot_plasma_coloumb_logarithms(figs[14].add_subplot(231), m_file, scan)
+    plot_debye_length_profile(figs[15].add_subplot(232), m_file, scan)
+    plot_velocity_profile(figs[15].add_subplot(233), m_file, scan)
+    plot_frequency_profile(figs[15].add_subplot(212), m_file, scan)
+    plot_plasma_coloumb_logarithms(figs[15].add_subplot(231), m_file, scan)
 
     # Plot poloidal cross-section
     poloidal_cross_section(
-        figs[15].add_subplot(121, aspect="equal"),
+        figs[16].add_subplot(121, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -12640,7 +12938,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        figs[15].add_subplot(122, aspect="equal"),
+        figs[16].add_subplot(122, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -12648,19 +12946,19 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = figs[15].add_subplot(222)
+    ax17 = figs[16].add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
-    ax18 = figs[16].add_subplot(211)
+    ax18 = figs[17].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = figs[17].add_subplot(211)
+    ax185 = figs[18].add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = figs[17].add_subplot(212)
+    ax18b = figs[18].add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
@@ -12668,52 +12966,52 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == 1:
         # TF coil with WP
-        ax19 = figs[18].add_subplot(221, aspect="equal")
+        ax19 = figs[19].add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, figs[18])
+        plot_superconducting_tf_wp(ax19, m_file, scan, figs[19])
 
         # TF coil turn structure
-        ax20 = figs[19].add_subplot(325, aspect="equal")
+        ax20 = figs[20].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[19], m_file, scan)
-        plot_205 = figs[19].add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, figs[20], m_file, scan)
+        plot_205 = figs[20].add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, figs[19], m_file, scan)
+        plot_cable_in_conduit_cable(plot_205, figs[20], m_file, scan)
     else:
-        ax19 = figs[18].add_subplot(211, aspect="equal")
+        ax19 = figs[19].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file, scan, figs[18])
-        plot_resistive_tf_info(ax19, m_file, scan, figs[18])
+        plot_resistive_tf_wp(ax19, m_file, scan, figs[19])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[19])
     plot_tf_coil_structure(
-        figs[20].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[21].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(figs[21], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[22], m_file, scan)
 
-    plot_tf_stress(figs[22].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    plot_tf_stress(figs[23].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
-    plot_current_profiles_over_time(figs[23].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[24].add_subplot(111), m_file, scan)
 
     plot_cs_coil_structure(
-        figs[24].add_subplot(121, aspect="equal"), figs[24], m_file, scan
+        figs[25].add_subplot(121, aspect="equal"), figs[25], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[24].add_subplot(224, aspect="equal"), figs[24], m_file, scan
+        figs[25].add_subplot(224, aspect="equal"), figs[25], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[25].add_subplot(221, aspect="equal"), m_file, scan
+        figs[26].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[25].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[25].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[26].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[26].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[26], m_file, scan)
-    ax_blanket = figs[26].add_subplot(122, aspect="equal")
+    plot_blkt_pipe_bends(figs[27], m_file, scan)
+    ax_blanket = figs[27].add_subplot(122, aspect="equal")
     plot_blanket(ax_blanket, m_file, scan, radial_build, colour_scheme)
     plot_firstwall(ax_blanket, m_file, scan, radial_build, colour_scheme)
     ax_blanket.set_xlabel("Radial position [m]")
@@ -12756,13 +13054,13 @@ def main_plot(
     )
 
     plot_main_power_flow(
-        figs[27].add_subplot(111, aspect="equal"), m_file, scan, figs[27]
+        figs[28].add_subplot(111, aspect="equal"), m_file, scan, figs[28]
     )
 
-    ax24 = figs[28].add_subplot(111)
+    ax24 = figs[29].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[28])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[29])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -12839,7 +13137,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(29)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(30)]
 
     # run main_plot
     main_plot(
