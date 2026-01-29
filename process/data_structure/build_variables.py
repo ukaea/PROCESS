@@ -20,6 +20,9 @@ a_blkt_inboard_surface_full_coverage: float = None
 a_blkt_outboard_surface: float = None
 """outboard blanket surface area (m2)"""
 
+a_blkt_outboard_surface_full_coverage: float = None
+"""Outboard blanket surface area with no holes or ports (toroidally continuous) (m²)"""
+
 
 blbmith: float = None
 """inboard blanket box manifold thickness (m) (`blktmodel>0`)"""
@@ -410,6 +413,7 @@ def init_build_variables():
         a_blkt_inboard_surface, \
         a_blkt_inboard_surface_full_coverage, \
         a_blkt_outboard_surface, \
+        a_blkt_outboard_surface_full_coverage, \
         blbmith, \
         blbmoth, \
         blbpith, \
@@ -505,6 +509,7 @@ def init_build_variables():
     a_blkt_inboard_surface = 0.0
     a_blkt_inboard_surface_full_coverage = 0.0
     a_blkt_outboard_surface = 0.0
+    a_blkt_outboard_surface_full_coverage = 0.0
     blbmith = 0.17
     blbmoth = 0.27
     blbpith = 0.30
