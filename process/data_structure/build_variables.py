@@ -204,7 +204,7 @@ rinboard: float = None
 """plasma inboard radius (m) (`consistency equation 29`)"""
 
 
-rsldi: float = None
+r_shld_inboard_inner: float = None
 """radius to inboard shield (inside point) (m)"""
 
 
@@ -450,7 +450,7 @@ def init_build_variables():
         rbld, \
         required_radial_space, \
         rinboard, \
-        rsldi, \
+        r_shld_inboard_inner, \
         rsldo, \
         r_vv_inboard_out, \
         r_sh_inboard_in, \
@@ -544,7 +544,7 @@ def init_build_variables():
     rbld = 0.0
     required_radial_space = 0.0
     rinboard = 0.651
-    rsldi = 0.0
+    r_shld_inboard_inner = 0.0
     rsldo = 0.0
     r_vv_inboard_out = 0.0
     r_sh_inboard_out = 0.0

@@ -1906,7 +1906,7 @@ class Build:
         )
 
         #  Radius to inner edge of inboard shield
-        build_variables.rsldi = (
+        build_variables.r_shld_inboard_inner = (
             physics_variables.rmajor
             - physics_variables.rminor
             - build_variables.dr_fw_plasma_gap_inboard

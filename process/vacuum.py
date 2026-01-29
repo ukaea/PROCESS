@@ -68,7 +68,9 @@ class Vacuum:
                 buv.dr_shld_outboard,
                 buv.dr_shld_inboard,
                 buv.dr_tf_inboard,
-                buv.rsldi - buv.dr_shld_vv_gap_inboard - buv.dr_vv_inboard,
+                buv.r_shld_inboard_inner
+                - buv.dr_shld_vv_gap_inboard
+                - buv.dr_vv_inboard,
                 tfv.n_tf_coils,
                 tv.t_plant_pulse_dwell,
                 pv.nd_plasma_electrons_vol_avg,

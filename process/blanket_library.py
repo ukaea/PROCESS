@@ -143,7 +143,7 @@ class BlanketLibrary:
         """
         # Calculate major radius to outer edge of inboard ...
         # ... section (m)
-        r1 = build_variables.rsldi
+        r1 = build_variables.r_shld_inboard_inner
         # ... shield (m)
         if icomponent == 1:
             r1 = r1 + build_variables.dr_shld_inboard
@@ -238,7 +238,7 @@ class BlanketLibrary:
 
         # Calculate distance between r1 and outer edge of inboard ...
         # ... section (m)
-        r2 = r1 - build_variables.rsldi
+        r2 = r1 - build_variables.r_shld_inboard_inner
         # ... shield (m)
         if icomponent == 1:
             r2 = r2 - build_variables.dr_shld_inboard

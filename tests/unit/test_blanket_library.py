@@ -502,7 +502,7 @@ def test_component_half_height(
 
 
 class DshapedComponentParam(NamedTuple):
-    rsldi: Any = None
+    r_shld_inboard_inner: Any = None
     dr_shld_inboard: Any = None
     dr_blkt_inboard: Any = None
     dr_fw_inboard: Any = None
@@ -559,7 +559,7 @@ class DshapedComponentParam(NamedTuple):
     "dshapedcomponentparam",
     (
         DshapedComponentParam(
-            rsldi=1.5,
+            r_shld_inboard_inner=1.5,
             dr_shld_inboard=0.40000000000000002,
             dr_blkt_inboard=0,
             dr_fw_inboard=0.018000000000000002,
@@ -612,7 +612,7 @@ class DshapedComponentParam(NamedTuple):
             expected_icomponent=0,
         ),
         DshapedComponentParam(
-            rsldi=1.5,
+            r_shld_inboard_inner=1.5,
             dr_shld_inboard=0.40000000000000002,
             dr_blkt_inboard=0,
             dr_fw_inboard=0.018000000000000002,
@@ -665,7 +665,7 @@ class DshapedComponentParam(NamedTuple):
             expected_icomponent=1,
         ),
         DshapedComponentParam(
-            rsldi=1.5,
+            r_shld_inboard_inner=1.5,
             dr_shld_inboard=0.40000000000000002,
             dr_blkt_inboard=0,
             dr_fw_inboard=0.018000000000000002,
@@ -731,7 +731,11 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "rsldi", dshapedcomponentparam.rsldi)
+    monkeypatch.setattr(
+        build_variables,
+        "r_shld_inboard_inner",
+        dshapedcomponentparam.r_shld_inboard_inner,
+    )
     monkeypatch.setattr(
         build_variables, "dr_shld_inboard", dshapedcomponentparam.dr_shld_inboard
     )
@@ -863,7 +867,7 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
 
 
 class EllipticalComponentParam(NamedTuple):
-    rsldi: Any = None
+    r_shld_inboard_inner: Any = None
     dr_shld_inboard: Any = None
     dr_blkt_inboard: Any = None
     rsldo: Any = None
@@ -919,7 +923,7 @@ class EllipticalComponentParam(NamedTuple):
     "ellipticalcomponentparam",
     (
         EllipticalComponentParam(
-            rsldi=4.0833333333333339,
+            r_shld_inboard_inner=4.0833333333333339,
             dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
@@ -971,7 +975,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_icomponent=0,
         ),
         EllipticalComponentParam(
-            rsldi=4.0833333333333339,
+            r_shld_inboard_inner=4.0833333333333339,
             dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
@@ -1023,7 +1027,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_icomponent=1,
         ),
         EllipticalComponentParam(
-            rsldi=4.0833333333333339,
+            r_shld_inboard_inner=4.0833333333333339,
             dr_shld_inboard=0.30000000000000004,
             dr_blkt_inboard=0.70000000000000007,
             rsldo=12.716666666666667,
@@ -1090,7 +1094,11 @@ def test_elliptical_component(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "rsldi", ellipticalcomponentparam.rsldi)
+    monkeypatch.setattr(
+        build_variables,
+        "r_shld_inboard_inner",
+        ellipticalcomponentparam.r_shld_inboard_inner,
+    )
     monkeypatch.setattr(
         build_variables, "dr_shld_inboard", ellipticalcomponentparam.dr_shld_inboard
     )
