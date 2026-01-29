@@ -862,7 +862,7 @@ class Costs2015:
         cost_2015_variables.s_cref[31] = 537.0e6
         #  Scale with outermost midplane radius of vacuum vessel squared (m2)
         cost_2015_variables.s_k[31] = (
-            build_variables.rsldo + build_variables.dr_vv_outboard
+            build_variables.r_shld_outboard_outer + build_variables.dr_vv_outboard
         ) ** 2
         cost_2015_variables.s_kref[31] = 94.09e0
         cost_2015_variables.s_cost[31] = (

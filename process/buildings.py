@@ -79,8 +79,8 @@ class Buildings:
                 tf_vertical_dim,
                 tfmtn,
                 tfcoil_variables.n_tf_coils,
-                build_variables.rsldo,
-                build_variables.rsldi,
+                build_variables.r_shld_outboard_outer,
+                build_variables.r_shld_inboard_inner,
                 2.0e0
                 * (build_variables.z_tf_inside_half - build_variables.dz_shld_vv_gap)
                 - build_variables.dz_vv_upper

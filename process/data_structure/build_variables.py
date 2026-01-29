@@ -9,13 +9,22 @@ available_radial_space: float = None
 a_blkt_total_surface: float = None
 """blanket total surface area (m2)"""
 
+a_blkt_total_surface_full_coverage: float = None
+"""Blanket(s) total surface area with no holes or ports (toroidally continuous) (m²)"""
+
 
 a_blkt_inboard_surface: float = None
 """inboard blanket surface area (m2)"""
 
+a_blkt_inboard_surface_full_coverage: float = None
+"""Inboard blanket surface area with no holes or ports (toroidally continuous) (m²)"""
+
 
 a_blkt_outboard_surface: float = None
 """outboard blanket surface area (m2)"""
+
+a_blkt_outboard_surface_full_coverage: float = None
+"""Outboard blanket surface area with no holes or ports (toroidally continuous) (m²)"""
 
 
 blbmith: float = None
@@ -204,11 +213,11 @@ rinboard: float = None
 """plasma inboard radius (m) (`consistency equation 29`)"""
 
 
-rsldi: float = None
+r_shld_inboard_inner: float = None
 """radius to inboard shield (inside point) (m)"""
 
 
-rsldo: float = None
+r_shld_outboard_outer: float = None
 """radius to outboard shield (outside point) (m)"""
 
 
@@ -404,8 +413,11 @@ def init_build_variables():
         aplasmin, \
         available_radial_space, \
         a_blkt_total_surface, \
+        a_blkt_total_surface_full_coverage, \
         a_blkt_inboard_surface, \
+        a_blkt_inboard_surface_full_coverage, \
         a_blkt_outboard_surface, \
+        a_blkt_outboard_surface_full_coverage, \
         blbmith, \
         blbmoth, \
         blbpith, \
@@ -450,8 +462,8 @@ def init_build_variables():
         rbld, \
         required_radial_space, \
         rinboard, \
-        rsldi, \
-        rsldo, \
+        r_shld_inboard_inner, \
+        r_shld_outboard_outer, \
         r_vv_inboard_out, \
         r_sh_inboard_in, \
         r_sh_inboard_out, \
@@ -498,8 +510,11 @@ def init_build_variables():
     aplasmin = 0.25
     available_radial_space = 0.0
     a_blkt_total_surface = 0.0
+    a_blkt_total_surface_full_coverage = 0.0
     a_blkt_inboard_surface = 0.0
+    a_blkt_inboard_surface_full_coverage = 0.0
     a_blkt_outboard_surface = 0.0
+    a_blkt_outboard_surface_full_coverage = 0.0
     blbmith = 0.17
     blbmoth = 0.27
     blbpith = 0.30
@@ -544,8 +559,8 @@ def init_build_variables():
     rbld = 0.0
     required_radial_space = 0.0
     rinboard = 0.651
-    rsldi = 0.0
-    rsldo = 0.0
+    r_shld_inboard_inner = 0.0
+    r_shld_outboard_outer = 0.0
     r_vv_inboard_out = 0.0
     r_sh_inboard_out = 0.0
     r_tf_inboard_in = 0.0

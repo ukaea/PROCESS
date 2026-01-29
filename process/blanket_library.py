@@ -143,7 +143,7 @@ class BlanketLibrary:
         """
         # Calculate major radius to outer edge of inboard ...
         # ... section (m)
-        r1 = build_variables.rsldi
+        r1 = build_variables.r_shld_inboard_inner
         # ... shield (m)
         if icomponent == 1:
             r1 = r1 + build_variables.dr_shld_inboard
@@ -166,7 +166,7 @@ class BlanketLibrary:
             r2 = build_variables.dr_blkt_inboard + r2 + build_variables.dr_blkt_outboard
         # Vaccum Vessel
         if icomponent == 2:
-            r2 = build_variables.rsldo - r1
+            r2 = build_variables.r_shld_outboard_outer - r1
 
         # Calculate surface area, assuming 100% coverage
         if icomponent == 0:
@@ -238,7 +238,7 @@ class BlanketLibrary:
 
         # Calculate distance between r1 and outer edge of inboard ...
         # ... section (m)
-        r2 = r1 - build_variables.rsldi
+        r2 = r1 - build_variables.r_shld_inboard_inner
         # ... shield (m)
         if icomponent == 1:
             r2 = r2 - build_variables.dr_shld_inboard
@@ -248,7 +248,7 @@ class BlanketLibrary:
 
         # Calculate distance between r1 and inner edge of outboard ...
         # ... section (m)
-        r3 = build_variables.rsldo - r1
+        r3 = build_variables.r_shld_outboard_outer - r1
         # ... shield (m)
         if icomponent == 1:
             r3 = r3 - build_variables.dr_shld_outboard
