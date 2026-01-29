@@ -1635,7 +1635,7 @@ class SuperconductingTFCoil(TFCoil):
                 full_output=True,
                 disp=True,
             )
-            # print(root_result)  # Diagnostic for newton method
+
             temp_tf_superconductor_margin = t_zero_margin - temp_tf_coolant_peak_field
             tfcoil_variables.temp_margin = temp_tf_superconductor_margin
 

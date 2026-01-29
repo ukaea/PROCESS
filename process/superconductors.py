@@ -820,7 +820,11 @@ def bottura_scaling(
         )  # Prevents NaNs. Sets tcrit negative
 
     # Critical field (T) at given strain and temperature
-    b_critical = b_c20_eps * (1.0 - f_temp_conductor_critical_no_field**1.52)
+    # This used to be written as 1-f^1.52 which would fail when f was negative
+    # even though it should be possible. rewriting this as f^1.52 = (f^38)^(1/25) works
+    b_critical = b_c20_eps * (
+        1.0 - np.power(f_temp_conductor_critical_no_field**38, 1 / 25)
+    )
 
     jc1 = (csc / b_conductor) * strfun
 
