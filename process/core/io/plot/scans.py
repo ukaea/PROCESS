@@ -354,18 +354,7 @@ def plot_scan(
         # -----------
         for index, output_name in enumerate(output_names):
             if stack_plots:
-                # check stack plots will work
-                if len(output_names) <= 1:
-                    raise ValueError(
-                        "For stack plots to be used need more than 1 output variable"
-                    )
-                fig, axs = plt.subplots(
-                    len(output_names),
-                    1,
-                    figsize=(8.0, (3.5 + (1 * len(output_names)))),
-                    sharex=True,
-                )
-                fig.subplots_adjust(hspace=0.0)
+                pass
             else:
                 fig, ax = plt.subplots()
                 if len(output_names2) > 0:
@@ -442,7 +431,22 @@ def plot_scan(
                     plt.tight_layout()
                 else:
                     if stack_plots:
-                        axs[output_names.index(output_name)].plot(
+                        # check stack plots will work
+                        if len(output_names) <= 1:
+                            raise ValueError(
+                                "For stack plots need more than 1 output variable"
+                            )
+                        # Create subplots only once for the first output
+                        if index == 0:
+                            fig, axs = plt.subplots(
+                                len(output_names),
+                                1,
+                                figsize=(8.0, (3.5 + (1 * len(output_names)))),
+                                sharex=True,
+                            )
+                            fig.subplots_adjust(hspace=0.0)
+
+                        axs[index].plot(
                             scan_var_array[input_file],
                             output_arrays[input_file][output_name],
                             "--o",
