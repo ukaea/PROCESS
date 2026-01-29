@@ -546,6 +546,9 @@ vol_blkt_inboard_full_coverage: float = None
 vol_blkt_outboard: float = None
 """volume of outboard blanket [m^3]"""
 
+vol_blkt_outboard_full_coverage: float = None
+"""Volume of outboard blanket with no holes or ports (toroidally continuous) [m³]"""
+
 
 vol_shld_total: float = None
 """volume of shield [m^3]"""
@@ -1023,6 +1026,7 @@ def init_fwbs_variables():
         vol_blkt_inboard, \
         vol_blkt_inboard_full_coverage, \
         vol_blkt_outboard, \
+        vol_blkt_outboard_full_coverage, \
         vol_shld_total, \
         whtshld, \
         wpenshld, \
@@ -1216,6 +1220,7 @@ def init_fwbs_variables():
     vol_blkt_inboard = 0.0
     vol_blkt_inboard_full_coverage = 0.0
     vol_blkt_outboard = 0.0
+    vol_blkt_outboard_full_coverage = 0.0
     vol_shld_total = 0.0
     whtshld = 0.0
     wpenshld = 0.0
