@@ -422,7 +422,7 @@ class ComponentHalfHeightParam(NamedTuple):
         ),
     ),
 )
-def test_component_half_height(
+def test_calculate_blkt_half_height(
     componenthalfheightparam, monkeypatch, blanket_library_fixture
 ):
     """
@@ -494,7 +494,7 @@ def test_component_half_height(
         divertor_variables, "dz_divertor", componenthalfheightparam.dz_divertor
     )
 
-    half_height = blanket_library_fixture.component_half_height(
+    half_height = blanket_library_fixture.calculate_blkt_half_height(
         componenthalfheightparam.icomponent
     )
 
