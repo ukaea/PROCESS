@@ -615,9 +615,92 @@ class BlanketLibrary:
             )
             - fwbs_variables.vol_blkt_inboard_full_coverage
         )
+        fwbs_variables.vol_blkt_inboard = fwbs_variables.vol_blkt_inboard_full_coverage
+
         fwbs_variables.vol_blkt_total = (
             fwbs_variables.vol_blkt_inboard_full_coverage
             + fwbs_variables.vol_blkt_outboard
+        )
+
+    def output_blkt_volumes_and_areas(self):
+        """Outputs blanket volumes and areas to the output file"""
+
+        po.oheadr(self.outfile, "Blanket Volumes and Surface Areas")
+
+        po.ovarst(
+            self.outfile,
+            "Inboard Blanket Volume with gaps and holes (m3)",
+            "(vol_blkt_inboard)",
+            fwbs_variables.vol_blkt_inboard,
+        )
+        po.ovarst(
+            self.outfile,
+            "Outboard Blanket Volume with gaps and holes (m3)",
+            "(vol_blkt_outboard)",
+            fwbs_variables.vol_blkt_outboard,
+        )
+        po.ovarst(
+            self.outfile,
+            "Total Blanket Volume with gaps and holes (m3)",
+            "(vol_blkt_total)",
+            fwbs_variables.vol_blkt_total,
+        )
+
+        po.ovarst(
+            self.outfile,
+            "Inboard Blanket Volume if toridally continuous (m3)",
+            "(vol_blkt_inboard_full_coverage)",
+            fwbs_variables.vol_blkt_inboard_full_coverage,
+        )
+        po.ovarst(
+            self.outfile,
+            "Outboard Blanket Volume if toridally continuous (m3)",
+            "(vol_blkt_outboard_full_coverage)",
+            fwbs_variables.vol_blkt_outboard_full_coverage,
+        )
+        po.ovarst(
+            self.outfile,
+            "Total Blanket Volume if toridally continuous (m3)",
+            "(vol_blkt_total_full_coverage)",
+            fwbs_variables.vol_blkt_total_full_coverage,
+        )
+
+        po.ovarst(
+            self.outfile,
+            "Inboard Blanket Surface Area with gaps and holes (m2)",
+            "(a_blkt_inboard_surface)",
+            build_variables.a_blkt_inboard_surface,
+        )
+        po.ovarst(
+            self.outfile,
+            "Outboard Blanket Surface Area with gaps and holes (m2)",
+            "(a_blkt_outboard_surface)",
+            build_variables.a_blkt_outboard_surface,
+        )
+        po.ovarst(
+            self.outfile,
+            "Total Blanket Surface Area with gaps and holes (m2)",
+            "(a_blkt_total_surface)",
+            build_variables.a_blkt_total_surface,
+        )
+
+        po.ovarst(
+            self.outfile,
+            "Inboard blanket surface area if toridally continuous (m2)",
+            "(a_blkt_inboard_surface_full_coverage)",
+            build_variables.a_blkt_inboard_surface_full_coverage,
+        )
+        po.ovarst(
+            self.outfile,
+            "Outboard blanket surface area if toridally continuous (m2)",
+            "(a_blkt_outboard_surface_full_coverage)",
+            build_variables.a_blkt_outboard_surface_full_coverage,
+        )
+        po.ovarst(
+            self.outfile,
+            "Total blanket surface area if toridally continuous (m2)",
+            "(a_blkt_total_surface_full_coverage)",
+            build_variables.a_blkt_total_surface_full_coverage,
         )
 
     def primary_coolant_properties(self, output: bool):

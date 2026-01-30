@@ -1221,6 +1221,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
     def write_output(self):
         po.oheadr(self.outfile, "First wall and blanket : CCFE HCPB model")
+
+        self.output_blkt_volumes_and_areas()
+
         po.osubhd(self.outfile, "Blanket Composition by volume :")
 
         po.ovarrf(

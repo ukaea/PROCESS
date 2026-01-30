@@ -912,6 +912,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
         # Component Volumes
         po.osubhd(self.outfile, "Component Volumes :")
 
+        self.output_blkt_volumes_and_areas()
+
         po.ovarrf(
             self.outfile,
             "First Wall Armour Volume (m3)",
