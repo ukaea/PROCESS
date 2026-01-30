@@ -2251,17 +2251,6 @@ i_blkt_inboard = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*icc = 52
-* DESCRIPTION:   Constraint equation for tritium breeding ratio lower limit
-* JUSTIFICATION: Turned off, do not care about minimum TBR.
-* VARIABLES:     tbrmin minimum tritium breeding ratio (If i_blanket_type=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio),  tbr calculated in situ
-
-*tbrmin = 
-* DESCRIPTION:   Minimum tritium breeding ratio (`constraint equation 52`) (default = 1.1)
-* JUSTIFICATION: Not using icc = 52
-
-*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 inuclear = 0
 * DESCRIPTION:   Switch for nuclear heating in the coils (default = 0)
 * =0 Frances Fox model (default)

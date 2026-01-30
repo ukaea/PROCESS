@@ -1618,7 +1618,7 @@ class Power:
          New Power Module Harrington  Cycle correlations  Cycle correlations.xls
         """
         if fwbs_variables.i_thermal_electric_conversion == 0:
-            #  CCFE HCPB Model (with or without TBR)
+            #  CCFE HCPB Model
             if fwbs_variables.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
@@ -1630,7 +1630,7 @@ class Power:
 
             #  Etath from reference. Div power to primary
         elif fwbs_variables.i_thermal_electric_conversion == 1:
-            #  CCFE HCPB Model (with or without TBR)
+            #  CCFE HCPB Model
             if fwbs_variables.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
@@ -1647,7 +1647,7 @@ class Power:
 
             #  Steam Rankine cycle to be used
         elif fwbs_variables.i_thermal_electric_conversion == 3:
-            #  CCFE HCPB Model (with or without TBR)
+            #  CCFE HCPB Model
             if fwbs_variables.i_blanket_type == 1:
                 #  If coolant is helium, the steam cycle is assumed to be superheated
                 #  and a different correlation is used. The turbine inlet temperature

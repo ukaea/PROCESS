@@ -2149,9 +2149,6 @@ class Stellarator:
                     fwbs_variables.f_blkt_li6_enrichment,
                 )
                 po.ovarre(
-                    self.outfile, "Tritium breeding ratio", "(tbr)", fwbs_variables.tbr
-                )
-                po.ovarre(
                     self.outfile,
                     "Tritium production rate (g/day)",
                     "(tritprate)",

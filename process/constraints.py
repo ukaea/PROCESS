@@ -1410,9 +1410,15 @@ def constraint_equation_52():
     """Equation for tritium breeding ratio lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    tbr: tritium breeding ratio (i_blanket_type=2,3 (KIT HCPB/HCLL))
-    tbrmin: minimum tritium breeding ratio (If i_blanket_type=1, tbrmin=minimum 5-year time-averaged tritium breeding ratio)
+    The tritium breeding ratio is only calculated when using the IFE model.
+
+    tbr: tritium breeding ratio
+    tbrmin: minimum tritium breeding ratio
     """
+    if data_structure.ife_variables.ife != 1:
+        raise ProcessValueError(
+            "Constraint 52 is only supported when running the IFE model"
+        )
     cc = (
         1.0
         - data_structure.fwbs_variables.tbr / data_structure.constraint_variables.tbrmin
