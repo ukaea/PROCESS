@@ -67,7 +67,39 @@ class BlanketLibrary:
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
-            self.dshaped_component()
+            (
+                build_variables.a_blkt_inboard_surface,
+                build_variables.a_blkt_outboard_surface,
+                build_variables.a_blkt_total_surface,
+            ) = self.calculate_dshaped_blkt_areas(
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
+                dr_shld_inboard=build_variables.dr_shld_inboard,
+                dr_blkt_inboard=build_variables.dr_blkt_inboard,
+                dr_fw_inboard=build_variables.dr_fw_inboard,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                rminor=physics_variables.rminor,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                dr_fw_outboard=build_variables.dr_fw_outboard,
+                dz_blkt_half=blanket_library.dz_blkt_half,
+            )
+
+            (
+                fwbs_variables.vol_blkt_inboard,
+                fwbs_variables.vol_blkt_outboard,
+                fwbs_variables.vol_blkt_total,
+            ) = self.calculate_dshaped_blkt_volumes(
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
+                dr_shld_inboard=build_variables.dr_shld_inboard,
+                dr_blkt_inboard=build_variables.dr_blkt_inboard,
+                dr_fw_inboard=build_variables.dr_fw_inboard,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                rminor=physics_variables.rminor,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                dr_fw_outboard=build_variables.dr_fw_outboard,
+                dz_blkt_half=blanket_library.dz_blkt_half,
+                dr_blkt_outboard=build_variables.dr_blkt_outboard,
+                dz_blkt_upper=build_variables.dz_blkt_upper,
+            )
 
         # Elliptical blanket and shield
         else:
@@ -181,6 +213,141 @@ class BlanketLibrary:
             build_variables.dr_blkt_outboard,
             build_variables.dz_blkt_upper,
         )
+
+    @staticmethod
+    def calculate_dshaped_blkt_areas(
+        r_shld_inboard_inner: float,
+        dr_shld_inboard: float,
+        dr_blkt_inboard: float,
+        dr_fw_inboard: float,
+        dr_fw_plasma_gap_inboard: float,
+        rminor: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_outboard: float,
+        dz_blkt_half: float,
+    ) -> tuple[float, float, float]:
+        """
+        Calculate D-shaped blanket surface areas.
+
+        :param r_shld_inboard_inner: Inner radius of inboard shield (m)
+        :type r_shld_inboard_inner: float
+        :param dr_shld_inboard: Thickness of inboard shield (m)
+        :type dr_shld_inboard: float
+        :param dr_blkt_inboard: Thickness of inboard blanket (m)
+        :type dr_blkt_inboard: float
+        :param dr_fw_inboard: Thickness of inboard first wall (m)
+        :type dr_fw_inboard: float
+        :param dr_fw_plasma_gap_inboard: Radial gap between inboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_inboard: float
+        :param rminor: Minor radius of the plasma (m)
+        :type rminor: float
+        :param dr_fw_plasma_gap_outboard: Radial gap between outboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_outboard: float
+        :param dr_fw_outboard: Thickness of outboard first wall (m)
+        :type dr_fw_outboard: float
+        :param dz_blkt_half: Half-height of the blanket (m)
+        :type dz_blkt_half: float
+
+        :return: Tuple containing inboard blanket surface area (m²), outboard blanket surface area (m²), and total blanket surface area (m²)
+        """
+        # Calculate major radius to outer edge of inboard ...
+        # ... section (m)
+        r1 = r_shld_inboard_inner
+
+        # ... blanket (m)
+
+        r1 = r1 + dr_shld_inboard + dr_blkt_inboard
+        # Horizontal distance between inside edges (m)
+        # i.e. outer radius of inboard part to inner radius of outboard part
+
+        r2 = (
+            dr_fw_inboard
+            + dr_fw_plasma_gap_inboard
+            + 2.0 * rminor
+            + dr_fw_plasma_gap_outboard
+            + dr_fw_outboard
+        )
+
+        (
+            a_blkt_inboard_surface,
+            a_blkt_outboard_surface,
+            a_blkt_total_surface,
+        ) = dshellarea(rmajor=r1, rminor=r2, zminor=dz_blkt_half)
+
+        return a_blkt_inboard_surface, a_blkt_outboard_surface, a_blkt_total_surface
+
+    @staticmethod
+    def calculate_dshaped_blkt_volumes(
+        r_shld_inboard_inner: float,
+        dr_shld_inboard: float,
+        dr_blkt_inboard: float,
+        dr_fw_inboard: float,
+        dr_fw_plasma_gap_inboard: float,
+        rminor: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_outboard: float,
+        dz_blkt_half: float,
+        dr_blkt_outboard: float,
+        dz_blkt_upper: float,
+    ) -> tuple[float, float, float]:
+        """
+        Calculate D-shaped blanket volumes.
+
+        :param r_shld_inboard_inner: Inner radius of inboard shield (m)
+        :type r_shld_inboard_inner: float
+        :param dr_shld_inboard: Thickness of inboard shield (m)
+        :type dr_shld_inboard: float
+        :param dr_blkt_inboard: Thickness of inboard blanket (m)
+        :type dr_blkt_inboard: float
+        :param dr_fw_inboard: Thickness of inboard first wall (m)
+        :type dr_fw_inboard: float
+        :param dr_fw_plasma_gap_inboard: Radial gap between inboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_inboard: float
+        :param rminor: Minor radius of the plasma (m)
+        :type rminor: float
+        :param dr_fw_plasma_gap_outboard: Radial gap between outboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_outboard: float
+        :param dr_fw_outboard: Thickness of outboard first wall (m)
+        :type dr_fw_outboard: float
+        :param dz_blkt_half: Half-height of the blanket (m)
+        :type dz_blkt_half: float
+        :param dr_blkt_outboard: Thickness of outboard blanket (m)
+        :type dr_blkt_outboard: float
+        :param dz_blkt_upper: Upper vertical thickness of the blanket (m)
+        :type dz_blkt_upper: float
+
+        :return: Tuple containing inboard blanket volume (m³), outboard blanket volume (m³), and total blanket volume (m³)
+        """
+        # Calculate major radius to outer edge of inboard ...
+        # ... section (m)
+        r1 = r_shld_inboard_inner
+
+        r1 = r1 + dr_shld_inboard + dr_blkt_inboard
+        # Horizontal distance between inside edges (m)
+        # i.e. outer radius of inboard part to inner radius of outboard part
+
+        r2 = (
+            dr_fw_inboard
+            + dr_fw_plasma_gap_inboard
+            + 2.0 * rminor
+            + dr_fw_plasma_gap_outboard
+            + dr_fw_outboard
+        )
+
+        (
+            vol_blkt_inboard,
+            vol_blkt_outboard,
+            vol_blkt_total,
+        ) = dshellvol(
+            rmajor=r1,
+            rminor=r2,
+            zminor=dz_blkt_half,
+            drin=dr_blkt_inboard,
+            drout=dr_blkt_outboard,
+            dz=dz_blkt_upper,
+        )
+
+        return vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total
 
     def elliptical_component(self):
         """Calculate component surface area and volume using elliptical scheme
