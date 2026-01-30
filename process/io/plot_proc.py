@@ -12743,6 +12743,80 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
     axis.set_xticklabels([])
 
 
+def plot_blkt_structure(
+    ax: plt.Axes,
+    m_file: mf.MFile,
+    scan: int,
+    radial_build: dict[str, float],
+    colour_scheme: Literal[1, 2],
+):
+    """Plot the BLKT structure on the given axis."""
+
+    rmajor = m_file.get("rmajor", scan=scan)
+
+    plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
+    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme)
+    ax.set_xlabel("Radial position [m]")
+    ax.set_ylabel("Vertical position [m]")
+    ax.set_title("Blanket and First Wall Poloidal Cross-Section")
+    ax.minorticks_on()
+    ax.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+    # Plot major radius line (vertical dashed line at rmajor)
+    ax.axvline(
+        m_file.get("rminor", scan=scan),
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        label="Major Radius $R_0$",
+    )
+    # Plot a horizontal line at dz_blkt_half (blanket half height)
+    dz_blkt_half = m_file.get("dz_blkt_half", scan=scan)
+    ax.axhline(
+        dz_blkt_half,
+        color="purple",
+        linestyle="--",
+        linewidth=1.5,
+        label="Blanket Half Height",
+    )
+    ax.axhline(
+        -dz_blkt_half,
+        color="purple",
+        linestyle="--",
+        linewidth=1.5,
+        label="Blanket Half Height",
+    )
+
+    ax.annotate(
+        "",
+        xy=(rmajor, dz_blkt_half),
+        xytext=(rmajor, -dz_blkt_half),
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+
+    # Add a label for the internal coil width
+    ax.text(
+        rmajor,
+        0.0,
+        f"{2 * dz_blkt_half:.3f} m",
+        fontsize=7,
+        color="black",
+        rotation=270,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=101,  # Ensure label is on top of all plots
+    )
+
+    # Plot midplane line (horizontal dashed line at Z=0)
+    ax.axhline(
+        0.0,
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        label="Midplane",
+    )
+
+
 def main_plot(
     figs: list[Axes],
     m_file: mf.MFile,
@@ -13012,46 +13086,7 @@ def main_plot(
 
     plot_blkt_pipe_bends(figs[27], m_file, scan)
     ax_blanket = figs[27].add_subplot(122, aspect="equal")
-    plot_blanket(ax_blanket, m_file, scan, radial_build, colour_scheme)
-    plot_firstwall(ax_blanket, m_file, scan, radial_build, colour_scheme)
-    ax_blanket.set_xlabel("Radial position [m]")
-    ax_blanket.set_ylabel("Vertical position [m]")
-    ax_blanket.set_title("Blanket and First Wall Poloidal Cross-Section")
-    ax_blanket.minorticks_on()
-    ax_blanket.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
-    # Plot major radius line (vertical dashed line at rmajor)
-    ax_blanket.axvline(
-        m_file.get("rminor", scan=scan),
-        color="black",
-        linestyle="--",
-        linewidth=1.5,
-        label="Major Radius $R_0$",
-    )
-    # Plot a horizontal line at dz_blkt_half (blanket half height)
-    dz_blkt_half = m_file.get("dz_blkt_half", scan=scan)
-    ax_blanket.axhline(
-        dz_blkt_half,
-        color="purple",
-        linestyle="--",
-        linewidth=1.5,
-        label="Blanket Half Height",
-    )
-    ax_blanket.axhline(
-        -dz_blkt_half,
-        color="purple",
-        linestyle="--",
-        linewidth=1.5,
-        label="Blanket Half Height",
-    )
-
-    # Plot midplane line (horizontal dashed line at Z=0)
-    ax_blanket.axhline(
-        0.0,
-        color="black",
-        linestyle="--",
-        linewidth=1.5,
-        label="Midplane",
-    )
+    plot_blkt_structure(ax_blanket, m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
         figs[28].add_subplot(111, aspect="equal"), m_file, scan, figs[28]
