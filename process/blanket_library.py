@@ -68,9 +68,9 @@ class BlanketLibrary:
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
             (
-                build_variables.a_blkt_inboard_surface,
-                build_variables.a_blkt_outboard_surface,
-                build_variables.a_blkt_total_surface,
+                build_variables.a_blkt_inboard_surface_full_coverage,
+                build_variables.a_blkt_outboard_surface_full_coverage,
+                build_variables.a_blkt_total_surface_full_coverage,
             ) = self.calculate_dshaped_blkt_areas(
                 r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
@@ -84,9 +84,9 @@ class BlanketLibrary:
             )
 
             (
-                fwbs_variables.vol_blkt_inboard,
-                fwbs_variables.vol_blkt_outboard,
-                fwbs_variables.vol_blkt_total,
+                fwbs_variables.vol_blkt_inboard_full_coverage,
+                fwbs_variables.vol_blkt_outboard_full_coverage,
+                fwbs_variables.vol_blkt_total_full_coverage,
             ) = self.calculate_dshaped_blkt_volumes(
                 r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
@@ -104,9 +104,9 @@ class BlanketLibrary:
         # Elliptical blanket and shield
         else:
             (
-                build_variables.a_blkt_inboard_surface,
-                build_variables.a_blkt_outboard_surface,
-                build_variables.a_blkt_total_surface,
+                build_variables.a_blkt_inboard_surface_full_coverage,
+                build_variables.a_blkt_outboard_surface_full_coverage,
+                build_variables.a_blkt_total_surface_full_coverage,
             ) = self.calculate_elliptical_blkt_areas(
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
@@ -121,9 +121,9 @@ class BlanketLibrary:
             )
 
             (
-                fwbs_variables.vol_blkt_inboard,
-                fwbs_variables.vol_blkt_outboard,
-                fwbs_variables.vol_blkt_total,
+                fwbs_variables.vol_blkt_inboard_full_coverage,
+                fwbs_variables.vol_blkt_outboard_full_coverage,
+                fwbs_variables.vol_blkt_total_full_coverage,
             ) = self.calculate_elliptical_blkt_volumes(
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
@@ -581,42 +581,43 @@ class BlanketLibrary:
         if divertor_variables.n_divertors == 2:
             # double null configuration
             build_variables.a_blkt_outboard_surface = (
-                build_variables.a_blkt_total_surface
+                build_variables.a_blkt_total_surface_full_coverage
                 * (
                     1.0
                     - 2.0 * fwbs_variables.f_ster_div_single
                     - fwbs_variables.f_a_fw_outboard_hcd
                 )
-                - build_variables.a_blkt_inboard_surface
+                - build_variables.a_blkt_inboard_surface_full_coverage
             )
         else:
             # single null configuration
             build_variables.a_blkt_outboard_surface = (
-                build_variables.a_blkt_total_surface
+                build_variables.a_blkt_total_surface_full_coverage
                 * (
                     1.0
                     - fwbs_variables.f_ster_div_single
                     - fwbs_variables.f_a_fw_outboard_hcd
                 )
-                - build_variables.a_blkt_inboard_surface
+                - build_variables.a_blkt_inboard_surface_full_coverage
             )
 
         build_variables.a_blkt_total_surface = (
-            build_variables.a_blkt_inboard_surface
+            build_variables.a_blkt_inboard_surface_full_coverage
             + build_variables.a_blkt_outboard_surface
         )
 
         fwbs_variables.vol_blkt_outboard = (
-            fwbs_variables.vol_blkt_total
+            fwbs_variables.vol_blkt_total_full_coverage
             * (
                 1.0
                 - fwbs_variables.f_ster_div_single
                 - fwbs_variables.f_a_fw_outboard_hcd
             )
-            - fwbs_variables.vol_blkt_inboard
+            - fwbs_variables.vol_blkt_inboard_full_coverage
         )
         fwbs_variables.vol_blkt_total = (
-            fwbs_variables.vol_blkt_inboard + fwbs_variables.vol_blkt_outboard
+            fwbs_variables.vol_blkt_inboard_full_coverage
+            + fwbs_variables.vol_blkt_outboard
         )
 
     def primary_coolant_properties(self, output: bool):
