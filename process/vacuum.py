@@ -867,6 +867,7 @@ class VacuumVessel:
         dz_vv_upper: float,
         dz_vv_lower: float,
     ) -> tuple[float, float, float]:
+        """Calculate volumes of elliptical vacuum vessel segments"""
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
         r_1 = rmajor - rminor * triang
