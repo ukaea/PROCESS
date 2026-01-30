@@ -58,13 +58,11 @@ class BlanketLibrary:
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
-            for icomponent in range(1):
-                self.dshaped_component(icomponent)
+            self.dshaped_component()
 
         # Elliptical blanket and shield
         else:
-            for icomponent in range(1):
-                self.elliptical_component(icomponent)
+            self.elliptical_component()
 
         # Apply coverage factors to volumes and surface areas
         self.apply_coverage_factors()
@@ -84,10 +82,6 @@ class BlanketLibrary:
                 + divertor_variables.dz_divertor
                 - build_variables.dz_blkt_upper
             )
-        else:
-            raise ProcessValueError(
-                f"{icomponent=} is invalid, it must be 0 for blanket."
-            )
 
         # Calculate component internal upper half-height (m)
         # If a double null machine then symmetric
@@ -105,7 +99,7 @@ class BlanketLibrary:
         # Average of top and bottom (m)
         return 0.5 * (htop + hbot)
 
-    def dshaped_component(self, icomponent: int):
+    def dshaped_component(self):
         """Calculate component surface area and volume using dshaped scheme
         Based on dshaped_blanket, dshaped_shield, dshaped_vv
         original author: J. Morris, CCFE, Culham Science Centre
@@ -130,30 +124,26 @@ class BlanketLibrary:
             + build_variables.dr_fw_outboard
         )
 
-        # Calculate surface area, assuming 100% coverage
-        if icomponent == 0:
-            (
-                build_variables.a_blkt_inboard_surface,
-                build_variables.a_blkt_outboard_surface,
-                build_variables.a_blkt_total_surface,
-            ) = dshellarea(r1, r2, blanket_library.dz_blkt_half)
+        (
+            build_variables.a_blkt_inboard_surface,
+            build_variables.a_blkt_outboard_surface,
+            build_variables.a_blkt_total_surface,
+        ) = dshellarea(r1, r2, blanket_library.dz_blkt_half)
 
-        # Calculate volumes, assuming 100% coverage
-        if icomponent == 0:
-            (
-                fwbs_variables.vol_blkt_inboard,
-                fwbs_variables.vol_blkt_outboard,
-                fwbs_variables.vol_blkt_total,
-            ) = dshellvol(
-                r1,
-                r2,
-                blanket_library.dz_blkt_half,
-                build_variables.dr_blkt_inboard,
-                build_variables.dr_blkt_outboard,
-                build_variables.dz_blkt_upper,
-            )
+        (
+            fwbs_variables.vol_blkt_inboard,
+            fwbs_variables.vol_blkt_outboard,
+            fwbs_variables.vol_blkt_total,
+        ) = dshellvol(
+            r1,
+            r2,
+            blanket_library.dz_blkt_half,
+            build_variables.dr_blkt_inboard,
+            build_variables.dr_blkt_outboard,
+            build_variables.dz_blkt_upper,
+        )
 
-    def elliptical_component(self, icomponent: int):
+    def elliptical_component(self):
         """Calculate component surface area and volume using elliptical scheme
         Based on elliptical_blanket, elliptical_shield, elliptical_vv
         original author: J. Morris, CCFE, Culham Science Centre
@@ -170,41 +160,37 @@ class BlanketLibrary:
         # ... section (m)
         r2 = r1 - build_variables.r_shld_inboard_inner
 
-        # ... blanket (m)
-        if icomponent == 0:
-            r2 = r2 - build_variables.dr_shld_inboard - build_variables.dr_blkt_inboard
+        r2 = r2 - build_variables.dr_shld_inboard - build_variables.dr_blkt_inboard
 
         # Calculate distance between r1 and inner edge of outboard ...
         # ... section (m)
         r3 = build_variables.r_shld_outboard_outer - r1
 
-        # ... blanket (m)
-        if icomponent == 0:
-            r3 = r3 - build_variables.dr_shld_outboard - build_variables.dr_blkt_outboard
+        r3 = r3 - build_variables.dr_shld_outboard - build_variables.dr_blkt_outboard
 
         # Calculate surface area, assuming 100% coverage
-        if icomponent == 0:
-            (
-                build_variables.a_blkt_inboard_surface,
-                build_variables.a_blkt_outboard_surface,
-                build_variables.a_blkt_total_surface,
-            ) = eshellarea(r1, r2, r3, blanket_library.dz_blkt_half)
+
+        (
+            build_variables.a_blkt_inboard_surface,
+            build_variables.a_blkt_outboard_surface,
+            build_variables.a_blkt_total_surface,
+        ) = eshellarea(r1, r2, r3, blanket_library.dz_blkt_half)
 
         # Calculate volumes, assuming 100% coverage
-        if icomponent == 0:
-            (
-                fwbs_variables.vol_blkt_inboard,
-                fwbs_variables.vol_blkt_outboard,
-                fwbs_variables.vol_blkt_total,
-            ) = eshellvol(
-                r1,
-                r2,
-                r3,
-                blanket_library.dz_blkt_half,
-                build_variables.dr_blkt_inboard,
-                build_variables.dr_blkt_outboard,
-                build_variables.dz_blkt_upper,
-            )
+
+        (
+            fwbs_variables.vol_blkt_inboard,
+            fwbs_variables.vol_blkt_outboard,
+            fwbs_variables.vol_blkt_total,
+        ) = eshellvol(
+            r1,
+            r2,
+            r3,
+            blanket_library.dz_blkt_half,
+            build_variables.dr_blkt_inboard,
+            build_variables.dr_blkt_outboard,
+            build_variables.dz_blkt_upper,
+        )
 
     def apply_coverage_factors(self):
         """Apply coverage factors to volumes

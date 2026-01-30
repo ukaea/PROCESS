@@ -537,7 +537,6 @@ class DshapedComponentParam(NamedTuple):
     dz_blkt_half: Any = None
     dz_shld_half: Any = None
     dz_vv_half: Any = None
-    icomponent: Any = None
     expected_a_blkt_inboard_surface: Any = None
     expected_a_blkt_outboard_surface: Any = None
     expected_a_blkt_total_surface: Any = None
@@ -594,7 +593,6 @@ class DshapedComponentParam(NamedTuple):
             dz_blkt_half=8.25,
             dz_shld_half=8.75,
             dz_vv_half=9.4349999999999987,
-            icomponent=0,
             expected_a_blkt_inboard_surface=196.97785938008002,
             expected_a_blkt_outboard_surface=852.24160940262459,
             expected_a_blkt_total_surface=1049.2194687827046,
@@ -745,7 +743,7 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     )
     monkeypatch.setattr(blanket_library, "dz_vv_half", dshapedcomponentparam.dz_vv_half)
 
-    blanket_library_fixture.dshaped_component(dshapedcomponentparam.icomponent)
+    blanket_library_fixture.dshaped_component()
 
     assert build_variables.a_blkt_inboard_surface == pytest.approx(
         dshapedcomponentparam.expected_a_blkt_inboard_surface
@@ -974,7 +972,7 @@ def test_elliptical_component(
         blanket_library, "dz_shld_half", ellipticalcomponentparam.dz_shld_half
     )
 
-    blanket_library_fixture.elliptical_component(ellipticalcomponentparam.icomponent)
+    blanket_library_fixture.elliptical_component()
 
     assert build_variables.a_blkt_inboard_surface == pytest.approx(
         ellipticalcomponentparam.expected_a_blkt_inboard_surface
