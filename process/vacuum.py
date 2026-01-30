@@ -786,6 +786,9 @@ class VacuumVessel:
         # changes in the same location.
         fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
 
+        # Vacuum vessel mass (kg)
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
+
     @staticmethod
     def calculate_vessel_half_height(
         z_tf_inside_half: float,
