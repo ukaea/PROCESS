@@ -54,7 +54,7 @@ class BlanketLibrary:
 
         # Calculate half-height
         # Blanket
-        blanket_library.dz_blkt_half = self.component_half_height(icomponent=0)
+        blanket_library.dz_blkt_half = self.calculate_blkt_half_height(icomponent=0)
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
@@ -67,7 +67,7 @@ class BlanketLibrary:
         # Apply coverage factors to volumes and surface areas
         self.apply_coverage_factors()
 
-    def component_half_height(self, icomponent: int):
+    def calculate_blkt_half_height(self, icomponent: int):
         """Calculate the blanket, shield or vacuum vessel half-height
         Based on blanket_half_height, shield_half_height, vv_half_height
         original author: J. Morris, CCFE, Culham Science Centre
