@@ -49,12 +49,21 @@ class BlanketLibrary:
         author: J. Morris, CCFE, Culham Science Centre
         Calculate the blanket, shield, vacuum vessel and cryostat volumes
         """
-        # N.B. icomponent is a switch used to specify selected component: blanket=0, sheild=1, vacuum vessel=2
-        # Replaced seperate subroutines for blnkt, shld and vv with fuction/subroutine with icomponent switch.
 
         # Calculate half-height
         # Blanket
-        blanket_library.dz_blkt_half = self.calculate_blkt_half_height(icomponent=0)
+        blanket_library.dz_blkt_half = self.calculate_blkt_half_height(
+            z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
+            dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
+            dz_divertor=divertor_variables.dz_divertor,
+            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
+            dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+            dr_fw_inboard=build_variables.dr_fw_inboard,
+            dr_fw_outboard=build_variables.dr_fw_outboard,
+            dz_blkt_upper=build_variables.dz_blkt_upper,
+            n_divertors=divertor_variables.n_divertors,
+        )
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
@@ -67,37 +76,67 @@ class BlanketLibrary:
         # Apply coverage factors to volumes and surface areas
         self.apply_coverage_factors()
 
-    def calculate_blkt_half_height(self, icomponent: int):
-        """Calculate the blanket, shield or vacuum vessel half-height
-        Based on blanket_half_height, shield_half_height, vv_half_height
-        original author: J. Morris, CCFE, Culham Science Centre
-        author: G. Graham, CCFE, Culham Science Centre
+    @staticmethod
+    def calculate_blkt_half_height(
+        z_plasma_xpoint_lower: float,
+        dz_xpoint_divertor: float,
+        dz_divertor: float,
+        z_plasma_xpoint_upper: float,
+        dr_fw_plasma_gap_inboard: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_inboard: float,
+        dr_fw_outboard: float,
+        dz_blkt_upper: float,
+        n_divertors: int,
+    ) -> float:
+        """
+        Calculate the blanket half-height based on plasma and component geometry.
+
+        :param z_plasma_xpoint_lower: Lower vertical position of the plasma x-point (m)
+        :type z_plasma_xpoint_lower: float
+        :param dz_xpoint_divertor: Vertical distance from x-point to divertor (m)
+        :type dz_xpoint_divertor: float
+        :param dz_divertor: Vertical thickness of the divertor (m)
+        :type dz_divertor: float
+        :param z_plasma_xpoint_upper: Upper vertical position of the plasma x-point (m)
+        :type z_plasma_xpoint_upper: float
+        :param dr_fw_plasma_gap_inboard: Radial gap between first wall and plasma on inboard side (m)
+        :type dr_fw_plasma_gap_inboard: float
+        :param dr_fw_plasma_gap_outboard: Radial gap between first wall and plasma on outboard side (m)
+        :type dr_fw_plasma_gap_outboard: float
+        :param dr_fw_inboard: Radial thickness of the first wall on inboard side (m)
+        :type dr_fw_inboard: float
+        :param dr_fw_outboard: Radial thickness of the first wall on outboard side (m)
+        :type dr_fw_outboard: float
+        :param dz_blkt_upper: Vertical thickness of the upper blanket (m)
+        :type dz_blkt_upper: float
+        :param n_divertors: Number of divertors (1 for single null, 2 for double null)
+        :type n_divertors: int
+
+        :return: Calculated blanket half-height (m)
+        :rtype: float
         """
         # Calculate component internal lower half-height (m)
         # Blanket
-        if icomponent == 0:
-            hbot = (
-                build_variables.z_plasma_xpoint_lower
-                + build_variables.dz_xpoint_divertor
-                + divertor_variables.dz_divertor
-                - build_variables.dz_blkt_upper
-            )
+        z_bottom = (
+            z_plasma_xpoint_lower + dz_xpoint_divertor + dz_divertor - dz_blkt_upper
+        )
 
         # Calculate component internal upper half-height (m)
         # If a double null machine then symmetric
-        if divertor_variables.n_divertors == 2:
-            htop = hbot
+        if n_divertors == 2:
+            z_top = z_bottom
         else:
             # Blanket
-            htop = build_variables.z_plasma_xpoint_upper + 0.5 * (
-                build_variables.dr_fw_plasma_gap_inboard
-                + build_variables.dr_fw_plasma_gap_outboard
-                + build_variables.dr_fw_inboard
-                + build_variables.dr_fw_outboard
+            z_top = z_plasma_xpoint_upper + 0.5 * (
+                dr_fw_plasma_gap_inboard
+                + dr_fw_plasma_gap_outboard
+                + dr_fw_inboard
+                + dr_fw_outboard
             )
 
         # Average of top and bottom (m)
-        return 0.5 * (htop + hbot)
+        return 0.5 * (z_top + z_bottom)
 
     def dshaped_component(self):
         """Calculate component surface area and volume using dshaped scheme
