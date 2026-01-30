@@ -617,6 +617,10 @@ class BlanketLibrary:
         )
         fwbs_variables.vol_blkt_inboard = fwbs_variables.vol_blkt_inboard_full_coverage
 
+        build_variables.a_blkt_inboard_surface = (
+            build_variables.a_blkt_inboard_surface_full_coverage
+        )
+
         fwbs_variables.vol_blkt_total = (
             fwbs_variables.vol_blkt_inboard_full_coverage
             + fwbs_variables.vol_blkt_outboard

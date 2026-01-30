@@ -10596,8 +10596,8 @@ def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
 def plot_blkt_pipe_bends(fig, m_file, scan: int):
     """Plot the blanket pipe bends on the given axis, with axes in mm."""
 
-    ax_90 = fig.add_subplot(331)
-    ax_180 = fig.add_subplot(334)
+    ax_90 = fig.add_subplot(341)
+    ax_180 = fig.add_subplot(342)
 
     # Get pipe radius from m_file, fallback to 0.1 m
     r = m_file.get("radius_blkt_channel", scan=scan)
@@ -12745,6 +12745,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
 
 def plot_blkt_structure(
     ax: plt.Axes,
+    fig: plt.Figure,
     m_file: mf.MFile,
     scan: int,
     radial_build: dict[str, float],
@@ -12814,6 +12815,58 @@ def plot_blkt_structure(
         linestyle="--",
         linewidth=1.5,
         label="Midplane",
+    )
+
+    textstr_blkt_areas = (
+        f"$\\mathbf{{Blanket \\ Areas:}}$\n\n"
+        f"Inboard blanket, with holes and gaps: {m_file.get('a_blkt_inboard_surface', scan=scan):,.3f} $\\text{{m}}^2$ \n"
+        f"Outboard blanket, with holes and gaps: {m_file.get('a_blkt_outboard_surface', scan=scan):,.3f} $\\text{{m}}^2$ \n"
+        f"Total blanket, with holes and gaps: {m_file.get('a_blkt_total_surface', scan=scan):,.3f} $\\text{{m}}^2$ \n\n"
+        f"Inboard blanket, full coverage: {m_file.get('a_blkt_inboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$ \n"
+        f"Outboard blanket, full coverage: {m_file.get('a_blkt_outboard_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$ \n"
+        f"Total blanket, full coverage: {m_file.get('a_blkt_total_surface_full_coverage', scan=scan):,.3f} $\\text{{m}}^2$ "
+    )
+
+    ax.text(
+        0.05,
+        0.3,
+        textstr_blkt_areas,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_blkt_volumes = (
+        f"$\\mathbf{{Blanket \\ Volumes:}}$\n\n"
+        f"Inboard blanket, with holes and gaps: {m_file.get('vol_blkt_inboard', scan=scan):,.3f} $\\text{{m}}^3$ \n"
+        f"Outboard blanket, with holes and gaps: {m_file.get('vol_blkt_outboard', scan=scan):,.3f} $\\text{{m}}^3$ \n"
+        f"Total blanket, with holes and gaps: {m_file.get('vol_blkt_total', scan=scan):,.3f} $\\text{{m}}^3$ \n\n"
+        f"Inboard blanket, full coverage: {m_file.get('vol_blkt_inboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$ \n"
+        f"Outboard blanket, full coverage: {m_file.get('vol_blkt_outboard_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$ \n"
+        f"Total blanket, full coverage: {m_file.get('vol_blkt_total_full_coverage', scan=scan):,.3f} $\\text{{m}}^3$ "
+    )
+
+    ax.text(
+        0.05,
+        0.05,
+        textstr_blkt_volumes,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
     )
 
 
@@ -13086,7 +13139,7 @@ def main_plot(
 
     plot_blkt_pipe_bends(figs[27], m_file, scan)
     ax_blanket = figs[27].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, m_file, scan, radial_build, colour_scheme)
+    plot_blkt_structure(ax_blanket, figs[27], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
         figs[28].add_subplot(111, aspect="equal"), m_file, scan, figs[28]
