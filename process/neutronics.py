@@ -759,7 +759,6 @@ class NeutronFluxProfile:
             mat = self.materials[num_layer]
             src_matrix = mat.sigma_s + mat.sigma_in
             diffusion_const_n = self.diffusion_const[num_layer, n]
-            skipped_c_coefs, skipped_s_coefs = [], []
             in_scatter_max_group = self.n_groups if include_upscatter else n+1
             for g in range(in_scatter_max_group):
                 # if the characteristic length of group [g] coincides with the
@@ -767,16 +766,22 @@ class NeutronFluxProfile:
                 # cosh/sinh would be indistinguishable from group [n]'s
                 # cosh/sinh anyways, therefore we can set the coefficient to 0.
                 if g==n:
+                    # placeholder zeros, to be properly calculated later.
                     _coefs.c.append(0.0)
                     _coefs.s.append(0.0)
                     continue
                 l2n, l2g = self.l2[num_layer, n], self.l2[num_layer, g]
                 l2_diff = l2g - l2n
                 if np.isclose(l2_diff, 0):
-                    skipped_c_coefs.append(...)
-                    skipped_s_coefs.append(...)
+                    # The multiplier of the sin(h) and cos(h) (x/L_g) function
+                    # should include a factor of x^k where k += 1.
                     _coefs.c.append(0.0)
                     _coefs.s.append(0.0)
+                    raise UserWarning(
+                        f"Group {g} and group {n} has the same neutron "
+                        "diffusion lengths, which may lead to an error "
+                        "in the neutron flux profile."
+                    )
                     continue
                 scale_factor = (l2n * l2g) / diffusion_const_n / l2_diff
                 in_scatter_min_group = 0 if include_upscatter else g
@@ -798,57 +803,11 @@ class NeutronFluxProfile:
                     )
                     * scale_factor
                 )
-            _coefs[num_layer, n].c[n] = ... - sum(skipped_c_coefs)
-            _coefs[num_layer, n].s[n] = ... - sum(skipped_s_coefs)
+            _coefs[num_layer, n].c[n] = ...
+            _coefs[num_layer, n].s[n] = ...
 
             self.coefficients[num_layer, n] = _coefs
 
-        def _set_coefficients(input_vector: Iterable[float]):
-            for num_layer in range(self.n_layers):
-                i = num_layer * 2
-                self.coefficients[num_layer, n].c[n] = input_vector[i]
-                self.coefficients[num_layer, n].s[n] = input_vector[i + 1]
-
-        def _evaluate_fit():
-            # Enforce zero net current flowing out of the plasma.
-            no_net_current_at_zero = self.groupwise_neutron_current_in_layer(
-                n, 0, 0.0
-            )
-            conditions = [no_net_current_at_zero]
-
-            # Enforce continuity conditions.
-            for num_layer in range(self.n_layers - 1):
-                x = self.layer_x[num_layer]
-                flux_continuity = self.groupwise_neutron_flux_in_layer(
-                    n, num_layer, x
-                ) - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
-                current_continuity = self.groupwise_neutron_current_in_layer(
-                    n, num_layer, x
-                ) - self.groupwise_neutron_current_in_layer(
-                    n, num_layer + 1, x
-                )
-                conditions.append(flux_continuity)
-                conditions.append(current_continuity)
-
-            # Enforce zero flux at extended boundary
-            flux_at_extended_boundary = self.groupwise_neutron_flux_in_layer(
-                n, self.n_layers - 1, self.extended_boundary[n]
-            )
-            conditions.append(flux_at_extended_boundary)
-            return np.array(conditions)
-
-        def objective(coefficients_vector):
-            _set_coefficients(coefficients_vector)
-            return _evaluate_fit()
-
-        x0 = np.flatten([
-            [layer_coefs[n].c[n], layer_coefs[n].s[n]]
-            for layer_coefs in self.coefficients
-        ])
-        results = optimize.root(objective, x0=x0)
-        _set_coefficients(results.res)
-        self.num_iteration += 1
-        return None
 
     def _check_if_in_layer(
         self, x: npt.NDArray[np.float64], num_layer: int
