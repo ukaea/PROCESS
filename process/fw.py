@@ -4,7 +4,7 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
-from process.blanket_library import BlanketLibrary, dshellarea
+from process.blanket_library import BlanketLibrary, dshellarea, eshellarea
 from process.coolprop_interface import FluidProperties
 from process.data_structure import blanket_library, build_variables, fwbs_variables
 
@@ -86,6 +86,45 @@ class FirstWall:
             a_fw_outboard_full_coverage,
             a_fw_total_full_coverage,
         ) = dshellarea(rmajor=r1, rminor=r2, zminor=dz_fw_half)
+
+        return (
+            a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage,
+            a_fw_total_full_coverage,
+        )
+
+    @staticmethod
+    def calculate_elliptical_first_wall_areas(
+        rmajor: float,
+        rminor: float,
+        triang: float,
+        dz_fw_half: float,
+        dr_fw_plasma_gap_inboard: float,
+        dr_fw_plasma_gap_outboard: float,
+    ) -> tuple[float, float, float]:
+        """Calculate the first wall areas for an elliptical cross-section."""
+
+        # Cross-section is assumed to be defined by two ellipses
+        #  Major radius to centre of inboard and outboard ellipses
+        #  (coincident in radius with top of plasma)
+
+        r1 = rmajor - rminor * triang
+
+        #  Distance between r1 and outer edge of inboard section
+
+        r2 = r1 - (rmajor - rminor - dr_fw_plasma_gap_inboard)
+
+        #  Distance between r1 and inner edge of outboard section
+
+        r3 = (rmajor + rminor + dr_fw_plasma_gap_outboard) - r1
+
+        #  Calculate surface area, assuming 100% coverage
+
+        (
+            a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage,
+            a_fw_total_full_coverage,
+        ) = eshellarea(rshell=r1, rmini=r2, rmino=r3, zminor=dz_fw_half)
 
         return (
             a_fw_inboard_full_coverage,
