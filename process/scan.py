@@ -580,66 +580,63 @@ class Scan:
         if numerics.nineqns > 0:
             inequality_constraint_table = []
             # Inequalities not necessarily satisfied when evaluating
-            if self.solver != "fsolve":
+            process_output.osubhd(
+                constants.NOUT,
+                "Negative inequality constraint (normalised) residuals indicate a constraint is satisfied.",
+            )
+            if self.solver == "fsolve":
                 process_output.osubhd(
                     constants.NOUT,
-                    "The following inequality constraint residues should be "
-                    "greater than or approximately equal to zero:",
+                    "This MFile was produced via an evaluation, not an optimisation, and so the constraints "
+                    "might be violated.",
                 )
 
             for i in range(numerics.neqns, numerics.neqns + numerics.nineqns):
                 name = numerics.lablcc[numerics.icc[i] - 1]
-                # Equality constraint bound/value required
-                constraint_bound = con2[i]
-
-                # Normally, a negative normalised constraint residual indicates that a constraint is feasible.
-                # However, at the end of the PROCESS constraint handler the sign is flipped.
-                # Therefore, we flip the sign back here by using -rcm
-                if sym[i] == ">=":
-                    constraint_value = constraint_bound * (1 - -numerics.rcm[i])
-                elif sym[i] == "<=":
-                    constraint_value = constraint_bound * (-numerics.rcm[i] + 1)
+                constraint = constraints.ConstraintManager.evaluate_constraint(
+                    int(numerics.icc[i])
+                )
 
                 inequality_constraint_table.append([
                     name,
-                    f"{constraint_value} {lab[i]}",
-                    sym[i],
-                    f"{con2[i]} {lab[i]}",
-                    f"{err[i]} {lab[i]}",
-                    f"{numerics.rcm[i]}",
+                    f"{constraint.constraint_value} {constraint.units}",
+                    constraint.symbol,
+                    f"{constraint.constraint_bound} {constraint.units}",
+                    f"{constraint.residual} {constraint.units}",
+                    f"{constraint.normalised_residual}",
                 ])
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} normalised residue",
                     f"(ineq_con{numerics.icc[i]:03d})",
-                    numerics.rcm[i],
+                    -constraint.normalised_residual,
                 )
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} physical value",
                     f"(ineq_value_con{numerics.icc[i]:03d})",
-                    constraint_value,
+                    constraint.constraint_value,
                 )
 
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} symbol",
                     f"(ineq_symbol_con{numerics.icc[i]:03d})",
-                    f"'{sym[i]}'",
+                    f"'{constraint.symbol}'",
                 )
 
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} units",
                     f"(ineq_units_con{numerics.icc[i]:03d})",
-                    f"'{lab[i]}'",
+                    f"'{constraint.units}'",
                 )
 
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} physical bound",
                     f"(ineq_bound_con{numerics.icc[i]:03d})",
-                    constraint_bound,
+                    constraint.constraint_bound,
                 )
 
             process_output.write(
@@ -648,11 +645,11 @@ class Scan:
                     inequality_constraint_table,
                     headers=[
                         "",
-                        "",
                         "Physical constraint",
                         "",
                         "Physical constraint bound",
                         "Constraint residue",
+                        "Normalised residue",
                     ],
                     numalign="left",
                 ),

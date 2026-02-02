@@ -153,7 +153,7 @@ def leq(value: float, bound: float, registration: ConstraintRegistration):
     return ConstraintResult(
         **asdict(registration),
         constraint_value=value,
-        constraint_bound=value,
+        constraint_bound=bound,
         normalised_residual=normalised_residual,
         residual=residual,
     )
@@ -166,7 +166,7 @@ def geq(value: float, bound: float, registration: ConstraintRegistration):
     return ConstraintResult(
         **asdict(registration),
         constraint_value=value,
-        constraint_bound=value,
+        constraint_bound=bound,
         normalised_residual=normalised_residual,
         residual=residual,
     )
@@ -179,7 +179,7 @@ def eq(value: float, bound: float, registration: ConstraintRegistration):
     return ConstraintResult(
         **asdict(registration),
         constraint_value=value,
-        constraint_bound=value,
+        constraint_bound=bound,
         normalised_residual=normalised_residual,
         residual=residual,
     )
@@ -403,20 +403,20 @@ def constraint_equation_5(constraint_registration):
     # Apply Greenwald limit to line-averaged density
     if data_structure.physics_variables.i_density_limit == 7:
         return leq(
+            data_structure.physics_variables.nd_plasma_electron_line,
             (
-                data_structure.physics_variables.nd_plasma_electron_line
-                / data_structure.physics_variables.nd_plasma_electrons_max
+                data_structure.physics_variables.nd_plasma_electrons_max
+                * data_structure.constraint_variables.fdene
             ),
-            data_structure.constraint_variables.fdene,
             constraint_registration,
         )
 
     return leq(
+        data_structure.physics_variables.nd_plasma_electrons_vol_avg,
         (
-            data_structure.physics_variables.nd_plasma_electrons_vol_avg
-            / data_structure.physics_variables.nd_plasma_electrons_max
+            data_structure.physics_variables.nd_plasma_electrons_max
+            * data_structure.constraint_variables.fdene
         ),
-        data_structure.constraint_variables.fdene,
         constraint_registration,
     )
 
@@ -936,11 +936,11 @@ def constraint_equation_33(constraint_registration):
     j_tf_wp / j_tf_wp_critical <= fiooic.
     """
     return leq(
+        data_structure.tfcoil_variables.j_tf_wp,
         (
-            data_structure.tfcoil_variables.j_tf_wp
-            / data_structure.tfcoil_variables.j_tf_wp_critical
+            data_structure.tfcoil_variables.j_tf_wp_critical
+            * data_structure.constraint_variables.fiooic
         ),
-        data_structure.constraint_variables.fiooic,
         constraint_registration,
     )
 
