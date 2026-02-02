@@ -11,7 +11,7 @@ from process.data_structure import blanket_library, build_variables, fwbs_variab
 logger = logging.getLogger(__name__)
 
 
-class Fw:
+class FirstWall:
     def __init__(self) -> None:
         self.outfile = constants.NOUT
         self.blanket_library = BlanketLibrary(fw=self)

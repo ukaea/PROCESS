@@ -14,7 +14,7 @@ from process.data_structure import (
     primary_pumping_variables,
     tfcoil_variables,
 )
-from process.fw import Fw
+from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
 
 
@@ -25,7 +25,7 @@ def ccfe_hcpb():
     :returns: initialised CCFE_HCPB object
     :rtype: process.hcpb.CCFE_HCPB
     """
-    return CCFE_HCPB(Fw())
+    return CCFE_HCPB(FirstWall())
 
 
 class NuclearHeatingMagnetsParam(NamedTuple):

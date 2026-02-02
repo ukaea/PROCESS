@@ -3,17 +3,17 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import fwbs_variables
-from process.fw import Fw
+from process.fw import FirstWall
 
 
 @pytest.fixture
 def fw():
-    """Provides Fw object for testing.
+    """Provides FirstWall object for testing.
 
-    :returns: initialised Fw object
-    :rtype: process.fw.Fw
+    :returns: initialised FirstWall object
+    :rtype: process.fw.FirstWall
     """
-    return Fw()
+    return FirstWall()
 
 
 class FwTempParam(NamedTuple):
