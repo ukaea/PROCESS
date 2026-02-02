@@ -7,25 +7,25 @@ import pytest
 from pytest import approx
 
 from process import fusion_reactions as reactions
-from process.fortran import physics_variables as pv
+from process.data_structure import physics_variables as pv
 
 
 class SetFusionPowersParam(NamedTuple):
     f_p_alpha_plasma_deposited: Any = None
 
-    f_deuterium: Any = None
+    f_plasma_fuel_deuterium: Any = None
 
     i_beta_fast_alpha: Any = None
 
-    bp: Any = None
+    b_plasma_poloidal_average: Any = None
 
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
 
-    dene: Any = None
+    nd_plasma_electrons_vol_avg: Any = None
 
-    nd_fuel_ions: Any = None
+    nd_plasma_fuel_ions_vol_avg: Any = None
 
-    nd_ions_total: Any = None
+    nd_plasma_ions_total_vol_avg: Any = None
 
     f_alpha_electron: Any = None
 
@@ -35,9 +35,9 @@ class SetFusionPowersParam(NamedTuple):
 
     pden_non_alpha_charged_mw: Any = None
 
-    ten: Any = None
+    temp_plasma_electron_density_weighted_kev: Any = None
 
-    tin: Any = None
+    temp_plasma_ion_density_weighted_kev: Any = None
 
     vol_plasma: Any = None
 
@@ -71,7 +71,7 @@ class SetFusionPowersParam(NamedTuple):
     (
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_deuterium=0.5,
+            f_plasma_fuel_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=0,
@@ -91,7 +91,7 @@ class SetFusionPowersParam(NamedTuple):
         ),
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_deuterium=0.5,
+            f_plasma_fuel_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=100.5,
@@ -111,7 +111,7 @@ class SetFusionPowersParam(NamedTuple):
         ),
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_deuterium=0.5,
+            f_plasma_fuel_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=100.5,
@@ -131,7 +131,7 @@ class SetFusionPowersParam(NamedTuple):
         ),
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
-            f_deuterium=2.5,
+            f_plasma_fuel_deuterium=2.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
             p_beam_alpha_mw=100.5,
@@ -168,7 +168,9 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
         "f_p_alpha_plasma_deposited",
         setfusionpowersparam.f_p_alpha_plasma_deposited,
     )
-    monkeypatch.setattr(pv, "f_deuterium", setfusionpowersparam.f_deuterium)
+    monkeypatch.setattr(
+        pv, "f_plasma_fuel_deuterium", setfusionpowersparam.f_plasma_fuel_deuterium
+    )
 
     (
         pden_neutron_total_mw,

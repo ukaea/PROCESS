@@ -2,11 +2,12 @@ import logging
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
-from process.data_structure import cost_2015_variables, cost_variables
-from process.fortran import (
+from process.data_structure import (
     build_variables,
-    constants,
+    cost_2015_variables,
+    cost_variables,
     current_drive_variables,
     fwbs_variables,
     global_variables,
@@ -22,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class Costs2015:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self):
         """
@@ -293,7 +294,7 @@ class Costs2015:
         cost_2015_variables.s_k[24] = (
             build_variables.a_fw_total
             * fwbs_variables.fw_armour_thickness
-            * constants.den_tungsten
+            * constants.DEN_TUNGSTEN
         )
         cost_2015_variables.s_kref[24] = 29000.0e0
         cost_2015_variables.s_cost[24] = (
@@ -745,7 +746,7 @@ class Costs2015:
         cost_2015_variables.s_cref[16] = 21.0e6
         # Scale with total copper mass (kg)
         cost_2015_variables.s_k[16] = (
-            tfcoil_variables.whtconcu * tfcoil_variables.n_tf_coils
+            tfcoil_variables.m_tf_coil_copper * tfcoil_variables.n_tf_coils
         )
         cost_2015_variables.s_kref[16] = 244.0e3
         cost_2015_variables.s_cost[16] = (
@@ -763,7 +764,7 @@ class Costs2015:
         cost_2015_variables.s_cref[17] = 526.0e6
         # Scale with the total mass of Nb3Sn (kg)
         cost_2015_variables.s_k[17] = (
-            tfcoil_variables.whtconsc * tfcoil_variables.n_tf_coils
+            tfcoil_variables.m_tf_coil_superconductor * tfcoil_variables.n_tf_coils
         )
         cost_2015_variables.s_kref[17] = 210.0e3
         cost_2015_variables.s_cost[17] = (

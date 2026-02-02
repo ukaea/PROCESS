@@ -6,31 +6,26 @@ import numpy as np
 import pytest
 from pytest import approx
 
-from process import fortran
+from process import data_structure
 from process.costs import Costs
 from process.data_structure import (
-    cost_variables,
-    divertor_variables,
-    pulse_variables,
-    structure_variables,
-    times_variables,
-    vacuum_variables,
-)
-from process.fortran import (
     build_variables,
     buildings_variables,
+    cost_variables,
     current_drive_variables,
+    divertor_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
+    pulse_variables,
+    structure_variables,
     tfcoil_variables,
+    times_variables,
+    vacuum_variables,
 )
-from process.fortran import error_handling as eh
-from process.fortran import fwbs_variables as fv
-from process.fortran import heat_transport_variables as htv
 
 
 @pytest.fixture
@@ -41,24 +36,6 @@ def costs():
     :rtype: process.pulse.Pulse
     """
     return Costs()
-
-
-@pytest.fixture
-def initialise_error_module(monkeypatch):
-    """pytest fixture to initialise error module
-
-    Any routine which can raise an error should initialise
-    the error module otherwise segmentation faults can occur.
-
-    This fixture also resets the `fdiags` array to 0's.
-
-    :param monkeypatch: Mock fixture
-    :type monkeypatch: object
-    """
-    eh.init_error_handling()
-    eh.initialise_error_list()
-    # monkeypatch.setattr(eh, 'fdiags', np.zeros(8))
-    # monkeypatch.setattr(eh, 'errors_on', False)
 
 
 def acc2261_param(**kwargs):
@@ -105,15 +82,17 @@ def acc2261_fix(costs, request, monkeypatch):
     # Mock variables used by acc2261()
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "lsa", 1)
-    monkeypatch.setattr(htv, "p_fw_div_heat_deposited_mw", 0.0)
-    monkeypatch.setattr(fv, "p_blkt_nuclear_heat_total_mw", 1558.0)
-    monkeypatch.setattr(fv, "p_shld_nuclear_heat_mw", 1.478)
-    monkeypatch.setattr(htv, "p_plant_primary_heat_mw", 2647.0)
-    monkeypatch.setattr(htv, "n_primary_heat_exchangers", 3)
+    monkeypatch.setattr(heat_transport_variables, "p_fw_div_heat_deposited_mw", 0.0)
+    monkeypatch.setattr(fwbs_variables, "p_blkt_nuclear_heat_total_mw", 1558.0)
+    monkeypatch.setattr(fwbs_variables, "p_shld_nuclear_heat_mw", 1.478)
+    monkeypatch.setattr(heat_transport_variables, "p_plant_primary_heat_mw", 2647.0)
+    monkeypatch.setattr(heat_transport_variables, "n_primary_heat_exchangers", 3)
     monkeypatch.setattr(cost_variables, "c2261", 0)
 
     # Parameterised mocks
-    monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
+    )
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -136,11 +115,11 @@ def test_acc2262(monkeypatch, costs):
     # Mock module variables
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "lsa", 4)
-    monkeypatch.setattr(htv, "p_hcd_electric_loss_mw", 76.5)
-    monkeypatch.setattr(htv, "p_cryo_plant_electric_mw", 39.936)
-    monkeypatch.setattr(htv, "vachtmw", 0.5)
-    monkeypatch.setattr(htv, "p_tritium_plant_electric_mw", 15.0)
-    monkeypatch.setattr(htv, "fachtmw", 64.835)
+    monkeypatch.setattr(heat_transport_variables, "p_hcd_electric_loss_mw", 76.5)
+    monkeypatch.setattr(heat_transport_variables, "p_cryo_plant_electric_mw", 39.936)
+    monkeypatch.setattr(heat_transport_variables, "vachtmw", 0.5)
+    monkeypatch.setattr(heat_transport_variables, "p_tritium_plant_electric_mw", 15.0)
+    monkeypatch.setattr(heat_transport_variables, "fachtmw", 64.835)
     monkeypatch.setattr(cost_variables, "c2262", 0)
 
     costs.acc2262()
@@ -156,8 +135,8 @@ def test_acc2263(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(cost_variables, "uccry", 9.3e4)
-    monkeypatch.setattr(fortran.tfcoil_variables, "tftmp", 4.5)
-    monkeypatch.setattr(htv, "helpow", 80.980e3)
+    monkeypatch.setattr(data_structure.tfcoil_variables, "tftmp", 4.5)
+    monkeypatch.setattr(heat_transport_variables, "helpow", 80.980e3)
     monkeypatch.setattr(cost_variables, "c2263", 0)
 
     costs.acc2263()
@@ -184,8 +163,8 @@ def test_acc2272(monkeypatch, costs):
     :param monkeypatch: Mock fixture
     :type monkeypatch: object
     """
-    monkeypatch.setattr(fortran.physics_variables, "rndfuel", 7.158e20)
-    monkeypatch.setattr(fortran.physics_variables, "m_fuel_amu", 2.5)
+    monkeypatch.setattr(physics_variables, "rndfuel", 7.158e20)
+    monkeypatch.setattr(physics_variables, "m_fuel_amu", 2.5)
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "c2271", 0)
 
@@ -201,9 +180,9 @@ def acc2273_param(**kwargs):
     """
     # Default parameters
     defaults = {
-        "f_tritium": 0.0001,
-        "volrci": fortran.buildings_variables.volrci,
-        "wsvol": fortran.buildings_variables.wsvol,
+        "f_plasma_fuel_tritium": 0.0001,
+        "volrci": data_structure.buildings_variables.volrci,
+        "wsvol": data_structure.buildings_variables.wsvol,
         "expected": approx(0.0, abs=0.00001),
     }
 
@@ -223,7 +202,7 @@ def acc2273_params():
     return [
         acc2273_param(),
         acc2273_param(
-            f_tritium=0.5,
+            f_plasma_fuel_tritium=0.5,
             volrci=1299783.4,
             wsvol=132304.1,
             expected=approx(74.12, abs=0.01),
@@ -246,9 +225,11 @@ def acc2273_fix(request, monkeypatch, costs):
 
     # Mock variables used by acc2273()
     # Some may be parameterised
-    monkeypatch.setattr(fortran.buildings_variables, "wsvol", param["wsvol"])
-    monkeypatch.setattr(fortran.buildings_variables, "volrci", param["volrci"])
-    monkeypatch.setattr(fortran.physics_variables, "f_tritium", param["f_tritium"])
+    monkeypatch.setattr(data_structure.buildings_variables, "wsvol", param["wsvol"])
+    monkeypatch.setattr(data_structure.buildings_variables, "volrci", param["volrci"])
+    monkeypatch.setattr(
+        physics_variables, "f_plasma_fuel_tritium", param["f_plasma_fuel_tritium"]
+    )
 
     # Mock result var as negative, as an expected result is 0
     # Otherwise could get false positive result
@@ -276,8 +257,8 @@ def test_acc2274(monkeypatch, costs):
     :param monkeypatch: Mock fixture
     :type monkeypatch: object
     """
-    monkeypatch.setattr(fortran.buildings_variables, "wsvol", 132304.1)
-    monkeypatch.setattr(fortran.buildings_variables, "volrci", 1299783.4)
+    monkeypatch.setattr(data_structure.buildings_variables, "wsvol", 132304.1)
+    monkeypatch.setattr(data_structure.buildings_variables, "volrci", 1299783.4)
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "c2274", 0)
 
@@ -446,8 +427,10 @@ def acc23_fix(request, monkeypatch, costs):
 
     # Mock variables used by acc23()
     # Some may be parameterised
-    monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
-    monkeypatch.setattr(htv, "p_plant_electric_gross_mw", 1200.0)
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
+    )
+    monkeypatch.setattr(heat_transport_variables, "p_plant_electric_gross_mw", 1200.0)
     monkeypatch.setattr(cost_variables, "c23", 0)
 
     # Return the expected result for the given parameter list
@@ -486,8 +469,10 @@ def test_acc242(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
-    monkeypatch.setattr(htv, "pacpmw", 630.0)
-    monkeypatch.setattr(htv, "p_plant_electric_base_total_mw", 65.0)
+    monkeypatch.setattr(heat_transport_variables, "pacpmw", 630.0)
+    monkeypatch.setattr(
+        heat_transport_variables, "p_plant_electric_base_total_mw", 65.0
+    )
     monkeypatch.setattr(cost_variables, "c242", 0)
 
     costs.acc242()
@@ -501,7 +486,7 @@ def test_acc243(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
-    monkeypatch.setattr(htv, "tlvpmw", 403.8)
+    monkeypatch.setattr(heat_transport_variables, "tlvpmw", 403.8)
     monkeypatch.setattr(cost_variables, "c243", 0)
 
     costs.acc243()
@@ -606,8 +591,8 @@ def acc26_param(**kwargs):
         "p_fusion_total_mw": 2000.0,
         "p_hcd_electric_total_mw": 250.0,
         "tfcmw": 50.0,
-        "p_plant_primary_heat_mw": htv.p_plant_primary_heat_mw,
-        "p_plant_electric_gross_mw": htv.p_plant_electric_gross_mw,
+        "p_plant_primary_heat_mw": heat_transport_variables.p_plant_primary_heat_mw,
+        "p_plant_electric_gross_mw": heat_transport_variables.p_plant_electric_gross_mw,
         "expected": approx(87.9, abs=0.01),
     }
 
@@ -628,9 +613,9 @@ def acc26_params():
         acc26_param(),
         acc26_param(
             ireactor=1,
-            p_fusion_total_mw=fortran.physics_variables.p_fusion_total_mw,
-            p_hcd_electric_total_mw=htv.p_hcd_electric_total_mw,
-            tfcmw=fortran.tfcoil_variables.tfcmw,
+            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+            p_hcd_electric_total_mw=heat_transport_variables.p_hcd_electric_total_mw,
+            tfcmw=data_structure.tfcoil_variables.tfcmw,
             p_plant_primary_heat_mw=3000.0,
             p_plant_electric_gross_mw=700.0,
         ),
@@ -655,17 +640,25 @@ def acc26_fix(request, monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(cost_variables, "ireactor", param["ireactor"])
     monkeypatch.setattr(
-        fortran.physics_variables, "p_fusion_total_mw", param["p_fusion_total_mw"]
+        physics_variables,
+        "p_fusion_total_mw",
+        param["p_fusion_total_mw"],
     )
     monkeypatch.setattr(
-        htv, "p_hcd_electric_total_mw", param["p_hcd_electric_total_mw"]
+        heat_transport_variables,
+        "p_hcd_electric_total_mw",
+        param["p_hcd_electric_total_mw"],
     )
-    monkeypatch.setattr(fortran.tfcoil_variables, "tfcmw", param["tfcmw"])
+    monkeypatch.setattr(data_structure.tfcoil_variables, "tfcmw", param["tfcmw"])
     monkeypatch.setattr(
-        htv, "p_plant_primary_heat_mw", param["p_plant_primary_heat_mw"]
+        heat_transport_variables,
+        "p_plant_primary_heat_mw",
+        param["p_plant_primary_heat_mw"],
     )
     monkeypatch.setattr(
-        htv, "p_plant_electric_gross_mw", param["p_plant_electric_gross_mw"]
+        heat_transport_variables,
+        "p_plant_electric_gross_mw",
+        param["p_plant_electric_gross_mw"],
     )
     monkeypatch.setattr(cost_variables, "c26", 0)
 
@@ -1753,11 +1746,11 @@ class Acc2221Param(NamedTuple):
 
     aintmass: Any = None
 
-    whtconcu: Any = None
+    m_tf_coil_copper: Any = None
 
-    whtconsc: Any = None
+    m_tf_coil_superconductor: Any = None
 
-    whtcas: Any = None
+    m_tf_coil_case: Any = None
 
     n_tf_coils: Any = None
 
@@ -1818,9 +1811,9 @@ class Acc2221Param(NamedTuple):
             itart=0,
             clgsmass=1953582.3684708222,
             aintmass=5829865.436088616,
-            whtconcu=58744.465423173802,
-            whtconsc=5802.5700395134345,
-            whtcas=1034021.9996272125,
+            m_tf_coil_copper=58744.465423173802,
+            m_tf_coil_superconductor=5802.5700395134345,
+            m_tf_coil_case=1034021.9996272125,
             n_tf_coils=16,
             whttflgs=0,
             whtcp=0,
@@ -1859,9 +1852,9 @@ class Acc2221Param(NamedTuple):
             itart=0,
             clgsmass=1951781.4798732549,
             aintmass=5829865.436088616,
-            whtconcu=58779.575542593491,
-            whtconsc=5806.038092640837,
-            whtcas=1034699.2182961091,
+            m_tf_coil_copper=58779.575542593491,
+            m_tf_coil_superconductor=5806.038092640837,
+            m_tf_coil_case=1034699.2182961091,
             n_tf_coils=16,
             whttflgs=0,
             whtcp=0,
@@ -1900,9 +1893,9 @@ class Acc2221Param(NamedTuple):
             itart=0,
             clgsmass=1951781.4798732549,
             aintmass=5829865.436088616,
-            whtconcu=58779.575542593491,
-            whtconsc=5806.038092640837,
-            whtcas=1034699.2182961091,
+            m_tf_coil_copper=58779.575542593491,
+            m_tf_coil_superconductor=5806.038092640837,
+            m_tf_coil_case=1034699.2182961091,
             n_tf_coils=16,
             whttflgs=0,
             whtcp=0,
@@ -1967,11 +1960,17 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(structure_variables, "aintmass", acc2221param.aintmass)
 
-    monkeypatch.setattr(tfcoil_variables, "whtconcu", acc2221param.whtconcu)
+    monkeypatch.setattr(
+        tfcoil_variables, "m_tf_coil_copper", acc2221param.m_tf_coil_copper
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "whtconsc", acc2221param.whtconsc)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coil_superconductor",
+        acc2221param.m_tf_coil_superconductor,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "whtcas", acc2221param.whtcas)
+    monkeypatch.setattr(tfcoil_variables, "m_tf_coil_case", acc2221param.m_tf_coil_case)
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", acc2221param.n_tf_coils)
 
@@ -3118,15 +3117,15 @@ class Acc224Param(NamedTuple):
 
     dlscal: Any = None
 
-    vacdshm: Any = None
+    m_vv_vacuum_duct_shield: Any = None
 
-    vpumpn: Any = None
+    n_vac_pumps_high: Any = None
 
-    vcdimax: Any = None
+    dia_vv_vacuum_ducts: Any = None
 
-    ntype: Any = None
+    i_vacuum_pump_type: Any = None
 
-    nvduct: Any = None
+    n_vv_vacuum_ducts: Any = None
 
     c22: Any = None
 
@@ -3163,11 +3162,11 @@ class Acc224Param(NamedTuple):
         Acc224Param(
             fkind=1,
             dlscal=4.9196133171476717,
-            vacdshm=0,
-            vpumpn=46,
-            vcdimax=0.57081858183821432,
-            ntype=1,
-            nvduct=16,
+            m_vv_vacuum_duct_shield=0,
+            n_vac_pumps_high=46,
+            dia_vv_vacuum_ducts=0.57081858183821432,
+            i_vacuum_pump_type=1,
+            n_vv_vacuum_ducts=16,
             c22=0,
             c224=0,
             c2241=0,
@@ -3186,11 +3185,11 @@ class Acc224Param(NamedTuple):
         Acc224Param(
             fkind=1,
             dlscal=4.9184638394909044,
-            vacdshm=0,
-            vpumpn=46,
-            vcdimax=0.57072331228476758,
-            ntype=1,
-            nvduct=16,
+            m_vv_vacuum_duct_shield=0,
+            n_vac_pumps_high=46,
+            dia_vv_vacuum_ducts=0.57072331228476758,
+            i_vacuum_pump_type=1,
+            n_vv_vacuum_ducts=16,
             c22=3474.7391916096453,
             c224=34.593599813216727,
             c2241=17.940000000000001,
@@ -3225,15 +3224,25 @@ def test_acc224(acc224param, monkeypatch, costs):
 
     monkeypatch.setattr(vacuum_variables, "dlscal", acc224param.dlscal)
 
-    monkeypatch.setattr(vacuum_variables, "vacdshm", acc224param.vacdshm)
+    monkeypatch.setattr(
+        vacuum_variables, "m_vv_vacuum_duct_shield", acc224param.m_vv_vacuum_duct_shield
+    )
 
-    monkeypatch.setattr(vacuum_variables, "vpumpn", acc224param.vpumpn)
+    monkeypatch.setattr(
+        vacuum_variables, "n_vac_pumps_high", acc224param.n_vac_pumps_high
+    )
 
-    monkeypatch.setattr(vacuum_variables, "vcdimax", acc224param.vcdimax)
+    monkeypatch.setattr(
+        vacuum_variables, "dia_vv_vacuum_ducts", acc224param.dia_vv_vacuum_ducts
+    )
 
-    monkeypatch.setattr(vacuum_variables, "ntype", acc224param.ntype)
+    monkeypatch.setattr(
+        vacuum_variables, "i_vacuum_pump_type", acc224param.i_vacuum_pump_type
+    )
 
-    monkeypatch.setattr(vacuum_variables, "nvduct", acc224param.nvduct)
+    monkeypatch.setattr(
+        vacuum_variables, "n_vv_vacuum_ducts", acc224param.n_vv_vacuum_ducts
+    )
 
     monkeypatch.setattr(cost_variables, "c22", acc224param.c22)
 
@@ -3279,7 +3288,7 @@ class Acc2251Param(NamedTuple):
 
     uctfbus: Any = None
 
-    vtfskv: Any = None
+    v_tf_coil_dump_quench_kv: Any = None
 
     tfcmw: Any = None
 
@@ -3336,7 +3345,7 @@ class Acc2251Param(NamedTuple):
             uctfbr=1.22,
             uctfps=24,
             uctfbus=100,
-            vtfskv=9.9882637896807953,
+            v_tf_coil_dump_quench_kv=9.9882637896807953,
             tfcmw=0,
             len_tf_bus=3397.0129827974288,
             e_tf_magnetic_stored_total_gj=152.78343648685947,
@@ -3367,7 +3376,7 @@ class Acc2251Param(NamedTuple):
             uctfbr=1.22,
             uctfps=24,
             uctfbus=100,
-            vtfskv=10.001287165953382,
+            v_tf_coil_dump_quench_kv=10.001287165953382,
             tfcmw=0,
             len_tf_bus=3397.0129827974288,
             e_tf_magnetic_stored_total_gj=152.98264590137683,
@@ -3418,7 +3427,11 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "uctfbus", acc2251param.uctfbus)
 
-    monkeypatch.setattr(tfcoil_variables, "vtfskv", acc2251param.vtfskv)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "v_tf_coil_dump_quench_kv",
+        acc2251param.v_tf_coil_dump_quench_kv,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "tfcmw", acc2251param.tfcmw)
 
@@ -3687,7 +3700,7 @@ class Acc2253Param(NamedTuple):
 
     istore: Any = None
 
-    tdown: Any = None
+    t_plant_pulse_no_burn: Any = None
 
     c22: Any = None
 
@@ -3709,7 +3722,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=0,
             c225=0,
             c2253=0,
@@ -3723,7 +3736,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=3474.7391916096453,
             c225=185.05656643685359,
             c2253=20.785622343242554,
@@ -3766,7 +3779,9 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
 
-    monkeypatch.setattr(times_variables, "tdown", acc2253param.tdown)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
+    )
 
     monkeypatch.setattr(cost_variables, "c22", acc2253param.c22)
 
@@ -4469,7 +4484,7 @@ class Acc2273Param(NamedTuple):
 
     fkind: Any = None
 
-    f_tritium: Any = None
+    f_plasma_fuel_tritium: Any = None
 
     c227: Any = None
 
@@ -4487,7 +4502,7 @@ class Acc2273Param(NamedTuple):
             wsvol=130018.25667917728,
             volrci=1205439.8543893537,
             fkind=1,
-            f_tritium=0.5,
+            f_plasma_fuel_tritium=0.5,
             c227=0,
             c2273=0,
             c22=0,
@@ -4497,7 +4512,7 @@ class Acc2273Param(NamedTuple):
             wsvol=130255.93791329287,
             volrci=1206887.4047542624,
             fkind=1,
-            f_tritium=0.5,
+            f_plasma_fuel_tritium=0.5,
             c227=284.96904049038437,
             c2273=69.115208498727412,
             c22=3474.7391916096453,
@@ -4524,7 +4539,9 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2273param.fkind)
 
-    monkeypatch.setattr(physics_variables, "f_tritium", acc2273param.f_tritium)
+    monkeypatch.setattr(
+        physics_variables, "f_plasma_fuel_tritium", acc2273param.f_plasma_fuel_tritium
+    )
 
     monkeypatch.setattr(cost_variables, "c227", acc2273param.c227)
 
@@ -5285,7 +5302,9 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_fusion_total_mw", acc26param.p_fusion_total_mw
+        physics_variables,
+        "p_fusion_total_mw",
+        acc26param.p_fusion_total_mw,
     )
 
     monkeypatch.setattr(tfcoil_variables, "tfcmw", acc26param.tfcmw)
@@ -5415,7 +5434,7 @@ class Acc2253Param(NamedTuple):
 
     istore: Any = None
 
-    tdown: Any = None
+    t_plant_pulse_no_burn: Any = None
 
     c22: Any = None
 
@@ -5437,7 +5456,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=0,
             c225=0,
             c2253=0,
@@ -5451,7 +5470,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=3474.7391916096453,
             c225=185.05656643685359,
             c2253=20.785622343242554,
@@ -5459,7 +5478,7 @@ class Acc2253Param(NamedTuple):
         ),
     ),
 )
-def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
+def test_acc2253_urt(acc2253param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2253.
 
@@ -5494,7 +5513,9 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
 
     monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
 
-    monkeypatch.setattr(times_variables, "tdown", acc2253param.tdown)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
+    )
 
     monkeypatch.setattr(cost_variables, "c22", acc2253param.c22)
 
@@ -5596,11 +5617,11 @@ class CoelcParam(NamedTuple):
 
     wtgpd: Any = None
 
-    f_helium3: Any = None
+    f_plasma_fuel_helium3: Any = None
 
-    t_cycle: Any = None
+    t_plant_pulse_total: Any = None
 
-    t_burn: Any = None
+    t_plant_pulse_burn: Any = None
 
     outfile: Any = None
 
@@ -5693,9 +5714,9 @@ class CoelcParam(NamedTuple):
             p_plant_electric_net_mw=493.01760776192009,
             itart=0,
             wtgpd=507.88376577416528,
-            f_helium3=0,
-            t_cycle=10864.426139387357,
-            t_burn=0,
+            f_plasma_fuel_helium3=0,
+            t_plant_pulse_total=10864.426139387357,
+            t_plant_pulse_burn=0,
             outfile=11,
             expected_coeoam=4.4099029328740929e20,
             expected_coecap=4.9891775218979061e21,
@@ -5777,9 +5798,9 @@ class CoelcParam(NamedTuple):
             p_plant_electric_net_mw=422.4198205312706,
             itart=0,
             wtgpd=507.72524666099866,
-            f_helium3=0,
-            t_cycle=864.42613938735622,
-            t_burn=10230.533336387549,
+            f_plasma_fuel_helium3=0,
+            t_plant_pulse_total=864.42613938735622,
+            t_plant_pulse_burn=10230.533336387549,
             outfile=11,
             expected_coeoam=1.2419424614419636,
             expected_coecap=15.547404530833255,
@@ -5895,11 +5916,17 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "wtgpd", coelcparam.wtgpd)
 
-    monkeypatch.setattr(physics_variables, "f_helium3", coelcparam.f_helium3)
+    monkeypatch.setattr(
+        physics_variables, "f_plasma_fuel_helium3", coelcparam.f_plasma_fuel_helium3
+    )
 
-    monkeypatch.setattr(times_variables, "t_cycle", coelcparam.t_cycle)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_total", coelcparam.t_plant_pulse_total
+    )
 
-    monkeypatch.setattr(times_variables, "t_burn", coelcparam.t_burn)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_burn", coelcparam.t_plant_pulse_burn
+    )
 
     costs.coelc()
 

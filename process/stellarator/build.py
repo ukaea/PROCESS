@@ -1,12 +1,12 @@
 from process import process_output as po
 
-from process.fortran import (
+from process.data_structure import (
     build_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
     stellarator_configuration,
-    stellarator_module as st,
+    stellarator_variables as st,
 )
 
 def st_build(stellarator, output: bool):
@@ -96,12 +96,12 @@ def st_build(stellarator, output: bool):
                 * (physics_variables.rminor - st.f_r * stellarator_configuration.stella_config_rminor_ref)
         )
         # This is the old version, left for now for comparison.
-            # st.f_r * (
-            # stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist
-            # * stellarator_configuration.stella_config_rminor_ref
-            # * (1 / st.f_aspect - 1)
-            # + stellarator_configuration.stella_config_min_plasma_coil_distance
-            # )
+        # build_variables.available_radial_space = stellarator_variables.f_r * (
+        #     stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist
+        #     * stellarator_configuration.stella_config_rminor_ref
+        #     * (1 / stellarator_variables.f_aspect - 1)
+        #     + stellarator_configuration.stella_config_min_plasma_coil_distance
+        # )
 
 
         #  Radius to inner edge of inboard shield
@@ -186,7 +186,7 @@ def st_build(stellarator, output: bool):
                 1.0e0
                 - fwbs_variables.fhole
                 - fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_hcd
+                - fwbs_variables.f_a_fw_outboard_hcd
             ) * build_variables.a_fw_total
 
         if output:

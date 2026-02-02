@@ -3,15 +3,15 @@ import math
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
+from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as divv
+from process.data_structure import fwbs_variables as fwbsv
+from process.data_structure import pfcoil_variables as pfv
+from process.data_structure import physics_variables as pv
 from process.data_structure import structure_variables as stv
-from process.fortran import build_variables as bv
-from process.fortran import constants
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import pfcoil_variables as pfv
-from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
+from process.data_structure import tfcoil_variables as tfv
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class Structure:
     """
 
     def __init__(self) -> None:
-        self.outfile = constants.nout  # output file unit
+        self.outfile = constants.NOUT  # output file unit
 
     def run(self, output: bool = False) -> None:
         """Structure calculation caller
@@ -52,7 +52,7 @@ class Structure:
             pv.rmajor,
             pv.rminor,
             pv.kappa,
-            pv.bt,
+            pv.b_plasma_toroidal_on_axis,
             tfv.i_tf_sup,
             pfv.i_pf_conductor,
             bv.dr_tf_inner_bore + bv.dr_tf_outboard + bv.dr_tf_inboard,

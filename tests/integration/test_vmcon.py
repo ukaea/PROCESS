@@ -13,15 +13,11 @@ import numpy as np
 import pytest
 
 from process.evaluators import Evaluators
-from process.fortran import error_handling
 from process.init import init_all_module_vars
 from process.solver import get_solver
 
 # Debug-level terminal output logging
 logger = logging.getLogger(__name__)
-
-# Provide helpful errors in the event of a failed Vmcon test
-error_handling.initialise_error_list()
 
 
 @pytest.fixture(autouse=True)
@@ -48,13 +44,15 @@ class Case:
 
 
 class SolverArgs:
-    def __init__(self):
+    def __init__(self, n=2):
         """Initialise some common arguments to the solver adapter.
+
+        :param n: number of input variables (default 2)
+        :type n: int
 
         These arguments are shared between some of the test cases.
         """
         # No bounds on x values set
-        n = 2
         self.x = np.zeros(n)
         self.ilower = np.zeros(n)
         self.iupper = np.zeros(n)
@@ -568,6 +566,7 @@ def get_case5():
     """
     # Create a case-specific Vmcon object with overridden fcnvmc1 and 2
     case = Case("5", Evaluator5())
+    case.solver_args = SolverArgs(n=1)
 
     # Set up vmcon values for this case
     neqns = 1

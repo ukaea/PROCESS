@@ -1,19 +1,23 @@
+import logging
+
+from process import constants
 from process import process_output as po
-from process.data_structure import pulse_variables, times_variables
-from process.fortran import (
-    constants,
+from process.data_structure import (
     constraint_variables,
-    error_handling,
     numerics,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
+    pulse_variables,
+    times_variables,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class Pulse:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self, output: bool) -> None:
         """Caller for the pulsed reactor model
@@ -31,10 +35,10 @@ class Pulse:
 
             #  Burn time calculation
 
-            times_variables.t_burn = self.calculate_burn_time(
+            times_variables.t_plant_pulse_burn = self.calculate_burn_time(
                 vs_cs_pf_total_burn=pfcoil_variables.vs_cs_pf_total_burn,
                 v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
-                t_fusion_ramp=times_variables.t_fusion_ramp,
+                t_plant_pulse_fusion_ramp=times_variables.t_plant_pulse_fusion_ramp,
             )
 
     def tohswg(self, output: bool) -> None:
@@ -151,7 +155,7 @@ class Pulse:
         self,
         vs_cs_pf_total_burn: float,
         v_plasma_loop_burn: float,
-        t_fusion_ramp: float,
+        t_plant_pulse_fusion_ramp: float,
     ) -> float:
         """
         Calculate the burn time for a pulsed reactor.
@@ -165,8 +169,8 @@ class Pulse:
         :type vs_cs_pf_total_burn: float
         :param v_plasma_loop_burn: Plasma loop voltage during burn (V)
         :type v_plasma_loop_burn: float
-        :param t_fusion_ramp: Time for fusion ramp (s)
-        :type t_fusion_ramp: float
+        :param t_plant_pulse_fusion_ramp: Time for fusion ramp (s)
+        :type t_plant_pulse_fusion_ramp: float
         :return: Calculated burn time (s)
         :rtype: float
 
@@ -174,13 +178,14 @@ class Pulse:
 
         """
 
-        t_burn = (abs(vs_cs_pf_total_burn) / v_plasma_loop_burn) - t_fusion_ramp
+        t_plant_pulse_burn = (
+            abs(vs_cs_pf_total_burn) / v_plasma_loop_burn
+        ) - t_plant_pulse_fusion_ramp
 
-        if t_burn < 0.0e0:
-            error_handling.fdiags[0] = t_burn
-            error_handling.fdiags[1] = vs_cs_pf_total_burn
-            error_handling.fdiags[2] = v_plasma_loop_burn
-            error_handling.fdiags[3] = t_fusion_ramp
-            error_handling.report_error(93)
+        if t_plant_pulse_burn < 0.0e0:
+            logger.error(
+                "Negative burn time available; reduce t_plant_pulse_fusion_ramp or raise PF coil V-s capabilit. "
+                f"{t_plant_pulse_burn=} {vs_cs_pf_total_burn=} {v_plasma_loop_burn=} {t_plant_pulse_fusion_ramp=}"
+            )
 
-        return t_burn
+        return t_plant_pulse_burn

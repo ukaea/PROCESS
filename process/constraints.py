@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Callable, Hashable
 from dataclasses import dataclass
 from typing import ClassVar, Literal
@@ -5,10 +6,12 @@ from typing import ClassVar, Literal
 import numpy as np
 
 import process.data_structure as data_structure
-import process.fortran as fortran
+from process import constants
 from process.exceptions import ProcessError, ProcessValueError
 
 ConstraintSymbolType = Literal["=", ">=", "<="]
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -124,7 +127,7 @@ def constraint_equation_1():
 
     author: J Morris
 
-    beta: total plasma beta
+    beta_total_vol_avg: total plasma beta
     beta_{ft}: fast alpha beta component
     beta_{NBI}: neutral beam beta component
     n_e: electron density [/m3]
@@ -133,27 +136,32 @@ def constraint_equation_1():
     T_i: density weighted average ion temperature [keV]
     B_{tot}: total toroidal + poloidal field [T]
     """
+
+    # Density weighted temperature is used here as 〈nT〉 != 〈n〉_V * 〈T〉_V
     cc = (
         1.0
         - (
-            fortran.physics_variables.beta_fast_alpha
-            + fortran.physics_variables.beta_beam
+            data_structure.physics_variables.beta_fast_alpha
+            + data_structure.physics_variables.beta_beam
             + 2.0e3
-            * fortran.constants.rmu0
-            * fortran.constants.electron_charge
+            * constants.RMU0
+            * constants.ELECTRON_CHARGE
             * (
-                fortran.physics_variables.dene * fortran.physics_variables.ten
-                + fortran.physics_variables.nd_ions_total
-                * fortran.physics_variables.tin
+                data_structure.physics_variables.nd_plasma_electrons_vol_avg
+                * data_structure.physics_variables.temp_plasma_electron_density_weighted_kev
+                + data_structure.physics_variables.nd_plasma_ions_total_vol_avg
+                * data_structure.physics_variables.temp_plasma_ion_density_weighted_kev
             )
-            / fortran.physics_variables.btot**2
+            / data_structure.physics_variables.b_plasma_total**2
         )
-        / fortran.physics_variables.beta
+        / data_structure.physics_variables.beta_total_vol_avg
     )
     return ConstraintResult(
         normalised_residual=cc,
-        constraint_value=(fortran.physics_variables.beta * (1.0 - cc)),
-        constraint_error=(fortran.physics_variables.beta * cc),
+        constraint_value=(
+            data_structure.physics_variables.beta_total_vol_avg * (1.0 - cc)
+        ),
+        constraint_error=(data_structure.physics_variables.beta_total_vol_avg * cc),
     )
 
 
@@ -162,7 +170,7 @@ def constraint_equation_2():
     """author: J. Morris
 
      i_rad_loss: switch for radiation loss term usage in power balance (see User Guide):
-    -  0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
+    -  0 total power lost is scaling power plus radiation (needed for i_plasma_pedestal=2,3)
     -  1 total power lost is scaling power plus core radiation only
     -  2 total power lost is scaling power only, with no additional
         allowance for radiation. This is not recommended for power plant models.
@@ -185,34 +193,34 @@ def constraint_equation_2():
     # pscaling: total transport power per volume (MW/m3)
 
     pscaling = (
-        fortran.physics_variables.pden_electron_transport_loss_mw
-        + fortran.physics_variables.pden_ion_transport_loss_mw
+        data_structure.physics_variables.pden_electron_transport_loss_mw
+        + data_structure.physics_variables.pden_ion_transport_loss_mw
     )
     # Total power lost is scaling power plus radiation:
-    if fortran.physics_variables.i_rad_loss == 0:
-        pnumerator = pscaling + fortran.physics_variables.pden_plasma_rad_mw
-    elif fortran.physics_variables.i_rad_loss == 1:
-        pnumerator = pscaling + fortran.physics_variables.pden_plasma_core_rad_mw
+    if data_structure.physics_variables.i_rad_loss == 0:
+        pnumerator = pscaling + data_structure.physics_variables.pden_plasma_rad_mw
+    elif data_structure.physics_variables.i_rad_loss == 1:
+        pnumerator = pscaling + data_structure.physics_variables.pden_plasma_core_rad_mw
     else:
         pnumerator = pscaling
 
     # if plasma not ignited include injected power
-    if fortran.physics_variables.i_plasma_ignited == 0:
+    if data_structure.physics_variables.i_plasma_ignited == 0:
         pdenom = (
-            fortran.physics_variables.f_p_alpha_plasma_deposited
-            * fortran.physics_variables.pden_alpha_total_mw
-            + fortran.physics_variables.pden_non_alpha_charged_mw
-            + fortran.physics_variables.pden_plasma_ohmic_mw
-            + fortran.current_drive_variables.p_hcd_injected_total_mw
-            / fortran.physics_variables.vol_plasma
+            data_structure.physics_variables.f_p_alpha_plasma_deposited
+            * data_structure.physics_variables.pden_alpha_total_mw
+            + data_structure.physics_variables.pden_non_alpha_charged_mw
+            + data_structure.physics_variables.pden_plasma_ohmic_mw
+            + data_structure.current_drive_variables.p_hcd_injected_total_mw
+            / data_structure.physics_variables.vol_plasma
         )
     else:
         # if plasma ignited
         pdenom = (
-            fortran.physics_variables.f_p_alpha_plasma_deposited
-            * fortran.physics_variables.pden_alpha_total_mw
-            + fortran.physics_variables.pden_non_alpha_charged_mw
-            + fortran.physics_variables.pden_plasma_ohmic_mw
+            data_structure.physics_variables.f_p_alpha_plasma_deposited
+            * data_structure.physics_variables.pden_alpha_total_mw
+            + data_structure.physics_variables.pden_non_alpha_charged_mw
+            + data_structure.physics_variables.pden_plasma_ohmic_mw
         )
 
     cc = 1.0 - pnumerator / pdenom
@@ -235,52 +243,52 @@ def constraint_equation_3():
     vol_plasma: plasma volume (m3)
     """
     # No assume plasma ignition:
-    if fortran.physics_variables.i_plasma_ignited == 0:
+    if data_structure.physics_variables.i_plasma_ignited == 0:
         cc = 1.0 - (
-            fortran.physics_variables.pden_ion_transport_loss_mw
-            + fortran.physics_variables.pden_ion_electron_equilibration_mw
+            data_structure.physics_variables.pden_ion_transport_loss_mw
+            + data_structure.physics_variables.pden_ion_electron_equilibration_mw
         ) / (
-            fortran.physics_variables.f_p_alpha_plasma_deposited
-            * fortran.physics_variables.f_pden_alpha_ions_mw
-            + fortran.current_drive_variables.p_hcd_injected_ions_mw
-            / fortran.physics_variables.vol_plasma
+            data_structure.physics_variables.f_p_alpha_plasma_deposited
+            * data_structure.physics_variables.f_pden_alpha_ions_mw
+            + data_structure.current_drive_variables.p_hcd_injected_ions_mw
+            / data_structure.physics_variables.vol_plasma
         )
         return ConstraintResult(
             cc,
             (
-                fortran.physics_variables.f_p_alpha_plasma_deposited
-                * fortran.physics_variables.f_pden_alpha_ions_mw
-                + fortran.current_drive_variables.p_hcd_injected_ions_mw
-                / fortran.physics_variables.vol_plasma
+                data_structure.physics_variables.f_p_alpha_plasma_deposited
+                * data_structure.physics_variables.f_pden_alpha_ions_mw
+                + data_structure.current_drive_variables.p_hcd_injected_ions_mw
+                / data_structure.physics_variables.vol_plasma
             )
             * (1.0 - cc),
             (
-                fortran.physics_variables.f_p_alpha_plasma_deposited
-                * fortran.physics_variables.f_pden_alpha_ions_mw
-                + fortran.current_drive_variables.p_hcd_injected_ions_mw
-                / fortran.physics_variables.vol_plasma
+                data_structure.physics_variables.f_p_alpha_plasma_deposited
+                * data_structure.physics_variables.f_pden_alpha_ions_mw
+                + data_structure.current_drive_variables.p_hcd_injected_ions_mw
+                / data_structure.physics_variables.vol_plasma
             )
             * cc,
         )
 
     # Plasma ignited:
     cc = 1.0 - (
-        fortran.physics_variables.pden_ion_transport_loss_mw
-        + fortran.physics_variables.pden_ion_electron_equilibration_mw
+        data_structure.physics_variables.pden_ion_transport_loss_mw
+        + data_structure.physics_variables.pden_ion_electron_equilibration_mw
     ) / (
-        fortran.physics_variables.f_p_alpha_plasma_deposited
-        * fortran.physics_variables.f_pden_alpha_ions_mw
+        data_structure.physics_variables.f_p_alpha_plasma_deposited
+        * data_structure.physics_variables.f_pden_alpha_ions_mw
     )
     return ConstraintResult(
         cc,
         (
-            fortran.physics_variables.f_p_alpha_plasma_deposited
-            * fortran.physics_variables.f_pden_alpha_ions_mw
+            data_structure.physics_variables.f_p_alpha_plasma_deposited
+            * data_structure.physics_variables.f_pden_alpha_ions_mw
         )
         * (1.0 - cc),
         (
-            fortran.physics_variables.f_p_alpha_plasma_deposited
-            * fortran.physics_variables.f_pden_alpha_ions_mw
+            data_structure.physics_variables.f_p_alpha_plasma_deposited
+            * data_structure.physics_variables.f_pden_alpha_ions_mw
         )
         * cc,
     )
@@ -292,7 +300,7 @@ def constraint_equation_4():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     i_rad_loss: switch for radiation loss term usage in power balance
-    - 0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
+    - 0 total power lost is scaling power plus radiation (needed for i_plasma_pedestal=2,3)
     - 1 total power lost is scaling power plus core radiation only
     - 2 total power lost is scaling power only, with no additional
         allowance for radiation. This is not recommended for power plant models.
@@ -312,30 +320,30 @@ def constraint_equation_4():
     """
     # pscaling: total transport power per volume (MW/m3)
 
-    pscaling = fortran.physics_variables.pden_electron_transport_loss_mw
+    pscaling = data_structure.physics_variables.pden_electron_transport_loss_mw
     # Total power lost is scaling power plus radiation:
-    if fortran.physics_variables.i_rad_loss == 0:
-        pnumerator = pscaling + fortran.physics_variables.pden_plasma_rad_mw
-    elif fortran.physics_variables.i_rad_loss == 1:
-        pnumerator = pscaling + fortran.physics_variables.pden_plasma_core_rad_mw
+    if data_structure.physics_variables.i_rad_loss == 0:
+        pnumerator = pscaling + data_structure.physics_variables.pden_plasma_rad_mw
+    elif data_structure.physics_variables.i_rad_loss == 1:
+        pnumerator = pscaling + data_structure.physics_variables.pden_plasma_core_rad_mw
     else:
         pnumerator = pscaling
 
     # if plasma not ignited include injected power
-    if fortran.physics_variables.i_plasma_ignited == 0:
+    if data_structure.physics_variables.i_plasma_ignited == 0:
         pdenom = (
-            fortran.physics_variables.f_p_alpha_plasma_deposited
-            * fortran.physics_variables.f_pden_alpha_electron_mw
-            + fortran.physics_variables.pden_ion_electron_equilibration_mw
-            + fortran.current_drive_variables.p_hcd_injected_electrons_mw
-            / fortran.physics_variables.vol_plasma
+            data_structure.physics_variables.f_p_alpha_plasma_deposited
+            * data_structure.physics_variables.f_pden_alpha_electron_mw
+            + data_structure.physics_variables.pden_ion_electron_equilibration_mw
+            + data_structure.current_drive_variables.p_hcd_injected_electrons_mw
+            / data_structure.physics_variables.vol_plasma
         )
     else:
         # if plasma ignited
         pdenom = (
-            fortran.physics_variables.f_p_alpha_plasma_deposited
-            * fortran.physics_variables.f_pden_alpha_electron_mw
-            + fortran.physics_variables.pden_ion_electron_equilibration_mw
+            data_structure.physics_variables.f_p_alpha_plasma_deposited
+            * data_structure.physics_variables.f_pden_alpha_electron_mw
+            + data_structure.physics_variables.pden_ion_electron_equilibration_mw
         )
 
     cc = 1.0 - pnumerator / pdenom
@@ -348,9 +356,9 @@ def constraint_equation_5():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fdene: f-value for density limit
-    dene: electron density (/m3)
-    dnelimt: density limit (/m3)
-    nd_electron_line: line averaged electron density (m-3)
+    nd_plasma_electrons_vol_avg: electron density (/m3)
+    nd_plasma_electrons_max: density limit (/m3)
+    nd_plasma_electron_line: line averaged electron density (m-3)
 
     i_density_limit:
     - 1 old ASDEX;
@@ -362,24 +370,27 @@ def constraint_equation_5():
     - 7 Greenwald limit
     """
     # Apply Greenwald limit to line-averaged density
-    if fortran.physics_variables.i_density_limit == 7:
+    if data_structure.physics_variables.i_density_limit == 7:
         return ConstraintResult(
-            fortran.physics_variables.nd_electron_line
-            / fortran.physics_variables.dnelimt
-            - 1.0 * fortran.constraint_variables.fdene,
-            fortran.constraint_variables.fdene * fortran.physics_variables.dnelimt,
-            fortran.constraint_variables.fdene * fortran.physics_variables.dnelimt
-            - fortran.physics_variables.nd_electron_line,
+            data_structure.physics_variables.nd_plasma_electron_line
+            / data_structure.physics_variables.nd_plasma_electrons_max
+            - 1.0 * data_structure.constraint_variables.fdene,
+            data_structure.constraint_variables.fdene
+            * data_structure.physics_variables.nd_plasma_electrons_max,
+            data_structure.constraint_variables.fdene
+            * data_structure.physics_variables.nd_plasma_electrons_max
+            - data_structure.physics_variables.nd_plasma_electron_line,
         )
 
     cc = (
-        fortran.physics_variables.dene / fortran.physics_variables.dnelimt
-        - 1.0 * fortran.constraint_variables.fdene
+        data_structure.physics_variables.nd_plasma_electrons_vol_avg
+        / data_structure.physics_variables.nd_plasma_electrons_max
+        - 1.0 * data_structure.constraint_variables.fdene
     )
     return ConstraintResult(
         cc,
-        fortran.physics_variables.dnelimt * (1.0 - cc),
-        fortran.physics_variables.dene * cc,
+        data_structure.physics_variables.nd_plasma_electrons_max * (1.0 - cc),
+        data_structure.physics_variables.nd_plasma_electrons_vol_avg * cc,
     )
 
 
@@ -394,14 +405,21 @@ def constraint_equation_6():
     beta_poloidal: poloidal beta
     """
     cc = (
-        (fortran.physics_variables.eps * fortran.physics_variables.beta_poloidal)
-        / fortran.physics_variables.beta_poloidal_eps_max
-        - 1.0 * fortran.constraint_variables.fbeta_poloidal_eps
+        (
+            data_structure.physics_variables.eps
+            * data_structure.physics_variables.beta_poloidal_vol_avg
+        )
+        / data_structure.physics_variables.beta_poloidal_eps_max
+        - 1.0 * data_structure.constraint_variables.fbeta_poloidal_eps
     )
     return ConstraintResult(
         cc,
-        fortran.physics_variables.beta_poloidal_eps_max * (1.0 - cc),
-        (fortran.physics_variables.eps * fortran.physics_variables.beta_poloidal) * cc,
+        data_structure.physics_variables.beta_poloidal_eps_max * (1.0 - cc),
+        (
+            data_structure.physics_variables.eps
+            * data_structure.physics_variables.beta_poloidal_vol_avg
+        )
+        * cc,
     )
 
 
@@ -420,20 +438,20 @@ def constraint_equation_7():
     nd_beam_ions_out: hot beam ion density from calculation (/m3)
     nd_beam_ions: hot beam ion density, variable (/m3)
     """
-    if fortran.physics_variables.i_plasma_ignited == 1:
+    if data_structure.physics_variables.i_plasma_ignited == 1:
         raise ProcessValueError(
             "Do not use constraint equation 7 if i_plasma_ignited=1"
         )
 
     cc = (
         1.0
-        - fortran.physics_variables.nd_beam_ions_out
-        / fortran.physics_variables.nd_beam_ions
+        - data_structure.physics_variables.nd_beam_ions_out
+        / data_structure.physics_variables.nd_beam_ions
     )
     return ConstraintResult(
         cc,
-        fortran.physics_variables.nd_beam_ions * (1.0 - cc),
-        fortran.physics_variables.nd_beam_ions * cc,
+        data_structure.physics_variables.nd_beam_ions * (1.0 - cc),
+        data_structure.physics_variables.nd_beam_ions * cc,
     )
 
 
@@ -447,15 +465,15 @@ def constraint_equation_8():
     """
     return ConstraintResult(
         (
-            fortran.physics_variables.pflux_fw_neutron_mw
-            / fortran.constraint_variables.pflux_fw_neutron_max_mw
-            - 1.0 * fortran.constraint_variables.fpflux_fw_neutron_max_mw
+            data_structure.physics_variables.pflux_fw_neutron_mw
+            / data_structure.constraint_variables.pflux_fw_neutron_max_mw
+            - 1.0 * data_structure.constraint_variables.fpflux_fw_neutron_max_mw
         ),
-        fortran.constraint_variables.fpflux_fw_neutron_max_mw
-        * fortran.constraint_variables.pflux_fw_neutron_max_mw,
-        fortran.constraint_variables.fpflux_fw_neutron_max_mw
-        * fortran.constraint_variables.pflux_fw_neutron_max_mw
-        - fortran.physics_variables.pflux_fw_neutron_mw,
+        data_structure.constraint_variables.fpflux_fw_neutron_max_mw
+        * data_structure.constraint_variables.pflux_fw_neutron_max_mw,
+        data_structure.constraint_variables.fpflux_fw_neutron_max_mw
+        * data_structure.constraint_variables.pflux_fw_neutron_max_mw
+        - data_structure.physics_variables.pflux_fw_neutron_mw,
     )
 
 
@@ -468,14 +486,14 @@ def constraint_equation_9():
     p_fusion_total_mw: fusion power (MW)
     """
     cc = (
-        fortran.physics_variables.p_fusion_total_mw
-        / fortran.constraint_variables.p_fusion_total_max_mw
-        - 1.0 * fortran.constraint_variables.fp_fusion_total_max_mw
+        data_structure.physics_variables.p_fusion_total_mw
+        / data_structure.constraint_variables.p_fusion_total_max_mw
+        - 1.0 * data_structure.constraint_variables.fp_fusion_total_max_mw
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.p_fusion_total_max_mw * (1.0 - cc),
-        fortran.physics_variables.p_fusion_total_mw * cc,
+        data_structure.constraint_variables.p_fusion_total_max_mw * (1.0 - cc),
+        data_structure.physics_variables.p_fusion_total_mw * cc,
     )
 
 
@@ -487,11 +505,14 @@ def constraint_equation_11():
     rbld: sum of thicknesses to the major radius (m)
     rmajor: plasma major radius (m)
     """
-    cc = 1.0 - fortran.build_variables.rbld / fortran.physics_variables.rmajor
+    cc = (
+        1.0
+        - data_structure.build_variables.rbld / data_structure.physics_variables.rmajor
+    )
     return ConstraintResult(
         cc,
-        fortran.physics_variables.rmajor * (1.0 - cc),
-        fortran.physics_variables.rmajor * cc,
+        data_structure.physics_variables.rmajor * (1.0 - cc),
+        data_structure.physics_variables.rmajor * cc,
     )
 
 
@@ -508,15 +529,15 @@ def constraint_equation_12():
     # vs_cs_pf_total_pulse is negative, requires sign change
     cc = (
         1.0
-        - fortran.constraint_variables.fvs_plasma_total_required
-        * (-fortran.pfcoil_variables.vs_cs_pf_total_pulse)
-        / fortran.physics_variables.vs_plasma_total_required
+        - data_structure.constraint_variables.fvs_plasma_total_required
+        * (-data_structure.pfcoil_variables.vs_cs_pf_total_pulse)
+        / data_structure.physics_variables.vs_plasma_total_required
     )
 
     return ConstraintResult(
         cc,
-        fortran.pfcoil_variables.vs_plasma_total_required * (1.0 - cc),
-        fortran.pfcoil_variables.vs_plasma_total_required * cc,
+        data_structure.pfcoil_variables.vs_plasma_total_required * (1.0 - cc),
+        data_structure.pfcoil_variables.vs_plasma_total_required * cc,
     )
 
 
@@ -527,19 +548,19 @@ def constraint_equation_13():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ft_burn_min: f-value for minimum burn time
-    t_burn: burn time (s) (calculated if i_pulsed_plant=1)
+    t_plant_pulse_burn: burn time (s) (calculated if i_pulsed_plant=1)
     t_burn_min: minimum burn time (s)
     """
     return ConstraintResult(
         1.0
-        - fortran.constraint_variables.ft_burn_min
-        * data_structure.times_variables.t_burn
-        / fortran.constraint_variables.t_burn_min,
-        fortran.constraint_variables.t_burn_min
-        / fortran.constraint_variables.ft_burn_min,
-        fortran.constraint_variables.t_burn_min
-        / fortran.constraint_variables.ft_burn_min
-        - data_structure.times_variables.t_burn,
+        - data_structure.constraint_variables.ft_burn_min
+        * data_structure.times_variables.t_plant_pulse_burn
+        / data_structure.constraint_variables.t_burn_min,
+        data_structure.constraint_variables.t_burn_min
+        / data_structure.constraint_variables.ft_burn_min,
+        data_structure.constraint_variables.t_burn_min
+        / data_structure.constraint_variables.ft_burn_min
+        - data_structure.times_variables.t_plant_pulse_burn,
     )
 
 
@@ -554,13 +575,13 @@ def constraint_equation_15():
     """
     return ConstraintResult(
         1.0
-        - fortran.constraint_variables.fl_h_threshold
-        * fortran.physics_variables.p_plasma_separatrix_mw
-        / fortran.physics_variables.p_l_h_threshold_mw,
-        fortran.physics_variables.p_l_h_threshold_mw,
-        fortran.physics_variables.p_l_h_threshold_mw
-        - fortran.physics_variables.p_plasma_separatrix_mw
-        / fortran.constraint_variables.fl_h_threshold,
+        - data_structure.constraint_variables.fl_h_threshold
+        * data_structure.physics_variables.p_plasma_separatrix_mw
+        / data_structure.physics_variables.p_l_h_threshold_mw,
+        data_structure.physics_variables.p_l_h_threshold_mw,
+        data_structure.physics_variables.p_l_h_threshold_mw
+        - data_structure.physics_variables.p_plasma_separatrix_mw
+        / data_structure.constraint_variables.fl_h_threshold,
     )
 
 
@@ -575,13 +596,13 @@ def constraint_equation_16():
     """
     return ConstraintResult(
         1.0
-        - fortran.constraint_variables.fp_plant_electric_net_required_mw
-        * fortran.heat_transport_variables.p_plant_electric_net_mw
-        / fortran.constraint_variables.p_plant_electric_net_required_mw,
-        fortran.constraint_variables.p_plant_electric_net_required_mw,
-        fortran.heat_transport_variables.p_plant_electric_net_mw
-        - fortran.constraint_variables.p_plant_electric_net_required_mw
-        / fortran.constraint_variables.fp_plant_electric_net_required_mw,
+        - data_structure.constraint_variables.fp_plant_electric_net_required_mw
+        * data_structure.heat_transport_variables.p_plant_electric_net_mw
+        / data_structure.constraint_variables.p_plant_electric_net_required_mw,
+        data_structure.constraint_variables.p_plant_electric_net_required_mw,
+        data_structure.heat_transport_variables.p_plant_electric_net_mw
+        - data_structure.constraint_variables.p_plant_electric_net_required_mw
+        / data_structure.constraint_variables.fp_plant_electric_net_required_mw,
     )
 
 
@@ -595,13 +616,14 @@ def constraint_equation_14():
     """
     cc = (
         1.0
-        - fortran.current_drive_variables.n_beam_decay_lengths_core
-        / fortran.current_drive_variables.n_beam_decay_lengths_core_required
+        - data_structure.current_drive_variables.n_beam_decay_lengths_core
+        / data_structure.current_drive_variables.n_beam_decay_lengths_core_required
     )
     return ConstraintResult(
         cc,
-        fortran.current_drive_variables.n_beam_decay_lengths_core_required * (1.0 - cc),
-        fortran.current_drive_variables.n_beam_decay_lengths_core_required * cc,
+        data_structure.current_drive_variables.n_beam_decay_lengths_core_required
+        * (1.0 - cc),
+        data_structure.current_drive_variables.n_beam_decay_lengths_core_required * cc,
     )
 
 
@@ -621,20 +643,22 @@ def constraint_equation_17():
     """
     # Maximum possible power/vol_plasma that can be radiated (local)
     pradmaxpv = (
-        fortran.current_drive_variables.p_hcd_injected_total_mw
-        / fortran.physics_variables.vol_plasma
-        + fortran.physics_variables.pden_alpha_total_mw
-        * fortran.physics_variables.f_p_alpha_plasma_deposited
-        + fortran.physics_variables.pden_non_alpha_charged_mw
-        + fortran.physics_variables.pden_plasma_ohmic_mw
+        data_structure.current_drive_variables.p_hcd_injected_total_mw
+        / data_structure.physics_variables.vol_plasma
+        + data_structure.physics_variables.pden_alpha_total_mw
+        * data_structure.physics_variables.f_p_alpha_plasma_deposited
+        + data_structure.physics_variables.pden_non_alpha_charged_mw
+        + data_structure.physics_variables.pden_plasma_ohmic_mw
     )
 
     cc = (
-        fortran.physics_variables.pden_plasma_rad_mw / pradmaxpv
-        - 1.0 * fortran.constraint_variables.fradpwr
+        data_structure.physics_variables.pden_plasma_rad_mw / pradmaxpv
+        - 1.0 * data_structure.constraint_variables.fradpwr
     )
     return ConstraintResult(
-        cc, pradmaxpv * (1.0 - cc), fortran.physics_variables.pden_plasma_rad_mw * cc
+        cc,
+        pradmaxpv * (1.0 - cc),
+        data_structure.physics_variables.pden_plasma_rad_mw * cc,
     )
 
 
@@ -650,7 +674,7 @@ def constraint_equation_18():
     cc = (
         data_structure.divertor_variables.pflux_div_heat_load_mw
         / data_structure.divertor_variables.pflux_div_heat_load_max_mw
-        - 1.0 * fortran.constraint_variables.fpflux_div_heat_load_mw
+        - 1.0 * data_structure.constraint_variables.fpflux_div_heat_load_mw
     )
     return ConstraintResult(
         cc,
@@ -670,16 +694,16 @@ def constraint_equation_19():
     mvalim: MVA limit for resistive TF coil set (total) (MW)
     """
     totmva = (
-        fortran.tfcoil_variables.p_cp_resistive_mw
-        + fortran.tfcoil_variables.p_tf_leg_resistive_mw
+        data_structure.tfcoil_variables.p_cp_resistive_mw
+        + data_structure.tfcoil_variables.p_tf_leg_resistive_mw
     )
 
     cc = (
-        totmva / fortran.constraint_variables.mvalim
-        - 1.0 * fortran.constraint_variables.fmva
+        totmva / data_structure.constraint_variables.mvalim
+        - 1.0 * data_structure.constraint_variables.fmva
     )
     return ConstraintManager(
-        cc, fortran.constraint_variables.mvalim * (1.0 - cc), totmva * cc
+        cc, data_structure.constraint_variables.mvalim * (1.0 - cc), totmva * cc
     )
 
 
@@ -693,14 +717,14 @@ def constraint_equation_20():
     radius_beam_tangency: neutral beam centreline tangency radius (m)
     """
     cc = (
-        fortran.current_drive_variables.radius_beam_tangency
-        / fortran.current_drive_variables.radius_beam_tangency_max
-        - 1.0 * fortran.constraint_variables.fradius_beam_tangency
+        data_structure.current_drive_variables.radius_beam_tangency
+        / data_structure.current_drive_variables.radius_beam_tangency_max
+        - 1.0 * data_structure.constraint_variables.fradius_beam_tangency
     )
     return ConstraintResult(
         cc,
-        fortran.current_drive_variables.radius_beam_tangency_max * (1.0 - cc),
-        fortran.current_drive_variables.radius_beam_tangency * cc,
+        data_structure.current_drive_variables.radius_beam_tangency_max * (1.0 - cc),
+        data_structure.current_drive_variables.radius_beam_tangency * cc,
     )
 
 
@@ -715,14 +739,14 @@ def constraint_equation_21():
     """
     cc = (
         1.0
-        - fortran.constraint_variables.frminor
-        * fortran.physics_variables.rminor
-        / fortran.build_variables.aplasmin
+        - data_structure.constraint_variables.frminor
+        * data_structure.physics_variables.rminor
+        / data_structure.build_variables.aplasmin
     )
     return ConstraintResult(
         cc,
-        fortran.build_variables.aplasmin * (1.0 - cc),
-        fortran.build_variables.aplasmin * cc,
+        data_structure.build_variables.aplasmin * (1.0 - cc),
+        data_structure.build_variables.aplasmin * cc,
     )
 
 
@@ -740,24 +764,24 @@ def constraint_equation_23():
     """
     # conducting shell radius (m)
     rcw = (
-        fortran.physics_variables.rminor
-        + fortran.build_variables.dr_fw_plasma_gap_outboard
-        + fortran.build_variables.dr_fw_outboard
-        + fortran.build_variables.dr_blkt_outboard
+        data_structure.physics_variables.rminor
+        + data_structure.build_variables.dr_fw_plasma_gap_outboard
+        + data_structure.build_variables.dr_fw_outboard
+        + data_structure.build_variables.dr_blkt_outboard
     )
 
     cc = (
         rcw
         / (
-            fortran.physics_variables.f_r_conducting_wall
-            * fortran.physics_variables.rminor
+            data_structure.physics_variables.f_r_conducting_wall
+            * data_structure.physics_variables.rminor
         )
-        - 1.0 * fortran.constraint_variables.fr_conducting_wall
+        - 1.0 * data_structure.constraint_variables.fr_conducting_wall
     )
     return ConstraintManager(
         cc,
-        fortran.physics_variables.f_r_conducting_wall
-        * fortran.physics_variables.rminor
+        data_structure.physics_variables.f_r_conducting_wall
+        * data_structure.physics_variables.rminor
         * (1.0 - cc),
         rcw * cc,
     )
@@ -777,77 +801,91 @@ def constraint_equation_24():
     - 0 use tokamak model;
     - 1 use stellarator model
     fbeta_max: f-value for beta limit
-    beta_max: allowable beta
-    beta: total plasma beta (calculated if ipedestal =3)
+    beta_vol_avg_max: allowable beta
+    beta_total_vol_avg: total plasma beta (calculated if i_plasma_pedestal =3)
     beta_fast_alpha: fast alpha beta component
     beta_beam: neutral beam beta component
-    bt: toroidal field
-    btot: total field
+    b_plasma_toroidal_on_axis: toroidal field
+    b_plasma_total: total field
     """
     # Include all beta components: relevant for both tokamaks and stellarators
     if (
-        fortran.physics_variables.i_beta_component == 0
-        or fortran.stellarator_variables.istell != 0
+        data_structure.physics_variables.i_beta_component == 0
+        or data_structure.stellarator_variables.istell != 0
     ):
         cc = (
-            fortran.physics_variables.beta / fortran.physics_variables.beta_max
-            - 1.0 * fortran.constraint_variables.fbeta_max
+            data_structure.physics_variables.beta_total_vol_avg
+            / data_structure.physics_variables.beta_vol_avg_max
+            - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = fortran.physics_variables.beta_max
+        con = data_structure.physics_variables.beta_vol_avg_max
         err = (
-            fortran.physics_variables.beta_max
-            - fortran.physics_variables.beta / fortran.constraint_variables.fbeta_max
+            data_structure.physics_variables.beta_vol_avg_max
+            - data_structure.physics_variables.beta_total_vol_avg
+            / data_structure.constraint_variables.fbeta_max
         )
     # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
-    elif fortran.physics_variables.i_beta_component == 1:
+    elif data_structure.physics_variables.i_beta_component == 1:
         cc = (
             (
-                fortran.physics_variables.beta
-                - fortran.physics_variables.beta_fast_alpha
-                - fortran.physics_variables.beta_beam
+                data_structure.physics_variables.beta_total_vol_avg
+                - data_structure.physics_variables.beta_fast_alpha
+                - data_structure.physics_variables.beta_beam
             )
-            / fortran.physics_variables.beta_max
-            - 1.0 * fortran.constraint_variables.fbeta_max
+            / data_structure.physics_variables.beta_vol_avg_max
+            - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = fortran.physics_variables.beta_max
+        con = data_structure.physics_variables.beta_vol_avg_max
         err = (
-            fortran.physics_variables.beta_max
+            data_structure.physics_variables.beta_vol_avg_max
             - (
-                fortran.physics_variables.beta
-                - fortran.physics_variables.beta_fast_alpha
-                - fortran.physics_variables.beta_beam
+                data_structure.physics_variables.beta_total_vol_avg
+                - data_structure.physics_variables.beta_fast_alpha
+                - data_structure.physics_variables.beta_beam
             )
-            / fortran.constraint_variables.fbeta_max
+            / data_structure.constraint_variables.fbeta_max
         )
     # Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
-    elif fortran.physics_variables.i_beta_component == 2:
-        cc = (
-            (fortran.physics_variables.beta - fortran.physics_variables.beta_fast_alpha)
-            / fortran.physics_variables.beta_max
-            - 1.0 * fortran.constraint_variables.fbeta_max
-        )
-        con = fortran.physics_variables.beta_max * (1.0 - cc)
-        err = (
-            fortran.physics_variables.beta - fortran.physics_variables.beta_fast_alpha
-        ) * cc
-    # Beta limit applies to toroidal beta
-    elif fortran.physics_variables.i_beta_component == 3:
+    elif data_structure.physics_variables.i_beta_component == 2:
         cc = (
             (
-                fortran.physics_variables.beta
-                * (fortran.physics_variables.btot / fortran.physics_variables.bt) ** 2
+                data_structure.physics_variables.beta_total_vol_avg
+                - data_structure.physics_variables.beta_fast_alpha
             )
-            / fortran.physics_variables.beta_max
-            - 1.0 * fortran.constraint_variables.fbeta_max
+            / data_structure.physics_variables.beta_vol_avg_max
+            - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = fortran.physics_variables.beta_max
+        con = data_structure.physics_variables.beta_vol_avg_max * (1.0 - cc)
         err = (
-            fortran.physics_variables.beta_max
-            - (
-                fortran.physics_variables.beta
-                * (fortran.physics_variables.btot / fortran.physics_variables.bt) ** 2
+            data_structure.physics_variables.beta_total_vol_avg
+            - data_structure.physics_variables.beta_fast_alpha
+        ) * cc
+    # Beta limit applies to toroidal beta
+    elif data_structure.physics_variables.i_beta_component == 3:
+        cc = (
+            (
+                data_structure.physics_variables.beta_total_vol_avg
+                * (
+                    data_structure.physics_variables.b_plasma_total
+                    / data_structure.physics_variables.b_plasma_toroidal_on_axis
+                )
+                ** 2
             )
-            / fortran.constraint_variables.fbeta_max
+            / data_structure.physics_variables.beta_vol_avg_max
+            - 1.0 * data_structure.constraint_variables.fbeta_max
+        )
+        con = data_structure.physics_variables.beta_vol_avg_max
+        err = (
+            data_structure.physics_variables.beta_vol_avg_max
+            - (
+                data_structure.physics_variables.beta_total_vol_avg
+                * (
+                    data_structure.physics_variables.b_plasma_total
+                    / data_structure.physics_variables.b_plasma_toroidal_on_axis
+                )
+                ** 2
+            )
+            / data_structure.constraint_variables.fbeta_max
         )
 
     return ConstraintResult(cc, con, err)
@@ -860,17 +898,17 @@ def constraint_equation_25():
 
     fb_tf_inboard_max: f-value for maximum toroidal field
     b_tf_inboard_max: maximum peak toroidal field (T)
-    b_tf_inboard_peak: mean peak field at TF coil (T)
+    b_tf_inboard_peak_symmetric: mean peak field at TF coil (T)
     """
     cc = (
-        fortran.tfcoil_variables.b_tf_inboard_peak
-        / fortran.constraint_variables.b_tf_inboard_max
-        - 1.0 * fortran.constraint_variables.fb_tf_inboard_max
+        data_structure.tfcoil_variables.b_tf_inboard_peak_symmetric
+        / data_structure.constraint_variables.b_tf_inboard_max
+        - 1.0 * data_structure.constraint_variables.fb_tf_inboard_max
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.b_tf_inboard_max * (1.0 - cc),
-        fortran.tfcoil_variables.b_tf_inboard_peak * cc,
+        data_structure.constraint_variables.b_tf_inboard_max * (1.0 - cc),
+        data_structure.tfcoil_variables.b_tf_inboard_peak_symmetric * cc,
     )
 
 
@@ -884,13 +922,13 @@ def constraint_equation_26():
     j_cs_flat_top_end: central solenoid overall current density at end of flat-top (A/m2)
     """
     return ConstraintResult(
-        fortran.pfcoil_variables.j_cs_flat_top_end
-        / fortran.pfcoil_variables.j_cs_critical_flat_top_end
-        - 1.0 * fortran.constraint_variables.fjohc,
-        fortran.pfcoil_variables.j_cs_critical_flat_top_end,
-        fortran.pfcoil_variables.j_cs_critical_flat_top_end
-        - fortran.pfcoil_variables.j_cs_flat_top_end
-        / fortran.constraint_variables.fjohc,
+        data_structure.pfcoil_variables.j_cs_flat_top_end
+        / data_structure.pfcoil_variables.j_cs_critical_flat_top_end
+        - 1.0 * data_structure.constraint_variables.fjohc,
+        data_structure.pfcoil_variables.j_cs_critical_flat_top_end,
+        data_structure.pfcoil_variables.j_cs_critical_flat_top_end
+        - data_structure.pfcoil_variables.j_cs_flat_top_end
+        / data_structure.constraint_variables.fjohc,
     )
 
 
@@ -904,13 +942,13 @@ def constraint_equation_27():
     j_cs_pulse_start: central solenoid overall current density at beginning of pulse (A/m2)
     """
     return ConstraintResult(
-        fortran.pfcoil_variables.j_cs_pulse_start
-        / fortran.pfcoil_variables.j_cs_critical_pulse_start
-        - 1.0 * fortran.constraint_variables.fjohc0,
-        fortran.pfcoil_variables.j_cs_critical_pulse_start,
-        fortran.pfcoil_variables.j_cs_critical_pulse_start
-        - fortran.pfcoil_variables.j_cs_pulse_start
-        / fortran.constraint_variables.fjohc0,
+        data_structure.pfcoil_variables.j_cs_pulse_start
+        / data_structure.pfcoil_variables.j_cs_critical_pulse_start
+        - 1.0 * data_structure.constraint_variables.fjohc0,
+        data_structure.pfcoil_variables.j_cs_critical_pulse_start,
+        data_structure.pfcoil_variables.j_cs_critical_pulse_start
+        - data_structure.pfcoil_variables.j_cs_pulse_start
+        / data_structure.constraint_variables.fjohc0,
     )
 
 
@@ -919,9 +957,9 @@ def constraint_equation_28():
     """Equation for fusion gain (big Q) lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fqval: pf-value for Q
-    bigq: Fusion gain; P_fusion / (P_injection + P_ohmic)
-    bigqmin: minimum fusion gain Q
+    fbig_q_plasma_min: pf-value for Q
+    big_q_plasma: Fusion gain; P_fusion / (P_injection + P_ohmic)
+    big_q_plasma_min: minimum fusion gain Q
     i_plasma_ignited : input integer : switch for ignition assumption:
     - 0 do not assume plasma ignition;
     - 1 assume ignited (but include auxiliary power in costs)
@@ -930,19 +968,19 @@ def constraint_equation_28():
     during plasma start-up, and is excluded from all steady-state
     power balance calculations.
     """
-    if fortran.physics_variables.i_plasma_ignited != 0:
+    if data_structure.physics_variables.i_plasma_ignited != 0:
         raise ProcessValueError("Do not use constraint 28 if i_plasma_ignited=1")
 
     cc = (
         1.0
-        - fortran.constraint_variables.fqval
-        * fortran.current_drive_variables.bigq
-        / fortran.constraint_variables.bigqmin
+        - data_structure.constraint_variables.fbig_q_plasma_min
+        * data_structure.current_drive_variables.big_q_plasma
+        / data_structure.constraint_variables.big_q_plasma_min
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.bigqmin * (1.0 - cc),
-        fortran.constraint_variables.bigqmin * cc,
+        data_structure.constraint_variables.big_q_plasma_min * (1.0 - cc),
+        data_structure.constraint_variables.big_q_plasma_min * cc,
     )
 
 
@@ -957,13 +995,16 @@ def constraint_equation_29():
     """
     cc = (
         1.0
-        - (fortran.physics_variables.rmajor - fortran.physics_variables.rminor)
-        / fortran.build_variables.rinboard
+        - (
+            data_structure.physics_variables.rmajor
+            - data_structure.physics_variables.rminor
+        )
+        / data_structure.build_variables.rinboard
     )
     return ConstraintResult(
         cc,
-        fortran.build_variables.rinboard * (1.0 - cc),
-        fortran.build_variables.rinboard * cc,
+        data_structure.build_variables.rinboard * (1.0 - cc),
+        data_structure.build_variables.rinboard * cc,
     )
 
 
@@ -977,13 +1018,13 @@ def constraint_equation_30():
     p_hcd_injected_max: Maximum allowable value for injected power (MW)
     """
     return ConstraintResult(
-        fortran.current_drive_variables.p_hcd_injected_total_mw
-        / fortran.current_drive_variables.p_hcd_injected_max
-        - 1.0 * fortran.constraint_variables.fp_hcd_injected_max,
-        fortran.current_drive_variables.p_hcd_injected_max,
-        fortran.current_drive_variables.p_hcd_injected_max
-        - fortran.current_drive_variables.p_hcd_injected_total_mw
-        / fortran.constraint_variables.fp_hcd_injected_max,
+        data_structure.current_drive_variables.p_hcd_injected_total_mw
+        / data_structure.current_drive_variables.p_hcd_injected_max
+        - 1.0 * data_structure.constraint_variables.fp_hcd_injected_max,
+        data_structure.current_drive_variables.p_hcd_injected_max,
+        data_structure.current_drive_variables.p_hcd_injected_max
+        - data_structure.current_drive_variables.p_hcd_injected_total_mw
+        / data_structure.constraint_variables.fp_hcd_injected_max,
     )
 
 
@@ -997,11 +1038,13 @@ def constraint_equation_31():
     sig_tf_case: Constrained stress in TF coil case (Pa)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.sig_tf_case / fortran.tfcoil_variables.sig_tf_case_max
-        - 1.0 * fortran.constraint_variables.fstrcase,
-        fortran.tfcoil_variables.sig_tf_case_max,
-        fortran.tfcoil_variables.sig_tf_case_max
-        - fortran.tfcoil_variables.sig_tf_case / fortran.constraint_variables.fstrcase,
+        data_structure.tfcoil_variables.sig_tf_case
+        / data_structure.tfcoil_variables.sig_tf_case_max
+        - 1.0 * data_structure.constraint_variables.fstrcase,
+        data_structure.tfcoil_variables.sig_tf_case_max,
+        data_structure.tfcoil_variables.sig_tf_case_max
+        - data_structure.tfcoil_variables.sig_tf_case
+        / data_structure.constraint_variables.fstrcase,
     )
 
 
@@ -1015,11 +1058,13 @@ def constraint_equation_32():
     sig_tf_wp: Constrained stress in TF conductor conduit (Pa)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.sig_tf_wp / fortran.tfcoil_variables.sig_tf_wp_max
-        - 1.0 * fortran.constraint_variables.fstrcond,
-        fortran.tfcoil_variables.sig_tf_wp_max,
-        fortran.tfcoil_variables.sig_tf_wp_max
-        - fortran.tfcoil_variables.sig_tf_wp / fortran.constraint_variables.fstrcond,
+        data_structure.tfcoil_variables.sig_tf_wp
+        / data_structure.tfcoil_variables.sig_tf_wp_max
+        - 1.0 * data_structure.constraint_variables.fstrcond,
+        data_structure.tfcoil_variables.sig_tf_wp_max,
+        data_structure.tfcoil_variables.sig_tf_wp_max
+        - data_structure.tfcoil_variables.sig_tf_wp
+        / data_structure.constraint_variables.fstrcond,
     )
 
 
@@ -1033,17 +1078,18 @@ def constraint_equation_33():
     j_tf_wp_critical: critical current density for winding pack (A/m2)
     j_tf_wp: winding pack current density (A/m2)
     """
-    if fortran.constraint_variables.fiooic > 0.7:
-        fortran.error_handling.report_error(285)
+    if data_structure.constraint_variables.fiooic > 0.7:
+        logger.error("fiooic shouldn't be above 0.7 for engineering reliability")
 
     cc = (
-        fortran.tfcoil_variables.j_tf_wp / fortran.tfcoil_variables.j_tf_wp_critical
-        - 1.0 * fortran.constraint_variables.fiooic
+        data_structure.tfcoil_variables.j_tf_wp
+        / data_structure.tfcoil_variables.j_tf_wp_critical
+        - 1.0 * data_structure.constraint_variables.fiooic
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.j_tf_wp_critical * (1.0 - cc),
-        fortran.tfcoil_variables.j_tf_wp * cc,
+        data_structure.tfcoil_variables.j_tf_wp_critical * (1.0 - cc),
+        data_structure.tfcoil_variables.j_tf_wp * cc,
     )
 
 
@@ -1053,14 +1099,16 @@ def constraint_equation_34():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fvdump: f-value for dump voltage
-    vdalw: max voltage across TF coil during quench (kV)
-    vtfskv: voltage across a TF coil during quench (kV)
+    v_tf_coil_dump_quench_max_kv: max voltage across TF coil during quench (kV)
+    v_tf_coil_dump_quench_kv: voltage across a TF coil during quench (kV)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.vtfskv / fortran.tfcoil_variables.vdalw
-        - 1.0 * fortran.constraint_variables.fvdump,
-        fortran.tfcoil_variables.vdalw,
-        fortran.tfcoil_variables.vdalw - fortran.tfcoil_variables.vtfskv,
+        data_structure.tfcoil_variables.v_tf_coil_dump_quench_kv
+        / data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv
+        - 1.0 * data_structure.constraint_variables.fvdump,
+        data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv,
+        data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv
+        - data_structure.tfcoil_variables.v_tf_coil_dump_quench_kv,
     )
 
 
@@ -1070,15 +1118,17 @@ def constraint_equation_35():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fjprot: f-value for TF coil winding pack current density
-    jwdgpro: allowable TF coil winding pack current density, for dump temperature
+    j_tf_wp_quench_heat_max: allowable TF coil winding pack current density, for dump temperature
     rise protection (A/m2)
     j_tf_wp: winding pack current density (A/m2)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.j_tf_wp / fortran.tfcoil_variables.jwdgpro
-        - 1.0 * fortran.constraint_variables.fjprot,
-        fortran.tfcoil_variables.jwdgpro,
-        fortran.tfcoil_variables.j_tf_wp - fortran.tfcoil_variables.jwdgpro,
+        data_structure.tfcoil_variables.j_tf_wp
+        / data_structure.tfcoil_variables.j_tf_wp_quench_heat_max
+        - 1.0 * data_structure.constraint_variables.fjprot,
+        data_structure.tfcoil_variables.j_tf_wp_quench_heat_max,
+        data_structure.tfcoil_variables.j_tf_wp
+        - data_structure.tfcoil_variables.j_tf_wp_quench_heat_max,
     )
 
 
@@ -1088,16 +1138,17 @@ def constraint_equation_36():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ftmargtf: f-value for TF coil temperature margin
-    tmargtf: TF coil temperature margin (K)
-    tmargmin_tf: minimum allowable temperature margin : TF coils (K)
+    temp_tf_superconductor_margin: TF coil temperature margin (K)
+    temp_tf_superconductor_margin_min: minimum allowable temperature margin : TF coils (K)
     """
     return ConstraintResult(
         1.0
-        - fortran.constraint_variables.ftmargtf
-        * fortran.tfcoil_variables.tmargtf
-        / fortran.tfcoil_variables.tmargmin_tf,
-        fortran.tfcoil_variables.tmargmin_tf,
-        fortran.tfcoil_variables.tmargmin_tf - fortran.tfcoil_variables.tmargtf,
+        - data_structure.constraint_variables.ftmargtf
+        * data_structure.tfcoil_variables.temp_tf_superconductor_margin
+        / data_structure.tfcoil_variables.temp_tf_superconductor_margin_min,
+        data_structure.tfcoil_variables.temp_tf_superconductor_margin_min,
+        data_structure.tfcoil_variables.temp_tf_superconductor_margin_min
+        - data_structure.tfcoil_variables.temp_tf_superconductor_margin,
     )
 
 
@@ -1111,14 +1162,14 @@ def constraint_equation_37():
     eta_cd_norm_hcd_primary: normalised current drive efficiency (1.0e20 A/W-m2)
     """
     cc = (
-        fortran.current_drive_variables.eta_cd_norm_hcd_primary
-        / fortran.constraint_variables.eta_cd_norm_hcd_primary_max
-        - 1.0 * fortran.constraint_variables.feta_cd_norm_hcd_primary_max
+        data_structure.current_drive_variables.eta_cd_norm_hcd_primary
+        / data_structure.constraint_variables.eta_cd_norm_hcd_primary_max
+        - 1.0 * data_structure.constraint_variables.feta_cd_norm_hcd_primary_max
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.eta_cd_norm_hcd_primary_max * (1.0 - cc),
-        fortran.current_drive_variables.eta_cd_norm_hcd_primary * cc,
+        data_structure.constraint_variables.eta_cd_norm_hcd_primary_max * (1.0 - cc),
+        data_structure.current_drive_variables.eta_cd_norm_hcd_primary * cc,
     )
 
 
@@ -1131,18 +1182,19 @@ def constraint_equation_39():
     temp_fw_max: maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
     temp_fw_peak: peak first wall temperature (K)
     """
-    if fortran.fwbs_variables.temp_fw_peak < 1.0:
+    if data_structure.fwbs_variables.temp_fw_peak < 1.0:
         raise ProcessValueError(
             "temp_fw_peak = 0 implies i_pulsed_plant=0; do not use constraint 39 if i_pulsed_plant=0"
         )
     cc = (
-        fortran.fwbs_variables.temp_fw_peak / fortran.fwbs_variables.temp_fw_max
-        - 1.0 * fortran.constraint_variables.ftemp_fw_max
+        data_structure.fwbs_variables.temp_fw_peak
+        / data_structure.fwbs_variables.temp_fw_max
+        - 1.0 * data_structure.constraint_variables.ftemp_fw_max
     )
     return ConstraintResult(
         cc,
-        fortran.fwbs_variables.temp_fw_max * (1.0 - cc),
-        fortran.fwbs_variables.temp_fw_peak * cc,
+        data_structure.fwbs_variables.temp_fw_max * (1.0 - cc),
+        data_structure.fwbs_variables.temp_fw_peak * cc,
     )
 
 
@@ -1151,20 +1203,20 @@ def constraint_equation_40():
     """Equation for auxiliary power lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fauxmn: f-value for minimum auxiliary power
+    fp_hcd_injected_min_mw: f-value for minimum auxiliary power
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
-    auxmin: minimum auxiliary power (MW)
+    p_hcd_injected_min_mw: minimum auxiliary power (MW)
     """
     cc = (
         1.0
-        - fortran.constraint_variables.fauxmn
-        * fortran.current_drive_variables.p_hcd_injected_total_mw
-        / fortran.constraint_variables.auxmin
+        - data_structure.constraint_variables.fp_hcd_injected_min_mw
+        * data_structure.current_drive_variables.p_hcd_injected_total_mw
+        / data_structure.constraint_variables.p_hcd_injected_min_mw
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.auxmin * (1.0 - cc),
-        fortran.constraint_variables.auxmin * cc,
+        data_structure.constraint_variables.p_hcd_injected_min_mw * (1.0 - cc),
+        data_structure.constraint_variables.p_hcd_injected_min_mw * cc,
     )
 
 
@@ -1174,19 +1226,19 @@ def constraint_equation_41():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ft_current_ramp_up: f-value for plasma current ramp-up time
-    t_current_ramp_up: plasma current ramp-up time for current initiation (s)
+    t_plant_pulse_plasma_current_ramp_up: plasma current ramp-up time for current initiation (s)
     t_current_ramp_up_min: minimum plasma current ramp-up time (s)
     """
     cc = (
         1.0
-        - fortran.constraint_variables.ft_current_ramp_up
-        * data_structure.times_variables.t_current_ramp_up
-        / fortran.constraint_variables.t_current_ramp_up_min
+        - data_structure.constraint_variables.ft_current_ramp_up
+        * data_structure.times_variables.t_plant_pulse_plasma_current_ramp_up
+        / data_structure.constraint_variables.t_current_ramp_up_min
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.t_current_ramp_up_min * (1.0 - cc),
-        fortran.constraint_variables.t_current_ramp_up_min * cc,
+        data_structure.constraint_variables.t_current_ramp_up_min * (1.0 - cc),
+        data_structure.constraint_variables.t_current_ramp_up_min * cc,
     )
 
 
@@ -1196,24 +1248,24 @@ def constraint_equation_42():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ft_cycle_min: f-value for cycle time
-    t_cycle: full cycle time (s)
+    t_plant_pulse_total: full cycle time (s)
     t_cycle_min: minimum cycle time (s)
     """
-    if fortran.constraint_variables.t_cycle_min < 1.0:
+    if data_structure.constraint_variables.t_cycle_min < 1.0:
         raise ProcessValueError(
             "t_cycle_min = 0 implies that i_pulsed_plant=0; do not use constraint 42 if i_pulsed_plant=0"
         )
 
     cc = (
         1.0
-        - fortran.constraint_variables.ft_cycle_min
-        * data_structure.times_variables.t_cycle
-        / fortran.constraint_variables.t_cycle_min
+        - data_structure.constraint_variables.ft_cycle_min
+        * data_structure.times_variables.t_plant_pulse_total
+        / data_structure.constraint_variables.t_cycle_min
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.t_cycle_min * (1.0 - cc),
-        fortran.constraint_variables.t_cycle_min * cc,
+        data_structure.constraint_variables.t_cycle_min * (1.0 - cc),
+        data_structure.constraint_variables.t_cycle_min * cc,
     )
 
 
@@ -1228,15 +1280,15 @@ def constraint_equation_43():
     - 0 use conventional aspect ratio models;
     - 1 use spherical tokamak models
     """
-    if fortran.physics_variables.itart == 0:
+    if data_structure.physics_variables.itart == 0:
         raise ProcessValueError("Do not use constraint 43 if itart=0")
 
-    if fortran.tfcoil_variables.i_tf_sup == 0:
-        temp_cp_average = fortran.tfcoil_variables.temp_cp_average - 273.15
-        tcpav2 = fortran.tfcoil_variables.tcpav2 - 273.15
+    if data_structure.tfcoil_variables.i_tf_sup == 0:
+        temp_cp_average = data_structure.tfcoil_variables.temp_cp_average - 273.15
+        tcpav2 = data_structure.tfcoil_variables.tcpav2 - 273.15
     else:
-        temp_cp_average = fortran.tfcoil_variables.temp_cp_average
-        tcpav2 = fortran.tfcoil_variables.tcpav2
+        temp_cp_average = data_structure.tfcoil_variables.temp_cp_average
+        tcpav2 = data_structure.tfcoil_variables.tcpav2
 
     cc = 1.0 - temp_cp_average / tcpav2
 
@@ -1249,24 +1301,24 @@ def constraint_equation_44():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fptemp: f-value for peak centrepost temperature
-    ptempalw: maximum peak centrepost temperature (K)
-    tcpmax: peak centrepost temperature (K)
+    temp_cp_max: maximum peak centrepost temperature (K)
+    temp_cp_peak: peak centrepost temperature (K)
     itart: switch for spherical tokamak (ST) models:
     - 0: use conventional aspect ratio models;
     - 1: use spherical tokamak models
     """
-    if fortran.physics_variables.itart == 0:
+    if data_structure.physics_variables.itart == 0:
         raise ProcessValueError("Do not use constraint 44 if itart=0")
 
-    if fortran.tfcoil_variables.i_tf_sup == 0:  # ! Copper case
-        ptempalw = fortran.tfcoil_variables.ptempalw - 273.15
-        tcpmax = fortran.tfcoil_variables.tcpmax - 273.15
+    if data_structure.tfcoil_variables.i_tf_sup == 0:  # ! Copper case
+        temp_cp_max = data_structure.tfcoil_variables.temp_cp_max - 273.15
+        temp_cp_peak = data_structure.tfcoil_variables.temp_cp_peak - 273.15
     else:
-        ptempalw = fortran.tfcoil_variables.ptempalw
-        tcpmax = fortran.tfcoil_variables.tcpmax
+        temp_cp_max = data_structure.tfcoil_variables.temp_cp_max
+        temp_cp_peak = data_structure.tfcoil_variables.temp_cp_peak
 
-    cc = tcpmax / ptempalw - 1.0 * fortran.constraint_variables.fptemp
-    return ConstraintResult(cc, ptempalw * (1.0 - cc), tcpmax * cc)
+    cc = temp_cp_peak / temp_cp_max - 1.0 * data_structure.constraint_variables.fptemp
+    return ConstraintResult(cc, temp_cp_max * (1.0 - cc), temp_cp_peak * cc)
 
 
 @ConstraintManager.register_constraint(45, "", ">=")
@@ -1274,26 +1326,26 @@ def constraint_manager_45():
     """Equation for edge safety factor lower limit (TART)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fq: f-value for edge safety factor
+    fq95_min: f-value for edge safety factor
     q95 : safety factor 'near' plasma edge
     (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
     q95_min: lower limit for edge safety factor
     itart : input integer : switch for spherical tokamak (ST) models:
     - 0 use conventional aspect ratio models;
     - 1 use spherical tokamak models"""
-    if fortran.physics_variables.itart == 0:
+    if data_structure.physics_variables.itart == 0:
         raise ProcessValueError("Do not use constraint 45 if itart=0")
 
     cc = (
         1.0
-        - fortran.constraint_variables.fq
-        * fortran.physics_variables.q95
-        / fortran.physics_variables.q95_min
+        - data_structure.constraint_variables.fq95_min
+        * data_structure.physics_variables.q95
+        / data_structure.physics_variables.q95_min
     )
     return ConstraintResult(
         cc,
-        fortran.physics_variables.q95_min * (1.0 - cc),
-        fortran.physics_variables.q95_min * cc,
+        data_structure.physics_variables.q95_min * (1.0 - cc),
+        data_structure.physics_variables.q95_min * cc,
     )
 
 
@@ -1310,20 +1362,21 @@ def constraint_equation_46():
     - 0: use conventional aspect ratio models;
     - 1: use spherical tokamak models
     """
-    if fortran.physics_variables.itart == 0:
+    if data_structure.physics_variables.itart == 0:
         raise ProcessValueError("Do not use constraint 46 if itart=0")
 
     # maximum ratio of plasma current to centrepost current
-    cratmx = 1.0 + 4.91 * (fortran.physics_variables.eps - 0.62)
+    cratmx = 1.0 + 4.91 * (data_structure.physics_variables.eps - 0.62)
     cc = (
-        fortran.physics_variables.plasma_current / fortran.tfcoil_variables.c_tf_total
-    ) / cratmx - 1.0 * fortran.constraint_variables.fipir
+        data_structure.physics_variables.plasma_current
+        / data_structure.tfcoil_variables.c_tf_total
+    ) / cratmx - 1.0 * data_structure.constraint_variables.fipir
 
     return ConstraintResult(
         cc,
         cratmx * (1.0 - cc),
-        fortran.physics_variables.plasma_current
-        / fortran.tfcoil_variables.c_tf_total
+        data_structure.physics_variables.plasma_current
+        / data_structure.tfcoil_variables.c_tf_total
         * cc,
     )
 
@@ -1338,14 +1391,14 @@ def constraint_equation_48():
     beta_poloidal: poloidal beta
     """
     cc = (
-        fortran.physics_variables.beta_poloidal
-        / fortran.constraint_variables.beta_poloidal_max
-        - 1.0 * fortran.constraint_variables.fbeta_poloidal
+        data_structure.physics_variables.beta_poloidal_vol_avg
+        / data_structure.constraint_variables.beta_poloidal_max
+        - 1.0 * data_structure.constraint_variables.fbeta_poloidal
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.beta_poloidal_max * (1.0 - cc),
-        fortran.physics_variables.beta_poloidal * cc,
+        data_structure.constraint_variables.beta_poloidal_max * (1.0 - cc),
+        data_structure.physics_variables.beta_poloidal_vol_avg * cc,
     )
 
 
@@ -1356,11 +1409,13 @@ def constraint_equation_50():
     author: S I Muldrew, CCFE, Culham Science Centre
     """
     cc = (
-        fortran.ife_variables.reprat / fortran.ife_variables.rrmax
-        - 1.0 * fortran.ife_variables.frrmax
+        data_structure.ife_variables.reprat / data_structure.ife_variables.rrmax
+        - 1.0 * data_structure.ife_variables.frrmax
     )
     return ConstraintResult(
-        cc, fortran.ife_variables.rrmax * (1.0 - cc), fortran.ife_variables.reprat * cc
+        cc,
+        data_structure.ife_variables.rrmax * (1.0 - cc),
+        data_structure.ife_variables.reprat * cc,
     )
 
 
@@ -1373,17 +1428,17 @@ def constraint_equation_51():
     vs_plasma_ind_ramp: internal and external plasma inductance V-s (Wb))
     vs_cs_pf_total_ramp: total flux swing for startup (Wb)
     """
-    cc = 1.0 - fortran.pfcoil_variables.fvs_cs_pf_total_ramp * abs(
+    cc = 1.0 - data_structure.pfcoil_variables.fvs_cs_pf_total_ramp * abs(
         (
-            fortran.physics_variables.vs_plasma_res_ramp
-            + fortran.physics_variables.vs_plasma_ind_ramp
+            data_structure.physics_variables.vs_plasma_res_ramp
+            + data_structure.physics_variables.vs_plasma_ind_ramp
         )
-        / fortran.pfcoil_variables.vs_cs_pf_total_ramp
+        / data_structure.pfcoil_variables.vs_cs_pf_total_ramp
     )
     return ConstraintResult(
         cc,
-        fortran.pfcoil_variables.vs_cs_pf_total_ramp * (1.0 - cc),
-        fortran.pfcoil_variables.vs_cs_pf_total_ramp * cc,
+        data_structure.pfcoil_variables.vs_cs_pf_total_ramp * (1.0 - cc),
+        data_structure.pfcoil_variables.vs_cs_pf_total_ramp * cc,
     )
 
 
@@ -1398,14 +1453,14 @@ def constraint_equation_52():
     """
     cc = (
         1.0
-        - fortran.constraint_variables.ftbr
-        * fortran.fwbs_variables.tbr
-        / fortran.constraint_variables.tbrmin
+        - data_structure.constraint_variables.ftbr
+        * data_structure.fwbs_variables.tbr
+        / data_structure.constraint_variables.tbrmin
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.tbrmin * (1.0 - cc),
-        fortran.constraint_variables.tbrmin * cc,
+        data_structure.constraint_variables.tbrmin * (1.0 - cc),
+        data_structure.constraint_variables.tbrmin * cc,
     )
 
 
@@ -1419,13 +1474,14 @@ def constraint_equation_53():
     nflutf: peak fast neutron fluence on TF coil superconductor (n/m2)
     """
     cc = (
-        fortran.fwbs_variables.nflutf / fortran.constraint_variables.nflutfmax
-        - 1.0 * fortran.constraint_variables.fflutf
+        data_structure.fwbs_variables.nflutf
+        / data_structure.constraint_variables.nflutfmax
+        - 1.0 * data_structure.constraint_variables.fflutf
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.nflutfmax * (1.0 - cc),
-        fortran.fwbs_variables.nflutf * cc,
+        data_structure.constraint_variables.nflutfmax * (1.0 - cc),
+        data_structure.fwbs_variables.nflutf * cc,
     )
 
 
@@ -1439,13 +1495,14 @@ def constraint_equation_54():
     ptfnucpm3: nuclear heating in the TF coil (MW/m3) (blktmodel>0)
     """
     cc = (
-        fortran.fwbs_variables.ptfnucpm3 / fortran.constraint_variables.ptfnucmax
-        - 1.0 * fortran.constraint_variables.fptfnuc
+        data_structure.fwbs_variables.ptfnucpm3
+        / data_structure.constraint_variables.ptfnucmax
+        - 1.0 * data_structure.constraint_variables.fptfnuc
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.ptfnucmax * (1.0 - cc),
-        fortran.fwbs_variables.ptfnucpm3 * cc,
+        data_structure.constraint_variables.ptfnucmax * (1.0 - cc),
+        data_structure.fwbs_variables.ptfnucpm3 * cc,
     )
 
 
@@ -1461,18 +1518,18 @@ def constraint_equation_56():
     """
     cc = (
         (
-            fortran.physics_variables.p_plasma_separatrix_mw
-            / fortran.physics_variables.rmajor
+            data_structure.physics_variables.p_plasma_separatrix_mw
+            / data_structure.physics_variables.rmajor
         )
-        / fortran.constraint_variables.pseprmax
-        - 1.0 * fortran.constraint_variables.fpsepr
+        / data_structure.constraint_variables.pseprmax
+        - 1.0 * data_structure.constraint_variables.fpsepr
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.pseprmax * (1.0 - cc),
+        data_structure.constraint_variables.pseprmax * (1.0 - cc),
         (
-            fortran.physics_variables.p_plasma_separatrix_mw
-            / fortran.physics_variables.rmajor
+            data_structure.physics_variables.p_plasma_separatrix_mw
+            / data_structure.physics_variables.rmajor
         )
         * cc,
     )
@@ -1488,14 +1545,14 @@ def constraint_equation_59():
     f_p_beam_shine_through: neutral beam shine-through fraction
     """
     cc = (
-        fortran.current_drive_variables.f_p_beam_shine_through
-        / fortran.constraint_variables.f_p_beam_shine_through_max
-        - 1.0 * fortran.constraint_variables.fnbshinef
+        data_structure.current_drive_variables.f_p_beam_shine_through
+        / data_structure.constraint_variables.f_p_beam_shine_through_max
+        - 1.0 * data_structure.constraint_variables.fnbshinef
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.f_p_beam_shine_through_max * (1.0 - cc),
-        fortran.current_drive_variables.f_p_beam_shine_through * cc,
+        data_structure.constraint_variables.f_p_beam_shine_through_max * (1.0 - cc),
+        data_structure.current_drive_variables.f_p_beam_shine_through * cc,
     )
 
 
@@ -1505,16 +1562,17 @@ def constraint_equation_60():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ftmargoh: f-value for central solenoid temperature margin
-    temp_cs_margin: Central solenoid temperature margin (K)
-    tmargmin_cs: Minimum allowable temperature margin : CS (K)
+    temp_cs_superconductor_margin: Central solenoid temperature margin (K)
+    temp_cs_superconductor_margin_min: Minimum allowable temperature margin : CS (K)
     """
     return ConstraintResult(
         1.0
-        - fortran.constraint_variables.ftmargoh
-        * fortran.pfcoil_variables.temp_cs_margin
-        / fortran.tfcoil_variables.tmargmin_cs,
-        fortran.tfcoil_variables.tmargmin_cs,
-        fortran.tfcoil_variables.tmargmin_cs - fortran.pfcoil_variables.temp_cs_margin,
+        - data_structure.constraint_variables.ftmargoh
+        * data_structure.pfcoil_variables.temp_cs_superconductor_margin
+        / data_structure.tfcoil_variables.temp_cs_superconductor_margin_min,
+        data_structure.tfcoil_variables.temp_cs_superconductor_margin_min,
+        data_structure.tfcoil_variables.temp_cs_superconductor_margin_min
+        - data_structure.pfcoil_variables.temp_cs_superconductor_margin,
     )
 
 
@@ -1552,19 +1610,19 @@ def constraint_equation_62():
     """
     cc = (
         1.0
-        - fortran.constraint_variables.falpha_energy_confinement
+        - data_structure.constraint_variables.falpha_energy_confinement
         * (
-            fortran.physics_variables.t_alpha_confinement
-            / fortran.physics_variables.t_energy_confinement
+            data_structure.physics_variables.t_alpha_confinement
+            / data_structure.physics_variables.t_energy_confinement
         )
-        / fortran.constraint_variables.f_alpha_energy_confinement_min
+        / data_structure.constraint_variables.f_alpha_energy_confinement_min
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.f_alpha_energy_confinement_min,
+        data_structure.constraint_variables.f_alpha_energy_confinement_min,
         (
-            fortran.physics_variables.t_alpha_confinement
-            / fortran.physics_variables.t_energy_confinement
+            data_structure.physics_variables.t_alpha_confinement
+            / data_structure.physics_variables.t_energy_confinement
         )
         * cc,
     )
@@ -1572,21 +1630,22 @@ def constraint_equation_62():
 
 @ConstraintManager.register_constraint(63, "", "<=")
 def constraint_equation_63():
-    """Upper limit on niterpump (vacuum_model = simple)
+    """Upper limit on n_iter_vacuum_pumps (i_vacuum_pumping = simple)
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fniterpump: f-value for constraint that number of pumps < tfno
     tfno: number of TF coils (default = 50 for stellarators)
-    niterpump: number of high vacuum pumps (real number), each with the throughput
+    n_iter_vacuum_pumps: number of high vacuum pumps (real number), each with the throughput
     """
     cc = (
-        data_structure.vacuum_variables.niterpump / fortran.tfcoil_variables.n_tf_coils
-        - 1.0 * fortran.constraint_variables.fniterpump
+        data_structure.vacuum_variables.n_iter_vacuum_pumps
+        / data_structure.tfcoil_variables.n_tf_coils
+        - 1.0 * data_structure.constraint_variables.fniterpump
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.n_tf_coils,
-        fortran.tfcoil_variables.n_tf_coils * cc,
+        data_structure.tfcoil_variables.n_tf_coils,
+        data_structure.tfcoil_variables.n_tf_coils * cc,
     )
 
 
@@ -1595,18 +1654,19 @@ def constraint_equation_64():
     """Upper limit on Zeff
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fzeffmax: f-value for maximum zeff
-    zeffmax: maximum value for Zeff
+    fzeff_max: f-value for maximum zeff
+    zeff_max: maximum value for Zeff
     zeff: plasma effective charge
     """
     cc = (
-        fortran.physics_variables.zeff / fortran.constraint_variables.fzeffmax
-        - 1.0 * fortran.constraint_variables.fzeffmax
+        data_structure.physics_variables.zeff
+        / data_structure.constraint_variables.zeff_max
+        - 1.0 * data_structure.constraint_variables.fzeff_max
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.fzeffmax,
-        fortran.constraint_variables.fzeffmax * cc,
+        data_structure.constraint_variables.fzeff_max,
+        data_structure.constraint_variables.fzeff_max * cc,
     )
 
 
@@ -1620,14 +1680,14 @@ def constraint_equation_65():
     vv_stress_quench: Stress of the VV (Pa)
     """
     cc = (
-        fortran.sctfcoil_module.vv_stress_quench
-        / fortran.tfcoil_variables.max_vv_stress
-        - 1.0 * fortran.constraint_variables.fmaxvvstress
+        data_structure.superconducting_tf_coil_variables.vv_stress_quench
+        / data_structure.tfcoil_variables.max_vv_stress
+        - 1.0 * data_structure.constraint_variables.fmaxvvstress
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.max_vv_stress,
-        fortran.tfcoil_variables.max_vv_stress * cc,
+        data_structure.tfcoil_variables.max_vv_stress,
+        data_structure.tfcoil_variables.max_vv_stress * cc,
     )
 
 
@@ -1641,14 +1701,14 @@ def constrain_equation_66():
     peakpoloidalpower: Peak absolute rate of change of stored energy in poloidal field (MW) (11/01/16)
     """
     cc = (
-        fortran.pf_power_variables.peakpoloidalpower
-        / fortran.pf_power_variables.maxpoloidalpower
-        - 1.0 * fortran.constraint_variables.fpoloidalpower
+        data_structure.pf_power_variables.peakpoloidalpower
+        / data_structure.pf_power_variables.maxpoloidalpower
+        - 1.0 * data_structure.constraint_variables.fpoloidalpower
     )
     return ConstraintResult(
         cc,
-        fortran.pf_power_variables.maxpoloidalpower,
-        fortran.pf_power_variables.maxpoloidalpower * cc,
+        data_structure.pf_power_variables.maxpoloidalpower,
+        data_structure.pf_power_variables.maxpoloidalpower * cc,
     )
 
 
@@ -1662,14 +1722,14 @@ def constraint_equation_67():
     pflux_fw_rad_max_mw: Peak radiation wall load (MW/m^2)
     """
     cc = (
-        fortran.constraint_variables.pflux_fw_rad_max_mw
-        / fortran.constraint_variables.pflux_fw_rad_max
-        - 1.0 * fortran.constraint_variables.fpflux_fw_rad_max
+        data_structure.constraint_variables.pflux_fw_rad_max_mw
+        / data_structure.constraint_variables.pflux_fw_rad_max
+        - 1.0 * data_structure.constraint_variables.fpflux_fw_rad_max
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.pflux_fw_rad_max,
-        fortran.constraint_variables.pflux_fw_rad_max * cc,
+        data_structure.constraint_variables.pflux_fw_rad_max,
+        data_structure.constraint_variables.pflux_fw_rad_max * cc,
     )
 
 
@@ -1681,63 +1741,63 @@ def constraint_equation_68():
     fpsepbqar: f-value for upper limit on psepbqar, maximum Psep*Bt/qAR limit
     psepbqarmax: maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
     p_plasma_separatrix_mw: Power to conducted to the divertor region (MW)
-    bt: toroidal field on axis (T) (iteration variable 2)
+    b_plasma_toroidal_on_axis: toroidal field on axis (T) (iteration variable 2)
     q95: safety factor q at 95% flux surface
     aspect: aspect ratio (iteration variable 1)
     rmajor: plasma major radius (m) (iteration variable 3)
     i_q95_fixed: Switch that allows for fixing q95 only in this constraint.
     q95_fixed: fixed safety factor q at 95% flux surface
     """
-    if fortran.constraint_variables.i_q95_fixed == 1:
+    if data_structure.constraint_variables.i_q95_fixed == 1:
         cc = (
             (
                 (
-                    fortran.physics_variables.p_plasma_separatrix_mw
-                    * fortran.physics_variables.bt
+                    data_structure.physics_variables.p_plasma_separatrix_mw
+                    * data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 / (
-                    fortran.constraint_variables.q95_fixed
-                    * fortran.physics_variables.aspect
-                    * fortran.physics_variables.rmajor
+                    data_structure.constraint_variables.q95_fixed
+                    * data_structure.physics_variables.aspect
+                    * data_structure.physics_variables.rmajor
                 )
             )
-            / fortran.constraint_variables.psepbqarmax
-            - 1.0 * fortran.constraint_variables.fpsepbqar
+            / data_structure.constraint_variables.psepbqarmax
+            - 1.0 * data_structure.constraint_variables.fpsepbqar
         )
         err = (
-            fortran.physics_variables.p_plasma_separatrix_mw
-            * fortran.physics_variables.bt
+            data_structure.physics_variables.p_plasma_separatrix_mw
+            * data_structure.physics_variables.b_plasma_toroidal_on_axis
         ) / (
-            fortran.constraint_variables.q95_fixed
-            * fortran.physics_variables.aspect
-            * fortran.physics_variables.rmajor
-        ) - fortran.constraint_variables.psepbqarmax
+            data_structure.constraint_variables.q95_fixed
+            * data_structure.physics_variables.aspect
+            * data_structure.physics_variables.rmajor
+        ) - data_structure.constraint_variables.psepbqarmax
     else:
         cc = (
             (
                 (
-                    fortran.physics_variables.p_plasma_separatrix_mw
-                    * fortran.physics_variables.bt
+                    data_structure.physics_variables.p_plasma_separatrix_mw
+                    * data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 / (
-                    fortran.physics_variables.q95
-                    * fortran.physics_variables.aspect
-                    * fortran.physics_variables.rmajor
+                    data_structure.physics_variables.q95
+                    * data_structure.physics_variables.aspect
+                    * data_structure.physics_variables.rmajor
                 )
             )
-            / fortran.constraint_variables.psepbqarmax
-            - 1.0 * fortran.constraint_variables.fpsepbqar
+            / data_structure.constraint_variables.psepbqarmax
+            - 1.0 * data_structure.constraint_variables.fpsepbqar
         )
         err = (
-            fortran.physics_variables.p_plasma_separatrix_mw
-            * fortran.physics_variables.bt
+            data_structure.physics_variables.p_plasma_separatrix_mw
+            * data_structure.physics_variables.b_plasma_toroidal_on_axis
         ) / (
-            fortran.physics_variables.q95
-            * fortran.physics_variables.aspect
-            * fortran.physics_variables.rmajor
-        ) - fortran.constraint_variables.psepbqarmax
+            data_structure.physics_variables.q95
+            * data_structure.physics_variables.aspect
+            * data_structure.physics_variables.rmajor
+        ) - data_structure.constraint_variables.psepbqarmax
 
-    return ConstraintResult(cc, fortran.constraint_variables.psepbqarmax, err)
+    return ConstraintResult(cc, data_structure.constraint_variables.psepbqarmax, err)
 
 
 @ConstraintManager.register_constraint(72, "Pa", "<=")
@@ -1764,32 +1824,34 @@ def constraint_equation_72():
     """
     # bucked and wedged desing
     if (
-        fortran.tfcoil_variables.i_tf_bucking >= 2
-        and fortran.build_variables.i_tf_inside_cs == 0
+        data_structure.tfcoil_variables.i_tf_bucking >= 2
+        and data_structure.build_variables.i_tf_inside_cs == 0
     ):
         cc = (
             max(
-                fortran.pfcoil_variables.s_shear_cs_peak,
-                fortran.tfcoil_variables.sig_tf_cs_bucked,
+                data_structure.pfcoil_variables.s_shear_cs_peak,
+                data_structure.tfcoil_variables.sig_tf_cs_bucked,
             )
-            / fortran.pfcoil_variables.alstroh
-            - 1.0 * fortran.constraint_variables.foh_stress
+            / data_structure.pfcoil_variables.alstroh
+            - 1.0 * data_structure.constraint_variables.foh_stress
         )
-        err = fortran.pfcoil_variables.alstroh - max(
-            fortran.pfcoil_variables.s_shear_cs_peak,
-            fortran.tfcoil_variables.sig_tf_cs_bucked,
+        err = data_structure.pfcoil_variables.alstroh - max(
+            data_structure.pfcoil_variables.s_shear_cs_peak,
+            data_structure.tfcoil_variables.sig_tf_cs_bucked,
         )
     # Free standing CS
     else:
         cc = (
-            fortran.pfcoil_variables.s_shear_cs_peak / fortran.pfcoil_variables.alstroh
-            - 1.0 * fortran.constraint_variables.foh_stress
+            data_structure.pfcoil_variables.s_shear_cs_peak
+            / data_structure.pfcoil_variables.alstroh
+            - 1.0 * data_structure.constraint_variables.foh_stress
         )
         err = (
-            fortran.pfcoil_variables.alstroh - fortran.pfcoil_variables.s_shear_cs_peak
+            data_structure.pfcoil_variables.alstroh
+            - data_structure.pfcoil_variables.s_shear_cs_peak
         )
 
-    return ConstraintResult(cc, fortran.pfcoil_variables.alstroh, err)
+    return ConstraintResult(cc, data_structure.pfcoil_variables.alstroh, err)
 
 
 @ConstraintManager.register_constraint(73, "MW", ">=")
@@ -1805,39 +1867,39 @@ def constraint_equation_73():
     """
     cc = (
         1.0
-        - fortran.physics_variables.fplhsep
-        * fortran.physics_variables.p_plasma_separatrix_mw
+        - data_structure.physics_variables.fplhsep
+        * data_structure.physics_variables.p_plasma_separatrix_mw
         / (
-            fortran.physics_variables.p_l_h_threshold_mw
-            + fortran.current_drive_variables.p_hcd_injected_total_mw
+            data_structure.physics_variables.p_l_h_threshold_mw
+            + data_structure.current_drive_variables.p_hcd_injected_total_mw
         )
     )
     return ConstraintResult(
         cc,
-        fortran.physics_variables.p_plasma_separatrix_mw,
-        fortran.physics_variables.p_plasma_separatrix_mw * cc,
+        data_structure.physics_variables.p_plasma_separatrix_mw,
+        data_structure.physics_variables.p_plasma_separatrix_mw * cc,
     )
 
 
 @ConstraintManager.register_constraint(74, "K", "<=")
 def constraint_equation_74():
-    """Upper limit to ensure TF coil quench temperature < tmax_croco
+    """Upper limit to ensure TF coil quench temperature < temp_croco_quench_max
     ONLY used for croco HTS coil
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fcqt: f-value: TF coil quench temparature remains below tmax_croco
-    croco_quench_temperature: CroCo strand: Actual temp reached during a quench (K)
-    tmax_croco: CroCo strand: maximum permitted temp during a quench (K)
+    ftemp_croco_quench_max: f-value: TF coil quench temparature remains below temp_croco_quench_max
+    temp_croco_quench: CroCo strand: Actual temp reached during a quench (K)
+    temp_croco_quench_max: CroCo strand: maximum permitted temp during a quench (K)
     """
     cc = (
-        fortran.tfcoil_variables.croco_quench_temperature
-        / fortran.tfcoil_variables.tmax_croco
-        - 1.0 * fortran.constraint_variables.fcqt
+        data_structure.tfcoil_variables.temp_croco_quench
+        / data_structure.tfcoil_variables.temp_croco_quench_max
+        - 1.0 * data_structure.constraint_variables.ftemp_croco_quench_max
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.croco_quench_temperature,
-        fortran.tfcoil_variables.croco_quench_temperature * cc,
+        data_structure.tfcoil_variables.temp_croco_quench,
+        data_structure.tfcoil_variables.temp_croco_quench * cc,
     )
 
 
@@ -1872,33 +1934,42 @@ def constraint_equation_76():
     Added for issue 558 with ref to http://iopscience.iop.org/article/10.1088/1741-4326/aaa340/pdf
 
     alpha_crit: critical ballooning parameter value
-    nesep_crit: critical electron density at separatrix [m-3]
+    nd_plasma_separatrix_electron_eich_max: critical electron density at separatrix [m-3]
     kappa: plasma separatrix elongation (calculated if i_plasma_geometry = 1-5, 7 or 9)
     triang: plasma separatrix triangularity (calculated if i_plasma_geometry = 1, 3-5 or 7)
     aspect: aspect ratio (iteration variable 1)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
-    dlimit(7)array : density limit (/m3) as calculated using various models
+    nd_plasma_electron_max_array(7)array : density limit (/m3) as calculated using various models
     fnesep: f-value for Eich critical separatrix density
     """
     # TODO: why on earth are these variables being set here!? Should they be local?
-    fortran.physics_variables.alpha_crit = (fortran.physics_variables.kappa**1.2) * (
-        1.0 + 1.5 * fortran.physics_variables.triang
-    )
-    fortran.physics_variables.nesep_crit = (
+    data_structure.physics_variables.alpha_crit = (
+        data_structure.physics_variables.kappa**1.2
+    ) * (1.0 + 1.5 * data_structure.physics_variables.triang)
+    data_structure.physics_variables.nd_plasma_separatrix_electron_eich_max = (
         5.9
-        * fortran.physics_variables.alpha_crit
-        * (fortran.physics_variables.aspect ** (-2.0 / 7.0))
-        * (((1.0 + (fortran.physics_variables.kappa**2.0)) / 2.0) ** (-6.0 / 7.0))
-        * ((fortran.physics_variables.p_plasma_separatrix_mw * 1.0e6) ** (-11.0 / 70.0))
-        * fortran.physics_variables.dlimit[6]
+        * data_structure.physics_variables.alpha_crit
+        * (data_structure.physics_variables.aspect ** (-2.0 / 7.0))
+        * (
+            ((1.0 + (data_structure.physics_variables.kappa**2.0)) / 2.0)
+            ** (-6.0 / 7.0)
+        )
+        * (
+            (data_structure.physics_variables.p_plasma_separatrix_mw * 1.0e6)
+            ** (-11.0 / 70.0)
+        )
+        * data_structure.physics_variables.nd_plasma_electron_max_array[6]
     )
 
     cc = (
-        fortran.physics_variables.nesep / fortran.physics_variables.nesep_crit
-        - 1.0 * fortran.constraint_variables.fnesep
+        data_structure.physics_variables.nd_plasma_separatrix_electron
+        / data_structure.physics_variables.nd_plasma_separatrix_electron_eich_max
+        - 1.0 * data_structure.constraint_variables.fnesep
     )
     return ConstraintResult(
-        cc, fortran.physics_variables.nesep, fortran.physics_variables.nesep * cc
+        cc,
+        data_structure.physics_variables.nd_plasma_separatrix_electron,
+        data_structure.physics_variables.nd_plasma_separatrix_electron * cc,
     )
 
 
@@ -1912,13 +1983,14 @@ def constraint_equation_77():
     c_tf_turn : TF coil current per turn [A/turn]
     """
     cc = (
-        fortran.tfcoil_variables.c_tf_turn / fortran.tfcoil_variables.c_tf_turn_max
-        - 1.0 * fortran.constraint_variables.fc_tf_turn_max
+        data_structure.tfcoil_variables.c_tf_turn
+        / data_structure.tfcoil_variables.c_tf_turn_max
+        - 1.0 * data_structure.constraint_variables.fc_tf_turn_max
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.c_tf_turn_max,
-        fortran.tfcoil_variables.c_tf_turn_max * cc,
+        data_structure.tfcoil_variables.c_tf_turn_max,
+        data_structure.tfcoil_variables.c_tf_turn_max * cc,
     )
 
 
@@ -1933,7 +2005,7 @@ def constraint_equation_78():
     """
     cc = (
         1.0
-        - fortran.constraint_variables.freinke
+        - data_structure.constraint_variables.freinke
         * data_structure.reinke_variables.fzactual
         / data_structure.reinke_variables.fzmin
     )
@@ -1957,18 +2029,18 @@ def constraint_equation_79():
     """
     cc = (
         max(
-            fortran.pfcoil_variables.b_cs_peak_flat_top_end,
-            fortran.pfcoil_variables.b_cs_peak_pulse_start,
+            data_structure.pfcoil_variables.b_cs_peak_flat_top_end,
+            data_structure.pfcoil_variables.b_cs_peak_pulse_start,
         )
-        / fortran.pfcoil_variables.b_cs_limit_max
-        - 1.0 * fortran.pfcoil_variables.fb_cs_limit_max
+        / data_structure.pfcoil_variables.b_cs_limit_max
+        - 1.0 * data_structure.pfcoil_variables.fb_cs_limit_max
     )
     return ConstraintResult(
         cc,
-        fortran.pfcoil_variables.b_cs_limit_max,
+        data_structure.pfcoil_variables.b_cs_limit_max,
         max(
-            fortran.pfcoil_variables.b_cs_peak_flat_top_end,
-            fortran.pfcoil_variables.b_cs_peak_pulse_start,
+            data_structure.pfcoil_variables.b_cs_peak_flat_top_end,
+            data_structure.pfcoil_variables.b_cs_peak_pulse_start,
         )
         * cc,
     )
@@ -1990,14 +2062,14 @@ def constraint_equation_80():
     """
     cc = (
         1.0
-        - fortran.physics_variables.fp_plasma_separatrix_min_mw
-        * fortran.physics_variables.p_plasma_separatrix_mw
-        / fortran.constraint_variables.p_plasma_separatrix_min_mw
+        - data_structure.physics_variables.fp_plasma_separatrix_min_mw
+        * data_structure.physics_variables.p_plasma_separatrix_mw
+        / data_structure.constraint_variables.p_plasma_separatrix_min_mw
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.p_plasma_separatrix_min_mw,
-        fortran.constraint_variables.p_plasma_separatrix_min_mw * cc,
+        data_structure.constraint_variables.p_plasma_separatrix_min_mw,
+        data_structure.constraint_variables.p_plasma_separatrix_min_mw * cc,
     )
 
 
@@ -2007,23 +2079,25 @@ def constraint_equation_81():
     author: S Kahn, Culham Science Centre
     args : output structure : residual error; constraint value;
     residual error in physical units; output string; units string
-    Lower limit ne0 > neped
+    Lower limit nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
     !#=# physics
-    !#=#=# ne0, neped
+    !#=#=# nd_plasma_electron_on_axis, nd_plasma_pedestal_electron
     Logic change during pre-factoring: err, symbol, units will be
     assigned only if present.
-    fne0  : input : F-value for constraint on ne0 > neped
-    ne0   : input : Central electron density [m-3]
-    neped : input : Electron density at pedestal [m-3]
+    fne0  : input : F-value for constraint on nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
+    nd_plasma_electron_on_axis   : input : Central electron density [m-3]
+    nd_plasma_pedestal_electron : input : Electron density at pedestal [m-3]
     """
     cc = (
         1.0
-        - fortran.physics_variables.fne0
-        * fortran.physics_variables.ne0
-        / fortran.physics_variables.neped
+        - data_structure.physics_variables.fne0
+        * data_structure.physics_variables.nd_plasma_electron_on_axis
+        / data_structure.physics_variables.nd_plasma_pedestal_electron
     )
     return ConstraintResult(
-        cc, fortran.physics_variables.fne0, fortran.physics_variables.fne0 * cc
+        cc,
+        data_structure.physics_variables.fne0,
+        data_structure.physics_variables.fne0 * cc,
     )
 
 
@@ -2038,13 +2112,13 @@ def constraint_equation_82():
     """
     return ConstraintResult(
         1.0
-        - fortran.tfcoil_variables.ftoroidalgap
-        * fortran.tfcoil_variables.toroidalgap
-        / fortran.tfcoil_variables.dx_tf_inboard_out_toroidal,
-        fortran.tfcoil_variables.toroidalgap,
-        fortran.tfcoil_variables.toroidalgap
-        - fortran.tfcoil_variables.dx_tf_inboard_out_toroidal
-        / fortran.tfcoil_variables.ftoroidalgap,
+        - data_structure.tfcoil_variables.ftoroidalgap
+        * data_structure.tfcoil_variables.toroidalgap
+        / data_structure.tfcoil_variables.dx_tf_inboard_out_toroidal,
+        data_structure.tfcoil_variables.toroidalgap,
+        data_structure.tfcoil_variables.toroidalgap
+        - data_structure.tfcoil_variables.dx_tf_inboard_out_toroidal
+        / data_structure.tfcoil_variables.ftoroidalgap,
     )
 
 
@@ -2059,14 +2133,14 @@ def constraint_equation_83():
     """
     cc = (
         1.0
-        - fortran.build_variables.f_avspace
-        * fortran.build_variables.available_radial_space
-        / fortran.build_variables.required_radial_space
+        - data_structure.build_variables.f_avspace
+        * data_structure.build_variables.available_radial_space
+        / data_structure.build_variables.required_radial_space
     )
     return ConstraintResult(
         cc,
-        fortran.build_variables.available_radial_space * (1.0 - cc),
-        fortran.build_variables.required_radial_space * cc,
+        data_structure.build_variables.available_radial_space * (1.0 - cc),
+        data_structure.build_variables.required_radial_space * cc,
     )
 
 
@@ -2075,20 +2149,20 @@ def constraint_equation_84():
     """Equation for the lower limit of beta
     author: J Lion, IPP Greifswald
 
-    fbeta_min: f-value for constraint beta-beta_fast_alpha > beta_min
-    beta_min: Lower limit for beta
+    fbeta_min: f-value for constraint beta-beta_fast_alpha > beta_vol_avg_min
+    beta_vol_avg_min: Lower limit for beta
     beta: plasma beta
     """
     cc = (
         1.0
-        - fortran.constraint_variables.fbeta_min
-        * fortran.physics_variables.beta
-        / fortran.physics_variables.beta_min
+        - data_structure.constraint_variables.fbeta_min
+        * data_structure.physics_variables.beta_total_vol_avg
+        / data_structure.physics_variables.beta_vol_avg_min
     )
     return ConstraintResult(
         cc,
-        fortran.physics_variables.beta_min * (1.0 - cc),
-        fortran.physics_variables.beta * cc,
+        data_structure.physics_variables.beta_vol_avg_min * (1.0 - cc),
+        data_structure.physics_variables.beta_total_vol_avg * cc,
     )
 
 
@@ -2129,7 +2203,7 @@ def constraint_equation_85():
         cc = (
             1.0
             - data_structure.cost_variables.cplife
-            / fortran.fwbs_variables.life_blkt_fpy
+            / data_structure.fwbs_variables.life_blkt_fpy
         )
 
     elif data_structure.cost_variables.i_cp_lifetime == 3:
@@ -2150,18 +2224,19 @@ def constraint_equation_86():
     """Upper limit on the turn edge length in the TF winding pack
     Author : S Kahn
 
-    t_turn_tf: TF coil turn edge length including turn insulation [m]
+    dx_tf_turn_general: TF coil turn edge length including turn insulation [m]
     f_t_turn_tf: f-value for TF turn edge length constraint
     t_turn_tf_max: TF turn edge length including turn insulation upper limit [m]
     """
     cc = (
-        fortran.tfcoil_variables.t_turn_tf / fortran.tfcoil_variables.t_turn_tf_max
-        - 1.0 * fortran.tfcoil_variables.f_t_turn_tf
+        data_structure.tfcoil_variables.dx_tf_turn_general
+        / data_structure.tfcoil_variables.t_turn_tf_max
+        - 1.0 * data_structure.tfcoil_variables.f_t_turn_tf
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.t_turn_tf_max * (1.0 - cc),
-        fortran.tfcoil_variables.t_turn_tf_max * cc,
+        data_structure.tfcoil_variables.t_turn_tf_max * (1.0 - cc),
+        data_structure.tfcoil_variables.t_turn_tf_max * cc,
     )
 
 
@@ -2175,14 +2250,15 @@ def constraint_equation_87():
     p_cryo_plant_electric_max_mw: Maximum cryogenic plant power (MW)
     """
     cc = (
-        fortran.heat_transport_variables.p_cryo_plant_electric_mw
-        / fortran.heat_transport_variables.p_cryo_plant_electric_max_mw
-        - 1.0 * fortran.heat_transport_variables.f_crypmw
+        data_structure.heat_transport_variables.p_cryo_plant_electric_mw
+        / data_structure.heat_transport_variables.p_cryo_plant_electric_max_mw
+        - 1.0 * data_structure.heat_transport_variables.f_crypmw
     )
     return ConstraintResult(
         cc,
-        fortran.heat_transport_variables.p_cryo_plant_electric_max_mw * (1.0 - cc),
-        fortran.heat_transport_variables.p_cryo_plant_electric_mw * cc,
+        data_structure.heat_transport_variables.p_cryo_plant_electric_max_mw
+        * (1.0 - cc),
+        data_structure.heat_transport_variables.p_cryo_plant_electric_mw * cc,
     )
 
 
@@ -2196,11 +2272,13 @@ def constraint_equation_88():
     str_wp: Constrained TF coil vertical strain
     """
     return ConstraintResult(
-        abs(fortran.tfcoil_variables.str_wp) / fortran.tfcoil_variables.str_wp_max
-        - 1.0 * fortran.constraint_variables.fstr_wp,
-        fortran.tfcoil_variables.str_wp_max,
-        fortran.tfcoil_variables.str_wp_max
-        - abs(fortran.tfcoil_variables.str_wp) / fortran.constraint_variables.fstr_wp,
+        abs(data_structure.tfcoil_variables.str_wp)
+        / data_structure.tfcoil_variables.str_wp_max
+        - 1.0 * data_structure.constraint_variables.fstr_wp,
+        data_structure.tfcoil_variables.str_wp_max,
+        data_structure.tfcoil_variables.str_wp_max
+        - abs(data_structure.tfcoil_variables.str_wp)
+        / data_structure.constraint_variables.fstr_wp,
     )
 
 
@@ -2244,7 +2322,7 @@ def constraint_equation_90():
 
     cc = (
         1.0
-        - fortran.constraint_variables.fncycle
+        - data_structure.constraint_variables.fncycle
         * data_structure.cs_fatigue_variables.n_cycle
         / data_structure.cs_fatigue_variables.n_cycle_min
     )
@@ -2267,28 +2345,28 @@ def constraint_equation_91():
     te0_ecrh_achievable: Max. achievable electron temperature at ignition point
     """
     # Achievable ECRH te needs to be larger than needed te for igntion
-    if fortran.physics_variables.i_plasma_ignited == 0:
+    if data_structure.physics_variables.i_plasma_ignited == 0:
         cc = (
             1.0
-            - fortran.constraint_variables.fecrh_ignition
+            - data_structure.constraint_variables.fecrh_ignition
             * (
-                fortran.stellarator_variables.powerht_constraint
-                + fortran.current_drive_variables.p_hcd_primary_extra_heat_mw
+                data_structure.stellarator_variables.powerht_constraint
+                + data_structure.current_drive_variables.p_hcd_primary_extra_heat_mw
             )
-            / fortran.stellarator_variables.powerscaling_constraint
+            / data_structure.stellarator_variables.powerscaling_constraint
         )
     else:
         cc = (
             1.0
-            - fortran.constraint_variables.fecrh_ignition
-            * fortran.stellarator_variables.powerht_constraint
-            / fortran.stellarator_variables.powerscaling_constraint
+            - data_structure.constraint_variables.fecrh_ignition
+            * data_structure.stellarator_variables.powerht_constraint
+            / data_structure.stellarator_variables.powerscaling_constraint
         )
 
     return ConstraintResult(
         cc,
-        fortran.stellarator_variables.powerscaling_constraint * (1.0 - cc),
-        fortran.stellarator_variables.powerht_constraint * cc,
+        data_structure.stellarator_variables.powerscaling_constraint * (1.0 - cc),
+        data_structure.stellarator_variables.powerht_constraint * cc,
     )
 
 
@@ -2297,17 +2375,18 @@ def constraint_equation_92():
     """Equation for checking is D/T ratio is consistent, and sums to 1.
     author: G Turkington, UKAEA
 
-    f_deuterium: fraction of deuterium ions
-    f_tritium: fraction of tritium ions
-    f_helium3: fraction of helium-3 ions
+    f_plasma_fuel_deuterium: fraction of deuterium ions
+    f_plasma_fuel_tritium: fraction of tritium ions
+    f_plasma_fuel_helium3: fraction of helium-3 ions
     """
-    f_deuterium = 1.0 - (
-        fortran.physics_variables.f_tritium + fortran.physics_variables.f_helium3
+    f_plasma_fuel_deuterium = 1.0 - (
+        data_structure.physics_variables.f_plasma_fuel_tritium
+        + data_structure.physics_variables.f_plasma_fuel_helium3
     )
     cc = 1.0 - (
-        f_deuterium
-        + fortran.physics_variables.f_tritium
-        + fortran.physics_variables.f_helium3
+        f_plasma_fuel_deuterium
+        + data_structure.physics_variables.f_plasma_fuel_tritium
+        + data_structure.physics_variables.f_plasma_fuel_helium3
     )
 
     return ConstraintResult(cc, 1.0, cc)
@@ -2331,7 +2410,7 @@ def constraint_eqns(m: int, ieqn: int):
     cc, con, err, symbol, units = [], [], [], [], []
 
     for i in range(i1, i2):
-        constraint_id = fortran.numerics.icc[i].item()
+        constraint_id = data_structure.numerics.icc[i]
         constraint = ConstraintManager.get_constraint(constraint_id)
 
         if constraint is None:
@@ -2362,94 +2441,3 @@ def constraint_eqns(m: int, ieqn: int):
         units.append(tmp_units)
 
     return np.array(cc), np.array(con), np.array(err), symbol, units
-
-
-def init_constraint_variables():
-    """Initialise the constraint variables"""
-    fortran.constraint_variables.auxmin = 0.1
-    fortran.constraint_variables.beta_poloidal_max = 0.19
-    fortran.constraint_variables.bigqmin = 10.0
-    fortran.constraint_variables.b_tf_inboard_max = 12.0
-    fortran.constraint_variables.fauxmn = 1.0
-    fortran.constraint_variables.fbeta_poloidal_eps = 1.0
-    fortran.constraint_variables.fbeta_poloidal = 1.0
-    fortran.constraint_variables.fbeta_max = 1.0
-    fortran.constraint_variables.fbeta_min = 1.0
-    fortran.constraint_variables.fc_tf_turn_max = 1.0
-    fortran.constraint_variables.fr_conducting_wall = 1.0
-    fortran.constraint_variables.fdene = 1.0
-    fortran.constraint_variables.fdtmp = 1.0
-    fortran.constraint_variables.fflutf = 1.0
-    fortran.constraint_variables.fp_fusion_total_max_mw = 1.0
-    fortran.constraint_variables.feta_cd_norm_hcd_primary_max = 1.0
-    fortran.constraint_variables.fpflux_div_heat_load_mw = 1.0
-    fortran.constraint_variables.fiooic = 0.5
-    fortran.constraint_variables.fipir = 1.0
-    fortran.constraint_variables.q95_fixed = 3.0
-    fortran.constraint_variables.fjohc = 1.0
-    fortran.constraint_variables.fjohc0 = 1.0
-    fortran.constraint_variables.fjprot = 1.0
-    fortran.constraint_variables.fl_h_threshold = 1.0
-    fortran.constraint_variables.fmva = 1.0
-    fortran.constraint_variables.fnbshinef = 1.0
-    fortran.constraint_variables.fncycle = 1.0
-    fortran.constraint_variables.fnesep = 1.0
-    fortran.constraint_variables.foh_stress = 1.0
-    fortran.constraint_variables.fb_tf_inboard_max = 1.0
-    fortran.constraint_variables.fp_hcd_injected_max = 1.0
-    fortran.constraint_variables.fp_plant_electric_net_required_mw = 1.0
-    fortran.constraint_variables.fradius_beam_tangency = 1.0
-    fortran.constraint_variables.fpsepbqar = 1.0
-    fortran.constraint_variables.fpsepr = 1.0
-    fortran.constraint_variables.fptemp = 1.0
-    fortran.constraint_variables.fptfnuc = 1.0
-    fortran.constraint_variables.fq = 1.0
-    fortran.constraint_variables.fqval = 1.0
-    fortran.constraint_variables.fradpwr = 0.99
-    fortran.constraint_variables.fpflux_fw_rad_max = 1.0
-    fortran.constraint_variables.freinke = 1.0
-    fortran.constraint_variables.frminor = 1.0
-    fortran.constraint_variables.fstrcase = 1.0
-    fortran.constraint_variables.fstrcond = 1.0
-    fortran.constraint_variables.fstr_wp = 1.0
-    fortran.constraint_variables.fmaxvvstress = 1.0
-    fortran.constraint_variables.ftbr = 1.0
-    fortran.constraint_variables.ft_burn_min = 1.0
-    fortran.constraint_variables.ft_cycle_min = 1.0
-    fortran.constraint_variables.ftmargoh = 1.0
-    fortran.constraint_variables.ftmargtf = 1.0
-    fortran.constraint_variables.ft_current_ramp_up = 1.0
-    fortran.constraint_variables.ftemp_fw_max = 1.0
-    fortran.constraint_variables.fvdump = 1.0
-    fortran.constraint_variables.fvs_plasma_total_required = 1.0
-    fortran.constraint_variables.fvvhe = 1.0
-    fortran.constraint_variables.fpflux_fw_neutron_max_mw = 1.0
-    fortran.constraint_variables.fzeffmax = 1.0
-    fortran.constraint_variables.eta_cd_norm_hcd_primary_max = 2.0
-    fortran.constraint_variables.i_q95_fixed = 0
-    fortran.constraint_variables.pflux_fw_rad_max = 1.0
-    fortran.constraint_variables.mvalim = 40.0
-    fortran.constraint_variables.f_p_beam_shine_through_max = 1e-3
-    fortran.constraint_variables.nflutfmax = 1.0e23
-    fortran.constraint_variables.p_plasma_separatrix_min_mw = 150.0
-    fortran.constraint_variables.f_fw_rad_max = 3.33
-    fortran.constraint_variables.pflux_fw_rad_max_mw = 0.0
-    fortran.constraint_variables.p_plant_electric_net_required_mw = 1.0e3
-    fortran.constraint_variables.p_fusion_total_max_mw = 1.5e3
-    fortran.constraint_variables.psepbqarmax = 9.5
-    fortran.constraint_variables.pseprmax = 25.0
-    fortran.constraint_variables.ptfnucmax = 1e-3
-    fortran.constraint_variables.tbrmin = 1.1
-    fortran.constraint_variables.t_burn_min = 1.0
-    fortran.constraint_variables.t_cycle_min = 0.0
-    fortran.constraint_variables.t_current_ramp_up_min = 1.0
-    fortran.constraint_variables.vvhealw = 1.0
-    fortran.constraint_variables.pflux_fw_neutron_max_mw = 1.0
-    fortran.constraint_variables.f_alpha_energy_confinement_min = 5.0
-    fortran.constraint_variables.falpha_energy_confinement = 1.0
-    fortran.constraint_variables.fniterpump = 1.0
-    fortran.constraint_variables.zeffmax = 3.6
-    fortran.constraint_variables.fpoloidalpower = 1.0
-    fortran.constraint_variables.fpsep = 1.0
-    fortran.constraint_variables.fcqt = 1.0
-    fortran.constraint_variables.fecrh_ignition = 1.0

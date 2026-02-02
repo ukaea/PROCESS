@@ -1,14 +1,16 @@
 import numpy as np
 
-from process.data_structure import cost_variables, divertor_variables, times_variables
-from process.exceptions import ProcessValueError
-from process.fortran import (
+from process.data_structure import (
+    cost_variables,
     current_drive_variables,
+    divertor_variables,
     heat_transport_variables,
     pf_power_variables,
     physics_variables,
     tfcoil_variables,
+    times_variables,
 )
+from process.exceptions import ProcessValueError
 
 OBJECTIVE_NAMES = {
     1: "Plasma major radius",
@@ -88,26 +90,26 @@ def objective_function(minmax: int) -> float:
         case 9:
             objective_metric = divertor_variables.pflux_div_heat_load_mw
         case 10:
-            objective_metric = physics_variables.bt
+            objective_metric = physics_variables.b_plasma_toroidal_on_axis
         case 11:
             objective_metric = current_drive_variables.p_hcd_injected_total_mw
         case 14:
-            objective_metric = times_variables.t_burn / 2.0e4
+            objective_metric = times_variables.t_plant_pulse_burn / 2.0e4
         case 15:
             if cost_variables.iavail != 1:
                 raise ProcessValueError("minmax=15 requires iavail=1")
             objective_metric = cost_variables.cfactr
         case 16:
             objective_metric = 0.95 * (physics_variables.rmajor / 9.0) - 0.05 * (
-                times_variables.t_burn / 7200.0
+                times_variables.t_plant_pulse_burn / 7200.0
             )
         case 17:
             objective_metric = heat_transport_variables.p_plant_electric_net_mw / 500.0
         case 18:
             objective_metric = 1.0
         case 19:
-            objective_metric = -0.5 * (current_drive_variables.bigq / 20.0) - 0.5 * (
-                times_variables.t_burn / 7200.0
-            )
+            objective_metric = -0.5 * (
+                current_drive_variables.big_q_plasma / 20.0
+            ) - 0.5 * (times_variables.t_plant_pulse_burn / 7200.0)
 
     return objective_sign * objective_metric

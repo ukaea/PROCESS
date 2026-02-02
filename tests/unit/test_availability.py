@@ -3,16 +3,16 @@
 import pytest
 from pytest import approx
 
-from process import fortran
+from process import data_structure
 from process.availability import Availability
+from process.data_structure import constraint_variables as ctv
 from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
+from process.data_structure import fwbs_variables as fwbsv
+from process.data_structure import ife_variables as ifev
+from process.data_structure import physics_variables as pv
+from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
-from process.fortran import constraint_variables as ctv
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import ife_variables as ifev
-from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
 from process.init import init_all_module_vars
 
 
@@ -50,10 +50,10 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(cv, "life_dpa", 40.0)
     monkeypatch.setattr(cv, "adivflnc", 8.0)
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
-    monkeypatch.setattr(tv, "t_cycle", 5.0)
+    monkeypatch.setattr(tv, "t_plant_pulse_total", 5.0)
     monkeypatch.setattr(cv, "iavail", 0)
     monkeypatch.setattr(cv, "cfactr", 0.8)
-    monkeypatch.setattr(tv, "t_burn", 500.0)
+    monkeypatch.setattr(tv, "t_plant_pulse_burn", 500.0)
     monkeypatch.setattr(pv, "itart", 1)
 
     availability.avail(output=False)
@@ -210,11 +210,9 @@ def calc_u_planned_fix(request, monkeypatch):
         "pflux_div_heat_load_mw",
         param["pflux_div_heat_load_mw"],
     )
-    monkeypatch.setattr(fortran.fwbs_variables, "life_blkt_fpy", 0.0)
-    monkeypatch.setattr(
-        fortran.physics_variables, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"]
-    )
-    monkeypatch.setattr(fortran.physics_variables, "itart", param["itart"])
+    monkeypatch.setattr(data_structure.fwbs_variables, "life_blkt_fpy", 0.0)
+    monkeypatch.setattr(pv, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"])
+    monkeypatch.setattr(pv, "itart", param["itart"])
     monkeypatch.setattr(cv, "tlife", param["tlife"])
     monkeypatch.setattr(cv, "divlife", 0.0)
     monkeypatch.setattr(cv, "adivflnc", param["adivflnc"])
@@ -253,8 +251,8 @@ def calc_u_unplanned_magnets_param(**kwargs):
     """
     defaults = {
         "temp_margin": 1.5,
-        "tmargmin_tf": 1.5,
-        "tmargmin_cs": 1.5,
+        "temp_tf_superconductor_margin_min": 1.5,
+        "temp_cs_superconductor_margin_min": 1.5,
         "t_operation": 30,
         "conf_mag": 1.0,
         "expected": approx(0.02, abs=0.005),
@@ -278,12 +276,15 @@ def calc_u_unplanned_magnets_params():
     return [
         calc_u_unplanned_magnets_param(),
         calc_u_unplanned_magnets_param(
-            temp_margin=2.0, tmargmin_tf=1.6, tmargmin_cs=1.6, conf_mag=0.8
+            temp_margin=2.0,
+            temp_tf_superconductor_margin_min=1.6,
+            temp_cs_superconductor_margin_min=1.6,
+            conf_mag=0.8,
         ),
         calc_u_unplanned_magnets_param(
             temp_margin=1.8,
-            tmargmin_tf=1.6,
-            tmargmin_cs=1.6,
+            temp_tf_superconductor_margin_min=1.6,
+            temp_cs_superconductor_margin_min=1.6,
             conf_mag=0.8,
             expected=approx(0.03, abs=0.005),
         ),
@@ -311,8 +312,16 @@ def calc_u_unplanned_magnets_fix(request, monkeypatch):
     # Mock module variables
     monkeypatch.setattr(cv, "t_operation", param["t_operation"])
     monkeypatch.setattr(cv, "conf_mag", param["conf_mag"])
-    monkeypatch.setattr(tfv, "tmargmin_cs", param["tmargmin_cs"])
-    monkeypatch.setattr(tfv, "tmargmin_tf", param["tmargmin_tf"])
+    monkeypatch.setattr(
+        tfv,
+        "temp_cs_superconductor_margin_min",
+        param["temp_cs_superconductor_margin_min"],
+    )
+    monkeypatch.setattr(
+        tfv,
+        "temp_tf_superconductor_margin_min",
+        param["temp_tf_superconductor_margin_min"],
+    )
     monkeypatch.setattr(tfv, "temp_margin", param["temp_margin"])
 
     return param["expected"]
@@ -338,7 +347,11 @@ def calc_u_unplanned_divertor_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"divlife": 1.99, "t_cycle": 9000, "expected": approx(0.02, abs=0.005)}
+    defaults = {
+        "divlife": 1.99,
+        "t_plant_pulse_total": 9000,
+        "expected": approx(0.02, abs=0.005),
+    }
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -379,7 +392,7 @@ def calc_u_unplanned_divertor_fix(request, monkeypatch):
 
     # Mock variables used by calc_u_unplanned_divertor()
     # Some may be parameterised
-    monkeypatch.setattr(tv, "t_cycle", param["t_cycle"])
+    monkeypatch.setattr(tv, "t_plant_pulse_total", param["t_plant_pulse_total"])
     monkeypatch.setattr(cv, "divlife", param["divlife"])
 
     # Return the expected result for the given parameter list
@@ -412,7 +425,7 @@ def calc_u_unplanned_fwbs_param(**kwargs):
     # Default parameters
     defaults = {
         "life_blkt_fpy": 5,
-        "t_cycle": 9000,
+        "t_plant_pulse_total": 9000,
         "expected": approx(0.02, abs=0.005),
     }
 
@@ -454,8 +467,10 @@ def calc_u_unplanned_fwbs_fix(request, monkeypatch):
 
     # Mock variables used by calc_u_unplanned_fwbs()
     # Some may be parameterised
-    monkeypatch.setattr(tv, "t_cycle", param["t_cycle"])
-    monkeypatch.setattr(fortran.fwbs_variables, "life_blkt_fpy", param["life_blkt_fpy"])
+    monkeypatch.setattr(tv, "t_plant_pulse_total", param["t_plant_pulse_total"])
+    monkeypatch.setattr(
+        data_structure.fwbs_variables, "life_blkt_fpy", param["life_blkt_fpy"]
+    )
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -527,8 +542,8 @@ def test_avail_2(monkeypatch, availability):
     )
 
     # Mock module variables
-    monkeypatch.setattr(tv, "t_burn", 5.0)
-    monkeypatch.setattr(tv, "t_cycle", 50.0)
+    monkeypatch.setattr(tv, "t_plant_pulse_burn", 5.0)
+    monkeypatch.setattr(tv, "t_plant_pulse_total", 50.0)
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "itart", 1)
     monkeypatch.setattr(fwbsv, "life_blkt_fpy", 5.0)
@@ -572,8 +587,8 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(cv, "tmain", 1.0)
     monkeypatch.setattr(cv, "tlife", 30.0)
     monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)
-    monkeypatch.setattr(tv, "t_burn", 5.0)
-    monkeypatch.setattr(tv, "t_cycle", 9000.0)
+    monkeypatch.setattr(tv, "t_plant_pulse_burn", 5.0)
+    monkeypatch.setattr(tv, "t_plant_pulse_total", 9000.0)
     monkeypatch.setattr(cv, "adivflnc", 10.0)
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(cv, "ibkt_life", 0)

@@ -1,25 +1,20 @@
+import logging
+
 import numpy as np
 
-from process import (
-    process_output as po,
-)
+from process import constants
+from process import process_output as po
+from process.blanket_library import BlanketLibrary
 from process.coolprop_interface import FluidProperties
-from process.fortran import (
-    blanket_library,
-    build_variables,
-    constants,
-    error_handling,
-    fwbs_variables,
-)
-from process.fortran import (
-    error_handling as eh,
-)
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.data_structure import blanket_library, build_variables, fwbs_variables
+
+logger = logging.getLogger(__name__)
 
 
 class Fw:
     def __init__(self) -> None:
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
+        self.blanket_library = BlanketLibrary(fw=self)
 
     def run(self):
         (
@@ -33,6 +28,11 @@ class Fw:
         )
 
         self.set_fw_geometry()
+
+        (
+            fwbs_variables.radius_fw_channel_90_bend,
+            fwbs_variables.radius_fw_channel_180_bend,
+        ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
 
     def set_fw_geometry(self):
         build_variables.dr_fw_inboard = (
@@ -98,16 +98,16 @@ class Fw:
 
         # Calculate inlet coolant fluid properties (fixed pressure)
         inlet_coolant_properties = FluidProperties.of(
-            f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type),
-            temperature=fwbs_variables.temp_fw_coolant_in.item(),
-            pressure=fwbs_variables.pres_fw_coolant.item(),
+            fwbs_variables.i_fw_coolant_type,
+            temperature=fwbs_variables.temp_fw_coolant_in,
+            pressure=fwbs_variables.pres_fw_coolant,
         )
 
         # Calculate outlet coolant fluid properties (fixed pressure)
         outlet_coolant_properties = FluidProperties.of(
-            f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type),
-            temperature=fwbs_variables.temp_fw_coolant_out.item(),
-            pressure=fwbs_variables.pres_fw_coolant.item(),
+            fwbs_variables.i_fw_coolant_type,
+            temperature=fwbs_variables.temp_fw_coolant_out,
+            pressure=fwbs_variables.pres_fw_coolant,
         )
 
         # Mean properties (inlet + outlet)/2
@@ -151,10 +151,11 @@ class Fw:
 
         # Print debug info if temperature too low/high or NaN/Inf
         if np.isnan(temp_k):
-            eh.report_error(223)
+            logger.error("NaN first wall temperature")
         elif (temp_k <= 100) or (temp_k > 1500):
-            eh.fdiags[0] = temp_k
-            eh.report_error(224)
+            logger.error(
+                f"First wall temperature (temp_k) out of range : [100-1500] K. {temp_k=}"
+            )
 
         # Thermal conductivity of first wall material (W/m.K)
         tkfw = self.fw_thermal_conductivity(temp_k)
@@ -445,17 +446,15 @@ class Fw:
 
         # Check that Reynolds number is in valid range for the Gnielinski correlation
         if (reynolds <= 3000.0) or (reynolds > 5.0e6):
-            error_handling.fdiags[0] = reynolds
-            error_handling.report_error(225)
+            logger.error(f"Reynolds number out of range : [3e3-5000e3]. {reynolds=}")
 
         # Check that Prandtl number is in valid range for the Gnielinski correlation
         if (pr < 0.5) or (pr > 2000.0):
-            error_handling.fdiags[0] = pr
-            error_handling.report_error(226)
+            logger.error(f"Prandtl number out of range : [0.5-2000]. {pr=}")
 
         # Check that the Darcy friction factor is in valid range for the Gnielinski correlation
         if f <= 0.0:
-            error_handling.report_error(227)
+            logger.error(f"Negative Darcy friction factor (f). {f=}")
 
         return heat_transfer_coefficient
 
@@ -530,6 +529,18 @@ class Fw:
             fwbs_variables.radius_fw_channel,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Radius of 90 degree coolant channel bend (m)",
+            "(radius_fw_channel_90_bend)",
+            fwbs_variables.radius_fw_channel_90_bend,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radius of 180 degree coolant channel bend (m)",
+            "(radius_fw_channel_180_bend)",
+            fwbs_variables.radius_fw_channel_180_bend,
+        )
         po.ovarrf(
             self.outfile,
             "Radial wall thickness surrounding first wall coolant channel (m)",
@@ -593,7 +604,7 @@ class Fw:
             self.outfile,
             "First wall coolant type",
             "(i_fw_coolant_type)",
-            f"'{f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type)}'",
+            f"'{fwbs_variables.i_fw_coolant_type}'",
         )
         po.ovarrf(
             self.outfile,
@@ -623,197 +634,3 @@ class Fw:
             fwbs_variables.temp_fw_peak,
             "OP ",
         )
-
-
-def init_fwbs_variables():
-    """Initialise FWBS variables"""
-    fwbs_variables.life_blkt_fpy = 0.0
-    fwbs_variables.life_blkt = 0.0
-    fwbs_variables.m_fw_blkt_div_coolant_total = 0.0
-    fwbs_variables.m_vv = 0.0
-    fwbs_variables.denstl = 7800.0
-    fwbs_variables.denwc = 15630.0
-    fwbs_variables.dewmkg = 0.0
-    fwbs_variables.f_p_blkt_multiplication = 1.269
-    fwbs_variables.p_blkt_multiplication_mw = 0.0
-    fwbs_variables.fblss = 0.09705
-    fwbs_variables.f_ster_div_single = 0.115
-    fwbs_variables.f_a_fw_hcd = 0.0
-    fwbs_variables.fhole = 0.0
-    fwbs_variables.i_fw_blkt_vv_shape = 2
-    fwbs_variables.life_fw_fpy = 0.0
-    fwbs_variables.m_fw_total = 0.0
-    fwbs_variables.fw_armour_mass = 0.0
-    fwbs_variables.fw_armour_thickness = 0.005
-    fwbs_variables.fw_armour_vol = 0.0
-    fwbs_variables.i_blanket_type = 1
-    fwbs_variables.i_blkt_inboard = 1
-    fwbs_variables.inuclear = 0
-    fwbs_variables.qnuc = 0.0
-    fwbs_variables.f_blkt_li6_enrichment = 30.0
-    fwbs_variables.p_blkt_nuclear_heat_total_mw = 0.0
-    fwbs_variables.p_div_nuclear_heat_total_mw = 0.0
-    fwbs_variables.p_fw_nuclear_heat_total_mw = 0.0
-    fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0.0
-    fwbs_variables.pnucloss = 0.0
-    fwbs_variables.pnucvvplus = 0.0
-    fwbs_variables.p_shld_nuclear_heat_mw = 0.0
-    fwbs_variables.m_blkt_total = 0.0
-    fwbs_variables.m_blkt_steel_total = 0.0
-    fwbs_variables.armour_fw_bl_mass = 0.0
-    fwbs_variables.breeder_f = 0.5
-    fwbs_variables.breeder_multiplier = 0.75
-    fwbs_variables.vfcblkt = 0.05295
-    fwbs_variables.vfpblkt = 0.1
-    fwbs_variables.m_blkt_li4sio4 = 0.0
-    fwbs_variables.m_blkt_tibe12 = 0.0
-    fwbs_variables.f_neut_shield = -1.0
-    fwbs_variables.f_a_fw_coolant_inboard = 0.0
-    fwbs_variables.f_a_fw_coolant_outboard = 0.0
-    fwbs_variables.psurffwi = 0.0
-    fwbs_variables.psurffwo = 0.0
-    fwbs_variables.vol_fw_total = 0.0
-    fwbs_variables.f_vol_blkt_steel = 0.0
-    fwbs_variables.f_vol_blkt_li4sio4 = 0.0
-    fwbs_variables.f_vol_blkt_tibe12 = 0.0
-    fwbs_variables.breedmat = 1
-    fwbs_variables.densbreed = 0.0
-    fwbs_variables.fblbe = 0.6
-    fwbs_variables.fblbreed = 0.154
-    fwbs_variables.fblhebmi = 0.4
-    fwbs_variables.fblhebmo = 0.4
-    fwbs_variables.fblhebpi = 0.6595
-    fwbs_variables.fblhebpo = 0.6713
-    fwbs_variables.hcdportsize = 1
-    fwbs_variables.nflutf = 0.0
-    fwbs_variables.npdiv = 2
-    fwbs_variables.nphcdin = 2
-    fwbs_variables.nphcdout = 2
-    fwbs_variables.tbr = 0.0
-    fwbs_variables.tritprate = 0.0
-    fwbs_variables.wallpf = 1.21
-    fwbs_variables.whtblbreed = 0.0
-    fwbs_variables.m_blkt_beryllium = 0.0
-    fwbs_variables.i_coolant_pumping = 2
-    fwbs_variables.i_shield_mat = 0
-    fwbs_variables.i_thermal_electric_conversion = 0
-    fwbs_variables.secondary_cycle_liq = 4
-    fwbs_variables.i_blkt_coolant_type = 1
-    fwbs_variables.i_fw_coolant_type = "helium"
-    fwbs_variables.dr_fw_wall = 0.003
-    fwbs_variables.radius_fw_channel = 0.006
-    fwbs_variables.dx_fw_module = 0.02
-    fwbs_variables.temp_fw_coolant_in = 573.0
-    fwbs_variables.temp_fw_coolant_out = 823.0
-    fwbs_variables.pres_fw_coolant = 15.5e6
-    fwbs_variables.temp_fw_peak = 873.0
-    fwbs_variables.roughness_fw_channel = 1.0e-6
-    fwbs_variables.len_fw_channel = 4.0
-    fwbs_variables.f_fw_peak = 1.0
-    fwbs_variables.pres_blkt_coolant = 15.50e6
-    fwbs_variables.temp_blkt_coolant_in = 573.0
-    fwbs_variables.temp_blkt_coolant_out = 823.0
-    fwbs_variables.coolp = 15.5e6
-    fwbs_variables.n_blkt_outboard_modules_poloidal = 8
-    fwbs_variables.n_blkt_inboard_modules_poloidal = 7
-    fwbs_variables.n_blkt_outboard_modules_toroidal = 48
-    fwbs_variables.n_blkt_inboard_modules_toroidal = 32
-    fwbs_variables.temp_fw_max = 823.0
-    fwbs_variables.fw_th_conductivity = 28.34
-    fwbs_variables.fvoldw = 1.74
-    fwbs_variables.fvolsi = 1.0
-    fwbs_variables.fvolso = 0.64
-    fwbs_variables.fwclfr = 0.15
-    fwbs_variables.p_div_rad_total_mw = 0.0
-    fwbs_variables.p_fw_rad_total_mw = 0.0
-    fwbs_variables.p_fw_hcd_rad_total_mw = 0.0
-    fwbs_variables.pradloss = 0.0
-    fwbs_variables.p_tf_nuclear_heat_mw = 0.0
-    fwbs_variables.ptfnucpm3 = 0.0
-    fwbs_variables.r_cryostat_inboard = 0.0
-    fwbs_variables.z_cryostat_half_inside = 0.0
-    fwbs_variables.dr_pf_cryostat = 0.5
-    fwbs_variables.vol_cryostat = 0.0
-    fwbs_variables.vol_cryostat_internal = 0.0
-    fwbs_variables.vol_vv = 0.0
-    fwbs_variables.vfshld = 0.25
-    fwbs_variables.vol_blkt_total = 0.0
-    fwbs_variables.vol_blkt_inboard = 0.0
-    fwbs_variables.vol_blkt_outboard = 0.0
-    fwbs_variables.volshld = 0.0
-    fwbs_variables.whtshld = 0.0
-    fwbs_variables.wpenshld = 0.0
-    fwbs_variables.wtshldi = 0.0
-    fwbs_variables.wtshldo = 0.0
-    fwbs_variables.irefprop = 1
-    fwbs_variables.fblli = 0.0
-    fwbs_variables.fblli2o = 0.08
-    fwbs_variables.fbllipb = 0.68
-    fwbs_variables.fblvd = 0.0
-    fwbs_variables.m_blkt_li2o = 0.0
-    fwbs_variables.wtbllipb = 0.0
-    fwbs_variables.m_blkt_vanadium = 0.0
-    fwbs_variables.m_blkt_lithium = 0.0
-    fwbs_variables.vfblkt = 0.25
-    fwbs_variables.blktmodel = 0
-    fwbs_variables.declblkt = 0.075
-    fwbs_variables.declfw = 0.075
-    fwbs_variables.declshld = 0.075
-    fwbs_variables.blkttype = 3
-    fwbs_variables.etaiso = 0.85
-    fwbs_variables.eta_coolant_pump_electric = 0.95
-    fwbs_variables.pnuc_cp = 0.0
-    fwbs_variables.p_cp_shield_nuclear_heat_mw = 0.0
-    fwbs_variables.pnuc_cp_tf = 0.0
-    fwbs_variables.neut_flux_cp = 0.0
-    fwbs_variables.i_fw_blkt_shared_coolant = 0
-    fwbs_variables.i_blkt_liquid_breeder_type = 0
-    fwbs_variables.i_blkt_dual_coolant = 0
-    fwbs_variables.i_blkt_liquid_breeder_channel_type = 0
-    fwbs_variables.ims = 0
-    fwbs_variables.n_liq_recirc = 10
-    fwbs_variables.r_f_liq_ib = 0.5
-    fwbs_variables.r_f_liq_ob = 0.5
-    fwbs_variables.w_f_liq_ib = 0.5
-    fwbs_variables.w_f_liq_ob = 0.5
-    fwbs_variables.den_ceramic = 3.21e3
-    fwbs_variables.th_wall_secondary = 1.25e-2
-    fwbs_variables.bz_channel_conduct_liq = 8.33e5
-    fwbs_variables.a_bz_liq = 0.2
-    fwbs_variables.b_bz_liq = 0.2
-    fwbs_variables.nopol = 2
-    fwbs_variables.nopipes = 4
-    fwbs_variables.den_liq = 9.5e3
-    fwbs_variables.specific_heat_liq = 1.9e2
-    fwbs_variables.thermal_conductivity_liq = 30.0
-    fwbs_variables.wht_liq = 0.0
-    fwbs_variables.wht_liq_ib = 0.0
-    fwbs_variables.wht_liq_ob = 0.0
-    fwbs_variables.dynamic_viscosity_liq = 0.0
-    fwbs_variables.electrical_conductivity_liq = 0.0
-    fwbs_variables.hartmann_liq = (0.0, 0.0)
-    fwbs_variables.b_mag_blkt = (5.0, 5.0)
-    fwbs_variables.etaiso_liq = 0.85
-    fwbs_variables.blpressure_liq = 1.7e6
-    fwbs_variables.inlet_temp_liq = 570.0
-    fwbs_variables.outlet_temp_liq = 720.0
-    fwbs_variables.den_fw_coolant = 0.0
-    fwbs_variables.visc_fw_coolant = 0.0
-    fwbs_variables.den_blkt_coolant = 0.0
-    fwbs_variables.visc_blkt_coolant = 0.0
-    fwbs_variables.cp_fw = 0.0
-    fwbs_variables.cv_fw = 0.0
-    fwbs_variables.cp_bl = 0.0
-    fwbs_variables.cv_bl = 0.0
-    fwbs_variables.f_nuc_pow_bz_struct = 0.34
-    fwbs_variables.f_nuc_pow_bz_liq = 0.66
-    fwbs_variables.pnuc_fw_ratio_dcll = 0.14
-    fwbs_variables.pnuc_blkt_ratio_dcll = 0.86
-    fwbs_variables.bzfllengi_n_rad = 4
-    fwbs_variables.bzfllengi_n_pol = 2
-    fwbs_variables.bzfllengo_n_rad = 4
-    fwbs_variables.bzfllengo_n_pol = 2
-    fwbs_variables.bzfllengi_n_rad_liq = 2
-    fwbs_variables.bzfllengi_n_pol_liq = 2
-    fwbs_variables.bzfllengo_n_rad_liq = 2
-    fwbs_variables.bzfllengo_n_pol_liq = 2

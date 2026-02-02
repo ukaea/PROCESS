@@ -13,7 +13,8 @@ authors:
     family-names: Morris
   - given-names: Stuart
     family-names: Muldrew
-    affiliation: United Kingdom Atomic Energy Authority
+    affiliation: UK Industrial Fusion Solutions Ltd
+    orcid: https://orcid.org/0000-0001-5940-3523
   - given-names: Peter
     family-names: Knight
     affiliation: United Kingdom Atomic Energy Authority
@@ -22,7 +23,8 @@ authors:
     affiliation: United Kingdom Atomic Energy Authority
   - given-names: Alexander
     family-names: Pearce
-    affiliation: United Kingdom Atomic Energy Authority
+    affiliation: UK Industrial Fusion Solutions Ltd
+    orcid: https://orcid.org/0000-0001-7344-6036
   - given-names: Sebastien
     family-names: Kahn
     affiliation: United Kingdom Atomic Energy Authority
@@ -32,6 +34,7 @@ authors:
   - given-names: Timothy
     family-names: Nunn
     affiliation: United Kingdom Atomic Energy Authority
+    orcid: https://orcid.org/0000-0001-7608-5512
   - given-names: Rhian
     family-names: Chapman
     affiliation: United Kingdom Atomic Energy Authority
@@ -43,7 +46,7 @@ authors:
     affiliation: United Kingdom Atomic Energy Authority
   - given-names: Jack
     family-names: Foster
-    affiliation: United Kingdom Atomic Energy Authority
+    affiliation: UK Industrial Fusion Solutions Ltd
   - given-names: Katy
     family-names: Ellis
     affiliation: United Kingdom Atomic Energy Authority
@@ -67,7 +70,8 @@ authors:
     affiliation: United Kingdom Atomic Energy Authority
   - given-names: Christopher
     family-names: Ashe
-    affiliation: United Kingdom Atomic Energy Authority
+    affiliation: UK Industrial Fusion Solutions Ltd
+    orcid: https://orcid.org/0000-0003-0578-1486
   - given-names: Emiliano
     family-names: Fable
     affiliation: Max Planck Institute for Plasma Physics
@@ -94,7 +98,7 @@ authors:
     affiliation: United Kingdom Atomic Energy Authority
   - given-names: Clair
     family-names: Mould
-    affiliation: University of Southampton
+    affiliation: United Kingdom Atomic Energy Authority
   - given-names: Thomas
     family-names: Miller
     affiliation: University of Oxford
@@ -134,8 +138,8 @@ keywords:
   - systems codes
   - power plant
 license: MIT
-version: 3.1.0
-date-released: "2024-03-21"
+version: 3.2.1
+date-released: "2025-10-13"
 references:
   - title: '"PROCESS": A systems code for fusion power plants—Part 1 Physics'
     type: article

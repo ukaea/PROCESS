@@ -33,7 +33,6 @@ e.g. FOO.bar says `bar`'s parent module is `FOO`.
 
 import argparse
 import datetime
-import inspect
 import itertools
 import json
 import logging
@@ -56,12 +55,85 @@ from bokeh.palettes import Category10
 from bokeh.plotting import figure
 from bokeh.resources import CDN
 
-from process import fortran
 from process.io import mfile as mf
 
 logging.basicConfig(level=logging.INFO, filename="tracker.log")
 logger = logging.getLogger("PROCESS Tracker")
 
+DEFAULT_TRACKING_VARIABLES = {
+    "CurrentDrive.p_hcd_primary_extra_heat_mw",
+    "CurrentDrive.f_c_plasma_bootstrap",
+    "CurrentDrive.p_hcd_injected_total_mw",
+    "Build.dr_shld_inboard",
+    "Build.dr_fw_inboard",
+    "Build.dr_fw_outboard",
+    "Build.dr_tf_shld_gap",
+    "Build.dr_bore",
+    "Build.dr_cs",
+    "Build.dr_fw_plasma_gap_inboard",
+    "Build.dr_blkt_outboard",
+    "Build.dr_cs_precomp",
+    "Build.dr_tf_outboard",
+    "Build.dr_blkt_inboard",
+    "Build.dr_shld_blkt_gap",
+    "Build.dr_fw_plasma_gap_outboard",
+    "Build.dr_cs_tf_gap",
+    "Build.dr_shld_vv_gap_outboard",
+    "Build.dr_shld_outboard",
+    "Build.dr_tf_inboard",
+    "Build.dr_shld_vv_gap_inboard",
+    "FWBSVariables.p_shld_nuclear_heat_mw",
+    "FWBSVariables.p_blkt_nuclear_heat_total_mw",
+    "Physics.triang",
+    "Physics.triang95",
+    "Physics.p_plasma_inner_rad_mw",
+    "Physics.temp_plasma_separatrix_kev",
+    "Physics.f_nd_alpha_electron",
+    "Physics.pflux_fw_neutron_mw",
+    "Physics.aspect",
+    "Physics.rminor",
+    "Physics.rmajor",
+    "Physics.q95",
+    "Physics.temp_plasma_electron_vol_avg_kev",
+    "Physics.beta_total_vol_avg",
+    "Physics.f_c_plasma_inductive",
+    "Physics.zeff",
+    "Physics.b_plasma_toroidal_on_axis",
+    "Physics.hfact",
+    "Physics.kappa",
+    "Physics.p_fusion_total_mw",
+    "Physics.temp_plasma_pedestal_kev",
+    "Physics.p_plasma_loss_mw",
+    "Physics.kappa95",
+    "Physics.nd_plasma_pedestal_electron",
+    "Physics.nd_plasma_electrons_vol_avg",
+    "Physics.p_plasma_rad_mw",
+    "Physics.nd_plasma_electron_on_axis",
+    "Physics.f_c_plasma_auxiliary",
+    "Physics.nd_plasma_impurities_vol_avg",
+    "Physics.t_energy_confinement",
+    "Physics.temp_plasma_electron_on_axis_kev",
+    "Physics.p_plasma_separatrix_mw",
+    "Physics.nd_plasma_separatrix_electron",
+    "Physics.vol_plasma",
+    "Physics.a_plasma_surface",
+    "HeatTransport.p_plant_electric_net_mw",
+    "HeatTransport.eta_turbine",
+    "HeatTransport.p_plant_electric_gross_mw",
+    "TFCoil.tftmp",
+    "TFCoil.n_tf_coils",
+    "TFCoil.b_tf_inboard_peak_symmetric",
+    "PFCoil.vs_cs_pf_total_pulse",
+    "Physics.nd_plasma_ions_total_vol_avg",
+    "Time.t_plant_pulse_burn",
+    "Cost.divlife",
+    "Cost.cdirt",
+    "Cost.concost",
+}
+"""Variables of the form: <system>.<variable>
+where <system> is an arbitrary name that categorises the variables
+and <variable> is present in the tracked MFile
+"""
 
 # Tracking
 
@@ -89,97 +161,13 @@ class ProcessTracker:
     meta_variables: ClassVar = {"date", "time"}
     # Variables in an MFile that hold metadata we want to show on the graph
 
-    tracking_variables: ClassVar = {
-        "p_hcd_primary_extra_heat_mw",
-        "f_c_plasma_bootstrap",
-        "p_hcd_injected_total_mw",
-        "dr_shld_inboard",
-        "dr_fw_inboard",
-        "dr_fw_outboard",
-        "thshield",
-        "dr_tf_shld_gap",
-        "dr_bore",
-        "dr_cs",
-        "dr_fw_plasma_gap_inboard",
-        "dr_blkt_outboard",
-        "dr_cs_precomp",
-        "dr_tf_outboard",
-        "dr_blkt_inboard",
-        "dr_shld_blkt_gap",
-        "dr_fw_plasma_gap_outboard",
-        "dr_cs_tf_gap",
-        "dr_shld_vv_gap_outboard",
-        "dr_shld_outboard",
-        "dr_tf_inboard",
-        "dr_shld_vv_gap_inboard",
-        "p_shld_nuclear_heat_mw",
-        "p_blkt_nuclear_heat_total_mw",
-        "triang",
-        "triang95",
-        "p_plasma_inner_rad_mw",
-        "tesep",
-        "f_nd_alpha_electron",
-        "pflux_fw_neutron_mw",
-        "aspect",
-        "rminor",
-        "rmajor",
-        "q95",
-        "te",
-        "beta",
-        "f_c_plasma_inductive",
-        "zeff",
-        "bt",
-        "hfact",
-        "kappa",
-        "p_fusion_total_mw",
-        "teped",
-        "p_plasma_loss_mw",
-        "kappa95",
-        "neped",
-        "dene",
-        "p_plasma_rad_mw",
-        "ne0",
-        "f_c_plasma_auxiliary",
-        "nd_impurities",
-        "t_energy_confinement",
-        "te0",
-        "p_plasma_separatrix_mw",
-        "nesep",
-        "vol_plasma",
-        "a_plasma_surface",
-        "p_plant_electric_net_mw",
-        "eta_turbine",
-        "p_plant_electric_gross_mw",
-        "tftmp",
-        "n_tf_coils",
-        "b_tf_inboard_peak",
-        "vs_cs_pf_total_pulse",
-        "nd_ions_total",
-        "t_burn",
-        "divlife",
-        "CostModel2.step20",
-        "CostModel2.step21",
-        "CostModel2.step2101",
-        "CostModel2.step2202",
-        "CostModel2.step2203",
-        "CostModel2.step22",
-        "CostModel2.step23",
-        "CostModel2.step24",
-        "CostModel2.step25",
-        "cdirt",
-        "concost",
-    }
-    # Variable in an MFile that we will track the changes in.
-
-    # 1) A variable of the form X.Y shows that variable Y exists as a member of module Y. This is needed for variables no longer in Fortran modules, where their parent cannot be scraped.
-    # 2) Other variables should be a module variable for a wrapped module. The name of the parent module will be automatically determined.
-
     def __init__(
         self,
         mfile: str,
         database: str | None = None,
         message: str | None = None,
         hashid: str | None = None,
+        tracking_variables_file: pathlib.Path | None = None,
     ) -> None:
         """Drive the creation of tracking JSON files.
 
@@ -191,6 +179,12 @@ class ProcessTracker:
         """
         self.mfile = mf.MFile(mfile)
         self.tracking_file = TrackingFile()
+
+        if tracking_variables_file is None:
+            self.tracking_variables = DEFAULT_TRACKING_VARIABLES
+        else:
+            with open(tracking_variables_file) as f:
+                self.tracking_variables = json.load(f)
 
         self._generate_data()
 
@@ -388,7 +382,7 @@ class TrackedData:
                 )  # add all the data in this JSON file to our internal store
 
 
-def plot_tracking_data(database):
+def plot_tracking_data(database, tracked_variables):
     """
     Drives the processing of existing .json tracking files and then plotting of this processed data.
     """
@@ -397,15 +391,14 @@ def plot_tracking_data(database):
 
     figures = {}
 
-    overrides = {}
+    variable_parent_map = {}
     # holds a map of variable parent's names overriden using the . (dot) syntax
     # variable: parent module name
 
     # populates the overrides map
-    for i in ProcessTracker.tracking_variables:
-        if hasattr(i, "split") and len(name_and_variable := i.split(".")) == 2:
-            overriden_name, variable = name_and_variable
-            overrides[variable] = overriden_name
+    for i in tracked_variables:
+        parent_name, variable = i.split(".")
+        variable_parent_map[variable] = parent_name
 
     for variable, history in loaded_tracking_database_data.tracked_variables.items():
         df = (
@@ -415,17 +408,11 @@ def plot_tracking_data(database):
         # order by date to avoid polygons all over the plot
         df = df.sort_values("date", ascending=True)
 
-        # overrides trumps fortran scrapping
-        parent = overrides.get(
-            variable
-        ) or PythonFortranInterfaceVariables.parent_module(
-            variable
-        )  # module name (or given name if overridden)
+        parent = variable_parent_map.get(variable)
 
-        if not parent:
-            logger.warning(
-                f"Variable {variable} is not a module variable of any Fortran module, please provide the python class which this variable can be found under as CLASS.VARIABLE noting that VARIABLE must be a variable present in the output file and does not necessarily need to correspond to an actual class variable, VARIABLE, of CLASS"
-            )
+        # if a variable does not have a parent, then it has been removed
+        # from the tracking list and we skip it.
+        if parent is None:
             continue
 
         if figures.get(parent) is None:
@@ -517,69 +504,19 @@ def plot_tracking_data(database):
     return file_html(tabs, CDN, "PROCESS Regression Testing Visualisation")
 
 
-def write_tracking_html_file(database, output):
+def write_tracking_html_file(database, output, tracking_variables_file):
     """Writes the visual tracking data to an appropriate file"""
-    tracking_html = plot_tracking_data(database)
+
+    if tracking_variables_file is None:
+        tracked_variables = DEFAULT_TRACKING_VARIABLES
+    else:
+        with open(tracking_variables_file) as f:
+            tracked_variables = json.load(f)
+
+    tracking_html = plot_tracking_data(database, tracked_variables)
 
     with open(output, "w") as f:
         f.write(tracking_html)
-
-
-class PythonFortranInterfaceVariables:
-    """
-    Parses the f2py generated tree and can find the parent module of a module variable.
-    """
-
-    tree: ClassVar = {}
-
-    @classmethod
-    def populate_classes(cls):
-        """
-        Scrape all the data into an internal data storage
-        """
-        classes = {}
-
-        for name, module in inspect.getmembers(fortran):
-            # there is technically a `fortran` type
-            # that is not clear where it is held
-            # this allow checking that module is a
-            # fortran module and is the next best
-            # thing to check this is a module.
-            # physics_variables is just the chosen arbitrary module
-            if type(module) == type(fortran.physics_variables):  # noqa: E721
-                classes[name] = cls._get_variables(module)
-
-        cls.tree = classes
-
-    @classmethod
-    def _get_variables(cls, fortran_module):
-        """
-        Get the variables of a given module
-        """
-        variables = []
-
-        for name, function in inspect.getmembers(fortran_module):
-            # type(fortran.physics_variables.constants.init_constants) => fortran subroutine
-            # if its not a fortran subroutine, its a variable
-            # because type `fortran` cannot be checked as a type
-            if type(function) != type(fortran.constants.init_constants):  # noqa: E721
-                variables.append(name)
-
-        return variables
-
-    @classmethod
-    def parent_module(cls, var: str):
-        """
-        Return the parent module of var, or None.
-        """
-        if not cls.tree:
-            cls.populate_classes()
-
-        for mod, functions in cls.tree.items():
-            if var in functions:
-                return mod
-
-        return None
 
 
 def track_entrypoint(arguments):
@@ -596,6 +533,7 @@ def track_entrypoint(arguments):
         database=arguments.db,
         message=arguments.commit,
         hashid=arguments.hash,
+        tracking_variables_file=arguments.tracking_variables_file,
     )
 
 
@@ -608,7 +546,11 @@ def plot_entrypoint(arguments):
     if not arguments.out:
         raise ValueError("plot requires --out be set")
 
-    write_tracking_html_file(database=arguments.db, output=arguments.out)
+    write_tracking_html_file(
+        database=arguments.db,
+        output=arguments.out,
+        tracking_variables_file=arguments.tracking_variables_file,
+    )
 
 
 if __name__ == "__main__":
@@ -630,6 +572,13 @@ if __name__ == "__main__":
         type=str,
         default=None,
         help="The current commit hash. If not provided, the code attempts to query to Git repository.",
+    )
+    parser.add_argument(
+        "--tracking-variables-file",
+        type=pathlib.Path,
+        default=None,
+        help="A JSON file containing a list of variables to track."
+        "See the description of DEFAULT_TRACKING_VARIABLES for details on formatting the strings in the list.",
     )
 
     arguments = parser.parse_args()

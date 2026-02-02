@@ -91,7 +91,11 @@ def merezhkin_muhkovatov_confinement_time(
 
 
 def shimomura_confinement_time(
-    rmajor: float, rminor: float, bt: float, kappa95: float, afuel: float
+    rmajor: float,
+    rminor: float,
+    b_plasma_toroidal_on_axis: float,
+    kappa95: float,
+    afuel: float,
 ) -> float:
     """
     Calculate the  Shimomura (S) optimized H-mode scaling confinement time
@@ -99,7 +103,7 @@ def shimomura_confinement_time(
     Parameters:
     rmajor (float): Plasma major radius [m]
     rminor (float): Plasma minor radius [m]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     kappa95 (float): Plasma elongation at 95% flux surface
     afuel (float): Fuel atomic mass number
 
@@ -112,7 +116,14 @@ def shimomura_confinement_time(
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
          "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
-    return 0.045e0 * rmajor * rminor * bt * np.sqrt(kappa95) * np.sqrt(afuel)
+    return (
+        0.045e0
+        * rmajor
+        * rminor
+        * b_plasma_toroidal_on_axis
+        * np.sqrt(kappa95)
+        * np.sqrt(afuel)
+    )
 
 
 def kaye_goldston_confinement_time(
@@ -121,7 +132,7 @@ def kaye_goldston_confinement_time(
     n20: float,
     rmajor: float,
     afuel: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     rminor: float,
     p_plasma_loss_mw: float,
 ) -> float:
@@ -135,7 +146,7 @@ def kaye_goldston_confinement_time(
     n20 (float): Line averaged electron density in units of 10**20 m**-3
     rmajor (float): Plasma major radius [m]
     afuel (float): Fuel atomic mass number
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     rminor (float): Plasma minor radius [m]
     p_plasma_loss_mw (float): Net Heating power [MW]
 
@@ -157,7 +168,11 @@ def kaye_goldston_confinement_time(
         * n20**0.26e0
         * rmajor**1.65e0
         * np.sqrt(afuel / 1.5e0)
-        / (bt**0.09e0 * rminor**0.49e0 * p_plasma_loss_mw**0.58e0)
+        / (
+            b_plasma_toroidal_on_axis**0.09e0
+            * rminor**0.49e0
+            * p_plasma_loss_mw**0.58e0
+        )
     )
 
 
@@ -167,7 +182,7 @@ def iter_89p_confinement_time(
     rminor: float,
     kappa: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     afuel: float,
     p_plasma_loss_mw: float,
 ) -> float:
@@ -180,7 +195,7 @@ def iter_89p_confinement_time(
     rminor (float): Plasma minor radius [m]
     kappa (float): Plasma elongation
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     afuel (float): Fuel atomic mass number
     p_plasma_loss_mw (float): Net Heating power [MW]
 
@@ -202,7 +217,7 @@ def iter_89p_confinement_time(
         * rminor**0.3e0
         * np.sqrt(kappa)
         * dnla20**0.1e0
-        * bt**0.2e0
+        * b_plasma_toroidal_on_axis**0.2e0
         * np.sqrt(afuel)
         / np.sqrt(p_plasma_loss_mw)
     )
@@ -214,7 +229,7 @@ def iter_89_0_confinement_time(
     rminor: float,
     kappa: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     afuel: float,
     p_plasma_loss_mw: float,
 ) -> float:
@@ -227,7 +242,7 @@ def iter_89_0_confinement_time(
     rminor (float): Plasma minor radius [m]
     kappa (float): Plasma elongation
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     afuel (float): Fuel atomic mass number
     p_plasma_loss_mw (float): Net Heating power [MW]
 
@@ -255,7 +270,7 @@ def iter_89_0_confinement_time(
         * rminor**0.6e0
         * kappa**0.5e0
         * dnla20**0.6e0
-        * bt**0.35e0
+        * b_plasma_toroidal_on_axis**0.35e0
         * afuel**0.2e0
         / p_plasma_loss_mw
     )
@@ -270,7 +285,7 @@ def rebut_lallia_confinement_time(
     pcur: float,
     zeff: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
 ) -> float:
     """
@@ -284,7 +299,7 @@ def rebut_lallia_confinement_time(
     pcur (float): Plasma current [MA]
     zeff (float): Effective charge
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     p_plasma_loss_mw (float): Net Heating power [MW]
 
     Returns:
@@ -301,7 +316,7 @@ def rebut_lallia_confinement_time(
         0.146e0
         * dnla20**0.75e0
         * np.sqrt(pcur)
-        * np.sqrt(bt)
+        * np.sqrt(b_plasma_toroidal_on_axis)
         * rll**2.75e0
         * zeff**0.25e0
         / p_plasma_loss_mw
@@ -353,7 +368,7 @@ def t10_confinement_time(
     dnla20: float,
     rmajor: float,
     qstar: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     rminor: float,
     kappa95: float,
     p_plasma_loss_mw: float,
@@ -367,7 +382,7 @@ def t10_confinement_time(
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
     rmajor (float): Plasma major radius [m]
     qstar (float): Equivalent cylindrical edge safety factor
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     rminor (float): Plasma minor radius [m]
     kappa95 (float): Plasma elongation at 95% flux surface
     p_plasma_loss_mw (float): Net Heating power [MW]
@@ -383,13 +398,13 @@ def t10_confinement_time(
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
-    denfac = dnla20 * rmajor * qstar / (1.3e0 * bt)
+    denfac = dnla20 * rmajor * qstar / (1.3e0 * b_plasma_toroidal_on_axis)
     denfac = min(1.0e0, denfac)
     return (
         0.095e0
         * rmajor
         * rminor
-        * bt
+        * b_plasma_toroidal_on_axis
         * np.sqrt(kappa95)
         * denfac
         / p_plasma_loss_mw**0.4e0
@@ -403,7 +418,7 @@ def jaeri_confinement_time(
     afuel: float,
     n20: float,
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     rmajor: float,
     qstar: float,
     zeff: float,
@@ -418,7 +433,7 @@ def jaeri_confinement_time(
     afuel (float): Fuel atomic mass number
     n20 (float): Line averaged electron density in units of 10**20 m**-3
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     rmajor (float): Plasma major radius [m]
     qstar (float): Equivalent cylindrical edge safety factor
     zeff (float): Effective charge
@@ -444,7 +459,7 @@ def jaeri_confinement_time(
         + 0.069e0
         * n20**0.6e0
         * pcur
-        * bt**0.2e0
+        * b_plasma_toroidal_on_axis**0.2e0
         * rminor**0.4e0
         * rmajor**1.6e0
         * np.sqrt(afuel)
@@ -457,7 +472,7 @@ def jaeri_confinement_time(
 def kaye_big_confinement_time(
     rmajor: float,
     rminor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     kappa95: float,
     pcur: float,
     n20: float,
@@ -470,7 +485,7 @@ def kaye_big_confinement_time(
     Parameters:
     rmajor (float): Plasma major radius [m]
     rminor (float): Plasma minor radius [m]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     kappa95 (float): Plasma elongation at 95% flux surface
     pcur (float): Plasma current [MA]
     n20 (float): Line averaged electron density in units of 10**20 m**-3
@@ -490,7 +505,7 @@ def kaye_big_confinement_time(
         0.105e0
         * np.sqrt(rmajor)
         * rminor**0.8e0
-        * bt**0.3e0
+        * b_plasma_toroidal_on_axis**0.3e0
         * kappa95**0.25e0
         * pcur**0.85e0
         * n20**0.1e0
@@ -505,7 +520,7 @@ def iter_h90_p_confinement_time(
     rminor: float,
     kappa: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     afuel: float,
     p_plasma_loss_mw: float,
 ) -> float:
@@ -518,7 +533,7 @@ def iter_h90_p_confinement_time(
     rminor (float): Plasma minor radius [m]
     kappa (float): Plasma elongation
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     afuel (float): Fuel atomic mass number
     p_plasma_loss_mw (float): Net Heating power [MW]
 
@@ -537,7 +552,7 @@ def iter_h90_p_confinement_time(
         * rminor ** (-0.12e0)
         * kappa**0.35e0
         * dnla20**0.09e0
-        * bt**0.15e0
+        * b_plasma_toroidal_on_axis**0.15e0
         * np.sqrt(afuel)
         / np.sqrt(p_plasma_loss_mw)
     )
@@ -549,7 +564,7 @@ def riedel_l_confinement_time(
     rminor: float,
     kappa95: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
 ) -> float:
     """
@@ -561,7 +576,7 @@ def riedel_l_confinement_time(
     rminor (float): Plasma minor radius [m]
     kappa95 (float): Plasma elongation at 95% flux surface
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     p_plasma_loss_mw (float): Net Heating power [MW]
 
     Returns:
@@ -579,7 +594,7 @@ def riedel_l_confinement_time(
         * rminor ** (-0.049e0)
         * kappa95**0.588e0
         * dnla20**0.078e0
-        * bt**0.152e0
+        * b_plasma_toroidal_on_axis**0.152e0
         / p_plasma_loss_mw**0.537e0
     )
 
@@ -590,7 +605,7 @@ def christiansen_confinement_time(
     rminor: float,
     kappa95: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
     afuel: float,
 ) -> float:
@@ -603,7 +618,7 @@ def christiansen_confinement_time(
     rminor (float): Plasma minor radius [m]
     kappa95 (float): Plasma elongation at 95% flux surface
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     p_plasma_loss_mw (float): Net Heating power [MW]
     afuel (float): Fuel atomic mass number
 
@@ -622,7 +637,7 @@ def christiansen_confinement_time(
         * rminor**1.46e0
         * kappa95**0.73e0
         * dnla20**0.41e0
-        * bt**0.29e0
+        * b_plasma_toroidal_on_axis**0.29e0
         / (p_plasma_loss_mw**0.79e0 * afuel**0.02e0)
     )
 
@@ -633,7 +648,7 @@ def lackner_gottardi_confinement_time(
     rminor: float,
     kappa95: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
 ) -> float:
     """
@@ -645,7 +660,7 @@ def lackner_gottardi_confinement_time(
     rminor (float): Plasma minor radius [m]
     kappa95 (float): Plasma elongation at 95% flux surface
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     p_plasma_loss_mw (float): Net Heating power [MW]
 
     Returns:
@@ -657,7 +672,12 @@ def lackner_gottardi_confinement_time(
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
 
     """
-    qhat = (1.0e0 + kappa95**2) * rminor**2 * bt / (0.4e0 * pcur * rmajor)
+    qhat = (
+        (1.0e0 + kappa95**2)
+        * rminor**2
+        * b_plasma_toroidal_on_axis
+        / (0.4e0 * pcur * rmajor)
+    )
     return (
         0.12e0
         * pcur**0.8e0
@@ -677,7 +697,7 @@ def neo_kaye_confinement_time(
     rminor: float,
     kappa95: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
 ) -> float:
     """
@@ -689,7 +709,7 @@ def neo_kaye_confinement_time(
     rminor (float): Plasma minor radius [m]
     kappa95 (float): Plasma elongation at 95% flux surface
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     p_plasma_loss_mw (float): Net Heating power [MW]
 
     Returns:
@@ -707,7 +727,7 @@ def neo_kaye_confinement_time(
         * rminor ** (-0.04e0)
         * kappa95**0.28e0
         * dnla20**0.14e0
-        * bt**0.04e0
+        * b_plasma_toroidal_on_axis**0.04e0
         / p_plasma_loss_mw**0.59e0
     )
 
@@ -718,7 +738,7 @@ def riedel_h_confinement_time(
     rminor: float,
     kappa95: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     afuel: float,
     p_plasma_loss_mw: float,
 ) -> float:
@@ -731,7 +751,7 @@ def riedel_h_confinement_time(
     rminor (float): Plasma minor radius [m]
     kappa95 (float): Plasma elongation at 95% flux surface
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     afuel (float): Fuel atomic mass number
     p_plasma_loss_mw (float): Net Heating power [MW]
 
@@ -750,7 +770,7 @@ def riedel_h_confinement_time(
         * rmajor**1.24e0
         * rminor ** (-0.23e0)
         * kappa95**0.317e0
-        * bt**0.207e0
+        * b_plasma_toroidal_on_axis**0.207e0
         * dnla20**0.105e0
         / p_plasma_loss_mw**0.486e0
     )
@@ -758,7 +778,7 @@ def riedel_h_confinement_time(
 
 def iter_h90_p_amended_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     afuel: float,
     rmajor: float,
     p_plasma_loss_mw: float,
@@ -769,7 +789,7 @@ def iter_h90_p_amended_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         afuel (float): Fuel atomic mass number
         rmajor (float): Plasma major radius [m]
         p_plasma_loss_mw (float): Net Heating power [MW]
@@ -789,7 +809,7 @@ def iter_h90_p_amended_confinement_time(
     return (
         0.082e0
         * pcur**1.02e0
-        * bt**0.15e0
+        * b_plasma_toroidal_on_axis**0.15e0
         * np.sqrt(afuel)
         * rmajor**1.60e0
         / (p_plasma_loss_mw**0.47e0 * kappa**0.19e0)
@@ -800,7 +820,7 @@ def sudo_et_al_confinement_time(
     rmajor: float,
     rminor: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
 ) -> float:
     """
@@ -810,7 +830,7 @@ def sudo_et_al_confinement_time(
         rmajor (float): Plasma major radius [m]
         rminor (float): Plasma minor radius [m]
         dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         p_plasma_loss_mw (float): Net Heating power [MW]
 
         Returns:
@@ -829,13 +849,13 @@ def sudo_et_al_confinement_time(
         * rmajor**0.75e0
         * rminor**2
         * dnla20**0.69e0
-        * bt**0.84e0
+        * b_plasma_toroidal_on_axis**0.84e0
         * p_plasma_loss_mw ** (-0.58e0)
     )
 
 
 def gyro_reduced_bohm_confinement_time(
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla20: float,
     p_plasma_loss_mw: float,
     rminor: float,
@@ -845,7 +865,7 @@ def gyro_reduced_bohm_confinement_time(
     Calculate the Gyro-reduced Bohm scaling confinement time
 
     Parameters:
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla20 (float): Line averaged electron density in units of 10**20 m**-3
     p_plasma_loss_mw (float): Net Heating power [MW]
     rminor (float): Plasma minor radius [m]
@@ -862,7 +882,7 @@ def gyro_reduced_bohm_confinement_time(
     """
     return (
         0.25e0
-        * bt**0.8e0
+        * b_plasma_toroidal_on_axis**0.8e0
         * dnla20**0.6e0
         * p_plasma_loss_mw ** (-0.6e0)
         * rminor**2.4e0
@@ -874,7 +894,7 @@ def lackner_gottardi_stellarator_confinement_time(
     rmajor: float,
     rminor: float,
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
     q: float,
 ) -> float:
@@ -885,7 +905,7 @@ def lackner_gottardi_stellarator_confinement_time(
         rmajor (float): Plasma major radius [m]
         rminor (float): Plasma minor radius [m]
         dnla20 (float): Line averaged electron density in units of 10**20 m**-3
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         p_plasma_loss_mw (float): Net Heating power [MW]
         q (float): Edge safety factor
 
@@ -905,7 +925,7 @@ def lackner_gottardi_stellarator_confinement_time(
         * rmajor
         * rminor**2
         * dnla20**0.6e0
-        * bt**0.8e0
+        * b_plasma_toroidal_on_axis**0.8e0
         * p_plasma_loss_mw ** (-0.6e0)
         * q**0.4e0
     )
@@ -913,7 +933,7 @@ def lackner_gottardi_stellarator_confinement_time(
 
 def iter_93h_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
     afuel: float,
     rmajor: float,
@@ -926,7 +946,7 @@ def iter_93h_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     p_plasma_loss_mw (float): Net Heating power [MW]
     afuel (float): Fuel atomic mass number
     rmajor (float): Plasma major radius [m]
@@ -947,7 +967,7 @@ def iter_93h_confinement_time(
     return (
         0.036e0
         * pcur**1.06e0
-        * bt**0.32e0
+        * b_plasma_toroidal_on_axis**0.32e0
         * p_plasma_loss_mw ** (-0.67e0)
         * afuel**0.41e0
         * rmajor**1.79e0
@@ -959,7 +979,7 @@ def iter_93h_confinement_time(
 
 def iter_h97p_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
     dnla19: float,
     rmajor: float,
@@ -972,7 +992,7 @@ def iter_h97p_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         p_plasma_loss_mw (float): Net Heating power [MW]
         dnla19 (float): Line averaged electron density in units of 10**19 m**-3
         rmajor (float): Plasma major radius [m]
@@ -994,7 +1014,7 @@ def iter_h97p_confinement_time(
     return (
         0.031e0
         * pcur**0.95e0
-        * bt**0.25e0
+        * b_plasma_toroidal_on_axis**0.25e0
         * p_plasma_loss_mw ** (-0.67e0)
         * dnla19**0.35e0
         * rmajor**1.92e0
@@ -1006,7 +1026,7 @@ def iter_h97p_confinement_time(
 
 def iter_h97p_elmy_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
     dnla19: float,
     rmajor: float,
@@ -1019,7 +1039,7 @@ def iter_h97p_elmy_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     p_plasma_loss_mw (float): Net Heating power [MW]
     dnla19 (float): Line averaged electron density in units of 10**19 m**-3
     rmajor (float): Plasma major radius [m]
@@ -1043,7 +1063,7 @@ def iter_h97p_elmy_confinement_time(
     return (
         0.029e0
         * pcur**0.90e0
-        * bt**0.20e0
+        * b_plasma_toroidal_on_axis**0.20e0
         * p_plasma_loss_mw ** (-0.66e0)
         * dnla19**0.40e0
         * rmajor**2.03e0
@@ -1055,7 +1075,7 @@ def iter_h97p_elmy_confinement_time(
 
 def iter_96p_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     kappa95: float,
     rmajor: float,
     aspect: float,
@@ -1068,7 +1088,7 @@ def iter_96p_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         kappa95 (float): Plasma elongation at 95% flux surface
         rmajor (float): Plasma major radius [m]
         aspect (float): Aspect ratio
@@ -1091,7 +1111,7 @@ def iter_96p_confinement_time(
     return (
         0.023e0
         * pcur**0.96e0
-        * bt**0.03e0
+        * b_plasma_toroidal_on_axis**0.03e0
         * kappa95**0.64e0
         * rmajor**1.83e0
         * aspect**0.06e0
@@ -1103,7 +1123,7 @@ def iter_96p_confinement_time(
 
 def valovic_elmy_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     afuel: float,
     rmajor: float,
@@ -1117,7 +1137,7 @@ def valovic_elmy_confinement_time(
     Parameters:
     hfact (float): H-factor
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla19 (float): Line averaged electron density in units of 10**19 m**-3
     afuel (float): Fuel atomic mass number
     rmajor (float): Plasma major radius [m]
@@ -1135,7 +1155,7 @@ def valovic_elmy_confinement_time(
     return (
         0.067e0
         * pcur**0.9e0
-        * bt**0.17e0
+        * b_plasma_toroidal_on_axis**0.17e0
         * dnla19**0.45e0
         * afuel**0.05e0
         * rmajor**1.316e0
@@ -1147,7 +1167,7 @@ def valovic_elmy_confinement_time(
 
 def kaye_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     kappa: float,
     rmajor: float,
     aspect: float,
@@ -1160,7 +1180,7 @@ def kaye_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     kappa (float): Plasma elongation
     rmajor (float): Plasma major radius [m]
     aspect (float): Aspect ratio
@@ -1179,7 +1199,7 @@ def kaye_confinement_time(
     return (
         0.021e0
         * pcur**0.81e0
-        * bt**0.14e0
+        * b_plasma_toroidal_on_axis**0.14e0
         * kappa**0.7e0
         * rmajor**2.01e0
         * aspect ** (-0.18e0)
@@ -1191,7 +1211,7 @@ def kaye_confinement_time(
 
 def iter_pb98py_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1204,7 +1224,7 @@ def iter_pb98py_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla19 (float): Line averaged electron density in units of 10**19 m**-3
     p_plasma_loss_mw (float): Net Heating power [MW]
     rmajor (float): Plasma major radius [m]
@@ -1223,7 +1243,7 @@ def iter_pb98py_confinement_time(
     return (
         0.0615e0
         * pcur**0.9e0
-        * bt**0.1e0
+        * b_plasma_toroidal_on_axis**0.1e0
         * dnla19**0.4e0
         * p_plasma_loss_mw ** (-0.66e0)
         * rmajor**2
@@ -1235,7 +1255,7 @@ def iter_pb98py_confinement_time(
 
 def iter_ipb98y_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1248,7 +1268,7 @@ def iter_ipb98y_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla19 (float): Line averaged electron density in units of 10**19 m**-3
     p_plasma_loss_mw (float): Net Heating power [MW]
     rmajor (float): Plasma major radius [m]
@@ -1274,7 +1294,7 @@ def iter_ipb98y_confinement_time(
     return (
         0.0365e0
         * pcur**0.97e0
-        * bt**0.08e0
+        * b_plasma_toroidal_on_axis**0.08e0
         * dnla19**0.41e0
         * p_plasma_loss_mw ** (-0.63e0)
         * rmajor**1.93e0
@@ -1286,7 +1306,7 @@ def iter_ipb98y_confinement_time(
 
 def iter_ipb98y1_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1299,7 +1319,7 @@ def iter_ipb98y1_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla19 (float): Line averaged electron density in units of 10**19 m**-3
     p_plasma_loss_mw (float): Net Heating power [MW]
     rmajor (float): Plasma major radius [m]
@@ -1324,7 +1344,7 @@ def iter_ipb98y1_confinement_time(
     return (
         0.0503e0
         * pcur**0.91e0
-        * bt**0.15e0
+        * b_plasma_toroidal_on_axis**0.15e0
         * dnla19**0.44e0
         * p_plasma_loss_mw ** (-0.65e0)
         * rmajor**2.05e0
@@ -1336,7 +1356,7 @@ def iter_ipb98y1_confinement_time(
 
 def iter_ipb98y2_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1349,7 +1369,7 @@ def iter_ipb98y2_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla19 (float): Line averaged electron density in units of 10**19 m**-3
     p_plasma_loss_mw (float): Net Heating power [MW]
     rmajor (float): Plasma major radius [m]
@@ -1373,7 +1393,7 @@ def iter_ipb98y2_confinement_time(
     return (
         0.0562e0
         * pcur**0.93e0
-        * bt**0.15e0
+        * b_plasma_toroidal_on_axis**0.15e0
         * dnla19**0.41e0
         * p_plasma_loss_mw ** (-0.69e0)
         * rmajor**1.97e0
@@ -1385,7 +1405,7 @@ def iter_ipb98y2_confinement_time(
 
 def iter_ipb98y3_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1398,7 +1418,7 @@ def iter_ipb98y3_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla19 (float): Line averaged electron density in units of 10**19 m**-3
     p_plasma_loss_mw (float): Net Heating power [MW]
     rmajor (float): Plasma major radius [m]
@@ -1422,7 +1442,7 @@ def iter_ipb98y3_confinement_time(
     return (
         0.0564e0
         * pcur**0.88e0
-        * bt**0.07e0
+        * b_plasma_toroidal_on_axis**0.07e0
         * dnla19**0.40e0
         * p_plasma_loss_mw ** (-0.69e0)
         * rmajor**2.15e0
@@ -1434,7 +1454,7 @@ def iter_ipb98y3_confinement_time(
 
 def iter_ipb98y4_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1447,7 +1467,7 @@ def iter_ipb98y4_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla19 (float): Line averaged electron density in units of 10**19 m**-3
     p_plasma_loss_mw (float): Net Heating power [MW]
     rmajor (float): Plasma major radius [m]
@@ -1471,7 +1491,7 @@ def iter_ipb98y4_confinement_time(
     return (
         0.0587e0
         * pcur**0.85e0
-        * bt**0.29e0
+        * b_plasma_toroidal_on_axis**0.29e0
         * dnla19**0.39e0
         * p_plasma_loss_mw ** (-0.70e0)
         * rmajor**2.08e0
@@ -1485,7 +1505,7 @@ def iss95_stellarator_confinement_time(
     rminor: float,
     rmajor: float,
     dnla19: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
     iotabar: float,
 ) -> float:
@@ -1496,7 +1516,7 @@ def iss95_stellarator_confinement_time(
         rminor (float): Plasma minor radius [m]
         rmajor (float): Plasma major radius [m]
         dnla19 (float): Line averaged electron density in units of 10**19 m**-3
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         p_plasma_loss_mw (float): Net Heating power [MW]
         iotabar (float): Rotational transform
 
@@ -1515,7 +1535,7 @@ def iss95_stellarator_confinement_time(
         * rminor**2.21e0
         * rmajor**0.65e0
         * dnla19**0.51e0
-        * bt**0.83e0
+        * b_plasma_toroidal_on_axis**0.83e0
         * p_plasma_loss_mw ** (-0.59e0)
         * iotabar**0.4e0
     )
@@ -1525,7 +1545,7 @@ def iss04_stellarator_confinement_time(
     rminor: float,
     rmajor: float,
     dnla19: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
     iotabar: float,
 ) -> float:
@@ -1536,7 +1556,7 @@ def iss04_stellarator_confinement_time(
         rminor (float): Plasma minor radius [m]
         rmajor (float): Plasma major radius [m]
         dnla19 (float): Line averaged electron density in units of 10**19 m**-3
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         p_plasma_loss_mw (float): Net Heating power [MW]
         iotabar (float): Rotational transform
 
@@ -1555,7 +1575,7 @@ def iss04_stellarator_confinement_time(
         * rminor**2.28e0
         * rmajor**0.64e0
         * dnla19**0.54e0
-        * bt**0.84e0
+        * b_plasma_toroidal_on_axis**0.84e0
         * p_plasma_loss_mw ** (-0.61e0)
         * iotabar**0.41e0
     )
@@ -1563,7 +1583,7 @@ def iss04_stellarator_confinement_time(
 
 def ds03_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1576,7 +1596,7 @@ def ds03_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         dnla19 (float): Line averaged electron density in units of 10**19 m**-3
         p_plasma_loss_mw (float): Net Heating power [MW]
         rmajor (float): Plasma major radius [m]
@@ -1598,7 +1618,7 @@ def ds03_confinement_time(
     return (
         0.028e0
         * pcur**0.83e0
-        * bt**0.07e0
+        * b_plasma_toroidal_on_axis**0.07e0
         * dnla19**0.49e0
         * p_plasma_loss_mw ** (-0.55e0)
         * rmajor**2.11e0
@@ -1613,7 +1633,7 @@ def murari_confinement_time(
     rmajor: float,
     kappa_ipb: float,
     dnla19: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
 ) -> float:
     """
@@ -1624,7 +1644,7 @@ def murari_confinement_time(
         rmajor (float): Plasma major radius [m]
         kappa_ipb (float): IPB specific plasma separatrix elongation
         dnla19 (float): Line averaged electron density in units of 10**19 m**-3
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         p_plasma_loss_mw (float): Net Heating power [MW]
 
         Returns:
@@ -1647,13 +1667,16 @@ def murari_confinement_time(
         * rmajor**1.731
         * kappa_ipb**1.450
         * p_plasma_loss_mw ** (-0.735)
-        * (dnla19**0.448 / (1.0 + np.exp(-9.403 * (dnla19 / bt) ** -1.365)))
+        * (
+            dnla19**0.448
+            / (1.0 + np.exp(-9.403 * (dnla19 / b_plasma_toroidal_on_axis) ** -1.365))
+        )
     )
 
 
 def petty08_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1665,7 +1688,7 @@ def petty08_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         dnla19 (float): Line averaged electron density in units of 10**19 m**-3
         p_plasma_loss_mw (float): Net Heating power [MW]
         rmajor (float): Plasma major radius [m]
@@ -1689,7 +1712,7 @@ def petty08_confinement_time(
     return (
         0.052e0
         * pcur**0.75e0
-        * bt**0.3e0
+        * b_plasma_toroidal_on_axis**0.3e0
         * dnla19**0.32e0
         * p_plasma_loss_mw ** (-0.47e0)
         * rmajor**2.09e0
@@ -1700,8 +1723,8 @@ def petty08_confinement_time(
 
 def lang_high_density_confinement_time(
     plasma_current: float,
-    bt: float,
-    nd_electron_line: float,
+    b_plasma_toroidal_on_axis: float,
+    nd_plasma_electron_line: float,
     p_plasma_loss_mw: float,
     rmajor: float,
     rminor: float,
@@ -1716,8 +1739,8 @@ def lang_high_density_confinement_time(
 
         Parameters:
         plasma_current (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
-        nd_electron_line (float): Line averaged electron density [m**-3]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
+        nd_plasma_electron_line (float): Line averaged electron density [m**-3]
         p_plasma_loss_mw (float): Net Heating power [MW]
         rmajor (float): Plasma major radius [m]
         rminor (float): Plasma minor radius [m]
@@ -1740,12 +1763,12 @@ def lang_high_density_confinement_time(
     """
     qratio = q / qstar
     n_gw = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
-    nratio = nd_electron_line / n_gw
+    nratio = nd_plasma_electron_line / n_gw
     return (
         6.94e-7
         * plasma_current**1.3678e0
-        * bt**0.12e0
-        * nd_electron_line**0.032236e0
+        * b_plasma_toroidal_on_axis**0.12e0
+        * nd_plasma_electron_line**0.032236e0
         * (p_plasma_loss_mw * 1.0e6) ** (-0.74e0)
         * rmajor**1.2345e0
         * kappa_ipb**0.37e0
@@ -1759,7 +1782,7 @@ def lang_high_density_confinement_time(
 
 def hubbard_nominal_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla20: float,
     p_plasma_loss_mw: float,
 ) -> float:
@@ -1768,7 +1791,7 @@ def hubbard_nominal_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         dnla20 (float): Line averaged electron density in units of 10**20 m**-3
         p_plasma_loss_mw (float): Net Heating power [MW]
 
@@ -1785,7 +1808,7 @@ def hubbard_nominal_confinement_time(
     return (
         0.014e0
         * pcur**0.68e0
-        * bt**0.77e0
+        * b_plasma_toroidal_on_axis**0.77e0
         * dnla20**0.02e0
         * p_plasma_loss_mw ** (-0.29e0)
     )
@@ -1793,7 +1816,7 @@ def hubbard_nominal_confinement_time(
 
 def hubbard_lower_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla20: float,
     p_plasma_loss_mw: float,
 ) -> float:
@@ -1802,7 +1825,7 @@ def hubbard_lower_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         dnla20 (float): Line averaged electron density in units of 10**20 m**-3
         p_plasma_loss_mw (float): Net Heating power [MW]
 
@@ -1819,7 +1842,7 @@ def hubbard_lower_confinement_time(
     return (
         0.014e0
         * pcur**0.60e0
-        * bt**0.70e0
+        * b_plasma_toroidal_on_axis**0.70e0
         * dnla20 ** (-0.03e0)
         * p_plasma_loss_mw ** (-0.33e0)
     )
@@ -1827,7 +1850,7 @@ def hubbard_lower_confinement_time(
 
 def hubbard_upper_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla20: float,
     p_plasma_loss_mw: float,
 ) -> float:
@@ -1836,7 +1859,7 @@ def hubbard_upper_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         dnla20 (float): Line averaged electron density in units of 10**20 m**-3
         p_plasma_loss_mw (float): Net Heating power [MW]
 
@@ -1853,7 +1876,7 @@ def hubbard_upper_confinement_time(
     return (
         0.014e0
         * pcur**0.76e0
-        * bt**0.84e0
+        * b_plasma_toroidal_on_axis**0.84e0
         * dnla20**0.07
         * p_plasma_loss_mw ** (-0.25e0)
     )
@@ -1861,7 +1884,7 @@ def hubbard_upper_confinement_time(
 
 def menard_nstx_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1874,7 +1897,7 @@ def menard_nstx_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         dnla19 (float): Line averaged electron density in units of 10**19 m**-3
         p_plasma_loss_mw (float): Net Heating power [MW]
         rmajor (float): Plasma major radius [m]
@@ -1902,7 +1925,7 @@ def menard_nstx_confinement_time(
     return (
         0.095e0
         * pcur**0.57e0
-        * bt**1.08e0
+        * b_plasma_toroidal_on_axis**1.08e0
         * dnla19**0.44e0
         * p_plasma_loss_mw ** (-0.73e0)
         * rmajor**1.97e0
@@ -1914,7 +1937,7 @@ def menard_nstx_confinement_time(
 
 def menard_nstx_petty08_hybrid_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -1927,7 +1950,7 @@ def menard_nstx_petty08_hybrid_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla19 (float): Line averaged electron density in units of 10**19 m**-3
     p_plasma_loss_mw (float): Net Heating power [MW]
     rmajor (float): Plasma major radius [m]
@@ -1951,7 +1974,7 @@ def menard_nstx_petty08_hybrid_confinement_time(
     if (1.0e0 / aspect) <= 0.4e0:
         return petty08_confinement_time(
             pcur,
-            bt,
+            b_plasma_toroidal_on_axis,
             dnla19,
             p_plasma_loss_mw,
             rmajor,
@@ -1963,7 +1986,7 @@ def menard_nstx_petty08_hybrid_confinement_time(
     if (1.0e0 / aspect) >= 0.6e0:
         return menard_nstx_confinement_time(
             pcur,
-            bt,
+            b_plasma_toroidal_on_axis,
             dnla19,
             p_plasma_loss_mw,
             rmajor,
@@ -1974,7 +1997,7 @@ def menard_nstx_petty08_hybrid_confinement_time(
     return (((1.0e0 / aspect) - 0.4e0) / (0.6e0 - 0.4e0)) * (
         menard_nstx_confinement_time(
             pcur,
-            bt,
+            b_plasma_toroidal_on_axis,
             dnla19,
             p_plasma_loss_mw,
             rmajor,
@@ -1985,7 +2008,7 @@ def menard_nstx_petty08_hybrid_confinement_time(
     ) + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * (
         petty08_confinement_time(
             pcur,
-            bt,
+            b_plasma_toroidal_on_axis,
             dnla19,
             p_plasma_loss_mw,
             rmajor,
@@ -1997,7 +2020,7 @@ def menard_nstx_petty08_hybrid_confinement_time(
 
 def nstx_gyro_bohm_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
     rmajor: float,
     dnla20: float,
@@ -2007,7 +2030,7 @@ def nstx_gyro_bohm_confinement_time(
 
         Parameters:
         pcur (float): Plasma current [MA]
-        bt (float): Toroidal magnetic field [T]
+        b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
         p_plasma_loss_mw (float): Net Heating power [MW]
         rmajor (float): Plasma major radius [m]
         dnla20 (float): Line averaged electron density in units of 10**20 m**-3
@@ -2026,7 +2049,7 @@ def nstx_gyro_bohm_confinement_time(
     return (
         0.21e0
         * pcur**0.54e0
-        * bt**0.91e0
+        * b_plasma_toroidal_on_axis**0.91e0
         * p_plasma_loss_mw ** (-0.38e0)
         * rmajor**2.14e0
         * dnla20 ** (-0.05e0)
@@ -2035,7 +2058,7 @@ def nstx_gyro_bohm_confinement_time(
 
 def itpa20_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dnla19: float,
     p_plasma_loss_mw: float,
     rmajor: float,
@@ -2049,7 +2072,7 @@ def itpa20_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     dnla19 (float): Central line-averaged electron density in units of 10**19 m**-3
     p_plasma_loss_mw (float): Thermal power lost due to transport through the LCFS [MW]
     rmajor (float): Plasma major radius [m]
@@ -2072,7 +2095,7 @@ def itpa20_confinement_time(
     return (
         0.053
         * pcur**0.98
-        * bt**0.22
+        * b_plasma_toroidal_on_axis**0.22
         * dnla19**0.24
         * p_plasma_loss_mw ** (-0.669)
         * rmajor**1.71
@@ -2085,7 +2108,7 @@ def itpa20_confinement_time(
 
 def itpa20_il_confinement_time(
     pcur: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     p_plasma_loss_mw: float,
     dnla19: float,
     aion: float,
@@ -2098,7 +2121,7 @@ def itpa20_il_confinement_time(
 
     Parameters:
     pcur (float): Plasma current [MA]
-    bt (float): Toroidal magnetic field [T]
+    b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
     p_plasma_loss_mw (float): Thermal power lost due to transport through the LCFS [MW]
     dnla19 (float): Central line-averaged electron density in units of 10**19 m**-3
     aion (float): Average mass of all ions (amu)
@@ -2121,7 +2144,7 @@ def itpa20_il_confinement_time(
     return (
         0.067
         * pcur**1.29
-        * bt**-0.13
+        * b_plasma_toroidal_on_axis**-0.13
         * p_plasma_loss_mw ** (-0.644)
         * dnla19**0.15
         * aion**0.3

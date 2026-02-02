@@ -1,17 +1,16 @@
 from process.data_structure import neoclassics_variables
 from process.stellarator.stellarator import KEV
-
-from process.fortran import (
-    constants,
+from process import constants
+from process.data_structure import (
     impurity_radiation_module,
     physics_variables,
     stellarator_configuration,
     stellarator_variables,
-    stellarator_module as st,
 )
 
 import numpy as np
-
+import logging
+logger = logging.getLogger(__name__)
 
 class Neoclassics:
     @property
@@ -127,24 +126,43 @@ class Neoclassics:
 
     def init_profile_values_from_PROCESS(self, rho):
         """Initializes the profile_values object from PROCESS' parabolic profiles"""
-        tempe = physics_variables.te0 * (1 - rho**2) ** physics_variables.alphat * KEV
-        tempT = physics_variables.ti0 * (1 - rho**2) ** physics_variables.alphat * KEV
-        tempD = physics_variables.ti0 * (1 - rho**2) ** physics_variables.alphat * KEV
-        tempa = physics_variables.ti0 * (1 - rho**2) ** physics_variables.alphat * KEV
+        tempe = (
+            physics_variables.temp_plasma_electron_on_axis_kev
+            * (1 - rho**2) ** physics_variables.alphat
+            * KEV
+        )
+        tempT = (
+            physics_variables.temp_plasma_ion_on_axis_kev
+            * (1 - rho**2) ** physics_variables.alphat
+            * KEV
+        )
+        tempD = (
+            physics_variables.temp_plasma_ion_on_axis_kev
+            * (1 - rho**2) ** physics_variables.alphat
+            * KEV
+        )
+        tempa = (
+            physics_variables.temp_plasma_ion_on_axis_kev
+            * (1 - rho**2) ** physics_variables.alphat
+            * KEV
+        )
 
-        dense = physics_variables.ne0 * (1 - rho**2) ** physics_variables.alphan
+        dense = (
+            physics_variables.nd_plasma_electron_on_axis
+            * (1 - rho**2) ** physics_variables.alphan
+        )
         densT = (
-            (1 - physics_variables.f_deuterium)
-            * physics_variables.ni0
+            (1 - physics_variables.f_plasma_fuel_deuterium)
+            * physics_variables.nd_plasma_ions_on_axis
             * (1 - rho**2) ** physics_variables.alphan
         )
         densD = (
-            physics_variables.f_deuterium
-            * physics_variables.ni0
+            physics_variables.f_plasma_fuel_deuterium
+            * physics_variables.nd_plasma_ions_on_axis
             * (1 - rho**2) ** physics_variables.alphan
         )
         densa = (
-            physics_variables.nd_alphas
+            physics_variables.nd_plasma_alphas_vol_avg
             * (1 + physics_variables.alphan)
             * (1 - rho**2) ** physics_variables.alphan
         )
@@ -154,7 +172,7 @@ class Neoclassics:
             -2.0
             * 1.0
             / physics_variables.rminor
-            * physics_variables.te0
+            * physics_variables.temp_plasma_electron_on_axis_kev
             * rho
             * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
             * physics_variables.alphat
@@ -164,7 +182,7 @@ class Neoclassics:
             -2.0
             * 1.0
             / physics_variables.rminor
-            * physics_variables.ti0
+            * physics_variables.temp_plasma_ion_on_axis_kev
             * rho
             * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
             * physics_variables.alphat
@@ -174,7 +192,7 @@ class Neoclassics:
             -2.0
             * 1.0
             / physics_variables.rminor
-            * physics_variables.ti0
+            * physics_variables.temp_plasma_ion_on_axis_kev
             * rho
             * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
             * physics_variables.alphat
@@ -184,7 +202,7 @@ class Neoclassics:
             -2.0
             * 1.0
             / physics_variables.rminor
-            * physics_variables.ti0
+            * physics_variables.temp_plasma_ion_on_axis_kev
             * rho
             * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
             * physics_variables.alphat
@@ -196,7 +214,7 @@ class Neoclassics:
             * 1.0
             / physics_variables.rminor
             * rho
-            * physics_variables.ne0
+            * physics_variables.nd_plasma_electron_on_axis
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
         )
@@ -205,8 +223,8 @@ class Neoclassics:
             * 1.0
             / physics_variables.rminor
             * rho
-            * (1 - physics_variables.f_deuterium)
-            * physics_variables.ni0
+            * (1 - physics_variables.f_plasma_fuel_deuterium)
+            * physics_variables.nd_plasma_ions_on_axis
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
         )
@@ -215,8 +233,8 @@ class Neoclassics:
             * 1.0
             / physics_variables.rminor
             * rho
-            * physics_variables.f_deuterium
-            * physics_variables.ni0
+            * physics_variables.f_plasma_fuel_deuterium
+            * physics_variables.nd_plasma_ions_on_axis
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
         )
@@ -225,7 +243,7 @@ class Neoclassics:
             * 1.0
             / physics_variables.rminor
             * rho
-            * physics_variables.nd_alphas
+            * physics_variables.nd_plasma_alphas_vol_avg
             * (1 + physics_variables.alphan)
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
@@ -240,6 +258,10 @@ class Neoclassics:
 
 
     def calc_neoclassics(self):
+        if stellarator_configuration.stella_config_epseff < 0:
+            logger.error(
+            f"epseff value lower than 0:  {stellarator_configuration.stella_config_epseff}"
+            )
         self.init_neoclassics(
             0.6,
             stellarator_configuration.stella_config_epseff,
@@ -326,7 +348,7 @@ class Neoclassics:
             * impurity_radiation_module.radius_plasma_core_norm
         )
         dmdt_neo_fuel = (
-            dndt_neo_fuel * physics_variables.m_fuel_amu * constants.proton_mass * 1.0e6
+            dndt_neo_fuel * physics_variables.m_fuel_amu * constants.PROTON_MASS * 1.0e6
         )  # mg
         dmdt_neo_fuel_from_e = (
             4
@@ -334,7 +356,7 @@ class Neoclassics:
             * physics_variables.a_plasma_surface
             * impurity_radiation_module.radius_plasma_core_norm
             * physics_variables.m_fuel_amu
-            * constants.proton_mass
+            * constants.PROTON_MASS
             * 1.0e6
         )  # kg
 
@@ -397,12 +419,12 @@ class Neoclassics:
     def neoclassics_calc_nu(self):
         """Calculates the collision frequency"""
         mass = np.array([
-            constants.electron_mass,
-            constants.proton_mass * 2.0,
-            constants.proton_mass * 3.0,
-            constants.proton_mass * 4.0,
+            constants.ELECTRON_MASS,
+            constants.PROTON_MASS * 2.0,
+            constants.PROTON_MASS * 3.0,
+            constants.PROTON_MASS * 4.0,
         ])
-        z = np.array([-1.0, 1.0, 1.0, 2.0]) * constants.electron_charge
+        z = np.array([-1.0, 1.0, 1.0, 2.0]) * constants.ELECTRON_CHARGE
 
         # transform the temperature back in eV
         # Formula from L. Spitzer.Physics of fully ionized gases.  Interscience, New York, 1962
@@ -411,7 +433,7 @@ class Neoclassics:
             - 1.15 * np.log10(neoclassics_variables.densities[0])
             + 2.3
             * np.log10(
-                neoclassics_variables.temperatures[0] / constants.electron_charge
+                neoclassics_variables.temperatures[0] / constants.ELECTRON_CHARGE
             )
         )
 
@@ -454,7 +476,7 @@ class Neoclassics:
                     ] + neoclassics_variables.densities[k] * (
                         z[j] * z[k]
                     ) ** 2 * lnlambda * phixmgx / (
-                        4.0 * np.pi * constants.epsilon0**2 * mass[j] ** 2 * v**3
+                        4.0 * np.pi * constants.EPSILON0**2 * mass[j] ** 2 * v**3
                     )
 
         return neoclassics_calc_nu
@@ -465,24 +487,24 @@ class Neoclassics:
         kk = (k * neoclassics_variables.temperatures).T
 
         mass = np.array([
-            constants.electron_mass,
-            constants.proton_mass * 2.0,
-            constants.proton_mass * 3.0,
-            constants.proton_mass * 4.0,
+            constants.ELECTRON_MASS,
+            constants.PROTON_MASS * 2.0,
+            constants.PROTON_MASS * 3.0,
+            constants.PROTON_MASS * 4.0,
         ])
 
         v = np.empty((4, self.no_roots))
-        v[0, :] = constants.speed_light * np.sqrt(
-            1.0 - (kk[0, :] / (mass[0] * constants.speed_light**2) + 1) ** (-1)
+        v[0, :] = constants.SPEED_LIGHT * np.sqrt(
+            1.0 - (kk[0, :] / (mass[0] * constants.SPEED_LIGHT**2) + 1) ** (-1)
         )
-        v[1, :] = constants.speed_light * np.sqrt(
-            1.0 - (kk[1, :] / (mass[1] * constants.speed_light**2) + 1) ** (-1)
+        v[1, :] = constants.SPEED_LIGHT * np.sqrt(
+            1.0 - (kk[1, :] / (mass[1] * constants.SPEED_LIGHT**2) + 1) ** (-1)
         )
-        v[2, :] = constants.speed_light * np.sqrt(
-            1.0 - (kk[2, :] / (mass[2] * constants.speed_light**2) + 1) ** (-1)
+        v[2, :] = constants.SPEED_LIGHT * np.sqrt(
+            1.0 - (kk[2, :] / (mass[2] * constants.SPEED_LIGHT**2) + 1) ** (-1)
         )
-        v[3, :] = constants.speed_light * np.sqrt(
-            1.0 - (kk[3, :] / (mass[3] * constants.speed_light**2) + 1) ** (-1)
+        v[3, :] = constants.SPEED_LIGHT * np.sqrt(
+            1.0 - (kk[3, :] / (mass[3] * constants.SPEED_LIGHT**2) + 1) ** (-1)
         )
 
         return (
@@ -495,34 +517,36 @@ class Neoclassics:
         """Calculates the collision frequency"""
         temp = (
             np.array([
-                physics_variables.te,
-                physics_variables.ti,
-                physics_variables.ti,
-                physics_variables.ti,
+                physics_variables.temp_plasma_electron_vol_avg_kev,
+                physics_variables.temp_plasma_ion_vol_avg_kev,
+                physics_variables.temp_plasma_ion_vol_avg_kev,
+                physics_variables.temp_plasma_ion_vol_avg_kev,
             ])
             * KEV
         )
         density = np.array([
-            physics_variables.dene,
-            physics_variables.nd_fuel_ions * physics_variables.f_deuterium,
-            physics_variables.nd_fuel_ions * (1 - physics_variables.f_deuterium),
-            physics_variables.nd_alphas,
+            physics_variables.nd_plasma_electrons_vol_avg,
+            physics_variables.nd_plasma_fuel_ions_vol_avg
+            * physics_variables.f_plasma_fuel_deuterium,
+            physics_variables.nd_plasma_fuel_ions_vol_avg
+            * (1 - physics_variables.f_plasma_fuel_deuterium),
+            physics_variables.nd_plasma_alphas_vol_avg,
         ])
 
         mass = np.array([
-            constants.electron_mass,
-            constants.proton_mass * 2.0,
-            constants.proton_mass * 3.0,
-            constants.proton_mass * 4.0,
+            constants.ELECTRON_MASS,
+            constants.PROTON_MASS * 2.0,
+            constants.PROTON_MASS * 3.0,
+            constants.PROTON_MASS * 4.0,
         ])
-        z = np.array([-1.0, 1.0, 1.0, 2.0]) * constants.electron_charge
+        z = np.array([-1.0, 1.0, 1.0, 2.0]) * constants.ELECTRON_CHARGE
 
         # transform the temperature back in eV
         # Formula from L. Spitzer.Physics of fully ionized gases.  Interscience, New York, 1962
         lnlambda = (
             32.2
             - 1.15 * np.log10(density[0])
-            + 2.3 * np.log10(temp[0] / constants.electron_charge)
+            + 2.3 * np.log10(temp[0] / constants.ELECTRON_CHARGE)
         )
 
         neoclassics_calc_nu_star_fromT = np.zeros((4,))
@@ -557,7 +581,7 @@ class Neoclassics:
                     * (z[j] * z[k]) ** 2
                     * lnlambda
                     * phixmgx
-                    / (4.0 * np.pi * constants.epsilon0**2 * mass[j] ** 2 * v**4)
+                    / (4.0 * np.pi * constants.EPSILON0**2 * mass[j] ** 2 * v**4)
                     * physics_variables.rmajor
                     / iota
                 )
@@ -568,27 +592,27 @@ class Neoclassics:
             neoclassics_variables.roots
             * neoclassics_variables.temperatures[0]
             / (
-                constants.electron_charge
+                constants.ELECTRON_CHARGE
                 * physics_variables.rmajor
-                * physics_variables.bt
+                * physics_variables.b_plasma_toroidal_on_axis
             )
         )
         vdD = (
             neoclassics_variables.roots
             * neoclassics_variables.temperatures[1]
             / (
-                constants.electron_charge
+                constants.ELECTRON_CHARGE
                 * physics_variables.rmajor
-                * physics_variables.bt
+                * physics_variables.b_plasma_toroidal_on_axis
             )
         )
         vdT = (
             neoclassics_variables.roots
             * neoclassics_variables.temperatures[2]
             / (
-                constants.electron_charge
+                constants.ELECTRON_CHARGE
                 * physics_variables.rmajor
-                * physics_variables.bt
+                * physics_variables.b_plasma_toroidal_on_axis
             )
         )
         vda = (
@@ -596,9 +620,9 @@ class Neoclassics:
             * neoclassics_variables.temperatures[3]
             / (
                 2.0
-                * constants.electron_charge
+                * constants.ELECTRON_CHARGE
                 * physics_variables.rmajor
-                * physics_variables.bt
+                * physics_variables.b_plasma_toroidal_on_axis
             )
         )
 
@@ -614,41 +638,41 @@ class Neoclassics:
     def neoclassics_calc_D11_plateau(self):
         """Calculates the plateau transport coefficients (D11_star sometimes)"""
         mass = np.array([
-            constants.electron_mass,
-            constants.proton_mass * 2.0,
-            constants.proton_mass * 3.0,
-            constants.proton_mass * 4.0,
+            constants.ELECTRON_MASS,
+            constants.PROTON_MASS * 2.0,
+            constants.PROTON_MASS * 3.0,
+            constants.PROTON_MASS * 4.0,
         ])
 
         v = np.empty((4, self.no_roots))
-        v[0, :] = constants.speed_light * np.sqrt(
+        v[0, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
             - (
-                neoclassics_variables.kt[0, :] / (mass[0] * constants.speed_light**2)
+                neoclassics_variables.kt[0, :] / (mass[0] * constants.SPEED_LIGHT**2)
                 + 1
             )
             ** (-1)
         )
-        v[1, :] = constants.speed_light * np.sqrt(
+        v[1, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
             - (
-                neoclassics_variables.kt[1, :] / (mass[1] * constants.speed_light**2)
+                neoclassics_variables.kt[1, :] / (mass[1] * constants.SPEED_LIGHT**2)
                 + 1
             )
             ** (-1)
         )
-        v[2, :] = constants.speed_light * np.sqrt(
+        v[2, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
             - (
-                neoclassics_variables.kt[2, :] / (mass[2] * constants.speed_light**2)
+                neoclassics_variables.kt[2, :] / (mass[2] * constants.SPEED_LIGHT**2)
                 + 1
             )
             ** (-1)
         )
-        v[3, :] = constants.speed_light * np.sqrt(
+        v[3, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
             - (
-                neoclassics_variables.kt[3, :] / (mass[3] * constants.speed_light**2)
+                neoclassics_variables.kt[3, :] / (mass[3] * constants.SPEED_LIGHT**2)
                 + 1
             )
             ** (-1)
@@ -730,7 +754,7 @@ class Neoclassics:
     def st_calc_eff_chi(self):
         volscaling = (
             physics_variables.vol_plasma
-            * st.f_r
+            * stellarator_variables.f_r
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
@@ -740,7 +764,7 @@ class Neoclassics:
         )
         surfacescaling = (
             physics_variables.a_plasma_surface
-            * st.f_r
+            * stellarator_variables.f_r
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
@@ -761,9 +785,9 @@ class Neoclassics:
         denominator = (
             (
                 3
-                * physics_variables.ne0
-                * constants.electron_charge
-                * physics_variables.te0
+                * physics_variables.nd_plasma_electron_on_axis
+                * constants.ELECTRON_CHARGE
+                * physics_variables.temp_plasma_electron_on_axis_kev
                 * 1e3
                 * physics_variables.alphat
                 * impurity_radiation_module.radius_plasma_core_norm

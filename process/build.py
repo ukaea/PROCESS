@@ -2,30 +2,30 @@ import logging
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
-from process.data_structure import build_python_variables, divertor_variables
-from process.exceptions import ProcessValueError
-from process.fortran import (
+from process.data_structure import (
     build_variables,
     buildings_variables,
-    constants,
     current_drive_variables,
-    error_handling,
+    divertor_variables,
     fwbs_variables,
     numerics,
     pfcoil_variables,
     physics_variables,
+    superconducting_tf_coil_variables,
     tfcoil_variables,
 )
+from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 
 
 class Build:
     def __init__(self):
-        self.outfile = constants.nout
-        self.mfile = constants.mfile
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
 
     def run(self) -> None:
         self.calculate_radial_build(output=False)
@@ -80,7 +80,7 @@ class Build:
         # Have kept the single letter variable names to match the original code and documentation diagram.
         radius_beam_tangency = f_radius_beam_tangency_rmajor * rmajor
 
-        omega = constants.twopi / n_tf_coils
+        omega = constants.TWOPI / n_tf_coils
 
         a = 0.5e0 * dx_tf_inboard_out_toroidal
         try:
@@ -119,9 +119,9 @@ class Build:
             eps = np.arcsin(e * np.sin(phi) / g) - alpha
             radius_beam_tangency_max = f * np.cos(eps) - 0.5e0 * c
         else:
-            error_handling.fdiags[0] = g
-            error_handling.fdiags[1] = c
-            error_handling.report_error(63)
+            logger.error(
+                f"Max beam tangency radius set =0 temporarily; change dx_beam_duct. {g=} {c=}"
+            )
             radius_beam_tangency_max = 0.0e0
 
         return radius_beam_tangency, radius_beam_tangency_max
@@ -474,7 +474,9 @@ class Build:
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
-                build_variables.tfoffset = (vbuile1 + vertical_build_upper) / 2.0e0
+                build_variables.dz_tf_plasma_centre_offset = (
+                    vbuile1 + vertical_build_upper
+                ) / 2.0e0
 
                 # End of Double null case
             else:
@@ -786,7 +788,7 @@ class Build:
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
-                build_variables.tfoffset = (vbuile1 + vbuild) / 2.0e0
+                build_variables.dz_tf_plasma_centre_offset = (vbuile1 + vbuild) / 2.0e0
 
                 # end of Single null case
 
@@ -827,7 +829,7 @@ class Build:
             build_variables.z_tf_top = (
                 build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
             )
-            build_variables.hpfdif = 0.0e0
+            build_variables.dz_tf_upper_lower_midplane = 0.0e0
         else:
             build_variables.z_tf_top = (
                 build_variables.dr_tf_inboard
@@ -843,10 +845,9 @@ class Build:
                 + build_variables.dz_fw_plasma_gap
                 + build_variables.z_plasma_xpoint_upper
             )
-            build_variables.hpfdif = (
-                build_variables.z_tf_top
-                - (build_variables.z_tf_inside_half + build_variables.dr_tf_inboard)
-            ) / 2.0e0
+            build_variables.dz_tf_upper_lower_midplane = build_variables.z_tf_top - (
+                build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
+            )
 
     def divgeom(self, output: bool):
         """
@@ -1037,8 +1038,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "TF coil vertical offset (m)",
-                    "(tfoffset)",
-                    build_variables.tfoffset,
+                    "(dz_tf_plasma_centre_offset)",
+                    build_variables.dz_tf_plasma_centre_offset,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1245,8 +1246,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "TF coil vertical offset (m)",
-                    "(tfoffset)",
-                    build_variables.tfoffset,
+                    "(dz_tf_plasma_centre_offset)",
+                    build_variables.dz_tf_plasma_centre_offset,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1516,40 +1517,74 @@ class Build:
                 )
         return divht
 
-    def ripple_amplitude(self, ripmax: float, r_tf_outboard_mid: float) -> float:
+    def plasma_outboard_edge_toroidal_ripple(
+        self,
+        ripple_b_tf_plasma_edge_max: float,
+        r_tf_outboard_mid: float,
+        n_tf_coils: int,
+        rmajor: float,
+        rminor: float,
+        r_tf_wp_inboard_inner,
+        r_tf_wp_inboard_centre: float,
+        r_tf_wp_inboard_outer: float,
+        dx_tf_wp_primary_toroidal: float,
+        i_tf_shape: int,
+        i_tf_sup: int,
+        dx_tf_wp_insulation: float,
+        dx_tf_wp_insertion_gap: float,
+    ) -> float:
         """
-        TF ripple calculation
-        author: P J Knight and C W Ashe, CCFE, Culham Science Centre
-        ripmax : input real  : maximum allowed ripple at plasma edge (%)
-        ripple : output real : actual ripple at plasma edge (%)
-        rtot   : input real  : radius to the centre of the outboard
-        TF coil leg (m)
-        rtotmin : output real : radius to the centre of the outboard
-        TF coil leg which would produce
-        a ripple of amplitude ripmax (m)
-        flag : output integer : on exit, =1 if the fitted
-        range of applicability is exceeded
-        This routine calculates the toroidal field ripple amplitude
-        at the midplane outboard plasma edge. The fitted coefficients
-        were produced from MATLAB runs by M. Kovari using the CCFE
-        MAGINT code to model the coils and fields.
-        <P>The minimum radius of the centre of the TF coil legs
-        to produce the maximum allowed ripple is also calculated.
-        M. Kovari, Toroidal Field Coils - Maximum Field and Ripple -
-        Parametric Calculation, July 2014
-        ##############################################################
+        Plasma outboard toroidal field (TF) ripple calculation.
 
-        Picture frame coil model by Ken McClements 2022 gives analytical
-        solutions within 10% agreement with numerical models.
-        Activated when i_tf_shape == 2 (picture frame)
+        This routine computes the TF ripple amplitude at the midplane outboard
+        plasma edge and the minimum radius of the TF coil centre that would
+        produce a specified maximum allowed ripple. The calculation uses
+        fitted coefficients derived from numerical modelling (MAGINT) and
+        includes a simplified analytical picture-frame coil model for
+        i_tf_shape == 2.
 
+        :param ripple_b_tf_plasma_edge_max: Maximum allowed ripple at plasma edge (percent)
+        :type ripple_b_tf_plasma_edge_max: float
+        :param r_tf_outboard_mid: Radius to the centre of the outboard TF coil leg (m)
+        :type r_tf_outboard_mid: float
+        :param n_tf_coils: Number of TF coils
+        :type n_tf_coils: int
+        :param rmajor: Plasma major radius (m)
+        :type rmajor: float
+        :param rminor: Plasma minor radius (m)
+        :type rminor: float
+        :param r_tf_wp_inboard_inner: Inner winding-pack inboard radius (m)
+        :type r_tf_wp_inboard_inner: float
+        :param r_tf_wp_inboard_centre: Centre winding-pack inboard radius (m)
+        :type r_tf_wp_inboard_centre: float
+        :param r_tf_wp_inboard_outer: Outer winding-pack inboard radius (m)
+        :type r_tf_wp_inboard_outer: float
+        :param dx_tf_wp_primary_toroidal: Primary toroidal winding-pack thickness (m)
+        :type dx_tf_wp_primary_toroidal: float
+        :param i_tf_shape: TF coil shape switch (2 => picture-frame analytical model)
+        :type i_tf_shape: int
+        :param i_tf_sup: TF coil support flag (1 => superconducting)
+        :type i_tf_sup: int
+        :param dx_tf_wp_insulation: Winding-pack insulation thickness (m)
+        :type dx_tf_wp_insulation: float
+        :param dx_tf_wp_insertion_gap: Winding-pack insertion gap (m)
+        :type dx_tf_wp_insertion_gap: float
+
+        :returns: Tuple containing:
+                  - ripple: Calculated ripple at plasma edge (percent)
+                  - r_tf_outboard_midmin: Minimum r_tf_outboard_mid that yields the specified maximum ripple (m)
+                  - flag: Applicability flag (0 = OK, non-zero = fitted-range concern)
+        :rtype: tuple[float, float, int]
+
+        :notes:
+            - Fitted coefficients originate from parametric MAGINT runs (M. Kovari, 2014).
+            - Picture-frame coil analytical model (Ken McClements, 2022) is used when
+            `i_tf_shape == 2` and gives approximate results (within ~10% of numerical).
+            - The routine sets an applicability flag when fitted-range assumptions are exceeded.
         """
-        n = float(tfcoil_variables.n_tf_coils)
-        if tfcoil_variables.i_tf_sup == 1:
+        if i_tf_sup == 1:
             # Minimal inboard WP radius [m]
-            r_wp_min = (
-                build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
-            )
+            r_wp_min = r_tf_wp_inboard_inner
 
             # Rectangular WP
             if tfcoil_variables.i_tf_wp_geom == 0:
@@ -1557,55 +1592,36 @@ class Build:
 
             # Double rectangle WP
             elif tfcoil_variables.i_tf_wp_geom == 1:
-                r_wp_max = r_wp_min + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
+                r_wp_max = r_tf_wp_inboard_centre
 
             # Trapezoidal WP
             elif tfcoil_variables.i_tf_wp_geom == 2:
-                r_wp_max = r_wp_min + tfcoil_variables.dr_tf_wp_with_insulation
+                r_wp_max = r_tf_wp_inboard_outer
 
             # Calculated maximum toroidal WP toroidal thickness [m]
-            if tfcoil_variables.tfc_sidewall_is_fraction:
-                t_wp_max = 2.0e0 * (
-                    (r_wp_max - tfcoil_variables.casths_fraction * r_wp_min)
-                    * np.tan(np.pi / n)
-                    - tfcoil_variables.dx_tf_wp_insulation
-                    - tfcoil_variables.dx_tf_wp_insertion_gap
-                )
-            else:
-                t_wp_max = 2.0e0 * (
-                    r_wp_max * np.tan(np.pi / n)
-                    - tfcoil_variables.dx_tf_side_case_min
-                    - tfcoil_variables.dx_tf_wp_insulation
-                    - tfcoil_variables.dx_tf_wp_insertion_gap
-                )
+            dx_tf_wp_conductor_max = dx_tf_wp_primary_toroidal - 2.0 * (
+                dx_tf_wp_insulation + dx_tf_wp_insertion_gap
+            )
 
         # Resistive magnet case
         else:
-            # Radius used to define the t_wp_max [m]
-            r_wp_max = (
-                build_variables.r_tf_inboard_in
-                + tfcoil_variables.dr_tf_nose_case
-                + tfcoil_variables.dr_tf_wp_with_insulation
-            )
-
+            # Radius used to define the dx_tf_wp_conductor_max [m]
+            r_wp_max = r_tf_wp_inboard_outer
             # Calculated maximum toroidal WP toroidal thickness [m]
-            t_wp_max = 2.0e0 * r_wp_max * np.tan(np.pi / n)
+            dx_tf_wp_conductor_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
 
         flag = 0
-        if tfcoil_variables.i_tf_shape == 2:
+        if i_tf_shape == 2:
             # Ken McClements ST picture frame coil analytical ripple calc
             # Calculated ripple for coil at r_tf_outboard_mid (%)
-            ripple = 100.0e0 * (
-                (physics_variables.rmajor + physics_variables.rminor)
-                / r_tf_outboard_mid
-            ) ** (n)
-            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripmax
-            r_tf_outboard_midmin = (
-                physics_variables.rmajor + physics_variables.rminor
-            ) / ((0.01e0 * ripmax) ** (1.0e0 / n))
+            ripple = 100.0e0 * ((rmajor + rminor) / r_tf_outboard_mid) ** (n_tf_coils)
+            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripple_b_tf_plasma_edge_max
+            r_tf_outboard_midmin = (rmajor + rminor) / (
+                (0.01e0 * ripple_b_tf_plasma_edge_max) ** (1.0e0 / n_tf_coils)
+            )
         else:
             # Winding pack to iter-coil at plasma centre toroidal lenth ratio
-            x = t_wp_max * n / physics_variables.rmajor
+            x = dx_tf_wp_conductor_max * n_tf_coils / rmajor
 
             # Fitting parameters
             c1 = 0.875e0 - 0.0557e0 * x
@@ -1615,15 +1631,11 @@ class Build:
             ripple = (
                 100.0e0
                 * c1
-                * (
-                    (physics_variables.rmajor + physics_variables.rminor)
-                    / r_tf_outboard_mid
-                )
-                ** (n - c2)
+                * ((rmajor + rminor) / r_tf_outboard_mid) ** (n_tf_coils - c2)
             )
 
-            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripmax
-            base = 0.01 * ripmax / c1
+            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripple_b_tf_plasma_edge_max
+            base = 0.01 * ripple_b_tf_plasma_edge_max / c1
             # Avoid potential negative or complex result: kludge base to be
             # small and positive if required
             try:
@@ -1632,9 +1644,9 @@ class Build:
                 logger.exception("base is <= 1e-6. Kludging to 1e-6.")
                 base = 1e-6
 
-            r_tf_outboard_midmin = (
-                physics_variables.rmajor + physics_variables.rminor
-            ) / (base ** (1.0 / (n - c2)))
+            r_tf_outboard_midmin = (rmajor + rminor) / (
+                base ** (1.0 / (n_tf_coils - c2))
+            )
 
             try:
                 assert r_tf_outboard_midmin < np.inf
@@ -1642,33 +1654,20 @@ class Build:
                 logger.exception(
                     "r_tf_outboard_midmin is inf. Kludging to a large value instead."
                 )
-                r_tf_outboard_midmin = (
-                    physics_variables.rmajor + physics_variables.rminor
-                ) * 3
+                r_tf_outboard_midmin = (rmajor + rminor) * 3
 
             #  Notify via flag if a range of applicability is violated
             flag = 0
             if (x < 0.737e0) or (x > 2.95e0):
                 flag = 1
-            if (tfcoil_variables.n_tf_coils < 16) or (tfcoil_variables.n_tf_coils > 20):
+            if (n_tf_coils < 16) or (n_tf_coils > 20):
                 flag = 2
-            if (
-                (physics_variables.rmajor + physics_variables.rminor)
-                / r_tf_outboard_mid
-                < 0.7e0
-            ) or (
-                (physics_variables.rmajor + physics_variables.rminor)
-                / r_tf_outboard_mid
-                > 0.8e0
+            if ((rmajor + rminor) / r_tf_outboard_mid < 0.7e0) or (
+                (rmajor + rminor) / r_tf_outboard_mid > 0.8e0
             ):
                 flag = 3
 
         return ripple, r_tf_outboard_midmin, flag
-
-    def tf_in_cs_bore_calc(self):
-        build_variables.dr_bore += (
-            build_variables.dr_tf_inboard + build_variables.dr_cs_tf_gap
-        )
 
     def calculate_radial_build(self, output: bool) -> None:
         """
@@ -1717,7 +1716,7 @@ class Build:
             )
 
         # Calculate pre-compression structure thickness is build_variables.i_cs_precomp=1
-        if build_variables.i_cs_precomp == 1:
+        if build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 0:
             build_variables.dr_cs_precomp = build_variables.fseppc / (
                 2.0e0
                 * np.pi
@@ -1729,14 +1728,37 @@ class Build:
                     + build_variables.dr_cs
                 )
             )
+        elif build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 1:
+            build_variables.dr_cs_precomp = build_variables.fseppc / (
+                2.0e0
+                * np.pi
+                * build_variables.fcspc
+                * build_variables.sigallpc
+                * (
+                    2.0 * build_variables.dr_bore
+                    + 2.0 * build_variables.dr_tf_inboard
+                    + 2.0 * build_variables.dr_cs_tf_gap
+                    + build_variables.dr_cs
+                )
+            )
         else:
             build_variables.dr_cs_precomp = 0.0e0
+
+        # Issue #514 Radial dimensions of inboard leg
+        # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
+        if 140 in numerics.ixc[0 : numerics.nvar]:
+            build_variables.dr_tf_inboard = (
+                tfcoil_variables.dr_tf_wp_with_insulation
+                + tfcoil_variables.dr_tf_plasma_case
+                + tfcoil_variables.dr_tf_nose_case
+            )
 
         if build_variables.i_tf_inside_cs == 1:
             build_variables.r_tf_inboard_in = (
                 build_variables.dr_bore
-                - build_variables.dr_tf_inboard
-                - build_variables.dr_cs_tf_gap
+                # NOTE: dr_bore is just the hollow space, the
+                # true dr_bore size used for flux calculations
+                # is dr_bore + dr_tf_inboard + dr_cs_tf_gap
             )
         else:
             # Inboard side inner radius [m]
@@ -1745,15 +1767,6 @@ class Build:
                 + build_variables.dr_cs
                 + build_variables.dr_cs_precomp
                 + build_variables.dr_cs_tf_gap
-            )
-
-        # Issue #514 Radial dimensions of inboard leg
-        # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
-        if any(numerics.ixc[0 : numerics.nvar] == 140):
-            build_variables.dr_tf_inboard = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                + tfcoil_variables.dr_tf_plasma_case
-                + tfcoil_variables.dr_tf_nose_case
             )
 
         # Radial build to tfcoil middle [m]
@@ -1768,7 +1781,7 @@ class Build:
 
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
-        if not any(numerics.ixc[0 : numerics.nvar] == 140):
+        if 140 not in numerics.ixc[0 : numerics.nvar]:
             tfcoil_variables.dr_tf_wp_with_insulation = (
                 build_variables.dr_tf_inboard
                 - tfcoil_variables.dr_tf_plasma_case
@@ -1796,9 +1809,10 @@ class Build:
 
                 # Notify user that build_variables.r_cp_top has been set to 1.01*build_variables.r_tf_inboard_out (lvl 2 error)
                 if build_variables.r_cp_top < 1.01e0 * build_variables.r_tf_inboard_out:
-                    error_handling.fdiags[0] = build_variables.r_cp_top
-                    error_handling.fdiags[1] = build_variables.r_tf_inboard_out
-                    error_handling.report_error(268)
+                    logger.error(
+                        "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue"
+                        f"{build_variables.r_cp_top=} {build_variables.r_tf_inboard_out=}"
+                    )
 
                     # build_variables.r_cp_top correction
                     build_variables.r_cp_top = build_variables.r_tf_inboard_out * 1.01e0
@@ -1812,9 +1826,10 @@ class Build:
             elif build_variables.i_r_cp_top == 1:
                 # Notify user that build_variables.r_cp_top has been set to 1.01*build_variables.r_tf_inboard_out (lvl 2 error)
                 if build_variables.r_cp_top < 1.01e0 * build_variables.r_tf_inboard_out:
-                    error_handling.fdiags[0] = build_variables.r_cp_top
-                    error_handling.fdiags[1] = build_variables.r_tf_inboard_out
-                    error_handling.report_error(268)
+                    logger.error(
+                        "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue"
+                        f"{build_variables.r_cp_top=} {build_variables.r_tf_inboard_out=}"
+                    )
 
                     # build_variables.r_cp_top correction
                     build_variables.r_cp_top = build_variables.r_tf_inboard_out * 1.01e0
@@ -1848,8 +1863,9 @@ class Build:
             )
             + tfcoil_variables.drtop
         ):
-            error_handling.fdiags[0] = build_variables.r_cp_top
-            error_handling.report_error(256)
+            logger.error(
+                f"Top CP radius larger that its value determined with plasma shape {build_variables.r_cp_top=}"
+            )
         if build_variables.i_tf_inside_cs == 1:
             #  Radial position of vacuum vessel [m]
             build_variables.r_vv_inboard_out = (
@@ -1911,7 +1927,7 @@ class Build:
         #  Thickness of outboard TF coil legs
         if tfcoil_variables.i_tf_sup != 1:
             build_variables.dr_tf_outboard = (
-                build_variables.tfootfi * build_variables.dr_tf_inboard
+                build_variables.f_dr_tf_outboard_inboard * build_variables.dr_tf_inboard
             )
         else:
             build_variables.dr_tf_outboard = build_variables.dr_tf_inboard
@@ -1933,12 +1949,23 @@ class Build:
         ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.dr_tf_inboard)
 
         (
-            tfcoil_variables.ripple,
+            tfcoil_variables.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
-            build_python_variables.ripflag,
-        ) = self.ripple_amplitude(
-            tfcoil_variables.ripmax,
-            build_variables.r_tf_outboard_mid,
+            build_variables.ripflag,
+        ) = self.plasma_outboard_edge_toroidal_ripple(
+            ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
+            r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
+            r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
+            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
+            i_tf_shape=tfcoil_variables.i_tf_shape,
+            i_tf_sup=tfcoil_variables.i_tf_sup,
+            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
         )
 
         #  If the tfcoil_variables.ripple is too large then move the outboard TF coil leg
@@ -1962,15 +1989,24 @@ class Build:
         else:
             build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
 
-        #  Call tfcoil_variables.ripple calculation again with new build_variables.r_tf_outboard_mid/build_variables.dr_shld_vv_gap_outboard value
-        #  call rippl(tfcoil_variables.ripmax,rmajor,rminor,r_tf_outboard_mid,n_tf_coils,ripple,r_tf_outboard_midl)
         (
-            tfcoil_variables.ripple,
+            tfcoil_variables.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
-            build_python_variables.ripflag,
-        ) = self.ripple_amplitude(
-            tfcoil_variables.ripmax,
-            build_variables.r_tf_outboard_mid,
+            build_variables.ripflag,
+        ) = self.plasma_outboard_edge_toroidal_ripple(
+            ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
+            r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
+            r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
+            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
+            i_tf_shape=tfcoil_variables.i_tf_shape,
+            i_tf_sup=tfcoil_variables.i_tf_sup,
+            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
         )
 
         #  Half-height of first wall (internal surface)
@@ -2013,9 +2049,9 @@ class Build:
             #  Calculate surface area, assuming 100% coverage
 
             (
-                build_variables.a_fw_inboard,
-                build_variables.a_fw_outboard,
-                build_variables.a_fw_total,
+                build_variables.a_fw_inboard_full_coverage,
+                build_variables.a_fw_outboard_full_coverage,
+                build_variables.a_fw_total_full_coverage,
             ) = dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
@@ -2046,32 +2082,40 @@ class Build:
             #  Calculate surface area, assuming 100% coverage
 
             (
-                build_variables.a_fw_inboard,
-                build_variables.a_fw_outboard,
-                build_variables.a_fw_total,
+                build_variables.a_fw_inboard_full_coverage,
+                build_variables.a_fw_outboard_full_coverage,
+                build_variables.a_fw_total_full_coverage,
             ) = eshellarea(r1, r2, r3, hfw)
 
         #  Apply area coverage factor
 
         if physics_variables.n_divertors == 2:
             # Double null configuration
-            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
-                1.0e0
-                - 2.0e0 * fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_outboard = (
+                build_variables.a_fw_outboard_full_coverage
+                * (
+                    1.0e0
+                    - 2.0e0 * fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                )
             )
-            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
-                1.0e0
-                - 2.0e0 * fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_inboard = (
+                build_variables.a_fw_inboard_full_coverage
+                * (1.0e0 - 2.0e0 * fwbs_variables.f_ster_div_single)
             )
         else:
             # Single null configuration
-            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
-                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_outboard = (
+                build_variables.a_fw_outboard_full_coverage
+                * (
+                    1.0e0
+                    - fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                )
             )
-            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
-                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_inboard = (
+                build_variables.a_fw_inboard_full_coverage
+                * (1.0e0 - fwbs_variables.f_ster_div_single)
             )
 
         build_variables.a_fw_total = (
@@ -2080,9 +2124,9 @@ class Build:
 
         if build_variables.a_fw_outboard <= 0.0e0:
             raise ProcessValueError(
-                "fhole+f_ster_div_single+f_a_fw_hcd is too high for a credible outboard wall area",
+                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high for a credible outboard wall area",
                 f_ster_div_single=fwbs_variables.f_ster_div_single,
-                f_a_fw_hcd=fwbs_variables.f_a_fw_hcd,
+                f_a_fw_outboard_hcd=fwbs_variables.f_a_fw_outboard_hcd,
             )
 
         #
@@ -2092,31 +2136,38 @@ class Build:
 
             po.oheadr(self.outfile, "Radial Build")
 
-            if build_python_variables.ripflag != 0:
+            if build_variables.ripflag != 0:
                 po.ocmmnt(
                     self.outfile,
                     "(Ripple result may not be accurate, as the fit was outside",
                 )
                 po.ocmmnt(self.outfile, " its range of applicability.)")
                 po.oblnkl(self.outfile)
-                error_handling.report_error(62)
+                logger.warning(
+                    "Ripple result may be inaccurate, as the fit has been extrapolated"
+                )
 
-                if build_python_variables.ripflag == 1:
-                    error_handling.fdiags[0] = (
+                if build_variables.ripflag == 1:
+                    diagnostic = (
                         tfcoil_variables.dx_tf_wp_primary_toroidal
                         * tfcoil_variables.n_tf_coils
                         / physics_variables.rmajor
                     )
-                    error_handling.report_error(141)
-                elif build_python_variables.ripflag == 2:
-                    # Convert to integer as idiags is integer array
-                    error_handling.idiags[0] = int(tfcoil_variables.n_tf_coils)
-                    error_handling.report_error(142)
+                    logger.warning(
+                        f"(TF coil ripple calculation) Dimensionless coil width X out of fitted range. {diagnostic=}"
+                    )
+                elif build_variables.ripflag == 2:
+                    logger.warning(
+                        f"(TF coil ripple calculation) No of TF coils not between 16 and 20 inclusive {tfcoil_variables.n_tf_coils=}"
+                    )
                 else:
-                    error_handling.fdiags[0] = (
+                    diagnostic = (
                         physics_variables.rmajor + physics_variables.rminor
                     ) / build_variables.r_tf_outboard_mid
-                    error_handling.report_error(143)
+
+                    logger.warning(
+                        f"(TF coil ripple calculation) (R+a)/rtot={diagnostic} out of fitted range."
+                    )
 
             po.ovarin(
                 self.outfile,
@@ -2164,37 +2215,23 @@ class Build:
                 build_variables.i_tf_inside_cs == 1
                 and tfcoil_variables.i_tf_bucking >= 2
             ):
-                radius = (
-                    radius
-                    + build_variables.dr_bore
-                    - build_variables.dr_tf_inboard
-                    - build_variables.dr_cs_tf_gap
-                )
+                radius = radius + build_variables.dr_bore
 
                 radial_build_data.append([
                     "Machine dr_bore wedge support cylinder",
                     "dr_bore",
-                    build_variables.dr_bore
-                    - build_variables.dr_tf_inboard
-                    - build_variables.dr_cs_tf_gap,
+                    build_variables.dr_bore,
                     radius,
                 ])
             elif (
                 build_variables.i_tf_inside_cs == 1
                 and tfcoil_variables.i_tf_bucking < 2
             ):
-                radius = (
-                    radius
-                    + build_variables.dr_bore
-                    - build_variables.dr_tf_inboard
-                    - build_variables.dr_cs_tf_gap
-                )
+                radius = radius + build_variables.dr_bore
                 radial_build_data.append([
                     "Machine dr_bore hole",
                     "dr_bore",
-                    build_variables.dr_bore
-                    - build_variables.dr_tf_inboard
-                    - build_variables.dr_cs_tf_gap,
+                    build_variables.dr_bore,
                     radius,
                 ])
             else:
@@ -2469,96 +2506,3 @@ class Build:
                     "(dx_beam_duct)",
                     current_drive_variables.dx_beam_duct,
                 )
-
-
-def init_build_variables():
-    build_variables.aplasmin = 0.25
-    build_variables.available_radial_space = 0.0
-    build_variables.blarea = 0.0
-    build_variables.blareaib = 0.0
-    build_variables.blareaob = 0.0
-    build_variables.blbmith = 0.17
-    build_variables.blbmoth = 0.27
-    build_variables.blbpith = 0.30
-    build_variables.blbpoth = 0.35
-    build_variables.blbuith = 0.365
-    build_variables.blbuoth = 0.465
-    build_variables.dr_blkt_inboard = 0.115
-    build_variables.dr_blkt_outboard = 0.235
-    build_variables.dz_blkt_upper = 0.0
-    build_python_variables.dz_fw_upper = 0.0
-    build_variables.dr_bore = 1.42
-    build_variables.f_z_cryostat = 4.268
-    build_variables.dr_cryostat = 0.07
-    build_variables.dr_vv_inboard = 0.07
-    build_variables.dr_vv_outboard = 0.07
-    build_variables.dz_vv_upper = 0.07
-    build_variables.dz_vv_lower = 0.07
-    build_variables.dr_vv_shells = 0.12
-    build_variables.f_avspace = 1.0
-    build_variables.fcspc = 0.6
-    build_variables.fseppc = 3.5e8
-    build_variables.a_fw_total = 0.0
-    build_variables.a_fw_inboard = 0.0
-    build_variables.a_fw_outboard = 0.0
-    build_variables.dr_fw_inboard = 0.0
-    build_variables.dr_fw_outboard = 0.0
-    build_variables.dr_shld_vv_gap_inboard = 0.155
-    build_variables.dr_cs_tf_gap = 0.08
-    build_variables.gapomin = 0.234
-    build_variables.dr_shld_vv_gap_outboard = 0.0
-    build_variables.z_tf_inside_half = 0.0
-    build_variables.hpfdif = 0.0
-    build_variables.z_tf_top = 0.0
-    build_variables.hr1 = 0.0
-    build_variables.iohcl = 1
-    build_variables.i_cs_precomp = 1
-    build_variables.i_tf_inside_cs = 0
-    build_variables.dr_cs = 0.811
-    build_variables.dr_cs_precomp = 0.0
-    build_variables.rbld = 0.0
-    build_variables.required_radial_space = 0.0
-    build_variables.rinboard = 0.651
-    build_variables.rsldi = 0.0
-    build_variables.rsldo = 0.0
-    build_variables.r_vv_inboard_out = 0.0
-    build_variables.r_sh_inboard_out = 0.0
-    build_variables.r_tf_inboard_in = 0.0
-    build_variables.r_tf_inboard_mid = 0.0
-    build_variables.r_tf_inboard_out = 0.0
-    build_variables.r_tf_outboard_mid = 0.0
-    build_variables.i_r_cp_top = 0
-    build_variables.r_cp_top = 0.0
-    build_variables.f_r_cp = 1.4
-    build_variables.dr_tf_inner_bore = 0.0
-    build_variables.dh_tf_inner_bore = 0.0
-    build_variables.dr_fw_plasma_gap_inboard = 0.14
-    build_variables.dr_fw_plasma_gap_outboard = 0.15
-    build_variables.sharea = 0.0
-    build_variables.shareaib = 0.0
-    build_variables.shareaob = 0.0
-    build_variables.dr_shld_inboard = 0.69
-    build_variables.dz_shld_lower = 0.7
-    build_variables.dr_shld_outboard = 1.05
-    build_variables.dz_shld_upper = 0.6
-    build_variables.sigallpc = 3.0e8
-    build_variables.dr_tf_inboard = 0.0
-    build_variables.tfoffset = 0.0
-    build_variables.tfootfi = 1.19
-    build_variables.dr_tf_outboard = 0.0
-    build_variables.dr_tf_shld_gap = 0.05
-    build_variables.dr_shld_thermal_inboard = 0.05
-    build_variables.dr_shld_thermal_outboard = 0.05
-    build_variables.dz_shld_thermal = 0.05
-    build_variables.dz_shld_vv_gap = 0.163
-    build_variables.dz_xpoint_divertor = 0.0
-    build_variables.dz_fw_plasma_gap = 0.60
-    build_variables.dr_shld_blkt_gap = 0.05
-    build_variables.plleni = 1.0
-    build_variables.plleno = 1.0
-    build_variables.plsepi = 1.0
-    build_variables.plsepo = 1.5
-    build_variables.rspo = 0.0
-    build_variables.r_sh_inboard_in = 0.0
-    build_variables.z_plasma_xpoint_upper = 0.0
-    build_variables.z_plasma_xpoint_lower = 0.0

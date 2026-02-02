@@ -1,4 +1,5 @@
-from process import fortran as ft
+from process import data_structure
+from process.log import logging_model_handler
 
 
 def write(models, _outfile):
@@ -11,18 +12,18 @@ def write(models, _outfile):
     :param outfile: Fortran output unit identifier
     :type outfile: int
     """
-    # Turn on error reporting
-    # (warnings etc. encountered in previous iterations may have cleared themselves
-    # during the solution process)
-    ft.error_handling.errors_on = True
+    # ensure we are capturing warnings that occur in the 'output' stage as these are warnings
+    # that occur at our solution point. So we clear existing warnings
+    logging_model_handler.start_capturing()
+    logging_model_handler.clear_logs()
 
     # Call stellarator output routine instead if relevant
-    if ft.stellarator_variables.istell != 0:
+    if data_structure.stellarator_variables.istell != 0:
         models.stellarator.run(output=True)
         return
 
     #  Call IFE output routine instead if relevant
-    if ft.ife_variables.ife != 0:
+    if data_structure.ife_variables.ife != 0:
         models.ife.run(output=True)
         return
 
@@ -62,19 +63,23 @@ def write(models, _outfile):
     models.cryostat.cryostat_output()
 
     # Toroidal field coil copper model
-    if ft.tfcoil_variables.i_tf_sup == 0:
+    if data_structure.tfcoil_variables.i_tf_sup == 0:
         models.copper_tf_coil.run(output=True)
 
     # Toroidal field coil superconductor model
-    if ft.tfcoil_variables.i_tf_sup == 1:
+    if data_structure.tfcoil_variables.i_tf_sup == 1:
         models.sctfcoil.run(output=True)
+        models.sctfcoil.output_tf_superconductor_info()
 
     # Toroidal field coil aluminium model
-    if ft.tfcoil_variables.i_tf_sup == 2:
+    if data_structure.tfcoil_variables.i_tf_sup == 2:
         models.aluminium_tf_coil.run(output=True)
 
     # Tight aspect ratio machine model
-    if ft.physics_variables.itart == 1 and ft.tfcoil_variables.i_tf_sup != 1:
+    if (
+        data_structure.physics_variables.itart == 1
+        and data_structure.tfcoil_variables.i_tf_sup != 1
+    ):
         models.tfcoil.iprint = 1
         models.tfcoil.cntrpst()
         models.tfcoil.iprint = 0
@@ -104,13 +109,13 @@ def write(models, _outfile):
     # First wall pumping
     models.fw.output_fw_pumping()
 
-    if ft.fwbs_variables.i_blanket_type == 1:
+    if data_structure.fwbs_variables.i_blanket_type == 1:
         # CCFE HCPB model
         models.ccfe_hcpb.run(output=True)
     # i_blanket_type = 2, KIT HCPB removed
     # i_blanket_type = 3, CCFE HCPB with TBR calculation removed
     # i_blanket_type = 4, KIT HCLL removed
-    elif ft.fwbs_variables.i_blanket_type == 5:
+    elif data_structure.fwbs_variables.i_blanket_type == 5:
         # DCLL model
         models.dcll.run(output=True)
 
@@ -138,3 +143,7 @@ def write(models, _outfile):
 
     # Water usage in secondary cooling system
     models.water_use.run(output=True)
+
+    # stop capturing warnings so that Outfile does not end up with
+    # a lot of non-model logs
+    logging_model_handler.stop_capturing()

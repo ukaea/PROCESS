@@ -24,7 +24,7 @@ epsvmc = 1e-7
 *------------------*
 icc = 1
 ixc = 5 * beta
-beta = 0.03
+beta_total_vol_avg =0.03
 
 * Global power balance *
 *----------------------*
@@ -40,9 +40,9 @@ icc = 11
 * Density upper limit *
 *---------------------*
 icc = 5
-ixc = 6 * dene [m-3]
+ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
 fdene = 1.2
-dene = 7.5E19
+nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
 *-------------------------------*
@@ -130,7 +130,7 @@ fiooic = 0.65
 icc = 34
 ixc = 51 * fvdump
 fvdump = 1.0
-vdalw = 10.0
+v_tf_coil_dump_quench_max_kv = 10.0
 
 * J_winding pack protection *
 *---------------------------*
@@ -149,7 +149,7 @@ tmargmin = 1.5
 *---------------------------------*
 icc = 60
 ixc = 106 * ftmargoh
-tmargmin_cs = 1.5
+temp_cs_superconductor_margin_min = 1.5
 
 * Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
@@ -171,7 +171,7 @@ foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* neped<ne0 *
+* nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*
 
 icc = 81
@@ -197,9 +197,9 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 * Iteration Variables *
 ***********************
 
-* bt [T]
+* b_plasma_toroidal_on_axis [T]
 ixc = 2
-bt = 5.7
+b_plasma_toroidal_on_axis = 5.7
 
 * rmajor [m]
 ixc = 3
@@ -207,10 +207,10 @@ boundl(3) = 8.0
 boundu(3) = 9.0
 rmajor = 8.0
 
-* te [keV]
+* temp_plasma_electron_vol_avg_keV [keV]
 ixc = 4
 boundu(4) = 100.0
-te = 12.0
+temp_plasma_electron_vol_avg_kev = 12.0
 
 * h factor
 ixc = 10
@@ -235,9 +235,9 @@ dr_bore = 2.0
 ixc = 44
 f_c_plasma_non_inductive = 0.4
 
-* tdmptf [s]
+* t_tf_superconductor_quench [s]
 ixc = 56
-tdmptf = 25.0
+t_tf_superconductor_quench = 25.0
 
 * dr_tf_nose_case [m]
 ixc = 57
@@ -252,7 +252,7 @@ dx_tf_turn_steel = 0.008
 ixc = 59 
 boundl(59) = 0.50
 boundu(59) = 0.94
-fcutfsu = 0.8
+f_a_tf_turn_cable_copper = 0.8
 
 * TF Current per turn [A]
 ixc = 60
@@ -264,13 +264,13 @@ c_tf_turn = 65000.0
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, f_a_cs_steel
+* CS steel fraction, f_a_cs_turn_steel
 ixc = 122
-f_a_cs_steel = 0.8
+f_a_cs_turn_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135
-fimp(13) = 0.00038
+f_nd_impurity_electrons(13) = 0.00038
 
 * TF winding pack thickness [m]
 ixc = 140
@@ -383,31 +383,31 @@ i_beta_fast_alpha = 1
 
 
 * Switch for pedestal profiles
-ipedestal = 1
+i_plasma_pedestal = 1
 
 * fraction of Greenwald density to set as separatrix density
-fgwsep = 0.5
+f_nd_plasma_separatrix_greenwald = 0.5
 
-* Electron density of pedestal [m-3] (ipedestal=1) - initial value
-neped = 0.5e20
+* Electron density of pedestal [m-3] (i_plasma_pedestal=1) - initial value
+nd_plasma_pedestal_electron = 0.5e20
 
-* Electron density at separatrix [m-3] (ipedestal=1) - initial value
-nesep = 0.2e20
+* Electron density at separatrix [m-3] (i_plasma_pedestal=1) - initial value
+nd_plasma_separatrix_electron = 0.2e20
 
-* R/a of density pedestal (ipedestal=1)
-rhopedn = 0.94
+* R/a of density pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_density_norm = 0.94
 
-* R/a of temperature pedestal (ipedestal=1)
-rhopedt = 0.94
+* R/a of temperature pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_temp_norm = 0.94
 
-* Temperature profile index beta (ipedestal=1)
+* Temperature profile index beta (i_plasma_pedestal=1)
 tbeta = 2.0
 
-* Electron temperature of pedestal (kev) (ipedestal=1)
-teped = 5.5
+* Electron temperature of pedestal (kev) (i_plasma_pedestal=1)
+temp_plasma_pedestal_kev = 5.5
 
-* Electron temperature at separatrix (kev) (ipedestal=1)
-tesep = 0.1
+* Electron temperature at separatrix (kev) (i_plasma_pedestal=1)
+temp_plasma_separatrix_kev = 0.1
 
 * Switch for energy confinement time scaling law
 i_confinement_time = 34
@@ -431,13 +431,13 @@ plasma_res_factor = 0.7
 i_pulsed_plant = 1
 
 * dwell time [s]
-t_between_pulse = 1800.0
+t_plant_pulse_dwell = 1800.0
 
 * Switch for pulse timing calculations
 pulsetimings = 0
 
 * CS ramp up time [s]
-t_precharge = 500.0
+t_plant_pulse_coil_precharge = 500.0
 
 * Current drive *
 *---------------*
@@ -464,23 +464,23 @@ p_hcd_primary_extra_heat_mw = 75.0
 radius_plasma_core_norm = 0.75
 
 * fraction of radiation from 'core' region that is subtracted
-coreradiationfraction = 0.6
+f_p_plasma_core_rad_reduction = 0.6
 
 * impurity array
-fimp(1) = 0.9
-fimp(2) = 0.1
-fimp(3) = 0.0
-fimp(4) = 0.0
-fimp(5) = 0.0
-fimp(6) = 0.0
-fimp(7) = 0.0
-fimp(8) = 0.0
-fimp(9) = 0.0
-fimp(10) = 0.0
-fimp(11) = 0.0
-fimp(12) = 0.0
-fimp(13) = 0.00038
-fimp(14) = 0.000005
+f_nd_impurity_electrons(1) = 0.9
+f_nd_impurity_electrons(2) = 0.1
+f_nd_impurity_electrons(3) = 0.0
+f_nd_impurity_electrons(4) = 0.0
+f_nd_impurity_electrons(5) = 0.0
+f_nd_impurity_electrons(6) = 0.0
+f_nd_impurity_electrons(7) = 0.0
+f_nd_impurity_electrons(8) = 0.0
+f_nd_impurity_electrons(9) = 0.0
+f_nd_impurity_electrons(10) = 0.0
+f_nd_impurity_electrons(11) = 0.0
+f_nd_impurity_electrons(12) = 0.0
+f_nd_impurity_electrons(13) = 0.00038
+f_nd_impurity_electrons(14) = 0.000005
 
 * Heat transport *
 ******************
@@ -489,7 +489,7 @@ fimp(14) = 0.000005
 ipowerflow = 0
 
 * Switch for pumping power for primary coolant
-i_coolant_pumping = 3
+i_p_coolant_pumping = 3
 
 * Electrical efficiency of FW and blanket coolant pumps
 eta_coolant_pump_electric = 0.87
@@ -579,7 +579,7 @@ dr_tf_plasma_case = 0.06
 dx_tf_side_case_min = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
-ripmax = 0.6
+ripple_b_tf_plasma_edge_max = 0.6
 
 * Number of TF coils
 n_tf_coils = 16

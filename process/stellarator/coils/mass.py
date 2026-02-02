@@ -1,7 +1,7 @@
 """Module for coil mass calculations in stellarators."""
 
-from process.fortran import (
-    constants,
+from process import constants
+from process.data_structure import (
     fwbs_variables,
     tfcoil_variables
 )
@@ -39,31 +39,31 @@ def casing():
     (no need for correction factors as is the case for tokamaks)
     This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.a_tf_coil_inboard_case)).
     """
-    tfcoil_variables.whtcas = (
+    tfcoil_variables.m_tf_coil_case = (
         tfcoil_variables.len_tf_coil
         * tfcoil_variables.a_tf_coil_inboard_case
-        * tfcoil_variables.dcase
+        * tfcoil_variables.den_tf_coil_case
     )
 
 def ground_insulation(a_tf_wp_with_insulation, a_tf_wp_no_insulation):
     '''Mass of ground-wall insulation [kg]
     (assumed to be same density/material as conduit insulation)'''
-    tfcoil_variables.whtgw = (
+    tfcoil_variables.m_tf_coil_wp_insulation = (
         tfcoil_variables.len_tf_coil
         * (a_tf_wp_with_insulation - a_tf_wp_no_insulation)
-        * tfcoil_variables.dcondins
+        * tfcoil_variables.den_tf_wp_turn_insulation
     )
 
 def superconductor():
     """ [kg] mass of Superconductor  
     a_tf_wp_coolant_channels is 0 for a stellarator. but keep this term for now."""
-    tfcoil_variables.whtconsc = (
+    tfcoil_variables.m_tf_coil_superconductor = (
         (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
-            * (1.0e0 - tfcoil_variables.fcutfsu)
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
             - tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_wp_coolant_channels
         )
@@ -72,46 +72,48 @@ def superconductor():
 
 def copper():
     """[kg] mass of Copper in conductor"""
-    tfcoil_variables.whtconcu = (
+    tfcoil_variables.m_tf_coil_copper = (
         tfcoil_variables.len_tf_coil
         * tfcoil_variables.n_tf_coil_turns
         * tfcoil_variables.a_tf_turn_cable_space_no_void
         * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
-        * tfcoil_variables.fcutfsu
+        * tfcoil_variables.f_a_tf_turn_cable_copper
         - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
-    ) * constants.dcopper
+    ) * constants.den_copper
 
 
 def conduit_steel():
     """ [kg] mass of Steel conduit (sheath)"""
-    tfcoil_variables.m_tf_turn_steel_conduit = (
+    tfcoil_variables.m_tf_wp_steel_conduit = (
         tfcoil_variables.len_tf_coil
         * tfcoil_variables.n_tf_coil_turns
         * tfcoil_variables.a_tf_turn_steel
-        * fwbs_variables.denstl
+        * fwbs_variables.den_steel
     )
-    # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
+    # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_wp_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
 
 def conduit_insulation():
     """Conduit insulation mass [kg]
     (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)"""
-    tfcoil_variables.whtconin = (
+    tfcoil_variables.m_tf_coil_wp_turn_insulation = (
         tfcoil_variables.len_tf_coil
         * tfcoil_variables.a_tf_coil_wp_turn_insulation
-        * tfcoil_variables.dcondins
+        * tfcoil_variables.den_tf_wp_turn_insulation
     )
 
 def total_conductor():
     """[kg] Total conductor mass"""
-    tfcoil_variables.whtcon = (
-        tfcoil_variables.whtconsc
-        + tfcoil_variables.whtconcu
-        + tfcoil_variables.m_tf_turn_steel_conduit
-        + tfcoil_variables.whtconin
+    tfcoil_variables.m_tf_coil_conductor = (
+        tfcoil_variables.m_tf_coil_superconductor
+        + tfcoil_variables.m_tf_coil_copper
+        + tfcoil_variables.m_tf_wp_steel_conduit
+        + tfcoil_variables.m_tf_coil_wp_turn_insulation
     )
 
 def total_coil():
     """[kg] Total coil mass"""
     tfcoil_variables.m_tf_coils_total = (
-        tfcoil_variables.whtcas + tfcoil_variables.whtcon + tfcoil_variables.whtgw
+        tfcoil_variables.m_tf_coil_case
+        + tfcoil_variables.m_tf_coil_conductor
+        + tfcoil_variables.m_tf_coil_wp_insulation
     ) * tfcoil_variables.n_tf_coils

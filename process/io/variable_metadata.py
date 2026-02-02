@@ -20,7 +20,7 @@ var_dicts = {
     "p_cryo_plant_electric_mw": VariableMetadata(
         latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW"
     ),
-    "bt": VariableMetadata(
+    "b_plasma_toroidal_on_axis": VariableMetadata(
         latex=r"$B_\mathrm{T}$ [$T$]", description="Toroidal magnetic field", units="T"
     ),
     "dr_tf_inboard": VariableMetadata(
@@ -49,7 +49,7 @@ var_dicts = {
         description="Alpha particle heating fraction",
         units="",
     ),
-    "te": VariableMetadata(
+    "temp_plasma_electron_vol_avg_kev": VariableMetadata(
         latex=r"$\left< T_\mathrm{e} \right>$",
         description="Average electron temperature",
         units="keV",
@@ -79,7 +79,7 @@ var_dicts = {
         description="Inboard TF coil case outer (non-plasma side) thickness",
         units="m",
     ),
-    "b_tf_inboard_peak": VariableMetadata(
+    "b_tf_inboard_peak_symmetric": VariableMetadata(
         latex=r"$B_\mathrm{TF}^\mathrm{max}$ [$T$]",
         description="Mean peak field at TF coil",
         units="T",
@@ -184,7 +184,7 @@ var_dicts = {
         description="Bore radius",
         units="m",
     ),
-    "nd_electron_line": VariableMetadata(
+    "nd_plasma_electron_line": VariableMetadata(
         latex=r"$\bar{n}_{\mathrm{e}}$[$m^{-3}$]",
         description="Average electron density",
         units="m^{-3}",
@@ -231,7 +231,9 @@ var_dicts = {
     "eta_cd_hcd_primary": VariableMetadata(
         latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
     ),
-    "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),
+    "big_q_plasma": VariableMetadata(
+        latex=r"$Q$", description="Plasma Q value", units=""
+    ),
     "f_c_plasma_auxiliary": VariableMetadata(
         latex=r"$f_{\mathrm{CD}}$", description="CD factor", units=""
     ),
@@ -268,7 +270,7 @@ var_dicts = {
     "zeff": VariableMetadata(
         latex=r"$Z_{\mathrm{eff}}$", description="Effective charge", units=""
     ),
-    "t_burn": VariableMetadata(
+    "t_plant_pulse_burn": VariableMetadata(
         latex=r"$t_{\mathrm{burn}}$[$s$]", description="Burn time", units="s"
     ),
     "v_plasma_loop_burn": VariableMetadata(
@@ -299,12 +301,12 @@ var_dicts = {
         description="Minimum burn time",
         units="s",
     ),
-    "pfv.f_a_cs_steel": VariableMetadata(
+    "pfv.f_a_cs_turn_steel": VariableMetadata(
         latex=r"$f_{\mathrm{Steel}}^{\mathrm{CS}}$",
         description="Steel fraction in CS coil",
         units="",
     ),
-    "csfv.t_structural_radial": VariableMetadata(
+    "csfv.dr_cs_turn_conduit": VariableMetadata(
         latex=r"$Turn_{\mathrm{radial}}^{\mathrm{CS}}[$m$]$",
         description="Radial turn length",
         units="m",
@@ -362,7 +364,7 @@ var_dicts = {
     "beta": VariableMetadata(
         latex=r"$\beta$", description="Total plasma beta", units=""
     ),
-    "fimp(13)": VariableMetadata(
+    "f_nd_impurity_electrons(13)": VariableMetadata(
         latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units=""
     ),
     "pdivmax_over_rmajor": VariableMetadata(
@@ -395,7 +397,7 @@ var_dicts = {
         description="Electron energy confinement time (sec)",
         units="s",
     ),
-    "dene": VariableMetadata(
+    "nd_plasma_electrons_vol_avg": VariableMetadata(
         latex=r"$n_e$",
         description="Volume-averaged electron density (/m3)",
         units="m-3",

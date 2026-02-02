@@ -1,15 +1,15 @@
 import numpy as np
 
+from process import constants
 from process import process_output as po
-from process.data_structure import water_usage_variables
-from process.fortran import constants, heat_transport_variables
+from process.data_structure import heat_transport_variables, water_usage_variables
 
 SECDAY = 86400e0
 
 
 class WaterUse:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self, output: bool):
         """

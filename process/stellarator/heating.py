@@ -1,7 +1,7 @@
 from process import process_output as po
 from process.exceptions import ProcessValueError
 
-from process.fortran import (
+from process.data_structure import (
     current_drive_variables,
     physics_variables,
     stellarator_variables,
@@ -81,6 +81,8 @@ def st_heat(stellarator, output: bool):
             + current_drive_variables.p_hcd_injected_electrons_mw
         ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
     else:
+        print('isthtr', stellarator_variables.isthtr, '\n')
+        print('isthtr type', type(stellarator_variables.isthtr), '\n')
         raise ProcessValueError(
             "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
         )
@@ -113,12 +115,15 @@ def st_heat(stellarator, output: bool):
         )
         < 1e-6
     ):
-        current_drive_variables.bigq = 1e18
+        current_drive_variables.big_q_plasma = 1e18
     else:
-        current_drive_variables.bigq = physics_variables.p_fusion_total_mw / (
-            current_drive_variables.p_hcd_injected_total_mw
-            + current_drive_variables.p_beam_orbit_loss_mw
-            + physics_variables.p_plasma_ohmic_mw
+        current_drive_variables.big_q_plasma = (
+            physics_variables.p_fusion_total_mw
+            / (
+                current_drive_variables.p_hcd_injected_total_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
+                + physics_variables.p_plasma_ohmic_mw
+            )
         )
 
     if output:
@@ -152,8 +157,8 @@ def print_output(stellarator, f_p_beam_injected_ions=None):
     po.ovarre(
             stellarator.outfile,
             "Fusion gain factor Q",
-            "(bigq)",
-            current_drive_variables.bigq,
+            "(big_q_plasma)",
+            current_drive_variables.big_q_plasma,
         )
 
     if abs(current_drive_variables.p_hcd_beam_injected_total_mw) > 1e-8:

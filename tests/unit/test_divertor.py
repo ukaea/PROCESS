@@ -3,8 +3,8 @@
 import pytest
 
 from process.data_structure import divertor_variables as dv
+from process.data_structure import tfcoil_variables as tfv
 from process.divertor import Divertor
-from process.fortran import tfcoil_variables as tfv
 
 
 @pytest.fixture
@@ -75,11 +75,11 @@ class TestDivertor:
         rmajor = 2.0
         rminor = 1.0
         aspect = 2.0
-        bt = 0.5
-        bp = 0.09595
+        b_plasma_toroidal_on_axis = 0.5
+        b_plasma_poloidal_average = 0.09595
         p_plasma_separatrix_mw = 1.0e2
         f_div_flux_expansion = 2
-        nesep = 1.0e19
+        nd_plasma_separatrix_electron = 1.0e19
         deg_div_field_plate = 5.0
         rad_fraction_sol = 8.0e-1
         f_p_div_lower = 1.0
@@ -90,11 +90,11 @@ class TestDivertor:
             rmajor,
             rminor,
             aspect,
-            bt,
-            bp,
+            b_plasma_toroidal_on_axis,
+            b_plasma_poloidal_average,
             p_plasma_separatrix_mw,
             f_div_flux_expansion,
-            nesep,
+            nd_plasma_separatrix_electron,
             deg_div_field_plate,
             rad_fraction_sol,
             f_p_div_lower,

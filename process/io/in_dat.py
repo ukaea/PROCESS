@@ -16,7 +16,9 @@ Notes:
 from re import sub
 from sys import stderr
 
-from process.io.python_fortran_dicts import get_dicts
+from process.constraints import ConstraintManager
+from process.exceptions import ProcessValidationError
+from process.io.data_structure_dicts import get_dicts
 
 # ioptimz values
 ioptimz_des = {
@@ -188,18 +190,23 @@ def get_constraint_equations(data):
     :return: dict of the constraint numbers and their comments
     :rtype: dict
     """
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
-
     constraints = {}
 
     # List of constraint equation numbers in IN.DAT
-    constraint_numbers = data["icc"].value
+    constraint_numbers = [int(i) for i in data["icc"].value]
 
     # Find associated comments and create constraint dict
     for constraint_number in constraint_numbers:
-        comment = dicts["DICT_ICC_FULL"][str(constraint_number)]["name"]
-        constraints[constraint_number] = comment
+        constraint = ConstraintManager.get_constraint(constraint_number)
+
+        if constraint is None:
+            raise ProcessValidationError(
+                f"Constraint equation {constraint_number} requested but has not been registered"
+            )
+
+        # TODO: we should store a short description of each constraint that we can use here.
+        # Currently, no such information exists.
+        constraints[constraint_number] = ""
 
     return constraints
 
@@ -345,10 +352,10 @@ def get_parameters(data, use_string_values=True):
             # Store a variable in parameters dict if it's in the IN.DAT file
             # (and not in the exclusion list). Store parameter name and value
             if item not in exclusions and item in data:
-                if item == "fimp":
-                    for k in range(len(data["fimp"].get_value)):
-                        name = f"fimp({str(k + 1).zfill(1)})"
-                        value = data["fimp"].get_value[k]
+                if item == "f_nd_impurity_electrons":
+                    for k in range(len(data["f_nd_impurity_electrons"].get_value)):
+                        name = f"f_nd_impurity_electrons({str(k + 1).zfill(1)})"
+                        value = data["f_nd_impurity_electrons"].get_value[k]
                         parameters[module][name] = value
 
                 elif item == "ioptimz":
@@ -423,7 +430,7 @@ def write_parameters(data, out_file):
     :param out_file: Output file for new IN.DAT
     :return: Nothing
     """
-    filter_list = ["fimp(", "zref(", "imp_rich", "vmec"]
+    filter_list = ["f_nd_impurity_electrons(", "zref(", "imp_rich", "vmec"]
     # Special parameters that require different formatting
     parameters = get_parameters(data)
 
@@ -538,8 +545,8 @@ def add_parameter(data, parameter_name, parameter_value):
     # Check that the parameter is not already in the dictionary
     if parameter_name not in data:
         parameter_group = find_parameter_group(parameter_name)
-        if "fimp" in parameter_name:
-            comment = dicts["DICT_DESCRIPTIONS"]["fimp"]
+        if "f_nd_impurity_electrons" in parameter_name:
+            comment = dicts["DICT_DESCRIPTIONS"]["f_nd_impurity_electrons"]
         else:
             try:
                 comment = dicts["DICT_DESCRIPTIONS"][parameter_name]
@@ -864,6 +871,21 @@ class INVariable:
         self.v_type = v_type
         self.parameter_group = parameter_group
         self.comment = comment
+
+    def __eq__(self, value):
+        # intentionally missing .comment, this is not necessary for the variables to be equal
+        return (
+            self.name == value.name
+            and self.value == value.value
+            and self.v_type == value.v_type
+            and self.parameter_group == value.parameter_group
+        )
+
+    def __repr__(self):
+        return (
+            f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, v_type={self.v_type!r}, "
+            f"parameter_group={self.parameter_group!r}, comment={self.comment!r})"
+        )
 
     @property
     def get_value(self):

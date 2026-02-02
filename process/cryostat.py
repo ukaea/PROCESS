@@ -1,11 +1,11 @@
 import numpy as np
 
+from process import constants
 from process import process_output as po
-from process.fortran import (
+from process.data_structure import (
     blanket_library,
     build_variables,
     buildings_variables,
-    constants,
     fwbs_variables,
     pfcoil_variables,
 )
@@ -13,7 +13,7 @@ from process.fortran import (
 
 class Cryostat:
     def __init__(self) -> None:
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self) -> None:
         """Run the cryostat calculations.
@@ -81,12 +81,12 @@ class Cryostat:
         ) - (fwbs_variables.vol_cryostat_internal)
 
         # Vacuum vessel mass (kg)
-        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.denstl
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
 
         # Sum of internal vacuum vessel and cryostat masses (kg)
         fwbs_variables.dewmkg = (
             fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
-        ) * fwbs_variables.denstl
+        ) * fwbs_variables.den_steel
 
     def cryostat_output(self) -> None:
         """

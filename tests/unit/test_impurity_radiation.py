@@ -6,11 +6,12 @@ import numpy as np
 import pytest
 
 import process.impurity_radiation as impurity_radiation
+from process.data_structure import impurity_radiation_module
 
 
 @pytest.fixture(autouse=True)
 def initialise_impurity_radiation():
-    impurity_radiation.init_impurity_radiation_module()
+    impurity_radiation_module.init_impurity_radiation_module()
     impurity_radiation.initialise_imprad()
 
 
@@ -85,7 +86,7 @@ def test_pimpden():
 class FradcoreParam(NamedTuple):
     rho: np.array = np.array
     radius_plasma_core_norm: float = 0.0
-    coreradiationfraction: float = 0.0
+    f_p_plasma_core_rad_reduction: float = 0.0
     expected_fradcore: np.array = np.array
 
 
@@ -98,14 +99,14 @@ def test_fradcore():
     :param radius_plasma_core_norm:  normalised core radius
     :type radius_plasma_core_norm: float
 
-    :param coreradiationfraction: fraction of core radiation
-    :type coreradiationfraction: float
+    :param f_p_plasma_core_rad_reduction: fraction of core radiation
+    :type f_p_plasma_core_rad_reduction: float
     :param expected_fradcore: Function to calculate core radiation fraction
     """
     fradcoreparam = FradcoreParam(
         rho=np.array([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]),
         radius_plasma_core_norm=0.75000000000000011,
-        coreradiationfraction=0.60000000000000009,
+        f_p_plasma_core_rad_reduction=0.60000000000000009,
         expected_fradcore=np.array([
             0.6,
             0.6,
@@ -122,7 +123,7 @@ def test_fradcore():
     fradcore = impurity_radiation.fradcore(
         fradcoreparam.rho,
         fradcoreparam.radius_plasma_core_norm,
-        fradcoreparam.coreradiationfraction,
+        fradcoreparam.f_p_plasma_core_rad_reduction,
     )
     assert pytest.approx(fradcore) == fradcoreparam.expected_fradcore
 
