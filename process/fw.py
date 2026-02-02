@@ -6,7 +6,14 @@ from process import constants
 from process import process_output as po
 from process.blanket_library import BlanketLibrary, dshellarea, eshellarea
 from process.coolprop_interface import FluidProperties
-from process.data_structure import blanket_library, build_variables, fwbs_variables
+from process.data_structure import (
+    blanket_library,
+    build_variables,
+    divertor_variables,
+    fwbs_variables,
+    physics_variables,
+)
+from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +24,57 @@ class FirstWall:
         self.blanket_library = BlanketLibrary(fw=self)
 
     def run(self):
+        fwbs_variables.dz_fw_half = self.calculate_first_wall_half_height(
+            z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
+            dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
+            dz_divertor=divertor_variables.dz_divertor,
+            dz_blkt_upper=build_variables.dz_blkt_upper,
+            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
+            dz_fw_plasma_gap=build_variables.dz_fw_plasma_gap,
+            n_divertors=divertor_variables.n_divertors,
+            dr_fw_inboard=build_variables.dr_fw_inboard,
+            dr_fw_outboard=build_variables.dr_fw_outboard,
+        )
+
+        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+            (
+                build_variables.a_fw_inboard_full_coverage,
+                build_variables.a_fw_outboard_full_coverage,
+                build_variables.a_fw_total_full_coverage,
+            ) = self.calculate_dshaped_first_wall_areas(
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                dz_fw_half=fwbs_variables.dz_fw_half,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+            )
+
+        else:
+            (
+                build_variables.a_fw_inboard_full_coverage,
+                build_variables.a_fw_outboard_full_coverage,
+                build_variables.a_fw_total_full_coverage,
+            ) = self.calculate_elliptical_first_wall_areas(
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                triang=physics_variables.triang,
+                dz_fw_half=fwbs_variables.dz_fw_half,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+            )
+
+        (
+            build_variables.a_fw_inboard,
+            build_variables.a_fw_outboard,
+            build_variables.a_fw_total,
+        ) = self.apply_first_wall_coverage_factors(
+            n_divertors=divertor_variables.n_divertors,
+            f_ster_div_single=fwbs_variables.f_ster_div_single,
+            f_a_fw_outboard_hcd=fwbs_variables.f_a_fw_outboard_hcd,
+            a_fw_inboard_full_coverage=build_variables.a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage=build_variables.a_fw_outboard_full_coverage,
+        )
+
         (
             blanket_library.n_fw_inboard_channels,
             blanket_library.n_fw_outboard_channels,
@@ -157,6 +215,13 @@ class FirstWall:
             a_fw_inboard = a_fw_inboard_full_coverage * (1.0e0 - f_ster_div_single)
 
         a_fw_total = a_fw_inboard + a_fw_outboard
+
+        if a_fw_outboard <= 0.0e0:
+            raise ProcessValueError(
+                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high for a credible outboard wall area",
+                f_ster_div_single=f_ster_div_single,
+                f_a_fw_outboard_hcd=f_a_fw_outboard_hcd,
+            )
 
         return a_fw_inboard, a_fw_outboard, a_fw_total
 
