@@ -4,7 +4,7 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
-from process.blanket_library import BlanketLibrary
+from process.blanket_library import BlanketLibrary, dshellarea
 from process.coolprop_interface import FluidProperties
 from process.data_structure import blanket_library, build_variables, fwbs_variables
 
@@ -33,6 +33,65 @@ class FirstWall:
             fwbs_variables.radius_fw_channel_90_bend,
             fwbs_variables.radius_fw_channel_180_bend,
         ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
+
+    @staticmethod
+    def calculate_first_wall_half_height(
+        z_plasma_xpoint_lower: float,
+        dz_xpoint_divertor: float,
+        dz_divertor: float,
+        dz_blkt_upper: float,
+        z_plasma_xpoint_upper: float,
+        dz_fw_plasma_gap: float,
+        n_divertors: int,
+        dr_fw_inboard: float,
+        dr_fw_outboard: float,
+    ) -> float:
+        """Calculate the half-height of the first wall."""
+
+        #  Half-height of first wall (internal surface)
+        z_bottom = (
+            z_plasma_xpoint_lower
+            + dz_xpoint_divertor
+            + dz_divertor
+            - dz_blkt_upper
+            - 0.5e0 * (dr_fw_inboard + dr_fw_outboard)
+        )
+        if n_divertors == 2:
+            z_top = z_bottom
+        else:
+            z_top = z_plasma_xpoint_upper + dz_fw_plasma_gap
+
+        return 0.5e0 * (z_top + z_bottom)
+
+    @staticmethod
+    def calculate_dshaped_first_wall_areas(
+        rmajor: float,
+        rminor: float,
+        dz_fw_half: float,
+        dr_fw_plasma_gap_inboard: float,
+        dr_fw_plasma_gap_outboard: float,
+    ) -> tuple[float, float, float]:
+        # D-shaped
+        #  Major radius to outer edge of inboard section
+        r1 = rmajor - rminor - dr_fw_plasma_gap_inboard
+
+        #  Horizontal distance between inside edges,
+        #  i.e. outer radius of inboard part to inner radius of outboard part
+
+        r2 = (rmajor + rminor + dr_fw_plasma_gap_outboard) - r1
+        #  Calculate surface area, assuming 100% coverage
+
+        (
+            a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage,
+            a_fw_total_full_coverage,
+        ) = dshellarea(rmajor=r1, rminor=r2, zminor=dz_fw_half)
+
+        return (
+            a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage,
+            a_fw_total_full_coverage,
+        )
 
     def set_fw_geometry(self):
         build_variables.dr_fw_inboard = (
