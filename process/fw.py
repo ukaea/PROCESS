@@ -132,6 +132,34 @@ class FirstWall:
             a_fw_total_full_coverage,
         )
 
+    @staticmethod
+    def apply_first_wall_coverage_factors(
+        n_divertors: int,
+        f_ster_div_single: float,
+        f_a_fw_outboard_hcd: float,
+        a_fw_inboard_full_coverage: float,
+        a_fw_outboard_full_coverage: float,
+    ) -> tuple[float, float, float]:
+        """Apply first wall coverage factors to calculate actual first wall areas."""
+        if n_divertors == 2:
+            # Double null configuration
+            a_fw_outboard = a_fw_outboard_full_coverage * (
+                1.0e0 - 2.0e0 * f_ster_div_single - f_a_fw_outboard_hcd
+            )
+            a_fw_inboard = a_fw_inboard_full_coverage * (
+                1.0e0 - 2.0e0 * f_ster_div_single
+            )
+        else:
+            # Single null configuration
+            a_fw_outboard = a_fw_outboard_full_coverage * (
+                1.0e0 - f_ster_div_single - f_a_fw_outboard_hcd
+            )
+            a_fw_inboard = a_fw_inboard_full_coverage * (1.0e0 - f_ster_div_single)
+
+        a_fw_total = a_fw_inboard + a_fw_outboard
+
+        return a_fw_inboard, a_fw_outboard, a_fw_total
+
     def set_fw_geometry(self):
         build_variables.dr_fw_inboard = (
             2 * fwbs_variables.radius_fw_channel + 2 * fwbs_variables.dr_fw_wall
