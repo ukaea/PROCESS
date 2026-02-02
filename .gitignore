@@ -57,8 +57,8 @@ env_process/
 !tests/integration/data/*.IN.DAT
 !scenario_examples/*/*.pdf
 
-stellarator_test/*
-stellarator_analysis/*
+stellarator_analysis
+stellarator_test
 
 */.ipynb_checkpoints/
 REBCO_JC.DAT
