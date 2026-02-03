@@ -77,17 +77,6 @@ def test_scan(examples_temp_data):
         assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
 
 
-def test_plot_solutions(examples_temp_data):
-    """Run plot_solutions.ipynb and check no exceptions are raised.
-
-    :param examples_temp_data: temporary dir containing examples files
-     :type examples_temp_data: Path
-    """
-    plot_solutions_notebook_location = examples_temp_data / "plot_solutions.ipynb"
-    with testbook(plot_solutions_notebook_location, execute=True, timeout=600):
-        pass
-
-
 def test_single_model_evaluation(examples_temp_data):
     """Run single_model_evaluation.ipynb and check no exceptions are raised.
 
@@ -110,4 +99,17 @@ def test_varyrun_example(examples_temp_data):
     """
     varyrun_example_notebook_location = examples_temp_data / "vary_run_example.ipynb"
     with testbook(varyrun_example_notebook_location, execute=True, timeout=600):
+        pass
+
+
+def test_optimum_solution_comparison_example(examples_temp_data):
+    """Run optimum_solutions_comparison.ipynb and check no exceptions are raised.
+
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
+    """
+    optimum_solution_notebook_location = (
+        examples_temp_data / "optimum_solutions_comparison.ipynb"
+    )
+    with testbook(optimum_solution_notebook_location, execute=True, timeout=600):
         pass
