@@ -59,6 +59,8 @@ env_process/
 
 stellarator_analysis
 stellarator_test
+tests/impurity_radiation.py
+tests/vv_stress.py
 
 */.ipynb_checkpoints/
 REBCO_JC.DAT
