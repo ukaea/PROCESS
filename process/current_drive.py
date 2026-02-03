@@ -88,7 +88,7 @@ class NeutralBeam:
             physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             physics_variables.dlamie,
         )
 
@@ -102,7 +102,7 @@ class NeutralBeam:
             current_drive_variables.e_beam_kev,
             physics_variables.rmajor,
             physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         return effnbss, f_p_beam_injected_ions, fshine
@@ -179,7 +179,7 @@ class NeutralBeam:
             physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             physics_variables.dlamie,
         )
 
@@ -198,7 +198,7 @@ class NeutralBeam:
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         return effnbss, f_p_beam_injected_ions, fshine
@@ -491,7 +491,17 @@ class NeutralBeam:
 
         return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)
 
-    def cfnbi(self, afast, efast, te, ne, _nd, _nt, zeffai, xlmbda):
+    def cfnbi(
+        self,
+        afast,
+        efast,
+        te,
+        ne,
+        _nd,
+        _nt,
+        n_charge_plasma_effective_mass_weighted_vol_avg,
+        xlmbda,
+    ):
         """Routine to calculate the fraction of the fast particle energy
         coupled to the ions
         author: P J Knight, CCFE, Culham Science Centre
@@ -501,7 +511,7 @@ class NeutralBeam:
         ne      : input real : volume averaged electron density (m**-3)
         nd      : input real : deuterium beam density (m**-3)
         nt      : input real : tritium beam density (m**-3)
-        zeffai  : input real : mass weighted plasma effective charge
+        n_charge_plasma_effective_mass_weighted_vol_avg  : input real : mass weighted plasma effective charge
         xlmbda  : input real : ion-electron coulomb logarithm
         f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
         This routine calculates the fast particle energy coupled to
@@ -522,7 +532,7 @@ class NeutralBeam:
         # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
 
         xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
-        sumln = zeffai * xlmbdai / xlmbda
+        sumln = n_charge_plasma_effective_mass_weighted_vol_avg * xlmbdai / xlmbda
         xlnrat = (
             3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.PROTON_MASS * sumln
         ) ** (2.0e0 / 3.0e0)
@@ -605,7 +615,7 @@ class ElectronCyclotron:
         epsloc = rrr * physics_variables.rminor / physics_variables.rmajor
 
         #  Effective charge (use average value)
-        zlocal = physics_variables.zeff
+        zlocal = physics_variables.n_charge_plasma_effective_vol_avg
 
         #  Coulomb logarithm for ion-electron collisions
         #  (From J. A. Wesson, 'Tokamaks', Clarendon Press, Oxford, p.293)
@@ -793,7 +803,7 @@ class ElectronCyclotron:
             1
             / (2 * np.pi)
             * np.sqrt(
-                (nd_plasma_electrons_vol_avg / 1.0e19)
+                (nd_plasma_electrons_vol_avg)
                 * constants.ELECTRON_CHARGE**2
                 / (constants.ELECTRON_MASS * constants.EPSILON0)
             )
@@ -927,8 +937,7 @@ class IonCyclotron:
         """
 
         return (
-            (0.63e0 * 0.1e0 * temp_plasma_electron_density_weighted_kev)
-            / (2.0e0 + zeff)
+            (0.63e0 * 0.1e0 * temp_plasma_electron_density_weighted_kev) / (2.0e0 + zeff)
         ) / (rmajor * dene20)
 
 
@@ -1066,7 +1075,11 @@ class LowerHybrid:
 
         x = 24.0e0 / (nplacc * np.sqrt(tlocal))
 
-        term01 = 6.1e0 / (nplacc * nplacc * (physics_variables.zeff + 5.0e0))
+        term01 = 6.1e0 / (
+            nplacc
+            * nplacc
+            * (physics_variables.n_charge_plasma_effective_vol_avg + 5.0e0)
+        )
         term02 = 1.0e0 + (tlocal / 25.0e0) ** 1.16e0
         term03 = epslh**0.77e0 * np.sqrt(12.25e0 + x * x)
         term04 = 3.5e0 * epslh**0.77e0 + x
@@ -1291,6 +1304,7 @@ class CurrentDrive:
         electron_bernstein: ElectronBernstein,
     ):
         self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.electron_cyclotron = electron_cyclotron
         self.ion_cyclotron = ion_cyclotron
@@ -1351,7 +1365,7 @@ class CurrentDrive:
                 * current_drive_variables.feffcd,
                 2: lambda: self.ion_cyclotron.ion_cyclotron_ipdg89(
                     temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
-                    zeff=physics_variables.zeff,
+                    zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
                 )
@@ -1368,7 +1382,7 @@ class CurrentDrive:
                     beta=physics_variables.beta_total_vol_avg,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
-                    zeff=physics_variables.zeff,
+                    zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                 )
                 * current_drive_variables.feffcd,
                 5: lambda: (
@@ -1393,7 +1407,7 @@ class CurrentDrive:
                 * current_drive_variables.feffcd,
                 13: lambda: self.electron_cyclotron.electron_cyclotron_freethy(
                     te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                    zeff=physics_variables.zeff,
+                    zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                     rmajor=physics_variables.rmajor,
                     nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
                     b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
@@ -1479,6 +1493,26 @@ class CurrentDrive:
                 / physics_variables.plasma_current
             )
 
+            # Calculate the dimensionless current drive efficiency for the primary heating method (ζ)
+            current_drive_variables.eta_cd_dimensionless_hcd_primary = self.calculate_dimensionless_current_drive_efficiency(
+                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                rmajor=physics_variables.rmajor,
+                temp_plasma_electron_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+                c_hcd_driven=current_drive_variables.c_hcd_primary_driven,
+                p_hcd_injected=current_drive_variables.p_hcd_primary_injected_mw * 1.0e6,
+            )
+
+            if current_drive_variables.p_hcd_secondary_injected_mw > 0.0:
+                # Calculate the dimensionless current drive efficiency for the secondary heating method (ζ)
+                current_drive_variables.eta_cd_dimensionless_hcd_secondary = self.calculate_dimensionless_current_drive_efficiency(
+                    nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                    rmajor=physics_variables.rmajor,
+                    temp_plasma_electron_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+                    c_hcd_driven=current_drive_variables.c_hcd_secondary_driven,
+                    p_hcd_injected=current_drive_variables.p_hcd_secondary_injected_mw
+                    * 1.0e6,
+                )
+
             # ===========================================================
 
             # Calculate the wall plug power for the secondary heating method
@@ -1511,7 +1545,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Ion cyclotron cases
-            if current_drive_variables.i_hcd_secondary in [2]:
+            if current_drive_variables.i_hcd_secondary == 2:
                 # Injected power
                 p_hcd_secondary_ions_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1563,7 +1597,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Electron berstein cases
-            if current_drive_variables.i_hcd_secondary in [12]:
+            if current_drive_variables.i_hcd_secondary == 12:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1700,7 +1734,7 @@ class CurrentDrive:
             # ===========================================================
 
             # Ion cyclotron cases
-            if current_drive_variables.i_hcd_primary in [2]:
+            if current_drive_variables.i_hcd_primary == 2:
                 p_hcd_primary_ions_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -1763,7 +1797,7 @@ class CurrentDrive:
 
             # Electron bernstein cases
 
-            if current_drive_variables.i_hcd_primary in [12]:
+            if current_drive_variables.i_hcd_primary == 12:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_ebw_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -1911,6 +1945,52 @@ class CurrentDrive:
                 )
             )
 
+    def calculate_dimensionless_current_drive_efficiency(
+        self,
+        nd_plasma_electrons_vol_avg: float,
+        rmajor: float,
+        temp_plasma_electron_vol_avg_kev: float,
+        c_hcd_driven: float,
+        p_hcd_injected: float,
+    ) -> float:
+        """
+                Calculate the dimensionless current drive efficiency, ζ.
+
+                This function computes the dimensionless current drive efficiency
+                based on the average electron density, major radius, and electron temperature.
+
+                :param nd_plasma_electrons_vol_avg: Volume averaged electron density in m^-3.
+                :type nd_plasma_electrons_vol_avg: float
+                :param rmajor: Major radius of the plasma in meters.
+                :type rmajor: float
+                :param temp_plasma_electron_vol_avg_kev: Volume averaged electron temperature in keV.
+                :type temp_plasma_electron_vol_avg_kev: float
+                :param c_hcd_driven: Current driven by the heating and current drive system.
+                :type c_hcd_driven: float
+                :param p_hcd_injected: Power injected by the heating and current drive system.
+                :type p_hcd_injected: float
+                :return: The calculated dimensionless current drive efficiency.
+                :rtype: float
+
+                :references:
+                    - E. Poli et al., “Electron-cyclotron-current-drive efficiency in DEMO plasmas,”
+                    Nuclear Fusion, vol. 53, no. 1, pp. 013011-013011, Dec. 2012,
+                    doi: https://doi.org/10.1088/0029-5515/53/1/013011.
+        ‌
+                    - T. C. Luce et al., “Generation of Localized Noninductive Current by Electron Cyclotron Waves on the DIII-D Tokamak,”
+                    Physical Review Letters, vol. 83, no. 22, pp. 4550-4553, Nov. 1999,
+                    doi: https://doi.org/10.1103/physrevlett.83.4550.
+        """
+
+        return (
+            (constants.ELECTRON_CHARGE**3 / constants.EPSILON0**2)
+            * (
+                (nd_plasma_electrons_vol_avg * rmajor)
+                / (temp_plasma_electron_vol_avg_kev * constants.KILOELECTRON_VOLT)
+            )
+            * (c_hcd_driven / p_hcd_injected)
+        )
+
     def output_current_drive(self):
         """
         Output the current drive information to the output file.
@@ -1990,6 +2070,19 @@ class CurrentDrive:
             current_drive_variables.eta_cd_norm_hcd_primary,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Dimensionless current drive efficiency of primary system, ζ",
+            "(eta_cd_dimensionless_hcd_primary)",
+            current_drive_variables.eta_cd_dimensionless_hcd_primary,
+            "OP ",
+        )
+        po.ovarre(
+            self.mfile,
+            "EBW coupling efficiency",
+            "(xi_ebw)",
+            current_drive_variables.xi_ebw,
+        )
         if current_drive_variables.i_hcd_primary == 10:
             po.ovarre(
                 self.outfile,
@@ -2047,6 +2140,12 @@ class CurrentDrive:
                 "ECRH / EBW harmonic number",
                 "(n_ecrh_harmonic)",
                 current_drive_variables.n_ecrh_harmonic,
+            )
+            po.ovarre(
+                self.outfile,
+                "EBW coupling efficiency",
+                "(xi_ebw)",
+                current_drive_variables.xi_ebw,
             )
         if current_drive_variables.i_hcd_primary == 13:
             po.ovarin(
@@ -2209,6 +2308,13 @@ class CurrentDrive:
             "Normalised current drive efficiency of secondary system [10^20 A / Wm^2]",
             "(eta_cd_norm_hcd_secondary)",
             current_drive_variables.eta_cd_norm_hcd_secondary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Dimensionless current drive efficiency of secondary system, ζ",
+            "(eta_cd_dimensionless_hcd_secondary)",
+            current_drive_variables.eta_cd_dimensionless_hcd_secondary,
             "OP ",
         )
         if current_drive_variables.i_hcd_secondary == 10:

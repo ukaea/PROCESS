@@ -41,7 +41,13 @@ def write(models, _outfile):
     models.availability.run(output=True)
 
     # Writing the output from physics.f90 into OUT.DAT + MFILE.DAT
+    models.physics.calculate_effective_charge_ionisation_profiles()
     models.physics.outplas()
+
+    # Detailed physics, currently only done at final point as values are not used
+    # by any other functions
+    models.physics_detailed.run()
+    models.physics_detailed.output_detailed_physics()
 
     # TODO what is this? Not in caller.f90?
     models.current_drive.output_current_drive()
@@ -140,6 +146,7 @@ def write(models, _outfile):
     models.power.output_cryogenics()
     models.power.output_plant_thermal_powers()
     models.power.output_plant_electric_powers()
+    models.power.output_power_profiles_over_time()
 
     # Water usage in secondary cooling system
     models.water_use.run(output=True)

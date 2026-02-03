@@ -1,0 +1,229 @@
+[build-system]
+requires      = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source           = "vcs"
+fallback-version = "0.0.0"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "process/_version.py"
+
+[project]
+name = "process"
+authors = [{ name = "UKAEA" }]
+description = "Power Reactor Optimisation Code for Environmental and Safety Studies"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dynamic = ["version"]
+dependencies = [
+    "numpy>=1.23",
+    "scipy>=1.10",
+    "cvxpy~=1.7.3",
+    "osqp>=1.0",
+    "pandas>=2.0",
+    "numba>=0.57",
+    "PyVMCON>=2.4.0,<2.5.0",
+    "CoolProp>=6.4",
+    "matplotlib>=2.1.1",
+    "seaborn>=0.12.2",
+    "tabulate",
+    "pyyaml",  # just used for mfile yml outputting
+   ]
+keywords = ['fusion', 'optimisation']
+classifiers = [
+  "Programming Language :: Python",
+  "Development Status :: 4 - Beta",
+  "Natural Language :: English",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.urls]
+Homepage      = "https://www.ukaea.org/service/process/"
+Source        = "https://github.com/ukaea/process"
+Documentation = "https://ukaea.github.io/PROCESS"
+Issues        = "https://github.com/ukaea/process/issues"
+
+[project.optional-dependencies]
+test = [
+  "pytest>=5.4.1",
+  "requests>=2.30",
+  "testbook>=0.4",
+  "pytest-cov>=3.0.0",
+  "pytest-xdist>=2.5.0",
+  "platformdirs~=4.5.0",
+  "process[examples]"
+]
+examples = ["jupyter==1.0.0"]
+plotly = ["plotly>=5.15.0,<6"]
+docs = [
+  "mkdocs>=1.1",
+  "mkdocs-material>=4.6.3",
+  "mkdocs-git-revision-date-localized-plugin >= 1.2",
+  "mkdocs-glightbox >= 0.3.4",
+  "pymdown-extensions>=6.3",
+  "bokeh>=3.4.0,<4",
+  "mkdocstrings==0.18.0",
+  "Jinja2>=3.0",
+  "mkdocs-jupyter>=0.24",
+]
+lint = ["pre-commit>=2.16.0", "ruff==0.9.3", "ty"]
+all = ["process[test,docs,lint,examples,plotly]"]
+
+[project.scripts]
+process = "process.main:main"
+
+[tool.hatch.build.targets.wheel]
+artifacts = [
+  "process/data/lz_non_corona_14_elements/*.dat",
+  "process/io/*.png"
+]
+
+[tool.hatch.envs.default]
+features = ["test", "docs", "lint"]
+
+[tool.hatch.envs.test]
+features = ["test"]
+[[tool.hatch.envs.test.matrix]]
+python = ["3.10", "3.11", "3.12", "3.13"]
+[tool.hatch.envs.test.scripts]
+tests      = "pytest -n auto -v {args:tests}"
+tests-cov  = "pytest --cov process  --cov-report html:htmlcov --cov-report xml {args:tests}"
+tests-cov-private  = "pytest --private --cov process --cov-report html:htmlcov --cov-report xml {args:tests}"
+
+[tool.hatch.envs.test-default]
+template="test"
+[[tool.hatch.envs.test-default.matrix]]
+python = ["3.10"]
+
+
+[tool.hatch.envs.docs]
+features = ["docs"]
+[tool.hatch.envs.docs.scripts]
+build = "mkdocs build"
+serve = "mkdocs serve"
+deploy = "mkdocs gh-deploy"
+
+[tool.hatch.envs.lint]
+detached     = true                           # Don't inherit from default (does not download project dependencies)
+dependencies = ["pre-commit", "ruff", "ty"]
+
+[tool.hatch.envs.lint.scripts]
+fmt    = ["pre-commit run --all-files --hook-stage manual"]
+
+[tool.coverage.report]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+"omit"        = ["process/_version.py"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers -r fEX"
+
+[tool.ty.terminal]
+output-format = "concise"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 89
+output-format = "concise"
+extend-exclude = ["env", ".env"]
+
+[tool.ruff.format]
+preview = true
+
+[tool.ruff.lint.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**" = ["ARG"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["process"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.flake8-copyright]
+notice-rgx = "(?i)# SPDX-FileCopyrightText:\\s\\d{4}(-(\\d{4}|present))*"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.lint.pylint]
+# These should be made stricter
+max-args = 17
+max-locals = 17
+
+[tool.ruff.lint]
+preview = true
+extend-select = [
+    "A",
+    "ARG",
+    "ASYNC",
+    "B",
+    "BLE",
+    "C4",
+    "COM",
+    "DTZ",
+    "EXE",
+    "F",
+    "FA",
+    "FLY",
+    "FURB",
+    "G",
+    "I",
+    "ICN",
+    "INT",
+    "ISC",
+    "LOG",
+    "N",
+    "NPY",
+    "PD",
+    "PERF",
+    "PGH",
+    "PIE",
+    "PYI",
+    "Q",
+    "RET",
+    "RSE",
+    "RUF",
+    "SIM",
+    "SLF",
+    "SLOT",
+    "T10",
+    "TID",
+    "UP",
+    "W",
+    "YTT",
+]
+ignore = ["COM812", "FBT", "G004", "PD901"]
+
+[tool.ruff.lint.pep8-naming]
+ignore-names = [
+    "*PROCESS*",
+    "*Bt*",
+    "*Bp*",
+    "*keV*",
+    "*MPa*",
+    "*H*",
+    "*T*",
+    "*D*",
+    "*He*",
+    "*Be*",
+    "C",
+    "N",
+    "O",
+    "Ne",
+    "Si",
+    "Ar",
+    "Fe",
+    "Ni",
+    "Kr",
+    "Xe",
+    "W",
+]

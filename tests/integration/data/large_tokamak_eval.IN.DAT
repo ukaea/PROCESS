@@ -92,16 +92,10 @@ dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 *---------------Constraint Variables---------------*
 
 b_tf_inboard_max   = 14.0 * maximum peak toroidal field (T) (`constraint equation 25`)
-fbeta_max = 0.5 * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
-fdene    = 1.2 * f-value for density limit (`constraint equation 5`; `iteration variable 9`)
-fiooic   = 0.65 * f-value for TF coil operating current / critical current ratio
-fjohc    = 0.6 * f-value for central solenoid current at end-of-flattop
-fjohc0   = 0.6 * f-value for central solenoid current at beginning of pulse
-fjprot   = 1.0 * f-value for TF coil winding pack current density
-foh_stress = 1.0 * f-value for Tresca yield criterion in Central Solenoid
-fmaxvvstress = 1.0 * f-value for maximum permitted stress of the VV
-fvdump   = 1.0 * f-value for dump voltage (`constraint equation 34`; `iteration variable 51`)
-fpflux_fw_neutron_max_mw   = 1.0 * f-value for maximum wall load (`constraint equation 8`; `iteration variable 14`)
+fdene    = 1.2 * density limit constraint scale (constraint equation 5)
+fiooic   = 0.65
+fjohc    = 0.6
+fjohc0   = 0.6
 p_plant_electric_net_required_mw = 400.0 * required net electric power (MW) (`constraint equation 16`)
 p_fusion_total_max_mw  = 3000 * maximum fusion power (MW) (`constraint equation 9`)
 psepbqarmax = 10.0 * maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
@@ -114,9 +108,9 @@ f_alpha_energy_confinement_min = 5.0 * Lower limit on f_alpha_energy_confinement
 
 *------------------Cost Variables------------------*
 
-cfactr   = 0.80 * Total plant availability fraction; input if `iavail=0`
+f_t_plant_available   = 0.80 * Total plant availability fraction; input if `i_plant_availability=0`
 cost_model = 0 * Switch for cost model;
-iavail   = 0 * Switch for plant availability model;
+i_plant_availability   = 0 * Switch for plant availability model;
 output_costs = 1 * Switch for costs output;
 
 *----------------------Costs-----------------------*

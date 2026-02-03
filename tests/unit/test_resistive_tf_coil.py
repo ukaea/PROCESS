@@ -723,9 +723,7 @@ def test_cpost(cpostparam, monkeypatch, resistive_tf_coil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", cpostparam.z_tf_inside_half
-    )
+    monkeypatch.setattr(build_variables, "z_tf_inside_half", cpostparam.z_tf_inside_half)
 
     (
         a_cp_cool,

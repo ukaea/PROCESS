@@ -236,7 +236,5 @@ This constraint can be activated by stating `icc = 78` in the input file.
 
 The minimum impurity fraction required from the Reinke module can be set with, `fzmin`
 
-The scaling value `freinke` can be varied also.
-
 
 [^1]: H. Lux, R. Kemp, D.J. Ward, M. Sertoli, Impurity radiation in DEMO systems modelling, Fusion Engineering and Design, Volume 101, 2015, Pages 42-51, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2015.10.002.

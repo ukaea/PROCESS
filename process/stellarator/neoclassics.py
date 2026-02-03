@@ -362,11 +362,9 @@ class Neoclassics:
 
         chi_neo_e = -(
             neoclassics_variables.q_flux[0]
-            + neoclassics_variables.gamma_flux[0]
-            * neoclassics_variables.temperatures[0]
+            + neoclassics_variables.gamma_flux[0] * neoclassics_variables.temperatures[0]
         ) / (
-            neoclassics_variables.densities[0]
-            * neoclassics_variables.dr_temperatures[0]
+            neoclassics_variables.densities[0] * neoclassics_variables.dr_temperatures[0]
             + neoclassics_variables.temperatures[0]
             * neoclassics_variables.dr_densities[0]
         )
@@ -432,9 +430,7 @@ class Neoclassics:
             32.2
             - 1.15 * np.log10(neoclassics_variables.densities[0])
             + 2.3
-            * np.log10(
-                neoclassics_variables.temperatures[0] / constants.ELECTRON_CHARGE
-            )
+            * np.log10(neoclassics_variables.temperatures[0] / constants.ELECTRON_CHARGE)
         )
 
         neoclassics_calc_nu = np.zeros((4, self.no_roots), order="F")
@@ -495,16 +491,24 @@ class Neoclassics:
 
         v = np.empty((4, self.no_roots))
         v[0, :] = constants.SPEED_LIGHT * np.sqrt(
-            1.0 - (kk[0, :] / (mass[0] * constants.SPEED_LIGHT**2) + 1) ** (-1)
+            1.0
+            - (neoclassics_variables.kt[0, :] / (mass[0] * constants.SPEED_LIGHT**2) + 1)
+            ** (-1)
         )
         v[1, :] = constants.SPEED_LIGHT * np.sqrt(
-            1.0 - (kk[1, :] / (mass[1] * constants.SPEED_LIGHT**2) + 1) ** (-1)
+            1.0
+            - (neoclassics_variables.kt[1, :] / (mass[1] * constants.SPEED_LIGHT**2) + 1)
+            ** (-1)
         )
         v[2, :] = constants.SPEED_LIGHT * np.sqrt(
-            1.0 - (kk[2, :] / (mass[2] * constants.SPEED_LIGHT**2) + 1) ** (-1)
+            1.0
+            - (neoclassics_variables.kt[2, :] / (mass[2] * constants.SPEED_LIGHT**2) + 1)
+            ** (-1)
         )
         v[3, :] = constants.SPEED_LIGHT * np.sqrt(
-            1.0 - (kk[3, :] / (mass[3] * constants.SPEED_LIGHT**2) + 1) ** (-1)
+            1.0
+            - (neoclassics_variables.kt[3, :] / (mass[3] * constants.SPEED_LIGHT**2) + 1)
+            ** (-1)
         )
 
         return (

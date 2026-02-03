@@ -149,9 +149,7 @@ var_dicts = {
         description="Maximum divertor heat load",
         units="MW.m^{-2}",
     ),
-    "hfact": VariableMetadata(
-        latex=r"$f_\mathrm{H}$", description="H-factor", units=""
-    ),
+    "hfact": VariableMetadata(latex=r"$f_\mathrm{H}$", description="H-factor", units=""),
     "kappa": VariableMetadata(
         latex=r"$\kappa_\mathrm{sep}$", description="Elongation", units=""
     ),
@@ -267,7 +265,7 @@ var_dicts = {
         description="Blanket cycles",
         units="",
     ),
-    "zeff": VariableMetadata(
+    "n_charge_plasma_effective_vol_avg": VariableMetadata(
         latex=r"$Z_{\mathrm{eff}}$", description="Effective charge", units=""
     ),
     "t_plant_pulse_burn": VariableMetadata(

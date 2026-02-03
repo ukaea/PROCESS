@@ -41,9 +41,7 @@ class Buildings:
             build_variables.dr_tf_outboard * 0.5e0
         )
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
-        tfri = build_variables.r_tf_inboard_mid - (
-            build_variables.dr_tf_inboard * 0.5e0
-        )
+        tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_inboard * 0.5e0)
 
         # Find width, in radial dimension, of TF coil (m)
         tf_radial_dim = tfro - tfri
@@ -81,8 +79,8 @@ class Buildings:
                 tf_vertical_dim,
                 tfmtn,
                 tfcoil_variables.n_tf_coils,
-                build_variables.rsldo,
-                build_variables.rsldi,
+                build_variables.r_shld_outboard_outer,
+                build_variables.r_shld_inboard_inner,
                 2.0e0
                 * (build_variables.z_tf_inside_half - build_variables.dz_shld_vv_gap)
                 - build_variables.dz_vv_upper
@@ -318,9 +316,7 @@ class Buildings:
         buildings_variables.convol = buildings_variables.conv
 
         # Total volume of nuclear buildings
-        buildings_variables.volnucb = (
-            vrci + rmbv + wsv + buildings_variables.triv + cryv
-        )
+        buildings_variables.volnucb = vrci + rmbv + wsv + buildings_variables.triv + cryv
 
         # Output !
         # !!!!!!!!!
@@ -539,7 +535,7 @@ class Buildings:
 
         # Inboard 'component': shield, blanket, first wall:
         # find height, maximum radial dimension, maximum toroidal dimension
-        if cost_variables.tlife != 0.0e0:
+        if cost_variables.life_plant != 0.0e0:
             hcomp_height = 2 * (
                 build_variables.z_tf_inside_half
                 - (
@@ -579,7 +575,7 @@ class Buildings:
             #   ( number in build * (plant lifetime / component lifetime) ) * quantity safety factor
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.tlife / cost_variables.tlife)
+                * (cost_variables.life_plant / cost_variables.life_plant)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of inboard shield-blanket-wall
             ib_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -619,7 +615,7 @@ class Buildings:
             )
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.tlife / cost_variables.tlife)
+                * (cost_variables.life_plant / cost_variables.life_plant)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of outboard wall-blanket-shield
             ob_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -629,7 +625,7 @@ class Buildings:
 
         # Divertor
         # Note: this estimation developed before the divertor design has been finalised
-        if cost_variables.divlife != 0.0e0:
+        if cost_variables.life_div_fpy != 0.0e0:
             hcomp_height = divertor_variables.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
@@ -641,7 +637,7 @@ class Buildings:
             )
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.tlife / cost_variables.divlife)
+                * (cost_variables.life_plant / cost_variables.life_div_fpy)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of divertor segments
             div_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -663,7 +659,7 @@ class Buildings:
                 hcomp_rad_thk + buildings_variables.hot_sepdist
             )
             hcomp_req_supply = (
-                cost_variables.tlife / cost_variables.cplife
+                cost_variables.life_plant / cost_variables.cplife
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of centre posts
             cp_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -680,9 +676,9 @@ class Buildings:
         hotcell_w = hotcell_l
 
         # external dimensions include same wall and roof thicknesses as reactor building
-        hotcell_area_ext = (
-            hotcell_l + 2.0e0 * buildings_variables.reactor_wall_thk
-        ) * (hotcell_w + 2.0e0 * buildings_variables.reactor_wall_thk)
+        hotcell_area_ext = (hotcell_l + 2.0e0 * buildings_variables.reactor_wall_thk) * (
+            hotcell_w + 2.0e0 * buildings_variables.reactor_wall_thk
+        )
         hotcell_vol_ext = hotcell_area_ext * (
             buildings_variables.hotcell_h
             + buildings_variables.reactor_roof_thk
@@ -736,9 +732,7 @@ class Buildings:
         magnet_pulse_vol = magnet_pulse_area * buildings_variables.magnet_pulse_h
 
         # Total power buildings areas and volumes
-        power_buildings_area = (
-            hcd_building_area + magnet_trains_area + magnet_pulse_area
-        )
+        power_buildings_area = hcd_building_area + magnet_trains_area + magnet_pulse_area
         power_buildings_vol = hcd_building_vol + magnet_trains_vol + magnet_pulse_vol
 
         buildings_total_vol = buildings_total_vol + power_buildings_vol
@@ -925,8 +919,7 @@ class Buildings:
         # Respiratory Protective Equipment cleaning; industrial drains & sewage
         # process and discharge; these values amalgamate multiple individual buildings.
         water_buildings_area = (
-            buildings_variables.water_buildings_l
-            * buildings_variables.water_buildings_w
+            buildings_variables.water_buildings_l * buildings_variables.water_buildings_w
         )
         water_buildings_vol = (
             water_buildings_area * buildings_variables.water_buildings_h

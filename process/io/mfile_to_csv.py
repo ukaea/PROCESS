@@ -69,11 +69,7 @@ def get_vars(vfile="mfile_to_csv_vars.json"):
     """
     print("Fetching list of variables from", vfile)
 
-    with open(vfile) as varfile:
-        data = varfile.read()
-        obj = json.loads(data)
-
-    return obj["vars"]
+    return json.loads(Path(vfile).read_text())["vars"]
 
 
 def read_mfile(mfilename="MFILE.DAT", variables=None):

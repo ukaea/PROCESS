@@ -286,7 +286,7 @@ def test_input_file(
     scenario = RegressionTestScenario(new_input_file)
 
     reference_mfile = tracked_regression_test_assets.get_reference_mfile(
-        scenario.scenario_name, tmp_path
+        scenario.scenario_name
     )
 
     scenario.run(solver_name)

@@ -65,21 +65,22 @@ exp_shield2: float = None
 
 
 def init_ccfe_hcpb_module():
-    global iso_fortran_env
-    global armour_density
-    global fw_density
-    global blanket_density
-    global shield_density
-    global vv_density
-    global x_blanket
-    global x_shield
-    global tfc_nuc_heating
-    global fw_armour_u_nuc_heating
-    global shld_u_nuc_heating
-    global pnuc_tot_blk_sector
-    global exp_blanket
-    global exp_shield1
-    global exp_shield2
+    global \
+        iso_fortran_env, \
+        armour_density, \
+        fw_density, \
+        blanket_density, \
+        shield_density, \
+        vv_density, \
+        x_blanket, \
+        x_shield, \
+        tfc_nuc_heating, \
+        fw_armour_u_nuc_heating, \
+        shld_u_nuc_heating, \
+        pnuc_tot_blk_sector, \
+        exp_blanket, \
+        exp_shield1, \
+        exp_shield2
 
     armour_density = 0.0
     fw_density = 0.0

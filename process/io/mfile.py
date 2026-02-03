@@ -29,11 +29,12 @@ Compatible with PROCESS version 286
 import json
 import logging
 from collections import OrderedDict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-class MFileVariable(dict):
+class MFileVariable(dict):  # noqa: FURB189
     """Class for containing a single mfile variable"""
 
     def __init__(
@@ -59,11 +60,9 @@ class MFileVariable(dict):
         self.var_flag = var_flag
         self.latest_scan = 0
         super().__init__(*args, **kwargs)
-        logger.debug(f"Initialising variable '{self.var_name}': {self.var_description}")
 
     def __getattr__(self, name):
         result = self.get(name)
-        # print(f"Trying to get({name}) on {self}, {id(self)}"
         if result:
             return result
         raise AttributeError(f"{self.__class__} object has no attribute {name}")
@@ -79,9 +78,6 @@ class MFileVariable(dict):
         self[f"scan{scan_number:02}"] = scan_value
         if scan_number > self.latest_scan:
             self.latest_scan = scan_number
-        logger.debug(
-            f"Scan {scan_number} for variable '{self.var_name}' == {scan_value}"
-        )
 
     def get_scan(self, scan_number):
         """Returns the value of a specific scan. For scan = -1 or None the last
@@ -94,12 +90,9 @@ class MFileVariable(dict):
           [single scan requested]
         """
 
-        try:
-            if scan_number is None or scan_number == -1:
-                return self[f"scan{self.latest_scan:02}"]
-            return self[f"scan{scan_number:02}"]
-        except KeyError:
-            raise  # or substitute with any other exception type you want
+        if scan_number is None or scan_number == -1:
+            return self[f"scan{self.latest_scan:02}"]
+        return self[f"scan{scan_number:02}"]
 
     def get_scans(self):
         """Returns a list of scan values in order of scan number
@@ -112,8 +105,6 @@ class MFileVariable(dict):
 
     def get_number_of_scans(self):
         """Function to return the number of scans in the variable class"""
-        # likely we can just use self.latest_scan, but not guaranteed, so
-        # keeping this as it is for now...
         return len([key for key in self.keys() if "scan" in key])
 
     @property
@@ -207,10 +198,7 @@ class DefaultOrderedDict(OrderedDict):
 class MFile:
     def __init__(self, filename="MFILE.DAT"):
         """Class object to store the MFile Objects"""
-        logger.info(f"Creating MFile class for file '{filename}'")
         self.filename = filename
-        # self.data = MFileDataDictionary()
-        # self.data = OrderedDict()
         self.data = DefaultOrderedDict()
         self.mfile_lines = []
         self.mfile_modules = {}
@@ -218,10 +206,16 @@ class MFile:
         self.mfile_modules["Misc"] = []
         self.current_module = "Misc"
         if filename is not None:
-            logger.info(f"Opening file '{self.filename}'")
             self.open_mfile()
-            logger.info(f"Parsing file '{self.filename}'")
             self.parse_mfile()
+
+    def get_variables(self, *variables: str, scan: int = -1) -> list[Any]:
+        """Get a number of variables from a single scan"""
+        return [self.get(v, scan=scan) for v in variables]
+
+    def get(self, variable: str, *, scan: int = -1) -> Any:
+        """Get variable data from a given scan"""
+        return self.data[variable].get_scan(scan)
 
     def open_mfile(self):
         """Function to open MFILE.DAT"""
@@ -236,7 +230,6 @@ class MFile:
 
     def parse_mfile(self):
         """Function to parse MFILE.DAT"""
-        # for line in (c for c in (clean_line(l) for l in self.mfile_lines if '#' not in l[:2])
         for line in (
             c for c in (clean_line(lines) for lines in self.mfile_lines) if c != [""]
         ):
@@ -285,7 +278,7 @@ class MFile:
         var_key = des.lower().replace("_", " ") if name == "" else name.lower()
 
         if var_key in self.data:
-            scan_num = scan if scan else (self.data[var_key].get_number_of_scans() + 1)
+            scan_num = scan or (self.data[var_key].get_number_of_scans() + 1)
 
             # Check for duplicate entries per scan point if there are scans and no scans
             a = len(self.data[var_key].get_scans())
@@ -317,10 +310,7 @@ class MFile:
             for i in range(self.data["rmajor"].get_number_of_scans()):
                 sub_dict = {}
                 for item in keys_to_write:
-                    if self.data[item].get_number_of_scans() == 1:
-                        dat_key = -1
-                    else:
-                        dat_key = i + 1
+                    dat_key = -1 if self.data[item].get_number_of_scans() == 1 else i + 1
                     data = self.data[item].get_scan(dat_key)
                     des = self.data[item].var_description.replace("_", " ")
                     entry = {"value": data, "description": des} if verbose else data

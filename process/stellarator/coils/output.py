@@ -158,9 +158,7 @@ def write(
             "(e_tf_magnetic_stored_total_gj)",
             tfcoil_variables.e_tf_magnetic_stored_total_gj,
         )
-        po.ovarre(
-            stellarator.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance
-        )
+        po.ovarre(stellarator.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance)
         po.ovarre(
             stellarator.outfile,
             "Total mass of coils (kg)",

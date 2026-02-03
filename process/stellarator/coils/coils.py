@@ -39,8 +39,8 @@ def jcrit_from_material(
         else:
             (
                 j_crit_sc,
-                bcrit,
-                tcrit,
+                _bcrit,
+                _tcrit,
             ) = superconductors.itersc(t_helium, b_max, strain, bc20m, tc0m)
 
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -63,11 +63,11 @@ def jcrit_from_material(
         #  jstrand = 0  # as far as I can tell this will always be 0
         #  because jwp was never set in fortran (so 0)
 
-        j_crit_cable, tmarg = superconductors.bi2212(
+        j_crit_cable, _tmarg = superconductors.bi2212(
             b_max, jstrand, t_helium, f_hts
         )  # bi2212 outputs j_crit_cable
         j_crit_sc = j_crit_cable / (1 - f_tf_conductor_copper)
-        tcrit = t_helium + tmarg
+        _tcrit = t_helium + _tmarg
     elif i_tf_sc_mat == 3:  # NbTi data
         bc20m = 15.0
         tc0m = 9.3
@@ -76,7 +76,7 @@ def jcrit_from_material(
         if b_max > bc20m:
             j_crit_sc = 1.0e-9  # Set to a small nonzero value
         else:
-            j_crit_sc, tcrit = superconductors.jcrit_nbti(
+            j_crit_sc, _tcrit = superconductors.jcrit_nbti(
                 t_helium,
                 b_max,
                 c0,
@@ -94,7 +94,7 @@ def jcrit_from_material(
     elif i_tf_sc_mat == 4:  # As (1), but user-defined parameters
         bc20m = b_crit_sc
         tc0m = t_crit_sc
-        j_crit_sc, bcrit, tcrit = superconductors.itersc(
+        j_crit_sc, _bcrit, _tcrit = superconductors.itersc(
             t_helium, b_max, strain, bc20m, tc0m
         )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -106,7 +106,7 @@ def jcrit_from_material(
         #  j_crit_sc returned by itersc is the critical current density in the
         #  superconductor - not the whole strand, which contains copper
 
-        j_crit_sc, bcrit, tcrit = superconductors.western_superconducting_nb3sn(
+        j_crit_sc, _bcrit, _tcrit = superconductors.western_superconducting_nb3sn(
             t_helium,
             b_max,
             strain,
@@ -118,7 +118,7 @@ def jcrit_from_material(
     elif (
         i_tf_sc_mat == 6
     ):  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
-        j_crit_sc, validity = superconductors.jcrit_rebco(t_helium, b_max, 0)
+        j_crit_sc, _validity = superconductors.jcrit_rebco(t_helium, b_max, 0)
         j_crit_sc = max(1.0e-9, j_crit_sc)
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
@@ -126,7 +126,7 @@ def jcrit_from_material(
     elif i_tf_sc_mat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
         bc20m = b_crit_upper_nbti
         tc0m = t_crit_nbti
-        j_crit_sc, bcrit, tcrit = superconductors.gl_nbti(
+        j_crit_sc, _bcrit, _tcrit = superconductors.gl_nbti(
             t_helium, b_max, strain, bc20m, tc0m
         )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -134,7 +134,7 @@ def jcrit_from_material(
     elif i_tf_sc_mat == 8:
         bc20m = 429
         tc0m = 185
-        j_crit_sc, bcrit, tcrit = superconductors.gl_rebco(
+        j_crit_sc, _bcrit, _tcrit = superconductors.gl_rebco(
             t_helium, b_max, strain, bc20m, tc0m
         )
         # A0 calculated for tape cross section already

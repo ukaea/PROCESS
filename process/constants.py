@@ -189,11 +189,14 @@ Reference: National Institute of Standards and Technology (NIST)
 https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=W
 """
 
-SPEED_LIGHT = 299792458
+SPEED_LIGHT = 299792458.0
 """Speed of light in vacuum (c) [m/s]
 Reference: National Institute of Standards and Technology (NIST)
 https://physics.nist.gov/cgi-bin/cuu/Value?c|search_for=light
 """
+
+PLANCK_CONSTANT = 6.62607015e-34
+"""Planck's constant [J.s]"""
 
 D_T_ENERGY = (
     (DEUTERON_MASS + TRITON_MASS) - (ALPHA_MASS + NEUTRON_MASS)
@@ -270,12 +273,8 @@ TEMP_ROOM = 293.15
 Assume the room is at 20 degrees Celsius
 """
 
-PI = 3.1415926535897932
-
 RMU0 = 1.256637062e-6
 """permeability of free space  [H/m]"""
-
-TWOPI = 6.2831853071795862
 
 UMASS = 1.660538921e-27
 """unified atomic mass unit [kg]"""
@@ -312,8 +311,7 @@ ACCELERATION_GRAVITY = 9.81
 
 
 def init_constants():
-    global den_copper
-    global den_aluminium
+    global den_copper, den_aluminium
 
     den_copper = 8900.0
     den_aluminium = 2700.0

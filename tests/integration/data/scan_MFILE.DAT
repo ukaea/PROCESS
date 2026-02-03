@@ -169,10 +169,10 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
- Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      2.0217E+01 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      4.0000E+01    
- Total_plant_availability_fraction_______________________________________ (cfactr)______________________      7.5000E-01    
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
+ Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
+ Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      9.1779E+00 ITV
@@ -249,7 +249,7 @@
  Xe_concentration________________________________________________________ (fimp(13)_____________________      3.5634E-04    
  W__concentration________________________________________________________ (fimp(14)_____________________      5.0000E-05    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
- Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
+ Effective_charge________________________________________________________ (n_charge_plasma_effective_vol_avg)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
@@ -1164,10 +1164,10 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
- Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      2.0217E+01 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      4.0000E+01    
- Total_plant_availability_fraction_______________________________________ (cfactr)______________________      7.5000E-01    
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
+ Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
+ Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      9.1779E+00 ITV
@@ -1244,7 +1244,7 @@
  Xe_concentration________________________________________________________ (fimp(13)_____________________      3.5634E-04    
  W__concentration________________________________________________________ (fimp(14)_____________________      5.0000E-05    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
- Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
+ Effective_charge________________________________________________________ (n_charge_plasma_effective_vol_avg)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
@@ -2159,10 +2159,10 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
- Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      2.0217E+01 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      4.0000E+01    
- Total_plant_availability_fraction_______________________________________ (cfactr)______________________      7.5000E-01    
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
+ Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
+ Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      9.1779E+00 ITV
@@ -2239,7 +2239,7 @@
  Xe_concentration________________________________________________________ (fimp(13)_____________________      3.5634E-04    
  W__concentration________________________________________________________ (fimp(14)_____________________      5.0000E-05    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
- Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
+ Effective_charge________________________________________________________ (n_charge_plasma_effective_vol_avg)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
@@ -3154,10 +3154,10 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
- Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      2.0217E+01 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      4.0000E+01    
- Total_plant_availability_fraction_______________________________________ (cfactr)______________________      7.5000E-01    
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
+ Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
+ Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      9.1779E+00 ITV
@@ -3234,7 +3234,7 @@
  Xe_concentration________________________________________________________ (fimp(13)_____________________      3.5634E-04    
  W__concentration________________________________________________________ (fimp(14)_____________________      5.0000E-05    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
- Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
+ Effective_charge________________________________________________________ (n_charge_plasma_effective_vol_avg)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
@@ -4149,10 +4149,10 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
- Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      2.0217E+01 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      4.0000E+01    
- Total_plant_availability_fraction_______________________________________ (cfactr)______________________      7.5000E-01    
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
+ Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
+ Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      9.1779E+00 ITV
@@ -4229,7 +4229,7 @@
  Xe_concentration________________________________________________________ (fimp(13)_____________________      3.5634E-04    
  W__concentration________________________________________________________ (fimp(14)_____________________      5.0000E-05    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
- Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
+ Effective_charge________________________________________________________ (n_charge_plasma_effective_vol_avg)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
@@ -5144,10 +5144,10 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
- Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      2.0217E+01 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      4.0000E+01    
- Total_plant_availability_fraction_______________________________________ (cfactr)______________________      7.5000E-01    
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
+ Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
+ Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      9.1779E+00 ITV
@@ -5224,7 +5224,7 @@
  Xe_concentration________________________________________________________ (fimp(13)_____________________      3.5634E-04    
  W__concentration________________________________________________________ (fimp(14)_____________________      5.0000E-05    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
- Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
+ Effective_charge________________________________________________________ (n_charge_plasma_effective_vol_avg)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
@@ -6139,10 +6139,10 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
- Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      2.0217E+01 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      4.0000E+01    
- Total_plant_availability_fraction_______________________________________ (cfactr)______________________      7.5000E-01    
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
+ Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
+ Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      9.1779E+00 ITV
@@ -6219,7 +6219,7 @@
  Xe_concentration________________________________________________________ (fimp(13)_____________________      3.5634E-04    
  W__concentration________________________________________________________ (fimp(14)_____________________      5.0000E-05    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
- Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
+ Effective_charge________________________________________________________ (n_charge_plasma_effective_vol_avg)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
@@ -7134,10 +7134,10 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
- Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      2.0217E+01 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      4.0000E+01    
- Total_plant_availability_fraction_______________________________________ (cfactr)______________________      7.5000E-01    
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
+ Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
+ Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      9.1779E+00 ITV
@@ -7214,7 +7214,7 @@
  Xe_concentration________________________________________________________ (fimp(13)_____________________      3.5634E-04    
  W__concentration________________________________________________________ (fimp(14)_____________________      5.0000E-05    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
- Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
+ Effective_charge________________________________________________________ (n_charge_plasma_effective_vol_avg)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
@@ -8129,10 +8129,10 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
- Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      2.0217E+01 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      4.0000E+01    
- Total_plant_availability_fraction_______________________________________ (cfactr)______________________      7.5000E-01    
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
+ Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
+ Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      9.1779E+00 ITV
@@ -8209,7 +8209,7 @@
  Xe_concentration________________________________________________________ (fimp(13)_____________________      3.5634E-04    
  W__concentration________________________________________________________ (fimp(14)_____________________      5.0000E-05    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
- Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
+ Effective_charge________________________________________________________ (n_charge_plasma_effective_vol_avg)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
@@ -9126,18 +9126,18 @@ output_costs = 0
 cost_model = 0
 abktflnc = 15 * Allowable first wall/blanket neutron
 adivflnc = 20.0 * Allowable divertor heat fluence (mw-yr/m2)
-cfactr   = 0.75 * Total plant availability fraction;
+f_t_plant_available   = 0.75 * Total plant availability fraction;
 dintrt   = 0.00 * Diff between borrowing and saving interest rates
 fcap0    = 1.15 * Average cost of money for construction of plant
 fcap0cp  = 1.06 * Average cost of money for replaceable components
 fcontng  = 0.15 * Project contingency factor
 fcr0     = 0.065 * Fixed charge rate during construction
 fkind    = 1.0 * Multiplier for nth of a kind costs
-iavail   = 0 * Switch for plant availability model;
+i_plant_availability   = 0 * Switch for plant availability model;
 ifueltyp = 1 * Switch;
 lsa      = 2 * Level of safety assurance switch (generally; use 3 or 4);
 discount_rate = 0.06 * Effective cost of money in constant dollars
-tlife    = 40 * Plant life (years)
+life_plant    = 40 * Plant life (years)
 ucblvd   = 280.0 * Unit cost for blanket vanadium ($/kg)
 ucdiv    = 5.0d5 * Cost of divertor blade ($)
 ucme     = 3.0d8 * Unit cost of maintenance equipment ($/w**0;3)
@@ -9153,7 +9153,7 @@ p_hcd_primary_extra_heat_mw = 50.0
 
 *----------------Divertor Variables----------------*
 
-divdum   = 1 * Switch for divertor zeff model; 0=calc; 1=input
+divdum   = 1 * Switch for divertor n_charge_plasma_effective_vol_avg model; 0=calc; 1=input
 dz_divertor   = 0.621 * Divertor structure vertical thickness (m)
 pflux_div_heat_load_max_mw = 10 * Heat load limit (mw/m2)
 ksic     = 1.4 * Power fraction for outboard double-null scrape-off plasma

@@ -9,13 +9,22 @@ available_radial_space: float = None
 a_blkt_total_surface: float = None
 """blanket total surface area (m2)"""
 
+a_blkt_total_surface_full_coverage: float = None
+"""Blanket(s) total surface area with no holes or ports (toroidally continuous) (m²)"""
+
 
 a_blkt_inboard_surface: float = None
 """inboard blanket surface area (m2)"""
 
+a_blkt_inboard_surface_full_coverage: float = None
+"""Inboard blanket surface area with no holes or ports (toroidally continuous) (m²)"""
+
 
 a_blkt_outboard_surface: float = None
 """outboard blanket surface area (m2)"""
+
+a_blkt_outboard_surface_full_coverage: float = None
+"""Outboard blanket surface area with no holes or ports (toroidally continuous) (m²)"""
 
 
 blbmith: float = None
@@ -88,10 +97,6 @@ dz_vv_lower: float = None
 
 dr_vv_shells: float = None
 """vacuum vessel double walled shell thicknesses (m)"""
-
-
-f_avspace: float = None
-"""F-value for stellarator radial space check (`constraint equation 83`)"""
 
 
 fcspc: float = None
@@ -208,11 +213,11 @@ rinboard: float = None
 """plasma inboard radius (m) (`consistency equation 29`)"""
 
 
-rsldi: float = None
+r_shld_inboard_inner: float = None
 """radius to inboard shield (inside point) (m)"""
 
 
-rsldo: float = None
+r_shld_outboard_outer: float = None
 """radius to outboard shield (outside point) (m)"""
 
 
@@ -403,107 +408,113 @@ the ripple calculation, else 0
 
 
 def init_build_variables():
-    global ripflag
-    global aplasmin
-    global available_radial_space
-    global a_blkt_total_surface
-    global a_blkt_inboard_surface
-    global a_blkt_outboard_surface
-    global blbmith
-    global blbmoth
-    global blbpith
-    global blbpoth
-    global blbuith
-    global blbuoth
-    global dr_blkt_inboard
-    global dr_blkt_outboard
-    global dz_blkt_upper
-    global dz_fw_upper
-    global dr_bore
-    global f_z_cryostat
-    global dr_cryostat
-    global dr_vv_inboard
-    global dr_vv_outboard
-    global dz_vv_upper
-    global dz_vv_lower
-    global dr_vv_shells
-    global f_avspace
-    global fcspc
-    global fseppc
-    global a_fw_total_full_coverage
-    global a_fw_inboard_full_coverage
-    global a_fw_outboard_full_coverage
-    global a_fw_total
-    global a_fw_inboard
-    global a_fw_outboard
-    global dr_fw_inboard
-    global dr_fw_outboard
-    global dr_shld_vv_gap_inboard
-    global dr_cs_tf_gap
-    global gapomin
-    global dr_shld_vv_gap_outboard
-    global z_tf_inside_half
-    global dz_tf_upper_lower_midplane
-    global z_tf_top
-    global hr1
-    global iohcl
-    global i_cs_precomp
-    global i_tf_inside_cs
-    global dr_cs
-    global dr_cs_precomp
-    global rbld
-    global required_radial_space
-    global rinboard
-    global rsldi
-    global rsldo
-    global r_vv_inboard_out
-    global r_sh_inboard_in
-    global r_sh_inboard_out
-    global r_tf_inboard_in
-    global r_tf_inboard_mid
-    global r_tf_inboard_out
-    global r_tf_outboard_mid
-    global i_r_cp_top
-    global r_cp_top
-    global f_r_cp
-    global dr_tf_inner_bore
-    global dh_tf_inner_bore
-    global dr_fw_plasma_gap_inboard
-    global dr_fw_plasma_gap_outboard
-    global a_shld_total_surface
-    global a_shld_inboard_surface
-    global a_shld_outboard_surface
-    global dr_shld_inboard
-    global dz_shld_lower
-    global dr_shld_outboard
-    global dz_shld_upper
-    global sigallpc
-    global dr_tf_inboard
-    global dz_tf_plasma_centre_offset
-    global f_dr_tf_outboard_inboard
-    global dr_tf_outboard
-    global dr_tf_shld_gap
-    global dr_shld_thermal_inboard
-    global dr_shld_thermal_outboard
-    global dz_shld_thermal
-    global dz_shld_vv_gap
-    global dz_xpoint_divertor
-    global dz_fw_plasma_gap
-    global dr_shld_blkt_gap
-    global plleni
-    global plleno
-    global plsepi
-    global plsepo
-    global rspo
-    global z_plasma_xpoint_upper
-    global z_plasma_xpoint_lower
+    global \
+        ripflag, \
+        aplasmin, \
+        available_radial_space, \
+        a_blkt_total_surface, \
+        a_blkt_total_surface_full_coverage, \
+        a_blkt_inboard_surface, \
+        a_blkt_inboard_surface_full_coverage, \
+        a_blkt_outboard_surface, \
+        a_blkt_outboard_surface_full_coverage, \
+        blbmith, \
+        blbmoth, \
+        blbpith, \
+        blbpoth, \
+        blbuith, \
+        blbuoth, \
+        dr_blkt_inboard, \
+        dr_blkt_outboard, \
+        dz_blkt_upper, \
+        dz_fw_upper, \
+        dr_bore, \
+        f_z_cryostat, \
+        dr_cryostat, \
+        dr_vv_inboard, \
+        dr_vv_outboard, \
+        dz_vv_upper, \
+        dz_vv_lower, \
+        dr_vv_shells, \
+        fcspc, \
+        fseppc, \
+        a_fw_total_full_coverage, \
+        a_fw_inboard_full_coverage, \
+        a_fw_outboard_full_coverage, \
+        a_fw_total, \
+        a_fw_inboard, \
+        a_fw_outboard, \
+        dr_fw_inboard, \
+        dr_fw_outboard, \
+        dr_shld_vv_gap_inboard, \
+        dr_cs_tf_gap, \
+        gapomin, \
+        dr_shld_vv_gap_outboard, \
+        z_tf_inside_half, \
+        dz_tf_upper_lower_midplane, \
+        z_tf_top, \
+        hr1, \
+        iohcl, \
+        i_cs_precomp, \
+        i_tf_inside_cs, \
+        dr_cs, \
+        dr_cs_precomp, \
+        rbld, \
+        required_radial_space, \
+        rinboard, \
+        r_shld_inboard_inner, \
+        r_shld_outboard_outer, \
+        r_vv_inboard_out, \
+        r_sh_inboard_in, \
+        r_sh_inboard_out, \
+        r_tf_inboard_in, \
+        r_tf_inboard_mid, \
+        r_tf_inboard_out, \
+        r_tf_outboard_mid, \
+        i_r_cp_top, \
+        r_cp_top, \
+        f_r_cp, \
+        dr_tf_inner_bore, \
+        dh_tf_inner_bore, \
+        dr_fw_plasma_gap_inboard, \
+        dr_fw_plasma_gap_outboard, \
+        a_shld_total_surface, \
+        a_shld_inboard_surface, \
+        a_shld_outboard_surface, \
+        dr_shld_inboard, \
+        dz_shld_lower, \
+        dr_shld_outboard, \
+        dz_shld_upper, \
+        sigallpc, \
+        dr_tf_inboard, \
+        dz_tf_plasma_centre_offset, \
+        f_dr_tf_outboard_inboard, \
+        dr_tf_outboard, \
+        dr_tf_shld_gap, \
+        dr_shld_thermal_inboard, \
+        dr_shld_thermal_outboard, \
+        dz_shld_thermal, \
+        dz_shld_vv_gap, \
+        dz_xpoint_divertor, \
+        dz_fw_plasma_gap, \
+        dr_shld_blkt_gap, \
+        plleni, \
+        plleno, \
+        plsepi, \
+        plsepo, \
+        rspo, \
+        z_plasma_xpoint_upper, \
+        z_plasma_xpoint_lower
 
     ripflag = 0
     aplasmin = 0.25
     available_radial_space = 0.0
     a_blkt_total_surface = 0.0
+    a_blkt_total_surface_full_coverage = 0.0
     a_blkt_inboard_surface = 0.0
+    a_blkt_inboard_surface_full_coverage = 0.0
     a_blkt_outboard_surface = 0.0
+    a_blkt_outboard_surface_full_coverage = 0.0
     blbmith = 0.17
     blbmoth = 0.27
     blbpith = 0.30
@@ -522,7 +533,6 @@ def init_build_variables():
     dz_vv_upper = 0.07
     dz_vv_lower = 0.07
     dr_vv_shells = 0.12
-    f_avspace = 1.0
     fcspc = 0.6
     fseppc = 3.5e8
     a_fw_total_full_coverage = 0.0
@@ -549,8 +559,8 @@ def init_build_variables():
     rbld = 0.0
     required_radial_space = 0.0
     rinboard = 0.651
-    rsldi = 0.0
-    rsldo = 0.0
+    r_shld_inboard_inner = 0.0
+    r_shld_outboard_outer = 0.0
     r_vv_inboard_out = 0.0
     r_sh_inboard_out = 0.0
     r_tf_inboard_in = 0.0

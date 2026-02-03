@@ -6,6 +6,7 @@ import numpy as np
 from process import constants
 from process import process_output as po
 from process.data_structure import build_variables as buv
+from process.data_structure import divertor_variables as dv
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
@@ -43,10 +44,7 @@ class Vacuum:
 
         # MDK Check this!!
         gasld = (
-            2.0e0
-            * pv.molflow_plasma_fuelling_required
-            * pv.m_fuel_amu
-            * constants.UMASS
+            2.0e0 * pv.molflow_plasma_fuelling_required * pv.m_fuel_amu * constants.UMASS
         )
 
         self.i_vacuum_pumping = vacv.i_vacuum_pumping
@@ -70,11 +68,13 @@ class Vacuum:
                 buv.dr_shld_outboard,
                 buv.dr_shld_inboard,
                 buv.dr_tf_inboard,
-                buv.rsldi - buv.dr_shld_vv_gap_inboard - buv.dr_vv_inboard,
+                buv.r_shld_inboard_inner
+                - buv.dr_shld_vv_gap_inboard
+                - buv.dr_vv_inboard,
                 tfv.n_tf_coils,
                 tv.t_plant_pulse_dwell,
                 pv.nd_plasma_electrons_vol_avg,
-                pv.n_divertors,
+                dv.n_divertors,
                 qtorus,
                 gasld,
                 output=output,
@@ -366,13 +366,16 @@ class Vacuum:
 
         source = pfus * 1.47e-09
         fhe = source / (frate * 4.985e5)
-        s.append(source / vacv.pres_div_chamber_burn / fhe)
-
-        #  Removal of dt on steady state basis
-        #  s(4) = net speed (D-T) required to remove dt at fuelling rate (m^3/s)
-
-        s.append(
-            (frate * 4.985e5 - source) / (vacv.pres_div_chamber_burn * (1.0e0 - fhe))
+        s.extend(
+            (
+                (source / vacv.pres_div_chamber_burn / fhe),
+                #  Removal of dt on steady state basis
+                #  s(4) = net speed (D-T) required to remove dt at fuelling rate (m^3/s)
+                (
+                    (frate * 4.985e5 - source)
+                    / (vacv.pres_div_chamber_burn * (1.0e0 - fhe))
+                ),
+            ),
         )
 
         #  Calculate conductance of a single duct
@@ -396,9 +399,7 @@ class Vacuum:
         d = np.full(4, 1e-6)
 
         for i in range(4):
-            sss = nduct / (
-                1.0e0 / sp[i] / pumpn + 1.0e0 / cmax * xmult[i] / xmult[imax]
-            )
+            sss = nduct / (1.0e0 / sp[i] / pumpn + 1.0e0 / cmax * xmult[i] / xmult[imax])
             if sss > s[i]:
                 continue
             imax = i
@@ -470,9 +471,7 @@ class Vacuum:
                 #  Area between adjacent TF coils available for pump ducts
                 #  ritf = outer radius of inboard leg of TF coil (m)
 
-                a1max = (r0 + aw - ritf - thcsh / math.tan(theta)) ** 2 * math.tan(
-                    theta
-                )
+                a1max = (r0 + aw - ritf - thcsh / math.tan(theta)) ** 2 * math.tan(theta)
                 d1max = math.sqrt(4.0e0 * a1max / math.pi)  # Equivalent diameter
                 if a1 < a1max:
                     break
@@ -661,9 +660,7 @@ class Vacuum:
             elif imax == 3:
                 po.ocmmnt(self.outfile, "requirements for helium ash removal.")
             else:
-                po.ocmmnt(
-                    self.outfile, "requirements for D-T removal at fuelling rate."
-                )
+                po.ocmmnt(self.outfile, "requirements for D-T removal at fuelling rate.")
 
             po.oblnkl(self.outfile)
             po.ovarin(self.outfile, "Number of large pump ducts", "(nduct)", nduct)

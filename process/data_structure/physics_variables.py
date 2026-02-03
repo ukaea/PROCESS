@@ -502,20 +502,6 @@ fkzohm: float = None
 """Zohm elongation scaling adjustment factor (`i_plasma_geometry=2, 3`)"""
 
 
-fplhsep: float = None
-"""F-value for Psep >= Plh + Paux (`constraint equation 73`)"""
-
-
-fp_plasma_separatrix_min_mw: float = None
-"""F-value for minimum p_plasma_separatrix_mw (`constraint equation 80`)"""
-
-
-fne0: float = None
-"""f-value for the constraint ne(0) > ne(ped) (`constraint equation 81`)
-(`Iteration variable 154`)
-"""
-
-
 f_plasma_fuel_tritium: float = None
 """Plasma tritium fuel fraction"""
 
@@ -627,10 +613,6 @@ i_density_limit: int = None
 - =7 Greenwald limit
 - =8 ASDEX New
 """
-
-
-n_divertors: int = None
-"""number of divertors (calculated from `i_single_null`)"""
 
 
 i_beta_fast_alpha: int = None
@@ -835,6 +817,9 @@ pres_plasma_fuel_profile: list[float] = None
 
 j_plasma_on_axis: float = None
 """Central plasma current density (A/m2)"""
+
+j_plasma_bootstrap_sauter_profile: list[float] = None
+"""Profile of bootstrap current density in plasma using Sauter et al scaling (A/m2)"""
 
 n_plasma_profile_elements: int = None
 """Number of elements in plasma profile"""
@@ -1132,6 +1117,9 @@ f_nd_protium_electrons: float = None
 ind_plasma_internal_norm: float = None
 """Plasma normalised internal inductance"""
 
+ind_plasma_internal_norm_iter_3: float = None
+"""Plasma normalised internal inductance (ITER type 3)"""
+
 
 ind_plasma_internal_norm_wesson: float = None
 """Wesson-like plasma normalised internal inductance"""
@@ -1304,42 +1292,64 @@ a_plasma_poloidal: float = None
 """plasma poloidal cross-sectional area [m^2]"""
 
 
-zeff: float = None
-"""plasma effective charge"""
+n_charge_plasma_effective_vol_avg: float = None
+"""Volume averaged plasma effective charge"""
+
+n_charge_plasma_effective_profile: list[float] = None
+"""Profile of plasma effective charge"""
 
 
-zeffai: float = None
-"""mass weighted plasma effective charge"""
+n_charge_plasma_effective_mass_weighted_vol_avg: float = None
+"""Plasma mass-weighted volume averaged plasma effective charge"""
+
+len_plasma_debye_electron_profile: list[float] = None
+"""Profile of electron Debye length in plasma (m)"""
+
+len_plasma_debye_electron_vol_avg: float = None
+"""Volume averaged electron Debye length in plasma (m)"""
+
+vel_plasma_electron_profile: list[float] = None
+"""Profile of electron thermal velocity in plasma (m/s)"""
+
+plasma_coulomb_log_electron_electron_profile: list[float] = None
+"""Profile of electron-electron Coulomb logarithm in plasma"""
+
+freq_plasma_electron_profile: list[float] = None
+"""Electron plasma frequency profile (Hz)"""
+
+freq_plasma_larmor_toroidal_electron_profile: list[float] = None
+"""Profile of electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
 
 def init_physics_module():
     """Initialise the physics module"""
-    global first_call
-    global iscz
-    global err242
-    global err243
-    global f_p_plasma_separatrix_rad
-    global e_plasma_beta
-    global p_plasma_heating_total_mw
-    global t_energy_confinement_beta
-    global ptarmw
-    global lambdaio
-    global drsep
-    global fio
-    global fli
-    global flo
-    global fui
-    global fuo
-    global plimw
-    global plomw
-    global puimw
-    global puomw
-    global rho_star
-    global rho_ne_max
-    global rho_te_max
-    global nu_star
-    global beta_mcdonald
-    global itart_r
+    global \
+        first_call, \
+        iscz, \
+        err242, \
+        err243, \
+        f_p_plasma_separatrix_rad, \
+        e_plasma_beta, \
+        p_plasma_heating_total_mw, \
+        t_energy_confinement_beta, \
+        ptarmw, \
+        lambdaio, \
+        drsep, \
+        fio, \
+        fli, \
+        flo, \
+        fui, \
+        fuo, \
+        plimw, \
+        plomw, \
+        puimw, \
+        puomw, \
+        rho_star, \
+        rho_ne_max, \
+        rho_te_max, \
+        nu_star, \
+        beta_mcdonald, \
+        itart_r
 
     first_call = 1
     iscz = 0
@@ -1370,262 +1380,268 @@ def init_physics_module():
 
 
 def init_physics_variables():
-    global m_beam_amu
-    global m_fuel_amu
-    global m_ions_total_amu
-    global m_plasma_fuel_ions
-    global m_plasma_ions_total
-    global m_plasma_alpha
-    global m_plasma_electron
-    global m_plasma
-    global alphaj
-    global i_alphaj
-    global alphan
-    global alphap
-    global fusden_alpha_total
-    global fusden_plasma_alpha
-    global alphat
-    global aspect
-    global beamfus0
-    global beta_total_vol_avg
-    global beta_fast_alpha
-    global beta_vol_avg_max
-    global beta_vol_avg_min
-    global beta_beam
-    global beta_poloidal_vol_avg
-    global beta_poloidal_eps
-    global beta_toroidal_vol_avg
-    global beta_thermal_toroidal_profile
-    global beta_thermal_vol_avg
-    global beta_thermal_poloidal_vol_avg
-    global beta_thermal_toroidal_vol_avg
-    global beta_norm_total
-    global beta_norm_thermal
-    global beta_norm_poloidal
-    global e_plasma_beta_thermal
-    global beta_norm_toroidal
-    global betbm0
-    global b_plasma_poloidal_average
-    global b_plasma_toroidal_on_axis
-    global b_plasma_toroidal_inboard
-    global b_plasma_toroidal_outboard
-    global b_plasma_toroidal_profile
-    global b_plasma_total
-    global e_plasma_magnetic_stored
-    global burnup
-    global burnup_in
-    global b_plasma_vertical_required
-    global c_beta
-    global csawth
-    global f_vol_plasma
-    global f_r_conducting_wall
-    global nd_plasma_electrons_vol_avg
-    global nd_plasma_fuel_ions_vol_avg
-    global dlamee
-    global dlamie
-    global nd_plasma_electron_max_array
-    global nd_plasma_alphas_vol_avg
-    global nd_beam_ions
-    global nd_beam_ions_out
-    global beta_norm_max
-    global beta_norm_max_wesson
-    global beta_norm_max_menard
-    global beta_norm_max_original_scaling
-    global beta_norm_max_tholerus
-    global beta_norm_max_stambaugh
-    global nd_plasma_electrons_max
-    global nd_plasma_ions_total_vol_avg
-    global nd_plasma_electron_line
-    global nd_plasma_protons_vol_avg
-    global ntau
-    global nTtau
-    global nd_plasma_impurities_vol_avg
-    global beta_poloidal_eps_max
-    global eps
-    global f_c_plasma_auxiliary
-    global f_c_plasma_inductive
-    global f_alpha_electron
-    global f_p_alpha_plasma_deposited
-    global f_alpha_ion
-    global f_plasma_fuel_deuterium
-    global f_p_div_lower
-    global ffwal
-    global f_nd_plasma_pedestal_greenwald
-    global f_nd_plasma_separatrix_greenwald
-    global f_plasma_fuel_helium3
-    global figmer
-    global fkzohm
-    global fplhsep
-    global fp_plasma_separatrix_min_mw
-    global fne0
-    global f_plasma_fuel_tritium
-    global fusden_total
-    global fusrat_total
-    global fusrat_plasma_dt_profile
-    global fusrat_plasma_dd_triton_profile
-    global fusrat_plasma_dd_helion_profile
-    global fusrat_plasma_dhe3_profile
-    global fusden_plasma
-    global f_c_plasma_non_inductive
-    global ejima_coeff
-    global f_beta_alpha_beam_thermal
-    global hfac
-    global hfact
-    global t_plasma_energy_confinement_max
-    global i_bootstrap_current
-    global i_beta_component
-    global i_plasma_current
-    global i_diamagnetic_current
-    global i_density_limit
-    global n_divertors
-    global i_beta_fast_alpha
-    global i_plasma_ignited
-    global i_plasma_pedestal
-    global i_pfirsch_schluter_current
-    global nd_plasma_pedestal_electron
-    global nd_plasma_separatrix_electron
-    global alpha_crit
-    global nd_plasma_separatrix_electron_eich_max
-    global plasma_res_factor
-    global radius_plasma_pedestal_density_norm
-    global radius_plasma_pedestal_temp_norm
-    global tbeta
-    global temp_plasma_pedestal_kev
-    global temp_plasma_separatrix_kev
-    global i_beta_norm_max
-    global i_rad_loss
-    global i_confinement_time
-    global i_plasma_wall_gap
-    global i_plasma_geometry
-    global i_plasma_shape
-    global itart
-    global itartpf
-    global i_pflux_fw_neutron
-    global plasma_square
-    global kappa
-    global kappa95
-    global kappa_ipb
-    global nd_plasma_electron_on_axis
-    global nd_plasma_ions_on_axis
-    global m_s_limit
-    global pres_plasma_thermal_on_axis
-    global pres_plasma_thermal_total_profile
-    global pres_plasma_electron_profile
-    global pres_plasma_ion_total_profile
-    global pres_plasma_fuel_profile
-    global j_plasma_on_axis
-    global n_plasma_profile_elements
-    global f_dd_branching_trit
-    global pden_plasma_alpha_mw
-    global pden_alpha_total_mw
-    global f_pden_alpha_electron_mw
-    global p_fw_alpha_mw
-    global f_pden_alpha_ions_mw
-    global p_alpha_total_mw
-    global p_plasma_alpha_mw
-    global p_beam_alpha_mw
-    global p_beam_neutron_mw
-    global p_beam_dt_mw
-    global p_non_alpha_charged_mw
-    global pden_non_alpha_charged_mw
-    global f_temp_plasma_electron_density_vol_avg
-    global p_plasma_inner_rad_mw
-    global pden_plasma_core_rad_mw
-    global p_dd_total_mw
-    global p_dhe3_total_mw
-    global p_plasma_separatrix_mw
-    global p_div_lower_separatrix_mw
-    global p_div_upper_separatrix_mw
-    global p_div_separatrix_max_mw
-    global p_dt_total_mw
-    global p_plasma_dt_mw
-    global p_plasma_outer_rad_mw
-    global pden_plasma_outer_rad_mw
-    global p_charged_particle_mw
-    global vs_plasma_internal
-    global pflux_fw_rad_mw
-    global pden_ion_electron_equilibration_mw
-    global plasma_current
-    global p_plasma_neutron_mw
-    global p_neutron_total_mw
-    global pden_neutron_total_mw
-    global pden_plasma_neutron_mw
-    global p_plasma_ohmic_mw
-    global pden_plasma_ohmic_mw
-    global p_plasma_loss_mw
-    global p_fusion_total_mw
-    global len_plasma_poloidal
-    global p_plasma_rad_mw
-    global pden_plasma_rad_mw
-    global pradsolmw
-    global proton_rate_density
-    global psolradmw
-    global pden_plasma_sync_mw
-    global p_plasma_sync_mw
-    global i_l_h_threshold
-    global p_l_h_threshold_mw
-    global l_h_threshold_powers
-    global p_electron_transport_loss_mw
-    global pden_electron_transport_loss_mw
-    global p_ion_transport_loss_mw
-    global pscalingmw
-    global pden_ion_transport_loss_mw
-    global q0
-    global q95
-    global molflow_plasma_fuelling_required
-    global tauratio
-    global q95_min
-    global qstar
-    global rad_fraction_sol
-    global rad_fraction_total
-    global f_nd_alpha_electron
-    global f_nd_protium_electrons
-    global ind_plasma_internal_norm
-    global ind_plasma_internal_norm_wesson
-    global ind_plasma_internal_norm_menard
-    global i_ind_plasma_internal_norm
-    global ind_plasma
-    global rmajor
-    global rminor
-    global f_nd_beam_electron
-    global f_nd_plasma_carbon_electron
-    global rndfuel
-    global f_nd_plasma_iron_argon_electron
-    global f_nd_plasma_oxygen_electron
-    global f_res_plasma_neo
-    global res_plasma
-    global t_plasma_res_diffusion
-    global a_plasma_surface
-    global a_plasma_surface_outboard
-    global i_single_null
-    global f_sync_reflect
-    global t_electron_energy_confinement
-    global tauee_in
-    global t_energy_confinement
-    global t_ion_energy_confinement
-    global t_alpha_confinement
-    global f_alpha_energy_confinement
-    global temp_plasma_electron_vol_avg_kev
-    global temp_plasma_electron_on_axis_kev
-    global temp_plasma_electron_density_weighted_kev
-    global temp_plasma_ion_vol_avg_kev
-    global temp_plasma_ion_on_axis_kev
-    global temp_plasma_ion_density_weighted_kev
-    global f_temp_plasma_ion_electron
-    global triang
-    global triang95
-    global vol_plasma
-    global vs_plasma_burn_required
-    global vs_plasma_ramp_required
-    global v_plasma_loop_burn
-    global vs_plasma_ind_ramp
-    global vs_plasma_res_ramp
-    global vs_plasma_total_required
-    global pflux_fw_neutron_mw
-    global wtgpd
-    global a_plasma_poloidal
-    global zeff
-    global zeffai
+    global \
+        m_beam_amu, \
+        m_fuel_amu, \
+        m_ions_total_amu, \
+        m_plasma_fuel_ions, \
+        m_plasma_ions_total, \
+        m_plasma_alpha, \
+        m_plasma_electron, \
+        m_plasma, \
+        alphaj, \
+        i_alphaj, \
+        alphan, \
+        alphap, \
+        fusden_alpha_total, \
+        fusden_plasma_alpha, \
+        alphat, \
+        aspect, \
+        beamfus0, \
+        beta_total_vol_avg, \
+        beta_fast_alpha, \
+        beta_vol_avg_max, \
+        beta_vol_avg_min, \
+        beta_beam, \
+        beta_poloidal_vol_avg, \
+        beta_poloidal_eps, \
+        beta_toroidal_vol_avg, \
+        beta_thermal_toroidal_profile, \
+        beta_thermal_vol_avg, \
+        beta_thermal_poloidal_vol_avg, \
+        beta_thermal_toroidal_vol_avg, \
+        beta_norm_total, \
+        beta_norm_thermal, \
+        beta_norm_poloidal, \
+        e_plasma_beta_thermal, \
+        beta_norm_toroidal, \
+        betbm0, \
+        b_plasma_poloidal_average, \
+        b_plasma_toroidal_on_axis, \
+        b_plasma_toroidal_inboard, \
+        b_plasma_toroidal_outboard, \
+        b_plasma_toroidal_profile, \
+        b_plasma_total, \
+        e_plasma_magnetic_stored, \
+        burnup, \
+        burnup_in, \
+        b_plasma_vertical_required, \
+        c_beta, \
+        csawth, \
+        f_vol_plasma, \
+        f_r_conducting_wall, \
+        nd_plasma_electrons_vol_avg, \
+        nd_plasma_fuel_ions_vol_avg, \
+        dlamee, \
+        dlamie, \
+        nd_plasma_electron_max_array, \
+        nd_plasma_alphas_vol_avg, \
+        nd_beam_ions, \
+        nd_beam_ions_out, \
+        beta_norm_max, \
+        beta_norm_max_wesson, \
+        beta_norm_max_menard, \
+        beta_norm_max_original_scaling, \
+        beta_norm_max_tholerus, \
+        beta_norm_max_stambaugh, \
+        nd_plasma_electrons_max, \
+        nd_plasma_ions_total_vol_avg, \
+        nd_plasma_electron_line, \
+        nd_plasma_protons_vol_avg, \
+        ntau, \
+        nTtau, \
+        nd_plasma_impurities_vol_avg, \
+        beta_poloidal_eps_max, \
+        eps, \
+        f_c_plasma_auxiliary, \
+        f_c_plasma_inductive, \
+        f_alpha_electron, \
+        f_p_alpha_plasma_deposited, \
+        f_alpha_ion, \
+        f_plasma_fuel_deuterium, \
+        f_p_div_lower, \
+        ffwal, \
+        f_nd_plasma_pedestal_greenwald, \
+        f_nd_plasma_separatrix_greenwald, \
+        f_plasma_fuel_helium3, \
+        figmer, \
+        fkzohm, \
+        f_plasma_fuel_tritium, \
+        fusden_total, \
+        fusrat_total, \
+        fusrat_plasma_dt_profile, \
+        fusrat_plasma_dd_triton_profile, \
+        fusrat_plasma_dd_helion_profile, \
+        fusrat_plasma_dhe3_profile, \
+        fusden_plasma, \
+        f_c_plasma_non_inductive, \
+        ejima_coeff, \
+        f_beta_alpha_beam_thermal, \
+        hfac, \
+        hfact, \
+        t_plasma_energy_confinement_max, \
+        i_bootstrap_current, \
+        i_beta_component, \
+        i_plasma_current, \
+        i_diamagnetic_current, \
+        i_density_limit, \
+        i_beta_fast_alpha, \
+        i_plasma_ignited, \
+        i_plasma_pedestal, \
+        i_pfirsch_schluter_current, \
+        nd_plasma_pedestal_electron, \
+        nd_plasma_separatrix_electron, \
+        alpha_crit, \
+        nd_plasma_separatrix_electron_eich_max, \
+        plasma_res_factor, \
+        radius_plasma_pedestal_density_norm, \
+        radius_plasma_pedestal_temp_norm, \
+        tbeta, \
+        temp_plasma_pedestal_kev, \
+        temp_plasma_separatrix_kev, \
+        i_beta_norm_max, \
+        i_rad_loss, \
+        i_confinement_time, \
+        i_plasma_wall_gap, \
+        i_plasma_geometry, \
+        i_plasma_shape, \
+        itart, \
+        itartpf, \
+        i_pflux_fw_neutron, \
+        plasma_square, \
+        kappa, \
+        kappa95, \
+        kappa_ipb, \
+        nd_plasma_electron_on_axis, \
+        nd_plasma_ions_on_axis, \
+        m_s_limit, \
+        pres_plasma_thermal_on_axis, \
+        pres_plasma_thermal_total_profile, \
+        pres_plasma_electron_profile, \
+        pres_plasma_ion_total_profile, \
+        pres_plasma_fuel_profile, \
+        j_plasma_on_axis, \
+        n_plasma_profile_elements, \
+        f_dd_branching_trit, \
+        pden_plasma_alpha_mw, \
+        pden_alpha_total_mw, \
+        f_pden_alpha_electron_mw, \
+        p_fw_alpha_mw, \
+        f_pden_alpha_ions_mw, \
+        p_alpha_total_mw, \
+        p_plasma_alpha_mw, \
+        p_beam_alpha_mw, \
+        p_beam_neutron_mw, \
+        p_beam_dt_mw, \
+        p_non_alpha_charged_mw, \
+        pden_non_alpha_charged_mw, \
+        f_temp_plasma_electron_density_vol_avg, \
+        p_plasma_inner_rad_mw, \
+        pden_plasma_core_rad_mw, \
+        p_dd_total_mw, \
+        p_dhe3_total_mw, \
+        p_plasma_separatrix_mw, \
+        p_div_lower_separatrix_mw, \
+        p_div_upper_separatrix_mw, \
+        p_div_separatrix_max_mw, \
+        p_dt_total_mw, \
+        p_plasma_dt_mw, \
+        p_plasma_outer_rad_mw, \
+        pden_plasma_outer_rad_mw, \
+        p_charged_particle_mw, \
+        vs_plasma_internal, \
+        pflux_fw_rad_mw, \
+        pden_ion_electron_equilibration_mw, \
+        plasma_current, \
+        p_plasma_neutron_mw, \
+        p_neutron_total_mw, \
+        pden_neutron_total_mw, \
+        pden_plasma_neutron_mw, \
+        p_plasma_ohmic_mw, \
+        pden_plasma_ohmic_mw, \
+        p_plasma_loss_mw, \
+        p_fusion_total_mw, \
+        len_plasma_poloidal, \
+        p_plasma_rad_mw, \
+        pden_plasma_rad_mw, \
+        pradsolmw, \
+        proton_rate_density, \
+        psolradmw, \
+        pden_plasma_sync_mw, \
+        p_plasma_sync_mw, \
+        i_l_h_threshold, \
+        p_l_h_threshold_mw, \
+        l_h_threshold_powers, \
+        p_electron_transport_loss_mw, \
+        pden_electron_transport_loss_mw, \
+        p_ion_transport_loss_mw, \
+        pscalingmw, \
+        pden_ion_transport_loss_mw, \
+        q0, \
+        q95, \
+        molflow_plasma_fuelling_required, \
+        tauratio, \
+        q95_min, \
+        qstar, \
+        rad_fraction_sol, \
+        rad_fraction_total, \
+        f_nd_alpha_electron, \
+        f_nd_protium_electrons, \
+        ind_plasma_internal_norm, \
+        ind_plasma_internal_norm_wesson, \
+        ind_plasma_internal_norm_menard, \
+        ind_plasma_internal_norm_iter_3, \
+        i_ind_plasma_internal_norm, \
+        ind_plasma, \
+        rmajor, \
+        rminor, \
+        f_nd_beam_electron, \
+        f_nd_plasma_carbon_electron, \
+        rndfuel, \
+        f_nd_plasma_iron_argon_electron, \
+        f_nd_plasma_oxygen_electron, \
+        f_res_plasma_neo, \
+        res_plasma, \
+        t_plasma_res_diffusion, \
+        a_plasma_surface, \
+        a_plasma_surface_outboard, \
+        i_single_null, \
+        f_sync_reflect, \
+        t_electron_energy_confinement, \
+        tauee_in, \
+        t_energy_confinement, \
+        t_ion_energy_confinement, \
+        t_alpha_confinement, \
+        f_alpha_energy_confinement, \
+        temp_plasma_electron_vol_avg_kev, \
+        temp_plasma_electron_on_axis_kev, \
+        temp_plasma_electron_density_weighted_kev, \
+        temp_plasma_ion_vol_avg_kev, \
+        temp_plasma_ion_on_axis_kev, \
+        temp_plasma_ion_density_weighted_kev, \
+        f_temp_plasma_ion_electron, \
+        triang, \
+        triang95, \
+        vol_plasma, \
+        vs_plasma_burn_required, \
+        vs_plasma_ramp_required, \
+        v_plasma_loop_burn, \
+        vs_plasma_ind_ramp, \
+        vs_plasma_res_ramp, \
+        vs_plasma_total_required, \
+        pflux_fw_neutron_mw, \
+        wtgpd, \
+        a_plasma_poloidal, \
+        n_charge_plasma_effective_vol_avg, \
+        n_charge_plasma_effective_profile, \
+        n_charge_plasma_effective_mass_weighted_vol_avg, \
+        j_plasma_bootstrap_sauter_profile, \
+        len_plasma_debye_electron_profile, \
+        len_plasma_debye_electron_vol_avg, \
+        vel_plasma_electron_profile, \
+        plasma_coulomb_log_electron_electron_profile, \
+        freq_plasma_electron_profile, \
+        freq_plasma_larmor_toroidal_electron_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1712,9 +1728,6 @@ def init_physics_variables():
     f_plasma_fuel_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0
-    fplhsep = 1.0
-    fp_plasma_separatrix_min_mw = 1.0
-    fne0 = 1.0
     f_plasma_fuel_tritium = 0.5
     fusden_total = 0.0
     fusrat_total = 0.0
@@ -1734,7 +1747,6 @@ def init_physics_variables():
     i_plasma_current = 4
     i_diamagnetic_current = 0
     i_density_limit = 8
-    n_divertors = 2
     i_beta_fast_alpha = 1
     i_plasma_ignited = 0
     i_plasma_pedestal = 1
@@ -1771,6 +1783,7 @@ def init_physics_variables():
     pres_plasma_ion_total_profile = []
     pres_plasma_fuel_profile = []
     j_plasma_on_axis = 0.0
+    j_plasma_bootstrap_sauter_profile = []
     n_plasma_profile_elements = 500
     f_dd_branching_trit = 0.0
     pden_plasma_alpha_mw = 0.0
@@ -1840,6 +1853,7 @@ def init_physics_variables():
     ind_plasma_internal_norm = 0.9
     ind_plasma_internal_norm_wesson = 0.0
     ind_plasma_internal_norm_menard = 0.0
+    ind_plasma_internal_norm_iter_3 = 0.0
     i_ind_plasma_internal_norm = 0
     ind_plasma = 0.0
     rmajor = 8.14
@@ -1881,5 +1895,12 @@ def init_physics_variables():
     pflux_fw_neutron_mw = 0.0
     wtgpd = 0.0
     a_plasma_poloidal = 0.0
-    zeff = 0.0
-    zeffai = 0.0
+    n_charge_plasma_effective_vol_avg = 0.0
+    n_charge_plasma_effective_profile = []
+    n_charge_plasma_effective_mass_weighted_vol_avg = 0.0
+    len_plasma_debye_electron_profile = []
+    len_plasma_debye_electron_vol_avg = 0.0
+    vel_plasma_electron_profile = []
+    plasma_coulomb_log_electron_electron_profile = []
+    freq_plasma_electron_profile = []
+    freq_plasma_larmor_toroidal_electron_profile = []

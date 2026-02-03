@@ -239,7 +239,7 @@ cdirt: float = None
 """total plant direct cost (M$)"""
 
 
-cdrlife: float = None
+life_hcd_fpy: float = None
 """Full power year lifetime of heating/current drive system (y)"""
 
 
@@ -247,8 +247,8 @@ cdrlife_cal: float = None
 """Calendar year lifetime of heating/current drive system (y)"""
 
 
-cfactr: float = None
-"""Total plant availability fraction; input if `iavail=0`"""
+f_t_plant_available: float = None
+"""Total plant availability fraction; input if `i_plant_availability=0`"""
 
 
 cpfact: float = None
@@ -401,11 +401,11 @@ divcst: float = None
 """divertor direct cost (M$)"""
 
 
-divlife: float = None
-"""Full power lifetime of divertor (y)"""
+life_div_fpy: float = None
+"""Full power year lifetime of divertor (fpy)"""
 
 
-divlife_cal: float = None
+life_div: float = None
 """Calendar year lifetime of divertor (y)"""
 
 
@@ -441,12 +441,12 @@ fwallcst: float = None
 """first wall cost (M$)"""
 
 
-iavail: int = None
+i_plant_availability: int = None
 """Switch for plant availability model:
-- =0 use input value for cfactr
-- =1 calculate cfactr using Taylor and Ward 1999 model
-- =2 calculate cfactr using new (2015) model
-- =3 calculate cfactr using ST model
+- =0 use input value for f_t_plant_available
+- =1 calculate f_t_plant_available using Taylor and Ward 1999 model
+- =2 calculate f_t_plant_available using new (2015) model
+- =3 calculate f_t_plant_available using ST model
 """
 
 
@@ -474,10 +474,6 @@ tok_build_cost_per_vol: float = None
 
 light_build_cost_per_vol: float = None
 """Unit cost for unshielded non-active buildings ($/m3)"""
-
-
-favail: float = None
-"""F-value for minimum availability (`constraint equation 61`)"""
 
 
 num_rh_systems: int = None
@@ -528,48 +524,48 @@ redun_vac: int = None
 """Number of redundant vacuum pumps"""
 
 
-t_operation: float = None
+t_plant_operational_total_yrs: float = None
 """Operational time (yrs)"""
 
 
-tbktrepl: float = None
-"""time taken to replace blanket (y) (`iavail=1`)"""
+t_blkt_replace_yrs: float = None
+"""time taken to replace blanket (y) (`i_plant_availability=1`)"""
 
 
 tcomrepl: float = None
-"""time taken to replace both blanket and divertor (y) (`iavail=1`)"""
+"""time taken to replace both blanket and divertor (y) (`i_plant_availability=1`)"""
 
 
-tdivrepl: float = None
-"""time taken to replace divertor (y) (`iavail=1`)"""
+t_div_replace_yrs: float = None
+"""Time taken to replace divertor (y) (`i_plant_availability=1`)"""
 
 
 uubop: float = None
-"""unplanned unavailability factor for balance of plant (`iavail=1`)"""
+"""unplanned unavailability factor for balance of plant (`i_plant_availability=1`)"""
 
 
 uucd: float = None
-"""unplanned unavailability factor for current drive (`iavail=1`)"""
+"""unplanned unavailability factor for current drive (`i_plant_availability=1`)"""
 
 
 uudiv: float = None
-"""unplanned unavailability factor for divertor (`iavail=1`)"""
+"""unplanned unavailability factor for divertor (`i_plant_availability=1`)"""
 
 
 uufuel: float = None
-"""unplanned unavailability factor for fuel system (`iavail=1`)"""
+"""unplanned unavailability factor for fuel system (`i_plant_availability=1`)"""
 
 
 uufw: float = None
-"""unplanned unavailability factor for first wall (`iavail=1`)"""
+"""unplanned unavailability factor for first wall (`i_plant_availability=1`)"""
 
 
 uumag: float = None
-"""unplanned unavailability factor for magnets (`iavail=1`)"""
+"""unplanned unavailability factor for magnets (`i_plant_availability=1`)"""
 
 
 uuves: float = None
-"""unplanned unavailability factor for vessel (`iavail=1`)"""
+"""unplanned unavailability factor for vessel (`i_plant_availability=1`)"""
 
 
 ifueltyp: int = None
@@ -634,16 +630,16 @@ supercond_cost_model: int = None
 - =1 use $/kAm"""
 
 
-tlife: float = None
+life_plant: float = None
 """Full power year plant lifetime (years)"""
 
 
 tmain: float = None
-"""Maintenance time for replacing CP (years) (iavail = 3)"""
+"""Maintenance time for replacing CP (years) (i_plant_availability = 3)"""
 
 
 u_unplanned_cp: float = None
-"""User-input CP unplanned unavailability (iavail = 3)"""
+"""User-input CP unplanned unavailability (i_plant_availability = 3)"""
 
 
 UCAD: float = 180.0
@@ -1274,162 +1270,171 @@ def init_cost_variables():
     global c22128
     c22128 = 0.0
 
-    global abktflnc
-    global adivflnc
-    global blkcst
-    global c221
-    global c222
-    global capcost
-    global cconfix
-    global cconshpf
-    global cconshtf
-    global cdcost
-    global cdirt
-    global cdrlife
-    global cdrlife_cal
-    global cfactr
-    global cpfact
-    global cfind
-    global cland
-    global coe
-    global coecap
-    global coefuelt
-    global coeoam
-    global concost
-    global costexp
-    global costexp_pebbles
-    global cost_factor_buildings
-    global cost_factor_land
-    global cost_factor_tf_coils
-    global cost_factor_fwbs
-    global cost_factor_rh
-    global cost_factor_vv
-    global cost_factor_bop
-    global cost_factor_misc
-    global maintenance_fwbs
-    global maintenance_gen
-    global amortization
-    global cost_model
-    global i_cp_lifetime
-    global cowner
-    global cplife_input
-    global cplife
-    global cplife_cal
-    global cpstcst
-    global cpstflnc
-    global crctcore
-    global csi
-    global cturbb
-    global decomf
-    global dintrt
-    global divcst
-    global divlife
-    global divlife_cal
-    global dtlife
-    global fcap0
-    global fcap0cp
-    global fcdfuel
-    global fcontng
-    global fcr0
-    global fkind
-    global fwallcst
-    global iavail
-    global ibkt_life
-    global life_dpa
-    global bktcycles
-    global avail_min
-    global tok_build_cost_per_vol
-    global light_build_cost_per_vol
-    global favail
-    global num_rh_systems
-    global conf_mag
-    global div_prob_fail
-    global div_umain_time
-    global div_nref
-    global div_nu
-    global fwbs_nref
-    global fwbs_nu
-    global fwbs_prob_fail
-    global fwbs_umain_time
-    global redun_vacp
-    global redun_vac
-    global t_operation
-    global tbktrepl
-    global tcomrepl
-    global tdivrepl
-    global uubop
-    global uucd
-    global uudiv
-    global uufuel
-    global uufw
-    global uumag
-    global uuves
-    global ifueltyp
-    global ipnet
-    global ireactor
-    global lsa
-    global moneyint
-    global output_costs
-    global discount_rate
-    global startupratio
-    global startuppwr
-    global supercond_cost_model
-    global tlife
-    global tmain
-    global u_unplanned_cp
-    global ucblbe
-    global ucblbreed
-    global ucblli
-    global ucblli2o
-    global ucbllipb
-    global ucblss
-    global ucblvd
-    global ucbus
-    global uccase
-    global uccpcl1
-    global uccpclb
-    global uccry
-    global uccryo
-    global uccu
-    global ucdiv
-    global ucech
-    global uces1
-    global uces2
-    global ucf1
-    global ucfnc
-    global ucfuel
-    global uche3
-    global uchrs
-    global uchts
-    global uciac
-    global ucich
-    global uclh
-    global ucme
-    global ucmisc
-    global ucnbi
-    global ucoam
-    global ucpens
-    global ucpfb
-    global ucpfbk
-    global ucpfbs
-    global ucpfcb
-    global ucpfdr1
-    global ucpfps
-    global ucrb
-    global ucsc
-    global sc_mat_cost_0
-    global ucshld
-    global uctfbr
-    global uctfbus
-    global uctfps
-    global uctfsw
-    global uctpmp
-    global ucturb
-    global ucwindpf
-    global ucwindtf
-    global ucws
-    global ucwst
-    global ucpfic
+    global \
+        abktflnc, \
+        adivflnc, \
+        blkcst, \
+        c221, \
+        c222, \
+        capcost, \
+        cconfix, \
+        cconshpf, \
+        cconshtf, \
+        cdcost, \
+        cdirt, \
+        cdrlife, \
+        cdrlife_cal, \
+        cfactr, \
+        cpfact, \
+        cfind, \
+        cland, \
+        coe, \
+        coecap, \
+        coefuelt, \
+        coeoam, \
+        concost, \
+        costexp, \
+        costexp_pebbles, \
+        cost_factor_buildings, \
+        cost_factor_land, \
+        cost_factor_tf_coils, \
+        cost_factor_fwbs, \
+        cost_factor_rh, \
+        cost_factor_vv, \
+        cost_factor_bop, \
+        cost_factor_misc, \
+        maintenance_fwbs, \
+        maintenance_gen, \
+        amortization, \
+        cost_model, \
+        i_cp_lifetime, \
+        cowner, \
+        cplife_input, \
+        cplife, \
+        cplife_cal, \
+        cpstcst, \
+        cpstflnc, \
+        crctcore, \
+        csi, \
+        cturbb, \
+        decomf, \
+        dintrt, \
+        divcst, \
+        divlife, \
+        divlife_cal, \
+        dtlife, \
+        fcap0, \
+        fcap0cp, \
+        fcdfuel, \
+        fcontng, \
+        fcr0, \
+        fkind, \
+        fwallcst, \
+        iavail, \
+        ibkt_life, \
+        life_dpa, \
+        bktcycles, \
+        avail_min, \
+        tok_build_cost_per_vol, \
+        light_build_cost_per_vol, \
+        num_rh_systems, \
+        conf_mag, \
+        div_prob_fail, \
+        div_umain_time, \
+        div_nref, \
+        div_nu, \
+        fwbs_nref, \
+        fwbs_nu, \
+        fwbs_prob_fail, \
+        fwbs_umain_time, \
+        redun_vacp, \
+        redun_vac, \
+        t_operation, \
+        tbktrepl, \
+        tcomrepl, \
+        tdivrepl, \
+        uubop, \
+        uucd, \
+        uudiv, \
+        uufuel, \
+        uufw, \
+        uumag, \
+        uuves, \
+        ifueltyp, \
+        ipnet, \
+        ireactor, \
+        lsa, \
+        moneyint, \
+        output_costs, \
+        discount_rate, \
+        startupratio, \
+        startuppwr, \
+        supercond_cost_model, \
+        tlife, \
+        tmain, \
+        u_unplanned_cp, \
+        ucblbe, \
+        ucblbreed, \
+        ucblli, \
+        ucblli2o, \
+        ucbllipb, \
+        ucblss, \
+        ucblvd, \
+        ucbus, \
+        uccase, \
+        uccpcl1, \
+        uccpclb, \
+        uccry, \
+        uccryo, \
+        uccu, \
+        ucdiv, \
+        ucech, \
+        uces1, \
+        uces2, \
+        ucf1, \
+        ucfnc, \
+        ucfuel, \
+        uche3, \
+        uchrs, \
+        uchts, \
+        uciac, \
+        ucich, \
+        uclh, \
+        ucme, \
+        ucmisc, \
+        ucnbi, \
+        ucoam, \
+        ucpens, \
+        ucpfb, \
+        ucpfbk, \
+        ucpfbs, \
+        ucpfcb, \
+        ucpfdr1, \
+        ucpfps, \
+        ucrb, \
+        ucsc, \
+        sc_mat_cost_0, \
+        ucshld, \
+        uctfbr, \
+        uctfbus, \
+        uctfps, \
+        uctfsw, \
+        uctpmp, \
+        ucturb, \
+        ucwindpf, \
+        ucwindtf, \
+        ucws, \
+        ucwst, \
+        ucpfic, \
+        life_hcd_fpy, \
+        f_t_plant_available, \
+        life_div_fpy, \
+        life_div, \
+        i_plant_availability, \
+        t_plant_operational_total_yrs, \
+        t_blkt_replace_yrs, \
+        t_div_replace_yrs, \
+        life_plant
 
     abktflnc = 5.0
     adivflnc = 7.0
@@ -1442,9 +1447,9 @@ def init_cost_variables():
     cconshtf = 75.0
     cdcost = 0.0
     cdirt = 0.0
-    cdrlife = 0.0
+    life_hcd_fpy = 0.0
     cdrlife_cal = 0.0
-    cfactr = 0.75
+    f_t_plant_available = 0.75
     cpfact = 0.0
     cfind = [0.244, 0.244, 0.244, 0.29]
     cland = 19.2
@@ -1478,8 +1483,8 @@ def init_cost_variables():
     decomf = 0.1
     dintrt = 0.0
     divcst = 0.0
-    divlife = 0.0
-    divlife_cal = 0.0
+    life_div_fpy = 0.0
+    life_div = 0.0
     dtlife = 0.0
     fcap0 = 1.165
     fcap0cp = 1.08
@@ -1488,14 +1493,13 @@ def init_cost_variables():
     fcr0 = 0.0966
     fkind = 1.0
     fwallcst = 0.0
-    iavail = 2
+    i_plant_availability = 2
     ibkt_life = 0
     life_dpa = 50
     bktcycles = 1.0e3
     avail_min = 0.75
     tok_build_cost_per_vol = 1283.0
     light_build_cost_per_vol = 270.0
-    favail = 1.0
     num_rh_systems = 4
     conf_mag = 0.99
     div_prob_fail = 0.0002
@@ -1508,10 +1512,10 @@ def init_cost_variables():
     fwbs_umain_time = 0.25
     redun_vacp = 25.0
     redun_vac = 0
-    t_operation = 0.0
-    tbktrepl = 0.5
+    t_plant_operational_total_yrs = 0.0
+    t_blkt_replace_yrs = 0.5
     tcomrepl = 0.5
-    tdivrepl = 0.25
+    t_div_replace_yrs = 0.25
     uubop = 0.02
     uucd = 0.02
     uudiv = 0.04
@@ -1528,7 +1532,7 @@ def init_cost_variables():
     discount_rate = 0.0435
     startupratio = 1.0
     startuppwr = 0.0
-    tlife = 30.0
+    life_plant = 30.0
     ucblbe = 260.0
     ucblbreed = 875.0
     ucblli = 875.0

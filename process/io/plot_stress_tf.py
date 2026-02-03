@@ -14,10 +14,7 @@ import os
 from argparse import RawTextHelpFormatter
 from pathlib import Path
 
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-
-mpl.use("Agg")
 
 
 def main(args=None):
@@ -265,14 +262,10 @@ def main(args=None):
             sig_file_data["Von-Mises stress (MPa)"][(ii + 1) * n_radial_array_layer - 1]
         )
         bound_tresca_stress.append(
-            sig_file_data["CEA Tresca stress (MPa)"][
-                (ii + 1) * n_radial_array_layer - 1
-            ]
+            sig_file_data["CEA Tresca stress (MPa)"][(ii + 1) * n_radial_array_layer - 1]
         )
         bound_cea_tresca_stress.append(
-            sig_file_data["CEA Tresca stress (MPa)"][
-                (ii + 1) * n_radial_array_layer - 1
-            ]
+            sig_file_data["CEA Tresca stress (MPa)"][(ii + 1) * n_radial_array_layer - 1]
         )
         bound_radial_displacement.append(
             sig_file_data["rad. displacement (mm)"][(ii + 1) * n_radial_array_layer - 1]
@@ -282,17 +275,15 @@ def main(args=None):
     for ii in range(n_layers):
         tresca_smeared_stress.append([])
 
-        bound_tresca_smeared_stress.append(
+        bound_tresca_smeared_stress.extend([
             max(abs(radial_smeared_stress[ii][0]), abs(toroidal_smeared_stress[ii][0]))
-            + vertical_smeared_stress[ii][0]
-        )
-        bound_tresca_smeared_stress.append(
+            + vertical_smeared_stress[ii][0],
             max(
                 abs(radial_smeared_stress[ii][n_radial_array_layer - 1]),
                 abs(toroidal_smeared_stress[ii][n_radial_array_layer - 1]),
             )
-            + vertical_smeared_stress[ii][n_radial_array_layer - 1]
-        )
+            + vertical_smeared_stress[ii][n_radial_array_layer - 1],
+        ])
         for jj in range(n_radial_array_layer):
             tresca_smeared_stress[ii].append(
                 max(
@@ -309,24 +300,18 @@ def main(args=None):
             toroidal_strain.append([])
             vertical_strain.append([])
 
-            bound_radial_strain.append(
-                sig_file_data["Radial strain"][ii * n_radial_array_layer]
-            )
-            bound_toroidal_strain.append(
-                sig_file_data["Toroidal strain"][ii * n_radial_array_layer]
-            )
-            bound_vertical_strain.append(
-                sig_file_data["Vertical strain"][ii * n_radial_array_layer]
-            )
-            bound_radial_strain.append(
-                sig_file_data["Radial strain"][(ii + 1) * n_radial_array_layer - 1]
-            )
-            bound_toroidal_strain.append(
-                sig_file_data["Toroidal strain"][(ii + 1) * n_radial_array_layer - 1]
-            )
-            bound_vertical_strain.append(
-                sig_file_data["Vertical strain"][(ii + 1) * n_radial_array_layer - 1]
-            )
+            bound_radial_strain.extend([
+                sig_file_data["Radial strain"][ii * n_radial_array_layer],
+                sig_file_data["Radial strain"][(ii + 1) * n_radial_array_layer - 1],
+            ])
+            bound_toroidal_strain.extend([
+                sig_file_data["Toroidal strain"][ii * n_radial_array_layer],
+                sig_file_data["Toroidal strain"][(ii + 1) * n_radial_array_layer - 1],
+            ])
+            bound_vertical_strain.extend([
+                sig_file_data["Vertical strain"][ii * n_radial_array_layer],
+                sig_file_data["Vertical strain"][(ii + 1) * n_radial_array_layer - 1],
+            ])
             for jj in range(n_radial_array_layer):
                 radial_strain[ii].append(
                     sig_file_data["Radial strain"][ii * n_radial_array_layer + jj]

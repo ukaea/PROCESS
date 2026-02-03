@@ -64,10 +64,10 @@ def superconductor():
             * tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
-            - tfcoil_variables.len_tf_coil
-            * tfcoil_variables.a_tf_wp_coolant_channels
-        )
-        * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
+        ) * tfcoil_variables.dcond[
+            tfcoil_variables.i_tf_sc_mat - 1
+        ]
     )
 
 def copper():

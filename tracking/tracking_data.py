@@ -38,6 +38,7 @@ import json
 import logging
 import math
 import pathlib
+from pathlib import Path
 from typing import ClassVar
 
 import git
@@ -97,7 +98,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "Physics.temp_plasma_electron_vol_avg_kev",
     "Physics.beta_total_vol_avg",
     "Physics.f_c_plasma_inductive",
-    "Physics.zeff",
+    "Physics.n_charge_plasma_effective_vol_avg",
     "Physics.b_plasma_toroidal_on_axis",
     "Physics.hfact",
     "Physics.kappa",
@@ -126,7 +127,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "PFCoil.vs_cs_pf_total_pulse",
     "Physics.nd_plasma_ions_total_vol_avg",
     "Time.t_plant_pulse_burn",
-    "Cost.divlife",
+    "Cost.life_div_fpy",
     "Cost.cdirt",
     "Cost.concost",
 }
@@ -168,6 +169,7 @@ class ProcessTracker:
         message: str | None = None,
         hashid: str | None = None,
         tracking_variables_file: pathlib.Path | None = None,
+        strict: bool = False,
     ) -> None:
         """Drive the creation of tracking JSON files.
 
@@ -178,6 +180,12 @@ class ProcessTracker:
         :type database: str
         """
         self.mfile = mf.MFile(mfile)
+
+        if strict and (ifail := self.mfile.data["ifail"].get_scan(-1)) != 1:
+            raise RuntimeError(
+                f"{ifail = :.0f} indicates PROCESS has failed to converge."
+            )
+
         self.tracking_file = TrackingFile()
 
         if tracking_variables_file is None:
@@ -515,8 +523,7 @@ def write_tracking_html_file(database, output, tracking_variables_file):
 
     tracking_html = plot_tracking_data(database, tracked_variables)
 
-    with open(output, "w") as f:
-        f.write(tracking_html)
+    Path(output).write_text(tracking_html)
 
 
 def track_entrypoint(arguments):

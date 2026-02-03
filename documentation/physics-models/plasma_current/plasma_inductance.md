@@ -42,7 +42,7 @@ This is only recommended for high aspect ratio tokamaks[^2].
 ---------
 
 
-#### Menard Inductance Relation
+### Menard Inductance Relation
 
 This can be activated by stating `ind_plasma_internal_norm = 2` in the input file.
 
@@ -60,9 +60,43 @@ This relation is based off of data from NSTX for $l_i$ in the range of 0.4-0.85.
 
 **It is recommended to use this switch with [`i_beta_norm_max = 3`](../plasma_beta/plasma_beta.md#menard-beta-relation) as they are self-consistent with each other.**
 
+--------------
+
+## ITER Definitions
+
+The generally agreed definition of $l_i$ is:
+
+$$
+l_i = \frac{\langle B_{\text{p}}^2 \rangle}{B_{\text{p}}(a)^2}
+$$
+
+where $B_{\text{p}}(a)^2$ is the square of the average poloidal field at the plasma edge. In the second term, the average on the
+boundary is made explicit, with Lp the line integral of the poloidal circumference of the last closed flux surface.
+
+In the unpublished ITER Physics Guidelines document[^4], different approximations for the denominator are used.
+
+Although the motivation for these approximations is not explicitly stated, it is likely due to the challenges involved in generating free-boundary equilibria that include an X-point at that time[^5][^6].
+
+### ITER Version 3 | `calculate_normalised_internal_inductance_iter_3()`
+
+$$
+\overbrace{l_i(3)}^{\texttt{ind_plasma_internal_norm_iter_3}} = \frac{2V\langle B_{\text{p}}^2 \rangle}{\mu_0^2I_{\text{p}}^2R_0}
+$$
+
+
+
+
+
 [^1]: T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,” Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
 
 [^2]: Tokamaks 4th Edition, Wesson, page 116
 
 [^3]: J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,” Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016, doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+
+[^4]: N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990
+
+[^5]: T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon, “Inductive flux usage and its optimization in tokamak operation,”
+Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014, doi: https://doi.org/10.1088/0029-5515/54/9/093005.
+
+[^6]: G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,” Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008, doi: https://doi.org/10.1088/0029-5515/48/12/125002.
 

@@ -5,6 +5,7 @@ from process.data_structure import (
     current_drive_variables,
     physics_variables,
     stellarator_variables,
+    heat_transport_variables,
 )
 
 
@@ -46,14 +47,14 @@ def st_heat(stellarator, output: bool):
         current_drive_variables.eta_hcd_primary_injector_wall_plug = (
             current_drive_variables.eta_lowhyb_injector_wall_plug
         )
-        current_drive_variables.p_hcd_electric_total_mw = (
+        heat_transport_variables.p_hcd_electric_total_mw = (
             current_drive_variables.p_hcd_injected_ions_mw
             + current_drive_variables.p_hcd_injected_electrons_mw
         ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         
     elif stellarator_variables.isthtr == 3:
         (
-            effnbss,
+            _effnbss,
             f_p_beam_injected_ions,
             current_drive_variables.f_p_beam_shine_through,
         ) = stellarator.current_drive.culnbi()

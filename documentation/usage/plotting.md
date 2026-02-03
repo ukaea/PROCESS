@@ -1,4 +1,4 @@
-# Utilities
+# Plotting
 
 ## Plotting an MFILE
 
@@ -9,16 +9,16 @@
 
 ### Summary document | `plot_proc.py`
 
-`plot_proc` is used for plotting an overview of the results from an MFILE. It can be run using its own CLI:
+`plot_proc` is used for plotting an overview of the results from an MFILE. It can be run using its own CLI (see [here](https://ukaea.github.io/PROCESS/io/utilities/) for full details):
 
 ```bash
 python process/io/plot_proc.py -f path/to/MFILE.DAT
 ```
 
-or through Process's main CLI (working, but still in development):
+or through PROCESS's main CLI:
 
 ```bash
-process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
+process -i path/to/IN.DAT --full-output
 ``` 
 
 An example of a plot proc output PDF for the large tokamak regression test is shown below:
@@ -45,20 +45,6 @@ python process/io/plot_scans.py -f path/to/MFILE.DAT
 </figure>
 
 ----------------
-
-### Radial build
-
-`plot_radial_build` is to plot the radial build of the machine in terms of bar segments. It can be run as follows:
-
-```bash
-python process/io/plot_radial_build.py -f path/to/MFILE.DAT
-```
-<figure markdown>
-![radial_build_plot](../images/radial_build_plot.png){ width="100%"}
-<figcaption>Figure 12: Simple radial build plot </figcaption>
-</figure>
-
----------------
 
 ### Interactive Sankey diagram
 

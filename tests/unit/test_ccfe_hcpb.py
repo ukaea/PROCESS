@@ -659,55 +659,6 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, ccfe_hcpb):
     assert exp_shield2 == pytest.approx(nuclearheatingshieldparam.expected_exp_shield2)
 
 
-class NuclearHeatingDivertorParam(NamedTuple):
-    f_ster_div_single: Any = None
-
-    n_divertors: Any = None
-
-    p_neutron_total_mw: Any = None
-
-    expected_p_div_nuclear_heat_total_mw: Any = None
-
-
-@pytest.mark.parametrize(
-    "nuclearheatingdivertorparam",
-    (
-        NuclearHeatingDivertorParam(
-            f_ster_div_single=0.115,
-            n_divertors=1,
-            p_neutron_total_mw=1986.0623241661431,
-            expected_p_div_nuclear_heat_total_mw=228.39716727910647,
-        ),
-        NuclearHeatingDivertorParam(
-            f_ster_div_single=0.115,
-            n_divertors=2,
-            p_neutron_total_mw=1985.4423932312809,
-            expected_p_div_nuclear_heat_total_mw=456.6517504431946,
-        ),
-    ),
-)
-def test_nuclear_heating_divertor(nuclearheatingdivertorparam, ccfe_hcpb):
-    """
-    Automatically generated Regression Unit Test for nuclear_heating_divertor.
-
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
-
-    :param nuclearheatingdivertorparam: the data used to mock and assert in this test.
-    :type nuclearheatingdivertorparam: nuclearheatingdivertorparam
-
-    """
-
-    p_div_nuclear_heat_total_mw = ccfe_hcpb.nuclear_heating_divertor(
-        n_divertors=nuclearheatingdivertorparam.n_divertors,
-        p_neutron_total_mw=nuclearheatingdivertorparam.p_neutron_total_mw,
-        f_ster_div_single=nuclearheatingdivertorparam.f_ster_div_single,
-    )
-
-    assert p_div_nuclear_heat_total_mw == pytest.approx(
-        nuclearheatingdivertorparam.expected_p_div_nuclear_heat_total_mw
-    )
-
-
 class PowerflowCalcParam(NamedTuple):
     a_fw_outboard: Any = None
 
@@ -808,7 +759,6 @@ class PowerflowCalcParam(NamedTuple):
             a_fw_total=1601.1595634509963,
             p_beam_orbit_loss_mw=0,
             f_ster_div_single=0.115,
-            p_div_rad_total_mw=0,
             p_fw_hcd_rad_total_mw=0,
             f_a_fw_outboard_hcd=0,
             p_fw_rad_total_mw=0,
@@ -816,6 +766,7 @@ class PowerflowCalcParam(NamedTuple):
             temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
             i_p_coolant_pumping=3,
+            p_div_rad_total_mw=33.056596978820579,
             p_fw_nuclear_heat_total_mw=276.80690153753221,
             p_blkt_nuclear_heat_total_mw=1504.9215740808861,
             p_div_nuclear_heat_total_mw=182.71773382328519,
@@ -842,7 +793,6 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             p_fw_blkt_coolant_pump_mw=0,
-            expected_p_div_rad_total_mw=33.056596978820579,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225231,
             expected_psurffwo=176.95628839065773,
@@ -855,10 +805,10 @@ class PowerflowCalcParam(NamedTuple):
             a_fw_total=1891.2865102700493,
             p_beam_orbit_loss_mw=0,
             f_ster_div_single=0.115,
-            p_div_rad_total_mw=33.056596978820579,
             p_fw_hcd_rad_total_mw=0,
             f_a_fw_outboard_hcd=0,
             p_fw_rad_total_mw=254.39207240222791,
+            p_div_rad_total_mw=33.056596978820579,
             i_blkt_coolant_type=1,
             temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
@@ -889,7 +839,6 @@ class PowerflowCalcParam(NamedTuple):
             t_in_bb=573.13,
             t_out_bb=773.13,
             p_fw_blkt_coolant_pump_mw=202.00455086503842,
-            expected_p_div_rad_total_mw=33.056596978820579,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_psurffwi=97.271629070225259,
             expected_psurffwo=176.95009681558912,
@@ -1049,7 +998,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        physics_variables, "n_divertors", powerflowcalcparam.n_divertors
+        divertor_variables, "n_divertors", powerflowcalcparam.n_divertors
     )
 
     monkeypatch.setattr(
@@ -1074,9 +1023,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         primary_pumping_variables, "gamma_he", powerflowcalcparam.gamma_he
     )
 
-    monkeypatch.setattr(
-        primary_pumping_variables, "t_in_bb", powerflowcalcparam.t_in_bb
-    )
+    monkeypatch.setattr(primary_pumping_variables, "t_in_bb", powerflowcalcparam.t_in_bb)
 
     monkeypatch.setattr(
         primary_pumping_variables, "t_out_bb", powerflowcalcparam.t_out_bb
@@ -1090,21 +1037,13 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
 
     ccfe_hcpb.powerflow_calc(False)
 
-    assert fwbs_variables.p_div_rad_total_mw == pytest.approx(
-        powerflowcalcparam.expected_p_div_rad_total_mw
-    )
-
     assert fwbs_variables.p_fw_rad_total_mw == pytest.approx(
         powerflowcalcparam.expected_p_fw_rad_total_mw
     )
 
-    assert fwbs_variables.psurffwi == pytest.approx(
-        powerflowcalcparam.expected_psurffwi
-    )
+    assert fwbs_variables.psurffwi == pytest.approx(powerflowcalcparam.expected_psurffwi)
 
-    assert fwbs_variables.psurffwo == pytest.approx(
-        powerflowcalcparam.expected_psurffwo
-    )
+    assert fwbs_variables.psurffwo == pytest.approx(powerflowcalcparam.expected_psurffwo)
 
     assert heat_transport_variables.p_shld_coolant_pump_mw == pytest.approx(
         powerflowcalcparam.expected_p_shld_coolant_pump_mw
@@ -1524,7 +1463,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
     monkeypatch.setattr(
-        physics_variables, "n_divertors", componentmassesparam.n_divertors
+        divertor_variables, "n_divertors", componentmassesparam.n_divertors
     )
     monkeypatch.setattr(
         physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface
@@ -1684,9 +1623,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     assert fwbs_variables.m_blkt_li2o == pytest.approx(
         componentmassesparam.expected_m_blkt_li2o
     )
-    assert fwbs_variables.whtshld == pytest.approx(
-        componentmassesparam.expected_whtshld
-    )
+    assert fwbs_variables.whtshld == pytest.approx(componentmassesparam.expected_whtshld)
     assert fwbs_variables.wpenshld == pytest.approx(
         componentmassesparam.expected_wpenshld
     )

@@ -54,19 +54,20 @@ wateruseonethru: float = None
 
 def init_watuse_variables():
     """Initialise water variables"""
-    global airtemp
-    global watertemp
-    global windspeed
-    global waterdens
-    global latentheat
-    global volheat
-    global evapratio
-    global evapvol
-    global energypervol
-    global volperenergy
-    global waterusetower
-    global wateruserecirc
-    global wateruseonethru
+    global \
+        airtemp, \
+        watertemp, \
+        windspeed, \
+        waterdens, \
+        latentheat, \
+        volheat, \
+        evapratio, \
+        evapvol, \
+        energypervol, \
+        volperenergy, \
+        waterusetower, \
+        wateruserecirc, \
+        wateruseonethru
 
     airtemp = 15.0
     watertemp = 5.0

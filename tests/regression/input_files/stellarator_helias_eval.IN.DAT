@@ -59,7 +59,6 @@ dr_blkt_outboard  = 0.6 * outboard blanket thickness (m); calculated if `blktmod
 dr_cryostat = 0.15 * cryostat thickness (m)
 dr_vv_inboard  = 0.5 * vacuum vessel inboard thickness (TF coil / shield) (m)
 dr_vv_outboard = 0.5 * vacuum vessel outboard thickness (TF coil / shield) (m)
-f_avspace = 1. * F-value for stellarator radial space check (`constraint equation 83`)
 dr_shld_vv_gap_inboard    = 0.1 * gap between inboard vacuum vessel and thermal shield (m) (`iteration variable 61`)
 gapomin  = 0.025 * minimum gap between outboard vacuum vessel and TF coil (m) (`iteration variable 31`)
 dr_fw_plasma_gap_inboard  = 0.15 * Gap between plasma and first wall; inboard side (m) (if `i_plasma_wall_gap=1`)
@@ -80,24 +79,13 @@ dz_xpoint_divertor = 0. * vertical gap between x-point and divertor (m) (if = 0;
 
 *---------------Constraint Variables---------------*
 
+fiooic   = 0.9 * margin for TF coil operating current / critical current ratio
 big_q_plasma_min  = 1 * minimum fusion gain Q (`constraint equation 28`)
-fbeta_max = 1. * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
-fecrh_ignition = 1.0 * f-value for ecrh ignition constraint
-fflutf   = 1 * f-value for neutron fluence on TF coil (`constraint equation 53`; `iteration variable 92`)
-fp_fusion_total_max_mw  = 1.0 * f-value for maximum fusion power (`constraint equation 9`; `iteration variable 26`)
-fpflux_div_heat_load_mw   = 0.8 * f-value for divertor heat load (`constraint equation 18`; `iteration variable 27`)
-fiooic   = 0.9 * f-value for TF coil operating current / critical current ratio
-fjprot   = 0.95 * f-value for TF coil winding pack current density
-fp_plant_electric_net_required_mw  = 1.0 * f-value for net electric power (`constraint equation 16`; `iteration variable 25`)
-fptfnuc  = 1 * f-value for maximum TF coil nuclear heating (`constraint equation 54`; `iteration variable 95`)
-fradpwr  = 1 * f-value for core radiation power limit (`constraint equation 17`; `iteration variable 28`)
-fpflux_fw_rad_max = 1.0 * f-value for upper limit on radiation wall load (`constr; equ; 67`; `iteration variable 116`)
 pflux_fw_rad_max = 1 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 p_plant_electric_net_required_mw = 1000 * required net electric power (MW) (`constraint equation 16`)
 p_fusion_total_max_mw  = 500. * maximum fusion power (MW) (`constraint equation 9`)
 pflux_fw_neutron_max_mw   = 1.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
 f_alpha_energy_confinement_min = 6 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
-falpha_energy_confinement = 1. * f-value for lower limit on taup/taueff the ratio of alpha particle to energy
 
 *-------------------Constraints--------------------*
 
@@ -106,7 +94,7 @@ falpha_energy_confinement = 1. * f-value for lower limit on taup/taueff the rati
 
 abktflnc = 5. * allowable first wall/blanket neutron fluence (MW-yr/m2) (`blktmodel=0`)
 adivflnc = 7. * allowable divertor heat fluence (MW-yr/m2)
-cfactr   = 0.75 * Total plant availability fraction; input if `iavail=0`
+f_t_plant_available   = 0.75 * Total plant availability fraction; input if `i_plant_availability=0`
 cost_model = 0 * Switch for cost model;
 dintrt   = 0. * diff between borrowing and saving interest rates
 fcap0    = 1.15 * average cost of money for construction of plant assuming design/construction time of six years
@@ -114,12 +102,12 @@ fcap0cp  = 1.06 * average cost of money for replaceable components assuming lead
 fcontng  = 0.15 * project contingency factor
 fcr0     = 0.065 * fixed charge rate during construction
 fkind    = 1. * multiplier for Nth of a kind costs
-iavail   = 0 * Switch for plant availability model;
+i_plant_availability   = 0 * Switch for plant availability model;
 ifueltyp = 0 * Switch for fuel type;
 ireactor = 1 * Switch for net electric power and cost of electricity calculations;
 lsa      = 2 * Level of safety assurance switch (generally; use 3 or 4);
 discount_rate = 0.06 * effective cost of money in constant dollars
-tlife    = 40. * Full power year plant lifetime (years)
+life_plant    = 40. * Full power year plant lifetime (years)
 ucblvd   = 280. * unit cost for blanket vanadium ($/kg)
 ucdiv    = 500000. * cost of divertor blade ($)
 ucme     = 3.e8 * cost of maintenance equipment ($)
@@ -339,7 +327,6 @@ sig_tf_wp_max = 4.e8 * Allowable maximum shear stress (Tresca criterion) in TF c
 dx_tf_turn_general = 0.037 * TF coil turn edge length including turn insulation [m]
 f_a_tf_turn_cable_copper  = 0.7630096974258808 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 8 * Switch for superconductor material in TF coils;
-ftoroidalgap = 1. * F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)
 t_tf_superconductor_quench   = 7.400147540321247 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 tftmp    = 4.5 * peak helium coolant temperature in TF coils and PF coils (K)
 dx_tf_turn_insulation = 0.001 * conduit insulation thickness (m)

@@ -1,9 +1,12 @@
 import math
 
+import numpy as np
+
 from process import constants
 from process import process_output as po
 from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as dv
+from process.data_structure import fwbs_variables as fwbs
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.exceptions import ProcessValueError
@@ -32,6 +35,19 @@ class Divertor:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
+
+        fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=dv.n_divertors,
+        )
+
+        fwbs.p_div_rad_total_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=pv.p_plasma_rad_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=dv.n_divertors,
+        )
+
         if dv.i_div_heat_load == 0 and output:
             po.ovarre(
                 self.outfile,
@@ -153,11 +169,11 @@ class Divertor:
 
         #  Vertical plate area
 
-        a1 = 2.0e0 * constants.PI * r1 * dz_divertor
+        a1 = 2.0e0 * np.pi * r1 * dz_divertor
 
         #  Horizontal plate area
 
-        a2 = constants.PI * (r2 * r2 - r1 * r1)
+        a2 = np.pi * (r2 * r2 - r1 * r1)
 
         #  Diagonal plate area
 
@@ -323,19 +339,14 @@ class Divertor:
 
         # Wetted area
         area_wetted = (
-            2
-            * constants.PI
-            * rmajor
-            * lambda_int
-            * f_div_flux_expansion
-            * math.sin(theta_div)
+            2 * np.pi * rmajor * lambda_int * f_div_flux_expansion * math.sin(theta_div)
         )
 
         # Divertor heat load
         hldiv_base = p_plasma_separatrix_mw * (1 - rad_fraction_sol) / area_wetted
 
         # For double null, calculate heat loads to upper and lower divertors and use the highest
-        if pv.n_divertors == 2:
+        if dv.n_divertors == 2:
             hldiv_lower = f_p_div_lower * hldiv_base
             hldiv_upper = (1.0 - f_p_div_lower) * hldiv_base
             dv.pflux_div_heat_load_mw = max(hldiv_lower, hldiv_upper)
@@ -365,3 +376,83 @@ class Divertor:
                 dv.pflux_div_heat_load_mw,
             )
         return dv.pflux_div_heat_load_mw
+
+    def incident_radiation_power(
+        self,
+        p_plasma_rad_mw: float,
+        f_ster_div_single: float,
+        n_divertors: int,
+    ) -> float:
+        """
+        Calculates the total incident radiation power on the divertor box.
+
+        :param p_plasma_rad_mw: Total plasma radiated power in megawatts (MW).
+        :type p_plasma_rad_mw: float
+        :param f_ster_div_single: Fraction of the solid angle subtended by a single divertor.
+        :type f_ster_div_single: float
+        :param n_divertors: Number of divertors.
+        :type n_divertors: int
+        :returns: Total incident radiation power on the divertor box in megawatts (MW).
+        :rtype: float
+        """
+
+        return p_plasma_rad_mw * f_ster_div_single * n_divertors
+
+    def incident_neutron_power(
+        self,
+        p_plasma_neutron_mw: float,
+        f_ster_div_single: float,
+        n_divertors: int,
+    ) -> float:
+        """
+        Calculates the total incident neutron power on the divertor box.
+
+        :param p_plasma_neutron_mw: Total plasma neutron power in megawatts (MW).
+        :type p_plasma_neutron_mw: float
+        :param f_ster_div_single: Fraction of the solid angle subtended by a single divertor.
+        :type f_ster_div_single: float
+        :param n_divertors: Number of divertors.
+        :type n_divertors: int
+        :returns: Total incident radiation power on the divertor box in megawatts (MW).
+        :rtype: float
+        """
+
+        return p_plasma_neutron_mw * f_ster_div_single * n_divertors
+
+
+class LowerDivertor(Divertor):
+    """Module containing lower divertor routines"""
+
+    def run(self, output: bool) -> None:
+        super().run(output=output)
+
+        dv.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
+
+        dv.p_div_lower_rad_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=pv.p_plasma_rad_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
+
+
+class UpperDivertor(Divertor):
+    """Module containing upper divertor routines"""
+
+    def run(self, output: bool) -> None:
+        super().run(output=output)
+
+        dv.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(
+            p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=1,
+        )
+
+        dv.p_div_upper_rad_mw = self.incident_radiation_power(
+            p_plasma_rad_mw=pv.p_plasma_rad_mw,
+            f_ster_div_single=fwbs.f_ster_div_single,
+            n_divertors=1,
+        )

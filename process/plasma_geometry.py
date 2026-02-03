@@ -123,9 +123,7 @@ class PlasmaGeom:
         ):  # Use input kappa95, physics_variables.triang95 values
             # Fit to MAST data (Issue #1086)
             physics_variables.kappa = 0.91300e0 * physics_variables.kappa95 + 0.38654e0
-            physics_variables.triang = (
-                0.77394e0 * physics_variables.triang95 + 0.18515e0
-            )
+            physics_variables.triang = 0.77394e0 * physics_variables.triang95 + 0.18515e0
 
         # ======================================================================
 
@@ -133,9 +131,7 @@ class PlasmaGeom:
             physics_variables.i_plasma_geometry == 6
         ):  # Use input kappa, physics_variables.triang values
             # Fit to MAST data (Issue #1086)
-            physics_variables.kappa95 = (
-                physics_variables.kappa - 0.38654e0
-            ) / 0.91300e0
+            physics_variables.kappa95 = (physics_variables.kappa - 0.38654e0) / 0.91300e0
             physics_variables.triang95 = (
                 physics_variables.triang - 0.18515e0
             ) / 0.77394e0
@@ -147,9 +143,7 @@ class PlasmaGeom:
         ):  # Use input kappa95, physics_variables.triang95 values
             # Fit to FIESTA (Issue #1086)
             physics_variables.kappa = 0.90698e0 * physics_variables.kappa95 + 0.39467e0
-            physics_variables.triang = (
-                1.3799e0 * physics_variables.triang95 + 0.048306e0
-            )
+            physics_variables.triang = 1.3799e0 * physics_variables.triang95 + 0.048306e0
 
         # ======================================================================
 
@@ -157,9 +151,7 @@ class PlasmaGeom:
             physics_variables.i_plasma_geometry == 8
         ):  # Use input kappa, physics_variables.triang values
             # Fit to FIESTA (Issue #1086)
-            physics_variables.kappa95 = (
-                physics_variables.kappa - 0.39467e0
-            ) / 0.90698e0
+            physics_variables.kappa95 = (physics_variables.kappa - 0.39467e0) / 0.90698e0
             physics_variables.triang95 = (
                 physics_variables.triang - 0.048306e0
             ) / 1.3799e0
@@ -452,7 +444,8 @@ class PlasmaGeom:
 
         rc = rmajor - rminor + xi
         vin = (
-            constants.TWOPI
+            2.0
+            * np.pi
             * xi
             * (
                 rc**2 * np.sin(thetai)
@@ -465,7 +458,8 @@ class PlasmaGeom:
 
         rc = rmajor + rminor - xo
         vout = (
-            constants.TWOPI
+            2.0
+            * np.pi
             * xo
             * (
                 rc**2 * np.sin(thetao)

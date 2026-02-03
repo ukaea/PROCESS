@@ -2,8 +2,6 @@ import argparse
 import pathlib
 import re
 
-import matplotlib as mpl
-
 try:
     import plotly.graph_objects as go
 
@@ -12,8 +10,6 @@ except ImportError:
     PLOT_SANKEY = False
 
 from process.io.mfile import MFile
-
-mpl.use("Agg")
 
 
 def main(args=None):
@@ -302,9 +298,7 @@ def plot_power_balance_sankey(m_file):
         m_file.data["p_div_secondary_heat_mw"].get_scan(
             -1
         ),  # 53 Divertor secondary heat,
-        m_file.data["p_shld_secondary_heat_mw"].get_scan(
-            -1
-        ),  # 54 Shield secondary heat
+        m_file.data["p_shld_secondary_heat_mw"].get_scan(-1),  # 54 Shield secondary heat
         m_file.data["p_fw_hcd_nuclear_heat_mw"].get_scan(
             -1
         ),  # 55 Neutron power to H&CD & Diagnostics

@@ -2,6 +2,7 @@ import logging
 import math
 
 import numpy as np
+import scipy as sp
 
 from process import constants
 from process import process_output as po
@@ -30,6 +31,7 @@ logger = logging.getLogger(__name__)
 class Power:
     def __init__(self):
         self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
 
     def pfpwr(self, output: bool):
         """
@@ -247,8 +249,7 @@ class Power:
         # Mean power dissipated
         # The flat top duration (time 4 to 5) is the denominator, as this is the time when electricity is generated.
         if (
-            times_variables.t_pulse_cumulative[4]
-            - times_variables.t_pulse_cumulative[3]
+            times_variables.t_pulse_cumulative[4] - times_variables.t_pulse_cumulative[3]
             > 1.0e0
         ):
             pfpower = sum(pfdissipation[:]) / (
@@ -460,9 +461,7 @@ class Power:
         # po.oheadr(self.outfile,'AC Power')
         po.oheadr(self.outfile, "Electric Power Requirements")
         po.ovarre(self.outfile, "Divertor coil power supplies (MW)", "(bdvmw)", bdvmw)
-        po.ovarre(
-            self.outfile, "Cryoplant electric power (MW)", "(crymw)", crymw, "OP "
-        )
+        po.ovarre(self.outfile, "Cryoplant electric power (MW)", "(crymw)", crymw, "OP ")
         # po.ovarre(self.outfile,'Heat removed from cryogenic coils (MWth)','(helpow/1.0e6)',helpow/1.0e6)
         # po.ovarre(self.outfile,'MGF (motor-generator flywheel) units (MW)', '(fmgdmw)',fmgdmw)
         # po.ovarin(self.outfile,'Primary coolant pumps (MW)', '(i_blkt_coolant_type)',i_blkt_coolant_type)
@@ -778,7 +777,7 @@ class Power:
         # Rem : Nuclear heating on the outer legs assumed to be negligible
         # Rem : To be updated with 2 cooling loops for TART designs
         if tfcoil_variables.i_tf_sup == 2:
-            # Heat removal power at cryogenic temperature tfcoil_variables.tcoolin (W)
+            # Heat removal power at cryogenic temperature tfcoil_variables.temp_cp_coolant_inlet (W)
             heat_transport_variables.helpow_cryal = (
                 tfcoil_variables.p_cp_resistive
                 + tfcoil_variables.p_tf_leg_resistive
@@ -786,11 +785,11 @@ class Power:
                 + fwbs_variables.pnuc_cp_tf * 1.0e6
             )
 
-            # Calculate electric power requirement for cryogenic plant at tfcoil_variables.tcoolin (MW)
+            # Calculate electric power requirement for cryogenic plant at tfcoil_variables.temp_cp_coolant_inlet (MW)
             p_tf_cryoal_cryo = (
                 1.0e-6
-                * (constants.TEMP_ROOM - tfcoil_variables.tcoolin)
-                / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
+                * (constants.TEMP_ROOM - tfcoil_variables.temp_cp_coolant_inlet)
+                / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_cp_coolant_inlet)
                 * heat_transport_variables.helpow_cryal
             )
 
@@ -805,7 +804,7 @@ class Power:
             * ((293 / tfcoil_variables.temp_tf_cryo) - 1)
             / ((293 / 4.5) - 1)
             + heat_transport_variables.helpow_cryal
-            * ((293 / tfcoil_variables.tcoolin) - 1)
+            * ((293 / tfcoil_variables.temp_cp_coolant_inlet) - 1)
             / ((293 / 4.5) - 1)
         ) / 1.0e3
 
@@ -1303,6 +1302,21 @@ class Power:
             heat_transport_variables.p_plant_electric_net_mw,
         )
 
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total electric energy output per pulse (MJ)",
+            "(e_plant_net_electric_pulse_mj)",
+            power_variables.e_plant_net_electric_pulse_mj,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total electric energy output per pulse (kWh)",
+            "(e_plant_net_electric_pulse_kwh)",
+            power_variables.e_plant_net_electric_pulse_kwh,
+        )
+
     def plant_electric_production(self) -> None:
         """
         This method completes the calculation of the plant's electrical and thermal power flows,
@@ -1407,6 +1421,40 @@ class Power:
                 heat_transport_variables.p_plant_electric_gross_mw
                 - heat_transport_variables.p_plant_electric_net_mw
             ) / heat_transport_variables.p_plant_electric_gross_mw
+
+        (
+            power_variables.e_plant_net_electric_pulse_kwh,
+            power_variables.e_plant_net_electric_pulse_mj,
+            power_variables.p_plant_electric_base_total_profile_mw,
+            power_variables.p_plant_electric_gross_profile_mw,
+            power_variables.p_plant_electric_net_profile_mw,
+            power_variables.p_hcd_electric_total_profile_mw,
+            power_variables.p_coolant_pump_elec_total_profile_mw,
+            power_variables.p_tf_electric_supplies_profile_mw,
+            power_variables.p_pf_electric_supplies_profile_mw,
+            power_variables.vachtmw_profile_mw,
+            power_variables.p_tritium_plant_electric_profile_mw,
+            power_variables.p_cryo_plant_electric_profile_mw,
+            power_variables.p_fusion_total_profile_mw,
+        ) = self.power_profiles_over_time(
+            t_precharge=times_variables.t_plant_pulse_coil_precharge,
+            t_current_ramp_up=times_variables.t_plant_pulse_plasma_current_ramp_up,
+            t_fusion_ramp=times_variables.t_plant_pulse_fusion_ramp,
+            t_burn=times_variables.t_plant_pulse_burn,
+            t_ramp_down=times_variables.t_plant_pulse_plasma_current_ramp_down,
+            t_between_pulse=times_variables.t_plant_pulse_dwell,
+            p_plant_electric_base_total_mw=heat_transport_variables.p_plant_electric_base_total_mw,
+            p_cryo_plant_electric_mw=heat_transport_variables.p_cryo_plant_electric_mw,
+            p_tritium_plant_electric_mw=heat_transport_variables.p_tritium_plant_electric_mw,
+            vachtmw=heat_transport_variables.vachtmw,
+            p_tf_electric_supplies_mw=heat_transport_variables.p_tf_electric_supplies_mw,
+            p_pf_electric_supplies_mw=pfcoil_variables.p_pf_electric_supplies_mw,
+            p_coolant_pump_elec_total_mw=heat_transport_variables.p_coolant_pump_elec_total_mw,
+            p_hcd_electric_total_mw=heat_transport_variables.p_hcd_electric_total_mw,
+            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+            p_plant_electric_gross_mw=heat_transport_variables.p_plant_electric_gross_mw,
+            p_plant_electric_net_mw=heat_transport_variables.p_plant_electric_net_mw,
+        )
 
     def cryo(
         self,
@@ -1525,7 +1573,7 @@ class Power:
 
         po.ovarre(
             self.outfile,
-            "Sum = Total heat removal at cryogenic temperatures (temp_tf_cryo & tcoolin) (MW)",
+            "Sum = Total heat removal at cryogenic temperatures (temp_tf_cryo & temp_cp_coolant_inlet) (MW)",
             "(helpow + helpow_cryal/1.0d6)",
             (heat_transport_variables.helpow + heat_transport_variables.helpow_cryal)
             * 1.0e-6,
@@ -1540,8 +1588,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "Temperature of cryogenic aluminium components (K)",
-            "(tcoolin)",
-            tfcoil_variables.tcoolin,
+            "(temp_cp_coolant_inlet)",
+            tfcoil_variables.temp_cp_coolant_inlet,
         )
         po.ovarre(
             self.outfile,
@@ -1570,7 +1618,7 @@ class Power:
          New Power Module Harrington  Cycle correlations  Cycle correlations.xls
         """
         if fwbs_variables.i_thermal_electric_conversion == 0:
-            #  CCFE HCPB Model (with or without TBR)
+            #  CCFE HCPB Model
             if fwbs_variables.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
@@ -1582,7 +1630,7 @@ class Power:
 
             #  Etath from reference. Div power to primary
         elif fwbs_variables.i_thermal_electric_conversion == 1:
-            #  CCFE HCPB Model (with or without TBR)
+            #  CCFE HCPB Model
             if fwbs_variables.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
@@ -1599,7 +1647,7 @@ class Power:
 
             #  Steam Rankine cycle to be used
         elif fwbs_variables.i_thermal_electric_conversion == 3:
-            #  CCFE HCPB Model (with or without TBR)
+            #  CCFE HCPB Model
             if fwbs_variables.i_blanket_type == 1:
                 #  If coolant is helium, the steam cycle is assumed to be superheated
                 #  and a different correlation is used. The turbine inlet temperature
@@ -2197,3 +2245,256 @@ class Power:
             )
 
         return (tfckw, len_tf_bus, drarea, tfcbv, p_tf_electric_supplies_mw)
+
+    def power_profiles_over_time(
+        self,
+        t_precharge: float,
+        t_current_ramp_up: float,
+        t_fusion_ramp: float,
+        t_burn: float,
+        t_ramp_down: float,
+        t_between_pulse: float,
+        p_plant_electric_base_total_mw: float,
+        p_cryo_plant_electric_mw: float,
+        p_tritium_plant_electric_mw: float,
+        vachtmw: float,
+        p_tf_electric_supplies_mw: float,
+        p_pf_electric_supplies_mw: float,
+        p_coolant_pump_elec_total_mw: float,
+        p_hcd_electric_total_mw: float,
+        p_fusion_total_mw: float,
+        p_plant_electric_gross_mw: float,
+        p_plant_electric_net_mw: float,
+    ) -> float:
+        """
+        Calculate time-dependent power profiles for different electric systems
+
+        :param t_precharge: Precharge time (s).
+        :type t_precharge: float
+        :param t_current_ramp_up: Current ramp-up time (s).
+        :type t_current_ramp_up: float
+        :param t_fusion_ramp: Fusion ramp time (s).
+        :type t_fusion_ramp: float
+        :param t_burn: Burn time (s).
+        :type t_burn: float
+        :param t_ramp_down: Ramp-down time (s).
+        :type t_ramp_down: float
+        :param t_between_pulse: Time between pulses (s).
+        :type t_between_pulse: float
+        :param p_plant_electric_base_total_mw: Plant base electric load (MW).
+        :type p_plant_electric_base_total_mw: float
+        :param p_cryo_plant_electric_mw: Cryogenic plant electric load (MW).
+        :type p_cryo_plant_electric_mw: float
+        :param p_tritium_plant_electric_mw: Tritium plant electric load (MW).
+        :type p_tritium_plant_electric_mw: float
+        :param vachtmw: Vacuum pumps electric load (MW).
+        :type vachtmw: float
+        :param p_tf_electric_supplies_mw: TF coil electric supplies (MW).
+        :type p_tf_electric_supplies_mw: float
+        :param p_pf_electric_supplies_mw: PF coil electric supplies (MW).
+        :type p_pf_electric_supplies_mw: float
+        :param p_coolant_pump_elec_total_mw: Total coolant pump electric load (MW).
+        :type p_coolant_pump_elec_total_mw: float
+        :param p_hcd_electric_total_mw: HCD electric total (MW).
+        :type p_hcd_electric_total_mw: float
+        :param p_fusion_total_mw: Fusion power (MW).
+        :type p_fusion_total_mw: float
+        :param p_plant_electric_gross_mw: Gross electric power produced (MW).
+        :type p_plant_electric_gross_mw: float
+        :param p_plant_electric_net_mw: Net electric power produced (MW).
+        :type p_plant_electric_net_mw: float
+
+        :notes:
+            - Assumes step-function changes in power at each phase transition.
+            - Negative values indicate power consumption (loads).
+
+        :returns: Total net electric energy produced over the pulse (MJ).
+        :rtype: float
+        """
+
+        t_steps = np.cumsum([
+            0,
+            t_precharge,
+            t_current_ramp_up,
+            t_fusion_ramp,
+            t_burn,
+            t_ramp_down,
+            t_between_pulse,
+        ])
+
+        # Number of time steps
+        n_steps = len(t_steps)
+
+        # Initialize arrays for each power profile
+        p_fusion_total_profile_mw = np.zeros(n_steps)
+        p_plant_electric_base_total_profile_mw = np.zeros(n_steps)
+        p_cryo_plant_electric_profile_mw = np.zeros(n_steps)
+        p_tritium_plant_electric_profile_mw = np.zeros(n_steps)
+        vachtmw_profile_mw = np.zeros(n_steps)
+        p_tf_electric_supplies_profile_mw = np.zeros(n_steps)
+        p_pf_electric_supplies_profile_mw = np.zeros(n_steps)
+        p_coolant_pump_elec_total_profile_mw = np.zeros(n_steps)
+        p_hcd_electric_total_profile_mw = np.zeros(n_steps)
+        p_plant_electric_gross_profile_mw = np.zeros(n_steps)
+        p_plant_electric_net_profile_mw = np.zeros(n_steps)
+
+        # Fusion power: zero until ramp-up, then during burn
+        p_fusion_total_profile_mw[:2] = 0
+        p_fusion_total_profile_mw[2:5] = p_fusion_total_mw
+        p_fusion_total_profile_mw[5:] = 0
+
+        # Plant base load: constant negative load throughout
+        p_plant_electric_base_total_profile_mw[:] = -p_plant_electric_base_total_mw
+
+        # Cryo plant: constant negative load throughout
+        p_cryo_plant_electric_profile_mw[:] = -p_cryo_plant_electric_mw
+
+        # Tritium plant: constant negative load throughout
+        p_tritium_plant_electric_profile_mw[:] = -p_tritium_plant_electric_mw
+
+        # Vacuum pumps: constant negative load throughout
+        vachtmw_profile_mw[:] = -vachtmw
+
+        # TF coil supplies: assume coil is always charged, so constant negative load
+        p_tf_electric_supplies_profile_mw[:] = -p_tf_electric_supplies_mw
+
+        # PF coil supplies: zero for first step, then negative during ramp-up and burn, then zero
+        p_pf_electric_supplies_profile_mw[0] = 0
+        p_pf_electric_supplies_profile_mw[1:5] = -p_pf_electric_supplies_mw
+        p_pf_electric_supplies_profile_mw[5:] = 0
+
+        # Coolant pump elec total: zero for first two steps, then negative during ramp-up and burn, then zero
+        p_coolant_pump_elec_total_profile_mw[:2] = 0
+        p_coolant_pump_elec_total_profile_mw[2:5] = -p_coolant_pump_elec_total_mw
+        p_coolant_pump_elec_total_profile_mw[5:] = 0
+
+        # HCD electric total: zero for first two steps, then negative during ramp-up and burn, then zero
+        p_hcd_electric_total_profile_mw[:2] = 0
+        p_hcd_electric_total_profile_mw[2:5] = -p_hcd_electric_total_mw
+        p_hcd_electric_total_profile_mw[5:] = 0
+
+        # Gross electric power: zero for first two steps, then positive during burn, then zero
+        p_plant_electric_gross_profile_mw[:2] = 0
+        p_plant_electric_gross_profile_mw[2:5] = p_plant_electric_gross_mw
+        p_plant_electric_gross_profile_mw[5:] = 0
+
+        # Net electric power: calculated by subtracting all loads from gross electric power
+        p_plant_electric_net_profile_mw = (
+            p_plant_electric_gross_profile_mw
+            + p_plant_electric_base_total_profile_mw
+            + p_cryo_plant_electric_profile_mw
+            + p_tritium_plant_electric_profile_mw
+            + vachtmw_profile_mw
+            + p_tf_electric_supplies_profile_mw
+            + p_pf_electric_supplies_profile_mw
+            + p_coolant_pump_elec_total_profile_mw
+            + p_hcd_electric_total_profile_mw
+        )
+
+        if p_plant_electric_net_profile_mw[3] != p_plant_electric_net_mw:
+            logger.error(
+                "Calculated net electric power during burn does not match input value."
+                f"Calculated: {p_plant_electric_net_profile_mw[3]}, Input: {p_plant_electric_net_mw}"
+            )
+
+        # Integrate net electric power over the pulse to get total energy produced (MJ)
+        # Assume t_steps in seconds, power in MW, so energy in MJ
+        energy_made_mj = sp.integrate.trapezoid(p_plant_electric_net_profile_mw, t_steps)
+        energy_made_kwh = energy_made_mj / 3.6
+
+        return (
+            energy_made_kwh,
+            energy_made_mj,
+            p_plant_electric_base_total_profile_mw,
+            p_plant_electric_gross_profile_mw,
+            p_plant_electric_net_profile_mw,
+            p_hcd_electric_total_profile_mw,
+            p_coolant_pump_elec_total_profile_mw,
+            p_tf_electric_supplies_profile_mw,
+            p_pf_electric_supplies_profile_mw,
+            vachtmw_profile_mw,
+            p_tritium_plant_electric_profile_mw,
+            p_cryo_plant_electric_profile_mw,
+            p_fusion_total_profile_mw,
+        )
+
+    def output_power_profiles_over_time(
+        self,
+    ):
+        for i, val in enumerate(power_variables.p_plant_electric_base_total_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric base load at time point {i}",
+                f"(p_plant_electric_base_total_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.p_plant_electric_gross_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric gross at time point {i}",
+                f"(p_plant_electric_gross_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.p_plant_electric_net_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric net at time point {i}",
+                f"(p_plant_electric_net_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.p_hcd_electric_total_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric HCD at time point {i}",
+                f"(p_hcd_electric_total_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.p_coolant_pump_elec_total_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric coolant pump at time point {i}",
+                f"(p_coolant_pump_elec_total_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.p_tf_electric_supplies_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric TF supplies at time point {i}",
+                f"(p_tf_electric_supplies_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.p_pf_electric_supplies_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric PF supplies at time point {i}",
+                f"(p_pf_electric_supplies_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.vachtmw_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric vacuum pump power at time point {i}",
+                f"(vachtmw_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.p_tritium_plant_electric_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric tritium plant power at time point {i}",
+                f"(p_tritium_plant_electric_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.p_cryo_plant_electric_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric cryo plant power at time point {i}",
+                f"(p_cryo_plant_electric_profile_mw{i})",
+                val,
+            )
+        for i, val in enumerate(power_variables.p_fusion_total_profile_mw):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric fusion plant power at time point {i}",
+                f"(p_fusion_total_profile_mw{i})",
+                val,
+            )

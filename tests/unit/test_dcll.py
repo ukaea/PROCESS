@@ -6,6 +6,7 @@ from process.data_structure import (
     build_variables,
     current_drive_variables,
     dcll_variables,
+    divertor_variables,
     fwbs_variables,
     physics_variables,
 )
@@ -72,10 +73,6 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_fw_alpha_mw: Any = None
 
-    expected_p_div_rad_total_mw: Any = None
-
-    expected_p_div_nuclear_heat_total_mw: Any = None
-
     expected_p_fw_rad_total_mw: Any = None
 
     expected_p_fw_nuclear_heat_total_mw: Any = None
@@ -93,8 +90,8 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             a_fw_total=1601.1595634509963,
             p_beam_orbit_loss_mw=0,
             f_ster_div_single=0.115,
-            p_div_rad_total_mw=0,
-            p_div_nuclear_heat_total_mw=0,
+            p_div_rad_total_mw=33.056596978820579,
+            p_div_nuclear_heat_total_mw=182.58994516305046,
             f_a_fw_outboard_hcd=0,
             p_fw_hcd_rad_total_mw=0,
             p_fw_hcd_nuclear_heat_mw=0,
@@ -113,8 +110,6 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_neutron_total_mw=1587.7386535917431,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.835845058655043,
-            expected_p_div_rad_total_mw=33.056596978820579,
-            expected_p_div_nuclear_heat_total_mw=182.58994516305046,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_p_fw_nuclear_heat_total_mw=196.72081918001697,
             expected_p_blkt_nuclear_heat_total_mw=1533.4949914565693,
@@ -145,8 +140,6 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             p_neutron_total_mw=1587.2430556964196,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.829653483586444,
-            expected_p_div_rad_total_mw=33.056596978820579,
-            expected_p_div_nuclear_heat_total_mw=182.53295140508826,
             expected_p_fw_rad_total_mw=254.39207240222791,
             expected_p_fw_nuclear_heat_total_mw=196.65941460078642,
             expected_p_blkt_nuclear_heat_total_mw=1533.0163252173013,
@@ -235,13 +228,9 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
         dcllneutronicsandpowerparam.p_fw_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(
-        fwbs_variables, "psurffwi", dcllneutronicsandpowerparam.psurffwi
-    )
+    monkeypatch.setattr(fwbs_variables, "psurffwi", dcllneutronicsandpowerparam.psurffwi)
 
-    monkeypatch.setattr(
-        fwbs_variables, "psurffwo", dcllneutronicsandpowerparam.psurffwo
-    )
+    monkeypatch.setattr(fwbs_variables, "psurffwo", dcllneutronicsandpowerparam.psurffwo)
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -280,7 +269,7 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        physics_variables, "n_divertors", dcllneutronicsandpowerparam.n_divertors
+        divertor_variables, "n_divertors", dcllneutronicsandpowerparam.n_divertors
     )
 
     monkeypatch.setattr(
@@ -300,14 +289,6 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     dcll.dcll_neutronics_and_power(False)
-
-    assert fwbs_variables.p_div_rad_total_mw == pytest.approx(
-        dcllneutronicsandpowerparam.expected_p_div_rad_total_mw
-    )
-
-    assert fwbs_variables.p_div_nuclear_heat_total_mw == pytest.approx(
-        dcllneutronicsandpowerparam.expected_p_div_nuclear_heat_total_mw
-    )
 
     assert fwbs_variables.p_fw_rad_total_mw == pytest.approx(
         dcllneutronicsandpowerparam.expected_p_fw_rad_total_mw
@@ -854,13 +835,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcllmassesparam.a_plasma_surface_outboard,
     )
 
-    monkeypatch.setattr(
-        fwbs_variables, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard
-    )
+    monkeypatch.setattr(fwbs_variables, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard)
 
-    monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_total", dcllmassesparam.vol_blkt_total
-    )
+    monkeypatch.setattr(fwbs_variables, "vol_blkt_total", dcllmassesparam.vol_blkt_total)
 
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_inboard", dcllmassesparam.vol_blkt_inboard
@@ -880,9 +857,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         fwbs_variables, "fw_armour_thickness", dcllmassesparam.fw_armour_thickness
     )
 
-    monkeypatch.setattr(
-        fwbs_variables, "fw_armour_mass", dcllmassesparam.fw_armour_mass
-    )
+    monkeypatch.setattr(fwbs_variables, "fw_armour_mass", dcllmassesparam.fw_armour_mass)
 
     monkeypatch.setattr(fwbs_variables, "vol_fw_total", dcllmassesparam.vol_fw_total)
 
@@ -926,9 +901,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         fwbs_variables, "i_blkt_dual_coolant", dcllmassesparam.i_blkt_dual_coolant
     )
 
-    monkeypatch.setattr(
-        fwbs_variables, "den_fw_coolant", dcllmassesparam.den_fw_coolant
-    )
+    monkeypatch.setattr(fwbs_variables, "den_fw_coolant", dcllmassesparam.den_fw_coolant)
 
     monkeypatch.setattr(
         fwbs_variables, "den_blkt_coolant", dcllmassesparam.den_blkt_coolant
@@ -972,9 +945,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcll_variables, "f_vol_mfbss_stl", dcllmassesparam.f_vol_mfbss_stl
     )
 
-    monkeypatch.setattr(
-        dcll_variables, "f_vol_mfbss_he", dcllmassesparam.f_vol_mfbss_he
-    )
+    monkeypatch.setattr(dcll_variables, "f_vol_mfbss_he", dcllmassesparam.f_vol_mfbss_he)
 
     monkeypatch.setattr(
         dcll_variables, "f_vol_mfbss_pbli", dcllmassesparam.f_vol_mfbss_pbli
@@ -996,9 +967,7 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(dcll_variables, "wht_cer", dcllmassesparam.wht_cer)
 
-    monkeypatch.setattr(
-        dcll_variables, "wht_stl_struct", dcllmassesparam.wht_stl_struct
-    )
+    monkeypatch.setattr(dcll_variables, "wht_stl_struct", dcllmassesparam.wht_stl_struct)
 
     monkeypatch.setattr(
         dcll_variables, "wht_cool_struct", dcllmassesparam.wht_cool_struct
@@ -1010,13 +979,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(dcll_variables, "wht_mfbss_stl", dcllmassesparam.wht_mfbss_stl)
 
-    monkeypatch.setattr(
-        dcll_variables, "wht_mfbss_cool", dcllmassesparam.wht_mfbss_cool
-    )
+    monkeypatch.setattr(dcll_variables, "wht_mfbss_cool", dcllmassesparam.wht_mfbss_cool)
 
-    monkeypatch.setattr(
-        dcll_variables, "wht_mfbss_pbli", dcllmassesparam.wht_mfbss_pbli
-    )
+    monkeypatch.setattr(dcll_variables, "wht_mfbss_pbli", dcllmassesparam.wht_mfbss_pbli)
 
     monkeypatch.setattr(dcll_variables, "fwmass_stl", dcllmassesparam.fwmass_stl)
 

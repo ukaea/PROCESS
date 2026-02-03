@@ -216,9 +216,15 @@ f_beam_tritium: float = None
 eta_cd_norm_hcd_primary: float = None
 """Normalised current drive efficiency for primary HCD system [(1.0e20 A)/(W m^2)]"""
 
+eta_cd_dimensionless_hcd_primary: float = None
+"""Dimensionless current drive efficiency for primary HCD system (ζ)"""
+
 
 eta_cd_norm_hcd_secondary: float = None
 """Normalised current drive efficiency for secondary HCD system [(1.0e20 A)/(W m^2)]"""
+
+eta_cd_dimensionless_hcd_secondary: float = None
+"""Dimensionless current drive efficiency for secondary HCD system (ζ)"""
 
 
 eta_cd_norm_ecrh: float = None
@@ -373,88 +379,91 @@ n_beam_decay_lengths_core_required: float = None
 
 def init_current_drive_variables():
     """Initialise current drive variables"""
-    global dx_beam_duct
-    global big_q_plasma
-    global f_c_plasma_bootstrap
-    global f_c_plasma_bootstrap_max
-    global f_c_plasma_bootstrap_iter89
-    global f_c_plasma_bootstrap_nevins
-    global f_c_plasma_bootstrap_sauter
-    global f_c_plasma_bootstrap_wilson
-    global f_c_plasma_bootstrap_sakai
-    global f_c_plasma_bootstrap_aries
-    global f_c_plasma_bootstrap_andrade
-    global f_c_plasma_bootstrap_hoang
-    global f_c_plasma_bootstrap_wong
-    global bscf_gi_i
-    global bscf_gi_ii
-    global f_c_plasma_bootstrap_sugiyama_l
-    global f_c_plasma_bootstrap_sugiyama_h
-    global cboot
-    global c_beam_total
-    global f_c_plasma_diamagnetic_hender
-    global f_c_plasma_diamagnetic_scene
-    global f_c_plasma_diamagnetic
-    global p_hcd_ecrh_injected_total_mw
-    global p_ebw_injected_mw
-    global p_hcd_ecrh_electric_mw
-    global p_hcd_ebw_electric_mw
-    global eta_cd_hcd_primary
-    global eta_cd_hcd_secondary
-    global c_hcd_primary_driven
-    global c_hcd_secondary_driven
-    global f_c_plasma_hcd_primary
-    global f_c_plasma_hcd_secondary
-    global n_ecrh_harmonic
-    global i_ecrh_wave_mode
-    global e_beam_kev
-    global eta_hcd_primary_injector_wall_plug
-    global eta_hcd_secondary_injector_wall_plug
-    global eta_ecrh_injector_wall_plug
-    global eta_lowhyb_injector_wall_plug
-    global eta_icrh_injector_wall_plug
-    global eta_ebw_injector_wall_plug
-    global eta_beam_injector_wall_plug
-    global f_p_beam_injected_ions
-    global p_beam_injected_mw
-    global f_c_plasma_pfirsch_schluter_scene
-    global p_beam_shine_through_mw
-    global feffcd
-    global f_p_beam_orbit_loss
-    global f_radius_beam_tangency_rmajor
-    global f_beam_tritium
-    global eta_cd_norm_hcd_primary
-    global eta_cd_norm_hcd_secondary
-    global eta_cd_norm_ecrh
-    global xi_ebw
-    global i_hcd_primary
-    global i_hcd_secondary
-    global i_hcd_calculations
-    global f_p_beam_shine_through
-    global dx_beam_shield
-    global p_hcd_primary_extra_heat_mw
-    global p_hcd_secondary_extra_heat_mw
-    global p_hcd_injected_max
-    global p_hcd_injected_electrons_mw
-    global p_hcd_injected_ions_mw
-    global p_hcd_injected_total_mw
-    global p_hcd_injected_current_total_mw
-    global p_hcd_secondary_injected_mw
-    global p_hcd_primary_injected_mw
-    global f_c_plasma_internal
-    global p_hcd_lowhyb_injected_total_mw
-    global p_hcd_icrh_injected_total_mw
-    global p_hcd_ebw_injected_total_mw
-    global p_beam_plasma_coupled_mw
-    global p_hcd_beam_injected_total_mw
-    global p_beam_orbit_loss_mw
-    global f_c_plasma_pfirsch_schluter
-    global p_hcd_lowhyb_electric_mw
-    global pwpnb
-    global radius_beam_tangency
-    global radius_beam_tangency_max
-    global n_beam_decay_lengths_core
-    global n_beam_decay_lengths_core_required
+    global \
+        dx_beam_duct, \
+        big_q_plasma, \
+        f_c_plasma_bootstrap, \
+        f_c_plasma_bootstrap_max, \
+        f_c_plasma_bootstrap_iter89, \
+        f_c_plasma_bootstrap_nevins, \
+        f_c_plasma_bootstrap_sauter, \
+        f_c_plasma_bootstrap_wilson, \
+        f_c_plasma_bootstrap_sakai, \
+        f_c_plasma_bootstrap_aries, \
+        f_c_plasma_bootstrap_andrade, \
+        f_c_plasma_bootstrap_hoang, \
+        f_c_plasma_bootstrap_wong, \
+        bscf_gi_i, \
+        bscf_gi_ii, \
+        f_c_plasma_bootstrap_sugiyama_l, \
+        f_c_plasma_bootstrap_sugiyama_h, \
+        cboot, \
+        c_beam_total, \
+        f_c_plasma_diamagnetic_hender, \
+        f_c_plasma_diamagnetic_scene, \
+        f_c_plasma_diamagnetic, \
+        p_hcd_ecrh_injected_total_mw, \
+        p_ebw_injected_mw, \
+        p_hcd_ecrh_electric_mw, \
+        p_hcd_ebw_electric_mw, \
+        eta_cd_hcd_primary, \
+        eta_cd_hcd_secondary, \
+        c_hcd_primary_driven, \
+        c_hcd_secondary_driven, \
+        f_c_plasma_hcd_primary, \
+        f_c_plasma_hcd_secondary, \
+        n_ecrh_harmonic, \
+        i_ecrh_wave_mode, \
+        e_beam_kev, \
+        eta_hcd_primary_injector_wall_plug, \
+        eta_hcd_secondary_injector_wall_plug, \
+        eta_ecrh_injector_wall_plug, \
+        eta_lowhyb_injector_wall_plug, \
+        eta_icrh_injector_wall_plug, \
+        eta_ebw_injector_wall_plug, \
+        eta_beam_injector_wall_plug, \
+        f_p_beam_injected_ions, \
+        p_beam_injected_mw, \
+        f_c_plasma_pfirsch_schluter_scene, \
+        p_beam_shine_through_mw, \
+        feffcd, \
+        f_p_beam_orbit_loss, \
+        f_radius_beam_tangency_rmajor, \
+        f_beam_tritium, \
+        eta_cd_norm_hcd_primary, \
+        eta_cd_dimensionless_hcd_primary, \
+        eta_cd_norm_hcd_secondary, \
+        eta_cd_dimensionless_hcd_secondary, \
+        eta_cd_norm_ecrh, \
+        xi_ebw, \
+        i_hcd_primary, \
+        i_hcd_secondary, \
+        i_hcd_calculations, \
+        f_p_beam_shine_through, \
+        dx_beam_shield, \
+        p_hcd_primary_extra_heat_mw, \
+        p_hcd_secondary_extra_heat_mw, \
+        p_hcd_injected_max, \
+        p_hcd_injected_electrons_mw, \
+        p_hcd_injected_ions_mw, \
+        p_hcd_injected_total_mw, \
+        p_hcd_injected_current_total_mw, \
+        p_hcd_secondary_injected_mw, \
+        p_hcd_primary_injected_mw, \
+        f_c_plasma_internal, \
+        p_hcd_lowhyb_injected_total_mw, \
+        p_hcd_icrh_injected_total_mw, \
+        p_hcd_ebw_injected_total_mw, \
+        p_beam_plasma_coupled_mw, \
+        p_hcd_beam_injected_total_mw, \
+        p_beam_orbit_loss_mw, \
+        f_c_plasma_pfirsch_schluter, \
+        p_hcd_lowhyb_electric_mw, \
+        pwpnb, \
+        radius_beam_tangency, \
+        radius_beam_tangency_max, \
+        n_beam_decay_lengths_core, \
+        n_beam_decay_lengths_core_required
 
     dx_beam_duct = 0.58
     big_q_plasma = 0.0
@@ -497,6 +506,7 @@ def init_current_drive_variables():
     f_radius_beam_tangency_rmajor = 1.05
     f_beam_tritium = 1e-6
     eta_cd_norm_hcd_primary = 0.0
+    eta_cd_dimensionless_hcd_primary = 0.0
     eta_cd_norm_ecrh = 0.35
     xi_ebw = 0.8
     i_hcd_primary = 5
@@ -521,6 +531,7 @@ def init_current_drive_variables():
     n_beam_decay_lengths_core = 0.0
     n_beam_decay_lengths_core_required = 3.0
     eta_cd_norm_hcd_secondary = 0.0
+    eta_cd_dimensionless_hcd_secondary = 0.0
     eta_cd_hcd_secondary = 0.0
     p_ebw_injected_mw = 0.0
     p_hcd_ecrh_electric_mw = 0.0

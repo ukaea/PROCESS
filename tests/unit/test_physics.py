@@ -21,6 +21,7 @@ from process.data_structure import (
 )
 from process.impurity_radiation import initialise_imprad
 from process.physics import (
+    DetailedPhysics,
     Physics,
     calculate_beta_limit,
     calculate_current_coefficient_hastie,
@@ -341,7 +342,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     q0: Any = None
 
-    m_fuel_amu: Any = None
+    m_ions_total_amu: Any = None
 
     zeff: Any = None
 
@@ -394,7 +395,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             temp_plasma_ion_vol_avg_kev=12.570861186498382,
             triang=0.5,
             q0=1,
-            m_fuel_amu=2.5,
+            m_ions_total_amu=2.5,
             zeff=2.5211399464385624,
             radius_plasma_pedestal_density_norm=0.9400000000000001,
             b_plasma_toroidal_on_axis=5.326133750416047,
@@ -414,7 +415,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             alphan=1,
             radius_plasma_pedestal_temp_norm=0.9400000000000001,
             alphat=1.45,
-            expected_bfs=0.4110838247346975,
+            expected_bfs=0.4052168782500341,
         ),
     ),
 )
@@ -437,9 +438,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.nd_plasma_ions_total_vol_avg,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "rminor", bootstrapfractionsauterparam.rminor
-    )
+    monkeypatch.setattr(physics_variables, "rminor", bootstrapfractionsauterparam.rminor)
 
     monkeypatch.setattr(
         physics_variables,
@@ -453,17 +452,21 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.temp_plasma_ion_vol_avg_kev,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "triang", bootstrapfractionsauterparam.triang
-    )
+    monkeypatch.setattr(physics_variables, "triang", bootstrapfractionsauterparam.triang)
 
     monkeypatch.setattr(physics_variables, "q0", bootstrapfractionsauterparam.q0)
 
     monkeypatch.setattr(
-        physics_variables, "m_fuel_amu", bootstrapfractionsauterparam.m_fuel_amu
+        physics_variables,
+        "m_ions_total_amu",
+        bootstrapfractionsauterparam.m_ions_total_amu,
     )
 
-    monkeypatch.setattr(physics_variables, "zeff", bootstrapfractionsauterparam.zeff)
+    monkeypatch.setattr(
+        physics_variables,
+        "n_charge_plasma_effective_vol_avg",
+        bootstrapfractionsauterparam.zeff,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -511,9 +514,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.te,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "rmajor", bootstrapfractionsauterparam.rmajor
-    )
+    monkeypatch.setattr(physics_variables, "rmajor", bootstrapfractionsauterparam.rmajor)
 
     monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsauterparam.q95)
 
@@ -543,9 +544,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.nd_plasma_electron_on_axis,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "alphan", bootstrapfractionsauterparam.alphan
-    )
+    monkeypatch.setattr(physics_variables, "alphan", bootstrapfractionsauterparam.alphan)
 
     monkeypatch.setattr(
         physics_variables,
@@ -553,11 +552,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.radius_plasma_pedestal_temp_norm,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "alphat", bootstrapfractionsauterparam.alphat
-    )
+    monkeypatch.setattr(physics_variables, "alphat", bootstrapfractionsauterparam.alphat)
     physics.plasma_profile.run()
-    bfs = physics.bootstrap_fraction_sauter(physics.plasma_profile)
+    bfs, _ = physics.bootstrap_fraction_sauter(physics.plasma_profile)
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
 
@@ -1222,9 +1219,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         plasmacurrentparam.beta_norm_total,
     )
 
-    monkeypatch.setattr(
-        physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta
-    )
+    monkeypatch.setattr(physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta)
 
     b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
         i_plasma_current=plasmacurrentparam.i_plasma_current,
@@ -1378,7 +1373,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_nd_protium_electrons: Any = None
 
-    zeffai: Any = None
+    n_charge_plasma_effective_mass_weighted_vol_avg: Any = None
 
     f_nd_plasma_carbon_electron: Any = None
 
@@ -1539,7 +1534,7 @@ class PlasmaCompositionParam(NamedTuple):
             m_ions_total_amu=0,
             nd_plasma_ions_total_vol_avg=0,
             f_nd_protium_electrons=0,
-            zeffai=0,
+            n_charge_plasma_effective_mass_weighted_vol_avg=0,
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0,
@@ -1657,7 +1652,7 @@ class PlasmaCompositionParam(NamedTuple):
             m_ions_total_amu=2.7395439636787726,
             nd_plasma_ions_total_vol_avg=6.6125550702454276e19,
             f_nd_protium_electrons=0,
-            zeffai=0.43046641789338563,
+            n_charge_plasma_effective_mass_weighted_vol_avg=0.43046641789338563,
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0.3154069116809366,
@@ -1802,7 +1797,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.f_nd_protium_electrons,
     )
 
-    monkeypatch.setattr(physics_variables, "zeffai", plasmacompositionparam.zeffai)
+    monkeypatch.setattr(
+        physics_variables,
+        "n_charge_plasma_effective_mass_weighted_vol_avg",
+        plasmacompositionparam.n_charge_plasma_effective_mass_weighted_vol_avg,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -1834,7 +1833,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.f_nd_beam_electron,
     )
 
-    monkeypatch.setattr(physics_variables, "zeff", plasmacompositionparam.zeff)
+    monkeypatch.setattr(
+        physics_variables,
+        "n_charge_plasma_effective_vol_avg",
+        plasmacompositionparam.zeff,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -1964,15 +1967,18 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_nd_ions_total
     )
 
-    assert physics_variables.zeffai == pytest.approx(
-        plasmacompositionparam.expected_zeffai
+    assert (
+        physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg
+        == pytest.approx(plasmacompositionparam.expected_zeffai)
     )
 
     assert physics_variables.f_alpha_ion == pytest.approx(
         plasmacompositionparam.expected_f_alpha_ion
     )
 
-    assert physics_variables.zeff == pytest.approx(plasmacompositionparam.expected_zeff)
+    assert physics_variables.n_charge_plasma_effective_vol_avg == pytest.approx(
+        plasmacompositionparam.expected_zeff
+    )
 
     assert physics_variables.nd_plasma_impurities_vol_avg == pytest.approx(
         plasmacompositionparam.expected_nd_impurities
@@ -2261,7 +2267,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     (
         burnup,
         ntau,
-        nTtau,
+        _nTtau,
         figmer,
         fusrat,
         molflow_plasma_fuelling_required,
@@ -2296,9 +2302,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     assert rndfuel == pytest.approx(phyauxparam.expected_rndfuel)
 
-    assert t_alpha_confinement == pytest.approx(
-        phyauxparam.expected_t_alpha_confinement
-    )
+    assert t_alpha_confinement == pytest.approx(phyauxparam.expected_t_alpha_confinement)
 
 
 def test_rether():
@@ -2393,9 +2397,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
         zeff=pohmparam.zeff,
     )
 
-    assert pden_plasma_ohmic_mw == pytest.approx(
-        pohmparam.expected_pden_plasma_ohmic_mw
-    )
+    assert pden_plasma_ohmic_mw == pytest.approx(pohmparam.expected_pden_plasma_ohmic_mw)
 
     assert p_plasma_ohmic_mw == pytest.approx(pohmparam.expected_p_plasma_ohmic_mw)
 
@@ -3277,9 +3279,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        physics_variables, "i_rad_loss", confinementtimeparam.i_rad_loss
-    )
+    monkeypatch.setattr(physics_variables, "i_rad_loss", confinementtimeparam.i_rad_loss)
 
     monkeypatch.setattr(physics_variables, "tauee_in", confinementtimeparam.tauee_in)
 
@@ -3459,3 +3459,176 @@ def test_calculate_beta_norm_max_stambaugh():
         f_c_plasma_bootstrap, kappa, aspect
     )
     assert result == pytest.approx(3.840954484207041, abs=0.00001)
+
+
+def test_calculate_internal_inductance_iter_3():
+    """Test calculate_normalised_internal_inductance_iter_3."""
+    result = Physics.calculate_normalised_internal_inductance_iter_3(
+        b_plasma_poloidal_vol_avg=1.0, c_plasma=1.5e7, vol_plasma=1000.0, rmajor=6.2
+    )
+    assert result == pytest.approx(0.9078959099585583, abs=0.00001)
+
+
+@pytest.mark.parametrize(
+    "b_field, m_particle, z_particle, expected",
+    [
+        (
+            1.0,
+            constants.ELECTRON_MASS,
+            1.0,
+            2.799249e10,
+        ),  # typical electron in 1T field
+        (2.0, constants.ELECTRON_MASS, 1.0, 5.598498e10),  # double field
+        (1.0, constants.PROTON_MASS, 1.0, 15245186.43761083),  # proton in 1T field
+        (0.5, constants.ELECTRON_MASS, 2.0, 2.799249e10),  # half field, double charge
+        (0.0, constants.ELECTRON_MASS, 1.0, 0.0),  # zero field
+    ],
+)
+def test_calculate_larmor_frequency(b_field, m_particle, z_particle, expected):
+    """Test calculate_larmor_frequency for various particles and fields."""
+    result = DetailedPhysics.calculate_larmor_frequency(
+        b_field=b_field, m_particle=m_particle, z_particle=z_particle
+    )
+    assert result == pytest.approx(expected, rel=1e-5)
+
+
+@pytest.mark.parametrize(
+    "nd_particle,m_particle,z_particle, expected",
+    (
+        (1.0e20, constants.ELECTRON_MASS, 1.0, 89786628157.96086),
+        (1.0e19, constants.PROTON_MASS, 1.0, 662608904.2919972),
+        (5.0e19, constants.PROTON_MASS, 2.0, 2963277104.987116),
+        (0.0, constants.ELECTRON_MASS, 1.0, 0.0),
+    ),
+)
+def test_calculate_plasma_frequency(nd_particle, m_particle, z_particle, expected):
+    """Parametrised tests for DetailedPhysics.calculate_plasma_frequency()."""
+
+    result = DetailedPhysics.calculate_plasma_frequency(
+        nd_particle, m_particle, z_particle
+    )
+    assert result == pytest.approx(expected, rel=1e-12, abs=1e-12)
+
+
+@pytest.mark.parametrize(
+    "mass,velocity,expected",
+    (
+        (
+            constants.ELECTRON_MASS,
+            constants.SPEED_LIGHT * 0.1,
+            3.861592674352376e-12,
+        ),
+        (
+            constants.PROTON_MASS,
+            constants.SPEED_LIGHT * 0.5,
+            4.2061782010279145e-16,
+        ),
+        (
+            constants.PROTON_MASS,
+            1e3,
+            6.304902508360882e-11,
+        ),
+    ),
+)
+def test_calculate_debroglie_wavelength(mass, velocity, expected):
+    """Test DetailedPhysics.calculate_debroglie_wavelength with several parameters."""
+    result = DetailedPhysics.calculate_debroglie_wavelength(mass, velocity)
+    assert result == pytest.approx(expected, rel=1e-12)
+
+
+@pytest.mark.parametrize(
+    "e_kev, mass, expected",
+    (
+        (0.0, constants.ELECTRON_MASS, 0.0),
+        (1.6e-19, constants.ELECTRON_MASS, 592693.0770572403),
+        (1.0e-13, constants.ELECTRON_MASS, 267699064.11978555),
+        (1.0e-10, constants.PROTON_MASS, 239716127.82335472),
+    ),
+)
+def test_calculate_relativistic_particle_speed(e_kev, mass, expected):
+    """Parametrised tests for DetailedPhysics.calculate_relativistic_particle_speed"""
+
+    result = DetailedPhysics.calculate_relativistic_particle_speed(
+        e_kinetic=e_kev, mass=mass
+    )
+    assert result == pytest.approx(expected, rel=1e-5)
+
+
+@pytest.mark.parametrize(
+    "velocity, expected_gamma",
+    (
+        (0.0, 1.0),
+        (0.6 * constants.SPEED_LIGHT, 1.25),
+        (0.99 * constants.SPEED_LIGHT, 7.088812050083354),
+    ),
+)
+def test_calculate_lorentz_factor(velocity, expected_gamma):
+    """Test DetailedPhysics.calculate_lorentz_factor for several velocities."""
+
+    result = DetailedPhysics.calculate_lorentz_factor(velocity=velocity)
+    assert result == pytest.approx(expected_gamma, rel=1e-12)
+
+
+@pytest.mark.parametrize(
+    "temp_keV, nd, expected",
+    (
+        (1.0, 1e19, 7.433941993525029e-05),
+        (10.0, 1e20, 7.433941993525029e-05),
+        (0.1, 1e18, 7.433941993525029e-05),
+    ),
+)
+def test_calculate_debye_length_parametrized(temp_keV, nd, expected):
+    """Parametrized test for DetailedPhysics.calculate_debye_length."""
+    result = DetailedPhysics.calculate_debye_length(temp_keV, nd)
+    assert result == pytest.approx(expected, rel=1e-12)
+
+
+def test_detailed_physics_run_computes_profiles():
+    # Minimal plasma profile
+    plasma = PlasmaProfile()
+    plasma.teprofile.profile_x = np.array([0.0, 0.5, 1.0])
+    plasma.teprofile.profile_y = np.array([1.0, 2.0, 3.0])  # keV
+    plasma.neprofile.profile_x = plasma.teprofile.profile_x
+    plasma.neprofile.profile_y = np.array([1.0e19, 2.0e19, 3.0e19])  # m^-3
+
+    # Set global physics variables required by DetailedPhysics.run
+    physics_variables.temp_plasma_electron_vol_avg_kev = float(
+        np.mean(plasma.teprofile.profile_y)
+    )
+    physics_variables.nd_plasma_electrons_vol_avg = float(
+        np.mean(plasma.neprofile.profile_y)
+    )
+    # toroidal field profile for larmor frequency calc
+    physics_variables.b_plasma_toroidal_profile = (
+        np.ones_like(plasma.neprofile.profile_y) * 5.0
+    )
+
+    dp = DetailedPhysics(plasma)
+
+    # Run should complete without error and populate physics_variables
+    dp.run()
+
+    n = len(plasma.teprofile.profile_y)
+    assert physics_variables.len_plasma_debye_electron_vol_avg > 0
+    assert hasattr(physics_variables, "len_plasma_debye_electron_profile")
+    assert np.shape(physics_variables.len_plasma_debye_electron_profile)[0] == n
+
+    assert np.shape(physics_variables.vel_plasma_electron_profile)[0] == n
+    assert np.all(np.isfinite(physics_variables.vel_plasma_electron_profile))
+
+    assert np.shape(physics_variables.freq_plasma_electron_profile)[0] == n
+    assert np.all(np.isfinite(physics_variables.freq_plasma_electron_profile))
+
+    assert (
+        np.shape(physics_variables.freq_plasma_larmor_toroidal_electron_profile)[0] == n
+    )
+    assert np.all(
+        np.isfinite(physics_variables.freq_plasma_larmor_toroidal_electron_profile)
+    )
+
+    assert (
+        np.shape(physics_variables.plasma_coulomb_log_electron_electron_profile)[0] == n
+    )
+    assert np.all(
+        np.isfinite(physics_variables.plasma_coulomb_log_electron_electron_profile)
+    )

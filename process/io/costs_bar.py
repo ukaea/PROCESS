@@ -104,9 +104,7 @@ def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
 
         # Plot bar charts
         ax.bar(index + identity * bar_width, sizes, bar_width, label=args.f[identity])
-        ax2.bar(
-            index2 + identity * bar_width, sizes2, bar_width, label=args.f[identity]
-        )
+        ax2.bar(index2 + identity * bar_width, sizes2, bar_width, label=args.f[identity])
 
     # Plot labels
     ax.set_xticks(index + (len(mfile_list) - 1) * 0.5 * bar_width)
@@ -165,9 +163,7 @@ def comp_new(args, mfile_list: list[str], inflate: float):
         cost[1] = item.data["s13"].get_scan(-1)  # Land
         cost[2] = item.data["s21"].get_scan(-1)  # TF Coils
         cost[3] = item.data["s27"].get_scan(-1)  # First wall and blanket
-        cost[4] = item.data["s31"].get_scan(
-            -1
-        )  # Active maintenance and remote handling
+        cost[4] = item.data["s31"].get_scan(-1)  # Active maintenance and remote handling
         cost[5] = item.data["s34"].get_scan(
             -1
         )  # Vacuum vessel and liquid nitrogen plant

@@ -1309,8 +1309,7 @@ class TFCoil:
                 # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.a_tf_wp_coolant_channels/ap)',a_tf_wp_coolant_channels/ap, 'OP ')
                 ap = (
                     tfcoil_variables.a_tf_wp_conductor
-                    + tfcoil_variables.n_tf_coil_turns
-                    * tfcoil_variables.a_tf_turn_steel
+                    + tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
                     + tfcoil_variables.a_tf_coil_wp_turn_insulation
                     + tfcoil_variables.a_tf_wp_extra_void
                     + tfcoil_variables.a_tf_wp_coolant_channels
@@ -1847,7 +1846,7 @@ class TFCoil:
                     self.outfile,
                     "Actual TF coil current / copper area (A/m2)",
                     "(copperA_m2)",
-                    rebco_variables.copperA_m2,
+                    rebco_variables.coppera_m2,
                 )
 
         # TF coil radial build
@@ -2023,9 +2022,7 @@ class TFCoil:
 
         # Radial build consistency check
         if (
-            abs(
-                radius - build_variables.r_tf_inboard_in - build_variables.dr_tf_inboard
-            )
+            abs(radius - build_variables.r_tf_inboard_in - build_variables.dr_tf_inboard)
             < 10.0e0 * np.finfo(float(radius)).eps
         ):
             po.ocmmnt(self.outfile, "TF coil dimensions are consistent")
@@ -2207,10 +2204,10 @@ class TFCoil:
         acool = (
             tfcoil_variables.a_cp_cool * tfcoil_variables.n_tf_coils
         )  # Cooling cross-sectional area
-        dcool = 2.0e0 * tfcoil_variables.rcool  # Diameter
+        dcool = 2.0e0 * tfcoil_variables.radius_cp_coolant_channel  # Diameter
         lcool = 2.0e0 * (bv.z_tf_inside_half + bv.dr_tf_outboard)  # Length
-        tfcoil_variables.ncool = acool / (
-            constants.PI * tfcoil_variables.rcool**2
+        tfcoil_variables.n_cp_coolant_channels_total = acool / (
+            np.pi * tfcoil_variables.radius_cp_coolant_channel**2
         )  # Number
 
         # Average conductor cross-sectional area to cool (with cooling area)
@@ -2220,7 +2217,7 @@ class TFCoil:
             / (bv.z_tf_inside_half + bv.dr_tf_outboard)
             + acool
         )
-        ro = (acpav / (constants.PI * tfcoil_variables.ncool)) ** 0.5
+        ro = (acpav / (np.pi * tfcoil_variables.n_cp_coolant_channels_total)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
         ptot = tfcoil_variables.p_cp_resistive + fwbs_variables.pnuc_cp_tf * 1.0e6
@@ -2239,28 +2236,32 @@ class TFCoil:
             coolant_th_cond = constants.KH2O
 
             # Mass flow rate [kg/s]
-            cool_mass_flow = acool * coolant_density * tfcoil_variables.vcool
+            cool_mass_flow = (
+                acool * coolant_density * tfcoil_variables.vel_cp_coolant_midplane
+            )
 
             # Water temperature rise
-            tfcoil_variables.dtiocool = ptot / (cool_mass_flow * coolant_cp)
+            tfcoil_variables.dtemp_cp_coolant = ptot / (cool_mass_flow * coolant_cp)
 
             # Constant coolant velocity
-            vcool_max = tfcoil_variables.vcool
+            vcool_max = tfcoil_variables.vel_cp_coolant_midplane
             # --------------
 
         # Helium coolant
         # --------------
         elif tfcoil_variables.i_tf_sup == 2:
             # Inlet coolant density [kg/m3]
-            coolant_density = self.he_density(tfcoil_variables.tcoolin)
+            coolant_density = self.he_density(tfcoil_variables.temp_cp_coolant_inlet)
 
             # Mass flow rate [kg/s]
-            cool_mass_flow = acool * coolant_density * tfcoil_variables.vcool
+            cool_mass_flow = (
+                acool * coolant_density * tfcoil_variables.vel_cp_coolant_midplane
+            )
 
             # Infinitesimal power deposition used in the integral
             dptot = ptot / n_tcool_it
 
-            tcool_calc = copy.copy(tfcoil_variables.tcoolin)  # K
+            tcool_calc = copy.copy(tfcoil_variables.temp_cp_coolant_inlet)  # K
             for _i in range(n_tcool_it):
                 # Thermal capacity Cp
                 coolant_cp = self.he_cp(tcool_calc)
@@ -2275,11 +2276,16 @@ class TFCoil:
             vcool_max = cool_mass_flow / (acool * coolant_density)
 
             # Getting the global in-outlet temperature increase
-            tfcoil_variables.dtiocool = tcool_calc - tfcoil_variables.tcoolin
+            tfcoil_variables.dtemp_cp_coolant = (
+                tcool_calc - tfcoil_variables.temp_cp_coolant_inlet
+            )
         # --------------
 
         # Average coolant temperature
-        tcool_av = tfcoil_variables.tcoolin + 0.5e0 * tfcoil_variables.dtiocool
+        tcool_av = (
+            tfcoil_variables.temp_cp_coolant_inlet
+            + 0.5e0 * tfcoil_variables.dtemp_cp_coolant
+        )
         # **********************************************
 
         # Film temperature rise
@@ -2292,7 +2298,12 @@ class TFCoil:
             coolant_visco = self.he_visco(tcool_av)
 
         # Reynolds number
-        reyn = coolant_density * tfcoil_variables.vcool * dcool / coolant_visco
+        reyn = (
+            coolant_density
+            * tfcoil_variables.vel_cp_coolant_midplane
+            * dcool
+            / coolant_visco
+        )
 
         # Helium thermal conductivity [W/(m.K)]
         if tfcoil_variables.i_tf_sup == 2:
@@ -2309,9 +2320,9 @@ class TFCoil:
         dtfilmav = ptot / (
             h
             * 2.0e0
-            * constants.PI
-            * tfcoil_variables.rcool
-            * tfcoil_variables.ncool
+            * np.pi
+            * tfcoil_variables.radius_cp_coolant_channel
+            * tfcoil_variables.n_cp_coolant_channels_total
             * lcool
         )
 
@@ -2335,12 +2346,16 @@ class TFCoil:
         # Average temperature rise : To be changed with Garry Voss' better documented formula ?
         dtcncpav = (
             (ptot / tfcoil_variables.vol_cond_cp)
-            / (2.0e0 * conductor_th_cond * (ro**2 - tfcoil_variables.rcool**2))
+            / (
+                2.0e0
+                * conductor_th_cond
+                * (ro**2 - tfcoil_variables.radius_cp_coolant_channel**2)
+            )
             * (
-                ro**2 * tfcoil_variables.rcool**2
-                - 0.25e0 * tfcoil_variables.rcool**4
+                ro**2 * tfcoil_variables.radius_cp_coolant_channel**2
+                - 0.25e0 * tfcoil_variables.radius_cp_coolant_channel**4
                 - 0.75e0 * ro**4
-                + ro**4 * np.log(ro / tfcoil_variables.rcool)
+                + ro**4 * np.log(ro / tfcoil_variables.radius_cp_coolant_channel)
             )
         )
 
@@ -2349,8 +2364,8 @@ class TFCoil:
             (ptot / tfcoil_variables.vol_cond_cp)
             / (2.0e0 * conductor_th_cond)
             * (
-                (tfcoil_variables.rcool**2 - ro**2) / 2.0e0
-                + ro**2 * np.log(ro / tfcoil_variables.rcool)
+                (tfcoil_variables.radius_cp_coolant_channel**2 - ro**2) / 2.0e0
+                + ro**2 * np.log(ro / tfcoil_variables.radius_cp_coolant_channel)
             )
         )
 
@@ -2366,17 +2381,24 @@ class TFCoil:
 
         # Average conductor temperature
         tfcoil_variables.tcpav2 = (
-            tfcoil_variables.tcoolin
+            tfcoil_variables.temp_cp_coolant_inlet
             + dtcncpav
             + dtfilmav
-            + 0.5e0 * tfcoil_variables.dtiocool
+            + 0.5e0 * tfcoil_variables.dtemp_cp_coolant
         )
 
         # Peak wall temperature
         tfcoil_variables.temp_cp_peak = (
-            tfcoil_variables.tcoolin + tfcoil_variables.dtiocool + dtfilmav + dtconcpmx
+            tfcoil_variables.temp_cp_coolant_inlet
+            + tfcoil_variables.dtemp_cp_coolant
+            + dtfilmav
+            + dtconcpmx
         )
-        tcoolmx = tfcoil_variables.tcoolin + tfcoil_variables.dtiocool + dtfilmav
+        tcoolmx = (
+            tfcoil_variables.temp_cp_coolant_inlet
+            + tfcoil_variables.dtemp_cp_coolant
+            + dtfilmav
+        )
         # -------------------------
 
         # Thermal hydraulics: friction factor from Z. Olujic, Chemical
@@ -2406,10 +2428,13 @@ class TFCoil:
             * (lcool / dcool)
             * coolant_density
             * 0.5e0
-            * tfcoil_variables.vcool**2
+            * tfcoil_variables.vel_cp_coolant_midplane**2
         )
         tfcoil_variables.p_cp_coolant_pump_elec = (
-            dpres * acool * tfcoil_variables.vcool / tfcoil_variables.etapump
+            dpres
+            * acool
+            * tfcoil_variables.vel_cp_coolant_midplane
+            / tfcoil_variables.etapump
         )
 
         # Critical pressure in saturation pressure calculations (Pa)
@@ -2451,8 +2476,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Inlet coolant flow speed (m/s)",
-                "(vcool)",
-                tfcoil_variables.vcool,
+                "(vel_cp_coolant_midplane)",
+                tfcoil_variables.vel_cp_coolant_midplane,
             )
             po.ovarre(
                 self.outfile,
@@ -2469,8 +2494,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Number of coolant tubes",
-                "(ncool)",
-                tfcoil_variables.ncool,
+                "(n_cp_coolant_channels_total)",
+                tfcoil_variables.n_cp_coolant_channels_total,
             )
             po.ovarre(self.outfile, "Reynolds number", "(reyn)", reyn)
             po.ovarre(self.outfile, "Prandtl number", "(prndtl)", prndtl)
@@ -2501,14 +2526,14 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Input coolant temperature (K)",
-                "(tfcoil_variables.tcoolin)",
-                tfcoil_variables.tcoolin,
+                "(tfcoil_variables.temp_cp_coolant_inlet)",
+                tfcoil_variables.temp_cp_coolant_inlet,
             )
             po.ovarre(
                 self.outfile,
                 "Input-output coolant temperature rise (K)",
-                "(dtiocool)",
-                tfcoil_variables.dtiocool,
+                "(dtemp_cp_coolant)",
+                tfcoil_variables.dtemp_cp_coolant,
             )
             po.ovarre(self.outfile, "Film temperature rise (K)", "(dtfilmav)", dtfilmav)
             po.ovarre(
@@ -2627,12 +2652,8 @@ class TFCoil:
                 r_tf_wp_inboard_inner + dx_tf_wp_insulation + dx_tf_wp_insertion_gap
             )
         else:
-            r_tf_wp_inboard_outer_conductor = (
-                r_tf_wp_inboard_outer - dx_tf_wp_insulation
-            )
-            r_tf_wp_inboard_inner_conductor = (
-                r_tf_wp_inboard_inner + dx_tf_wp_insulation
-            )
+            r_tf_wp_inboard_outer_conductor = r_tf_wp_inboard_outer - dx_tf_wp_insulation
+            r_tf_wp_inboard_inner_conductor = r_tf_wp_inboard_inner + dx_tf_wp_insulation
 
         # Associated WP thickness
         dr_tf_wp_inboard_conductor = (
@@ -2695,8 +2716,7 @@ class TFCoil:
                 * (
                     r_tf_wp_inboard_outer_conductor
                     * np.log(
-                        r_tf_wp_inboard_inner_conductor
-                        / r_tf_wp_inboard_outer_conductor
+                        r_tf_wp_inboard_inner_conductor / r_tf_wp_inboard_outer_conductor
                     )
                     + r_tf_wp_outboard_inner_conductor
                     * np.log(
@@ -2719,8 +2739,7 @@ class TFCoil:
                     2.0e0
                     * r_tf_wp_inboard_outer_conductor**2
                     * np.log(
-                        r_tf_wp_inboard_outer_conductor
-                        / r_tf_wp_inboard_inner_conductor
+                        r_tf_wp_inboard_outer_conductor / r_tf_wp_inboard_inner_conductor
                     )
                     + 2.0e0
                     * dr_tf_wp_inboard_conductor**2
@@ -2733,8 +2752,7 @@ class TFCoil:
                     * dr_tf_wp_inboard_conductor
                     * r_tf_wp_inboard_outer_conductor
                     * np.log(
-                        r_tf_wp_inboard_inner_conductor
-                        / r_tf_wp_inboard_outer_conductor
+                        r_tf_wp_inboard_inner_conductor / r_tf_wp_inboard_outer_conductor
                     )
                 )
             )
@@ -3094,7 +3112,7 @@ class TFCoil:
             ind_tf_coil = (
                 (z_tf_inside_half + dr_tf_outboard)
                 * constants.RMU0
-                / constants.PI
+                / np.pi
                 * np.log(r_tf_outboard_mid / r_tf_inboard_mid)
             )
 
@@ -3106,9 +3124,7 @@ class TFCoil:
         # Surface areas (for cryo system) [m²]
         wbtf = (
             build_variables.r_tf_inboard_out
-            * np.sin(
-                superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half
-            )
+            * np.sin(superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half)
             - build_variables.r_tf_inboard_in
             * superconducting_tf_coil_variables.tan_theta_coil
         )
@@ -3124,7 +3140,8 @@ class TFCoil:
         tfcoil_variables.tfcryoarea = (
             2.0e0
             * tfcoil_variables.len_tf_coil
-            * constants.TWOPI
+            * 2.0
+            * np.pi
             * 0.5e0
             * (build_variables.r_tf_inboard_mid + build_variables.r_tf_outboard_mid)
         )
@@ -4746,10 +4763,7 @@ def extended_plane_strain(
     # Axial stiffness products
     ey_bar_z_area = np.pi * sum(
         ey_bar_z[nonslip_layer - 1 : nlayers]
-        * (
-            rad[nonslip_layer : nlayers + 1] ** 2
-            - rad[nonslip_layer - 1 : nlayers] ** 2
-        )
+        * (rad[nonslip_layer : nlayers + 1] ** 2 - rad[nonslip_layer - 1 : nlayers] ** 2)
     )
     ey_bar_z_area_slip = np.pi * sum(
         ey_bar_z[: nonslip_layer - 1]
@@ -5066,12 +5080,25 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     # out of numba, running the code, and then copying the result
     # back in. This means that the linear algebra solve is not compiled and runs
     # as if it were written in normal Python.
-    # This is necessary because numba compiles against the SciPy algebra library,
-    # not the Numpy one. There are differences in the Scipy solvers depending on
-    # operating system/architecture/Scipy version that cause tests to fail.
+    # This is done because numba compiles against the SciPy algebra library,
+    # not the Numpy one. We have observed some odd behaviour when using the SciPy library
+    # for this specific problem and so opt for using the numpy library instead.
     # https://github.com/ukaea/PROCESS/issues/3027
     # https://github.com/scipy/scipy/issues/23639
     with numba.objmode(cc="float64[:]"):
+        # These matrices can often end up being very ill-conditioned which can lead to numerical
+        # instability when solving below.
+        # Scaling the matrix can help reduce numerical instability by reducing the condition of matrix.
+        # Here, we scale aa such that the largest element on a given row is 1.0. This does not
+        # change the solution provided each element of a given row is scaled by the same scalar
+        # and the corresponding entry in bb is also scaled the same amount.
+        # NOTE: this does not entirely solve the numerical instability and you can get above-floating point
+        # differences in the result of this function depending on system.
+        row_scale = np.max(np.abs(aa), axis=1)
+        # The transpose below ensures the scale is repeated along the row, not the column
+        aa /= np.broadcast_to(row_scale, aa.shape).T
+        bb /= row_scale
+
         cc = np.linalg.solve(aa, bb)
 
     #  Multiply c by (-1) (John Last, internal CCFE memorandum, 21/05/2013)

@@ -470,9 +470,7 @@ def test_acc242(monkeypatch, costs):
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(heat_transport_variables, "pacpmw", 630.0)
-    monkeypatch.setattr(
-        heat_transport_variables, "p_plant_electric_base_total_mw", 65.0
-    )
+    monkeypatch.setattr(heat_transport_variables, "p_plant_electric_base_total_mw", 65.0)
     monkeypatch.setattr(cost_variables, "c242", 0)
 
     costs.acc242()
@@ -5533,7 +5531,7 @@ class CoelcParam(NamedTuple):
 
     uche3: Any = None
 
-    tlife: Any = None
+    life_plant: Any = None
 
     ifueltyp: Any = None
 
@@ -5549,21 +5547,21 @@ class CoelcParam(NamedTuple):
 
     lsa: Any = None
 
-    cfactr: Any = None
+    f_t_plant_available: Any = None
 
     divcst: Any = None
 
     ucfuel: Any = None
 
-    divlife: Any = None
+    life_div_fpy: Any = None
 
-    divlife_cal: Any = None
+    life_div: Any = None
 
     coefuelt: Any = None
 
     moneyint: Any = None
 
-    cdrlife: Any = None
+    life_hcd_fpy: Any = None
 
     cdrlife_cal: Any = None
 
@@ -5644,7 +5642,7 @@ class CoelcParam(NamedTuple):
         CoelcParam(
             fcdfuel=0.10000000000000001,
             uche3=1000000,
-            tlife=40,
+            life_plant=40,
             ifueltyp=1,
             cpstcst=0,
             coeoam=0,
@@ -5652,14 +5650,14 @@ class CoelcParam(NamedTuple):
             output_costs=0,
             coe=0,
             lsa=2,
-            cfactr=0.75000000000000011,
+            f_t_plant_available=0.75000000000000011,
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
-            divlife=6.1337250397740126,
-            divlife_cal=6.1337250397740126,
+            life_div_fpy=6.1337250397740126,
+            life_div=6.1337250397740126,
             coefuelt=0,
             moneyint=0,
-            cdrlife=19.216116010620578,
+            life_hcd_fpy=19.216116010620578,
             cdrlife_cal=19.216116010620578,
             capcost=0,
             cplife=0,
@@ -5728,7 +5726,7 @@ class CoelcParam(NamedTuple):
         CoelcParam(
             fcdfuel=0.10000000000000001,
             uche3=1000000,
-            tlife=40,
+            life_plant=40,
             ifueltyp=1,
             cpstcst=0,
             coeoam=4.4099029328740929e20,
@@ -5736,14 +5734,14 @@ class CoelcParam(NamedTuple):
             output_costs=0,
             coe=6.9525339143363677e21,
             lsa=2,
-            cfactr=0.75000000000000011,
+            f_t_plant_available=0.75000000000000011,
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
-            divlife=6.145510750914414,
-            divlife_cal=6.145510750914414,
+            life_div_fpy=6.145510750914414,
+            life_div=6.145510750914414,
             coefuelt=1.4801870771036603e21,
             moneyint=1001.1727468691442,
-            cdrlife=19.222115557991025,
+            life_hcd_fpy=19.222115557991025,
             cdrlife_cal=19.222115557991025,
             capcost=7675.6577259967762,
             cplife=0,
@@ -5828,7 +5826,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "uche3", coelcparam.uche3)
 
-    monkeypatch.setattr(cost_variables, "tlife", coelcparam.tlife)
+    monkeypatch.setattr(cost_variables, "life_plant", coelcparam.life_plant)
 
     monkeypatch.setattr(cost_variables, "ifueltyp", coelcparam.ifueltyp)
 
@@ -5844,21 +5842,23 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "lsa", coelcparam.lsa)
 
-    monkeypatch.setattr(cost_variables, "cfactr", coelcparam.cfactr)
+    monkeypatch.setattr(
+        cost_variables, "f_t_plant_available", coelcparam.f_t_plant_available
+    )
 
     monkeypatch.setattr(cost_variables, "divcst", coelcparam.divcst)
 
     monkeypatch.setattr(cost_variables, "ucfuel", coelcparam.ucfuel)
 
-    monkeypatch.setattr(cost_variables, "divlife", coelcparam.divlife)
+    monkeypatch.setattr(cost_variables, "life_div_fpy", coelcparam.life_div_fpy)
 
-    monkeypatch.setattr(cost_variables, "divlife_cal", coelcparam.divlife_cal)
+    monkeypatch.setattr(cost_variables, "life_div", coelcparam.life_div)
 
     monkeypatch.setattr(cost_variables, "coefuelt", coelcparam.coefuelt)
 
     monkeypatch.setattr(cost_variables, "moneyint", coelcparam.moneyint)
 
-    monkeypatch.setattr(cost_variables, "cdrlife", coelcparam.cdrlife)
+    monkeypatch.setattr(cost_variables, "life_hcd_fpy", coelcparam.life_hcd_fpy)
 
     monkeypatch.setattr(cost_variables, "cdrlife_cal", coelcparam.cdrlife_cal)
 

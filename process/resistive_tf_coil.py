@@ -211,9 +211,7 @@ class ResistiveTFCoil(TFCoil):
             )
 
             tfcoil_variables.casestr = (
-                tfcoil_variables.casestr
-                if tfcoil_variables.casestr is None
-                else casestr
+                tfcoil_variables.casestr if tfcoil_variables.casestr is None else casestr
             )
 
             tfcoil_variables.insstrain = (
@@ -261,7 +259,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.sig_tf_case = 0.0e0
                 tfcoil_variables.sig_tf_wp = 0.0e0
         if output:
-            self.outtf(0)
+            self.outtf()
 
     def res_tf_internal_geom(self):
         """
@@ -374,8 +372,7 @@ class ResistiveTFCoil(TFCoil):
             + tfcoil_variables.dx_tf_turn_insulation * tfcoil_variables.n_tf_coil_turns
         )
         tfcoil_variables.a_res_tf_coil_conductor = (
-            tfcoil_variables.a_res_tf_coil_conductor
-            * (1.0e0 - tfcoil_variables.fcoolcp)
+            tfcoil_variables.a_res_tf_coil_conductor * (1.0e0 - tfcoil_variables.fcoolcp)
         )
 
         # Inter turn insulation area per coil [m2]
@@ -489,9 +486,7 @@ class ResistiveTFCoil(TFCoil):
                 < np.finfo(float(tfcoil_variables.temp_tf_legs_outboard)).eps
             ):
                 superconducting_tf_coil_variables.is_leg_cp_temp_same = 1
-                tfcoil_variables.temp_tf_legs_outboard = (
-                    tfcoil_variables.temp_cp_average
-                )
+                tfcoil_variables.temp_tf_legs_outboard = tfcoil_variables.temp_cp_average
 
             # Leg resistivity (different leg temperature as separate cooling channels)
             if tfcoil_variables.i_tf_sup == 0:
@@ -499,8 +494,7 @@ class ResistiveTFCoil(TFCoil):
                     tfcoil_variables.frholeg
                     * (
                         1.86e0
-                        + 0.00393e0
-                        * (tfcoil_variables.temp_tf_legs_outboard - 293.15e0)
+                        + 0.00393e0 * (tfcoil_variables.temp_tf_legs_outboard - 293.15e0)
                     )
                     * 1.0e-8
                 )
@@ -686,8 +680,7 @@ class ResistiveTFCoil(TFCoil):
 
             # Total TF conductor volume [m3]
             vol_cond = (
-                tfcoil_variables.vol_cond_cp
-                + tfcoil_variables.n_tf_coils * vol_cond_leg
+                tfcoil_variables.vol_cond_cp + tfcoil_variables.n_tf_coils * vol_cond_leg
             )
 
             # Outboard leg TF turn insulation layer volume (per leg) [m3]

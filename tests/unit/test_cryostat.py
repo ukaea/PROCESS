@@ -181,9 +181,7 @@ def test_external_cryo_geometry(
     )
     monkeypatch.setattr(fwbs_variables, "m_vv", externalcryogeometryparam.m_vv)
     monkeypatch.setattr(fwbs_variables, "vol_vv", externalcryogeometryparam.vol_vv)
-    monkeypatch.setattr(
-        fwbs_variables, "den_steel", externalcryogeometryparam.den_steel
-    )
+    monkeypatch.setattr(fwbs_variables, "den_steel", externalcryogeometryparam.den_steel)
     monkeypatch.setattr(fwbs_variables, "dewmkg", externalcryogeometryparam.dewmkg)
     monkeypatch.setattr(
         pfcoil_variables, "r_pf_coil_outer", externalcryogeometryparam.r_pf_coil_outer

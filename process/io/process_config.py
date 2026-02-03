@@ -111,8 +111,7 @@ class ProcessConfig:
         """creates README.txt containing comment"""
 
         if self.comment != "":
-            with open(directory + "/README.txt", "w") as readme:
-                readme.write(self.comment)
+            Path(directory + "/README.txt").write_text(self.comment)
 
     def error_status2readme(self, directory="."):
         """appends PROCESS outcome to README.txt"""
@@ -129,8 +128,7 @@ class ProcessConfig:
                 with open(directory + "/README.txt", "a") as readme:
                     readme.write(error_status)
             else:
-                with open(directory + "/README.txt", "w") as readme:
-                    readme.write(error_status)
+                Path(directory + "/README.txt").write_text(error_status)
 
     def modify_in_dat(self):
         """modifies the original IN.DAT file"""

@@ -120,6 +120,7 @@ class Stellarator:
             self.costs.run()
             self.costs.output()
             self.availability.run(output=True)
+            self.physics.calculate_effective_charge_ionisation_profiles()
             self.physics.outplas()
             st_heat(self, True)
             self.st_phys(True)
@@ -196,6 +197,12 @@ class Stellarator:
             Path(f"{global_variables.output_prefix}stella_conf.json"),
         )
 
+        # If physics_variables.aspect ratio is not in numerics.ixc set it to default value
+        # Or when you call it the first time
+        if 1 not in numerics.ixc:
+            physics_variables.aspect = stellarator_configuration.stella_config_aspect_ref
+
+
         # Set the physics_variables.rminor radius as result here.
         physics_variables.rminor = physics_variables.rmajor / physics_variables.aspect
         physics_variables.eps = 1.0e0 / physics_variables.aspect
@@ -205,19 +212,15 @@ class Stellarator:
             * stellarator_configuration.stella_config_symmetry
         )  # This overwrites tfcoil_variables.n_tf_coils in input file.
 
-        #  Factors used to scale the reference point.
         stellarator_variables.f_r = (
-            physics_variables.rmajor
-            / stellarator_configuration.stella_config_rmajor_ref
+            physics_variables.rmajor / stellarator_configuration.stella_config_rmajor_ref
         )  # Size scaling factor with respect to the reference calculation
         stellarator_variables.f_a = (
-            physics_variables.rminor
-            / stellarator_configuration.stella_config_rminor_ref
+            physics_variables.rminor / stellarator_configuration.stella_config_rminor_ref
         )  # Size scaling factor with respect to the reference calculation
 
         stellarator_variables.f_aspect = (
-            physics_variables.aspect
-            / stellarator_configuration.stella_config_aspect_ref
+            physics_variables.aspect / stellarator_configuration.stella_config_aspect_ref
         )
         stellarator_variables.f_n = tfcoil_variables.n_tf_coils / (
             stellarator_configuration.stella_config_coilspermodule
@@ -464,7 +467,7 @@ class Stellarator:
         """
         fwbs_variables.life_fw_fpy = min(
             cost_variables.abktflnc / physics_variables.pflux_fw_neutron_mw,
-            cost_variables.tlife,
+            cost_variables.life_plant,
         )
 
         #  First wall inboard, outboard areas (assume 50% of total each)
@@ -708,9 +711,7 @@ class Stellarator:
                     pnucfwbs * build_variables.a_fw_inboard / build_variables.a_fw_total
                 )
                 pnucfwbso = (
-                    pnucfwbs
-                    * build_variables.a_fw_outboard
-                    / build_variables.a_fw_total
+                    pnucfwbs * build_variables.a_fw_outboard / build_variables.a_fw_total
                 )
 
                 #  Radiation power incident on divertor (MW)
@@ -1514,9 +1515,6 @@ class Stellarator:
                     fwbs_variables.f_blkt_li6_enrichment,
                 )
                 po.ovarre(
-                    self.outfile, "Tritium breeding ratio", "(tbr)", fwbs_variables.tbr
-                )
-                po.ovarre(
                     self.outfile,
                     "Tritium production rate (g/day)",
                     "(tritprate)",
@@ -1833,7 +1831,7 @@ class Stellarator:
             # Full power DT operation years for replacement of TF Coil
             # (or plant life)
 
-            fpydt = cost_variables.cfactr * cost_variables.tlife
+            fpydt = cost_variables.f_t_plant_available * cost_variables.life_plant
             fpsdt = fpydt * 3.154e7  # seconds
 
             # Insulator dose (rad)
@@ -2016,7 +2014,7 @@ class Stellarator:
                 physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
-                physics_variables.zeffai,
+                 physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
             physics_variables.fusden_total = (
                 physics_variables.fusden_plasma
@@ -2114,7 +2112,7 @@ class Stellarator:
             physics_variables.dlamie,
             physics_variables.temp_plasma_electron_vol_avg_kev,
             physics_variables.temp_plasma_ion_vol_avg_kev,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
         )
 
         #  Calculate radiation power
@@ -2135,9 +2133,7 @@ class Stellarator:
         )
         physics_variables.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
         physics_variables.pden_plasma_core_rad_mw = radpwr_data.pden_plasma_core_rad_mw
-        physics_variables.pden_plasma_outer_rad_mw = (
-            radpwr_data.pden_plasma_outer_rad_mw
-        )
+        physics_variables.pden_plasma_outer_rad_mw = radpwr_data.pden_plasma_outer_rad_mw
         physics_variables.pden_plasma_rad_mw = radpwr_data.pden_plasma_rad_mw
 
         physics_variables.pden_plasma_core_rad_mw = max(
@@ -2180,9 +2176,7 @@ class Stellarator:
 
         # Here the implementation sometimes leaves the accessible regime when p_plasma_rad_mw> powht which is unphysical and
         # is not taken care of by the rad module. We restrict the radiation power here by the heating power:
-        physics_variables.p_plasma_rad_mw = max(
-            0.0e0, physics_variables.p_plasma_rad_mw
-        )
+        physics_variables.p_plasma_rad_mw = max(0.0e0, physics_variables.p_plasma_rad_mw)
 
         #  Power to divertor, = (1-stellarator_variables.f_rad)*Psol
 
@@ -2283,7 +2277,7 @@ class Stellarator:
             stellarator_variables.iotabar,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         physics_variables.p_electron_transport_loss_mw = (
@@ -2308,7 +2302,7 @@ class Stellarator:
             physics_variables.ntau,
             physics_variables.nTtau,
             physics_variables.figmer,
-            fusrat,
+            _fusrat,
             physics_variables.molflow_plasma_fuelling_required,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
@@ -2334,24 +2328,24 @@ class Stellarator:
         (
             q_PROCESS,
             q_PROCESS_r1,
-            q_neo,
-            gamma_neo,
-            total_q_neo,
+            _q_neo,
+            _gamma_neo,
+            _total_q_neo,
             total_q_neo_e,
             q_neo_e,
-            q_neo_D,
-            q_neo_a,
-            q_neo_T,
+            _q_neo_D,
+            _q_neo_a,
+            _q_neo_T,
             g_neo_e,
-            g_neo_D,
-            g_neo_a,
-            g_neo_T,
+            _g_neo_D,
+            _g_neo_a,
+            _g_neo_T,
             dndt_neo_e,
-            dndt_neo_D,
-            dndt_neo_a,
-            dndt_neo_T,
-            dndt_neo_fuel,
-            dmdt_neo_fuel,
+            _dndt_neo_D,
+            _dndt_neo_a,
+            _dndt_neo_T,
+            _dndt_neo_fuel,
+            _dmdt_neo_fuel,
             dmdt_neo_fuel_from_e,
             chi_neo_e,
             chi_PROCESS_e,

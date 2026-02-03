@@ -469,6 +469,8 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "rminor", plasmaprofilesparam.rminor)
 
+    monkeypatch.setattr(physics_variables, "a_plasma_poloidal", 4.0)
+
     plasmaprofile = PlasmaProfile()
     plasmaprofile.run()
 
@@ -482,9 +484,7 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.expected_tin
     )
 
-    assert physics_variables.alphap == pytest.approx(
-        plasmaprofilesparam.expected_alphap
-    )
+    assert physics_variables.alphap == pytest.approx(plasmaprofilesparam.expected_alphap)
 
     assert physics_variables.temp_plasma_electron_on_axis_kev == pytest.approx(
         plasmaprofilesparam.expected_te0

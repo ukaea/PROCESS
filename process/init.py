@@ -329,6 +329,22 @@ def check_process(inputs):  # noqa: ARG001
             "Iteration variables 13 and 140 cannot be used simultaneously",
         )
 
+    # Can't use c_tf_turn as interation var, constraint or input if i_tf_turns_integer == 1
+    if (
+        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 60
+    ).any() and data_structure.tfcoil_variables.i_tf_turns_integer == 1:
+        raise ProcessValidationError(
+            "Iteration variable 60 (TF current per turn, c_tf_turn) cannot be used with the TF coil integer turn model (i_tf_turns_integer == 1) as it is a calculated output instead for this model. However, the maximum current per turn can be constrained with constraint 77."
+        )
+
+    # Can't have icc 77 and ixc 60 at the same time
+    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 60).any() and (
+        data_structure.numerics.icc[: data_structure.numerics.nvar] == 77
+    ).any():
+        raise ProcessValidationError(
+            "Cannot use iteration variable 60 (TF coil current per turn, c_tf_turn) and constraint 77 (maximum TF current per turn) simultaneously."
+        )
+
     if (
         data_structure.numerics.icc[
             : data_structure.numerics.neqns + data_structure.numerics.nineqns
@@ -600,7 +616,7 @@ def check_process(inputs):  # noqa: ARG001
             )
 
     if data_structure.physics_variables.i_single_null == 0:
-        data_structure.physics_variables.n_divertors = 2
+        data_structure.divertor_variables.n_divertors = 2
         data_structure.build_variables.dz_fw_plasma_gap = (
             data_structure.build_variables.dz_xpoint_divertor
         )
@@ -612,7 +628,7 @@ def check_process(inputs):  # noqa: ARG001
         )
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
-        data_structure.physics_variables.n_divertors = 1
+        data_structure.divertor_variables.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
     if data_structure.physics_variables.itart == 1:
@@ -645,10 +661,10 @@ def check_process(inputs):  # noqa: ARG001
         # Water cooled copper magnets initalisation / checks
         if data_structure.tfcoil_variables.i_tf_sup == 0:
             # Check if the initial centrepost coolant loop adapted to the magnet technology
-            # Ice cannot flow so tcoolin > 273.15 K
-            if data_structure.tfcoil_variables.tcoolin < 273.15:
+            # Ice cannot flow so temp_cp_coolant_inlet > 273.15 K
+            if data_structure.tfcoil_variables.temp_cp_coolant_inlet < 273.15:
                 raise ProcessValidationError(
-                    "Coolant temperature (tcoolin) cannot be < 0 C (273.15 K) for water cooled copper magents"
+                    "Coolant temperature (temp_cp_coolant_inlet) cannot be < 0 C (273.15 K) for water cooled copper magents"
                 )
 
             # Temperature of the TF legs cannot be cooled down
@@ -680,9 +696,9 @@ def check_process(inputs):  # noqa: ARG001
         elif data_structure.tfcoil_variables.i_tf_sup == 2:
             # Call a lvl 3 error if the inlet coolant temperature is too large
             # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
-            if data_structure.tfcoil_variables.tcoolin > 40.0:
+            if data_structure.tfcoil_variables.temp_cp_coolant_inlet > 40.0:
                 raise ProcessValidationError(
-                    "Coolant temperature (tcoolin) should be < 40 K for the cryo-al resistivity to be defined"
+                    "Coolant temperature (temp_cp_coolant_inlet) should be < 40 K for the cryo-al resistivity to be defined"
                 )
 
             # Check if the leg average temperature is low enough for the resisitivity fit
@@ -701,7 +717,7 @@ def check_process(inputs):  # noqa: ARG001
 
             # Otherwise intitialise the average conductor temperature at
             data_structure.tfcoil_variables.temp_cp_average = (
-                data_structure.tfcoil_variables.tcoolin
+                data_structure.tfcoil_variables.temp_cp_coolant_inlet
             )
 
         # Check if the boostrap current selection is addapted to ST
@@ -749,9 +765,7 @@ def check_process(inputs):  # noqa: ARG001
         # Checking the CP TF top radius
         if (
             abs(data_structure.build_variables.r_cp_top) > 0
-            or (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 174
-            ).any()
+            or (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 174).any()
         ) and data_structure.build_variables.i_r_cp_top != 1:
             raise ProcessValidationError(
                 "To set the TF CP top value, you must use i_r_cp_top = 1"
@@ -826,9 +840,7 @@ def check_process(inputs):  # noqa: ARG001
     if (
         (
             not (
-                (
-                    data_structure.numerics.ixc[: data_structure.numerics.nvar] == 16
-                ).any()
+                (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 16).any()
                 or (
                     data_structure.numerics.ixc[: data_structure.numerics.nvar] == 29
                 ).any()
@@ -1021,14 +1033,11 @@ def check_process(inputs):  # noqa: ARG001
             )
 
             # Steel conduit thickness (can be an iteration variable)
-            if (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58
-            ).any():
+            if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58).any():
                 dr_tf_wp_min = dr_tf_wp_min + 2.0 * data_structure.numerics.boundl[57]
             else:
                 dr_tf_wp_min = (
-                    dr_tf_wp_min
-                    + 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
+                    dr_tf_wp_min + 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
                 )
 
         # Minimal conductor layer thickness
@@ -1042,7 +1051,7 @@ def check_process(inputs):  # noqa: ARG001
                     data_structure.tfcoil_variables.dx_tf_turn_insulation
                     + data_structure.tfcoil_variables.dx_tf_wp_insulation
                 )
-                + 4.0 * data_structure.tfcoil_variables.rcool
+                + 4.0 * data_structure.tfcoil_variables.radius_cp_coolant_channel
             )
 
         if data_structure.numerics.boundl[139] < dr_tf_wp_min:
@@ -1251,15 +1260,11 @@ def set_active_constraints():
             ] = True
             num_constraints += 1
 
-    if data_structure.numerics.neqns == 0:
+    if data_structure.numerics.neqns < 0:
         # The value of neqns has not been set in the input file.  Default = 0.
-        data_structure.numerics.neqns = (
-            num_constraints - data_structure.numerics.nineqns
-        )
+        data_structure.numerics.neqns = num_constraints - data_structure.numerics.nineqns
     else:
-        data_structure.numerics.nineqns = (
-            num_constraints - data_structure.numerics.neqns
-        )
+        data_structure.numerics.nineqns = num_constraints - data_structure.numerics.neqns
 
 
 def set_device_type():

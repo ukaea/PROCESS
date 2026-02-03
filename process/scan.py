@@ -50,21 +50,18 @@ SCAN_VARIABLES = {
     5: ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)"),
     6: ScanVariable("pflux_fw_neutron_max_mw", "Allow._wall_load_(MW/m2)"),
     7: ScanVariable("beamfus0", "Beam_bkgrd_multiplier"),
-    8: ScanVariable("fbig_q_plasma_min", "Big_Q_f-value"),
     9: ScanVariable("temp_plasma_electron_vol_avg_kev", "Electron_temperature_keV"),
     10: ScanVariable("boundu(15)", "Volt-second_upper_bound"),
     11: ScanVariable("beta_norm_max", "Beta_coefficient"),
     12: ScanVariable("f_c_plasma_bootstrap_max", "Bootstrap_fraction"),
     13: ScanVariable("boundu(10)", "H_factor_upper_bound"),
     14: ScanVariable("fiooic", "TFC_Iop_/_Icrit_f-value"),
-    15: ScanVariable("fjprot", "TFC_Jprot_limit_f-value"),
     16: ScanVariable("rmajor", "Plasma_major_radius_(m)"),
     17: ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)"),
     18: ScanVariable("eta_cd_norm_hcd_primary_max", "Maximum_CD_gamma"),
     19: ScanVariable("boundl(16)", "CS_thickness_lower_bound"),
     20: ScanVariable("t_burn_min", "Minimum_burn_time_(s)"),
-    22: ScanVariable("cfactr", "Plant_availability_factor"),
-    23: ScanVariable("boundu(72)", "Ip/Irod_upper_bound"),
+    22: ScanVariable("f_t_plant_available", "Plant_availability_factor"),
     24: ScanVariable("p_fusion_total_max_mw", "Fusion_power_limit_(MW)"),
     25: ScanVariable("kappa", "Plasma_elongation"),
     26: ScanVariable("triang", "Plasma_triangularity"),
@@ -99,9 +96,7 @@ SCAN_VARIABLES = {
     57: ScanVariable("boundl(2)", "b_plasma_toroidal_on_axis minimum"),
     58: ScanVariable("dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"),
     59: ScanVariable("dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"),
-    60: ScanVariable(
-        "sig_tf_wp_max", "Allowable_stress_in_tf_coil_conduit_Tresca_(pa)"
-    ),
+    60: ScanVariable("sig_tf_wp_max", "Allowable_stress_in_tf_coil_conduit_Tresca_(pa)"),
     61: ScanVariable("copperaoh_m2_max", "Max CS coil current / copper area"),
     62: ScanVariable("coheof", "CS coil current density at EOF (A/m2)"),
     63: ScanVariable("dr_cs", "CS coil thickness (m)"),
@@ -388,12 +383,14 @@ class Scan:
 
                 if numerics.xcm[i] < xminn:
                     location, bound = "below", "lower"
+                    bounds = numerics.itv_scaled_lower_bounds
                 else:
                     location, bound = "above", "upper"
+                    bounds = numerics.itv_scaled_upper_bounds
                 process_output.write(
                     constants.NOUT,
                     f"   {name:<30}= {xcval} is at or {location} its {bound} bound:"
-                    f" {numerics.itv_scaled_upper_bounds[i] * numerics.scafc[i]}",
+                    f" {bounds[i] * numerics.scafc[i]}",
                 )
 
             # Write optimisation parameters to mfile
@@ -485,6 +482,26 @@ class Scan:
                 con1[i],
             )
 
+            process_output.ovarre(
+                constants.MFILE,
+                f"{name:<33} residual",
+                f"(res_eq_con{numerics.icc[i]:03d})",
+                err[i],
+            )
+            process_output.ovarre(
+                constants.MFILE,
+                f"{name} constraint value",
+                f"(val_eq_con{numerics.icc[i]:03d})",
+                con2[i],
+            )
+
+            process_output.ovarre(
+                constants.MFILE,
+                f"{name} units",
+                f"(eq_units_con{numerics.icc[i]:03d})",
+                f"'{lab[i]}'",
+            )
+
         # Write equality constraints to output file
         process_output.write(
             constants.NOUT,
@@ -514,17 +531,57 @@ class Scan:
 
             for i in range(numerics.neqns, numerics.neqns + numerics.nineqns):
                 name = numerics.lablcc[numerics.icc[i] - 1]
+                # Equality constraint bound/value required
+                constraint_bound = con2[i]
+
+                # Normally, a negative normalised constraint residual indicates that a constraint is feasible.
+                # However, at the end of the PROCESS constraint handler the sign is flipped.
+                # Therefore, we flip the sign back here by using -rcm
+                if sym[i] == ">=":
+                    constraint_value = constraint_bound * (1 - -numerics.rcm[i])
+                elif sym[i] == "<=":
+                    constraint_value = constraint_bound * (-numerics.rcm[i] + 1)
+
                 inequality_constraint_table.append([
                     name,
+                    f"{constraint_value} {lab[i]}",
                     sym[i],
                     f"{con2[i]} {lab[i]}",
                     f"{err[i]} {lab[i]}",
+                    f"{numerics.rcm[i]}",
                 ])
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} normalised residue",
                     f"(ineq_con{numerics.icc[i]:03d})",
                     numerics.rcm[i],
+                )
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} physical value",
+                    f"(ineq_value_con{numerics.icc[i]:03d})",
+                    constraint_value,
+                )
+
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} symbol",
+                    f"(ineq_symbol_con{numerics.icc[i]:03d})",
+                    f"'{sym[i]}'",
+                )
+
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} units",
+                    f"(ineq_units_con{numerics.icc[i]:03d})",
+                    f"'{lab[i]}'",
+                )
+
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} physical bound",
+                    f"(ineq_bound_con{numerics.icc[i]:03d})",
+                    constraint_bound,
                 )
 
             process_output.write(
@@ -535,6 +592,8 @@ class Scan:
                         "",
                         "",
                         "Physical constraint",
+                        "",
+                        "Physical constraint bound",
                         "Constraint residue",
                     ],
                     numalign="left",
@@ -551,9 +610,7 @@ class Scan:
         """
         if ifail == -1:
             process_output.ocmmnt(constants.NOUT, "User-terminated execution of VMCON.")
-            process_output.ocmmnt(
-                constants.IOTTY, "User-terminated execution of VMCON."
-            )
+            process_output.ocmmnt(constants.IOTTY, "User-terminated execution of VMCON.")
         elif ifail == 0:
             process_output.ocmmnt(
                 constants.NOUT, "Improper input parameters to the VMCON routine."
@@ -947,8 +1004,6 @@ class Scan:
                 constraint_variables.pflux_fw_neutron_max_mw = swp[iscn - 1]
             case 7:
                 physics_variables.beamfus0 = swp[iscn - 1]
-            case 8:
-                constraint_variables.fbig_q_plasma_min = swp[iscn - 1]
             case 9:
                 physics_variables.temp_plasma_electron_vol_avg_kev = swp[iscn - 1]
             case 10:
@@ -959,10 +1014,6 @@ class Scan:
                 current_drive_variables.f_c_plasma_bootstrap_max = swp[iscn - 1]
             case 13:
                 numerics.boundu[9] = swp[iscn - 1]
-            case 14:
-                constraint_variables.fiooic = swp[iscn - 1]
-            case 15:
-                constraint_variables.fjprot = swp[iscn - 1]
             case 16:
                 physics_variables.rmajor = swp[iscn - 1]
             case 17:
@@ -974,11 +1025,11 @@ class Scan:
             case 20:
                 constraint_variables.t_burn_min = swp[iscn - 1]
             case 22:
-                if cost_variables.iavail == 1:
-                    raise ProcessValueError("Do not scan cfactr if iavail=1")
-                cost_variables.cfactr = swp[iscn - 1]
-            case 23:
-                numerics.boundu[71] = swp[iscn - 1]
+                if cost_variables.i_plant_availability == 1:
+                    raise ProcessValueError(
+                        "Do not scan f_t_plant_available if i_plant_availability=1"
+                    )
+                cost_variables.f_t_plant_available = swp[iscn - 1]
             case 24:
                 constraint_variables.p_fusion_total_max_mw = swp[iscn - 1]
             case 25:

@@ -72,3 +72,4 @@ env-fork
 !tests/integration/data/large_tokamak_SIG_TF.json
 *.html
 !documentation/**/*.html
+process/_version.py

@@ -270,9 +270,9 @@ class StbildParam(NamedTuple):
 
     rbld: Any = None
 
-    rsldi: Any = None
+    r_shld_inboard_inner: Any = None
 
-    rsldo: Any = None
+    r_shld_outboard_outer: Any = None
 
     rspo: Any = None
 
@@ -291,8 +291,6 @@ class StbildParam(NamedTuple):
     dr_tf_outboard: Any = None
 
     available_radial_space: Any = None
-
-    f_avspace: Any = None
 
     required_radial_space: Any = None
 
@@ -388,8 +386,8 @@ class StbildParam(NamedTuple):
             dr_cs=0,
             r_tf_outboard_mid=0,
             rbld=0,
-            rsldi=0,
-            rsldo=0,
+            r_shld_inboard_inner=0,
+            r_shld_outboard_outer=0,
             rspo=0,
             dr_fw_plasma_gap_inboard=0.15000000000000002,
             dr_fw_plasma_gap_outboard=0.30000000000000004,
@@ -399,7 +397,6 @@ class StbildParam(NamedTuple):
             dr_tf_inboard=0.78058448071757114,
             dr_tf_outboard=0.78058448071757114,
             available_radial_space=0,
-            f_avspace=1,
             required_radial_space=0,
             radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
@@ -458,8 +455,8 @@ class StbildParam(NamedTuple):
             dr_cs=0,
             r_tf_outboard_mid=26.367558258201448,
             rbld=22,
-            rsldi=18.947733982157342,
-            rsldo=25.602266017842663,
+            r_shld_inboard_inner=18.947733982157342,
+            r_shld_outboard_outer=25.602266017842663,
             rspo=22,
             dr_fw_plasma_gap_inboard=0.15000000000000002,
             dr_fw_plasma_gap_outboard=0.30000000000000004,
@@ -469,7 +466,6 @@ class StbildParam(NamedTuple):
             dr_tf_inboard=0.78058448071757114,
             dr_tf_outboard=0.78058448071757114,
             available_radial_space=1.8828828828828827,
-            f_avspace=1,
             required_radial_space=2.0332922403587861,
             radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
@@ -575,9 +571,13 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "rbld", stbildparam.rbld)
 
-    monkeypatch.setattr(build_variables, "rsldi", stbildparam.rsldi)
+    monkeypatch.setattr(
+        build_variables, "r_shld_inboard_inner", stbildparam.r_shld_inboard_inner
+    )
 
-    monkeypatch.setattr(build_variables, "rsldo", stbildparam.rsldo)
+    monkeypatch.setattr(
+        build_variables, "r_shld_outboard_outer", stbildparam.r_shld_outboard_outer
+    )
 
     monkeypatch.setattr(build_variables, "rspo", stbildparam.rspo)
 
@@ -608,8 +608,6 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     monkeypatch.setattr(
         build_variables, "available_radial_space", stbildparam.available_radial_space
     )
-
-    monkeypatch.setattr(build_variables, "f_avspace", stbildparam.f_avspace)
 
     monkeypatch.setattr(
         build_variables, "required_radial_space", stbildparam.required_radial_space
@@ -696,9 +694,13 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     assert build_variables.rbld == pytest.approx(stbildparam.expected_rbld)
 
-    assert build_variables.rsldi == pytest.approx(stbildparam.expected_rsldi)
+    assert build_variables.r_shld_inboard_inner == pytest.approx(
+        stbildparam.expected_rsldi
+    )
 
-    assert build_variables.rsldo == pytest.approx(stbildparam.expected_rsldo)
+    assert build_variables.r_shld_outboard_outer == pytest.approx(
+        stbildparam.expected_rsldo
+    )
 
     assert build_variables.rspo == pytest.approx(stbildparam.expected_rspo)
 
@@ -2911,8 +2913,8 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     dr_fw_outboard: Any = None
     dr_shld_inboard: Any = None
     dr_shld_outboard: Any = None
-    cfactr: Any = None
-    tlife: Any = None
+    f_t_plant_available: Any = None
+    life_plant: Any = None
     pflux_fw_neutron_mw: Any = None
     dr_tf_plasma_case: Any = None
     i_tf_sup: Any = None
@@ -2942,8 +2944,8 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             dr_fw_outboard=0.018000000000000002,
             dr_shld_inboard=0.20000000000000001,
             dr_shld_outboard=0.20000000000000001,
-            cfactr=0.75000000000000011,
-            tlife=40,
+            f_t_plant_available=0.75000000000000011,
+            life_plant=40,
             pflux_fw_neutron_mw=0.61095969282042206,
             dr_tf_plasma_case=0.050000000000000003,
             i_tf_sup=1,
@@ -3009,10 +3011,12 @@ def test_sctfcoil_nuclear_heating_iter90(
         sctfcoilnuclearheatingiter90param.dr_shld_outboard,
     )
     monkeypatch.setattr(
-        cost_variables, "cfactr", sctfcoilnuclearheatingiter90param.cfactr
+        cost_variables,
+        "f_t_plant_available",
+        sctfcoilnuclearheatingiter90param.f_t_plant_available,
     )
     monkeypatch.setattr(
-        cost_variables, "tlife", sctfcoilnuclearheatingiter90param.tlife
+        cost_variables, "life_plant", sctfcoilnuclearheatingiter90param.life_plant
     )
     monkeypatch.setattr(
         physics_variables,
@@ -3057,9 +3061,7 @@ def test_sctfcoil_nuclear_heating_iter90(
         p_tf_nuclear_heat_mw,
     ) = stellarator.sctfcoil_nuclear_heating_iter90()
 
-    assert coilhtmx == pytest.approx(
-        sctfcoilnuclearheatingiter90param.expected_coilhtmx
-    )
+    assert coilhtmx == pytest.approx(sctfcoilnuclearheatingiter90param.expected_coilhtmx)
     assert dpacop == pytest.approx(sctfcoilnuclearheatingiter90param.expected_dpacop)
     assert htheci == pytest.approx(sctfcoilnuclearheatingiter90param.expected_htheci)
     assert nflutf == pytest.approx(sctfcoilnuclearheatingiter90param.expected_nflutf)

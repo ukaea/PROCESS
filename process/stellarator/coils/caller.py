@@ -393,9 +393,7 @@ def winding_pack_total_size(r_coil_major:float, r_coil_minor:float, coilcurrent:
         ) ** 2  # If REBCO, : start at smaller winding pack ratios
 
     # Find the intersection between LHS and RHS (or: how much awp do I need to get to the desired coil current)
-    wp_width_r_min = intersect(
-        wp_width_r, lhs, wp_width_r, rhs, wp_width_r_min
-    )
+    wp_width_r_min = intersect(wp_width_r, lhs, wp_width_r, rhs, wp_width_r_min)
 
     # Maximum field at superconductor surface (T)
     wp_width_r_min = max(tfcoil_variables.dx_tf_turn_general**2, wp_width_r_min)

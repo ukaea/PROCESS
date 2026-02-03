@@ -97,25 +97,11 @@ i_bldgs_size = 0 * switch between routines estimating building sizes (0 = defaul
 
 
 *---------------Constraint Variables---------------*
-
-fbeta_max = 0.8735070761063214 * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
-fdene    = 1.0 * f-value for density limit (`constraint equation 5`; `iteration variable 9`)
-fp_fusion_total_max_mw  = 1.0 * f-value for maximum fusion power (`constraint equation 9`; `iteration variable 26`)
-fiooic   = 0.9942981023320613 * f-value for TF coil operating current / critical current ratio
-fipir    = 0.5460655498423221 * f-value for Ip/Irod upper limit
-fl_h_threshold = 0.34445356794812293 * f-value for L-H power threshold (`constraint equation 15`; `iteration variable 103`)
-fp_hcd_injected_max    = 0.9546763572954339 * f-value for injection power (`constraint equation 30`; `iteration variable 46`)
-fpsepr   = 1.0 * f-value for maximum Psep/R limit (`constraint equation 56`; `iteration variable 97`)
-fradpwr  = 0.7109311818294267 * f-value for core radiation power limit (`constraint equation 17`; `iteration variable 28`)
-fpflux_fw_rad_max = 0.4187507268216411 * f-value for upper limit on radiation wall load (`constr; equ; 67`; `iteration variable 116`)
-fstrcase = 0.47408648750854704 * f-value for maximum TF coil case Tresca yield criterion
-fstrcond = 0.4359431939504875 * f-value for maxiumum TF coil conduit Tresca yield criterion
 pflux_fw_rad_max = 1.2 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 f_fw_rad_max = 1.0 * peaking factor for radiation wall load (`constraint equation 67`)
 p_fusion_total_max_mw  = 2500.0 * maximum fusion power (MW) (`constraint equation 9`)
 pseprmax = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
 f_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
-falpha_energy_confinement = 1.0 * f-value for lower limit on taup/taueff the ratio of alpha particle to energy
 p_plant_electric_net_required_mw = 100.0 * minimum net electric
 
 *-------------------Constraints--------------------*
@@ -124,7 +110,7 @@ p_plant_electric_net_required_mw = 100.0 * minimum net electric
 *------------------Cost Variables------------------*
 
 cost_model = 0 * Switch for cost model;
-iavail   = 0 * Switch for plant availability model;
+i_plant_availability   = 0 * Switch for plant availability model;
 ifueltyp = 0 * Switch for fuel type;
 lsa      = 2 * Level of safety assurance switch (generally; use 3 or 4);
 output_costs = 1 * Switch for costs output;
@@ -275,7 +261,6 @@ i_beta_norm_max = 0 * Normalised beta max selection (0 = user input)
 f_p_div_lower     = 0.5 * fraction of power to the lower divertor in double null configuration
 f_nd_plasma_pedestal_greenwald   = 0.1 * fraction of Greenwald density to set as pedestal-top density; If `<0`; pedestal-top
 f_nd_plasma_separatrix_greenwald   = 0.1 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
-fne0     = 0.06753736857715759 * f-value for the constraint ne(0) > ne(ped) (`constraint equation 81`)
 hfact    = 1.2 * H factor on energy confinement times; radiation corrected (`iteration variable 10`);
 i_bootstrap_current = 4 * switch for bootstrap current scaling
 i_beta_component = 3 * switch for beta limit scaling (`constraint equation 24`)

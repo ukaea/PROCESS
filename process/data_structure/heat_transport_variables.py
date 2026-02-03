@@ -20,13 +20,6 @@ Scan variable nwseep = 56
 """
 
 
-f_crypmw: float = None
-"""f-value for maximum cryogenic plant power
-Iteration variable ixc = 164
-Constraint equation icc = 87
-"""
-
-
 etatf: float = None
 """AC to resistive power conversion for TF coils"""
 
@@ -83,7 +76,7 @@ helpow: float = None
 
 
 helpow_cryal: float = None
-"""Heat removal at cryogenic temperature tcoolin (W)"""
+"""Heat removal at cryogenic temperature temp_cp_coolant_inlet (W)"""
 
 
 p_coolant_pump_elec_total_mw: float = None
@@ -230,61 +223,60 @@ f_p_plant_electric_recirc: float = None
 
 def init_heat_transport_variables():
     """Initialise heat transport variables"""
-    global p_plant_electric_base
-    global p_cryo_plant_electric_mw
-    global p_cryo_plant_electric_max_mw
-    global f_crypmw
-    global etatf
-    global eta_turbine
-    global etath_liq
-    global fachtmw
-    global p_plant_electric_base_total_mw
-    global fgrosbop
-    global fmgdmw
-    global f_p_blkt_coolant_pump_total_heat
-    global f_p_div_coolant_pump_total_heat
-    global f_p_fw_coolant_pump_total_heat
-    global f_p_shld_coolant_pump_total_heat
-    global helpow
-    global helpow_cryal
-    global p_coolant_pump_elec_total_mw
-    global p_blkt_coolant_pump_mw
-    global p_blkt_breeder_pump_mw
-    global htpmw_blkt_tot
-    global p_div_coolant_pump_mw
-    global p_fw_coolant_pump_mw
-    global p_shld_coolant_pump_mw
-    global p_coolant_pump_loss_total_mw
-    global ipowerflow
-    global i_shld_primary_heat
-    global n_primary_heat_exchangers
-    global pacpmw
-    global peakmva
-    global p_fw_div_heat_deposited_mw
-    global p_plant_electric_gross_mw
-    global p_hcd_electric_loss_mw
-    global p_hcd_electric_total_mw
-    global p_hcd_secondary_electric_mw
-    global p_plant_electric_net_mw
-    global p_plant_electric_recirc_mw
-    global priheat
-    global p_div_secondary_heat_mw
-    global p_hcd_secondary_heat_mw
-    global p_plant_secondary_heat_mw
-    global p_shld_secondary_heat_mw
-    global p_plant_primary_heat_mw
-    global pflux_plant_floor_electric
-    global p_tf_electric_supplies_mw
-    global tlvpmw
-    global p_tritium_plant_electric_mw
-    global temp_turbine_coolant_in
-    global vachtmw
-    global f_p_plant_electric_recirc
+    global \
+        p_plant_electric_base, \
+        p_cryo_plant_electric_mw, \
+        p_cryo_plant_electric_max_mw, \
+        etatf, \
+        eta_turbine, \
+        etath_liq, \
+        fachtmw, \
+        p_plant_electric_base_total_mw, \
+        fgrosbop, \
+        fmgdmw, \
+        f_p_blkt_coolant_pump_total_heat, \
+        f_p_div_coolant_pump_total_heat, \
+        f_p_fw_coolant_pump_total_heat, \
+        f_p_shld_coolant_pump_total_heat, \
+        helpow, \
+        helpow_cryal, \
+        p_coolant_pump_elec_total_mw, \
+        p_blkt_coolant_pump_mw, \
+        p_blkt_breeder_pump_mw, \
+        htpmw_blkt_tot, \
+        p_div_coolant_pump_mw, \
+        p_fw_coolant_pump_mw, \
+        p_shld_coolant_pump_mw, \
+        p_coolant_pump_loss_total_mw, \
+        ipowerflow, \
+        i_shld_primary_heat, \
+        n_primary_heat_exchangers, \
+        pacpmw, \
+        peakmva, \
+        p_fw_div_heat_deposited_mw, \
+        p_plant_electric_gross_mw, \
+        p_hcd_electric_loss_mw, \
+        p_hcd_electric_total_mw, \
+        p_hcd_secondary_electric_mw, \
+        p_plant_electric_net_mw, \
+        p_plant_electric_recirc_mw, \
+        priheat, \
+        p_div_secondary_heat_mw, \
+        p_hcd_secondary_heat_mw, \
+        p_plant_secondary_heat_mw, \
+        p_shld_secondary_heat_mw, \
+        p_plant_primary_heat_mw, \
+        pflux_plant_floor_electric, \
+        p_tf_electric_supplies_mw, \
+        tlvpmw, \
+        p_tritium_plant_electric_mw, \
+        temp_turbine_coolant_in, \
+        vachtmw, \
+        f_p_plant_electric_recirc
 
     p_plant_electric_base = 5.0e6
     p_cryo_plant_electric_mw = 0.0
     p_cryo_plant_electric_max_mw = 50.0
-    f_crypmw = 1.0
     etatf = 0.9
     eta_turbine = 0.35
     etath_liq = 0.35

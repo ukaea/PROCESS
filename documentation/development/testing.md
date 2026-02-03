@@ -98,7 +98,7 @@ For a guide on contributing code to PROCESS, see `CONTRIBUTING.md`.
 Running the entire test suite can be time consuming, as by default it runs on a single core. 
 `pytest-xdist` allows `pytest` tests to be distributed across multiple cores to speed up testing.
 
-`pytest-xdist` should be installed already (included in `requirements.txt`), but if not it can be installed manually with:
+`pytest-xdist` should be installed already (included in `test` extras; `pip install ".[test]"`), but if not it can be installed manually with:
 
 ```bash
 pip install pytest-xdist

@@ -41,7 +41,7 @@ def rether(
     dlamie,
     te,
     temp_plasma_ion_vol_avg_kev,
-    zeffai,
+    n_charge_plasma_effective_mass_weighted_vol_avg,
 ):
     """Routine to find the equilibration power between the
     ions and electrons
@@ -52,7 +52,7 @@ def rether(
     dlamie : input real :  ion-electron coulomb logarithm
     te     : input real :  electron temperature (keV)
     temp_plasma_ion_vol_avg_kev     : input real :  ion temperature (keV)
-    zeffai : input real :  mass weighted plasma effective charge
+    n_charge_plasma_effective_mass_weighted_vol_avg : input real :  mass weighted plasma effective charge
     pden_ion_electron_equilibration_mw  : output real : ion/electron equilibration power (MW/m3)
     This routine calculates the equilibration power between the
     ions and electrons.
@@ -61,7 +61,13 @@ def rether(
     profie = (1.0 + alphan) ** 2 / (
         (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
     )
-    conie = 2.42165e-41 * dlamie * nd_plasma_electrons_vol_avg**2 * zeffai * profie
+    conie = (
+        2.42165e-41
+        * dlamie
+        * nd_plasma_electrons_vol_avg**2
+        * n_charge_plasma_effective_mass_weighted_vol_avg
+        * profie
+    )
 
     return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
 
@@ -813,9 +819,7 @@ def _coulomb_logarithm_sauter(
       pp. 1-32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
     """
     return (
-        15.9
-        - 0.5 * np.log(ne[radial_elements - 1])
-        + np.log(tempe[radial_elements - 1])
+        15.9 - 0.5 * np.log(ne[radial_elements - 1]) + np.log(tempe[radial_elements - 1])
     )
 
 
@@ -1680,6 +1684,15 @@ class Physics:
             self.calculate_internal_inductance_menard(kappa=physics_variables.kappa)
         )
 
+        physics_variables.ind_plasma_internal_norm_iter_3 = (
+            self.calculate_normalised_internal_inductance_iter_3(
+                b_plasma_poloidal_vol_avg=physics_variables.b_plasma_poloidal_average,
+                c_plasma=physics_variables.plasma_current,
+                vol_plasma=physics_variables.vol_plasma,
+                rmajor=physics_variables.rmajor,
+            )
+        )
+
         # Map calculation methods to a dictionary
         ind_plasma_internal_norm_calculations = {
             0: physics_variables.ind_plasma_internal_norm,
@@ -2018,7 +2031,7 @@ class Physics:
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 physics_variables.temp_plasma_electron_vol_avg_kev,
-                physics_variables.zeff,
+                physics_variables.n_charge_plasma_effective_vol_avg,
             )
         )
 
@@ -2037,9 +2050,12 @@ class Physics:
             )
         )
 
-        current_drive_variables.f_c_plasma_bootstrap_sauter = (
+        (
+            current_drive_variables.f_c_plasma_bootstrap_sauter,
+            physics_variables.j_plasma_bootstrap_sauter_profile,
+        ) = self.bootstrap_fraction_sauter(self.plasma_profile)
+        current_drive_variables.f_c_plasma_bootstrap_sauter *= (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_sauter(self.plasma_profile)
         )
 
         current_drive_variables.f_c_plasma_bootstrap_sakai = (
@@ -2101,7 +2117,7 @@ class Physics:
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.zeff,
+                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
             )
@@ -2114,7 +2130,7 @@ class Physics:
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.zeff,
+                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
             )
         )
         current_drive_variables.f_c_plasma_bootstrap_sugiyama_l = (
@@ -2124,7 +2140,7 @@ class Physics:
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
-                zeff=physics_variables.zeff,
+                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
             )
@@ -2137,7 +2153,7 @@ class Physics:
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 tbeta=physics_variables.tbeta,
-                zeff=physics_variables.zeff,
+                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
                 radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
@@ -2272,7 +2288,7 @@ class Physics:
                 physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
-                physics_variables.zeffai,
+                physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
             physics_variables.fusden_total = (
                 physics_variables.fusden_plasma
@@ -2355,7 +2371,7 @@ class Physics:
                 / physics_variables.a_plasma_surface
             )
         else:
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 # Double null configuration
                 physics_variables.pflux_fw_neutron_mw = (
                     (
@@ -2387,7 +2403,7 @@ class Physics:
             physics_variables.dlamie,
             physics_variables.temp_plasma_electron_vol_avg_kev,
             physics_variables.temp_plasma_ion_vol_avg_kev,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
         )
 
         # Calculate radiation power
@@ -2439,7 +2455,7 @@ class Physics:
             physics_variables.rminor,
             physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.vol_plasma,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         # Calculate L- to H-mode power threshold for different scalings
@@ -2489,7 +2505,7 @@ class Physics:
         # if double null configuration share the power
         # over the upper and lower divertor, where physics_variables.f_p_div_lower gives
         # the factor of power conducted to the lower divertor
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             physics_variables.p_div_lower_separatrix_mw = (
                 physics_variables.f_p_div_lower
                 * physics_variables.p_plasma_separatrix_mw
@@ -2530,7 +2546,7 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.a_plasma_surface,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         # Calculate transport losses and energy confinement time using the
@@ -2567,7 +2583,7 @@ class Physics:
             physics_variables.q95,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         # Total transport power from scaling law (MW)
@@ -2662,12 +2678,10 @@ class Physics:
         )
 
         # E. Tholerus scaling law
-        physics_variables.beta_norm_max_thloreus = (
-            self.calculate_beta_norm_max_thloreus(
-                c_beta=physics_variables.c_beta,
-                pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
-                pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
-            )
+        physics_variables.beta_norm_max_thloreus = self.calculate_beta_norm_max_thloreus(
+            c_beta=physics_variables.c_beta,
+            pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
+            pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
         )
 
         # R. D. Stambaugh scaling law
@@ -2720,7 +2734,7 @@ class Physics:
                 / physics_variables.a_plasma_surface
             )
         else:
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 # Double Null configuration in - including SoL radiation
                 physics_variables.pflux_fw_rad_mw = (
                     (
@@ -2802,7 +2816,7 @@ class Physics:
                 )
             )
         )
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             # Double Null configuration
             # Find all the power fractions accross the targets
             # Taken from D3-D conventional divertor design
@@ -2850,8 +2864,7 @@ class Physics:
             * physics_variables.rad_fraction_sol
         )
         physics_variables.pradsolmw = (
-            physics_variables.rad_fraction_sol
-            * physics_variables.p_plasma_separatrix_mw
+            physics_variables.rad_fraction_sol * physics_variables.p_plasma_separatrix_mw
         )
 
         if 78 in numerics.icc:
@@ -2868,7 +2881,8 @@ class Physics:
             # calculate separatrix temperature, if Reinke criterion is used
             physics_variables.temp_plasma_separatrix_kev = reinke_tsep(
                 physics_variables.b_plasma_toroidal_on_axis,
-                constraint_variables.fl_h_threshold,
+                physics_variables.p_plasma_separatrix_mw
+                / physics_variables.p_l_h_threshold_mw,
                 physics_variables.q95,
                 physics_variables.rmajor,
                 physics_variables.eps,
@@ -3435,9 +3449,9 @@ class Physics:
         # Effective charge
         # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
         # but ne = sum(ni.Zi) through quasineutrality
-        physics_variables.zeff = 0.0
+        physics_variables.n_charge_plasma_effective_vol_avg = 0.0
         for imp in range(impurity_radiation_module.N_IMPURITIES):
-            physics_variables.zeff += (
+            physics_variables.n_charge_plasma_effective_vol_avg += (
                 impurity_radiation_module.f_nd_impurity_electron_array[imp]
                 * impurity_radiation.zav_of_te(
                     imp, np.array([physics_variables.temp_plasma_electron_vol_avg_kev])
@@ -3516,7 +3530,7 @@ class Physics:
 
         # Mass weighted plasma effective charge
         # Sum of (Zi^2*n_i) / m_i
-        physics_variables.zeffai = (
+        physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg = (
             (
                 physics_variables.f_plasma_fuel_deuterium
                 * physics_variables.nd_plasma_fuel_ions_vol_avg
@@ -3548,7 +3562,7 @@ class Physics:
         ) / physics_variables.nd_plasma_electrons_vol_avg
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                physics_variables.zeffai += (
+                physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.zav_of_te(
                         imp,
@@ -3655,6 +3669,47 @@ class Physics:
             rndfuel,
             t_alpha_confinement,
             f_alpha_energy_confinement,
+        )
+
+    @staticmethod
+    def calculate_normalised_internal_inductance_iter_3(
+        b_plasma_poloidal_vol_avg: float,
+        c_plasma: float,
+        vol_plasma: float,
+        rmajor: float,
+    ) -> float:
+        """
+        Calculate the normalised internal inductance using ITER-3 scaling li(3).
+
+        :param b_plasma_poloidal_vol_avg: Volume-averaged poloidal magnetic field (T).
+        :type b_plasma_poloidal_vol_avg: float
+        :param c_plasma: Plasma current (A).
+        :type c_plasma: float
+        :param vol_plasma: Plasma volume (m^3).
+        :type vol_plasma: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+
+        :returns: The li(3) normalised internal inductance.
+        :rtype: float
+
+        :references:
+            - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
+            “Inductive flux usage and its optimization in tokamak operation,”
+            Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
+            doi: https://doi.org/10.1088/0029-5515/54/9/093005.
+
+            - G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,”
+            Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/12/125002.
+        ‌
+        """
+
+        return (
+            2
+            * vol_plasma
+            * b_plasma_poloidal_vol_avg**2
+            / (constants.RMU0**2 * c_plasma**2 * rmajor)
         )
 
     @staticmethod
@@ -3868,7 +3923,7 @@ class Physics:
         # Main plasma current calculation using the fq value from the different settings
         if i_plasma_current != 2:
             plasma_current = (
-                (constants.TWOPI / constants.RMU0)
+                (2.0 * np.pi / constants.RMU0)
                 * rminor**2
                 / (rmajor * q95)
                 * fq
@@ -3975,6 +4030,37 @@ class Physics:
             "OP ",
         )
 
+    def calculate_effective_charge_ionisation_profiles(self):
+        """Calculate the effective charge profiles for ionisation calculations."""
+
+        # Calculate the effective charge (zeff) profile across the plasma
+        # Returns an array of zeff at each radial point
+        zeff_profile = np.zeros_like(self.plasma_profile.teprofile.profile_y)
+        for i in range(len(zeff_profile)):
+            zeff_profile[i] = 0.0
+            for imp in range(impurity_radiation_module.N_IMPURITIES):
+                zeff_profile[i] += (
+                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
+                    * impurity_radiation.zav_of_te(
+                        imp, np.array([self.plasma_profile.teprofile.profile_y[i]])
+                    ).squeeze()
+                    ** 2
+                )
+        physics_variables.n_charge_plasma_effective_profile = zeff_profile
+
+        # Assign the charge profiles of each species
+        n_impurities = impurity_radiation_module.N_IMPURITIES
+        te_profile = self.plasma_profile.teprofile.profile_y
+        n_points = len(te_profile)
+        # Create a 2D array: (n_impurities, n_points)
+        charge_profiles = np.zeros((n_impurities, n_points))
+        for imp in range(n_impurities):
+            for i in range(n_points):
+                charge_profiles[imp, i] = impurity_radiation.zav_of_te(
+                    imp, np.array([te_profile[i]])
+                ).squeeze()
+        impurity_radiation_module.n_charge_impurity_profile = charge_profiles
+
     def outplas(self):
         """Subroutine to output the plasma physics information
         author: P J Knight, CCFE, Culham Science Centre
@@ -4030,16 +4116,16 @@ class Physics:
         po.oheadr(self.outfile, "Plasma")
 
         if stellarator_variables.istell == 0:
-            if physics_variables.n_divertors == 0:
+            if divertor_variables.n_divertors == 0:
                 po.ocmmnt(self.outfile, "Plasma configuration = limiter")
-            elif physics_variables.n_divertors == 1:
+            elif divertor_variables.n_divertors == 1:
                 po.ocmmnt(self.outfile, "Plasma configuration = single null divertor")
-            elif physics_variables.n_divertors == 2:
+            elif divertor_variables.n_divertors == 2:
                 po.ocmmnt(self.outfile, "Plasma configuration = double null divertor")
             else:
                 raise ProcessValueError(
                     "Illegal value of n_divertors",
-                    n_divertors=physics_variables.n_divertors,
+                    n_divertors=divertor_variables.n_divertors,
                 )
         else:
             po.ocmmnt(self.outfile, "Plasma configuration = stellarator")
@@ -4073,9 +4159,7 @@ class Physics:
             po.osubhd(self.outfile, "Classic PROCESS plasma shape model is used :")
         elif physics_variables.i_plasma_shape == 1:
             po.osubhd(self.outfile, "Sauter plasma shape model is used :")
-        po.ovarrf(
-            self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor
-        )
+        po.ovarrf(self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor)
         po.ovarrf(
             self.outfile,
             "Minor radius (m)",
@@ -4411,6 +4495,14 @@ class Physics:
                 physics_variables.ind_plasma_internal_norm_menard,
                 "OP ",
             )
+            po.ovarrf(
+                self.outfile,
+                "ITER li(3) plasma normalised internal inductance",
+                "(ind_plasma_internal_norm_iter_3)",
+                physics_variables.ind_plasma_internal_norm_iter_3,
+                "OP ",
+            )
+
         else:
             po.ovarrf(
                 self.outfile,
@@ -4957,14 +5049,36 @@ class Physics:
 
         po.oblnkl(self.outfile)
         po.ovarrf(
-            self.outfile, "Effective charge", "(zeff)", physics_variables.zeff, "OP "
+            self.outfile,
+            "Volume averaged plasma effective charge",
+            "(n_charge_plasma_effective_vol_avg)",
+            physics_variables.n_charge_plasma_effective_vol_avg,
+            "OP ",
         )
+        for i in range(len(physics_variables.n_charge_plasma_effective_profile)):
+            po.ovarre(
+                self.mfile,
+                "Effective charge at point",
+                f"(n_charge_plasma_effective_profile{i})",
+                physics_variables.n_charge_plasma_effective_profile[i],
+                "OP ",
+            )
+
+        for imp in range(impurity_radiation_module.N_IMPURITIES):
+            for i in range(physics_variables.n_plasma_profile_elements):
+                po.ovarre(
+                    self.mfile,
+                    "Impurity charge at point",
+                    f"(n_charge_plasma_profile{imp}_{i})",
+                    impurity_radiation_module.n_charge_impurity_profile[imp][i],
+                    "OP ",
+                )
 
         po.ovarrf(
             self.outfile,
             "Mass-weighted Effective charge",
-            "(zeffai)",
-            physics_variables.zeffai,
+            "(n_charge_plasma_effective_mass_weighted_vol_avg)",
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             "OP ",
         )
 
@@ -5179,14 +5293,6 @@ class Physics:
                 physics_variables.nd_plasma_electrons_max,
                 "OP ",
             )
-            if (numerics.ioptimz > 0) and (numerics.active_constraints[4]):
-                po.ovarre(
-                    self.outfile,
-                    "Density limit (enforced) (/m3)",
-                    "(boundu(9)*nd_plasma_electrons_max)",
-                    numerics.boundu[8] * physics_variables.nd_plasma_electrons_max,
-                    "OP ",
-                )
 
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
@@ -5599,7 +5705,7 @@ class Physics:
                 physics_variables.lambdaio,
                 "OP ",
             )
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
                     "Midplane seperation of the two magnetic closed flux surfaces (m)",
@@ -5629,7 +5735,7 @@ class Physics:
                 physics_variables.flo,
                 "OP ",
             )
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
                     "Fraction of power incident on the upper inner target",
@@ -5659,7 +5765,7 @@ class Physics:
                 physics_variables.plomw,
                 "OP ",
             )
-            if physics_variables.n_divertors == 2:
+            if divertor_variables.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
                     "Power incident on the upper innner target (MW)",
@@ -5760,16 +5866,14 @@ class Physics:
             po.ocmmnt(
                 self.outfile, "  BEWARE: possible problem with high radiation power"
             )
-            po.ocmmnt(
-                self.outfile, "          Power into divertor zone is unrealistic;"
-            )
+            po.ocmmnt(self.outfile, "          Power into divertor zone is unrealistic;")
             po.ocmmnt(self.outfile, "          divertor calculations will be nonsense#")
             po.ocmmnt(
                 self.outfile, "  Set constraint 17 (Radiation fraction upper limit)."
             )
             po.oblnkl(self.outfile)
 
-        if physics_variables.n_divertors == 2:
+        if divertor_variables.n_divertors == 2:
             # Double null divertor configuration
             po.ovarre(
                 self.outfile,
@@ -6041,13 +6145,6 @@ class Physics:
                 logger.warning("Closed divertor only. Limited data used in Snipes fit")
 
             if (numerics.ioptimz > 0) and (numerics.active_constraints[14]):
-                po.ovarre(
-                    self.outfile,
-                    "L-H threshold power (enforced) (MW)",
-                    "(boundl(103)*p_l_h_threshold_mw)",
-                    numerics.boundl[102] * physics_variables.p_l_h_threshold_mw,
-                    "OP ",
-                )
                 po.ovarre(
                     self.outfile,
                     "L-H threshold power (MW)",
@@ -6418,6 +6515,14 @@ class Physics:
                 current_drive_variables.f_c_plasma_bootstrap_sauter,
                 "OP ",
             )
+            for point in range(len(physics_variables.j_plasma_bootstrap_sauter_profile)):
+                po.ovarrf(
+                    self.mfile,
+                    f"Sauter et al bootstrap current density profile at point {point}",
+                    f"(j_plasma_bootstrap_sauter_profile{point})",
+                    physics_variables.j_plasma_bootstrap_sauter_profile[point],
+                    "OP ",
+                )
 
             po.ovarrf(
                 self.outfile,
@@ -6772,7 +6877,7 @@ class Physics:
                 physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.zeff,
+                physics_variables.n_charge_plasma_effective_vol_avg,
             )
 
             try:
@@ -7063,9 +7168,6 @@ class Physics:
         The code was supplied by Emiliano Fable, IPP Garching (private communication).
         """
 
-        # Number of radial data points along the profile
-        nr = plasma_profile.profile_size
-
         # Radial points from 0 to 1 seperated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
 
@@ -7091,7 +7193,7 @@ class Physics:
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
-        zeff = np.full_like(tempi, physics_variables.zeff)
+        zeff = np.full_like(tempi, physics_variables.n_charge_plasma_effective_vol_avg)
 
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
@@ -7100,24 +7202,14 @@ class Physics:
             + (physics_variables.q95 - physics_variables.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, physics_variables.m_fuel_amu)
+        amain = np.full_like(inverse_q, physics_variables.m_ions_total_amu)
 
         # Create new array of average main ion charge
         zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_plasma_fuel_helium3)
 
-        # Prevent division by zero
-        if ne[nr - 1] == 0.0:
-            ne[nr - 1] = 1e-4 * ne[nr - 2]
-            ni[nr - 1] = 1e-4 * ni[nr - 2]
-
-        # Prevent division by zero
-        if tempe[nr - 1] == 0.0:
-            tempe[nr - 1] = 1e-4 * tempe[nr - 2]
-            tempi[nr - 1] = 1e-4 * tempi[nr - 2]
-
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0 @ j == 1
-        radial_elements = np.arange(2, nr)
+        radial_elements = np.arange(2, plasma_profile.profile_size)
 
         # Change in localised minor radius to be used as delta term in derivative
         drho = rho[radial_elements] - rho[radial_elements - 1]
@@ -7125,23 +7217,17 @@ class Physics:
         # Area of annulus, assuming circular plasma cross-section
         da = 2 * np.pi * rho[radial_elements - 1] * drho  # area of annulus
 
-        # Create the partial derivatives
-        dlogte_drho = (
-            np.log(tempe[radial_elements]) - np.log(tempe[radial_elements - 1])
-        ) / drho
-        dlogti_drho = (
-            np.log(tempi[radial_elements]) - np.log(tempi[radial_elements - 1])
-        ) / drho
-        dlogne_drho = (
-            np.log(ne[radial_elements]) - np.log(ne[radial_elements - 1])
-        ) / drho
+        # Create the partial derivatives using numpy gradient (central differences)
+        dlogte_drho = np.gradient(np.log(tempe), rho)[radial_elements - 1]
+        dlogti_drho = np.gradient(np.log(tempi), rho)[radial_elements - 1]
+        dlogne_drho = np.gradient(np.log(ne), rho)[radial_elements - 1]
 
         jboot = (
             0.5
             * (
                 _calculate_l31_coefficient(
                     radial_elements,
-                    nr,
+                    plasma_profile.profile_size,
                     physics_variables.rmajor,
                     physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
@@ -7157,7 +7243,7 @@ class Physics:
                 * dlogne_drho
                 + _calculate_l31_32_coefficient(
                     radial_elements,
-                    nr,
+                    plasma_profile.profile_size,
                     physics_variables.rmajor,
                     physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
@@ -7173,7 +7259,7 @@ class Physics:
                 * dlogte_drho
                 + _calculate_l34_alpha_31_coefficient(
                     radial_elements,
-                    nr,
+                    plasma_profile.profile_size,
                     physics_variables.rmajor,
                     physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
@@ -7199,7 +7285,7 @@ class Physics:
             )
         )  # A/m2
 
-        return np.sum(da * jboot, axis=0) / physics_variables.plasma_current
+        return (np.sum(da * jboot, axis=0) / physics_variables.plasma_current), jboot
 
     @staticmethod
     def bootstrap_fraction_sakai(
@@ -7707,7 +7793,7 @@ class Physics:
                 physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.zeff,
+                physics_variables.n_charge_plasma_effective_vol_avg,
             )
 
             # At power balance, fhz is zero.
@@ -8946,3 +9032,296 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
         * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
         * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
     )
+
+
+class DetailedPhysics:
+    """Class to hold detailed physics models for plasma processing."""
+
+    def __init__(self, plasma_profile):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+        self.plasma_profile = plasma_profile
+
+    def run(self):
+        # ---------------------------
+        #  Debye length calculation
+        # ---------------------------
+
+        physics_variables.len_plasma_debye_electron_vol_avg = self.calculate_debye_length(
+            temp_plasma_species_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_species=physics_variables.nd_plasma_electrons_vol_avg,
+        )
+
+        physics_variables.len_plasma_debye_electron_profile = (
+            self.calculate_debye_length(
+                temp_plasma_species_kev=self.plasma_profile.teprofile.profile_y,
+                nd_plasma_species=self.plasma_profile.neprofile.profile_y,
+            )
+        )
+
+        # ============================
+        # Particle relativistic speeds
+        # ============================
+
+        physics_variables.vel_plasma_electron_profile = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
+                mass=constants.ELECTRON_MASS,
+            )
+        )
+
+        # ============================
+        # Plasma frequencies
+        # ============================
+
+        physics_variables.freq_plasma_electron_profile = self.calculate_plasma_frequency(
+            nd_particle=self.plasma_profile.neprofile.profile_y,
+            m_particle=constants.ELECTRON_MASS,
+            z_particle=1.0,
+        )
+
+        # ============================
+        # Larmor frequencies
+        # ============================
+
+        physics_variables.freq_plasma_larmor_toroidal_electron_profile = (
+            self.calculate_larmor_frequency(
+                b_field=physics_variables.b_plasma_toroidal_profile,
+                m_particle=constants.ELECTRON_MASS,
+                z_particle=1.0,
+            )
+        )
+
+        # ============================
+        # Coulomb logarithm
+        # ============================
+
+        physics_variables.plasma_coulomb_log_electron_electron_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        e_kinetic=self.plasma_profile.teprofile.profile_y[i]
+                        * constants.KILOELECTRON_VOLT,
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=constants.ELECTRON_MASS,
+                        velocity=physics_variables.vel_plasma_electron_profile[i],
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
+    @staticmethod
+    def calculate_debye_length(
+        temp_plasma_species_kev: float | np.ndarray,
+        nd_plasma_species: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """
+        Calculate the Debye length for a plasma.
+
+        :param temp_plasma_species_kev: Species temperature in keV.
+        :type temp_plasma_species_kev: float | np.ndarray
+        :param nd_plasma_species: Species number density (/m^3).
+        :type nd_plasma_species: float | np.ndarray
+
+        :returns: Debye length in meters.
+        :rtype: float | np.ndarray
+        """
+        return (
+            (constants.EPSILON0 * temp_plasma_species_kev * constants.KILOELECTRON_VOLT)
+            / (nd_plasma_species * constants.ELECTRON_CHARGE**2)
+        ) ** 0.5
+
+    @staticmethod
+    def calculate_lorentz_factor(velocity: float | np.ndarray) -> float | np.ndarray:
+        """
+        Calculate the Lorentz factor for a given velocity.
+        :param velocity: Velocity in m/s.
+        :type velocity: float | np.ndarray
+        :returns: Lorentz factor (dimensionless).
+        :rtype: float | np.ndarray
+        """
+        return 1 / (1 - (velocity / constants.SPEED_LIGHT) ** 2) ** 0.5
+
+    @staticmethod
+    def calculate_relativistic_particle_speed(
+        e_kinetic: float | np.ndarray, mass: float
+    ) -> float | np.ndarray:
+        """
+        Calculate the speed of a particle given its kinetic energy and mass using relativistic mechanics.
+        :param e_kinetic: Kinetic energy in Joules.
+        :type e_kinetic: float | np.ndarray
+        :param mass: Mass of the particle in kg.
+        :type mass: float
+        :returns: Speed of the particle in m/s.
+        :rtype: float | np.ndarray
+        """
+        return (
+            constants.SPEED_LIGHT
+            * (1 - (1 / ((e_kinetic / (mass * constants.SPEED_LIGHT**2)) + 1) ** 2))
+            ** 0.5
+        )
+
+    def calculate_coulomb_log_from_impact(
+        self, impact_param_max: float, impact_param_min: float
+    ) -> float:
+        """
+        Calculate the Coulomb logarithm from maximum and minimum impact parameters.
+        :param impact_param_max: Maximum impact parameter in meters.
+        :type impact_param_max: float
+        :param impact_param_min: Minimum impact parameter in meters.
+        :type impact_param_min: float
+        :returns: Coulomb logarithm (dimensionless).
+        :rtype: float
+        """
+        return np.log(impact_param_max / impact_param_min)
+
+    @staticmethod
+    def calculate_classical_distance_of_closest_approach(
+        charge1: float,
+        charge2: float,
+        e_kinetic: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """
+        Calculate the classical distance of closest approach for two charged particles.
+
+        :param charge1: Charge of particle 1 in units of elementary charge.
+        :type charge1: float
+        :param charge2: Charge of particle 2 in units of elementary charge.
+        :type charge2: float
+        :param e_kinetic: Kinetic energy of the particles in Joules.
+        :type e_kinetic: float | np.ndarray
+        :returns: Distance of closest approach in meters.
+        :rtype: float | np.ndarray
+        """
+
+        return (charge1 * charge2 * constants.ELECTRON_CHARGE**2) / (
+            4 * np.pi * constants.EPSILON0 * e_kinetic
+        )
+
+    @staticmethod
+    def calculate_debroglie_wavelength(
+        mass: float, velocity: float | np.ndarray
+    ) -> float | np.ndarray:
+        """
+        Calculate the de Broglie wavelength of a particle.
+        :param mass: Mass of the particle in kg.
+        :type mass: float
+        :param velocity: Velocity of the particle in m/s.
+        :type velocity: float | np.ndarray
+        :returns: de Broglie wavelength in meters.
+        :rtype: float | np.ndarray
+
+        :note: Reduced Planck constant (h-bar) is used in the calculation as this is for scattering.
+        """
+        return (constants.PLANCK_CONSTANT / (2 * np.pi)) / (mass * velocity)
+
+    @staticmethod
+    def calculate_plasma_frequency(
+        nd_particle: float | np.ndarray, m_particle: float, z_particle: float
+    ) -> float | np.ndarray:
+        """
+        Calculate the plasma frequency for a particle species.
+        :param nd_particle: Number density of the particle species (/m^3).
+        :type nd_particle: float | np.ndarray
+        :param m_particle: Mass of the particle species (kg).
+        :type m_particle: float
+        :param Z_particle: Charge state of the particle species (dimensionless).
+        :type Z_particle: float
+        :returns: Plasma frequency in Hz.
+        :rtype: float | np.ndarray
+        """
+        return (
+            (
+                (nd_particle * z_particle**2 * constants.ELECTRON_CHARGE**2)
+                / (m_particle * constants.EPSILON0)
+            )
+            ** 0.5
+        ) / (2 * np.pi)
+
+    @staticmethod
+    def calculate_larmor_frequency(
+        b_field: float | np.ndarray, m_particle: float, z_particle: float
+    ) -> float | np.ndarray:
+        """
+        Calculate the Larmor frequency for a particle species.
+        :param b_field: Magnetic field strength (T).
+        :type b_field: float | np.ndarray
+        :param m_particle: Mass of the particle species (kg).
+        :type m_particle: float
+        :param Z_particle: Charge state of the particle species (dimensionless).
+        :type Z_particle: float
+        :returns: Larmor frequency in Hz.
+        :rtype: float | np.ndarray
+        """
+        return (z_particle * constants.ELECTRON_CHARGE * b_field) / (
+            2 * np.pi * m_particle
+        )
+
+    def output_detailed_physics(self):
+        """Outputs detailed physics variables to file."""
+
+        po.oheadr(self.outfile, "Detailed Plasma")
+
+        po.osubhd(self.outfile, "Debye lengths:")
+
+        po.ovarrf(
+            self.outfile,
+            "Plasma volume averaged electron Debye length (m)",
+            "(len_plasma_debye_electron_vol_avg)",
+            physics_variables.len_plasma_debye_electron_vol_avg,
+            "OP ",
+        )
+        for i in range(len(physics_variables.len_plasma_debye_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron Debye length at point {i}",
+                f"(len_plasma_debye_electron_profile{i})",
+                physics_variables.len_plasma_debye_electron_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Velocities:")
+
+        for i in range(len(physics_variables.vel_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron thermal velocity at point {i}",
+                f"(vel_plasma_electron_profile{i})",
+                physics_variables.vel_plasma_electron_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Frequencies:")
+
+        for i in range(len(physics_variables.freq_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron frequency at point {i}",
+                f"(freq_plasma_electron_profile{i})",
+                physics_variables.freq_plasma_electron_profile[i],
+            )
+        for i in range(
+            len(physics_variables.freq_plasma_larmor_toroidal_electron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron Larmor frequency at point {i}",
+                f"(freq_plasma_larmor_toroidal_electron_profile{i})",
+                physics_variables.freq_plasma_larmor_toroidal_electron_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Coulomb Logarithms:")
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_electron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-electron Coulomb log at point {i}",
+                f"(plasma_coulomb_log_electron_electron_profile{i})",
+                physics_variables.plasma_coulomb_log_electron_electron_profile[i],
+            )

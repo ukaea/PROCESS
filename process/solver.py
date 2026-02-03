@@ -4,6 +4,7 @@ import importlib
 import logging
 from abc import ABC, abstractmethod
 
+import cvxpy
 import numpy as np
 from pyvmcon import (
     AbstractProblem,
@@ -217,7 +218,7 @@ class Vmcon(_Solver):
                 np.array(self.bndu),
                 max_iter=global_variables.maxcal,
                 epsilon=self.tolerance,
-                qsp_options={"adaptive_rho_interval": 25},
+                qsp_options={"solver": cvxpy.CLARABEL},
                 initial_B=bb,
                 callback=_solver_callback,
                 additional_convergence=_ineq_cons_satisfied
@@ -303,7 +304,7 @@ class FSolve(_Solver):
         :rtype: int
         """
         print("Solving equality constraints using fsolve")
-        self.x, info, err, msg = fsolve(
+        self.x, _info, err, msg = fsolve(
             self.evaluate_eq_cons, self.x_0, full_output=True
         )
 

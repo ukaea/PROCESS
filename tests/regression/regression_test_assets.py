@@ -6,11 +6,13 @@ import dataclasses
 import logging
 import re
 import subprocess
-from pathlib import Path
 
 import requests
+from platformdirs import user_cache_path
 
 logger = logging.getLogger(__name__)
+
+TEST_ASSET_CACHE_DIR = user_cache_path("PROCESS-regression-tests", "ukaea")
 
 
 @dataclasses.dataclass
@@ -28,9 +30,7 @@ class RegressionTestAssetCollector:
         self._hashes = self._git_commit_hashes()
         self._tracked_mfiles = self._get_tracked_mfiles()
 
-    def get_reference_mfile(
-        self, scenario_name: str, directory: Path, target_hash: str | None = None
-    ):
+    def get_reference_mfile(self, scenario_name: str, target_hash: str | None = None):
         """Finds the most recent reference MFile for `<scenario_name>.IN.DAT`
         and downloads it to the `directory` with the name `ref.<scenario_name>.MFILE.DAT`.
 
@@ -50,16 +50,29 @@ class RegressionTestAssetCollector:
         `None` is returned.
         :rtype: Path
         """
-        reference_mfile_location = directory / f"ref.{scenario_name}.MFILE.DAT"
+
         for mf in self._tracked_mfiles:
             if (mf.scenario_name == scenario_name and target_hash is None) or (
                 mf.scenario_name == scenario_name and target_hash == mf.hash
             ):
-                with open(reference_mfile_location, "w") as f:
-                    f.write(requests.get(mf.download_link).content.decode())
+                cache_directory = TEST_ASSET_CACHE_DIR / mf.hash
+                cached_location = cache_directory / f"ref.{scenario_name}.MFILE.DAT"
 
-                logger.info(f"Reference MFile found for commit {mf.hash}")
-                return reference_mfile_location
+                if cached_location.exists():
+                    logger.info(
+                        f"Using cached reference MFile ({cached_location}) found for commit {mf.hash}."
+                    )
+                    return cached_location
+
+                cache_directory.mkdir(parents=True, exist_ok=True)
+                cached_location.write_text(
+                    requests.get(mf.download_link).content.decode()
+                )
+
+                logger.info(
+                    f"Reference MFile found for commit {mf.hash}. Writing to {cached_location}"
+                )
+                return cached_location
 
         return None
 

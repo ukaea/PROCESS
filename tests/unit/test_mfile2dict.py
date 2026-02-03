@@ -38,24 +38,24 @@ def test_value_read(read_mfile):
 
 
 def test_write_json(read_mfile, temporary_dir):
-    _json_f = os.path.join(temporary_dir, "2017_baseline.json")
-    read_mfile.write(_json_f)
-    assert os.path.exists(_json_f)
-    with open(_json_f) as file:
+    json_f = os.path.join(temporary_dir, "2017_baseline.json")
+    read_mfile.write(json_f)
+    assert os.path.exists(json_f)
+    with open(json_f) as file:
         assert json.load(file)
 
 
 def test_write_yaml(read_mfile, temporary_dir):
-    _yml_f = os.path.join(temporary_dir, "2017_baseline.yml")
-    read_mfile.write(_yml_f)
-    assert os.path.exists(_yml_f)
-    with open(_yml_f) as file:
+    pckl_f = os.path.join(temporary_dir, "2017_baseline.yml")
+    read_mfile.write(pckl_f)
+    assert os.path.exists(pckl_f)
+    with open(pckl_f) as file:
         assert yaml.load(file, Loader=yaml.BaseLoader)
 
 
 def test_write_pickle(read_mfile, temporary_dir):
-    _pckl_f = os.path.join(temporary_dir, "2017_baseline.pckl")
-    read_mfile.write(_pckl_f)
-    assert os.path.exists(_pckl_f)
-    with open(_pckl_f, "rb") as file:
+    pckl_f = os.path.join(temporary_dir, "2017_baseline.pckl")
+    read_mfile.write(pckl_f)
+    assert os.path.exists(pckl_f)
+    with open(pckl_f, "rb") as file:
         assert pickle.load(file)

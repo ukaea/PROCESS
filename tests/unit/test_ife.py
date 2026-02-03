@@ -1254,9 +1254,9 @@ def test_iondrv(iondrvparam, ife):
 
 class IfefbsParam(NamedTuple):
     a_fw_total: Any = None
-    tlife: Any = None
+    life_plant: Any = None
     abktflnc: Any = None
-    cfactr: Any = None
+    f_t_plant_available: Any = None
     den_steel: Any = None
     m_fw_total: Any = None
     m_blkt_total: Any = None
@@ -1304,9 +1304,9 @@ class IfefbsParam(NamedTuple):
     (
         IfefbsParam(
             a_fw_total=188.02432031734912,
-            tlife=30.0,
+            life_plant=30.0,
             abktflnc=20.0,
-            cfactr=0.75000000000000011,
+            f_t_plant_available=0.75000000000000011,
             den_steel=7800.0,
             m_fw_total=0.0,
             m_blkt_total=0.0,
@@ -1571,16 +1571,16 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(build_variables, "a_fw_total", ifefbsparam.a_fw_total)
-    monkeypatch.setattr(cost_variables, "tlife", ifefbsparam.tlife)
+    monkeypatch.setattr(cost_variables, "life_plant", ifefbsparam.life_plant)
     monkeypatch.setattr(cost_variables, "abktflnc", ifefbsparam.abktflnc)
-    monkeypatch.setattr(cost_variables, "cfactr", ifefbsparam.cfactr)
+    monkeypatch.setattr(
+        cost_variables, "f_t_plant_available", ifefbsparam.f_t_plant_available
+    )
     monkeypatch.setattr(fwbs_variables, "den_steel", ifefbsparam.den_steel)
     monkeypatch.setattr(fwbs_variables, "m_fw_total", ifefbsparam.m_fw_total)
     monkeypatch.setattr(fwbs_variables, "m_blkt_total", ifefbsparam.m_blkt_total)
     monkeypatch.setattr(fwbs_variables, "whtshld", ifefbsparam.whtshld)
-    monkeypatch.setattr(
-        fwbs_variables, "m_blkt_beryllium", ifefbsparam.m_blkt_beryllium
-    )
+    monkeypatch.setattr(fwbs_variables, "m_blkt_beryllium", ifefbsparam.m_blkt_beryllium)
     monkeypatch.setattr(fwbs_variables, "m_blkt_vanadium", ifefbsparam.m_blkt_vanadium)
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_steel_total", ifefbsparam.m_blkt_steel_total
@@ -3145,9 +3145,7 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
         "p_plant_primary_heat_mw",
         ifepw2param.p_plant_primary_heat_mw,
     )
-    monkeypatch.setattr(
-        heat_transport_variables, "eta_turbine", ifepw2param.eta_turbine
-    )
+    monkeypatch.setattr(heat_transport_variables, "eta_turbine", ifepw2param.eta_turbine)
     monkeypatch.setattr(heat_transport_variables, "fgrosbop", ifepw2param.fgrosbop)
     monkeypatch.setattr(
         heat_transport_variables,

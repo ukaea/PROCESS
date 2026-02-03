@@ -105,7 +105,7 @@ def st_build(stellarator, output: bool):
 
 
         #  Radius to inner edge of inboard shield
-        build_variables.rsldi = (
+        build_variables.r_shld_inboard_inner = (
             physics_variables.rmajor
             - physics_variables.rminor
             - build_variables.dr_fw_plasma_gap_inboard
@@ -115,7 +115,7 @@ def st_build(stellarator, output: bool):
         )
 
         #  Radius to outer edge of outboard shield
-        build_variables.rsldo = (
+        build_variables.r_shld_outboard_outer = (
             physics_variables.rmajor
             + physics_variables.rminor
             + build_variables.dr_fw_plasma_gap_outboard
@@ -131,7 +131,7 @@ def st_build(stellarator, output: bool):
 
         build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
         build_variables.r_tf_outboard_mid = (
-            build_variables.rsldo
+            build_variables.r_shld_outboard_outer
             + build_variables.dr_vv_outboard
             + build_variables.dr_shld_vv_gap_outboard
             + 0.5e0 * build_variables.dr_tf_outboard
@@ -209,9 +209,6 @@ def print_output(stellarator):
         "Req. Space (m)",
         "(required_radial_space)",
         build_variables.required_radial_space,
-    )
-    po.ovarre(
-        stellarator.outfile, "f value: ", "(f_avspace)", build_variables.f_avspace
     )
 
     #     po.write(self.outfile,10)

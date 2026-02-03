@@ -83,26 +83,27 @@ outgasfactor: float = None
 
 def init_vacuum_variables():
     """Initialise Vacuum variables"""
-    global i_vacuum_pumping
-    global n_iter_vacuum_pumps
-    global i_vacuum_pump_type
-    global n_vv_vacuum_ducts
-    global dlscal
-    global pres_vv_chamber_base
-    global pres_div_chamber_burn
-    global molflow_vac_pumps
-    global outgrat_fw
-    global temp_vv_chamber_gas_burn_end
-    global m_vv_vacuum_duct_shield
-    global dia_vv_vacuum_ducts
-    global n_vac_pumps_high
-    global i_vac_pump_dwell
-    global f_a_vac_pump_port_plasma_surface
-    global volflow_vac_pumps_max
-    global f_volflow_vac_pumps_impedance
-    global pres_vv_chamber_dwell_start
-    global outgasindex
-    global outgasfactor
+    global \
+        i_vacuum_pumping, \
+        n_iter_vacuum_pumps, \
+        i_vacuum_pump_type, \
+        n_vv_vacuum_ducts, \
+        dlscal, \
+        pres_vv_chamber_base, \
+        pres_div_chamber_burn, \
+        molflow_vac_pumps, \
+        outgrat_fw, \
+        temp_vv_chamber_gas_burn_end, \
+        m_vv_vacuum_duct_shield, \
+        dia_vv_vacuum_ducts, \
+        n_vac_pumps_high, \
+        i_vac_pump_dwell, \
+        f_a_vac_pump_port_plasma_surface, \
+        volflow_vac_pumps_max, \
+        f_volflow_vac_pumps_impedance, \
+        pres_vv_chamber_dwell_start, \
+        outgasindex, \
+        outgasfactor
 
     i_vacuum_pumping = "old"
     n_iter_vacuum_pumps = 0.0

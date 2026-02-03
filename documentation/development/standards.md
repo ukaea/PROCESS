@@ -308,6 +308,18 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Electric charges
+
+- Electric charges should start with the `charge_` prefix
+
+--------------------
+
+###### Charge numbers
+
+- Electric charge numbers should start with the `n_charge_` prefix.
+
+------------------
+
 ##### Current densities
 
 - Current densities should start with the `j_` prefix
@@ -347,6 +359,12 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 ##### Temperatures
 
 - Temperatures should start with the `temp_` prefix
+
+---------------------
+
+##### Temperature Changes
+
+- Relative rises or falls in temperatures should start with the `dtemp_` prefix
 
 ---------------------
 
@@ -494,11 +512,6 @@ If a variable is intended to represent an engineering efficiency then it should 
 
 ---------------------
 
-##### F-values
-
-Variables used within constraint equations to scale iteration variables (f-values) should start with the `f` prefix without an underscore before the next word.
-
----------------------
 
 ### Variable Length
 

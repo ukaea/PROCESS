@@ -52,9 +52,7 @@ def st_div(stellarator, output: bool):
 
     #  Length 'along' plasma (m)
 
-    l_p = (
-        2 * np.pi * r * (stellarator_variables.m_res) / stellarator_variables.n_res
-    )
+    l_p = 2 * np.pi * r * (stellarator_variables.m_res) / stellarator_variables.n_res
 
     #  Connection length from X-point to divertor plate (m)
 
@@ -207,9 +205,7 @@ def print_output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
     po.ovarre(stellarator.outfile, "Divertor plate length (m)", "(L_d)", l_d)
     po.ovarre(stellarator.outfile, "Divertor plate width (m)", "(L_w)", l_w)
     po.ovarre(stellarator.outfile, "Flux channel broadening factor", "(F_x)", f_x)
-    po.ovarre(
-        stellarator.outfile, "Power decay width (cm)", "(100*l_q)", 100.0e0 * l_q
-    )
+    po.ovarre(stellarator.outfile, "Power decay width (cm)", "(100*l_q)", 100.0e0 * l_q)
     po.ovarre(stellarator.outfile, "Island width (m)", "(w_r)", w_r)
     po.ovarre(
         stellarator.outfile,
