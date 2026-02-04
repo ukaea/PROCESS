@@ -353,9 +353,7 @@ def plot_scan(
         # Plot section
         # -----------
         for index, output_name in enumerate(output_names):
-            if stack_plots:
-                pass
-            else:
+            if not stack_plots:
                 fig, ax = plt.subplots()
                 if len(output_names2) > 0:
                     ax2 = ax.twinx()
