@@ -700,7 +700,7 @@ class Models:
                 physics=self.physics,
                 neoclassics=self.neoclassics,
             )
-            
+
         self.dcll = DCLL(fw=self.fw)
 
     @property

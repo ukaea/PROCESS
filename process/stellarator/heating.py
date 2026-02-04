@@ -1,12 +1,11 @@
 from process import process_output as po
-from process.exceptions import ProcessValueError
-
 from process.data_structure import (
     current_drive_variables,
+    heat_transport_variables,
     physics_variables,
     stellarator_variables,
-    heat_transport_variables,
 )
+from process.exceptions import ProcessValueError
 
 
 def st_heat(stellarator, output: bool):
@@ -51,7 +50,7 @@ def st_heat(stellarator, output: bool):
             current_drive_variables.p_hcd_injected_ions_mw
             + current_drive_variables.p_hcd_injected_electrons_mw
         ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
-        
+
     elif stellarator_variables.isthtr == 3:
         (
             _effnbss,
@@ -67,8 +66,7 @@ def st_heat(stellarator, output: bool):
             * current_drive_variables.f_p_beam_orbit_loss
         )
         current_drive_variables.p_hcd_injected_ions_mw = (
-            current_drive_variables.p_hcd_beam_injected_total_mw
-            * f_p_beam_injected_ions
+            current_drive_variables.p_hcd_beam_injected_total_mw * f_p_beam_injected_ions
         )
         current_drive_variables.p_hcd_injected_electrons_mw = (
             current_drive_variables.p_hcd_beam_injected_total_mw
@@ -82,8 +80,8 @@ def st_heat(stellarator, output: bool):
             + current_drive_variables.p_hcd_injected_electrons_mw
         ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
     else:
-        print('isthtr', stellarator_variables.isthtr, '\n')
-        print('isthtr type', type(stellarator_variables.isthtr), '\n')
+        print("isthtr", stellarator_variables.isthtr, "\n")
+        print("isthtr type", type(stellarator_variables.isthtr), "\n")
         raise ProcessValueError(
             "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
         )
@@ -118,13 +116,10 @@ def st_heat(stellarator, output: bool):
     ):
         current_drive_variables.big_q_plasma = 1e18
     else:
-        current_drive_variables.big_q_plasma = (
-            physics_variables.p_fusion_total_mw
-            / (
-                current_drive_variables.p_hcd_injected_total_mw
-                + current_drive_variables.p_beam_orbit_loss_mw
-                + physics_variables.p_plasma_ohmic_mw
-            )
+        current_drive_variables.big_q_plasma = physics_variables.p_fusion_total_mw / (
+            current_drive_variables.p_hcd_injected_total_mw
+            + current_drive_variables.p_beam_orbit_loss_mw
+            + physics_variables.p_plasma_ohmic_mw
         )
 
     if output:
@@ -143,85 +138,83 @@ def output(stellarator, f_p_beam_injected_ions=None):
 
     if physics_variables.i_plasma_ignited == 1:
         po.ocmmnt(
-                stellarator.outfile,
-                "Ignited plasma; injected power only used for start-up phase",
-            )
+            stellarator.outfile,
+            "Ignited plasma; injected power only used for start-up phase",
+        )
 
     po.oblnkl(stellarator.outfile)
 
     po.ovarre(
-            stellarator.outfile,
-            "Auxiliary power supplied to plasma (MW)",
-            "(p_hcd_primary_extra_heat_mw)",
-            current_drive_variables.p_hcd_primary_extra_heat_mw,
-        )
+        stellarator.outfile,
+        "Auxiliary power supplied to plasma (MW)",
+        "(p_hcd_primary_extra_heat_mw)",
+        current_drive_variables.p_hcd_primary_extra_heat_mw,
+    )
     po.ovarre(
-            stellarator.outfile,
-            "Fusion gain factor Q",
-            "(big_q_plasma)",
-            current_drive_variables.big_q_plasma,
-        )
+        stellarator.outfile,
+        "Fusion gain factor Q",
+        "(big_q_plasma)",
+        current_drive_variables.big_q_plasma,
+    )
 
     if abs(current_drive_variables.p_hcd_beam_injected_total_mw) > 1e-8:
         po.ovarre(
-                stellarator.outfile,
-                "Neutral beam energy (KEV)",
-                "(enbeam)",
-                current_drive_variables.enbeam,
-            )
+            stellarator.outfile,
+            "Neutral beam energy (KEV)",
+            "(enbeam)",
+            current_drive_variables.enbeam,
+        )
         po.ovarre(
-                stellarator.outfile,
-                "Neutral beam current (A)",
-                "(c_beam_total)",
-                current_drive_variables.c_beam_total,
-            )
+            stellarator.outfile,
+            "Neutral beam current (A)",
+            "(c_beam_total)",
+            current_drive_variables.c_beam_total,
+        )
         po.ovarre(
-                stellarator.outfile,
-                "Fraction of beam energy to ions",
-                "(f_p_beam_injected_ions)",
-                f_p_beam_injected_ions,
-            )
+            stellarator.outfile,
+            "Fraction of beam energy to ions",
+            "(f_p_beam_injected_ions)",
+            f_p_beam_injected_ions,
+        )
         po.ovarre(
-                stellarator.outfile,
-                "Neutral beam shine-through fraction",
-                "(f_p_beam_shine_through)",
-                current_drive_variables.f_p_beam_shine_through,
-            )
+            stellarator.outfile,
+            "Neutral beam shine-through fraction",
+            "(f_p_beam_shine_through)",
+            current_drive_variables.f_p_beam_shine_through,
+        )
         po.ovarre(
-                stellarator.outfile,
-                "Neutral beam orbit loss power (MW)",
-                "(p_beam_orbit_loss_mw)",
-                current_drive_variables.p_beam_orbit_loss_mw,
-            )
+            stellarator.outfile,
+            "Neutral beam orbit loss power (MW)",
+            "(p_beam_orbit_loss_mw)",
+            current_drive_variables.p_beam_orbit_loss_mw,
+        )
         po.ovarre(
-                stellarator.outfile,
-                "Beam duct shielding thickness (m)",
-                "(dx_beam_shield)",
-                current_drive_variables.dx_beam_shield,
-            )
+            stellarator.outfile,
+            "Beam duct shielding thickness (m)",
+            "(dx_beam_shield)",
+            current_drive_variables.dx_beam_shield,
+        )
         po.ovarre(
-                stellarator.outfile,
-                "R injection tangent / R-major",
-                "(f_radius_beam_tangency_rmajor)",
-                current_drive_variables.f_radius_beam_tangency_rmajor,
-            )
+            stellarator.outfile,
+            "R injection tangent / R-major",
+            "(f_radius_beam_tangency_rmajor)",
+            current_drive_variables.f_radius_beam_tangency_rmajor,
+        )
         po.ovarre(
-                stellarator.outfile,
-                "Beam centreline tangency radius (m)",
-                "(radius_beam_tangency)",
-                current_drive_variables.radius_beam_tangency,
-            )
+            stellarator.outfile,
+            "Beam centreline tangency radius (m)",
+            "(radius_beam_tangency)",
+            current_drive_variables.radius_beam_tangency,
+        )
         po.ovarre(
-                stellarator.outfile,
-                "Maximum possible tangency radius (m)",
-                "(radius_beam_tangency_max)",
-                current_drive_variables.radius_beam_tangency_max,
-            )
+            stellarator.outfile,
+            "Maximum possible tangency radius (m)",
+            "(radius_beam_tangency_max)",
+            current_drive_variables.radius_beam_tangency_max,
+        )
         po.ovarre(
-                stellarator.outfile,
-                "Beam decay lengths to centre",
-                "(n_beam_decay_lengths_core)",
-                current_drive_variables.n_beam_decay_lengths_core,
-            )
-
-
+            stellarator.outfile,
+            "Beam decay lengths to centre",
+            "(n_beam_decay_lengths_core)",
+            current_drive_variables.n_beam_decay_lengths_core,
+        )

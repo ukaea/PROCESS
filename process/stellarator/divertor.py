@@ -1,11 +1,10 @@
 import numpy as np
 
-from process import process_output as po
-from process.data_structure import divertor_variables
 from process import constants
-
+from process import process_output as po
 from process.data_structure import (
     build_variables,
+    divertor_variables,
     fwbs_variables,
     physics_variables,
     stellarator_variables,

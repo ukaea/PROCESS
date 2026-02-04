@@ -5,18 +5,10 @@ import numpy as np
 
 import process.fusion_reactions as reactions
 import process.physics_functions as physics_funcs
-from process.stellarator.build import st_build
-from process.stellarator.denisty_limits import power_at_ignition_point, st_denisty_limits
-from process.stellarator.divertor import st_div
-from process.stellarator.heating import st_heat
-from process.stellarator.coils.calculate import st_coil
 from process import constants
 from process import process_output as po
 from process.coolprop_interface import FluidProperties
 from process.data_structure import (
-    cost_variables,
-    divertor_variables,
-    structure_variables,
     build_variables,
     constraint_variables,
     cost_variables,
@@ -34,6 +26,11 @@ from process.data_structure import (
 )
 from process.exceptions import ProcessValueError
 from process.physics import Physics, rether
+from process.stellarator.build import st_build
+from process.stellarator.coils.calculate import st_coil
+from process.stellarator.denisty_limits import power_at_ignition_point, st_denisty_limits
+from process.stellarator.divertor import st_div
+from process.stellarator.heating import st_heat
 from process.stellarator.preset_config import load_stellarator_config
 
 logger = logging.getLogger(__name__)
@@ -103,7 +100,6 @@ class Stellarator:
         self.physics = physics
         self.neoclassics = neoclassics
 
-
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
         relevant to stellarators
@@ -128,7 +124,7 @@ class Stellarator:
 
             # Change in density limit can result in changed dene?
             # A second call of st_phys is used to make sure it is consitent.
-            # st_phys and denisty limits should be integarted to avoid this double call. 
+            # st_phys and denisty limits should be integarted to avoid this double call.
             # Problem was probably bigger in the older version
 
             self.st_phys(False)
@@ -202,7 +198,6 @@ class Stellarator:
         if 1 not in numerics.ixc:
             physics_variables.aspect = stellarator_configuration.stella_config_aspect_ref
 
-
         # Set the physics_variables.rminor radius as result here.
         physics_variables.rminor = physics_variables.rmajor / physics_variables.aspect
         physics_variables.eps = 1.0e0 / physics_variables.aspect
@@ -227,7 +222,8 @@ class Stellarator:
             * stellarator_configuration.stella_config_symmetry
         )  # Coil number factor
         stellarator_variables.f_st_b = (
-            physics_variables.b_plasma_toroidal_on_axis / stellarator_configuration.stella_config_bt_ref
+            physics_variables.b_plasma_toroidal_on_axis
+            / stellarator_configuration.stella_config_bt_ref
         )  # B-field scaling factor
 
         # Coil aspect ratio factor to the reference calculation (we use it to scale the coil minor radius)
@@ -236,18 +232,26 @@ class Stellarator:
         # Coil aspect ration factor can be described with the reversed equation (so if we would know r_coil_minor)
         # stellarator_variables.f_coil_aspect = (
         #     (physics_variables.rmajor / stellarator_variables.r_coil_minor) /
-        #     (stellarator_configuration.stella_config_rmajor_ref / 
+        #     (stellarator_configuration.stella_config_rmajor_ref /
         #      stellarator_configuration.stella_config_coil_rminor)
-        # ) 
+        # )
 
         # Coil major radius, scaled with respect to the reference calculation
-        stellarator_variables.r_coil_major = stellarator_configuration.stella_config_coil_rmajor * stellarator_variables.f_st_rmajor
+        stellarator_variables.r_coil_major = (
+            stellarator_configuration.stella_config_coil_rmajor
+            * stellarator_variables.f_st_rmajor
+        )
         # Coil minor radius, scaled with respect to the reference calculation
-        stellarator_variables.r_coil_minor = stellarator_configuration.stella_config_coil_rminor * stellarator_variables.f_st_rmajor / stellarator_variables.f_coil_aspect
+        stellarator_variables.r_coil_minor = (
+            stellarator_configuration.stella_config_coil_rminor
+            * stellarator_variables.f_st_rmajor
+            / stellarator_variables.f_coil_aspect
+        )
 
-        stellarator_variables.f_coil_shape = (( stellarator_configuration.stella_config_min_plasma_coil_distance
-                           + stellarator_configuration.stella_config_rminor_ref )
-                           / stellarator_configuration.stella_config_coil_rminor)
+        stellarator_variables.f_coil_shape = (
+            stellarator_configuration.stella_config_min_plasma_coil_distance
+            + stellarator_configuration.stella_config_rminor_ref
+        ) / stellarator_configuration.stella_config_coil_rminor
 
     def st_geom(self):
         """
@@ -267,15 +271,15 @@ class Stellarator:
         """
         physics_variables.vol_plasma = (
             # stellarator_variables.f_r * stellarator_variables.f_a**2 * stellarator_configuration.stella_config_plasma_volume
-            stellarator_variables.f_st_rmajor 
-            * stellarator_variables.f_st_rminor**2 
+            stellarator_variables.f_st_rmajor
+            * stellarator_variables.f_st_rminor**2
             * stellarator_configuration.stella_config_vol_plasma
         )
 
         # Plasma surface scaled from effective parameter:
         physics_variables.a_plasma_surface = (
-            stellarator_variables.f_st_rmajor 
-            * stellarator_variables.f_st_rminor 
+            stellarator_variables.f_st_rmajor
+            * stellarator_variables.f_st_rminor
             * stellarator_configuration.stella_config_plasma_surface
         )
 
@@ -290,7 +294,6 @@ class Stellarator:
         physics_variables.a_plasma_surface_outboard = (
             0.5e0 * physics_variables.a_plasma_surface
         )  # Used only in the divertor model; approximate as for tokamaks
-
 
     def st_strc(self, output):
         """
@@ -328,8 +331,12 @@ class Stellarator:
         # Calculate the intercoil bolted plates structure from the coil surface
 
         intercoil_surface = (
-            stellarator_configuration.stella_config_coilsurface * stellarator_variables.f_st_rmajor
-            * (stellarator_variables.r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
+            stellarator_configuration.stella_config_coilsurface
+            * stellarator_variables.f_st_rmajor
+            * (
+                stellarator_variables.r_coil_minor
+                / stellarator_configuration.stella_config_coil_rminor
+            )
             - tfcoil_variables.dx_tf_inboard_out_toroidal
             * tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_coils
@@ -338,7 +345,10 @@ class Stellarator:
         # This 0.18 m is an effective thickness which is scaled with empirial 1.5 law. 5.6 T is reference point of Helias
         # The thickness 0.18m was obtained as a measured value from Schauer, F. and Bykov, V. design of Helias 5-B. (Nucl Fus. 2013)
         structure_variables.aintmass = (
-            0.18e0 * (physics_variables.b_plasma_toroidal_on_axis/5.6)**2 * intercoil_surface * fwbs_variables.den_steel
+            0.18e0
+            * (physics_variables.b_plasma_toroidal_on_axis / 5.6) ** 2
+            * intercoil_surface
+            * fwbs_variables.den_steel
         )
 
         structure_variables.clgsmass = (
@@ -381,7 +391,6 @@ class Stellarator:
                 "(coldmass)",
                 structure_variables.coldmass,
             )
-
 
     def blanket_neutronics(self):
         # heating of the blanket
@@ -724,7 +733,8 @@ class Stellarator:
                 #  Radiation power incident on HCD apparatus (MW)
 
                 fwbs_variables.p_fw_hcd_rad_total_mw = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_outboard_hcd
+                    physics_variables.p_plasma_rad_mw
+                    * fwbs_variables.f_a_fw_outboard_hcd
                 )
 
                 #  Radiation power lost through holes (eventually hits shield) (MW)
@@ -1868,7 +1878,6 @@ class Stellarator:
             p_tf_nuclear_heat_mw,
         )
 
-
     def st_phys(self, output):
         """Routine to calculate stellarator plasma physics information
         author: P J Knight, CCFE, Culham Science Centre
@@ -1949,7 +1958,6 @@ class Stellarator:
             * stellarator_variables.iotabar
         )
 
-
         #  Perform auxiliary power calculations
 
         st_heat(self, False)
@@ -1957,7 +1965,9 @@ class Stellarator:
         #  Calculate fusion power
 
         fusion_reactions = reactions.FusionReactionRate(self.plasma_profile)
-        fusion_reactions.deuterium_branching(physics_variables.temp_plasma_ion_vol_avg_kev)
+        fusion_reactions.deuterium_branching(
+            physics_variables.temp_plasma_ion_vol_avg_kev
+        )
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
@@ -1999,7 +2009,7 @@ class Stellarator:
                 physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
-                 physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
+                physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
             physics_variables.fusden_total = (
                 physics_variables.fusden_plasma
@@ -2507,5 +2517,3 @@ class Stellarator:
             "(nd_plasma_electron_line/nd_plasma_electrons_max)",
             nd_plasma_electron_line / nd_plasma_electrons_max,
         )
-
-

@@ -1,15 +1,14 @@
 """Module to calculate quench protection limits for stellarator coils"""
 
-from process.data_structure import rebco_variables
+import numpy as np
 
 from process.data_structure import (
-    physics_variables,
     build_variables,
+    physics_variables,
+    rebco_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-
-import numpy as np
 
 
 def calculate_quench_protection(coilcurrent):
@@ -53,7 +52,9 @@ def calculate_quench_protection(coilcurrent):
     a_vv = (rad_vv_out + rad_vv_in) / (rad_vv_out - rad_vv_in)
     zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
 
-    superconducting_tf_coil_variables.vv_stress_quench =  zeta * f_vv_actual * 1e6 * rad_vv_in
+    superconducting_tf_coil_variables.vv_stress_quench = (
+        zeta * f_vv_actual * 1e6 * rad_vv_in
+    )
 
     # the conductor fraction is meant of the cable space#
     # This is the old routine which is being replaced for now by the new one below
@@ -61,17 +62,18 @@ def calculate_quench_protection(coilcurrent):
     # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,
     #    tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
-
     # comparison
     # the new quench protection routine, see #1047
-    tfcoil_variables.j_tf_wp_quench_heat_max = calculate_quench_protection_current_density(
-        tau_quench=tfcoil_variables.t_tf_superconductor_quench,
-        t_detect=tfcoil_variables.t_tf_quench_detection,
-        f_cu=tfcoil_variables.f_a_tf_turn_cable_copper,
-        f_cond=1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
-        temp=tfcoil_variables.tftmp,
-        a_cable=tfcoil_variables.a_tf_turn_cable_space_no_void,
-        a_turn=tfcoil_variables.dx_tf_turn_general**2,
+    tfcoil_variables.j_tf_wp_quench_heat_max = (
+        calculate_quench_protection_current_density(
+            tau_quench=tfcoil_variables.t_tf_superconductor_quench,
+            t_detect=tfcoil_variables.t_tf_quench_detection,
+            f_cu=tfcoil_variables.f_a_tf_turn_cable_copper,
+            f_cond=1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
+            temp=tfcoil_variables.tftmp,
+            a_cable=tfcoil_variables.a_tf_turn_cable_space_no_void,
+            a_turn=tfcoil_variables.dx_tf_turn_general**2,
+        )
     )
 
     # Also give the copper current density (copper A/m2) for REBCO quench calculations:
@@ -86,60 +88,75 @@ def calculate_quench_protection(coilcurrent):
 
     # Max volatage during fast discharge of TF coil (V)
     # (note that tf_coil_variable is in kV, while calculation is in V)
-    tfcoil_variables.v_tf_coil_dump_quench_kv = max_dump_voltage(
-        tf_energy_stored= (tfcoil_variables.e_tf_magnetic_stored_total_gj
-                            / tfcoil_variables.n_tf_coils
-                            * 1.0e9),
-        t_dump=tfcoil_variables.t_tf_superconductor_quench,
-        current= tfcoil_variables.c_tf_turn,
-    ) / 1.0e3   # turn into kV
+    tfcoil_variables.v_tf_coil_dump_quench_kv = (
+        max_dump_voltage(
+            tf_energy_stored=(
+                tfcoil_variables.e_tf_magnetic_stored_total_gj
+                / tfcoil_variables.n_tf_coils
+                * 1.0e9
+            ),
+            t_dump=tfcoil_variables.t_tf_superconductor_quench,
+            current=tfcoil_variables.c_tf_turn,
+        )
+        / 1.0e3
+    )  # turn into kV
 
     return f_vv_actual
 
 
-def calculate_vv_max_force_density_from_W7X_scaling(rad_vv:float) -> float:
-    """ Actual VV force density from scaling [MN/m^3] 
+def calculate_vv_max_force_density_from_W7X_scaling(rad_vv: float) -> float:
+    """Actual VV force density from scaling [MN/m^3]
     Based on reference values from W-7X."""
-    f_ref = 2.54    # MN/m^3
-    B_ref = 3.0     # T
-    I_ref = 1.3e6 * 50
-    a_ref = 0.92    # m
-    Tau_ref = 3.0   # s
-    R_ref = 5.2     # m
-    d_ref = 14e-3   # m, thickness of VV
+    force_density_ref = 2.54  # MN/m^3
+    b_ref = 3.0  # T
+    i_total_ref = 1.3e6 * 50
+    rminor_ref = 0.92  # m
+    tau_ref = 3.0  # s
+    rmajor_ref = 5.2  # m
+    dr_vv_ref = 14e-3  # m, thickness of VV
 
     return (
-        f_ref 
-        * (B_ref / physics_variables.b_plasma_toroidal_on_axis
-            * I_ref / tfcoil_variables.c_tf_total
-            * a_ref**2 / physics_variables.rminor**2
-            ) **(-1)
+        force_density_ref
         * (
-                Tau_ref / tfcoil_variables.t_tf_superconductor_quench
-                * R_ref / rad_vv
-                * d_ref / ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
-            )
+            b_ref
+            / physics_variables.b_plasma_toroidal_on_axis
+            * i_total_ref
+            / tfcoil_variables.c_tf_total
+            * rminor_ref**2
+            / physics_variables.rminor**2
+        )
+        ** (-1)
+        * (
+            tau_ref
+            / tfcoil_variables.t_tf_superconductor_quench
+            * rmajor_ref
+            / rad_vv
+            * dr_vv_ref
+            / ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
+        )
     )
-    
 
-def max_dump_voltage(tf_energy_stored:float , t_dump:float, current:float) -> float:
+
+def max_dump_voltage(tf_energy_stored: float, t_dump: float, current: float) -> float:
     """
-    Max volatage during fast discharge of TF coil (V)  
-    tf_energy_stored : Energy stored in one TF coil (J)  
-    t_dump : Dump time (sec)  
+    Max volatage during fast discharge of TF coil (V)
+    tf_energy_stored : Energy stored in one TF coil (J)
+    t_dump : Dump time (sec)
     current : Operating current (A)
     """
     return 2 * (tf_energy_stored / t_dump) / current
 
 
-def calculate_quench_protection_current_density(tau_quench, t_detect, f_cu, f_cond, temp, a_cable, a_turn):
+def calculate_quench_protection_current_density(
+    tau_quench, t_detect, f_cu, f_cond, temp, a_cable, a_turn
+):
     """
     Calculates the current density limited by the protection limit.
 
     Simplified 0-D adiabatic heat balance "hotspot criterion" model.
 
-    This is slightly diffrent that tokamak version (also diffrent from the stellarator paper). 
-    We skip the superconduc6tor contribution (this should be more conservative in theory). 
+    This is slightly diffrent that tokamak version (also diffrent from the stellarator paper).
+    We skip the superconduc6tor contribution (this should be more conservative in theory).
     tau_quench : Quench time (s)
     t_detect : Detection time (s)
     f_cu : Copper fraction

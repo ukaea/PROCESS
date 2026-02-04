@@ -707,7 +707,9 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "f_w": InputVariable(data_structure.stellarator_variables, float, range=(0.1, 1.0)),
-    "f_st_coil_aspect": InputVariable(data_structure.stellarator_variables, float, range=(0.1, 10.0)),
+    "f_st_coil_aspect": InputVariable(
+        data_structure.stellarator_variables, float, range=(0.1, 10.0)
+    ),
     "f_z_cryostat": InputVariable(
         data_structure.build_variables, float, range=(2.0, 10.0)
     ),

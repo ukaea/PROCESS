@@ -1,4 +1,3 @@
-from process.data_structure import times_variables
 from process.data_structure import (
     build_variables,
     current_drive_variables,
@@ -6,7 +5,9 @@ from process.data_structure import (
     pfcoil_variables,
     physics_variables,
     stellarator_variables,
+    times_variables,
 )
+
 
 def st_init():
     """Routine to initialise the variables relevant to stellarators

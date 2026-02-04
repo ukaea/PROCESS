@@ -1,16 +1,19 @@
-from process.data_structure import neoclassics_variables
-from process.stellarator.stellarator import KEV
+import logging
+
+import numpy as np
+
 from process import constants
 from process.data_structure import (
     impurity_radiation_module,
+    neoclassics_variables,
     physics_variables,
     stellarator_configuration,
     stellarator_variables,
 )
+from process.stellarator.stellarator import KEV
 
-import numpy as np
-import logging
 logger = logging.getLogger(__name__)
+
 
 class Neoclassics:
     @property
@@ -256,11 +259,10 @@ class Neoclassics:
 
         return dens, temp, dr_dens, dr_temp
 
-
     def calc_neoclassics(self):
         if stellarator_configuration.stella_config_epseff < 0:
             logger.error(
-            f"epseff value lower than 0:  {stellarator_configuration.stella_config_epseff}"
+                f"epseff value lower than 0:  {stellarator_configuration.stella_config_epseff}"
             )
         self.init_neoclassics(
             0.6,
@@ -479,8 +481,8 @@ class Neoclassics:
 
     def neoclassics_calc_nu_star(self):
         """Calculates the normalized collision frequency"""
-        k = np.repeat(neoclassics_variables.roots[:, np.newaxis], 4, axis=1)
-        kk = (k * neoclassics_variables.temperatures).T
+        # k = np.repeat(neoclassics_variables.roots[:, np.newaxis], 4, axis=1)
+        # kk = (k * neoclassics_variables.temperatures).T
 
         mass = np.array([
             constants.ELECTRON_MASS,
@@ -651,34 +653,22 @@ class Neoclassics:
         v = np.empty((4, self.no_roots))
         v[0, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
-            - (
-                neoclassics_variables.kt[0, :] / (mass[0] * constants.SPEED_LIGHT**2)
-                + 1
-            )
+            - (neoclassics_variables.kt[0, :] / (mass[0] * constants.SPEED_LIGHT**2) + 1)
             ** (-1)
         )
         v[1, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
-            - (
-                neoclassics_variables.kt[1, :] / (mass[1] * constants.SPEED_LIGHT**2)
-                + 1
-            )
+            - (neoclassics_variables.kt[1, :] / (mass[1] * constants.SPEED_LIGHT**2) + 1)
             ** (-1)
         )
         v[2, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
-            - (
-                neoclassics_variables.kt[2, :] / (mass[2] * constants.SPEED_LIGHT**2)
-                + 1
-            )
+            - (neoclassics_variables.kt[2, :] / (mass[2] * constants.SPEED_LIGHT**2) + 1)
             ** (-1)
         )
         v[3, :] = constants.SPEED_LIGHT * np.sqrt(
             1.0
-            - (
-                neoclassics_variables.kt[3, :] / (mass[3] * constants.SPEED_LIGHT**2)
-                + 1
-            )
+            - (neoclassics_variables.kt[3, :] / (mass[3] * constants.SPEED_LIGHT**2) + 1)
             ** (-1)
         )
 
@@ -754,7 +744,7 @@ class Neoclassics:
                 / neoclassics_variables.temperatures
             )
         )
-    
+
     def st_calc_eff_chi(self):
         volscaling = (
             physics_variables.vol_plasma
@@ -803,4 +793,3 @@ class Neoclassics:
         )
 
         return nominator / denominator
-

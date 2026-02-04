@@ -1,13 +1,15 @@
-import numpy as np
 import logging
 
-import process.superconductors as superconductors
-from process.exceptions import ProcessValueError
+import numpy as np
 
+import process.superconductors as superconductors
 from process.data_structure import (
     stellarator_configuration,
 )
+from process.exceptions import ProcessValueError
+
 logger = logging.getLogger(__name__)
+
 
 def jcrit_from_material(
     b_max,
@@ -25,7 +27,9 @@ def jcrit_from_material(
     strain = -0.005  # for now a small value
     f_he = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
 
-    f_tf_conductor_copper = f_a_tf_turn_cable_copper  # fcutfsu is a global variable. Is the copper fraction
+    f_tf_conductor_copper = (
+        f_a_tf_turn_cable_copper  # fcutfsu is a global variable. Is the copper fraction
+    )
     # of a cable conductor.
 
     if i_tf_sc_mat == 1:  # ITER Nb3Sn critical surface parameterization
@@ -115,9 +119,7 @@ def jcrit_from_material(
         )
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
-    elif (
-        i_tf_sc_mat == 6
-    ):  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
+    elif i_tf_sc_mat == 6:  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
         j_crit_sc, _validity = superconductors.jcrit_rebco(t_helium, b_max, 0)
         j_crit_sc = max(1.0e-9, j_crit_sc)
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -149,101 +151,100 @@ def jcrit_from_material(
 
 
 def intersect(x1, y1, x2, y2, xin):
-        """Routine to find the x (abscissa) intersection point of two curves
-        each defined by tabulated (x,y) values  
-        author: P J Knight, CCFE, Culham Science Centre  
-        x1(1:n1) : input real array : x values for first curve  
-        y1(1:n1) : input real array : y values for first curve  
-        n1       : length of arrays x1, y1  
-        x2(1:n2) : input real array : x values for first curve  
-        y2(1:n2) : input real array : y values for first curve  
-        n2       : length of arrays x2, y2  
-        xin      : initial guess for intersection point
-        x value at point of intersection on exit
-        This routine estimates the x point (abscissa) at which two curves
-        defined by tabulated (x,y) values intersect, using simple
-        linear interpolation and the Newton-Raphson method.
-        The routine will stop with an error message if no crossing point
-        is found within the x ranges of the two curves.
-        """
-        x = xin
-        n1 = len(x1)
-        n2 = len(x2)
+    """Routine to find the x (abscissa) intersection point of two curves
+    each defined by tabulated (x,y) values
+    author: P J Knight, CCFE, Culham Science Centre
+    x1(1:n1) : input real array : x values for first curve
+    y1(1:n1) : input real array : y values for first curve
+    n1       : length of arrays x1, y1
+    x2(1:n2) : input real array : x values for first curve
+    y2(1:n2) : input real array : y values for first curve
+    n2       : length of arrays x2, y2
+    xin      : initial guess for intersection point
+    x value at point of intersection on exit
+    This routine estimates the x point (abscissa) at which two curves
+    defined by tabulated (x,y) values intersect, using simple
+    linear interpolation and the Newton-Raphson method.
+    The routine will stop with an error message if no crossing point
+    is found within the x ranges of the two curves.
+    """
+    x = xin
+    n1 = len(x1)
+    n2 = len(x2)
 
-        xmin = max(np.amin(x1), np.amin(x2))
-        xmax = min(np.max(x1), np.amax(x2))
+    xmin = max(np.amin(x1), np.amin(x2))
+    xmax = min(np.max(x1), np.amax(x2))
 
-        if xmin >= xmax:
+    if xmin >= xmax:
+        logger.error(
+            f"X ranges not overlapping. {np.amin(x1)=} {np.amin(x2)=} "
+            f"{np.amax(x1)=} {np.amax(x2)=}"
+        )
+
+    #  Ensure input guess for x is within this range
+    if x < xmin:
+        x = xmin
+    elif x > xmax:
+        x = xmax
+
+    #  Find overall y range, and set tolerance
+    #  in final difference in y values
+
+    ymin = min(np.amin(y1), np.amin(y2))
+    ymax = max(np.max(y1), np.max(y2))
+
+    epsy = 1.0e-6 * (ymax - ymin)
+
+    #  Finite difference dx
+
+    dx = 0.01e0 / max(n1, n2) * (xmax - xmin)
+
+    for _i in range(100):
+        #  Find difference in y values at x
+
+        y01 = np.interp(x, x1, y1)
+        y02 = np.interp(x, x2, y2)
+        y = y01 - y02
+
+        if abs(y) < epsy:
+            break
+
+        #  Find difference in y values at x+dx
+
+        y01 = np.interp(x + dx, x1, y1)
+        y02 = np.interp(x + dx, x2, y2)
+        yright = y01 - y02
+
+        #  Find difference in y values at x-dx
+
+        y01 = np.interp(x - dx, x1, y1)
+        y02 = np.interp(x - dx, x2, y2)
+        yleft = y01 - y02
+
+        #  Adjust x using Newton-Raphson method
+
+        x = x - 2.0e0 * dx * y / (yright - yleft)
+
+        if x < xmin:
             logger.error(
-                f"X ranges not overlapping. {np.amin(x1)=} {np.amin(x2)=} "
-                f"{np.amax(x1)=} {np.amax(x2)=}"
+                f"X has dropped below Xmin; X={x} has been set equal to Xmin={xmin}"
             )
+            x = xmin
+            break
 
-        #  Ensure input guess for x is within this range
+        if x > xmax:
+            logger.error(
+                f"X has risen above Xmax; X={x} has been set equal to Xmax={xmin}"
+            )
+            x = xmax
+            break
+    else:
+        logger.error("Convergence too slow; X may be wrong...")
 
-        if   x < xmin:  x = xmin
-        elif x > xmax:  x = xmax
-
-        #  Find overall y range, and set tolerance
-        #  in final difference in y values
-
-        ymin = min(np.amin(y1), np.amin(y2))
-        ymax = max(np.max(y1), np.max(y2))
-
-        epsy = 1.0e-6 * (ymax - ymin)
-
-        #  Finite difference dx
-
-        dx = 0.01e0 / max(n1, n2) * (xmax - xmin)
-
-        for _i in range(100):
-            #  Find difference in y values at x
-
-            y01 = np.interp(x, x1, y1)
-            y02 = np.interp(x, x2, y2)
-            y = y01 - y02
-
-            if abs(y) < epsy:
-                break
-
-            #  Find difference in y values at x+dx
-
-            y01 = np.interp(x + dx, x1, y1)
-            y02 = np.interp(x + dx, x2, y2)
-            yright = y01 - y02
-
-            #  Find difference in y values at x-dx
-
-            y01 = np.interp(x - dx, x1, y1)
-            y02 = np.interp(x - dx, x2, y2)
-            yleft = y01 - y02
-
-            #  Adjust x using Newton-Raphson method
-
-            x = x - 2.0e0 * dx * y / (yright - yleft)
-
-            if x < xmin:
-                logger.error(
-                    f"X has dropped below Xmin; X={x} has been set equal to Xmin={xmin}"
-                )
-                x = xmin
-                break
-
-            if x > xmax:
-                logger.error(
-                    f"X has risen above Xmax; X={x} has been set equal to Xmax={xmin}"
-                )
-                x = xmax
-                break
-        else:
-            logger.error("Convergence too slow; X may be wrong...")
-
-        return x
+    return x
 
 
-def bmax_from_awp(
-    wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor
-):
+def bmax_from_awp(wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor):
     """Returns a fitted function for bmax for stellarators
 
     author: J Lion, IPP Greifswald
@@ -253,16 +254,12 @@ def bmax_from_awp(
     """
 
     return (
-        2e-1 # this is mu x 1e6, to use current in MA
+        2e-1  # this is mu x 1e6, to use current in MA
         * current
         * n_tf_coils
         / (r_coil_major - r_coil_minor)
         * (
             stellarator_configuration.stella_config_a1
-            + stellarator_configuration.stella_config_a2
-            * r_coil_major
-            / wp_width_radial
+            + stellarator_configuration.stella_config_a2 * r_coil_major / wp_width_radial
         )
     )
-
-

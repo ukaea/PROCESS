@@ -8,7 +8,7 @@ f_st_rmajor: float = None
 f_st_aspect: float = None
 """Actual aspect ratio to reference value from stella_config file"""
 
-f_st_coil_aspect:float = None
+f_st_coil_aspect: float = None
 """Scaling factor for (stellarator major radius / coil radius ratio)"""
 
 f_st_b: float = None
