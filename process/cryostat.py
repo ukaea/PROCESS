@@ -80,9 +80,6 @@ class Cryostat:
             * (build_variables.dr_cryostat + fwbs_variables.z_cryostat_half_inside)
         ) - (fwbs_variables.vol_cryostat_internal)
 
-        # Vacuum vessel mass (kg)
-        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
-
         # Sum of internal vacuum vessel and cryostat masses (kg)
         fwbs_variables.dewmkg = (
             fwbs_variables.vol_vv + fwbs_variables.vol_cryostat

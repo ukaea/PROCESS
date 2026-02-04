@@ -107,7 +107,7 @@ from process.shield import Shield
 from process.structure import Structure
 from process.superconducting_tf_coil import SuperconductingTFCoil
 from process.tf_coil import TFCoil
-from process.vacuum import Vacuum
+from process.vacuum import Vacuum, VacuumVessel
 from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
@@ -666,8 +666,10 @@ class Models:
         self.availability = Availability()
         self.buildings = Buildings()
         self.vacuum = Vacuum()
+        self.vacuum_vessel = VacuumVessel()
         self.water_use = WaterUse()
         self.pulse = Pulse()
+        self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
         self.plasma_profile = PlasmaProfile()
         self.fw = Fw()

@@ -43,7 +43,6 @@ class ExternalCryoGeometryParam(NamedTuple):
     expected_r_cryostat_inboard: Any = None
     expected_z_cryostat_half_inside: Any = None
     expected_vol_cryostat: Any = None
-    expected_vvmass: Any = None
     expected_dewmkg: Any = None
     expected_dz_tf_cryostat: Any = None
     expected_dz_pf_cryostat: Any = None
@@ -130,7 +129,6 @@ class ExternalCryoGeometryParam(NamedTuple):
             expected_r_cryostat_inboard=17.805470903073743,
             expected_z_cryostat_half_inside=15.259637557000296,
             expected_vol_cryostat=818.1630389343372,
-            expected_vvmass=7927043.4756686538,
             expected_dewmkg=14308715.179356484,
             expected_dz_tf_cryostat=5.514694530398824,
             expected_dz_pf_cryostat=5.3441455565624985,
@@ -206,9 +204,6 @@ def test_external_cryo_geometry(
     )
     assert fwbs_variables.vol_cryostat == pytest.approx(
         externalcryogeometryparam.expected_vol_cryostat
-    )
-    assert fwbs_variables.m_vv == pytest.approx(
-        externalcryogeometryparam.expected_vvmass
     )
     assert fwbs_variables.dewmkg == pytest.approx(
         externalcryogeometryparam.expected_dewmkg

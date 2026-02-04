@@ -55,26 +55,14 @@ class BlanketLibrary:
         # Calculate half-height
         # Blanket
         blanket_library.dz_blkt_half = self.component_half_height(icomponent=0)
-        # Shield
-        blanket_library.dz_shld_half = self.component_half_height(icomponent=1)
-        # Vacuum Vessel
-        blanket_library.dz_vv_half = self.component_half_height(icomponent=2)
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
-            for icomponent in range(3):
-                self.dshaped_component(icomponent)
+            self.dshaped_component()
 
         # Elliptical blanket and shield
         else:
-            for icomponent in range(3):
-                self.elliptical_component(icomponent)
-
-            # This will fail the hts_REBCO and 2D_scan regression tests,
-            # the number of VMCON iterations (nviter) is different.
-            # Seems to be because in the blanket calculations (icomponent=0):
-            # r2 = 1.3836567143743970 rather than old value of r2 = 1.3836567143743972,
-            # r3 = 3.7009701431231936 rather than r3 = 3.7009701431231923.
+            self.elliptical_component()
 
         # Apply coverage factors to volumes and surface areas
         self.apply_coverage_factors()
@@ -94,22 +82,6 @@ class BlanketLibrary:
                 + divertor_variables.dz_divertor
                 - build_variables.dz_blkt_upper
             )
-        # Sheild
-        elif icomponent == 1:
-            hbot = (
-                build_variables.z_plasma_xpoint_lower
-                + build_variables.dz_xpoint_divertor
-                + divertor_variables.dz_divertor
-            )
-        # Vacuum vessel
-        elif icomponent == 2:
-            hbot = (
-                build_variables.z_tf_inside_half
-                - build_variables.dz_shld_vv_gap
-                - build_variables.dz_vv_lower
-            )
-        else:
-            raise ProcessValueError(f"{icomponent=} is invalid, it must be either 0,1,2")
 
         # Calculate component internal upper half-height (m)
         # If a double null machine then symmetric
@@ -123,19 +95,11 @@ class BlanketLibrary:
                 + build_variables.dr_fw_inboard
                 + build_variables.dr_fw_outboard
             )
-            # Shield
-            if icomponent == 1:
-                htop = htop + build_variables.dz_blkt_upper
-            # Vacuum Vessel
-            if icomponent == 2:
-                htop = (
-                    htop + build_variables.dz_blkt_upper + build_variables.dz_shld_upper
-                )
 
         # Average of top and bottom (m)
         return 0.5 * (htop + hbot)
 
-    def dshaped_component(self, icomponent: int):
+    def dshaped_component(self):
         """Calculate component surface area and volume using dshaped scheme
         Based on dshaped_blanket, dshaped_shield, dshaped_vv
         original author: J. Morris, CCFE, Culham Science Centre
@@ -144,12 +108,10 @@ class BlanketLibrary:
         # Calculate major radius to outer edge of inboard ...
         # ... section (m)
         r1 = build_variables.r_shld_inboard_inner
-        # ... shield (m)
-        if icomponent == 1:
-            r1 = r1 + build_variables.dr_shld_inboard
+
         # ... blanket (m)
-        elif icomponent == 0:
-            r1 = r1 + build_variables.dr_shld_inboard + build_variables.dr_blkt_inboard
+
+        r1 = r1 + build_variables.dr_shld_inboard + build_variables.dr_blkt_inboard
 
         # Horizontal distance between inside edges (m)
         # i.e. outer radius of inboard part to inner radius of outboard part
@@ -161,69 +123,27 @@ class BlanketLibrary:
             + build_variables.dr_fw_plasma_gap_outboard
             + build_variables.dr_fw_outboard
         )
-        # Sheild
-        if icomponent == 1:
-            r2 = build_variables.dr_blkt_inboard + r2 + build_variables.dr_blkt_outboard
-        # Vaccum Vessel
-        if icomponent == 2:
-            r2 = build_variables.r_shld_outboard_outer - r1
 
-        # Calculate surface area, assuming 100% coverage
-        if icomponent == 0:
-            (
-                build_variables.a_blkt_inboard_surface,
-                build_variables.a_blkt_outboard_surface,
-                build_variables.a_blkt_total_surface,
-            ) = dshellarea(r1, r2, blanket_library.dz_blkt_half)
-        if icomponent == 1:
-            (
-                build_variables.a_shld_inboard_surface,
-                build_variables.a_shld_outboard_surface,
-                build_variables.a_shld_total_surface,
-            ) = dshellarea(r1, r2, blanket_library.dz_shld_half)
+        (
+            build_variables.a_blkt_inboard_surface,
+            build_variables.a_blkt_outboard_surface,
+            build_variables.a_blkt_total_surface,
+        ) = dshellarea(r1, r2, blanket_library.dz_blkt_half)
 
-        # Calculate volumes, assuming 100% coverage
-        if icomponent == 0:
-            (
-                fwbs_variables.vol_blkt_inboard,
-                fwbs_variables.vol_blkt_outboard,
-                fwbs_variables.vol_blkt_total,
-            ) = dshellvol(
-                r1,
-                r2,
-                blanket_library.dz_blkt_half,
-                build_variables.dr_blkt_inboard,
-                build_variables.dr_blkt_outboard,
-                build_variables.dz_blkt_upper,
-            )
-        elif icomponent == 1:
-            (
-                blanket_library.vol_shld_inboard,
-                blanket_library.vol_shld_outboard,
-                fwbs_variables.vol_shld_total,
-            ) = dshellvol(
-                r1,
-                r2,
-                blanket_library.dz_shld_half,
-                build_variables.dr_shld_inboard,
-                build_variables.dr_shld_outboard,
-                build_variables.dz_shld_upper,
-            )
-        elif icomponent == 2:
-            (
-                blanket_library.vol_vv_inboard,
-                blanket_library.vol_vv_outboard,
-                fwbs_variables.vol_vv,
-            ) = dshellvol(
-                r1,
-                r2,
-                blanket_library.dz_vv_half,
-                build_variables.dr_vv_inboard,
-                build_variables.dr_vv_outboard,
-                (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
-            )
+        (
+            fwbs_variables.vol_blkt_inboard,
+            fwbs_variables.vol_blkt_outboard,
+            fwbs_variables.vol_blkt_total,
+        ) = dshellvol(
+            r1,
+            r2,
+            blanket_library.dz_blkt_half,
+            build_variables.dr_blkt_inboard,
+            build_variables.dr_blkt_outboard,
+            build_variables.dz_blkt_upper,
+        )
 
-    def elliptical_component(self, icomponent: int):
+    def elliptical_component(self):
         """Calculate component surface area and volume using elliptical scheme
         Based on elliptical_blanket, elliptical_shield, elliptical_vv
         original author: J. Morris, CCFE, Culham Science Centre
@@ -239,80 +159,38 @@ class BlanketLibrary:
         # Calculate distance between r1 and outer edge of inboard ...
         # ... section (m)
         r2 = r1 - build_variables.r_shld_inboard_inner
-        # ... shield (m)
-        if icomponent == 1:
-            r2 = r2 - build_variables.dr_shld_inboard
-        # ... blanket (m)
-        if icomponent == 0:
-            r2 = r2 - build_variables.dr_shld_inboard - build_variables.dr_blkt_inboard
+
+        r2 = r2 - build_variables.dr_shld_inboard - build_variables.dr_blkt_inboard
 
         # Calculate distance between r1 and inner edge of outboard ...
         # ... section (m)
         r3 = build_variables.r_shld_outboard_outer - r1
-        # ... shield (m)
-        if icomponent == 1:
-            r3 = r3 - build_variables.dr_shld_outboard
-        # ... blanket (m)
-        if icomponent == 0:
-            r3 = r3 - build_variables.dr_shld_outboard - build_variables.dr_blkt_outboard
+
+        r3 = r3 - build_variables.dr_shld_outboard - build_variables.dr_blkt_outboard
 
         # Calculate surface area, assuming 100% coverage
-        if icomponent == 0:
-            (
-                build_variables.a_blkt_inboard_surface,
-                build_variables.a_blkt_outboard_surface,
-                build_variables.a_blkt_total_surface,
-            ) = eshellarea(r1, r2, r3, blanket_library.dz_blkt_half)
-        if icomponent == 1:
-            (
-                build_variables.a_shld_inboard_surface,
-                build_variables.a_shld_outboard_surface,
-                build_variables.a_shld_total_surface,
-            ) = eshellarea(r1, r2, r3, blanket_library.dz_shld_half)
+
+        (
+            build_variables.a_blkt_inboard_surface,
+            build_variables.a_blkt_outboard_surface,
+            build_variables.a_blkt_total_surface,
+        ) = eshellarea(r1, r2, r3, blanket_library.dz_blkt_half)
 
         # Calculate volumes, assuming 100% coverage
-        if icomponent == 0:
-            (
-                fwbs_variables.vol_blkt_inboard,
-                fwbs_variables.vol_blkt_outboard,
-                fwbs_variables.vol_blkt_total,
-            ) = eshellvol(
-                r1,
-                r2,
-                r3,
-                blanket_library.dz_blkt_half,
-                build_variables.dr_blkt_inboard,
-                build_variables.dr_blkt_outboard,
-                build_variables.dz_blkt_upper,
-            )
-        if icomponent == 1:
-            (
-                blanket_library.vol_shld_inboard,
-                blanket_library.vol_shld_outboard,
-                fwbs_variables.vol_shld_total,
-            ) = eshellvol(
-                r1,
-                r2,
-                r3,
-                blanket_library.dz_shld_half,
-                build_variables.dr_shld_inboard,
-                build_variables.dr_shld_outboard,
-                build_variables.dz_shld_upper,
-            )
-        if icomponent == 2:
-            (
-                blanket_library.vol_vv_inboard,
-                blanket_library.vol_vv_outboard,
-                fwbs_variables.vol_vv,
-            ) = eshellvol(
-                r1,
-                r2,
-                r3,
-                blanket_library.dz_vv_half,
-                build_variables.dr_vv_inboard,
-                build_variables.dr_vv_outboard,
-                (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
-            )
+
+        (
+            fwbs_variables.vol_blkt_inboard,
+            fwbs_variables.vol_blkt_outboard,
+            fwbs_variables.vol_blkt_total,
+        ) = eshellvol(
+            r1,
+            r2,
+            r3,
+            blanket_library.dz_blkt_half,
+            build_variables.dr_blkt_inboard,
+            build_variables.dr_blkt_outboard,
+            build_variables.dz_blkt_upper,
+        )
 
     def apply_coverage_factors(self):
         """Apply coverage factors to volumes
@@ -360,33 +238,6 @@ class BlanketLibrary:
         fwbs_variables.vol_blkt_total = (
             fwbs_variables.vol_blkt_inboard + fwbs_variables.vol_blkt_outboard
         )
-
-        # Apply shield coverage factors
-        build_variables.a_shld_inboard_surface = (
-            fwbs_variables.fvolsi * build_variables.a_shld_inboard_surface
-        )
-        build_variables.a_shld_outboard_surface = (
-            fwbs_variables.fvolso * build_variables.a_shld_outboard_surface
-        )
-        build_variables.a_shld_total_surface = (
-            build_variables.a_shld_inboard_surface
-            + build_variables.a_shld_outboard_surface
-        )
-
-        blanket_library.vol_shld_inboard = (
-            fwbs_variables.fvolsi * blanket_library.vol_shld_inboard
-        )
-        blanket_library.vol_shld_outboard = (
-            fwbs_variables.fvolso * blanket_library.vol_shld_outboard
-        )
-        fwbs_variables.vol_shld_total = (
-            blanket_library.vol_shld_inboard + blanket_library.vol_shld_outboard
-        )
-
-        # Apply vacuum vessel coverage factor
-        # moved from dshaped_* and elliptical_* to keep coverage factor
-        # changes in the same location.
-        fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
 
     def primary_coolant_properties(self, output: bool):
         """Calculates the fluid properties of the Primary Coolant in the FW and BZ.
