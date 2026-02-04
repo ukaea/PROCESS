@@ -67,11 +67,11 @@ def jcrit_from_material(
         #  jstrand = 0  # as far as I can tell this will always be 0
         #  because jwp was never set in fortran (so 0)
 
-        j_crit_cable, _tmarg = superconductors.bi2212(
+        j_crit_cable, tmarg = superconductors.bi2212(
             b_max, jstrand, t_helium, f_hts
         )  # bi2212 outputs j_crit_cable
         j_crit_sc = j_crit_cable / (1 - f_tf_conductor_copper)
-        _tcrit = t_helium + _tmarg
+        _tcrit = t_helium + tmarg
     elif i_tf_sc_mat == 3:  # NbTi data
         bc20m = 15.0
         tc0m = 9.3

@@ -50,12 +50,11 @@ i_plasma_ignited   = 1            *Switch for ignition assumption (1: Ignited)
 i_plasma_pedestal = 0           *Switch for pedestal profiles (0: Parabolic Profiles)
 i_rad_loss = 1            *Switch for radiation loss term usage in power balance (1: Total power lost is scaling power plus core radiation only)
 i_confinement_time      = 38           *Switch for energy confinement time scaling law (38: ISS04)
-kappa    = 1.001        *Plasma separatrix elongation
 rmajor   = 22.0         *Plasma major radius (m)
 f_sync_reflect    = 0.6          *Synchrotron wall reflectivity factor
 temp_plasma_electron_vol_avg_kev       = 7.0          *Volume averaged electron temperature (keV)
 f_temp_plasma_ion_electron   = 0.95         *Ion temperature / electron temperature
-*zfear    = 0            *High-Z impurity switch (0: Iron)
+
 
 *--------------Stellarator Variables---------------*
 
@@ -169,15 +168,6 @@ f_a_tf_turn_cable_space_extra_void      = 0.3         *Coolant fraction of TF co
 dr_tf_nose_case    = 0.06        * Case thickness
 *-----------------Pfcoil Variables-----------------*
 
-*PF coil vertical positioning adjuster
-zref(1)  = 3.6
-zref(2)  = 1.2
-zref(3)  = 2.5
-zref(4)  = 1.0
-zref(5)  = 1.0
-zref(6)  = 1.0
-zref(7)  = 1.0
-zref(8)  = 1.0
 
 *------------------Cost Variables------------------*
 cost_model = 0          *0: 1990 cost module, the 2015 does not work yet for stellarators

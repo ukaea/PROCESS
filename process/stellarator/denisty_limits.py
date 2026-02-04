@@ -46,7 +46,7 @@ def st_denisty_limits(stellarator, f_output):
         )
 
 
-def st_sudo_density_limit(bt, powht, rmajor, rminor):
+def st_sudo_density_limit(b_plasma_toroidal_on_axis, powht, rmajor, rminor):
     """Routine to calculate the Sudo density limit in a stellarator
     author: P J Knight, CCFE, Culham Science Centre
     bt     : input real : Toroidal field on axis (T)
@@ -60,14 +60,14 @@ def st_sudo_density_limit(bt, powht, rmajor, rminor):
     and Density Limit in Stellarator/Heliotron Devices, Nuclear Fusion
     vol.30, 11 (1990).
     """
-    arg = powht * bt / (rmajor * rminor * rminor)
+    arg = powht * b_plasma_toroidal_on_axis / (rmajor * rminor * rminor)
 
     if arg <= 0.0e0:
         raise ProcessValueError(
             "Negative square root imminent",
             arg=arg,
             powht=powht,
-            bt=bt,
+            bt=b_plasma_toroidal_on_axis,
             rmajor=rmajor,
             rminor=rminor,
         )

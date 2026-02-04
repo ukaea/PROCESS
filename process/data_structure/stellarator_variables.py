@@ -15,7 +15,7 @@ f_st_b: float = None
 """Actual b_plasma_toroidal_on_axis to reference value from stella_config file """
 
 f_st_i_total: float = None
-"""Actual totail coil current to reference value from stella_config file"""
+"""Actual total coil current to reference value from stella_config file"""
 
 f_st_rminor: float = None
 """Actual minor radius to reference value from stella_config file"""

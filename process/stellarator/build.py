@@ -94,13 +94,6 @@ def st_build(stellarator, f_output: bool):
         physics_variables.rminor
         - st.f_st_rmajor * stellarator_configuration.stella_config_rminor_ref
     )
-    # This is the old version, left for now for comparison.
-    # build_variables.available_radial_space = stellarator_variables.f_r * (
-    #     stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist
-    #     * stellarator_configuration.stella_config_rminor_ref
-    #     * (1 / stellarator_variables.f_aspect - 1)
-    #     + stellarator_configuration.stella_config_min_plasma_coil_distance
-    # )
 
     #  Radius to inner edge of inboard shield
     build_variables.r_shld_inboard_inner = (
@@ -207,9 +200,6 @@ def output(stellarator):
         "(required_radial_space)",
         build_variables.required_radial_space,
     )
-
-    #     po.write(self.outfile,10)
-    # 10  format(t43,'Thickness (m)',t60,'Radius (m)')
 
     radius = 0.0e0
     po.obuild(stellarator.outfile, "Device centreline", 0.0e0, radius)

@@ -100,7 +100,8 @@ def calculate_quench_protection(coilcurrent):
 
 def calculate_vv_max_force_density_from_W7X_scaling(rad_vv: float) -> float:
     """Actual VV force density from scaling [MN/m^3]
-    Based on reference values from W-7X."""
+    Based on reference values from W-7X.
+    """
     force_density_ref = 2.54  # MN/m^3
     b_ref = 3.0  # T
     i_total_ref = 1.3e6 * 50

@@ -84,8 +84,8 @@ def st_heat(stellarator, f_output: bool):
             + current_drive_variables.p_hcd_injected_electrons_mw
         ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
     else:
-        logger.error(f"isthtr {stellarator_variables.isthtr} \n")
-        logger.error(f"isthtr type {type(stellarator_variables.isthtr)} \n")
+        logger.error(f"isthtr {stellarator_variables.isthtr}")
+        logger.error(f"isthtr type {type(stellarator_variables.isthtr)}")
         raise ProcessValueError(
             "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
         )

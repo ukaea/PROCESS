@@ -186,6 +186,14 @@ class Stellarator:
         This routine is called right before the calculation and could
         in principle overwrite variables from the input file.
         It overwrites rminor with rmajor and aspect ratio e.g.
+
+        To clarify the coils scaling factor:
+        Coil aspect ratio factor can be described with the reversed equation (so if we would know r_coil_minor)
+        stellarator_variables.f_coil_aspect = (
+            (physics_variables.rmajor / stellarator_variables.r_coil_minor) /
+            (stellarator_configuration.stella_config_rmajor_ref /
+             stellarator_configuration.stella_config_coil_rminor)
+        )
         """
 
         load_stellarator_config(
@@ -227,14 +235,7 @@ class Stellarator:
         )  # B-field scaling factor
 
         # Coil aspect ratio factor to the reference calculation (we use it to scale the coil minor radius)
-        stellarator_variables.f_coil_aspect = stellarator_variables.f_st_coil_aspect
-
-        # Coil aspect ration factor can be described with the reversed equation (so if we would know r_coil_minor)
-        # stellarator_variables.f_coil_aspect = (
-        #     (physics_variables.rmajor / stellarator_variables.r_coil_minor) /
-        #     (stellarator_configuration.stella_config_rmajor_ref /
-        #      stellarator_configuration.stella_config_coil_rminor)
-        # )
+        stellarator_variables.f_coil_aspect = stellarator_variables.f_st_coil_aspect       
 
         # Coil major radius, scaled with respect to the reference calculation
         stellarator_variables.r_coil_major = (
@@ -270,7 +271,6 @@ class Stellarator:
         surfaces with Fourier coefficients')
         """
         physics_variables.vol_plasma = (
-            # stellarator_variables.f_r * stellarator_variables.f_a**2 * stellarator_configuration.stella_config_plasma_volume
             stellarator_variables.f_st_rmajor
             * stellarator_variables.f_st_rminor**2
             * stellarator_configuration.stella_config_vol_plasma
@@ -980,10 +980,6 @@ class Stellarator:
                     )
                 else:  # resistive coils
                     fwbs_variables.p_tf_nuclear_heat_mw = 0.0e0
-
-        #  heat_transport_variables.ipowerflow
-
-        #  fwbs_variables.blktmodel
 
         #  Divertor mass
         #  N.B. divertor_variables.a_div_surface_total is calculated in stdiv after this point, so will
@@ -2185,7 +2181,6 @@ class Stellarator:
         physics_variables.p_plasma_rad_mw = (
             physics_variables.p_plasma_rad_mw + physics_variables.psolradmw
         )
-        # pden_plasma_rad_mw = physics_variables.p_plasma_rad_mw / physics_variables.vol_plasma # this line OVERWRITES the original definition of pden_plasma_rad_mw, probably shouldn't be defined like that as the core does not lose SOL power.
 
         #  The following line is unphysical, but prevents -ve sqrt argument
         #  Should be obsolete if constraint eqn 17 is turned on (but beware -
@@ -2317,9 +2312,6 @@ class Stellarator:
             physics_variables.t_energy_confinement,
             physics_variables.vol_plasma,
         )
-
-        # Calculate physics_variables.beta limit. Does nothing atm so commented out
-        # call stblim(physics_variables.beta_vol_avg_max)
 
         # Calculate the neoclassical sanity check with PROCESS parameters
         (
