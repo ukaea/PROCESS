@@ -1013,6 +1013,26 @@ class BlanketLibrary:
             dpres_blkt_outboard_coolant,
         ]
 
+    @staticmethod
+    def calculate_dshaped_inboard_blkt_segment_poloidal(
+        dz_blkt_half: float, n_blkt_inboard_modules_poloidal: int
+    ) -> float:
+        """Calculations for D-shaped inboard blanket module poloidal segment length
+
+        :param dz_blkt_half: Half-height of the blanket module (m)
+        :type dz_blkt_half: float
+        :param n_blkt_inboard_modules_poloidal: Number of inboard blanket modules in poloidal direction
+        :type n_blkt_inboard_modules_poloidal: int
+
+        :return: Segment length of inboard blanket module in poloidal direction (m)
+        :rtype: float
+
+        """
+
+        # D-shaped machine
+        # Segment vertical inboard surface (m)
+        return (2.0 * dz_blkt_half) / n_blkt_inboard_modules_poloidal
+
     def blanket_module_poloidal_height(self):
         """Calculations for blanket module poloidal height
 
