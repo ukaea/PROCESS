@@ -47,6 +47,11 @@ class Power:
         <I>dI/dt</I> at the time periods.
         None
         """
+        # Local aliases for readability (no functional change)
+        t_pulse_cumulative = times_variables.t_pulse_cumulative  # [s]
+        c_pf_coil_turn = pfcoil_variables.c_pf_coil_turn  # [A]
+        ind_pf_cs_plasma_mutual = pfcoil_variables.ind_pf_cs_plasma_mutual  # [H]
+
         powpfii = np.zeros((pfcoil_variables.NGC2,))
         cktr = np.zeros((pfcoil_variables.NGC2,))
         pfcr = np.zeros((pfcoil_variables.NGC2,))
@@ -134,26 +139,23 @@ class Power:
         #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils (including Central Solenoid and plasma)
         #          plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
         #  pfcoil_variables.ind_pf_cs_plasma_mutual(i,j) : mutual inductance between coil i and j
-        for i in range(pfcoil_variables.n_pf_cs_plasma_circuits):
-            powpfii[i] = 0.0e0
-            vpfi[i] = 0.0e0
+        for ii in range(pfcoil_variables.n_pf_cs_plasma_circuits):
+            powpfii[ii] = 0.0e0
+            vpfi[ii] = 0.0e0
 
         jpf = -1
         poloidalenergy[:] = 0.0e0
-        for jjpf in range(ngrpt):  # Loop over all groups of PF coils.
+        for jj in range(ngrpt):  # Loop over all groups of PF coils.
             for _jjpf2 in range(
-                pfcoil_variables.n_pf_coils_in_group[jjpf]
+                pfcoil_variables.n_pf_coils_in_group[jj]
             ):  # Loop over all coils in each group
                 jpf = jpf + 1
                 inductxcurrent[:] = 0.0e0
-                for ipf in range(pfcoil_variables.n_pf_cs_plasma_circuits):
+                for ii in range(pfcoil_variables.n_pf_cs_plasma_circuits):
                     #  Voltage in circuit jpf due to change in current from circuit ipf
                     vpfij = (
-                        pfcoil_variables.ind_pf_cs_plasma_mutual[jpf, ipf]
-                        * (
-                            pfcoil_variables.c_pf_coil_turn[ipf, 2]
-                            - pfcoil_variables.c_pf_coil_turn[ipf, 1]
-                        )
+                        ind_pf_cs_plasma_mutual[jpf, ii]
+                        * (c_pf_coil_turn[ii, 2] - c_pf_coil_turn[ii, 1])
                         / delktim
                     )
 
@@ -161,100 +163,66 @@ class Power:
                     vpfi[jpf] = vpfi[jpf] + vpfij
 
                     #  MVA in circuit jpf at time, times_variables.t_pulse_cumulative(3) due to changes in current
-                    powpfii[jpf] = (
-                        powpfii[jpf]
-                        + vpfij * pfcoil_variables.c_pf_coil_turn[jpf, 2] / 1.0e6
-                    )
+                    powpfii[jpf] = powpfii[jpf] + vpfij * c_pf_coil_turn[jpf, 2] / 1.0e6
 
                     # Term used for calculating stored energy at each time
-                    for time in range(6):
-                        inductxcurrent[time] = (
-                            inductxcurrent[time]
-                            + pfcoil_variables.ind_pf_cs_plasma_mutual[jpf, ipf]
-                            * pfcoil_variables.c_pf_coil_turn[ipf, time]
+                    for kk in range(6):
+                        inductxcurrent[kk] = (
+                            inductxcurrent[kk]
+                            + ind_pf_cs_plasma_mutual[jpf, ii] * c_pf_coil_turn[ii, kk]
                         )
-
-                    # engx = engx + pfcoil_variables.ind_pf_cs_plasma_mutual(jpf,ipf)*pfcoil_variables.c_pf_coil_turn(ipf,5)
 
                 #  Stored magnetic energy of the poloidal field at each time
                 # 'time' is the time INDEX.  't_pulse_cumulative' is the time.
-                for time in range(6):
-                    poloidalenergy[time] = (
-                        poloidalenergy[time]
-                        + 0.5e0
-                        * inductxcurrent[time]
-                        * pfcoil_variables.c_pf_coil_turn[jpf, time]
+                for kk in range(6):
+                    poloidalenergy[kk] = (
+                        poloidalenergy[kk]
+                        + 0.5e0 * inductxcurrent[kk] * c_pf_coil_turn[jpf, kk]
                     )
-
-                #   do time = 1,5
-                #     # Mean rate of change of stored energy between time and time+1
-                #     if(abs(times_variables.t_pulse_cumulative(time+1)-times_variables.t_pulse_cumulative(time)).gt.1.0e0) :
-                #         pf_power_variables.poloidalpower(time) = (poloidalenergy(time+1)-poloidalenergy(time)) / (times_variables.t_pulse_cumulative(time+1)-times_variables.t_pulse_cumulative(time))
-                #     else:
-                #         # Flag when an interval is small or zero MDK 30/11/16
-                #         pf_power_variables.poloidalpower(time) = 9.9e9
-                #
-
-                #   end do
-                #   #engxpc = 0.5e0 * engx * pfcoil_variables.c_pf_coil_turn(jpf,5)
-                #   #ensxpf = ensxpf + engxpc
 
                 #  Resistive power in circuits at times times_variables.t_pulse_cumulative(3) and times_variables.t_pulse_cumulative(5) respectively (MW)
                 powpfr = (
                     powpfr
                     + pfcoil_variables.n_pf_coil_turns[jpf]
-                    * pfcoil_variables.c_pf_coil_turn[jpf, 2]
-                    * cktr[jjpf]
+                    * c_pf_coil_turn[jpf, 2]
+                    * cktr[jj]
                     / 1.0e6
                 )
                 powpfr2 = (
                     powpfr2
                     + pfcoil_variables.n_pf_coil_turns[jpf]
-                    * pfcoil_variables.c_pf_coil_turn[jpf, 4]
-                    * cktr[jjpf]
+                    * c_pf_coil_turn[jpf, 4]
+                    * cktr[jj]
                     / 1.0e6
                 )
                 powpfi = powpfi + powpfii[jpf]
 
-        for time in range(5):
+        for ii in range(5):
             # Stored magnetic energy of the poloidal field at each time
             # 'time' is the time INDEX.  't_pulse_cumulative' is the time.
             # Mean rate of change of stored energy between time and time+1
-            if (
-                abs(
-                    times_variables.t_pulse_cumulative[time + 1]
-                    - times_variables.t_pulse_cumulative[time]
-                )
-                > 1.0e0
-            ):
-                pf_power_variables.poloidalpower[time] = (
-                    poloidalenergy[time + 1] - poloidalenergy[time]
-                ) / (
-                    times_variables.t_pulse_cumulative[time + 1]
-                    - times_variables.t_pulse_cumulative[time]
-                )
+            if abs(t_pulse_cumulative[ii + 1] - t_pulse_cumulative[ii]) > 1.0e0:
+                pf_power_variables.poloidalpower[ii] = (
+                    poloidalenergy[ii + 1] - poloidalenergy[ii]
+                ) / (t_pulse_cumulative[ii + 1] - t_pulse_cumulative[ii])
             else:
                 # Flag when an interval is small or zero MDK 30/11/16
-                pf_power_variables.poloidalpower[time] = 9.9e9
+                pf_power_variables.poloidalpower[ii] = 9.9e9
 
             # Electrical energy dissipated in PFC power supplies as they increase or decrease the poloidal field energy
             # This assumes that the energy storage in the PFC power supply is lossless and that currents
             # in the coils can be varied without loss when there is no change in the energy in the poloidal field.
             # Energy is dissipated only when energy moves into or out of the store in the power supply.
             # Issue #713
-            pfdissipation[time] = abs(
-                poloidalenergy[time + 1] - poloidalenergy[time]
-            ) * (1.0e0 / pfcoil_variables.etapsu - 1.0e0)
+            pfdissipation[ii] = abs(poloidalenergy[ii + 1] - poloidalenergy[ii]) * (
+                1.0e0 / pfcoil_variables.etapsu - 1.0e0
+            )
 
         # Mean power dissipated
         # The flat top duration (time 4 to 5) is the denominator, as this is the time when electricity is generated.
-        if (
-            times_variables.t_pulse_cumulative[4] - times_variables.t_pulse_cumulative[3]
-            > 1.0e0
-        ):
+        if t_pulse_cumulative[4] - t_pulse_cumulative[3] > 1.0e0:
             pfpower = sum(pfdissipation[:]) / (
-                times_variables.t_pulse_cumulative[4]
-                - times_variables.t_pulse_cumulative[3]
+                t_pulse_cumulative[4] - t_pulse_cumulative[3]
             )
         else:
             # Give up when an interval is small or zero.
@@ -282,20 +250,20 @@ class Power:
         pf_power_variables.acptmax = 0.0e0
         pf_power_variables.spsmva = 0.0e0
 
-        for jpf in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
+        for ii in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
             #  Power supply MVA for each PF circuit
-            psmva[jpf] = 1.0e-6 * abs(
-                vpfi[jpf] * pfcoil_variables.c_pf_coil_turn_peak_input[jpf]
+            psmva[ii] = 1.0e-6 * abs(
+                vpfi[ii] * pfcoil_variables.c_pf_coil_turn_peak_input[ii]
             )
 
             #  Sum of the power supply MVA of the PF circuits
-            pf_power_variables.spsmva = pf_power_variables.spsmva + psmva[jpf]
+            pf_power_variables.spsmva = pf_power_variables.spsmva + psmva[ii]
 
             #  Average of the maximum currents in the PF circuits, kA
             pf_power_variables.acptmax = (
                 pf_power_variables.acptmax
                 + 1.0e-3
-                * abs(pfcoil_variables.c_pf_coil_turn_peak_input[jpf])
+                * abs(pfcoil_variables.c_pf_coil_turn_peak_input[ii])
                 / pf_power_variables.pfckts
             )
 
