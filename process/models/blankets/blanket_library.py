@@ -1033,6 +1033,70 @@ class BlanketLibrary:
         # Segment vertical inboard surface (m)
         return (2.0 * dz_blkt_half) / n_blkt_inboard_modules_poloidal
 
+    @staticmethod
+    def calculate_dshaped_outboard_blkt_segment_poloidal(
+        n_blkt_outboard_modules_poloidal: int,
+        dr_fw_plasma_gap_inboard: float,
+        rminor: float,
+        dr_fw_plasma_gap_outboard: float,
+        dz_blkt_half: float,
+        n_divertors: int,
+        f_ster_div_single: float,
+    ) -> float:
+        """
+        Calculations for D-shaped outboard blanket module poloidal segment length
+
+        :param n_blkt_outboard_modules_poloidal: Number of outboard blanket modules in poloidal direction
+        :type n_blkt_outboard_modules_poloidal: int
+        :param dr_fw_plasma_gap_inboard: Radial gap between inboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_inboard: float
+        :param rminor: Minor radius of the plasma (m)
+        :type rminor: float
+        :param dr_fw_plasma_gap_outboard: Radial gap between outboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_outboard: float
+        :param dz_blkt_half: Half-height of the blanket module (m)
+        :type dz_blkt_half: float
+        :param n_divertors: Number of divertors (1 for single null, 2 for double null)
+        :type n_divertors: int
+        :param f_ster_div_single: Fractional poloidal length of the divertor in single null configuration
+        :type f_ster_div_single: float
+
+        :return: Segment length of outboard blanket module in poloidal direction (m)
+        :rtype: float
+
+
+        """
+
+        # Calculate perimeter of ellipse that defines the internal
+        # surface of the outboard first wall / blanket
+
+        # Mid-plane distance from inboard to outboard side (m)
+        a = dr_fw_plasma_gap_inboard + 2.0 * rminor + dr_fw_plasma_gap_outboard
+
+        # Internal half-height of blanket (m)
+        b = dz_blkt_half
+
+        # Calculate ellipse circumference using Ramanujan approximation (m)
+        ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
+
+        # Calculate blanket poloidal length and segment, subtracting divertor length (m)
+        # kit hcll version only had the single null option
+        if n_divertors == 2:
+            # Double null configuration
+            len_blkt_outboard_segment_poloidal = (
+                0.5
+                * ptor
+                * (1.0 - 2.0 * f_ster_div_single)
+                / n_blkt_outboard_modules_poloidal
+            )
+        else:
+            # single null configuration
+            len_blkt_outboard_segment_poloidal = (
+                0.5 * ptor * (1.0 - f_ster_div_single) / n_blkt_outboard_modules_poloidal
+            )
+
+        return len_blkt_outboard_segment_poloidal
+
     def blanket_module_poloidal_height(self):
         """Calculations for blanket module poloidal height
 
