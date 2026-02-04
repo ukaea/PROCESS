@@ -11,7 +11,7 @@ from process.data_structure import (
 )
 
 
-def st_div(stellarator, output: bool):
+def st_div(stellarator, f_output: bool):
     """Routine to call the stellarator divertor model
     author: P J Knight, CCFE, Culham Science Centre
     author: F Warmer, IPP Greifswald
@@ -97,7 +97,7 @@ def st_div(stellarator, output: bool):
 
     fwbs_variables.f_ster_div_single = darea / build_variables.a_fw_total
 
-    if output:
+    if f_output:
         output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta)
 
 

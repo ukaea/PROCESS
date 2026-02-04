@@ -13,7 +13,7 @@ from process.exceptions import ProcessValueError
 logger = logging.getLogger(__name__)
 
 
-def st_denisty_limits(stellarator, output):
+def st_denisty_limits(stellarator, f_output):
     """Routine to reiterate the physics loop
     author: J Lion, IPP Greifswald
     None
@@ -38,7 +38,7 @@ def st_denisty_limits(stellarator, output):
     ne0_max_ECRH = min(physics_variables.nd_plasma_electron_on_axis, ne0_max_ECRH)
     bt_ecrh = min(physics_variables.b_plasma_toroidal_on_axis, bt_ecrh)
 
-    if output:
+    if f_output:
         output(
             stellarator,
             bt_ecrh,

@@ -8,7 +8,7 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 
 
-def st_heat(stellarator, output: bool):
+def st_heat(stellarator, f_output: bool):
     """Routine to calculate the auxiliary heating power
     in a stellarator
     author: P J Knight, CCFE, Culham Science Centre
@@ -122,7 +122,7 @@ def st_heat(stellarator, output: bool):
             + physics_variables.p_plasma_ohmic_mw
         )
 
-    if output:
+    if f_output:
         output(stellarator, f_p_beam_injected_ions)
 
 
