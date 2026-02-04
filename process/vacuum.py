@@ -4,6 +4,7 @@ import math
 import numpy as np
 
 from process import constants, process_output
+from process import process_output as po
 from process.blanket_library import dshellvol, eshellvol
 from process.data_structure import (
     blanket_library,
@@ -732,7 +733,7 @@ class VacuumVessel:
     """Class containing vacuum vessel routines"""
 
     def __init__(self) -> None:
-        pass
+        self.outfile = constants.NOUT
 
     def run(self) -> None:
         blanket_library.dz_vv_half = self.calculate_vessel_half_height(
@@ -891,3 +892,30 @@ class VacuumVessel:
             (dz_vv_upper + dz_vv_lower) / 2,
         )
         return vol_vv_inboard, vol_vv_outboard, vol_vv
+
+    def output_vv_areas_and_volumes(self) -> None:
+        """Output shield areas and volumes to log."""
+
+        po.oheadr(self.outfile, "Vacuum Vessel Areas and Volumes")
+
+        po.ovarrf(
+            self.outfile,
+            "Volume of inboard vacuum vessel (m^3)",
+            "(vol_vv_inboard)",
+            blanket_library.vol_vv_inboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Volume of outboard vacuum vessel (m^3)",
+            "(vol_vv_outboard)",
+            blanket_library.vol_vv_outboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Total volume of vacuum vessel (m^3)",
+            "(vol_vv)",
+            fwbs_variables.vol_vv,
+            "OP ",
+        )

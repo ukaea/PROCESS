@@ -1,5 +1,7 @@
 import logging
 
+from process import constants
+from process import process_output as po
 from process.blanket_library import dshellarea, dshellvol, eshellarea, eshellvol
 from process.data_structure import blanket_library as blanket_library
 from process.data_structure import build_variables as build_variables
@@ -13,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class Shield:
     def __init__(self) -> None:
-        pass
+        self.outfile = constants.NOUT
 
     def run(self) -> None:
         blanket_library.dz_shld_half = self.calculate_shield_half_height(
@@ -301,3 +303,51 @@ class Shield:
         ) = eshellarea(rshell=r_1, rmini=r_2, rmino=r_3, zminor=dz_shld_half)
 
         return a_shld_inboard_surface, a_shld_outboard_surface, a_shld_total_surface
+
+    def output_shld_areas_and_volumes(self) -> None:
+        """Output shield areas and volumes to log."""
+
+        po.oheadr(self.outfile, "Shield Areas and Volumes")
+
+        po.ovarrf(
+            self.outfile,
+            "Area of inboard shield surface (m^2)",
+            "(a_shld_inboard_surface)",
+            build_variables.a_shld_inboard_surface,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Area of outboard shield surface (m^2)",
+            "(a_shld_outboard_surface)",
+            build_variables.a_shld_outboard_surface,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Total area of shield surface (m^2)",
+            "(a_shld_total_surface)",
+            build_variables.a_shld_total_surface,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Volume of inboard shield (m^3)",
+            "(vol_shld_inboard)",
+            blanket_library.vol_shld_inboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Volume of outboard shield (m^3)",
+            "(vol_shld_outboard)",
+            blanket_library.vol_shld_outboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Total volume of shield (m^3)",
+            "(vol_shld_total)",
+            fwbs_variables.vol_shld_total,
+            "OP ",
+        )
