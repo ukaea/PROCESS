@@ -1743,107 +1743,7 @@ class Physics:
         # Beta Components
         # -----------------------------------------------------
 
-        physics_variables.beta_toroidal_vol_avg = (
-            physics_variables.beta_total_vol_avg
-            * physics_variables.b_plasma_total**2
-            / physics_variables.b_plasma_toroidal_on_axis**2
-        )
-
-        # Calculate physics_variables.beta poloidal [-]
-        physics_variables.beta_poloidal_vol_avg = self.beta.calculate_poloidal_beta(
-            b_plasma_total=physics_variables.b_plasma_total,
-            b_plasma_poloidal_average=physics_variables.b_plasma_poloidal_average,
-            beta=physics_variables.beta_total_vol_avg,
-        )
-
-        physics_variables.beta_thermal_vol_avg = (
-            physics_variables.beta_total_vol_avg
-            - physics_variables.beta_fast_alpha
-            - physics_variables.beta_beam
-        )
-
-        physics_variables.beta_poloidal_eps = (
-            physics_variables.beta_poloidal_vol_avg * physics_variables.eps
-        )
-
-        physics_variables.beta_thermal_poloidal_vol_avg = (
-            physics_variables.beta_thermal_vol_avg
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_poloidal_average
-            )
-            ** 2
-        )
-        physics_variables.beta_thermal_toroidal_vol_avg = (
-            physics_variables.beta_thermal_vol_avg
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_toroidal_on_axis
-            )
-            ** 2
-        )
-
-        # =======================================================
-
-        # Mirror the pressure profiles to match the doubled toroidal field profile
-        pres_profile_total = np.concatenate([
-            physics_variables.pres_plasma_thermal_total_profile[::-1],
-            physics_variables.pres_plasma_thermal_total_profile,
-        ])
-
-        physics_variables.beta_thermal_toroidal_profile = np.array([
-            self.calculate_plasma_beta(
-                pres_plasma=pres_profile_total[i],
-                b_field=physics_variables.b_plasma_toroidal_profile[i],
-            )
-            for i in range(len(physics_variables.b_plasma_toroidal_profile))
-        ])
-
-        # =======================================================
-
-        physics_variables.beta_norm_thermal = self.beta.calculate_normalised_beta(
-            beta=physics_variables.beta_thermal_vol_avg,
-            rminor=physics_variables.rminor,
-            c_plasma=physics_variables.plasma_current,
-            b_field=physics_variables.b_plasma_toroidal_on_axis,
-        )
-
-        physics_variables.beta_norm_toroidal = (
-            physics_variables.beta_norm_total
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_toroidal_on_axis
-            )
-            ** 2
-        )
-        physics_variables.beta_norm_poloidal = (
-            physics_variables.beta_norm_total
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_poloidal_average
-            )
-            ** 2
-        )
-
-        physics_variables.f_beta_alpha_beam_thermal = (
-            physics_variables.beta_fast_alpha + physics_variables.beta_beam
-        ) / physics_variables.beta_thermal_vol_avg
-
-        # Plasma thermal energy derived from the thermal beta
-        physics_variables.e_plasma_beta_thermal = (
-            self.beta.calculate_plasma_energy_from_beta(
-                beta=physics_variables.beta_thermal_vol_avg,
-                b_field=physics_variables.b_plasma_total,
-                vol_plasma=physics_variables.vol_plasma,
-            )
-        )
-
-        # Plasma thermal energy derived from the total beta
-        physics_variables.e_plasma_beta = self.beta.calculate_plasma_energy_from_beta(
-            beta=physics_variables.beta_total_vol_avg,
-            b_field=physics_variables.b_plasma_total,
-            vol_plasma=physics_variables.vol_plasma,
-        )
+        self.beta.run()
 
         # =======================================================
 
@@ -3766,22 +3666,6 @@ class Physics:
         )
 
         return b_plasma_poloidal_average, qstar, plasma_current
-
-    def calculate_plasma_beta(self, pres_plasma: float, b_field: float) -> float:
-        """
-        Calculate the plasma beta for a given pressure and field.
-
-        :param pres_plasma: Plasma pressure (in Pascals).
-        :type pres_plasma: float
-        :param b_field: Magnetic field strength (in Tesla).
-        :type b_field: float
-        :returns: The plasma beta (dimensionless).
-        :rtype: float
-
-        Plasma beta is the ratio of plasma pressure to magnetic pressure.
-        """
-
-        return 2 * constants.RMU0 * pres_plasma / (b_field**2)
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -8606,6 +8490,130 @@ class PlasmaBeta:
             BetaNormMaxModel.STAMBAUGH: physics_variables.beta_norm_max_stambaugh,
         }
         return model_map[model]
+
+    def run(self) -> None:
+        """
+        Calculate plasma beta values.
+        """
+
+        physics_variables.beta_toroidal_vol_avg = (
+            physics_variables.beta_total_vol_avg
+            * physics_variables.b_plasma_total**2
+            / physics_variables.b_plasma_toroidal_on_axis**2
+        )
+
+        # Calculate physics_variables.beta poloidal [-]
+        physics_variables.beta_poloidal_vol_avg = self.calculate_poloidal_beta(
+            b_plasma_total=physics_variables.b_plasma_total,
+            b_plasma_poloidal_average=physics_variables.b_plasma_poloidal_average,
+            beta=physics_variables.beta_total_vol_avg,
+        )
+
+        physics_variables.beta_thermal_vol_avg = (
+            physics_variables.beta_total_vol_avg
+            - physics_variables.beta_fast_alpha
+            - physics_variables.beta_beam
+        )
+
+        physics_variables.beta_poloidal_eps = (
+            physics_variables.beta_poloidal_vol_avg * physics_variables.eps
+        )
+
+        physics_variables.beta_thermal_poloidal_vol_avg = (
+            physics_variables.beta_thermal_vol_avg
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
+            ** 2
+        )
+        physics_variables.beta_thermal_toroidal_vol_avg = (
+            physics_variables.beta_thermal_vol_avg
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
+            ** 2
+        )
+
+        # =======================================================
+
+        # Mirror the pressure profiles to match the doubled toroidal field profile
+        pres_profile_total = np.concatenate([
+            physics_variables.pres_plasma_thermal_total_profile[::-1],
+            physics_variables.pres_plasma_thermal_total_profile,
+        ])
+
+        physics_variables.beta_thermal_toroidal_profile = np.array([
+            self.calculate_plasma_beta(
+                pres_plasma=pres_profile_total[i],
+                b_field=physics_variables.b_plasma_toroidal_profile[i],
+            )
+            for i in range(len(physics_variables.b_plasma_toroidal_profile))
+        ])
+
+        # =======================================================
+
+        physics_variables.beta_norm_thermal = self.calculate_normalised_beta(
+            beta=physics_variables.beta_thermal_vol_avg,
+            rminor=physics_variables.rminor,
+            c_plasma=physics_variables.plasma_current,
+            b_field=physics_variables.b_plasma_toroidal_on_axis,
+        )
+
+        physics_variables.beta_norm_toroidal = (
+            physics_variables.beta_norm_total
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
+            ** 2
+        )
+        physics_variables.beta_norm_poloidal = (
+            physics_variables.beta_norm_total
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
+            ** 2
+        )
+
+        physics_variables.f_beta_alpha_beam_thermal = (
+            physics_variables.beta_fast_alpha + physics_variables.beta_beam
+        ) / physics_variables.beta_thermal_vol_avg
+
+        # Plasma thermal energy derived from the thermal beta
+        physics_variables.e_plasma_beta_thermal = self.calculate_plasma_energy_from_beta(
+            beta=physics_variables.beta_thermal_vol_avg,
+            b_field=physics_variables.b_plasma_total,
+            vol_plasma=physics_variables.vol_plasma,
+        )
+
+        # Plasma thermal energy derived from the total beta
+        physics_variables.e_plasma_beta = self.calculate_plasma_energy_from_beta(
+            beta=physics_variables.beta_total_vol_avg,
+            b_field=physics_variables.b_plasma_total,
+            vol_plasma=physics_variables.vol_plasma,
+        )
+
+    @staticmethod
+    def calculate_plasma_beta(
+        pres_plasma: float | np.ndarray, b_field: float | np.ndarray
+    ) -> float | np.ndarray:
+        """
+        Calculate the plasma beta (β) for a given pressure and field.
+
+        :param pres_plasma: Plasma pressure (in Pascals).
+        :type pres_plasma: float | np.ndarray
+        :param b_field: Magnetic field strength (in Tesla).
+        :type b_field: float | np.ndarray
+        :returns: The plasma beta (dimensionless).
+        :rtype: float | np.ndarray
+
+        Plasma beta is the ratio of plasma pressure to magnetic pressure.
+        """
+
+        return 2 * constants.RMU0 * pres_plasma / (b_field**2)
 
     @staticmethod
     def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
