@@ -109,6 +109,9 @@ def write(models, _outfile):
     # 4    |  KIT HCLL model
     # 5    |  DCLL model
 
+    models.shield.output_shld_areas_and_volumes()
+    models.vacuum_vessel.output_vv_areas_and_volumes()
+
     # First wall geometry
     models.fw.output_fw_geometry()
 
