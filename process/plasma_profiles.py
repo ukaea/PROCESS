@@ -120,7 +120,7 @@ class PlasmaProfile:
             or physics_variables.nd_plasma_separatrix_electron != 0.0
             or physics_variables.tbeta != 2.0
         ):
-            logger.info(
+            logger.error(
                 "Parabolic plasma profiles is used for an L-Mode plasma, "
                 "but the physics variables do not describe an L-Mode plasma. "
                 "'radius_plasma_pedestal_temp_norm', 'radius_plasma_pedestal_density_norm', 'temp_plasma_pedestal_kev', 'temp_plasma_separatrix_kev', 'nd_plasma_pedestal_electron', 'nd_plasma_separatrix_electron', "

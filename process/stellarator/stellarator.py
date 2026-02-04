@@ -9,7 +9,7 @@ from process.stellarator.build import st_build
 from process.stellarator.denisty_limits import power_at_ignition_point, st_denisty_limits
 from process.stellarator.divertor import st_div
 from process.stellarator.heating import st_heat
-from process.stellarator.coils.caller import st_coil
+from process.stellarator.coils.calculate import st_coil
 from process import constants
 from process import process_output as po
 from process.coolprop_interface import FluidProperties
@@ -212,21 +212,21 @@ class Stellarator:
             * stellarator_configuration.stella_config_symmetry
         )  # This overwrites tfcoil_variables.n_tf_coils in input file.
 
-        stellarator_variables.f_r = (
+        stellarator_variables.f_st_rmajor = (
             physics_variables.rmajor / stellarator_configuration.stella_config_rmajor_ref
         )  # Size scaling factor with respect to the reference calculation
-        stellarator_variables.f_a = (
+        stellarator_variables.f_st_rminor = (
             physics_variables.rminor / stellarator_configuration.stella_config_rminor_ref
         )  # Size scaling factor with respect to the reference calculation
 
-        stellarator_variables.f_aspect = (
+        stellarator_variables.f_st_aspect = (
             physics_variables.aspect / stellarator_configuration.stella_config_aspect_ref
         )
-        stellarator_variables.f_n = tfcoil_variables.n_tf_coils / (
+        stellarator_variables.f_st_n_coils = tfcoil_variables.n_tf_coils / (
             stellarator_configuration.stella_config_coilspermodule
             * stellarator_configuration.stella_config_symmetry
         )  # Coil number factor
-        stellarator_variables.f_b = (
+        stellarator_variables.f_st_b = (
             physics_variables.b_plasma_toroidal_on_axis / stellarator_configuration.stella_config_bt_ref
         )  # B-field scaling factor
 
@@ -241,9 +241,9 @@ class Stellarator:
         # ) 
 
         # Coil major radius, scaled with respect to the reference calculation
-        stellarator_variables.r_coil_major = stellarator_configuration.stella_config_coil_rmajor * stellarator_variables.f_r
+        stellarator_variables.r_coil_major = stellarator_configuration.stella_config_coil_rmajor * stellarator_variables.f_st_rmajor
         # Coil minor radius, scaled with respect to the reference calculation
-        stellarator_variables.r_coil_minor = stellarator_configuration.stella_config_coil_rminor * stellarator_variables.f_r / stellarator_variables.f_coil_aspect
+        stellarator_variables.r_coil_minor = stellarator_configuration.stella_config_coil_rminor * stellarator_variables.f_st_rmajor / stellarator_variables.f_coil_aspect
 
         stellarator_variables.f_coil_shape = (( stellarator_configuration.stella_config_min_plasma_coil_distance
                            + stellarator_configuration.stella_config_rminor_ref )
@@ -267,15 +267,15 @@ class Stellarator:
         """
         physics_variables.vol_plasma = (
             # stellarator_variables.f_r * stellarator_variables.f_a**2 * stellarator_configuration.stella_config_plasma_volume
-            stellarator_variables.f_r 
-            * stellarator_variables.f_a**2 
+            stellarator_variables.f_st_rmajor 
+            * stellarator_variables.f_st_rminor**2 
             * stellarator_configuration.stella_config_vol_plasma
         )
 
         # Plasma surface scaled from effective parameter:
         physics_variables.a_plasma_surface = (
-            stellarator_variables.f_r 
-            * stellarator_variables.f_a 
+            stellarator_variables.f_st_rmajor 
+            * stellarator_variables.f_st_rminor 
             * stellarator_configuration.stella_config_plasma_surface
         )
 
@@ -328,7 +328,7 @@ class Stellarator:
         # Calculate the intercoil bolted plates structure from the coil surface
 
         intercoil_surface = (
-            stellarator_configuration.stella_config_coilsurface * stellarator_variables.f_r
+            stellarator_configuration.stella_config_coilsurface * stellarator_variables.f_st_rmajor
             * (stellarator_variables.r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
             - tfcoil_variables.dx_tf_inboard_out_toroidal
             * tfcoil_variables.len_tf_coil
@@ -1601,21 +1601,6 @@ class Stellarator:
                     po.ocmmnt(self.outfile, "   (Simple calculation)")
 
             po.osubhd(self.outfile, "Blanket / shield volumes and weights :")
-
-            #     if (fwbs_variables.blktmodel == 0) :
-            #         if ((fwbs_variables.blkttype == 1)or(fwbs_variables.blkttype == 2)) :
-            #             po.write(self.outfile,601) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, f_a_blkt_cooling_channels, fbllipb, wtbllipb, fblli, m_blkt_lithium,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, vol_shld_inboard, vol_shld_outboard,                vol_shld_total, whtshld, vfshld, fwbs_variables.wpenshld
-            #         else:  #  (also if ipowerflow=0)
-            #             po.write(self.outfile,600) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, f_a_blkt_cooling_channels, fblbe, m_blkt_beryllium, fblli2o, m_blkt_li2o,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, vol_shld_inboard, vol_shld_outboard,                vol_shld_total, whtshld, vfshld, fwbs_variables.wpenshld
-
-            #     else:
-            #         po.write(self.outfile,602) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total, m_blkt_total, f_a_blkt_cooling_channels,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, m_blkt_beryllium,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             m_blkt_steel_total,             vol_shld_inboard, vol_shld_outboard, vol_shld_total, whtshld, vfshld, fwbs_variables.wpenshld
-
-            # 600 format(          t32,'volume (m3)',t45,'vol fraction',t62,'weight (kg)'/          t32,'-----------',t45,'------------',t62,'-----------'/          '    Inboard blanket' ,t32,1pe10.3,/          '    Outboard blanket' ,t32,1pe10.3,/          '    Total blanket' ,t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '       Blanket Be   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Li2O ',t45,1pe10.3,t62,1pe10.3/          '       Blanket ss   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Vd   ',t45,1pe10.3,t62,1pe10.3/          '    Inboard shield'  ,t32,1pe10.3,/          '    Outboard shield'  ,t32,1pe10.3,/          '    Primary shield',t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '    Penetration shield'        ,t62,1pe10.3)
-
-            # 601 format(          t32,'volume (m3)',t45,'vol fraction',t62,'weight (kg)'/          t32,'-----------',t45,'------------',t62,'-----------'/          '    Inboard blanket' ,t32,1pe10.3,/          '    Outboard blanket' ,t32,1pe10.3,/          '    Total blanket' ,t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '       Blanket LiPb ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Li   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket ss   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Vd   ',t45,1pe10.3,t62,1pe10.3/          '    Inboard shield'  ,t32,1pe10.3,/          '    Outboard shield'  ,t32,1pe10.3,/          '    Primary shield',t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '    Penetration shield'        ,t62,1pe10.3)
-
-            # 602 format(          t32,'volume (m3)',t45,'vol fraction',t62,'weight (kg)'/          t32,'-----------',t45,'------------',t62,'-----------'/          '    Inboard blanket' ,t32,1pe10.3,/          '    Outboard blanket' ,t32,1pe10.3,/          '    Total blanket' ,t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '       Blanket Be   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket breeder',t45,1pe10.3,t62,1pe10.3/          '       Blanket steel',t45,1pe10.3,t62,1pe10.3/          '    Inboard shield'  ,t32,1pe10.3,/          '    Outboard shield'  ,t32,1pe10.3,/          '    Primary shield',t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '    Penetration shield'        ,t62,1pe10.3)
 
             po.osubhd(self.outfile, "Other volumes, masses and areas :")
             po.ovarre(

@@ -91,9 +91,9 @@ def st_build(stellarator, output: bool):
         # derivative_min_LCFS_coils_dist  for how strong the stellarator shape changes wrt to aspect ratio
         build_variables.available_radial_space = (
             (st.r_coil_minor * st.f_coil_shape
-                - st.f_r * stellarator_configuration.stella_config_rminor_ref)
+                - st.f_st_rmajor * stellarator_configuration.stella_config_rminor_ref)
             + stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist
-                * (physics_variables.rminor - st.f_r * stellarator_configuration.stella_config_rminor_ref)
+                * (physics_variables.rminor - st.f_st_rmajor * stellarator_configuration.stella_config_rminor_ref)
         )
         # This is the old version, left for now for comparison.
         # build_variables.available_radial_space = stellarator_variables.f_r * (

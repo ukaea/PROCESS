@@ -99,10 +99,10 @@ def st_div(stellarator, output: bool):
     fwbs_variables.f_ster_div_single = darea / build_variables.a_fw_total
 
     if output:
-        print_output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta)
+        output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta)
 
 
-def print_output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
+def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
     """
     Outputs a summary of divertor-related parameters and results to the stellartor object.
 

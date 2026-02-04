@@ -38,7 +38,7 @@ def st_denisty_limits(stellarator, output):
     bt_ecrh = min(physics_variables.b_plasma_toroidal_on_axis, bt_ecrh)
 
     if output:
-        print_output(
+        output(
             stellarator,
             bt_ecrh,
             ne0_max_ECRH,
@@ -175,7 +175,7 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
         return powerht_out, pscalingmw_out
 
 
-def print_output(stellarator, bt_ecrh, ne0_max_ECRH):
+def output(stellarator, bt_ecrh, ne0_max_ECRH):
     po.oheadr(stellarator.outfile, "ECRH Ignition at lower values. Information:")
 
     po.ovarre(

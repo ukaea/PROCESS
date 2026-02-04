@@ -758,7 +758,7 @@ class Neoclassics:
     def st_calc_eff_chi(self):
         volscaling = (
             physics_variables.vol_plasma
-            * stellarator_variables.f_r
+            * stellarator_variables.f_st_rmajor
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
@@ -768,7 +768,7 @@ class Neoclassics:
         )
         surfacescaling = (
             physics_variables.a_plasma_surface
-            * stellarator_variables.f_r
+            * stellarator_variables.f_st_rmajor
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor

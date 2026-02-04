@@ -1,19 +1,24 @@
 # These variables were from stellarator.f90
-f_n: float = None
+f_st_n_coils: float = None
+"""Actual number of coils to reference value from stella_config file"""
 
-f_r: float = None
+f_st_rmajor: float = None
+"""Actual major radius to reference value from stella_config file"""
 
-f_aspect: float = None
+f_st_aspect: float = None
+"""Actual aspect ratio to reference value from stella_config file"""
 
 f_st_coil_aspect:float = None
+"""Scaling factor for (stellarator major radius / coil radius ratio)"""
 
-f_b: float = None
+f_st_b: float = None
 """Actual b_plasma_toroidal_on_axis to reference value from stella_config file """
 
-f_i: float = None
+f_st_i_total: float = None
 """Actual totail coil current to reference value from stella_config file"""
 
-f_a: float = None
+f_st_rminor: float = None
+"""Actual minor radius to reference value from stella_config file"""
 
 first_call: bool = None
 
@@ -101,11 +106,11 @@ def init_stellarator_variables():
     global \
         first_call, \
         first_call_stfwbs, \
-        f_n, \
-        f_r, \
-        f_a, \
-        f_b, \
-        f_i, \
+        f_st_n_coils, \
+        f_st_rmajor, \
+        f_st_rminor, \
+        f_st_b, \
+        f_st_i_total, \
         istell, \
         bmn, \
         f_asym, \
@@ -132,11 +137,11 @@ def init_stellarator_variables():
 
     first_call = True
     first_call_stfwbs = True
-    f_n = 0.0
-    f_r = 0.0
-    f_a = 0.0
-    f_b = 0.0
-    f_i = 0.0
+    f_st_n_coils = 0.0
+    f_st_rmajor = 0.0
+    f_st_rminor = 0.0
+    f_st_b = 0.0
+    f_st_i_total = 0.0
     istell = 0
     bmn = 1e-3
     f_asym = 1.0

@@ -13,7 +13,8 @@ from process.data_structure import (
 )
 
 import numpy as np
-import warnings
+import logging
+logger = logging.getLogger(__name__)
 
 from process.stellarator.coils.output import write
 
@@ -87,7 +88,7 @@ def st_coil(stellarator, output: bool):
 
     # [m^2] Total surface area of toroidal shells covering coils
     tfcoil_variables.tfcryoarea = (
-        stellarator_configuration.stella_config_coilsurface * stellarator_variables.f_r
+        stellarator_configuration.stella_config_coilsurface * stellarator_variables.f_st_rmajor
         * (stellarator_variables.r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
         * 1.1e0
     )
@@ -97,7 +98,7 @@ def st_coil(stellarator, output: bool):
     # Minimal bending radius:
     min_bending_radius = (
         stellarator_configuration.stella_config_min_bend_radius
-        * stellarator_variables.f_r
+        * stellarator_variables.f_st_rmajor
         / (1.0 - tfcoil_variables.dr_tf_wp_with_insulation / (2.0 * r_coil_minor))
     )
 
@@ -256,9 +257,9 @@ def calculate_inductnace(r_coil_minor):
     """ This uses the reference value for the inductance and scales it with a^2/R (toroid inductance scaling) """
     inductance = (
         stellarator_configuration.stella_config_inductance
-        / stellarator_variables.f_r
+        / stellarator_variables.f_st_rmajor
         * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
-        * stellarator_variables.f_n**2
+        * stellarator_variables.f_st_n_coils**2
     )
     return inductance
 
@@ -269,9 +270,9 @@ def calculate_stored_magnetic_energy(r_coil_minor):
         0.5e0
         * (
             stellarator_configuration.stella_config_inductance
-            / stellarator_variables.f_r
+            / stellarator_variables.f_st_rmajor
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
-            * stellarator_variables.f_n**2
+            * stellarator_variables.f_st_n_coils**2
         )
         * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
         * 1.0e-9
@@ -288,7 +289,7 @@ def calculate_winding_pack_geometry():
         tfcoil_variables.dx_tf_turn_steel + tfcoil_variables.dx_tf_turn_insulation
     )  # dx_tf_turn_cable_space_average = t_w
     if dx_tf_turn_cable_space_average < 0:
-        warnings.warn("Warning: Negative cable space dimension in TF coil winding pack. Check input parameters.")
+        logger.warning("Warning: Negative cable space dimension in TF coil winding pack. Check input parameters.")
         print(
             "dx_tf_turn_cable_space_average is negative. Check t_turn, tfcoil_variables.dx_tf_turn_steel and dx_tf_turn_insulation."
         )
@@ -309,12 +310,12 @@ def calculate_current():
     Update stellarator_variables.f_i
     """
     coilcurrent = (
-        stellarator_variables.f_b 
+        stellarator_variables.f_st_b 
         * stellarator_configuration.stella_config_i0 
-        * stellarator_variables.f_r 
-        / stellarator_variables.f_n
+        * stellarator_variables.f_st_rmajor 
+        / stellarator_variables.f_st_n_coils
     )
-    stellarator_variables.f_i = coilcurrent / stellarator_configuration.stella_config_i0
+    stellarator_variables.f_st_i_total = coilcurrent / stellarator_configuration.stella_config_i0
     return coilcurrent
 
 
@@ -499,8 +500,8 @@ def calculate_vertical_ports():
     stellarator_variables.vporttmax = (
         0.4e0
         * stellarator_configuration.stella_config_max_portsize_width
-        * stellarator_variables.f_r
-        / stellarator_variables.f_n
+        * stellarator_variables.f_st_rmajor
+        / stellarator_variables.f_st_n_coils
     )  # This is not accurate yet. Needs more insight#
 
     #  Maximal poloidal port size (vertical ports) (m)
@@ -518,8 +519,8 @@ def calculate_horizontal_ports():
     stellarator_variables.hporttmax = (
         0.8e0
         * stellarator_configuration.stella_config_max_portsize_width
-        * stellarator_variables.f_r
-        / stellarator_variables.f_n
+        * stellarator_variables.f_st_rmajor
+        / stellarator_variables.f_st_n_coils
     )  # Factor 0.8 to take the variation with height into account
 
     #  Maximal poloidal port size (horizontal ports) (m)

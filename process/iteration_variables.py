@@ -288,7 +288,7 @@ ITERATION_VARIABLES = {
     ),
     174: IterationVariable("triang", data_structure.physics_variables, 0.00, 1.00),
     175: IterationVariable("kappa", data_structure.physics_variables, 0.00, 10.00),
-    176: IterationVariable("f_st_coil_aspect", data_structure.stellarator_variables, 0.80, 1.20),
+    176: IterationVariable("f_st_coil_aspect", data_structure.stellarator_variables, 0.70, 1.30),
 }
 
 

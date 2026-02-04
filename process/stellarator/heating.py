@@ -128,10 +128,10 @@ def st_heat(stellarator, output: bool):
         )
 
     if output:
-        print_output(stellarator, f_p_beam_injected_ions)
+        output(stellarator, f_p_beam_injected_ions)
 
 
-def print_output(stellarator, f_p_beam_injected_ions=None):
+def output(stellarator, f_p_beam_injected_ions=None):
     po.oheadr(stellarator.outfile, "Auxiliary Heating System")
 
     if stellarator_variables.isthtr == 1:

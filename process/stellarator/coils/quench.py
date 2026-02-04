@@ -98,7 +98,7 @@ def calculate_quench_protection(coilcurrent):
 
 
 def calculate_vv_max_force_density_from_W7X_scaling(rad_vv:float) -> float:
-    """ Actual VV force density  
+    """ Actual VV force density from scaling [MN/m^3] 
     Based on reference values from W-7X."""
     f_ref = 2.54    # MN/m^3
     B_ref = 3.0     # T
@@ -140,6 +140,13 @@ def calculate_quench_protection_current_density(tau_quench, t_detect, f_cu, f_co
 
     This is slightly diffrent that tokamak version (also diffrent from the stellarator paper). 
     We skip the superconduc6tor contribution (this should be more conservative in theory). 
+    tau_quench : Quench time (s)
+    t_detect : Detection time (s)
+    f_cu : Copper fraction
+    f_cond : Conductor fraction
+    temp : peak helium coolant temperature in TF coils and PF coils (K)
+    a_cable : Cable space area (per turn)  [m2] (Includes the area of voids and central helium channel)
+    a_turn : TF coil turn cross section area [m2]
     """
     temp_k = [4, 14, 24, 34, 44, 54, 64, 74, 84, 94, 104, 114, 124]
     q_cu_array_sa2m4 = [
