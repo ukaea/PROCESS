@@ -481,8 +481,6 @@ class Neoclassics:
 
     def neoclassics_calc_nu_star(self):
         """Calculates the normalized collision frequency"""
-        # k = np.repeat(neoclassics_variables.roots[:, np.newaxis], 4, axis=1)
-        # kk = (k * neoclassics_variables.temperatures).T
 
         mass = np.array([
             constants.ELECTRON_MASS,

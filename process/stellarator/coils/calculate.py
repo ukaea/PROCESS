@@ -301,7 +301,7 @@ def calculate_winding_pack_geometry():
         logger.warning(
             "Warning: Negative cable space dimension in TF coil winding pack. Check input parameters."
         )
-        print(
+        logger.info(
             "dx_tf_turn_cable_space_average is negative. Check t_turn, tfcoil_variables.dx_tf_turn_steel and dx_tf_turn_insulation."
         )
     # [m^2] Cross-sectional area of cable space per turn

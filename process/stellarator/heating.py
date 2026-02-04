@@ -1,3 +1,5 @@
+import logging
+
 from process import process_output as po
 from process.data_structure import (
     current_drive_variables,
@@ -6,6 +8,8 @@ from process.data_structure import (
     stellarator_variables,
 )
 from process.exceptions import ProcessValueError
+
+logger = logging.getLogger(__name__)
 
 
 def st_heat(stellarator, f_output: bool):
@@ -80,8 +84,8 @@ def st_heat(stellarator, f_output: bool):
             + current_drive_variables.p_hcd_injected_electrons_mw
         ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
     else:
-        print("isthtr", stellarator_variables.isthtr, "\n")
-        print("isthtr type", type(stellarator_variables.isthtr), "\n")
+        logger.error(f"isthtr {stellarator_variables.isthtr} \n")
+        logger.error(f"isthtr type {type(stellarator_variables.isthtr)} \n")
         raise ProcessValueError(
             "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
         )

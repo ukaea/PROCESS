@@ -56,12 +56,6 @@ def calculate_quench_protection(coilcurrent):
         zeta * f_vv_actual * 1e6 * rad_vv_in
     )
 
-    # the conductor fraction is meant of the cable space#
-    # This is the old routine which is being replaced for now by the new one below
-    #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-    # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,
-    #    tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
-
     # comparison
     # the new quench protection routine, see #1047
     tfcoil_variables.j_tf_wp_quench_heat_max = (

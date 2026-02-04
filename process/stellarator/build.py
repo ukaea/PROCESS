@@ -11,7 +11,7 @@ from process.data_structure import (
 )
 
 
-def st_build(stellarator, output: bool):
+def st_build(stellarator, f_output: bool):
     """
     Routine to determine the build of a stellarator machine
     author: P J Knight, CCFE, Culham Science Centre
@@ -187,12 +187,12 @@ def st_build(stellarator, output: bool):
             - fwbs_variables.f_a_fw_outboard_hcd
         ) * build_variables.a_fw_total
 
-    if output:
+    if f_output:
         #  Print out device build
-        print_output(stellarator)
+        output(stellarator)
 
 
-def print_output(stellarator):
+def output(stellarator):
     po.oheadr(stellarator.outfile, "Radial Build")
 
     po.ovarre(

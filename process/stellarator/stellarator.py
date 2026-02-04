@@ -393,6 +393,8 @@ class Stellarator:
             )
 
     def blanket_neutronics(self):
+        """Routine to calculate neutronic properties for a stellarator"""
+
         # heating of the blanket
         if fwbs_variables.breedmat == 1:
             fwbs_variables.breeder = "Orthosilicate"
