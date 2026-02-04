@@ -590,9 +590,7 @@ def main(args=None):
         # Plot section
         # -----------
         for index, output_name in enumerate(output_names):
-            if stack_plots:
-                pass
-            else:
+            if not stack_plots:
                 fig, ax = plt.subplots()
                 if output_names2 != []:
                     ax2 = ax.twinx()
