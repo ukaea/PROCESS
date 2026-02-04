@@ -3,14 +3,19 @@ import math
 
 import numpy as np
 
-from process import constants
+from process import constants, process_output
 from process import process_output as po
-from process.data_structure import build_variables as buv
-from process.data_structure import divertor_variables as dv
-from process.data_structure import physics_variables as pv
-from process.data_structure import tfcoil_variables as tfv
-from process.data_structure import times_variables as tv
-from process.data_structure import vacuum_variables as vacv
+from process.blanket_library import dshellvol, eshellvol
+from process.data_structure import (
+    blanket_library,
+    build_variables,
+    divertor_variables,
+    fwbs_variables,
+    physics_variables,
+    tfcoil_variables,
+    times_variables,
+    vacuum_variables,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -44,47 +49,56 @@ class Vacuum:
 
         # MDK Check this!!
         gasld = (
-            2.0e0 * pv.molflow_plasma_fuelling_required * pv.m_fuel_amu * constants.UMASS
+            2.0e0
+            * physics_variables.molflow_plasma_fuelling_required
+            * physics_variables.m_fuel_amu
+            * constants.UMASS
         )
 
-        self.i_vacuum_pumping = vacv.i_vacuum_pumping
+        self.i_vacuum_pumping = vacuum_variables.i_vacuum_pumping
 
         # i_vacuum_pumping required to be compared to a b string
         # as this is what f2py returns
         if self.i_vacuum_pumping == "old":
             (
                 pumpn,
-                vacv.n_vv_vacuum_ducts,
-                vacv.dlscal,
-                vacv.m_vv_vacuum_duct_shield,
-                vacv.dia_vv_vacuum_ducts,
+                vacuum_variables.n_vv_vacuum_ducts,
+                vacuum_variables.dlscal,
+                vacuum_variables.m_vv_vacuum_duct_shield,
+                vacuum_variables.dia_vv_vacuum_ducts,
             ) = self.vacuum(
-                pv.p_fusion_total_mw,
-                pv.rmajor,
-                pv.rminor,
-                0.5e0 * (buv.dr_fw_plasma_gap_inboard + buv.dr_fw_plasma_gap_outboard),
-                pv.a_plasma_surface,
-                pv.vol_plasma,
-                buv.dr_shld_outboard,
-                buv.dr_shld_inboard,
-                buv.dr_tf_inboard,
-                buv.r_shld_inboard_inner
-                - buv.dr_shld_vv_gap_inboard
-                - buv.dr_vv_inboard,
-                tfv.n_tf_coils,
-                tv.t_plant_pulse_dwell,
-                pv.nd_plasma_electrons_vol_avg,
-                dv.n_divertors,
+                physics_variables.p_fusion_total_mw,
+                physics_variables.rmajor,
+                physics_variables.rminor,
+                0.5e0
+                * (
+                    build_variables.dr_fw_plasma_gap_inboard
+                    + build_variables.dr_fw_plasma_gap_outboard
+                ),
+                physics_variables.a_plasma_surface,
+                physics_variables.vol_plasma,
+                build_variables.dr_shld_outboard,
+                build_variables.dr_shld_inboard,
+                build_variables.dr_tf_inboard,
+                build_variables.r_shld_inboard_inner
+                - build_variables.dr_shld_vv_gap_inboard
+                - build_variables.dr_vv_inboard,
+                tfcoil_variables.n_tf_coils,
+                times_variables.t_plant_pulse_dwell,
+                physics_variables.nd_plasma_electrons_vol_avg,
+                divertor_variables.n_divertors,
                 qtorus,
                 gasld,
                 output=output,
             )
             # MDK pumpn is real: convert to integer by rounding.
-            vacv.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
+            vacuum_variables.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
         elif self.i_vacuum_pumping == "simple":
-            vacv.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
+            vacuum_variables.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
         else:
-            logger.error(f"i_vacuum_pumping is invalid: {vacv.i_vacuum_pumping}")
+            logger.error(
+                f"i_vacuum_pumping is invalid: {vacuum_variables.i_vacuum_pumping}"
+            )
 
     def vacuum_simple(self, output) -> float:
         """Simple model of vacuum pumping system
@@ -101,24 +115,27 @@ class Vacuum:
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
         n_iter_vacuum_pumps = (
-            pv.molflow_plasma_fuelling_required / vacv.molflow_vac_pumps
+            physics_variables.molflow_plasma_fuelling_required
+            / vacuum_variables.molflow_vac_pumps
         )
 
         # Pump-down:
         # Pumping speed per pump m3/s
         pumpspeed = (
-            vacv.volflow_vac_pumps_max
-            * vacv.f_a_vac_pump_port_plasma_surface
-            * vacv.f_volflow_vac_pumps_impedance
-            * pv.a_plasma_surface
-            / tfv.n_tf_coils
+            vacuum_variables.volflow_vac_pumps_max
+            * vacuum_variables.f_a_vac_pump_port_plasma_surface
+            * vacuum_variables.f_volflow_vac_pumps_impedance
+            * physics_variables.a_plasma_surface
+            / tfcoil_variables.n_tf_coils
         )
 
-        wallarea = (pv.a_plasma_surface / 1084.0e0) * 2000.0e0
+        wallarea = (physics_variables.a_plasma_surface / 1084.0e0) * 2000.0e0
         # Required pumping speed for pump-down
         pumpdownspeed = (
-            vacv.outgasfactor * wallarea / vacv.pres_vv_chamber_base
-        ) * tv.t_plant_pulse_dwell ** (-vacv.outgasindex)
+            vacuum_variables.outgasfactor
+            * wallarea
+            / vacuum_variables.pres_vv_chamber_base
+        ) * times_variables.t_plant_pulse_dwell ** (-vacuum_variables.outgasindex)
         # Number of pumps required for pump-down
         npumpdown = pumpdownspeed / pumpspeed
 
@@ -128,32 +145,32 @@ class Vacuum:
 
         #  Output section
         if output:
-            po.oheadr(self.outfile, "Vacuum System")
-            po.ovarst(
+            process_output.oheadr(self.outfile, "Vacuum System")
+            process_output.ovarst(
                 self.outfile,
                 "Switch for vacuum pumping model",
                 "(i_vacuum_pumping)",
                 '"' + self.i_vacuum_pumping + '"',
             )
-            po.ocmmnt(
+            process_output.ocmmnt(
                 self.outfile,
                 "Simple steady-state model with comparison to ITER cryopumps",
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "Plasma fuelling rate (nucleus-pairs/s)",
                 "(molflow_plasma_fuelling_required)",
-                pv.molflow_plasma_fuelling_required,
+                physics_variables.molflow_plasma_fuelling_required,
                 "OP ",
             )
-            po.ocmmnt(
+            process_output.ocmmnt(
                 self.outfile, "Number of high vacuum pumps, each with the throughput"
             )
-            po.ocmmnt(
+            process_output.ocmmnt(
                 self.outfile,
                 " of one ITER cryopump (50 Pa m3 s-1 = 1.2e+22 molecules/s),",
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 " all operating at the same time",
                 "(n_iter_vacuum_pumps)",
@@ -161,20 +178,20 @@ class Vacuum:
                 "OP ",
             )
 
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "Dwell time",
                 "(t_plant_pulse_dwell)",
-                tv.t_plant_pulse_dwell,
+                times_variables.t_plant_pulse_dwell,
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "Number of pumps required for pump-down",
                 "(npumpdown)",
                 npumpdown,
                 "OP ",
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "Number of pumps required overall",
                 "(npump)",
@@ -311,7 +328,7 @@ class Vacuum:
         # nitrogen, DT, helium, DT again
         sp = (
             [1.95, 1.8, 1.8, 1.8]
-            if vacv.i_vacuum_pump_type == 0
+            if vacuum_variables.i_vacuum_pump_type == 0
             else [9.0, 25.0, 5.0, 25.0]
         )
 
@@ -329,8 +346,8 @@ class Vacuum:
 
         area = plasma_sarea * (aw + dsol) / aw
 
-        ogas = vacv.outgrat_fw * area * 10.0e0  # Outgassing rate (Pa-m^3/s)
-        s.append(ogas / vacv.pres_vv_chamber_base)
+        ogas = vacuum_variables.outgrat_fw * area * 10.0e0  # Outgassing rate (Pa-m^3/s)
+        s.append(ogas / vacuum_variables.pres_vv_chamber_base)
 
         #  Pumpdown between burns
         #  s(2) = net pump speed (DT) required for pumpdown between burns (m^3/s)
@@ -338,7 +355,7 @@ class Vacuum:
         #  t_plant_pulse_dwell = dwell time between burns (s)
 
         pend = (
-            0.5e0 * nplasma * k * vacv.temp_vv_chamber_gas_burn_end
+            0.5e0 * nplasma * k * vacuum_variables.temp_vv_chamber_gas_burn_end
         )  # pressure in plasma chamber after burn (Pa)
         pstart = 0.01e0 * pend  # pressure in chamber before start of burn (Pa)
 
@@ -349,10 +366,10 @@ class Vacuum:
         volume = plasma_vol * (aw + dsol) * (aw + dsol) / (aw * aw)
 
         #  dwell pumping options
-        if (vacv.i_vac_pump_dwell == 1) or (t_plant_pulse_dwell == 0):
-            tpump = tv.t_plant_pulse_coil_precharge
-        elif vacv.i_vac_pump_dwell == 2:
-            tpump = t_plant_pulse_dwell + tv.t_plant_pulse_coil_precharge
+        if (vacuum_variables.i_vac_pump_dwell == 1) or (t_plant_pulse_dwell == 0):
+            tpump = times_variables.t_plant_pulse_coil_precharge
+        elif vacuum_variables.i_vac_pump_dwell == 2:
+            tpump = t_plant_pulse_dwell + times_variables.t_plant_pulse_coil_precharge
         else:
             tpump = t_plant_pulse_dwell
 
@@ -368,12 +385,12 @@ class Vacuum:
         fhe = source / (frate * 4.985e5)
         s.extend(
             (
-                (source / vacv.pres_div_chamber_burn / fhe),
+                (source / vacuum_variables.pres_div_chamber_burn / fhe),
                 #  Removal of dt on steady state basis
                 #  s(4) = net speed (D-T) required to remove dt at fuelling rate (m^3/s)
                 (
                     (frate * 4.985e5 - source)
-                    / (vacv.pres_div_chamber_burn * (1.0e0 - fhe))
+                    / (vacuum_variables.pres_div_chamber_burn * (1.0e0 - fhe))
                 ),
             ),
         )
@@ -463,7 +480,7 @@ class Vacuum:
 
                 else:
                     logger.error(
-                        f"Newton's method not converging; check fusion power, te {pv.p_fusion_total_mw=} {pv.temp_plasma_electron_vol_avg_kev=}"
+                        f"Newton's method not converging; check fusion power, te {physics_variables.p_fusion_total_mw=} {physics_variables.temp_plasma_electron_vol_avg_kev=}"
                     )
 
                 theta = math.pi / ntf
@@ -507,7 +524,7 @@ class Vacuum:
         #  If cryopumps are used then an additional pump is required
         #  for continuous operation with regeneration.
 
-        if vacv.i_vacuum_pump_type == 1:
+        if vacuum_variables.i_vacuum_pump_type == 1:
             pumpn = pumpn * 2.0e0
 
         #  Information for costing routine
@@ -526,29 +543,29 @@ class Vacuum:
         if output:
             #  Output section
 
-            po.oheadr(self.outfile, "Vacuum System")
+            process_output.oheadr(self.outfile, "Vacuum System")
 
-            po.ocmmnt(self.outfile, "Pumpdown to Base Pressure :")
-            po.oblnkl(self.outfile)
-            po.ovarre(
+            process_output.ocmmnt(self.outfile, "Pumpdown to Base Pressure :")
+            process_output.oblnkl(self.outfile)
+            process_output.ovarre(
                 self.outfile,
                 "First wall outgassing rate (Pa m/s)",
                 "(outgrat_fw)",
-                vacv.outgrat_fw,
+                vacuum_variables.outgrat_fw,
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile, "Total outgassing load (Pa m3/s)", "(ogas)", ogas, "OP "
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "Base pressure required (Pa)",
                 "(pres_vv_chamber_base)",
-                vacv.pres_vv_chamber_base,
+                vacuum_variables.pres_vv_chamber_base,
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile, "Required N2 pump speed (m3/s)", "(s(1))", s[0], "OP "
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "N2 pump speed provided (m3/s)",
                 "(snet(1))",
@@ -556,44 +573,44 @@ class Vacuum:
                 "OP ",
             )
 
-            po.osubhd(self.outfile, "Pumpdown between Burns :")
-            po.ovarre(
+            process_output.osubhd(self.outfile, "Pumpdown between Burns :")
+            process_output.ovarre(
                 self.outfile, "Plasma chamber volume (m3)", "(volume)", volume, "OP "
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile, "Chamber pressure after burn (Pa)", "(pend)", pend, "OP "
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile, "Chamber pressure before burn (Pa)", "(pstart)", pstart
             )
-            po.ovarin(
+            process_output.ovarin(
                 self.outfile,
                 "Allowable pumping time switch",
                 "(i_vac_pump_dwell)",
-                vacv.i_vac_pump_dwell,
+                vacuum_variables.i_vac_pump_dwell,
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "Dwell time between burns (s)",
                 "(t_plant_pulse_dwell.)",
                 t_plant_pulse_dwell,
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "CS ramp-up time burns (s)",
                 "(t_plant_pulse_coil_precharge.)",
-                tv.t_plant_pulse_coil_precharge,
+                times_variables.t_plant_pulse_coil_precharge,
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "Allowable pumping time between burns (s)",
                 "(tpump)",
                 tpump,
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile, "Required D-T pump speed (m3/s)", "(s(2))", s[1], "OP "
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "D-T pump speed provided (m3/s)",
                 "(snet(2))",
@@ -601,24 +618,24 @@ class Vacuum:
                 "OP ",
             )
 
-            po.osubhd(self.outfile, "Helium Ash Removal :")
-            po.ovarre(
+            process_output.osubhd(self.outfile, "Helium Ash Removal :")
+            process_output.ovarre(
                 self.outfile,
                 "Divertor chamber gas pressure (Pa)",
                 "(pres_div_chamber_burn)",
-                vacv.pres_div_chamber_burn,
+                vacuum_variables.pres_div_chamber_burn,
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "Helium gas fraction in divertor chamber",
                 "(fhe)",
                 fhe,
                 "OP ",
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile, "Required helium pump speed (m3/s)", "(s(3))", s[2], "OP "
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "Helium pump speed provided (m3/s)",
                 "(snet(3))",
@@ -626,12 +643,14 @@ class Vacuum:
                 "OP ",
             )
 
-            po.osubhd(self.outfile, "D-T Removal at Fuelling Rate :")
-            po.ovarre(self.outfile, "D-T fuelling rate (kg/s)", "(frate)", frate, "OP ")
-            po.ovarre(
+            process_output.osubhd(self.outfile, "D-T Removal at Fuelling Rate :")
+            process_output.ovarre(
+                self.outfile, "D-T fuelling rate (kg/s)", "(frate)", frate, "OP "
+            )
+            process_output.ovarre(
                 self.outfile, "Required D-T pump speed (m3/s)", "(s(4))", s[3], "OP "
             )
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile,
                 "D-T pump speed provided (m3/s)",
                 "(snet(4))",
@@ -640,49 +659,263 @@ class Vacuum:
             )
 
             if nflag == 1:
-                po.oblnkl(self.outfile)
-                po.ocmmnt(self.outfile, "Vacuum pumping ducts are space limited.")
-                po.ocmmnt(self.outfile, f"Maximum duct diameter is only {d1max} m")
-                po.ocmmnt(self.outfile, "Conductance is inadequate.")
-                po.oblnkl(self.outfile)
+                process_output.oblnkl(self.outfile)
+                process_output.ocmmnt(
+                    self.outfile, "Vacuum pumping ducts are space limited."
+                )
+                process_output.ocmmnt(
+                    self.outfile, f"Maximum duct diameter is only {d1max} m"
+                )
+                process_output.ocmmnt(self.outfile, "Conductance is inadequate.")
+                process_output.oblnkl(self.outfile)
 
             i_fw_blkt_shared_coolant = (
-                "cryo " if vacv.i_vacuum_pump_type == 1 else "turbo"
+                "cryo " if vacuum_variables.i_vacuum_pump_type == 1 else "turbo"
             )
 
-            po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, "The vacuum pumping system size is governed by the")
+            process_output.oblnkl(self.outfile)
+            process_output.ocmmnt(
+                self.outfile, "The vacuum pumping system size is governed by the"
+            )
 
             if imax == 1:
-                po.ocmmnt(self.outfile, "requirements for pumpdown to base pressure.")
+                process_output.ocmmnt(
+                    self.outfile, "requirements for pumpdown to base pressure."
+                )
             elif imax == 2:
-                po.ocmmnt(self.outfile, "requirements for pumpdown between burns.")
+                process_output.ocmmnt(
+                    self.outfile, "requirements for pumpdown between burns."
+                )
             elif imax == 3:
-                po.ocmmnt(self.outfile, "requirements for helium ash removal.")
+                process_output.ocmmnt(
+                    self.outfile, "requirements for helium ash removal."
+                )
             else:
-                po.ocmmnt(self.outfile, "requirements for D-T removal at fuelling rate.")
+                process_output.ocmmnt(
+                    self.outfile, "requirements for D-T removal at fuelling rate."
+                )
 
-            po.oblnkl(self.outfile)
-            po.ovarin(self.outfile, "Number of large pump ducts", "(nduct)", nduct)
-            po.ovarre(
+            process_output.oblnkl(self.outfile)
+            process_output.ovarin(
+                self.outfile, "Number of large pump ducts", "(nduct)", nduct
+            )
+            process_output.ovarre(
                 self.outfile,
                 "Passage diameter, divertor to ducts (m)",
                 "(d(imax))",
                 d[imax],
                 "OP ",
             )
-            po.ovarre(self.outfile, "Passage length (m)", "(l1)", l1, "OP ")
-            po.ovarre(self.outfile, "Diameter of ducts (m)", "(dout)", dout, "OP ")
+            process_output.ovarre(self.outfile, "Passage length (m)", "(l1)", l1, "OP ")
+            process_output.ovarre(
+                self.outfile, "Diameter of ducts (m)", "(dout)", dout, "OP "
+            )
 
-            po.ovarre(
+            process_output.ovarre(
                 self.outfile, "Duct length, divertor to elbow (m)", "(l2)", l2, "OP "
             )
-            po.ovarre(self.outfile, "Duct length, elbow to pumps (m)", "(l3)", l3)
-            po.ovarre(self.outfile, "Number of pumps", "(pumpn)", pumpn, "OP ")
-            po.oblnkl(self.outfile)
-            po.ocmmnt(
+            process_output.ovarre(
+                self.outfile, "Duct length, elbow to pumps (m)", "(l3)", l3
+            )
+            process_output.ovarre(
+                self.outfile, "Number of pumps", "(pumpn)", pumpn, "OP "
+            )
+            process_output.oblnkl(self.outfile)
+            process_output.ocmmnt(
                 self.outfile,
                 f"The vacuum system uses {i_fw_blkt_shared_coolant} pumps.",
             )
 
         return pumpn, nduct, dlscalc, mvdsh, dimax
+
+
+class VacuumVessel:
+    """Class containing vacuum vessel routines"""
+
+    def __init__(self) -> None:
+        self.outfile = constants.NOUT
+
+    def run(self) -> None:
+        blanket_library.dz_vv_half = self.calculate_vessel_half_height(
+            z_tf_inside_half=build_variables.z_tf_inside_half,
+            dz_shld_vv_gap=build_variables.dz_shld_vv_gap,
+            dz_vv_lower=build_variables.dz_vv_lower,
+            n_divertors=divertor_variables.n_divertors,
+            dz_blkt_upper=build_variables.dz_blkt_upper,
+            dz_shld_upper=build_variables.dz_shld_upper,
+            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
+            dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+            dr_fw_inboard=build_variables.dr_fw_inboard,
+            dr_fw_outboard=build_variables.dr_fw_outboard,
+        )
+        # D-shaped blanket and shield
+        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+            (
+                blanket_library.vol_vv_inboard,
+                blanket_library.vol_vv_outboard,
+                fwbs_variables.vol_vv,
+            ) = self.calculate_dshaped_vessel_volumes(
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
+                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
+                dz_vv_half=blanket_library.dz_vv_half,
+                dr_vv_inboard=build_variables.dr_vv_inboard,
+                dr_vv_outboard=build_variables.dr_vv_outboard,
+                dz_vv_upper=build_variables.dz_vv_upper,
+                dz_vv_lower=build_variables.dz_vv_lower,
+            )
+        else:
+            (
+                blanket_library.vol_vv_inboard,
+                blanket_library.vol_vv_outboard,
+                fwbs_variables.vol_vv,
+            ) = self.calculate_elliptical_vessel_volumes(
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                triang=physics_variables.triang,
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
+                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
+                dz_vv_half=blanket_library.dz_vv_half,
+                dr_vv_inboard=build_variables.dr_vv_inboard,
+                dr_vv_outboard=build_variables.dr_vv_outboard,
+                dz_vv_upper=build_variables.dz_vv_upper,
+                dz_vv_lower=build_variables.dz_vv_lower,
+            )
+
+        # Apply vacuum vessel coverage factor
+        # moved from dshaped_* and elliptical_* to keep coverage factor
+        # changes in the same location.
+        fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
+
+        # Vacuum vessel mass (kg)
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
+
+    @staticmethod
+    def calculate_vessel_half_height(
+        z_tf_inside_half: float,
+        dz_shld_vv_gap: float,
+        dz_vv_lower: float,
+        n_divertors: int,
+        dz_blkt_upper: float,
+        dz_shld_upper: float,
+        z_plasma_xpoint_upper: float,
+        dr_fw_plasma_gap_inboard: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_inboard: float,
+        dr_fw_outboard: float,
+    ) -> float:
+        """Calculate vacuum vessel internal half-height (m)"""
+
+        z_bottom = z_tf_inside_half - dz_shld_vv_gap - dz_vv_lower
+
+        # Calculate component internal upper half-height (m)
+        # If a double null machine then symmetric
+        if n_divertors == 2:
+            z_top = z_bottom
+        else:
+            z_top = z_plasma_xpoint_upper + 0.5 * (
+                dr_fw_plasma_gap_inboard
+                + dr_fw_plasma_gap_outboard
+                + dr_fw_inboard
+                + dr_fw_outboard
+            )
+
+            z_top = z_top + dz_blkt_upper + dz_shld_upper
+
+        # Average of top and bottom (m)
+        return 0.5 * (z_top + z_bottom)
+
+    @staticmethod
+    def calculate_dshaped_vessel_volumes(
+        r_shld_inboard_inner: float,
+        r_shld_outboard_outer: float,
+        dz_vv_half: float,
+        dr_vv_inboard: float,
+        dr_vv_outboard: float,
+        dz_vv_upper: float,
+        dz_vv_lower: float,
+    ) -> tuple[float, float, float]:
+        """Calculate volumes of D-shaped vacuum vessel segments"""
+
+        r_1 = r_shld_inboard_inner
+        r_2 = r_shld_outboard_outer - r_1
+
+        (
+            vol_vv_inboard,
+            vol_vv_outboard,
+            vol_vv,
+        ) = dshellvol(
+            rmajor=r_1,
+            rminor=r_2,
+            zminor=dz_vv_half,
+            drin=dr_vv_inboard,
+            drout=dr_vv_outboard,
+            dz=(dz_vv_upper + dz_vv_lower) / 2,
+        )
+
+        return vol_vv_inboard, vol_vv_outboard, vol_vv
+
+    @staticmethod
+    def calculate_elliptical_vessel_volumes(
+        rmajor: float,
+        rminor: float,
+        triang: float,
+        r_shld_inboard_inner: float,
+        r_shld_outboard_outer: float,
+        dz_vv_half: float,
+        dr_vv_inboard: float,
+        dr_vv_outboard: float,
+        dz_vv_upper: float,
+        dz_vv_lower: float,
+    ) -> tuple[float, float, float]:
+        """Calculate volumes of elliptical vacuum vessel segments"""
+        # Major radius to centre of inboard and outboard ellipses (m)
+        # (coincident in radius with top of plasma)
+        r_1 = rmajor - rminor * triang
+
+        # Calculate distance between r1 and outer edge of inboard ...
+        # ... section (m)
+        r_2 = r_1 - r_shld_inboard_inner
+        r_3 = r_shld_outboard_outer - r_1
+
+        (
+            vol_vv_inboard,
+            vol_vv_outboard,
+            vol_vv,
+        ) = eshellvol(
+            r_1,
+            r_2,
+            r_3,
+            dz_vv_half,
+            dr_vv_inboard,
+            dr_vv_outboard,
+            (dz_vv_upper + dz_vv_lower) / 2,
+        )
+        return vol_vv_inboard, vol_vv_outboard, vol_vv
+
+    def output_vv_areas_and_volumes(self) -> None:
+        """Output shield areas and volumes to log."""
+
+        po.oheadr(self.outfile, "Vacuum Vessel Areas and Volumes")
+
+        po.ovarrf(
+            self.outfile,
+            "Volume of inboard vacuum vessel (m^3)",
+            "(vol_vv_inboard)",
+            blanket_library.vol_vv_inboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Volume of outboard vacuum vessel (m^3)",
+            "(vol_vv_outboard)",
+            blanket_library.vol_vv_outboard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Total volume of vacuum vessel (m^3)",
+            "(vol_vv)",
+            fwbs_variables.vol_vv,
+            "OP ",
+        )
