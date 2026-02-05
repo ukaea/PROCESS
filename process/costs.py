@@ -8,6 +8,7 @@ from process.data_structure import (
     cost_variables,
     current_drive_variables,
     divertor_variables,
+    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
@@ -1220,7 +1221,7 @@ class Costs:
                 * cmlsa[cost_variables.lsa - 1]
                 * (
                     (cost_variables.UCFWA + cost_variables.UCFWS)
-                    * build_variables.a_fw_total
+                    * first_wall_variables.a_fw_total
                     + cost_variables.UCFWPS
                 )
             )

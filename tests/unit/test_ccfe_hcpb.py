@@ -7,6 +7,7 @@ from process.data_structure import (
     ccfe_hcpb_module,
     current_drive_variables,
     divertor_variables,
+    first_wall_variables,
     fwbs_variables,
     global_variables,
     heat_transport_variables,
@@ -862,10 +863,12 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     """
 
     monkeypatch.setattr(
-        build_variables, "a_fw_outboard", powerflowcalcparam.a_fw_outboard
+        first_wall_variables, "a_fw_outboard", powerflowcalcparam.a_fw_outboard
     )
 
-    monkeypatch.setattr(build_variables, "a_fw_total", powerflowcalcparam.a_fw_total)
+    monkeypatch.setattr(
+        first_wall_variables, "a_fw_total", powerflowcalcparam.a_fw_total
+    )
 
     monkeypatch.setattr(
         current_drive_variables,
@@ -1481,18 +1484,20 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(build_variables, "blbmoth", componentmassesparam.blbmoth)
     monkeypatch.setattr(build_variables, "blbpoth", componentmassesparam.blbpoth)
     monkeypatch.setattr(
-        build_variables, "a_fw_inboard", componentmassesparam.a_fw_inboard
+        first_wall_variables, "a_fw_inboard", componentmassesparam.a_fw_inboard
     )
     monkeypatch.setattr(
         build_variables, "dr_fw_inboard", componentmassesparam.dr_fw_inboard
     )
     monkeypatch.setattr(
-        build_variables, "a_fw_outboard", componentmassesparam.a_fw_outboard
+        first_wall_variables, "a_fw_outboard", componentmassesparam.a_fw_outboard
     )
     monkeypatch.setattr(
         build_variables, "dr_fw_outboard", componentmassesparam.dr_fw_outboard
     )
-    monkeypatch.setattr(build_variables, "a_fw_total", componentmassesparam.a_fw_total)
+    monkeypatch.setattr(
+        first_wall_variables, "a_fw_total", componentmassesparam.a_fw_total
+    )
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", componentmassesparam.vol_blkt_total
     )

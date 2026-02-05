@@ -17,6 +17,7 @@ from process.current_drive import (
 from process.data_structure import (
     build_variables,
     cost_variables,
+    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     impurity_radiation_module,
@@ -540,7 +541,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "dr_vv_outboard", stbildparam.dr_vv_outboard)
 
-    monkeypatch.setattr(build_variables, "a_fw_total", stbildparam.a_fw_total)
+    monkeypatch.setattr(first_wall_variables, "a_fw_total", stbildparam.a_fw_total)
 
     monkeypatch.setattr(build_variables, "dr_fw_inboard", stbildparam.dr_fw_inboard)
 
@@ -671,7 +672,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     assert build_variables.dr_bore == pytest.approx(stbildparam.expected_bore)
 
-    assert build_variables.a_fw_total == pytest.approx(stbildparam.expected_a_fw_total)
+    assert first_wall_variables.a_fw_total == pytest.approx(
+        stbildparam.expected_a_fw_total
+    )
 
     assert build_variables.dr_fw_inboard == pytest.approx(
         stbildparam.expected_dr_fw_inboard

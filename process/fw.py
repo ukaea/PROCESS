@@ -10,6 +10,7 @@ from process.data_structure import (
     blanket_library,
     build_variables,
     divertor_variables,
+    first_wall_variables,
     fwbs_variables,
     physics_variables,
 )
@@ -38,9 +39,9 @@ class FirstWall:
 
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
             (
-                build_variables.a_fw_inboard_full_coverage,
-                build_variables.a_fw_outboard_full_coverage,
-                build_variables.a_fw_total_full_coverage,
+                first_wall_variables.a_fw_inboard_full_coverage,
+                first_wall_variables.a_fw_outboard_full_coverage,
+                first_wall_variables.a_fw_total_full_coverage,
             ) = self.calculate_dshaped_first_wall_areas(
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
@@ -51,9 +52,9 @@ class FirstWall:
 
         else:
             (
-                build_variables.a_fw_inboard_full_coverage,
-                build_variables.a_fw_outboard_full_coverage,
-                build_variables.a_fw_total_full_coverage,
+                first_wall_variables.a_fw_inboard_full_coverage,
+                first_wall_variables.a_fw_outboard_full_coverage,
+                first_wall_variables.a_fw_total_full_coverage,
             ) = self.calculate_elliptical_first_wall_areas(
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
@@ -64,23 +65,23 @@ class FirstWall:
             )
 
         (
-            build_variables.a_fw_inboard,
-            build_variables.a_fw_outboard,
-            build_variables.a_fw_total,
+            first_wall_variables.a_fw_inboard,
+            first_wall_variables.a_fw_outboard,
+            first_wall_variables.a_fw_total,
         ) = self.apply_first_wall_coverage_factors(
             n_divertors=divertor_variables.n_divertors,
             f_ster_div_single=fwbs_variables.f_ster_div_single,
             f_a_fw_outboard_hcd=fwbs_variables.f_a_fw_outboard_hcd,
-            a_fw_inboard_full_coverage=build_variables.a_fw_inboard_full_coverage,
-            a_fw_outboard_full_coverage=build_variables.a_fw_outboard_full_coverage,
+            a_fw_inboard_full_coverage=first_wall_variables.a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage=first_wall_variables.a_fw_outboard_full_coverage,
         )
 
         (
             blanket_library.n_fw_inboard_channels,
             blanket_library.n_fw_outboard_channels,
         ) = self.calculate_total_fw_channels(
-            build_variables.a_fw_inboard,
-            build_variables.a_fw_outboard,
+            first_wall_variables.a_fw_inboard,
+            first_wall_variables.a_fw_outboard,
             fwbs_variables.len_fw_channel,
             fwbs_variables.dx_fw_module,
         )

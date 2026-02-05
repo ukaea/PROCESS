@@ -14,6 +14,7 @@ from process.data_structure import (
     blanket_library,
     build_variables,
     divertor_variables,
+    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
@@ -1611,13 +1612,13 @@ class BlanketLibrary:
         # IB/OB FW (MW)
         blanket_library.p_fw_inboard_nuclear_heat_mw = (
             fwbs_variables.p_fw_nuclear_heat_total_mw
-            * build_variables.a_fw_inboard
-            / build_variables.a_fw_total
+            * first_wall_variables.a_fw_inboard
+            / first_wall_variables.a_fw_total
         )
         blanket_library.p_fw_outboard_nuclear_heat_mw = (
             fwbs_variables.p_fw_nuclear_heat_total_mw
-            * build_variables.a_fw_outboard
-            / build_variables.a_fw_total
+            * first_wall_variables.a_fw_outboard
+            / first_wall_variables.a_fw_total
         )
 
         # IB/OB Blanket (MW)
@@ -1747,7 +1748,7 @@ class BlanketLibrary:
             output,
             fwbs_variables.radius_fw_channel,
             build_variables.dr_fw_inboard,
-            build_variables.a_fw_inboard,
+            first_wall_variables.a_fw_inboard,
             fwbs_variables.psurffwi,
             blanket_library.p_fw_inboard_nuclear_heat_mw,
             "Inboard first wall",
@@ -1761,7 +1762,7 @@ class BlanketLibrary:
             output,
             fwbs_variables.radius_fw_channel,
             build_variables.dr_fw_outboard,
-            build_variables.a_fw_outboard,
+            first_wall_variables.a_fw_outboard,
             fwbs_variables.psurffwo,
             blanket_library.p_fw_outboard_nuclear_heat_mw,
             "Outboard first wall",
