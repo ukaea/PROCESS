@@ -33,12 +33,159 @@ class Power:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
+    def _pf_loss_storage_j(self, e_pf_delta_j: float) -> float:
+        """
+        Energy storage loss over an interval [J]
+        Loss = f_p_pf_energy_store_loss * |ΔE_PF|
+        Ref: M. Kovari, "PF power supplies accounting 2, Issue #972"
+
+        :param e_pf_delta_j: change in stored poloidal magnetic energy over interval [J]
+        :type e_pf_delta_j: float
+        :return: energy storage electrical loss over interval [J]
+        :rtype: float
+        """
+        return pf_power_variables.f_p_pf_energy_store_loss * abs(e_pf_delta_j)
+
+    def _pf_loss_power_supply_j(
+        self,
+        ii: int,
+        c_pf_coil_turn: np.ndarray,
+        ind_pf_cs_plasma_mutual: np.ndarray,
+    ) -> float:
+        """
+        Power supply conversion loss over interval ii -> ii+1 [J]
+        Implements: sum_i (k_ps/2) * | (I_i[n+1] + I_i[n]) * sum_j M_ij (I_j[n+1] - I_j[n]) |
+        Ref: M. Kovari, "PF power supplies accounting 2, Issue #972"
+
+        :param ii: index of time interval (ii -> ii+1)
+        :type ii: int
+        :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
+        :type c_pf_coil_turn: np.ndarray
+        :param ind_pf_cs_plasma_mutual: mutual inductance matrix between PF circuits [H]
+        :type ind_pf_cs_plasma_mutual: np.ndarray
+        :return: power supply electrical energy loss over interval [J]
+        :rtype: float
+        """
+        e_loss_pf_psu_j = 0.0e0
+        for jj in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
+            c_pf_sum_a = c_pf_coil_turn[jj, ii + 1] + c_pf_coil_turn[jj, ii]
+
+            web_pf_delta_wb = 0.0e0
+            for kk in range(pfcoil_variables.n_pf_cs_plasma_circuits):
+                web_pf_delta_wb = web_pf_delta_wb + ind_pf_cs_plasma_mutual[jj, kk] * (
+                    c_pf_coil_turn[kk, ii + 1] - c_pf_coil_turn[kk, ii]
+                )
+
+            e_loss_pf_psu_j = (
+                e_loss_pf_psu_j
+                + 0.5e0
+                * pf_power_variables.f_p_pf_psu_loss
+                * abs(c_pf_sum_a * web_pf_delta_wb)
+            )
+
+        return e_loss_pf_psu_j
+
+    def _pf_loss_busbar_j(
+        self,
+        ii: int,
+        dt_pulse_phase_s: float,
+        ngrpt: int,
+        pf_group_circuit_index: np.ndarray,
+        c_pf_coil_turn: np.ndarray,
+        pfbusr: np.ndarray,
+    ) -> float:
+        """
+        Busbar resistive loss over interval ii -> ii+1 [J]
+        Loss = Δt * sum_groups (I_mean^2 * R_bus)
+        Ref: M. Kovari, "PF power supplies accounting 2, Issue #972"
+
+        :param ii: index of time interval (ii -> ii+1)
+        :type ii: int
+        :param dt_pulse_phase_s: duration of pulse interval [s]
+        :type dt_pulse_phase_s: float
+        :param ngrpt: number of PF coil groups/circuits
+        :type ngrpt: int
+        :param pf_group_circuit_index: mapping from PF group to circuit index
+        :type pf_group_circuit_index: np.ndarray
+        :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
+        :type c_pf_coil_turn: np.ndarray
+        :param pfbusr: PF busbar resistance for each circuit/group [ohm]
+        :type pfbusr: np.ndarray
+        :return: busbar electrical energy loss over interval [J]
+        :rtype: float
+        """
+        e_loss_pf_bus_j = 0.0e0
+        for jj in range(ngrpt):
+            kk = pf_group_circuit_index[jj]
+            c_pf_mean_a = 0.5e0 * (c_pf_coil_turn[kk, ii + 1] + c_pf_coil_turn[kk, ii])
+            e_loss_pf_bus_j = (
+                e_loss_pf_bus_j + dt_pulse_phase_s * (c_pf_mean_a**2) * pfbusr[jj]
+            )
+        return e_loss_pf_bus_j
+
+    def _pf_loss_interval_total_j(
+        self,
+        ii: int,
+        dt_pulse_phase_s: float,
+        poloidalenergy: np.ndarray,
+        ngrpt: int,
+        pf_group_circuit_index: np.ndarray,
+        c_pf_coil_turn: np.ndarray,
+        ind_pf_cs_plasma_mutual: np.ndarray,
+        pfbusr: np.ndarray,
+    ) -> float:
+        """
+        Total PF electrical energy dissipated over interval ii -> ii+1 [J]
+        = storage + power supply + busbar
+        Ref: M. Kovari, "PF power supplies accounting 2, Issue #972".
+
+        :param ii: index of time interval (ii -> ii+1)
+        :type ii: int
+        :param dt_pulse_phase_s: duration of pulse interval [s]
+        :type dt_pulse_phase_s: float
+        :param poloidalenergy: stored poloidal magnetic energy at pulse times [J]
+        :type poloidalenergy: np.ndarray
+        :param ngrpt: number of PF coil groups/circuits
+        :type ngrpt: int
+        :param pf_group_circuit_index: mapping from PF group to circuit index
+        :type pf_group_circuit_index: np.ndarray
+        :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
+        :type c_pf_coil_turn: np.ndarray
+        :param ind_pf_cs_plasma_mutual: mutual inductance matrix between PF circuits [H]
+        :type ind_pf_cs_plasma_mutual: np.ndarray
+        :param pfbusr: PF busbar resistance for each circuit/group [ohm]
+        :type pfbusr: np.ndarray
+        :return: total PF electrical energy dissipated over interval [J]
+        :rtype: float
+        """
+        if dt_pulse_phase_s <= 0.0e0:
+            return 0.0e0
+
+        e_pf_delta_j = poloidalenergy[ii + 1] - poloidalenergy[ii]
+        e_loss_pf_store_j = self._pf_loss_storage_j(e_pf_delta_j)
+
+        e_loss_pf_psu_j = self._pf_loss_power_supply_j(
+            ii=ii,
+            c_pf_coil_turn=c_pf_coil_turn,
+            ind_pf_cs_plasma_mutual=ind_pf_cs_plasma_mutual,
+        )
+
+        e_loss_pf_bus_j = self._pf_loss_busbar_j(
+            ii=ii,
+            dt_pulse_phase_s=dt_pulse_phase_s,
+            ngrpt=ngrpt,
+            pf_group_circuit_index=pf_group_circuit_index,
+            c_pf_coil_turn=c_pf_coil_turn,
+            pfbusr=pfbusr,
+        )
+
+        return e_loss_pf_store_j + e_loss_pf_psu_j + e_loss_pf_bus_j
+
     def pfpwr(self, output: bool):
         """
         PF coil power supply requirements
         author: P J Knight, CCFE, Culham Science Centre
         outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output (1=yes)
         This routine calculates the MVA, power and energy requirements
         for the PF coil systems.  Units are MW and MVA for power terms.
         The routine checks at the beginning of the flattop for the
@@ -79,11 +226,15 @@ class Power:
         if build_variables.iohcl != 0:
             ngrpt = ngrpt + 1
 
+        # Map PF group to representative circuit index (used for busbar I^2R per circuit)
+        pf_group_circuit_index = np.zeros((ngrpt,), dtype=int)
+
         pf_power_variables.srcktpm = 0.0e0
         pfbuspwr = 0.0e0
 
         for ig in range(ngrpt):
             ic = ic + pfcoil_variables.n_pf_coils_in_group[ig]
+            pf_group_circuit_index[ig] = ic
 
             #  Section area of aluminium bussing for circuit (cm**2)
             #  pfcoil_variables.c_pf_coil_turn_peak_input : max current per turn of coil (A)
@@ -137,7 +288,7 @@ class Power:
         powpfr2 = 0.0e0
 
         #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils (including Central Solenoid and plasma)
-        #          plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
+        #  plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
         #  pfcoil_variables.ind_pf_cs_plasma_mutual(i,j) : mutual inductance between coil i and j
         for ii in range(pfcoil_variables.n_pf_cs_plasma_circuits):
             powpfii[ii] = 0.0e0
@@ -152,7 +303,7 @@ class Power:
                 jpf = jpf + 1
                 inductxcurrent[:] = 0.0e0
                 for ii in range(pfcoil_variables.n_pf_cs_plasma_circuits):
-                    #  Voltage in circuit jpf due to change in current from circuit ipf
+                    #  Voltage in circuit jpf due to change in current from circuit ii
                     vpfij = (
                         ind_pf_cs_plasma_mutual[jpf, ii]
                         * (c_pf_coil_turn[ii, 2] - c_pf_coil_turn[ii, 1])
@@ -173,14 +324,14 @@ class Power:
                         )
 
                 #  Stored magnetic energy of the poloidal field at each time
-                # 'time' is the time INDEX.  't_pulse_cumulative' is the time.
+                # kk is the time INDEX. 't_pulse_cumulative' is the time.
                 for kk in range(6):
                     poloidalenergy[kk] = (
                         poloidalenergy[kk]
                         + 0.5e0 * inductxcurrent[kk] * c_pf_coil_turn[jpf, kk]
                     )
 
-                #  Resistive power in circuits at times times_variables.t_pulse_cumulative(3) and times_variables.t_pulse_cumulative(5) respectively (MW)
+                # Resistive power in circuits at times times_variables.t_pulse_cumulative(3) and times_variables.t_pulse_cumulative(5) respectively (MW)
                 powpfr = (
                     powpfr
                     + pfcoil_variables.n_pf_coil_turns[jpf]
@@ -199,7 +350,7 @@ class Power:
 
         for ii in range(5):
             # Stored magnetic energy of the poloidal field at each time
-            # 'time' is the time INDEX.  't_pulse_cumulative' is the time.
+            # ii is the time index. 't_pulse_cumulative' is the time.
             # Mean rate of change of stored energy between time and time+1
             if abs(t_pulse_cumulative[ii + 1] - t_pulse_cumulative[ii]) > 1.0e0:
                 pf_power_variables.poloidalpower[ii] = (
@@ -209,15 +360,19 @@ class Power:
                 # Flag when an interval is small or zero MDK 30/11/16
                 pf_power_variables.poloidalpower[ii] = 9.9e9
 
-            # Electrical energy dissipated in PFC power supplies as they increase or decrease the poloidal field energy
-            # This assumes that the energy storage in the PFC power supply is lossless and that currents
-            # in the coils can be varied without loss when there is no change in the energy in the poloidal field.
-            # Energy is dissipated only when energy moves into or out of the store in the power supply.
-            # Issue #713
-            pfdissipation[ii] = abs(poloidalenergy[ii + 1] - poloidalenergy[ii]) * (
-                1.0e0 / pfcoil_variables.etapsu - 1.0e0
-            )
+            dt_pulse_phase_s = t_pulse_cumulative[ii + 1] - t_pulse_cumulative[ii]
 
+            # Electrical energy dissipated in PFC power supplies as they increase or decrease the poloidal field energy
+            pfdissipation[ii] = self._pf_loss_interval_total_j(
+                ii=ii,
+                dt_pulse_phase_s=dt_pulse_phase_s,
+                poloidalenergy=poloidalenergy,
+                ngrpt=ngrpt,
+                pf_group_circuit_index=pf_group_circuit_index,
+                c_pf_coil_turn=c_pf_coil_turn,
+                ind_pf_cs_plasma_mutual=ind_pf_cs_plasma_mutual,
+                pfbusr=pfbusr,
+            )
         # Mean power dissipated
         # The flat top duration (time 4 to 5) is the denominator, as this is the time when electricity is generated.
         if t_pulse_cumulative[4] - t_pulse_cumulative[3] > 1.0e0:
@@ -370,7 +525,6 @@ class Power:
         author: P J Knight, CCFE, Culham Science Centre
         author: P C Shipe, ORNL
         outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output (1=yes)
         The routine was drastically shortened on 23/01/90 (ORNL) from the
         original TETRA routine to provide only the total power needs for
         the plant. Included in STORAC in January 1992 by P.C. Shipe.
@@ -1718,7 +1872,6 @@ class Power:
         TF coil power supply requirements for resistive coils
         author: P J Knight, CCFE, Culham Science Centre
         outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output (1=yes)
         This routine calculates the power conversion requirements for
         resistive TF coils, or calls <CODE>tfpwcall</CODE> if the TF
         coils are superconducting.
@@ -1888,7 +2041,6 @@ class Power:
         author: P J Knight, CCFE, Culham Science Centre
         author: P C Shipe, ORNL
         outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output (1=yes)
         This routine calls routine <CODE>tfcpwr</CODE> to calculate
         the power conversion requirements for superconducting TF coils.
         None
