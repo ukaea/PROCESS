@@ -101,8 +101,9 @@ from process.process_output import OutputFileManager, oheadr
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
+from process.stellarator.neoclassics import Neoclassics
+from process.stellarator.stellarator import Stellarator
 from process.shield import Shield
-from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
 from process.superconducting_tf_coil import SuperconductingTFCoil
 from process.tf_coil import TFCoil
@@ -689,18 +690,20 @@ class Models:
             plasma_profile=self.plasma_profile,
         )
         self.neoclassics = Neoclassics()
-        self.stellarator = Stellarator(
-            availability=self.availability,
-            buildings=self.buildings,
-            vacuum=self.vacuum,
-            costs=self.costs,
-            power=self.power,
-            plasma_profile=self.plasma_profile,
-            hcpb=self.ccfe_hcpb,
-            current_drive=self.current_drive,
-            physics=self.physics,
-            neoclassics=self.neoclassics,
-        )
+        if data_structure.stellarator_variables.istell != 0:
+            self.stellarator = Stellarator(
+                availability=self.availability,
+                buildings=self.buildings,
+                vacuum=self.vacuum,
+                costs=self.costs,
+                power=self.power,
+                plasma_profile=self.plasma_profile,
+                hcpb=self.ccfe_hcpb,
+                current_drive=self.current_drive,
+                physics=self.physics,
+                neoclassics=self.neoclassics,
+            )
+
         self.dcll = DCLL(fw=self.fw)
 
     @property
