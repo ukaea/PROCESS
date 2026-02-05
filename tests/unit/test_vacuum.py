@@ -1,10 +1,12 @@
+from typing import Any, NamedTuple
+
 import pytest
 
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
-from process.vacuum import Vacuum
+from process.vacuum import Vacuum, VacuumVessel
 
 
 @pytest.fixture
@@ -15,6 +17,16 @@ def vacuum():
     :type vacuum: process.vacuum.Vacuum
     """
     return Vacuum()
+
+
+@pytest.fixture
+def vacuum_vessel():
+    """Provides Vacuum object for testing.
+
+    :return vacuum: initialised Vacuum object
+    :type vacuum: process.vacuum.Vacuum
+    """
+    return VacuumVessel()
 
 
 class TestVacuum:
@@ -109,3 +121,125 @@ class TestVacuum:
         assert dlscalc == pytest.approx(2.798765707267961)
         assert mvdsh == 0.0
         assert dimax == pytest.approx(0.42414752916950604)
+
+
+class EllipticalVesselVolumes(NamedTuple):
+    rmajor: Any = None
+    rminor: Any = None
+    triang: Any = None
+    r_shld_inboard_inner: Any = None
+    r_shld_outboard_outer: Any = None
+    dz_vv_half: Any = None
+    dr_vv_inboard: Any = None
+    dr_vv_outboard: Any = None
+    dz_vv_upper: Any = None
+    dz_vv_lower: Any = None
+
+
+@pytest.mark.parametrize(
+    "elliptical_vessel_volumes, expected",
+    [
+        (
+            EllipticalVesselVolumes(
+                rmajor=8,
+                rminor=2.6666666666666665,
+                triang=0.5,
+                r_shld_inboard_inner=4.083333333333334,
+                r_shld_outboard_outer=12.716666666666667,
+                dz_vv_half=7.5032752487304135,
+                dr_vv_inboard=0.30000000000000004,
+                dr_vv_outboard=0.30000000000000004,
+                dz_vv_upper=0.30000000000000004,
+                dz_vv_lower=0.30000000000000004,
+            ),
+            (
+                pytest.approx(143.03162449152501),
+                pytest.approx(441.04172325889158),
+                pytest.approx(584.07334775041659),
+            ),
+        )
+    ],
+)
+def test_elliptical_vessel_volumes(vacuum_vessel, elliptical_vessel_volumes, expected):
+    """Tests `elliptical_vessel_volumes` function.
+
+    :param elliptical_vessel_volumes: input parameters for the function
+    :type elliptical_vessel_volumes: EllipticalVesselVolumes
+
+
+    """
+
+    vol_vv_inboard, vol_vv_outboard, vol_vv = (
+        vacuum_vessel.calculate_elliptical_vessel_volumes(
+            rmajor=elliptical_vessel_volumes.rmajor,
+            rminor=elliptical_vessel_volumes.rminor,
+            triang=elliptical_vessel_volumes.triang,
+            r_shld_inboard_inner=elliptical_vessel_volumes.r_shld_inboard_inner,
+            r_shld_outboard_outer=elliptical_vessel_volumes.r_shld_outboard_outer,
+            dz_vv_half=elliptical_vessel_volumes.dz_vv_half,
+            dr_vv_inboard=elliptical_vessel_volumes.dr_vv_inboard,
+            dr_vv_outboard=elliptical_vessel_volumes.dr_vv_outboard,
+            dz_vv_upper=elliptical_vessel_volumes.dz_vv_upper,
+            dz_vv_lower=elliptical_vessel_volumes.dz_vv_lower,
+        )
+    )
+
+    assert vol_vv_inboard == expected[0]
+    assert vol_vv_outboard == expected[1]
+    assert vol_vv == expected[2]
+
+
+class DShapedVesselVolumes(NamedTuple):
+    r_shld_inboard_inner: Any = None
+    r_shld_outboard_outer: Any = None
+    dz_vv_half: Any = None
+    dr_vv_inboard: Any = None
+    dr_vv_outboard: Any = None
+    dz_vv_upper: Any = None
+    dz_vv_lower: Any = None
+
+
+@pytest.mark.parametrize(
+    "dshaped_vessel_volumes, expected",
+    [
+        (
+            DShapedVesselVolumes(
+                r_shld_inboard_inner=1.5,
+                r_shld_outboard_outer=8.4000000000000004,
+                dz_vv_half=9.4349999999999987,
+                dr_vv_inboard=0.20000000000000001,
+                dr_vv_outboard=0.30000000000000004,
+                dz_vv_upper=0.30000000000000004,
+                dz_vv_lower=0.30000000000000004,
+            ),
+            (
+                pytest.approx(34.253413020620215),
+                pytest.approx(306.20028292282814),
+                pytest.approx(340.45369594344834),
+            ),
+        )
+    ],
+)
+def test_dshaped_vessel_volumes(vacuum_vessel, dshaped_vessel_volumes, expected):
+    """Tests `dshaped_vessel_volumes` function.
+
+    :param dshaped_vessel_volumes: input parameters for the function
+    :type dshaped_vessel_volumes: DShapedVesselVolumes
+
+    """
+
+    vol_vv_inboard, vol_vv_outboard, vol_vv = (
+        vacuum_vessel.calculate_dshaped_vessel_volumes(
+            r_shld_inboard_inner=dshaped_vessel_volumes.r_shld_inboard_inner,
+            r_shld_outboard_outer=dshaped_vessel_volumes.r_shld_outboard_outer,
+            dz_vv_half=dshaped_vessel_volumes.dz_vv_half,
+            dr_vv_inboard=dshaped_vessel_volumes.dr_vv_inboard,
+            dr_vv_outboard=dshaped_vessel_volumes.dr_vv_outboard,
+            dz_vv_upper=dshaped_vessel_volumes.dz_vv_upper,
+            dz_vv_lower=dshaped_vessel_volumes.dz_vv_lower,
+        )
+    )
+
+    assert vol_vv_inboard == expected[0]
+    assert vol_vv_outboard == expected[1]
+    assert vol_vv == expected[2]

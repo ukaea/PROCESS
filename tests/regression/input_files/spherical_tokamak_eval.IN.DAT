@@ -337,7 +337,7 @@ i_pulsed_plant   = 0 * Switch for reactor model;
 
 
 *-----------------Tfcoil Variables-----------------*
-
+dr_tf_inboard = 0.9 * TF coil inboard leg radial thickness (m)
 sig_tf_case_max = 850.0e6 * Allowable maximum shear stress (Tresca criterion) in TF coil case (Pa)
 sig_tf_wp_max = 700.0e6 * Allowable maximum shear stress (Tresca criterion) in TF coil conduit (Pa)
 f_dr_tf_plasma_case = 1.0e-12 * inboard TF coil case plasma side thickness as a fraction of tfcth
