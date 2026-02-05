@@ -235,7 +235,7 @@ class Stellarator:
         )  # B-field scaling factor
 
         # Coil aspect ratio factor to the reference calculation (we use it to scale the coil minor radius)
-        stellarator_variables.f_coil_aspect = stellarator_variables.f_st_coil_aspect       
+        stellarator_variables.f_coil_aspect = stellarator_variables.f_st_coil_aspect
 
         # Coil major radius, scaled with respect to the reference calculation
         stellarator_variables.r_coil_major = (

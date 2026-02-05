@@ -20,9 +20,20 @@ f_st_i_total: float = None
 f_st_rminor: float = None
 """Actual minor radius to reference value from stella_config file"""
 
+f_coil_shape: float = None
+""" Paramtere required for coil scaling
+(min_plasma_coil_distance + stella_config_rminor_ref) / stella_config_coil_rminor
+"""
+
 first_call: bool = None
 
 first_call_stfwbs: bool = None
+
+r_coil_minor: float = None
+"""Coil minor radius (m)"""
+
+r_coil_major: float = None
+"""Coil major radius (m)"""
 
 # These variables were from stellarator_variables.f90
 istell: int = None
@@ -109,8 +120,11 @@ def init_stellarator_variables():
         f_st_n_coils, \
         f_st_rmajor, \
         f_st_rminor, \
+        f_coil_shape, \
         f_st_b, \
         f_st_i_total, \
+        r_coil_minor, \
+        r_coil_major, \
         istell, \
         bmn, \
         f_asym, \
@@ -140,8 +154,12 @@ def init_stellarator_variables():
     f_st_n_coils = 0.0
     f_st_rmajor = 0.0
     f_st_rminor = 0.0
+    f_coil_shape = 0.0
     f_st_b = 0.0
     f_st_i_total = 0.0
+    f_st_coil_aspect = 0.0
+    r_coil_major = 0.0
+    r_coil_minor = 0.0
     istell = 0
     bmn = 1e-3
     f_asym = 1.0

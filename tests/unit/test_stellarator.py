@@ -31,12 +31,13 @@ from process.hcpb import CCFE_HCPB
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
+from process.stellarator.build import st_build
 from process.stellarator.coils.coils import bmax_from_awp, intersect
 from process.stellarator.coils.quench import (
     calculate_quench_protection_current_density,
     max_dump_voltage,
 )
-from process.stellarator.denisty_limits import st_d_limit_ecrh
+from process.stellarator.denisty_limits import st_d_limit_ecrh, st_sudo_density_limit
 from process.stellarator.neoclassics import Neoclassics
 from process.stellarator.stellarator import Stellarator
 from process.vacuum import Vacuum
@@ -101,7 +102,7 @@ class StgeomParam(NamedTuple):
 
     stella_config_plasma_surface: Any = None
 
-    f_st_r: Any = None
+    f_st_rmajor: Any = None
 
     f_st_rminor: Any = None
 
@@ -128,7 +129,7 @@ class StgeomParam(NamedTuple):
             b_plasma_toroidal_on_axis=5.5,
             stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
-            f_st_r=0.99099099099099097,
+            f_st_rmajor=0.99099099099099097,
             f_st_rminor=0.99125889880147788,
             expected_a_plasma_surface=1925.3641313657533,
             expected_a_plasma_surface_outboard=962.68206568287667,
@@ -146,7 +147,7 @@ class StgeomParam(NamedTuple):
             b_plasma_toroidal_on_axis=5.5,
             stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
-            f_st_r=0.99099099099099097,
+            f_st_rmajor=0.99099099099099097,
             f_st_rminor=0.99125889880147788,
             expected_a_plasma_surface=1925.3641313657533,
             expected_a_plasma_surface_outboard=962.68206568287667,
@@ -212,7 +213,7 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(stellarator_variables, "f_st_rminor", stgeomparam.f_st_rminor)
 
-    stellarator.stgeom()
+    stellarator.st_geom()
 
     assert physics_variables.a_plasma_surface == pytest.approx(
         stgeomparam.expected_a_plasma_surface
@@ -412,27 +413,27 @@ class StbildParam(NamedTuple):
             dr_fw_wall=0.0030000000000000001,
             ipowerflow=1,
             rmajor=22,
-            rminor=1.7842660178426601,
+            rminor=1.783783784,
             a_plasma_surface=1925.3641313657533,
             stella_config_derivative_min_lcfs_coils_dist=-1,
             stella_config_rminor_ref=1.8,
             stella_config_min_plasma_coil_distance=1.8999999999999999,
             f_st_rmajor=0.99099099099099097,
             f_st_aspect=1,
-            f_st_rminor=0.99125889880147788,
+            f_st_rminor=0.99099099099099097,
             iprint=0,
             outfile=11,
             expected_dz_blkt_upper=0.75,
-            expected_bore=17.79214950143977,
-            expected_a_fw_total=1918.8188778803135,
+            expected_bore=17.792631735282427,
+            expected_a_fw_total=1918.87696696527,
             expected_dr_fw_inboard=0.018000000000000002,
             expected_dr_fw_outboard=0.018000000000000002,
             expected_dr_shld_vv_gap_outboard=0.025000000000000005,
-            expected_hmax=3.7022660178426601,
-            expected_r_tf_outboard_mid=26.367558258201448,
+            expected_hmax=3.7017837840000003,
+            expected_r_tf_outboard_mid=26.367076024358788,
             expected_rbld=22,
-            expected_rsldi=18.947733982157342,
-            expected_rsldo=25.602266017842663,
+            expected_rsldi=18.948216216000002,
+            expected_rsldo=25.601783784000002,
             expected_rspo=22,
             expected_available_radial_space=1.8828828828828827,
             expected_required_radial_space=2.0332922403587861,
@@ -459,10 +460,10 @@ class StbildParam(NamedTuple):
             dr_shld_vv_gap_outboard=0.025000000000000005,
             z_tf_inside_half=6.2927927927927927,
             dr_cs=0,
-            r_tf_outboard_mid=26.367558258201448,
+            r_tf_outboard_mid=26.367076024358788,
             rbld=22,
-            r_shld_inboard_inner=18.947733982157342,
-            r_shld_outboard_outer=25.602266017842663,
+            r_shld_inboard_inner=18.948216216000002,
+            r_shld_outboard_outer=25.601783784000002,
             rspo=22,
             dr_fw_plasma_gap_inboard=0.15000000000000002,
             dr_fw_plasma_gap_outboard=0.30000000000000004,
@@ -481,27 +482,27 @@ class StbildParam(NamedTuple):
             dr_fw_wall=0.0030000000000000001,
             ipowerflow=1,
             rmajor=22,
-            rminor=1.7842660178426601,
+            rminor=1.783783784,
             a_plasma_surface=1925.3641313657533,
             stella_config_derivative_min_lcfs_coils_dist=-1,
             stella_config_rminor_ref=1.8,
             stella_config_min_plasma_coil_distance=1.8999999999999999,
             f_st_rmajor=0.99099099099099097,
             f_st_aspect=1,
-            f_st_rminor=0.99125889880147788,
+            f_st_rminor=0.99099099099099097,
             iprint=0,
             outfile=11,
             expected_dz_blkt_upper=0.75,
-            expected_bore=17.79214950143977,
-            expected_a_fw_total=2120.6210472630282,
+            expected_bore=17.792631735282427,
+            expected_a_fw_total=2120.685245576686,
             expected_dr_fw_inboard=0.018000000000000002,
             expected_dr_fw_outboard=0.018000000000000002,
             expected_dr_shld_vv_gap_outboard=0.025000000000000005,
-            expected_hmax=3.7022660178426601,
-            expected_r_tf_outboard_mid=26.367558258201448,
+            expected_hmax=3.7017837840000003,
+            expected_r_tf_outboard_mid=26.367076024358788,
             expected_rbld=22,
-            expected_rsldi=18.947733982157342,
-            expected_rsldo=25.602266017842663,
+            expected_rsldi=18.948216216000002,
+            expected_rsldo=25.601783784000002,
             expected_rspo=22,
             expected_available_radial_space=1.8828828828828827,
             expected_required_radial_space=2.0332922403587861,
@@ -665,13 +666,26 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         stbildparam.stella_config_min_plasma_coil_distance,
     )
 
+    monkeypatch.setattr(
+        stellarator_variables,
+        "r_coil_minor",
+        (
+            stbildparam.stella_config_min_plasma_coil_distance
+            + stbildparam.stella_config_rminor_ref
+        )
+        * stbildparam.f_st_rminor,
+    )
+
     monkeypatch.setattr(stellarator_variables, "f_st_rmajor", stbildparam.f_st_rmajor)
 
     monkeypatch.setattr(stellarator_variables, "f_st_aspect", stbildparam.f_st_aspect)
 
     monkeypatch.setattr(stellarator_variables, "f_st_rminor", stbildparam.f_st_rminor)
 
-    stellarator.stbild(False)
+    monkeypatch.setattr(stellarator_variables, "f_coil_shape", 1.0)
+
+    st_build(stellarator, False)
+
     assert build_variables.dz_blkt_upper == pytest.approx(
         stbildparam.expected_dz_blkt_upper
     )
@@ -788,9 +802,9 @@ class StstrcParam(NamedTuple):
             f_st_b=0.98214285714285721,
             iprint=0,
             outfile=11,
-            expected_aintmass=4882304.266547408,
-            expected_clgsmass=976460.85330948164,
-            expected_coldmass=10087177.087209985,
+            expected_aintmass=5207102.5841011265,
+            expected_clgsmass=1041420.5168202254,
+            expected_coldmass=10411975.404763702,
         ),
         StstrcParam(
             dewmkg=22397931.480129492,
@@ -812,9 +826,9 @@ class StstrcParam(NamedTuple):
             f_st_b=0.98214285714285721,
             iprint=0,
             outfile=11,
-            expected_aintmass=4882304.266547408,
-            expected_clgsmass=976460.85330948164,
-            expected_coldmass=32485108.567339476,
+            expected_aintmass=5207102.5841011265,
+            expected_clgsmass=1041420.5168202254,
+            expected_coldmass=32809906.884893194,
         ),
     ),
 )
@@ -881,13 +895,37 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
         ststrcparam.stella_config_coillength,
     )
 
+    monkeypatch.setattr(
+        stellarator_configuration,
+        "stella_config_coil_rminor",
+        1.0,
+    )
+
+    monkeypatch.setattr(
+        stellarator_variables,
+        "r_coil_minor",
+        ststrcparam.f_st_rmajor,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "len_tf_coil",
+        ststrcparam.stella_config_coillength * ststrcparam.f_st_rmajor,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "n_tf_coils",
+        1,
+    )
+
     monkeypatch.setattr(stellarator_variables, "f_st_n_coils", ststrcparam.f_st_n_coils)
 
     monkeypatch.setattr(stellarator_variables, "f_st_rmajor", ststrcparam.f_st_rmajor)
 
     monkeypatch.setattr(stellarator_variables, "f_st_b", ststrcparam.f_st_b)
 
-    stellarator.ststrc(False)
+    stellarator.st_strc(False)
 
     assert structure_variables.aintmass == pytest.approx(ststrcparam.expected_aintmass)
 
@@ -2705,7 +2743,7 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
         stdlimparam.nd_plasma_electrons_max,
     )
 
-    nd_plasma_electron_max_array = stellarator.st_sudo_density_limit(
+    nd_plasma_electron_max_array = st_sudo_density_limit(
         b_plasma_toroidal_on_axis=stdlimparam.b_plasma_toroidal_on_axis,
         powht=stdlimparam.powht,
         rmajor=stdlimparam.rmajor,
@@ -2909,7 +2947,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
         stellarator_variables, "f_st_rmajor", stcalceffchiparam.f_st_rmajor
     )
 
-    output = stellarator.st_calc_eff_chi()
+    output = stellarator.neoclassics.st_calc_eff_chi()
 
     assert output == pytest.approx(stcalceffchiparam.expected_output)
 
