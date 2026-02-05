@@ -478,8 +478,43 @@ class BlanketLibrary:
             fwbs_variables.n_blkt_inboard_modules_poloidal = 1
             fwbs_variables.n_blkt_outboard_modules_poloidal = 1
 
-        # Calculate poloidal height of blanket modules
-        self.blanket_module_poloidal_height()
+        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+            blanket_library.len_blkt_inboard_segment_poloidal = self.calculate_dshaped_inboard_blkt_segment_poloidal(
+                dz_blkt_half=blanket_library.dz_blkt_half,
+                n_blkt_inboard_modules_poloidal=fwbs_variables.n_blkt_inboard_modules_poloidal,
+            )
+
+            blanket_library.len_blkt_outboard_segment_poloidal = self.calculate_dshaped_outboard_blkt_segment_poloidal(
+                n_blkt_outboard_modules_poloidal=fwbs_variables.n_blkt_outboard_modules_poloidal,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                rminor=physics_variables.rminor,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                dz_blkt_half=blanket_library.dz_blkt_half,
+                n_divertors=divertor_variables.n_divertors,
+                f_ster_div_single=fwbs_variables.f_ster_div_single,
+            )
+        else:
+            blanket_library.len_blkt_inboard_segment_poloidal = self.calculate_elliptical_inboard_blkt_segment_poloidal(
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                triang=physics_variables.triang,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                dz_blkt_half=blanket_library.dz_blkt_half,
+                n_blkt_inboard_modules_poloidal=fwbs_variables.n_blkt_inboard_modules_poloidal,
+                n_divertors=divertor_variables.n_divertors,
+                f_ster_div_single=fwbs_variables.f_ster_div_single,
+            )
+
+            blanket_library.len_blkt_outboard_segment_poloidal = self.calculate_elliptical_outboard_blkt_segment_poloidal(
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                triang=physics_variables.triang,
+                dz_blkt_half=blanket_library.dz_blkt_half,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                n_blkt_outboard_modules_poloidal=fwbs_variables.n_blkt_outboard_modules_poloidal,
+                n_divertors=divertor_variables.n_divertors,
+                f_ster_div_single=fwbs_variables.f_ster_div_single,
+            )
 
         # If liquid breeder or dual coolant blanket then calculate
         if fwbs_variables.i_blkt_dual_coolant > 0:
