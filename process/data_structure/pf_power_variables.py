@@ -43,10 +43,10 @@ poloidalpower: list[float] = None
 """Poloidal power usage at time t (MW)"""
 
 f_p_pf_energy_store_loss: float = None
-"""Dimensionless loss fraction per energy transfer"""
+"""Fraction of PF magnetic energy moved into/out of storage that is lost each time"""
 
 f_p_pf_psu_loss: float = None
-"""Dimensionless loss fraction of handled power/energy"""
+"""Fraction of inductive power flow lost in the PF power supplies/converters."""
 
 
 def init_pf_power_variables():
