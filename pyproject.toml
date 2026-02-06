@@ -93,14 +93,12 @@ features = ["test"]
 python = ["3.10", "3.11", "3.12", "3.13"]
 [tool.hatch.envs.test.scripts]
 tests      = "pytest -n auto -v {args:tests}"
+tests-unit      = "pytest -n auto -v tests/unit {args:}"
+tests-regression      = "pytest -n auto -v tests/regression {args:}"
+tests-integration      = "pytest -n auto -v tests/integration {args:}"
+tests-examples      = "pytest -n auto -v tests/examples {args:}"
 tests-cov  = "pytest --cov process  --cov-report html:htmlcov --cov-report xml {args:tests}"
 tests-cov-private  = "pytest --private --cov process --cov-report html:htmlcov --cov-report xml {args:tests}"
-
-[tool.hatch.envs.test-default]
-template="test"
-[[tool.hatch.envs.test-default.matrix]]
-python = ["3.10"]
-
 
 [tool.hatch.envs.docs]
 features = ["docs"]
