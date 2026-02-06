@@ -37,7 +37,7 @@ nav:
           - Python Optimisation and Numba: development/numba.md
       - Style:
           - Standards: development/standards.md
-                      # - Versioning: development/versioning.md
+              # - Versioning: development/versioning.md
   - Models:
       - Physics Models:
           - Plasma:
@@ -147,7 +147,7 @@ repo_name: UKAEA/PROCESS
 copyright: Copyright &copy; 2023 United Kingdom Atomic Energy Authority
 
 theme:
-    # name: readthedocs
+  # name: readthedocs
   name: material
   font:
     text: Roboto
@@ -155,7 +155,7 @@ theme:
     - navigation.tabs
     - navigation.footer
     - navigation.top
-          # - navigation.sections
+      # - navigation.sections
     - search.suggest
     - search.highlight
     - navigation.instant
