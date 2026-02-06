@@ -97,8 +97,7 @@ tests-unit      = "pytest -n auto -v tests/unit {args:}"
 tests-regression      = "pytest -n auto -v tests/regression {args:}"
 tests-integration      = "pytest -n auto -v tests/integration {args:}"
 tests-examples      = "pytest -n auto -v tests/examples {args:}"
-tests-cov  = "pytest --cov process  --cov-report html:htmlcov --cov-report xml {args:tests}"
-tests-cov-private  = "pytest --private --cov process --cov-report html:htmlcov --cov-report xml {args:tests}"
+tests-cov  = "pytest -n auto --cov process  --cov-report html:htmlcov --cov-report xml {args:tests}"
 
 [tool.hatch.envs.docs]
 features = ["docs"]
