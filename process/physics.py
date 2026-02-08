@@ -5555,112 +5555,7 @@ class Physics:
             po.ostars(self.outfile, 110)
             po.oblnkl(self.outfile)
 
-            po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
-            po.ovarre(
-                self.outfile,
-                "Total plasma volt-seconds required for pulse (Wb)",
-                "(vs_plasma_total_required)",
-                physics_variables.vs_plasma_total_required,
-                "OP ",
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
-                "(vs_plasma_ind_ramp)",
-                physics_variables.vs_plasma_ind_ramp,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma resistive flux consumption for plasma current ramp-up (Wb)",
-                "(vs_plasma_res_ramp)",
-                physics_variables.vs_plasma_res_ramp,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total flux consumption for plasma current ramp-up (Wb)",
-                "(vs_plasma_ramp_required)",
-                physics_variables.vs_plasma_ramp_required,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Ejima coefficient",
-                "(ejima_coeff)",
-                physics_variables.ejima_coeff,
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Internal plasma V-s",
-                "(vs_plasma_internal)",
-                physics_variables.vs_plasma_internal,
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
-                "(vs_plasma_burn_required)",
-                physics_variables.vs_plasma_burn_required,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma loop voltage during burn (V)",
-                "(v_plasma_loop_burn)",
-                physics_variables.v_plasma_loop_burn,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Coefficient for sawtooth effects on burn V-s requirement",
-                "(csawth)",
-                physics_variables.csawth,
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Plasma resistance (ohm)",
-                "(res_plasma)",
-                physics_variables.res_plasma,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma resistive diffusion time (s)",
-                "(t_plasma_res_diffusion)",
-                physics_variables.t_plasma_res_diffusion,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma inductance (H)",
-                "(ind_plasma)",
-                physics_variables.ind_plasma,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma magnetic energy stored (J)",
-                "(e_plasma_magnetic_stored)",
-                physics_variables.e_plasma_magnetic_stored,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Plasma normalised internal inductance",
-                "(ind_plasma_internal_norm)",
-                physics_variables.ind_plasma_internal_norm,
-                "OP ",
-            )
-
-            po.oblnkl(self.outfile)
-            po.ostars(self.outfile, 110)
-            po.oblnkl(self.outfile)
+            self.inductance.output_volt_second_information()
 
             po.ovarrf(
                 self.outfile,
@@ -9261,6 +9156,116 @@ class PlasmaInductance:
             International Series of Monographs on Physics, Volume 149.
         """
         return np.log(1.65 + 0.89 * alphaj)
+
+    def output_volt_second_information(self):
+        """Output volt-second information to file."""
+
+        po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
+        po.ovarre(
+            self.outfile,
+            "Total plasma volt-seconds required for pulse (Wb)",
+            "(vs_plasma_total_required)",
+            physics_variables.vs_plasma_total_required,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
+            "(vs_plasma_ind_ramp)",
+            physics_variables.vs_plasma_ind_ramp,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma resistive flux consumption for plasma current ramp-up (Wb)",
+            "(vs_plasma_res_ramp)",
+            physics_variables.vs_plasma_res_ramp,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total flux consumption for plasma current ramp-up (Wb)",
+            "(vs_plasma_ramp_required)",
+            physics_variables.vs_plasma_ramp_required,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ejima coefficient",
+            "(ejima_coeff)",
+            physics_variables.ejima_coeff,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Internal plasma V-s",
+            "(vs_plasma_internal)",
+            physics_variables.vs_plasma_internal,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
+            "(vs_plasma_burn_required)",
+            physics_variables.vs_plasma_burn_required,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma loop voltage during burn (V)",
+            "(v_plasma_loop_burn)",
+            physics_variables.v_plasma_loop_burn,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Coefficient for sawtooth effects on burn V-s requirement",
+            "(csawth)",
+            physics_variables.csawth,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma resistance (ohm)",
+            "(res_plasma)",
+            physics_variables.res_plasma,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma resistive diffusion time (s)",
+            "(t_plasma_res_diffusion)",
+            physics_variables.t_plasma_res_diffusion,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma inductance (H)",
+            "(ind_plasma)",
+            physics_variables.ind_plasma,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma magnetic energy stored (J)",
+            "(e_plasma_magnetic_stored)",
+            physics_variables.e_plasma_magnetic_stored,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Plasma normalised internal inductance",
+            "(ind_plasma_internal_norm)",
+            physics_variables.ind_plasma_internal_norm,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
 
 class DetailedPhysics:
