@@ -1,4 +1,4 @@
-# Plasma Inductance
+# Plasma Inductance | `PlasmaInductance`
 
 ## Setting the normalised internal inductance
 
@@ -22,7 +22,7 @@ ind_plasma_internal_norm = 1.0
 
 ----------
 
-### Wesson relation
+### Wesson relation | `calculate_internal_inductance_wesson()`
 
 This can be activated by stating `i_ind_plasma_internal_normx = 1` in the input file.
 
@@ -42,7 +42,7 @@ This is only recommended for high aspect ratio tokamaks[^2].
 ---------
 
 
-### Menard Inductance Relation
+### Menard Inductance Relation | `calculate_internal_inductance_menard()`
 
 This can be activated by stating `ind_plasma_internal_norm = 2` in the input file.
 

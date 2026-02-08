@@ -23,12 +23,10 @@ from process.impurity_radiation import initialise_imprad
 from process.physics import (
     DetailedPhysics,
     Physics,
-    calculate_beta_limit,
-    calculate_current_coefficient_hastie,
-    calculate_plasma_current_peng,
-    calculate_poloidal_beta,
+    PlasmaBeta,
+    PlasmaCurrent,
+    PlasmaInductance,
     calculate_poloidal_field,
-    calculate_volt_second_requirements,
     diamagnetic_fraction_hender,
     diamagnetic_fraction_scene,
     ps_fraction_scene,
@@ -55,12 +53,15 @@ def physics():
             electron_bernstein=ElectronBernstein(plasma_profile=PlasmaProfile()),
             lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
         ),
+        PlasmaBeta(),
+        PlasmaInductance(),
+        PlasmaCurrent(),
     )
 
 
 def test_calculate_poloidal_beta():
     """Test calculate_poloidal_beta()"""
-    beta_poloidal = calculate_poloidal_beta(5.347, 0.852, 0.0307)
+    beta_poloidal = PlasmaBeta.calculate_poloidal_beta(5.347, 0.852, 0.0307)
     assert beta_poloidal == pytest.approx(1.209, abs=0.001)
 
 
@@ -1213,33 +1214,25 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        physics_variables,
-        "beta_norm_total",
-        plasmacurrentparam.beta_norm_total,
-    )
-
     monkeypatch.setattr(physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta)
 
-    b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
-        i_plasma_current=plasmacurrentparam.i_plasma_current,
-        alphaj=plasmacurrentparam.alphaj,
-        alphap=plasmacurrentparam.alphap,
-        b_plasma_toroidal_on_axis=plasmacurrentparam.b_plasma_toroidal_on_axis,
-        eps=plasmacurrentparam.eps,
-        kappa=plasmacurrentparam.kappa,
-        kappa95=plasmacurrentparam.kappa95,
-        pres_plasma_on_axis=plasmacurrentparam.pres_plasma_on_axis,
-        len_plasma_poloidal=plasmacurrentparam.len_plasma_poloidal,
-        q95=plasmacurrentparam.q95,
-        rmajor=plasmacurrentparam.rmajor,
-        rminor=plasmacurrentparam.rminor,
-        triang=plasmacurrentparam.triang,
-        triang95=plasmacurrentparam.triang95,
-    )
-
-    assert physics_variables.beta_norm_total == pytest.approx(
-        plasmacurrentparam.expected_normalised_total_beta
+    b_plasma_poloidal_average, qstar, plasma_current = (
+        PlasmaCurrent().calculate_plasma_current(
+            i_plasma_current=plasmacurrentparam.i_plasma_current,
+            alphaj=plasmacurrentparam.alphaj,
+            alphap=plasmacurrentparam.alphap,
+            b_plasma_toroidal_on_axis=(plasmacurrentparam.b_plasma_toroidal_on_axis),
+            eps=plasmacurrentparam.eps,
+            kappa=plasmacurrentparam.kappa,
+            kappa95=plasmacurrentparam.kappa95,
+            pres_plasma_on_axis=plasmacurrentparam.pres_plasma_on_axis,
+            len_plasma_poloidal=plasmacurrentparam.len_plasma_poloidal,
+            q95=plasmacurrentparam.q95,
+            rmajor=plasmacurrentparam.rmajor,
+            rminor=plasmacurrentparam.rminor,
+            triang=plasmacurrentparam.triang,
+            triang95=plasmacurrentparam.triang95,
+        )
     )
 
     assert b_plasma_poloidal_average == pytest.approx(plasmacurrentparam.expected_bp)
@@ -1279,7 +1272,9 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     ),
 )
 def test_calculate_plasma_current_peng(arguments, expected):
-    assert calculate_plasma_current_peng(**arguments) == pytest.approx(expected)
+    assert PlasmaCurrent.calculate_plasma_current_peng(**arguments) == pytest.approx(
+        expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -1337,11 +1332,13 @@ def test_calculate_poloidal_field(arguments, expected):
 
 
 def test_calculate_beta_limit():
-    assert calculate_beta_limit(12, 4.879, 18300000, 2.5) == pytest.approx(0.0297619)
+    assert PlasmaBeta.calculate_beta_limit_from_norm(
+        12, 4.879, 18300000, 2.5
+    ) == pytest.approx(0.0297619)
 
 
 def test_conhas():
-    assert calculate_current_coefficient_hastie(
+    assert PlasmaCurrent.calculate_current_coefficient_hastie(
         5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.RMU0
     ) == pytest.approx(2.518876726889116)
 
@@ -2107,7 +2104,7 @@ def test_vscalc(voltsecondreqparam):
         vs_plasma_res_ramp,
         vs_plasma_total_required,
         v_plasma_loop_burn,
-    ) = calculate_volt_second_requirements(
+    ) = PlasmaInductance.calculate_volt_second_requirements(
         csawth=voltsecondreqparam.csawth,
         eps=voltsecondreqparam.eps,
         f_c_plasma_inductive=voltsecondreqparam.f_c_plasma_inductive,
@@ -3407,35 +3404,35 @@ def test_calculate_current_profile_index_wesson():
 def test_calculate_internal_inductance_wesson():
     """Test calculate_internal_inductance_wesson()."""
     alphaj = 0.8
-    result = Physics.calculate_internal_inductance_wesson(alphaj)
+    result = PlasmaInductance.calculate_internal_inductance_wesson(alphaj)
     assert result == pytest.approx(0.8595087177751706, abs=0.0001)
 
 
 def test_calculate_internal_inductance_menard():
     """Test calculate_internal_inductance_menard()."""
     kappa = 2.8
-    result = Physics.calculate_internal_inductance_menard(kappa)
+    result = PlasmaInductance.calculate_internal_inductance_menard(kappa)
     assert result == pytest.approx(0.6, abs=0.001)
 
 
 def test_calculate_beta_norm_max_wesson():
     """Test calculate_beta_norm_max_wesson()."""
     ind_plasma_internal_norm = 1.5
-    result = Physics.calculate_beta_norm_max_wesson(ind_plasma_internal_norm)
+    result = PlasmaBeta.calculate_beta_norm_max_wesson(ind_plasma_internal_norm)
     assert result == pytest.approx(6.0, abs=0.001)
 
 
 def test_calculate_beta_norm_max_original():
     """Test calculate_beta_norm_max_original()"""
     eps = 0.5
-    result = Physics.calculate_beta_norm_max_original(eps)
+    result = PlasmaBeta.calculate_beta_norm_max_original(eps)
     assert result == pytest.approx(3.8932426932522994, abs=0.00001)
 
 
 def test_calculate_beta_norm_max_menard():
     """Test calculate_beta_norm_max_menard()."""
     eps = 0.5
-    result = Physics.calculate_beta_norm_max_menard(eps)
+    result = PlasmaBeta.calculate_beta_norm_max_menard(eps)
     assert result == pytest.approx(4.197251361676802, abs=0.000001)
 
 
@@ -3444,7 +3441,7 @@ def test_calculate_beta_norm_max_thloreus():
     c_beta = 0.5
     pres_plasma_on_axis = 2.0
     pres_plasma_vol_avg = 1.0
-    result = Physics.calculate_beta_norm_max_thloreus(
+    result = PlasmaBeta.calculate_beta_norm_max_thloreus(
         c_beta, pres_plasma_on_axis, pres_plasma_vol_avg
     )
     assert result == pytest.approx(5.075, abs=0.00001)
@@ -3455,7 +3452,7 @@ def test_calculate_beta_norm_max_stambaugh():
     f_c_plasma_bootstrap = 0.7
     kappa = 2.0
     aspect = 2.5
-    result = Physics.calculate_beta_norm_max_stambaugh(
+    result = PlasmaBeta.calculate_beta_norm_max_stambaugh(
         f_c_plasma_bootstrap, kappa, aspect
     )
     assert result == pytest.approx(3.840954484207041, abs=0.00001)
@@ -3463,10 +3460,34 @@ def test_calculate_beta_norm_max_stambaugh():
 
 def test_calculate_internal_inductance_iter_3():
     """Test calculate_normalised_internal_inductance_iter_3."""
-    result = Physics.calculate_normalised_internal_inductance_iter_3(
+    result = PlasmaInductance.calculate_normalised_internal_inductance_iter_3(
         b_plasma_poloidal_vol_avg=1.0, c_plasma=1.5e7, vol_plasma=1000.0, rmajor=6.2
     )
     assert result == pytest.approx(0.9078959099585583, abs=0.00001)
+
+
+def test_calculate_normalised_beta():
+    """Test calculate_normalised_beta()"""
+    beta = 0.05
+    rminor = 2.0
+    c_plasma = 15.0e6
+    b_field = 5.0
+
+    result = PlasmaBeta.calculate_normalised_beta(
+        beta=beta, rminor=rminor, c_plasma=c_plasma, b_field=b_field
+    )
+    assert result == pytest.approx(3.3333333333333335, abs=1e-6)
+
+
+def test_calculate_plasma_energy_from_beta():
+    """Test calculate_plasma_energy_from_beta()"""
+    beta = 0.02
+    b_field = 5.3
+    vol_plasma = 1000.0
+    result = PlasmaBeta.calculate_plasma_energy_from_beta(
+        beta=beta, b_field=b_field, vol_plasma=vol_plasma
+    )
+    assert result == pytest.approx(335299676.2083403, rel=0.01)
 
 
 @pytest.mark.parametrize(

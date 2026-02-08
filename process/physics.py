@@ -1,5 +1,6 @@
 import logging
 import math
+from enum import IntEnum
 
 import numba as nb
 import numpy as np
@@ -70,186 +71,6 @@ def rether(
     )
 
     return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
-
-
-@nb.jit(nopython=True, cache=True)
-def calculate_volt_second_requirements(
-    csawth: float,
-    eps: float,
-    f_c_plasma_inductive: float,
-    ejima_coeff: float,
-    kappa: float,
-    rmajor: float,
-    res_plasma: float,
-    plasma_current: float,
-    t_plant_pulse_fusion_ramp: float,
-    t_plant_pulse_burn: float,
-    ind_plasma_internal_norm: float,
-) -> tuple[float, float, float, float, float, float]:
-    """Calculate the volt-second requirements and related parameters for plasma physics.
-
-    :param csawth: Coefficient for sawteeth effects
-    :type csawth: float
-    :param eps: Inverse aspect ratio
-    :type eps: float
-    :param f_c_plasma_inductive: Fraction of plasma current produced inductively
-    :type f_c_plasma_inductive: float
-    :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
-    :type ejima_coeff: float
-    :param kappa: Plasma elongation
-    :type kappa: float
-    :param rmajor: Plasma major radius (m)
-    :type rmajor: float
-    :param res_plasma: Plasma resistance (ohm)
-    :type res_plasma: float
-    :param plasma_current: Plasma current (A)
-    :type plasma_current: float
-    :param t_plant_pulse_fusion_ramp: Heating time (s)
-    :type t_plant_pulse_fusion_ramp: float
-    :param t_plant_pulse_burn: Burn time (s)
-    :type t_plant_pulse_burn: float
-    :param ind_plasma_internal_norm: Plasma normalized internal inductance
-    :type ind_plasma_internal_norm: float
-
-    :return: A tuple containing:
-        - vs_plasma_internal: Internal plasma volt-seconds (Wb)
-        - ind_plasma_internal: Plasma inductance (H)
-        - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
-        - vs_plasma_ramp_required: Volt-seconds needed during ramp-up (Wb)
-        - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
-        - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
-        - vs_plasma_total_required: Total volt-seconds needed (Wb)
-    :rtype: tuple[float, float, float, float, float, float]
-
-    :notes:
-
-    :references:
-        - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
-        “Volt-second analysis and consumption in Doublet III plasmas,”
-        Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
-        https://doi.org/10.1088/0029-5515/22/10/006.
-
-        - S. C. Jardin, C. E. Kessel, and N Pomphrey,
-        “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
-        Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
-        doi: https://doi.org/10.1088/0029-5515/34/8/i07.
-
-        - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
-        The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
-        doi: https://doi.org/10.1063/1.865934.
-    """
-    # Plasma internal inductance
-
-    ind_plasma_internal = constants.RMU0 * rmajor * ind_plasma_internal_norm / 2.0
-
-    # Internal plasma flux (V-s) component
-    vs_plasma_internal = ind_plasma_internal * plasma_current
-
-    # Start-up resistive component
-    # Uses ITER formula without the 10 V-s add-on
-
-    vs_res_ramp = ejima_coeff * constants.RMU0 * plasma_current * rmajor
-
-    # ======================================================================
-
-    # Hirshman and Neilson fit for external inductance
-
-    aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
-        2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
-    )
-    beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-
-    ind_plasma_external = (
-        rmajor * constants.RMU0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
-    )
-
-    # ======================================================================
-
-    ind_plasma_total = ind_plasma_external + ind_plasma_internal
-
-    # Inductive V-s component
-
-    vs_self_ind_ramp = ind_plasma_total * plasma_current
-    vs_plasma_ramp_required = vs_res_ramp + vs_self_ind_ramp
-
-    # Plasma loop voltage during flat-top
-    # Include enhancement factor in flattop V-s requirement
-    # to account for MHD sawtooth effects.
-
-    v_plasma_loop_burn = plasma_current * res_plasma * f_c_plasma_inductive
-
-    v_burn_resistive = v_plasma_loop_burn * csawth
-
-    # N.B. t_plant_pulse_burn on first iteration will not be correct
-    # if the pulsed reactor option is used, but the value
-    # will be correct on subsequent calls.
-
-    vs_plasma_burn_required = v_burn_resistive * (
-        t_plant_pulse_fusion_ramp + t_plant_pulse_burn
-    )
-    vs_plasma_total_required = vs_plasma_ramp_required + vs_plasma_burn_required
-
-    return (
-        vs_plasma_internal,
-        ind_plasma_total,
-        vs_plasma_burn_required,
-        vs_plasma_ramp_required,
-        vs_self_ind_ramp,
-        vs_res_ramp,
-        vs_plasma_total_required,
-        v_plasma_loop_burn,
-    )
-
-
-@nb.jit(nopython=True, cache=True)
-def calculate_beta_limit(
-    b_plasma_toroidal_on_axis: float,
-    beta_norm_max: float,
-    plasma_current: float,
-    rminor: float,
-) -> float:
-    """
-    Calculate the beta scaling limit.
-
-    :param b_plasma_toroidal_on_axis: Toroidal B-field on plasma axis [T].
-    :type b_plasma_toroidal_on_axis: float
-    :param beta_norm_max: Troyon-like g coefficient.
-    :type beta_norm_max: float
-    :param plasma_current: Plasma current [A].
-    :type plasma_current: float
-    :param rminor: Plasma minor axis [m].
-    :type rminor: float
-    :return: Beta limit as defined below.
-    :rtype: float
-
-    This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
-    The limit applies to beta defined with respect to the total B-field.
-    Switch i_beta_component determines which components of beta to include.
-
-    Notes:
-        - If i_beta_component = 0, then the limit is applied to the total beta.
-        - If i_beta_component = 1, then the limit is applied to the thermal beta only.
-        - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
-        - If i_beta_component = 3, then the limit is applied to the toroidal beta.
-
-        - The default value for the g coefficient is beta_norm_max = 3.5.
-
-    References:
-        - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
-          Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
-          doi: https://doi.org/10.1088/0741-3335/30/11/019.
-
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
-
-    """
-
-    # Multiplied by 0.01 to convert from % to fraction
-    return (
-        0.01
-        * beta_norm_max
-        * (plasma_current / 1.0e6)
-        / (rminor * b_plasma_toroidal_on_axis)
-    )
 
 
 # -----------------------------------------------------
@@ -365,293 +186,6 @@ def calculate_poloidal_field(
     qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
     return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
-
-
-def calculate_current_coefficient_peng(
-    eps: float, len_plasma_poloidal: float, rminor: float
-) -> float:
-    """
-    Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
-
-    :param eps: Plasma inverse aspect ratio.
-    :type eps: float
-    :param len_plasma_poloidal: Plasma poloidal perimeter length [m].
-    :type len_plasma_poloidal: float
-    :param rminor: Plasma minor radius [m].
-    :type rminor: float
-
-    :return: The plasma current scaling coefficient.
-    :rtype: float
-
-    :references: None
-    """
-
-    return (
-        (1.22 - 0.68 * eps)
-        / ((1.0 - eps * eps) ** 2)
-        * (len_plasma_poloidal / (2.0 * np.pi * rminor)) ** 2
-    )
-
-
-def calculate_plasma_current_peng(
-    q95: float,
-    aspect: float,
-    eps: float,
-    rminor: float,
-    b_plasma_toroidal_on_axis: float,
-    kappa: float,
-    delta: float,
-) -> float:
-    """
-    Function to calculate plasma current (Peng scaling from the STAR code)
-
-    Parameters:
-    - q95: float, 95% flux surface safety factor
-    - aspect: float, plasma aspect ratio
-    - eps: float, inverse aspect ratio
-    - rminor: float, plasma minor radius (m)
-    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-    - kappa: float, plasma elongation
-    - delta: float, plasma triangularity
-
-    Returns:
-    - float, plasma current in MA
-
-    This function calculates the plasma current in MA,
-    using a scaling from Peng, Galambos and Shipe (1992).
-    It is primarily used for Tight Aspect Ratio Tokamaks and is
-    selected via i_plasma_current=2.
-
-    References:
-    - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-      unpublished internal Oak Ridge document
-    - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-      'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-      1729-1738. https://doi.org/10.13182/FST92-A29971
-    """
-
-    # Transform q95 to qbar
-    qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
-
-    ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
-
-    e1 = (2.0 * kappa) / (d1 * (1.0 + delta))
-    e2 = (2.0 * kappa) / (d2 * (1.0 - delta))
-
-    return (
-        rminor
-        * b_plasma_toroidal_on_axis
-        / qbar
-        * 5.0
-        * kappa
-        / (2.0 * np.pi**2)
-        * (np.arcsin(e1) / e1 + np.arcsin(e2) / e2)
-        * (ff1 + ff2)
-    )
-
-
-@nb.jit(nopython=True, cache=True)
-def calculate_current_coefficient_ipdg89(
-    eps: float, kappa95: float, triang95: float
-) -> float:
-    """
-    Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
-
-    Parameters:
-    - eps: float, plasma inverse aspect ratio
-    - kappa95: float, plasma elongation 95%
-    - triang95: float, plasma triangularity 95%
-
-    Returns:
-    - float, the fq plasma current coefficient
-
-    This function calculates the fq coefficient used in the IPDG89 plasma current scaling,
-    based on the given plasma parameters.
-
-    References:
-    - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
-    - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
-    """
-    return (
-        0.5
-        * (1.17 - 0.65 * eps)
-        / ((1.0 - eps * eps) ** 2)
-        * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
-    )
-
-
-@nb.jit(nopython=True, cache=True)
-def calculate_current_coefficient_todd(
-    eps: float, kappa95: float, triang95: float, model: int
-) -> float:
-    """
-    Calculate the fq coefficient used in the two Todd plasma current scalings.
-
-    Parameters:
-    - eps: float, plasma inverse aspect ratio
-    - kappa95: float, plasma elongation 95%
-    - triang95: float, plasma triangularity 95%
-
-    Returns:
-    - float, the fq plasma current coefficient
-
-    This function calculates the fq coefficient based on the given plasma parameters for the two Todd scalings.
-
-    References:
-    - D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-    - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
-    """
-    # Calculate the Todd scaling based on the model
-    base_scaling = (
-        (1.0 + 2.0 * eps**2)
-        * ((1.0 + kappa95**2) / 0.5)
-        * (1.24 - 0.54 * kappa95 + 0.3 * (kappa95**2 + triang95**2) + 0.125 * triang95)
-    )
-    if model == 1:
-        return base_scaling
-    if model == 2:
-        return base_scaling * (1.0 + (abs(kappa95 - 1.2)) ** 3)
-    raise ProcessValueError(f"model = {model} is an invalid option")
-
-
-@nb.jit(nopython=True, cache=True)
-def calculate_current_coefficient_hastie(
-    alphaj: float,
-    alphap: float,
-    b_plasma_toroidal_on_axis: float,
-    delta95: float,
-    eps: float,
-    kappa95: float,
-    pres_plasma_on_axis: float,
-    rmu0: float,
-) -> float:
-    """
-    Routine to calculate the f_q coefficient for the Connor-Hastie model used for scaling the plasma current.
-
-    Parameters:
-    - alphaj: float, the current profile index
-    - alphap: float, the pressure profile index
-    - b_plasma_toroidal_on_axis: float, the toroidal field on axis (T)
-    - delta95: float, the plasma triangularity 95%
-    - eps: float, the inverse aspect ratio
-    - kappa95: float, the plasma elongation 95%
-    - pres_plasma_on_axis: float, the central plasma pressure (Pa)
-    - rmu0: float, the vacuum permeability (H/m)
-
-    Returns:
-    - float, the F coefficient
-
-    This routine calculates the f_q coefficient used for scaling the plasma current,
-    using the Connor-Hastie scaling
-
-    Reference:
-    - J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985).
-      https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
-    - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
-    """
-    # Exponent in Connor-Hastie current profile
-    lamda = alphaj
-
-    # Exponent in Connor-Hastie pressure profile
-    nu = alphap
-
-    # Central plasma beta
-    beta0 = 2.0 * rmu0 * pres_plasma_on_axis / (b_plasma_toroidal_on_axis**2)
-
-    # Plasma internal inductance
-    lamp1 = 1.0 + lamda
-    li = lamp1 / lamda * (lamp1 / lamda * np.log(lamp1) - 1.0)
-
-    # T/r in AEA FUS 172
-    kap1 = kappa95 + 1.0
-    tr = kappa95 * delta95 / kap1**2
-
-    # E/r in AEA FUS 172
-    er = (kappa95 - 1.0) / kap1
-
-    # T primed in AEA FUS 172
-    tprime = 2.0 * tr * lamp1 / (1.0 + 0.5 * lamda)
-
-    # E primed in AEA FUS 172
-    eprime = er * lamp1 / (1.0 + lamda / 3.0)
-
-    # Delta primed in AEA FUS 172
-    deltap = (0.5 * kap1 * eps * 0.5 * li) + (beta0 / (0.5 * kap1 * eps)) * lamp1**2 / (
-        1.0 + nu
-    )
-
-    # Delta/R0 in AEA FUS 172
-    deltar = beta0 / 6.0 * (1.0 + 5.0 * lamda / 6.0 + 0.25 * lamda**2) + (
-        0.5 * kap1 * eps
-    ) ** 2 * 0.125 * (1.0 - (lamda**2) / 3.0)
-
-    # F coefficient
-    return (0.5 * kap1) ** 2 * (
-        1.0
-        + eps**2 * (0.5 * kap1) ** 2
-        + 0.5 * deltap**2
-        + 2.0 * deltar
-        + 0.5 * (eprime**2 + er**2)
-        + 0.5 * (tprime**2 + 4.0 * tr**2)
-    )
-
-
-@nb.jit(nopython=True, cache=True)
-def calculate_current_coefficient_sauter(
-    eps: float,
-    kappa: float,
-    triang: float,
-) -> float:
-    """
-    Routine to calculate the f_q coefficient for the Sauter model used for scaling the plasma current.
-
-    Parameters:
-    - eps: float, inverse aspect ratio
-    - kappa: float, plasma elongation at the separatrix
-    - triang: float, plasma triangularity at the separatrix
-
-    Returns:
-    - float, the fq coefficient
-
-    Reference:
-    - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
-      Fusion Engineering and Design, Volume 112, 2016, Pages 633-645,
-      ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
-    """
-    w07 = 1.0  # zero squareness - can be modified later if required
-
-    return (
-        (4.1e6 / 5.0e6)
-        * (1.0 + 1.2 * (kappa - 1.0) + 0.56 * (kappa - 1.0) ** 2)
-        * (1.0 + 0.09 * triang + 0.16 * triang**2)
-        * (1.0 + 0.45 * triang * eps)
-        / (1.0 - 0.74 * eps)
-        * (1.0 + 0.55 * (w07 - 1.0))
-    )
-
-
-@nb.jit(nopython=True, cache=True)
-def calculate_current_coefficient_fiesta(
-    eps: float, kappa: float, triang: float
-) -> float:
-    """
-    Calculate the fq coefficient used in the FIESTA plasma current scaling.
-
-    Parameters:
-    - eps: float, plasma inverse aspect ratio
-    - kappa: float, plasma elongation at the separatrix
-    - triang: float, plasma triangularity at the separatrix
-
-    Returns:
-    - float, the fq plasma current coefficient
-
-    This function calculates the fq coefficient based on the given plasma parameters for the FIESTA scaling.
-
-    References:
-    - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design,
-      Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
-    """
-    return 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
 
 
 # --------------------------------
@@ -1566,11 +1100,21 @@ def _trapped_particle_fraction_sauter(
 
 
 class Physics:
-    def __init__(self, plasma_profile, current_drive):
+    def __init__(
+        self,
+        plasma_profile,
+        current_drive,
+        plasma_beta,
+        plasma_inductance,
+        plasma_current,
+    ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
+        self.beta = plasma_beta
+        self.inductance = plasma_inductance
+        self.current = plasma_current
 
     def physics(self):
         """
@@ -1626,7 +1170,7 @@ class Physics:
             physics_variables.b_plasma_poloidal_average,
             physics_variables.qstar,
             physics_variables.plasma_current,
-        ) = self.calculate_plasma_current(
+        ) = self.current.calculate_plasma_current(
             physics_variables.alphaj,
             physics_variables.alphap,
             physics_variables.b_plasma_toroidal_on_axis,
@@ -1641,6 +1185,14 @@ class Physics:
             physics_variables.rminor,
             physics_variables.triang,
             physics_variables.triang95,
+        )
+
+        # Normalised beta from Troyon beta limit
+        physics_variables.beta_norm_total = self.beta.calculate_normalised_beta(
+            beta=physics_variables.beta_total_vol_avg,
+            rminor=physics_variables.rminor,
+            c_plasma=physics_variables.plasma_current,
+            b_field=physics_variables.b_plasma_toroidal_on_axis,
         )
 
         # -----------------------------------------------------
@@ -1675,17 +1227,21 @@ class Physics:
         # -----------------------------------------------------
 
         physics_variables.ind_plasma_internal_norm_wesson = (
-            self.calculate_internal_inductance_wesson(alphaj=physics_variables.alphaj)
+            self.inductance.calculate_internal_inductance_wesson(
+                alphaj=physics_variables.alphaj
+            )
         )
 
         # Spherical Tokamak relation for internal inductance
         # Menard et al. (2016), Nuclear Fusion, 56, 106023
         physics_variables.ind_plasma_internal_norm_menard = (
-            self.calculate_internal_inductance_menard(kappa=physics_variables.kappa)
+            self.inductance.calculate_internal_inductance_menard(
+                kappa=physics_variables.kappa
+            )
         )
 
         physics_variables.ind_plasma_internal_norm_iter_3 = (
-            self.calculate_normalised_internal_inductance_iter_3(
+            self.inductance.calculate_normalised_internal_inductance_iter_3(
                 b_plasma_poloidal_vol_avg=physics_variables.b_plasma_poloidal_average,
                 c_plasma=physics_variables.plasma_current,
                 vol_plasma=physics_variables.vol_plasma,
@@ -1693,28 +1249,19 @@ class Physics:
             )
         )
 
-        # Map calculation methods to a dictionary
-        ind_plasma_internal_norm_calculations = {
-            0: physics_variables.ind_plasma_internal_norm,
-            1: physics_variables.ind_plasma_internal_norm_wesson,
-            2: physics_variables.ind_plasma_internal_norm_menard,
-        }
-
-        # Calculate ind_plasma_internal_normx based on i_ind_plasma_internal_norm
-        if (
-            int(physics_variables.i_ind_plasma_internal_norm)
-            in ind_plasma_internal_norm_calculations
-        ):
-            physics_variables.ind_plasma_internal_norm = (
-                ind_plasma_internal_norm_calculations[
-                    int(physics_variables.i_ind_plasma_internal_norm)
-                ]
+        # Calculate ind_plasma_internal_norm based on i_ind_plasma_internal_norm
+        try:
+            model = IndInternalNormModel(
+                int(physics_variables.i_ind_plasma_internal_norm)
             )
-        else:
+            physics_variables.ind_plasma_internal_norm = (
+                self.inductance.get_ind_internal_norm_value(model)
+            )
+        except ValueError:
             raise ProcessValueError(
                 "Illegal value of i_ind_plasma_internal_norm",
                 i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
-            )
+            ) from None
 
         # ===================================================
 
@@ -1784,111 +1331,7 @@ class Physics:
         # Beta Components
         # -----------------------------------------------------
 
-        physics_variables.beta_toroidal_vol_avg = (
-            physics_variables.beta_total_vol_avg
-            * physics_variables.b_plasma_total**2
-            / physics_variables.b_plasma_toroidal_on_axis**2
-        )
-
-        # Calculate physics_variables.beta poloidal [-]
-        physics_variables.beta_poloidal_vol_avg = calculate_poloidal_beta(
-            physics_variables.b_plasma_total,
-            physics_variables.b_plasma_poloidal_average,
-            physics_variables.beta_total_vol_avg,
-        )
-
-        physics_variables.beta_thermal_vol_avg = (
-            physics_variables.beta_total_vol_avg
-            - physics_variables.beta_fast_alpha
-            - physics_variables.beta_beam
-        )
-
-        physics_variables.beta_poloidal_eps = (
-            physics_variables.beta_poloidal_vol_avg * physics_variables.eps
-        )
-
-        physics_variables.beta_thermal_poloidal_vol_avg = (
-            physics_variables.beta_thermal_vol_avg
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_poloidal_average
-            )
-            ** 2
-        )
-        physics_variables.beta_thermal_toroidal_vol_avg = (
-            physics_variables.beta_thermal_vol_avg
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_toroidal_on_axis
-            )
-            ** 2
-        )
-
-        # =======================================================
-
-        # Mirror the pressure profiles to match the doubled toroidal field profile
-        pres_profile_total = np.concatenate([
-            physics_variables.pres_plasma_thermal_total_profile[::-1],
-            physics_variables.pres_plasma_thermal_total_profile,
-        ])
-
-        physics_variables.beta_thermal_toroidal_profile = np.array([
-            self.calculate_plasma_beta(
-                pres_plasma=pres_profile_total[i],
-                b_field=physics_variables.b_plasma_toroidal_profile[i],
-            )
-            for i in range(len(physics_variables.b_plasma_toroidal_profile))
-        ])
-
-        # =======================================================
-
-        physics_variables.beta_norm_thermal = (
-            1.0e8
-            * physics_variables.beta_thermal_vol_avg
-            * physics_variables.rminor
-            * physics_variables.b_plasma_toroidal_on_axis
-            / physics_variables.plasma_current
-        )
-        physics_variables.beta_norm_toroidal = (
-            physics_variables.beta_norm_total
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_toroidal_on_axis
-            )
-            ** 2
-        )
-        physics_variables.beta_norm_poloidal = (
-            physics_variables.beta_norm_total
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_poloidal_average
-            )
-            ** 2
-        )
-
-        physics_variables.f_beta_alpha_beam_thermal = (
-            physics_variables.beta_fast_alpha + physics_variables.beta_beam
-        ) / physics_variables.beta_thermal_vol_avg
-
-        # Plasma thermal energy derived from the thermal beta
-        physics_variables.e_plasma_beta_thermal = (
-            1.5e0
-            * physics_variables.beta_thermal_vol_avg
-            * physics_variables.b_plasma_total
-            * physics_variables.b_plasma_total
-            / (2.0e0 * constants.RMU0)
-            * physics_variables.vol_plasma
-        )
-
-        # Plasma thermal energy derived from the total beta
-        physics_variables.e_plasma_beta = (
-            1.5e0
-            * physics_variables.beta_total_vol_avg
-            * physics_variables.b_plasma_total
-            * physics_variables.b_plasma_total
-            / (2.0e0 * constants.RMU0)
-            * physics_variables.vol_plasma
-        )
+        self.beta.run()
 
         # =======================================================
 
@@ -2349,17 +1792,17 @@ class Physics:
             physics_variables.pden_plasma_alpha_mw,
         )
 
-        physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
-            physics_variables.b_plasma_poloidal_average,
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_plasma_fuel_ions_vol_avg,
-            physics_variables.nd_plasma_ions_total_vol_avg,
-            physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.temp_plasma_ion_density_weighted_kev,
-            physics_variables.pden_alpha_total_mw,
-            physics_variables.pden_plasma_alpha_mw,
-            physics_variables.i_beta_fast_alpha,
+        physics_variables.beta_fast_alpha = self.beta.fast_alpha_beta(
+            b_plasma_poloidal_average=physics_variables.b_plasma_poloidal_average,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+            nd_plasma_fuel_ions_vol_avg=physics_variables.nd_plasma_fuel_ions_vol_avg,
+            nd_plasma_ions_total_vol_avg=physics_variables.nd_plasma_ions_total_vol_avg,
+            temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
+            temp_plasma_ion_density_weighted_kev=physics_variables.temp_plasma_ion_density_weighted_kev,
+            pden_alpha_total_mw=physics_variables.pden_alpha_total_mw,
+            pden_plasma_alpha_mw=physics_variables.pden_plasma_alpha_mw,
+            i_beta_fast_alpha=physics_variables.i_beta_fast_alpha,
         )
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
@@ -2605,7 +2048,7 @@ class Physics:
             physics_variables.vs_plasma_res_ramp,
             physics_variables.vs_plasma_total_required,
             physics_variables.v_plasma_loop_burn,
-        ) = calculate_volt_second_requirements(
+        ) = self.inductance.calculate_volt_second_requirements(
             physics_variables.csawth,
             physics_variables.eps,
             physics_variables.f_c_plasma_inductive,
@@ -2663,63 +2106,56 @@ class Physics:
 
         # Define beta_norm_max calculations
 
-        physics_variables.beta_norm_max_wesson = self.calculate_beta_norm_max_wesson(
-            ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
+        physics_variables.beta_norm_max_wesson = (
+            self.beta.calculate_beta_norm_max_wesson(
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
+            )
         )
 
         # Original scaling law
         physics_variables.beta_norm_max_original_scaling = (
-            self.calculate_beta_norm_max_original(eps=physics_variables.eps)
+            self.beta.calculate_beta_norm_max_original(eps=physics_variables.eps)
         )
 
         # J. Menard scaling law
-        physics_variables.beta_norm_max_menard = self.calculate_beta_norm_max_menard(
-            eps=physics_variables.eps
+        physics_variables.beta_norm_max_menard = (
+            self.beta.calculate_beta_norm_max_menard(eps=physics_variables.eps)
         )
 
         # E. Tholerus scaling law
-        physics_variables.beta_norm_max_thloreus = self.calculate_beta_norm_max_thloreus(
-            c_beta=physics_variables.c_beta,
-            pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
-            pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
+        physics_variables.beta_norm_max_thloreus = (
+            self.beta.calculate_beta_norm_max_thloreus(
+                c_beta=physics_variables.c_beta,
+                pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
+                pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
+            )
         )
 
         # R. D. Stambaugh scaling law
         physics_variables.beta_norm_max_stambaugh = (
-            self.calculate_beta_norm_max_stambaugh(
+            self.beta.calculate_beta_norm_max_stambaugh(
                 f_c_plasma_bootstrap=current_drive_variables.f_c_plasma_bootstrap,
                 kappa=physics_variables.kappa,
                 aspect=physics_variables.aspect,
             )
         )
 
-        # Map calculation methods to a dictionary
-        beta_norm_max_calculations = {
-            0: physics_variables.beta_norm_max,
-            1: physics_variables.beta_norm_max_wesson,
-            2: physics_variables.beta_norm_max_original_scaling,
-            3: physics_variables.beta_norm_max_menard,
-            4: physics_variables.beta_norm_max_thloreus,
-            5: physics_variables.beta_norm_max_stambaugh,
-        }
-
         # Calculate beta_norm_max based on i_beta_norm_max
-        if int(physics_variables.i_beta_norm_max) in beta_norm_max_calculations:
-            physics_variables.beta_norm_max = beta_norm_max_calculations[
-                int(physics_variables.i_beta_norm_max)
-            ]
-        else:
+        try:
+            model = BetaNormMaxModel(int(physics_variables.i_beta_norm_max))
+            physics_variables.beta_norm_max = self.beta.get_beta_norm_max_value(model)
+        except ValueError:
             raise ProcessValueError(
                 "Illegal value of i_beta_norm_max",
                 i_beta_norm_max=physics_variables.i_beta_norm_max,
-            )
+            ) from None
 
         # calculate_beta_limit() returns the beta_vol_avg_max for beta
-        physics_variables.beta_vol_avg_max = calculate_beta_limit(
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.beta_norm_max,
-            physics_variables.plasma_current,
-            physics_variables.rminor,
+        physics_variables.beta_vol_avg_max = self.beta.calculate_beta_limit_from_norm(
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            beta_norm_max=physics_variables.beta_norm_max,
+            plasma_current=physics_variables.plasma_current,
+            rminor=physics_variables.rminor,
         )
 
         # ============================================================
@@ -2929,187 +2365,6 @@ class Physics:
             International Series of Monographs on Physics, Volume 149.
         """
         return qstar / q0 - 1.0
-
-    @staticmethod
-    def calculate_internal_inductance_wesson(alphaj: float) -> float:
-        """
-        Calculate the Wesson plasma normalized internal inductance.
-
-        :param alphaj: Current profile index.
-        :type alphaj: float
-
-        :return: The Wesson plasma normalised internal inductance.
-        :rtype: float
-
-        :Notes:
-            - It is recommended to use this method with the other Wesson relations for normalised beta and
-              current profile index.
-            - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
-
-        :References:
-            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
-            International Series of Monographs on Physics, Volume 149.
-        """
-        return np.log(1.65 + 0.89 * alphaj)
-
-    @staticmethod
-    def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
-        """
-        Calculate the Wesson normalsied beta upper limit.
-
-        :param ind_plasma_internal_norm: Plasma normalised internal inductance
-        :type ind_plasma_internal_norm: float
-
-        :return: The Wesson normalised beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - It is recommended to use this method with the other Wesson relations for normalsied internal
-            inductance and current profile index.
-            - This fit is derived from the DIII-D database for β_N >= 2.5
-
-        :References:
-            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
-            International Series of Monographs on Physics, Volume 149.
-
-            - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
-            Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
-        """
-        return 4 * ind_plasma_internal_norm
-
-    @staticmethod
-    def calculate_beta_norm_max_original(eps: float) -> float:
-        """
-        Calculate the original scaling law normalsied beta upper limit.
-
-        :param eps: Plasma normalised internal inductance
-        :type eps: float
-
-        :return: The original scaling law normalised beta upper limit.
-        :rtype: float
-
-        :Notes:
-
-        :References:
-
-        """
-        return 2.7 * (1.0 + 5.0 * eps**3.5)
-
-    @staticmethod
-    def calculate_beta_norm_max_menard(eps: float) -> float:
-        """
-        Calculate the Menard normalsied beta upper limit.
-
-        :param eps: Plasma normalised internal inductance
-        :type eps: float
-
-        :return: The Menard normalised beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - Found as a reasonable fit to the computed no wall limit at f_BS ≈ 50%
-            - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
-              β_T data from DIII-D at A = 2.9 and high κ.
-
-        :References:
-            - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
-
-        """
-        return 3.12 + 3.5 * eps**1.7
-
-    @staticmethod
-    def calculate_beta_norm_max_thloreus(
-        c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
-    ) -> float:
-        """
-        Calculate the E. Tholerus normalized beta upper limit.
-
-        :param c_beta: Pressure peaking factor coefficient.
-        :type c_beta: float
-        :param pres_plasma_on_axis: Central plasma pressure (Pa).
-        :type pres_plasma_on_axis: float
-        :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
-        :type pres_plasma_vol_avg: float
-
-        :return: The E. Tholerus normalized beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
-              which is defined as the ratio of the peak pressure to the average pressure.
-            - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
-
-        :References:
-            - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
-              Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
-        """
-        return 3.7 + (
-            (c_beta / (pres_plasma_on_axis / pres_plasma_vol_avg))
-            * (12.5 - 3.5 * (pres_plasma_on_axis / pres_plasma_vol_avg))
-        )
-
-    @staticmethod
-    def calculate_beta_norm_max_stambaugh(
-        f_c_plasma_bootstrap: float,
-        kappa: float,
-        aspect: float,
-    ) -> float:
-        """
-        Calculate the Stambaugh normalized beta upper limit.
-
-        :param f_c_plasma_bootstrap: Bootstrap current fraction.
-        :type f_c_plasma_bootstrap: float
-        :param kappa: Plasma separatrix elongation.
-        :type kappa: float
-        :param aspect: Plasma aspect ratio.
-        :type aspect: float
-
-        :return: The Stambaugh normalized beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
-            - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
-
-        :References:
-            - R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
-              Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
-              doi: https://doi.org/10.13182/fst59-279.
-
-            - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
-              Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
-              doi: https://doi.org/10.1088/0029-5515/44/4/009.
-        """
-        return (
-            f_c_plasma_bootstrap
-            * 10
-            * (-0.7748 + (1.2869 * kappa) - (0.2921 * kappa**2) + (0.0197 * kappa**3))
-            / (aspect**0.5523 * np.tanh((1.8524 + (0.2319 * kappa)) / aspect**0.6163))
-        )
-
-    @staticmethod
-    def calculate_internal_inductance_menard(kappa: float) -> float:
-        """
-        Calculate the Menard plasma normalized internal inductance.
-
-        :param kappa: Plasma separatrix elongation.
-        :type kappa: float
-
-        :return: The Menard plasma normalised internal inductance.
-        :rtype: float
-
-        :Notes:
-            - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
-            - This model is only recommneded to be used for ST's with kappa > 2.5
-
-        :References:
-            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
-        """
-        return 3.4 - kappa
 
     @staticmethod
     def calculate_density_limit(
@@ -3672,47 +2927,6 @@ class Physics:
         )
 
     @staticmethod
-    def calculate_normalised_internal_inductance_iter_3(
-        b_plasma_poloidal_vol_avg: float,
-        c_plasma: float,
-        vol_plasma: float,
-        rmajor: float,
-    ) -> float:
-        """
-        Calculate the normalised internal inductance using ITER-3 scaling li(3).
-
-        :param b_plasma_poloidal_vol_avg: Volume-averaged poloidal magnetic field (T).
-        :type b_plasma_poloidal_vol_avg: float
-        :param c_plasma: Plasma current (A).
-        :type c_plasma: float
-        :param vol_plasma: Plasma volume (m^3).
-        :type vol_plasma: float
-        :param rmajor: Plasma major radius (m).
-        :type rmajor: float
-
-        :returns: The li(3) normalised internal inductance.
-        :rtype: float
-
-        :references:
-            - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
-            “Inductive flux usage and its optimization in tokamak operation,”
-            Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
-            doi: https://doi.org/10.1088/0029-5515/54/9/093005.
-
-            - G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,”
-            Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008,
-            doi: https://doi.org/10.1088/0029-5515/48/12/125002.
-        ‌
-        """
-
-        return (
-            2
-            * vol_plasma
-            * b_plasma_poloidal_vol_avg**2
-            / (constants.RMU0**2 * c_plasma**2 * rmajor)
-        )
-
-    @staticmethod
     def plasma_ohmic_heating(
         f_c_plasma_inductive: float,
         kappa95: float,
@@ -3789,197 +3003,6 @@ class Physics:
         p_plasma_ohmic_mw = pden_plasma_ohmic_mw * vol_plasma
 
         return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, f_res_plasma_neo, res_plasma
-
-    @staticmethod
-    def calculate_plasma_current(
-        alphaj: float,
-        alphap: float,
-        b_plasma_toroidal_on_axis: float,
-        eps: float,
-        i_plasma_current: int,
-        kappa: float,
-        kappa95: float,
-        pres_plasma_on_axis: float,
-        len_plasma_poloidal: float,
-        q95: float,
-        rmajor: float,
-        rminor: float,
-        triang: float,
-        triang95: float,
-    ) -> tuple[float, float, float, float, float]:
-        """Calculate the plasma current.
-
-        Args:
-            alphaj (float): Current profile index.
-            alphap (float): Pressure profile index.
-            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
-            eps (float): Inverse aspect ratio.
-            i_plasma_current (int): Current scaling model to use.
-                1 = Peng analytic fit
-                2 = Peng divertor scaling (TART,STAR)
-                3 = Simple ITER scaling
-                4 = IPDG89 scaling
-                5 = Todd empirical scaling I
-                6 = Todd empirical scaling II
-                7 = Connor-Hastie model
-                8 = Sauter scaling (allowing negative triangularity)
-                9 = FIESTA ST scaling
-            kappa (float): Plasma elongation.
-            kappa95 (float): Plasma elongation at 95% surface.
-            pres_plasma_on_axis (float): Central plasma pressure (Pa).
-            len_plasma_poloidal (float): Plasma perimeter length (m).
-            q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
-            ind_plasma_internal_norm (float): Plasma normalised internal inductance.
-            rmajor (float): Major radius (m).
-            rminor (float): Minor radius (m).
-            triang (float): Plasma triangularity.
-            triang95 (float): Plasma triangularity at 95% surface.
-
-        Returns:
-            Tuple[float, float, float,]: Tuple containing b_plasma_poloidal_average, qstar, plasma_current,
-
-        Raises:
-            ValueError: If invalid value for i_plasma_current is provided.
-
-        Notes:
-            This routine calculates the plasma current based on the edge safety factor q95.
-            It will also make the current profile parameters consistent with the q-profile if required.
-
-        References:
-            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
-            - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-              'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-              1729-1738. https://doi.org/10.13182/FST92-A29971
-            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al, ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-            - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
-            - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
-            - T. Hartmann, 2013, Development of a modular systems code to analyse the implications of physics assumptions on the design of a demonstration fusion power plant
-            - Sauter, Geometric formulas for systems codes..., FED 2016
-        """
-        # Aspect ratio
-        aspect_ratio = 1.0 / eps
-
-        # Only the Sauter scaling (i_plasma_current=8) is suitable for negative triangularity:
-        if i_plasma_current != 8 and triang < 0.0:
-            raise ProcessValueError(
-                f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}"
-            )
-
-        # Calculate the function Fq that scales the edge q from the
-        # circular cross-section cylindrical case
-
-        # Peng analytical fit
-        if i_plasma_current == 1:
-            fq = calculate_current_coefficient_peng(eps, len_plasma_poloidal, rminor)
-
-        # Peng scaling for double null divertor; TARTs [STAR Code]
-        elif i_plasma_current == 2:
-            plasma_current = 1.0e6 * calculate_plasma_current_peng(
-                q95, aspect_ratio, eps, rminor, b_plasma_toroidal_on_axis, kappa, triang
-            )
-
-        # Simple ITER scaling (simply the cylindrical case)
-        elif i_plasma_current == 3:
-            fq = 1.0
-
-        # ITER formula (IPDG89)
-        elif i_plasma_current == 4:
-            fq = calculate_current_coefficient_ipdg89(eps, kappa95, triang95)
-
-        # Todd empirical scalings
-        # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-        elif i_plasma_current in [5, 6]:
-            fq = calculate_current_coefficient_todd(eps, kappa95, triang95, model=1)
-
-            if i_plasma_current == 6:
-                fq = calculate_current_coefficient_todd(eps, kappa95, triang95, model=2)
-
-        # Connor-Hastie asymptotically-correct expression
-        elif i_plasma_current == 7:
-            fq = calculate_current_coefficient_hastie(
-                alphaj,
-                alphap,
-                b_plasma_toroidal_on_axis,
-                triang95,
-                eps,
-                kappa95,
-                pres_plasma_on_axis,
-                constants.RMU0,
-            )
-
-        # Sauter scaling allowing negative triangularity [FED May 2016]
-        # https://doi.org/10.1016/j.fusengdes.2016.04.033.
-        elif i_plasma_current == 8:
-            # Assumes zero squareness, note takes kappa, delta at separatrix not _95
-            fq = calculate_current_coefficient_sauter(eps, kappa, triang)
-
-        # FIESTA ST scaling
-        # https://doi.org/10.1016/j.fusengdes.2020.111530.
-        elif i_plasma_current == 9:
-            fq = calculate_current_coefficient_fiesta(eps, kappa, triang)
-        else:
-            raise ProcessValueError(f"Invalid value {i_plasma_current=}")
-
-        # Main plasma current calculation using the fq value from the different settings
-        if i_plasma_current != 2:
-            plasma_current = (
-                (2.0 * np.pi / constants.RMU0)
-                * rminor**2
-                / (rmajor * q95)
-                * fq
-                * b_plasma_toroidal_on_axis
-            )
-        # i_plasma_current == 2 case covered above
-
-        # Calculate cyclindrical safety factor from IPDG89
-        qstar = (
-            5.0e6
-            * rminor**2
-            / (rmajor * plasma_current / b_plasma_toroidal_on_axis)
-            * 0.5
-            * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
-        )
-
-        # Normalised beta from Troyon beta limit
-        physics_variables.beta_norm_total = (
-            1.0e8
-            * physics_variables.beta_total_vol_avg
-            * rminor
-            * b_plasma_toroidal_on_axis
-            / plasma_current
-        )
-
-        # Calculate the poloidal field generated by the plasma current
-        b_plasma_poloidal_average = calculate_poloidal_field(
-            i_plasma_current,
-            plasma_current,
-            q95,
-            aspect_ratio,
-            eps,
-            b_plasma_toroidal_on_axis,
-            kappa,
-            triang,
-            len_plasma_poloidal,
-            constants.RMU0,
-        )
-
-        return b_plasma_poloidal_average, qstar, plasma_current
-
-    def calculate_plasma_beta(self, pres_plasma: float, b_field: float) -> float:
-        """
-        Calculate the plasma beta for a given pressure and field.
-
-        :param pres_plasma: Plasma pressure (in Pascals).
-        :type pres_plasma: float
-        :param b_field: Magnetic field strength (in Tesla).
-        :type b_field: float
-        :returns: The plasma beta (dimensionless).
-        :rtype: float
-
-        Plasma beta is the ratio of plasma pressure to magnetic pressure.
-        """
-
-        return 2 * constants.RMU0 * pres_plasma / (b_field**2)
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -4513,253 +3536,9 @@ class Physics:
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
-        po.osubhd(self.outfile, "Beta Information :")
-        if physics_variables.i_beta_component == 0:
-            po.ovarrf(
-                self.outfile,
-                "Upper limit on total beta",
-                "(beta_vol_avg_max)",
-                physics_variables.beta_vol_avg_max,
-                "OP ",
-            )
-        elif physics_variables.i_beta_component == 1:
-            po.ovarrf(
-                self.outfile,
-                "Upper limit on thermal beta",
-                "(beta_vol_avg_max)",
-                physics_variables.beta_vol_avg_max,
-                "OP ",
-            )
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Upper limit on thermal + NB beta",
-                "(beta_vol_avg_max)",
-                physics_variables.beta_vol_avg_max,
-                "OP ",
-            )
 
-        po.ovarre(
-            self.outfile,
-            "Total plasma beta",
-            "(beta_total_vol_avg)",
-            physics_variables.beta_total_vol_avg,
-        )
-        if physics_variables.i_beta_component == 0:
-            po.ovarrf(
-                self.outfile,
-                "Lower limit on total beta",
-                "(beta_vol_avg_min)",
-                physics_variables.beta_vol_avg_min,
-                "IP",
-            )
-        elif physics_variables.i_beta_component == 1:
-            po.ovarrf(
-                self.outfile,
-                "Lower limit on thermal beta",
-                "(beta_vol_avg_min)",
-                physics_variables.beta_vol_avg_min,
-                "IP",
-            )
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Lower limit on thermal + NB beta",
-                "(beta_vol_avg_min)",
-                physics_variables.beta_vol_avg_min,
-                "IP",
-            )
-        po.ovarre(
-            self.outfile,
-            "Upper limit on poloidal beta",
-            "(beta_poloidal_max)",
-            constraint_variables.beta_poloidal_max,
-            "IP",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total poloidal beta",
-            "(beta_poloidal_vol_avg)",
-            physics_variables.beta_poloidal_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Volume averaged toroidal beta",
-            "(beta_toroidal_vol_avg)",
-            physics_variables.beta_toroidal_vol_avg,
-            "OP ",
-        )
-        for i in range(len(physics_variables.beta_thermal_toroidal_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Beta toroidal profile at point {i}",
-                f"beta_thermal_toroidal_profile{i}",
-                physics_variables.beta_thermal_toroidal_profile[i],
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Fast alpha beta",
-            "(beta_fast_alpha)",
-            physics_variables.beta_fast_alpha,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Neutral Beam ion beta",
-            "(beta_beam)",
-            physics_variables.beta_beam,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Ratio of fast alpha and beam beta to thermal beta",
-            "(f_beta_alpha_beam_thermal)",
-            physics_variables.f_beta_alpha_beam_thermal,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Volume averaged thermal beta",
-            "(beta_thermal_vol_avg)",
-            physics_variables.beta_thermal_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Thermal poloidal beta",
-            "(beta_thermal_poloidal_vol_avg)",
-            physics_variables.beta_thermal_poloidal_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Thermal toroidal beta",
-            "(beta_thermal_toroidal_vol_avg)",
-            physics_variables.beta_thermal_toroidal_vol_avg,
-            "OP ",
-        )
-
-        po.ovarrf(
-            self.outfile,
-            "Poloidal beta and inverse aspect ratio",
-            "(beta_poloidal_eps)",
-            physics_variables.beta_poloidal_eps,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Poloidal beta and inverse aspect ratio upper limit",
-            "(beta_poloidal_eps_max)",
-            physics_variables.beta_poloidal_eps_max,
-        )
-        po.osubhd(self.outfile, "Normalised Beta Information :")
-        if stellarator_variables.istell == 0:
-            if physics_variables.i_beta_norm_max != 0:
-                po.ovarrf(
-                    self.outfile,
-                    "Beta g coefficient",
-                    "(beta_norm_max)",
-                    physics_variables.beta_norm_max,
-                    "OP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Beta g coefficient",
-                    "(beta_norm_max)",
-                    physics_variables.beta_norm_max,
-                )
-            po.ovarrf(
-                self.outfile,
-                "Normalised total beta",
-                "(beta_norm_total)",
-                physics_variables.beta_norm_total,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Normalised thermal beta",
-                "(beta_norm_thermal) ",
-                physics_variables.beta_norm_thermal,
-                "OP ",
-            )
-
-            po.ovarrf(
-                self.outfile,
-                "Normalised toroidal beta",
-                "(beta_norm_toroidal) ",
-                physics_variables.beta_norm_toroidal,
-                "OP ",
-            )
-
-            po.ovarrf(
-                self.outfile,
-                "Normalised poloidal beta",
-                "(beta_norm_poloidal) ",
-                physics_variables.beta_norm_poloidal,
-                "OP ",
-            )
-
-            po.osubhd(self.outfile, "Maximum normalised beta scalings :")
-            po.ovarrf(
-                self.outfile,
-                "J. Wesson normalised beta upper limit",
-                "(beta_norm_max_wesson) ",
-                physics_variables.beta_norm_max_wesson,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Original normalsied beta upper limit",
-                "(beta_norm_max_original_scaling) ",
-                physics_variables.beta_norm_max_original_scaling,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "J. Menard normalised beta upper limit",
-                "(beta_norm_max_menard) ",
-                physics_variables.beta_norm_max_menard,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "E. Thloreus normalised beta upper limit",
-                "(beta_norm_max_thloreus) ",
-                physics_variables.beta_norm_max_thloreus,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "R. Stambaugh normalised beta upper limit",
-                "(beta_norm_max_stambaugh) ",
-                physics_variables.beta_norm_max_stambaugh,
-                "OP ",
-            )
-
-        po.osubhd(self.outfile, "Plasma energies derived from beta :")
-        po.ovarre(
-            self.outfile,
-            "Plasma thermal energy derived from thermal beta (J)",
-            "(e_plasma_beta_thermal) ",
-            physics_variables.e_plasma_beta_thermal,
-            "OP",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Plasma thermal energy derived from the total beta (J)",
-            "(e_plasma_beta)",
-            physics_variables.e_plasma_beta,
-            "OP",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
+        # Output beta information
+        self.beta.output_beta_information()
 
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
@@ -6387,112 +5166,7 @@ class Physics:
             po.ostars(self.outfile, 110)
             po.oblnkl(self.outfile)
 
-            po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
-            po.ovarre(
-                self.outfile,
-                "Total plasma volt-seconds required for pulse (Wb)",
-                "(vs_plasma_total_required)",
-                physics_variables.vs_plasma_total_required,
-                "OP ",
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
-                "(vs_plasma_ind_ramp)",
-                physics_variables.vs_plasma_ind_ramp,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma resistive flux consumption for plasma current ramp-up (Wb)",
-                "(vs_plasma_res_ramp)",
-                physics_variables.vs_plasma_res_ramp,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total flux consumption for plasma current ramp-up (Wb)",
-                "(vs_plasma_ramp_required)",
-                physics_variables.vs_plasma_ramp_required,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Ejima coefficient",
-                "(ejima_coeff)",
-                physics_variables.ejima_coeff,
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Internal plasma V-s",
-                "(vs_plasma_internal)",
-                physics_variables.vs_plasma_internal,
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
-                "(vs_plasma_burn_required)",
-                physics_variables.vs_plasma_burn_required,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma loop voltage during burn (V)",
-                "(v_plasma_loop_burn)",
-                physics_variables.v_plasma_loop_burn,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Coefficient for sawtooth effects on burn V-s requirement",
-                "(csawth)",
-                physics_variables.csawth,
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Plasma resistance (ohm)",
-                "(res_plasma)",
-                physics_variables.res_plasma,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma resistive diffusion time (s)",
-                "(t_plasma_res_diffusion)",
-                physics_variables.t_plasma_res_diffusion,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma inductance (H)",
-                "(ind_plasma)",
-                physics_variables.ind_plasma,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma magnetic energy stored (J)",
-                "(e_plasma_magnetic_stored)",
-                physics_variables.e_plasma_magnetic_stored,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Plasma normalised internal inductance",
-                "(ind_plasma_internal_norm)",
-                physics_variables.ind_plasma_internal_norm,
-                "OP ",
-            )
-
-            po.oblnkl(self.outfile)
-            po.ostars(self.outfile, 110)
-            po.oblnkl(self.outfile)
+            self.inductance.output_volt_second_information()
 
             po.ovarrf(
                 self.outfile,
@@ -8772,21 +7446,6 @@ class Physics:
         )
 
 
-def calculate_poloidal_beta(b_plasma_total, b_plasma_poloidal_average, beta):
-    """Calculates total poloidal beta
-
-    Author: James Morris (UKAEA)
-
-    J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
-    Page 270 ISBN 0521851076
-
-    :param b_plasma_total: sum of the toroidal and poloidal fields (T)
-    :param b_plasma_poloidal_average: poloidal field (T)
-    :param beta: total plasma beta
-    """
-    return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
-
-
 def res_diff_time(rmajor, res_plasma, kappa95):
     """Calculates resistive diffusion time
 
@@ -9032,6 +7691,1595 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
         * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
         * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
     )
+
+
+class BetaNormMaxModel(IntEnum):
+    """Beta norm max (β_N_max) model types"""
+
+    USER_INPUT = 0
+    WESSON = 1
+    ORIGINAL_SCALING = 2
+    MENARD = 3
+    THLOREUS = 4
+    STAMBAUGH = 5
+
+
+class PlasmaBeta:
+    """Class to hold plasma beta calculations for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+
+    def get_beta_norm_max_value(self, model: BetaNormMaxModel) -> float:
+        """Get the beta norm max value (β_N_max) for the specified model."""
+        model_map = {
+            BetaNormMaxModel.USER_INPUT: physics_variables.beta_norm_max,
+            BetaNormMaxModel.WESSON: physics_variables.beta_norm_max_wesson,
+            BetaNormMaxModel.ORIGINAL_SCALING: physics_variables.beta_norm_max_original_scaling,
+            BetaNormMaxModel.MENARD: physics_variables.beta_norm_max_menard,
+            BetaNormMaxModel.THLOREUS: physics_variables.beta_norm_max_thloreus,
+            BetaNormMaxModel.STAMBAUGH: physics_variables.beta_norm_max_stambaugh,
+        }
+        return model_map[model]
+
+    def run(self) -> None:
+        """
+        Calculate plasma beta values.
+        """
+
+        physics_variables.beta_toroidal_vol_avg = (
+            physics_variables.beta_total_vol_avg
+            * physics_variables.b_plasma_total**2
+            / physics_variables.b_plasma_toroidal_on_axis**2
+        )
+
+        # Calculate physics_variables.beta poloidal [-]
+        physics_variables.beta_poloidal_vol_avg = self.calculate_poloidal_beta(
+            b_plasma_total=physics_variables.b_plasma_total,
+            b_plasma_poloidal_average=physics_variables.b_plasma_poloidal_average,
+            beta=physics_variables.beta_total_vol_avg,
+        )
+
+        physics_variables.beta_thermal_vol_avg = (
+            physics_variables.beta_total_vol_avg
+            - physics_variables.beta_fast_alpha
+            - physics_variables.beta_beam
+        )
+
+        physics_variables.beta_poloidal_eps = (
+            physics_variables.beta_poloidal_vol_avg * physics_variables.eps
+        )
+
+        physics_variables.beta_thermal_poloidal_vol_avg = (
+            physics_variables.beta_thermal_vol_avg
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
+            ** 2
+        )
+        physics_variables.beta_thermal_toroidal_vol_avg = (
+            physics_variables.beta_thermal_vol_avg
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
+            ** 2
+        )
+
+        # =======================================================
+
+        # Mirror the pressure profiles to match the doubled toroidal field profile
+        pres_profile_total = np.concatenate([
+            physics_variables.pres_plasma_thermal_total_profile[::-1],
+            physics_variables.pres_plasma_thermal_total_profile,
+        ])
+
+        physics_variables.beta_thermal_toroidal_profile = np.array([
+            self.calculate_plasma_beta(
+                pres_plasma=pres_profile_total[i],
+                b_field=physics_variables.b_plasma_toroidal_profile[i],
+            )
+            for i in range(len(physics_variables.b_plasma_toroidal_profile))
+        ])
+
+        # =======================================================
+
+        physics_variables.beta_norm_thermal = self.calculate_normalised_beta(
+            beta=physics_variables.beta_thermal_vol_avg,
+            rminor=physics_variables.rminor,
+            c_plasma=physics_variables.plasma_current,
+            b_field=physics_variables.b_plasma_toroidal_on_axis,
+        )
+
+        physics_variables.beta_norm_toroidal = (
+            physics_variables.beta_norm_total
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
+            ** 2
+        )
+        physics_variables.beta_norm_poloidal = (
+            physics_variables.beta_norm_total
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
+            ** 2
+        )
+
+        physics_variables.f_beta_alpha_beam_thermal = (
+            physics_variables.beta_fast_alpha + physics_variables.beta_beam
+        ) / physics_variables.beta_thermal_vol_avg
+
+        # Plasma thermal energy derived from the thermal beta
+        physics_variables.e_plasma_beta_thermal = self.calculate_plasma_energy_from_beta(
+            beta=physics_variables.beta_thermal_vol_avg,
+            b_field=physics_variables.b_plasma_total,
+            vol_plasma=physics_variables.vol_plasma,
+        )
+
+        # Plasma thermal energy derived from the total beta
+        physics_variables.e_plasma_beta = self.calculate_plasma_energy_from_beta(
+            beta=physics_variables.beta_total_vol_avg,
+            b_field=physics_variables.b_plasma_total,
+            vol_plasma=physics_variables.vol_plasma,
+        )
+
+    @staticmethod
+    def calculate_plasma_beta(
+        pres_plasma: float | np.ndarray, b_field: float | np.ndarray
+    ) -> float | np.ndarray:
+        """
+        Calculate the plasma beta (β) for a given pressure and field.
+
+        :param pres_plasma: Plasma pressure (in Pascals).
+        :type pres_plasma: float | np.ndarray
+        :param b_field: Magnetic field strength (in Tesla).
+        :type b_field: float | np.ndarray
+        :returns: The plasma beta (dimensionless).
+        :rtype: float | np.ndarray
+
+        Plasma beta is the ratio of plasma pressure to magnetic pressure.
+        """
+
+        return 2 * constants.RMU0 * pres_plasma / (b_field**2)
+
+    @staticmethod
+    def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
+        """
+        Calculate the Wesson normalsied beta upper limit.
+
+        :param ind_plasma_internal_norm: Plasma normalised internal inductance
+        :type ind_plasma_internal_norm: float
+
+        :return: The Wesson normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - It is recommended to use this method with the other Wesson relations for normalsied internal
+            inductance and current profile index.
+            - This fit is derived from the DIII-D database for β_N >= 2.5
+
+        :References:
+            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+            International Series of Monographs on Physics, Volume 149.
+
+            - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
+            Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+        """
+        return 4 * ind_plasma_internal_norm
+
+    @staticmethod
+    def calculate_beta_norm_max_original(eps: float) -> float:
+        """
+        Calculate the original scaling law normalsied beta upper limit.
+
+        :param eps: Plasma normalised internal inductance
+        :type eps: float
+
+        :return: The original scaling law normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+
+        :References:
+
+        """
+        return 2.7 * (1.0 + 5.0 * eps**3.5)
+
+    @staticmethod
+    def calculate_beta_norm_max_menard(eps: float) -> float:
+        """
+        Calculate the Menard normalsied beta upper limit.
+
+        :param eps: Plasma normalised internal inductance
+        :type eps: float
+
+        :return: The Menard normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - Found as a reasonable fit to the computed no wall limit at f_BS ≈ 50%
+            - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
+              β_T data from DIII-D at A = 2.9 and high κ.
+
+        :References:
+            - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+
+        """
+        return 3.12 + 3.5 * eps**1.7
+
+    @staticmethod
+    def calculate_beta_norm_max_thloreus(
+        c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
+    ) -> float:
+        """
+        Calculate the E. Tholerus normalized beta upper limit.
+
+        :param c_beta: Pressure peaking factor coefficient.
+        :type c_beta: float
+        :param pres_plasma_on_axis: Central plasma pressure (Pa).
+        :type pres_plasma_on_axis: float
+        :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
+        :type pres_plasma_vol_avg: float
+
+        :return: The E. Tholerus normalized beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
+              which is defined as the ratio of the peak pressure to the average pressure.
+            - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
+
+        :References:
+            - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
+              Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+        """
+        return 3.7 + (
+            (c_beta / (pres_plasma_on_axis / pres_plasma_vol_avg))
+            * (12.5 - 3.5 * (pres_plasma_on_axis / pres_plasma_vol_avg))
+        )
+
+    @staticmethod
+    def calculate_beta_norm_max_stambaugh(
+        f_c_plasma_bootstrap: float,
+        kappa: float,
+        aspect: float,
+    ) -> float:
+        """
+        Calculate the Stambaugh normalized beta upper limit.
+
+        :param f_c_plasma_bootstrap: Bootstrap current fraction.
+        :type f_c_plasma_bootstrap: float
+        :param kappa: Plasma separatrix elongation.
+        :type kappa: float
+        :param aspect: Plasma aspect ratio.
+        :type aspect: float
+
+        :return: The Stambaugh normalized beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
+            - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
+
+        :References:
+            - R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
+              Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
+              doi: https://doi.org/10.13182/fst59-279.
+
+            - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
+              Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
+              doi: https://doi.org/10.1088/0029-5515/44/4/009.
+        """
+        return (
+            f_c_plasma_bootstrap
+            * 10
+            * (-0.7748 + (1.2869 * kappa) - (0.2921 * kappa**2) + (0.0197 * kappa**3))
+            / (aspect**0.5523 * np.tanh((1.8524 + (0.2319 * kappa)) / aspect**0.6163))
+        )
+
+    @staticmethod
+    def calculate_normalised_beta(
+        beta: float, rminor: float, c_plasma: float, b_field: float
+    ) -> float:
+        """Calculate normalised beta (β_N).
+
+        :param beta: Plasma beta (fraction).
+        :type beta: float
+        :param rminor: Plasma minor radius (m).
+        :type rminor: float
+        :param c_plasma: Plasma current (A).
+        :type c_plasma: float
+        :param b_field: Magnetic field (T).
+        :type b_field: float
+        :return: Normalised beta.
+        :rtype: float
+
+        :Notes:
+            - 1.0e8 is a conversion factor to get beta_N in standard units, as plasma current is normally in MA and
+             beta is in percentage instead of fraction.
+        """
+
+        return 1.0e8 * (beta * rminor * b_field) / c_plasma
+
+    @staticmethod
+    def calculate_plasma_energy_from_beta(
+        beta: float, b_field: float, vol_plasma: float
+    ) -> float:
+        """Calculate plasma thermal energy from beta.
+
+        E_plasma = 1.5 * β * B² / (2 * μ_0) * V
+
+        :param beta: Plasma beta (fraction).
+        :type beta: float
+        :param b_field: Magnetic field (T).
+        :type b_field: float
+        :param vol_plasma: Plasma volume (m³).
+        :type vol_plasma: float
+        :return: Plasma energy (J).
+        :rtype: float
+
+        """
+
+        return (1.5e0 * beta * b_field**2) / (2.0e0 * constants.RMU0) * vol_plasma
+
+    @staticmethod
+    def calculate_beta_limit_from_norm(
+        b_plasma_toroidal_on_axis: float,
+        beta_norm_max: float,
+        plasma_current: float,
+        rminor: float,
+    ) -> float:
+        """
+        Calculate the maximum allowed beta (β) from a given normalised (β_N).
+
+        :param b_plasma_toroidal_on_axis: Toroidal B-field on plasma axis [T].
+        :type b_plasma_toroidal_on_axis: float
+        :param beta_norm_max: Troyon-like g coefficient.
+        :type beta_norm_max: float
+        :param plasma_current: Plasma current [A].
+        :type plasma_current: float
+        :param rminor: Plasma minor axis [m].
+        :type rminor: float
+        :return: Beta limit as defined below.
+        :rtype: float
+
+        This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
+        The limit applies to beta defined with respect to the total B-field.
+        Switch i_beta_component determines which components of beta to include.
+
+        Notes:
+            - If i_beta_component = 0, then the limit is applied to the total beta.
+            - If i_beta_component = 1, then the limit is applied to the thermal beta only.
+            - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
+            - If i_beta_component = 3, then the limit is applied to the toroidal beta.
+
+            - The default value for the g coefficient is beta_norm_max = 3.5.
+
+        References:
+            - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
+            Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
+            doi: https://doi.org/10.1088/0741-3335/30/11/019.
+
+            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
+        """
+
+        # Multiplied by 0.01 to convert from % to fraction
+        return (
+            0.01
+            * beta_norm_max
+            * (plasma_current / 1.0e6)
+            / (rminor * b_plasma_toroidal_on_axis)
+        )
+
+    @staticmethod
+    def calculate_poloidal_beta(
+        b_plasma_total: float, b_plasma_poloidal_average: float, beta: float
+    ) -> float:
+        """Calculates total poloidal beta (β_p)
+
+        :type b_plasma_total: float
+        :param b_plasma_poloidal_average: The average poloidal magnetic field of the plasma (in Tesla).
+        :type b_plasma_poloidal_average: float
+        :param beta: The plasma beta, a dimensionless parameter representing the ratio of plasma pressure to magnetic pressure.
+        :type beta: float
+        :return: The calculated total poloidal beta.
+        :rtype: float
+
+        :references:
+            - J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
+        Page 270 ISBN 0521851076
+
+        """
+        return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
+
+    @staticmethod
+    def fast_alpha_beta(
+        b_plasma_poloidal_average: float,
+        b_plasma_toroidal_on_axis: float,
+        nd_plasma_electrons_vol_avg: float,
+        nd_plasma_fuel_ions_vol_avg: float,
+        nd_plasma_ions_total_vol_avg: float,
+        temp_plasma_electron_density_weighted_kev: float,
+        temp_plasma_ion_density_weighted_kev: float,
+        pden_alpha_total_mw: float,
+        pden_plasma_alpha_mw: float,
+        i_beta_fast_alpha: int,
+    ) -> float:
+        """
+        Calculate the fast alpha beta (β_fast_alpha) component.
+
+        This function computes the fast alpha beta contribution based on the provided plasma parameters.
+
+        :param b_plasma_poloidal_average: Poloidal field (T).
+        :type b_plasma_poloidal_average: float
+        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
+        :type b_plasma_toroidal_on_axis: float
+        :param nd_plasma_electrons_vol_avg: Electron density (m⁻³).
+        :type nd_plasma_electrons_vol_avg: float
+        :param nd_plasma_fuel_ions_vol_avg: Fuel ion density (m⁻³).
+        :type nd_plasma_fuel_ions_vol_avg: float
+        :param nd_plasma_ions_total_vol_avg: Total ion density (m⁻³).
+        :type nd_plasma_ions_total_vol_avg: float
+        :param temp_plasma_electron_density_weighted_kev: Density-weighted electron temperature (keV).
+        :type temp_plasma_electron_density_weighted_kev: float
+        :param temp_plasma_ion_density_weighted_kev: Density-weighted ion temperature (keV).
+        :type temp_plasma_ion_density_weighted_kev: float
+        :param pden_alpha_total_mw: Alpha power per unit volume, from beams and plasma (MW/m³).
+        :type pden_alpha_total_mw: float
+        :param pden_plasma_alpha_mw: Alpha power per unit volume just from plasma (MW/m³).
+        :type pden_plasma_alpha_mw: float
+        :param i_beta_fast_alpha: Switch for fast alpha pressure method.
+        :type i_beta_fast_alpha: int
+
+        :return: Fast alpha beta component.
+        :rtype: float
+
+        :Notes:
+            - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, 〈T〉 = 5-20 keV
+
+
+        :References:
+            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+            https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+
+            - Uckan, N. A., Tolliver, J. S., Houlberg, W. A., and Attenberger, S. E.
+            Influence of fast alpha diffusion and thermal alpha buildup on tokamak reactor performance.
+            United States: N. p., 1987. Web.https://www.osti.gov/servlets/purl/5611706
+
+        """
+
+        # Determine average fast alpha density
+        if physics_variables.f_plasma_fuel_deuterium < 1.0:
+            beta_thermal = (
+                2.0
+                * constants.RMU0
+                * constants.KILOELECTRON_VOLT
+                * (
+                    nd_plasma_electrons_vol_avg
+                    * temp_plasma_electron_density_weighted_kev
+                    + nd_plasma_ions_total_vol_avg * temp_plasma_ion_density_weighted_kev
+                )
+                / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
+            )
+
+            # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
+            # IPDG89 fast alpha scaling
+            if i_beta_fast_alpha == 0:
+                fact = min(
+                    0.3,
+                    0.29
+                    * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg) ** 2
+                    * (
+                        (
+                            temp_plasma_electron_density_weighted_kev
+                            + temp_plasma_ion_density_weighted_kev
+                        )
+                        / 20.0
+                        - 0.37
+                    ),
+                )
+
+            # Modified scaling, D J Ward
+            else:
+                fact = min(
+                    0.30,
+                    0.26
+                    * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg) ** 2
+                    * np.sqrt(
+                        max(
+                            0.0,
+                            (
+                                (
+                                    temp_plasma_electron_density_weighted_kev
+                                    + temp_plasma_ion_density_weighted_kev
+                                )
+                                / 20.0
+                                - 0.65
+                            ),
+                        )
+                    ),
+                )
+
+            fact = max(fact, 0.0)
+            fact2 = pden_alpha_total_mw / pden_plasma_alpha_mw
+            beta_fast_alpha = beta_thermal * fact * fact2
+
+        else:  # negligible alpha production, alpha_power_density = p_beam_alpha_mw = 0
+            beta_fast_alpha = 0.0
+
+        return beta_fast_alpha
+
+    def output_beta_information(self):
+        """Output beta information to file."""
+
+        po.osubhd(self.outfile, "Beta Information :")
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on total beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on thermal beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on thermal + NB beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Total plasma beta",
+            "(beta_total_vol_avg)",
+            physics_variables.beta_total_vol_avg,
+        )
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on total beta",
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
+                "IP",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal beta",
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
+                "IP",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal + NB beta",
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
+                "IP",
+            )
+        po.ovarre(
+            self.outfile,
+            "Upper limit on poloidal beta",
+            "(beta_poloidal_max)",
+            constraint_variables.beta_poloidal_max,
+            "IP",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total poloidal beta",
+            "(beta_poloidal_vol_avg)",
+            physics_variables.beta_poloidal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged toroidal beta",
+            "(beta_toroidal_vol_avg)",
+            physics_variables.beta_toroidal_vol_avg,
+            "OP ",
+        )
+        for i in range(len(physics_variables.beta_thermal_toroidal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Beta toroidal profile at point {i}",
+                f"beta_thermal_toroidal_profile{i}",
+                physics_variables.beta_thermal_toroidal_profile[i],
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Fast alpha beta",
+            "(beta_fast_alpha)",
+            physics_variables.beta_fast_alpha,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutral Beam ion beta",
+            "(beta_beam)",
+            physics_variables.beta_beam,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Ratio of fast alpha and beam beta to thermal beta",
+            "(f_beta_alpha_beam_thermal)",
+            physics_variables.f_beta_alpha_beam_thermal,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged thermal beta",
+            "(beta_thermal_vol_avg)",
+            physics_variables.beta_thermal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermal poloidal beta",
+            "(beta_thermal_poloidal_vol_avg)",
+            physics_variables.beta_thermal_poloidal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermal toroidal beta",
+            "(beta_thermal_toroidal_vol_avg)",
+            physics_variables.beta_thermal_toroidal_vol_avg,
+            "OP ",
+        )
+
+        po.ovarrf(
+            self.outfile,
+            "Poloidal beta and inverse aspect ratio",
+            "(beta_poloidal_eps)",
+            physics_variables.beta_poloidal_eps,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Poloidal beta and inverse aspect ratio upper limit",
+            "(beta_poloidal_eps_max)",
+            physics_variables.beta_poloidal_eps_max,
+        )
+        po.osubhd(self.outfile, "Normalised Beta Information :")
+        if stellarator_variables.istell == 0:
+            if physics_variables.i_beta_norm_max != 0:
+                po.ovarrf(
+                    self.outfile,
+                    "Beta g coefficient",
+                    "(beta_norm_max)",
+                    physics_variables.beta_norm_max,
+                    "OP ",
+                )
+            else:
+                po.ovarrf(
+                    self.outfile,
+                    "Beta g coefficient",
+                    "(beta_norm_max)",
+                    physics_variables.beta_norm_max,
+                )
+            po.ovarrf(
+                self.outfile,
+                "Normalised total beta",
+                "(beta_norm_total)",
+                physics_variables.beta_norm_total,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Normalised thermal beta",
+                "(beta_norm_thermal) ",
+                physics_variables.beta_norm_thermal,
+                "OP ",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Normalised toroidal beta",
+                "(beta_norm_toroidal) ",
+                physics_variables.beta_norm_toroidal,
+                "OP ",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Normalised poloidal beta",
+                "(beta_norm_poloidal) ",
+                physics_variables.beta_norm_poloidal,
+                "OP ",
+            )
+
+            po.osubhd(self.outfile, "Maximum normalised beta scalings :")
+            po.ovarrf(
+                self.outfile,
+                "J. Wesson normalised beta upper limit",
+                "(beta_norm_max_wesson) ",
+                physics_variables.beta_norm_max_wesson,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Original normalsied beta upper limit",
+                "(beta_norm_max_original_scaling) ",
+                physics_variables.beta_norm_max_original_scaling,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "J. Menard normalised beta upper limit",
+                "(beta_norm_max_menard) ",
+                physics_variables.beta_norm_max_menard,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "E. Thloreus normalised beta upper limit",
+                "(beta_norm_max_thloreus) ",
+                physics_variables.beta_norm_max_thloreus,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "R. Stambaugh normalised beta upper limit",
+                "(beta_norm_max_stambaugh) ",
+                physics_variables.beta_norm_max_stambaugh,
+                "OP ",
+            )
+
+        po.osubhd(self.outfile, "Plasma energies derived from beta :")
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy derived from thermal beta (J)",
+            "(e_plasma_beta_thermal) ",
+            physics_variables.e_plasma_beta_thermal,
+            "OP",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy derived from the total beta (J)",
+            "(e_plasma_beta)",
+            physics_variables.e_plasma_beta,
+            "OP",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
+
+
+class IndInternalNormModel(IntEnum):
+    """Normalised internal inductance (l_i) model types"""
+
+    USER_INPUT = 0
+    WESSON = 1
+    MENARD = 2
+
+
+class PlasmaInductance:
+    """Class to hold plasma inductance calculations for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+
+    def get_ind_internal_norm_value(self, model: IndInternalNormModel) -> float:
+        """Get the normalised internal inductance (l_i) for the specified model."""
+        model_map = {
+            IndInternalNormModel.USER_INPUT: physics_variables.ind_plasma_internal_norm,
+            IndInternalNormModel.WESSON: physics_variables.ind_plasma_internal_norm_wesson,
+            IndInternalNormModel.MENARD: physics_variables.ind_plasma_internal_norm_menard,
+        }
+        return model_map[model]
+
+    @staticmethod
+    def calculate_volt_second_requirements(
+        csawth: float,
+        eps: float,
+        f_c_plasma_inductive: float,
+        ejima_coeff: float,
+        kappa: float,
+        rmajor: float,
+        res_plasma: float,
+        plasma_current: float,
+        t_plant_pulse_fusion_ramp: float,
+        t_plant_pulse_burn: float,
+        ind_plasma_internal_norm: float,
+    ) -> tuple[float, float, float, float, float, float]:
+        """Calculate the volt-second requirements and related parameters for plasma physics.
+
+        :param csawth: Coefficient for sawteeth effects
+        :type csawth: float
+        :param eps: Inverse aspect ratio
+        :type eps: float
+        :param f_c_plasma_inductive: Fraction of plasma current produced inductively
+        :type f_c_plasma_inductive: float
+        :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
+        :type ejima_coeff: float
+        :param kappa: Plasma elongation
+        :type kappa: float
+        :param rmajor: Plasma major radius (m)
+        :type rmajor: float
+        :param res_plasma: Plasma resistance (ohm)
+        :type res_plasma: float
+        :param plasma_current: Plasma current (A)
+        :type plasma_current: float
+        :param t_plant_pulse_fusion_ramp: Heating time (s)
+        :type t_plant_pulse_fusion_ramp: float
+        :param t_plant_pulse_burn: Burn time (s)
+        :type t_plant_pulse_burn: float
+        :param ind_plasma_internal_norm: Plasma normalized internal inductance
+        :type ind_plasma_internal_norm: float
+
+        :return: A tuple containing:
+            - vs_plasma_internal: Internal plasma volt-seconds (Wb)
+            - ind_plasma_internal: Plasma inductance (H)
+            - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
+            - vs_plasma_ramp_required: Volt-seconds needed during ramp-up (Wb)
+            - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
+            - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
+            - vs_plasma_total_required: Total volt-seconds needed (Wb)
+        :rtype: tuple[float, float, float, float, float, float]
+
+        :notes:
+
+        :references:
+            - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
+            “Volt-second analysis and consumption in Doublet III plasmas,”
+            Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
+            https://doi.org/10.1088/0029-5515/22/10/006.
+
+            - S. C. Jardin, C. E. Kessel, and N Pomphrey,
+            “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
+            Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
+            doi: https://doi.org/10.1088/0029-5515/34/8/i07.
+
+            - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
+            The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
+            doi: https://doi.org/10.1063/1.865934.
+        """
+        # Plasma internal inductance
+
+        ind_plasma_internal = constants.RMU0 * rmajor * ind_plasma_internal_norm / 2.0
+
+        # Internal plasma flux (V-s) component
+        vs_plasma_internal = ind_plasma_internal * plasma_current
+
+        # Start-up resistive component
+        # Uses ITER formula without the 10 V-s add-on
+
+        vs_res_ramp = ejima_coeff * constants.RMU0 * plasma_current * rmajor
+
+        # ======================================================================
+
+        # Hirshman and Neilson fit for external inductance
+
+        aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
+            2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
+        )
+        beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
+
+        ind_plasma_external = (
+            rmajor * constants.RMU0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+        )
+
+        # ======================================================================
+
+        ind_plasma_total = ind_plasma_external + ind_plasma_internal
+
+        # Inductive V-s component
+
+        vs_self_ind_ramp = ind_plasma_total * plasma_current
+        vs_plasma_ramp_required = vs_res_ramp + vs_self_ind_ramp
+
+        # Plasma loop voltage during flat-top
+        # Include enhancement factor in flattop V-s requirement
+        # to account for MHD sawtooth effects.
+
+        v_plasma_loop_burn = plasma_current * res_plasma * f_c_plasma_inductive
+
+        v_burn_resistive = v_plasma_loop_burn * csawth
+
+        # N.B. t_plant_pulse_burn on first iteration will not be correct
+        # if the pulsed reactor option is used, but the value
+        # will be correct on subsequent calls.
+
+        vs_plasma_burn_required = v_burn_resistive * (
+            t_plant_pulse_fusion_ramp + t_plant_pulse_burn
+        )
+        vs_plasma_total_required = vs_plasma_ramp_required + vs_plasma_burn_required
+
+        return (
+            vs_plasma_internal,
+            ind_plasma_total,
+            vs_plasma_burn_required,
+            vs_plasma_ramp_required,
+            vs_self_ind_ramp,
+            vs_res_ramp,
+            vs_plasma_total_required,
+            v_plasma_loop_burn,
+        )
+
+    @staticmethod
+    def calculate_normalised_internal_inductance_iter_3(
+        b_plasma_poloidal_vol_avg: float,
+        c_plasma: float,
+        vol_plasma: float,
+        rmajor: float,
+    ) -> float:
+        """
+        Calculate the normalised internal inductance using ITER-3 scaling li(3).
+
+        :param b_plasma_poloidal_vol_avg: Volume-averaged poloidal magnetic field (T).
+        :type b_plasma_poloidal_vol_avg: float
+        :param c_plasma: Plasma current (A).
+        :type c_plasma: float
+        :param vol_plasma: Plasma volume (m^3).
+        :type vol_plasma: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+
+        :returns: The li(3) normalised internal inductance.
+        :rtype: float
+
+        :references:
+            - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
+            “Inductive flux usage and its optimization in tokamak operation,”
+            Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
+            doi: https://doi.org/10.1088/0029-5515/54/9/093005.
+
+            - G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,”
+            Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/12/125002.
+        ‌
+        """
+
+        return (
+            2
+            * vol_plasma
+            * b_plasma_poloidal_vol_avg**2
+            / (constants.RMU0**2 * c_plasma**2 * rmajor)
+        )
+
+    @staticmethod
+    def calculate_internal_inductance_menard(kappa: float) -> float:
+        """
+        Calculate the Menard plasma normalized internal inductance.
+
+        :param kappa: Plasma separatrix elongation.
+        :type kappa: float
+
+        :return: The Menard plasma normalised internal inductance.
+        :rtype: float
+
+        :Notes:
+            - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
+            - This model is only recommneded to be used for ST's with kappa > 2.5
+
+        :References:
+            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+        """
+        return 3.4 - kappa
+
+    @staticmethod
+    def calculate_internal_inductance_wesson(alphaj: float) -> float:
+        """
+        Calculate the Wesson plasma normalized internal inductance.
+
+        :param alphaj: Current profile index.
+        :type alphaj: float
+
+        :return: The Wesson plasma normalised internal inductance.
+        :rtype: float
+
+        :Notes:
+            - It is recommended to use this method with the other Wesson relations for normalised beta and
+              current profile index.
+            - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
+
+        :References:
+            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+            International Series of Monographs on Physics, Volume 149.
+        """
+        return np.log(1.65 + 0.89 * alphaj)
+
+    def output_volt_second_information(self):
+        """Output volt-second information to file."""
+
+        po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
+        po.ovarre(
+            self.outfile,
+            "Total plasma volt-seconds required for pulse (Wb)",
+            "(vs_plasma_total_required)",
+            physics_variables.vs_plasma_total_required,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
+            "(vs_plasma_ind_ramp)",
+            physics_variables.vs_plasma_ind_ramp,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma resistive flux consumption for plasma current ramp-up (Wb)",
+            "(vs_plasma_res_ramp)",
+            physics_variables.vs_plasma_res_ramp,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total flux consumption for plasma current ramp-up (Wb)",
+            "(vs_plasma_ramp_required)",
+            physics_variables.vs_plasma_ramp_required,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ejima coefficient",
+            "(ejima_coeff)",
+            physics_variables.ejima_coeff,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Internal plasma V-s",
+            "(vs_plasma_internal)",
+            physics_variables.vs_plasma_internal,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
+            "(vs_plasma_burn_required)",
+            physics_variables.vs_plasma_burn_required,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma loop voltage during burn (V)",
+            "(v_plasma_loop_burn)",
+            physics_variables.v_plasma_loop_burn,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Coefficient for sawtooth effects on burn V-s requirement",
+            "(csawth)",
+            physics_variables.csawth,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma resistance (ohm)",
+            "(res_plasma)",
+            physics_variables.res_plasma,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma resistive diffusion time (s)",
+            "(t_plasma_res_diffusion)",
+            physics_variables.t_plasma_res_diffusion,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma inductance (H)",
+            "(ind_plasma)",
+            physics_variables.ind_plasma,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma magnetic energy stored (J)",
+            "(e_plasma_magnetic_stored)",
+            physics_variables.e_plasma_magnetic_stored,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Plasma normalised internal inductance",
+            "(ind_plasma_internal_norm)",
+            physics_variables.ind_plasma_internal_norm,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
+
+
+class PlasmaCurrent:
+    """Class to hold plasma current calculations for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+
+    def calculate_plasma_current(
+        self,
+        alphaj: float,
+        alphap: float,
+        b_plasma_toroidal_on_axis: float,
+        eps: float,
+        i_plasma_current: int,
+        kappa: float,
+        kappa95: float,
+        pres_plasma_on_axis: float,
+        len_plasma_poloidal: float,
+        q95: float,
+        rmajor: float,
+        rminor: float,
+        triang: float,
+        triang95: float,
+    ) -> tuple[float, float, float, float, float]:
+        """Calculate the plasma current.
+
+        Args:
+            alphaj (float): Current profile index.
+            alphap (float): Pressure profile index.
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
+            eps (float): Inverse aspect ratio.
+            i_plasma_current (int): Current scaling model to use.
+                1 = Peng analytic fit
+                2 = Peng divertor scaling (TART,STAR)
+                3 = Simple ITER scaling
+                4 = IPDG89 scaling
+                5 = Todd empirical scaling I
+                6 = Todd empirical scaling II
+                7 = Connor-Hastie model
+                8 = Sauter scaling (allowing negative triangularity)
+                9 = FIESTA ST scaling
+            kappa (float): Plasma elongation.
+            kappa95 (float): Plasma elongation at 95% surface.
+            pres_plasma_on_axis (float): Central plasma pressure (Pa).
+            len_plasma_poloidal (float): Plasma perimeter length (m).
+            q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
+            ind_plasma_internal_norm (float): Plasma normalised internal inductance.
+            rmajor (float): Major radius (m).
+            rminor (float): Minor radius (m).
+            triang (float): Plasma triangularity.
+            triang95 (float): Plasma triangularity at 95% surface.
+
+        Returns:
+            Tuple[float, float, float,]: Tuple containing b_plasma_poloidal_average, qstar, plasma_current,
+
+        Raises:
+            ValueError: If invalid value for i_plasma_current is provided.
+
+        Notes:
+            This routine calculates the plasma current based on the edge safety factor q95.
+            It will also make the current profile parameters consistent with the q-profile if required.
+
+        References:
+            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
+            - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+              'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+              1729-1738. https://doi.org/10.13182/FST92-A29971
+            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al, ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+            - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
+            - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
+            - T. Hartmann, 2013, Development of a modular systems code to analyse the implications of physics assumptions on the design of a demonstration fusion power plant
+            - Sauter, Geometric formulas for systems codes..., FED 2016
+        """
+        # Aspect ratio
+        aspect_ratio = 1.0 / eps
+
+        # Only the Sauter scaling (i_plasma_current=8) is suitable for negative triangularity:
+        if i_plasma_current != 8 and triang < 0.0:
+            raise ProcessValueError(
+                f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}"
+            )
+
+        # Calculate the function Fq that scales the edge q from the
+        # circular cross-section cylindrical case
+
+        # Peng analytical fit
+        if i_plasma_current == 1:
+            fq = self.current.calculate_current_coefficient_peng(
+                eps, len_plasma_poloidal, rminor
+            )
+
+        # Peng scaling for double null divertor; TARTs [STAR Code]
+        elif i_plasma_current == 2:
+            plasma_current = 1.0e6 * self.current.calculate_plasma_current_peng(
+                q95, aspect_ratio, eps, rminor, b_plasma_toroidal_on_axis, kappa, triang
+            )
+
+        # Simple ITER scaling (simply the cylindrical case)
+        elif i_plasma_current == 3:
+            fq = 1.0
+
+        # ITER formula (IPDG89)
+        elif i_plasma_current == 4:
+            fq = self.calculate_current_coefficient_ipdg89(eps, kappa95, triang95)
+
+        # Todd empirical scalings
+        # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
+        elif i_plasma_current in [5, 6]:
+            fq = self.calculate_current_coefficient_todd(eps, kappa95, triang95, model=1)
+
+            if i_plasma_current == 6:
+                fq = self.calculate_current_coefficient_todd(
+                    eps, kappa95, triang95, model=2
+                )
+
+        # Connor-Hastie asymptotically-correct expression
+        elif i_plasma_current == 7:
+            fq = self.calculate_current_coefficient_hastie(
+                alphaj,
+                alphap,
+                b_plasma_toroidal_on_axis,
+                triang95,
+                eps,
+                kappa95,
+                pres_plasma_on_axis,
+                constants.RMU0,
+            )
+
+        # Sauter scaling allowing negative triangularity [FED May 2016]
+        # https://doi.org/10.1016/j.fusengdes.2016.04.033.
+        elif i_plasma_current == 8:
+            # Assumes zero squareness, note takes kappa, delta at separatrix not _95
+            fq = self.calculate_current_coefficient_sauter(eps, kappa, triang)
+
+        # FIESTA ST scaling
+        # https://doi.org/10.1016/j.fusengdes.2020.111530.
+        elif i_plasma_current == 9:
+            fq = self.calculate_current_coefficient_fiesta(eps, kappa, triang)
+        else:
+            raise ProcessValueError(f"Invalid value {i_plasma_current=}")
+
+        # Main plasma current calculation using the fq value from the different settings
+        if i_plasma_current != 2:
+            plasma_current = (
+                (2.0 * np.pi / constants.RMU0)
+                * rminor**2
+                / (rmajor * q95)
+                * fq
+                * b_plasma_toroidal_on_axis
+            )
+        # i_plasma_current == 2 case covered above
+
+        # Calculate cyclindrical safety factor from IPDG89
+        qstar = (
+            5.0e6
+            * rminor**2
+            / (rmajor * plasma_current / b_plasma_toroidal_on_axis)
+            * 0.5
+            * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
+        )
+
+        # Calculate the poloidal field generated by the plasma current
+        b_plasma_poloidal_average = calculate_poloidal_field(
+            i_plasma_current,
+            plasma_current,
+            q95,
+            aspect_ratio,
+            eps,
+            b_plasma_toroidal_on_axis,
+            kappa,
+            triang,
+            len_plasma_poloidal,
+            constants.RMU0,
+        )
+
+        return b_plasma_poloidal_average, qstar, plasma_current
+
+    @staticmethod
+    def calculate_current_coefficient_peng(
+        eps: float, len_plasma_poloidal: float, rminor: float
+    ) -> float:
+        """
+        Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
+
+        :param eps: Plasma inverse aspect ratio.
+        :type eps: float
+        :param len_plasma_poloidal: Plasma poloidal perimeter length [m].
+        :type len_plasma_poloidal: float
+        :param rminor: Plasma minor radius [m].
+        :type rminor: float
+
+        :return: The plasma current scaling coefficient.
+        :rtype: float
+
+        :references: None
+        """
+
+        return (
+            (1.22 - 0.68 * eps)
+            / ((1.0 - eps * eps) ** 2)
+            * (len_plasma_poloidal / (2.0 * np.pi * rminor)) ** 2
+        )
+
+    @staticmethod
+    def calculate_plasma_current_peng(
+        q95: float,
+        aspect: float,
+        eps: float,
+        rminor: float,
+        b_plasma_toroidal_on_axis: float,
+        kappa: float,
+        delta: float,
+    ) -> float:
+        """
+        Function to calculate plasma current (Peng scaling from the STAR code)
+
+        Parameters:
+        - q95: float, 95% flux surface safety factor
+        - aspect: float, plasma aspect ratio
+        - eps: float, inverse aspect ratio
+        - rminor: float, plasma minor radius (m)
+        - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
+        - kappa: float, plasma elongation
+        - delta: float, plasma triangularity
+
+        Returns:
+        - float, plasma current in MA
+
+        This function calculates the plasma current in MA,
+        using a scaling from Peng, Galambos and Shipe (1992).
+        It is primarily used for Tight Aspect Ratio Tokamaks and is
+        selected via i_plasma_current=2.
+
+        References:
+        - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
+        - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+        1729-1738. https://doi.org/10.13182/FST92-A29971
+        """
+
+        # Transform q95 to qbar
+        qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
+
+        ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
+
+        e1 = (2.0 * kappa) / (d1 * (1.0 + delta))
+        e2 = (2.0 * kappa) / (d2 * (1.0 - delta))
+
+        return (
+            rminor
+            * b_plasma_toroidal_on_axis
+            / qbar
+            * 5.0
+            * kappa
+            / (2.0 * np.pi**2)
+            * (np.arcsin(e1) / e1 + np.arcsin(e2) / e2)
+            * (ff1 + ff2)
+        )
+
+    @staticmethod
+    def calculate_current_coefficient_ipdg89(
+        eps: float, kappa95: float, triang95: float
+    ) -> float:
+        """
+        Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
+
+        Parameters:
+        - eps: float, plasma inverse aspect ratio
+        - kappa95: float, plasma elongation 95%
+        - triang95: float, plasma triangularity 95%
+
+        Returns:
+        - float, the fq plasma current coefficient
+
+        This function calculates the fq coefficient used in the IPDG89 plasma current scaling,
+        based on the given plasma parameters.
+
+        References:
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        """
+        return (
+            0.5
+            * (1.17 - 0.65 * eps)
+            / ((1.0 - eps * eps) ** 2)
+            * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
+        )
+
+    @staticmethod
+    def calculate_current_coefficient_todd(
+        eps: float, kappa95: float, triang95: float, model: int
+    ) -> float:
+        """
+        Calculate the fq coefficient used in the two Todd plasma current scalings.
+
+        Parameters:
+        - eps: float, plasma inverse aspect ratio
+        - kappa95: float, plasma elongation 95%
+        - triang95: float, plasma triangularity 95%
+
+        Returns:
+        - float, the fq plasma current coefficient
+
+        This function calculates the fq coefficient based on the given plasma parameters for the two Todd scalings.
+
+        References:
+        - D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        """
+        # Calculate the Todd scaling based on the model
+        base_scaling = (
+            (1.0 + 2.0 * eps**2)
+            * ((1.0 + kappa95**2) / 0.5)
+            * (
+                1.24
+                - 0.54 * kappa95
+                + 0.3 * (kappa95**2 + triang95**2)
+                + 0.125 * triang95
+            )
+        )
+        if model == 1:
+            return base_scaling
+        if model == 2:
+            return base_scaling * (1.0 + (abs(kappa95 - 1.2)) ** 3)
+        raise ProcessValueError(f"model = {model} is an invalid option")
+
+    @staticmethod
+    def calculate_current_coefficient_hastie(
+        alphaj: float,
+        alphap: float,
+        b_plasma_toroidal_on_axis: float,
+        delta95: float,
+        eps: float,
+        kappa95: float,
+        pres_plasma_on_axis: float,
+        rmu0: float,
+    ) -> float:
+        """
+        Routine to calculate the f_q coefficient for the Connor-Hastie model used for scaling the plasma current.
+
+        Parameters:
+        - alphaj: float, the current profile index
+        - alphap: float, the pressure profile index
+        - b_plasma_toroidal_on_axis: float, the toroidal field on axis (T)
+        - delta95: float, the plasma triangularity 95%
+        - eps: float, the inverse aspect ratio
+        - kappa95: float, the plasma elongation 95%
+        - pres_plasma_on_axis: float, the central plasma pressure (Pa)
+        - rmu0: float, the vacuum permeability (H/m)
+
+        Returns:
+        - float, the F coefficient
+
+        This routine calculates the f_q coefficient used for scaling the plasma current,
+        using the Connor-Hastie scaling
+
+        Reference:
+        - J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985).
+        https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        """
+        # Exponent in Connor-Hastie current profile
+        lamda = alphaj
+
+        # Exponent in Connor-Hastie pressure profile
+        nu = alphap
+
+        # Central plasma beta
+        beta0 = 2.0 * rmu0 * pres_plasma_on_axis / (b_plasma_toroidal_on_axis**2)
+
+        # Plasma internal inductance
+        lamp1 = 1.0 + lamda
+        li = lamp1 / lamda * (lamp1 / lamda * np.log(lamp1) - 1.0)
+
+        # T/r in AEA FUS 172
+        kap1 = kappa95 + 1.0
+        tr = kappa95 * delta95 / kap1**2
+
+        # E/r in AEA FUS 172
+        er = (kappa95 - 1.0) / kap1
+
+        # T primed in AEA FUS 172
+        tprime = 2.0 * tr * lamp1 / (1.0 + 0.5 * lamda)
+
+        # E primed in AEA FUS 172
+        eprime = er * lamp1 / (1.0 + lamda / 3.0)
+
+        # Delta primed in AEA FUS 172
+        deltap = (0.5 * kap1 * eps * 0.5 * li) + (
+            beta0 / (0.5 * kap1 * eps)
+        ) * lamp1**2 / (1.0 + nu)
+
+        # Delta/R0 in AEA FUS 172
+        deltar = beta0 / 6.0 * (1.0 + 5.0 * lamda / 6.0 + 0.25 * lamda**2) + (
+            0.5 * kap1 * eps
+        ) ** 2 * 0.125 * (1.0 - (lamda**2) / 3.0)
+
+        # F coefficient
+        return (0.5 * kap1) ** 2 * (
+            1.0
+            + eps**2 * (0.5 * kap1) ** 2
+            + 0.5 * deltap**2
+            + 2.0 * deltar
+            + 0.5 * (eprime**2 + er**2)
+            + 0.5 * (tprime**2 + 4.0 * tr**2)
+        )
+
+    @staticmethod
+    def calculate_current_coefficient_sauter(
+        eps: float,
+        kappa: float,
+        triang: float,
+    ) -> float:
+        """
+        Routine to calculate the f_q coefficient for the Sauter model used for scaling the plasma current.
+
+        Parameters:
+        - eps: float, inverse aspect ratio
+        - kappa: float, plasma elongation at the separatrix
+        - triang: float, plasma triangularity at the separatrix
+
+        Returns:
+        - float, the fq coefficient
+
+        Reference:
+        - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
+        Fusion Engineering and Design, Volume 112, 2016, Pages 633-645,
+        ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
+        """
+        w07 = 1.0  # zero squareness - can be modified later if required
+
+        return (
+            (4.1e6 / 5.0e6)
+            * (1.0 + 1.2 * (kappa - 1.0) + 0.56 * (kappa - 1.0) ** 2)
+            * (1.0 + 0.09 * triang + 0.16 * triang**2)
+            * (1.0 + 0.45 * triang * eps)
+            / (1.0 - 0.74 * eps)
+            * (1.0 + 0.55 * (w07 - 1.0))
+        )
+
+    @staticmethod
+    def calculate_current_coefficient_fiesta(
+        eps: float, kappa: float, triang: float
+    ) -> float:
+        """
+        Calculate the fq coefficient used in the FIESTA plasma current scaling.
+
+        Parameters:
+        - eps: float, plasma inverse aspect ratio
+        - kappa: float, plasma elongation at the separatrix
+        - triang: float, plasma triangularity at the separatrix
+
+        Returns:
+        - float, the fq plasma current coefficient
+
+        This function calculates the fq coefficient based on the given plasma parameters for the FIESTA scaling.
+
+        References:
+        - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design,
+        Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
+        """
+        return 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
 
 
 class DetailedPhysics:
