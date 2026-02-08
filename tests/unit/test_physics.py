@@ -29,9 +29,8 @@ from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
+    PlasmaCurrent,
     PlasmaInductance,
-    calculate_current_coefficient_hastie,
-    calculate_plasma_current_peng,
     calculate_poloidal_field,
     diamagnetic_fraction_hender,
     diamagnetic_fraction_scene,
@@ -66,6 +65,7 @@ def physics():
         PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
         PlasmaConfinementTime(),
         PlasmaConfinementTransition(),
+        PlasmaCurrent(),
     )
 
 
@@ -1228,21 +1228,23 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta)
 
-    b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
-        i_plasma_current=plasmacurrentparam.i_plasma_current,
-        alphaj=plasmacurrentparam.alphaj,
-        alphap=plasmacurrentparam.alphap,
-        b_plasma_toroidal_on_axis=plasmacurrentparam.b_plasma_toroidal_on_axis,
-        eps=plasmacurrentparam.eps,
-        kappa=plasmacurrentparam.kappa,
-        kappa95=plasmacurrentparam.kappa95,
-        pres_plasma_on_axis=plasmacurrentparam.pres_plasma_on_axis,
-        len_plasma_poloidal=plasmacurrentparam.len_plasma_poloidal,
-        q95=plasmacurrentparam.q95,
-        rmajor=plasmacurrentparam.rmajor,
-        rminor=plasmacurrentparam.rminor,
-        triang=plasmacurrentparam.triang,
-        triang95=plasmacurrentparam.triang95,
+    b_plasma_poloidal_average, qstar, plasma_current = (
+        PlasmaCurrent().calculate_plasma_current(
+            i_plasma_current=plasmacurrentparam.i_plasma_current,
+            alphaj=plasmacurrentparam.alphaj,
+            alphap=plasmacurrentparam.alphap,
+            b_plasma_toroidal_on_axis=(plasmacurrentparam.b_plasma_toroidal_on_axis),
+            eps=plasmacurrentparam.eps,
+            kappa=plasmacurrentparam.kappa,
+            kappa95=plasmacurrentparam.kappa95,
+            pres_plasma_on_axis=plasmacurrentparam.pres_plasma_on_axis,
+            len_plasma_poloidal=plasmacurrentparam.len_plasma_poloidal,
+            q95=plasmacurrentparam.q95,
+            rmajor=plasmacurrentparam.rmajor,
+            rminor=plasmacurrentparam.rminor,
+            triang=plasmacurrentparam.triang,
+            triang95=plasmacurrentparam.triang95,
+        )
     )
 
     assert b_plasma_poloidal_average == pytest.approx(plasmacurrentparam.expected_bp)
@@ -1282,7 +1284,9 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     ),
 )
 def test_calculate_plasma_current_peng(arguments, expected):
-    assert calculate_plasma_current_peng(**arguments) == pytest.approx(expected)
+    assert PlasmaCurrent.calculate_plasma_current_peng(**arguments) == pytest.approx(
+        expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -1346,7 +1350,7 @@ def test_calculate_beta_limit():
 
 
 def test_conhas():
-    assert calculate_current_coefficient_hastie(
+    assert PlasmaCurrent.calculate_current_coefficient_hastie(
         5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.RMU0
     ) == pytest.approx(2.518876726889116)
 
