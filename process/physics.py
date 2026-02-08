@@ -1520,28 +1520,19 @@ class Physics:
             )
         )
 
-        # Map calculation methods to a dictionary
-        ind_plasma_internal_norm_calculations = {
-            0: physics_variables.ind_plasma_internal_norm,
-            1: physics_variables.ind_plasma_internal_norm_wesson,
-            2: physics_variables.ind_plasma_internal_norm_menard,
-        }
-
-        # Calculate ind_plasma_internal_normx based on i_ind_plasma_internal_norm
-        if (
-            int(physics_variables.i_ind_plasma_internal_norm)
-            in ind_plasma_internal_norm_calculations
-        ):
-            physics_variables.ind_plasma_internal_norm = (
-                ind_plasma_internal_norm_calculations[
-                    int(physics_variables.i_ind_plasma_internal_norm)
-                ]
+        # Calculate ind_plasma_internal_norm based on i_ind_plasma_internal_norm
+        try:
+            model = IndInternalNormModel(
+                int(physics_variables.i_ind_plasma_internal_norm)
             )
-        else:
+            physics_variables.ind_plasma_internal_norm = (
+                self.inductance.get_ind_internal_norm_value(model)
+            )
+        except ValueError:
             raise ProcessValueError(
                 "Illegal value of i_ind_plasma_internal_norm",
                 i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
-            )
+            ) from None
 
         # ===================================================
 
@@ -9034,12 +9025,29 @@ class PlasmaBeta:
         po.oblnkl(self.outfile)
 
 
+class IndInternalNormModel(IntEnum):
+    """Normalised internal inductance (l_i) model types"""
+
+    USER_INPUT = 0
+    WESSON = 1
+    MENARD = 2
+
+
 class PlasmaInductance:
     """Class to hold plasma inductance calculations for plasma processing."""
 
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def get_ind_internal_norm_value(self, model: IndInternalNormModel) -> float:
+        """Get the normalised internal inductance (l_i) for the specified model."""
+        model_map = {
+            IndInternalNormModel.USER_INPUT: physics_variables.ind_plasma_internal_norm,
+            IndInternalNormModel.WESSON: physics_variables.ind_plasma_internal_norm_wesson,
+            IndInternalNormModel.MENARD: physics_variables.ind_plasma_internal_norm_menard,
+        }
+        return model_map[model]
 
     @staticmethod
     def calculate_volt_second_requirements(
