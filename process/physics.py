@@ -2494,6 +2494,10 @@ class Physics:
             - physics_variables.p_plasma_rad_mw
         )
 
+        physics_variables.plfux_plasma_surface_neutron_avg_mw = (
+            physics_variables.p_neutron_total_mw / physics_variables.a_plasma_surface
+        )
+
         # KLUDGE: Ensure p_plasma_separatrix_mw is continuously positive (physical, rather than
         # negative potential power), as required by other models (e.g.
         # Physics.calculate_density_limit())
@@ -5646,6 +5650,14 @@ class Physics:
             physics_variables.pflux_fw_rad_mw,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Average neutron flux at plasma surface (MW/m^2)",
+            "(plfux_plasma_surface_neutron_avg_mw)",
+            physics_variables.plfux_plasma_surface_neutron_avg_mw,
+            "OP ",
+        )
+
         po.ovarre(
             self.outfile,
             "Peaking factor for radiation first-wall load",
