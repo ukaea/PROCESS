@@ -29,7 +29,7 @@ from process.data_structure import (
 )
 from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
-from process.physics import Physics, PlasmaBeta
+from process.physics import Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
 from process.stellarator import Neoclassics, Stellarator
@@ -70,9 +70,11 @@ def stellarator():
                 ElectronBernstein(plasma_profile=PlasmaProfile()),
             ),
             PlasmaBeta(),
+            PlasmaInductance(),
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),
+        plasma_inductance=PlasmaInductance(),
     )
 
 

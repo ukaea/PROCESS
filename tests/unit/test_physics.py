@@ -24,10 +24,10 @@ from process.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
+    PlasmaInductance,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,
     calculate_poloidal_field,
-    calculate_volt_second_requirements,
     diamagnetic_fraction_hender,
     diamagnetic_fraction_scene,
     ps_fraction_scene,
@@ -55,6 +55,7 @@ def physics():
             lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
         ),
         PlasmaBeta(),
+        PlasmaInductance(),
     )
 
 
@@ -2099,7 +2100,7 @@ def test_vscalc(voltsecondreqparam):
         vs_plasma_res_ramp,
         vs_plasma_total_required,
         v_plasma_loop_burn,
-    ) = calculate_volt_second_requirements(
+    ) = PlasmaInductance.calculate_volt_second_requirements(
         csawth=voltsecondreqparam.csawth,
         eps=voltsecondreqparam.eps,
         f_c_plasma_inductive=voltsecondreqparam.f_c_plasma_inductive,
