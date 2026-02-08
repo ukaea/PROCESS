@@ -641,6 +641,7 @@ class Physics:
         plasma_density_limit,
         plasma_exhaust,
         plasma_bootstrap_current: PlasmaBootstrapCurrent,
+        plasma_current,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -651,6 +652,7 @@ class Physics:
         self.density_limit = plasma_density_limit
         self.exhaust = plasma_exhaust
         self.plasma_bootstrap_current = plasma_bootstrap_current
+        self.current = plasma_current
 
     def physics(self):
         """Routine to calculate tokamak plasma physics information
@@ -7075,6 +7077,14 @@ class PlasmaInductance:
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
+
+
+class PlasmaCurrent:
+    """Class to hold plasma current calculations for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
 
 
 class DetailedPhysics:
