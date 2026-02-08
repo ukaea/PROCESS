@@ -1498,17 +1498,21 @@ class Physics:
         # -----------------------------------------------------
 
         physics_variables.ind_plasma_internal_norm_wesson = (
-            self.calculate_internal_inductance_wesson(alphaj=physics_variables.alphaj)
+            self.inductance.calculate_internal_inductance_wesson(
+                alphaj=physics_variables.alphaj
+            )
         )
 
         # Spherical Tokamak relation for internal inductance
         # Menard et al. (2016), Nuclear Fusion, 56, 106023
         physics_variables.ind_plasma_internal_norm_menard = (
-            self.calculate_internal_inductance_menard(kappa=physics_variables.kappa)
+            self.inductance.calculate_internal_inductance_menard(
+                kappa=physics_variables.kappa
+            )
         )
 
         physics_variables.ind_plasma_internal_norm_iter_3 = (
-            self.calculate_normalised_internal_inductance_iter_3(
+            self.inductance.calculate_normalised_internal_inductance_iter_3(
                 b_plasma_poloidal_vol_avg=physics_variables.b_plasma_poloidal_average,
                 c_plasma=physics_variables.plasma_current,
                 vol_plasma=physics_variables.vol_plasma,
@@ -2587,50 +2591,6 @@ class Physics:
         return qstar / q0 - 1.0
 
     @staticmethod
-    def calculate_internal_inductance_wesson(alphaj: float) -> float:
-        """
-        Calculate the Wesson plasma normalized internal inductance.
-
-        :param alphaj: Current profile index.
-        :type alphaj: float
-
-        :return: The Wesson plasma normalised internal inductance.
-        :rtype: float
-
-        :Notes:
-            - It is recommended to use this method with the other Wesson relations for normalised beta and
-              current profile index.
-            - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
-
-        :References:
-            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
-            International Series of Monographs on Physics, Volume 149.
-        """
-        return np.log(1.65 + 0.89 * alphaj)
-
-    @staticmethod
-    def calculate_internal_inductance_menard(kappa: float) -> float:
-        """
-        Calculate the Menard plasma normalized internal inductance.
-
-        :param kappa: Plasma separatrix elongation.
-        :type kappa: float
-
-        :return: The Menard plasma normalised internal inductance.
-        :rtype: float
-
-        :Notes:
-            - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
-            - This model is only recommneded to be used for ST's with kappa > 2.5
-
-        :References:
-            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
-        """
-        return 3.4 - kappa
-
-    @staticmethod
     def calculate_density_limit(
         b_plasma_toroidal_on_axis: float,
         i_density_limit: int,
@@ -3188,47 +3148,6 @@ class Physics:
             rndfuel,
             t_alpha_confinement,
             f_alpha_energy_confinement,
-        )
-
-    @staticmethod
-    def calculate_normalised_internal_inductance_iter_3(
-        b_plasma_poloidal_vol_avg: float,
-        c_plasma: float,
-        vol_plasma: float,
-        rmajor: float,
-    ) -> float:
-        """
-        Calculate the normalised internal inductance using ITER-3 scaling li(3).
-
-        :param b_plasma_poloidal_vol_avg: Volume-averaged poloidal magnetic field (T).
-        :type b_plasma_poloidal_vol_avg: float
-        :param c_plasma: Plasma current (A).
-        :type c_plasma: float
-        :param vol_plasma: Plasma volume (m^3).
-        :type vol_plasma: float
-        :param rmajor: Plasma major radius (m).
-        :type rmajor: float
-
-        :returns: The li(3) normalised internal inductance.
-        :rtype: float
-
-        :references:
-            - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
-            “Inductive flux usage and its optimization in tokamak operation,”
-            Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
-            doi: https://doi.org/10.1088/0029-5515/54/9/093005.
-
-            - G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,”
-            Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008,
-            doi: https://doi.org/10.1088/0029-5515/48/12/125002.
-        ‌
-        """
-
-        return (
-            2
-            * vol_plasma
-            * b_plasma_poloidal_vol_avg**2
-            / (constants.RMU0**2 * c_plasma**2 * rmajor)
         )
 
     @staticmethod
@@ -9249,6 +9168,91 @@ class PlasmaInductance:
             vs_plasma_total_required,
             v_plasma_loop_burn,
         )
+
+    @staticmethod
+    def calculate_normalised_internal_inductance_iter_3(
+        b_plasma_poloidal_vol_avg: float,
+        c_plasma: float,
+        vol_plasma: float,
+        rmajor: float,
+    ) -> float:
+        """
+        Calculate the normalised internal inductance using ITER-3 scaling li(3).
+
+        :param b_plasma_poloidal_vol_avg: Volume-averaged poloidal magnetic field (T).
+        :type b_plasma_poloidal_vol_avg: float
+        :param c_plasma: Plasma current (A).
+        :type c_plasma: float
+        :param vol_plasma: Plasma volume (m^3).
+        :type vol_plasma: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+
+        :returns: The li(3) normalised internal inductance.
+        :rtype: float
+
+        :references:
+            - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
+            “Inductive flux usage and its optimization in tokamak operation,”
+            Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
+            doi: https://doi.org/10.1088/0029-5515/54/9/093005.
+
+            - G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,”
+            Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/12/125002.
+        ‌
+        """
+
+        return (
+            2
+            * vol_plasma
+            * b_plasma_poloidal_vol_avg**2
+            / (constants.RMU0**2 * c_plasma**2 * rmajor)
+        )
+
+    @staticmethod
+    def calculate_internal_inductance_menard(kappa: float) -> float:
+        """
+        Calculate the Menard plasma normalized internal inductance.
+
+        :param kappa: Plasma separatrix elongation.
+        :type kappa: float
+
+        :return: The Menard plasma normalised internal inductance.
+        :rtype: float
+
+        :Notes:
+            - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
+            - This model is only recommneded to be used for ST's with kappa > 2.5
+
+        :References:
+            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+        """
+        return 3.4 - kappa
+
+    @staticmethod
+    def calculate_internal_inductance_wesson(alphaj: float) -> float:
+        """
+        Calculate the Wesson plasma normalized internal inductance.
+
+        :param alphaj: Current profile index.
+        :type alphaj: float
+
+        :return: The Wesson plasma normalised internal inductance.
+        :rtype: float
+
+        :Notes:
+            - It is recommended to use this method with the other Wesson relations for normalised beta and
+              current profile index.
+            - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
+
+        :References:
+            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+            International Series of Monographs on Physics, Volume 149.
+        """
+        return np.log(1.65 + 0.89 * alphaj)
 
 
 class DetailedPhysics:
