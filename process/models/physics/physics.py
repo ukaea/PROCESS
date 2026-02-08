@@ -1627,13 +1627,21 @@ def _trapped_particle_fraction_sauter(
 
 
 class Physics:
-    def __init__(self, plasma_profile, current_drive, plasma_beta, plasma_inductance):
+    def __init__(
+        self,
+        plasma_profile,
+        current_drive,
+        plasma_beta,
+        plasma_inductance,
+        plasma_current,
+    ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
         self.beta = plasma_beta
         self.inductance = plasma_inductance
+        self.current = plasma_current
 
     def physics(self):
         """Routine to calculate tokamak plasma physics information
@@ -9859,6 +9867,14 @@ class PlasmaInductance:
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
+
+
+class PlasmaCurrent:
+    """Class to hold plasma current calculations for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
 
 
 class DetailedPhysics:
