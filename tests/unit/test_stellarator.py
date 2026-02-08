@@ -28,7 +28,7 @@ from process.data_structure import (
 )
 from process.fw import Fw
 from process.hcpb import CCFE_HCPB
-from process.physics import Physics, PlasmaBeta, PlasmaInductance
+from process.physics import Physics, PlasmaBeta, PlasmaCurrent, PlasmaInductance
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
 from process.stellarator import Neoclassics, Stellarator
@@ -70,10 +70,12 @@ def stellarator():
             ),
             PlasmaBeta(),
             PlasmaInductance(),
+            PlasmaCurrent(),
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),
         plasma_inductance=PlasmaInductance(),
+        plasma_current=PlasmaCurrent(),
     )
 
 
