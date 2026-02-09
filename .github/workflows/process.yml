@@ -13,6 +13,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  python-version: '3.10'
+
 jobs:
   unit-test:
     strategy:
@@ -35,8 +38,6 @@ jobs:
 
   integration-test:
     runs-on: ubuntu-latest
-    env:
-      python-version: '3.10'
     steps:
       - uses: actions/checkout@v4
       - name: Setup python and hatch
@@ -48,8 +49,6 @@ jobs:
 
   example-test:
     runs-on: ubuntu-latest
-    env:
-      python-version: '3.10'
     steps:
       - uses: actions/checkout@v4
       - name: Setup python and hatch
@@ -68,8 +67,6 @@ jobs:
     strategy:
       matrix:
         tolerance: [0.2, 5]
-    env:
-      python-version: '3.10'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -89,7 +86,7 @@ jobs:
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
-          python-version: '3.10'
+          python-version: env.python-version
       - name: Run regression input files
         run: hatch run python tracking/run_tracking_inputs.py run tests/regression/input_files
       - name: Move other files
@@ -112,7 +109,7 @@ jobs:
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
-          python-version: '3.10'
+          python-version: env.python-version
       - name: Run pre-commit
         run: hatch run lint:fmt
 
@@ -130,7 +127,7 @@ jobs:
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
-          python-version: '3.10'
+          python-version: env.python-version
       - name: Setup SSH identity
         uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -180,7 +177,7 @@ jobs:
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
-          python-version: '3.10'
+          python-version: env.python-version
       - run: hatch run python scripts/vardes.py
       - run: git config --global --add safe.directory '*'
       - name: Download STF_TF.json files
