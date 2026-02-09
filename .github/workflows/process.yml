@@ -86,7 +86,7 @@ jobs:
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
-          python-version: env.python-version
+          python-version: ${{ env.python-version }}
       - name: Run regression input files
         run: hatch run python tracking/run_tracking_inputs.py run tests/regression/input_files
       - name: Move other files
@@ -109,7 +109,7 @@ jobs:
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
-          python-version: env.python-version
+          python-version: ${{ env.python-version }}
       - name: Run pre-commit
         run: hatch run lint:fmt
 
@@ -127,7 +127,7 @@ jobs:
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
-          python-version: env.python-version
+          python-version: ${{ env.python-version }}
       - name: Setup SSH identity
         uses: webfactory/ssh-agent@v0.7.0
         with:
@@ -177,7 +177,7 @@ jobs:
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
-          python-version: env.python-version
+          python-version: ${{ env.python-version }}
       - run: hatch run python scripts/vardes.py
       - run: git config --global --add safe.directory '*'
       - name: Download STF_TF.json files
