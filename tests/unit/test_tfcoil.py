@@ -1839,6 +1839,31 @@ class EyoungParallelArrayParam(NamedTuple):
                 0.34000000000000002,
                 0,
             )),
+<<<<<<< HEAD
+=======
+            expected_eyoung_j_out=38289891367.115105,
+            expected_l_out=0.050841087836601018,
+            expected_poisson_j_perp_out=0.30931445806415137,
+            expected_eyoung_stiffest=116443733140.5881,
+        ),
+        EyoungTNestedSquaresParam(
+            n=4,
+            eyoung_j_in=np.array((0, 0, 205000000000, 20000000000, 0)),
+            l_in=np.array((
+                0.010000000000000002,
+                0.020661087836601012,
+                0.016,
+                0.0041799999999999997,
+                0,
+            )),
+            poisson_j_perp_in=np.array((
+                0.29999999999999999,
+                0.30000001192092896,
+                0.29999999999999999,
+                0.34000000000000002,
+                0,
+            )),
+>>>>>>> b6b401a1 (Move certain large test data to json files (#4084))
             expected_eyoung_j_out=38289891367.115105,
             expected_l_out=0.050841087836601018,
             expected_poisson_j_perp_out=0.30931445806415137,
@@ -1962,6 +1987,30 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch):
                 0.30000001192092896,
                 0.29999999999999999,
             )),
+<<<<<<< HEAD
+=======
+            expected_eyoung_j_out=110859361820.72557,
+            expected_a_out=0.70527618095271016,
+            expected_poisson_j_perp_out=0.31608714140682664,
+        ),
+        EyoungParallelArrayParam(
+            n=5,
+            eyoung_j_in=np.array((205000000000, 20000000000, 117000000000, 0, 0)),
+            a_in=np.array((
+                0.29370123076207649,
+                0.11646247019991701,
+                0.13374756938078641,
+                0.031609694578447076,
+                0.1297552160314831,
+            )),
+            poisson_j_perp_in=np.array((
+                0.29999999999999999,
+                0.34000000000000002,
+                0.34999999999999998,
+                0.30000001192092896,
+                0.29999999999999999,
+            )),
+>>>>>>> b6b401a1 (Move certain large test data to json files (#4084))
             expected_eyoung_j_out=110859361820.72557,
             expected_a_out=0.70527618095271016,
             expected_poisson_j_perp_out=0.31608714140682664,
