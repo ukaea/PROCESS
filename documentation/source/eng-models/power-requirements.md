@@ -1,6 +1,7 @@
 # Power Requirements
 
 The main power flow is controlled by `power.py`. The main class `Power` controls this.
+
 ## Power requirements | `Power`
 
 ### TF Coils
@@ -20,6 +21,133 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 ### PF Coils
 
 #### PF power | `pfpwr()`
+
+#### PF coil power loss model – equations and derivation
+
+PF coil currents are defined at discrete pulse times $t_0 \ldots t_5$.  
+All PF circuits (and plasma current) are coupled through the mutual inductance matrix $M_{ij}$.
+
+---
+
+##### 1. Magnetic energy stored in the poloidal field | `_pf_loss_storage_j()`
+
+Magnetic energy in an inductive system is given by:
+
+$$
+E_{PF}(t_n) = \frac{1}{2} \sum_i I_i(t_n)\sum_j M_{ij} I_j(t_n)
+$$
+
+This is the standard inductive energy expression:
+
+$$
+E = \frac{1}{2} I^T M I
+$$
+
+---
+
+##### 2. Energy moved between pulse phases
+
+The change in stored magnetic energy between time points is:
+
+$$
+\Delta E_n = E_{PF}(t_{n+1}) - E_{PF}(t_n)
+$$
+
+This represents how much energy is charged into or discharged from the PF magnetic field.
+
+---
+
+##### 3. Storage system losses | `_pf_loss_storage_j()`
+
+Assuming a fractional inefficiency $k_s$ in the energy storage system:
+
+$$
+ELoss_{s,n} = k_s \, \left| \Delta E_n \right|
+$$
+
+A fixed fraction of energy moved is lost each time energy flows in or out of storage.
+
+---
+
+##### 4. Power supply losses | `_pf_loss_power_supply_j()`
+
+Electrical power delivered to each PF circuit is:
+
+$$
+P_i = V_i I_i
+$$
+
+Inductive voltage arises from changing currents:
+
+$$
+V_i = \sum_j M_{ij} \frac{dI_j}{dt}
+$$
+
+Approximating over a discrete time interval $\Delta t = t_{n+1}-t_n$:
+
+$$
+\frac{dI_j}{dt} \approx \frac{I_j(t_{n+1}) - I_j(t_n)}{\Delta t}
+$$
+
+and using the mean current:
+
+$$
+I_i \approx \frac{I_i(t_{n+1}) + I_i(t_n)}{2}
+$$
+
+gives:
+
+$$
+V_i \approx \frac{1}{\Delta t} \sum_j M_{ij}\left[I_j(t_{n+1}) - I_j(t_n)\right]
+$$
+
+The resulting energy loss in the power supplies over the interval is:
+
+$$
+ELoss_{ps,n} =
+\frac{k_{ps}}{2}
+\left|
+\left[I_i(t_{n+1}) + I_i(t_n)\right]
+\sum_j M_{ij}
+\left[I_j(t_{n+1}) - I_j(t_n)\right]
+\right|
+$$
+
+This represents inefficiency proportional to inductive power flow.
+
+---
+
+##### 5. Busbar resistive losses | `_pf_loss_busbar_j()`
+
+Resistive heating follows Joule’s law:
+
+$$
+P = I^2 R
+$$
+
+Using the mean current over each interval:
+
+$$
+\bar{I}_i = \frac{I_i(t_{n+1}) + I_i(t_n)}{2}
+$$
+
+Energy dissipated in the busbars is:
+
+$$
+ELoss_{bus,n} = \Delta t \sum_i \bar{I}_i^2 R_i
+$$
+
+---
+
+##### 6. Total PF energy loss per pulse | `_pf_loss_interval_total_j()`
+
+Summing losses over all pulse phases:
+
+$$
+EnergyLoss = \sum_n \left( ELoss_{s,n} + ELoss_{ps,n} + ELoss_{bus,n} \right)
+$$
+
+The mean PF electrical power demand is obtained by dividing the total pulse energy loss by the flat-top duration.
 
 ---
 
@@ -70,7 +198,7 @@ $$
 P_{\text{blkt-breeder-heat}} = \left(P_{\text{blkt,nuclear}} \times \texttt{f_nuc_pow_bz_liq}\right) + P_{\text{pump,blkt-secondary}}
 $$
 
-6: If `i_blkt_dual_coolant == 1` the secondary breeder is only pumped for tritium extraction and not cooling so: 
+6: If `i_blkt_dual_coolant == 1` the secondary breeder is only pumped for tritium extraction and not cooling so:
 
 $$
 P_{\text{blkt-breeder-heat}} =  P_{\text{pump,blkt-secondary}}
@@ -84,10 +212,9 @@ $$
  + \underbrace{\left[P_{\text{Blkt, nuclear}} + P_{\text{Blkt, pump}}\right]}_{\texttt{p_blkt_heat_deposited_mw}}
 $$
 
-  - $P_{\text{FW, nuclear}}$ & $P_{\text{Blkt, nuclear}}$ is the nuclear heating from neutron interaction (which includes the energy multiplication (`f_p_blkt_multiplication`) for the blanket.)
-  - $P_{\text{FW,}\gamma}$ is the photon radiation incident on the FW (`p_fw_rad_total_mw`).
-  - $P_{\alpha,\text{loss}}$ is the plasma lost alpha power (`p_fw_alpha_mw`)
-
+- $P_{\text{FW, nuclear}}$ & $P_{\text{Blkt, nuclear}}$ is the nuclear heating from neutron interaction (which includes the energy multiplication (`f_p_blkt_multiplication`) for the blanket.)
+- $P_{\text{FW,}\gamma}$ is the photon radiation incident on the FW (`p_fw_rad_total_mw`).
+- $P_{\alpha,\text{loss}}$ is the plasma lost alpha power (`p_fw_alpha_mw`)
 
 8: The thermal power deposited in the shields is calculated:
 
@@ -142,7 +269,7 @@ $$
 2: The electric demands of the plant core systems are calculated
 
 $$
-\overbrace{P_{\text{core systems}}}^\texttt{p_plant_core_systems_elec_mw} = P_{\text{base,total}} 
+\overbrace{P_{\text{core systems}}}^\texttt{p_plant_core_systems_elec_mw} = P_{\text{base,total}}
 \\ + \overbrace{P_{\text{cryo plant}}}^\texttt{p_cryo_plant_electric_mw} + \overbrace{P_{\text{tritium plant}}}^\texttt{p_tritium_plant_electric_mw}
 \\ + \overbrace{P_{\text{TF}}}^\texttt{p_tf_electric_supplies_mw} + \overbrace{P_{\text{PF}}}^\texttt{p_pf_electric_supplies_mw}
 \\ + \overbrace{P_{\text{vacuum pumps}}}^\texttt{vachtmw} + \underbrace{\overbrace{P_{\text{CP pumps}}}}_{\text{If present}}^\texttt{p_cp_coolant_pump_elec_mw}
@@ -177,13 +304,11 @@ $$
 \\ + \overbrace{P_{\text{HCD electric}}}^\texttt{p_hcd_electric_total_mw} + \overbrace{P_{\text{coolant pumps, electric}}}^\texttt{p_coolant_pump_elec_total_mw}
 $$
 
-
 7: The net-electric power is found by the different of gross and net
 
 $$
 \overbrace{P_{\text{net, electric}}}^\texttt{p_plant_electric_net_mw} = P_{\text{gross, electric}} - P_{\text{recirc, electric}}
 $$
-
 
 8: The recirculated power fraction is then quickly found as
 
@@ -191,12 +316,11 @@ $$
 \overbrace{f_{\text{recirc}}}^\texttt{f_p_plant_electric_recirc} = \frac{P_{\text{gross, electric}} - P_{\text{net, electric}}}{P_{\text{gross, electric}}}
 $$
 
-
 ---
 
 #### Plant thermal efficiency | `plant_thermal_efficiency()`
 
-`i_thermal_electric_conversion` : This switch controls the calculation of the thermal to electric conversion 
+`i_thermal_electric_conversion` : This switch controls the calculation of the thermal to electric conversion
 efficiency in the secondary cycle.
 
 ----------------
@@ -207,9 +331,9 @@ This model is set with `i_thermal_electric_conversion = 0`.
 
 It can be used with water or helium primary coolants.
 
-The efficiency of the power generation cycle is set to a single value 
-obtained from previous cycle modelling studies. The heat deposited in the Toroidal Field coils 
-divertor coolant is assumed to be at such low temperature that it cannot be used for power 
+The efficiency of the power generation cycle is set to a single value
+obtained from previous cycle modelling studies. The heat deposited in the Toroidal Field coils
+divertor coolant is assumed to be at such low temperature that it cannot be used for power
 generation and is dumped to the environment.
 
 The resulting thermal efficiencies used are taken from studies that modelled Rankine cycles for
@@ -221,7 +345,6 @@ are even considered in the model.
 $$
 \eta_{\text{turbine}} = 0.411
 $$
-
 
 -------------------
 
@@ -262,7 +385,7 @@ It can be used with helium primary coolant.
 $$
 T_{\text{turbine,inlet}} = T_{\text{blkt,outlet}} - 20.0
 $$
- 
+
 $$
 \eta_{\text{turbine}} = 0.1802 \ln{(T_{\text{turbine,inlet}})}-0.7823 - \Delta \eta \\
 \text{for} \quad  657.15 \le T_{\text{turbine,inlet}} \le 915.15 \text{K}
@@ -272,7 +395,6 @@ The peak divertor coolant temperature ($T_{\text{div,outlet}}$) is assumed to be
 
 If the Rankine cycle is chosen and the primary coolant is water, it is assumed that the cycle is similar to that of pressurised water reactors currently in operation.
 
-
 ------------
 
 ##### Supercritical CO2 Brayton Cycle
@@ -281,14 +403,14 @@ This model is set with `i_thermal_electric_conversion = 4`.
 
 It can be used with water or helium primary coolants.
 
-A supercritical CO$_2$ Brayton cycle is assumed. The secondary cycle 
-efficiency (`eta_turbine`) is calculated from the coolant outlet temperature using simple relations 
+A supercritical CO$_2$ Brayton cycle is assumed. The secondary cycle
+efficiency (`eta_turbine`) is calculated from the coolant outlet temperature using simple relations
 between temperature and efficiency from :
 
 $$
 T_{\text{turbine,inlet}} = T_{\text{blkt,outlet}} - 20.0
 $$
- 
+
 $$
 \eta_{\text{turbine}} = 0.4347 \ln{(T_{\text{turbine,inlet}})}-2.5043 \\
 \text{for} \quad  408.15 \le T_{\text{turbine,inlet}} \le 1023.15 \text{K}
@@ -296,9 +418,7 @@ $$
 
 The peak divertor coolant temperature ($T_{\text{div,outlet}}$) is assumed to be the same as the turbine inlet ($T_{\text{turbine,inlet}}$).
 
-
 The correlation of efficiency with temperature is derived from results of cycle modelling carried out by CCFE in collaboration with industry. The divertor heat is used in the main heat exchanger. The divertor heat is counted as primary heat, and is included in the calculation of the efficiency.
-
 
 ---
 
@@ -306,23 +426,16 @@ The correlation of efficiency with temperature is derived from results of cycle 
 
 ---
 
-
-
-
 ### Cryogenic power requirements | `cryo()`
 
 ---
 
-
-
-
-
-Figure 1 shows a simplified description of the power flow. 
+Figure 1 shows a simplified description of the power flow.
 
 <figure>
     <center>
-    <img src="../../images/Overall-power-flow.png" alt="Overall power flow" 
-    title="Power flows" 
+    <img src="../../images/Overall-power-flow.png" alt="Overall power flow"
+    title="Power flows"
     width="650" height="100" />
     <br><br>
     <figcaption><i>Figure 1: Power flows
@@ -338,7 +451,7 @@ Some details of the auxiliary systems are as follows.
 The TF current is carried from the power supplies to the reactor by room-temperature aluminium busbars, organised in $N_{circuit}$ circuits.  The total length of the busbars is (somehwat arbitrarily) given by
 
 $$
-L_bus = 8 \pi R_0 + (1 + N_{circuit}) (12 R_0 + 80) 
+L_bus = 8 \pi R_0 + (1 + N_{circuit}) (12 R_0 + 80)
 $$
 
 The resistivity of the busbar is 2.62e-8 ohm.m (0.0262 ohm.mm²/m) (hard-coded).
@@ -346,9 +459,3 @@ The resistivity of the busbar is 2.62e-8 ohm.m (0.0262 ohm.mm²/m) (hard-coded).
 "TF coil resistive power" (`rpower`) includes the dissipation of the cryogenic current leads (assumed to be resistive).
 
 The AC power required is determined by the efficiency of the coil power supply: `etatf` (default = 90%).
-
-
-
-
-
-
