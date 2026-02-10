@@ -63,7 +63,9 @@ class Power(Model):
         # Cryoplant loads
         self.calculate_cryo_loads()
 
-    def _pf_loss_storage_j(self, e_pf_delta_j: float) -> float:
+    def _pf_loss_storage_j(
+        self, e_pf_delta_j: float, f_p_pf_energy_store_loss: float
+    ) -> float:
         """
         Energy storage loss over an interval [J]
         Loss = f_p_pf_energy_store_loss * |ΔE_PF|
@@ -74,11 +76,12 @@ class Power(Model):
         :return: energy storage electrical loss over interval [J]
         :rtype: float
         """
-        return pf_power_variables.f_p_pf_energy_store_loss * abs(e_pf_delta_j)
+        return f_p_pf_energy_store_loss * abs(e_pf_delta_j)
 
     def _pf_loss_power_supply_j(
         self,
         ii: int,
+        n_pf_cs_plasma_circuits: int,
         c_pf_coil_turn: np.ndarray,
         ind_pf_cs_plasma_mutual: np.ndarray,
     ) -> float:
@@ -97,11 +100,11 @@ class Power(Model):
         :rtype: float
         """
         e_loss_pf_psu_j = 0.0e0
-        for jj in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
+        for jj in range(n_pf_cs_plasma_circuits - 1):
             c_pf_sum_a = c_pf_coil_turn[jj, ii + 1] + c_pf_coil_turn[jj, ii]
 
             web_pf_delta_wb = 0.0e0
-            for kk in range(pfcoil_variables.n_pf_cs_plasma_circuits):
+            for kk in range(n_pf_cs_plasma_circuits):
                 web_pf_delta_wb = web_pf_delta_wb + ind_pf_cs_plasma_mutual[jj, kk] * (
                     c_pf_coil_turn[kk, ii + 1] - c_pf_coil_turn[kk, ii]
                 )
@@ -156,10 +159,12 @@ class Power(Model):
     def _pf_loss_interval_total_j(
         self,
         ii: int,
+        f_p_pf_energy_store_loss: float,
         dt_pulse_phase_s: float,
         poloidalenergy: np.ndarray,
         ngrpt: int,
         pf_group_circuit_index: np.ndarray,
+        n_pf_cs_plasma_circuits: int,
         c_pf_coil_turn: np.ndarray,
         ind_pf_cs_plasma_mutual: np.ndarray,
         pfbusr: np.ndarray,
@@ -192,10 +197,13 @@ class Power(Model):
             return 0.0e0
 
         e_pf_delta_j = poloidalenergy[ii + 1] - poloidalenergy[ii]
-        e_loss_pf_store_j = self._pf_loss_storage_j(e_pf_delta_j)
+        e_loss_pf_store_j = self._pf_loss_storage_j(
+            e_pf_delta_j, f_p_pf_energy_store_loss
+        )
 
         e_loss_pf_psu_j = self._pf_loss_power_supply_j(
             ii=ii,
+            n_pf_cs_plasma_circuits=n_pf_cs_plasma_circuits,
             c_pf_coil_turn=c_pf_coil_turn,
             ind_pf_cs_plasma_mutual=ind_pf_cs_plasma_mutual,
         )
@@ -232,6 +240,10 @@ class Power(Model):
         t_pulse_cumulative = times_variables.t_pulse_cumulative  # [s]
         c_pf_coil_turn = pfcoil_variables.c_pf_coil_turn  # [A]
         ind_pf_cs_plasma_mutual = pfcoil_variables.ind_pf_cs_plasma_mutual  # [H]
+        f_p_pf_energy_store_loss = (
+            pf_power_variables.f_p_pf_energy_store_loss
+        )  # [unitless]
+        n_pf_cs_plasma_circuits = pfcoil_variables.n_pf_cs_plasma_circuits  # [unitless]
 
         powpfii = np.zeros((pfcoil_variables.NGC2,))
         cktr = np.zeros((pfcoil_variables.NGC2,))
@@ -399,10 +411,12 @@ class Power(Model):
             # Electrical energy dissipated in PFC power supplies as they increase or decrease the poloidal field energy
             pfdissipation[ii] = self._pf_loss_interval_total_j(
                 ii=ii,
+                f_p_pf_energy_store_loss=f_p_pf_energy_store_loss,
                 dt_pulse_phase_s=dt_pulse_phase_s,
                 poloidalenergy=poloidalenergy,
                 ngrpt=ngrpt,
                 pf_group_circuit_index=pf_group_circuit_index,
+                n_pf_cs_plasma_circuits=n_pf_cs_plasma_circuits,
                 c_pf_coil_turn=c_pf_coil_turn,
                 ind_pf_cs_plasma_mutual=ind_pf_cs_plasma_mutual,
                 pfbusr=pfbusr,
