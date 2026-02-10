@@ -2889,7 +2889,11 @@ def plot_main_plasma_information(
 
     textstr_neutron = (
         f"$P_{{\\text{{n,total}}}}$ {mfile.get('p_neutron_total_mw', scan=scan):.2f} MW \n"
+<<<<<<< HEAD:process/core/io/plot/summary.py
         f"$\\phi_{{\\text{{n,avg}}}}$ {mfile.get('pflux_plasma_surface_neutron_avg_mw', scan=scan):.3f} MW/m²"
+=======
+        f"$\\phi_{{\\text{{n,avg}}}}$ {mfile.get('plfux_plasma_surface_neutron_avg_mw', scan=scan):.3f} MW/m²"
+>>>>>>> 230e3864 (Add plasma neutron surface power to output (#4087)):process/io/plot_proc.py
     )
 
     axis.text(

@@ -1263,7 +1263,11 @@ vs_plasma_total_required: float = None
 pflux_fw_neutron_mw: float = None
 """average neutron wall load (MW/m2)"""
 
+<<<<<<< HEAD
 pflux_plasma_surface_neutron_avg_mw: float = None
+=======
+plfux_plasma_surface_neutron_avg_mw: float = None
+>>>>>>> 230e3864 (Add plasma neutron surface power to output (#4087))
 """Average neutron flux at plasma surface (MW/m2)"""
 
 
@@ -1667,7 +1671,11 @@ def init_physics_variables():
         vs_plasma_res_ramp, \
         vs_plasma_total_required, \
         pflux_fw_neutron_mw, \
+<<<<<<< HEAD
         pflux_plasma_surface_neutron_avg_mw, \
+=======
+        plfux_plasma_surface_neutron_avg_mw, \
+>>>>>>> 230e3864 (Add plasma neutron surface power to output (#4087))
         wtgpd, \
         a_plasma_poloidal, \
         n_charge_plasma_effective_vol_avg, \
@@ -1958,7 +1966,11 @@ def init_physics_variables():
     vs_plasma_res_ramp = 0.0
     vs_plasma_total_required = 0.0
     pflux_fw_neutron_mw = 0.0
+<<<<<<< HEAD
     pflux_plasma_surface_neutron_avg_mw = 0.0
+=======
+    plfux_plasma_surface_neutron_avg_mw = 0.0
+>>>>>>> 230e3864 (Add plasma neutron surface power to output (#4087))
     wtgpd = 0.0
     a_plasma_poloidal = 0.0
     n_charge_plasma_effective_vol_avg = 0.0
