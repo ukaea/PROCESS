@@ -1944,7 +1944,6 @@ class TFCoil:
                 "(dr_tf_plasma_case)",
             )
 
-            radius = radius / np.cos(np.pi / tfcoil_variables.n_tf_coils)
             po.obuild(
                 self.outfile,
                 "Plasma side case max radius",
