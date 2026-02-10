@@ -4,25 +4,84 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
-from process.blanket_library import BlanketLibrary
+from process.blanket_library import BlanketLibrary, dshellarea, eshellarea
 from process.coolprop_interface import FluidProperties
-from process.data_structure import blanket_library, build_variables, fwbs_variables
+from process.data_structure import (
+    blanket_library,
+    build_variables,
+    divertor_variables,
+    first_wall_variables,
+    fwbs_variables,
+    physics_variables,
+)
+from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 
 
-class Fw:
+class FirstWall:
     def __init__(self) -> None:
         self.outfile = constants.NOUT
         self.blanket_library = BlanketLibrary(fw=self)
 
     def run(self):
+        fwbs_variables.dz_fw_half = self.calculate_first_wall_half_height(
+            z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
+            dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
+            dz_divertor=divertor_variables.dz_divertor,
+            dz_blkt_upper=build_variables.dz_blkt_upper,
+            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
+            dz_fw_plasma_gap=build_variables.dz_fw_plasma_gap,
+            n_divertors=divertor_variables.n_divertors,
+            dr_fw_inboard=build_variables.dr_fw_inboard,
+            dr_fw_outboard=build_variables.dr_fw_outboard,
+        )
+
+        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+            (
+                first_wall_variables.a_fw_inboard_full_coverage,
+                first_wall_variables.a_fw_outboard_full_coverage,
+                first_wall_variables.a_fw_total_full_coverage,
+            ) = self.calculate_dshaped_first_wall_areas(
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                dz_fw_half=fwbs_variables.dz_fw_half,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+            )
+
+        else:
+            (
+                first_wall_variables.a_fw_inboard_full_coverage,
+                first_wall_variables.a_fw_outboard_full_coverage,
+                first_wall_variables.a_fw_total_full_coverage,
+            ) = self.calculate_elliptical_first_wall_areas(
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                triang=physics_variables.triang,
+                dz_fw_half=fwbs_variables.dz_fw_half,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+            )
+
+        (
+            first_wall_variables.a_fw_inboard,
+            first_wall_variables.a_fw_outboard,
+            first_wall_variables.a_fw_total,
+        ) = self.apply_first_wall_coverage_factors(
+            n_divertors=divertor_variables.n_divertors,
+            f_ster_div_single=fwbs_variables.f_ster_div_single,
+            f_a_fw_outboard_hcd=fwbs_variables.f_a_fw_outboard_hcd,
+            a_fw_inboard_full_coverage=first_wall_variables.a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage=first_wall_variables.a_fw_outboard_full_coverage,
+        )
+
         (
             blanket_library.n_fw_inboard_channels,
             blanket_library.n_fw_outboard_channels,
         ) = self.calculate_total_fw_channels(
-            build_variables.a_fw_inboard,
-            build_variables.a_fw_outboard,
+            first_wall_variables.a_fw_inboard,
+            first_wall_variables.a_fw_outboard,
             fwbs_variables.len_fw_channel,
             fwbs_variables.dx_fw_module,
         )
@@ -33,6 +92,155 @@ class Fw:
             fwbs_variables.radius_fw_channel_90_bend,
             fwbs_variables.radius_fw_channel_180_bend,
         ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
+
+    @staticmethod
+    def calculate_first_wall_half_height(
+        z_plasma_xpoint_lower: float,
+        dz_xpoint_divertor: float,
+        dz_divertor: float,
+        dz_blkt_upper: float,
+        z_plasma_xpoint_upper: float,
+        dz_fw_plasma_gap: float,
+        n_divertors: int,
+        dr_fw_inboard: float,
+        dr_fw_outboard: float,
+    ) -> float:
+        """Calculate the half-height of the first wall."""
+
+        #  Half-height of first wall (internal surface)
+        z_bottom = (
+            z_plasma_xpoint_lower
+            + dz_xpoint_divertor
+            + dz_divertor
+            - dz_blkt_upper
+            - 0.5e0 * (dr_fw_inboard + dr_fw_outboard)
+        )
+        if n_divertors == 2:
+            z_top = z_bottom
+        else:
+            z_top = z_plasma_xpoint_upper + dz_fw_plasma_gap
+
+        return 0.5e0 * (z_top + z_bottom)
+
+    @staticmethod
+    def calculate_dshaped_first_wall_areas(
+        rmajor: float,
+        rminor: float,
+        dz_fw_half: float,
+        dr_fw_plasma_gap_inboard: float,
+        dr_fw_plasma_gap_outboard: float,
+    ) -> tuple[float, float, float]:
+        # D-shaped
+        #  Major radius to outer edge of inboard section
+        r1 = rmajor - rminor - dr_fw_plasma_gap_inboard
+
+        #  Horizontal distance between inside edges,
+        #  i.e. outer radius of inboard part to inner radius of outboard part
+
+        r2 = (rmajor + rminor + dr_fw_plasma_gap_outboard) - r1
+        #  Calculate surface area, assuming 100% coverage
+
+        (
+            a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage,
+            a_fw_total_full_coverage,
+        ) = dshellarea(rmajor=r1, rminor=r2, zminor=dz_fw_half)
+
+        return (
+            a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage,
+            a_fw_total_full_coverage,
+        )
+
+    @staticmethod
+    def calculate_elliptical_first_wall_areas(
+        rmajor: float,
+        rminor: float,
+        triang: float,
+        dz_fw_half: float,
+        dr_fw_plasma_gap_inboard: float,
+        dr_fw_plasma_gap_outboard: float,
+    ) -> tuple[float, float, float]:
+        """Calculate the first wall areas for an elliptical cross-section."""
+
+        # Cross-section is assumed to be defined by two ellipses
+        #  Major radius to centre of inboard and outboard ellipses
+        #  (coincident in radius with top of plasma)
+
+        r1 = rmajor - rminor * triang
+
+        #  Distance between r1 and outer edge of inboard section
+
+        r2 = r1 - (rmajor - rminor - dr_fw_plasma_gap_inboard)
+
+        #  Distance between r1 and inner edge of outboard section
+
+        r3 = (rmajor + rminor + dr_fw_plasma_gap_outboard) - r1
+
+        #  Calculate surface area, assuming 100% coverage
+
+        (
+            a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage,
+            a_fw_total_full_coverage,
+        ) = eshellarea(rshell=r1, rmini=r2, rmino=r3, zminor=dz_fw_half)
+
+        return (
+            a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage,
+            a_fw_total_full_coverage,
+        )
+
+    @staticmethod
+    def apply_first_wall_coverage_factors(
+        n_divertors: int,
+        f_ster_div_single: float,
+        f_a_fw_outboard_hcd: float,
+        a_fw_inboard_full_coverage: float,
+        a_fw_outboard_full_coverage: float,
+    ) -> tuple[float, float, float]:
+        """Apply first wall coverage factors to calculate actual first wall areas.
+
+        :param n_divertors: Number of divertors (1 or 2).
+        :type n_divertors: int
+        :param f_ster_div_single: Fractional area of first wall sterically blocked by single divertor.
+        :type f_ster_div_single: float
+        :param f_a_fw_outboard_hcd: Fractional area of outboard first wall covered by high heat flux components.
+        :type f_a_fw_outboard_hcd: float
+        :param a_fw_inboard_full_coverage: First wall inboard area assuming 100% coverage (m^2).
+        :type a_fw_inboard_full_coverage: float
+        :param a_fw_outboard_full_coverage: First wall outboard area assuming 100% coverage (m^2).
+        :type a_fw_outboard_full_coverage: float
+
+        :returns: Contains first wall inboard area, outboard area, and total area (m^2).
+        :rtype: tuple[float, float, float]
+
+        """
+        if n_divertors == 2:
+            # Double null configuration
+            a_fw_outboard = a_fw_outboard_full_coverage * (
+                1.0e0 - 2.0e0 * f_ster_div_single - f_a_fw_outboard_hcd
+            )
+            a_fw_inboard = a_fw_inboard_full_coverage * (
+                1.0e0 - 2.0e0 * f_ster_div_single
+            )
+        else:
+            # Single null configuration
+            a_fw_outboard = a_fw_outboard_full_coverage * (
+                1.0e0 - f_ster_div_single - f_a_fw_outboard_hcd
+            )
+            a_fw_inboard = a_fw_inboard_full_coverage * (1.0e0 - f_ster_div_single)
+
+        a_fw_total = a_fw_inboard + a_fw_outboard
+
+        if a_fw_outboard <= 0.0e0:
+            raise ProcessValueError(
+                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high for a credible outboard wall area",
+                f_ster_div_single=f_ster_div_single,
+                f_a_fw_outboard_hcd=f_a_fw_outboard_hcd,
+            )
+
+        return a_fw_inboard, a_fw_outboard, a_fw_total
 
     def set_fw_geometry(self):
         build_variables.dr_fw_inboard = (

@@ -8,9 +8,9 @@ import pytest
 from process.availability import Availability
 from process.costs import Costs
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     cost_variables,
+    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
@@ -550,7 +550,7 @@ def test_sombld(sombldparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "a_fw_total", sombldparam.a_fw_total)
+    monkeypatch.setattr(first_wall_variables, "a_fw_total", sombldparam.a_fw_total)
     monkeypatch.setattr(ife_variables, "ifetyp", sombldparam.ifetyp)
     monkeypatch.setattr(ife_variables, "chrad", sombldparam.chrad)
     monkeypatch.setattr(ife_variables, "r1", sombldparam.r1)
@@ -620,7 +620,9 @@ def test_sombld(sombldparam, monkeypatch, ife):
 
     ife.sombld()
 
-    assert build_variables.a_fw_total == pytest.approx(sombldparam.expected_a_fw_total)
+    assert first_wall_variables.a_fw_total == pytest.approx(
+        sombldparam.expected_a_fw_total
+    )
     assert ife_variables.r1 == pytest.approx(sombldparam.expected_r1)
     assert ife_variables.r2 == pytest.approx(sombldparam.expected_r2)
     assert ife_variables.r3 == pytest.approx(sombldparam.expected_r3)
@@ -1135,7 +1137,7 @@ def test_hylbld(hylbldparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "a_fw_total", hylbldparam.a_fw_total)
+    monkeypatch.setattr(first_wall_variables, "a_fw_total", hylbldparam.a_fw_total)
     monkeypatch.setattr(ife_variables, "ifetyp", hylbldparam.ifetyp)
     monkeypatch.setattr(ife_variables, "chrad", hylbldparam.chrad)
     monkeypatch.setattr(ife_variables, "r1", hylbldparam.r1)
@@ -1189,7 +1191,9 @@ def test_hylbld(hylbldparam, monkeypatch, ife):
 
     ife.hylbld()
 
-    assert build_variables.a_fw_total == pytest.approx(hylbldparam.expected_a_fw_total)
+    assert first_wall_variables.a_fw_total == pytest.approx(
+        hylbldparam.expected_a_fw_total
+    )
     assert ife_variables.r1 == pytest.approx(hylbldparam.expected_r1)
     assert ife_variables.r2 == pytest.approx(hylbldparam.expected_r2)
     assert ife_variables.r3 == pytest.approx(hylbldparam.expected_r3)
@@ -1570,7 +1574,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "a_fw_total", ifefbsparam.a_fw_total)
+    monkeypatch.setattr(first_wall_variables, "a_fw_total", ifefbsparam.a_fw_total)
     monkeypatch.setattr(cost_variables, "life_plant", ifefbsparam.life_plant)
     monkeypatch.setattr(cost_variables, "abktflnc", ifefbsparam.abktflnc)
     monkeypatch.setattr(
@@ -2021,7 +2025,7 @@ def test_genbld(genbldparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "a_fw_total", genbldparam.a_fw_total)
+    monkeypatch.setattr(first_wall_variables, "a_fw_total", genbldparam.a_fw_total)
     monkeypatch.setattr(ife_variables, "ifetyp", genbldparam.ifetyp)
     monkeypatch.setattr(ife_variables, "chrad", genbldparam.chrad)
     monkeypatch.setattr(ife_variables, "r1", genbldparam.r1)
@@ -2075,7 +2079,9 @@ def test_genbld(genbldparam, monkeypatch, ife):
 
     ife.genbld()
 
-    assert build_variables.a_fw_total == pytest.approx(genbldparam.expected_a_fw_total)
+    assert first_wall_variables.a_fw_total == pytest.approx(
+        genbldparam.expected_a_fw_total
+    )
     assert ife_variables.r1 == pytest.approx(genbldparam.expected_r1)
     assert ife_variables.r2 == pytest.approx(genbldparam.expected_r2)
     assert ife_variables.r3 == pytest.approx(genbldparam.expected_r3)
@@ -2638,7 +2644,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "a_fw_total", bld2019param.a_fw_total)
+    monkeypatch.setattr(first_wall_variables, "a_fw_total", bld2019param.a_fw_total)
     monkeypatch.setattr(buildings_variables, "trcl", bld2019param.trcl)
     monkeypatch.setattr(buildings_variables, "stcl", bld2019param.stcl)
     monkeypatch.setattr(fwbs_variables, "tbr", bld2019param.tbr)
@@ -2698,7 +2704,9 @@ def test_bld2019(bld2019param, monkeypatch, ife):
 
     ife.bld2019()
 
-    assert build_variables.a_fw_total == pytest.approx(bld2019param.expected_a_fw_total)
+    assert first_wall_variables.a_fw_total == pytest.approx(
+        bld2019param.expected_a_fw_total
+    )
     assert fwbs_variables.tbr == pytest.approx(bld2019param.expected_tbr)
     assert fwbs_variables.f_p_blkt_multiplication == pytest.approx(
         bld2019param.expected_emult

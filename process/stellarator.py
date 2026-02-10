@@ -16,6 +16,7 @@ from process.data_structure import (
     cost_variables,
     current_drive_variables,
     divertor_variables,
+    first_wall_variables,
     fwbs_variables,
     global_variables,
     heat_transport_variables,
@@ -459,21 +460,21 @@ class Stellarator:
             build_variables.dr_fw_plasma_gap_inboard
             + build_variables.dr_fw_plasma_gap_outboard
         )
-        build_variables.a_fw_total = (
+        first_wall_variables.a_fw_total = (
             physics_variables.a_plasma_surface * awall / physics_variables.rminor
         )
 
         if heat_transport_variables.ipowerflow == 0:
-            build_variables.a_fw_total = (
+            first_wall_variables.a_fw_total = (
                 1.0e0 - fwbs_variables.fhole
-            ) * build_variables.a_fw_total
+            ) * first_wall_variables.a_fw_total
         else:
-            build_variables.a_fw_total = (
+            first_wall_variables.a_fw_total = (
                 1.0e0
                 - fwbs_variables.fhole
                 - fwbs_variables.f_ster_div_single
                 - fwbs_variables.f_a_fw_outboard_hcd
-            ) * build_variables.a_fw_total
+            ) * first_wall_variables.a_fw_total
 
         if output:
             #  Print out device build
@@ -915,7 +916,7 @@ class Stellarator:
         divertor_variables.pflux_div_heat_load_mw = q_div
         divertor_variables.a_div_surface_total = darea
 
-        fwbs_variables.f_ster_div_single = darea / build_variables.a_fw_total
+        fwbs_variables.f_ster_div_single = darea / first_wall_variables.a_fw_total
 
         if output:
             po.oheadr(self.outfile, "Divertor")
@@ -1105,8 +1106,8 @@ class Stellarator:
         )
 
         #  First wall inboard, outboard areas (assume 50% of total each)
-        build_variables.a_fw_inboard = 0.5e0 * build_variables.a_fw_total
-        build_variables.a_fw_outboard = 0.5e0 * build_variables.a_fw_total
+        first_wall_variables.a_fw_inboard = 0.5e0 * first_wall_variables.a_fw_total
+        first_wall_variables.a_fw_outboard = 0.5e0 * first_wall_variables.a_fw_total
 
         #  Blanket volume; assume that its surface area is scaled directly from the
         #  plasma surface area.
@@ -1342,10 +1343,14 @@ class Stellarator:
                 #  Split between inboard and outboard by first wall area fractions
 
                 pnucfwbsi = (
-                    pnucfwbs * build_variables.a_fw_inboard / build_variables.a_fw_total
+                    pnucfwbs
+                    * first_wall_variables.a_fw_inboard
+                    / first_wall_variables.a_fw_total
                 )
                 pnucfwbso = (
-                    pnucfwbs * build_variables.a_fw_outboard / build_variables.a_fw_total
+                    pnucfwbs
+                    * first_wall_variables.a_fw_outboard
+                    / first_wall_variables.a_fw_total
                 )
 
                 #  Radiation power incident on divertor (MW)
@@ -1427,13 +1432,13 @@ class Stellarator:
 
                 psurffwi = (
                     fwbs_variables.p_fw_rad_total_mw
-                    * build_variables.a_fw_inboard
-                    / build_variables.a_fw_total
+                    * first_wall_variables.a_fw_inboard
+                    / first_wall_variables.a_fw_total
                 )
                 psurffwo = (
                     fwbs_variables.p_fw_rad_total_mw
-                    * build_variables.a_fw_outboard
-                    / build_variables.a_fw_total
+                    * first_wall_variables.a_fw_outboard
+                    / first_wall_variables.a_fw_total
                 )
 
                 #  Simple blanket model (fwbs_variables.i_p_coolant_pumping = 0 or 1) is assumed for stellarators
@@ -1542,15 +1547,15 @@ class Stellarator:
                     pnucbsi
                     - pnucbzi
                     + (fwbs_variables.pnucloss + fwbs_variables.pradloss)
-                    * build_variables.a_fw_inboard
-                    / build_variables.a_fw_total
+                    * first_wall_variables.a_fw_inboard
+                    / first_wall_variables.a_fw_total
                 )
                 pnucso = (
                     pnucbso
                     - pnucbzo
                     + (fwbs_variables.pnucloss + fwbs_variables.pradloss)
-                    * build_variables.a_fw_outboard
-                    / build_variables.a_fw_total
+                    * first_wall_variables.a_fw_outboard
+                    / first_wall_variables.a_fw_total
                 )
 
                 #  Improved calculation of shield power decay lengths required
@@ -1794,7 +1799,7 @@ class Stellarator:
             #  (first wall area is calculated else:where)
 
             fwbs_variables.m_fw_total = (
-                build_variables.a_fw_total
+                first_wall_variables.a_fw_total
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 / 2.0e0
                 * fwbs_variables.den_steel
@@ -1805,7 +1810,7 @@ class Stellarator:
 
             coolvol = (
                 coolvol
-                + build_variables.a_fw_total
+                + first_wall_variables.a_fw_total
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 / 2.0e0
                 * fwbs_variables.fwclfr
@@ -1813,19 +1818,19 @@ class Stellarator:
 
         else:
             fwbs_variables.m_fw_total = fwbs_variables.den_steel * (
-                build_variables.a_fw_inboard
+                first_wall_variables.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * (1.0e0 - f_a_fw_coolant_inboard)
-                + build_variables.a_fw_outboard
+                + first_wall_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
                 * (1.0e0 - f_a_fw_coolant_outboard)
             )
             coolvol = (
                 coolvol
-                + build_variables.a_fw_inboard
+                + first_wall_variables.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * f_a_fw_coolant_inboard
-                + build_variables.a_fw_outboard
+                + first_wall_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
                 * f_a_fw_coolant_outboard
             )
@@ -1834,14 +1839,14 @@ class Stellarator:
             #  in fispact.f90, safety.f90
 
             fwbs_variables.fwclfr = (
-                build_variables.a_fw_inboard
+                first_wall_variables.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * f_a_fw_coolant_inboard
-                + build_variables.a_fw_outboard
+                + first_wall_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
                 * f_a_fw_coolant_outboard
             ) / (
-                build_variables.a_fw_total
+                first_wall_variables.a_fw_total
                 * 0.5e0
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
             )
@@ -2256,7 +2261,7 @@ class Stellarator:
                 self.outfile,
                 "First wall area (m2)",
                 "(a_fw_total)",
-                build_variables.a_fw_total,
+                first_wall_variables.a_fw_total,
             )
             po.ovarre(
                 self.outfile,
@@ -4405,7 +4410,7 @@ class Stellarator:
                 physics_variables.pflux_fw_neutron_mw = (
                     (1.0e0 - fwbs_variables.fhole)
                     * physics_variables.p_neutron_total_mw
-                    / build_variables.a_fw_total
+                    / first_wall_variables.a_fw_total
                 )
             else:
                 physics_variables.pflux_fw_neutron_mw = (
@@ -4416,7 +4421,7 @@ class Stellarator:
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_neutron_total_mw
-                    / build_variables.a_fw_total
+                    / first_wall_variables.a_fw_total
                 )
 
         #  Calculate ion/electron equilibration power
@@ -4531,7 +4536,7 @@ class Stellarator:
                 physics_variables.pflux_fw_rad_mw = (
                     (1.0e0 - fwbs_variables.fhole)
                     * physics_variables.p_plasma_rad_mw
-                    / build_variables.a_fw_total
+                    / first_wall_variables.a_fw_total
                 )
             else:
                 physics_variables.pflux_fw_rad_mw = (
@@ -4542,7 +4547,7 @@ class Stellarator:
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_plasma_rad_mw
-                    / build_variables.a_fw_total
+                    / first_wall_variables.a_fw_total
                 )
 
         constraint_variables.pflux_fw_rad_max_mw = (
