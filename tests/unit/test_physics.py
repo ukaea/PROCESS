@@ -25,6 +25,7 @@ from process.models.physics.physics import (
     Physics,
     PlasmaBeta,
     PlasmaInductance,
+    PlasmaBootstrapCurrent,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,
     calculate_poloidal_field,
@@ -56,6 +57,7 @@ def physics():
         ),
         PlasmaBeta(),
         PlasmaInductance(),
+        PlasmaBootstrapCurrent(),
     )
 
 
@@ -143,7 +145,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    f_c_plasma_bootstrap = physics.bootstrap_fraction_iter89(
+    f_c_plasma_bootstrap = PlasmaBootstrapCurrent().bootstrap_fraction_iter89(
         aspect=bootstrapfractioniter89param.aspect,
         beta=bootstrapfractioniter89param.beta,
         b_plasma_toroidal_on_axis=bootstrapfractioniter89param.b_plasma_toroidal_on_axis,
@@ -238,7 +240,7 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, ph
         bootstrapfractionnevinsparam.nd_plasma_electron_on_axis,
     )
 
-    fibs = physics.bootstrap_fraction_nevins(
+    fibs = PlasmaBootstrapCurrent().bootstrap_fraction_nevins(
         alphan=bootstrapfractionnevinsparam.alphan,
         alphat=bootstrapfractionnevinsparam.alphat,
         beta_toroidal=bootstrapfractionnevinsparam.beta_toroidal,
@@ -316,7 +318,7 @@ def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    bfw = physics.bootstrap_fraction_wilson(
+    bfw = PlasmaBootstrapCurrent().bootstrap_fraction_wilson(
         alphaj=bootstrapfractionwilsonparam.alphaj,
         alphap=bootstrapfractionwilsonparam.alphap,
         alphat=bootstrapfractionwilsonparam.alphat,
@@ -555,7 +557,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
     monkeypatch.setattr(physics_variables, "alphat", bootstrapfractionsauterparam.alphat)
     physics.plasma_profile.run()
-    bfs, _ = physics.bootstrap_fraction_sauter(physics.plasma_profile)
+    bfs, _ = PlasmaBootstrapCurrent().bootstrap_fraction_sauter(physics.plasma_profile)
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
 
@@ -639,7 +641,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
         bootstrapfractionsakaiparam.ind_plasma_internal_norm,
     )
 
-    bfs = physics.bootstrap_fraction_sakai(
+    bfs = PlasmaBootstrapCurrent().bootstrap_fraction_sakai(
         beta_poloidal=bootstrapfractionsakaiparam.beta_poloidal,
         q95=bootstrapfractionsakaiparam.q95,
         q0=bootstrapfractionsakaiparam.q0,
@@ -689,7 +691,7 @@ def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_aries(
+    bfs = PlasmaBootstrapCurrent().bootstrap_fraction_aries(
         beta_poloidal=bootstrapfractionariesparam.beta_poloidal,
         ind_plasma_internal_norm=bootstrapfractionariesparam.ind_plasma_internal_norm,
         core_density=bootstrapfractionariesparam.core_density,
@@ -734,7 +736,7 @@ def test_bootstrap_fraction_andrade(bootstrapfractionandradeparam, physics):
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_andrade(
+    bfs = PlasmaBootstrapCurrent().bootstrap_fraction_andrade(
         beta_poloidal=bootstrapfractionandradeparam.beta_poloidal,
         core_pressure=bootstrapfractionandradeparam.core_pressure,
         average_pressure=bootstrapfractionandradeparam.average_pressure,
@@ -778,7 +780,7 @@ def test_bootstrap_fraction_hoang(bootstrapfractionhoangparam, physics):
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_hoang(
+    bfs = PlasmaBootstrapCurrent().bootstrap_fraction_hoang(
         beta_poloidal=bootstrapfractionhoangparam.beta_poloidal,
         pressure_index=bootstrapfractionhoangparam.pressure_index,
         current_index=bootstrapfractionhoangparam.current_index,
@@ -825,7 +827,7 @@ def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_wong(
+    bfs = PlasmaBootstrapCurrent().bootstrap_fraction_wong(
         beta_poloidal=bootstrapfractionwongparam.beta_poloidal,
         density_index=bootstrapfractionwongparam.density_index,
         temperature_index=bootstrapfractionwongparam.temperature_index,
@@ -879,7 +881,7 @@ def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):  # noqa: N
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_gi_I(
+    bfs = PlasmaBootstrapCurrent().bootstrap_fraction_gi_I(
         beta_poloidal=bootstrapfractiongiiparam.beta_poloidal,
         pressure_index=bootstrapfractiongiiparam.pressure_index,
         temperature_index=bootstrapfractiongiiparam.temperature_index,
@@ -929,7 +931,7 @@ def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):  # noqa:
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_gi_II(
+    bfs = PlasmaBootstrapCurrent().bootstrap_fraction_gi_II(
         beta_poloidal=bootstrapfractiongiiiparam.beta_poloidal,
         pressure_index=bootstrapfractiongiiiparam.pressure_index,
         temperature_index=bootstrapfractiongiiiparam.temperature_index,
@@ -986,7 +988,7 @@ def test_bootstrap_fraction_sugiyama_l_mode(bootstrapfractionsugiyamalparam, phy
     :param bootstrapfractionsugiyamalparam: Parameters for the test case.
     :type bootstrapfractionsugiyamalparam: BootstrapFractionSugiyamaLModeParam
     """
-    bfs = physics.bootstrap_fraction_sugiyama_l_mode(
+    bfs = PlasmaBootstrapCurrent().bootstrap_fraction_sugiyama_l_mode(
         eps=bootstrapfractionsugiyamalparam.eps,
         beta_poloidal=bootstrapfractionsugiyamalparam.beta_poloidal,
         alphan=bootstrapfractionsugiyamalparam.alphan,
@@ -1092,7 +1094,7 @@ def test_bootstrap_fraction_sugiyama_h_mode(bootstrapfractionsugiyamahparam, phy
     :param bootstrapfractionsugiyamahparam: Parameters for the test case.
     :type bootstrapfractionsugiyamahparam: BootstrapFractionSugiyamaHModeParam
     """
-    bfs = physics.bootstrap_fraction_sugiyama_h_mode(
+    bfs = PlasmaBootstrapCurrent().bootstrap_fraction_sugiyama_h_mode(
         eps=bootstrapfractionsugiyamahparam.eps,
         beta_poloidal=bootstrapfractionsugiyamahparam.beta_poloidal,
         alphan=bootstrapfractionsugiyamahparam.alphan,

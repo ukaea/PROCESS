@@ -698,11 +698,13 @@ class Models:
         )
         self.plasma_beta = PlasmaBeta()
         self.plasma_inductance = PlasmaInductance()
+        self.plasma_bootstrap = PlasmaBootstrapCurrent()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
             plasma_beta=self.plasma_beta,
             plasma_inductance=self.plasma_inductance,
+            plasma_bootstrap=self.plasma_bootstrap,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,

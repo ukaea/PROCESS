@@ -1627,13 +1627,14 @@ def _trapped_particle_fraction_sauter(
 
 
 class Physics:
-    def __init__(self, plasma_profile, current_drive, plasma_beta, plasma_inductance):
+    def __init__(self, plasma_profile, current_drive, plasma_beta, plasma_inductance, plasma_bootstrap):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
         self.beta = plasma_beta
         self.inductance = plasma_inductance
+        self.bootstrap = plasma_bootstrap
 
     def physics(self):
         """Routine to calculate tokamak plasma physics information
@@ -1922,7 +1923,7 @@ class Physics:
         # Calculate bootstrap current fraction using various models
         current_drive_variables.f_c_plasma_bootstrap_iter89 = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_iter89(
+            * self.bootstrap.bootstrap_fraction_iter89(
                 physics_variables.aspect,
                 physics_variables.beta_total_vol_avg,
                 physics_variables.b_plasma_total,
@@ -1936,7 +1937,7 @@ class Physics:
 
         current_drive_variables.f_c_plasma_bootstrap_nevins = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_nevins(
+            * self.bootstrap.bootstrap_fraction_nevins(
                 physics_variables.alphan,
                 physics_variables.alphat,
                 physics_variables.beta_toroidal_vol_avg,
@@ -1955,7 +1956,7 @@ class Physics:
         # Wilson scaling uses thermal poloidal beta, not total
         current_drive_variables.f_c_plasma_bootstrap_wilson = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_wilson(
+            * self.bootstrap.bootstrap_fraction_wilson(
                 physics_variables.alphaj,
                 physics_variables.alphap,
                 physics_variables.alphat,
@@ -1970,14 +1971,14 @@ class Physics:
         (
             current_drive_variables.f_c_plasma_bootstrap_sauter,
             physics_variables.j_plasma_bootstrap_sauter_profile,
-        ) = self.bootstrap_fraction_sauter(self.plasma_profile)
+        ) = self.bootstrap.bootstrap_fraction_sauter(self.plasma_profile)
         current_drive_variables.f_c_plasma_bootstrap_sauter *= (
             current_drive_variables.cboot
         )
 
         current_drive_variables.f_c_plasma_bootstrap_sakai = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_sakai(
+            * self.bootstrap.bootstrap_fraction_sakai(
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
@@ -1990,7 +1991,7 @@ class Physics:
 
         current_drive_variables.f_c_plasma_bootstrap_aries = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_aries(
+            * self.bootstrap.bootstrap_fraction_aries(
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
                 core_density=physics_variables.nd_plasma_electron_on_axis,
@@ -2001,7 +2002,7 @@ class Physics:
 
         current_drive_variables.f_c_plasma_bootstrap_andrade = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_andrade(
+            * self.bootstrap.bootstrap_fraction_andrade(
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 core_pressure=physics_variables.pres_plasma_thermal_on_axis,
                 average_pressure=physics_variables.pres_plasma_thermal_vol_avg,
@@ -2010,7 +2011,7 @@ class Physics:
         )
         current_drive_variables.f_c_plasma_bootstrap_hoang = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_hoang(
+            * self.bootstrap.bootstrap_fraction_hoang(
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 pressure_index=physics_variables.alphap,
                 current_index=physics_variables.alphaj,
@@ -2019,7 +2020,7 @@ class Physics:
         )
         current_drive_variables.f_c_plasma_bootstrap_wong = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_wong(
+            * self.bootstrap.bootstrap_fraction_wong(
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 density_index=physics_variables.alphan,
                 temperature_index=physics_variables.alphat,
@@ -2029,7 +2030,7 @@ class Physics:
         )
         current_drive_variables.bscf_gi_i = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_gi_I(
+            * self.bootstrap.bootstrap_fraction_gi_I(
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
@@ -2042,7 +2043,7 @@ class Physics:
 
         current_drive_variables.bscf_gi_ii = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_gi_II(
+            * self.bootstrap.bootstrap_fraction_gi_II(
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
@@ -2052,7 +2053,7 @@ class Physics:
         )
         current_drive_variables.f_c_plasma_bootstrap_sugiyama_l = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_sugiyama_l_mode(
+            * self.bootstrap.bootstrap_fraction_sugiyama_l_mode(
                 eps=physics_variables.eps,
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 alphan=physics_variables.alphan,
@@ -2064,7 +2065,7 @@ class Physics:
         )
         current_drive_variables.f_c_plasma_bootstrap_sugiyama_h = (
             current_drive_variables.cboot
-            * self.bootstrap_fraction_sugiyama_h_mode(
+            * self.bootstrap.bootstrap_fraction_sugiyama_h_mode(
                 eps=physics_variables.eps,
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 alphan=physics_variables.alphan,
@@ -9859,6 +9860,855 @@ class PlasmaInductance:
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
+
+
+class PlasmaBootstrapCurrent:
+    """Class to hold plasma bootstrap current for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+
+    @staticmethod
+    def bootstrap_fraction_iter89(
+        aspect: float,
+        beta: float,
+        b_plasma_toroidal_on_axis: float,
+        plasma_current: float,
+        q95: float,
+        q0: float,
+        rmajor: float,
+        vol_plasma: float,
+    ) -> float:
+        """
+        Calculate the bootstrap-driven fraction of the plasma current.
+
+        Args:
+            aspect (float): Plasma aspect ratio.
+            beta (float): Plasma total beta.
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
+            plasma_current (float): Plasma current (A).
+            q95 (float): Safety factor at 95% surface.
+            q0 (float): Central safety factor.
+            rmajor (float): Plasma major radius (m).
+            vol_plasma (float): Plasma volume (m3).
+
+        Returns:
+            float: The bootstrap-driven fraction of the plasma current.
+
+        This function performs the original ITER calculation of the plasma current bootstrap fraction.
+
+        Reference:
+        - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        - ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        """
+
+        # Calculate the bootstrap current coefficient
+        c_bs = 1.32 - 0.235 * (q95 / q0) + 0.0185 * (q95 / q0) ** 2
+
+        # Calculate the average minor radius
+        average_a = np.sqrt(vol_plasma / (2 * np.pi**2 * rmajor))
+
+        b_pa = (plasma_current / 1e6) / (5 * average_a)
+
+        # Calculate the poloidal beta for bootstrap current
+        betapbs = beta * (b_plasma_toroidal_on_axis / b_pa) ** 2
+
+        # Ensure betapbs is positive
+        if betapbs <= 0.0:
+            return 0.0
+
+        # Calculate and return the bootstrap current fraction
+        return c_bs * (betapbs / np.sqrt(aspect)) ** 1.3
+
+    @staticmethod
+    def bootstrap_fraction_wilson(
+        alphaj: float,
+        alphap: float,
+        alphat: float,
+        betpth: float,
+        q0: float,
+        q95: float,
+        rmajor: float,
+        rminor: float,
+    ) -> float:
+        """
+        Bootstrap current fraction from Wilson et al scaling
+
+        Args:
+            alphaj (float): Current profile index.
+            alphap (float): Pressure profile index.
+            alphat (float): Temperature profile index.
+            betpth (float): Thermal component of poloidal beta.
+            q0 (float): Safety factor on axis.
+            q95 (float): Edge safety factor.
+            rmajor (float): Major radius (m).
+            rminor (float): Minor radius (m).
+
+        Returns:
+            float: The bootstrap current fraction.
+
+        This function calculates the bootstrap current fraction using the numerically fitted algorithm written by Howard Wilson.
+
+        Reference:
+            - AEA FUS 172: Physics Assessment for the European Reactor Study, 1989
+            - H. R. Wilson, Nuclear Fusion 32 (1992) 257
+        """
+
+        term1 = np.log(0.5)
+        term2 = np.log(q0 / q95)
+
+        # Re-arranging of parabolic profile to be equal to (r/a)^2 where the profile value is half of the core value
+
+        termp = 1.0 - 0.5 ** (1.0 / alphap)
+        termt = 1.0 - 0.5 ** (1.0 / alphat)
+        termj = 1.0 - 0.5 ** (1.0 / alphaj)
+
+        # Assuming a parabolic safety factor profile of the form q = q0 + (q95 - q0) * (r/a)^2
+        # Substitute (r/a)^2 term from temperature,pressure and current profiles into q profile when values is 50% of core value
+        # Take natural log of q profile over q95 and q0 to get the profile index
+
+        alfpnw = term1 / np.log(np.log((q0 + (q95 - q0) * termp) / q95) / term2)
+        alftnw = term1 / np.log(np.log((q0 + (q95 - q0) * termt) / q95) / term2)
+        aj = term1 / np.log(np.log((q0 + (q95 - q0) * termj) / q95) / term2)
+
+        # Crude check for NaN errors or other illegal values.
+        if np.isnan(aj) or np.isnan(alfpnw) or np.isnan(alftnw) or aj < 0:
+            raise ProcessValueError(
+                "Illegal profile value found", aj=aj, alfpnw=alfpnw, alftnw=alftnw
+            )
+
+        # Ratio of ionic charge to electron charge
+
+        z = 1.0
+
+        # Inverse aspect ratio: r2 = maximum plasma radius, r1 = minimum
+        # This is the definition used in the paper
+        r2 = rmajor + rminor
+        r1 = rmajor - rminor
+        eps1 = (r2 - r1) / (r2 + r1)
+
+        # Coefficients fitted using least squares techniques
+
+        # Square root of current profile index term
+        saj = np.sqrt(aj)
+
+        a = np.array([
+            1.41 * (1.0 - 0.28 * saj) * (1.0 + 0.12 / z),
+            0.36 * (1.0 - 0.59 * saj) * (1.0 + 0.8 / z),
+            -0.27 * (1.0 - 0.47 * saj) * (1.0 + 3.0 / z),
+            0.0053 * (1.0 + 5.0 / z),
+            -0.93 * (1.0 - 0.34 * saj) * (1.0 + 0.15 / z),
+            -0.26 * (1.0 - 0.57 * saj) * (1.0 - 0.27 * z),
+            0.064 * (1.0 - 0.6 * aj + 0.15 * aj * aj) * (1.0 + 7.6 / z),
+            -0.0011 * (1.0 + 9.0 / z),
+            -0.33 * (1.0 - aj + 0.33 * aj * aj),
+            -0.26 * (1.0 - 0.87 / saj - 0.16 * aj),
+            -0.14 * (1.0 - 1.14 / saj - 0.45 * saj),
+            -0.0069,
+        ])
+
+        seps1 = np.sqrt(eps1)
+
+        b = np.array([
+            1.0,
+            alfpnw,
+            alftnw,
+            alfpnw * alftnw,
+            seps1,
+            alfpnw * seps1,
+            alftnw * seps1,
+            alfpnw * alftnw * seps1,
+            eps1,
+            alfpnw * eps1,
+            alftnw * eps1,
+            alfpnw * alftnw * eps1,
+        ])
+
+        # Empirical bootstrap current fraction
+        return seps1 * betpth * (a * b).sum()
+
+    @staticmethod
+    def bootstrap_fraction_nevins(
+        alphan: float,
+        alphat: float,
+        beta_toroidal: float,
+        b_plasma_toroidal_on_axis: float,
+        nd_plasma_electrons_vol_avg: float,
+        plasma_current: float,
+        q95: float,
+        q0: float,
+        rmajor: float,
+        rminor: float,
+        te: float,
+        zeff: float,
+    ) -> float:
+        """
+        Calculate the bootstrap current fraction from Nevins et al scaling.
+
+        Args:
+            alphan (float): Density profile index.
+            alphat (float): Temperature profile index.
+            beta_toroidal (float): Toroidal plasma beta.
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
+            nd_plasma_electrons_vol_avg (float): Electron density (/m3).
+            plasma_current (float): Plasma current (A).
+            q0 (float): Central safety factor.
+            q95 (float): Safety factor at 95% surface.
+            rmajor (float): Plasma major radius (m).
+            rminor (float): Plasma minor radius (m).
+            te (float): Volume averaged plasma temperature (keV).
+            zeff (float): Plasma effective charge.
+
+        Returns:
+            float: The bootstrap current fraction.
+
+        This function calculates the bootstrap current fraction using the Nevins et al method.
+
+        Reference: See appendix of:
+        Keii Gi, Makoto Nakamura, Kenji Tobita, Yasushi Ono,
+        Bootstrap current fraction scaling for a tokamak reactor design study,
+        Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715,
+        ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2014.07.009.
+
+        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
+        ITER-TN-PH-8-4, June 1988. 1988.
+
+        """
+        # Calculate peak electron beta at plasma centre, this is not the form used in the paper
+        # The paper assumes parabolic profiles for calculating core values with the profile indexes.
+        # We instead use the directly calculated electron density and temperature values at the core.
+        # So that it is compatible with all profiles
+
+        betae0 = (
+            physics_variables.nd_plasma_electron_on_axis
+            * physics_variables.temp_plasma_electron_on_axis_kev
+            * 1.0e3
+            * constants.ELECTRON_CHARGE
+            / (b_plasma_toroidal_on_axis**2 / (2.0 * constants.RMU0))
+        )
+
+        # Call integration routine using definite integral routine from scipy
+
+        ainteg, _ = integrate.quad(
+            lambda y: _nevins_integral(
+                y,
+                nd_plasma_electrons_vol_avg,
+                te,
+                b_plasma_toroidal_on_axis,
+                rminor,
+                rmajor,
+                zeff,
+                alphat,
+                alphan,
+                q0,
+                q95,
+                beta_toroidal,
+            ),
+            0,  # Lower bound
+            1.0,  # Upper bound
+        )
+
+        # Calculate bootstrap current and fraction
+
+        aibs = 2.5 * betae0 * rmajor * b_plasma_toroidal_on_axis * q95 * ainteg
+        return 1.0e6 * aibs / plasma_current
+
+    @staticmethod
+    def bootstrap_fraction_sauter(plasma_profile: float) -> float:
+        """Calculate the bootstrap current fraction from the Sauter et al scaling.
+
+        Args:
+            plasma_profile (PlasmaProfile): The plasma profile object.
+
+        Returns:
+            float: The bootstrap current fraction.
+
+        This function calculates the bootstrap current fraction using the Sauter, Angioni, and Lin-Liu scaling.
+
+        Reference:
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+          Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+          Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+          Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
+          [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+
+        Note:
+        The code was supplied by Emiliano Fable, IPP Garching (private communication).
+        """
+
+        # Radial points from 0 to 1 seperated by 1/profile_size
+        roa = plasma_profile.neprofile.profile_x
+
+        # Local circularised minor radius
+        rho = np.sqrt(physics_variables.a_plasma_poloidal / np.pi) * roa
+
+        # Square root of local aspect ratio
+        sqeps = np.sqrt(roa * (physics_variables.rminor / physics_variables.rmajor))
+
+        # Calculate electron and ion density profiles
+        ne = plasma_profile.neprofile.profile_y * 1e-19
+        ni = (
+            physics_variables.nd_plasma_ions_total_vol_avg
+            / physics_variables.nd_plasma_electrons_vol_avg
+        ) * ne
+
+        # Calculate electron and ion temperature profiles
+        tempe = plasma_profile.teprofile.profile_y
+        tempi = (
+            physics_variables.temp_plasma_ion_vol_avg_kev
+            / physics_variables.temp_plasma_electron_vol_avg_kev
+        ) * tempe
+
+        # Flat Zeff profile assumed
+        # Return tempi like array object filled with zeff
+        zeff = np.full_like(tempi, physics_variables.n_charge_plasma_effective_vol_avg)
+
+        # inverse_q = 1/safety factor
+        # Parabolic q profile assumed
+        inverse_q = 1 / (
+            physics_variables.q0
+            + (physics_variables.q95 - physics_variables.q0) * roa**2
+        )
+        # Create new array of average mass of fuel portion of ions
+        amain = np.full_like(inverse_q, physics_variables.m_ions_total_amu)
+
+        # Create new array of average main ion charge
+        zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_plasma_fuel_helium3)
+
+        # Calculate total bootstrap current (MA) by summing along profiles
+        # Looping from 2 because _calculate_l31_coefficient() etc should return 0 @ j == 1
+        radial_elements = np.arange(2, plasma_profile.profile_size)
+
+        # Change in localised minor radius to be used as delta term in derivative
+        drho = rho[radial_elements] - rho[radial_elements - 1]
+
+        # Area of annulus, assuming circular plasma cross-section
+        da = 2 * np.pi * rho[radial_elements - 1] * drho  # area of annulus
+
+        # Create the partial derivatives using numpy gradient (central differences)
+        dlogte_drho = np.gradient(np.log(tempe), rho)[radial_elements - 1]
+        dlogti_drho = np.gradient(np.log(tempi), rho)[radial_elements - 1]
+        dlogne_drho = np.gradient(np.log(ne), rho)[radial_elements - 1]
+
+        jboot = (
+            0.5
+            * (
+                _calculate_l31_coefficient(
+                    radial_elements,
+                    plasma_profile.profile_size,
+                    physics_variables.rmajor,
+                    physics_variables.b_plasma_toroidal_on_axis,
+                    physics_variables.triang,
+                    ne,
+                    ni,
+                    tempe,
+                    tempi,
+                    inverse_q,
+                    rho,
+                    zeff,
+                    sqeps,
+                )
+                * dlogne_drho
+                + _calculate_l31_32_coefficient(
+                    radial_elements,
+                    plasma_profile.profile_size,
+                    physics_variables.rmajor,
+                    physics_variables.b_plasma_toroidal_on_axis,
+                    physics_variables.triang,
+                    ne,
+                    ni,
+                    tempe,
+                    tempi,
+                    inverse_q,
+                    rho,
+                    zeff,
+                    sqeps,
+                )
+                * dlogte_drho
+                + _calculate_l34_alpha_31_coefficient(
+                    radial_elements,
+                    plasma_profile.profile_size,
+                    physics_variables.rmajor,
+                    physics_variables.b_plasma_toroidal_on_axis,
+                    physics_variables.triang,
+                    inverse_q,
+                    sqeps,
+                    tempi,
+                    tempe,
+                    amain,
+                    zmain,
+                    ni,
+                    ne,
+                    rho,
+                    zeff,
+                )
+                * dlogti_drho
+            )
+            * 1.0e6
+            * (
+                -physics_variables.b_plasma_toroidal_on_axis
+                / (0.2 * np.pi * physics_variables.rmajor)
+                * rho[radial_elements - 1]
+                * inverse_q[radial_elements - 1]
+            )
+        )  # A/m2
+
+        return (np.sum(da * jboot, axis=0) / physics_variables.plasma_current), jboot
+
+    @staticmethod
+    def bootstrap_fraction_sakai(
+        beta_poloidal: float,
+        q95: float,
+        q0: float,
+        alphan: float,
+        alphat: float,
+        eps: float,
+        ind_plasma_internal_norm: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Sakai formula.
+
+        Parameters:
+        beta_poloidal (float): Plasma poloidal beta.
+        q95 (float): Safety factor at 95% of the plasma radius.
+        q0 (float): Safety factor at the magnetic axis.
+        alphan (float): Density profile index
+        alphat (float): Temperature profile index
+        eps (float): Inverse aspect ratio.
+        ind_plasma_internal_norm (float): Plasma normalised internal inductance
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+        The profile assumed for the alphan and alpat indexes is only a parabolic profile without a pedestal (L-mode).
+        The Root Mean Squared Error for the fitting database of this formula was 0.025
+        Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully non-inductively driven
+        conditions with neutral beam (NB) injection only are calculated.
+        The electron temperature and the ion temperature were assumed to be equal
+        This can be used for all apsect ratios.
+        The diamagnetic fraction is included in this formula.
+
+        References:
+        Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis,
+        Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
+        https://doi.org/10.1016/j.fusengdes.2019.111322.
+        """
+        # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
+        # So the diamganetic current should not be calculated with this. i_diamagnetic_current = 0
+        return (
+            10 ** (0.951 * eps - 0.948)
+            * beta_poloidal ** (1.226 * eps + 1.584)
+            * ind_plasma_internal_norm ** (-0.184 * eps - 0.282)
+            * (q95 / q0) ** (-0.042 * eps - 0.02)
+            * alphan ** (0.13 * eps + 0.05)
+            * alphat ** (0.502 * eps - 0.273)
+        )
+
+    @staticmethod
+    def bootstrap_fraction_aries(
+        beta_poloidal: float,
+        ind_plasma_internal_norm: float,
+        core_density: float,
+        average_density: float,
+        inverse_aspect: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the ARIES formula.
+
+        Parameters:
+        beta_poloidal (float): Plasma poloidal beta.
+        ind_plasma_internal_norm (float): Plasma normalized internal inductance.
+        core_density (float): Core plasma density.
+        average_density (float): Average plasma density.
+        inverse_aspect (float): Inverse aspect ratio.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+            - The source reference does not provide any info about the derivation of the formula. It is only stated
+
+        References:
+            - Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants,”
+              Fusion Engineering and Design, vol. 85, no. 2, pp. 243-265, Apr. 2010,
+              doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
+
+        """
+        # Using the standard variable naming from the ARIES paper
+        a_1 = (
+            1.10 - 1.165 * ind_plasma_internal_norm + 0.47 * ind_plasma_internal_norm**2
+        )
+        b_1 = (
+            0.806
+            - 0.885 * ind_plasma_internal_norm
+            + 0.297 * ind_plasma_internal_norm**2
+        )
+
+        c_bs = a_1 + b_1 * (core_density / average_density)
+
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
+
+    @staticmethod
+    def bootstrap_fraction_andrade(
+        beta_poloidal: float,
+        core_pressure: float,
+        average_pressure: float,
+        inverse_aspect: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Andrade et al formula.
+
+        Parameters:
+        beta_poloidal (float): Plasma poloidal beta.
+        core_pressure (float): Core plasma pressure.
+        average_pressure (float): Average plasma pressure.
+        inverse_aspect (float): Inverse aspect ratio.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+            - Based off 350 plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak
+            - A = 1.5, R_0 = 0.3m, I_p = 200kA, B_0=0.4T, beta = 4-10%. Profiles taken as Gaussian shaped functions.
+            - Errors mostly up to the order of 10% are obtained when both expressions are compared with the equilibrium estimates for the
+              bootstrap current in ETE
+
+        References:
+            - M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,”
+              Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
+              doi: https://doi.org/10.1088/0741-3335/50/6/065001.
+
+        """
+
+        # Using the standard variable naming from the Andrade et.al. paper
+        c_p = core_pressure / average_pressure
+
+        # Error +- 0.0007
+        c_bs = 0.2340
+
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal * c_p**0.8
+
+    @staticmethod
+    def bootstrap_fraction_hoang(
+        beta_poloidal: float,
+        pressure_index: float,
+        current_index: float,
+        inverse_aspect: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Hoang et al formula.
+
+        Parameters:
+        beta_poloidal (float): Plasma poloidal beta.
+        pressure_index (float): Pressure profile index.
+        current_index (float): Current profile index.
+        inverse_aspect (float): Inverse aspect ratio.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+            - Based off of TFTR data calculated using the TRANSP plasma analysis code
+            - 170 discharges which was assembled to  study the tritium influx and transport in discharges with D-only neutral beam
+              injection (NBI)
+            - Contains L-mode, supershots, reversed shear, enhanced reversed shear and increased li discharges
+            - Discharges with monotonic flux profiles with reversed shear are also included
+            - Is applied to circular cross-section plasmas
+
+        References:
+            - G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings,
+              Jan. 1997, doi: https://doi.org/10.1063/1.53414.
+        """
+
+        # Using the standard variable naming from the Hoang et.al. paper
+        # Hoang et.al uses a different definition for the profile indexes such that
+        # alpha_p is defined as the ratio of the central and the volume-averaged values, and the peakedness of the density of the total plasma current
+        # (defined as ratio of the central value and I_p), alpha_j$
+
+        # We assume the pressure and current profile is parabolic and use the (profile_index +1) term in lieu
+        # The term represents the ratio of the the core to volume averaged value
+
+        # This could lead to large changes in the value depending on interpretation of the profile index
+
+        c_bs = np.sqrt((pressure_index + 1) / (current_index + 1))
+
+        return 0.4 * np.sqrt(inverse_aspect) * beta_poloidal**0.9 * c_bs
+
+    @staticmethod
+    def bootstrap_fraction_wong(
+        beta_poloidal: float,
+        density_index: float,
+        temperature_index: float,
+        inverse_aspect: float,
+        elongation: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the Wong et al formula.
+
+        Parameters:
+        beta_poloidal (float): Plasma poloidal beta.
+        density_index (float): Density profile index.
+        temperature_index (float): Temperature profile index.
+        inverse_aspect (float): Inverse aspect ratio.
+        elongation (float): Plasma elongation.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+            - Data is based off of equilibria from Miller et al.
+            - A: 1.2 - 3.0 and stable to n ballooning and low n kink modes at a bootstrap fraction of 99% for kappa = 2, 2.5 and 3
+            - The results were parameterized as a function of aspect ratio and elongation
+            - The parametric dependency of beta_p and beta_T are based on fitting of the DIII-D high equivalent DT yield results
+            - Parabolic profiles should be used for best results as the pressure peaking value is calculated as the product of a parabolic
+              temperature and density profile
+
+        References:
+            - C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,”
+              vol. 42, no. 5, pp. 547-556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
+
+            - Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks".
+              Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
+        """
+        # Using the standard variable naming from the Wong et.al. paper
+        f_peak = 2.0 / scipy.special.beta(0.5, density_index + temperature_index + 1)
+
+        c_bs = 0.773 + 0.019 * elongation
+
+        return c_bs * f_peak**0.25 * beta_poloidal * np.sqrt(inverse_aspect)
+
+    @staticmethod
+    def bootstrap_fraction_gi_I(  # noqa: N802
+        beta_poloidal: float,
+        pressure_index: float,
+        temperature_index: float,
+        inverse_aspect: float,
+        effective_charge: float,
+        q95: float,
+        q0: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the first scaling from the Gi et al formula.
+
+        Parameters:
+        beta_poloidal (float): Plasma poloidal beta.
+        pressure_index (float): Pressure profile index.
+        temperature_index (float): Temperature profile index.
+        inverse_aspect (float): Inverse aspect ratio.
+        effective_charge (float): Plasma effective charge.
+        q95 (float): Safety factor at 95% of the plasma radius.
+        q0 (float): Safety factor at the magnetic axis.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+            - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
+            - Method was done to put the scaling into parameters compatible with the TPC systems code
+            - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
+              curent drive and equilibrium models in the scan
+            - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, traing = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0
+            - Uses parabolic plasma profiles only.
+            - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the f_BS value for reversed shear
+              equilibrium.
+
+        References:
+            - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
+              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+              doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+        """
+
+        # Using the standard variable naming from the Gi et.al. paper
+
+        c_bs = (
+            0.474
+            * inverse_aspect**-0.1
+            * pressure_index**0.974
+            * temperature_index**-0.416
+            * effective_charge**0.178
+            * (q95 / q0) ** -0.133
+        )
+
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
+
+    @staticmethod
+    def bootstrap_fraction_gi_II(  # noqa: N802
+        beta_poloidal: float,
+        pressure_index: float,
+        temperature_index: float,
+        inverse_aspect: float,
+        effective_charge: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the second scaling from the Gi et al formula.
+
+        Parameters:
+        beta_poloidal (float): Plasma poloidal beta.
+        pressure_index (float): Pressure profile index.
+        temperature_index (float): Temperature profile index.
+        inverse_aspect (float): Inverse aspect ratio.
+        effective_charge (float): Plasma effective charge.
+
+        Returns:
+        float: The calculated bootstrap fraction.
+
+        Notes:
+            - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
+            - Method was done to put the scaling into parameters compatible with the TPC systems code
+            - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
+              curent drive and equilibrium models in the scan
+            - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, traing = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0
+            - Uses parabolic plasma profiles only.
+            - This scaling has the q profile dependance removed to obtain a scaling formula with much more flexible variables than
+              that by a single profile factor for internal current profile.
+
+        References:
+            - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
+              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+              doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+        """
+
+        # Using the standard variable naming from the Gi et.al. paper
+
+        c_bs = (
+            0.382
+            * inverse_aspect**-0.242
+            * pressure_index**0.974
+            * temperature_index**-0.416
+            * effective_charge**0.178
+        )
+
+        return c_bs * np.sqrt(inverse_aspect) * beta_poloidal
+
+    @staticmethod
+    def bootstrap_fraction_sugiyama_l_mode(
+        eps: float,
+        beta_poloidal: float,
+        alphan: float,
+        alphat: float,
+        zeff: float,
+        q95: float,
+        q0: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the L-mode scaling from the Sugiyama et al formula.
+
+        :param eps: Inverse aspect ratio.
+        :type eps: float
+        :param beta_poloidal: Plasma poloidal beta.
+        :type beta_poloidal: float
+        :param alphan: Density profile index.
+        :type alphan: float
+        :param alphat: Temperature profile index.
+        :type alphat: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param q95: Safety factor at 95% of the plasma radius.
+        :type q95: float
+        :param q0: Safety factor at the magnetic axis.
+        :type q0: float
+
+        :returns: The calculated bootstrap fraction.
+        :rtype: float
+
+        :notes:
+            - This scaling is derived for L-mode plasmas.
+            - Ion and electron temperature are the same
+            - Z_eff has a uniform profile, with only fully stripped carbon impurity
+
+        :references:
+            - S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and
+              current balance models for tokamak systems code considering H-mode plasma profiles,”
+              Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
+              https://doi.org/10.1016/j.fusengdes.2025.115022.
+        """
+
+        return (
+            0.740
+            * eps**0.418
+            * beta_poloidal**0.904
+            * alphan**0.06
+            * alphat**-0.138
+            * zeff**0.230
+            * (q95 / q0) ** -0.142
+        )
+
+    @staticmethod
+    def bootstrap_fraction_sugiyama_h_mode(
+        eps: float,
+        beta_poloidal: float,
+        alphan: float,
+        alphat: float,
+        tbeta: float,
+        zeff: float,
+        q95: float,
+        q0: float,
+        radius_plasma_pedestal_density_norm: float,
+        nd_plasma_pedestal_electron: float,
+        n_greenwald: float,
+        temp_plasma_pedestal_kev: float,
+    ) -> float:
+        """
+        Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama et al formula.
+
+        :param eps: Inverse aspect ratio.
+        :type eps: float
+        :param beta_poloidal: Plasma poloidal beta.
+        :type beta_poloidal: float
+        :param alphan: Density profile index.
+        :type alphan: float
+        :param alphat: Temperature profile index.
+        :type alphat: float
+        :param tbeta: Second temperature profile index.
+        :type tbeta: float
+        :param zeff: Plasma effective charge.
+        :type zeff: float
+        :param q95: Safety factor at 95% of the plasma radius.
+        :type q95: float
+        :param q0: Safety factor at the magnetic axis.
+        :type q0: float
+        :param radius_plasma_pedestal_density_norm: Normalised plasma radius of density pedestal.
+        :type radius_plasma_pedestal_density_norm: float
+        :param nd_plasma_pedestal_electron: Electron number density at the pedestal [m^-3].
+        :type nd_plasma_pedestal_electron: float
+        :param n_greenwald: Greenwald density limit [m^-3].
+        :type n_greenwald: float
+        :param temp_plasma_pedestal_kev: Electron temperature at the pedestal [keV].
+        :type temp_plasma_pedestal_kev: float
+
+        :returns: The calculated bootstrap fraction.
+        :rtype: float
+
+        :notes:
+            - This scaling is derived for H-mode plasmas.
+            - The temperature and density pedestal positions are the same
+            - Separatrix temperature and density are zero
+            - Ion and electron temperature are the same
+            - Z_eff has a uniform profile, with only fully stripped carbon impurity
+
+        :references:
+            - S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and
+              current balance models for tokamak systems code considering H-mode plasma profiles,”
+              Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
+              https://doi.org/10.1016/j.fusengdes.2025.115022.
+        """
+
+        return (
+            0.789
+            * eps**0.606
+            * beta_poloidal**0.960
+            * alphan**0.0319
+            * alphat**0.00822
+            * tbeta**-0.0783
+            * zeff**0.241
+            * (q95 / q0) ** -0.103
+            * radius_plasma_pedestal_density_norm**0.367
+            * (nd_plasma_pedestal_electron / n_greenwald) ** -0.174
+            * temp_plasma_pedestal_kev**0.0552
+        )
 
 
 class DetailedPhysics:
