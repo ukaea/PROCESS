@@ -3,9 +3,14 @@ from enum import IntEnum
 
 import numpy as np
 
+<<<<<<< HEAD:process/models/build.py
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
+=======
+from process import constants
+from process import process_output as po
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/build.py
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -18,11 +23,14 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
+<<<<<<< HEAD:process/models/build.py
 from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
 )
 from process.models.tfcoil.base import TFCoilShapeModel
+=======
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/build.py
 
 logger = logging.getLogger(__name__)
 
@@ -2036,6 +2044,11 @@ class Build(Model):
             dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
         )
 
+<<<<<<< HEAD:process/models/build.py
+=======
+        #
+
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/build.py
         if output:
             #  Print out device build
 

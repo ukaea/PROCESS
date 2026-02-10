@@ -4,8 +4,13 @@ from process.core.init import init_all_module_vars
 from process.data_structure import build_variables as bv
 from process.data_structure import fwbs_variables as fwbs
 from process.data_structure import physics_variables as pv
+<<<<<<< HEAD
 from process.models.blankets.blanket_library import BlanketLibrary
 from process.models.fw import FirstWall
+=======
+from process.fw import FirstWall
+from process.init import init_all_module_vars
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077))
 
 init_all_module_vars()
 

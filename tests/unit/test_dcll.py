@@ -11,8 +11,13 @@ from process.data_structure import (
     fwbs_variables,
     physics_variables,
 )
+<<<<<<< HEAD
 from process.models.blankets.dcll import DCLL
 from process.models.fw import FirstWall
+=======
+from process.dcll import DCLL
+from process.fw import FirstWall
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077))
 
 
 @pytest.fixture

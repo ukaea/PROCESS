@@ -15,8 +15,13 @@ from process.data_structure import (
     primary_pumping_variables,
     tfcoil_variables,
 )
+<<<<<<< HEAD
 from process.models.blankets.hcpb import CCFE_HCPB
 from process.models.fw import FirstWall
+=======
+from process.fw import FirstWall
+from process.hcpb import CCFE_HCPB
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077))
 
 
 @pytest.fixture

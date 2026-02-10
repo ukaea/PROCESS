@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+<<<<<<< HEAD:process/models/fw.py
 from process.core import constants
 from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
@@ -11,23 +12,41 @@ from process.data_structure import (
     blanket_library,
     build_variables,
     constraint_variables,
+=======
+from process import constants
+from process import process_output as po
+from process.blanket_library import BlanketLibrary, dshellarea, eshellarea
+from process.coolprop_interface import FluidProperties
+from process.data_structure import (
+    blanket_library,
+    build_variables,
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/fw.py
     divertor_variables,
     first_wall_variables,
     fwbs_variables,
     physics_variables,
 )
+<<<<<<< HEAD:process/models/fw.py
 from process.models.blankets.blanket_library import (
     BlanketLibrary,
     dshellarea,
     eshellarea,
 )
 from process.models.build import FwBlktVVShape
+=======
+from process.exceptions import ProcessValueError
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/fw.py
 
 logger = logging.getLogger(__name__)
 
 
+<<<<<<< HEAD:process/models/fw.py
 class FirstWall(Model):
     def __init__(self):
+=======
+class FirstWall:
+    def __init__(self) -> None:
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/fw.py
         self.outfile = constants.NOUT
         self.blanket_library = BlanketLibrary(fw=self)
 
@@ -54,10 +73,14 @@ class FirstWall(Model):
             dr_fw_outboard=build_variables.dr_fw_outboard,
         )
 
+<<<<<<< HEAD:process/models/fw.py
         if (
             physics_variables.itart == 1
             or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
+=======
+        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/fw.py
             (
                 first_wall_variables.a_fw_inboard_full_coverage,
                 first_wall_variables.a_fw_outboard_full_coverage,
@@ -113,6 +136,7 @@ class FirstWall(Model):
             fwbs_variables.radius_fw_channel_180_bend,
         ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
 
+<<<<<<< HEAD:process/models/fw.py
         if physics_variables.i_pflux_fw_neutron == 1:
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
@@ -143,6 +167,8 @@ class FirstWall(Model):
             1.0e0 - physics_variables.f_p_alpha_plasma_deposited
         )
 
+=======
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/fw.py
     @staticmethod
     def calculate_first_wall_half_height(
         z_plasma_xpoint_lower: float,
@@ -155,6 +181,7 @@ class FirstWall(Model):
         dr_fw_inboard: float,
         dr_fw_outboard: float,
     ) -> float:
+<<<<<<< HEAD:process/models/fw.py
         """Calculate the half-height of the first wall.
 
         Parameters
@@ -178,6 +205,9 @@ class FirstWall(Model):
         dr_fw_outboard:
 
         """
+=======
+        """Calculate the half-height of the first wall."""
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/fw.py
 
         #  Half-height of first wall (internal surface)
         z_bottom = (
@@ -233,6 +263,7 @@ class FirstWall(Model):
         dr_fw_plasma_gap_inboard: float,
         dr_fw_plasma_gap_outboard: float,
     ) -> tuple[float, float, float]:
+<<<<<<< HEAD:process/models/fw.py
         """Calculate the first wall areas for an elliptical cross-section.
 
         Parameters
@@ -250,6 +281,9 @@ class FirstWall(Model):
         dr_fw_plasma_gap_outboard:
 
         """
+=======
+        """Calculate the first wall areas for an elliptical cross-section."""
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/fw.py
 
         # Cross-section is assumed to be defined by two ellipses
         #  Major radius to centre of inboard and outboard ellipses
@@ -289,6 +323,7 @@ class FirstWall(Model):
     ) -> tuple[float, float, float]:
         """Apply first wall coverage factors to calculate actual first wall areas.
 
+<<<<<<< HEAD:process/models/fw.py
         Parameters
         ----------
         n_divertors : int
@@ -306,6 +341,22 @@ class FirstWall(Model):
         -------
         tuple[float, float, float]
             Contains first wall inboard area, outboard area, and total area (m^2).
+=======
+        :param n_divertors: Number of divertors (1 or 2).
+        :type n_divertors: int
+        :param f_ster_div_single: Fractional area of first wall sterically blocked by single divertor.
+        :type f_ster_div_single: float
+        :param f_a_fw_outboard_hcd: Fractional area of outboard first wall covered by high heat flux components.
+        :type f_a_fw_outboard_hcd: float
+        :param a_fw_inboard_full_coverage: First wall inboard area assuming 100% coverage (m^2).
+        :type a_fw_inboard_full_coverage: float
+        :param a_fw_outboard_full_coverage: First wall outboard area assuming 100% coverage (m^2).
+        :type a_fw_outboard_full_coverage: float
+
+        :returns: Contains first wall inboard area, outboard area, and total area (m^2).
+        :rtype: tuple[float, float, float]
+
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077)):process/fw.py
         """
         if n_divertors == 2:
             # Double null configuration

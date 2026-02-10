@@ -16,6 +16,7 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
 )
+<<<<<<< HEAD
 from process.models.availability import Availability
 from process.models.blankets.hcpb import CCFE_HCPB
 from process.models.buildings import Buildings
@@ -56,6 +57,15 @@ from process.models.stellarator.denisty_limits import (
 from process.models.stellarator.neoclassics import Neoclassics
 from process.models.stellarator.stellarator import Stellarator
 from process.models.vacuum import Vacuum
+=======
+from process.fw import FirstWall
+from process.hcpb import CCFE_HCPB
+from process.physics import Physics
+from process.plasma_profiles import PlasmaProfile
+from process.power import Power
+from process.stellarator import Neoclassics, Stellarator
+from process.vacuum import Vacuum
+>>>>>>> 728a4b40 (Move first wall geometry calculations into dedicated class (#4077))
 
 
 @pytest.fixture
