@@ -90,9 +90,11 @@ def stellarator():
             PlasmaInductance(),
             PlasmaDensityLimit(),
             PlasmaExhaust(),
+            PlasmaBootstrapCurrent(),
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),
+        plasma_bootstrap=PlasmaBootstrapCurrent(),
     )
 
 
