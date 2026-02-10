@@ -34,7 +34,7 @@ All PF circuits (and plasma current) are coupled through the mutual inductance m
 Magnetic energy in an inductive system is given by:
 
 $$
-E_{PF}(t_n) = \frac{1}{2} \sum_i I_i(t_n)\sum_j M_{ij} I_j(t_n)
+E_{\text{PF}}(t_n) = \frac{1}{2} \sum_i I_i(t_n)\sum_j M_{ij} I_j(t_n)
 $$
 
 This is the standard inductive energy expression:
@@ -50,7 +50,7 @@ $$
 The change in stored magnetic energy between time points is:
 
 $$
-\Delta E_n = E_{PF}(t_{n+1}) - E_{PF}(t_n)
+\Delta E_n = E_{\text{PF}}(t_{n+1}) - E_{\text{PF}}(t_n)
 $$
 
 This represents how much energy is charged into or discharged from the PF magnetic field.
@@ -59,10 +59,10 @@ This represents how much energy is charged into or discharged from the PF magnet
 
 ##### 3. Storage system losses | `_pf_loss_storage_j()`
 
-Assuming a fractional inefficiency $k_s$ in the energy storage system:
+Assuming a fractional inefficiency $k_\text{s}$ in the energy storage system:
 
 $$
-ELoss_{s,n} = k_s \, \left| \Delta E_n \right|
+E_{\text{loss},\text{s},n} = k_\text{s} \, \left| \Delta E_n \right|
 $$
 
 A fixed fraction of energy moved is lost each time energy flows in or out of storage.
@@ -104,8 +104,8 @@ $$
 The resulting energy loss in the power supplies over the interval is:
 
 $$
-ELoss_{ps,n} =
-\frac{k_{ps}}{2}
+E_{\text{loss},\text{ps},n} =
+\frac{k_{\text{ps}}}{2}
 \left|
 \left[I_i(t_{n+1}) + I_i(t_n)\right]
 \sum_j M_{ij}
@@ -134,7 +134,7 @@ $$
 Energy dissipated in the busbars is:
 
 $$
-ELoss_{bus,n} = \Delta t \sum_i \bar{I}_i^2 R_i
+E_{\text{loss}, \text{bus},n} = \Delta t \sum_i \bar{I}_i^2 R_i
 $$
 
 ---
@@ -144,7 +144,7 @@ $$
 Summing losses over all pulse phases:
 
 $$
-EnergyLoss = \sum_n \left( ELoss_{s,n} + ELoss_{ps,n} + ELoss_{bus,n} \right)
+EnergyLoss = \sum_n \left( E_{\text{loss},\text{s},n} + E_{\text{loss},\text{ps},n} + E_{\text{loss},\text{bus},n} \right)
 $$
 
 The mean PF electrical power demand is obtained by dividing the total pulse energy loss by the flat-top duration.
