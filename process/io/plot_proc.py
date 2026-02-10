@@ -2870,12 +2870,13 @@ def plot_main_plasma_information(
     )
 
     textstr_neutron = (
-        f"$P_{{\\text{{n,total}}}}$ {mfile.get('p_neutron_total_mw', scan=scan):.2f} MW"
+        f"$P_{{\\text{{n,total}}}}$ {mfile.get('p_neutron_total_mw', scan=scan):.2f} MW \n"
+        f"$\\phi_{{\\text{{n,avg}}}}$ {mfile.get('plfux_plasma_surface_neutron_avg_mw', scan=scan):.3f} MW/m²"
     )
 
     axis.text(
         0.775,
-        0.85,
+        0.875,
         textstr_neutron,
         fontsize=9,
         verticalalignment="top",
