@@ -9,6 +9,7 @@ from process.data_structure import (
     current_drive_variables,
     dcll_variables,
     divertor_variables,
+    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
@@ -193,13 +194,13 @@ class DCLL(InboardBlanket, OutboardBlanket):
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
             fwbs_variables.p_fw_rad_total_mw
-            * build_variables.a_fw_outboard
-            / build_variables.a_fw_total
+            * first_wall_variables.a_fw_outboard
+            / first_wall_variables.a_fw_total
             + current_drive_variables.p_beam_orbit_loss_mw
             + physics_variables.p_fw_alpha_mw
         )
         fwbs_variables.psurffwi = fwbs_variables.p_fw_rad_total_mw * (
-            1 - build_variables.a_fw_outboard / build_variables.a_fw_total
+            1 - first_wall_variables.a_fw_outboard / first_wall_variables.a_fw_total
         )
 
         if output:
@@ -685,8 +686,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
         # FW
         # First wall volume (m^3)
         fwbs_variables.vol_fw_total = (
-            build_variables.a_fw_inboard * build_variables.dr_fw_inboard
-            + build_variables.a_fw_outboard * build_variables.dr_fw_outboard
+            first_wall_variables.a_fw_inboard * build_variables.dr_fw_inboard
+            + first_wall_variables.a_fw_outboard * build_variables.dr_fw_outboard
         )
         # First wall mass, excluding armour (kg)
         dcll_variables.fwmass_stl = (
@@ -738,7 +739,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 * (fwbs_variables.vol_blkt_inboard / fwbs_variables.vol_blkt_total)
                 + fwbs_variables.m_fw_total
                 * (
-                    build_variables.a_fw_inboard
+                    first_wall_variables.a_fw_inboard
                     * build_variables.dr_fw_inboard
                     / fwbs_variables.vol_fw_total
                 )
@@ -758,7 +759,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             * (fwbs_variables.vol_blkt_outboard / fwbs_variables.vol_blkt_total)
             + fwbs_variables.m_fw_total
             * (
-                build_variables.a_fw_outboard
+                first_wall_variables.a_fw_outboard
                 * build_variables.dr_fw_outboard
                 / fwbs_variables.vol_fw_total
             )

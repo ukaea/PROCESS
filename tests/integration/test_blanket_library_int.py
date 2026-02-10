@@ -4,7 +4,7 @@ from process.blanket_library import BlanketLibrary
 from process.data_structure import build_variables as bv
 from process.data_structure import fwbs_variables as fwbs
 from process.data_structure import physics_variables as pv
-from process.fw import Fw
+from process.fw import FirstWall
 from process.init import init_all_module_vars
 
 init_all_module_vars()
@@ -17,7 +17,7 @@ def blanket_library_fixture():
     :returns: initialised BlanketLibrary object
     :rtype: process.blanket_library.BlanketLibrary
     """
-    return BlanketLibrary(Fw())
+    return BlanketLibrary(FirstWall())
 
 
 def test_hydraulic_diameter(monkeypatch, blanket_library_fixture):

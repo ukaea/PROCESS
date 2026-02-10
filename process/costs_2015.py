@@ -9,6 +9,7 @@ from process.data_structure import (
     cost_2015_variables,
     cost_variables,
     current_drive_variables,
+    first_wall_variables,
     fwbs_variables,
     global_variables,
     heat_transport_variables,
@@ -278,7 +279,7 @@ class Costs2015:
         cost_2015_variables.s_cref[24] = 25.0e6
         #  First wall W coating mass (kg)
         cost_2015_variables.s_k[24] = (
-            build_variables.a_fw_total
+            first_wall_variables.a_fw_total
             * fwbs_variables.fw_armour_thickness
             * constants.DEN_TUNGSTEN
         )

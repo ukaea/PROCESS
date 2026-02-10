@@ -11,7 +11,7 @@ from process.data_structure import (
     fwbs_variables,
     physics_variables,
 )
-from process.fw import Fw
+from process.fw import FirstWall
 
 
 @pytest.fixture
@@ -21,7 +21,7 @@ def blanket_library_fixture():
     :returns: initialised BlanketLibrary object
     :rtype: process.blanket_library.BlanketLibrary
     """
-    return BlanketLibrary(Fw())
+    return BlanketLibrary(FirstWall())
 
 
 class PrimaryCoolantPropertiesParam(NamedTuple):

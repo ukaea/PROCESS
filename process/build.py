@@ -4,7 +4,6 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
-from process.blanket_library import dshellarea, eshellarea
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -17,7 +16,6 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 
@@ -2009,124 +2007,6 @@ class Build:
             dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
             dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
         )
-
-        #  Half-height of first wall (internal surface)
-        hbot = (
-            build_variables.z_plasma_xpoint_lower
-            + build_variables.dz_xpoint_divertor
-            + divertor_variables.dz_divertor
-            - build_variables.dz_blkt_upper
-            - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
-        )
-        if (
-            divertor_variables.n_divertors == 2
-        ):  # (i.e. physics_variables.i_single_null=0)
-            htop = hbot
-        else:
-            htop = (
-                build_variables.z_plasma_xpoint_upper + build_variables.dz_fw_plasma_gap
-            )
-
-        hfw = 0.5e0 * (htop + hbot)
-
-        if (physics_variables.itart == 1) or (
-            fwbs_variables.i_fw_blkt_vv_shape == 1
-        ):  # D-shaped
-            #  Major radius to outer edge of inboard section
-            r1 = (
-                physics_variables.rmajor
-                - physics_variables.rminor
-                - build_variables.dr_fw_plasma_gap_inboard
-            )
-
-            #  Horizontal distance between inside edges,
-            #  i.e. outer radius of inboard part to inner radius of outboard part
-
-            r2 = (
-                physics_variables.rmajor
-                + physics_variables.rminor
-                + build_variables.dr_fw_plasma_gap_outboard
-            ) - r1
-            #  Calculate surface area, assuming 100% coverage
-
-            (
-                build_variables.a_fw_inboard_full_coverage,
-                build_variables.a_fw_outboard_full_coverage,
-                build_variables.a_fw_total_full_coverage,
-            ) = dshellarea(r1, r2, hfw)
-
-        else:  # Cross-section is assumed to be defined by two ellipses
-            #  Major radius to centre of inboard and outboard ellipses
-            #  (coincident in radius with top of plasma)
-
-            r1 = (
-                physics_variables.rmajor
-                - physics_variables.rminor * physics_variables.triang
-            )
-
-            #  Distance between r1 and outer edge of inboard section
-
-            r2 = r1 - (
-                physics_variables.rmajor
-                - physics_variables.rminor
-                - build_variables.dr_fw_plasma_gap_inboard
-            )
-
-            #  Distance between r1 and inner edge of outboard section
-
-            r3 = (
-                physics_variables.rmajor
-                + physics_variables.rminor
-                + build_variables.dr_fw_plasma_gap_outboard
-            ) - r1
-
-            #  Calculate surface area, assuming 100% coverage
-
-            (
-                build_variables.a_fw_inboard_full_coverage,
-                build_variables.a_fw_outboard_full_coverage,
-                build_variables.a_fw_total_full_coverage,
-            ) = eshellarea(r1, r2, r3, hfw)
-
-        #  Apply area coverage factor
-
-        if divertor_variables.n_divertors == 2:
-            # Double null configuration
-            build_variables.a_fw_outboard = (
-                build_variables.a_fw_outboard_full_coverage
-                * (
-                    1.0e0
-                    - 2.0e0 * fwbs_variables.f_ster_div_single
-                    - fwbs_variables.f_a_fw_outboard_hcd
-                )
-            )
-            build_variables.a_fw_inboard = build_variables.a_fw_inboard_full_coverage * (
-                1.0e0 - 2.0e0 * fwbs_variables.f_ster_div_single
-            )
-        else:
-            # Single null configuration
-            build_variables.a_fw_outboard = (
-                build_variables.a_fw_outboard_full_coverage
-                * (
-                    1.0e0
-                    - fwbs_variables.f_ster_div_single
-                    - fwbs_variables.f_a_fw_outboard_hcd
-                )
-            )
-            build_variables.a_fw_inboard = build_variables.a_fw_inboard_full_coverage * (
-                1.0e0 - fwbs_variables.f_ster_div_single
-            )
-
-        build_variables.a_fw_total = (
-            build_variables.a_fw_inboard + build_variables.a_fw_outboard
-        )
-
-        if build_variables.a_fw_outboard <= 0.0e0:
-            raise ProcessValueError(
-                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high for a credible outboard wall area",
-                f_ster_div_single=fwbs_variables.f_ster_div_single,
-                f_a_fw_outboard_hcd=fwbs_variables.f_a_fw_outboard_hcd,
-            )
 
         #
 

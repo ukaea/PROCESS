@@ -69,7 +69,7 @@ from process.current_drive import (
 )
 from process.dcll import DCLL
 from process.divertor import Divertor
-from process.fw import Fw
+from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
 from process.ife import IFE
 from process.impurity_radiation import initialise_imprad
@@ -671,7 +671,7 @@ class Models:
         self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
         self.plasma_profile = PlasmaProfile()
-        self.fw = Fw()
+        self.fw = FirstWall()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
         self.current_drive = CurrentDrive(
