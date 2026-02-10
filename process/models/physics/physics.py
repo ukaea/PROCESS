@@ -2081,31 +2081,19 @@ class Physics:
             )
         )
 
-        bootstrap_map = {
-            0: current_drive_variables.f_c_plasma_bootstrap,
-            1: current_drive_variables.f_c_plasma_bootstrap_iter89,
-            2: current_drive_variables.f_c_plasma_bootstrap_nevins,
-            3: current_drive_variables.f_c_plasma_bootstrap_wilson,
-            4: current_drive_variables.f_c_plasma_bootstrap_sauter,
-            5: current_drive_variables.f_c_plasma_bootstrap_sakai,
-            6: current_drive_variables.f_c_plasma_bootstrap_aries,
-            7: current_drive_variables.f_c_plasma_bootstrap_andrade,
-            8: current_drive_variables.f_c_plasma_bootstrap_hoang,
-            9: current_drive_variables.f_c_plasma_bootstrap_wong,
-            10: current_drive_variables.bscf_gi_i,
-            11: current_drive_variables.bscf_gi_ii,
-            12: current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
-            13: current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
-        }
-        if int(physics_variables.i_bootstrap_current) in bootstrap_map:
-            current_drive_variables.f_c_plasma_bootstrap = bootstrap_map[
+        # Calculate beta_norm_max based on i_beta_norm_max
+        try:
+            model = BootstrapCurrentFractionModel(
                 int(physics_variables.i_bootstrap_current)
-            ]
-        else:
+            )
+            current_drive_variables.f_c_plasma_bootstrap = (
+                self.bootstrap.get_bootstrap_current_fraction_value(model)
+            )
+        except ValueError:
             raise ProcessValueError(
                 "Illegal value of i_bootstrap_current",
                 i_bootstrap_current=physics_variables.i_bootstrap_current,
-            )
+            ) from None
 
         physics_variables.err242 = 0
         if (
@@ -9862,12 +9850,53 @@ class PlasmaInductance:
         po.oblnkl(self.outfile)
 
 
+class BootstrapCurrentFractionModel(IntEnum):
+    """Bootstrap plasma current fraction (f_BS) model types"""
+
+    USER_INPUT = 0
+    ITER_89 = 1
+    NEVINS = 2
+    WILSON = 3
+    SAUTER = 4
+    SAKAI = 5
+    ARIES = 6
+    ANDRADE = 7
+    HOANG = 8
+    WONG = 9
+    GI_1 = 10
+    GI_2 = 11
+    SUGIYAMA_L_MODE = 12
+    SUGIYAMA_H_MODE = 13
+
+
 class PlasmaBootstrapCurrent:
     """Class to hold plasma bootstrap current for plasma processing."""
 
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def get_bootstrap_current_fraction_value(
+        self, model: BootstrapCurrentFractionModel
+    ) -> float:
+        """Get the plasma current bootstrap fraction (f_BS) for the specified model."""
+        model_map = {
+            BootstrapCurrentFractionModel.USER_INPUT: current_drive_variables.f_c_plasma_bootstrap,
+            BootstrapCurrentFractionModel.ITER_89: current_drive_variables.f_c_plasma_bootstrap_iter89,
+            BootstrapCurrentFractionModel.NEVINS: current_drive_variables.f_c_plasma_bootstrap_nevins,
+            BootstrapCurrentFractionModel.WILSON: current_drive_variables.f_c_plasma_bootstrap_wilson,
+            BootstrapCurrentFractionModel.SAUTER: current_drive_variables.f_c_plasma_bootstrap_sauter,
+            BootstrapCurrentFractionModel.SAKAI: current_drive_variables.f_c_plasma_bootstrap_sakai,
+            BootstrapCurrentFractionModel.ARIES: current_drive_variables.f_c_plasma_bootstrap_aries,
+            BootstrapCurrentFractionModel.ANDRADE: current_drive_variables.f_c_plasma_bootstrap_andrade,
+            BootstrapCurrentFractionModel.HOANG: current_drive_variables.f_c_plasma_bootstrap_hoang,
+            BootstrapCurrentFractionModel.WONG: current_drive_variables.f_c_plasma_bootstrap_wong,
+            BootstrapCurrentFractionModel.GI_1: current_drive_variables.bscf_gi_i,
+            BootstrapCurrentFractionModel.GI_2: current_drive_variables.bscf_gi_ii,
+            BootstrapCurrentFractionModel.SUGIYAMA_L_MODE: current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
+            BootstrapCurrentFractionModel.SUGIYAMA_H_MODE: current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
+        }
+        return model_map[model]
 
     @staticmethod
     def bootstrap_fraction_iter89(
