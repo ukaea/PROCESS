@@ -318,18 +318,18 @@ class Power:
             powpfii[idx_circuit] = 0.0e0
             vpfi[idx_circuit] = 0.0e0
 
-        jpf = -1
+        idx_pf_coil = -1
         poloidalenergy[:] = 0.0e0
         for idx_group in range(n_pf_coil_groups):  # Loop over all groups of PF coils.
-            for _jjpf2 in range(
+            for _ in range(
                 pfcoil_variables.n_pf_coils_in_group[idx_group]
             ):  # Loop over all coils in each group
-                jpf = jpf + 1
+                idx_pf_coil = idx_pf_coil + 1
                 inductxcurrent[:] = 0.0e0
                 for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits):
-                    #  Voltage in circuit jpf due to change in current from circuit idx_circuit
+                    #  Voltage in circuit idx_pf_coil due to change in current from circuit idx_circuit
                     vpfij = (
-                        ind_pf_cs_plasma_mutual[jpf, idx_circuit]
+                        ind_pf_cs_plasma_mutual[idx_pf_coil, idx_circuit]
                         * (
                             c_pf_coil_turn[idx_circuit, 2]
                             - c_pf_coil_turn[idx_circuit, 1]
@@ -337,17 +337,20 @@ class Power:
                         / delktim
                     )
 
-                    #  Voltage in circuit jpf at time, times_variables.t_pulse_cumulative(3), due to changes in coil currents
-                    vpfi[jpf] = vpfi[jpf] + vpfij
+                    #  Voltage in circuit idx_pf_coil at time, times_variables.t_pulse_cumulative(3), due to changes in coil currents
+                    vpfi[idx_pf_coil] = vpfi[idx_pf_coil] + vpfij
 
-                    #  MVA in circuit jpf at time, times_variables.t_pulse_cumulative(3) due to changes in current
-                    powpfii[jpf] = powpfii[jpf] + vpfij * c_pf_coil_turn[jpf, 2] / 1.0e6
+                    #  MVA in circuit idx_pf_coil at time, times_variables.t_pulse_cumulative(3) due to changes in current
+                    powpfii[idx_pf_coil] = (
+                        powpfii[idx_pf_coil]
+                        + vpfij * c_pf_coil_turn[idx_pf_coil, 2] / 1.0e6
+                    )
 
                     # Term used for calculating stored energy at each time
                     for kk in range(6):
                         inductxcurrent[kk] = (
                             inductxcurrent[kk]
-                            + ind_pf_cs_plasma_mutual[jpf, idx_circuit]
+                            + ind_pf_cs_plasma_mutual[idx_pf_coil, idx_circuit]
                             * c_pf_coil_turn[idx_circuit, kk]
                         )
 
@@ -356,25 +359,25 @@ class Power:
                 for kk in range(6):
                     poloidalenergy[kk] = (
                         poloidalenergy[kk]
-                        + 0.5e0 * inductxcurrent[kk] * c_pf_coil_turn[jpf, kk]
+                        + 0.5e0 * inductxcurrent[kk] * c_pf_coil_turn[idx_pf_coil, kk]
                     )
 
                 # Resistive power in circuits at times times_variables.t_pulse_cumulative(3) and times_variables.t_pulse_cumulative(5) respectively (MW)
                 powpfr = (
                     powpfr
-                    + pfcoil_variables.n_pf_coil_turns[jpf]
-                    * c_pf_coil_turn[jpf, 2]
+                    + pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
+                    * c_pf_coil_turn[idx_pf_coil, 2]
                     * cktr[idx_group]
                     / 1.0e6
                 )
                 powpfr2 = (
                     powpfr2
-                    + pfcoil_variables.n_pf_coil_turns[jpf]
-                    * c_pf_coil_turn[jpf, 4]
+                    + pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
+                    * c_pf_coil_turn[idx_pf_coil, 4]
                     * cktr[idx_group]
                     / 1.0e6
                 )
-                powpfi = powpfi + powpfii[jpf]
+                powpfi = powpfi + powpfii[idx_pf_coil]
 
         for ii in range(5):
             # Stored magnetic energy of the poloidal field at each time
