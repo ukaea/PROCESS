@@ -314,9 +314,9 @@ class Power:
         #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils (including Central Solenoid and plasma)
         #  plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
         #  pfcoil_variables.ind_pf_cs_plasma_mutual(i,j) : mutual inductance between coil i and j
-        for ii in range(pfcoil_variables.n_pf_cs_plasma_circuits):
-            powpfii[ii] = 0.0e0
-            vpfi[ii] = 0.0e0
+        for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits):
+            powpfii[idx_circuit] = 0.0e0
+            vpfi[idx_circuit] = 0.0e0
 
         jpf = -1
         poloidalenergy[:] = 0.0e0
@@ -326,11 +326,14 @@ class Power:
             ):  # Loop over all coils in each group
                 jpf = jpf + 1
                 inductxcurrent[:] = 0.0e0
-                for ii in range(pfcoil_variables.n_pf_cs_plasma_circuits):
-                    #  Voltage in circuit jpf due to change in current from circuit ii
+                for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits):
+                    #  Voltage in circuit jpf due to change in current from circuit idx_circuit
                     vpfij = (
-                        ind_pf_cs_plasma_mutual[jpf, ii]
-                        * (c_pf_coil_turn[ii, 2] - c_pf_coil_turn[ii, 1])
+                        ind_pf_cs_plasma_mutual[jpf, idx_circuit]
+                        * (
+                            c_pf_coil_turn[idx_circuit, 2]
+                            - c_pf_coil_turn[idx_circuit, 1]
+                        )
                         / delktim
                     )
 
@@ -344,7 +347,8 @@ class Power:
                     for kk in range(6):
                         inductxcurrent[kk] = (
                             inductxcurrent[kk]
-                            + ind_pf_cs_plasma_mutual[jpf, ii] * c_pf_coil_turn[ii, kk]
+                            + ind_pf_cs_plasma_mutual[jpf, idx_circuit]
+                            * c_pf_coil_turn[idx_circuit, kk]
                         )
 
                 #  Stored magnetic energy of the poloidal field at each time
