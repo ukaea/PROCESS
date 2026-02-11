@@ -381,23 +381,36 @@ class Power:
                 )
                 powpfi = powpfi + powpfii[idx_pf_coil]
 
-        for ii in range(5):
+        for idx_time_interval in range(5):
             # Stored magnetic energy of the poloidal field at each time
-            # ii is the time index. 't_pulse_cumulative' is the time.
+            # idx_time_interval is the time index. 't_pulse_cumulative' is the time.
             # Mean rate of change of stored energy between time and time+1
-            if abs(t_pulse_cumulative[ii + 1] - t_pulse_cumulative[ii]) > 1.0e0:
-                pf_power_variables.poloidalpower[ii] = (
-                    poloidalenergy[ii + 1] - poloidalenergy[ii]
-                ) / (t_pulse_cumulative[ii + 1] - t_pulse_cumulative[ii])
+            if (
+                abs(
+                    t_pulse_cumulative[idx_time_interval + 1]
+                    - t_pulse_cumulative[idx_time_interval]
+                )
+                > 1.0e0
+            ):
+                pf_power_variables.poloidalpower[idx_time_interval] = (
+                    poloidalenergy[idx_time_interval + 1]
+                    - poloidalenergy[idx_time_interval]
+                ) / (
+                    t_pulse_cumulative[idx_time_interval + 1]
+                    - t_pulse_cumulative[idx_time_interval]
+                )
             else:
                 # Flag when an interval is small or zero MDK 30/11/16
-                pf_power_variables.poloidalpower[ii] = 9.9e9
+                pf_power_variables.poloidalpower[idx_time_interval] = 9.9e9
 
-            dt_pulse_phase_s = t_pulse_cumulative[ii + 1] - t_pulse_cumulative[ii]
+            dt_pulse_phase_s = (
+                t_pulse_cumulative[idx_time_interval + 1]
+                - t_pulse_cumulative[idx_time_interval]
+            )
 
             # Electrical energy dissipated in PFC power supplies as they increase or decrease the poloidal field energy
-            pfdissipation[ii] = self._pf_loss_interval_total_j(
-                ii=ii,
+            pfdissipation[idx_time_interval] = self._pf_loss_interval_total_j(
+                ii=idx_time_interval,
                 f_p_pf_energy_store_loss=f_p_pf_energy_store_loss,
                 dt_pulse_phase_s=dt_pulse_phase_s,
                 poloidalenergy=poloidalenergy,
