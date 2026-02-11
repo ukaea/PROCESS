@@ -244,23 +244,27 @@ class Power:
         pf_power_variables.srcktpm = 0.0e0
         pfbuspwr = 0.0e0
 
-        for ig in range(n_pf_coil_groups):
-            ic = ic + pfcoil_variables.n_pf_coils_in_group[ig]
-            pf_group_circuit_index[ig] = ic
+        for idx_n_pf in range(n_pf_coil_groups):
+            ic = ic + pfcoil_variables.n_pf_coils_in_group[idx_n_pf]
+            pf_group_circuit_index[idx_n_pf] = ic
 
             #  Section area of aluminium bussing for circuit (cm**2)
             #  pfcoil_variables.c_pf_coil_turn_peak_input : max current per turn of coil (A)
-            albusa[ig] = abs(pfcoil_variables.c_pf_coil_turn_peak_input[ic]) / 100.0e0
+            albusa[idx_n_pf] = (
+                abs(pfcoil_variables.c_pf_coil_turn_peak_input[ic]) / 100.0e0
+            )
 
             #  Resistance of bussing for circuit (ohm)
             #  pfbusl : bus length for each PF circuit (m)
-            #  pfbusr[ig] = 1.5e0 * 2.62e-4 * pfbusl / albusa[ig]
+            #  pfbusr[idx_n_pf] = 1.5e0 * 2.62e-4 * pfbusl / albusa[idx_n_pf]
             #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
-            pfbusr[ig] = pfcoil_variables.rhopfbus * pfbusl / (albusa[ig] / 10000)
+            pfbusr[idx_n_pf] = (
+                pfcoil_variables.rhopfbus * pfbusl / (albusa[idx_n_pf] / 10000)
+            )
 
             #  Total PF coil resistance (during burn)
             #  pfcoil_variables.c_pf_cs_coils_peak_ma : maximum current in coil (A)
-            pfcr[ig] = (
+            pfcr[idx_n_pf] = (
                 pfcoil_variables.rho_pf_coil
                 * 2.0e0
                 * np.pi
@@ -274,21 +278,29 @@ class Power:
                     )
                 )
                 * pfcoil_variables.n_pf_coil_turns[ic] ** 2
-                * pfcoil_variables.n_pf_coils_in_group[ig]
+                * pfcoil_variables.n_pf_coils_in_group[idx_n_pf]
             )
 
-            cktr[ig] = pfcr[ig] + pfbusr[ig]  # total resistance of circuit (ohms)
+            cktr[idx_n_pf] = (
+                pfcr[idx_n_pf] + pfbusr[idx_n_pf]
+            )  # total resistance of circuit (ohms)
             cptburn = (
                 pfcoil_variables.c_pf_coil_turn_peak_input[ic]
                 * pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic]
                 / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
-            rcktvm[ig] = abs(cptburn) * cktr[ig]  # peak resistive voltage (V)
-            rcktpm[ig] = 1.0e-6 * rcktvm[ig] * abs(cptburn)  # peak resistive power (MW)
+            rcktvm[idx_n_pf] = (
+                abs(cptburn) * cktr[idx_n_pf]
+            )  # peak resistive voltage (V)
+            rcktpm[idx_n_pf] = (
+                1.0e-6 * rcktvm[idx_n_pf] * abs(cptburn)
+            )  # peak resistive power (MW)
 
             #  Compute the sum of resistive power in the PF circuits, kW
-            pfbuspwr = pfbuspwr + 1.0e-3 * pfbusr[ig] * cptburn**2
-            pf_power_variables.srcktpm = pf_power_variables.srcktpm + 1.0e3 * rcktpm[ig]
+            pfbuspwr = pfbuspwr + 1.0e-3 * pfbusr[idx_n_pf] * cptburn**2
+            pf_power_variables.srcktpm = (
+                pf_power_variables.srcktpm + 1.0e3 * rcktpm[idx_n_pf]
+            )
 
         #  Inductive MVA requirements, and stored energy
         delktim = times_variables.t_plant_pulse_plasma_current_ramp_up
