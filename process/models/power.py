@@ -709,9 +709,7 @@ class Power(Model):
         # po.oheadr(self.outfile,'AC Power')
         po.oheadr(self.outfile, "Electric Power Requirements")
         po.ovarre(self.outfile, "Divertor coil power supplies (MW)", "(bdvmw)", bdvmw)
-        po.ovarre(
-            self.outfile, "Cryoplant electric power (MW)", "(crymw)", crymw, "OP "
-        )
+        po.ovarre(self.outfile, "Cryoplant electric power (MW)", "(crymw)", crymw, "OP ")
         # po.ovarre(self.outfile,'Heat removed from cryogenic coils (MWth)','(helpow/1.0e6)',helpow/1.0e6)
         # po.ovarre(self.outfile,'MGF (motor-generator flywheel) units (MW)', '(fmgdmw)',fmgdmw)
         # po.ovarin(self.outfile,'Primary coolant pumps (MW)', '(i_blkt_coolant_type)',i_blkt_coolant_type)
@@ -1035,10 +1033,7 @@ class Power(Model):
             p_tf_cryoal_cryo = (
                 1.0e-6
                 * (constants.TEMP_ROOM - tfcoil_variables.temp_cp_coolant_inlet)
-                / (
-                    tfcoil_variables.eff_tf_cryo
-                    * tfcoil_variables.temp_cp_coolant_inlet
-                )
+                / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_cp_coolant_inlet)
                 * heat_transport_variables.helpow_cryal
             )
 
@@ -2604,17 +2599,15 @@ class Power(Model):
         - Negative values indicate power consumption (loads).
         """
 
-        t_steps = np.cumsum(
-            [
-                0,
-                t_precharge,
-                t_current_ramp_up,
-                t_fusion_ramp,
-                t_burn,
-                t_ramp_down,
-                t_between_pulse,
-            ]
-        )
+        t_steps = np.cumsum([
+            0,
+            t_precharge,
+            t_current_ramp_up,
+            t_fusion_ramp,
+            t_burn,
+            t_ramp_down,
+            t_between_pulse,
+        ])
 
         # Number of time steps
         n_steps = len(t_steps)
@@ -2693,9 +2686,7 @@ class Power(Model):
 
         # Integrate net electric power over the pulse to get total energy produced (MJ)
         # Assume t_steps in seconds, power in MW, so energy in MJ
-        energy_made_mj = sp.integrate.trapezoid(
-            p_plant_electric_net_profile_mw, t_steps
-        )
+        energy_made_mj = sp.integrate.trapezoid(p_plant_electric_net_profile_mw, t_steps)
         energy_made_kwh = energy_made_mj / 3.6
 
         return (
