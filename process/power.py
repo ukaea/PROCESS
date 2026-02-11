@@ -453,20 +453,21 @@ class Power:
         pf_power_variables.acptmax = 0.0e0
         pf_power_variables.spsmva = 0.0e0
 
-        for ii in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
+        for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
             #  Power supply MVA for each PF circuit
-            psmva[ii] = 1.0e-6 * abs(
-                vpfi[ii] * pfcoil_variables.c_pf_coil_turn_peak_input[ii]
+            psmva[idx_circuit] = 1.0e-6 * abs(
+                vpfi[idx_circuit]
+                * pfcoil_variables.c_pf_coil_turn_peak_input[idx_circuit]
             )
 
             #  Sum of the power supply MVA of the PF circuits
-            pf_power_variables.spsmva = pf_power_variables.spsmva + psmva[ii]
+            pf_power_variables.spsmva = pf_power_variables.spsmva + psmva[idx_circuit]
 
             #  Average of the maximum currents in the PF circuits, kA
             pf_power_variables.acptmax = (
                 pf_power_variables.acptmax
                 + 1.0e-3
-                * abs(pfcoil_variables.c_pf_coil_turn_peak_input[ii])
+                * abs(pfcoil_variables.c_pf_coil_turn_peak_input[idx_circuit])
                 / pf_power_variables.pfckts
             )
 
