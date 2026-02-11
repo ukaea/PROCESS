@@ -347,19 +347,21 @@ class Power:
                     )
 
                     # Term used for calculating stored energy at each time
-                    for kk in range(6):
-                        inductxcurrent[kk] = (
-                            inductxcurrent[kk]
+                    for idx_time in range(6):
+                        inductxcurrent[idx_time] = (
+                            inductxcurrent[idx_time]
                             + ind_pf_cs_plasma_mutual[idx_pf_coil, idx_circuit]
-                            * c_pf_coil_turn[idx_circuit, kk]
+                            * c_pf_coil_turn[idx_circuit, idx_time]
                         )
 
                 #  Stored magnetic energy of the poloidal field at each time
-                # kk is the time INDEX. 't_pulse_cumulative' is the time.
-                for kk in range(6):
-                    poloidalenergy[kk] = (
-                        poloidalenergy[kk]
-                        + 0.5e0 * inductxcurrent[kk] * c_pf_coil_turn[idx_pf_coil, kk]
+                # idx_time is the time INDEX. 't_pulse_cumulative' is the time.
+                for idx_time in range(6):
+                    poloidalenergy[idx_time] = (
+                        poloidalenergy[idx_time]
+                        + 0.5e0
+                        * inductxcurrent[idx_time]
+                        * c_pf_coil_turn[idx_pf_coil, idx_time]
                     )
 
                 # Resistive power in circuits at times times_variables.t_pulse_cumulative(3) and times_variables.t_pulse_cumulative(5) respectively (MW)
