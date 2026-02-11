@@ -320,9 +320,9 @@ class Power:
 
         jpf = -1
         poloidalenergy[:] = 0.0e0
-        for jj in range(n_pf_coil_groups):  # Loop over all groups of PF coils.
+        for idx_group in range(n_pf_coil_groups):  # Loop over all groups of PF coils.
             for _jjpf2 in range(
-                pfcoil_variables.n_pf_coils_in_group[jj]
+                pfcoil_variables.n_pf_coils_in_group[idx_group]
             ):  # Loop over all coils in each group
                 jpf = jpf + 1
                 inductxcurrent[:] = 0.0e0
@@ -364,14 +364,14 @@ class Power:
                     powpfr
                     + pfcoil_variables.n_pf_coil_turns[jpf]
                     * c_pf_coil_turn[jpf, 2]
-                    * cktr[jj]
+                    * cktr[idx_group]
                     / 1.0e6
                 )
                 powpfr2 = (
                     powpfr2
                     + pfcoil_variables.n_pf_coil_turns[jpf]
                     * c_pf_coil_turn[jpf, 4]
-                    * cktr[jj]
+                    * cktr[idx_group]
                     / 1.0e6
                 )
                 powpfi = powpfi + powpfii[jpf]
