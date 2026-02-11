@@ -92,7 +92,7 @@ Instead of $q_a$, $q_{95}$ is used as in plasma configurations with divertors th
 
 ## Plasma Current Calculation | `calculate_plasma_current()`
 
-This function calculates the plasma current shaping factor ($f_q$), plasma current ($I_{\text{p}}$), qstar ($q^*$), normalized beta ($\beta_{\text{N}}$) and then poloidal field and the profile settings for $\mathtt{alphaj}$ ($\alpha_J$) and $\mathtt{ind_plasma_internal_norm}$ ($l_{\mathtt{i}}$). This is done in 5 separate steps which are shown in the following numbered sections.
+This function calculates the plasma current shaping factor ($f_q$), plasma current ($I_{\text{p}}$), qstar ($q^*$) and then poloidal field and the profile settings for $\texttt{alphaj}$ ($\alpha_J$) and $\texttt{ind_plasma_internal_norm}$ ($l_{\text{i}}$). This is done in 5 separate steps which are shown in the following numbered sections.
 
 
 $$\begin{aligned}
@@ -118,7 +118,7 @@ The formula for calculating `fq` is:
 
 $$f_q = \left(\frac{{1.22 - 0.68  \epsilon}}{{(1.0 - \epsilon^2)^2}}\right)  \left(\frac{L_{\text{poloidal}}}{2\pi a}\right)^2$$
 
-Where $\epsilon$ is the inverse [aspect ratio](../plasma_geometry.md) ($\mathtt{eps}$) and $L_{\text{poloidal}}$ is the poloidal perimeter of the plasma.
+Where $\epsilon$ is the inverse [aspect ratio](../plasma_geometry.md) ($\texttt{eps}$) and $L_{\text{poloidal}}$ is the poloidal perimeter of the plasma.
 
 -----------
 
@@ -523,23 +523,13 @@ $$
 
 --------------
 
-### 3. Calculate the normalized beta
 
-The total normalized beta is calculated as per:
-
-$$
-\beta_N = \beta\frac{1\times10^8  a B_{\text{T}}}{I_{\text{P}}}
-$$
-
-
------------------
-
-### 4. Plasma Current Poloidal Field
+### 3. Plasma Current Poloidal Field
 
 For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the poloidal field is simply returned as:
 
 $$
-B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\mathtt{len_plasma_poloidal}}
+B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\texttt{len_plasma_poloidal}}
 $$
 
 Where `len_plasma_poloidal` is the plasma poloidal perimeter calculated [here](../plasma_geometry.md#poloidal-perimeter).
