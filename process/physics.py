@@ -1,5 +1,6 @@
 import logging
 import math
+from enum import IntEnum
 
 import numba as nb
 import numpy as np
@@ -198,57 +199,6 @@ def calculate_volt_second_requirements(
         vs_res_ramp,
         vs_plasma_total_required,
         v_plasma_loop_burn,
-    )
-
-
-@nb.jit(nopython=True, cache=True)
-def calculate_beta_limit(
-    b_plasma_toroidal_on_axis: float,
-    beta_norm_max: float,
-    plasma_current: float,
-    rminor: float,
-) -> float:
-    """
-    Calculate the beta scaling limit.
-
-    :param b_plasma_toroidal_on_axis: Toroidal B-field on plasma axis [T].
-    :type b_plasma_toroidal_on_axis: float
-    :param beta_norm_max: Troyon-like g coefficient.
-    :type beta_norm_max: float
-    :param plasma_current: Plasma current [A].
-    :type plasma_current: float
-    :param rminor: Plasma minor axis [m].
-    :type rminor: float
-    :return: Beta limit as defined below.
-    :rtype: float
-
-    This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
-    The limit applies to beta defined with respect to the total B-field.
-    Switch i_beta_component determines which components of beta to include.
-
-    Notes:
-        - If i_beta_component = 0, then the limit is applied to the total beta.
-        - If i_beta_component = 1, then the limit is applied to the thermal beta only.
-        - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
-        - If i_beta_component = 3, then the limit is applied to the toroidal beta.
-
-        - The default value for the g coefficient is beta_norm_max = 3.5.
-
-    References:
-        - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
-          Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
-          doi: https://doi.org/10.1088/0741-3335/30/11/019.
-
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
-
-    """
-
-    # Multiplied by 0.01 to convert from % to fraction
-    return (
-        0.01
-        * beta_norm_max
-        * (plasma_current / 1.0e6)
-        / (rminor * b_plasma_toroidal_on_axis)
     )
 
 
@@ -1566,11 +1516,12 @@ def _trapped_particle_fraction_sauter(
 
 
 class Physics:
-    def __init__(self, plasma_profile, current_drive):
+    def __init__(self, plasma_profile, current_drive, plasma_beta):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
+        self.beta = plasma_beta
 
     def physics(self):
         """
@@ -1784,111 +1735,7 @@ class Physics:
         # Beta Components
         # -----------------------------------------------------
 
-        physics_variables.beta_toroidal_vol_avg = (
-            physics_variables.beta_total_vol_avg
-            * physics_variables.b_plasma_total**2
-            / physics_variables.b_plasma_toroidal_on_axis**2
-        )
-
-        # Calculate physics_variables.beta poloidal [-]
-        physics_variables.beta_poloidal_vol_avg = calculate_poloidal_beta(
-            physics_variables.b_plasma_total,
-            physics_variables.b_plasma_poloidal_average,
-            physics_variables.beta_total_vol_avg,
-        )
-
-        physics_variables.beta_thermal_vol_avg = (
-            physics_variables.beta_total_vol_avg
-            - physics_variables.beta_fast_alpha
-            - physics_variables.beta_beam
-        )
-
-        physics_variables.beta_poloidal_eps = (
-            physics_variables.beta_poloidal_vol_avg * physics_variables.eps
-        )
-
-        physics_variables.beta_thermal_poloidal_vol_avg = (
-            physics_variables.beta_thermal_vol_avg
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_poloidal_average
-            )
-            ** 2
-        )
-        physics_variables.beta_thermal_toroidal_vol_avg = (
-            physics_variables.beta_thermal_vol_avg
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_toroidal_on_axis
-            )
-            ** 2
-        )
-
-        # =======================================================
-
-        # Mirror the pressure profiles to match the doubled toroidal field profile
-        pres_profile_total = np.concatenate([
-            physics_variables.pres_plasma_thermal_total_profile[::-1],
-            physics_variables.pres_plasma_thermal_total_profile,
-        ])
-
-        physics_variables.beta_thermal_toroidal_profile = np.array([
-            self.calculate_plasma_beta(
-                pres_plasma=pres_profile_total[i],
-                b_field=physics_variables.b_plasma_toroidal_profile[i],
-            )
-            for i in range(len(physics_variables.b_plasma_toroidal_profile))
-        ])
-
-        # =======================================================
-
-        physics_variables.beta_norm_thermal = (
-            1.0e8
-            * physics_variables.beta_thermal_vol_avg
-            * physics_variables.rminor
-            * physics_variables.b_plasma_toroidal_on_axis
-            / physics_variables.plasma_current
-        )
-        physics_variables.beta_norm_toroidal = (
-            physics_variables.beta_norm_total
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_toroidal_on_axis
-            )
-            ** 2
-        )
-        physics_variables.beta_norm_poloidal = (
-            physics_variables.beta_norm_total
-            * (
-                physics_variables.b_plasma_total
-                / physics_variables.b_plasma_poloidal_average
-            )
-            ** 2
-        )
-
-        physics_variables.f_beta_alpha_beam_thermal = (
-            physics_variables.beta_fast_alpha + physics_variables.beta_beam
-        ) / physics_variables.beta_thermal_vol_avg
-
-        # Plasma thermal energy derived from the thermal beta
-        physics_variables.e_plasma_beta_thermal = (
-            1.5e0
-            * physics_variables.beta_thermal_vol_avg
-            * physics_variables.b_plasma_total
-            * physics_variables.b_plasma_total
-            / (2.0e0 * constants.RMU0)
-            * physics_variables.vol_plasma
-        )
-
-        # Plasma thermal energy derived from the total beta
-        physics_variables.e_plasma_beta = (
-            1.5e0
-            * physics_variables.beta_total_vol_avg
-            * physics_variables.b_plasma_total
-            * physics_variables.b_plasma_total
-            / (2.0e0 * constants.RMU0)
-            * physics_variables.vol_plasma
-        )
+        self.beta.run()
 
         # =======================================================
 
@@ -2349,17 +2196,17 @@ class Physics:
             physics_variables.pden_plasma_alpha_mw,
         )
 
-        physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
-            physics_variables.b_plasma_poloidal_average,
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_plasma_fuel_ions_vol_avg,
-            physics_variables.nd_plasma_ions_total_vol_avg,
-            physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.temp_plasma_ion_density_weighted_kev,
-            physics_variables.pden_alpha_total_mw,
-            physics_variables.pden_plasma_alpha_mw,
-            physics_variables.i_beta_fast_alpha,
+        physics_variables.beta_fast_alpha = self.beta.fast_alpha_beta(
+            b_plasma_poloidal_average=physics_variables.b_plasma_poloidal_average,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+            nd_plasma_fuel_ions_vol_avg=physics_variables.nd_plasma_fuel_ions_vol_avg,
+            nd_plasma_ions_total_vol_avg=physics_variables.nd_plasma_ions_total_vol_avg,
+            temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
+            temp_plasma_ion_density_weighted_kev=physics_variables.temp_plasma_ion_density_weighted_kev,
+            pden_alpha_total_mw=physics_variables.pden_alpha_total_mw,
+            pden_plasma_alpha_mw=physics_variables.pden_plasma_alpha_mw,
+            i_beta_fast_alpha=physics_variables.i_beta_fast_alpha,
         )
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
@@ -2661,73 +2508,6 @@ class Physics:
 
         # ============================================================
 
-        # -----------------------------------------------------
-        # Normalised Beta Limit
-        # -----------------------------------------------------
-
-        # Define beta_norm_max calculations
-
-        physics_variables.beta_norm_max_wesson = self.calculate_beta_norm_max_wesson(
-            ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
-        )
-
-        # Original scaling law
-        physics_variables.beta_norm_max_original_scaling = (
-            self.calculate_beta_norm_max_original(eps=physics_variables.eps)
-        )
-
-        # J. Menard scaling law
-        physics_variables.beta_norm_max_menard = self.calculate_beta_norm_max_menard(
-            eps=physics_variables.eps
-        )
-
-        # E. Tholerus scaling law
-        physics_variables.beta_norm_max_thloreus = self.calculate_beta_norm_max_thloreus(
-            c_beta=physics_variables.c_beta,
-            pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
-            pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
-        )
-
-        # R. D. Stambaugh scaling law
-        physics_variables.beta_norm_max_stambaugh = (
-            self.calculate_beta_norm_max_stambaugh(
-                f_c_plasma_bootstrap=current_drive_variables.f_c_plasma_bootstrap,
-                kappa=physics_variables.kappa,
-                aspect=physics_variables.aspect,
-            )
-        )
-
-        # Map calculation methods to a dictionary
-        beta_norm_max_calculations = {
-            0: physics_variables.beta_norm_max,
-            1: physics_variables.beta_norm_max_wesson,
-            2: physics_variables.beta_norm_max_original_scaling,
-            3: physics_variables.beta_norm_max_menard,
-            4: physics_variables.beta_norm_max_thloreus,
-            5: physics_variables.beta_norm_max_stambaugh,
-        }
-
-        # Calculate beta_norm_max based on i_beta_norm_max
-        if int(physics_variables.i_beta_norm_max) in beta_norm_max_calculations:
-            physics_variables.beta_norm_max = beta_norm_max_calculations[
-                int(physics_variables.i_beta_norm_max)
-            ]
-        else:
-            raise ProcessValueError(
-                "Illegal value of i_beta_norm_max",
-                i_beta_norm_max=physics_variables.i_beta_norm_max,
-            )
-
-        # calculate_beta_limit() returns the beta_vol_avg_max for beta
-        physics_variables.beta_vol_avg_max = calculate_beta_limit(
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.beta_norm_max,
-            physics_variables.plasma_current,
-            physics_variables.rminor,
-        )
-
-        # ============================================================
-
         # MDK
         # Nominal mean photon wall load on entire first wall area including divertor and beam holes
         # Note that 'a_fw_total' excludes these, so they have been added back in.
@@ -2955,143 +2735,6 @@ class Physics:
             International Series of Monographs on Physics, Volume 149.
         """
         return np.log(1.65 + 0.89 * alphaj)
-
-    @staticmethod
-    def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
-        """
-        Calculate the Wesson normalsied beta upper limit.
-
-        :param ind_plasma_internal_norm: Plasma normalised internal inductance
-        :type ind_plasma_internal_norm: float
-
-        :return: The Wesson normalised beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - It is recommended to use this method with the other Wesson relations for normalsied internal
-            inductance and current profile index.
-            - This fit is derived from the DIII-D database for β_N >= 2.5
-
-        :References:
-            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
-            International Series of Monographs on Physics, Volume 149.
-
-            - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
-            Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
-        """
-        return 4 * ind_plasma_internal_norm
-
-    @staticmethod
-    def calculate_beta_norm_max_original(eps: float) -> float:
-        """
-        Calculate the original scaling law normalsied beta upper limit.
-
-        :param eps: Plasma normalised internal inductance
-        :type eps: float
-
-        :return: The original scaling law normalised beta upper limit.
-        :rtype: float
-
-        :Notes:
-
-        :References:
-
-        """
-        return 2.7 * (1.0 + 5.0 * eps**3.5)
-
-    @staticmethod
-    def calculate_beta_norm_max_menard(eps: float) -> float:
-        """
-        Calculate the Menard normalsied beta upper limit.
-
-        :param eps: Plasma normalised internal inductance
-        :type eps: float
-
-        :return: The Menard normalised beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - Found as a reasonable fit to the computed no wall limit at f_BS ≈ 50%
-            - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
-              β_T data from DIII-D at A = 2.9 and high κ.
-
-        :References:
-            - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
-
-        """
-        return 3.12 + 3.5 * eps**1.7
-
-    @staticmethod
-    def calculate_beta_norm_max_thloreus(
-        c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
-    ) -> float:
-        """
-        Calculate the E. Tholerus normalized beta upper limit.
-
-        :param c_beta: Pressure peaking factor coefficient.
-        :type c_beta: float
-        :param pres_plasma_on_axis: Central plasma pressure (Pa).
-        :type pres_plasma_on_axis: float
-        :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
-        :type pres_plasma_vol_avg: float
-
-        :return: The E. Tholerus normalized beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
-              which is defined as the ratio of the peak pressure to the average pressure.
-            - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
-
-        :References:
-            - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
-              Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
-        """
-        return 3.7 + (
-            (c_beta / (pres_plasma_on_axis / pres_plasma_vol_avg))
-            * (12.5 - 3.5 * (pres_plasma_on_axis / pres_plasma_vol_avg))
-        )
-
-    @staticmethod
-    def calculate_beta_norm_max_stambaugh(
-        f_c_plasma_bootstrap: float,
-        kappa: float,
-        aspect: float,
-    ) -> float:
-        """
-        Calculate the Stambaugh normalized beta upper limit.
-
-        :param f_c_plasma_bootstrap: Bootstrap current fraction.
-        :type f_c_plasma_bootstrap: float
-        :param kappa: Plasma separatrix elongation.
-        :type kappa: float
-        :param aspect: Plasma aspect ratio.
-        :type aspect: float
-
-        :return: The Stambaugh normalized beta upper limit.
-        :rtype: float
-
-        :Notes:
-            - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
-            - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
-
-        :References:
-            - R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
-              Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
-              doi: https://doi.org/10.13182/fst59-279.
-
-            - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
-              Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
-              doi: https://doi.org/10.1088/0029-5515/44/4/009.
-        """
-        return (
-            f_c_plasma_bootstrap
-            * 10
-            * (-0.7748 + (1.2869 * kappa) - (0.2921 * kappa**2) + (0.0197 * kappa**3))
-            / (aspect**0.5523 * np.tanh((1.8524 + (0.2319 * kappa)) / aspect**0.6163))
-        )
 
     @staticmethod
     def calculate_internal_inductance_menard(kappa: float) -> float:
@@ -3944,15 +3587,6 @@ class Physics:
             * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
         )
 
-        # Normalised beta from Troyon beta limit
-        physics_variables.beta_norm_total = (
-            1.0e8
-            * physics_variables.beta_total_vol_avg
-            * rminor
-            * b_plasma_toroidal_on_axis
-            / plasma_current
-        )
-
         # Calculate the poloidal field generated by the plasma current
         b_plasma_poloidal_average = calculate_poloidal_field(
             i_plasma_current,
@@ -3968,22 +3602,6 @@ class Physics:
         )
 
         return b_plasma_poloidal_average, qstar, plasma_current
-
-    def calculate_plasma_beta(self, pres_plasma: float, b_field: float) -> float:
-        """
-        Calculate the plasma beta for a given pressure and field.
-
-        :param pres_plasma: Plasma pressure (in Pascals).
-        :type pres_plasma: float
-        :param b_field: Magnetic field strength (in Tesla).
-        :type b_field: float
-        :returns: The plasma beta (dimensionless).
-        :rtype: float
-
-        Plasma beta is the ratio of plasma pressure to magnetic pressure.
-        """
-
-        return 2 * constants.RMU0 * pres_plasma / (b_field**2)
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -4517,253 +4135,9 @@ class Physics:
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
-        po.osubhd(self.outfile, "Beta Information :")
-        if physics_variables.i_beta_component == 0:
-            po.ovarrf(
-                self.outfile,
-                "Upper limit on total beta",
-                "(beta_vol_avg_max)",
-                physics_variables.beta_vol_avg_max,
-                "OP ",
-            )
-        elif physics_variables.i_beta_component == 1:
-            po.ovarrf(
-                self.outfile,
-                "Upper limit on thermal beta",
-                "(beta_vol_avg_max)",
-                physics_variables.beta_vol_avg_max,
-                "OP ",
-            )
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Upper limit on thermal + NB beta",
-                "(beta_vol_avg_max)",
-                physics_variables.beta_vol_avg_max,
-                "OP ",
-            )
 
-        po.ovarre(
-            self.outfile,
-            "Total plasma beta",
-            "(beta_total_vol_avg)",
-            physics_variables.beta_total_vol_avg,
-        )
-        if physics_variables.i_beta_component == 0:
-            po.ovarrf(
-                self.outfile,
-                "Lower limit on total beta",
-                "(beta_vol_avg_min)",
-                physics_variables.beta_vol_avg_min,
-                "IP",
-            )
-        elif physics_variables.i_beta_component == 1:
-            po.ovarrf(
-                self.outfile,
-                "Lower limit on thermal beta",
-                "(beta_vol_avg_min)",
-                physics_variables.beta_vol_avg_min,
-                "IP",
-            )
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Lower limit on thermal + NB beta",
-                "(beta_vol_avg_min)",
-                physics_variables.beta_vol_avg_min,
-                "IP",
-            )
-        po.ovarre(
-            self.outfile,
-            "Upper limit on poloidal beta",
-            "(beta_poloidal_max)",
-            constraint_variables.beta_poloidal_max,
-            "IP",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total poloidal beta",
-            "(beta_poloidal_vol_avg)",
-            physics_variables.beta_poloidal_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Volume averaged toroidal beta",
-            "(beta_toroidal_vol_avg)",
-            physics_variables.beta_toroidal_vol_avg,
-            "OP ",
-        )
-        for i in range(len(physics_variables.beta_thermal_toroidal_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Beta toroidal profile at point {i}",
-                f"beta_thermal_toroidal_profile{i}",
-                physics_variables.beta_thermal_toroidal_profile[i],
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Fast alpha beta",
-            "(beta_fast_alpha)",
-            physics_variables.beta_fast_alpha,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Neutral Beam ion beta",
-            "(beta_beam)",
-            physics_variables.beta_beam,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Ratio of fast alpha and beam beta to thermal beta",
-            "(f_beta_alpha_beam_thermal)",
-            physics_variables.f_beta_alpha_beam_thermal,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Volume averaged thermal beta",
-            "(beta_thermal_vol_avg)",
-            physics_variables.beta_thermal_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Thermal poloidal beta",
-            "(beta_thermal_poloidal_vol_avg)",
-            physics_variables.beta_thermal_poloidal_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Thermal toroidal beta",
-            "(beta_thermal_toroidal_vol_avg)",
-            physics_variables.beta_thermal_toroidal_vol_avg,
-            "OP ",
-        )
-
-        po.ovarrf(
-            self.outfile,
-            "Poloidal beta and inverse aspect ratio",
-            "(beta_poloidal_eps)",
-            physics_variables.beta_poloidal_eps,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Poloidal beta and inverse aspect ratio upper limit",
-            "(beta_poloidal_eps_max)",
-            physics_variables.beta_poloidal_eps_max,
-        )
-        po.osubhd(self.outfile, "Normalised Beta Information :")
-        if stellarator_variables.istell == 0:
-            if physics_variables.i_beta_norm_max != 0:
-                po.ovarrf(
-                    self.outfile,
-                    "Beta g coefficient",
-                    "(beta_norm_max)",
-                    physics_variables.beta_norm_max,
-                    "OP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Beta g coefficient",
-                    "(beta_norm_max)",
-                    physics_variables.beta_norm_max,
-                )
-            po.ovarrf(
-                self.outfile,
-                "Normalised total beta",
-                "(beta_norm_total)",
-                physics_variables.beta_norm_total,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Normalised thermal beta",
-                "(beta_norm_thermal) ",
-                physics_variables.beta_norm_thermal,
-                "OP ",
-            )
-
-            po.ovarrf(
-                self.outfile,
-                "Normalised toroidal beta",
-                "(beta_norm_toroidal) ",
-                physics_variables.beta_norm_toroidal,
-                "OP ",
-            )
-
-            po.ovarrf(
-                self.outfile,
-                "Normalised poloidal beta",
-                "(beta_norm_poloidal) ",
-                physics_variables.beta_norm_poloidal,
-                "OP ",
-            )
-
-            po.osubhd(self.outfile, "Maximum normalised beta scalings :")
-            po.ovarrf(
-                self.outfile,
-                "J. Wesson normalised beta upper limit",
-                "(beta_norm_max_wesson) ",
-                physics_variables.beta_norm_max_wesson,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Original normalsied beta upper limit",
-                "(beta_norm_max_original_scaling) ",
-                physics_variables.beta_norm_max_original_scaling,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "J. Menard normalised beta upper limit",
-                "(beta_norm_max_menard) ",
-                physics_variables.beta_norm_max_menard,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "E. Thloreus normalised beta upper limit",
-                "(beta_norm_max_thloreus) ",
-                physics_variables.beta_norm_max_thloreus,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "R. Stambaugh normalised beta upper limit",
-                "(beta_norm_max_stambaugh) ",
-                physics_variables.beta_norm_max_stambaugh,
-                "OP ",
-            )
-
-        po.osubhd(self.outfile, "Plasma energies derived from beta :")
-        po.ovarre(
-            self.outfile,
-            "Plasma thermal energy derived from thermal beta (J)",
-            "(e_plasma_beta_thermal) ",
-            physics_variables.e_plasma_beta_thermal,
-            "OP",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Plasma thermal energy derived from the total beta (J)",
-            "(e_plasma_beta)",
-            physics_variables.e_plasma_beta,
-            "OP",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
+        # Output beta information
+        self.beta.output_beta_information()
 
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
@@ -8784,21 +8158,6 @@ class Physics:
         )
 
 
-def calculate_poloidal_beta(b_plasma_total, b_plasma_poloidal_average, beta):
-    """Calculates total poloidal beta
-
-    Author: James Morris (UKAEA)
-
-    J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
-    Page 270 ISBN 0521851076
-
-    :param b_plasma_total: sum of the toroidal and poloidal fields (T)
-    :param b_plasma_poloidal_average: poloidal field (T)
-    :param beta: total plasma beta
-    """
-    return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
-
-
 def res_diff_time(rmajor, res_plasma, kappa95):
     """Calculates resistive diffusion time
 
@@ -9044,6 +8403,844 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
         * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
         * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
     )
+
+
+class BetaNormMaxModel(IntEnum):
+    """Beta norm max (β_N_max) model types"""
+
+    USER_INPUT = 0
+    WESSON = 1
+    ORIGINAL_SCALING = 2
+    MENARD = 3
+    THLOREUS = 4
+    STAMBAUGH = 5
+
+
+class PlasmaBeta:
+    """Class to hold plasma beta calculations for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+
+    def get_beta_norm_max_value(self, model: BetaNormMaxModel) -> float:
+        """Get the beta norm max value (β_N_max) for the specified model."""
+        model_map = {
+            BetaNormMaxModel.USER_INPUT: physics_variables.beta_norm_max,
+            BetaNormMaxModel.WESSON: physics_variables.beta_norm_max_wesson,
+            BetaNormMaxModel.ORIGINAL_SCALING: physics_variables.beta_norm_max_original_scaling,
+            BetaNormMaxModel.MENARD: physics_variables.beta_norm_max_menard,
+            BetaNormMaxModel.THLOREUS: physics_variables.beta_norm_max_thloreus,
+            BetaNormMaxModel.STAMBAUGH: physics_variables.beta_norm_max_stambaugh,
+        }
+        return model_map[model]
+
+    def run(self) -> None:
+        """
+        Calculate plasma beta values.
+        """
+
+        # -----------------------------------------------------
+        # Normalised Beta Limit
+        # -----------------------------------------------------
+
+        # Normalised beta from Troyon beta limit
+        physics_variables.beta_norm_total = self.calculate_normalised_beta(
+            beta=physics_variables.beta_total_vol_avg,
+            rminor=physics_variables.rminor,
+            c_plasma=physics_variables.plasma_current,
+            b_field=physics_variables.b_plasma_toroidal_on_axis,
+        )
+
+        # Define beta_norm_max calculations
+
+        physics_variables.beta_norm_max_wesson = self.calculate_beta_norm_max_wesson(
+            ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
+        )
+
+        # Original scaling law
+        physics_variables.beta_norm_max_original_scaling = (
+            self.calculate_beta_norm_max_original(eps=physics_variables.eps)
+        )
+
+        # J. Menard scaling law
+        physics_variables.beta_norm_max_menard = self.calculate_beta_norm_max_menard(
+            eps=physics_variables.eps
+        )
+
+        # E. Tholerus scaling law
+        physics_variables.beta_norm_max_thloreus = self.calculate_beta_norm_max_thloreus(
+            c_beta=physics_variables.c_beta,
+            pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
+            pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
+        )
+
+        # R. D. Stambaugh scaling law
+        physics_variables.beta_norm_max_stambaugh = (
+            self.calculate_beta_norm_max_stambaugh(
+                f_c_plasma_bootstrap=current_drive_variables.f_c_plasma_bootstrap,
+                kappa=physics_variables.kappa,
+                aspect=physics_variables.aspect,
+            )
+        )
+
+        # Calculate beta_norm_max based on i_beta_norm_max
+        try:
+            model = BetaNormMaxModel(int(physics_variables.i_beta_norm_max))
+            physics_variables.beta_norm_max = self.get_beta_norm_max_value(model)
+        except ValueError:
+            raise ProcessValueError(
+                "Illegal value of i_beta_norm_max",
+                i_beta_norm_max=physics_variables.i_beta_norm_max,
+            ) from None
+
+        # calculate_beta_limit() returns the beta_vol_avg_max for beta
+        physics_variables.beta_vol_avg_max = self.calculate_beta_limit_from_norm(
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            beta_norm_max=physics_variables.beta_norm_max,
+            plasma_current=physics_variables.plasma_current,
+            rminor=physics_variables.rminor,
+        )
+
+        physics_variables.beta_toroidal_vol_avg = (
+            physics_variables.beta_total_vol_avg
+            * physics_variables.b_plasma_total**2
+            / physics_variables.b_plasma_toroidal_on_axis**2
+        )
+
+        # Calculate physics_variables.beta poloidal [-]
+        physics_variables.beta_poloidal_vol_avg = self.calculate_poloidal_beta(
+            b_plasma_total=physics_variables.b_plasma_total,
+            b_plasma_poloidal_average=physics_variables.b_plasma_poloidal_average,
+            beta=physics_variables.beta_total_vol_avg,
+        )
+
+        physics_variables.beta_thermal_vol_avg = (
+            physics_variables.beta_total_vol_avg
+            - physics_variables.beta_fast_alpha
+            - physics_variables.beta_beam
+        )
+
+        physics_variables.beta_poloidal_eps = (
+            physics_variables.beta_poloidal_vol_avg * physics_variables.eps
+        )
+
+        physics_variables.beta_thermal_poloidal_vol_avg = (
+            physics_variables.beta_thermal_vol_avg
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
+            ** 2
+        )
+        physics_variables.beta_thermal_toroidal_vol_avg = (
+            physics_variables.beta_thermal_vol_avg
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
+            ** 2
+        )
+
+        # =======================================================
+
+        # Mirror the pressure profiles to match the doubled toroidal field profile
+        pres_profile_total = np.concatenate([
+            physics_variables.pres_plasma_thermal_total_profile[::-1],
+            physics_variables.pres_plasma_thermal_total_profile,
+        ])
+
+        physics_variables.beta_thermal_toroidal_profile = np.array([
+            self.calculate_plasma_beta(
+                pres_plasma=pres_profile_total[i],
+                b_field=physics_variables.b_plasma_toroidal_profile[i],
+            )
+            for i in range(len(physics_variables.b_plasma_toroidal_profile))
+        ])
+
+        # =======================================================
+
+        physics_variables.beta_norm_thermal = self.calculate_normalised_beta(
+            beta=physics_variables.beta_thermal_vol_avg,
+            rminor=physics_variables.rminor,
+            c_plasma=physics_variables.plasma_current,
+            b_field=physics_variables.b_plasma_toroidal_on_axis,
+        )
+
+        physics_variables.beta_norm_toroidal = (
+            physics_variables.beta_norm_total
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
+            ** 2
+        )
+        physics_variables.beta_norm_poloidal = (
+            physics_variables.beta_norm_total
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
+            ** 2
+        )
+
+        physics_variables.f_beta_alpha_beam_thermal = (
+            physics_variables.beta_fast_alpha + physics_variables.beta_beam
+        ) / physics_variables.beta_thermal_vol_avg
+
+        # Plasma thermal energy derived from the thermal beta
+        physics_variables.e_plasma_beta_thermal = self.calculate_plasma_energy_from_beta(
+            beta=physics_variables.beta_thermal_vol_avg,
+            b_field=physics_variables.b_plasma_total,
+            vol_plasma=physics_variables.vol_plasma,
+        )
+
+        # Plasma thermal energy derived from the total beta
+        physics_variables.e_plasma_beta = self.calculate_plasma_energy_from_beta(
+            beta=physics_variables.beta_total_vol_avg,
+            b_field=physics_variables.b_plasma_total,
+            vol_plasma=physics_variables.vol_plasma,
+        )
+
+    @staticmethod
+    def calculate_plasma_beta(
+        pres_plasma: float | np.ndarray, b_field: float | np.ndarray
+    ) -> float | np.ndarray:
+        """
+        Calculate the plasma beta (β) for a given pressure and field.
+
+        :param pres_plasma: Plasma pressure (in Pascals).
+        :type pres_plasma: float | np.ndarray
+        :param b_field: Magnetic field strength (in Tesla).
+        :type b_field: float | np.ndarray
+        :returns: The plasma beta (dimensionless).
+        :rtype: float | np.ndarray
+
+        Plasma beta is the ratio of plasma pressure to magnetic pressure.
+        """
+
+        return 2 * constants.RMU0 * pres_plasma / (b_field**2)
+
+    @staticmethod
+    def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
+        """
+        Calculate the Wesson normalsied beta upper limit.
+
+        :param ind_plasma_internal_norm: Plasma normalised internal inductance
+        :type ind_plasma_internal_norm: float
+
+        :return: The Wesson normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - It is recommended to use this method with the other Wesson relations for normalsied internal
+            inductance and current profile index.
+            - This fit is derived from the DIII-D database for β_N >= 2.5
+
+        :References:
+            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+            International Series of Monographs on Physics, Volume 149.
+
+            - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
+            Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+        """
+        return 4 * ind_plasma_internal_norm
+
+    @staticmethod
+    def calculate_beta_norm_max_original(eps: float) -> float:
+        """
+        Calculate the original scaling law normalsied beta upper limit.
+
+        :param eps: Plasma normalised internal inductance
+        :type eps: float
+
+        :return: The original scaling law normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+
+        :References:
+
+        """
+        return 2.7 * (1.0 + 5.0 * eps**3.5)
+
+    @staticmethod
+    def calculate_beta_norm_max_menard(eps: float) -> float:
+        """
+        Calculate the Menard normalsied beta upper limit.
+
+        :param eps: Plasma normalised internal inductance
+        :type eps: float
+
+        :return: The Menard normalised beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - Found as a reasonable fit to the computed no wall limit at f_BS ≈ 50%
+            - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
+              β_T data from DIII-D at A = 2.9 and high κ.
+
+        :References:
+            - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+
+        """
+        return 3.12 + 3.5 * eps**1.7
+
+    @staticmethod
+    def calculate_beta_norm_max_thloreus(
+        c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
+    ) -> float:
+        """
+        Calculate the E. Tholerus normalized beta upper limit.
+
+        :param c_beta: Pressure peaking factor coefficient.
+        :type c_beta: float
+        :param pres_plasma_on_axis: Central plasma pressure (Pa).
+        :type pres_plasma_on_axis: float
+        :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
+        :type pres_plasma_vol_avg: float
+
+        :return: The E. Tholerus normalized beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
+              which is defined as the ratio of the peak pressure to the average pressure.
+            - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
+
+        :References:
+            - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
+              Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+        """
+        return 3.7 + (
+            (c_beta / (pres_plasma_on_axis / pres_plasma_vol_avg))
+            * (12.5 - 3.5 * (pres_plasma_on_axis / pres_plasma_vol_avg))
+        )
+
+    @staticmethod
+    def calculate_beta_norm_max_stambaugh(
+        f_c_plasma_bootstrap: float,
+        kappa: float,
+        aspect: float,
+    ) -> float:
+        """
+        Calculate the Stambaugh normalized beta upper limit.
+
+        :param f_c_plasma_bootstrap: Bootstrap current fraction.
+        :type f_c_plasma_bootstrap: float
+        :param kappa: Plasma separatrix elongation.
+        :type kappa: float
+        :param aspect: Plasma aspect ratio.
+        :type aspect: float
+
+        :return: The Stambaugh normalized beta upper limit.
+        :rtype: float
+
+        :Notes:
+            - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
+            - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
+
+        :References:
+            - R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
+              Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
+              doi: https://doi.org/10.13182/fst59-279.
+
+            - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
+              Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
+              doi: https://doi.org/10.1088/0029-5515/44/4/009.
+        """
+        return (
+            f_c_plasma_bootstrap
+            * 10
+            * (-0.7748 + (1.2869 * kappa) - (0.2921 * kappa**2) + (0.0197 * kappa**3))
+            / (aspect**0.5523 * np.tanh((1.8524 + (0.2319 * kappa)) / aspect**0.6163))
+        )
+
+    @staticmethod
+    def calculate_normalised_beta(
+        beta: float, rminor: float, c_plasma: float, b_field: float
+    ) -> float:
+        """Calculate normalised beta (β_N).
+
+        :param beta: Plasma beta (fraction).
+        :type beta: float
+        :param rminor: Plasma minor radius (m).
+        :type rminor: float
+        :param c_plasma: Plasma current (A).
+        :type c_plasma: float
+        :param b_field: Magnetic field (T).
+        :type b_field: float
+        :return: Normalised beta.
+        :rtype: float
+
+        :Notes:
+            - 1.0e8 is a conversion factor to get beta_N in standard units, as plasma current is normally in MA and
+             beta is in percentage instead of fraction.
+        """
+
+        return 1.0e8 * (beta * rminor * b_field) / c_plasma
+
+    @staticmethod
+    def calculate_plasma_energy_from_beta(
+        beta: float, b_field: float, vol_plasma: float
+    ) -> float:
+        """Calculate plasma thermal energy from beta.
+
+        E_plasma = 1.5 * β * B² / (2 * μ_0) * V
+
+        :param beta: Plasma beta (fraction).
+        :type beta: float
+        :param b_field: Magnetic field (T).
+        :type b_field: float
+        :param vol_plasma: Plasma volume (m³).
+        :type vol_plasma: float
+        :return: Plasma energy (J).
+        :rtype: float
+
+        """
+
+        return (1.5e0 * beta * b_field**2) / (2.0e0 * constants.RMU0) * vol_plasma
+
+    @staticmethod
+    def calculate_beta_limit_from_norm(
+        b_plasma_toroidal_on_axis: float,
+        beta_norm_max: float,
+        plasma_current: float,
+        rminor: float,
+    ) -> float:
+        """
+        Calculate the maximum allowed beta (β) from a given normalised (β_N).
+
+        :param b_plasma_toroidal_on_axis: Toroidal B-field on plasma axis [T].
+        :type b_plasma_toroidal_on_axis: float
+        :param beta_norm_max: Troyon-like g coefficient.
+        :type beta_norm_max: float
+        :param plasma_current: Plasma current [A].
+        :type plasma_current: float
+        :param rminor: Plasma minor axis [m].
+        :type rminor: float
+        :return: Beta limit as defined below.
+        :rtype: float
+
+        This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
+        The limit applies to beta defined with respect to the total B-field.
+        Switch i_beta_component determines which components of beta to include.
+
+        Notes:
+            - If i_beta_component = 0, then the limit is applied to the total beta.
+            - If i_beta_component = 1, then the limit is applied to the thermal beta only.
+            - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
+            - If i_beta_component = 3, then the limit is applied to the toroidal beta.
+
+            - The default value for the g coefficient is beta_norm_max = 3.5.
+
+        References:
+            - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
+            Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
+            doi: https://doi.org/10.1088/0741-3335/30/11/019.
+
+            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
+        """
+
+        # Multiplied by 0.01 to convert from % to fraction
+        return (
+            0.01
+            * beta_norm_max
+            * (plasma_current / 1.0e6)
+            / (rminor * b_plasma_toroidal_on_axis)
+        )
+
+    @staticmethod
+    def calculate_poloidal_beta(
+        b_plasma_total: float, b_plasma_poloidal_average: float, beta: float
+    ) -> float:
+        """Calculates total poloidal beta (β_p)
+
+        :type b_plasma_total: float
+        :param b_plasma_poloidal_average: The average poloidal magnetic field of the plasma (in Tesla).
+        :type b_plasma_poloidal_average: float
+        :param beta: The plasma beta, a dimensionless parameter representing the ratio of plasma pressure to magnetic pressure.
+        :type beta: float
+        :return: The calculated total poloidal beta.
+        :rtype: float
+
+        :references:
+            - J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
+        Page 270 ISBN 0521851076
+
+        """
+        return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
+
+    @staticmethod
+    def fast_alpha_beta(
+        b_plasma_poloidal_average: float,
+        b_plasma_toroidal_on_axis: float,
+        nd_plasma_electrons_vol_avg: float,
+        nd_plasma_fuel_ions_vol_avg: float,
+        nd_plasma_ions_total_vol_avg: float,
+        temp_plasma_electron_density_weighted_kev: float,
+        temp_plasma_ion_density_weighted_kev: float,
+        pden_alpha_total_mw: float,
+        pden_plasma_alpha_mw: float,
+        i_beta_fast_alpha: int,
+    ) -> float:
+        """
+        Calculate the fast alpha beta (β_fast_alpha) component.
+
+        This function computes the fast alpha beta contribution based on the provided plasma parameters.
+
+        :param b_plasma_poloidal_average: Poloidal field (T).
+        :type b_plasma_poloidal_average: float
+        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
+        :type b_plasma_toroidal_on_axis: float
+        :param nd_plasma_electrons_vol_avg: Electron density (m⁻³).
+        :type nd_plasma_electrons_vol_avg: float
+        :param nd_plasma_fuel_ions_vol_avg: Fuel ion density (m⁻³).
+        :type nd_plasma_fuel_ions_vol_avg: float
+        :param nd_plasma_ions_total_vol_avg: Total ion density (m⁻³).
+        :type nd_plasma_ions_total_vol_avg: float
+        :param temp_plasma_electron_density_weighted_kev: Density-weighted electron temperature (keV).
+        :type temp_plasma_electron_density_weighted_kev: float
+        :param temp_plasma_ion_density_weighted_kev: Density-weighted ion temperature (keV).
+        :type temp_plasma_ion_density_weighted_kev: float
+        :param pden_alpha_total_mw: Alpha power per unit volume, from beams and plasma (MW/m³).
+        :type pden_alpha_total_mw: float
+        :param pden_plasma_alpha_mw: Alpha power per unit volume just from plasma (MW/m³).
+        :type pden_plasma_alpha_mw: float
+        :param i_beta_fast_alpha: Switch for fast alpha pressure method.
+        :type i_beta_fast_alpha: int
+
+        :return: Fast alpha beta component.
+        :rtype: float
+
+        :Notes:
+            - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, 〈T〉 = 5-20 keV
+
+
+        :References:
+            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+            https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+
+            - Uckan, N. A., Tolliver, J. S., Houlberg, W. A., and Attenberger, S. E.
+            Influence of fast alpha diffusion and thermal alpha buildup on tokamak reactor performance.
+            United States: N. p., 1987. Web.https://www.osti.gov/servlets/purl/5611706
+
+        """
+
+        # Determine average fast alpha density
+        if physics_variables.f_plasma_fuel_deuterium < 1.0:
+            beta_thermal = (
+                2.0
+                * constants.RMU0
+                * constants.KILOELECTRON_VOLT
+                * (
+                    nd_plasma_electrons_vol_avg
+                    * temp_plasma_electron_density_weighted_kev
+                    + nd_plasma_ions_total_vol_avg * temp_plasma_ion_density_weighted_kev
+                )
+                / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
+            )
+
+            # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
+            # IPDG89 fast alpha scaling
+            if i_beta_fast_alpha == 0:
+                fact = min(
+                    0.3,
+                    0.29
+                    * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg) ** 2
+                    * (
+                        (
+                            temp_plasma_electron_density_weighted_kev
+                            + temp_plasma_ion_density_weighted_kev
+                        )
+                        / 20.0
+                        - 0.37
+                    ),
+                )
+
+            # Modified scaling, D J Ward
+            else:
+                fact = min(
+                    0.30,
+                    0.26
+                    * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg) ** 2
+                    * np.sqrt(
+                        max(
+                            0.0,
+                            (
+                                (
+                                    temp_plasma_electron_density_weighted_kev
+                                    + temp_plasma_ion_density_weighted_kev
+                                )
+                                / 20.0
+                                - 0.65
+                            ),
+                        )
+                    ),
+                )
+
+            fact = max(fact, 0.0)
+            fact2 = pden_alpha_total_mw / pden_plasma_alpha_mw
+            beta_fast_alpha = beta_thermal * fact * fact2
+
+        else:  # negligible alpha production, alpha_power_density = p_beam_alpha_mw = 0
+            beta_fast_alpha = 0.0
+
+        return beta_fast_alpha
+
+    def output_beta_information(self):
+        """Output beta information to file."""
+
+        po.osubhd(self.outfile, "Beta Information :")
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on total beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on thermal beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on thermal + NB beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Total plasma beta",
+            "(beta_total_vol_avg)",
+            physics_variables.beta_total_vol_avg,
+        )
+        if physics_variables.i_beta_component == 0:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on total beta",
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
+                "IP",
+            )
+        elif physics_variables.i_beta_component == 1:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal beta",
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
+                "IP",
+            )
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Lower limit on thermal + NB beta",
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
+                "IP",
+            )
+        po.ovarre(
+            self.outfile,
+            "Upper limit on poloidal beta",
+            "(beta_poloidal_max)",
+            constraint_variables.beta_poloidal_max,
+            "IP",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total poloidal beta",
+            "(beta_poloidal_vol_avg)",
+            physics_variables.beta_poloidal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged toroidal beta",
+            "(beta_toroidal_vol_avg)",
+            physics_variables.beta_toroidal_vol_avg,
+            "OP ",
+        )
+        for i in range(len(physics_variables.beta_thermal_toroidal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Beta toroidal profile at point {i}",
+                f"beta_thermal_toroidal_profile{i}",
+                physics_variables.beta_thermal_toroidal_profile[i],
+            )
+
+        po.ovarre(
+            self.outfile,
+            "Fast alpha beta",
+            "(beta_fast_alpha)",
+            physics_variables.beta_fast_alpha,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutral Beam ion beta",
+            "(beta_beam)",
+            physics_variables.beta_beam,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Ratio of fast alpha and beam beta to thermal beta",
+            "(f_beta_alpha_beam_thermal)",
+            physics_variables.f_beta_alpha_beam_thermal,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged thermal beta",
+            "(beta_thermal_vol_avg)",
+            physics_variables.beta_thermal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermal poloidal beta",
+            "(beta_thermal_poloidal_vol_avg)",
+            physics_variables.beta_thermal_poloidal_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermal toroidal beta",
+            "(beta_thermal_toroidal_vol_avg)",
+            physics_variables.beta_thermal_toroidal_vol_avg,
+            "OP ",
+        )
+
+        po.ovarrf(
+            self.outfile,
+            "Poloidal beta and inverse aspect ratio",
+            "(beta_poloidal_eps)",
+            physics_variables.beta_poloidal_eps,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Poloidal beta and inverse aspect ratio upper limit",
+            "(beta_poloidal_eps_max)",
+            physics_variables.beta_poloidal_eps_max,
+        )
+        po.osubhd(self.outfile, "Normalised Beta Information :")
+        if stellarator_variables.istell == 0:
+            if physics_variables.i_beta_norm_max != 0:
+                po.ovarrf(
+                    self.outfile,
+                    "Beta g coefficient",
+                    "(beta_norm_max)",
+                    physics_variables.beta_norm_max,
+                    "OP ",
+                )
+            else:
+                po.ovarrf(
+                    self.outfile,
+                    "Beta g coefficient",
+                    "(beta_norm_max)",
+                    physics_variables.beta_norm_max,
+                )
+            po.ovarrf(
+                self.outfile,
+                "Normalised total beta",
+                "(beta_norm_total)",
+                physics_variables.beta_norm_total,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Normalised thermal beta",
+                "(beta_norm_thermal) ",
+                physics_variables.beta_norm_thermal,
+                "OP ",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Normalised toroidal beta",
+                "(beta_norm_toroidal) ",
+                physics_variables.beta_norm_toroidal,
+                "OP ",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Normalised poloidal beta",
+                "(beta_norm_poloidal) ",
+                physics_variables.beta_norm_poloidal,
+                "OP ",
+            )
+
+            po.osubhd(self.outfile, "Maximum normalised beta scalings :")
+            po.ovarrf(
+                self.outfile,
+                "J. Wesson normalised beta upper limit",
+                "(beta_norm_max_wesson) ",
+                physics_variables.beta_norm_max_wesson,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Original normalsied beta upper limit",
+                "(beta_norm_max_original_scaling) ",
+                physics_variables.beta_norm_max_original_scaling,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "J. Menard normalised beta upper limit",
+                "(beta_norm_max_menard) ",
+                physics_variables.beta_norm_max_menard,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "E. Thloreus normalised beta upper limit",
+                "(beta_norm_max_thloreus) ",
+                physics_variables.beta_norm_max_thloreus,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "R. Stambaugh normalised beta upper limit",
+                "(beta_norm_max_stambaugh) ",
+                physics_variables.beta_norm_max_stambaugh,
+                "OP ",
+            )
+
+        po.osubhd(self.outfile, "Plasma energies derived from beta :")
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy derived from thermal beta (J)",
+            "(e_plasma_beta_thermal) ",
+            physics_variables.e_plasma_beta_thermal,
+            "OP",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal energy derived from the total beta (J)",
+            "(e_plasma_beta)",
+            physics_variables.e_plasma_beta,
+            "OP",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
 
 class DetailedPhysics:

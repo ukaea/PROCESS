@@ -92,7 +92,12 @@ Instead of $q_a$, $q_{95}$ is used as in plasma configurations with divertors th
 
 ## Plasma Current Calculation | `calculate_plasma_current()`
 
+<<<<<<< HEAD:documentation/source/physics-models/plasma_current/plasma_current.md
 This function calculates the plasma current shaping factor ($f_q$) and then plasma current ($I_{\text{p}}$). 
+=======
+This function calculates the plasma current shaping factor ($f_q$), plasma current ($I_{\text{p}}$), qstar ($q^*$) and then poloidal field and the profile settings for $\texttt{alphaj}$ ($\alpha_J$) and $\texttt{ind_plasma_internal_norm}$ ($l_{\text{i}}$). This is done in 5 separate steps which are shown in the following numbered sections.
+
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053)):documentation/physics-models/plasma_current/plasma_current.md
 
 $$\begin{aligned}
 I_{\text{p}} = f_q \frac{2\pi}{\mu_0}  \frac{a^2 B_{\text{T}}}{R \ q_{95}}
@@ -523,9 +528,15 @@ $$
 --------------
 
 
+<<<<<<< HEAD:documentation/source/physics-models/plasma_current/plasma_current.md
 ## Plasma Current Poloidal Field | `calculate_surface_averaged_poloidal_field()`
 
 For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the plasma edge average poloidal field is simply returned as:
+=======
+### 3. Plasma Current Poloidal Field
+
+For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the poloidal field is simply returned as:
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053)):documentation/physics-models/plasma_current/plasma_current.md
 
 $$
 B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\texttt{len_plasma_poloidal}}

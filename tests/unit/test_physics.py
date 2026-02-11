@@ -29,8 +29,17 @@ from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
+<<<<<<< HEAD
     PlasmaInductance,
     calculate_cylindrical_safety_factor,
+=======
+    calculate_current_coefficient_hastie,
+    calculate_plasma_current_peng,
+    calculate_poloidal_field,
+    calculate_volt_second_requirements,
+    diamagnetic_fraction_hender,
+    diamagnetic_fraction_scene,
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053))
     ps_fraction_scene,
     res_diff_time,
     rether,
@@ -58,6 +67,7 @@ def physics():
             lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
         ),
         PlasmaBeta(),
+<<<<<<< HEAD
         PlasmaInductance(),
         PlasmaDensityLimit(),
         PlasmaExhaust(),
@@ -67,6 +77,8 @@ def physics():
         PlasmaCurrent(),
         PlasmaFields(),
         plasma_dia_current=PlasmaDiamagneticCurrent(),
+=======
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053))
     )
 
 
@@ -1238,6 +1250,13 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         triang95=plasmacurrentparam.triang95,
     )
 
+<<<<<<< HEAD
+=======
+    assert b_plasma_poloidal_average == pytest.approx(plasmacurrentparam.expected_bp)
+
+    assert qstar == pytest.approx(plasmacurrentparam.expected_qstar)
+
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053))
     assert plasma_current == pytest.approx(plasmacurrentparam.expected_plasma_current)
 
 

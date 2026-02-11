@@ -60,7 +60,7 @@ from process.models.vacuum import Vacuum
 =======
 from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
-from process.physics import Physics
+from process.physics import Physics, PlasmaBeta
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
 from process.stellarator import Neoclassics, Stellarator
@@ -102,6 +102,7 @@ def stellarator():
                 ElectronBernstein(plasma_profile=PlasmaProfile()),
             ),
             PlasmaBeta(),
+<<<<<<< HEAD
             PlasmaInductance(),
             PlasmaDensityLimit(),
             PlasmaExhaust(),
@@ -115,6 +116,11 @@ def stellarator():
         Neoclassics(),
         plasma_beta=PlasmaBeta(),
         plasma_bootstrap=PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
+=======
+        ),
+        Neoclassics(),
+        plasma_beta=PlasmaBeta(),
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053))
     )
 
 

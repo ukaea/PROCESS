@@ -121,9 +121,29 @@ from process.models.tfcoil.resistive import (
     CopperTFCoil,
     ResistiveTFCoil,
 )
+<<<<<<< HEAD
 from process.models.tfcoil.superconducting import SuperconductingTFCoil
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
+=======
+from process.log import logging_model_handler, show_errors
+from process.pfcoil import PFCoil
+from process.physics import DetailedPhysics, Physics, PlasmaBeta
+from process.plasma_geometry import PlasmaGeom
+from process.plasma_profiles import PlasmaProfile
+from process.power import Power
+from process.process_output import OutputFileManager, oheadr
+from process.pulse import Pulse
+from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
+from process.scan import Scan
+from process.shield import Shield
+from process.stellarator import Neoclassics, Stellarator
+from process.structure import Structure
+from process.superconducting_tf_coil import SuperconductingTFCoil
+from process.tf_coil import TFCoil
+from process.vacuum import Vacuum, VacuumVessel
+from process.water_use import WaterUse
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053))
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
@@ -646,6 +666,7 @@ class Models:
             electron_bernstein=ElectronBernstein(plasma_profile=self.plasma_profile),
         )
         self.plasma_beta = PlasmaBeta()
+<<<<<<< HEAD
         self.plasma_inductance = PlasmaInductance()
         self.plasma_density_limit = PlasmaDensityLimit()
         self.plasma_exhaust = PlasmaExhaust()
@@ -657,10 +678,13 @@ class Models:
         self.plasma_current = PlasmaCurrent()
         self.plasma_fields = PlasmaFields()
         self.plasma_dia_current = PlasmaDiamagneticCurrent()
+=======
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053))
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
             plasma_beta=self.plasma_beta,
+<<<<<<< HEAD
             plasma_inductance=self.plasma_inductance,
             plasma_density_limit=self.plasma_density_limit,
             plasma_exhaust=self.plasma_exhaust,
@@ -670,11 +694,14 @@ class Models:
             plasma_current=self.plasma_current,
             plasma_fields=self.plasma_fields,
             plasma_dia_current=self.plasma_dia_current,
+=======
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053))
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
         )
         self.neoclassics = Neoclassics()
+<<<<<<< HEAD
         if data_structure.stellarator_variables.istell != 0:
             self.stellarator = Stellarator(
                 availability=self.availability,
@@ -691,6 +718,21 @@ class Models:
                 plasma_bootstrap=self.plasma_bootstrap_current,
             )
 
+=======
+        self.stellarator = Stellarator(
+            availability=self.availability,
+            buildings=self.buildings,
+            vacuum=self.vacuum,
+            costs=self.costs,
+            power=self.power,
+            plasma_profile=self.plasma_profile,
+            hcpb=self.ccfe_hcpb,
+            current_drive=self.current_drive,
+            physics=self.physics,
+            neoclassics=self.neoclassics,
+            plasma_beta=self.plasma_beta,
+        )
+>>>>>>> 90edc925 (Move beta calculations into separate class (#4053))
         self.dcll = DCLL(fw=self.fw)
 
         self.setup_data_structure()
