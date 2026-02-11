@@ -57,7 +57,7 @@ def test_one_group():
     fw_removal = sigma_fw_t - sigma_fw_s - fw_material.sigma_in[0, 0]
     bz_removal = sigma_bz_t - sigma_bz_s - bz_material.sigma_in[0, 0]
     assert np.isclose(
-        neutron_profile.flux,
+        neutron_profile.fluxes[0],
         neutron_profile.neutron_current_escaped()
         + fw_removal * neutron_profile.integrated_flux_in_layer(0)
         + bz_removal * neutron_profile.integrated_flux_in_layer(1),
@@ -150,7 +150,7 @@ def test_one_group_with_fission():
     bz_removal = sigma_bz_t - sigma_bz_s - bz_material.sigma_in[0, 0]
 
     assert np.isclose(
-        neutron_profile.flux,
+        neutron_profile.fluxes[0],
         neutron_profile.neutron_current_escaped()
         + fw_removal * neutron_profile.integrated_flux_in_layer(0)
         + bz_removal * neutron_profile.integrated_flux_in_layer(1),
