@@ -1594,14 +1594,6 @@ class Physics:
             physics_variables.triang95,
         )
 
-        # Normalised beta from Troyon beta limit
-        physics_variables.beta_norm_total = self.beta.calculate_normalised_beta(
-            beta=physics_variables.beta_total_vol_avg,
-            rminor=physics_variables.rminor,
-            c_plasma=physics_variables.plasma_current,
-            b_field=physics_variables.b_plasma_toroidal_on_axis,
-        )
-
         # -----------------------------------------------------
         # Plasma Current Profile
         # -----------------------------------------------------
@@ -2508,66 +2500,6 @@ class Physics:
         physics_variables.pscalingmw = (
             physics_variables.p_electron_transport_loss_mw
             + physics_variables.p_ion_transport_loss_mw
-        )
-
-        # ============================================================
-
-        # -----------------------------------------------------
-        # Normalised Beta Limit
-        # -----------------------------------------------------
-
-        # Define beta_norm_max calculations
-
-        physics_variables.beta_norm_max_wesson = (
-            self.beta.calculate_beta_norm_max_wesson(
-                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
-            )
-        )
-
-        # Original scaling law
-        physics_variables.beta_norm_max_original_scaling = (
-            self.beta.calculate_beta_norm_max_original(eps=physics_variables.eps)
-        )
-
-        # J. Menard scaling law
-        physics_variables.beta_norm_max_menard = (
-            self.beta.calculate_beta_norm_max_menard(eps=physics_variables.eps)
-        )
-
-        # E. Tholerus scaling law
-        physics_variables.beta_norm_max_thloreus = (
-            self.beta.calculate_beta_norm_max_thloreus(
-                c_beta=physics_variables.c_beta,
-                pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
-                pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
-            )
-        )
-
-        # R. D. Stambaugh scaling law
-        physics_variables.beta_norm_max_stambaugh = (
-            self.beta.calculate_beta_norm_max_stambaugh(
-                f_c_plasma_bootstrap=current_drive_variables.f_c_plasma_bootstrap,
-                kappa=physics_variables.kappa,
-                aspect=physics_variables.aspect,
-            )
-        )
-
-        # Calculate beta_norm_max based on i_beta_norm_max
-        try:
-            model = BetaNormMaxModel(int(physics_variables.i_beta_norm_max))
-            physics_variables.beta_norm_max = self.beta.get_beta_norm_max_value(model)
-        except ValueError:
-            raise ProcessValueError(
-                "Illegal value of i_beta_norm_max",
-                i_beta_norm_max=physics_variables.i_beta_norm_max,
-            ) from None
-
-        # calculate_beta_limit() returns the beta_vol_avg_max for beta
-        physics_variables.beta_vol_avg_max = self.beta.calculate_beta_limit_from_norm(
-            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-            beta_norm_max=physics_variables.beta_norm_max,
-            plasma_current=physics_variables.plasma_current,
-            rminor=physics_variables.rminor,
         )
 
         # ============================================================
@@ -8495,6 +8427,68 @@ class PlasmaBeta:
         """
         Calculate plasma beta values.
         """
+
+        # -----------------------------------------------------
+        # Normalised Beta Limit
+        # -----------------------------------------------------
+
+        # Normalised beta from Troyon beta limit
+        physics_variables.beta_norm_total = self.calculate_normalised_beta(
+            beta=physics_variables.beta_total_vol_avg,
+            rminor=physics_variables.rminor,
+            c_plasma=physics_variables.plasma_current,
+            b_field=physics_variables.b_plasma_toroidal_on_axis,
+        )
+
+        # Define beta_norm_max calculations
+
+        physics_variables.beta_norm_max_wesson = self.calculate_beta_norm_max_wesson(
+            ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm
+        )
+
+        # Original scaling law
+        physics_variables.beta_norm_max_original_scaling = (
+            self.calculate_beta_norm_max_original(eps=physics_variables.eps)
+        )
+
+        # J. Menard scaling law
+        physics_variables.beta_norm_max_menard = self.calculate_beta_norm_max_menard(
+            eps=physics_variables.eps
+        )
+
+        # E. Tholerus scaling law
+        physics_variables.beta_norm_max_thloreus = self.calculate_beta_norm_max_thloreus(
+            c_beta=physics_variables.c_beta,
+            pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
+            pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
+        )
+
+        # R. D. Stambaugh scaling law
+        physics_variables.beta_norm_max_stambaugh = (
+            self.calculate_beta_norm_max_stambaugh(
+                f_c_plasma_bootstrap=current_drive_variables.f_c_plasma_bootstrap,
+                kappa=physics_variables.kappa,
+                aspect=physics_variables.aspect,
+            )
+        )
+
+        # Calculate beta_norm_max based on i_beta_norm_max
+        try:
+            model = BetaNormMaxModel(int(physics_variables.i_beta_norm_max))
+            physics_variables.beta_norm_max = self.get_beta_norm_max_value(model)
+        except ValueError:
+            raise ProcessValueError(
+                "Illegal value of i_beta_norm_max",
+                i_beta_norm_max=physics_variables.i_beta_norm_max,
+            ) from None
+
+        # calculate_beta_limit() returns the beta_vol_avg_max for beta
+        physics_variables.beta_vol_avg_max = self.calculate_beta_limit_from_norm(
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            beta_norm_max=physics_variables.beta_norm_max,
+            plasma_current=physics_variables.plasma_current,
+            rminor=physics_variables.rminor,
+        )
 
         physics_variables.beta_toroidal_vol_avg = (
             physics_variables.beta_total_vol_avg
