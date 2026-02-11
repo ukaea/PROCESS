@@ -50,18 +50,18 @@ class Power:
 
     def _pf_loss_power_supply_j(
         self,
-        ii: int,
+        idx_time_interval: int,
         n_pf_cs_plasma_circuits: int,
         c_pf_coil_turn: np.ndarray,
         ind_pf_cs_plasma_mutual: np.ndarray,
     ) -> float:
         """
-        Power supply conversion loss over interval ii -> ii+1 [J]
+        Power supply conversion loss over interval idx_time_interval -> idx_time_interval+1 [J]
         Implements: sum_i (k_ps/2) * | (I_i[n+1] + I_i[n]) * sum_j M_ij (I_j[n+1] - I_j[n]) |
         Ref: M. Kovari, "PF power supplies accounting 2, Issue #972"
 
-        :param ii: index of time interval (ii -> ii+1)
-        :type ii: int
+        :param idx_time_interval: index of time interval (n -> n+1)
+        :type idx_time_interval: int
         :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
         :type c_pf_coil_turn: np.ndarray
         :param ind_pf_cs_plasma_mutual: mutual inductance matrix between PF circuits [H]
@@ -70,27 +70,34 @@ class Power:
         :rtype: float
         """
         e_loss_pf_psu_j = 0.0e0
-        for jj in range(n_pf_cs_plasma_circuits - 1):
-            c_pf_sum_a = c_pf_coil_turn[jj, ii + 1] + c_pf_coil_turn[jj, ii]
 
-            web_pf_delta_wb = 0.0e0
-            for kk in range(n_pf_cs_plasma_circuits):
-                web_pf_delta_wb = web_pf_delta_wb + ind_pf_cs_plasma_mutual[jj, kk] * (
-                    c_pf_coil_turn[kk, ii + 1] - c_pf_coil_turn[kk, ii]
+        # Exclude plasma circuit from power supply sum: circuits 0..(n-2)
+        for idx_circuit in range(n_pf_cs_plasma_circuits - 1):
+            c_pf_sum_a = (
+                c_pf_coil_turn[idx_circuit, idx_time_interval + 1]
+                + c_pf_coil_turn[idx_circuit, idx_time_interval]
+            )
+
+            delta_flux_linkage_wb = 0.0e0
+            for idx_coupled_circuit in range(n_pf_cs_plasma_circuits):
+                delta_flux_linkage_wb += ind_pf_cs_plasma_mutual[
+                    idx_circuit, idx_coupled_circuit
+                ] * (
+                    c_pf_coil_turn[idx_coupled_circuit, idx_time_interval + 1]
+                    - c_pf_coil_turn[idx_coupled_circuit, idx_time_interval]
                 )
 
-            e_loss_pf_psu_j = (
-                e_loss_pf_psu_j
-                + 0.5e0
+            e_loss_pf_psu_j += (
+                0.5e0
                 * pf_power_variables.f_p_pf_psu_loss
-                * abs(c_pf_sum_a * web_pf_delta_wb)
+                * abs(c_pf_sum_a * delta_flux_linkage_wb)
             )
 
         return e_loss_pf_psu_j
 
     def _pf_loss_busbar_j(
         self,
-        ii: int,
+        idx_time_interval: int,
         dt_pulse_phase_s: float,
         n_pf_coil_groups: int,
         pf_group_circuit_index: np.ndarray,
@@ -98,17 +105,17 @@ class Power:
         pfbusr: np.ndarray,
     ) -> float:
         """
-        Busbar resistive loss over interval ii -> ii+1 [J]
+        Busbar resistive loss over interval idx_time_interval -> idx_time_interval+1 [J]
         Loss = Δt * sum_groups (I_mean^2 * R_bus)
         Ref: M. Kovari, "PF power supplies accounting 2, Issue #972"
 
-        :param ii: index of time interval (ii -> ii+1)
-        :type ii: int
+        :param idx_time_interval: index of time interval (n -> n+1)
+        :type idx_time_interval: int
         :param dt_pulse_phase_s: duration of pulse interval [s]
         :type dt_pulse_phase_s: float
         :param n_pf_coil_groups: number of PF coil groups/circuits
         :type n_pf_coil_groups: int
-        :param pf_group_circuit_index: mapping from PF group to circuit index
+        :param pf_group_circuit_index: mapping from PF group to representative circuit index
         :type pf_group_circuit_index: np.ndarray
         :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
         :type c_pf_coil_turn: np.ndarray
@@ -118,17 +125,20 @@ class Power:
         :rtype: float
         """
         e_loss_pf_bus_j = 0.0e0
-        for jj in range(n_pf_coil_groups):
-            kk = pf_group_circuit_index[jj]
-            c_pf_mean_a = 0.5e0 * (c_pf_coil_turn[kk, ii + 1] + c_pf_coil_turn[kk, ii])
-            e_loss_pf_bus_j = (
-                e_loss_pf_bus_j + dt_pulse_phase_s * (c_pf_mean_a**2) * pfbusr[jj]
+
+        for idx_group in range(n_pf_coil_groups):
+            idx_group_circuit = pf_group_circuit_index[idx_group]
+            c_pf_mean_a = 0.5e0 * (
+                c_pf_coil_turn[idx_group_circuit, idx_time_interval + 1]
+                + c_pf_coil_turn[idx_group_circuit, idx_time_interval]
             )
+            e_loss_pf_bus_j += dt_pulse_phase_s * (c_pf_mean_a**2) * pfbusr[idx_group]
+
         return e_loss_pf_bus_j
 
     def _pf_loss_interval_total_j(
         self,
-        ii: int,
+        idx_time_interval: int,
         f_p_pf_energy_store_loss: float,
         dt_pulse_phase_s: float,
         poloidalenergy: np.ndarray,
@@ -140,19 +150,19 @@ class Power:
         pfbusr: np.ndarray,
     ) -> float:
         """
-        Total PF electrical energy dissipated over interval ii -> ii+1 [J]
+        Total PF electrical energy dissipated over interval idx_time_interval -> idx_time_interval+1 [J]
         = storage + power supply + busbar
         Ref: M. Kovari, "PF power supplies accounting 2, Issue #972".
 
-        :param ii: index of time interval (ii -> ii+1)
-        :type ii: int
+        :param idx_time_interval: index of time interval (n -> n+1)
+        :type idx_time_interval: int
         :param dt_pulse_phase_s: duration of pulse interval [s]
         :type dt_pulse_phase_s: float
         :param poloidalenergy: stored poloidal magnetic energy at pulse times [J]
         :type poloidalenergy: np.ndarray
         :param n_pf_coil_groups: number of PF coil groups/circuits
         :type n_pf_coil_groups: int
-        :param pf_group_circuit_index: mapping from PF group to circuit index
+        :param pf_group_circuit_index: mapping from PF group to representative circuit index
         :type pf_group_circuit_index: np.ndarray
         :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
         :type c_pf_coil_turn: np.ndarray
@@ -166,20 +176,23 @@ class Power:
         if dt_pulse_phase_s <= 0.0e0:
             return 0.0e0
 
-        e_pf_delta_j = poloidalenergy[ii + 1] - poloidalenergy[ii]
+        e_pf_delta_j = (
+            poloidalenergy[idx_time_interval + 1] - poloidalenergy[idx_time_interval]
+        )
         e_loss_pf_store_j = self._pf_loss_storage_j(
-            e_pf_delta_j, f_p_pf_energy_store_loss
+            e_pf_delta_j=e_pf_delta_j,
+            f_p_pf_energy_store_loss=f_p_pf_energy_store_loss,
         )
 
         e_loss_pf_psu_j = self._pf_loss_power_supply_j(
-            ii=ii,
+            idx_time_interval=idx_time_interval,
             n_pf_cs_plasma_circuits=n_pf_cs_plasma_circuits,
             c_pf_coil_turn=c_pf_coil_turn,
             ind_pf_cs_plasma_mutual=ind_pf_cs_plasma_mutual,
         )
 
         e_loss_pf_bus_j = self._pf_loss_busbar_j(
-            ii=ii,
+            idx_time_interval=idx_time_interval,
             dt_pulse_phase_s=dt_pulse_phase_s,
             n_pf_coil_groups=n_pf_coil_groups,
             pf_group_circuit_index=pf_group_circuit_index,
@@ -410,7 +423,7 @@ class Power:
 
             # Electrical energy dissipated in PFC power supplies as they increase or decrease the poloidal field energy
             pfdissipation[idx_time_interval] = self._pf_loss_interval_total_j(
-                ii=idx_time_interval,
+                idx_time_interval=idx_time_interval,
                 f_p_pf_energy_store_loss=f_p_pf_energy_store_loss,
                 dt_pulse_phase_s=dt_pulse_phase_s,
                 poloidalenergy=poloidalenergy,
