@@ -187,3 +187,9 @@ def test_three_group():
 
 def test_two_group():
     """Ensure continuity at interface for both groups."""
+
+def test_two_identical_materials():
+    """
+    A 2-layer model (both layers being made of material A) should have the same
+    neutron spectrum and flux profiles as a one-layer model.
+    """
