@@ -384,9 +384,6 @@ class NeutronFluxProfile:
             Energy bin edges, 1D array of len = n_groups+1
         group_energy:
             The average neutron energy of each group.
-        incident_neutron_group:
-            The group index (n) of the neutron group that contains the incident
-            (monoenergetic) plasma neutron's energy.
 
         coefficients:
             Coefficients that determine the flux shape (and therefore reaction
@@ -408,7 +405,6 @@ class NeutronFluxProfile:
             downscattering.
         """
         # flux incident on the first wall at the highest energy.
-        self.flux = flux
         self.init_neutron_energy = init_neutron_energy
 
         # layers
@@ -443,10 +439,14 @@ class NeutronFluxProfile:
                 )
         self.n_groups = fw_mat.n_groups
         self.group_structure = fw_mat.group_structure
-        self.group_energy, self.incident_neutron_group = (
+        self.group_energy, incident_neutron_group = (
             self._calculate_mean_energy_and_incident_bin(
                 self.group_structure, self.init_neutron_energy
             )
+        )
+        self.fluxes = np.array(
+            [flux if n==incident_neutron_group
+                else 0.0 for n in range(self.n_groups)]
         )
 
         mat_name_list = [mat.name for mat in self.materials]
@@ -496,11 +496,14 @@ class NeutronFluxProfile:
 
         Returns
         -------
-        avg_neutron_e:
+        avg_neutron_E:
             Mean energy of neutrons. The bin containing init_neutron_e
             (likely the highest energy bin, i.e. bin[0]) is assumed to be
             dominated by the unscattered neutrons entering from the plasma,
             therefore it is
+        incident_neutron_group:
+            The group index (n) of the neutron group whose energy range
+            includes the incident (monoenergetic) plasma neutron's energy.
         """
         high, low = group_structure[:-1], group_structure[1:]
         weighted_mean = (high - low) / (np.log(high) - np.log(low))
@@ -626,16 +629,16 @@ class NeutronFluxProfile:
                 s_bz_mod = np.sin((self.extended_boundary[n] - x_fw) / l_bz)
                 t_bz_mod = np.tan((self.extended_boundary[n] - x_fw) / l_bz)
 
-            fw_c_factor = -self.flux * (
+            fw_c_factor = -self.fluxes[0] * (
                 l_fw / d_fw
                 - np.exp(x_fw / l_fw)
                 * ((l_fw / d_fw) + (l_bz / d_bz) * t_bz_mod)
                 / (c_fw + s_fw * t_bz_mod * (d_fw / l_fw) * (l_bz / d_bz))
             )
-            fw_s_factor = -self.flux * l_fw / d_fw
+            fw_s_factor = -self.fluxes[0] * l_fw / d_fw
 
             bz_common_factor = (
-                self.flux
+                self.fluxes[0]
                 * np.exp(x_fw / l_fw)
                 * (1 - t_fw)
                 / ((d_bz / l_bz) * c_bz_mod + (d_fw / l_fw) * t_fw * s_bz_mod)
@@ -655,6 +658,7 @@ class NeutronFluxProfile:
 
     def _get_propagation_matrix_and_offset_vec(n: int, num_layer: int):
         """
+        SOMETHING SEEMS OFF ABOUT THIS FUNCTION, I'M DOING IT WRONG
         Infer this layer's main basis functions' coefficients (.c[n] and .s[n])
         using using the previous layer's basis functions.
         """
@@ -753,13 +757,14 @@ class NeutronFluxProfile:
         )
 
         include_upscatter = self.contains_upscatter and self.num_iteration!=0
+
         for num_layer in range(self.n_layers):
             # Setting up aliases for shorter code
             _coefs = Coefficients([], [])
             mat = self.materials[num_layer]
             src_matrix = mat.sigma_s + mat.sigma_in
             diffusion_const_n = self.diffusion_const[num_layer, n]
-            in_scatter_max_group = self.n_groups if include_upscatter else n+1
+            in_scatter_max_group = self.n_groups if include_upscatter else n+1  # must include the current group, n.
             for g in range(in_scatter_max_group):
                 # if the characteristic length of group [g] coincides with the
                 # characteristic length of group [n], then that particular
@@ -803,10 +808,11 @@ class NeutronFluxProfile:
                     )
                     * scale_factor
                 )
-            _coefs[num_layer, n].c[n] = ...
-            _coefs[num_layer, n].s[n] = ...
+            _coefs[num_layer, n].c[n] = 0.0
+            _coefs[num_layer, n].s[n] = 0.0
 
             self.coefficients[num_layer, n] = _coefs
+        self.coefficient[0, n].s[n] = - np.sqrt(abs(self.l2[0, n]))/self.diffusion_const[0, n] * self.fluxes[n] - sum(np.sqrt(abs(self.l2[0, n]))/np.sqrt(abs(l20g)) for g, l20g in self.l2[0] if g!=n)
 
 
     def _check_if_in_layer(
