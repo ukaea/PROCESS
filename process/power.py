@@ -92,7 +92,7 @@ class Power:
         self,
         ii: int,
         dt_pulse_phase_s: float,
-        ngrpt: int,
+        n_pf_coil_groups: int,
         pf_group_circuit_index: np.ndarray,
         c_pf_coil_turn: np.ndarray,
         pfbusr: np.ndarray,
@@ -106,8 +106,8 @@ class Power:
         :type ii: int
         :param dt_pulse_phase_s: duration of pulse interval [s]
         :type dt_pulse_phase_s: float
-        :param ngrpt: number of PF coil groups/circuits
-        :type ngrpt: int
+        :param n_pf_coil_groups: number of PF coil groups/circuits
+        :type n_pf_coil_groups: int
         :param pf_group_circuit_index: mapping from PF group to circuit index
         :type pf_group_circuit_index: np.ndarray
         :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
@@ -118,7 +118,7 @@ class Power:
         :rtype: float
         """
         e_loss_pf_bus_j = 0.0e0
-        for jj in range(ngrpt):
+        for jj in range(n_pf_coil_groups):
             kk = pf_group_circuit_index[jj]
             c_pf_mean_a = 0.5e0 * (c_pf_coil_turn[kk, ii + 1] + c_pf_coil_turn[kk, ii])
             e_loss_pf_bus_j = (
@@ -132,7 +132,7 @@ class Power:
         f_p_pf_energy_store_loss: float,
         dt_pulse_phase_s: float,
         poloidalenergy: np.ndarray,
-        ngrpt: int,
+        n_pf_coil_groups: int,
         pf_group_circuit_index: np.ndarray,
         n_pf_cs_plasma_circuits: int,
         c_pf_coil_turn: np.ndarray,
@@ -150,8 +150,8 @@ class Power:
         :type dt_pulse_phase_s: float
         :param poloidalenergy: stored poloidal magnetic energy at pulse times [J]
         :type poloidalenergy: np.ndarray
-        :param ngrpt: number of PF coil groups/circuits
-        :type ngrpt: int
+        :param n_pf_coil_groups: number of PF coil groups/circuits
+        :type n_pf_coil_groups: int
         :param pf_group_circuit_index: mapping from PF group to circuit index
         :type pf_group_circuit_index: np.ndarray
         :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
@@ -181,7 +181,7 @@ class Power:
         e_loss_pf_bus_j = self._pf_loss_busbar_j(
             ii=ii,
             dt_pulse_phase_s=dt_pulse_phase_s,
-            ngrpt=ngrpt,
+            n_pf_coil_groups=n_pf_coil_groups,
             pf_group_circuit_index=pf_group_circuit_index,
             c_pf_coil_turn=c_pf_coil_turn,
             pfbusr=pfbusr,
@@ -234,17 +234,17 @@ class Power:
         #  PF coil resistive power requirements
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
         ic = -1
-        ngrpt = pfcoil_variables.n_pf_coil_groups
+        n_pf_coil_groups = pfcoil_variables.n_pf_coil_groups
         if build_variables.iohcl != 0:
-            ngrpt = ngrpt + 1
+            n_pf_coil_groups = n_pf_coil_groups + 1
 
         # Map PF group to representative circuit index (used for busbar I^2R per circuit)
-        pf_group_circuit_index = np.zeros((ngrpt,), dtype=int)
+        pf_group_circuit_index = np.zeros((n_pf_coil_groups,), dtype=int)
 
         pf_power_variables.srcktpm = 0.0e0
         pfbuspwr = 0.0e0
 
-        for ig in range(ngrpt):
+        for ig in range(n_pf_coil_groups):
             ic = ic + pfcoil_variables.n_pf_coils_in_group[ig]
             pf_group_circuit_index[ig] = ic
 
@@ -299,13 +299,16 @@ class Power:
         powpfr = 0.0e0
         powpfr2 = 0.0e0
 
+        #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils (including Central Solenoid and plasma)
+        #  plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
+        #  pfcoil_variables.ind_pf_cs_plasma_mutual(i,j) : mutual inductance between coil i and j
         for ii in range(pfcoil_variables.n_pf_cs_plasma_circuits):
             powpfii[ii] = 0.0e0
             vpfi[ii] = 0.0e0
 
         jpf = -1
         poloidalenergy[:] = 0.0e0
-        for jj in range(ngrpt):  # Loop over all groups of PF coils.
+        for jj in range(n_pf_coil_groups):  # Loop over all groups of PF coils.
             for _jjpf2 in range(
                 pfcoil_variables.n_pf_coils_in_group[jj]
             ):  # Loop over all coils in each group
@@ -377,7 +380,7 @@ class Power:
                 f_p_pf_energy_store_loss=f_p_pf_energy_store_loss,
                 dt_pulse_phase_s=dt_pulse_phase_s,
                 poloidalenergy=poloidalenergy,
-                ngrpt=ngrpt,
+                n_pf_coil_groups=n_pf_coil_groups,
                 pf_group_circuit_index=pf_group_circuit_index,
                 n_pf_cs_plasma_circuits=n_pf_cs_plasma_circuits,
                 c_pf_coil_turn=c_pf_coil_turn,
