@@ -9878,6 +9878,38 @@ class PlasmaDensityLimit:
         )
 
     @staticmethod
+    def calculate_jet_simple_density_limit(
+        b_plasma_toroidal_on_axis: float,
+        p_plasma_separatrix_mw: float,
+        rmajor: float,
+        prn1: float,
+    ) -> float:
+        """
+        Calculate the JET simple density limit.
+
+        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
+        :type b_plasma_toroidal_on_axis: float
+        :param p_plasma_separatrix_mw: Power crossing the separatrix (MW).
+        :type p_plasma_separatrix_mw: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+        :param prn1: Edge density / average plasma density.
+        :type prn1: float
+        :return: The JET simple density limit (m⁻³).
+        :rtype: float
+
+        :references:
+            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
+        """
+        return (
+            0.237e20
+            * b_plasma_toroidal_on_axis
+            * np.sqrt(p_plasma_separatrix_mw)
+            / rmajor
+        ) / prn1
+
+    @staticmethod
     def calculate_hugill_murakami_density_limit(
         b_plasma_toroidal_on_axis: float, rmajor: float, qcyl: float
     ) -> float:
@@ -10085,12 +10117,12 @@ class PlasmaDensityLimit:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        nd_plasma_electron_max_array[4] = (
-            0.237e20
-            * b_plasma_toroidal_on_axis
-            * np.sqrt(p_plasma_separatrix_mw)
-            / rmajor
-        ) / prn1
+        nd_plasma_electron_max_array[4] = self.calculate_jet_simple_density_limit(
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            p_plasma_separatrix_mw=p_plasma_separatrix_mw,
+            rmajor=rmajor,
+            prn1=prn1,
+        )
 
         # Hugill-Murakami M.q limit
         # qcyl=qstar here, which is okay according to the literature
