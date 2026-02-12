@@ -28,6 +28,8 @@ from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
+
 
 class Costs:
     def __init__(self):
