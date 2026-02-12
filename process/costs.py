@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 
 from process import constants
@@ -21,6 +23,8 @@ from process.data_structure import (
     vacuum_variables,
 )
 from process.exceptions import ProcessValueError
+
+logger = logging.getLogger(__name__)
 
 
 class Costs:
@@ -3025,8 +3029,18 @@ class Costs:
 
         #  Annual cost of operation and maintenance
 
-        annoam = cost_variables.ucoam[cost_variables.lsa - 1] * np.sqrt(
-            np.clip(heat_transport_variables.p_plant_electric_net_mw, 0, np.inf)
+        if heat_transport_variables.p_plant_electric_net_mw < 0:
+            sqrt_p_plant_electric_net_mw = 0.0
+            logger.warning(
+                "p_plant_electric_net_mw has gone negative!Clamping it to 0 now."
+            )
+        else:
+            sqrt_p_plant_electric_net_mw = np.sqrt(
+                heat_transport_variables.p_plant_electric_net_mw
+            )
+        annoam = (
+            cost_variables.ucoam[cost_variables.lsa - 1]
+            * sqrt_p_plant_electric_net_mw
             / 1200.0e0
         )
 
@@ -3044,7 +3058,7 @@ class Costs:
         #
         #  Scale with net electric power
         #
-        #         annoam1 = annoam1 * heat_transport_variables.p_plant_electric_net_mw/1200.0e0
+        #         annoam1 = annoam1 * sqrt_p_plant_electric_net_mw/1200.0e0
         #
         #  It is necessary to convert from 1992 pounds to 1990 dollars
         #  Reasonable guess for the exchange rate + inflation factor
@@ -3097,8 +3111,9 @@ class Costs:
 
         #  Annual cost of waste disposal
 
-        annwst = cost_variables.ucwst[cost_variables.lsa - 1] * np.sqrt(
-            np.clip(heat_transport_variables.p_plant_electric_net_mw, 0, np.inf)
+        annwst = (
+            cost_variables.ucwst[cost_variables.lsa - 1]
+            * sqrt_p_plant_electric_net_mw
             / 1200.0e0
         )
 
