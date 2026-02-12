@@ -35,7 +35,7 @@ $C \approx$  1.8 for ITER-like conditions.
 
 -----------------
 
-## Borrass model for ITER, II 
+## Borrass model for ITER, II | `calculate_borrass_iter_ii_density_limit()`
 
 Switch value: `i_density_limit = 3` [^1]
 
