@@ -13,7 +13,7 @@ For the models below $P_{\perp}$ is the mean heat flux density across the separa
 
 -----------------
 
-## ASDEX model
+## ASDEX model | `calculate_asdex_density_limit()`
 
 Switch value: `i_density_limit = 1`[^1][^2]
 
