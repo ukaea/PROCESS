@@ -9289,6 +9289,15 @@ class DetailedPhysics:
             )
         )
 
+        physics_variables.vel_plasma_triton_profile = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT
+                * physics_variables.f_temp_plasma_ion_electron,
+                mass=constants.TRITON_MASS,
+            )
+        )
+
         # ============================
         # Plasma frequencies
         # ============================
@@ -9315,6 +9324,14 @@ class DetailedPhysics:
             self.calculate_larmor_frequency(
                 b_field=physics_variables.b_plasma_toroidal_profile,
                 m_particle=constants.DEUTERON_MASS,
+                z_particle=1.0,
+            )
+        )
+
+        physics_variables.freq_plasma_larmor_toroidal_triton_profile = (
+            self.calculate_larmor_frequency(
+                b_field=physics_variables.b_plasma_toroidal_profile,
+                m_particle=constants.TRITON_MASS,
                 z_particle=1.0,
             )
         )
@@ -9377,6 +9394,37 @@ class DetailedPhysics:
                         ),
                         velocity=self.calculate_average_relative_velocity(
                             velocity_1=physics_variables.vel_plasma_deuteron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
+        physics_variables.plasma_coulomb_log_electron_triton_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.TRITON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_triton_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.TRITON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_triton_profile[i],
                             velocity_2=physics_variables.vel_plasma_electron_profile[i],
                         ),
                     ),
@@ -9601,6 +9649,13 @@ class DetailedPhysics:
                 f"(vel_plasma_deuteron_profile{i})",
                 physics_variables.vel_plasma_deuteron_profile[i],
             )
+        for i in range(len(physics_variables.vel_plasma_triton_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma triton thermal velocity at point {i}",
+                f"(vel_plasma_triton_profile{i})",
+                physics_variables.vel_plasma_triton_profile[i],
+            )
 
         po.osubhd(self.outfile, "Frequencies:")
 
@@ -9629,6 +9684,15 @@ class DetailedPhysics:
                 f"(freq_plasma_larmor_toroidal_deuteron_profile{i})",
                 physics_variables.freq_plasma_larmor_toroidal_deuteron_profile[i],
             )
+        for i in range(
+            len(physics_variables.freq_plasma_larmor_toroidal_triton_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma triton toroidal Larmor frequency at point {i}",
+                f"(freq_plasma_larmor_toroidal_triton_profile{i})",
+                physics_variables.freq_plasma_larmor_toroidal_triton_profile[i],
+            )
 
         po.osubhd(self.outfile, "Coulomb Logarithms:")
 
@@ -9650,4 +9714,14 @@ class DetailedPhysics:
                 f"Electron-deuteron Coulomb log at point {i}",
                 f"(plasma_coulomb_log_electron_deuteron_profile{i})",
                 physics_variables.plasma_coulomb_log_electron_deuteron_profile[i],
+            )
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_triton_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-triton Coulomb log at point {i}",
+                f"(plasma_coulomb_log_electron_triton_profile{i})",
+                physics_variables.plasma_coulomb_log_electron_triton_profile[i],
             )
