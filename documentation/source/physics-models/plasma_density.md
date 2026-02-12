@@ -73,7 +73,7 @@ where $\kappa \approx 1.5, \Delta \approx 0.1a$ has been taken from JET.
 
 -----------------
 
-## Hugill-Murakami model
+## Hugill-Murakami model | `calculate_hugill_murakami_density_limit()`
 
 Switch value: `i_density_limit = 6` [^2]
 

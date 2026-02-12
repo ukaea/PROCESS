@@ -9878,6 +9878,28 @@ class PlasmaDensityLimit:
         )
 
     @staticmethod
+    def calculate_hugill_murakami_density_limit(
+        b_plasma_toroidal_on_axis: float, rmajor: float, qcyl: float
+    ) -> float:
+        """
+        Calculate the Hugill-Murakami density limit.
+
+        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
+        :type b_plasma_toroidal_on_axis: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+        :param qcyl: Equivalent cylindrical safety factor (qstar).
+        :type qcyl: float
+        :return: The Hugill-Murakami density limit (m⁻³).
+        :rtype: float
+
+        :references:
+            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+        """
+
+        return 3.0e20 * b_plasma_toroidal_on_axis / (rmajor * qcyl)
+
+    @staticmethod
     def calculate_greenwald_density_limit(c_plasma: float, rminor: float) -> float:
         """
         Calculate the Greenwald density limit (n_GW).
@@ -10073,8 +10095,8 @@ class PlasmaDensityLimit:
         # Hugill-Murakami M.q limit
         # qcyl=qstar here, which is okay according to the literature
 
-        nd_plasma_electron_max_array[5] = (
-            3.0e20 * b_plasma_toroidal_on_axis / (rmajor * qcyl)
+        nd_plasma_electron_max_array[5] = self.calculate_hugill_murakami_density_limit(
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis, rmajor=rmajor, qcyl=qcyl
         )
 
         # Greenwald limit
