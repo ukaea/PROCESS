@@ -8,6 +8,7 @@ from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     blanket_library,
     build_variables,
+    constraint_variables,
     divertor_variables,
     first_wall_variables,
     fwbs_variables,
@@ -96,6 +97,35 @@ class FirstWall:
             fwbs_variables.radius_fw_channel_90_bend,
             fwbs_variables.radius_fw_channel_180_bend,
         ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
+
+        # ==============================
+        # First wall power fluxes
+        # ==============================
+
+        if physics_variables.i_pflux_fw_neutron == 1:
+            physics_variables.pflux_fw_neutron_mw = (
+                physics_variables.ffwal
+                * physics_variables.pflux_plasma_surface_neutron_avg_mw
+            )
+        else:
+            physics_variables.pflux_fw_neutron_mw = (
+                physics_variables.p_neutron_total_mw / first_wall_variables.a_fw_total
+            )
+
+        if physics_variables.i_pflux_fw_neutron == 1:
+            physics_variables.pflux_fw_rad_mw = (
+                physics_variables.ffwal
+                * physics_variables.p_plasma_rad_mw
+                / physics_variables.a_plasma_surface
+            )
+        else:
+            physics_variables.pflux_fw_rad_mw = (
+                physics_variables.p_plasma_rad_mw / build_variables.a_fw_total
+            )
+
+        constraint_variables.pflux_fw_rad_max_mw = (
+            physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
+        )
 
     @staticmethod
     def calculate_first_wall_half_height(
