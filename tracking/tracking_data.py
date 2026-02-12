@@ -62,6 +62,7 @@ logging.basicConfig(level=logging.INFO, filename="tracker.log")
 logger = logging.getLogger("PROCESS Tracker")
 
 DEFAULT_TRACKING_VARIABLES = {
+    "Metadata.process_runtime",
     "CurrentDrive.p_hcd_primary_extra_heat_mw",
     "CurrentDrive.f_c_plasma_bootstrap",
     "CurrentDrive.p_hcd_injected_total_mw",
