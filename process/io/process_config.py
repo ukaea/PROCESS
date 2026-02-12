@@ -36,35 +36,24 @@ logger = logging.getLogger(__name__)
 class ProcessConfig:
     """
     Configuration parameters for PROCESS runs
-
-    filename - Configuration file name
-
-    wdir     - Working directory
-
-    or_in_dat  - Original IN.DAT file
-
-    process  - PROCESS binary
-
-    niter    - (Maximum) number of iterations
-
-    u_seed   - User specified seed value for the random number generator
-
-    factor   - Multiplication factor adjusting the range in which the original
-               iteration variables should get varied
-
-    comment  - additional comment to be written into README.txt
-
     """
 
     filename = None
+    """Configuration file name"""
     configfileexists = True
     wdir = "."
+    """Working directory"""
     or_in_dat = "IN.DAT"
-    process = "process.exe"
+    """Original IN.DAT file"""
     niter = 10
+    """(Maximum) number of iterations"""
     u_seed = None
+    """User specified seed value for the random number generator"""
     factor = 1.5
+    """Multiplication factor adjusting the range in which the original
+iteration variables should get varied"""
     comment = " "
+    """additional comment to be written into README.txt"""
 
     def echo(self):
         """echos the attributes of the class"""
@@ -72,7 +61,6 @@ class ProcessConfig:
         if self.wdir != ".":
             print(f"Working directory:   {self.wdir}")
         print(f"Original IN.DAT:     {self.or_in_dat}")
-        print(f"PROCESS binary:      {self.process}")
         print(f"Number of iterations {self.niter}")
 
         if self.u_seed is not None:
@@ -101,8 +89,7 @@ class ProcessConfig:
         os.chdir(self.wdir)
         subprocess.call(
             [
-                "rm -f OUT.DAT MFILE.DAT README.txt\
-        SolverTest.out process.log *.pdf  uncertainties.nc time.info"
+                "rm -f OUT.DAT MFILE.DAT README.txt SolverTest.out process.log *.pdf  uncertainties.nc time.info"
             ],
             shell=True,
         )
@@ -240,10 +227,6 @@ class ProcessConfig:
             )
             raise
 
-        buf = self.get_attribute("process")
-        if buf is not None:
-            self.process = buf
-
         buf = self.get_attribute("niter")
         if buf is not None:
             self.niter = int(buf)
@@ -262,14 +245,11 @@ class ProcessConfig:
         if not self.get_comment():
             print(f"No comment in config file {self.filename}")
 
-    def run_process(self, input_path, solver="vmcon"):
+    def run_process(self, input_path: Path, solver: str = "vmcon"):
         """Perform a single run of PROCESS, catching any errors.
 
         :param input_path: the input file to run on
-        :type input_path: pathlib.Path
-        :param solver: which solver to use, as specified in solver.py, defaults
-        to "vmcon"
-        :type solver: str, optional
+        :param solver: which solver to use, as specified in solver.py, defaults to "vmcon"
         """
         with open("process.log", "w") as logfile:
             print("PROCESS run started ...", end="")
@@ -295,43 +275,27 @@ class ProcessConfig:
         print("finished.")
 
 
-################################################################################
-# class RunProcessConfig(ProcessConfig)
-################################################################################
-
-
 class RunProcessConfig(ProcessConfig):
     """
     Configuration parameters of the run_process.py program
-
-    no_allowed_unfeasible - the number of allowed unfeasible points in a sweep
-
-    create_itervar_diff - boolean to indicate the creation of a summary file
-                          of the iteration variable values at each stage
-
-    add_ixc - List of iteration variables to be added to IN.DAT
-
-    del_ixc - List of iteration variables to be deleted from IN.DAT
-
-    add_icc - List of constrained equations to be added to IN.DAT
-
-    del_icc - List of constrained equations to be deleted from IN.DAT
-
-    dictvar - Dictionary mapping variable name to new value (replaces old
-              or gets appended)
-
-    del_var - List of variables to be deleted from IN.DAT
-
     """
 
     no_allowed_unfeasible = 0
+    """the number of allowed unfeasible points in a sweep"""
     create_itervar_diff = False
+    """boolean to indicate the creation of a summary file of the iteration variable values at each stage"""
     add_ixc: ClassVar = []
+    """ List of iteration variables to be added to IN.DAT"""
     del_ixc: ClassVar = []
+    """List of iteration variables to be deleted from IN.DAT"""
     add_icc: ClassVar = []
+    """List of constrained equations to be added to IN.DAT"""
     del_icc: ClassVar = []
+    """List of constrained equations to be deleted from IN.DAT"""
     dictvar: ClassVar = {}
+    """Dictionary mapping variable name to new value (replaces old or gets appended)"""
     del_var: ClassVar = []
+    """List of variables to be deleted from IN.DAT"""
 
     def __init__(self, filename="run_process.conf"):
         """
@@ -356,8 +320,7 @@ class RunProcessConfig(ProcessConfig):
                 self.create_itervar_diff = False
             else:
                 print(
-                    "WARNING: Value for create_itervar_diff\
- is not defined!",
+                    "WARNING: Value for create_itervar_diff is not defined!",
                     file=stderr,
                 )
 
@@ -459,10 +422,7 @@ class RunProcessConfig(ProcessConfig):
 
         print(f"no. allowed UNFEASIBLE points {self.no_allowed_unfeasible:d}")
         if self.create_itervar_diff:
-            print(
-                "Set to create a summary file of the iteration variable\
- values!"
-            )
+            print("Set to create a summary file of the iteration variable values!")
 
         if self.add_ixc != []:
             print("add_ixc", self.add_ixc)
@@ -520,8 +480,7 @@ class RunProcessConfig(ProcessConfig):
         # check that there is no variable in both lists
         if set(self.add_ixc).intersection(self.del_ixc) != set():
             print(
-                "Error: You are trying to add and delete \
-                   the same variable from ixc!",
+                "Error: You are trying to add and delete the same variable from ixc!",
                 file=stderr,
             )
             exit()
@@ -542,8 +501,7 @@ class RunProcessConfig(ProcessConfig):
         # check that there is no variable in both lists
         if set(self.add_icc).intersection(self.del_icc) != set():
             print(
-                "Error: You are trying to add and delete the same \
-                  variable from icc!",
+                "Error: You are trying to add and delete the same variable from icc!",
                 file=stderr,
             )
             exit()
