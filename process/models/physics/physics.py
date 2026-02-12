@@ -9850,6 +9850,19 @@ class PlasmaInductance:
         po.oblnkl(self.outfile)
 
 
+class DensityLimitModel(IntEnum):
+    """Electron density model types"""
+
+    ASDEX = 1
+    BORRASS_ITER_I = 2
+    BORRASS_ITER_II = 3
+    JET_EDGE_RADIATION = 4
+    JET_SIMPLE = 5
+    HUGILL_MURAKAMI = 6
+    GREENWALD = 7
+    ASDEX_NEW = 8
+
+
 class PlasmaDensityLimit:
     """Class to hold plasma density limit calculations for plasma processing."""
 
