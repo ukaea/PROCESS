@@ -1497,42 +1497,7 @@ class Physics:
         # Plasma Normalised Internal Inductance
         # -----------------------------------------------------
 
-        physics_variables.ind_plasma_internal_norm_wesson = (
-            self.inductance.calculate_internal_inductance_wesson(
-                alphaj=physics_variables.alphaj
-            )
-        )
-
-        # Spherical Tokamak relation for internal inductance
-        # Menard et al. (2016), Nuclear Fusion, 56, 106023
-        physics_variables.ind_plasma_internal_norm_menard = (
-            self.inductance.calculate_internal_inductance_menard(
-                kappa=physics_variables.kappa
-            )
-        )
-
-        physics_variables.ind_plasma_internal_norm_iter_3 = (
-            self.inductance.calculate_normalised_internal_inductance_iter_3(
-                b_plasma_poloidal_vol_avg=physics_variables.b_plasma_poloidal_average,
-                c_plasma=physics_variables.plasma_current,
-                vol_plasma=physics_variables.vol_plasma,
-                rmajor=physics_variables.rmajor,
-            )
-        )
-
-        # Calculate ind_plasma_internal_norm based on i_ind_plasma_internal_norm
-        try:
-            model = IndInternalNormModel(
-                int(physics_variables.i_ind_plasma_internal_norm)
-            )
-            physics_variables.ind_plasma_internal_norm = (
-                self.inductance.get_ind_internal_norm_value(model)
-            )
-        except ValueError:
-            raise ProcessValueError(
-                "Illegal value of i_ind_plasma_internal_norm",
-                i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
-            ) from None
+        self.inductance.run()
 
         # ===================================================
 
@@ -8934,6 +8899,40 @@ class PlasmaInductance:
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def run(self):
+        physics_variables.ind_plasma_internal_norm_wesson = (
+            self.calculate_internal_inductance_wesson(alphaj=physics_variables.alphaj)
+        )
+
+        # Spherical Tokamak relation for internal inductance
+        # Menard et al. (2016), Nuclear Fusion, 56, 106023
+        physics_variables.ind_plasma_internal_norm_menard = (
+            self.calculate_internal_inductance_menard(kappa=physics_variables.kappa)
+        )
+
+        physics_variables.ind_plasma_internal_norm_iter_3 = (
+            self.calculate_normalised_internal_inductance_iter_3(
+                b_plasma_poloidal_vol_avg=physics_variables.b_plasma_poloidal_average,
+                c_plasma=physics_variables.plasma_current,
+                vol_plasma=physics_variables.vol_plasma,
+                rmajor=physics_variables.rmajor,
+            )
+        )
+
+        # Calculate ind_plasma_internal_norm based on i_ind_plasma_internal_norm
+        try:
+            model = IndInternalNormModel(
+                int(physics_variables.i_ind_plasma_internal_norm)
+            )
+            physics_variables.ind_plasma_internal_norm = (
+                self.get_ind_internal_norm_value(model)
+            )
+        except ValueError:
+            raise ProcessValueError(
+                "Illegal value of i_ind_plasma_internal_norm",
+                i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
+            ) from None
 
     def get_ind_internal_norm_value(self, model: IndInternalNormModel) -> float:
         """Get the normalised internal inductance (l_i) for the specified model."""
