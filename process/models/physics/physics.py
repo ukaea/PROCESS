@@ -2411,7 +2411,7 @@ class Physics:
             - physics_variables.p_plasma_rad_mw
         )
 
-        physics_variables.plfux_plasma_surface_neutron_avg_mw = (
+        physics_variables.pflux_plasma_surface_neutron_avg_mw = (
             physics_variables.p_neutron_total_mw / physics_variables.a_plasma_surface
         )
 
@@ -5098,8 +5098,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Average neutron flux at plasma surface (MW/m^2)",
-            "(plfux_plasma_surface_neutron_avg_mw)",
-            physics_variables.plfux_plasma_surface_neutron_avg_mw,
+            "(pflux_plasma_surface_neutron_avg_mw)",
+            physics_variables.pflux_plasma_surface_neutron_avg_mw,
             "OP ",
         )
 
