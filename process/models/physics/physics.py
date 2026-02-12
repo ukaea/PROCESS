@@ -1627,7 +1627,14 @@ def _trapped_particle_fraction_sauter(
 
 
 class Physics:
-    def __init__(self, plasma_profile, current_drive, plasma_beta, plasma_inductance, plasma_density_limit):
+    def __init__(
+        self,
+        plasma_profile,
+        current_drive,
+        plasma_beta,
+        plasma_inductance,
+        plasma_density_limit,
+    ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
@@ -4662,74 +4669,7 @@ class Physics:
         po.oblnkl(self.outfile)
 
         if stellarator_variables.istell == 0:
-            po.osubhd(self.outfile, "Density Limit using different models :")
-            po.ovarre(
-                self.outfile,
-                "Old ASDEX model",
-                "(nd_plasma_electron_max_array(1))",
-                physics_variables.nd_plasma_electron_max_array[0],
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Borrass ITER model I",
-                "(nd_plasma_electron_max_array(2))",
-                physics_variables.nd_plasma_electron_max_array[1],
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Borrass ITER model II",
-                "(nd_plasma_electron_max_array(3))",
-                physics_variables.nd_plasma_electron_max_array[2],
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "JET edge radiation model",
-                "(nd_plasma_electron_max_array(4))",
-                physics_variables.nd_plasma_electron_max_array[3],
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "JET simplified model",
-                "(nd_plasma_electron_max_array(5))",
-                physics_variables.nd_plasma_electron_max_array[4],
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Hugill-Murakami Mq model",
-                "(nd_plasma_electron_max_array(6))",
-                physics_variables.nd_plasma_electron_max_array[5],
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Greenwald model",
-                "(nd_plasma_electron_max_array(7))",
-                physics_variables.nd_plasma_electron_max_array[6],
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "ASDEX New",
-                "(nd_plasma_electron_max_array(8))",
-                physics_variables.nd_plasma_electron_max_array[7],
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Density limit from scaling (/m3)",
-                "(nd_plasma_electrons_max)",
-                physics_variables.nd_plasma_electrons_max,
-                "OP ",
-            )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
+            self.density_limit.output_density_limit_information()
 
         po.oheadr(self.outfile, "Plasma Reactions :")
 
@@ -10408,6 +10348,78 @@ class PlasmaDensityLimit:
         return nd_plasma_electron_max_array, nd_plasma_electron_max_array[
             i_density_limit - 1
         ]
+
+    def output_density_limit_information(self):
+        """Output density limit information to file."""
+
+        po.osubhd(self.outfile, "Density Limit using different models :")
+        po.ovarre(
+            self.outfile,
+            "Old ASDEX model",
+            "(nd_plasma_electron_max_array(1))",
+            physics_variables.nd_plasma_electron_max_array[0],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Borrass ITER model I",
+            "(nd_plasma_electron_max_array(2))",
+            physics_variables.nd_plasma_electron_max_array[1],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Borrass ITER model II",
+            "(nd_plasma_electron_max_array(3))",
+            physics_variables.nd_plasma_electron_max_array[2],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "JET edge radiation model",
+            "(nd_plasma_electron_max_array(4))",
+            physics_variables.nd_plasma_electron_max_array[3],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "JET simplified model",
+            "(nd_plasma_electron_max_array(5))",
+            physics_variables.nd_plasma_electron_max_array[4],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Hugill-Murakami Mq model",
+            "(nd_plasma_electron_max_array(6))",
+            physics_variables.nd_plasma_electron_max_array[5],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Greenwald model",
+            "(nd_plasma_electron_max_array(7))",
+            physics_variables.nd_plasma_electron_max_array[6],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "ASDEX New",
+            "(nd_plasma_electron_max_array(8))",
+            physics_variables.nd_plasma_electron_max_array[7],
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Density limit from scaling (/m3)",
+            "(nd_plasma_electrons_max)",
+            physics_variables.nd_plasma_electrons_max,
+            "OP ",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
 
 
 class DetailedPhysics:
