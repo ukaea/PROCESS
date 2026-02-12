@@ -93,7 +93,13 @@ from process.io.process_funcs import (
 )
 from process.log import logging_model_handler, show_errors
 from process.pfcoil import PFCoil
-from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
+from process.physics import (
+    DetailedPhysics,
+    Physics,
+    PlasmaBeta,
+    PlasmaExhaust,
+    PlasmaInductance,
+)
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
@@ -684,11 +690,13 @@ class Models:
         )
         self.plasma_beta = PlasmaBeta()
         self.plasma_inductance = PlasmaInductance()
+        self.plasma_exhaust = PlasmaExhaust()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
             plasma_beta=self.plasma_beta,
             plasma_inductance=self.plasma_inductance,
+            plasma_exhaust=self.plasma_exhaust,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
