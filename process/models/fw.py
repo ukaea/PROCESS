@@ -127,6 +127,11 @@ class FirstWall:
             physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
         )
 
+        # Power transported to the first wall by escaped alpha particles
+        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
+            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
+        )
+
     @staticmethod
     def calculate_first_wall_half_height(
         z_plasma_xpoint_lower: float,
