@@ -252,6 +252,9 @@ def plot_plasma(
         axis.plot(pg.rs[0], pg.zs[0], color="black")
         axis.plot(pg.rs[1], pg.zs[1], color="black")
 
+        axis.plot(pg.rs[0] + 0.005, pg.zs[0] + 0.005, color="red", linestyle="dashed")
+        axis.plot(pg.rs[1] + 0.005, pg.zs[1] + 0.005, color="red", linestyle="dashed")
+
         # Set triang_95 to stop plotting plasma past boundary
         # Assume IPDG scaling
         triang_95 = triang / 1.5
