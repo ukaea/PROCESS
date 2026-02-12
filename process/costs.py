@@ -3032,7 +3032,7 @@ class Costs:
         if heat_transport_variables.p_plant_electric_net_mw < 0:
             sqrt_p_plant_electric_net_mw = 0.0
             logger.warning(
-                "p_plant_electric_net_mw has gone negative!Clamping it to 0 now."
+                "p_plant_electric_net_mw has gone negative! Clamping it to 0 for the calculation of annoam and annwst (cost of maintenance and cost of waste)."
             )
         else:
             sqrt_p_plant_electric_net_mw = np.sqrt(
