@@ -9878,7 +9878,33 @@ class PlasmaDensityLimit:
         )
 
     @staticmethod
+    def calculate_greenwald_density_limit(c_plasma: float, rminor: float) -> float:
+        """
+        Calculate the Greenwald density limit (n_GW).
+
+        :param c_plasma: Plasma current (A).
+        :type c_plasma: float
+        :param rminor: Plasma minor radius (m).
+        :type rminor: float
+        :return: The Greenwald density limit (m⁻³).
+        :rtype: float
+
+        :notes: The Greenwald limit is typically applied to the line averaged electron density
+
+        :references:
+            - M. Greenwald et al., “A new look at density limits in tokamaks,”
+            Nuclear Fusion, vol. 28, no. 12, pp. 2199-2207, Dec. 1988,
+            doi: https://doi.org/10.1088/0029-5515/28/12/009.
+
+            - M. Greenwald, “Density limits in toroidal plasmas,”
+            Plasma Physics and Controlled Fusion, vol. 44, no. 8, pp. R27-R53, Jul. 2002,
+            doi: https://doi.org/10.1088/0741-3335/44/8/201.
+        """
+
+        return 1.0e14 * c_plasma / (np.pi * rminor**2)
+
     def calculate_density_limit(
+        self,
         b_plasma_toroidal_on_axis: float,
         i_density_limit: int,
         p_plasma_separatrix_mw: float,
@@ -10017,8 +10043,8 @@ class PlasmaDensityLimit:
 
         # Greenwald limit
 
-        nd_plasma_electron_max_array[6] = (
-            1.0e14 * plasma_current / (np.pi * rminor * rminor)
+        nd_plasma_electron_max_array[6] = self.calculate_greenwald_density_limit(
+            c_plasma=plasma_current, rminor=rminor
         )
 
         nd_plasma_electron_max_array[7] = (
