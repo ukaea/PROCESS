@@ -53,7 +53,6 @@ def test_introductory_examples(examples_temp_data):
     introduction.ex.py uses temp dirs to clean up any produced files itself.
     :param examples_temp_data: temporary dir containing examples files
     :type examples_temp_data: Path
-
     """
     example_notebook_location = _get_location(examples_temp_data, "introduction")
     with testbook(example_notebook_location, execute=True, timeout=600):

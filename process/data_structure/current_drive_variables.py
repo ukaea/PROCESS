@@ -1,4 +1,4 @@
-"""author: J. Morris (UKAEA)
+"""
 Module containing global variables relating to the current drive system
 """
 

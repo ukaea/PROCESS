@@ -224,7 +224,7 @@ plugins:
       handlers:
         python:
           options:
-            docstring_style: google
+            docstring_style: numpy
             show_if_no_docstring: true
             members_order: source
             filters:

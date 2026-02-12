@@ -36,17 +36,25 @@ class Evaluators:
         n-dimensional point of interest xv.
         Note that the equality constraints must precede the inequality
         constraints in conf.
-        :param n: number of variables
-        :type n: int
-        :param m: number of constraints
-        :type m: int
-        :param xv: scaled variable values, length n
-        :type xv: numpy.array
-        :param ifail: ifail error flag
-        :type ifail: int
-        :return: tuple containing: objfn objective function, conf(m) constraint
-        functions
-        :rtype: tuple
+
+        Parameters
+        ----------
+        n : int
+            number of variables
+        m : int
+            number of constraints
+        xv : numpy.array
+            scaled variable values, length n
+        ifail : int
+            ifail error flag
+        _n :
+
+
+        Returns
+        -------
+        tuple
+            tuple containing: objfn objective function, conf(m) constraint
+            functions
         """
         # Output array for constraint functions
         conf = np.zeros(m, dtype=np.float64, order="F")
@@ -86,18 +94,23 @@ class Evaluators:
         constraints in conf. The constraint gradients or normals are returned as the
         columns of cnorm.
 
-        :param n: number of variables
-        :type n: int
-        :param m: number of constraints
-        :type m: int
-        :param xv: scaled variable names, size n
-        :type xv: numpy.array
-        :param lcnorm: number of columns in cnorm
-        :type lcnorm: int
-        :return: fgrdm (numpy.array (n)) gradient of the objective function
-        cnorm (numpy.array (lcnorm, m)) constraint gradients, i.e. cnorm[i, j] is
-        the derivative of constraint j w.r.t. variable i
-        :rtype: tuple
+        Parameters
+        ----------
+        n : int
+            number of variables
+        m : int
+            number of constraints
+        xv : numpy.array
+            scaled variable names, size n
+        lcnorm : int
+            number of columns in cnorm
+
+        Returns
+        -------
+        tuple
+            fgrdm (numpy.array (n)) gradient of the objective function
+            cnorm (numpy.array (lcnorm, m)) constraint gradients, i.e. cnorm[i, j] is
+            the derivative of constraint j w.r.t. variable i
         """
         xfor = np.zeros(n, dtype=np.float64, order="F")
         xbac = np.zeros(n, dtype=np.float64, order="F")

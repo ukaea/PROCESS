@@ -1,5 +1,5 @@
 """Module containing neoclassical computations
-author: J Lion, IPP Greifswald
+
 Formulas used are described in:
 Beidler (2013), https://doi.org/10.1088/0029-5515/51/7/076001
 """

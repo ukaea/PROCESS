@@ -5,7 +5,7 @@ These include:
 - component_masses
 - thermo_hydraulic_model
 
-author: G Graham, CCFE, Culham Science Centre
+
 
 Acronyms for this module:
 

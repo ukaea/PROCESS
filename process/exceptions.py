@@ -19,7 +19,6 @@ class ProcessError(Exception):
 
 class ProcessValidationError(ProcessError):
     """Exception raised when validating PROCESS input.
-
     E.g. initial values, constraint/variable combinations, switch combinations"""
 
 

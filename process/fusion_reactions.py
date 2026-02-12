@@ -61,8 +61,7 @@ REACTION_CONSTANTS_DD2 = {
 
 
 class FusionReactionRate:
-    """
-    Calculate the fusion reaction rate for each reaction case (DT, DHE3, DD1, DD2).
+    """Calculate the fusion reaction rate for each reaction case (DT, DHE3, DD1, DD2).
 
     This class provides methods to numerically integrate over the plasma cross-section
     to find the core plasma fusion power for different fusion reactions. The reactions
@@ -77,71 +76,35 @@ class FusionReactionRate:
     fusion power.
 
     Attributes:
-        plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
-        sigmav_dt_average (float): Average fusion reaction rate <sigma v> for D-T.
-        dhe3_power_density (float): Fusion power density produced by the D-3He reaction.
-        dd_power_density (float): Fusion power density produced by the D-D reactions.
-        dt_power_density (float): Fusion power density produced by the D-T reaction.
-        alpha_power_density (float): Power density of alpha particles produced.
-        pden_non_alpha_charged_mw (float): Power density of charged particles produced.
-        neutron_power_density (float): Power density of neutrons produced.
-        fusion_rate_density (float): Fusion reaction rate density.
-        alpha_rate_density (float): Alpha particle production rate density.
-        proton_rate_density (float): Proton production rate density.
-        f_dd_branching_trit (float): The rate of tritium producing D-D reactions to 3He ones.
-
-    Methods:
-        deuterium_branching(ion_temperature: float) -> float:
-            Calculate the relative rate of tritium producing D-D reactions to 3He ones based on the volume averaged ion temperature.
-
-        dt_reaction() -> None:
-            Calculate the fusion reaction rate and power density for the deuterium-tritium (D-T) fusion reaction.
-
-        dhe3_reaction() -> None:
-            Calculate the fusion reaction rate and power density for the deuterium-helium-3 (D-3He) fusion reaction.
-
-        dd_helion_reaction() -> None:
-            Calculate the fusion reaction rate and power density for the deuterium-deuterium (D-D) fusion reaction, specifically the branch that produces helium-3 (3He) and a neutron (n).
-
-        dd_triton_reaction() -> None:
-            Calculate the fusion reaction rate and power density for the deuterium-deuterium (D-D) fusion reaction, specifically the branch that produces tritium (T) and a proton (p).
-
-        sum_fusion_rates(alpha_power_add: float, charged_power_add: float, neutron_power_add: float, fusion_rate_add: float, alpha_rate_add: float, proton_rate_add: float) -> None:
-            Sum the fusion rate at the end of each reaction.
-
-        calculate_fusion_rates() -> None:
-            Initiate all the fusion rate calculations.
-
-        set_physics_variables() -> None:
-            Set the required physics variables in the physics_variables and physics_module modules.
+         plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
+         sigmav_dt_average (float): Average fusion reaction rate <sigma v> for D-T.
+         dhe3_power_density (float): Fusion power density produced by the D-3He reaction.
+         dd_power_density (float): Fusion power density produced by the D-D reactions.
+         dt_power_density (float): Fusion power density produced by the D-T reaction.
+         alpha_power_density (float): Power density of alpha particles produced.
+         pden_non_alpha_charged_mw (float): Power density of charged particles produced.
+         neutron_power_density (float): Power density of neutrons produced.
+         fusion_rate_density (float): Fusion reaction rate density.
+         alpha_rate_density (float): Alpha particle production rate density.
+         proton_rate_density (float): Proton production rate density.
+         f_dd_branching_trit (float): The rate of tritium producing D-D reactions to 3He ones.
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
           Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
-
     """
 
     def __init__(self, plasma_profile: PlasmaProfile) -> None:
         """
         Initialize the FusionReactionRate class with the given plasma profile.
 
-        Parameters:
-            plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
+        Parameters
+        ----------
+        plasma_profile:
+            The parameterized temperature and density profiles of the plasma.
 
-        Attributes:
-            plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
-            sigmav_dt_average (float): Average fusion reaction rate <sigma v> for D-T.
-            dhe3_power_density (float): Fusion power density produced by the D-3He reaction.
-            dd_power_density (float): Fusion power density produced by the D-D reactions.
-            dt_power_density (float): Fusion power density produced by the D-T reaction.
-            alpha_power_density (float): Power density of alpha particles produced.
-            pden_non_alpha_charged_mw (float): Power density of charged particles produced.
-            neutron_power_density (float): Power density of neutrons produced.
-            fusion_rate_density (float): Fusion reaction rate density.
-            alpha_rate_density (float): Alpha particle production rate density.
-            proton_rate_density (float): Proton production rate density.
-            f_dd_branching_trit (float): The rate of tritium producing D-D reactions to 3He ones.
+
         """
         self.plasma_profile = plasma_profile
         self.sigmav_dt_average = 0.0
@@ -157,24 +120,22 @@ class FusionReactionRate:
         self.f_dd_branching_trit = 0.0
 
     def deuterium_branching(self, ion_temperature: float) -> float:
-        """
-        Calculate the relative rate of tritium producing D-D reactions to 3He ones based on the volume averaged ion temperature
+        """Calculate the relative rate of tritium producing D-D reactions to 3He ones based on the volume averaged ion temperature
 
-        Parameters:
-            ion_temperature (float): Volume averaged ion temperature in keV
+        Parameters
+        ----------
+        ion_temperature :
+            float
 
-        The method updates the following attributes:
-            -f_dd_branching_trit: The rate of tritium producing D-D reactions to 3He ones
-
-        Notes:
-            - For ion temperatures between 0.5 keV and 200 keV.
-            - The deviation of the fit from the R-matrix branching ratio is always smaller than 0.5%.
+        Notes
+        -----
+        For ion temperatures between 0.5 keV and 200 keV.
+        The deviation of the fit from the R-matrix branching ratio is always smaller than 0.5%.
 
         References:
             - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
               Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
               doi: https://doi.org/10.1088/0029-5515/32/4/i07.
-        ‌
         """
         # Divide by 2 to get the branching ratio for the D-D reaction that produces tritium as the output
         # is just the ratio of the two normalized cross sections
@@ -204,8 +165,7 @@ class FusionReactionRate:
             - self.alpha_rate_density: Alpha particle production rate density.
             - self.proton_rate_density: Proton production rate density.
 
-        Returns:
-            None
+
         """
         # Initialize Bosch-Hale constants for the D-T reaction
         dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
@@ -303,8 +263,7 @@ class FusionReactionRate:
             - self.alpha_rate_density: Alpha particle production rate density.
             - self.proton_rate_density: Proton production rate density.
 
-        Returns:
-            None
+
         """
         # Initialize Bosch-Hale constants for the D-3He reaction
         dhe3 = BoschHaleConstants(**REACTION_CONSTANTS_DHE3)
@@ -400,8 +359,7 @@ class FusionReactionRate:
             - self.alpha_rate_density: Alpha particle production rate density.
             - self.proton_rate_density: Proton production rate density.
 
-        Returns:
-            None
+
         """
         # Initialize Bosch-Hale constants for the D-D reaction
         dd1 = BoschHaleConstants(**REACTION_CONSTANTS_DD1)
@@ -500,8 +458,7 @@ class FusionReactionRate:
             - self.alpha_rate_density: Alpha particle production rate density.
             - self.proton_rate_density: Proton production rate density.
 
-        Returns:
-            None
+
         """
         # Initialize Bosch-Hale constants for the D-D reaction
         dd2 = BoschHaleConstants(**REACTION_CONSTANTS_DD2)
@@ -591,16 +548,23 @@ class FusionReactionRate:
         This method updates the cumulative fusion power densities and reaction rates
         for alpha particles, charged particles, neutrons, and protons.
 
-        Parameters:
-            alpha_power_add (float): Alpha particle fusion power per unit volume [MW/m3].
-            charged_power_add (float): Other charged particle fusion power per unit volume [MW/m3].
-            neutron_power_add (float): Neutron fusion power per unit volume [MW/m3].
-            fusion_rate_add (float): Fusion reaction rate per unit volume [reactions/m3/s].
-            alpha_rate_add (float): Alpha particle production rate per unit volume [/m3/s].
-            proton_rate_add (float): Proton production rate per unit volume [/m3/s].
+        Parameters
+        ----------
+        alpha_power_add :
+            Alpha particle fusion power per unit volume [MW/m3].
+        charged_power_add :
+            Other charged particle fusion power per unit volume [MW/m3].
+        neutron_power_add :
+            Neutron fusion power per unit volume [MW/m3]
+        fusion_rate_add :
+            Fusion reaction rate per unit volume [reactions/m3/s].
+        alpha_rate_add :
+            Alpha particle production rate per unit volume [/m3/s].
+        proton_rate_add :
+            Proton production rate per unit volume [/m3/s].
 
-        Returns:
-            None
+
+
         """
         self.alpha_power_density += alpha_power_add
         self.pden_non_alpha_charged_mw += charged_power_add
@@ -610,8 +574,7 @@ class FusionReactionRate:
         self.proton_rate_density += proton_rate_add
 
     def calculate_fusion_rates(self) -> None:
-        """
-        Initiate all the fusion rate calculations.
+        """Initiate all the fusion rate calculations.
 
         This method sequentially calculates the fusion reaction rates and power densities
         for the following reactions:
@@ -623,8 +586,7 @@ class FusionReactionRate:
         It updates the instance attributes for the cumulative power densities and reaction rates
         for alpha particles, charged particles, neutrons, and protons.
 
-        Returns:
-            None
+
         """
         self.dt_reaction()
         self.dhe3_reaction()
@@ -632,14 +594,12 @@ class FusionReactionRate:
         self.dd_triton_reaction()
 
     def set_physics_variables(self) -> None:
-        """
-        Set the required physics variables in the physics_variables and physics_module modules.
+        """Set the required physics variables in the physics_variables and physics_module modules.
 
         This method updates the global physics variables and module variables with the
         current instance's fusion power densities and reaction rates.
 
-        Returns:
-            None
+
         """
         physics_variables.pden_plasma_alpha_mw = self.alpha_power_density
         physics_variables.pden_non_alpha_charged_mw = self.pden_non_alpha_charged_mw
@@ -674,20 +634,25 @@ class BoschHaleConstants:
 def fusion_rate_integral(
     plasma_profile: PlasmaProfile, reaction_constants: BoschHaleConstants
 ) -> np.ndarray:
-    """
-    Evaluate the integrand for the fusion power integration.
+    """Evaluate the integrand for the fusion power integration.
 
-    Parameters:
-        plasma_profile (PlasmaProfile): Parameterised temperature and density profiles.
-        reactionconstants (BoschHaleConstants): Bosch-Hale reaction constants.
+    Parameters
+    ----------
+    plasma_profile :
+        Parameterised temperature and density profiles.
+    reactionconstants :
+        Bosch-Hale reaction constants.
 
-    Returns:
+
+    Returns
+    -------
+    type
         np.ndarray: Integrand for the fusion power.
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
-          doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+        Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
+        doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
 
     # Since the electron temperature profile is only calculated directly, we scale the ion temperature
@@ -720,8 +685,7 @@ def fusion_rate_integral(
 def bosch_hale_reactivity(
     ion_temperature_profile: np.ndarray, reaction_constants: BoschHaleConstants
 ) -> np.ndarray:
-    """
-    Calculate the volumetric fusion reaction rate 〈sigmav〉 (m^3/s) for one of four nuclear reactions using
+    """Calculate the volumetric fusion reaction rate 〈sigmav〉 (m^3/s) for one of four nuclear reactions using
     the Bosch-Hale parametrization.
 
     The valid range of the fit is 0.2 keV < t < 100 keV except for D-3He where it is 0.5 keV < t < 190 keV.
@@ -732,17 +696,22 @@ def bosch_hale_reactivity(
         3. D-D 1st reaction
         4. D-D 2nd reaction
 
-    Parameters:
-        ion_temperature_profile (np.ndarray): Plasma ion temperature profile in keV.
-        reaction_constants (BoschHaleConstants): Bosch-Hale reaction constants.
+    Parameters
+    ----------
+    ion_temperature_profile :
+        Plasma ion temperature profile in keV.
+    reaction_constants :
+        Bosch-Hale reaction constants.
 
-    Returns:
+    Returns
+    -------
+    type
         np.ndarray: Volumetric fusion reaction rate 〈sigmav〉 in m^3/s for each point in the ion temperature profile.
 
-    References:
+        References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-          Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
-          doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+        Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
+        doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
     theta1 = (
         ion_temperature_profile

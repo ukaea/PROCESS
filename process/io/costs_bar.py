@@ -8,7 +8,6 @@ Stuart Muldrew (stuart.muldrew@ukaea.uk)
 
 History
 04/04/2019 SIM Added comp_step
-
 """
 
 # Imported libraries
@@ -22,9 +21,7 @@ import process.io.mfile as mf
 
 
 def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
-    """
-
-    Plot bar chart for the orginal 1990 cost model.
+    """Plot bar chart for the orginal 1990 cost model.
     Two plots produced: (1) Breakdown of the direct costs and (2) Direct, indirect, etc.
 
     """

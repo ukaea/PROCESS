@@ -23,7 +23,6 @@ Notes:
                 generation script imports, and inspects, process.
 
 Compatible with PROCESS version 286
-
 """
 
 import json

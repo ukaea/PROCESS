@@ -1261,14 +1261,16 @@ INPUT_VARIABLES = {
         data_structure.rebco_variables,
         float,
         range=(1e-08, 0.0001),
-        additional_actions=lambda _n, rt, _i, _c: rt <= 1e-6
-        or warn(
-            (
-                "the relationship between REBCO layer thickness and current density is not linear."
-                "REBCO layer thicknesses > 1um should be considered an aggressive extrapolation of"
-                "current HTS technology and any results must be considered speculative."
-            ),
-            stacklevel=1,
+        additional_actions=lambda _n, rt, _i, _c: (
+            rt <= 1e-6
+            or warn(
+                (
+                    "the relationship between REBCO layer thickness and current density is not linear."
+                    "REBCO layer thicknesses > 1um should be considered an aggressive extrapolation of"
+                    "current HTS technology and any results must be considered speculative."
+                ),
+                stacklevel=1,
+            )
         ),
     ),
     "redun_vacp": InputVariable(

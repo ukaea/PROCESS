@@ -33,9 +33,8 @@ class Costs:
         self.outfile = constants.NOUT
 
     def run(self):
-        """
-        Cost accounting for a fusion power plant
-        author: P J Knight, CCFE, Culham Science Centre
+        """Cost accounting for a fusion power plant
+
 
         This routine performs the cost accounting for a fusion power plant.
         The direct costs are calculated based on parameters input
@@ -927,10 +926,9 @@ class Costs:
             )
 
     def acc22(self):
-        """
-        Account 22 : Fusion power island
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 22 : Fusion power island
+
+
         None
         This routine evaluates the Account 22 (fusion power island
         - the tokamak itself plus auxiliary power systems, etc.) costs.
@@ -987,9 +985,8 @@ class Costs:
         )
 
     def acc221(self):
-        """
-        Account 221 : Reactor
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 221 : Reactor
+
         None
         This routine evaluates the Account 221 (reactor) costs.
         These include the first wall, blanket, shield, support structure
@@ -1028,9 +1025,8 @@ class Costs:
         )
 
     def acc222(self):
-        """
-        Account 222 : Magnets, including cryostat
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 222 : Magnets, including cryostat
+
         None
         This routine evaluates the Account 222 (magnet) costs,
         including the costs of associated cryostats.
@@ -1057,9 +1053,8 @@ class Costs:
         )
 
     def acc225(self):
-        """
-        Account 225 : Power conditioning
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 225 : Power conditioning
+
         None
         This routine evaluates the Account 225 (power conditioning) costs.
         """
@@ -1085,9 +1080,8 @@ class Costs:
             )
 
     def acc21(self):
-        """
-        Account 21 : Structures and site facilities
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 21 : Structures and site facilities
+
         None
         This routine evaluates the Account 21 (structures and site
         facilities) costs.
@@ -1206,9 +1200,8 @@ class Costs:
         )
 
     def acc2211(self):
-        """
-        Account 221.1 : First wall
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 221.1 : First wall
+
         None
         This routine evaluates the Account 221.1 (first wall) costs.
         The first wall cost is scaled linearly with surface area from TFCX.
@@ -1272,9 +1265,8 @@ class Costs:
             cost_variables.fwallcst = 0.0e0
 
     def acc2212(self):
-        """
-        Account 221.2 : Blanket
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 221.2 : Blanket
+
         None
         This routine evaluates the Account 221.2 (blanket) costs.
         If ifueltyp = 1, the blanket cost is treated as a fuel cost,
@@ -1398,9 +1390,8 @@ class Costs:
             cost_variables.blkcst = 0.0e0
 
     def acc2213(self):
-        """
-        Account 221.3 : Shield
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 221.3 : Shield
+
         None
         This routine evaluates the Account 221.3 (shield) costs.
         """
@@ -1463,9 +1454,8 @@ class Costs:
         cost_variables.c2213 = cost_variables.c22131 + cost_variables.c22132
 
     def acc2214(self):
-        """
-        Account 221.4 : Reactor structure
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 221.4 : Reactor structure
+
         None
         This routine evaluates the Account 221.4 (reactor structure) costs.
         The structural items are costed as standard steel elements.
@@ -1481,9 +1471,8 @@ class Costs:
         cost_variables.c2214 = cost_variables.fkind * cost_variables.c2214
 
     def acc2215(self):
-        """
-        Account 221.5 : Divertor
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 221.5 : Divertor
+
         None
         This routine evaluates the Account 221.5 (divertor) costs.
         The cost of the divertor blade is scaled linearly with
@@ -1514,9 +1503,8 @@ class Costs:
             cost_variables.divcst = 0.0e0
 
     def acc2221(self):
-        """
-        Account 222.1 : TF magnet assemblies
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 222.1 : TF magnet assemblies
+
         None
         This routine evaluates the Account 222.1 (TF magnet) costs.
         Copper magnets are costed from the TFCX data base ($/kg).
@@ -1671,9 +1659,8 @@ class Costs:
             )
 
     def acc2222(self):
-        """
-        Account 222.2 : PF magnet assemblies
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 222.2 : PF magnet assemblies
+
         None
         This routine evaluates the Account 222.2 (PF magnet) costs.
         Conductor costs previously used an algorithm devised by R. Hancox,
@@ -1916,9 +1903,8 @@ class Costs:
         )
 
     def acc2223(self):
-        """
-        Account 222.3 : Vacuum vessel
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 222.3 : Vacuum vessel
+
         None
         This routine evaluates the Account 222.3 (vacuum vessel) costs.
         """
@@ -1930,9 +1916,8 @@ class Costs:
         )
 
     def acc223(self):
-        """
-        Account 223 : Power injection
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 223 : Power injection
+
         None
         This routine evaluates the Account 223 (power injection) costs.
         The costs are from TETRA, updated to 1990$.
@@ -2058,9 +2043,8 @@ class Costs:
         cost_variables.cdcost = cost_variables.c223
 
     def acc224(self):
-        """
-        Account 224 : Vacuum system
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 224 : Vacuum system
+
         None
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
@@ -2131,9 +2115,8 @@ class Costs:
         )
 
     def acc2251(self):
-        """
-        Account 225.1 : TF coil power conditioning
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 225.1 : TF coil power conditioning
+
         None
         This routine evaluates the Account 225.1 (TF coil power
         conditioning) costs.
@@ -2213,9 +2196,8 @@ class Costs:
         )
 
     def acc2252(self):
-        """
-        Account 225.2 : PF coil power conditioning
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 225.2 : PF coil power conditioning
+
         None
         This routine evaluates the Account 225.2 (PF coil power
         conditioning) costs.
@@ -2295,9 +2277,8 @@ class Costs:
         )
 
     def acc226(self):
-        """
-        Account 226 : Heat transport system
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 226 : Heat transport system
+
         None
         This routine evaluates the Account 226 (heat transport system) costs.
         Costs are estimated from major equipment and heat transport
@@ -2308,9 +2289,8 @@ class Costs:
         )
 
     def acc2261(self):
-        """
-        Account 2261 : Reactor cooling system
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 2261 : Reactor cooling system
+
         None
         This routine evaluates the Account 2261 -
         """
@@ -2354,9 +2334,8 @@ class Costs:
         cost_variables.c2261 = cost_variables.chx + cost_variables.cpp
 
     def acc2262(self):
-        """
-        Account 2262 : Auxiliary component cooling
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 2262 : Auxiliary component cooling
+
         None
         This routine evaluates the Account 2262 - Auxiliary component cooling
         """
@@ -2396,9 +2375,8 @@ class Costs:
         cost_variables.c2262 = cost_variables.cppa
 
     def acc2263(self):
-        """
-        Account 2263 : Cryogenic system
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 2263 : Cryogenic system
+
         None
         This routine evaluates the Account 2263 - Cryogenic system
         """
@@ -2419,9 +2397,8 @@ class Costs:
         )
 
     def acc227(self):
-        """
-        Account 227 : Fuel handling
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 227 : Fuel handling
+
         None
         This routine evaluates the Account 227 (fuel handling) costs.
         Costs are scaled from TETRA reactor code runs.
@@ -2434,9 +2411,8 @@ class Costs:
         )
 
     def acc2271(self):
-        """
-        Account 2271 : Fuelling system
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 2271 : Fuelling system
+
         None
         This routine evaluates the Account 2271 - Fuelling system
         """
@@ -2446,9 +2422,8 @@ class Costs:
         cost_variables.c2271 = cost_variables.fkind * cost_variables.c2271
 
     def acc2272(self):
-        """
-        Account 2272 : Fuel processing and purification
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 2272 : Fuel processing and purification
+
         None
         This routine evaluates the Account 2272 - Fuel processing
         """
@@ -2487,9 +2462,8 @@ class Costs:
         cost_variables.c2272 = cost_variables.fkind * cost_variables.c2272
 
     def acc2273(self):
-        """
-        Account 2273 : Atmospheric recovery systems
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 2273 : Atmospheric recovery systems
+
         None
         This routine evaluates the Account 2273 - Atmospheric recovery systems
         """
@@ -2511,9 +2485,8 @@ class Costs:
         cost_variables.c2273 = cost_variables.fkind * cost_variables.c2273
 
     def acc2274(self):
-        """
-        Account 2274 : Nuclear building ventilation
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 2274 : Nuclear building ventilation
+
         None
         This routine evaluates the Account 2274 - Nuclear building ventilation
         """
@@ -2527,10 +2500,9 @@ class Costs:
         cost_variables.c2274 = cost_variables.fkind * cost_variables.c2274
 
     def acc228(self):
-        """
-        Account 228 : Instrumentation and control
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 228 : Instrumentation and control
+
+
         None
         This routine evaluates the Account 228 (instrumentation and
         control) costs.
@@ -2540,10 +2512,9 @@ class Costs:
         cost_variables.c228 = cost_variables.fkind * cost_variables.c228
 
     def acc229(self):
-        """
-        Account 229 : Maintenance equipment
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 229 : Maintenance equipment
+
+
         None
         This routine evaluates the Account 229 (maintenance equipment) costs.
         """
@@ -2551,10 +2522,9 @@ class Costs:
         cost_variables.c229 = cost_variables.fkind * cost_variables.c229
 
     def acc23(self):
-        """
-        Account 23 : Turbine plant equipment
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 23 : Turbine plant equipment
+
+
         None
         This routine evaluates the Account 23 (turbine plant equipment) costs.
         """
@@ -2569,10 +2539,9 @@ class Costs:
             )
 
     def acc24(self):
-        """
-        Account 24 : Electric plant equipment
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 24 : Electric plant equipment
+
+
         None
         This routine evaluates the Account 24 (electric plant equipment) costs.
         """
@@ -2585,9 +2554,8 @@ class Costs:
         )
 
     def acc241(self):
-        """
-        Account 241 : Electric plant equipment - switchyard
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 241 : Electric plant equipment - switchyard
+
         None
         This routine evaluates the Account 241 - switchyard
         """
@@ -2599,9 +2567,8 @@ class Costs:
         )
 
     def acc242(self):
-        """
-        Account 242 : Electric plant equipment - Transformers
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 242 : Electric plant equipment - Transformers
+
         None
         This routine evaluates the Account 242 - Transformers
         """
@@ -2619,9 +2586,8 @@ class Costs:
         cost_variables.c242 = cost_variables.c242 * cmlsa[cost_variables.lsa - 1]
 
     def acc243(self):
-        """
-        Account 243 : Electric plant equipment - Low voltage
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 243 : Electric plant equipment - Low voltage
+
         None
         This routine evaluates the Account 243 - Low voltage
         """
@@ -2639,9 +2605,8 @@ class Costs:
         )
 
     def acc244(self):
-        """
-        Account 244 : Electric plant equipment - Diesel generators
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 244 : Electric plant equipment - Diesel generators
+
         None
         This routine evaluates the Account 244 - Diesel generators
         """
@@ -2653,9 +2618,8 @@ class Costs:
         )
 
     def acc245(self):
-        """
-        Account 245 : Electric plant equipment - Aux facility power
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 245 : Electric plant equipment - Aux facility power
+
         None
         This routine evaluates the Account 245 - Aux facility power
         """
@@ -2667,10 +2631,9 @@ class Costs:
         )
 
     def acc25(self):
-        """
-        Account 25 : Miscellaneous plant equipment
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 25 : Miscellaneous plant equipment
+
+
         None
         This routine evaluates the Account 25 (miscellaneous plant
         equipment) costs, such as waste treatment.
@@ -2682,10 +2645,9 @@ class Costs:
         )
 
     def acc26(self):
-        """
-        Account 26 : Heat rejection system
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 26 : Heat rejection system
+
+
         None
         This routine evaluates the Account 26 (heat rejection system) costs.
         Costs are scaled with the total plant heat rejection based on
@@ -2717,10 +2679,9 @@ class Costs:
         )
 
     def acc9(self):
-        """
-        Account 9 : Indirect cost and contingency allowances
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Morris, CCFE, Culham Science Centre
+        """Account 9 : Indirect cost and contingency allowances
+
+
         None
         This routine evaluates the Account 9 (indirect cost and
         contingency allowances) costs.
@@ -2745,9 +2706,8 @@ class Costs:
         )
 
     def acc2253(self):
-        """
-        Account 225.3 : Energy storage
-        author: P J Knight, CCFE, Culham Science Centre
+        """Account 225.3 : Energy storage
+
         None
         This routine evaluates the Account 225.3 (energy storage) costs.
         """
@@ -2848,9 +2808,8 @@ class Costs:
         cost_variables.c2253 = cost_variables.fkind * cost_variables.c2253
 
     def coelc(self):
-        """
-        Routine to calculate the cost of electricity for a fusion power plant
-        author: P J Knight, CCFE, Culham Science Centre
+        """Routine to calculate the cost of electricity for a fusion power plant
+
         outfile : input integer : output file unit
 
         This routine performs the calculation of the cost of electricity
@@ -3170,8 +3129,7 @@ class Costs:
 
     @staticmethod
     def convert_fpy_to_calendar() -> None:
-        """
-        Routine to convert component lifetimes in FPY to calendar years.
+        """Routine to convert component lifetimes in FPY to calendar years.
         Required for replacement component costs.
         Author: J Foster, CCFE, Culham Campus
         """

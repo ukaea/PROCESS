@@ -42,12 +42,21 @@ class Caller:
     ) -> bool:
         """Compare previous and current arrays for agreement within a tolerance.
 
-        :param previous: value(s) from previous models evaluation
-        :type previous: float | np.ndarray
-        :param current: value(s) from current models evaluation
-        :type current: float | np.ndarray
-        :return: whether values agree or not
-        :rtype: bool
+        Parameters
+        ----------
+        previous : float | np.ndarray
+            value(s) from previous models evaluation
+        current : float | np.ndarray
+            value(s) from current models evaluation
+        previous: float | np.ndarray :
+
+        current: float | np.ndarray :
+
+
+        Returns
+        -------
+        bool
+            whether values agree or not
         """
         # Check for same shape: mfile length can change between iterations
         if isinstance(previous, float) or previous.shape == current.shape:
@@ -59,14 +68,27 @@ class Caller:
 
         Ensure objective function and constraints are idempotent before returning.
 
-        :param xc: optimisation parameters
-        :type xc: np.ndarray
-        :param m: number of constraints
-        :type m: int
-        :raises RuntimeError: if values are non-idempotent after successive
-        evaluations
-        :return: objective function and constraints
-        :rtype: Tuple[float, np.ndarray]
+        Parameters
+        ----------
+        xc : np.ndarray
+            optimisation parameters
+        m : int
+            number of constraints
+        xc: np.ndarray :
+
+        m: int :
+
+
+        Returns
+        -------
+        Tuple[float, np.ndarray]
+            objective function and constraints
+
+        Raises
+        ------
+        RuntimeError
+            if values are non-idempotent after successive
+            evaluations
         """
         objf_prev = None
         conf_prev = None
@@ -115,12 +137,22 @@ class Caller:
         optimisation, or in a non-optimising evaluation. Writes OUT.DAT and
         MFILE.DAT with final results.
 
-        :param xc: optimisation parameter
-        :type xc: np.ndarray
-        :param ifail: return code of solver
-        :type ifail: int
-        :raises RuntimeError: if values are non-idempotent after successive
-        evaluations
+        Parameters
+        ----------
+        xc : np.ndarray
+            optimisation parameter
+        ifail : int
+            return code of solver
+        xc: np.ndarray :
+
+        ifail: int :
+
+
+        Raises
+        ------
+        RuntimeError
+            if values are non-idempotent after successive
+            evaluations
         """
         # TODO The only way to ensure idempotence in all outputs is by comparing
         # mfiles at this stage
@@ -220,8 +252,13 @@ class Caller:
         This method is the principal caller of all the physics and
         engineering models. Some are Fortran subroutines within modules, others
         will be methods on Python model objects.
-        :param xc: Array of optimisation parameters
-        :type xc: np.array
+
+        Parameters
+        ----------
+        xc : np.array
+            Array of optimisation parameters
+        xc: np.ndarray :
+
         """
         # Number of active iteration variables
         nvars = len(xc)
@@ -360,10 +397,16 @@ class Caller:
 def write_output_files(models: Models, ifail: int) -> None:
     """Evaluate models and write output files (OUT.DAT and MFILE.DAT).
 
-    :param models: physics and engineering models
-    :type models: Models
-    :param ifail: solver return code
-    :type ifail: int
+    Parameters
+    ----------
+    models : Models
+        physics and engineering models
+    ifail : int
+        solver return code
+    models: Models :
+
+    ifail: int :
+
     """
     n = data_structure.numerics.nvar
     x = data_structure.numerics.xcm[:n]

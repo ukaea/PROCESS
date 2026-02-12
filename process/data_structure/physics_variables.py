@@ -1,10 +1,10 @@
 """Module containing tokamak plasma physics routines
-author: P J Knight, CCFE, Culham Science Centre
+
 N/A
 This module contains all the primary plasma physics routines
 for a tokamak device.
 
-author: J. Morris (UKAEA)
+
 Module containing global variables relating to the plasma physics
 """
 

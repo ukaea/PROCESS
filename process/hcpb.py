@@ -254,7 +254,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
     def component_masses(self):
         """Calculations for component masses
-        author: J. Morris, CCFE, Culham Science Centre
+
 
         This model used to be in the blanket library. However,
         it only appears to contain code relevant to hcpb.
@@ -433,11 +433,16 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
     def nuclear_heating_magnets(self, output: bool):
         """Nuclear heating in the magnets for CCFE HCPB model
-        author: Michael Kovari, CCFE, Culham Science Centre
-        author: J. Morris, CCFE, Culham Science Centre
+
+
         This subroutine calculates the nuclear heating in the
         coils.
         PROCESS Engineering paper (M. Kovari et al.)
+
+        Parameters
+        ----------
+        output: bool :
+
         """
 
         # Model factors and coefficients

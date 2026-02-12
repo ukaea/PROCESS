@@ -6,7 +6,6 @@ Stuart Muldrew (stuart.muldrew@ukaea.uk)
 
 History
 04/04/2019 SIM Added step_cost_model
-
 """
 
 # Imported libraries
@@ -18,9 +17,7 @@ import process.io.mfile as mf
 
 
 def orig_cost_model(m_file, args):
-    """
-
-    Plot pie chart for the orginal 1990 cost model.
+    """Plot pie chart for the orginal 1990 cost model.
     Two plots produced: (1) Breakdown of the direct costs and (2) Direct, indirect, etc.
 
     """

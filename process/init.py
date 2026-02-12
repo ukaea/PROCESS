@@ -64,7 +64,7 @@ from process.stellarator.initialization import st_init
 
 def init_process():
     """Routine that calls the initialisation routines
-    author: P J Knight, CCFE, Culham Science Centre
+
     None
     This routine calls the main initialisation routines that set
     the default values for the global variables, reads in data from
@@ -300,7 +300,7 @@ def init_all_module_vars():
 def check_process(inputs):  # noqa: ARG001
     """Routine to reset specific variables if certain options are
     being used
-    author: P J Knight, CCFE, Culham Science Centre
+
     None
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.

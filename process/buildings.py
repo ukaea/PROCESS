@@ -21,14 +21,13 @@ logger = logging.getLogger(__name__)
 
 
 class Buildings:
-    """author: J. Morris, P. Knight, R. Chapman (UKAEA)
+    """
 
     This module contains routines for calculating the
-    parameters of the fusion power plant buildings.
     """
 
     def __init__(self) -> None:
-        """author: J. Morris, P. Knight, R. Chapman (UKAEA)
+        """
 
         This routine calls the buildings calculations.
         """
@@ -108,8 +107,8 @@ class Buildings:
         helpow,
     ):
         """Determines the sizes of the plant buildings
-        author: P J Knight, CCFE, Culham Science Centre
-        author: P C Shipe, ORNL
+
+
         pfr : input/output real :  largest PF coil outer radius, m
         pfm : : input real : largest PF coil mass, tonne
         tfro : input real : outer radius of TF coil, m
@@ -140,6 +139,37 @@ class Buildings:
         to fit the ITER design, September 1990 (J. Galambos).
         This routine was included in PROCESS in January 1992 by
         P. C. Shipe.
+
+        Parameters
+        ----------
+        output: bool :
+
+        pfr :
+
+        pfm :
+
+        tfro :
+
+        tfri :
+
+        tfh :
+
+        tfm :
+
+        n_tf_coils :
+
+        shro :
+
+        shri :
+
+        shh :
+
+        shm :
+
+        crr :
+
+        helpow :
+
         """
 
         # Reactor building
@@ -383,7 +413,16 @@ class Buildings:
         some are derived from footprints/volumes based on
         assessment of other power plants and/or similar facilities.
         !!
-        author: R Chapman, UKAEA
+
+
+        Parameters
+        ----------
+        output :
+
+        tf_radial_dim :
+
+        tf_vertical_dim :
+
         """
 
         buildings_total_vol = 0.0e0
