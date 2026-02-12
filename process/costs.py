@@ -3030,18 +3030,17 @@ class Costs:
         #  Annual cost of operation and maintenance
 
         if heat_transport_variables.p_plant_electric_net_mw < 0:
-            sqrt_p_plant_electric_net_mw = 0.0
+            sqrt_p_plant_electric_net_mw_1200 = 0.0
             logger.warning(
                 "p_plant_electric_net_mw has gone negative! Clamping it to 0 for the calculation of annoam and annwst (cost of maintenance and cost of waste)."
             )
         else:
-            sqrt_p_plant_electric_net_mw = np.sqrt(
-                heat_transport_variables.p_plant_electric_net_mw
+            sqrt_p_plant_electric_net_mw_1200 = np.sqrt(
+                heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
             )
         annoam = (
             cost_variables.ucoam[cost_variables.lsa - 1]
-            * sqrt_p_plant_electric_net_mw
-            / 1200.0e0
+            * sqrt_p_plant_electric_net_mw_1200
         )
 
         #  Additional cost due to pulsed reactor thermal storage
@@ -3058,7 +3057,7 @@ class Costs:
         #
         #  Scale with net electric power
         #
-        #         annoam1 = annoam1 * sqrt_p_plant_electric_net_mw/1200.0e0
+        #         annoam1 = annoam1 * heat_transport_variables.p_plant_electric_net_mw/1200.0e0
         #
         #  It is necessary to convert from 1992 pounds to 1990 dollars
         #  Reasonable guess for the exchange rate + inflation factor
@@ -3113,8 +3112,7 @@ class Costs:
 
         annwst = (
             cost_variables.ucwst[cost_variables.lsa - 1]
-            * sqrt_p_plant_electric_net_mw
-            / 1200.0e0
+            * sqrt_p_plant_electric_net_mw_1200
         )
 
         #  Cost of electricity due to waste disposal
