@@ -25,8 +25,7 @@ def main(args=None):
         return
 
     parser = argparse.ArgumentParser(
-        description="Program to plot\
-     the power flow in PROCESS using a Sankey diagram."
+        description="Program to plot the power flow in PROCESS using a Sankey diagram."
     )
 
     parser.add_argument("-e", "--end", default="pdf", help="file format, default = pdf")
