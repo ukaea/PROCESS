@@ -950,11 +950,11 @@ def main(args=None):
             else:
                 extra_str = f"{output_name}{f'_vs_{output_name2}' if output_names2 != [] else ''}"
 
-            plt.savefig(
-                f"{args.outputdir}/scan_{scan_var_name}_vs_{extra_str}.{save_format}",
-                dpi=300,
-            )
             if not stack_plots:  # Display plot (used in Jupyter notebooks)
+                plt.savefig(
+                    f"{args.outputdir}/scan_{scan_var_name}_vs_{extra_str}.{save_format}",
+                    dpi=300,
+                )
                 plt.show()
                 plt.clf()
         # ------------
