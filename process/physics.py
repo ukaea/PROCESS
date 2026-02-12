@@ -9503,7 +9503,7 @@ class DetailedPhysics:
         charge1: float,
         charge2: float,
         m_reduced: float,
-        vel_relative: float | np.ndarray = None,
+        vel_relative: float | np.ndarray,
     ) -> float | np.ndarray:
         """
         Calculate the classical distance of closest approach for two charged particles.
