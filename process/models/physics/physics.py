@@ -9903,6 +9903,42 @@ class PlasmaDensityLimit:
 
         return 1.0e14 * c_plasma / (np.pi * rminor**2)
 
+    @staticmethod
+    def calculate_asdex_new_density_limit(
+        p_hcd_injected_total_mw: float, c_plasma: float, q95: float, prn1: float
+    ) -> float:
+        """
+        Calculate the ASDEX Upgrade new density limit.
+
+        :param p_hcd_injected_total_mw: Power injected into the plasma (MW).
+        :type p_hcd_injected_total_mw: float
+        :param plasma_current: Plasma current (A).
+        :type plasma_current: float
+        :param q95: Safety factor at 95% surface.
+        :type q95: float
+        :param prn1: Edge density / average plasma density.
+        :type prn1: float
+        :return: The ASDEX Upgrade new density limit (m⁻³).
+        :rtype: float
+
+        :notes: This limit is for the separatrix density so wee scale by `prn1` to get it as a volume average
+
+        :references:
+
+            - J. W. Berkery et al., “Density limits as disruption forecasters for spherical tokamaks,”
+            Plasma Physics and Controlled Fusion, vol. 65, no. 9, pp. 095003-095003, Jul. 2023,
+            doi: https://doi.org/10.1088/1361-6587/ace476.
+
+            - M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,” vol. 57, no. 1, pp. 014038-014038, Nov. 2014,
+            doi: https://doi.org/10.1088/0741-3335/57/1/014038.
+        """
+        return (
+            1.0e20
+            * 0.506
+            * (p_hcd_injected_total_mw**0.396 * (c_plasma / 1.0e6) ** 0.265)
+            / (q95**0.323)
+        ) / prn1
+
     def calculate_density_limit(
         self,
         b_plasma_toroidal_on_axis: float,
@@ -10047,12 +10083,12 @@ class PlasmaDensityLimit:
             c_plasma=plasma_current, rminor=rminor
         )
 
-        nd_plasma_electron_max_array[7] = (
-            1.0e20
-            * 0.506
-            * (p_hcd_injected_total_mw**0.396 * (plasma_current / 1.0e6) ** 0.265)
-            / (q95**0.323)
-        ) / prn1
+        nd_plasma_electron_max_array[7] = self.calculate_asdex_new_density_limit(
+            p_hcd_injected_total_mw=p_hcd_injected_total_mw,
+            c_plasma=plasma_current,
+            q95=q95,
+            prn1=prn1,
+        )
 
         # Enforce the chosen density limit
 
