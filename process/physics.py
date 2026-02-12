@@ -16,11 +16,9 @@ import process.physics_functions as physics_funcs
 from process import constants
 from process import process_output as po
 from process.data_structure import (
-    build_variables,
     constraint_variables,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     impurity_radiation_module,
     numerics,
     physics_variables,
@@ -2041,38 +2039,6 @@ class Physics:
             i_beta_fast_alpha=physics_variables.i_beta_fast_alpha,
         )
 
-        # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
-        # Note that 'a_fw_total' excludes these, so they have been added back in.
-        if physics_variables.i_pflux_fw_neutron == 1:
-            physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.ffwal
-                * physics_variables.p_neutron_total_mw
-                / physics_variables.a_plasma_surface
-            )
-        else:
-            if divertor_variables.n_divertors == 2:
-                # Double null configuration
-                physics_variables.pflux_fw_neutron_mw = (
-                    (
-                        1.0e0
-                        - fwbs_variables.f_a_fw_outboard_hcd
-                        - 2.0e0 * fwbs_variables.f_ster_div_single
-                    )
-                    * physics_variables.p_neutron_total_mw
-                    / build_variables.a_fw_total
-                )
-            else:
-                # Single null Configuration
-                physics_variables.pflux_fw_neutron_mw = (
-                    (
-                        1.0e0
-                        - fwbs_variables.f_a_fw_outboard_hcd
-                        - fwbs_variables.f_ster_div_single
-                    )
-                    * physics_variables.p_neutron_total_mw
-                    / build_variables.a_fw_total
-                )
-
         # Calculate ion/electron equilibration power
 
         physics_variables.pden_ion_electron_equilibration_mw = rether(
@@ -2173,7 +2139,7 @@ class Physics:
             - physics_variables.p_plasma_rad_mw
         )
 
-        physics_variables.plfux_plasma_surface_neutron_avg_mw = (
+        physics_variables.pflux_plasma_surface_neutron_avg_mw = (
             physics_variables.p_neutron_total_mw / physics_variables.a_plasma_surface
         )
 
@@ -2206,11 +2172,6 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.kappa95,
-        )
-
-        # Power transported to the first wall by escaped alpha particles
-        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
-            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
         )
 
         # Density limit
@@ -2339,59 +2300,6 @@ class Physics:
         )
 
         # ============================================================
-
-        # MDK
-        # Nominal mean photon wall load on entire first wall area including divertor and beam holes
-        # Note that 'a_fw_total' excludes these, so they have been added back in.
-        if physics_variables.i_pflux_fw_neutron == 1:
-            physics_variables.pflux_fw_rad_mw = (
-                physics_variables.ffwal
-                * physics_variables.p_plasma_rad_mw
-                / physics_variables.a_plasma_surface
-            )
-        else:
-            if divertor_variables.n_divertors == 2:
-                # Double Null configuration in - including SoL radiation
-                physics_variables.pflux_fw_rad_mw = (
-                    (
-                        1.0e0
-                        - fwbs_variables.f_a_fw_outboard_hcd
-                        - 2.0e0 * fwbs_variables.f_ster_div_single
-                    )
-                    * physics_variables.p_plasma_rad_mw
-                    / build_variables.a_fw_total
-                    + (
-                        1.0e0
-                        - fwbs_variables.f_a_fw_outboard_hcd
-                        - 2.0e0 * fwbs_variables.f_ster_div_single
-                    )
-                    * physics_variables.rad_fraction_sol
-                    * physics_variables.p_plasma_separatrix_mw
-                    / (build_variables.a_fw_total)
-                )
-            else:
-                # Single null configuration - including SoL radaition
-                physics_variables.pflux_fw_rad_mw = (
-                    (
-                        1.0e0
-                        - fwbs_variables.f_a_fw_outboard_hcd
-                        - fwbs_variables.f_ster_div_single
-                    )
-                    * physics_variables.p_plasma_rad_mw
-                    / build_variables.a_fw_total
-                    + (
-                        1.0e0
-                        - fwbs_variables.f_a_fw_outboard_hcd
-                        - fwbs_variables.f_ster_div_single
-                    )
-                    * physics_variables.rad_fraction_sol
-                    * physics_variables.p_plasma_separatrix_mw
-                    / build_variables.a_fw_total
-                )
-
-        constraint_variables.pflux_fw_rad_max_mw = (
-            physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
-        )
 
         # Calculate the target imbalances
         # find the total power into the targets
@@ -4774,8 +4682,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Average neutron flux at plasma surface (MW/m^2)",
-            "(plfux_plasma_surface_neutron_avg_mw)",
-            physics_variables.plfux_plasma_surface_neutron_avg_mw,
+            "(pflux_plasma_surface_neutron_avg_mw)",
+            physics_variables.pflux_plasma_surface_neutron_avg_mw,
             "OP ",
         )
 
