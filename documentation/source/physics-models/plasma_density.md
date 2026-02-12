@@ -45,7 +45,7 @@ $$
 
 -----------------
 
-## JET edge radiation model
+## JET edge radiation model | `calculate_jet_edge_radiation_density_limit()`
 
 Switch value: `i_density_limit = 4` [^1]
 
