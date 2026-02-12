@@ -84,7 +84,7 @@ $$
 
 -----------------
 
-## Greenwald model
+## Greenwald model | `calculate_greenwald_density_limit()`
 
 Switch value: `i_density_limit = 7` [^3][^4]
 
@@ -96,7 +96,7 @@ For the Greenwald model the limit applies to the line-averaged electron density,
 
 ---------------------
 
-## ASDEX New model
+## ASDEX New model | `calculate_asdex_new_density_limit()`
 
 Switch value: `i_density_limit = 8` [^5][^6]
 
