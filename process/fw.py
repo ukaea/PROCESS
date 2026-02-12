@@ -201,20 +201,33 @@ class FirstWall:
     ) -> tuple[float, float, float]:
         """Apply first wall coverage factors to calculate actual first wall areas.
 
-        :param n_divertors: Number of divertors (1 or 2).
-        :type n_divertors: int
-        :param f_ster_div_single: Fractional area of first wall sterically blocked by single divertor.
-        :type f_ster_div_single: float
-        :param f_a_fw_outboard_hcd: Fractional area of outboard first wall covered by high heat flux components.
-        :type f_a_fw_outboard_hcd: float
-        :param a_fw_inboard_full_coverage: First wall inboard area assuming 100% coverage (m^2).
-        :type a_fw_inboard_full_coverage: float
-        :param a_fw_outboard_full_coverage: First wall outboard area assuming 100% coverage (m^2).
-        :type a_fw_outboard_full_coverage: float
+        Parameters
+        ----------
+        n_divertors : int
+            Number of divertors (1 or 2).
+        f_ster_div_single : float
+            Fractional area of first wall sterically blocked by single divertor.
+        f_a_fw_outboard_hcd : float
+            Fractional area of outboard first wall covered by high heat flux components.
+        a_fw_inboard_full_coverage : float
+            First wall inboard area assuming 100% coverage (m^2).
+        a_fw_outboard_full_coverage : float
+            First wall outboard area assuming 100% coverage (m^2).
+        n_divertors: int :
 
-        :returns: Contains first wall inboard area, outboard area, and total area (m^2).
-        :rtype: tuple[float, float, float]
+        f_ster_div_single: float :
 
+        f_a_fw_outboard_hcd: float :
+
+        a_fw_inboard_full_coverage: float :
+
+        a_fw_outboard_full_coverage: float :
+
+
+        Returns
+        -------
+        tuple[float, float, float]
+            Contains first wall inboard area, outboard area, and total area (m^2).
         """
         if n_divertors == 2:
             # Double null configuration

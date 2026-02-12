@@ -24,10 +24,18 @@ class NeutralBeam:
 
     def iternb(self):
         """Routine to calculate ITER Neutral Beam current drive parameters
-        author: P J Knight, CCFE, Culham Science Centre
-        effnbss : output real : neutral beam current drive efficiency (A/W)
-        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
-        fshine  : output real : shine-through fraction of beam
+
+        Returns
+        -------
+        effnbss:
+            neutral beam current drive efficiency (A/W)
+        f_p_beam_injected_ions:
+            fraction of NB power given to ions
+        fshine:
+             shine-through fraction of beam
+
+        Notes
+        -----
         This routine calculates the current drive parameters for a
         neutral beam system, based on the 1990 ITER model.
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
@@ -109,10 +117,18 @@ class NeutralBeam:
 
     def culnbi(self):
         """Routine to calculate Neutral Beam current drive parameters
-        author: P J Knight, CCFE, Culham Science Centre
-        effnbss : output real : neutral beam current drive efficiency (A/W)
-        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
-        fshine  : output real : shine-through fraction of beam
+
+        Returns
+        -------
+        effnbss:
+            neutral beam current drive efficiency (A/W)
+        f_p_beam_injected_ions:
+            fraction of NB power given to ions
+        fshine:
+            shine-through fraction of beam
+
+        Notes
+        -----
         This routine calculates Neutral Beam current drive parameters
         using the corrections outlined in AEA FUS 172 to the ITER method.
         <P>The result cannot be guaranteed for devices with aspect ratios far
@@ -222,20 +238,8 @@ class NeutralBeam:
         """Routine to find neutral beam current drive efficiency
         using the ITER 1990 formulation, plus correction terms
         outlined in Culham Report AEA FUS 172
-        author: P J Knight, CCFE, Culham Science Centre
-        m_beam_amu   : input real : beam ion mass (amu)
-        alphan  : input real : density profile factor
-        alphat  : input real : temperature profile factor
-        aspect  : input real : aspect ratio
-        nd_plasma_electrons_vol_avg    : input real : volume averaged electron density (m**-3)
-        nd_plasma_electron_line    : input real : line averaged electron density (m**-3)
-        e_beam_kev  : input real : neutral beam energy (keV)
-        f_radius_beam_tangency_rmajor  : input real : R_tangent / R_major for neutral beam injection
-        fshine  : input real : shine-through fraction of beam
-        rmajor  : input real : plasma major radius (m)
-        rminor  : input real : plasma minor radius (m)
-        temp_plasma_electron_density_weighted_kev     : input real : density weighted average electron temperature (keV)
-        zeff    : input real : plasma effective charge
+
+
         This routine calculates the current drive efficiency in A/W of
         a neutral beam system, based on the 1990 ITER model,
         plus correction terms outlined in Culham Report AEA FUS 172.
@@ -243,6 +247,35 @@ class NeutralBeam:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
+        Parameters
+        ----------
+        m_beam_amu:
+            beam ion mass (amu)
+        alphan:
+            density profile factor
+        alphat:
+            temperature profile factor
+        aspect:
+            aspect ratio
+        nd_plasma_electrons_vol_avg:
+            volume averaged electron density (m**-3)
+        nd_plasma_electron_line:
+            line averaged electron density (m**-3)
+        e_beam_kev:
+            neutral beam energy (keV)
+        f_radius_beam_tangency_rmajor:
+            R_tangent / R_major for neutral beam injection
+        fshine:
+            shine-through fraction of beam
+        rmajor:
+            plasma major radius (m)
+        rminor:
+            plasma minor radius (m)
+        temp_plasma_electron_density_weighted_kev:
+            density weighted average electron temperature (keV)
+        zeff:
+            plasma effective charge
         """
         #  Charge of beam ions
         zbeam = 1.0
@@ -285,7 +318,6 @@ class NeutralBeam:
 
         #  Normalisation to allow results to be valid for
         #  non-ITER plasma size and density:
-
         #  Line averaged electron density (10**20 m**-3) normalised to ITER
         nnorm = 1.0
 
@@ -349,20 +381,37 @@ class NeutralBeam:
     ):
         """Routine to find neutral beam current drive efficiency
         using the ITER 1990 formulation
-        author: P J Knight, CCFE, Culham Science Centre
-        m_beam_amu   : input real : beam ion mass (amu)
-        alphan  : input real : density profile factor
-        alphat  : input real : temperature profile factor
-        aspect  : input real : aspect ratio
-        nd_plasma_electrons_vol_avg    : input real : volume averaged electron density (m**-3)
-        ebeam  : input real : neutral beam energy (keV)
-        rmajor  : input real : plasma major radius (m)
-        temp_plasma_electron_density_weighted_kev     : input real : density weighted average electron temp. (keV)
-        zeff    : input real : plasma effective charge
+
+        Parameters
+        ----------
+        m_beam_amu:
+            beam ion mass (amu)
+        alphan:
+            density profile factor
+        alphat:
+            temperature profile factor
+        aspect:
+            aspect ratio
+        nd_plasma_electrons_vol_avg:
+            volume averaged electron density (m**-3)
+        ebeam:
+            neutral beam energy (keV)
+        rmajor:
+            plasma major radius (m)
+        temp_plasma_electron_density_weighted_kev:
+            density weighted average electron temp. (keV)
+        zeff:
+            plasma effective charge
+
+        Notes
+        -----
         This routine calculates the current drive efficiency of
         a neutral beam system, based on the 1990 ITER model.
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
+
+
         """
 
         zbeam = 1.0
@@ -402,15 +451,27 @@ class NeutralBeam:
 
     def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
         """Calculates the stopping cross-section for a hydrogen
-        beam in a fusion plasma
-        author: P J Knight, CCFE, Culham Science Centre
-        eb     : input real : beam energy (kev/amu)
-        te     : input real : electron temperature (keV)
-        ne     : input real : electron density (10^20m-3)
-        rnhe   : input real : alpha density / ne
-        rnc    : input real : carbon density /ne
-        rno    : input real : oxygen density /ne
-        rnfe   : input real : iron density /ne
+               beam in a fusion plasma
+
+        Parameters
+        ----------
+        eb:
+            beam energy (kev/amu)
+        te:
+            electron temperature (keV)
+        ne:
+            electron density (10^20m-3)
+        rnhe:
+            alpha density / ne
+        rnc:
+            carbon density /ne
+        rno:
+            oxygen density /ne
+        rnfe:
+            iron density /ne
+
+        Notes
+        -----
         This function calculates the stopping cross-section (m^-2)
         for a hydrogen beam in a fusion plasma.
         Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
@@ -503,17 +564,33 @@ class NeutralBeam:
         xlmbda,
     ):
         """Routine to calculate the fraction of the fast particle energy
-        coupled to the ions
-        author: P J Knight, CCFE, Culham Science Centre
-        afast   : input real : mass of fast particle (units of proton mass)
-        efast   : input real : energy of fast particle (keV)
-        te      : input real : density weighted average electron temp. (keV)
-        ne      : input real : volume averaged electron density (m**-3)
-        nd      : input real : deuterium beam density (m**-3)
-        nt      : input real : tritium beam density (m**-3)
-        n_charge_plasma_effective_mass_weighted_vol_avg  : input real : mass weighted plasma effective charge
-        xlmbda  : input real : ion-electron coulomb logarithm
-        f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
+         coupled to the ions
+
+        Parameters
+        ----------
+        afast:
+            mass of fast particle (units of proton mass)
+        efast:
+            energy of fast particle (keV)
+        te:
+            density weighted average electron temp. (keV)
+        ne:
+            volume averaged electron density (m**-3)
+        nd:
+            deuterium beam density (m**-3)
+        nt:
+            tritium beam density (m**-3)
+        n_charge_plasma_effective_mass_weighted_vol_avg:
+            mass weighted plasma effective charge
+        xlmbda:
+            ion-electron coulomb logarithm
+
+        Returns
+        -------
+        f_p_beam_injected_ions:
+             fraction of fast particle energy coupled to ions
+        Notes
+        -----
         This routine calculates the fast particle energy coupled to
         the ions in the neutral beam system.
         """
@@ -566,6 +643,19 @@ class NeutralBeam:
         collisions where the relative velocity may be large compared
         with the background ('mt') thermal velocity.
         Mikkelson and Singer, Nuc Tech/Fus, 4, 237 (1983)
+
+        Parameters
+        ----------
+        mb :
+
+        mth :
+
+        eb :
+
+        t :
+
+        nelec :
+
         """
 
         x1 = (t / 10.0) * (eb / 1000.0) * mb / (nelec / 1e20)
@@ -664,6 +754,19 @@ class ElectronCyclotron:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
+        Parameters
+        ----------
+        tlocal :
+
+        epsloc :
+
+        zlocal :
+
+        cosang :
+
+        coulog :
+
         """
         mcsq = (
             constants.ELECTRON_MASS * 2.9979e8**2 / (1.0e3 * constants.ELECTRON_VOLT)
@@ -718,28 +821,38 @@ class ElectronCyclotron:
         dene20: float,
         dlamee: float,
     ) -> float:
-        """
-        Routine to calculate Fenstermacher Electron Cyclotron heating efficiency.
+        """Routine to calculate Fenstermacher Electron Cyclotron heating efficiency.
 
-        :param temp_plasma_electron_density_weighted_kev: Density weighted average electron temperature keV.
-        :type temp_plasma_electron_density_weighted_kev: float
-        :param zeff: Plasma effective charge.
-        :type zeff: float
-        :param rmajor: Major radius of the plasma in meters.
-        :type rmajor: float
-        :param dene20: Volume averaged electron density in 1x10^20 m^-3.
-        :type dene20: float
-        :param dlamee: Electron collision frequency in 1/s.
-        :type dlamee: float
+                Parameters
+                ----------
+                temp_plasma_electron_density_weighted_kev : float
+                    Density weighted average electron temperature keV.
+                zeff : float
+                    Plasma effective charge.
+                rmajor : float
+                    Major radius of the plasma in meters.
+                dene20 : float
+                    Volume averaged electron density in 1x10^20 m^-3.
+                dlamee : float
+                    Electron collision frequency in 1/s.
+                temp_plasma_electron_density_weighted_kev: float :
 
-        :return: The calculated electron cyclotron heating efficiency in A/W.
-        :rtype: float
+                rmajor: float :
+
+                dene20: float :
+
+                dlamee: float :
+
+
+                Returns
+                -------
+                float
 
         :notes:
 
         :references:
             - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
-
+                    The calculated electron cyclotron heating efficiency in A/W.
         """
 
         return (0.21e0 * temp_plasma_electron_density_weighted_kev) / (

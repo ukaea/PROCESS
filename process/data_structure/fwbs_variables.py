@@ -1,4 +1,4 @@
-"""author: J. Morris (UKAEA), M. Kovari (UKAEA)
+"""
 Module containing global variables relating to the first wall, blanket and
 shield components
 ### References

@@ -1,6 +1,6 @@
 """Module containing global variables relating to the inertial fusion energy model
 
-author: S. Muldrew (UKAEA)
+
 
 Default IFE builds and material volumes are those for the SOMBRERO device.
 The 2-dimensional arrays have indices (region, material), where 'region'
@@ -606,7 +606,6 @@ def init_ife_variables():
         zu5, \
         zu6, \
         zu7
-
     """Initialise IFE variables"""
     bldr = 1.0
     bldrc = 1.0

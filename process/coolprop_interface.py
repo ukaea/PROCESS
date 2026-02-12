@@ -64,12 +64,31 @@ class FluidProperties:
     ):
         """Calculates the fluid properties of a fluid given its temperature and pressure.
 
-        :param fluid_name: the name of the fluid to calculate properties for, e.g. 'Helium' or 'Water'.
-        :param temperature: the current temperature [K] of the fluid to calculate the properties with respect to.
-        :param pressure: the current pressure [Pa] of the fluid to calculate the properties with respect to.
-        :param entropy: the current entropy [J/kg/K] of the fluid to calculate the properties with respect to.
-        :param vapor_quality: the molar vapor quality [mol/mol] of the fluid to calculate the properties with respect to.
-        `[0, 1]`, where `0` is a saturated liquid and `1` is a saturated vapor.
+        Parameters
+        ----------
+        fluid_name :
+            the name of the fluid to calculate properties for, e.g. 'Helium' or 'Water'.
+        temperature :
+            the current temperature [K] of the fluid to calculate the properties with respect to.
+        pressure :
+            the current pressure [Pa] of the fluid to calculate the properties with respect to.
+        entropy :
+            the current entropy [J/kg/K] of the fluid to calculate the properties with respect to.
+        vapor_quality :
+            the molar vapor quality [mol/mol] of the fluid to calculate the properties with respect to.
+            `[0, 1]`, where `0` is a saturated liquid and `1` is a saturated vapor.
+        fluid_name: str :
+
+        * :
+
+        temperature: float | None :
+             (Default value = None)
+        pressure: float | None :
+             (Default value = None)
+        entropy: float | None :
+             (Default value = None)
+        vapor_quality: float | None :
+             (Default value = None)
         """
         coolprop_inputs = []
 

@@ -26,7 +26,13 @@ class ConfigurationParser:
 
     @data.setter
     def data(self, value):
-        """Validate the configuration is provided in a specific format."""
+        """Validate the configuration is provided in a specific format.
+
+        Parameters
+        ----------
+        value :
+
+        """
         self.data_validate(value)
         self._data = value
 
@@ -35,7 +41,13 @@ class ConfigurationParser:
         del self._data
 
     def data_validate(self, value):
-        """Check that value corresponds to a specific data format."""
+        """Check that value corresponds to a specific data format.
+
+        Parameters
+        ----------
+        value :
+
+        """
         if not isinstance(value, dict) and value is not None:
             raise ValueError("Configuration data must be specified as a dictionary")
 
@@ -69,7 +81,15 @@ class Config:
         return objekt
 
     def _search_config_for(self, config, *keys):
-        """Recursively search config (a dict) for keys."""
+        """Recursively search config (a dict) for keys.
+
+        Parameters
+        ----------
+        config :
+
+        *keys :
+
+        """
         try:
             search_key = keys[0].lower() if isinstance(keys[0], str) else keys[0]
             value = config[search_key]
@@ -88,13 +108,21 @@ class Config:
 
     def get(self, *config_keys, default=None):
         """
-        Return configured value corresponding to config_keys if possible.
 
-        For nested configs, sequential items in config_keys can be used.
-        For example, if the configuration is:
-        {"a": "b", "c": {1: "hello", 2: {"x": "alpha", "z": "beta"}}}
-        you can access the value of "z" by calling get("c", 2, "z").
+        Parameters
+        ----------
+        *config_keys :
 
+        default :
+             (Default value = None)
+
+        Returns
+        -------
+        type
+            For nested configs, sequential items in config_keys can be used.
+            For example, if the configuration is:
+            {"a": "b", "c": {1: "hello", 2: {"x": "alpha", "z": "beta"}}}
+            you can access the value of "z" by calling get("c", 2, "z").
         """
 
         try:

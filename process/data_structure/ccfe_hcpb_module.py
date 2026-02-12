@@ -1,4 +1,4 @@
-"""author: J Morris (UKAEA)
+"""
 This module contains the PROCESS CCFE HCPB blanket model
 based on CCFE HCPB model from the PROCESS engineering paper
 PROCESS Engineering paper (M. Kovari et al.)

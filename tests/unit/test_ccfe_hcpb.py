@@ -538,7 +538,6 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, ccfe_hcpb):
 
     :param nuclearheatingblanketparam: the data used to mock and assert in this test.
     :type nuclearheatingblanketparam: nuclearheatingblanketparam
-
     """
 
     p_blkt_nuclear_heat_total_mw, exp_blanket = ccfe_hcpb.nuclear_heating_blanket(
@@ -632,7 +631,6 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, ccfe_hcpb):
 
     :param nuclearheatingshieldparam: the data used to mock and assert in this test.
     :type nuclearheatingshieldparam: nuclearheatingshieldparam
-
     """
 
     p_shld_nuclear_heat_mw, exp_shield1, exp_shield2, shld_u_nuc_heating = (

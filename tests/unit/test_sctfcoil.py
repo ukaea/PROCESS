@@ -779,7 +779,6 @@ def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
 
     :param tfwpgeomparam: the data used to mock and assert in this test.
     :type tfwpgeomparam: tfwpgeomparam
-
     """
 
     (
@@ -951,7 +950,6 @@ def test_superconducting_tf_case_geometry(tfcasegeomparam, sctfcoil):
 
     :param tfcasegeomparam: the data used to mock and assert in this test.
     :type tfcasegeomparam: tfcasegeomparam
-
     """
     (
         a_tf_coil_inboard_case,

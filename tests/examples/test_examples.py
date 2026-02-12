@@ -40,7 +40,6 @@ def test_examples(examples_temp_data):
     examples.ipynb uses temp dirs to clean up any produced files itself.
     :param examples_temp_data: temporary dir containing examples files
     :type examples_temp_data: Path
-
     """
     example_notebook_location = examples_temp_data / "examples.ipynb"
     with testbook(example_notebook_location, execute=True, timeout=600):
@@ -93,7 +92,6 @@ def test_single_model_evaluation(examples_temp_data):
 
     :param examples_temp_data: temporary dir containing examples files
     :type examples_temp_data: Path
-
     """
     single_model_evaluation_notebook_location = (
         examples_temp_data / "single_model_evaluation.ipynb"

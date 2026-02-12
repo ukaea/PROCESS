@@ -19,7 +19,6 @@ class Cryostat:
         """Run the cryostat calculations.
 
         This method runs the cryostat calculations, including the calculation of the cryostat geometry.
-
         """
 
         # Calculate cryostat geometry
@@ -33,7 +32,6 @@ class Cryostat:
         the vertical clearance between the uppermost PF coil and the cryostat lid, the half-height
         of the cryostat, the vertical clearance between the TF coil and the cryostat, the cryostat volume,
         the vacuum vessel mass, and the sum of internal vacuum vessel and cryostat masses.
-
         """
 
         # Cryostat radius [m]
@@ -85,13 +83,8 @@ class Cryostat:
             fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
         ) * fwbs_variables.den_steel
 
-    def cryostat_output(self) -> None:
-        """
-        Outputs the cryostat geometry details to the output file.
-
-        Returns:
-            None
-        """
+    def cryostat_output(self):
+        """Outputs the cryostat geometry details to the output file."""
         po.oheadr(self.outfile, "Cryostat build")
 
         po.ovarrf(

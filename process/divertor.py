@@ -14,7 +14,7 @@ from process.exceptions import ProcessValueError
 
 class Divertor:
     """Module containing divertor routines
-    author: P J Knight, CCFE, Culham Science Centre
+
 
     This module contains routines relevant for calculating the
     divertor parameters for a fusion power plant.
@@ -25,15 +25,19 @@ class Divertor:
 
     def run(self, output: bool) -> None:
         """Routine to call the divertor model
-        author: J Galambos, ORNL
-        author: P J Knight, CCFE, Culham Science Centre
+
+
 
         This subroutine calls the divertor routine. This routine scales
         dimensions, powers and field levels which are used as input to
         the Harrison divertor model.
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
+        output: bool :
+
         """
 
         fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
@@ -99,44 +103,60 @@ class Divertor:
         dz_divertor: float,
     ) -> float:
         """Tight aspect ratio tokamak divertor model
-        author: P J Knight, CCFE, Culham Science Centre
+
 
         This method calculates the divertor heat load for a tight aspect
         ratio machine, assuming that the power is evenly distributed around the
         divertor chamber by the action of a gaseous target. Each divertor is
         modeled as approximately triangular in the R,Z plane.
 
-        :param rmajor: Plasma major radius (m)
-        :type rmajor: float
+        Parameters
+        ----------
+        rmajor : float
+            Plasma major radius (m)
+        rminor : float
+            Plasma minor radius (m)
+        triang : float
+            Plasma triangularity
+        dr_fw_plasma_gap_inboard : float
+            Inboard scrape-off width (m)
+        dz_xpoint_divertor : float
+            Vertical distance from X-point to divertor (m)
+        p_plasma_separatrix_mw : float
+            Power to the divertor (MW)
+        output : bool
+            Indicates whether output should be written to the output file
+        i_single_null : int
+            1 for single null configuration, 0 for double null
+        dz_divertor : float
+            Vertical height of the divertor (m)
+        rmajor: float :
 
-        :param rminor: Plasma minor radius (m)
-        :type rminor: float
+        rminor: float :
 
-        :param triang: Plasma triangularity
-        :type triang: float
+        triang: float :
 
-        :param dr_fw_plasma_gap_inboard: Inboard scrape-off width (m)
-        :type dr_fw_plasma_gap_inboard: float
+        dr_fw_plasma_gap_inboard: float :
 
-        :param dz_xpoint_divertor: Vertical distance from X-point to divertor (m)
-        :type dz_xpoint_divertor: float
+        dz_xpoint_divertor: float :
 
-        :param p_plasma_separatrix_mw: Power to the divertor (MW)
-        :type p_plasma_separatrix_mw: float
+        p_plasma_separatrix_mw: float :
 
-        :param output: Indicates whether output should be written to the output file
-        :type output: bool
+        output: bool :
 
-        :param i_single_null: 1 for single null configuration, 0 for double null
-        :type i_single_null: int
+        i_single_null: int :
 
-        :param dz_divertor: Vertical height of the divertor (m)
-        :type dz_divertor: float
+        dz_divertor: float :
 
-        :returns: Divertor heat load for a tight aspect ratio machine (MW/m2)
-        :rtype: float
 
-        :notes:
+        Returns
+        -------
+        float
+            Divertor heat load for a tight aspect ratio machine (MW/m2)
+
+
+        Notes
+        -----
             - This model assumes a tight aspect ratio tokamak with a gaseous target
               divertor. The divertor chamber is modeled as triangular in the R,Z plane,
               and the heat load is calculated based on the total divertor surface area.
@@ -241,7 +261,7 @@ class Divertor:
         output: bool,
     ) -> float:
         """Divertor heat load model (Wade 2020)
-        author: J A Foster, CCFE, Culham Science Centre
+
 
         This subroutine calculates the divertor heat flux for any machine,
         with either a single null or double null configuration.
@@ -249,52 +269,35 @@ class Divertor:
         to calculate the SOL width. This is then used with a flux expansion factor to calculate
         the wetted area and then the heat flux.
 
-        :param rmajor: plasma major radius (m)
-        :type rmajor: float
+        Parameters
+        ----------
+        rmajor : float
+            plasma major radius (m)
+        rminor : float
+            plasma minor radius (m)
+        aspect : float
+            tokamak aspect ratio
+        b_plasma_toroidal_on_axis : float
+            toroidal field (T)
+        b_plasma_poloidal_average : float
+            poloidal field (T)
+        p_plasma_separatrix_mw : float
+            power to divertor (MW)
+        f_div_flux_expansion : float
+            plasma flux expansion in divertor
+        nd_plasma_separatrix_electron : float
+            electron density at separatrix (m-3)
+        deg_div_field_plate : float
+            field line angle wrt divertor target plate (degrees)
+        rad_fraction_sol : float
+            SOL radiation fraction
+        f_p_div_lower : float
+            fraction of power to the lower divertor in double null configuration
 
-        :param rminor: plasma minor radius (m)
-        :type rminor: float
-
-        :param aspect: tokamak aspect ratio
-        :type aspect: float
-
-        :param b_plasma_toroidal_on_axis: toroidal field (T)
-        :type b_plasma_toroidal_on_axis: float
-
-        :param b_plasma_poloidal_average: poloidal field (T)
-        :type b_plasma_poloidal_average: float
-
-        :param p_plasma_separatrix_mw: power to divertor (MW)
-        :type p_plasma_separatrix_mw: float
-
-        :param f_div_flux_expansion: plasma flux expansion in divertor
-        :type f_div_flux_expansion: float
-
-        :param nd_plasma_separatrix_electron: electron density at separatrix (m-3)
-        :type nd_plasma_separatrix_electron: float
-
-        :param deg_div_field_plate: field line angle wrt divertor target plate (degrees)
-        :type deg_div_field_plate: float
-
-        :param rad_fraction_sol: SOL radiation fraction
-        :type rad_fraction_sol: float
-
-        :param f_p_div_lower: fraction of power to the lower divertor in double null configuration
-        :type f_p_div_lower: float
-
-        :returns: divertor heat load for a tight aspect ratio machine
-        :rtype: float
-
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
-
-        :notes:
-
-        :references:
-
-
-
-
+        Returns
+        -------
+        float
+            divertor heat load for a tight aspect ratio machine
         """
 
         # Radius on midplane
@@ -383,17 +386,27 @@ class Divertor:
         f_ster_div_single: float,
         n_divertors: int,
     ) -> float:
-        """
-        Calculates the total incident radiation power on the divertor box.
+        """Calculates the total incident radiation power on the divertor box.
 
-        :param p_plasma_rad_mw: Total plasma radiated power in megawatts (MW).
-        :type p_plasma_rad_mw: float
-        :param f_ster_div_single: Fraction of the solid angle subtended by a single divertor.
-        :type f_ster_div_single: float
-        :param n_divertors: Number of divertors.
-        :type n_divertors: int
-        :returns: Total incident radiation power on the divertor box in megawatts (MW).
-        :rtype: float
+        Parameters
+        ----------
+        p_plasma_rad_mw : float
+            Total plasma radiated power in megawatts (MW).
+        f_ster_div_single : float
+            Fraction of the solid angle subtended by a single divertor.
+        n_divertors : int
+            Number of divertors.
+        p_plasma_rad_mw: float :
+
+        f_ster_div_single: float :
+
+        n_divertors: int :
+
+
+        Returns
+        -------
+        float
+            Total incident radiation power on the divertor box in megawatts (MW).
         """
 
         return p_plasma_rad_mw * f_ster_div_single * n_divertors
@@ -404,17 +417,27 @@ class Divertor:
         f_ster_div_single: float,
         n_divertors: int,
     ) -> float:
-        """
-        Calculates the total incident neutron power on the divertor box.
+        """Calculates the total incident neutron power on the divertor box.
 
-        :param p_plasma_neutron_mw: Total plasma neutron power in megawatts (MW).
-        :type p_plasma_neutron_mw: float
-        :param f_ster_div_single: Fraction of the solid angle subtended by a single divertor.
-        :type f_ster_div_single: float
-        :param n_divertors: Number of divertors.
-        :type n_divertors: int
-        :returns: Total incident radiation power on the divertor box in megawatts (MW).
-        :rtype: float
+        Parameters
+        ----------
+        p_plasma_neutron_mw : float
+            Total plasma neutron power in megawatts (MW).
+        f_ster_div_single : float
+            Fraction of the solid angle subtended by a single divertor.
+        n_divertors : int
+            Number of divertors.
+        p_plasma_neutron_mw: float :
+
+        f_ster_div_single: float :
+
+        n_divertors: int :
+
+
+        Returns
+        -------
+        float
+            Total incident radiation power on the divertor box in megawatts (MW).
         """
 
         return p_plasma_neutron_mw * f_ster_div_single * n_divertors

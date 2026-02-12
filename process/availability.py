@@ -37,7 +37,7 @@ AVAILABILITY_MODELS = {
 
 class Availability:
     """Module containing plant availability routines
-    author: P J Knight, CCFE, Culham Science Centre
+
 
     This module contains routines for calculating the
     plant availability and component lifetimes for a fusion power plant.
@@ -57,8 +57,12 @@ class Availability:
         2    |  Morris model (2015)
         3    |  ST model (2023)
 
-        :param output: indicate whether output should be written to the output file, or not (default = False)
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not (default = False)
+        output: bool :
+             (Default value = False)
         """
 
         if cv.i_plant_availability == 3:
@@ -74,14 +78,18 @@ class Availability:
 
     def avail(self, output: bool):
         """Routine to calculate component lifetimes and the overall plant availability
-        author: P J Knight, CCFE, Culham Science Centre
+
 
         This routine calculates the component lifetimes and the overall
         plant availability.
         F/PL/PJK/PROCESS/CODE/043
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
+        output: bool :
+
         """
 
         # Full power lifetime (in years)
@@ -329,15 +337,19 @@ class Availability:
 
     def avail_2(self, output: bool):
         """Routine to calculate component lifetimes and the overall plant availability
-        author: J Morris, CCFE, Culham Science Centre
+
 
         This routine calculates the component lifetimes and the overall
         plant availability using an updated model linked to the 2014 EUROfusion
         RAMI task
         2014 EUROfusion RAMI report, &quot;Availability in PROCESS&quot;
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
+        output: bool :
+
         """
 
         # Plant Availability
@@ -486,18 +498,24 @@ class Availability:
 
     def calc_u_planned(self, output: bool) -> float:
         """Calculates the planned unavailability of the plant
-        author: J Morris, CCFE, Culham Science Centre
+
 
         This routine calculates the planned unavailability of the
         plant, using the methodology outlined in the 2014 EUROfusion
         RAMI report.
         2014 EUROfusion RAMI report, &quot;Availability in PROCESS&quot;
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
+        output: bool :
 
-        :returns: planned unavailability of plant
-        :rtype: float
+
+        Returns
+        -------
+        float
+            planned unavailability of plant
         """
 
         # Full power lifetimes (in years) !
@@ -623,18 +641,24 @@ class Availability:
 
     def calc_u_unplanned_magnets(self, output: bool) -> float:
         """Calculates the unplanned unavailability of the magnets
-        author: J Morris, CCFE, Culham Science Centre
+
 
         This routine calculates the unplanned unavailability of the magnets,
         using the methodology outlined in the 2014 EUROfusion
         RAMI report.
         2014 EUROfusion RAMI report, &quot;Availability in PROCESS&quot;
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
+        output: bool :
 
-        :returns: unplanned unavailability of magnets
-        :rtype: float
+
+        Returns
+        -------
+        float
+            unplanned unavailability of magnets
         """
 
         # Magnet temperature margin limit (K)
@@ -704,13 +728,19 @@ class Availability:
 
     def calc_u_unplanned_divertor(self, output: bool) -> float:
         """Calculates the unplanned unavailability of the divertor
-        author: J Morris, CCFE, Culham Science Centre
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
 
-        :returns: unplanned unavailability of the divertor
-        :rtype: float
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
+        output: bool :
+
+
+        Returns
+        -------
+        float
+            unplanned unavailability of the divertor
         """
 
         # Calculate cycle limit in terms of days
@@ -797,15 +827,21 @@ class Availability:
 
     def calc_u_unplanned_fwbs(self, output: bool) -> float:
         """Calculates the unplanned unavailability of the first wall and blanket
-        author: J Morris, CCFE, Culham Science Centre
+
 
         2014 EUROfusion RAMI report, &quot;Availability in PROCESS&quot;
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
+        output: bool :
 
-        :returns: unplanned unavailability of first wall and blanket
-        :rtype: float
+
+        Returns
+        -------
+        float
+            unplanned unavailability of first wall and blanket
         """
 
         # Calculate cycle limit in terms of days
@@ -887,18 +923,24 @@ class Availability:
 
     def calc_u_unplanned_bop(self, output: bool) -> float:
         """Calculates the unplanned unavailability of the balance of plant
-        author: J Morris, CCFE, Culham Science Centre
+
 
         This routine calculates the unplanned unavailability of the balance of plant,
         using the methodology outlined in the 2014 EUROfusion
         RAMI report.
         2014 EUROfusion RAMI report, &quot;Availability in PROCESS&quot;
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
+        output: bool :
 
-        :returns: unplanned unavailability of balance of plant
-        :rtype: float
+
+        Returns
+        -------
+        float
+            unplanned unavailability of balance of plant
         """
 
         # Balance of plant failure rate (failures per hour)
@@ -947,15 +989,17 @@ class Availability:
 
     def calc_u_unplanned_hcd(self) -> float:
         """Calculates the unplanned unavailability of the heating and current drive system
-        author: J Morris, CCFE, Culham Science Centre
+
 
         This routine calculates the unplanned unavailability of the heating
         and current drive system, using the methodology outlined in the
         2014 EUROfusion RAMI report.
         2014 EUROfusion RAMI report, &quot;Availability in PROCESS&quot;
 
-        :returns: unplanned unavailability of hcd
-        :rtype: float
+        Returns
+        -------
+        float
+            unplanned unavailability of hcd
         """
 
         # Currently just a fixed value until more information available or Q.
@@ -965,7 +1009,7 @@ class Availability:
 
     def calc_u_unplanned_vacuum(self, output: bool) -> float:
         """Calculates the unplanned unavailability of the vacuum system
-        author: J Morris, CCFE, Culham Science Centre
+
 
         This routine calculates the unplanned unavailability of the vacuum system,
         using the methodology outlined in the 2014 EUROfusion
@@ -973,11 +1017,17 @@ class Availability:
         2014 EUROfusion RAMI report, &quot;Availability in
         PROCESS&quot;
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
+        output: bool :
 
-        :returns: unplanned unavailability of vacuum system
-        :rtype: float
+
+        Returns
+        -------
+        float
+            unplanned unavailability of vacuum system
         """
 
         # Number of shutdowns
@@ -1060,8 +1110,7 @@ class Availability:
         return u_unplanned_vacuum
 
     def avail_st(self, output: bool):
-        """
-        Calculate the availability for a plant with a Spherical Tokamak.
+        """Calculate the availability for a plant with a Spherical Tokamak.
 
         This routine calculates the availability of a plant by considering various factors such as
         the lifetime of different components, planned and unplanned unavailability, and maintenance cycles.
@@ -1092,6 +1141,10 @@ class Availability:
         ------
         - The method assumes certain constants and reference points for calculations.
         - The method modifies the lifetimes of components to account for the calculated availability.
+
+        Parameters
+        ----------
+        output: bool :
         """
 
         ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
@@ -1352,8 +1405,10 @@ class Availability:
         This routine calculates the lifetime of the centrepost,
         either for superconducting or aluminium/resistive magnets.
 
-        :returns: CP lifetime
-        :rtype: float
+        Returns
+        -------
+        float
+            CP lifetime
         """
         # SC magnets CP lifetime
         # Rem : only the TF maximum fluence is considered for now
@@ -1379,8 +1434,11 @@ class Availability:
         """Calculate Divertor Lifetime
 
         This routine calculates the lifetime of the divertor based on the allowable divertor heat fluence.
-        :returns: Divertor lifetime
-        :rtype: float
+
+        Returns
+        -------
+        float
+            Divertor lifetime
         """
         # Divertor lifetime
         # Either 0.0, calculated from allowable divertor fluence and heat load, or lifetime of the plant

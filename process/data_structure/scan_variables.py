@@ -1,5 +1,5 @@
 """Module containing routines to perform a parameter scan
-author: P J Knight, CCFE, Culham Science Centre
+
 None
 This module contains routines to perform a parameter scan
 over a range of values of a particular scanning variable.

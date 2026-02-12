@@ -27,9 +27,8 @@ class Costs2015:
         self.outfile = constants.NOUT
 
     def run(self):
-        """
-        Cost accounting for a fusion power plant
-        author: J Morris, CCFE, Culham Science Centre
+        """Cost accounting for a fusion power plant
+
         outfile : input integer : output file unit
         iprint : input integer : switch for writing to output file (1=yes)
         This routine performs the cost accounting for a fusion power plant.
@@ -139,9 +138,8 @@ class Costs2015:
             return
 
     def calc_fwbs_costs(self):
-        """
-        Function to calculate the cost of the first wall, blanket and shield
-        author: J Morris, CCFE, Culham Science Centre
+        """Function to calculate the cost of the first wall, blanket and shield
+
         None
         This routine calculates the cost of the first wall, blanket and shield
         coils for a fusion power plant based on the costings in the PROCESS costs paper.
@@ -318,9 +316,8 @@ class Costs2015:
             )
 
     def output(self):
-        """
-        Function to output the costs calculations
-        author: J Morris, CCFE, Culham Science Centre
+        """Function to output the costs calculations
+
         None
         This routine outputs the costs to output file
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -463,9 +460,8 @@ class Costs2015:
         )
 
     def calc_building_costs(self):
-        """
-        Function to calculate the cost of all buildings.
-        author: J Morris, CCFE, Culham Science Centre
+        """Function to calculate the cost of all buildings.
+
         None
         This routine calculates the building costs for a fusion power plant
         based on the costings in the PROCESS costs Paper.
@@ -606,9 +602,8 @@ class Costs2015:
             )
 
     def calc_land_costs(self):
-        """
-        Function to calculate the cost of land for the power plant
-        author: J Morris, CCFE, Culham Science Centre
+        """Function to calculate the cost of land for the power plant
+
         None
         Land also uses a unit cost, but area is scaled.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -682,9 +677,8 @@ class Costs2015:
             )
 
     def calc_tf_coil_costs(self):
-        """
-                Function to calculate the cost of the TF coils for the power plant
-        author: J Morris, CCFE, Culham Science Centre
+        """Function to calculate the cost of the TF coils for the power plant
+
         None
         This routine calculates the cost of the TF coils for a fusion power
         plant based on the costings in the PROCESS costs Paper.
@@ -796,9 +790,8 @@ class Costs2015:
             )
 
     def calc_remote_handling_costs(self):
-        """
-        Function to calculate the cost of the remote handling facilities
-        author: J Morris, CCFE, Culham Science Centre
+        """Function to calculate the cost of the remote handling facilities
+
         None
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
@@ -846,9 +839,8 @@ class Costs2015:
         )
 
     def calc_n_plant_and_vv_costs(self):
-        """
-        Function to calculate the cost of the nitrogen plant and vacuum vessel
-        author: J Morris, CCFE, Culham Science Centre
+        """Function to calculate the cost of the nitrogen plant and vacuum vessel
+
         None
         This routine calculates the cost of the nitrogen plant and vacuum vessel
         for a fusion power plant based on the costings in the PROCESS costs paper.
@@ -895,9 +887,8 @@ class Costs2015:
             )
 
     def calc_energy_conversion_system(self):
-        """
-        Function to calculate the cost of the energy conversion system
-        author: J Morris, CCFE, Culham Science Centre
+        """Function to calculate the cost of the energy conversion system
+
         None
         This routine calculates the cost of the energy conversion system
         for a fusion power plant based on the costings in the PROCESS costs paper.
@@ -919,9 +910,8 @@ class Costs2015:
         )
 
     def calc_remaining_subsystems(self):
-        """
-        Function to calculate the cost of the remaining subsystems
-        author: J Morris, CCFE, Culham Science Centre
+        """Function to calculate the cost of the remaining subsystems
+
         None
         This routine calculates the cost of the remaining subsystems
         for a fusion power plant based on the costings in the PROCESS costs paper.
@@ -1288,19 +1278,33 @@ class Costs2015:
             )
 
     def value_function(self, x):
-        """
-        Value function
-        author: J Morris, CCFE, Culham Science Centre
+        """Value function
+
         None
         Function for separative work unit calculation for enrichment cost
         PROCESS Costs Paper (M. Kovari, J. Morris)
+
+        Parameters
+        ----------
+        x :
+
         """
         return (1.0e0 - 2.0e0 * x) * np.log((1.0e0 - x) / x)
 
     def ocost(self, file, descr, vname, value):
-        """
-        Routine to print out the code, description and value
+        """Routine to print out the code, description and value
         of a cost item from array s in costs_2015
+
+        Parameters
+        ----------
+        file :
+
+        descr :
+
+        vname :
+
+        value :
+
         """
 
         #  Local variables
@@ -1321,9 +1325,19 @@ class Costs2015:
         po.ovarrf(file, descr, vname, value)
 
     def ocost_vname(self, file, descr, vname, value):
-        """
-        Routine to print out the code, description and value
+        """Routine to print out the code, description and value
         of a cost item not in the array s in costs_2015
+
+        Parameters
+        ----------
+        file :
+
+        descr :
+
+        vname :
+
+        value :
+
         """
 
         # character(len=70) :: dum70

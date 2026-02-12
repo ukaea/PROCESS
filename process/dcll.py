@@ -20,7 +20,7 @@ from process.data_structure import (
 class DCLL(InboardBlanket, OutboardBlanket):
     """This module contains the Dual Coolant Lead Lithium (DCLL) specific submods of PROCESSS.
 
-    author: G. Graham, CCFE
+
 
     Acronyms for this module:
 
@@ -134,6 +134,11 @@ class DCLL(InboardBlanket, OutboardBlanket):
              - pnuc_blkt_ratio_dcll
              - f_nuc_pow_bz_struct
              - f_nuc_pow_bz_liq
+
+        Parameters
+        ----------
+        output: bool :
+
         """
 
         if divertor_variables.n_divertors == 2:
@@ -467,6 +472,11 @@ class DCLL(InboardBlanket, OutboardBlanket):
                  Side walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
                  Top walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
                  Bottom walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
+
+        Parameters
+        ----------
+        output: bool :
+
         """
         # If there are FCIs then how much of the radial build is FCI?
         if fwbs_variables.i_blkt_liquid_breeder_channel_type > 0:
