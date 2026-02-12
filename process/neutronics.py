@@ -9,14 +9,16 @@ The rest of the derivation are done in a paper, the conversion is as follows:
 |group index (1)          |  i  |      n      |
 |group index (2)          |  j  |      g      |
 |group index (3)          |(N/A)|      k      |
+|group index (4)          |  g  |      i      |
 |layer index (1)          |  m  |  num_layer  |
 |layer index (2)          |  l  | num_layer+1 |
 |layer index (3)          |  k  |      k      |
 |total number of groups(1)|  N  |self.n_groups|
 |total number of layers(2)|  M  |self.n_layers|
-The reason for this deviation in variable names is because of code style, 
-e.g. n and g are more descriptive (*n*umber and *g*roup) indices, and capital
-letters are frowned upon as standalone python variables.
+The reason for this deviation in variable names is because of code style,
+e.g. n and g are more descriptive (*n*umber and *g*roup) indices, and hence
+is the most frequently used letter for group index; while capital letters are
+frowned upon as standalone python variables, so aren't used in the program.
 This retains maintainability without having to refer to the paper.
 (Meanwhile, it is customary to use i,j,k,l,m as mathematical indices in
 academic publications)
@@ -31,7 +33,6 @@ from itertools import pairwise
 import numpy as np
 from matplotlib import pyplot as plt
 from numpy import typing as npt
-from scipy import optimize
 
 from process.exceptions import ProcessValidationError, ProcessValueError
 from process.neutronics_data import DT_NEUTRON_E, MaterialMacroInfo
@@ -471,10 +472,10 @@ class NeutronFluxProfile:
                 self.group_structure, self.init_neutron_energy
             )
         )
-        self.fluxes = np.array(
-            [flux if n==incident_neutron_group
-                else 0.0 for n in range(self.n_groups)]
-        )
+        self.fluxes = np.array([
+            flux if n == incident_neutron_group else 0.0
+            for n in range(self.n_groups)
+        ])
 
         mat_name_list = [mat.name for mat in self.materials]
         self.coefficients = LayerSpecificGroupwiseConstants(
@@ -566,10 +567,10 @@ class NeutronFluxProfile:
         """
         abs_x = abs(x)
         if self.l2[num_layer, n] > 0:
-            l = np.sqrt(self.l2[num_layer, n])
+            l = np.sqrt(self.l2[num_layer, n])  # noqa: E741
             c, s = np.cosh, np.sinh
         else:
-            l = np.sqrt(-self.l2[num_layer, n])
+            l = np.sqrt(-self.l2[num_layer, n])  # noqa: E741
             c, s = np.cos, np.sin
         return np.array([c(abs_x / l), s(abs_x / l)])
 
@@ -582,9 +583,9 @@ class NeutronFluxProfile:
         """
         abs_x = abs(x)
         if self.l2[num_layer, n] > 0:
-            l = np.sqrt(self.l2[num_layer, n])
+            l = np.sqrt(self.l2[num_layer, n])  # noqa: E741
             return np.array([np.sinh(abs_x / l) / l, np.cosh(abs_x / l) / l])
-        l = np.sqrt(-self.l2[num_layer, n])
+        l = np.sqrt(-self.l2[num_layer, n])  # noqa: E741
         return np.array([-np.sin(abs_x / l) / l, np.cos(abs_x / l) / l])
 
     def _groupwise_cs_definite_integral_in_layer(
@@ -595,15 +596,15 @@ class NeutronFluxProfile:
         from x_lower to x_upper.
         """
         if self.l2[num_layer, n] > 0:
-            l = np.sqrt(self.l2[num_layer, n])
+            l = np.sqrt(self.l2[num_layer, n])  # noqa: E741
             return np.array([
                 l * (np.sinh(x_upper / l) - np.sinh(x_lower / l)),
-                l * (np.cosh(x_upper / l) - np.cosh(x_lower / l))
+                l * (np.cosh(x_upper / l) - np.cosh(x_lower / l)),
             ])
-        l = np.sqrt(-self.l2[num_layer, n])
+        l = np.sqrt(-self.l2[num_layer, n])  # noqa: E741
         return np.array([
             l * (np.sin(x_upper / l) - np.sin(x_lower / l)),
-            l * (np.cos(x_lower / l) - np.cos(x_upper / l))  # reverse sign
+            l * (np.cos(x_lower / l) - np.cos(x_upper / l)),  # reverse sign
         ])
 
     def _summation_shorthand(
@@ -636,19 +637,22 @@ class NeutronFluxProfile:
         np.sum:
             A scalar.
         """
+
         def coef_pair(g: int) -> npt.NDArray[float]:
             """
             A quick function to get the coefficient pair at the specified
-            neutron group n, material layer num_layer, and in-scattering 
+            neutron group n, material layer num_layer, and in-scattering
             neutron group g. For paramters: see parent function.
             """
             return np.array([
                 self.coefficients[num_layer, n].c[g],
-                self.coefficients[num_layer, n].s[g]
+                self.coefficients[num_layer, n].s[g],
             ])
+
         summation_sequence = [
             coef_pair(num_layer, n, g) @ func(g, num_layer, x)
-            for g in range(max_group) if g!=n
+            for g in range(max_group)
+            if g != n
         ]
         return np.sum(summation_sequence, axis=-1)
 
@@ -661,7 +665,7 @@ class NeutronFluxProfile:
         """
         n = 0
         if self.coefficients.has_populated(n):
-            return  # skip if it has already been solved.
+            return None  # skip if it has already been solved.
         for num_layer, mat in enumerate(self.materials):
             self.diffusion_const[num_layer, n], self.l2[num_layer, n] = (
                 get_diffusion_coefficient_and_length(
@@ -727,11 +731,10 @@ class NeutronFluxProfile:
             )
         else:
             return NotImplemented
-        return
+        return None
 
     def _propagate_coefs_to_next_layer(
-        self, n: int, num_layer: int,
-        include_upscatter: bool
+        self, n: int, num_layer: int, include_upscatter: bool
     ) -> tuple[npt.NDArray, npt.NDArray[float]]:
         """
         Infer this layer's main basis functions' coefficients (.c[n] and .s[n])
@@ -751,42 +754,50 @@ class NeutronFluxProfile:
         """
         xm = self.layer_x
 
-        a_mmi = np.array([
+        a_mmn = np.array([
             self._groupwise_cs_values_in_layer(n, num_layer, xm),
             self.diffusion_const[num_layer, n]
-            * self._groupwise_cs_differential_in_layer(n, num_layer, xm)
+            * self._groupwise_cs_differential_in_layer(n, num_layer, xm),
         ])
-        a_lmi = np.array([
-            self._groupwise_cs_values_in_layer(n, num_layer+1, xm),
-            self.diffusion_const[num_layer+1, n]
-            * self._groupwise_cs_differential_in_layer(n, num_layer+1, xm)
+        a_lmn = np.array([
+            self._groupwise_cs_values_in_layer(n, num_layer + 1, xm),
+            self.diffusion_const[num_layer + 1, n]
+            * self._groupwise_cs_differential_in_layer(n, num_layer + 1, xm),
         ])
 
         in_scatter_max_group = self.n_groups if include_upscatter else n
-        b_mmi = np.array([
+        b_mmn = np.array([
             self._summation_shorthand(
-                num_layer, n,
+                num_layer,
+                n,
                 self._groupwise_cs_values_in_layer,
-                xm, in_scatter_max_group
+                xm,
+                in_scatter_max_group,
             ),
             self.diffusion_const[num_layer, n]
             * self._summation_shorthand(
-                num_layer, n,
+                num_layer,
+                n,
                 self._groupwise_cs_differential_in_layer,
-                xm, in_scatter_max_group
+                xm,
+                in_scatter_max_group,
             ),
         ])
-        b_lmi = np.array([
+        b_lmn = np.array([
             self._summation_shorthand(
-                num_layer+1, n,
+                num_layer + 1,
+                n,
                 self._groupwise_cs_values_in_layer,
-                xm, in_scatter_max_group
+                xm,
+                in_scatter_max_group,
             ),
-            self.diffusion_const[num_layer+1, n]
+            self.diffusion_const[num_layer + 1, n]
             * self._summation_shorthand(
-                num_layer+1, n,
+                num_layer + 1,
+                n,
                 self._groupwise_cs_differential_in_layer,
-                xm, in_scatter_max_group
+                xm,
+                in_scatter_max_group,
             ),
         ])
 
@@ -818,7 +829,7 @@ class NeutronFluxProfile:
             self.num_layer-1
         """
         m_list, v_list = [], []
-        for num_layer in range(self.n_layers-1):
+        for num_layer in range(self.n_layers - 1):
             m, v = self._propagate_coefs_to_next_layer(
                 n, num_layer, include_upscatter
             )
@@ -849,7 +860,7 @@ class NeutronFluxProfile:
         for k in range(n):
             if not self.coefficients.has_populated(k):
                 self.solve_group_n(k)
-        if self.contains_upscatter and num_iteration>1:
+        if self.contains_upscatter and self.num_iteration > 1:
             raise NotImplementedError(
                 "Will implement solve_group_n in a loop later.\n"
                 "Previous implementation will trigger a ProcessValueError via "
@@ -873,8 +884,10 @@ class NeutronFluxProfile:
             self.diffusion_const[-1, n]
         )
 
-        include_upscatter = self.contains_upscatter and self.num_iteration!=0
-        in_scatter_max_group = self.n_groups if include_upscatter else n+1  # must include the current group, n.
+        include_upscatter = self.contains_upscatter and self.num_iteration != 0
+        in_scatter_max_group = (
+            self.n_groups if include_upscatter else n + 1
+        )  # must include the current group, n.
 
         for num_layer in range(self.n_layers):
             # Setting up aliases for shorter code
@@ -883,7 +896,7 @@ class NeutronFluxProfile:
             src_matrix = mat.sigma_s + mat.sigma_in
             diffusion_const_n = self.diffusion_const[num_layer, n]
             for g in range(in_scatter_max_group):
-                if g==n:
+                if g == n:
                     # placeholder zeros, to be properly calculated later.
                     _coefs.c.append(0.0)
                     _coefs.s.append(0.0)
@@ -905,14 +918,15 @@ class NeutronFluxProfile:
                         "in the neutron flux profile."
                     )
                     continue
-                scale_factor = (l2n * l2g) / diffusion_const_n / l2_diff
+                scale_factor = (l2n * l2g) / l2_diff / diffusion_const_n
                 in_scatter_min_group = 0 if include_upscatter else g
                 _coefs.c.append(
                     np.sum(
                         src_matrix[i, n] * self.coefficients[num_layer, i].c[g]
                         for i in range(
                             in_scatter_min_group, in_scatter_max_group
-                        ) if i!=n
+                        )
+                        if i != n
                     )
                     * scale_factor
                 )
@@ -921,7 +935,8 @@ class NeutronFluxProfile:
                         src_matrix[i, n] * self.coefficients[num_layer, i].s[g]
                         for i in range(
                             in_scatter_min_group, in_scatter_max_group
-                        ) if i!=n
+                        )
+                        if i != n
                     )
                     * scale_factor
                 )
@@ -930,10 +945,12 @@ class NeutronFluxProfile:
 
             self.coefficients[num_layer, n] = _coefs
         self.coefficients[0, n].s[n] = np.sqrt(abs(self.l2[0, n])) * (
-            - self.fluxes[n]/self.diffusion_const[0, n] * 
-            - np.sum(
+            -self.fluxes[n]
+            / self.diffusion_const[0, n]
+            * -np.sum(
                 self.coefficients[1, n].s[g] / np.sqrt(abs(self.l2[0, g]))
-                for g in range(in_scatter_max_group) if g!=n
+                for g in range(in_scatter_max_group)
+                if g != n
             )
         )
 
@@ -941,32 +958,44 @@ class NeutronFluxProfile:
             n, include_upscatter
         )
         affine_transform_matrix_stack = multiply_2_2_matrices(*m_list[::-1])
-        affine_transformed_column_vector = np.sum([
-            multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
-            for k in range(self.n_layers - 1)
-        ], axis=0)
+        affine_transformed_column_vector = np.sum(
+            [
+                multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
+                for k in range(self.n_layers - 1)
+            ],
+            axis=0,
+        )
         row_vector = self._groupwise_cs_values_in_layer(
-            n, self.n_layers-1, self.extended_boundary[n]
+            n, self.n_layers - 1, self.extended_boundary[n]
         )
         final_left_vector = row_vector @ affine_transform_matrix_stack
-        final_const = - self._summation_shorthand(
-            n, self.n_layers-1,
-            self._groupwise_cs_values_in_layer,
-            self.extended_boundary[n],
-            in_scatter_max_group
-        ) - row_vector @ affine_transformed_column_vector
+        final_const = (
+            -self._summation_shorthand(
+                n,
+                self.n_layers - 1,
+                self._groupwise_cs_values_in_layer,
+                self.extended_boundary[n],
+                in_scatter_max_group,
+            )
+            - row_vector @ affine_transformed_column_vector
+        )
         self.coefficients[0, n].c[n] = (
             final_const - final_left_vector[1] * self.coefficients[0, n].s[n]
         ) / final_left_vector[0]
         for num_layer in range(self.n_layers - 1):
             [
-                self.coefficients[num_layer+1, n].c[n],
-                self.coefficients[num_layer+1, n].s[n],
-            ] = m_list[num_layer] @ np.array([
+                self.coefficients[num_layer + 1, n].c[n],
+                self.coefficients[num_layer + 1, n].s[n],
+            ] = (
+                m_list[num_layer]
+                @ np.array([
                     self.coefficients[num_layer, n].c[n],
                     self.coefficients[num_layer, n].s[n],
-                ]) + v_list[num_layer]
+                ])
+                + v_list[num_layer]
+            )
         self.num_iteration += 1
+        return None
 
     def _check_if_in_layer(
         self, x: npt.NDArray[np.float64], num_layer: int
@@ -1283,7 +1312,9 @@ class NeutronFluxProfile:
 
     @summarize_values
     def groupwise_integrated_heating_in_layer(
-        self, n: int, num_layer: int,
+        self,
+        n: int,
+        num_layer: int,
     ) -> float:
         """
         The total amount of heat produced (per unit area) due to neutron
@@ -1300,7 +1331,9 @@ class NeutronFluxProfile:
     # Do NOT add a summarize_values decorator, as you can't add cross-sections
     # from different groups together without first multiplying by flux to get reaction rate.
     def groupwise_linear_heating_density_in_layer(
-        self, n: int, num_layer: int,
+        self,
+        n: int,
+        num_layer: int,
     ) -> float:
         """
         unit: [J m^-1]
