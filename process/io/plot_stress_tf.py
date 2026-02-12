@@ -2,8 +2,6 @@
 Code generating the TF coil inboard mid-plane stress/strain summary plots
 The whole radial distribution is displayed
 
-Author: S. Kahn (sebastien.kahn@ukaea.uk)
-
 Input file:
 SIG_TF.json
 """

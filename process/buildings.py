@@ -26,7 +26,7 @@ class Buildings:
     This module contains routines for calculating the
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         """
 
         This routine calls the buildings calculations.

@@ -15,17 +15,21 @@ NB3SN_DENSITY = 8040.0  # [kg/m^3]
 
 
 def _copper_specific_heat_capacity(temperature: float) -> float:
-    """
-    Calculates the specific heat capacity of cryogenic copper at a given temperature [J/(kg·K)].
+    """Calculates the specific heat capacity of cryogenic copper at a given temperature [J/(kg·K)].
 
-    :author M. Coleman, UKAEA
+    Parameters
+    ----------
+    temperature:
+        Temperature [K].
 
-    :param float temperature: Temperature [K].
-    :returns: Specific heat capacity of copper at the given temperature [J/(kg·K)].
-    :rtype: float
+    Returns
+    -------
+    float
+        Specific heat capacity of copper at the given temperature [J/(kg·K)].
 
-    :notes:
-        - Assumes high-purity copper with negligible impurity effects.
+    Notes
+    -----
+    Assumes high-purity copper with negligible impurity effects.
 
     :references:
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
@@ -40,16 +44,20 @@ def _copper_specific_heat_capacity(temperature: float) -> float:
 
 
 def _copper_rrr_resistivity(temperature: float, rrr: float) -> float:
-    """
-    Calculates the electrical resistivity of cryogenic copper with temperature and RRR
+    """Calculates the electrical resistivity of cryogenic copper with temperature and RRR
     dependence  [Ω·m].
 
-    :author M. Coleman, UKAEA
+    Parameters
+    ----------
+    temperature:
+        Operating temperature [K].
+    rrr:
+        Residual resistivity ratio (dimensionless).
 
-    :param float temperature: Operating temperature [K].
-    :param float rrr: Residual resistivity ratio (dimensionless).
-    :returns: Electrical resistivity of copper [Ω·m].
-    :rtype: float
+    Returns
+    -------
+    float
+        Electrical resistivity of copper [Ω·m].
 
     :references:
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
@@ -89,24 +97,29 @@ def _copper_rrr_resistivity(temperature: float, rrr: float) -> float:
 
 
 def _copper_irradiation_resistivity(fluence: float) -> float:
-    """
-    Calculates the radiation-induced electrical resistivity of copper.
+    """Calculates the radiation-induced electrical resistivity of copper.
 
     Estimates the increase in copper's electrical resistivity [Ω·m] due to neutron irradiation,
     as a function of total neutron fluence.
 
-    :author M. Coleman, UKAEA
 
-    :param float fluence: Total neutron fluence [n/m²].
-    :returns: Radiation-induced resistivity of copper [Ω·m].
-    :rtype: float
+    Parameters
+    ----------
+    fluence:
+        Total neutron fluence [n/m²].
 
-    :notes:
-        - Fit to data at low-temperature conditions (around 4.6 K).
-        - Fit to data in fast neutron spectrum (E > 0.1 MeV).
-        - Damage and transmutation effects therefore both included, but transmutation effects
-        may be underestimated.
-        - This is an additive contribution to the base residual resistivity of copper.
+    Returns
+    -------
+    :
+        Radiation-induced resistivity of copper [Ω·m].
+
+    Notes
+    -----
+    - Fit to data at low-temperature conditions (around 4.6 K).
+    - Fit to data in fast neutron spectrum (E > 0.1 MeV).
+    - Damage and transmutation effects therefore both included, but transmutation effects
+    may be underestimated.
+    - This is an additive contribution to the base residual resistivity of copper.
 
     :references:
         - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
@@ -126,15 +139,19 @@ def _copper_irradiation_resistivity(fluence: float) -> float:
 
 
 def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
-    """
-    Calculates the electrical resistivity of cryogenic copper due to magnetoresistive effects [Ω·m].
+    """Calculates the electrical resistivity of cryogenic copper due to magnetoresistive effects [Ω·m].
 
-    :author M. Coleman, UKAEA
+    Parameters
+    ----------
+    resistivity:
+        Operating resistivity [K].
+    field:
+        Operating magnetic field [T].
 
-    :param float resistivity: Operating resistivity [K].
-    :param float field: Operating magnetic field [T].
-    :returns: Electrical resistivity of copper [Ω·m].
-    :rtype: float
+    Returns
+    -------
+    :
+        Electrical resistivity of copper [Ω·m].
 
     :notes:
         - Resistivity increases with magnetic field due to magnetoresistance effects.
@@ -161,34 +178,41 @@ def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
 def _copper_electrical_resistivity(
     temperature: float, field: float, rrr: float, fluence: float
 ) -> float:
-    """
-    Calculates the electrical resistivity of cryogenic copper with temperature, RRR, magnetic
+    """Calculates the electrical resistivity of cryogenic copper with temperature, RRR, magnetic
     field, and fluence dependence  [Ω·m].
 
-    :author M. Coleman, UKAEA
 
-    :param float temperature: Operating temperature [K].
-    :param float rrr: Residual resistivity ratio (dimensionless).
-    :param float field: Operating magnetic field [T].
-    :param float fluence: Total end-of-life neutron fluence [n/m²].
-    :returns: Electrical resistivity of copper [Ω·m].
-    :rtype: float
+    Parameters
+    ----------
+    temperature:
+        Operating temperature [K].
+    rrr:
+        Residual resistivity ratio (dimensionless).
+    field:
+        Operating magnetic field [T].
+    fluence:
+        Total end-of-life neutron fluence [n/m²].
+
+    Returns
+    -------
+    float
+        Electrical resistivity of copper [Ω·m].
 
     :notes:
-        - Resistivity increases with magnetic field due to magnetoresistance effects.
+    - Resistivity increases with magnetic field due to magnetoresistance effects.
 
     :references:
-        - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
-        at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
-        https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
-        Equation 8-1
-        - J. G. Hust, A. B. Lankford, NBSIR 84-3007 "THERMAL CONDUCTIVITY OF  ALUMINUM, COPPER, IRON, AND
-        TUNGSTEN FOR TEMPERATURES FROM  1 K TO THE MELTING POINT", 1984
-        https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir84-3007.pdf
-        - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
-        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977).
-        https://doi.org/10.1103/PhysRevB.16.5285
-        Figure 6
+    - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
+    at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
+    https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
+    Equation 8-1
+    - J. G. Hust, A. B. Lankford, NBSIR 84-3007 "THERMAL CONDUCTIVITY OF  ALUMINUM, COPPER, IRON, AND
+    TUNGSTEN FOR TEMPERATURES FROM  1 K TO THE MELTING POINT", 1984
+    https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir84-3007.pdf
+    - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
+    - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977).
+    https://doi.org/10.1103/PhysRevB.16.5285
+    Figure 6
     """
     rho_rrr = _copper_rrr_resistivity(temperature, rrr)
     rho_irr = _copper_irradiation_resistivity(fluence)
@@ -196,27 +220,31 @@ def _copper_electrical_resistivity(
 
 
 def _nb3sn_specific_heat_capacity(temperature: float) -> float:
-    """
-    Calculates the specific heat capacity of Nb₃Sn as a function of temperature.
+    """Calculates the specific heat capacity of Nb₃Sn as a function of temperature.
 
     Provides the temperature-dependent specific heat capacity [J/(kg·K)] of the A15
     superconductor Nb₃Sn.
 
-    :author M. Coleman, UKAEA
 
-    :param float temperature: Temperature [K].
-    :returns: Specific heat capacity of Nb₃Sn at the given temperature [J/(kg·K)].
-    :rtype: float
+    Parameters
+    ----------
+    temperature:
+        Temperature [K].
+
+    Returns
+    -------
+    float
+        Specific heat capacity of Nb₃Sn at the given temperature [J/(kg·K)].
 
     :notes:
-        - The superconducting part is ignored, which is typical in thermal quench calculations.
+    - The superconducting part is ignored, which is typical in thermal quench calculations.
 
     :references:
-        - EFDA Material Data Compilation for Superconductor Simulation, P. Bauer, H. Rajainmaki, E. Salpietro, EFDA CSU, Garching, 04/18/07.
-        - ITER DRG1 Annex, Superconducting Material Database, Article 5, N 11 FDR 42 01-07-05 R 0.1.
-        - V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting Cables, Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.
-        - G.S. Knapp, S.D. Bader, Z. Fisk, Phonon properties of A-15 superconductors obtained from heat capacity measurements, Phys. Rev. B, 13(9), pp 3783-3789, 1976.
-        https://doi.org/10.1103/PhysRevB.13.3783
+    - EFDA Material Data Compilation for Superconductor Simulation, P. Bauer, H. Rajainmaki, E. Salpietro, EFDA CSU, Garching, 04/18/07.
+    - ITER DRG1 Annex, Superconducting Material Database, Article 5, N 11 FDR 42 01-07-05 R 0.1.
+    - V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting Cables, Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.
+    - G.S. Knapp, S.D. Bader, Z. Fisk, Phonon properties of A-15 superconductors obtained from heat capacity measurements, Phys. Rev. B, 13(9), pp 3783-3789, 1976.
+    https://doi.org/10.1103/PhysRevB.13.3783
     """
     gamma: Final[float] = 0.1  # [J/K²/kg] (Grueneisen)
     beta: Final[float] = 0.001  # [J/K⁴/kg] (Debye)
@@ -242,26 +270,33 @@ def _quench_integrals(
     rrr: float,
     fluence: float,
 ) -> tuple[float, float, float]:
-    """
-    Calculates the material property integrals for quench protection.
+    """Calculates the material property integrals for quench protection.
 
     Evaluates the integrals over temperature for helium, copper, and superconductor contributions.
     These integrals are used in determining current density limits during a quench.
 
-    :author M. Coleman, UKAEA
+    Parameters
+    ----------
+    t_he_peak:
+        t_he_peak: Lower temperature bound of integration [K].
+    t_max:
+        t_max: Upper temperature bound of integration [K].
+    field:
+        field: Magnetic field [T].
+    rrr:
+        rrr: Residual resistivity ratio of copper.
+    fluence:
+        fluence: Neutron fluence [n/cm²] (for irradiation effects).
 
-    :param float t_he_peak: Lower temperature bound of integration [K].
-    :param float t_max: Upper temperature bound of integration [K].
-    :param float field: Magnetic field [T].
-    :param float rrr: Residual resistivity ratio of copper.
-    :param float fluence: Neutron fluence [n/cm²] (for irradiation effects).
-    :returns: Tuple of integrals for helium, copper, and superconductor contributions (I_He, I_Cu, I_sc).
-    :rtype: Tuple[float, float, float]
+    Returns
+    -------
+    Tuple[float, float, float]
+        Tuple of integrals for helium, copper, and superconductor contributions (I_He, I_Cu, I_sc).
 
     :notes:
-        - Integrals assume temperature-dependent material models are defined for the entire range [t_he_peak, t_max].
-        - Helium is assumed to be at constant pressure throughout the quench (i.e. some PRV in the
-        cooling system)
+    - Integrals assume temperature-dependent material models are defined for the entire range [t_he_peak, t_max].
+    - Helium is assumed to be at constant pressure throughout the quench (i.e. some PRV in the
+    cooling system)
     """
     # Helium pressure [Pa] (assumed to be constant throughout quench) - no plans to make input
     pressure = 6e5  # ITER TF coolant pressure
@@ -297,8 +332,7 @@ def calculate_quench_protection_current_density(
     detection_time: float,
     fluence: float,
 ) -> float:
-    """
-    Calculates the current density limited by the protection limit.
+    """Calculates the current density limited by the protection limit.
 
     Simplified 0-D adiabatic heat balance "hotspot criterion" model.
 
@@ -307,29 +341,42 @@ def calculate_quench_protection_current_density(
     field does not decay over time and accounts for contributions from copper, helium, and
     superconductor materials using temperature integrals.
 
-    :author M. Coleman, UKAEA
 
-    :param float tau_discharge: Quench discharge time constant [s].
-    :param float peak_field: Magnetic field at the peak point [T].
-    :param float f_cu: Fraction of conductor cross-section that is copper.
-    :param float f_he: Fraction of cable occupied by helium.
-    :param float t_he_peak: Peak helium temperature at quench initiation [K].
-    :param float t_max: Maximum allowed conductor temperature during quench [K].
-    :param float cu_rrr: Residual resistivity ratio of copper.
-    :param float detection_time: Detection time delay [s].
-    :param float fluence: Neutron fluence [n/m²].
-    :returns: Maximum allowable winding pack current density [A/m²].
-    :rtype: float
+    Parameters
+    ----------
+    tau_discharge:
+        tau_discharge: Quench discharge time constant [s].
+    peak_field:
+        peak_field: Magnetic field at the peak point [T].
+    f_cu:
+        f_cu: Fraction of conductor cross-section that is copper.
+    f_he:
+        f_he: Fraction of cable occupied by helium.
+    t_he_peak:
+        t_he_peak: Peak helium temperature at quench initiation [K].
+    t_max:
+        t_max: Maximum allowed conductor temperature during quench [K].
+    cu_rrr:
+        cu_rrr: Residual resistivity ratio of copper.
+    detection_time:
+        detection_time: Detection time delay [s].
+    fluence:
+        fluence: Neutron fluence [n/m²].
+
+    Returns
+    -------
+    float
+        Maximum allowable winding pack current density [A/m²].
 
     :notes:
-        - Assumes constant magnetic field over the duration of the quench.
-        - Assumes the dump resistor has a constant resistance much higher
-        than that of the TF coil.
-        - Operates on the current-carring cross-section of a conductor. The
-        jacket and insulation are ignored. The actual allowable WP current
-        density must be weighted with the ratio of current-carrying cross-section
-        vs. total WP cross-section (including jacket and insulation).
-        - Presently only applicable to LTS TF coil winding packs (Nb3Sn assumed)
+    - Assumes constant magnetic field over the duration of the quench.
+    - Assumes the dump resistor has a constant resistance much higher
+    than that of the TF coil.
+    - Operates on the current-carring cross-section of a conductor. The
+    jacket and insulation are ignored. The actual allowable WP current
+    density must be weighted with the ratio of current-carrying cross-section
+    vs. total WP cross-section (including jacket and insulation).
+    - Presently only applicable to LTS TF coil winding packs (Nb3Sn assumed)
     """
     # Default fluence is too high for this model
     if (fluence < 0.0) | (fluence > 1.5e23):

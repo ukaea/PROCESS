@@ -26,7 +26,7 @@ class RegressionTestAssetCollector:
     remote_repository_owner = "timothy-nunn"
     remote_repository_repo = "process-tracking-data"
 
-    def __init__(self) -> None:
+    def __init__(self):
         self._hashes = self._git_commit_hashes()
         self._tracked_mfiles = self._get_tracked_mfiles()
 

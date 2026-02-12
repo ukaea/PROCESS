@@ -234,31 +234,38 @@ def init_imp_element(
     f_nd_species_electron: float,
     len_tab: int,
     error: int,
-) -> None:
-    """
-    Initialise the impurity radiation data for a species.
+):
+    """Initialise the impurity radiation data for a species.
 
-    :param n_species_index: Position of species in impurity array
-    :type n_species_index: int
-    :param name_label: Species name
-    :type name_label: str
-    :param z: Species charge number
-    :type z: int
-    :param m_species_amu: Species atomic mass (amu)
-    :type m_species_amu: float
-    :param f_nd_species_electron: Number density / electron density
-    :type f_nd_species_electron: float
-    :param len_tab: Length of temperature and Lz tables
-    :type len_tab: int
-    :param error: Error flag; 0 = okay, 1 = missing impurity data
-    :type error: int
-    :raises ProcessValueError: If illegal impurity number is provided
-    :raises FileNotFoundError: If impurity data files are missing
-    :raises ProcessError: If required data cannot be located in files
+    Parameters
+    ----------
+    n_species_index : int
+        Position of species in impurity array
+    name_label : str
+        Species name
+    z : int
+        Species charge number
+    m_species_amu : float
+        Species atomic mass (amu)
+    f_nd_species_electron : float
+        Number density / electron density
+    len_tab : int
+        Length of temperature and Lz tables
+    error : int
+        Error flag; 0 = okay, 1 = missing impurity data
 
-    This routine initialises the impurity radiation data structure
-    for a given impurity species. The Lz versus temperature data are
-    read in from file.
+    Raises
+    ------
+    ProcessValueError
+        If illegal impurity number is provided
+    FileNotFoundError
+        If impurity data files are missing
+    ProcessError
+        If required data cannot be located in files
+
+        This routine initialises the impurity radiation data structure
+        for a given impurity species. The Lz versus temperature data are
+        read in from file.
     """
 
     if error == 1:
@@ -500,6 +507,11 @@ def pimpden(imp_element_index, neprofile, teprofile):
 def element2index(element: str):
     """Returns the index of the `element` in the impurity array with
     a given name
+
+    Parameters
+    ----------
+    element: str :
+
     """
     try:
         return (
@@ -551,11 +563,6 @@ class ImpurityRadiation:
             Johner, Fusion Science and Technology 59 (2011), pp 308-349
             Sertoli, private communication
             Kallenbach et al., Plasma Phys. Control. Fus. 55(2013) 124041
-        Authors:
-            R Kemp, CCFE, Culham Science Centre
-            H Lux, CCFE, Culham Science Centre
-            P J Knight, CCFE, Culham Science Centre
-            G Turkington, CCFFE, Culham Science Centre
 
         Parameters
         ----------

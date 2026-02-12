@@ -132,7 +132,10 @@ class Process:
     def parse_args(self, args: list[Any] | None):
         """Parse the command-line arguments, such as the input filename.
 
-        :param args: Arguments to parse
+        Parameters
+        ----------
+        args :
+            Arguments to parse
         """
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -291,7 +294,10 @@ class VaryRun:
     def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
 
-        :raises FileNotFoundError: if input file doesn't exist
+        Raises
+        ------
+        FileNotFoundError
+            if input file doesn't exist
         """
         # The input path for the varied input file
         input_path = self.config_file.parent / "IN.DAT"
@@ -506,15 +512,10 @@ class SingleRun:
             mfile_file.writelines(input_lines)
 
     def validate_input(self, replace_obsolete: bool = False):
-        """
-        Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
+        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
         within obsolete_variables.py. If obsolete variables are found, and if `replace_obsolete`
         is set to True, they are either removed or replaced by their updated names as specified
         in the OBS_VARS dictionary.
-
-        Parameters:
-            replace_obsolete: If True, modifies the IN.DAT file to replace or comment out
-                                    obsolete variables. If False, only reports obsolete variables.
         """
 
         obsolete_variables = ov.OBS_VARS
@@ -742,7 +743,13 @@ logging_model_handler.setFormatter(logging_formatter)
 
 
 def setup_loggers(working_directory_log_path: Path | None = None):
-    """A function that adds our handlers to the appropriate logger object."""
+    """A function that adds our handlers to the appropriate logger object.
+
+    Parameters
+    ----------
+    working_directory_log_path: Path | None :
+         (Default value = None)
+    """
     # Remove all of the existing handlers from the 'process' package logger
 
     logger.handlers.clear()
@@ -775,7 +782,10 @@ def main(args: list[Any] | None = None):
     used instead of command-line arguments by argparse. This allows testing of
     different command-line arguments from the test suite.
 
-    :param args: Arguments to parse, defaults to None
+    Parameters
+    ----------
+    args :
+        Arguments to parse, defaults to None
     """
 
     Process(args)

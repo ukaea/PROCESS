@@ -14,10 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 class Shield:
-    def __init__(self) -> None:
+    def __init__(self):
         self.outfile = constants.NOUT
 
-    def run(self) -> None:
+    def run(self):
         blanket_library.dz_shld_half = self.calculate_shield_half_height(
             z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
             dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
@@ -135,7 +135,31 @@ class Shield:
         dr_fw_outboard: float,
         dz_blkt_upper: float,
     ) -> float:
-        """Calculate shield half-height."""
+        """Calculate shield half-height.
+
+        Parameters
+        ----------
+        z_plasma_xpoint_lower:
+
+        dz_xpoint_divertor:
+
+        dz_divertor:
+
+        n_divertors: int :
+
+        z_plasma_xpoint_upper:
+
+        dr_fw_plasma_gap_inboard:
+
+        dr_fw_plasma_gap_outboard:
+
+        dr_fw_inboard:
+
+        dr_fw_outboard:
+
+        dz_blkt_upper:
+
+        """
 
         z_bottom = z_plasma_xpoint_lower + dz_xpoint_divertor + dz_divertor
 
@@ -171,7 +195,35 @@ class Shield:
         dr_shld_outboard: float,
         dz_shld_upper: float,
     ) -> tuple[float, float, float]:
-        """Calculate volumes of D-shaped shield segments."""
+        """Calculate volumes of D-shaped shield segments.
+
+        Parameters
+        ----------
+        r_shld_inboard_inner:
+
+        dr_shld_inboard:
+
+        dr_fw_inboard:
+
+        dr_fw_plasma_gap_inboard:
+
+        rminor:
+
+        dr_fw_plasma_gap_outboard:
+
+        dr_fw_outboard:
+
+        dr_blkt_inboard:
+
+        dr_blkt_outboard:
+
+        dz_shld_half:
+
+        dr_shld_outboard:
+
+        dz_shld_upper:
+
+        """
 
         r_1 = r_shld_inboard_inner + dr_shld_inboard
         r_2 = (
@@ -212,7 +264,31 @@ class Shield:
         dr_blkt_outboard: float,
         dz_shld_half: float,
     ) -> tuple[float, float, float]:
-        """Calculate areas of D-shaped shield segments."""
+        """Calculate areas of D-shaped shield segments.
+
+        Parameters
+        ----------
+        r_shld_inboard_inner:
+
+        dr_shld_inboard:
+
+        dr_fw_inboard:
+
+        dr_fw_plasma_gap_inboard:
+
+        rminor:
+
+        dr_fw_plasma_gap_outboard:
+
+        dr_fw_outboard:
+
+        dr_blkt_inboard:
+
+        dr_blkt_outboard:
+
+        dz_shld_half:
+
+        """
 
         r_1 = r_shld_inboard_inner + dr_shld_inboard
         r_2 = (
@@ -245,7 +321,29 @@ class Shield:
         dr_shld_outboard: float,
         dz_shld_upper: float,
     ) -> tuple[float, float, float]:
-        """Calculate volumes of elliptical shield segments."""
+        """Calculate volumes of elliptical shield segments.
+
+        Parameters
+        ----------
+        r_shld_inboard_inner:
+
+        r_shld_outboard_outer:
+
+        rmajor:
+
+        triang:
+
+        dr_shld_inboard:
+
+        rminor:
+
+        dz_shld_half:
+
+        dr_shld_outboard:
+
+        dz_shld_upper:
+
+        """
 
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
@@ -284,7 +382,27 @@ class Shield:
         dz_shld_half: float,
         dr_shld_outboard: float,
     ) -> tuple[float, float, float]:
-        """Calculate areas of elliptical shield segments."""
+        """Calculate areas of elliptical shield segments.
+
+        Parameters
+        ----------
+        r_shld_inboard_inner:
+
+        r_shld_outboard_outer:
+
+        rmajor:
+
+        triang:
+
+        dr_shld_inboard:
+
+        rminor:
+
+        dz_shld_half:
+
+        dr_shld_outboard:
+
+        """
 
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
@@ -304,7 +422,7 @@ class Shield:
 
         return a_shld_inboard_surface, a_shld_outboard_surface, a_shld_total_surface
 
-    def output_shld_areas_and_volumes(self) -> None:
+    def output_shld_areas_and_volumes(self):
         """Output shield areas and volumes to log."""
 
         po.oheadr(self.outfile, "Shield Areas and Volumes")

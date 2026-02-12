@@ -98,8 +98,8 @@ def to_type(string):
 
     Returns
     -------
-
-        value --> Either a float, int or string depending on input
+    :
+        Either a float, int or string depending on input
     """
 
     try:
@@ -122,13 +122,20 @@ def to_type(string):
 def grep(file, regexp, flags=re.UNICODE):
     """Implements an in-python grep. Returns the lines that match
     as a list.
-    Args:
-         file --> Name of file to be read
-         regexp --> Regular expression to search for
-         flags --> re flags to use in search. Default is re.U which has
-                     no effect
-    Returns:
-         lines --> List of matching lines
+
+    Parameters
+    ----------
+    file:
+        Name of file to be read
+    regexp:
+        Regular expression to search for
+    flags:
+        re flags to use in search. Default is re.U which has
+
+    Returns
+    -------
+    lines:
+        List of matching lines
     """
 
     lines = []
@@ -160,8 +167,8 @@ def slice_file(file, re1, re2):
 
     Returns
     -------
-    type
-        lines --> List of lines from file between re1 and re2 inclusive
+    :
+        lines:List of lines from file between re1 and re2 inclusive
     """
 
     with open(file, encoding="utf-8") as file:
@@ -193,10 +200,17 @@ def remove_comments(line):
     removing everything after the first '!' in the line. This will
     cause problems in the case of '!' characters contained within strings
     so am assuming this won't happen. Need to change this.
-    Args:
-         line --> Line to strip comments from
+
+    Parameters
+    ----------
+    line:
+        Line to strip comments from
+
     Returns
-         modified_line --> Line with comments removed
+    -------
+    modified_line:
+        Line with comments removed
+
     """
     if "!" in line:
         line = line[: line.find("!")]

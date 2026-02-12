@@ -1,15 +1,7 @@
 """
-Author: Hanni Lux (Hanni.Lux@ccfe.ac.uk)
-
 Interfaces for Configuration values for programs
 - run_process.py
 - test_process.py
-
-Compatible with PROCESS version 382
-
-24/11/2021: Global dictionary variables moved within the functions
-            to avoid cyclic dependencies. This is because the dicts
-            generation script imports, and inspects, process.
 """
 
 import logging
@@ -34,9 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 class ProcessConfig:
-    """
-    Configuration parameters for PROCESS runs
-    """
+    """Configuration parameters for PROCESS runs"""
 
     filename = None
     """Configuration file name"""
@@ -248,8 +238,12 @@ iteration variables should get varied"""
     def run_process(self, input_path: Path, solver: str = "vmcon"):
         """Perform a single run of PROCESS, catching any errors.
 
-        :param input_path: the input file to run on
-        :param solver: which solver to use, as specified in solver.py, defaults to "vmcon"
+        Parameters
+        ----------
+        input_path :
+            the input file to run on
+        solver :
+            which solver to use, as specified in solver.py, defaults to "vmcon"
         """
         with open("process.log", "w") as logfile:
             print("PROCESS run started ...", end="")
@@ -276,9 +270,7 @@ iteration variables should get varied"""
 
 
 class RunProcessConfig(ProcessConfig):
-    """
-    Configuration parameters of the run_process.py program
-    """
+    """Configuration parameters of the run_process.py program"""
 
     no_allowed_unfeasible = 0
     """the number of allowed unfeasible points in a sweep"""
@@ -337,8 +329,7 @@ class RunProcessConfig(ProcessConfig):
         self.set_dictvar()
 
     def get_attribute_csv_list(self, attributename):
-        """
-        get class attribute list from configuration file
+        """get class attribute list from configuration file
         expects comma separated values
         """
 

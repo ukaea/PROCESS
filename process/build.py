@@ -25,7 +25,7 @@ class Build:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
-    def run(self) -> None:
+    def run(self):
         self.calculate_radial_build(output=False)
         self.calculate_vertical_build(output=False)
 
@@ -74,21 +74,21 @@ class Build:
             Width of beam duct
         dx_beam_shield : float
             Shielding width on both sides of beam duct
-        f_radius_beam_tangency_rmajor: float :
+        f_radius_beam_tangency_rmajor:
 
-        rmajor: float :
+        rmajor:
 
         n_tf_coils: int :
 
-        dx_tf_inboard_out_toroidal: float :
+        dx_tf_inboard_out_toroidal:
 
-        dr_tf_outboard: float :
+        dr_tf_outboard:
 
-        r_tf_outboard_mid: float :
+        r_tf_outboard_mid:
 
-        dx_beam_duct: float :
+        dx_beam_duct:
 
-        dx_beam_shield: float :
+        dx_beam_shield:
 
 
         Returns
@@ -146,7 +146,7 @@ class Build:
 
         return radius_beam_tangency, radius_beam_tangency_max
 
-    def calculate_vertical_build(self, output: bool) -> None:
+    def calculate_vertical_build(self, output: bool):
         """Determines the vertical build of the machine.
 
         This method calculates various parameters related to the vertical build of the machine,
@@ -1596,29 +1596,29 @@ class Build:
                     Winding-pack insulation thickness (m)
                 dx_tf_wp_insertion_gap : float
                     Winding-pack insertion gap (m)
-                ripple_b_tf_plasma_edge_max: float :
+                ripple_b_tf_plasma_edge_max:
 
-                r_tf_outboard_mid: float :
+                r_tf_outboard_mid:
 
                 n_tf_coils: int :
 
-                rmajor: float :
+                rmajor:
 
-                rminor: float :
+                rminor:
 
-                r_tf_wp_inboard_centre: float :
+                r_tf_wp_inboard_centre:
 
-                r_tf_wp_inboard_outer: float :
+                r_tf_wp_inboard_outer:
 
-                dx_tf_wp_primary_toroidal: float :
+                dx_tf_wp_primary_toroidal:
 
                 i_tf_shape: int :
 
                 i_tf_sup: int :
 
-                dx_tf_wp_insulation: float :
+                dx_tf_wp_insulation:
 
-                dx_tf_wp_insertion_gap: float :
+                dx_tf_wp_insertion_gap:
 
 
                 Returns
@@ -1722,7 +1722,7 @@ class Build:
 
         return ripple, r_tf_outboard_midmin, flag
 
-    def calculate_radial_build(self, output: bool) -> None:
+    def calculate_radial_build(self, output: bool):
         """This method determines the radial build of the machine.
         It calculates various parameters related to the build of the machine,
         such as thicknesses, radii, and areas.

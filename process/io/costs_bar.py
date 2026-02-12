@@ -3,11 +3,6 @@
 Code to produce costs bar chart.
 Can take multiple input files.
 
-Stuart Muldrew (stuart.muldrew@ukaea.uk)
-11/09/2018
-
-History
-04/04/2019 SIM Added comp_step
 """
 
 # Imported libraries
@@ -20,10 +15,9 @@ import numpy as np
 import process.io.mfile as mf
 
 
-def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
+def comp_orig(args, mfile_list: list[str], inflate: float):
     """Plot bar chart for the orginal 1990 cost model.
     Two plots produced: (1) Breakdown of the direct costs and (2) Direct, indirect, etc.
-
     """
     # Setup figures
     labels = [
@@ -131,11 +125,7 @@ def comp_orig(args, mfile_list: list[str], inflate: float) -> None:
 
 
 def comp_new(args, mfile_list: list[str], inflate: float):
-    """
-
-    Plot bar chart for the new 2014 cost model.
-
-    """
+    """Plot bar chart for the new 2014 cost model."""
     # Setup figures
     labels = [
         "Land and Buildings",
@@ -221,7 +211,6 @@ def main(args=None):
     parser = argparse.ArgumentParser(
         description="Displays the cost breakdown as a bar chart.  "
         "Multiple MFILEs can be given and will be plotted on the same chart.  "
-        "For more information contact Stuart.Muldrew@ukaea.uk"
     )
 
     parser.add_argument(

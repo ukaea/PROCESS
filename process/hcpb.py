@@ -594,23 +594,26 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         fw_armour_u_nuc_heating: float,
         p_fusion_total_mw: float,
     ) -> float:
-        """
-        Calculate the nuclear heating in the first wall (FW) for the CCFE HCPB model.
+        """Calculate the nuclear heating in the first wall (FW) for the CCFE HCPB model.
 
-        :param m_fw_total: Total mass of the first wall (kg).
-        :type m_fw_total: float
-        :param fw_armour_u_nuc_heating: Unit nuclear heating of the FW and armour (W/kg per W of fusion power).
-        :type fw_armour_u_nuc_heating: float
-        :param p_fusion_total_mw: Total fusion power (MW).
-        :type p_fusion_total_mw: float
+        Parameters
+        ----------
+        m_fw_total:
+            Total mass of the first wall (kg).
+        fw_armour_u_nuc_heating:
+            Unit nuclear heating of the FW and armour (W/kg per W of fusion power).
+        p_fusion_total_mw:
+            Total fusion power (MW).
 
-        :returns: Total nuclear heating in the first wall (MW).
-        :rtype: float
+        Returns
+        -------
+        :
+            Total nuclear heating in the first wall (MW).
 
-        :raises ProcessValueError: If the calculated nuclear heating is negative.
-
-
-        This subroutine calculates the nuclear heating in the FW.
+        Raises
+        ------
+        ProcessValueError
+            If the calculated nuclear heating is negative.
         """
 
         # Total nuclear heating in FW (MW)
@@ -631,21 +634,25 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
     def nuclear_heating_blanket(
         self, m_blkt_total: float, p_fusion_total_mw: float
     ) -> tuple[float, float]:
-        """
-        Calculates the nuclear heating in the blanket for the CCFE HCPB model.
+        """Calculates the nuclear heating in the blanket for the CCFE HCPB model.
 
-        :param m_blkt_total: Total mass of the blanket in kilograms.
-        :type m_blkt_total: float
-        :param p_fusion_total_mw: Total fusion power in megawatts.
-        :type p_fusion_total_mw: float
+        Parameters
+        ----------
+        m_blkt_total:
+            Total mass of the blanket in kilograms.
+        p_fusion_total_mw:
+            Total fusion power in megawatts.
 
-        :returns:
-            - p_blkt_nuclear_heat_total_mw (float): Total nuclear heating in the blanket (MW).
+        Returns
+        -------
+        :
+            p_blkt_nuclear_heat_total_mw (float): Total nuclear heating in the blanket (MW).
             - exp_blanket (float): Exponential blanket factor (dimensionless).
-        :rtype: tuple[float, float]
 
-        :raises ProcessValueError: If the calculated nuclear heating is less than 1 MW.
-
+        Raises
+        ------
+        ProcessValueError
+            If the calculated nuclear heating is less than 1 MW.
         """
         # Blanket nuclear heating coefficient and exponent
         a = 0.764
@@ -677,34 +684,36 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         x_blanket: float,
         p_fusion_total_mw: float,
     ) -> tuple[float, float, float, float]:
-        """
-        Calculate the nuclear heating in the shield for the CCFE HCPB model.
+        """Calculate the nuclear heating in the shield for the CCFE HCPB model.
 
-        :param itart: Indicator for spherical tokamak (1 if ST, else 0).
-        :type itart: int
-        :param dr_shld_outboard: Outboard shield thickness (m).
-        :type dr_shld_outboard: float
-        :param dr_shld_inboard: Inboard shield thickness (m).
-        :type dr_shld_inboard: float
-        :param shield_density: Shield smeared density (kg/m^3).
-        :type shield_density: float
-        :param whtshld: Shield mass (kg).
-        :type whtshld: float
-        :param x_blanket: Blanket line density (tonne/m^2).
-        :type x_blanket: float
-        :param p_fusion_total_mw: Total fusion power (MW).
-        :type p_fusion_total_mw: float
+        Parameters
+        ----------
+        itart:
+            Indicator for spherical tokamak (1 if ST, else 0).
+        dr_shld_outboard:
+            Outboard shield thickness (m).
+        dr_shld_inboard:
+            Inboard shield thickness (m).
+        shield_density:
+            Shield smeared density (kg/m^3).
+        whtshld:
+            Shield mass (kg).
+        x_blanket:
+            Blanket line density (tonne/m^2).
+        p_fusion_total_mw:
+            Total fusion power (MW).
 
-        :returns:
-            - p_shld_nuclear_heat_mw (float): Total nuclear heating in shield (MW).
-            - exp_shield1 (float): First exponential factor for shield heating.
-            - exp_shield2 (float): Second exponential factor for shield heating.
-            - shld_u_nuc_heating (float): Unit nuclear heating of shield (W/kg/GW of fusion power) x mass.
-        :rtype: tuple[float, float, float, float]
+        Returns
+        -------
+        :
 
         This method calculates the nuclear heating in the shield using empirical coefficients and exponents,
         based on the shield's geometry, density, and the total fusion power. The calculation distinguishes
         between spherical tokamak and conventional configurations for the average shield thickness.
+                    p_shld_nuclear_heat_mw (float): Total nuclear heating in shield (MW).
+                    - exp_shield1 (float): First exponential factor for shield heating.
+                    - exp_shield2 (float): Second exponential factor for shield heating.
+                    - shld_u_nuc_heating (float): Unit nuclear heating of shield (W/kg/GW of fusion power) x mass.
         """
 
         # Shield nuclear heating coefficients and exponents
@@ -735,8 +744,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
     def powerflow_calc(self, output: bool):
         """Calculations for powerflow
-        author: J. Morris, CCFE, Culham Science Centre
-        Calculations for powerflow
+
+        Parameters
+        ----------
+        output:
+
         """
 
         # Radiation power incident on HCD apparatus (MW)
@@ -966,19 +978,28 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 )
 
     def st_cp_angle_fraction(self, z_cp_top, r_cp_mid, r_cp_top, rmajor):
-        """Author : S. Kahn, CCFE, Culham science centre
+        """
         Estimates the CP angular solid angle coverage fration
         Equation (1-3) from
         ref : P. Guest THE-REVIEW OF SCIENTIFIC INSTRUMENTS, vol 32, n 2 (1960)
         Initial, but undocumented calculation kept as commented section
         without any talor expansion approximation
 
-        :param z_cp_top: Centrepost shield half height [m]
-        :param r_cp_top: Centrepost top radius [m]
-        :param r_cp_mid: Centrepost mid-plane radius [m]
-        :param rmajor: Plasma major radius [m]
+        Parameters
+        ----------
+        z_cp_top :
+            Centrepost shield half height [m]
+        r_cp_top :
+            Centrepost top radius [m]
+        r_cp_mid :
+            Centrepost mid-plane radius [m]
+        rmajor :
+            Plasma major radius [m]
 
-        :returns: Solid angle fraction covered by the CP [-]
+        Returns
+        -------
+        type
+            Solid angle fraction covered by the CP [-]
         """
 
         n_integral = 10
@@ -1033,7 +1054,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         return 0.25 * cp_sol_angle / np.pi
 
     def st_tf_centrepost_fast_neut_flux(self, p_neutron_total_mw, sh_width, rmajor):
-        """Author S Kahn
+        """
         Routine calculating the fast neutron (E > 0.1 MeV) flux reaching the TF
         at the centerpost. These calcualtion are made from a CP only MCNP fit
         with a variable tungsten carbyde shield with 13% water cooling. The
@@ -1043,9 +1064,14 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         of 16.6 cm, close to the "15 - 16 cm" of Menard et al. 2016.
         (This is an e-folding lenth of 7.22 cm.)
 
-        :param p_neutron_total_mw: neutron fusion power [MW]
-        :param sh_width: Neutron shield width [m]
-        :param rmajor: Plasma major radius [m]
+        Parameters
+        ----------
+        p_neutron_total_mw :
+            neutron fusion power [MW]
+        sh_width :
+            Neutron shield width [m]
+        rmajor :
+            Plasma major radius [m]
         """
         # Fraction of fast neutrons originating from the outer wall reflection [-]
         f_neut_flux_out_wall = 1
@@ -1082,8 +1108,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         return neut_flux_cp
 
     def st_centrepost_nuclear_heating(self, pneut, sh_width):
-        """Author : P J Knight, CCFE, Culham Science Centre
-        Author : S Kahn, CCFE, Culham Science Centre
+        """
         Estimates the nuclear power absorbed by the ST centrepost magnet
         This routine calculates the neutron power absorbed by a
         copper spherical tokamak centrepost.
@@ -1094,12 +1119,19 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
         unpublished internal Oak Ridge document
 
-        :param pneut: 14 MeV plasma neutron power generated by the plasma [MW]
-        :param sh_width: Thickeness of the centrepost neutron shield [m]
+        Parameters
+        ----------
+        pneut :
+            14 MeV plasma neutron power generated by the plasma [MW]
+        sh_width :
+            Thickeness of the centrepost neutron shield [m]
 
-        :returns: (Nuclear nuclear heat deposited in the centrepost TF coil [MW],
-        Nuclear nuclear heat deposited in the centrepost shield [MW],
-        Total nuclear heat deposited in the centrepost shield [MW])
+        Returns
+        -------
+        type
+            Nuclear nuclear heat deposited in the centrepost TF coil [MW],
+            Nuclear nuclear heat deposited in the centrepost shield [MW],
+            Total nuclear heat deposited in the centrepost shield [MW])
         """
         # Outer wall reflection TF nuclear heating enhancement factor [-]
         f_pnuc_cp_tf = 1

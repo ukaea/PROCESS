@@ -20,7 +20,7 @@ a_fw_outboard: float = None
 """Outboard first wall surface area [m^2]"""
 
 
-def init_first_wall_variables() -> None:
+def init_first_wall_variables():
     """Initializes first wall variables to None"""
     global \
         a_fw_total_full_coverage, \

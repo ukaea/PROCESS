@@ -12,14 +12,13 @@ class WaterUse:
         self.outfile = constants.NOUT
 
     def run(self, output: bool):
-        """
-        Routine to call the water usage calculation routines.
-        author: R Chapman, UKAEA
-
+        """Routine to call the water usage calculation routines.
         This routine calls the different water usage routines.
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output :
+            indicate whether output should be written to the output file, or not
         """
         rejected_heat = heat_transport_variables.p_plant_primary_heat_mw * (
             1 - heat_transport_variables.eta_turbine
@@ -51,10 +50,13 @@ class WaterUse:
 
     def cooling_towers(self, wastetherm: float, output: bool):
         """Water used in cooling towers
-        author: R Chapman, UKAEA
-        outfile : input integer : Fortran output unit identifier
-        iprint : input integer : Switch to write output (1=yes)
-        wastetherm : input real : thermal energy (MJ) to be cooled by this system
+
+        Parameters
+        ----------
+        wastetherm:
+            thermal energy (MJ) to be cooled by this system
+        output:
+
         """
         water_usage_variables.evapratio = 1.0e0 - (
             (
@@ -105,11 +107,13 @@ class WaterUse:
         temperatures, windspeeds, and heat loading:
         http://pubs.usgs.gov/sir/2013/5188/appendix/sir2013-5188_appendix4_fews_version_3.104.xlsx
 
-        author: R Chapman, UKAEA
-        outfile : input integer : Fortran output unit identifier
-        iprint : input integer : Switch to write output (1=yes)
-        icool: input integer : switch between different water-body cooling options
-        wastetherm : input real : thermal energy (MJ) to be cooled by this system
+
+        Parameters
+        ----------
+        wastetherm:
+            thermal energy (MJ) to be cooled by this system
+        output:
+
         """
         evapsum = 0.0e0
 

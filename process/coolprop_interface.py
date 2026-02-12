@@ -79,7 +79,7 @@ class FluidProperties:
             `[0, 1]`, where `0` is a saturated liquid and `1` is a saturated vapor.
         fluid_name: str :
 
-        * :
+
 
         temperature: float | None :
              (Default value = None)

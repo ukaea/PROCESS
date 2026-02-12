@@ -12,10 +12,10 @@ from process.data_structure import (
 
 
 class Cryostat:
-    def __init__(self) -> None:
+    def __init__(self):
         self.outfile = constants.NOUT
 
-    def run(self) -> None:
+    def run(self):
         """Run the cryostat calculations.
 
         This method runs the cryostat calculations, including the calculation of the cryostat geometry.
@@ -25,7 +25,7 @@ class Cryostat:
         self.external_cryo_geometry()
 
     @staticmethod
-    def external_cryo_geometry() -> None:
+    def external_cryo_geometry():
         """Calculate cryostat geometry.
 
         This method calculates the geometry of the cryostat, including the inboard radius,

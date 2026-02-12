@@ -43,7 +43,7 @@ class Availability:
     plant availability and component lifetimes for a fusion power plant.
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.outfile = constants.NOUT  # output file unit
 
     def run(self, output: bool = False):

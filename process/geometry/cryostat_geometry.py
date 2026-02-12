@@ -10,14 +10,19 @@ def cryostat_geometry(
 ) -> list[RectangleGeometry]:
     """Calculates rectangular geometries of the cryostat
 
-    :param r_cryostat_inboard: cryostat internal radius
-    :type r_cryostat_inboard: float
-    :param dr_cryostat: external cryostat thickness
-    :type dr_cryostat: float
-    :param z_cryostat_half_inside: cryostat internal half-height
-    :type z_cryostat_half_inside: float
-    :return: list of RectangleGeometry - dataclass returning rectangular geometry parameters
-    :rtype: List[RectangleGeometry]
+    Parameters
+    ----------
+    r_cryostat_inboard:
+        cryostat internal radius
+    dr_cryostat:
+        external cryostat thickness
+    z_cryostat_half_inside:
+        cryostat internal half-height
+
+    Returns
+    -------
+    :
+        list of RectangleGeometry - dataclass returning rectangular geometry parameters
     """
     # The cryostat is represented by 4 rectangular sections as follows:
 

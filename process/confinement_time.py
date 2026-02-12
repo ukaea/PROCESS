@@ -16,18 +16,18 @@ def neo_alcator_confinement_time(
         float
     qstar :
         float
-    dene20: float :
+    dene20:
 
-    rminor: float :
+    rminor:
 
-    rmajor: float :
+    rmajor:
 
-    qstar: float :
+    qstar:
 
 
     Returns
     -------
-    type
+    :
         float: Neo-Alcator confinement time [s]
 
         Notes:
@@ -52,16 +52,16 @@ def mirnov_confinement_time(rminor: float, kappa95: float, pcur: float) -> float
         float
     pcur :
         float
-    rminor: float :
+    rminor:
 
-    kappa95: float :
+    kappa95:
 
-    pcur: float :
+    pcur:
 
 
     Returns
     -------
-    type
+    :
         float: Mirnov scaling confinement time [s]
 
         Notes:
@@ -100,24 +100,24 @@ def merezhkin_muhkovatov_confinement_time(
         float
     ten :
         float
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa95: float :
+    kappa95:
 
-    qstar: float :
+    qstar:
 
-    dnla20: float :
+    dnla20:
 
-    afuel: float :
+    afuel:
 
-    ten: float :
+    ten:
 
 
     Returns
     -------
-    type
+    :
         float: Merezhkin-Mukhovatov confinement time [s]
 
         Notes:
@@ -159,20 +159,20 @@ def shimomura_confinement_time(
         float
     afuel :
         float
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    kappa95: float :
+    kappa95:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: Shimomura confinement time [s]
 
         Notes:
@@ -223,26 +223,26 @@ def kaye_goldston_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    kappa95: float :
+    kappa95:
 
-    pcur: float :
+    pcur:
 
-    n20: float :
+    n20:
 
-    rmajor: float :
+    rmajor:
 
-    afuel: float :
+    afuel:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    rminor: float :
+    rminor:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Kaye-Goldston confinement time [s]
 
         Notes:
@@ -294,26 +294,26 @@ def iter_89p_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa: float :
+    kappa:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    afuel: float :
+    afuel:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: ITER 89-P confinement time [s]
 
         Notes:
@@ -367,26 +367,26 @@ def iter_89_0_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa: float :
+    kappa:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    afuel: float :
+    afuel:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: ITER 89-O confinement time [s]
 
         Notes:
@@ -449,28 +449,28 @@ def rebut_lallia_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    rminor: float :
+    rminor:
 
-    rmajor: float :
+    rmajor:
 
-    kappa: float :
+    kappa:
 
-    afuel: float :
+    afuel:
 
-    pcur: float :
+    pcur:
 
-    zeff: float :
+    zeff:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Rebut-Lallia confinement time [s]
 
         Notes:
@@ -516,22 +516,22 @@ def goldston_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa95: float :
+    kappa95:
 
-    afuel: float :
+    afuel:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Goldston confinement time [s]
 
         Notes:
@@ -584,28 +584,28 @@ def t10_confinement_time(
         float
     pcur :
         float
-    dnla20: float :
+    dnla20:
 
-    rmajor: float :
+    rmajor:
 
-    qstar: float :
+    qstar:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    rminor: float :
+    rminor:
 
-    kappa95: float :
+    kappa95:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    zeff: float :
+    zeff:
 
-    pcur: float :
+    pcur:
 
 
     Returns
     -------
-    type
+    :
         float: T-10 confinement time [s]
 
         Notes:
@@ -664,30 +664,30 @@ def jaeri_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    kappa95: float :
+    kappa95:
 
-    rminor: float :
+    rminor:
 
-    afuel: float :
+    afuel:
 
-    n20: float :
+    n20:
 
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    rmajor: float :
+    rmajor:
 
-    qstar: float :
+    qstar:
 
-    zeff: float :
+    zeff:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: JAERI confinement time [s]
 
         Notes:
@@ -747,26 +747,26 @@ def kaye_big_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    kappa95: float :
+    kappa95:
 
-    pcur: float :
+    pcur:
 
-    n20: float :
+    n20:
 
-    afuel: float :
+    afuel:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Kaye-Big confinement time [s]
 
         Notes:
@@ -818,26 +818,26 @@ def iter_h90_p_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa: float :
+    kappa:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    afuel: float :
+    afuel:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: ITER H90-P confinement time [s]
 
         Notes:
@@ -885,24 +885,24 @@ def riedel_l_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa95: float :
+    kappa95:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Riedel confinement time [s]
 
         Notes:
@@ -952,26 +952,26 @@ def christiansen_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa95: float :
+    kappa95:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: Christiansen confinement time [s]
 
         Notes:
@@ -1018,24 +1018,24 @@ def lackner_gottardi_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa95: float :
+    kappa95:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Lackner-Gottardi confinement time [s]
 
         Notes:
@@ -1089,24 +1089,24 @@ def neo_kaye_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa95: float :
+    kappa95:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Neo-Kaye confinement time [s]
 
         Notes:
@@ -1156,26 +1156,26 @@ def riedel_h_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa95: float :
+    kappa95:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    afuel: float :
+    afuel:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Riedel H-mode confinement time [s]
 
         Notes:
@@ -1220,22 +1220,22 @@ def iter_h90_p_amended_confinement_time(
         float
     kappa :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    afuel: float :
+    afuel:
 
-    rmajor: float :
+    rmajor:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    kappa: float :
+    kappa:
 
 
     Returns
     -------
-    type
+    :
         float: Amended ITER H90-P confinement time [s]
 
         Notes:
@@ -1277,20 +1277,20 @@ def sudo_et_al_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Sudo et al. confinement time [s]
 
         Notes:
@@ -1333,20 +1333,20 @@ def gyro_reduced_bohm_confinement_time(
         float
     rmajor :
         float
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla20: float :
+    dnla20:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rminor: float :
+    rminor:
 
-    rmajor: float :
+    rmajor:
 
 
     Returns
     -------
-    type
+    :
         float: Gyro-reduced Bohm confinement time [s]
 
         Notes:
@@ -1389,22 +1389,22 @@ def lackner_gottardi_stellarator_confinement_time(
         float
     q :
         float
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    dnla20: float :
+    dnla20:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    q: float :
+    q:
 
 
     Returns
     -------
-    type
+    :
         float: Lackner-Gottardi stellarator confinement time [s]
 
         Notes:
@@ -1456,26 +1456,26 @@ def iter_93h_confinement_time(
         float
     kappa :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    afuel: float :
+    afuel:
 
-    rmajor: float :
+    rmajor:
 
-    dnla20: float :
+    dnla20:
 
-    aspect: float :
+    aspect:
 
-    kappa: float :
+    kappa:
 
 
     Returns
     -------
-    type
+    :
         float: ITER-93H confinement time [s]
 
         Notes:
@@ -1527,26 +1527,26 @@ def iter_h97p_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    dnla19: float :
+    dnla19:
 
-    rmajor: float :
+    rmajor:
 
-    aspect: float :
+    aspect:
 
-    kappa: float :
+    kappa:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: ITER H97-P confinement time [s]
 
         Notes:
@@ -1600,26 +1600,26 @@ def iter_h97p_elmy_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    dnla19: float :
+    dnla19:
 
-    rmajor: float :
+    rmajor:
 
-    aspect: float :
+    aspect:
 
-    kappa: float :
+    kappa:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: ITER H97-P(y) confinement time [s]
 
         Notes:
@@ -1675,26 +1675,26 @@ def iter_96p_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    kappa95: float :
+    kappa95:
 
-    rmajor: float :
+    rmajor:
 
-    aspect: float :
+    aspect:
 
-    dnla19: float :
+    dnla19:
 
-    afuel: float :
+    afuel:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: ITER-96P confinement time [s]
 
         Notes:
@@ -1751,26 +1751,26 @@ def valovic_elmy_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    afuel: float :
+    afuel:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    kappa: float :
+    kappa:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Valovic modified ELMy-H mode confinement time [s]
 
         Notes:
@@ -1820,26 +1820,26 @@ def kaye_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    kappa: float :
+    kappa:
 
-    rmajor: float :
+    rmajor:
 
-    aspect: float :
+    aspect:
 
-    dnla19: float :
+    dnla19:
 
-    afuel: float :
+    afuel:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Kaye PPPL Workshop confinement time [s]
 
         Notes:
@@ -1890,26 +1890,26 @@ def iter_pb98py_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa: float :
+    kappa:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: ITERH-PB98P(y) ELMy H-mode confinement time [s]
 
         Notes:
@@ -1959,26 +1959,26 @@ def iter_ipb98y_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa: float :
+    kappa:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: IPB98(y) ELMy H-mode confinement time [s]
 
         Notes:
@@ -2035,26 +2035,26 @@ def iter_ipb98y1_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: IPB98(y,1) ELMy H-mode confinement time [s]
 
         Notes:
@@ -2110,26 +2110,26 @@ def iter_ipb98y2_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: IPB98(y,2) ELMy H-mode confinement time [s]
 
         Notes:
@@ -2185,26 +2185,26 @@ def iter_ipb98y3_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: IPB98(y,3) ELMy H-mode confinement time [s]
 
         Notes:
@@ -2260,26 +2260,26 @@ def iter_ipb98y4_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: IPB98(y,4) ELMy H-mode confinement time [s]
 
         Notes:
@@ -2329,22 +2329,22 @@ def iss95_stellarator_confinement_time(
         float
     iotabar :
         float
-    rminor: float :
+    rminor:
 
-    rmajor: float :
+    rmajor:
 
-    dnla19: float :
+    dnla19:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    iotabar: float :
+    iotabar:
 
 
     Returns
     -------
-    type
+    :
         float: ISS95 stellarator confinement time [s]
 
         Notes:
@@ -2389,22 +2389,22 @@ def iss04_stellarator_confinement_time(
         float
     iotabar :
         float
-    rminor: float :
+    rminor:
 
-    rmajor: float :
+    rmajor:
 
-    dnla19: float :
+    dnla19:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    iotabar: float :
+    iotabar:
 
 
     Returns
     -------
-    type
+    :
         float: ISS04 stellarator confinement time [s]
 
         Notes:
@@ -2455,26 +2455,26 @@ def ds03_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa95: float :
+    kappa95:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: DS03 beta-independent H-mode confinement time [s]
 
         Notes:
@@ -2522,22 +2522,22 @@ def murari_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    rmajor: float :
+    rmajor:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
-    dnla19: float :
+    dnla19:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Murari confinement time [s]
 
         Notes:
@@ -2591,24 +2591,24 @@ def petty08_confinement_time(
         float
     aspect :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
-    aspect: float :
+    aspect:
 
 
     Returns
     -------
-    type
+    :
         float: Petty08 confinement time [s]
 
         Notes:
@@ -2673,32 +2673,32 @@ def lang_high_density_confinement_time(
         float
     kappa_ipb :
         float
-    plasma_current: float :
+    plasma_current:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    nd_plasma_electron_line: float :
+    nd_plasma_electron_line:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    rminor: float :
+    rminor:
 
-    q: float :
+    q:
 
-    qstar: float :
+    qstar:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
 
     Returns
     -------
-    type
+    :
         float: High density relevant confinement time [s]
 
         Notes:
@@ -2746,18 +2746,18 @@ def hubbard_nominal_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla20: float :
+    dnla20:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Hubbard confinement time [s]
 
         Notes:
@@ -2794,18 +2794,18 @@ def hubbard_lower_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla20: float :
+    dnla20:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Hubbard confinement time [s]
 
         Notes:
@@ -2842,18 +2842,18 @@ def hubbard_upper_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla20: float :
+    dnla20:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
 
     Returns
     -------
-    type
+    :
         float: Hubbard confinement time [s]
 
         Notes:
@@ -2902,26 +2902,26 @@ def menard_nstx_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: Menard NSTX ELMy H-mode confinement time [s]
 
         Notes:
@@ -2980,26 +2980,26 @@ def menard_nstx_petty08_hybrid_confinement_time(
         float
     afuel :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
-    aspect: float :
+    aspect:
 
-    afuel: float :
+    afuel:
 
 
     Returns
     -------
-    type
+    :
         float: Menard NSTX-Petty hybrid confinement time [s]
 
         Notes:
@@ -3080,20 +3080,20 @@ def nstx_gyro_bohm_confinement_time(
         float
     dnla20 :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    dnla20: float :
+    dnla20:
 
 
     Returns
     -------
-    type
+    :
         float: NSTX gyro-Bohm confinement time [s]
 
         Notes:
@@ -3147,28 +3147,28 @@ def itpa20_confinement_time(
         float
     aion :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    dnla19: float :
+    dnla19:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    rmajor: float :
+    rmajor:
 
-    triang: float :
+    triang:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
-    eps: float :
+    eps:
 
-    aion: float :
+    aion:
 
 
     Returns
     -------
-    type
+    :
         float: ITPA20 confinement time [s]
 
         Notes:
@@ -3223,26 +3223,26 @@ def itpa20_il_confinement_time(
         float
     kappa_ipb :
         float
-    pcur: float :
+    pcur:
 
-    b_plasma_toroidal_on_axis: float :
+    b_plasma_toroidal_on_axis:
 
-    p_plasma_loss_mw: float :
+    p_plasma_loss_mw:
 
-    dnla19: float :
+    dnla19:
 
-    aion: float :
+    aion:
 
-    rmajor: float :
+    rmajor:
 
-    triang: float :
+    triang:
 
-    kappa_ipb: float :
+    kappa_ipb:
 
 
     Returns
     -------
-    type
+    :
         float: ITPA20-IL confinement time [s]
 
         Notes:

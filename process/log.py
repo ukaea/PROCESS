@@ -64,8 +64,12 @@ logging_model_handler = ProcessLogHandler()
 def show_errors(file_unit: int):
     """Write the rendered captured logs to the terminal/OUTFile
 
-    :param file_unit: a number describing the output medium (terminal, OUTFile)
-    :type file_unit: int
+    Parameters
+    ----------
+    file_unit : int
+        a number describing the output medium (terminal, OUTFile)
+    file_unit: int :
+
     """
     warning_string = (
         "******************************************** Errors and Warnings *********************************************"

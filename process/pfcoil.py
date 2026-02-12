@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 class PFCoil:
     """Calculate poloidal field coil system parameters."""
 
-    def __init__(self, cs_fatigue) -> None:
+    def __init__(self, cs_fatigue):
         """Initialise Fortran module variables."""
         self.outfile = constants.NOUT  # output file unit
         self.mfile = constants.MFILE  # mfile file unit
@@ -60,8 +60,8 @@ class PFCoil:
 
     def pfcoil(self):
         """Routine to perform calculations for the PF and Central Solenoid coils.
-        author: P J Knight, CCFE, Culham Science Centre
-        author: R Kemp, CCFE, Culham Science Centre
+
+
         None
         This subroutine performs the calculations for the PF and
         Central Solenoid coils, to determine their size, location, current waveforms,
@@ -1077,25 +1077,43 @@ class PFCoil:
         dr_tf_inboard: float,
         z_cs_coil_upper: float,
     ) -> tuple[np.ndarray, np.ndarray]:
-        """
-        Calculate the placement of PF coils stacked above the Central Solenoid.
+        """Calculate the placement of PF coils stacked above the Central Solenoid.
 
-        :param n_pf_coils_in_group: Array containing the number of coils in each PF group.
-        :type n_pf_coils_in_group: np.ndarray
-        :param n_pf_group: Index of the PF coil group.
-        :type n_pf_group: int
-        :param r_cs_middle: Radial coordinate of CS coil centre (m).
-        :type r_cs_middle: float
-        :param dr_pf_cs_middle_offset: Radial offset for PF coil placement (m).
-        :type dr_pf_cs_middle_offset: float
-        :param z_tf_inside_half: Half-height of the TF bore (m).
-        :type z_tf_inside_half: float
-        :param dr_tf_inboard: Thickness of the TF inboard leg (m).
-        :type dr_tf_inboard: float
-        :param z_cs_coil_upper: Upper z coordinate of the CS coil (m).
-        :type z_cs_coil_upper: float
-        :return: Tuple of arrays containing the radial and vertical coordinates of PF coils in the group.
-        :rtype: tuple[np.ndarray, np.ndarray]
+        Parameters
+        ----------
+        n_pf_coils_in_group : np.ndarray
+            Array containing the number of coils in each PF group.
+        n_pf_group : int
+            Index of the PF coil group.
+        r_cs_middle : float
+            Radial coordinate of CS coil centre (m).
+        dr_pf_cs_middle_offset : float
+            Radial offset for PF coil placement (m).
+        z_tf_inside_half : float
+            Half-height of the TF bore (m).
+        dr_tf_inboard : float
+            Thickness of the TF inboard leg (m).
+        z_cs_coil_upper : float
+            Upper z coordinate of the CS coil (m).
+        n_pf_coils_in_group: np.ndarray :
+
+        n_pf_group: int :
+
+        r_cs_middle:
+
+        dr_pf_cs_middle_offset:
+
+        z_tf_inside_half:
+
+        dr_tf_inboard:
+
+        z_cs_coil_upper:
+
+
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            Tuple of arrays containing the radial and vertical coordinates of PF coils in the group.
         """
 
         # Initialise as empty arrays; will be resized in the loop

@@ -3128,10 +3128,9 @@ class Costs:
         )
 
     @staticmethod
-    def convert_fpy_to_calendar() -> None:
+    def convert_fpy_to_calendar():
         """Routine to convert component lifetimes in FPY to calendar years.
         Required for replacement component costs.
-        Author: J Foster, CCFE, Culham Campus
         """
         # FW/Blanket and HCD
         if fwbs_variables.life_blkt_fpy < cost_variables.life_plant:

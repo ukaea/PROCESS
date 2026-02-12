@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class Profile(ABC):
     """Abstract base class used to create and hold profiles (temperature, density)"""
 
-    def __init__(self, profile_size: int) -> None:
+    def __init__(self, profile_size: int):
         """
         Initialize a Profiles object.
 
@@ -25,7 +25,6 @@ class Profile(ABC):
         - profile_y (ndarray): An array of zeros with length profile_size.
         - profile_integ (int): The integral of the profile_y array.
         - profile_dx (int): The step size between consecutive values in profile_x.
-
         """
         self.profile_size = profile_size
         self.profile_x = np.arange(self.profile_size)
@@ -33,9 +32,8 @@ class Profile(ABC):
         self.profile_integ = 0
         self.profile_dx = 0
 
-    def normalise_profile_x(self) -> None:
-        """
-        Normalizes the x-dimension of the profile.
+    def normalise_profile_x(self):
+        """Normalizes the x-dimension of the profile.
 
         This method divides the values in the `profile_x` attribute by the maximum value
         in the `profile_x` array, resulting in a normalized version of the x-dimension.
@@ -47,39 +45,30 @@ class Profile(ABC):
         Note:
             This method modifies the `profile_x` attribute in-place.
 
-        Returns:
-            None
+
         """
         self.profile_x = self.profile_x / max(self.profile_x)
 
-    def calculate_profile_dx(self) -> None:
+    def calculate_profile_dx(self):
         """Calculates the differential between points in the profile.
 
         This method calculates the differential between points in the profile by dividing the maximum x value in the profile
         by the difference in size between the points. The result is stored in the `profile_dx` attribute.
-
         """
         self.profile_dx = max(self.profile_x) / (self.profile_size - 1)
 
     @abstractmethod
-    def calculate_profile_y(self) -> None:
+    def calculate_profile_y(self):
         """Use a profile function to act on self.profile_x to calculate and set the
         values of self.profile_y.
         """
 
-    def integrate_profile_y(self) -> None:
-        """
-        Integrate profile_y values using scipy.integrate.simpson() function.
+    def integrate_profile_y(self):
+        """Integrate profile_y values using scipy.integrate.simpson() function.
 
         This method calculates the integral of the profile_y values using the Simpson's rule
         provided by the scipy.integrate.simpson() function. The integral is stored in the
         self.profile_integ attribute.
-
-        Parameters:
-        None
-
-        Returns:
-        None
         """
         self.profile_integ = sp.integrate.simpson(
             self.profile_y, x=self.profile_x, dx=self.profile_dx
@@ -89,18 +78,9 @@ class Profile(ABC):
 class NeProfile(Profile):
     """Electron density profile class. Contains a function to calculate the electron density profile and
     store the data.
-
-    Attributes:
-        Inherits attributes from the base class `Profile`.
-
-    Methods:
-        run(): Subroutine which calls functions and stores neprofile data.
-        calculate_profile_y(rho, radius_plasma_pedestal_density_norm, n0, nped, nsep, alphan): Calculates the density at each normalised minor radius position.
-        ncore(radius_plasma_pedestal_density_norm, nped, nsep, nav, alphan): Calculates the core density of a pedestalised profile.
-        set_physics_variables(): Calculates and sets physics variables required for the profile.
     """
 
-    def run(self) -> None:
+    def run(self):
         """Subroutine which calls profile functions and stores neprofile data."""
         self.normalise_profile_x()
         self.calculate_profile_dx()
@@ -123,26 +103,24 @@ class NeProfile(Profile):
         nped: float,
         nsep: float,
         alphan: float,
-    ) -> None:
-        """
-        This routine calculates the density at each normalised minor radius position
+    ):
+        """This routine calculates the density at each normalised minor radius position
         rho for a HELIOS-type density pedestal profile (neprofile).
 
-        Authors:
-            R Kemp, CCFE, Culham Science Centre
-            H Lux, CCFE, Culham Science Centre
-            P J Knight, CCFE, Culham Science Centre
-
-        Parameters:
-            - rho (np.array): Normalised minor radius vector.
-            - radius_plasma_pedestal_density_norm (float): Normalised minor radius pedestal position.
-            - n0 (float): Central density (/m3).
-            - nped (float): Pedestal density (/m3).
-            - nsep (float): Separatrix density (/m3).
-            - alphan (float): Density peaking parameter.
-
-        Returns:
-            None
+        Parameters
+        ----------
+        rho :
+            Normalised minor radius vector.
+        radius_plasma_pedestal_density_norm :
+            Normalised minor radius pedestal position.
+        n0 :
+            Central density (/m3).
+        nped :
+            Pedestal density (/m3).
+        nsep :
+            Separatrix density (/m3)
+        alphan :
+            Density peaking parameter.
         """
 
         if physics_variables.i_plasma_pedestal == 0:
@@ -173,8 +151,7 @@ class NeProfile(Profile):
         nav: float,
         alphan: float,
     ) -> float:
-        """
-        This routine calculates the core density of a pedestalised profile.
+        """This routine calculates the core density of a pedestalised profile.
         The solution comes from integrating and summing the two separate density profiles for the core
         and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
         to an added rho term in each part of the profile. When dividing by the volume of integration to get the average density
@@ -182,22 +159,24 @@ class NeProfile(Profile):
         This function for the average density can then be re-arranged to calculate the central plasma density n_0 / ncore.
         References:
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
-        Authors:
-            Kemp, CCFE, Culham Science Centre
-            H Lux, CCFE, Culham Science Centre
-            P J Knight, CCFE, Culham Science Centre
-            C. Ashe, CCFE, Culham Science Centre
 
-        Parameters:
-        - radius_plasma_pedestal_density_norm (float): The normalised minor radius pedestal position.
-        - nped (float): The pedestal density (/m3).
-        - nsep (float): The separatrix density (/m3).
-        - nav (float): The electron density (/m3).
-        - alphan (float): The density peaking parameter.
+        Parameters
+        ----------
+        radius_plasma_pedestal_density_norm :
+             The normalised minor radius pedestal position.
+        nped :
+            The pedestal density (/m3).
+        nsep :
+            The separatrix density (/m3).
+        nav :
+            The electron density (/m3).
+        alphan :
+            The density peaking parameter
 
-        Returns:
-        - ncore (float): The core density.
-
+        Returns
+        -------
+        :
+            The core density.
         """
 
         ncore = (
@@ -229,7 +208,7 @@ class NeProfile(Profile):
             ncore = 1.0e-6
         return ncore
 
-    def set_physics_variables(self) -> None:
+    def set_physics_variables(self):
         """Calculates and sets physics variables required for the profile."""
 
         if physics_variables.i_plasma_pedestal == 0:
@@ -255,7 +234,7 @@ class NeProfile(Profile):
 class TeProfile(Profile):
     """Electron temperature profile class. Contains a function to calculate the temperature profile and store the data."""
 
-    def run(self) -> None:
+    def run(self):
         """Subroutine to initialise neprofile and execute calculations."""
         self.normalise_profile_x()
         self.calculate_profile_dx()
@@ -280,25 +259,28 @@ class TeProfile(Profile):
         temp_plasma_separatrix_kev: float,
         alphat: float,
         tbeta: float,
-    ) -> None:
-        """
-        Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (teprofile).
+    ):
+        """Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (teprofile).
         If i_plasma_pedestal = 0 the original parabolic profile form is used instead.
         References:
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
-        Authors:
-            R Kemp, CCFE, Culham Science Centre
-            H Lux, CCFE, Culham Science Centre
-            P J Knight, CCFE, Culham Science Centre
 
-        Args:
-            rho (np.array): Normalised minor radius.
-            radius_plasma_pedestal_temp_norm (float): Normalised minor radius pedestal position.
-            t0 (float): Central temperature (keV).
-            temp_plasma_pedestal_kev (float): Pedestal temperature (keV).
-            temp_plasma_separatrix_kev (float): Separatrix temperature (keV).
-            alphat (float): Temperature peaking parameter.
-            tbeta (float): Second temperature exponent.
+        Parameters
+        ----------
+        rho : np.array
+            Normalised minor radius.
+        radius_plasma_pedestal_temp_norm : float
+            Normalised minor radius pedestal position.
+        t0 : float
+            Central temperature (keV).
+        temp_plasma_pedestal_kev : float
+            Pedestal temperature (keV).
+        temp_plasma_separatrix_kev : float
+            Separatrix temperature (keV).
+        alphat : float
+            Temperature peaking parameter.
+        tbeta : float
+            Second temperature exponent.
         """
         if physics_variables.i_plasma_pedestal == 0:
             # profile values of 0 cause divide by 0 errors so ensure the profile value is at least 1e-8
@@ -331,8 +313,7 @@ class TeProfile(Profile):
         alphat: float,
         tbeta: float,
     ) -> float:
-        """
-        This routine calculates the core temperature (keV)
+        """This routine calculates the core temperature (keV)
         of a pedestalised profile. The solution comes from integrating and summing the two seprate temperature profiles for the core
         and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
         to an added rho term in each part of the profile. When dividing by the volume of integration to get the average temperature
@@ -340,22 +321,26 @@ class TeProfile(Profile):
         This function for the average temperature can then be re-arranged to calculate the central plasma temeprature T_0 / tcore.
         References:
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
-        Authors:
-            Kemp, CCFE, Culham Science Centre
-            H Lux, CCFE, Culham Science Centre
-            P J Knight, CCFE, Culham Science Centre
-            C. Ashe, CCFE, Culham Science Centre
 
-        Args:
-            radius_plasma_pedestal_temp_norm (float): Normalised minor radius pedestal position.
-            temp_plasma_pedestal_kev (float): Pedestal temperature (keV).
-            temp_plasma_separatrix_kev (float): Separatrix temperature (keV).
-            tav (float): Volume average temperature (keV).
-            alphat (float): Temperature peaking parameter.
-            tbeta (float): Second temperature exponent.
+        Parameters
+        ----------
+        radius_plasma_pedestal_temp_norm : float
+            Normalised minor radius pedestal position.
+        temp_plasma_pedestal_kev : float
+            Pedestal temperature (keV).
+        temp_plasma_separatrix_kev : float
+            Separatrix temperature (keV).
+        tav : float
+            Volume average temperature (keV).
+        alphat : float
+            Temperature peaking parameter.
+        tbeta : float
+            Second temperature exponent.
 
-        Returns:
-            float: Core temperature.
+        Returns
+        -------
+        float
+            Core temperature.
         """
         #  Calculate core temperature
 
@@ -385,16 +370,8 @@ class TeProfile(Profile):
             )
         )
 
-    def set_physics_variables(self) -> None:
-        """
-        Calculates and sets physics variables required for the temperature profile.
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
+    def set_physics_variables(self):
+        """Calculates and sets physics variables required for the temperature profile."""
         if physics_variables.i_plasma_pedestal == 0:
             physics_variables.temp_plasma_electron_on_axis_kev = (
                 physics_variables.temp_plasma_electron_vol_avg_kev

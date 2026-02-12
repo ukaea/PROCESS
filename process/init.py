@@ -301,7 +301,6 @@ def check_process(inputs):  # noqa: ARG001
     """Routine to reset specific variables if certain options are
     being used
 
-    None
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.
     """
