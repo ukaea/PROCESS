@@ -25,6 +25,7 @@ from process.models.physics.physics import (
     Physics,
     PlasmaBeta,
     PlasmaInductance,
+    PlasmaDensityLimit,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,
     calculate_poloidal_field,
@@ -56,6 +57,7 @@ def physics():
         ),
         PlasmaBeta(),
         PlasmaInductance(),
+        PlasmaDensityLimit(),
     )
 
 
@@ -2473,7 +2475,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     """
 
     nd_plasma_electron_max_array, nd_plasma_electrons_max = (
-        physics.calculate_density_limit(
+        PlasmaDensityLimit().calculate_density_limit(
             i_density_limit=calculatedensitylimitparam.i_density_limit,
             b_plasma_toroidal_on_axis=calculatedensitylimitparam.b_plasma_toroidal_on_axis,
             p_plasma_separatrix_mw=calculatedensitylimitparam.p_plasma_separatrix_mw,
