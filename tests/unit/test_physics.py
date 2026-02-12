@@ -24,10 +24,10 @@ from process.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
+    PlasmaInductance,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,
     calculate_poloidal_field,
-    calculate_volt_second_requirements,
     diamagnetic_fraction_hender,
     diamagnetic_fraction_scene,
     ps_fraction_scene,
@@ -55,6 +55,7 @@ def physics():
             lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
         ),
         PlasmaBeta(),
+        PlasmaInductance(),
     )
 
 
@@ -2099,7 +2100,7 @@ def test_vscalc(voltsecondreqparam):
         vs_plasma_res_ramp,
         vs_plasma_total_required,
         v_plasma_loop_burn,
-    ) = calculate_volt_second_requirements(
+    ) = PlasmaInductance.calculate_volt_second_requirements(
         csawth=voltsecondreqparam.csawth,
         eps=voltsecondreqparam.eps,
         f_c_plasma_inductive=voltsecondreqparam.f_c_plasma_inductive,
@@ -3399,14 +3400,14 @@ def test_calculate_current_profile_index_wesson():
 def test_calculate_internal_inductance_wesson():
     """Test calculate_internal_inductance_wesson()."""
     alphaj = 0.8
-    result = Physics.calculate_internal_inductance_wesson(alphaj)
+    result = PlasmaInductance.calculate_internal_inductance_wesson(alphaj)
     assert result == pytest.approx(0.8595087177751706, abs=0.0001)
 
 
 def test_calculate_internal_inductance_menard():
     """Test calculate_internal_inductance_menard()."""
     kappa = 2.8
-    result = Physics.calculate_internal_inductance_menard(kappa)
+    result = PlasmaInductance.calculate_internal_inductance_menard(kappa)
     assert result == pytest.approx(0.6, abs=0.001)
 
 
@@ -3455,7 +3456,7 @@ def test_calculate_beta_norm_max_stambaugh():
 
 def test_calculate_internal_inductance_iter_3():
     """Test calculate_normalised_internal_inductance_iter_3."""
-    result = Physics.calculate_normalised_internal_inductance_iter_3(
+    result = PlasmaInductance.calculate_normalised_internal_inductance_iter_3(
         b_plasma_poloidal_vol_avg=1.0, c_plasma=1.5e7, vol_plasma=1000.0, rmajor=6.2
     )
     assert result == pytest.approx(0.9078959099585583, abs=0.00001)
