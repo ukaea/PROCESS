@@ -9878,6 +9878,33 @@ class PlasmaDensityLimit:
         )
 
     @staticmethod
+    def calculate_jet_edge_radiation_density_limit(
+        zeff: float, p_hcd_injected_total_mw: float, prn1: float, qcyl: float
+    ) -> float:
+        """
+        Calculate the JET edge radiation density limit.
+
+        :param zeff: Effective charge (Z_eff).
+        :type zeff: float
+        :param p_hcd_injected_total_mw: Power injected into the plasma (MW).
+        :type p_hcd_injected_total_mw: float
+        :param prn1: Edge density / average plasma density.
+        :type prn1: float
+        :param qcyl: Equivalent cylindrical safety factor (qstar).
+        :type qcyl: float
+        :return: The JET edge radiation density limit (m⁻³).
+        :rtype: float
+
+        :references:
+            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        """
+
+        denom = (zeff - 1.0) * (1.0 - 4.0 / (3.0 * qcyl))
+        if denom <= 0.0:
+            return 0.0
+        return (1.0e20 * np.sqrt(p_hcd_injected_total_mw / denom)) / prn1
+
+    @staticmethod
     def calculate_jet_simple_density_limit(
         b_plasma_toroidal_on_axis: float,
         p_plasma_separatrix_mw: float,
@@ -10099,19 +10126,14 @@ class PlasmaDensityLimit:
         # to give the density limit applying to the average plasma density.
         # qcyl=qstar here, but literature is not clear.
 
-        denom = (zeff - 1.0) * (1.0 - 4.0 / (3.0 * qcyl))
-        if denom <= 0.0:
-            if i_density_limit == 4:
-                logger.error(
-                    f"qcyl < 4/3; nd_plasma_electron_max_array(4) set to zero; model 5 will be enforced instead. {denom=} {qcyl=}"
-                )
-                i_density_limit = 5
-
-            nd_plasma_electron_max_array[3] = 0.0
-        else:
-            nd_plasma_electron_max_array[3] = (
-                1.0e20 * np.sqrt(p_hcd_injected_total_mw / denom)
-            ) / prn1
+        nd_plasma_electron_max_array[3] = (
+            self.calculate_jet_edge_radiation_density_limit(
+                zeff=zeff,
+                p_hcd_injected_total_mw=p_hcd_injected_total_mw,
+                prn1=prn1,
+                qcyl=qcyl,
+            )
+        )
 
         # JET simplified density limit model
         # This applies to the density at the plasma edge, so must be scaled
