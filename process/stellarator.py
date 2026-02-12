@@ -69,6 +69,7 @@ class Stellarator:
         neoclassics,
         plasma_beta,
         plasma_inductance,
+        plasma_density_limit,
     ) -> None:
         """Initialises the Stellarator model's variables
 
@@ -107,6 +108,7 @@ class Stellarator:
         self.neoclassics = neoclassics
         self.beta = plasma_beta
         self.inductance = plasma_inductance
+        self.density_limit = plasma_density_limit
 
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
