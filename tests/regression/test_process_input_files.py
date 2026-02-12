@@ -32,6 +32,7 @@ EXCLUSIONS = {
     r"sig_tf_r_max\(1\)",  # weird value, flips between 0 and very low?
     r"normres[0-9]+",
     r"nitvar[0-9]+",
+    "process_runtime",
 }
 
 

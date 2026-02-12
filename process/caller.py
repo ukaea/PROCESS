@@ -8,12 +8,12 @@ import numpy as np
 from tabulate import tabulate
 
 import process.constraints as constraints
-from process import data_structure
+from process import constants, data_structure
 from process.final import finalise
 from process.io.mfile import MFile
 from process.iteration_variables import set_scaled_iteration_variable
 from process.objectives import objective_function
-from process.process_output import OutputFileManager
+from process.process_output import OutputFileManager, ovarre
 
 if TYPE_CHECKING:
     from process.main import Models
@@ -380,7 +380,7 @@ class Caller:
         # FISPACT and LOCA model (not used)- removed
 
 
-def write_output_files(models: Models, ifail: int):
+def write_output_files(models: Models, ifail: int, *, runtime: float | None = None):
     """Evaluate models and write output files (OUT.DAT and MFILE.DAT).
 
     Parameters
@@ -394,6 +394,13 @@ def write_output_files(models: Models, ifail: int):
     x = data_structure.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
     caller = Caller(models)
+    if runtime is not None:
+        ovarre(
+            constants.MFILE,
+            "Runtime of PROCESS in seconds",
+            "(process_runtime)",
+            runtime,
+        )
     caller.call_models_and_write_output(
         xc=x,
         ifail=ifail,
