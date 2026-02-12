@@ -73,135 +73,6 @@ def rether(
     return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
 
 
-@nb.jit(nopython=True, cache=True)
-def calculate_volt_second_requirements(
-    csawth: float,
-    eps: float,
-    f_c_plasma_inductive: float,
-    ejima_coeff: float,
-    kappa: float,
-    rmajor: float,
-    res_plasma: float,
-    plasma_current: float,
-    t_plant_pulse_fusion_ramp: float,
-    t_plant_pulse_burn: float,
-    ind_plasma_internal_norm: float,
-) -> tuple[float, float, float, float, float, float]:
-    """Calculate the volt-second requirements and related parameters for plasma physics.
-
-    :param csawth: Coefficient for sawteeth effects
-    :type csawth: float
-    :param eps: Inverse aspect ratio
-    :type eps: float
-    :param f_c_plasma_inductive: Fraction of plasma current produced inductively
-    :type f_c_plasma_inductive: float
-    :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
-    :type ejima_coeff: float
-    :param kappa: Plasma elongation
-    :type kappa: float
-    :param rmajor: Plasma major radius (m)
-    :type rmajor: float
-    :param res_plasma: Plasma resistance (ohm)
-    :type res_plasma: float
-    :param plasma_current: Plasma current (A)
-    :type plasma_current: float
-    :param t_plant_pulse_fusion_ramp: Heating time (s)
-    :type t_plant_pulse_fusion_ramp: float
-    :param t_plant_pulse_burn: Burn time (s)
-    :type t_plant_pulse_burn: float
-    :param ind_plasma_internal_norm: Plasma normalized internal inductance
-    :type ind_plasma_internal_norm: float
-
-    :return: A tuple containing:
-        - vs_plasma_internal: Internal plasma volt-seconds (Wb)
-        - ind_plasma_internal: Plasma inductance (H)
-        - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
-        - vs_plasma_ramp_required: Volt-seconds needed during ramp-up (Wb)
-        - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
-        - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
-        - vs_plasma_total_required: Total volt-seconds needed (Wb)
-    :rtype: tuple[float, float, float, float, float, float]
-
-    :notes:
-
-    :references:
-        - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
-        “Volt-second analysis and consumption in Doublet III plasmas,”
-        Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
-        https://doi.org/10.1088/0029-5515/22/10/006.
-
-        - S. C. Jardin, C. E. Kessel, and N Pomphrey,
-        “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
-        Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
-        doi: https://doi.org/10.1088/0029-5515/34/8/i07.
-
-        - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
-        The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
-        doi: https://doi.org/10.1063/1.865934.
-    """
-    # Plasma internal inductance
-
-    ind_plasma_internal = constants.RMU0 * rmajor * ind_plasma_internal_norm / 2.0
-
-    # Internal plasma flux (V-s) component
-    vs_plasma_internal = ind_plasma_internal * plasma_current
-
-    # Start-up resistive component
-    # Uses ITER formula without the 10 V-s add-on
-
-    vs_res_ramp = ejima_coeff * constants.RMU0 * plasma_current * rmajor
-
-    # ======================================================================
-
-    # Hirshman and Neilson fit for external inductance
-
-    aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
-        2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
-    )
-    beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
-
-    ind_plasma_external = (
-        rmajor * constants.RMU0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
-    )
-
-    # ======================================================================
-
-    ind_plasma_total = ind_plasma_external + ind_plasma_internal
-
-    # Inductive V-s component
-
-    vs_self_ind_ramp = ind_plasma_total * plasma_current
-    vs_plasma_ramp_required = vs_res_ramp + vs_self_ind_ramp
-
-    # Plasma loop voltage during flat-top
-    # Include enhancement factor in flattop V-s requirement
-    # to account for MHD sawtooth effects.
-
-    v_plasma_loop_burn = plasma_current * res_plasma * f_c_plasma_inductive
-
-    v_burn_resistive = v_plasma_loop_burn * csawth
-
-    # N.B. t_plant_pulse_burn on first iteration will not be correct
-    # if the pulsed reactor option is used, but the value
-    # will be correct on subsequent calls.
-
-    vs_plasma_burn_required = v_burn_resistive * (
-        t_plant_pulse_fusion_ramp + t_plant_pulse_burn
-    )
-    vs_plasma_total_required = vs_plasma_ramp_required + vs_plasma_burn_required
-
-    return (
-        vs_plasma_internal,
-        ind_plasma_total,
-        vs_plasma_burn_required,
-        vs_plasma_ramp_required,
-        vs_self_ind_ramp,
-        vs_res_ramp,
-        vs_plasma_total_required,
-        v_plasma_loop_burn,
-    )
-
-
 # -----------------------------------------------------
 # Plasma Current & Poloidal Field Calculations
 # -----------------------------------------------------
@@ -1516,12 +1387,13 @@ def _trapped_particle_fraction_sauter(
 
 
 class Physics:
-    def __init__(self, plasma_profile, current_drive, plasma_beta):
+    def __init__(self, plasma_profile, current_drive, plasma_beta, plasma_inductance):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
         self.beta = plasma_beta
+        self.inductance = plasma_inductance
 
     def physics(self):
         """
@@ -1625,47 +1497,7 @@ class Physics:
         # Plasma Normalised Internal Inductance
         # -----------------------------------------------------
 
-        physics_variables.ind_plasma_internal_norm_wesson = (
-            self.calculate_internal_inductance_wesson(alphaj=physics_variables.alphaj)
-        )
-
-        # Spherical Tokamak relation for internal inductance
-        # Menard et al. (2016), Nuclear Fusion, 56, 106023
-        physics_variables.ind_plasma_internal_norm_menard = (
-            self.calculate_internal_inductance_menard(kappa=physics_variables.kappa)
-        )
-
-        physics_variables.ind_plasma_internal_norm_iter_3 = (
-            self.calculate_normalised_internal_inductance_iter_3(
-                b_plasma_poloidal_vol_avg=physics_variables.b_plasma_poloidal_average,
-                c_plasma=physics_variables.plasma_current,
-                vol_plasma=physics_variables.vol_plasma,
-                rmajor=physics_variables.rmajor,
-            )
-        )
-
-        # Map calculation methods to a dictionary
-        ind_plasma_internal_norm_calculations = {
-            0: physics_variables.ind_plasma_internal_norm,
-            1: physics_variables.ind_plasma_internal_norm_wesson,
-            2: physics_variables.ind_plasma_internal_norm_menard,
-        }
-
-        # Calculate ind_plasma_internal_normx based on i_ind_plasma_internal_norm
-        if (
-            int(physics_variables.i_ind_plasma_internal_norm)
-            in ind_plasma_internal_norm_calculations
-        ):
-            physics_variables.ind_plasma_internal_norm = (
-                ind_plasma_internal_norm_calculations[
-                    int(physics_variables.i_ind_plasma_internal_norm)
-                ]
-            )
-        else:
-            raise ProcessValueError(
-                "Illegal value of i_ind_plasma_internal_norm",
-                i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
-            )
+        self.inductance.run()
 
         # ===================================================
 
@@ -2456,7 +2288,7 @@ class Physics:
             physics_variables.vs_plasma_res_ramp,
             physics_variables.vs_plasma_total_required,
             physics_variables.v_plasma_loop_burn,
-        ) = calculate_volt_second_requirements(
+        ) = self.inductance.calculate_volt_second_requirements(
             physics_variables.csawth,
             physics_variables.eps,
             physics_variables.f_c_plasma_inductive,
@@ -2713,50 +2545,6 @@ class Physics:
             International Series of Monographs on Physics, Volume 149.
         """
         return qstar / q0 - 1.0
-
-    @staticmethod
-    def calculate_internal_inductance_wesson(alphaj: float) -> float:
-        """
-        Calculate the Wesson plasma normalized internal inductance.
-
-        :param alphaj: Current profile index.
-        :type alphaj: float
-
-        :return: The Wesson plasma normalised internal inductance.
-        :rtype: float
-
-        :Notes:
-            - It is recommended to use this method with the other Wesson relations for normalised beta and
-              current profile index.
-            - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
-
-        :References:
-            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
-            International Series of Monographs on Physics, Volume 149.
-        """
-        return np.log(1.65 + 0.89 * alphaj)
-
-    @staticmethod
-    def calculate_internal_inductance_menard(kappa: float) -> float:
-        """
-        Calculate the Menard plasma normalized internal inductance.
-
-        :param kappa: Plasma separatrix elongation.
-        :type kappa: float
-
-        :return: The Menard plasma normalised internal inductance.
-        :rtype: float
-
-        :Notes:
-            - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
-            - This model is only recommneded to be used for ST's with kappa > 2.5
-
-        :References:
-            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
-        """
-        return 3.4 - kappa
 
     @staticmethod
     def calculate_density_limit(
@@ -3316,47 +3104,6 @@ class Physics:
             rndfuel,
             t_alpha_confinement,
             f_alpha_energy_confinement,
-        )
-
-    @staticmethod
-    def calculate_normalised_internal_inductance_iter_3(
-        b_plasma_poloidal_vol_avg: float,
-        c_plasma: float,
-        vol_plasma: float,
-        rmajor: float,
-    ) -> float:
-        """
-        Calculate the normalised internal inductance using ITER-3 scaling li(3).
-
-        :param b_plasma_poloidal_vol_avg: Volume-averaged poloidal magnetic field (T).
-        :type b_plasma_poloidal_vol_avg: float
-        :param c_plasma: Plasma current (A).
-        :type c_plasma: float
-        :param vol_plasma: Plasma volume (m^3).
-        :type vol_plasma: float
-        :param rmajor: Plasma major radius (m).
-        :type rmajor: float
-
-        :returns: The li(3) normalised internal inductance.
-        :rtype: float
-
-        :references:
-            - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
-            “Inductive flux usage and its optimization in tokamak operation,”
-            Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
-            doi: https://doi.org/10.1088/0029-5515/54/9/093005.
-
-            - G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,”
-            Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008,
-            doi: https://doi.org/10.1088/0029-5515/48/12/125002.
-        ‌
-        """
-
-        return (
-            2
-            * vol_plasma
-            * b_plasma_poloidal_vol_avg**2
-            / (constants.RMU0**2 * c_plasma**2 * rmajor)
         )
 
     @staticmethod
@@ -5773,112 +5520,7 @@ class Physics:
             po.ostars(self.outfile, 110)
             po.oblnkl(self.outfile)
 
-            po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
-            po.ovarre(
-                self.outfile,
-                "Total plasma volt-seconds required for pulse (Wb)",
-                "(vs_plasma_total_required)",
-                physics_variables.vs_plasma_total_required,
-                "OP ",
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
-                "(vs_plasma_ind_ramp)",
-                physics_variables.vs_plasma_ind_ramp,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma resistive flux consumption for plasma current ramp-up (Wb)",
-                "(vs_plasma_res_ramp)",
-                physics_variables.vs_plasma_res_ramp,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Total flux consumption for plasma current ramp-up (Wb)",
-                "(vs_plasma_ramp_required)",
-                physics_variables.vs_plasma_ramp_required,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Ejima coefficient",
-                "(ejima_coeff)",
-                physics_variables.ejima_coeff,
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Internal plasma V-s",
-                "(vs_plasma_internal)",
-                physics_variables.vs_plasma_internal,
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
-                "(vs_plasma_burn_required)",
-                physics_variables.vs_plasma_burn_required,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma loop voltage during burn (V)",
-                "(v_plasma_loop_burn)",
-                physics_variables.v_plasma_loop_burn,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Coefficient for sawtooth effects on burn V-s requirement",
-                "(csawth)",
-                physics_variables.csawth,
-            )
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Plasma resistance (ohm)",
-                "(res_plasma)",
-                physics_variables.res_plasma,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma resistive diffusion time (s)",
-                "(t_plasma_res_diffusion)",
-                physics_variables.t_plasma_res_diffusion,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma inductance (H)",
-                "(ind_plasma)",
-                physics_variables.ind_plasma,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma magnetic energy stored (J)",
-                "(e_plasma_magnetic_stored)",
-                physics_variables.e_plasma_magnetic_stored,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Plasma normalised internal inductance",
-                "(ind_plasma_internal_norm)",
-                physics_variables.ind_plasma_internal_norm,
-                "OP ",
-            )
-
-            po.oblnkl(self.outfile)
-            po.ostars(self.outfile, 110)
-            po.oblnkl(self.outfile)
+            self.inductance.output_volt_second_information()
 
             po.ovarrf(
                 self.outfile,
@@ -9236,6 +8878,388 @@ class PlasmaBeta:
             "(e_plasma_beta)",
             physics_variables.e_plasma_beta,
             "OP",
+        )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
+        po.oblnkl(self.outfile)
+
+
+class IndInternalNormModel(IntEnum):
+    """Normalised internal inductance (l_i) model types"""
+
+    USER_INPUT = 0
+    WESSON = 1
+    MENARD = 2
+
+
+class PlasmaInductance:
+    """Class to hold plasma inductance calculations for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+
+    def run(self):
+        physics_variables.ind_plasma_internal_norm_wesson = (
+            self.calculate_internal_inductance_wesson(alphaj=physics_variables.alphaj)
+        )
+
+        # Spherical Tokamak relation for internal inductance
+        # Menard et al. (2016), Nuclear Fusion, 56, 106023
+        physics_variables.ind_plasma_internal_norm_menard = (
+            self.calculate_internal_inductance_menard(kappa=physics_variables.kappa)
+        )
+
+        physics_variables.ind_plasma_internal_norm_iter_3 = (
+            self.calculate_normalised_internal_inductance_iter_3(
+                b_plasma_poloidal_vol_avg=physics_variables.b_plasma_poloidal_average,
+                c_plasma=physics_variables.plasma_current,
+                vol_plasma=physics_variables.vol_plasma,
+                rmajor=physics_variables.rmajor,
+            )
+        )
+
+        # Calculate ind_plasma_internal_norm based on i_ind_plasma_internal_norm
+        try:
+            model = IndInternalNormModel(
+                int(physics_variables.i_ind_plasma_internal_norm)
+            )
+            physics_variables.ind_plasma_internal_norm = (
+                self.get_ind_internal_norm_value(model)
+            )
+        except ValueError:
+            raise ProcessValueError(
+                "Illegal value of i_ind_plasma_internal_norm",
+                i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
+            ) from None
+
+    def get_ind_internal_norm_value(self, model: IndInternalNormModel) -> float:
+        """Get the normalised internal inductance (l_i) for the specified model."""
+        model_map = {
+            IndInternalNormModel.USER_INPUT: physics_variables.ind_plasma_internal_norm,
+            IndInternalNormModel.WESSON: physics_variables.ind_plasma_internal_norm_wesson,
+            IndInternalNormModel.MENARD: physics_variables.ind_plasma_internal_norm_menard,
+        }
+        return model_map[model]
+
+    @staticmethod
+    def calculate_volt_second_requirements(
+        csawth: float,
+        eps: float,
+        f_c_plasma_inductive: float,
+        ejima_coeff: float,
+        kappa: float,
+        rmajor: float,
+        res_plasma: float,
+        plasma_current: float,
+        t_plant_pulse_fusion_ramp: float,
+        t_plant_pulse_burn: float,
+        ind_plasma_internal_norm: float,
+    ) -> tuple[float, float, float, float, float, float]:
+        """Calculate the volt-second requirements and related parameters for plasma physics.
+
+        :param csawth: Coefficient for sawteeth effects
+        :type csawth: float
+        :param eps: Inverse aspect ratio
+        :type eps: float
+        :param f_c_plasma_inductive: Fraction of plasma current produced inductively
+        :type f_c_plasma_inductive: float
+        :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
+        :type ejima_coeff: float
+        :param kappa: Plasma elongation
+        :type kappa: float
+        :param rmajor: Plasma major radius (m)
+        :type rmajor: float
+        :param res_plasma: Plasma resistance (ohm)
+        :type res_plasma: float
+        :param plasma_current: Plasma current (A)
+        :type plasma_current: float
+        :param t_plant_pulse_fusion_ramp: Heating time (s)
+        :type t_plant_pulse_fusion_ramp: float
+        :param t_plant_pulse_burn: Burn time (s)
+        :type t_plant_pulse_burn: float
+        :param ind_plasma_internal_norm: Plasma normalized internal inductance
+        :type ind_plasma_internal_norm: float
+
+        :return: A tuple containing:
+            - vs_plasma_internal: Internal plasma volt-seconds (Wb)
+            - ind_plasma_internal: Plasma inductance (H)
+            - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
+            - vs_plasma_ramp_required: Volt-seconds needed during ramp-up (Wb)
+            - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
+            - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
+            - vs_plasma_total_required: Total volt-seconds needed (Wb)
+        :rtype: tuple[float, float, float, float, float, float]
+
+        :notes:
+
+        :references:
+            - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
+            “Volt-second analysis and consumption in Doublet III plasmas,”
+            Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
+            https://doi.org/10.1088/0029-5515/22/10/006.
+
+            - S. C. Jardin, C. E. Kessel, and N Pomphrey,
+            “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
+            Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
+            doi: https://doi.org/10.1088/0029-5515/34/8/i07.
+
+            - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
+            The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
+            doi: https://doi.org/10.1063/1.865934.
+        """
+        # Plasma internal inductance
+
+        ind_plasma_internal = constants.RMU0 * rmajor * ind_plasma_internal_norm / 2.0
+
+        # Internal plasma flux (V-s) component
+        vs_plasma_internal = ind_plasma_internal * plasma_current
+
+        # Start-up resistive component
+        # Uses ITER formula without the 10 V-s add-on
+
+        vs_res_ramp = ejima_coeff * constants.RMU0 * plasma_current * rmajor
+
+        # ======================================================================
+
+        # Hirshman and Neilson fit for external inductance
+
+        aeps = (1.0 + 1.81 * np.sqrt(eps) + 2.05 * eps) * np.log(8.0 / eps) - (
+            2.0 + 9.25 * np.sqrt(eps) - 1.21 * eps
+        )
+        beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
+
+        ind_plasma_external = (
+            rmajor * constants.RMU0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+        )
+
+        # ======================================================================
+
+        ind_plasma_total = ind_plasma_external + ind_plasma_internal
+
+        # Inductive V-s component
+
+        vs_self_ind_ramp = ind_plasma_total * plasma_current
+        vs_plasma_ramp_required = vs_res_ramp + vs_self_ind_ramp
+
+        # Plasma loop voltage during flat-top
+        # Include enhancement factor in flattop V-s requirement
+        # to account for MHD sawtooth effects.
+
+        v_plasma_loop_burn = plasma_current * res_plasma * f_c_plasma_inductive
+
+        v_burn_resistive = v_plasma_loop_burn * csawth
+
+        # N.B. t_plant_pulse_burn on first iteration will not be correct
+        # if the pulsed reactor option is used, but the value
+        # will be correct on subsequent calls.
+
+        vs_plasma_burn_required = v_burn_resistive * (
+            t_plant_pulse_fusion_ramp + t_plant_pulse_burn
+        )
+        vs_plasma_total_required = vs_plasma_ramp_required + vs_plasma_burn_required
+
+        return (
+            vs_plasma_internal,
+            ind_plasma_total,
+            vs_plasma_burn_required,
+            vs_plasma_ramp_required,
+            vs_self_ind_ramp,
+            vs_res_ramp,
+            vs_plasma_total_required,
+            v_plasma_loop_burn,
+        )
+
+    @staticmethod
+    def calculate_normalised_internal_inductance_iter_3(
+        b_plasma_poloidal_vol_avg: float,
+        c_plasma: float,
+        vol_plasma: float,
+        rmajor: float,
+    ) -> float:
+        """
+        Calculate the normalised internal inductance using ITER-3 scaling li(3).
+
+        :param b_plasma_poloidal_vol_avg: Volume-averaged poloidal magnetic field (T).
+        :type b_plasma_poloidal_vol_avg: float
+        :param c_plasma: Plasma current (A).
+        :type c_plasma: float
+        :param vol_plasma: Plasma volume (m^3).
+        :type vol_plasma: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+
+        :returns: The li(3) normalised internal inductance.
+        :rtype: float
+
+        :references:
+            - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
+            “Inductive flux usage and its optimization in tokamak operation,”
+            Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
+            doi: https://doi.org/10.1088/0029-5515/54/9/093005.
+
+            - G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,”
+            Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/12/125002.
+        ‌
+        """
+
+        return (
+            2
+            * vol_plasma
+            * b_plasma_poloidal_vol_avg**2
+            / (constants.RMU0**2 * c_plasma**2 * rmajor)
+        )
+
+    @staticmethod
+    def calculate_internal_inductance_menard(kappa: float) -> float:
+        """
+        Calculate the Menard plasma normalized internal inductance.
+
+        :param kappa: Plasma separatrix elongation.
+        :type kappa: float
+
+        :return: The Menard plasma normalised internal inductance.
+        :rtype: float
+
+        :Notes:
+            - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
+            - This model is only recommneded to be used for ST's with kappa > 2.5
+
+        :References:
+            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
+            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
+            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+        """
+        return 3.4 - kappa
+
+    @staticmethod
+    def calculate_internal_inductance_wesson(alphaj: float) -> float:
+        """
+        Calculate the Wesson plasma normalized internal inductance.
+
+        :param alphaj: Current profile index.
+        :type alphaj: float
+
+        :return: The Wesson plasma normalised internal inductance.
+        :rtype: float
+
+        :Notes:
+            - It is recommended to use this method with the other Wesson relations for normalised beta and
+              current profile index.
+            - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
+
+        :References:
+            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+            International Series of Monographs on Physics, Volume 149.
+        """
+        return np.log(1.65 + 0.89 * alphaj)
+
+    def output_volt_second_information(self):
+        """Output volt-second information to file."""
+
+        po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
+        po.ovarre(
+            self.outfile,
+            "Total plasma volt-seconds required for pulse (Wb)",
+            "(vs_plasma_total_required)",
+            physics_variables.vs_plasma_total_required,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
+            "(vs_plasma_ind_ramp)",
+            physics_variables.vs_plasma_ind_ramp,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma resistive flux consumption for plasma current ramp-up (Wb)",
+            "(vs_plasma_res_ramp)",
+            physics_variables.vs_plasma_res_ramp,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total flux consumption for plasma current ramp-up (Wb)",
+            "(vs_plasma_ramp_required)",
+            physics_variables.vs_plasma_ramp_required,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ejima coefficient",
+            "(ejima_coeff)",
+            physics_variables.ejima_coeff,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Internal plasma V-s",
+            "(vs_plasma_internal)",
+            physics_variables.vs_plasma_internal,
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
+            "(vs_plasma_burn_required)",
+            physics_variables.vs_plasma_burn_required,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma loop voltage during burn (V)",
+            "(v_plasma_loop_burn)",
+            physics_variables.v_plasma_loop_burn,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Coefficient for sawtooth effects on burn V-s requirement",
+            "(csawth)",
+            physics_variables.csawth,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma resistance (ohm)",
+            "(res_plasma)",
+            physics_variables.res_plasma,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Plasma resistive diffusion time (s)",
+            "(t_plasma_res_diffusion)",
+            physics_variables.t_plasma_res_diffusion,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma inductance (H)",
+            "(ind_plasma)",
+            physics_variables.ind_plasma,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Plasma magnetic energy stored (J)",
+            "(e_plasma_magnetic_stored)",
+            physics_variables.e_plasma_magnetic_stored,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Plasma normalised internal inductance",
+            "(ind_plasma_internal_norm)",
+            physics_variables.ind_plasma_internal_norm,
+            "OP ",
         )
 
         po.oblnkl(self.outfile)
