@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 
 from process import constants
@@ -22,6 +24,8 @@ from process.data_structure import (
     vacuum_variables,
 )
 from process.exceptions import ProcessValueError
+
+logger = logging.getLogger(__name__)
 
 
 class Costs:
@@ -3026,8 +3030,18 @@ class Costs:
 
         #  Annual cost of operation and maintenance
 
-        annoam = cost_variables.ucoam[cost_variables.lsa - 1] * np.sqrt(
-            heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
+        if heat_transport_variables.p_plant_electric_net_mw < 0:
+            sqrt_p_plant_electric_net_mw_1200 = 0.0
+            logger.warning(
+                "p_plant_electric_net_mw has gone negative! Clamping it to 0 for the calculation of annoam and annwst (cost of maintenance and cost of waste)."
+            )
+        else:
+            sqrt_p_plant_electric_net_mw_1200 = np.sqrt(
+                heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
+            )
+        annoam = (
+            cost_variables.ucoam[cost_variables.lsa - 1]
+            * sqrt_p_plant_electric_net_mw_1200
         )
 
         #  Additional cost due to pulsed reactor thermal storage
@@ -3097,8 +3111,9 @@ class Costs:
 
         #  Annual cost of waste disposal
 
-        annwst = cost_variables.ucwst[cost_variables.lsa - 1] * np.sqrt(
-            heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
+        annwst = (
+            cost_variables.ucwst[cost_variables.lsa - 1]
+            * sqrt_p_plant_electric_net_mw_1200
         )
 
         #  Cost of electricity due to waste disposal
