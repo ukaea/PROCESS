@@ -55,7 +55,7 @@ $$
 
 -----------------
 
-## JET simplified model
+## JET simplified model | `calculate_jet_simple_density_limit()`
 
 Switch value: `i_density_limit = 5` [^1]
 
