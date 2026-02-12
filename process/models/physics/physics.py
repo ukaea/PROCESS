@@ -9914,6 +9914,23 @@ class PlasmaExhaust:
             - p_plasma_rad_mw
         )
 
+    @staticmethod
+    def calculate_psep_over_r_metric(
+        p_plasma_separatrix_mw: float, rmajor: float
+    ) -> float:
+        """
+        Calculate the power crossing the separatrix per unit major radius (P_sep/R).
+
+        :param p_plasma_separatrix_mw: Power crossing the separatrix (MW).
+        :type p_plasma_separatrix_mw: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+        :return: Power crossing the separatrix per unit major radius (MW/m).
+        :rtype: float
+
+        """
+        return p_plasma_separatrix_mw / rmajor
+
 
 class DetailedPhysics:
     """Class to hold detailed physics models for plasma processing."""
