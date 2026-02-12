@@ -1,6 +1,6 @@
 ---
 site_name: PROCESS
-docs_dir: documentation/
+docs_dir: documentation/source
 nav:
   - Getting Started:
       - About: index.md
@@ -131,10 +131,7 @@ nav:
           - Stellarator Model: fusion-devices/stellarator.md
           - Inertial Fusion Energy Model: fusion-devices/inertial.md
   - Publications: publications.md
-  - Source Documentation:
-      - process: python/process.md
-      - process.io: python/process.io.md
-      - process.utilities: python/process.utilities.md
+  - Source Documentation: source/reference/
 
 repo_url: https://github.com/UKAEA/PROCESS
 repo_name: UKAEA/PROCESS
@@ -207,6 +204,11 @@ markdown_extensions:
 plugins:
   - autorefs
   - search
+  - gen-files:
+      scripts:
+        - documentation/gen_api_ref.py
+  - literate-nav:
+      nav_file: overview.md
   - glightbox:
       touchNavigation: true
       effect: zoom
@@ -217,16 +219,17 @@ plugins:
   - git-revision-date-localized:
       enable_creation_date: true
   - mkdocs-jupyter:
-      execute: true
+      # execute: true
       ignore: [scripts/**/*.py]
-
-#     - mkdocstrings:
-#           handlers:
-#               python:
-#                   selection:
-#                       docstring_style: restructured-text
-#                   rendering:
-#                       show_source: false
-#                       show_root_heading: true
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_if_no_docstring: true
+            members_order: source
+            filters:
+              - '!^_' # Ignore private members starting with underscore
+              - '!log'
 
 extra_css: [stylesheets/vardes.css]
