@@ -9878,6 +9878,42 @@ class PlasmaDensityLimit:
         )
 
     @staticmethod
+    def calculate_borrass_iter_ii_density_limit(
+        p_perp: float,
+        b_plasma_toroidal_on_axis: float,
+        q95: float,
+        rmajor: float,
+        prn1: float,
+    ) -> float:
+        """
+        Calculate the Borrass ITER II density limit.
+
+        :param p_perp: Perpendicular power density (MW/m²).
+        :type p_perp: float
+        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
+        :type b_plasma_toroidal_on_axis: float
+        :param q95: Safety factor at 95% of the plasma poloidal flux.
+        :type q95: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+        :param prn1: Edge density / average plasma density.
+        :type prn1: float
+        :return: The Borrass ITER II density limit (m⁻³).
+        :rtype: float
+
+
+        :references:
+            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
+        """
+        return (
+            0.5e20
+            * p_perp**0.57
+            * b_plasma_toroidal_on_axis**0.31
+            / (q95 * rmajor) ** 0.09
+        ) / prn1
+
+    @staticmethod
     def calculate_jet_edge_radiation_density_limit(
         zeff: float, p_hcd_injected_total_mw: float, prn1: float, qcyl: float
     ) -> float:
@@ -10114,12 +10150,13 @@ class PlasmaDensityLimit:
         # This formula is (almost) identical to that in the original routine
         # denlim (now deleted).
 
-        nd_plasma_electron_max_array[2] = (
-            0.5e20
-            * p_perp**0.57
-            * b_plasma_toroidal_on_axis**0.31
-            / (q95 * rmajor) ** 0.09
-        ) / prn1
+        nd_plasma_electron_max_array[2] = self.calculate_borrass_iter_ii_density_limit(
+            p_perp=p_perp,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            q95=q95,
+            rmajor=rmajor,
+            prn1=prn1,
+        )
 
         # JET edge radiation density limit model
         # This applies to the density at the plasma edge, so must be scaled
