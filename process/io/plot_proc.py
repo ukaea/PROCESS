@@ -12428,6 +12428,10 @@ def plot_velocity_profile(axis, mfile_data, scan):
         mfile_data.data[f"vel_plasma_deuteron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
+    vel_plasma_triton_profile = [
+        mfile_data.data[f"vel_plasma_triton_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
 
     axis.plot(
         np.linspace(0, 1, len(vel_plasma_electron_profile)),
@@ -12442,6 +12446,13 @@ def plot_velocity_profile(axis, mfile_data, scan):
         color="red",
         linestyle="-",
         label=r"$v_{D}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(vel_plasma_triton_profile)),
+        vel_plasma_triton_profile,
+        color="green",
+        linestyle="-",
+        label=r"$v_{T}$",
     )
 
     axis.set_yscale("log")
@@ -12499,12 +12510,26 @@ def plot_ion_frequency_profile(axis, mfile_data, scan):
         )
     ]
 
+    freq_plasma_larmor_toroidal_triton_profile = [
+        mfile_data.data[f"freq_plasma_larmor_toroidal_triton_profile{i}"].get_scan(scan)
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
+
     axis.plot(
         np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_deuteron_profile)),
         np.array(freq_plasma_larmor_toroidal_deuteron_profile) / 1e6,
         color="red",
         linestyle="-",
         label=r"$f_{Larmor,toroidal,D}$",
+    )
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_triton_profile)),
+        np.array(freq_plasma_larmor_toroidal_triton_profile) / 1e6,
+        color="green",
+        linestyle="-",
+        label=r"$f_{Larmor,toroidal,T}$",
     )
 
     axis.set_ylabel("Frequency [MHz]")
@@ -12530,6 +12555,11 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
+    plasma_coulomb_log_electron_triton_profile = [
+        mfile_data.data[f"plasma_coulomb_log_electron_triton_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
     axis.plot(
         np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
         plasma_coulomb_log_electron_electron_profile,
@@ -12544,6 +12574,14 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
         color="red",
         linestyle="-",
         label=r"$ln \Lambda_{e-D}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_electron_triton_profile)),
+        plasma_coulomb_log_electron_triton_profile,
+        color="green",
+        linestyle="-",
+        label=r"$ln \Lambda_{e-T}$",
     )
 
     axis.set_ylabel("Coulomb Logarithm")
