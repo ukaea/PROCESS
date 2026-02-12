@@ -23,7 +23,6 @@ nav:
           - Output: io/output-guide.md
           - Python Libraries: io/python-lib-guide.md
           - Utilities: io/utilities.md
-          - Variable Descriptions: io/vardes.md
   - Development:
       - Git:
           - Usage: development/git-usage.md
@@ -209,7 +208,7 @@ plugins:
   - search
   - gen-files:
       scripts:
-        - documentation/gen_api_ref.py
+        - documentation/scripts/gen_api_ref.py
   - literate-nav:
       nav_file: overview.md
   - glightbox:
@@ -233,5 +232,3 @@ plugins:
             filters:
               - '!^_' # Ignore private members starting with underscore
               - '!log'
-
-extra_css: [stylesheets/vardes.css]
