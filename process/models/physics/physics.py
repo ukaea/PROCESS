@@ -1627,13 +1627,21 @@ def _trapped_particle_fraction_sauter(
 
 
 class Physics:
-    def __init__(self, plasma_profile, current_drive, plasma_beta, plasma_inductance):
+    def __init__(
+        self,
+        plasma_profile,
+        current_drive,
+        plasma_beta,
+        plasma_inductance,
+        plasma_exhaust,
+    ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
         self.beta = plasma_beta
         self.inductance = plasma_inductance
+        self.exhaust = plasma_exhaust
 
     def physics(self):
         """Routine to calculate tokamak plasma physics information
@@ -2403,12 +2411,14 @@ class Physics:
         )
 
         physics_variables.p_plasma_separatrix_mw = (
-            physics_variables.f_p_alpha_plasma_deposited
-            * physics_variables.p_alpha_total_mw
-            + physics_variables.p_non_alpha_charged_mw
-            + pinj
-            + physics_variables.p_plasma_ohmic_mw
-            - physics_variables.p_plasma_rad_mw
+            self.exhaust.calculate_separatrix_power(
+                f_p_alpha_plasma_deposited=physics_variables.f_p_alpha_plasma_deposited,
+                p_alpha_total_mw=physics_variables.p_alpha_total_mw,
+                p_non_alpha_charged_mw=physics_variables.p_non_alpha_charged_mw,
+                p_hcd_injected_total_mw=pinj,
+                p_plasma_ohmic_mw=physics_variables.p_plasma_ohmic_mw,
+                p_plasma_rad_mw=physics_variables.p_plasma_rad_mw,
+            )
         )
 
         physics_variables.plfux_plasma_surface_neutron_avg_mw = (
@@ -9859,6 +9869,50 @@ class PlasmaInductance:
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
+
+
+class PlasmaExhaust:
+    """Class to hold plasma exhaust calculations for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+
+    @staticmethod
+    def calculate_separatrix_power(
+        f_p_alpha_plasma_deposited: float,
+        p_alpha_total_mw: float,
+        p_non_alpha_charged_mw: float,
+        p_hcd_injected_total_mw: float,
+        p_plasma_ohmic_mw: float,
+        p_plasma_rad_mw: float,
+    ) -> float:
+        """
+        Calculate the power crossing the separatrix (P_sep).
+
+        :param f_p_alpha_plasma_deposited: Fraction of alpha power deposited in plasma.
+        :type f_p_alpha_plasma_deposited: float
+        :param p_alpha_total_mw: Total alpha power produced (MW).
+        :type p_alpha_total_mw: float
+        :param p_non_alpha_charged_mw: Power from non-alpha charged particles (MW).
+        :type p_non_alpha_charged_mw: float
+        :param p_hcd_injected_total_mw: Total power injected by heating and current drive (MW).
+        :type p_hcd_injected_total_mw: float
+        :param p_plasma_ohmic_mw: Ohmic heating power (MW).
+        :type p_plasma_ohmic_mw: float
+        :param p_plasma_rad_mw: Radiated power from plasma (MW).
+        :type p_plasma_rad_mw: float
+        :return: Power crossing the separatrix (MW).
+        :rtype: float
+        """
+
+        return (
+            f_p_alpha_plasma_deposited * p_alpha_total_mw
+            + p_non_alpha_charged_mw
+            + p_hcd_injected_total_mw
+            + p_plasma_ohmic_mw
+            - p_plasma_rad_mw
+        )
 
 
 class DetailedPhysics:
