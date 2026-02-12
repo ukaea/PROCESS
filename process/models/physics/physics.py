@@ -9931,6 +9931,35 @@ class PlasmaExhaust:
         """
         return p_plasma_separatrix_mw / rmajor
 
+    @staticmethod
+    def calculate_eu_demo_re_attachment_metric(
+        p_plasma_separatrix_mw: float,
+        b_plasma_toroidal_on_axis: float,
+        q95: float,
+        aspect: float,
+        rmajor: float,
+    ) -> float:
+        """Calculate the EU DEMO divertor protection re-attachment metric for plasma exhaust.
+
+        :param p_plasma_separatrix_mw: Power crossing the separatrix (MW).
+        :type p_plasma_separatrix_mw: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field on axis (T).
+        :type b_plasma_toroidal_on_axis: float
+        :param q95: Safety factor at 95% flux surface.
+        :type q95: float
+        :param aspect: Aspect ratio of the plasma.
+        :type aspect: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+        :return: EU DEMO re-attachment metric (MW T /m).
+        :rtype: float
+
+        """
+
+        return (p_plasma_separatrix_mw * b_plasma_toroidal_on_axis) / (
+            q95 * aspect * rmajor
+        )
+
 
 class DetailedPhysics:
     """Class to hold detailed physics models for plasma processing."""
