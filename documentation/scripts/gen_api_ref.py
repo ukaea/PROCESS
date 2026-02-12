@@ -11,7 +11,7 @@ from mkdocs_gen_files.nav import Nav
 
 nav = Nav()
 
-root = Path(__file__).parent.parent
+root = Path(__file__).parent.parent.parent
 package_name = "process"
 src = root / package_name
 reference = Path("source", "reference")

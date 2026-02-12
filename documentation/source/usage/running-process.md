@@ -8,7 +8,7 @@ There are a number of ways to run PROCESS.  The first two are determined by the 
 
 If the optimisation fails to converge, a third option is available by using the command line option `-v` (VaryRun), together with a configuration file.  PROCESS is run repeatedly in optimisation mode (`ioptimz` = 1 must be set), but a new input file is written each time, with different, randomly selected *initial* values of the iteration variables.  The factor within which the initial values of the iteration variables are changed is `FACTOR` (in the configuration file).  For example, `FACTOR = 1.1` will vary the initial values randomly by up to 10%.  This is repeated until PROCESS converges, or until the maximum number of PROCESS runs (`NITER`) is reached.  Sometimes this procedure will generate a converged solution when a single optimisation run does not.
 
-A SCAN is available in any of these modes.  One input variable can be scanned (`scan_dim = 1`) or two input variables (`scan_dim = 2`).  A scan variable must not be an iteration variable.  For details, see [scan_module](https://ukaea.github.io/PROCESS/io/vardes/?h=scan#scan_module).
+A SCAN is available in any of these modes.  One input variable can be scanned (`scan_dim = 1`) or two input variables (`scan_dim = 2`).  A scan variable must not be an iteration variable.  For details, see [scan_module](source/reference/process/scan.md).
 
 --------------
 
