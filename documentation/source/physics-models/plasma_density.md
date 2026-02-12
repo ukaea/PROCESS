@@ -23,7 +23,7 @@ $$
 
 -----------------
 
-## Borrass model for ITER, I
+## Borrass model for ITER, I | `calculate_borrass_iter_i_density_limit()`
 
 Switch value: `i_density_limit = 2` [^1]
 

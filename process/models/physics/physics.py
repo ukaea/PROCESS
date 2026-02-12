@@ -9878,6 +9878,42 @@ class PlasmaDensityLimit:
         )
 
     @staticmethod
+    def calculate_borrass_iter_i_density_limit(
+        p_perp: float,
+        b_plasma_toroidal_on_axis: float,
+        q95: float,
+        rmajor: float,
+        prn1: float,
+    ) -> float:
+        """
+        Calculate the Borrass ITER I density limit.
+
+        :param p_perp: Perpendicular power density (MW/m²).
+        :type p_perp: float
+        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
+        :type b_plasma_toroidal_on_axis: float
+        :param q95: Safety factor at 95% of the plasma poloidal flux.
+        :type q95: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+        :param prn1: Edge density / average plasma density.
+        :type prn1: float
+        :return: The Borrass ITER I density limit (m⁻³).
+        :rtype: float
+
+
+        :references:
+            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
+        """
+        return (
+            1.8e20
+            * p_perp**0.53
+            * b_plasma_toroidal_on_axis**0.31
+            / (q95 * rmajor) ** 0.22
+        ) / prn1
+
+    @staticmethod
     def calculate_borrass_iter_ii_density_limit(
         p_perp: float,
         b_plasma_toroidal_on_axis: float,
@@ -10137,12 +10173,13 @@ class PlasmaDensityLimit:
         # to give the density limit applying to the average plasma density.
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
-        nd_plasma_electron_max_array[1] = (
-            1.8e20
-            * p_perp**0.53
-            * b_plasma_toroidal_on_axis**0.31
-            / (q95 * rmajor) ** 0.22
-        ) / prn1
+        nd_plasma_electron_max_array[1] = self.calculate_borrass_iter_i_density_limit(
+            p_perp=p_perp,
+            b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+            q95=q95,
+            rmajor=rmajor,
+            prn1=prn1,
+        )
 
         # Borrass density limit model for ITER (II)
         # This applies to the density at the plasma edge, so must be scaled
