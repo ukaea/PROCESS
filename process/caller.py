@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class Caller:
     """Calls physics and engineering models."""
 
-    def __init__(self, models: Models) -> None:
+    def __init__(self, models: Models):
         """Initialise all physics and engineering models.
 
         To ensure that, at the start of a run, all physics/engineering
@@ -129,7 +129,7 @@ class Caller:
             "converged (don't produce idempotent values)."
         )
 
-    def call_models_and_write_output(self, xc: np.ndarray, ifail: int) -> None:
+    def call_models_and_write_output(self, xc: np.ndarray, ifail: int):
         """Evaluate models until results are idempotent, then write output files.
 
         Ensure all outputs in mfile are idempotent before returning, by
@@ -246,7 +246,7 @@ class Caller:
             OutputFileManager.close_idempotence_files()
             raise
 
-    def _call_models_once(self, xc: np.ndarray) -> None:
+    def _call_models_once(self, xc: np.ndarray):
         """Call the physics and engineering models.
 
         This method is the principal caller of all the physics and
@@ -394,7 +394,7 @@ class Caller:
         # FISPACT and LOCA model (not used)- removed
 
 
-def write_output_files(models: Models, ifail: int) -> None:
+def write_output_files(models: Models, ifail: int):
     """Evaluate models and write output files (OUT.DAT and MFILE.DAT).
 
     Parameters

@@ -20,38 +20,24 @@ def pfcoil_geometry(
 
     Parameters
     ----------
-    coils_r : List[float]
+    coils_r:
         list of pf coil radii
-    coils_z : List[float]
+    coils_z:
         list of pf coil vertical positions
-    coils_dr : List[float]
+    coils_dr:
         list of pf coil radial thicknesses
-    coils_dz : List[float]
+    coils_dz:
         list of pf coil vertical thicknesses
-    dr_bore : float
+    dr_bore:
         central solenoid inboard radius
-    dr_cs : float
+    dr_cs:
         central solenoid thickness
-    ohdz : float
+    ohdz:
         central solenoid vertical thickness
-    coils_r: list[float] :
-
-    coils_z: list[float] :
-
-    coils_dr: list[float] :
-
-    coils_dz: list[float] :
-
-    dr_bore: float :
-
-    dr_cs: float :
-
-    ohdz: float :
-
 
     Returns
     -------
-    Tuple[np.ndarray, np.ndarray, RectangleGeometry]
+    :
         tuple containing radial and vertical coordinates for pf coils, and dataclass returning coordinates representing a rectangular geometry used to plot the central coil
     """
     r_points = []

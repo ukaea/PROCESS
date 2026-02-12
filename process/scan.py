@@ -193,8 +193,13 @@ class Scan:
 
     def post_optimise(self, ifail: int):
         """Called after calling the optimising equation solver from Python.
-        author: P J Knight, CCFE, Culham Science Centre
+
         ifail   : input integer : error flag
+
+        Parameters
+        ----------
+        ifail: int :
+
         """
         numerics.sqsumsq = sum(r**2 for r in numerics.rcm[: numerics.neqns]) ** 0.5
 
@@ -603,10 +608,15 @@ class Scan:
     def verror(self, ifail: int):
         """Routine to print out relevant messages in the case of an
         unfeasible result from a VMCON (optimisation) run
-        author: P J Knight, CCFE, Culham Science Centre
+
         ifail  : input integer : error flag
         This routine prints out relevant messages in the case of
         an unfeasible result from a VMCON (optimisation) run.
+
+        Parameters
+        ----------
+        ifail: int :
+
         """
         if ifail == -1:
             process_output.ocmmnt(constants.NOUT, "User-terminated execution of VMCON.")

@@ -1,16 +1,3 @@
-###############################################################################
-#                                                                             #
-#                      MFILE to Python Dictionary Conversion                  #
-#                                                                             #
-#   Converts data from a PROCESS MFILE to a Python Dictionary with the        #
-#   option to then write the result to a file. The format of the output is    #
-#   determined by the specified file type which can be JSON, TOML, YAML or    #
-#   a Pickle file. If TOMLKit is available the output contains docstrings.    #
-#                                                                             #
-#   @author :   K. Zarebski <kristian.zarebski@ukaea.uk>                      #
-#   @date   :   last modified 2021-02-22                                      #
-#                                                                             #
-###############################################################################
 import logging
 import os
 import re
@@ -24,14 +11,9 @@ HEADER_MAPPING = {"Power Reactor Optimisation Code": "metadata"}
 
 
 class MFILEParser(abc.MutableMapping):
-    def __init__(self, input_mfile: str = ""):
-        """Parse an MFILE and extract output values.
+    """Parse an MFILE and extract output values."""
 
-        Parameters
-        ----------
-        input_mfile : str, optional
-            MFILE to search, by default ""
-        """
+    def __init__(self, input_mfile: str = ""):
         self._input_file = input_mfile
         self._mfile_data: OrderedDict = OrderedDict()
         self._logger = logging.getLogger(self.__class__.__name__)
@@ -61,7 +43,7 @@ class MFILEParser(abc.MutableMapping):
 
         Returns
         -------
-        Dict[str, Dict[str, Any]]
+        :
             retrieve the full information dictionary containing values and
             descriptions of extracted parameters
         """
@@ -92,15 +74,11 @@ class MFILEParser(abc.MutableMapping):
 
         Parameters
         ----------
-        lines : List[str]
+        lines :
             list of file lines to search
-        search_str : str
+        search_str:
             search term to look for
 
-        Returns
-        -------
-        List[int]
-            list of indexes for matching lines
         """
         return [i for i, line in enumerate(lines) if search_str in line]
 
@@ -112,13 +90,8 @@ class MFILEParser(abc.MutableMapping):
 
         Parameters
         ----------
-        value_str : str
+        value_str :
             value as a string
-
-        Returns
-        -------
-        Any
-            the value in the appropriate form
         """
         for type_str in ["OP", "IP", "ITV"]:
             value_str = value_str.replace(type_str, "")
@@ -136,13 +109,8 @@ class MFILEParser(abc.MutableMapping):
 
         Parameters
         ----------
-        lines : List[str]
+        lines :
             list of file lines to be parsed
-
-        Returns
-        -------
-        Dict[str, Any]
-            dictionary containing variable name, value and description
         """
         # Compile regex for converting underscores which are spaces into
         # a space character
@@ -209,18 +177,14 @@ class MFILEParser(abc.MutableMapping):
 
         Parameters
         ----------
-        mfile_addr : str
+        mfile_addr :
             address of MFILE to parse
 
         Returns
         -------
-        Dict
+        :
             dictionary of output values
 
-        Raises
-        ------
-        FileNotFoundError
-            if the input file does not exist
         """
         if not os.path.exists(mfile_addr):
             raise FileNotFoundError(
@@ -345,7 +309,7 @@ class MFILEParser(abc.MutableMapping):
         self._logger.info("Extraction completed successfully")
         return self._mfile_data
 
-    def write(self, output_filename: str) -> None:
+    def write(self, output_filename: str):
         """Write output to file.
 
         Parameters

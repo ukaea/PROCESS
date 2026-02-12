@@ -1,12 +1,8 @@
 """
 Code to display the power flow of a PROCESS run in a Sankey diagram
 
-Author: H. Lux (Hanni.Lux@ukaea.uk)
-Updated 20/08/219: A. Brown (adam.brown@ukaea.uk)
-
 Input file:
 MFILE.DAT
-
 """
 
 import argparse

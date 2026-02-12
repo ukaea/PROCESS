@@ -125,8 +125,7 @@ class TFCoil:
         r_tf_outboard_mid: float,
         dr_tf_outboard: float,
     ) -> tuple[float, float, float, float, float, float, float, float, float]:
-        """
-        Calculate the global geometry of the Toroidal Field (TF) coil.
+        """Calculate the global geometry of the Toroidal Field (TF) coil.
 
         This method computes the overall geometry of the TF coil, including:
 

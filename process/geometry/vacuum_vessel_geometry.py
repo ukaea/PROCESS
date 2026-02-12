@@ -21,26 +21,31 @@ def vacuum_vessel_geometry_single_null(
 ) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of the vacuum vessel in a single null configuration
 
-    :param cumulative_upper: cumulative vertical thicknesses of components above the midplane
-    :type cumulative_upper: dict
-    :param upper: vertical thicknesses of components above the midplane
-    :type upper: dict
-    :param triang: plasma triangularity
-    :type triang: float
-    :param radx_outer: outboard radius of outer surface of vacuum vessel
-    :type radx_outer: float
-    :param rminx_outer: inboard radius of outer surface of vacuum vessel
-    :type rminx_outer: float
-    :param radx_inner: outboard radius of inner surface of vacuum vessel
-    :type radx_inner: float
-    :param rminx_inner: inboard radius of inner surface of vacuum vessel
-    :type rminx_inner: float
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :param lower: vertical thicknesses of components below the midplane
-    :type lower: dict
-    :return: dataclass returning radial and vertical coordinates
-    :rtype: ArbitraryGeometry
+    Parameters
+    ----------
+    cumulative_upper:
+        cumulative vertical thicknesses of components above the midplane
+    upper:
+        vertical thicknesses of components above the midplane
+    triang:
+        plasma triangularity
+    radx_outer:
+        outboard radius of outer surface of vacuum vessel
+    rminx_outer:
+        inboard radius of outer surface of vacuum vessel
+    radx_inner:
+        outboard radius of inner surface of vacuum vessel
+    rminx_inner:
+        inboard radius of inner surface of vacuum vessel
+    cumulative_lower:
+        cumulative vertical thicknesses of components below the midplane
+    lower:
+        vertical thicknesses of components below the midplane
+
+    Returns
+    -------
+    ArbitraryGeometry
+        dataclass returning radial and vertical coordinates
     """
     # Upper vacuum vessel
     kapx = cumulative_upper["dz_vv_upper"] / rminx_outer
@@ -100,22 +105,27 @@ def vacuum_vessel_geometry_lower(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of vacuum vessel below the midplane
 
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :param lower: vertical thicknesses of components below the midplane
-    :type lower: dict
-    :param triang: plasma triangularity
-    :type triang: float
-    :param radx_outer: outboard radius of outer surface of vacuum vessel
-    :type radx_outer: float
-    :param rminx_outer: inboard radius of outer surface of vacuum vessel
-    :type rminx_outer: float
-    :param radx_inner: outboard radius of inner surface of vacuum vessel
-    :type radx_inner: float
-    :param rminx_inner: inboard radius of inner surface of vacuum vessel
-    :type rminx_inner: float
-    :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the vacuum vessel geometry below the midplane
-    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+    Parameters
+    ----------
+    cumulative_lower:
+        cumulative vertical thicknesses of components below the midplane
+    lower:
+        vertical thicknesses of components below the midplane
+    triang:
+        plasma triangularity
+    radx_outer:
+        outboard radius of outer surface of vacuum vessel
+    rminx_outer:
+        inboard radius of outer surface of vacuum vessel
+    radx_inner:
+        outboard radius of inner surface of vacuum vessel
+    rminx_inner:
+        inboard radius of inner surface of vacuum vessel
+
+    Returns
+    -------
+    :
+        tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the vacuum vessel geometry below the midplane
     """
     kapx = cumulative_lower["dz_vv_lower"] / rminx_outer
     rs_lower_outboard, zs_lower_outboard = dh_vertices(
@@ -144,22 +154,27 @@ def vacuum_vessel_geometry_double_null(
     """Calculates radial and vertical distances for the geometry of vacuum vessel in a double null configuration
     In a double null configuration, the geometry of the lower vacuum vessel is reflected across the midplane to create the section of vacuum vessel above the midplane
 
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :param lower: vertical thicknesses of components below the midplane
-    :type lower: dict
-    :param triang: plasma triangularity
-    :type triang: float
-    :param radx_outer: outboard radius of outer surface of vacuum vessel
-    :type radx_outer: float
-    :param rminx_outer: inboard radius of outer surface of vacuum vessel
-    :type rminx_outer: float
-    :param radx_inner: outboard radius of inner surface of vacuum vessel
-    :type radx_inner: float
-    :param rminx_inner: inboard radius of inner surface of vacuum vessel
-    :type rminx_inner: float
-    :return: dataclass returning radial and vertical coordinates
-    :rtype: ArbitraryGeometry
+    Parameters
+    ----------
+    cumulative_lower:
+        cumulative vertical thicknesses of components below the midplane
+    lower:
+        vertical thicknesses of components below the midplane
+    triang:
+        plasma triangularity
+    radx_outer:
+        outboard radius of outer surface of vacuum vessel
+    rminx_outer:
+        inboard radius of outer surface of vacuum vessel
+    radx_inner:
+        outboard radius of inner surface of vacuum vessel
+    rminx_inner:
+        inboard radius of inner surface of vacuum vessel
+
+    Returns
+    -------
+    ArbitraryGeometry
+        dataclass returning radial and vertical coordinates
     """
     # Lower vacuum vessel
     (

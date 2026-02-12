@@ -10,16 +10,21 @@ def dh_vertices(
 ) -> tuple[np.ndarray, np.ndarray]:
     """Returns the radial and vertical coordinates which, when plotted, plots half a thin D-section, centred on z = 0
 
-    :param r0: major radius of centre
-    :type r0: float
-    :param a: horizontal radius
-    :type a: float
-    :param triang: plasma triangularity
-    :type triang: float
-    :param kap: plasma elongation
-    :type kap: float
-    :return: tuple containing radial and vertical coordinates which, when plotted, plots a half thin D-section with a gap
-    :rtype: Tuple[np.ndarray, np.ndarray]
+    Parameters
+    ----------
+    r0:
+        major radius of centre
+    a:
+        horizontal radius
+    triang:
+        plasma triangularity
+    kap:
+        plasma elongation
+
+    Returns
+    -------
+    :
+        tuple containing radial and vertical coordinates which, when plotted, plots a half thin D-section with a gap
     """
     angs = np.linspace(0, np.pi, 50, endpoint=True)
     rs = r0 + a * np.cos(angs + triang * np.sin(1.0 * angs))
@@ -47,22 +52,27 @@ def dhgap_vertices(
 ]:
     """Returns the radial and vertical coordinates which, when plotted, plots a half thick D-section with a gap
 
-    :param inpt: inner point
-    :type inpt: float
-    :param outpt: outer point
-    :type outpt: float
-    :param inthk: inner thickness
-    :type inthk: float
-    :param outthk: outer thickness
-    :type outthk: float
-    :param toppt: top point
-    :type toppt: float
-    :param topthk: top thickness
-    :type topthk: float
-    :param triang: plasma triangularity
-    :type triang: float
-    :return: tuple containing radial and vertical coordinates which, when plotted, plots a half thick D-section with a gap
-    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray,]
+    Parameters
+    ----------
+    inpt:
+        inner point
+    outpt:
+        outer point
+    inthk:
+        inner thickness
+    outthk:
+        outer thickness
+    toppt:
+        top point
+    topthk:
+        top thickness
+    triang:
+        plasma triangularity
+
+    Returns
+    -------
+    :
+        tuple containing radial and vertical coordinates which, when plotted, plots a half thick D-section with a gap
     """
     arc = np.pi / 4.0
     r01 = (inpt + outpt) / 2.0
@@ -97,24 +107,29 @@ def ellips_fill_vertices(
 ) -> list[tuple[float, float]]:
     """Returns the vertices of a shape which, when filled, fills the space between two concentric ellipse sectors
 
-    :param a1: horizontal radius to be filled, defaults to 0
-    :type a1: float, optional
-    :param a2: horizontal radius to be filled, defaults to 0
-    :type a2: float, optional
-    :param b1: vertical radius to be filled, defaults to 0
-    :type b1: float, optional
-    :param b2: vertical radius to be filled, defaults to 0
-    :type b2: float, optional
-    :param x0: x coordinate of centre of ellipses, defaults to 0
-    :type x0: float, optional
-    :param y0: y coordinate of centre of ellipses, defaults to 0
-    :type y0: float, optional
-    :param ang1: polar angle at start, defaults to 0
-    :type ang1: float, optional
-    :param ang2: polar angle at end, defaults to np.pi/2
-    :type ang2: float, optional
-    :return: list containing (R,Z) coordinates which, when plotted, fill space between ellipses
-    :rtype: List[Tuple[float, float]]
+    Parameters
+    ----------
+    a1:
+        horizontal radius to be filled, defaults to 0
+    a2:
+        horizontal radius to be filled, defaults to 0
+    b1:
+        vertical radius to be filled, defaults to 0
+    b2:
+        vertical radius to be filled, defaults to 0
+    x0:
+        x coordinate of centre of ellipses, defaults to 0
+    y0:
+        y coordinate of centre of ellipses, defaults to 0
+    ang1:
+        polar angle at start, defaults to 0
+    ang2:
+        polar angle at end, defaults to np.pi/2
+
+    Returns
+    -------
+    :
+        list containing (R,Z) coordinates which, when plotted, fill space between ellipses
     """
     angs = np.linspace(ang1, ang2, endpoint=True)
     r1 = ((np.cos(angs) / a1) ** 2 + (np.sin(angs) / b1) ** 2) ** (-0.5)

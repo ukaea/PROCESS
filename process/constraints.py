@@ -2098,7 +2098,6 @@ def constraint_equation_84():
 @ConstraintManager.register_constraint(85, "years", "=")
 def constraint_equation_85():
     """Equality constraint for the centerpost (CP) lifetime
-    Author : S Kahn
 
     Depending on the chosen option i_cp_lifetime:
     - 0 : The CP full power year lifelime is set by the user (cplife_input)
@@ -2152,7 +2151,6 @@ def constraint_equation_85():
 @ConstraintManager.register_constraint(86, "m", "<=")
 def constraint_equation_86():
     """Upper limit on the turn edge length in the TF winding pack
-    Author : S Kahn
 
     dx_tf_turn_general: TF coil turn edge length including turn insulation [m]
     t_turn_tf_max: TF turn edge length including turn insulation upper limit [m]

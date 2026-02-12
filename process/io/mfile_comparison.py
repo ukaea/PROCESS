@@ -13,7 +13,6 @@ Notes:
     + 24/11/2021: Global dictionary variables moved within the functions
                 to avoid cyclic dependencies. This is because the dicts
                 generation script imports, and inspects, process.
-
 """
 
 import argparse
@@ -280,8 +279,10 @@ class BColors:
 def main(arg):
     """Main function for comparing MFILEs
 
-    :param arg: List of arguments
-    :return:
+    Parameters
+    ----------
+    arg :
+        List of arguments
     """
 
     print_counter = 0

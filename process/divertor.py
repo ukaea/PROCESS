@@ -20,10 +20,10 @@ class Divertor:
     divertor parameters for a fusion power plant.
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.outfile = constants.NOUT  # output file unit
 
-    def run(self, output: bool) -> None:
+    def run(self, output: bool):
         """Routine to call the divertor model
 
 
@@ -130,23 +130,23 @@ class Divertor:
             1 for single null configuration, 0 for double null
         dz_divertor : float
             Vertical height of the divertor (m)
-        rmajor: float :
+        rmajor:
 
-        rminor: float :
+        rminor:
 
-        triang: float :
+        triang:
 
-        dr_fw_plasma_gap_inboard: float :
+        dr_fw_plasma_gap_inboard:
 
-        dz_xpoint_divertor: float :
+        dz_xpoint_divertor:
 
-        p_plasma_separatrix_mw: float :
+        p_plasma_separatrix_mw:
 
         output: bool :
 
         i_single_null: int :
 
-        dz_divertor: float :
+        dz_divertor:
 
 
         Returns
@@ -396,9 +396,9 @@ class Divertor:
             Fraction of the solid angle subtended by a single divertor.
         n_divertors : int
             Number of divertors.
-        p_plasma_rad_mw: float :
+        p_plasma_rad_mw:
 
-        f_ster_div_single: float :
+        f_ster_div_single:
 
         n_divertors: int :
 
@@ -427,9 +427,9 @@ class Divertor:
             Fraction of the solid angle subtended by a single divertor.
         n_divertors : int
             Number of divertors.
-        p_plasma_neutron_mw: float :
+        p_plasma_neutron_mw:
 
-        f_ster_div_single: float :
+        f_ster_div_single:
 
         n_divertors: int :
 
@@ -446,7 +446,7 @@ class Divertor:
 class LowerDivertor(Divertor):
     """Module containing lower divertor routines"""
 
-    def run(self, output: bool) -> None:
+    def run(self, output: bool):
         super().run(output=output)
 
         dv.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
@@ -465,7 +465,7 @@ class LowerDivertor(Divertor):
 class UpperDivertor(Divertor):
     """Module containing upper divertor routines"""
 
-    def run(self, output: bool) -> None:
+    def run(self, output: bool):
         super().run(output=output)
 
         dv.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(

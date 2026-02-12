@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 
 class BlanketLibrary:
-    def __init__(self, fw) -> None:
+    def __init__(self, fw):
         self.outfile = constants.NOUT
 
         self.fw = fw
@@ -2186,21 +2186,21 @@ class BlanketLibrary:
 
         icoolpump: int :
 
-        vel_coolant: float :
+        vel_coolant:
 
-        len_pipe: float :
+        len_pipe:
 
         n_pipe_90_deg_bends: int :
 
         n_pipe_180_deg_bends: int :
 
-        den_coolant: float :
+        den_coolant:
 
-        visc_coolant_dynamic: float :
+        visc_coolant_dynamic:
 
-        coolant_electrical_conductivity: float :
+        coolant_electrical_conductivity:
 
-        pol_channel_length: float :
+        pol_channel_length:
 
         nopolchan: int :
 
@@ -2322,13 +2322,13 @@ class BlanketLibrary:
             to obtain head loss coefficients in hydraulic systems and it's appliaction
             to liquid metal flows in nuclear fusion reactor blankets, Plasma. Phys.
             Control fusion, 63, 124002
-        vel: float :
+        vel:
 
-        vsc: float :
+        vsc:
 
-        conduct_liq: float :
+        conduct_liq:
 
-        l_channel: float :
+        l_channel:
 
         num_pol: int :
 
@@ -2509,21 +2509,21 @@ class BlanketLibrary:
             N.B. Darcy friction factor is estimated from the Haaland approximation.
         i_ps: int :
 
-        radius_pipe_90_deg_bend: float :
+        radius_pipe_90_deg_bend:
 
-        radius_pipe_180_deg_bend: float :
+        radius_pipe_180_deg_bend:
 
-        n_pipe_90_deg_bends: float :
+        n_pipe_90_deg_bends:
 
-        n_pipe_180_deg_bends: float :
+        n_pipe_180_deg_bends:
 
-        len_pipe: float :
+        len_pipe:
 
-        den_coolant: float :
+        den_coolant:
 
-        visc_coolant: float :
+        visc_coolant:
 
-        vel_coolant: float :
+        vel_coolant:
 
         label: str :
 
@@ -2692,13 +2692,13 @@ class BlanketLibrary:
                     Darcy friction factor
                 dia_pipe : float
                     Pipe diameter (m)
-                radius_pipe_elbow: float :
+                radius_pipe_elbow:
 
-                deg_pipe_elbow: float :
+                deg_pipe_elbow:
 
-                darcy_friction: float :
+                darcy_friction:
 
-                dia_pipe: float :
+                dia_pipe:
 
 
                 Returns
@@ -2786,19 +2786,19 @@ class BlanketLibrary:
 
                 i_liquid_breeder: int :
 
-                temp_coolant_pump_outlet: float :
+                temp_coolant_pump_outlet:
 
-                temp_coolant_pump_inlet: float :
+                temp_coolant_pump_inlet:
 
-                pres_coolant_pump_inlet: float :
+                pres_coolant_pump_inlet:
 
-                dpres_coolant: float :
+                dpres_coolant:
 
-                mflow_coolant_total: float :
+                mflow_coolant_total:
 
                 primary_coolant_switch: str :
 
-                den_coolant: float :
+                den_coolant:
 
                 label: str :
 
@@ -2982,31 +2982,31 @@ def set_pumping_powers_as_fractions(
         Divertor nuclear heating (MW).
     p_div_rad_total_mw : float
         Divertor radiative power (MW).
-    f_p_fw_coolant_pump_total_heat: float :
+    f_p_fw_coolant_pump_total_heat:
 
-    f_p_blkt_coolant_pump_total_heat: float :
+    f_p_blkt_coolant_pump_total_heat:
 
-    f_p_shld_coolant_pump_total_heat: float :
+    f_p_shld_coolant_pump_total_heat:
 
-    f_p_div_coolant_pump_total_heat: float :
+    f_p_div_coolant_pump_total_heat:
 
-    p_fw_nuclear_heat_total_mw: float :
+    p_fw_nuclear_heat_total_mw:
 
-    psurffwi: float :
+    psurffwi:
 
-    psurffwo: float :
+    psurffwo:
 
-    p_blkt_nuclear_heat_total_mw: float :
+    p_blkt_nuclear_heat_total_mw:
 
-    p_shld_nuclear_heat_mw: float :
+    p_shld_nuclear_heat_mw:
 
-    p_cp_shield_nuclear_heat_mw: float :
+    p_cp_shield_nuclear_heat_mw:
 
-    p_plasma_separatrix_mw: float :
+    p_plasma_separatrix_mw:
 
-    p_div_nuclear_heat_total_mw: float :
+    p_div_nuclear_heat_total_mw:
 
-    p_div_rad_total_mw: float :
+    p_div_rad_total_mw:
 
 
     Returns
@@ -3086,11 +3086,11 @@ def dshellarea(
             Horizontal width of shell (m)
         zminor : float
             Vertical half-height of shell (m)
-        rmajor: float :
+        rmajor:
 
-        rminor: float :
+        rminor:
 
-        zminor: float :
+        zminor:
 
 
         Returns
@@ -3287,11 +3287,11 @@ class OutboardBlanket(BlanketLibrary):
             Outboard first wall to plasma gap (m).
         n_blkt_outboard_modules_toroidal: int :
 
-        rmajor: float :
+        rmajor:
 
-        rminor: float :
+        rminor:
 
-        dr_fw_plasma_gap_outboard: float :
+        dr_fw_plasma_gap_outboard:
 
 
         Returns
@@ -3338,11 +3338,11 @@ class InboardBlanket(BlanketLibrary):
             Inboard first wall to plasma gap (m).
         n_blkt_inboard_modules_toroidal: int :
 
-        rmajor: float :
+        rmajor:
 
-        rminor: float :
+        rminor:
 
-        dr_fw_plasma_gap_inboard: float :
+        dr_fw_plasma_gap_inboard:
 
 
         Returns

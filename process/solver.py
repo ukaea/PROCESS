@@ -24,32 +24,34 @@ logger = logging.getLogger(__name__)
 
 
 class _Solver(ABC):
-    """Base class for different solver implementations.
+    """Base class for different solver implementations."""
 
-    :param ABC: abstract base class
-    :type ABC: ABC
-    """
-
-    def __init__(self) -> None:
+    def __init__(self):
         """Initialise a solver."""
         # Exit code for the solver
         self.ifail = 0
         self.tolerance = numerics.epsvmc
         self.b: float | None = None
 
-    def set_evaluators(self, evaluators: Evaluators) -> None:
+    def set_evaluators(self, evaluators: Evaluators):
         """Set objective and constraint functions and their gradient evaluators.
 
-        :param evaluators: objective and constraint evaluators
-        :type evaluators: Evaluators
+        Parameters
+        ----------
+        evaluators : Evaluators
+            objective and constraint evaluators
+
         """
         self.evaluators = evaluators
 
-    def set_opt_params(self, x_0: np.ndarray) -> None:
+    def set_opt_params(self, x_0: np.ndarray):
         """Define the initial optimisation parameters.
 
-        :param x_0: optimisation parameters vector
-        :type x_0: np.ndarray
+        Parameters
+        ----------
+        x_0 : np.ndarray
+            optimisation parameters vector
+
         """
         self.x_0 = x_0
 
@@ -59,19 +61,21 @@ class _Solver(ABC):
         bndu: np.ndarray,
         ilower: np.ndarray | None = None,
         iupper: np.ndarray | None = None,
-    ) -> None:
+    ):
         """Set the bounds on the optimisation parameters.
 
-        :param bndl: lower bounds for the optimisation parameters
-        :type bndl: np.ndarray
-        :param bndu: upper bounds for the optimisation parameters
-        :type bndu: np.ndarray
-        :param ilower: array of 0s and 1s to activate lower bounds on
-        optimsation parameters in x
-        :type ilower: np.ndarray, optional
-        :param iupper: array of 0s and 1s to activate upper bounds on
-        optimsation parameters in x
-        :type iupper: np.ndarray, optional
+        Parameters
+        ----------
+        bndl : np.ndarray
+            lower bounds for the optimisation parameters
+        bndu : np.ndarray
+            upper bounds for the optimisation parameters
+        ilower : np.ndarray, optional
+            array of 0s and 1s to activate lower bounds on
+            optimsation parameters in x
+        iupper : np.ndarray, optional
+            array of 0s and 1s to activate upper bounds on
+            optimsation parameters in x
         """
         self.bndl = bndl
         self.bndu = bndu
@@ -87,30 +91,36 @@ class _Solver(ABC):
         self.ilower = ilower
         self.iupper = iupper
 
-    def set_constraints(self, m: int, meq: int) -> None:
+    def set_constraints(self, m: int, meq: int):
         """Set the total number of constraints and equality constraints.
 
-        :param m: number of constraint equations
-        :type m: int
-        :param meq: of the constraint equations, how many are equalities
-        :type meq: int
+        Parameters
+        ----------
+        m : int
+            number of constraint equations
+        meq : int
+            of the constraint equations, how many are equalities
         """
         self.m = m
         self.meq = meq
 
-    def set_tolerance(self, tolerance: float) -> None:
+    def set_tolerance(self, tolerance: float):
         """Set tolerance for solver termination.
 
-        :param tolerance: tolerance for solver termination
-        :type tolerance: float
+        Parameters
+        ----------
+        tolerance : float
+            tolerance for solver termination
         """
         self.tolerance = tolerance
 
-    def set_b(self, b: float) -> None:
+    def set_b(self, b: float):
         """Set the multiplier for the Hessian approximation.
 
-        :param b: multiplier for an identity matrix as input for the Hessian b(n,n)
-        :type b: float
+        Parameters
+        ----------
+        b : float
+            multiplier for an identity matrix as input for the Hessian b(n,n)
         """
         self.b = b
 
@@ -118,13 +128,15 @@ class _Solver(ABC):
     def solve(self) -> int:
         """Run the optimisation.
 
-        :return: solver error code
-        :rtype: int
+        Returns
+        -------
+        int
+            solver error code
         """
 
 
 class VmconProblem(AbstractProblem):
-    def __init__(self, evaluator, nequality, ninequality) -> None:
+    def __init__(self, evaluator, nequality, ninequality):
         self._evaluator = evaluator
         self._nequality = nequality
         self._ninequality = ninequality
@@ -153,17 +165,15 @@ class VmconProblem(AbstractProblem):
 
 
 class Vmcon(_Solver):
-    """New VMCON implementation.
-
-    :param _Solver: Solver base class
-    :type _Solver: _Solver
-    """
+    """New VMCON implementation."""
 
     def solve(self) -> int:
         """Optimise using new VMCON.
 
-        :return: solver error code
-        :rtype: int
+        Returns
+        -------
+        int
+            solver error code
         """
         problem = VmconProblem(self.evaluators, self.meq, self.m - self.meq)
 
@@ -192,18 +202,24 @@ class Vmcon(_Solver):
             This additional convergence criterion ensures that solutions have
             satisfied inequality constraints.
 
-            :param result: evaluation of current optimisation parameter vector
-            :type result: Result
-            :param _x: current optimisation parameter vector
-            :type _x: np.ndarray
-            :param _delta: search direction for line search
-            :type _delta: np.ndarray
-            :param _lambda_eq: equality Lagrange multipliers
-            :type _lambda_eq: np.ndarray
-            :param _lambda_in: inequality Lagrange multipliers
-            :type _lambda_in: np.ndarray
-            :return: True if inequality constraints satisfied
-            :rtype: bool
+            Parameters
+            ----------
+            result : Result
+                evaluation of current optimisation parameter vector
+            _x : np.ndarray
+                current optimisation parameter vector
+            _delta : np.ndarray
+                search direction for line search
+            _lambda_eq : np.ndarray
+                equality Lagrange multipliers
+            _lambda_in : np.ndarray
+                inequality Lagrange multipliers
+
+            Returns
+            -------
+            bool
+                True if inequality constraints satisfied
+
             """
             # negative constraint value = violated
             # Check all ineqs are satisfied to within the tolerance
@@ -264,7 +280,7 @@ class Vmcon(_Solver):
 class VmconBounded(Vmcon):
     """A solver that uses VMCON but checks x is in bounds before running"""
 
-    def set_opt_params(self, x_0: np.ndarray) -> None:
+    def set_opt_params(self, x_0: np.ndarray):
         lower_violated = np.less(x_0, self.bndl)
         upper_violated = np.greater(x_0, self.bndu)
 
@@ -278,19 +294,20 @@ class VmconBounded(Vmcon):
 
 
 class FSolve(_Solver):
-    """Solve equality constraints to ensure model consistency.
-
-    :param _Solver: Solver base class
-    :type _Solver: _Solver
-    """
+    """Solve equality constraints to ensure model consistency."""
 
     def evaluate_eq_cons(self, x: np.ndarray) -> np.ndarray:
         """Evaluate equality constraints.
 
-        :param x: parameter vector
-        :type x: np.ndarray
-        :return: equality constraint vector
-        :rtype: np.ndarray
+        Parameters
+        ----------
+        x : np.ndarray
+            parameter vector
+
+        Returns
+        -------
+        np.ndarray
+            equality constraint vector
         """
         # Evaluate equality constraints only
         _, conf = self.evaluators.fcnvmc1(x.shape[0], self.meq, x, 0)
@@ -300,8 +317,10 @@ class FSolve(_Solver):
     def solve(self) -> int:
         """Solve equality constraints.
 
-        :return: solver error code
-        :rtype: int
+        Returns
+        -------
+        int
+            solver error code
         """
         print("Solving equality constraints using fsolve")
         self.x, _info, err, msg = fsolve(
@@ -324,10 +343,15 @@ class FSolve(_Solver):
 def get_solver(solver_name: str = "vmcon") -> _Solver:
     """Return a solver instance.
 
-    :param solver_name: solver to create, defaults to "vmcon"
-    :type solver_name: str, optional
-    :return: solver to use for optimisation
-    :rtype: _Solver
+    Parameters
+    ----------
+    solver_name : str, optional
+        solver to create, defaults to "vmcon"
+
+    Returns
+    -------
+    _Solver
+        solver to use for optimisation
     """
     solver: _Solver
 
@@ -352,7 +376,13 @@ def load_external_solver(package: str):
     """Attempts to load a package of name `package`.
 
     If a package of the name is available, return the `__process_solver__`
-    attribute of that package or raise an `AttributeError`."""
+    attribute of that package or raise an `AttributeError`.
+
+    Parameters
+    ----------
+    package: str :
+
+    """
     module = importlib.import_module(package)
 
     solver = getattr(module, "__process_solver__", None)

@@ -5,17 +5,19 @@ from process.solver import get_solver
 
 
 class SolverHandler:
+    """Creates and runs a solver instance.
+
+    This may be an optimiser (e.g. VMCON) or an equation solver (e.g. fsolve).
+
+    Parameters
+    ----------
+    models : process.main.Models
+        physics and engineering model objects
+    solver_name : str
+        which solver to use, as specified in solver.py
+    """
+
     def __init__(self, models, solver_name):
-        """Creates and runs a solver instance.
-
-        This may be an optimiser (e.g. VMCON) or an equation solver (e.g.
-        fsolve).
-
-        :param models: physics and engineering model objects
-        :type models: process.main.Models
-        :param solver_name: which solver to use, as specified in solver.py
-        :type solver_name: str
-        """
         self.models = models
         self.solver_name = solver_name
 
