@@ -2412,11 +2412,6 @@ class Physics:
             physics_variables.kappa95,
         )
 
-        # Power transported to the first wall by escaped alpha particles
-        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
-            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
-        )
-
         # Density limit
         (
             physics_variables.nd_plasma_electron_max_array,
