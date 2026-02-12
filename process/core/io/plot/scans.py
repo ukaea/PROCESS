@@ -709,11 +709,11 @@ def plot_scan(
             else:
                 extra_str = f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"
 
-            plt.savefig(
-                outputdir / f"scan_{scan_var_name}_vs_{extra_str}.{save_format}",
-                dpi=300,
-            )
             if not stack_plots:  # Display plot (used in Jupyter notebooks)
+                plt.savefig(
+                    outputdir / f"scan_{scan_var_name}_vs_{extra_str}.{save_format}",
+                    dpi=300,
+                )
                 plt.show()
                 plt.clf()
         # ------------
