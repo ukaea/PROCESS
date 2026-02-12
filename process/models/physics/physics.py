@@ -9871,24 +9871,138 @@ class PlasmaDensityLimit:
         self.mfile = constants.MFILE
 
     def run(self):
-        # Density limit
-        (
-            physics_variables.nd_plasma_electron_max_array,
-            physics_variables.nd_plasma_electrons_max,
-        ) = self.calculate_density_limit(
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.i_density_limit,
-            physics_variables.p_plasma_separatrix_mw,
-            current_drive_variables.p_hcd_injected_total_mw,
-            physics_variables.plasma_current,
-            divertor_variables.prn1,
-            physics_variables.qstar,
-            physics_variables.q95,
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            physics_variables.a_plasma_surface,
-            physics_variables.n_charge_plasma_effective_vol_avg,
+        nd_plasma_electron_max_array = np.empty((8,))
+
+        p_perp = (
+            physics_variables.p_plasma_separatrix_mw / physics_variables.a_plasma_surface
         )
+
+        # Old ASDEX density limit formula
+        # This applies to the density at the plasma edge, so must be scaled
+        # to give the density limit applying to the average plasma density.
+        nd_plasma_electron_max_array[0] = self.calculate_asdex_density_limit(
+            p_perp=p_perp,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            q95=physics_variables.q95,
+            rmajor=physics_variables.rmajor,
+            prn1=divertor_variables.prn1,
+        )
+
+        # Borrass density limit model for ITER (I)
+        # This applies to the density at the plasma edge, so must be scaled
+        # to give the density limit applying to the average plasma density.
+        # Borrass et al, ITER-TN-PH-9-6 (1989)
+
+        nd_plasma_electron_max_array[1] = self.calculate_borrass_iter_i_density_limit(
+            p_perp=p_perp,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            q95=physics_variables.q95,
+            rmajor=physics_variables.rmajor,
+            prn1=divertor_variables.prn1,
+        )
+
+        # Borrass density limit model for ITER (II)
+        # This applies to the density at the plasma edge, so must be scaled
+        # to give the density limit applying to the average plasma density.
+        # This formula is (almost) identical to that in the original routine
+        # denlim (now deleted).
+
+        nd_plasma_electron_max_array[2] = self.calculate_borrass_iter_ii_density_limit(
+            p_perp=p_perp,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            q95=physics_variables.q95,
+            rmajor=physics_variables.rmajor,
+            prn1=divertor_variables.prn1,
+        )
+
+        # JET edge radiation density limit model
+        # This applies to the density at the plasma edge, so must be scaled
+        # to give the density limit applying to the average plasma density.
+        # qcyl=qstar here, but literature is not clear.
+
+        nd_plasma_electron_max_array[3] = (
+            self.calculate_jet_edge_radiation_density_limit(
+                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                p_hcd_injected_total_mw=current_drive_variables.p_hcd_injected_total_mw,
+                prn1=divertor_variables.prn1,
+                qcyl=physics_variables.qstar,
+            )
+        )
+
+        # JET simplified density limit model
+        # This applies to the density at the plasma edge, so must be scaled
+        # to give the density limit applying to the average plasma density.
+
+        nd_plasma_electron_max_array[4] = self.calculate_jet_simple_density_limit(
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+            rmajor=physics_variables.rmajor,
+            prn1=divertor_variables.prn1,
+        )
+
+        # Hugill-Murakami M.q limit
+        # qcyl=qstar here, which is okay according to the literature
+
+        nd_plasma_electron_max_array[5] = self.calculate_hugill_murakami_density_limit(
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            rmajor=physics_variables.rmajor,
+            qcyl=physics_variables.qstar,
+        )
+
+        # Greenwald limit
+
+        nd_plasma_electron_max_array[6] = self.calculate_greenwald_density_limit(
+            c_plasma=physics_variables.plasma_current, rminor=physics_variables.rminor
+        )
+
+        nd_plasma_electron_max_array[7] = self.calculate_asdex_new_density_limit(
+            p_hcd_injected_total_mw=current_drive_variables.p_hcd_injected_total_mw,
+            c_plasma=physics_variables.plasma_current,
+            q95=physics_variables.q95,
+            prn1=divertor_variables.prn1,
+        )
+
+        physics_variables.nd_plasma_electron_max_array = nd_plasma_electron_max_array
+
+        # Calculate beta_norm_max based on i_beta_norm_max
+        try:
+            model = DensityLimitModel(int(physics_variables.i_density_limit))
+            physics_variables.nd_plasma_electrons_max = self.get_density_limit_value(
+                model
+            )
+        except ValueError:
+            raise ProcessValueError(
+                "Illegal value of i_density_limit",
+                i_density_limit=physics_variables.i_density_limit,
+            ) from None
+
+    def get_density_limit_value(self, model: DensityLimitModel) -> float:
+        """Get the density limit value (n_e_max) for the specified model."""
+        model_map = {
+            DensityLimitModel.ASDEX: physics_variables.nd_plasma_electron_max_array[0],
+            DensityLimitModel.BORRASS_ITER_I: physics_variables.nd_plasma_electron_max_array[
+                1
+            ],
+            DensityLimitModel.BORRASS_ITER_II: physics_variables.nd_plasma_electron_max_array[
+                2
+            ],
+            DensityLimitModel.JET_EDGE_RADIATION: physics_variables.nd_plasma_electron_max_array[
+                3
+            ],
+            DensityLimitModel.JET_SIMPLE: physics_variables.nd_plasma_electron_max_array[
+                4
+            ],
+            DensityLimitModel.HUGILL_MURAKAMI: physics_variables.nd_plasma_electron_max_array[
+                5
+            ],
+            DensityLimitModel.GREENWALD: physics_variables.nd_plasma_electron_max_array[
+                6
+            ],
+            DensityLimitModel.ASDEX_NEW: physics_variables.nd_plasma_electron_max_array[
+                7
+            ],
+        }
+        return model_map[model]
 
     @staticmethod
     def calculate_asdex_density_limit(
