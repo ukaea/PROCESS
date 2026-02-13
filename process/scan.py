@@ -41,7 +41,7 @@ class ScanVariable:
     variable_num: int
 
     def __iter__(self):
-        return iter(astuple(self))
+        return iter(astuple(self)[:2])
 
 
 class ScanVariables(Enum):
@@ -1202,4 +1202,4 @@ class Scan:
             case _:
                 raise ProcessValueError("Illegal scan variable number", nwp=nwp)
 
-        return ScanVariables(int(nwp))
+        return ScanVariables(int(nwp)).value
