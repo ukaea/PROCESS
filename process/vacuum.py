@@ -106,7 +106,7 @@ class Vacuum:
 
         Parameters
         ----------
-        output : boolean
+        output :
 
         Returns
         -------
@@ -261,7 +261,7 @@ class Vacuum:
             Gas load  from NBI (deuterons/second)
         gasld :
             Total D-T gas load (kg/s)
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
 
 

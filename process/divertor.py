@@ -34,10 +34,8 @@ class Divertor:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
-        output: bool :
-
         """
 
         fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(

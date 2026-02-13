@@ -59,10 +59,8 @@ class Availability:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not (default = False)
-        output: bool :
-             (Default value = False)
         """
 
         if cv.i_plant_availability == 3:
@@ -86,10 +84,8 @@ class Availability:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
-        output: bool :
-
         """
 
         # Full power lifetime (in years)
@@ -346,10 +342,8 @@ class Availability:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
-        output: bool :
-
         """
 
         # Plant Availability
@@ -507,10 +501,8 @@ class Availability:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
-        output: bool :
-
 
         Returns
         -------
@@ -650,10 +642,8 @@ class Availability:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
-        output: bool :
-
 
         Returns
         -------
@@ -732,10 +722,8 @@ class Availability:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
-        output: bool :
-
 
         Returns
         -------
@@ -833,10 +821,8 @@ class Availability:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
-        output: bool :
-
 
         Returns
         -------
@@ -932,10 +918,8 @@ class Availability:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
-        output: bool :
-
 
         Returns
         -------
@@ -1019,10 +1003,8 @@ class Availability:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
-        output: bool :
-
 
         Returns
         -------
