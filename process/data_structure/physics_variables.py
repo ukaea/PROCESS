@@ -1314,14 +1314,32 @@ len_plasma_debye_electron_vol_avg: float = None
 vel_plasma_electron_profile: list[float] = None
 """Profile of electron thermal velocity in plasma (m/s)"""
 
+vel_plasma_deuteron_profile: list[float] = None
+"""Profile of deuteron thermal velocity in plasma (m/s)"""
+
+vel_plasma_triton_profile: list[float] = None
+"""Profile of triton thermal velocity in plasma (m/s)"""
+
 plasma_coulomb_log_electron_electron_profile: list[float] = None
 """Profile of electron-electron Coulomb logarithm in plasma"""
+
+plasma_coulomb_log_electron_deuteron_profile: list[float] = None
+"""Profile of electron-deuteron Coulomb logarithm in plasma"""
+
+plasma_coulomb_log_electron_triton_profile: list[float] = None
+"""Profile of electron-triton Coulomb logarithm in plasma"""
 
 freq_plasma_electron_profile: list[float] = None
 """Electron plasma frequency profile (Hz)"""
 
 freq_plasma_larmor_toroidal_electron_profile: list[float] = None
 """Profile of electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
+freq_plasma_larmor_toroidal_deuteron_profile: list[float] = None
+"""Profile of deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
+freq_plasma_larmor_toroidal_triton_profile: list[float] = None
+"""Profile of triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
 
 def init_physics_module():
@@ -1643,9 +1661,15 @@ def init_physics_variables():
         len_plasma_debye_electron_profile, \
         len_plasma_debye_electron_vol_avg, \
         vel_plasma_electron_profile, \
+        vel_plasma_deuteron_profile, \
+        vel_plasma_triton_profile, \
         plasma_coulomb_log_electron_electron_profile, \
+        plasma_coulomb_log_electron_deuteron_profile, \
+        plasma_coulomb_log_electron_triton_profile, \
         freq_plasma_electron_profile, \
-        freq_plasma_larmor_toroidal_electron_profile
+        freq_plasma_larmor_toroidal_electron_profile, \
+        freq_plasma_larmor_toroidal_deuteron_profile, \
+        freq_plasma_larmor_toroidal_triton_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1906,6 +1930,12 @@ def init_physics_variables():
     len_plasma_debye_electron_profile = []
     len_plasma_debye_electron_vol_avg = 0.0
     vel_plasma_electron_profile = []
+    vel_plasma_deuteron_profile = []
+    vel_plasma_triton_profile = []
     plasma_coulomb_log_electron_electron_profile = []
+    plasma_coulomb_log_electron_deuteron_profile = []
+    plasma_coulomb_log_electron_triton_profile = []
     freq_plasma_electron_profile = []
     freq_plasma_larmor_toroidal_electron_profile = []
+    freq_plasma_larmor_toroidal_deuteron_profile = []
+    freq_plasma_larmor_toroidal_triton_profile = []

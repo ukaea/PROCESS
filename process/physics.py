@@ -9304,6 +9304,24 @@ class DetailedPhysics:
             )
         )
 
+        physics_variables.vel_plasma_deuteron_profile = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT
+                * physics_variables.f_temp_plasma_ion_electron,
+                mass=constants.DEUTERON_MASS,
+            )
+        )
+
+        physics_variables.vel_plasma_triton_profile = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT
+                * physics_variables.f_temp_plasma_ion_electron,
+                mass=constants.TRITON_MASS,
+            )
+        )
+
         # ============================
         # Plasma frequencies
         # ============================
@@ -9326,6 +9344,22 @@ class DetailedPhysics:
             )
         )
 
+        physics_variables.freq_plasma_larmor_toroidal_deuteron_profile = (
+            self.calculate_larmor_frequency(
+                b_field=physics_variables.b_plasma_toroidal_profile,
+                m_particle=constants.DEUTERON_MASS,
+                z_particle=1.0,
+            )
+        )
+
+        physics_variables.freq_plasma_larmor_toroidal_triton_profile = (
+            self.calculate_larmor_frequency(
+                b_field=physics_variables.b_plasma_toroidal_profile,
+                m_particle=constants.TRITON_MASS,
+                z_particle=1.0,
+            )
+        )
+
         # ============================
         # Coulomb logarithm
         # ============================
@@ -9337,12 +9371,86 @@ class DetailedPhysics:
                     self.calculate_classical_distance_of_closest_approach(
                         charge1=1,
                         charge2=1,
-                        e_kinetic=self.plasma_profile.teprofile.profile_y[i]
-                        * constants.KILOELECTRON_VOLT,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
                     ),
                     self.calculate_debroglie_wavelength(
-                        mass=constants.ELECTRON_MASS,
-                        velocity=physics_variables.vel_plasma_electron_profile[i],
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
+        physics_variables.plasma_coulomb_log_electron_deuteron_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.DEUTERON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_deuteron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.DEUTERON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_deuteron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
+        physics_variables.plasma_coulomb_log_electron_triton_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.TRITON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_triton_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.TRITON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_triton_profile[i],
+                            velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
                     ),
                 ),
             )
@@ -9418,7 +9526,8 @@ class DetailedPhysics:
     def calculate_classical_distance_of_closest_approach(
         charge1: float,
         charge2: float,
-        e_kinetic: float | np.ndarray,
+        m_reduced: float,
+        vel_relative: float | np.ndarray,
     ) -> float | np.ndarray:
         """
         Calculate the classical distance of closest approach for two charged particles.
@@ -9427,14 +9536,16 @@ class DetailedPhysics:
         :type charge1: float
         :param charge2: Charge of particle 2 in units of elementary charge.
         :type charge2: float
-        :param e_kinetic: Kinetic energy of the particles in Joules.
-        :type e_kinetic: float | np.ndarray
+        :param m_reduced: Reduced mass of the two-particle system in kg.
+        :type m_reduced: float
+        :param vel_relative: Relative velocity of the two particles in m/s.
+        :type vel_relative: float | np.ndarray
         :returns: Distance of closest approach in meters.
         :rtype: float | np.ndarray
         """
 
         return (charge1 * charge2 * constants.ELECTRON_CHARGE**2) / (
-            4 * np.pi * constants.EPSILON0 * e_kinetic
+            2 * np.pi * constants.EPSILON0 * m_reduced * vel_relative**2
         )
 
     @staticmethod
@@ -9496,6 +9607,34 @@ class DetailedPhysics:
             2 * np.pi * m_particle
         )
 
+    @staticmethod
+    def calculate_reduced_mass(mass1: float, mass2: float) -> float:
+        """
+        Calculate the reduced mass of two particles.
+        :param mass1: Mass of particle 1 (kg).
+        :type mass1: float
+        :param mass2: Mass of particle 2 (kg).
+        :type mass2: float
+        :returns: Reduced mass (kg).
+        :rtype: float
+        """
+        return (mass1 * mass2) / (mass1 + mass2)
+
+    @staticmethod
+    def calculate_average_relative_velocity(
+        velocity_1: float | np.ndarray, velocity_2: float | np.ndarray
+    ) -> float | np.ndarray:
+        """
+        Calculate the average relative velocity between two particles.
+        :param velocity_1: Velocity of particle 1 (m/s).
+        :type velocity_1: float | np.ndarray
+        :param velocity_2: Velocity of particle 2 (m/s).
+        :type velocity_2: float | np.ndarray
+        :returns: Average relative velocity (m/s).
+        :rtype: float | np.ndarray
+        """
+        return np.sqrt(velocity_1**2 + velocity_2**2)
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
 
@@ -9527,6 +9666,20 @@ class DetailedPhysics:
                 f"(vel_plasma_electron_profile{i})",
                 physics_variables.vel_plasma_electron_profile[i],
             )
+        for i in range(len(physics_variables.vel_plasma_deuteron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma deuteron thermal velocity at point {i}",
+                f"(vel_plasma_deuteron_profile{i})",
+                physics_variables.vel_plasma_deuteron_profile[i],
+            )
+        for i in range(len(physics_variables.vel_plasma_triton_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma triton thermal velocity at point {i}",
+                f"(vel_plasma_triton_profile{i})",
+                physics_variables.vel_plasma_triton_profile[i],
+            )
 
         po.osubhd(self.outfile, "Frequencies:")
 
@@ -9542,9 +9695,27 @@ class DetailedPhysics:
         ):
             po.ovarre(
                 self.mfile,
-                f"Plasma electron Larmor frequency at point {i}",
+                f"Plasma electron toroidal Larmor frequency at point {i}",
                 f"(freq_plasma_larmor_toroidal_electron_profile{i})",
                 physics_variables.freq_plasma_larmor_toroidal_electron_profile[i],
+            )
+        for i in range(
+            len(physics_variables.freq_plasma_larmor_toroidal_deuteron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma deuteron toroidal Larmor frequency at point {i}",
+                f"(freq_plasma_larmor_toroidal_deuteron_profile{i})",
+                physics_variables.freq_plasma_larmor_toroidal_deuteron_profile[i],
+            )
+        for i in range(
+            len(physics_variables.freq_plasma_larmor_toroidal_triton_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma triton toroidal Larmor frequency at point {i}",
+                f"(freq_plasma_larmor_toroidal_triton_profile{i})",
+                physics_variables.freq_plasma_larmor_toroidal_triton_profile[i],
             )
 
         po.osubhd(self.outfile, "Coulomb Logarithms:")
@@ -9557,4 +9728,24 @@ class DetailedPhysics:
                 f"Electron-electron Coulomb log at point {i}",
                 f"(plasma_coulomb_log_electron_electron_profile{i})",
                 physics_variables.plasma_coulomb_log_electron_electron_profile[i],
+            )
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_deuteron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-deuteron Coulomb log at point {i}",
+                f"(plasma_coulomb_log_electron_deuteron_profile{i})",
+                physics_variables.plasma_coulomb_log_electron_deuteron_profile[i],
+            )
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_triton_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-triton Coulomb log at point {i}",
+                f"(plasma_coulomb_log_electron_triton_profile{i})",
+                physics_variables.plasma_coulomb_log_electron_triton_profile[i],
             )
