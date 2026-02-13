@@ -18,7 +18,7 @@ import numpy as np
 from process.init import init_all_module_vars
 from process.input import INPUT_VARIABLES
 from process.iteration_variables import ITERATION_VARIABLES
-from process.scan import SCAN_VARIABLES
+from process.scan import ScanVariables
 
 INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}
 
@@ -231,7 +231,7 @@ def dict_ixc2nsweep():
     """
 
     name_to_nsweep = {
-        var.variable_name: nsweep for nsweep, var in SCAN_VARIABLES.items()
+        sv.value.variable_name: sv.value.variable_num for sv in ScanVariables
     }
 
     # create a dictionary that maps iteration variable names to ixc_no
@@ -308,7 +308,7 @@ def dict_input_bounds():
 
 
 def dict_nsweep2varname():
-    return {str(nsweep): var.variable_name for nsweep, var in SCAN_VARIABLES.items()}
+    return {sv.value.variable_num: sv.value.variable_name for sv in ScanVariables}
 
 
 def dict_ixc_full():
