@@ -8,6 +8,9 @@ If the code encounters a problem reading the input file, it will stop immediatel
 with an error message. The last line of the output file `OUT.DAT` may give an 
 indication of where in the input file the problem lies.
 
+!!! Info "Variable Descriptions"
+    A full list of inputs variables is given in the PROCESS data structure API documentation [here](../../source/reference/process/data_structure/blanket_library).
+
 ## File Naming Convention
 
 The default PROCESS input file name is `IN.DAT`. The user can provide a named 
@@ -149,7 +152,7 @@ one can add a `*` to the beginning of the line, as below:
 ```
 
 !!! Info "Variable Descriptions"  
-    A full list of inputs variables is given in the PROCESS data structure API documentation [here](../../source/reference/process/data_structure).
+    A full list of inputs variables is given in the PROCESS data structure API documentation [here](../../source/reference/process/data_structure/blanket_library).
 
 ## Scan
 
