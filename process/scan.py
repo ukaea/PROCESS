@@ -49,7 +49,7 @@ class ScanVariables(Enum):
     def _missing_(cls, var):
         if isinstance(var, int):
             for sv in cls:
-                if sv.variable_num == var:
+                if sv.value.variable_num == var:
                     return sv
         return super()._missing_(var)
 
