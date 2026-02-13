@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import logging
 from copy import copy
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -34,8 +37,19 @@ from process.data_structure import (
     times_variables,
 )
 from process.exceptions import ProcessValueError
-from process.physics import rether
+from process.physics import Physics, rether
 from process.stellarator_config import load_stellarator_config
+
+if TYPE_CHECKING:
+    from process.availability import Availability
+    from process.buildings import Buildings
+    from process.costs import Costs
+    from process.current_drive import CurrentDrive
+    from process.hcpb import CCFE_HCPB
+    from process.plasma_profiles import PlasmaProfile
+    from process.power import Power
+    from process.vacuum import Vacuum
+
 
 logger = logging.getLogger(__name__)
 
@@ -47,49 +61,49 @@ KEV = 1e3 * constants.ELECTRON_CHARGE  # Kiloelectron-volt (keV)
 
 class Stellarator:
     """Module containing stellarator routines
-    author: P J Knight, CCFE, Culham Science Centre
-    N/A
+
     This module contains routines for calculating the
     parameters of the first wall, blanket and shield components
     of a fusion power plant.
-
     """
 
     def __init__(
         self,
-        availability,
-        vacuum,
-        buildings,
-        costs,
-        power,
-        plasma_profile,
-        hcpb,
-        current_drive,
-        physics,
-        neoclassics,
+        availability: Availability,
+        vacuum: Vacuum,
+        buildings: Buildings,
+        costs: Costs,
+        power: Power,
+        plasma_profile: PlasmaProfile,
+        hcpb: CCFE_HCPB,
+        current_drive: CurrentDrive,
+        physics: Physics,
+        neoclassics: Neoclassics,
         plasma_beta,
         plasma_inductance,
-    ) -> None:
+    ):
         """Initialises the Stellarator model's variables
 
-        :param availability: a pointer to the availability model, allowing use of availability's variables/methods
-        :type availability: process.availability.Availability
-        :param buildings: a pointer to the buildings model, allowing use of buildings's variables/methods
-        :type buildings: process.buildings.Buildings
-        :param Vacuum: a pointer to the vacuum model, allowing use of vacuum's variables/methods
-        :type Vacuum: process.vacuum.Vacuum
-        :param costs: a pointer to the costs model, allowing use of costs' variables/methods
-        :type costs: process.costs.Costs
-        :param plasma_profile: a pointer to the plasma_profile model, allowing use of plasma_profile's variables/methods
-        :type plasma_profile: process.plasma_profile.PlasmaProfile
-        :param hcpb: a pointer to the ccfe_hcpb model, allowing use of ccfe_hcpb's variables/methods
-        :type hcpb: process.hcpb.CCFE_HCPB
-        :param current_drive: a pointer to the CurrentDrive model, allowing use of CurrentDrives's variables/methods
-        :type current_drive: process.current_drive.CurrentDrive
-        :param physics: a pointer to the Physics model, allowing use of Physics's variables/methods
-        :type physics: process.physics.Physics
-        :param neoclassics: a pointer to the Neoclassics model, allowing use of neoclassics's variables/methods
-        :type neoclassics: process.stellarator.Neoclassics
+        Parameters
+        ----------
+        availability:
+            a pointer to the availability model, allowing use of availability's variables/methods
+        buildings:
+            a pointer to the buildings model, allowing use of buildings's variables/methods
+        Vacuum:
+            a pointer to the vacuum model, allowing use of vacuum's variables/methods
+        costs:
+            a pointer to the costs model, allowing use of costs' variables/methods
+        plasma_profile:
+            a pointer to the plasma_profile model, allowing use of plasma_profile's variables/methods
+        hcpb:
+            a pointer to the ccfe_hcpb model, allowing use of ccfe_hcpb's variables/methods
+        currnt_drive:
+            a pointer to the CurrentDrive model, allowing use of CurrentDrives's variables/methods
+        physics:
+            a pointer to the Physics model, allowing use of Physics's variables/methods
+        neoclassics:
+            a pointer to the Neoclassics model, allowing use of neoclassics's variables/methods
         """
 
         self.outfile: int = constants.NOUT
@@ -111,13 +125,13 @@ class Stellarator:
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
         relevant to stellarators
-        author: P J Knight, CCFE, Culham Science Centre
-        author: F Warmer, IPP Greifswald
 
         This routine is the caller for the stellarator models.
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output : boolean
+            indicate whether output should be written to the output file, or not
         """
 
         if output:
@@ -186,7 +200,7 @@ class Stellarator:
         stellarator_variables.first_call = False
 
     def stnewconfig(self):
-        """author: J Lion, IPP Greifswald
+        """
         Routine to initialise the stellarator configuration
 
         Routine to initialise the stellarator configuration.
@@ -236,7 +250,6 @@ class Stellarator:
 
     def stgeom(self):
         """
-                author: J Lion, IPP Greifswald
         Routine to calculate the plasma volume and surface area for
         a stellarator using precalculated effective values
 
@@ -277,8 +290,7 @@ class Stellarator:
 
     def stopt(self, output: bool):
         """Routine to reiterate the physics loop
-        author: J Lion, IPP Greifswald
-        None
+
         This routine reiterates some physics modules.
         """
 
@@ -309,16 +321,17 @@ class Stellarator:
             )
 
     def stbild(self, output: bool):
-        """
-                Routine to determine the build of a stellarator machine
-        author: P J Knight, CCFE, Culham Science Centre
-        author: F Warmer, IPP Greifswald
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+        """Routine to determine the build of a stellarator machine
+
         This routine determines the build of the stellarator machine.
         The values calculated are based on the mean minor radius, etc.,
         as the actual radial and vertical build thicknesses vary with
         toroidal angle.
+
+        Parameters
+        ----------
+        output: bool :
+
         """
         if fwbs_variables.blktmodel > 0:
             build_variables.dr_blkt_inboard = (
@@ -738,16 +751,18 @@ class Stellarator:
             )
 
     def ststrc(self, output):
-        """
-                Routine to calculate the structural masses for a stellarator
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+        """Routine to calculate the structural masses for a stellarator
+
         This routine calculates the structural masses for a stellarator.
         This is the stellarator version of routine
         <A HREF="struct.html">STRUCT</A>. In practice, many of the masses
         are simply set to zero to avoid double-counting of structural
         components that are specified differently for tokamaks.
+
+        Parameters
+        ----------
+        output :
+
         """
         structure_variables.fncmass = 0.0e0
 
@@ -838,14 +853,17 @@ class Stellarator:
 
     def stdiv(self, output: bool):
         """Routine to call the stellarator divertor model
-        author: P J Knight, CCFE, Culham Science Centre
-        author: F Warmer, IPP Greifswald
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+
+
         This routine calls the divertor model for a stellarator,
         developed by Felix Warmer.
         Stellarator Divertor Model for the Systems
         Code PROCESS, F. Warmer, 21/06/2013
+
+        Parameters
+        ----------
+        output: bool :
+
         """
         Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch
         r = physics_variables.rmajor
@@ -1083,8 +1101,8 @@ class Stellarator:
     def stfwbs(self, output: bool):
         """Routine to calculate first wall, blanket and shield properties
         for a stellarator
-        author: P J Knight, CCFE, Culham Science Centre
-        author: F Warmer, IPP Greifswald
+
+
         outfile : input integer : Fortran output unit identifier
         iprint : input integer : Switch to write output to file (1=yes)
         This routine calculates a stellarator's first wall, blanket and
@@ -1103,6 +1121,11 @@ class Stellarator:
         <A HREF="fwbs.html">fwbs</A>), except for the volume calculations,
         which scale the surface area of the components from that
         of the plasma.
+
+        Parameters
+        ----------
+        output: bool :
+
         """
         fwbs_variables.life_fw_fpy = min(
             cost_variables.abktflnc / physics_variables.pflux_fw_neutron_mw,
@@ -2339,7 +2362,7 @@ class Stellarator:
 
     def sctfcoil_nuclear_heating_iter90(self):
         """Superconducting TF coil nuclear heating estimate
-        author: P J Knight, CCFE, Culham Science Centre
+
         coilhtmx : output real : peak magnet heating (MW/m3)
         dpacop : output real : copper stabiliser displacements/atom
         htheci : output real : peak TF coil case heating (MW/m3)
@@ -2528,15 +2551,18 @@ class Stellarator:
 
     def stcoil(self, output: bool):
         """Routine that performs the calculations for stellarator coils
-        author: J Lion, IPP Greifswald
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+
         This routine calculates the properties of the coils for
         a stellarator device.
         <P>Some precalculated effective parameters for a stellarator power
         plant design are used as the basis for the calculations. The coils
         are assumed to be a fixed shape, but are scaled in size
         appropriately for the machine being modelled.
+
+        Parameters
+        ----------
+        output: bool :
+
         """
         r_coil_major = (
             stellarator_configuration.stella_config_coil_rmajor
@@ -3210,9 +3236,15 @@ class Stellarator:
             )
 
     def u_max_protect_v(self, tfes, tdump, aio):
-        """tfes : input real : Energy stored in one TF coil (J)
-        tdump : input real : Dump time (sec)
-        aio : input real : Operating current (A)
+        """
+        Parameters
+        ----------
+        tfes :
+            Energy stored in one TF coil (J)
+        tdump :
+            Dump time (sec)
+        aio :
+            Operating current (A)
         """
         return 2 * tfes / (tdump * aio)
 
@@ -3401,10 +3433,23 @@ class Stellarator:
     ):
         """Returns a fitted function for bmax for stellarators
 
-        author: J Lion, IPP Greifswald
+
         Returns a fitted function for bmax in dependece
         of the winding pack. The stellarator type config
         is taken from the parent scope.
+
+        Parameters
+        ----------
+        wp_width_radial :
+
+        current :
+
+        n_tf_coils :
+
+        r_coil_major :
+
+        r_coil_minor :
+
         """
 
         return (
@@ -3423,21 +3468,25 @@ class Stellarator:
     def intersect(self, x1, y1, x2, y2, xin):
         """Routine to find the x (abscissa) intersection point of two curves
         each defined by tabulated (x,y) values
-        author: P J Knight, CCFE, Culham Science Centre
-        x1(1:n1) : input real array : x values for first curve
-        y1(1:n1) : input real array : y values for first curve
-        n1       : input integer : length of arrays x1, y1
-        x2(1:n2) : input real array : x values for first curve
-        y2(1:n2) : input real array : y values for first curve
-        n2       : input integer : length of arrays x2, y2
-        x        : input/output real : initial x value guess on entry;
-        x value at point of intersection on exit
+
         This routine estimates the x point (abscissa) at which two curves
         defined by tabulated (x,y) values intersect, using simple
         linear interpolation and the Newton-Raphson method.
         The routine will stop with an error message if no crossing point
         is found within the x ranges of the two curves.
-        None
+
+        Parameters
+        ----------
+        x1 :
+            x values for first curve
+        y1 :
+            y values for first curve
+        x2 :
+            x values for first curve
+        y2 :
+            y values for first curve
+        xin :
+            initial x value guess on entry
         """
         x = xin
         n1 = len(x1)
@@ -3589,14 +3638,24 @@ class Stellarator:
     def power_at_ignition_point(self, gyro_frequency_max, te0_available):
         """Routine to calculate if the plasma is ignitable with the current values for the B field. Assumes
         current ECRH achievable peak temperature (which is inaccurate as the cordey pass should be calculated)
-        author: J Lion, IPP Greifswald
-        gyro_frequency_max : input real : Maximal available Gyrotron frequency (1/s) NOT (rad/s)
-        te0_available : input real : Reachable peak electron temperature, reached by ECRH (KEV)
-        powerht_out : output real: Heating Power at ignition point (MW)
-        pscalingmw_out : output real: Heating Power loss at ignition point (MW)
+
         This routine calculates the density limit due to an ECRH heating scheme on axis
         Assumes current peak temperature (which is inaccurate as the cordey pass should be calculated)
         Maybe use this: https://doi.org/10.1088/0029-5515/49/8/085026
+
+        Parameters
+        ----------
+        gyro_frequency_max :
+             Maximal available Gyrotron frequency (1/s) NOT (rad/s)
+        te0_available :
+            Reachable peak electron temperature, reached by ECRH (KEV)
+
+        Returns
+        -------
+        powerht_out :
+            Heating Power at ignition point (MW)
+        pscalingmw_out :
+            Heating Power loss at ignition point (MW)
         """
         te_old = copy(physics_variables.temp_plasma_electron_vol_avg_kev)
         # Volume averaged physics_variables.te from te0_achievable
@@ -3642,16 +3701,27 @@ class Stellarator:
 
     def stdlim(self, b_plasma_toroidal_on_axis, powht, rmajor, rminor):
         """Routine to calculate the Sudo density limit in a stellarator
-        author: P J Knight, CCFE, Culham Science Centre
-        b_plasma_toroidal_on_axis     : input real : Toroidal field on axis (T)
-        powht  : input real : Absorbed heating power (MW)
-        rmajor : input real : Plasma major radius (m)
-        rminor : input real : Plasma minor radius (m)
-        nd_plasma_electron_max_array : output real : Maximum volume-averaged plasma density (/m3)
+
         This routine calculates the density limit for a stellarator.
         S.Sudo, Y.Takeiri, H.Zushi et al., Scalings of Energy Confinement
         and Density Limit in Stellarator/Heliotron Devices, Nuclear Fusion
         vol.30, 11 (1990).
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis :
+            Toroidal field on axis (T)
+        powht :
+            Absorbed heating power (MW)
+        rmajor :
+             Plasma major radius (m)
+        rminor :
+            Plasma minor radius (m)
+
+        Returns
+        -------
+        nd_plasma_electron_max_array :
+            Maximum volume-averaged plasma density (/m3)
         """
         arg = powht * b_plasma_toroidal_on_axis / (rmajor * rminor * rminor)
 
@@ -3714,11 +3784,65 @@ class Stellarator:
         v_tf_coil_dump_quench_kv,
     ):
         """Writes stellarator modular coil output to file
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
+
         This routine writes the stellarator modular coil results
         to the output file.
         None
+
+        Parameters
+        ----------
+        a_tf_wp_no_insulation :
+
+        centering_force_avg_mn :
+
+        centering_force_max_mn :
+
+        centering_force_min_mn :
+
+        coilcoilgap :
+
+        coppera_m2 :
+
+        coppera_m2_max :
+
+        f_scu :
+
+        f_vv_actual :
+
+        inductance :
+
+        max_force_density :
+
+        max_force_density_mnm :
+
+        max_lateral_force_density :
+
+        max_radial_force_density :
+
+        min_bending_radius :
+
+        r_coil_major :
+
+        r_coil_minor :
+
+        r_tf_inleg_mid :
+
+        sig_tf_wp :
+
+        dx_tf_turn_general :
+
+        t_tf_superconductor_quench :
+
+        tf_total_h_width :
+
+        tfborev :
+
+        toroidalgap :
+
+        v_tf_coil_dump_quench_max_kv :
+
+        v_tf_coil_dump_quench_kv :
+
         """
         po.oheadr(self.outfile, "Modular Coils")
 
@@ -4179,12 +4303,24 @@ class Stellarator:
     def stdlim_ecrh(self, gyro_frequency_max, bt_input):
         """Routine to calculate the density limit due to an ECRH heating scheme on axis
         depending on an assumed maximal available gyrotron frequency.
-        author: J Lion, IPP Greifswald
-        gyro_frequency_max     : input real : Maximal available Gyrotron frequency (1/s) NOT (rad/s)
-        b_plasma_toroidal_on_axis  : input real : Maximal magnetic field on axis (T)
-        dlimit_ecrh : output real : Maximum peak plasma density by ECRH constraints (/m3)
-        bt_max : output real : Maximum allowable b field for ecrh heating (T)
+
         This routine calculates the density limit due to an ECRH heating scheme on axis
+
+        Parameters
+        ----------
+        gyro_frequency_max :
+            Maximal available Gyrotron frequency (1/s) NOT (rad/s)
+
+        bt_input :
+            Maximal magnetic field on axis (T)
+
+        Returns
+        -------
+        dlimit_ecrh :
+            Maximum peak plasma density by ECRH constraints (/m3)
+        bt_max :
+            Maximum allowable b field for ecrh heating (T)
+
         """
         gyro_frequency = min(1.76e11 * bt_input, gyro_frequency_max * 2.0e0 * np.pi)
 
@@ -4208,12 +4344,15 @@ class Stellarator:
 
     def stphys(self, output):
         """Routine to calculate stellarator plasma physics information
-        author: P J Knight, CCFE, Culham Science Centre
-        author: F Warmer, IPP Greifswald
-        None
+
         This routine calculates the physics quantities relevant to
         a stellarator device.
         AEA FUS 172: Physics Assessment for the European Reactor Study
+
+        Parameters
+        ----------
+        output :
+
         """
         # ###############################################
         #  Calculate plasma composition
@@ -5045,12 +5184,15 @@ class Stellarator:
     def stheat(self, output: bool):
         """Routine to calculate the auxiliary heating power
         in a stellarator
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+
         This routine calculates the auxiliary heating power for
         a stellarator device.
         AEA FUS 172: Physics Assessment for the European Reactor Study
+
+        Parameters
+        ----------
+        output: bool :
+
         """
         if stellarator_variables.isthtr == 1:
             current_drive_variables.p_hcd_ecrh_injected_total_mw = (
@@ -5257,6 +5399,15 @@ class Neoclassics:
     def init_neoclassics(self, r_effin, eps_effin, iotain):
         """Constructor of the neoclassics object from the effective radius,
         epsilon effective and iota only.
+
+        Parameters
+        ----------
+        r_effin :
+
+        eps_effin :
+
+        iotain :
+
         """
         (
             neoclassics_variables.densities,
@@ -5362,7 +5513,13 @@ class Neoclassics:
         neoclassics_variables.q_flux = self.neoclassics_calc_q_flux()
 
     def init_profile_values_from_PROCESS(self, rho):
-        """Initializes the profile_values object from PROCESS' parabolic profiles"""
+        """Initializes the profile_values object from PROCESS' parabolic profiles
+
+        Parameters
+        ----------
+        rho :
+
+        """
         tempe = (
             physics_variables.temp_plasma_electron_on_axis_kev
             * (1 - rho**2) ** physics_variables.alphat
@@ -5597,7 +5754,13 @@ class Neoclassics:
         )
 
     def neoclassics_calc_nu_star_fromT(self, iota):
-        """Calculates the collision frequency"""
+        """Calculates the collision frequency
+
+        Parameters
+        ----------
+        iota :
+
+        """
         temp = (
             np.array([
                 physics_variables.temp_plasma_electron_vol_avg_kev,
@@ -5761,6 +5924,11 @@ class Neoclassics:
     def neoclassics_calc_d11_mono(self, eps_eff):
         """Calculates the monoenergetic radial transport coefficients
         using epsilon effective
+
+        Parameters
+        ----------
+        eps_eff :
+
         """
         return (
             4.0
@@ -5774,6 +5942,11 @@ class Neoclassics:
         """Calculates the integrated radial transport coefficients (index `index`)
         It uses Gauss laguerre integration
         https://en.wikipedia.org/wiki/Gauss%E2%80%93Laguerre_quadrature
+
+        Parameters
+        ----------
+        index: int :
+
         """
         return np.sum(
             2.0
@@ -5787,7 +5960,19 @@ class Neoclassics:
     def neoclassics_calc_gamma_flux(
         self, densities, temperatures, dr_densities, dr_temperatures
     ):
-        """Calculates the Energy flux by neoclassical particle transport"""
+        """Calculates the Energy flux by neoclassical particle transport
+
+        Parameters
+        ----------
+        densities :
+
+        temperatures :
+
+        dr_densities :
+
+        dr_temperatures :
+
+        """
 
         z = np.array([-1.0, 1.0, 1.0, 2.0])
 
@@ -5825,8 +6010,6 @@ class Neoclassics:
 
 def stinit():
     """Routine to initialise the variables relevant to stellarators
-    author: P J Knight, CCFE, Culham Science Centre
-    author: F Warmer, IPP Greifswald
 
     This routine initialises the variables relevant to stellarators.
     Many of these may override the values set in routine
