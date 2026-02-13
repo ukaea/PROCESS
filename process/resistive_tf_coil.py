@@ -24,7 +24,13 @@ class ResistiveTFCoil(TFCoil):
         self.outfile = constants.NOUT
 
     def run(self, output: bool):
-        """Run main tfcoil subroutine without outputting."""
+        """Run main tfcoil subroutine without outputting.
+
+        Parameters
+        ----------
+        output: bool :
+
+        """
         self.iprint = 0
 
         # Set up TF values share by all coil types
@@ -263,9 +269,7 @@ class ResistiveTFCoil(TFCoil):
 
     def res_tf_internal_geom(self):
         """
-        Author : S. Kahn
         Resisitve TF turn geometry, equivalent to winding_pack subroutines
-
         """
         superconducting_tf_coil_variables.r_tf_wp_inboard_inner = (
             build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
@@ -441,9 +445,8 @@ class ResistiveTFCoil(TFCoil):
                 f"Negative cable space dimension. {superconducting_tf_coil_variables.a_tf_wp_no_insulation=}"
             )
 
-    def tf_res_heating(self) -> None:
-        """
-        Calculate resistive heating for resistive magnets.
+    def tf_res_heating(self):
+        """Calculate resistive heating for resistive magnets.
 
         This method calculates the resistive heating for resistive magnets.
         It considers the following scenarios:
@@ -650,9 +653,7 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.p_tf_joints_resistive = 0.0e0
 
     def resistive_tf_coil_areas_and_masses(self):
-        """
-        Calculate the areas and masses of the resistive TF coil
-        """
+        """Calculate the areas and masses of the resistive TF coil"""
 
         vol_case = 0.0e0  # Total TF case volume [m3]
         vol_ins = 0.0e0  # Total leg turn insulation volume [m3]
@@ -851,7 +852,6 @@ class ResistiveTFCoil(TFCoil):
         n_tf_coils,
     ):
         """
-        author: P J Knight, CCFE, Culham Science Centre
         Calculates the volume and resistive power losses of a TART centrepost
         This routine calculates the volume and resistive power losses
         of a TART centrepost. It is assumed to be tapered - narrowest at
@@ -867,6 +867,37 @@ class ResistiveTFCoil(TFCoil):
         26/11/19 SK added the coolant area, the conuctor/isulator/outer casing volume
         30/11/20 SK added the ground outer ground insulation volume
         F/MI/PJK/LOGBOOK12, pp.33,34
+
+        Parameters
+        ----------
+        r_tf_inboard_in :
+
+        r_tf_inboard_out :
+
+        r_cp_top :
+
+        ztop :
+
+        hmaxi :
+
+        cas_in_th :
+
+        cas_out_th :
+
+        gr_ins_th :
+
+        ins_th :
+
+        n_tf_coil_turns :
+
+        curr :
+
+        rho :
+
+        fcool :
+
+        n_tf_coils :
+
         """
         yy_ins = np.zeros((101,))  # Exact conductor area (to be integrated)
         yy_cond = np.zeros((101,))  # Turn insulation area (to be integrated)
@@ -1118,14 +1149,12 @@ class ResistiveTFCoil(TFCoil):
 
 
 class CopperTFCoil(ResistiveTFCoil):
-    """
-    Copper TF coil class for resistive TF coil calculations.
+    """Copper TF coil class for resistive TF coil calculations.
     Inherits from ResistiveTFCoil and implements specific methods for copper TF coils.
     """
 
 
 class AluminiumTFCoil(ResistiveTFCoil):
-    """
-    Aluminium TF coil class for resistive TF coil calculations.
+    """Aluminium TF coil class for resistive TF coil calculations.
     Inherits from ResistiveTFCoil and implements specific methods for aluminium TF coils.
     """

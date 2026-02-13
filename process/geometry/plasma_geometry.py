@@ -29,30 +29,33 @@ def plasma_geometry(
     i_plasma_shape: int,
     square: float,
 ) -> PlasmaGeometry:
-    """
-    Calculates radial and vertical distances and plasma elongation for the geometry of the plasma.
+    """Calculates radial and vertical distances and plasma elongation for the geometry of the plasma.
 
     This function computes the radial and vertical coordinates of the plasma boundary, as well as the plasma elongation,
     based on the given major radius, minor radius, triangularity, and elongation at 95% of the plasma surface. It also
     considers whether the plasma configuration is single null or double null.
 
-    :param rmajor: Plasma major radius.
-    :type rmajor: float
-    :param rminor: Plasma minor radius.
-    :type rminor: float
-    :param triang: Plasma triangularity at separatrix.
-    :type triang: float
-    :param kappa: Plasma elongation at separatrix.
-    :type kappa: float
-    :param i_single_null: Switch for single null (1) or double null (0) plasma configuration.
-    :type i_single_null: int
-    :param i_plasma_shape: Switch for plasma shape (0 for double arc, 1 for Sauter).
-    :type i_plasma_shape: int
-    :param square: Square term for Sauter plasma shape.
-    :type square: float
-    :returns: A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
-    :rtype: PlasmaGeometry
+    Parameters
+    ----------
+    rmajor:
+        Plasma major radius.
+    rminor:
+        Plasma minor radius.
+    triang:
+        Plasma triangularity at separatrix.
+    kappa:
+        Plasma elongation at separatrix.
+    i_single_null:
+        Switch for single null (1) or double null (0) plasma configuration.
+    i_plasma_shape:
+        Switch for plasma shape (0 for double arc, 1 for Sauter).
+    square:
+        Square term for Sauter plasma shape.
 
+    Returns
+    -------
+    PlasmaGeometry
+        A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
     """
 
     # Original PROCESS double arc plasma shape

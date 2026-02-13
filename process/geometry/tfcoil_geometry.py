@@ -22,28 +22,33 @@ def tfcoil_geometry_rectangular_shape(
 ) -> list[RectangleGeometry]:
     """Calculates rectangular geometries for tf coils in a picture frame/rectangular shape parametrization
 
-    :param x1: radial location of arc point 1
-    :type x1: float
-    :param x2: radial location of arc point 2
-    :type x2: float
-    :param x4: radial location of arc point 4
-    :type x4: float
-    :param x5: radial location of arc point 5
-    :type x5: float
-    :param y1: vertical location of arc point 1
-    :type y1: float
-    :param y2: vertical location of arc point 2
-    :type y2: float
-    :param y4: vertical location of arc point 4
-    :type y4: float
-    :param y5: vertical location of arc point 5
-    :type y5: float
-    :param dr_tf_inboard: inboard tf coil thickness
-    :type dr_tf_inboard: float
-    :param offset_in: an increase in the thickness of the geometry on the inside
-    :type offset_in: float
-    :return: list of RectangleGeometry - dataclass returning rectangular geometry parameters
-    :rtype: List[RectangleGeometry]
+    Parameters
+    ----------
+    x1:
+        radial location of arc point 1
+    x2:
+        radial location of arc point 2
+    x4:
+        radial location of arc point 4
+    x5:
+        radial location of arc point 5
+    y1:
+        vertical location of arc point 1
+    y2:
+        vertical location of arc point 2
+    y4:
+        vertical location of arc point 4
+    y5:
+        vertical location of arc point 5
+    dr_tf_inboard:
+        inboard tf coil thickness
+    offset_in:
+        an increase in the thickness of the geometry on the inside
+
+    Returns
+    -------
+    :
+        list of RectangleGeometry - dataclass returning rectangular geometry parameters
     """
     # In this geometry, the tf coil is represented by 4 rectangular sections as follows:
     return [
@@ -93,34 +98,39 @@ def tfcoil_geometry_d_shape(
 ) -> tuple[list[RectangleGeometry], list[list[tuple[float, float]]]]:
     """Calculates radial and vertical distances for the geometry of the tf coils in a D-shape parametrization
 
-    :param x1: radial location of arc point 1
-    :type x1: float
-    :param x2: radial location of arc point 2
-    :type x2: float
-    :param x3: radial location of arc point 3
-    :type x3: float
-    :param x4: radial location of arc point 4
-    :type x4: float
-    :param x5: radial location of arc point 5
-    :type x5: float
-    :param y1: vertical location of arc point 1
-    :type y1: float
-    :param y2: vertical location of arc point 2
-    :type y2: float
-    :param y4: vertical location of arc point 4
-    :type y4: float
-    :param y5: vertical location of arc point 5
-    :type y5: float
-    :param dr_tf_inboard: inboard tf coil thickness
-    :type dr_tf_inboard: float
-    :param rtangle: angle used in tf coil parametrization
-    :type rtangle: float
-    :param rtangle2: angle used in tf coil parametrization
-    :type rtangle2: float
-    :param offset_in: an increase in the thickness of the geometry on the inside
-    :type offset_in: float
-    :return: radial and vertical coordinates for tf coils
-    :rtype: Tuple[List[RectangleGeometry], List[List[Tuple[float, float]]]]
+    Parameters
+    ----------
+    x1:
+        radial location of arc point 1
+    x2:
+        radial location of arc point 2
+    x3:
+        radial location of arc point 3
+    x4:
+        radial location of arc point 4
+    x5:
+        radial location of arc point 5
+    y1:
+        vertical location of arc point 1
+    y2:
+        vertical location of arc point 2
+    y4:
+        vertical location of arc point 4
+    y5:
+        vertical location of arc point 5
+    dr_tf_inboard:
+        inboard tf coil thickness
+    rtangle:
+        angle used in tf coil parametrization
+    rtangle2:
+        angle used in tf coil parametrization
+    offset_in:
+        an increase in the thickness of the geometry on the inside
+
+    Returns
+    -------
+    :
+        radial and vertical coordinates for tf coils
     """
     return_rects = []
     return_verts = []

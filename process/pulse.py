@@ -19,16 +19,16 @@ class Pulse:
     def __init__(self):
         self.outfile = constants.NOUT
 
-    def run(self, output: bool) -> None:
+    def run(self, output: bool):
         """Caller for the pulsed reactor model
-        author: C A Gardner, AEA Fusion, Culham Laboratory
-        author: P J Knight, CCFE, Culham Science Centre
 
         This calls the routines relevant to a pulsed reactor scenario.
         Work File Notes F/MPE/MOD/CAG/PROCESS/PULSE
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output :
+            indicate whether output should be written to the output file, or not
         """
         if pulse_variables.i_pulsed_plant == 1:
             self.tohswg(output=output)
@@ -41,18 +41,18 @@ class Pulse:
                 t_plant_pulse_fusion_ramp=times_variables.t_plant_pulse_fusion_ramp,
             )
 
-    def tohswg(self, output: bool) -> None:
+    def tohswg(self, output: bool):
         """Routine to calculate the plasma current ramp-up time
-        author: C A Gardner, AEA Fusion, Culham Laboratory
-        author: P J Knight, CCFE, Culham Science Centre
 
         This routine calculates the plasma current ramp-up time
         for a pulsed reactor.
         Work File Note F/MPE/MOD/CAG/PROCESS/PULSE/0013
         Work File Note F/PL/PJK/PROCESS/CODE/050
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output :
+            indicate whether output should be written to the output file, or not
         """
         if pulse_variables.i_pulsed_plant != 1:
             return
@@ -157,25 +157,26 @@ class Pulse:
         v_plasma_loop_burn: float,
         t_plant_pulse_fusion_ramp: float,
     ) -> float:
-        """
-        Calculate the burn time for a pulsed reactor.
+        """Calculate the burn time for a pulsed reactor.
 
         This routine computes the burn time for a pulsed reactor scenario,
         based on the total Vs available in the CS and PF coils and the
         plasma loop voltage during burn. It also checks for negative burn time
         and reports an error if encountered.
 
-        :param vs_cs_pf_total_burn: Total volt-seconds in CS and PF coils available for burn (V·s)
-        :type vs_cs_pf_total_burn: float
-        :param v_plasma_loop_burn: Plasma loop voltage during burn (V)
-        :type v_plasma_loop_burn: float
-        :param t_plant_pulse_fusion_ramp: Time for fusion ramp (s)
-        :type t_plant_pulse_fusion_ramp: float
-        :return: Calculated burn time (s)
-        :rtype: float
+        Parameters
+        ----------
+        vs_cs_pf_total_burn : float
+            Total volt-seconds in CS and PF coils available for burn (V·s)
+        v_plasma_loop_burn : float
+            Plasma loop voltage during burn (V)
+        t_plant_pulse_fusion_ramp : float
+            Time for fusion ramp (s)
 
-        :raises: Reports error 93 if calculated burn time is negative.
-
+        Returns
+        -------
+        float
+            Calculated burn time (s)
         """
 
         t_plant_pulse_burn = (

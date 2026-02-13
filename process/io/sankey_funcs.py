@@ -1,10 +1,5 @@
 """
 Library of Sankey plotting routine
-
-Author: Hanni Lux (Hanni.Lux@ukaea.uk)
-        Matti Coleman (Matti.Coleman@ukaea.uk)
-
-Updated 13/09/2019: Adam Brown (adam.brown@ukaea.uk)
 """
 
 import matplotlib.pyplot as plt
@@ -343,7 +338,6 @@ def plot_full_sankey(
         if _ == 0 and sqrt(sum(first_wall) ** 2) > 0.1:
             print("FIRST_WALL power balance =", sum(first_wall))
             exit()
-
         """# -------------------------------------- BLANKET - 6 --------------------------------------
 
         # Blanket - Energy mult., Energy Mult., pumping power, Blanket
@@ -370,7 +364,6 @@ def plot_full_sankey(
             if diff > 0.1:
                 print("The difference between [1][1] and [3][0] =", diff)
                 exit()"""
-
         """# --------------------------------------- SHIELD - 7 --------------------------------------
 
         # Neutrons, Coolant pumping, Total power
@@ -387,7 +380,6 @@ def plot_full_sankey(
             if sqrt(sum(SHIELD)**2) > 0.1:
                 print("SHIELD power balance =", sum(SHIELD))
                 exit()"""
-
         """# ------------------------------------ PRIMARY HEAT - 7 -----------------------------------
 
         # 1st wall, Blanket, Shield, Divertor, Total thermal power
@@ -404,7 +396,6 @@ def plot_full_sankey(
             if sqrt(sum(HEAT)**2) > 0.1:
                 print("PRIMARY power balance =", sum(HEAT))
                 exit()"""
-
         """# ------------------------------- ELECTRICITY CONVERSION - 8 ------------------------------
 
         # Total thermal, Elctricty conversion loss, Gross Electricity
@@ -423,7 +414,6 @@ def plot_full_sankey(
                 exit()"""
 
         # ------------------------------ RECIRCULATED ELECTRICITY - 9 -----------------------------
-
         """# ---------------------------------------- HCD - 11 ----------------------------------------
 
         # HCD loss + injected, -injected, -HCD loss
@@ -454,7 +444,6 @@ def plot_full_sankey(
     # Munipulating the positioning of the branch labels
     # -ve to left and down; +ve to right and up
     # pos[0] = x-axis; pos[1] = y-axis
-
     """for d in diagrams:
         y = 0
         for t in d.texts:

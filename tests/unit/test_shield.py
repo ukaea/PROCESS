@@ -58,7 +58,6 @@ def test_elliptical_shield_volumes(shield, elliptical_shield_volumes, expected):
     :param elliptical_shield_volumes: input parameters for the function
     :type elliptical_shield_volumes: EllipticalShieldVolumes
 
-
     """
 
     vol_shield_inboard, vol_shield_outboard, vol_shield = (
@@ -120,7 +119,6 @@ def test_elliptical_shield_areas(shield, elliptical_shield_areas, expected):
     """Tests `elliptical_shield_areas` function.
     :param elliptical_shield_areas: input parameters for the function
     :type elliptical_shield_areas: EllipticalShieldAreas
-
 
     """
 
@@ -189,7 +187,6 @@ def test_dshaped_shield_volumes(shield, dshaped_shield_volumes, expected):
     :param dshaped_shield_volumes: input parameters for the function
     :type dshaped_shield_volumes: DShapedShieldVolumes
 
-
     """
 
     vol_shield_inboard, vol_shield_outboard, vol_shield = (
@@ -256,7 +253,6 @@ def test_dshaped_shield_areas(shield, dshaped_shield_areas, expected):
 
     :param dshaped_shield_areas: input parameters for the function
     :type dshaped_shield_areas: DShapedShieldAreas
-
 
     """
 

@@ -35,26 +35,28 @@ OBJECTIVE_NAMES = {
 def objective_function(minmax: int) -> float:
     """Calculate the specified objective function
 
-    :param minimax: the ID and sign of the figure of merit to evaluate.
-    A negative value indicates maximisation.
-    A positive value indicates minimisation.
-    * 1: Major radius
-    * 3: Neutron wall load
-    * 4: TF coil + PF coil power
-    * 5: Fusion gain
-    * 6: Cost of electricity
-    * 7: Direct/constructed/capital cost
-    * 8: Aspect ratio
-    * 9: Divertor heat load
-    * 10: Toroidal field on axis
-    * 11: Injected power
-    * 14: Pulse length
-    * 15: Plant availability
-    * 16: Major radius/burn time
-    * 17: Net electrical output
-    * 18: NULL, f(x) = 1
-    * 19: Major radius/burn time
-    :type minimax: int
+    Parameters
+    ----------
+    minimax : int
+        the ID and sign of the figure of merit to evaluate.
+        A negative value indicates maximisation.
+        A positive value indicates minimisation.
+        * 1: Major radius
+        * 3: Neutron wall load
+        * 4: TF coil + PF coil power
+        * 5: Fusion gain
+        * 6: Cost of electricity
+        * 7: Direct/constructed/capital cost
+        * 8: Aspect ratio
+        * 9: Divertor heat load
+        * 10: Toroidal field on axis
+        * 11: Injected power
+        * 14: Pulse length
+        * 15: Plant availability
+        * 16: Major radius/burn time
+        * 17: Net electrical output
+        * 18: NULL, f(x) = 1
+        * 19: Major radius/burn time
     """
     figure_of_merit = abs(minmax)
 

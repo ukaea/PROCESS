@@ -25,7 +25,8 @@ class RectangleGeometry:
 class ArbitraryGeometry:
     """Holds radial and vertical coordinates for arbitrary reactor component shapes
 
-    Example: a triangular shaped component with vertices [(0,0), (1,0), (0,1)] would be represented by ArbitraryGeometry(rs=[0,1,0], zs=[0,0,1])"""
+    Example: a triangular shaped component with vertices [(0,0), (1,0), (0,1)] would be represented by ArbitraryGeometry(rs=[0,1,0], zs=[0,0,1])
+    """
 
     rs: np.ndarray
     """outboard and inboard radial coordinates"""

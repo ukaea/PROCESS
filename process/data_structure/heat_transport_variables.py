@@ -1,4 +1,4 @@
-"""author: J. Morris, M. Kovari (UKAEA)
+"""
 This module contains global variables relating to the heat transport system
 of a fusion power plant, and also those for a hydrogen production plant.
 ### References

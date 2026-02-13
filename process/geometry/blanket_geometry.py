@@ -24,32 +24,37 @@ def blanket_geometry_single_null(
 ) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of the blanket in a single null configuration
 
-    :param radx_outer: outboard radius of outer surface of blanket
-    :type radx_outer: float
-    :param rminx_outer: inboard radius of outer surface of blanket
-    :type rminx_outer: float
-    :param radx_inner: outboard radius of inner surface of blanket
-    :type radx_inner: float
-    :param rminx_inner: inboard radius of inner surface of blanket
-    :type rminx_inner: float
-    :param cumulative_upper: cumulative vertical thicknesses of components above the midplane
-    :type cumulative_upper: dict
-    :param triang: plasma triangularity
-    :type triang: float
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :param dz_blkt_upper: top blanket vertical thickness
-    :type dz_blkt_upper: float
-    :param c_shldith: inboard shield thickness
-    :type c_shldith: float
-    :param c_blnkoth: outboard blanket radial thickness
-    :type c_blnkoth: float
-    :param dr_blkt_inboard: inboard blanket radial thickness
-    :type dr_blkt_inboard: float
-    :param dr_blkt_outboard: outboard blanket radial thickness
-    :type dr_blkt_outboard: float
-    :return: dataclass returning radial and vertical coordinates
-    :rtype: ArbitraryGeometry
+    Parameters
+    ----------
+    radx_outer:
+        outboard radius of outer surface of blanket
+    rminx_outer:
+        inboard radius of outer surface of blanket
+    radx_inner:
+        outboard radius of inner surface of blanket
+    rminx_inner:
+        inboard radius of inner surface of blanket
+    cumulative_upper:
+        cumulative vertical thicknesses of components above the midplane
+    triang:
+        plasma triangularity
+    cumulative_lower:
+        cumulative vertical thicknesses of components below the midplane
+    dz_blkt_upper:
+        top blanket vertical thickness
+    c_shldith:
+        inboard shield thickness
+    c_blnkoth:
+        outboard blanket radial thickness
+    dr_blkt_inboard:
+        inboard blanket radial thickness
+    dr_blkt_outboard:
+        outboard blanket radial thickness
+
+    Returns
+    -------
+    ArbitraryGeometry
+        dataclass returning radial and vertical coordinates
     """
     # Upper blanket outer surface
     kapx = cumulative_upper["dz_blkt_upper"] / rminx_outer
@@ -108,22 +113,27 @@ def blanket_geometry_lower(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of blanket below the midplane
 
-    :param triang: plasma triangularity
-    :type triang: float
-    :param dz_blkt_upper: top blanket vertical thickness
-    :type dz_blkt_upper: float
-    :param c_shldith: inboard shield thickness
-    :type c_shldith: float
-    :param c_blnkoth: outboard blanket radial thickness
-    :type c_blnkoth: float
-    :param dr_blkt_inboard: inboard blanket radial thickness
-    :type dr_blkt_inboard: float
-    :param dr_blkt_outboard: outboard blanket radial thickness
-    :type dr_blkt_outboard: float
-    :param divgap: divertor structure vertical thickness
-    :type divgap: float
-    :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the blanket geometry below the midplane
-    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+    Parameters
+    ----------
+    triang:
+        plasma triangularity
+    dz_blkt_upper:
+        top blanket vertical thickness
+    c_shldith:
+        inboard shield thickness
+    c_blnkoth:
+        outboard blanket radial thickness
+    dr_blkt_inboard:
+        inboard blanket radial thickness
+    dr_blkt_outboard:
+        outboard blanket radial thickness
+    divgap:
+        divertor structure vertical thickness
+
+    Returns
+    -------
+    :
+        tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the blanket geometry below the midplane
     """
     # Lower blanket
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
@@ -157,22 +167,27 @@ def blanket_geometry_double_null(
     """Calculates radial and vertical distances for the geometry of blanket in a double null configuration
     In a double null configuration, the geometry of the lower blanket is reflected across the midplane to create the section of blanket above the midplane
 
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :param triang: plasma triangularity
-    :type triang: float
-    :param dz_blkt_upper: top blanket vertical thickness
-    :type dz_blkt_upper: float
-    :param c_shldith: inboard shield thickness
-    :type c_shldith: float
-    :param c_blnkoth: outboard blanket radial thickness
-    :type c_blnkoth: float
-    :param dr_blkt_inboard: inboard blanket radial thickness
-    :type dr_blkt_inboard: float
-    :param dr_blkt_outboard: outboard blanket radial thickness
-    :type dr_blkt_outboard: float
-    :return: dataclass returning radial and vertical coordinates
-    :rtype: ArbitraryGeometry
+    Parameters
+    ----------
+    cumulative_lower:
+        cumulative vertical thicknesses of components below the midplane
+    triang:
+        plasma triangularity
+    dz_blkt_upper:
+        top blanket vertical thickness
+    c_shldith:
+        inboard shield thickness
+    c_blnkoth:
+        outboard blanket radial thickness
+    dr_blkt_inboard:
+        inboard blanket radial thickness
+    dr_blkt_outboard:
+        outboard blanket radial thickness
+
+    Returns
+    -------
+    ArbitraryGeometry
+        dataclass returning radial and vertical coordinates
     """
     # Lower blanket
     divgap = cumulative_lower["dz_divertor"]

@@ -1,13 +1,5 @@
 """
 A selection of functions for using the PROCESS code
-
-Author: Hanni Lux (Hanni.Lux@ccfe.ac.uk)
-
-Compatible with PROCESS version 368
-
-24/11/2021: Global dictionary variables moved within the functions
-            to avoid cyclic dependencies. This is because the dicts
-            generation script imports, and inspects, process.
 """
 
 import logging
@@ -25,8 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_neqns_itervars(wdir="."):
-    """
-    returns the number of equations and a list of variable
+    """Returns the number of equations and a list of variable
     names of all iteration variables
     """
     # Load dicts from dicts JSON file
@@ -49,8 +40,7 @@ def get_neqns_itervars(wdir="."):
 
 
 def update_ixc_bounds(wdir="."):
-    """
-    updates the lower and upper bounds in DICT_IXC_BOUNDS
+    """updates the lower and upper bounds in DICT_IXC_BOUNDS
     from IN.DAT
     """
     # Load dicts from dicts JSON file
@@ -72,18 +62,22 @@ def update_ixc_bounds(wdir="."):
 
 
 def get_variable_range(itervars, factor, wdir="."):
-    """
-    Returns the lower and upper bounds of the variable range
+    """Returns the lower and upper bounds of the variable range
     for each iteration variable.
-
-    itervars - string list of all iteration variable names
-    factor   - defines the variation range for non-f-values by
-               setting them to value * factor and value / factor
-               respectively while taking their process bounds
-               into account.
 
     For f-values the allowed range is equal to their process bounds.
 
+    Parameters
+    ----------
+    itervars :
+        string list of all iteration variable names
+    factor :
+        defines the variation range for non-f-values by
+        setting them to value * factor and value / factor
+        respectively while taking their process bounds
+        into account.
+    wdir :
+         (Default value = ".")
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
@@ -146,7 +140,8 @@ def get_variable_range(itervars, factor, wdir="."):
 
 def check_in_dat():
     """Tests IN.DAT during setup:
-    1)Are ixc bounds outside of allowed input ranges?"""
+    1)Are ixc bounds outside of allowed input ranges?
+    """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
 
@@ -215,11 +210,15 @@ def check_in_dat():
 
 
 def check_logfile(logfile="process.log"):
-    """
-    Checks the log file of the PROCESS output.
+    """Checks the log file of the PROCESS output.
     Stops, if an error occured that needs to be
     fixed before rerunning.
     XXX should be deprecated!! and replaced by check_input_error!
+
+    Parameters
+    ----------
+    logfile :
+         (Default value = "process.log")
     """
 
     with open(logfile) as outlogfile:
@@ -234,8 +233,7 @@ def check_logfile(logfile="process.log"):
 
 
 def check_input_error(wdir="."):
-    """
-    Checks, if an input error has occurred.
+    """Checks, if an input error has occurred.
     Stops as a consequence.
     Will also fail if the MFILE.DAT isn't found.
     """
@@ -265,8 +263,7 @@ def check_input_error(wdir="."):
 
 
 def process_stopped(wdir="."):
-    """
-    Checks the process Mfile whether it has
+    """Checks the process Mfile whether it has
     prematurely stopped.
     """
     # Check for MFILE
@@ -292,8 +289,7 @@ def process_stopped(wdir="."):
 
 
 def process_warnings(wdir="."):
-    """
-    Checks the process Mfile whether any
+    """Checks the process Mfile whether any
     warnings have occurred.
     """
 
@@ -322,8 +318,7 @@ def mfile_exists():
 
 
 def no_unfeasible_mfile(wdir="."):
-    """
-    returns the number of unfeasible points
+    """returns the number of unfeasible points
     in a scan in MFILE.DAT
     """
 
@@ -349,13 +344,19 @@ def no_unfeasible_mfile(wdir="."):
 
 
 def vary_iteration_variables(itervars, lbs, ubs, generator):
-    """
-    Routine to change the iteration variables in IN.DAT
+    """Routine to change the iteration variables in IN.DAT
     within given bounds.
-    itervars  - string list of all iteration variable names
-    lbs       - float list of lower bounds for variables
-    ubs       - float list of upper bounds for variables
-    generator - Generator numpy generator to create random numbers
+
+    Parameters
+    ----------
+    itervars :
+        string list of all iteration variable names
+    lbs :
+        float list of lower bounds for variables
+    ubs :
+        float list of upper bounds for variables
+    generator :
+        Generator numpy generator to create random numbers
     """
 
     in_dat = InDat()
@@ -376,8 +377,7 @@ def vary_iteration_variables(itervars, lbs, ubs, generator):
 
 
 def get_solution_from_mfile(neqns, nvars, wdir="."):
-    """
-    returns
+    """returns
     ifail - error_value of VMCON/PROCESS
     the objective functions
     the square root of the sum of the squares of the constraints

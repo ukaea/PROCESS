@@ -1,17 +1,21 @@
 def calculate_iter1996_nominal(
     dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float
 ) -> float:
-    """
-    Calculate the nominal ITER-1996 L-H transition power threshold.
+    """Calculate the nominal ITER-1996 L-H transition power threshold.
 
-    :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-    :type dnla20: float
-    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-    :type b_plasma_toroidal_on_axis: float
-    :param rmajor: Plasma major radius [m]
-    :type rmajor: float
-    :return: The ITER-1996 L-H transition power threshold [MW]
-    :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+
+    Returns
+    -------
+    float
+        The ITER-1996 L-H transition power threshold [MW]
 
     :notes:
 
@@ -29,17 +33,21 @@ def calculate_iter1996_nominal(
 def calculate_iter1996_upper(
     dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float
 ) -> float:
-    """
-    Calculate the upper variant ITER-1996 L-H transition power threshold.
+    """Calculate the upper variant ITER-1996 L-H transition power threshold.
 
-    :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-    :type dnla20: float
-    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-    :type b_plasma_toroidal_on_axis: float
-    :param rmajor: Plasma major radius [m]
-    :type rmajor: float
-    :return: The ITER-1996 L-H transition power threshold [MW]
-    :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+
+    Returns
+    -------
+    float
+        The ITER-1996 L-H transition power threshold [MW]
 
     :notes:
 
@@ -57,17 +65,21 @@ def calculate_iter1996_upper(
 def calculate_iter1996_lower(
     dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float
 ) -> float:
-    """
-    Calculate the lower variant ITER-1996 L-H transition power threshold.
+    """Calculate the lower variant ITER-1996 L-H transition power threshold.
 
-    :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-    :type dnla20: float
-    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-    :type b_plasma_toroidal_on_axis: float
-    :param rmajor: Plasma major radius [m]
-    :type rmajor: float
-    :return: The ITER-1996 L-H transition power threshold [MW]
-    :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+
+    Returns
+    -------
+    float
+        The ITER-1996 L-H transition power threshold [MW]
 
     :notes:
 
@@ -85,17 +97,21 @@ def calculate_iter1996_lower(
 def calculate_snipes1997_iter(
     dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float
 ) -> float:
-    """
-    Calculate the Snipes 1997 ITER L-H transition power threshold.
+    """Calculate the Snipes 1997 ITER L-H transition power threshold.
 
-    :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-    :type dnla20: float
-    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-    :type b_plasma_toroidal_on_axis: float
-    :param rmajor: Plasma major radius [m]
-    :type rmajor: float
-    :return: The Snipes 1997 L-H transition power threshold [MW]
-    :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+
+    Returns
+    -------
+    float
+        The Snipes 1997 L-H transition power threshold [MW]
 
     :notes:
 
@@ -112,19 +128,23 @@ def calculate_snipes1997_iter(
 def calculate_snipes1997_kappa(
     dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float, kappa: float
 ) -> float:
-    """
-    Calculate the Snipes 1997 ITER L-H transition power threshold with kappa factor.
+    """Calculate the Snipes 1997 ITER L-H transition power threshold with kappa factor.
 
-    :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-    :type dnla20: float
-    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-    :type b_plasma_toroidal_on_axis: float
-    :param rmajor: Plasma major radius [m]
-    :type rmajor: float
-    :param kappa: Plasma elongation
-    :type kappa: float
-    :return: The Snipes 1997 L-H transition power threshold with kappa factor [MW]
-    :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+    kappa : float
+        Plasma elongation
+
+    Returns
+    -------
+    float
+        The Snipes 1997 L-H transition power threshold with kappa factor [MW]
 
     :notes:
 
@@ -150,31 +170,34 @@ def calculate_martin08_nominal(
     a_plasma_surface: float,
     m_ions_total_amu: float,
 ) -> float:
-    """
-        Calculate the nominal Martin L-H transition power threshold.
+    """Calculate the nominal Martin L-H transition power threshold.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param a_plasma_surface: Plasma surface area [m^2]
-        :type a_plasma_surface: float
-        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-        :type m_ions_total_amu: float
-        :return: The Martin L-H transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    a_plasma_surface : float
+        Plasma surface area [m^2]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
 
-        :notes:
-            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    Returns
+    -------
+    float
+        The Martin L-H transition power threshold [MW]
+
+    :notes:
+        - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+        "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+        reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
 
-        :references:
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
-            Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-            doi: https://doi.org/10.1088/1742-6596/123/1/012033.
-    ‌
+    :references:
+        - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
     """
     return (
         0.0488
@@ -191,29 +214,32 @@ def calculate_martin08_upper(
     a_plasma_surface: float,
     m_ions_total_amu: float,
 ) -> float:
-    """
-        Calculate the upper Martin L-H transition power threshold.
+    """Calculate the upper Martin L-H transition power threshold.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param a_plasma_surface: Plasma surface area [m^2]
-        :type a_plasma_surface: float
-        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-        :type m_ions_total_amu: float
-        :return: The Martin L-H transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    a_plasma_surface : float
+        Plasma surface area [m^2]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
 
-        :notes:
-            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
-        :references:
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
-            Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-            doi: https://doi.org/10.1088/1742-6596/123/1/012033.
-    ‌
+    Returns
+    -------
+    float
+        The Martin L-H transition power threshold [MW]
+
+    :notes:
+        - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+        "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+        reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    :references:
+        - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
     """
     return (
         0.05166240355
@@ -230,30 +256,33 @@ def calculate_martin08_lower(
     a_plasma_surface: float,
     m_ions_total_amu: float,
 ) -> float:
-    """
-        Calculate the lower Martin L-H transition power threshold.
+    """Calculate the lower Martin L-H transition power threshold.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param a_plasma_surface: Plasma surface area [m^2]
-        :type a_plasma_surface: float
-        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-        :type m_ions_total_amu: float
-        :return: The Martin L-H transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    a_plasma_surface : float
+        Plasma surface area [m^2]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
 
-        :notes:
-            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    Returns
+    -------
+    float
+        The Martin L-H transition power threshold [MW]
 
-        :references:
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
-            Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-            doi: https://doi.org/10.1088/1742-6596/123/1/012033.
-    ‌
+    :notes:
+        - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+        "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+        reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
+    :references:
+        - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
     """
     return (
         0.04609619059
@@ -271,32 +300,35 @@ def calculate_snipes2000_nominal(
     rminor: float,
     m_ions_total_amu: float,
 ) -> float:
-    """
-        Calculate the nominal Snipes 2000 L-H transition power threshold.
+    """Calculate the nominal Snipes 2000 L-H transition power threshold.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param rmajor: Plasma major radius [m]
-        :type rmajor: float
-        :param rminor: Plasma minor radius [m]
-        :type rminor: float
-        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-        :type m_ions_total_amu: float
-        :return: The Snipes 2000 L-H transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+    rminor : float
+        Plasma minor radius [m]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
 
-        :notes:
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    Returns
+    -------
+    float
+        The Snipes 2000 L-H transition power threshold [MW]
 
-        :references:
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
-    ‌
+    :notes:
+        - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+        "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+        results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
+    :references:
+        - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+        doi: https://doi.org/10.1088/0741-3335/42/5a/336.
     """
     return (
         1.42
@@ -315,32 +347,36 @@ def calculate_snipes2000_upper(
     rminor: float,
     m_ions_total_amu: float,
 ) -> float:
-    """
-        Calculate the upper Snipes 2000 L-H transition power threshold.
+    """Calculate the upper Snipes 2000 L-H transition power threshold.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param rmajor: Plasma major radius [m]
-        :type rmajor: float
-        :param rminor: Plasma minor radius [m]
-        :type rminor: float
-        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-        :type m_ions_total_amu: float
-        :return: The Snipes 2000 L-H transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+    rminor : float
+        Plasma minor radius [m]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
 
-        :notes:
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    Returns
+    -------
+    float
+        The Snipes 2000 L-H transition power threshold [MW]
 
-        :references:
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
-    ‌
+    :notes:
+        - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+        "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+        results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
+    :references:
+        - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+        doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+
     """
     return (
         1.547
@@ -359,32 +395,36 @@ def calculate_snipes2000_lower(
     rminor: float,
     m_ions_total_amu: float,
 ) -> float:
-    """
-        Calculate the lower Snipes 2000 L-H transition power threshold.
+    """Calculate the lower Snipes 2000 L-H transition power threshold.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param rmajor: Plasma major radius [m]
-        :type rmajor: float
-        :param rminor: Plasma minor radius [m]
-        :type rminor: float
-        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-        :type m_ions_total_amu: float
-        :return: The Snipes 2000 L-H transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+    rminor : float
+        Plasma minor radius [m]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
 
-        :notes:
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    Returns
+    -------
+    float
+        The Snipes 2000 L-H transition power threshold [MW]
 
-        :references:
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
-    ‌
+    :notes:
+        - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+        "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+        results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
+    :references:
+        - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+        doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+
     """
     return (
         1.293
@@ -402,30 +442,34 @@ def calculate_snipes2000_closed_divertor_nominal(
     rmajor: float,
     m_ions_total_amu: float,
 ) -> float:
-    """
-        Calculate the nominal Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
+    """Calculate the nominal Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param rmajor: Plasma major radius [m]
-        :type rmajor: float
-        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-        :type m_ions_total_amu: float
-        :return: The Snipes 2000 L-H transition power threshold with CD factor [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
 
-        :notes:
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    Returns
+    -------
+    float
+        The Snipes 2000 L-H transition power threshold with CD factor [MW]
 
-        :references:
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
-    ‌
+    :notes:
+        - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+        "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+        results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
+    :references:
+        - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+        doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+
     """
     return (
         0.8
@@ -442,30 +486,34 @@ def calculate_snipes2000_closed_divertor_upper(
     rmajor: float,
     m_ions_total_amu: float,
 ) -> float:
-    """
-        Calculate the upper Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
+    """Calculate the upper Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param rmajor: Plasma major radius [m]
-        :type rmajor: float
-        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-        :type m_ions_total_amu: float
-        :return: The Snipes 2000 L-H transition power threshold with CD factor [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
 
-        :notes:
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    Returns
+    -------
+    float
+        The Snipes 2000 L-H transition power threshold with CD factor [MW]
 
-        :references:
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
-    ‌
+    :notes:
+        - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+        "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+        results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
+    :references:
+        - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+        doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+
     """
     return (
         0.867
@@ -482,30 +530,34 @@ def calculate_snipes2000_closed_divertor_lower(
     rmajor: float,
     m_ions_total_amu: float,
 ) -> float:
-    """
-        Calculate the lower Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
+    """Calculate the lower Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param rmajor: Plasma major radius [m]
-        :type rmajor: float
-        :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-        :type m_ions_total_amu: float
-        :return: The Snipes 2000 L-H transition power threshold with CD factor [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    rmajor : float
+        Plasma major radius [m]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
 
-        :notes:
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    Returns
+    -------
+    float
+        The Snipes 2000 L-H transition power threshold with CD factor [MW]
 
-        :references:
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
-    ‌
+    :notes:
+        - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
+        "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+        results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
+    :references:
+        - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
+        Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
+        doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+
     """
     return (
         0.733
@@ -517,67 +569,83 @@ def calculate_snipes2000_closed_divertor_lower(
 
 
 def calculate_hubbard2012_nominal(plasma_current: float, dnla20: float) -> float:
-    """
-        Calculate the nominal Hubbard 2012 L-I transition power threshold.
+    """Calculate the nominal Hubbard 2012 L-I transition power threshold.
 
-        :param plasma_current: Plasma current [A]
-        :type plasma_current: float
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :return: The Hubbard 2012 L-I transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    plasma_current : float
+        Plasma current [A]
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
 
-        :notes:
+    Returns
+    -------
+    float
+        The Hubbard 2012 L-I transition power threshold [MW]
 
-        :references:
-            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
-            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
-    ‌
+    :notes:
+
+    :references:
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+        Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+        doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+
     """
     return 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65
 
 
 def calculate_hubbard2012_upper(plasma_current: float, dnla20: float) -> float:
-    """
-        Calculate the upper Hubbard 2012 L-I transition power threshold.
+    """Calculate the upper Hubbard 2012 L-I transition power threshold.
 
-        :param plasma_current: Plasma current [A]
-        :type plasma_current: float
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :return: The Hubbard 2012 L-I transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    plasma_current : float
+        Plasma current [A]
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
 
-        :notes:
+    Returns
+    -------
+    float
+        The Hubbard 2012 L-I transition power threshold [MW]
 
-        :references:
-            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
-            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
-    ‌
+    :notes:
+
+    :references:
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+        Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+        doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+
     """
     return 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
 
 
 def calculate_hubbard2012_lower(plasma_current: float, dnla20: float) -> float:
-    """
-        Calculate the lower Hubbard 2012 L-I transition power threshold.
+    """Calculate the lower Hubbard 2012 L-I transition power threshold.
 
-        :param plasma_current: Plasma current [A]
-        :type plasma_current: float
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :return: The Hubbard 2012 L-I transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    plasma_current : float
+        Plasma current [A]
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    plasma_current:
 
-        :notes:
+    dnla20:
 
-        :references:
-            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
-            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
-    ‌
+
+    Returns
+    -------
+    float
+        The Hubbard 2012 L-I transition power threshold [MW]
+
+    :notes:
+
+    :references:
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+        Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+        doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+
     """
     return 2.11 * (plasma_current / 1e6) ** 0.7 * dnla20**0.47
 
@@ -585,26 +653,30 @@ def calculate_hubbard2012_lower(plasma_current: float, dnla20: float) -> float:
 def calculate_hubbard2017(
     dnla20: float, a_plasma_surface: float, b_plasma_toroidal_on_axis: float
 ) -> float:
-    """
-        Calculate the Hubbard 2017 L-I transition power threshold.
+    """Calculate the Hubbard 2017 L-I transition power threshold.
 
-        :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-        :type dnla20: float
-        :param a_plasma_surface: Plasma surface area [m^2]
-        :type a_plasma_surface: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-        :type b_plasma_toroidal_on_axis: float
-        :return: The Hubbard 2017 L-I transition power threshold [MW]
-        :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    a_plasma_surface : float
+        Plasma surface area [m^2]
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
 
-        :notes:
-            - The scaling is given in the caption of Figure 6 in the reference.
+    Returns
+    -------
+    float
+        The Hubbard 2017 L-I transition power threshold [MW]
 
-        :references:
-            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
-            Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017,
-            doi: https://doi.org/10.1088/1741-4326/aa8570.
-    ‌
+    :notes:
+        - The scaling is given in the caption of Figure 6 in the reference.
+
+    :references:
+        - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
+        Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017,
+        doi: https://doi.org/10.1088/1741-4326/aa8570.
+
     """
     return 0.162 * dnla20 * a_plasma_surface * b_plasma_toroidal_on_axis**0.26
 
@@ -616,39 +688,43 @@ def calculate_martin08_aspect_nominal(
     m_ions_total_amu: float,
     aspect: float,
 ) -> float:
-    """
-            Calculate the nominal Martin L-H transition power threshold with aspect ratio correction from T Takizuka.
+    """Calculate the nominal Martin L-H transition power threshold with aspect ratio correction from T Takizuka.
 
-            :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-            :type dnla20: float
-            :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-            :type b_plasma_toroidal_on_axis: float
-            :param a_plasma_surface: Plasma surface area [m^2]
-            :type a_plasma_surface: float
-            :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-            :type m_ions_total_amu: float
-            :param aspect: Plasma aspect ratio
-            :type aspect: float
-            :return: The Martin L-H transition power threshold [MW]
-            :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    a_plasma_surface : float
+        Plasma surface area [m^2]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
+    aspect : float
+        Plasma aspect ratio
 
-            :notes:
-                - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
-                if not the usual Martin 2008 scaling will be returned.
+    Returns
+    -------
+    float
+        The Martin L-H transition power threshold [MW]
 
-                - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-                "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-                reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    :notes:
+        - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
+        if not the usual Martin 2008 scaling will be returned.
 
-            :references:
-                - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
-                Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-                doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+        - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+        "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+        reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-                - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,”
-                Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004,
-                doi: https://doi.org/10.1088/0741-3335/46/5a/024.
-    ‌
+    :references:
+        - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+
+        - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,”
+        Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004,
+        doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+
     """
 
     if aspect <= 2.7:
@@ -673,39 +749,43 @@ def calculate_martin08_aspect_upper(
     m_ions_total_amu: float,
     aspect: float,
 ) -> float:
-    """
-            Calculate the upper Martin L-H transition power threshold with aspect ratio correction from T Takizuka.
+    """Calculate the upper Martin L-H transition power threshold with aspect ratio correction from T Takizuka.
 
-            :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-            :type dnla20: float
-            :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-            :type b_plasma_toroidal_on_axis: float
-            :param a_plasma_surface: Plasma surface area [m^2]
-            :type a_plasma_surface: float
-            :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-            :type m_ions_total_amu: float
-            :param aspect: Plasma aspect ratio
-            :type aspect: float
-            :return: The Martin L-H transition power threshold [MW]
-            :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    a_plasma_surface : float
+        Plasma surface area [m^2]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
+    aspect : float
+        Plasma aspect ratio
 
-            :notes:
-                - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
-                if not the usual Martin 2008 scaling will be returned.
+    Returns
+    -------
+    float
+        The Martin L-H transition power threshold [MW]
 
-                - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-                "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-                reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    :notes:
+        - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
+        if not the usual Martin 2008 scaling will be returned.
 
-            :references:
-                - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
-                Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-                doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+        - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+        "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+        reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-                - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,”
-                Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004,
-                doi: https://doi.org/10.1088/0741-3335/46/5a/024.
-    ‌
+    :references:
+        - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+
+        - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,”
+        Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004,
+        doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+
     """
 
     if aspect <= 2.7:
@@ -730,39 +810,43 @@ def calculate_martin08_aspect_lower(
     m_ions_total_amu: float,
     aspect: float,
 ) -> float:
-    """
-            Calculate the lower Martin L-H transition power threshold with aspect ratio correction from T Takizuka.
+    """Calculate the lower Martin L-H transition power threshold with aspect ratio correction from T Takizuka.
 
-            :param dnla20: Line averaged electron density in units of 10^20 m^-3.
-            :type dnla20: float
-            :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
-            :type b_plasma_toroidal_on_axis: float
-            :param a_plasma_surface: Plasma surface area [m^2]
-            :type a_plasma_surface: float
-            :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
-            :type m_ions_total_amu: float
-            :param aspect: Plasma aspect ratio
-            :type aspect: float
-            :return: The Martin L-H transition power threshold [MW]
-            :rtype: float
+    Parameters
+    ----------
+    dnla20 : float
+        Line averaged electron density in units of 10^20 m^-3.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field [T]
+    a_plasma_surface : float
+        Plasma surface area [m^2]
+    m_ions_total_amu : float
+        Total ion mass in atomic mass units [amu]
+    aspect : float
+        Plasma aspect ratio
 
-            :notes:
-                - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
-                if not the usual Martin 2008 scaling will be returned.
+    Returns
+    -------
+    float
+        The Martin L-H transition power threshold [MW]
 
-                - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-                "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-                reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+    :notes:
+        - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
+        if not the usual Martin 2008 scaling will be returned.
 
-            :references:
-                - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
-                Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
-                doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+        - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
+        "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
+        reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-                - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,”
-                Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004,
-                doi: https://doi.org/10.1088/0741-3335/46/5a/024.
-    ‌
+    :references:
+        - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+        Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
+        doi: https://doi.org/10.1088/1742-6596/123/1/012033.
+
+        - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,”
+        Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004,
+        doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+
     """
 
     if aspect <= 2.7:

@@ -166,7 +166,6 @@ def test_elliptical_vessel_volumes(vacuum_vessel, elliptical_vessel_volumes, exp
     :param elliptical_vessel_volumes: input parameters for the function
     :type elliptical_vessel_volumes: EllipticalVesselVolumes
 
-
     """
 
     vol_vv_inboard, vol_vv_outboard, vol_vv = (
@@ -225,7 +224,6 @@ def test_dshaped_vessel_volumes(vacuum_vessel, dshaped_vessel_volumes, expected)
 
     :param dshaped_vessel_volumes: input parameters for the function
     :type dshaped_vessel_volumes: DShapedVesselVolumes
-
     """
 
     vol_vv_inboard, vol_vv_outboard, vol_vv = (

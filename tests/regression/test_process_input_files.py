@@ -44,7 +44,7 @@ class MFileVariableDifference:
 
 
 class RegressionTestScenario:
-    def __init__(self, input_file: Path) -> None:
+    def __init__(self, input_file: Path):
         """
         Represents an input scenario (input file) to PROCESS that is to be regression tested.
 

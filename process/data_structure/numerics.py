@@ -492,7 +492,6 @@ def init_numerics():
         vlam, \
         force_vmcon_inequality_satisfication, \
         force_vmcon_inequality_tolerance
-
     """Initialise module variables"""
     ioptimz = 1
     minmax = 7

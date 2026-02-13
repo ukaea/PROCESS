@@ -109,7 +109,6 @@ def test_embedded_stress_intensity_factor(
 
     :param c: crack length (w - direction).
     :type c: float
-
     """
     k = cs_fatigue_python.embedded_stress_intensity_factor(hoop_stress, t, w, a, c, phi)
 
@@ -149,7 +148,6 @@ def test_surface_stress_intensity_factor(
 
     :param c: crack length (w - direction).
     :type c: float
-
     """
     k = cs_fatigue_python.surface_stress_intensity_factor(hoop_stress, t, w, a, c, phi)
 

@@ -12,26 +12,11 @@ logger = logging.getLogger(__name__)
 
 
 class PlasmaProfile:
-    """
-    Plasma profile class. Initiates the electron density and electron temperature profiles and
+    """Plasma profile class. Initiates the electron density and electron temperature profiles and
     handles the required physics variables.
-
-    Attributes:
-        profile_size (int): The size of the plasma profile.
-        outfile (str): The output file path.
-        neprofile (NeProfile): An instance of the NeProfile class.
-        teprofile (TeProfile): An instance of the TeProfile class.
-
-    Methods:
-        run(): Subroutine to execute PlasmaProfile functions.
-        parameterise_plasma(): Initializes the density and temperature profile averages and peak values.
-        parabolic_paramterisation(): Parameterizes plasma profiles in the case where i_plasma_pedestal=0.
-        pedestal_parameterisation(): Instance temperature and density profiles then integrate them, setting physics variables temp_plasma_electron_density_weighted_kev and temp_plasma_ion_density_weighted_kev.
-        calculate_profile_factors(): Calculate and set the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
-        calculate_parabolic_profile_factors(): The gradient information for i_plasma_pedestal = 0.
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         """
         Initialize the PlasmaProfile class.
 
@@ -48,34 +33,20 @@ class PlasmaProfile:
         self.neprofile = profiles.NeProfile(self.profile_size)
         self.teprofile = profiles.TeProfile(self.profile_size)
 
-    def run(self) -> None:
-        """
-        Subroutine to execute PlasmaProfile functions.
+    def run(self):
+        """Subroutine to execute PlasmaProfile functions.
 
         This method calls the parameterise_plasma() method to initialize the plasma profiles.
-
-        Returns:
-            None
         """
         self.parameterise_plasma()
 
-    def parameterise_plasma(self) -> None:
-        """
-        This routine initializes the density and temperature
+    def parameterise_plasma(self):
+        """This routine initializes the density and temperature
         profile averages and peak values, given the main
         parameters describing these profiles.
 
-        Args:
-            None
-
-        Returns:
-            None
-
-        Authors:
-            P J Knight, CCFE, Culham Science Centre
-
         References:
-            T&M/PKNIGHT/LOGBOOK24, pp.4-7
+        T&M/PKNIGHT/LOGBOOK24, pp.4-7
         """
 
         #  Volume-averaged ion temperature
@@ -97,18 +68,11 @@ class PlasmaProfile:
             self.pedestal_parameterisation()
             self.calculate_profile_factors()
 
-    def parabolic_paramterisation(self) -> None:
-        """
-        Parameterise plasma profiles in the case where i_plasma_pedestal == 0.
+    def parabolic_paramterisation(self):
+        """Parameterise plasma profiles in the case where i_plasma_pedestal == 0.
 
         This routine calculates the parameterization of plasma profiles in the case where i_plasma_pedestal=0.
         It sets the necessary physics variables for the parabolic profile case.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
         # Reset pedestal values to agree with original parabolic profiles
         if (
@@ -190,17 +154,10 @@ class PlasmaProfile:
             * (1.0 + physics_variables.alphan)
         )
 
-    def pedestal_parameterisation(self) -> None:
-        """
-        Instance temperature and density profiles then integrate them, setting physics variables temp_plasma_electron_density_weighted_kev and temp_plasma_ion_density_weighted_kev.
+    def pedestal_parameterisation(self):
+        """Instance temperature and density profiles then integrate them, setting physics variables temp_plasma_electron_density_weighted_kev and temp_plasma_ion_density_weighted_kev.
 
         This routine instances temperature and density profiles and integrates them to calculate the values of the physics variables `temp_plasma_electron_density_weighted_kev` and `temp_plasma_ion_density_weighted_kev`.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
         #  Run TeProfile and NeProfile class methods:
         #  Re-caluclate core and profile values
@@ -256,18 +213,11 @@ class PlasmaProfile:
             / physics_variables.nd_plasma_electrons_vol_avg,
         )  # Preventing division by zero later
 
-    def calculate_profile_factors(self) -> None:
-        """
-        Calculate and set the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
+    def calculate_profile_factors(self):
+        """Calculate and set the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
 
         This method calculates the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
         It sets the value of the physics variable `pres_plasma_thermal_on_axis`.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
 
         #  Central pressure (Pa), from ideal gas law : p = nkT
@@ -338,21 +288,14 @@ class PlasmaProfile:
         )
 
     @staticmethod
-    def calculate_parabolic_profile_factors() -> None:
-        """
-        Calculate the gradient information for i_plasma_pedestal = 0.
+    def calculate_parabolic_profile_factors():
+        """Calculate the gradient information for i_plasma_pedestal = 0.
 
         This function calculates the gradient information for the plasma profiles at the pedestal region
         when the value of i_plasma_pedestal is 0. It is used by the stellarator routines.
 
         The function uses analytical parametric formulas to calculate the gradient information.
         The maximum normalized radius (rho_max) is obtained by equating the second derivative to zero.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
         if physics_variables.i_plasma_pedestal == 0:
             if physics_variables.alphat > 1.0:
