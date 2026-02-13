@@ -1159,39 +1159,42 @@ class PFCoil:
         rpf2: float,
         zref: np.ndarray,
     ) -> tuple[np.ndarray, np.ndarray, int]:
-        """
-        Calculates and places poloidal field (PF) coils above the toroidal field (TF) coils for a given group.
+        """Calculates and places poloidal field (PF) coils above the toroidal field (TF) coils for a given group.
 
-        :param n_pf_coils_in_group: Array containing the number of PF coils in each group.
-        :type n_pf_coils_in_group: np.ndarray
-        :param n_pf_group: Index of the PF coil group to process.
-        :type n_pf_group: int
-        :param rmajor: Major radius of the device.
-        :type rmajor: float
-        :param triang: Triangularity parameter for coil placement.
-        :type triang: float
-        :param rminor: Minor radius of the device.
-        :type rminor: float
-        :param itart: Flag indicating ST configuration.
-        :type itart: int
-        :param itartpf: Flag indicating PF coil configuration for ST.
-        :type itartpf: int
-        :param z_tf_inside_half: Half-height of the TF coil inside region.
-        :type z_tf_inside_half: float
-        :param dz_tf_upper_lower_midplane: Height difference parameter for PF coil placement.
-        :type dz_tf_upper_lower_midplane: float
-        :param z_tf_top: Top z-coordinate of the TF coil.
-        :type z_tf_top: float
-        :param top_bottom: Indicator for coil placement above (+1) or below (-1) the midplane.
-        :type top_bottom: int
-        :param rpf2: Radial offset parameter for PF coil placement.
-        :type rpf2: float
-        :param zref: Array of reference z-coordinates for PF coil placement.
-        :type zref: np.ndarray
+        Parameters
+        ----------
+        n_pf_coils_in_group : np.ndarray
+            Array containing the number of PF coils in each group.
+        n_pf_group : int
+            Index of the PF coil group to process.
+        rmajor : float
+            Major radius of the device.
+        triang : float
+            Triangularity parameter for coil placement.
+        rminor : float
+            Minor radius of the device.
+        itart : int
+            Flag indicating ST configuration.
+        itartpf : int
+            Flag indicating PF coil configuration for ST.
+        z_tf_inside_half : float
+            Half-height of the TF coil inside region.
+        dz_tf_upper_lower_midplane : float
+            Height difference parameter for PF coil placement.
+        z_tf_top : float
+            Top z-coordinate of the TF coil.
+        top_bottom : int
+            Indicator for coil placement above (+1) or below (-1) the midplane.
+        rpf2 : float
+            Radial offset parameter for PF coil placement.
+        zref : np.ndarray
+            Array of reference z-coordinates for PF coil placement.
 
-        :returns: Tuple containing arrays of radial and vertical positions of PF coil middles for the specified group,
-                  and the updated top_bottom indicator.
-        :rtype: tuple[np.ndarray, np.ndarray, int]
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray, int]
+            Tuple containing arrays of radial and vertical positions of PF coil middles for the specified group,
+            and the updated top_bottom indicator.
         """
         # Initialise as empty arrays; will be resized in the loop
         r_pf_coil_middle_group_array = np.zeros((
@@ -1237,26 +1240,29 @@ class PFCoil:
         i_r_pf_outside_tf_placement: int,
         r_pf_outside_tf_midplane: float,
     ) -> tuple[np.ndarray, np.ndarray]:
-        """
-        Calculates the radial and vertical positions of poloidal field (PF) coils placed outside the toroidal field (TF) coil.
+        """Calculates the radial and vertical positions of poloidal field (PF) coils placed outside the toroidal field (TF) coil.
 
-        :param n_pf_coils_in_group: Array containing the number of PF coils in each group.
-        :type n_pf_coils_in_group: np.ndarray
-        :param n_pf_group: Index of the PF coil group to process.
-        :type n_pf_group: int
-        :param rminor: Minor radius of the device.
-        :type rminor: float
-        :param zref: Reference vertical positions for each PF coil group.
-        :type zref: np.ndarray
-        :param i_tf_shape: Integer flag indicating TF coil shape (2 for picture frame, others for D-shape).
-        :type i_tf_shape: int
-        :param i_r_pf_outside_tf_placement: Placement switch for PF coil radius (1 for constant/stacked, 0 for following TF curve).
-        :type i_r_pf_outside_tf_placement: int
-        :param r_pf_outside_tf_midplane: Radial position of PF coil at the midplane.
-        :type r_pf_outside_tf_midplane: float
+        Parameters
+        ----------
+        n_pf_coils_in_group : np.ndarray
+            Array containing the number of PF coils in each group.
+        n_pf_group : int
+            Index of the PF coil group to process.
+        rminor : float
+            Minor radius of the device.
+        zref : np.ndarray
+            Reference vertical positions for each PF coil group.
+        i_tf_shape : int
+            Integer flag indicating TF coil shape (2 for picture frame, others for D-shape).
+        i_r_pf_outside_tf_placement : int
+            Placement switch for PF coil radius (1 for constant/stacked, 0 for following TF curve).
+        r_pf_outside_tf_midplane : float
+            Radial position of PF coil at the midplane.
 
-        :returns: Tuple containing arrays of radial and vertical positions of PF coil centers for the specified group.
-        :rtype: tuple[np.ndarray, np.ndarray]
+        Returns
+        -------
+        tuple[np.ndarray, np.ndarray]
+            Tuple containing arrays of radial and vertical positions of PF coil centers for the specified group.
         """
 
         # Initialise as empty arrays; will be resized in the loop
@@ -1307,24 +1313,27 @@ class PFCoil:
         zref: np.ndarray,
         rref: np.ndarray,
     ) -> tuple[np.ndarray, np.ndarray]:
-        """
-        Calculates the radial and vertical positions of poloidal field (PF) coils placed in a general location.
+        """Calculates the radial and vertical positions of poloidal field (PF) coils placed in a general location.
 
-        :param n_pf_coils_in_group: Array containing the number of PF coils in each group.
-        :type n_pf_coils_in_group: numpy.ndarray
-        :param n_pf_group: Index of the PF coil group to process.
-        :type n_pf_group: int
-        :param rminor: Minor radius of the device.
-        :type rminor: float
-        :param rmajor: Major radius of the device.
-        :type rmajor: float
-        :param zref: Reference vertical positions for each PF coil group.
-        :type zref: numpy.ndarray
-        :param rref: Reference radial positions for each PF coil group.
-        :type rref: numpy.ndarray
+        Parameters
+        ----------
+        n_pf_coils_in_group : numpy.ndarray
+            Array containing the number of PF coils in each group.
+        n_pf_group : int
+            Index of the PF coil group to process.
+        rminor : float
+            Minor radius of the device.
+        rmajor : float
+            Major radius of the device.
+        zref : numpy.ndarray
+            Reference vertical positions for each PF coil group.
+        rref : numpy.ndarray
+            Reference radial positions for each PF coil group.
 
-        :returns: Tuple containing arrays of radial and vertical positions of PF coil centers for the specified group.
-        :rtype: tuple[numpy.ndarray, numpy.ndarray]
+        Returns
+        -------
+        tuple[numpy.ndarray, numpy.ndarray]
+            Tuple containing arrays of radial and vertical positions of PF coil centers for the specified group.
         """
         r_pf_coil_middle_group_array: np.ndarray = np.zeros((
             pfcoil_variables.n_pf_coil_groups,
@@ -1373,71 +1382,60 @@ class PFCoil:
     ):
         """Calculates field coil currents.
 
-        author: P J Knight, CCFE, Culham Science Centre
-        author: D Strickler, ORNL
-        author: J Galambos, ORNL
-        author: P C Shipe, ORNL
+
+
+
+
         This routine calculates the currents required in a group
         of ring coils to produce a fixed field at prescribed
         locations. Additional ring coils with fixed currents are
         also allowed.
 
-        :param npts: number of data points at which field is to be fixed; should
-        be <= nptsmx
-        :type npts: int
-        :param rpts: coords of data points (m)
-        :type rpts: np.ndarray
-        :param zpts: coords of data points (m)
-        :type zpts: np.ndarray
-        :param brin: field components at data points (T)
-        :type brin: np.ndarray
-        :param bzin: field components at data points (T)
-        :type bzin: np.ndarray
-        :param nfix: number of coils with fixed currents, <= nfixmx
-        :type nfix: int
-        :param rfix: coordinates of coils with fixed currents (m)
-        :type rfix: np.ndarray
-        :param zfix: coordinates of coils with fixed currents (m)
-        :type zfix: np.ndarray
-        :param cfix: Fixed currents (A)
-        :type cfix: np.ndarray
-        :param n_pf_coil_groups: number of coil groups, where all coils in a group have the
-        same current, <= n_pf_groups_max
-        :type n_pf_coil_groups: int
-        :param n_pf_coils_in_group: number of coils in each group, each value <= n_pf_coils_in_group_max
-        :type n_pf_coils_in_group: np.ndarray
-        :param r_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
-        :type r_pf_coil_middle_group_array: np.ndarray
-        :param z_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
-        :type z_pf_coil_middle_group_array: np.ndarray
-        :param alfa: smoothing parameter (0 = no smoothing, 1.0D-9 = large
-        smoothing)
-        :type alfa: float
-        :param bfix: work array
-        :type bfix: np.ndarray
-        :param gmat: work array
-        :type gmat: np.ndarray
-        :param bvec: work array
-        :type bvec: np.ndarray
-        :param rc: work array
-        :type rc: np.ndarray
-        :param zc: work array
-        :type zc: np.ndarray
-        :param cc: work array
-        :type cc: np.ndarray
-        :param xc: work array
-        :type xc: np.ndarray
-        :param umat: work array
-        :type umat: np.ndarray
-        :param vmat: work array
-        :type vmat: np.ndarray
-        :param sigma: work array
-        :type sigma: np.ndarray
-        :param work2: work array
-        :type work2: np.ndarray
-        :return: sum of squares of elements of residual vector, solution vector
-        of coil currents in each group (A)
-        :rtype: tuple[float, np.ndarray]
+        Parameters
+        ----------
+        npts : int
+            number of data points at which field is to be fixed; should
+            be <= nptsmx
+        rpts : np.ndarray
+            coords of data points (m)
+        zpts : np.ndarray
+            coords of data points (m)
+        brin : np.ndarray
+            field components at data points (T)
+        bzin : np.ndarray
+            field components at data points (T)
+        nfix : int
+            number of coils with fixed currents, <= nfixmx
+        rfix : np.ndarray
+            coordinates of coils with fixed currents (m)
+        zfix : np.ndarray
+            coordinates of coils with fixed currents (m)
+        cfix : np.ndarray
+            Fixed currents (A)
+        n_pf_coil_groups : int
+            number of coil groups, where all coils in a group have the
+            same current, <= n_pf_groups_max
+        n_pf_coils_in_group : np.ndarray
+            number of coils in each group, each value <= n_pf_coils_in_group_max
+        r_pf_coil_middle_group_array : np.ndarray
+            coords R(i,j), Z(i,j) of coil j in group i (m)
+        z_pf_coil_middle_group_array : np.ndarray
+            coords R(i,j), Z(i,j) of coil j in group i (m)
+        alfa : float
+            smoothing parameter (0 = no smoothing, 1.0D-9 = large
+            smoothing)
+        bfix : np.ndarray
+            work array
+        gmat : np.ndarray
+            work array
+        bvec : np.ndarray
+            work array
+
+        Returns
+        -------
+        tuple[float, np.ndarray]
+            sum of squares of elements of residual vector, solution vector
+            of coil currents in each group (A)
         """
         lrow1 = bfix.shape[0]
         lcol1 = gmat.shape[1]
@@ -1535,26 +1533,26 @@ class PFCoil:
 
         This routine solves the matrix equation for calculating the
         currents in a group of ring coils.
-        author: P J Knight, CCFE, Culham Science Centre
-        author: D Strickler, ORNL
-        author: J Galambos, ORNL
-        author: P C Shipe, ORNL
 
-        :param n_pf_groups_max: maximum number of PF coil groups
-        :type n_pf_groups_max: int
-        :param n_pf_coil_groups: number of coil groups, where all coils in a group have the
-        same current, <= n_pf_groups_max
-        :type n_pf_coil_groups: int
-        :param nrws: actual number of rows to use
-        :type nrws: int
-        :param gmat: work array
-        :type gmat: numpy.ndarray
-        :param bvec: work array
-        :type bvec: numpy.ndarray
-        :return: solution vector of coil currents
-        in each group (A) (ccls), rest are work arrays
-        :rtype: tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray,
-        numpy.ndarray, numpy.ndarray]
+        Parameters
+        ----------
+        n_pf_groups_max : int
+            maximum number of PF coil groups
+        n_pf_coil_groups : int
+            number of coil groups, where all coils in a group have the
+            same current, <= n_pf_groups_max
+        nrws : int
+            actual number of rows to use
+        gmat : numpy.ndarray
+            work array
+        bvec : numpy.ndarray
+            work array
+
+        Returns
+        -------
+        :
+            solution vector of coil currents
+            in each group (A) (ccls), rest are work arrays
         """
         ccls = np.zeros(n_pf_groups_max)
         work2 = np.zeros(n_pf_groups_max)
@@ -1580,7 +1578,7 @@ class PFCoil:
     def vsec(self):
         """Calculation of volt-second capability of PF system.
 
-        author: P J Knight, CCFE, Culham Science Centre
+
         This routine calculates the volt-second capability of the PF
         coil system.
         """
@@ -1688,12 +1686,14 @@ class PFCoil:
     def induct(self, output):
         """Calculates PF coil set mutual inductance matrix.
 
-        author: P J Knight, CCFE, Culham Science Centre
+
         This routine calculates the mutual inductances between all the
         PF coils.
 
-        :param output: switch for writing to output file
-        :type output: bool
+        Parameters
+        ----------
+        output : bool
+            switch for writing to output file
         """
         nohmax = 200
         nplas = 1
@@ -1996,7 +1996,7 @@ class PFCoil:
     def outpf(self):
         """Routine to write output from PF coil module to file.
 
-        author: P J Knight, CCFE, Culham Science Centre
+
         This routine writes the PF coil information to the output file.
         """
         op.oheadr(self.outfile, "Central Solenoid and PF Coils")
@@ -2723,8 +2723,6 @@ class PFCoil:
     def outvolt(self):
         """Writes volt-second information to output file.
 
-        author: P J Knight, CCFE, Culham Science Centre
-        author: R Kemp, CCFE, Culham Science Centre
         This routine writes the PF coil volt-second data to the
         output file.
         """
@@ -2884,20 +2882,26 @@ class PFCoil:
     def selfinductance(self, a, b, c, n):
         """Calculates the selfinductance using Bunet's formula.
 
-        author: M. Kovari, CCFE
+
         This routine calculates the self inductance in Henries
         Radiotron Designers Handbook (4th Edition) chapter 10
 
-        :param a: mean radius of coil (m)
-        :type a: float
-        :param b: length of coil (m) (given as l in the reference)
-        :type b: float
-        :param c: radial winding thickness (m)
-        :type c: float
-        :param N: number of turns
-        :type N: float
-        :return selfinductance: the self inductance in Henries
-        :rtype: float
+        Parameters
+        ----------
+        a : float
+            mean radius of coil (m)
+        b : float
+            length of coil (m) (given as l in the reference)
+        c : float
+            radial winding thickness (m)
+        n : float
+            number of turns
+
+
+        Returns
+        -------
+        :
+            the self inductance in Henries
         """
         return (
             (1.0e-6 / 0.0254e0)
@@ -2909,7 +2913,7 @@ class PFCoil:
     def waveform(self):
         """Sets up the PF coil waveforms.
 
-        author: P J Knight, CCFE, Culham Science Centre
+
         This routine sets up the PF coil current waveforms.
         f_c_pf_cs_peak_time_array[i,j] is the current in coil i, at time j,
         normalized to the peak current in that coil at any time.
@@ -2980,7 +2984,7 @@ class PFCoil:
 class CSCoil:
     """Calculate central solenoid coil system parameters."""
 
-    def __init__(self, cs_fatigue) -> None:
+    def __init__(self, cs_fatigue):
         """Initialise Fortran module variables."""
         self.outfile = constants.NOUT  # output file unit``
         self.mfile = constants.MFILE  # mfile file unit
@@ -2993,18 +2997,23 @@ class CSCoil:
         dr_cs: float,
         dr_bore: float,
     ) -> tuple[float, float, float, float, float, float, float, float, float]:
-        """
-        Calculate the geometry of the Central Solenoid (CS) coil.
+        """Calculate the geometry of the Central Solenoid (CS) coil.
 
-        :param z_tf_inside_half: Half-height of the TF bore (m)
-        :type z_tf_inside_half: float
-        :param f_z_cs_tf_internal: Fractional height of CS relative to TF bore
-        :type f_z_cs_tf_internal: float
-        :param dr_cs: Thickness of the CS coil (m)
-        :type dr_cs: float
-        :param dr_bore: Radius of the TF bore (m)
-        :type dr_bore: float
-        :return: Tuple containing:
+        Parameters
+        ----------
+        z_tf_inside_half : float
+            Half-height of the TF bore (m)
+        f_z_cs_tf_internal : float
+            Fractional height of CS relative to TF bore
+        dr_cs : float
+            Thickness of the CS coil (m)
+        dr_bore : float
+            Radius of the TF bore (m)
+
+        Returns
+        -------
+        tuple[float, float, float, float, float, float, float, float]
+            Tuple containing:
             - z_cs_coil_upper: Upper Z coordinate of CS coil (m)
             - z_cs_coil_lower: Lower Z coordinate of CS coil (m)
             - r_cs_coil_middle: Radial coordinate of CS coil centre (m)
@@ -3013,7 +3022,6 @@ class CSCoil:
             - r_cs_coil_inner: Inner radius of CS coil (m)
             - a_cs_poloidal: Total poloidal cross-sectional area of CS coil (m²)
             - dz_cs_full: Full height of CS coil (m)
-        :rtype: tuple[float, float, float, float, float, float, float, float]
         """
 
         # Central Solenoid mean radius
@@ -3064,24 +3072,28 @@ class CSCoil:
         radius_cs_turn_corners: float,
         f_a_cs_turn_steel: float,
     ) -> tuple[float, float, float, float, float]:
-        """
-        Calculate the geometry of a CS (Central Solenoid) turn using the EU DEMO stadium-shaped model.
+        """Calculate the geometry of a CS (Central Solenoid) turn using the EU DEMO stadium-shaped model.
 
-        :param a_cs_turn: Poloidal area of a CS turn (m^2)
-        :type a_cs_turn: float
-        :param f_dr_dz_cs_turn: Length-to-height ratio of the CS turn
-        :type f_dr_dz_cs_turn: float
-        :param radius_cs_turn_corners: Radius of curved outer corner (m)
-        :type radius_cs_turn_corners: float
-        :param f_a_cs_turn_steel: Fraction of steel area in the CS turn
-        :type f_a_cs_turn_steel: float
-        :return: Tuple containing:
+        Parameters
+         ----------
+         a_cs_turn : float
+             Poloidal area of a CS turn (m^2)
+         f_dr_dz_cs_turn : float
+             Length-to-height ratio of the CS turn
+         radius_cs_turn_corners : float
+             Radius of curved outer corner (m)
+         f_a_cs_turn_steel : float
+             Fraction of steel area in the CS turn
+
+        Returns
+        -------
+        :
+            Tuple containing:
             - dz_cs_turn: Depth/width of CS turn conduit (m)
             - dr_cs_turn: Length of CS turn conduit (m)
             - radius_cs_turn_cable_space: Radius of CS turn cable space (m)
             - dr_cs_turn_conduit: Radial thickness of steel conduit (m)
             - dz_cs_turn_conduit: Vertical thickness of steel conduit (m)
-        :rtype: tuple[float, float, float, float, float]
 
         :notes:
             - The calculation assumes a stadium-shaped cross-section for the CS turn.
@@ -3091,7 +3103,6 @@ class CSCoil:
             - R. Wesche et al., “Central solenoid winding pack design for DEMO,”
             Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017,
             doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
-
         """
         # Vertical height of CS turn conduit/turn
         dz_cs_turn = (a_cs_turn / f_dr_dz_cs_turn) ** 0.5
@@ -3139,31 +3150,34 @@ class CSCoil:
         f_j_cs_start_pulse_end_flat_top: float,
         nfxf: int,
     ):
-        """
-        Places central solenoid (CS) filaments and assigns their positions and currents.
+        """Places central solenoid (CS) filaments and assigns their positions and currents.
 
         This function calculates the radial (R) and vertical (Z) positions, as well as the current values,
         for a set of CS filaments based on the provided parameters. Each filament is placed symmetrically
         about the midplane, and currents are assigned according to the flat-top end current and scaling factors.
 
-        :param n_cs_current_filaments: Number of CS current filaments to place (per side).
-        :type n_cs_current_filaments: int
-        :param r_cs_middle: Radial coordinate of the middle of the CS.
-        :type r_cs_middle: float
-        :param z_cs_inside_half: Half-height of the CS in the vertical (Z) direction.
-        :type z_cs_inside_half: float
-        :param c_cs_flat_top_end: Flat-top end current for the CS.
-        :type c_cs_flat_top_end: float
-        :param f_j_cs_start_pulse_end_flat_top: Scaling factor for the CS current at the start of the pulse and flat-top end.
-        :type f_j_cs_start_pulse_end_flat_top: float
-        :param nfxf: Number of flux loops or scaling factor for current distribution.
-        :type nfxf: int
+        Parameters
+        ----------
+        n_cs_current_filaments : int
+            Number of CS current filaments to place (per side).
+        r_cs_middle : float
+            Radial coordinate of the middle of the CS.
+        z_cs_inside_half : float
+            Half-height of the CS in the vertical (Z) direction.
+        c_cs_flat_top_end : float
+            Flat-top end current for the CS.
+        f_j_cs_start_pulse_end_flat_top : float
+            Scaling factor for the CS current at the start of the pulse and flat-top end.
+        nfxf : int
+            Number of flux loops or scaling factor for current distribution.
 
-        :returns: Tuple containing:
+        Returns
+        -------
+        tuple[list[float], list[float], list[float]]
+            Tuple containing:
             - r_pf_cs_current_filaments (list of float): Radial positions of the CS filaments.
             - z_pf_cs_current_filaments (list of float): Vertical positions of the CS filaments.
             - c_pf_cs_current_filaments (list of float): Current values assigned to each CS filament.
-        :rtype: tuple[list[float], list[float], list[float]]
         """
         r_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
         z_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
@@ -3199,10 +3213,7 @@ class CSCoil:
         )
 
     def ohcalc(self):
-        """Routine to perform calculations for the Central Solenoid.
-
-        author: P J Knight, CCFE, Culham Science Centre
-        """
+        """Routine to perform calculations for the Central Solenoid."""
 
         (
             pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
@@ -3576,21 +3587,23 @@ class CSCoil:
         r_cs_outer: float,
         dz_cs_half: float,
     ) -> float:
-        """
-        Calculates the maximum field of a solenoid of circular winding and rectangular cross-section.
+        """Calculates the maximum field of a solenoid of circular winding and rectangular cross-section.
 
-        :param j_cs: Overall current density (A/m²)
-        :type j_cs: float
-        :param r_cs_inner: Solenoid inner radius (m)
-        :type r_cs_inner: float
-        :param r_cs_outer: Solenoid outer radius (m)
-        :type r_cs_outer: float
-        :param dz_cs_half: Solenoid half height (m)
-        :type dz_cs_half: float
-        :return: Maximum field of solenoid (T)
-        :rtype: float
+        Parameters
+        ----------
+        j_cs : float
+            Overall current density (A/m²)
+        r_cs_inner : float
+            Solenoid inner radius (m)
+        r_cs_outer : float
+            Solenoid outer radius (m)
+        dz_cs_half : float
+            Solenoid half height (m)
 
-        :notes:
+        Returns
+        -------
+        float
+            Maximum field of solenoid (T)
 
         :references:
             - Fits are taken from the figure on p.22 of M. Wilson's book
@@ -3713,18 +3726,25 @@ class CSCoil:
         dz_cs_half: float,
         c_cs_peak: float,
     ) -> tuple[float, float]:
-        """
-        Calculate axial stress and axial force for the central solenoid.
+        """Calculate axial stress and axial force for the central solenoid.
 
-        :param float r_cs_outer: Outer radius of the central solenoid (m).
-        :param float r_cs_inner: Inner radius of the central solenoid (m).
-        :param float dz_cs_half: Half-height of the central solenoid (m).
-        :param float c_cs_peak: Peak CS coil current (A).
+        Parameters
+        ----------
+        r_cs_outer:
+            Outer radius of the central solenoid (m).
+        r_cs_inner:
+            Inner radius of the central solenoid (m).
+        dz_cs_half:
+            Half-height of the central solenoid (m).
+        c_cs_peak:
+            Peak CS coil current (A).
 
-        :returns: A tuple containing the unsmeared axial stress and the axial force.
-        :rtype: tuple(float, float)
-            The first element is the unsmeared axial stress in MPa.
-            The second element is the axial force in newtons (N).
+        Returns
+        -------
+        tuple(float, float)
+            A tuple containing the unsmeared axial stress and the axial force.
+                The first element is the unsmeared axial stress in MPa.
+                The second element is the axial force in newtons (N).
 
         :note:
            The axial force is computed using elliptic-integral based terms and the
@@ -3734,7 +3754,6 @@ class CSCoil:
         :references:
             - Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009.
               doi: https://doi.org/10.1007/b112047.
-
         """
 
         # kb term for elliptical integrals
@@ -3785,14 +3804,18 @@ class CSCoil:
     def hoop_stress(self, r):
         """Calculation of hoop stress of central solenoid.
 
-        author: J Morris, CCFE, Culham Science Centre
         This routine calculates the hoop stress of the central solenoid
         from "Superconducting magnets", M. N. Wilson OUP
 
-        :param r: radial position a < r < b
-        :type r: float
-        :return: hoop stress (MPa)
-        :rtype: float
+        Parameters
+        ----------
+        r : float
+            radial position a < r < b
+
+        Returns
+        -------
+        float
+            hoop stress (MPa)
         """
         a = pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1]
 
@@ -3854,28 +3877,29 @@ class CSCoil:
 def peak_b_field_at_pf_coil(
     n_coil: int, n_coil_group: int, t_b_field_peak: int
 ) -> tuple[float, float, float, float]:
-    """
-    Calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
+    """Calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
 
-    :param n_coil: Coil number (1-based index)
-    :type n_coil: int
-    :param n_coil_group: Group number (1-based index)
-    :type n_coil_group: int
-    :param t_b_field_peak: Time point at which the field is highest
-    :type t_b_field_peak: int
+    Parameters
+    ----------
+    n_coil : int
+        Coil number (1-based index)
+    n_coil_group : int
+        Group number (1-based index)
+    t_b_field_peak : int
+        Time point at which the field is highest
 
-    :returns: Tuple containing:
+    Returns
+    -------
+    tuple[float, float, float, float]
+        Tuple containing:
         - b_pf_inner_radial (float): Radial field at inner edge (T)
         - b_pf_outer_radial (float): Radial field at outer edge (T)
         - b_pf_inner_vertical (float): Vertical field at inner edge (T)
         - b_pf_outer_vertical (float): Vertical field at outer edge (T)
-    :rtype: tuple[float, float, float, float]
 
     :notes:
-        This routine calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
-        The calculation includes the effects from all the coils and the plasma.
-
-    :author: P J Knight, CCFE, Culham Science Centre
+    This routine calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
+    The calculation includes the effects from all the coils and the plasma.
     """
     if bv.iohcl != 0 and n_coil == pfcoil_variables.n_cs_pf_coils:
         # Peak field is to be calculated at the Central Solenoid itself,
@@ -4085,7 +4109,6 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
     This routine calculates the superconductor critical winding pack
     current density for the PF coils, plus the temperature margin.
     It is based on the TF coil version, supercon.
-    author: P J Knight, CCFE, Culham Science Centre
 
     N.B. critical current density for a super conductor (j_crit_sc)
     is for the superconducting strands/tape, not including copper.
@@ -4095,38 +4118,43 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
     superconducting strands AND any addtional copper, such as REBCO
     tape support.
 
-    :param bmax: peak field at conductor (T)
-    :type bmax: float
-    :param fhe: fraction of cable space that is for He cooling
-    :type fhe: float
-    :param fcu: fraction of cable conductor that is copper
-    :type fcu: float
-    :param jwp: actual winding pack current density (A/m2)
-    :type jwp: float
-    :param isumat: switch for conductor type
-    1 = ITER Nb3Sn, standard parameters,
-    2 = Bi-2212 High Temperature Superconductor,
-    3 = NbTi,
-    4 = ITER Nb3Sn, user-defined parameters
-    5 = WST Nb3Sn parameterisation
-    7 = Durham Ginzbug-Landau Nb-Ti parameterisation
-    :type isumat: int
-    :param fhts: Adjustment factor (<= 1) to account for strain,
-    radiation damage, fatigue or AC losses
-    :type fhts: float
-    :param strain: Strain on superconductor at operation conditions
-    :type strain: float
-    :param thelium: He temperature at peak field point (K)
-    :type thelium: float
-    :param bcritsc: Critical field at zero temperature and strain (T) (isumat=4 only)
-    :type bcritsc: float
-    :param tcritsc: Critical temperature at zero field and strain (K) (isumat=4 only)
-    :type tcritsc: float
-    :return: Critical winding pack current density (A/m2) (j_crit_wp),
-    Critical cable current density (A/m2) (j_crit_cable)
-    Superconducting strand non-copper critical current density (A/m2) (j_crit_sc)
-    Temperature margin (K) (tmarg)
-    :rtype: tuple[float, float, float, float]
+    Parameters
+    ----------
+    bmax : float
+        peak field at conductor (T)
+    fhe : float
+        fraction of cable space that is for He cooling
+    fcu : float
+        fraction of cable conductor that is copper
+    jwp : float
+        actual winding pack current density (A/m2)
+    isumat : int
+        switch for conductor type
+        1 = ITER Nb3Sn, standard parameters,
+        2 = Bi-2212 High Temperature Superconductor,
+        3 = NbTi,
+        4 = ITER Nb3Sn, user-defined parameters
+        5 = WST Nb3Sn parameterisation
+        7 = Durham Ginzbug-Landau Nb-Ti parameterisation
+    fhts : float
+        Adjustment factor (<= 1) to account for strain,
+        radiation damage, fatigue or AC losses
+    strain : float
+        Strain on superconductor at operation conditions
+    thelium : float
+        He temperature at peak field point (K)
+    bcritsc : float
+        Critical field at zero temperature and strain (T) (isumat=4 only)
+    tcritsc : float
+        Critical temperature at zero field and strain (K) (isumat=4 only)
+
+    Returns
+    -------
+    tuple[float, float, float, float]
+        Critical winding pack current density (A/m2) (j_crit_wp),
+        Critical cable current density (A/m2) (j_crit_cable)
+        Superconducting strand non-copper critical current density (A/m2) (j_crit_sc)
+        Temperature margin (K) (tmarg)
     """
 
     # Find critical current density in superconducting strand, jcritstr
@@ -4286,34 +4314,37 @@ def calculate_b_field_at_point(
     r_test_point: float,
     z_test_point: float,
 ) -> tuple[np.ndarray, float, float, float]:
-    """
-    Calculate the magnetic field and mutual inductance at a point due to currents in circular poloidal conductor loops.
+    """Calculate the magnetic field and mutual inductance at a point due to currents in circular poloidal conductor loops.
     - P J Knight, CCFE, Culham Science Centre
     - D Strickler, ORNL
     - J Galambos, ORNL
 
-    :param r_current_loop: Array of R coordinates of current loops (m)
-    :type r_current_loop: np.ndarray
-    :param z_current_loop: Array of Z coordinates of current loops (m)
-    :type z_current_loop: np.ndarray
-    :param c_current_loop: Array of currents in loops (A)
-    :type c_current_loop: np.ndarray
-    :param r_test_point: R coordinate of the test point (m)
-    :type r_test_point: float
-    :param z_test_point: Z coordinate of the test point (m)
-    :type z_test_point: float
+    Parameters
+    ----------
+    r_current_loop : np.ndarray
+        Array of R coordinates of current loops (m)
+    z_current_loop : np.ndarray
+        Array of Z coordinates of current loops (m)
+    c_current_loop : np.ndarray
+        Array of currents in loops (A)
+    r_test_point : float
+        R coordinate of the test point (m)
+    z_test_point : float
+        Z coordinate of the test point (m)
 
-    :returns: Tuple containing:
+    Returns
+    -------
+    tuple[np.ndarray, float, float, float]
+        Tuple containing:
         - ind_mutual_array: Mutual inductances (H) between each loop and the test point
         - b_test_point_radial: Radial field component at the test point (T)
         - b_test_point_vertical: Vertical field component at the test point (T)
         - web_test_point_poloidal: Poloidal flux at the test point (Wb)
-    :rtype: tuple[np.ndarray, float, float, float]
 
     :notes:
-        - This routine calculates the magnetic field components and the poloidal flux at a given (R, Z) point,
-        given the locations and currents of a set of conductor loops. The mutual inductances between the loops
-        and a poloidal filament at the (R, Z) point of interest are also computed.
+    - This routine calculates the magnetic field components and the poloidal flux at a given (R, Z) point,
+    given the locations and currents of a set of conductor loops. The mutual inductances between the loops
+    and a poloidal filament at the (R, Z) point of interest are also computed.
     """
 
     #  Elliptic integral coefficients
@@ -4417,36 +4448,37 @@ def calculate_b_field_at_point(
 def rsid(npts, brin, bzin, nfix, n_pf_coil_groups, ccls, bfix, gmat):
     """Computes the norm of the residual vectors.
 
-    author: P J Knight, CCFE, Culham Science Centre
-    author: D Strickler, ORNL
-    author: J Galambos, ORNL
-    author: P C Shipe, ORNL
     This routine calculates the residuals from the matrix
     equation for calculation of the currents in a group of ring coils.
 
-    :param npts: number of data points at which field is  to be fixed;
-    should be <= nptsmx
-    :type npts: int
-    :param brin: field components at data points (T)
-    :type brin: numpy.ndarray
-    :param bzin: field components at data points (T)
-    :type bzin: numpy.ndarray
-    :param nfix: number of coils with fixed currents, <= nfixmx
-    :type nfix: int
-    :param n_pf_coil_groups: number of coil groups, where all coils in a group have the
-    same current, <= n_pf_groups_max
-    :type n_pf_coil_groups: int
-    :param ccls: coil currents in each group (A)
-    :type ccls: numpy.ndarray
-    :param bfix: work array
-    :type bfix: numpy.ndarray
-    :param gmat: work array
-    :type gmat: numpy.ndarray
-    :return: sum of squares of radial field residues (brssq), radial field
-    residue norm (brnrm), sum of squares of vertical field residues (bzssq),
-    vertical field residue norm (bznrm), sum of squares of elements of
-    residual vector (ssq)
-    :rtype: tuple[float, float, float, float, float]
+    Parameters
+    ----------
+    npts : int
+        number of data points at which field is  to be fixed;
+        should be <= nptsmx
+    brin : numpy.ndarray
+        field components at data points (T)
+    bzin : numpy.ndarray
+        field components at data points (T)
+    nfix : int
+        number of coils with fixed currents, <= nfixmx
+    n_pf_coil_groups : int
+        number of coil groups, where all coils in a group have the
+        same current, <= n_pf_groups_max
+    ccls : numpy.ndarray
+        coil currents in each group (A)
+    bfix : numpy.ndarray
+        work array
+    gmat : numpy.ndarray
+        work array
+
+    Returns
+    -------
+    tuple[float, float, float, float, float]
+        sum of squares of radial field residues (brssq), radial field
+        residue norm (brnrm), sum of squares of vertical field residues (bzssq),
+        vertical field residue norm (bznrm), sum of squares of elements of
+        residual vector (ssq)
     """
     brnrm = 0.0e0
     brssq = 0.0e0
@@ -4486,31 +4518,33 @@ def rsid(npts, brin, bzin, nfix, n_pf_coil_groups, ccls, bfix, gmat):
 def fixb(lrow1, npts, rpts, zpts, nfix, rfix, zfix, cfix):
     """Calculates the field from the fixed current loops.
 
-    author: P J Knight, CCFE, Culham Science Centre
-    author: D Strickler, ORNL
-    author: J Galambos, ORNL
     This routine calculates the fields at the points specified by
     (rpts,zpts) from the set of coils with fixed currents.
 
-    :param lrow1: row length of array bfix; should be >= nptsmx
-    :type lrow1: int
-    :param npts: number of data points at which field is to be fixed;
-    should be <= nptsmx
-    :type npts: int
-    :param rpts: coords of data points (m)
-    :type rpts: numpy.ndarray
-    :param zpts: coords of data points (m)
-    :type zpts: numpy.ndarray
-    :param nfix: number of coils with fixed currents, <= nfixmx
-    :type nfix: int
-    :param rfix: coordinates of coils with fixed currents (m)
-    :type rfix: numpy.ndarray
-    :param zfix: coordinates of coils with fixed currents (m)
-    :type zfix: numpy.ndarray
-    :param cfix: Fixed currents (A)
-    :type cfix: numpy.ndarray
-    :return: Fields at data points (T)
-    :rtype: numpy.ndarray
+    Parameters
+    ----------
+    lrow1 : int
+        row length of array bfix; should be >= nptsmx
+    npts : int
+        number of data points at which field is to be fixed;
+        should be <= nptsmx
+    rpts : numpy.ndarray
+        coords of data points (m)
+    zpts : numpy.ndarray
+        coords of data points (m)
+    nfix : int
+        number of coils with fixed currents, <= nfixmx
+    rfix : numpy.ndarray
+        coordinates of coils with fixed currents (m)
+    zfix : numpy.ndarray
+        coordinates of coils with fixed currents (m)
+    cfix : numpy.ndarray
+        Fixed currents (A)
+
+    Returns
+    -------
+    numpy.ndarray
+        Fields at data points (T)
     """
     bfix = np.zeros(lrow1)
 
@@ -4554,46 +4588,49 @@ def mtrx(
 
     Set up the matrix equation to calculate the currents in a group of ring
     coils.
-    author: P J Knight, CCFE, Culham Science Centre
-    author: D Strickler, ORNL
-    author: J Galambos, ORNL
 
-    :param lrow1: row length of arrays bfix, bvec, gmat, umat, vmat; should
-    be >= (2*nptsmx + n_pf_groups_max)
-    :type lrow1: int
-    :param lcol1: column length of arrays gmat, umat, vmat; should be >=
-    n_pf_groups_max
-    :type lcol1: int
-    :param npts: number of data points at which field is to be fixed; should
-    be <= nptsmx
-    :type npts: int
-    :param rpts: coords of data points (m)
-    :type rpts: numpy.ndarray
-    :param zpts: coords of data points (m)
-    :type zpts: numpy.ndarray
-    :param brin: field components at data points (T)
-    :type brin: numpy.ndarray
-    :param bzin: field components at data points (T)
-    :type bzin: numpy.ndarray
-    :param n_pf_coil_groups: number of coil groups, where all coils in a group have the
-    same current, <= n_pf_groups_max
-    :type n_pf_coil_groups: int
-    :param n_pf_coils_in_group: number of coils in each group, each value <= n_pf_coils_in_group_max
-    :type n_pf_coils_in_group: numpy.ndarray
-    :param r_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
-    :type r_pf_coil_middle_group_array: numpy.ndarray
-    :param z_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
-    :type z_pf_coil_middle_group_array: numpy.ndarray
-    :param alfa: smoothing parameter (0 = no smoothing, 1.0D-9 = large
-    smoothing)
-    :type alfa: float
-    :param bfix: Fields at data points (T)
-    :type bfix: numpy.ndarray
-    :return: actual number of rows to use, work array, work array,
-    Coordinates of conductor loops (m), Coordinates of conductor loops (m),
-    Currents in conductor loops (A), Mutual inductances (H)
-    :rtype: tuple[int, numpy.ndarray, numpy.ndarray, numpy.ndarray
-    numpy.ndarray, numpy.ndarray, numpy.ndarray]
+    Parameters
+    ----------
+    lrow1 : int
+        row length of arrays bfix, bvec, gmat, umat, vmat; should
+        be >= (2*nptsmx + n_pf_groups_max)
+    lcol1 : int
+        column length of arrays gmat, umat, vmat; should be >=
+        n_pf_groups_max
+    npts : int
+        number of data points at which field is to be fixed; should
+        be <= nptsmx
+    rpts : numpy.ndarray
+        coords of data points (m)
+    zpts : numpy.ndarray
+        coords of data points (m)
+    brin : numpy.ndarray
+        field components at data points (T)
+    bzin : numpy.ndarray
+        field components at data points (T)
+    n_pf_coil_groups : int
+        number of coil groups, where all coils in a group have the
+        same current, <= n_pf_groups_max
+    n_pf_coils_in_group : numpy.ndarray
+        number of coils in each group, each value <= n_pf_coils_in_group_max
+    r_pf_coil_middle_group_array : numpy.ndarray
+        coords R(i,j), Z(i,j) of coil j in group i (m)
+    z_pf_coil_middle_group_array : numpy.ndarray
+        coords R(i,j), Z(i,j) of coil j in group i (m)
+    alfa : float
+        smoothing parameter (0 = no smoothing, 1.0D-9 = large
+        smoothing)
+    bfix : numpy.ndarray
+        Fields at data points (T)
+    n_pf_coils_in_group_max :
+
+
+    Returns
+    -------
+    :
+        actual number of rows to use, work array, work array,
+        Coordinates of conductor loops (m), Coordinates of conductor loops (m),
+        Currents in conductor loops (A), Mutual inductances (H)
     """
     bvec = np.zeros(lrow1)
     gmat = np.zeros((lrow1, lcol1))
