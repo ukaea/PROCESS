@@ -130,7 +130,7 @@ class Stellarator:
 
         Parameters
         ----------
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
         """
 

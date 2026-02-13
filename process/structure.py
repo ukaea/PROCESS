@@ -130,7 +130,7 @@ class Structure:
             total water coolant mass (kg)
         dewmass : float
             vacuum vessel + cryostat mass (kg)
-        output : boolean
+        output :
             indicate whether output should be written to the output file, or not
 
 

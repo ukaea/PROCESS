@@ -50,7 +50,7 @@ icc = 2 * Global power balance (consistency equation)
 
 !!! Info "Constraints"  
     A full list of constraints is given on the variable description page in the row labelled 
-    `lablcc` [here](source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablcc).
+    `lablcc` [here](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablcc).
     See [solver](../solver/solver-guide.md) page for more info
 
 ## Iteration Variables
@@ -83,7 +83,7 @@ the default, if no value is specified), will be used as the starting value.
 
 !!! Note "Iteration Variables"  
     A full list of iteration variables is given on the variable description page in the row labelled 
-    `lablxc` [here](source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablxc).
+    `lablxc` [here](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablxc).
     (See [solver](../solver/solver-guide.md) page for more info)
 
 ## Bounds
