@@ -61,8 +61,6 @@ class PFCoil:
     def pfcoil(self):
         """Routine to perform calculations for the PF and Central Solenoid coils.
 
-
-        None
         This subroutine performs the calculations for the PF and
         Central Solenoid coils, to determine their size, location, current waveforms,
         stresses etc.

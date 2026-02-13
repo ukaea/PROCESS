@@ -262,8 +262,6 @@ class IFE:
         """Routine to create the build of an inertial fusion energy
         device, based on the design of the OSIRIS study,
         and to calculate the material volumes for the device core
-
-        None
         This routine constructs the build of an inertial fusion energy
         device, based on the design of the OSIRIS study, and to calculate
         the material volumes for the device core.
@@ -284,8 +282,6 @@ class IFE:
         """Routine to create the build of an inertial fusion energy
         device, based on the design of the SOMBRERO study,
         and to calculate the material volumes for the device core
-
-        None
         This routine constructs the build of an inertial fusion energy
         device, based on the design of the SOMBRERO study, and to calculate
         the material volumes for the device core.
@@ -815,8 +811,6 @@ class IFE:
     def bld2019(self):
         """Routine to create the build of a 2019 inertial fusion energy
         device, and to calculate the material volumes for the device core
-
-        None
         This routine constructs the build of a modern inertial fusion energy
         device, assumed to be cylindrically-symmetric, with a pool at bottom
         and top corners and with a lower shield at the centre.  See diagram
@@ -1132,8 +1126,6 @@ class IFE:
     def genbld(self):
         """Routine to create the build of a generic inertial fusion energy
         device, and to calculate the material volumes for the device core
-
-        None
         This routine constructs the build of a generic inertial fusion energy
         device, assumed to be cylindrically-symmetric, and to calculate
         the material volumes for the device core.
@@ -1851,8 +1843,6 @@ class IFE:
     def ifepw1(self):
         """Routine to calculate the first part of the heat transport
         and plant power balance constituents, for an IFE power plant
-
-        None
         This routine calculates the first part of the heat transport
         and plant power balance constituents, for an IFE power plant.
         F/MI/PJK/LOGBOOK12, pp.67,89

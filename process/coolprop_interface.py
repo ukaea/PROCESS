@@ -77,18 +77,6 @@ class FluidProperties:
         vapor_quality :
             the molar vapor quality [mol/mol] of the fluid to calculate the properties with respect to.
             `[0, 1]`, where `0` is a saturated liquid and `1` is a saturated vapor.
-        fluid_name: str :
-
-
-
-        temperature: float | None :
-             (Default value = None)
-        pressure: float | None :
-             (Default value = None)
-        entropy: float | None :
-             (Default value = None)
-        vapor_quality: float | None :
-             (Default value = None)
         """
         coolprop_inputs = []
 
