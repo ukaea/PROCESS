@@ -110,7 +110,7 @@ After following the instruction to add an input variable, you can make the varia
   
 2. Add a short description of the new scanning variable in the `nsweep` comment in `scan_variables.py`, alongside its identification number.
   
-3. Update the `SCAN_VARIABLES` dictionary in the `scan.py` file by adding a new case statement connecting the variable to the scan integer switch, the variable name and a short description. 
+3. Update the `ScanVariables` enum in the `scan.py` file by adding a new case statement connecting the variable to the scan integer switch, the variable name and a short description.
   
 4. Add a comment in the corresponding variable file in the data_structure directory, eg, `data_structure/[XX]_variables.py`, to add the variable description indicating the scan switch number.
   
@@ -130,12 +130,12 @@ After following the instruction to add an input variable, you can make the varia
 `SCAN_VARIABLES` case example:
 
 ```python
-  SCAN_VARIABLES = {
-    1: ScanVariable("aspect", "Aspect_ratio"),
-    2: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)"),
+  class ScanVariables(Enum):
+    aspect: ScanVariable("aspect", "Aspect_ratio", 1),
+    pflux_div_heat_load_max_mw: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)", 2),
     ...
-    54: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)"),
-    55: ScanVariable("dr_shld_inboard", "Inboard neutronic shield"),
+    Bc2_0K: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)", 54),
+    dr_shld_inboard : ScanVariable("dr_shld_inboard", "Inboard neutronic shield", 55),
 ```
 
 ---------------
