@@ -928,8 +928,6 @@ class Costs:
     def acc22(self):
         """Account 22 : Fusion power island
 
-
-        None
         This routine evaluates the Account 22 (fusion power island
         - the tokamak itself plus auxiliary power systems, etc.) costs.
         """
@@ -986,8 +984,6 @@ class Costs:
 
     def acc221(self):
         """Account 221 : Reactor
-
-        None
         This routine evaluates the Account 221 (reactor) costs.
         These include the first wall, blanket, shield, support structure
         and divertor plates.
@@ -1026,8 +1022,6 @@ class Costs:
 
     def acc222(self):
         """Account 222 : Magnets, including cryostat
-
-        None
         This routine evaluates the Account 222 (magnet) costs,
         including the costs of associated cryostats.
         """
@@ -1054,8 +1048,6 @@ class Costs:
 
     def acc225(self):
         """Account 225 : Power conditioning
-
-        None
         This routine evaluates the Account 225 (power conditioning) costs.
         """
         if ife_variables.ife == 1:
@@ -1081,8 +1073,6 @@ class Costs:
 
     def acc21(self):
         """Account 21 : Structures and site facilities
-
-        None
         This routine evaluates the Account 21 (structures and site
         facilities) costs.
         Building costs are scaled with volume according to algorithms
@@ -1201,8 +1191,6 @@ class Costs:
 
     def acc2211(self):
         """Account 221.1 : First wall
-
-        None
         This routine evaluates the Account 221.1 (first wall) costs.
         The first wall cost is scaled linearly with surface area from TFCX.
         If ifueltyp = 1, the first wall cost is treated as a fuel cost,
@@ -1266,8 +1254,6 @@ class Costs:
 
     def acc2212(self):
         """Account 221.2 : Blanket
-
-        None
         This routine evaluates the Account 221.2 (blanket) costs.
         If ifueltyp = 1, the blanket cost is treated as a fuel cost,
         rather than as a capital cost.
@@ -1391,8 +1377,6 @@ class Costs:
 
     def acc2213(self):
         """Account 221.3 : Shield
-
-        None
         This routine evaluates the Account 221.3 (shield) costs.
         """
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
@@ -1455,8 +1439,6 @@ class Costs:
 
     def acc2214(self):
         """Account 221.4 : Reactor structure
-
-        None
         This routine evaluates the Account 221.4 (reactor structure) costs.
         The structural items are costed as standard steel elements.
         """
@@ -1472,8 +1454,6 @@ class Costs:
 
     def acc2215(self):
         """Account 221.5 : Divertor
-
-        None
         This routine evaluates the Account 221.5 (divertor) costs.
         The cost of the divertor blade is scaled linearly with
         surface area from TFCX. The graphite armour is assumed to
@@ -1504,8 +1484,6 @@ class Costs:
 
     def acc2221(self):
         """Account 222.1 : TF magnet assemblies
-
-        None
         This routine evaluates the Account 222.1 (TF magnet) costs.
         Copper magnets are costed from the TFCX data base ($/kg).
         Superconductor magnets are costed using a new method devised
@@ -1660,8 +1638,6 @@ class Costs:
 
     def acc2222(self):
         """Account 222.2 : PF magnet assemblies
-
-        None
         This routine evaluates the Account 222.2 (PF magnet) costs.
         Conductor costs previously used an algorithm devised by R. Hancox,
         January 1994, under contract to Culham, which took into
@@ -1904,8 +1880,6 @@ class Costs:
 
     def acc2223(self):
         """Account 222.3 : Vacuum vessel
-
-        None
         This routine evaluates the Account 222.3 (vacuum vessel) costs.
         """
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
@@ -1917,8 +1891,6 @@ class Costs:
 
     def acc223(self):
         """Account 223 : Power injection
-
-        None
         This routine evaluates the Account 223 (power injection) costs.
         The costs are from TETRA, updated to 1990$.
         Nominal TIBER values are used pending system designs. Costs are
@@ -2044,8 +2016,6 @@ class Costs:
 
     def acc224(self):
         """Account 224 : Vacuum system
-
-        None
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
         """
@@ -2116,8 +2086,6 @@ class Costs:
 
     def acc2251(self):
         """Account 225.1 : TF coil power conditioning
-
-        None
         This routine evaluates the Account 225.1 (TF coil power
         conditioning) costs.
         Costs are developed based on the major equipment specification
@@ -2197,8 +2165,6 @@ class Costs:
 
     def acc2252(self):
         """Account 225.2 : PF coil power conditioning
-
-        None
         This routine evaluates the Account 225.2 (PF coil power
         conditioning) costs.
         Costs are taken from the equipment specification of the
@@ -2278,8 +2244,6 @@ class Costs:
 
     def acc226(self):
         """Account 226 : Heat transport system
-
-        None
         This routine evaluates the Account 226 (heat transport system) costs.
         Costs are estimated from major equipment and heat transport
         system loops developed in the heatpwr module of the code.
@@ -2290,8 +2254,6 @@ class Costs:
 
     def acc2261(self):
         """Account 2261 : Reactor cooling system
-
-        None
         This routine evaluates the Account 2261 -
         """
         cmlsa = [0.4000e0, 0.7000e0, 0.8500e0, 1.0000e0]
@@ -2335,8 +2297,6 @@ class Costs:
 
     def acc2262(self):
         """Account 2262 : Auxiliary component cooling
-
-        None
         This routine evaluates the Account 2262 - Auxiliary component cooling
         """
         cmlsa = 0.4000e0, 0.7000e0, 0.8500e0, 1.0000e0
@@ -2376,8 +2336,6 @@ class Costs:
 
     def acc2263(self):
         """Account 2263 : Cryogenic system
-
-        None
         This routine evaluates the Account 2263 - Cryogenic system
         """
         cmlsa = 0.4000e0, 0.7000e0, 0.8500e0, 1.0000e0
@@ -2398,8 +2356,6 @@ class Costs:
 
     def acc227(self):
         """Account 227 : Fuel handling
-
-        None
         This routine evaluates the Account 227 (fuel handling) costs.
         Costs are scaled from TETRA reactor code runs.
         """
@@ -2412,8 +2368,6 @@ class Costs:
 
     def acc2271(self):
         """Account 2271 : Fuelling system
-
-        None
         This routine evaluates the Account 2271 - Fuelling system
         """
         cost_variables.c2271 = 1.0e-6 * cost_variables.ucf1
@@ -2423,8 +2377,6 @@ class Costs:
 
     def acc2272(self):
         """Account 2272 : Fuel processing and purification
-
-        None
         This routine evaluates the Account 2272 - Fuel processing
         """
         if ife_variables.ife != 1:
@@ -2463,8 +2415,6 @@ class Costs:
 
     def acc2273(self):
         """Account 2273 : Atmospheric recovery systems
-
-        None
         This routine evaluates the Account 2273 - Atmospheric recovery systems
         """
         cfrht = 1.0e5
@@ -2486,8 +2436,6 @@ class Costs:
 
     def acc2274(self):
         """Account 2274 : Nuclear building ventilation
-
-        None
         This routine evaluates the Account 2274 - Nuclear building ventilation
         """
         cost_variables.c2274 = (
@@ -2502,8 +2450,6 @@ class Costs:
     def acc228(self):
         """Account 228 : Instrumentation and control
 
-
-        None
         This routine evaluates the Account 228 (instrumentation and
         control) costs.
         Costs are based on TFCX and INTOR.
@@ -2514,8 +2460,6 @@ class Costs:
     def acc229(self):
         """Account 229 : Maintenance equipment
 
-
-        None
         This routine evaluates the Account 229 (maintenance equipment) costs.
         """
         cost_variables.c229 = 1.0e-6 * cost_variables.ucme
@@ -2524,8 +2468,6 @@ class Costs:
     def acc23(self):
         """Account 23 : Turbine plant equipment
 
-
-        None
         This routine evaluates the Account 23 (turbine plant equipment) costs.
         """
 
@@ -2541,8 +2483,6 @@ class Costs:
     def acc24(self):
         """Account 24 : Electric plant equipment
 
-
-        None
         This routine evaluates the Account 24 (electric plant equipment) costs.
         """
         cost_variables.c24 = (
@@ -2555,8 +2495,6 @@ class Costs:
 
     def acc241(self):
         """Account 241 : Electric plant equipment - switchyard
-
-        None
         This routine evaluates the Account 241 - switchyard
         """
         cmlsa = 0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0
@@ -2568,8 +2506,6 @@ class Costs:
 
     def acc242(self):
         """Account 242 : Electric plant equipment - Transformers
-
-        None
         This routine evaluates the Account 242 - Transformers
         """
         cmlsa = 0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0
@@ -2587,8 +2523,6 @@ class Costs:
 
     def acc243(self):
         """Account 243 : Electric plant equipment - Low voltage
-
-        None
         This routine evaluates the Account 243 - Low voltage
         """
         cmlsa = 0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0
@@ -2606,8 +2540,6 @@ class Costs:
 
     def acc244(self):
         """Account 244 : Electric plant equipment - Diesel generators
-
-        None
         This routine evaluates the Account 244 - Diesel generators
         """
         cmlsa = [0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0]
@@ -2619,8 +2551,6 @@ class Costs:
 
     def acc245(self):
         """Account 245 : Electric plant equipment - Aux facility power
-
-        None
         This routine evaluates the Account 245 - Aux facility power
         """
         cmlsa = 0.5700e0, 0.7850e0, 0.8925e0, 1.0000e0
@@ -2633,8 +2563,6 @@ class Costs:
     def acc25(self):
         """Account 25 : Miscellaneous plant equipment
 
-
-        None
         This routine evaluates the Account 25 (miscellaneous plant
         equipment) costs, such as waste treatment.
         """
@@ -2647,8 +2575,6 @@ class Costs:
     def acc26(self):
         """Account 26 : Heat rejection system
 
-
-        None
         This routine evaluates the Account 26 (heat rejection system) costs.
         Costs are scaled with the total plant heat rejection based on
         commercial systems.
@@ -2681,8 +2607,6 @@ class Costs:
     def acc9(self):
         """Account 9 : Indirect cost and contingency allowances
 
-
-        None
         This routine evaluates the Account 9 (indirect cost and
         contingency allowances) costs.
         The cost modelling is based on the commercial plant model of a
@@ -2707,8 +2631,6 @@ class Costs:
 
     def acc2253(self):
         """Account 225.3 : Energy storage
-
-        None
         This routine evaluates the Account 225.3 (energy storage) costs.
         """
         cost_variables.c2253 = 0.0e0

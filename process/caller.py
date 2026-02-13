@@ -48,10 +48,6 @@ class Caller:
             value(s) from previous models evaluation
         current : float | np.ndarray
             value(s) from current models evaluation
-        previous: float | np.ndarray :
-
-        current: float | np.ndarray :
-
 
         Returns
         -------
@@ -74,10 +70,6 @@ class Caller:
             optimisation parameters
         m : int
             number of constraints
-        xc: np.ndarray :
-
-        m: int :
-
 
         Returns
         -------
@@ -143,10 +135,6 @@ class Caller:
             optimisation parameter
         ifail : int
             return code of solver
-        xc: np.ndarray :
-
-        ifail: int :
-
 
         Raises
         ------
@@ -257,8 +245,6 @@ class Caller:
         ----------
         xc : np.array
             Array of optimisation parameters
-        xc: np.ndarray :
-
         """
         # Number of active iteration variables
         nvars = len(xc)
@@ -403,10 +389,6 @@ def write_output_files(models: Models, ifail: int):
         physics and engineering models
     ifail : int
         solver return code
-    models: Models :
-
-    ifail: int :
-
     """
     n = data_structure.numerics.nvar
     x = data_structure.numerics.xcm[:n]

@@ -139,8 +139,6 @@ class Costs2015:
 
     def calc_fwbs_costs(self):
         """Function to calculate the cost of the first wall, blanket and shield
-
-        None
         This routine calculates the cost of the first wall, blanket and shield
         coils for a fusion power plant based on the costings in the PROCESS costs paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -317,8 +315,6 @@ class Costs2015:
 
     def output(self):
         """Function to output the costs calculations
-
-        None
         This routine outputs the costs to output file
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
@@ -461,8 +457,6 @@ class Costs2015:
 
     def calc_building_costs(self):
         """Function to calculate the cost of all buildings.
-
-        None
         This routine calculates the building costs for a fusion power plant
         based on the costings in the PROCESS costs Paper.
         Buildings have a different scaling law, with fixed cost per unit volume.
@@ -603,8 +597,6 @@ class Costs2015:
 
     def calc_land_costs(self):
         """Function to calculate the cost of land for the power plant
-
-        None
         Land also uses a unit cost, but area is scaled.
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
@@ -678,8 +670,6 @@ class Costs2015:
 
     def calc_tf_coil_costs(self):
         """Function to calculate the cost of the TF coils for the power plant
-
-        None
         This routine calculates the cost of the TF coils for a fusion power
         plant based on the costings in the PROCESS costs Paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -791,8 +781,6 @@ class Costs2015:
 
     def calc_remote_handling_costs(self):
         """Function to calculate the cost of the remote handling facilities
-
-        None
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         for i in range(27, 31):
@@ -840,8 +828,6 @@ class Costs2015:
 
     def calc_n_plant_and_vv_costs(self):
         """Function to calculate the cost of the nitrogen plant and vacuum vessel
-
-        None
         This routine calculates the cost of the nitrogen plant and vacuum vessel
         for a fusion power plant based on the costings in the PROCESS costs paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -888,8 +874,6 @@ class Costs2015:
 
     def calc_energy_conversion_system(self):
         """Function to calculate the cost of the energy conversion system
-
-        None
         This routine calculates the cost of the energy conversion system
         for a fusion power plant based on the costings in the PROCESS costs paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -911,8 +895,6 @@ class Costs2015:
 
     def calc_remaining_subsystems(self):
         """Function to calculate the cost of the remaining subsystems
-
-        None
         This routine calculates the cost of the remaining subsystems
         for a fusion power plant based on the costings in the PROCESS costs paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -1279,8 +1261,6 @@ class Costs2015:
 
     def value_function(self, x):
         """Value function
-
-        None
         Function for separative work unit calculation for enrichment cost
         PROCESS Costs Paper (M. Kovari, J. Morris)
 

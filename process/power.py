@@ -526,8 +526,6 @@ class Power:
     def component_thermal_powers(self):
         """Calculates the first part of the heat transport
         and plant power balance constituents
-
-        None
         This routine calculates the first part of the heat transport
         and plant power balance constituents.
         None

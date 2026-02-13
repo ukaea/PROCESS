@@ -82,11 +82,6 @@ class ConstraintManager:
             the units of the constraint written to the output files
         symbol : str
             the symbol of the constraint written to the output files
-        name: Hashable :
-
-        units: str :
-
-        symbol: ConstraintSymbolType :
 
         """
 
@@ -110,8 +105,6 @@ class ConstraintManager:
         ----------
         name : Hashable
             the name of the constraint
-        name: Hashable :
-
 
         Returns
         -------
@@ -128,8 +121,6 @@ class ConstraintManager:
         ----------
         name : Hashable
             the name of the constraint
-        name: Hashable :
-
 
         Returns
         -------

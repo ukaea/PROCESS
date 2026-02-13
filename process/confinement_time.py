@@ -9,30 +9,21 @@ def neo_alcator_confinement_time(
     Parameters
     ----------
     dene20 :
-        float
+        Volume averaged electron density in units of 10**20 m**-3
     rminor :
-        float
+        Plasma minor radius [m]
     rmajor :
-        float
+        Plasma major radius [m]
     qstar :
-        float
-    dene20:
-
-    rminor:
-
-    rmajor:
-
-    qstar:
-
+        Equivalent cylindrical edge safety factor
 
     Returns
     -------
     :
         float: Neo-Alcator confinement time [s]
 
-        Notes:
 
-        References:
+    References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
@@ -44,19 +35,12 @@ def mirnov_confinement_time(rminor: float, kappa95: float, pcur: float) -> float
 
     Parameters
     ----------
-    hfact :
-        float
     rminor :
         float
     kappa95 :
         float
     pcur :
         float
-    rminor:
-
-    kappa95:
-
-    pcur:
 
 
     Returns
@@ -64,9 +48,7 @@ def mirnov_confinement_time(rminor: float, kappa95: float, pcur: float) -> float
     :
         float: Mirnov scaling confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
@@ -100,29 +82,14 @@ def merezhkin_muhkovatov_confinement_time(
         float
     ten :
         float
-    rmajor:
-
-    rminor:
-
-    kappa95:
-
-    qstar:
-
-    dnla20:
-
-    afuel:
-
-    ten:
-
 
     Returns
     -------
     :
         float: Merezhkin-Mukhovatov confinement time [s]
 
-        Notes:
 
-        References:
+    References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
