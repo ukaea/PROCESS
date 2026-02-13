@@ -43,8 +43,12 @@ class SuperconductingTFCoil(TFCoil):
         self.outfile = constants.NOUT
 
     def run(self, output: bool):
-        """
-        Routine to call the superconductor module for the TF coils
+        """Routine to call the superconductor module for the TF coils
+
+        Parameters
+        ----------
+        output: bool :
+
         """
         self.iprint = 0
 
@@ -432,14 +436,19 @@ class SuperconductingTFCoil(TFCoil):
         self, a_tf_turn, b_tf_inboard_peak_symmetric, iop, thelium, output: bool
     ):
         """TF superconducting CroCo conductor using REBCO tape
-        author: M Kovari, CCFE, Culham Science Centre
-        b_tf_inboard_peak_symmetric : input real : Peak field at conductor (T)
-        iop : input real : Operating current per turn (A)
-        thelium : input real : He temperature at peak field point (K)
-        iprint : input integer : Switch for printing (1 = yes, 0 = no)
-        outfile : input integer : Fortran output unit identifier
-        j_tf_wp_critical : output real : Critical winding pack current density (A/m2)
-        tmarg : output real : Temperature margin (K)
+
+        Parameters
+        ----------
+        a_tf_turn :
+
+        b_tf_inboard_peak_symmetric :
+            Peak field at conductor (T)
+        iop :
+            Operating current per turn (A)
+        thelium :
+            He temperature at peak field point (K)
+        output:
+
         """
 
         j_crit_sc: float = 0.0
@@ -900,26 +909,27 @@ class SuperconductingTFCoil(TFCoil):
         bcritsc: float,
         tcritsc: float,
     ) -> tuple[float, float, float, float, float, float, float, float]:
-        """
-        Calculates the properties of the TF superconducting conductor.
+        """Calculates the properties of the TF superconducting conductor.
 
-        :param float a_tf_turn_cable_space:
+        Parameters
+        ----------
+        a_tf_turn_cable_space:
             Cable space - inside area (m²).
-        :param float a_tf_turn:
+        a_tf_turn:
             Area per turn (i.e. entire jacketed conductor) (m²).
-        :param float a_tf_turn_cable_space_effective:
+        a_tf_turn_cable_space_effective:
             Effective cable space area per turn (m²).
-        :param float f_a_tf_turn_cable_space_cooling:
+        f_a_tf_turn_cable_space_cooling:
             Fraction of cable space used for cooling.
-        :param float b_tf_inboard_peak:
+        b_tf_inboard_peak:
             Peak field at conductor (T).
-        :param float f_a_tf_turn_cable_copper:
+        f_a_tf_turn_cable_copper:
             Fraction of conductor that is copper.
-        :param float c_tf_turn:
+        c_tf_turn:
             Operating current per turn (A).
-        :param float j_tf_wp:
+        j_tf_wp:
             Actual winding pack current density (A/m²).
-        :param int i_tf_superconductor:
+        i_tf_superconductor:
             Switch for conductor type:
             - 1: ITER Nb3Sn, standard parameters
             - 2: Bi-2212 High Temperature Superconductor
@@ -929,16 +939,19 @@ class SuperconductingTFCoil(TFCoil):
             - 7: Durham Ginzburg-Landau Nb-Ti parameterisation
             - 8: Durham Ginzburg-Landau critical surface model for REBCO
             - 9: Hazelton experimental data + Zhai conceptual model for REBCO
-        :param float f_strain_scale:
+        f_strain_scale:
             Adjustment factor (<= 1) to account for strain, radiation damage, fatigue or AC losses.
-        :param float temp_tf_coolant_peak_field:
+        temp_tf_coolant_peak_field:
             He temperature at peak field point (K).
-        :param float bcritsc:
+        bcritsc:
             Critical field at zero temperature and strain (T) (used only if i_tf_superconductor=4).
-        :param float tcritsc:
+        tcritsc:
             Critical temperature at zero field and strain (K) (used only if i_tf_superconductor=4).
 
-        :returns: tuple (float, float, float, float, float, float, float, float, float)
+        Returns
+        -------
+        type
+            tuple (float, float, float, float, float, float, float, float, float)
             - j_tf_wp_critical (float): Critical winding pack current density (A/m²).
             - j_superconductor_critical (float): Critical current density in superconductor (A/m²).
             - f_c_tf_turn_operating_critical (float): Ratio of operating / critical current.
@@ -949,16 +962,16 @@ class SuperconductingTFCoil(TFCoil):
             - c_tf_turn_cables_critical (float): Critical current in cable (A).
 
         :notes:
-            This routine calculates the superconductor properties for the TF coils.
-            It was originally programmed by J. Galambos (1991), from algorithms provided by J. Miller.
-            The routine calculates the critical current density (winding pack) and also the protection
-            information (for a quench). Not used for the CroCo conductor.
+        This routine calculates the superconductor properties for the TF coils.
+        It was originally programmed by J. Galambos (1991), from algorithms provided by J. Miller.
+        The routine calculates the critical current density (winding pack) and also the protection
+        information (for a quench). Not used for the CroCo conductor.
 
-            The critical current density for a superconductor (``j_superconductor_critical``) is for the superconducting
-            strands/tape, not including copper. The critical current density for a cable (``j_crit_cable``)
-            accounts for both the fraction of the cable taken up by helium coolant channels, and the cable
-            conductor copper fraction (i.e., the copper in the superconducting strands and any additional
-            copper, such as REBCO tape support).
+        The critical current density for a superconductor (``j_superconductor_critical``) is for the superconducting
+        strands/tape, not including copper. The critical current density for a cable (``j_crit_cable``)
+        accounts for both the fraction of the cable taken up by helium coolant channels, and the cable
+        conductor copper fraction (i.e., the copper in the superconducting strands and any additional
+        copper, such as REBCO tape support).
         """
 
         # Guard against negative conductor fraction f_a_tf_turn_cable_space_conductor
@@ -1316,17 +1329,24 @@ class SuperconductingTFCoil(TFCoil):
         a_cable_space: float,
         dia_superconductor_strand: float,
     ) -> int:
-        """
-        Calculates the maximum number of superconducting strands that can fit into a cable-in-conduit conductor,
+        """Calculates the maximum number of superconducting strands that can fit into a cable-in-conduit conductor,
         based on the available cable space, strand diameter, and desired void fraction.
 
-        :param a_cable_space: Total cross-sectional area available for the cable (in m²).
-        :type a_cable_space: float
-        :param dia_superconductor_strand: Diameter of a single superconducting strand (in meters).
-        :type dia_superconductor_strand: float
+        Parameters
+        ----------
+        a_cable_space : float
+            Total cross-sectional area available for the cable (in m²).
+        dia_superconductor_strand : float
+            Diameter of a single superconducting strand (in meters).
+        a_cable_space:
 
-        :returns: The maximum number of strands that can fit in the available space, accounting for the void fraction.
-        :rtype: int
+        dia_superconductor_strand:
+
+
+        Returns
+        -------
+        int
+            The maximum number of strands that can fit in the available space, accounting for the void fraction.
         """
 
         # Effective area available for strands (excluding voids)
@@ -1345,18 +1365,25 @@ class SuperconductingTFCoil(TFCoil):
         len_tf_coil: float,
         n_tf_turn_superconducting_cables: int,
     ) -> float:
-        """
-        Calculates the total length of superconducting material required for the TF coils.
+        """Calculates the total length of superconducting material required for the TF coils.
 
-        :param int n_tf_coils: Number of TF coils.
-        :param int n_tf_coil_turns: Total number of turns in the TF coil winding pack.
-        :param float len_tf_coil: Length of a single TF coil (in meters).
-        :param int n_tf_turn_superconducting_cables: Number of superconducting cables per turn in the TF coil.
+        Parameters
+        ----------
+        n_tf_coils: int :
+            n_tf_coils: Number of TF coils.
+        n_tf_coil_turns: int :
+            n_tf_coil_turns: Total number of turns in the TF coil winding pack.
+        len_tf_coil:
+            len_tf_coil: Length of a single TF coil (in meters).
+        n_tf_turn_superconducting_cables: int :
+            n_tf_turn_superconducting_cables: Number of superconducting cables per turn in the TF coil.
 
-        :returns: Tuple containing:
+        Returns
+        -------
+        tuple[float, float]
+            Tuple containing:
             - Length of superconductor in one TF coil (in meters).
             - Total length of superconductor in all TF coils (in meters).
-        :rtype: tuple[float, float]
         """
 
         # Length of superconductor in one TF coil
@@ -1553,10 +1580,11 @@ class SuperconductingTFCoil(TFCoil):
         c0: float,
         temp_tf_coolant_peak_field: float,
     ):
-        """
-        Calculate the temperature margin of the TF superconductor.
+        """Calculate the temperature margin of the TF superconductor.
 
-        :param int i_tf_superconductor:
+        Parameters
+        ----------
+        i_tf_superconductor:
             Switch for conductor type:
             - 1: ITER Nb3Sn, standard parameters
             - 2: Bi-2212 High Temperature Superconductor
@@ -1566,22 +1594,25 @@ class SuperconductingTFCoil(TFCoil):
             - 7: Durham Ginzburg-Landau Nb-Ti parameterisation
             - 8: Durham Ginzburg-Landau critical surface model for REBCO
             - 9: Hazelton experimental data + Zhai conceptual model for REBCO
-        :param float j_superconductor:
+        j_superconductor:
             Current density in superconductor (A/m²).
-        :param float b_tf_inboard_peak:
+        b_tf_inboard_peak:
             Peak field at conductor (T).
-        :param float strain:
+        strain:
             Strain on superconductor.
-        :param float bc20m:
+        bc20m:
             Critical field at zero temperature and strain (T).
-        :param float tc0m:
+        tc0m:
             Critical temperature at zero field and strain (K).
-        :param float c0:
+        c0:
             Constant used in NbTi critical current density calculation (A/m²).
-        :param float temp_tf_coolant_peak_field:
+        temp_tf_coolant_peak_field:
             He temperature at peak field point (K).
 
-        :return: temp_tf_superconductor_margin.
+        Returns
+        -------
+        type
+            temp_tf_superconductor_margin.
         """
 
         # =================================================================
@@ -1666,41 +1697,43 @@ class SuperconductingTFCoil(TFCoil):
         t_tf_quench_detection: float,
         nflutfmax: float,
     ) -> tuple[float, float]:
-        """
-        Calculates the maximum conductor current density limited by the protection limit,
+        """Calculates the maximum conductor current density limited by the protection limit,
         and the discharge voltage for a TF coil.
 
-        :param c_tf_turn: Operating current (A)
-        :type c_tf_turn: float
-        :param e_tf_coil_magnetic_stored: Energy stored in one TF coil (J)
-        :type e_tf_coil_magnetic_stored: float
-        :param a_tf_turn_cable_space: Cable space - inside area (m²)
-        :type a_tf_turn_cable_space: float
-        :param a_tf_turn: Area per turn (i.e. entire cable) (m²)
-        :type a_tf_turn: float
-        :param t_tf_quench_dump: Dump time (s)
-        :type t_tf_quench_dump: float
-        :param f_a_tf_turn_cable_space_conductor: Fraction of cable space containing conductor
-        :type f_a_tf_turn_cable_space_conductor: float
-        :param f_a_tf_turn_cable_copper: Fraction of conductor that is copper
-        :type f_a_tf_turn_cable_copper: float
-        :param temp_tf_coolant_peak_field: Helium temperature at peak field point (K)
-        :type temp_tf_coolant_peak_field: float
-        :param temp_tf_conductor_quench_max: Maximum conductor temperature during quench (K)
-        :type temp_tf_conductor_quench_max: float
-        :param b_tf_inboard_peak: Peak magnetic field at conductor (T)
-        :type b_tf_inboard_peak: float
-        :param cu_rrr: Copper residual-resistance-ratio
-        :type cu_rrr: float
-        :param t_tf_quench_detection: Quench detection time (s)
-        :type t_tf_quench_detection: float
-        :param nflutfmax: End-of-life neutron fluence in the copper (1/m²)
-        :type nflutfmax: float
+        Parameters
+        ----------
+        c_tf_turn : float
+            Operating current (A)
+        e_tf_coil_magnetic_stored : float
+            Energy stored in one TF coil (J)
+        a_tf_turn_cable_space : float
+            Cable space - inside area (m²)
+        a_tf_turn : float
+            Area per turn (i.e. entire cable) (m²)
+        t_tf_quench_dump : float
+            Dump time (s)
+        f_a_tf_turn_cable_space_conductor : float
+            Fraction of cable space containing conductor
+        f_a_tf_turn_cable_copper : float
+            Fraction of conductor that is copper
+        temp_tf_coolant_peak_field : float
+            Helium temperature at peak field point (K)
+        temp_tf_conductor_quench_max : float
+            Maximum conductor temperature during quench (K)
+        b_tf_inboard_peak : float
+            Peak magnetic field at conductor (T)
+        cu_rrr : float
+            Copper residual-resistance-ratio
+        t_tf_quench_detection : float
+            Quench detection time (s)
+        nflutfmax : float
+            End-of-life neutron fluence in the copper (1/m²)
 
-        :returns:
-            - j_tf_wp_quench_protection_max (float): Winding pack current density from temperature rise protection (A/m²)
+        Returns
+        -------
+        tuple[float, float]
+            j_tf_wp_quench_protection_max (float): Winding pack current density from temperature rise protection (A/m²)
             - v_tf_dump_voltage_peak (float): Discharge voltage imposed on a TF coil (V)
-        :rtype: tuple[float, float]
 
         :references:
         - L. Bottura, “Magnet Quench 101,” arXiv (Cornell University), Jan. 2014,
@@ -1734,8 +1767,6 @@ class SuperconductingTFCoil(TFCoil):
     def vv_stress_on_quench(self):
         """Calculate the Tresca stress [Pa] of the Vacuum Vessel (VV)
         experienced when the TF coil quenches.
-
-        Author: Timothy Nunn, UKAEA
 
         Assumes the current center line (CCL) of the TF coil is the
         middle of the coil.
@@ -1816,31 +1847,44 @@ class SuperconductingTFCoil(TFCoil):
         r_tf_wp_inboard_centre: float,
         b_tf_inboard_peak_symmetric: float,
     ) -> tuple[float, int]:
-        """
-        Calculates the peak toroidal field at the outboard edge of the inboard TF coil winding pack,
+        """Calculates the peak toroidal field at the outboard edge of the inboard TF coil winding pack,
         including the effects of ripple.
 
         For 16, 18, or 20 coils, uses fitting formulae derived by M. Kovari using MAGINT calculations
         on coil sets based on a DEMO1 case. For other numbers of coils, uses a 9% increase due to ripple
         from the axisymmetric calculation.
 
-        :param n_tf_coils: Number of TF coils.
-        :type n_tf_coils: float
-        :param dx_tf_wp_primary_toroidal: Width of plasma-facing face of winding pack (m).
-        :type dx_tf_wp_primary_toroidal: float
-        :param dr_tf_wp_no_insulation: Radial thickness of winding pack with no insulation (e.g. conductor region) (m).
-        :type dr_tf_wp_no_insulation: float
-        :param r_tf_wp_inboard_centre: Major radius of centre of winding pack (m).
-        :type r_tf_wp_inboard_centre: float
-        :param b_tf_inboard_peak_symmetric: Nominal (axisymmetric) peak toroidal field (T).
-        :type b_tf_inboard_peak_symmetric: float
+        Parameters
+        ----------
+        n_tf_coils : float
+            Number of TF coils.
+        dx_tf_wp_primary_toroidal : float
+            Width of plasma-facing face of winding pack (m).
+        dr_tf_wp_no_insulation : float
+            Radial thickness of winding pack with no insulation (e.g. conductor region) (m).
+        r_tf_wp_inboard_centre : float
+            Major radius of centre of winding pack (m).
+        b_tf_inboard_peak_symmetric : float
+            Nominal (axisymmetric) peak toroidal field (T).
+        n_tf_coils:
 
-        :returns: Tuple containing:
+        dx_tf_wp_primary_toroidal:
+
+        dr_tf_wp_no_insulation:
+
+        r_tf_wp_inboard_centre:
+
+        b_tf_inboard_peak_symmetric:
+
+
+        Returns
+        -------
+        tuple[float]
+            Tuple containing:
             - b_tf_inboard_peak_with_ripple (float): Peak toroidal field including ripple (T).
-        :rtype: tuple[float]
 
         :notes:
-            - M. Kovari, Toroidal Field Coils - Maximum Field and Ripple - Parametric Calculation, July 2014.
+        - M. Kovari, Toroidal Field Coils - Maximum Field and Ripple - Parametric Calculation, July 2014.
         """
         a = np.zeros((4,))
 
@@ -1917,8 +1961,16 @@ class SuperconductingTFCoil(TFCoil):
 
     def sc_tf_internal_geom(self, i_tf_wp_geom, i_tf_case_geom, i_tf_turns_integer):
         """
-        Author : S. Kahn, CCFE
         Seting the WP, case and turns geometry for SC magnets
+
+        Parameters
+        ----------
+        i_tf_wp_geom :
+
+        i_tf_case_geom :
+
+        i_tf_turns_integer :
+
         """
 
         # Calculating the WP / ground insulation areas
@@ -2158,30 +2210,32 @@ class SuperconductingTFCoil(TFCoil):
         float,  # a_tf_wp_no_insulation
         float,  # a_tf_wp_ground_insulation
     ]:
-        """
-        Calculates the winding pack (WP) geometry and cross-sectional areas for superconducting toroidal field (TF) coils.
+        """Calculates the winding pack (WP) geometry and cross-sectional areas for superconducting toroidal field (TF) coils.
 
-        :param i_tf_wp_geom:
-            - 0: Rectangular
+        Parameters
+        ----------
+        i_tf_wp_geom : int
+            0: Rectangular
             - 1: Double rectangular
             - 2: Trapezoidal
-        :type i_tf_wp_geom: int
-        :param r_tf_inboard_in: Inboard inner radius [m].
-        :type r_tf_inboard_in: float
-        :param dr_tf_nose_case: Radial thickness of nose case [m].
-        :type dr_tf_nose_case: float
-        :param dr_tf_wp_with_insulation: Radial thickness of winding pack including insulation [m].
-        :type dr_tf_wp_with_insulation: float
-        :param tan_theta_coil: Tangent of coil half angle [-].
-        :type tan_theta_coil: float
-        :param dx_tf_side_case_min: Side case thickness [m].
-        :type dx_tf_side_case_min: float
-        :param dx_tf_wp_insulation: Insulation thickness [m].
-        :type dx_tf_wp_insulation: float
-        :param dx_tf_wp_insertion_gap: Insertion gap thickness [m].
-        :type dx_tf_wp_insertion_gap: float
+        r_tf_inboard_in : float
+            Inboard inner radius [m].
+        dr_tf_nose_case : float
+            Radial thickness of nose case [m].
+        dr_tf_wp_with_insulation : float
+            Radial thickness of winding pack including insulation [m].
+        tan_theta_coil : float
+            Tangent of coil half angle [-].
+        dx_tf_side_case_min : float
+            Side case thickness [m].
+        dx_tf_wp_insulation : float
+            Insulation thickness [m].
+        dx_tf_wp_insertion_gap : float
+            Insertion gap thickness [m].
 
-        :returns:
+        Returns
+        -------
+        tuple[float, float, float, float, float, float, float, float, float, float]
             Tuple containing:
             - r_tf_wp_inboard_inner (float): WP inboard inner radius [m]
             - r_tf_wp_inboard_outer (float): WP inboard outer radius [m]
@@ -2194,9 +2248,11 @@ class SuperconductingTFCoil(TFCoil):
             - a_tf_wp_with_insulation (float): WP cross-sectional area with insulation [m²]
             - a_tf_wp_no_insulation (float): WP cross-sectional area without insulation [m²]
             - a_tf_wp_ground_insulation (float): WP ground insulation cross-sectional area [m²]
-        :rtype: tuple[float, float, float, float, float, float, float, float, float, float]
 
-        :raises ValueError: If calculated winding pack area (with or without insulation) is non-positive.
+        Raises
+        ------
+        ValueError
+            If calculated winding pack area (with or without insulation) is non-positive.
         """
 
         r_tf_wp_inboard_inner = r_tf_inboard_in + dr_tf_nose_case
@@ -2396,50 +2452,51 @@ class SuperconductingTFCoil(TFCoil):
         dx_tf_side_case_min: float,
         dr_tf_wp_with_insulation: float,
     ) -> tuple[float, float, float, float, float, float]:
-        """
-        Setting the case geometry and area for SC magnets
+        """Setting the case geometry and area for SC magnets
 
-        :param i_tf_wp_geom: Index specifying winding pack geometry (0: rectangular, 1: double rectangular, else: trapezoidal).
-        :type i_tf_wp_geom: int
-        :param i_tf_case_geom: Index specifying case geometry (0: circular, else: straight).
-        :type i_tf_case_geom: int
-        :param a_tf_inboard_total: Total inboard area for TF coils [m²].
-        :type a_tf_inboard_total: float
-        :param n_tf_coils: Number of TF coils.
-        :type n_tf_coils: float
-        :param a_tf_wp_with_insulation: Area of winding pack with insulation [m²].
-        :type a_tf_wp_with_insulation: float
-        :param a_tf_leg_outboard: Outboard leg cross-sectional area [m²].
-        :type a_tf_leg_outboard: float
-        :param rad_tf_coil_inboard_toroidal_half: Half toroidal radius of inboard coil [m].
-        :type rad_tf_coil_inboard_toroidal_half: float
-        :param r_tf_inboard_out: Outer radius of inboard TF coil [m].
-        :type r_tf_inboard_out: float
-        :param tan_theta_coil: Tangent of coil angle theta.
-        :type tan_theta_coil: float
-        :param r_tf_wp_inboard_outer: Outer radius of inboard winding pack [m].
-        :type r_tf_wp_inboard_outer: float
-        :param dr_tf_plasma_case: Radial thickness of plasma case [m].
-        :type dr_tf_plasma_case: float
-        :param r_tf_wp_inboard_inner: Inner radius of inboard winding pack [m].
-        :type r_tf_wp_inboard_inner: float
-        :param r_tf_inboard_in: Inner radius of inboard TF coil [m].
-        :type r_tf_inboard_in: float
-        :param dx_tf_side_case_min: Minimum lateral casing thickness [m].
-        :type dx_tf_side_case_min: float
-        :param dr_tf_wp_with_insulation: Radial thickness of winding pack with insulation [m].
-        :type dr_tf_wp_with_insulation: float
+        Parameters
+        ----------
+        i_tf_wp_geom : int
+            Index specifying winding pack geometry (0: rectangular, 1: double rectangular, else: trapezoidal).
+        i_tf_case_geom : int
+            Index specifying case geometry (0: circular, else: straight).
+        a_tf_inboard_total : float
+            Total inboard area for TF coils [m²].
+        n_tf_coils : float
+            Number of TF coils.
+        a_tf_wp_with_insulation : float
+            Area of winding pack with insulation [m²].
+        a_tf_leg_outboard : float
+            Outboard leg cross-sectional area [m²].
+        rad_tf_coil_inboard_toroidal_half : float
+            Half toroidal radius of inboard coil [m].
+        r_tf_inboard_out : float
+            Outer radius of inboard TF coil [m].
+        tan_theta_coil : float
+            Tangent of coil angle theta.
+        r_tf_wp_inboard_outer : float
+            Outer radius of inboard winding pack [m].
+        dr_tf_plasma_case : float
+            Radial thickness of plasma case [m].
+        r_tf_wp_inboard_inner : float
+            Inner radius of inboard winding pack [m].
+        r_tf_inboard_in : float
+            Inner radius of inboard TF coil [m].
+        dx_tf_side_case_min : float
+            Minimum lateral casing thickness [m].
+        dr_tf_wp_with_insulation : float
+            Radial thickness of winding pack with insulation [m].
 
-        :returns: Tuple containing:
+        Returns
+        -------
+        tuple[float, float, float, float, float]
+            Tuple containing:
             - a_tf_coil_inboard_case (float): Inboard case area [m²].
             - a_tf_coil_outboard_case (float): Outboard case area [m²].
             - a_tf_plasma_case (float): Front casing area [m²].
             - a_tf_coil_nose_case (float): Nose casing area [m²].
             - dx_tf_side_case_average (float): Average lateral casing thickness [m].
             - dx_tf_side_case_peak (float): Peak lateral casing thickness [m].
-        :rtype: tuple[float, float, float, float, float]
-
-        :raises: Reports error if calculated casing areas are negative.
         """
 
         # Total area of inboard TF coil case [m²]
@@ -2548,32 +2605,36 @@ class SuperconductingTFCoil(TFCoil):
         float,  # dx_tf_turn_cable_space
         float,  # dx_tf_turn_cable_space_average
     ]:
-        """
-        Set the TF WP turn geometry for superconducting magnets using the number of turn rows in the radial direction.
+        """Set the TF WP turn geometry for superconducting magnets using the number of turn rows in the radial direction.
         The turns can have any rectangular shape.
 
         This calculation checks if a turn can exist (positive cable space) and provides its dimensions, areas, and associated current.
 
-        :param dr_tf_wp_with_insulation: Radial thickness of winding pack with insulation [m].
-        :type dr_tf_wp_with_insulation: float
-        :param dx_tf_wp_insulation: Thickness of winding pack insulation [m].
-        :type dx_tf_wp_insulation: float
-        :param dx_tf_wp_insertion_gap: Thickness of winding pack insertion gap [m].
-        :type dx_tf_wp_insertion_gap: float
-        :param n_tf_wp_layers: Number of winding pack layers (radial direction).
-        :type n_tf_wp_layers: int
-        :param dx_tf_wp_toroidal_min: Minimum toroidal thickness of winding pack [m].
-        :type dx_tf_wp_toroidal_min: float
-        :param n_tf_wp_pancakes: Number of winding pack pancakes (toroidal direction).
-        :type n_tf_wp_pancakes: int
-        :param c_tf_coil: Total TF coil current [A].
-        :type c_tf_coil: float
-        :param dx_tf_turn_steel: Thickness of turn steel [m].
-        :type dx_tf_turn_steel: float
-        :param dx_tf_turn_insulation: Thickness of turn insulation [m].
-        :type dx_tf_turn_insulation: float
+        Parameters
+        ----------
+        dr_tf_wp_with_insulation : float
+            Radial thickness of winding pack with insulation [m].
+        dx_tf_wp_insulation : float
+            Thickness of winding pack insulation [m].
+        dx_tf_wp_insertion_gap : float
+            Thickness of winding pack insertion gap [m].
+        n_tf_wp_layers : int
+            Number of winding pack layers (radial direction).
+        dx_tf_wp_toroidal_min : float
+            Minimum toroidal thickness of winding pack [m].
+        n_tf_wp_pancakes : int
+            Number of winding pack pancakes (toroidal direction).
+        c_tf_coil : float
+            Total TF coil current [A].
+        dx_tf_turn_steel : float
+            Thickness of turn steel [m].
+        dx_tf_turn_insulation : float
+            Thickness of turn insulation [m].
 
-        :returns: tuple containing:
+        Returns
+        -------
+        type
+            tuple containing:
             - radius_tf_turn_cable_space_corners
             - dr_tf_turn
             - dx_tf_turn
@@ -2588,8 +2649,6 @@ class SuperconductingTFCoil(TFCoil):
             - dr_tf_turn_cable_space
             - dx_tf_turn_cable_space
             - dx_tf_turn_cable_space_average
-
-        :raises: Reports error if calculated turn or cable space dimensions are non-positive.
         """
 
         # Radius of rounded corners in the cable space [m]
@@ -2716,7 +2775,6 @@ class SuperconductingTFCoil(TFCoil):
 
     def tf_wp_currents(self):
         """
-        Author : S. Kahn, CCFE
         Turn engineering turn currents/densities
         """
         tfcoil_variables.j_tf_wp = max(
@@ -2744,15 +2802,41 @@ class SuperconductingTFCoil(TFCoil):
         dia_tf_turn_coolant_channel,
         f_a_tf_turn_cable_space_extra_void,
     ):
-        """
-        subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
-        Authors : J. Morris, CCFE
-        Authors : S. Kahn, CCFE
+        """subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
         Setting the TF WP turn geometry for SC magnets from the number
         the current per turn.
         This calculation has two purposes, first to check if a turn can exist
         (positive cable space) and the second to provide its dimensions,
         areas and the (float) number of turns
+
+        Parameters
+        ----------
+        j_tf_wp :
+
+        dx_tf_turn_steel :
+
+        dx_tf_turn_insulation :
+
+        i_tf_sc_mat :
+
+        dx_tf_turn_general :
+
+        c_tf_turn :
+
+        i_dx_tf_turn_general_input :
+
+        i_dx_tf_turn_cable_space_general_input :
+
+        dx_tf_turn_cable_space_general :
+
+        layer_ins :
+
+        a_tf_wp_no_insulation :
+
+        dia_tf_turn_coolant_channel :
+
+        f_a_tf_turn_cable_space_extra_void :
+
         """
 
         # Turn dimension is a an input
@@ -3005,15 +3089,20 @@ class SuperconductingTFCoil(TFCoil):
 
 @staticmethod
 def lambda_term(tau: float, omega: float) -> float:
-    """
-    The lambda function used inegral in inductance calcuation found
+    """The lambda function used inegral in inductance calcuation found
     in Y. Itoh et al. The full form of the functions are given in appendix A.
 
-    Author: Alexander Pearce, UKAEA
+    Parameters
+    ----------
+    tau :
+        tau_{s,k} = (R_{s,k} - R_{c,k}) / R_k
+    omega :
+        omega_k = R_{c,k}/R_k
 
-    :param tau: tau_{s,k} = (R_{s,k} - R_{c,k}) / R_k
-    :param omega: omega_k = R_{c,k}/R_k
-    :returns: integral
+    Returns
+    -------
+    :
+        integral
     """
     p = 1.0 - omega**2.0
 
@@ -3033,19 +3122,27 @@ def lambda_term(tau: float, omega: float) -> float:
 def _theta_factor_integral(
     ro_vv: float, ri_vv: float, rm_vv: float, h_vv: float, theta1_vv: float
 ) -> float:
-    """
-    The calcuation of the theta factor found in Eq 4 of Y. Itoh et al. The
+    """The calcuation of the theta factor found in Eq 4 of Y. Itoh et al. The
     full form of the integral is given in appendix A.
 
-    Author: Alexander Pearce, UKAEA
+    Parameters
+    ----------
+    ro_vv :
+        the radius of the outboard edge of the VV CCL
+    ri_vv :
+        the radius of the inboard edge of the VV CCL
+    rm_vv :
+        the radius where the maximum height of the VV CCL occurs
+    h_vv :
+        the maximum height of the VV CCL
+    theta1_vv :
+        the polar angle of the point at which one circular arc is
+        joined to another circular arc in the approximation to the VV CCL
 
-    :param ro_vv: the radius of the outboard edge of the VV CCL
-    :param ri_vv: the radius of the inboard edge of the VV CCL
-    :param rm_vv: the radius where the maximum height of the VV CCL occurs
-    :param h_vv: the maximum height of the VV CCL
-    :param theta1_vv: the polar angle of the point at which one circular arc is
-    joined to another circular arc in the approximation to the VV CCL
-    :returns: theta factor.
+    Returns
+    -------
+    :
+        theta factor.
     """
     theta2 = np.pi / 2.0 + theta1_vv
     a = (ro_vv - ri_vv) / 2.0
@@ -3112,8 +3209,6 @@ def vv_stress_on_quench(
     """Generic model to calculate the Tresca stress of the
     Vacuum Vessel (VV), experienced when the TF coil quenches.
 
-    Author: Timothy Nunn, UKAEA
-
     The current center line (CCL) of a structure is an appoximation
     of where the poloidal current of a structure acts. This model
     considers how the current (self-)induced in the following structures
@@ -3124,33 +3219,53 @@ def vv_stress_on_quench(
     1. the TF coil steel structure
     2. the VV
 
-    :param H_coil: the maximum height of the TF coil CCL
-    :param ri_coil: the radius of the inboard edge of the TF coil CCL
-    :param ro_coil: the radius of the outboard edge of the TF coil CCL
-    :param rm_coil: the radius where the maximum height of the TF coil CCL occurs
-    :param ccl_length_coil: the length of the TF coil CCL
-    :param theta1_coil: the polar angle of the point at which one circular arc is
-    joined to another circular arc in the approximation to the coil CCL,
-    using an arbitrary origin of coordinates (Rc2, Zc2).
+    Parameters
+    ----------
+    H_coil :
+        the maximum height of the TF coil CCL
+    ri_coil :
+        the radius of the inboard edge of the TF coil CCL
+    ro_coil :
+        the radius of the outboard edge of the TF coil CCL
+    rm_coil :
+        the radius where the maximum height of the TF coil CCL occurs
+    ccl_length_coil :
+        the length of the TF coil CCL
+    theta1_coil :
+        the polar angle of the point at which one circular arc is
+        joined to another circular arc in the approximation to the coil CCL,
+        using an arbitrary origin of coordinates (Rc2, Zc2).
+    H_vv :
+        the maximum height of the VV CCL
+    ri_vv :
+        the radius of the inboard edge of the VV CCL
+    ro_vv :
+        the radius of the outboard edge of the VV CCL
+    rm_vv :
+        the radius where the maximum height of the VV CCL occurs
+    theta1_vv :
+        the polar angle of the point at which one circular arc is
+        joined to another circular arc in the approximation to the VV CCL,
+        using an arbitrary origin of coordinates (Rc2, Zc2).
+    n_tf_coils :
+        the number of TF coils
+    n_tf_coil_turns :
+        the number of turns per TF coil
+    s_rp :
+        the cross-sectional area of the radial plates of the TF coil
+    s_cc :
+        the cross-sectional area of the TF coil case
+    taud :
+        the discharge time of the TF coil when quench occurs
+    i_op :
+        the 'normal' operating current of the TF coil
+    d_vv :
+        the thickness of the vacuum vessel shell
 
-    :param H_vv: the maximum height of the VV CCL
-    :param ri_vv: the radius of the inboard edge of the VV CCL
-    :param ro_vv: the radius of the outboard edge of the VV CCL
-    :param rm_vv: the radius where the maximum height of the VV CCL occurs
-    :param theta1_vv: the polar angle of the point at which one circular arc is
-    joined to another circular arc in the approximation to the VV CCL,
-    using an arbitrary origin of coordinates (Rc2, Zc2).
-
-    :param n_tf_coils: the number of TF coils
-    :param n_tf_coil_turns: the number of turns per TF coil
-    :param s_rp: the cross-sectional area of the radial plates of the TF coil
-    :param s_cc: the cross-sectional area of the TF coil case
-    :param taud: the discharge time of the TF coil when quench occurs
-    :param i_op: the 'normal' operating current of the TF coil
-
-    :param d_vv: the thickness of the vacuum vessel shell
-
-    :returns: the maximum stress experienced by the vacuum vessel
+    Returns
+    -------
+    :
+        the maximum stress experienced by the vacuum vessel
 
     Notes
     -----
@@ -3224,15 +3339,20 @@ def _inductance_factor(
     """Calculates the inductance factor for a toroidal structure
     using surrogate 2 #1866.
 
-    Author: Timothy Nunn, UKAEA
-
-    :param H: the maximum height of the structure
-    :param ri: the radius of the inboard side of the structure CCL
-    :param ro: the radius of the outboard side of the structure CCL
-    :param rm: the radius at which `H` occurs
-    :param theta1: the polar angle of the point at which one circular arc is
-    joined to another circular arc in the approximation to the structure CCL,
-    using an arbitrary origin of coordinates (Rc2, Zc2).
+    Parameters
+    ----------
+    H :
+        the maximum height of the structure
+    ri :
+        the radius of the inboard side of the structure CCL
+    ro :
+        the radius of the outboard side of the structure CCL
+    rm :
+        the radius at which `H` occurs
+    theta1 :
+        the polar angle of the point at which one circular arc is
+        joined to another circular arc in the approximation to the structure CCL,
+        using an arbitrary origin of coordinates (Rc2, Zc2).
     """
     # NOTE: the following properties are not those of the plasma but of
     # the VV/coil structures
