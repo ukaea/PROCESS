@@ -1341,7 +1341,7 @@ class IFE:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
              (Default value = False)
         """
         match ife_variables.ifedrv:
@@ -1685,7 +1685,7 @@ class IFE:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
              (Default value = False)
         """
 
@@ -1936,7 +1936,7 @@ class IFE:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
              (Default value = False)
         """
         # Facility heat removal (p_plant_electric_base_total_mw calculated in IFEACP)
@@ -2123,7 +2123,7 @@ class IFE:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
              (Default value = False)
         """
         # Facility base load, MW (loads not dependent on floor area)
@@ -2259,7 +2259,7 @@ class IFE:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
              (Default value = False)
         """
         # Reactor building

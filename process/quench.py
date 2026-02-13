@@ -225,7 +225,6 @@ def _nb3sn_specific_heat_capacity(temperature: float) -> float:
     Provides the temperature-dependent specific heat capacity [J/(kg·K)] of the A15
     superconductor Nb₃Sn.
 
-
     Parameters
     ----------
     temperature:

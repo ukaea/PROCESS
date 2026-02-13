@@ -245,7 +245,7 @@ class BlanketLibrary:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
 
@@ -573,7 +573,7 @@ class BlanketLibrary:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         npoltoti = 0
@@ -1154,7 +1154,7 @@ class BlanketLibrary:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
              (Default value = False)
         """
 
@@ -1471,7 +1471,7 @@ class BlanketLibrary:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         ######################################################
@@ -2182,7 +2182,7 @@ class BlanketLibrary:
             Number of poloidal channel sections.
         label : str
             Description label for output.
-        output: bool :
+        output: bool
 
         icoolpump: int :
 
@@ -2334,7 +2334,7 @@ class BlanketLibrary:
 
         label: str :
 
-        output: bool :
+        output: bool
              (Default value = False)
         """
         # Magnetic feild strength in IB or OB blanket
@@ -2527,7 +2527,7 @@ class BlanketLibrary:
 
         label: str :
 
-        output: bool :
+        output: bool
              (Default value = False)
         """
 
@@ -2782,7 +2782,7 @@ class BlanketLibrary:
                     Density of coolant or liquid breeder (kg/m³).
                 label : str
                     Description label for output.
-                output: bool :
+                output: bool
 
                 i_liquid_breeder: int :
 

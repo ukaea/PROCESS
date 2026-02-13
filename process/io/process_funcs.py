@@ -36,9 +36,6 @@ def get_neqns_itervars(wdir="."):
     return in_dat.number_of_constraints, itervars
 
 
-###############################
-
-
 def update_ixc_bounds(wdir="."):
     """updates the lower and upper bounds in DICT_IXC_BOUNDS
     from IN.DAT
@@ -56,9 +53,6 @@ def update_ixc_bounds(wdir="."):
             dicts["DICT_IXC_BOUNDS"][name]["lb"] = float(value["l"])
         if "u" in value:
             dicts["DICT_IXC_BOUNDS"][name]["ub"] = float(value["u"])
-
-
-###############################
 
 
 def get_variable_range(itervars, factor, wdir="."):
@@ -135,9 +129,6 @@ def get_variable_range(itervars, factor, wdir="."):
     return lbs, ubs
 
 
-###############################
-
-
 def check_in_dat():
     """Tests IN.DAT during setup:
     1)Are ixc bounds outside of allowed input ranges?
@@ -206,9 +197,6 @@ def check_in_dat():
     in_dat.write_in_dat(output_filename="IN.DAT")
 
 
-###############################
-
-
 def check_logfile(logfile="process.log"):
     """Checks the log file of the PROCESS output.
     Stops, if an error occured that needs to be
@@ -259,9 +247,6 @@ def check_input_error(wdir="."):
         raise
 
 
-########################################
-
-
 def process_stopped(wdir="."):
     """Checks the process Mfile whether it has
     prematurely stopped.
@@ -285,9 +270,6 @@ def process_stopped(wdir="."):
     return error_status >= 3
 
 
-########################################
-
-
 def process_warnings(wdir="."):
     """Checks the process Mfile whether any
     warnings have occurred.
@@ -297,9 +279,6 @@ def process_warnings(wdir="."):
     error_status = m_file.data["error_status"].get_scan(-1)
 
     return error_status >= 2
-
-
-############################################
 
 
 def mfile_exists():
@@ -312,9 +291,6 @@ def mfile_exists():
 
     except FileNotFoundError:
         return False
-
-
-############################################
 
 
 def no_unfeasible_mfile(wdir="."):
@@ -338,9 +314,6 @@ def no_unfeasible_mfile(wdir="."):
         # This probably means in the mfile library a KeyError
         # should be raised not only a message to stdout!
         return 100000
-
-
-################################
 
 
 def vary_iteration_variables(itervars, lbs, ubs, generator):
@@ -371,9 +344,6 @@ def vary_iteration_variables(itervars, lbs, ubs, generator):
     in_dat.write_in_dat(output_filename="IN.DAT")
 
     return new_values
-
-
-###################################
 
 
 def get_solution_from_mfile(neqns, nvars, wdir="."):
@@ -408,9 +378,6 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns
 
     return ifail, objective_function, constraints, table_sol, table_res
-
-
-############################################
 
 
 def get_from_indat_or_default(in_dat, varname):

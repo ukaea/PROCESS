@@ -39,7 +39,7 @@ class Evaluators:
 
         Parameters
         ----------
-        n : int
+        _n : int
             number of variables
         m : int
             number of constraints
@@ -47,8 +47,6 @@ class Evaluators:
             scaled variable values, length n
         ifail : int
             ifail error flag
-        _n :
-
 
         Returns
         -------

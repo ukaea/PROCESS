@@ -708,7 +708,7 @@ def bosch_hale_reactivity(
     :
         np.ndarray: Volumetric fusion reaction rate 〈sigmav〉 in m^3/s for each point in the ion temperature profile.
 
-        References:
+    References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
         Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
@@ -799,7 +799,7 @@ def set_fusion_powers(
         - p_charged_particle_mw (float): Charged particle fusion power [MW].
         - p_fusion_total_mw (float): Total fusion power [MW].
 
-        References:
+    References:
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
         - ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
     """
@@ -941,14 +941,14 @@ def beam_fusion(
         - nd_beam_ions_out (float): Hot beam ion density (m^-3).
         - p_beam_alpha_mw (float): Alpha power from hot neutral beam ions (MW).
 
-        Notes:
+    Notes:
         - The function uses the Bosch-Hale parametrization to compute the reactivity.
         - The critical energy for electron/ion slowing down of the beam ion is calculated
         for both deuterium and tritium neutral beams.
         - The function integrates the hot beam fusion reaction rate integrand over the
         range of beam velocities up to the critical velocity.
 
-        References:
+    References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
         Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
@@ -1079,14 +1079,14 @@ def beamcalc(
         - Hot beam ion density (m^-3).
         - Average hot beam ion energy (keV).
 
-        Notes:
+    Notes:
         - The function uses the Bosch-Hale parametrization to compute the reactivity.
         - The critical energy for electron/ion slowing down of the beam ion is calculated
         for both deuterium and tritium neutral beams.
         - The function integrates the hot beam fusion reaction rate integrand over the
         range of beam velocities up to the critical velocity.
 
-        References:
+    References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
         Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
@@ -1252,13 +1252,13 @@ def fast_ion_pressure_integral(e_beam_kev: float, critical_energy: float) -> flo
     :
         float: Fraction of initial beam energy given to the ions.
 
-        Notes:
+    Notes:
         - The function uses the ratio of the beam energy to the critical energy to compute
         the hot ion energy parameter.
         - The calculation involves logarithmic and arctangent functions to account for
         the energy distribution of the hot ions.
 
-        References:
+    References:
         - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
         vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
@@ -1372,8 +1372,6 @@ def beam_reaction_rate(
     over the range of beam velocities up to the critical velocity.
     - The integration is performed using the quad function from scipy.integrate.
 
-    References:
-    - P J Knight, CCFE, Culham Science Centre
     """
 
     # Find the speed of the beam particle when it has the critical energy.

@@ -137,7 +137,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
 
@@ -475,7 +475,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         # If there are FCIs then how much of the radial build is FCI?

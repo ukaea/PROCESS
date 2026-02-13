@@ -531,16 +531,6 @@ class PlasmaGeom:
             Plasma separatrix triangularity
         square : float
             Plasma squareness
-        a:
-
-        r0:
-
-        kappa:
-
-        triang:
-
-        square:
-
 
         Returns
         -------
@@ -660,12 +650,6 @@ def perim(a: float, kap: float, tri: float) -> float:
         Plasma separatrix elongation
     tri : float
         Plasma separatrix triangularity
-    a:
-
-    kap:
-
-    tri:
-
 
     Returns
     -------

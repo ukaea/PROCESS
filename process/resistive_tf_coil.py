@@ -28,7 +28,7 @@ class ResistiveTFCoil(TFCoil):
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         self.iprint = 0
@@ -743,9 +743,6 @@ class ResistiveTFCoil(TFCoil):
                 * tfcoil_variables.n_tf_coils
             )
 
-        # ---
-        # -------
-
         # Copper magnets casing/conductor weights per coil [kg]
         if tfcoil_variables.i_tf_sup == 0:
             tfcoil_variables.m_tf_coil_case = (
@@ -858,14 +855,7 @@ class ResistiveTFCoil(TFCoil):
         the midplane and reaching maximum thickness at the height of the
         plasma. Above/below the plasma, the centrepost is cylindrical.
         The shape of the taper is assumed to be an arc of a circle.
-        P J Knight, CCFE, Culham Science Centre
-        21/10/96 PJK Initial version
-        08/05/12 PJK Initial F90 version
-        16/10/12 PJK Added constants; removed argument pi
-        26/06/14 PJK Added error handling
-        12/11/19 SK Using fixed cooling cross-section area along the CP
-        26/11/19 SK added the coolant area, the conuctor/isulator/outer casing volume
-        30/11/20 SK added the ground outer ground insulation volume
+
         F/MI/PJK/LOGBOOK12, pp.33,34
 
         Parameters

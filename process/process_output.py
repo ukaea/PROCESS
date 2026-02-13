@@ -65,11 +65,6 @@ def ocentr(file, string: str, width: int, *, character="*"):
         the desired with of the header
     character :
         the character to pad the heading with (*) (Default value = "*")
-    string: str :
-
-    width: int :
-
-
 
     """
     write(file, f"{f' {string} ':{character}^{width}}")
@@ -87,9 +82,6 @@ def ostars(file, width: int, *, character="*"):
         the desired with of the line
     character :
         the character to fill the line with (*) (Default value = "*")
-    width: int :
-
-
 
     """
     write(file, character * width)

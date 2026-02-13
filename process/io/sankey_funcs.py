@@ -494,9 +494,6 @@ def plot_full_sankey(
             y += 1"""
 
 
-####################################################################################################
-
-
 def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Diagram
     # ------------------------------- Pulling values from the MFILE -------------------------------
 

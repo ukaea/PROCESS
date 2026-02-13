@@ -48,7 +48,7 @@ class Power:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         powpfii = np.zeros((pfcoil_variables.NGC2,))
@@ -413,7 +413,7 @@ class Power:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         ptfmw = heat_transport_variables.p_tf_electric_supplies_mw
@@ -1784,7 +1784,7 @@ class Power:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         if tfcoil_variables.i_tf_sup != 1:
@@ -1957,7 +1957,7 @@ class Power:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         ettfmj = (
@@ -2007,7 +2007,7 @@ class Power:
             in TETRA
         None :
 
-        output: bool :
+        output: bool
 
         itfka :
 

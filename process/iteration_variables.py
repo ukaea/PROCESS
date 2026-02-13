@@ -392,7 +392,6 @@ def set_scaled_iteration_variable(xc, nn: int):
         scaled iteration variable values
     nn :
         number of iteration variables
-    nn: int :
 
     """
 

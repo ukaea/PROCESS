@@ -1093,20 +1093,6 @@ class PFCoil:
             Thickness of the TF inboard leg (m).
         z_cs_coil_upper : float
             Upper z coordinate of the CS coil (m).
-        n_pf_coils_in_group: np.ndarray :
-
-        n_pf_group: int :
-
-        r_cs_middle:
-
-        dr_pf_cs_middle_offset:
-
-        z_tf_inside_half:
-
-        dr_tf_inboard:
-
-        z_cs_coil_upper:
-
 
         Returns
         -------
@@ -1379,10 +1365,6 @@ class PFCoil:
         bvec,
     ):
         """Calculates field coil currents.
-
-
-
-
 
         This routine calculates the currents required in a group
         of ring coils to produce a fixed field at prescribed
@@ -4313,9 +4295,6 @@ def calculate_b_field_at_point(
     z_test_point: float,
 ) -> tuple[np.ndarray, float, float, float]:
     """Calculate the magnetic field and mutual inductance at a point due to currents in circular poloidal conductor loops.
-    - P J Knight, CCFE, Culham Science Centre
-    - D Strickler, ORNL
-    - J Galambos, ORNL
 
     Parameters
     ----------

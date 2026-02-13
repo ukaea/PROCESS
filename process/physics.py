@@ -46,14 +46,6 @@ def rether(
 ):
     """Routine to find the equilibration power between the
     ions and electrons
-    alphan : input real :  density profile index
-    alphat : input real :  temperature profile index
-    nd_plasma_electrons_vol_avg   : input real :  electron density (/m3)
-    dlamie : input real :  ion-electron coulomb logarithm
-    te     : input real :  electron temperature (keV)
-    temp_plasma_ion_vol_avg_kev     : input real :  ion temperature (keV)
-    n_charge_plasma_effective_mass_weighted_vol_avg : input real :  mass weighted plasma effective charge
-    pden_ion_electron_equilibration_mw  : output real : ion/electron equilibration power (MW/m3)
     This routine calculates the equilibration power between the
     ions and electrons.
     Unknown origin
@@ -61,19 +53,24 @@ def rether(
     Parameters
     ----------
     alphan :
-
+        density profile index
     alphat :
-
+        temperature profile index
     nd_plasma_electrons_vol_avg :
-
+        electron density (/m3)
     dlamie :
-
+        ion-electron coulomb logarithm
     te :
-
+        electron temperature (keV)
     temp_plasma_ion_vol_avg_kev :
-
+        ion temperature (keV)
     n_charge_plasma_effective_mass_weighted_vol_avg :
+        mass weighted plasma effective charge
 
+    Returns
+    -------
+    pden_ion_electron_equilibration_mw  :
+        ion/electron equilibration power (MW/m3)
 
     """
     profie = (1.0 + alphan) ** 2 / (
@@ -102,6 +99,10 @@ def _plascar_bpol(
     """Calculate the poloidal field coefficients for determining the plasma current
     and poloidal field.
 
+
+    This internal function calculates the poloidal field coefficients,
+    which is used to calculate the poloidal field and the plasma current.
+
     Parameters
     ----------
     aspect :
@@ -117,9 +118,6 @@ def _plascar_bpol(
     -------
     :
         coefficients ff1, ff2, d1, d2
-
-    This internal function calculates the poloidal field coefficients,
-    which is used to calculate the poloidal field and the plasma current.
 
     References:
         - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
@@ -3751,8 +3749,6 @@ class Physics:
         This routine writes the plasma physics information
         to a file, in a tidy format.
         """
-
-        # ###############################################
         # Dimensionless plasma parameters. See reference below.
         physics_variables.nu_star = (
             1
@@ -10204,12 +10200,17 @@ class DetailedPhysics:
     def calculate_reduced_mass(mass1: float, mass2: float) -> float:
         """
         Calculate the reduced mass of two particles.
-        :param mass1: Mass of particle 1 (kg).
-        :type mass1: float
-        :param mass2: Mass of particle 2 (kg).
-        :type mass2: float
-        :returns: Reduced mass (kg).
-        :rtype: float
+
+        Parameters
+        ----------
+        mass1:
+            Mass of particle 1 (kg).
+        mass2:
+            Mass of particle 2 (kg).
+
+        Returns
+        -------
+            Reduced mass (kg).
         """
         return (mass1 * mass2) / (mass1 + mass2)
 
@@ -10219,12 +10220,17 @@ class DetailedPhysics:
     ) -> float | np.ndarray:
         """
         Calculate the average relative velocity between two particles.
-        :param velocity_1: Velocity of particle 1 (m/s).
-        :type velocity_1: float | np.ndarray
-        :param velocity_2: Velocity of particle 2 (m/s).
-        :type velocity_2: float | np.ndarray
-        :returns: Average relative velocity (m/s).
-        :rtype: float | np.ndarray
+
+        Parameters
+        ----------
+        velocity_1:
+            Velocity of particle 1 (m/s).
+        velocity_2:
+            Velocity of particle 2 (m/s).
+
+        Returns
+        -------
+            Average relative velocity (m/s).
         """
         return np.sqrt(velocity_1**2 + velocity_2**2)
 

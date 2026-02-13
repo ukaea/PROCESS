@@ -17,8 +17,6 @@ def calculate_iter1996_nominal(
     float
         The ITER-1996 L-H transition power threshold [MW]
 
-    :notes:
-
     :references:
         - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
         "Threshold power and energy confinement for ITER". 1996.
@@ -48,8 +46,6 @@ def calculate_iter1996_upper(
     -------
     float
         The ITER-1996 L-H transition power threshold [MW]
-
-    :notes:
 
     :references:
         - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
@@ -81,8 +77,6 @@ def calculate_iter1996_lower(
     float
         The ITER-1996 L-H transition power threshold [MW]
 
-    :notes:
-
     :references:
         - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
         "Threshold power and energy confinement for ITER". 1996.
@@ -112,8 +106,6 @@ def calculate_snipes1997_iter(
     -------
     float
         The Snipes 1997 L-H transition power threshold [MW]
-
-    :notes:
 
     :references:
         - J. A. Snipes and the ITER H-mode Threshold Database Working Group, "An Analysis of the H-mode Threshold in ITER,"
@@ -145,8 +137,6 @@ def calculate_snipes1997_kappa(
     -------
     float
         The Snipes 1997 L-H transition power threshold with kappa factor [MW]
-
-    :notes:
 
     :references:
         - J. A. Snipes and the ITER H-mode Threshold Database Working Group, "An Analysis of the H-mode Threshold in ITER,"
@@ -629,10 +619,6 @@ def calculate_hubbard2012_lower(plasma_current: float, dnla20: float) -> float:
         Plasma current [A]
     dnla20 : float
         Line averaged electron density in units of 10^20 m^-3.
-    plasma_current:
-
-    dnla20:
-
 
     Returns
     -------

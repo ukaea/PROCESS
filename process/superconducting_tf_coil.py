@@ -47,7 +47,7 @@ class SuperconductingTFCoil(TFCoil):
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         self.iprint = 0
@@ -1338,10 +1338,6 @@ class SuperconductingTFCoil(TFCoil):
             Total cross-sectional area available for the cable (in m²).
         dia_superconductor_strand : float
             Diameter of a single superconducting strand (in meters).
-        a_cable_space:
-
-        dia_superconductor_strand:
-
 
         Returns
         -------
@@ -1866,16 +1862,6 @@ class SuperconductingTFCoil(TFCoil):
             Major radius of centre of winding pack (m).
         b_tf_inboard_peak_symmetric : float
             Nominal (axisymmetric) peak toroidal field (T).
-        n_tf_coils:
-
-        dx_tf_wp_primary_toroidal:
-
-        dr_tf_wp_no_insulation:
-
-        r_tf_wp_inboard_centre:
-
-        b_tf_inboard_peak_symmetric:
-
 
         Returns
         -------

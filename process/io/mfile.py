@@ -4,9 +4,6 @@ PROCESS MFILE.DAT IO library
 
 process.io.mfile.
 
-James Morris
-CCFE
-
 Notes:
   + 12/03/2014: Initial version
   + 12/03/2014: Added MFILE variable class

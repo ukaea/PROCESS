@@ -2782,8 +2782,6 @@ class TFCoil:
         ----------
         temp : float
             Helium temperature [K]
-        temp:
-
 
         Returns
         -------

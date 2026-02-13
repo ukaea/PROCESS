@@ -11,9 +11,8 @@ def write(models, _outfile):
     ----------
     models : process.main.Models
         physics and engineering model objects
-    outfile : int
+    _outfile : int
         Fortran output unit identifier
-    _outfile :
 
     """
     # ensure we are capturing warnings that occur in the 'output' stage as these are warnings

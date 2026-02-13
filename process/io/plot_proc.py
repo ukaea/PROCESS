@@ -2,11 +2,6 @@
 
 PROCESS plot_proc using process_io_lib functions and MFILE.DAT
 
-James Morris
-13/04/2014
-CCFE
-Revised by Michael Kovari, 7/1/2016
-
 24/11/2021: Global dictionary variables moved within the functions
             to avoid cyclic dependencies. This is because the dicts
             generation script imports, and inspects, process.
@@ -3060,8 +3055,6 @@ def plot_main_plasma_information(
         transform=fig.transFigure,
     )
 
-    # =================================================
-
     # Add magnetic field information
     textstr_fields = (
         f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
@@ -3096,8 +3089,6 @@ def plot_main_plasma_information(
         verticalalignment="top",
         transform=fig.transFigure,
     )
-
-    # ===========================================
 
     # Add radiation information
     textstr_radiation = (
@@ -3137,8 +3128,6 @@ def plot_main_plasma_information(
         transform=fig.transFigure,
     )
 
-    # ============================================
-
     # Add L-H threshold information
     textstr_lh = (
         f"$\\mathbf{{L-H \\ threshold:}}$\n\n"
@@ -3159,8 +3148,6 @@ def plot_main_plasma_information(
             "linewidth": 2,
         },
     )
-
-    # ======================================
 
     # Add density limit information
     textstr_density_limit = (
@@ -3284,10 +3271,7 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: mf.MFile, scan: int):
 
 
 def plot_system_power_profiles_over_time(
-    axis: plt.Axes,
-    mfile: mf.MFile,
-    scan: int,
-    fig,
+    axis: plt.Axes, mfile: mf.MFile, scan: int, fig
 ):
     """Plots the power profiles over time for various systems."""
 
@@ -3444,12 +3428,7 @@ def plot_system_power_profiles_over_time(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox={"boxstyle": "round", "facecolor": "grey", "alpha": 1.0, "linewidth": 2},
     )
 
 

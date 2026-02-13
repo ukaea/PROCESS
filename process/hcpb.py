@@ -434,14 +434,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
     def nuclear_heating_magnets(self, output: bool):
         """Nuclear heating in the magnets for CCFE HCPB model
 
-
         This subroutine calculates the nuclear heating in the
         coils.
         PROCESS Engineering paper (M. Kovari et al.)
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
 
@@ -686,6 +685,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
     ) -> tuple[float, float, float, float]:
         """Calculate the nuclear heating in the shield for the CCFE HCPB model.
 
+        This method calculates the nuclear heating in the shield using empirical coefficients and exponents,
+        based on the shield's geometry, density, and the total fusion power. The calculation distinguishes
+        between spherical tokamak and conventional configurations for the average shield thickness.
+
         Parameters
         ----------
         itart:
@@ -706,14 +709,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         Returns
         -------
         :
+            p_shld_nuclear_heat_mw (float): Total nuclear heating in shield (MW).
+            - exp_shield1 (float): First exponential factor for shield heating.
+            - exp_shield2 (float): Second exponential factor for shield heating.
+            - shld_u_nuc_heating (float): Unit nuclear heating of shield (W/kg/GW of fusion power) x mass.
 
-        This method calculates the nuclear heating in the shield using empirical coefficients and exponents,
-        based on the shield's geometry, density, and the total fusion power. The calculation distinguishes
-        between spherical tokamak and conventional configurations for the average shield thickness.
-                    p_shld_nuclear_heat_mw (float): Total nuclear heating in shield (MW).
-                    - exp_shield1 (float): First exponential factor for shield heating.
-                    - exp_shield2 (float): Second exponential factor for shield heating.
-                    - shld_u_nuc_heating (float): Unit nuclear heating of shield (W/kg/GW of fusion power) x mass.
         """
 
         # Shield nuclear heating coefficients and exponents

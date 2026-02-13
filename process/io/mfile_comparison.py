@@ -4,11 +4,6 @@ Python tool for comparing MFILE and outputting differences.
 The tool does not work for MFiles that are not the result of
 a full PROCESS run (ie if an error or exception occured).
 
-James Morris
-14/04/15
-
-CCFE
-
 Notes:
     + 24/11/2021: Global dictionary variables moved within the functions
                 to avoid cyclic dependencies. This is because the dicts

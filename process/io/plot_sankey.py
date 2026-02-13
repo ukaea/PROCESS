@@ -14,9 +14,6 @@ from process.io.sankey_funcs import plot_sankey
 
 
 def main(args=None):
-    ###########################################################
-    # Usage
-
     parser = argparse.ArgumentParser(
         description="Program to plot the power flow in PROCESS using a Sankey diagram."
     )
@@ -28,9 +25,6 @@ def main(args=None):
     )
 
     args = parser.parse_args(args)
-
-    #########################################################
-    # main program
 
     plot_sankey(args.mfile)
 

@@ -18,7 +18,6 @@ logger = logging.getLogger(__name__)
 def initialise_imprad():
     """Initialises the impurity radiation data structure
 
-    None
     This routine initialises the impurity radiation data.
     """
 
@@ -237,6 +236,10 @@ def init_imp_element(
 ):
     """Initialise the impurity radiation data for a species.
 
+    This routine initialises the impurity radiation data structure
+    for a given impurity species. The Lz versus temperature data are
+    read in from file.
+
     Parameters
     ----------
     n_species_index : int
@@ -262,10 +265,6 @@ def init_imp_element(
         If impurity data files are missing
     ProcessError
         If required data cannot be located in files
-
-        This routine initialises the impurity radiation data structure
-        for a given impurity species. The Lz versus temperature data are
-        read in from file.
     """
 
     if error == 1:
@@ -557,17 +556,18 @@ class ImpurityRadiation:
 
     def imprad_profile(self, imp_element_index):
         """This routine calculates the impurity radiation losses for given temperature and density profiles.
+
+        Parameters
+        ----------
+        imp_element_index : Int
+            Index used to access different impurity radiation elements
+
         References:
             Bremsstrahlung equation from Johner, L(z) data (coronal equilibrium)
             from Marco Sertoli, Asdex-U, ref. Kallenbach et al.
             Johner, Fusion Science and Technology 59 (2011), pp 308-349
             Sertoli, private communication
             Kallenbach et al., Plasma Phys. Control. Fus. 55(2013) 124041
-
-        Parameters
-        ----------
-        imp_element_index : Int
-            Index used to access different impurity radiation elements
         """
 
         pimp = pimpden(

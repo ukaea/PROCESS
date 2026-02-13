@@ -15,7 +15,6 @@ from process.exceptions import ProcessValueError
 class Divertor:
     """Module containing divertor routines
 
-
     This module contains routines relevant for calculating the
     divertor parameters for a fusion power plant.
     """
@@ -25,8 +24,6 @@ class Divertor:
 
     def run(self, output: bool):
         """Routine to call the divertor model
-
-
 
         This subroutine calls the divertor routine. This routine scales
         dimensions, powers and field levels which are used as input to
@@ -102,7 +99,6 @@ class Divertor:
     ) -> float:
         """Tight aspect ratio tokamak divertor model
 
-
         This method calculates the divertor heat load for a tight aspect
         ratio machine, assuming that the power is evenly distributed around the
         divertor chamber by the action of a gaseous target. Each divertor is
@@ -128,24 +124,6 @@ class Divertor:
             1 for single null configuration, 0 for double null
         dz_divertor : float
             Vertical height of the divertor (m)
-        rmajor:
-
-        rminor:
-
-        triang:
-
-        dr_fw_plasma_gap_inboard:
-
-        dz_xpoint_divertor:
-
-        p_plasma_separatrix_mw:
-
-        output: bool :
-
-        i_single_null: int :
-
-        dz_divertor:
-
 
         Returns
         -------
@@ -259,7 +237,6 @@ class Divertor:
         output: bool,
     ) -> float:
         """Divertor heat load model (Wade 2020)
-
 
         This subroutine calculates the divertor heat flux for any machine,
         with either a single null or double null configuration.
@@ -394,12 +371,6 @@ class Divertor:
             Fraction of the solid angle subtended by a single divertor.
         n_divertors : int
             Number of divertors.
-        p_plasma_rad_mw:
-
-        f_ster_div_single:
-
-        n_divertors: int :
-
 
         Returns
         -------
@@ -425,12 +396,6 @@ class Divertor:
             Fraction of the solid angle subtended by a single divertor.
         n_divertors : int
             Number of divertors.
-        p_plasma_neutron_mw:
-
-        f_ster_div_single:
-
-        n_divertors: int :
-
 
         Returns
         -------

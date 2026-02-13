@@ -1126,7 +1126,7 @@ class Availability:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
         """
 
         ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO

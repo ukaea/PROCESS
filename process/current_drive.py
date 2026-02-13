@@ -831,11 +831,6 @@ class ElectronCyclotron:
             Volume averaged electron density in 1x10^20 m^-3.
         dlamee: float
             Electron collision frequency in 1/s.
-        temp_plasma_electron_density_weighted_kev: float:
-            rmajor: float:
-            dene20: float:
-            dlamee: float:
-
 
         Returns
         -------
@@ -882,14 +877,6 @@ class ElectronCyclotron:
             Cyclotron harmonic number (fundamental used as default).
         i_ecrh_wave_mode: int
             Wave mode switch (0 for O-mode, 1 for X-mode).
-        te: float:
-            zeff: float:
-            rmajor: float:
-            nd_plasma_electrons_vol_avg: float:
-            b_plasma_toroidal_on_axis: float:
-            n_ecrh_harmonic: int:
-            i_ecrh_wave_mode: int:
-
 
         Returns
         -------

@@ -10,8 +10,6 @@ Fortran "program" statement. This Python module effectively acts as the Fortran
 "program".
 
 Power Reactor Optimisation Code for Environmental and Safety Studies
-P J Knight, CCFE, Culham Science Centre
-J Morris, CCFE, Culham Science Centre
 
 This is a systems code that evaluates various physics and
 engineering aspects of a fusion power plant subject to given
@@ -283,8 +281,12 @@ class VaryRun:
     def __init__(self, config_file: str, solver: str = "vmcon"):
         """Initialise and perform a VaryRun.
 
-        :param config_file: config file for run parameters
-        :param solver: which solver to use, as specified in solver.py
+        Parameters
+        ----------
+        config_file:
+            config file for run parameters
+        solver:
+            which solver to use, as specified in solver.py
         """
         # Store the absolute path to the config file immediately: various
         # dir changes happen in old run_process code
@@ -374,8 +376,13 @@ class SingleRun:
         self, input_file: str, solver: str = "vmcon", *, update_obsolete: bool = False
     ):
         """Read input file and initialise variables.
-        :param input_file: input file named <optional_name>IN.DAT
-        :param solver: which solver to use, as specified in solver.py
+
+        Parameters
+        ----------
+        input_file:
+            input file named <optional_name>IN.DAT
+        solver:
+            which solver to use, as specified in solver.py
         """
         self.input_file = input_file
 

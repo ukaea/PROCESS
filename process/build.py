@@ -140,7 +140,7 @@ class Build:
         ----------
         output : bool
             Flag indicating whether to output results
-        output: bool :
+        output: bool
 
 
 
@@ -870,7 +870,7 @@ class Build:
 
         Parameters
         ----------
-        output: bool :
+        output: bool
 
         """
         if physics_variables.itart == 1:
@@ -1692,7 +1692,7 @@ class Build:
         ----------
         output : bool
             Flag indicating whether to output the results
-        output: bool :
+        output: bool
 
 
 

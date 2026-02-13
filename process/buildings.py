@@ -149,6 +149,20 @@ class Buildings:
         helpow :
             total cryogenic load, W
 
+        Returns
+        -------
+        cryv:
+            volume of cryogenic building, m3
+        vrci:
+            inner volume of reactor building, m3
+        rbv:
+            outer volume of reactor building, m3
+        rmbv:
+            volume of reactor maintenance building, m3
+        wsv:
+            volume of warm shop, m3
+        elev:
+            volume of electrical buildings, m3
         """
 
         # Reactor building

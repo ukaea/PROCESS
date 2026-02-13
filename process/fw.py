@@ -251,16 +251,6 @@ class FirstWall:
             First wall inboard area assuming 100% coverage (m^2).
         a_fw_outboard_full_coverage : float
             First wall outboard area assuming 100% coverage (m^2).
-        n_divertors: int :
-
-        f_ster_div_single:
-
-        f_a_fw_outboard_hcd:
-
-        a_fw_inboard_full_coverage:
-
-        a_fw_outboard_full_coverage:
-
 
         Returns
         -------

@@ -29,14 +29,10 @@ class Costs2015:
     def run(self):
         """Cost accounting for a fusion power plant
 
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
         This routine performs the cost accounting for a fusion power plant.
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         self.outfile = self.outfile
-
-        # ###############################################
 
         # Calculate building costs
         self.calc_building_costs()

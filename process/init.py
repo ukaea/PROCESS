@@ -65,7 +65,6 @@ from process.stellarator.initialization import st_init
 def init_process():
     """Routine that calls the initialisation routines
 
-    None
     This routine calls the main initialisation routines that set
     the default values for the global variables, reads in data from
     the input file, and checks the run parameters for consistency.

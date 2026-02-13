@@ -23,10 +23,6 @@ def finalise(models, ifail: int, non_idempotent_msg: str | None = None):
         error flag
     non_idempotent_msg : None | str, optional
         warning about non-idempotent variables, defaults to None
-    ifail: int :
-
-    non_idempotent_msg: str | None :
-         (Default value = None)
     """
     if ifail == 1:
         po.oheadr(constants.NOUT, "Final Feasible Point")

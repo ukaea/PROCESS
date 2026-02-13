@@ -3,10 +3,6 @@
 File for reading IN.DATs
 Version 2 (mainly for use with IN.DAT created from UI)
 
-James Morris
-CCFE
-11/12/14
-
 Notes:
     + 24/11/2021: Global dictionary variables moved within the functions
                 to avoid cyclic dependencies. This is because the dicts
@@ -320,20 +316,20 @@ def write_constraint_equations(data, out_file):
 def get_iteration_variables(data: dict):
     """Create the iteration variable information.
 
-     Use the iteration variable numbers from IN.DAT to find the comment
-     associated with them in the source dictionary. Then check the information
-     from the IN.DAT file to see if upper and/or lower bounds are present, and
-     what the value is. Return all this information for each variable.
+    Use the iteration variable numbers from IN.DAT to find the comment
+    associated with them in the source dictionary. Then check the information
+    from the IN.DAT file to see if upper and/or lower bounds are present, and
+    what the value is. Return all this information for each variable.
 
-     Parameters
-     ----------
-     data:
-         Data dictionary for the IN.DAT information
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
 
-     Returns
-     -------
+    Returns
+    -------
     :
-         variable number, comment, upper and/or lower bounds if present
+        variable number, comment, upper and/or lower bounds if present
     """
     variables = {}
 

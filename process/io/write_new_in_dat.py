@@ -3,8 +3,6 @@
 Modifies the PROCESS input file IN.DAT so all the iteration variables are
 given their values from the output file MFILE.DAT.
 
-James Morris 30/04/2014 based on code by Michael Kovari 9/8/13 and
-J C Rivas, 16/7/2013
 """
 
 import argparse

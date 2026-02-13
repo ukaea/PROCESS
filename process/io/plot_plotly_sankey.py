@@ -13,9 +13,6 @@ from process.io.mfile import MFile
 
 
 def main(args=None):
-    ###########################################################
-    # Usage
-
     if not PLOT_SANKEY:
         print(
             "\nPlotly is not installed, unable to create sankey diagram!\n"
@@ -35,9 +32,6 @@ def main(args=None):
     )
 
     args = parser.parse_args(args)
-
-    #########################################################
-    # main program
 
     plot_power_balance_sankey(args.mfile)
 
