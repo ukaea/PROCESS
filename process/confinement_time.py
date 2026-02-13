@@ -416,33 +416,14 @@ def rebut_lallia_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    rminor:
-
-    rmajor:
-
-    kappa:
-
-    afuel:
-
-    pcur:
-
-    zeff:
-
-    dnla20:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Rebut-Lallia confinement time [s]
 
-        Notes:
 
-        References:
+    References:
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
     rll = (rminor**2 * rmajor * kappa) ** (1.0e0 / 3.0e0)
@@ -483,27 +464,13 @@ def goldston_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    rmajor:
-
-    rminor:
-
-    kappa95:
-
-    afuel:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Goldston confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
@@ -551,33 +518,13 @@ def t10_confinement_time(
         float
     pcur :
         float
-    dnla20:
-
-    rmajor:
-
-    qstar:
-
-    b_plasma_toroidal_on_axis:
-
-    rminor:
-
-    kappa95:
-
-    p_plasma_loss_mw:
-
-    zeff:
-
-    pcur:
-
 
     Returns
     -------
     :
         float: T-10 confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
@@ -631,35 +578,13 @@ def jaeri_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    kappa95:
-
-    rminor:
-
-    afuel:
-
-    n20:
-
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    rmajor:
-
-    qstar:
-
-    zeff:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: JAERI confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
@@ -714,31 +639,14 @@ def kaye_big_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    rmajor:
-
-    rminor:
-
-    b_plasma_toroidal_on_axis:
-
-    kappa95:
-
-    pcur:
-
-    n20:
-
-    afuel:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Kaye-Big confinement time [s]
 
-        Notes:
 
-        References:
+    References:
         - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
         "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
     """
@@ -785,31 +693,14 @@ def iter_h90_p_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    rmajor:
-
-    rminor:
-
-    kappa:
-
-    dnla20:
-
-    b_plasma_toroidal_on_axis:
-
-    afuel:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: ITER H90-P confinement time [s]
 
-        Notes:
 
-        References:
+    References:
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
     return (
@@ -852,29 +743,13 @@ def riedel_l_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    rmajor:
-
-    rminor:
-
-    kappa95:
-
-    dnla20:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Riedel confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
     return (
@@ -919,31 +794,13 @@ def christiansen_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    rmajor:
-
-    rminor:
-
-    kappa95:
-
-    dnla20:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: Christiansen confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
     return (
@@ -985,29 +842,13 @@ def lackner_gottardi_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    rmajor:
-
-    rminor:
-
-    kappa95:
-
-    dnla20:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Lackner-Gottardi confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
     qhat = (
@@ -1056,29 +897,14 @@ def neo_kaye_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    rmajor:
-
-    rminor:
-
-    kappa95:
-
-    dnla20:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Neo-Kaye confinement time [s]
 
-        Notes:
 
-        References:
+    References:
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
     return (
@@ -1123,31 +949,13 @@ def riedel_h_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    rmajor:
-
-    rminor:
-
-    kappa95:
-
-    dnla20:
-
-    b_plasma_toroidal_on_axis:
-
-    afuel:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Riedel H-mode confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
     """
     return (
@@ -1187,31 +995,16 @@ def iter_h90_p_amended_confinement_time(
         float
     kappa :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    afuel:
-
-    rmajor:
-
-    p_plasma_loss_mw:
-
-    kappa:
-
 
     Returns
     -------
     :
         float: Amended ITER H90-P confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - J. P. Christiansen et al., “Global energy confinement H-mode database for ITER,”
         Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992,
         doi: https://doi.org/10.1088/0029-5515/32/2/i11.
-        ‌
     """
     return (
         0.082e0
@@ -1244,29 +1037,16 @@ def sudo_et_al_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    rmajor:
-
-    rminor:
-
-    dnla20:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Sudo et al. confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - S. Sudo et al., “Scalings of energy confinement and density limit in stellarator/heliotron devices,”
         Nuclear Fusion, vol. 30, no. 1, pp. 11-21, Jan. 1990,
         doi: https://doi.org/10.1088/0029-5515/30/1/002.
-        ‌
     """
 
     return (
@@ -1300,25 +1080,13 @@ def gyro_reduced_bohm_confinement_time(
         float
     rmajor :
         float
-    b_plasma_toroidal_on_axis:
-
-    dnla20:
-
-    p_plasma_loss_mw:
-
-    rminor:
-
-    rmajor:
-
 
     Returns
     -------
     :
         float: Gyro-reduced Bohm confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. μ B/B as the Cause of Transport in Tokamaks."
         Bull. Am. Phys. Soc 34 (1989): 1964.
     """
@@ -1356,31 +1124,16 @@ def lackner_gottardi_stellarator_confinement_time(
         float
     q :
         float
-    rmajor:
-
-    rminor:
-
-    dnla20:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
-    q:
-
 
     Returns
     -------
     :
         float: Lackner-Gottardi stellarator confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - K. Lackner and N. A. O. Gottardi, “Tokamak confinement in relation to plateau scaling,”
         Nuclear Fusion, vol. 30, no. 4, pp. 767-770, Apr. 1990,
         doi: https://doi.org/10.1088/0029-5515/30/4/018.
-        ‌
     """
     return (
         0.17e0
@@ -1423,31 +1176,13 @@ def iter_93h_confinement_time(
         float
     kappa :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
-    afuel:
-
-    rmajor:
-
-    dnla20:
-
-    aspect:
-
-    kappa:
-
 
     Returns
     -------
     :
         float: ITER-93H confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - K. Thomsen et al., “ITER H mode confinement database update,”
         vol. 34, no. 1, pp. 131-167, Jan. 1994, doi: https://doi.org/10.1088/0029-5515/34/1/i10.
     """
@@ -1494,35 +1229,16 @@ def iter_h97p_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
-    dnla19:
-
-    rmajor:
-
-    aspect:
-
-    kappa:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: ITER H97-P confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - I. C. Database and M. W. G. (presented Cordey), “Energy confinement scaling and the extrapolation to ITER,”
         Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127, Dec. 1997,
         doi: https://doi.org/10.1088/0741-3335/39/12b/009.
-        ‌
     """
     return (
         0.031e0
@@ -1567,31 +1283,13 @@ def iter_h97p_elmy_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
-    dnla19:
-
-    rmajor:
-
-    aspect:
-
-    kappa:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: ITER H97-P(y) confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - I. C. Database and M. W. G. (presented Cordey), “Energy confinement scaling and the extrapolation to ITER,”
         Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127, Dec. 1997,
         doi: https://doi.org/10.1088/0741-3335/39/12b/009.
@@ -1642,36 +1340,19 @@ def iter_96p_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    kappa95:
-
-    rmajor:
-
-    aspect:
-
-    dnla19:
-
-    afuel:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: ITER-96P confinement time [s]
 
-        Notes:
+    Notes:
         - The thermal energy confinement time is given below
 
-        References:
+    References:
         - S. B. Kaye et al., “ITER L mode confinement database,”
         Nuclear Fusion, vol. 37, no. 9, pp. 1303-1328, Sep. 1997,
         doi: https://doi.org/10.1088/0029-5515/37/9/i10.
-        ‌
     """
     return (
         0.023e0
@@ -1718,31 +1399,11 @@ def valovic_elmy_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    afuel:
-
-    rmajor:
-
-    rminor:
-
-    kappa:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Valovic modified ELMy-H mode confinement time [s]
-
-        Notes:
-
-        References:
     """
     return (
         0.067e0
@@ -1787,31 +1448,13 @@ def kaye_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    kappa:
-
-    rmajor:
-
-    aspect:
-
-    dnla19:
-
-    afuel:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Kaye PPPL Workshop confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - Kaye PPPL Workshop April 1998
     """
     return (
@@ -1857,31 +1500,11 @@ def iter_pb98py_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa:
-
-    aspect:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: ITERH-PB98P(y) ELMy H-mode confinement time [s]
-
-        Notes:
-
-        References:
     """
     return (
         0.0615e0
@@ -1926,33 +1549,17 @@ def iter_ipb98y_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa:
-
-    aspect:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: IPB98(y) ELMy H-mode confinement time [s]
 
-        Notes:
+    Notes:
         - Unlike the other IPB98 scaling laws, the IPB98(y) scaling law uses the true separatrix elongation.
         - See correction paper below for more information
 
-        References:
+    References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
         Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -2002,32 +1609,16 @@ def iter_ipb98y1_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa_ipb:
-
-    aspect:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: IPB98(y,1) ELMy H-mode confinement time [s]
 
-        Notes:
+    Notes:
         - See correction paper below for more information about the re-definition of the elongation used.
 
-        References:
+    References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
         Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -2077,32 +1668,16 @@ def iter_ipb98y2_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa_ipb:
-
-    aspect:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: IPB98(y,2) ELMy H-mode confinement time [s]
 
-        Notes:
+    Notes:
         - See correction paper below for more information about the re-definition of the elongation used.
 
-        References:
+    References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
         Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -2152,32 +1727,16 @@ def iter_ipb98y3_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa_ipb:
-
-    aspect:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: IPB98(y,3) ELMy H-mode confinement time [s]
 
-        Notes:
+    Notes:
         - See correction paper below for more information about the re-definition of the elongation used.
 
-        References:
+    References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
         Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -2227,32 +1786,16 @@ def iter_ipb98y4_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa_ipb:
-
-    aspect:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: IPB98(y,4) ELMy H-mode confinement time [s]
 
-        Notes:
+    Notes:
         - See correction paper below for more information about the re-definition of the elongation used.
 
-        References:
+    References:
         - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
         Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -2296,30 +1839,15 @@ def iss95_stellarator_confinement_time(
         float
     iotabar :
         float
-    rminor:
-
-    rmajor:
-
-    dnla19:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
-    iotabar:
-
 
     Returns
     -------
     :
         float: ISS95 stellarator confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - U. Stroth et al., “Energy confinement scaling from the international stellarator database,”
         vol. 36, no. 8, pp. 1063-1077, Aug. 1996, doi: https://doi.org/10.1088/0029-5515/36/8/i11.
-        ‌
     """
     return (
         0.079e0
@@ -2356,30 +1884,15 @@ def iss04_stellarator_confinement_time(
         float
     iotabar :
         float
-    rminor:
-
-    rmajor:
-
-    dnla19:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
-    iotabar:
-
 
     Returns
     -------
     :
         float: ISS04 stellarator confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - H. Yamada et al., “Characterization of energy confinement in net-current free plasmas using the extended International Stellarator Database,”
         vol. 45, no. 12, pp. 1684-1693, Nov. 2005, doi: https://doi.org/10.1088/0029-5515/45/12/024.
-        ‌
     """
     return (
         0.134e0
@@ -2422,35 +1935,16 @@ def ds03_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa95:
-
-    aspect:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: DS03 beta-independent H-mode confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - T. C. Luce, C. C. Petty, and J. G. Cordey, “Application of dimensionless parameter scaling techniques to the design and interpretation of magnetic fusion experiments,”
         Plasma Physics and Controlled Fusion, vol. 50, no. 4, p. 043001, Mar. 2008,
         doi: https://doi.org/10.1088/0741-3335/50/4/043001.
-        ‌
     """
     return (
         0.028e0
@@ -2489,34 +1983,21 @@ def murari_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    rmajor:
-
-    kappa_ipb:
-
-    dnla19:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Murari confinement time [s]
 
-        Notes:
+    Notes:
         - This scaling uses the IPB defintiion of elongation, see reference for more information.
 
-        References:
+    References:
         - A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio, “A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks,”
         Nuclear Fusion, vol. 55, no. 7, pp. 073009-073009, Jun. 2015, doi: https://doi.org/10.1088/0029-5515/55/7/073009.
 
         - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
         Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
-        ‌
     """
     return (
         0.0367
@@ -2558,36 +2039,21 @@ def petty08_confinement_time(
         float
     aspect :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa_ipb:
-
-    aspect:
-
 
     Returns
     -------
     :
         float: Petty08 confinement time [s]
 
-        Notes:
+    Notes:
         - This scaling uses the IPB defintiion of elongation, see reference for more information.
 
-        References:
+    References:
         - C. C. Petty, “Sizing up plasmas using dimensionless parameters,”
         Physics of Plasmas, vol. 15, no. 8, Aug. 2008, doi: https://doi.org/10.1063/1.2961043.
 
         - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
         Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
-        ‌
     """
     return (
         0.052e0
@@ -2640,41 +2106,16 @@ def lang_high_density_confinement_time(
         float
     kappa_ipb :
         float
-    plasma_current:
-
-    b_plasma_toroidal_on_axis:
-
-    nd_plasma_electron_line:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    rminor:
-
-    q:
-
-    qstar:
-
-    aspect:
-
-    afuel:
-
-    kappa_ipb:
-
 
     Returns
     -------
     :
         float: High density relevant confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - P. T. Lang, C. Angioni, R. M. M. Dermott, R. Fischer, and H. Zohm, “Pellet Induced High Density Phases during ELM Suppression in ASDEX Upgrade,”
         24th IAEA Conference Fusion Energy, 2012, Oct. 2012,
         Available: https://www.researchgate.net/publication/274456104_Pellet_Induced_High_Density_Phases_during_ELM_Suppression_in_ASDEX_Upgrade
-        ‌
     """
     qratio = q / qstar
     n_gw = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
@@ -2713,26 +2154,15 @@ def hubbard_nominal_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla20:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Hubbard confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
         Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
-        ‌
     """
     return (
         0.014e0
@@ -2761,26 +2191,15 @@ def hubbard_lower_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla20:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Hubbard confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
         Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
-        ‌
     """
     return (
         0.014e0
@@ -2809,26 +2228,15 @@ def hubbard_upper_confinement_time(
         float
     p_plasma_loss_mw :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla20:
-
-    p_plasma_loss_mw:
-
 
     Returns
     -------
     :
         float: Hubbard confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
         Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
-        ‌
     """
     return (
         0.014e0
@@ -2869,40 +2277,23 @@ def menard_nstx_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa_ipb:
-
-    aspect:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: Menard NSTX ELMy H-mode confinement time [s]
 
-        Notes:
+    Notes:
         - "The leading NSTX conﬁnement scaling coefﬁcient is chosen such that the ITER and ST energy conﬁnement times are
         identical for a reference NSTX scenario"
         - Assumes IPB98(y,2) exponents are applicable where the ST exponents are not yet determined, i.e.
         the species mass, major radius, inverse aspect ratio and elongation. Hence here we use the IPB98(y,2) definition
         of elongation.
 
-        References:
+    References:
         - J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,”
         Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019,
         doi: https://doi.org/10.1098/rsta.2017.0440.
-        ‌
     """
     return (
         0.095e0
@@ -2947,36 +2338,19 @@ def menard_nstx_petty08_hybrid_confinement_time(
         float
     afuel :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    kappa_ipb:
-
-    aspect:
-
-    afuel:
-
 
     Returns
     -------
     :
         float: Menard NSTX-Petty hybrid confinement time [s]
 
-        Notes:
+    Notes:
         - Assuming a linear interpolation in (1/aspect) between the two scalings
 
-        References:
+    References:
         - J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,”
         Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019,
         doi: https://doi.org/10.1098/rsta.2017.0440.
-        ‌
     """
     # Equivalent to A > 2.5, use Petty scaling
     if (1.0e0 / aspect) <= 0.4e0:
@@ -3047,29 +2421,16 @@ def nstx_gyro_bohm_confinement_time(
         float
     dnla20 :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    dnla20:
-
 
     Returns
     -------
     :
         float: NSTX gyro-Bohm confinement time [s]
 
-        Notes:
-
-        References:
+    References:
         - P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and S. McNamara,
         “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,”
         vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
-        ‌
     """
     return (
         0.21e0
@@ -3114,35 +2475,17 @@ def itpa20_confinement_time(
         float
     aion :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    dnla19:
-
-    p_plasma_loss_mw:
-
-    rmajor:
-
-    triang:
-
-    kappa_ipb:
-
-    eps:
-
-    aion:
-
 
     Returns
     -------
     :
         float: ITPA20 confinement time [s]
 
-        Notes:
+    Notes:
         - Mass term is the effective mass of the plasma, so we assume the total ion mass here
         - This scaling uses the IPB defintiion of elongation, see reference for more information.
 
-        References:
+    References:
         - G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,”
         Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
     """
@@ -3190,33 +2533,17 @@ def itpa20_il_confinement_time(
         float
     kappa_ipb :
         float
-    pcur:
-
-    b_plasma_toroidal_on_axis:
-
-    p_plasma_loss_mw:
-
-    dnla19:
-
-    aion:
-
-    rmajor:
-
-    triang:
-
-    kappa_ipb:
-
 
     Returns
     -------
     :
         float: ITPA20-IL confinement time [s]
 
-        Notes:
+    Notes:
         - Mass term is the effective mass of the plasma, so we assume the total ion mass here
         - This scaling uses the IPB defintiion of elongation, see reference for more information.
 
-        References:
+    References:
         - T. Luda et al., “Validation of a full-plasma integrated modeling approach on ASDEX Upgrade,”
         Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048, Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
     """
