@@ -220,7 +220,7 @@ plugins:
   - git-revision-date-localized:
       enable_creation_date: true
   - mkdocs-jupyter:
-      # execute: true
+      execute: true
       ignore: [scripts/**/*.py]
   - mkdocstrings:
       handlers:
