@@ -47,7 +47,7 @@ icc = 2 * Global power balance (consistency equation)
 
 !!! Info "Constraints"  
     A full list of constraints is given on the variable description page in the row labelled 
-    `lablcc` [here](vardes.md#numerics).  
+    `lablcc` [here](source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablcc).
     See [solver](../solver/solver-guide.md) page for more info
 
 ## Iteration Variables
@@ -80,7 +80,7 @@ the default, if no value is specified), will be used as the starting value.
 
 !!! Note "Iteration Variables"  
     A full list of iteration variables is given on the variable description page in the row labelled 
-    `lablxc` [here](vardes.md#numerics).  
+    `lablxc` [here](source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablxc).
     (See [solver](../solver/solver-guide.md) page for more info)
 
 ## Bounds
@@ -131,7 +131,7 @@ epsvmc   = 1.0e-8 * Error tolerance for vmcon
 
 !!! Info "Figure of Merit"  
     A full list of figures of merit is given on the variable description page in the row labelled 
-    `lablmm` [here](vardes.md#numerics).  
+    `lablmm` [here](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablmm).
 
 ## Input Variables
 
@@ -149,8 +149,7 @@ one can add a `*` to the beginning of the line, as below:
 ```
 
 !!! Info "Variable Descriptions"  
-    A full list of inputs variables is given in the PROCESS `html` documentation 
-    file `vardes.html` and on the variable description page [here](vardes.md).
+    A full list of inputs variables is given in the PROCESS data structure API documentation [here](../../source/reference/process/data_structure).
 
 ## Scan
 
@@ -166,7 +165,7 @@ isweep = 4
 sweep = 2.8, 2.9, 3.0, 3.1
 ```
 
-where `nsweep` is the scan variable chosen (see [variable descriptions](vardes.md)),
+where `nsweep` is the scan variable chosen (see [variable descriptions](../../source/reference/process/scan/#process.scan.ScanVariables)),
 `isweep` is the number of scan points and `sweep` is the array of scan values. In this example, 
 PROCESS runs for each of the four values given of the plasma aspect ratio variable `aspect`. 
 
@@ -198,7 +197,7 @@ Scan variables should not be confused with iteration variables.
 !!! Info "Scanning"    
     For obvious reasons, the active scanning variable or variables must not also be active
     iteration variables.   
-    A full list of scan variables is [here](vardes.md#scan_module).  
+    A full list of scan variables is [here](../../source/reference/process/scan/#process.scan.ScanVariables).
 
 ## Examples
 
