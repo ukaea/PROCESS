@@ -1320,6 +1320,9 @@ vel_plasma_deuteron_profile: list[float] = None
 vel_plasma_triton_profile: list[float] = None
 """Profile of triton thermal velocity in plasma (m/s)"""
 
+vel_plasma_alpha_thermal_profile: list[float] = None
+"""Profile of thermal alpha particle velocity in plasma (m/s)"""
+
 plasma_coulomb_log_electron_electron_profile: list[float] = None
 """Profile of electron-electron Coulomb logarithm in plasma"""
 
@@ -1669,6 +1672,7 @@ def init_physics_variables():
         vel_plasma_electron_profile, \
         vel_plasma_deuteron_profile, \
         vel_plasma_triton_profile, \
+        vel_plasma_alpha_thermal_profile, \
         plasma_coulomb_log_electron_electron_profile, \
         plasma_coulomb_log_electron_deuteron_profile, \
         plasma_coulomb_log_electron_triton_profile, \
@@ -1940,6 +1944,7 @@ def init_physics_variables():
     vel_plasma_electron_profile = []
     vel_plasma_deuteron_profile = []
     vel_plasma_triton_profile = []
+    vel_plasma_alpha_thermal_profile = []
     plasma_coulomb_log_electron_electron_profile = []
     plasma_coulomb_log_electron_deuteron_profile = []
     plasma_coulomb_log_electron_triton_profile = []
