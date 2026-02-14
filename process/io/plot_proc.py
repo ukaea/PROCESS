@@ -12628,6 +12628,8 @@ def plot_velocity_profile(axis, mfile_data, scan):
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
+    vel_plasma_alpha_birth = mfile_data.data["vel_plasma_alpha_birth"].get_scan(scan)
+
     axis.plot(
         np.linspace(0, 1, len(vel_plasma_electron_profile)),
         vel_plasma_electron_profile,
@@ -12655,6 +12657,13 @@ def plot_velocity_profile(axis, mfile_data, scan):
         color="orange",
         linestyle="-",
         label=r"$v_{\alpha,thermal}$",
+    )
+    axis.axhline(
+        vel_plasma_alpha_birth,
+        color="red",
+        linestyle="--",
+        linewidth=1.5,
+        label=r"$v_{\alpha,birth}$",
     )
 
     axis.set_yscale("log")
