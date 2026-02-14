@@ -1311,6 +1311,9 @@ len_plasma_debye_electron_profile: list[float] = None
 radius_plasma_deuteron_toroidal_larmor_isotropic_profile: list[float] = None
 """Profile of deuteron toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
+radius_plasma_triton_toroidal_larmor_isotropic_profile: list[float] = None
+"""Profile of triton toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
+
 len_plasma_debye_electron_vol_avg: float = None
 """Volume averaged electron Debye length in plasma (m)"""
 
@@ -1678,6 +1681,7 @@ def init_physics_variables():
         j_plasma_bootstrap_sauter_profile, \
         len_plasma_debye_electron_profile, \
         radius_plasma_deuteron_toroidal_larmor_isotropic_profile, \
+        radius_plasma_triton_toroidal_larmor_isotropic_profile, \
         len_plasma_debye_electron_vol_avg, \
         vel_plasma_electron_profile, \
         vel_plasma_deuteron_profile, \
@@ -1953,6 +1957,7 @@ def init_physics_variables():
     n_charge_plasma_effective_mass_weighted_vol_avg = 0.0
     len_plasma_debye_electron_profile = []
     radius_plasma_deuteron_toroidal_larmor_isotropic_profile = []
+    radius_plasma_triton_toroidal_larmor_isotropic_profile = []
     len_plasma_debye_electron_vol_avg = 0.0
     vel_plasma_electron_profile = []
     vel_plasma_deuteron_profile = []
