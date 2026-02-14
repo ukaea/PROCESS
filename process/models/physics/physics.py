@@ -10096,6 +10096,41 @@ class DetailedPhysics:
             for i in range(len(physics_variables.len_plasma_debye_electron_profile))
         ])
 
+        physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=2,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ALPHA_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_alpha_thermal_profile[
+                                i
+                            ],
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ALPHA_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_alpha_thermal_profile[
+                                i
+                            ],
+                        ),
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
     @staticmethod
     def calculate_debye_length(
         temp_plasma_species_kev: float | np.ndarray,
@@ -10458,4 +10493,14 @@ class DetailedPhysics:
                 f"Deuteron-triton Coulomb log at point {i}",
                 f"(plasma_coulomb_log_deuteron_triton_profile{i})",
                 physics_variables.plasma_coulomb_log_deuteron_triton_profile[i],
+            )
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-alpha thermal Coulomb log at point {i}",
+                f"(plasma_coulomb_log_electron_alpha_thermal_profile{i})",
+                physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile[i],
             )
