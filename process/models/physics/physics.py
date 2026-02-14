@@ -9529,6 +9529,13 @@ class DetailedPhysics:
             )
         )
 
+        physics_variables.vel_plasma_alpha_birth = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=constants.DT_ALPHA_ENERGY,
+                mass=constants.ALPHA_MASS,
+            )
+        )
+
         # ============================
         # Plasma frequencies
         # ============================
@@ -10014,6 +10021,12 @@ class DetailedPhysics:
                 f"(vel_plasma_alpha_thermal_profile{i})",
                 physics_variables.vel_plasma_alpha_thermal_profile[i],
             )
+        po.ovarre(
+            self.outfile,
+            "Plasma alpha birth velocity (m/s)",
+            "(vel_plasma_alpha_birth)",
+            physics_variables.vel_plasma_alpha_birth,
+        )
 
         po.osubhd(self.outfile, "Frequencies:")
 
