@@ -10333,6 +10333,22 @@ class DetailedPhysics:
         )
 
     @staticmethod
+    def calculate_larmor_radius(
+        vel_perp: float | np.ndarray,
+        freq_larmor: float,
+    ) -> float | np.ndarray:
+        """
+        Calculate the Larmor radius for a particle species.
+        :param vel_perp: Perpendicular velocity of the particle to the magnetic field (m/s).
+        :type vel_perp: float | np.ndarray
+        :param freq_larmor: Larmor frequency of the particle (Hz).
+        :type freq_larmor: float
+        :returns: Larmor radius in meters.
+        :rtype: float | np.ndarray
+        """
+        return vel_perp / (freq_larmor)
+
+    @staticmethod
     def calculate_reduced_mass(mass1: float, mass2: float) -> float:
         """
         Calculate the reduced mass of two particles.
