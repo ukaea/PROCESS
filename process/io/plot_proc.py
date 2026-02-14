@@ -12571,8 +12571,21 @@ def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
         )
     ]
 
+    radius_plasma_triton_larmor_profile = [
+        mfile_data.data[
+            f"radius_plasma_triton_toroidal_larmor_isotropic_profile{i}"
+        ].get_scan(scan)
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
+
     radius_plasma_deuteron_larmor_profile_mm = [
         radius * 1e3 for radius in radius_plasma_deuteron_larmor_profile
+    ]
+
+    radius_plasma_triton_larmor_profile_mm = [
+        radius * 1e3 for radius in radius_plasma_triton_larmor_profile
     ]
 
     axis.plot(
@@ -12583,8 +12596,16 @@ def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
         label=r"$\rho_{Larmor,toroidal,D}$",
     )
 
+    axis.plot(
+        np.linspace(-1, 1, len(radius_plasma_triton_larmor_profile_mm)),
+        radius_plasma_triton_larmor_profile_mm,
+        color="green",
+        linestyle="-",
+        label=r"$\rho_{Larmor,toroidal,T}$",
+    )
+
     axis.set_ylabel(r"Larmor Radii [mm]")
-    axis.set_title(r"Larmor Radii ($v_{\perp}^2 = 2v_{th}^2$)")
+    axis.set_title(r" Toroidal Larmor Radii ($v_{\perp}^2 = 2v_{th}^2$)")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.minorticks_on()

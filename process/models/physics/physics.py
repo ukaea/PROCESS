@@ -9982,12 +9982,33 @@ class DetailedPhysics:
         # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
         # we can use the total velocity to calculate the Larmor radius for an isotropic profile
         physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_profile = self.calculate_larmor_radius(
-            vel_perp=np.sqrt(2)
-            * np.concatenate([
-                physics_variables.vel_plasma_deuteron_profile[::-1],
-                physics_variables.vel_plasma_deuteron_profile,
-            ]),
-            freq_larmor=physics_variables.freq_plasma_larmor_toroidal_deuteron_profile,
+            vel_perp=np.sqrt(
+                2
+                * np.concatenate([
+                    physics_variables.vel_plasma_deuteron_profile[::-1],
+                    physics_variables.vel_plasma_deuteron_profile,
+                ])
+                ** 2
+            ),
+            freq_larmor=physics_variables.freq_plasma_larmor_toroidal_deuteron_profile
+            * (2 * np.pi),
+        )
+
+        # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
+        # we can use the total velocity to calculate the Larmor radius for an isotropic profile
+        physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_profile = (
+            self.calculate_larmor_radius(
+                vel_perp=np.sqrt(
+                    2
+                    * np.concatenate([
+                        physics_variables.vel_plasma_triton_profile[::-1],
+                        physics_variables.vel_plasma_triton_profile,
+                    ])
+                    ** 2
+                ),
+                freq_larmor=physics_variables.freq_plasma_larmor_toroidal_triton_profile
+                * (2 * np.pi),
+            )
         )
 
         # ============================
@@ -10435,6 +10456,17 @@ class DetailedPhysics:
                 f"Plasma deuteron isotropic Larmor radius at point {i}",
                 f"(radius_plasma_deuteron_toroidal_larmor_isotropic_profile{i})",
                 physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_profile[
+                    i
+                ],
+            )
+        for i in range(
+            len(physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma triton isotropic Larmor radius at point {i}",
+                f"(radius_plasma_triton_toroidal_larmor_isotropic_profile{i})",
+                physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_profile[
                     i
                 ],
             )
