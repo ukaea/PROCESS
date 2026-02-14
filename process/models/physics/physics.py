@@ -9921,6 +9921,15 @@ class DetailedPhysics:
             )
         )
 
+        physics_variables.vel_plasma_alpha_thermal_profile = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT
+                * physics_variables.f_temp_plasma_ion_electron,
+                mass=constants.ALPHA_MASS,
+            )
+        )
+
         # ============================
         # Plasma frequencies
         # ============================
@@ -10363,6 +10372,13 @@ class DetailedPhysics:
                 f"Plasma triton thermal velocity at point {i}",
                 f"(vel_plasma_triton_profile{i})",
                 physics_variables.vel_plasma_triton_profile[i],
+            )
+        for i in range(len(physics_variables.vel_plasma_alpha_thermal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma alpha thermal velocity at point {i}",
+                f"(vel_plasma_alpha_thermal_profile{i})",
+                physics_variables.vel_plasma_alpha_thermal_profile[i],
             )
 
         po.osubhd(self.outfile, "Frequencies:")
