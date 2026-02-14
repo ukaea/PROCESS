@@ -1335,6 +1335,9 @@ plasma_coulomb_log_electron_triton_profile: list[float] = None
 plasma_coulomb_log_deuteron_triton_profile: list[float] = None
 """Profile of deuteron-triton Coulomb logarithm in plasma"""
 
+plasma_coulomb_log_electron_alpha_thermal_profile: list[float] = None
+"""Profile of electron-alpha Coulomb logarithm in plasma"""
+
 freq_plasma_electron_profile: list[float] = None
 """Electron plasma frequency profile (Hz)"""
 
@@ -1677,6 +1680,7 @@ def init_physics_variables():
         plasma_coulomb_log_electron_deuteron_profile, \
         plasma_coulomb_log_electron_triton_profile, \
         plasma_coulomb_log_deuteron_triton_profile, \
+        plasma_coulomb_log_electron_alpha_thermal_profile, \
         freq_plasma_electron_profile, \
         freq_plasma_deuteron_profile, \
         freq_plasma_larmor_toroidal_electron_profile, \
@@ -1949,6 +1953,7 @@ def init_physics_variables():
     plasma_coulomb_log_electron_deuteron_profile = []
     plasma_coulomb_log_electron_triton_profile = []
     plasma_coulomb_log_deuteron_triton_profile = []
+    plasma_coulomb_log_electron_alpha_thermal_profile = []
     freq_plasma_electron_profile = []
     freq_plasma_deuteron_profile = []
     freq_plasma_larmor_toroidal_electron_profile = []
