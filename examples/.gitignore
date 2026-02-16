@@ -6,3 +6,4 @@
 *.csv
 *.png
 data/README.txt
+*.ipynb

@@ -9,16 +9,16 @@ Renders of these notebooks can be found under the same sub-heading as this page.
 
 ### Notebooks in VS Code
 
-The recommended way to run notebooks is in VS Code; this has the additional advantage of being able to debug notebooks. Simply open the `.ipynb` file in VS Code to view and run it. You may be required to select a notebook kernel on first run; be sure to select the virtual environment where PROCESS is installed (e.g. `~/PROCESS/.venv`).
+The recommended way to run notebooks is in VS Code; this has the additional advantage of being able to debug notebooks. Simply open the `.ex.py` file in VS Code and click run in interactive mode to view and run it. You may be required to select a notebook kernel on first run; be sure to select the virtual environment where PROCESS is installed (e.g. `~/PROCESS/.venv`).
 
 ### Notebooks via the Jupyter server
 
 Another way of running Jupyter notebooks is via a web browser and the Jupyter server. Start by navigating to your PROCESS directory and activate your virtual environment (e.g. `source .venv/bin/activate`). 
 
-You should then ensure that the `jupyter` and `notebook` packages are installed by running:
+You should then ensure that examples required dependencies are installed using the examples extra:
 
 ```bash
-pip install jupyter
+pip install -e .'[examples]'
 ```
 
 Next, navigate to the `examples` directory within PROCESS
@@ -30,7 +30,7 @@ cd examples/
 and then run:
 
 ```bash
-python -m notebook
+jupyter lab
 ```
 
 A web browser will open and the notebook can be run from there. If you're using WSL, you'll have to `ctrl + click` the link.
@@ -40,17 +40,3 @@ Another way of running the PROCESS example notebooks is to use Binder. This uses
 PROCESS, allowing the examples to be run via a web browser and without installation on your computer. You can click 
 [here](https://mybinder.org/v2/gh/ukaea/PROCESS/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2F) to try this out.
 The Binder may take some time to load, but once loaded you will be in the `examples` folder and can select example notebooks to run in your web browser.
-
-## Maintaining notebooks
-
-Notebooks are located in the `examples` directory and are tested using `testbook` to ensure they keep working.
-
-
-## Issues running notebooks
-
-If you encounter a `PDFInfoNotInstalledError` when running a notebook, ensure poppler utilities are properly installed:
-
-```bash
-apt-get update
-apt-get install poppler-utils
-```

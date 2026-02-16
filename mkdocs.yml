@@ -11,10 +11,7 @@ nav:
           - Running PROCESS: usage/running-process.md
           - Examples:
               - Examples of running PROCESS: usage/examples.md
-              - examples/examples.ipynb
-              - examples/scan.ipynb
-              - examples/plot_solutions.ipynb
-              - examples/single_model_evaluation.ipynb
+              - examples/*.ex.py
           - Troubleshooting: usage/troubleshooting.md
           - Plotting: usage/plotting.md
           - Tracking: tracking.html
@@ -139,15 +136,12 @@ nav:
       - process.io: python/process.io.md
       - process.utilities: python/process.utilities.md
 
-# repo_url: https://git.ccfe.ac.uk/process/process.git
-
 repo_url: https://github.com/UKAEA/PROCESS
 repo_name: UKAEA/PROCESS
 
 copyright: Copyright &copy; 2023 United Kingdom Atomic Energy Authority
 
 theme:
-  # name: readthedocs
   name: material
   font:
     text: Roboto
@@ -216,6 +210,7 @@ plugins:
       zoomable: true
       auto_caption: true
       caption_position: bottom
+  - literate-nav
   - git-revision-date-localized:
       enable_creation_date: true
   - mkdocs-jupyter:
