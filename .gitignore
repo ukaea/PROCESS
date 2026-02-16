@@ -66,3 +66,4 @@ env-fork
 *.html
 !documentation/**/*.html
 process/_version.py
+*.ipynb
