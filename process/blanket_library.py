@@ -2182,30 +2182,6 @@ class BlanketLibrary:
             Number of poloidal channel sections.
         label : str
             Description label for output.
-        output: bool
-
-        icoolpump: int :
-
-        vel_coolant:
-
-        len_pipe:
-
-        n_pipe_90_deg_bends: int :
-
-        n_pipe_180_deg_bends: int :
-
-        den_coolant:
-
-        visc_coolant_dynamic:
-
-        coolant_electrical_conductivity:
-
-        pol_channel_length:
-
-        nopolchan: int :
-
-        label: str :
-
 
         Returns
         -------
@@ -2495,7 +2471,7 @@ class BlanketLibrary:
         output :
             boolean of whether to write data to output file
 
-            :Notes:
+        :Notes:
             Darcy-Weisbach Equation (straight pipe):
 
             ΔP = λ * L/D * (p 〈v〉²) / 2
@@ -2507,28 +2483,6 @@ class BlanketLibrary:
             with modified coefficients.
 
             N.B. Darcy friction factor is estimated from the Haaland approximation.
-        i_ps: int :
-
-        radius_pipe_90_deg_bend:
-
-        radius_pipe_180_deg_bend:
-
-        n_pipe_90_deg_bends:
-
-        n_pipe_180_deg_bends:
-
-        len_pipe:
-
-        den_coolant:
-
-        visc_coolant:
-
-        vel_coolant:
-
-        label: str :
-
-        output: bool
-             (Default value = False)
         """
 
         # Calculate hydraulic dimater for round or retancular pipe (m)
@@ -2682,33 +2636,25 @@ class BlanketLibrary:
     ) -> float:
         """Calculates elbow bend coefficients for pressure drop calculations.
 
-                Parameters
-                ----------
-                radius_pipe_elbow : float
-                    Pipe elbow radius (m)
-                deg_pipe_elbow : float
-                    Pipe elbow angle (degrees)
-                darcy_friction : float
-                    Darcy friction factor
-                dia_pipe : float
-                    Pipe diameter (m)
-                radius_pipe_elbow:
+        Parameters
+        ----------
+        radius_pipe_elbow : float
+            Pipe elbow radius (m)
+        deg_pipe_elbow : float
+            Pipe elbow angle (degrees)
+        darcy_friction : float
+            Darcy friction factor
+        dia_pipe : float
+            Pipe diameter (m)
 
-                deg_pipe_elbow:
-
-                darcy_friction:
-
-                dia_pipe:
-
-
-                Returns
-                -------
-                float
+        Returns
+        -------
+        float
+            Elbow coefficient for pressure drop calculation
 
         :References:
         - [Ide1969] Idel'Cik, I. E. (1969), Memento des pertes de charge,
-          Collection de la Direction des Etudes et Recherches d'Electricité de France.
-                    Elbow coefficient for pressure drop calculation
+        Collection de la Direction des Etudes et Recherches d'Electricité de France.
         """
 
         if deg_pipe_elbow == 90:
@@ -2760,57 +2706,37 @@ class BlanketLibrary:
     ) -> float:
         """Calculate the coolant pumping power in MW for the first wall (FW) or breeding blanket (BZ) coolant.
 
-                Parameters
-                ----------
-                output : bool
-                    Whether to write data to output file.
-                i_liquid_breeder : int
-                    Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
-                temp_coolant_pump_outlet : float
-                    Pump outlet temperature (K).
-                temp_coolant_pump_inlet : float
-                    Pump inlet temperature (K).
-                pressure : float
-                    Outlet (pump inlet) coolant pressure (Pa).
-                dpres_coolant : float
-                    Coolant pressure drop (Pa).
-                mflow_coolant_total : float
-                    Total coolant mass flow rate in (kg/s).
-                primary_coolant_switch : str
-                    Name of FW/blanket coolant (e.g., "Helium" or "Water") if icoolpump=1.
-                den_coolant : float
-                    Density of coolant or liquid breeder (kg/m³).
-                label : str
-                    Description label for output.
-                output: bool
+        Parameters
+        ----------
+        output : bool
+            Whether to write data to output file.
+        i_liquid_breeder : int
+            Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
+        temp_coolant_pump_outlet : float
+            Pump outlet temperature (K).
+        temp_coolant_pump_inlet : float
+            Pump inlet temperature (K).
+        pressure : float
+            Outlet (pump inlet) coolant pressure (Pa).
+        dpres_coolant : float
+            Coolant pressure drop (Pa).
+        mflow_coolant_total : float
+            Total coolant mass flow rate in (kg/s).
+        primary_coolant_switch : str
+            Name of FW/blanket coolant (e.g., "Helium" or "Water") if icoolpump=1.
+        den_coolant : float
+            Density of coolant or liquid breeder (kg/m³).
+        label : str
+            Description label for output.
 
-                i_liquid_breeder: int :
-
-                temp_coolant_pump_outlet:
-
-                temp_coolant_pump_inlet:
-
-                pres_coolant_pump_inlet:
-
-                dpres_coolant:
-
-                mflow_coolant_total:
-
-                primary_coolant_switch: str :
-
-                den_coolant:
-
-                label: str :
-
-
-                Returns
-                -------
-                float
+        Returns
+        -------
+        float
+            Pumping power in MW.
 
         :references:
             - Idel'Cik, I. E. (1969), Memento des pertes de charge
             - S.P. Sukhatme (2005), A Textbook on Heat Transfer
-                    Pumping power in MW.
         """
 
         # Pump outlet pressure (Pa)
@@ -2982,32 +2908,6 @@ def set_pumping_powers_as_fractions(
         Divertor nuclear heating (MW).
     p_div_rad_total_mw : float
         Divertor radiative power (MW).
-    f_p_fw_coolant_pump_total_heat:
-
-    f_p_blkt_coolant_pump_total_heat:
-
-    f_p_shld_coolant_pump_total_heat:
-
-    f_p_div_coolant_pump_total_heat:
-
-    p_fw_nuclear_heat_total_mw:
-
-    psurffwi:
-
-    psurffwo:
-
-    p_blkt_nuclear_heat_total_mw:
-
-    p_shld_nuclear_heat_mw:
-
-    p_cp_shield_nuclear_heat_mw:
-
-    p_plasma_separatrix_mw:
-
-    p_div_nuclear_heat_total_mw:
-
-    p_div_rad_total_mw:
-
 
     Returns
     -------
@@ -3078,31 +2978,24 @@ def dshellarea(
 ) -> tuple[float, float, float]:
     """Calculate the inboard, outboard, and total surface areas of a D-shaped toroidal shell.
 
-        Parameters
-        ----------
-        rmajor : float
-            Major radius of inboard straight section (m)
-        rminor : float
-            Horizontal width of shell (m)
-        zminor : float
-            Vertical half-height of shell (m)
-        rmajor:
-
-        rminor:
-
-        zminor:
-
-
-        Returns
-        -------
-        tuple[float, float, float]
-
     The inboard section is assumed to be a cylinder.
     The outboard section is defined by a semi-ellipse, centred on the major radius of the inboard section.
-            Tuple containing:
-            - ain: Surface area of inboard straight section (m²)
-            - aout: Surface area of outboard curved section (m²)
-            - atot: Total surface area of shell (m²)
+    Parameters
+    ----------
+    rmajor : float
+        Major radius of inboard straight section (m)
+    rminor : float
+        Horizontal width of shell (m)
+    zminor : float
+        Vertical half-height of shell (m)
+
+    Returns
+    -------
+    tuple[float, float, float]
+        Tuple containing:
+        - ain: Surface area of inboard straight section (m²)
+        - aout: Surface area of outboard curved section (m²)
+        - atot: Total surface area of shell (m²)
     """
     # Area of inboard cylindrical shell
     ain = 4.0 * zminor * np.pi * rmajor
@@ -3118,18 +3011,6 @@ def eshellvol(rshell, rmini, rmino, zminor, drin, drout, dz):
     """Routine to calculate the inboard, outboard and total volumes
     of a toroidal shell comprising two elliptical sections
 
-    rshell : input real : major radius of centre of both ellipses (m)
-    rmini  : input real : horizontal distance from rshell to outer edge
-    of inboard elliptical shell (m)
-    rmino  : input real : horizontal distance from rshell to inner edge
-    of outboard elliptical shell (m)
-    zminor : input real : vertical internal half-height of shell (m)
-    drin   : input real : horiz. thickness of inboard shell at midplane (m)
-    drout  : input real : horiz. thickness of outboard shell at midplane (m)
-    dz     : input real : vertical thickness of shell at top/bottom (m)
-    vin    : output real : volume of inboard section (m3)
-    vout   : output real : volume of outboard section (m3)
-    vtot   : output real : total volume of shell (m3)
     This routine calculates the volume of the inboard and outboard sections
     of a toroidal shell defined by two co-centred semi-ellipses.
     Each section's internal and external surfaces are in turn defined
@@ -3140,19 +3021,29 @@ def eshellvol(rshell, rmini, rmino, zminor, drin, drout, dz):
     Parameters
     ----------
     rshell :
-
+        major radius of centre of both ellipses (m)
     rmini :
-
+        horizontal distance from rshell to outer edge of inboard elliptical shell (m)
     rmino :
-
+        horizontal distance from rshell to inner edge of outboard elliptical shell (m)
     zminor :
-
+        vertical internal half-height of shell (m)
     drin :
-
+        horiz. thickness of inboard shell at midplane (m)
     drout :
-
+        horiz. thickness of outboard shell at midplane (m)
     dz :
+        vertical thickness of shell at top/bottom (m)
 
+    Returns
+    -------
+    vin :
+        volume of inboard section (m3)
+    vout:
+        volume of outboard section (m3)
+    vtot:
+        total volume of shell (m3)
+    -------
     """
     # Inboard section
 
@@ -3199,16 +3090,6 @@ def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
     """Routine to calculate the inboard, outboard and total volumes
     of a D-shaped toroidal shell
 
-    rmajor : input real : major radius to outer point of inboard
-    straight section of shell (m)
-    rminor : input real : horizontal internal width of shell (m)
-    zminor : input real : vertical internal half-height of shell (m)
-    drin   : input real : horiz. thickness of inboard shell at midplane (m)
-    drout  : input real : horiz. thickness of outboard shell at midplane (m)
-    dz     : input real : vertical thickness of shell at top/bottom (m)
-    vin    : output real : volume of inboard straight section (m3)
-    vout   : output real : volume of outboard curved section (m3)
-    vtot   : output real : total volume of shell (m3)
     This routine calculates the volume of the inboard and outboard sections
     of a D-shaped toroidal shell defined by the above input parameters.
     The inboard section is assumed to be a cylinder of uniform thickness.
@@ -3220,16 +3101,26 @@ def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
     Parameters
     ----------
     rmajor :
-
+        major radius to outer point of inboardstraight section of shell (m)
     rminor :
-
+        horizontal internal width of shell (m)
     zminor :
-
+        vertical internal half-height of shell (m)
     drin :
-
+        horiz. thickness of inboard shell at midplane (m)
     drout :
-
+        horiz. thickness of outboard shell at midplane (m)
     dz :
+        vertical thickness of shell at top/bottom (m)
+
+    Returns
+    -------
+    vin :
+        volume of inboard straight section (m3)
+    vout:
+        volume of outboard curved section (m3)
+    vtot:
+        total volume of shell (m3)
 
     """
     # Volume of inboard cylindrical shell
@@ -3285,14 +3176,6 @@ class OutboardBlanket(BlanketLibrary):
             Minor radius (m).
         dr_fw_plasma_gap_outboard : float
             Outboard first wall to plasma gap (m).
-        n_blkt_outboard_modules_toroidal: int :
-
-        rmajor:
-
-        rminor:
-
-        dr_fw_plasma_gap_outboard:
-
 
         Returns
         -------
@@ -3336,14 +3219,6 @@ class InboardBlanket(BlanketLibrary):
             Minor radius (m).
         dr_fw_plasma_gap_inboard : float
             Inboard first wall to plasma gap (m).
-        n_blkt_inboard_modules_toroidal: int :
-
-        rmajor:
-
-        rminor:
-
-        dr_fw_plasma_gap_inboard:
-
 
         Returns
         -------

@@ -1487,24 +1487,25 @@ def _beta_poloidal_total_sauter(
     Parameters
     ----------
     radial_elements :
-
+        radial element indexes in range 1 to nr
     nr :
-
+        maximum value of radial_elements
     rmajor :
-
+        plasma major radius (m)
     b_plasma_toroidal_on_axis :
-
+        toroidal field on axis (T)
     ne :
-
+        electron density profile (/m^3)
     ni :
-
+        ion density profile (/m^3)
     tempe :
-
+        electron temperature profile (keV)
     tempi :
-
+        ion temperature profile (keV)
     inverse_q :
-
+        inverse safety factor profile
     rho :
+        normalized minor radius profile
 
     Returns
     -------

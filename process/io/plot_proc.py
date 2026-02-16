@@ -7497,12 +7497,6 @@ def plot_info(axis: plt.Axes, data, mfile: mf.MFile, scan: int):
         MFILE
     scan :
         scan number to use
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
     """
     eqpos = 0.75
     for i in range(len(data)):
@@ -7578,12 +7572,6 @@ def plot_header(axis: plt.Axes, mfile: mf.MFile, scan: int):
         MFILE
     scan :
         scan number to use
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
     """
     xmin = 0
     xmax = 1
@@ -7704,12 +7692,6 @@ def plot_geometry_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
         MFILE
     scan :
         scan number to use
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
     """
     xmin = 0
     xmax = 1
@@ -7759,12 +7741,6 @@ def plot_physics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
         MFILE
     scan :
         scan number to use
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
     """
     xmin = 0
     xmax = 1
@@ -7842,12 +7818,6 @@ def plot_magnetics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
         MFILE
     scan :
         scan number to use
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
     """
     # Check for Copper magnets
     i_tf_sup = int(mfile.get("i_tf_sup", scan=scan)) if "i_tf_sup" in mfile.data else 1
@@ -7977,12 +7947,6 @@ def plot_power_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
         MFILE
     scan :
         scan number to use
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
     """
 
     xmin = 0
@@ -8075,12 +8039,6 @@ def plot_current_drive_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
         MFILE
     scan :
         scan number to use
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
     """
 
     xmin = 0
@@ -8342,12 +8300,6 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
         MFILE data object
     scan :
         scan number to use
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
     """
 
     boot_ipdg = mfile.get("f_c_plasma_bootstrap_iter89", scan=scan)
@@ -8433,17 +8385,11 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int, u_se
     Parameters
     ----------
     axis :
-        plt
+        Axis object to plot to.
     mfile :
-        mf
+         MFILE data object.
     scan :
-        int
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
+        Scan number to use.
     u_seed :
          (Default value = None)
     """
@@ -8575,17 +8521,11 @@ def plot_confinement_time_comparison(
     Parameters
     ----------
     axis :
-        plt
+        Axis object to plot to.
     mfile :
-        mf
+         MFILE data object.
     scan :
-        int
-    axis: plt.Axes :
-
-    mfile: mf.MFile :
-
-    scan: int :
-
+        Scan number to use.
     u_seed :
          (Default value = None)
     """
@@ -9358,11 +9298,11 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
     Parameters
     ----------
     axis :
-        plt
+        Axis object to plot to.
     mfile :
-        mf
+         MFILE data object.
     scan :
-        int
+        Scan number to use.
     """
     old_asdex = mfile.get("nd_plasma_electron_max_array(1)", scan=scan)
     borrass_iter_i = mfile.get("nd_plasma_electron_max_array(2)", scan=scan)
