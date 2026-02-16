@@ -20,7 +20,7 @@ This should take less than or around 5 seconds. Users have experienced this taki
     ```bash
     nano ~/.bashrc
     ```
-    - You will see the following line near the bottom, whihc was inserted when downloading and installing Xlaunch:
+    - You will see the following line near the bottom, which was inserted when downloading and installing Xlaunch:
     ```bash
     export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
     ```

@@ -423,11 +423,11 @@ nd_plasma_impurities_vol_avg: float = None
 
 
 gradient_length_ne: float = None
-"""Max. normalized gradient length in el. density (i_plasma_pedestal==0 only)"""
+"""Max. normalised gradient length in el. density (i_plasma_pedestal==0 only)"""
 
 
 gradient_length_te: float = None
-"""Max. normalized gradient length in el. temperature (i_plasma_pedestal==0 only)"""
+"""Max. normalised gradient length in el. temperature (i_plasma_pedestal==0 only)"""
 
 
 beta_poloidal_eps_max: float = None

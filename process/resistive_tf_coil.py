@@ -269,7 +269,7 @@ class ResistiveTFCoil(TFCoil):
 
     def res_tf_internal_geom(self):
         """
-        Resisitve TF turn geometry, equivalent to winding_pack subroutines
+        Resistive TF turn geometry, equivalent to winding_pack subroutines
         """
         superconducting_tf_coil_variables.r_tf_wp_inboard_inner = (
             build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
@@ -454,7 +454,7 @@ class ResistiveTFCoil(TFCoil):
         - Sliding joints might have a region of high resistivity.
 
         Notes:
-        - The copper resisitivty is set to be that for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
+        - The copper resistivity is set to be that for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
         - The coefficient of resistivity is set to be that of pure copper
 
         References:
@@ -466,7 +466,7 @@ class ResistiveTFCoil(TFCoil):
         # Resistivity of the Glidcop copper centerpost
         if tfcoil_variables.i_tf_sup == 0:
             tfcoil_variables.rho_cp = (
-                # 1.86 is the resitivity at `20°C` for GLIDCOP AL-15
+                # 1.86 is the resistivity at `20°C` for GLIDCOP AL-15
                 # 0.00393 is the coefficient of resistivity for copper
                 tfcoil_variables.frhocp
                 * (1.86e0 + 0.00393e0 * (tfcoil_variables.temp_cp_average - 293.15e0))

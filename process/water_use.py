@@ -85,7 +85,7 @@ class WaterUse:
 
         # find water withdrawn from external source
         water_usage_variables.waterusetower = 1.4e0 * water_usage_variables.evapvol
-        # Estimated as a ratio to evaporated water (averaged across obervered dataset)
+        # Estimated as a ratio to evaporated water (averaged across observed dataset)
         #  as per Diehl et al. USGS Report 2014-5184, http://dx.doi.org/10.3133/sir20145184
 
         # end break
@@ -262,7 +262,7 @@ class WaterUse:
         evapsum = evapsum / icool
 
         # water volume withdrawn from external source depends on recirculation or 'once-through' system choice
-        #   Estimated as a ratio to evaporated water (averaged across obervered dataset)
+        #   Estimated as a ratio to evaporated water (averaged across observed dataset)
         #   as per Diehl et al. USGS Report 2014-5184, http://dx.doi.org/10.3133/sir20145184
 
         # recirculating water system:

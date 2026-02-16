@@ -10241,7 +10241,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
                 label="Final Value" if n_plot == 0 else "",
             )
 
-        # Plot scatter point for normalized relative change
+        # Plot scatter point for normalised relative change
         axis.scatter(
             norm_relative_change,
             n_plot,
@@ -11064,7 +11064,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
 
     # =================================================
 
-    # Compute cumulative integral (trapezoidal) of the total fusion rate profile vs normalized radius
+    # Compute cumulative integral (trapezoidal) of the total fusion rate profile vs normalised radius
     rho_c = np.linspace(0.0, 1.0, len(fusrat_plasma_total_profile))
     y_total = np.asarray(fusrat_plasma_total_profile, dtype=float)
 
@@ -11621,7 +11621,7 @@ def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: mf.MFile, scan
     pres_plasma_profile_fuel_kpa = np.array(pres_plasma_profile_fuel) / 1000.0
     pres_plasma_profile_total_kpa = np.array(pres_plasma_profile_total) / 1000.0
 
-    # Calculate the normalized radius
+    # Calculate the normalised radius
     rho = np.linspace(0, 1, len(pres_plasma_profile_kpa))
 
     # Compute gradients using numpy.gradient
@@ -11663,7 +11663,7 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: mf.MFile, scan
 
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
-    # Get pressure profile (function of normalized radius rho, 0..1)
+    # Get pressure profile (function of normalised radius rho, 0..1)
     pres_plasma_electron_profile = [
         mfile.get(f"pres_plasma_electron_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
@@ -12909,7 +12909,7 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, sc
             # Remove trailing underscores and replace underscores between words with spaces
             var_label = var_label.rstrip("_").replace("_", " ")
 
-        # Plot the normalized residual as a bar
+        # Plot the normalised residual as a bar
         axis.barh(
             n_plot,
             con_norm_residual,
@@ -12998,7 +12998,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
         # Unit type of the constraint
         con_units = m_file.data[f"ineq_units_con{n:03d}"].get_scan(scan).strip("'`")
 
-        # Add a vertical line at the normalized constraint bounds of 0 and 1
+        # Add a vertical line at the normalised constraint bounds of 0 and 1
         axis.axvline(
             0.0,
             color="red",
@@ -13023,16 +13023,16 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
         # Calculate the normalised constraint threshold depending if the constraint is an upper
         # or lower limit
         if con_symbol == "'<='":
-            normalized_value = 1 - con_residual_norm
-            bar_left = normalized_value
-            bar_width = 1 - normalized_value
+            normalised_value = 1 - con_residual_norm
+            bar_left = normalised_value
+            bar_width = 1 - normalised_value
         else:
-            normalized_value = con_residual_norm
+            normalised_value = con_residual_norm
             bar_left = 0
-            bar_width = normalized_value
+            bar_width = normalised_value
 
         # If the constraint value is very close to the bound then plot a square marker at the bound
-        if np.isclose(normalized_value, 1.0, atol=1e-3):
+        if np.isclose(normalised_value, 1.0, atol=1e-3):
             axis.plot(
                 1,
                 n_plot,
@@ -13041,7 +13041,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
                 markersize=8,
                 zorder=5,
             )
-        elif np.isclose(normalized_value, 0.0, atol=1e-3):
+        elif np.isclose(normalised_value, 0.0, atol=1e-3):
             axis.plot(
                 0,
                 n_plot,
@@ -13075,8 +13075,8 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
             fontsize=8,
             color=(
                 "orange"
-                if np.isclose(normalized_value, 1.0, atol=1e-3)
-                or np.isclose(normalized_value, 0.0, atol=1e-3)
+                if np.isclose(normalised_value, 1.0, atol=1e-3)
+                or np.isclose(normalised_value, 0.0, atol=1e-3)
                 else "green"
             ),
             bbox={
@@ -13091,7 +13091,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
         if con_symbol == "'<='":
             # Add the constraint symbol and bound as text
             axis.text(
-                1.02,  # Position text slightly to the right of the normalized bound
+                1.02,  # Position text slightly to the right of the normalised bound
                 n_plot,
                 f"$\\leq$ {con_bound:,.8g} {con_units}",
                 va="center",
@@ -13101,7 +13101,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
             )
         else:  # con_symbol == ">="
             axis.text(
-                -0.025,  # Position text slightly to the left of the normalized bound
+                -0.025,  # Position text slightly to the left of the normalised bound
                 n_plot,
                 f"$\\geq$ {con_bound:,.8g} {con_units}",
                 va="center",

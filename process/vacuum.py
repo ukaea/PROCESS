@@ -395,7 +395,7 @@ class Vacuum:
         l3 = 2.0e0  # Length of ducts from elbow to hi-vac pumps (m)
         ltot = l1 + l2 + l3
 
-        # ceff and d require initialising to small positive values; they're not
+        # ceff and d require initialising too small positive values; they're not
         # always overwritten in the following loop and can cause div by 0 errors
         # otherwise
         ceff = np.full(4, 1e-6)

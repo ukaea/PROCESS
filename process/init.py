@@ -609,7 +609,7 @@ def check_process(inputs):  # noqa: ARG001
             and data_structure.physics_variables.i_plasma_pedestal
         ):
             warn(
-                "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model",
+                "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommended for the Reinke model",
                 stacklevel=2,
             )
 

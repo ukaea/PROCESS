@@ -255,7 +255,7 @@ $$
 P(t)dt = \sum_i c_{P,i}\rho_{i} V_{i} dT
 $$
 
-Where $P(t)$ is the power deposited in the copper through Joule heating at time t, and the sum on the RHS is over the conductor consitutents (copper, helium, superconductor), where $V_{i}$ is the volume of said constituent. This can be rewritten as:
+Where $P(t)$ is the power deposited in the copper through Joule heating at time t, and the sum on the RHS is over the conductor constituents (copper, helium, superconductor), where $V_{i}$ is the volume of said constituent. This can be rewritten as:
 
 $$
 \int J(t)^2 dt = \int_{T_{0}}^{T_{max}} \sum_i f_{i}\dfrac{c_{P,i}\rho_{i}}{\nu_{Cu}} dT
@@ -263,7 +263,7 @@ $$
 
 The LHS is solved analytically, assuming that the current is at the operational value $J_{op}$ for some quench detection time $t_{detection}$ and then decays exponentially with a time constant $\tau_{discharge}$. The RHS is solved numerically by integration of the temperature-dependent material properties over $dT$.
 
-The resistivity of copper, $\nu_{Cu}$, is an extremely important parameter in this model. The residual-resistance-ratio (RRR) of the copper can be specified, and magneto-resistive and irradiation-induced increases in resistivity are accounted for. The magnetic field at which the copper resisitivity is calculated is kept constant at $B_{TF,peak}$. This is conservative, and to simplify the implementation (keeping the separation of the $t$ and $T$ integrations).
+The resistivity of copper, $\nu_{Cu}$, is an extremely important parameter in this model. The residual-resistance-ratio (RRR) of the copper can be specified, and magneto-resistive and irradiation-induced increases in resistivity are accounted for. The magnetic field at which the copper resistivity is calculated is kept constant at $B_{TF,peak}$. This is conservative, and to simplify the implementation (keeping the separation of the $t$ and $T$ integrations).
 
 Formally this gives:
 

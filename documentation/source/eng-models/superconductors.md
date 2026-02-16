@@ -355,7 +355,7 @@ The fit values are:
 - $u: 33450.0$
 - $v: -176577.0$
 
-The output of the model only gives the critical current ($I_c$) and not the critical current density ($J_c$). Therefore the value is multiplied by the tape paramters to find the critical current density in the REBCO strand
+The output of the model only gives the critical current ($I_c$) and not the critical current density ($J_c$). Therefore the value is multiplied by the tape parameters to find the critical current density in the REBCO strand
 
 $$
 J_c = I_c \frac{w_{\text{tape}} \times \Delta x_{\text{REBCO}}}{w_{\text{tape}} \times \Delta x_{\text{tape}} }

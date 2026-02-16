@@ -28,7 +28,7 @@ Resistive coils can benefit in having a larger outboard conductor area than
 the inboard one, to reduce resistive heating without increasing the plasma
 major radius or increasing its aspect ratio. For this reason, thicker outboard
 can be set using the f_dr_tf_outboard_inboard user input defined as the ratio between
-ouboard and inboard TF coil legs. The possibility of having different coil
+outboard and inboard TF coil legs. The possibility of having different coil
 thicknesses is only available for resistive coils and f_dr_tf_outboard_inboard
 would have no effect if superconducting coils are selected (`i_tf_sup = 1`)
 
@@ -63,7 +63,7 @@ Two different plasma side casing shapes can be selected using the `i_tf_case_geo
 ## Topology of TF coils and Central Solenoid
 The engineering models are based on a topology like that used in ITER: the central solenoid and the TF coils are not linked: the central solenoid can be inserted or removed without cutting the TF coils.
 
-However, an option does exist wich permits the alternative topology, in which the inboard legs of the TF coils pass through the middle of the central solenoid.  This layout is used in MAST, where the copper TF coils can be dismantled to allow the central solenoid to be inserted or removed.
+However, an option does exist which permits the alternative topology, in which the inboard legs of the TF coils pass through the middle of the central solenoid.  This layout is used in MAST, where the copper TF coils can be dismantled to allow the central solenoid to be inserted or removed.
 
 The topology is set as follows:    
 - `i_tf_inside_cs = 0` (default) ITER-like topology: the central solenoid and the TF coils are not linked.   
@@ -452,7 +452,7 @@ $$
     this configuration in theory. The radial and toroidal stress calculations
     are made assuming no vertical tension. A constant vertical stress is then
     estimated *a posteriori* by dividing the inboard vertical tension by the
-    support sutructure area to obtain the 3 normal stress necessary to for the
+    support structure area to obtain the 3 normal stress necessary to for the
     *TRESCA* yield stress estimate as described in [1]. Although using
     un-adapted model hypothesis this model is still used by default as it
     has been validated on FEA analysis and benchmarked with the *MADMAX* *CEA*
@@ -472,7 +472,7 @@ $$
     complete this model is not yet used by default as more FEA validations
     are needed. `i_tf_stress_model = 0` is the older model, which is O(n^3)
     in the number of layers and fails if there is a solid dr_bore. 
-    `i_tf_stress_model = 2` is the newr model, which is O(n) and accepts a solid
+    `i_tf_stress_model = 2` is the newer model, which is O(n) and accepts a solid
     dr_bore, but is otherwise identical to the older model `i_tf_stress_model = 0`.
   </p>
 
@@ -729,22 +729,22 @@ selected with the `i_tf_bucking` integer switch.
 - <p style='text-align: justify;'>
     **Bucked and wedged (`i_tf_bucking == 2,3`):** the TF coil uses the CS coil
     as centering forces structural support. This design allows to substantially
-    reduce the thickness of the TF coil individual suport structure if a large
+    reduce the thickness of the TF coil individual support structure if a large
     CS coil is present. As the CS coil current generates a beneficial CS radial
     outward forces, the most critical instant for structural support is the
     moment when no current flows in the CS coil. The CS coil is therefore
-    represented as an additionnal stress layer with `e.m.` no body forces.
-    The layer strctural properties are defined using using similar smearing/
+    represented as an additional stress layer with `e.m.` no body forces.
+    The layer structural properties are defined using using similar smearing/
     unsmeating procedure as the TF coil, as detailed in issue [4]. The maximum
     between the CS stress from the this model and the on calculated in the
     `pfcoil` module is taken as the CS coil stress limit (constraint 72). A fast
     version, neglecting the interface layer properties is implemented 
     (`i_tf_bucking == 2`). And a more complete one, taking explicitly the Kapton
-    interface into account in the stress calcualtions (`i_tf_bucking == 3`) is
+    interface into account in the stress calculations (`i_tf_bucking == 3`) is
     also implemented. Before using this design option, the user must know two
     major potential issues not captured by *PROCESS*. The first is the fatigue
     introduced by the CS on the TF coil. The second is the nature of the CS-TF
-    coil interface that has to allow vertical slinding at cryogenic temperatures,
+    coil interface that has to allow vertical sliding at cryogenic temperatures,
     as the CS vertical size reduces when energized and the TF coil vertical
     tension makes TF grow taller with current flowing in it. The CS and the TF
     coil are therefore strain insulated, therefore all the vertical tension is
@@ -824,7 +824,7 @@ and the maximum field (on coil toroidal direction) respectively, measured at
 the mid-plane plasma outer limit (separatrix). 
 
 To prevent intolerable fast particles losses and plasma instabilities,
-$\delta$ must be limited to a few percent, approximatively \( \delta \in
+$\delta$ must be limited to a few percent, approximately \( \delta \in
 [0.5-1]\) . If intolerable, the plasma ripple can be reduced with many
 different techniques, for example the TF coil shape, stabilisation coils can
 be added, more coils can be used or the coil outboard radius can be increased.
@@ -880,7 +880,7 @@ $$
 $$
 
 
-with \(x\) the lateral thickness of the winding pack normalized to the coil
+with \(x\) the lateral thickness of the winding pack normalised to the coil
 dimensions defined as:
 
 

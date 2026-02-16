@@ -269,22 +269,22 @@ $$
 ### Model Switches
 
 There are three blanket model options, chosen by the user to match their selected blanket design using the switch 'i_blkt_dual_coolant' (default=0):
-    0.   Solid breeder - nuclear heating in the blanket is exctrated by the primary coolant.
+    0.   Solid breeder - nuclear heating in the blanket is extracted by the primary coolant.
     1.   Liquid metal breeder, single-coolant 
-        - nuclear heating in the blanket is exctrated by the primary coolant.
+        - nuclear heating in the blanket is extracted by the primary coolant.
         - liquid metal is circulated for tritium extraction, specified by number of circulations/day.
     2.   Liquid metal breeder, dual-coolant
         - nuclear heating in the liquid breeder/coolant is extracted by the liquid breeder/coolant.
         - nuclear heating in the blanket structure is extracted by the primary coolant
 
 The default assuption for all blanket models is that the first wall and breeding blanket have the same coolant (flow = FW inlet -> FW outlet -> BB inlet-> BB outlet). 
-It is possible to choose a different coolant for the FW and breeding blanket, in which case the mechanical pumping powers for the FW and BB are calculated seperately. 
+It is possible to choose a different coolant for the FW and breeding blanket, in which case the mechanical pumping powers for the FW and BB are calculated separately. 
 The model has three mechanical pumping power options, chosen by the user to match their selected blanket design using the switch 'i_fw_blkt_shared_coolant' (default=0): 
     0.   Same coolant for FW and BB ('i_fw_coolant_type`=`i_blkt_coolant_type`)
     1.   Different coolant for FW and BB ('i_fw_coolant_type`/=`i_blkt_coolant_type`) 
 
 !!! Note "Note" 
-    For the dual-coolant blanket the 'i_fw_blkt_shared_coolant' switch is relavent for the blanket structure coolant and not the liquid metal breeder/coolant choice.  
+    For the dual-coolant blanket the 'i_fw_blkt_shared_coolant' switch is relevant for the blanket structure coolant and not the liquid metal breeder/coolant choice.  
 
 The user can select the number poloidal and toroidal modules for the IB and OB BB. The 'i_blkt_module_segmentation' switch can be set to 1 for a single-module-segment blanket (default=0):
     0. Multi-module segment 

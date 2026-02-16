@@ -219,7 +219,7 @@ class TFCoil:
             # Set directly as input
             dr_tf_plasma_case = tfcoil_variables.dr_tf_plasma_case
 
-        # This ensures that there is sufficent radial space for the WP to not
+        # This ensures that there is sufficient radial space for the WP to not
         # clip the edges of the plasma-facing front case
 
         if dr_tf_plasma_case < (r_tf_inboard_in + dr_tf_inboard) * (
@@ -234,7 +234,7 @@ class TFCoil:
         # Warn that the value has be forced to a minimum value at some point in
         # iteration
         logger.error(
-            "dr_tf_plasma_case to small to accommodate the WP, forced to minimum value"
+            "dr_tf_plasma_case too small to accommodate the WP, forced to minimum value"
         )
 
         # ======================================================================
@@ -384,7 +384,7 @@ class TFCoil:
         tfb = np.zeros(4)
 
         if i_tf_shape == 1 and itart == 0:
-            # PROCESS D-shape parametrisation
+            # PROCESS D-shape parameterisation
             r_tf_arc[0] = r_tf_inboard_out
             r_tf_arc[1] = rmajor - 0.2e0 * rminor
             r_tf_arc[2] = r_tf_outboard_in
@@ -534,12 +534,12 @@ class TFCoil:
 
         if tfcoil_variables.i_tf_sup == 0:
             po.ocmmnt(
-                self.outfile, "  -> Resitive coil : Water cooled copper (GLIDCOP AL-15)"
+                self.outfile, "  -> resistive coil : Water cooled copper (GLIDCOP AL-15)"
             )
         elif tfcoil_variables.i_tf_sup == 1:
             po.ocmmnt(self.outfile, "  -> Superconducting coil (SC)")
         elif tfcoil_variables.i_tf_sup == 2:
-            po.ocmmnt(self.outfile, "  -> Reisitive coil : Helium cooled aluminium")
+            po.ocmmnt(self.outfile, "  -> Resistive coil : Helium cooled aluminium")
 
         # SC material scaling
         if tfcoil_variables.i_tf_sup == 1:
@@ -1071,7 +1071,7 @@ class TFCoil:
             po.osubhd(self.outfile, "WP turn information:")
             po.ovarin(
                 self.outfile,
-                "Turn parametrisation",
+                "Turn parameterisation",
                 "(i_tf_turns_integer)",
                 tfcoil_variables.i_tf_turns_integer,
             )
@@ -3681,7 +3681,7 @@ class TFCoil:
 
             # WP effective insulation thickness (SC only) [m]
             # include groundwall insulation + insertion gap in tfcoil_variables.dx_tf_turn_insulation
-            # inertion gap is tfcoil_variables.dx_tf_wp_insertion_gap on 4 sides
+            # insertion gap is tfcoil_variables.dx_tf_wp_insertion_gap on 4 sides
             t_ins_eff = (
                 dx_tf_turn_insulation
                 + (dx_tf_wp_insertion_gap + dx_tf_wp_insulation) / n_tf_coil_turns
@@ -5249,7 +5249,7 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
 
     kk = ey / (1 - nu**2)
 
-    # Lorentz forces parametrisation coeficients (array equation)
+    # Lorentz forces parameterisation coeficients (array equation)
     alpha = 0.5e0 * constants.RMU0 * j**2 / kk
 
     inner_layer_curr = 0.0e0

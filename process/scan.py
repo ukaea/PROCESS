@@ -176,7 +176,7 @@ class ScanVariables(Enum):
     )
     f_nuc_pow_bz_struct = ScanVariable(
         "f_nuc_pow_bz_struct",
-        "Fraction of BZ power cooled by primary coolant for dual-coolant balnket",
+        "Fraction of BZ power cooled by primary coolant for dual-coolant blanket",
         74,
     )
     dx_fw_module = ScanVariable(

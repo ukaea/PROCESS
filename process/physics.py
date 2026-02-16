@@ -9665,7 +9665,7 @@ class PlasmaInductance:
 
         :Notes:
             - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
-            - This model is only recommneded to be used for ST's with kappa > 2.5
+            - This model is only recommended to be used for ST's with kappa > 2.5
 
         :References:
             - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”

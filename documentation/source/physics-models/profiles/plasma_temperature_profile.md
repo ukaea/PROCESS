@@ -6,7 +6,7 @@ The temperature profile class is organised around a central runner function that
 
 1. Firstly the profile x-dimension is normalised in [`normalise_profile_x()`](./plasma_profiles_abstract_class.md/#normalise-the-profile-in-x--normalise_profile_x) by simply dividing the profile size by its max value.
 
-2. The steps between the normalized points is then done by [`calculate_profile_dx()`](./plasma_profiles_abstract_class.md#calculate-the-profile-steps-in-x--calculate_profile_dx) which divides the max x-dimension by the number of points.
+2. The steps between the normalised points is then done by [`calculate_profile_dx()`](./plasma_profiles_abstract_class.md#calculate-the-profile-steps-in-x--calculate_profile_dx) which divides the max x-dimension by the number of points.
 
 3. The core electron and ion temperatures are claculated via [`set_physics_variables()`]()
 
@@ -47,7 +47,7 @@ $$
 V = \int \int \int dV = \int^{2\pi R}_0 \int^{2\pi}_0 \int^a_0 r \ dr \ d\theta \ dz
 $$
 
-Inserting our temperature function to be integrated over we get in normalized radial cordinates ($\rho$) we get:
+Inserting our temperature function to be integrated over we get in normalised radial cordinates ($\rho$) we get:
 
 $$
 \int^{2\pi R}_0 \int^{2\pi}_0 \int^{1}_0       \rho \ T_{\text{e}}(\rho) \ d\rho \ d\theta \ dz

@@ -272,7 +272,7 @@ $$
  1 \times 10^6 \times \frac{-B_{0}\left[\rho\right]_{-1}\left[\frac{1}{q}\right]_{-1}}{0.2\pi R_0}\right)
 $$
 
-In this case square brackets denote array variables equal in length to $\rho_{\text{max}}$ representing the normalized radius elements across the profile. The $-1$ subscript denotes the previous array element in the summation.
+In this case square brackets denote array variables equal in length to $\rho_{\text{max}}$ representing the normalised radius elements across the profile. The $-1$ subscript denotes the previous array element in the summation.
 
 It is not known fully if the $\left(\sigma_{\text {neo }}\left\langle E_{\|} B\right\rangle-I(\psi) p(\psi)\right)$ term is properly implemented into the `PROCESS` version. The $R_{pe}$ value is assumingly taken to be 0.5 as it is stated to approximately to be in Sauter et.al[^4].
 

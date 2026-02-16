@@ -3,7 +3,7 @@
 Debugging allows you stop a program mid-execution (called 'breaking') and explore the current state (e.g. print the current value of variables or attributes). In Python, this is done using `pdb` which comes as-standard with Python. 
 
 First, you must decide where in the code you would like to break. When debugging, a useful way to 
-decide is to look at the terminal for where the error may have occured and break there. To insert a 
+decide is to look at the terminal for where the error may have occurred and break there. To insert a 
 breakpoint in the code, insert the following code where you want the code to break:
 
 ```python

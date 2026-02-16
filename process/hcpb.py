@@ -85,8 +85,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             # Solid angle fraction of neutrons that hit the centrepost shield [-]
             # Calculating the CP solid angle coverage fraction
             # Rem : This calculation considered the shield flaring
-            #       while the MCNP based neutronincs considers a
-            #       cylindre
+            #       while the MCNP based neutronics considers a
+            #       cylinder
             f_geom_cp = self.st_cp_angle_fraction(
                 h_sh_max_r,
                 build_variables.r_sh_inboard_out,
@@ -120,7 +120,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         self.component_masses()
 
         # Calculate the nuclear heating
-        # Rem : The heating power will be normalized to the neutron power using
+        # Rem : The heating power will be normalised to the neutron power using
         #       the divertor and the centrepost (for itart == 1),
         self.nuclear_heating_magnets(output=output)
 
@@ -152,7 +152,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
 
         # Normalisation of the nuclear heating
-        # The nuclear heating are noramalized assuming no energy multiplication
+        # The nuclear heating are normalised assuming no energy multiplication
         # in the divertor and the centrepost
         # Assume that all the neutrons are absorbed. (Not applicable for very thin blankets)
         # Rem SK : This calculation effectively only uses the angular fractions to get
@@ -160,7 +160,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # Split neutron power to main wall between fw, bkt, shld and TF with same
         # fractions as before.
-        # Total nuclear power deposited in the blancket sector (MW)
+        # Total nuclear power deposited in the blanket sector (MW)
         ccfe_hcpb_module.pnuc_tot_blk_sector = (
             fwbs_variables.p_fw_nuclear_heat_total_mw
             + fwbs_variables.p_blkt_nuclear_heat_total_mw
@@ -1012,7 +1012,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         #           * atan(r_cp_outer/(rmajor-r_cp_outer) )/pi
         # -------------------
 
-        # Major radius normalized to the CP average radius [-]
+        # Major radius normalised to the CP average radius [-]
         rho_maj = 2.0 * rmajor / (r_cp_mid + r_cp_top)
 
         # Average CP extent in the toroidal plane [rad]

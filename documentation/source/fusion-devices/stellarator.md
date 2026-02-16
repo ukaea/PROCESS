@@ -34,7 +34,7 @@ The user can switch between these models by using the switch variable `istell`:
  - `istell=5`: A W7-X variation with 30 coils
  - `istell-6`: Use the `stella_conf.json` file.
 
-The stellarator version of PROCESS assumes the coil-set itself to be **fixed in shape** and can only scale the *overall* size of the machine in major radius `rmajor`. There is no capability in PROCESS to seperately scale the minor coil radius -- in other words: the coil aspect ratio is fixed. Also the number of coils is considered fixed and is given by the configuration.
+The stellarator version of PROCESS assumes the coil-set itself to be **fixed in shape** and can only scale the *overall* size of the machine in major radius `rmajor`. There is no capability in PROCESS to separately scale the minor coil radius -- in other words: the coil aspect ratio is fixed. Also the number of coils is considered fixed and is given by the configuration.
 
 ## Input File Specifications
 
@@ -88,7 +88,7 @@ The model call is in the following order
 
  1. Stellarator New Configuration setup (`stnewconfig`)
  2. Stellarator Geometry (`stgeom`)
- 3. Stellarator Physics Loop Routine (containing steps requiring to evalute the physics model at different operation points) (`stopt`)
+ 3. Stellarator Physics Loop Routine (containing steps requiring to evaluate the physics model at different operation points) (`stopt`)
  4. Stellarator Physics (`stphys`)
  5. Stellarator radial and toroidal build (`stbild`)
  6. Stellarator Structure Mass (`ststrc`)
@@ -156,7 +156,7 @@ Here $\bar{\iota}$ is the rotational transform, which is equivalent to the recip
 
 As no 1D solver options are available for stellarators yet, PROCESS prints several neoclassics parameters as obtained from the 1/$\nu$ regime.
 The two most important parameters are `q_PROCESS` and `total_q_neo_e`.
-`q_PROCESS` is the heat flux that PROCESS obtaines from the 0D confinement time scalings.
+`q_PROCESS` is the heat flux that PROCESS obtains from the 0D confinement time scalings.
 `total_q_neo_e` is the estimated total neoclassical flux as obtained from the 1/$\nu$ electron transport regime, multiplied by a factor of 4 (2 for the ion contribution and another factor of 2 for the radial electrical field influence).
 The user should check if `q_PROCESS>total_q_neo_e`. If not, the design point is likely not feasible.
 

@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 # LT          Low Temperature
 # HT          High Temperature
 # MMS         Multi Module Segment
-# SMS         Single Modle Segment
+# SMS         Single Module Segment
 # IB          Inboard
 # OB          Outboard
 # HCD         Heating & Current Drive
@@ -47,8 +47,8 @@ class BlanketLibrary:
 
         Calculate the blanket, shield, vacuum vessel and cryostat volumes
         """
-        # N.B. icomponent is a switch used to specify selected component: blanket=0, sheild=1, vacuum vessel=2
-        # Replaced seperate subroutines for blnkt, shld and vv with fuction/subroutine with icomponent switch.
+        # N.B. icomponent is a switch used to specify selected component: blanket=0, shield=1, vacuum vessel=2
+        # Replaced separate subroutines for blnkt, shld and vv with fuction/subroutine with icomponent switch.
 
         # Calculate half-height
         # Blanket
@@ -250,7 +250,7 @@ class BlanketLibrary:
         """
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the i_fw_blkt_shared_coolant variable is appropriately set for seperate coolants
+        # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
         if (
             fwbs_variables.i_fw_coolant_type == "Helium"
             and fwbs_variables.i_blkt_coolant_type == 2
@@ -472,7 +472,7 @@ class BlanketLibrary:
         # Using the total perimeter of the machine, segment the outboard
         # blanket into nblktmodp*nblktmodt modules, all assumed to be the same size
 
-        # If SMS blanket then do not have seperate poloidal modules....
+        # If SMS blanket then do not have separate poloidal modules....
         # Should not need this as n_blkt_inboard_modules_poloidal is input but make sure here.
         if fwbs_variables.i_blkt_module_segmentation == 1:
             fwbs_variables.n_blkt_inboard_modules_poloidal = 1
@@ -1533,7 +1533,7 @@ class BlanketLibrary:
         # FW and BB Mass Flow ###########
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the i_fw_blkt_shared_coolant variable is appropriately set for seperate coolants
+        # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
         if (
             fwbs_variables.i_fw_coolant_type == "Helium"
             and fwbs_variables.i_blkt_coolant_type == 2

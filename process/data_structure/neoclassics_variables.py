@@ -53,7 +53,7 @@ d11_mono: list[float] = None
 
 d11_plateau: list[float] = None
 """Toroidal monoenergetic transport coefficient as given by the stellarator
-input json file as function of nu_star, normalized by the banana value.
+input json file as function of nu_star, normalised by the banana value.
 """
 
 d111: list[float] = None

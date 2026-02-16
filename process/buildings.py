@@ -196,10 +196,10 @@ class Buildings:
         # Laydown length (m)
         layl = max(crr, pfr)
 
-        # Diagnoal length (m)
+        # Diagonal length (m)
         hy = bmr + buildings_variables.rxcl + sectl + buildings_variables.trcl + layl
 
-        # Angle between diagnoal length and floor (m)
+        # Angle between diagonal length and floor (m)
         ang = (buildings_variables.wrbi - buildings_variables.trcl - layl) / hy
 
         # Cap angle at 1

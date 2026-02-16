@@ -15,7 +15,7 @@ the nature of the error and its location (line in the code).
 
 In addition, PROCESS will log recoverable errors and warnings (and other information) to the process.log 
 file and, for serious logs, the terminal. Logs (errors and warnings) that occur during the output phase are captured
-and written to the OUTFile and terminal in the run summary. The ouput phase is when the models are run to write the 
+and written to the OUTFile and terminal in the run summary. The output phase is when the models are run to write the 
 results into the MFile, and occurs at the final iteration of an optimising run or when running an evaluation. These logs
 can be classified into two types:
 1. **Warning**: provides information that the user should be aware about but that is not an error. For example, if the users

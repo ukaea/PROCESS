@@ -69,7 +69,7 @@ $$
 \overbrace{\Phi_{\text{ind,internal,ramp}}}^{\texttt{vs_plasma_internal}} =  I_{\text{p}} \times \underbrace{\left[\frac{\mu_0 R l_i}{2}\right]}_{\texttt{ind_plasma_internal}}
 $$
 
-Here $l_i$ is known as the normalized internal inductance defined for circular cross section plasmas with minor radius $a$:
+Here $l_i$ is known as the normalised internal inductance defined for circular cross section plasmas with minor radius $a$:
 
 $$
 l_i = \frac{\langle B_{\text{p}}^2 \rangle }{B_{\text{p}}^2(a)}

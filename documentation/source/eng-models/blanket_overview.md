@@ -48,7 +48,7 @@ Using the Reynolds number we calculate the Darcy friction factor using the Haala
 
 For the radius of the pipe bend we assume it to be 3 times the radius of the coolant channel.
 
-The elbow coefficients for the 90 and 180 degree bends $\left(f_{\text{90,elbow}}, f_{\text{180,elbow}}\right)$ are clalculated via [`elbow_coeff()`](#pipe-bend-elbow-coefficient--elbow_coeff).
+The elbow coefficients for the 90 and 180 degree bends $\left(f_{\text{90,elbow}}, f_{\text{180,elbow}}\right)$ are calculated via [`elbow_coeff()`](#pipe-bend-elbow-coefficient--elbow_coeff).
 
 The pressure drop for the straights along the entire pipe length is the same as above:
 

@@ -103,7 +103,7 @@ class Cryostat:
         )
         po.ovarrf(
             self.outfile,
-            "Cryostat intenral half height (m)",
+            "Cryostat internal half height (m)",
             "(z_cryostat_half_inside)",
             fwbs_variables.z_cryostat_half_inside,
             "OP ",

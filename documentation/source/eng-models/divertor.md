@@ -95,7 +95,7 @@ $$
 
     The main assumption of the Peng gaseous divertor model is that the power radiated to the divertor is equally radiated in the divertor box across all three surfaces. This may not truly be the case in reality.
 
-The interactive graph below can be used to investigate how changing the key prameters changes the divertor configuration. The grey box represents the first wall, the far right red line represents the right hand edge of the divertor region ($r_{\text{outer}}$), the far left red line represents the left hand edge of the divertor region ($r_{\text{inner}}$) and the blue line represents the bottom of the divertor region ($\Delta z_{\text{plasma,div}}$).
+The interactive graph below can be used to investigate how changing the key parameters changes the divertor configuration. The grey box represents the first wall, the far right red line represents the right hand edge of the divertor region ($r_{\text{outer}}$), the far left red line represents the left hand edge of the divertor region ($r_{\text{inner}}$) and the blue line represents the bottom of the divertor region ($\Delta z_{\text{plasma,div}}$).
 
 -------------
 

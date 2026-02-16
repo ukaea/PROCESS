@@ -133,7 +133,7 @@ for the reference year of the inflation used.
 | Power flows                                                                                                                                        |
 | :------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Nominal neutron wall load[^2]                                                                                                                      |
-| Normalised radius of the 'core' region $\rho_{core}$ used in the radiation correction of the onfinement scaling[^3] [^4]                           |
+| Normalised radius of the 'core' region $\rho_{core}$ used in the radiation correction of the confinement scaling[^3] [^4]                          |
 | The electron density at the pedestal top, $n_{\text{e,ped}}$                                                                                       |
 | The normalised radius $\rho=r/a$ at the pedestal top                                                                                               |
 | The helium fraction relative to the electron density                                                                                               |
@@ -153,7 +153,7 @@ for the reference year of the inflation used.
 | Physics                                                                                                                                       |
 | :-------------------------------------------------------------------------------------------------------------------------------------------- |
 | Plasma current, $I_{\text{P}}$                                                                                                                |
-| Vaccuum magnetic field at in the plasma centre, $B_{\text{T}}(R_0)$                                                                           |
+| Vacuum magnetic field at in the plasma centre, $B_{\text{T}}(R_0)$                                                                            |
 | Safety factor at the 95% flux surface, $q_{95}$                                                                                               |
 | Definitions of $\beta$ as given in [^1]                                                                                                       |
 | Volume averaged electron temperature $\langle T_e\rangle$ and density $\langle n_e\rangle$                                                    |
@@ -183,7 +183,7 @@ for the reference year of the inflation used.
 | Inboard TF nose case thickness                       |
 | Inboard TF minimum distance between side case and WP |
 | Radial width of inboard TF leg                       |
-| Thickness of insualtion surrounding WP               |
+| Thickness of insulation surrounding WP               |
 | Number of turns in WP                                |
 | WP current density                                   |
 | Radial width of WP                                   |
@@ -241,7 +241,7 @@ plots in the `SIG_TF_plots/` folder, created if not existing.
 
 ### Discussion of the stress modelling assumptions
 
-In case of a resisitive coil, the stress is calculated from a generalized plane strain model, hence providing vertical
+In case of a resistive coil, the stress is calculated from a generalized plane strain model, hence providing vertical
 stress radial distribution, alongside the radial and the toroidal ones. This is not the case for superconducting magnets
 as a plane stress modelling is used for now. The reason is that a transverse orthotropic formulation of the generalized 
 plane strain is needed to correctly take the difference of the casing in the vertical direction properly. This will be
@@ -331,7 +331,7 @@ python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv output vars] [-y
 | `-sf, --save_format`              | Output format (default='pdf')                                                                                                                                                                                                                                                            |
 | `-as, --axis_font_size`           | Axis label font size selection (default=18)                                                                                                                                                                                                                                              |
 | `-ln, --label_name`               | Label names for plot legend. If multiple input files used then list the same number of label names eg: -nl 'leg1 leg2', (default = MFile file name)                                                                                                                                      |
-| `-2DC, --two_dimensional_contour` | Option to plot 2D scans as a coloured contour plot instead of a line plot. Note: Non convergent points will show up with a value of zero Note: The scan paramters must both be in increasing orderl                                                                                      |
+| `-2DC, --two_dimensional_contour` | Option to plot 2D scans as a coloured contour plot instead of a line plot. Note: Non convergent points will show up with a value of zero Note: The scan parameters must both be in increasing order                                                                                    |
 | `-stc, --stack_plots`             | Option to plot multiple 1D plots in a column of subplots. Variables will be plotted in order of input                                                                                                                                                                                    |
 
 

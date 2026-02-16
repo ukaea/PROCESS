@@ -21,7 +21,7 @@ class ProcessLogHandler(Handler):
     """
 
     def __init__(self, capturing=True):
-        """Intantiates a ProcessLogHandler.
+        """Instantiates a ProcessLogHandler.
 
         :param capturing: capture and store emitted logs?
         :type capturning: bool

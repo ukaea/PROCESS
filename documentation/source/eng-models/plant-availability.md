@@ -4,7 +4,7 @@ Switch `i_plant_availability` is used to control how the overall plant availabil
 
 If `i_plant_availability = 0`, the input value of `f_t_plant_available` is used.
 
-If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used instead, in which `f_t_plant_available` is calculated taking into account the time taken to replace certain components of the fusion power core, and various unplanned unavailability fractions which may be set by the user, as summerised in Table 1.
+If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used instead, in which `f_t_plant_available` is calculated taking into account the time taken to replace certain components of the fusion power core, and various unplanned unavailability fractions which may be set by the user, as summarised in Table 1.
 
 ------------------
 
@@ -122,7 +122,7 @@ where $t_{\text{burn}}$ is the burn time and $t_{\text{cycle}}$ is the full cycl
 
 --------------
 
-All availability models in PROCESS require the calculation of the centerpost lifetime, which is detailed here.
+All availability models in PROCESS require the calculation of the centrepost lifetime, which is detailed here.
 
 !!! Note "Note" 
 		The centrepost lifetime is calculated in full-power years (FPY).

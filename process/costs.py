@@ -45,7 +45,7 @@ class Costs:
         <P>The code is arranged in the order of the standard accounts.
         """
         # Convert FPY component lifetimes to calendar years
-        # for replacment components
+        # for replacement components
         self.convert_fpy_to_calendar()
 
         self.acc21()

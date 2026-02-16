@@ -8,7 +8,7 @@ You can check if your code meets the `ruff` standards by running:
 2. `pre-commit run --all-files`
 
 !!! Info "ruff automatic fixes"
-    Many problems that `ruff` can detect it can also safely fix. Simply run `ruff check --fix` and it will try and automatically fix the mistakes, rewritting your source code. 
+    Many problems that `ruff` can detect it can also safely fix. Simply run `ruff check --fix` and it will try and automatically fix the mistakes, rewriting your source code. 
 
 
 --------------------
@@ -601,7 +601,7 @@ ii
 | `b_t_onaxis`  | Toroidal field on-axis | T |
 | `b_t_max`     | Max toroidal field | T |
 | `nd_electron_vol` | Volume average electron density | m-3 |
-| `temp_electron_vol_eV` | Volume avgerage electron temperature | eV |
+| `temp_electron_vol_eV` | Volume average electron temperature | eV |
 | `m_steel` | Mass of steel | kg |
 | `m_steel_tonne` | Mass of steel | tonne |
 | `e_neutron_eV` | Energy of neutron | eV |

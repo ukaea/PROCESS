@@ -80,7 +80,7 @@ $$
 
 where $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$, is the ratio of the outer and inner radii of the solenoid and $\beta = \frac{z_{\text{CS,half}}}{r_{\text{CS,outer}}}$, is the ratio of the solenoid half height to its inboard radius.
 
-The peak field at the bore of the central solenoid will not be the same as that felt by the conductors inside the structures. We require to know the peak field on the conductor if we are to design a superconducting central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ have been calulated as follows:
+The peak field at the bore of the central solenoid will not be the same as that felt by the conductors inside the structures. We require to know the peak field on the conductor if we are to design a superconducting central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ have been calculated as follows:
 
 - $\beta > 3.0$
 

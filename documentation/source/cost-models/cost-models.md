@@ -4,7 +4,7 @@ Two cost models are available, determined by the switch `cost_model`.
 
 ## 1990 cost model (`cost_model = 0`)
 
-This combines methods[^1] used in the TETRA code [^2] and the Generomak[^3] scheme. The costs are split into accounting categories[^4]. The best references for the algorithms used are[^5], and source file `costs.f90` in the code itself. The majority of the costed items have a unit cost associated with them. These values scale with (for example) power output, volume, component mass etc., and many are avaiable to be changed via the input file. All costs and their algorithms correspond to 1990 dollars.
+This combines methods[^1] used in the TETRA code [^2] and the Generomak[^3] scheme. The costs are split into accounting categories[^4]. The best references for the algorithms used are[^5], and source file `costs.f90` in the code itself. The majority of the costed items have a unit cost associated with them. These values scale with (for example) power output, volume, component mass etc., and many are available to be changed via the input file. All costs and their algorithms correspond to 1990 dollars.
 
 The unit costs of the components of the fusion power core are relevant to "first-of-a-kind" items. That is to say, the items are assumed to be relatively expensive to build as they are effectively prototypes and specialised tools and machines have perhaps been made specially to create them. However, if a "production line" has been set up, and R & D progress has allowed more experience to be gained in constructing the power core components, the cost will be reduced as a result. Variable `fkind` may be used to multiply the raw unit costs of the fusion power core items (by a factor less than one) to simulate this cost reduction for an *N<sup>th</sup>*-of-a-kind device. In other systems studies of fusion power plants[^6], values for this multiplier have ranged from 0.5 to 0.8.
 
@@ -14,7 +14,7 @@ The first wall, blanket, divertor, centrepost (if present) and current drive sys
 
 If the switch `ireactor = 0`, no cost of electricity calculation is performed. If `ireactor = 1`, then the cost of electricity is evaluated, with the value quoted in units of $/MWh.
 
-The net electric power is calculated in routine `POWER` It is possible that the net electric power can become negative due to a high recirculating power. Switch `ipnet` determines whether the net electric power is scaled to always reamin positive (`ipnet = 0`, or whether it is allowed to become negative (`ipnet = 1`), in which case no cost of electricity calculation is performed.
+The net electric power is calculated in routine `POWER` It is possible that the net electric power can become negative due to a high recirculating power. Switch `ipnet` determines whether the net electric power is scaled to always remain positive (`ipnet = 0`, or whether it is allowed to become negative (`ipnet = 1`), in which case no cost of electricity calculation is performed.
 
 ## 2015 Kovari model (`cost_model = 1`)
 

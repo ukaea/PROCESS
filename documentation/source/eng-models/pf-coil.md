@@ -48,7 +48,7 @@ The four possible values of `i_pf_location(j)` correspond to the following PF co
     R = R_0 + \texttt{rpf2} \times \delta \times a
     $$
 
-    Due to the nautre of the TF coils not being top-down symmetric for single null cases the positioning slightly differs if the coil is above or below the midplane.
+    Due to the nature of the TF coils not being top-down symmetric for single null cases the positioning slightly differs if the coil is above or below the midplane.
     
     For above the midplane:
 

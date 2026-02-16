@@ -4,8 +4,8 @@
 
 | Input | Description |
 |-------|-------------|
-| `nd_plasma_electrons_vol_avg`, $n_{\text{e}}$ | Avergae electron temperature $\left[10^{19}\text{m}^{-3}\right]$ |
-| `temp_plasma_electron_vol_avg_kev`, $T_{\text{e}}$ | Avergae electron temperature $\left[\text{keV}\right]$ |
+| `nd_plasma_electrons_vol_avg`, $n_{\text{e}}$ | Average electron temperature $\left[10^{19}\text{m}^{-3}\right]$ |
+| `temp_plasma_electron_vol_avg_kev`, $T_{\text{e}}$ | Average electron temperature $\left[\text{keV}\right]$ |
 | `rmajor`, $R_0$ | Major radius $\left[\text{m}\right]$ |
 | `b_plasma_toroidal_on_axis`, $B_{\text{T}}$ | Toroidal magnetic field $\left[\text{T}\right]$ |
 | `zeff`, $Z_{\text{eff}}$ | Effective charge |

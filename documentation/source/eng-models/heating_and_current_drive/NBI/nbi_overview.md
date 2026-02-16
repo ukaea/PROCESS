@@ -100,7 +100,7 @@ It is recommended that <b>only one</b> of these two constraint equations is used
 | $\mathtt{rnfe}$      | Iron density /$n_{\text{e}}$   |
 
 
-Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the `sigbeam` method to calculate the stopping cross section[^1]. It finds a suitable analytic epressing for $\sigma_s^{(Z)}(E,n_{\text{e}},T_{\text{e}},Z_{\text{eff}})$ for fitting $\sigma_s$ data for a single impurity $(\text{Z)}$ plasma:
+Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the `sigbeam` method to calculate the stopping cross section[^1]. It finds a suitable analytic expression for $\sigma_s^{(Z)}(E,n_{\text{e}},T_{\text{e}},Z_{\text{eff}})$ for fitting $\sigma_s$ data for a single impurity $(\text{Z)}$ plasma:
 
 
 

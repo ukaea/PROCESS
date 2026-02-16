@@ -3,7 +3,7 @@ the operating system, system architecture, and the software versions installed o
 not surprising nor massively concerning for numeric scientific software. However, it can be problematic
 for tests where the results we assert on change from system to system.
 
-We identify systems that will be succeptible to these tiny changes and skip the tests so as not to
+We identify systems that will be susceptible to these tiny changes and skip the tests so as not to
 create failures. We do this by checking the users systems results on an algorithm compared to some
 known result.
 This algorithm solves a system of equations that is very ill-conditioned where tiny numeric differences

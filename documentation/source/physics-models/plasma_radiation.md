@@ -66,7 +66,7 @@ For the regime above $40 \ \text{keV}$ whichc an be seen by the dashed lines in 
 The radiation emission is numerically integrated over the plasma profile, 
 using the corresponding temperature and density distributions. Emission is only considered from within the separatrix, 
 as the PROCESS model does not account for the scrape-off layer. 
-The plasma inside the separatrix is divided into two regions: the “core” and the “edge,” separated by a normalized minor radius defined by the user. 
+The plasma inside the separatrix is divided into two regions: the “core” and the “edge,” separated by a normalised minor radius defined by the user. 
 Radiation is calculated separately for the core and edge regions, except for synchrotron radiation, which is assumed to originate solely from the core.
 
 --------------
@@ -200,7 +200,7 @@ A comparison of the different reflection functions can be seen in the graph belo
 </body>
 </html>
 
-The power loss due to synchrotron radiation grows as the aspect ratio decreases. At high aspect ratios $(A > 6)$, although $P_{\text{syn}}$ increases with $R$, the normalized synchrotron loss saturates. This is due to the fact that the magnetic field inhomogeneity vanishes for large $A$. For the above reason a $G$ correction factor is implemented.This gives an root mean square error of 6.2% with respect to a secondary
+The power loss due to synchrotron radiation grows as the aspect ratio decreases. At high aspect ratios $(A > 6)$, although $P_{\text{syn}}$ increases with $R$, the normalised synchrotron loss saturates. This is due to the fact that the magnetic field inhomogeneity vanishes for large $A$. For the above reason a $G$ correction factor is implemented.This gives an root mean square error of 6.2% with respect to a secondary
 dataset consisting of 640 complete computations for the same range of variables variables above and for an aspect ratio interval of $1.5 <A< 15$.
 
 $$
@@ -263,7 +263,7 @@ This constraint can be activated by stating `icc = 67` in the input file.
 
 The limiting value of $q_{\text{fw,rad}}$ in $\mathrm {MWm^{-2}}$ is be set using input parameter `pflux_fw_rad_max`.
 
-[^1]: “ADAS: Docmentation,” Adas.ac.uk, 2024. https://www.adas.ac.uk/manual.php
+[^1]: “ADAS: Documentation,” Adas.ac.uk, 2024. https://www.adas.ac.uk/manual.php
 [^2]: “OPEN-ADAS,” Adas.ac.uk, 2025. https://open.adas.ac.uk/adf11 (accessed Jan. 15, 2025).
 [^3]: H. P. Summers et al., “Ionization state, excited populations and emission of impurities in dynamic finite density plasmas: I. The generalized collisional–radiative model for light elements,” Plasma Physics and Controlled Fusion, vol. 48, no. 2, pp. 263–293, Jan. 2006, doi: https://doi.org/10.1088/0741-3335/48/2/007.
 [^4]: M. Arnaud and R. Rothenflug, “An updated evaluation of recombination and ionization rates,” Astronomy & Astrophysics Supplement Series, vol. 60, no. 3, pp. 425–457, Jun. 1985.

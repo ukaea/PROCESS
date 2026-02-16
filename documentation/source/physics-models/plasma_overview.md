@@ -2,7 +2,7 @@
 
 !!! warning " Documentation re-write"
 
-    The plasma documenation is slowly going through an update to ensure each section is properly decribed and up to date. Each section of the plasma now has its own dedicated page
+    The plasma documentation is slowly going through an update to ensure each section is properly described and up to date. Each section of the plasma now has its own dedicated page
 
 ## Introduction
 

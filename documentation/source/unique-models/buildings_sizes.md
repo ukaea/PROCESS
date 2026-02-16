@@ -9,7 +9,7 @@ The routine documented here estimates the sizes (footprints and volumes) of buil
 Calculation of the lateral size of the reactor building is driven by the radial width of the largest component, which is assumed to be one of a) PF coil maximum radius, b) cryostat radius, c) TF coil outer radius. 
 Space is included for biological shielding around the reactor. 
 
-The 'key-width' used in estimating the reactor building size is defined to include the radial width of the largest component twice (to allow space for manoeuvring components during construction), a set clearance distance around the reactor, a transportation clearance between components, and a clearance to the building wall for crane operation. This key-width is then used to estimate the length and width of the reactor building, allowing for the necessity of laying down the largest component during construction.
+The 'key-width' used in estimating the reactor building size is defined to include the radial width of the largest component twice (to allow space for manoeuvering components during construction), a set clearance distance around the reactor, a transportation clearance between components, and a clearance to the building wall for crane operation. This key-width is then used to estimate the length and width of the reactor building, allowing for the necessity of laying down the largest component during construction.
 
 The estimate of the vertical clearance required around the reactor include the set reactor clearance distance, a transportation clearance between components, clearance from the TF coil to the cryostat, clearance beneath the TF coil, a clearance to the ceiling for crane operation, and a crane arm height. The height of the reactor building is estimated on the assumption that the TF coil is the tallest single component and that twice this height is required to allow for construction/maintenance access, and this is added to the required vertical clearance. 
 
@@ -32,7 +32,7 @@ The architecture used in this estimation is that of a basement directly beneath 
 
 This building provides hot cell facilities to maintain or dismantle highly radioactive components. These estimates assume all in-vessel components used through the life of the plant will need storage. The storage area required is derived from the sizes and number of components, allowing for a margin in component numbers as set by the quantity safety factor. Footprints and volumes required for storage include a set hot separation distance. The estimation of this facility size include:
 
-- The tokomak is toroidally segmented based on number of TF coils
+- The tokamak is toroidally segmented based on number of TF coils
 - Each component will be stored with the largest dimension oriented horizontally
 - Component height is the largest dimension 
 
