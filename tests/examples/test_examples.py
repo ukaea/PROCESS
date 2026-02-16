@@ -47,15 +47,15 @@ def _get_location(loc, name):
     return loc / name.format(".ex.ipynb")
 
 
-def test_examples(examples_temp_data):
-    """Run the examples.ex.py and check no exceptions are raised.
+def test_introductory_examples(examples_temp_data):
+    """Run the introduction.ex.py and check no exceptions are raised.
 
-    examples.ex.py uses temp dirs to clean up any produced files itself.
+    introudction.ex.py uses temp dirs to clean up any produced files itself.
     :param examples_temp_data: temporary dir containing examples files
     :type examples_temp_data: Path
 
     """
-    example_notebook_location = _get_location(examples_temp_data, "examples")
+    example_notebook_location = _get_location(examples_temp_data, "introduction")
     with testbook(example_notebook_location, execute=True, timeout=600):
         # Check csv file is created
         assert os.path.exists(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
