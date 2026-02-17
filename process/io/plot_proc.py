@@ -12692,7 +12692,7 @@ def plot_velocity_profile(axis, mfile_data, scan):
     axis.plot(
         np.linspace(0, 1, len(vel_plasma_deuteron_profile)),
         vel_plasma_deuteron_profile,
-        color="red",
+        color="pink",
         linestyle="-",
         label=r"$v_{D}$",
     )
@@ -12706,7 +12706,7 @@ def plot_velocity_profile(axis, mfile_data, scan):
     axis.plot(
         np.linspace(0, 1, len(vel_plasma_alpha_thermal_profile)),
         vel_plasma_alpha_thermal_profile,
-        color="orange",
+        color="red",
         linestyle="-",
         label=r"$v_{\alpha,thermal}$",
     )
@@ -12764,13 +12764,31 @@ def plot_electron_frequency_profile(axis, mfile_data, scan):
         np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
         color="red",
         linestyle="-",
-        label=r"$f_{Larmor,toroidal,e}$",
+        label=r"$f_{Larmor,toroidal,e}$ | Fundamental",
+    )
+
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+        2 * np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+        color="red",
+        linestyle="--",
+        label=r"$f_{Larmor,toroidal,e}$ | 2nd harmonic",
+    )
+
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+        3 * np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+        color="red",
+        linestyle=":",
+        label=r"$f_{Larmor,toroidal,e}$ | 3rd harmonic",
     )
 
     x = np.linspace(0, 1, len(freq_plasma_electron_profile))
     y = np.array(freq_plasma_electron_profile) / 1e9
     # original curve
-    axis.plot(x, y, color="blue", linestyle="-", label=r"$\omega_{p,e}$")
+    axis.plot(
+        x, y, color="blue", linestyle="-", label=r"$\omega_{p,e}$ | Plasma Frequency"
+    )
     # mirrored across the y-axis (drawn at negative rho)
     axis.plot(-x, y, color="blue", linestyle="-", label="_nolegend_")
 
@@ -12779,10 +12797,11 @@ def plot_electron_frequency_profile(axis, mfile_data, scan):
         np.array(freq_plasma_upper_hybrid_electron_profile) / 1e9,
         color="purple",
         linestyle="-",
-        label=r"$\omega_{UH,e}$",
+        label=r"$\omega_{UH,e}$ | Upper Hybrid",
     )
 
     axis.set_xlim(-1.025, 1.025)
+    axis.set_ylim(None, max(freq_plasma_larmor_toroidal_electron_profile) / 1e9 * 1.6)
 
     axis.set_xlabel("$\\rho$ [r/a]")
     axis.set_ylabel("Frequency [GHz]")
@@ -12807,7 +12826,7 @@ def plot_electron_frequency_profile(axis, mfile_data, scan):
     # Move secondary axis to the bottom
     ax2.xaxis.set_ticks_position("bottom")
     ax2.xaxis.set_label_position("bottom")
-    ax2.spines["bottom"].set_position(("outward", 40))
+    ax2.spines["bottom"].set_position(("outward", 30))
 
     axis.legend()
 
@@ -12905,7 +12924,7 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
     axis.plot(
         np.linspace(0, 1, len(plasma_coulomb_log_electron_deuteron_profile)),
         plasma_coulomb_log_electron_deuteron_profile,
-        color="red",
+        color="pink",
         linestyle="-",
         label=r"$ln \Lambda_{e-D}$",
     )
@@ -12929,7 +12948,7 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
     axis.plot(
         np.linspace(0, 1, len(plasma_coulomb_log_electron_alpha_thermal_profile)),
         plasma_coulomb_log_electron_alpha_thermal_profile,
-        color="purple",
+        color="red",
         linestyle="-",
         label=r"$ln \Lambda_{e-\alpha,thermal}$",
     )
@@ -13395,7 +13414,7 @@ def main_plot(
 
     plot_electron_frequency_profile(figs[15].add_subplot(212), m_file, scan)
 
-    plot_ion_frequency_profile(figs[16].add_subplot(411), m_file, scan)
+    plot_ion_frequency_profile(figs[16].add_subplot(311), m_file, scan)
 
     plot_larmor_radius_profile(figs[16].add_subplot(313), m_file, scan)
 
