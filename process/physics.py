@@ -2059,7 +2059,7 @@ class Physics:
                         - 2.0e0 * fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_neutron_total_mw
-                    / first_wall_variables.a_fw_total
+                    / build_variables.a_fw_total
                 )
             else:
                 # Single null Configuration
@@ -2070,7 +2070,7 @@ class Physics:
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_neutron_total_mw
-                    / first_wall_variables.a_fw_total
+                    / build_variables.a_fw_total
                 )
 
         # Calculate ion/electron equilibration power
@@ -2359,7 +2359,7 @@ class Physics:
                         - 2.0e0 * fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_plasma_rad_mw
-                    / first_wall_variables.a_fw_total
+                    / build_variables.a_fw_total
                     + (
                         1.0e0
                         - fwbs_variables.f_a_fw_outboard_hcd
@@ -2367,7 +2367,7 @@ class Physics:
                     )
                     * physics_variables.rad_fraction_sol
                     * physics_variables.p_plasma_separatrix_mw
-                    / (first_wall_variables.a_fw_total)
+                    / (build_variables.a_fw_total)
                 )
             else:
                 # Single null configuration - including SoL radaition
@@ -2378,7 +2378,7 @@ class Physics:
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_plasma_rad_mw
-                    / first_wall_variables.a_fw_total
+                    / build_variables.a_fw_total
                     + (
                         1.0e0
                         - fwbs_variables.f_a_fw_outboard_hcd
@@ -2386,7 +2386,7 @@ class Physics:
                     )
                     * physics_variables.rad_fraction_sol
                     * physics_variables.p_plasma_separatrix_mw
-                    / first_wall_variables.a_fw_total
+                    / build_variables.a_fw_total
                 )
 
         constraint_variables.pflux_fw_rad_max_mw = (

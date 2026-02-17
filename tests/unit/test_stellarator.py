@@ -82,7 +82,6 @@ def stellarator():
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),
-        plasma_inductance=PlasmaInductance(),
     )
 
 

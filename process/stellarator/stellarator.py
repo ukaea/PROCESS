@@ -65,7 +65,6 @@ class Stellarator:
         physics: Physics,
         neoclassics,
         plasma_beta,
-        plasma_inductance,
     ) -> None:
         """Initialises the Stellarator model's variables
 
@@ -103,7 +102,6 @@ class Stellarator:
         self.physics = physics
         self.neoclassics = neoclassics
         self.beta = plasma_beta
-
 
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
@@ -724,10 +722,14 @@ class Stellarator:
                 #  Split between inboard and outboard by first wall area fractions
 
                 pnucfwbsi = (
-                    pnucfwbs * first_wall_variables.a_fw_inboard / first_wall_variables.a_fw_total
+                    pnucfwbs
+                    * first_wall_variables.a_fw_inboard
+                    / first_wall_variables.a_fw_total
                 )
                 pnucfwbso = (
-                    pnucfwbs * first_wall_variables.a_fw_outboard / first_wall_variables.a_fw_total
+                    pnucfwbs
+                    * first_wall_variables.a_fw_outboard
+                    / first_wall_variables.a_fw_total
                 )
 
                 #  Radiation power incident on divertor (MW)

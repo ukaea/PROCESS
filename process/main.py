@@ -101,9 +101,9 @@ from process.process_output import OutputFileManager, oheadr
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
+from process.shield import Shield
 from process.stellarator.neoclassics import Neoclassics
 from process.stellarator.stellarator import Stellarator
-from process.shield import Shield
 from process.structure import Structure
 from process.superconducting_tf_coil import SuperconductingTFCoil
 from process.tf_coil import TFCoil
@@ -708,8 +708,7 @@ class Models:
                 physics=self.physics,
                 neoclassics=self.neoclassics,
                 plasma_beta=self.plasma_beta,
-                plasma_inductance=self.plasma_inductance,
-        )
+            )
 
         self.dcll = DCLL(fw=self.fw)
 
