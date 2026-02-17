@@ -7,11 +7,12 @@ from process.data_structure import (
     current_drive_variables,
     dcll_variables,
     divertor_variables,
+    first_wall_variables,
     fwbs_variables,
     physics_variables,
 )
 from process.dcll import DCLL
-from process.fw import Fw
+from process.fw import FirstWall
 
 
 @pytest.fixture
@@ -21,7 +22,7 @@ def dcll():
     :returns: initialised DCLL object
     :rtype: process.dcll.DCLL
     """
-    return DCLL(Fw())
+    return DCLL(FirstWall())
 
 
 class DcllNeutronicsAndPowerParam(NamedTuple):
@@ -161,11 +162,11 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     """
 
     monkeypatch.setattr(
-        build_variables, "a_fw_outboard", dcllneutronicsandpowerparam.a_fw_outboard
+        first_wall_variables, "a_fw_outboard", dcllneutronicsandpowerparam.a_fw_outboard
     )
 
     monkeypatch.setattr(
-        build_variables, "a_fw_total", dcllneutronicsandpowerparam.a_fw_total
+        first_wall_variables, "a_fw_total", dcllneutronicsandpowerparam.a_fw_total
     )
 
     monkeypatch.setattr(
@@ -799,11 +800,15 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "a_fw_inboard", dcllmassesparam.a_fw_inboard)
+    monkeypatch.setattr(
+        first_wall_variables, "a_fw_inboard", dcllmassesparam.a_fw_inboard
+    )
 
     monkeypatch.setattr(build_variables, "dr_fw_inboard", dcllmassesparam.dr_fw_inboard)
 
-    monkeypatch.setattr(build_variables, "a_fw_outboard", dcllmassesparam.a_fw_outboard)
+    monkeypatch.setattr(
+        first_wall_variables, "a_fw_outboard", dcllmassesparam.a_fw_outboard
+    )
 
     monkeypatch.setattr(
         build_variables, "dr_fw_outboard", dcllmassesparam.dr_fw_outboard

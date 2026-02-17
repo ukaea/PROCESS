@@ -1,6 +1,7 @@
 from process import process_output as po
 from process.data_structure import (
     build_variables,
+    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
@@ -163,21 +164,21 @@ def st_build(stellarator, f_output: bool):
         build_variables.dr_fw_plasma_gap_inboard
         + build_variables.dr_fw_plasma_gap_outboard
     )
-    build_variables.a_fw_total = (
+    first_wall_variables.a_fw_total = (
         physics_variables.a_plasma_surface * awall / physics_variables.rminor
     )
 
     if heat_transport_variables.ipowerflow == 0:
-        build_variables.a_fw_total = (
+        first_wall_variables.a_fw_total = (
             1.0e0 - fwbs_variables.fhole
-        ) * build_variables.a_fw_total
+        ) * first_wall_variables.a_fw_total
     else:
-        build_variables.a_fw_total = (
+        first_wall_variables.a_fw_total = (
             1.0e0
             - fwbs_variables.fhole
             - fwbs_variables.f_ster_div_single
             - fwbs_variables.f_a_fw_outboard_hcd
-        ) * build_variables.a_fw_total
+        ) * first_wall_variables.a_fw_total
 
     if f_output:
         #  Print out device build

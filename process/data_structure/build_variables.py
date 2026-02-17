@@ -107,29 +107,6 @@ fseppc: float = None
 """Separation force in CS coil pre-compression structure"""
 
 
-a_fw_total_full_coverage: float = None
-"""First wall total surface area with no holes or ports [m^2]"""
-
-
-a_fw_inboard_full_coverage: float = None
-"""Inboard first wall surface area with no holes or ports [m^2]"""
-
-
-a_fw_outboard_full_coverage: float = None
-"""Outboard first wall surface area with no holes or ports [m^2]"""
-
-a_fw_total: float = None
-"""First wall total surface area [m^2]"""
-
-
-a_fw_inboard: float = None
-"""Inboard first wall surface area [m^2]"""
-
-
-a_fw_outboard: float = None
-"""Outboard first wall surface area [m^2]"""
-
-
 dr_fw_inboard: float = None
 """inboard first wall thickness, initial estimate as calculated (m)"""
 
@@ -438,12 +415,6 @@ def init_build_variables():
         dr_vv_shells, \
         fcspc, \
         fseppc, \
-        a_fw_total_full_coverage, \
-        a_fw_inboard_full_coverage, \
-        a_fw_outboard_full_coverage, \
-        a_fw_total, \
-        a_fw_inboard, \
-        a_fw_outboard, \
         dr_fw_inboard, \
         dr_fw_outboard, \
         dr_shld_vv_gap_inboard, \
@@ -535,12 +506,6 @@ def init_build_variables():
     dr_vv_shells = 0.12
     fcspc = 0.6
     fseppc = 3.5e8
-    a_fw_total_full_coverage = 0.0
-    a_fw_inboard_full_coverage = 0.0
-    a_fw_outboard_full_coverage = 0.0
-    a_fw_total = 0.0
-    a_fw_inboard = 0.0
-    a_fw_outboard = 0.0
     dr_fw_inboard = 0.0
     dr_fw_outboard = 0.0
     dr_shld_vv_gap_inboard = 0.155

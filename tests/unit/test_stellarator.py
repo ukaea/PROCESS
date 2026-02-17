@@ -17,6 +17,7 @@ from process.current_drive import (
 from process.data_structure import (
     build_variables,
     cost_variables,
+    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     impurity_radiation_module,
@@ -26,9 +27,9 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
 )
-from process.fw import Fw
+from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
-from process.physics import Physics
+from process.physics import Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
 from process.stellarator.build import st_build
@@ -57,7 +58,7 @@ def stellarator():
         Costs(),
         Power(),
         PlasmaProfile(),
-        CCFE_HCPB(Fw()),
+        CCFE_HCPB(FirstWall()),
         CurrentDrive(
             PlasmaProfile(),
             ElectronCyclotron(plasma_profile=PlasmaProfile()),
@@ -76,8 +77,12 @@ def stellarator():
                 LowerHybrid(plasma_profile=PlasmaProfile()),
                 ElectronBernstein(plasma_profile=PlasmaProfile()),
             ),
+            PlasmaBeta(),
+            PlasmaInductance(),
         ),
         Neoclassics(),
+        plasma_beta=PlasmaBeta(),
+        plasma_inductance=PlasmaInductance(),
     )
 
 
@@ -548,7 +553,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "dr_vv_outboard", stbildparam.dr_vv_outboard)
 
-    monkeypatch.setattr(build_variables, "a_fw_total", stbildparam.a_fw_total)
+    monkeypatch.setattr(first_wall_variables, "a_fw_total", stbildparam.a_fw_total)
 
     monkeypatch.setattr(build_variables, "dr_fw_inboard", stbildparam.dr_fw_inboard)
 
@@ -692,7 +697,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     assert build_variables.dr_bore == pytest.approx(stbildparam.expected_bore)
 
-    assert build_variables.a_fw_total == pytest.approx(stbildparam.expected_a_fw_total)
+    assert first_wall_variables.a_fw_total == pytest.approx(
+        stbildparam.expected_a_fw_total
+    )
 
     assert build_variables.dr_fw_inboard == pytest.approx(
         stbildparam.expected_dr_fw_inboard

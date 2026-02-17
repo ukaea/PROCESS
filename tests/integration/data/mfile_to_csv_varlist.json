@@ -1,7 +1,3 @@
 {
-  "vars": [
-   "rmajor",
-   "p_plant_electric_net_mw",
-   "jwdgop"
-  ]
+  "vars": ["rmajor", "p_plant_electric_net_mw", "jwdgop"]
 }

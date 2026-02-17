@@ -907,6 +907,9 @@ radius_fw_channel_180_bend: float = None
 radius_blkt_channel_180_bend: float = None
 """Radius of blanket cooling channel 180° bend [m]"""
 
+dz_fw_half: float = None
+"""Half-height of first wall structure [m]"""
+
 
 def init_fwbs_variables():
     """Initialise FWBS variables"""
@@ -1108,7 +1111,8 @@ def init_fwbs_variables():
         radius_fw_channel_90_bend, \
         radius_fw_channel_180_bend, \
         radius_blkt_channel_90_bend, \
-        radius_blkt_channel_180_bend
+        radius_blkt_channel_180_bend, \
+        dz_fw_half
 
     life_blkt_fpy = 0.0
     life_blkt = 0.0
@@ -1308,3 +1312,4 @@ def init_fwbs_variables():
     radius_fw_channel_180_bend = 0.0
     radius_blkt_channel_90_bend = 0.0
     radius_blkt_channel_180_bend = 0.0
+    dz_fw_half = 0.0

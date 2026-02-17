@@ -69,7 +69,7 @@ from process.current_drive import (
 )
 from process.dcll import DCLL
 from process.divertor import Divertor
-from process.fw import Fw
+from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
 from process.ife import IFE
 from process.impurity_radiation import initialise_imprad
@@ -93,7 +93,7 @@ from process.io.process_funcs import (
 )
 from process.log import logging_model_handler, show_errors
 from process.pfcoil import PFCoil
-from process.physics import DetailedPhysics, Physics
+from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
@@ -672,7 +672,7 @@ class Models:
         self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)
         self.plasma_profile = PlasmaProfile()
-        self.fw = Fw()
+        self.fw = FirstWall()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
         self.current_drive = CurrentDrive(
@@ -683,8 +683,13 @@ class Models:
             neutral_beam=NeutralBeam(plasma_profile=self.plasma_profile),
             electron_bernstein=ElectronBernstein(plasma_profile=self.plasma_profile),
         )
+        self.plasma_beta = PlasmaBeta()
+        self.plasma_inductance = PlasmaInductance()
         self.physics = Physics(
-            plasma_profile=self.plasma_profile, current_drive=self.current_drive
+            plasma_profile=self.plasma_profile,
+            current_drive=self.current_drive,
+            plasma_beta=self.plasma_beta,
+            plasma_inductance=self.plasma_inductance,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
@@ -702,7 +707,9 @@ class Models:
                 current_drive=self.current_drive,
                 physics=self.physics,
                 neoclassics=self.neoclassics,
-            )
+                plasma_beta=self.plasma_beta,
+                plasma_inductance=self.plasma_inductance,
+        )
 
         self.dcll = DCLL(fw=self.fw)
 
