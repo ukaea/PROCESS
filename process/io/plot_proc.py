@@ -12759,6 +12759,7 @@ def plot_electron_frequency_profile(axis, mfile_data, scan):
         linestyle="-",
         label=r"$f_{Larmor,toroidal,e}$",
     )
+
     x = np.linspace(0, 1, len(freq_plasma_electron_profile))
     y = np.array(freq_plasma_electron_profile) / 1e9
     # original curve
@@ -12767,8 +12768,30 @@ def plot_electron_frequency_profile(axis, mfile_data, scan):
     axis.plot(-x, y, color="blue", linestyle="-", label="_nolegend_")
     axis.set_xlim(-1.025, 1.025)
 
+    axis.set_xlabel("$\\rho$ [r/a]")
     axis.set_ylabel("Frequency [GHz]")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
+
+    # Add secondary x-axis showing radius in metres below the primary axis
+    ax2 = axis.twiny()
+    rmajor = mfile_data.get("rmajor", scan=scan)
+    rminor = mfile_data.get("rminor", scan=scan)
+
+    # Convert normalized radius to actual radius
+    # rho ranges from -1 to 1, which corresponds to r = rmajor - rminor to rmajor + rminor
+    rho_ticks = np.array([-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1])
+    r_ticks = rmajor + rho_ticks * rminor
+
+    ax2.set_xticks(rho_ticks)
+    ax2.set_xticklabels([f"{r:.2f}" for r in r_ticks])
+    ax2.set_xlabel("Radius [m]")
+    ax2.minorticks_on()
+    ax2.set_xlim(axis.get_xlim())
+
+    # Move secondary axis to the bottom
+    ax2.xaxis.set_ticks_position("bottom")
+    ax2.xaxis.set_label_position("bottom")
+    ax2.spines["bottom"].set_position(("outward", 40))
 
     axis.legend()
 
@@ -13352,17 +13375,13 @@ def main_plot(
 
     plot_debye_length_profile(figs[15].add_subplot(232), m_file, scan)
     plot_velocity_profile(figs[15].add_subplot(233), m_file, scan)
-
-    ax_ion = figs[15].add_subplot(414)
-    ax_electron = figs[15].add_subplot(413, sharex=ax_ion)
-
-    plot_electron_frequency_profile(ax_electron, m_file, scan)
-
-    plot_ion_frequency_profile(ax_ion, m_file, scan)
-
     plot_plasma_coloumb_logarithms(figs[15].add_subplot(231), m_file, scan)
 
-    plot_larmor_radius_profile(figs[16].add_subplot(311), m_file, scan)
+    plot_electron_frequency_profile(figs[15].add_subplot(212), m_file, scan)
+
+    plot_ion_frequency_profile(figs[16].add_subplot(411), m_file, scan)
+
+    plot_larmor_radius_profile(figs[16].add_subplot(313), m_file, scan)
 
     # Plot poloidal cross-section
     poloidal_cross_section(
