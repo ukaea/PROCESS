@@ -12752,6 +12752,13 @@ def plot_electron_frequency_profile(axis, mfile_data, scan):
         )
     ]
 
+    freq_plasma_upper_hybrid_electron_profile = [
+        mfile_data.data[f"freq_plasma_upper_hybrid_profile{i}"].get_scan(scan)
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
+
     axis.plot(
         np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
         np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
@@ -12766,6 +12773,15 @@ def plot_electron_frequency_profile(axis, mfile_data, scan):
     axis.plot(x, y, color="blue", linestyle="-", label=r"$\omega_{p,e}$")
     # mirrored across the y-axis (drawn at negative rho)
     axis.plot(-x, y, color="blue", linestyle="-", label="_nolegend_")
+
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_upper_hybrid_electron_profile)),
+        np.array(freq_plasma_upper_hybrid_electron_profile) / 1e9,
+        color="purple",
+        linestyle="-",
+        label=r"$\omega_{UH,e}$",
+    )
+
     axis.set_xlim(-1.025, 1.025)
 
     axis.set_xlabel("$\\rho$ [r/a]")
