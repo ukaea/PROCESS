@@ -9573,12 +9573,18 @@ class DetailedPhysics:
                 z_particle=1.0,
             )
         )
-        
+
         # ============================
         # Upper hybrid frequencies
         # ============================
-        
 
+        physics_variables.freq_plasma_upper_hybrid_profile = self.calculate_upper_hybrid_frequency(
+            freq_plasma=np.concatenate([
+                physics_variables.freq_plasma_electron_profile[::-1],
+                physics_variables.freq_plasma_electron_profile,
+            ]),
+            freq_larmor=physics_variables.freq_plasma_larmor_toroidal_electron_profile,
+        )
 
         # ============================
         # Larmor radii
@@ -9988,7 +9994,7 @@ class DetailedPhysics:
         :rtype: float | np.ndarray
         """
         return np.sqrt(freq_plasma**2 + freq_larmor**2)
-    
+
     @staticmethod
     def calculate_larmor_radius(
         vel_perp: float | np.ndarray,
@@ -10164,6 +10170,14 @@ class DetailedPhysics:
                 f"Plasma triton toroidal Larmor frequency at point {i}",
                 f"(freq_plasma_larmor_toroidal_triton_profile{i})",
                 physics_variables.freq_plasma_larmor_toroidal_triton_profile[i],
+            )
+
+        for i in range(len(physics_variables.freq_plasma_upper_hybrid_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma upper hybrid frequency at point {i}",
+                f"(freq_plasma_upper_hybrid_profile{i})",
+                physics_variables.freq_plasma_upper_hybrid_profile[i],
             )
 
         po.osubhd(self.outfile, "Coulomb Logarithms:")
