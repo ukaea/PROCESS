@@ -392,7 +392,6 @@ class ComponentHalfHeightParam(NamedTuple):
     z_plasma_xpoint_upper: Any = None
     n_divertors: Any = None
     dz_divertor: Any = None
-    icomponent: Any = None
     expected_icomponent: Any = None
     expected_half_height: Any = None
 
@@ -416,86 +415,30 @@ class ComponentHalfHeightParam(NamedTuple):
             z_plasma_xpoint_upper=4.93333333333333333,
             n_divertors=1,
             dz_divertor=0.62000000000000011,
-            icomponent=0,
-            expected_icomponent=0,
             expected_half_height=5.9532752487304119,
         ),
     ),
 )
-def test_component_half_height(
-    componenthalfheightparam, monkeypatch, blanket_library_fixture
-):
+def test_calculate_blkt_half_height(componenthalfheightparam, blanket_library_fixture):
     """
-    Automatically generated Regression Unit Test for component_half_height.
+    Regression Unit Test for component_half_height.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak.IN.DAT.
+    This test was generated using data from large_tokamak.IN.DAT.
 
-    :param componenthalfheightparam: the data used to mock and assert in this test.
+    :param componenthalfheightparam: the data used in this test.
     :type componenthalfheightparam: componenthalfheightparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", componenthalfheightparam.z_tf_inside_half
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dz_xpoint_divertor",
-        componenthalfheightparam.dz_xpoint_divertor,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dz_shld_vv_gap",
-        componenthalfheightparam.dz_shld_vv_gap,
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_blkt_upper", componenthalfheightparam.dz_blkt_upper
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_shld_upper", componenthalfheightparam.dz_shld_upper
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_inboard",
-        componenthalfheightparam.dr_fw_plasma_gap_inboard,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_outboard",
-        componenthalfheightparam.dr_fw_plasma_gap_outboard,
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_fw_inboard", componenthalfheightparam.dr_fw_inboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_fw_outboard", componenthalfheightparam.dr_fw_outboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_vv_lower", componenthalfheightparam.dz_vv_lower
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_vv_upper", componenthalfheightparam.dz_vv_upper
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "z_plasma_xpoint_lower",
-        componenthalfheightparam.z_plasma_xpoint_lower,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "z_plasma_xpoint_upper",
-        componenthalfheightparam.z_plasma_xpoint_upper,
-    )
-    monkeypatch.setattr(
-        divertor_variables, "n_divertors", componenthalfheightparam.n_divertors
-    )
-    monkeypatch.setattr(
-        divertor_variables, "dz_divertor", componenthalfheightparam.dz_divertor
-    )
-
-    half_height = blanket_library_fixture.component_half_height(
-        componenthalfheightparam.icomponent
+    half_height = blanket_library_fixture.calculate_blkt_half_height(
+        z_plasma_xpoint_lower=componenthalfheightparam.z_plasma_xpoint_lower,
+        dz_xpoint_divertor=componenthalfheightparam.dz_xpoint_divertor,
+        dz_divertor=componenthalfheightparam.dz_divertor,
+        z_plasma_xpoint_upper=componenthalfheightparam.z_plasma_xpoint_upper,
+        dr_fw_plasma_gap_inboard=componenthalfheightparam.dr_fw_plasma_gap_inboard,
+        dr_fw_plasma_gap_outboard=componenthalfheightparam.dr_fw_plasma_gap_outboard,
+        dr_fw_inboard=componenthalfheightparam.dr_fw_inboard,
+        dr_fw_outboard=componenthalfheightparam.dr_fw_outboard,
+        dz_blkt_upper=componenthalfheightparam.dz_blkt_upper,
+        n_divertors=componenthalfheightparam.n_divertors,
     )
 
     assert half_height == pytest.approx(componenthalfheightparam.expected_half_height)
