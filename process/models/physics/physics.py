@@ -9974,6 +9974,12 @@ class DetailedPhysics:
                 z_particle=1.0,
             )
         )
+        
+        # ============================
+        # Upper hybrid frequencies
+        # ============================
+        
+
 
         # ============================
         # Larmor radii
@@ -10368,6 +10374,22 @@ class DetailedPhysics:
             2 * np.pi * m_particle
         )
 
+    @staticmethod
+    def calculate_upper_hybrid_frequency(
+        freq_plasma: float | np.ndarray, freq_larmor: float | np.ndarray
+    ) -> float | np.ndarray:
+        """
+        Calculate the upper hybrid frequency for a particle species.
+
+        :param freq_plasma: Plasma frequency of the particle species (Hz).
+        :type freq_plasma: float | np.ndarray
+        :param freq_larmor: Larmor frequency of the particle species (Hz).
+        :type freq_larmor: float | np.ndarray
+        :returns: Upper hybrid frequency in Hz.
+        :rtype: float | np.ndarray
+        """
+        return np.sqrt(freq_plasma**2 + freq_larmor**2)
+    
     @staticmethod
     def calculate_larmor_radius(
         vel_perp: float | np.ndarray,
