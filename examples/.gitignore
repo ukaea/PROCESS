@@ -1,8 +1,7 @@
-!large_tokamak_?_MFILE.DAT
 !csv_output_large_tokamak_MFILE.DAT
 !large_tokamak_eval_IN.DAT
-!large_tokamak_nof*_MFILE.DAT
 !large_tokamak_varyrun_IN.DAT
 *.csv
 *.png
 data/README.txt
+!large_tokamak_varied_min_net_electric_IN.DAT
