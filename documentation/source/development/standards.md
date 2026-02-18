@@ -634,26 +634,39 @@ The docstring style is that of the [Sphinx type](https://www.sphinx-doc.org/en/m
 If writing in new Python functions please use the docstring template below.
 
 ```python
-def function_name(param1, param2):
+def function_name(param1: Any, param2: Any) -> Any:
     """
     Brief description of what the function does.
 
     Detailed description of the function. This can include information about the algorithm,
     any important notes, and other relevant details.
 
-    :param type param1: Description of the first parameter.
-    :param type param2: Description of the second parameter.
-    :returns: Description of the return value.
-    :rtype: return_type
-    :raises ExceptionType: Description of the exception raised (if any).
+    Parameters
+    ----------
+    param1:
+        Description of the first parameter.
+    param2:
+        Description of the second parameter.
 
-    :notes:
-        - Additional notes about the function.
-        - Any important considerations or caveats.
+    Returns
+    -------
+    :
+        Description of the return value.
 
-    :references:
-        - Reference 1: Description of the reference.
-        - Reference 2: Description of the reference.
+    Raises
+    ------
+    ExceptionType
+        Description of the exception raised (if any).
+
+    Notes
+    -----
+    - Additional notes about the function.
+    - Any important considerations or caveats.
+
+    References
+    ----------
+    - Reference 1: Description of the reference.
+    - Reference 2: Description of the reference.
     """
 ```
 

@@ -26,7 +26,8 @@ def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]
         - j_critical: Critical current density in the superconductor (A/m²).
         - validity: A boolean indicating whether the input parameters are within the valid range.
 
-    :notes:
+    Notes
+    -----
     - Validity range:
         - Temperature: 4.2 K ≤ temp_conductor ≤ 72.0 K
         - Magnetic field:
@@ -155,7 +156,8 @@ def itersc(
         - b_critical: Critical field (T).
         - temp_critical: Critical temperature (K).
 
-    :notes:
+    Notes
+    -----
     - This routine uses the ITER Nb₃Sn critical surface model.
     - The model assumes a strand size of 0.82 mm diameter.
 
@@ -237,7 +239,8 @@ def jcrit_nbti(
         - jcrit: Critical current density in the superconductor (A/m²).
         - tcrit: Critical temperature (K).
 
-    :notes:
+    Notes
+    -----
         - If the magnetic field exceeds the upper critical field (bmax > bc20max),
           the critical temperature is adjusted to ensure a real (negative) value.
         - If the temperature exceeds the critical temperature, the critical surface
@@ -299,7 +302,8 @@ def bi2212(b_conductor, jstrand, temp_conductor, f_strain):
         - j_critical: Critical current density in strand (A/m²).
         - temp_margin: Temperature margin (K).
 
-    :notes:
+    Notes
+    -----
         -The model's range of validity is:
             T < 20K
             Adjusted field b < 104 T
@@ -380,7 +384,8 @@ def gl_nbti(
         - b_critical : Critical magnetic field [T].
         - t_critical : Critical temperature [K].
 
-    :notes:
+    Notes
+    -----
 
 
     :references:
@@ -479,7 +484,8 @@ def gl_rebco(
         - b_critical: Critical magnetic field (T).
         - temp_critical: Critical temperature (K).
 
-    :notes:
+    Notes
+    -----
 
     :references:
     - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
@@ -584,7 +590,8 @@ def hijc_rebco(
         - b_critical: Critical field (T).
         - temp_critical: Critical temperature (K).
 
-    :notes:
+    Notes
+    -----
     - The parameter A is transformed into a function A(T) based on a Newton polynomial fit
       considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8.
 
@@ -696,7 +703,8 @@ def western_superconducting_nb3sn(
         - b_crititical: Critical field (T).
         - temp_critical: Critical temperature (K).
 
-    :notes:
+    Notes
+    -----
     - This routine uses the WST Nb3Sn critical surface model.
     - The scaling constants and parameters are based on the reference below.
     - This assumes a strand size of 1.5mm.
@@ -793,7 +801,8 @@ def bottura_scaling(
         - bcrit: Critical field (T).
         - tcrit: Critical temperature (K).
 
-    :notes:
+    Notes
+    -----
     - This is a generic scaling proposed for the characterization and production of
     ITER Nb₃Sn strands. This is also known as the "ITER-2008 parametrization."
 

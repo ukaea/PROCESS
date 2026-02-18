@@ -140,12 +140,7 @@ class Build:
         ----------
         output : bool
             Flag indicating whether to output results
-        output: bool
-
-
-
         """
-
         # Set the X-point heights for the top and bottom of the plasma
         # Assumes top-down plasma symmetry
         build_variables.z_plasma_xpoint_upper = (
@@ -858,10 +853,6 @@ class Build:
     def divgeom(self, output: bool):
         """Divertor geometry calculation
 
-
-        divht : output real : divertor height (m)
-        self.outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
         This subroutine determines the divertor geometry.
         The inboard (i) and outboard (o) plasma surfaces
         are approximated by arcs, and followed past the X-point to
@@ -872,6 +863,10 @@ class Build:
         ----------
         output: bool
 
+        Returns
+        -------
+        divht:
+            divertor height (m)
         """
         if physics_variables.itart == 1:
             return 1.75e0 * physics_variables.rminor
@@ -1589,7 +1584,8 @@ class Build:
             - r_tf_outboard_midmin: Minimum r_tf_outboard_mid that yields the specified maximum ripple (m)
             - flag: Applicability flag (0 = OK, non-zero = fitted-range concern)
 
-        :notes:
+        Notes
+        -----
         - Fitted coefficients originate from parametric MAGINT runs (M. Kovari, 2014).
         - Picture-frame coil analytical model (Ken McClements, 2022) is used when
         `i_tf_shape == 2` and gives approximate results (within ~10% of numerical).

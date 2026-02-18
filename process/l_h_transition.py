@@ -178,7 +178,8 @@ def calculate_martin08_nominal(
     float
         The Martin L-H transition power threshold [MW]
 
-    :notes:
+    Notes
+        -----
         - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
         "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
@@ -222,7 +223,8 @@ def calculate_martin08_upper(
     float
         The Martin L-H transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
         - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
         "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
@@ -264,7 +266,8 @@ def calculate_martin08_lower(
     float
         The Martin L-H transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
         - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
         "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
@@ -310,7 +313,8 @@ def calculate_snipes2000_nominal(
     float
         The Snipes 2000 L-H transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
         - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
@@ -357,7 +361,8 @@ def calculate_snipes2000_upper(
     float
         The Snipes 2000 L-H transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
         - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
@@ -405,7 +410,8 @@ def calculate_snipes2000_lower(
     float
         The Snipes 2000 L-H transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
         - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
@@ -450,7 +456,8 @@ def calculate_snipes2000_closed_divertor_nominal(
     float
         The Snipes 2000 L-H transition power threshold with CD factor [MW]
 
-    :notes:
+    Notes
+    -----
         - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
@@ -494,7 +501,8 @@ def calculate_snipes2000_closed_divertor_upper(
     float
         The Snipes 2000 L-H transition power threshold with CD factor [MW]
 
-    :notes:
+    Notes
+    -----
         - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
@@ -538,7 +546,8 @@ def calculate_snipes2000_closed_divertor_lower(
     float
         The Snipes 2000 L-H transition power threshold with CD factor [MW]
 
-    :notes:
+    Notes
+    -----
         - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
@@ -573,7 +582,8 @@ def calculate_hubbard2012_nominal(plasma_current: float, dnla20: float) -> float
     float
         The Hubbard 2012 L-I transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
 
     :references:
         - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
@@ -599,7 +609,8 @@ def calculate_hubbard2012_upper(plasma_current: float, dnla20: float) -> float:
     float
         The Hubbard 2012 L-I transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
 
     :references:
         - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
@@ -625,7 +636,8 @@ def calculate_hubbard2012_lower(plasma_current: float, dnla20: float) -> float:
     float
         The Hubbard 2012 L-I transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
 
     :references:
         - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
@@ -655,7 +667,8 @@ def calculate_hubbard2017(
     float
         The Hubbard 2017 L-I transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
         - The scaling is given in the caption of Figure 6 in the reference.
 
     :references:
@@ -694,7 +707,8 @@ def calculate_martin08_aspect_nominal(
     float
         The Martin L-H transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
         - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
         if not the usual Martin 2008 scaling will be returned.
 
@@ -755,7 +769,8 @@ def calculate_martin08_aspect_upper(
     float
         The Martin L-H transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
         - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
         if not the usual Martin 2008 scaling will be returned.
 
@@ -816,7 +831,8 @@ def calculate_martin08_aspect_lower(
     float
         The Martin L-H transition power threshold [MW]
 
-    :notes:
+    Notes
+    -----
         - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
         if not the usual Martin 2008 scaling will be returned.
 

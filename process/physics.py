@@ -7079,7 +7079,8 @@ class Physics:
         float
             The calculated bootstrap fraction.
 
-        :notes:
+        Notes
+        -----
             - This scaling is derived for L-mode plasmas.
             - Ion and electron temperature are the same
             - Z_eff has a uniform profile, with only fully stripped carbon impurity
@@ -7151,7 +7152,8 @@ class Physics:
         float
             The calculated bootstrap fraction.
 
-        :notes:
+        Notes
+        -----
             - This scaling is derived for H-mode plasmas.
             - The temperature and density pedestal positions are the same
             - Separatrix temperature and density are zero

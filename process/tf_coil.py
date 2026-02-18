@@ -492,7 +492,8 @@ class TFCoil:
             - e_tf_magnetic_stored_total_gj (float): Total stored magnetic energy in all TF coils [GJ].
             - e_tf_coil_magnetic_stored (float): Stored magnetic energy in a single TF coil [J].
 
-        :notes:
+        Notes
+        -----
             - The stored magnetic energy in an inductor is given by:
                 E = (1/2) * L * I^2
                 where E is the energy [J], L is the inductance [H], and I is the current [A].
@@ -3052,7 +3053,8 @@ class TFCoil:
         float
             Self-inductance of the TF coil [H].
 
-        :notes:
+        Notes
+        -----
         For the D-shaped coil (i_tf_shape == 1) in a standard (non-TART) configuration
         (itart == 0), the integration is performed over the coil cross-section, including both
         the inboard and outboard arcs. The field is computed for unit current,

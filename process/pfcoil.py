@@ -3075,7 +3075,8 @@ class CSCoil:
             - dr_cs_turn_conduit: Radial thickness of steel conduit (m)
             - dz_cs_turn_conduit: Vertical thickness of steel conduit (m)
 
-        :notes:
+        Notes
+        -----
             - The calculation assumes a stadium-shaped cross-section for the CS turn.
             - If the calculated conduit thickness is negative or too small, it is set to a minimum value of 1 mm.
 
@@ -3877,7 +3878,8 @@ def peak_b_field_at_pf_coil(
         - b_pf_inner_vertical (float): Vertical field at inner edge (T)
         - b_pf_outer_vertical (float): Vertical field at outer edge (T)
 
-    :notes:
+    Notes
+    -----
     This routine calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
     The calculation includes the effects from all the coils and the plasma.
     """
@@ -4318,7 +4320,8 @@ def calculate_b_field_at_point(
         - b_test_point_vertical: Vertical field component at the test point (T)
         - web_test_point_poloidal: Poloidal flux at the test point (Wb)
 
-    :notes:
+    Notes
+    -----
     - This routine calculates the magnetic field components and the poloidal flux at a given (R, Z) point,
     given the locations and currents of a set of conductor loops. The mutual inductances between the loops
     and a poloidal filament at the (R, Z) point of interest are also computed.

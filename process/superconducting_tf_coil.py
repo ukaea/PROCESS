@@ -961,7 +961,8 @@ class SuperconductingTFCoil(TFCoil):
             - temp_tf_superconductor_critical_zero_field_strain (float): Critical temperature at zero field and strain (K).
             - c_tf_turn_cables_critical (float): Critical current in cable (A).
 
-        :notes:
+        Notes
+        -----
         This routine calculates the superconductor properties for the TF coils.
         It was originally programmed by J. Galambos (1991), from algorithms provided by J. Miller.
         The routine calculates the critical current density (winding pack) and also the protection
@@ -1869,7 +1870,8 @@ class SuperconductingTFCoil(TFCoil):
             Tuple containing:
             - b_tf_inboard_peak_with_ripple (float): Peak toroidal field including ripple (T).
 
-        :notes:
+        Notes
+        -----
         - M. Kovari, Toroidal Field Coils - Maximum Field and Ripple - Parametric Calculation, July 2014.
         """
         a = np.zeros((4,))

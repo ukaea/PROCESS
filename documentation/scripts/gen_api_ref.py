@@ -22,15 +22,10 @@ for path in sorted(src.rglob("*.py")):
 
     parts = tuple(module_path.parts)
 
-    # if is_init:= (parts[-1] =="__init__"):
-    #     parts = parts[:-1]
-    #     if len(parts) > 1:
-    #         continue
     if parts[-1] in {"__init__", "__main__", "_version"}:
         continue
 
     p = ".".join(parts)
-    # parts = (*parts, p) if is_init else parts
     nav[parts] = doc_path.as_posix()
 
     with mkdocs_gen_files.open(full_doc_path, "w") as fd:

@@ -1127,6 +1127,7 @@ class Availability:
         Parameters
         ----------
         output: bool
+           indicate whether output should be written to the output file, or no
         """
 
         ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO

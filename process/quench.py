@@ -153,7 +153,8 @@ def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
     :
         Electrical resistivity of copper [Ω·m].
 
-    :notes:
+    Notes
+    -----
         - Resistivity increases with magnetic field due to magnetoresistance effects.
 
     :references:
@@ -198,7 +199,8 @@ def _copper_electrical_resistivity(
     float
         Electrical resistivity of copper [Ω·m].
 
-    :notes:
+    Notes
+    -----
     - Resistivity increases with magnetic field due to magnetoresistance effects.
 
     :references:
@@ -235,7 +237,8 @@ def _nb3sn_specific_heat_capacity(temperature: float) -> float:
     float
         Specific heat capacity of Nb₃Sn at the given temperature [J/(kg·K)].
 
-    :notes:
+    Notes
+    -----
     - The superconducting part is ignored, which is typical in thermal quench calculations.
 
     :references:
@@ -292,7 +295,8 @@ def _quench_integrals(
     Tuple[float, float, float]
         Tuple of integrals for helium, copper, and superconductor contributions (I_He, I_Cu, I_sc).
 
-    :notes:
+    Notes
+    -----
     - Integrals assume temperature-dependent material models are defined for the entire range [t_he_peak, t_max].
     - Helium is assumed to be at constant pressure throughout the quench (i.e. some PRV in the
     cooling system)
@@ -367,7 +371,8 @@ def calculate_quench_protection_current_density(
     float
         Maximum allowable winding pack current density [A/m²].
 
-    :notes:
+    Notes
+    -----
     - Assumes constant magnetic field over the duration of the quench.
     - Assumes the dump resistor has a constant resistance much higher
     than that of the TF coil.

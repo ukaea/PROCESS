@@ -1038,7 +1038,8 @@ class IonCyclotron:
         float
             The calculated ion cyclotron heating efficiency in A/W.
 
-        :notes:
+        Notes
+        -----
         - The 0.1 term is to convert the temperature into 10 keV units
         - The original formula is for the normalised current drive efficnecy
         hence the addition of the density and majro radius terms to get back to an absolute value
@@ -1094,7 +1095,8 @@ class ElectronBernstein:
         float
             The calculated absolute EBW current drive efficiency in A/W.
 
-        :notes:
+        Notes
+        -----
         - EBWs can only couple to plasma if the cyclotron harmonic is above the plasma density cut-off.
         - The density factor accounts for this behavior.
 
