@@ -157,7 +157,7 @@ def init_stellarator_variables():
     f_coil_shape = 0.0
     f_st_b = 0.0
     f_st_i_total = 0.0
-    f_st_coil_aspect = 0.0
+    f_st_coil_aspect = 1.0
     r_coil_major = 0.0
     r_coil_minor = 0.0
     istell = 0
