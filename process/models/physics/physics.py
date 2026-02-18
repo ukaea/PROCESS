@@ -1070,6 +1070,12 @@ class Physics:
         physics_variables.fusrat_total = (
             physics_variables.fusden_total * physics_variables.vol_plasma
         )
+        physics_variables.fusrat_dt_total = (
+            physics_variables.p_dt_total_mw * 1.0e6 / (constants.D_T_ENERGY)
+        )
+        physics_variables.fusrat_tritium_total_kg = (
+            physics_variables.fusrat_dt_total * constants.TRITON_MASS
+        )
 
         # Create some derived values and add beam contribution to fusion power
         (
@@ -3263,6 +3269,20 @@ class Physics:
             "Fusion rate: total (reactions/sec)",
             "(fusrat_total)",
             physics_variables.fusrat_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-T fusion rate: total (reactions/sec)",
+            "(fusrat_dt_total)",
+            physics_variables.fusrat_dt_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Tritium burn rate: total (kg/sec)",
+            "(fusrat_tritium_total_kg)",
+            physics_variables.fusrat_tritium_total_kg,
             "OP ",
         )
         po.ovarre(
