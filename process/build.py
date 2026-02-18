@@ -1688,10 +1688,6 @@ class Build:
         ----------
         output : bool
             Flag indicating whether to output the results
-        output: bool
-
-
-
         """
 
         if fwbs_variables.blktmodel > 0:
