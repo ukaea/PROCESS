@@ -59,10 +59,11 @@ test = [
   "platformdirs~=4.5.0",
   "process[examples]"
 ]
-examples = ["jupyter==1.0.0"]
+examples = ["jupyter==1.0.0", "jupytext"]
 plotly = ["plotly>=5.15.0,<6"]
 docs = [
   "mkdocs>=1.1",
+  "mkdocs-literate-nav",
   "mkdocs-material>=4.6.3",
   "mkdocs-git-revision-date-localized-plugin >= 1.2",
   "mkdocs-glightbox >= 0.3.4",
@@ -135,10 +136,6 @@ extend-exclude = ["env", ".env"]
 [tool.ruff.format]
 preview = true
 
-[tool.ruff.lint.per-file-ignores]
-# Tests can use magic values, assertions, and relative imports
-"tests/**" = ["ARG"]
-
 [tool.ruff.lint.isort]
 known-first-party = ["process"]
 
@@ -158,6 +155,11 @@ max-complexity = 12
 # These should be made stricter
 max-args = 17
 max-locals = 17
+
+[tool.ruff.lint.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**" = ["ARG"]
+"examples/**" = ['B018', 'E402']
 
 [tool.ruff.lint]
 preview = true
