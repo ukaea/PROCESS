@@ -56,12 +56,6 @@ env_process/
 !tests/regression/input_files/*.IN.DAT
 !tests/integration/data/*.IN.DAT
 !scenario_examples/*/*.pdf
-
-stellarator_analysis
-stellarator_test
-tests/impurity_radiation.py
-tests/vv_stress.py
-
 */.ipynb_checkpoints/
 REBCO_JC.DAT
 *.whl
