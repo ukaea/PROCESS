@@ -499,7 +499,8 @@ class TFCoil:
                 where E is the energy [J], L is the inductance [H], and I is the current [A].
             - Total energy is for all coils; per-coil energy is divided by n_tf_coils.
 
-        :references:
+        References
+        ----------
             - http://hyperphysics.phy-astr.gsu.edu/hbase/electric/indeng.html
 
             - https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy

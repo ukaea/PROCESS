@@ -78,7 +78,8 @@ def calculate_radiation_powers(
             - pden_plasma_outer_rad_mw (float): Edge radiation power per unit volume (MW/m^3).
             - pden_plasma_rad_mw (float): Total radiation power per unit volume (MW/m^3).
 
-    :references:
+    References
+    ----------
         - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
           Nuclear Fusion, vol. 41, no. 6, pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
         - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
@@ -174,7 +175,8 @@ def psync_albajar_fidone(
     float
         Synchrotron radiation power per unit volume (MW/m^3).
 
-    :references:
+    References
+    ----------
     - F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,”
       Nuclear Fusion, vol. 41, no. 6, pp. 665-678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
 

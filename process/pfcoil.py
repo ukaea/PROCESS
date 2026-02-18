@@ -3080,7 +3080,8 @@ class CSCoil:
             - The calculation assumes a stadium-shaped cross-section for the CS turn.
             - If the calculated conduit thickness is negative or too small, it is set to a minimum value of 1 mm.
 
-        :references:
+        References
+        ----------
             - R. Wesche et al., “Central solenoid winding pack design for DEMO,”
             Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017,
             doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
@@ -3586,7 +3587,8 @@ class CSCoil:
         float
             Maximum field of solenoid (T)
 
-        :references:
+        References
+        ----------
             - Fits are taken from the figure on p.22 of M. Wilson's book
             "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983,
             ISBN 13: 9780198548102
@@ -3732,7 +3734,8 @@ class CSCoil:
            unsmeared axial stress is obtained by dividing the axial force by
            the effective steel area associated with the CS turns.
 
-        :references:
+        References
+        ----------
             - Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009.
               doi: https://doi.org/10.1007/b112047.
         """

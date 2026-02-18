@@ -138,7 +138,8 @@ class Divertor:
               and the heat load is calculated based on the total divertor surface area.
             - The method accounts for both single null and double null configurations.
 
-        :references:
+        References
+        ----------
             - Y.-K. M. Peng, J. B. Hicks, AEA Fusion, Culham (UK), "Engineering feasibility of tight aspect ratio Tokamak (spherical torus) reactors".
               1990. https://inis.iaea.org/records/ey2rf-dah04
 

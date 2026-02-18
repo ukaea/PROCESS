@@ -161,7 +161,8 @@ def itersc(
     - This routine uses the ITER Nb₃Sn critical surface model.
     - The model assumes a strand size of 0.82 mm diameter.
 
-    :references:
+    References
+    ----------
     - ITER DDD 11-7: Magnets - conductors (2NBKXY) (2009),
       https://user.iter.org/?uid=2NBKXY&action=get_document
     """
@@ -249,7 +250,8 @@ def jcrit_nbti(
         - This model uses an antiquated scaling law for NbTi, which is not used in the superconductor field for nearly 30 years.
         - It is simplistic and linear in J_c (B) (for a fixed temperature), lacking accuracy in both the high and low field regions.
 
-    :references:
+    References
+    ----------
         - M. Lubell, “Empirical scaling formulas for critical current and critical field for commercial NbTi,”
         IEEE Transactions on Magnetics, vol. 19, no. 3, pp. 754-757, May 1983,
         doi: https://doi.org/10.1109/tmag.1983.1062311.
@@ -388,7 +390,8 @@ def gl_nbti(
     -----
 
 
-    :references:
+    References
+    ----------
     - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
     “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
     Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
@@ -487,7 +490,8 @@ def gl_rebco(
     Notes
     -----
 
-    :references:
+    References
+    ----------
     - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
     “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
     Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
@@ -597,7 +601,8 @@ def hijc_rebco(
 
     - A scaling factor of 0.4 was originally applied to j_critical for CORC cables, but is not used here.
 
-    :references:
+    References
+    ----------
     - Based in part on the parameterization described in:
     M. J. Wolf, Nadezda Bagrets, W. H. Fietz, C. Lange, and K.-P. Weiss,
     “Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,”
@@ -711,7 +716,8 @@ def western_superconducting_nb3sn(
     - Compared to the EUTF4 (OST) ( European qualification samples for TF conductor),
     the performance of the WST at low strain is superior by about 10%.
 
-    :references:
+    References
+    ----------
     - V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”
     Accessed: May 12, 2025. [Online].
     Available: https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
@@ -811,7 +817,8 @@ def bottura_scaling(
 
     - The strain function is suitable only in the moderate strain region, down to 0.8%.
 
-    :references:
+    References
+    ----------
     - L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,”
     IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009,
     doi: https://doi.org/10.1109/tasc.2009.2018278.

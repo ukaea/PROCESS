@@ -1732,7 +1732,8 @@ class SuperconductingTFCoil(TFCoil):
             j_tf_wp_quench_protection_max (float): Winding pack current density from temperature rise protection (A/m²)
             - v_tf_dump_voltage_peak (float): Discharge voltage imposed on a TF coil (V)
 
-        :references:
+        References
+        ----------
         - L. Bottura, “Magnet Quench 101,” arXiv (Cornell University), Jan. 2014,
         doi: https://doi.org/10.48550/arxiv.1401.3927.
         """

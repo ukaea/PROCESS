@@ -17,7 +17,8 @@ def calculate_iter1996_nominal(
     float
         The ITER-1996 L-H transition power threshold [MW]
 
-    :references:
+    References
+    ----------
         - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
         "Threshold power and energy confinement for ITER". 1996.
 
@@ -47,7 +48,8 @@ def calculate_iter1996_upper(
     float
         The ITER-1996 L-H transition power threshold [MW]
 
-    :references:
+    References
+    ----------
         - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
         "Threshold power and energy confinement for ITER". 1996.
 
@@ -77,7 +79,8 @@ def calculate_iter1996_lower(
     float
         The ITER-1996 L-H transition power threshold [MW]
 
-    :references:
+    References
+    ----------
         - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
         "Threshold power and energy confinement for ITER". 1996.
 
@@ -107,7 +110,8 @@ def calculate_snipes1997_iter(
     float
         The Snipes 1997 L-H transition power threshold [MW]
 
-    :references:
+    References
+    ----------
         - J. A. Snipes and the ITER H-mode Threshold Database Working Group, "An Analysis of the H-mode Threshold in ITER,"
         Controlled Fusion and Plasma Physics, 24th EPS Conference,
         Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
@@ -138,7 +142,8 @@ def calculate_snipes1997_kappa(
     float
         The Snipes 1997 L-H transition power threshold with kappa factor [MW]
 
-    :references:
+    References
+    ----------
         - J. A. Snipes and the ITER H-mode Threshold Database Working Group, "An Analysis of the H-mode Threshold in ITER,"
         Controlled Fusion and Plasma Physics, 24th EPS Conference,
         Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
@@ -185,7 +190,8 @@ def calculate_martin08_nominal(
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
 
-    :references:
+    References
+    ----------
         - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
         Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
         doi: https://doi.org/10.1088/1742-6596/123/1/012033.
@@ -228,7 +234,8 @@ def calculate_martin08_upper(
         - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
         "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
-    :references:
+    References
+    ----------
         - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
         Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
         doi: https://doi.org/10.1088/1742-6596/123/1/012033.
@@ -272,7 +279,8 @@ def calculate_martin08_lower(
         "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
         Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
         doi: https://doi.org/10.1088/1742-6596/123/1/012033.
@@ -319,7 +327,8 @@ def calculate_snipes2000_nominal(
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
         Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
         doi: https://doi.org/10.1088/0741-3335/42/5a/336.
@@ -367,7 +376,8 @@ def calculate_snipes2000_upper(
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
         Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
         doi: https://doi.org/10.1088/0741-3335/42/5a/336.
@@ -416,7 +426,8 @@ def calculate_snipes2000_lower(
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
         Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
         doi: https://doi.org/10.1088/0741-3335/42/5a/336.
@@ -462,7 +473,8 @@ def calculate_snipes2000_closed_divertor_nominal(
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
         Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
         doi: https://doi.org/10.1088/0741-3335/42/5a/336.
@@ -507,7 +519,8 @@ def calculate_snipes2000_closed_divertor_upper(
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
         Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
         doi: https://doi.org/10.1088/0741-3335/42/5a/336.
@@ -552,7 +565,8 @@ def calculate_snipes2000_closed_divertor_lower(
         "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
         results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
         Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
         doi: https://doi.org/10.1088/0741-3335/42/5a/336.
@@ -585,7 +599,8 @@ def calculate_hubbard2012_nominal(plasma_current: float, dnla20: float) -> float
     Notes
     -----
 
-    :references:
+    References
+    ----------
         - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
         Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
         doi: https://doi.org/10.1088/0029-5515/52/11/114009.
@@ -612,7 +627,8 @@ def calculate_hubbard2012_upper(plasma_current: float, dnla20: float) -> float:
     Notes
     -----
 
-    :references:
+    References
+    ----------
         - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
         Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
         doi: https://doi.org/10.1088/0029-5515/52/11/114009.
@@ -639,7 +655,8 @@ def calculate_hubbard2012_lower(plasma_current: float, dnla20: float) -> float:
     Notes
     -----
 
-    :references:
+    References
+    ----------
         - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
         Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
         doi: https://doi.org/10.1088/0029-5515/52/11/114009.
@@ -671,7 +688,8 @@ def calculate_hubbard2017(
     -----
         - The scaling is given in the caption of Figure 6 in the reference.
 
-    :references:
+    References
+    ----------
         - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
         Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017,
         doi: https://doi.org/10.1088/1741-4326/aa8570.
@@ -716,7 +734,8 @@ def calculate_martin08_aspect_nominal(
         "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
         Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
         doi: https://doi.org/10.1088/1742-6596/123/1/012033.
@@ -778,7 +797,8 @@ def calculate_martin08_aspect_upper(
         "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
         Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
         doi: https://doi.org/10.1088/1742-6596/123/1/012033.
@@ -840,7 +860,8 @@ def calculate_martin08_aspect_lower(
         "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
-    :references:
+    References
+    ----------
         - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
         Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
         doi: https://doi.org/10.1088/1742-6596/123/1/012033.

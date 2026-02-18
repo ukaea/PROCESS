@@ -1044,7 +1044,8 @@ class IonCyclotron:
         - The original formula is for the normalised current drive efficnecy
         hence the addition of the density and majro radius terms to get back to an absolute value
 
-        :references:
+        References
+        ----------
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
           https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
 
@@ -1100,7 +1101,8 @@ class ElectronBernstein:
         - EBWs can only couple to plasma if the cyclotron harmonic is above the plasma density cut-off.
         - The density factor accounts for this behavior.
 
-        :references:
+        References
+        ----------
         - Freethy, S., PROCESS issue #1262.
         """
 
@@ -1378,7 +1380,8 @@ class LowerHybrid:
         - This forumla was originally in the Oak RidgeSystems Code, attributed to Fenstermacher
               and is used in the AEA FUS 172 report.
 
-        :references:
+        References
+        ----------
             - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
 
             - R.L.Reid et al, Oak Ridge Report ORNL/FEDC-87-7, 1988
@@ -1413,7 +1416,8 @@ class LowerHybrid:
             The calculated absolute current drive efficiency in A/W.
 
 
-        :references:
+        References
+        ----------
             - Ehst, D.A., and Karney, C.F.F., "Lower Hybrid Current Drive in Tokamaks",
               Nuclear Fusion, 31(10), 1933-1949, 1991.
         """
@@ -2131,7 +2135,8 @@ class CurrentDrive:
         float
             The calculated dimensionless current drive efficiency.
 
-        :references:
+        References
+        ----------
         - E. Poli et al., “Electron-cyclotron-current-drive efficiency in DEMO plasmas,”
             Nuclear Fusion, vol. 53, no. 1, pp. 013011-013011, Dec. 2012,
             doi: https://doi.org/10.1088/0029-5515/53/1/013011.

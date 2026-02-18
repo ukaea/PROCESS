@@ -119,7 +119,8 @@ def _plascar_bpol(
     :
         coefficients ff1, ff2, d1, d2
 
-    References:
+    References
+    ----------
         - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
         'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
         1729-1738. https://doi.org/10.13182/FST92-A29971
@@ -204,7 +205,8 @@ def calculate_poloidal_field(
         poloidal field in Tesla
 
 
-    References:
+    References
+    ----------
         - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
         unpublished internal Oak Ridge document
         - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
@@ -292,7 +294,8 @@ def calculate_plasma_current_peng(
         plasma current in MA
 
 
-    References:
+    References
+    ----------
         - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
         unpublished internal Oak Ridge document
         - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
@@ -345,7 +348,8 @@ def calculate_current_coefficient_ipdg89(
         the fq plasma current coefficient
 
 
-    References:
+    References
+    ----------
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
 
@@ -381,7 +385,8 @@ def calculate_current_coefficient_todd(
     :
         the fq plasma current coefficient
 
-    References:
+    References
+    ----------
         - D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
 
@@ -557,7 +562,8 @@ def calculate_current_coefficient_fiesta(
         the fq plasma current coefficient
 
 
-    References:
+    References
+    ----------
         - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design,
         Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
 
@@ -1569,7 +1575,8 @@ def _trapped_particle_fraction_sauter(
 
         This function calculates the trapped particle fraction at a given radius.
 
-    References:
+    References
+    ----------
         Used in this paper:
         - O. Sauter, C. Angioni, Y. R. Lin-Liu;
         Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
@@ -2767,7 +2774,8 @@ class Physics:
         float
             The Wesson current profile index.
 
-        :Notes:
+        Notes
+        -----
             - It is recommended to use this method with the other Wesson relations for normalised beta and
               normalised internal inductance.
             - This relation is only true for the cyclindrical plasma approximation.
@@ -2834,18 +2842,22 @@ class Physics:
         ------
         ValueError
             If i_density_limit is not between 1 and 7.
-            Notes:
+            Notes
+            -----
         ValueError
             If i_density_limit is not between 1 and 7.
-            Notes:
+            Notes
+            -----
             This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
         ValueError
             If i_density_limit is not between 1 and 7.
-            Notes:
+            Notes
+            -----
             This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
             For i_density_limit = 1-5, 8, we scale the sepatrix density limit output by the ratio of the separatrix to volume averaged density
 
-        References:
+        References
+        ----------
         - AEA FUS 172
             Physics Assessment for the European Reactor Study
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines
@@ -3411,7 +3423,8 @@ class Physics:
             - f_res_plasma_neo (float): Neo-classical resistivity enhancement factor.
             - res_plasma (float): Plasma resistance (ohm).
 
-        References:
+        References
+        ----------
         - ITER Physics Design Guidelines
             1989 [IPDG89], N. A. Uckan et al,
 
@@ -3527,18 +3540,22 @@ class Physics:
         ------
         ValueError
             If invalid value for i_plasma_current is provided.
-            Notes:
+            Notes
+            -----
         ValueError
             If invalid value for i_plasma_current is provided.
-            Notes:
+            Notes
+            -----
             This routine calculates the plasma current based on the edge safety factor q95.
         ValueError
             If invalid value for i_plasma_current is provided.
-            Notes:
+            Notes
+            -----
             This routine calculates the plasma current based on the edge safety factor q95.
             It will also make the current profile parameters consistent with the q-profile if required.
 
-        References:
+        References
+        ----------
         - J D Galambos, STAR Code
             Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
         - J D Galambos, STAR Code
@@ -6701,7 +6718,8 @@ class Physics:
         :
             The calculated bootstrap fraction.
 
-        Notes:
+        Notes
+        -----
             The profile assumed for the alphan and alpat indexes is only a parabolic profile without a pedestal (L-mode).
             The Root Mean Squared Error for the fitting database of this formula was 0.025
             Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully non-inductively driven
@@ -6710,7 +6728,8 @@ class Physics:
             This can be used for all apsect ratios.
             The diamagnetic fraction is included in this formula.
 
-        References:
+        References
+        ----------
             Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis,
             Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
             https://doi.org/10.1016/j.fusengdes.2019.111322.
@@ -6754,10 +6773,12 @@ class Physics:
         :
             The calculated bootstrap fraction.
 
-        Notes:
+        Notes
+        -----
             - The source reference does not provide any info about the derivation of the formula. It is only stated
 
-        References:
+        References
+        ----------
             - Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants,”
             Fusion Engineering and Design, vol. 85, no. 2, pp. 243-265, Apr. 2010,
             doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
@@ -6802,13 +6823,15 @@ class Physics:
         :
             The calculated bootstrap fraction.
 
-        Notes:
+        Notes
+        -----
             - Based off 350 plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak
             - A = 1.5, R_0 = 0.3m, I_p = 200kA, B_0=0.4T, beta = 4-10%. Profiles taken as Gaussian shaped functions.
             - Errors mostly up to the order of 10% are obtained when both expressions are compared with the equilibrium estimates for the
             bootstrap current in ETE
 
-        References:
+        References
+        ----------
             - M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,”
             Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
             doi: https://doi.org/10.1088/0741-3335/50/6/065001.
@@ -6847,7 +6870,8 @@ class Physics:
         :
             The calculated bootstrap fraction.
 
-        Notes:
+        Notes
+        -----
             - Based off of TFTR data calculated using the TRANSP plasma analysis code
             - 170 discharges which was assembled to  study the tritium influx and transport in discharges with D-only neutral beam
             injection (NBI)
@@ -6855,7 +6879,8 @@ class Physics:
             - Discharges with monotonic flux profiles with reversed shear are also included
             - Is applied to circular cross-section plasmas
 
-        References:
+        References
+        ----------
             - G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings,
             Jan. 1997, doi: https://doi.org/10.1063/1.53414.
 
@@ -6902,7 +6927,8 @@ class Physics:
         :
             The calculated bootstrap fraction.
 
-        Notes:
+        Notes
+        -----
             - Data is based off of equilibria from Miller et al.
             - A: 1.2 - 3.0 and stable to n ballooning and low n kink modes at a bootstrap fraction of 99% for kappa = 2, 2.5 and 3
             - The results were parameterized as a function of aspect ratio and elongation
@@ -6910,7 +6936,8 @@ class Physics:
             - Parabolic profiles should be used for best results as the pressure peaking value is calculated as the product of a parabolic
             temperature and density profile
 
-        References:
+        References
+        ----------
             - C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,”
             vol. 42, no. 5, pp. 547-556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
 
@@ -6958,7 +6985,8 @@ class Physics:
         :
             The calculated bootstrap fraction.
 
-        Notes:
+        Notes
+        -----
             - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
             - Method was done to put the scaling into parameters compatible with the TPC systems code
             - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
@@ -6968,7 +6996,8 @@ class Physics:
             - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the f_BS value for reversed shear
             equilibrium.
 
-        References:
+        References
+        ----------
             - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
             Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
             doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
@@ -7016,7 +7045,8 @@ class Physics:
         :
             The calculated bootstrap fraction.
 
-        Notes:
+        Notes
+        -----
             - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
             - Method was done to put the scaling into parameters compatible with the TPC systems code
             - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
@@ -7026,7 +7056,8 @@ class Physics:
             - This scaling has the q profile dependance removed to obtain a scaling formula with much more flexible variables than
             that by a single profile factor for internal current profile.
 
-            References:
+            References
+            ----------
             - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
             Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
             doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
@@ -7085,7 +7116,8 @@ class Physics:
             - Ion and electron temperature are the same
             - Z_eff has a uniform profile, with only fully stripped carbon impurity
 
-        :references:
+        References
+        ----------
             - S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and
               current balance models for tokamak systems code considering H-mode plasma profiles,”
               Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
@@ -7160,7 +7192,8 @@ class Physics:
             - Ion and electron temperature are the same
             - Z_eff has a uniform profile, with only fully stripped carbon impurity
 
-        :references:
+        References
+        ----------
             - S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and
               current balance models for tokamak systems code considering H-mode plasma profiles,”
               Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
@@ -8762,7 +8795,8 @@ class PlasmaBeta:
         float
             The Wesson normalised beta upper limit.
 
-         :Notes:
+         Notes
+         -----
              - It is recommended to use this method with the other Wesson relations for normalsied internal
              inductance and current profile index.
              - This fit is derived from the DIII-D database for β_N >= 2.5
@@ -8810,7 +8844,8 @@ class PlasmaBeta:
         float
             The Menard normalised beta upper limit.
 
-        :Notes:
+        Notes
+        -----
             - Found as a reasonable fit to the computed no wall limit at f_BS ≈ 50%
             - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
               β_T data from DIII-D at A = 2.9 and high κ.
@@ -8849,7 +8884,8 @@ class PlasmaBeta:
         float
             The E. Tholerus normalized beta upper limit.
 
-        :Notes:
+        Notes
+        -----
             - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
               which is defined as the ratio of the peak pressure to the average pressure.
             - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
@@ -8887,7 +8923,8 @@ class PlasmaBeta:
         float
             The Stambaugh normalized beta upper limit.
 
-        :Notes:
+        Notes
+        -----
             - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
             - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
 
@@ -8930,7 +8967,8 @@ class PlasmaBeta:
         float
             Normalised beta.
 
-        :Notes:
+        Notes
+        -----
         - 1.0e8 is a conversion factor to get beta_N in standard units, as plasma current is normally in MA and
         beta is in percentage instead of fraction.
 
@@ -8992,7 +9030,8 @@ class PlasmaBeta:
         float
             Beta limit as defined below.
 
-        Notes:
+        Notes
+        -----
             - If i_beta_component = 0, then the limit is applied to the total beta.
             - If i_beta_component = 1, then the limit is applied to the thermal beta only.
             - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
@@ -9000,7 +9039,8 @@ class PlasmaBeta:
 
             - The default value for the g coefficient is beta_norm_max = 3.5.
 
-        References:
+        References
+        ----------
             - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
             Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
             doi: https://doi.org/10.1088/0741-3335/30/11/019.
@@ -9034,7 +9074,8 @@ class PlasmaBeta:
         float
             The calculated total poloidal beta.
 
-        :references:
+        References
+        ----------
         - J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
         Page 270 ISBN 0521851076
 
@@ -9086,7 +9127,8 @@ class PlasmaBeta:
         float
             Fast alpha beta component.
 
-        :Notes:
+        Notes
+        -----
             - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, 〈T〉 = 5-20 keV
 
 
@@ -9530,7 +9572,8 @@ class PlasmaInductance:
             - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
             - vs_plasma_total_required: Total volt-seconds needed (Wb)
 
-        :references:
+        References
+        ----------
             - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
             “Volt-second analysis and consumption in Doublet III plasmas,”
             Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
@@ -9633,7 +9676,8 @@ class PlasmaInductance:
         float
             The li(3) normalised internal inductance.
 
-        :references:
+        References
+        ----------
             - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
             “Inductive flux usage and its optimization in tokamak operation,”
             Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
@@ -9666,7 +9710,8 @@ class PlasmaInductance:
         float
             The Menard plasma normalised internal inductance.
 
-        :Notes:
+        Notes
+        -----
             - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
             - This model is only recommended to be used for ST's with kappa > 2.5
 
@@ -9692,7 +9737,8 @@ class PlasmaInductance:
         float
             The Wesson plasma normalised internal inductance.
 
-        :Notes:
+        Notes
+        -----
             - It is recommended to use this method with the other Wesson relations for normalised beta and
               current profile index.
             - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.

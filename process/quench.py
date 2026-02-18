@@ -31,7 +31,8 @@ def _copper_specific_heat_capacity(temperature: float) -> float:
     -----
     Assumes high-purity copper with negligible impurity effects.
 
-    :references:
+    References
+    ----------
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
         at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
         https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
@@ -59,7 +60,8 @@ def _copper_rrr_resistivity(temperature: float, rrr: float) -> float:
     float
         Electrical resistivity of copper [Ω·m].
 
-    :references:
+    References
+    ----------
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
         at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
         https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
@@ -121,7 +123,8 @@ def _copper_irradiation_resistivity(fluence: float) -> float:
     may be underestimated.
     - This is an additive contribution to the base residual resistivity of copper.
 
-    :references:
+    References
+    ----------
         - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
         - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977).
         https://doi.org/10.1103/PhysRevB.16.5285
@@ -157,7 +160,8 @@ def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
     -----
         - Resistivity increases with magnetic field due to magnetoresistance effects.
 
-    :references:
+    References
+    ----------
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
         at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
         https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
@@ -203,7 +207,8 @@ def _copper_electrical_resistivity(
     -----
     - Resistivity increases with magnetic field due to magnetoresistance effects.
 
-    :references:
+    References
+    ----------
     - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
     at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
     https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
@@ -241,7 +246,8 @@ def _nb3sn_specific_heat_capacity(temperature: float) -> float:
     -----
     - The superconducting part is ignored, which is typical in thermal quench calculations.
 
-    :references:
+    References
+    ----------
     - EFDA Material Data Compilation for Superconductor Simulation, P. Bauer, H. Rajainmaki, E. Salpietro, EFDA CSU, Garching, 04/18/07.
     - ITER DRG1 Annex, Superconducting Material Database, Article 5, N 11 FDR 42 01-07-05 R 0.1.
     - V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting Cables, Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.

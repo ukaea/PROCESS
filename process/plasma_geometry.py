@@ -18,7 +18,8 @@ class PlasmaGeom:
         This method calculates the plasma geometry parameters based on various shaping terms and input values.
         It updates the `physics_variables` with calculated values for kappa, triangularity, surface area, volume, etc.
 
-        :references:
+        References
+        ----------
             - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
               unpublished internal Oak Ridge document
             - H. Zohm et al, On the Physics Guidelines for a Tokamak DEMO,
@@ -324,7 +325,8 @@ class PlasmaGeom:
             - thetao (float): Half-angle of arc describing outboard surface
 
 
-        :references:
+        References
+        ----------
         - F/MI/PJK/LOGBOOK14, p.42
         - F/PL/PJK/PROCESS/CODE/047
         """
@@ -399,7 +401,8 @@ class PlasmaGeom:
             - xso (float): Outboard surface area (m^2)
 
 
-        :references:
+        References
+        ----------
         - F/MI/PJK/LOGBOOK14, p.43
         """
         fourpi = 4.0e0 * np.pi
@@ -442,7 +445,8 @@ class PlasmaGeom:
             Plasma volume (m^3)
 
 
-        :references:
+        References
+        ----------
         - F/MI/PJK/LOGBOOK14, p.43
         """
 
@@ -505,7 +509,8 @@ class PlasmaGeom:
             Plasma cross-sectional area (m^2)
 
 
-        :references:
+        References
+        ----------
         - F/MI/PJK/LOGBOOK14, p.41
         """
 
@@ -542,7 +547,8 @@ class PlasmaGeom:
             - vol_plasma (float): Plasma volume
 
 
-        :references:
+        References
+        ----------
             - O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,”
             Fusion Engineering and Design, vol. 112, pp. 633-645, Nov. 2016,
             doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
@@ -615,7 +621,8 @@ def surfa(a: float, r: float, k: float, d: float) -> tuple[float, float]:
         - so (float): Plasma outboard surface area (m^2)
 
 
-    :references:
+    References
+    ----------
     - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
     unpublished internal Oak Ridge document
     """
@@ -657,7 +664,8 @@ def perim(a: float, kap: float, tri: float) -> float:
         Plasma poloidal perimeter (m)
 
 
-    :references:
+    References
+    ----------
     - F/PL/PJK/PROCESS/CODE/047
     """
 
@@ -700,7 +708,8 @@ def fvol(r: float, a: float, kap: float, tri: float) -> float:
         Plasma volume (m^3)
 
 
-    :references:
+    References
+    ----------
     - F/MI/PJK/LOGBOOK14, p.41
     - F/PL/PJK/PROCESS/CODE/047
     """
@@ -753,7 +762,8 @@ def xsect0(a: float, kap: float, tri: float) -> float:
     float
         Plasma cross-sectional area (m^2)
 
-    :references:
+    References
+    ----------
     - F/MI/PJK/LOGBOOK14, p.41
     - F/PL/PJK/PROCESS/CODE/047
     """

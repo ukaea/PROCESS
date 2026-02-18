@@ -2734,7 +2734,8 @@ class BlanketLibrary:
         float
             Pumping power in MW.
 
-        :references:
+        References
+        ----------
             - Idel'Cik, I. E. (1969), Memento des pertes de charge
             - S.P. Sukhatme (2005), A Textbook on Heat Transfer
         """
