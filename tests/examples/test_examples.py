@@ -50,7 +50,7 @@ def _get_location(loc, name):
 def test_introductory_examples(examples_temp_data):
     """Run the introduction.ex.py and check no exceptions are raised.
 
-    introudction.ex.py uses temp dirs to clean up any produced files itself.
+    introduction.ex.py uses temp dirs to clean up any produced files itself.
     :param examples_temp_data: temporary dir containing examples files
     :type examples_temp_data: Path
 
