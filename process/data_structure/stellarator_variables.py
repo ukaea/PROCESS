@@ -21,7 +21,7 @@ f_st_rminor: float = None
 """Actual minor radius to reference value from stella_config file"""
 
 f_coil_shape: float = None
-""" Paramtere required for coil scaling
+"""Paramtere required for coil scaling
 (min_plasma_coil_distance + stella_config_rminor_ref) / stella_config_coil_rminor
 """
 
