@@ -933,6 +933,9 @@ p_div_separatrix_max_mw: float = None
 p_dt_total_mw: float = None
 """Total deuterium-tritium fusion power, from plasma and beams [MW]"""
 
+fusrat_dt_total: float = None
+"""Total deuterium-tritium fusion reaction rate, from plasma and beams [reactions/sec]"""
+
 
 p_plasma_dt_mw: float = None
 """Deuterium-tritium fusion power, just from plasma [MW]"""
@@ -1603,6 +1606,7 @@ def init_physics_variables():
         p_div_upper_separatrix_mw, \
         p_div_separatrix_max_mw, \
         p_dt_total_mw, \
+        fusrat_dt_total, \
         p_plasma_dt_mw, \
         p_plasma_outer_rad_mw, \
         pden_plasma_outer_rad_mw, \
@@ -1885,6 +1889,7 @@ def init_physics_variables():
     p_div_upper_separatrix_mw = 0.0
     p_div_separatrix_max_mw = 0.0
     p_dt_total_mw = 0.0
+    fusrat_dt_total = 0.0
     p_plasma_dt_mw = 0.0
     p_plasma_outer_rad_mw = 0.0
     pden_plasma_outer_rad_mw = 0.0
