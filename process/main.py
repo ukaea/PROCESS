@@ -102,6 +102,7 @@ from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.power import Power
 from process.models.pulse import Pulse
 from process.models.shield import Shield
+from process.models.structure import Structure
 from process.models.tfcoil.resistive_tf_coil import (
     AluminiumTFCoil,
     CopperTFCoil,
@@ -113,7 +114,6 @@ from process.process_output import OutputFileManager, oheadr
 from process.scan import Scan
 from process.stellarator.neoclassics import Neoclassics
 from process.stellarator.stellarator import Stellarator
-from process.structure import Structure
 from process.vacuum import Vacuum, VacuumVessel
 from process.water_use import WaterUse
 
