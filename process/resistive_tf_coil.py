@@ -12,7 +12,7 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.tf_coil import TFCoil
+from process.models.tfcoil.tf_coil import TFCoil
 
 logger = logging.getLogger(__name__)
 

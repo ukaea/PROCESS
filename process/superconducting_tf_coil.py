@@ -21,7 +21,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.tf_coil import TFCoil
+from process.models.tfcoil.tf_coil import TFCoil
 
 logger = logging.getLogger(__name__)
 
