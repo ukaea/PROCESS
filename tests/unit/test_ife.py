@@ -14,9 +14,9 @@ from process.data_structure import (
     ife_variables,
     physics_variables,
 )
-from process.ife import IFE
 from process.models.availability import Availability
 from process.models.costs.costs import Costs
+from process.models.ife import IFE
 
 
 @pytest.fixture
