@@ -3,14 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.current_drive import (
-    CurrentDrive,
-    ElectronBernstein,
-    ElectronCyclotron,
-    IonCyclotron,
-    LowerHybrid,
-    NeutralBeam,
-)
 from process.data_structure import (
     build_variables,
     cost_variables,
@@ -29,6 +21,14 @@ from process.hcpb import CCFE_HCPB
 from process.models.availability import Availability
 from process.models.buildings import Buildings
 from process.models.costs.costs import Costs
+from process.models.physics.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
 from process.physics import Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power

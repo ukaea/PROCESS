@@ -49,14 +49,6 @@ import process
 import process.data_structure as data_structure
 import process.init as init
 from process import constants
-from process.current_drive import (
-    CurrentDrive,
-    ElectronBernstein,
-    ElectronCyclotron,
-    IonCyclotron,
-    LowerHybrid,
-    NeutralBeam,
-)
 from process.dcll import DCLL
 from process.divertor import Divertor
 from process.fw import FirstWall
@@ -90,6 +82,14 @@ from process.models.costs.costs import Costs
 from process.models.costs.costs_2015 import Costs2015
 from process.models.cryostat import Cryostat
 from process.models.cs_fatigue import CsFatigue
+from process.models.physics.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
 from process.pfcoil import PFCoil
 from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_geometry import PlasmaGeom

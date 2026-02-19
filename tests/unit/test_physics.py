@@ -6,7 +6,13 @@ import numpy as np
 import pytest
 
 from process import constants
-from process.current_drive import (
+from process.data_structure import (
+    current_drive_variables,
+    impurity_radiation_module,
+    physics_variables,
+)
+from process.impurity_radiation import initialise_imprad
+from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
     ElectronCyclotron,
@@ -14,12 +20,6 @@ from process.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.data_structure import (
-    current_drive_variables,
-    impurity_radiation_module,
-    physics_variables,
-)
-from process.impurity_radiation import initialise_imprad
 from process.physics import (
     DetailedPhysics,
     Physics,
