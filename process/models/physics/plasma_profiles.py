@@ -3,7 +3,7 @@ import logging
 import numpy as np
 import scipy as sp
 
-import process.profiles as profiles
+import process.models.physics.profiles as profiles
 from process import constants
 from process.data_structure import divertor_variables, physics_variables
 from process.exceptions import ProcessValueError
