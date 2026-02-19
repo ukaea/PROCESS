@@ -59,7 +59,7 @@ from process.data_structure.water_usage_variables import init_watuse_variables
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.log import logging_model_handler
-from process.stellarator import stinit
+from process.stellarator.initialization import st_init
 
 
 def init_process():
@@ -86,7 +86,7 @@ def init_process():
     set_device_type()
 
     # Initialise the Stellarator
-    stinit()
+    st_init()
 
     # Check input data for errors/ambiguities
     check_process(inputs)

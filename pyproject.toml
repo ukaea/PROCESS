@@ -228,4 +228,5 @@ ignore-names = [
     "Kr",
     "Xe",
     "W",
+    "*W7X*",
 ]

@@ -1,19 +1,39 @@
 # These variables were from stellarator.f90
-f_n: float = None
+f_st_n_coils: float = None
+"""Actual number of coils to reference value from stella_config file"""
 
-f_r: float = None
+f_st_rmajor: float = None
+"""Actual major radius to reference value from stella_config file"""
 
-f_aspect: float = None
+f_st_aspect: float = None
+"""Actual aspect ratio to reference value from stella_config file"""
 
-f_b: float = None
+f_st_coil_aspect: float = None
+"""Scaling factor for (stellarator major radius / coil radius ratio)"""
 
-f_i: float = None
+f_st_b: float = None
+"""Actual b_plasma_toroidal_on_axis to reference value from stella_config file """
 
-f_a: float = None
+f_st_i_total: float = None
+"""Actual total coil current to reference value from stella_config file"""
+
+f_st_rminor: float = None
+"""Actual minor radius to reference value from stella_config file"""
+
+f_coil_shape: float = None
+"""Paramtere required for coil scaling
+(min_plasma_coil_distance + stella_config_rminor_ref) / stella_config_coil_rminor
+"""
 
 first_call: bool = None
 
 first_call_stfwbs: bool = None
+
+r_coil_minor: float = None
+"""Coil minor radius (m)"""
+
+r_coil_major: float = None
+"""Coil major radius (m)"""
 
 # These variables were from stellarator_variables.f90
 istell: int = None
@@ -97,16 +117,20 @@ def init_stellarator_variables():
     global \
         first_call, \
         first_call_stfwbs, \
-        f_n, \
-        f_r, \
-        f_a, \
-        f_b, \
-        f_i, \
+        f_st_n_coils, \
+        f_st_rmajor, \
+        f_st_rminor, \
+        f_coil_shape, \
+        f_st_b, \
+        f_st_i_total, \
+        r_coil_minor, \
+        r_coil_major, \
         istell, \
         bmn, \
         f_asym, \
         f_rad, \
         f_w, \
+        f_st_coil_aspect, \
         fdivwet, \
         flpitch, \
         hportamax, \
@@ -127,11 +151,15 @@ def init_stellarator_variables():
 
     first_call = True
     first_call_stfwbs = True
-    f_n = 0.0
-    f_r = 0.0
-    f_a = 0.0
-    f_b = 0.0
-    f_i = 0.0
+    f_st_n_coils = 0.0
+    f_st_rmajor = 0.0
+    f_st_rminor = 0.0
+    f_coil_shape = 0.0
+    f_st_b = 0.0
+    f_st_i_total = 0.0
+    f_st_coil_aspect = 1.0
+    r_coil_major = 0.0
+    r_coil_minor = 0.0
     istell = 0
     bmn = 1e-3
     f_asym = 1.0
@@ -143,7 +171,7 @@ def init_stellarator_variables():
     hportpmax = 0.0
     hporttmax = 0.0
     iotabar = 1.0
-    isthtr = 3
+    isthtr = 1
     m_res = 5
     n_res = 5
     shear = 0.5

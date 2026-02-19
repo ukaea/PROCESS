@@ -49,6 +49,7 @@ dist/*
 documentation/io/vardes.md
 lcov_results/
 env/
+env_process/
 .venv
 *.DAT
 !scenario_examples/*/*.DAT
