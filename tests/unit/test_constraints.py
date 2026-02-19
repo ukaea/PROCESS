@@ -24,4 +24,4 @@ def test_constraint_functions(constraint_registration):
     # default flags (i_pulsed_plant=0 or itart=0).
     with contextlib.suppress(ZeroDivisionError, ProcessValueError):
         # call the constraint equation and check no error occurs
-        constraint_registration.constraint_equation()
+        constraint_registration.constraint_equation(constraint_registration)
