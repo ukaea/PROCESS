@@ -1,6 +1,6 @@
 import pytest
 
-from process.l_h_transition import (
+from process.models.physics.l_h_transition import (
     calculate_hubbard2012_lower,
     calculate_hubbard2012_nominal,
     calculate_hubbard2012_upper,
