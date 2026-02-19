@@ -23,6 +23,15 @@ class Neoclassics:
     def init_neoclassics(self, r_effin, eps_effin, iotain):
         """Constructor of the neoclassics object from the effective radius,
         epsilon effective and iota only.
+
+        Parameters
+        ----------
+        r_effin :
+
+        eps_effin :
+
+        iotain :
+
         """
         (
             neoclassics_variables.densities,
@@ -128,7 +137,13 @@ class Neoclassics:
         neoclassics_variables.q_flux = self.neoclassics_calc_q_flux()
 
     def init_profile_values_from_PROCESS(self, rho):
-        """Initializes the profile_values object from PROCESS' parabolic profiles"""
+        """Initialises the profile_values object from PROCESS' parabolic profiles
+
+        Parameters
+        ----------
+        rho :
+
+        """
         tempe = (
             physics_variables.temp_plasma_electron_on_axis_kev
             * (1 - rho**2) ** physics_variables.alphat
@@ -512,7 +527,14 @@ class Neoclassics:
         )
 
     def neoclassics_calc_nu_star_fromT(self, iota):
-        """Calculates the collision frequency"""
+        """Calculates the collision frequency
+
+        Parameters
+        ----------
+        iota :
+
+
+        """
         temp = (
             np.array([
                 physics_variables.temp_plasma_electron_vol_avg_kev,
@@ -676,6 +698,11 @@ class Neoclassics:
     def neoclassics_calc_d11_mono(self, eps_eff):
         """Calculates the monoenergetic radial transport coefficients
         using epsilon effective
+
+        Parameters
+        ----------
+        eps_eff :
+
         """
         return (
             4.0
@@ -689,6 +716,11 @@ class Neoclassics:
         """Calculates the integrated radial transport coefficients (index `index`)
         It uses Gauss laguerre integration
         https://en.wikipedia.org/wiki/Gauss%E2%80%93Laguerre_quadrature
+
+        Parameters
+        ----------
+        index:
+
         """
         return np.sum(
             2.0
@@ -702,7 +734,19 @@ class Neoclassics:
     def neoclassics_calc_gamma_flux(
         self, densities, temperatures, dr_densities, dr_temperatures
     ):
-        """Calculates the Energy flux by neoclassical particle transport"""
+        """Calculates the Energy flux by neoclassical particle transport
+
+        Parameters
+        ----------
+        densities :
+
+        temperatures :
+
+        dr_densities :
+
+        dr_temperatures :
+
+        """
 
         z = np.array([-1.0, 1.0, 1.0, 2.0])
 

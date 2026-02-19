@@ -20,17 +20,21 @@ logger = logging.getLogger(__name__)
 
 
 def st_coil(stellarator, output: bool):
-    """
-    This routine calculates the properties of the coils for
+    """This routine calculates the properties of the coils for
     a stellarator device.
-    author: J Lion, IPP Greifswald
-    outfile : input integer : output file unit
-    iprint : input integer : switch for writing to output file (1=yes)
 
     Some precalculated effective parameters for a stellarator power
     plant design are used as the basis for the calculations. The coils
     are assumed to be a fixed shape, but are scaled in size
     appropriately for the machine being modelled.
+
+    Parameters
+    ----------
+    stellarator :
+
+    output:
+
+
     """
     r_coil_major = stellarator_variables.r_coil_major
     r_coil_minor = stellarator_variables.r_coil_minor
@@ -222,9 +226,15 @@ def calculate_plasma_facing_coil_area():
 
 
 def calculate_coil_coil_toroidal_gap(r_coil_major, r_coil_minor):
-    """
-    [m] Minimal distance in toroidal direction between two stellarator coils
+    """[m] Minimal distance in toroidal direction between two stellarator coils
     Consistency with coil width is checked in constraint equation 82
+
+    Parameters
+    ----------
+    r_coil_major :
+
+    r_coil_minor :
+
     """
     # [m] Toroidal gap between two coil filaments
     tfcoil_variables.toroidalgap = (
@@ -243,7 +253,19 @@ def calculate_coil_coil_toroidal_gap(r_coil_major, r_coil_minor):
 
 
 def calculate_coils_summary_variables(coilcurrent, r_coil_major, r_coil_minor, awp_rad):
-    """Variables for ALL coils."""
+    """Variables for ALL coils.
+
+    Parameters
+    ----------
+    coilcurrent :
+
+    r_coil_major :
+
+    r_coil_minor :
+
+    awp_rad :
+
+    """
     # [m^2] Total area of all coil legs (midplane)
     tfcoil_variables.a_tf_inboard_total = (
         tfcoil_variables.n_tf_coils * tfcoil_variables.a_tf_leg_outboard
@@ -263,7 +285,13 @@ def calculate_coils_summary_variables(coilcurrent, r_coil_major, r_coil_minor, a
 
 
 def calculate_inductnace(r_coil_minor):
-    """This uses the reference value for the inductance and scales it with a^2/R (toroid inductance scaling)"""
+    """This uses the reference value for the inductance and scales it with a^2/R (toroid inductance scaling)
+
+    Parameters
+    ----------
+    r_coil_minor :
+
+    """
     return (
         stellarator_configuration.stella_config_inductance
         / stellarator_variables.f_st_rmajor
@@ -273,7 +301,13 @@ def calculate_inductnace(r_coil_minor):
 
 
 def calculate_stored_magnetic_energy(r_coil_minor):
-    """[GJ] Total magnetic energy"""
+    """[GJ] Total magnetic energy
+
+    Parameters
+    ----------
+    r_coil_minor :
+
+    """
     tfcoil_variables.e_tf_magnetic_stored_total_gj = (
         0.5e0
         * (
@@ -288,9 +322,9 @@ def calculate_stored_magnetic_energy(r_coil_minor):
 
 
 def calculate_winding_pack_geometry():
-    """
-    Winding Pack Geometry: for one conductor
+    """Winding Pack Geometry: for one conductor
     This one conductor will just be multiplied later to fit the winding pack size.
+
     """
     # [m] Dimension of square cable space inside insulation
     #     and case of the conduit of each turn
@@ -315,10 +349,10 @@ def calculate_winding_pack_geometry():
 
 
 def calculate_current():
-    """
-    Recalculate the coil current from global stellarator configuration and variables:
+    """Recalculate the coil current from global stellarator configuration and variables:
     coilcurrent = f_b * stella_config_i0 * f_r / f_n
     Update stellarator_variables.f_i
+
     """
     coilcurrent = (
         stellarator_variables.f_st_b
@@ -491,11 +525,17 @@ def winding_pack_total_size(
 
 
 def calculate_casing():
-    """
-    Coil case thickness (m). Here assumed to be constant until something better comes up.
-    case_thickness_constant = tfcoil_variables.dr_tf_nose_case #0.2e0 # ?
-    Leave this constant for now... Check this## Should be scaled with forces I think.
+    """Coil case thickness (m).
+
+    Here assumed to be constant until something better comes up.
     For now assumed to be constant in a bolted plate model.
+
+    case_thickness_constant = tfcoil_variables.dr_tf_nose_case
+
+    #0.2e0 ?
+    Leave this constant for now... Check this
+
+    ## Should be scaled with forces I think.
     """
     # [m] coil case thickness outboard distance (radial)
     tfcoil_variables.dr_tf_plasma_case = tfcoil_variables.dr_tf_nose_case

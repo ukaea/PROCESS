@@ -48,7 +48,6 @@ fortran.py
 dist/*
 lcov_results/
 env/
-env_process/
 .venv
 *.DAT
 !scenario_examples/*/*.DAT

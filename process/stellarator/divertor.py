@@ -13,14 +13,18 @@ from process.data_structure import (
 
 def st_div(stellarator, f_output: bool):
     """Routine to call the stellarator divertor model
-    author: P J Knight, CCFE, Culham Science Centre
-    author: F Warmer, IPP Greifswald
-    outfile : input integer : output file unit
-    iprint : input integer : switch for writing to output file (1=yes)
-    This routine calls the divertor model for a stellarator,
-    developed by Felix Warmer.
-    Stellarator Divertor Model for the Systems
-    Code PROCESS, F. Warmer, 21/06/2013
+
+    This routine calls the divertor model for a stellarator
+
+    Parameters
+    ----------
+    stellarator :
+        An object containing stellarator configuration and output handle
+    f_output:
+
+    References
+    ----------
+    Stellarator Divertor Model for the Systems Code PROCESS, F. Warmer, 21/06/2013
     """
     Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch
     r = physics_variables.rmajor
@@ -102,22 +106,32 @@ def st_div(stellarator, f_output: bool):
 
 
 def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
-    """
-    Outputs a summary of divertor-related parameters and results to the stellartor object.
-
-    Parameters:
+    """Outputs a summary of divertor-related parameters and results to the stellartor object.
         stellarator: An object containing stellarator configuration and output handle.
-        a_eff (float): Effective divertor wetted area (m²).
-        l_d (float): Divertor plate length (m).
-        l_w (float): Divertor plate width (m).
-        f_x (float): Flux channel broadening factor.
-        l_q (float): Power decay width (m).
-        w_r (float): Island width (m).
-        Delta (float): Perpendicular distance from X-point to plate (m).
 
     The function writes various physical and geometric parameters related to the divertor,
     including power, angles, heat transport coefficients, resonance numbers, field perturbations,
     and other relevant quantities, to the output file associated with the stellarator object.
+
+    Parameters
+    ----------
+    stellarator :
+        An object containing stellarator configuration and output handle
+    a_eff :
+        Effective divertor wetted area (m²).
+    l_d :
+        Divertor plate length (m).
+    l_w :
+        Divertor plate width (m).
+    f_x :
+        Flux channel broadening factor.
+    l_q :
+        Power decay width (m).
+    w_r :
+        Island width (m).
+    Delta :
+        Perpendicular distance from X-point to plate (m).
+
     """
 
     po.oheadr(stellarator.outfile, "Divertor")

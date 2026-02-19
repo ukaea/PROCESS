@@ -34,11 +34,63 @@ def write(
     quench_voltage,
 ):
     """Writes stellarator modular coil output to file
-    author: P J Knight, CCFE, Culham Science Centre
-    outfile : input integer : output file unit
+
     This routine writes the stellarator modular coil results
     to the output file.
-    None
+
+    Parameters
+    ----------
+    stellarator :
+
+    a_tf_wp_no_insulation :
+
+    centering_force_avg_mn :
+
+    centering_force_max_mn :
+
+    centering_force_min_mn :
+
+    coilcoilgap :
+
+    coppera_m2 :
+
+    coppera_m2_max :
+
+    f_a_scu_of_wp :
+
+    f_vv_actual :
+
+    fiooic :
+
+    inductance :
+
+    max_force_density :
+
+    max_force_density_mnm :
+
+    max_lateral_force_density :
+
+    max_radial_force_density :
+
+    min_bending_radius :
+
+    r_coil_major :
+
+    r_coil_minor :
+
+    sig_tf_wp :
+
+    dx_tf_turn_general :
+
+    t_tf_superconductor_quench :
+
+    toroidalgap :
+
+    allowed_quench_voltage :
+
+    quench_voltage :
+
+
     """
     po.oheadr(stellarator.outfile, "Modular Coils")
 

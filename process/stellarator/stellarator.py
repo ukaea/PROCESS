@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -34,6 +37,16 @@ from process.stellarator.divertor import st_div
 from process.stellarator.heating import st_heat
 from process.stellarator.preset_config import load_stellarator_config
 
+if TYPE_CHECKING:
+    from process.availability import Availability
+    from process.buildings import Buildings
+    from process.costs import Costs
+    from process.current_drive import CurrentDrive
+    from process.hcpb import CCFE_HCPB
+    from process.plasma_profiles import PlasmaProfile
+    from process.stellarator.neoclassics import Neoclassics
+    from process.vacuum import Vacuum
+
 logger = logging.getLogger(__name__)
 
 # NOTE: a different value of electron_charge was used in the original implementation
@@ -44,50 +57,47 @@ KEV = 1e3 * constants.ELECTRON_CHARGE  # Kiloelectron-volt (keV)
 
 class Stellarator:
     """Module containing stellarator routines
-    author: P J Knight, CCFE, Culham Science Centre
-    N/A
+
     This module contains routines for calculating the
     parameters of the first wall, blanket and shield components
     of a fusion power plant.
 
+    Parameters
+    ----------
+    availability:
+        A pointer to the availability model, allowing use of availability's variables/methods
+    buildings:
+        A pointer to the buildings model, allowing use of buildings's variables/methods
+    Vacuum:
+        A pointer to the vacuum model, allowing use of vacuum's variables/methods
+    costs:
+        A pointer to the costs model, allowing use of costs' variables/methods
+    plasma_profile:
+        A pointer to the plasma_profile model, allowing use of plasma_profile's variables/methods
+    hcpb:
+        A pointer to the ccfe_hcpb model, allowing use of ccfe_hcpb's variables/methods
+    current_drive:
+        A pointer to the CurrentDrive model, allowing use of CurrentDrives's variables/methods
+    physics:
+        A pointer to the Physics model, allowing use of Physics's variables/methods
+    neoclassics:
+        A pointer to the Neoclassics model, allowing use of neoclassics's variables/methods
     """
 
     def __init__(
         self,
-        availability,
-        vacuum,
-        buildings,
-        costs,
+        availability: Availability,
+        vacuum: Vacuum,
+        buildings: Buildings,
+        costs: Costs,
         power,
-        plasma_profile,
-        hcpb,
-        current_drive,
+        plasma_profile: PlasmaProfile,
+        hcpb: CCFE_HCPB,
+        current_drive: CurrentDrive,
         physics: Physics,
-        neoclassics,
+        neoclassics: Neoclassics,
         plasma_beta,
     ) -> None:
-        """Initialises the Stellarator model's variables
-
-        :param availability: a pointer to the availability model, allowing use of availability's variables/methods
-        :type availability: process.availability.Availability
-        :param buildings: a pointer to the buildings model, allowing use of buildings's variables/methods
-        :type buildings: process.buildings.Buildings
-        :param Vacuum: a pointer to the vacuum model, allowing use of vacuum's variables/methods
-        :type Vacuum: process.vacuum.Vacuum
-        :param costs: a pointer to the costs model, allowing use of costs' variables/methods
-        :type costs: process.costs.Costs
-        :param plasma_profile: a pointer to the plasma_profile model, allowing use of plasma_profile's variables/methods
-        :type plasma_profile: process.plasma_profile.PlasmaProfile
-        :param hcpb: a pointer to the ccfe_hcpb model, allowing use of ccfe_hcpb's variables/methods
-        :type hcpb: process.hcpb.CCFE_HCPB
-        :param current_drive: a pointer to the CurrentDrive model, allowing use of CurrentDrives's variables/methods
-        :type current_drive: process.current_drive.CurrentDrive
-        :param physics: a pointer to the Physics model, allowing use of Physics's variables/methods
-        :type physics: process.physics.Physics
-        :param neoclassics: a pointer to the Neoclassics model, allowing use of neoclassics's variables/methods
-        :type neoclassics: process.stellarator.Neoclassics
-        """
-
         self.outfile: int = constants.NOUT
         self.first_call_stfwbs = True
 
@@ -106,13 +116,13 @@ class Stellarator:
     def run(self, output: bool):
         """Routine to call the physics and engineering modules
         relevant to stellarators
-        author: P J Knight, CCFE, Culham Science Centre
-        author: F Warmer, IPP Greifswald
 
         This routine is the caller for the stellarator models.
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output :
+            indicate whether output should be written to the output file, or not
         """
 
         if output:
@@ -182,7 +192,7 @@ class Stellarator:
         stellarator_variables.first_call = False
 
     def st_new_config(self):
-        """author: J Lion, IPP Greifswald
+        """
         Routine to initialise the stellarator configuration
 
         Routine to initialise the stellarator configuration.
@@ -197,6 +207,7 @@ class Stellarator:
             (stellarator_configuration.stella_config_rmajor_ref /
              stellarator_configuration.stella_config_coil_rminor)
         )
+
         """
 
         load_stellarator_config(
@@ -259,7 +270,6 @@ class Stellarator:
 
     def st_geom(self):
         """
-                author: J Lion, IPP Greifswald
         Routine to calculate the plasma volume and surface area for
         a stellarator using precalculated effective values
 
@@ -268,10 +278,13 @@ class Stellarator:
         It is simple scaling based on a Fourier representation based on
         that described in Geiger documentation.
 
+        References
+        ----------
         J. Geiger, IPP Greifswald internal document:  'Darstellung von
         ineinandergeschachtelten toroidal geschlossenen Flaechen mit
         Fourierkoeffizienten' ('Representation of nested, closed
         surfaces with Fourier coefficients')
+
         """
         physics_variables.vol_plasma = (
             stellarator_variables.f_st_rmajor
@@ -299,16 +312,18 @@ class Stellarator:
         )  # Used only in the divertor model; approximate as for tokamaks
 
     def st_strc(self, output):
-        """
-                Routine to calculate the structural masses for a stellarator
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+        """Routine to calculate the structural masses for a stellarator
+
         This routine calculates the structural masses for a stellarator.
         This is the stellarator version of routine
         <A HREF="struct.html">STRUCT</A>. In practice, many of the masses
         are simply set to zero to avoid double-counting of structural
         components that are specified differently for tokamaks.
+
+        Parameters
+        ----------
+        output :
+
         """
         structure_variables.fncmass = 0.0e0
 
@@ -458,10 +473,8 @@ class Stellarator:
     def st_fwbs(self, output: bool):
         """Routine to calculate first wall, blanket and shield properties
         for a stellarator
-        author: P J Knight, CCFE, Culham Science Centre
-        author: F Warmer, IPP Greifswald
-        outfile : input integer : Fortran output unit identifier
-        iprint : input integer : Switch to write output to file (1=yes)
+
+
         This routine calculates a stellarator's first wall, blanket and
         shield properties.
         It calculates the nuclear heating in the blanket / shield, and
@@ -478,6 +491,12 @@ class Stellarator:
         <A HREF="fwbs.html">fwbs</A>), except for the volume calculations,
         which scale the surface area of the components from that
         of the plasma.
+
+        Parameters
+        ----------
+        output:
+
+
         """
         fwbs_variables.life_fw_fpy = min(
             cost_variables.abktflnc / physics_variables.pflux_fw_neutron_mw,
@@ -1696,17 +1715,7 @@ class Stellarator:
 
     def sc_tf_coil_nuclear_heating_iter90(self):
         """Superconducting TF coil nuclear heating estimate
-        author: P J Knight, CCFE, Culham Science Centre
-        coilhtmx : output real : peak magnet heating (MW/m3)
-        dpacop : output real : copper stabiliser displacements/atom
-        htheci : output real : peak TF coil case heating (MW/m3)
-        nflutf : output real : maximum neutron fluence (n/m2)
-        pheci : output real : inboard coil case heating (MW)
-        pheco : output real : outboard coil case heating (MW)
-        ptfiwp : output real : inboard TF coil winding pack heating (MW)
-        ptfowp : output real : outboard TF coil winding pack heating (MW)
-        raddose : output real : insulator dose (rad)
-        p_tf_nuclear_heat_mw : output real : TF coil nuclear heating (MW)
+
         This subroutine calculates the nuclear heating in the
         superconducting TF coils, assuming an exponential neutron
         attenuation through the blanket and shield materials.
@@ -1718,6 +1727,29 @@ class Stellarator:
         <P><LI><CODE>j = 2</CODE> : tungsten shield (not used)</UL>
         Note: Costing and mass calculations elsewhere assume
         stainless steel only.
+
+        Returns
+        -------
+        coilhtmx :
+             peak magnet heating (MW/m3)
+        dpacop :
+             copper stabiliser displacements/atom
+        htheci :
+             peak TF coil case heating (MW/m3)
+        nflutf :
+             maximum neutron fluence (n/m2)
+        pheci :
+             inboard coil case heating (MW)
+        pheco :
+             outboard coil case heating (MW)
+        ptfiwp :
+             inboard TF coil winding pack heating (MW)
+        ptfowp :
+             outboard TF coil winding pack heating (MW)
+        raddose :
+             insulator dose (rad)
+        p_tf_nuclear_heat_mw :
+             TF coil nuclear heating (MW)
         """
 
         ishmat = 0  # stainless steel coil casing is assumed
@@ -1885,12 +1917,18 @@ class Stellarator:
 
     def st_phys(self, output):
         """Routine to calculate stellarator plasma physics information
-        author: P J Knight, CCFE, Culham Science Centre
-        author: F Warmer, IPP Greifswald
-        None
+
         This routine calculates the physics quantities relevant to
         a stellarator device.
+
+        Parameters
+        ----------
+        output :
+
+        References
+        ----------
         AEA FUS 172: Physics Assessment for the European Reactor Study
+
         """
         # ###############################################
         #  Calculate plasma composition

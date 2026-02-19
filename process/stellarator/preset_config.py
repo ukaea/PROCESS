@@ -211,14 +211,19 @@ W7X50 = {
 
 def load_stellarator_config(istell: int, config_file: Path | None):
     """Load the appropriate Stellarator machine configuration
-    given the `istell` switch:
 
-    istell = 1: Helias5 machine
-    istell = 2: Helias4 machine
-    istell = 3: Helias3 machine
-    istell = 4: w7x30 machine
-    istell = 5: w7x50 machine
-    istell = 6: Init from json
+    Parameters
+    ----------
+    istell:
+        istell = 1: Helias5 machine
+        istell = 2: Helias4 machine
+        istell = 3: Helias3 machine
+        istell = 4: w7x30 machine
+        istell = 5: w7x50 machine
+        istell = 6: Init from json
+    config_file:
+
+
     """
     match istell:
         case 1:

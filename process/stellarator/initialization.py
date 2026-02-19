@@ -11,11 +11,10 @@ from process.data_structure import (
 
 def st_init():
     """Routine to initialise the variables relevant to stellarators
-    author: P J Knight, CCFE, Culham Science Centre
-    author: F Warmer, IPP Greifswald
 
     This routine initialises the variables relevant to stellarators.
     Many of these may override the values set in routine
+
     """
     if stellarator_variables.istell == 0:
         return

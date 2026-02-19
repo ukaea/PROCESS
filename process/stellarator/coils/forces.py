@@ -8,7 +8,13 @@ from process.data_structure import (
 
 
 def calculate_max_force_density(a_tf_wp_no_insulation):
-    """Calculate the maximum force density in the TF coil winding pack from scaling. [MN/m3]"""
+    """Calculate the maximum force density in the TF coil winding pack from scaling. [MN/m3]
+
+    Parameters
+    ----------
+    a_tf_wp_no_insulation :
+
+    """
 
     tfcoil_variables.max_force_density = (
         stellarator_configuration.stella_config_max_force_density
@@ -42,7 +48,13 @@ def calculate_maximum_stress():
 
 
 def calculate_max_lateral_force_density(a_tf_wp_no_insulation):
-    """Calculate the maximum lateral force density in the TF coil winding pack from scaling. [MN/m3]"""
+    """Calculate the maximum lateral force density in the TF coil winding pack from scaling. [MN/m3]
+
+    Parameters
+    ----------
+    a_tf_wp_no_insulation :
+
+    """
     return (
         stellarator_configuration.stella_config_max_lateral_force_density
         * stellarator_variables.f_st_i_total
@@ -55,7 +67,13 @@ def calculate_max_lateral_force_density(a_tf_wp_no_insulation):
 
 
 def calculate_max_radial_force_density(a_tf_wp_no_insulation):
-    """Calculate the maximum radial force density in the TF coil winding pack from scaling. [MN/m3]"""
+    """Calculate the maximum radial force density in the TF coil winding pack from scaling. [MN/m3]
+
+    Parameters
+    ----------
+    a_tf_wp_no_insulation :
+
+    """
     return (
         stellarator_configuration.stella_config_max_radial_force_density
         * stellarator_variables.f_st_i_total

@@ -12,11 +12,15 @@ from process.data_structure import (
 
 
 def calculate_quench_protection(coilcurrent):
-    """
-    Calculate quench protecion limits for stellarator coils
+    """Calculate quench protecion limits for stellarator coils
     Includes calculation of the vacuum vessel force density, quench protection current density
     and max dump voltage during quench
-    coilcurrent : Total coils current (MA)
+
+    Parameters
+    ----------
+    coilcurrent :
+        Total coils current (MA)
+
     """
     #
     # This copied from the tokamak module:
@@ -101,6 +105,15 @@ def calculate_quench_protection(coilcurrent):
 def calculate_vv_max_force_density_from_W7X_scaling(rad_vv: float) -> float:
     """Actual VV force density from scaling [MN/m^3]
     Based on reference values from W-7X.
+
+    Parameters
+    ----------
+    rad_vv:
+
+    Returns
+    -------
+    :
+
     """
     force_density_ref = 2.54  # MN/m^3
     b_ref = 3.0  # T
@@ -133,11 +146,17 @@ def calculate_vv_max_force_density_from_W7X_scaling(rad_vv: float) -> float:
 
 
 def max_dump_voltage(tf_energy_stored: float, t_dump: float, current: float) -> float:
-    """
-    Max volatage during fast discharge of TF coil (V)
-    tf_energy_stored : Energy stored in one TF coil (J)
-    t_dump : Dump time (sec)
-    current : Operating current (A)
+    """Max volatage during fast discharge of TF coil (V)
+
+    Parameters
+    ----------
+    tf_energy_stored:
+        Energy stored in one TF coil (J)
+    t_dump:
+        Dump time (sec)
+    current :
+        Operating current (A)
+
     """
     return 2 * (tf_energy_stored / t_dump) / current
 
@@ -145,20 +164,29 @@ def max_dump_voltage(tf_energy_stored: float, t_dump: float, current: float) -> 
 def calculate_quench_protection_current_density(
     tau_quench, t_detect, f_cu, f_cond, temp, a_cable, a_turn
 ):
-    """
-    Calculates the current density limited by the protection limit.
+    """Calculates the current density limited by the protection limit.
 
     Simplified 0-D adiabatic heat balance "hotspot criterion" model.
 
     This is slightly diffrent that tokamak version (also diffrent from the stellarator paper).
     We skip the superconduc6tor contribution (this should be more conservative in theory).
-    tau_quench : Quench time (s)
-    t_detect : Detection time (s)
-    f_cu : Copper fraction
-    f_cond : Conductor fraction
-    temp : peak helium coolant temperature in TF coils and PF coils (K)
-    a_cable : Cable space area (per turn)  [m2] (Includes the area of voids and central helium channel)
-    a_turn : TF coil turn cross section area [m2]
+
+    Parameters
+    ----------
+    tau_quench :
+        Quench time (s)
+    t_detect :
+        Detection time (s)
+    f_cu :
+        Copper fraction
+    f_cond :
+        Conductor fraction
+    temp :
+        peak helium coolant temperature in TF coils and PF coils (K)
+    a_cable :
+        Cable space area (per turn)  [m2] (Includes the area of voids and central helium channel)
+    a_turn :
+        TF coil turn cross section area [m2]
     """
     temp_k = [4, 14, 24, 34, 44, 54, 64, 74, 84, 94, 104, 114, 124]
     q_cu_array_sa2m4 = [

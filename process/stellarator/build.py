@@ -13,16 +13,20 @@ from process.data_structure import (
 
 
 def st_build(stellarator, f_output: bool):
-    """
-    Routine to determine the build of a stellarator machine
-    author: P J Knight, CCFE, Culham Science Centre
-    author: F Warmer, IPP Greifswald
-    outfile : input integer : output file unit
-    iprint : input integer : switch for writing to output file (1=yes)
+    """Routine to determine the build of a stellarator machine
+
     This routine determines the build of the stellarator machine.
     The values calculated are based on the mean minor radius, etc.,
     as the actual radial and vertical build thicknesses vary with
     toroidal angle.
+
+    Parameters
+    ----------
+    stellarator :
+
+    f_output:
+
+
     """
     if fwbs_variables.blktmodel > 0:
         build_variables.dr_blkt_inboard = (

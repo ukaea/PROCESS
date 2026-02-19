@@ -15,12 +15,17 @@ logger = logging.getLogger(__name__)
 def st_heat(stellarator, f_output: bool):
     """Routine to calculate the auxiliary heating power
     in a stellarator
-    author: P J Knight, CCFE, Culham Science Centre
-    outfile : input integer : output file unit
-    iprint : input integer : switch for writing to output file (1=yes)
+
     This routine calculates the auxiliary heating power for
     a stellarator device.
-    AEA FUS 172: Physics Assessment for the European Reactor Study
+
+    Parameters
+    ----------
+    stellarator :
+
+    f_output:
+
+
     """
     f_p_beam_injected_ions = None
     if stellarator_variables.isthtr == 1:
