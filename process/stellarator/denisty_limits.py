@@ -15,9 +15,16 @@ logger = logging.getLogger(__name__)
 
 def st_denisty_limits(stellarator, f_output):
     """Routine to reiterate the physics loop
-    author: J Lion, IPP Greifswald
-    None
+
     This routine reiterates some physics modules.
+
+    Parameters
+    ----------
+    stellarator :
+
+    f_output :
+
+
     """
 
     #  Set the required value for icc=5
@@ -48,17 +55,28 @@ def st_denisty_limits(stellarator, f_output):
 
 def st_sudo_density_limit(b_plasma_toroidal_on_axis, powht, rmajor, rminor):
     """Routine to calculate the Sudo density limit in a stellarator
-    author: P J Knight, CCFE, Culham Science Centre
-    bt     : input real : Toroidal field on axis (T)
-    bt = b_plasma_toroidal_on_axis
-    powht  : input real : Absorbed heating power (MW)
-    rmajor : input real : Plasma major radius (m)
-    rminor : input real : Plasma minor radius (m)
-    dlimit : output real : Maximum volume-averaged plasma density (/m3)
+
     This routine calculates the density limit for a stellarator.
     S.Sudo, Y.Takeiri, H.Zushi et al., Scalings of Energy Confinement
     and Density Limit in Stellarator/Heliotron Devices, Nuclear Fusion
     vol.30, 11 (1990).
+
+    Parameters
+    ----------
+    b_plasma_toroidal_on_axis :
+        Toroidal field on axis (T)
+    powht :
+        Absored heating power (MW)
+    rmajor :
+        Plama major radius (m)
+    rminor :
+        Plama minor radius (m)
+
+    Returns
+    -------
+    dlimit :
+        Maximum volume-averaged plasma density (/m3)
+
     """
     arg = powht * b_plasma_toroidal_on_axis / (rmajor * rminor * rminor)
 
@@ -93,12 +111,23 @@ def st_sudo_density_limit(b_plasma_toroidal_on_axis, powht, rmajor, rminor):
 def st_d_limit_ecrh(gyro_frequency_max, bt_input):
     """Routine to calculate the density limit due to an ECRH heating scheme on axis
     depending on an assumed maximal available gyrotron frequency.
-    author: J Lion, IPP Greifswald
-    gyro_frequency_max     : input real : Maximal available Gyrotron frequency (1/s) NOT (rad/s)
-    bt  : input real : Maximal magnetic field on axis (T)
-    dlimit_ecrh : output real : Maximum peak plasma density by ECRH constraints (/m3)
-    bt_max : output real : Maximum allowable b field for ecrh heating (T)
+
     This routine calculates the density limit due to an ECRH heating scheme on axis
+
+    Parameters
+    ----------
+    gyro_frequency_max :
+        Maximal available Gyrotron frequency (1/s) NOT (rad/s)
+    bt_input :
+        Maximal magnetic field on axis (T)
+
+    Returns
+    -------
+    dlimit_ecrh:
+        Maximum peak plasma density by ECRH constraints (/m3)
+    bt_max:
+        Maximum allowable b field for ecrh heating (T)
+
     """
     gyro_frequency = min(1.76e11 * bt_input, gyro_frequency_max * 2.0e0 * np.pi)
 
@@ -123,14 +152,28 @@ def st_d_limit_ecrh(gyro_frequency_max, bt_input):
 def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
     """Routine to calculate if the plasma is ignitable with the current values for the B field. Assumes
     current ECRH achievable peak temperature (which is inaccurate as the cordey pass should be calculated)
-    author: J Lion, IPP Greifswald
-    gyro_frequency_max : input real : Maximal available Gyrotron frequency (1/s) NOT (rad/s)
-    te0_available : input real : Reachable peak electron temperature, reached by ECRH (KEV)
-    powerht_out : output real: Heating Power at ignition point (MW)
-    pscalingmw_out : output real: Heating Power loss at ignition point (MW)
+
     This routine calculates the density limit due to an ECRH heating scheme on axis
     Assumes current peak temperature (which is inaccurate as the cordey pass should be calculated)
     Maybe use this: https://doi.org/10.1088/0029-5515/49/8/085026
+
+    Parameters
+    ----------
+    stellarator :
+        An object containing stellarator configuration and output handle
+    gyro_frequency_max :
+        Maximal available Gyrotron frequency (1/s) NOT (rad/s)
+
+    te0_available :
+        Reachable peak electron temperature, reached by ECRH (KEV)
+
+    Returns
+    -------
+    powerht_out:
+        Heating Power at ignition point (MW)
+    pscalingmw_out:
+        Heating Power loss at ignition point (MW)
+
     """
     te_old = copy(physics_variables.temp_plasma_electron_vol_avg_kev)
     # Volume averaged physics_variables.te from te0_achievable

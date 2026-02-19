@@ -22,23 +22,23 @@ logger = logging.getLogger(__name__)
 
 class Vacuum:
     """Module containing vacuum system routines
-    author: P J Knight, CCFE, Culham Science Centre
 
     This module contains routines for calculating the
     parameters of the vacuum system for a fusion power plant.
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.outfile: int = constants.NOUT
 
-    def run(self, output: bool) -> None:
+    def run(self, output: bool):
         """Routine to call the vacuum module
-        author: P J Knight, CCFE, Culham Science Centre
-
         This routine calls the main vacuum package.
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output:
+            indicate whether output should be written to the output file, or not
+
         """
         # (should be) NBI gas load (deuterons/second)
 
@@ -102,13 +102,17 @@ class Vacuum:
 
     def vacuum_simple(self, output) -> float:
         """Simple model of vacuum pumping system
-        author: MD Kovari, CCFE, Culham Science Centre
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
 
-        :return npump: number of pumps for pumpdown and steady-state
-        :rtype: float
+        Parameters
+        ----------
+        output :
+
+        Returns
+        -------
+        npump:
+            number of pumps for pumpdown and steady-state
+            indicate whether output should be written to the output file, or not
         """
 
         # Steady-state model (super simple)
@@ -222,67 +226,49 @@ class Vacuum:
         output,
     ):
         """Routine to calculate the parameters of the vacuum system
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Haines, FEDC (originator)
-        author: P Dubois, LLNL
-        author: J Galambos, ORNL
-        author: P C Shipe, ORNL
 
-        This routine calculates the parameters of the vacuum system.
+        Parameters
+        ----------
+        pfusmw : float
+            Fusion power (MW)
+        r0 : float
+            Major radius (m)
+        aw : float
+            Minor radius (m)
+        dsol :
+            Scrape-off layer average width (m)
+        plasma_sarea :
+            Plasma surface area (m2)
+        plasma_vol :
+            Plasma volume (m3)
+        thshldo :
+            Outboard shield thickness (m)
+        thshldi :
+            Inboard shield thickness (m)
+        thtf :
+            TF coil thickness (m)
+        ritf :
+            Radius of inboard TF leg point nearest plasma (m)
+        n_tf_coils :
+            Number of TF coils
+        t_plant_pulse_dwell :
+            Dwell time between pulses (s)
+        nplasma :
+            Plasma density (m**-3)
+        ndiv :
+            Number of divertors with pumping (single null = 1, double null = 2 if pumping provided at both locations)
+        qtorus :
+            Gas load  from NBI (deuterons/second)
+        gasld :
+            Total D-T gas load (kg/s)
+        output :
+            indicate whether output should be written to the output file, or not
 
-        :param pfusmw: Fusion power (MW)
-        :type pfusmw: float
 
-        :param r0: Major radius (m)
-        :type r0: float
-
-        :param aw: Minor radius (m)
-        :type aw: float
-
-        :param dsol: Scrape-off layer average width (m)
-        :type : float
-
-        :param plasma_sarea: Plasma surface area (m2)
-        :type : float
-
-        :param plasma_vol: Plasma volume (m3)
-        :type : float
-
-        :param thshldo: Outboard shield thickness (m)
-        :type : float
-
-        :param thshldi: Inboard shield thickness (m)
-        :type : float
-
-        :param thtf:  TF coil thickness (m)
-        :type : float
-
-        :param ritf: Radius of inboard TF leg point nearest plasma (m)
-        :type : float
-
-        :param tfno:  Number of TF coils
-        :type : int
-
-        :param t_plant_pulse_dwell: Dwell time between pulses (s)
-        :type : float
-
-        :param nplasma: Plasma density (m**-3)
-        :type : float
-
-        :param ndiv: Number of divertors with pumping (single null = 1, double null = 2 if pumping provided at both locations)
-        :type : int
-
-        :param qtorus: Gas load  from NBI (deuterons/second)
-        :type : float
-
-        :param gasld: Total D-T gas load (kg/s)
-        :type : float
-
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
-
-        :returns:
-            - pumpn (`float`) - Number of high vacuum pumps
+        Returns
+        -------
+        :
+            pumpn (`float`) - Number of high vacuum pumps
             - nduct (`int`) - Number of ducts
             - dlscalc (`float`) - Duct-length equivalent for costing purposes (m)
             - mvdsh (`float`) - Mass of a single vacuum duct shield (kg)
@@ -409,7 +395,7 @@ class Vacuum:
         l3 = 2.0e0  # Length of ducts from elbow to hi-vac pumps (m)
         ltot = l1 + l2 + l3
 
-        # ceff and d require initialising to small positive values; they're not
+        # ceff and d require initialising too small positive values; they're not
         # always overwritten in the following loop and can cause div by 0 errors
         # otherwise
         ceff = np.full(4, 1e-6)
@@ -732,10 +718,10 @@ class Vacuum:
 class VacuumVessel:
     """Class containing vacuum vessel routines"""
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.outfile = constants.NOUT
 
-    def run(self) -> None:
+    def run(self):
         blanket_library.dz_vv_half = self.calculate_vessel_half_height(
             z_tf_inside_half=build_variables.z_tf_inside_half,
             dz_shld_vv_gap=build_variables.dz_shld_vv_gap,
@@ -804,7 +790,33 @@ class VacuumVessel:
         dr_fw_inboard: float,
         dr_fw_outboard: float,
     ) -> float:
-        """Calculate vacuum vessel internal half-height (m)"""
+        """Calculate vacuum vessel internal half-height (m)
+
+        Parameters
+        ----------
+        z_tf_inside_half:
+
+        dz_shld_vv_gap:
+
+        dz_vv_lower:
+
+        n_divertors: int :
+
+        dz_blkt_upper:
+
+        dz_shld_upper:
+
+        z_plasma_xpoint_upper:
+
+        dr_fw_plasma_gap_inboard:
+
+        dr_fw_plasma_gap_outboard:
+
+        dr_fw_inboard:
+
+        dr_fw_outboard:
+
+        """
 
         z_bottom = z_tf_inside_half - dz_shld_vv_gap - dz_vv_lower
 
@@ -835,7 +847,25 @@ class VacuumVessel:
         dz_vv_upper: float,
         dz_vv_lower: float,
     ) -> tuple[float, float, float]:
-        """Calculate volumes of D-shaped vacuum vessel segments"""
+        """Calculate volumes of D-shaped vacuum vessel segments
+
+        Parameters
+        ----------
+        r_shld_inboard_inner:
+
+        r_shld_outboard_outer:
+
+        dz_vv_half:
+
+        dr_vv_inboard:
+
+        dr_vv_outboard:
+
+        dz_vv_upper:
+
+        dz_vv_lower:
+
+        """
 
         r_1 = r_shld_inboard_inner
         r_2 = r_shld_outboard_outer - r_1
@@ -868,7 +898,31 @@ class VacuumVessel:
         dz_vv_upper: float,
         dz_vv_lower: float,
     ) -> tuple[float, float, float]:
-        """Calculate volumes of elliptical vacuum vessel segments"""
+        """Calculate volumes of elliptical vacuum vessel segments
+
+        Parameters
+        ----------
+        rmajor:
+
+        rminor:
+
+        triang:
+
+        r_shld_inboard_inner:
+
+        r_shld_outboard_outer:
+
+        dz_vv_half:
+
+        dr_vv_inboard:
+
+        dr_vv_outboard:
+
+        dz_vv_upper:
+
+        dz_vv_lower:
+
+        """
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
         r_1 = rmajor - rminor * triang
@@ -893,7 +947,7 @@ class VacuumVessel:
         )
         return vol_vv_inboard, vol_vv_outboard, vol_vv
 
-    def output_vv_areas_and_volumes(self) -> None:
+    def output_vv_areas_and_volumes(self):
         """Output shield areas and volumes to log."""
 
         po.oheadr(self.outfile, "Vacuum Vessel Areas and Volumes")

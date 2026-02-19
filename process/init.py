@@ -64,8 +64,7 @@ from process.stellarator.initialization import st_init
 
 def init_process():
     """Routine that calls the initialisation routines
-    author: P J Knight, CCFE, Culham Science Centre
-    None
+
     This routine calls the main initialisation routines that set
     the default values for the global variables, reads in data from
     the input file, and checks the run parameters for consistency.
@@ -300,8 +299,7 @@ def init_all_module_vars():
 def check_process(inputs):  # noqa: ARG001
     """Routine to reset specific variables if certain options are
     being used
-    author: P J Knight, CCFE, Culham Science Centre
-    None
+
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.
     """
@@ -611,7 +609,7 @@ def check_process(inputs):  # noqa: ARG001
             and data_structure.physics_variables.i_plasma_pedestal
         ):
             warn(
-                "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model",
+                "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommended for the Reinke model",
                 stacklevel=2,
             )
 

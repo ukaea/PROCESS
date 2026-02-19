@@ -16,10 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 def initialise_imprad():
-    """
-    Initialises the impurity radiation data structure
-    author: H Lux, CCFE, Culham Science Centre
-    None
+    """Initialises the impurity radiation data structure
+
     This routine initialises the impurity radiation data.
     """
 
@@ -235,31 +233,38 @@ def init_imp_element(
     f_nd_species_electron: float,
     len_tab: int,
     error: int,
-) -> None:
-    """
-    Initialise the impurity radiation data for a species.
-
-    :param n_species_index: Position of species in impurity array
-    :type n_species_index: int
-    :param name_label: Species name
-    :type name_label: str
-    :param z: Species charge number
-    :type z: int
-    :param m_species_amu: Species atomic mass (amu)
-    :type m_species_amu: float
-    :param f_nd_species_electron: Number density / electron density
-    :type f_nd_species_electron: float
-    :param len_tab: Length of temperature and Lz tables
-    :type len_tab: int
-    :param error: Error flag; 0 = okay, 1 = missing impurity data
-    :type error: int
-    :raises ProcessValueError: If illegal impurity number is provided
-    :raises FileNotFoundError: If impurity data files are missing
-    :raises ProcessError: If required data cannot be located in files
+):
+    """Initialise the impurity radiation data for a species.
 
     This routine initialises the impurity radiation data structure
     for a given impurity species. The Lz versus temperature data are
     read in from file.
+
+    Parameters
+    ----------
+    n_species_index : int
+        Position of species in impurity array
+    name_label : str
+        Species name
+    z : int
+        Species charge number
+    m_species_amu : float
+        Species atomic mass (amu)
+    f_nd_species_electron : float
+        Number density / electron density
+    len_tab : int
+        Length of temperature and Lz tables
+    error : int
+        Error flag; 0 = okay, 1 = missing impurity data
+
+    Raises
+    ------
+    ProcessValueError
+        If illegal impurity number is provided
+    FileNotFoundError
+        If impurity data files are missing
+    ProcessError
+        If required data cannot be located in files
     """
 
     if error == 1:
@@ -344,14 +349,19 @@ def z2index(zimp):
 def fradcore(rho, radius_plasma_core_norm, f_p_plasma_core_rad_reduction):
     """Finds the fraction of radiation from the core that is subtracted in impurity radiation model.
 
-    :param rho: normalised minor radius
-    :type rho: numpy.array
-    :param radius_plasma_core_norm: normalised radius defining the 'core' region
-    :type radius_plasma_core_norm: float
-    :param f_p_plasma_core_rad_reduction: fraction of radiation from the core region
-    :type f_p_plasma_core_rad_reduction: float
-    :return: fradcore - array filled with the f_p_plasma_core_rad_reduction
-    :rtype: numpy.array
+    Parameters
+    ----------
+    rho : numpy.array
+        normalised minor radius
+    radius_plasma_core_norm : float
+        normalised radius defining the 'core' region
+    f_p_plasma_core_rad_reduction : float
+        fraction of radiation from the core region
+
+    Returns
+    -------
+    numpy.array
+        fradcore - array filled with the f_p_plasma_core_rad_reduction
     """
     fradcore = np.zeros(len(rho))
     rho_mask = rho < radius_plasma_core_norm
@@ -363,12 +373,17 @@ def fradcore(rho, radius_plasma_core_norm, f_p_plasma_core_rad_reduction):
 def zav_of_te(imp_element_index, teprofile):
     """Calculates electron temperature dependent average atomic number
 
-    :param imp_element_index: Impurity element index
-    :type imp_element_index: int
-    :param teprofile: temperature profile
-    :type teprofile: numpy.array
-    :return: zav_of_te - electron temperature dependent average atomic number
-    :rtype: numpy.array
+    Parameters
+    ----------
+    imp_element_index : int
+        Impurity element index
+    teprofile : numpy.array
+        temperature profile
+
+    Returns
+    -------
+    numpy.array
+        zav_of_te - electron temperature dependent average atomic number
     """
     # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
     return _zav_of_te_compiled(
@@ -420,14 +435,19 @@ def _zav_of_te_compiled(
 def pimpden(imp_element_index, neprofile, teprofile):
     """Calculates the impurity radiation density (W/m3)
 
-    :param imp_element_index: Impurity element index
-    :type imp_element_index: int
-    :param neprofile: electron density profile
-    :type neprofile: numpy.array
-    :param teprofile: electron temperature profile
-    :type teprofile: numpy.array
-    :return: pimpden - total impurity radiation density (W/m3)
-    :rtype: numpy.array
+    Parameters
+    ----------
+    imp_element_index : int
+        Impurity element index
+    neprofile : numpy.array
+        electron density profile
+    teprofile : numpy.array
+        electron temperature profile
+
+    Returns
+    -------
+    numpy.array
+        pimpden - total impurity radiation density (W/m3)
     """
     # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
     bins = impurity_radiation_module.temp_impurity_keV_array[imp_element_index]
@@ -486,6 +506,11 @@ def pimpden(imp_element_index, neprofile, teprofile):
 def element2index(element: str):
     """Returns the index of the `element` in the impurity array with
     a given name
+
+    Parameters
+    ----------
+    element: str :
+
     """
     try:
         return (
@@ -503,7 +528,8 @@ class ImpurityRadiation:
     """This class calculates the impurity radiation losses for given temperature and density profiles.
     The considers the  total impurity radiation from the core (pden_impurity_core_rad_total_mw) and total impurity radiation
     (pden_impurity_rad_total_mw) [MW/(m^3)]. The class is used to sum the impurity radiation loss from each impurity
-    element to find the total impurity radiation loss."""
+    element to find the total impurity radiation loss.
+    """
 
     def __init__(self, plasma_profile):
         """
@@ -529,22 +555,19 @@ class ImpurityRadiation:
         list(map(self.imprad_profile, self.imp))
 
     def imprad_profile(self, imp_element_index):
-        """
-        This routine calculates the impurity radiation losses for given temperature and density profiles.
+        """This routine calculates the impurity radiation losses for given temperature and density profiles.
+
+        Parameters
+        ----------
+        imp_element_index : Int
+            Index used to access different impurity radiation elements
+
         References:
             Bremsstrahlung equation from Johner, L(z) data (coronal equilibrium)
             from Marco Sertoli, Asdex-U, ref. Kallenbach et al.
             Johner, Fusion Science and Technology 59 (2011), pp 308-349
             Sertoli, private communication
             Kallenbach et al., Plasma Phys. Control. Fus. 55(2013) 124041
-        Authors:
-            R Kemp, CCFE, Culham Science Centre
-            H Lux, CCFE, Culham Science Centre
-            P J Knight, CCFE, Culham Science Centre
-            G Turkington, CCFFE, Culham Science Centre
-
-        :param imp_element_index: Index used to access different impurity radiation elements
-        :type imp_element_index: Int
         """
 
         pimp = pimpden(
@@ -580,7 +603,8 @@ class ImpurityRadiation:
 
     def integrate_radiation_loss_profiles(self):
         """Integrate the radiation loss profiles using the Simpson rule.
-        Store the total values for each aspect of impurity radiation loss."""
+        Store the total values for each aspect of impurity radiation loss.
+        """
 
         # 2.0e-6 converts from W/m^3 to MW/m^3 and also accounts for both sides of the plasma
         self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(

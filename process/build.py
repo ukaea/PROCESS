@@ -25,7 +25,7 @@ class Build:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
-    def run(self) -> None:
+    def run(self):
         self.calculate_radial_build(output=False)
         self.calculate_vertical_build(output=False)
 
@@ -54,28 +54,31 @@ class Build:
         dx_beam_duct: float,
         dx_beam_shield: float,
     ) -> tuple[float, float]:
-        """
-        Calculates the maximum possible tangency radius for adequate beam access.
+        """Calculates the maximum possible tangency radius for adequate beam access.
 
-        :param f_radius_beam_tangency_rmajor: Fraction of rmajor for beam tangency
-        :type f_radius_beam_tangency_rmajor: float
-        :param rmajor: Major radius
-        :type rmajor: float
-        :param n_tf_coils: Number of TF coils
-        :type n_tf_coils: int
-        :param dx_tf_inboard_out_toroidal: Toroidal width of outboard TF coil
-        :type dx_tf_inboard_out_toroidal: float
-        :param dr_tf_outboard: Radial thickness of outboard TF coil leg
-        :type dr_tf_outboard: float
-        :param r_tf_outboard_mid: Major radius of centre of outboard TF coil
-        :type r_tf_outboard_mid: float
-        :param dx_beam_duct: Width of beam duct
-        :type dx_beam_duct: float
-        :param dx_beam_shield: Shielding width on both sides of beam duct
-        :type dx_beam_shield: float
+        Parameters
+        ----------
+        f_radius_beam_tangency_rmajor : float
+            Fraction of rmajor for beam tangency
+        rmajor : float
+            Major radius
+        n_tf_coils : int
+            Number of TF coils
+        dx_tf_inboard_out_toroidal : float
+            Toroidal width of outboard TF coil
+        dr_tf_outboard : float
+            Radial thickness of outboard TF coil leg
+        r_tf_outboard_mid : float
+            Major radius of centre of outboard TF coil
+        dx_beam_duct : float
+            Width of beam duct
+        dx_beam_shield : float
+            Shielding width on both sides of beam duct
 
-        :returns: Tuple containing (radius_beam_tangency, radius_beam_tangency_max)
-        :rtype: tuple[float, float]
+        Returns
+        -------
+        tuple[float, float]
+            Tuple containing (radius_beam_tangency, radius_beam_tangency_max)
         """
 
         # Have kept the single letter variable names to match the original code and documentation diagram.
@@ -127,18 +130,17 @@ class Build:
 
         return radius_beam_tangency, radius_beam_tangency_max
 
-    def calculate_vertical_build(self, output: bool) -> None:
-        """
-        Determines the vertical build of the machine.
+    def calculate_vertical_build(self, output: bool):
+        """Determines the vertical build of the machine.
 
         This method calculates various parameters related to the vertical build of the machine,
         such as thicknesses, radii, and areas. Results can be outputted with the `output` flag.
 
-        :param output: Flag indicating whether to output results
-        :type output: bool
-        :returns: None
+        Parameters
+        ----------
+        output : bool
+            Flag indicating whether to output results
         """
-
         # Set the X-point heights for the top and bottom of the plasma
         # Assumes top-down plasma symmetry
         build_variables.z_plasma_xpoint_upper = (
@@ -849,18 +851,22 @@ class Build:
             )
 
     def divgeom(self, output: bool):
-        """
-                Divertor geometry calculation
-        author: J Galambos, ORNL
-        author: P J Knight, CCFE, Culham Science Centre
-        divht : output real : divertor height (m)
-        self.outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+        """Divertor geometry calculation
+
         This subroutine determines the divertor geometry.
         The inboard (i) and outboard (o) plasma surfaces
         are approximated by arcs, and followed past the X-point to
         determine the maximum height.
         TART option: Peng SOFT paper
+
+        Parameters
+        ----------
+        output: bool
+
+        Returns
+        -------
+        divht:
+            divertor height (m)
         """
         if physics_variables.itart == 1:
             return 1.75e0 * physics_variables.rminor
@@ -1532,8 +1538,7 @@ class Build:
         dx_tf_wp_insulation: float,
         dx_tf_wp_insertion_gap: float,
     ) -> tuple[float, float, int]:
-        """
-        Plasma outboard toroidal field (TF) ripple calculation.
+        """Plasma outboard toroidal field (TF) ripple calculation.
 
         This routine computes the TF ripple amplitude at the midplane outboard
         plasma edge and the minimum radius of the TF coil centre that would
@@ -1542,44 +1547,49 @@ class Build:
         includes a simplified analytical picture-frame coil model for
         i_tf_shape == 2.
 
-        :param ripple_b_tf_plasma_edge_max: Maximum allowed ripple at plasma edge (percent)
-        :type ripple_b_tf_plasma_edge_max: float
-        :param r_tf_outboard_mid: Radius to the centre of the outboard TF coil leg (m)
-        :type r_tf_outboard_mid: float
-        :param n_tf_coils: Number of TF coils
-        :type n_tf_coils: int
-        :param rmajor: Plasma major radius (m)
-        :type rmajor: float
-        :param rminor: Plasma minor radius (m)
-        :type rminor: float
-        :param r_tf_wp_inboard_inner: Inner winding-pack inboard radius (m)
-        :type r_tf_wp_inboard_inner: float
-        :param r_tf_wp_inboard_centre: Centre winding-pack inboard radius (m)
-        :type r_tf_wp_inboard_centre: float
-        :param r_tf_wp_inboard_outer: Outer winding-pack inboard radius (m)
-        :type r_tf_wp_inboard_outer: float
-        :param dx_tf_wp_primary_toroidal: Primary toroidal winding-pack thickness (m)
-        :type dx_tf_wp_primary_toroidal: float
-        :param i_tf_shape: TF coil shape switch (2 => picture-frame analytical model)
-        :type i_tf_shape: int
-        :param i_tf_sup: TF coil support flag (1 => superconducting)
-        :type i_tf_sup: int
-        :param dx_tf_wp_insulation: Winding-pack insulation thickness (m)
-        :type dx_tf_wp_insulation: float
-        :param dx_tf_wp_insertion_gap: Winding-pack insertion gap (m)
-        :type dx_tf_wp_insertion_gap: float
+        Parameters
+        ----------
+        ripple_b_tf_plasma_edge_max : float
+            Maximum allowed ripple at plasma edge (percent)
+        r_tf_outboard_mid : float
+            Radius to the centre of the outboard TF coil leg (m)
+        n_tf_coils : int
+            Number of TF coils
+        rmajor : float
+            Plasma major radius (m)
+        rminor : float
+            Plasma minor radius (m)
+        r_tf_wp_inboard_inner : float
+            Inner winding-pack inboard radius (m)
+        r_tf_wp_inboard_centre : float
+            Centre winding-pack inboard radius (m)
+        r_tf_wp_inboard_outer : float
+            Outer winding-pack inboard radius (m)
+        dx_tf_wp_primary_toroidal : float
+            Primary toroidal winding-pack thickness (m)
+        i_tf_shape : int
+            TF coil shape switch (2 => picture-frame analytical model)
+        i_tf_sup : int
+            TF coil support flag (1 => superconducting)
+        dx_tf_wp_insulation : float
+            Winding-pack insulation thickness (m)
+        dx_tf_wp_insertion_gap : float
+            Winding-pack insertion gap (m)
 
-        :returns: Tuple containing:
-                  - ripple: Calculated ripple at plasma edge (percent)
-                  - r_tf_outboard_midmin: Minimum r_tf_outboard_mid that yields the specified maximum ripple (m)
-                  - flag: Applicability flag (0 = OK, non-zero = fitted-range concern)
-        :rtype: tuple[float, float, int]
+        Returns
+        -------
+        tuple[float, float, int]
+            Tuple containing:
+            - ripple: Calculated ripple at plasma edge (percent)
+            - r_tf_outboard_midmin: Minimum r_tf_outboard_mid that yields the specified maximum ripple (m)
+            - flag: Applicability flag (0 = OK, non-zero = fitted-range concern)
 
-        :notes:
-            - Fitted coefficients originate from parametric MAGINT runs (M. Kovari, 2014).
-            - Picture-frame coil analytical model (Ken McClements, 2022) is used when
-            `i_tf_shape == 2` and gives approximate results (within ~10% of numerical).
-            - The routine sets an applicability flag when fitted-range assumptions are exceeded.
+        Notes
+        -----
+        - Fitted coefficients originate from parametric MAGINT runs (M. Kovari, 2014).
+        - Picture-frame coil analytical model (Ken McClements, 2022) is used when
+        `i_tf_shape == 2` and gives approximate results (within ~10% of numerical).
+        - The routine sets an applicability flag when fitted-range assumptions are exceeded.
         """
         if i_tf_sup == 1:
             # Minimal inboard WP radius [m]
@@ -1668,19 +1678,16 @@ class Build:
 
         return ripple, r_tf_outboard_midmin, flag
 
-    def calculate_radial_build(self, output: bool) -> None:
-        """
-        This method determines the radial build of the machine.
+    def calculate_radial_build(self, output: bool):
+        """This method determines the radial build of the machine.
         It calculates various parameters related to the build of the machine,
         such as thicknesses, radii, and areas.
         Results can be outputted with the `output` flag.
 
-        Args:
-            output (bool): Flag indicating whether to output the results
-
-        Returns:
-            None
-
+        Parameters
+        ----------
+        output : bool
+            Flag indicating whether to output the results
         """
 
         if fwbs_variables.blktmodel > 0:

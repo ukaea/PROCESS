@@ -178,7 +178,6 @@ jobs:
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
           python-version: ${{ env.python-version }}
-      - run: hatch run python scripts/vardes.py
       - run: git config --global --add safe.directory '*'
       - name: Download STF_TF.json files
         uses: actions/download-artifact@v4

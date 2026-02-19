@@ -4,9 +4,6 @@ PROCESS MFILE.DAT IO library
 
 process.io.mfile.
 
-James Morris
-CCFE
-
 Notes:
   + 12/03/2014: Initial version
   + 12/03/2014: Added MFILE variable class
@@ -23,7 +20,6 @@ Notes:
                 generation script imports, and inspects, process.
 
 Compatible with PROCESS version 286
-
 """
 
 import json
@@ -70,10 +66,12 @@ class MFileVariable(dict):  # noqa: FURB189
     def set_scan(self, scan_number, scan_value):
         """Sets the class attribute self.scan# where # is scan number
 
-        Arguments:
-          scan_number --> scan number
-          scan_value --> value of parameter for scan
-
+        Parameters
+        ----------
+        scan_number :
+            scan number
+        scan_value :
+            value of parameter for scan
         """
         self[f"scan{scan_number:02}"] = scan_value
         if scan_number > self.latest_scan:
@@ -83,11 +81,15 @@ class MFileVariable(dict):  # noqa: FURB189
         """Returns the value of a specific scan. For scan = -1 or None the last
         scan is given.
 
-        Arguments:
-          scan_number --> scan number to return [-1/None = last scan]
+        Parameters
+        ----------
+        scan_number :
+            scan number to return
 
-        Returns:
-          [single scan requested]
+        Returns
+        -------
+        type
+            [single scan requested]
         """
 
         if scan_number is None or scan_number == -1:
@@ -97,9 +99,10 @@ class MFileVariable(dict):  # noqa: FURB189
     def get_scans(self):
         """Returns a list of scan values in order of scan number
 
-        Returns:
-          [List of all scans for variable]
+        Returns
+        -------
 
+            [List of all scans for variable]
         """
         return [v for k, v in sorted(filter(lambda x: "scan" in x[0], self.items()))]
 
@@ -196,8 +199,9 @@ class DefaultOrderedDict(OrderedDict):
 
 
 class MFile:
+    """Class object to store the MFile Objects"""
+
     def __init__(self, filename="MFILE.DAT"):
-        """Class object to store the MFile Objects"""
         self.filename = filename
         self.data = DefaultOrderedDict()
         self.mfile_lines = []
@@ -210,11 +214,27 @@ class MFile:
             self.parse_mfile()
 
     def get_variables(self, *variables: str, scan: int = -1) -> list[Any]:
-        """Get a number of variables from a single scan"""
+        """Get a number of variables from a single scan
+
+        Parameters
+        ----------
+        *variables:
+
+        scan:
+             (Default value = -1)
+        """
         return [self.get(v, scan=scan) for v in variables]
 
     def get(self, variable: str, *, scan: int = -1) -> Any:
-        """Get variable data from a given scan"""
+        """Get variable data from a given scan
+
+        Parameters
+        ----------
+        variable:
+
+        scan:
+             (Default value = -1)
+        """
         return self.data[variable].get_scan(scan)
 
     def open_mfile(self):
@@ -238,6 +258,11 @@ class MFile:
     def add_line(self, line):
         """Function to read the line from MFILE and add to the appropriate
         class or create a new class if it is the first instance of it.
+
+        Parameters
+        ----------
+        line :
+
         """
         if "#" in line[:2]:
             combined = " ".join(line[1:-1])
@@ -274,7 +299,23 @@ class MFile:
             self.add_to_mfile_variable(var_des, var_name, var_value, var_unit, var_flag)
 
     def add_to_mfile_variable(self, des, name, value, unit, flag, scan=None):
-        """Function to add value to MFile class for that name/description"""
+        """Function to add value to MFile class for that name/description
+
+        Parameters
+        ----------
+        des :
+
+        name :
+
+        value :
+
+        unit :
+
+        flag :
+
+        scan :
+             (Default value = None)
+        """
         var_key = des.lower().replace("_", " ") if name == "" else name.lower()
 
         if var_key in self.data:
@@ -297,7 +338,17 @@ class MFile:
             self.data[var_key].set_scan(1, value)
 
     def write_to_json(self, keys_to_write=None, scan=-1, verbose=False):
-        """Write MFILE object to JSON file"""
+        """Write MFILE object to JSON file
+
+        Parameters
+        ----------
+        keys_to_write :
+             (Default value = None)
+        scan :
+             (Default value = -1)
+        verbose :
+             (Default value = False)
+        """
 
         if keys_to_write is None:
             keys_to_write = self.data.keys()
@@ -338,10 +389,18 @@ def sort_value(value_words: list[str]) -> str | float:
     """Parse value section of a line in MFILE.
 
     value_words is a list of strings, which is then parsed.
-    :param value_words: value of var in MFILE as list of strings
-    :type value_words: List[str]
-    :return: string or float representation of value list
-    :rtype: Union[str, float]
+
+    Parameters
+    ----------
+    value_words : List[str]
+        value of var in MFILE as list of strings
+    value_words: list[str] :
+
+
+    Returns
+    -------
+    Union[str, float]
+        string or float representation of value list
     """
     if any(c in value_words[0] for c in ['"', "'"]):
         # First "word" begins with ": return words as single str
@@ -357,7 +416,13 @@ def sort_value(value_words: list[str]) -> str | float:
 
 
 def sort_brackets(var):
-    """Function to sort bracket madness on variable name."""
+    """Function to sort bracket madness on variable name.
+
+    Parameters
+    ----------
+    var :
+
+    """
     if var != "":
         tmp_name = var.lstrip("(").split(")")
         if len(tmp_name) > 2:
@@ -367,7 +432,13 @@ def sort_brackets(var):
 
 
 def clean_line(line):
-    """Cleans an MFILE line into the three parts we care about"""
+    """Cleans an MFILE line into the three parts we care about
+
+    Parameters
+    ----------
+    line :
+
+    """
     return [item.strip("_ \n") for item in line.split(" ") if item != ""]
 
 
@@ -377,13 +448,17 @@ def search_keys(dictionary, variable):
 
     Puts everything into lower case before searching.
 
-    Argument:
-      dictionary --> dictionary to search in
-      variable --> variable name to search for
+    Parameters
+    ----------
+    dictionary :
+        dictionary to search in
+    variable :
+        variable name to search for
 
-    Returns:
-      matches --> List of matches to the searched for variable
-
+    Returns
+    -------
+    :
+        List of matches to the searched for variable
     """
     return [key for key in dictionary if variable.lower() in key.lower()]
 
@@ -394,20 +469,30 @@ def search_des(dictionary, description):
 
     Puts everything into lower case before searching.
 
-    Argument:
-      dictionary --> dictionary to search in
-      variable --> variable name to search for
+    Parameters
+    ----------
+    dictionary :
+        dictionary to search in
+    variable :
+        variable name to search for
 
-    Returns:
-      matches --> List of matches to the searched for description
-
+    Returns
+    -------
+    :
+        List of matches to the searched for description
     """
     descriptions = [dictionary[key].var_descript.lower() for key in dictionary.data]
     return [item for item in descriptions if description.lower() in item.lower()]
 
 
 def get_unit(variable_desc):
-    """Returns the unit from a variable description if possible, else None."""
+    """Returns the unit from a variable description if possible, else None.
+
+    Parameters
+    ----------
+    variable_desc :
+
+    """
     candidate = variable_desc.rsplit("_", 1)[-1]
     if candidate.startswith("(") and candidate.endswith(")"):
         return candidate[1:-1]
@@ -415,7 +500,13 @@ def get_unit(variable_desc):
 
 
 def is_number(val):
-    """Check MFILE data entry"""
+    """Check MFILE data entry
+
+    Parameters
+    ----------
+    val :
+
+    """
     try:
         float(val)
         return True

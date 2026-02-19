@@ -1,7 +1,7 @@
 """Module containing superconducting TF coil routines
-author: P J Knight, CCFE, Culham Science Centre
-author: J Morris, CCFE, Culham Science Centre
-author: S Kahn, CCFE, Culham Science Centre
+
+
+
 N/A
 This module contains routines for calculating the
 parameters of a superconducting TF coil system for a

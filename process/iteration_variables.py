@@ -298,6 +298,13 @@ def check_iteration_variable(iteration_variable_value, name: str = ""):
     """Check that the iteration variable value is valid (not a weird number or too small).
 
     Raises an error upon encountering an invalid value, otherwise does nothing.
+
+    Parameters
+    ----------
+    iteration_variable_value :
+
+    name: str :
+         (Default value = "")
     """
     if abs(iteration_variable_value) <= 1e-12:
         error_msg = f"Iteration variable {name} is 0 (or very close)"
@@ -379,8 +386,13 @@ def load_iteration_variables():
 def set_scaled_iteration_variable(xc, nn: int):
     """Converts scaled iteration variables back to their real values and sets them in the code.
 
-    :param xc: scaled iteration variable values
-    :param nn: number of iteration variables
+    Parameters
+    ----------
+    xc :
+        scaled iteration variable values
+    nn :
+        number of iteration variables
+
     """
 
     for i in range(nn):

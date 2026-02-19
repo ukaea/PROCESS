@@ -699,7 +699,6 @@ uccase: float = None
 
 
 UCCO: float = 350.0
-
 """unit cost for control buildings (M$/m3)"""
 
 
@@ -772,7 +771,6 @@ ucfnc: float = None
 
 
 UCFPR: float = 4.4e7
-
 """cost of 60g/day tritium processing unit ($)"""
 
 

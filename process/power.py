@@ -34,9 +34,8 @@ class Power:
         self.mfile = constants.MFILE
 
     def pfpwr(self, output: bool):
-        """
-        PF coil power supply requirements
-        author: P J Knight, CCFE, Culham Science Centre
+        """PF coil power supply requirements
+
         outfile : input integer : output file unit
         iprint : input integer : switch for writing to output (1=yes)
         This routine calculates the MVA, power and energy requirements
@@ -46,6 +45,11 @@ class Power:
         The reactive (inductive) components use waves to calculate the
         <I>dI/dt</I> at the time periods.
         None
+
+        Parameters
+        ----------
+        output: bool
+
         """
         powpfii = np.zeros((pfcoil_variables.NGC2,))
         cktr = np.zeros((pfcoil_variables.NGC2,))
@@ -397,16 +401,20 @@ class Power:
         # write(self.outfile,50)(times_variables.t_pulse_cumulative(time),time=1,6)
 
     def acpow(self, output: bool):
-        """
-        AC power requirements
-        author: P J Knight, CCFE, Culham Science Centre
-        author: P C Shipe, ORNL
+        """AC power requirements
+
+
         outfile : input integer : output file unit
         iprint : input integer : switch for writing to output (1=yes)
         The routine was drastically shortened on 23/01/90 (ORNL) from the
         original TETRA routine to provide only the total power needs for
         the plant. Included in STORAC in January 1992 by P.C. Shipe.
         None
+
+        Parameters
+        ----------
+        output: bool
+
         """
         ptfmw = heat_transport_variables.p_tf_electric_supplies_mw
         ppfmw = 1.0e-3 * pf_power_variables.srcktpm
@@ -516,11 +524,8 @@ class Power:
         # po.ovarre(self.outfile,'Total low voltage power (MW)','(tlvpmw)',tlvpmw)
 
     def component_thermal_powers(self):
-        """
-        Calculates the first part of the heat transport
+        """Calculates the first part of the heat transport
         and plant power balance constituents
-        author: P J Knight, CCFE, Culham Science Centre
-        None
         This routine calculates the first part of the heat transport
         and plant power balance constituents.
         None
@@ -728,9 +733,8 @@ class Power:
             heat_transport_variables.p_plant_primary_heat_mw / 1000.0e0
         )
 
-    def calculate_cryo_loads(self) -> None:
-        """
-        Calculates and updates the cryogenic heat loads for the system.
+    def calculate_cryo_loads(self):
+        """Calculates and updates the cryogenic heat loads for the system.
 
         This method computes the various cryogenic heat loads, including conduction/radiation,
         nuclear heating, AC losses, and resistive losses in current leads. It also updates
@@ -1317,15 +1321,13 @@ class Power:
             power_variables.e_plant_net_electric_pulse_kwh,
         )
 
-    def plant_electric_production(self) -> None:
-        """
-        This method completes the calculation of the plant's electrical and thermal power flows,
+    def plant_electric_production(self):
+        """This method completes the calculation of the plant's electrical and thermal power flows,
         including secondary heat, recirculating power, net and gross electric power, and various
         efficiency measures.
 
         If `output` is True, the method writes a comprehensive summary of the plant's power and
         heat transport balance, assumptions, and efficiency metrics to the specified output file.
-
         """
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 0:
             power_variables.p_cp_coolant_pump_elec_mw = (
@@ -1467,9 +1469,8 @@ class Power:
         c_tf_turn,
         n_tf_coils,
     ):
-        """
-        Calculates cryogenic loads
-        author: P J Knight, CCFE, Culham Science Centre
+        """Calculates cryogenic loads
+
         itfsup : input integer : Switch denoting whether TF coils are
         superconducting
         tfcryoarea : input real : Surface area of toroidal shells covering TF coils (m2)
@@ -1484,6 +1485,25 @@ class Power:
         helpow : output real : Helium heat removal at cryo temperatures (W)
         This routine calculates the cryogenic heat load.
         D. Slack memo SCMDG 88-5-1-059, LLNL ITER-88-054, Aug. 1988
+
+        Parameters
+        ----------
+        i_tf_sup :
+
+        tfcryoarea :
+
+        coldmass :
+
+        p_tf_nuclear_heat_mw :
+
+        ensxpfm :
+
+        t_plant_pulse_plasma_present :
+
+        c_tf_turn :
+
+        n_tf_coils :
+
         """
         power_variables.qss = 4.3e-4 * coldmass
         if i_tf_sup == 1:
@@ -1519,9 +1539,8 @@ class Power:
             + power_variables.qcl,
         )
 
-    def output_cryogenics(self) -> None:
-        """
-        Outputs cryogenic system heat loads and related parameters to the output file.
+    def output_cryogenics(self):
+        """Outputs cryogenic system heat loads and related parameters to the output file.
 
         This method prints the breakdown of cryogenic heat loads, including conduction/radiation,
         nuclear heating, AC losses, resistive losses in current leads, miscellaneous allowances,
@@ -1600,10 +1619,9 @@ class Power:
         )
 
     def plant_thermal_efficiency(self, eta_turbine):
-        """
-        Calculates the thermal efficiency of the power conversion cycle
-        author: P J Knight, CCFE, Culham Science Centre
-        author: C Harrington, CCFE, Culham Science Centre
+        """Calculates the thermal efficiency of the power conversion cycle
+
+
         eta_turbine : input/output real : thermal to electric conversion efficiency
         This routine calculates the thermal efficiency of the power conversion cycle.
         This gives the gross power of the plant, i.e. the primary coolant pumping
@@ -1616,6 +1634,11 @@ class Power:
         between eta_turbine and temp_blkt_coolant_out again obtained from previous studies.
         C. Harrington, K:Power Plant Physics and Technology  PROCESS  blanket_model
          New Power Module Harrington  Cycle correlations  Cycle correlations.xls
+
+        Parameters
+        ----------
+        eta_turbine :
+
         """
         if fwbs_variables.i_thermal_electric_conversion == 0:
             #  CCFE HCPB Model
@@ -1713,9 +1736,13 @@ class Power:
         return eta_turbine
 
     def plant_thermal_efficiency_2(self, etath_liq):
-        """
-        Calculates the thermal efficiency of the power conversion cycle
+        """Calculates the thermal efficiency of the power conversion cycle
         for the liquid metal breeder
+
+        Parameters
+        ----------
+        etath_liq :
+
         """
         if fwbs_variables.secondary_cycle_liq == 2:
             #  User input used, eta_turbine not changed
@@ -1746,15 +1773,19 @@ class Power:
         )
 
     def tfpwr(self, output: bool):
-        """
-        TF coil power supply requirements for resistive coils
-        author: P J Knight, CCFE, Culham Science Centre
+        """TF coil power supply requirements for resistive coils
+
         outfile : input integer : output file unit
         iprint : input integer : switch for writing to output (1=yes)
         This routine calculates the power conversion requirements for
         resistive TF coils, or calls <CODE>tfpwcall</CODE> if the TF
         coils are superconducting.
         None
+
+        Parameters
+        ----------
+        output: bool
+
         """
         if tfcoil_variables.i_tf_sup != 1:
             # Cross-sectional area of bus
@@ -1914,16 +1945,20 @@ class Power:
         # po.ovarre(outfile,'TF coil reactive power (MW)','(tfreacmw)', tfreacmw)
 
     def tfpwcall(self, output: bool):
-        """
-        Calls the TF coil power conversion routine for
+        """Calls the TF coil power conversion routine for
         superconducting coils
-        author: P J Knight, CCFE, Culham Science Centre
-        author: P C Shipe, ORNL
+
+
         outfile : input integer : output file unit
         iprint : input integer : switch for writing to output (1=yes)
         This routine calls routine <CODE>tfcpwr</CODE> to calculate
         the power conversion requirements for superconducting TF coils.
         None
+
+        Parameters
+        ----------
+        output: bool
+
         """
         ettfmj = (
             tfcoil_variables.e_tf_magnetic_stored_total_gj
@@ -1954,18 +1989,28 @@ class Power:
     def tfcpwr(
         self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc
     ):
-        """
-        Calculates the TF coil power conversion system parameters
+        """Calculates the TF coil power conversion system parameters
         for superconducting coils
-        author: P J Knight, CCFE, Culham Science Centre
-        author: P C Shipe, ORNL
-        This routine calculates the TF power conversion system
-        parameters:  floor space, power supplies, bussing,
+
+        This routine calculates the TF power conversion systemp arameters:
+        floor space, power supplies, bussing,
         coil protection equipment, and the associated controls
-        and instrumentation. It was originally written by G. Gorker,
-        FEDC/ORNL, April 1987, modified by J. Galambos in 1991 to
-        run in TETRA, and included in PROCESS in 1992 by P. C. Shipe.
-        None
+        and instrumentation.
+
+        Parameters
+        ----------
+        itfka :
+
+        rmajor :
+
+        ntfc :
+
+        v_tf_coil_dump_quench_kv :
+
+        ettfmj :
+
+        rptfc :
+
         """
 
         ncpbkr = 1.0e0  # number of TF coils per circuit breaker
@@ -2266,50 +2311,54 @@ class Power:
         p_plant_electric_gross_mw: float,
         p_plant_electric_net_mw: float,
     ) -> float:
-        """
-        Calculate time-dependent power profiles for different electric systems
+        """Calculate time-dependent power profiles for different electric systems
 
-        :param t_precharge: Precharge time (s).
-        :type t_precharge: float
-        :param t_current_ramp_up: Current ramp-up time (s).
-        :type t_current_ramp_up: float
-        :param t_fusion_ramp: Fusion ramp time (s).
-        :type t_fusion_ramp: float
-        :param t_burn: Burn time (s).
-        :type t_burn: float
-        :param t_ramp_down: Ramp-down time (s).
-        :type t_ramp_down: float
-        :param t_between_pulse: Time between pulses (s).
-        :type t_between_pulse: float
-        :param p_plant_electric_base_total_mw: Plant base electric load (MW).
-        :type p_plant_electric_base_total_mw: float
-        :param p_cryo_plant_electric_mw: Cryogenic plant electric load (MW).
-        :type p_cryo_plant_electric_mw: float
-        :param p_tritium_plant_electric_mw: Tritium plant electric load (MW).
-        :type p_tritium_plant_electric_mw: float
-        :param vachtmw: Vacuum pumps electric load (MW).
-        :type vachtmw: float
-        :param p_tf_electric_supplies_mw: TF coil electric supplies (MW).
-        :type p_tf_electric_supplies_mw: float
-        :param p_pf_electric_supplies_mw: PF coil electric supplies (MW).
-        :type p_pf_electric_supplies_mw: float
-        :param p_coolant_pump_elec_total_mw: Total coolant pump electric load (MW).
-        :type p_coolant_pump_elec_total_mw: float
-        :param p_hcd_electric_total_mw: HCD electric total (MW).
-        :type p_hcd_electric_total_mw: float
-        :param p_fusion_total_mw: Fusion power (MW).
-        :type p_fusion_total_mw: float
-        :param p_plant_electric_gross_mw: Gross electric power produced (MW).
-        :type p_plant_electric_gross_mw: float
-        :param p_plant_electric_net_mw: Net electric power produced (MW).
-        :type p_plant_electric_net_mw: float
+        Parameters
+        ----------
+        t_precharge : float
+            Precharge time (s).
+        t_current_ramp_up : float
+            Current ramp-up time (s).
+        t_fusion_ramp : float
+            Fusion ramp time (s).
+        t_burn : float
+            Burn time (s).
+        t_ramp_down : float
+            Ramp-down time (s).
+        t_between_pulse : float
+            Time between pulses (s).
+        p_plant_electric_base_total_mw : float
+            Plant base electric load (MW).
+        p_cryo_plant_electric_mw : float
+            Cryogenic plant electric load (MW).
+        p_tritium_plant_electric_mw : float
+            Tritium plant electric load (MW).
+        vachtmw : float
+            Vacuum pumps electric load (MW).
+        p_tf_electric_supplies_mw : float
+            TF coil electric supplies (MW).
+        p_pf_electric_supplies_mw : float
+            PF coil electric supplies (MW).
+        p_coolant_pump_elec_total_mw : float
+            Total coolant pump electric load (MW).
+        p_hcd_electric_total_mw : float
+            HCD electric total (MW).
+        p_fusion_total_mw : float
+            Fusion power (MW).
+        p_plant_electric_gross_mw : float
+            Gross electric power produced (MW).
+        p_plant_electric_net_mw : float
+            Net electric power produced (MW).
 
-        :notes:
-            - Assumes step-function changes in power at each phase transition.
-            - Negative values indicate power consumption (loads).
+        Returns
+        -------
+        float
+            Total net electric energy produced over the pulse (MJ).
 
-        :returns: Total net electric energy produced over the pulse (MJ).
-        :rtype: float
+        Notes
+        -----
+        - Assumes step-function changes in power at each phase transition.
+        - Negative values indicate power consumption (loads).
         """
 
         t_steps = np.cumsum([

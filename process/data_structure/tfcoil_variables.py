@@ -1,4 +1,4 @@
-"""author: J. Morris, M. Kovari, S. Kahn (UKAEA)
+"""
 Module containing global variables relating to the toroidal field coil systems
 ### References
 - ITER Magnets design description document DDD11-2 v2 2 (2009)

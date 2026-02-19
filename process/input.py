@@ -1261,14 +1261,16 @@ INPUT_VARIABLES = {
         data_structure.rebco_variables,
         float,
         range=(1e-08, 0.0001),
-        additional_actions=lambda _n, rt, _i, _c: rt <= 1e-6
-        or warn(
-            (
-                "the relationship between REBCO layer thickness and current density is not linear."
-                "REBCO layer thicknesses > 1um should be considered an aggressive extrapolation of"
-                "current HTS technology and any results must be considered speculative."
-            ),
-            stacklevel=1,
+        additional_actions=lambda _n, rt, _i, _c: (
+            rt <= 1e-6
+            or warn(
+                (
+                    "the relationship between REBCO layer thickness and current density is not linear."
+                    "REBCO layer thicknesses > 1um should be considered an aggressive extrapolation of"
+                    "current HTS technology and any results must be considered speculative."
+                ),
+                stacklevel=1,
+            )
         ),
     ),
     "redun_vacp": InputVariable(
@@ -2271,13 +2273,23 @@ def validate_variable(
 ) -> ValidInputTypes:
     """Validate an input.
 
-    :param name: the name of the input.
-    :param value: the value of the input variable.
-    :param array_index: the array index of the variable in the input file.
-    :param config: the config of the variable that describes how to validate and process it.
-    :param line_number: line number of current line being parsed for error reporting.
+    Parameters
+    ----------
+    name :
+        the name of the input.
+    value :
+        the value of the input variable.
+    array_index :
+        the array index of the variable in the input file.
+    config :
+        the config of the variable that describes how to validate and process it.
+    line_number :
+        line number of current line being parsed for error reporting.
 
-    :returns: the input value with the correct type.
+    Returns
+    -------
+    :
+        the input value with the correct type.
     """
     # check that if the variable should be an array, then an array index is provided
     # EXCEPT for if check_array is False. This should only be the case when parsing
@@ -2324,9 +2336,14 @@ def validate_variable(
 def set_scalar_variable(name: str, value: ValidInputTypes, config: InputVariable):
     """Set a scalar (not part of an array) variable in the `config.module`.
 
-    :param name: the name of the input.
-    :param value: the value of the input variable.
-    :param config: the config of the variable that describes how to validate and process it.
+    Parameters
+    ----------
+    name :
+        the name of the input.
+    value :
+        the value of the input variable.
+    config :
+        the config of the variable that describes how to validate and process it.
     """
     current_value = getattr(config.module, name, ...)
 
@@ -2347,10 +2364,16 @@ def set_array_variable(name: str, value: str, array_index: int, config: InputVar
     The way PROCESS input files are structured, each element of the array is provided on one line
     so this function just needs to set the `value` at `array_index` (-1) because of Fortran-based indexing.
 
-    :param name: the name of the input.
-    :param value: the value of the input variable.
-    :param array_index: the array index of the variable in the input file.
-    :param config: the config of the variable that describes how to validate and process it.
+    Parameters
+    ----------
+    name :
+        the name of the input.
+    value :
+        the value of the input variable.
+    array_index :
+        the array index of the variable in the input file.
+    config :
+        the config of the variable that describes how to validate and process it.
     """
     current_array = getattr(config.module, name, ...)
     shape = current_array.shape

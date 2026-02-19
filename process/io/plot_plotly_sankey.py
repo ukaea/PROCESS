@@ -13,9 +13,6 @@ from process.io.mfile import MFile
 
 
 def main(args=None):
-    ###########################################################
-    # Usage
-
     if not PLOT_SANKEY:
         print(
             "\nPlotly is not installed, unable to create sankey diagram!\n"
@@ -25,8 +22,7 @@ def main(args=None):
         return
 
     parser = argparse.ArgumentParser(
-        description="Program to plot\
-     the power flow in PROCESS using a Sankey diagram."
+        description="Program to plot the power flow in PROCESS using a Sankey diagram."
     )
 
     parser.add_argument("-e", "--end", default="pdf", help="file format, default = pdf")
@@ -36,9 +32,6 @@ def main(args=None):
     )
 
     args = parser.parse_args(args)
-
-    #########################################################
-    # main program
 
     plot_power_balance_sankey(args.mfile)
 

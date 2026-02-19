@@ -19,22 +19,25 @@ def shield_geometry_single_null(
 ) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of shield in a single null configuration
 
-    :param cumulative_upper: cumulative vertical thicknesses of components above the midplane
-    :type cumulative_upper: dict
-    :param radx_far: outboard radius of outer surface of shield
-    :type radx_far: float
-    :param rminx_far: inboard radius of outer surface of shield
-    :type rminx_far: float
-    :param radx_near: outboard radius of inner surface of shield
-    :type radx_near: float
-    :param rminx_near: inboard radius of inner surface of shield
-    :type rminx_near: float
-    :param triang: plasma triangularity
-    :type triang: float
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :return: dataclass returning radial and vertical coordinates
-    :rtype: ArbitraryGeometry
+    Parameters
+    ----------
+    cumulative_upper:
+        cumulative vertical thicknesses of components above the midplane
+    radx_far:
+        outboard radius of outer surface of shield
+    rminx_far:
+        inboard radius of outer surface of shield
+    radx_near:
+        outboard radius of inner surface of shield
+    rminx_near:
+        inboard radius of inner surface of shield
+    triang:
+        plasma triangularity
+
+    Returns
+    -------
+    ArbitraryGeometry
+        dataclass returning radial and vertical coordinates
     """
     # Upper shield
     # Side furthest from plasma
@@ -88,20 +91,25 @@ def shield_geometry_lower(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of shield below the midplane
 
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :param radx_far: outboard radius of outer surface of shield
-    :type radx_far: float
-    :param rminx_far: inboard radius of outer surface of shield
-    :type rminx_far: float
-    :param radx_near: outboard radius of inner surface of shield
-    :type radx_near: float
-    :param rminx_near: inboard radius of inner surface of shield
-    :type rminx_near: float
-    :param triang: plasma triangularity
-    :type triang: float
-    :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the shield geometry below the midplane
-    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+    Parameters
+    ----------
+    cumulative_lower:
+        cumulative vertical thicknesses of components below the midplane
+    radx_far:
+        outboard radius of outer surface of shield
+    rminx_far:
+        inboard radius of outer surface of shield
+    radx_near:
+        outboard radius of inner surface of shield
+    rminx_near:
+        inboard radius of inner surface of shield
+    triang:
+        plasma triangularity
+
+    Returns
+    -------
+    Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+        tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the shield geometry below the midplane
     """
     # Side furthest from plasma
     kapx = cumulative_lower["dz_shld_lower"] / rminx_far
@@ -125,20 +133,25 @@ def shield_geometry_double_null(
     """Calculates radial and vertical distances for the geometry of shield in a double null configuration
     In a double null configuration, the geometry of the lower shield is reflected across the midplane to create the section of shield above the midplane
 
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :param radx_far: outboard radius of outer surface of shield
-    :type radx_far: float
-    :param rminx_far: inboard radius of outer surface of shield
-    :type rminx_far: float
-    :param radx_near: outboard radius of inner surface of shield
-    :type radx_near: float
-    :param rminx_near: inboard radius of inner surface of shield
-    :type rminx_near: float
-    :param triang: plasma triangularity
-    :type triang: float
-    :return: dataclass returning radial and vertical coordinates
-    :rtype: ArbitraryGeometry
+    Parameters
+    ----------
+    cumulative_lowe:
+        cumulative vertical thicknesses of components below the midplane
+    radx_far:
+        outboard radius of outer surface of shield
+    rminx_far:
+        inboard radius of outer surface of shield
+    radx_near:
+        outboard radius of inner surface of shield
+    rminx_near:
+        inboard radius of inner surface of shield
+    triang:
+        plasma triangularity
+
+    Returns
+    -------
+    ArbitraryGeometry
+        dataclass returning radial and vertical coordinates
     """
     # Lower shield
     (

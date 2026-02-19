@@ -25,34 +25,39 @@ def first_wall_geometry_single_null(
 ) -> ArbitraryGeometry:
     """Calculates radial and vertical distances for the geometry of first wall in a single null configuration
 
-    :param radx_outer: outboard radius of outer surface of first wall
-    :type radx_outer: float
-    :param rminx_outer: inboard radius of outer surface of first wall
-    :type rminx_outer: float
-    :param radx_inner: outboard radius of inner surface of first wall
-    :type radx_inner: float
-    :param rminx_inner: inboard radius of inner surface of first wall
-    :type rminx_inner: float
-    :param cumulative_upper: cumulative vertical thicknesses of components above the midplane
-    :type cumulative_upper: dict
-    :param triang: plasma triangularity
-    :type triang: float
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :param dz_blkt_upper: top blanket vertical thickness
-    :type dz_blkt_upper: float
-    :param c_blnkith: inboard blanket vertical thickness
-    :type c_blnkith: float
-    :param c_fwoth: outboard first wall vertical thickness
-    :type c_fwoth: float
-    :param dr_fw_inboard: inboard first wall radial thickness
-    :type dr_fw_inboard: float
-    :param dr_fw_outboard: outboard first wall radial thickness
-    :type dr_fw_outboard: float
-    :param tfwvt: top first wall vertical thickness
-    :type tfwvt: float
-    :return: dataclass returning radial and vertical coordinates
-    :rtype: ArbitraryGeometry
+    Parameters
+    ----------
+    radx_outer:
+        outboard radius of outer surface of first wall
+    rminx_outer:
+        inboard radius of outer surface of first wall
+    radx_inner:
+        outboard radius of inner surface of first wall
+    rminx_inner:
+        inboard radius of inner surface of first wall
+    cumulative_upper:
+        cumulative vertical thicknesses of components above the midplane
+    triang:
+        plasma triangularity
+    cumulative_lower:
+        cumulative vertical thicknesses of components below the midplane
+    dz_blkt_upper:
+        top blanket vertical thickness
+    c_blnkith:
+        inboard blanket vertical thickness
+    c_fwoth:
+        outboard first wall vertical thickness
+    dr_fw_inboard:
+        inboard first wall radial thickness
+    dr_fw_outboard:
+        outboard first wall radial thickness
+    tfwvt:
+        top first wall vertical thickness
+
+    Returns
+    -------
+    ArbitraryGeometry
+        dataclass returning radial and vertical coordinates
     """
     # Upper first wall: outer surface
     kapx = cumulative_upper["dz_fw_upper"] / rminx_outer
@@ -110,22 +115,28 @@ def first_wall_geometry_lower(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Calculates radial and vertical distances for the geometry of section of first wall below the midplane
 
-    :param triang: plasma triangularity
-    :type triang: float
-    :param c_blnkith: inboard blanket vertical thickness
-    :type c_blnkith: float
-    :param c_fwoth: outboard first wall vertical thickness
-    :type c_fwoth: float
-    :param dr_fw_inboard: inboard first wall radial thickness
-    :type dr_fw_inboard: float
-    :param dr_fw_outboard: outboard first wall radial thickness
-    :type dr_fw_outboard: float
-    :param tfwvt: top first wall vertical thickness
-    :type tfwvt: float
-    :param top_point: top point for plotdhgap, equal to
-    :type top_point: float
-    :return: tuple containing the R coordinates for the outboard, Z coordinates for the outboard, R coordinates for the inboard, Z coordinates for the inboard of the first wall geometry below the midplane
-    :rtype: Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+    Parameters
+    ----------
+    triang:
+        plasma triangularity
+    c_blnkith:
+        inboard blanket vertical thickness
+    c_fwoth:
+        outboard first wall vertical thickness
+    dr_fw_inboard:
+        inboard first wall radial thickness
+    dr_fw_outboard:
+        outboard first wall radial thickness
+    tfwvt:
+        top first wall vertical thickness
+    top_point:
+        top point for plotdhgap, equal to
+
+    Returns
+    -------
+    :
+        tuple containing the R coordinates for the outboard, Z coordinates for the outboard,
+        R coordinates for the inboard, Z coordinates for the inboard of the first wall geometry below the midplane
     """
     # Lower first wall
     rs1, rs2, rs3, rs4, zs1, zs2, zs3, zs4 = dhgap_vertices(
@@ -160,24 +171,29 @@ def first_wall_geometry_double_null(
     """Calculates radial and vertical distances for the geometry of first wall in a double null configuration
     In a double null configuration, the geometry of the lower first wall is reflected across the midplane to create the section of first wall above the midplane
 
-    :param cumulative_lower: cumulative vertical thicknesses of components below the midplane
-    :type cumulative_lower: dict
-    :param triang: plasma triangularity
-    :type triang: float
-    :param dz_blkt_upper: top blanket vertical thickness
-    :type dz_blkt_upper: float
-    :param c_blnkith: inboard blanket vertical thickness
-    :type c_blnkith: float
-    :param c_fwoth: outboard first wall vertical thickness
-    :type c_fwoth: float
-    :param dr_fw_inboard: inboard first wall radial thickness
-    :type dr_fw_inboard: float
-    :param dr_fw_outboard: outboard first wall radial thickness
-    :type dr_fw_outboard: float
-    :param tfwvt: top first wall vertical thickness
-    :type tfwvt: float
-    :return: dataclass returning radial and vertical coordinates
-    :rtype: ArbitraryGeometry
+    Parameters
+    ----------
+    cumulative_lower:
+        cumulative vertical thicknesses of components below the midplane
+    triang:
+        plasma triangularity
+    dz_blkt_upper:
+        top blanket vertical thickness
+    c_blnkith:
+        inboard blanket vertical thickness
+    c_fwoth:
+        outboard first wall vertical thickness
+    dr_fw_inboard:
+        inboard first wall radial thickness
+    dr_fw_outboard:
+        outboard first wall radial thickness
+    tfwvt:
+        top first wall vertical thickness
+
+    Returns
+    -------
+    ArbitraryGeometry
+        dataclass returning radial and vertical coordinates
     """
     # Lower first wall
     divgap = cumulative_lower["dz_divertor"]

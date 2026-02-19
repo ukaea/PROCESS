@@ -21,7 +21,7 @@ class ProcessLogHandler(Handler):
     """
 
     def __init__(self, capturing=True):
-        """Intantiates a ProcessLogHandler.
+        """Instantiates a ProcessLogHandler.
 
         :param capturing: capture and store emitted logs?
         :type capturning: bool
@@ -64,8 +64,11 @@ logging_model_handler = ProcessLogHandler()
 def show_errors(file_unit: int):
     """Write the rendered captured logs to the terminal/OUTFile
 
-    :param file_unit: a number describing the output medium (terminal, OUTFile)
-    :type file_unit: int
+    Parameters
+    ----------
+    file_unit : int
+        a number describing the output medium (terminal, OUTFile)
+
     """
     warning_string = (
         "******************************************** Errors and Warnings *********************************************"

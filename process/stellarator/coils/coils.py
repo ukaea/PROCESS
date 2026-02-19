@@ -153,20 +153,31 @@ def jcrit_from_material(
 def intersect(x1, y1, x2, y2, xin):
     """Routine to find the x (abscissa) intersection point of two curves
     each defined by tabulated (x,y) values
-    author: P J Knight, CCFE, Culham Science Centre
-    x1(1:n1) : input real array : x values for first curve
-    y1(1:n1) : input real array : y values for first curve
-    n1       : length of arrays x1, y1
-    x2(1:n2) : input real array : x values for first curve
-    y2(1:n2) : input real array : y values for first curve
-    n2       : length of arrays x2, y2
-    xin      : initial guess for intersection point
-    x value at point of intersection on exit
+
     This routine estimates the x point (abscissa) at which two curves
     defined by tabulated (x,y) values intersect, using simple
     linear interpolation and the Newton-Raphson method.
     The routine will stop with an error message if no crossing point
     is found within the x ranges of the two curves.
+
+    Parameters
+    ----------
+    x1 :
+        x values for first curve
+    y1 :
+        y values for first curve
+    x2 :
+        x values for first curve
+    y2 :
+        y values for first curve
+    xin :
+        initial guess for intersection point
+
+    Returns
+    -------
+    :
+        x value at point of intersection on exit
+
     """
     x = xin
     n1 = len(x1)
@@ -247,10 +258,23 @@ def intersect(x1, y1, x2, y2, xin):
 def bmax_from_awp(wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor):
     """Returns a fitted function for bmax for stellarators
 
-    author: J Lion, IPP Greifswald
-    Returns a fitted function for bmax in dependece
+    Returns a fitted function for bmax in dependence
     of the winding pack. The stellarator type config
     is taken from the parent scope.
+
+    Parameters
+    ----------
+    wp_width_radial :
+
+    current :
+
+    n_tf_coils :
+
+    r_coil_major :
+
+    r_coil_minor :
+
+
     """
 
     return (

@@ -7,10 +7,13 @@ def write(models, _outfile):
 
     Write the program results to a file, in a tidy format.
 
-    :param models: physics and engineering model objects
-    :type models: process.main.Models
-    :param outfile: Fortran output unit identifier
-    :type outfile: int
+    Parameters
+    ----------
+    models : process.main.Models
+        physics and engineering model objects
+    _outfile : int
+        Fortran output unit identifier
+
     """
     # ensure we are capturing warnings that occur in the 'output' stage as these are warnings
     # that occur at our solution point. So we clear existing warnings

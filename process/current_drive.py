@@ -24,10 +24,18 @@ class NeutralBeam:
 
     def iternb(self):
         """Routine to calculate ITER Neutral Beam current drive parameters
-        author: P J Knight, CCFE, Culham Science Centre
-        effnbss : output real : neutral beam current drive efficiency (A/W)
-        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
-        fshine  : output real : shine-through fraction of beam
+
+        Returns
+        -------
+        effnbss:
+            neutral beam current drive efficiency (A/W)
+        f_p_beam_injected_ions:
+            fraction of NB power given to ions
+        fshine:
+             shine-through fraction of beam
+
+        Notes
+        -----
         This routine calculates the current drive parameters for a
         neutral beam system, based on the 1990 ITER model.
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
@@ -109,10 +117,18 @@ class NeutralBeam:
 
     def culnbi(self):
         """Routine to calculate Neutral Beam current drive parameters
-        author: P J Knight, CCFE, Culham Science Centre
-        effnbss : output real : neutral beam current drive efficiency (A/W)
-        f_p_beam_injected_ions   : output real : fraction of NB power given to ions
-        fshine  : output real : shine-through fraction of beam
+
+        Returns
+        -------
+        effnbss:
+            neutral beam current drive efficiency (A/W)
+        f_p_beam_injected_ions:
+            fraction of NB power given to ions
+        fshine:
+            shine-through fraction of beam
+
+        Notes
+        -----
         This routine calculates Neutral Beam current drive parameters
         using the corrections outlined in AEA FUS 172 to the ITER method.
         <P>The result cannot be guaranteed for devices with aspect ratios far
@@ -222,20 +238,8 @@ class NeutralBeam:
         """Routine to find neutral beam current drive efficiency
         using the ITER 1990 formulation, plus correction terms
         outlined in Culham Report AEA FUS 172
-        author: P J Knight, CCFE, Culham Science Centre
-        m_beam_amu   : input real : beam ion mass (amu)
-        alphan  : input real : density profile factor
-        alphat  : input real : temperature profile factor
-        aspect  : input real : aspect ratio
-        nd_plasma_electrons_vol_avg    : input real : volume averaged electron density (m**-3)
-        nd_plasma_electron_line    : input real : line averaged electron density (m**-3)
-        e_beam_kev  : input real : neutral beam energy (keV)
-        f_radius_beam_tangency_rmajor  : input real : R_tangent / R_major for neutral beam injection
-        fshine  : input real : shine-through fraction of beam
-        rmajor  : input real : plasma major radius (m)
-        rminor  : input real : plasma minor radius (m)
-        temp_plasma_electron_density_weighted_kev     : input real : density weighted average electron temperature (keV)
-        zeff    : input real : plasma effective charge
+
+
         This routine calculates the current drive efficiency in A/W of
         a neutral beam system, based on the 1990 ITER model,
         plus correction terms outlined in Culham Report AEA FUS 172.
@@ -243,6 +247,35 @@ class NeutralBeam:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
+        Parameters
+        ----------
+        m_beam_amu:
+            beam ion mass (amu)
+        alphan:
+            density profile factor
+        alphat:
+            temperature profile factor
+        aspect:
+            aspect ratio
+        nd_plasma_electrons_vol_avg:
+            volume averaged electron density (m**-3)
+        nd_plasma_electron_line:
+            line averaged electron density (m**-3)
+        e_beam_kev:
+            neutral beam energy (keV)
+        f_radius_beam_tangency_rmajor:
+            R_tangent / R_major for neutral beam injection
+        fshine:
+            shine-through fraction of beam
+        rmajor:
+            plasma major radius (m)
+        rminor:
+            plasma minor radius (m)
+        temp_plasma_electron_density_weighted_kev:
+            density weighted average electron temperature (keV)
+        zeff:
+            plasma effective charge
         """
         #  Charge of beam ions
         zbeam = 1.0
@@ -285,7 +318,6 @@ class NeutralBeam:
 
         #  Normalisation to allow results to be valid for
         #  non-ITER plasma size and density:
-
         #  Line averaged electron density (10**20 m**-3) normalised to ITER
         nnorm = 1.0
 
@@ -349,20 +381,37 @@ class NeutralBeam:
     ):
         """Routine to find neutral beam current drive efficiency
         using the ITER 1990 formulation
-        author: P J Knight, CCFE, Culham Science Centre
-        m_beam_amu   : input real : beam ion mass (amu)
-        alphan  : input real : density profile factor
-        alphat  : input real : temperature profile factor
-        aspect  : input real : aspect ratio
-        nd_plasma_electrons_vol_avg    : input real : volume averaged electron density (m**-3)
-        ebeam  : input real : neutral beam energy (keV)
-        rmajor  : input real : plasma major radius (m)
-        temp_plasma_electron_density_weighted_kev     : input real : density weighted average electron temp. (keV)
-        zeff    : input real : plasma effective charge
+
+        Parameters
+        ----------
+        m_beam_amu:
+            beam ion mass (amu)
+        alphan:
+            density profile factor
+        alphat:
+            temperature profile factor
+        aspect:
+            aspect ratio
+        nd_plasma_electrons_vol_avg:
+            volume averaged electron density (m**-3)
+        ebeam:
+            neutral beam energy (keV)
+        rmajor:
+            plasma major radius (m)
+        temp_plasma_electron_density_weighted_kev:
+            density weighted average electron temp. (keV)
+        zeff:
+            plasma effective charge
+
+        Notes
+        -----
         This routine calculates the current drive efficiency of
         a neutral beam system, based on the 1990 ITER model.
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
+
+
         """
 
         zbeam = 1.0
@@ -402,15 +451,27 @@ class NeutralBeam:
 
     def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
         """Calculates the stopping cross-section for a hydrogen
-        beam in a fusion plasma
-        author: P J Knight, CCFE, Culham Science Centre
-        eb     : input real : beam energy (kev/amu)
-        te     : input real : electron temperature (keV)
-        ne     : input real : electron density (10^20m-3)
-        rnhe   : input real : alpha density / ne
-        rnc    : input real : carbon density /ne
-        rno    : input real : oxygen density /ne
-        rnfe   : input real : iron density /ne
+               beam in a fusion plasma
+
+        Parameters
+        ----------
+        eb:
+            beam energy (kev/amu)
+        te:
+            electron temperature (keV)
+        ne:
+            electron density (10^20m-3)
+        rnhe:
+            alpha density / ne
+        rnc:
+            carbon density /ne
+        rno:
+            oxygen density /ne
+        rnfe:
+            iron density /ne
+
+        Notes
+        -----
         This function calculates the stopping cross-section (m^-2)
         for a hydrogen beam in a fusion plasma.
         Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
@@ -503,17 +564,33 @@ class NeutralBeam:
         xlmbda,
     ):
         """Routine to calculate the fraction of the fast particle energy
-        coupled to the ions
-        author: P J Knight, CCFE, Culham Science Centre
-        afast   : input real : mass of fast particle (units of proton mass)
-        efast   : input real : energy of fast particle (keV)
-        te      : input real : density weighted average electron temp. (keV)
-        ne      : input real : volume averaged electron density (m**-3)
-        nd      : input real : deuterium beam density (m**-3)
-        nt      : input real : tritium beam density (m**-3)
-        n_charge_plasma_effective_mass_weighted_vol_avg  : input real : mass weighted plasma effective charge
-        xlmbda  : input real : ion-electron coulomb logarithm
-        f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
+         coupled to the ions
+
+        Parameters
+        ----------
+        afast:
+            mass of fast particle (units of proton mass)
+        efast:
+            energy of fast particle (keV)
+        te:
+            density weighted average electron temp. (keV)
+        ne:
+            volume averaged electron density (m**-3)
+        nd:
+            deuterium beam density (m**-3)
+        nt:
+            tritium beam density (m**-3)
+        n_charge_plasma_effective_mass_weighted_vol_avg:
+            mass weighted plasma effective charge
+        xlmbda:
+            ion-electron coulomb logarithm
+
+        Returns
+        -------
+        f_p_beam_injected_ions:
+             fraction of fast particle energy coupled to ions
+        Notes
+        -----
         This routine calculates the fast particle energy coupled to
         the ions in the neutral beam system.
         """
@@ -556,16 +633,24 @@ class NeutralBeam:
 
     def xlmbdabi(self, mb, mth, eb, t, nelec):
         """Calculates the Coulomb logarithm for ion-ion collisions
-        author: P J Knight, CCFE, Culham Science Centre
-        mb     : input real : mass of fast particle (units of proton mass)
-        mth    : input real : mass of background ions (units of proton mass)
-        eb     : input real : energy of fast particle (keV)
-        t      : input real : density weighted average electron temp. (keV)
-        nelec  : input real : volume averaged electron density (m**-3)
+
         This function calculates the Coulomb logarithm for ion-ion
         collisions where the relative velocity may be large compared
         with the background ('mt') thermal velocity.
         Mikkelson and Singer, Nuc Tech/Fus, 4, 237 (1983)
+
+        Parameters
+        ----------
+        mb:
+            mass of fast particle (units of proton mass)
+        mth:
+            mass of background ions (units of proton mass)
+        eb:
+            energy of fast particle (keV)
+        t:
+            density weighted average electron temp. (keV)
+        nelec:
+            volume averaged electron density (m**-3)
         """
 
         x1 = (t / 10.0) * (eb / 1000.0) * mb / (nelec / 1e20)
@@ -581,12 +666,15 @@ class ElectronCyclotron:
 
     def culecd(self):
         """Routine to calculate Electron Cyclotron current drive efficiency
-        author: M R O'Brien, CCFE, Culham Science Centre
-        author: P J Knight, CCFE, Culham Science Centre
-        effrfss : output real : electron cyclotron current drive efficiency (A/W)
+
         This routine calculates the current drive parameters for a
         electron cyclotron system, based on the AEA FUS 172 model.
         AEA FUS 172: Physics Assessment for the European Reactor Study
+
+        Returns
+        -------
+        :
+            electron cyclotron current drive efficiency (A/W)
         """
         rrr = 1.0e0 / 3.0e0
 
@@ -642,19 +730,11 @@ class ElectronCyclotron:
 
     def eccdef(self, tlocal, epsloc, zlocal, cosang, coulog):
         """Routine to calculate Electron Cyclotron current drive efficiency
-        author: M R O'Brien, CCFE, Culham Science Centre
-        author: P J Knight, CCFE, Culham Science Centre
-        tlocal : input real : local electron temperature (keV)
-        epsloc : input real : local inverse aspect ratio
-        zlocal : input real : local plasma effective charge
-        cosang : input real : cosine of the poloidal angle at which ECCD takes
-        place (+1 outside, -1 inside)
-        coulog : input real : local coulomb logarithm for ion-electron collisions
-        ecgam  : output real : normalised current drive efficiency (A/W m**-2)
+
         This routine calculates the current drive parameters for a
         electron cyclotron system, based on the AEA FUS 172 model.
         It works out the ECCD efficiency using the formula due to Cohen
-        quoted in the ITER Physics Design Guidelines : 1989
+        quoted in the ITER Physics Design Guidelines: 1989
         (but including division by the Coulomb Logarithm omitted from
         IPDG89). We have assumed gamma**2-1 << 1, where gamma is the
         relativistic factor. The notation follows that in IPDG89.
@@ -664,6 +744,25 @@ class ElectronCyclotron:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
+        Parameters
+        ----------
+        tlocal:
+            local electron temperature (keV)
+        epsloc:
+            local inverse aspect ratio
+        zlocal:
+            local plasma effective charge
+        cosang:
+            cosine of the poloidal angle at which ECCD takes
+            place (+1 outside, -1 inside)
+        coulog:
+            local coulomb logarithm for ion-electron collisions
+
+        Returns
+        -------
+        ecgam:
+             normalised current drive efficiency (A/W m**-2)
         """
         mcsq = (
             constants.ELECTRON_MASS * 2.9979e8**2 / (1.0e3 * constants.ELECTRON_VOLT)
@@ -718,28 +817,28 @@ class ElectronCyclotron:
         dene20: float,
         dlamee: float,
     ) -> float:
-        """
-        Routine to calculate Fenstermacher Electron Cyclotron heating efficiency.
+        """Routine to calculate Fenstermacher Electron Cyclotron heating efficiency.
 
-        :param temp_plasma_electron_density_weighted_kev: Density weighted average electron temperature keV.
-        :type temp_plasma_electron_density_weighted_kev: float
-        :param zeff: Plasma effective charge.
-        :type zeff: float
-        :param rmajor: Major radius of the plasma in meters.
-        :type rmajor: float
-        :param dene20: Volume averaged electron density in 1x10^20 m^-3.
-        :type dene20: float
-        :param dlamee: Electron collision frequency in 1/s.
-        :type dlamee: float
+        Parameters
+        ----------
+        temp_plasma_electron_density_weighted_kev: float
+            Density weighted average electron temperature keV.
+        zeff: float
+            Plasma effective charge.
+        rmajor: float
+            Major radius of the plasma in meters.
+        dene20: float
+            Volume averaged electron density in 1x10^20 m^-3.
+        dlamee: float
+            Electron collision frequency in 1/s.
 
-        :return: The calculated electron cyclotron heating efficiency in A/W.
-        :rtype: float
+        Returns
+        -------
+        float
+            The calculated electron cyclotron heating efficiency in A/W.
 
-        :notes:
-
-        :references:
-            - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
-
+        references:
+        - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
         """
 
         return (0.21e0 * temp_plasma_electron_density_weighted_kev) / (
@@ -756,37 +855,40 @@ class ElectronCyclotron:
         n_ecrh_harmonic: int,
         i_ecrh_wave_mode: int,
     ) -> float:
-        """
-        Calculate the Electron Cyclotron current drive efficiency using the Freethy model.
+        """Calculate the Electron Cyclotron current drive efficiency using the Freethy model.
 
         This function computes the ECCD efficiency based on the electron temperature,
         effective charge, major radius, electron density, magnetic field, harmonic number,
         and wave mode.
 
-        :param te: Volume averaged electron temperature in keV.
-        :type te: float
-        :param zeff: Plasma effective charge.
-        :type zeff: float
-        :param rmajor: Major radius of the plasma in meters.
-        :type rmajor: float
-        :param nd_plasma_electrons_vol_avg: Volume averaged electron density in m^-3.
-        :type nd_plasma_electrons_vol_avg: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field in Tesla.
-        :type b_plasma_toroidal_on_axis: float
-        :param n_ecrh_harmonic: Cyclotron harmonic number (fundamental used as default).
-        :type n_ecrh_harmonic: int
-        :param i_ecrh_wave_mode: Wave mode switch (0 for O-mode, 1 for X-mode).
-        :type i_ecrh_wave_mode: int
+        Parameters
+        ----------
+        te: float
+            Volume averaged electron temperature in keV.
+        zeff: float
+            Plasma effective charge.
+        rmajor: float
+            Major radius of the plasma in meters.
+        nd_plasma_electrons_vol_avg: float
+            Volume averaged electron density in m^-3.
+        b_plasma_toroidal_on_axis: float
+            Toroidal magnetic field in Tesla.
+        n_ecrh_harmonic: int
+            Cyclotron harmonic number (fundamental used as default).
+        i_ecrh_wave_mode: int
+            Wave mode switch (0 for O-mode, 1 for X-mode).
 
-        :return: The calculated absolute ECCD efficiency in A/W.
-        :rtype: float
+        Returns
+        -------
+        float
+            The calculated absolute ECCD efficiency in A/W.
 
-        :notes:
-            - Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic.
-            - The density factor accounts for this behavior.
+        notes:
+        - Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic.
+        - The density factor accounts for this behavior.
 
-        :references:
-            - Freethy, S., PROCESS issue #2994.
+        references:
+        - Freethy, S., PROCESS issue #2994.
         """
 
         # Cyclotron frequency
@@ -835,12 +937,7 @@ class ElectronCyclotron:
 
     def legend(self, zlocal, arg):
         """Routine to calculate Legendre function and its derivative
-        author: M R O'Brien, CCFE, Culham Science Centre
-        author: P J Knight, CCFE, Culham Science Centre
-        zlocal  : input real : local plasma effective charge
-        arg     : input real : argument of Legendre function
-        palpha  : output real : value of Legendre function
-        palphap : output real : derivative of Legendre function
+
         This routine calculates the Legendre function <CODE>palpha</CODE>
         of argument <CODE>arg</CODE> and order
         <CODE>alpha = -0.5 + i sqrt(xisq)</CODE>,
@@ -856,6 +953,20 @@ class ElectronCyclotron:
         <CODE>gam2</CODE> are the Gamma functions of arguments
         <CODE>0.5*(1+alpha)</CODE> and <CODE>0.5*(2+alpha)</CODE> respectively.
         Abramowitz and Stegun, equation 8.12.1
+
+        Parameters
+        ----------
+        zlocal:
+             local plasma effective charge
+        arg:
+             argument of Legendre function
+
+        Returns
+        -------
+        palphap:
+            derivative of Legendre function
+        palpha:
+            value of Legendre function
         """
         if abs(arg) > (1.0e0 + 1.0e-10):
             raise ProcessValueError("Invalid argument", arg=arg)
@@ -906,30 +1017,35 @@ class IonCyclotron:
         rmajor: float,
         dene20: float,
     ) -> float:
-        """
-        Routine to calculate IPDG89 Ion Cyclotron heating efficiency.
+        """Routine to calculate IPDG89 Ion Cyclotron heating efficiency.
 
         This function computes the ion cyclotron heating efficiency based on
         the electron temperature, effective charge, major radius, and electron density.
 
-        :param temp_plasma_electron_density_weighted_kev: Density weighted average electron temperature keV.
-        :type temp_plasma_electron_density_weighted_kev: float
-        :param zeff: Plasma effective charge.
-        :type zeff: float
-        :param rmajor: Major radius of the plasma in meters.
-        :type rmajor: float
-        :param nd_plasma_electrons_vol_avg: Volume averaged electron density in 1x10^20 m^-3.
-        :type nd_plasma_electrons_vol_avg: float
+        Parameters
+        ----------
+        temp_plasma_electron_density_weighted_kev: float
+            Density weighted average electron temperature keV.
+        zeff: float
+            Plasma effective charge.
+        rmajor: float
+            Major radius of the plasma in meters.
+        nd_plasma_electrons_vol_avg: float
+            Volume averaged electron density in 1x10^20 m^-3.
 
-        :return: The calculated ion cyclotron heating efficiency in A/W.
-        :rtype: float
+        Returns
+        -------
+        float
+            The calculated ion cyclotron heating efficiency in A/W.
 
-        :notes:
+        Notes
+        -----
         - The 0.1 term is to convert the temperature into 10 keV units
-        - The original formula is for the normalised current drive efficnecy
-          hence the addition of the density and majro radius terms to get back to an absolute value
+        - The original formula is for the normalised current drive efficiency
+        hence the addition of the density and majro radius terms to get back to an absolute value
 
-        :references:
+        References
+        ----------
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
           https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
 
@@ -955,34 +1071,39 @@ class ElectronBernstein:
         n_ecrh_harmonic: int,
         xi_ebw: float,
     ) -> float:
-        """
-        Calculate the Electron Bernstein Wave (EBW) current drive efficiency using the Freethy model.
+        """Calculate the Electron Bernstein Wave (EBW) current drive efficiency using the Freethy model.
 
         This function computes the EBW current drive efficiency based on the electron temperature,
         major radius, electron density, magnetic field, harmonic number, and scaling factor.
 
-        :param te: Volume averaged electron temperature in keV.
-        :type te: float
-        :param rmajor: Major radius of the plasma in meters.
-        :type rmajor: float
-        :param dene20: Volume averaged electron density in units of 10^20 m^-3.
-        :type dene20: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field in Tesla.
-        :type b_plasma_toroidal_on_axis: float
-        :param n_ecrh_harmonic: Cyclotron harmonic number (fundamental used as default).
-        :type n_ecrh_harmonic: int
-        :param xi_ebw: Scaling factor for EBW efficiency.
-        :type xi_ebw: float
+        Parameters
+        ----------
+        te: float
+            Volume averaged electron temperature in keV.
+        rmajor: float
+            Major radius of the plasma in meters.
+        dene20: float
+            Volume averaged electron density in units of 10^20 m^-3.
+        b_plasma_toroidal_on_axis: float
+            Toroidal magnetic field in Tesla.
+        n_ecrh_harmonic: int
+            Cyclotron harmonic number (fundamental used as default).
+        xi_ebw: float
+            Scaling factor for EBW efficiency.
 
-        :return: The calculated absolute EBW current drive efficiency in A/W.
-        :rtype: float
+        Returns
+        -------
+        float
+            The calculated absolute EBW current drive efficiency in A/W.
 
-        :notes:
-            - EBWs can only couple to plasma if the cyclotron harmonic is above the plasma density cut-off.
-            - The density factor accounts for this behavior.
+        Notes
+        -----
+        - EBWs can only couple to plasma if the cyclotron harmonic is above the plasma density cut-off.
+        - The density factor accounts for this behavior.
 
-        :references:
-            - Freethy, S., PROCESS issue #1262.
+        References
+        ----------
+        - Freethy, S., PROCESS issue #1262.
         """
 
         # Normalised current drive efficiency gamma
@@ -1028,8 +1149,8 @@ class LowerHybrid:
 
     def cullhy(self):
         """Routine to calculate Lower Hybrid current drive efficiency
-        author: P J Knight, CCFE, Culham Science Centre
-        effrfss : output real : lower hybrid current drive efficiency (A/W)
+
+        effrfss: output real: lower hybrid current drive efficiency (A/W)
         This routine calculates the current drive parameters for a
         lower hybrid system, based on the AEA FUS 172 model.
         AEA FUS 172: Physics Assessment for the European Reactor Study
@@ -1099,8 +1220,8 @@ class LowerHybrid:
 
     def lhrad(self):
         """Routine to calculate Lower Hybrid wave absorption radius
-        author: P J Knight, CCFE, Culham Science Centre
-        rratio  : output real : minor radius of penetration / rminor
+
+        rratio: output real: minor radius of penetration / rminor
         This routine determines numerically the minor radius at which the
         damping of Lower Hybrid waves occurs, using a Newton-Raphson method.
         AEA FUS 172: Physics Assessment for the European Reactor Study
@@ -1161,10 +1282,21 @@ class LowerHybrid:
     def lheval(self, drfind, rratio):
         """Routine to evaluate the difference between electron energy
         expressions required to find the Lower Hybrid absorption radius
-        author: P J Knight, CCFE, Culham Science Centre
-        drfind  : input real : correction to parallel refractive index
-        rratio  : input real : guess for radius of penetration / rminor
-        ediff   : output real : difference between the E values (keV)
+
+        Parameters
+        ----------
+        drfind:
+            correction to parallel refractive index
+        rratio:
+            guess for radius of penetration / rminor
+
+        Returns
+        -------
+        ediff:
+            difference between the E values (keV)
+
+        Notes
+        -----
         This routine evaluates the difference between the values calculated
         from the two equations for the electron energy E, given in
         AEA FUS 172, p.58. This difference is used to locate the Lower Hybrid
@@ -1225,26 +1357,31 @@ class LowerHybrid:
     def lower_hybrid_fenstermacher(
         self, te: float, rmajor: float, dene20: float
     ) -> float:
-        """
-        Calculate the lower hybrid frequency using the Fenstermacher formula.
+        """Calculate the lower hybrid frequency using the Fenstermacher formula.
         This function computes the lower hybrid frequency based on the electron
         temperature, major radius, and electron density.
 
-        :param te: Volume averaged electron temperature in keV.
-        :type te: float
-        :param rmajor: Major radius of the plasma in meters.
-        :type rmajor: float
-        :param dene20: Volume averaged electron density in units of 10^20 m^-3.
-        :type dene20: float
+        Parameters
+        ----------
+        te: float
+            Volume averaged electron temperature in keV.
+        rmajor: float
+            Major radius of the plasma in meters.
+        dene20: float
+            Volume averaged electron density in units of 10^20 m^-3.
 
-        :return: The calculated absolute current drive efficiency in A/W.
-        :rtype: float
+        Returns
+        -------
+        float
+            The calculated absolute current drive efficiency in A/W.
 
-        :notes:
-            - This forumla was originally in the Oak RidgeSystems Code, attributed to Fenstermacher
+        Notes
+        -----
+        - This forumla was originally in the Oak RidgeSystems Code, attributed to Fenstermacher
               and is used in the AEA FUS 172 report.
 
-        :references:
+        References
+        ----------
             - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
 
             - R.L.Reid et al, Oak Ridge Report ORNL/FEDC-87-7, 1988
@@ -1255,29 +1392,32 @@ class LowerHybrid:
     def lower_hybrid_ehst(
         self, te: float, beta: float, rmajor: float, dene20: float, zeff: float
     ) -> float:
-        """
-        Calculate the Lower Hybrid current drive efficiency using the Ehst model.
+        """Calculate the Lower Hybrid current drive efficiency using the Ehst model.
 
         This function computes the current drive efficiency based on the electron
         temperature, beta, major radius, electron density, and effective charge.
 
-        :param te: Volume averaged electron temperature in keV.
-        :type te: float
-        :param beta: Plasma beta value (ratio of plasma pressure to magnetic pressure).
-        :type beta: float
-        :param rmajor: Major radius of the plasma in meters.
-        :type rmajor: float
-        :param dene20: Volume averaged electron density in units of 10^20 m^-3.
-        :type dene20: float
-        :param zeff: Plasma effective charge.
-        :type zeff: float
+        Parameters
+        ----------
+        te: float
+            Volume averaged electron temperature in keV.
+        beta: float
+            Plasma beta value (ratio of plasma pressure to magnetic pressure).
+        rmajor: float
+            Major radius of the plasma in meters.
+        dene20: float
+            Volume averaged electron density in units of 10^20 m^-3.
+        zeff: float
+            Plasma effective charge.
 
-        :return: The calculated absolute current drive efficiency in A/W.
-        :rtype: float
+        Returns
+        -------
+        float
+            The calculated absolute current drive efficiency in A/W.
 
-        :notes:
 
-        :references:
+        References
+        ----------
             - Ehst, D.A., and Karney, C.F.F., "Lower Hybrid Current Drive in Tokamaks",
               Nuclear Fusion, 31(10), 1933-1949, 1991.
         """
@@ -1312,17 +1452,21 @@ class CurrentDrive:
         self.neutral_beam = neutral_beam
         self.electron_bernstein = electron_bernstein
 
-    def cudriv(self) -> None:
-        """
-        Calculate the current drive power requirements.
+    def cudriv(self):
+        """Calculate the current drive power requirements.
 
         This method computes the power requirements of the current drive system
         using a choice of models for the current drive efficiency.
 
-        :param output: Flag indicating whether to write results to the output file.
-        :type output: bool
+        Parameters
+        ----------
+        output: bool
+            Flag indicating whether to write results to the output file.
 
-        :raises ProcessValueError: If an invalid current drive switch is encountered.
+        Raises
+        ------
+        ProcessValueError
+            If an invalid current drive switch is encountered.
         """
 
         current_drive_variables.p_hcd_ecrh_injected_total_mw = 0.0e0
@@ -1357,64 +1501,79 @@ class CurrentDrive:
 
             # Define a dictionary of lambda functions for current drive efficiency models
             hcd_models = {
-                1: lambda: self.lower_hybrid.lower_hybrid_fenstermacher(
-                    physics_variables.temp_plasma_electron_vol_avg_kev,
-                    physics_variables.rmajor,
-                    dene20,
-                )
-                * current_drive_variables.feffcd,
-                2: lambda: self.ion_cyclotron.ion_cyclotron_ipdg89(
-                    temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
-                    zeff=physics_variables.n_charge_plasma_effective_vol_avg,
-                    rmajor=physics_variables.rmajor,
-                    dene20=dene20,
-                )
-                * current_drive_variables.feffcd,
-                3: lambda: self.electron_cyclotron.electron_cyclotron_fenstermacher(
-                    temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
-                    rmajor=physics_variables.rmajor,
-                    dene20=dene20,
-                    dlamee=physics_variables.dlamee,
-                )
-                * current_drive_variables.feffcd,
-                4: lambda: self.lower_hybrid.lower_hybrid_ehst(
-                    te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                    beta=physics_variables.beta_total_vol_avg,
-                    rmajor=physics_variables.rmajor,
-                    dene20=dene20,
-                    zeff=physics_variables.n_charge_plasma_effective_vol_avg,
-                )
-                * current_drive_variables.feffcd,
+                1: lambda: (
+                    self.lower_hybrid.lower_hybrid_fenstermacher(
+                        physics_variables.temp_plasma_electron_vol_avg_kev,
+                        physics_variables.rmajor,
+                        dene20,
+                    )
+                    * current_drive_variables.feffcd
+                ),
+                2: lambda: (
+                    self.ion_cyclotron.ion_cyclotron_ipdg89(
+                        temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
+                        zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                    )
+                    * current_drive_variables.feffcd
+                ),
+                3: lambda: (
+                    self.electron_cyclotron.electron_cyclotron_fenstermacher(
+                        temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        dlamee=physics_variables.dlamee,
+                    )
+                    * current_drive_variables.feffcd
+                ),
+                4: lambda: (
+                    self.lower_hybrid.lower_hybrid_ehst(
+                        te=physics_variables.temp_plasma_electron_vol_avg_kev,
+                        beta=physics_variables.beta_total_vol_avg,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                    )
+                    * current_drive_variables.feffcd
+                ),
                 5: lambda: (
                     self.neutral_beam.iternb()[0] * current_drive_variables.feffcd
                 ),
                 6: lambda: self.lower_hybrid.cullhy() * current_drive_variables.feffcd,
-                7: lambda: self.electron_cyclotron.culecd()
-                * current_drive_variables.feffcd,
+                7: lambda: (
+                    self.electron_cyclotron.culecd() * current_drive_variables.feffcd
+                ),
                 8: lambda: (
                     self.neutral_beam.culnbi()[0] * current_drive_variables.feffcd
                 ),
-                10: lambda: current_drive_variables.eta_cd_norm_ecrh
-                / (dene20 * physics_variables.rmajor),
-                12: lambda: self.electron_bernstein.electron_bernstein_freethy(
-                    te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                    rmajor=physics_variables.rmajor,
-                    dene20=dene20,
-                    b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-                    n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
-                    xi_ebw=current_drive_variables.xi_ebw,
-                )
-                * current_drive_variables.feffcd,
-                13: lambda: self.electron_cyclotron.electron_cyclotron_freethy(
-                    te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                    zeff=physics_variables.n_charge_plasma_effective_vol_avg,
-                    rmajor=physics_variables.rmajor,
-                    nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
-                    b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-                    n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
-                    i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
-                )
-                * current_drive_variables.feffcd,
+                10: lambda: (
+                    current_drive_variables.eta_cd_norm_ecrh
+                    / (dene20 * physics_variables.rmajor)
+                ),
+                12: lambda: (
+                    self.electron_bernstein.electron_bernstein_freethy(
+                        te=physics_variables.temp_plasma_electron_vol_avg_kev,
+                        rmajor=physics_variables.rmajor,
+                        dene20=dene20,
+                        b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                        xi_ebw=current_drive_variables.xi_ebw,
+                    )
+                    * current_drive_variables.feffcd
+                ),
+                13: lambda: (
+                    self.electron_cyclotron.electron_cyclotron_freethy(
+                        te=physics_variables.temp_plasma_electron_vol_avg_kev,
+                        zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                        rmajor=physics_variables.rmajor,
+                        nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                        b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+                        n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
+                        i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
+                    )
+                    * current_drive_variables.feffcd
+                ),
             }
 
             # Assign outputs for models that return multiple values
@@ -1953,33 +2112,37 @@ class CurrentDrive:
         c_hcd_driven: float,
         p_hcd_injected: float,
     ) -> float:
-        """
-                Calculate the dimensionless current drive efficiency, ζ.
+        """Calculate the dimensionless current drive efficiency, ζ.
 
-                This function computes the dimensionless current drive efficiency
-                based on the average electron density, major radius, and electron temperature.
+        This function computes the dimensionless current drive efficiency
+        based on the average electron density, major radius, and electron temperature.
 
-                :param nd_plasma_electrons_vol_avg: Volume averaged electron density in m^-3.
-                :type nd_plasma_electrons_vol_avg: float
-                :param rmajor: Major radius of the plasma in meters.
-                :type rmajor: float
-                :param temp_plasma_electron_vol_avg_kev: Volume averaged electron temperature in keV.
-                :type temp_plasma_electron_vol_avg_kev: float
-                :param c_hcd_driven: Current driven by the heating and current drive system.
-                :type c_hcd_driven: float
-                :param p_hcd_injected: Power injected by the heating and current drive system.
-                :type p_hcd_injected: float
-                :return: The calculated dimensionless current drive efficiency.
-                :rtype: float
+        Parameters
+        ----------
+        nd_plasma_electrons_vol_avg:
+            Volume averaged electron density in m^-3.
+        rmajor:
+            Major radius of the plasma in meters.
+        temp_plasma_electron_vol_avg_kev:
+            Volume averaged electron temperature in keV.
+        c_hcd_driven:
+            Current driven by the heating and current drive system.
+        p_hcd_injected:
+            Power injected by the heating and current drive system.
 
-                :references:
-                    - E. Poli et al., “Electron-cyclotron-current-drive efficiency in DEMO plasmas,”
-                    Nuclear Fusion, vol. 53, no. 1, pp. 013011-013011, Dec. 2012,
-                    doi: https://doi.org/10.1088/0029-5515/53/1/013011.
-        ‌
-                    - T. C. Luce et al., “Generation of Localized Noninductive Current by Electron Cyclotron Waves on the DIII-D Tokamak,”
-                    Physical Review Letters, vol. 83, no. 22, pp. 4550-4553, Nov. 1999,
-                    doi: https://doi.org/10.1103/physrevlett.83.4550.
+        Returns
+        -------
+        float
+            The calculated dimensionless current drive efficiency.
+
+        References
+        ----------
+        - E. Poli et al., “Electron-cyclotron-current-drive efficiency in DEMO plasmas,”
+            Nuclear Fusion, vol. 53, no. 1, pp. 013011-013011, Dec. 2012,
+            doi: https://doi.org/10.1088/0029-5515/53/1/013011.
+        - T. C. Luce et al., “Generation of Localized Noninductive Current by Electron Cyclotron Waves on the DIII-D Tokamak,”
+            Physical Review Letters, vol. 83, no. 22, pp. 4550-4553, Nov. 1999,
+            doi: https://doi.org/10.1103/physrevlett.83.4550.
         """
 
         return (
@@ -1992,8 +2155,7 @@ class CurrentDrive:
         )
 
     def output_current_drive(self):
-        """
-        Output the current drive information to the output file.
+        """Output the current drive information to the output file.
         This method writes the current drive information to the output file.
         """
 

@@ -46,18 +46,32 @@ def rether(
 ):
     """Routine to find the equilibration power between the
     ions and electrons
-    author: P J Knight, CCFE, Culham Science Centre
-    alphan : input real :  density profile index
-    alphat : input real :  temperature profile index
-    nd_plasma_electrons_vol_avg   : input real :  electron density (/m3)
-    dlamie : input real :  ion-electron coulomb logarithm
-    te     : input real :  electron temperature (keV)
-    temp_plasma_ion_vol_avg_kev     : input real :  ion temperature (keV)
-    n_charge_plasma_effective_mass_weighted_vol_avg : input real :  mass weighted plasma effective charge
-    pden_ion_electron_equilibration_mw  : output real : ion/electron equilibration power (MW/m3)
     This routine calculates the equilibration power between the
     ions and electrons.
     Unknown origin
+
+    Parameters
+    ----------
+    alphan :
+        density profile index
+    alphat :
+        temperature profile index
+    nd_plasma_electrons_vol_avg :
+        electron density (/m3)
+    dlamie :
+        ion-electron coulomb logarithm
+    te :
+        electron temperature (keV)
+    temp_plasma_ion_vol_avg_kev :
+        ion temperature (keV)
+    n_charge_plasma_effective_mass_weighted_vol_avg :
+        mass weighted plasma effective charge
+
+    Returns
+    -------
+    pden_ion_electron_equilibration_mw  :
+        ion/electron equilibration power (MW/m3)
+
     """
     profie = (1.0 + alphan) ** 2 / (
         (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
@@ -82,28 +96,37 @@ def rether(
 def _plascar_bpol(
     aspect: float, eps: float, kappa: float, delta: float
 ) -> tuple[float, float, float, float]:
-    """
-    Calculate the poloidal field coefficients for determining the plasma current
+    """Calculate the poloidal field coefficients for determining the plasma current
     and poloidal field.
 
-    Parameters:
-    - aspect: float, plasma aspect ratio
-    - eps: float, inverse aspect ratio
-    - kappa: float, plasma elongation
-    - delta: float, plasma triangularity
-
-    Returns:
-    - Tuple[float, float, float, float], coefficients ff1, ff2, d1, d2
 
     This internal function calculates the poloidal field coefficients,
     which is used to calculate the poloidal field and the plasma current.
 
-    References:
-    - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-      'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-      1729-1738. https://doi.org/10.13182/FST92-A29971
-    - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-      unpublished internal Oak Ridge document
+    Parameters
+    ----------
+    aspect :
+        plasma aspect ratio
+    eps :
+        inverse aspect ratio
+    kappa :
+        plasma elongation
+    delta :
+        plasma triangularity
+
+    Returns
+    -------
+    :
+        coefficients ff1, ff2, d1, d2
+
+    References
+    ----------
+        - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+        1729-1738. https://doi.org/10.13182/FST92-A29971
+        - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
+
     """
     # Original coding, only suitable for TARTs [STAR Code]
 
@@ -146,35 +169,50 @@ def calculate_poloidal_field(
     perim: float,
     rmu0: float,
 ) -> float:
-    """
-    Function to calculate poloidal field from the plasma current
-
-    Parameters:
-    - i_plasma_current: int, current scaling model to use
-    - ip: float, plasma current (A)
-    - q95: float, 95% flux surface safety factor
-    - aspect: float, plasma aspect ratio
-    - eps: float, inverse aspect ratio
-    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-    - kappa: float, plasma elongation
-    - delta: float, plasma triangularity
-    - perim: float, plasma perimeter (m)
-    - rmu0: float, vacuum permeability (H/m)
-
-    Returns:
-    - float, poloidal field in Tesla
+    """Function to calculate poloidal field from the plasma current
 
     This function calculates the poloidal field from the plasma current in Tesla,
     using a simple calculation using Ampere's law for conventional
     tokamaks, or for TARTs, a scaling from Peng, Galambos and
     Shipe (1992).
 
-    References:
-    - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-      unpublished internal Oak Ridge document
-    - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-      'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-      1729-1738. https://doi.org/10.13182/FST92-A29971
+    Parameters
+    ----------
+    i_plasma_current :
+        current scaling model to use
+    ip :
+        plasma current (A)
+    q95 :
+        95% flux surface safety factor
+    aspect :
+        plasma aspect ratio
+    eps :
+        inverse aspect ratio
+    b_plasma_toroidal_on_axis :
+        toroidal field on axis (T)
+    kappa :
+        plasma elongation
+    delta :
+        plasma triangularity
+    perim :
+        plasma perimeter (m)
+    rmu0 :
+        vacuum permeability (H/m)
+
+    Returns
+    -------
+    :
+        poloidal field in Tesla
+
+
+    References
+    ----------
+        - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
+        - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+        1729-1738. https://doi.org/10.13182/FST92-A29971
+
     """
     # Use Ampere's law using the plasma poloidal cross-section
     if i_plasma_current != 2:
@@ -191,20 +229,22 @@ def calculate_poloidal_field(
 def calculate_current_coefficient_peng(
     eps: float, len_plasma_poloidal: float, rminor: float
 ) -> float:
-    """
-    Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
+    """Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
 
-    :param eps: Plasma inverse aspect ratio.
-    :type eps: float
-    :param len_plasma_poloidal: Plasma poloidal perimeter length [m].
-    :type len_plasma_poloidal: float
-    :param rminor: Plasma minor radius [m].
-    :type rminor: float
+    Parameters
+    ----------
+    eps : float
+        Plasma inverse aspect ratio.
+    len_plasma_poloidal : float
+        Plasma poloidal perimeter length [m].
+    rminor : float
+        Plasma minor radius [m].
 
-    :return: The plasma current scaling coefficient.
-    :rtype: float
+    Returns
+    -------
+    float
+        The plasma current scaling coefficient.
 
-    :references: None
     """
 
     return (
@@ -223,32 +263,45 @@ def calculate_plasma_current_peng(
     kappa: float,
     delta: float,
 ) -> float:
-    """
-    Function to calculate plasma current (Peng scaling from the STAR code)
-
-    Parameters:
-    - q95: float, 95% flux surface safety factor
-    - aspect: float, plasma aspect ratio
-    - eps: float, inverse aspect ratio
-    - rminor: float, plasma minor radius (m)
-    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-    - kappa: float, plasma elongation
-    - delta: float, plasma triangularity
-
-    Returns:
-    - float, plasma current in MA
+    """Function to calculate plasma current (Peng scaling from the STAR code)
 
     This function calculates the plasma current in MA,
     using a scaling from Peng, Galambos and Shipe (1992).
     It is primarily used for Tight Aspect Ratio Tokamaks and is
     selected via i_plasma_current=2.
 
-    References:
-    - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-      unpublished internal Oak Ridge document
-    - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-      'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-      1729-1738. https://doi.org/10.13182/FST92-A29971
+    Parameters
+    ----------
+    q95 :
+        95% flux surface safety factor
+    aspect :
+        plasma aspect ratio
+    eps :
+        inverse aspect ratio
+    rminor :
+        plasma minor radius (m)
+    b_plasma_toroidal_on_axis :
+        toroidal field on axis (T)
+    kappa :
+        plasma elongation
+    delta :
+        plasma triangularity
+
+
+    Returns
+    -------
+    :
+        plasma current in MA
+
+
+    References
+    ----------
+        - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+        unpublished internal Oak Ridge document
+        - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
+        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+        1729-1738. https://doi.org/10.13182/FST92-A29971
+
     """
 
     # Transform q95 to qbar
@@ -275,23 +328,31 @@ def calculate_plasma_current_peng(
 def calculate_current_coefficient_ipdg89(
     eps: float, kappa95: float, triang95: float
 ) -> float:
-    """
-    Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
-
-    Parameters:
-    - eps: float, plasma inverse aspect ratio
-    - kappa95: float, plasma elongation 95%
-    - triang95: float, plasma triangularity 95%
-
-    Returns:
-    - float, the fq plasma current coefficient
+    """Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
 
     This function calculates the fq coefficient used in the IPDG89 plasma current scaling,
     based on the given plasma parameters.
 
-    References:
-    - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
-    - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+    Parameters
+    ----------
+    eps :
+        plasma inverse aspect ratio
+    kappa95 :
+        plasma elongation 95%
+    triang95 :
+        plasma triangularity 95%
+
+    Returns
+    -------
+    :
+        the fq plasma current coefficient
+
+
+    References
+    ----------
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
     """
     return (
         0.5
@@ -305,22 +366,30 @@ def calculate_current_coefficient_ipdg89(
 def calculate_current_coefficient_todd(
     eps: float, kappa95: float, triang95: float, model: int
 ) -> float:
-    """
-    Calculate the fq coefficient used in the two Todd plasma current scalings.
-
-    Parameters:
-    - eps: float, plasma inverse aspect ratio
-    - kappa95: float, plasma elongation 95%
-    - triang95: float, plasma triangularity 95%
-
-    Returns:
-    - float, the fq plasma current coefficient
+    """Calculate the fq coefficient used in the two Todd plasma current scalings.
 
     This function calculates the fq coefficient based on the given plasma parameters for the two Todd scalings.
 
-    References:
-    - D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-    - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+    Parameters
+    ----------
+    eps :
+        plasma inverse aspect ratio
+    kappa95 :
+        plasma elongation 95%
+    triang95 :
+        plasma triangularity 95%
+    model:
+
+    Returns
+    -------
+    :
+        the fq plasma current coefficient
+
+    References
+    ----------
+        - D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
     """
     # Calculate the Todd scaling based on the model
     base_scaling = (
@@ -346,29 +415,42 @@ def calculate_current_coefficient_hastie(
     pres_plasma_on_axis: float,
     rmu0: float,
 ) -> float:
-    """
-    Routine to calculate the f_q coefficient for the Connor-Hastie model used for scaling the plasma current.
-
-    Parameters:
-    - alphaj: float, the current profile index
-    - alphap: float, the pressure profile index
-    - b_plasma_toroidal_on_axis: float, the toroidal field on axis (T)
-    - delta95: float, the plasma triangularity 95%
-    - eps: float, the inverse aspect ratio
-    - kappa95: float, the plasma elongation 95%
-    - pres_plasma_on_axis: float, the central plasma pressure (Pa)
-    - rmu0: float, the vacuum permeability (H/m)
-
-    Returns:
-    - float, the F coefficient
+    """Routine to calculate the f_q coefficient for the Connor-Hastie model used for scaling the plasma current.
 
     This routine calculates the f_q coefficient used for scaling the plasma current,
     using the Connor-Hastie scaling
 
+
+    Parameters
+    ----------
+    alphaj :
+        the current profile index
+    alphap :
+        the pressure profile index
+    b_plasma_toroidal_on_axis :
+        the toroidal field on axis (T)
+    delta95 :
+        the plasma triangularity 95%
+    eps :
+        the inverse aspect ratio
+    kappa95 :
+        the plasma elongation 95%
+    pres_plasma_on_axis :
+        the central plasma pressure (Pa)
+    rmu0 :
+        the vacuum permeability (H/m)
+
+    Returns
+    -------
+    :
+        the F coefficient
+
+
     Reference:
-    - J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985).
-      https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
-    - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        - J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985).
+        https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+
     """
     # Exponent in Connor-Hastie current profile
     lamda = alphaj
@@ -423,21 +505,27 @@ def calculate_current_coefficient_sauter(
     kappa: float,
     triang: float,
 ) -> float:
-    """
-    Routine to calculate the f_q coefficient for the Sauter model used for scaling the plasma current.
+    """Routine to calculate the f_q coefficient for the Sauter model used for scaling the plasma current.
 
-    Parameters:
-    - eps: float, inverse aspect ratio
-    - kappa: float, plasma elongation at the separatrix
-    - triang: float, plasma triangularity at the separatrix
+    Parameters
+    ----------
+    eps :
+        inverse aspect ratio
+    kappa :
+        plasma elongation at the separatrix
+    triang :
+        plasma triangularity at the separatrix
 
-    Returns:
-    - float, the fq coefficient
+    Returns
+    -------
+    :
+        the fq coefficient
 
     Reference:
-    - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
-      Fusion Engineering and Design, Volume 112, 2016, Pages 633-645,
-      ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
+        - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
+        Fusion Engineering and Design, Volume 112, 2016, Pages 633-645,
+        ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
+
     """
     w07 = 1.0  # zero squareness - can be modified later if required
 
@@ -455,22 +543,30 @@ def calculate_current_coefficient_sauter(
 def calculate_current_coefficient_fiesta(
     eps: float, kappa: float, triang: float
 ) -> float:
-    """
-    Calculate the fq coefficient used in the FIESTA plasma current scaling.
-
-    Parameters:
-    - eps: float, plasma inverse aspect ratio
-    - kappa: float, plasma elongation at the separatrix
-    - triang: float, plasma triangularity at the separatrix
-
-    Returns:
-    - float, the fq plasma current coefficient
+    """Calculate the fq coefficient used in the FIESTA plasma current scaling.
 
     This function calculates the fq coefficient based on the given plasma parameters for the FIESTA scaling.
 
-    References:
-    - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design,
-      Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
+    Parameters
+    ----------
+    eps :
+        plasma inverse aspect ratio
+    kappa :
+        plasma elongation at the separatrix
+    triang :
+        plasma triangularity at the separatrix
+
+    Returns
+    -------
+    :
+        the fq plasma current coefficient
+
+
+    References
+    ----------
+        - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design,
+        Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
+
     """
     return 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
 
@@ -495,27 +591,43 @@ def _nevins_integral(
     q95: float,
     beta_toroidal: float,
 ) -> float:
-    """
-    Integrand function for Nevins et al bootstrap current scaling.
-
-    Parameters:
-    - y: float, abscissa of integration, normalized minor radius
-    - nd_plasma_electrons_vol_avg: float, volume averaged electron density (/m^3)
-    - te: float, volume averaged electron temperature (keV)
-    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-    - rminor: float, plasma minor radius (m)
-    - rmajor: float, plasma major radius (m)
-    - zeff: float, plasma effective charge
-    - alphat: float, temperature profile index
-    - alphan: float, density profile index
-    - q0: float, normalized safety factor at the magnetic axis
-    - q95: float, normalized safety factor at 95% of the plasma radius
-    - beta_toroidal: float, Toroidal plasma beta
-
-    Returns:
-    - float, the integrand value
+    """Integrand function for Nevins et al bootstrap current scaling.
 
     This function calculates the integrand function for the Nevins et al bootstrap current scaling.
+
+    Parameters
+    ----------
+    y :
+        abscissa of integration, normalized minor radius
+    nd_plasma_electrons_vol_avg :
+        volume averaged electron density (/m^3)
+    te :
+        volume averaged electron temperature (keV)
+    b_plasma_toroidal_on_axis :
+        toroidal field on axis (T)
+    rminor :
+        plasma minor radius (m)
+    rmajor :
+        plasma major radius (m)
+    zeff :
+        plasma effective charge
+    alphat :
+        temperature profile index
+    alphan :
+        density profile index
+    q0 :
+        normalized safety factor at the magnetic axis
+    q95 :
+        normalized safety factor at 95% of the plasma radius
+    beta_toroidal :
+        Toroidal plasma beta
+
+
+    Returns
+    -------
+    type
+        - float, the integrand value
+
 
     Reference: See appendix of:
         Keii Gi, Makoto Nakamura, Kenji Tobita, Yasushi Ono,
@@ -567,44 +679,58 @@ def _nevins_integral(
 
 @nb.jit(nopython=True, cache=True)
 def diamagnetic_fraction_hender(beta: float) -> float:
-    """
-    Calculate the diamagnetic fraction based on the Hender fit.
+    """Calculate the diamagnetic fraction based on the Hender fit.
 
-    Parameters:
-    - beta: float, the plasma beta value
+    Parameters
+    ----------
+    beta :
+        the plasma beta value
 
-    Returns:
-    - float, the diamagnetic fraction
+    Returns
+    -------
+    :
+        the diamagnetic fraction
+
     """
     return beta / 2.8
 
 
 @nb.jit(nopython=True, cache=True)
 def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
-    """
-    Calculate the diamagnetic fraction based on the SCENE fit by Tim Hender.
+    """Calculate the diamagnetic fraction based on the SCENE fit by Tim Hender.
 
-    Parameters:
-    - beta: float, the plasma beta value
-    - q95: float, the normalized safety factor at 95% of the plasma radius
-    - q0: float, the normalized safety factor at the magnetic axis
+    Parameters
+    ----------
+    beta :
+        the plasma beta value
+    q95 :
+        the normalized safety factor at 95% of the plasma radius
+    q0 :
+        the normalized safety factor at the magnetic axis
 
-    Returns:
-    - float, the diamagnetic fraction
+    Returns
+    -------
+    :
+        the diamagnetic fraction
     """
     return beta * (0.1 * q95 / q0 + 0.44) * 0.414
 
 
 @nb.jit(nopython=True, cache=True)
 def ps_fraction_scene(beta: float) -> float:
-    """
-    Calculate the Pfirsch-Schlüter fraction based on the SCENE fit by Tim Hender 2019.
+    """Calculate the Pfirsch-Schlüter fraction based on the SCENE fit by Tim Hender 2019.
 
-    Parameters:
-    - beta: float, the plasma beta value
+    Parameters
+    ----------
+    beta :
+        the plasma beta value
 
-    Returns:
-    - float, the Pfirsch-Schlüter current fraction
+
+    Returns
+    -------
+    :
+        the Pfirsch-Schlüter current fraction
+
     """
     return -9e-2 * beta
 
@@ -618,26 +744,32 @@ def ps_fraction_scene(beta: float) -> float:
 def _coulomb_logarithm_sauter(
     radial_elements: int, tempe: np.ndarray, ne: np.ndarray
 ) -> np.ndarray:
-    """
-    Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap current scaling.
-
-    Parameters:
-    - radial_elements: np.ndarray, the radial element indexes in the range 1 to nr
-    - tempe: np.ndarray, the electron temperature array
-    - ne: np.ndarray, the electron density array
-
-    Returns:
-    - np.ndarray, the Coulomb logarithm at each array point
+    """Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap current scaling.
 
     This function calculates the Coulomb logarithm, which is valid for e-e collisions (T_e > 0.01 keV)
     and for e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
 
+    Parameters
+    ----------
+    radial_elements :
+        the radial element indexes in the range 1 to nr
+    tempe :
+        the electron temperature array
+    ne :
+        the electron density array
+
+    Returns
+    -------
+    type
+        - np.ndarray, the Coulomb logarithm at each array point
+
     Reference:
-    - C. A. Ordonez, M. I. Molina;
-      Evaluation of the Coulomb logarithm using cutoff and screened Coulomb interaction potentials.
-      Phys. Plasmas 1 August 1994; 1 (8): 2515-2518. https://doi.org/10.1063/1.870578
-    - Y. R. Shen, “Recent advances in nonlinear optics,” Reviews of Modern Physics, vol. 48, no. 1,
-      pp. 1-32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
+        - C. A. Ordonez, M. I. Molina;
+        Evaluation of the Coulomb logarithm using cutoff and screened Coulomb interaction potentials.
+        Phys. Plasmas 1 August 1994; 1 (8): 2515-2518. https://doi.org/10.1063/1.870578
+        - Y. R. Shen, “Recent advances in nonlinear optics,” Reviews of Modern Physics, vol. 48, no. 1,
+        pp. 1-32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
+
     """
     return (
         15.9 - 0.5 * np.log(ne[radial_elements - 1]) + np.log(tempe[radial_elements - 1])
@@ -648,21 +780,28 @@ def _coulomb_logarithm_sauter(
 def _electron_collisions_sauter(
     radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray
 ) -> np.ndarray:
-    """
-    Calculate the frequency of electron-electron collisions used in the arrays for the Sauter bootstrap current scaling.
-
-    Parameters:
-    - radial_elements: np.ndarray, the radial element index in the range 1 to nr
-    - tempe: np.ndarray, the electron temperature array
-    - ne: np.ndarray, the electron density array
-
-    Returns:
-    - float, the frequency of electron-electron collisions (Hz)
+    """Calculate the frequency of electron-electron collisions used in the arrays for the Sauter bootstrap current scaling.
 
     This function calculates the frequency of electron-electron collisions
 
+    Parameters
+    ----------
+    radial_elements :
+        the radial element indexes in the range 1 to nr
+    tempe :
+        the electron temperature array
+    ne :
+        the electron density array
+
+    Returns
+    -------
+    :
+        the frequency of electron-electron collisions (Hz)
+
+
     Reference:
-    - Yushmanov, 25th April 1987 (?), updated by Pereverzev, 9th November 1994 (?)
+        - Yushmanov, 25th April 1987 (?), updated by Pereverzev, 9th November 1994 (?)
+
     """
     return (
         670.0
@@ -682,23 +821,33 @@ def _electron_collisionality_sauter(
     tempe: np.ndarray,
     ne: np.ndarray,
 ) -> np.ndarray:
-    """
-    Calculate the electron collisionality used in the arrays for the Sauter bootstrap current scaling.
+    """Calculate the electron collisionality used in the arrays for the Sauter bootstrap current scaling.
 
-    Parameters:
-    - radial_elements: np.ndarray, the radial element index in the range 1 to nr
-    - rmajor: float, the plasma major radius (m)
-    - zeff: np.ndarray, the effective charge array
-    - inverse_q: np.ndarray, inverse safety factor profile
-    - sqeps: np.ndarray, the square root of the inverse aspect ratio array
-    - tempe: np.ndarray, the electron temperature array
-    - ne: np.ndarray, the electron density array
+    Parameters
+    ----------
+    radial_elements :
+        the radial element index in the range 1 to nr
+    rmajor :
+        the plasma major radius (m)
+    zeff :
+        the effective charge array
+    inverse_q :
+        inverse safety factor profile
+    sqeps :
+        the square root of the inverse aspect ratio array
+    tempe :
+        the electron temperature array
+    ne :
+        the electron density array
 
-    Returns:
-    - np.ndarray, the relative frequency of electron collisions
+    Returns
+    -------
+    :
+        the relative frequency of electron collisions
 
     Reference:
-    - Yushmanov, 30th April 1987 (?)
+        - Yushmanov, 30th April 1987 (?)
+
     """
     return (
         _electron_collisions_sauter(radial_elements, tempe, ne)
@@ -722,23 +871,27 @@ def _ion_collisions_sauter(
     tempi: np.ndarray,
     amain: np.ndarray,
 ) -> np.ndarray:
-    """
-    Calculate the full frequency of ion collisions used in the arrays for the Sauter bootstrap current scaling.
-
-    Parameters:
-    - radial_elements: np.ndarray, the radial element indexes in the range 1 to nr
-    - zeff: np.ndarray, the effective charge array
-    - ni: np.ndarray, the ion density array
-    - tempi: np.ndarray, the ion temperature array
-    - amain: np.ndarray, the atomic mass of the main ion species array
-
-    Returns:
-    - np.ndarray, the full frequency of ion collisions (Hz)
+    """Calculate the full frequency of ion collisions used in the arrays for the Sauter bootstrap current scaling.
 
     This function calculates the full frequency of ion collisions using the Coulomb logarithm of 15.
 
-    Reference:
-    - None
+    Parameters
+    ----------
+    radial_elements :
+        the radial element indexes in the range 1 to nr
+    zeff :
+        the effective charge array
+    ni :
+        the ion density array
+    tempi :
+        the ion temperature array
+    amain :
+        the atomic mass of the main ion species array
+
+    Returns
+    -------
+    :
+        the full frequency of ion collisions (Hz)
     """
     return (
         zeff[radial_elements - 1] ** 4
@@ -762,24 +915,31 @@ def _ion_collisionality_sauter(
     zeff: np.ndarray,
     ni: np.ndarray,
 ) -> float:
-    """
-    Calculate the ion collisionality to be used in the Sauter bootstrap current scaling.
+    """Calculate the ion collisionality to be used in the Sauter bootstrap current scaling.
 
-    Parameters:
-    - radial_elements: np.ndarray, the radial element indexes in the range 1 to nr
-    - rmajor: float, the plasma major radius (m)
-    - inverse_q: np.ndarray, inverse safety factor profile
-    - sqeps: np.ndarray, the square root of the inverse aspect ratio profile
-    - tempi: np.ndarray, the ion temperature profile (keV)
-    - amain: np.ndarray, the atomic mass of the main ion species profile
-    - zeff: np.ndarray, the effective charge of the main ion species
-    - ni: np.ndarray, the ion density profile (/m^3)
+    Parameters
+    ----------
+    radial_elements :
+        the radial element indexes in the range 1 to nr
+    rmajor :
+        the plasma major radius (m)
+    inverse_q :
+        inverse safety factor profile
+    sqeps :
+        the square root of the inverse aspect ratio profile
+    tempi :
+        the ion temperature profile (keV)
+    amain :
+        the atomic mass of the main ion species profile
+    zeff :
+        the effective charge of the main ion species
+    ni :
+        the ion density profile (/m^3)
 
-    Returns:
-    - float, the ion collisionality
-
-    Reference:
-    - None
+    Returns
+    -------
+    :
+        the ion collisionality
     """
     return (
         3.2e-6
@@ -809,36 +969,53 @@ def _calculate_l31_coefficient(
     zeff: np.ndarray,
     sqeps: np.ndarray,
 ) -> float:
-    """
-    L31 coefficient before Grad(ln(ne)) in the Sauter bootstrap scaling.
+    """L31 coefficient before Grad(ln(ne)) in the Sauter bootstrap scaling.
 
-    Parameters:
-    - radial_elements: np.ndarray, radial element indexes in range 2 to nr
-    - number_of_elements: int, maximum value of radial_elements
-    - rmajor: float, plasma major radius (m)
-    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-    - triang: float, plasma triangularity
-    - ne: np.ndarray, electron density profile (/m^3)
-    - ni: np.ndarray, ion density profile (/m^3)
-    - tempe: np.ndarray, electron temperature profile (keV)
-    - tempi: np.ndarray, ion temperature profile (keV)
-    - inverse_q: np.ndarray, inverse safety factor profile
-    - rho: np.ndarray, normalized minor radius profile
-    - zeff: np.ndarray, effective charge profile
-    - sqeps: np.ndarray, square root of inverse aspect ratio profile
 
-    Returns:
-    - float, the coefficient scaling grad(ln(ne)) in the Sauter bootstrap current scaling.
+    Parameters
+    ----------
+    radial_elements :
+        radial element indexes in range 2 to nr
+    number_of_elements :
+        maximum value of radial_elements
+    rmajor :
+        plasma major radius (m)
+    b_plasma_toroidal_on_axis :
+        toroidal field on axis (T)
+    triang :
+        plasma triangularity
+    ne :
+        electron density profile (/m^3)
+    ni :
+        ion density profile (/m^3)
+    tempe :
+        electron temperature profile (keV)
+    tempi :
+        ion temperature profile (keV)
+    inverse_q :
+        inverse safety factor profile
+    rho :
+        normalized minor radius profile
+    zeff :
+        effective charge profile
+    sqeps :
+        square root of inverse aspect ratio profile
 
-    This function calculates the coefficient scaling grad(ln(ne)) in the Sauter bootstrap current scaling.
+    Returns
+    -------
+    type
+        - float, the coefficient scaling grad(ln(ne)) in the Sauter bootstrap current scaling.
+
+        This function calculates the coefficient scaling grad(ln(ne)) in the Sauter bootstrap current scaling.
 
     Reference:
-    - O. Sauter, C. Angioni, Y. R. Lin-Liu;
-      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-      Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
-    - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
-      [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+
     """
     # Prevents first element being 0
     charge_profile = zeff[radial_elements - 1]
@@ -894,36 +1071,55 @@ def _calculate_l31_32_coefficient(
     zeff: np.ndarray,
     sqeps: np.ndarray,
 ) -> float:
-    """
-    L31 & L32 coefficient before Grad(ln(Te)) in the Sauter bootstrap scaling.
-
-    Parameters:
-    - radial_elements: np.ndarray, radial element indexes in range 2 to nr
-    - number_of_elements: int, maximum value of radial_elements
-    - rmajor: float, plasma major radius (m)
-    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-    - triang: float, plasma triangularity
-    - ne: np.ndarray, electron density profile (/m^3)
-    - ni: np.ndarray, ion density profile (/m^3)
-    - tempe: np.ndarray, electron temperature profile (keV)
-    - tempi: np.ndarray, ion temperature profile (keV)
-    - inverse_q: np.ndarray, inverse safety factor profile
-    - rho: np.ndarray, normalized minor radius profile
-    - zeff: np.ndarray, effective charge profile
-    - sqeps: np.ndarray, square root of inverse aspect ratio profile
-
-    Returns:
-    - float, the L31 & L32 coefficient scaling grad(ln(Te)) in the Sauter bootstrap current scaling.
+    """L31 & L32 coefficient before Grad(ln(Te)) in the Sauter bootstrap scaling.
 
     This function calculates the coefficient scaling grad(ln(Te)) in the Sauter bootstrap current scaling.
 
+
+    Parameters
+    ----------
+    radial_elements :
+        radial element indexes in range 2 to nr
+    number_of_elements :
+        maximum value of radial_elements
+    rmajor :
+        plasma major radius (m)
+    b_plasma_toroidal_on_axis :
+        toroidal field on axis (T)
+    triang :
+        plasma triangularity
+    ne :
+        electron density profile (/m^3)
+    ni :
+        ion density profile (/m^3)
+    tempe :
+        electron temperature profile (keV)
+    tempi :
+        ion temperature profile (keV)
+    inverse_q :
+        inverse safety factor profile
+    rho :
+        normalized minor radius profile
+    zeff :
+        effective charge profile
+    sqeps :
+        square root of inverse aspect ratio profile
+
+
+    Returns
+    -------
+    :
+        the L31 & L32 coefficient scaling grad(ln(Te)) in the Sauter bootstrap current scaling.
+
+
     Reference:
-    - O. Sauter, C. Angioni, Y. R. Lin-Liu;
-      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-      Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
-    - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
-      [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+
     """
 
     # Prevents first element being 0
@@ -1058,38 +1254,59 @@ def _calculate_l34_alpha_31_coefficient(
     rho: np.ndarray,
     zeff: np.ndarray,
 ) -> float:
-    """
-    L34, alpha and L31 coefficient before Grad(ln(Ti)) in the Sauter bootstrap scaling.
-
-    Parameters:
-    - radial_elements: np.ndarray, radial element indexes in range 2 to nr
-    - number_of_elements: int, maximum value of radial_elements
-    - rmajor: float, plasma major radius (m)
-    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-    - triang: float, plasma triangularity
-    - inverse_q: np.ndarray, inverse safety factor profile
-    - sqeps: np.ndarray, square root of inverse aspect ratio profile
-    - tempi: np.ndarray, ion temperature profile (keV)
-    - tempe: np.ndarray, electron temperature profile (keV)
-    - amain: float, atomic mass of the main ion
-    - zmain: float, charge of the main ion
-    - ni: np.ndarray, ion density profile (/m^3)
-    - ne: np.ndarray, electron density profile (/m^3)
-    - rho: np.ndarray, normalized minor radius profile
-    - zeff: np.ndarray, effective charge profile
-
-    Returns:
-    - float, the the L34, alpha and L31 coefficient scaling grad(ln(Ti)) in the Sauter bootstrap current scaling.
+    """L34, alpha and L31 coefficient before Grad(ln(Ti)) in the Sauter bootstrap scaling.
 
     This function calculates the coefficient scaling grad(ln(Ti)) in the Sauter bootstrap current scaling.
 
+
+    Parameters
+    ----------
+    radial_elements :
+        radial element indexes in range 2 to nr
+    number_of_elements :
+        maximum value of radial_elements
+    rmajor :
+        plasma major radius (m)
+    b_plasma_toroidal_on_axis :
+        toroidal field on axis (T)
+    triang :
+        plasma triangularity
+    inverse_q :
+        inverse safety factor profile
+    sqeps :
+        square root of inverse aspect ratio profile
+    tempi :
+        ion temperature profile (keV)
+    tempe :
+        electron temperature profile (keV)
+    amain :
+        atomic mass of the main ion
+    zmain :
+        charge of the main ion
+    ni :
+        ion density profile (/m^3)
+    ne :
+        electron density profile (/m^3)
+    rho :
+        normalized minor radius profile
+    zeff :
+        effective charge profile
+
+
+    Returns
+    -------
+    :
+        the L34, alpha and L31 coefficient scaling grad(ln(Ti)) in the Sauter bootstrap current scaling.
+
+
     Reference:
-    - O. Sauter, C. Angioni, Y. R. Lin-Liu;
-      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-      Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
-    - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
-      [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+
     """
     # Prevents first element being 0
     charge_profile = zeff[radial_elements - 1]
@@ -1210,24 +1427,32 @@ def _beta_poloidal_sauter(
     inverse_q: np.ndarray,
     rho: np.ndarray,
 ) -> np.ndarray:
-    """
-    Calculate the local beta poloidal using only electron profiles for the Sauter bootstrap current scaling.
+    """Calculate the local beta poloidal using only electron profiles for the Sauter bootstrap current scaling.
 
-    Parameters:
-    - radial_elements: np.ndarray, radial element indexes in range 1 to nr
-    - nr: int, maximum value of radial_elements
-    - rmajor: float, plasma major radius (m)
-    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-    - ne: np.ndarray, electron density profile (/m^3)
-    - tempe: np.ndarray, electron temperature profile (keV)
-    - inverse_q: np.ndarray, inverse safety factor profile
-    - rho: np.ndarray, normalized minor radius profile
+    Parameters
+    ----------
+    radial_elements :
+        radial element indexes in range 1 to nr
+    nr :
+        maximum value of radial_elements
+    rmajor :
+        plasma major radius (m)
+    b_plasma_toroidal_on_axis :
+        toroidal field on axis (T)
+    ne :
+        electron density profile (/m^3)
+    tempe :
+        electron temperature profile (keV)
+    inverse_q :
+        inverse safety factor profile
+    rho :
+        normalized minor radius profile
 
-    Returns:
-    - np.ndarray, the local beta poloidal
 
-    Reference:
-    - None
+    Returns
+    -------
+    :
+        the local beta poloidal
     """
     return (
         np.where(
@@ -1263,26 +1488,35 @@ def _beta_poloidal_total_sauter(
     inverse_q: np.ndarray,
     rho: np.ndarray,
 ) -> np.ndarray:
-    """
-    Calculate the local beta poloidal including ion pressure for the Sauter bootstrap current scaling.
+    """Calculate the local beta poloidal including ion pressure for the Sauter bootstrap current scaling.
 
-    Parameters:
-    - radial_elements: np.ndarray, radial element indexes in range 1 to nr
-    - nr: int, maximum value of radial_elements
-    - rmajor: float, plasma major radius (m)
-    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
-    - ne: np.ndarray, electron density profile (/m^3)
-    - ni: np.ndarray, ion density profile (/m^3)
-    - tempe: np.ndarray, electron temperature profile (keV)
-    - tempi: np.ndarray, ion temperature profile (keV)
-    - inverse_q: np.ndarray, inverse safety factor profile
-    - rho: np.ndarray, normalized minor radius profile
+    Parameters
+    ----------
+    radial_elements :
+        radial element indexes in range 1 to nr
+    nr :
+        maximum value of radial_elements
+    rmajor :
+        plasma major radius (m)
+    b_plasma_toroidal_on_axis :
+        toroidal field on axis (T)
+    ne :
+        electron density profile (/m^3)
+    ni :
+        ion density profile (/m^3)
+    tempe :
+        electron temperature profile (keV)
+    tempi :
+        ion temperature profile (keV)
+    inverse_q :
+        inverse safety factor profile
+    rho :
+        normalized minor radius profile
 
-    Returns:
-    - np.ndarray, the local total beta poloidal
-
-    Reference:
-    - None
+    Returns
+    -------
+    :
+        the local total beta poloidal
     """
     return (
         np.where(
@@ -1322,34 +1556,40 @@ def _beta_poloidal_total_sauter(
 def _trapped_particle_fraction_sauter(
     radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0
 ) -> np.ndarray:
-    """
-    Calculates the trapped particle fraction to be used in the Sauter bootstrap current scaling.
+    """Calculates the trapped particle fraction to be used in the Sauter bootstrap current scaling.
+    Parameters
+    ----------
+    radial_elements :
+        radial element index in range 1 to nr
+    triang :
+        plasma triangularity
+    sqeps :
+        square root of local aspect ratio
+    fit :
+        fit method (1 = ASTRA method, 2 = Equation from Sauter 2002, 3 = Equation from Sauter 2016)
 
-    Parameters:
-    - radial_elements: list, radial element index in range 1 to nr
-    - triang: float, plasma triangularity
-    - sqeps: list, square root of local aspect ratio
-    - fit: int, fit method (1 = ASTRA method, 2 = Equation from Sauter 2002, 3 = Equation from Sauter 2016)
+    Returns
+    -------
+    type
+        - list, trapped particle fraction
 
-    Returns:
-    - list, trapped particle fraction
+        This function calculates the trapped particle fraction at a given radius.
 
-    This function calculates the trapped particle fraction at a given radius.
+    References
+    ----------
+        Used in this paper:
+        - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
-    References:
-      Used in this paper:
-    - O. Sauter, C. Angioni, Y. R. Lin-Liu;
-      Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-      Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        - O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and contributors to the E.-J. Workprogramme,
+        “Marginal-limit for neoclassical tearing modes in JET H-mode discharges,”
+        Plasma Physics and Controlled Fusion, vol. 44, no. 9, pp. 1999-2019, Aug. 2002,
+        doi: https://doi.org/10.1088/0741-3335/44/9/315.
 
-    - O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and contributors to the E.-J. Workprogramme,
-      “Marginal-limit for neoclassical tearing modes in JET H-mode discharges,”
-      Plasma Physics and Controlled Fusion, vol. 44, no. 9, pp. 1999-2019, Aug. 2002,
-      doi: https://doi.org/10.1088/0741-3335/44/9/315.
-
-    - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
-      Fusion Engineering and Design, Volume 112, 2016, Pages 633-645, ISSN 0920-3796,
-      https://doi.org/10.1016/j.fusengdes.2016.04.033.
+        - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
+        Fusion Engineering and Design, Volume 112, 2016, Pages 633-645, ISSN 0920-3796,
+        https://doi.org/10.1016/j.fusengdes.2016.04.033.
 
     """
     # Prevent first element from being zero
@@ -1396,13 +1636,11 @@ class Physics:
         self.inductance = plasma_inductance
 
     def physics(self):
-        """
-        Routine to calculate tokamak plasma physics information
-        author: P J Knight, CCFE, Culham Science Centre
-        None
+        """Routine to calculate tokamak plasma physics information
         This routine calculates all the primary plasma physics parameters for a tokamak fusion reactor.
 
-        :References:
+        References
+        ----------
         - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
           https://www.sciencedirect.com/science/article/pii/S0920379614005961
         - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
@@ -2523,26 +2761,31 @@ class Physics:
 
     @staticmethod
     def calculate_current_profile_index_wesson(qstar: float, q0: float) -> float:
-        """
-        Calculate the Wesson current profile index.
+        """Calculate the Wesson current profile index.
 
-        :param qstar: Cylindrical safety factor.
-        :type qstar: float
-        :param q0: Safety factor on axis.
-        :type q0: float
+        Parameters
+        ----------
+        qstar : float
+            Cylindrical safety factor.
+        q0 : float
+            Safety factor on axis.
 
+        Returns
+        -------
+        float
+            The Wesson current profile index.
 
-        :return: The Wesson current profile index.
-        :rtype: float
-
-        :Notes:
+        Notes
+        -----
             - It is recommended to use this method with the other Wesson relations for normalised beta and
               normalised internal inductance.
             - This relation is only true for the cyclindrical plasma approximation.
 
-        :References:
+        References
+        ----------
             - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
             International Series of Monographs on Physics, Volume 149.
+
         """
         return qstar / q0 - 1.0
 
@@ -2561,42 +2804,71 @@ class Physics:
         a_plasma_surface: float,
         zeff: float,
     ) -> tuple[np.ndarray, float]:
-        """
-        Calculate the density limit using various models.
+        """Calculate the density limit using various models.
 
-        Args:
-            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
-            i_density_limit (int): Switch denoting which formula to enforce.
-            p_plasma_separatrix_mw (float): Power flowing to the edge plasma via charged particles (MW).
-            p_hcd_injected_total_mw (float): Power injected into the plasma (MW).
-            plasma_current (float): Plasma current (A).
-            prn1 (float): Edge density / average plasma density.
-            qcyl (float): Equivalent cylindrical safety factor (qstar).
-            q95 (float): Safety factor at 95% surface.
-            rmajor (float): Plasma major radius (m).
-            rminor (float): Plasma minor radius (m).
-            a_plasma_surface (float): Plasma surface area (m^2).
-            zeff (float): Plasma effective charge.
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        i_density_limit : int
+            Switch denoting which formula to enforce.
+        p_plasma_separatrix_mw : float
+            Power flowing to the edge plasma via charged particles (MW).
+        p_hcd_injected_total_mw : float
+            Power injected into the plasma (MW).
+        plasma_current : float
+            Plasma current (A).
+        prn1 : float
+            Edge density / average plasma density.
+        qcyl : float
+            Equivalent cylindrical safety factor (qstar).
+        q95 : float
+            Safety factor at 95% surface.
+        rmajor : float
+            Plasma major radius (m).
+        rminor : float
+            Plasma minor radius (m).
+        a_plasma_surface : float
+            Plasma surface area (m^2).
+        zeff : float
+            Plasma effective charge.
 
-        Returns:
-            Tuple[np.ndarray, float]: A tuple containing:
-                - nd_plasma_electron_max_array (np.ndarray): Average plasma density limit using seven different models (m^-3).
-                - nd_plasma_electrons_max (float): Enforced average plasma density limit (m^-3).
+        Returns
+        -------
+        Tuple[np.ndarray, float]
+            A tuple containing:
+            - nd_plasma_electron_max_array (np.ndarray): Average plasma density limit using seven different models (m^-3).
+            - nd_plasma_electrons_max (float): Enforced average plasma density limit (m^-3).
 
-        Raises:
-            ValueError: If i_density_limit is not between 1 and 7.
-
-        Notes:
+        Raises
+        ------
+        ValueError
+            If i_density_limit is not between 1 and 7.
+            Notes
+            -----
+        ValueError
+            If i_density_limit is not between 1 and 7.
+            Notes
+            -----
+            This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
+        ValueError
+            If i_density_limit is not between 1 and 7.
+            Notes
+            -----
             This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
             For i_density_limit = 1-5, 8, we scale the sepatrix density limit output by the ratio of the separatrix to volume averaged density
 
-        References:
-            - AEA FUS 172: Physics Assessment for the European Reactor Study
-
-            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989
-
+        References
+        ----------
+        - AEA FUS 172
+            Physics Assessment for the European Reactor Study
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines
+            1989
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines
+            1989
             - M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,”
-              vol. 57, no. 1, pp. 014038-014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038. ‌
+            vol. 57, no. 1, pp. 014038-014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038. ‌
+
         """
 
         if i_density_limit < 1 or i_density_limit > 7:
@@ -2704,11 +2976,8 @@ class Physics:
         ]
 
     @staticmethod
-    def plasma_composition() -> None:
-        """
-        Calculates various plasma component fractional makeups.
-
-        Author: P J Knight, CCFE, Culham Science Centre
+    def plasma_composition():
+        """Calculates various plasma component fractional makeups.
 
         This subroutine determines the various plasma component fractional makeups.
         It is the replacement for the original routine betcom(), and is used in conjunction
@@ -2727,11 +2996,6 @@ class Physics:
         - Calculates the fraction of alpha energy to ions and electrons.
         - Calculates the average atomic masses of injected fuel species and neutral beams.
         - Calculates the density weighted mass and mass weighted plasma effective charge.
-
-        Notes:
-
-
-        References:
         """
 
         # Alpha ash portion
@@ -3025,32 +3289,46 @@ class Physics:
     ) -> tuple[float, float, float, float, float, float, float, float]:
         """Auxiliary physics quantities
 
-        Args:
-            aspect (float): Plasma aspect ratio.
-            nd_plasma_electrons_vol_avg (float): Electron density (/m3).
-            te (float): Volume avergaed electron temperature (keV).
-            nd_plasma_fuel_ions_vol_avg (float): Fuel ion density (/m3).
-            fusden_total (float): Fusion reaction rate from plasma and beams (/m3/s).
-            fusden_alpha_total (float): Alpha particle production rate (/m3/s).
-            plasma_current (float): Plasma current (A).
-            sbar (float): Exponent for aspect ratio (normally 1).
-            nd_plasma_alphas_vol_avg (float): Alpha ash density (/m3).
-            t_energy_confinement (float): Global energy confinement time (s).
-            vol_plasma (float): Plasma volume (m3).
+        Parameters
+        ----------
+        aspect : float
+            Plasma aspect ratio.
+        nd_plasma_electrons_vol_avg : float
+            Electron density (/m3).
+        te : float
+            Volume avergaed electron temperature (keV).
+        nd_plasma_fuel_ions_vol_avg : float
+            Fuel ion density (/m3).
+        fusden_total : float
+            Fusion reaction rate from plasma and beams (/m3/s).
+        fusden_alpha_total : float
+            Alpha particle production rate (/m3/s).
+        plasma_current : float
+            Plasma current (A).
+        sbar : float
+            Exponent for aspect ratio (normally 1).
+        nd_plasma_alphas_vol_avg : float
+            Alpha ash density (/m3).
+        t_energy_confinement : float
+            Global energy confinement time (s).
+        vol_plasma : float
+            Plasma volume (m3).
 
-        Returns:
-            tuple: A tuple containing:
-                - burnup (float): Fractional plasma burnup.
-                - ntau (float): Plasma average n-tau (s/m3).
-                - nTtau (float): Plasma triple product nT-tau (s/m3).
-                - figmer (float): Physics figure of merit.
-                - fusrat (float): Number of fusion reactions per second.
-                - molflow_plasma_fuelling_required (float): Fuelling rate for D-T (nucleus-pairs/sec).
-                - rndfuel (float): Fuel burnup rate (reactions/s).
-                - t_alpha_confinement (float): Alpha particle confinement time (s).
-                - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
+        Returns
+        -------
+        tuple
+            A tuple containing:
+            - burnup (float): Fractional plasma burnup.
+            - ntau (float): Plasma average n-tau (s/m3).
+            - nTtau (float): Plasma triple product nT-tau (s/m3).
+            - figmer (float): Physics figure of merit.
+            - fusrat (float): Number of fusion reactions per second.
+            - molflow_plasma_fuelling_required (float): Fuelling rate for D-T (nucleus-pairs/sec).
+            - rndfuel (float): Fuel burnup rate (reactions/s).
+            - t_alpha_confinement (float): Alpha particle confinement time (s).
+            - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
+            This subroutine calculates extra physics related items needed by other parts of the code.
 
-        This subroutine calculates extra physics related items needed by other parts of the code.
         """
         figmer = 1e-6 * plasma_current * aspect**sbar
 
@@ -3117,30 +3395,40 @@ class Physics:
         vol_plasma: float,
         zeff: float,
     ) -> tuple[float, float, float, float]:
-        """
-        Calculate the ohmic heating power and related parameters.
+        """Calculate the ohmic heating power and related parameters.
 
-        Args:
-            f_c_plasma_inductive (float): Fraction of plasma current driven inductively.
-            kappa95 (float): Plasma elongation at 95% surface.
-            plasma_current (float): Plasma current (A).
-            rmajor (float): Major radius (m).
-            rminor (float): Minor radius (m).
-            temp_plasma_electron_density_weighted_kev (float): Density weighted average electron temperature (keV).
-            vol_plasma (float): Plasma volume (m^3).
-            zeff (float): Plasma effective charge.
+        Parameters
+        ----------
+        f_c_plasma_inductive : float
+            Fraction of plasma current driven inductively.
+        kappa95 : float
+            Plasma elongation at 95% surface.
+        plasma_current : float
+            Plasma current (A).
+        rmajor : float
+            Major radius (m).
+        rminor : float
+            Minor radius (m).
+        temp_plasma_electron_density_weighted_kev : float
+            Density weighted average electron temperature (keV).
+        vol_plasma : float
+            Plasma volume (m^3).
+        zeff : float
+            Plasma effective charge.
 
-        Returns:
-            Tuple[float, float, float, float]: Tuple containing:
-                - pden_plasma_ohmic_mw (float): Ohmic heating power per unit volume (MW/m^3).
-                - p_plasma_ohmic_mw (float): Total ohmic heating power (MW).
-                - f_res_plasma_neo (float): Neo-classical resistivity enhancement factor.
-                - res_plasma (float): Plasma resistance (ohm).
+        Returns
+        -------
+        Tuple[float, float, float, float]
+            Tuple containing:
+            - pden_plasma_ohmic_mw (float): Ohmic heating power per unit volume (MW/m^3).
+            - p_plasma_ohmic_mw (float): Total ohmic heating power (MW).
+            - f_res_plasma_neo (float): Neo-classical resistivity enhancement factor.
+            - res_plasma (float): Plasma resistance (ohm).
 
-        Notes:
-
-        References:
-            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+        References
+        ----------
+        - ITER Physics Design Guidelines
+            1989 [IPDG89], N. A. Uckan et al,
 
         """
         # Density weighted electron temperature in 10 keV units
@@ -3203,52 +3491,91 @@ class Physics:
     ) -> tuple[float, float, float, float, float]:
         """Calculate the plasma current.
 
-        Args:
-            alphaj (float): Current profile index.
-            alphap (float): Pressure profile index.
-            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
-            eps (float): Inverse aspect ratio.
-            i_plasma_current (int): Current scaling model to use.
-                1 = Peng analytic fit
-                2 = Peng divertor scaling (TART,STAR)
-                3 = Simple ITER scaling
-                4 = IPDG89 scaling
-                5 = Todd empirical scaling I
-                6 = Todd empirical scaling II
-                7 = Connor-Hastie model
-                8 = Sauter scaling (allowing negative triangularity)
-                9 = FIESTA ST scaling
-            kappa (float): Plasma elongation.
-            kappa95 (float): Plasma elongation at 95% surface.
-            pres_plasma_on_axis (float): Central plasma pressure (Pa).
-            len_plasma_poloidal (float): Plasma perimeter length (m).
-            q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
-            ind_plasma_internal_norm (float): Plasma normalised internal inductance.
-            rmajor (float): Major radius (m).
-            rminor (float): Minor radius (m).
-            triang (float): Plasma triangularity.
-            triang95 (float): Plasma triangularity at 95% surface.
+        This routine calculates the plasma current based on the edge safety factor q95.
+        It will also make the current profile parameters consistent with the q-profile if required.
 
-        Returns:
-            Tuple[float, float, float,]: Tuple containing b_plasma_poloidal_average, qstar, plasma_current,
+        Parameters
+        ----------
+        alphaj : float
+            Current profile index.
+        alphap : float
+            Pressure profile index.
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        eps : float
+            Inverse aspect ratio.
+        i_plasma_current : int
+            Current scaling model to use.
+            1 = Peng analytic fit
+            2 = Peng divertor scaling (TART,STAR)
+            3 = Simple ITER scaling
+            4 = IPDG89 scaling
+            5 = Todd empirical scaling I
+            6 = Todd empirical scaling II
+            7 = Connor-Hastie model
+            8 = Sauter scaling (allowing negative triangularity)
+            9 = FIESTA ST scaling
+        kappa : float
+            Plasma elongation.
+        kappa95 : float
+            Plasma elongation at 95% surface.
+        pres_plasma_on_axis : float
+            Central plasma pressure (Pa).
+        len_plasma_poloidal : float
+            Plasma perimeter length (m).
+        q95 : float
+            Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
+        ind_plasma_internal_norm : float
+            Plasma normalised internal inductance.
+        rmajor : float
+            Major radius (m).
+        rminor : float
+            Minor radius (m).
+        triang : float
+            Plasma triangularity.
+        triang95 : float
+            Plasma triangularity at 95% surface.
 
-        Raises:
-            ValueError: If invalid value for i_plasma_current is provided.
+        Returns
+        -------
+        Tuple[float, float, float,]
+            Tuple containing b_plasma_poloidal_average, qstar, plasma_current,
 
-        Notes:
-            This routine calculates the plasma current based on the edge safety factor q95.
-            It will also make the current profile parameters consistent with the q-profile if required.
+        Raises
+        ------
+        ValueError
+            If invalid value for i_plasma_current is provided.
+        ValueError
+            If invalid value for i_plasma_current is provided.
+        ValueError
+            If invalid value for i_plasma_current is provided.
 
-        References:
-            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
+        References
+        ----------
+        - J D Galambos, STAR Code
+            Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
+        - J D Galambos, STAR Code
+            Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
             - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-              'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-              1729-1738. https://doi.org/10.13182/FST92-A29971
-            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al, ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-            - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
+            'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
+            1729-1738. https://doi.org/10.13182/FST92-A29971
+        - ITER Physics Design Guidelines
+            1989 [IPDG89], N. A. Uckan et al, ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+        - M. Kovari et al, 2014, "PROCESS"
+            A systems code for fusion power plants - Part 1: Physics
+        - M. Kovari et al, 2014, "PROCESS"
+            A systems code for fusion power plants - Part 1: Physics
+            - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
+        - M. Kovari et al, 2014, "PROCESS"
+            A systems code for fusion power plants - Part 1: Physics
+            - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
+            - T. Hartmann, 2013, Development of a modular systems code to analyse the implications of physics assumptions on the design of a demonstration fusion power plant
+        - M. Kovari et al, 2014, "PROCESS"
+            A systems code for fusion power plants - Part 1: Physics
             - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
             - T. Hartmann, 2013, Development of a modular systems code to analyse the implications of physics assumptions on the design of a demonstration fusion power plant
             - Sauter, Geometric formulas for systems codes..., FED 2016
+
         """
         # Aspect ratio
         aspect_ratio = 1.0 / eps
@@ -3432,13 +3759,10 @@ class Physics:
 
     def outplas(self):
         """Subroutine to output the plasma physics information
-        author: P J Knight, CCFE, Culham Science Centre
         self.outfile : input integer : Fortran output unit identifier
         This routine writes the plasma physics information
         to a file, in a tidy format.
         """
-
-        # ###############################################
         # Dimensionless plasma parameters. See reference below.
         physics_variables.nu_star = (
             1
@@ -5822,9 +6146,8 @@ class Physics:
                 reinke_variables.fzactual,
             )
 
-    def output_confinement_comparison(self, istell: int) -> None:
-        """
-        Routine to calculate ignition margin for different confinement scalings and equivalent confinement times for H=1.
+    def output_confinement_comparison(self, istell: int):
+        """Routine to calculate ignition margin for different confinement scalings and equivalent confinement times for H=1.
 
         This routine calculates the ignition margin at the final point with different scalings and outputs the results to a file.
 
@@ -5842,11 +6165,11 @@ class Physics:
         - `calculate_confinement_time`: Calculates confinement-related parameters.
         - `find_other_h_factors`: Calculates the H-factor for a given confinement time.
 
-        Parameters:
-        - istell (int): Indicator for stellarator (0 for tokamak, >=1 for stellarator).
+        Parameters
+        ----------
+        istell :
+            Indicator for stellarator (0 for tokamak, >=1 for stellarator).
 
-        Returns:
-        - None
         """
 
         po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
@@ -5938,27 +6261,38 @@ class Physics:
         rmajor: float,
         vol_plasma: float,
     ) -> float:
-        """
-        Calculate the bootstrap-driven fraction of the plasma current.
-
-        Args:
-            aspect (float): Plasma aspect ratio.
-            beta (float): Plasma total beta.
-            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
-            plasma_current (float): Plasma current (A).
-            q95 (float): Safety factor at 95% surface.
-            q0 (float): Central safety factor.
-            rmajor (float): Plasma major radius (m).
-            vol_plasma (float): Plasma volume (m3).
-
-        Returns:
-            float: The bootstrap-driven fraction of the plasma current.
+        """Calculate the bootstrap-driven fraction of the plasma current.
 
         This function performs the original ITER calculation of the plasma current bootstrap fraction.
 
+        Parameters
+        ----------
+        aspect : float
+            Plasma aspect ratio.
+        beta : float
+            Plasma total beta.
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        plasma_current : float
+            Plasma current (A).
+        q95 : float
+            Safety factor at 95% surface.
+        q0 : float
+            Central safety factor.
+        rmajor : float
+            Plasma major radius (m).
+        vol_plasma : float
+            Plasma volume (m3).
+
+        Returns
+        -------
+        float
+            The bootstrap-driven fraction of the plasma current.
+
         Reference:
-        - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
-        - ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+            - ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
         """
 
         # Calculate the bootstrap current coefficient
@@ -5990,27 +6324,41 @@ class Physics:
         rmajor: float,
         rminor: float,
     ) -> float:
-        """
-        Bootstrap current fraction from Wilson et al scaling
-
-        Args:
-            alphaj (float): Current profile index.
-            alphap (float): Pressure profile index.
-            alphat (float): Temperature profile index.
-            betpth (float): Thermal component of poloidal beta.
-            q0 (float): Safety factor on axis.
-            q95 (float): Edge safety factor.
-            rmajor (float): Major radius (m).
-            rminor (float): Minor radius (m).
-
-        Returns:
-            float: The bootstrap current fraction.
+        """Bootstrap current fraction from Wilson et al scaling
 
         This function calculates the bootstrap current fraction using the numerically fitted algorithm written by Howard Wilson.
 
+        Parameters
+        ----------
+        alphaj : float
+            Current profile index.
+        alphap : float
+            Pressure profile index.
+        alphat : float
+            Temperature profile index.
+        betpth : float
+            Thermal component of poloidal beta.
+        q0 : float
+            Safety factor on axis.
+        q95 : float
+            Edge safety factor.
+        rmajor : float
+            Major radius (m).
+        rminor : float
+            Minor radius (m).
+
+        Returns
+        -------
+        float
+            The bootstrap current fraction.
+
         Reference:
-            - AEA FUS 172: Physics Assessment for the European Reactor Study, 1989
+        - AEA FUS 172
+            Physics Assessment for the European Reactor Study, 1989
+        - AEA FUS 172
+            Physics Assessment for the European Reactor Study, 1989
             - H. R. Wilson, Nuclear Fusion 32 (1992) 257
+
         """
 
         term1 = np.log(0.5)
@@ -6101,36 +6449,49 @@ class Physics:
         te: float,
         zeff: float,
     ) -> float:
-        """
-        Calculate the bootstrap current fraction from Nevins et al scaling.
-
-        Args:
-            alphan (float): Density profile index.
-            alphat (float): Temperature profile index.
-            beta_toroidal (float): Toroidal plasma beta.
-            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
-            nd_plasma_electrons_vol_avg (float): Electron density (/m3).
-            plasma_current (float): Plasma current (A).
-            q0 (float): Central safety factor.
-            q95 (float): Safety factor at 95% surface.
-            rmajor (float): Plasma major radius (m).
-            rminor (float): Plasma minor radius (m).
-            te (float): Volume averaged plasma temperature (keV).
-            zeff (float): Plasma effective charge.
-
-        Returns:
-            float: The bootstrap current fraction.
+        """Calculate the bootstrap current fraction from Nevins et al scaling.
 
         This function calculates the bootstrap current fraction using the Nevins et al method.
 
-        Reference: See appendix of:
-        Keii Gi, Makoto Nakamura, Kenji Tobita, Yasushi Ono,
-        Bootstrap current fraction scaling for a tokamak reactor design study,
-        Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715,
-        ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2014.07.009.
+        Parameters
+        ----------
+        alphan : float
+            Density profile index.
+        alphat : float
+            Temperature profile index.
+        beta_toroidal : float
+            Toroidal plasma beta.
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        nd_plasma_electrons_vol_avg : float
+            Electron density (/m3).
+        plasma_current : float
+            Plasma current (A).
+        q0 : float
+            Central safety factor.
+        q95 : float
+            Safety factor at 95% surface.
+        rmajor : float
+            Plasma major radius (m).
+        rminor : float
+            Plasma minor radius (m).
+        te : float
+            Volume averaged plasma temperature (keV).
+        zeff : float
+            Plasma effective charge.
 
-        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
-        ITER-TN-PH-8-4, June 1988. 1988.
+        Returns
+        -------
+        float
+            The bootstrap current fraction.
+
+        Reference: See appendix of:
+            Keii Gi, Makoto Nakamura, Kenji Tobita, Yasushi Ono,
+            Bootstrap current fraction scaling for a tokamak reactor design study,
+            Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715,
+            ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2014.07.009.
+            Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
+            ITER-TN-PH-8-4, June 1988. 1988.
 
         """
         # Calculate peak electron beta at plasma centre, this is not the form used in the paper
@@ -6176,24 +6537,28 @@ class Physics:
     def bootstrap_fraction_sauter(plasma_profile: float) -> float:
         """Calculate the bootstrap current fraction from the Sauter et al scaling.
 
-        Args:
-            plasma_profile (PlasmaProfile): The plasma profile object.
-
-        Returns:
-            float: The bootstrap current fraction.
-
         This function calculates the bootstrap current fraction using the Sauter, Angioni, and Lin-Liu scaling.
 
-        Reference:
-        - O. Sauter, C. Angioni, Y. R. Lin-Liu;
-          Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
-          Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
-        - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-          Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
-          [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        Parameters
+        ----------
+        plasma_profile : PlasmaProfile
+            The plasma profile object.
 
-        Note:
-        The code was supplied by Emiliano Fable, IPP Garching (private communication).
+        Returns
+        -------
+        float
+            The bootstrap current fraction.
+
+        Reference:
+            - O. Sauter, C. Angioni, Y. R. Lin-Liu;
+            Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime.
+            Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+            - O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
+            Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria and arbitrary collisionality regime
+            [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+            Note:
+            The code was supplied by Emiliano Fable, IPP Garching (private communication).
+
         """
 
         # Radial points from 0 to 1 seperated by 1/profile_size
@@ -6325,34 +6690,46 @@ class Physics:
         eps: float,
         ind_plasma_internal_norm: float,
     ) -> float:
-        """
-        Calculate the bootstrap fraction using the Sakai formula.
+        """Calculate the bootstrap fraction using the Sakai formula.
 
-        Parameters:
-        beta_poloidal (float): Plasma poloidal beta.
-        q95 (float): Safety factor at 95% of the plasma radius.
-        q0 (float): Safety factor at the magnetic axis.
-        alphan (float): Density profile index
-        alphat (float): Temperature profile index
-        eps (float): Inverse aspect ratio.
-        ind_plasma_internal_norm (float): Plasma normalised internal inductance
+        Parameters
+        ----------
+        beta_poloidal :
+            Plasma poloidal beta.
+        q95 :
+            Safety factor at 95% of the plasma radius.
+        q0 :
+            Safety factor at the magnetic axis.
+        alphan :
+            Density profile index
+        alphat :
+            Temperature profile index
+        eps :
+            Inverse aspect ratio.
+        ind_plasma_internal_norm :
+            Plasma normalised internal inductance
 
-        Returns:
-        float: The calculated bootstrap fraction.
+        Returns
+        -------
+        :
+            The calculated bootstrap fraction.
 
-        Notes:
-        The profile assumed for the alphan and alpat indexes is only a parabolic profile without a pedestal (L-mode).
-        The Root Mean Squared Error for the fitting database of this formula was 0.025
-        Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully non-inductively driven
-        conditions with neutral beam (NB) injection only are calculated.
-        The electron temperature and the ion temperature were assumed to be equal
-        This can be used for all apsect ratios.
-        The diamagnetic fraction is included in this formula.
+        Notes
+        -----
+            The profile assumed for the alphan and alpat indexes is only a parabolic profile without a pedestal (L-mode).
+            The Root Mean Squared Error for the fitting database of this formula was 0.025
+            Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully non-inductively driven
+            conditions with neutral beam (NB) injection only are calculated.
+            The electron temperature and the ion temperature were assumed to be equal
+            This can be used for all apsect ratios.
+            The diamagnetic fraction is included in this formula.
 
-        References:
-        Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis,
-        Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
-        https://doi.org/10.1016/j.fusengdes.2019.111322.
+        References
+        ----------
+            Ryosuke Sakai, Takaaki Fujita, Atsushi Okamoto, Derivation of bootstrap current fraction scaling formula for 0-D system code analysis,
+            Fusion Engineering and Design, Volume 149, 2019, 111322, ISSN 0920-3796,
+            https://doi.org/10.1016/j.fusengdes.2019.111322.
+
         """
         # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
         # So the diamganetic current should not be calculated with this. i_diamagnetic_current = 0
@@ -6373,26 +6750,34 @@ class Physics:
         average_density: float,
         inverse_aspect: float,
     ) -> float:
-        """
-        Calculate the bootstrap fraction using the ARIES formula.
+        """Calculate the bootstrap fraction using the ARIES formula.
+        Parameters
+        ----------
+        beta_poloidal :
+            Plasma poloidal beta.
+        ind_plasma_internal_norm :
+            Plasma normalized internal inductance.
+        core_density :
+            Core plasma density.
+        average_density :
+            Average plasma density.
+        inverse_aspect :
+            Inverse aspect ratio.
 
-        Parameters:
-        beta_poloidal (float): Plasma poloidal beta.
-        ind_plasma_internal_norm (float): Plasma normalized internal inductance.
-        core_density (float): Core plasma density.
-        average_density (float): Average plasma density.
-        inverse_aspect (float): Inverse aspect ratio.
+        Returns
+        -------
+        :
+            The calculated bootstrap fraction.
 
-        Returns:
-        float: The calculated bootstrap fraction.
-
-        Notes:
+        Notes
+        -----
             - The source reference does not provide any info about the derivation of the formula. It is only stated
 
-        References:
+        References
+        ----------
             - Zoran Dragojlovic et al., “An advanced computational algorithm for systems analysis of tokamak power plants,”
-              Fusion Engineering and Design, vol. 85, no. 2, pp. 243-265, Apr. 2010,
-              doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
+            Fusion Engineering and Design, vol. 85, no. 2, pp. 243-265, Apr. 2010,
+            doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
 
         """
         # Using the standard variable naming from the ARIES paper
@@ -6416,28 +6801,36 @@ class Physics:
         average_pressure: float,
         inverse_aspect: float,
     ) -> float:
-        """
-        Calculate the bootstrap fraction using the Andrade et al formula.
+        """Calculate the bootstrap fraction using the Andrade et al formula.
 
-        Parameters:
-        beta_poloidal (float): Plasma poloidal beta.
-        core_pressure (float): Core plasma pressure.
-        average_pressure (float): Average plasma pressure.
-        inverse_aspect (float): Inverse aspect ratio.
+        Parameters
+        ----------
+        beta_poloidal :
+            Plasma poloidal beta.
+        core_pressure :
+            Core plasma pressure.
+        average_pressure :
+            Average plasma pressure.
+        inverse_aspect :
+            Inverse aspect ratio.
 
-        Returns:
-        float: The calculated bootstrap fraction.
+        Returns
+        -------
+        :
+            The calculated bootstrap fraction.
 
-        Notes:
+        Notes
+        -----
             - Based off 350 plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak
             - A = 1.5, R_0 = 0.3m, I_p = 200kA, B_0=0.4T, beta = 4-10%. Profiles taken as Gaussian shaped functions.
             - Errors mostly up to the order of 10% are obtained when both expressions are compared with the equilibrium estimates for the
-              bootstrap current in ETE
+            bootstrap current in ETE
 
-        References:
+        References
+        ----------
             - M. C. R. Andrade and G. O. Ludwig, “Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,”
-              Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
-              doi: https://doi.org/10.1088/0741-3335/50/6/065001.
+            Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
+            doi: https://doi.org/10.1088/0741-3335/50/6/065001.
 
         """
 
@@ -6456,29 +6849,37 @@ class Physics:
         current_index: float,
         inverse_aspect: float,
     ) -> float:
-        """
-        Calculate the bootstrap fraction using the Hoang et al formula.
+        """Calculate the bootstrap fraction using the Hoang et al formula.
+        Parameters
+        ----------
+        beta_poloidal :
+            Plasma poloidal beta.
+        pressure_index :
+            Pressure profile index.
+        current_index :
+            Current profile index.
+        inverse_aspect :
+            Inverse aspect ratio.
 
-        Parameters:
-        beta_poloidal (float): Plasma poloidal beta.
-        pressure_index (float): Pressure profile index.
-        current_index (float): Current profile index.
-        inverse_aspect (float): Inverse aspect ratio.
+        Returns
+        -------
+        :
+            The calculated bootstrap fraction.
 
-        Returns:
-        float: The calculated bootstrap fraction.
-
-        Notes:
+        Notes
+        -----
             - Based off of TFTR data calculated using the TRANSP plasma analysis code
             - 170 discharges which was assembled to  study the tritium influx and transport in discharges with D-only neutral beam
-              injection (NBI)
+            injection (NBI)
             - Contains L-mode, supershots, reversed shear, enhanced reversed shear and increased li discharges
             - Discharges with monotonic flux profiles with reversed shear are also included
             - Is applied to circular cross-section plasmas
 
-        References:
+        References
+        ----------
             - G. T. Hoang and R. V. Budny, “The bootstrap fraction in TFTR,” AIP conference proceedings,
-              Jan. 1997, doi: https://doi.org/10.1063/1.53414.
+            Jan. 1997, doi: https://doi.org/10.1063/1.53414.
+
         """
 
         # Using the standard variable naming from the Hoang et.al. paper
@@ -6503,33 +6904,42 @@ class Physics:
         inverse_aspect: float,
         elongation: float,
     ) -> float:
-        """
-        Calculate the bootstrap fraction using the Wong et al formula.
+        """Calculate the bootstrap fraction using the Wong et al formula.
+        Parameters
+        ----------
+        beta_poloidal :
+            Plasma poloidal beta.
+        density_index :
+            Density profile index.
+        temperature_index :
+            Temperature profile index.
+        inverse_aspect :
+            Inverse aspect ratio.
+        elongation :
+            Plasma elongation.
 
-        Parameters:
-        beta_poloidal (float): Plasma poloidal beta.
-        density_index (float): Density profile index.
-        temperature_index (float): Temperature profile index.
-        inverse_aspect (float): Inverse aspect ratio.
-        elongation (float): Plasma elongation.
+        Returns
+        -------
+        :
+            The calculated bootstrap fraction.
 
-        Returns:
-        float: The calculated bootstrap fraction.
-
-        Notes:
+        Notes
+        -----
             - Data is based off of equilibria from Miller et al.
             - A: 1.2 - 3.0 and stable to n ballooning and low n kink modes at a bootstrap fraction of 99% for kappa = 2, 2.5 and 3
             - The results were parameterized as a function of aspect ratio and elongation
             - The parametric dependency of beta_p and beta_T are based on fitting of the DIII-D high equivalent DT yield results
             - Parabolic profiles should be used for best results as the pressure peaking value is calculated as the product of a parabolic
-              temperature and density profile
+            temperature and density profile
 
-        References:
+        References
+        ----------
             - C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,”
-              vol. 42, no. 5, pp. 547-556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
+            vol. 42, no. 5, pp. 547-556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
 
             - Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks".
-              Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
+            Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
+
         """
         # Using the standard variable naming from the Wong et.al. paper
         f_peak = 2.0 / scipy.special.beta(0.5, density_index + temperature_index + 1)
@@ -6548,35 +6958,47 @@ class Physics:
         q95: float,
         q0: float,
     ) -> float:
-        """
-        Calculate the bootstrap fraction using the first scaling from the Gi et al formula.
+        """Calculate the bootstrap fraction using the first scaling from the Gi et al formula.
 
-        Parameters:
-        beta_poloidal (float): Plasma poloidal beta.
-        pressure_index (float): Pressure profile index.
-        temperature_index (float): Temperature profile index.
-        inverse_aspect (float): Inverse aspect ratio.
-        effective_charge (float): Plasma effective charge.
-        q95 (float): Safety factor at 95% of the plasma radius.
-        q0 (float): Safety factor at the magnetic axis.
+        Parameters
+        ----------
+        beta_poloidal :
+            Plasma poloidal beta.
+        pressure_index :
+            Pressure profile index.
+        temperature_index :
+            Temperature profile index.
+        inverse_aspect :
+            Inverse aspect ratio.
+        effective_charge :
+            Plasma effective charge.
+        q95 :
+            Safety factor at 95% of the plasma radius.
+        q0 :
+            Safety factor at the magnetic axis.
 
-        Returns:
-        float: The calculated bootstrap fraction.
+        Returns
+        -------
+        :
+            The calculated bootstrap fraction.
 
-        Notes:
-            - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
-            - Method was done to put the scaling into parameters compatible with the TPC systems code
-            - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
-              curent drive and equilibrium models in the scan
-            - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, traing = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0
-            - Uses parabolic plasma profiles only.
-            - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the f_BS value for reversed shear
-              equilibrium.
+        Notes
+        -----
+        - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
+        - Method was done to put the scaling into parameters compatible with the TPC systems code
+        - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
+        current drive and equilibrium models in the scan
+        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, traing = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0
+        - Uses parabolic plasma profiles only.
+        - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the f_BS value for reversed shear
+        equilibrium.
 
-        References:
-            - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
-              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
-              doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+        References
+        ----------
+        - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
+        Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+        doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+
         """
 
         # Using the standard variable naming from the Gi et.al. paper
@@ -6600,33 +7022,43 @@ class Physics:
         inverse_aspect: float,
         effective_charge: float,
     ) -> float:
-        """
-        Calculate the bootstrap fraction using the second scaling from the Gi et al formula.
+        """Calculate the bootstrap fraction using the second scaling from the Gi et al formula.
 
-        Parameters:
-        beta_poloidal (float): Plasma poloidal beta.
-        pressure_index (float): Pressure profile index.
-        temperature_index (float): Temperature profile index.
-        inverse_aspect (float): Inverse aspect ratio.
-        effective_charge (float): Plasma effective charge.
+        Parameters
+        ----------
+        beta_poloidal :
+            Plasma poloidal beta.
+        pressure_index :
+            Pressure profile index.
+        temperature_index :
+            Temperature profile index.
+        inverse_aspect :
+            Inverse aspect ratio.
+        effective_charge :
+            Plasma effective charge.
 
-        Returns:
-        float: The calculated bootstrap fraction.
+        Returns
+        -------
+        :
+            The calculated bootstrap fraction.
 
-        Notes:
+        Notes
+        -----
             - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
             - Method was done to put the scaling into parameters compatible with the TPC systems code
             - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
-              curent drive and equilibrium models in the scan
+            curent drive and equilibrium models in the scan
             - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, traing = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0
             - Uses parabolic plasma profiles only.
             - This scaling has the q profile dependance removed to obtain a scaling formula with much more flexible variables than
-              that by a single profile factor for internal current profile.
+            that by a single profile factor for internal current profile.
 
-        References:
+            References
+            ----------
             - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
-              Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
-              doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+            Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+            doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+
         """
 
         # Using the standard variable naming from the Gi et.al. paper
@@ -6651,37 +7083,43 @@ class Physics:
         q95: float,
         q0: float,
     ) -> float:
-        """
-        Calculate the bootstrap fraction using the L-mode scaling from the Sugiyama et al formula.
+        """Calculate the bootstrap fraction using the L-mode scaling from the Sugiyama et al formula.
 
-        :param eps: Inverse aspect ratio.
-        :type eps: float
-        :param beta_poloidal: Plasma poloidal beta.
-        :type beta_poloidal: float
-        :param alphan: Density profile index.
-        :type alphan: float
-        :param alphat: Temperature profile index.
-        :type alphat: float
-        :param zeff: Plasma effective charge.
-        :type zeff: float
-        :param q95: Safety factor at 95% of the plasma radius.
-        :type q95: float
-        :param q0: Safety factor at the magnetic axis.
-        :type q0: float
+        Parameters
+        ----------
+        eps : float
+            Inverse aspect ratio.
+        beta_poloidal : float
+            Plasma poloidal beta.
+        alphan : float
+            Density profile index.
+        alphat : float
+            Temperature profile index.
+        zeff : float
+            Plasma effective charge.
+        q95 : float
+            Safety factor at 95% of the plasma radius.
+        q0 : float
+            Safety factor at the magnetic axis.
 
-        :returns: The calculated bootstrap fraction.
-        :rtype: float
+        Returns
+        -------
+        float
+            The calculated bootstrap fraction.
 
-        :notes:
+        Notes
+        -----
             - This scaling is derived for L-mode plasmas.
             - Ion and electron temperature are the same
             - Z_eff has a uniform profile, with only fully stripped carbon impurity
 
-        :references:
+        References
+        ----------
             - S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and
               current balance models for tokamak systems code considering H-mode plasma profiles,”
               Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
               https://doi.org/10.1016/j.fusengdes.2025.115022.
+
         """
 
         return (
@@ -6709,49 +7147,55 @@ class Physics:
         n_greenwald: float,
         temp_plasma_pedestal_kev: float,
     ) -> float:
-        """
-        Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama et al formula.
+        """Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama et al formula.
 
-        :param eps: Inverse aspect ratio.
-        :type eps: float
-        :param beta_poloidal: Plasma poloidal beta.
-        :type beta_poloidal: float
-        :param alphan: Density profile index.
-        :type alphan: float
-        :param alphat: Temperature profile index.
-        :type alphat: float
-        :param tbeta: Second temperature profile index.
-        :type tbeta: float
-        :param zeff: Plasma effective charge.
-        :type zeff: float
-        :param q95: Safety factor at 95% of the plasma radius.
-        :type q95: float
-        :param q0: Safety factor at the magnetic axis.
-        :type q0: float
-        :param radius_plasma_pedestal_density_norm: Normalised plasma radius of density pedestal.
-        :type radius_plasma_pedestal_density_norm: float
-        :param nd_plasma_pedestal_electron: Electron number density at the pedestal [m^-3].
-        :type nd_plasma_pedestal_electron: float
-        :param n_greenwald: Greenwald density limit [m^-3].
-        :type n_greenwald: float
-        :param temp_plasma_pedestal_kev: Electron temperature at the pedestal [keV].
-        :type temp_plasma_pedestal_kev: float
+        Parameters
+        ----------
+        eps : float
+            Inverse aspect ratio.
+        beta_poloidal : float
+            Plasma poloidal beta.
+        alphan : float
+            Density profile index.
+        alphat : float
+            Temperature profile index.
+        tbeta : float
+            Second temperature profile index.
+        zeff : float
+            Plasma effective charge.
+        q95 : float
+            Safety factor at 95% of the plasma radius.
+        q0 : float
+            Safety factor at the magnetic axis.
+        radius_plasma_pedestal_density_norm : float
+            Normalised plasma radius of density pedestal.
+        nd_plasma_pedestal_electron : float
+            Electron number density at the pedestal [m^-3].
+        n_greenwald : float
+            Greenwald density limit [m^-3].
+        temp_plasma_pedestal_kev : float
+            Electron temperature at the pedestal [keV].
 
-        :returns: The calculated bootstrap fraction.
-        :rtype: float
+        Returns
+        -------
+        float
+            The calculated bootstrap fraction.
 
-        :notes:
+        Notes
+        -----
             - This scaling is derived for H-mode plasmas.
             - The temperature and density pedestal positions are the same
             - Separatrix temperature and density are zero
             - Ion and electron temperature are the same
             - Z_eff has a uniform profile, with only fully stripped carbon impurity
 
-        :references:
+        References
+        ----------
             - S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and
               current balance models for tokamak systems code considering H-mode plasma profiles,”
               Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
               https://doi.org/10.1016/j.fusengdes.2025.115022.
+
         """
 
         return (
@@ -6769,25 +7213,35 @@ class Physics:
         )
 
     def find_other_h_factors(self, i_confinement_time: int) -> float:
-        """
-        Function to find H-factor for the equivalent confinement time in other scalings.
+        """Function to find H-factor for the equivalent confinement time in other scalings.
 
-        Args:
-            i_confinement_time (int): Index of the confinement time scaling to use.
+        Parameters
+        ----------
+        i_confinement_time : int
+            Index of the confinement time scaling to use.
 
-        Returns:
-            float: The calculated H-factor.
+        Returns
+        -------
+        float
+            The calculated H-factor.
+
         """
 
         def fhz(hfact: float) -> float:
-            """
-            Function used to find power balance.
+            """Function used to find power balance.
 
-            Args:
-                hfact (float): H-factor to be used in the calculation.
+            Parameters
+            ----------
+            hfact : float
+                H-factor to be used in the calculation.
+            hfact: float :
 
-            Returns:
-                float: The difference between the calculated power and the required power for balance.
+
+            Returns
+            -------
+            float
+                The difference between the calculated power and the required power for balance.
+
             """
             (
                 ptrez,
@@ -6879,43 +7333,74 @@ class Physics:
         vol_plasma: float,
         zeff: float,
     ) -> tuple[float, float, float, float, float, float, float]:
-        """
-        Calculate the confinement times and the transport power loss terms.
+        """Calculate the confinement times and the transport power loss terms.
 
-        :param m_fuel_amu: Average mass of fuel (amu)
-        :param p_alpha_total_mw: Alpha particle power (MW)
-        :param aspect: Aspect ratio
-        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
-        :param nd_plasma_ions_total_vol_avg: Total ion density (/m3)
-        :param nd_plasma_electrons_vol_avg: Volume averaged electron density (/m3)
-        :param nd_plasma_electron_line: Line-averaged electron density (/m3)
-        :param eps: Inverse aspect ratio
-        :param hfact: H factor on energy confinement scalings
-        :param i_confinement_time: Switch for energy confinement scaling to use
-        :param i_plasma_ignited: Switch for ignited calculation
-        :param kappa: Plasma elongation
-        :param kappa95: Plasma elongation at 95% surface
-        :param p_non_alpha_charged_mw: Non-alpha charged particle fusion power (MW)
-        :param p_hcd_injected_total_mw: Auxiliary power to ions and electrons (MW)
-        :param plasma_current: Plasma current (A)
-        :param pden_plasma_core_rad_mw: Total core radiation power (MW/m3)
-        :param q95: Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
-        :param qstar: Equivalent cylindrical edge safety factor
-        :param rmajor: Plasma major radius (m)
-        :param rminor: Plasma minor radius (m)
-        :param temp_plasma_electron_density_weighted_kev: Density weighted average electron temperature (keV)
-        :param temp_plasma_ion_density_weighted_kev: Density weighted average ion temperature (keV)
-        :param vol_plasma: Plasma volume (m3)
-        :param a_plasma_poloidal: Plasma cross-sectional area (m2)
-        :param zeff: Plasma effective charge
+        Parameters
+        ----------
+        m_fuel_amu :
+            Average mass of fuel (amu)
+        p_alpha_total_mw :
+            Alpha particle power (MW)
+        aspect :
+            Aspect ratio
+        b_plasma_toroidal_on_axis :
+            Toroidal field on axis (T)
+        nd_plasma_ions_total_vol_avg :
+            Total ion density (/m3)
+        nd_plasma_electrons_vol_avg :
+            Volume averaged electron density (/m3)
+        nd_plasma_electron_line :
+            Line-averaged electron density (/m3)
+        eps :
+            Inverse aspect ratio
+        hfact :
+            H factor on energy confinement scalings
+        i_confinement_time :
+            Switch for energy confinement scaling to use
+        i_plasma_ignited :
+            Switch for ignited calculation
+        kappa :
+            Plasma elongation
+        kappa95 :
+            Plasma elongation at 95% surface
+        p_non_alpha_charged_mw :
+            Non-alpha charged particle fusion power (MW)
+        p_hcd_injected_total_mw :
+            Auxiliary power to ions and electrons (MW)
+        plasma_current :
+            Plasma current (A)
+        pden_plasma_core_rad_mw :
+            Total core radiation power (MW/m3)
+        q95 :
+            Edge safety factor (tokamaks), or rotational transform iotabar (stellarators)
+        qstar :
+            Equivalent cylindrical edge safety factor
+        rmajor :
+            Plasma major radius (m)
+        rminor :
+            Plasma minor radius (m)
+        temp_plasma_electron_density_weighted_kev :
+            Density weighted average electron temperature (keV)
+        temp_plasma_ion_density_weighted_kev :
+            Density weighted average ion temperature (keV)
+        vol_plasma :
+            Plasma volume (m3)
+        a_plasma_poloidal :
+            Plasma cross-sectional area (m2)
+        zeff :
+            Plasma effective charge
 
-        :return: Tuple containing:
+        Returns
+        -------
+        type
+            Tuple containing:
             - pden_electron_transport_loss_mw (float): Electron transport power (MW/m3)
             - pden_ion_transport_loss_mw (float): Ion transport power (MW/m3)
             - t_electron_energy_confinement (float): Electron energy confinement time (s)
             - t_ion_energy_confinement (float): Ion energy confinement time (s)
             - t_energy_confinement (float): Global energy confinement time (s)
             - p_plasma_loss_mw (float): Heating power (MW) assumed in calculation
+
         """
 
         # ========================================================================
@@ -7752,26 +8237,30 @@ class Physics:
         vol_plasma: float,
         nd_plasma_electrons_vol_avg: float,
     ) -> tuple[float, float, float, float, float]:
-        """
-        Calculate the plasma masses.
+        """Calculate the plasma masses.
 
-        :param m_fuel_amu: Average mass of fuel (amu).
-        :type m_fuel_amu: float
-        :param m_ions_total_amu: Average mass of all ions (amu).
-        :type m_ions_total_amu: float
-        :param nd_plasma_ions_total_vol_avg: Total ion density (/m3).
-        :type nd_plasma_ions_total_vol_avg: float
-        :param nd_plasma_fuel_ions_vol_avg: Fuel ion density (/m3).
-        :type nd_plasma_fuel_ions_vol_avg: float
-        :param nd_plasma_alphas_vol_avg: Alpha ash density (/m3).
-        :type nd_plasma_alphas_vol_avg: float
-        :param vol_plasma: Plasma volume (m3).
-        :type vol_plasma: float
-        :param nd_plasma_electrons_vol_avg: Volume averaged electron density (/m3).
-        :type nd_plasma_electrons_vol_avg: float
+        Parameters
+        ----------
+        m_fuel_amu : float
+            Average mass of fuel (amu).
+        m_ions_total_amu : float
+            Average mass of all ions (amu).
+        nd_plasma_ions_total_vol_avg : float
+            Total ion density (/m3).
+        nd_plasma_fuel_ions_vol_avg : float
+            Fuel ion density (/m3).
+        nd_plasma_alphas_vol_avg : float
+            Alpha ash density (/m3).
+        vol_plasma : float
+            Plasma volume (m3).
+        nd_plasma_electrons_vol_avg : float
+            Volume averaged electron density (/m3).
 
-        :returns: A tuple containing:
-        :rtype: tuple[float, float, float, float, float]
+        Returns
+        -------
+        tuple[float, float, float, float, float]
+            A tuple containing:
+
         """
 
         # Calculate mass of fuel ions
@@ -7803,11 +8292,15 @@ class Physics:
 def res_diff_time(rmajor, res_plasma, kappa95):
     """Calculates resistive diffusion time
 
-    Author: James Morris (UKAEA)
+    Parameters
+    ----------
+    rmajor :
+        plasma major radius (m)
+    res_plasma :
+        plasma resistivity (Ohms)
+    kappa95 :
+        plasma elongation at 95% flux surface
 
-    :param rmajor: plasma major radius (m)
-    :param res_plasma: plasma resistivity (Ohms)
-    :param kappa95: plasma elongation at 95% flux surface
     """
 
     return 2 * constants.RMU0 * rmajor / (res_plasma * kappa95)
@@ -7824,30 +8317,34 @@ def l_h_threshold_power(
     aspect: float,
     plasma_current: float,
 ) -> list[float]:
-    """
-    L-mode to H-mode power threshold calculation.
+    """L-mode to H-mode power threshold calculation.
 
-    :param nd_plasma_electron_line: Line-averaged electron density (/m3)
-    :type nd_plasma_electron_line: float
-    :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
-    :type b_plasma_toroidal_on_axis: float
-    :param rmajor: Plasma major radius (m)
-    :type rmajor: float
-    :param rminor: Plasma minor radius (m)
-    :type rminor: float
-    :param kappa: Plasma elongation
-    :type kappa: float
-    :param a_plasma_surface: Plasma surface area (m2)
-    :type a_plasma_surface: float
-    :param m_ions_total_amu: Average mass of all ions (amu)
-    :type m_ions_total_amu: float
-    :param aspect: Aspect ratio
-    :type aspect: float
-    :param plasma_current: Plasma current (A)
-    :type plasma_current: float
+    Parameters
+    ----------
+    nd_plasma_electron_line : float
+        Line-averaged electron density (/m3)
+    b_plasma_toroidal_on_axis : float
+        Toroidal field on axis (T)
+    rmajor : float
+        Plasma major radius (m)
+    rminor : float
+        Plasma minor radius (m)
+    kappa : float
+        Plasma elongation
+    a_plasma_surface : float
+        Plasma surface area (m2)
+    m_ions_total_amu : float
+        Average mass of all ions (amu)
+    aspect : float
+        Aspect ratio
+    plasma_current : float
+        Plasma current (A)
 
-    :returns: Array of power thresholds
-    :rtype: list[float]
+    Returns
+    -------
+    list[float]
+        Array of power thresholds
+
     """
 
     dnla20 = 1e-20 * nd_plasma_electron_line
@@ -8018,19 +8515,29 @@ def l_h_threshold_power(
 
 def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, lhat):
     """Function for calculating upstream temperature(keV) in Reinke model
-    author: H Lux, CCFE/UKAEA
-    b_plasma_toroidal_on_axis      : input real : toroidal field on axis (T)
-    flh     : input real : fraction of Psep/P_LH
-    qstar   : input real : safety factor similar to q95 (see #707)
-    rmajor  : input real : major radius (m)
-    eps     : input real : inverse aspect ratio
-    fgw     : input real : ratio of volume averaged density to n_GW
-    kappa   : input real : elongation
-    lhat    : input real : connection length factor
     This function calculates the upstream temperature in the
     divertor/SoL model used for the Reinke citerion.
     Issue #707
     M.L. Reinke 2017 Nucl. Fusion 57 034004
+
+    Parameters
+    ---------_
+    b_plasma_toroidal_on_axis :
+        toroidal field on axis (T)
+    flh :
+        fraction of Psep/P_LH
+    qstar :
+        safety factor similar to q95 (see #707)
+    rmajor :
+        major radius (m)
+    eps :
+        inverse aspect ratio
+    fgw :
+        ratio of volume averaged density to n_GW
+    kappa :
+        elongation
+    lhat :
+        connection length factor
     """
     kappa_0 = 2.0e3  # Stangeby W/m/eV^(7/2)
 
@@ -8066,7 +8573,12 @@ class PlasmaBeta:
         self.mfile = constants.MFILE
 
     def get_beta_norm_max_value(self, model: BetaNormMaxModel) -> float:
-        """Get the beta norm max value (β_N_max) for the specified model."""
+        """Get the beta norm max value (β_N_max) for the specified model.
+
+        Parameters
+        ----------
+        model: BetaNormMaxModel :
+        """
         model_map = {
             BetaNormMaxModel.USER_INPUT: physics_variables.beta_norm_max,
             BetaNormMaxModel.WESSON: physics_variables.beta_norm_max_wesson,
@@ -8077,10 +8589,8 @@ class PlasmaBeta:
         }
         return model_map[model]
 
-    def run(self) -> None:
-        """
-        Calculate plasma beta values.
-        """
+    def run(self):
+        """Calculate plasma beta values."""
 
         # -----------------------------------------------------
         # Normalised Beta Limit
@@ -8248,81 +8758,99 @@ class PlasmaBeta:
     def calculate_plasma_beta(
         pres_plasma: float | np.ndarray, b_field: float | np.ndarray
     ) -> float | np.ndarray:
-        """
-        Calculate the plasma beta (β) for a given pressure and field.
-
-        :param pres_plasma: Plasma pressure (in Pascals).
-        :type pres_plasma: float | np.ndarray
-        :param b_field: Magnetic field strength (in Tesla).
-        :type b_field: float | np.ndarray
-        :returns: The plasma beta (dimensionless).
-        :rtype: float | np.ndarray
+        """Calculate the plasma beta (β) for a given pressure and field.
 
         Plasma beta is the ratio of plasma pressure to magnetic pressure.
+
+        Parameters
+        ----------
+        pres_plasma : float | np.ndarray
+            Plasma pressure (in Pascals).
+        b_field : float | np.ndarray
+            Magnetic field strength (in Tesla).
+
+        Returns
+        -------
+        float | np.ndarray
+            The plasma beta (dimensionless).
         """
 
         return 2 * constants.RMU0 * pres_plasma / (b_field**2)
 
     @staticmethod
     def calculate_beta_norm_max_wesson(ind_plasma_internal_norm: float) -> float:
-        """
-        Calculate the Wesson normalsied beta upper limit.
+        """Calculate the Wesson normalsied beta upper limit.
 
-        :param ind_plasma_internal_norm: Plasma normalised internal inductance
-        :type ind_plasma_internal_norm: float
+        Parameters
+        ----------
+        ind_plasma_internal_norm : float
+            Plasma normalised internal inductance
 
-        :return: The Wesson normalised beta upper limit.
-        :rtype: float
 
-        :Notes:
-            - It is recommended to use this method with the other Wesson relations for normalsied internal
-            inductance and current profile index.
-            - This fit is derived from the DIII-D database for β_N >= 2.5
+         Returns
+        -------
+        float
+            The Wesson normalised beta upper limit.
 
-        :References:
-            - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
-            International Series of Monographs on Physics, Volume 149.
+         Notes
+         -----
+             - It is recommended to use this method with the other Wesson relations for normalsied internal
+             inductance and current profile index.
+             - This fit is derived from the DIII-D database for β_N >= 2.5
 
-            - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
-            Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+         References
+         ----------
+             - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+             International Series of Monographs on Physics, Volume 149.
+
+             - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
+             Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+
         """
         return 4 * ind_plasma_internal_norm
 
     @staticmethod
     def calculate_beta_norm_max_original(eps: float) -> float:
-        """
-        Calculate the original scaling law normalsied beta upper limit.
+        """Calculate the original scaling law normalsied beta upper limit.
 
-        :param eps: Plasma normalised internal inductance
-        :type eps: float
+        Parameters
+        ----------
+        eps : float
+            Plasma normalised internal inductance
 
-        :return: The original scaling law normalised beta upper limit.
-        :rtype: float
+        Returns
+        -------
+        float
 
-        :Notes:
-
-        :References:
+        References
+        ----------
+            The original scaling law normalised beta upper limit.
 
         """
         return 2.7 * (1.0 + 5.0 * eps**3.5)
 
     @staticmethod
     def calculate_beta_norm_max_menard(eps: float) -> float:
-        """
-        Calculate the Menard normalsied beta upper limit.
+        """Calculate the Menard normalsied beta upper limit.
 
-        :param eps: Plasma normalised internal inductance
-        :type eps: float
+        Parameters
+        ----------
+        eps : float
+            Plasma normalised internal inductance
 
-        :return: The Menard normalised beta upper limit.
-        :rtype: float
+        Returns
+        -------
+        float
+            The Menard normalised beta upper limit.
 
-        :Notes:
+        Notes
+        -----
             - Found as a reasonable fit to the computed no wall limit at f_BS ≈ 50%
             - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
               β_T data from DIII-D at A = 2.9 and high κ.
 
-        :References:
+        References
+        ----------
             - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
             Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
             doi: https://doi.org/10.1088/0029-5515/56/10/106023.
@@ -8334,27 +8862,39 @@ class PlasmaBeta:
     def calculate_beta_norm_max_thloreus(
         c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
     ) -> float:
-        """
-        Calculate the E. Tholerus normalized beta upper limit.
+        """Calculate the E. Tholerus normalized beta upper limit.
 
-        :param c_beta: Pressure peaking factor coefficient.
-        :type c_beta: float
-        :param pres_plasma_on_axis: Central plasma pressure (Pa).
-        :type pres_plasma_on_axis: float
-        :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
-        :type pres_plasma_vol_avg: float
+        Parameters
+        ----------
+        c_beta : float
+            Pressure peaking factor coefficient.
+        pres_plasma_on_axis : float
+            Central plasma pressure (Pa).
+        pres_plasma_vol_avg : float
+            Volume-averaged plasma pressure (Pa).
+        c_beta: float :
 
-        :return: The E. Tholerus normalized beta upper limit.
-        :rtype: float
+        pres_plasma_on_axis: float :
 
-        :Notes:
+        pres_plasma_vol_avg: float :
+
+
+        Returns
+        -------
+        float
+            The E. Tholerus normalized beta upper limit.
+
+        Notes
+        -----
             - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
               which is defined as the ratio of the peak pressure to the average pressure.
             - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
 
-        :References:
+        References
+        ----------
             - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
               Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+
         """
         return 3.7 + (
             (c_beta / (pres_plasma_on_axis / pres_plasma_vol_avg))
@@ -8367,24 +8907,30 @@ class PlasmaBeta:
         kappa: float,
         aspect: float,
     ) -> float:
-        """
-        Calculate the Stambaugh normalized beta upper limit.
+        """Calculate the Stambaugh normalized beta upper limit.
 
-        :param f_c_plasma_bootstrap: Bootstrap current fraction.
-        :type f_c_plasma_bootstrap: float
-        :param kappa: Plasma separatrix elongation.
-        :type kappa: float
-        :param aspect: Plasma aspect ratio.
-        :type aspect: float
+        Parameters
+        ----------
+        f_c_plasma_bootstrap : float
+            Bootstrap current fraction.
+        kappa : float
+            Plasma separatrix elongation.
+        aspect : float
+            Plasma aspect ratio.
 
-        :return: The Stambaugh normalized beta upper limit.
-        :rtype: float
 
-        :Notes:
+        Returns
+        -------
+        float
+            The Stambaugh normalized beta upper limit.
+
+        Notes
+        -----
             - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
             - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
 
-        :References:
+        References
+        ----------
             - R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
               Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
               doi: https://doi.org/10.13182/fst59-279.
@@ -8392,6 +8938,7 @@ class PlasmaBeta:
             - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
               Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
               doi: https://doi.org/10.1088/0029-5515/44/4/009.
+
         """
         return (
             f_c_plasma_bootstrap
@@ -8406,20 +8953,27 @@ class PlasmaBeta:
     ) -> float:
         """Calculate normalised beta (β_N).
 
-        :param beta: Plasma beta (fraction).
-        :type beta: float
-        :param rminor: Plasma minor radius (m).
-        :type rminor: float
-        :param c_plasma: Plasma current (A).
-        :type c_plasma: float
-        :param b_field: Magnetic field (T).
-        :type b_field: float
-        :return: Normalised beta.
-        :rtype: float
+        Parameters
+        ----------
+        beta : float
+            Plasma beta (fraction).
+        rminor : float
+            Plasma minor radius (m).
+        c_plasma : float
+            Plasma current (A).
+        b_field : float
+            Magnetic field (T).
 
-        :Notes:
-            - 1.0e8 is a conversion factor to get beta_N in standard units, as plasma current is normally in MA and
-             beta is in percentage instead of fraction.
+        Returns
+        -------
+        float
+            Normalised beta.
+
+        Notes
+        -----
+        - 1.0e8 is a conversion factor to get beta_N in standard units, as plasma current is normally in MA and
+        beta is in percentage instead of fraction.
+
         """
 
         return 1.0e8 * (beta * rminor * b_field) / c_plasma
@@ -8432,15 +8986,19 @@ class PlasmaBeta:
 
         E_plasma = 1.5 * β * B² / (2 * μ_0) * V
 
-        :param beta: Plasma beta (fraction).
-        :type beta: float
-        :param b_field: Magnetic field (T).
-        :type b_field: float
-        :param vol_plasma: Plasma volume (m³).
-        :type vol_plasma: float
-        :return: Plasma energy (J).
-        :rtype: float
+        Parameters
+        ----------
+        beta : float
+            Plasma beta (fraction).
+        b_field : float
+            Magnetic field (T).
+        vol_plasma : float
+            Plasma volume (m³).
 
+        Returns
+        -------
+        float
+            Plasma energy (J).
         """
 
         return (1.5e0 * beta * b_field**2) / (2.0e0 * constants.RMU0) * vol_plasma
@@ -8452,25 +9010,30 @@ class PlasmaBeta:
         plasma_current: float,
         rminor: float,
     ) -> float:
-        """
-        Calculate the maximum allowed beta (β) from a given normalised (β_N).
-
-        :param b_plasma_toroidal_on_axis: Toroidal B-field on plasma axis [T].
-        :type b_plasma_toroidal_on_axis: float
-        :param beta_norm_max: Troyon-like g coefficient.
-        :type beta_norm_max: float
-        :param plasma_current: Plasma current [A].
-        :type plasma_current: float
-        :param rminor: Plasma minor axis [m].
-        :type rminor: float
-        :return: Beta limit as defined below.
-        :rtype: float
+        """Calculate the maximum allowed beta (β) from a given normalised (β_N).
 
         This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
         The limit applies to beta defined with respect to the total B-field.
         Switch i_beta_component determines which components of beta to include.
 
-        Notes:
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal B-field on plasma axis [T].
+        beta_norm_max : float
+            Troyon-like g coefficient.
+        plasma_current : float
+            Plasma current [A].
+        rminor : float
+            Plasma minor axis [m].
+
+        Returns
+        -------
+        float
+            Beta limit as defined below.
+
+        Notes
+        -----
             - If i_beta_component = 0, then the limit is applied to the total beta.
             - If i_beta_component = 1, then the limit is applied to the thermal beta only.
             - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
@@ -8478,13 +9041,13 @@ class PlasmaBeta:
 
             - The default value for the g coefficient is beta_norm_max = 3.5.
 
-        References:
+        References
+        ----------
             - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
             Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
             doi: https://doi.org/10.1088/0741-3335/30/11/019.
 
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
-
         """
 
         # Multiplied by 0.01 to convert from % to fraction
@@ -8501,16 +9064,21 @@ class PlasmaBeta:
     ) -> float:
         """Calculates total poloidal beta (β_p)
 
-        :type b_plasma_total: float
-        :param b_plasma_poloidal_average: The average poloidal magnetic field of the plasma (in Tesla).
-        :type b_plasma_poloidal_average: float
-        :param beta: The plasma beta, a dimensionless parameter representing the ratio of plasma pressure to magnetic pressure.
-        :type beta: float
-        :return: The calculated total poloidal beta.
-        :rtype: float
+        Parameters
+        ----------
+        b_plasma_poloidal_average : float
+            The average poloidal magnetic field of the plasma (in Tesla).
+        beta : float
+            The plasma beta, a dimensionless parameter representing the ratio of plasma pressure to magnetic pressure.
 
-        :references:
-            - J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
+        Returns
+        -------
+        float
+            The calculated total poloidal beta.
+
+        References
+        ----------
+        - J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
         Page 270 ISBN 0521851076
 
         """
@@ -8529,40 +9097,45 @@ class PlasmaBeta:
         pden_plasma_alpha_mw: float,
         i_beta_fast_alpha: int,
     ) -> float:
-        """
-        Calculate the fast alpha beta (β_fast_alpha) component.
+        """Calculate the fast alpha beta (β_fast_alpha) component.
 
         This function computes the fast alpha beta contribution based on the provided plasma parameters.
 
-        :param b_plasma_poloidal_average: Poloidal field (T).
-        :type b_plasma_poloidal_average: float
-        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
-        :type b_plasma_toroidal_on_axis: float
-        :param nd_plasma_electrons_vol_avg: Electron density (m⁻³).
-        :type nd_plasma_electrons_vol_avg: float
-        :param nd_plasma_fuel_ions_vol_avg: Fuel ion density (m⁻³).
-        :type nd_plasma_fuel_ions_vol_avg: float
-        :param nd_plasma_ions_total_vol_avg: Total ion density (m⁻³).
-        :type nd_plasma_ions_total_vol_avg: float
-        :param temp_plasma_electron_density_weighted_kev: Density-weighted electron temperature (keV).
-        :type temp_plasma_electron_density_weighted_kev: float
-        :param temp_plasma_ion_density_weighted_kev: Density-weighted ion temperature (keV).
-        :type temp_plasma_ion_density_weighted_kev: float
-        :param pden_alpha_total_mw: Alpha power per unit volume, from beams and plasma (MW/m³).
-        :type pden_alpha_total_mw: float
-        :param pden_plasma_alpha_mw: Alpha power per unit volume just from plasma (MW/m³).
-        :type pden_plasma_alpha_mw: float
-        :param i_beta_fast_alpha: Switch for fast alpha pressure method.
-        :type i_beta_fast_alpha: int
+        Parameters
+        ----------
+        b_plasma_poloidal_average : float
+            Poloidal field (T).
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        nd_plasma_electrons_vol_avg : float
+            Electron density (m⁻³).
+        nd_plasma_fuel_ions_vol_avg : float
+            Fuel ion density (m⁻³).
+        nd_plasma_ions_total_vol_avg : float
+            Total ion density (m⁻³).
+        temp_plasma_electron_density_weighted_kev : float
+            Density-weighted electron temperature (keV).
+        temp_plasma_ion_density_weighted_kev : float
+            Density-weighted ion temperature (keV).
+        pden_alpha_total_mw : float
+            Alpha power per unit volume, from beams and plasma (MW/m³).
+        pden_plasma_alpha_mw : float
+            Alpha power per unit volume just from plasma (MW/m³).
+        i_beta_fast_alpha : int
+            Switch for fast alpha pressure method.
 
-        :return: Fast alpha beta component.
-        :rtype: float
+        Returns
+        -------
+        float
+            Fast alpha beta component.
 
-        :Notes:
+        Notes
+        -----
             - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, 〈T〉 = 5-20 keV
 
 
-        :References:
+        References
+        ----------
             - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
             https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
 
@@ -8935,7 +9508,12 @@ class PlasmaInductance:
             ) from None
 
     def get_ind_internal_norm_value(self, model: IndInternalNormModel) -> float:
-        """Get the normalised internal inductance (l_i) for the specified model."""
+        """Get the normalised internal inductance (l_i) for the specified model.
+
+        Parameters
+        ----------
+        model: IndInternalNormModel :
+        """
         model_map = {
             IndInternalNormModel.USER_INPUT: physics_variables.ind_plasma_internal_norm,
             IndInternalNormModel.WESSON: physics_variables.ind_plasma_internal_norm_wesson,
@@ -8959,30 +9537,36 @@ class PlasmaInductance:
     ) -> tuple[float, float, float, float, float, float]:
         """Calculate the volt-second requirements and related parameters for plasma physics.
 
-        :param csawth: Coefficient for sawteeth effects
-        :type csawth: float
-        :param eps: Inverse aspect ratio
-        :type eps: float
-        :param f_c_plasma_inductive: Fraction of plasma current produced inductively
-        :type f_c_plasma_inductive: float
-        :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
-        :type ejima_coeff: float
-        :param kappa: Plasma elongation
-        :type kappa: float
-        :param rmajor: Plasma major radius (m)
-        :type rmajor: float
-        :param res_plasma: Plasma resistance (ohm)
-        :type res_plasma: float
-        :param plasma_current: Plasma current (A)
-        :type plasma_current: float
-        :param t_plant_pulse_fusion_ramp: Heating time (s)
-        :type t_plant_pulse_fusion_ramp: float
-        :param t_plant_pulse_burn: Burn time (s)
-        :type t_plant_pulse_burn: float
-        :param ind_plasma_internal_norm: Plasma normalized internal inductance
-        :type ind_plasma_internal_norm: float
+        Parameters
+        ----------
+        csawth : float
+            Coefficient for sawteeth effects
+        eps : float
+            Inverse aspect ratio
+        f_c_plasma_inductive : float
+            Fraction of plasma current produced inductively
+        ejima_coeff : float
+            Ejima coefficient for resistive start-up V-s component
+        kappa : float
+            Plasma elongation
+        rmajor : float
+            Plasma major radius (m)
+        res_plasma : float
+            Plasma resistance (ohm)
+        plasma_current : float
+            Plasma current (A)
+        t_plant_pulse_fusion_ramp : float
+            Heating time (s)
+        t_plant_pulse_burn : float
+            Burn time (s)
+        ind_plasma_internal_norm : float
+            Plasma normalized internal inductance
 
-        :return: A tuple containing:
+
+        Returns
+        -------
+        tuple[float, float, float, float, float, float]
+            A tuple containing:
             - vs_plasma_internal: Internal plasma volt-seconds (Wb)
             - ind_plasma_internal: Plasma inductance (H)
             - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
@@ -8990,11 +9574,9 @@ class PlasmaInductance:
             - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
             - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
             - vs_plasma_total_required: Total volt-seconds needed (Wb)
-        :rtype: tuple[float, float, float, float, float, float]
 
-        :notes:
-
-        :references:
+        References
+        ----------
             - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
             “Volt-second analysis and consumption in Doublet III plasmas,”
             Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
@@ -9008,6 +9590,7 @@ class PlasmaInductance:
             - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
             The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
             doi: https://doi.org/10.1063/1.865934.
+
         """
         # Plasma internal inductance
 
@@ -9078,22 +9661,26 @@ class PlasmaInductance:
         vol_plasma: float,
         rmajor: float,
     ) -> float:
-        """
-        Calculate the normalised internal inductance using ITER-3 scaling li(3).
+        """Calculate the normalised internal inductance using ITER-3 scaling li(3).
 
-        :param b_plasma_poloidal_vol_avg: Volume-averaged poloidal magnetic field (T).
-        :type b_plasma_poloidal_vol_avg: float
-        :param c_plasma: Plasma current (A).
-        :type c_plasma: float
-        :param vol_plasma: Plasma volume (m^3).
-        :type vol_plasma: float
-        :param rmajor: Plasma major radius (m).
-        :type rmajor: float
+        Parameters
+        ------------
+        b_plasma_poloidal_vol_avg : float
+            Volume-averaged poloidal magnetic field (T).
+        c_plasma : float
+            Plasma current (A).
+        vol_plasma : float
+            Plasma volume (m^3).
+        rmajor : float
+            Plasma major radius (m).
 
-        :returns: The li(3) normalised internal inductance.
-        :rtype: float
+        Returns
+        --------
+        float
+            The li(3) normalised internal inductance.
 
-        :references:
+        References
+        -----------
             - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
             “Inductive flux usage and its optimization in tokamak operation,”
             Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
@@ -9102,7 +9689,7 @@ class PlasmaInductance:
             - G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,”
             Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008,
             doi: https://doi.org/10.1088/0029-5515/48/12/125002.
-        ‌
+
         """
 
         return (
@@ -9114,45 +9701,57 @@ class PlasmaInductance:
 
     @staticmethod
     def calculate_internal_inductance_menard(kappa: float) -> float:
-        """
-        Calculate the Menard plasma normalized internal inductance.
+        """Calculate the Menard plasma normalized internal inductance.
 
-        :param kappa: Plasma separatrix elongation.
-        :type kappa: float
+        Parameters
+        ----------
+        kappa : float
+            Plasma separatrix elongation.
 
-        :return: The Menard plasma normalised internal inductance.
-        :rtype: float
+        Returns
+        -------
+        float
+            The Menard plasma normalised internal inductance.
 
-        :Notes:
+        Notes
+        -----
             - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
-            - This model is only recommneded to be used for ST's with kappa > 2.5
+            - This model is only recommended to be used for ST's with kappa > 2.5
 
-        :References:
+        References
+        ----------
             - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
             Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
             doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+
         """
         return 3.4 - kappa
 
     @staticmethod
     def calculate_internal_inductance_wesson(alphaj: float) -> float:
-        """
-        Calculate the Wesson plasma normalized internal inductance.
+        """Calculate the Wesson plasma normalized internal inductance.
 
-        :param alphaj: Current profile index.
-        :type alphaj: float
+        Parameters
+        ----------
+        alphaj : float
+            Current profile index.
 
-        :return: The Wesson plasma normalised internal inductance.
-        :rtype: float
+        Returns
+        -------
+        float
+            The Wesson plasma normalised internal inductance.
 
-        :Notes:
+        Notes
+        -----
             - It is recommended to use this method with the other Wesson relations for normalised beta and
               current profile index.
             - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
 
-        :References:
+        References
+        ----------
             - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
             International Series of Monographs on Physics, Volume 149.
+
         """
         return np.log(1.65 + 0.89 * alphaj)
 
@@ -9462,16 +10061,20 @@ class DetailedPhysics:
         temp_plasma_species_kev: float | np.ndarray,
         nd_plasma_species: float | np.ndarray,
     ) -> float | np.ndarray:
-        """
-        Calculate the Debye length for a plasma.
+        """Calculate the Debye length for a plasma.
 
-        :param temp_plasma_species_kev: Species temperature in keV.
-        :type temp_plasma_species_kev: float | np.ndarray
-        :param nd_plasma_species: Species number density (/m^3).
-        :type nd_plasma_species: float | np.ndarray
+        Parameters
+        ----------
+        temp_plasma_species_kev : float | np.ndarray
+            Species temperature in keV.
+        nd_plasma_species : float | np.ndarray
+            Species number density (/m^3).
 
-        :returns: Debye length in meters.
-        :rtype: float | np.ndarray
+        Returns
+        -------
+        float | np.ndarray
+            Debye length in meters.
+
         """
         return (
             (constants.EPSILON0 * temp_plasma_species_kev * constants.KILOELECTRON_VOLT)
@@ -9480,12 +10083,18 @@ class DetailedPhysics:
 
     @staticmethod
     def calculate_lorentz_factor(velocity: float | np.ndarray) -> float | np.ndarray:
-        """
-        Calculate the Lorentz factor for a given velocity.
-        :param velocity: Velocity in m/s.
-        :type velocity: float | np.ndarray
-        :returns: Lorentz factor (dimensionless).
-        :rtype: float | np.ndarray
+        """Calculate the Lorentz factor for a given velocity.
+
+        Parameters
+        ----------
+        velocity : float | np.ndarray
+            Velocity in m/s.
+
+        Returns
+        -------
+        float | np.ndarray
+            Lorentz factor (dimensionless).
+
         """
         return 1 / (1 - (velocity / constants.SPEED_LIGHT) ** 2) ** 0.5
 
@@ -9493,14 +10102,20 @@ class DetailedPhysics:
     def calculate_relativistic_particle_speed(
         e_kinetic: float | np.ndarray, mass: float
     ) -> float | np.ndarray:
-        """
-        Calculate the speed of a particle given its kinetic energy and mass using relativistic mechanics.
-        :param e_kinetic: Kinetic energy in Joules.
-        :type e_kinetic: float | np.ndarray
-        :param mass: Mass of the particle in kg.
-        :type mass: float
-        :returns: Speed of the particle in m/s.
-        :rtype: float | np.ndarray
+        """Calculate the speed of a particle given its kinetic energy and mass using relativistic mechanics.
+
+        Parameters
+        ----------
+        e_kinetic : float | np.ndarray
+            Kinetic energy in Joules.
+        mass : float
+            Mass of the particle in kg.
+
+        Returns
+        -------
+        float | np.ndarray
+            Speed of the particle in m/s.
+
         """
         return (
             constants.SPEED_LIGHT
@@ -9511,14 +10126,20 @@ class DetailedPhysics:
     def calculate_coulomb_log_from_impact(
         self, impact_param_max: float, impact_param_min: float
     ) -> float:
-        """
-        Calculate the Coulomb logarithm from maximum and minimum impact parameters.
-        :param impact_param_max: Maximum impact parameter in meters.
-        :type impact_param_max: float
-        :param impact_param_min: Minimum impact parameter in meters.
-        :type impact_param_min: float
-        :returns: Coulomb logarithm (dimensionless).
-        :rtype: float
+        """Calculate the Coulomb logarithm from maximum and minimum impact parameters.
+
+        Parameters
+        ----------
+        impact_param_max : float
+            Maximum impact parameter in meters.
+        impact_param_min : float
+            Minimum impact parameter in meters.
+
+        Returns
+        -------
+        float
+            Coulomb logarithm (dimensionless).
+
         """
         return np.log(impact_param_max / impact_param_min)
 
@@ -9529,19 +10150,23 @@ class DetailedPhysics:
         m_reduced: float,
         vel_relative: float | np.ndarray,
     ) -> float | np.ndarray:
-        """
-        Calculate the classical distance of closest approach for two charged particles.
+        """Calculate the classical distance of closest approach for two charged particles.
 
-        :param charge1: Charge of particle 1 in units of elementary charge.
-        :type charge1: float
-        :param charge2: Charge of particle 2 in units of elementary charge.
-        :type charge2: float
-        :param m_reduced: Reduced mass of the two-particle system in kg.
-        :type m_reduced: float
-        :param vel_relative: Relative velocity of the two particles in m/s.
-        :type vel_relative: float | np.ndarray
-        :returns: Distance of closest approach in meters.
-        :rtype: float | np.ndarray
+        Parameters
+        ----------
+        charge1 :
+            Charge of particle 1 in units of elementary charge.
+        charge2 :
+            Charge of particle 2 in units of elementary charge.
+        m_reduced:
+            Reduced mass of the two-particle system in kg.
+        vel_relative:
+            Relative velocity of the two particles in m/s.
+
+        Returns
+        -------
+        float | np.ndarray
+            Distance of closest approach in meters.
         """
 
         return (charge1 * charge2 * constants.ELECTRON_CHARGE**2) / (
@@ -9552,16 +10177,22 @@ class DetailedPhysics:
     def calculate_debroglie_wavelength(
         mass: float, velocity: float | np.ndarray
     ) -> float | np.ndarray:
-        """
-        Calculate the de Broglie wavelength of a particle.
-        :param mass: Mass of the particle in kg.
-        :type mass: float
-        :param velocity: Velocity of the particle in m/s.
-        :type velocity: float | np.ndarray
-        :returns: de Broglie wavelength in meters.
-        :rtype: float | np.ndarray
+        """Calculate the de Broglie wavelength of a particle.
+
+        Parameters
+        ----------
+        mass : float
+            Mass of the particle in kg.
+        velocity : float | np.ndarray
+            Velocity of the particle in m/s.
+
+        Returns
+        -------
+        float | np.ndarray
+            de Broglie wavelength in meters.
 
         :note: Reduced Planck constant (h-bar) is used in the calculation as this is for scattering.
+
         """
         return (constants.PLANCK_CONSTANT / (2 * np.pi)) / (mass * velocity)
 
@@ -9569,16 +10200,22 @@ class DetailedPhysics:
     def calculate_plasma_frequency(
         nd_particle: float | np.ndarray, m_particle: float, z_particle: float
     ) -> float | np.ndarray:
-        """
-        Calculate the plasma frequency for a particle species.
-        :param nd_particle: Number density of the particle species (/m^3).
-        :type nd_particle: float | np.ndarray
-        :param m_particle: Mass of the particle species (kg).
-        :type m_particle: float
-        :param Z_particle: Charge state of the particle species (dimensionless).
-        :type Z_particle: float
-        :returns: Plasma frequency in Hz.
-        :rtype: float | np.ndarray
+        """Calculate the plasma frequency for a particle species.
+
+        Parameters
+        ----------
+        nd_particle : float | np.ndarray
+            Number density of the particle species (/m^3).
+        m_particle : float
+            Mass of the particle species (kg).
+        Z_particle : float
+            Charge state of the particle species (dimensionless).
+
+        Returns
+        -------
+        float | np.ndarray
+            Plasma frequency in Hz.
+
         """
         return (
             (
@@ -9592,16 +10229,22 @@ class DetailedPhysics:
     def calculate_larmor_frequency(
         b_field: float | np.ndarray, m_particle: float, z_particle: float
     ) -> float | np.ndarray:
-        """
-        Calculate the Larmor frequency for a particle species.
-        :param b_field: Magnetic field strength (T).
-        :type b_field: float | np.ndarray
-        :param m_particle: Mass of the particle species (kg).
-        :type m_particle: float
-        :param Z_particle: Charge state of the particle species (dimensionless).
-        :type Z_particle: float
-        :returns: Larmor frequency in Hz.
-        :rtype: float | np.ndarray
+        """Calculate the Larmor frequency for a particle species.
+
+        Parameters
+        ----------
+        b_field : float | np.ndarray
+            Magnetic field strength (T).
+        m_particle : float
+            Mass of the particle species (kg).
+        Z_particle : float
+            Charge state of the particle species (dimensionless).
+
+        Returns
+        -------
+        float | np.ndarray
+            Larmor frequency in Hz.
+
         """
         return (z_particle * constants.ELECTRON_CHARGE * b_field) / (
             2 * np.pi * m_particle
@@ -9611,12 +10254,17 @@ class DetailedPhysics:
     def calculate_reduced_mass(mass1: float, mass2: float) -> float:
         """
         Calculate the reduced mass of two particles.
-        :param mass1: Mass of particle 1 (kg).
-        :type mass1: float
-        :param mass2: Mass of particle 2 (kg).
-        :type mass2: float
-        :returns: Reduced mass (kg).
-        :rtype: float
+
+        Parameters
+        ----------
+        mass1:
+            Mass of particle 1 (kg).
+        mass2:
+            Mass of particle 2 (kg).
+
+        Returns
+        -------
+            Reduced mass (kg).
         """
         return (mass1 * mass2) / (mass1 + mass2)
 
@@ -9626,12 +10274,17 @@ class DetailedPhysics:
     ) -> float | np.ndarray:
         """
         Calculate the average relative velocity between two particles.
-        :param velocity_1: Velocity of particle 1 (m/s).
-        :type velocity_1: float | np.ndarray
-        :param velocity_2: Velocity of particle 2 (m/s).
-        :type velocity_2: float | np.ndarray
-        :returns: Average relative velocity (m/s).
-        :rtype: float | np.ndarray
+
+        Parameters
+        ----------
+        velocity_1:
+            Velocity of particle 1 (m/s).
+        velocity_2:
+            Velocity of particle 2 (m/s).
+
+        Returns
+        -------
+            Average relative velocity (m/s).
         """
         return np.sqrt(velocity_1**2 + velocity_2**2)
 

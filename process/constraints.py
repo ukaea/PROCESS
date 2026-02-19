@@ -74,12 +74,15 @@ class ConstraintManager:
         The decorator should wrap a function with no argument which returns a
         ConstraintResult.
 
-        :param name: the name of the constraint and how it can be indexed from the registry
-        :type name: Hashable
-        :param units: the units of the constraint written to the output files
-        :type units: str
-        :param symbol: the symbol of the constraint written to the output files
-        :type symbol: str
+        Parameters
+        ----------
+        name : Hashable
+            the name of the constraint and how it can be indexed from the registry
+        units : str
+            the units of the constraint written to the output files
+        symbol : str
+            the symbol of the constraint written to the output files
+
         """
 
         def wrapper(func: Callable[[], ConstraintResult]):
@@ -98,20 +101,31 @@ class ConstraintManager:
         """Retrieves a constraint registration from the registry given its name.
         Returns None if no constraint with the name exists.
 
-        :param name: the name of the constraint
-        :type name: Hashable
-        :returns: the constraint registration object
-        :rtype: ConstraintRegistration | None
+        Parameters
+        ----------
+        name : Hashable
+            the name of the constraint
+
+        Returns
+        -------
+        ConstraintRegistration | None
+            the constraint registration object
         """
         return cls._constraint_registry.get(name)
 
     @classmethod
     def evaluate_constraint(cls, name: Hashable):
         """Evalutes a constraint with a given name.
-        :param name: the name of the constraint
-        :type name: Hashable
-        :returns: the result of evaluating the constraint
-        :rtype: ConstraintResult | None
+
+        Parameters
+        ----------
+        name : Hashable
+            the name of the constraint
+
+        Returns
+        -------
+        ConstraintResult | None
+            the result of evaluating the constraint
         """
         registration = cls.get_constraint(name)
 
@@ -124,8 +138,6 @@ class ConstraintManager:
 @ConstraintManager.register_constraint(1, "", "=")
 def constraint_equation_1():
     """Relationship between beta, temperature (keV) and density
-
-    author: J Morris
 
     beta_total_vol_avg: total plasma beta
     beta_{ft}: fast alpha beta component
@@ -167,7 +179,7 @@ def constraint_equation_1():
 
 @ConstraintManager.register_constraint(2, "MW/m3", "=")
 def constraint_equation_2():
-    """author: J. Morris
+    """
 
      i_rad_loss: switch for radiation loss term usage in power balance (see User Guide):
     -  0 total power lost is scaling power plus radiation (needed for i_plasma_pedestal=2,3)
@@ -297,7 +309,6 @@ def constraint_equation_3():
 @ConstraintManager.register_constraint(4, "MW/m3", "=")
 def constraint_equation_4():
     """Global power balance equation for electrons
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     i_rad_loss: switch for radiation loss term usage in power balance
     - 0 total power lost is scaling power plus radiation (needed for i_plasma_pedestal=2,3)
@@ -353,7 +364,6 @@ def constraint_equation_4():
 @ConstraintManager.register_constraint(5, "/m3", "<=")
 def constraint_equation_5():
     """Equation for density upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     fdene: density limit scale
     nd_plasma_electrons_vol_avg: electron density (/m3)
@@ -401,7 +411,6 @@ def constraint_equation_5():
 @ConstraintManager.register_constraint(6, "", "<=")
 def constraint_equation_6():
     """Equation for epsilon beta-poloidal upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     beta_poloidal_eps_max: maximum (eps*beta_poloidal)
     eps: inverse aspect ratio
@@ -492,7 +501,6 @@ def constraint_equation_9():
 @ConstraintManager.register_constraint(11, "m", "=")
 def constraint_equation_11():
     """Equation for radial build
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     rbld: sum of thicknesses to the major radius (m)
     rmajor: plasma major radius (m)
@@ -511,7 +519,6 @@ def constraint_equation_11():
 @ConstraintManager.register_constraint(12, "V.sec", ">=")
 def constraint_equation_12():
     """Equation for volt-second capability lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     vs_plasma_total_required: total V-s needed (Wb)
     vs_plasma_total_required (lower limit) is positive; vs_cs_pf_total_pulse (available) is negative
@@ -535,8 +542,6 @@ def constraint_equation_12():
 def constraint_equation_13():
     """Equation for burn time lower limit
 
-    author: P B Lloyd, CCFE, Culham Science Centre
-
     t_plant_pulse_burn: burn time (s) (calculated if i_pulsed_plant=1)
     t_burn_min: minimum burn time (s)
     """
@@ -553,7 +558,6 @@ def constraint_equation_13():
 @ConstraintManager.register_constraint(14, "", "=")
 def constraint_equation_14():
     """Equation to fix number of NBI decay lengths to plasma centre
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     n_beam_decay_lengths_core: neutral beam e-decay lengths to plasma centre
     n_beam_decay_lengths_core_required: permitted neutral beam e-decay lengths to plasma centre
@@ -574,7 +578,6 @@ def constraint_equation_14():
 @ConstraintManager.register_constraint(15, "MW", ">=")
 def constraint_equation_15():
     """Equation for L-H power threshold limit to enforce H-mode
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     f_h_mode_margin: a margin on the constraint
     p_l_h_threshold_mw: L-H mode power threshold (MW)
@@ -603,7 +606,6 @@ def constraint_equation_15():
 @ConstraintManager.register_constraint(16, "MW", ">=")
 def constraint_equation_16():
     """Equation for net electric power lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     p_plant_electric_net_mw: net electric power (MW)
     p_plant_electric_net_required_mw: required net electric power (MW)
@@ -621,7 +623,6 @@ def constraint_equation_16():
 @ConstraintManager.register_constraint(17, "MW/m3", "<=")
 def constraint_equation_17():
     """Equation for radiation power upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
@@ -660,7 +661,6 @@ def constraint_equation_17():
 @ConstraintManager.register_constraint(18, "MW/m2", "<=")
 def constraint_equation_18():
     """Equation for divertor heat load upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     pflux_div_heat_load_max_mw: heat load limit (MW/m2)
     pflux_div_heat_load_mw: divertor heat load (MW/m2)
@@ -680,7 +680,6 @@ def constraint_equation_18():
 @ConstraintManager.register_constraint(19, "MVA", "<=")
 def constraint_equation_19():
     """Equation for MVA (power) upper limit: resistive TF coil set
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     p_cp_resistive_mw: peak resistive TF coil inboard leg power (total) (MW)
     p_tf_leg_resistive_mw: TF coil outboard leg resistive power (total) (MW)
@@ -700,7 +699,6 @@ def constraint_equation_19():
 @ConstraintManager.register_constraint(20, "m", "<=")
 def constraint_equation_20():
     """Equation for neutral beam tangency radius upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     radius_beam_tangency_max: maximum tangency radius for centreline of beam (m)
     radius_beam_tangency: neutral beam centreline tangency radius (m)
@@ -720,7 +718,6 @@ def constraint_equation_20():
 @ConstraintManager.register_constraint(21, "", ">=")
 def constraint_equation_21():
     """Equation for minor radius lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     rminor: plasma minor radius (m)
     aplasmin: minimum minor radius (m)
@@ -768,7 +765,6 @@ def constraint_equation_22():
 @ConstraintManager.register_constraint(23, "m", "<=")
 def constraint_equation_23():
     """Equation for conducting shell radius / rminor upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     rminor: plasma minor radius (m)
     dr_fw_plasma_gap_outboard: gap between plasma and first wall, outboard side (m)
@@ -804,7 +800,6 @@ def constraint_equation_23():
 @ConstraintManager.register_constraint(24, "", "<=")
 def constraint_equation_24():
     """Equation for beta upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     i_beta_component: switch for beta limit scaling (constraint equation  24):
     - 0 apply limit to total beta;
@@ -886,7 +881,6 @@ def constraint_equation_24():
 @ConstraintManager.register_constraint(25, "T", "<=")
 def constraint_equation_25():
     """Equation for peak toroidal field upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     b_tf_inboard_max: maximum peak toroidal field (T)
     b_tf_inboard_peak_symmetric: mean peak field at TF coil (T)
@@ -906,7 +900,6 @@ def constraint_equation_25():
 @ConstraintManager.register_constraint(26, "A/m2", "<=")
 def constraint_equation_26():
     """Equation for Central Solenoid current density upper limit at EOF
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     fjohc: margin for central solenoid current at end-of-flattop
     j_cs_critical_flat_top_end: allowable central solenoid current density at end of flat-top (A/m2)
@@ -926,7 +919,6 @@ def constraint_equation_26():
 @ConstraintManager.register_constraint(27, "A/m2", "<=")
 def constraint_equation_27():
     """Equation for Central Solenoid current density upper limit at BOP
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     fjohc0: margin for central solenoid current at beginning of pulse
     j_cs_critical_pulse_start: allowable central solenoid current density at beginning of pulse (A/m2)
@@ -946,7 +938,6 @@ def constraint_equation_27():
 @ConstraintManager.register_constraint(28, "", ">=")
 def constraint_equation_28():
     """Equation for fusion gain (big Q) lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     big_q_plasma: Fusion gain; P_fusion / (P_injection + P_ohmic)
     big_q_plasma_min: minimum fusion gain Q
@@ -976,7 +967,6 @@ def constraint_equation_28():
 @ConstraintManager.register_constraint(29, "m", "=")
 def constraint_equation_29():
     """Equation for inboard major radius: This is a consistency equation
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     rmajor: plasma major radius (m) (iteration variable 3)
     rminor: plasma minor radius (m)
@@ -1000,7 +990,6 @@ def constraint_equation_29():
 @ConstraintManager.register_constraint(30, "MW", "<=")
 def constraint_equation_30():
     """Equation for injection power upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
     p_hcd_injected_max: Maximum allowable value for injected power (MW)
@@ -1018,7 +1007,6 @@ def constraint_equation_30():
 @ConstraintManager.register_constraint(31, "Pa", "<=")
 def constraint_equation_31():
     """Equation for TF coil case stress upper limit (SCTF)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     sig_tf_case_max: Allowable maximum shear stress in TF coil case (Tresca criterion) (Pa)
     sig_tf_case: Constrained stress in TF coil case (Pa)
@@ -1036,7 +1024,6 @@ def constraint_equation_31():
 @ConstraintManager.register_constraint(32, "Pa", "<=")
 def constraint_equation_32():
     """Equation for TF coil conduit stress upper limit (SCTF)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     sig_tf_wp_max: Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)
     sig_tf_wp: Constrained stress in TF conductor conduit (Pa)
@@ -1054,7 +1041,7 @@ def constraint_equation_32():
 @ConstraintManager.register_constraint(33, "A/m2", "<=")
 def constraint_equation_33():
     """Equation for TF coil operating/critical J upper limit (SCTF)
-    author: P B Lloyd, CCFE, Culham Science Centre
+
     args : output structure : residual error; constraint value;
 
     fiooic: margin for TF coil operating current / critical
@@ -1080,7 +1067,6 @@ def constraint_equation_33():
 @ConstraintManager.register_constraint(34, "V", "<=")
 def constraint_equation_34():
     """Equation for TF coil dump voltage upper limit (SCTF)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     v_tf_coil_dump_quench_max_kv: max voltage across TF coil during quench (kV)
     v_tf_coil_dump_quench_kv: voltage across a TF coil during quench (kV)
@@ -1098,7 +1084,6 @@ def constraint_equation_34():
 @ConstraintManager.register_constraint(35, "A/m2", "<=")
 def constraint_equation_35():
     """Equation for TF coil J_wp/J_prot upper limit (SCTF)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     j_tf_wp_quench_heat_max: allowable TF coil winding pack current density, for dump temperature
     rise protection (A/m2)
@@ -1117,7 +1102,6 @@ def constraint_equation_35():
 @ConstraintManager.register_constraint(36, "K", ">=")
 def constraint_equation_36():
     """Equation for TF coil s/c temperature margin lower limit (SCTF)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     temp_tf_superconductor_margin: TF coil temperature margin (K)
     temp_tf_superconductor_margin_min: minimum allowable temperature margin : TF coils (K)
@@ -1135,7 +1119,6 @@ def constraint_equation_36():
 @ConstraintManager.register_constraint(37, "1E20 A/Wm2", "<=")
 def constraint_equation_37():
     """Equation for current drive gamma upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     eta_cd_norm_hcd_primary_max: maximum current drive gamma
     eta_cd_norm_hcd_primary: normalised current drive efficiency (1.0e20 A/W-m2)
@@ -1155,7 +1138,6 @@ def constraint_equation_37():
 @ConstraintManager.register_constraint(39, "K", "<=")
 def constraint_equation_39():
     """Equation for first wall temperature upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     temp_fw_max: maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
     temp_fw_peak: peak first wall temperature (K)
@@ -1179,7 +1161,6 @@ def constraint_equation_39():
 @ConstraintManager.register_constraint(40, "MW", ">=")
 def constraint_equation_40():
     """Equation for auxiliary power lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
     p_hcd_injected_min_mw: minimum auxiliary power (MW)
@@ -1199,7 +1180,6 @@ def constraint_equation_40():
 @ConstraintManager.register_constraint(41, "sec", ">=")
 def constraint_equation_41():
     """Equation for plasma current ramp-up time lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     t_plant_pulse_plasma_current_ramp_up: plasma current ramp-up time for current initiation (s)
     t_current_ramp_up_min: minimum plasma current ramp-up time (s)
@@ -1219,7 +1199,6 @@ def constraint_equation_41():
 @ConstraintManager.register_constraint(42, "sec", ">=")
 def constraint_equation_42():
     """Equation for cycle time lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     t_plant_pulse_total: full cycle time (s)
     t_cycle_min: minimum cycle time (s)
@@ -1244,7 +1223,6 @@ def constraint_equation_42():
 @ConstraintManager.register_constraint(43, "deg C", "=")
 def constraint_equation_43():
     """Equation for average centrepost temperature: This is a consistency equation (TART)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     temp_cp_average: average temp of TF coil inboard leg conductor (C)e
     tcpav2: centrepost average temperature (C) (for consistency)
@@ -1270,7 +1248,6 @@ def constraint_equation_43():
 @ConstraintManager.register_constraint(44, "deg C", "<=")
 def constraint_equation_44():
     """Equation for centrepost temperature upper limit (TART)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     temp_cp_max: maximum peak centrepost temperature (K)
     temp_cp_peak: peak centrepost temperature (K)
@@ -1295,14 +1272,14 @@ def constraint_equation_44():
 @ConstraintManager.register_constraint(45, "", ">=")
 def constraint_manager_45():
     """Equation for edge safety factor lower limit (TART)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     q95 : safety factor 'near' plasma edge
     (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
     q95_min: lower limit for edge safety factor
     itart : input integer : switch for spherical tokamak (ST) models:
     - 0 use conventional aspect ratio models;
-    - 1 use spherical tokamak models"""
+    - 1 use spherical tokamak models
+    """
     if data_structure.physics_variables.itart == 0:
         raise ProcessValueError("Do not use constraint 45 if itart=0")
 
@@ -1320,7 +1297,6 @@ def constraint_manager_45():
 @ConstraintManager.register_constraint(46, "", "<=")
 def constraint_equation_46():
     """Equation for Ip/Irod upper limit (TART)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     eps: inverse aspect ratio
     c_tf_total: total (summed) current in TF coils (A)
@@ -1351,7 +1327,6 @@ def constraint_equation_46():
 @ConstraintManager.register_constraint(48, "", "<=")
 def constraint_equation_48():
     """Equation for poloidal beta upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     beta_poloidal_max: maximum poloidal beta
     beta_poloidal: poloidal beta
@@ -1370,10 +1345,7 @@ def constraint_equation_48():
 
 @ConstraintManager.register_constraint(50, "Hz", "<=")
 def constraint_equation_50():
-    """IFE option: Equation for repetition rate upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
-    author: S I Muldrew, CCFE, Culham Science Centre
-    """
+    """IFE option: Equation for repetition rate upper limit"""
     cc = data_structure.ife_variables.reprat / data_structure.ife_variables.rrmax - 1.0
     return ConstraintResult(
         cc,
@@ -1385,7 +1357,6 @@ def constraint_equation_50():
 @ConstraintManager.register_constraint(51, "V.s", "=")
 def constraint_equation_51():
     """Equation to enforce startup flux = available startup flux
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     vs_plasma_res_ramp: resistive losses in startup V-s (Wb)
     vs_plasma_ind_ramp: internal and external plasma inductance V-s (Wb))
@@ -1408,7 +1379,6 @@ def constraint_equation_51():
 @ConstraintManager.register_constraint(52, "", ">=")
 def constraint_equation_52():
     """Equation for tritium breeding ratio lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     The tritium breeding ratio is only calculated when using the IFE model.
 
@@ -1433,7 +1403,6 @@ def constraint_equation_52():
 @ConstraintManager.register_constraint(53, "neutron/m2", "<=")
 def constraint_equation_53():
     """Equation for fast neutron fluence on TF coil upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     nflutfmax: max fast neutron fluence on TF coil (n/m2)
     nflutf: peak fast neutron fluence on TF coil superconductor (n/m2)
@@ -1453,7 +1422,6 @@ def constraint_equation_53():
 @ConstraintManager.register_constraint(54, "MW/m3", "<=")
 def constraint_equation_54():
     """Equation for peak TF coil nuclear heating upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     ptfnucmax: maximum nuclear heating in TF coil (MW/m3)
     ptfnucpm3: nuclear heating in the TF coil (MW/m3) (blktmodel>0)
@@ -1473,7 +1441,6 @@ def constraint_equation_54():
 @ConstraintManager.register_constraint(56, "MW/m", "<=")
 def constraint_equation_56():
     """Equation for power through separatrix / major radius upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     pseprmax: maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
     p_plasma_separatrix_mw: power to be conducted to the divertor region (MW)
@@ -1497,7 +1464,6 @@ def constraint_equation_56():
 @ConstraintManager.register_constraint(59, "", "<=")
 def constraint_equation_59():
     """Equation for neutral beam shine-through fraction upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     f_p_beam_shine_through_max: maximum neutral beam shine-through fraction
     f_p_beam_shine_through: neutral beam shine-through fraction
@@ -1517,7 +1483,6 @@ def constraint_equation_59():
 @ConstraintManager.register_constraint(60, "K", ">=")
 def constraint_equation_60():
     """Equation for Central Solenoid s/c temperature margin lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     temp_cs_superconductor_margin: Central solenoid temperature margin (K)
     temp_cs_superconductor_margin_min: Minimum allowable temperature margin : CS (K)
@@ -1535,7 +1500,6 @@ def constraint_equation_60():
 @ConstraintManager.register_constraint(61, "", ">=")
 def constraint_equation_61():
     """Equation for availability lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     f_t_plant_available: Total plant availability fraction
     avail_min: Minimum availability
@@ -1555,7 +1519,6 @@ def constraint_equation_61():
 @ConstraintManager.register_constraint(62, "", ">=")
 def constraint_equation_62():
     """Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     t_alpha_confinement: alpha particle confinement time (s)
     t_energy_confinement: global thermal energy confinement time (sec)
@@ -1583,7 +1546,6 @@ def constraint_equation_62():
 @ConstraintManager.register_constraint(63, "", "<=")
 def constraint_equation_63():
     """Upper limit on n_iter_vacuum_pumps (i_vacuum_pumping = simple)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     tfno: number of TF coils (default = 50 for stellarators)
     n_iter_vacuum_pumps: number of high vacuum pumps (real number), each with the throughput
@@ -1603,7 +1565,6 @@ def constraint_equation_63():
 @ConstraintManager.register_constraint(64, "", "<=")
 def constraint_equation_64():
     """Upper limit on Zeff
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     zeff_max: maximum value for Zeff
     n_charge_plasma_effective_vol_avg: plasma effective charge
@@ -1623,7 +1584,6 @@ def constraint_equation_64():
 @ConstraintManager.register_constraint(65, "Pa", "<=")
 def constraint_equation_65():
     """Upper limit on stress of the vacuum vessel that occurs when the TF coil quenches.
-    author: Timothy Nunn, UKAEA
 
     max_vv_stress: Maximum permitted stress of the VV (Pa)
     vv_stress_quench: Stress of the VV (Pa)
@@ -1643,7 +1603,6 @@ def constraint_equation_65():
 @ConstraintManager.register_constraint(66, "MW", "<=")
 def constrain_equation_66():
     """Upper limit on rate of change of energy in poloidal field
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     maxpoloidalpower: Maximum permitted absolute rate of change of stored energy in poloidal field (MW)
     peakpoloidalpower: Peak absolute rate of change of stored energy in poloidal field (MW) (11/01/16)
@@ -1663,7 +1622,6 @@ def constrain_equation_66():
 @ConstraintManager.register_constraint(67, "MW/m2", "<=")
 def constraint_equation_67():
     """Simple upper limit on radiation wall load
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     pflux_fw_rad_max: Maximum permitted radiation wall load (MW/m^2)
     pflux_fw_rad_max_mw: Peak radiation wall load (MW/m^2)
@@ -1683,7 +1641,6 @@ def constraint_equation_67():
 @ConstraintManager.register_constraint(68, "MWT/m", "<=")
 def constraint_equation_68():
     """Upper limit on Psep scaling (PsepB/qAR)
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     psepbqarmax: maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
     p_plasma_separatrix_mw: Power to conducted to the divertor region (MW)
@@ -1741,7 +1698,6 @@ def constraint_equation_68():
 @ConstraintManager.register_constraint(72, "Pa", "<=")
 def constraint_equation_72():
     """Upper limit on central Solenoid Tresca yield stress
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     In the case if the bucked and wedged option ( i_tf_bucking >= 2 ) the constrained
     stress is the largest the largest stress of the
@@ -1795,7 +1751,6 @@ def constraint_equation_72():
 def constraint_equation_73():
     """Lower limit to ensure separatrix power is greater than the L-H power + auxiliary power
     Related to constraint 15
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     p_l_h_threshold_mw: L-H mode power threshold (MW)
     p_plasma_separatrix_mw: power to be conducted to the divertor region (MW)
@@ -1816,7 +1771,6 @@ def constraint_equation_73():
 def constraint_equation_74():
     """Upper limit to ensure TF coil quench temperature < temp_croco_quench_max
     ONLY used for croco HTS coil
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     temp_croco_quench: CroCo strand: Actual temp reached during a quench (K)
     temp_croco_quench_max: CroCo strand: maximum permitted temp during a quench (K)
@@ -1837,7 +1791,6 @@ def constraint_equation_74():
 def constraint_equation_75():
     """Upper limit to ensure that TF coil current / copper area < Maximum value
     ONLY used for croco HTS coil
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     copperA_m2: TF coil current / copper area (A/m2)
     copperA_m2_max: Maximum TF coil current / copper area (A/m2)
@@ -1857,7 +1810,6 @@ def constraint_equation_75():
 @ConstraintManager.register_constraint(76, "m-3", "<=")
 def constraint_equation_76():
     """Upper limit for Eich critical separatrix density model: Added for issue 558
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     Eich critical separatrix density model
     Added for issue 558 with ref to http://iopscience.iop.org/article/10.1088/1741-4326/aaa340/pdf
@@ -1901,7 +1853,6 @@ def constraint_equation_76():
 @ConstraintManager.register_constraint(77, "A/turn", "<=")
 def constraint_equation_77():
     """Equation for maximum TF current per turn upper limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     c_tf_turn_max : allowable TF coil current per turn [A/turn]
     c_tf_turn : TF coil current per turn [A/turn]
@@ -1921,7 +1872,6 @@ def constraint_equation_77():
 @ConstraintManager.register_constraint(78, "", ">=")
 def constraint_equation_78():
     """Equation for Reinke criterion, divertor impurity fraction lower limit
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     fzmin : input : minimum impurity fraction from Reinke model
     fzactual : input : actual impurity fraction
@@ -1941,7 +1891,6 @@ def constraint_equation_78():
 @ConstraintManager.register_constraint(79, "A/turn", "<=")
 def constraint_equation_79():
     """Equation for maximum CS field
-    author: P B Lloyd, CCFE, Culham Science Centre
 
     b_cs_limit_max: Central solenoid max field limit [T]
     b_cs_peak_pulse_start: maximum field in central solenoid at beginning of pulse (T)
@@ -1970,7 +1919,7 @@ def constraint_equation_79():
 @ConstraintManager.register_constraint(80, "MW", ">=")
 def constraint_equation_80():
     """Equation for p_plasma_separatrix_mw lower limit
-    author: J Morris, Culham Science Centre
+
     args : output structure : residual error; constraint value; residual error in physical units;
     output string; units string
     Lower limit p_plasma_separatrix_mw
@@ -1993,7 +1942,7 @@ def constraint_equation_80():
 @ConstraintManager.register_constraint(81, "m-3", ">=")
 def constraint_equation_81():
     """Lower limit to ensure central density is larger that the pedestal one
-    author: S Kahn, Culham Science Centre
+
     args : output structure : residual error; constraint value;
     residual error in physical units; output string; units string
     Lower limit nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
@@ -2019,7 +1968,6 @@ def constraint_equation_81():
 @ConstraintManager.register_constraint(82, "m", ">=")
 def constraint_equation_82():
     """Equation for toroidal consistency of stellarator build
-    author: J Lion, IPP Greifswald
 
     toroidalgap: minimal gap between two stellarator coils
     dx_tf_inboard_out_toroidal: total toroidal width of a tf coil
@@ -2037,7 +1985,6 @@ def constraint_equation_82():
 @ConstraintManager.register_constraint(83, "m", ">=")
 def constraint_equation_83():
     """Equation for radial consistency of stellarator build
-    author: J Lion, IPP Greifswald
 
     available_radial_space: avaible space in radial direction as given by each s.-configuration
     required_radial_space: required space in radial direction
@@ -2057,7 +2004,6 @@ def constraint_equation_83():
 @ConstraintManager.register_constraint(84, "", ">=")
 def constraint_equation_84():
     """Equation for the lower limit of beta
-    author: J Lion, IPP Greifswald
 
     beta_vol_avg_min: Lower limit for beta
     beta: plasma beta
@@ -2077,7 +2023,6 @@ def constraint_equation_84():
 @ConstraintManager.register_constraint(85, "years", "=")
 def constraint_equation_85():
     """Equality constraint for the centerpost (CP) lifetime
-    Author : S Kahn
 
     Depending on the chosen option i_cp_lifetime:
     - 0 : The CP full power year lifelime is set by the user (cplife_input)
@@ -2131,7 +2076,6 @@ def constraint_equation_85():
 @ConstraintManager.register_constraint(86, "m", "<=")
 def constraint_equation_86():
     """Upper limit on the turn edge length in the TF winding pack
-    Author : S Kahn
 
     dx_tf_turn_general: TF coil turn edge length including turn insulation [m]
     t_turn_tf_max: TF turn edge length including turn insulation upper limit [m]
@@ -2151,7 +2095,6 @@ def constraint_equation_86():
 @ConstraintManager.register_constraint(87, "MW", "<=")
 def constraint_equation_87():
     """Equation for TF coil cryogenic power upper limit
-    author: S. Kahn, CCFE, Culham Science Centre
 
     p_cryo_plant_electric_mw: cryogenic plant power (MW)
     p_cryo_plant_electric_max_mw: Maximum cryogenic plant power (MW)
@@ -2172,7 +2115,6 @@ def constraint_equation_87():
 @ConstraintManager.register_constraint(88, "", "<=")
 def constraint_equation_88():
     """Equation for TF coil vertical strain upper limit (absolute value)
-    author: CPS Swanson, PPPL, USA
 
     str_wp_max: Allowable maximum TF coil vertical strain
     str_wp: Constrained TF coil vertical strain
@@ -2190,7 +2132,6 @@ def constraint_equation_88():
 @ConstraintManager.register_constraint(89, "A/m2", "<=")
 def constraint_equation_89():
     """Upper limit to ensure that the Central Solenoid [OH] coil current / copper area < Maximum value
-    author: G Turkington, CCFE, Culham Science Centre
 
     copperaoh_m2: CS coil current at EOF / copper area [A/m2]
     copperaoh_m2_max: maximum coil current / copper area [A/m2]
@@ -2210,7 +2151,6 @@ def constraint_equation_89():
 @ConstraintManager.register_constraint(90, "", ">=")
 def constraint_equation_90():
     """Lower limit for CS coil stress load cycles
-    author: A. Pearce, G Turkington CCFE, Culham Science Centre
 
     n_cycle: Allowable number of cycles for CS
     n_cycle_min: Minimum required cycles for CS
@@ -2240,7 +2180,6 @@ def constraint_equation_91():
     """Lower limit to ensure ECRH te is greater than required te for ignition
     at lower values for n and B. Or if the design point is ECRH heatable (if i_plasma_ignited==0)
     stellarators only (but in principle usable also for tokamaks).
-    author: J Lion, IPP Greifswald
 
     max_gyrotron_frequency: Max. av. gyrotron frequency
     te0_ecrh_achievable: Max. achievable electron temperature at ignition point
@@ -2272,7 +2211,6 @@ def constraint_equation_91():
 @ConstraintManager.register_constraint(92, "", "=")
 def constraint_equation_92():
     """Equation for checking is D/T ratio is consistent, and sums to 1.
-    author: G Turkington, UKAEA
 
     f_plasma_fuel_deuterium: fraction of deuterium ions
     f_plasma_fuel_tritium: fraction of tritium ions
@@ -2294,9 +2232,17 @@ def constraint_equation_92():
 def constraint_eqns(m: int, ieqn: int):
     """Evaluates the constraints given the current state of PROCESS.
 
-    :param m: The number of constraints to evaluate
-    :param ieqn: Evaluates the 'ieqn'th constraint equation (index starts at 1)
-    or all equations if <= 0
+    Parameters
+    ----------
+    m :
+        The number of constraints to evaluate
+    ieqn :
+        Evaluates the 'ieqn'th constraint equation (index starts at 1)
+        or all equations if <= 0
+    m: int :
+
+    ieqn: int :
+
     """
 
     if ieqn > 0:

@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class Caller:
     """Calls physics and engineering models."""
 
-    def __init__(self, models: Models) -> None:
+    def __init__(self, models: Models):
         """Initialise all physics and engineering models.
 
         To ensure that, at the start of a run, all physics/engineering
@@ -42,12 +42,17 @@ class Caller:
     ) -> bool:
         """Compare previous and current arrays for agreement within a tolerance.
 
-        :param previous: value(s) from previous models evaluation
-        :type previous: float | np.ndarray
-        :param current: value(s) from current models evaluation
-        :type current: float | np.ndarray
-        :return: whether values agree or not
-        :rtype: bool
+        Parameters
+        ----------
+        previous : float | np.ndarray
+            value(s) from previous models evaluation
+        current : float | np.ndarray
+            value(s) from current models evaluation
+
+        Returns
+        -------
+        bool
+            whether values agree or not
         """
         # Check for same shape: mfile length can change between iterations
         if isinstance(previous, float) or previous.shape == current.shape:
@@ -59,14 +64,23 @@ class Caller:
 
         Ensure objective function and constraints are idempotent before returning.
 
-        :param xc: optimisation parameters
-        :type xc: np.ndarray
-        :param m: number of constraints
-        :type m: int
-        :raises RuntimeError: if values are non-idempotent after successive
-        evaluations
-        :return: objective function and constraints
-        :rtype: Tuple[float, np.ndarray]
+        Parameters
+        ----------
+        xc : np.ndarray
+            optimisation parameters
+        m : int
+            number of constraints
+
+        Returns
+        -------
+        Tuple[float, np.ndarray]
+            objective function and constraints
+
+        Raises
+        ------
+        RuntimeError
+            if values are non-idempotent after successive
+            evaluations
         """
         objf_prev = None
         conf_prev = None
@@ -107,7 +121,7 @@ class Caller:
             "converged (don't produce idempotent values)."
         )
 
-    def call_models_and_write_output(self, xc: np.ndarray, ifail: int) -> None:
+    def call_models_and_write_output(self, xc: np.ndarray, ifail: int):
         """Evaluate models until results are idempotent, then write output files.
 
         Ensure all outputs in mfile are idempotent before returning, by
@@ -115,12 +129,18 @@ class Caller:
         optimisation, or in a non-optimising evaluation. Writes OUT.DAT and
         MFILE.DAT with final results.
 
-        :param xc: optimisation parameter
-        :type xc: np.ndarray
-        :param ifail: return code of solver
-        :type ifail: int
-        :raises RuntimeError: if values are non-idempotent after successive
-        evaluations
+        Parameters
+        ----------
+        xc : np.ndarray
+            optimisation parameter
+        ifail : int
+            return code of solver
+
+        Raises
+        ------
+        RuntimeError
+            if values are non-idempotent after successive
+            evaluations
         """
         # TODO The only way to ensure idempotence in all outputs is by comparing
         # mfiles at this stage
@@ -214,14 +234,17 @@ class Caller:
             OutputFileManager.close_idempotence_files()
             raise
 
-    def _call_models_once(self, xc: np.ndarray) -> None:
+    def _call_models_once(self, xc: np.ndarray):
         """Call the physics and engineering models.
 
         This method is the principal caller of all the physics and
         engineering models. Some are Fortran subroutines within modules, others
         will be methods on Python model objects.
-        :param xc: Array of optimisation parameters
-        :type xc: np.array
+
+        Parameters
+        ----------
+        xc : np.array
+            Array of optimisation parameters
         """
         # Number of active iteration variables
         nvars = len(xc)
@@ -357,13 +380,15 @@ class Caller:
         # FISPACT and LOCA model (not used)- removed
 
 
-def write_output_files(models: Models, ifail: int) -> None:
+def write_output_files(models: Models, ifail: int):
     """Evaluate models and write output files (OUT.DAT and MFILE.DAT).
 
-    :param models: physics and engineering models
-    :type models: Models
-    :param ifail: solver return code
-    :type ifail: int
+    Parameters
+    ----------
+    models : Models
+        physics and engineering models
+    ifail : int
+        solver return code
     """
     n = data_structure.numerics.nvar
     x = data_structure.numerics.xcm[:n]

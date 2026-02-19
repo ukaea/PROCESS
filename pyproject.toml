@@ -69,9 +69,11 @@ docs = [
   "mkdocs-glightbox >= 0.3.4",
   "pymdown-extensions>=6.3",
   "bokeh>=3.4.0,<4",
-  "mkdocstrings==0.18.0",
+  "mkdocstrings[python]==1.0.3",
   "Jinja2>=3.0",
   "mkdocs-jupyter>=0.24",
+  "mkdocs-gen-files",
+  "mkdocs-literate-nav",
 ]
 lint = ["pre-commit>=2.16.0", "ruff==0.9.3", "ty"]
 all = ["process[test,docs,lint,examples,plotly]"]

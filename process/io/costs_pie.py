@@ -1,12 +1,5 @@
 """
 Code to display the cost breakdown as a pie chart
-
-Stuart Muldrew (stuart.muldrew@ukaea.uk)
-06/09/2018
-
-History
-04/04/2019 SIM Added step_cost_model
-
 """
 
 # Imported libraries
@@ -18,11 +11,8 @@ import process.io.mfile as mf
 
 
 def orig_cost_model(m_file, args):
-    """
-
-    Plot pie chart for the orginal 1990 cost model.
+    """Plot pie chart for the orginal 1990 cost model.
     Two plots produced: (1) Breakdown of the direct costs and (2) Direct, indirect, etc.
-
     """
     # Read Cost Values
     c21 = m_file.data["c21"].get_scan(-1)  # Site and Buildings
@@ -131,11 +121,7 @@ def orig_cost_model(m_file, args):
 
 
 def new_cost_model(m_file, args):
-    """
-
-    Plot pie chart for the new 2014 cost model.
-
-    """
+    """Plot pie chart for the new 2014 cost model."""
     # Read Cost Values
     s09 = m_file.data["s09"].get_scan(-1)  # Buildings
     s13 = m_file.data["s13"].get_scan(-1)  # Land
@@ -193,7 +179,6 @@ def main(args=None):
     # Setup command line arguments
     parser = argparse.ArgumentParser(
         description="Displays the cost breakdown as a pie chart.  "
-        "For more information contact Stuart.Muldrew@ukaea.uk"
     )
 
     parser.add_argument(

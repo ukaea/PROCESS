@@ -10,26 +10,29 @@ logger = logging.getLogger(__name__)
 
 
 def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]:
-    """
-    Calculate the critical current density for a "REBCO" 2nd generation HTS superconductor.
+    """Calculate the critical current density for a "REBCO" 2nd generation HTS superconductor.
 
-    :param temp_conductor: Superconductor temperature in Kelvin (K).
-    :type temp_conductor: float
-    :param b_conductor: Magnetic field at the superconductor in Tesla (T).
-    :type b_conductor: float
-    :return: A tuple containing:
+    Parameters
+    ----------
+    temp_conductor : float
+        Superconductor temperature in Kelvin (K).
+    b_conductor : float
+        Magnetic field at the superconductor in Tesla (T).
+
+    Returns
+    -------
+    tuple[float, bool]
+        A tuple containing:
         - j_critical: Critical current density in the superconductor (A/m²).
         - validity: A boolean indicating whether the input parameters are within the valid range.
-    :rtype: tuple[float, bool]
 
-    :notes:
-        - Validity range:
-            - Temperature: 4.2 K ≤ temp_conductor ≤ 72.0 K
-            - Magnetic field:
-                - For temp_conductor < 65 K: 0.0 T ≤ b_conductor ≤ 15.0 T
-                - For temp_conductor ≥ 65 K: 0.0 T ≤ b_conductor ≤ 11.5 T
-
-    :references:
+    Notes
+    -----
+    - Validity range:
+        - Temperature: 4.2 K ≤ temp_conductor ≤ 72.0 K
+        - Magnetic field:
+            - For temp_conductor < 65 K: 0.0 T ≤ b_conductor ≤ 15.0 T
+            - For temp_conductor ≥ 65 K: 0.0 T ≤ b_conductor ≤ 11.5 T
 
     """
     # Critical temperature (K) at zero field and strain.
@@ -86,9 +89,18 @@ def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]
 
 def current_sharing_rebco(bfield, j):
     """Current sharing temperature for "REBCO" 2nd generation HTS superconductor
-    b : input real : Magnetic field at superconductor (T)
-    j : input real : Current density in superconductor (A/m2)
-    current_sharing_t : output real : Current sharing temperature (K)
+
+    Parameters
+    ----------
+    bfield :
+        Magnetic field at superconductor (T)
+    j :
+        Current density in superconductor (A/m2)
+
+    Returns
+    -------
+    current_sharing_t :
+        Current sharing temperature (K)
     """
 
     def deltaj_rebco(temperature):
@@ -120,33 +132,39 @@ def itersc(
     b_c20max: float,
     temp_c0max: float,
 ) -> tuple[float, float, float]:
-    """
-    Calculate the critical current density, critical field, and critical temperature
+    """Calculate the critical current density, critical field, and critical temperature
     for an ITER Nb₃Sn superconductor using the ITER Nb₃Sn critical surface model.
 
-    :param temp_conductor: Superconductor temperature (K).
-    :type temp_conductor: float
-    :param b_conductor: Magnetic field at the conductor (T).
-    :type b_conductor: float
-    :param strain: Strain in the superconductor.
-    :type strain: float
-    :param b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
-    :type b_c20max: float
-    :param temp_c0max: Critical temperature (K) at zero field and strain.
-    :type temp_c0max: float
-    :return: A tuple containing:
+    Parameters
+    ----------
+    temp_conductor : float
+        Superconductor temperature (K).
+    b_conductor : float
+        Magnetic field at the conductor (T).
+    strain : float
+        Strain in the superconductor.
+    b_c20max : float
+        Upper critical field (T) for the superconductor at zero temperature and strain.
+    temp_c0max : float
+        Critical temperature (K) at zero field and strain.
+
+    Returns
+    -------
+    tuple[float, float, float]
+        A tuple containing:
         - j_critical: Critical current density in the superconductor (A/m²).
         - b_critical: Critical field (T).
         - temp_critical: Critical temperature (K).
-    :rtype: tuple[float, float, float]
 
-    :notes:
-        - This routine uses the ITER Nb₃Sn critical surface model.
-        - The model assumes a strand size of 0.82 mm diameter.
+    Notes
+    -----
+    - This routine uses the ITER Nb₃Sn critical surface model.
+    - The model assumes a strand size of 0.82 mm diameter.
 
-    :references:
-        - ITER DDD 11-7: Magnets - conductors (2NBKXY) (2009),
-          https://user.iter.org/?uid=2NBKXY&action=get_document
+    References
+    ----------
+    - ITER DDD 11-7: Magnets - conductors (2NBKXY) (2009),
+      https://user.iter.org/?uid=2NBKXY&action=get_document
     """
     # Scaling constant C [AT/mm²]
     csc = 19922.0
@@ -199,39 +217,44 @@ def jcrit_nbti(
     b_c20max: float,
     temp_c0max: float,
 ) -> tuple[float, float]:
-    """
-        Calculate the critical current density and critical temperature for a NbTi superconductor strand using the old empirical
+    """Calculate the critical current density and critical temperature for a NbTi superconductor strand using the old empirical
         Lubell scaling law.
 
-        :param temp_conductor: Superconductor temperature (K).
-        :type temp_conductor: float
-        :param b_conductor: Magnetic field at the conductor (T).
-        :type b_conductor: float
-        :param c0: Scaling constant (A/m²).
-        :type c0: float
-        :param b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
-        :type b_c20max: float
-        :param temp_c0max: Critical temperature (K) at zero field and strain.
-        :type temp_c0max: float
-        :return: A tuple containing:
-            - jcrit: Critical current density in the superconductor (A/m²).
-            - tcrit: Critical temperature (K).
-        :rtype: tuple[float, float]
+    Parameters
+    ----------
+    temp_conductor : float
+        Superconductor temperature (K).
+    b_conductor : float
+        Magnetic field at the conductor (T).
+    c0 : float
+        Scaling constant (A/m²).
+    b_c20max : float
+        Upper critical field (T) for the superconductor at zero temperature and strain.
+    temp_c0max : float
+        Critical temperature (K) at zero field and strain.
 
-        :notes:
-            - If the magnetic field exceeds the upper critical field (bmax > bc20max),
-              the critical temperature is adjusted to ensure a real (negative) value.
-            - If the temperature exceeds the critical temperature, the critical surface
-              is considered exceeded, and the reduced temperature (tbar) becomes negative.
+    Returns
+    -------
+    tuple[float, float]
+        A tuple containing:
+        - jcrit: Critical current density in the superconductor (A/m²).
+        - tcrit: Critical temperature (K).
 
-            - This model uses an antiquated scaling law for NbTi, which is not used in the superconductor field for nearly 30 years.
-            - It is simplistic and linear in J_c (B) (for a fixed temperature), lacking accuracy in both the high and low field regions.
+    Notes
+    -----
+        - If the magnetic field exceeds the upper critical field (bmax > bc20max),
+          the critical temperature is adjusted to ensure a real (negative) value.
+        - If the temperature exceeds the critical temperature, the critical surface
+          is considered exceeded, and the reduced temperature (tbar) becomes negative.
 
-        :references:
-            - M. Lubell, “Empirical scaling formulas for critical current and critical field for commercial NbTi,”
-            IEEE Transactions on Magnetics, vol. 19, no. 3, pp. 754-757, May 1983,
-            doi: https://doi.org/10.1109/tmag.1983.1062311.
-    ‌
+        - This model uses an antiquated scaling law for NbTi, which is not used in the superconductor field for nearly 30 years.
+        - It is simplistic and linear in J_c (B) (for a fixed temperature), lacking accuracy in both the high and low field regions.
+
+    References
+    ----------
+        - M. Lubell, “Empirical scaling formulas for critical current and critical field for commercial NbTi,”
+        IEEE Transactions on Magnetics, vol. 19, no. 3, pp. 754-757, May 1983,
+        doi: https://doi.org/10.1109/tmag.1983.1062311.
     """
     bratio = b_conductor / b_c20max
 
@@ -252,8 +275,7 @@ def jcrit_nbti(
 
 
 def bi2212(b_conductor, jstrand, temp_conductor, f_strain):
-    """
-        Fitted parameterization to Bi-2212 superconductor properties.
+    """Fitted parameterization to Bi-2212 superconductor properties.
 
         This function calculates the critical current density and the temperature margin
         for Bi-2212 superconductor in the TF coils using a fit by M. Kovari to measurements
@@ -263,32 +285,42 @@ def bi2212(b_conductor, jstrand, temp_conductor, f_strain):
         It needs to be operated below about 10K but remains superconducting at much higher
         fields at that temperature than Nb₃Sn, etc.
 
-        :param b_conductor: Magnetic field at conductor (T).
-        :type b_conductor: float
-        :param jstrand: Current density in strand (A/m²).
-        :type jstrand: float
-        :param temp_conductor: Superconductor temperature (K).
-        :type temp_conductor: float
-        :param f_strain: Adjustment factor (≤ 1) to account for strain, radiation damage,
-                     fatigue, or AC losses.
-        :type f_strain: float
-        :raises ProcessValueError: If the input parameters are outside the range of validity.
-        :return: A tuple containing:
-            - j_critical: Critical current density in strand (A/m²).
-            - temp_margin: Temperature margin (K).
-        :rtype: tuple[float, float]
+    Parameters
+    ----------
+    b_conductor : float
+        Magnetic field at conductor (T).
+    jstrand : float
+        Current density in strand (A/m²).
+    temp_conductor : float
+        Superconductor temperature (K).
+    f_strain : float
+        Adjustment factor (≤ 1) to account for strain, radiation damage,
+        fatigue, or AC losses.
 
-        :notes:
-            -The model's range of validity is:
-                T < 20K
-                Adjusted field b < 104 T
-                B > 6 T
+    Returns
+    -------
+    tuple[float, float]
+        A tuple containing:
+        - j_critical: Critical current density in strand (A/m²).
+        - temp_margin: Temperature margin (K).
 
-        :reference:
-            - D. C. Larbalestier, J. Jiang, U. P. Trociewitz, F. Kametani, and E. E. Hellstrom,
-            “A transformative superconducting magnet technology for fields well above 30 T using isotropic round wire multifilament Bi2Sr2CaCu2O8-x conductor,”
-            May 06, 2013. https://www.researchgate.net/publication/236627864_A_transformative_superconducting_magnet_technology_for_fields_well_above_30_T_using_isotropic_round_wire_multifilament_Bi2Sr2CaCu2O8-x_conductor
-    ‌
+    Notes
+    -----
+        -The model's range of validity is:
+            T < 20K
+            Adjusted field b < 104 T
+            B > 6 T
+
+    References
+    -----------
+        - D. C. Larbalestier, J. Jiang, U. P. Trociewitz, F. Kametani, and E. E. Hellstrom,
+        “A transformative superconducting magnet technology for fields well above 30 T using isotropic round wire multifilament Bi2Sr2CaCu2O8-x conductor,”
+        May 06, 2013. https://www.researchgate.net/publication/236627864_A_transformative_superconducting_magnet_technology_for_fields_well_above_30_T_using_isotropic_round_wire_multifilament_Bi2Sr2CaCu2O8-x_conductor
+
+    Raises
+    ------
+    ProcessValueError
+        If the input parameters are outside the range of validity.
     """
 
     b = b_conductor / np.exp(-0.168 * (temp_conductor - 4.2))
@@ -331,36 +363,36 @@ def gl_nbti(
     b_c20max: float,
     t_c0: float,
 ) -> tuple[float, float, float]:
-    """
-    Calculate the critical current density, critical field, and critical temperature
+    """Calculate the critical current density, critical field, and critical temperature
     of an ITER Nb-Ti strand based on the Ginzburg-Landau theory of superconductivity.
 
-    :param temp_conductor: Superconductor temperature [K].
-    :type temp_conductor: float
-    :param b_conductor: Magnetic field at the conductor [T].
-    :type b_conductor: float
-    :param strain: Intrinsic strain in the superconductor [%].
-    :type strain: float
-    :param b_c20max: Strain-dependent upper critical field at zero temperature [T].
-    :type b_c20max: float
-    :param t_c0: Strain-dependent critical temperature at zero strain [K].
-    :type t_c0: float
+    Parameters
+    ----------
+    temp_conductor : float
+        Superconductor temperature [K].
+    b_conductor : float
+        Magnetic field at the conductor [T].
+    strain : float
+        Intrinsic strain in the superconductor [%].
+    b_c20max : float
+        Strain-dependent upper critical field at zero temperature [T].
+    t_c0 : float
+        Strain-dependent critical temperature at zero strain [K].
 
-    :return: A tuple containing:
+    Returns
+    -------
+    tuple[float, float, float]
+        A tuple containing:
         - j_critical : Critical current density in the superconductor [A/m²].
         - b_critical : Critical magnetic field [T].
         - t_critical : Critical temperature [K].
-    :rtype: tuple[float, float, float]
 
-    :notes:
-
-
-    :references:
-        - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
-        “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
-        Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
-        https://doi.org/10.1088/1742-6596/1559/1/012063.
-
+    References
+    ----------
+    - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
+    “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
+    Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
+    https://doi.org/10.1088/1742-6596/1559/1/012063.
     """
 
     a_0 = 1102e6
@@ -427,41 +459,42 @@ def gl_rebco(
     b_c20max: float,
     t_c0: float,
 ) -> tuple[float, float, float]:
-    """
-    Calculate the critical current density, critical field, and critical temperature
+    """Calculate the critical current density, critical field, and critical temperature
     for a SuperPower REBCO tape based on measurements by P. Branch at Durham University and
     the Ginzburg-Landau theory of superconductivity
 
-    :param temp_conductor: Coolant/superconductor temperature (K).
-    :type temp_conductor: float
-    :param b_conductor: Magnetic field at conductor (T).
-    :type b_conductor: float
-    :param strain: Intrinsic strain in superconductor (%).
-    :type strain: float
-    :param b_c20max: Strain-dependent upper critical field at zero temperature (T).
-    :type b_c20max: float
-    :param t_c0: Strain-dependent critical temperature at zero strain (K).
-    :type t_c0: float
-    :return: Tuple containing:
+    Parameters
+    ----------
+    temp_conductor : float
+        Coolant/superconductor temperature (K).
+    b_conductor : float
+        Magnetic field at conductor (T).
+    strain : float
+        Intrinsic strain in superconductor (%).
+    b_c20max : float
+        Strain-dependent upper critical field at zero temperature (T).
+    t_c0 : float
+        Strain-dependent critical temperature at zero strain (K).
+
+    Returns
+    -------
+    tuple[float, float, float]
+        Tuple containing:
         - j_critical: Critical current density in superconductor (A/m²).
         - b_critical: Critical magnetic field (T).
         - temp_critical: Critical temperature (K).
-    :rtype: tuple[float, float, float]
 
-    :notes:
-
-    :references:
-        - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
-        “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
-        Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
-        https://doi.org/10.1088/1742-6596/1559/1/012063.
-        -
-        -Fit to state-of-the-art measurements at 4.2 K:P. Branch, K. Osamura, and D. Hampshire,
-        “Weak emergence in the angular dependence of the critical current density of the high temperature superconductor coated conductor REBCO,”
-        Superconductor Science and Technology, vol. 33, no. 10, p. 104006, Sep. 2020,
-        doi: 10.1088/1361-6668/abaebe.
-
-
+    References
+    ----------
+    - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
+    “The magnetic field, temperature, strain and angular dependence of the critical current density for Nb-Ti,”
+    Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
+    https://doi.org/10.1088/1742-6596/1559/1/012063.
+    -
+    -Fit to state-of-the-art measurements at 4.2 K:P. Branch, K. Osamura, and D. Hampshire,
+    “Weak emergence in the angular dependence of the critical current density of the high temperature superconductor coated conductor REBCO,”
+    Superconductor Science and Technology, vol. 33, no. 10, p. 104006, Sep. 2020,
+    doi: 10.1088/1361-6668/abaebe.
     """
     # Critical current density pre-factor
     a_0 = 2.95e2
@@ -526,53 +559,58 @@ def hijc_rebco(
     dx_hts_tape_rebco: float,
     dx_hts_tape_total: float,
 ) -> tuple[float, float, float]:
-    """
-    Calculates the critical current density, critical field, and critical temperature
+    """Calculates the critical current density, critical field, and critical temperature
     for a high current density REBCO tape based Wolf et al. parameterization with data from Hazelton
     and Zhai et al.
 
-    :param temp_conductor: Superconductor temperature (K).
-    :type temp_conductor: float
-    :param b_conductor: Magnetic field at conductor (T).
-    :type b_conductor: float
-    :param b_c20max: Upper critical field (T) for superconductor at zero temperature and strain.
-    :type b_c20max: float
-    :param t_c0: Critical temperature (K) at zero field and strain.
-    :type t_c0: float
-    :param dr_hts_tape: Width of the tape (m).
-    :type dr_hts_tape: float
-    :param dx_hts_tape_rebco: Thickness of the REBCO layer (m).
-    :type dx_hts_tape_rebco: float
-    :param dx_hts_tape_total: Total thickness of the tape (m).
-    :type dx_hts_tape_total: float
-    :return: Tuple containing:
+    Parameters
+    ----------
+    temp_conductor : float
+        Superconductor temperature (K).
+    b_conductor : float
+        Magnetic field at conductor (T).
+    b_c20max : float
+        Upper critical field (T) for superconductor at zero temperature and strain.
+    t_c0 : float
+        Critical temperature (K) at zero field and strain.
+    dr_hts_tape : float
+        Width of the tape (m).
+    dx_hts_tape_rebco : float
+        Thickness of the REBCO layer (m).
+    dx_hts_tape_total : float
+        Total thickness of the tape (m).
+
+    Returns
+    -------
+    tuple[float, float, float]
+        Tuple containing:
         - j_critical: Critical current density in superconductor (A/m²).
         - b_critical: Critical field (T).
         - temp_critical: Critical temperature (K).
-    :rtype: tuple[float, float, float]
 
-    :notes:
-        - The parameter A is transformed into a function A(T) based on a Newton polynomial fit
-          considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8.
+    Notes
+    -----
+    - The parameter A is transformed into a function A(T) based on a Newton polynomial fit
+      considering A(4.2 K) = 2.2e8, A(20 K) = 2.3e8 and A(65 K) = 3.5e8.
 
-        - A scaling factor of 0.4 was originally applied to j_critical for CORC cables, but is not used here.
+    - A scaling factor of 0.4 was originally applied to j_critical for CORC cables, but is not used here.
 
-    :references:
-        - Based in part on the parameterization described in:
-        M. J. Wolf, Nadezda Bagrets, W. H. Fietz, C. Lange, and K.-P. Weiss,
-        “Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,”
-        IEEE Transactions on Applied Superconductivity, vol. 28, no. 4, pp. 1-4, Jun. 2018,
-        doi: https://doi.org/10.1109/tasc.2018.2815767.
+    References
+    ----------
+    - Based in part on the parameterization described in:
+    M. J. Wolf, Nadezda Bagrets, W. H. Fietz, C. Lange, and K.-P. Weiss,
+    “Critical Current Densities of 482 A/mm2 in HTS CrossConductors at 4.2 K and 12 T,”
+    IEEE Transactions on Applied Superconductivity, vol. 28, no. 4, pp. 1-4, Jun. 2018,
+    doi: https://doi.org/10.1109/tasc.2018.2815767.
 
-        - Fit values based on:
-        D. W. Hazelton, “4th Workshop on Accelerator Magnets in HTS (WAMHTS-4) | 2G HTS Wire Development at SuperPower,”
-        Indico, 2017. https://indico.cern.ch/event/588810/contributions/2473740/ (accessed May 20, 2025).
+    - Fit values based on:
+    D. W. Hazelton, “4th Workshop on Accelerator Magnets in HTS (WAMHTS-4) | 2G HTS Wire Development at SuperPower,”
+    Indico, 2017. https://indico.cern.ch/event/588810/contributions/2473740/ (accessed May 20, 2025).
 
-        -The high Ic parameterization is a result of modifications based on Ic values observed in:
-        Y. Zhai, D. van der Laan, P. Connolly, and C. Kessel, “Conceptual design of HTS magnets for fusion nuclear science facility,”
-        Fusion Engineering and Design, vol. 168, p. 112611, Jul. 2021,
-        doi: https://doi.org/10.1016/j.fusengdes.2021.112611.
-
+    -The high Ic parameterization is a result of modifications based on Ic values observed in:
+    Y. Zhai, D. van der Laan, P. Connolly, and C. Kessel, “Conceptual design of HTS magnets for fusion nuclear science facility,”
+    Fusion Engineering and Design, vol. 168, p. 112611, Jul. 2021,
+    doi: https://doi.org/10.1016/j.fusengdes.2021.112611.
     """
 
     a = 1.4
@@ -640,41 +678,46 @@ def western_superconducting_nb3sn(
     b_c20max: float,
     temp_c0max: float,
 ) -> tuple[float, float, float]:
-    """
-    Calculate the critical current density, critical field, and critical temperature
+    """Calculate the critical current density, critical field, and critical temperature
     for a WST Nb₃Sn superconductor using the ITER Nb₃Sn critical surface model.
 
-    :param temp_conductor: Superconductor temperature (K).
-    :type temp_conductor: float
-    :param b_conductor: Magnetic field at the superconductor (T).
-    :type b_conductor: float
-    :param strain: Strain in the superconductor.
-    :type strain: float
-    :param b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
-    :type b_c20max: float
-    :param temp_c0max: Critical temperature (K) at zero field and strain.
-    :type temp_c0max: float
-    :return: A tuple containing:
+    Parameters
+    ----------
+    temp_conductor : float
+        Superconductor temperature (K).
+    b_conductor : float
+        Magnetic field at the superconductor (T).
+    strain : float
+        Strain in the superconductor.
+    b_c20max : float
+        Upper critical field (T) for the superconductor at zero temperature and strain.
+    temp_c0max : float
+        Critical temperature (K) at zero field and strain.
+
+    Returns
+    -------
+    tuple[float, float, float]
+        A tuple containing:
         - j_critical: Critical current density in the superconductor (A/m²).
         - b_crititical: Critical field (T).
         - temp_critical: Critical temperature (K).
-    :rtype: tuple[float, float, float]
 
-    :notes:
-        - This routine uses the WST Nb3Sn critical surface model.
-        - The scaling constants and parameters are based on the reference below.
-        - This assumes a strand size of 1.5mm.
-        - Compared to the EUTF4 (OST) ( European qualification samples for TF conductor),
-        the performance of the WST at low strain is superior by about 10%.
+    Notes
+    -----
+    - This routine uses the WST Nb3Sn critical surface model.
+    - The scaling constants and parameters are based on the reference below.
+    - This assumes a strand size of 1.5mm.
+    - Compared to the EUTF4 (OST) ( European qualification samples for TF conductor),
+    the performance of the WST at low strain is superior by about 10%.
 
-    :references:
-        - V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”
-        Accessed: May 12, 2025. [Online].
-        Available: https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
+    References
+    ----------
+    - V. Corato, “EUROFUSION WPMAG-REP(16) 16565 Common operating values for DEMO magnets design for 2016 REPORT.”
+    Accessed: May 12, 2025. [Online].
+    Available: https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPMAGREP16_16565_submitted.pdf
 
-        - “Introduction of WST,” 2015. Accessed: May 12, 2025. [Online].
-        Available: https://indico.cern.ch/event/340703/contributions/802232/attachments/668814/919331/WST_INTRO_2015-3_for_FCC_WEEK.pdf
-
+    - “Introduction of WST,” 2015. Accessed: May 12, 2025. [Online].
+    Available: https://indico.cern.ch/event/340703/contributions/802232/attachments/668814/919331/WST_INTRO_2015-3_for_FCC_WEEK.pdf
     """
     # Scaling constant C [AT/mm²]
     csc = 83075.0
@@ -722,51 +765,57 @@ def bottura_scaling(
     b_c20max: float,
     temp_c0max: float,
 ) -> tuple[float, float, float]:
-    """
-    Implements the scaling from:
+    """Implements the scaling from:
     Jc(B,T,epsilon) Parameterization for the ITER Nb₃Sn Production,
 
-    :param csc: Scaling constant C [AT/mm²].
-    :type csc: float
-    :param p: Low field exponent of the pinning force
-    :type p: float
-    :param q: High field exponent of the pinning force
-    :type q: float
-    :param c_a1: Strain fitting constant C_{a1}.
-    :type c_a1: float
-    :param c_a2: Strain fitting constant C_{a2}.
-    :type c_a2: float
-    :param epsilon_0a: Residual strain component
-    :type epsilon_0a: float
-    :param temp_conductor: Superconductor temperature (K).
-    :type temp_conductor: float
-    :param b_conductor: Magnetic field at conductor (T).
-    :type b_conductor: float
-    :param epsilon: Strain in superconductor.
-    :type epsilon: float
-    :param b_c20max: Upper critical field (T) for superconductor at zero temperature and strain.
-    :type b_c20max: float
-    :param temp_c0max: Critical temperature (K) at zero field and strain.
-    :type temp_c0max: float
-    :return: A tuple containing:
+    Parameters
+    ----------
+    csc : float
+        Scaling constant C [AT/mm²].
+    p : float
+        Low field exponent of the pinning force
+    q : float
+        High field exponent of the pinning force
+    c_a1 : float
+        Strain fitting constant C_{a1}.
+    c_a2 : float
+        Strain fitting constant C_{a2}.
+    epsilon_0a : float
+        Residual strain component
+    temp_conductor : float
+        Superconductor temperature (K).
+    b_conductor : float
+        Magnetic field at conductor (T).
+    epsilon : float
+        Strain in superconductor.
+    b_c20max : float
+        Upper critical field (T) for superconductor at zero temperature and strain.
+    temp_c0max : float
+        Critical temperature (K) at zero field and strain.
+
+    Returns
+    -------
+    tuple[float, float, float]
+        A tuple containing:
         - jscaling: Critical current density scaling factor (A/m²).
         - bcrit: Critical field (T).
         - tcrit: Critical temperature (K).
-    :rtype: tuple[float, float, float]
 
-    :notes:
-        - This is a generic scaling proposed for the characterization and production of
-        ITER Nb₃Sn strands. This is also known as the "ITER-2008 parametrization."
+    Notes
+    -----
+    - This is a generic scaling proposed for the characterization and production of
+    ITER Nb₃Sn strands. This is also known as the "ITER-2008 parametrization."
 
-        - Parameter ranges are strain (1.5% to 0.4%), temperature (2.35 to 16 K), and field (0.5 to 19 T).
-        The ITER-2008 parameterization achieves an average accuracy error of 3.8 Amps, with the best at 1.5 Amps and the worst at 7.5 Amps.
+    - Parameter ranges are strain (1.5% to 0.4%), temperature (2.35 to 16 K), and field (0.5 to 19 T).
+    The ITER-2008 parameterization achieves an average accuracy error of 3.8 Amps, with the best at 1.5 Amps and the worst at 7.5 Amps.
 
-        - The strain function is suitable only in the moderate strain region, down to 0.8%.
+    - The strain function is suitable only in the moderate strain region, down to 0.8%.
 
-    :references:
-        - L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,”
-        IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009,
-        doi: https://doi.org/10.1109/tasc.2009.2018278.
+    References
+    ----------
+    - L. Bottura and B. Bordini, “$J_{C}(B,T,\varepsilon)$ Parameterization for the ITER ${\rm Nb}_{3}{\rm Sn}$ Production,”
+    IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009,
+    doi: https://doi.org/10.1109/tasc.2009.2018278.
     """
 
     epsilon_sh = (c_a2 * epsilon_0a) / (np.sqrt(c_a1**2 - c_a2**2))
@@ -868,21 +917,25 @@ def calculate_croco_cable_geometry(
     float,  # a_croco_strand
     float,  # dr_hts_tape
 ]:
-    """
-    Calculate geometry and areas for a CroCo cable strand.
+    """Calculate geometry and areas for a CroCo cable strand.
 
-    :param dia_croco_strand: Diameter of CroCo strand (m)
-    :type dia_croco_strand: float
-    :param dx_croco_strand_copper: Thickness of copper layer in CroCo strand (m)
-    :type dx_croco_strand_copper: float
-    :param dx_hts_tape_rebco: Thickness of REBCO layer in HTS tape (m)
-    :type dx_hts_tape_rebco: float
-    :param dx_hts_tape_copper: Thickness of copper layer in HTS tape (m)
-    :type dx_hts_tape_copper: float
-    :param dx_hts_tape_hastelloy: Thickness of Hastelloy layer in HTS tape (m)
-    :type dx_hts_tape_hastelloy: float
+    Parameters
+    ----------
+    dia_croco_strand : float
+        Diameter of CroCo strand (m)
+    dx_croco_strand_copper : float
+        Thickness of copper layer in CroCo strand (m)
+    dx_hts_tape_rebco : float
+        Thickness of REBCO layer in HTS tape (m)
+    dx_hts_tape_copper : float
+        Thickness of copper layer in HTS tape (m)
+    dx_hts_tape_hastelloy : float
+        Thickness of Hastelloy layer in HTS tape (m)
 
-    :return: Tuple containing:
+    Returns
+    -------
+    tuple[float, float, float, float, float, float, float, float]
+        Tuple containing:
         - dia_croco_strand_tape_region: Inner diameter of CroCo strand tape region (m)
         - n_croco_strand_hts_tapes: Number of HTS tapes in CroCo strand
         - a_croco_strand_copper_total: Total copper area in CroCo strand (m²)
@@ -891,7 +944,6 @@ def calculate_croco_cable_geometry(
         - a_croco_strand_rebco: Total REBCO area in CroCo strand (m²)
         - a_croco_strand: Total area of CroCo strand (m²)
         - dr_hts_tape: Width of the tape (m)
-    :rtype: tuple[float, float, float, float, float, float, float, float]
     """
 
     # Calculate the inner diameter of the CroCo strand tape region
@@ -949,6 +1001,17 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     """'CroCo' (cross-conductor) strand and cable design for
     'REBCO' 2nd generation HTS superconductor
     Updated 13/11/18 using data from Lewandowska et al 2018.
+
+    Parameters
+    ----------
+    j_crit_sc :
+
+    conductor_area :
+
+    dia_croco_strand :
+
+    dx_croco_strand_copper :
+
     """
 
     (
@@ -1026,28 +1089,7 @@ def superconductor_current_density_margin(
     tc0m: float,
     c0: float = 0.0,
 ) -> float:
-    """
-    Calculate the current density margin for a superconductor.
-
-    :param temp_superconductor: Superconductor Temperature (K)
-    :type temp_superconductor: float
-    :param i_superconductor_type: Switch for superconductor material
-    :type i_superconductor_type: int
-    :param j_superconductor: Superconductor actual current density (A/m²)
-    :type j_superconductor: float
-    :param b_superconductor: Magnetic field at the superconductor (T)
-    :type b_superconductor: float
-    :param strain: Superconductor strain
-    :type strain: float
-    :param bc20m: Upper critical field (T)
-    :type bc20m: float
-    :param tc0m: Critical temperature (K)
-    :type tc0m: float
-    :param c0: Scaling constant (A/m²), required for NbTi
-    :type c0: float, optional
-    :return: Current density margin (A/m²)
-    :rtype: float
-
+    """Calculate the current density margin for a superconductor.
     The current density margin is the difference between the operating current density and
     the critical current density of a superconductor at a given temperature and field.
     It is zero at the current-sharing temperature.
@@ -1060,6 +1102,31 @@ def superconductor_current_density_margin(
         7: Ginzburg-Landau NbTi
         8: Ginzburg-Landau REBCO
         9: High current density REBCO
+
+    Parameters
+    ----------
+    temp_superconductor : float
+        Superconductor Temperature (K)
+    i_superconductor_type : int
+        Switch for superconductor material
+    j_superconductor : float
+        Superconductor actual current density (A/m²)
+    b_superconductor : float
+        Magnetic field at the superconductor (T)
+    strain : float
+        Superconductor strain
+    bc20m : float
+        Upper critical field (T)
+    tc0m : float
+        Critical temperature (K)
+    c0 : float, optional
+        Scaling constant (A/m²), required for NbTi
+
+    Returns
+    -------
+    float
+        Current density margin (A/m²)
+
     """
     material_functions = {
         1: lambda: itersc(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[0],

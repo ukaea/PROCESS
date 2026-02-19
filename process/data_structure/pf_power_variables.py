@@ -1,4 +1,4 @@
-"""author: J. Morris, M. Kovari (UKAEA)
+"""
 Module containing global variables relating to the PF coil power conversion system
 """
 

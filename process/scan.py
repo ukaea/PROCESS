@@ -1,5 +1,6 @@
 import logging
 from dataclasses import astuple, dataclass
+from enum import Enum
 
 import numpy as np
 from tabulate import tabulate
@@ -37,106 +38,158 @@ logger = logging.getLogger(__name__)
 class ScanVariable:
     variable_name: str
     variable_description: str
+    variable_num: int
 
     def __iter__(self):
-        return iter(astuple(self))
+        return iter(astuple(self)[:2])
 
 
-SCAN_VARIABLES = {
-    1: ScanVariable("aspect", "Aspect_ratio"),
-    2: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)"),
-    3: ScanVariable("p_plant_electric_net_required_mw", "Net_electric_power_(MW)"),
-    4: ScanVariable("hfact", "Confinement_H_factor"),
-    5: ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)"),
-    6: ScanVariable("pflux_fw_neutron_max_mw", "Allow._wall_load_(MW/m2)"),
-    7: ScanVariable("beamfus0", "Beam_bkgrd_multiplier"),
-    9: ScanVariable("temp_plasma_electron_vol_avg_kev", "Electron_temperature_keV"),
-    10: ScanVariable("boundu(15)", "Volt-second_upper_bound"),
-    11: ScanVariable("beta_norm_max", "Beta_coefficient"),
-    12: ScanVariable("f_c_plasma_bootstrap_max", "Bootstrap_fraction"),
-    13: ScanVariable("boundu(10)", "H_factor_upper_bound"),
-    14: ScanVariable("fiooic", "TFC_Iop_/_Icrit_f-value"),
-    16: ScanVariable("rmajor", "Plasma_major_radius_(m)"),
-    17: ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)"),
-    18: ScanVariable("eta_cd_norm_hcd_primary_max", "Maximum_CD_gamma"),
-    19: ScanVariable("boundl(16)", "CS_thickness_lower_bound"),
-    20: ScanVariable("t_burn_min", "Minimum_burn_time_(s)"),
-    22: ScanVariable("f_t_plant_available", "Plant_availability_factor"),
-    24: ScanVariable("p_fusion_total_max_mw", "Fusion_power_limit_(MW)"),
-    25: ScanVariable("kappa", "Plasma_elongation"),
-    26: ScanVariable("triang", "Plasma_triangularity"),
-    27: ScanVariable("tbrmin", "Min_tritium_breed._ratio"),
-    28: ScanVariable("b_plasma_toroidal_on_axis", "Tor._field_on_axis_(T)"),
-    29: ScanVariable("coreradius", "Core_radius"),
-    31: ScanVariable(
-        "f_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit"
-    ),
-    32: ScanVariable("epsvmc", "VMCON error tolerance"),
-    38: ScanVariable("boundu(129)", " Neon upper limit"),
-    39: ScanVariable("boundu(131)", " Argon upper limit"),
-    40: ScanVariable("boundu(135)", " Xenon upper limit"),
-    41: ScanVariable("dr_blkt_outboard", "Outboard blanket thick."),
-    42: ScanVariable("f_nd_impurity_electrons(9)", "Argon fraction"),
-    44: ScanVariable("sig_tf_case_max", "Allowable_stress_in_tf_coil_case_Tresca_(pa)"),
-    45: ScanVariable(
-        "temp_tf_superconductor_margin_min", "Minimum_allowable_temperature_margin"
-    ),
-    46: ScanVariable("boundu(152)", "Max allowable f_nd_plasma_separatrix_greenwald"),
-    48: ScanVariable("n_tf_wp_pancakes", "TF Coil - n_tf_wp_pancakes"),
-    49: ScanVariable("n_tf_wp_layers", "TF Coil - n_tf_wp_layers"),
-    50: ScanVariable("f_nd_impurity_electrons(13)", "Xenon fraction"),
-    51: ScanVariable("f_p_div_lower", "lower_divertor_power_fraction"),
-    52: ScanVariable("rad_fraction_sol", "SoL radiation fraction"),
-    53: ScanVariable("boundu(157)", "Max allowable fvssu"),
-    54: ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)"),
-    55: ScanVariable("dr_shld_inboard", "Inboard neutronic shield"),
-    56: ScanVariable(
-        "p_cryo_plant_electric_max_mw", "max allowable p_cryo_plant_electric_mw"
-    ),
-    57: ScanVariable("boundl(2)", "b_plasma_toroidal_on_axis minimum"),
-    58: ScanVariable("dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"),
-    59: ScanVariable("dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"),
-    60: ScanVariable("sig_tf_wp_max", "Allowable_stress_in_tf_coil_conduit_Tresca_(pa)"),
-    61: ScanVariable("copperaoh_m2_max", "Max CS coil current / copper area"),
-    62: ScanVariable("coheof", "CS coil current density at EOF (A/m2)"),
-    63: ScanVariable("dr_cs", "CS coil thickness (m)"),
-    64: ScanVariable("ohhghf", "CS height (m)"),
-    65: ScanVariable("n_cycle_min", "CS stress cycles min"),
-    66: ScanVariable("oh_steel_frac", "CS steel fraction"),
-    67: ScanVariable("t_crack_vertical", "Initial crack vertical size (m)"),
-    68: ScanVariable(
-        "inlet_temp_liq", "Inlet Temperature Liquid Metal Breeder/Coolant (K)"
-    ),
-    69: ScanVariable(
-        "outlet_temp_liq", "Outlet Temperature Liquid Metal Breeder/Coolant (K)"
-    ),
-    70: ScanVariable(
-        "blpressure_liq", "Blanket liquid metal breeder/coolant pressure (Pa)"
-    ),
-    71: ScanVariable(
-        "n_liq_recirc", "Selected number of liquid metal breeder recirculations per day"
-    ),
-    72: ScanVariable(
+class ScanVariables(Enum):
+    @classmethod
+    def _missing_(cls, var):
+        if isinstance(var, int):
+            for sv in cls:
+                if sv.value.variable_num == var:
+                    return sv
+        return super()._missing_(var)
+
+    aspect = ScanVariable("aspect", "Aspect_ratio", 1)
+    pflux_div_heat_load_max_mw = ScanVariable(
+        "pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)", 2
+    )
+    p_plant_electric_net_required_mw = ScanVariable(
+        "p_plant_electric_net_required_mw", "Net_electric_power_(MW)", 3
+    )
+    hfact = ScanVariable("hfact", "Confinement_H_factor", 4)
+    oacdcp = ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)", 5)
+    pflux_fw_neutron_max_mw = ScanVariable(
+        "pflux_fw_neutron_max_mw", "Allow._wall_load_(MW/m2)", 6
+    )
+    beamfus0 = ScanVariable("beamfus0", "Beam_bkgrd_multiplier", 7)
+    temp_plasma_electron_vol_avg_kev = ScanVariable(
+        "temp_plasma_electron_vol_avg_kev", "Electron_temperature_keV", 9
+    )
+    boundu15 = ScanVariable("boundu(15)", "Volt-second_upper_bound", 10)
+    beta_norm_max = ScanVariable("beta_norm_max", "Beta_coefficient", 11)
+    f_c_plasma_bootstrap_max = ScanVariable(
+        "f_c_plasma_bootstrap_max", "Bootstrap_fraction", 12
+    )
+    boundu10 = ScanVariable("boundu(10)", "H_factor_upper_bound", 13)
+    fiooic = ScanVariable("fiooic", "TFC_Iop_/_Icrit_f-value", 14)
+    rmajor = ScanVariable("rmajor", "Plasma_major_radius_(m)", 16)
+    b_tf_inboard_max = ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)", 17)
+    eta_cd_norm_hcd_primary_max = ScanVariable(
+        "eta_cd_norm_hcd_primary_max", "Maximum_CD_gamma", 18
+    )
+    boundl16 = ScanVariable("boundl(16)", "CS_thickness_lower_bound", 19)
+    t_burn_min = ScanVariable("t_burn_min", "Minimum_burn_time_(s)", 20)
+    f_t_plant_available = ScanVariable(
+        "f_t_plant_available", "Plant_availability_factor", 22
+    )
+    p_fusion_total_max_mw = ScanVariable(
+        "p_fusion_total_max_mw", "Fusion_power_limit_(MW)", 24
+    )
+    kappa = ScanVariable("kappa", "Plasma_elongation", 25)
+    triang = ScanVariable("triang", "Plasma_triangularity", 26)
+    tbrmin = ScanVariable("tbrmin", "Min_tritium_breed._ratio", 27)
+    b_plasma_toroidal_on_axis = ScanVariable(
+        "b_plasma_toroidal_on_axis", "Tor._field_on_axis_(T)", 28
+    )
+    coreradius = ScanVariable("coreradius", "Core_radius", 29)
+    f_alpha_energy_confinement_min = ScanVariable(
+        "f_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit", 31
+    )
+    epsvmc = ScanVariable("epsvmc", "VMCON error tolerance", 32)
+    boundu129 = ScanVariable("boundu(129)", " Neon upper limit", 38)
+    boundu131 = ScanVariable("boundu(131)", " Argon upper limit", 39)
+    boundu135 = ScanVariable("boundu(135)", " Xenon upper limit", 40)
+    dr_blkt_outboard = ScanVariable("dr_blkt_outboard", "Outboard blanket thick.", 41)
+    f_nd_impurity_electrons9 = ScanVariable(
+        "f_nd_impurity_electrons(9)", "Argon fraction", 42
+    )
+    sig_tf_case_max = ScanVariable(
+        "sig_tf_case_max", "Allowable_stress_in_tf_coil_case_Tresca_(pa)", 44
+    )
+    temp_tf_superconductor_margin_min = ScanVariable(
+        "temp_tf_superconductor_margin_min", "Minimum_allowable_temperature_margin", 45
+    )
+    boundu152 = ScanVariable(
+        "boundu(152)", "Max allowable f_nd_plasma_separatrix_greenwald", 46
+    )
+    n_tf_wp_pancakes = ScanVariable("n_tf_wp_pancakes", "TF Coil - n_tf_wp_pancakes", 48)
+    n_tf_wp_layers = ScanVariable("n_tf_wp_layers", "TF Coil - n_tf_wp_layers", 49)
+    f_nd_impurity_electrons13 = ScanVariable(
+        "f_nd_impurity_electrons(13)", "Xenon fraction", 50
+    )
+    f_p_div_lower = ScanVariable("f_p_div_lower", "lower_divertor_power_fraction", 51)
+    rad_fraction_sol = ScanVariable("rad_fraction_sol", "SoL radiation fraction", 52)
+    boundu157 = ScanVariable("boundu(157)", "Max allowable fvssu", 53)
+    Bc2_0K = ScanVariable("Bc2(0K)", "GL_NbTi Bc2(0K)", 54)
+    dr_shld_inboard = ScanVariable("dr_shld_inboard", "Inboard neutronic shield", 55)
+    p_cryo_plant_electric_max_mw = ScanVariable(
+        "p_cryo_plant_electric_max_mw", "max allowable p_cryo_plant_electric_mw", 56
+    )
+    boundl2 = ScanVariable("boundl(2)", "b_plasma_toroidal_on_axis minimum", 57)
+    dr_fw_plasma_gap_inboard = ScanVariable(
+        "dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap", 58
+    )
+    dr_fw_plasma_gap_outboard = ScanVariable(
+        "dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap", 59
+    )
+    sig_tf_wp_max = ScanVariable(
+        "sig_tf_wp_max", "Allowable_stress_in_tf_coil_conduit_Tresca_(pa)", 60
+    )
+    copperaoh_m2_max = ScanVariable(
+        "copperaoh_m2_max", "Max CS coil current / copper area", 61
+    )
+    coheof = ScanVariable("coheof", "CS coil current density at EOF (A/m2)", 62)
+    dr_cs = ScanVariable("dr_cs", "CS coil thickness (m)", 63)
+    ohhghf = ScanVariable("ohhghf", "CS height (m)", 64)
+    n_cycle_min = ScanVariable("n_cycle_min", "CS stress cycles min", 65)
+    oh_steel_frac = ScanVariable("oh_steel_frac", "CS steel fraction", 66)
+    t_crack_vertical = ScanVariable(
+        "t_crack_vertical", "Initial crack vertical size (m)", 67
+    )
+    inlet_temp_liq = ScanVariable(
+        "inlet_temp_liq", "Inlet Temperature Liquid Metal Breeder/Coolant (K)", 68
+    )
+    outlet_temp_liq = ScanVariable(
+        "outlet_temp_liq", "Outlet Temperature Liquid Metal Breeder/Coolant (K)", 69
+    )
+    blpressure_liq = ScanVariable(
+        "blpressure_liq", "Blanket liquid metal breeder/coolant pressure (Pa)", 70
+    )
+    n_liq_recirc = ScanVariable(
+        "n_liq_recirc",
+        "Selected number of liquid metal breeder recirculations per day",
+        71,
+    )
+    bz_channel_conduct_liq = ScanVariable(
         "bz_channel_conduct_liq",
         "Conductance of liquid metal breeder duct walls (A V-1 m-1)",
-    ),
-    73: ScanVariable(
-        "pnuc_fw_ratio_dcll", "Ratio of FW nuclear power as fraction of total (FW+BB)"
-    ),
-    74: ScanVariable(
+        72,
+    )
+    pnuc_fw_ratio_dcll = ScanVariable(
+        "pnuc_fw_ratio_dcll",
+        "Ratio of FW nuclear power as fraction of total (FW+BB)",
+        73,
+    )
+    f_nuc_pow_bz_struct = ScanVariable(
         "f_nuc_pow_bz_struct",
-        "Fraction of BZ power cooled by primary coolant for dual-coolant balnket",
-    ),
-    75: ScanVariable("dx_fw_module", "dx_fw_module of first wall cooling channels (m)"),
-    76: ScanVariable("eta_turbine", "Thermal conversion eff."),
-    77: ScanVariable("startupratio", "Gyrotron redundancy"),
-    78: ScanVariable("fkind", "Multiplier for Nth of a kind costs"),
-    79: ScanVariable(
-        "eta_ecrh_injector_wall_plug", "ECH wall plug to injector efficiency"
-    ),
-    80: ScanVariable("fcoolcp", "Coolant fraction of TF"),
-    81: ScanVariable("n_tf_coil_turns", "Number of turns in TF"),
-}
+        "Fraction of BZ power cooled by primary coolant for dual-coolant blanket",
+        74,
+    )
+    dx_fw_module = ScanVariable(
+        "dx_fw_module", "dx_fw_module of first wall cooling channels (m)", 75
+    )
+    eta_turbine = ScanVariable("eta_turbine", "Thermal conversion eff.", 76)
+    startupratio = ScanVariable("startupratio", "Gyrotron redundancy", 77)
+    fkind = ScanVariable("fkind", "Multiplier for Nth of a kind costs", 78)
+    eta_ecrh_injector_wall_plug = ScanVariable(
+        "eta_ecrh_injector_wall_plug", "ECH wall plug to injector efficiency", 79
+    )
+    fcoolcp = ScanVariable("fcoolcp", "Coolant fraction of TF", 80)
+    n_tf_coil_turns = ScanVariable("n_tf_coil_turns", "Number of turns in TF", 81)
 
 
 class Scan:
@@ -193,8 +246,13 @@ class Scan:
 
     def post_optimise(self, ifail: int):
         """Called after calling the optimising equation solver from Python.
-        author: P J Knight, CCFE, Culham Science Centre
+
         ifail   : input integer : error flag
+
+        Parameters
+        ----------
+        ifail: int :
+
         """
         numerics.sqsumsq = sum(r**2 for r in numerics.rcm[: numerics.neqns]) ** 0.5
 
@@ -603,10 +661,15 @@ class Scan:
     def verror(self, ifail: int):
         """Routine to print out relevant messages in the case of an
         unfeasible result from a VMCON (optimisation) run
-        author: P J Knight, CCFE, Culham Science Centre
+
         ifail  : input integer : error flag
         This routine prints out relevant messages in the case of
         an unfeasible result from a VMCON (optimisation) run.
+
+        Parameters
+        ----------
+        ifail: int :
+
         """
         if ifail == -1:
             process_output.ocmmnt(constants.NOUT, "User-terminated execution of VMCON.")
@@ -1139,4 +1202,4 @@ class Scan:
             case _:
                 raise ProcessValueError("Illegal scan variable number", nwp=nwp)
 
-        return SCAN_VARIABLES[int(nwp)]
+        return ScanVariables(int(nwp)).value

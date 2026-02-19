@@ -5,15 +5,23 @@ from process.data_structure import fwbs_variables, tfcoil_variables
 
 
 def calculate_coils_mass(a_tf_wp_with_insulation: float, a_tf_wp_no_insulation: float):
-    """
-    Calculates the mass of stellarator coils by aggregating the masses of various coil components.
+    """Calculates the mass of stellarator coils by aggregating the masses of various coil components.
+
     This function computes the masses of conductor constituents (casing, ground insulation, superconductor, copper),
     conduit masses (steel and insulation), and then calculates the total conductor and coil masses.
-    Args:
-        a_tf_wp_with_insulation (float): Area of the toroidal field coil winding pack with insulation.
-        a_tf_wp_no_insulation (float): Area of the toroidal field coil winding pack without insulation.
-    Returns:
-        None: The function performs calculations and updates external state.
+
+    Parameters
+    ----------
+    a_tf_wp_with_insulation :
+        Area of the toroidal field coil winding pack with insulation.
+    a_tf_wp_no_insulation:
+        Area of the toroidal field coil winding pack without insulation.
+
+    Returns
+    -------
+    :
+        The function performs calculations and updates external state.
+
     """
 
     #  Masses of conductor constituents
@@ -32,10 +40,10 @@ def calculate_coils_mass(a_tf_wp_with_insulation: float, a_tf_wp_no_insulation: 
 
 
 def casing():
-    """
-    [kg] Mass of case
+    """[kg] Mass of case
     (no need for correction factors as is the case for tokamaks)
     This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.a_tf_coil_inboard_case)).
+
     """
     tfcoil_variables.m_tf_coil_case = (
         tfcoil_variables.len_tf_coil
@@ -46,7 +54,15 @@ def casing():
 
 def ground_insulation(a_tf_wp_with_insulation, a_tf_wp_no_insulation):
     """Mass of ground-wall insulation [kg]
-    (assumed to be same density/material as conduit insulation)"""
+    (assumed to be same density/material as conduit insulation)
+
+    Parameters
+    ----------
+    a_tf_wp_with_insulation :
+
+    a_tf_wp_no_insulation :
+
+    """
     tfcoil_variables.m_tf_coil_wp_insulation = (
         tfcoil_variables.len_tf_coil
         * (a_tf_wp_with_insulation - a_tf_wp_no_insulation)
@@ -56,7 +72,9 @@ def ground_insulation(a_tf_wp_with_insulation, a_tf_wp_no_insulation):
 
 def superconductor():
     """[kg] mass of Superconductor
-    a_tf_wp_coolant_channels is 0 for a stellarator. but keep this term for now."""
+    a_tf_wp_coolant_channels is 0 for a stellarator. but keep this term for now.
+
+    """
     tfcoil_variables.m_tf_coil_superconductor = (
         tfcoil_variables.len_tf_coil
         * tfcoil_variables.n_tf_coil_turns
@@ -92,7 +110,9 @@ def conduit_steel():
 
 def conduit_insulation():
     """Conduit insulation mass [kg]
-    (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)"""
+    (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
+
+    """
     tfcoil_variables.m_tf_coil_wp_turn_insulation = (
         tfcoil_variables.len_tf_coil
         * tfcoil_variables.a_tf_coil_wp_turn_insulation

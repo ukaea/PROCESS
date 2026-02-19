@@ -1,7 +1,4 @@
-"""This library contains routines that can be shared by the blanket modules used in PROCESS.
-
-author: G Graham, CCFE, Culham Science Centre
-"""
+"""This library contains routines that can be shared by the blanket modules used in PROCESS."""
 
 import logging
 
@@ -32,7 +29,7 @@ logger = logging.getLogger(__name__)
 # LT          Low Temperature
 # HT          High Temperature
 # MMS         Multi Module Segment
-# SMS         Single Modle Segment
+# SMS         Single Module Segment
 # IB          Inboard
 # OB          Outboard
 # HCD         Heating & Current Drive
@@ -40,18 +37,18 @@ logger = logging.getLogger(__name__)
 
 
 class BlanketLibrary:
-    def __init__(self, fw) -> None:
+    def __init__(self, fw):
         self.outfile = constants.NOUT
 
         self.fw = fw
 
     def component_volumes(self):
         """Calculate the blanket, shield, vacuum vessel and cryostat volumes
-        author: J. Morris, CCFE, Culham Science Centre
+
         Calculate the blanket, shield, vacuum vessel and cryostat volumes
         """
-        # N.B. icomponent is a switch used to specify selected component: blanket=0, sheild=1, vacuum vessel=2
-        # Replaced seperate subroutines for blnkt, shld and vv with fuction/subroutine with icomponent switch.
+        # N.B. icomponent is a switch used to specify selected component: blanket=0, shield=1, vacuum vessel=2
+        # Replaced separate subroutines for blnkt, shld and vv with fuction/subroutine with icomponent switch.
 
         # Calculate half-height
         # Blanket
@@ -71,8 +68,11 @@ class BlanketLibrary:
     def component_half_height(self, icomponent: int):
         """Calculate the blanket, shield or vacuum vessel half-height
         Based on blanket_half_height, shield_half_height, vv_half_height
-        original author: J. Morris, CCFE, Culham Science Centre
-        author: G. Graham, CCFE, Culham Science Centre
+
+        Parameters
+        ----------
+        icomponent: int :
+
         """
         # Calculate component internal lower half-height (m)
         # Blanket
@@ -103,8 +103,6 @@ class BlanketLibrary:
     def dshaped_component(self):
         """Calculate component surface area and volume using dshaped scheme
         Based on dshaped_blanket, dshaped_shield, dshaped_vv
-        original author: J. Morris, CCFE, Culham Science Centre
-        author: G. Graham, CCFE, Culham Science Centre
         """
         # Calculate major radius to outer edge of inboard ...
         # ... section (m)
@@ -147,8 +145,6 @@ class BlanketLibrary:
     def elliptical_component(self):
         """Calculate component surface area and volume using elliptical scheme
         Based on elliptical_blanket, elliptical_shield, elliptical_vv
-        original author: J. Morris, CCFE, Culham Science Centre
-        author: G. Graham, CCFE, Culham Science Centre
         """
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
@@ -195,7 +191,7 @@ class BlanketLibrary:
 
     def apply_coverage_factors(self):
         """Apply coverage factors to volumes
-        author: J. Morris, CCFE, Culham Science Centre
+
         Apply coverage factors to volumes
         """
         # Apply blanket coverage factors
@@ -245,13 +241,16 @@ class BlanketLibrary:
         Uses middle value of input and output temperatures of coolant.
         Curently have H20 and He options.
 
-        original author: P. J. Knight, CCFE
-        adapted from previous version of pumppower function by: G Graham, CCFE
         References: see pumppower function description
+
+        Parameters
+        ----------
+        output: bool
+
         """
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the i_fw_blkt_shared_coolant variable is appropriately set for seperate coolants
+        # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
         if (
             fwbs_variables.i_fw_coolant_type == "Helium"
             and fwbs_variables.i_blkt_coolant_type == 2
@@ -436,8 +435,7 @@ class BlanketLibrary:
                 )
 
     def set_blanket_module_geometry(self):
-        """
-        Sets the geometry parameters for blanket modules, including coolant channel dimensions,
+        """Sets the geometry parameters for blanket modules, including coolant channel dimensions,
         module segmentation, and flow lengths, based on the current configuration and input variables.
 
         The method performs the following steps:
@@ -449,8 +447,10 @@ class BlanketLibrary:
           in radial, toroidal, and poloidal directions, and checks for geometric constraints.
         - Calculates total flow lengths for primary coolant channels, used in pressure drop calculations.
 
-        Raises:
-            Error: If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
+        Raises
+        ------
+        Error
+            If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
         """
 
         if fwbs_variables.i_blanket_type == 5:
@@ -472,7 +472,7 @@ class BlanketLibrary:
         # Using the total perimeter of the machine, segment the outboard
         # blanket into nblktmodp*nblktmodt modules, all assumed to be the same size
 
-        # If SMS blanket then do not have seperate poloidal modules....
+        # If SMS blanket then do not have separate poloidal modules....
         # Should not need this as n_blkt_inboard_modules_poloidal is input but make sure here.
         if fwbs_variables.i_blkt_module_segmentation == 1:
             fwbs_variables.n_blkt_inboard_modules_poloidal = 1
@@ -561,8 +561,7 @@ class BlanketLibrary:
         )
 
     def thermo_hydraulic_model_pressure_drop_calculations(self, output: bool):
-        """
-        Function that calculates the pressure drops for the thermo-hydraulic model
+        """Function that calculates the pressure drops for the thermo-hydraulic model
         when i_p_coolant_pumping = 2.
 
         Within are calculations necessary for the deltap_tot function but not required
@@ -571,6 +570,11 @@ class BlanketLibrary:
 
         Returns the pressure drops as a list with the number of entries dependent upon
         the switches i_blkt_dual_coolant and i_blkt_inboard.
+
+        Parameters
+        ----------
+        output: bool
+
         """
         npoltoti = 0
         npoltoto = 0
@@ -1011,7 +1015,7 @@ class BlanketLibrary:
 
     def blanket_module_poloidal_height(self):
         """Calculations for blanket module poloidal height
-        author: J. Morris, CCFE, Culham Science Centre
+
         Calculations for blanket module poloidal height for D shaped and elliptical machines
         """
         if (
@@ -1134,7 +1138,7 @@ class BlanketLibrary:
         Uses middle value of input and output temperatures of Liquid Metal Breeder/Coolant
         Curently have PbLi but can expand with e.g., Lithium
 
-        author: G Graham, CCFE
+
 
         References:
 
@@ -1147,6 +1151,11 @@ class BlanketLibrary:
 
              [Mar2019]   Martelli et al. (2019), Literature review of lead-lithium
                          thermophysical properties, Fusion Engineering and Design, 138, 183-195.
+
+        Parameters
+        ----------
+        output: bool
+             (Default value = False)
         """
 
         # Use mid temp
@@ -1386,14 +1395,19 @@ class BlanketLibrary:
     def flow_velocity(self, i_channel_shape, mass_flow_rate, flow_density):
         """Calculate the coolant flow velocity (m/s) for given pipe mass flow rate and pipe size/shape.
         N.B. Assumed that primary BB and FW coolants have same pipe radius (= radius_fw_channel).
-        author: G. Graham, CCFE
 
-        :param i_channel_shape: Switch for circular or rectangular channel crossection.
+
+        Parameters
+        ----------
+        i_channel_shape :
+            Switch for circular or rectangular channel crossection.
             Shape depends on whether primary or secondary coolant.
             1: circle (primary)
             2: rectangle (secondary)
-        :param mass_flow_rate: Coolant mass flow rate per pipe (kg/s)
-        :param flow_density: Coolant density
+        mass_flow_rate :
+            Coolant mass flow rate per pipe (kg/s)
+        flow_density :
+            Coolant density
         """
 
         if i_channel_shape == 1:
@@ -1415,13 +1429,11 @@ class BlanketLibrary:
         )
 
     def thermo_hydraulic_model(self, output: bool):
-        """
-        Thermo-hydraulic model for first wall and blanket
+        """Thermo-hydraulic model for first wall and blanket
         ONLY CALLED if i_p_coolant_pumping = 2 or 3
 
         Calculations for detailed powerflow model i_thermal_electric_conversion > 1
 
-        original author: J. Morris, CCFE, Culham Science Centre
         Dual-coolant modifications and generalisation refactor: G. Graham, CCFE
 
         Three options:
@@ -1456,6 +1468,11 @@ class BlanketLibrary:
             inlet temp (K)              temp_fw_coolant_in                 temp_blkt_coolant_in          inlet_temp_liq
             outlet temp (K)             temp_fw_coolant_out                temp_blkt_coolant_out         outlet_temp_liq
             pressure (Pa)               pres_fw_coolant              pres_blkt_coolant          blpressure_liq
+
+        Parameters
+        ----------
+        output: bool
+
         """
         ######################################################
         # Pre calculations needed for thermo-hydraulic model #
@@ -1516,7 +1533,7 @@ class BlanketLibrary:
         # FW and BB Mass Flow ###########
 
         # Make sure that, if the inputs for the FW and blanket inputs are different,
-        # the i_fw_blkt_shared_coolant variable is appropriately set for seperate coolants
+        # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
         if (
             fwbs_variables.i_fw_coolant_type == "Helium"
             and fwbs_variables.i_blkt_coolant_type == 2
@@ -2135,37 +2152,41 @@ class BlanketLibrary:
         nopolchan: int,
         label: str,
     ) -> float:
-        """
-        Calculate the total pressure drop (Pa) for coolant flow in the first wall (FW) and breeding blanket (BZ).
+        """Calculate the total pressure drop (Pa) for coolant flow in the first wall (FW) and breeding blanket (BZ).
 
         This includes frictional losses and, for liquid breeder coolants, magnetohydrodynamic (MHD) losses.
 
-        :param output: Whether to write output to file.
-        :type output: bool
-        :param icoolpump: Switch for coolant type (1=primary He/H2O, 2=secondary PbLi/Li).
-        :type icoolpump: int
-        :param flow_velocity: Coolant flow velocity (m/s).
-        :type flow_velocity: float
-        :param len_pipe: Total flow length along pipe (m).
-        :type len_pipe: float
-        :param n_pipe_90_deg_bends: Number of 90 degree bends in pipe.
-        :type n_pipe_90_deg_bends: int
-        :param n_pipe_180_deg_bends: Number of 180 degree bends in pipe.
-        :type n_pipe_180_deg_bends: int
-        :param den_coolant: Coolant density (kg/m³).
-        :type den_coolant: float
-        :param visc_coolant_dynamic: Coolant dynamic viscosity (Pa s).
-        :type visc_coolant_dynamic: float
-        :param coolant_electrical_conductivity: Coolant electrical conductivity (A V⁻¹ m⁻¹).
-        :type coolant_electrical_conductivity: float
-        :param pol_channel_length: Length of poloidal channel section (m).
-        :type pol_channel_length: float
-        :param nopolchan: Number of poloidal channel sections.
-        :type nopolchan: int
-        :param label: Description label for output.
-        :type label: str
-        :return: Total pressure drop (Pa).
-        :rtype: float
+        Parameters
+        ----------
+        output : bool
+            Whether to write output to file.
+        icoolpump : int
+            Switch for coolant type (1=primary He/H2O, 2=secondary PbLi/Li).
+        flow_velocity : float
+            Coolant flow velocity (m/s).
+        len_pipe : float
+            Total flow length along pipe (m).
+        n_pipe_90_deg_bends : int
+            Number of 90 degree bends in pipe.
+        n_pipe_180_deg_bends : int
+            Number of 180 degree bends in pipe.
+        den_coolant : float
+            Coolant density (kg/m³).
+        visc_coolant_dynamic : float
+            Coolant dynamic viscosity (Pa s).
+        coolant_electrical_conductivity : float
+            Coolant electrical conductivity (A V⁻¹ m⁻¹).
+        pol_channel_length : float
+            Length of poloidal channel section (m).
+        nopolchan : int
+            Number of poloidal channel sections.
+        label : str
+            Description label for output.
+
+        Returns
+        -------
+        float
+            Total pressure drop (Pa).
         """
 
         radius_pipe_90_deg_bend, radius_pipe_180_deg_bend = (
@@ -2234,41 +2255,53 @@ class BlanketLibrary:
         drop is the sum of contributions. This is only used for secondary coolant/breeder so rectangular flow
         channels are assumed.
 
-        author: G Graham, CCFE
 
-        :param vel: liquid metal coolant/breeder flow velocity (m/s)
-        :param vsc: liquid metal visosity
-        :param conduct_liq: liquid metal conductivity
-        :param l_channel: length long poloidal sections of channel
-        :param num_pol: number long poloidal sections of channel
-        :param label: description of calculation
 
-        References:
+        Parameters
+        ----------
+        vel :
+            liquid metal coolant/breeder flow velocity (m/s)
+        vsc :
+            liquid metal visosity
+        conduct_liq :
+            liquid metal conductivity
+        l_channel :
+            length long poloidal sections of channel
+        num_pol :
+            number long poloidal sections of channel
+        label :
+            description of calculation
+        output: bool
+             (Default value = False)
 
-             [Miy1986]   Miyazaki et al. (1986), Magneto-Hydro-Dynamic Pressure Drop of Lithium
-                         Flow in Rectangular Ducts, Fusion Technology, 10:3P2A, 830-836, DOI: 10.13182/FST10-830
+        References
+        ----------
 
-             [Mal1995]   Malang and Mattas (1995), Comparison of lithium and the eutectic
-                         lead-lithium alloy, two candidate liquid metal breeder materials
-                         for self-cooled blankets, Fusion Engineering and Design 27, 399-406
+        [Miy1986]   Miyazaki et al. (1986), Magneto-Hydro-Dynamic Pressure Drop of Lithium
+        Flow in Rectangular Ducts, Fusion Technology, 10:3P2A, 830-836, DOI: 10.13182/FST10-830
 
-             [Iba2013]   Ibano et al (2013), Nutronics and pumping power analysis on the
-                         Tokamak reactor for the fusion-biomass hybrid concept,
-                         Fusion Engineering and Design, 88
+        [Mal1995]   Malang and Mattas (1995), Comparison of lithium and the eutectic
+        lead-lithium alloy, two candidate liquid metal breeder materials
+        for self-cooled blankets, Fusion Engineering and Design 27, 399-406
 
-             [Sho2018]   Shoki et al (2018), MHD pressure drop measurement of PbLi flow
-                         in double-bended pipe, Fusion Engineering and Design, 136, 17-23
+        [Iba2013]   Ibano et al (2013), Nutronics and pumping power analysis on the
+        Tokamak reactor for the fusion-biomass hybrid concept,
+        Fusion Engineering and Design, 88
 
-             [Klu2019]   Kluber et al. (2019), Numerical simulations of 3D magnetohydrodynamic
-                         flows in dual-coolant lead lithium blankets, Fusion Engineering and Design,
-                         146, 684-687
+        [Sho2018]   Shoki et al (2018), MHD pressure drop measurement of PbLi flow
+        in double-bended pipe, Fusion Engineering and Design, 136, 17-23
 
-             [Sua2021]   MHD effects in geometrical sigularities on high velocity breeding
-                         blanket designs. Part II, ENR-PRD.BB-T007-D002, EFDA_D_2PDT9U.
-                         Also, see asssociated paper: Suarez et al. (2021), On the use of CFD
-                         to obtain head loss coefficients in hydraulic systems and it's appliaction
-                         to liquid metal flows in nuclear fusion reactor blankets, Plasma. Phys.
-                         Control fusion, 63, 124002
+        [Klu2019]   Kluber et al. (2019), Numerical simulations of 3D magnetohydrodynamic
+        flows in dual-coolant lead lithium blankets, Fusion Engineering and Design,
+        146, 684-687
+
+        [Sua2021]   MHD effects in geometrical sigularities on high velocity breeding
+        blanket designs. Part II, ENR-PRD.BB-T007-D002, EFDA_D_2PDT9U.
+        Also, see asssociated paper: Suarez et al. (2021), On the use of CFD
+        to obtain head loss coefficients in hydraulic systems and it's appliaction
+        to liquid metal flows in nuclear fusion reactor blankets, Plasma. Phys.
+        Control fusion, 63, 124002
+
         """
         # Magnetic feild strength in IB or OB blanket
         if label == "Inboard blanket breeder liquid":
@@ -2366,7 +2399,12 @@ class BlanketLibrary:
     def calculate_pipe_bend_radius(self, i_ps: int):
         """Set the pipe bend radius based on the coolant type.
 
-        :param i_ps: switch for primary or secondary coolant
+        Parameters
+        ----------
+        i_ps :
+            switch for primary or secondary coolant
+        i_ps: int :
+
         """
         # If primary coolant or secondary coolant (See DCLL)
         radius_pipe_90_deg_bend = (
@@ -2392,24 +2430,36 @@ class BlanketLibrary:
         label: str,
         output: bool = False,
     ):
-        """
-        Pressure drops are calculated for a pipe with a number of 90
+        """Pressure drops are calculated for a pipe with a number of 90
         and 180 degree bends. The pressure drop due to frictional forces along
         the total straight length of the pipe is calculated, then the pressure
         drop due to the bends is calculated. The total pressure drop is the sum
         of all contributions.
 
-        :param i_ps: switch for primary or secondary coolant
-        :param radius_pipe_90_deg_bend: radius of 90 degree bend in pipe (m)
-        :param radius_pipe_180_deg_bend: radius of 180 degree bend in pipe (m)
-        :param n_pipe_90_deg_bends: number of 90 degree bends in the pipe
-        :param n_pipe_180_deg_bends: number of 180 degree bends in the pipe
-        :param len_pipe: total flow length along pipe (m)
-        :param den_coolant: coolant density (kg/m³)
-        :param visc_coolant: coolant viscosity (Pa s)
-        :param vel_coolant: coolant flow velocity (m/s)
-        :param label: component name
-        :param output: boolean of whether to write data to output file
+        Parameters
+        ----------
+        i_ps :
+            switch for primary or secondary coolant
+        radius_pipe_90_deg_bend :
+            radius of 90 degree bend in pipe (m)
+        radius_pipe_180_deg_bend :
+            radius of 180 degree bend in pipe (m)
+        n_pipe_90_deg_bends :
+            number of 90 degree bends in the pipe
+        n_pipe_180_deg_bends :
+            number of 180 degree bends in the pipe
+        len_pipe :
+            total flow length along pipe (m)
+        den_coolant :
+            coolant density (kg/m³)
+        visc_coolant :
+            coolant viscosity (Pa s)
+        vel_coolant :
+            coolant flow velocity (m/s)
+        label :
+            component name
+        output :
+            boolean of whether to write data to output file
 
         :Notes:
             Darcy-Weisbach Equation (straight pipe):
@@ -2542,9 +2592,12 @@ class BlanketLibrary:
 
     def pipe_hydraulic_diameter(self, i_channel_shape):
         """Caculate the hydraulic diameter (m) for a given coolant pipe size/shape.
-        author: G. Graham
 
-        :param i_channel_shape: switch for circular or rectangular channel crossection.
+
+        Parameters
+        ----------
+        i_channel_shape :
+            switch for circular or rectangular channel crossection.
             Shape depends on whether primary or secondary coolant
         """
         # If primary coolant then circular channels assumed
@@ -2571,24 +2624,28 @@ class BlanketLibrary:
         darcy_friction: float,
         dia_pipe: float,
     ) -> float:
-        """
-        Calculates elbow bend coefficients for pressure drop calculations.
+        """Calculates elbow bend coefficients for pressure drop calculations.
 
-        :param radius_pipe_elbow: Pipe elbow radius (m)
-        :type radius_pipe_elbow: float
-        :param deg_pipe_elbow: Pipe elbow angle (degrees)
-        :type deg_pipe_elbow: float
-        :param darcy_friction: Darcy friction factor
-        :type darcy_friction: float
-        :param dia_pipe: Pipe diameter (m)
-        :type dia_pipe: float
-        :return: Elbow coefficient for pressure drop calculation
-        :rtype: float
+        Parameters
+        ----------
+        radius_pipe_elbow : float
+            Pipe elbow radius (m)
+        deg_pipe_elbow : float
+            Pipe elbow angle (degrees)
+        darcy_friction : float
+            Darcy friction factor
+        dia_pipe : float
+            Pipe diameter (m)
 
-        :References:
+        Returns
+        -------
+        float
+            Elbow coefficient for pressure drop calculation
+
+        References
+        ----------
         - [Ide1969] Idel'Cik, I. E. (1969), Memento des pertes de charge,
-          Collection de la Direction des Etudes et Recherches d'Electricité de France.
-
+        Collection de la Direction des Etudes et Recherches d'Electricité de France.
         """
 
         if deg_pipe_elbow == 90:
@@ -2638,33 +2695,38 @@ class BlanketLibrary:
         den_coolant: float,
         label: str,
     ) -> float:
-        """
-        Calculate the coolant pumping power in MW for the first wall (FW) or breeding blanket (BZ) coolant.
+        """Calculate the coolant pumping power in MW for the first wall (FW) or breeding blanket (BZ) coolant.
 
-        :param output: Whether to write data to output file.
-        :type output: bool
-        :param i_liquid_breeder: Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
-        :type i_liquid_breeder: int
-        :param temp_coolant_pump_outlet: Pump outlet temperature (K).
-        :type temp_coolant_pump_outlet: float
-        :param temp_coolant_pump_inlet: Pump inlet temperature (K).
-        :type temp_coolant_pump_inlet: float
-        :param pressure: Outlet (pump inlet) coolant pressure (Pa).
-        :type pressure: float
-        :param dpres_coolant: Coolant pressure drop (Pa).
-        :type dpres_coolant: float
-        :param mflow_coolant_total: Total coolant mass flow rate in (kg/s).
-        :type mflow_coolant_total: float
-        :param primary_coolant_switch: Name of FW/blanket coolant (e.g., "Helium" or "Water") if icoolpump=1.
-        :type primary_coolant_switch: str
-        :param den_coolant: Density of coolant or liquid breeder (kg/m³).
-        :type den_coolant: float
-        :param label: Description label for output.
-        :type label: str
-        :return: Pumping power in MW.
-        :rtype: float
+        Parameters
+        ----------
+        output : bool
+            Whether to write data to output file.
+        i_liquid_breeder : int
+            Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
+        temp_coolant_pump_outlet : float
+            Pump outlet temperature (K).
+        temp_coolant_pump_inlet : float
+            Pump inlet temperature (K).
+        pressure : float
+            Outlet (pump inlet) coolant pressure (Pa).
+        dpres_coolant : float
+            Coolant pressure drop (Pa).
+        mflow_coolant_total : float
+            Total coolant mass flow rate in (kg/s).
+        primary_coolant_switch : str
+            Name of FW/blanket coolant (e.g., "Helium" or "Water") if icoolpump=1.
+        den_coolant : float
+            Density of coolant or liquid breeder (kg/m³).
+        label : str
+            Description label for output.
 
-        :references:
+        Returns
+        -------
+        float
+            Pumping power in MW.
+
+        References
+        ----------
             - Idel'Cik, I. E. (1969), Memento des pertes de charge
             - S.P. Sukhatme (2005), A Textbook on Heat Transfer
         """
@@ -2808,38 +2870,41 @@ def set_pumping_powers_as_fractions(
     p_div_nuclear_heat_total_mw: float,
     p_div_rad_total_mw: float,
 ) -> tuple[float, float, float, float]:
-    """
-    Calculate mechanical pumping powers as fractions of thermal power in each component.
+    """Calculate mechanical pumping powers as fractions of thermal power in each component.
 
-    :param f_p_fw_coolant_pump_total_heat: Fraction for FW coolant pump.
-    :type f_p_fw_coolant_pump_total_heat: float
-    :param f_p_blkt_coolant_pump_total_heat: Fraction for blanket coolant pump.
-    :type f_p_blkt_coolant_pump_total_heat: float
-    :param f_p_shld_coolant_pump_total_heat: Fraction for shield coolant pump.
-    :type f_p_shld_coolant_pump_total_heat: float
-    :param f_p_div_coolant_pump_total_heat: Fraction for divertor coolant pump.
-    :type f_p_div_coolant_pump_total_heat: float
-    :param p_fw_nuclear_heat_total_mw: Total FW nuclear heating (MW).
-    :type p_fw_nuclear_heat_total_mw: float
-    :param psurffwi: Inboard FW surface heating (MW).
-    :type psurffwi: float
-    :param psurffwo: Outboard FW surface heating (MW).
-    :type psurffwo: float
-    :param p_blkt_nuclear_heat_total_mw: Total blanket nuclear heating (MW).
-    :type p_blkt_nuclear_heat_total_mw: float
-    :param p_shld_nuclear_heat_mw: Shield nuclear heating (MW).
-    :type p_shld_nuclear_heat_mw: float
-    :param p_cp_shield_nuclear_heat_mw: CP shield nuclear heating (MW).
-    :type p_cp_shield_nuclear_heat_mw: float
-    :param p_plasma_separatrix_mw: Plasma separatrix power (MW).
-    :type p_plasma_separatrix_mw: float
-    :param p_div_nuclear_heat_total_mw: Divertor nuclear heating (MW).
-    :type p_div_nuclear_heat_total_mw: float
-    :param p_div_rad_total_mw: Divertor radiative power (MW).
-    :type p_div_rad_total_mw: float
+    Parameters
+    ----------
+    f_p_fw_coolant_pump_total_heat : float
+        Fraction for FW coolant pump.
+    f_p_blkt_coolant_pump_total_heat : float
+        Fraction for blanket coolant pump.
+    f_p_shld_coolant_pump_total_heat : float
+        Fraction for shield coolant pump.
+    f_p_div_coolant_pump_total_heat : float
+        Fraction for divertor coolant pump.
+    p_fw_nuclear_heat_total_mw : float
+        Total FW nuclear heating (MW).
+    psurffwi : float
+        Inboard FW surface heating (MW).
+    psurffwo : float
+        Outboard FW surface heating (MW).
+    p_blkt_nuclear_heat_total_mw : float
+        Total blanket nuclear heating (MW).
+    p_shld_nuclear_heat_mw : float
+        Shield nuclear heating (MW).
+    p_cp_shield_nuclear_heat_mw : float
+        CP shield nuclear heating (MW).
+    p_plasma_separatrix_mw : float
+        Plasma separatrix power (MW).
+    p_div_nuclear_heat_total_mw : float
+        Divertor nuclear heating (MW).
+    p_div_rad_total_mw : float
+        Divertor radiative power (MW).
 
-    :return: Tuple of pumping powers (MW) for FW, blanket, shield, and divertor.
-    :rtype: tuple[float, float, float, float]
+    Returns
+    -------
+    tuple[float, float, float, float]
+        Tuple of pumping powers (MW) for FW, blanket, shield, and divertor.
     """
     p_fw_coolant_pump_mw = f_p_fw_coolant_pump_total_heat * (
         p_fw_nuclear_heat_total_mw + psurffwi + psurffwo
@@ -2864,7 +2929,7 @@ def set_pumping_powers_as_fractions(
 def eshellarea(rshell, rmini, rmino, zminor):
     """Routine to calculate the inboard, outboard and total surface areas
     of a toroidal shell comprising two elliptical sections
-    author: P J Knight, CCFE, Culham Science Centre
+
     rshell : input real : major radius of centre of both ellipses (m)
     rmini  : input real : horizontal distance from rshell to
     inboard elliptical shell (m)
@@ -2876,6 +2941,17 @@ def eshellarea(rshell, rmini, rmino, zminor):
     atot   : output real : total surface area of shell (m3)
     This routine calculates the surface area of the inboard and outboard
     sections of a toroidal shell defined by two co-centred semi-ellipses.
+
+    Parameters
+    ----------
+    rshell :
+
+    rmini :
+
+    rmino :
+
+    zminor :
+
     """
 
     # Inboard section
@@ -2892,24 +2968,26 @@ def eshellarea(rshell, rmini, rmino, zminor):
 def dshellarea(
     rmajor: float, rminor: float, zminor: float
 ) -> tuple[float, float, float]:
-    """
-    Calculate the inboard, outboard, and total surface areas of a D-shaped toroidal shell.
-
-    :param rmajor: Major radius of inboard straight section (m)
-    :type rmajor: float
-    :param rminor: Horizontal width of shell (m)
-    :type rminor: float
-    :param zminor: Vertical half-height of shell (m)
-    :type zminor: float
-
-    :return: Tuple containing:
-        - ain: Surface area of inboard straight section (m²)
-        - aout: Surface area of outboard curved section (m²)
-        - atot: Total surface area of shell (m²)
-    :rtype: tuple[float, float, float]
+    """Calculate the inboard, outboard, and total surface areas of a D-shaped toroidal shell.
 
     The inboard section is assumed to be a cylinder.
     The outboard section is defined by a semi-ellipse, centred on the major radius of the inboard section.
+    Parameters
+    ----------
+    rmajor : float
+        Major radius of inboard straight section (m)
+    rminor : float
+        Horizontal width of shell (m)
+    zminor : float
+        Vertical half-height of shell (m)
+
+    Returns
+    -------
+    tuple[float, float, float]
+        Tuple containing:
+        - ain: Surface area of inboard straight section (m²)
+        - aout: Surface area of outboard curved section (m²)
+        - atot: Total surface area of shell (m²)
     """
     # Area of inboard cylindrical shell
     ain = 4.0 * zminor * np.pi * rmajor
@@ -2924,25 +3002,40 @@ def dshellarea(
 def eshellvol(rshell, rmini, rmino, zminor, drin, drout, dz):
     """Routine to calculate the inboard, outboard and total volumes
     of a toroidal shell comprising two elliptical sections
-    author: P J Knight, CCFE, Culham Science Centre
-    rshell : input real : major radius of centre of both ellipses (m)
-    rmini  : input real : horizontal distance from rshell to outer edge
-    of inboard elliptical shell (m)
-    rmino  : input real : horizontal distance from rshell to inner edge
-    of outboard elliptical shell (m)
-    zminor : input real : vertical internal half-height of shell (m)
-    drin   : input real : horiz. thickness of inboard shell at midplane (m)
-    drout  : input real : horiz. thickness of outboard shell at midplane (m)
-    dz     : input real : vertical thickness of shell at top/bottom (m)
-    vin    : output real : volume of inboard section (m3)
-    vout   : output real : volume of outboard section (m3)
-    vtot   : output real : total volume of shell (m3)
+
     This routine calculates the volume of the inboard and outboard sections
     of a toroidal shell defined by two co-centred semi-ellipses.
     Each section's internal and external surfaces are in turn defined
     by two semi-ellipses. The volumes of each section are calculated as
     the difference in those of the volumes of revolution enclosed by their
     inner and outer surfaces.
+
+    Parameters
+    ----------
+    rshell :
+        major radius of centre of both ellipses (m)
+    rmini :
+        horizontal distance from rshell to outer edge of inboard elliptical shell (m)
+    rmino :
+        horizontal distance from rshell to inner edge of outboard elliptical shell (m)
+    zminor :
+        vertical internal half-height of shell (m)
+    drin :
+        horiz. thickness of inboard shell at midplane (m)
+    drout :
+        horiz. thickness of outboard shell at midplane (m)
+    dz :
+        vertical thickness of shell at top/bottom (m)
+
+    Returns
+    -------
+    vin :
+        volume of inboard section (m3)
+    vout:
+        volume of outboard section (m3)
+    vtot:
+        total volume of shell (m3)
+    -------
     """
     # Inboard section
 
@@ -2988,17 +3081,7 @@ def eshellvol(rshell, rmini, rmino, zminor, drin, drout, dz):
 def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
     """Routine to calculate the inboard, outboard and total volumes
     of a D-shaped toroidal shell
-    author: P J Knight, CCFE, Culham Science Centre
-    rmajor : input real : major radius to outer point of inboard
-    straight section of shell (m)
-    rminor : input real : horizontal internal width of shell (m)
-    zminor : input real : vertical internal half-height of shell (m)
-    drin   : input real : horiz. thickness of inboard shell at midplane (m)
-    drout  : input real : horiz. thickness of outboard shell at midplane (m)
-    dz     : input real : vertical thickness of shell at top/bottom (m)
-    vin    : output real : volume of inboard straight section (m3)
-    vout   : output real : volume of outboard curved section (m3)
-    vtot   : output real : total volume of shell (m3)
+
     This routine calculates the volume of the inboard and outboard sections
     of a D-shaped toroidal shell defined by the above input parameters.
     The inboard section is assumed to be a cylinder of uniform thickness.
@@ -3006,6 +3089,31 @@ def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
     by two semi-ellipses, centred on the outer edge of the inboard section;
     its volume is calculated as the difference in those of the volumes of
     revolution enclosed by the two surfaces.
+
+    Parameters
+    ----------
+    rmajor :
+        major radius to outer point of inboardstraight section of shell (m)
+    rminor :
+        horizontal internal width of shell (m)
+    zminor :
+        vertical internal half-height of shell (m)
+    drin :
+        horiz. thickness of inboard shell at midplane (m)
+    drout :
+        horiz. thickness of outboard shell at midplane (m)
+    dz :
+        vertical thickness of shell at top/bottom (m)
+
+    Returns
+    -------
+    vin :
+        volume of inboard straight section (m3)
+    vout:
+        volume of outboard curved section (m3)
+    vtot:
+        total volume of shell (m3)
+
     """
     # Volume of inboard cylindrical shell
     vin = 2.0 * (zminor + dz) * np.pi * (rmajor**2 - (rmajor - drin) ** 2)
@@ -3048,19 +3156,23 @@ class OutboardBlanket(BlanketLibrary):
         rminor: float,
         dr_fw_plasma_gap_outboard: float,
     ) -> float:
-        """
-        Calculate the mid-plane toroidal circumference and segment length of the outboard blanket.
+        """Calculate the mid-plane toroidal circumference and segment length of the outboard blanket.
 
-        :param n_blkt_outboard_modules_toroidal: Number of outboard blanket modules in the toroidal direction.
-        :type n_blkt_outboard_modules_toroidal: int
-        :param rmajor: Major radius (m).
-        :type rmajor: float
-        :param rminor: Minor radius (m).
-        :type rminor: float
-        :param dr_fw_plasma_gap_outboard: Outboard first wall to plasma gap (m).
-        :type dr_fw_plasma_gap_outboard: float
-        :return: Length of outboard blanket segment in the toroidal direction (m).
-        :rtype: float
+        Parameters
+        ----------
+        n_blkt_outboard_modules_toroidal : int
+            Number of outboard blanket modules in the toroidal direction.
+        rmajor : float
+            Major radius (m).
+        rminor : float
+            Minor radius (m).
+        dr_fw_plasma_gap_outboard : float
+            Outboard first wall to plasma gap (m).
+
+        Returns
+        -------
+        float
+            Length of outboard blanket segment in the toroidal direction (m).
         """
         return (
             2.0 * np.pi * (rmajor + rminor + dr_fw_plasma_gap_outboard)
@@ -3087,19 +3199,23 @@ class InboardBlanket(BlanketLibrary):
         rminor: float,
         dr_fw_plasma_gap_inboard: float,
     ) -> float:
-        """
-        Calculate the mid-plane toroidal circumference and segment length of the inboard blanket.
+        """Calculate the mid-plane toroidal circumference and segment length of the inboard blanket.
 
-        :param n_blkt_inboard_modules_toroidal: Number of inboard blanket modules in the toroidal direction.
-        :type n_blkt_inboard_modules_toroidal: int
-        :param rmajor: Major radius (m).
-        :type rmajor: float
-        :param rminor: Minor radius (m).
-        :type rminor: float
-        :param dr_fw_plasma_gap_inboard: Inboard first wall to plasma gap (m).
-        :type dr_fw_plasma_gap_inboard: float
-        :return: Length of inboard blanket segment in the toroidal direction (m).
-        :rtype: float
+        Parameters
+        ----------
+        n_blkt_inboard_modules_toroidal : int
+            Number of inboard blanket modules in the toroidal direction.
+        rmajor : float
+            Major radius (m).
+        rminor : float
+            Minor radius (m).
+        dr_fw_plasma_gap_inboard : float
+            Inboard first wall to plasma gap (m).
+
+        Returns
+        -------
+        float
+            Length of inboard blanket segment in the toroidal direction (m).
         """
         return (
             2.0 * np.pi * (rmajor + rminor + dr_fw_plasma_gap_inboard)

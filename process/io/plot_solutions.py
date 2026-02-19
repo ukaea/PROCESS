@@ -93,19 +93,24 @@ def plot_mfile_solutions(
 ) -> tuple[mpl.figure.Figure, pd.DataFrame]:
     """Plot multiple solutions, optionally normalised by a given solution.
 
-    :param runs_metadata: list of RunMetadata objects
-    :type runs_metadata: Sequence[RunMetadata]
-    :param plot_title: title of plot
-    :type plot_title: str
-    :param normalising_tag: tag for solution to normalise with. If provided,
-    normalise, otherwise don't, defaults to None
-    :type normalising_tag: str, optional
-    :param rmse: plot RMS errors relative to reference solution, defaults to False
-    :type rmse: bool, optional
-    :param normalisation_type: opt param normalisation to use: one of ["init", "range", None], defaults to "init"
-    :type normalisation_type: str, optional
-    :return: figure and dataframe of solutions
-    :rtype: Tuple[mpl.figure.Figure, pd.DataFrame]
+    Parameters
+    ----------
+    runs_metadata : Sequence[RunMetadata]
+        list of RunMetadata objects
+    plot_title : str
+        title of plot
+    normalising_tag : str, optional
+        tag for solution to normalise with. If provided,
+        normalise, otherwise don't, defaults to None
+    rmse : bool, optional
+        plot RMS errors relative to reference solution, defaults to False
+    normalisation_type : str, optional
+        opt param normalisation to use: one of ["init", "range", None], defaults to "init"
+
+    Returns
+    -------
+    Tuple[mpl.figure.Figure, pd.DataFrame]
+        figure and dataframe of solutions
     """
     if normalisation_type is not None and normalising_tag is not None:
         warn(
@@ -182,10 +187,15 @@ def _extract_mfile_data(mfile_path: Path) -> dict:
 
     Also include the names of the optimisation parameters.
 
-    :param mfile_path: mfile to extract data from
-    :type mfile_path: pathlib.Path
-    :return: dict of all data in mfile
-    :rtype: dict
+    Parameters
+    ----------
+    mfile_path:
+        mfile to extract data from
+
+    Returns
+    -------
+    dict
+        dict of all data in mfile
     """
     mfile = MFile(str(mfile_path))
     mfile_data = {}
@@ -205,10 +215,16 @@ def _create_df_from_run_metadata(runs_metadata: Sequence[RunMetadata]) -> pd.Dat
     """Create a dataframe from multiple mfiles.
 
     Uses RunMetadata objects.
-    :param runs_metadata: scenarios and solvers that have been run
-    :type runs_metadata: Sequence[RunMetadata]
-    :return: dataframe of all results
-    :rtype: pandas.DataFrame
+
+    Parameters
+    ----------
+    runs_metadata
+        scenarios and solvers that have been run
+
+    Returns
+    -------
+    pandas.DataFrame
+        dataframe of all results
     """
     results = []
     for run_metadata in runs_metadata:
@@ -227,12 +243,17 @@ def _separate_norm_solution(
 ) -> tuple[pd.DataFrame]:
     """Separate solutions df into normalising row and rows to be normalised.
 
-    :param results_df: multiple solutions dataframe
-    :type results_df: pd.DataFrame
-    :param normalising_tag: tag to identify row to normalise with
-    :type normalising_tag: str
-    :return: normalising row, rows to be normalised
-    :rtype: Tuple[pd.DataFrame]
+    Parameters
+    ----------
+    results_df:
+        multiple solutions dataframe
+    normalising_tag:
+        tag to identify row to normalise with
+
+    Returns
+    -------
+    Tuple[pd.DataFrame]
+        normalising row, rows to be normalised
     """
     # Split results into normalising and non-normalising solutions
     normalising_soln = results_df[results_df[TAG] == normalising_tag]
@@ -248,14 +269,19 @@ def _filter_opt_params(
 ) -> pd.DataFrame:
     """Filter optimsation parameters in or out of results.
 
-    :param results: multiple solutions
-    :type results: pd.DataFrame
-    :param opt_param_value_pattern: normalisation type for opt params in mfile
-    :type opt_param_value_pattern: str
-    :param filter_in: include opt params, defaults to True
-    :type filter_in: bool, optional
-    :return: multiple solutions with opt params filtered in or out
-    :rtype: pd.DataFrame
+    Parameters
+    ----------
+    results:
+        multiple solutions
+    opt_param_value_pattern:
+        normalisation type for opt params in mfile
+    filter_in:
+        include opt params, defaults to True
+
+    Returns
+    -------
+    pd.DataFrame
+        multiple solutions with opt params filtered in or out
     """
     is_opt_param = results.columns.str.contains(opt_param_value_pattern)
     if filter_in:
@@ -273,14 +299,19 @@ def _normalise_diffs(
 ) -> pd.DataFrame:
     """Normalise differences of multiple solutions with a normalising solution.
 
-    :param results_df: dataframe of two solutions (same scenario, different solvers)
-    :type results_df: pandas.DataFrame
-    :param opt_param_value_pattern: normalisation type for opt params in mfile
-    :type opt_param_value_pattern: str
-    :param normalising_tag: tag to normalise other solutions with
-    :type normalising_tag: str
-    :return: normalised differences
-    :rtype: pandas.DataFrame
+    Parameters
+    ----------
+    results_df:
+        dataframe of two solutions (same scenario, different solvers)
+    opt_param_value_pattern:
+        normalisation type for opt params in mfile
+    normalising_tag:
+        tag to normalise other solutions with
+
+    Returns
+    -------
+    pandas.DataFrame
+        normalised differences
     """
     normalising_soln, non_normalising_solns = _separate_norm_solution(
         results_df, normalising_tag
@@ -327,17 +358,22 @@ def _filter_vars_of_interest(
 ) -> pd.DataFrame:
     """Filter variables of interest from full results for all solutions.
 
-    :param results_df: full results for all solutions
-    :type results_df: pandas.DataFrame
-    :param opt_param_value_pattern: normalisation type for opt params in mfile,
-    set if plotting opt params, defaults to None
-    :type opt_param_value_pattern: str | None, optional
-    :param constraints: filter in constraint values, defaults to False
-    :type constraints: bool, optional
-    :param extra_var_names: other variables of interest to filter, defaults to None
-    :type extra_var_names: List[str], optional
-    :return: variables of interest
-    :rtype: pandas.DataFrame
+    Parameters
+    ----------
+    results_df
+        full results for all solutions
+    opt_param_value_pattern
+        normalisation type for opt params in mfile,
+        set if plotting opt params, defaults to None
+    constraints
+        filter in constraint values, defaults to False
+    extra_var_names
+        other variables of interest to filter, defaults to None
+
+    Returns
+    -------
+    pandas.DataFrame
+        variables of interest
     """
     if extra_var_names is None:
         extra_var_names = []
@@ -367,20 +403,26 @@ def _plot_solutions(
 ) -> mpl.figure.Figure:
     """Plot multiple solutions, optionally normalised by a given solution.
 
-    :param diffs_df: normalised diffs for optimisation parameters and objective function
-    :type diffs_df: pandas.DataFrame
-    :param normalisation_type: opt param normalisation to use: ["init", "range", None]
-    :type normalisation_type: str | None
-    :param opt_param_value_pattern: normalisation type for opt params in mfile
-    :type opt_param_value_pattern: str
-    :param plot_title: title of plot
-    :type plot_title: str
-    :param normalising_tag: tag for normalising solution, if any
-    :type normalising_tag: Union[str, None]
-    :param rmse_df: RMS errors relative to reference solution
-    :type rmse_df: pd.DataFrame
-    :return: figure containing varying numbers of axes
-    :rtype: mpl.figure.Figure
+    Parameters
+    ----------
+    diffs_df:
+        normalised diffs for optimisation parameters and objective function
+    normalisation_type:
+        opt param normalisation to use: ["init", "range", None]
+    opt_param_value_pattern:
+        normalisation type for opt params in mfile
+    plot_title:
+        title of plot
+    normalising_tag:
+        tag for normalising solution, if any
+    rmse_df:
+        RMS errors relative to reference solution
+
+
+    Returns
+    -------
+    mpl.figure.Figure
+        figure containing varying numbers of axes
     """
     # Separate optimisation parameters and objective dfs
     opt_params_df = diffs_df.filter(
@@ -606,14 +648,20 @@ def _rms_errors(
     """Calculate RMS errors between different solutions.
 
     Summarise solution differences in single number.
-    :param results_df: df containing multiple solutions
-    :type results_df: pandas.DataFrame
-    :param opt_param_value_pattern: normalisation type for opt params in mfile
-    :type opt_param_value_pattern: str
-    :param normalising_tag: tag to calculate RMSEs against
-    :type normalising_tag: str
-    :return: RMS errors for each solution
-    :rtype: pandas.DataFrame
+
+    Parameters
+    ----------
+    results_df:
+        df containing multiple solutions
+    opt_param_value_pattern:
+        normalisation type for opt params in mfile
+    normalising_tag:
+        tag to calculate RMSEs against
+
+    Returns
+    -------
+    :
+        RMS errors for each solution
     """
     normalising_soln, _ = _separate_norm_solution(results_df, normalising_tag)
     # Reference solution to calculate RMS errors against
@@ -644,12 +692,17 @@ def _rms_errors(
 def _plot_solutions_constraints(df: pd.DataFrame, title: str) -> mpl.figure.Figure:
     """Create plot from constraint values df.
 
-    :param df: constraint values for each mfile
-    :type df: pd.DataFrame
-    :param title: plot title
-    :type title: str
-    :return: created figure
-    :rtype: mpl.figure.Figure
+    Parameters
+    ----------
+    df:
+        constraint values for each mfile
+    title:
+        plot title
+
+    Returns
+    -------
+    mpl.figure.Figure
+        created figure
     """
     # Replace constraint numbers with descriptions
     df = df.rename(mapper=CONSTRAINT_NUMS, axis="columns")
@@ -677,12 +730,17 @@ def plot_mfile_solutions_constraints(
 ) -> tuple[mpl.figure.Figure, pd.DataFrame]:
     """Plot constraint values in mfiles.
 
-    :param runs_metadata: list of RunMetadata objects
-    :type runs_metadata: Sequence[RunMetadata]
-    :param title: plot title
-    :type title: str
-    :return: figure and dataframe of solutions
-    :rtype: Tuple[mpl.figure.Figure, pd.DataFrame]
+    Parameters
+    ----------
+    runs_metadata:
+        list of RunMetadata objects
+    title:
+        plot title
+
+    Returns
+    -------
+    :
+        figure and dataframe of solutions
     """
     # Create dataframe from runs metadata: mfile data with a tag for each run
     results_df = _create_df_from_run_metadata(runs_metadata)

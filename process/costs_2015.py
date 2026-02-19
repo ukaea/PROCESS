@@ -27,17 +27,12 @@ class Costs2015:
         self.outfile = constants.NOUT
 
     def run(self):
-        """
-        Cost accounting for a fusion power plant
-        author: J Morris, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+        """Cost accounting for a fusion power plant
+
         This routine performs the cost accounting for a fusion power plant.
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         self.outfile = self.outfile
-
-        # ###############################################
 
         # Calculate building costs
         self.calc_building_costs()
@@ -139,10 +134,7 @@ class Costs2015:
             return
 
     def calc_fwbs_costs(self):
-        """
-        Function to calculate the cost of the first wall, blanket and shield
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Function to calculate the cost of the first wall, blanket and shield
         This routine calculates the cost of the first wall, blanket and shield
         coils for a fusion power plant based on the costings in the PROCESS costs paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -318,10 +310,7 @@ class Costs2015:
             )
 
     def output(self):
-        """
-        Function to output the costs calculations
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Function to output the costs calculations
         This routine outputs the costs to output file
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
@@ -463,10 +452,7 @@ class Costs2015:
         )
 
     def calc_building_costs(self):
-        """
-        Function to calculate the cost of all buildings.
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Function to calculate the cost of all buildings.
         This routine calculates the building costs for a fusion power plant
         based on the costings in the PROCESS costs Paper.
         Buildings have a different scaling law, with fixed cost per unit volume.
@@ -606,10 +592,7 @@ class Costs2015:
             )
 
     def calc_land_costs(self):
-        """
-        Function to calculate the cost of land for the power plant
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Function to calculate the cost of land for the power plant
         Land also uses a unit cost, but area is scaled.
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
@@ -682,10 +665,7 @@ class Costs2015:
             )
 
     def calc_tf_coil_costs(self):
-        """
-                Function to calculate the cost of the TF coils for the power plant
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Function to calculate the cost of the TF coils for the power plant
         This routine calculates the cost of the TF coils for a fusion power
         plant based on the costings in the PROCESS costs Paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -796,10 +776,7 @@ class Costs2015:
             )
 
     def calc_remote_handling_costs(self):
-        """
-        Function to calculate the cost of the remote handling facilities
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Function to calculate the cost of the remote handling facilities
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         for i in range(27, 31):
@@ -846,10 +823,7 @@ class Costs2015:
         )
 
     def calc_n_plant_and_vv_costs(self):
-        """
-        Function to calculate the cost of the nitrogen plant and vacuum vessel
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Function to calculate the cost of the nitrogen plant and vacuum vessel
         This routine calculates the cost of the nitrogen plant and vacuum vessel
         for a fusion power plant based on the costings in the PROCESS costs paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -895,10 +869,7 @@ class Costs2015:
             )
 
     def calc_energy_conversion_system(self):
-        """
-        Function to calculate the cost of the energy conversion system
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Function to calculate the cost of the energy conversion system
         This routine calculates the cost of the energy conversion system
         for a fusion power plant based on the costings in the PROCESS costs paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -919,10 +890,7 @@ class Costs2015:
         )
 
     def calc_remaining_subsystems(self):
-        """
-        Function to calculate the cost of the remaining subsystems
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Function to calculate the cost of the remaining subsystems
         This routine calculates the cost of the remaining subsystems
         for a fusion power plant based on the costings in the PROCESS costs paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
@@ -1288,19 +1256,31 @@ class Costs2015:
             )
 
     def value_function(self, x):
-        """
-        Value function
-        author: J Morris, CCFE, Culham Science Centre
-        None
+        """Value function
         Function for separative work unit calculation for enrichment cost
         PROCESS Costs Paper (M. Kovari, J. Morris)
+
+        Parameters
+        ----------
+        x :
+
         """
         return (1.0e0 - 2.0e0 * x) * np.log((1.0e0 - x) / x)
 
     def ocost(self, file, descr, vname, value):
-        """
-        Routine to print out the code, description and value
+        """Routine to print out the code, description and value
         of a cost item from array s in costs_2015
+
+        Parameters
+        ----------
+        file :
+
+        descr :
+
+        vname :
+
+        value :
+
         """
 
         #  Local variables
@@ -1321,9 +1301,19 @@ class Costs2015:
         po.ovarrf(file, descr, vname, value)
 
     def ocost_vname(self, file, descr, vname, value):
-        """
-        Routine to print out the code, description and value
+        """Routine to print out the code, description and value
         of a cost item not in the array s in costs_2015
+
+        Parameters
+        ----------
+        file :
+
+        descr :
+
+        vname :
+
+        value :
+
         """
 
         # character(len=70) :: dum70

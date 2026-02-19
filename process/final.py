@@ -15,12 +15,14 @@ def finalise(models, ifail: int, non_idempotent_msg: str | None = None):
 
     Writes to OUT.DAT and MFILE.DAT.
 
-    :param models: physics and engineering model objects
-    :type models: process.main.Models
-    :param ifail: error flag
-    :type ifail: int
-    :param non_idempotent_msg: warning about non-idempotent variables, defaults to None
-    :type non_idempotent_msg: None | str, optional
+    Parameters
+    ----------
+    models : process.main.Models
+        physics and engineering model objects
+    ifail : int
+        error flag
+    non_idempotent_msg : None | str, optional
+        warning about non-idempotent variables, defaults to None
     """
     if ifail == 1:
         po.oheadr(constants.NOUT, "Final Feasible Point")

@@ -40,10 +40,15 @@ from process.io.variable_metadata import var_dicts as meta
 def parse_args(args):
     """Parse supplied arguments.
 
-    :param args: arguments to parse
-    :type args: list, None
-    :return: parsed arguments
-    :rtype: Namespace
+    Parameters
+    ----------
+    args : list, None
+        arguments to parse
+
+    Returns
+    -------
+    Namespace
+        parsed arguments
     """
     parser = argparse.ArgumentParser(
         description="Plot optimization information",
@@ -240,8 +245,10 @@ def parse_args(args):
 def main(args=None):
     """Main plot scans script.
 
-    :param args: optional command-line args from test function, defaults to None
-    :type args: list, optional
+    Parameters
+    ----------
+    args : list, optional
+        optional command-line args from test function, defaults to None
     """
     args = parse_args(args)
 

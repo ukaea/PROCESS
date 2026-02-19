@@ -3,8 +3,6 @@
 Modifies the PROCESS input file IN.DAT so all the iteration variables are
 given their values from the output file MFILE.DAT.
 
-James Morris 30/04/2014 based on code by Michael Kovari 9/8/13 and
-J C Rivas, 16/7/2013
 """
 
 import argparse
@@ -17,13 +15,17 @@ from process.io.in_dat import InDat
 def feasible_point(filename, position):
     """Function to check for feasible solution before creating new IN.DAT, or to determine the first or last feasible point in a scan
 
-    Args:
-      filename --> name of MFILE.DAT to read
-      position --> e.g first or last
+    Parameters
+    ----------
+    filename :
+        name of MFILE.DAT to read
+    position :
+        e.g first or last
 
-    Returns:
-      scanPoint --> scan number to use when writing new file
-
+    Returns
+    -------
+    scanPoint:
+        scan number to use when writing new file
     """
     mfile_data = mf.MFile(filename)
     finished = False
@@ -63,14 +65,18 @@ def get_iteration_variables(filename, scan):
     """Function to get a list of the iteration variables and their values from
     MFILE.DAT
 
-    Args:
-      filename --> name of MFILE.DAT to read
-      scan --> scan number to use
+    Parameters
+    ----------
+    filename:
+        name of MFILE.DAT to read
+    scan:
+        scan number to use
 
-    Returns:
-      iteration_vars --> dictionary of iteration variables in MFILE and their
-                         values.
-
+    Returns
+    -------
+    iteration_vars:
+        dictionary of iteration variables in MFILE and their
+        values.
     """
     mfile_data = mf.MFile(filename)
     iteration_vars = {}
@@ -88,11 +94,13 @@ def replace_iteration_variables(iteration_vars, in_data):
     """Function to replace the iteration variables in IN.DAT if the variable
     is not defined in IN.DAT it will add the variable to the end of the file.
 
-    Args:
-      iteration_vars --> dictionary of iteration variables from MFILE.DAT and
-                         their values
-      in_data --> IN.DAT data object.
-
+    Parameters
+    ----------
+    iteration_vars:
+        dictionary of iteration variables from MFILE.DAT and
+        their values
+    in_data:
+        IN.DAT data object.
     """
 
     for variable_name, variable_value in iteration_vars.items():

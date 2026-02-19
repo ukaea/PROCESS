@@ -1,5 +1,5 @@
 """Module containing Inertial Fusion Energy device routines
-author: P J Knight, CCFE, Culham Science Centre
+
 
 This module contains routines for calculating the
 parameters of an Inertial Fusion Energy power plant.
@@ -36,13 +36,13 @@ MATERIALS = [
 
 class IFE:
     """Module containing Inertial Fusion Energy device routines
-    author: P J Knight, CCFE, Culham Science Centre
+
     N/A
     This module contains routines for calculating the
     parameters of an Inertial Fusion Energy power plant.
     """
 
-    def __init__(self, availability, costs) -> None:
+    def __init__(self, availability, costs):
         """Initialises the IFE module's variables
 
         :param availability: a pointer to the availability model, allowing use of availability's variables/methods
@@ -58,14 +58,17 @@ class IFE:
     def run(self, output: bool):
         """Routine to output the physics and engineering information
         relevant to inertial fusion energy power plants
-        author: P J Knight, CCFE, Culham Science Centre
+
 
         This routine outputs the physics and engineering information
         relevant to inertial fusion energy power plants.
         F/MI/PJK/LOGBOOK12, p.66
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        Parameters
+        ----------
+        output:
+            indicate whether output should be written to the output file, or not
+
         """
         # Device build
         self.ifebld(output=output)
@@ -111,13 +114,15 @@ class IFE:
     def ifebld(self, output: bool = False):
         """Routine to create the build of an inertial fusion energy device
         and to calculate the material volumes for the device core
-        author: P J Knight, CCFE, Culham Science Centre
+
 
         This routine constructs the build of an inertial fusion energy device
         and calculates the material volumes for the device core.
 
-        :param output: boolean to control writing of output to outfile/mfile
-        :type output: bool
+        Parameters
+        ----------
+        output:
+            boolean to control writing of output to outfile/mfile
         """
         match ife_variables.ifetyp:
             case 1:
@@ -257,8 +262,6 @@ class IFE:
         """Routine to create the build of an inertial fusion energy
         device, based on the design of the OSIRIS study,
         and to calculate the material volumes for the device core
-        author: P J Knight, CCFE, Culham Science Centre
-        None
         This routine constructs the build of an inertial fusion energy
         device, based on the design of the OSIRIS study, and to calculate
         the material volumes for the device core.
@@ -279,8 +282,6 @@ class IFE:
         """Routine to create the build of an inertial fusion energy
         device, based on the design of the SOMBRERO study,
         and to calculate the material volumes for the device core
-        author: P J Knight, CCFE, Culham Science Centre
-        None
         This routine constructs the build of an inertial fusion energy
         device, based on the design of the SOMBRERO study, and to calculate
         the material volumes for the device core.
@@ -810,8 +811,6 @@ class IFE:
     def bld2019(self):
         """Routine to create the build of a 2019 inertial fusion energy
         device, and to calculate the material volumes for the device core
-        author: S I Muldrew, CCFE, Culham Science Centre
-        None
         This routine constructs the build of a modern inertial fusion energy
         device, assumed to be cylindrically-symmetric, with a pool at bottom
         and top corners and with a lower shield at the centre.  See diagram
@@ -1127,8 +1126,6 @@ class IFE:
     def genbld(self):
         """Routine to create the build of a generic inertial fusion energy
         device, and to calculate the material volumes for the device core
-        author: P J Knight, CCFE, Culham Science Centre
-        None
         This routine constructs the build of a generic inertial fusion energy
         device, assumed to be cylindrically-symmetric, and to calculate
         the material volumes for the device core.
@@ -1336,11 +1333,16 @@ class IFE:
     def ifephy(self, output: bool = False):
         """Routine to calculate the physics parameters of an Inertial Fusion
         Energy power plant
-        author: P J Knight, CCFE, Culham Science Centre
+
 
         This routine calculates the physics parameters of an Inertial Fusion
         Energy power plant.
         F/MI/PJK/LOGBOOK12, pp.68,85
+
+        Parameters
+        ----------
+        output: bool
+             (Default value = False)
         """
         match ife_variables.ifedrv:
             case -1:
@@ -1468,12 +1470,25 @@ class IFE:
     def driver(self, edrive, gainve, etave):
         """Routine to calculate parameters of a generic driver
         suitable for inertial fusion energy
-        author: P J Knight, CCFE, Culham Science Centre
-        edrive : input real : Driver energy (J)
-        gainve(10) : input real array : Gain vs energy data
-        etave(10) : input real array : Driver efficiency vs energy data
-        gain   : output real : Target gain
-        etadrv : output real : Driver efficiency
+
+        Parameters
+        ----------
+        edrive:
+            Driver energy (J)
+        gainve(10):
+            Gain vs energy data
+        etave(10):
+            Driver efficiency vs energy data
+
+        Returns
+        -------
+        gain   :
+            Target gain
+        etadrv :
+            Driver efficiency
+
+        Notes
+        -----
         This routine calculates the parameters of a generic driver
         suitable for inertial fusion energy.
         Gain and driver efficiency data are interpolated from input data.
@@ -1508,10 +1523,21 @@ class IFE:
     def lasdrv(self, edrive):
         """Routine to calculate parameters of a laser driver
         suitable for inertial fusion energy
-        author: P J Knight, CCFE, Culham Science Centre
-        edrive : input real : Driver energy (J)
-        gain   : output real : Target gain
-        etadrv : output real : Driver efficiency
+
+        Parameters
+        ----------
+        edrive:
+            Driver energy (J)
+
+        Returns
+        -------
+        gain   : output
+            Target gain
+        etadrv : output
+            Driver efficiency
+
+        Notes
+        -----
         This routine calculates the parameters of a laser driver
         suitable for inertial fusion energy.
         Gain and driver efficiency data are taken from Figures 1 and 2 of
@@ -1555,10 +1581,21 @@ class IFE:
     def iondrv(self, edrive):
         """Routine to calculate parameters of a heavy ion driver
         suitable for inertial fusion energy
-        author: P J Knight, CCFE, Culham Science Centre
-        edrive : input real : Driver energy (J)
-        gain   : output real : Target gain
-        etadrv : output real : Driver efficiency
+
+        Parameters
+        ----------
+        edrive:
+            Driver energy (J)
+
+        Returns
+        -------
+        gain   : output
+            Target gain
+        etadrv : output
+            Driver efficiency
+
+        Notes
+        -----
 
         This routine calculates the parameters of a heavy ion driver
         suitable for inertial fusion energy.
@@ -1609,7 +1646,7 @@ class IFE:
     def ifestr(self):
         """Routine to calculate the support structural masses for the core of
         an Inertial Fusion Energy power plant
-        author: P J Knight, CCFE, Culham Science Centre
+
         This routine calculates the support structural masses for the core of
         an Inertial Fusion Energy power plant.
 
@@ -1625,7 +1662,7 @@ class IFE:
     def ifetgt(self):
         """Routine to calculate the power requirements of the target
         delivery system and the target factory
-        author: P J Knight, CCFE, Culham Science Centre
+
         This routine calculates the power requirements of the target
         delivery system and the target factory, for an Inertial
         Fusion Energy power plant.
@@ -1640,13 +1677,16 @@ class IFE:
     def ifefbs(self, output: bool = False):
         """Routine to calculate the first wall, blanket and shield volumes,
         masses and other parameters, for an Inertial Fusion Energy device
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+
         This routine calculates the first wall, blanket and shield volumes,
         masses and other parameters, for an Inertial Fusion Energy device.
         F/MI/PJK/LOGBOOK12, p.86
         Moir et al., Fusion Technology, vol.25 (1994) p.5
+
+        Parameters
+        ----------
+        output: bool
+             (Default value = False)
         """
 
         # Material densities
@@ -1803,8 +1843,6 @@ class IFE:
     def ifepw1(self):
         """Routine to calculate the first part of the heat transport
         and plant power balance constituents, for an IFE power plant
-        author: P J Knight, CCFE, Culham Science Centre
-        None
         This routine calculates the first part of the heat transport
         and plant power balance constituents, for an IFE power plant.
         F/MI/PJK/LOGBOOK12, pp.67,89
@@ -1889,14 +1927,17 @@ class IFE:
         """Routine to calculate the rest of the IFE heat transport
         and plant power balance constituents, not already calculated in
         IFEPW1 or IFEACP
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+
         This routine calculates the rest of the IFE heat transport
         and plant power balance constituents, not already calculated in
         routines <A HREF="ifepw1.html">IFEPW1</A> or
         <A HREF="ifeacp.html">IFEACP</A>.
         F/MI/PJK/LOGBOOK12, p.67
+
+        Parameters
+        ----------
+        output: bool
+             (Default value = False)
         """
         # Facility heat removal (p_plant_electric_base_total_mw calculated in IFEACP)
         heat_transport_variables.fachtmw = (
@@ -2076,10 +2117,14 @@ class IFE:
 
     def ifeacp(self, output: bool = False):
         """Routine to calculate AC power requirements for an IFE power plant
-        author: P J Knight, CCFE, Culham Science Centre
 
         This routine calculates the AC power requirements for an IFE power plant.
         F/MI/PJK/LOGBOOK12, p.68
+
+        Parameters
+        ----------
+        output: bool
+             (Default value = False)
         """
         # Facility base load, MW (loads not dependent on floor area)
 
@@ -2207,12 +2252,15 @@ class IFE:
     def ifebdg(self, output: bool = False):
         """Routine to calculate the volumes of the buildings required for
         an Inertial Fusion Energy power plant
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+
         This routine calculates the volumes of the buildings required for
         an Inertial Fusion Energy power plant. The method is based
         closely on that for tokamaks etc. in routine
+
+        Parameters
+        ----------
+        output: bool
+             (Default value = False)
         """
         # Reactor building
         # ================
@@ -2401,7 +2449,7 @@ class IFE:
     def ifevac(self):
         """Routine to calculate parameters of the vacuum system for an
         Inertial Fusion Energy power plant
-        author: P J Knight, CCFE, Culham Science Centre
+
         This routine calculates the parameters of the vacuum system for an
         Inertial Fusion Energy power plant.
         <P>The calculated values are hard-wired; they are based loosely

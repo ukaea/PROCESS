@@ -10,8 +10,6 @@ Fortran "program" statement. This Python module effectively acts as the Fortran
 "program".
 
 Power Reactor Optimisation Code for Environmental and Safety Studies
-P J Knight, CCFE, Culham Science Centre
-J Morris, CCFE, Culham Science Centre
 
 This is a systems code that evaluates various physics and
 engineering aspects of a fusion power plant subject to given
@@ -45,7 +43,7 @@ import argparse
 import logging
 import os
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol
 
 import process
 import process.data_structure as data_structure
@@ -120,21 +118,22 @@ logger = logging.getLogger("process")
 class Process:
     """The main Process class."""
 
-    def __init__(self, args=None):
+    def __init__(self, args: list[Any] | None = None):
         """Run Process.
 
         :param args: Arguments to parse, defaults to None
-        :type args: list, optional
         """
         self.parse_args(args)
         self.run_mode()
         self.post_process()
 
-    def parse_args(self, args):
+    def parse_args(self, args: list[Any] | None):
         """Parse the command-line arguments, such as the input filename.
 
-        :param args: Arguments to parse
-        :type args: list
+        Parameters
+        ----------
+        args :
+            Arguments to parse
         """
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -279,13 +278,15 @@ class VaryRun:
     README.txt  - contains comments from config file
     """
 
-    def __init__(self, config_file, solver="vmcon"):
+    def __init__(self, config_file: str, solver: str = "vmcon"):
         """Initialise and perform a VaryRun.
 
-        :param config_file: config file for run parameters
-        :type config_file: str
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str, optional
+        Parameters
+        ----------
+        config_file:
+            config file for run parameters
+        solver:
+            which solver to use, as specified in solver.py
         """
         # Store the absolute path to the config file immediately: various
         # dir changes happen in old run_process code
@@ -295,7 +296,10 @@ class VaryRun:
     def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
 
-        :raises FileNotFoundError: if input file doesn't exist
+        Raises
+        ------
+        FileNotFoundError
+            if input file doesn't exist
         """
         # The input path for the varied input file
         input_path = self.config_file.parent / "IN.DAT"
@@ -368,12 +372,17 @@ class VaryRun:
 class SingleRun:
     """Perform a single run of PROCESS."""
 
-    def __init__(self, input_file, solver="vmcon", *, update_obsolete=False):
+    def __init__(
+        self, input_file: str, solver: str = "vmcon", *, update_obsolete: bool = False
+    ):
         """Read input file and initialise variables.
-        :param input_file: input file named <optional_name>IN.DAT
-        :type input_file: str
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str, optional
+
+        Parameters
+        ----------
+        input_file:
+            input file named <optional_name>IN.DAT
+        solver:
+            which solver to use, as specified in solver.py
         """
         self.input_file = input_file
 
@@ -509,16 +518,11 @@ class SingleRun:
             mfile_file.write("***********************************************")
             mfile_file.writelines(input_lines)
 
-    def validate_input(self, replace_obsolete=False):
-        """
-        Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
+    def validate_input(self, replace_obsolete: bool = False):
+        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
         within obsolete_variables.py. If obsolete variables are found, and if `replace_obsolete`
         is set to True, they are either removed or replaced by their updated names as specified
         in the OBS_VARS dictionary.
-
-        Parameters:
-            replace_obsolete (bool): If True, modifies the IN.DAT file to replace or comment out
-                                    obsolete variables. If False, only reports obsolete variables.
         """
 
         obsolete_variables = ov.OBS_VARS
@@ -746,7 +750,13 @@ logging_model_handler.setFormatter(logging_formatter)
 
 
 def setup_loggers(working_directory_log_path: Path | None = None):
-    """A function that adds our handlers to the appropriate logger object."""
+    """A function that adds our handlers to the appropriate logger object.
+
+    Parameters
+    ----------
+    working_directory_log_path: Path | None :
+         (Default value = None)
+    """
     # Remove all of the existing handlers from the 'process' package logger
 
     logger.handlers.clear()
@@ -771,7 +781,7 @@ def setup_loggers(working_directory_log_path: Path | None = None):
         logger.addHandler(logging_file_input_location_handler)
 
 
-def main(args=None):
+def main(args: list[Any] | None = None):
     """Run Process.
 
     The args parameter is used to control command-line arguments when running
@@ -779,8 +789,10 @@ def main(args=None):
     used instead of command-line arguments by argparse. This allows testing of
     different command-line arguments from the test suite.
 
-    :param args: Arguments to parse, defaults to None
-    :type args: list, optional
+    Parameters
+    ----------
+    args :
+        Arguments to parse, defaults to None
     """
 
     Process(args)

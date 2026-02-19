@@ -55,10 +55,17 @@ def write(file, string: str):
 def ocentr(file, string: str, width: int, *, character="*"):
     """Write a centred header within a line of characters to a file
 
-    :param file: the integer unit of the file
-    :param string: the heading text
-    :param width: the desired with of the header
-    :param character: the character to pad the heading with (*)
+    Parameters
+    ----------
+    file :
+        the integer unit of the file
+    string :
+        the heading text
+    width :
+        the desired with of the header
+    character :
+        the character to pad the heading with (*) (Default value = "*")
+
     """
     write(file, f"{f' {string} ':{character}^{width}}")
     write(constants.MFILE, f"# {string} #")
@@ -67,9 +74,15 @@ def ocentr(file, string: str, width: int, *, character="*"):
 def ostars(file, width: int, *, character="*"):
     """Write a line of characters to a file
 
-    :param file: the integer unit of the file
-    :param width: the desired with of the line
-    :param character: the character to fill the line with (*)
+    Parameters
+    ----------
+    file :
+        the integer unit of the file
+    width :
+        the desired with of the line
+    character :
+        the character to fill the line with (*) (Default value = "*")
+
     """
     write(file, character * width)
 
@@ -77,10 +90,16 @@ def ostars(file, width: int, *, character="*"):
 def oheadr(file, string: str, *, width: int = 110, character="*"):
     """Write a centred header within a line of characters between two blank lines
 
-    :param file: the integer unit of the file
-    :param string: the heading text
-    :param width: the desired with of the header
-    :param character: the character to pad the heading with (*)
+    Parameters
+    ----------
+    file :
+        the integer unit of the file
+    string :
+        the heading text
+    width :
+        the desired with of the header
+    character :
+        the character to pad the heading with (*) (Default value = "*")
     """
     oblnkl(file)
     ocentr(file, string, width, character=character)
@@ -90,10 +109,16 @@ def oheadr(file, string: str, *, width: int = 110, character="*"):
 def oshead(file, string: str, *, width: int = 80, character="*"):
     """Write a short centred header within a line of characters between two blank lines
 
-    :param file: the integer unit of the file
-    :param string: the heading text
-    :param width: the desired with of the header
-    :param character: the character to pad the heading with (*)
+    Parameters
+    ----------
+    file :
+        the integer unit of the file
+    string :
+        the heading text
+    width :
+        the desired with of the header
+    character :
+        the character to pad the heading with (*) (Default value = "*")
     """
     oheadr(file, string, width=width, character=character)
 
@@ -101,7 +126,10 @@ def oshead(file, string: str, *, width: int = 80, character="*"):
 def oblnkl(file):
     """Write a blank line to a file
 
-    :param file: the integer unit of the file
+    Parameters
+    ----------
+    file :
+        the integer unit of the file
     """
     write(file, " ")
 
@@ -109,8 +137,12 @@ def oblnkl(file):
 def osubhd(file, string):
     """Write a subheading between two blank lines
 
-    :param file: the integer unit of the file
-    :param string: the heading text
+    Parameters
+    ----------
+    file :
+        the integer unit of the file
+    string :
+        the heading text
     """
     oblnkl(file)
     write(file, string)
@@ -120,8 +152,12 @@ def osubhd(file, string):
 def ocmmnt(file, string: str):
     """Write a comment to a file
 
-    :param file: the integer unit of the file
-    :param string: the comment text
+    Parameters
+    ----------
+    file :
+        the integer unit of the file
+    string :
+        the comment text
     """
     write(file, string)
 

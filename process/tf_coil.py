@@ -125,8 +125,7 @@ class TFCoil:
         r_tf_outboard_mid: float,
         dr_tf_outboard: float,
     ) -> tuple[float, float, float, float, float, float, float, float, float]:
-        """
-        Calculate the global geometry of the Toroidal Field (TF) coil.
+        """Calculate the global geometry of the Toroidal Field (TF) coil.
 
         This method computes the overall geometry of the TF coil, including:
 
@@ -135,44 +134,36 @@ class TFCoil:
         - Radii and widths of the inboard and outboard legs.
         - Case thicknesses for plasma-facing and sidewall regions.
 
-        :param i_tf_case_geom:
+        Parameters
+        ----------
+        i_tf_case_geom : int
             Geometry type of the TF coil case (e.g., circular or straight plasma-facing front case).
-        :type i_tf_case_geom: int
-        :param i_f_dr_tf_plasma_case:
+        i_f_dr_tf_plasma_case : bool
             Whether the plasma-facing case thickness is specified as a fraction of the inboard thickness.
-        :type i_f_dr_tf_plasma_case: bool
-        :param f_dr_tf_plasma_case:
+        f_dr_tf_plasma_case : float
             Fraction of the inboard thickness used for the plasma-facing case thickness.
-        :type f_dr_tf_plasma_case: float
-        :param tfc_sidewall_is_fraction:
+        tfc_sidewall_is_fraction : bool
             Whether the sidewall case thickness is specified as a fraction of the inboard radius.
-        :type tfc_sidewall_is_fraction: bool
-        :param casths_fraction:
+        casths_fraction : float
             Fraction of the inboard radius used for the sidewall case thickness.
-        :type casths_fraction: float
-        :param n_tf_coils:
+        n_tf_coils : int
             Number of TF coils.
-        :type n_tf_coils: int
-        :param dr_tf_inboard:
+        dr_tf_inboard : float
             Radial thickness of the inboard leg of the TF coil [m].
-        :type dr_tf_inboard: float
-        :param dr_tf_nose_case:
+        dr_tf_nose_case : float
             Thickness of the inboard leg case at the nose region [m].
-        :type dr_tf_nose_case: float
-        :param r_tf_inboard_out:
+        r_tf_inboard_out : float
             Outer radius of the inboard leg of the TF coil [m].
-        :type r_tf_inboard_out: float
-        :param r_tf_inboard_in:
+        r_tf_inboard_in : float
             Inner radius of the inboard leg of the TF coil [m].
-        :type r_tf_inboard_in: float
-        :param r_tf_outboard_mid:
+        r_tf_outboard_mid : float
             Mid-plane radius of the outboard leg of the TF coil [m].
-        :type r_tf_outboard_mid: float
-        :param dr_tf_outboard:
+        dr_tf_outboard : float
             Radial thickness of the outboard leg of the TF coil [m].
-        :type dr_tf_outboard: float
 
-        :returns:
+        Returns
+        -------
+        tuple
             A tuple containing:
             - **rad_tf_coil_inboard_toroidal_half** (*float*): Toroidal angular spacing of each TF coil [radians].
             - **tan_theta_coil** (*float*): Tangent of the toroidal angular spacing.
@@ -181,7 +172,6 @@ class TFCoil:
             - **r_tf_outboard_out** (*float*): Outer radius of the outboard leg of the TF coil [m].
             - **dx_tf_inboard_out_toroidal** (*float*): Width of the inboard leg at the outer edge in the toroidal direction [m].
             - **a_tf_leg_outboard** (*float*): Cross-sectional area of the outboard leg of the TF coil [m²].
-        :rtype: tuple
         """
 
         # The angular space of each TF coil in the toroidal direction [rad]
@@ -229,7 +219,7 @@ class TFCoil:
             # Set directly as input
             dr_tf_plasma_case = tfcoil_variables.dr_tf_plasma_case
 
-        # This ensures that there is sufficent radial space for the WP to not
+        # This ensures that there is sufficient radial space for the WP to not
         # clip the edges of the plasma-facing front case
 
         if dr_tf_plasma_case < (r_tf_inboard_in + dr_tf_inboard) * (
@@ -244,7 +234,7 @@ class TFCoil:
         # Warn that the value has be forced to a minimum value at some point in
         # iteration
         logger.error(
-            "dr_tf_plasma_case to small to accommodate the WP, forced to minimum value"
+            "dr_tf_plasma_case too small to accommodate the WP, forced to minimum value"
         )
 
         # ======================================================================
@@ -279,26 +269,29 @@ class TFCoil:
         r_b_tf_inboard_peak: float,
         a_tf_inboard_total: float,
     ) -> tuple[float, float, float, float]:
-        """
-        Calculate the maximum B field and the corresponding TF current.
+        """Calculate the maximum B field and the corresponding TF current.
 
-        :param n_tf_coils: Number of TF coils.
-        :type n_tf_coils: int
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field at the plasma center [T].
-        :type b_plasma_toroidal_on_axis: float
-        :param rmajor: Major radius of the plasma [m].
-        :type rmajor: float
-        :param r_b_tf_inboard_peak: Radius at which the peak inboard B field occurs [m].
-        :type r_b_tf_inboard_peak: float
-        :param a_tf_inboard_total: Cross-sectional area of the inboard leg of the TF coil [m²].
-        :type a_tf_inboard_total: float
+        Parameters
+        ----------
+        n_tf_coils : int
+            Number of TF coils.
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field at the plasma center [T].
+        rmajor : float
+            Major radius of the plasma [m].
+        r_b_tf_inboard_peak : float
+            Radius at which the peak inboard B field occurs [m].
+        a_tf_inboard_total : float
+            Cross-sectional area of the inboard leg of the TF coil [m²].
 
-        :returns: A tuple containing:
+        Returns
+        -------
+        tuple[float, float, float, float]
+            A tuple containing:
             - **b_tf_inboard_peak_symmetric** (*float*): Maximum B field on the magnet [T].
             - **c_tf_total** (*float*): Total current in TF coils [A].
             - **c_tf_coil** (*float*): Current per TF coil [A].
             - **oacdcp** (*float*): Global inboard leg average current density in TF coils [A/m²].
-        :rtype: tuple[float, float, float, float]
         """
 
         # Calculation of the maximum B field on the magnet [T]
@@ -338,48 +331,50 @@ class TFCoil:
         r_tf_outboard_mid: float,
         r_tf_inboard_mid: float,
     ) -> tuple[float, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-        """
-        Calculate the shape of the inside of the TF coil.
+        """Calculate the shape of the inside of the TF coil.
 
         This method approximates the TF coil by a straight inboard section and four elliptical arcs.
         The model is ad hoc and does not have a physics or engineering basis.
 
-        :param i_tf_shape: TF coil shape selection switch.
-        :type i_tf_shape: int
-        :param itart: TART (tight aspect ratio tokamak) switch.
-        :type itart: int
-        :param i_single_null: Single null switch.
-        :type i_single_null: int
-        :param r_tf_inboard_out: Outer radius of the inboard leg of the TF coil [m].
-        :type r_tf_inboard_out: float
-        :param r_cp_top: Centrepost outer radius at the top [m].
-        :type r_cp_top: float
-        :param rmajor: Major radius of the plasma [m].
-        :type rmajor: float
-        :param rminor: Minor radius of the plasma [m].
-        :type rminor: float
-        :param r_tf_outboard_in: Inner radius of the outboard leg of the TF coil [m].
-        :type r_tf_outboard_in: float
-        :param z_tf_inside_half: Maximum inboard edge height [m].
-        :type z_tf_inside_half: float
-        :param z_tf_top: Vertical position of the top of the TF coil [m].
-        :type z_tf_top: float
-        :param dr_tf_inboard: Radial thickness of the inboard leg of the TF coil [m].
-        :type dr_tf_inboard: float
-        :param dr_tf_outboard: Radial thickness of the outboard leg of the TF coil [m].
-        :type dr_tf_outboard: float
-        :param r_tf_outboard_mid: Mid-plane radius of the outboard leg of the TF coil [m].
-        :type r_tf_outboard_mid: float
-        :param r_tf_inboard_mid: Mid-plane radius of the inboard leg of the TF coil [m].
-        :type r_tf_inboard_mid: float
+        Parameters
+        ----------
+        i_tf_shape : int
+            TF coil shape selection switch.
+        itart : int
+            TART (tight aspect ratio tokamak) switch.
+        i_single_null : int
+            Single null switch.
+        r_tf_inboard_out : float
+            Outer radius of the inboard leg of the TF coil [m].
+        r_cp_top : float
+            Centrepost outer radius at the top [m].
+        rmajor : float
+            Major radius of the plasma [m].
+        rminor : float
+            Minor radius of the plasma [m].
+        r_tf_outboard_in : float
+            Inner radius of the outboard leg of the TF coil [m].
+        z_tf_inside_half : float
+            Maximum inboard edge height [m].
+        z_tf_top : float
+            Vertical position of the top of the TF coil [m].
+        dr_tf_inboard : float
+            Radial thickness of the inboard leg of the TF coil [m].
+        dr_tf_outboard : float
+            Radial thickness of the outboard leg of the TF coil [m].
+        r_tf_outboard_mid : float
+            Mid-plane radius of the outboard leg of the TF coil [m].
+        r_tf_inboard_mid : float
+            Mid-plane radius of the inboard leg of the TF coil [m].
 
-        :returns:
-            - len_tf_coil (float): Total length of the TF coil.
+        Returns
+        -------
+        tuple[float, np.ndarray, np.ndarray, np.ndarray, np.ndarray]
+            len_tf_coil (float): Total length of the TF coil.
             - tfa (np.ndarray): Arc segment lengths in R.
             - tfb (np.ndarray): Arc segment lengths in Z.
             - r_tf_arc (np.ndarray): R coordinates of arc points.
             - z_tf_arc (np.ndarray): Z coordinates of arc points.
-        :rtype: tuple[float, np.ndarray, np.ndarray, np.ndarray, np.ndarray]
         """
         FSTRAIGHT = 0.6
         len_tf_coil = 0.0
@@ -389,7 +384,7 @@ class TFCoil:
         tfb = np.zeros(4)
 
         if i_tf_shape == 1 and itart == 0:
-            # PROCESS D-shape parametrisation
+            # PROCESS D-shape parameterisation
             r_tf_arc[0] = r_tf_inboard_out
             r_tf_arc[1] = rmajor - 0.2e0 * rminor
             r_tf_arc[2] = r_tf_outboard_in
@@ -478,29 +473,34 @@ class TFCoil:
         c_tf_total: float,
         n_tf_coils: int,
     ) -> tuple[float, float, float]:
-        """
-        Calculates the stored magnetic energy in a single TF coil.
+        """Calculates the stored magnetic energy in a single TF coil.
 
-        :param ind_tf_coil: Self-inductance of the TF coil [H].
-        :type ind_tf_coil: float
-        :param c_tf_total: Current in all TF coils [A].
-        :type c_tf_total: float
-        :param n_tf_coils: Number of TF coils.
-        :type n_tf_coils: int
+        Parameters
+        ----------
+        ind_tf_coil : float
+            Self-inductance of the TF coil [H].
+        c_tf_total : float
+            Current in all TF coils [A].
+        n_tf_coils : int
+            Number of TF coils.
 
-        :returns: Tuple containing:
+        Returns
+        -------
+        tuple[float, float, float]
+            Tuple containing:
             - e_tf_magnetic_stored_total (float): Total stored magnetic energy in all TF coils [J].
             - e_tf_magnetic_stored_total_gj (float): Total stored magnetic energy in all TF coils [GJ].
             - e_tf_coil_magnetic_stored (float): Stored magnetic energy in a single TF coil [J].
-        :rtype: tuple[float, float, float]
 
-        :notes:
+        Notes
+        -----
             - The stored magnetic energy in an inductor is given by:
                 E = (1/2) * L * I^2
                 where E is the energy [J], L is the inductance [H], and I is the current [A].
             - Total energy is for all coils; per-coil energy is divided by n_tf_coils.
 
-        :references:
+        References
+        ----------
             - http://hyperphysics.phy-astr.gsu.edu/hbase/electric/indeng.html
 
             - https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy
@@ -519,8 +519,7 @@ class TFCoil:
 
     def outtf(self):
         """Writes superconducting TF coil output to file
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
+
         This routine writes the superconducting TF coil results
         to the output file.
         PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
@@ -537,12 +536,12 @@ class TFCoil:
 
         if tfcoil_variables.i_tf_sup == 0:
             po.ocmmnt(
-                self.outfile, "  -> Resitive coil : Water cooled copper (GLIDCOP AL-15)"
+                self.outfile, "  -> resistive coil : Water cooled copper (GLIDCOP AL-15)"
             )
         elif tfcoil_variables.i_tf_sup == 1:
             po.ocmmnt(self.outfile, "  -> Superconducting coil (SC)")
         elif tfcoil_variables.i_tf_sup == 2:
-            po.ocmmnt(self.outfile, "  -> Reisitive coil : Helium cooled aluminium")
+            po.ocmmnt(self.outfile, "  -> Resistive coil : Helium cooled aluminium")
 
         # SC material scaling
         if tfcoil_variables.i_tf_sup == 1:
@@ -1074,7 +1073,7 @@ class TFCoil:
             po.osubhd(self.outfile, "WP turn information:")
             po.ovarin(
                 self.outfile,
-                "Turn parametrisation",
+                "Turn parameterisation",
                 "(i_tf_turns_integer)",
                 tfcoil_variables.i_tf_turns_integer,
             )
@@ -2152,14 +2151,17 @@ class TFCoil:
 
         An ellipse has the following formula: (x/a)² + (y/b)² = 1
 
-        :param aaa: the value of a in the formula of the ellipse.
-        :type aaa: float
+        Parameters
+        ----------
+        aaa : float
+            the value of a in the formula of the ellipse.
+        bbb : float
+            the value of b in the formula of the ellipse.
 
-        :param bbb: the value of b in the formula of the ellipse.
-        :type bbb: float
-
-        :returns: an approximation of the circumference of the ellipse
-        :rtype: float
+        Returns
+        -------
+        float
+            an approximation of the circumference of the ellipse
         """
         hh = (aaa - bbb) ** 2 / (aaa + bbb) ** 2
         return (
@@ -2169,9 +2171,8 @@ class TFCoil:
         )
 
     def cntrpst(self):
-        """
-        Evaluates the properties of a TART centrepost
-        author: P J Knight, CCFE, Culham Science Centre
+        """Evaluates the properties of a TART centrepost
+
         outfile : input integer : output file unit
         iprint : input integer : switch for writing to output file (1=yes)
         This subroutine evaluates the parameters of the centrepost for a
@@ -2590,57 +2591,53 @@ class TFCoil:
         i_cp_joints: int,
         f_vforce_inboard: float,
     ) -> tuple[float, float, float, float, float]:
-        """
-        Calculates the Toroidal Field (TF) coil field, forces, vacuum vessel (VV) quench considerations,
+        """Calculates the Toroidal Field (TF) coil field, forces, vacuum vessel (VV) quench considerations,
         and resistive magnet resistance/volume.
 
-        :param i_tf_sup: TF coil support type (1 = superconducting, 0 = resistive copper, 2 = resistive aluminium)
-        :type i_tf_sup: int
-        :param r_tf_wp_inboard_outer: Outer radius of the inboard winding pack [m]
-        :type r_tf_wp_inboard_outer: float
-        :param r_tf_wp_inboard_inner: Inner radius of the inboard winding pack [m]
-        :type r_tf_wp_inboard_inner: float
-        :param r_tf_outboard_in: Inner radius of the outboard leg [m]
-        :type r_tf_outboard_in: float
-        :param dx_tf_wp_insulation: Thickness of winding pack ground insulation [m]
-        :type dx_tf_wp_insulation: float
-        :param dx_tf_wp_insertion_gap: Thickness of winding pack insertion gap [m]
-        :type dx_tf_wp_insertion_gap: float
-        :param b_tf_inboard_peak_symmetric: Peak inboard magnetic field [T]
-        :type b_tf_inboard_peak_symmetric: float
-        :param c_tf_total: Total current in TF coils [A]
-        :type c_tf_total: float
-        :param n_tf_coils: Number of TF coils
-        :type n_tf_coils: int
-        :param dr_tf_plasma_case: Plasma-facing case thickness [m]
-        :type dr_tf_plasma_case: float
-        :param rmajor: Major radius of the plasma [m]
-        :type rmajor: float
-        :param b_plasma_toroidal_on_axis: Toroidal magnetic field at plasma center [T]
-        :type b_plasma_toroidal_on_axis: float
-        :param r_cp_top: Centrepost outer radius at the top [m]
-        :type r_cp_top: float
-        :param itart: TART (tight aspect ratio tokamak) switch (0 = standard, 1 = TART)
-        :type itart: int
-        :param i_cp_joints: Centrepost joints switch (1 = with sliding joints, 0 = without)
-        :type i_cp_joints: int
-        :param f_vforce_inboard: Inboard vertical tension fraction
-        :type f_vforce_inboard: float
+        Parameters
+        ----------
+        i_tf_sup : int
+            TF coil support type (1 = superconducting, 0 = resistive copper, 2 = resistive aluminium)
+        r_tf_wp_inboard_outer : float
+            Outer radius of the inboard winding pack [m]
+        r_tf_wp_inboard_inner : float
+            Inner radius of the inboard winding pack [m]
+        r_tf_outboard_in : float
+            Inner radius of the outboard leg [m]
+        dx_tf_wp_insulation : float
+            Thickness of winding pack ground insulation [m]
+        dx_tf_wp_insertion_gap : float
+            Thickness of winding pack insertion gap [m]
+        b_tf_inboard_peak_symmetric : float
+            Peak inboard magnetic field [T]
+        c_tf_total : float
+            Total current in TF coils [A]
+        n_tf_coils : int
+            Number of TF coils
+        dr_tf_plasma_case : float
+            Plasma-facing case thickness [m]
+        rmajor : float
+            Major radius of the plasma [m]
+        b_plasma_toroidal_on_axis : float
+            Toroidal magnetic field at plasma center [T]
+        r_cp_top : float
+            Centrepost outer radius at the top [m]
+        itart : int
+            TART (tight aspect ratio tokamak) switch (0 = standard, 1 = TART)
+        i_cp_joints : ints: int
+            Centrepost joints switch (1 = with sliding joints, 0 = without)
+        f_vforce_inboard : float
+            Inboard vertical tension fraction
 
-        :returns: Tuple containing:
+        Returns
+        -------
+        tuple[float, float, float, float]
+            Tuple containing:
             - cforce (float): Centering force per TF coil [N/m]
             - vforce (float): Inboard vertical tension [N]
             - vforce_outboard (float): Outboard vertical tension [N]
             - vforce_inboard_tot (float): Total inboard vertical force [N]
             - f_vforce_inboard (float): Inboard vertical tension fraction
-        :rtype: tuple[float, float, float, float]
-
-        :raises: None
-
-        :notes:
-            - This method computes the centering and vertical forces on the TF coil, as well as
-              the vacuum vessel stress during a quench and the resistance/volume for resistive magnets.
-            - The calculation depends on the coil support type and geometry.
         """
 
         # Outer/inner WP radius removing the ground insulation layer and the insertion gap [m]
@@ -2778,16 +2775,20 @@ class TFCoil:
 
     @staticmethod
     def he_density(temp: float) -> float:
-        """Author : S. Kahn
+        """
         Subroutine calculating temperature dependent helium density at 100 bar
         from fit using the following data, valid in [4-50] K
         Ref : R.D. McCarty, Adv. Cryo. Eng., 1990, 35, 1465-1475.
 
-        :param temp: Helium temperature [K]
-        :type temp: float
+        Parameters
+        ----------
+        temp : float
+            Helium temperature [K]
 
-        :returns density: Heliyn density [kg/m3]
-        :type density: float
+        Returns
+        -------
+        type
+            density: Heliyn density [kg/m3]
         """
 
         # Fit range validation
@@ -2817,17 +2818,21 @@ class TFCoil:
 
     @staticmethod
     def he_cp(temp: float) -> float:
-        """Author : S. Kahn
+        """
         Subroutine calculating temperature dependent thermal capacity at
         constant pressures at 100 Bar from fit using the following data
         valid in [4-50] K
         Ref : R.D. McCarty, Adv. Cryo. Eng., 1990, 35, 1465-1475.
 
-        :param temp: Helium temperature [K]
-        :type temp: float
+        Parameters
+        ----------
+        temp : float
+            Helium temperature [K]
 
-        :return cp: Themal capacity at constant pressure [K/(kg.K)]
-        :type cp: float
+        Returns
+        -------
+        :
+            Themal capacity at constant pressure [K/(kg.K)]
         """
 
         # Fit range validation
@@ -2860,17 +2865,21 @@ class TFCoil:
 
     @staticmethod
     def he_visco(temp: float) -> float:
-        """Author : S. Kahn
+        """
         Subroutine calculating temperature dependent He viscosity at 100 Bar
         from fit using the following data, valid in [4-50] K
         Ref : V.D. Arp,; R.D. McCarty ; Friend, D.G., Technical Note 1334, National
         Institute of Standards and Technology, Boulder, CO, 1998, 0.
 
-        :param temp: Helium temperature [K]
-        :type temp: float
+        Parameters
+        ----------
+        temp : float
+            Helium temperature [K]
 
-        :return visco: Themal capacity at constant pressure [Pa.s]
-        :type visco: float
+        Returns
+        -------
+        :
+            Themal capacity at constant pressure [Pa.s]
         """
 
         if temp < 4.0e0 or temp > 50.0e0:
@@ -2900,16 +2909,20 @@ class TFCoil:
 
     @staticmethod
     def he_th_cond(temp: float) -> float:
-        """Author : S. Kahn
+        """
         Subroutine calculating temperature dependent He thermal conductivity
         at 100 Bar from fit using the following data, valid in [4-50] K
         Ref : B.A. Hands B.A., Cryogenics, 1981, 21, 12, 697-703.
 
-        :param temp: Helium temperature [K]
-        :type temp: float
+        Parameters
+        ----------
+        temp : float
+            Helium temperature [K]
 
-        :return th_cond: Themal conductivity [W/(m.K)]
-        :type th_cond: float
+        Returns
+        -------
+        :
+            Themal conductivity [W/(m.K)]
         """
 
         # Fit range validation
@@ -2953,14 +2966,18 @@ class TFCoil:
 
     @staticmethod
     def al_th_cond(temp: float) -> float:
-        """Author : S. Kahn
+        """
         Subroutine calculating temperature dependent Al thermal conductivity
 
-        :param temp: Helium temperature [K]
-        :type temp: float
+        Parameters
+        ----------
+        temp : float
+            Helium temperature [K]
 
-        :return th_cond: Themal conductivity [W/(m.K)]
-        :type th_cond: float
+        Returns
+        -------
+        :
+            Themal conductivity [W/(m.K)]
         """
 
         # Fiting range verification
@@ -3005,43 +3022,46 @@ class TFCoil:
         r_tf_outboard_mid: float,
         r_tf_inboard_mid: float,
     ) -> float:
-        """
-        Calculates the self-inductance of a TF coil.
+        """Calculates the self-inductance of a TF coil.
 
         This function numerically integrates the magnetic field energy to estimate
         the self-inductance of a toroidal field (TF) coil, using the geometry
         defined by the arc points and the inboard thickness.
 
-        :param dr_tf_inboard: Radial thickness of the inboard leg of the TF coil [m].
-        :type dr_tf_inboard: float
-        :param r_tf_arc: Array of R coordinates of arc points (length 5).
-        :type r_tf_arc: numpy.ndarray
-        :param z_tf_arc: Array of Z coordinates of arc points (length 5).
-        :type z_tf_arc: numpy.ndarray
-        :param itart: TART (tight aspect ratio tokamak) switch (0 = standard, 1 = TART).
-        :type itart: int
-        :param i_tf_shape: TF coil shape selection switch (1 = D-shape, 2 = picture frame).
-        :type i_tf_shape: int
-        :param z_tf_inside_half: Maximum inboard edge height [m].
-        :type z_tf_inside_half: float
-        :param dr_tf_outboard: Radial thickness of the outboard leg of the TF coil [m].
-        :type dr_tf_outboard: float
-        :param r_tf_outboard_mid: Mid-plane radius of the outboard leg of the TF coil [m].
-        :type r_tf_outboard_mid: float
-        :param r_tf_inboard_mid: Mid-plane radius of the inboard leg of the TF coil [m].
-        :type r_tf_inboard_mid: float
+        Parameters
+        ----------
+        dr_tf_inboard : float
+            Radial thickness of the inboard leg of the TF coil [m].
+        r_tf_arc : numpy.ndarray
+            Array of R coordinates of arc points (length 5).
+        z_tf_arc : numpy.ndarray
+            Array of Z coordinates of arc points (length 5).
+        itart : int
+            TART (tight aspect ratio tokamak) switch (0 = standard, 1 = TART).
+        i_tf_shape : int
+            TF coil shape selection switch (1 = D-shape, 2 = picture frame).
+        z_tf_inside_half : float
+            Maximum inboard edge height [m].
+        dr_tf_outboard : float
+            Radial thickness of the outboard leg of the TF coil [m].
+        r_tf_outboard_mid : float
+            Mid-plane radius of the outboard leg of the TF coil [m].
+        r_tf_inboard_mid : float
+            Mid-plane radius of the inboard leg of the TF coil [m].
 
-        :returns: Self-inductance of the TF coil [H].
-        :rtype: float
+        Returns
+        -------
+        float
+            Self-inductance of the TF coil [H].
 
-        :notes:
+        Notes
+        -----
         For the D-shaped coil (i_tf_shape == 1) in a standard (non-TART) configuration
         (itart == 0), the integration is performed over the coil cross-section, including both
         the inboard and outboard arcs. The field is computed for unit current,
         and the contribution from the coil's own cross-sectional area is included
         by taking the field as B(r)/2. Top/bottom symmetry is assumed.
 
-        :references:
         """
         NINTERVALS = 100
 
@@ -3219,15 +3239,146 @@ class TFCoil:
     ):
         """TF coil stress routine
 
-
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Morris, CCFE, Culham Science Centre
-        author: S Kahn, CCFE, Culham Science Centre
-        author: J Galambos, FEDC/ORNL
-
         This subroutine sets up the stress calculations for the
         TF coil set.
         PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
+
+        Parameters
+        ----------
+        n_tf_layer :
+
+        n_radial_array :
+
+        n_tf_wp_stress_layers :
+
+        i_tf_bucking :
+
+        r_tf_inboard_in :
+
+        dr_bore :
+
+        z_tf_inside_half :
+
+        f_z_cs_tf_internal :
+
+        dr_cs :
+
+        i_tf_inside_cs :
+
+        dr_tf_inboard :
+
+        dr_cs_tf_gap :
+
+        i_pf_conductor :
+
+        j_cs_flat_top_end :
+
+        j_cs_pulse_start :
+
+        c_pf_coil_turn_peak_input :
+
+        n_pf_coils_in_group :
+
+        f_dr_dz_cs_turn :
+
+        radius_cs_turn_corners :
+
+        f_a_cs_turn_steel :
+
+        eyoung_steel :
+
+        poisson_steel :
+
+        eyoung_cond_axial :
+
+        poisson_cond_axial :
+
+        eyoung_cond_trans :
+
+        poisson_cond_trans :
+
+        eyoung_ins :
+
+        poisson_ins :
+
+        dx_tf_turn_insulation :
+
+        eyoung_copper :
+
+        poisson_copper :
+
+        i_tf_sup :
+
+        eyoung_res_tf_buck :
+
+        r_tf_wp_inboard_inner :
+
+        tan_theta_coil :
+
+        rad_tf_coil_inboard_toroidal_half :
+
+        r_tf_wp_inboard_outer :
+
+        a_tf_coil_inboard_steel :
+
+        a_tf_plasma_case :
+
+        a_tf_coil_nose_case :
+
+        dx_tf_wp_insertion_gap :
+
+        dx_tf_wp_insulation :
+
+        n_tf_coil_turns :
+
+        i_tf_turns_integer :
+
+        dx_tf_turn_cable_space_average :
+
+        dr_tf_turn_cable_space :
+
+        dia_tf_turn_coolant_channel :
+
+        f_a_tf_turn_cable_copper :
+
+        dx_tf_turn_steel :
+
+        dx_tf_side_case_average :
+
+        dx_tf_wp_toroidal_average :
+
+        a_tf_coil_inboard_insulation :
+
+        a_tf_wp_steel :
+
+        a_tf_wp_conductor :
+
+        a_tf_wp_with_insulation :
+
+        eyoung_al :
+
+        poisson_al :
+
+        fcoolcp :
+
+        n_tf_graded_layers :
+
+        c_tf_total :
+
+        dr_tf_plasma_case :
+
+        i_tf_stress_model :
+
+        vforce_inboard_tot :
+
+        i_tf_tresca :
+
+        a_tf_coil_inboard_case :
+
+        vforce :
+
+        a_tf_turn_steel :
+
         """
         jeff = np.zeros((n_tf_layer,))
         # Effective current density [A/m2]
@@ -3533,7 +3684,7 @@ class TFCoil:
 
             # WP effective insulation thickness (SC only) [m]
             # include groundwall insulation + insertion gap in tfcoil_variables.dx_tf_turn_insulation
-            # inertion gap is tfcoil_variables.dx_tf_wp_insertion_gap on 4 sides
+            # insertion gap is tfcoil_variables.dx_tf_wp_insertion_gap on 4 sides
             t_ins_eff = (
                 dx_tf_turn_insulation
                 + (dx_tf_wp_insertion_gap + dx_tf_wp_insulation) / n_tf_coil_turns
@@ -4092,7 +4243,65 @@ class TFCoil:
         """Subroutine showing the writing the TF midplane stress analysis
         in the output file and the stress distribution in the SIG_TF.json
         file used to plot stress distributions
-        Author : S. Kahn
+
+        Parameters
+        ----------
+        sig_tf_r_max :
+
+        sig_tf_t_max :
+
+        sig_tf_z_max :
+
+        sig_tf_vmises_max :
+
+        s_shear_tf_peak :
+
+        deflect :
+
+        eyoung_axial :
+
+        eyoung_trans :
+
+        eyoung_wp_axial :
+
+        eyoung_wp_trans :
+
+        poisson_wp_trans :
+
+        radial_array :
+
+        s_shear_cea_tf_cond :
+
+        poisson_wp_axial :
+
+        sig_tf_r :
+
+        sig_tf_smeared_r :
+
+        sig_tf_smeared_t :
+
+        sig_tf_smeared_z :
+
+        sig_tf_t :
+
+        s_shear_tf :
+
+        sig_tf_vmises :
+
+        sig_tf_z :
+
+        str_tf_r :
+
+        str_tf_t :
+
+        str_tf_z :
+
+        n_radial_array :
+
+        n_tf_bucking :
+
+        sig_tf_wp_av_z :
+
         """
 
         def table_format_arrays(a, mult=1, delim="\t\t"):
@@ -4370,8 +4579,6 @@ def eyoung_parallel(
     eyoung_j_1, a_1, poisson_j_perp_1, eyoung_j_2, a_2, poisson_j_perp_2
 ):
     """
-    Author : C. Swanson, PPPL
-    January 2022
     See Issue #1205 for derivation PDF
     This subroutine gives the smeared elastic properties of two
     members that are carrying a force in parallel with each other.
@@ -4403,6 +4610,21 @@ def eyoung_parallel(
     ... etc.
     So that tripletOUT would eventually have the smeared properties
     of the total composite member.
+
+    Parameters
+    ----------
+    eyoung_j_1 :
+
+    a_1 :
+
+    poisson_j_perp_1 :
+
+    eyoung_j_2 :
+
+    a_2 :
+
+    poisson_j_perp_2 :
+
     """
     poisson_j_perp_3 = (poisson_j_perp_1 * a_1 + poisson_j_perp_2 * a_2) / (a_1 + a_2)
     eyoung_j_3 = (eyoung_j_1 * a_1 + eyoung_j_2 * a_2) / (a_1 + a_2)
@@ -4414,19 +4636,29 @@ def eyoung_parallel(
 @numba.njit(cache=True)
 def sigvm(sx: float, sy: float, sz: float, txy: float, txz: float, tyz: float) -> float:
     """Calculates Von Mises stress in a TF coil
-    author: P J Knight, CCFE, Culham Science Centre
-    author: B Reimer, FEDC
+
     This routine calculates the Von Mises combination of
     stresses (Pa) in a TF coil.
 
-    :param sx: In-plane stress in X direction [Pa]
-    :param sy: In-plane stress in Y direction [Pa]
-    :param sz: In-plane stress in Z direction [Pa]
-    :param txy: Out-of-plane stress in X-Y plane [Pa]
-    :param txz: Out-of-plane stress in X-Z plane [Pa]
-    :param tyz: Out-of-plane stress in Y-Z plane [Pa]
+    Parameters
+    ----------
+    sx :
+        In-plane stress in X direction [Pa]
+    sy :
+        In-plane stress in Y direction [Pa]
+    sz :
+        In-plane stress in Z direction [Pa]
+    txy :
+        Out-of-plane stress in X-Y plane [Pa]
+    txz :
+        Out-of-plane stress in X-Z plane [Pa]
+    tyz :
+        Out-of-plane stress in Y-Z plane [Pa]
 
-    :returns: Von Mises combination of stresses (Pa) in a TF coil.
+    Returns
+    -------
+    :
+        Von Mises combination of stresses (Pa) in a TF coil.
     """
 
     return np.sqrt(
@@ -4453,8 +4685,7 @@ def extended_plane_strain(
     n_radial_array,
     i_tf_bucking,
 ):
-    """Author : C. Swanson, PPPL and S. Kahn, CCFE
-    September 2021
+    """
     There is a writeup of the derivation of this model on the gitlab server.
     https://git.ccfe.ac.uk/process/process/-/issues/1414
     This surboutine estimates the radial displacement, stresses, and strains of
@@ -4479,6 +4710,29 @@ def extended_plane_strain(
     radius, and is transformed via matrix multiplication into those A,B
     values at other radii. The constraints are inner products with this vector,
     and so when stacked form a matrix to invert.
+
+    Parameters
+    ----------
+    nu_t :
+
+    nu_zt :
+
+    ey_t :
+
+    ey_z :
+
+    rad :
+
+    d_curr :
+
+    v_force :
+
+    nlayers :
+
+    n_radial_array :
+
+    i_tf_bucking :
+
     """
     # outputs
     sigr = np.zeros((n_radial_array * nlayers,))
@@ -4940,15 +5194,28 @@ def extended_plane_strain(
 def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     """Calculates the stresses in a superconductor TF coil
     inboard leg at the midplane using the plain stress approximation
-    author: P J Knight, CCFE, Culham Science Centre
-    author: J Morris, CCFE, Culham Science Centre
-    author: S Kahn, CCFE, Culham Science Centre
+
     This routine calculates the stresses in a superconductor TF coil
     inboard leg at midplane.
     <P>A 2 layer plane stress model developed by CCFE is used. The first layer
     is the steel case inboard of the winding pack, and the second
     layer is the winding pack itself.
     PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
+
+    Parameters
+    ----------
+    nu :
+
+    rad :
+
+    ey :
+
+    j :
+
+    nlayers :
+
+    n_radial_array :
+
     """
     alpha = np.zeros((nlayers,))
     beta = np.zeros((nlayers,))
@@ -4985,7 +5252,7 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
 
     kk = ey / (1 - nu**2)
 
-    # Lorentz forces parametrisation coeficients (array equation)
+    # Lorentz forces parameterisation coeficients (array equation)
     alpha = 0.5e0 * constants.RMU0 * j**2 / kk
 
     inner_layer_curr = 0.0e0
@@ -5147,8 +5414,6 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
 @numba.njit(cache=True)
 def eyoung_parallel_array(n, eyoung_j_in, a_in, poisson_j_perp_in):
     """
-    Author : C. Swanson, PPPL
-    January 2022
     See Issue #1205 for derivation PDF
     This subroutine gives the smeared elastic properties of two
     members that are carrying a force in parallel with each other.
@@ -5180,6 +5445,17 @@ def eyoung_parallel_array(n, eyoung_j_in, a_in, poisson_j_perp_in):
     ... etc.
     So that tripletOUT would eventually have the smeared properties
     of the total composite member.
+
+    Parameters
+    ----------
+    n :
+
+    eyoung_j_in :
+
+    a_in :
+
+    poisson_j_perp_in :
+
     """
     eyoung_j_out = 0
     a_out = 0
@@ -5202,8 +5478,6 @@ def eyoung_parallel_array(n, eyoung_j_in, a_in, poisson_j_perp_in):
 @numba.njit(cache=True)
 def eyoung_t_nested_squares(n, eyoung_j_in, l_in, poisson_j_perp_in):
     """
-    Author : C. Swanson, PPPL
-    January 2022
     This subroutine gives the smeared transverse elastic
     properties of n members whose cross sectional areas are
     nested squares. It uses the subroutines eyoung_series and
@@ -5215,6 +5489,17 @@ def eyoung_t_nested_squares(n, eyoung_j_in, l_in, poisson_j_perp_in):
     documentation) is composed of several layers under stress in
     series, and each leg is under stress in parallel with every
     other leg.
+
+    Parameters
+    ----------
+    n :
+
+    eyoung_j_in :
+
+    l_in :
+
+    poisson_j_perp_in :
+
     """
     eyoung_j_working = np.zeros((n,))
     l_working = np.zeros((n,))
@@ -5271,8 +5556,6 @@ def eyoung_t_nested_squares(n, eyoung_j_in, l_in, poisson_j_perp_in):
 @numba.njit(cache=True)
 def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_perp_2):
     """
-    Author : C. Swanson, PPPL
-    January 2022
     See Issue #1205 for derivation PDF
     This subroutine gives the smeared elastic properties of two
     members that are carrying a force in series with each other.
@@ -5308,6 +5591,21 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
     ... etc.
     So that tripletOUT would eventually have the smeared properties
     of the total composite member.
+
+    Parameters
+    ----------
+    eyoung_j_1 :
+
+    l_1 :
+
+    poisson_j_perp_1 :
+
+    eyoung_j_2 :
+
+    l_2 :
+
+    poisson_j_perp_2 :
+
     """
 
     if eyoung_j_1 * eyoung_j_2 == 0:

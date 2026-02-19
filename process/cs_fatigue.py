@@ -17,7 +17,21 @@ class CsFatigue:
         dz_cs_turn_conduit,
         dr_cs_turn_conduit,
     ):
-        """ """
+        """
+
+        Parameters
+        ----------
+        max_hoop_stress :
+
+        residual_stress :
+
+        t_crack_vertical :
+
+        dz_cs_turn_conduit :
+
+        dr_cs_turn_conduit :
+
+        """
         # Default Parameters for SS 316LN from
         # X. Sarasola et al, IEEE Transactions on Applied Superconductivity,
         # vol. 30, no. 4, pp. 1-5, June 2020, Art no. 4200705

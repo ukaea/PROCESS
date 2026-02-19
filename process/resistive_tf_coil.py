@@ -24,7 +24,13 @@ class ResistiveTFCoil(TFCoil):
         self.outfile = constants.NOUT
 
     def run(self, output: bool):
-        """Run main tfcoil subroutine without outputting."""
+        """Run main tfcoil subroutine without outputting.
+
+        Parameters
+        ----------
+        output: bool
+
+        """
         self.iprint = 0
 
         # Set up TF values share by all coil types
@@ -263,9 +269,7 @@ class ResistiveTFCoil(TFCoil):
 
     def res_tf_internal_geom(self):
         """
-        Author : S. Kahn
-        Resisitve TF turn geometry, equivalent to winding_pack subroutines
-
+        Resistive TF turn geometry, equivalent to winding_pack subroutines
         """
         superconducting_tf_coil_variables.r_tf_wp_inboard_inner = (
             build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
@@ -441,9 +445,8 @@ class ResistiveTFCoil(TFCoil):
                 f"Negative cable space dimension. {superconducting_tf_coil_variables.a_tf_wp_no_insulation=}"
             )
 
-    def tf_res_heating(self) -> None:
-        """
-        Calculate resistive heating for resistive magnets.
+    def tf_res_heating(self):
+        """Calculate resistive heating for resistive magnets.
 
         This method calculates the resistive heating for resistive magnets.
         It considers the following scenarios:
@@ -451,7 +454,7 @@ class ResistiveTFCoil(TFCoil):
         - Sliding joints might have a region of high resistivity.
 
         Notes:
-        - The copper resisitivty is set to be that for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
+        - The copper resistivity is set to be that for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
         - The coefficient of resistivity is set to be that of pure copper
 
         References:
@@ -463,7 +466,7 @@ class ResistiveTFCoil(TFCoil):
         # Resistivity of the Glidcop copper centerpost
         if tfcoil_variables.i_tf_sup == 0:
             tfcoil_variables.rho_cp = (
-                # 1.86 is the resitivity at `20°C` for GLIDCOP AL-15
+                # 1.86 is the resistivity at `20°C` for GLIDCOP AL-15
                 # 0.00393 is the coefficient of resistivity for copper
                 tfcoil_variables.frhocp
                 * (1.86e0 + 0.00393e0 * (tfcoil_variables.temp_cp_average - 293.15e0))
@@ -650,9 +653,7 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.p_tf_joints_resistive = 0.0e0
 
     def resistive_tf_coil_areas_and_masses(self):
-        """
-        Calculate the areas and masses of the resistive TF coil
-        """
+        """Calculate the areas and masses of the resistive TF coil"""
 
         vol_case = 0.0e0  # Total TF case volume [m3]
         vol_ins = 0.0e0  # Total leg turn insulation volume [m3]
@@ -741,9 +742,6 @@ class ResistiveTFCoil(TFCoil):
                 * tfcoil_variables.a_tf_coil_inboard_case
                 * tfcoil_variables.n_tf_coils
             )
-
-        # ---
-        # -------
 
         # Copper magnets casing/conductor weights per coil [kg]
         if tfcoil_variables.i_tf_sup == 0:
@@ -851,22 +849,45 @@ class ResistiveTFCoil(TFCoil):
         n_tf_coils,
     ):
         """
-        author: P J Knight, CCFE, Culham Science Centre
         Calculates the volume and resistive power losses of a TART centrepost
         This routine calculates the volume and resistive power losses
         of a TART centrepost. It is assumed to be tapered - narrowest at
         the midplane and reaching maximum thickness at the height of the
         plasma. Above/below the plasma, the centrepost is cylindrical.
         The shape of the taper is assumed to be an arc of a circle.
-        P J Knight, CCFE, Culham Science Centre
-        21/10/96 PJK Initial version
-        08/05/12 PJK Initial F90 version
-        16/10/12 PJK Added constants; removed argument pi
-        26/06/14 PJK Added error handling
-        12/11/19 SK Using fixed cooling cross-section area along the CP
-        26/11/19 SK added the coolant area, the conuctor/isulator/outer casing volume
-        30/11/20 SK added the ground outer ground insulation volume
+
         F/MI/PJK/LOGBOOK12, pp.33,34
+
+        Parameters
+        ----------
+        r_tf_inboard_in :
+
+        r_tf_inboard_out :
+
+        r_cp_top :
+
+        ztop :
+
+        hmaxi :
+
+        cas_in_th :
+
+        cas_out_th :
+
+        gr_ins_th :
+
+        ins_th :
+
+        n_tf_coil_turns :
+
+        curr :
+
+        rho :
+
+        fcool :
+
+        n_tf_coils :
+
         """
         yy_ins = np.zeros((101,))  # Exact conductor area (to be integrated)
         yy_cond = np.zeros((101,))  # Turn insulation area (to be integrated)
@@ -1118,14 +1139,12 @@ class ResistiveTFCoil(TFCoil):
 
 
 class CopperTFCoil(ResistiveTFCoil):
-    """
-    Copper TF coil class for resistive TF coil calculations.
+    """Copper TF coil class for resistive TF coil calculations.
     Inherits from ResistiveTFCoil and implements specific methods for copper TF coils.
     """
 
 
 class AluminiumTFCoil(ResistiveTFCoil):
-    """
-    Aluminium TF coil class for resistive TF coil calculations.
+    """Aluminium TF coil class for resistive TF coil calculations.
     Inherits from ResistiveTFCoil and implements specific methods for aluminium TF coils.
     """

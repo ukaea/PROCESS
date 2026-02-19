@@ -1,13 +1,5 @@
 """
 A selection of functions for using the PROCESS code
-
-Author: Hanni Lux (Hanni.Lux@ccfe.ac.uk)
-
-Compatible with PROCESS version 368
-
-24/11/2021: Global dictionary variables moved within the functions
-            to avoid cyclic dependencies. This is because the dicts
-            generation script imports, and inspects, process.
 """
 
 import logging
@@ -25,8 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_neqns_itervars(wdir="."):
-    """
-    returns the number of equations and a list of variable
+    """Returns the number of equations and a list of variable
     names of all iteration variables
     """
     # Load dicts from dicts JSON file
@@ -45,12 +36,8 @@ def get_neqns_itervars(wdir="."):
     return in_dat.number_of_constraints, itervars
 
 
-###############################
-
-
 def update_ixc_bounds(wdir="."):
-    """
-    updates the lower and upper bounds in DICT_IXC_BOUNDS
+    """updates the lower and upper bounds in DICT_IXC_BOUNDS
     from IN.DAT
     """
     # Load dicts from dicts JSON file
@@ -68,22 +55,23 @@ def update_ixc_bounds(wdir="."):
             dicts["DICT_IXC_BOUNDS"][name]["ub"] = float(value["u"])
 
 
-###############################
-
-
 def get_variable_range(itervars, factor, wdir="."):
-    """
-    Returns the lower and upper bounds of the variable range
+    """Returns the lower and upper bounds of the variable range
     for each iteration variable.
-
-    itervars - string list of all iteration variable names
-    factor   - defines the variation range for non-f-values by
-               setting them to value * factor and value / factor
-               respectively while taking their process bounds
-               into account.
 
     For f-values the allowed range is equal to their process bounds.
 
+    Parameters
+    ----------
+    itervars :
+        string list of all iteration variable names
+    factor :
+        defines the variation range for non-f-values by
+        setting them to value * factor and value / factor
+        respectively while taking their process bounds
+        into account.
+    wdir :
+         (Default value = ".")
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
@@ -141,12 +129,10 @@ def get_variable_range(itervars, factor, wdir="."):
     return lbs, ubs
 
 
-###############################
-
-
 def check_in_dat():
     """Tests IN.DAT during setup:
-    1)Are ixc bounds outside of allowed input ranges?"""
+    1)Are ixc bounds outside of allowed input ranges?
+    """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
 
@@ -211,15 +197,16 @@ def check_in_dat():
     in_dat.write_in_dat(output_filename="IN.DAT")
 
 
-###############################
-
-
 def check_logfile(logfile="process.log"):
-    """
-    Checks the log file of the PROCESS output.
+    """Checks the log file of the PROCESS output.
     Stops, if an error occured that needs to be
     fixed before rerunning.
     XXX should be deprecated!! and replaced by check_input_error!
+
+    Parameters
+    ----------
+    logfile :
+         (Default value = "process.log")
     """
 
     with open(logfile) as outlogfile:
@@ -234,8 +221,7 @@ def check_logfile(logfile="process.log"):
 
 
 def check_input_error(wdir="."):
-    """
-    Checks, if an input error has occurred.
+    """Checks, if an input error has occurred.
     Stops as a consequence.
     Will also fail if the MFILE.DAT isn't found.
     """
@@ -261,12 +247,8 @@ def check_input_error(wdir="."):
         raise
 
 
-########################################
-
-
 def process_stopped(wdir="."):
-    """
-    Checks the process Mfile whether it has
+    """Checks the process Mfile whether it has
     prematurely stopped.
     """
     # Check for MFILE
@@ -288,12 +270,8 @@ def process_stopped(wdir="."):
     return error_status >= 3
 
 
-########################################
-
-
 def process_warnings(wdir="."):
-    """
-    Checks the process Mfile whether any
+    """Checks the process Mfile whether any
     warnings have occurred.
     """
 
@@ -301,9 +279,6 @@ def process_warnings(wdir="."):
     error_status = m_file.data["error_status"].get_scan(-1)
 
     return error_status >= 2
-
-
-############################################
 
 
 def mfile_exists():
@@ -318,12 +293,8 @@ def mfile_exists():
         return False
 
 
-############################################
-
-
 def no_unfeasible_mfile(wdir="."):
-    """
-    returns the number of unfeasible points
+    """returns the number of unfeasible points
     in a scan in MFILE.DAT
     """
 
@@ -345,17 +316,20 @@ def no_unfeasible_mfile(wdir="."):
         return 100000
 
 
-################################
-
-
 def vary_iteration_variables(itervars, lbs, ubs, generator):
-    """
-    Routine to change the iteration variables in IN.DAT
+    """Routine to change the iteration variables in IN.DAT
     within given bounds.
-    itervars  - string list of all iteration variable names
-    lbs       - float list of lower bounds for variables
-    ubs       - float list of upper bounds for variables
-    generator - Generator numpy generator to create random numbers
+
+    Parameters
+    ----------
+    itervars :
+        string list of all iteration variable names
+    lbs :
+        float list of lower bounds for variables
+    ubs :
+        float list of upper bounds for variables
+    generator :
+        Generator numpy generator to create random numbers
     """
 
     in_dat = InDat()
@@ -372,12 +346,8 @@ def vary_iteration_variables(itervars, lbs, ubs, generator):
     return new_values
 
 
-###################################
-
-
 def get_solution_from_mfile(neqns, nvars, wdir="."):
-    """
-    returns
+    """returns
     ifail - error_value of VMCON/PROCESS
     the objective functions
     the square root of the sum of the squares of the constraints
@@ -408,9 +378,6 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns
 
     return ifail, objective_function, constraints, table_sol, table_res
-
-
-############################################
 
 
 def get_from_indat_or_default(in_dat, varname):

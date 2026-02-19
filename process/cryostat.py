@@ -12,28 +12,26 @@ from process.data_structure import (
 
 
 class Cryostat:
-    def __init__(self) -> None:
+    def __init__(self):
         self.outfile = constants.NOUT
 
-    def run(self) -> None:
+    def run(self):
         """Run the cryostat calculations.
 
         This method runs the cryostat calculations, including the calculation of the cryostat geometry.
-
         """
 
         # Calculate cryostat geometry
         self.external_cryo_geometry()
 
     @staticmethod
-    def external_cryo_geometry() -> None:
+    def external_cryo_geometry():
         """Calculate cryostat geometry.
 
         This method calculates the geometry of the cryostat, including the inboard radius,
         the vertical clearance between the uppermost PF coil and the cryostat lid, the half-height
         of the cryostat, the vertical clearance between the TF coil and the cryostat, the cryostat volume,
         the vacuum vessel mass, and the sum of internal vacuum vessel and cryostat masses.
-
         """
 
         # Cryostat radius [m]
@@ -85,13 +83,8 @@ class Cryostat:
             fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
         ) * fwbs_variables.den_steel
 
-    def cryostat_output(self) -> None:
-        """
-        Outputs the cryostat geometry details to the output file.
-
-        Returns:
-            None
-        """
+    def cryostat_output(self):
+        """Outputs the cryostat geometry details to the output file."""
         po.oheadr(self.outfile, "Cryostat build")
 
         po.ovarrf(
@@ -110,7 +103,7 @@ class Cryostat:
         )
         po.ovarrf(
             self.outfile,
-            "Cryostat intenral half height (m)",
+            "Cryostat internal half height (m)",
             "(z_cryostat_half_inside)",
             fwbs_variables.z_cryostat_half_inside,
             "OP ",

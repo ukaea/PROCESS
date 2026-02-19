@@ -145,7 +145,7 @@ class TrackingFile:
     e.g. starfire_MFILE-<date>-<time>.json
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.meta: dict = {}
         # metadata (e.g. commit message and date generated) as a key-value pair
 
@@ -170,7 +170,7 @@ class ProcessTracker:
         hashid: str | None = None,
         tracking_variables_file: pathlib.Path | None = None,
         strict: bool = False,
-    ) -> None:
+    ):
         """Drive the creation of tracking JSON files.
 
         :param mfile: the path to an mfile to create tracking data for.
@@ -296,7 +296,7 @@ class TrackedVariable:
     of this variable.
     """
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str):
         self.name = name
         # Name of the graph this variable is plotted under
         self._data = []
@@ -337,7 +337,7 @@ class TrackedVariable:
 class TrackedData:
     """Holds the entire tracking history of a database"""
 
-    def __init__(self, database) -> None:
+    def __init__(self, database):
         self.database = pathlib.Path(database)
 
         self.tracked_variables = {}

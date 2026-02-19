@@ -1,6 +1,6 @@
 """This module contains the Dual Coolant Lead Lithium (DCLL) specific submods of PROCESSS.
 
-author: G. Graham, CCFE
+
 
 Acronyms for this module:
 

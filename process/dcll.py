@@ -20,7 +20,7 @@ from process.data_structure import (
 class DCLL(InboardBlanket, OutboardBlanket):
     """This module contains the Dual Coolant Lead Lithium (DCLL) specific submods of PROCESSS.
 
-    author: G. Graham, CCFE
+
 
     Acronyms for this module:
 
@@ -51,7 +51,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
          FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator, 2 = FCIs, with specified conductance
              i_blkt_liquid_breeder_channel_type = 0, 1, or 2
 
-         Liquid metal duct wall conductance initilized at Eurofer value in fwbs_variables, or can input other value, used for i_blkt_liquid_breeder_channel_type = 0 or 2
+         Liquid metal duct wall conductance initialised at Eurofer value in fwbs_variables, or can input other value, used for i_blkt_liquid_breeder_channel_type = 0 or 2
              (bz_channel_conduct_liq)
 
          Choose if FW and BB structure are on the same pumping system (unless have diffent coolants), default is same coolant with flow IN->FW->BB->OUT
@@ -123,17 +123,22 @@ class DCLL(InboardBlanket, OutboardBlanket):
             self.write_output()
 
     def dcll_neutronics_and_power(self, output: bool):
-        """This is a tempory module that will use results from CCFE Bluemira nutronics work (once completed).
+        """This is a temporary module that will use results from CCFE Bluemira nutronics work (once completed).
         Database will provide values for power deposition in FW & BB, BB TBR, and nuron fluence at TF coil for
         different thicknesses of BB and meterial fractions.
 
-        For now we use the same method as KIT HCLL and the user can select approprite fractional
+        For now we use the same method as KIT HCLL and the user can select appropriate fractional
         values from DCLL nutronics studies as inputs.
         See fwbs_variables:
              - pnuc_fw_ratio_dcll
              - pnuc_blkt_ratio_dcll
              - f_nuc_pow_bz_struct
              - f_nuc_pow_bz_liq
+
+        Parameters
+        ----------
+        output: bool
+
         """
 
         if divertor_variables.n_divertors == 2:
@@ -172,7 +177,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             * covf
         )
 
-        # HCD Apperatus
+        # HCD Apparatus
 
         # No nuclear heating of the H & CD
         fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0
@@ -467,6 +472,11 @@ class DCLL(InboardBlanket, OutboardBlanket):
                  Side walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
                  Top walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
                  Bottom walls = 2.0D-2 m, 85.54% EUROfer, 14.46% He
+
+        Parameters
+        ----------
+        output: bool
+
         """
         # If there are FCIs then how much of the radial build is FCI?
         if fwbs_variables.i_blkt_liquid_breeder_channel_type > 0:

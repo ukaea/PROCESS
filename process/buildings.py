@@ -21,14 +21,13 @@ logger = logging.getLogger(__name__)
 
 
 class Buildings:
-    """author: J. Morris, P. Knight, R. Chapman (UKAEA)
-
-    This module contains routines for calculating the
-    parameters of the fusion power plant buildings.
     """
 
-    def __init__(self) -> None:
-        """author: J. Morris, P. Knight, R. Chapman (UKAEA)
+    This module contains routines for calculating the
+    """
+
+    def __init__(self):
+        """
 
         This routine calls the buildings calculations.
         """
@@ -108,29 +107,9 @@ class Buildings:
         helpow,
     ):
         """Determines the sizes of the plant buildings
-        author: P J Knight, CCFE, Culham Science Centre
-        author: P C Shipe, ORNL
-        pfr : input/output real :  largest PF coil outer radius, m
-        pfm : : input real : largest PF coil mass, tonne
-        tfro : input real : outer radius of TF coil, m
-        tfri : input real : inner radius of TF coil, m
-        tfh : input real : full height of TF coil, m
-        tfm : input real : mass of one TF coil, tonne
-        tfno : input real : number of tf coils
-        shro : input real : outer radius of attached shield, m
-        shri : input real : inner radius of attached shield, m
-        shh : input real : height of attached shield, m
-        shm : input real : total mass of attached shield, kg
-        crr : input real : outer radius of common cryostat, m
-        helpow : input real : total cryogenic load, W
-        iprint : input integer : switch for writing to output file (1=yes)
-        outfile : input integer : output file unit
-        cryv : output real : volume of cryogenic building, m3
-        vrci : output real : inner volume of reactor building, m3
-        rbv : output real : outer volume of reactor building, m3
-        rmbv : output real : volume of reactor maintenance building, m3
-        wsv : output real : volume of warm shop, m3
-        elev : output real : volume of electrical buildings, m3
+
+
+
         This routine determines the size of the plant buildings.
         The reactor building and maintenance building are sized
         based on the tokamak dimensions. The cryogenic building volume is
@@ -138,8 +117,52 @@ class Buildings:
         sizes are input from other modules or by the user.
         This routine was modified to include fudge factors (fac1,2,...)
         to fit the ITER design, September 1990 (J. Galambos).
-        This routine was included in PROCESS in January 1992 by
-        P. C. Shipe.
+
+        Parameters
+        ----------
+        output:
+
+        pfr :
+             largest PF coil outer radius, m
+        pfm :
+            largest PF coil mass, tonne
+        tfro :
+            outer radius of TF coil, m
+        tfri :
+            inner radius of TF coil, m
+        tfh :
+            full height of TF coil, m
+        tfm :
+            mass of one TF coil, tonne
+        n_tf_coils :
+            number of tf coils
+        shro :
+            outer radius of attached shield, m
+        shri :
+            inner radius of attached shield, m
+        shh :
+            height of attached shield, m
+        shm :
+            total mass of attached shield, kg
+        crr :
+            outer radius of common cryostat, m
+        helpow :
+            total cryogenic load, W
+
+        Returns
+        -------
+        cryv:
+            volume of cryogenic building, m3
+        vrci:
+            inner volume of reactor building, m3
+        rbv:
+            outer volume of reactor building, m3
+        rmbv:
+            volume of reactor maintenance building, m3
+        wsv:
+            volume of warm shop, m3
+        elev:
+            volume of electrical buildings, m3
         """
 
         # Reactor building
@@ -173,10 +196,10 @@ class Buildings:
         # Laydown length (m)
         layl = max(crr, pfr)
 
-        # Diagnoal length (m)
+        # Diagonal length (m)
         hy = bmr + buildings_variables.rxcl + sectl + buildings_variables.trcl + layl
 
-        # Angle between diagnoal length and floor (m)
+        # Angle between diagonal length and floor (m)
         ang = (buildings_variables.wrbi - buildings_variables.trcl - layl) / hy
 
         # Cap angle at 1
@@ -383,7 +406,16 @@ class Buildings:
         some are derived from footprints/volumes based on
         assessment of other power plants and/or similar facilities.
         !!
-        author: R Chapman, UKAEA
+
+
+        Parameters
+        ----------
+        output :
+
+        tf_radial_dim :
+
+        tf_vertical_dim :
+
         """
 
         buildings_total_vol = 0.0e0

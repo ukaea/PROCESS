@@ -1,10 +1,6 @@
 """
 Code to read from a PROCESS MFILE and write values into a csv
 
-Author: R Chapman (rhian.chapman@ukaea.uk)
-Date: 26/05/2021
-Updated: 06/06/2022
-
 Input files:
 mfile (default MFILE.DAT) as output from PROCESS
 variable list (default mfile_to_csv_vars.json) as defined by user
@@ -14,7 +10,6 @@ Instructions:
 
 Output file:
 .csv will be saved to the directory of the input file
-
 """
 
 # == import modules ==
@@ -33,10 +28,15 @@ from process.io.mfile import MFile
 def parse_args(args):
     """Parse supplied arguments.
 
-    :param args: arguments to parse
-    :type args: list, None
-    :return: parsed arguments
-    :rtype: Namespace
+    Parameters
+    ----------
+    args : list, None
+        arguments to parse
+
+    Returns
+    -------
+    Namespace
+        parsed arguments
     """
     parser = argparse.ArgumentParser(
         description="Read from a PROCESS MFILE and write values into a csv."
@@ -62,10 +62,17 @@ def parse_args(args):
 def get_vars(vfile="mfile_to_csv_vars.json"):
     """Returns variable names from identified file.
 
-    :param args: input JSON filename
-    :type args: string
-    :return: variable names
-    :rtype: list
+    Parameters
+    ----------
+    args : string
+        input JSON filename
+    vfile :
+         (Default value = "mfile_to_csv_vars.json")
+
+    Returns
+    -------
+    list
+        variable names
     """
     print("Fetching list of variables from", vfile)
 
@@ -75,10 +82,19 @@ def get_vars(vfile="mfile_to_csv_vars.json"):
 def read_mfile(mfilename="MFILE.DAT", variables=None):
     """Returns specified variable values from identified file.
 
-    :param args: input filename, variable names
-    :type args: string, list
-    :return: variable descriptions, names, and values
-    :rtype: list of tuples
+    Parameters
+    ----------
+    args : string, list
+        input filename, variable names
+    mfilename :
+         (Default value = "MFILE.DAT")
+    variables :
+         (Default value = None)
+
+    Returns
+    -------
+    list of tuples
+        variable descriptions, names, and values
     """
     if variables is None:
         variables = []
@@ -105,10 +121,17 @@ def read_mfile(mfilename="MFILE.DAT", variables=None):
 def get_savenamepath(mfilename="MFILE.DAT"):
     """Returns path/filename.csv for file saving.
 
-    :param args: input filename
-    :type args: string
-    :return: output filename
-    :rtype: pathlib.PurePosixPath
+    Parameters
+    ----------
+    args : string
+        input filename
+    mfilename :
+         (Default value = "MFILE.DAT")
+
+    Returns
+    -------
+    pathlib.PurePosixPath
+        output filename
     """
 
     # Either save it locally or output the csv file to the directory of the input file
@@ -121,8 +144,14 @@ def get_savenamepath(mfilename="MFILE.DAT"):
 def write_to_csv(csv_outfile, output_data=None):
     """Write to csv file.
 
-    :param args: input filename, variable data
-    :type args: string, list of tuples
+    Parameters
+    ----------
+    args : string, list of tuples
+        input filename, variable data
+    csv_outfile :
+
+    output_data :
+         (Default value = None)
     """
     if output_data is None:
         output_data = []
@@ -138,8 +167,10 @@ def write_to_csv(csv_outfile, output_data=None):
 def main(args=None):
     """Extract certain variables from an MFILE.DAT and output to CSV.
 
-    :param args: optional command-line args for testing, defaults to None
-    :type args: list, optional
+    Parameters
+    ----------
+    args : list, optional
+        optional command-line args for testing, defaults to None
     """
     # read from command line inputs
     args = parse_args(args)

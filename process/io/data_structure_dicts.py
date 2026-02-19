@@ -18,7 +18,7 @@ import numpy as np
 from process.init import init_all_module_vars
 from process.input import INPUT_VARIABLES
 from process.iteration_variables import ITERATION_VARIABLES
-from process.scan import SCAN_VARIABLES
+from process.scan import ScanVariables
 
 INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}
 
@@ -90,10 +90,16 @@ def to_type(string):
     looks to see if it begins with a integer and returns that (since
     some lines have clarification text after the number). If this
     also fails, return string.strip()
-    Args:
-         string --> String to be converted
-    Returns:
-         value --> Either a float, int or string depending on input
+
+    Parameters
+    ----------
+    string :
+
+
+    Returns
+    -------
+    :
+        Either a float, int or string depending on input
     """
 
     try:
@@ -116,13 +122,20 @@ def to_type(string):
 def grep(file, regexp, flags=re.UNICODE):
     """Implements an in-python grep. Returns the lines that match
     as a list.
-    Args:
-         file --> Name of file to be read
-         regexp --> Regular expression to search for
-         flags --> re flags to use in search. Default is re.U which has
-                     no effect
-    Returns:
-         lines --> List of matching lines
+
+    Parameters
+    ----------
+    file:
+        Name of file to be read
+    regexp:
+        Regular expression to search for
+    flags:
+        re flags to use in search. Default is re.U which has
+
+    Returns
+    -------
+    lines:
+        List of matching lines
     """
 
     lines = []
@@ -142,12 +155,20 @@ def slice_file(file, re1, re2):
     to re1 in the file marks the start of the slice, the first match
     to re2 after that marks the end of the slice. The list of lines
     returned includes the two bounding lines.
-    Args:
-         file --> Name of file to read through
-         re1 --> Starting regular expression
-         re2 --> Ending regular expression
-    Returns:
-         lines --> List of lines from file between re1 and re2 inclusive
+
+    Parameters
+    ----------
+    file :
+        Name of file to read through
+    re1 :
+        Starting regular expression
+    re2 :
+        Ending regular expression
+
+    Returns
+    -------
+    :
+        lines:List of lines from file between re1 and re2 inclusive
     """
 
     with open(file, encoding="utf-8") as file:
@@ -179,10 +200,17 @@ def remove_comments(line):
     removing everything after the first '!' in the line. This will
     cause problems in the case of '!' characters contained within strings
     so am assuming this won't happen. Need to change this.
-    Args:
-         line --> Line to strip comments from
+
+    Parameters
+    ----------
+    line:
+        Line to strip comments from
+
     Returns
-         modified_line --> Line with comments removed
+    -------
+    modified_line:
+        Line with comments removed
+
     """
     if "!" in line:
         line = line[: line.find("!")]
@@ -203,7 +231,7 @@ def dict_ixc2nsweep():
     """
 
     name_to_nsweep = {
-        var.variable_name: nsweep for nsweep, var in SCAN_VARIABLES.items()
+        sv.value.variable_name: sv.value.variable_num for sv in ScanVariables
     }
 
     # create a dictionary that maps iteration variable names to ixc_no
@@ -219,7 +247,8 @@ def dict_ixc2nsweep():
 
 def dict_nsweep2ixc():
     """Returns a dict mapping nsweep_no to ixc_no; the inverse of
-    dict_ixc2nsweep"""
+    dict_ixc2nsweep
+    """
 
     # Use dict_ixc2nsweep from output_dict to produce dict_nsweep2ixc
     ixc2nsweep = output_dict["DICT_IXC2NSWEEP"]
@@ -279,7 +308,7 @@ def dict_input_bounds():
 
 
 def dict_nsweep2varname():
-    return {str(nsweep): var.variable_name for nsweep, var in SCAN_VARIABLES.items()}
+    return {sv.value.variable_num: sv.value.variable_name for sv in ScanVariables}
 
 
 def dict_ixc_full():

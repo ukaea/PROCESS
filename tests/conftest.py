@@ -157,7 +157,6 @@ def reinitialise_error_module():
 
     If a subroutine raises an error and writes to error variables, this should
     be cleaned up when the test finishes to prevent any side-effects.
-
     """
     # TODO Perhaps this should be autoused by all tests? Specify use explicitly
     # for now for known error-raisers

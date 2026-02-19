@@ -2,15 +2,9 @@
 
 PROCESS plot_proc using process_io_lib functions and MFILE.DAT
 
-James Morris
-13/04/2014
-CCFE
-Revised by Michael Kovari, 7/1/2016
-
 24/11/2021: Global dictionary variables moved within the functions
             to avoid cyclic dependencies. This is because the dicts
             generation script imports, and inspects, process.
-
 """
 
 import argparse
@@ -87,10 +81,15 @@ class RadialBuild:
 def parse_args(args):
     """Parse supplied arguments.
 
-    :param args: arguments to parse
-    :type args: list, None
-    :return: parsed arguments
-    :rtype: Namespace
+    Parameters
+    ----------
+    args : list, None
+        arguments to parse
+
+    Returns
+    -------
+    Namespace
+        parsed arguments
     """
     # Setup command line arguments
     parser = argparse.ArgumentParser(
@@ -214,12 +213,16 @@ def plot_plasma(
 ):
     """Plots the plasma boundary arcs.
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE data object
-        scan --> scan number to use
-        colour_scheme --> colour scheme to use for plots
-
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
+    colour_scheme :
+        colour scheme to use for plots
     """
 
     (r_0, a, triang, kappa, i_single_null, i_plasma_shape, plasma_square) = (
@@ -276,10 +279,14 @@ def plot_plasma(
 def plot_centre_cross(axis: plt.Axes, mfile: mf.MFile, scan: int):
     """Function to plot centre cross on plot
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE data object
-        scan --> scan number to use
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
     """
     rmajor = mfile.get("rmajor", scan=scan)
     axis.plot(
@@ -293,14 +300,19 @@ def cumulative_radial_build(section, mfile: mf.MFile, scan: int):
     """Function for calculating the cumulative radial build up to and
     including the given section.
 
-    Arguments:
-        section --> section of the radial build to go up to
-        mfile --> MFILE data object
-        scan --> scan number to use
+    Parameters
+    ----------
+    section :
+        section of the radial build to go up to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
 
-    Returns:
-        cumulative_build --> cumulative radial build up to section given
-
+    Returns
+    -------
+    :
+        cumulative_build:cumulative radial build up to section given
     """
     complete = False
     cumulative_build = 0
@@ -328,16 +340,21 @@ def cumulative_radial_build2(section, mfile: mf.MFile, scan: int):
     """Function for calculating the cumulative radial build up to and
     including the given section.
 
-    Arguments:
-        section --> section of the radial build to go up to
-        mfile --> MFILE data object
-        scan --> scan number to use
+    Parameters
+    ----------
+    section :
+        section of the radial build to go up to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
 
-    Returns:
+    Returns
+    -------
+    :
         cumulative_build --> cumulative radial build up to and including
-                             section given
+        section given
         previous         --> cumulative radial build up to section given
-
     """
     cumulative_build = 0
     build = 0
@@ -369,12 +386,18 @@ def poloidal_cross_section(
 ):
     """Function to plot poloidal cross-section
 
-    Arguments:
-      axis --> axis object to add plot to
-      mfile --> MFILE data object
-      scan --> scan number to use
-      colour_scheme --> colour scheme to use for plots
+    Parameters
+    ----------
+    axis :
+        axis object to add plot to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
+    demo_ranges:
 
+    colour_scheme :
+        colour scheme to use for plots
     """
 
     axis.set_xlabel("R / m")
@@ -407,19 +430,21 @@ def poloidal_cross_section(
     # ---
 
 
-def plot_main_power_flow(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Figure
-) -> None:
-    """
-    Plots the main power flow diagram for the fusion reactor, including plasma, heating and current drive,
+def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Figure):
+    """Plots the main power flow diagram for the fusion reactor, including plasma, heating and current drive,
     first wall, blanket, vacuum vessel, divertor, coolant pumps, turbine, generator, and auxiliary systems.
     Annotates the diagram with power values and draws arrows to indicate power flows.
 
-    Args:
-        axis (plt.Axes): The matplotlib axis object to plot on.
-        mfile (mf.MFile): The MFILE data object containing power flow parameters.
-        scan (int): The scan number to use for extracting data.
-        fig (plt.Figure): The matplotlib figure object for additional annotations.
+    Parameters
+    ----------
+    axis:
+        The matplotlib axis object to plot on.
+    mfile:
+        The MFILE data object containing power flow parameters.
+    scan:
+        The scan number to use for extracting data.
+    fig:
+        The matplotlib figure object for additional annotations.
     """
 
     axis.text(
@@ -2369,17 +2394,22 @@ def plot_main_plasma_information(
     scan: int,
     colour_scheme: Literal[1, 2],
     fig: plt.Figure,
-) -> None:
-    """
-    Plots the main plasma information including plasma shape, geometry, currents, heating,
+):
+    """Plots the main plasma information including plasma shape, geometry, currents, heating,
     confinement, and other relevant plasma parameters.
 
-    Args:
-        axis (plt.Axes): The matplotlib axis object to plot on.
-        mfile (mf.MFile): The MFILE data object containing plasma parameters.
-        scan (int): The scan number to use for extracting data.
-        colour_scheme (int): The colour scheme to use for plots.
-        fig (plt.Figure): The matplotlib figure object for additional annotations.
+    Parameters
+    ----------
+    axis : plt.Axes
+        The matplotlib axis object to plot on.
+    mfile : mf.MFile
+        The MFILE data object containing plasma parameters.
+    scan : int
+        The scan number to use for extracting data.
+    colour_scheme : int
+        The colour scheme to use for plots.
+    fig : plt.Figure
+        The matplotlib figure object for additional annotations.
     """
     # Import key variables
     triang = mfile.get("triang", scan=scan)
@@ -3025,8 +3055,6 @@ def plot_main_plasma_information(
         transform=fig.transFigure,
     )
 
-    # =================================================
-
     # Add magnetic field information
     textstr_fields = (
         f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
@@ -3061,8 +3089,6 @@ def plot_main_plasma_information(
         verticalalignment="top",
         transform=fig.transFigure,
     )
-
-    # ===========================================
 
     # Add radiation information
     textstr_radiation = (
@@ -3102,8 +3128,6 @@ def plot_main_plasma_information(
         transform=fig.transFigure,
     )
 
-    # ============================================
-
     # Add L-H threshold information
     textstr_lh = (
         f"$\\mathbf{{L-H \\ threshold:}}$\n\n"
@@ -3124,8 +3148,6 @@ def plot_main_plasma_information(
             "linewidth": 2,
         },
     )
-
-    # ======================================
 
     # Add density limit information
     textstr_density_limit = (
@@ -3149,15 +3171,8 @@ def plot_main_plasma_information(
     )
 
 
-def plot_current_profiles_over_time(axis: plt.Axes, mfile: mf.MFile, scan: int) -> None:
-    """
-    Plots the current profiles over time for PF circuits, CS coil, and plasma.
-
-    Arguments:
-        axis (plt.Axes): Axis object to plot to.
-        mfile (mf.MFile): MFILE data object.
-        scan (int): Scan number to use.
-    """
+def plot_current_profiles_over_time(axis: plt.Axes, mfile: mf.MFile, scan: int):
+    """Plots the current profiles over time for PF circuits, CS coil, and plasma."""
     t_plant_pulse_coil_precharge = mfile.get("t_plant_pulse_coil_precharge", scan=scan)
     t_plant_pulse_plasma_current_ramp_up = mfile.get(
         "t_plant_pulse_plasma_current_ramp_up", scan=scan
@@ -3256,19 +3271,9 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: mf.MFile, scan: int) 
 
 
 def plot_system_power_profiles_over_time(
-    axis: plt.Axes,
-    mfile: mf.MFile,
-    scan: int,
-    fig,
-) -> None:
-    """
-    Plots the power profiles over time for various systems.
-
-    Arguments:
-        axis (plt.Axes): Axis object to plot to.
-        mfile (mf.MFile): MFILE data object.
-        scan (int): Scan number to use.
-    """
+    axis: plt.Axes, mfile: mf.MFile, scan: int, fig
+):
+    """Plots the power profiles over time for various systems."""
 
     t_precharge = mfile.get("t_plant_pulse_coil_precharge", scan=scan)
     t_current_ramp_up = mfile.get("t_plant_pulse_plasma_current_ramp_up", scan=scan)
@@ -3423,12 +3428,7 @@ def plot_system_power_profiles_over_time(
         fontsize=9,
         verticalalignment="top",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "grey",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox={"boxstyle": "round", "facecolor": "grey", "alpha": 1.0, "linewidth": 2},
     )
 
 
@@ -3455,11 +3455,7 @@ def plot_cryostat(
 
 
 def color_key(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal[1, 2]):
-    """Function to plot the colour key
-    Arguments:
-      axis --> object to add plot to
-      colour_scheme --> colour scheme to use for plots
-    """
+    """Function to plot the colour key"""
 
     axis.set_ylim([0, 10])
     axis.set_xlim([0, 10])
@@ -3528,13 +3524,7 @@ def toroidal_cross_section(
     demo_ranges: bool,
     colour_scheme: Literal[1, 2],
 ):
-    """Function to plot toroidal cross-section
-    Arguments:
-      axis --> axis object to add plot to
-      mfile --> MFILE data object
-      scan --> scan number to use
-      colour_scheme --> colour scheme to use for plots
-    """
+    """Function to plot toroidal cross-section"""
 
     axis.set_xlabel("x / m")
     axis.set_ylabel("y / m")
@@ -3741,13 +3731,20 @@ def TF_outboard(axis: plt.Axes, item, n_tf_coils, r3, r4, w, facecolor):
 def arc(axis: plt.Axes, r, theta1=0, theta2=rtangle, style="solid"):
     """Plots an arc.
 
-    Arguments
+    Parameters
+    ----------
+    axis :
+        plot object
+    r :
+        radius
+    theta1 :
+        starting polar angle (Default value = 0)
+    theta2 :
+        finishing polar angle (Default value = rtangle)
+    axis: plt.Axes :
 
-    axis: plot object
-    r: radius
-    theta1: starting polar angle
-    theta2: finishing polar angle
-
+    style :
+         (Default value = "solid")
     """
     angs = np.linspace(theta1, theta2)
     xs = r * np.cos(angs)
@@ -3758,11 +3755,18 @@ def arc(axis: plt.Axes, r, theta1=0, theta2=rtangle, style="solid"):
 def arc_fill(axis: plt.Axes, r1, r2, color="pink"):
     """Fills the space between two quarter circles.
 
-    Arguments
+    Parameters
+    ----------
+    axis :
+        plot object
+    r1 :
+        r2 radii to be filled
+    axis: plt.Axes :
 
-    axis: plot object
-    r1, r2 radii to be filled
+    r2 :
 
+    color :
+         (Default value = "pink")
     """
     angs = np.linspace(0, rtangle, endpoint=True)
     xs1 = r1 * np.cos(angs)
@@ -3781,8 +3785,17 @@ def arc_fill(axis: plt.Axes, r1, r2, color="pink"):
 
 def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     """Function to plot density profile
-    Arguments:
-      prof --> axis object to add plot to
+
+    Parameters
+    ----------
+    prof :
+        axis object to add plot to
+    demo_ranges: bool :
+
+    mfile: mf.MFile :
+
+    scan: int :
+
     """
     nd_alphas = mfile.get("nd_plasma_alphas_vol_avg", scan=scan)
     nd_protons = mfile.get("nd_plasma_protons_vol_avg", scan=scan)
@@ -3997,8 +4010,15 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
 
 def plot_jprofile(prof, mfile: mf.MFile, scan: int):
     """Function to plot density profile
-    Arguments:
-      prof --> axis object to add plot to
+
+    Parameters
+    ----------
+    prof :
+        axis object to add plot to
+    mfile: mf.MFile :
+
+    scan: int :
+
     """
     alphaj = mfile.get("alphaj", scan=scan)
     j_plasma_0 = mfile.get("j_plasma_on_axis", scan=scan)
@@ -4065,8 +4085,17 @@ def plot_jprofile(prof, mfile: mf.MFile, scan: int):
 
 def plot_t_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     """Function to plot temperature profile
-    Arguments:
-      prof --> axis object to add plot to
+
+    Parameters
+    ----------
+    prof :
+        axis object to add plot to
+    demo_ranges: bool :
+
+    mfile: mf.MFile :
+
+    scan: int :
+
     """
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
@@ -4178,8 +4207,16 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
 def plot_qprofile(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     """Function to plot q profile, formula taken from Nevins bootstrap model.
 
-    Arguments:
-      prof --> axis object to add plot to
+    Parameters
+    ----------
+    prof :
+        axis object to add plot to
+    demo_ranges: bool :
+
+    mfile: mf.MFile :
+
+    scan: int :
+
     """
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel("$q$")
@@ -4240,9 +4277,14 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
 def read_imprad_data(_skiprows, data_path):
     """Function to read all data needed for creation of radiation profile
 
-    Arguments:
-        skiprows --> number of rows to skip when reading impurity data files
-        data_path --> path to impurity data
+    Parameters
+    ----------
+    skiprows :
+        number of rows to skip when reading impurity data files
+    data_path :
+        path to impurity data
+    _skiprows :
+
     """
     label = [
         "H_",
@@ -4365,11 +4407,22 @@ def profiles_with_pedestal(mfile, scan: int):
 def plot_radprofile(prof, mfile: mf.MFile, scan: int, impp, demo_ranges: bool):
     """Function to plot radiation profile, formula taken from ???.
 
-    Arguments:
-      prof --> axis object to add plot to
-      mfile --> MFILE.DAT object
-      scan --> scan number to use
-      impp --> impurity path
+    Parameters
+    ----------
+    prof :
+        axis object to add plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
+    impp :
+        impurity path
+    mfile: mf.MFile :
+
+    scan: int :
+
+    demo_ranges: bool :
+
     """
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
@@ -4469,9 +4522,8 @@ def plot_radprofile(prof, mfile: mf.MFile, scan: int, impp, demo_ranges: bool):
     # ---
 
 
-def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str) -> None:
-    """
-    Plots the contour of line and bremsstrahlung radiation density for a plasma cross-section.
+def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
+    """Plots the contour of line and bremsstrahlung radiation density for a plasma cross-section.
 
     This function reads impurity and plasma profile data, computes the radiation density profile,
     interpolates it onto a 2D grid, and plots the upper and lower half contours on the provided axis.
@@ -4604,11 +4656,18 @@ def plot_vacuum_vessel_and_divertor(
 ):
     """Function to plot vacuum vessel and divertor boxes
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE data object
-        scan --> scan number to use
-        colour_scheme --> colour scheme to use for plots
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
+    radial_build :
+
+    colour_scheme :
+        colour scheme to use for plots
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
@@ -4801,11 +4860,19 @@ def plot_vacuum_vessel_and_divertor(
 def plot_shield(axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour_scheme):
     """Function to plot shield
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE data object
-        scan --> scan number to use
-        colour_scheme --> colour scheme to use for plots
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
+    radial_build :
+
+    colour_scheme :
+        colour scheme to use for plots
+
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
@@ -4862,17 +4929,21 @@ def plot_shield(axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour
     )
 
 
-def plot_blanket(
-    axis: plt.Axes, mfile: mf.MFile, scan, radial_build, colour_scheme
-) -> None:
+def plot_blanket(axis: plt.Axes, mfile: mf.MFile, scan, radial_build, colour_scheme):
     """Function to plot blanket
 
-    Arguments:
-      axis --> axis object to plot to
-      mfile --> MFILE.DAT object
-      scan --> scan number to use
-      colour_scheme --> colour scheme to use for plots
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
+    radial_build :
 
+    colour_scheme :
+        colour scheme to use for plots
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
@@ -5217,12 +5288,18 @@ def plot_firstwall(
 ):
     """Function to plot first wall
 
-    Arguments:
-      axis --> axis object to plot to
-      mfile --> MFILE.DAT object
-      scan --> scan number to use
-      colour_scheme --> colour scheme to use for plots
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
+    radial_build :
 
+    colour_scheme :
+        colour scheme to use for plots
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
@@ -5319,12 +5396,16 @@ def plot_tf_coils(
 ):
     """Function to plot TF coils
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-        colour_scheme --> colour scheme to use for plots
-
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
+    colour_scheme :
+        colour scheme to use for plots
     """
 
     # Arc points
@@ -5421,10 +5502,8 @@ def plot_tf_coils(
             )
 
 
-def plot_superconducting_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> None:
-    """
-    Plots inboard TF coil and winding pack.
-    Author: C. Ashe
+def plot_superconducting_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig):
+    """Plots inboard TF coil and winding pack.
 
     Parameters
     ----------
@@ -5434,10 +5513,6 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) 
         Object containing data for the plot.
     scan : int
         Scan number to use.
-
-    Returns
-    -------
-    None
     """
 
     # Import the TF variables
@@ -6125,10 +6200,8 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) 
         axis.legend(loc="upper left")
 
 
-def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> None:
-    """
-    Plots inboard TF coil and winding pack.
-    Author: C. Ashe
+def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig):
+    """Plots inboard TF coil and winding pack.
 
     Parameters
     ----------
@@ -6138,10 +6211,6 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
         Object containing data for the plot.
     scan : int
         Scan number to use.
-
-    Returns
-    -------
-    None
     """
 
     # Import the TF variables
@@ -6518,7 +6587,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> Non
     )
 
 
-def plot_resistive_tf_info(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> None:
+def plot_resistive_tf_info(axis: plt.Axes, mfile: mf.MFile, scan: int, fig):
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
         f"$\\mathbf{{Casing:}}$\n \n"
@@ -6639,12 +6708,8 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: mf.MFile, scan: int, fig) -> N
     )
 
 
-def plot_tf_cable_in_conduit_turn(
-    axis: plt.Axes, fig, mfile: mf.MFile, scan: int
-) -> None:
-    """
-    Plots inboard TF coil CICC individual turn structure.
-    Author: C. Ashe
+def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
+    """Plots inboard TF coil CICC individual turn structure.
 
     Parameters
     ----------
@@ -6654,10 +6719,6 @@ def plot_tf_cable_in_conduit_turn(
         Object containing data for the plot.
     scan : int
         Scan number to use.
-
-    Returns
-    -------
-    None
     """
 
     def _pack_strands_rectangular_with_obstacles(
@@ -6671,7 +6732,29 @@ def plot_tf_cable_in_conduit_turn(
         corner_radius,
         f_a_tf_turn_cable_copper,
     ):
-        """Pack circular strands in rectangular space with cooling pipe obstacle"""
+        """Pack circular strands in rectangular space with cooling pipe obstacle
+
+        Parameters
+        ----------
+        cable_space_bounds :
+
+        pipe_center :
+
+        pipe_radius :
+
+        strand_diameter :
+
+        void_fraction :
+
+        n_strands :
+
+        axis :
+
+        corner_radius :
+
+        f_a_tf_turn_cable_copper :
+
+        """
 
         x, y, width, height = cable_space_bounds
 
@@ -7211,9 +7294,19 @@ def plot_tf_cable_in_conduit_turn(
     )
 
 
-def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int) -> None:
-    """
-    Plots TF coil CICC cable cross-section.
+def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
+    """Plots TF coil CICC cable cross-section.
+
+    Parameters
+    ----------
+    axis: plt.Axes :
+
+    fig :
+
+    mfile: mf.MFile :
+
+    scan: int :
+
     """
 
     dia_tf_turn_superconducting_cable = mfile.get(
@@ -7300,11 +7393,16 @@ def plot_pf_coils(
 ):
     """Function to plot PF coils
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-        colour_scheme --> colour scheme to use for plots
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
+    colour_scheme :
+        colour scheme to use for plots
     """
 
     coils_r = []
@@ -7389,12 +7487,16 @@ def plot_pf_coils(
 def plot_info(axis: plt.Axes, data, mfile: mf.MFile, scan: int):
     """Function to plot data in written form on a matplotlib plot.
 
-    Arguments:
-        axis --> axis object to plot to
-        data --> plot information
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    data :
+        plot information
+    mfile :
+        MFILE
+    scan :
+        scan number to use
     """
     eqpos = 0.75
     for i in range(len(data)):
@@ -7462,11 +7564,14 @@ def plot_info(axis: plt.Axes, data, mfile: mf.MFile, scan: int):
 def plot_header(axis: plt.Axes, mfile: mf.MFile, scan: int):
     """Function to plot header info: date, rutitle etc
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
     """
     xmin = 0
     xmax = 1
@@ -7579,11 +7684,14 @@ def plot_header(axis: plt.Axes, mfile: mf.MFile, scan: int):
 def plot_geometry_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     """Function to plot geometry info
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
     """
     xmin = 0
     xmax = 1
@@ -7625,11 +7733,14 @@ def plot_geometry_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
 def plot_physics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     """Function to plot geometry info
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
     """
     xmin = 0
     xmax = 1
@@ -7699,11 +7810,14 @@ def plot_physics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
 def plot_magnetics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     """Function to plot magnet info
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
     """
     # Check for Copper magnets
     i_tf_sup = int(mfile.get("i_tf_sup", scan=scan)) if "i_tf_sup" in mfile.data else 1
@@ -7825,11 +7939,14 @@ def plot_magnetics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
 def plot_power_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     """Function to plot power info
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
     """
 
     xmin = 0
@@ -7914,11 +8031,14 @@ def plot_power_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
 def plot_current_drive_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     """Function to plot current drive info
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
     """
 
     xmin = 0
@@ -8172,10 +8292,14 @@ def plot_current_drive_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
 def plot_bootstrap_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
     """Function to plot a scatter box plot of bootstrap current fractions.
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE data object
-        scan --> scan number to use
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
     """
 
     boot_ipdg = mfile.get("f_c_plasma_bootstrap_iter89", scan=scan)
@@ -8255,16 +8379,19 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_h_threshold_comparison(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, u_seed=None
-) -> None:
-    """
-    Function to plot a scatter box plot of L-H threshold power comparisons.
+def plot_h_threshold_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int, u_seed=None):
+    """Function to plot a scatter box plot of L-H threshold power comparisons.
 
-    Arguments:
-        axis (plt.Axes): Axis object to plot to.
-        mfile (mf.MFile): MFILE data object.
-        scan (int): Scan number to use.
+    Parameters
+    ----------
+    axis :
+        Axis object to plot to.
+    mfile :
+         MFILE data object.
+    scan :
+        Scan number to use.
+    u_seed :
+         (Default value = None)
     """
     iter_nominal = mfile.get("l_h_threshold_powers(1)", scan=scan)
     iter_upper = mfile.get("l_h_threshold_powers(2)", scan=scan)
@@ -8388,14 +8515,19 @@ def plot_h_threshold_comparison(
 
 def plot_confinement_time_comparison(
     axis: plt.Axes, mfile: mf.MFile, scan: int, u_seed=None
-) -> None:
-    """
-    Function to plot a scatter box plot of confinement time comparisons.
+):
+    """Function to plot a scatter box plot of confinement time comparisons.
 
-    Arguments:
-        axis (plt.Axes): Axis object to plot to.
-        mfile (mf.MFile): MFILE data object.
-        scan (int): Scan number to use.
+    Parameters
+    ----------
+    axis :
+        Axis object to plot to.
+    mfile :
+         MFILE data object.
+    scan :
+        Scan number to use.
+    u_seed :
+         (Default value = None)
     """
     rminor = mfile.get("rminor", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
@@ -8721,11 +8853,8 @@ def plot_confinement_time_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_radial_build(
-    axis: plt.Axes, mfile: mf.MFile, colour_scheme: Literal[1, 2]
-) -> None:
-    """
-    Plots the radial build of a fusion device on the given matplotlib axis.
+def plot_radial_build(axis: plt.Axes, mfile: mf.MFile, colour_scheme: Literal[1, 2]):
+    """Plots the radial build of a fusion device on the given matplotlib axis.
 
     This function visualizes the different layers/components of the machine's radial build
     (such as central solenoid, toroidal field coils, vacuum vessel, shields, blankets, etc.)
@@ -8743,14 +8872,11 @@ def plot_radial_build(
     mfile : mf.MFile
         An object containing the machine build data, with required fields for each
         radial component and the "i_tf_inside_cs" flag.
-
-    Returns
-    -------
-    None
-        This function modifies the provided axis in-place and does not return a value.
+    colour_scheme:
 
     Notes
     -----
+    This function modifies the provided axis in-place and does not return a value.
     - Components with zero thickness are omitted from the plot.
     - The legend displays the name and thickness (in meters) of each component.
     """
@@ -8909,9 +9035,8 @@ def plot_radial_build(
 
 def plot_lower_vertical_build(
     axis: plt.Axes, mfile: mf.MFile, colour_scheme: Literal[1, 2]
-) -> None:
-    """
-    Plots the lower vertical build of a fusion device on the given matplotlib axis.
+):
+    """Plots the lower vertical build of a fusion device on the given matplotlib axis.
 
     This function visualizes the different layers/components of the machine's vertical build
     (such as plasma, first wall, divertor, shield, vacuum vessel, thermal shield, TF coil, etc.)
@@ -8920,21 +9045,18 @@ def plot_lower_vertical_build(
 
     Parameters
     ----------
-    axis : matplotlib.axes.Axes
+    axis :
         The matplotlib axis on which to plot the vertical build.
-    mfile : mf.MFile
+    mfile :
         An object containing the machine build data, with required fields for each
         vertical component.
-    colour_scheme : int
+    colour_scheme :
         Colour scheme index to use for component colors.
 
-    Returns
-    -------
-    None
-        This function modifies the provided axis in-place and does not return a value.
 
     Notes
     -----
+    This function modifies the provided axis in-place and does not return a value.
     - Components with zero thickness are omitted from the plot.
     - The legend displays the name and thickness (in meters) of each component.
     """
@@ -9019,9 +9141,8 @@ def plot_lower_vertical_build(
 
 def plot_upper_vertical_build(
     axis: plt.Axes, mfile: mf.MFile, colour_scheme: Literal[1, 2]
-) -> None:
-    """
-    Plots the upper vertical build of a fusion device on the given matplotlib axis.
+):
+    """Plots the upper vertical build of a fusion device on the given matplotlib axis.
 
     This function visualizes the different layers/components of the machine's vertical build
     (such as plasma, first wall, divertor, shield, vacuum vessel, thermal shield, TF coil, etc.)
@@ -9030,21 +9151,17 @@ def plot_upper_vertical_build(
 
     Parameters
     ----------
-    axis : matplotlib.axes.Axes
+    axis:
         The matplotlib axis on which to plot the vertical build.
-    mfile : mf.MFile
+    mfile:
         An object containing the machine build data, with required fields for each
         vertical component.
-    colour_scheme : int
+    colour_scheme:
         Colour scheme index to use for component colors.
-
-    Returns
-    -------
-    None
-        This function modifies the provided axis in-place and does not return a value.
 
     Notes
     -----
+    This function modifies the provided axis in-place and does not return a value.
     - Components with zero thickness are omitted from the plot.
     - The legend displays the name and thickness (in meters) of each component.
     """
@@ -9175,14 +9292,17 @@ def plot_upper_vertical_build(
     axis.title.set_text("Upper Vertical Build")
 
 
-def plot_density_limit_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int) -> None:
-    """
-    Function to plot a scatter box plot of different density limit comparisons.
+def plot_density_limit_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
+    """Function to plot a scatter box plot of different density limit comparisons.
 
-    Arguments:
-        axis (plt.Axes): Axis object to plot to.
-        mfile (mf.MFile): MFILE data object.
-        scan (int): Scan number to use.
+    Parameters
+    ----------
+    axis :
+        Axis object to plot to.
+    mfile :
+         MFILE data object.
+    scan :
+        Scan number to use.
     """
     old_asdex = mfile.get("nd_plasma_electron_max_array(1)", scan=scan)
     borrass_iter_i = mfile.get("nd_plasma_electron_max_array(2)", scan=scan)
@@ -9263,12 +9383,19 @@ def plot_cs_coil_structure(
 ):
     """Function to plot the coil structure of the CS.
 
-    Arguments:
-        axis --> axis object to plot to
-        mfile --> MFILE.DAT object
-        scan --> scan number to use
-        demo_ranges --> whether to use demo ranges for the plot
-        colour_scheme --> colour scheme to use for the plot
+    Parameters
+    ----------
+    axis :
+        axis object to plot to
+    mfile :
+        MFILE
+    scan :
+        scan number to use
+    demo_ranges :
+        whether to use demo ranges for the plot
+    colour_scheme :
+        colour scheme to use for the plot (Default value = 1)
+
     """
     # Get CS coil parameters
     dr_cs = mfile.get("dr_cs", scan=scan)
@@ -9977,7 +10104,17 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
 
 
 def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
-    """Plot the iteration variables and where they lay in their bounds on a given axes"""
+    """Plot the iteration variables and where they lay in their bounds on a given axes
+
+    Parameters
+    ----------
+    axis: plt.Axes :
+
+    m_file: mf.MFile :
+
+    scan: int :
+
+    """
 
     # Get total number of iteration variables
     n_itvars = int(m_file.get("nvar", scan=scan))
@@ -10044,7 +10181,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
                 label="Final Value" if n_plot == 0 else "",
             )
 
-        # Plot scatter point for normalized relative change
+        # Plot scatter point for normalised relative change
         axis.scatter(
             norm_relative_change,
             n_plot,
@@ -10130,11 +10267,17 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
 
 
 def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
-    """
-    Function to plot the TF coil stress from the SIG_TF.json file.
+    """Function to plot the TF coil stress from the SIG_TF.json file.
 
     Input file:
     SIG_TF.json
+
+    Parameters
+    ----------
+    axis: plt.Axes :
+
+    mfile: mf.MFile :
+
     """
 
     # Step 1 : Data extraction
@@ -10595,7 +10738,17 @@ def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
 
 
 def plot_blkt_pipe_bends(fig, m_file, scan: int):
-    """Plot the blanket pipe bends on the given axis, with axes in mm."""
+    """Plot the blanket pipe bends on the given axis, with axes in mm.
+
+    Parameters
+    ----------
+    fig :
+
+    m_file :
+
+    scan: int :
+
+    """
 
     ax_90 = fig.add_subplot(331)
     ax_180 = fig.add_subplot(334)
@@ -10677,7 +10830,17 @@ def plot_blkt_pipe_bends(fig, m_file, scan: int):
 
 
 def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
-    """Plot the first wall pipe 90 degree bend on the given axis, with axes in mm."""
+    """Plot the first wall pipe 90 degree bend on the given axis, with axes in mm.
+
+    Parameters
+    ----------
+    ax :
+
+    m_file :
+
+    scan: int :
+
+    """
 
     # Get pipe radius from m_file, fallback to 0.1 m
     r = m_file.get("radius_fw_channel", scan=scan)
@@ -10841,7 +11004,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
 
     # =================================================
 
-    # Compute cumulative integral (trapezoidal) of the total fusion rate profile vs normalized radius
+    # Compute cumulative integral (trapezoidal) of the total fusion rate profile vs normalised radius
     rho_c = np.linspace(0.0, 1.0, len(fusrat_plasma_total_profile))
     y_total = np.asarray(fusrat_plasma_total_profile, dtype=float)
 
@@ -11126,14 +11289,22 @@ def plot_cover_page(
     radial_build: RadialBuild,
     colour_scheme: Literal[1, 2],
 ):
-    """
-    Plots a cover page for the PROCESS run, including run title, date, user, and summary info.
+    """Plots a cover page for the PROCESS run, including run title, date, user, and summary info.
 
-    Args:
-        axis (plt.Axes): The matplotlib axis object to plot on.
-        mfile (mf.MFile): The MFILE data object containing run info.
-        scan (int): The scan number to use for extracting data.
-        fig (plt.Figure): The matplotlib figure object for additional annotations.
+    Parameters
+    ----------
+    axis : plt.Axes
+        The matplotlib axis object to plot on.
+    mfile : mf.MFile
+        The MFILE data object containing run info.
+    scan : int
+        The scan number to use for extracting data.
+    fig : plt.Figure
+        The matplotlib figure object for additional annotations.
+    radial_build:
+
+    colour_scheme:
+
     """
     axis.axis("off")
     title = mfile.get("runtitle", scan=-1)
@@ -11390,7 +11561,7 @@ def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: mf.MFile, scan
     pres_plasma_profile_fuel_kpa = np.array(pres_plasma_profile_fuel) / 1000.0
     pres_plasma_profile_total_kpa = np.array(pres_plasma_profile_total) / 1000.0
 
-    # Calculate the normalized radius
+    # Calculate the normalised radius
     rho = np.linspace(0, 1, len(pres_plasma_profile_kpa))
 
     # Compute gradients using numpy.gradient
@@ -11413,27 +11584,26 @@ def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: mf.MFile, scan
     axis.legend()
 
 
-def plot_plasma_poloidal_pressure_contours(
-    axis: plt.Axes, mfile: mf.MFile, scan: int
-) -> None:
-    """
-    Plot plasma poloidal pressure contours inside the plasma boundary.
-
-    :param axis: Matplotlib axis object to plot on.
-    :type axis: matplotlib.axes.Axes
-    :param mfile: MFILE data object containing plasma and geometry data.
-    :type mfile: mf.MFile
-    :param scan: Scan number to use for extracting data.
-    :type scan: int
+def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: mf.MFile, scan: int):
+    """Plot plasma poloidal pressure contours inside the plasma boundary.
 
     This function visualizes the poloidal pressure distribution inside the plasma boundary
     by interpolating the pressure profile onto a grid defined by the plasma geometry.
     The pressure is shown as filled contours, with the plasma boundary overlaid.
+
+    Parameters
+    ----------
+    axis : matplotlib.axes.Axes
+        Matplotlib axis object to plot on.
+    mfile : mfile: mf.MFile
+        MFILE data object containing plasma and geometry data.
+    scan : int
+        Scan number to use for extracting data.
     """
 
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
-    # Get pressure profile (function of normalized radius rho, 0..1)
+    # Get pressure profile (function of normalised radius rho, 0..1)
     pres_plasma_electron_profile = [
         mfile.get(f"pres_plasma_electron_profile{i}", scan=scan)
         for i in range(n_plasma_profile_elements)
@@ -11565,21 +11735,22 @@ def plot_corc_cable_geometry(
     dx_croco_strand_tape_stack: float,
     n_croco_strand_hts_tapes: int,
 ):
-    """
-    Plot the geometry of a CroCo strand cable.
+    """Plot the geometry of a CroCo strand cable.
 
-    :param axis: The matplotlib axis to plot on.
-    :type axis: matplotlib.axes._axes.Axes
-    :param dia_croco_strand: Diameter of the CroCo strand (in meters).
-    :type dia_croco_strand: float
-    :param dx_croco_strand_copper: Thickness of the copper layer (in meters).
-    :type dx_croco_strand_copper: float
-    :param dr_hts_tape: Radius of the HTS tape stack (in meters).
-    :type dr_hts_tape: float
-    :param dx_croco_strand_tape_stack: Height of the HTS tape stack (in meters).
-    :type dx_croco_strand_tape_stack: float
-    :param n_croco_strand_hts_tapes: Number of HTS tape layers in the stack.
-    :type n_croco_strand_hts_tapes: int
+    Parameters
+    ----------
+    axis : matplotlib.axes._axes.Axes
+        The matplotlib axis to plot on.
+    dia_croco_strand : float
+        Diameter of the CroCo strand (in meters).
+    dx_croco_strand_copper : float
+        Thickness of the copper layer (in meters).
+    dr_hts_tape : float
+        Radius of the HTS tape stack (in meters).
+    dx_croco_strand_tape_stack : float
+        Height of the HTS tape stack (in meters).
+    n_croco_strand_hts_tapes : int
+        Number of HTS tape layers in the stack.
     """
     # Plot a circle with the given diameter and copper edges
     circle = Circle(
@@ -11714,7 +11885,7 @@ def plot_fusion_rate_contours(
     fig2,
     mfile: mf.MFile,
     scan: int,
-) -> None:
+):
     fusrat_plasma_dt_profile = []
     fusrat_plasma_dd_triton_profile = []
     fusrat_plasma_dd_helion_profile = []
@@ -11890,7 +12061,7 @@ def plot_beta_profiles(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.set_ylim(bottom=0.0)
 
 
-def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: mf.MFile, scan: int) -> None:
+def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: mf.MFile, scan: int):
     r_tf_outboard_mid = mfile.get("r_tf_outboard_mid", scan=scan)
     n_tf_coils = mfile.get("n_tf_coils", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
@@ -12390,7 +12561,17 @@ def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: mf.MFile, scan: int):
 
 
 def plot_debye_length_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
-    """Plot the Debye length profile on the given axis."""
+    """Plot the Debye length profile on the given axis.
+
+    Parameters
+    ----------
+    axis :
+
+    mfile_data :
+
+    scan :
+
+    """
     len_plasma_debye_electron_profile = [
         mfile_data.data[f"len_plasma_debye_electron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
@@ -12419,7 +12600,17 @@ def plot_debye_length_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
 
 
 def plot_velocity_profile(axis, mfile_data, scan):
-    """Plot the electron thermal velocity profile on the given axis."""
+    """Plot the electron thermal velocity profile on the given axis.
+
+    Parameters
+    ----------
+    axis :
+
+    mfile_data :
+
+    scan :
+
+    """
     vel_plasma_electron_profile = [
         mfile_data.data[f"vel_plasma_electron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
@@ -12465,7 +12656,17 @@ def plot_velocity_profile(axis, mfile_data, scan):
 
 
 def plot_electron_frequency_profile(axis, mfile_data, scan):
-    """Plot the electron thermal frequency profile on the given axis."""
+    """Plot the electron thermal frequency profile on the given axis.
+
+    Parameters
+    ----------
+    axis :
+
+    mfile_data :
+
+    scan :
+
+    """
     freq_plasma_electron_profile = [
         mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
@@ -12540,7 +12741,17 @@ def plot_ion_frequency_profile(axis, mfile_data, scan):
 
 
 def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
-    """Plot the plasma coloumb logarithms on the given axis."""
+    """Plot the plasma coloumb logarithms on the given axis.
+
+    Parameters
+    ----------
+    axis :
+
+    mfile_data :
+
+    scan :
+
+    """
     plasma_coulomb_log_electron_electron_profile = [
         mfile_data.data[f"plasma_coulomb_log_electron_electron_profile{i}"].get_scan(
             scan
@@ -12592,7 +12803,17 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
 
 
 def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, scan: int):
-    """Plot the equality constraints for a solution and their normalised residuals"""
+    """Plot the equality constraints for a solution and their normalised residuals
+
+    Parameters
+    ----------
+    axis: plt.Axes :
+
+    m_file_data: mf.MFile :
+
+    scan: int :
+
+    """
 
     y_labels = []
     y_pos = []
@@ -12628,7 +12849,7 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, sc
             # Remove trailing underscores and replace underscores between words with spaces
             var_label = var_label.rstrip("_").replace("_", " ")
 
-        # Plot the normalized residual as a bar
+        # Plot the normalised residual as a bar
         axis.barh(
             n_plot,
             con_norm_residual,
@@ -12673,7 +12894,17 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, sc
 
 
 def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan: int):
-    """Plot the inequality constraints for a solution and where they lay within their bounds"""
+    """Plot the inequality constraints for a solution and where they lay within their bounds
+
+    Parameters
+    ----------
+    axis: plt.Axes :
+
+    m_file: mf.MFile :
+
+    scan: int :
+
+    """
 
     y_labels = []
     y_pos = []
@@ -12707,7 +12938,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
         # Unit type of the constraint
         con_units = m_file.data[f"ineq_units_con{n:03d}"].get_scan(scan).strip("'`")
 
-        # Add a vertical line at the normalized constraint bounds of 0 and 1
+        # Add a vertical line at the normalised constraint bounds of 0 and 1
         axis.axvline(
             0.0,
             color="red",
@@ -12732,16 +12963,16 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
         # Calculate the normalised constraint threshold depending if the constraint is an upper
         # or lower limit
         if con_symbol == "'<='":
-            normalized_value = 1 - con_residual_norm
-            bar_left = normalized_value
-            bar_width = 1 - normalized_value
+            normalised_value = 1 - con_residual_norm
+            bar_left = normalised_value
+            bar_width = 1 - normalised_value
         else:
-            normalized_value = con_residual_norm
+            normalised_value = con_residual_norm
             bar_left = 0
-            bar_width = normalized_value
+            bar_width = normalised_value
 
         # If the constraint value is very close to the bound then plot a square marker at the bound
-        if np.isclose(normalized_value, 1.0, atol=1e-3):
+        if np.isclose(normalised_value, 1.0, atol=1e-3):
             axis.plot(
                 1,
                 n_plot,
@@ -12750,7 +12981,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
                 markersize=8,
                 zorder=5,
             )
-        elif np.isclose(normalized_value, 0.0, atol=1e-3):
+        elif np.isclose(normalised_value, 0.0, atol=1e-3):
             axis.plot(
                 0,
                 n_plot,
@@ -12784,8 +13015,8 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
             fontsize=8,
             color=(
                 "orange"
-                if np.isclose(normalized_value, 1.0, atol=1e-3)
-                or np.isclose(normalized_value, 0.0, atol=1e-3)
+                if np.isclose(normalised_value, 1.0, atol=1e-3)
+                or np.isclose(normalised_value, 0.0, atol=1e-3)
                 else "green"
             ),
             bbox={
@@ -12800,7 +13031,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
         if con_symbol == "'<='":
             # Add the constraint symbol and bound as text
             axis.text(
-                1.02,  # Position text slightly to the right of the normalized bound
+                1.02,  # Position text slightly to the right of the normalised bound
                 n_plot,
                 f"$\\leq$ {con_bound:,.8g} {con_units}",
                 va="center",
@@ -12810,7 +13041,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
             )
         else:  # con_symbol == ">="
             axis.text(
-                -0.025,  # Position text slightly to the left of the normalized bound
+                -0.025,  # Position text slightly to the left of the normalised bound
                 n_plot,
                 f"$\\geq$ {con_bound:,.8g} {con_units}",
                 va="center",
@@ -12843,12 +13074,20 @@ def main_plot(
 ):
     """Function to create radial and vertical build plot on given figure.
 
-    Arguments:
-      fig1 --> figure object to add plot to.
-      fig2 --> figure object to add plot to.
-      m_file --> MFILE.DAT data to read
-      scan --> scan to read from MFILE.DAT
-      imp --> path to impurity data
+    Parameters
+    ----------
+    figs :
+        figure object to add plot to
+    m_file :
+        MFILE
+    scan :
+        scan to read from MFILE
+    imp :
+        path to impurity data
+    demo_ranges: bool :
+         (Default value = False)
+    colour_scheme:
+
     """
 
     # Checking the impurity data folder

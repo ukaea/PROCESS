@@ -3,10 +3,6 @@
 File for reading IN.DATs
 Version 2 (mainly for use with IN.DAT created from UI)
 
-James Morris
-CCFE
-11/12/14
-
 Notes:
     + 24/11/2021: Global dictionary variables moved within the functions
                 to avoid cyclic dependencies. This is because the dicts
@@ -32,8 +28,15 @@ ioptimz_des = {
 def fortran_python_scientific(var_value):
     """Convert FORTRAN scientific notation to Python notation
 
-    :param var_value: variable value
-    :return: value with 'd/D' notation swapped for 'e/E' notation
+     Parameters
+     ----------
+     var_value:
+         variable value
+
+     Returns
+     -------
+    :
+         value with 'd/D' notation swapped for 'e/E' notation
     """
     return var_value.replace("D", "e").replace("d", "e")
 
@@ -41,8 +44,15 @@ def fortran_python_scientific(var_value):
 def remove_empty_lines(lines):
     """Function to remove empty lines from list.
 
-    :param lines: list of lines (type=list)
-    :return: list of lines with empty lines removed (type=list)
+     Parameters
+     ----------
+     lines:
+         list of lines (type=list)
+
+     Returns
+     -------
+    :
+         list of lines with empty lines removed (type=list)
     """
     return [line for line in lines if line.strip(" ") != "\n"]
 
@@ -50,16 +60,31 @@ def remove_empty_lines(lines):
 def is_title(line):
     """Function to determine if line is title line
 
-    :param line: line from IN.DAT
-    :return: True/False if line is a title or header.
+     Parameters
+     ----------
+     line:
+         line from IN.DAT
+
+     Returns
+     -------
+    :
+         True/False if line is a title or header.
     """
     return line[:2] == "*-" or line[:3] == "***" or line[0] == "$"
 
 
 def is_comment(line):
     """Function to determine if line is a commented line
-    :param line: line from IN.DAT
-    :return: True/False if line is a commented line
+
+     Parameters
+     ----------
+     line:
+         line from IN.DAT
+
+     Returns
+     -------
+    :
+         True/False if line is a commented line
     """
     return line[0] == "*"
 
@@ -67,8 +92,15 @@ def is_comment(line):
 def is_iteration_variable(name):
     """Function to determine if item is an iteration variable
 
-    :param name: Name of the variable
-    :return: True/False if 'ixc' is in name
+     Parameters
+     ----------
+     name:
+         Name of the variable
+
+     Returns
+     -------
+    :
+         True/False if 'ixc' is in name
     """
     return "ixc" in name
 
@@ -76,8 +108,15 @@ def is_iteration_variable(name):
 def is_constraint_equation(name):
     """Function to determine if item is constraint equation
 
-    :param name: Name of the variable
-    :return: True/False if 'icc' is in name
+     Parameters
+     ----------
+     name:
+         Name of the variable
+
+     Returns
+     -------
+    :
+         True/False if 'icc' is in name
     """
     return "icc" in name
 
@@ -85,8 +124,15 @@ def is_constraint_equation(name):
 def is_bound(name):
     """Function to determine if item is a bound
 
-    :param name: Name of the variable
-    :return: True/False if 'bound' is in name
+     Parameters
+     ----------
+     name:
+         Name of the variable
+
+     Returns
+     -------
+    :
+         True/False if 'bound' is in name
     """
     return "bound" in name
 
@@ -94,8 +140,15 @@ def is_bound(name):
 def is_array(name):
     """Function to determine if item is an array
 
-    :param name: Name of the variable
-    :return: True/False if name is of an array
+     Parameters
+     ----------
+     name:
+         Name of the variable
+
+     Returns
+     -------
+    :
+         True/False if name is of an array
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
@@ -112,8 +165,15 @@ def is_array(name):
 def find_line_type(line):
     """Function to find line type
 
-    :param line: Line to find type of
-    :return: Return string describing the line type
+     Parameters
+     ----------
+     line:
+         Line to find type of
+
+     Returns
+     -------
+    :
+         Return string describing the line type
     """
 
     # Split variable name from line
@@ -150,8 +210,15 @@ def find_line_type(line):
 def find_parameter_group(name):
     """Function to find the module which the parameter belongs to.
 
-    :param name: Parameter name
-    :return: Return the module the parameter belongs to
+     Parameters
+     ----------
+     name:
+         Parameter name
+
+     Returns
+     -------
+    :
+         Return the module the parameter belongs to
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
@@ -166,9 +233,13 @@ def find_parameter_group(name):
 def write_title(title, out_file):
     """Function to write title line to file with fixed width
 
-    :param title: The name of the section
-    :param out_file: Output file for new IN.DAT
-    :return: Nothing
+    Parameters
+    ----------
+    title:
+        The name of the section
+    out_file:
+        Output file for new IN.DAT
+
     """
 
     out_file.write("\n")
@@ -186,9 +257,17 @@ def get_constraint_equations(data):
     Use the constraint equation numbers from IN.DAT to find the comment
     associated with them in the source dictionary, then return both.
 
-    :param dict data: Data dictionary for the IN.DAT information
-    :return: dict of the constraint numbers and their comments
-    :rtype: dict
+    Parameters
+    ----------
+    dict:
+        data: Data dictionary for the IN.DAT information
+    data :
+
+
+    Returns
+    -------
+    dict
+        dict of the constraint numbers and their comments
     """
     constraints = {}
 
@@ -214,9 +293,13 @@ def get_constraint_equations(data):
 def write_constraint_equations(data, out_file):
     """Function to write constraint equation information to file
 
-    :param data: Data dictionary for the IN.DAT information
-    :param out_file: Output file for new IN.DAT
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    out_file:
+        Output file for new IN.DAT
+
     """
 
     # Header
@@ -230,7 +313,7 @@ def write_constraint_equations(data, out_file):
         out_file.write(constraint_line)
 
 
-def get_iteration_variables(data):
+def get_iteration_variables(data: dict):
     """Create the iteration variable information.
 
     Use the iteration variable numbers from IN.DAT to find the comment
@@ -238,9 +321,15 @@ def get_iteration_variables(data):
     from the IN.DAT file to see if upper and/or lower bounds are present, and
     what the value is. Return all this information for each variable.
 
-    :param dict data: Data dictionary for the IN.DAT information
-    :return: variable number, comment, upper and/or lower bounds if present
-    :rtype: dict
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+
+    Returns
+    -------
+    :
+        variable number, comment, upper and/or lower bounds if present
     """
     variables = {}
 
@@ -281,9 +370,12 @@ def get_iteration_variables(data):
 def write_iteration_variables(data, out_file):
     """Function to write iteration variable information to file
 
-    :param data: Data dictionary for the IN.DAT information
-    :param out_file: Output file for new IN.DAT
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    out_file:
+        Output file for new IN.DAT
     """
 
     # Header
@@ -318,11 +410,18 @@ def get_parameters(data, use_string_values=True):
     new IN.DAT files. If False, store the values as their original type, e.g.
     int, float etc. This is used for validating the input file.
 
-    :param dict data: Data dictionary for the IN.DAT information
-    :param bool use_string_values: If True, store all parameter values as
-    strings. If False, preserve parameter value type.
-    :return: dict of parameters containing names, values and comments
-    :rtype: dict
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    use_string_values:
+        If True, store all parameter values as
+        strings. If False, preserve parameter value type.
+
+    Returns
+    -------
+    dict
+        dict of parameters containing names, values and comments
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
@@ -426,9 +525,13 @@ def get_parameters(data, use_string_values=True):
 def write_parameters(data, out_file):
     """Write parameters to file
 
-    :param data: Data dictionary for the IN.DAT information
-    :param out_file: Output file for new IN.DAT
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    out_file:
+        Output file for new IN.DAT
+
     """
     filter_list = ["f_nd_impurity_electrons(", "zref(", "imp_rich", "vmec"]
     # Special parameters that require different formatting
@@ -466,9 +569,13 @@ def write_parameters(data, out_file):
 def add_iteration_variable(data, variable_number):
     """Function to add iteration variable to IN.DAT data dictionary
 
-    :param data: Data dictionary for the IN.DAT information
-    :param variable_number: Iteration variable number to add
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    variable_number:
+        Iteration variable number to add
+
     """
 
     # Check the variable number is not already in the iteration variable list
@@ -483,9 +590,13 @@ def add_iteration_variable(data, variable_number):
 def remove_iteration_variable(data, variable_number):
     """Function to remove iteration variable from the IN.DAT data dictionary
 
-    :param data: Data dictionary for the IN.DAT information
-    :param variable_number: Iteration variable number to remove
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    variable_number:
+        Iteration variable number to remove
+
     """
 
     # Check the variable is in the iteration variable list
@@ -499,9 +610,13 @@ def remove_iteration_variable(data, variable_number):
 def add_constraint_equation(data, equation_number):
     """Function to add constraint equation to the IN.DAT data dictionary
 
-    :param data: Data dictionary for the IN.DAT information
-    :param equation_number: Constraint equation number to add
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    equation_number:
+        Constraint equation number to add
+
     """
 
     # Check the constraint is not already in the constraint equation list
@@ -517,9 +632,13 @@ def remove_constraint_equation(data, equation_number):
     """Function to remove a constraint equation from the IN.DAT data
     dictionary
 
-    :param data: Data dictionary for the IN.DAT information
-    :param equation_number: Constraint equation number to remove
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    equation_number:
+        Constraint equation number to remove
+
     """
 
     # Check the constraint is in
@@ -534,10 +653,15 @@ def remove_constraint_equation(data, equation_number):
 def add_parameter(data, parameter_name, parameter_value):
     """Function to add/change parameter to the IN.DAT data dictionary
 
-    :param data: Data dictionary for the IN.DAT information
-    :param parameter_name: Name of the parameter to add
-    :param parameter_value: Value of the parameter to add
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    parameter_name:
+        Name of the parameter to add
+    parameter_value:
+        Value of the parameter to add
+
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
@@ -579,9 +703,13 @@ def add_parameter(data, parameter_name, parameter_value):
 def remove_parameter(data, parameter_name):
     """Function to remove parameter from the IN.DAT data dictionary
 
-    :param data: Data dictionary for the IN.DAT information
-    :param parameter_name: Name of the parameter to remove
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    parameter_name:
+        Name of the parameter to remove
+
     """
 
     # Check that the parameter exists in the data dictionary
@@ -597,11 +725,16 @@ def remove_parameter(data, parameter_name):
 def change_array(data, name, array_id, array_val):
     """Function to change value in generic array
 
-    :param data: Data dictionary for the IN.DAT information
-    :param name: generic array name
-    :param array_id: generic array index
-    :param array_val: generic array value
-    :return:
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    name:
+        generic array name
+    array_id:
+        generic array index
+    array_val:
+        generic array value
     """
 
     data[name].value[array_id] = array_val
@@ -618,12 +751,18 @@ def add_bound(data, bound, bound_type, bound_value):
     """Function to add/change a bound to the bounds entry in the IN.dat data
     dictionary
 
-    :param data: Data dictionary for the IN.DAT information
-    :param bound: Bound number associated with iteration variable number to
-                  change
-    :param bound_type: States whether bound is upper of lower bound
-    :param bound_value: New value of the bound
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    bound:
+        Bound number associated with iteration variable number to
+        change
+    bound_type:
+        States whether bound is upper of lower bound
+    bound_value:
+        New value of the bound
+
     """
 
     # Put bound type into lower cases for consistency
@@ -648,11 +787,16 @@ def remove_bound(data, bound, bound_type):
     """Function to remove a bound from the bounds entry in the IN.DAT data
     dictionary
 
-    :param data: Data dictionary for the IN.DAT information
-    :param bound: Bound number associated with iteration variable number to
-                  change
-    :param bound_type: States whether bound is upper or lower bound
-    :return: Nothing
+    Parameters
+    ----------
+    data:
+        Data dictionary for the IN.DAT information
+    bound:
+        Bound number associated with iteration variable number to
+        change
+    bound_type:
+        States whether bound is upper or lower bound
+
     """
 
     # use local variable for cleanliness
@@ -676,9 +820,17 @@ def fortran_float_to_py(f: str) -> str:
 def parameter_type(name, value):
     """Function to return value in correct format for altering values etc.
 
-    :param name: Name of parameter to check type
-    :param value: Value of parameter to format
-    :return: Formatted value
+    Parameters
+    ----------
+    name:
+        Name of parameter to check type
+    value:
+        Value of parameter to format
+
+    Returns
+    -------
+    :
+        Formatted value
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
@@ -747,10 +899,18 @@ def parameter_type(name, value):
 def variable_constraint_type_check(item_number, var_type):
     """Function to put input into correct format for altering values etc.
 
-    :param item_number: Number associated with variable or constraint
-    :param var_type: States whether item is iteration variable or constraint
-                     equation
-    :return: Formatted item_number
+    Parameters
+    ----------
+    item_number:
+        Number associated with variable or constraint
+    var_type:
+        States whether item is iteration variable or constraint
+        equation
+
+    Returns
+    -------
+    :
+        Formatted item_number
     """
 
     # Check if item is in string format
@@ -807,9 +967,17 @@ def variable_constraint_type_check(item_number, var_type):
 def variable_bound_check(bound_number, bound_type):
     """Function to put bound_number and bound_type into correct format
 
-    :param bound_number: Bound number to check
-    :param bound_type: States whether bound is upper or lower bound
-    :return: Formatted bound number and bound type
+    Parameters
+    ----------
+    bound_number:
+        Bound number to check
+    bound_type:
+        States whether bound is upper or lower bound
+
+    Returns
+    -------
+    :
+         Formatted bound number and bound type
     """
 
     # put bound type into lower case for consistency
@@ -854,18 +1022,24 @@ def variable_bound_check(bound_number, bound_type):
 
 
 class INVariable:
-    def __init__(self, name, value, v_type, parameter_group, comment):
-        """Class to stores the information of a single variable from the
+    """Class to stores the information of a single variable from the
         IN.DAT file
 
-        :param name: Item name
-        :param value: Item value
-        :param v_type: Type of item
-        :param parameter_group: PROCESS variable group item belongs to
-        :param comment: Comment for item
-        :return: Nothing
-        """
+    Parameters
+    ----------
+    name:
+        Item name
+    value:
+        Item value
+    v_type:
+        Type of item
+    parameter_group:
+        PROCESS variable group item belongs to
+    comment:
+        Comment for item
+    """
 
+    def __init__(self, name, value, v_type, parameter_group, comment):
         self.name = name
         self.value = value
         self.v_type = v_type
@@ -889,28 +1063,30 @@ class INVariable:
 
     @property
     def get_value(self):
-        """Return value in correct format"""
+        """ """
         if self.v_type != "Bound":
             return parameter_type(self.name, self.value)
         return self.value
 
 
 class InDat:
-    """
-    Class 'InDat' for handling IN.DAT data. It handles
+    """Class 'InDat' for handling IN.DAT data. It handles
 
-        - Reading IN.DAT files
-        - Writing IN.DAT files
-        - Storing information in dictionary for use in other codes
-        - Alterations to IN.DAT
+    - Reading IN.DAT files
+    - Writing IN.DAT files
+    - Storing information in dictionary for use in other codes
+    - Alterations to IN.DAT
     """
 
     def __init__(self, filename="IN.DAT", start_line=0):
         """Initialise class
 
-        :param filename: Name of input IN.DAT
-        :param start_line: Line to start reading from
-        :return: Nothing
+        Parameters
+        ----------
+        filename:
+            Name of input IN.DAT
+        start_line:
+            Line to start reading from
         """
 
         self.filename = filename
@@ -968,9 +1144,13 @@ class InDat:
         """Function to process the line and return the appropriate INVariable
         object
 
-        :param line_type: Type of information the line contains
-        :param line: Line from IN.DAT to process
-        :return: Nothing
+        Parameters
+        ----------
+        line_type:
+            Type of information the line contains
+        line:
+            Line from IN.DAT to process
+
         """
 
         # Load dicts from dicts JSON file
@@ -1041,8 +1221,11 @@ class InDat:
     def process_parameter(self, line):
         """Function to process parameter entries in IN.DAT
 
-        :param line: Line from IN.DAT to process
-        :return: Nothing
+        Parameters
+        ----------
+        line:
+            Line from IN.DAT to process
+
         """
         # Load dicts from dicts JSON file
         dicts = get_dicts()
@@ -1101,8 +1284,11 @@ class InDat:
     def process_constraint_equation(self, line):
         """Function to process constraint equation entry in IN.DAT
 
-        :param line: Line from IN.DAT to process
-        :return: Nothing
+        Parameters
+        ----------
+        line:
+            Line from IN.DAT to process
+
         """
 
         # Remove comment from line to make things easier
@@ -1148,8 +1334,11 @@ class InDat:
     def process_iteration_variables(self, line):
         """Function to process iteration variables entry in IN.DAT
 
-        :param line: Line from IN.DAT to process
-        :return: Nothing
+        Parameters
+        ----------
+        line:
+            Line from IN.DAT to process
+
         """
 
         # Remove comment from line to make things easier
@@ -1193,8 +1382,11 @@ class InDat:
     def process_bound(self, line):
         """Function to process bound entries in IN.DAT
 
-        :param line: Line from IN.DAT to process
-        :return: Nothing
+        Parameters
+        ----------
+        line:
+            Line from IN.DAT to process
+
         """
 
         # Initialise bound type
@@ -1237,9 +1429,17 @@ class InDat:
     def process_array(self, line, empty_array):
         """Function to process generic array
 
-        :param line: Line from IN.DAT to process
-        :param empty_array: Default array for this array name
-        :return: nothing
+        Parameters
+        ----------
+        line:
+            Line from IN.DAT to process
+        empty_array:
+            Default array for this array name
+
+        Returns
+        -------
+        type
+            nothing
         """
         # TODO This is a mess after the Fortran module variable
         # re-initialisation work. It is hard to see how this can be improved
@@ -1325,16 +1525,22 @@ class InDat:
 
         If a var is initialised more than once in the input file, the last
         value persists, but the overwriting is recorded here.
-        :param name: The name of the variable being duplicated
-        :type var: str
+
+        Parameters
+        ----------
+        name:
+            The name of the variable being duplicated
         """
         self.duplicates.append(name)
 
     def add_iteration_variable(self, variable_number):
         """Function to add iteration variable to IN.DAT data dictionary
 
-        :param variable_number: Iteration variable number to add
-        :return: Nothing
+        Parameters
+        ----------
+        variable_number:
+            Iteration variable number to add
+
         """
 
         # format iteration variable number
@@ -1347,8 +1553,11 @@ class InDat:
     def remove_iteration_variable(self, variable_number):
         """Function to remove iteration variable to IN.DAT data dictionary
 
-        :param variable_number: Iteration variable number to remove
-        :return: Nothing
+        Parameters
+        ----------
+        variable_number:
+            Iteration variable number to remove
+
         """
 
         # format iteration variable number
@@ -1361,8 +1570,11 @@ class InDat:
     def add_constraint_equation(self, equation_number):
         """Function to add constraint equation to IN.DAT data dictionary
 
-        :param equation_number: Constraint equation number to add
-        :return: Nothing
+        Parameters
+        ----------
+        equation_number:
+            Constraint equation number to add
+
         """
 
         # format constraint equation number
@@ -1377,8 +1589,11 @@ class InDat:
         """Function to remove a constraint equation from IN.DAT data
         dictionary
 
-        :param equation_number: Constraint equation number to remove
-        :return: Nothing
+        Parameters
+        ----------
+        equation_number:
+            Constraint equation number to remove
+
         """
 
         # format constraint equation number
@@ -1392,9 +1607,13 @@ class InDat:
     def add_parameter(self, parameter_name, parameter_value):
         """Function to add/change parameter to IN.DAT data dictionary
 
-        :param parameter_name: Name of parameter to add/change
-        :param parameter_value: Value of parameter to add/change
-        :return: Nothing
+        Parameters
+        ----------
+        parameter_name:
+            Name of parameter to add/change
+        parameter_value:
+            Value of parameter to add/change
+
         """
 
         # add/change parameter to/in IN.DAT data dictionary
@@ -1403,10 +1622,14 @@ class InDat:
     def change_array(self, array_name, array_index, array_value):
         """Function to change value in generic array
 
-        :param array_name: name of generic array to change
-        :param array_index: index of generic array to change
-        :param array_value: value to change array entry to
-        :return:
+        Parameters
+        ----------
+        array_name:
+            name of generic array to change
+        array_index:
+            index of generic array to change
+        array_value:
+            value to change array entry to
         """
 
         # change generic array value in IN.DAT data dictionary
@@ -1415,8 +1638,11 @@ class InDat:
     def remove_parameter(self, parameter_name):
         """Function to remove parameter from IN.DAT data dictionary
 
-        :param parameter_name: Name of parameter to remove
-        :return: Nothing
+        Parameters
+        ----------
+        parameter_name:
+            Name of parameter to remove
+
         """
 
         # remove parameter from IN.DAT data dictionary
@@ -1425,10 +1651,15 @@ class InDat:
     def add_bound(self, bound, bound_type, bound_value):
         """Function to add/change a bound in IN.DAT data dictionary
 
-        :param bound: Bound number to add/change
-        :param bound_type: States whether bound is upper or lower bound
-        :param bound_value: Value of bound to add/change
-        :return: Nothing
+        Parameters
+        ----------
+        bound:
+            Bound number to add/change
+        bound_type:
+            States whether bound is upper or lower bound
+        bound_value:
+            Value of bound to add/change
+
         """
 
         # format bound number and bound type
@@ -1440,9 +1671,13 @@ class InDat:
     def remove_bound(self, bound, bound_type):
         """Function to remove a bound from IN.DAT data dictionary
 
-        :param bound: Bound number to remove
-        :param bound_type: States whether bound is upper or lower bound
-        :return: Nothing
+        Parameters
+        ----------
+        bound:
+            Bound number to remove
+        bound_type:
+            States whether bound is upper or lower bound
+
         """
 
         # format bound number and bound type
@@ -1452,7 +1687,13 @@ class InDat:
         remove_bound(self.data, bound, bound_type)
 
     def write_in_dat(self, output_filename="new_IN.DAT"):
-        """Function to write data to output file called 'output_filename'"""
+        """Function to write data to output file called 'output_filename'
+
+        Parameters
+        ----------
+        output_filename:
+             (Default value = "new_IN.DAT")
+        """
 
         # create and open output file
         with open(output_filename, "w") as output:
@@ -1524,10 +1765,15 @@ class StructuredInputData:
     def get_param(self, var_name):
         """Get a parameter's dict from the data.
 
-        :param var_name: The name of the parameter to be returned
-        :type var_name: str
-        :return: Dictionary of parameter's information, or None if not found
-        :rtype: dict
+        Parameters
+        ----------
+        var_name:
+            The name of the parameter to be returned
+
+        Returns
+        -------
+        dict
+            Dictionary of parameter's information, or None if not found
         """
         modules = self.data["parameters"]
 
@@ -1541,10 +1787,15 @@ class StructuredInputData:
     def is_param_defined(self, var_name):
         """Check if a parameter is defined or not in the input data.
 
-        :param var_name: Name of the parameter to be checked
-        :type var_name: str
-        :return: True if defined, False if not
-        :rtype: bool
+        Parameters
+        ----------
+        var_name:
+            Name of the parameter to be checked
+
+        Returns
+        -------
+        bool
+            True if defined, False if not
         """
         defined = False
 
@@ -1556,10 +1807,15 @@ class StructuredInputData:
     def get_param_value(self, var_name):
         """Gets the value of a parameter from the input data.
 
-        :param var_name: The name of the parameter
-        :type var_name: str
-        :return: Value of that parameter; can be any type. None if not found.
-        :rtype: int, float
+        Parameters
+        ----------
+        var_name:
+            The name of the parameter
+
+        Returns
+        -------
+        int, float
+            Value of that parameter; can be any type. None if not found.
         """
         value = None
         var_dict = self.get_param(var_name)

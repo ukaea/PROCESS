@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class FirstWall:
-    def __init__(self) -> None:
+    def __init__(self):
         self.outfile = constants.NOUT
         self.blanket_library = BlanketLibrary(fw=self)
 
@@ -105,7 +105,29 @@ class FirstWall:
         dr_fw_inboard: float,
         dr_fw_outboard: float,
     ) -> float:
-        """Calculate the half-height of the first wall."""
+        """Calculate the half-height of the first wall.
+
+        Parameters
+        ----------
+        z_plasma_xpoint_lower:
+
+        dz_xpoint_divertor:
+
+        dz_divertor:
+
+        dz_blkt_upper:
+
+        z_plasma_xpoint_upper:
+
+        dz_fw_plasma_gap:
+
+        n_divertors: int :
+
+        dr_fw_inboard:
+
+        dr_fw_outboard:
+
+        """
 
         #  Half-height of first wall (internal surface)
         z_bottom = (
@@ -161,7 +183,23 @@ class FirstWall:
         dr_fw_plasma_gap_inboard: float,
         dr_fw_plasma_gap_outboard: float,
     ) -> tuple[float, float, float]:
-        """Calculate the first wall areas for an elliptical cross-section."""
+        """Calculate the first wall areas for an elliptical cross-section.
+
+        Parameters
+        ----------
+        rmajor:
+
+        rminor:
+
+        triang:
+
+        dz_fw_half:
+
+        dr_fw_plasma_gap_inboard:
+
+        dr_fw_plasma_gap_outboard:
+
+        """
 
         # Cross-section is assumed to be defined by two ellipses
         #  Major radius to centre of inboard and outboard ellipses
@@ -201,20 +239,23 @@ class FirstWall:
     ) -> tuple[float, float, float]:
         """Apply first wall coverage factors to calculate actual first wall areas.
 
-        :param n_divertors: Number of divertors (1 or 2).
-        :type n_divertors: int
-        :param f_ster_div_single: Fractional area of first wall sterically blocked by single divertor.
-        :type f_ster_div_single: float
-        :param f_a_fw_outboard_hcd: Fractional area of outboard first wall covered by high heat flux components.
-        :type f_a_fw_outboard_hcd: float
-        :param a_fw_inboard_full_coverage: First wall inboard area assuming 100% coverage (m^2).
-        :type a_fw_inboard_full_coverage: float
-        :param a_fw_outboard_full_coverage: First wall outboard area assuming 100% coverage (m^2).
-        :type a_fw_outboard_full_coverage: float
+        Parameters
+        ----------
+        n_divertors : int
+            Number of divertors (1 or 2).
+        f_ster_div_single : float
+            Fractional area of first wall sterically blocked by single divertor.
+        f_a_fw_outboard_hcd : float
+            Fractional area of outboard first wall covered by high heat flux components.
+        a_fw_inboard_full_coverage : float
+            First wall inboard area assuming 100% coverage (m^2).
+        a_fw_outboard_full_coverage : float
+            First wall outboard area assuming 100% coverage (m^2).
 
-        :returns: Contains first wall inboard area, outboard area, and total area (m^2).
-        :rtype: tuple[float, float, float]
-
+        Returns
+        -------
+        tuple[float, float, float]
+            Contains first wall inboard area, outboard area, and total area (m^2).
         """
         if n_divertors == 2:
             # Double null configuration
@@ -258,26 +299,28 @@ class FirstWall:
         pnuc_deposited: float,
         label: str,
     ) -> tuple:
-        """
-        Thermo-hydraulic calculations for the first wall.
+        """Thermo-hydraulic calculations for the first wall.
 
-        :param output: Flag to indicate if output is required.
-        :type output: bool
-        :param radius_fw_channel: First wall coolant channel radius (m).
-        :type radius_fw_channel: float
-        :param dr_fw: First wall thickness (m).
-        :type dr_fw: float
-        :param a_fw: Area of first wall section under consideration (m^2).
-        :type a_fw: float
-        :param prad_incident: Radiation surface heat flux on first wall (MW).
-        :type prad_incident: float
-        :param pnuc_deposited: Nuclear power deposited in FW (MW).
-        :type pnuc_deposited: float
-        :param label: Information string.
-        :type label: str
+        Parameters
+        ----------
+        output:
+            Flag to indicate if output is required.
+        radius_fw_channel:
+            First wall coolant channel radius (m).
+        dr_fw:
+            First wall thickness (m).
+        a_fw:
+            Area of first wall section under consideration (m^2).
+        prad_incident:
+            Radiation surface heat flux on first wall (MW).
+        pnuc_deposited:
+            Nuclear power deposited in FW (MW).
+        label:
+            Information string.
 
-        :returns: Contains peak first wall temperature (K), coolant specific heat capacity at constant pressure (J/kg/K),
-        :rtype: tuple
+        Returns
+        -------
+        tuple
 
         Detailed thermal hydraulic model for the blanket (first wall + breeding zone).
         Given the heating incident on the first wall, and the coolant outlet temperature,
@@ -286,6 +329,7 @@ class FirstWall:
         The calculation of the maximum temperature is described by Gardner:
         "Temperature distribution in the first wall", K:\\Power Plant Physics and Technology\\ PROCESS\\PROCESS References & Systems Codes\\Pulsed option - Gardner.
         This is in turn taken from "Methods of First Wall Structural Analysis with Application to the Long Pulse Commercial Tokamak Reactor Design", R.J. LeClaire, MIT, PFC/RR-84-9.
+        Contains peak first wall temperature (K), coolant specific heat capacity at constant pressure (J/kg/K),
         """
 
         # First wall volume (inboard or outboard depending on arguments) (m^3)
@@ -556,18 +600,24 @@ class FirstWall:
         )
 
     def fw_thermal_conductivity(self, temp: float) -> float:
-        """
-        Calculates the thermal conductivity of the first wall material (Eurofer97).
+        """Calculates the thermal conductivity of the first wall material (Eurofer97).
 
-        :param temp: Property temperature in Kelvin (K).
-        :type temp: float
-        :return: Thermal conductivity of Eurofer97 in W/m/K.
-        :rtype: float
+        Parameters
+        ----------
+        temp:
+            Property temperature in Kelvin (K).
 
-        :notes:
-            Valid up to about 800 K
+        Returns
+        -------
+        :
+            Thermal conductivity of Eurofer97 in W/m/K.
 
-        :references:
+        Notes
+        -----
+        Valid up to about 800 K
+
+        References
+        ----------
             - A. A. Tavassoli et al., “Materials design data for reduced activation martensitic steel type EUROFER,”
             Journal of Nuclear Materials, vol. 329-333, pp. 257-262, Aug. 2004,
             doi: https://doi.org/10.1016/j.jnucmat.2004.04.020.
@@ -593,32 +643,39 @@ class FirstWall:
         thermcond_coolant: float,
         roughness_fw_channel: float,
     ) -> float:
-        """
-        Calculate heat transfer coefficient using Gnielinski correlation.
+        """Calculate heat transfer coefficient using Gnielinski correlation.
 
-        :param mflux_coolant: Coolant mass flux in a single channel (kg/m^2/s).
-        :type mflux_coolant: float
-        :param den_coolant: Coolant density (average of inlet and outlet) (kg/m^3).
-        :type den_coolant: float
-        :param radius_channel: Coolant pipe radius (m).
-        :type radius_channel: float
-        :param heatcap_coolant: Coolant specific heat capacity (average of inlet and outlet) (J/kg/K).
-        :type heatcap_coolant: float
-        :param visc_coolant: Coolant viscosity (average of inlet and outlet) (Pa.s).
-        :type visc_coolant: float
-        :param thermcond_coolant: Thermal conductivity of coolant (average of inlet and outlet) (W/m.K).
-        :type thermcond_coolant: float
-        :param roughness_fw_channel: Roughness of the first wall coolant channel (m).
-        :type roughness_fw_channel: float
-        :return: Heat transfer coefficient (W/m^2K).
-        :rtype: float
+        Parameters
+        ----------
+        mflux_coolant:
+            Coolant mass flux in a single channel (kg/m^2/s).
+        den_coolant:
+            Coolant density (average of inlet and outlet) (kg/m^3).
+        radius_channel:
+            Coolant pipe radius (m).
+        heatcap_coolant:
+            Coolant specific heat capacity (average of inlet and outlet) (J/kg/K).
+        visc_coolant:
+            Coolant viscosity (average of inlet and outlet) (Pa.s).
+        thermcond_coolant:
+            Thermal conductivity of coolant (average of inlet and outlet) (W/m.K).
+        roughness_fw_channel:
+            Roughness of the first wall coolant channel (m).
 
-        :notes:
-            Gnielinski correlation. Ignore the distinction between wall and
-            bulk temperatures. Valid for: 3000 < Re < 5e6, 0.5 < Pr < 2000
+        Returns
+        -------
+        :
+            Heat transfer coefficient (W/m^2K).
 
-        :references:
+        Notes
+        -----
+        Gnielinski correlation. Ignore the distinction between wall and
+        bulk temperatures. Valid for: 3000 < Re < 5e6, 0.5 < Pr < 2000
+
+        References
+        ----------
             - https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation
+
         """
         # Calculate pipe diameter (m)
         diameter = 2 * radius_channel
@@ -667,24 +724,29 @@ class FirstWall:
     def darcy_friction_haaland(
         self, reynolds: float, roughness_fw_channel: float, radius_fw_channel: float
     ) -> float:
-        """
-        Calculate Darcy friction factor using the Haaland equation.
+        """Calculate Darcy friction factor using the Haaland equation.
 
-        :param reynolds: Reynolds number.
-            :type reynolds: float
-            :param roughness_fw_channel: Roughness of the first wall coolant channel (m).
-            :type roughness_fw_channel: float
-            :param radius_fw_channel: Radius of the first wall coolant channel (m).
-            :type radius_fw_channel: float
+        Parameters
+        ----------
+        reynolds
+            Reynolds number.
+        roughness_fw_channel
+            Roughness of the first wall coolant channel (m).
+        radius_fw_channel
+            Radius of the first wall coolant channel (m).
 
-            :return: Darcy friction factor.
-            :rtype: float
+        Returns
+        -------
+        :
+            Darcy friction factor.
 
-        :Notes:
+        Notes
+        -----
             The Haaland equation is an approximation to the implicit Colebrook-White equation.
             It is used to calculate the Darcy friction factor for turbulent flow in pipes.
 
-        :References:
+        References
+        ----------
             - https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
         """
 
@@ -703,29 +765,30 @@ class FirstWall:
         len_fw_channel: float,
         dx_fw_module: float,
     ) -> tuple[int, int]:
-        """
-        Calculate the total number of first wall channels for inboard and outboard sections.
+        """Calculate the total number of first wall channels for inboard and outboard sections.
 
-        Args:
-            a_fw_inboard (float): Area of the inboard first wall section (m^2).
-            a_fw_outboard (float): Area of the outboard first wall section (m^2).
-            len_fw_channel (float): Length of each first wall channel (m).
-            dx_fw_module (float): Toroidal width of each first wall module (m).
+        Parameters
+        ----------
+        a_fw_inboard:
+            Area of the inboard first wall section (m^2).
+        a_fw_outboard:
+            Area of the outboard first wall section (m^2).
+        len_fw_channel:
+            Length of each first wall channel (m).
+        dx_fw_module:
+            Toroidal width of each first wall module (m).
 
-        Returns:
-            tuple: Number of inboard and outboard first wall channels.
+        Returns
+        -------
+        tuple
+            Number of inboard and outboard first wall channels.
         """
         n_fw_inboard_channels = a_fw_inboard / (len_fw_channel * dx_fw_module)
         n_fw_outboard_channels = a_fw_outboard / (len_fw_channel * dx_fw_module)
         return int(n_fw_inboard_channels), int(n_fw_outboard_channels)
 
     def output_fw_geometry(self):
-        """
-        Outputs the first wall geometry details to the output file.
-
-        Returns:
-            None
-        """
+        """Outputs the first wall geometry details to the output file."""
         po.oheadr(self.outfile, "First wall build")
 
         po.ovarrf(
@@ -798,12 +861,7 @@ class FirstWall:
         )
 
     def output_fw_pumping(self):
-        """
-        Outputs the first wall pumping details to the output file.
-
-        Returns:
-            None
-        """
+        """Outputs the first wall pumping details to the output file."""
         po.oheadr(self.outfile, "First wall pumping")
 
         po.ovarst(
