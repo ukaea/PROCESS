@@ -57,10 +57,10 @@ from process.geometry.vacuum_vessel_geometry import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
-from process.impurity_radiation import read_impurity_file
 from process.io.mfile import MFileErrorClass
 from process.models.build import Build
 from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
+from process.models.physics.impurity_radiation import read_impurity_file
 from process.objectives import OBJECTIVE_NAMES
 from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 

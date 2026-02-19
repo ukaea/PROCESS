@@ -5,7 +5,7 @@ from typing import NamedTuple
 import numpy as np
 import pytest
 
-import process.impurity_radiation as impurity_radiation
+import process.models.physics.impurity_radiation as impurity_radiation
 from process.data_structure import impurity_radiation_module
 
 

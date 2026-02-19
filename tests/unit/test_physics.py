@@ -11,7 +11,6 @@ from process.data_structure import (
     impurity_radiation_module,
     physics_variables,
 )
-from process.impurity_radiation import initialise_imprad
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -20,6 +19,7 @@ from process.models.physics.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
+from process.models.physics.impurity_radiation import initialise_imprad
 from process.physics import (
     DetailedPhysics,
     Physics,

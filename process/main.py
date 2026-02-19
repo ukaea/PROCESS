@@ -49,7 +49,6 @@ import process
 import process.data_structure as data_structure
 import process.init as init
 from process import constants
-from process.impurity_radiation import initialise_imprad
 from process.io import (
     mfile,
     plot_plotly_sankey,
@@ -90,6 +89,7 @@ from process.models.physics.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
+from process.models.physics.impurity_radiation import initialise_imprad
 from process.pfcoil import PFCoil
 from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_geometry import PlasmaGeom

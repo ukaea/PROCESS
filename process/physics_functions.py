@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-import process.impurity_radiation as impurity
+import process.models.physics.impurity_radiation as impurity
 from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
