@@ -1041,7 +1041,7 @@ class IonCyclotron:
         Notes
         -----
         - The 0.1 term is to convert the temperature into 10 keV units
-        - The original formula is for the normalised current drive efficnecy
+        - The original formula is for the normalised current drive efficiency
         hence the addition of the density and majro radius terms to get back to an absolute value
 
         References

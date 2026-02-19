@@ -387,10 +387,6 @@ def gl_nbti(
         - b_critical : Critical magnetic field [T].
         - t_critical : Critical temperature [K].
 
-    Notes
-    -----
-
-
     References
     ----------
     - Model based on: S B L Chislett-Mcdonald, Y. Tsui, E. Surrey, M. Kovari, and D. P. Hampshire,
@@ -487,9 +483,6 @@ def gl_rebco(
         - j_critical: Critical current density in superconductor (A/m²).
         - b_critical: Critical magnetic field (T).
         - temp_critical: Critical temperature (K).
-
-    Notes
-    -----
 
     References
     ----------

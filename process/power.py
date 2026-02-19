@@ -1992,23 +1992,13 @@ class Power:
         """Calculates the TF coil power conversion system parameters
         for superconducting coils
 
-
-        This routine calculates the TF power conversion system
+        This routine calculates the TF power conversion systemp arameters:
+        floor space, power supplies, bussing,
+        coil protection equipment, and the associated controls
+        and instrumentation.
 
         Parameters
         ----------
-        coil :
-            protection equipment
-        and :
-            instrumentation
-        FEDC :
-            ORNL
-        run :
-            in TETRA
-        None :
-
-        output: bool
-
         itfka :
 
         rmajor :

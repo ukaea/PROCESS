@@ -2271,47 +2271,37 @@ class BlanketLibrary:
             number long poloidal sections of channel
         label :
             description of calculation
-
-            References:
-
-            [Miy1986]   Miyazaki et al. (1986), Magneto-Hydro-Dynamic Pressure Drop of Lithium
-            Flow in Rectangular Ducts, Fusion Technology, 10:3P2A, 830-836, DOI: 10.13182/FST10-830
-
-            [Mal1995]   Malang and Mattas (1995), Comparison of lithium and the eutectic
-            lead-lithium alloy, two candidate liquid metal breeder materials
-            for self-cooled blankets, Fusion Engineering and Design 27, 399-406
-
-            [Iba2013]   Ibano et al (2013), Nutronics and pumping power analysis on the
-            Tokamak reactor for the fusion-biomass hybrid concept,
-            Fusion Engineering and Design, 88
-
-            [Sho2018]   Shoki et al (2018), MHD pressure drop measurement of PbLi flow
-            in double-bended pipe, Fusion Engineering and Design, 136, 17-23
-
-            [Klu2019]   Kluber et al. (2019), Numerical simulations of 3D magnetohydrodynamic
-            flows in dual-coolant lead lithium blankets, Fusion Engineering and Design,
-            146, 684-687
-
-            [Sua2021]   MHD effects in geometrical sigularities on high velocity breeding
-            blanket designs. Part II, ENR-PRD.BB-T007-D002, EFDA_D_2PDT9U.
-            Also, see asssociated paper: Suarez et al. (2021), On the use of CFD
-            to obtain head loss coefficients in hydraulic systems and it's appliaction
-            to liquid metal flows in nuclear fusion reactor blankets, Plasma. Phys.
-            Control fusion, 63, 124002
-        vel:
-
-        vsc:
-
-        conduct_liq:
-
-        l_channel:
-
-        num_pol: int :
-
-        label: str :
-
         output: bool
              (Default value = False)
+
+        References
+        ----------
+
+        [Miy1986]   Miyazaki et al. (1986), Magneto-Hydro-Dynamic Pressure Drop of Lithium
+        Flow in Rectangular Ducts, Fusion Technology, 10:3P2A, 830-836, DOI: 10.13182/FST10-830
+
+        [Mal1995]   Malang and Mattas (1995), Comparison of lithium and the eutectic
+        lead-lithium alloy, two candidate liquid metal breeder materials
+        for self-cooled blankets, Fusion Engineering and Design 27, 399-406
+
+        [Iba2013]   Ibano et al (2013), Nutronics and pumping power analysis on the
+        Tokamak reactor for the fusion-biomass hybrid concept,
+        Fusion Engineering and Design, 88
+
+        [Sho2018]   Shoki et al (2018), MHD pressure drop measurement of PbLi flow
+        in double-bended pipe, Fusion Engineering and Design, 136, 17-23
+
+        [Klu2019]   Kluber et al. (2019), Numerical simulations of 3D magnetohydrodynamic
+        flows in dual-coolant lead lithium blankets, Fusion Engineering and Design,
+        146, 684-687
+
+        [Sua2021]   MHD effects in geometrical sigularities on high velocity breeding
+        blanket designs. Part II, ENR-PRD.BB-T007-D002, EFDA_D_2PDT9U.
+        Also, see asssociated paper: Suarez et al. (2021), On the use of CFD
+        to obtain head loss coefficients in hydraulic systems and it's appliaction
+        to liquid metal flows in nuclear fusion reactor blankets, Plasma. Phys.
+        Control fusion, 63, 124002
+
         """
         # Magnetic feild strength in IB or OB blanket
         if label == "Inboard blanket breeder liquid":
@@ -2652,7 +2642,8 @@ class BlanketLibrary:
         float
             Elbow coefficient for pressure drop calculation
 
-        :References:
+        References
+        ----------
         - [Ide1969] Idel'Cik, I. E. (1969), Memento des pertes de charge,
         Collection de la Direction des Etudes et Recherches d'Electricité de France.
         """

@@ -1639,7 +1639,8 @@ class Physics:
         """Routine to calculate tokamak plasma physics information
         This routine calculates all the primary plasma physics parameters for a tokamak fusion reactor.
 
-        :References:
+        References
+        ----------
         - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
           https://www.sciencedirect.com/science/article/pii/S0920379614005961
         - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
@@ -2780,7 +2781,8 @@ class Physics:
               normalised internal inductance.
             - This relation is only true for the cyclindrical plasma approximation.
 
-        :References:
+        References
+        ----------
             - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
             International Series of Monographs on Physics, Volume 149.
 
@@ -3489,6 +3491,9 @@ class Physics:
     ) -> tuple[float, float, float, float, float]:
         """Calculate the plasma current.
 
+        This routine calculates the plasma current based on the edge safety factor q95.
+        It will also make the current profile parameters consistent with the q-profile if required.
+
         Parameters
         ----------
         alphaj : float
@@ -3540,19 +3545,10 @@ class Physics:
         ------
         ValueError
             If invalid value for i_plasma_current is provided.
-            Notes
-            -----
         ValueError
             If invalid value for i_plasma_current is provided.
-            Notes
-            -----
-            This routine calculates the plasma current based on the edge safety factor q95.
         ValueError
             If invalid value for i_plasma_current is provided.
-            Notes
-            -----
-            This routine calculates the plasma current based on the edge safety factor q95.
-            It will also make the current profile parameters consistent with the q-profile if required.
 
         References
         ----------
@@ -6963,6 +6959,7 @@ class Physics:
         q0: float,
     ) -> float:
         """Calculate the bootstrap fraction using the first scaling from the Gi et al formula.
+
         Parameters
         ----------
         beta_poloidal :
@@ -6987,20 +6984,20 @@ class Physics:
 
         Notes
         -----
-            - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
-            - Method was done to put the scaling into parameters compatible with the TPC systems code
-            - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
-            curent drive and equilibrium models in the scan
-            - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, traing = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0
-            - Uses parabolic plasma profiles only.
-            - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the f_BS value for reversed shear
-            equilibrium.
+        - Scaling found by solving the Hirshman-Sigmar bootstrap modelusing the matrix inversion method
+        - Method was done to put the scaling into parameters compatible with the TPC systems code
+        - Uses the ACCOME code to create bootstrap current fractions without using the itrative calculations of the
+        current drive and equilibrium models in the scan
+        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, traing = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0
+        - Uses parabolic plasma profiles only.
+        - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the f_BS value for reversed shear
+        equilibrium.
 
         References
         ----------
-            - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
-            Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
-            doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+        - K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,”
+        Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+        doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
 
         """
 
@@ -8801,7 +8798,8 @@ class PlasmaBeta:
              inductance and current profile index.
              - This fit is derived from the DIII-D database for β_N >= 2.5
 
-         :References:
+         References
+         ----------
              - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
              International Series of Monographs on Physics, Volume 149.
 
@@ -8824,7 +8822,8 @@ class PlasmaBeta:
         -------
         float
 
-        :References:
+        References
+        ----------
             The original scaling law normalised beta upper limit.
 
         """
@@ -8850,7 +8849,8 @@ class PlasmaBeta:
             - Uses maximum κ data from NSTX at A = 1.45, A = 1.75. Along with record
               β_T data from DIII-D at A = 2.9 and high κ.
 
-        :References:
+        References
+        ----------
             - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
             Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
             doi: https://doi.org/10.1088/0029-5515/56/10/106023.
@@ -8890,7 +8890,8 @@ class PlasmaBeta:
               which is defined as the ratio of the peak pressure to the average pressure.
             - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
 
-        :References:
+        References
+        ----------
             - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
               Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
 
@@ -8928,7 +8929,8 @@ class PlasmaBeta:
             - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
             - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
 
-        :References:
+        References
+        ----------
             - R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,”
               Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
               doi: https://doi.org/10.13182/fst59-279.
@@ -9132,7 +9134,8 @@ class PlasmaBeta:
             - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, 〈T〉 = 5-20 keV
 
 
-        :References:
+        References
+        ----------
             - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
             https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
 
@@ -9715,7 +9718,8 @@ class PlasmaInductance:
             - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
             - This model is only recommended to be used for ST's with kappa > 2.5
 
-        :References:
+        References
+        ----------
             - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
             Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
             doi: https://doi.org/10.1088/0029-5515/56/10/106023.
@@ -9743,7 +9747,8 @@ class PlasmaInductance:
               current profile index.
             - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
 
-        :References:
+        References
+        ----------
             - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
             International Series of Monographs on Physics, Volume 149.
 

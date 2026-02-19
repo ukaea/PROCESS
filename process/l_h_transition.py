@@ -184,7 +184,7 @@ def calculate_martin08_nominal(
         The Martin L-H transition power threshold [MW]
 
     Notes
-        -----
+    -----
         - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
         "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
         reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
