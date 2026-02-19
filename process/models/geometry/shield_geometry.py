@@ -4,8 +4,8 @@ Calculate radial and vertical coordinates for the geometry of the shield
 
 import numpy as np
 
-from process.geometry.geometry_parameterisations import ArbitraryGeometry
-from process.geometry.utils import dh_vertices
+from process.models.geometry.geometry_parameterisations import ArbitraryGeometry
+from process.models.geometry.utils import dh_vertices
 
 
 def shield_geometry_single_null(

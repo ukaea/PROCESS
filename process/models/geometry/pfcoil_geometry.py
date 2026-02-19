@@ -4,7 +4,7 @@ Calculate radial and vertical coordinates for the geometry of the pf coils and c
 
 import numpy as np
 
-from process.geometry.geometry_parameterisations import RectangleGeometry
+from process.models.geometry.geometry_parameterisations import RectangleGeometry
 
 
 def pfcoil_geometry(
