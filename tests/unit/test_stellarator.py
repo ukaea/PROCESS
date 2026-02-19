@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.availability import Availability
 from process.buildings import Buildings
 from process.costs import Costs
 from process.current_drive import (
@@ -29,6 +28,7 @@ from process.data_structure import (
 )
 from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
+from process.models.availability import Availability
 from process.physics import Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
