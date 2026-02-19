@@ -49,7 +49,6 @@ import process
 import process.data_structure as data_structure
 import process.init as init
 from process import constants
-from process.cs_fatigue import CsFatigue
 from process.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -90,6 +89,7 @@ from process.models.buildings import Buildings
 from process.models.costs.costs import Costs
 from process.models.costs.costs_2015 import Costs2015
 from process.models.cryostat import Cryostat
+from process.models.cs_fatigue import CsFatigue
 from process.pfcoil import PFCoil
 from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_geometry import PlasmaGeom
