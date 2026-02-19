@@ -8,10 +8,10 @@ import scipy
 import scipy.integrate as integrate
 from scipy.optimize import root_scalar
 
-import process.fusion_reactions as reactions
 import process.impurity_radiation as impurity_radiation
 import process.l_h_transition as transition
 import process.models.physics.confinement_time as confinement
+import process.models.physics.fusion_reactions as reactions
 import process.physics_functions as physics_funcs
 from process import constants
 from process import process_output as po

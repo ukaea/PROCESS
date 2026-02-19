@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-import process.fusion_reactions as reactions
+import process.models.physics.fusion_reactions as reactions
 import process.physics_functions as physics_funcs
 from process import constants
 from process import process_output as po
