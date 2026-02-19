@@ -11,8 +11,8 @@ from process.data_structure import (
     fwbs_variables,
     physics_variables,
 )
-from process.dcll import DCLL
 from process.fw import FirstWall
+from process.models.blankets.dcll import DCLL
 
 
 @pytest.fixture

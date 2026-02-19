@@ -49,7 +49,6 @@ import process
 import process.data_structure as data_structure
 import process.init as init
 from process import constants
-from process.dcll import DCLL
 from process.divertor import Divertor
 from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
@@ -76,6 +75,7 @@ from process.io.process_funcs import (
 from process.log import logging_model_handler, show_errors
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
+from process.models.blankets.dcll import DCLL
 from process.models.build import Build
 from process.models.buildings import Buildings
 from process.models.costs.costs import Costs
