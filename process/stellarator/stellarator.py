@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 import process.models.physics.fusion_reactions as reactions
-import process.physics_functions as physics_funcs
+import process.models.physics.physics_functions as physics_funcs
 from process import constants
 from process import process_output as po
 from process.coolprop_interface import FluidProperties
