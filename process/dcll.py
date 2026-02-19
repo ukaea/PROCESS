@@ -1,9 +1,8 @@
-import process.blanket_library as blanket_library
+import process.models.blankets.blanket_library as blanket_library
 from process import constants
 from process import (
     process_output as po,
 )
-from process.blanket_library import InboardBlanket, OutboardBlanket
 from process.data_structure import (
     build_variables,
     current_drive_variables,
@@ -15,6 +14,7 @@ from process.data_structure import (
     physics_variables,
     primary_pumping_variables,
 )
+from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 
 
 class DCLL(InboardBlanket, OutboardBlanket):

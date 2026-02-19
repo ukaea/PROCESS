@@ -2,13 +2,12 @@ import logging
 
 import numpy as np
 
-import process.blanket_library as blanket_library
 import process.data_structure.blanket_library as blanket_vars
+import process.models.blankets.blanket_library as blanket_library
 from process import constants
 from process import (
     process_output as po,
 )
-from process.blanket_library import InboardBlanket, OutboardBlanket
 from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     build_variables,
@@ -24,6 +23,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
+from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 
 logger = logging.getLogger(__name__)
 

@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.blanket_library import BlanketLibrary
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -12,6 +11,7 @@ from process.data_structure import (
     physics_variables,
 )
 from process.fw import FirstWall
+from process.models.blankets.blanket_library import BlanketLibrary
 
 
 @pytest.fixture

@@ -5,7 +5,6 @@ import numpy as np
 
 from process import constants, process_output
 from process import process_output as po
-from process.blanket_library import dshellvol, eshellvol
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -16,6 +15,7 @@ from process.data_structure import (
     times_variables,
     vacuum_variables,
 )
+from process.models.blankets.blanket_library import dshellvol, eshellvol
 
 logger = logging.getLogger(__name__)
 

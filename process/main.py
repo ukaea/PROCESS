@@ -49,7 +49,6 @@ import process
 import process.data_structure as data_structure
 import process.init as init
 from process import constants
-from process.blanket_library import BlanketLibrary
 from process.build import Build
 from process.buildings import Buildings
 from process.costs import Costs
@@ -90,6 +89,7 @@ from process.io.process_funcs import (
 )
 from process.log import logging_model_handler, show_errors
 from process.models.availability import Availability
+from process.models.blankets.blanket_library import BlanketLibrary
 from process.pfcoil import PFCoil
 from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_geometry import PlasmaGeom
