@@ -32,6 +32,252 @@ class TritiumPlantMeschini:
     def __init__(self) -> None:
         self.outfile: int = constants.NOUT
 
+    def run(self) -> None:
+        """Run the tritium plant model."""
+
+        t_end = 20000  # End time for simulation (s)
+        dt = 1  # Time step (s)
+
+        RATE_T_DECAY = 1.78e-9  # Tritium decay rate (1/s)
+
+        TBR = 0.5
+        # Tritium burn efficiency in the plasma
+        TBE = 0.05
+
+        # Direct internal recycling fraction
+        f_dir = 0.1
+
+        # Tritium residence time in the ith component
+        tau_1 = 5.0
+        tau_2 = 10.0
+        tau_3 = 15.0
+        tau_4 = 20.0
+        tau_5 = 25.0
+        tau_6 = 30.0
+        tau_7 = 35.0
+        tau_8 = 40.0
+        tau_9 = 45.0
+        tau_10 = 50.0
+        tau_11 = 55.0
+        tau_12 = 60.0
+
+        n_t_burn = 3e-6  # Tritium burn rate in the plasma (kg/s)
+
+        i_startup = 5.0
+
+        ETA_2 = 0.5
+
+        # Flow rate fractions between components
+        f_5_1 = 0.33
+        f_5_3 = 0.33
+        f_5_6 = 1e-4
+        f_9_6 = 0.1
+        f_p_3 = 1e-4
+        f_p_4 = 1e-4
+        f_5_4 = 0.33
+
+        # The non-radioactive loss fraction has been assumed asb in this work.
+        epsilon_1 = 1e-4
+        epsilon_2 = 1e-4
+        epsilon_3 = 0.0
+        epsilon_4 = 0.0
+        epsilon_5 = 1e-4
+        epsilon_6 = 1e-4
+        epsilon_7 = 1e-4
+        epsilon_8 = 1e-4
+        epsilon_9 = 1e-4
+        epsilon_10 = 0.0
+        epsilon_11 = 1e-4
+        epsilon_12 = 1e-4
+
+        # Tritium inventory in the ith component (kg)
+        # Initialise plant to be zero and clean with startup inventory in storage and management
+        m_tritium_component_1 = 0.0
+        m_tritium_component_2 = 0.0
+        m_tritium_component_3 = 0.0
+        m_tritium_component_4 = 0.0
+        m_tritium_component_5 = 0.0
+        m_tritium_component_6 = 0.0
+        m_tritium_component_7 = 0.0
+        m_tritium_component_8 = 0.0
+        m_tritium_component_9 = 0.0
+        m_tritium_component_10 = i_startup
+        m_tritium_component_11 = 0.0
+        m_tritium_component_12 = 0.0
+
+        n_steps = int(t_end / dt) + 1
+        times = [i * dt for i in range(n_steps)]
+
+        # Initialize inventory arrays
+        inventories = {
+            "i_1": [m_tritium_component_1],
+            "i_2": [m_tritium_component_2],
+            "i_3": [m_tritium_component_3],
+            "i_4": [m_tritium_component_4],
+            "i_5": [m_tritium_component_5],
+            "i_6": [m_tritium_component_6],
+            "i_7": [m_tritium_component_7],
+            "i_8": [m_tritium_component_8],
+            "i_9": [m_tritium_component_9],
+            "i_10": [m_tritium_component_10],
+            "i_11": [m_tritium_component_11],
+            "i_12": [m_tritium_component_12],
+        }
+
+        # Current values
+        curr = [
+            m_tritium_component_1,
+            m_tritium_component_2,
+            m_tritium_component_3,
+            m_tritium_component_4,
+            m_tritium_component_5,
+            m_tritium_component_6,
+            m_tritium_component_7,
+            m_tritium_component_8,
+            m_tritium_component_9,
+            m_tritium_component_10,
+            m_tritium_component_11,
+            m_tritium_component_12,
+        ]
+
+        for _ in range(1, n_steps):
+            # Calculate rates
+            rate_1 = self.calculate_component_1_time_derivative(
+                m_tritium_component_1=m_tritium_component_1,
+                m_tritium_component_3=m_tritium_component_3,
+                m_tritium_component_4=m_tritium_component_4,
+                m_tritium_component_5=m_tritium_component_5,
+                t_tritium_residence_component_1=tau_1,
+                t_tritium_residence_component_3=tau_3,
+                t_tritium_residence_component_4=tau_4,
+                t_tritium_residence_component_5=tau_5,
+                tbr=TBR,
+                fusrat_tritium_kg=n_t_burn,
+                f_5_1=f_5_1,
+                epsilon_1=epsilon_1,
+            )
+            rate_2 = self.calculate_component_2_time_derivative(
+                m_tritium_component_1=m_tritium_component_1,
+                m_tritium_component_2=m_tritium_component_2,
+                t_tritium_residence_component_1=tau_1,
+                t_tritium_residence_component_2=tau_2,
+                epsilon_2=epsilon_2,
+            )
+            rate_3 = self.calculate_component_3_time_derivative(
+                m_tritium_component_3=m_tritium_component_3,
+                m_tritium_component_5=m_tritium_component_5,
+                t_tritium_residence_component_3=tau_3,
+                t_tritium_residence_component_5=tau_5,
+                f_p_3=f_p_3,
+                f_5_3=f_5_3,
+                fusrat_tritium_kg=n_t_burn,
+                epsilon_3=epsilon_3,
+            )
+            rate_4 = self.calculate_component_4_time_derivative(
+                m_tritium_component_4=m_tritium_component_4,
+                m_tritium_component_5=m_tritium_component_5,
+                t_tritium_residence_component_4=tau_4,
+                t_tritium_residence_component_5=tau_5,
+                f_p_4=f_p_4,
+                f_5_4=f_5_4,
+                fusrat_tritium_kg=n_t_burn,
+                epsilon_4=epsilon_4,
+            )
+            rate_5 = self.calculate_component_5_time_derivative(
+                m_tritium_component_2=m_tritium_component_2,
+                m_tritium_component_5=m_tritium_component_5,
+                t_tritium_residence_component_2=tau_2,
+                t_tritium_residence_component_5=tau_5,
+                epsilon_5=epsilon_5,
+            )
+            rate_6 = self.calculate_component_6_time_derivative(
+                m_tritium_component_5=m_tritium_component_5,
+                m_tritium_component_6=m_tritium_component_6,
+                m_tritium_component_9=m_tritium_component_9,
+                t_tritium_residence_component_5=tau_5,
+                t_tritium_residence_component_6=tau_6,
+                t_tritium_residence_component_9=tau_9,
+                f_5_6=f_5_6,
+                f_9_6=f_9_6,
+                epsilon_6=epsilon_6,
+            )
+            rate_7 = self.calculate_component_7_time_derivative(
+                m_tritium_component_7=m_tritium_component_7,
+                t_tritium_residence_component_7=tau_7,
+                f_p_3=f_p_3,
+                f_p_4=f_p_4,
+                fusrat_tritium_kg=n_t_burn,
+                epsilon_7=epsilon_7,
+            )
+            rate_8 = self.calculate_component_8_time_derivative(
+                m_tritium_component_7=m_tritium_component_7,
+                m_tritium_component_8=m_tritium_component_8,
+                t_tritium_residence_component_7=tau_7,
+                t_tritium_residence_component_8=tau_8,
+                f_dir=f_dir,
+                epsilon_8=epsilon_8,
+            )
+            rate_9 = self.calculate_component_9_time_derivative(
+                m_tritium_component_6=m_tritium_component_6,
+                m_tritium_component_8=m_tritium_component_8,
+                m_tritium_component_9=m_tritium_component_9,
+                t_tritium_residence_component_6=tau_6,
+                t_tritium_residence_component_8=tau_8,
+                t_tritium_residence_component_9=tau_9,
+                epsilon_9=epsilon_9,
+            )
+            rate_10 = self.calculate_component_10_time_derivative(
+                m_tritium_component_7=m_tritium_component_7,
+                m_tritium_component_9=m_tritium_component_9,
+                m_tritium_component_10=m_tritium_component_10,
+                m_tritium_component_12=m_tritium_component_12,
+                t_tritium_residence_component_7=tau_7,
+                t_tritium_residence_component_9=tau_9,
+                t_tritium_residence_component_12=tau_12,
+                f_9_6=f_9_6,
+                f_dir=f_dir,
+                n_t_burn=n_t_burn,
+            )
+            rate_12 = self.calculate_component_12_time_derivative(
+                m_tritium_component_2=m_tritium_component_2,
+                m_tritium_component_12=m_tritium_component_12,
+                t_tritium_residence_component_2=tau_2,
+                t_tritium_residence_component_12=tau_12,
+                epsilon_12=epsilon_12,
+            )
+            # Update inventories using Euler method
+            curr[0] += rate_1 * dt
+            curr[1] += rate_2 * dt
+            curr[2] += rate_3 * dt
+            curr[3] += rate_4 * dt
+            curr[4] += rate_5 * dt
+            curr[5] += rate_6 * dt
+            curr[6] += rate_7 * dt
+            curr[7] += rate_8 * dt
+            curr[8] += rate_9 * dt
+            curr[9] += rate_10 * dt
+            curr[11] += rate_12 * dt
+            # i_11 remains 0
+
+            # Store values
+            for idx, key in enumerate([
+                "i_1",
+                "i_2",
+                "i_3",
+                "i_4",
+                "i_5",
+                "i_6",
+                "i_7",
+                "i_8",
+                "i_9",
+                "i_10",
+                "i_11",
+                "i_12",
+            ]):
+                inventories[key].append(curr[idx])
+
+        return times, inventories
+
     def calculate_component_1_time_derivative(
         m_tritium_component_1: float,
         m_tritium_component_3: float,
@@ -229,6 +475,10 @@ class TritiumPlantMeschini:
             m_tritium_component_12
             * (((1 + epsilon_12) / t_tritium_residence_component_12) + RATE_T_DECAY)
         )
+
+    def plot_tritium_systems_overview(axis: plt.Axes, m_file: mf.MFile, scan: int)
+
+
 
 
 # RATE_T_DECAY = 1.78e-9  # Tritium decay rate (1/s)
