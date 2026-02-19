@@ -549,7 +549,7 @@ hfact: float = None
 """H factor on energy confinement times, radiation corrected (`iteration variable 10`)."""
 
 
-hstar : float = None
+hstar: float = None
 """H* non-radiation corrected H factor on energy confinement times"""
 
 
