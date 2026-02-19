@@ -5,7 +5,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.costs import Costs
 from process.data_structure import (
     buildings_variables,
     cost_variables,
@@ -17,6 +16,7 @@ from process.data_structure import (
 )
 from process.ife import IFE
 from process.models.availability import Availability
+from process.models.costs.costs import Costs
 
 
 @pytest.fixture

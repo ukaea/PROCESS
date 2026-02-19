@@ -49,7 +49,6 @@ import process
 import process.data_structure as data_structure
 import process.init as init
 from process import constants
-from process.costs import Costs
 from process.cryostat import Cryostat
 from process.cs_fatigue import CsFatigue
 from process.current_drive import (
@@ -89,6 +88,7 @@ from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
 from process.models.build import Build
 from process.models.buildings import Buildings
+from process.models.costs.costs import Costs
 from process.models.costs.costs_2015 import Costs2015
 from process.pfcoil import PFCoil
 from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
