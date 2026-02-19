@@ -101,6 +101,7 @@ from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.power import Power
 from process.models.pulse import Pulse
+from process.models.shield import Shield
 from process.models.tfcoil.resistive_tf_coil import (
     AluminiumTFCoil,
     CopperTFCoil,
@@ -110,7 +111,6 @@ from process.models.tfcoil.superconducting_tf_coil import SuperconductingTFCoil
 from process.models.tfcoil.tf_coil import TFCoil
 from process.process_output import OutputFileManager, oheadr
 from process.scan import Scan
-from process.shield import Shield
 from process.stellarator.neoclassics import Neoclassics
 from process.stellarator.stellarator import Stellarator
 from process.structure import Structure

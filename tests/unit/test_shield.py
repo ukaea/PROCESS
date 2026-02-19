@@ -2,7 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.shield import Shield
+from process.models.shield import Shield
 
 
 @pytest.fixture
