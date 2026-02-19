@@ -111,11 +111,11 @@ from process.models.tfcoil.resistive_tf_coil import (
 from process.models.tfcoil.superconducting_tf_coil import SuperconductingTFCoil
 from process.models.tfcoil.tf_coil import TFCoil
 from process.models.vacuum import Vacuum, VacuumVessel
+from process.models.water_use import WaterUse
 from process.process_output import OutputFileManager, oheadr
 from process.scan import Scan
 from process.stellarator.neoclassics import Neoclassics
 from process.stellarator.stellarator import Stellarator
-from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
