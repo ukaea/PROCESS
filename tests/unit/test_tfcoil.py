@@ -9,7 +9,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-import process.models.tfcoil.tf_coil as tfcoil_module
+import process.models.tfcoil.base as tfcoil_module
 from process.data_structure import (
     build_variables,
     fwbs_variables,
@@ -17,7 +17,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.models.build import Build
-from process.models.tfcoil.tf_coil import TFCoil
+from process.models.tfcoil.base import TFCoil
 
 
 @pytest.fixture

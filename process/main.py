@@ -105,13 +105,13 @@ from process.models.shield import Shield
 from process.models.stellarator.neoclassics import Neoclassics
 from process.models.stellarator.stellarator import Stellarator
 from process.models.structure import Structure
+from process.models.tfcoil.base import TFCoil
 from process.models.tfcoil.resistive import (
     AluminiumTFCoil,
     CopperTFCoil,
     ResistiveTFCoil,
 )
 from process.models.tfcoil.superconducting import SuperconductingTFCoil
-from process.models.tfcoil.tf_coil import TFCoil
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
 from process.process_output import OutputFileManager, oheadr
