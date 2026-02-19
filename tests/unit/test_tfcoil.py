@@ -10,13 +10,13 @@ import numpy as np
 import pytest
 
 import process.tf_coil as tfcoil_module
-from process.build import Build
 from process.data_structure import (
     build_variables,
     fwbs_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
+from process.models.build import Build
 from process.tf_coil import TFCoil
 
 

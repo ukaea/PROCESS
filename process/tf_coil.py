@@ -7,7 +7,6 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
-from process.build import Build
 from process.data_structure import (
     build_variables,
     fwbs_variables,
@@ -20,6 +19,7 @@ from process.data_structure import (
 )
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
+from process.models.build import Build
 
 logger = logging.getLogger(__name__)
 

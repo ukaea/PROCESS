@@ -33,7 +33,6 @@ import process.constants as constants
 import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
-from process.build import Build
 from process.current_drive import ElectronBernstein, ElectronCyclotron
 from process.data_structure import impurity_radiation_module, physics_variables
 from process.geometry.blanket_geometry import (
@@ -61,6 +60,7 @@ from process.geometry.vacuum_vessel_geometry import (
 )
 from process.impurity_radiation import read_impurity_file
 from process.io.mfile import MFileErrorClass
+from process.models.build import Build
 from process.objectives import OBJECTIVE_NAMES
 from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 
