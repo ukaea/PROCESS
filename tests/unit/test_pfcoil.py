@@ -10,7 +10,7 @@ from process.data_structure import build_variables as bv
 from process.data_structure import pfcoil_variables
 from process.data_structure import tfcoil_variables as tfv
 from process.models.cs_fatigue import CsFatigue
-from process.pfcoil import CSCoil, PFCoil, calculate_b_field_at_point, rsid
+from process.models.pfcoil import CSCoil, PFCoil, calculate_b_field_at_point, rsid
 
 
 @pytest.fixture

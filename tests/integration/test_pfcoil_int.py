@@ -22,7 +22,7 @@ from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.init import init_all_module_vars
 from process.models.cs_fatigue import CsFatigue
-from process.pfcoil import (
+from process.models.pfcoil import (
     CSCoil,
     PFCoil,
     fixb,

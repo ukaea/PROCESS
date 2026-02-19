@@ -81,6 +81,7 @@ from process.models.cs_fatigue import CsFatigue
 from process.models.divertor import Divertor
 from process.models.fw import FirstWall
 from process.models.ife import IFE
+from process.models.pfcoil import PFCoil
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -90,7 +91,6 @@ from process.models.physics.current_drive import (
     NeutralBeam,
 )
 from process.models.physics.impurity_radiation import initialise_imprad
-from process.pfcoil import PFCoil
 from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
