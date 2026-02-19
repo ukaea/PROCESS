@@ -3,17 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.availability import Availability
-from process.buildings import Buildings
-from process.costs import Costs
-from process.current_drive import (
-    CurrentDrive,
-    ElectronBernstein,
-    ElectronCyclotron,
-    IonCyclotron,
-    LowerHybrid,
-    NeutralBeam,
-)
 from process.data_structure import (
     build_variables,
     cost_variables,
@@ -27,21 +16,35 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
 )
-from process.fw import FirstWall
-from process.hcpb import CCFE_HCPB
-from process.physics import Physics, PlasmaBeta, PlasmaInductance
-from process.plasma_profiles import PlasmaProfile
-from process.power import Power
-from process.stellarator.build import st_build
-from process.stellarator.coils.coils import bmax_from_awp, intersect
-from process.stellarator.coils.quench import (
+from process.models.availability import Availability
+from process.models.blankets.hcpb import CCFE_HCPB
+from process.models.buildings import Buildings
+from process.models.costs.costs import Costs
+from process.models.fw import FirstWall
+from process.models.physics.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
+from process.models.physics.physics import Physics, PlasmaBeta, PlasmaInductance
+from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.power import Power
+from process.models.stellarator.build import st_build
+from process.models.stellarator.coils.coils import bmax_from_awp, intersect
+from process.models.stellarator.coils.quench import (
     calculate_quench_protection_current_density,
     max_dump_voltage,
 )
-from process.stellarator.denisty_limits import st_d_limit_ecrh, st_sudo_density_limit
-from process.stellarator.neoclassics import Neoclassics
-from process.stellarator.stellarator import Stellarator
-from process.vacuum import Vacuum
+from process.models.stellarator.denisty_limits import (
+    st_d_limit_ecrh,
+    st_sudo_density_limit,
+)
+from process.models.stellarator.neoclassics import Neoclassics
+from process.models.stellarator.stellarator import Stellarator
+from process.models.vacuum import Vacuum
 
 
 @pytest.fixture

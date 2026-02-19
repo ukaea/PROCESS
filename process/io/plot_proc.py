@@ -28,41 +28,41 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 from scipy.interpolate import interp1d
 
-import process.confinement_time as confine
 import process.constants as constants
 import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
-import process.superconducting_tf_coil as sctf
-from process.build import Build
-from process.current_drive import ElectronBernstein, ElectronCyclotron
+import process.models.physics.confinement_time as confine
+import process.models.tfcoil.superconducting as sctf
 from process.data_structure import impurity_radiation_module, physics_variables
-from process.geometry.blanket_geometry import (
+from process.io.mfile import MFileErrorClass
+from process.models.build import Build
+from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
 )
-from process.geometry.cryostat_geometry import cryostat_geometry
-from process.geometry.firstwall_geometry import (
+from process.models.geometry.cryostat import cryostat_geometry
+from process.models.geometry.firstwall import (
     first_wall_geometry_double_null,
     first_wall_geometry_single_null,
 )
-from process.geometry.pfcoil_geometry import pfcoil_geometry
-from process.geometry.plasma_geometry import plasma_geometry
-from process.geometry.shield_geometry import (
+from process.models.geometry.pfcoil import pfcoil_geometry
+from process.models.geometry.plasma import plasma_geometry
+from process.models.geometry.shield import (
     shield_geometry_double_null,
     shield_geometry_single_null,
 )
-from process.geometry.tfcoil_geometry import (
+from process.models.geometry.tfcoil import (
     tfcoil_geometry_d_shape,
     tfcoil_geometry_rectangular_shape,
 )
-from process.geometry.vacuum_vessel_geometry import (
+from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
-from process.impurity_radiation import read_impurity_file
-from process.io.mfile import MFileErrorClass
+from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
+from process.models.physics.impurity_radiation import read_impurity_file
+from process.models.tfcoil.superconducting import SUPERCONDUCTING_TF_TYPES
 from process.objectives import OBJECTIVE_NAMES
-from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 
 mpl.rcParams["figure.max_open_warning"] = 40
 

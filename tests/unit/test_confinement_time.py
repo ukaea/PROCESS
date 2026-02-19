@@ -1,6 +1,6 @@
 import pytest
 
-from process import confinement_time as conf
+from process.models.physics import confinement_time as conf
 
 
 @pytest.mark.parametrize(

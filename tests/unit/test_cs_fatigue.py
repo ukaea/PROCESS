@@ -2,7 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.cs_fatigue import CsFatigue
+from process.models.cs_fatigue import CsFatigue
 
 
 @pytest.fixture

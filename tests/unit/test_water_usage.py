@@ -3,7 +3,7 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import water_usage_variables
-from process.water_use import WaterUse
+from process.models.water_use import WaterUse
 
 
 @pytest.fixture

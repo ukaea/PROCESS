@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from scipy.optimize import approx_fprime
 
-from process.quench import (
+from process.models.tfcoil.quench import (
     _copper_irradiation_resistivity,
     _copper_magneto_resistivity,
     _copper_rrr_resistivity,

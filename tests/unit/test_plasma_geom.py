@@ -4,8 +4,8 @@ from typing import Any, NamedTuple
 
 import pytest
 
-import process.plasma_geometry as pg
-from process.plasma_geometry import PlasmaGeom
+import process.models.physics.plasma_geometry as pg
+from process.models.physics.plasma_geometry import PlasmaGeom
 
 
 @pytest.fixture

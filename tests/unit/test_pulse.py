@@ -11,7 +11,7 @@ from process.data_structure import (
     physics_variables,
     pulse_variables,
 )
-from process.pulse import Pulse
+from process.models.pulse import Pulse
 
 
 @pytest.fixture

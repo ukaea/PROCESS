@@ -2,7 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.buildings import Buildings
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -14,6 +13,7 @@ from process.data_structure import (
     physics_variables,
     tfcoil_variables,
 )
+from process.models.buildings import Buildings
 
 
 @pytest.fixture

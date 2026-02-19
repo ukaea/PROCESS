@@ -1,7 +1,12 @@
 import pytest
 
 from process import constants
-from process.current_drive import (
+from process.data_structure import (
+    current_drive_variables,
+    heat_transport_variables,
+    physics_variables,
+)
+from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
     ElectronCyclotron,
@@ -9,12 +14,7 @@ from process.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.data_structure import (
-    current_drive_variables,
-    heat_transport_variables,
-    physics_variables,
-)
-from process.plasma_profiles import PlasmaProfile
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture

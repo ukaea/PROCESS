@@ -6,7 +6,12 @@ import numpy as np
 import pytest
 
 from process import constants
-from process.current_drive import (
+from process.data_structure import (
+    current_drive_variables,
+    impurity_radiation_module,
+    physics_variables,
+)
+from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
     ElectronCyclotron,
@@ -14,13 +19,8 @@ from process.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.data_structure import (
-    current_drive_variables,
-    impurity_radiation_module,
-    physics_variables,
-)
-from process.impurity_radiation import initialise_imprad
-from process.physics import (
+from process.models.physics.impurity_radiation import initialise_imprad
+from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
@@ -34,7 +34,7 @@ from process.physics import (
     res_diff_time,
     rether,
 )
-from process.plasma_profiles import PlasmaProfile
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture

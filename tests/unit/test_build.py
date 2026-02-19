@@ -2,12 +2,12 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.build import Build
 from process.data_structure import (
     build_variables,
     divertor_variables,
     physics_variables,
 )
+from process.models.build import Build
 
 
 @pytest.fixture

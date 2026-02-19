@@ -6,8 +6,8 @@ import numpy as np
 import pytest
 from pytest import approx
 
-from process import fusion_reactions as reactions
 from process.data_structure import physics_variables as pv
+from process.models.physics import fusion_reactions as reactions
 
 
 class SetFusionPowersParam(NamedTuple):

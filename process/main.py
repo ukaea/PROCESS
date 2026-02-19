@@ -49,28 +49,6 @@ import process
 import process.data_structure as data_structure
 import process.init as init
 from process import constants
-from process.availability import Availability
-from process.blanket_library import BlanketLibrary
-from process.build import Build
-from process.buildings import Buildings
-from process.costs import Costs
-from process.costs_2015 import Costs2015
-from process.cryostat import Cryostat
-from process.cs_fatigue import CsFatigue
-from process.current_drive import (
-    CurrentDrive,
-    ElectronBernstein,
-    ElectronCyclotron,
-    IonCyclotron,
-    LowerHybrid,
-    NeutralBeam,
-)
-from process.dcll import DCLL
-from process.divertor import Divertor
-from process.fw import FirstWall
-from process.hcpb import CCFE_HCPB
-from process.ife import IFE
-from process.impurity_radiation import initialise_imprad
 from process.io import (
     mfile,
     plot_plotly_sankey,
@@ -90,23 +68,54 @@ from process.io.process_funcs import (
     vary_iteration_variables,
 )
 from process.log import logging_model_handler, show_errors
-from process.pfcoil import PFCoil
-from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
-from process.plasma_geometry import PlasmaGeom
-from process.plasma_profiles import PlasmaProfile
-from process.power import Power
+from process.models.availability import Availability
+from process.models.blankets.blanket_library import BlanketLibrary
+from process.models.blankets.dcll import DCLL
+from process.models.blankets.hcpb import CCFE_HCPB
+from process.models.build import Build
+from process.models.buildings import Buildings
+from process.models.costs.costs import Costs
+from process.models.costs.costs_2015 import Costs2015
+from process.models.cryostat import Cryostat
+from process.models.cs_fatigue import CsFatigue
+from process.models.divertor import Divertor
+from process.models.fw import FirstWall
+from process.models.ife import IFE
+from process.models.pfcoil import PFCoil
+from process.models.physics.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
+from process.models.physics.impurity_radiation import initialise_imprad
+from process.models.physics.physics import (
+    DetailedPhysics,
+    Physics,
+    PlasmaBeta,
+    PlasmaInductance,
+)
+from process.models.physics.plasma_geometry import PlasmaGeom
+from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.power import Power
+from process.models.pulse import Pulse
+from process.models.shield import Shield
+from process.models.stellarator.neoclassics import Neoclassics
+from process.models.stellarator.stellarator import Stellarator
+from process.models.structure import Structure
+from process.models.tfcoil.base import TFCoil
+from process.models.tfcoil.resistive import (
+    AluminiumTFCoil,
+    CopperTFCoil,
+    ResistiveTFCoil,
+)
+from process.models.tfcoil.superconducting import SuperconductingTFCoil
+from process.models.vacuum import Vacuum, VacuumVessel
+from process.models.water_use import WaterUse
 from process.process_output import OutputFileManager, oheadr
-from process.pulse import Pulse
-from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
-from process.shield import Shield
-from process.stellarator.neoclassics import Neoclassics
-from process.stellarator.stellarator import Stellarator
-from process.structure import Structure
-from process.superconducting_tf_coil import SuperconductingTFCoil
-from process.tf_coil import TFCoil
-from process.vacuum import Vacuum, VacuumVessel
-from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 

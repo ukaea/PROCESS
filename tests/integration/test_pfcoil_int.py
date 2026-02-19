@@ -14,7 +14,6 @@ import pytest
 from numpy.testing import assert_array_almost_equal
 
 from process import constants
-from process.cs_fatigue import CsFatigue
 from process.data_structure import build_variables as bv
 from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import pfcoil_variables, superconducting_tf_coil_variables
@@ -22,7 +21,8 @@ from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.init import init_all_module_vars
-from process.pfcoil import (
+from process.models.cs_fatigue import CsFatigue
+from process.models.pfcoil import (
     CSCoil,
     PFCoil,
     fixb,
