@@ -745,7 +745,8 @@ class FirstWall:
             The Haaland equation is an approximation to the implicit Colebrook-White equation.
             It is used to calculate the Darcy friction factor for turbulent flow in pipes.
 
-        :References:
+        References
+        ----------
             - https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
         """
 

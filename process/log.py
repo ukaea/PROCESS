@@ -68,7 +68,6 @@ def show_errors(file_unit: int):
     ----------
     file_unit : int
         a number describing the output medium (terminal, OUTFile)
-    file_unit: int :
 
     """
     warning_string = (

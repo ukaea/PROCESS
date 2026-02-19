@@ -91,8 +91,7 @@ class Structure:
     ):
         """Method to calculate mass of support structure
 
-
-        Reprogrammed by J. Galambos to match the ITER (i.e. B. Spears) rules.
+        Programmed to match the ITER (i.e. B. Spears) rules.
 
         Parameters
         ----------

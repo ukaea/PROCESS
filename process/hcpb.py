@@ -33,7 +33,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
     based on CCFE HCPB model from the PROCESS engineering paper
     PROCESS Engineering paper (M. Kovari et al.)
 
-    :References:
+    References
+    ----------
         - M. Kovari et al., “PROCESS: A systems code for fusion power plants - Part 2: Engineering,”
         Fusion Engineering and Design, vol. 104, pp. 9-20, Mar. 2016,
         doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
