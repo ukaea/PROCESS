@@ -311,7 +311,8 @@ def bi2212(b_conductor, jstrand, temp_conductor, f_strain):
             Adjusted field b < 104 T
             B > 6 T
 
-    :reference:
+    References
+    -----------
         - D. C. Larbalestier, J. Jiang, U. P. Trociewitz, F. Kametani, and E. E. Hellstrom,
         “A transformative superconducting magnet technology for fields well above 30 T using isotropic round wire multifilament Bi2Sr2CaCu2O8-x conductor,”
         May 06, 2013. https://www.researchgate.net/publication/236627864_A_transformative_superconducting_magnet_technology_for_fields_well_above_30_T_using_isotropic_round_wire_multifilament_Bi2Sr2CaCu2O8-x_conductor
