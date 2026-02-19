@@ -2,7 +2,7 @@
 Calculate cryostat geometries
 """
 
-from process.models.geometry.geometry_parameterisations import RectangleGeometry
+from process.models.geometry.parameterisations import RectangleGeometry
 
 
 def cryostat_geometry(

@@ -2,7 +2,7 @@
 Calculate radial and vertical coordinates for the geometry of the tf coils
 """
 
-from process.models.geometry.geometry_parameterisations import RectangleGeometry
+from process.models.geometry.parameterisations import RectangleGeometry
 from process.models.geometry.utils import ellips_fill_vertices
 
 

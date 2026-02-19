@@ -36,26 +36,26 @@ import process.models.tfcoil.superconducting as sctf
 from process.data_structure import impurity_radiation_module, physics_variables
 from process.io.mfile import MFileErrorClass
 from process.models.build import Build
-from process.models.geometry.blanket_geometry import (
+from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
 )
-from process.models.geometry.cryostat_geometry import cryostat_geometry
-from process.models.geometry.firstwall_geometry import (
+from process.models.geometry.cryostat import cryostat_geometry
+from process.models.geometry.firstwall import (
     first_wall_geometry_double_null,
     first_wall_geometry_single_null,
 )
-from process.models.geometry.pfcoil_geometry import pfcoil_geometry
-from process.models.geometry.plasma_geometry import plasma_geometry
-from process.models.geometry.shield_geometry import (
+from process.models.geometry.pfcoil import pfcoil_geometry
+from process.models.geometry.plasma import plasma_geometry
+from process.models.geometry.shield import (
     shield_geometry_double_null,
     shield_geometry_single_null,
 )
-from process.models.geometry.tfcoil_geometry import (
+from process.models.geometry.tfcoil import (
     tfcoil_geometry_d_shape,
     tfcoil_geometry_rectangular_shape,
 )
-from process.models.geometry.vacuum_vessel_geometry import (
+from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )

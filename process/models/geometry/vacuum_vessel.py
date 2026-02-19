@@ -4,7 +4,7 @@ Calculate radial and vertical coordinates for the geometry of the vacuum vessel
 
 import numpy as np
 
-from process.models.geometry.geometry_parameterisations import ArbitraryGeometry
+from process.models.geometry.parameterisations import ArbitraryGeometry
 from process.models.geometry.utils import dh_vertices
 
 
