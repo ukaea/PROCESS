@@ -49,7 +49,6 @@ import process
 import process.data_structure as data_structure
 import process.init as init
 from process import constants
-from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
 from process.ife import IFE
 from process.impurity_radiation import initialise_imprad
@@ -82,6 +81,7 @@ from process.models.costs.costs_2015 import Costs2015
 from process.models.cryostat import Cryostat
 from process.models.cs_fatigue import CsFatigue
 from process.models.divertor import Divertor
+from process.models.fw import FirstWall
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,

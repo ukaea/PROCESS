@@ -10,8 +10,8 @@ from process.data_structure import (
     fwbs_variables,
     physics_variables,
 )
-from process.fw import FirstWall
 from process.models.blankets.blanket_library import BlanketLibrary
+from process.models.fw import FirstWall
 
 
 @pytest.fixture

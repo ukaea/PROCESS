@@ -15,8 +15,8 @@ from process.data_structure import (
     primary_pumping_variables,
     tfcoil_variables,
 )
-from process.fw import FirstWall
 from process.hcpb import CCFE_HCPB
+from process.models.fw import FirstWall
 
 
 @pytest.fixture
