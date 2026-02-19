@@ -32,7 +32,7 @@ import process.constants as constants
 import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.models.physics.confinement_time as confine
-import process.superconducting_tf_coil as sctf
+import process.models.tfcoil.superconducting_tf_coil as sctf
 from process.data_structure import impurity_radiation_module, physics_variables
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
@@ -61,8 +61,8 @@ from process.io.mfile import MFileErrorClass
 from process.models.build import Build
 from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
 from process.models.physics.impurity_radiation import read_impurity_file
+from process.models.tfcoil.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 from process.objectives import OBJECTIVE_NAMES
-from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 
 mpl.rcParams["figure.max_open_warning"] = 40
 
