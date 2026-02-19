@@ -8,7 +8,7 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.models.tfcoil.resistive_tf_coil import ResistiveTFCoil
+from process.models.tfcoil.resistive import ResistiveTFCoil
 
 
 @pytest.fixture
