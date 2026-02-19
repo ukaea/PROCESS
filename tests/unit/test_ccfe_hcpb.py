@@ -15,7 +15,7 @@ from process.data_structure import (
     primary_pumping_variables,
     tfcoil_variables,
 )
-from process.hcpb import CCFE_HCPB
+from process.models.blankets.hcpb import CCFE_HCPB
 from process.models.fw import FirstWall
 
 

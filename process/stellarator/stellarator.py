@@ -38,8 +38,8 @@ from process.stellarator.heating import st_heat
 from process.stellarator.preset_config import load_stellarator_config
 
 if TYPE_CHECKING:
-    from process.hcpb import CCFE_HCPB
     from process.models.availability import Availability
+    from process.models.blankets.hcpb import CCFE_HCPB
     from process.models.buildings import Buildings
     from process.models.costs.costs import Costs
     from process.models.physics.current_drive import CurrentDrive

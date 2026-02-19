@@ -16,8 +16,8 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
 )
-from process.hcpb import CCFE_HCPB
 from process.models.availability import Availability
+from process.models.blankets.hcpb import CCFE_HCPB
 from process.models.buildings import Buildings
 from process.models.costs.costs import Costs
 from process.models.fw import FirstWall

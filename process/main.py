@@ -49,7 +49,6 @@ import process
 import process.data_structure as data_structure
 import process.init as init
 from process import constants
-from process.hcpb import CCFE_HCPB
 from process.ife import IFE
 from process.impurity_radiation import initialise_imprad
 from process.io import (
@@ -74,6 +73,7 @@ from process.log import logging_model_handler, show_errors
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
 from process.models.blankets.dcll import DCLL
+from process.models.blankets.hcpb import CCFE_HCPB
 from process.models.build import Build
 from process.models.buildings import Buildings
 from process.models.costs.costs import Costs
