@@ -28,10 +28,10 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 from scipy.interpolate import interp1d
 
-import process.confinement_time as confine
 import process.constants as constants
 import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
+import process.models.physics.confinement_time as confine
 import process.superconducting_tf_coil as sctf
 from process.current_drive import ElectronBernstein, ElectronCyclotron
 from process.data_structure import impurity_radiation_module, physics_variables
