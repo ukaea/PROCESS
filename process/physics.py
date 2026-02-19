@@ -9661,7 +9661,7 @@ class PlasmaInductance:
         """Calculate the normalised internal inductance using ITER-3 scaling li(3).
 
         Parameters
-                ----------
+        ------------
         b_plasma_poloidal_vol_avg : float
             Volume-averaged poloidal magnetic field (T).
         c_plasma : float
@@ -9672,12 +9672,12 @@ class PlasmaInductance:
             Plasma major radius (m).
 
         Returns
-                -------
+        --------
         float
             The li(3) normalised internal inductance.
 
         References
-        ----------
+        -----------
             - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
             “Inductive flux usage and its optimization in tokamak operation,”
             Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
