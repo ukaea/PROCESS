@@ -4,7 +4,7 @@ import pytest
 
 from process.data_structure import divertor_variables as dv
 from process.data_structure import tfcoil_variables as tfv
-from process.divertor import Divertor
+from process.models.divertor import Divertor
 
 
 @pytest.fixture
