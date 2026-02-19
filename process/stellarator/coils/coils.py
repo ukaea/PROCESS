@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-import process.superconductors as superconductors
+import process.models.superconductors as superconductors
 from process.data_structure import (
     stellarator_configuration,
 )

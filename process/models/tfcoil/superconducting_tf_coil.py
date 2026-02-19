@@ -4,8 +4,8 @@ import logging
 import numpy as np
 from scipy import optimize
 
+import process.models.superconductors as superconductors
 import process.models.tfcoil.quench as quench
-import process.superconductors as superconductors
 from process import constants
 from process import process_output as po
 from process.data_structure import (

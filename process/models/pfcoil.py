@@ -7,7 +7,7 @@ from scipy import optimize
 from scipy.linalg import svd
 from scipy.special import ellipe, ellipk
 
-import process.superconductors as superconductors
+import process.models.superconductors as superconductors
 from process import constants
 from process import process_output as op
 from process.data_structure import build_variables as bv
