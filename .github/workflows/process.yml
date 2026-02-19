@@ -193,7 +193,7 @@ jobs:
       - name: Create an example plot proc
         run: hatch run python process/io/plot_proc.py -f tracking/large_tokamak_nof_MFILE.DAT
       - name: Move plot proc file to docs images
-        run: mv tracking/large_tokamak_nof_MFILE.DATSUMMARY.pdf documentation/images/plot_proc.pdf
+        run: mv tracking/large_tokamak_nof_MFILE.DATSUMMARY.pdf documentation/source/images/plot_proc.pdf
       - run: hatch run docs:build
       - name: Download tracking html
         uses: actions/download-artifact@v4
