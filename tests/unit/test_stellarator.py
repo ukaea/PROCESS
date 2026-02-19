@@ -31,7 +31,7 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.physics import Physics, PlasmaBeta, PlasmaInductance
 from process.models.physics.plasma_profiles import PlasmaProfile
-from process.power import Power
+from process.models.power import Power
 from process.stellarator.build import st_build
 from process.stellarator.coils.coils import bmax_from_awp, intersect
 from process.stellarator.coils.quench import (

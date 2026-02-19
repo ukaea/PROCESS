@@ -98,8 +98,8 @@ from process.models.physics.physics import (
     PlasmaInductance,
 )
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.power import Power
 from process.plasma_geometry import PlasmaGeom
-from process.power import Power
 from process.process_output import OutputFileManager, oheadr
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
