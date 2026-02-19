@@ -14,7 +14,7 @@ from process.models.physics.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.plasma_profiles import PlasmaProfile
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture

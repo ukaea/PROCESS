@@ -34,7 +34,7 @@ from process.models.physics.physics import (
     res_diff_time,
     rether,
 )
-from process.plasma_profiles import PlasmaProfile
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture

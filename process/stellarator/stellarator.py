@@ -43,7 +43,7 @@ if TYPE_CHECKING:
     from process.models.buildings import Buildings
     from process.models.costs.costs import Costs
     from process.models.physics.current_drive import CurrentDrive
-    from process.plasma_profiles import PlasmaProfile
+    from process.models.physics.plasma_profiles import PlasmaProfile
     from process.stellarator.neoclassics import Neoclassics
     from process.vacuum import Vacuum
 

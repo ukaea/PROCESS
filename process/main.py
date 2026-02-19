@@ -97,8 +97,8 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
 )
+from process.models.physics.plasma_profiles import PlasmaProfile
 from process.plasma_geometry import PlasmaGeom
-from process.plasma_profiles import PlasmaProfile
 from process.power import Power
 from process.process_output import OutputFileManager, oheadr
 from process.pulse import Pulse

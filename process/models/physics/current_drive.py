@@ -12,7 +12,7 @@ from process.data_structure import (
     physics_variables,
 )
 from process.exceptions import ProcessError, ProcessValueError
-from process.plasma_profiles import PlasmaProfile
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 

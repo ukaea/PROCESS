@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from process.data_structure import divertor_variables, physics_variables
-from process.plasma_profiles import PlasmaProfile
+from process.models.physics.plasma_profiles import PlasmaProfile
 from process.profiles import NeProfile, TeProfile
 
 
