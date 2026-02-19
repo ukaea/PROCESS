@@ -10,7 +10,7 @@ from process.data_structure import (
     stellarator_configuration,
     stellarator_variables,
 )
-from process.stellarator.stellarator import KEV
+from process.models.stellarator.stellarator import KEV
 
 logger = logging.getLogger(__name__)
 

@@ -30,12 +30,15 @@ from process.data_structure import (
 )
 from process.exceptions import ProcessValueError
 from process.models.physics.physics import Physics, rether
-from process.stellarator.build import st_build
-from process.stellarator.coils.calculate import st_coil
-from process.stellarator.denisty_limits import power_at_ignition_point, st_denisty_limits
-from process.stellarator.divertor import st_div
-from process.stellarator.heating import st_heat
-from process.stellarator.preset_config import load_stellarator_config
+from process.models.stellarator.build import st_build
+from process.models.stellarator.coils.calculate import st_coil
+from process.models.stellarator.denisty_limits import (
+    power_at_ignition_point,
+    st_denisty_limits,
+)
+from process.models.stellarator.divertor import st_div
+from process.models.stellarator.heating import st_heat
+from process.models.stellarator.preset_config import load_stellarator_config
 
 if TYPE_CHECKING:
     from process.models.availability import Availability
@@ -44,8 +47,8 @@ if TYPE_CHECKING:
     from process.models.costs.costs import Costs
     from process.models.physics.current_drive import CurrentDrive
     from process.models.physics.plasma_profiles import PlasmaProfile
+    from process.models.stellarator.neoclassics import Neoclassics
     from process.models.vacuum import Vacuum
-    from process.stellarator.neoclassics import Neoclassics
 
 logger = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-import process.stellarator.coils.forces as forces
+import process.models.stellarator.coils.forces as forces
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -11,10 +11,14 @@ from process.data_structure import (
     stellarator_variables,
     tfcoil_variables,
 )
-from process.stellarator.coils.coils import bmax_from_awp, intersect, jcrit_from_material
-from process.stellarator.coils.mass import calculate_coils_mass
-from process.stellarator.coils.output import write
-from process.stellarator.coils.quench import calculate_quench_protection
+from process.models.stellarator.coils.coils import (
+    bmax_from_awp,
+    intersect,
+    jcrit_from_material,
+)
+from process.models.stellarator.coils.mass import calculate_coils_mass
+from process.models.stellarator.coils.output import write
+from process.models.stellarator.coils.quench import calculate_quench_protection
 
 logger = logging.getLogger(__name__)
 
