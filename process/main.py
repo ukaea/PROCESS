@@ -91,7 +91,12 @@ from process.models.physics.current_drive import (
     NeutralBeam,
 )
 from process.models.physics.impurity_radiation import initialise_imprad
-from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
+from process.models.physics.physics import (
+    DetailedPhysics,
+    Physics,
+    PlasmaBeta,
+    PlasmaInductance,
+)
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power

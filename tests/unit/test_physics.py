@@ -20,7 +20,7 @@ from process.models.physics.current_drive import (
     NeutralBeam,
 )
 from process.models.physics.impurity_radiation import initialise_imprad
-from process.physics import (
+from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,

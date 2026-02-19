@@ -29,7 +29,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.physics import Physics, rether
+from process.models.physics.physics import Physics, rether
 from process.stellarator.build import st_build
 from process.stellarator.coils.calculate import st_coil
 from process.stellarator.denisty_limits import power_at_ignition_point, st_denisty_limits
