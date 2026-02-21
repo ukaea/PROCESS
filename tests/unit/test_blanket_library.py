@@ -1125,138 +1125,170 @@ def test_apply_coverage_factors(
     )
 
 
-class BlanketModPolHeightParam(NamedTuple):
-    dr_fw_plasma_gap_inboard: Any = None
-    dr_fw_plasma_gap_outboard: Any = None
-    i_fw_blkt_vv_shape: Any = None
-    n_blkt_inboard_modules_poloidal: Any = None
-    f_ster_div_single: Any = None
-    n_blkt_outboard_modules_poloidal: Any = None
-    itart: Any = None
-    rminor: Any = None
-    n_divertors: Any = None
-    rmajor: Any = None
-    triang: Any = None
-    len_blkt_inboard_segment_poloidal: Any = None
-    len_blkt_outboard_segment_poloidal: Any = None
+class DshapedInboardBlktSegmentParam(NamedTuple):
     dz_blkt_half: Any = None
+    n_blkt_inboard_modules_poloidal: Any = None
     expected_len_blkt_inboard_segment_poloidal: Any = None
+
+
+@pytest.mark.parametrize(
+    "dshaped_inboard_param",
+    (
+        DshapedInboardBlktSegmentParam(
+            dz_blkt_half=8.25,
+            n_blkt_inboard_modules_poloidal=7,
+            expected_len_blkt_inboard_segment_poloidal=2.3571428571428572,
+        ),
+    ),
+)
+def test_calculate_dshaped_inboard_blkt_segment_poloidal(
+    dshaped_inboard_param, blanket_library_fixture
+):
+    """Test for calculate_dshaped_inboard_blkt_segment_poloidal."""
+    result = blanket_library_fixture.calculate_dshaped_inboard_blkt_segment_poloidal(
+        dz_blkt_half=dshaped_inboard_param.dz_blkt_half,
+        n_blkt_inboard_modules_poloidal=dshaped_inboard_param.n_blkt_inboard_modules_poloidal,
+    )
+    assert result == pytest.approx(
+        dshaped_inboard_param.expected_len_blkt_inboard_segment_poloidal
+    )
+
+
+class DshapedOutboardBlktSegmentParam(NamedTuple):
+    n_blkt_outboard_modules_poloidal: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    rminor: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
+    dz_blkt_half: Any = None
+    n_divertors: Any = None
+    f_ster_div_single: Any = None
     expected_len_blkt_outboard_segment_poloidal: Any = None
 
 
 @pytest.mark.parametrize(
-    "blanketmodpolheightparam",
+    "dshaped_outboard_param",
     (
-        BlanketModPolHeightParam(
-            dr_fw_plasma_gap_inboard=0.25,
-            dr_fw_plasma_gap_outboard=0.25,
-            i_fw_blkt_vv_shape=2,
-            n_blkt_inboard_modules_poloidal=7,
-            f_ster_div_single=0.115,
+        DshapedOutboardBlktSegmentParam(
             n_blkt_outboard_modules_poloidal=8,
-            itart=0,
-            rminor=2.6666666666666665,
-            n_divertors=1,
-            rmajor=8,
-            triang=0.5,
-            len_blkt_inboard_segment_poloidal=0,
-            len_blkt_outboard_segment_poloidal=0,
-            dz_blkt_half=5.9532752487304119,
-            expected_len_blkt_inboard_segment_poloidal=1.6252823720672551,
-            expected_len_blkt_outboard_segment_poloidal=1.7853902013340495,
-        ),
-        BlanketModPolHeightParam(
             dr_fw_plasma_gap_inboard=0.10000000000000001,
-            dr_fw_plasma_gap_outboard=0.10000000000000001,
-            i_fw_blkt_vv_shape=1,
-            n_blkt_inboard_modules_poloidal=7,
-            f_ster_div_single=0.115,
-            n_blkt_outboard_modules_poloidal=8,
-            itart=1,
             rminor=2.5,
-            n_divertors=2,
-            rmajor=4.5,
-            triang=0.5,
-            len_blkt_inboard_segment_poloidal=0,
-            len_blkt_outboard_segment_poloidal=0,
+            dr_fw_plasma_gap_outboard=0.10000000000000001,
             dz_blkt_half=8.25,
-            expected_len_blkt_inboard_segment_poloidal=2.3571428571428572,
+            n_divertors=2,
+            f_ster_div_single=0.115,
             expected_len_blkt_outboard_segment_poloidal=2.0597205347177807,
         ),
     ),
 )
-def test_blanket_mod_pol_height(
-    blanketmodpolheightparam,
-    monkeypatch,
-    blanket_library_fixture,
+def test_calculate_dshaped_outboard_blkt_segment_poloidal(
+    dshaped_outboard_param, blanket_library_fixture
 ):
-    """
-    Automatically generated Regression Unit Test for blanket_mod_pol_height.
-
-    This test was generated using data from blanket_files/large_tokamak_primary_pumping2.IN.DAT.
-
-    :param blanketmodpolheightparam: the data used to mock and assert in this test.
-    :type blanketmodpolheightparam: blanketmodpolheightparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_inboard",
-        blanketmodpolheightparam.dr_fw_plasma_gap_inboard,
+    """Test for calculate_dshaped_outboard_blkt_segment_poloidal."""
+    result = blanket_library_fixture.calculate_dshaped_outboard_blkt_segment_poloidal(
+        n_blkt_outboard_modules_poloidal=dshaped_outboard_param.n_blkt_outboard_modules_poloidal,
+        dr_fw_plasma_gap_inboard=dshaped_outboard_param.dr_fw_plasma_gap_inboard,
+        rminor=dshaped_outboard_param.rminor,
+        dr_fw_plasma_gap_outboard=dshaped_outboard_param.dr_fw_plasma_gap_outboard,
+        dz_blkt_half=dshaped_outboard_param.dz_blkt_half,
+        n_divertors=dshaped_outboard_param.n_divertors,
+        f_ster_div_single=dshaped_outboard_param.f_ster_div_single,
     )
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_outboard",
-        blanketmodpolheightparam.dr_fw_plasma_gap_outboard,
-    )
-    monkeypatch.setattr(
-        fwbs_variables,
-        "i_fw_blkt_vv_shape",
-        blanketmodpolheightparam.i_fw_blkt_vv_shape,
-    )
-    monkeypatch.setattr(
-        fwbs_variables,
-        "n_blkt_inboard_modules_poloidal",
-        blanketmodpolheightparam.n_blkt_inboard_modules_poloidal,
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "f_ster_div_single", blanketmodpolheightparam.f_ster_div_single
-    )
-    monkeypatch.setattr(
-        fwbs_variables,
-        "n_blkt_outboard_modules_poloidal",
-        blanketmodpolheightparam.n_blkt_outboard_modules_poloidal,
-    )
-    monkeypatch.setattr(physics_variables, "itart", blanketmodpolheightparam.itart)
-    monkeypatch.setattr(physics_variables, "rminor", blanketmodpolheightparam.rminor)
-    monkeypatch.setattr(
-        divertor_variables, "n_divertors", blanketmodpolheightparam.n_divertors
-    )
-    monkeypatch.setattr(physics_variables, "rmajor", blanketmodpolheightparam.rmajor)
-    monkeypatch.setattr(physics_variables, "triang", blanketmodpolheightparam.triang)
-    monkeypatch.setattr(
-        blanket_library,
-        "len_blkt_inboard_segment_poloidal",
-        blanketmodpolheightparam.len_blkt_inboard_segment_poloidal,
-    )
-    monkeypatch.setattr(
-        blanket_library,
-        "len_blkt_outboard_segment_poloidal",
-        blanketmodpolheightparam.len_blkt_outboard_segment_poloidal,
-    )
-    monkeypatch.setattr(
-        blanket_library, "dz_blkt_half", blanketmodpolheightparam.dz_blkt_half
+    assert result == pytest.approx(
+        dshaped_outboard_param.expected_len_blkt_outboard_segment_poloidal
     )
 
-    blanket_library_fixture.blanket_module_poloidal_height()
 
-    assert blanket_library.len_blkt_inboard_segment_poloidal == pytest.approx(
-        blanketmodpolheightparam.expected_len_blkt_inboard_segment_poloidal
+class EllipticalInboardBlktSegmentParam(NamedTuple):
+    rmajor: Any = None
+    rminor: Any = None
+    triang: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    dz_blkt_half: Any = None
+    n_blkt_inboard_modules_poloidal: Any = None
+    n_divertors: Any = None
+    f_ster_div_single: Any = None
+    expected_len_blkt_inboard_segment_poloidal: Any = None
+
+
+@pytest.mark.parametrize(
+    "elliptical_inboard_param",
+    (
+        EllipticalInboardBlktSegmentParam(
+            rmajor=8,
+            rminor=2.6666666666666665,
+            triang=0.5,
+            dr_fw_plasma_gap_inboard=0.25,
+            dz_blkt_half=5.9532752487304119,
+            n_blkt_inboard_modules_poloidal=7,
+            n_divertors=1,
+            f_ster_div_single=0.115,
+            expected_len_blkt_inboard_segment_poloidal=1.6252823720672551,
+        ),
+    ),
+)
+def test_calculate_elliptical_inboard_blkt_segment_poloidal(
+    elliptical_inboard_param, blanket_library_fixture
+):
+    """Test for calculate_elliptical_inboard_blkt_segment_poloidal."""
+    result = blanket_library_fixture.calculate_elliptical_inboard_blkt_segment_poloidal(
+        rmajor=elliptical_inboard_param.rmajor,
+        rminor=elliptical_inboard_param.rminor,
+        triang=elliptical_inboard_param.triang,
+        dr_fw_plasma_gap_inboard=elliptical_inboard_param.dr_fw_plasma_gap_inboard,
+        dz_blkt_half=elliptical_inboard_param.dz_blkt_half,
+        n_blkt_inboard_modules_poloidal=elliptical_inboard_param.n_blkt_inboard_modules_poloidal,
+        n_divertors=elliptical_inboard_param.n_divertors,
+        f_ster_div_single=elliptical_inboard_param.f_ster_div_single,
     )
-    assert blanket_library.len_blkt_outboard_segment_poloidal == pytest.approx(
-        blanketmodpolheightparam.expected_len_blkt_outboard_segment_poloidal
+    assert result == pytest.approx(
+        elliptical_inboard_param.expected_len_blkt_inboard_segment_poloidal
+    )
+
+
+class EllipticalOutboardBlktSegmentParam(NamedTuple):
+    rmajor: Any = None
+    rminor: Any = None
+    triang: Any = None
+    dz_blkt_half: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
+    n_blkt_outboard_modules_poloidal: Any = None
+    n_divertors: Any = None
+    f_ster_div_single: Any = None
+    expected_len_blkt_outboard_segment_poloidal: Any = None
+
+
+@pytest.mark.parametrize(
+    "elliptical_outboard_param",
+    (
+        EllipticalOutboardBlktSegmentParam(
+            rmajor=8,
+            rminor=2.6666666666666665,
+            triang=0.5,
+            dz_blkt_half=5.9532752487304119,
+            dr_fw_plasma_gap_outboard=0.25,
+            n_blkt_outboard_modules_poloidal=8,
+            n_divertors=1,
+            f_ster_div_single=0.115,
+            expected_len_blkt_outboard_segment_poloidal=1.7853902013340495,
+        ),
+    ),
+)
+def test_calculate_elliptical_outboard_blkt_segment_poloidal(
+    elliptical_outboard_param, blanket_library_fixture
+):
+    """Test for calculate_elliptical_outboard_blkt_segment_poloidal."""
+    result = blanket_library_fixture.calculate_elliptical_outboard_blkt_segment_poloidal(
+        rmajor=elliptical_outboard_param.rmajor,
+        rminor=elliptical_outboard_param.rminor,
+        triang=elliptical_outboard_param.triang,
+        dz_blkt_half=elliptical_outboard_param.dz_blkt_half,
+        dr_fw_plasma_gap_outboard=elliptical_outboard_param.dr_fw_plasma_gap_outboard,
+        n_blkt_outboard_modules_poloidal=elliptical_outboard_param.n_blkt_outboard_modules_poloidal,
+        n_divertors=elliptical_outboard_param.n_divertors,
+        f_ster_div_single=elliptical_outboard_param.f_ster_div_single,
+    )
+    assert result == pytest.approx(
+        elliptical_outboard_param.expected_len_blkt_outboard_segment_poloidal
     )
 
 
