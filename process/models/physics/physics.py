@@ -4996,54 +4996,12 @@ class Physics:
             physics_variables.f_p_plasma_separatrix_rad,
             "OP ",
         )
-        po.ovarre(
-            self.outfile,
-            "Nominal mean radiation load on vessel first-wall (MW/m^2)",
-            "(pflux_fw_rad_mw)",
-            physics_variables.pflux_fw_rad_mw,
-            "OP ",
-        )
+
         po.ovarre(
             self.outfile,
             "Average neutron flux at plasma surface (MW/m^2)",
             "(pflux_plasma_surface_neutron_avg_mw)",
             physics_variables.pflux_plasma_surface_neutron_avg_mw,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Peaking factor for radiation first-wall load",
-            "(f_fw_rad_max)",
-            constraint_variables.f_fw_rad_max,
-            "IP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Maximum permitted radiation first-wall load (MW/m^2)",
-            "(pflux_fw_rad_max)",
-            constraint_variables.pflux_fw_rad_max,
-            "IP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Peak radiation wall load (MW/m^2)",
-            "(pflux_fw_rad_max_mw)",
-            constraint_variables.pflux_fw_rad_max_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Fast alpha particle power incident on the first-wall (MW)",
-            "(p_fw_alpha_mw)",
-            physics_variables.p_fw_alpha_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Nominal mean neutron load on vessel first-wall (MW/m^2)",
-            "(pflux_fw_neutron_mw)",
-            physics_variables.pflux_fw_neutron_mw,
             "OP ",
         )
 
