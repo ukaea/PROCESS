@@ -95,6 +95,7 @@ from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
+    PlasmaDensityLimit,
     PlasmaInductance,
 )
 from process.models.physics.plasma_geometry import PlasmaGeom
