@@ -3809,9 +3809,16 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
 
     nd_plasma_separatrix_electron = mfile.get("nd_plasma_separatrix_electron", scan=scan)
 
-    prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"$n \ [10^{19}\ \mathrm{m}^{-3}]$")
-    prof.set_title("Density profile")
+    ax_main = prof.add_subplot(631)
+    ax_main.set_position([0.075, 0.625, 0.25, 0.325])
+    ax_impurity = prof.add_subplot(634, sharex=ax_main)
+    ax_impurity.set_position([0.075, 0.275, 0.25, 0.325])
+    ax_main.tick_params(labelbottom=False)
+
+    ax_impurity.set_xlabel(r"$\rho \quad [r/a]$")
+    ax_main.set_ylabel(r"$n \ [10^{19}\ \mathrm{m}^{-3}]$")
+    ax_impurity.set_ylabel(r"$n \ [10^{16}\ \mathrm{m}^{-3}]$")
+    ax_main.set_title("Density profile")
 
     i_plasma_pedestal = mfile.get("i_plasma_pedestal", scan=scan)
     nd_plasma_pedestal_electron = mfile.get("nd_plasma_pedestal_electron", scan=scan)
@@ -3870,64 +3877,66 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     # convert to 1e19 m^-3 units for plotting (vectorised)
     density_profiles_plotting = density_profiles / 1e19
 
-    prof.plot(
+    ax_main.plot(
         rho,
         density_profiles_plotting[0],
         label=r"$n_{\text{fuel}}$",
         color="#2ca02c",
         linewidth=1.5,
     )
-    prof.plot(
+    ax_main.plot(
         rho,
         density_profiles_plotting[1],
         label=r"$n_{\alpha}$",
         color="#d62728",
         linewidth=1.5,
     )
-    prof.plot(
+    ax_impurity.plot(
         rho,
-        density_profiles_plotting[2],
+        density_profiles_plotting[2] * 1e3,
         label=r"$n_{p}$",
         color="#17becf",
         linewidth=1.5,
     )
-    prof.plot(
+    ax_impurity.plot(
         rho,
-        density_profiles_plotting[3],
+        density_profiles_plotting[3] * 1e3,
         label=r"$n_{Z}$",
         color="#9467bd",
         linewidth=1.5,
     )
-    prof.plot(
+    ax_main.plot(
         rho,
         density_profiles_plotting[4],
         label=r"$n_{i,total}$",
         color="#ff7f0e",
         linewidth=1.5,
     )
-    prof.plot(
+    ax_main.plot(
         rho, density_profiles_plotting[5], label=r"$n_{e}$", color="blue", linewidth=1.5
     )
 
     # make legend use multiple columns (up to 4) and place it to the right to avoid overlapping the plots
-    _handles, labels = prof.get_legend_handles_labels()
-    ncol = min(4, max(1, len(labels)))
-    prof.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=ncol)
+    _handles, labels = ax_main.get_legend_handles_labels()
+    ax_main.legend(loc="best")
+    ax_impurity.legend(loc="best")
 
     # Ranges
     # ---
     # DEMO : Fixed ranges for comparison
-    prof.set_xlim([0, 1])
+    ax_main.set_xlim([0, 1])
+    ax_impurity.set_xlim([0, 1])
     if demo_ranges:
-        prof.set_ylim([0, 20])
+        ax_main.set_ylim([0, 20])
 
     # Adapatative ranges
     else:
-        prof.set_ylim([0, prof.get_ylim()[1]])
+        ax_main.set_ylim([0, ax_main.get_ylim()[1]])
+        ax_impurity.set_ylim([0, ax_impurity.get_ylim()[1]])
 
     if i_plasma_pedestal != 0:
         # Print pedestal lines
-        prof.axhline(
+        ax_main.axhline(
             y=nd_plasma_pedestal_electron / 1e19,
             xmax=radius_plasma_pedestal_density_norm,
             color="r",
@@ -3935,7 +3944,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
             linewidth=0.4,
             alpha=0.4,
         )
-        prof.vlines(
+        ax_main.vlines(
             x=radius_plasma_pedestal_density_norm,
             ymin=0.0,
             ymax=nd_plasma_pedestal_electron / 1e19,
@@ -3944,7 +3953,8 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
             linewidth=0.4,
             alpha=0.4,
         )
-    prof.minorticks_on()
+    ax_main.minorticks_on()
+    ax_impurity.minorticks_on()
 
     # Add text box with density profile parameters
     textstr_density = "\n".join((
@@ -3965,11 +3975,11 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     ))
 
     props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
-    prof.text(
+    ax_main.text(
         0.0,
-        -0.25,
+        -0.175,
         textstr_density,
-        transform=prof.transAxes,
+        transform=ax_impurity.transAxes,
         fontsize=9,
         verticalalignment="top",
         bbox=props_density,
@@ -3988,14 +3998,14 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
         f"{mfile.get('nd_plasma_protons_vol_avg', scan=scan):.3e} m$^{{-3}}$",
     ))
 
-    prof.text(
+    ax_impurity.text(
         1.2,
-        -0.725,
+        0.05,
         textstr_ions,
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
-        transform=prof.transAxes,
+        transform=ax_impurity.transAxes,
         bbox={
             "boxstyle": "round",
             "facecolor": "wheat",
@@ -4003,8 +4013,8 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
         },
     )
 
-    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
-
+    ax_main.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+    ax_impurity.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
     # ---
 
 
@@ -4055,8 +4065,8 @@ def plot_jprofile(prof, mfile: mf.MFile, scan: int):
 
     props_j = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
-        1.1,
-        0.75,
+        0.65,
+        1.6,
         textstr_j,
         transform=prof.transAxes,
         fontsize=9,
@@ -4065,7 +4075,7 @@ def plot_jprofile(prof, mfile: mf.MFile, scan: int):
     )
 
     prof.text(
-        0.05,
+        0.35,
         0.04,
         "*Current profile is assumed to be parabolic",
         fontsize=10,
@@ -4073,7 +4083,7 @@ def plot_jprofile(prof, mfile: mf.MFile, scan: int):
         transform=plt.gcf().transFigure,
     )
     prof.text(
-        0.05,
+        0.35,
         0.02,
         "*Bootstrap profile is for representation only",
         fontsize=10,
@@ -4193,7 +4203,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
         0.0,
-        -0.16,
+        -0.125,
         textstr_temperature,
         transform=prof.transAxes,
         fontsize=9,
@@ -4256,16 +4266,16 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
     # ---
 
-    textstr_q = "\n".join((
-        r"$q_0$: " + f"{q0:.3f}\n",
-        r"$q_{95}$: " + f"{q95:.3f}\n",
+    textstr_q = " | ".join((
+        r"$q_0$: " + f"{q0:.3f}",
+        r"$q_{95}$: " + f"{q95:.3f}",
         r"$q_{\text{cyl}}$: " + f"{mfile.get('qstar', scan=scan):.3f}",
     ))
 
     props_q = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
-        -0.4,
-        0.75,
+        0.0,
+        1.4,
         textstr_q,
         transform=prof.transAxes,
         fontsize=9,
@@ -13156,13 +13166,13 @@ def main_plot(
     )
 
     # Plot density profiles
-    ax9 = figs[5].add_subplot(231)
-    ax9.set_position([0.075, 0.55, 0.25, 0.4])
-    plot_n_profiles(ax9, demo_ranges, m_file, scan)
+    # ax9 = figs[5].add_subplot(231)
+    # ax9.set_position([0.075, 0.55, 0.25, 0.4])
+    plot_n_profiles(figs[5], demo_ranges, m_file, scan)
 
     # Plot temperature profiles
     ax10 = figs[5].add_subplot(232)
-    ax10.set_position([0.375, 0.55, 0.25, 0.4])
+    ax10.set_position([0.375, 0.575, 0.25, 0.375])
     plot_t_profiles(ax10, demo_ranges, m_file, scan)
 
     # Plot impurity profiles
@@ -13172,12 +13182,12 @@ def main_plot(
 
     # Plot current density profile
     ax12 = figs[5].add_subplot(4, 3, 10)
-    ax12.set_position([0.075, 0.105, 0.25, 0.15])
+    ax12.set_position([0.375, 0.105, 0.25, 0.15])
     plot_jprofile(ax12, m_file, scan)
 
     # Plot q profile
     ax13 = figs[5].add_subplot(4, 3, 12)
-    ax13.set_position([0.7, 0.125, 0.25, 0.15])
+    ax13.set_position([0.7, 0.105, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
     plot_plasma_effective_charge_profile(figs[6].add_subplot(221), m_file, scan)
