@@ -1341,6 +1341,9 @@ freq_plasma_larmor_toroidal_deuteron_profile: list[float] = None
 freq_plasma_larmor_toroidal_triton_profile: list[float] = None
 """Profile of triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
+i_plasma_impurity_accumulation: int = None
+"""switch for impurity accumulation model:"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1669,7 +1672,8 @@ def init_physics_variables():
         freq_plasma_electron_profile, \
         freq_plasma_larmor_toroidal_electron_profile, \
         freq_plasma_larmor_toroidal_deuteron_profile, \
-        freq_plasma_larmor_toroidal_triton_profile
+        freq_plasma_larmor_toroidal_triton_profile, \
+        i_plasma_impurity_accumulation
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1939,3 +1943,4 @@ def init_physics_variables():
     freq_plasma_larmor_toroidal_electron_profile = []
     freq_plasma_larmor_toroidal_deuteron_profile = []
     freq_plasma_larmor_toroidal_triton_profile = []
+    i_plasma_impurity_accumulation = 1

@@ -1873,6 +1873,9 @@ INPUT_VARIABLES = {
     "i_plasma_wall_gap": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1]
     ),
+    "i_plasma_impurity_accumulation": InputVariable(
+        data_structure.physics_variables, int, choices=[1, 2]
+    ),
     "i_pulsed_plant": InputVariable(data_structure.pulse_variables, int, choices=[0, 1]),
     "i_q95_fixed": InputVariable(
         data_structure.constraint_variables, int, choices=[0, 1]
