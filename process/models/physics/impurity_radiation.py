@@ -11,6 +11,7 @@ from scipy import integrate
 from process import constants
 from process.data_structure import impurity_radiation_module
 from process.exceptions import ProcessError, ProcessValueError
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -501,6 +502,71 @@ def pimpden(imp_element_index, neprofile, teprofile):
     )
 
     return pimpden
+
+
+def calaculate_cylindrical_neoclassical_impurity_profile(
+    n_charge_impurity: int,
+    f_nd_impurity_electron: float,
+    nd_plasma_electrons_vol_avg: float,
+    nd_plasma_ions_profile: PlasmaProfile,
+    nd_plasma_ions_on_axis: float,
+    temp_plasma_ion_profile_kev: PlasmaProfile,
+    temp_plasma_ion_on_axis_kev: float,
+):
+    """Calculate the cylindrical neoclassical impurity density profile
+
+    :param n_charge_impurity: Charge of the impurity
+    :type n_charge_impurity: int
+    :param f_nd_impurity_electron: Relative density of impurity electrons (n_imp/n_e)
+    :type f_nd_impurity_electron: float
+    :param nd_plasma_electrons_vol_avg: Volume-averaged electron density of the plasma
+    :type nd_plasma_electrons_vol_avg: float
+    :param nd_plasma_ions_profile: Ion density profile of the plasma
+    :type nd_plasma_ions_profile: PlasmaProfile
+    :param nd_plasma_ions_on_axis: Ion density on axis
+    :type nd_plasma_ions_on_axis: float
+    :param temp_plasma_ion_profile_kev: Ion temperature profile in keV
+    :type temp_plasma_ion_profile_kev: PlasmaProfile
+    :param temp_plasma_ion_on_axis_kev: Ion temperature on axis in keV
+    :type temp_plasma_ion_on_axis_kev: float
+    :return: Impurity density profile
+    :rtype: numpy.array
+
+    :notes:
+        - The formula is only true for high Z so Z>>1
+        - This is the impurity model used in the CEA METIS code
+
+    :references:
+        - P. Helander and D. J. Sigmar, Collisional Transport in Magnetized Plasmas.
+        Cambridge University Press, 2005. page 92-93
+    ‌
+    """
+
+    # Calculate volume-averaged impurity density profile
+    # Using rho as the radial coordinate for volume averaging
+    # Volume element: dV ~ ρ * dρ (in normalized coordinates)
+    rho_vals = np.linspace(0, 1, len(nd_plasma_ions_profile))
+    d_rho = rho_vals[1] - rho_vals[0] if len(rho_vals) > 1 else 1.0
+
+    impurity_profile_unnorm = (
+        nd_plasma_ions_profile / nd_plasma_ions_on_axis
+    ) ** n_charge_impurity * (
+        temp_plasma_ion_profile_kev / temp_plasma_ion_on_axis_kev
+    ) ** ((n_charge_impurity / 2) - 1)
+
+    # Volume-weighted average using scipy's trapz integration
+    volume_integral = np.trapz(impurity_profile_unnorm * rho_vals, dx=d_rho)
+    volume_avg = 2 * volume_integral
+
+    impurity_profile = (
+        ((f_nd_impurity_electron * nd_plasma_electrons_vol_avg) / volume_avg)
+        * ((nd_plasma_ions_profile / nd_plasma_ions_on_axis) ** n_charge_impurity)
+        * (
+            (temp_plasma_ion_profile_kev / temp_plasma_ion_on_axis_kev)
+            ** ((n_charge_impurity / 2) - 1)
+        )
+    )
+    return impurity_profile
 
 
 def element2index(element: str):
