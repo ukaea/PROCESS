@@ -9,7 +9,7 @@ from numba import njit
 from scipy import integrate
 
 from process import constants
-from process.data_structure import impurity_radiation_module
+from process.data_structure import impurity_radiation_module, physics_variables
 from process.exceptions import ProcessError, ProcessValueError
 from process.models.physics.plasma_profiles import PlasmaProfile
 
@@ -471,40 +471,97 @@ def pimpden(imp_element_index, neprofile, teprofile):
         )
     )
 
-    pimpden = (
-        impurity_radiation_module.f_nd_impurity_electron_array[imp_element_index]
-        * neprofile
-        * neprofile
-        * pimpden
-    )
+    if physics_variables.i_plasma_impurity_accumulation == 2:
+        nd_impurity_profile = calculate_cylindrical_neoclassical_impurity_profile(
+            n_charge_impurity=impurity_radiation_module.impurity_arr_z[
+                imp_element_index
+            ],
+            f_nd_impurity_electron=impurity_radiation_module.f_nd_impurity_electron_array[
+                imp_element_index
+            ],
+            nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+            nd_plasma_ions_profile=neprofile,
+            nd_plasma_ions_on_axis=neprofile[0]
+            * (
+                physics_variables.nd_plasma_fuel_ions_vol_avg
+                / physics_variables.nd_plasma_electrons_vol_avg
+            ),
+            temp_plasma_ion_profile_kev=teprofile
+            * physics_variables.f_temp_plasma_ion_electron,
+            temp_plasma_ion_on_axis_kev=teprofile[0]
+            * physics_variables.f_temp_plasma_ion_electron,
+        )
 
-    less_than_imp_temp_mask = (
-        teprofile
-        <= impurity_radiation_module.temp_impurity_keV_array[imp_element_index, 0]
-    )
-    pimpden[less_than_imp_temp_mask] = (
-        impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, 0]
-    )
+        pimpden = nd_impurity_profile * neprofile * pimpden
 
-    greater_than_imp_temp_mask = (
-        teprofile
-        >= impurity_radiation_module.temp_impurity_keV_array[
-            imp_element_index,
-            impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
-        ]
-    )
-    #  This is okay because Bremsstrahlung will dominate at higher temp.
-    pimpden[greater_than_imp_temp_mask] = (
-        impurity_radiation_module.pden_impurity_lz_nd_temp_array[
-            imp_element_index,
-            impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
-        ]
-    )
+        less_than_imp_temp_mask = (
+            teprofile
+            <= impurity_radiation_module.temp_impurity_keV_array[imp_element_index, 0]
+        )
+        pimpden[less_than_imp_temp_mask] = (
+            impurity_radiation_module.pden_impurity_lz_nd_temp_array[
+                imp_element_index, 0
+            ]
+        )
+
+        greater_than_imp_temp_mask = (
+            teprofile
+            >= impurity_radiation_module.temp_impurity_keV_array[
+                imp_element_index,
+                impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
+            ]
+        )
+        #  This is okay because Bremsstrahlung will dominate at higher temp.
+        pimpden[greater_than_imp_temp_mask] = (
+            impurity_radiation_module.pden_impurity_lz_nd_temp_array[
+                imp_element_index,
+                impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
+            ]
+        )
+
+    elif physics_variables.i_plasma_impurity_accumulation == 1:
+        pimpden = (
+            impurity_radiation_module.f_nd_impurity_electron_array[imp_element_index]
+            * neprofile
+            * neprofile
+            * pimpden
+        )
+
+        less_than_imp_temp_mask = (
+            teprofile
+            <= impurity_radiation_module.temp_impurity_keV_array[imp_element_index, 0]
+        )
+        pimpden[less_than_imp_temp_mask] = (
+            impurity_radiation_module.pden_impurity_lz_nd_temp_array[
+                imp_element_index, 0
+            ]
+        )
+
+        greater_than_imp_temp_mask = (
+            teprofile
+            >= impurity_radiation_module.temp_impurity_keV_array[
+                imp_element_index,
+                impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
+            ]
+        )
+        #  This is okay because Bremsstrahlung will dominate at higher temp.
+        pimpden[greater_than_imp_temp_mask] = (
+            impurity_radiation_module.pden_impurity_lz_nd_temp_array[
+                imp_element_index,
+                impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
+            ]
+        )
+
+    else:
+        raise ProcessValueError(
+            "Invalid value for i_plasma_impurity_accumulation",
+            i_plasma_impurity_accumulation=physics_variables.i_plasma_impurity_accumulation,
+        )
 
     return pimpden
 
 
-def calaculate_cylindrical_neoclassical_impurity_profile(
+def calculate_cylindrical_neoclassical_impurity_profile(
     n_charge_impurity: int,
     f_nd_impurity_electron: float,
     nd_plasma_electrons_vol_avg: float,
