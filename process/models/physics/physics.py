@@ -4412,6 +4412,13 @@ class Physics:
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
 
+        po.ovarin(
+            self.outfile,
+            "Plasma impurity accumulation model",
+            "(i_plasma_impurity_accumulation)",
+            physics_variables.i_plasma_impurity_accumulation,
+        )
+
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             # MDK Update f_nd_impurity_electrons, as this will make the ITV output work correctly.
             impurity_radiation_module.f_nd_impurity_electrons[imp] = (
