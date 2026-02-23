@@ -4033,13 +4033,14 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     # DEMO : Fixed ranges for comparison
     ax_main.set_xlim([0, 1])
     ax_impurity.set_xlim([0, 1])
+    ax_impurity.set_yscale("log")
     if demo_ranges:
         ax_main.set_ylim([0, 20])
 
     # Adapatative ranges
     else:
         ax_main.set_ylim([0, ax_main.get_ylim()[1]])
-        ax_impurity.set_ylim([0, ax_impurity.get_ylim()[1]])
+        ax_impurity.set_ylim([1e-3, 1e5])
 
     if i_plasma_pedestal != 0:
         # Print pedestal lines
@@ -4546,6 +4547,10 @@ def plot_radprofile(prof, mfile: mf.MFile, scan: int, impp, demo_ranges: bool):
     prof.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
     prof.set_title("Raw Data: Line & Bremsstrahlung radiation profile")
 
+    i_plasma_impurity_accumulation = mfile.get(
+        "i_plasma_impurity_accumulation", scan=scan
+    )
+
     # read in the impurity data
     imp_data = read_imprad_data(_skiprows=2, data_path=impp)
 
@@ -4573,7 +4578,18 @@ def plot_radprofile(prof, mfile: mf.MFile, scan: int, impp, demo_ranges: bool):
                 log_te_data = np.log([row[0] for row in imp_data[i]])
                 log_lz_data = np.log([row[1] for row in imp_data[i]])
                 lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
-            pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
+            if i_plasma_impurity_accumulation == 1:
+                pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
+            elif i_plasma_impurity_accumulation == 2:
+                if (
+                    imp_frac[i] > 1.0e-30 and i > 1
+                ):  # Skip H and He for impurity accumulation
+                    nd_impurity_profile = mfile.get(
+                        f"f_nd_impurity_electrons{i}_{k}", scan=scan
+                    )
+                    pimpden[i][k] = nd_impurity_profile * ne[k] * lz[i][k]
+                else:
+                    pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
 
         for l in range(imp_data.shape[0]):  # noqa: E741
             prad[k] = prad[k] + pimpden[l][k] * 1.0e-6
@@ -4670,6 +4686,9 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
     """
     rminor = mfile.get("rminor", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
+    i_plasma_impurity_accumulation = mfile.get(
+        "i_plasma_impurity_accumulation", scan=scan
+    )
     # Read in the impurity data
     imp_data = read_imprad_data(2, impp)
     # imp data is a 3D array with shape (num_impurities, num_temp_points, (temp, lz, zav))
@@ -4707,10 +4726,24 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
                 lz[impurity][rho] = np.exp(
                     np.interp(np.log(te[rho]), log_te_data, log_lz_data)
                 )
-            # Find the power density for each impurity at each rho
-            pimpden[impurity][rho] = (
-                imp_frac[impurity] * ne[rho] * ne[rho] * lz[impurity][rho]
-            )
+            if i_plasma_impurity_accumulation == 1:
+                pimpden[impurity][rho] = (
+                    imp_frac[impurity] * ne[rho] * ne[rho] * lz[impurity][rho]
+                )
+            elif i_plasma_impurity_accumulation == 2:
+                if (
+                    imp_frac[impurity] > 1.0e-30 and impurity > 1
+                ):  # Skip H and He for impurity accumulation
+                    nd_impurity_profile = mfile.get(
+                        f"f_nd_impurity_electrons{impurity}_{rho}", scan=scan
+                    )
+                    pimpden[impurity][rho] = (
+                        nd_impurity_profile * ne[rho] * lz[impurity][rho]
+                    )
+                else:
+                    pimpden[impurity][rho] = (
+                        imp_frac[impurity] * ne[rho] * ne[rho] * lz[impurity][rho]
+                    )
 
         for impurity in range(imp_data.shape[0]):
             prad[rho] = prad[rho] + pimpden[impurity][rho] * 1.0e-6
