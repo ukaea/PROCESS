@@ -12,51 +12,40 @@ Output file:
 .csv will be saved to the directory of the input file
 """
 
-# == import modules ==
-# standard python modules
-import argparse
-import csv
 import json
+from collections.abc import Sequence
 from pathlib import Path, PurePath
 
+<<<<<<<< HEAD:process/core/io/mfile_to_csv.py
 # PROCESS-specific modules
 from process.core.io.mfile import MFile
+========
+import numpy as np
+>>>>>>>> 71bdc991 (Overhall CI):process/core/io/mfile/mfile_to_csv.py
 
-# == define functions ==
+from process.io.mfile.mfile import MFile
 
-
-def parse_args(args):
-    """Parse supplied arguments.
-
-    Parameters
-    ----------
-    args : list, None
-        arguments to parse
-
-    Returns
-    -------
-    Namespace
-        parsed arguments
-    """
-    parser = argparse.ArgumentParser(
-        description="Read from a PROCESS MFILE and write values into a csv."
-    )
-    parser.add_argument(
-        "-f",
-        "--mfile",
-        type=str,
-        default="MFILE.DAT",
-        help="Specify input mfile name, default = MFILE.DAT",
-    )
-    parser.add_argument(
-        "-v",
-        "--varfile",
-        type=str,
-        default="mfile_to_csv_vars.json",
-        help="Specify file holding variable names, default = mfile_to_csv_vars.json",
-    )
-
-    return parser.parse_args(args)
+default_vars = (
+    "minmax",
+    "p_hcd_injected_max",
+    "p_plant_electric_net_required_mw",
+    "ripple_b_tf_plasma_edge_max",
+    "t_burn_min",
+    "alstroh",
+    "sig_tf_wp_max",
+    "dx_tf_turn_steel",
+    "f_j_cs_start_pulse_end_flat_top",
+    "alstroh",
+    "rmajor",
+    "dr_tf_inboard",
+    "dr_cs",
+    "c_tf_turn",
+    "dr_tf_wp_with_insulation",
+    "dr_cryostat",
+    "dr_shld_outboard",
+    "dz_divertor",
+    "rmajor",
+)
 
 
 def get_vars(vfile="mfile_to_csv_vars.json"):
@@ -110,10 +99,11 @@ def read_mfile(mfilename="MFILE.DAT", variables=None):
             print(f"Variable '{var_name}' not in MFILE. Skipping and moving on...")
         else:
             # In case of a file containing multiple scans, (scan = -1) uses the last scan value
-            var_val = m_file.data[var_name].get_scan(-1)
-            description = m_file.data[var_name].var_description
-            var_data = (description, var_name, var_val)
-            output_vars.append(var_data)
+            output_vars.append((
+                m_file.data[var_name].var_description,
+                var_name,
+                m_file.get(var_name, scan=-1),
+            ))
 
     return output_vars
 
@@ -153,47 +143,34 @@ def write_to_csv(csv_outfile, output_data=None):
     output_data :
          (Default value = None)
     """
-    if output_data is None:
-        output_data = []
-    with open(csv_outfile, "w") as csv_file:
-        print("Writing to csv file:", csv_outfile)
-        writer = csv.writer(csv_file, delimiter=",")
-        writer.writerow(["Description", "Varname", "Value"])
+    print("Writing to csv file:", csv_outfile)
+    np.savetxt(
+        csv_outfile,
+        output_data or [],
+        fmt="%.5e",
+        delimiter=",",
+        header=", ".join(["Description", "Varname", "Value"]),
+        footer="",
+        comments="",
+    )
 
-        for vardesc in output_data:
-            writer.writerow(vardesc)
 
-
-def main(args=None):
+def to_csv(mfile, variables: Sequence[str] | str = default_vars):
     """Extract certain variables from an MFILE.DAT and output to CSV.
 
     Parameters
     ----------
-    args : list, optional
-        optional command-line args for testing, defaults to None
+    mfile:
+        Mfile to convert
+    variables:
+        variable file with variables to extract
     """
-    # read from command line inputs
-    args = parse_args(args)
-
-    # read list of required variables from input json file
-    jvars = get_vars(args.varfile)
-
-    # read required data from input mfile
-    output_data = read_mfile(args.mfile, jvars)
-
-    # identify save location
-    output_file = get_savenamepath(args.mfile)
-
-    # write to csv
-    write_to_csv(output_file, output_data)
+    write_to_csv(
+        get_savenamepath(mfile),
+        read_mfile(
+            mfile, get_vars(variables) if isinstance(variables, str) else variables
+        ),
+    )
 
     # write final line to screen
     print("Complete.")
-
-
-# == program ==
-
-if __name__ == "__main__":
-    main()
-
-# == end ==

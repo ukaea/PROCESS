@@ -387,17 +387,3 @@ class MFILEParser(abc.MutableMapping):
             raise RuntimeError(f"Unrecognised file format '{suffix}'")
 
         self._logger.info("File was written successfully.")
-
-
-if __name__ in "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("input_mfile")
-    parser.add_argument("output_file")
-
-    args = parser.parse_args()
-
-    parser = MFILEParser(args.input_mfile)
-    parser.write(args.output_file)

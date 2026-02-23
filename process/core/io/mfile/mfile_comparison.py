@@ -10,7 +10,6 @@ Notes:
                 generation script imports, and inspects, process.
 """
 
-import argparse
 import sys
 
 import numpy as np
@@ -271,7 +270,15 @@ class BColors:
     ENDC = "\033[0m"
 
 
-def main(arg):
+comparison_dict = {
+    "defaults": DEFAULT_COMPARE_PARAMS,
+    "baseline": BASELINE_LIST,
+    "blanket": BLANKET_COMPARE_PARAMS,
+    "generic": GENERIC_LIST,
+}
+
+
+def compare_mfiles(files, comparison, acc, save, verbose):
     """Main function for comparing MFILEs
 
     Parameters
@@ -283,9 +290,9 @@ def main(arg):
     print_counter = 0
     n = 2
     mfile_list = []
-    for item in arg.f:
+    for item in files:
         mfile = mf.MFile(filename=item)
-        if mfile.data["error_status"].get_scan(-1) == 3:
+        if mfile.get("error_status", scan=-1) == 3:
             raise RuntimeError(
                 f"{item} is an MFile from a PROCESS run that did not converge"
                 " and instead results from an error during the run"
@@ -293,10 +300,7 @@ def main(arg):
 
         mfile_list.append(mfile)
 
-    var_list = []
-    missing_vars = []
-    diff_list = []
-    within_list = []
+    var_list, missing_vars, diff_list, within_list = [], [], [], []
 
     key_list = mfile_list[0].data.keys()
     for var in key_list:
@@ -309,38 +313,30 @@ def main(arg):
         if store:
             var_list.append(var)
 
-    if arg.defaults:
-        var_list = DEFAULT_COMPARE_PARAMS
+    if comparison != "all":
+        var_list = comparison_dict[comparison]
 
-    if arg.blanket:
-        var_list = BLANKET_COMPARE_PARAMS
-
-    if arg.baseline:
-        var_list = BASELINE_LIST
-
-    if arg.generic:
-        var_list = GENERIC_LIST
-
+    dts = get_dicts()
     for v in var_list:
         if "normres" in v:
             continue
 
         values = np.zeros(n)  # replaced scipy with numpy
 
-        if v not in get_dicts()["DICT_VAR_TYPE"]:
+        if v not in dts["DICT_VAR_TYPE"]:
             try:
-                eval(mfile_list[0].data[v].get_scan(-1))
+                eval(mfile_list[0].get(v, scan=-1))
             except NameError:
                 pass
             except TypeError:
                 for m in range(len(mfile_list)):
-                    values[m] = mfile_list[m].data[v].get_scan(-1)
+                    values[m] = mfile_list[m].get(v, scan=-1)
             except SyntaxError:
                 pass
 
         elif (
-            get_dicts()["DICT_VAR_TYPE"][v] == "real_variable"
-            or get_dicts()["DICT_VAR_TYPE"][v] == "int_variable"
+            dts["DICT_VAR_TYPE"][v] == "real_variable"
+            or dts["DICT_VAR_TYPE"][v] == "int_variable"
         ):
             for m in range(len(mfile_list)):
                 values[m] = mfile_list[m].data[v].get_scan(-1)
@@ -348,150 +344,32 @@ def main(arg):
         norm_vals = []
         if values[0] != 0 and isfinite(values[0]):
             norm_vals = values / values[0]
-        # else:
-        #    print(key, values[0])
 
         if len(norm_vals) >= 1:
             key = v.strip(".").strip(" ")
-            des = get_dicts()["DICT_DESCRIPTIONS"].get(key, "-")
-            a = norm_vals >= 1.0 + arg.acc / 100.0
-            b = norm_vals <= 1.0 - arg.acc / 100.0
-            if a[1]:
+            des = dts["DICT_DESCRIPTIONS"].get(key, "-")
+            a = norm_vals >= 1.0 + acc / 100.0
+            b = norm_vals <= 1.0 - acc / 100.0
+            rounded = round((norm_vals[1] - 1) * 100.0, 2)
+            vals = f"{values[0]}\t{values[1]}"
+            if a[1] or b[1]:
                 diff_list.append(v)
-                line = (
-                    BColors.ENDC
-                    + v
-                    + "\t"
-                    + des
-                    + "\t"
-                    + str(values[0])
-                    + "\t"
-                    + str(values[1])
-                    + "\t"
-                    + BColors.FAIL
-                    + str(round((norm_vals[1] - 1) * 100.0, 2))
-                    + " %"
-                )
-                wline = (
-                    v
-                    + "\t"
-                    + des
-                    + "\t"
-                    + "\t"
-                    + str(values[0])
-                    + "\t"
-                    + str(values[1])
-                    + "\t"
-                    + str(round((norm_vals[1] - 1) * 100.0, 2))
-                    + " %"
-                )
-                print(line)
-                print_counter += 1
-                if arg.save:
-                    with open("comp.txt", "a") as ofile:
-                        ofile.write(wline + "\n")
-            elif b[1]:
-                diff_list.append(v)
-                line = (
-                    BColors.ENDC
-                    + v
-                    + "\t"
-                    + des
-                    + "\t"
-                    + str(values[0])
-                    + "\t"
-                    + str(values[1])
-                    + "\t"
-                    + BColors.FAIL
-                    + str(round((norm_vals[1] - 1) * 100.0, 2))
-                    + " %"
-                )
-                wline = (
-                    v
-                    + "\t"
-                    + des
-                    + "\t"
-                    + str(values[0])
-                    + "\t"
-                    + str(values[1])
-                    + "\t"
-                    + str(round((norm_vals[1] - 1) * 100.0, 2))
-                    + " %"
-                )
-                print(line)
-                print_counter += 1
-                if arg.save:
-                    with open("comp.txt", "a") as ofile:
-                        ofile.write(wline + "\n")
+                rv = f"{BColors.FAIL}{rounded} %"
             else:
                 within_list.append(v)
-                line = (
-                    BColors.ENDC
-                    + v
-                    + "\t"
-                    + des
-                    + "\t"
-                    + str(values[0])
-                    + "\t"
-                    + str(values[1])
-                    + "\t"
-                    + str(round((norm_vals[1] - 1) * 100.0, 2))
-                    + " %"
-                )
-                wline = (
-                    v
-                    + "\t"
-                    + des
-                    + "\t"
-                    + str(values[0])
-                    + "\t"
-                    + str(values[1])
-                    + "\t"
-                    + str(round((norm_vals[1] - 1) * 100.0, 2))
-                    + " %"
-                )
-                if arg.verbose:
-                    print(line)
-                    print_counter += 1
+                rv = f"{rounded} %"
+
+            wline = "\t".join([v, f"{des}\t" if a[1] else des, vals, f"{rounded} %"])
+            if a[1] or b[1] or verbose:
+                print("\t".join([f"{BColors.ENDC}{v}", des, vals, rv]))
+                print_counter += 1
+                if save:
                     with open("comp.txt", "a") as ofile:
                         ofile.write(wline + "\n")
 
-    if arg.baseline and arg.acc >= 10.0:
+    print(BColors.ENDC)
+    if comparison == "baseline" and acc >= 10.0:
         if print_counter == 0:
             sys.exit(0)
         else:
-            sys.exit(f"Differences in baseline output by more than {arg.acc}%")
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Produce a comparison "
-        "between two PROCESS "
-        "MFILEs. User Can specify "
-        "level of differences to show. "
-        "For info contact "
-        "james.morris2@ccfe.ac.uk"
-    )
-
-    parser.add_argument("-f", metavar="f", type=str, nargs="+", help="Files to compare")
-
-    parser.add_argument(
-        "-s", "--save", help="Save output to file called comp.txt", action="store_true"
-    )
-
-    parser.add_argument("--acc", type=float, default=5.0)
-
-    parser.add_argument("--verbose", type=float, default=0.0)
-
-    parser.add_argument("--defaults", action="store_true")
-
-    parser.add_argument("--baseline", action="store_true")
-
-    parser.add_argument("--blanket", action="store_true")
-
-    parser.add_argument("--generic", action="store_true")
-
-    args = parser.parse_args()
-
-    main(args)
-    print(BColors.ENDC)
+            sys.exit(f"Differences in baseline output by more than {acc}%")
