@@ -9,7 +9,11 @@ try:
 except ImportError:
     PLOT_SANKEY = False
 
+<<<<<<<< HEAD:process/core/io/plot_plotly_sankey.py
 from process.core.io.mfile import MFile
+========
+from process.io.mfile.mfile import MFile
+>>>>>>>> 71bdc991 (Overhall CI):process/core/io/plot/sankey/plot_plotly_sankey.py
 
 
 def main(args=None):
