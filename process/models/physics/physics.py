@@ -30,6 +30,9 @@ from process.data_structure import (
     times_variables,
 )
 from process.exceptions import ProcessValueError
+from process.models.physics.impurity_radiation import (
+    calculate_cylindrical_neoclassical_impurity_profile,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -4445,6 +4448,53 @@ class Physics:
                     str2,
                     impurity_radiation_module.f_nd_impurity_electrons[imp],
                 )
+                if impurity_radiation_module.f_nd_impurity_electrons[imp] != 0.0:
+                    if physics_variables.i_plasma_impurity_accumulation == 1:
+                        for i in range(physics_variables.n_plasma_profile_elements):
+                            po.ovarre(
+                                self.mfile,
+                                str1 + f" at point {i}",
+                                f"(f_nd_impurity_electrons{imp}_{i})",
+                                impurity_radiation_module.f_nd_impurity_electrons[imp]
+                                * self.plasma_profile.neprofile.profile_y[i],
+                                "OP ",
+                            )
+                    elif physics_variables.i_plasma_impurity_accumulation == 2:
+                        imp_profile = calculate_cylindrical_neoclassical_impurity_profile(
+                            n_charge_impurity=impurity_radiation_module.impurity_arr_z[
+                                imp
+                            ],
+                            f_nd_impurity_electron=impurity_radiation_module.f_nd_impurity_electrons[
+                                imp
+                            ],
+                            nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                            nd_plasma_ions_profile=self.plasma_profile.neprofile.profile_y
+                            * (
+                                physics_variables.nd_plasma_fuel_ions_vol_avg
+                                / physics_variables.nd_plasma_electrons_vol_avg
+                            ),
+                            nd_plasma_ions_on_axis=self.plasma_profile.neprofile.profile_y[
+                                0
+                            ]
+                            * (
+                                physics_variables.nd_plasma_fuel_ions_vol_avg
+                                / physics_variables.nd_plasma_electrons_vol_avg
+                            ),
+                            temp_plasma_ion_profile_kev=self.plasma_profile.teprofile.profile_y
+                            * physics_variables.f_temp_plasma_ion_electron,
+                            temp_plasma_ion_on_axis_kev=self.plasma_profile.teprofile.profile_y[
+                                0
+                            ]
+                            * physics_variables.f_temp_plasma_ion_electron,
+                        )
+                        for i in range(physics_variables.n_plasma_profile_elements):
+                            po.ovarre(
+                                self.mfile,
+                                str1 + f" at point {i}",
+                                f"(f_nd_impurity_electrons{imp}_{i})",
+                                imp_profile[i],
+                                "OP ",
+                            )
 
         po.ovarre(
             self.outfile,

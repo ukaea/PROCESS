@@ -3835,28 +3835,27 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
         "radius_plasma_pedestal_density_norm", scan=scan
     )
     ne0 = mfile.get("nd_plasma_electron_on_axis", scan=scan)
+    n_plasma_profile_elements = mfile.get("n_plasma_profile_elements", scan=scan)
 
     # build electron profile and species profiles (scale with electron profile shape)
     if i_plasma_pedestal == 1:
-        rhocore = np.linspace(0, radius_plasma_pedestal_density_norm)
-        necore = (
-            nd_plasma_pedestal_electron
-            + (ne0 - nd_plasma_pedestal_electron)
-            * (1 - rhocore**2 / radius_plasma_pedestal_density_norm**2) ** alphan
-        )
+        rho = np.linspace(0, 1.0, int(n_plasma_profile_elements))
+        ne = np.zeros_like(rho)
 
-        rhosep = np.linspace(radius_plasma_pedestal_density_norm, 1)
-        neesep = nd_plasma_separatrix_electron + (
-            nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
-        ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_density_norm))
-
-        rho = np.append(rhocore, rhosep)
-        ne = np.append(necore, neesep)
-
+        for i in range(len(rho)):
+            if rho[i] <= radius_plasma_pedestal_density_norm:
+                ne[i] = (
+                    nd_plasma_pedestal_electron
+                    + (ne0 - nd_plasma_pedestal_electron)
+                    * (1 - rho[i] ** 2 / radius_plasma_pedestal_density_norm**2)
+                    ** alphan
+                )
+            else:
+                ne[i] = nd_plasma_separatrix_electron + (
+                    nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
+                ) * (1 - rho[i]) / (1 - min(0.9999, radius_plasma_pedestal_density_norm))
     else:
-        rho1 = np.linspace(0, 0.95)
-        rho2 = np.linspace(0.95, 1)
-        rho = np.append(rho1, rho2)
+        rho = np.linspace(0, 1.0, n_plasma_profile_elements)
         ne = ne0 * (1 - rho**2) ** alphan
 
     # species profiles scaled by their average fraction relative to electrons
@@ -3949,6 +3948,80 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
             ax_impurity.plot(rho, imp_frac[12] * ne / 1e16, label=r"$n_{\text{Xe}}$")
         if imp_frac[13] > 1.0e-30:
             ax_impurity.plot(rho, imp_frac[13] * ne / 1e16, label=r"$n_{\text{W}}$")
+
+    if i_plasma_impurity_accumulation == 2:
+        if imp_frac[2] > 1.0e-30:
+            nd_beryllium_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{2}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_beryllium_profile / 1e16, label=r"$n_{\text{Be}}$")
+        if imp_frac[3] > 1.0e-30:
+            nd_carbon_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{3}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_carbon_profile / 1e16, label=r"$n_{\text{C}}$")
+        if imp_frac[4] > 1.0e-30:
+            nd_nitrogen_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{4}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_nitrogen_profile / 1e16, label=r"$n_{\text{N}}$")
+        if imp_frac[5] > 1.0e-30:
+            nd_oxygen_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{5}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_oxygen_profile / 1e16, label=r"$n_{\text{O}}$")
+        if imp_frac[6] > 1.0e-30:
+            nd_neon_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{6}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_neon_profile / 1e16, label=r"$n_{\text{Ne}}$")
+        if imp_frac[7] > 1.0e-30:
+            nd_silicon_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{7}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_silicon_profile / 1e16, label=r"$n_{\text{Si}}$")
+        if imp_frac[8] > 1.0e-30:
+            nd_argon_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{8}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_argon_profile / 1e16, label=r"$n_{\text{Ar}}$")
+        if imp_frac[9] > 1.0e-30:
+            nd_iron_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{9}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_iron_profile / 1e16, label=r"$n_{\text{Fe}}$")
+        if imp_frac[10] > 1.0e-30:
+            nd_nickel_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{10}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_nickel_profile / 1e16, label=r"$n_{\text{Ni}}$")
+        if imp_frac[11] > 1.0e-30:
+            nd_krypton_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{11}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_krypton_profile / 1e16, label=r"$n_{\text{Kr}}$")
+        if imp_frac[12] > 1.0e-30:
+            nd_xenon_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{12}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_xenon_profile / 1e16, label=r"$n_{\text{Xe}}$")
+        if imp_frac[13] > 1.0e-30:
+            nd_tungsten_profile = np.array([
+                mfile.get(f"f_nd_impurity_electrons{13}_{i}", scan=scan)
+                for i in range(int(mfile.get("n_plasma_profile_elements", scan=scan)))
+            ])
+            ax_impurity.plot(rho, nd_tungsten_profile / 1e16, label=r"$n_{\text{W}}$")
 
     # make legend use multiple columns (up to 4) and place it to the right to avoid overlapping the plots
     _handles, labels = ax_main.get_legend_handles_labels()
