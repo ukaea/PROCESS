@@ -39,22 +39,21 @@ Box file F/MI/PJK/PROCESS and F/PL/PJK/PROCESS (15/01/96 to 24/01/12)
 Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
 
-import argparse
 import logging
 import os
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Protocol
+
+import click
 
 import process
 import process.core.init as init
 import process.data_structure as data_structure
 from process.core import constants
-from process.core.io import (
-    mfile,
-    plot_plotly_sankey,
-    plot_proc,
-)
 from process.core.io import obsolete_vars as ov
+from process.core.io.mfile import mfile
+from process.core.io.plot import plot_proc
+from process.core.io.plot.sankey import plot_plotly_sankey
 
 # For VaryRun
 from process.core.io.process_config import RunProcessConfig
@@ -67,6 +66,7 @@ from process.core.io.process_funcs import (
     process_warnings,
     vary_iteration_variables,
 )
+from process.core.io.tools import LazyGroup, indat_opt
 from process.core.log import logging_model_handler, show_errors
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
@@ -124,145 +124,113 @@ PACKAGE_LOGGING = True
 logger = logging.getLogger("process")
 
 
-class Process:
-    """The main Process class."""
+@click.group(
+    cls=LazyGroup,
+    lazy_subcommands={
+        "mfile": "process.io.mfile.cli.mfile",
+        "plot": "process.io.plot.cli.plot",
+        "indat": "process.io.in_dat.cli.new_indat",
+    },
+    invoke_without_command=True,
+    no_args_is_help=True,
+)
+@click.version_option()
+@indat_opt(default=None)
+@click.option(
+    "-s",
+    "--solver",
+    default="vmcon",
+    type=str,
+    help="Specify which solver to use: only 'vmcon' at the moment",
+)
+@click.option(
+    "-v",
+    "--varyiterparams",
+    is_flag=True,
+    help="Vary iteration parameters",
+)
+@click.option(
+    "-c",
+    "--varyiterparamsconfig",
+    "config_file",
+    default="run_process.conf",
+    help="configuration file for varying iteration parameters",
+)
+@click.option(
+    "-m",
+    "--mfile",
+    "mfile_path",
+    default="MFILE.DAT",
+    help="mfile for post-processing/plotting",
+)
+@click.option(
+    "-mj",
+    "--mfilejson",
+    is_flag=True,
+    help="Produce a filled json from --mfile arg in working dir",
+)
+@click.option(
+    "--update-obsolete",
+    is_flag=True,
+    help="Automatically update obsolete variables in the IN.DAT file",
+)
+@click.option(
+    "--full-output",
+    is_flag=True,
+    help="Run all summary plotting scripts for the output",
+)
+@click.pass_context
+def process_cli(
+    ctx,
+    indat,
+    solver,
+    varyiterparams,
+    config_file,
+    mfile_path,
+    mfilejson,
+    update_obsolete,
+    full_output,
+):
+    """
+    \b
+    PROCESS
+    Power Reactor Optimisation Code
+    Copyright (c) [2023] [United Kingdom Atomic Energy Authority]
 
-    def __init__(self, args: list[Any] | None = None):
-        """Run Process.
+    \b
+    Contact
+    James Morris     : james.morris2@ukaea.uk
+    Jonathan Maddock : jonathan.maddock@ukaea.uk
 
-        :param args: Arguments to parse, defaults to None
-        """
-        self.parse_args(args)
-        self.run_mode()
-        self.post_process()
-
-    def parse_args(self, args: list[Any] | None):
-        """Parse the command-line arguments, such as the input filename.
-
-        Parameters
-        ----------
-        args :
-            Arguments to parse
-        """
-        parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-            description=(
-                "PROCESS\n"
-                "Power Reactor Optimisation Code\n"
-                "Copyright (c) [2023] [United Kingdom Atomic Energy Authority]\n"
-                "\n"
-                "Contact\n"
-                "James Morris  : james.morris2@ukaea.uk\n"
-                "Jonathan Maddock : jonathan.maddock@ukaea.uk\n"
-                "\n"
-                "GitHub        : https://github.com/ukaea/PROCESS\n"
-            ),
-        )
-
-        # Optional args
-        parser.add_argument(
-            "-i",
-            "--input",
-            default="IN.DAT",
-            metavar="input_file_path",
-            type=str,
-            help="The path to the input file that Process runs on",
-        )
-        parser.add_argument(
-            "-s",
-            "--solver",
-            default="vmcon",
-            metavar="solver_name",
-            type=str,
-            help="Specify which solver to use: only 'vmcon' at the moment",
-        )
-        parser.add_argument(
-            "-v",
-            "--varyiterparams",
-            action="store_true",
-            help="Vary iteration parameters",
-        )
-        parser.add_argument(
-            "-c",
-            "--varyiterparamsconfig",
-            metavar="config_file",
-            default="run_process.conf",
-            help="configuration file for varying iteration parameters",
-        )
-        parser.add_argument(
-            "-m",
-            "--mfile",
-            default="MFILE.DAT",
-            help="mfile for post-processing/plotting",
-        )
-        parser.add_argument(
-            "-mj",
-            "--mfilejson",
-            action="store_true",
-            help="Produce a filled json from --mfile arg in working dir",
-        )
-        parser.add_argument(
-            "--version",
-            action="store_true",
-            help="Print the version of PROCESS to the terminal",
-        )
-        parser.add_argument(
-            "--update-obsolete",
-            action="store_true",
-            help="Automatically update obsolete variables in the IN.DAT file",
-        )
-        parser.add_argument(
-            "--full-output",
-            action="store_true",
-            help="Run all summary plotting scripts for the output",
-        )
-
-        # If args is not None, then parse the supplied arguments. This is likely
-        # to come from the test suite when testing command-line arguments; the
-        # method is being run from the test suite.
-        # If args is None, then use actual command-line arguments (e.g.
-        # sys.argv), as the method is being run from the command-line.
-        self.args = parser.parse_args(args)
-        # Store namespace object of the args
-
-    def run_mode(self):
-        """Determine how to run Process."""
-        if self.args.version:
-            print(process.__version__)
-            return
-        # Store run object: useful for testing
-        if self.args.varyiterparams:
-            self.run = VaryRun(self.args.varyiterparamsconfig, self.args.solver)
+    GitHub        : https://github.com/ukaea/PROCESS
+    """
+    if ctx.invoked_subcommand is None:
+        if indat is None:
+            raise click.BadParameter("IN.DAT not specified")
+        if varyiterparams:
+            runtype = VaryRun(config_file, solver)
         else:
-            self.run = SingleRun(
-                self.args.input,
-                self.args.solver,
-                update_obsolete=self.args.update_obsolete,
-            )
-        self.run.run()
+            runtype = SingleRun(indat, solver, update_obsolete=update_obsolete)
 
-    def post_process(self):
-        """Perform post-run actions, like plotting the mfile."""
-        # TODO Currently, Process will always run on an input file beforehand.
-        # It would be better to not require this, so just plot_proc could be
-        # run, for example.
-        if self.args.mfilejson:
+        runtype.run()
+
+        if mfilejson:
             # Produce a json file containing mfile output, useful for VVUQ work.
-            mfile_path = Path(self.args.mfile)
+            mfile_path = Path(mfile_path)
             mfile_data = mfile.MFile(filename=mfile_path)
             mfile_data.open_mfile()
             mfile_data.write_to_json()
-        if self.args.full_output:
-            # Run all summary plotting scripts for the output
-            mfile_path = Path(str(self.args.input).replace("IN.DAT", "MFILE.DAT"))
-            mfile_str = str(mfile_path.resolve())
-            print(f"Plotting mfile {mfile_str}")
-            if mfile_path.exists():
-                plot_proc.main(args=["-f", mfile_str])
-                plot_plotly_sankey.main(args=["-m", mfile_str])
 
+        if full_output:
+            # Run all summary plotting scripts for the output
+            mfile_path = Path(mfile_path)
+            if mfile_path.exists():
+                mfile_str = mfile_path.resolve().as_posix()
+                print(f"Plotting mfile {mfile_str}")
+                plot_proc.setup_plot(mfile_path)
+                plot_plotly_sankey.main(args=["-m", mfile_str])
             else:
-                logger.error("mfile to be used for plotting doesn't exist")
+                logger.error(f"Cannot find mfile for plotting {mfile_path}")
 
 
 class VaryRun:
@@ -788,24 +756,3 @@ def setup_loggers(working_directory_log_path: Path | None = None):
         logging_file_input_location_handler.setLevel(logging.INFO)
         logging_file_input_location_handler.setFormatter(logging_formatter)
         logger.addHandler(logging_file_input_location_handler)
-
-
-def main(args: list[Any] | None = None):
-    """Run Process.
-
-    The args parameter is used to control command-line arguments when running
-    tests. Optional args can be supplied by different tests, which are then
-    used instead of command-line arguments by argparse. This allows testing of
-    different command-line arguments from the test suite.
-
-    Parameters
-    ----------
-    args :
-        Arguments to parse, defaults to None
-    """
-
-    Process(args)
-
-
-if __name__ == "__main__":
-    main()

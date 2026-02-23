@@ -31,7 +31,6 @@ If the variable is not a fortran module variable, ensure to override its parent 
 e.g. FOO.bar says `bar`'s parent module is `FOO`.
 """
 
-import argparse
 import datetime
 import itertools
 import json
@@ -559,39 +558,3 @@ def plot_entrypoint(arguments):
         output=arguments.out,
         tracking_variables_file=arguments.tracking_variables_file,
     )
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument("mode", type=str, choices=["track", "plot"])
-
-    parser.add_argument("db", type=str)
-    parser.add_argument("-o", "--out", type=str, default=None)
-    parser.add_argument("-m", "--mfile", type=str, default=None)
-    parser.add_argument(
-        "--commit",
-        type=str,
-        default=None,
-        help="The current commit message. If not provided, the code attempts to query to Git repository.",
-    )
-    parser.add_argument(
-        "--hash",
-        type=str,
-        default=None,
-        help="The current commit hash. If not provided, the code attempts to query to Git repository.",
-    )
-    parser.add_argument(
-        "--tracking-variables-file",
-        type=pathlib.Path,
-        default=None,
-        help="A JSON file containing a list of variables to track."
-        "See the description of DEFAULT_TRACKING_VARIABLES for details on formatting the strings in the list.",
-    )
-
-    arguments = parser.parse_args()
-
-    if arguments.mode == "track":
-        track_entrypoint(arguments)
-    elif arguments.mode == "plot":
-        plot_entrypoint(arguments)

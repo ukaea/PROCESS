@@ -7,12 +7,10 @@ PROCESS plot_proc using process_io_lib functions and MFILE.DAT
             generation script imports, and inspects, process.
 """
 
-import argparse
 import json
 import os
 import pathlib
 import textwrap
-from argparse import RawTextHelpFormatter
 from dataclasses import dataclass
 from importlib import resources
 from typing import Any, Literal
@@ -31,11 +29,19 @@ from scipy.interpolate import interp1d
 import process.core.constants as constants
 import process.core.io.mfile as mf
 import process.data_structure.pfcoil_variables as pfcoil_variables
+<<<<<<<< HEAD:process/core/io/plot_proc.py
+========
+import process.io.mfile.mfile as mf
+>>>>>>>> 71bdc991 (Overhall CI):process/core/io/plot/plot_proc.py
 import process.models.physics.confinement_time as confine
 import process.models.tfcoil.superconducting as sctf
 from process.core.io.mfile import MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
 from process.data_structure import impurity_radiation_module, physics_variables
+<<<<<<<< HEAD:process/core/io/plot_proc.py
+========
+from process.io.mfile.mfile import MFileErrorClass
+>>>>>>>> 71bdc991 (Overhall CI):process/core/io/plot/plot_proc.py
 from process.models.build import Build
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
@@ -76,70 +82,6 @@ class RadialBuild:
     cumulative_upper: dict[str, float]
     cumulative_lower: dict[str, float]
     cumulative_radial: dict[str, float]
-
-
-def parse_args(args):
-    """Parse supplied arguments.
-
-    Parameters
-    ----------
-    args : list, None
-        arguments to parse
-
-    Returns
-    -------
-    Namespace
-        parsed arguments
-    """
-    # Setup command line arguments
-    parser = argparse.ArgumentParser(
-        description="Produces a summary of the PROCESS MFILE output, using the MFILE.  "
-        "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts ",
-        formatter_class=RawTextHelpFormatter,
-    )
-
-    parser.add_argument(
-        "-f",
-        metavar="FILENAME",
-        type=str,
-        default="",
-        help="specify input/output file path",
-    )
-    parser.add_argument("-s", "--show", help="show plot", action="store_true")
-
-    parser.add_argument("-n", type=int, help="Which scan to plot?")
-
-    parser.add_argument(
-        "-d",
-        "--DEMO-ranges",
-        help="Uses the DEMO dimensions as ranges for all graphics",
-        action="store_true",
-    )
-
-    parser.add_argument(
-        "-c",
-        "--colour",
-        type=int,
-        help=(
-            "Which colour scheme to use for cross-section plots\n"
-            "1: Original PROCESS (default)\n"
-            "2: BLUEMIRA"
-        ),
-        default=1,
-        choices=[1, 2],
-    )
-    parser.add_argument(
-        "-o",
-        "--output-format",
-        type=str,
-        help=(
-            "Output file format\npdf: pdf output (default)\npng: png output\nnone: no output file written"
-        ),
-        default="pdf",
-        choices=["pdf", "png", "none"],
-    )
-
-    return parser.parse_args(args)
 
 
 # Colours are PROCESS defualt, BLUEMIRA
@@ -13470,9 +13412,14 @@ def create_thickness_builds(m_file, scan: int):
     )
 
 
-def main(args=None):
-    args = parse_args(args)
-
+def setup_plot(
+    mfile: Path,
+    scan: int = -1,
+    demo_ranges: bool = False,
+    colour: Literal[1, 2] = 1,
+    output_format: str = "pdf",
+    show: bool = False,
+):
     # create main plot
     # Increase range when adding new page
     pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(30)]
@@ -13480,28 +13427,24 @@ def main(args=None):
     # run main_plot
     main_plot(
         pages,
-        mf.MFile(args.f) if args.f != "" else mf.MFile("MFILE.DAT"),
-        scan=args.n or -1,
-        demo_ranges=bool(args.DEMO_ranges),
-        colour_scheme=int(args.colour),
+        mf.MFile(mfile) if mfile != "" else mf.MFile("MFILE.DAT"),
+        scan=scan or -1,
+        demo_ranges=demo_ranges,
+        colour_scheme=colour,
     )
 
-    if args.output_format == "pdf":
-        with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
+    if output_format == "pdf":
+        with bpdf.PdfPages(mfile + "SUMMARY.pdf") as pdf:
             for p in pages:
                 pdf.savefig(p)
-    elif args.output_format == "png":
-        folder = pathlib.Path(args.f.removesuffix(".DAT") + "_SUMMARY")
+    elif output_format == "png":
+        folder = pathlib.Path(mfile.removesuffix(".DAT") + "_SUMMARY")
         folder.mkdir(parents=True, exist_ok=True)
         for no, page in enumerate(pages):
             page.savefig(pathlib.Path(folder, f"page{no}.png"), format="png")
 
     # show fig if option used
-    if args.show:
+    if show:
         plt.show(block=True)
 
     plt.close("all")
-
-
-if __name__ == "__main__":
-    main()
