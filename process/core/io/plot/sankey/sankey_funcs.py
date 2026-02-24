@@ -2,12 +2,32 @@
 Library of Sankey plotting routine
 """
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.sankey import Sankey
 from numpy import sqrt
 
-from process.core.io.mfile import MFile
+from process.core.io.mfile.mfile import MFile
+
+try:
+    import plotly.graph_objects as go
+
+    PLOT_SANKEY = True
+except ImportError:
+    PLOT_SANKEY = False
+
+
+def plot_sankey_plotly(m_file):
+    if not PLOT_SANKEY:
+        print(
+            "\nPlotly is not installed, unable to create sankey diagram!\n"
+            "Install plotly by installing the optional 'plotly' dependency "
+            "e.g. \"pip install -e '.[plotly]'\""
+        )
+        return None
+    return plotly(power_balance_sankey(m_file), m_file)
 
 
 def power_balance_sankey(m_file):
@@ -333,7 +353,7 @@ def power_balance_sankey(m_file):
     }
 
 
-def plotly(sankey_dict, mfile):
+def plotly(sankey_dict, m_file):
     fig = go.Figure(data=[sankey_dict])
 
     fig.update_layout({
@@ -343,9 +363,8 @@ def plotly(sankey_dict, mfile):
         "margin": {"l": 40, "r": 40, "t": 40, "b": 40},
     })
     # Strip 'MFILE' from the filename for the HTML output
-    # Remove the character before "MFILE" and "MFILE" itself from the filename
-    html_output_path = pathlib.Path(
-        re.sub(r"(.)?[ \.\_]?MFILE", r"\1_plotly_sankey", m_file.filename)
+    html_output_path = m_file.with_stem(
+        m_file.stem.replace("MFILE", "plotly_sankey")
     ).with_suffix(".html")
     fig.write_html(str(html_output_path))
     print(f"Interactive Sankey diagram saved to {html_output_path}")
@@ -358,95 +377,84 @@ def plot_full_sankey(
     # ------------------------------- Pulling values from the MFILE -------------------------------
 
     m_file = MFile(mfilename)
+    variables = [
+        # Used in [PLASMA]
+        "p_fusion_total_mw",  # Fusion Power (MW)
+        "p_hcd_injected_total_mw",  # Total auxiliary injected Power (MW)
+        "p_plasma_ohmic_mw",  # Ohmic heating Power (MW)
+        "p_neutron_total_mw",  # Neutron fusion power (MW)
+        "p_non_alpha_charged_mw",  # Non-alpha charged particle power (MW)
+        "p_alpha_total_mw",  # Alpha power (MW)
+        # Used in [NEUTRONICS]
+        "p_blkt_multiplication_mw",  # Energy multiplication in blanket (MW)
+        "p_blkt_nuclear_heat_total_mw",  # Total Nuclear heating in the blanket (MW)
+        "p_div_nuclear_heat_total_mw",  # Nuclear heating in the divertor (MW)
+        "p_fw_nuclear_heat_total_mw",  # Nuclear heating in the first wall (MW)
+        "p_shld_nuclear_heat_mw",  # Nuclear heating in the shield (MW)
+        "p_tf_nuclear_heat_mw",  # Nuclear heating in the TF coil (MW)
+        # Used in [CHARGEP]
+        "p_plasma_separatrix_mw",  # Charged particle power deposited on divertor (MW)
+        "f_p_alpha_plasma_deposited",  # Fraction of alpha power deposited in plasma
+        "p_plasma_rad_mw",  # Total radiation Power (MW)
+        # Used in [RADIATION]
+        "f_ster_div_single"
+        "f_a_fw_outboard_hcd"
+        # Used in [DIVERTOR]
+        "p_div_coolant_pump_mw",  # Divertor coolant pumping power
+        "p_div_heat_deposited_mw",  # Total power extracted from divertor (MW)
+        # Used in [FIRST_WALL]
+        "p_fw_blkt_heat_deposited_mw",  # Power extracted blanket & FW (MW)
+        "p_fw_blkt_coolant_pump_mw",  # Pump Power in FW and blanket (MW)
+    ]
+    (
+        p_fusion_total_mw,
+        p_hcd_injected_total_mw,
+        p_plasma_ohmic_mw,
+        p_neutron_total_mw,
+        p_non_alpha_charged_mw,
+        p_alpha_total_mw,
+        p_blkt_multiplication_mw,
+        p_blkt_nuclear_heat_total_mw,
+        p_div_nuclear_heat_total_mw,
+        p_fw_nuclear_heat_total_mw,
+        p_shld_nuclear_heat_mw,
+        p_tf_nuclear_heat_mw,
+        p_plasma_separatrix_mw,
+        f_p_alpha_plasma_deposited,
+        p_plasma_rad_mw,
+        f_ster_div_single,
+        f_a_fw_outboard_hcd,
+        p_div_coolant_pump_mw,
+        p_div_heat_deposited_mw,
+        p_fw_blkt_heat_deposited_mw,
+        p_fw_blkt_coolant_pump_mw,
+    ) = m_file.get_variables(*variables, scan=-1)
 
     # Used in [PLASMA]
-    p_fusion_total_mw = m_file.get("p_fusion_total_mw", scan=-1)  # Fusion power (MW)
-    p_hcd_injected_total_mw = m_file.get(
-        "p_hcd_injected_total_mw", scan=-1
-    )  # Total auxiliary injected power (MW)
-    p_plasma_ohmic_mw = m_file.get(
-        "p_plasma_ohmic_mw", scan=-1
-    )  # Ohmic heating power (MW)
-    totalplasma = (
-        p_fusion_total_mw + p_hcd_injected_total_mw + p_plasma_ohmic_mw
-    )  # Total Power in plasma (MW)
-    p_neutron_total_mw = m_file.get(
-        "p_neutron_total_mw", scan=-1
-    )  # Neutron fusion power (MW)
-    p_non_alpha_charged_mw = m_file.get(
-        "p_non_alpha_charged_mw", scan=-1
-    )  # Non-alpha charged particle power (MW)
-    pcharohmmw = (
-        p_non_alpha_charged_mw + p_plasma_ohmic_mw
-    )  # The ohmic and charged particle power (MW)
-    p_alpha_total_mw = m_file.get("p_alpha_total_mw", scan=-1)  # Alpha power (MW)
-    palpinjmw = (
-        p_alpha_total_mw + p_hcd_injected_total_mw
-    )  # Alpha particle and HC&D power (MW)
+    # Total Power in plasma (MW)
+    totalplasma = p_fusion_total_mw + p_hcd_injected_total_mw + p_plasma_ohmic_mw
+    # The ohmic and charged particle power (MW)
+    pcharohmmw = p_non_alpha_charged_mw + p_plasma_ohmic_mw
+    # Alpha particle and HC&D power (MW)
+    palpinjmw = p_alpha_total_mw + p_hcd_injected_total_mw
 
     # Used in [NEUTRONICS]
-    p_blkt_multiplication_mw = m_file.get(
-        "p_blkt_multiplication_mw", scan=-1
-    )  # Energy multiplication in blanket (MW)
-    p_blkt_nuclear_heat_total_mw = m_file.get(
-        "p_blkt_nuclear_heat_total_mw", scan=-1
-    )  # Total Nuclear heating in the blanket (MW)
-    pnucemblkt = (
-        p_blkt_nuclear_heat_total_mw - p_blkt_multiplication_mw
-    )  # External nuclear heating in blanket (MW)
-    p_div_nuclear_heat_total_mw = m_file.get(
-        "p_div_nuclear_heat_total_mw", scan=-1
-    )  # Nuclear heating in the divertor (MW)
-    p_fw_nuclear_heat_total_mw = m_file.get(
-        "p_fw_nuclear_heat_total_mw", scan=-1
-    )  # Nuclear heating in the first wall (MW)
-    p_shld_nuclear_heat_mw = m_file.get(
-        "p_shld_nuclear_heat_mw", scan=-1
-    )  # Nuclear heating in the shield (MW)
-    p_tf_nuclear_heat_mw = m_file.get(
-        "p_tf_nuclear_heat_mw", scan=-1
-    )  # Nuclear heating in the TF coil (MW)
+    # External nuclear heating in blanket (MW)
+    pnucemblkt = p_blkt_nuclear_heat_total_mw - p_blkt_multiplication_mw
 
     # Used in [CHARGEP]
-    p_plasma_separatrix_mw = m_file.get(
-        "p_plasma_separatrix_mw", scan=-1
-    )  # Charged particle power deposited on divertor (MW)
-    f_p_alpha_plasma_deposited = m_file.get(
-        "f_p_alpha_plasma_deposited", scan=-1
-    )  # Fraction of alpha power deposited in plasma
-    p_fw_alpha_mw = p_alpha_total_mw * (
-        1 - f_p_alpha_plasma_deposited
-    )  # Alpha particles hitting first wall (MW)
-    p_plasma_rad_mw = m_file.get(
-        "p_plasma_rad_mw", scan=-1
-    )  # Total radiation Power (MW)
+    # Alpha particles hitting first wall (MW)
+    p_fw_alpha_mw = p_alpha_total_mw * (1 - f_p_alpha_plasma_deposited)
 
     # Used in [RADIATION]
-    p_div_rad_total_mw = p_plasma_rad_mw * m_file.get(
-        "f_ster_div_single", scan=-1
-    )  # Radiation deposited on the divertor (MW)
-    p_fw_hcd_rad_total_mw = p_plasma_rad_mw * m_file.data[
-        "f_a_fw_outboard_hcd"
-    ].get_scan(-1)  # Radiation deposited on HCD (MW)
-    p_fw_rad_total_mw = (
-        p_plasma_rad_mw - p_div_rad_total_mw - p_fw_hcd_rad_total_mw
-    )  # Radiation deposited in the FW (MW)
-
-    # Used in [DIVERTOR]
-    p_div_coolant_pump_mw = m_file.get(
-        "p_div_coolant_pump_mw", scan=-1
-    )  # Divertor coolant pumping power
-    p_div_heat_deposited_mw = m_file.get(
-        "p_div_heat_deposited_mw", scan=-1
-    )  # Total power extracted from divertor (MW)
+    # Radiation deposited on the divertor (MW)
+    p_div_rad_total_mw = p_plasma_rad_mw * f_ster_div_single
+    # Radiation deposited on HCD (MW)
+    p_fw_hcd_rad_total_mw = p_plasma_rad_mw * f_a_fw_outboard_hcd
+    # Radiation deposited in the FW (MW)
+    p_fw_rad_total_mw = p_plasma_rad_mw - p_div_rad_total_mw - p_fw_hcd_rad_total_mw
 
     # Used in [FIRST_WALL]
-    p_fw_blkt_heat_deposited_mw = m_file.get(
-        "p_fw_blkt_heat_deposited_mw", scan=-1
-    )  # Power extracted blanket & FW (MW)
-    p_fw_blkt_coolant_pump_mw = m_file.get(
-        "p_fw_blkt_coolant_pump_mw", scan=-1
-    )  # Pump Power in FW and blanket (MW)
     htpmwblkt = p_fw_blkt_coolant_pump_mw / 2  # Pump power in blanket (MW)
     htpmwfw = p_fw_blkt_coolant_pump_mw / 2  # Pump power in FW (MW)
     p_fw_heat_deposited_mw = (
@@ -834,76 +842,101 @@ def plot_full_sankey(
             y += 1"""
 
 
-def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Diagram
+def plot_sankey(
+    mfilename=Path("MFILE.DAT"), format_: str = "pdf"
+):  # Plot simplified power flow Sankey Diagram
     # ------------------------------- Pulling values from the MFILE -------------------------------
-
+    mfilename = Path(mfilename)
     m_file = MFile(mfilename)
 
-    # Used in [PLASMA]
-    p_fusion_total_mw = m_file.get("p_fusion_total_mw", scan=-1)  # Fusion Power (MW)
-    p_hcd_injected_total_mw = m_file.get(
-        "p_hcd_injected_total_mw", scan=-1
-    )  # Total auxiliary injected Power (MW)
-    p_plasma_ohmic_mw = m_file.get(
-        "p_plasma_ohmic_mw", scan=-1
-    )  # Ohmic heating Power (MW)
-    totalplasma = (
-        p_fusion_total_mw + p_hcd_injected_total_mw + p_plasma_ohmic_mw
-    )  # Total Power in plasma (MW)
+    variables = [
+        # Used in [PLASMA]
+        "p_fusion_total_mw",  # Fusion Power (MW)
+        "p_hcd_injected_total_mw",  # Total auxiliary injected Power (MW)
+        "p_plasma_ohmic_mw",  # Ohmic heating Power (MW)
+        # Used in [DEPOSITION]
+        "p_plasma_rad_mw",  # Total radiation Power (MW)
+        "f_ster_div_single",  # Area fraction taken up by divertor
+        "2*f_ster_div_single",  # Area fraction taken up by double null divertor
+        "f_a_fw_outboard_hcd",  # Area fraction covered by HCD and diagnostics
+        "p_plasma_separatrix_mw",  # power to conducted to the divertor region (MW)
+        "p_div_nuclear_heat_total_mw",  # nuclear heating in the divertor (MW)
+        "p_fw_nuclear_heat_total_mw",  # nuclear heating in the first wall (MW)
+        "p_blkt_nuclear_heat_total_mw",  # nuclear heating in the blanket (MW)
+        "p_shld_nuclear_heat_mw",  # nuclear heating in the shield (MW)
+        "p_cp_shield_nuclear_heat_mw",  # nuclear heating in the CP shield (MW)
+        "p_blkt_multiplication_mw",  # Blanket energy multiplication (MW)
+        "p_alpha_total_mw",  # Alpha power (MW)
+        "f_p_alpha_plasma_deposited",  # Fraction of alpha power deposited in plasma
+        "itart",  # switch for spherical tokamak (ST) models
+        # Used in [BLANKETSETC]
+        "p_fw_blkt_heat_deposited_mw",  # Heat for electricity (MW)
+        "p_fw_blkt_coolant_pump_mw",  # 1st wall & blanket pumping (MW)
+        # Used in [PRIMARY]
+        "p_plant_electric_gross_mw",  # gross electric power (MW)
+        # Used in [NET]
+        "p_plant_electric_net_mw",  # net electric power (MW)
+        # Used in [RECIRC]
+        "p_cryo_plant_electric_mw",  # cryogenic plant power (MW)
+        "fachtmw",  # facility heat removal (MW)
+        "p_tf_electric_supplies_mw",  # total steady state TF coil AC power demand (MW)
+        "p_tritium_plant_electric_mw",  # power required for tritium processing (MW)
+        "vachtmw",  # vacuum pump power (MW)
+        "p_pf_electric_supplies_mw",  # Total mean wall plug power for PFC & CS (MW)
+        "p_hcd_electric_total_mw",  # injector wall plug power (MW)
+        "p_coolant_pump_elec_total_mw",  # heat transport system electrical pump power (MW)
+        "p_cp_coolant_pump_elec",  # pumping power
+    ]
+    (
+        p_fusion_total_mw,
+        p_hcd_injected_total_mw,
+        p_plasma_ohmic_mw,
+        p_plasma_rad_mw,
+        f_ster_div_single,
+        fdiv_2,
+        f_a_fw_outboard_hcd,
+        p_plasma_separatrix_mw,
+        p_div_nuclear_heat_total_mw,
+        p_fw_nuclear_heat_total_mw,
+        p_blkt_nuclear_heat_total_mw,
+        p_shld_nuclear_heat_mw,
+        p_cp_shield_nuclear_heat_mw,
+        p_blkt_multiplication_mw,
+        p_alpha_total_mw,
+        f_p_alpha_plasma_deposited,
+        itart,
+        p_fw_blkt_heat_deposited_mw,
+        p_fw_blkt_coolant_pump_mw,
+        p_plant_electric_gross_mw,
+        p_plant_electric_net_mw,
+        p_plant_electric_recirc_mw,
+        p_cryo_plant_electric_mw,
+        fachtmw,
+        p_tf_electric_supplies_mw,
+        p_tritium_plant_electric_mw,
+        vachtmw,
+        p_pf_electric_supplies_mw,
+        p_hcd_electric_total_mw,
+        p_coolant_pump_elec_total_mw,
+        p_cp_coolant_pump_elec,
+    ) = m_file.get_variables(*variables, scan=-1)
 
-    # Used in [DEPOSITION]
-    p_plasma_rad_mw = m_file.get(
-        "p_plasma_rad_mw", scan=-1
-    )  # Total radiation Power (MW)
-    f_ster_div_single = m_file.get(
-        "f_ster_div_single", scan=-1
-    )  # Area fraction taken up by divertor
-    fdiv_2 = m_file.get(
-        "2*f_ster_div_single", scan=-1
-    )  # Area fraction taken up by double null divertor
+    p_cp_coolant_pump_elec_mw = p_cp_coolant_pump_elec / 1e6
+
+    # Total Power in plasma (MW)
+    totalplasma = p_fusion_total_mw + p_hcd_injected_total_mw + p_plasma_ohmic_mw
+
     if fdiv_2 > 0:  # Takes into account old MFILE representation of double null divertor
         f_ster_div_single = fdiv_2
-    p_div_rad_total_mw = (
-        p_plasma_rad_mw * f_ster_div_single
-    )  # Radiation deposited on the divertor (MW)
-    f_a_fw_outboard_hcd = m_file.get(
-        "f_a_fw_outboard_hcd", scan=-1
-    )  # Area fraction covered by HCD and diagnostics
-    p_fw_hcd_rad_total_mw = (
-        p_plasma_rad_mw * f_a_fw_outboard_hcd
-    )  # Radiation deposited on HCD and diagnostics (MW)
-    p_fw_rad_total_mw = (
-        p_plasma_rad_mw - p_div_rad_total_mw - p_fw_hcd_rad_total_mw
-    )  # Radiation deposited in the blanket (MW)
-    p_plasma_separatrix_mw = m_file.get(
-        "p_plasma_separatrix_mw", scan=-1
-    )  # power to conducted to the divertor region (MW)
-    p_div_nuclear_heat_total_mw = m_file.get(
-        "p_div_nuclear_heat_total_mw", scan=-1
-    )  # nuclear heating in the divertor (MW)
-    p_fw_nuclear_heat_total_mw = m_file.get(
-        "p_fw_nuclear_heat_total_mw", scan=-1
-    )  # nuclear heating in the first wall (MW)
-    p_blkt_nuclear_heat_total_mw = m_file.get(
-        "p_blkt_nuclear_heat_total_mw", scan=-1
-    )  # nuclear heating in the blanket (MW)
-    p_shld_nuclear_heat_mw = m_file.get(
-        "p_shld_nuclear_heat_mw", scan=-1
-    )  # nuclear heating in the shield (MW)
-    p_cp_shield_nuclear_heat_mw = m_file.get(
-        "p_cp_shield_nuclear_heat_mw", scan=-1
-    )  # nuclear heating in the CP shield (MW)
-    p_blkt_multiplication_mw = m_file.get(
-        "p_blkt_multiplication_mw", scan=-1
-    )  # Blanket energy multiplication (MW)
-    p_alpha_total_mw = m_file.get("p_alpha_total_mw", scan=-1)  # Alpha power (MW)
-    f_p_alpha_plasma_deposited = m_file.get(
-        "f_p_alpha_plasma_deposited", scan=-1
-    )  # Fraction of alpha power deposited in plasma
-    p_fw_alpha_mw = p_alpha_total_mw * (
-        1 - f_p_alpha_plasma_deposited
-    )  # Alpha power hitting 1st wall (MW)
-    itart = m_file.get("itart", scan=-1)  # switch for spherical tokamak (ST) models
+
+    # Radiation deposited on the divertor (MW)
+    p_div_rad_total_mw = p_plasma_rad_mw * f_ster_div_single
+    # Radiation deposited on HCD and diagnostics (MW)
+    p_fw_hcd_rad_total_mw = p_plasma_rad_mw * f_a_fw_outboard_hcd
+    # Radiation deposited in the blanket (MW)
+    p_fw_rad_total_mw = p_plasma_rad_mw - p_div_rad_total_mw - p_fw_hcd_rad_total_mw
+    # Alpha power hitting 1st wall (MW)
+    p_fw_alpha_mw = p_alpha_total_mw * (1 - f_p_alpha_plasma_deposited)
 
     # Power deposited on divertor (MW)
     totaldivetc = (
@@ -926,48 +959,11 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         # Power deposited in CP (MW)
         totalcpetc = p_cp_shield_nuclear_heat_mw
 
-    # Used in [BLANKETSETC]
-    p_fw_blkt_heat_deposited_mw = m_file.get(
-        "p_fw_blkt_heat_deposited_mw", scan=-1
-    )  # Heat for electricity (MW)
-    p_fw_blkt_coolant_pump_mw = m_file.get(
-        "p_fw_blkt_coolant_pump_mw", scan=-1
-    )  # 1st wall & blanket pumping (MW)
-    pthermmw_p = (
-        p_fw_blkt_heat_deposited_mw - p_fw_blkt_coolant_pump_mw
-    )  # Heat - pumping power (MW)
+    # Heat - pumping power (MW)
+    pthermmw_p = p_fw_blkt_heat_deposited_mw - p_fw_blkt_coolant_pump_mw
 
-    # Used in [PRIMARY]
-    p_plant_electric_gross_mw = m_file.get(
-        "p_plant_electric_gross_mw", scan=-1
-    )  # gross electric power (MW)
-
-    # Used in [NET]
-    p_plant_electric_net_mw = m_file.get(
-        "p_plant_electric_net_mw", scan=-1
-    )  # net electric power (MW)
-    p_plant_electric_recirc_mw = (
-        p_plant_electric_gross_mw - p_plant_electric_net_mw
-    )  # Recirculating power (MW)
-
-    # Used in [RECIRC]
-    p_cryo_plant_electric_mw = m_file.get(
-        "p_cryo_plant_electric_mw", scan=-1
-    )  # cryogenic plant power (MW)
-    fachtmw = m_file.get("fachtmw", scan=-1)  # facility heat removal (MW)
-    p_tf_electric_supplies_mw = m_file.get(
-        "p_tf_electric_supplies_mw", scan=-1
-    )  # total steady state TF coil AC power demand (MW)
-    p_tritium_plant_electric_mw = m_file.get(
-        "p_tritium_plant_electric_mw", scan=-1
-    )  # power required for tritium processing (MW)
-    vachtmw = m_file.get("vachtmw", scan=-1)  # vacuum pump power (MW)
-    p_pf_electric_supplies_mw = m_file.get(
-        "p_pf_electric_supplies_mw", scan=-1
-    )  # Total mean wall plug power for PFC & CS (MW)
-    p_cp_coolant_pump_elec_mw = (
-        m_file.get("p_cp_coolant_pump_elec", scan=-1) / 1e6
-    )  # Set pumping power to MW by dividing by 1e6
+    # Recirculating power (MW)
+    p_plant_electric_recirc_mw = p_plant_electric_gross_mw - p_plant_electric_net_mw
 
     # Energy required for rest of power plant (MW)
     p_plant_core_systems_elec_mw = (
@@ -979,12 +975,6 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         + p_pf_electric_supplies_mw
         + p_cp_coolant_pump_elec_mw
     )
-    p_hcd_electric_total_mw = m_file.get(
-        "p_hcd_electric_total_mw", scan=-1
-    )  # injector wall plug power (MW)
-    p_coolant_pump_elec_total_mw = m_file.get(
-        "p_coolant_pump_elec_total_mw", scan=-1
-    )  # heat transport system electrical pump power (MW)
 
     # Initialising x and y variables for adjusting 'Plasma Heating' branch tip location
     x_adj, y_adj = 0, 0
@@ -1163,7 +1153,7 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
             labels=[None, "Plasma Heating", "Losses"],
         )
 
-        # Colelcting Sankey diagram and applying a condensed layout
+        # Collecting Sankey diagram and applying a condensed layout
         diagrams = sankey.finish()
         fig.tight_layout()
 
@@ -1251,3 +1241,9 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
                     * ((p_hcd_electric_total_mw - p_hcd_injected_total_mw) / totalplasma)
                     - 0.2,
                 ))
+
+    # Get directory of mfile
+    fig.savefig(mfilename.parent / f"SankeyPowerFlow.{format_}")
+
+    plt.show()
+    return fig
