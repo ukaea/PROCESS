@@ -5,7 +5,7 @@ import click
 import process.io.mfile.mfile as mf
 from process.io.plot.costs.costs_bar import cost_comp_1990, cost_comp_2014
 from process.io.plot.costs.costs_pie import new_cost_model, orig_cost_model
-from process.io.tools import mfile_arg, mfile_opt, save
+from process.io.tools import mfile_arg, save
 
 save = save("Save figure")
 
@@ -16,20 +16,20 @@ def costs():
 
 
 @costs.command("pie", no_args_is_help=True)
-@mfile_opt(exists=True)
+@mfile_arg
 @save
-def pie_plot(mfile, save):
+def pie_plot(mfiles, save):
     """Displays the cost breakdown as a pie chart."""
+    for m_file in mfiles:
+        m_file = mf.MFile(m_file)
 
-    m_file = mf.MFile(mfile)
-
-    # Check which cost model is being used
-    if "c21" in m_file.data:
-        orig_cost_model(m_file, save)
-    elif "s01" in m_file.data:
-        new_cost_model(m_file, save)
-    else:
-        print("ERROR: Cannot identify cost data, check MFILE!")
+        # Check which cost model is being used
+        if "c21" in m_file.data:
+            orig_cost_model(m_file, save)
+        elif "s01" in m_file.data:
+            new_cost_model(m_file, save)
+        else:
+            print("ERROR: Cannot identify cost data, check MFILE!")
 
 
 @costs.command("bar", no_args_is_help=True)
@@ -42,13 +42,13 @@ def pie_plot(mfile, save):
     help="Inflation Factor (multiplies costs)",
     default=1.0,
 )
-def bar_plot(mfile, save, inflate):
+def bar_plot(mfiles, save, inflate):
     """Displays the cost breakdown as a bar chart.
 
     Multiple MFILEs can be given and will be plotted on the same chart.
     """
     # Get file names
-    mfile_list = [mf.MFile(filename=item) for item in mfile]
+    mfile_list = [mf.MFile(filename=item) for item in mfiles]
 
     # Check which cost model is being used
     if "c21" in mfile_list[0].data:
