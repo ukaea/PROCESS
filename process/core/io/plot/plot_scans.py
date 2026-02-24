@@ -23,63 +23,50 @@ Performed checks:
 """
 
 import math
-import os
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import numpy as np
 
-# PROCESS libraries
-import process.core.io.mfile as mf
+import process.core.io.mfile.mfile as mf
 from process.core.io.variable_metadata import var_dicts as meta
 
 
-def main(args=None):
-    """Main plot scans script.
+def plot_scan(
+    mfiles: list[Path],
+    output_names,
+    output_names2,
+    outputdir: Path,
+    term_output,
+    save_format,
+    axis_font_size,
+    axis_tick_size,
+    x_axis_percent,
+    x_axis_max: list[float],
+    x_axis_range,
+    y_axis_percent,
+    y_axis_percent2,
+    y_axis_max,
+    y_axis2_max,
+    y_axis_range,
+    y_axis_range2,
+    label_name,
+    twod_contour,
+    stack_plots,
+):
+    """Main plot scans script."""
 
-    Parameters
-    ----------
-    args : list, optional
-        optional command-line args from test function, defaults to None
-    """
-    args = parse_args(args)
+    input_files = mfiles
+    x_max_input = x_axis_max
 
-    # Parameters to be used as function input
-    # ---------------------------------------
-    input_files = str(args.input_files)
-    output_names = str(args.y_vars)
-    output_names2 = str(args.y_vars2)
-    save_format = str(args.save_format)
-    term_output = args.term_output
-    label_name = str(args.label_name)
-    x_axis_percentage = args.x_axis_percent
-    x_max_input = list(filter(None, args.x_axis_max.split(" ")))
-    y_axis_percentage = args.y_axis_percent
-    y_max_input = list(filter(None, args.y_axis_max.split(" ")))
-    y_axis_percentage2 = args.y_axis_2_percent
-    y_max2_input = list(filter(None, args.y_axis_2_max.split(" ")))
-    two_dimensional_contour = args.two_dimensional_contour
-    stack_plots = args.stack_plots
-    # ---------------------------------------
-
-    # Input checks
-    # ------------
-    # Formting the inputs
-    output_names = list(filter(None, output_names.split(" ")))
-    output_names2 = list(filter(None, output_names2.split(" ")))
-    input_files = list(filter(None, input_files.split(" ")))
-    label_name = list(filter(None, label_name.split(" ")))
+    y_max_input = y_axis_max
+    y_max2_input = y_axis2_max
 
     # If the input file is a directory, add MFILE.DAT
     for ii in range(len(input_files)):
-        if os.path.isdir(input_files[ii]):
-            input_files[ii] = input_files[ii].replace("/", "")
-            input_files[ii] = input_files[ii] + "/MFILE.DAT"
-
-        # Check for the existence of the MFILE
-        if not os.path.isfile(input_files[ii]):
-            print(f"ERROR : The {input_files[ii]} MFILE does not exist, skipping it")
-            input_files.remove(input_files[ii])
+        if input_files[ii].is_dir():
+            input_files[ii] = input_files[ii] / "MFILE.DAT"
 
     # nsweep varible dict
     # -------------------
@@ -220,62 +207,38 @@ def main(args=None):
     # Plot settings
     # -------------
     # Plot cosmetic settings
-    axis_tick_size = args.axis_ticklabel_size
-    legend_size = 12
-    axis_font_size = args.axis_font_size
-    x_axis_range = list(filter(None, args.x_axis_range.split(" ")))
-    if x_axis_range != []:
-        x_axis_range = list(np.float64(x_axis_range))
-    y_axis_range = list(filter(None, args.y_axis_range.split(" ")))
-    if y_axis_range != []:
-        y_axis_range = list(np.float64(y_axis_range))
-    y_axis_range2 = list(filter(None, args.y_axis_2_range.split(" ")))
-    if y_axis_range2 != []:
-        y_axis_range2 = list(np.float64(y_axis_range2))
-
-    if len(x_max_input) != len(output_names):
+    def _format_lists(inp, output_names):
         x_max = []
-        for i in range(len(output_names)):
-            if x_max_input != []:
-                j = 0
-                try:
-                    x_max += [float(x_max_input[i])]
-                    j += 1
-                except IndexError:
-                    x_max += [float(x_max_input[j])]
-            else:
-                x_max += [None]
-    else:
-        x_max = np.float64(x_max_input)
-    if len(y_max_input) != len(output_names):
-        y_max = []
-        for i in range(len(output_names)):
-            if y_max_input != []:
-                j = 0
-                try:
-                    y_max += [float(y_max_input[i])]
-                    j += 1
-                except IndexError:
-                    y_max += [float(y_max_input[j])]
-            else:
-                y_max += [None]
-    else:
-        y_max = np.float64(y_max_input)
-    if output_names2 != []:
-        if len(y_max2_input) != len(output_names):
-            y_max2 = []
+        if inp != []:
             for i in range(len(output_names)):
-                if y_max2_input != []:
-                    j = 0
-                    try:
-                        y_max2 += [float(y_max2_input[i])]
-                        j += 1
-                    except IndexError:
-                        y_max2 += [float(y_max2_input[j])]
-                else:
-                    y_max2 += [None]
+                j = 0
+                try:
+                    x_max += [float(inp[i])]
+                    j += 1
+                except IndexError:
+                    x_max += [float(inp[j])]
         else:
-            y_max2 = np.float64(y_max2_input)
+            x_max = [None] * len(output_names)
+
+        return x_max
+
+    legend_size = 12
+    x_max = (
+        _format_lists(x_max_input, output_names)
+        if len(x_max_input) != len(output_names)
+        else np.float64(x_max_input)
+    )
+    y_max = (
+        _format_lists(y_max_input, output_names)
+        if len(y_max_input) != len(output_names)
+        else np.float64(y_max_input)
+    )
+    if output_names2 != []:
+        y_max2 = (
+            _format_lists(y_max2_input, output_names)
+            if len(y_max2_input) != len(output_names)
+            else np.float64(y_max2_input)
+        )
     else:
         y_max2 = y_max2_input
     # -------------
@@ -417,12 +380,7 @@ def main(args=None):
             for input_file in input_files:
                 # Legend label formating
                 if label_name == []:
-                    labl = input_file
-                    if "/MFILE.DAT" in input_file:
-                        labl = input_file[:-10]
-                    elif "MFILE.DAT" in input_file:
-                        labl = input_file[:-9]
-                    labl = labl.replace("_", " ")
+                    labl = input_file.name
                 else:
                     labl = label_name[kk]
                     kk = kk + 1
@@ -438,7 +396,7 @@ def main(args=None):
                     )
                     if y_axis_range != []:
                         y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
-                    if y_axis_percentage:
+                    if y_axis_percent:
                         if y_max[index] is None:
                             y_max[index] = max(
                                 np.abs(output_arrays[input_file][output_name])
@@ -454,13 +412,13 @@ def main(args=None):
                             )
                         ax.yaxis.set_major_formatter(yticks)
                     if y_axis_range != []:
-                        if y_axis_percentage is False:
+                        if y_axis_percent is False:
                             y_range = y_axis_range
                         ax.set_ylim(y_range[0], y_range[1])
                         ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
                     if x_axis_range != []:
                         x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
-                    if x_axis_percentage:
+                    if x_axis_percent:
                         if x_max[index] is None:
                             x_max[index] = max(np.abs(scan_var_array[input_file]))
                         xticks = mtick.PercentFormatter(x_max[index])
@@ -476,7 +434,7 @@ def main(args=None):
                     plt.rc("xtick", labelsize=axis_tick_size)
                     plt.rc("ytick", labelsize=axis_tick_size)
                     if x_axis_range != []:
-                        if x_axis_percentage is False:
+                        if x_axis_percent is False:
                             x_range = x_axis_range
                         plt.xlim(x_range[0], x_range[1])
                         ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
@@ -492,7 +450,7 @@ def main(args=None):
                         )
                         if y_axis_range != []:
                             y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
-                        if y_axis_percentage:
+                        if y_axis_percent:
                             if y_max[index] is None:
                                 y_max[index] = max(
                                     np.abs(output_arrays[input_file][output_name])
@@ -510,7 +468,7 @@ def main(args=None):
                                 output_names.index(output_name)
                             ].yaxis.set_major_formatter(yticks)
                         if y_axis_range != []:
-                            if y_axis_percentage is False:
+                            if y_axis_percent is False:
                                 y_range = y_axis_range
                             axs[output_names.index(output_name)].set_ylim(
                                 y_range[0], y_range[1]
@@ -520,7 +478,7 @@ def main(args=None):
                             )
                         if x_axis_range != []:
                             x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
-                        if x_axis_percentage:
+                        if x_axis_percent:
                             if x_max[index] is None:
                                 x_max[index] = max(np.abs(scan_var_array[input_file]))
                             xticks = mtick.PercentFormatter(x_max[index])
@@ -536,7 +494,7 @@ def main(args=None):
                                 output_names.index(output_name)
                             ].xaxis.set_major_formatter(xticks)
                         if x_axis_range != []:
-                            if x_axis_percentage is False:
+                            if x_axis_percent is False:
                                 x_range = x_axis_range
                             plt.xlim(x_range[0], x_range[1])
                             axs[output_names.index(output_name)].xaxis.set_major_locator(
@@ -555,7 +513,7 @@ def main(args=None):
                         )
                         if y_axis_range != []:
                             y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
-                        if y_axis_percentage:
+                        if y_axis_percent:
                             if y_max[index] is None:
                                 y_max[index] = max(
                                     np.abs(output_arrays[input_file][output_name])
@@ -571,7 +529,7 @@ def main(args=None):
                                 )
                             ax.yaxis.set_major_formatter(yticks)
                         if y_axis_range != []:
-                            if y_axis_percentage is False:
+                            if y_axis_percent is False:
                                 y_range = y_axis_range
                             ax.set_ylim(y_range[0], y_range[1])
                             ax.yaxis.set_major_locator(
@@ -579,7 +537,7 @@ def main(args=None):
                             )
                         if x_axis_range != []:
                             x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
-                        if x_axis_percentage:
+                        if x_axis_percent:
                             if x_max[index] is None:
                                 x_max[index] = max(np.abs(scan_var_array[input_file]))
                             xticks = mtick.PercentFormatter(x_max[index])
@@ -593,7 +551,7 @@ def main(args=None):
                                 )
                             ax.xaxis.set_major_formatter(xticks)
                         if x_axis_range != []:
-                            if x_axis_percentage is False:
+                            if x_axis_percent is False:
                                 x_range = x_axis_range
                             plt.xlim(x_range[0], x_range[1])
                             ax.xaxis.set_major_locator(
@@ -621,7 +579,7 @@ def main(args=None):
                     )
                     if y_axis_range2 != []:
                         y_divisions2 = (y_axis_range2[1] - y_axis_range2[0]) / 10
-                    if y_axis_percentage2:
+                    if y_axis_percent2:
                         if y_max2[index] is None:
                             y_max2[index] = max(
                                 np.abs(output_arrays2[input_file][output_name2])
@@ -637,7 +595,7 @@ def main(args=None):
                             )
                         ax2.yaxis.set_major_formatter(yticks2)
                     if y_axis_range2 != []:
-                        if y_axis_percentage2 is False:
+                        if y_axis_percent2 is False:
                             y_range2 = y_axis_range2
                         ax2.set_ylim(y_range2[0], y_range2[1])
                         ax2.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions2))
@@ -749,7 +707,7 @@ def main(args=None):
                 extra_str = f"{output_name}{f'_vs_{output_name2}' if output_names2 != [] else ''}"
 
             plt.savefig(
-                f"{args.outputdir}/scan_{scan_var_name}_vs_{extra_str}.{save_format}",
+                outputdir / f"scan_{scan_var_name}_vs_{extra_str}.{save_format}",
                 dpi=300,
             )
             if not stack_plots:  # Display plot (used in Jupyter notebooks)
@@ -802,7 +760,7 @@ def main(args=None):
             # Declaring the outputs
             output_arrays = []
 
-            if two_dimensional_contour:
+            if twod_contour:
                 output_contour_z = np.zeros((n_scan_1, n_scan_2))
                 x_contour = [
                     m_file.data[scan_2_var_name].get_scan(i + 1) for i in range(n_scan_2)
@@ -861,7 +819,7 @@ def main(args=None):
                 )
                 if y_axis_range != []:
                     y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
-                if y_axis_percentage:
+                if y_axis_percent:
                     if y_max[index] is None:
                         y_max[index] = max(np.abs(y_contour))
                     yticks = mtick.PercentFormatter(y_max[index])
@@ -873,13 +831,13 @@ def main(args=None):
                         )
                     ax.yaxis.set_major_formatter(yticks)
                 if y_axis_range != []:
-                    if y_axis_percentage is False:
+                    if y_axis_percent is False:
                         y_range = y_axis_range
                     ax.set_ylim(y_range[0], y_range[1])
                     ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
                 if x_axis_range != []:
                     x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
-                if x_axis_percentage:
+                if x_axis_percent:
                     if x_max[index] is None:
                         x_max[index] = max(np.abs(x_contour))
                     xticks = mtick.PercentFormatter(x_max[index])
@@ -891,7 +849,7 @@ def main(args=None):
                         )
                     ax.xaxis.set_major_formatter(xticks)
                 if x_axis_range != []:
-                    if x_axis_percentage is False:
+                    if x_axis_percent is False:
                         x_range = x_axis_range
                     plt.xlim(x_range[0], x_range[1])
                     ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
@@ -899,7 +857,8 @@ def main(args=None):
                 plt.rc("ytick", labelsize=axis_tick_size)
                 plt.tight_layout()
                 plt.savefig(
-                    f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
+                    outputdir
+                    / f"scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
                 )
                 plt.grid(True)
                 plt.show()
@@ -953,7 +912,7 @@ def main(args=None):
                 ]
                 if y_axis_range != []:
                     y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
-                if y_axis_percentage:
+                if y_axis_percent:
                     if y_max[index] is None:
                         y_max[index] = max(np.abs(y_data))
                     yticks = mtick.PercentFormatter(y_max[index])
@@ -965,7 +924,7 @@ def main(args=None):
                         )
                     ax.yaxis.set_major_formatter(yticks)
                 if y_axis_range != []:
-                    if y_axis_percentage is False:
+                    if y_axis_percent is False:
                         y_range = y_axis_range
                     ax.set_ylim(y_range[0], y_range[1])
                     ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
@@ -974,7 +933,7 @@ def main(args=None):
                 ]
                 if x_axis_range != []:
                     x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
-                if x_axis_percentage:
+                if x_axis_percent:
                     if x_max[index] is None:
                         x_max[index] = max(np.abs(x_data))
                     xticks = mtick.PercentFormatter(x_max[index])
@@ -986,7 +945,7 @@ def main(args=None):
                         )
                     ax.xaxis.set_major_formatter(xticks)
                 if x_axis_range != []:
-                    if x_axis_percentage is False:
+                    if x_axis_percent is False:
                         x_range = x_axis_range
                     plt.xlim(x_range[0], x_range[1])
                     ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
@@ -994,7 +953,8 @@ def main(args=None):
                 plt.rc("ytick", labelsize=8)
                 plt.tight_layout()
                 plt.savefig(
-                    f"{args.outputdir}/scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
+                    outputdir
+                    / f"scan_{output_name}_vs_{scan_var_name}_{scan_2_var_name}.{save_format}"
                 )
 
                 # Display plot (used in Jupyter notebooks)
