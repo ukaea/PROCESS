@@ -12,7 +12,7 @@ from process.io.tools import LazyGroup, mfile_arg, mfile_opt, split_callback
     cls=LazyGroup,
     lazy_subcommands={
         "costs": "process.io.plot.costs.cli.costs",
-        # "sankey": "process.io.plot.sankey.cli",
+        "sankey": "process.io.plot.sankey.cli.sankey",
     },
 )
 def plot():
