@@ -10,7 +10,7 @@
 
 *----------------------------Global Variables---------------------------*
 
-maxcal = 1000
+maxcal = 100
 * DESCRIPTION:   Maximum number of VMCON iterations
 * JUSTIFICATION: default
 

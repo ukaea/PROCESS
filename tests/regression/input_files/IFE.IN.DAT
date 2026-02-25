@@ -25,6 +25,7 @@ p_plant_electric_net_required_mw  = 1000.0     *Required net electric power (MW)
 *---------------Numerics Variables-----------------*
 IOPTIMZ   = 1         *Code operation switch (1: for optimisation VMCON only)
 minmax    = 18        *Null FoM, find feasible
+maxcal    = 100       *Maximum number of solver iterations
 
 
 *------------------IFE Variables-------------------*
