@@ -5,18 +5,29 @@ import click
 from process.io.plot.plot_proc import setup_plot
 from process.io.plot.plot_scans import plot_scan
 from process.io.plot.plot_stress_tf import plot_stress
+from process.io.plot.sankey import plot_sankey, plot_sankey_plotly
 from process.io.tools import LazyGroup, mfile_arg, mfile_opt, split_callback
 
 
 @click.group(
     cls=LazyGroup,
-    lazy_subcommands={
-        "costs": "process.io.plot.costs.cli.costs",
-        "sankey": "process.io.plot.sankey.cli.sankey",
-    },
+    lazy_subcommands={"costs": "process.io.plot.costs.cli.costs"},
 )
 def plot():
     """Plotting utilities for PROCESS"""
+
+
+@plot.command("sankey", no_args_is_help=True)
+@mfile_opt(exists=True)
+@click.option("-fmt", "--format", "format_", default="pdf", help="file format []")
+def sankey(mfile, format_):
+    """Plot the power flow in PROCESS using a Sankey diagram."""
+    if format_ in {"html", "plotly"}:
+        out = plot_sankey_plotly(mfile)
+        if out is not None:
+            return out
+
+    return plot_sankey(mfile, format_)
 
 
 @plot.command("scans", no_args_is_help=True)

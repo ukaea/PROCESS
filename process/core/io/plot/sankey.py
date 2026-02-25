@@ -909,7 +909,6 @@ def plot_sankey(
         p_fw_blkt_coolant_pump_mw,
         p_plant_electric_gross_mw,
         p_plant_electric_net_mw,
-        p_plant_electric_recirc_mw,
         p_cryo_plant_electric_mw,
         fachtmw,
         p_tf_electric_supplies_mw,
