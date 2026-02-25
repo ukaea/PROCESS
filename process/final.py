@@ -6,8 +6,8 @@ import process.core.optimisation.constraints as constraints
 from process import output as op
 from process import process_output as po
 from process.core import constants
+from process.core.optimisation.objectives import objective_function
 from process.data_structure import numerics
-from process.objectives import objective_function
 
 
 def finalise(models, ifail: int, non_idempotent_msg: str | None = None):
