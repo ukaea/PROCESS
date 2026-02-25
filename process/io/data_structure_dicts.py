@@ -15,9 +15,9 @@ from itertools import pairwise
 
 import numpy as np
 
+from process.core.optimisation.iteration_variables import ITERATION_VARIABLES
 from process.init import init_all_module_vars
 from process.input import INPUT_VARIABLES
-from process.iteration_variables import ITERATION_VARIABLES
 from process.scan import ScanVariables
 
 INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}

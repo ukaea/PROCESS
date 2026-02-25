@@ -10,9 +10,9 @@ from tabulate import tabulate
 import process.core.optimisation.constraints as constraints
 from process import data_structure
 from process.core import constants
+from process.core.optimisation.iteration_variables import set_scaled_iteration_variable
 from process.final import finalise
 from process.io.mfile import MFile
-from process.iteration_variables import set_scaled_iteration_variable
 from process.objectives import objective_function
 from process.process_output import OutputFileManager, ovarre
 

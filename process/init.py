@@ -6,7 +6,7 @@ from pathlib import Path
 from warnings import warn
 
 import process
-import process.iteration_variables as iteration_variables
+import process.core.optimisation.iteration_variables as iteration_variables
 import process.process_output as process_output
 from process import data_structure
 from process.core import constants
