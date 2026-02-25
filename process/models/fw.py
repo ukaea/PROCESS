@@ -4,7 +4,7 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
-from process.coolprop_interface import FluidProperties
+from process.core.coolprop_interface import FluidProperties
 from process.data_structure import (
     blanket_library,
     build_variables,

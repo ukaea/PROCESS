@@ -8,7 +8,7 @@ from process import constants
 from process import (
     process_output as po,
 )
-from process.coolprop_interface import FluidProperties
+from process.core.coolprop_interface import FluidProperties
 from process.data_structure import (
     build_variables,
     ccfe_hcpb_module,

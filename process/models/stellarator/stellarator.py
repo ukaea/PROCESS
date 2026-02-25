@@ -10,7 +10,7 @@ import process.models.physics.fusion_reactions as reactions
 import process.models.physics.radiation_power as physics_funcs
 from process import constants
 from process import process_output as po
-from process.coolprop_interface import FluidProperties
+from process.core.coolprop_interface import FluidProperties
 from process.data_structure import (
     build_variables,
     constraint_variables,

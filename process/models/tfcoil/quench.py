@@ -4,7 +4,7 @@ from warnings import warn
 import numpy as np
 
 # TODO: Use of CoolProp prevents nb.jit at present...
-from process.coolprop_interface import FluidProperties
+from process.core.coolprop_interface import FluidProperties
 
 __all__ = ["calculate_quench_protection_current_density"]
 
