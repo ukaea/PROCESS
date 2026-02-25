@@ -48,7 +48,7 @@ from typing import Any, Protocol
 import process
 import process.data_structure as data_structure
 import process.init as init
-from process import constants
+from process.core import constants
 from process.io import (
     mfile,
     plot_plotly_sankey,

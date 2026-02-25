@@ -1,7 +1,7 @@
 import numpy as np
 
-from process import constants
 from process import process_output as po
+from process.core import constants
 from process.data_structure import heat_transport_variables, water_usage_variables
 
 SECDAY = 86400e0

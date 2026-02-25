@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-from process import constants
+from process.core import constants
 from process.data_structure import (
     impurity_radiation_module,
     neoclassics_variables,

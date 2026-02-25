@@ -1,6 +1,6 @@
 import pytest
 
-from process import constants
+from process.core import constants
 from process.data_structure import (
     current_drive_variables,
     heat_transport_variables,

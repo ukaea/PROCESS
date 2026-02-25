@@ -13,7 +13,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_almost_equal
 
-from process import constants
+from process.core import constants
 from process.data_structure import build_variables as bv
 from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import pfcoil_variables, superconducting_tf_coil_variables

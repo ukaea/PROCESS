@@ -6,8 +6,8 @@ from scipy import optimize
 
 import process.models.superconductors as superconductors
 import process.models.tfcoil.quench as quench
-from process import constants
 from process import process_output as po
+from process.core import constants
 from process.data_structure import (
     build_variables,
     constraint_variables,

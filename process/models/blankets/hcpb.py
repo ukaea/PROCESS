@@ -4,10 +4,10 @@ import numpy as np
 
 import process.data_structure.blanket_library as blanket_vars
 import process.models.blankets.blanket_library as blanket_library
-from process import constants
 from process import (
     process_output as po,
 )
+from process.core import constants
 from process.core.coolprop_interface import FluidProperties
 from process.data_structure import (
     build_variables,

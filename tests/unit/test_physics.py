@@ -5,7 +5,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process import constants
+from process.core import constants
 from process.data_structure import (
     current_drive_variables,
     impurity_radiation_module,

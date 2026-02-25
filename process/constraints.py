@@ -6,7 +6,7 @@ from typing import ClassVar, Literal
 import numpy as np
 
 import process.data_structure as data_structure
-from process import constants
+from process.core import constants
 from process.exceptions import ProcessError, ProcessValueError
 
 ConstraintSymbolType = Literal["=", ">=", "<="]

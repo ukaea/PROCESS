@@ -28,7 +28,7 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 from scipy.interpolate import interp1d
 
-import process.constants as constants
+import process.core.constants as constants
 import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.models.physics.confinement_time as confine

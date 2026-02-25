@@ -8,7 +8,7 @@ import numpy as np
 from numba import njit
 from scipy import integrate
 
-from process import constants
+from process.core import constants
 from process.data_structure import impurity_radiation_module
 from process.exceptions import ProcessError, ProcessValueError
 

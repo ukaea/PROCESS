@@ -8,7 +8,8 @@ import numpy as np
 from tabulate import tabulate
 
 import process.constraints as constraints
-from process import constants, data_structure
+from process import data_structure
+from process.core import constants
 from process.final import finalise
 from process.io.mfile import MFile
 from process.iteration_variables import set_scaled_iteration_variable

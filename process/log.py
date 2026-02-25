@@ -9,7 +9,7 @@ to the MFile.
 from logging import Handler
 
 import process.process_output as process_output
-from process import constants
+from process.core import constants
 
 
 class ProcessLogHandler(Handler):

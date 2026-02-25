@@ -1,7 +1,7 @@
 import logging
 
-from process import constants
 from process import process_output as po
+from process.core import constants
 from process.data_structure import blanket_library as blanket_library
 from process.data_structure import build_variables as build_variables
 from process.data_structure import ccfe_hcpb_module as ccfe_hcpb_module
