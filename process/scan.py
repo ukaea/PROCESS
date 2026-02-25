@@ -1,4 +1,5 @@
 import logging
+import time
 from dataclasses import astuple, dataclass
 from enum import Enum
 
@@ -220,8 +221,11 @@ class Scan:
         if scan_variables.isweep == 0:
             # Solve single problem, rather than an array of problems (scan)
             # doopt() can also run just an evaluation
+            start_time = time.time()
             ifail = self.doopt()
-            write_output_files(models=self.models, ifail=ifail)
+            write_output_files(
+                models=self.models, ifail=ifail, runtime=time.time() - start_time
+            )
             show_errors(constants.NOUT)
             return
 
@@ -818,9 +822,12 @@ class Scan:
 
         for iscan in range(1, scan_variables.isweep + 1):
             self.scan_1d_write_point_header(iscan)
+            start_time = time.time()
             ifail = self.doopt()
             scan_1d_ifail_dict[iscan] = ifail
-            write_output_files(models=self.models, ifail=ifail)
+            write_output_files(
+                models=self.models, ifail=ifail, runtime=time.time() - start_time
+            )
 
             show_errors(constants.NOUT)
             logging_model_handler.clear_logs()
@@ -873,9 +880,11 @@ class Scan:
         for iscan_1 in range(1, scan_variables.isweep + 1):
             for iscan_2 in range(1, scan_variables.isweep_2 + 1):
                 self.scan_2d_write_point_header(iscan, iscan_1, iscan_2)
+                start_time = time.time()
                 ifail = self.doopt()
-
-                write_output_files(models=self.models, ifail=ifail)
+                write_output_files(
+                    models=self.models, ifail=ifail, runtime=time.time() - start_time
+                )
 
                 show_errors(constants.NOUT)
                 logging_model_handler.clear_logs()
