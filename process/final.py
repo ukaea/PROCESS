@@ -2,7 +2,7 @@
 
 from tabulate import tabulate
 
-import process.constraints as constraints
+import process.core.optimisation.constraints as constraints
 from process import output as op
 from process import process_output as po
 from process.core import constants

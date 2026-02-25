@@ -10,7 +10,7 @@ from warnings import warn
 
 import process
 import process.data_structure as data_structure
-from process.constraints import ConstraintManager
+from process.core.optimisation.constraints import ConstraintManager
 from process.exceptions import ProcessValidationError, ProcessValueError
 
 NumberType = int | float

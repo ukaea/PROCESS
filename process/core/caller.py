@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 from tabulate import tabulate
 
-import process.constraints as constraints
+import process.core.optimisation.constraints as constraints
 from process import data_structure
 from process.core import constants
 from process.final import finalise
