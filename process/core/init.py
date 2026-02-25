@@ -6,8 +6,8 @@ from pathlib import Path
 from warnings import warn
 
 import process
+import process.core.process_output as process_output
 import process.core.solver.iteration_variables as iteration_variables
-import process.process_output as process_output
 from process import data_structure
 from process.core import constants
 from process.core.exceptions import ProcessValidationError

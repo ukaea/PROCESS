@@ -2,10 +2,10 @@ import logging
 
 import numpy as np
 
-from process import (
+from process.core import constants
+from process.core import (
     process_output as po,
 )
-from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure import (
     current_drive_variables,

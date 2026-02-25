@@ -8,7 +8,7 @@ to the MFile.
 
 from logging import Handler
 
-import process.process_output as process_output
+import process.core.process_output as process_output
 from process.core import constants
 
 

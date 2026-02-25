@@ -50,6 +50,7 @@ import process.core.init as init
 import process.data_structure as data_structure
 from process.core import constants
 from process.core.log import logging_model_handler, show_errors
+from process.core.process_output import OutputFileManager, oheadr
 from process.io import (
     mfile,
     plot_plotly_sankey,
@@ -114,7 +115,6 @@ from process.models.tfcoil.resistive import (
 from process.models.tfcoil.superconducting import SuperconductingTFCoil
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
-from process.process_output import OutputFileManager, oheadr
 from process.scan import Scan
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))

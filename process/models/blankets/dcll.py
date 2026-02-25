@@ -1,8 +1,8 @@
 import process.models.blankets.blanket_library as blanket_library
-from process import (
+from process.core import constants
+from process.core import (
     process_output as po,
 )
-from process.core import constants
 from process.data_structure import (
     build_variables,
     current_drive_variables,

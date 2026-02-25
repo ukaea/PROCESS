@@ -13,8 +13,8 @@ import process.models.physics.fusion_reactions as reactions
 import process.models.physics.impurity_radiation as impurity_radiation
 import process.models.physics.l_h_transition as transition
 import process.models.physics.radiation_power as physics_funcs
-from process import process_output as po
 from process.core import constants
+from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     build_variables,

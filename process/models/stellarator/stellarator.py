@@ -8,8 +8,8 @@ import numpy as np
 
 import process.models.physics.fusion_reactions as reactions
 import process.models.physics.radiation_power as physics_funcs
-from process import process_output as po
 from process.core import constants
+from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (

@@ -6,8 +6,8 @@ from enum import Enum
 import numpy as np
 from tabulate import tabulate
 
+import process.core.process_output as process_output
 import process.core.solver.constraints as constraints
-import process.process_output as process_output
 from process.core import constants
 from process.core.caller import write_output_files
 from process.core.exceptions import ProcessValueError

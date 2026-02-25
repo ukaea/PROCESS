@@ -2,8 +2,8 @@ import math
 
 import numpy as np
 
-from process import process_output as po
 from process.core import constants
+from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as dv

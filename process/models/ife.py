@@ -7,8 +7,7 @@ parameters of an Inertial Fusion Energy power plant.
 
 import numpy as np
 
-from process import process_output
-from process.core import constants
+from process.core import constants, process_output
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     buildings_variables,

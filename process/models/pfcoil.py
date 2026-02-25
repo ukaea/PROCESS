@@ -8,8 +8,8 @@ from scipy.linalg import svd
 from scipy.special import ellipe, ellipk
 
 import process.models.superconductors as superconductors
-from process import process_output as op
 from process.core import constants
+from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
 from process.data_structure import build_variables as bv
 from process.data_structure import constraint_variables as ctv
