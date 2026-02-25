@@ -35,8 +35,8 @@ def plot_stress(
     plot_selection,
     save_format,
     axis_font_size,
-    input_file,
     term_output,
+    input_file,
     plot_conf: StressPlotConfig | dict | None = None,
 ):
     if plot_conf is None:
@@ -46,10 +46,10 @@ def plot_stress(
 
     # Boolean swiches for plot selection
     # -----------------------------------
-    plot_sig = ("sig" in plot_selection) or plot_selection == "all"
-    plot_disp = ("disp" in plot_selection) or plot_selection == "all"
-    plot_strain = ("strain" in plot_selection) or plot_selection == "all"
-    plot_sm_sig = ("sm_sig" in plot_selection) or plot_selection == "all"
+    plot_sig = ("sig" in plot_selection) or ("all" in plot_selection)
+    plot_disp = ("disp" in plot_selection) or ("all" in plot_selection)
+    plot_strain = ("strain" in plot_selection) or ("all" in plot_selection)
+    plot_sm_sig = ("sm_sig" in plot_selection) or ("all" in plot_selection)
 
     # Step 1 : Data extraction
     # ----------------------------------------------------------------------------------------------
@@ -67,21 +67,24 @@ def plot_stress(
     # Assumes n_layers >= 1
 
     # Physical quantities : full vectors
-    radius = [[] * n_layers]
-    radial_smeared_stress = [[] * n_layers]
-    toroidal_smeared_stress = [[] * n_layers]
-    vertical_smeared_stress = [[] * n_layers]
-    tresca_smeared_stress = [[] * n_layers]
-    radial_stress = [[] * n_layers]
-    toroidal_stress = [[] * n_layers]
-    vertical_stress = [[] * n_layers]
-    vm_stress = [[] * n_layers]
-    tresca_stress = [[] * n_layers]
-    cea_tresca_stress = [[] * n_layers]
-    radial_strain = [[] * n_layers]
-    toroidal_strain = [[] * n_layers]
-    vertical_strain = [[] * n_layers]
-    radial_displacement = [[] * n_layers]
+    def _empty_lists(n_l):
+        return [[] for _ in range(n_l)]
+
+    radius = _empty_lists(n_layers)
+    radial_smeared_stress = _empty_lists(n_layers)
+    toroidal_smeared_stress = _empty_lists(n_layers)
+    vertical_smeared_stress = _empty_lists(n_layers)
+    tresca_smeared_stress = _empty_lists(n_layers)
+    radial_stress = _empty_lists(n_layers)
+    toroidal_stress = _empty_lists(n_layers)
+    vertical_stress = _empty_lists(n_layers)
+    vm_stress = _empty_lists(n_layers)
+    tresca_stress = _empty_lists(n_layers)
+    cea_tresca_stress = _empty_lists(n_layers)
+    radial_strain = _empty_lists(n_layers)
+    toroidal_strain = _empty_lists(n_layers)
+    vertical_strain = _empty_lists(n_layers)
+    radial_displacement = _empty_lists(n_layers)
 
     # Physical quantity : WP stress
     wp_vertical_stress = []
