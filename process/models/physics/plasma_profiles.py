@@ -5,8 +5,8 @@ import scipy as sp
 
 import process.models.physics.profiles as profiles
 from process.core import constants
+from process.core.exceptions import ProcessValueError
 from process.data_structure import divertor_variables, physics_variables
-from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 

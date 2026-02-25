@@ -6,7 +6,7 @@ import pytest
 import process.data_structure as data_structure
 import process.init as init
 import process.input as process_input
-from process.exceptions import ProcessValidationError
+from process.core.exceptions import ProcessValidationError
 
 
 def _create_input_file(directory, content: str):

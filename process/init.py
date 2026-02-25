@@ -10,6 +10,7 @@ import process.core.solver.iteration_variables as iteration_variables
 import process.process_output as process_output
 from process import data_structure
 from process.core import constants
+from process.core.exceptions import ProcessValidationError
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_library import init_blanket_library
 from process.data_structure.build_variables import init_build_variables
@@ -57,7 +58,6 @@ from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
-from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.log import logging_model_handler
 from process.models.stellarator.initialization import st_init

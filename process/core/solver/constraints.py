@@ -7,7 +7,7 @@ import numpy as np
 
 import process.data_structure as data_structure
 from process.core import constants
-from process.exceptions import ProcessError, ProcessValueError
+from process.core.exceptions import ProcessError, ProcessValueError
 
 ConstraintSymbolType = Literal["=", ">=", "<="]
 

@@ -9,6 +9,7 @@ import numpy as np
 
 from process import process_output
 from process.core import constants
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     buildings_variables,
     cost_variables,
@@ -20,7 +21,6 @@ from process.data_structure import (
     structure_variables,
     vacuum_variables,
 )
-from process.exceptions import ProcessValueError
 
 MATERIALS = [
     "void",

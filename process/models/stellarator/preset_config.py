@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
+from process.core.exceptions import ProcessValueError
 from process.data_structure import stellarator_configuration
-from process.exceptions import ProcessValueError
 
 HELIAS5B = {
     "name": "Helias 5b",

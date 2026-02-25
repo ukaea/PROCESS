@@ -3,8 +3,8 @@ import logging
 import numpy as np
 from scipy import optimize
 
+from process.core.exceptions import ProcessValueError
 from process.data_structure import rebco_variables
-from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 

@@ -15,6 +15,7 @@ import process.models.physics.l_h_transition as transition
 import process.models.physics.radiation_power as physics_funcs
 from process import process_output as po
 from process.core import constants
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -29,7 +30,6 @@ from process.data_structure import (
     stellarator_variables,
     times_variables,
 )
-from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 

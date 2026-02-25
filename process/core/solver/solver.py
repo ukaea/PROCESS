@@ -16,9 +16,9 @@ from pyvmcon import (
 )
 from scipy.optimize import fsolve
 
+from process.core.exceptions import ProcessValueError
 from process.core.solver.evaluators import Evaluators
 from process.data_structure import global_variables, numerics
-from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 

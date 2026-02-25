@@ -6,7 +6,7 @@ from warnings import warn
 import numpy as np
 
 import process.data_structure as data_structure
-from process.exceptions import ProcessValueError
+from process.core.exceptions import ProcessValueError
 
 
 @dataclass

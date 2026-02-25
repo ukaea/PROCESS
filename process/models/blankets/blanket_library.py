@@ -7,6 +7,7 @@ import numpy as np
 from process import process_output as po
 from process.core import constants
 from process.core.coolprop_interface import FluidProperties
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -17,7 +18,6 @@ from process.data_structure import (
     physics_variables,
     primary_pumping_variables,
 )
-from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 

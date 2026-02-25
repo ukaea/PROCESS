@@ -12,8 +12,8 @@ Notes:
 from re import sub
 from sys import stderr
 
+from process.core.exceptions import ProcessValidationError
 from process.core.solver.constraints import ConstraintManager
-from process.exceptions import ProcessValidationError
 from process.io.data_structure_dicts import get_dicts
 
 # ioptimz values

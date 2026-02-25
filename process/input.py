@@ -10,8 +10,8 @@ from warnings import warn
 
 import process
 import process.data_structure as data_structure
+from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.core.solver.constraints import ConstraintManager
-from process.exceptions import ProcessValidationError, ProcessValueError
 
 NumberType = int | float
 ValidInputTypes = NumberType | str

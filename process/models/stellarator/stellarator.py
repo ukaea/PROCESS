@@ -11,6 +11,7 @@ import process.models.physics.radiation_power as physics_funcs
 from process import process_output as po
 from process.core import constants
 from process.core.coolprop_interface import FluidProperties
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -28,7 +29,6 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
 )
-from process.exceptions import ProcessValueError
 from process.models.physics.physics import Physics, rether
 from process.models.stellarator.build import st_build
 from process.models.stellarator.coils.calculate import st_coil

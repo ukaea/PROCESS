@@ -3,10 +3,10 @@ import logging
 import numpy as np
 
 import process.models.superconductors as superconductors
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     stellarator_configuration,
 )
-from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 

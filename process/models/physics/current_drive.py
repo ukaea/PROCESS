@@ -6,12 +6,12 @@ from process import (
     process_output as po,
 )
 from process.core import constants
+from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure import (
     current_drive_variables,
     heat_transport_variables,
     physics_variables,
 )
-from process.exceptions import ProcessError, ProcessValueError
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)

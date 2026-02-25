@@ -1,5 +1,6 @@
 import numpy as np
 
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     cost_variables,
     current_drive_variables,
@@ -10,7 +11,6 @@ from process.data_structure import (
     tfcoil_variables,
     times_variables,
 )
-from process.exceptions import ProcessValueError
 
 OBJECTIVE_NAMES = {
     1: "Plasma major radius",

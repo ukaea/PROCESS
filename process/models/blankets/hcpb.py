@@ -9,6 +9,7 @@ from process import (
 )
 from process.core import constants
 from process.core.coolprop_interface import FluidProperties
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     build_variables,
     ccfe_hcpb_module,
@@ -22,7 +23,6 @@ from process.data_structure import (
     primary_pumping_variables,
     tfcoil_variables,
 )
-from process.exceptions import ProcessValueError
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 
 logger = logging.getLogger(__name__)
