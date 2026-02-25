@@ -4,6 +4,7 @@ import pytest
 from pytest import approx
 
 from process import data_structure
+from process.core.init import init_all_module_vars
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
@@ -12,7 +13,6 @@ from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
-from process.init import init_all_module_vars
 from process.models.availability import Availability
 
 

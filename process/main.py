@@ -46,8 +46,8 @@ from pathlib import Path
 from typing import Any, Protocol
 
 import process
+import process.core.init as init
 import process.data_structure as data_structure
-import process.init as init
 from process.core import constants
 from process.io import (
     mfile,

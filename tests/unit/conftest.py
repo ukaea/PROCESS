@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from process.init import init_all_module_vars
+from process.core.init import init_all_module_vars
 
 
 @pytest.fixture(scope="function", autouse=True)
