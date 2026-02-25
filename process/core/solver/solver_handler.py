@@ -3,8 +3,8 @@ from process.core.solver.iteration_variables import (
     load_iteration_variables,
     load_scaled_bounds,
 )
+from process.core.solver.solver import get_solver
 from process.data_structure import numerics
-from process.solver import get_solver
 
 
 class SolverHandler:
