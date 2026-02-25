@@ -3,9 +3,9 @@
 from tabulate import tabulate
 
 import process.core.solver.constraints as constraints
-from process import output as op
 from process import process_output as po
 from process.core import constants
+from process.core import output as op
 from process.core.solver.objectives import objective_function
 from process.data_structure import numerics
 
