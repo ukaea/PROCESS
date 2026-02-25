@@ -445,7 +445,9 @@ INPUT_VARIABLES = {
     "dz_vv_upper": InputVariable(
         data_structure.build_variables, float, range=(0.0, 10.0)
     ),
-    "den_aluminium": InputVariable(process.constants, float, range=(2500.0, 30000.0)),
+    "den_aluminium": InputVariable(
+        process.core.constants, float, range=(2500.0, 30000.0)
+    ),
     "den_tf_coil_case": InputVariable(
         data_structure.tfcoil_variables, float, range=(1000.0, 100000.0)
     ),
@@ -455,7 +457,7 @@ INPUT_VARIABLES = {
     "den_tf_wp_turn_insulation": InputVariable(
         data_structure.tfcoil_variables, float, range=(500.0, 10000.0)
     ),
-    "den_copper": InputVariable(process.constants, float, range=(8000.0, 10000.0)),
+    "den_copper": InputVariable(process.core.constants, float, range=(8000.0, 10000.0)),
     "declblkt": InputVariable(data_structure.fwbs_variables, float, range=(0.01, 0.2)),
     "declfw": InputVariable(data_structure.fwbs_variables, float, range=(0.01, 0.2)),
     "declshld": InputVariable(data_structure.fwbs_variables, float, range=(0.01, 0.2)),
