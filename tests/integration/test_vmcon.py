@@ -12,7 +12,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 import pytest
 
-from process.evaluators import Evaluators
+from process.core.optimisation.evaluators import Evaluators
 from process.init import init_all_module_vars
 from process.solver import get_solver
 

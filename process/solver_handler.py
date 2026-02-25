@@ -1,9 +1,9 @@
+from process.core.optimisation.evaluators import Evaluators
 from process.core.optimisation.iteration_variables import (
     load_iteration_variables,
     load_scaled_bounds,
 )
 from process.data_structure import numerics
-from process.evaluators import Evaluators
 from process.solver import get_solver
 
 
