@@ -4,8 +4,8 @@ import numpy as np
 import pytest
 
 import process.core.init as init
+import process.core.input as process_input
 import process.data_structure as data_structure
-import process.input as process_input
 from process.core.exceptions import ProcessValidationError
 
 
