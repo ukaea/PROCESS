@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-import process.io.in_dat as indat
+import process.core.io.in_dat as indat
 
 logger = logging.getLogger(__name__)
 

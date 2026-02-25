@@ -20,7 +20,7 @@ import json
 from pathlib import Path, PurePath
 
 # PROCESS-specific modules
-from process.io.mfile import MFile
+from process.core.io.mfile import MFile
 
 # == define functions ==
 

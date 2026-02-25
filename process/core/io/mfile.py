@@ -2,7 +2,7 @@
 
 PROCESS MFILE.DAT IO library
 
-process.io.mfile.
+process.core.io.mfile.
 
 Notes:
   + 12/03/2014: Initial version

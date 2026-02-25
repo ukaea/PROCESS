@@ -16,8 +16,8 @@ import sys
 import numpy as np
 from numpy import isfinite
 
-import process.io.mfile as mf
-from process.io.data_structure_dicts import get_dicts
+import process.core.io.mfile as mf
+from process.core.io.data_structure_dicts import get_dicts
 
 # Dictionary for parameter descriptions
 DICT_DESCRIPTIONS = get_dicts()["DICT_DESCRIPTIONS"]

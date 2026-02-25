@@ -8,8 +8,8 @@ given their values from the output file MFILE.DAT.
 import argparse
 import re
 
-import process.io.mfile as mf
-from process.io.in_dat import InDat
+import process.core.io.mfile as mf
+from process.core.io.in_dat import InDat
 
 
 def feasible_point(filename, position):

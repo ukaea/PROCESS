@@ -9,7 +9,7 @@ try:
 except ImportError:
     PLOT_SANKEY = False
 
-from process.io.mfile import MFile
+from process.core.io.mfile import MFile
 
 
 def main(args=None):

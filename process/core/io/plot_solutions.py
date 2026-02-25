@@ -20,8 +20,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from process.core.io.mfile import MFile
 from process.data_structure import numerics
-from process.io.mfile import MFile
 
 # Variables of interest in mfiles and subsequent dataframes
 # Be specific about exact names, patterns and regex

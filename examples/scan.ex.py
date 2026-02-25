@@ -48,7 +48,7 @@ single_run.run()
 
 # %% slideshow={"slide_type": "subslide"}
 # %matplotlib inline
-from process.io import plot_scans
+from process.core.io import plot_scans
 
 # Define working directory relative to project dir and input file name
 mfile_name = data_dir / "scan_example_file_MFILE.DAT"

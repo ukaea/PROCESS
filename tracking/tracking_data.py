@@ -56,7 +56,7 @@ from bokeh.palettes import Category10
 from bokeh.plotting import figure
 from bokeh.resources import CDN
 
-from process.io import mfile as mf
+from process.core.io import mfile as mf
 
 logging.basicConfig(level=logging.INFO, filename="tracker.log")
 logger = logging.getLogger("PROCESS Tracker")

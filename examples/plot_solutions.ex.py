@@ -38,7 +38,7 @@
 # %load_ext autoreload
 # %autoreload 2
 
-from process.io.plot_solutions import (
+from process.core.io.plot_solutions import (
     RunMetadata,
     plot_mfile_solutions,
     plot_mfile_solutions_constraints,

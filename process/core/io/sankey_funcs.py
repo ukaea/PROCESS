@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib.sankey import Sankey
 from numpy import sqrt
 
-from process.io.mfile import MFile
+from process.core.io.mfile import MFile
 
 
 def plot_full_sankey(

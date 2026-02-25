@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 
 import process.data_structure as data_structure
-import process.iteration_variables as iteration_variables
+import process.core.solver.iteration_variables as iteration_variables
 from process.main import SingleRun
 
 

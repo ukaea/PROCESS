@@ -8,10 +8,10 @@ from pathlib import Path
 from sys import stderr
 from time import sleep
 
+from process.core.io.data_structure_dicts import get_dicts
+from process.core.io.in_dat import InDat
+from process.core.io.mfile import MFile
 from process.data_structure import numerics
-from process.io.data_structure_dicts import get_dicts
-from process.io.in_dat import InDat
-from process.io.mfile import MFile
 
 logger = logging.getLogger(__name__)
 

@@ -7,7 +7,7 @@ import argparse
 
 import matplotlib.pyplot as plt
 
-import process.io.mfile as mf
+import process.core.io.mfile as mf
 
 
 def orig_cost_model(m_file, args):

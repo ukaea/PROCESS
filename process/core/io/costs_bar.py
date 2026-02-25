@@ -12,7 +12,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-import process.io.mfile as mf
+import process.core.io.mfile as mf
 
 
 def comp_orig(args, mfile_list: list[str], inflate: float):

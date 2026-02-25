@@ -65,10 +65,10 @@ single_run.run()
 # ## Plot summary
 # Create a summary of the generated `MFILE.DAT` using `plot_proc`.
 #
-# You can also call `plot_proc` from the cli with `python -m process.io.plot_proc`
+# You can also call `plot_proc` from the cli with `python -m process.core.io.plot_proc`
 
 # %%
-from process.io import plot_proc
+from process.core.io import plot_proc
 
 # Pdf and png output are also available
 plot_proc.main(
@@ -92,7 +92,7 @@ print(f"Electrical plant equipment: {process.data_structure.cost_variables.c24:.
 # This demonstrates how you would read from a PROCESS MFILE and write specified values into a csv using the `mfile_to_csv` function
 
 # %%
-from process.io import mfile_to_csv
+from process.core.io import mfile_to_csv
 
 # mfile_to_csv requires two inputs:
 # - path to the MFILE

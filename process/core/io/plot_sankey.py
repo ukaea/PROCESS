@@ -10,7 +10,7 @@ import pathlib
 
 from pylab import savefig, show
 
-from process.io.sankey_funcs import plot_sankey
+from process.core.io.sankey_funcs import plot_sankey
 
 
 def main(args=None):

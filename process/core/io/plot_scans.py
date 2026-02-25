@@ -33,8 +33,8 @@ import matplotlib.ticker as mtick
 import numpy as np
 
 # PROCESS libraries
-import process.io.mfile as mf
-from process.io.variable_metadata import var_dicts as meta
+import process.core.io.mfile as mf
+from process.core.io.variable_metadata import var_dicts as meta
 
 
 def parse_args(args):

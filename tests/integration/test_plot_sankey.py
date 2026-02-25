@@ -1,6 +1,6 @@
 """Integration tests for plot_sankey.py."""
 
-from process.io import plot_sankey
+from process.core.io import plot_sankey
 
 
 def test_plot_sankey(temp_data_cwd, mfile_name):
