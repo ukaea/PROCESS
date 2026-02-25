@@ -12,7 +12,7 @@ from _pytest.fixtures import SubRequest
 from system_check import system_compatible
 
 from process import main
-from process.log import logging_model_handler
+from process.core.log import logging_model_handler
 
 
 def pytest_addoption(parser):

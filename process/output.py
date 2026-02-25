@@ -1,5 +1,5 @@
 from process import data_structure
-from process.log import logging_model_handler
+from process.core.log import logging_model_handler
 
 
 def write(models, _outfile):

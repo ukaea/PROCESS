@@ -49,6 +49,7 @@ import process
 import process.core.init as init
 import process.data_structure as data_structure
 from process.core import constants
+from process.core.log import logging_model_handler, show_errors
 from process.io import (
     mfile,
     plot_plotly_sankey,
@@ -67,7 +68,6 @@ from process.io.process_funcs import (
     process_warnings,
     vary_iteration_variables,
 )
-from process.log import logging_model_handler, show_errors
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
 from process.models.blankets.dcll import DCLL

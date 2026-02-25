@@ -11,6 +11,7 @@ import process.process_output as process_output
 from process.core import constants
 from process.core.caller import write_output_files
 from process.core.exceptions import ProcessValueError
+from process.core.log import logging_model_handler, show_errors
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
     build_variables,
@@ -30,7 +31,6 @@ from process.data_structure import (
     scan_variables,
     tfcoil_variables,
 )
-from process.log import logging_model_handler, show_errors
 
 logger = logging.getLogger(__name__)
 
