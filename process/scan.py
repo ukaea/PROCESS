@@ -10,6 +10,7 @@ import process.core.solver.constraints as constraints
 import process.process_output as process_output
 from process.core import constants
 from process.core.caller import write_output_files
+from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -30,7 +31,6 @@ from process.data_structure import (
 )
 from process.exceptions import ProcessValueError
 from process.log import logging_model_handler, show_errors
-from process.solver_handler import SolverHandler
 
 logger = logging.getLogger(__name__)
 
