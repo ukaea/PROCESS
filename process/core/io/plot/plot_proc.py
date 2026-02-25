@@ -26,12 +26,12 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 from scipy.interpolate import interp1d
 
-import process.core.io.mfile as mf
+import process.core.io.mfile.mfile as mf
 import process.models.tfcoil.superconducting as sctf
 from process.core import constants
 from process.core.io.mfile.mfile import MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
-from process.data_structure import impurity_radiation_module, pfcoil_variables
+from process.data_structure import impurity_radiation_module
 from process.models.build import Build
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
@@ -475,7 +475,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     # ===========================================
 
     # Load the plasma image
-    with resources.path("process.core.io", "plasma.png") as img_path:
+    with resources.path("process.core.io.plot.images", "plasma.png") as img_path:
         plasma = mpimg.imread(img_path.open("rb"))
 
     # Display the plasma image over the figure, not the axes
@@ -497,7 +497,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
         fontsize=11,
     )
     # Load the neutron image
-    with resources.path("process.core.io", "neutron.png") as img_path:
+    with resources.path("process.core.io.plot.images", "neutron.png") as img_path:
         neutron = mpimg.imread(img_path.open("rb"))
 
     new_ax = axis.inset_axes(
@@ -643,7 +643,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the alpha particle image
-    with resources.path("process.core.io", "alpha_particle.png") as img_path:
+    with resources.path("process.core.io.plot.images", "alpha_particle.png") as img_path:
         alpha = mpimg.imread(img_path.open("rb"))
 
     # Display the alpha particle image over the figure, not the axes
@@ -729,7 +729,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the HCD injector image
-    with resources.path("process.core.io", "hcd_injector.png") as img_path:
+    with resources.path("process.core.io.plot.images", "hcd_injector.png") as img_path:
         hcd_injector_1 = hcd_injector_2 = mpimg.imread(img_path.open("rb"))
 
     # Display the injector image over the figure, not the axes
@@ -997,7 +997,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     # ===========================================
 
     # Load the turbine image
-    with resources.path("process.core.io", "turbine.png") as img_path:
+    with resources.path("process.core.io.plot.images", "turbine.png") as img_path:
         turbine = mpimg.imread(img_path.open("rb"))
 
     # Display the turbine image over the figure, not the axes
@@ -1053,7 +1053,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the generator image
-    with resources.path("process.core.io", "generator.png") as img_path:
+    with resources.path("process.core.io.plot.images", "generator.png") as img_path:
         generator = mpimg.imread(img_path.open("rb"))
 
     # Display the generator image over the figure, not the axes
@@ -1122,7 +1122,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the pylon image
-    with resources.path("process.core.io", "pylon.png") as img_path:
+    with resources.path("process.core.io.plot.images", "pylon.png") as img_path:
         pylon = mpimg.imread(img_path.open("rb"))
 
     # Display the pylon image over the figure, not the axes
@@ -1331,7 +1331,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     # ================================
 
     # Load the first wall image
-    with resources.path("process.core.io", "fw.png") as img_path:
+    with resources.path("process.core.io.plot.images", "fw.png") as img_path:
         fw = mpimg.imread(img_path.open("rb"))
 
     # Display the first wall image over the figure, not the axes
@@ -1587,7 +1587,9 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the blanket image
-    with resources.path("process.core.io", "blanket_with_coolant.png") as img_path:
+    with resources.path(
+        "process.core.io.plot.images", "blanket_with_coolant.png"
+    ) as img_path:
         blanket = mpimg.imread(img_path.open("rb"))
 
     # Display the blanket image over the figure, not the axes
@@ -1630,7 +1632,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the vacuum vessel image
-    with resources.path("process.core.io", "vv.png") as img_path:
+    with resources.path("process.core.io.plot.images", "vv.png") as img_path:
         vv = mpimg.imread(img_path.open("rb"))
 
     # Display the vacuum vessel image over the figure, not the axes
@@ -1734,7 +1736,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the divertor image
-    with resources.path("process.core.io", "divertor.png") as img_path:
+    with resources.path("process.core.io.plot.images", "divertor.png") as img_path:
         divertor = mpimg.imread(img_path.open("rb"))
 
     # Display the divertor image over the figure, not the axes
@@ -2835,7 +2837,7 @@ def plot_main_plasma_information(
 
     # Load the neutron image
     with resources.path(
-        "process.core.io", "alpha_particle.png"
+        "process.core.io.plot.images", "alpha_particle.png"
     ) as alpha_particle_image_path:
         # Use importlib.resources to locate the image
         alpha_particle = mpimg.imread(alpha_particle_image_path.open("rb"))
@@ -2870,7 +2872,9 @@ def plot_main_plasma_information(
     )
 
     # =========================================
-    with resources.path("process.core.io", "neutron.png") as neutron_image_path:
+    with resources.path(
+        "process.core.io.plot.images", "neutron.png"
+    ) as neutron_image_path:
         neutron = mpimg.imread(neutron_image_path.open("rb"))
     new_ax = axis.inset_axes(
         [0.975, 0.75, 0.075, 0.075], transform=axis.transAxes, zorder=10

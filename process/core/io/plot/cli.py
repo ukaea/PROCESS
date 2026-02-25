@@ -234,7 +234,7 @@ def plot_scans_cli(
     "-p",
     "--plot-selec",
     multiple=True,
-    default="all",
+    default=["all"],
     type=click.Choice(["all", "sig", "disp", "strain", "sm_sig"]),
     help="""\b
 Plot selection string :
