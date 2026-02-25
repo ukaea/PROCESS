@@ -16,7 +16,7 @@ from pyvmcon import (
 )
 from scipy.optimize import fsolve
 
-from process.core.optimisation.evaluators import Evaluators
+from process.core.solver.evaluators import Evaluators
 from process.data_structure import global_variables, numerics
 from process.exceptions import ProcessValueError
 

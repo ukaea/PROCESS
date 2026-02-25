@@ -1,5 +1,5 @@
-from process.core.optimisation.evaluators import Evaluators
-from process.core.optimisation.iteration_variables import (
+from process.core.solver.evaluators import Evaluators
+from process.core.solver.iteration_variables import (
     load_iteration_variables,
     load_scaled_bounds,
 )

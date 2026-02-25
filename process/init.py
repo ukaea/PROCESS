@@ -6,11 +6,11 @@ from pathlib import Path
 from warnings import warn
 
 import process
-import process.core.optimisation.iteration_variables as iteration_variables
+import process.core.solver.iteration_variables as iteration_variables
 import process.process_output as process_output
 from process import data_structure
 from process.core import constants
-from process.core.optimisation.constraints import ConstraintManager
+from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_library import init_blanket_library
 from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables

@@ -33,7 +33,7 @@ import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.models.physics.confinement_time as confine
 import process.models.tfcoil.superconducting as sctf
-from process.core.optimisation.objectives import OBJECTIVE_NAMES
+from process.core.solver.objectives import OBJECTIVE_NAMES
 from process.data_structure import impurity_radiation_module, physics_variables
 from process.io.mfile import MFileErrorClass
 from process.models.build import Build

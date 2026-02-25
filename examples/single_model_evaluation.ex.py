@@ -80,7 +80,7 @@ print_values()
 # Now investigate effect of varying W impurity on impurity radiation power, divertor power and constraint 15 (L-H threshold constraint).
 
 # %%
-from process.core.optimisation.constraints import ConstraintManager
+from process.core.solver.constraints import ConstraintManager
 
 
 def run_impurities(w_imp_fracs):

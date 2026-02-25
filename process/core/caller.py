@@ -7,11 +7,11 @@ from typing import TYPE_CHECKING
 import numpy as np
 from tabulate import tabulate
 
-import process.core.optimisation.constraints as constraints
+import process.core.solver.constraints as constraints
 from process import data_structure
 from process.core import constants
-from process.core.optimisation.iteration_variables import set_scaled_iteration_variable
-from process.core.optimisation.objectives import objective_function
+from process.core.solver.iteration_variables import set_scaled_iteration_variable
+from process.core.solver.objectives import objective_function
 from process.final import finalise
 from process.io.mfile import MFile
 from process.process_output import OutputFileManager, ovarre

@@ -2,11 +2,11 @@
 
 from tabulate import tabulate
 
-import process.core.optimisation.constraints as constraints
+import process.core.solver.constraints as constraints
 from process import output as op
 from process import process_output as po
 from process.core import constants
-from process.core.optimisation.objectives import objective_function
+from process.core.solver.objectives import objective_function
 from process.data_structure import numerics
 
 
