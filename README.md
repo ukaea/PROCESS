@@ -4,7 +4,7 @@
 
 **Here are the [PROCESS docs](https://ukaea.github.io/PROCESS/).**
 
-PROCESS is the reactor systems code at the [UK Atomic Energy Authority](https://www.ukaea.org/). More information on PROCESS can be found on the PROCESS [webpage](https://www.ukaea.org/service/process/).
+PROCESS is the reactor systems code at the [UK Atomic Energy Authority](https://www.ukaea.org/) (UKAEA). More information can be found on the PROCESS [webpage](https://www.ukaea.org/service/process/).
 
 PROCESS was originally a Fortran code, but is now a pure-Python command line program. PROCESS is still undergoing a significant restructure and, as such, **PROCESS version 3 is unstable and does not guarantee backward compatibility**. PROCESS version 4 will be the first major version to enforce backward-compatible API changes and will be released following a refactor of the data structure. 
 
@@ -37,13 +37,7 @@ Please see the [CONTRIBUTING.md](https://github.com/ukaea/PROCESS/blob/main/CONT
 A list of publications using PROCESS is given [here](https://ukaea.github.io/PROCESS/publications), including two papers outlining the physics and engineering models in PROCESS.
 
 ## Citing PROCESS
-If you use PROCESS in your work, please cite it using the "Cite this repository" link in the "About" section of the repository. This will cite the latest version of PROCESS, if you are using a different release please find the appropriate DOI on [PROCESS' Zenodo page](https://doi.org/10.5281/zenodo.8335291). To ensure reproducible research, we recommend you run an [official release of PROCESS](https://github.com/ukaea/PROCESS/releases) by checking out the appropriate git tag.
+If you use PROCESS in your work, please cite it using the "Cite this repository" link in the "About" section of the repository. This will cite the latest version of PROCESS, if you are using a different release, please find the appropriate DOI on [PROCESS' Zenodo page](https://doi.org/10.5281/zenodo.8335291). To ensure reproducible research, we recommend you run an [official release of PROCESS](https://github.com/ukaea/PROCESS/releases) by checking out the appropriate git tag.
 
-## Contacts
-[James Morris](mailto:james.morris2@ukaea.uk)
-
-[Jonathan Maddock](mailto:jonathan.maddock@ukaea.uk)
-
-[Michael Kovari](mailto:michael.kovari@ukaea.uk)
-
-[Stuart Muldrew](mailto:stuart.muldrew@ukifs.uk)
+## Contact
+A contact form can be found on the [PROCESS webpage](https://www.ukaea.org/service/process/) to make contact with the UKAEA maintainers of PROCESS. Alternatively, you can make an issue or discussion in line with our [contribution guide](CONTRIBUTING.md).
