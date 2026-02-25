@@ -3,7 +3,7 @@ import math
 
 import numpy as np
 
-from process.caller import Caller
+from process.core.caller import Caller
 from process.data_structure import cost_variables as cv
 from process.data_structure import global_variables as gv
 from process.data_structure import numerics
