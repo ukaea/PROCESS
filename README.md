@@ -10,7 +10,7 @@ PROCESS was originally a Fortran code, but is now a pure-Python command line pro
 
 
 
-![Blender_and_output](./documentation/images/README_image.PNG)
+![Blender_and_output](./documentation/source/images/README_image.PNG)
 <center>Overview of some outputs for a DEMO-like reactor.</center>
 
 
