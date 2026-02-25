@@ -478,8 +478,43 @@ class BlanketLibrary:
             fwbs_variables.n_blkt_inboard_modules_poloidal = 1
             fwbs_variables.n_blkt_outboard_modules_poloidal = 1
 
-        # Calculate poloidal height of blanket modules
-        self.blanket_module_poloidal_height()
+        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+            blanket_library.len_blkt_inboard_segment_poloidal = self.calculate_dshaped_inboard_blkt_segment_poloidal(
+                dz_blkt_half=blanket_library.dz_blkt_half,
+                n_blkt_inboard_modules_poloidal=fwbs_variables.n_blkt_inboard_modules_poloidal,
+            )
+
+            blanket_library.len_blkt_outboard_segment_poloidal = self.calculate_dshaped_outboard_blkt_segment_poloidal(
+                n_blkt_outboard_modules_poloidal=fwbs_variables.n_blkt_outboard_modules_poloidal,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                rminor=physics_variables.rminor,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                dz_blkt_half=blanket_library.dz_blkt_half,
+                n_divertors=divertor_variables.n_divertors,
+                f_ster_div_single=fwbs_variables.f_ster_div_single,
+            )
+        else:
+            blanket_library.len_blkt_inboard_segment_poloidal = self.calculate_elliptical_inboard_blkt_segment_poloidal(
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                triang=physics_variables.triang,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                dz_blkt_half=blanket_library.dz_blkt_half,
+                n_blkt_inboard_modules_poloidal=fwbs_variables.n_blkt_inboard_modules_poloidal,
+                n_divertors=divertor_variables.n_divertors,
+                f_ster_div_single=fwbs_variables.f_ster_div_single,
+            )
+
+            blanket_library.len_blkt_outboard_segment_poloidal = self.calculate_elliptical_outboard_blkt_segment_poloidal(
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                triang=physics_variables.triang,
+                dz_blkt_half=blanket_library.dz_blkt_half,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                n_blkt_outboard_modules_poloidal=fwbs_variables.n_blkt_outboard_modules_poloidal,
+                n_divertors=divertor_variables.n_divertors,
+                f_ster_div_single=fwbs_variables.f_ster_div_single,
+            )
 
         # If liquid breeder or dual coolant blanket then calculate
         if fwbs_variables.i_blkt_dual_coolant > 0:
@@ -1013,125 +1048,223 @@ class BlanketLibrary:
             dpres_blkt_outboard_coolant,
         ]
 
-    def blanket_module_poloidal_height(self):
-        """Calculations for blanket module poloidal height
+    @staticmethod
+    def calculate_dshaped_inboard_blkt_segment_poloidal(
+        dz_blkt_half: float, n_blkt_inboard_modules_poloidal: int
+    ) -> float:
+        """Calculations for D-shaped inboard blanket module poloidal segment length
 
-        Calculations for blanket module poloidal height for D shaped and elliptical machines
+        :param dz_blkt_half: Half-height of the blanket module (m)
+        :type dz_blkt_half: float
+        :param n_blkt_inboard_modules_poloidal: Number of inboard blanket modules in poloidal direction
+        :type n_blkt_inboard_modules_poloidal: int
+
+        :return: Segment length of inboard blanket module in poloidal direction (m)
+        :rtype: float
+
         """
-        if (
-            physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1
-        ):  # D-shaped machine
-            # Segment vertical inboard surface (m)
-            blanket_library.len_blkt_inboard_segment_poloidal = (
-                2.0 * blanket_library.dz_blkt_half
-            ) / fwbs_variables.n_blkt_inboard_modules_poloidal
 
-            # Calculate perimeter of ellipse that defines the internal
-            # surface of the outboard first wall / blanket
+        # D-shaped machine
+        # Segment vertical inboard surface (m)
+        return (2.0 * dz_blkt_half) / n_blkt_inboard_modules_poloidal
 
-            # Mid-plane distance from inboard to outboard side (m)
-            a = (
-                build_variables.dr_fw_plasma_gap_inboard
-                + 2.0 * physics_variables.rminor
-                + build_variables.dr_fw_plasma_gap_outboard
+    @staticmethod
+    def calculate_dshaped_outboard_blkt_segment_poloidal(
+        n_blkt_outboard_modules_poloidal: int,
+        dr_fw_plasma_gap_inboard: float,
+        rminor: float,
+        dr_fw_plasma_gap_outboard: float,
+        dz_blkt_half: float,
+        n_divertors: int,
+        f_ster_div_single: float,
+    ) -> float:
+        """
+        Calculations for D-shaped outboard blanket module poloidal segment length
+
+        :param n_blkt_outboard_modules_poloidal: Number of outboard blanket modules in poloidal direction
+        :type n_blkt_outboard_modules_poloidal: int
+        :param dr_fw_plasma_gap_inboard: Radial gap between inboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_inboard: float
+        :param rminor: Minor radius of the plasma (m)
+        :type rminor: float
+        :param dr_fw_plasma_gap_outboard: Radial gap between outboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_outboard: float
+        :param dz_blkt_half: Half-height of the blanket module (m)
+        :type dz_blkt_half: float
+        :param n_divertors: Number of divertors (1 for single null, 2 for double null)
+        :type n_divertors: int
+        :param f_ster_div_single: Fractional poloidal length of the divertor in single null configuration
+        :type f_ster_div_single: float
+
+        :return: Segment length of outboard blanket module in poloidal direction (m)
+        :rtype: float
+
+
+        """
+
+        # Calculate perimeter of ellipse that defines the internal
+        # surface of the outboard first wall / blanket
+
+        # Mid-plane distance from inboard to outboard side (m)
+        a = dr_fw_plasma_gap_inboard + 2.0 * rminor + dr_fw_plasma_gap_outboard
+
+        # Internal half-height of blanket (m)
+        b = dz_blkt_half
+
+        # Calculate ellipse circumference using Ramanujan approximation (m)
+        ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
+
+        # Calculate blanket poloidal length and segment, subtracting divertor length (m)
+        # kit hcll version only had the single null option
+        if n_divertors == 2:
+            # Double null configuration
+            len_blkt_outboard_segment_poloidal = (
+                0.5
+                * ptor
+                * (1.0 - 2.0 * f_ster_div_single)
+                / n_blkt_outboard_modules_poloidal
             )
-
-            # Internal half-height of blanket (m)
-            b = blanket_library.dz_blkt_half
-
-            # Calculate ellipse circumference using Ramanujan approximation (m)
-            ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
-
-            # Calculate blanket poloidal length and segment, subtracting divertor length (m)
-            # kit hcll version only had the single null option
-            if divertor_variables.n_divertors == 2:
-                # Double null configuration
-                blanket_library.len_blkt_outboard_segment_poloidal = (
-                    0.5
-                    * ptor
-                    * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
-                    / fwbs_variables.n_blkt_outboard_modules_poloidal
-                )
-            else:
-                # single null configuration
-                blanket_library.len_blkt_outboard_segment_poloidal = (
-                    0.5
-                    * ptor
-                    * (1.0 - fwbs_variables.f_ster_div_single)
-                    / fwbs_variables.n_blkt_outboard_modules_poloidal
-                )
-
-        # shape defined by two half-ellipses
         else:
-            # Major radius where half-ellipses 'meet' (m)
-            r1 = (
-                physics_variables.rmajor
-                - physics_variables.rminor * physics_variables.triang
+            # single null configuration
+            len_blkt_outboard_segment_poloidal = (
+                0.5 * ptor * (1.0 - f_ster_div_single) / n_blkt_outboard_modules_poloidal
             )
 
-            # Internal half-height of blanket (m)
-            b = blanket_library.dz_blkt_half
+        return len_blkt_outboard_segment_poloidal
 
-            # Distance between r1 and nearest edge of inboard first wall / blanket (m)
-            a = r1 - (
-                physics_variables.rmajor
-                - physics_variables.rminor
-                - build_variables.dr_fw_plasma_gap_inboard
+    @staticmethod
+    def calculate_elliptical_inboard_blkt_segment_poloidal(
+        rmajor: float,
+        rminor: float,
+        triang: float,
+        dr_fw_plasma_gap_inboard: float,
+        dz_blkt_half: float,
+        n_blkt_inboard_modules_poloidal: int,
+        n_divertors: int,
+        f_ster_div_single: float,
+    ) -> float:
+        """
+        Calculations for elliptical inboard blanket module poloidal segment length
+
+        :param rmajor: Major radius of the plasma (m)
+        :type rmajor: float
+        :param rminor: Minor radius of the plasma (m)
+        :type rminor: float
+        :param triang: Triangularity of the plasma
+        :type triang: float
+        :param dr_fw_plasma_gap_inboard: Radial gap between inboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_inboard: float
+        :param dz_blkt_half: Half-height of the blanket module (m)
+        :type dz_blkt_half: float
+        :param n_blkt_inboard_modules_poloidal: Number of inboard blanket modules in poloidal direction
+        :type n_blkt_inboard_modules_poloidal: int
+        :param n_divertors: Number of divertors (1 for single null, 2 for double null)
+        :type n_divertors: int
+        :param f_ster_div_single: Fractional poloidal length of the divertor in single null configuration
+        :type f_ster_div_single: float
+
+        :return: Segment length of inboard blanket module in poloidal direction (m)
+        :rtype: float
+
+        """
+
+        # Major radius where half-ellipses 'meet' (m)
+        r1 = rmajor - rminor * triang
+
+        # Internal half-height of blanket (m)
+        b = dz_blkt_half
+
+        # Distance between r1 and nearest edge of inboard first wall / blanket (m)
+        a = r1 - (rmajor - rminor - dr_fw_plasma_gap_inboard)
+
+        # Calculate ellipse circumference using Ramanujan approximation (m)
+        ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
+
+        # Calculate inboard blanket poloidal length and segment, subtracting divertor length (m)
+        # Assume divertor lies between the two ellipses, so fraction f_ster_div_single still applies
+
+        # kit hcll version only had the single null option
+        if n_divertors == 2:
+            # Double null configuration
+            len_blkt_inboard_segment_poloidal = (
+                0.5
+                * ptor
+                * (1.0 - 2.0 * f_ster_div_single)
+                / n_blkt_inboard_modules_poloidal
+            )
+        else:
+            # single null configuration
+            len_blkt_inboard_segment_poloidal = (
+                0.5 * ptor * (1.0 - f_ster_div_single) / n_blkt_inboard_modules_poloidal
             )
 
-            # Calculate ellipse circumference using Ramanujan approximation (m)
-            ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
+        return len_blkt_inboard_segment_poloidal
 
-            # Calculate inboard blanket poloidal length and segment, subtracting divertor length (m)
-            # Assume divertor lies between the two ellipses, so fraction f_ster_div_single still applies
+    @staticmethod
+    def calculate_elliptical_outboard_blkt_segment_poloidal(
+        rmajor: float,
+        rminor: float,
+        triang: float,
+        dz_blkt_half: float,
+        dr_fw_plasma_gap_outboard: float,
+        n_blkt_outboard_modules_poloidal: int,
+        n_divertors: int,
+        f_ster_div_single: float,
+    ) -> float:
+        """
+        Calculations for elliptical outboard blanket module poloidal segment length
 
-            # kit hcll version only had the single null option
-            if divertor_variables.n_divertors == 2:
-                # Double null configuration
-                blanket_library.len_blkt_inboard_segment_poloidal = (
-                    0.5
-                    * ptor
-                    * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
-                    / fwbs_variables.n_blkt_inboard_modules_poloidal
-                )
-            else:
-                # single null configuration
-                blanket_library.len_blkt_inboard_segment_poloidal = (
-                    0.5
-                    * ptor
-                    * (1.0 - fwbs_variables.f_ster_div_single)
-                    / fwbs_variables.n_blkt_inboard_modules_poloidal
-                )
+        :param rmajor: Major radius of the plasma (m)
+        :type rmajor: float
+        :param rminor: Minor radius of the plasma (m)
+        :type rminor: float
+        :param triang: Triangularity of the plasma
+        :type triang: float
+        :param dz_blkt_half: Half-height of the blanket module (m)
+        :type dz_blkt_half: float
+        :param dr_fw_plasma_gap_outboard: Radial gap between outboard first wall and plasma (m)
+        :type dr_fw_plasma_gap_outboard: float
+        :param n_blkt_outboard_modules_poloidal: Number of outboard blanket modules in poloidal direction
+        :type n_blkt_outboard_modules_poloidal: int
+        :param n_divertors: Number of divertors (1 for single null, 2 for double null)
+        :type n_divertors: int
+        :param f_ster_div_single: Fractional poloidal length of the divertor in single null configuration
+        :type f_ster_div_single: float
 
-            # Distance between r1 and inner edge of outboard first wall / blanket (m)
-            a = (
-                physics_variables.rmajor
-                + physics_variables.rminor
-                + build_variables.dr_fw_plasma_gap_outboard
-                - r1
+        :return: Segment length of outboard blanket module in poloidal direction (m)
+        :rtype: float
+
+
+        """
+
+        # Major radius where half-ellipses 'meet' (m)
+        r1 = rmajor - rminor * triang
+
+        # Internal half-height of blanket (m)
+        b = dz_blkt_half
+
+        # Distance between r1 and inner edge of outboard first wall / blanket (m)
+        a = rmajor + rminor + dr_fw_plasma_gap_outboard - r1
+
+        # Calculate ellipse circumference using Ramanujan approximation (m)
+        ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
+
+        # kit hcll version only had the single null option
+        # Calculate outboard blanket poloidal length and segment, subtracting divertor length (m)
+        if n_divertors == 2:
+            # Double null configuration
+            len_blkt_outboard_segment_poloidal = (
+                0.5
+                * ptor
+                * (1.0 - 2.0 * f_ster_div_single)
+                / n_blkt_outboard_modules_poloidal
             )
-
-            # Calculate ellipse circumference using Ramanujan approximation (m)
-            ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
-
-            # kit hcll version only had the single null option
-            # Calculate outboard blanket poloidal length and segment, subtracting divertor length (m)
-            if divertor_variables.n_divertors == 2:
-                # Double null configuration
-                blanket_library.len_blkt_outboard_segment_poloidal = (
-                    0.5
-                    * ptor
-                    * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
-                    / fwbs_variables.n_blkt_outboard_modules_poloidal
-                )
-            else:
-                # single null configuration
-                blanket_library.len_blkt_outboard_segment_poloidal = (
-                    0.5
-                    * ptor
-                    * (1.0 - fwbs_variables.f_ster_div_single)
-                    / fwbs_variables.n_blkt_outboard_modules_poloidal
-                )
+        else:
+            # single null configuration
+            len_blkt_outboard_segment_poloidal = (
+                0.5 * ptor * (1.0 - f_ster_div_single) / n_blkt_outboard_modules_poloidal
+            )
+        return len_blkt_outboard_segment_poloidal
 
     def liquid_breeder_properties(self, output: bool = False):
         """Calculates the fluid properties of the Liquid Metal Breeder/Coolant in the Blanket BZ
