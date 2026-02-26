@@ -6,6 +6,8 @@ some types of output.
 
 Renders of these notebooks can be found under the same sub-heading as this page. We would encourage users to run the notebooks themselves once they have read through the renders as this will help build experience with running and visualising PROCESS.
 
+Please note that when trying to run the examples, it is important to have PROCESS installed editably to ensure the data files can be located. Without an editable install, most examples will not run.
+
 
 ### Notebooks in VS Code
 
