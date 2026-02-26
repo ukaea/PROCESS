@@ -1,11 +1,15 @@
+import shutil
 from pathlib import Path
 
 from process.io.mfile_utils import get_mfile_initial_ixc_values
 
 
-def test_get_mfile_initial_ixc_values(input_file):
+def test_get_mfile_initial_ixc_values(input_file, tmp_path):
+    tmp_input_file = tmp_path / "IN.DAT"
+    shutil.copy(input_file, tmp_input_file)
+
     iteration_variable_names, iteration_variable_values = get_mfile_initial_ixc_values(
-        Path(input_file)
+        Path(tmp_input_file)
     )
 
     assert iteration_variable_names[0] == "b_plasma_toroidal_on_axis"
