@@ -39,10 +39,187 @@ class BootstrapCurrentFractionModel(IntEnum):
 class PlasmaBootstrapCurrent:
     """Class to hold plasma bootstrap current for plasma processing."""
 
-    def __init__(self):
+    def __init__(self, plasma_profile: PlasmaProfile) -> None:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+        self.plasma_profile = plasma_profile
         self.sauter_bootstrap = SauterBootstrapCurrent()
+
+    def run(self) -> None:
+        # Calculate bootstrap current fraction using various models
+        current_drive_variables.f_c_plasma_bootstrap_iter89 = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_iter89(
+                physics_variables.aspect,
+                physics_variables.beta_total_vol_avg,
+                physics_variables.b_plasma_total,
+                physics_variables.plasma_current,
+                physics_variables.q95,
+                physics_variables.q0,
+                physics_variables.rmajor,
+                physics_variables.vol_plasma,
+            )
+        )
+
+        current_drive_variables.f_c_plasma_bootstrap_nevins = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_nevins(
+                physics_variables.alphan,
+                physics_variables.alphat,
+                physics_variables.beta_toroidal_vol_avg,
+                physics_variables.b_plasma_toroidal_on_axis,
+                physics_variables.nd_plasma_electrons_vol_avg,
+                physics_variables.plasma_current,
+                physics_variables.q95,
+                physics_variables.q0,
+                physics_variables.rmajor,
+                physics_variables.rminor,
+                physics_variables.temp_plasma_electron_vol_avg_kev,
+                physics_variables.n_charge_plasma_effective_vol_avg,
+            )
+        )
+
+        # Wilson scaling uses thermal poloidal beta, not total
+        current_drive_variables.f_c_plasma_bootstrap_wilson = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_wilson(
+                physics_variables.alphaj,
+                physics_variables.alphap,
+                physics_variables.alphat,
+                physics_variables.beta_thermal_poloidal_vol_avg,
+                physics_variables.q0,
+                physics_variables.q95,
+                physics_variables.rmajor,
+                physics_variables.rminor,
+            )
+        )
+
+        (
+            current_drive_variables.f_c_plasma_bootstrap_sauter,
+            physics_variables.j_plasma_bootstrap_sauter_profile,
+        ) = self.bootstrap_fraction_sauter(self.plasma_profile)
+        current_drive_variables.f_c_plasma_bootstrap_sauter *= (
+            current_drive_variables.cboot
+        )
+
+        current_drive_variables.f_c_plasma_bootstrap_sakai = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sakai(
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+                alphan=physics_variables.alphan,
+                alphat=physics_variables.alphat,
+                eps=physics_variables.eps,
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
+            )
+        )
+
+        current_drive_variables.f_c_plasma_bootstrap_aries = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_aries(
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
+                ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
+                core_density=physics_variables.nd_plasma_electron_on_axis,
+                average_density=physics_variables.nd_plasma_electrons_vol_avg,
+                inverse_aspect=physics_variables.eps,
+            )
+        )
+
+        current_drive_variables.f_c_plasma_bootstrap_andrade = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_andrade(
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
+                core_pressure=physics_variables.pres_plasma_thermal_on_axis,
+                average_pressure=physics_variables.pres_plasma_thermal_vol_avg,
+                inverse_aspect=physics_variables.eps,
+            )
+        )
+        current_drive_variables.f_c_plasma_bootstrap_hoang = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_hoang(
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
+                pressure_index=physics_variables.alphap,
+                current_index=physics_variables.alphaj,
+                inverse_aspect=physics_variables.eps,
+            )
+        )
+        current_drive_variables.f_c_plasma_bootstrap_wong = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_wong(
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
+                density_index=physics_variables.alphan,
+                temperature_index=physics_variables.alphat,
+                inverse_aspect=physics_variables.eps,
+                elongation=physics_variables.kappa,
+            )
+        )
+        current_drive_variables.bscf_gi_i = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_gi_I(
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
+                pressure_index=physics_variables.alphap,
+                temperature_index=physics_variables.alphat,
+                inverse_aspect=physics_variables.eps,
+                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+            )
+        )
+
+        current_drive_variables.bscf_gi_ii = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_gi_II(
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
+                pressure_index=physics_variables.alphap,
+                temperature_index=physics_variables.alphat,
+                inverse_aspect=physics_variables.eps,
+                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
+            )
+        )
+        current_drive_variables.f_c_plasma_bootstrap_sugiyama_l = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sugiyama_l_mode(
+                eps=physics_variables.eps,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
+                alphan=physics_variables.alphan,
+                alphat=physics_variables.alphat,
+                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+            )
+        )
+        current_drive_variables.f_c_plasma_bootstrap_sugiyama_h = (
+            current_drive_variables.cboot
+            * self.bootstrap_fraction_sugiyama_h_mode(
+                eps=physics_variables.eps,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
+                alphan=physics_variables.alphan,
+                alphat=physics_variables.alphat,
+                tbeta=physics_variables.tbeta,
+                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
+                q95=physics_variables.q95,
+                q0=physics_variables.q0,
+                radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
+                nd_plasma_pedestal_electron=physics_variables.nd_plasma_pedestal_electron,
+                n_greenwald=physics_variables.nd_plasma_electron_max_array[6],
+                temp_plasma_pedestal_kev=physics_variables.temp_plasma_pedestal_kev,
+            )
+        )
+
+        # Calculate beta_norm_max based on i_beta_norm_max
+        try:
+            model = BootstrapCurrentFractionModel(
+                int(physics_variables.i_bootstrap_current)
+            )
+            current_drive_variables.f_c_plasma_bootstrap = (
+                self.get_bootstrap_current_fraction_value(model)
+            )
+        except ValueError:
+            raise ProcessValueError(
+                "Illegal value of i_bootstrap_current",
+                i_bootstrap_current=physics_variables.i_bootstrap_current,
+            ) from None
 
     def get_bootstrap_current_fraction_value(
         self, model: BootstrapCurrentFractionModel
