@@ -579,19 +579,6 @@ dtheta_description =
 
 ---------------------
 
-### Loop order
-
-Loop variables that use I, j etc. should use
-
-```fortran
-ii
-    jj
-        kk
-            mm
-```
-
----------------------
-
 ### Examples
 
 | Variable name | Description | Units |
@@ -627,7 +614,7 @@ It is greatly encouraged and recommended to include type hints for all inputs an
 
 ## Docstrings
 
-The docstring style is that of the [Sphinx type](https://www.sphinx-doc.org/en/master/index.html). Though there are some additions for `Notes` and `References` in order to give mathematical reasoning and sources to some functions.
+The docstring style is the [Numpy style](https://numpydoc.readthedocs.io/en/latest/format.html#sections).
 
 ### Functions
 
