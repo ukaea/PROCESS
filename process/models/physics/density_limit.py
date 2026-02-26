@@ -142,7 +142,19 @@ class PlasmaDensityLimit:
             ) from None
 
     def get_density_limit_value(self, model: DensityLimitModel) -> float:
-        """Get the density limit value (n_e_max) for the specified model."""
+        """
+        Get the density limit value (n_e_max) for the specified model.
+
+        Parameters
+        ----------
+        model : DensityLimitModel
+            The density limit model type.
+
+        Returns
+        -------
+        float
+            The density limit value (m⁻³).
+        """
         model_map = {
             DensityLimitModel.ASDEX: physics_variables.nd_plasma_electron_max_array[0],
             DensityLimitModel.BORRASS_ITER_I: physics_variables.nd_plasma_electron_max_array[
@@ -180,22 +192,27 @@ class PlasmaDensityLimit:
         """
         Calculate the ASDEX density limit.
 
-        :param p_perp: Perpendicular power density (MW/m²).
-        :type p_perp: float
-        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
-        :type b_plasma_toroidal_on_axis: float
-        :param q95: Safety factor at 95% of the plasma poloidal flux.
-        :type q95: float
-        :param rmajor: Plasma major radius (m).
-        :type rmajor: float
-        :param prn1: Edge density / average plasma density.
-        :type prn1: float
-        :return: The ASDEX density limit (m⁻³).
-        :rtype: float
+        Parameters
+        ----------
+        p_perp : float
+            Perpendicular power density (MW/m²).
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        q95 : float
+            Safety factor at 95% of the plasma poloidal flux.
+        rmajor : float
+            Plasma major radius (m).
+        prn1 : float
+            Edge density / average plasma density.
 
-        :references:
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        Returns
+        -------
+        float
+            The ASDEX density limit (m⁻³).
 
+        References
+        ----------
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         return (
             1.54e20
@@ -215,23 +232,27 @@ class PlasmaDensityLimit:
         """
         Calculate the Borrass ITER I density limit.
 
-        :param p_perp: Perpendicular power density (MW/m²).
-        :type p_perp: float
-        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
-        :type b_plasma_toroidal_on_axis: float
-        :param q95: Safety factor at 95% of the plasma poloidal flux.
-        :type q95: float
-        :param rmajor: Plasma major radius (m).
-        :type rmajor: float
-        :param prn1: Edge density / average plasma density.
-        :type prn1: float
-        :return: The Borrass ITER I density limit (m⁻³).
-        :rtype: float
+        Parameters
+        ----------
+        p_perp : float
+            Perpendicular power density (MW/m²).
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        q95 : float
+            Safety factor at 95% of the plasma poloidal flux.
+        rmajor : float
+            Plasma major radius (m).
+        prn1 : float
+            Edge density / average plasma density.
 
+        Returns
+        -------
+        float
+            The Borrass ITER I density limit (m⁻³).
 
-        :references:
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
-
+        References
+        ----------
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         return (
             1.8e20
@@ -251,23 +272,27 @@ class PlasmaDensityLimit:
         """
         Calculate the Borrass ITER II density limit.
 
-        :param p_perp: Perpendicular power density (MW/m²).
-        :type p_perp: float
-        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
-        :type b_plasma_toroidal_on_axis: float
-        :param q95: Safety factor at 95% of the plasma poloidal flux.
-        :type q95: float
-        :param rmajor: Plasma major radius (m).
-        :type rmajor: float
-        :param prn1: Edge density / average plasma density.
-        :type prn1: float
-        :return: The Borrass ITER II density limit (m⁻³).
-        :rtype: float
+        Parameters
+        ----------
+        p_perp : float
+            Perpendicular power density (MW/m²).
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        q95 : float
+            Safety factor at 95% of the plasma poloidal flux.
+        rmajor : float
+            Plasma major radius (m).
+        prn1 : float
+            Edge density / average plasma density.
 
+        Returns
+        -------
+        float
+            The Borrass ITER II density limit (m⁻³).
 
-        :references:
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
-
+        References
+        ----------
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         return (
             0.5e20
@@ -283,19 +308,25 @@ class PlasmaDensityLimit:
         """
         Calculate the JET edge radiation density limit.
 
-        :param zeff: Effective charge (Z_eff).
-        :type zeff: float
-        :param p_hcd_injected_total_mw: Power injected into the plasma (MW).
-        :type p_hcd_injected_total_mw: float
-        :param prn1: Edge density / average plasma density.
-        :type prn1: float
-        :param qcyl: Equivalent cylindrical safety factor (qstar).
-        :type qcyl: float
-        :return: The JET edge radiation density limit (m⁻³).
-        :rtype: float
+        Parameters
+        ----------
+        zeff : float
+            Effective charge (Z_eff).
+        p_hcd_injected_total_mw : float
+            Power injected into the plasma (MW).
+        prn1 : float
+            Edge density / average plasma density.
+        qcyl : float
+            Equivalent cylindrical safety factor (qstar).
 
-        :references:
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        Returns
+        -------
+        float
+            The JET edge radiation density limit (m⁻³).
+
+        References
+        ----------
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
 
         denom = (zeff - 1.0) * (1.0 - 4.0 / (3.0 * qcyl))
@@ -313,20 +344,25 @@ class PlasmaDensityLimit:
         """
         Calculate the JET simple density limit.
 
-        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
-        :type b_plasma_toroidal_on_axis: float
-        :param p_plasma_separatrix_mw: Power crossing the separatrix (MW).
-        :type p_plasma_separatrix_mw: float
-        :param rmajor: Plasma major radius (m).
-        :type rmajor: float
-        :param prn1: Edge density / average plasma density.
-        :type prn1: float
-        :return: The JET simple density limit (m⁻³).
-        :rtype: float
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        p_plasma_separatrix_mw : float
+            Power crossing the separatrix (MW).
+        rmajor : float
+            Plasma major radius (m).
+        prn1 : float
+            Edge density / average plasma density.
 
-        :references:
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        Returns
+        -------
+        float
+            The JET simple density limit (m⁻³).
 
+        References
+        ----------
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         return (
             0.237e20
@@ -342,17 +378,23 @@ class PlasmaDensityLimit:
         """
         Calculate the Hugill-Murakami density limit.
 
-        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T).
-        :type b_plasma_toroidal_on_axis: float
-        :param rmajor: Plasma major radius (m).
-        :type rmajor: float
-        :param qcyl: Equivalent cylindrical safety factor (qstar).
-        :type qcyl: float
-        :return: The Hugill-Murakami density limit (m⁻³).
-        :rtype: float
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        rmajor : float
+            Plasma major radius (m).
+        qcyl : float
+            Equivalent cylindrical safety factor (qstar).
 
-        :references:
-            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+        Returns
+        -------
+        float
+            The Hugill-Murakami density limit (m⁻³).
+
+        References
+        ----------
+        N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
         """
 
         return 3.0e20 * b_plasma_toroidal_on_axis / (rmajor * qcyl)
@@ -362,23 +404,31 @@ class PlasmaDensityLimit:
         """
         Calculate the Greenwald density limit (n_GW).
 
-        :param c_plasma: Plasma current (A).
-        :type c_plasma: float
-        :param rminor: Plasma minor radius (m).
-        :type rminor: float
-        :return: The Greenwald density limit (m⁻³).
-        :rtype: float
+        Parameters
+        ----------
+        c_plasma : float
+            Plasma current (A).
+        rminor : float
+            Plasma minor radius (m).
 
-        :notes: The Greenwald limit is typically applied to the line averaged electron density
+        Returns
+        -------
+        float
+            The Greenwald density limit (m⁻³).
 
-        :references:
-            - M. Greenwald et al., “A new look at density limits in tokamaks,”
-            Nuclear Fusion, vol. 28, no. 12, pp. 2199-2207, Dec. 1988,
-            doi: https://doi.org/10.1088/0029-5515/28/12/009.
+        Notes
+        -----
+        The Greenwald limit is typically applied to the line averaged electron density.
 
-            - M. Greenwald, “Density limits in toroidal plasmas,”
-            Plasma Physics and Controlled Fusion, vol. 44, no. 8, pp. R27-R53, Jul. 2002,
-            doi: https://doi.org/10.1088/0741-3335/44/8/201.
+        References
+        ----------
+        M. Greenwald et al., "A new look at density limits in tokamaks,"
+        Nuclear Fusion, vol. 28, no. 12, pp. 2199-2207, Dec. 1988,
+        doi: https://doi.org/10.1088/0029-5515/28/12/009.
+
+        M. Greenwald, "Density limits in toroidal plasmas,"
+        Plasma Physics and Controlled Fusion, vol. 44, no. 8, pp. R27-R53, Jul. 2002,
+        doi: https://doi.org/10.1088/0741-3335/44/8/201.
         """
 
         return 1.0e14 * c_plasma / (np.pi * rminor**2)
@@ -390,27 +440,34 @@ class PlasmaDensityLimit:
         """
         Calculate the ASDEX Upgrade new density limit.
 
-        :param p_hcd_injected_total_mw: Power injected into the plasma (MW).
-        :type p_hcd_injected_total_mw: float
-        :param plasma_current: Plasma current (A).
-        :type plasma_current: float
-        :param q95: Safety factor at 95% surface.
-        :type q95: float
-        :param prn1: Edge density / average plasma density.
-        :type prn1: float
-        :return: The ASDEX Upgrade new density limit (m⁻³).
-        :rtype: float
+        Parameters
+        ----------
+        p_hcd_injected_total_mw : float
+            Power injected into the plasma (MW).
+        c_plasma : float
+            Plasma current (A).
+        q95 : float
+            Safety factor at 95% surface.
+        prn1 : float
+            Edge density / average plasma density.
 
-        :notes: This limit is for the separatrix density so wee scale by `prn1` to get it as a volume average
+        Returns
+        -------
+        float
+            The ASDEX Upgrade new density limit (m⁻³).
 
-        :references:
+        Notes
+        -----
+        This limit is for the separatrix density so we scale by `prn1` to get it as a volume average.
 
-            - J. W. Berkery et al., “Density limits as disruption forecasters for spherical tokamaks,”
-            Plasma Physics and Controlled Fusion, vol. 65, no. 9, pp. 095003-095003, Jul. 2023,
-            doi: https://doi.org/10.1088/1361-6587/ace476.
+        References
+        ----------
+        J. W. Berkery et al., "Density limits as disruption forecasters for spherical tokamaks,"
+        Plasma Physics and Controlled Fusion, vol. 65, no. 9, pp. 095003-095003, Jul. 2023,
+        doi: https://doi.org/10.1088/1361-6587/ace476.
 
-            - M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,” vol. 57, no. 1, pp. 014038-014038, Nov. 2014,
-            doi: https://doi.org/10.1088/0741-3335/57/1/014038.
+        M. Bernert et al., "The H-mode density limit in the full tungsten ASDEX Upgrade tokamak," vol. 57, no. 1, pp. 014038-014038, Nov. 2014,
+        doi: https://doi.org/10.1088/0741-3335/57/1/014038.
         """
         return (
             1.0e20
@@ -437,39 +494,58 @@ class PlasmaDensityLimit:
         """
         Calculate the density limit using various models.
 
-        Args:
-            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
-            i_density_limit (int): Switch denoting which formula to enforce.
-            p_plasma_separatrix_mw (float): Power flowing to the edge plasma via charged particles (MW).
-            p_hcd_injected_total_mw (float): Power injected into the plasma (MW).
-            plasma_current (float): Plasma current (A).
-            prn1 (float): Edge density / average plasma density.
-            qcyl (float): Equivalent cylindrical safety factor (qstar).
-            q95 (float): Safety factor at 95% surface.
-            rmajor (float): Plasma major radius (m).
-            rminor (float): Plasma minor radius (m).
-            a_plasma_surface (float): Plasma surface area (m^2).
-            zeff (float): Plasma effective charge.
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        i_density_limit : int
+            Switch denoting which formula to enforce (1-7).
+        p_plasma_separatrix_mw : float
+            Power flowing to the edge plasma via charged particles (MW).
+        p_hcd_injected_total_mw : float
+            Power injected into the plasma (MW).
+        plasma_current : float
+            Plasma current (A).
+        prn1 : float
+            Edge density / average plasma density.
+        qcyl : float
+            Equivalent cylindrical safety factor (qstar).
+        q95 : float
+            Safety factor at 95% surface.
+        rmajor : float
+            Plasma major radius (m).
+        rminor : float
+            Plasma minor radius (m).
+        a_plasma_surface : float
+            Plasma surface area (m²).
+        zeff : float
+            Plasma effective charge.
 
-        Returns:
-            Tuple[np.ndarray, float]: A tuple containing:
-                - nd_plasma_electron_max_array (np.ndarray): Average plasma density limit using seven different models (m^-3).
-                - nd_plasma_electrons_max (float): Enforced average plasma density limit (m^-3).
+        Returns
+        -------
+        tuple[np.ndarray, float]
+            A tuple containing:
+            - nd_plasma_electron_max_array : Average plasma density limit using eight different models (m⁻³).
+            - nd_plasma_electrons_max : Enforced average plasma density limit (m⁻³).
 
-        Raises:
-            ValueError: If i_density_limit is not between 1 and 7.
+        Raises
+        ------
+        ValueError
+            If i_density_limit is not between 1 and 7.
 
-        Notes:
-            This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
-            For i_density_limit = 1-5, 8, we scale the sepatrix density limit output by the ratio of the separatrix to volume averaged density
+        Notes
+        -----
+        This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
+        For i_density_limit = 1-5, 8, we scale the separatrix density limit output by the ratio of the separatrix to volume averaged density.
 
-        References:
-            - AEA FUS 172: Physics Assessment for the European Reactor Study
+        References
+        ----------
+        AEA FUS 172: Physics Assessment for the European Reactor Study
 
-            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989
+        N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
 
-            - M. Bernert et al., “The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,”
-              vol. 57, no. 1, pp. 014038-014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038. ‌
+        M. Bernert et al., "The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,"
+        vol. 57, no. 1, pp. 014038-014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038.
         """
 
         if i_density_limit < 1 or i_density_limit > 7:
