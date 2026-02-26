@@ -1,7 +1,7 @@
 # Density Limit | `PlasmaDensityLimit`
 
 Several density limit models are available in PROCESS. These are
-calculated in routine `calculate_density_limit()`, which is called by `physics`.
+calculated in the run routine `density_limit.run()`, which is called by `physics()`.
 
 This constraint can be activated by stating `icc = 5` in the input file.
 
