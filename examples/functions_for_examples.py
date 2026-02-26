@@ -1,14 +1,9 @@
 """Contains functions needed for running the examples files in a temporary directory
 and for getting initial values from input files."""
 
-import re
 from pathlib import Path
 from shutil import copy
 from tempfile import TemporaryDirectory
-
-import process.data_structure as data_structure
-from process import iteration_variables
-from process.main import SingleRun
 
 
 def copy_to_temp_dir(input_rel, proj_dir):
@@ -40,34 +35,3 @@ def copy_to_temp_dir(input_rel, proj_dir):
     temp_input_path = temp_dir_path / input_abs_path.name
 
     return temp_dir, temp_input_path, temp_dir_path
-
-
-def get_initial_values(file_path):
-    """
-    Initialise the input file and obtain the initial values of the iteration variables
-
-    :param file_path: Path to the input file
-    :type file_path: pathlib.Path
-    """
-    SingleRun(str(file_path))
-    iteration_variables.load_iteration_variables()
-
-    iteration_variable_names = []
-    iteration_variable_values = []
-
-    for i in range(data_structure.numerics.nvar):
-        ivar = data_structure.numerics.ixc[i].item()
-
-        itv = iteration_variables.ITERATION_VARIABLES[ivar]
-
-        iteration_variable_names.append(itv.name)
-        if array := re.match(r"(\w+)\(([0-9]+)\)", itv.name):
-            var_name = array.group(1)
-            index = array.group(2)
-            iteration_variable_values.append(
-                getattr(itv.module, var_name)[int(index) - 1]
-            )
-        else:
-            iteration_variable_values.append(getattr(itv.module, itv.name))
-
-    return iteration_variable_names, iteration_variable_values

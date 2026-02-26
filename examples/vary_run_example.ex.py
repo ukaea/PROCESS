@@ -78,8 +78,9 @@ import os
 from pathlib import Path
 from shutil import copy
 
-from functions_for_examples import copy_to_temp_dir, get_initial_values
+from functions_for_examples import copy_to_temp_dir
 
+from process.io.mfile_utils import get_mfile_initial_ixc_values
 from process.main import VaryRun
 
 # Define project root dir; when running a notebook, the cwd is the dir the notebook is in
@@ -110,13 +111,13 @@ os.chdir(cwd)
 
 
 # Get the initial values from the original input file
-iteration_variable_names, original_iteration_variable_values = get_initial_values(
-    input_file
+iteration_variable_names, original_iteration_variable_values = (
+    get_mfile_initial_ixc_values(input_file)
 )
 
 # Get the initial values from the new input file produced by VaryRun
 path_to_new_input = (temp_dir_path / "IN.DAT").as_posix()
-_, updated_iteration_variable_values = get_initial_values(path_to_new_input)
+_, updated_iteration_variable_values = get_mfile_initial_ixc_values(path_to_new_input)
 
 # %% [markdown]
 # ## Compare iteration variable values
