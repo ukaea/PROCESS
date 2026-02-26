@@ -106,7 +106,7 @@ shutil.copy(conf_file, conf_path)
 # TODO Remove the os.chdir() from VaryRun
 cwd = Path.cwd()
 
-vary_run = VaryRun(temp_dir.name)
+vary_run = VaryRun(conf_path.as_posix())
 vary_run.run()
 os.chdir(cwd)
 
