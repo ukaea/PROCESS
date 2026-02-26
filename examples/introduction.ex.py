@@ -94,8 +94,6 @@ print(f"Electrical plant equipment: {process.data_structure.cost_variables.c24:.
 # %%
 from process.io import mfile_to_csv
 
-data_dir = Path("data")
-
 # mfile_to_csv requires two inputs:
 # - path to the MFILE
 # - .json containing the variable names to include in the csv file
