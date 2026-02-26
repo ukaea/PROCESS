@@ -82,6 +82,7 @@ from process.models.divertor import Divertor
 from process.models.fw import FirstWall
 from process.models.ife import IFE
 from process.models.pfcoil import PFCoil
+from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -698,11 +699,15 @@ class Models:
         )
         self.plasma_beta = PlasmaBeta()
         self.plasma_inductance = PlasmaInductance()
+        self.plasma_bootstrap = PlasmaBootstrapCurrent(
+            plasma_profile=self.plasma_profile
+        )
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
             plasma_beta=self.plasma_beta,
             plasma_inductance=self.plasma_inductance,
+            plasma_bootstrap=self.plasma_bootstrap,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
@@ -721,6 +726,7 @@ class Models:
                 physics=self.physics,
                 neoclassics=self.neoclassics,
                 plasma_beta=self.plasma_beta,
+                plasma_bootstrap=self.plasma_bootstrap,
             )
 
         self.dcll = DCLL(fw=self.fw)
