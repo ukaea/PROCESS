@@ -29,7 +29,12 @@ from process.models.physics.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.models.physics.physics import Physics, PlasmaBeta, PlasmaInductance
+from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.physics import (
+    Physics,
+    PlasmaBeta,
+    PlasmaInductance,
+)
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.power import Power
 from process.models.stellarator.build import st_build
@@ -82,6 +87,7 @@ def stellarator():
             ),
             PlasmaBeta(),
             PlasmaInductance(),
+            PlasmaExhaust(),
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),

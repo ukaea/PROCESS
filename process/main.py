@@ -90,6 +90,7 @@ from process.models.physics.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
+from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -698,11 +699,13 @@ class Models:
         )
         self.plasma_beta = PlasmaBeta()
         self.plasma_inductance = PlasmaInductance()
+        self.plasma_exhaust = PlasmaExhaust()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
             plasma_beta=self.plasma_beta,
             plasma_inductance=self.plasma_inductance,
+            plasma_exhaust=self.plasma_exhaust,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
