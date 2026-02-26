@@ -2421,6 +2421,13 @@ class Physics:
             )
         )
 
+        physics_variables.p_plasma_separatrix_rmajor_mw = (
+            self.exhaust.calculate_psep_over_r_metric(
+                p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+                rmajor=physics_variables.rmajor,
+            )
+        )
+
         physics_variables.plfux_plasma_surface_neutron_avg_mw = (
             physics_variables.p_neutron_total_mw / physics_variables.a_plasma_surface
         )
@@ -5318,7 +5325,7 @@ class Physics:
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Power into divertor zone via charged particles (MW)",
+            "Plasma separatrix power (MW)",
             "(p_plasma_separatrix_mw)",
             physics_variables.p_plasma_separatrix_mw,
             "OP ",
@@ -5345,8 +5352,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Pdivt / R ratio (MW/m) (On peak divertor)",
-                "(p_div_separatrix_max_mw/physics_variables.rmajor)",
-                physics_variables.p_div_separatrix_max_mw / physics_variables.rmajor,
+                "(p_div_separatrix_rmajor_mw)",
+                physics_variables.p_div_separatrix_rmajor_mw,
                 "OP ",
             )
             po.ovarre(
@@ -5371,8 +5378,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Psep / R ratio (MW/m)",
-                "(p_plasma_separatrix_mw/rmajor)",
-                physics_variables.p_plasma_separatrix_mw / physics_variables.rmajor,
+                "(p_plasma_separatrix_rmajor_mw)",
+                physics_variables.p_plasma_separatrix_rmajor_mw,
                 "OP ",
             )
             po.ovarre(
