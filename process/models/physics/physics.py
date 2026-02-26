@@ -34,6 +34,52 @@ from process.exceptions import ProcessValueError
 logger = logging.getLogger(__name__)
 
 
+def calculate_cylindrical_safety_factor(
+    rmajor: float,
+    rminor: float,
+    plasma_current: float,
+    b_plasma_toroidal_on_axis: float,
+    kappa95: float,
+    triang95: float,
+) -> float:
+    """Calculate the cylindrical safety factor from the IPDG89 guidelines.
+
+    Parameters
+    ----------
+    rmajor : float
+        Major radius of the tokamak in meters.
+    rminor : float
+        Minor radius of the tokamak in meters.
+    plasma_current : float
+        Plasma current in amperes.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field on axis in tesla.
+    kappa95 : float
+        Elongation at 95% of the plasma boundary.
+    triang95 : float
+        Triangularity at 95% of the plasma boundary.
+    Returns
+    -------
+    float
+        Cylindrical safety factor (dimensionless).
+    Notes
+    -----
+    The cylindrical safety factor is calculated following the IPDG89 guidelines.
+    The formula accounts for plasma elongation and triangularity effects on the
+    safety factor through the kappa95 and triang95 parameters.
+
+    """
+
+    # Calculate cyclindrical safety factor from IPDG89
+    return (
+        ((2 * np.pi) / constants.RMU0)
+        * rminor**2
+        / (rmajor * plasma_current / b_plasma_toroidal_on_axis)
+        * 0.5
+        * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
+    )
+
+
 @nb.jit(nopython=True, cache=True)
 def rether(
     alphan,
@@ -92,140 +138,6 @@ def rether(
 # -----------------------------------------------------
 
 
-@nb.jit(nopython=True, cache=True)
-def _plascar_bpol(
-    aspect: float, eps: float, kappa: float, delta: float
-) -> tuple[float, float, float, float]:
-    """Calculate the poloidal field coefficients for determining the plasma current
-    and poloidal field.
-
-
-    This internal function calculates the poloidal field coefficients,
-    which is used to calculate the poloidal field and the plasma current.
-
-    Parameters
-    ----------
-    aspect :
-        plasma aspect ratio
-    eps :
-        inverse aspect ratio
-    kappa :
-        plasma elongation
-    delta :
-        plasma triangularity
-
-    Returns
-    -------
-    :
-        coefficients ff1, ff2, d1, d2
-
-    References
-    ----------
-        - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-        1729-1738. https://doi.org/10.13182/FST92-A29971
-        - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-        unpublished internal Oak Ridge document
-
-    """
-    # Original coding, only suitable for TARTs [STAR Code]
-
-    c1 = (kappa**2 / (1.0 + delta)) + delta
-    c2 = (kappa**2 / (1.0 - delta)) - delta
-
-    d1 = (kappa / (1.0 + delta)) ** 2 + 1.0
-    d2 = (kappa / (1.0 - delta)) ** 2 + 1.0
-
-    c1_aspect = ((c1 * eps) - 1.0) if aspect < c1 else (1.0 - (c1 * eps))
-
-    y1 = np.sqrt(c1_aspect / (1.0 + eps)) * ((1.0 + delta) / kappa)
-    y2 = np.sqrt((c2 * eps + 1.0) / (1.0 - eps)) * ((1.0 - delta) / kappa)
-
-    h2 = (1.0 + (c2 - 1.0) * (eps / 2.0)) / np.sqrt((1.0 - eps) * (c2 * eps + 1.0))
-    f2 = (d2 * (1.0 - delta) * eps) / ((1.0 - eps) * ((c2 * eps) + 1.0))
-    g = (eps * kappa) / (1.0 - (eps * delta))
-    ff2 = f2 * (g + 2.0 * h2 * np.arctan(y2))
-
-    h1 = (1.0 + (1.0 - c1) * (eps / 2.0)) / np.sqrt((1.0 + eps) * c1_aspect)
-    f1 = (d1 * (1.0 + delta) * eps) / ((1.0 + eps) * (c1 * eps - 1.0))
-
-    if aspect < c1:
-        ff1 = f1 * (g - h1 * np.log((1.0 + y1) / (1.0 - y1)))
-    else:
-        ff1 = -f1 * (-g + 2.0 * h1 * np.arctan(y1))
-
-    return ff1, ff2, d1, d2
-
-
-def calculate_poloidal_field(
-    i_plasma_current: int,
-    ip: float,
-    q95: float,
-    aspect: float,
-    eps: float,
-    b_plasma_toroidal_on_axis: float,
-    kappa: float,
-    delta: float,
-    perim: float,
-    rmu0: float,
-) -> float:
-    """Function to calculate poloidal field from the plasma current
-
-    This function calculates the poloidal field from the plasma current in Tesla,
-    using a simple calculation using Ampere's law for conventional
-    tokamaks, or for TARTs, a scaling from Peng, Galambos and
-    Shipe (1992).
-
-    Parameters
-    ----------
-    i_plasma_current :
-        current scaling model to use
-    ip :
-        plasma current (A)
-    q95 :
-        95% flux surface safety factor
-    aspect :
-        plasma aspect ratio
-    eps :
-        inverse aspect ratio
-    b_plasma_toroidal_on_axis :
-        toroidal field on axis (T)
-    kappa :
-        plasma elongation
-    delta :
-        plasma triangularity
-    perim :
-        plasma perimeter (m)
-    rmu0 :
-        vacuum permeability (H/m)
-
-    Returns
-    -------
-    :
-        poloidal field in Tesla
-
-
-    References
-    ----------
-        - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
-        unpublished internal Oak Ridge document
-        - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-        'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-        1729-1738. https://doi.org/10.13182/FST92-A29971
-
-    """
-    # Use Ampere's law using the plasma poloidal cross-section
-    if i_plasma_current != 2:
-        return rmu0 * ip / perim
-    # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
-    ff1, ff2, _, _ = _plascar_bpol(aspect, eps, kappa, delta)
-
-    # Transform q95 to qbar
-    qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
-
-    return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
-
-
 def calculate_current_coefficient_peng(
     eps: float, len_plasma_poloidal: float, rminor: float
 ) -> float:
@@ -255,6 +167,7 @@ def calculate_current_coefficient_peng(
 
 
 def calculate_plasma_current_peng(
+    self,
     q95: float,
     aspect: float,
     eps: float,
@@ -307,7 +220,7 @@ def calculate_plasma_current_peng(
     # Transform q95 to qbar
     qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
-    ff1, ff2, d1, d2 = _plascar_bpol(aspect, eps, kappa, delta)
+    ff1, ff2, d1, d2 = self._plascar_bpol(aspect, eps, kappa, delta)
 
     e1 = (2.0 * kappa) / (d1 * (1.0 + delta))
     e2 = (2.0 * kappa) / (d2 * (1.0 - delta))
@@ -1627,13 +1540,21 @@ def _trapped_particle_fraction_sauter(
 
 
 class Physics:
-    def __init__(self, plasma_profile, current_drive, plasma_beta, plasma_inductance):
+    def __init__(
+        self,
+        plasma_profile,
+        current_drive,
+        plasma_beta,
+        plasma_inductance,
+        plasma_current,
+    ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
         self.beta = plasma_beta
         self.inductance = plasma_inductance
+        self.current = plasma_current
 
     def physics(self):
         """Routine to calculate tokamak plasma physics information
@@ -1687,7 +1608,7 @@ class Physics:
             physics_variables.b_plasma_poloidal_average,
             physics_variables.qstar,
             physics_variables.plasma_current,
-        ) = self.calculate_plasma_current(
+        ) = self.current.calculate_plasma_current(
             physics_variables.alphaj,
             physics_variables.alphap,
             physics_variables.b_plasma_toroidal_on_axis,
@@ -1702,6 +1623,15 @@ class Physics:
             physics_variables.rminor,
             physics_variables.triang,
             physics_variables.triang95,
+        )
+
+        physics_variables.qstar = calculate_cylindrical_safety_factor(
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            plasma_current=physics_variables.plasma_current,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            kappa95=physics_variables.kappa95,
+            triang95=physics_variables.triang95,
         )
 
         # -----------------------------------------------------

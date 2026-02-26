@@ -97,6 +97,7 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
 )
+from process.models.physics.plasma_current import PlasmaCurrent
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.power import Power
@@ -698,11 +699,13 @@ class Models:
         )
         self.plasma_beta = PlasmaBeta()
         self.plasma_inductance = PlasmaInductance()
+        self.plasma_current = PlasmaCurrent()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
             plasma_beta=self.plasma_beta,
             plasma_inductance=self.plasma_inductance,
+            plasma_current=self.plasma_current,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
