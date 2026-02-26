@@ -2475,7 +2475,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     """
 
     nd_plasma_electron_max_array, nd_plasma_electrons_max = (
-        PlasmaDensityLimit().calculate_density_limit(
+        physics.density_limit.calculate_density_limit(
             i_density_limit=calculatedensitylimitparam.i_density_limit,
             b_plasma_toroidal_on_axis=calculatedensitylimitparam.b_plasma_toroidal_on_axis,
             p_plasma_separatrix_mw=calculatedensitylimitparam.p_plasma_separatrix_mw,
