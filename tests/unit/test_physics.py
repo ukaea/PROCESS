@@ -3617,7 +3617,7 @@ def test_detailed_physics_run_computes_profiles():
     )
     # toroidal field profile for larmor frequency calc
     physics_variables.b_plasma_toroidal_profile = (
-        np.ones_like(plasma.neprofile.profile_y) * 5.0
+        np.ones(2 * len(plasma.neprofile.profile_y)) * 5.0
     )
 
     dp = DetailedPhysics(plasma)
@@ -3637,7 +3637,8 @@ def test_detailed_physics_run_computes_profiles():
     assert np.all(np.isfinite(physics_variables.freq_plasma_electron_profile))
 
     assert (
-        np.shape(physics_variables.freq_plasma_larmor_toroidal_electron_profile)[0] == n
+        np.shape(physics_variables.freq_plasma_larmor_toroidal_electron_profile)[0]
+        == n * 2
     )
     assert np.all(
         np.isfinite(physics_variables.freq_plasma_larmor_toroidal_electron_profile)

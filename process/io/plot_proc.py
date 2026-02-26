@@ -12560,6 +12560,58 @@ def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.minorticks_on()
 
 
+def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
+    """Plot the Larmor radius profile on the given axis."""
+    radius_plasma_deuteron_larmor_profile = [
+        mfile_data.data[
+            f"radius_plasma_deuteron_toroidal_larmor_isotropic_profile{i}"
+        ].get_scan(scan)
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
+
+    radius_plasma_triton_larmor_profile = [
+        mfile_data.data[
+            f"radius_plasma_triton_toroidal_larmor_isotropic_profile{i}"
+        ].get_scan(scan)
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
+
+    radius_plasma_deuteron_larmor_profile_mm = [
+        radius * 1e3 for radius in radius_plasma_deuteron_larmor_profile
+    ]
+
+    radius_plasma_triton_larmor_profile_mm = [
+        radius * 1e3 for radius in radius_plasma_triton_larmor_profile
+    ]
+
+    axis.plot(
+        np.linspace(-1, 1, len(radius_plasma_deuteron_larmor_profile_mm)),
+        radius_plasma_deuteron_larmor_profile_mm,
+        color="red",
+        linestyle="-",
+        label=r"$\rho_{Larmor,toroidal,D}$",
+    )
+
+    axis.plot(
+        np.linspace(-1, 1, len(radius_plasma_triton_larmor_profile_mm)),
+        radius_plasma_triton_larmor_profile_mm,
+        color="green",
+        linestyle="-",
+        label=r"$\rho_{Larmor,toroidal,T}$",
+    )
+
+    axis.set_ylabel(r"Larmor Radii [mm]")
+    axis.set_title(r" Toroidal Larmor Radii ($v_{\perp}^2 = 2v_{th}^2$)")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
 def plot_debye_length_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
     """Plot the Debye length profile on the given axis.
 
@@ -12623,6 +12675,12 @@ def plot_velocity_profile(axis, mfile_data, scan):
         mfile_data.data[f"vel_plasma_triton_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
+    vel_plasma_alpha_thermal_profile = [
+        mfile_data.data[f"vel_plasma_alpha_thermal_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    vel_plasma_alpha_birth = mfile_data.data["vel_plasma_alpha_birth"].get_scan(scan)
 
     axis.plot(
         np.linspace(0, 1, len(vel_plasma_electron_profile)),
@@ -12634,7 +12692,7 @@ def plot_velocity_profile(axis, mfile_data, scan):
     axis.plot(
         np.linspace(0, 1, len(vel_plasma_deuteron_profile)),
         vel_plasma_deuteron_profile,
-        color="red",
+        color="pink",
         linestyle="-",
         label=r"$v_{D}$",
     )
@@ -12644,6 +12702,20 @@ def plot_velocity_profile(axis, mfile_data, scan):
         color="green",
         linestyle="-",
         label=r"$v_{T}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(vel_plasma_alpha_thermal_profile)),
+        vel_plasma_alpha_thermal_profile,
+        color="red",
+        linestyle="-",
+        label=r"$v_{\alpha,thermal}$",
+    )
+    axis.axhline(
+        vel_plasma_alpha_birth,
+        color="red",
+        linestyle="--",
+        linewidth=1.5,
+        label=r"$v_{\alpha,birth}$",
     )
 
     axis.set_yscale("log")
@@ -12680,23 +12752,81 @@ def plot_electron_frequency_profile(axis, mfile_data, scan):
         )
     ]
 
+    freq_plasma_upper_hybrid_electron_profile = [
+        mfile_data.data[f"freq_plasma_upper_hybrid_profile{i}"].get_scan(scan)
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
+
     axis.plot(
         np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
         np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
         color="red",
         linestyle="-",
-        label=r"$f_{Larmor,toroidal,e}$",
+        label=r"$f_{Larmor,toroidal,e}$ | Fundamental",
     )
+
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+        2 * np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+        color="red",
+        linestyle="--",
+        label=r"$f_{Larmor,toroidal,e}$ | 2nd harmonic",
+    )
+
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+        3 * np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+        color="red",
+        linestyle=":",
+        label=r"$f_{Larmor,toroidal,e}$ | 3rd harmonic",
+    )
+
     x = np.linspace(0, 1, len(freq_plasma_electron_profile))
     y = np.array(freq_plasma_electron_profile) / 1e9
     # original curve
-    axis.plot(x, y, color="blue", linestyle="-", label=r"$\omega_{p,e}$")
+    axis.plot(
+        x, y, color="blue", linestyle="-", label=r"$\omega_{p,e}$ | Plasma Frequency"
+    )
     # mirrored across the y-axis (drawn at negative rho)
     axis.plot(-x, y, color="blue", linestyle="-", label="_nolegend_")
-    axis.set_xlim(-1.025, 1.025)
 
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_upper_hybrid_electron_profile)),
+        np.array(freq_plasma_upper_hybrid_electron_profile) / 1e9,
+        color="purple",
+        linestyle="-",
+        label=r"$\omega_{UH,e}$ | Upper Hybrid",
+    )
+
+    axis.set_xlim(-1.025, 1.025)
+    axis.set_ylim(None, max(freq_plasma_larmor_toroidal_electron_profile) / 1e9 * 1.6)
+
+    axis.set_xlabel("$\\rho$ [r/a]")
     axis.set_ylabel("Frequency [GHz]")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
+
+    # Add secondary x-axis showing radius in metres below the primary axis
+    ax2 = axis.twiny()
+    rmajor = mfile_data.get("rmajor", scan=scan)
+    rminor = mfile_data.get("rminor", scan=scan)
+
+    # Convert normalized radius to actual radius
+    # rho ranges from -1 to 1, which corresponds to r = rmajor - rminor to rmajor + rminor
+    rho_ticks = np.array([-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1])
+    r_ticks = rmajor + rho_ticks * rminor
+
+    ax2.set_xticks(rho_ticks)
+    ax2.set_xticklabels([f"{r:.2f}" for r in r_ticks])
+    ax2.set_xlabel("Radius [m]")
+    ax2.minorticks_on()
+    ax2.set_xlim(axis.get_xlim())
+
+    # Move secondary axis to the bottom
+    ax2.xaxis.set_ticks_position("bottom")
+    ax2.xaxis.set_label_position("bottom")
+    ax2.spines["bottom"].set_position(("outward", 30))
 
     axis.legend()
 
@@ -12771,6 +12901,18 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
+    plasma_coulomb_log_deuteron_triton_profile = [
+        mfile_data.data[f"plasma_coulomb_log_deuteron_triton_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    plasma_coulomb_log_electron_alpha_thermal_profile = [
+        mfile_data.data[
+            f"plasma_coulomb_log_electron_alpha_thermal_profile{i}"
+        ].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
     axis.plot(
         np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
         plasma_coulomb_log_electron_electron_profile,
@@ -12782,7 +12924,7 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
     axis.plot(
         np.linspace(0, 1, len(plasma_coulomb_log_electron_deuteron_profile)),
         plasma_coulomb_log_electron_deuteron_profile,
-        color="red",
+        color="pink",
         linestyle="-",
         label=r"$ln \Lambda_{e-D}$",
     )
@@ -12793,6 +12935,22 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
         color="green",
         linestyle="-",
         label=r"$ln \Lambda_{e-T}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_deuteron_triton_profile)),
+        plasma_coulomb_log_deuteron_triton_profile,
+        color="orange",
+        linestyle="-",
+        label=r"$ln \Lambda_{D-T}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_electron_alpha_thermal_profile)),
+        plasma_coulomb_log_electron_alpha_thermal_profile,
+        color="red",
+        linestyle="-",
+        label=r"$ln \Lambda_{e-\alpha,thermal}$",
     )
 
     axis.set_ylabel("Coulomb Logarithm")
@@ -13252,19 +13410,17 @@ def main_plot(
 
     plot_debye_length_profile(figs[15].add_subplot(232), m_file, scan)
     plot_velocity_profile(figs[15].add_subplot(233), m_file, scan)
-
-    ax_ion = figs[15].add_subplot(414)
-    ax_electron = figs[15].add_subplot(413, sharex=ax_ion)
-
-    plot_electron_frequency_profile(ax_electron, m_file, scan)
-
-    plot_ion_frequency_profile(ax_ion, m_file, scan)
-
     plot_plasma_coloumb_logarithms(figs[15].add_subplot(231), m_file, scan)
+
+    plot_electron_frequency_profile(figs[15].add_subplot(212), m_file, scan)
+
+    plot_ion_frequency_profile(figs[16].add_subplot(311), m_file, scan)
+
+    plot_larmor_radius_profile(figs[16].add_subplot(313), m_file, scan)
 
     # Plot poloidal cross-section
     poloidal_cross_section(
-        figs[16].add_subplot(121, aspect="equal"),
+        figs[17].add_subplot(121, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -13274,7 +13430,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        figs[16].add_subplot(122, aspect="equal"),
+        figs[17].add_subplot(122, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -13282,19 +13438,19 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = figs[16].add_subplot(222)
+    ax17 = figs[17].add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
-    ax18 = figs[17].add_subplot(211)
+    ax18 = figs[18].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = figs[18].add_subplot(211)
+    ax185 = figs[19].add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = figs[18].add_subplot(212)
+    ax18b = figs[19].add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
@@ -13302,52 +13458,52 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == 1:
         # TF coil with WP
-        ax19 = figs[19].add_subplot(221, aspect="equal")
+        ax19 = figs[20].add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, figs[19])
+        plot_superconducting_tf_wp(ax19, m_file, scan, figs[20])
 
         # TF coil turn structure
-        ax20 = figs[20].add_subplot(325, aspect="equal")
+        ax20 = figs[21].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[20], m_file, scan)
-        plot_205 = figs[20].add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, figs[21], m_file, scan)
+        plot_205 = figs[21].add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, figs[20], m_file, scan)
+        plot_cable_in_conduit_cable(plot_205, figs[21], m_file, scan)
     else:
-        ax19 = figs[19].add_subplot(211, aspect="equal")
+        ax19 = figs[20].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file, scan, figs[19])
-        plot_resistive_tf_info(ax19, m_file, scan, figs[19])
+        plot_resistive_tf_wp(ax19, m_file, scan, figs[20])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[20])
     plot_tf_coil_structure(
-        figs[21].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[22].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(figs[22], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[23], m_file, scan)
 
-    plot_tf_stress(figs[23].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    plot_tf_stress(figs[24].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
-    plot_current_profiles_over_time(figs[24].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[25].add_subplot(111), m_file, scan)
 
     plot_cs_coil_structure(
-        figs[25].add_subplot(121, aspect="equal"), figs[25], m_file, scan
+        figs[26].add_subplot(121, aspect="equal"), figs[26], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[25].add_subplot(224, aspect="equal"), figs[25], m_file, scan
+        figs[26].add_subplot(224, aspect="equal"), figs[26], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[26].add_subplot(221, aspect="equal"), m_file, scan
+        figs[27].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[26].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[26].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[27].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[27].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[27], m_file, scan)
-    ax_blanket = figs[27].add_subplot(122, aspect="equal")
+    plot_blkt_pipe_bends(figs[28], m_file, scan)
+    ax_blanket = figs[28].add_subplot(122, aspect="equal")
     plot_blanket(ax_blanket, m_file, scan, radial_build, colour_scheme)
     plot_firstwall(ax_blanket, m_file, scan, radial_build, colour_scheme)
     ax_blanket.set_xlabel("Radial position [m]")
@@ -13390,13 +13546,13 @@ def main_plot(
     )
 
     plot_main_power_flow(
-        figs[28].add_subplot(111, aspect="equal"), m_file, scan, figs[28]
+        figs[29].add_subplot(111, aspect="equal"), m_file, scan, figs[29]
     )
 
-    ax24 = figs[29].add_subplot(111)
+    ax24 = figs[30].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[29])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[30])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -13473,7 +13629,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(30)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(31)]
 
     # run main_plot
     main_plot(
