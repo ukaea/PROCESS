@@ -30,6 +30,7 @@ from process.models.physics.current_drive import (
     NeutralBeam,
 )
 from process.models.physics.physics import Physics, PlasmaBeta, PlasmaInductance
+from process.models.physics.plasma_current import PlasmaCurrent
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.power import Power
 from process.models.stellarator.build import st_build

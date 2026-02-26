@@ -24,15 +24,14 @@ from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
-    PlasmaCurrent,
     PlasmaInductance,
-    calculate_poloidal_field,
     diamagnetic_fraction_hender,
     diamagnetic_fraction_scene,
     ps_fraction_scene,
     res_diff_time,
     rether,
 )
+from process.models.physics.plasma_current import PlasmaCurrent
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 
@@ -1328,7 +1327,9 @@ def test_calculate_plasma_current_peng(arguments, expected):
     ),
 )
 def test_calculate_poloidal_field(arguments, expected):
-    assert calculate_poloidal_field(**arguments) == pytest.approx(expected)
+    assert PlasmaCurrent().calculate_poloidal_field(**arguments) == pytest.approx(
+        expected
+    )
 
 
 def test_calculate_beta_limit():
