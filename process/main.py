@@ -703,7 +703,9 @@ class Models:
         self.plasma_inductance = PlasmaInductance()
         self.plasma_density_limit = PlasmaDensityLimit()
         self.plasma_exhaust = PlasmaExhaust()
-        self.plasma_bootstrap = PlasmaBootstrapCurrent()
+        self.plasma_bootstrap = PlasmaBootstrapCurrent(
+            plasma_profile=self.plasma_profile
+        )
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
