@@ -914,6 +914,9 @@ p_plasma_separatrix_mw: float = None
 p_plasma_separatrix_rmajor_mw: float = None
 """Power to conducted to the divertor region per major radius (MW/m)"""
 
+p_div_bt_q_aspect_rmajor_mw: float = None
+"""EU DEMO divertor protection parameter (MW/T/m)"""
+
 
 p_div_lower_separatrix_mw: float = None
 """Separatrix power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)"""
@@ -1571,6 +1574,7 @@ def init_physics_variables():
         p_dhe3_total_mw, \
         p_plasma_separatrix_mw, \
         p_plasma_separatrix_rmajor_mw, \
+        p_div_bt_q_aspect_rmajor_mw, \
         p_div_lower_separatrix_mw, \
         p_div_upper_separatrix_mw, \
         p_div_separatrix_max_mw, \
@@ -1843,6 +1847,7 @@ def init_physics_variables():
     p_dhe3_total_mw = 0.0
     p_plasma_separatrix_mw = 0.0
     p_plasma_separatrix_rmajor_mw = 0.0
+    p_div_lower_separatrix_mw = 0.0
     p_div_lower_separatrix_mw = 0.0
     p_div_upper_separatrix_mw = 0.0
     p_div_separatrix_max_mw = 0.0
