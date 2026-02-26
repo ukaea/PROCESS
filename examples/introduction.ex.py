@@ -42,8 +42,8 @@ import shutil
 import tempfile
 from pathlib import Path
 
+from process.core.repository import get_process_root
 from process.main import SingleRun
-from process.repository import get_process_root
 
 # Define project root dir; this is using the current working directory
 PROJ_DIR = Path.cwd().parent

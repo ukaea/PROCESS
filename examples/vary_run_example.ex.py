@@ -79,9 +79,9 @@ import shutil
 import tempfile
 from pathlib import Path
 
+from process.core.repository import get_process_root
 from process.io.mfile_utils import get_mfile_initial_ixc_values
 from process.main import VaryRun
-from process.repository import get_process_root
 
 # Define project root dir; when running a notebook, the cwd is the dir the notebook is in
 PROJ_DIR = Path.cwd().parent
