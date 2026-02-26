@@ -34,6 +34,52 @@ from process.exceptions import ProcessValueError
 logger = logging.getLogger(__name__)
 
 
+def calculate_cylindrical_safety_factor(
+    rmajor: float,
+    rminor: float,
+    plasma_current: float,
+    b_plasma_toroidal_on_axis: float,
+    kappa95: float,
+    triang95: float,
+) -> float:
+    """Calculate the cylindrical safety factor from the IPDG89 guidelines.
+
+    Parameters
+    ----------
+    rmajor : float
+        Major radius of the tokamak in meters.
+    rminor : float
+        Minor radius of the tokamak in meters.
+    plasma_current : float
+        Plasma current in amperes.
+    b_plasma_toroidal_on_axis : float
+        Toroidal magnetic field on axis in tesla.
+    kappa95 : float
+        Elongation at 95% of the plasma boundary.
+    triang95 : float
+        Triangularity at 95% of the plasma boundary.
+    Returns
+    -------
+    float
+        Cylindrical safety factor (dimensionless).
+    Notes
+    -----
+    The cylindrical safety factor is calculated following the IPDG89 guidelines.
+    The formula accounts for plasma elongation and triangularity effects on the
+    safety factor through the kappa95 and triang95 parameters.
+
+    """
+
+    # Calculate cyclindrical safety factor from IPDG89
+    return (
+        ((2 * np.pi) / constants.RMU0)
+        * rminor**2
+        / (rmajor * plasma_current / b_plasma_toroidal_on_axis)
+        * 0.5
+        * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
+    )
+
+
 @nb.jit(nopython=True, cache=True)
 def rether(
     alphan,
@@ -1577,6 +1623,15 @@ class Physics:
             physics_variables.rminor,
             physics_variables.triang,
             physics_variables.triang95,
+        )
+
+        physics_variables.qstar = calculate_cylindrical_safety_factor(
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            plasma_current=physics_variables.plasma_current,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            kappa95=physics_variables.kappa95,
+            triang95=physics_variables.triang95,
         )
 
         # -----------------------------------------------------
