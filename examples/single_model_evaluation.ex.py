@@ -38,7 +38,10 @@ print(
 # In order to initialise all variables in Process with their values at a given point (design parameter vector), run an evaluation input file (one with no optimisation) to initialise values in all models. The "large tokamak" regression test solution is used here.
 
 # %%
-single_run = SingleRun("data/large_tokamak_eval_IN.DAT")
+from process.repository import get_process_root
+
+data_dir = get_process_root() / "../examples/data/"
+single_run = SingleRun((data_dir / "large_tokamak_eval_IN.DAT").as_posix())
 single_run.run()
 
 

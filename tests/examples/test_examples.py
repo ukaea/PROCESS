@@ -55,8 +55,15 @@ def test_introductory_examples(examples_temp_data):
     :type examples_temp_data: Path
     """
     example_notebook_location = _get_location(examples_temp_data, "introduction")
-    with testbook(example_notebook_location, execute=True, timeout=600):
-        # Check csv file is created
+
+    with (
+        testbook(example_notebook_location, execute=False, timeout=600) as tb,
+        tb.patch(
+            "process.repository._PROCESS_ROOT",
+            new=example_notebook_location.parent.resolve().as_posix(),
+        ),
+    ):
+        tb.execute()
         assert os.path.exists(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
 
         # Read in the csv file created by test and check it contains positive floats
@@ -84,7 +91,15 @@ def test_scan(examples_temp_data):
     :type examples_temp_data: Path
     """
     scan_notebook_location = _get_location(examples_temp_data, "scan")
-    with testbook(scan_notebook_location, execute=True, timeout=1200):
+
+    with (
+        testbook(scan_notebook_location, execute=False, timeout=1200) as tb,
+        tb.patch(
+            "process.repository._PROCESS_ROOT",
+            new=scan_notebook_location.parent.resolve().as_posix(),
+        ),
+    ):
+        tb.execute()
         # Run entire scan.ex.py notebook and assert an MFILE is created
         assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
 
@@ -97,6 +112,12 @@ def test_no_assertion_solutions(name, examples_temp_data):
 
     :param examples_temp_data: temporary dir containing examples files
     """
-    plot_solutions_notebook_location = _get_location(examples_temp_data, name)
-    with testbook(plot_solutions_notebook_location, execute=True, timeout=600):
-        pass
+    notebook_location = _get_location(examples_temp_data, name)
+    with (
+        testbook(notebook_location, execute=False, timeout=600) as tb,
+        tb.patch(
+            "process.repository._PROCESS_ROOT",
+            new=notebook_location.parent.resolve().as_posix(),
+        ),
+    ):
+        tb.execute()

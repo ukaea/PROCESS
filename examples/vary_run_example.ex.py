@@ -75,25 +75,27 @@
 # %autoreload 2
 
 import os
+import shutil
+import tempfile
 from pathlib import Path
-from shutil import copy
 
-from functions_for_examples import copy_to_temp_dir, get_initial_values
-
+from process.io.mfile_utils import get_mfile_initial_ixc_values
 from process.main import VaryRun
+from process.repository import get_process_root
 
 # Define project root dir; when running a notebook, the cwd is the dir the notebook is in
 PROJ_DIR = Path.cwd().parent
 
-# Path to .conf file
-script_dir = Path("__file__").parent.resolve()
-conf_file = script_dir / "data/run_process.conf"
-temp_dir, temp_input_path, temp_dir_path = copy_to_temp_dir(conf_file, PROJ_DIR)
+# Path to files
+data_dir = get_process_root() / "../examples/data/"
+conf_file = data_dir / "run_process.conf"
+input_file = data_dir / "large_tokamak_varyrun_IN.DAT"
 
-# .conf file relies on a separate input file too; copy this as well
-# TODO This double input file requirement needs to be removed
-input_file = script_dir / "data/large_tokamak_varyrun_IN.DAT"
-copy(PROJ_DIR / input_file, temp_dir.name)
+temp_dir = tempfile.TemporaryDirectory()
+input_path = Path(temp_dir.name) / "large_tokamak_IN.DAT"
+conf_path = Path(temp_dir.name) / "run_process.conf"
+shutil.copy(input_file, input_path)
+shutil.copy(conf_file, conf_path)
 
 
 # VaryRun uses process_config.py, which changes the current working directory
@@ -104,19 +106,22 @@ copy(PROJ_DIR / input_file, temp_dir.name)
 # TODO Remove the os.chdir() from VaryRun
 cwd = Path.cwd()
 
-vary_run = VaryRun(temp_input_path.as_posix())
+vary_run = VaryRun(conf_path.as_posix())
 vary_run.run()
 os.chdir(cwd)
 
 
 # Get the initial values from the original input file
-iteration_variable_names, original_iteration_variable_values = get_initial_values(
-    input_file
+iteration_variable_names, original_iteration_variable_values = (
+    get_mfile_initial_ixc_values(input_file)
 )
 
 # Get the initial values from the new input file produced by VaryRun
-path_to_new_input = (temp_dir_path / "IN.DAT").as_posix()
-_, updated_iteration_variable_values = get_initial_values(path_to_new_input)
+# VaryRun always produces a file called IN.DAT in the same directory
+# as the conf file
+_, updated_iteration_variable_values = get_mfile_initial_ixc_values(
+    Path(temp_dir.name) / "IN.DAT"
+)
 
 # %% [markdown]
 # ## Compare iteration variable values

@@ -38,23 +38,27 @@
 # %load_ext autoreload
 # %autoreload 2
 
+import shutil
+import tempfile
 from pathlib import Path
 
-from functions_for_examples import copy_to_temp_dir
-
 from process.main import SingleRun
+from process.repository import get_process_root
 
 # Define project root dir; this is using the current working directory
 PROJ_DIR = Path.cwd().parent
 
 # Define input file name relative to project dir, then copy to temp dir
-script_dir = Path("__file__").parent.resolve()
-input_rel = script_dir / "data/large_tokamak_IN.DAT"
+data_dir = get_process_root() / "../examples/data/"
+input_file = data_dir / "large_tokamak_IN.DAT"
 
-temp_dir, temp_input_path, temp_dir_path = copy_to_temp_dir(input_rel, PROJ_DIR)
+# Copy the file to avoid polluting the project directory with example files
+temp_dir = tempfile.TemporaryDirectory()
+input_path = Path(temp_dir.name) / "large_tokamak_IN.DAT"
+shutil.copy(input_file, input_path)
 
 # Run process on an input file in a temporary directory
-single_run = SingleRun(temp_input_path.as_posix())
+single_run = SingleRun(input_path.as_posix())
 single_run.run()
 
 # %% [markdown]
@@ -89,8 +93,6 @@ print(f"Electrical plant equipment: {process.data_structure.cost_variables.c24:.
 
 # %%
 from process.io import mfile_to_csv
-
-data_dir = Path("data")
 
 # mfile_to_csv requires two inputs:
 # - path to the MFILE

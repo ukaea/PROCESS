@@ -8,7 +8,12 @@ Please make sure the extra example dependencies are installed
 pip install -e .'[examples]'
 ```
 
+It is important that the install is editable, otherwise the examples will be unable to find the required data to run.
+
 ## Running notebooks
+
+### Notebooks in Binder
+Navigate to [our Binder](https://mybinder.org/v2/gh/ukaea/PROCESS/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2F), this should open a Binder in the `examples` directory. Right click on the `.ex.py` notebook you wish to open and select `Open with > Notebook`.
 
 ### Notebooks in VS Code
 

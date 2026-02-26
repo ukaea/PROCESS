@@ -38,13 +38,12 @@
 # %load_ext autoreload
 # %autoreload 2
 
-from pathlib import Path
-
 from process.io.plot_solutions import (
     RunMetadata,
     plot_mfile_solutions,
     plot_mfile_solutions_constraints,
 )
+from process.repository import get_process_root
 
 # %% [markdown]
 # ## Plot single solution
@@ -52,7 +51,7 @@ from process.io.plot_solutions import (
 # Plot a single solution, showing optimisation parameters normalised to their initial values.
 
 # %%
-data_dir = Path("data")
+data_dir = data_dir = get_process_root() / "../examples/data/"
 runs_metadata = [
     RunMetadata(data_dir / "large_tokamak_1_MFILE.DAT", "large tokamak 1"),
 ]
