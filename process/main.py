@@ -90,12 +90,12 @@ from process.models.physics.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
+from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
-    PlasmaDensityLimit,
     PlasmaInductance,
 )
 from process.models.physics.plasma_geometry import PlasmaGeom

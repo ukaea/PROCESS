@@ -1,4 +1,4 @@
-# Density Limit
+# Density Limit | `PlasmaDensityLimit`
 
 Several density limit models are available in PROCESS. These are
 calculated in routine `calculate_density_limit()`, which is called by `physics`.
