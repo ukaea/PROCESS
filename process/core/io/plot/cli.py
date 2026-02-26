@@ -27,7 +27,7 @@ def sankey(mfile, format_):
         if out is not None:
             return out
 
-    return plot_sankey(mfile, format_)
+    return plot_sankey(mfile)
 
 
 @plot.command("scans", no_args_is_help=True)
