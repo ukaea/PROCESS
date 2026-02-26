@@ -2402,6 +2402,16 @@ class Physics:
             )
         )
 
+        physics_variables.p_div_bt_q_aspect_rmajor_mw = (
+            self.exhaust.calculate_eu_demo_re_attachment_metric(
+                p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+                b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+                q95=physics_variables.q95,
+                aspect=physics_variables.aspect,
+                rmajor=physics_variables.rmajor,
+            )
+        )
+
         physics_variables.pflux_plasma_surface_neutron_avg_mw = (
             physics_variables.p_neutron_total_mw / physics_variables.a_plasma_surface
         )
@@ -4963,18 +4973,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Pdivt Bt / qAR ratio (MWT/m) (On peak divertor)",
-                "(pdivmaxbt/qar)",
-                (
-                    (
-                        physics_variables.p_div_separatrix_max_mw
-                        * physics_variables.b_plasma_toroidal_on_axis
-                    )
-                    / (
-                        physics_variables.q95
-                        * physics_variables.aspect
-                        * physics_variables.rmajor
-                    )
-                ),
+                "(p_div_bt_q_aspect_rmajor_mw)",
+                physics_variables.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
             )
         else:
@@ -4989,18 +4989,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Psep Bt / qAR ratio (MWT/m)",
-                "(pdivtbt_over_qar)",
-                (
-                    (
-                        physics_variables.p_plasma_separatrix_mw
-                        * physics_variables.b_plasma_toroidal_on_axis
-                    )
-                    / (
-                        physics_variables.q95
-                        * physics_variables.aspect
-                        * physics_variables.rmajor
-                    )
-                ),
+                "(p_div_bt_q_aspect_rmajor_mw)",
+                physics_variables.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
             )
 
