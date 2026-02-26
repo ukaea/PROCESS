@@ -41,4 +41,4 @@ A web browser will open and the notebook can be run from there. If you're using 
 Another way of running the PROCESS example notebooks is to use Binder. This uses a JupyterHub server to host the contents of
 PROCESS, allowing the examples to be run via a web browser and without installation on your computer. You can click 
 [here](https://mybinder.org/v2/gh/ukaea/PROCESS/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2F) to try this out.
-The Binder may take some time to load, but once loaded you will be in the `examples` folder and can select example notebooks to run in your web browser.
+The Binder may take some time to load, but once loaded you will be in the `examples` folder and can select example notebooks to run in your web browser. Simply click the notebook you wish to run (a `.ex.py` file) and select `Open with > Notebook`.

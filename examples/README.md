@@ -12,6 +12,9 @@ It is important that the install is editable, otherwise the examples will be una
 
 ## Running notebooks
 
+### Notebooks in Binder
+Navigate to [our Binder](https://mybinder.org/v2/gh/ukaea/PROCESS/HEAD?urlpath=%2Fdoc%2Ftree%2Fexamples%2F), this should open a Binder in the `examples` directory. Right click on the `.ex.py` notebook you wish to open and select `Open with > Notebook`.
+
 ### Notebooks in VS Code
 
 The recommended way to run notebooks is in VS Code; this has the additional advantage of being able to debug notebooks. Simply open the `.ex.py` file in VS Code and click run in interactive mode to view and run it. You may be required to select a notebook kernel on first run; be sure to select the virtual environment where PROCESS is installed (e.g. `~/PROCESS/.venv`).
