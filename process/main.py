@@ -95,6 +95,7 @@ from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
+    PlasmaBootstrapCurrent,
     PlasmaInductance,
 )
 from process.models.physics.plasma_geometry import PlasmaGeom
@@ -723,6 +724,7 @@ class Models:
                 physics=self.physics,
                 neoclassics=self.neoclassics,
                 plasma_beta=self.plasma_beta,
+                plasma_bootstrap=self.plasma_bootstrap,
             )
 
         self.dcll = DCLL(fw=self.fw)
