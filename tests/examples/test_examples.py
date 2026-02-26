@@ -59,7 +59,7 @@ def test_introductory_examples(examples_temp_data):
     with (
         testbook(example_notebook_location, execute=False, timeout=600) as tb,
         tb.patch(
-            "process.repository._PROCESS_ROOT",
+            "process.core.repository._PROCESS_ROOT",
             new=example_notebook_location.parent.resolve().as_posix(),
         ),
     ):
@@ -95,7 +95,7 @@ def test_scan(examples_temp_data):
     with (
         testbook(scan_notebook_location, execute=False, timeout=1200) as tb,
         tb.patch(
-            "process.repository._PROCESS_ROOT",
+            "process.core.repository._PROCESS_ROOT",
             new=scan_notebook_location.parent.resolve().as_posix(),
         ),
     ):
@@ -116,7 +116,7 @@ def test_no_assertion_solutions(name, examples_temp_data):
     with (
         testbook(notebook_location, execute=False, timeout=600) as tb,
         tb.patch(
-            "process.repository._PROCESS_ROOT",
+            "process.core.repository._PROCESS_ROOT",
             new=notebook_location.parent.resolve().as_posix(),
         ),
     ):
