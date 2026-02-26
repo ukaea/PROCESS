@@ -19,6 +19,7 @@ from process.models.physics.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
+from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
@@ -56,6 +57,7 @@ def physics():
         ),
         PlasmaBeta(),
         PlasmaInductance(),
+        PlasmaDensityLimit(),
     )
 
 
@@ -2473,7 +2475,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     """
 
     nd_plasma_electron_max_array, nd_plasma_electrons_max = (
-        physics.calculate_density_limit(
+        physics.density_limit.calculate_density_limit(
             i_density_limit=calculatedensitylimitparam.i_density_limit,
             b_plasma_toroidal_on_axis=calculatedensitylimitparam.b_plasma_toroidal_on_axis,
             p_plasma_separatrix_mw=calculatedensitylimitparam.p_plasma_separatrix_mw,
