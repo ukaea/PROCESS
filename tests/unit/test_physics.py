@@ -11,6 +11,7 @@ from process.data_structure import (
     impurity_radiation_module,
     physics_variables,
 )
+from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -24,7 +25,6 @@ from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
-    PlasmaBootstrapCurrent,
     PlasmaInductance,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,

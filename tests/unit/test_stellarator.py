@@ -21,6 +21,7 @@ from process.models.blankets.hcpb import CCFE_HCPB
 from process.models.buildings import Buildings
 from process.models.costs.costs import Costs
 from process.models.fw import FirstWall
+from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -32,7 +33,6 @@ from process.models.physics.current_drive import (
 from process.models.physics.physics import (
     Physics,
     PlasmaBeta,
-    PlasmaBootstrapCurrent,
     PlasmaInductance,
 )
 from process.models.physics.plasma_profiles import PlasmaProfile
