@@ -33,11 +33,10 @@
 # - `sweep`: array of values for the scanned variable to take; one for each run. Should be of length `isweep`
 
 # %% slideshow={"slide_type": "subslide"}
-from pathlib import Path
-
 from process.main import SingleRun
+from process.repository import get_process_root
 
-data_dir = Path("data")
+data_dir = get_process_root() / "../examples/data/"
 input_name = data_dir / "scan_example_file_IN.DAT"
 # Perform a SingleRun on a scan-enabled input file
 single_run = SingleRun(str(input_name), solver="vmcon_bounded")

@@ -43,13 +43,14 @@ import tempfile
 from pathlib import Path
 
 from process.main import SingleRun
+from process.repository import get_process_root
 
 # Define project root dir; this is using the current working directory
 PROJ_DIR = Path.cwd().parent
 
 # Define input file name relative to project dir, then copy to temp dir
-script_dir = Path("__file__").parent.resolve()
-input_file = script_dir / "data/large_tokamak_IN.DAT"
+data_dir = get_process_root() / "../examples/data/"
+input_file = data_dir / "large_tokamak_IN.DAT"
 
 # Copy the file to avoid polluting the project directory with example files
 temp_dir = tempfile.TemporaryDirectory()

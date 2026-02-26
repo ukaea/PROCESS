@@ -81,14 +81,15 @@ from pathlib import Path
 
 from process.io.mfile_utils import get_mfile_initial_ixc_values
 from process.main import VaryRun
+from process.repository import get_process_root
 
 # Define project root dir; when running a notebook, the cwd is the dir the notebook is in
 PROJ_DIR = Path.cwd().parent
 
-# Path to .conf file
-script_dir = Path("__file__").parent.resolve()
-conf_file = script_dir / "data/run_process.conf"
-input_file = script_dir / "data/large_tokamak_varyrun_IN.DAT"
+# Path to files
+data_dir = get_process_root() / "../examples/data/"
+conf_file = data_dir / "run_process.conf"
+input_file = data_dir / "large_tokamak_varyrun_IN.DAT"
 
 temp_dir = tempfile.TemporaryDirectory()
 input_path = Path(temp_dir.name) / "large_tokamak_IN.DAT"

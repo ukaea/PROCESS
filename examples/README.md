@@ -8,6 +8,8 @@ Please make sure the extra example dependencies are installed
 pip install -e .'[examples]'
 ```
 
+It is important that the install is editable, otherwise the examples will be unable to find the required data to run.
+
 ## Running notebooks
 
 ### Notebooks in VS Code
