@@ -93,12 +93,13 @@ def test_scan(examples_temp_data):
     scan_notebook_location = _get_location(examples_temp_data, "scan")
 
     with (
-        testbook(scan_notebook_location, execute=True, timeout=1200) as tb,
+        testbook(scan_notebook_location, execute=False, timeout=1200) as tb,
         tb.patch(
             "process.repository._PROCESS_ROOT",
             new=scan_notebook_location.parent.resolve().as_posix(),
         ),
     ):
+        tb.execute()
         # Run entire scan.ex.py notebook and assert an MFILE is created
         assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
 
@@ -113,10 +114,10 @@ def test_no_assertion_solutions(name, examples_temp_data):
     """
     notebook_location = _get_location(examples_temp_data, name)
     with (
-        testbook(notebook_location, execute=True, timeout=600) as tb,
+        testbook(notebook_location, execute=False, timeout=600) as tb,
         tb.patch(
             "process.repository._PROCESS_ROOT",
             new=notebook_location.parent.resolve().as_posix(),
         ),
     ):
-        pass
+        tb.execute()
