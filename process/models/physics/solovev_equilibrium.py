@@ -1,4 +1,5 @@
 import logging
+from dataclasses import dataclass
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,21 +13,18 @@ import process.io.mfile as mf
 logger = logging.getLogger(__name__)
 
 
+@dataclass
 class ExtremalPoint:
-    __slots__ = ("_elongation", "_squareness", "_triangularity", "_x_point")
-    x_point: bool = False
+    elongation: float
+    triangularity: float
+    x_point: bool
+    squareness: float = 0.0
 
-    def __init__(
-        self,
-        elongation: float,
-        triangularity: float,
-        x_point: bool,
-        squareness: float = 0.0,
-    ):
-        self._elongation = float(elongation)
-        self._triangularity = float(triangularity)
-        self._x_point = bool(x_point)
-        self._squareness = float(squareness)
+    def __post_init__(self):
+        self.elongation = float(self.elongation)
+        self.triangularity = float(self.triangularity)
+        self.x_point = bool(self.x_point)
+        self.squareness = float(self.squareness)
 
         if self.elongation <= 0:
             raise ValueError(f"Elongation must be positive: {self.elongation}")
@@ -58,20 +56,8 @@ class ExtremalPoint:
         return cls(elongation, triangularity, x_point)
 
     @property
-    def elongation(self) -> float:
-        return self._elongation
-
-    @property
-    def triangularity(self) -> float:
-        return self._triangularity
-
-    @property
-    def get_x_point(self) -> float:
-        return self._x_point
-
-    @property
-    def squareness(self) -> float:
-        return self._squareness
+    def get_x_point(self) -> bool:
+        return self.x_point
 
 
 class AnalyticGradShafranovSolution:
