@@ -29,10 +29,10 @@ from process.models.physics.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
+from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.physics import (
     Physics,
     PlasmaBeta,
-    PlasmaExhaust,
     PlasmaInductance,
 )
 from process.models.physics.plasma_profiles import PlasmaProfile
