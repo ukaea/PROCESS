@@ -8,6 +8,7 @@ from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     blanket_library,
     build_variables,
+    constraint_variables,
     divertor_variables,
     first_wall_variables,
     fwbs_variables,
@@ -96,6 +97,36 @@ class FirstWall:
             fwbs_variables.radius_fw_channel_90_bend,
             fwbs_variables.radius_fw_channel_180_bend,
         ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
+
+        if physics_variables.i_pflux_fw_neutron == 1:
+            physics_variables.pflux_fw_neutron_mw = (
+                physics_variables.ffwal
+                * physics_variables.pflux_plasma_surface_neutron_avg_mw
+            )
+        else:
+            physics_variables.pflux_fw_neutron_mw = (
+                physics_variables.p_neutron_total_mw / first_wall_variables.a_fw_total
+            )
+
+        if physics_variables.i_pflux_fw_neutron == 1:
+            physics_variables.pflux_fw_rad_mw = (
+                physics_variables.ffwal
+                * physics_variables.p_plasma_rad_mw
+                / physics_variables.a_plasma_surface
+            )
+        else:
+            physics_variables.pflux_fw_rad_mw = (
+                physics_variables.p_plasma_rad_mw / build_variables.a_fw_total
+            )
+
+        constraint_variables.pflux_fw_rad_max_mw = (
+            physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
+        )
+
+        # Power transported to the first wall by escaped alpha particles
+        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
+            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
+        )
 
     @staticmethod
     def calculate_first_wall_half_height(
@@ -900,5 +931,52 @@ class FirstWall:
             "Peak temperature of first wall [K]",
             "(temp_fw_peak)",
             fwbs_variables.temp_fw_peak,
+            "OP ",
+        )
+
+    def output_fw_surface_loads(self):
+        """Outputs the first wall surface load details to the output file."""
+        po.oheadr(self.outfile, "First wall surface loads")
+
+        po.ovarre(
+            self.outfile,
+            "Nominal mean radiation load on vessel first-wall (MW/m^2)",
+            "(pflux_fw_rad_mw)",
+            physics_variables.pflux_fw_rad_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Peaking factor for radiation first-wall load",
+            "(f_fw_rad_max)",
+            constraint_variables.f_fw_rad_max,
+            "IP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Maximum permitted radiation first-wall load (MW/m^2)",
+            "(pflux_fw_rad_max)",
+            constraint_variables.pflux_fw_rad_max,
+            "IP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Peak radiation wall load (MW/m^2)",
+            "(pflux_fw_rad_max_mw)",
+            constraint_variables.pflux_fw_rad_max_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fast alpha particle power incident on the first-wall (MW)",
+            "(p_fw_alpha_mw)",
+            physics_variables.p_fw_alpha_mw,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Nominal mean neutron load on vessel first-wall (MW/m^2)",
+            "(pflux_fw_neutron_mw)",
+            physics_variables.pflux_fw_neutron_mw,
             "OP ",
         )
