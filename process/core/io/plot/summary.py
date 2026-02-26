@@ -57,6 +57,7 @@ from process.models.physics.current_drive import (
     ElectronCyclotron,
 )
 from process.models.physics.impurity_radiation import read_impurity_file
+from process.models.physics.solovev_equilibrium import plot_analytic_equilibrium
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import BetaComponentLimits, BetaNormMaxModel
 from process.models.physics.plasma_current import (
@@ -13818,6 +13819,10 @@ def main_plot(
     plot_ion_frequency_profile(figs[18].add_subplot(311), m_file, scan)
 
     plot_larmor_radius_profile(figs[18].add_subplot(313), m_file, scan)
+
+    ax25 = figs[16].add_subplot(222, aspect="equal")
+    ax25.set_position([0.6, 0.55, 0.45, 0.45])
+    plot_analytic_equilibrium(ax25, m_file, scan, figs[16])
 
     # Plot poloidal cross-section
     poloidal_cross_section(
