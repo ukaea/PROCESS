@@ -10,6 +10,8 @@ import pandas as pd
 import pytest
 from testbook import testbook
 
+import process.repository as repository
+
 
 @pytest.fixture(scope="module")
 def examples_temp_data(tmp_path_factory):
@@ -47,7 +49,11 @@ def _get_location(loc, name):
     return loc / name.format(".ex.ipynb")
 
 
-def test_introductory_examples(examples_temp_data):
+def _fake_process_location(temp_examples_dir: Path):
+    return temp_examples_dir / "../process"
+
+
+def test_introductory_examples(examples_temp_data, monkeypatch):
     """Run the introduction.ex.py and check no exceptions are raised.
 
     introduction.ex.py uses temp dirs to clean up any produced files itself.
@@ -55,6 +61,9 @@ def test_introductory_examples(examples_temp_data):
     :type examples_temp_data: Path
     """
     example_notebook_location = _get_location(examples_temp_data, "introduction")
+    monkeypatch.setattr(
+        repository, "get_process_root", _fake_process_location(example_notebook_location)
+    )
     with testbook(example_notebook_location, execute=True, timeout=600):
         # Check csv file is created
         assert os.path.exists(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
@@ -75,7 +84,7 @@ def test_introductory_examples(examples_temp_data):
         assert check_positive
 
 
-def test_scan(examples_temp_data):
+def test_scan(examples_temp_data, monkeypatch):
     """Run scan.ex.py notebook check no exceptions are raised and that an MFILE is created.
 
     scan.ex.py intentionally produces files when running the notebook, but remove
@@ -84,6 +93,9 @@ def test_scan(examples_temp_data):
     :type examples_temp_data: Path
     """
     scan_notebook_location = _get_location(examples_temp_data, "scan")
+    monkeypatch.setattr(
+        repository, "get_process_root", _fake_process_location(scan_notebook_location)
+    )
     with testbook(scan_notebook_location, execute=True, timeout=1200):
         # Run entire scan.ex.py notebook and assert an MFILE is created
         assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
@@ -92,11 +104,14 @@ def test_scan(examples_temp_data):
 @pytest.mark.parametrize(
     "name", ("plot_solutions", "single_model_evaluation", "vary_run_example")
 )
-def test_no_assertion_solutions(name, examples_temp_data):
+def test_no_assertion_solutions(name, examples_temp_data, monkeypatch):
     """Run examples and check no exceptions are raised.
 
     :param examples_temp_data: temporary dir containing examples files
     """
-    plot_solutions_notebook_location = _get_location(examples_temp_data, name)
-    with testbook(plot_solutions_notebook_location, execute=True, timeout=600):
+    notebook_location = _get_location(examples_temp_data, name)
+    monkeypatch.setattr(
+        repository, "get_process_root", _fake_process_location(notebook_location)
+    )
+    with testbook(notebook_location, execute=True, timeout=600):
         pass
