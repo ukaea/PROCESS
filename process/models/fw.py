@@ -98,12 +98,6 @@ class FirstWall:
             fwbs_variables.radius_fw_channel_180_bend,
         ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
 
-        # ==============================
-
-        # First wall power fluxes
-
-        # ==============================
-
         if physics_variables.i_pflux_fw_neutron == 1:
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
