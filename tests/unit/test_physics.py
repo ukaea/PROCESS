@@ -20,12 +20,12 @@ from process.models.physics.current_drive import (
     NeutralBeam,
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
+from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
-    PlasmaExhaust,
     PlasmaInductance,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,
