@@ -84,6 +84,7 @@ from process.models.divertor import Divertor
 from process.models.fw import FirstWall
 from process.models.ife import IFE
 from process.models.pfcoil import PFCoil
+from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -99,7 +100,6 @@ from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
-    PlasmaBootstrapCurrent,
     PlasmaInductance,
 )
 from process.models.physics.plasma_geometry import PlasmaGeom
