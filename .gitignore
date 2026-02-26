@@ -41,7 +41,7 @@ com.msg
 *.gz
 ford_site/
 lib/
-process/io/python_fortran_dicts.json
+process/core/io/python_fortran_dicts.json
 *.egg-info
 fortran.py
 .coverage

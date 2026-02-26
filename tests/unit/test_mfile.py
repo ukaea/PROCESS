@@ -1,7 +1,7 @@
 import shutil
 from pathlib import Path
 
-from process.io.mfile_utils import get_mfile_initial_ixc_values
+from process.core.io.mfile_utils import get_mfile_initial_ixc_values
 
 
 def test_get_mfile_initial_ixc_values(input_file, tmp_path):

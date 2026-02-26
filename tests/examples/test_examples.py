@@ -29,7 +29,7 @@ def examples_temp_data(tmp_path_factory):
         ignore=ignore_patterns("*.md", "*log", "__pycache__", "*.ipynb*"),
     )
     csv_json_path = (
-        Path(__file__).parent.parent.parent / "process/io/mfile_to_csv_vars.json"
+        Path(__file__).parent.parent.parent / "process/core/io/mfile_to_csv_vars.json"
     )
     copy(csv_json_path, tmp_path)
 

@@ -20,13 +20,13 @@ make sure their directory is in your Python path.
 
 ## Compare MFILEs
 
-`process/io/mfile_comparison.py`
+`process/core/io/mfile_comparison.py`
 
 Tool for comparing two MFILEs and outputting significant differences in numerical values.
 
 ### Usage
 ```bash
-python process/io/mfile_comparison.py [-f path/to/first_MFILE.DAT path/to/second_MFILE.DAT] [-s] [--acc] [--verbose]
+python process/core/io/mfile_comparison.py [-f path/to/first_MFILE.DAT path/to/second_MFILE.DAT] [-s] [--acc] [--verbose]
 ```
 ### Options
 | Argument     | Description                                   |
@@ -43,15 +43,15 @@ Outputs variables and their values which differ significantly between the two MF
 ## CSV Exporter
 
 ```
-process/io/mfile_to_csv.py
+process/core/io/mfile_to_csv.py
 ```
 
-This script reads from a PROCESS MFILE and writes values into a CSV file. The variable list is given in a .json file which is defined by the user; a pre-made one can be found in `process/io/mfile_to_csv_vars.json`.
+This script reads from a PROCESS MFILE and writes values into a CSV file. The variable list is given in a .json file which is defined by the user; a pre-made one can be found in `process/core/io/mfile_to_csv_vars.json`.
 
 ### Usage
 
 ```bash
-python process/io/mfile_to_csv.py [-h] [-f path/to/MFILE] [-v path/to/variable_list.json]
+python process/core/io/mfile_to_csv.py [-h] [-f path/to/MFILE] [-v path/to/variable_list.json]
 ```
 ### Options
 | Argument         | Description                           |
@@ -67,14 +67,14 @@ A `.csv` file will be saved to the directory of the input file.
 
 ## PROCESS Summary
 
-> `process/io/plot_proc.py`
+> `process/core/io/plot_proc.py`
 
 A utility to produce a summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles, TF coil layout and turn structure, density, bootstrap and L-H scaling comparisons, plasma and PF coil current over the pulse duration plot and first wall geometry and pumping plot.
 
 ### Usage
 
 ```bash
-python process/io/plot_proc.py [-h] [-f path/to/MFILE.DAT] [-s] [-n N] [-d] [-c COLOUR] [-o OUTPUT-FORMAT]
+python process/core/io/plot_proc.py [-h] [-f path/to/MFILE.DAT] [-s] [-n N] [-d] [-c COLOUR] [-o OUTPUT-FORMAT]
 ```
 
 If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the current directory.
@@ -194,7 +194,7 @@ for the reference year of the inflation used.
 
 ## Sankey Diagram
 
-> `process/io/plot_sankey.py`
+> `process/core/io/plot_sankey.py`
 
 The power flows of the power plant will be extracted from MFILE.DAT and used to populate a
 Sankey diagram. The diagram will start from the initial fusion power and show the inputs
@@ -204,7 +204,7 @@ heating back into the fusion power.
 ### Usage
 
 ```
-python process/io/plot_sankey.py [-h] [-e END] [-m path/to/MFILE.DAT]
+python process/core/io/plot_sankey.py [-h] [-e END] [-m path/to/MFILE.DAT]
 ```
 If no `-m` argument is provided it assumes a file named `MFILE.DAT` is in the current directory.
 
@@ -233,7 +233,7 @@ N.B. Rounding to whole integer can cause errors of $\pm$1 between adjacent arrow
 
 ## TF Stress distribution plots
 
-> `process/io/plot_stress_tf.py`
+> `process/core/io/plot_stress_tf.py`
 
 Program to plot stress, strain and displacement radial distributions at the inboard mid-plane section of the TF coil.
 This program uses the `SIG_TF.json` file created by running `PROCESS`, that stores stress distributions of the VMCON point and stores the output
@@ -250,7 +250,7 @@ done in the near future.
 ### Usage
 
 ```bash
-python process/io/plot_stress_tf.py [-h] [-f path/to/SIG_TF.json] [-p [PLOT_SELEC]] [-sf [SAVE_FORMAT]] [-as [AXIS_FONT_SIZE]]
+python process/core/io/plot_stress_tf.py [-h] [-f path/to/SIG_TF.json] [-p [PLOT_SELEC]] [-sf [SAVE_FORMAT]] [-as [AXIS_FONT_SIZE]]
 ```
 
 ### Option
@@ -271,7 +271,7 @@ python process/io/plot_stress_tf.py [-h] [-f path/to/SIG_TF.json] [-p [PLOT_SELE
 
 ## Turn output into input
 
-`process/io/write_new_in_dat.py`
+`process/core/io/write_new_in_dat.py`
 
 This program creates a new `IN.DAT` file with the initial values of all the iteration variables 
 replaced by their results in `OUT.DAT`, if that output is a feasible solution.
@@ -285,7 +285,7 @@ the new starting values. There is also an option to select the first feasible so
 
 ### Usage
 ```
-python process/io/write_new_in_dat.py [-h] [-f path/to/MFILE.DAT] [-i path/to/IN.DAT] [-o path/to/new_IN.DAT]
+python process/core/io/write_new_in_dat.py [-h] [-f path/to/MFILE.DAT] [-i path/to/IN.DAT] [-o path/to/new_IN.DAT]
 ```
 
 ### Options
@@ -304,7 +304,7 @@ python process/io/write_new_in_dat.py [-h] [-f path/to/MFILE.DAT] [-i path/to/IN
 
 ## Plot scan results
 
-`process/io/plot_scans.py`
+`process/core/io/plot_scans.py`
 
 This utility plots the output of a PROCESS scan. PROCESS must be run on a scan-enabled input file to create an MFILE on which `plot_scans.py` can be run. More than one input file can be used and the different files will be plotted on the same graph.
 
@@ -315,7 +315,7 @@ This utility plots the output of a PROCESS scan. PROCESS must be run on a scan-e
 ### Usage
 
 ```
-python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv output vars] [-yv2 2nd axis output variable] [-o [path/to/directory]] [-out] [-sf [SAVE_FORMAT]] [-as [AXIS_FONT_SIZE]] [-ln LABEL_NAME] [-2DC] [-stc]
+python process/core/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv output vars] [-yv2 2nd axis output variable] [-o [path/to/directory]] [-out] [-sf [SAVE_FORMAT]] [-as [AXIS_FONT_SIZE]] [-ln LABEL_NAME] [-2DC] [-stc]
 ```
 
 ### Options
@@ -338,7 +338,7 @@ python process/io/plot_scans.py [-h] [-f path/to/MFILE(s)] [-yv output vars] [-y
 
 ## Plot a pie chart of the cost breakdown
 
-`process/io/costs_pie.py`
+`process/core/io/costs_pie.py`
 
 This utility plots the cost breakdown as a pie chart giving each component as a percentage. This allows for the most expensive areas to be easily identified. For the 1990 cost model, an additional plot showing how direct, indirect and contingency costs contribute to the overall budget is shown.
 
@@ -348,7 +348,7 @@ This utility plots the cost breakdown as a pie chart giving each component as a 
 
 ### Usage
 ```
-python process/io/costs_pie.py [-h] [-f path/to/MFILE] [-s]
+python process/core/io/costs_pie.py [-h] [-f path/to/MFILE] [-s]
 ```
 If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the current directory.
 
@@ -363,7 +363,7 @@ If no `-f` argument is provided it assumes a file named `MFILE.DAT` is in the cu
 
 ## Plot a bar chart of the cost breakdown
 
-`process/io/costs_bar.py`
+`process/core/io/costs_bar.py`
 
 This utility plots the cost breakdown as a bar chart giving the cost of each component. This allows for the most expensive areas to be easily identified. For the 1990 cost model, an additional plot showing how the direct, indirect and contingency costs contribute to the overall budget is shown. Multiple MFILEs can be specified allowing for different PROCESS runs to be compared on the same plot. An inflation factor can be specified using the `-inf` argument, which multiplies all the costs by that value.
 
@@ -373,7 +373,7 @@ This utility plots the cost breakdown as a bar chart giving the cost of each com
 
 ### Usage
 ```
-python process/io/costs_bar.py [-h] [-f f [f ...]] [-s] [-inf INF]
+python process/core/io/costs_bar.py [-h] [-f f [f ...]] [-s] [-inf INF]
 ```
 
 ### Options
