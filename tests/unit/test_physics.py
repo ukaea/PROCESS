@@ -24,6 +24,7 @@ from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
+    PlasmaExhaust,
     PlasmaInductance,
     calculate_current_coefficient_hastie,
     calculate_plasma_current_peng,
@@ -56,6 +57,7 @@ def physics():
         ),
         PlasmaBeta(),
         PlasmaInductance(),
+        PlasmaExhaust(),
     )
 
 
