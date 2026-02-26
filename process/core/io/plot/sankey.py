@@ -2,12 +2,15 @@
 Library of Sankey plotting routine
 """
 
+from collections.abc import Iterable
+from copy import deepcopy
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.sankey import Sankey
 from numpy import sqrt
+from scipy.optimize import minimize
 
 from process.core.io.mfile.mfile import MFile
 
@@ -363,483 +366,199 @@ def plotly(sankey_dict, m_file):
         "margin": {"l": 40, "r": 40, "t": 40, "b": 40},
     })
     # Strip 'MFILE' from the filename for the HTML output
-    html_output_path = m_file.with_stem(
-        m_file.stem.replace("MFILE", "plotly_sankey")
-    ).with_suffix(".html")
+    html_output_path = (
+        Path(m_file)
+        .with_stem(Path(m_file).stem.replace("MFILE", "plotly_sankey"))
+        .with_suffix(".html")
+    )
     fig.write_html(str(html_output_path))
     print(f"Interactive Sankey diagram saved to {html_output_path}")
     return fig
 
 
-def plot_full_sankey(
-    mfilename="MFILE.DAT",
-):  # Plots the power flow from PROCESS as a Sankey Diagram
-    # ------------------------------- Pulling values from the MFILE -------------------------------
+class SuperSankey(Sankey):
+    """
+    Originally from Bluemira
 
-    m_file = MFile(mfilename)
-    variables = [
-        # Used in [PLASMA]
-        "p_fusion_total_mw",  # Fusion Power (MW)
-        "p_hcd_injected_total_mw",  # Total auxiliary injected Power (MW)
-        "p_plasma_ohmic_mw",  # Ohmic heating Power (MW)
-        "p_neutron_total_mw",  # Neutron fusion power (MW)
-        "p_non_alpha_charged_mw",  # Non-alpha charged particle power (MW)
-        "p_alpha_total_mw",  # Alpha power (MW)
-        # Used in [NEUTRONICS]
-        "p_blkt_multiplication_mw",  # Energy multiplication in blanket (MW)
-        "p_blkt_nuclear_heat_total_mw",  # Total Nuclear heating in the blanket (MW)
-        "p_div_nuclear_heat_total_mw",  # Nuclear heating in the divertor (MW)
-        "p_fw_nuclear_heat_total_mw",  # Nuclear heating in the first wall (MW)
-        "p_shld_nuclear_heat_mw",  # Nuclear heating in the shield (MW)
-        "p_tf_nuclear_heat_mw",  # Nuclear heating in the TF coil (MW)
-        # Used in [CHARGEP]
-        "p_plasma_separatrix_mw",  # Charged particle power deposited on divertor (MW)
-        "f_p_alpha_plasma_deposited",  # Fraction of alpha power deposited in plasma
-        "p_plasma_rad_mw",  # Total radiation Power (MW)
-        # Used in [RADIATION]
-        "f_ster_div_single"
-        "f_a_fw_outboard_hcd"
-        # Used in [DIVERTOR]
-        "p_div_coolant_pump_mw",  # Divertor coolant pumping power
-        "p_div_heat_deposited_mw",  # Total power extracted from divertor (MW)
-        # Used in [FIRST_WALL]
-        "p_fw_blkt_heat_deposited_mw",  # Power extracted blanket & FW (MW)
-        "p_fw_blkt_coolant_pump_mw",  # Pump Power in FW and blanket (MW)
-    ]
-    (
-        p_fusion_total_mw,
-        p_hcd_injected_total_mw,
-        p_plasma_ohmic_mw,
-        p_neutron_total_mw,
-        p_non_alpha_charged_mw,
-        p_alpha_total_mw,
-        p_blkt_multiplication_mw,
-        p_blkt_nuclear_heat_total_mw,
-        p_div_nuclear_heat_total_mw,
-        p_fw_nuclear_heat_total_mw,
-        p_shld_nuclear_heat_mw,
-        p_tf_nuclear_heat_mw,
-        p_plasma_separatrix_mw,
-        f_p_alpha_plasma_deposited,
-        p_plasma_rad_mw,
-        f_ster_div_single,
-        f_a_fw_outboard_hcd,
-        p_div_coolant_pump_mw,
-        p_div_heat_deposited_mw,
-        p_fw_blkt_heat_deposited_mw,
-        p_fw_blkt_coolant_pump_mw,
-    ) = m_file.get_variables(*variables, scan=-1)
+    A sub-class of the Sankey diagram class from matplotlib, which is capable
+    of connecting two blocks, instead of just one. This is done using a cute
+    sledgehammer approach, using optimisation. Basically, the Sankey object
+    is quite complex, and it makes it very hard to calculate the exact lengths
+    required to connect two sub-diagrams.
+    """
 
-    # Used in [PLASMA]
-    # Total Power in plasma (MW)
-    totalplasma = p_fusion_total_mw + p_hcd_injected_total_mw + p_plasma_ohmic_mw
-    # The ohmic and charged particle power (MW)
-    pcharohmmw = p_non_alpha_charged_mw + p_plasma_ohmic_mw
-    # Alpha particle and HC&D power (MW)
-    palpinjmw = p_alpha_total_mw + p_hcd_injected_total_mw
+    def add(
+        self,
+        patchlabel: str = "",
+        flows: Iterable[float] | None = None,
+        orientations: Iterable[float] | None = None,
+        labels: str | list[str | None] | None = "",
+        trunklength: float = 1.0,
+        pathlengths: float | list[float | None] = 0.25,
+        prior: int | None = None,
+        future: int | None = None,
+        connect: tuple[int, int] | list[tuple[int, int]] = (0, 0),
+        rotation: float = 0,
+        **kwargs,
+    ):
+        __doc__ = super().__doc__  # noqa: F841, A001
+        # Here we first check if the "add" method has received arguments that
+        # the Sankey class can't handle.
+        if future is None:
+            # There is only one connection, Sankey knows how to do this
+            super().add(
+                patchlabel,
+                flows,
+                orientations,
+                labels,
+                trunklength,
+                pathlengths,
+                prior,
+                connect,
+                rotation,
+                **kwargs,
+            )
+        else:
+            # There are two connections, use new method
+            self._double_connect(
+                patchlabel,
+                flows,
+                orientations,
+                labels,
+                trunklength,
+                pathlengths,
+                prior,
+                future,
+                connect,
+                rotation,
+                **kwargs,
+            )
 
-    # Used in [NEUTRONICS]
-    # External nuclear heating in blanket (MW)
-    pnucemblkt = p_blkt_nuclear_heat_total_mw - p_blkt_multiplication_mw
+    def _double_connect(
+        self,
+        patchlabel: str,
+        flows: Iterable[float] | None,
+        orientations: Iterable[float] | None,
+        labels: str | list[str | None] | None,
+        trunklength: float,
+        pathlengths: list[float],
+        prior: int | None,
+        future: int | None,
+        connect: list[tuple[int, int]],
+        rotation: float,
+        **kwargs,
+    ):
+        """
+        Handles two connections in a Sankey diagram.
 
-    # Used in [CHARGEP]
-    # Alpha particles hitting first wall (MW)
-    p_fw_alpha_mw = p_alpha_total_mw * (1 - f_p_alpha_plasma_deposited)
+        Parameters
+        ----------
+        future:
+            The index of the diagram to connect to
+        connect:
+            The list of (int, int) connections.
+            - connect[0] is a (prior, this) tuple indexing the flow of the
+            prior diagram and the flow of this diagram to connect.
+            - connect[1] is a (future, this) tuple indexing of the flow of the
+            future diagram and the flow of this diagram to connect.
 
-    # Used in [RADIATION]
-    # Radiation deposited on the divertor (MW)
-    p_div_rad_total_mw = p_plasma_rad_mw * f_ster_div_single
-    # Radiation deposited on HCD (MW)
-    p_fw_hcd_rad_total_mw = p_plasma_rad_mw * f_a_fw_outboard_hcd
-    # Radiation deposited in the FW (MW)
-    p_fw_rad_total_mw = p_plasma_rad_mw - p_div_rad_total_mw - p_fw_hcd_rad_total_mw
+        See Also
+        --------
+        Sankey.add for a full description of the various args and kwargs
 
-    # Used in [FIRST_WALL]
-    htpmwblkt = p_fw_blkt_coolant_pump_mw / 2  # Pump power in blanket (MW)
-    htpmwfw = p_fw_blkt_coolant_pump_mw / 2  # Pump power in FW (MW)
-    p_fw_heat_deposited_mw = (
-        p_fw_blkt_heat_deposited_mw - htpmwblkt - p_blkt_nuclear_heat_total_mw
-    )  # Power extracted 1st wall (MW)
-    # porbitloss = m_file.data['porbitloss'].get_scan(-1) # Charged P. on FW before thermalising
-    # p_beam_shine_through_mw = m_file.data['p_beam_shine_through_mw'].get_scan(-1) # Injection shine-through to 1st wall
-
-    # Initialising x and y variables for adjusting 'Plasma Heating' branch tip location
-    y_adj_1 = 0
-    y_adj_2 = 0
-
-    # Loop 1 to get 'Plasma Heating' branch tip coords; loop 2 to match 'PLASMA' branch
-    for _ in range(2):
-        # The visual settings of the Sankey Plot
-        plt.rcParams.update({"font.size": 9})
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1, xticks=[], yticks=[], frameon=False)
-        sankey = Sankey(
-            ax=ax, unit="MW", margin=0.5, format="%1.0f", scale=1.0 / (totalplasma)
+        """
+        # Get the optimum deltas
+        dx, dy = self._opt_connect(
+            flows, orientations, prior, future, connect, trunklength=trunklength
+        )
+        # Replace
+        pathlengths[0] = dx
+        pathlengths[-1] = dy
+        self.add(
+            patchlabel=patchlabel,
+            labels=labels,
+            flows=flows,
+            orientations=orientations,
+            prior=prior,
+            connect=connect[0],
+            trunklength=trunklength,
+            pathlengths=pathlengths,
+            rotation=rotation,
+            facecolor=kwargs.get("facecolor"),
         )
 
-        # --------------------------------------- PLASMA - 0 --------------------------------------
+    def _opt_connect(
+        self,
+        flows: Iterable[float] | None,
+        orient: Iterable[float] | None,
+        prior: int | None,
+        future: int | None,
+        connect: list[tuple[int, int]],
+        trunklength: float,
+    ) -> tuple[float, float]:
+        """
+        Optimises the second connection between Sankey diagrams.
 
-        # Fusion, Injected, Ohmic, -Charged P.-Ohmic, -Alphas-Injected, -Neutrons
-        plasma = [
-            p_fusion_total_mw,
-            p_hcd_injected_total_mw,
-            p_plasma_ohmic_mw,
-            -pcharohmmw,
-            -palpinjmw,
-            -p_neutron_total_mw,
-        ]
-        sankey.add(
-            flows=plasma,
-            # [left(in), down(in), down(in), up(out), up(out), right(out)]
-            orientations=[0, -1, -1, 1, 1, 0],
-            trunklength=0.5,
-            pathlengths=[0.5, 0.25, 0.25, 0.75, 0.25 + 0.5 * y_adj_1, 0.0],
-            # labels=["Fusion","H&CD", "Ohmic", "Charged P.", "Alphas", "Neutrons"])
-            labels=[None, None, None, None, None, None],
-        )
+        Returns
+        -------
+        dx:
+            The x pathlength to use to match the tips
+        dy:
+            The y pathlength to use to match the tips
 
-        # Check to see if the fusion components balance
-        if _ == 0 and sqrt(sum(plasma) ** 2) > 0.1:
-            print("FUSION power balance =", sum(plasma), "\n")
-            exit()
+        Notes
+        -----
+        This is because Sankey is very complicated, and makes it hard to work
+        out the positions of things prior to adding them to the diagrams.
+        Because we are bizarrely using a plotting function as a minimisation
+        objective, we need to make sure we clean the plot on every call.
+        """
+        future_index, this_f_index = connect[1]
+        labels = [None] * len(flows)
+        pathlengths = [0.0] * len(flows)
 
-        if _ == 1:
-            print(sankey.finish()[0])
-        if _ == 1:
-            print(sankey.finish()[0].patch)
-        if _ == 1:
-            print(type(sankey.finish()[0].patch))
+        # Make a local copy of the Sankey.extent attribute to override any
+        # modifications during optimisation
+        extent = deepcopy(self.extent)
 
-        # ------------------------------------- NEUTRONICS - 1 ------------------------------------
+        def minimise_dxdy(x_opt):
+            """
+            Minimisation function for the spatial difference between the target
+            tip and the actual tip.
 
-        # Neutrons, -Divertor, -1st wall, -Shield, -TF coils, -Blanket+Energy Mult.
-        neutrons = [
-            p_neutron_total_mw,
-            -p_div_nuclear_heat_total_mw,
-            -p_fw_nuclear_heat_total_mw,
-            -p_shld_nuclear_heat_mw,
-            -p_tf_nuclear_heat_mw,
-            -pnucemblkt,
-        ]
-        sankey.add(
-            flows=neutrons,
-            # left(in), up(out), up(out), up(out), up(out), right(out)
-            orientations=[0, 1, 1, 1, 1, 0],
-            trunklength=0.5,
-            pathlengths=[0.3, 0.25, 0.25, 0.25, 0.25, 0.15],
-            prior=0,  # PLASMA
-            connect=(5, 0),  # Neutrons
-            # labels=["Neutrons", "Divertor", "1st Wall", "Shield", "TF coils", "Blanket"])
-            labels=[None, None, None, None, None, None],
-        )
+            Parameters
+            ----------
+            x_opt: array_like
+                The vector of d_x, d_y delta-vectors to match tip positions
 
-        # Checking to see if the neutronics components balance
-        if _ == 0 and sqrt(sum(neutrons) ** 2) > 0.1:
-            print("NEUTRONS power balance =", sum(neutrons), "\n")
-            exit()
+            Returns
+            -------
+            delta: float
+                The sum of the absolute differences
+            """
+            tip2 = self.diagrams[future].tips[future_index]
+            pathlengths[0] = x_opt[0]
+            pathlengths[-1] = x_opt[1]
+            self.add(
+                trunklength=trunklength,
+                pathlengths=pathlengths,
+                flows=flows,
+                prior=prior,
+                connect=connect[0],
+                orientations=orient,
+                labels=labels,
+                facecolor="#00000000",
+            )
+            new_tip = self.diagrams[-1].tips[this_f_index].copy()
+            # Clean sankey plot
+            self.diagrams.pop()
+            self.ax.patches[-1].remove()
+            return np.sum(np.abs(tip2 - new_tip))
 
-        # Check to see if connections balance
-        if _ == 0:
-            check = sankey.finish()
-            diff1_1 = check[0].flows[5] + check[1].flows[0]
-            plt.close()
-            if diff1_1 > 0.1:
-                print("Neutrons [0][5] and [1][0] difference =", diff1_1)
-                exit()
-
-        # --------------------------------- CHARGED PARTICLES - 2 ---------------------------------
-
-        # Charge P.+Ohmic, Alpha+Injected, -Divertor, -1st Wall, -Photons
-        chargedp = [
-            pcharohmmw,
-            palpinjmw,
-            -p_plasma_separatrix_mw,
-            -p_fw_alpha_mw,
-            -p_plasma_rad_mw,
-        ]
-        sankey.add(
-            flows=chargedp,
-            # down(in), down(in), up(out), up(out), right(out)
-            orientations=[-1, -1, 1, -1, 0],
-            trunklength=0.5,
-            pathlengths=[0.75, 0.25 + 0.5 * y_adj_1, 0.25, 0.25, 0.25],
-            prior=0,  # PLASMA
-            connect=(3, 0),  # Charged P.+Ohmic
-            # labels=["Charged P.", "Alphas", "Divertor", "1st Wall", "Photons"])
-            labels=[None, None, None, None, None],
-        )
-
-        if _ == 0 and sqrt(sum(chargedp) ** 2) > 0.1:
-            print("CHARGEDP power balance =", sum(chargedp))
-            exit()
-
-        # Check to see if connections balance
-        if _ == 0:
-            check = sankey.finish()
-            diff2_1 = check[0].flows[3] + check[2].flows[0]
-            diff2_2 = check[0].flows[4] + check[2].flows[1]
-            plt.close()
-            if diff2_1 > 0.1:
-                print("Charged P.+Ohmic [0][3] and [2][0] difference =", diff2_1)
-                exit()
-            if diff2_2 > 0.1:
-                print("Alphas+Injected [0][4] and [2][1] difference =", diff2_2)
-                exit()
-
-        # ------------------------------------- RADIATION - 3 -------------------------------------
-
-        # Photons, -1st Wall, -Divertor, -H&CD
-        radiation = [
-            p_plasma_rad_mw,
-            -p_fw_rad_total_mw,
-            -p_div_rad_total_mw,
-            -p_fw_hcd_rad_total_mw,
-        ]
-        sankey.add(
-            flows=radiation,
-            # right(in), up(out), up(out), up(out)
-            orientations=[
-                0,
-                -1,
-                1,
-                1,
-            ],
-            trunklength=0.5,
-            pathlengths=[0.25, 0.25, 0.25, 0.25],
-            prior=2,  # CHARGED PARTICLES
-            connect=(4, 0),  # Charged P.
-            # labels=["Photons", "1st Wall", "Divertor", "H&CD"])
-            labels=[None, None, None, None],
-        )
-
-        if _ == 0 and sqrt(sum(radiation) ** 2) > 0.1:
-            print("RADIATION power balance =", sum(radiation))
-            exit()
-
-        if _ == 0:
-            check = sankey.finish()
-            diff3_1 = check[2].flows[4] + check[3].flows[0]
-            plt.close()
-            if diff3_1 > 0.1:
-                print("Photons [2][4] and [3][0] difference =", diff3_1)
-                exit()
-
-        # -------------------------------------- DIVERTOR - 4 -------------------------------------
-
-        # Charged P., Neutrons, Photons, Coolant Pumping, Total Divertor
-        divertor = [
-            p_plasma_separatrix_mw,
-            p_div_nuclear_heat_total_mw,
-            p_div_rad_total_mw,
-            p_div_coolant_pump_mw,
-            -p_div_heat_deposited_mw,
-        ]
-        sankey.add(
-            flows=divertor,
-            # down(in), up(in), down(in), up(in), right(out)
-            orientations=[-1, -1, -1, -1, 0],
-            trunklength=0.5,
-            pathlengths=[0.25, 0.25, 0.25, 0.25 - 0.5 * y_adj_2, 0.25],
-            prior=2,  # CHARGED PARTICLES
-            connect=(2, 0),  # Charged P. --> None
-            # labels=["Charged P.", "Neutrons", "Photons", "Coolant Pumping", "Divertor Power"])
-            labels=[None, None, None, None, None],
-        )
-
-        if _ == 0 and sqrt(sum(divertor) ** 2) > 0.1:
-            print("DIVERTOR power balance =", sum(divertor))
-            exit()
-
-        if _ == 0:
-            check = sankey.finish()
-            diff4_1 = check[1].flows[1] + check[4].flows[0]
-            diff4_2 = check[2].flows[3] + check[4].flows[3]
-            plt.close()
-            if diff4_1 > 0.1:
-                print("Neutrons [1][1] and [4][0] difference =", diff4_1)
-                exit()
-            if diff4_2 > 0.1:
-                print("Charged P. [2][3] and [4][3] difference =", diff4_2)
-                exit()
-
-        # ---------------------------------------- 1ST WALL - 5 ---------------------------------------
-
-        # Alphas, Neutrons, Photons, Coolant Pumping, Total 1st Wall
-        first_wall = [
-            p_fw_alpha_mw,
-            p_fw_nuclear_heat_total_mw,
-            p_fw_rad_total_mw,
-            htpmwfw,
-            -p_fw_heat_deposited_mw,
-        ]
-        sankey.add(
-            flows=first_wall,
-            orientations=[0, -1, 1, -1, 0],
-            trunklength=0.5,
-            pathlengths=[0.25, 0.25, 0.25, 0.25, 0.25],
-            prior=1,
-            connect=(2, 1),
-            # labels=["Alphas", "Neutrons", "Radiation", "Coolant Pumping", "FW Power"])
-            labels=[None, None, None, None, None],
-        )
-
-        if _ == 0 and sqrt(sum(first_wall) ** 2) > 0.1:
-            print("FIRST_WALL power balance =", sum(first_wall))
-            exit()
-        """# -------------------------------------- BLANKET - 6 --------------------------------------
-
-        # Blanket - Energy mult., Energy Mult., pumping power, Blanket
-        BLANKET = [pnucemblkt, p_blkt_multiplication_mw, htpmwblkt, -p_blkt_heat_deposited_mw]
-        sankey.add(flows=BLANKET,
-                   # left(in), down(in), down(in), right(out)
-                   orientations=[0, -1, -1, 0],
-                   trunklength=0.5,
-                   pathlengths=[0.25, 0.25, 0.25, 0.25],
-                   #prior=1, # NEUTRONICS
-                   #connect=(1, 0), # Blanket --> None
-                   labels=[None, "Energy Mult.", "Coolant Pumping", "Blanket"])
-
-        # Checking to see if the blanket components balance
-        if _ == 0:
-            if sqrt(sum(BLANKET)**2) > 0.1:
-                print("BLANKET power balance =", sum(BLANKET), "\n")
-                exit()
-
-        # Check to see if connections balance
-        if _ == 0:
-            check = sankey.finish()
-            diff = check[1].flows[1]+check[3].flows[0]
-            if diff > 0.1:
-                print("The difference between [1][1] and [3][0] =", diff)
-                exit()"""
-        """# --------------------------------------- SHIELD - 7 --------------------------------------
-
-        # Neutrons, Coolant pumping, Total power
-        SHIELD = [p_shld_nuclear_heat_mw, p_shld_coolant_pump_mw, -p_shld_heat_deposited_mw]
-        sankey.add(flows=SHIELD,
-                   orientations=[-1, -1, 1],
-                   trunklength=0.5,
-                   pathlengths=[0.25, 0.25 ,0.25],
-                   #prior=2,
-                   #connect=(5, 0),
-                   labels=["Neutrons", "Coolant Pumping", "Shield Power"])
-
-        if _ == 0:
-            if sqrt(sum(SHIELD)**2) > 0.1:
-                print("SHIELD power balance =", sum(SHIELD))
-                exit()"""
-        """# ------------------------------------ PRIMARY HEAT - 7 -----------------------------------
-
-        # 1st wall, Blanket, Shield, Divertor, Total thermal power
-        HEAT = [p_fw_heat_deposited_mw, p_blkt_heat_deposited_mw, p_shld_heat_deposited_mw, p_div_heat_deposited_mw, -p_plant_primary_heat_mw]
-        sankey.add(flows=HEAT,
-                   orientations=[1, 0, -1, 1, 0],
-                   trunklength=0.5,
-                   pathlengths=[0.25, 0.25 ,0.25, 0.25, 0.25],
-                   #prior=2,
-                   #connect=(5, 0),
-                   labels=["1st Wall", "Blanket", "Shield", "Divertor", "Total Power"])
-
-        if _ == 0:
-            if sqrt(sum(HEAT)**2) > 0.1:
-                print("PRIMARY power balance =", sum(HEAT))
-                exit()"""
-        """# ------------------------------- ELECTRICITY CONVERSION - 8 ------------------------------
-
-        # Total thermal, Elctricty conversion loss, Gross Electricity
-        GROSS = [p_plant_primary_heat_mw, -pelectloss, -p_plant_electric_gross_mw]
-        sankey.add(flows=GROSS,
-                   orientations=[0, -1, 0],
-                   trunklength=0.5,
-                   pathlengths=[0.25, 0.25 ,0.25],
-                   #prior=2,
-                   #connect=(5, 0),
-                   labels=["Thermal Power", "Conversion loss", "Gross Electricity"])
-
-        if _ == 0:
-            if sqrt(sum(GROSS)**2) > 0.1:
-                print("GROSS power balance =", sum(GROSS))
-                exit()"""
-
-        # ------------------------------ RECIRCULATED ELECTRICITY - 9 -----------------------------
-        """# ---------------------------------------- HCD - 11 ----------------------------------------
-
-        # HCD loss + injected, -injected, -HCD loss
-        HCD = [p_hcd_electric_loss_mw+p_hcd_injected_total_mw, -p_hcd_injected_total_mw, -p_hcd_electric_loss_mw]
-        assert(sum(HCD)**2 < 0.5)
-        sankey.add(flows=HCD,
-                   # [down(in), up(out), down(out)]
-                   orientations=[-1, 1, -1],
-                   #prior=0, # PLASMA
-                   #connect=(1, 1), # H&CD --> None
-                   trunklength=0.5,
-                   pathlengths=[0.25, 0.25, 0.25],
-                   labels=['H&CD power', None, 'H&CD loss'])"""
-
-        fig.tight_layout()
-
-        if _ == 0:
-            plt.close()
-
-        # Matching PLASMA and CHARGED PARTICLES 'Alphas' branches
-        # x_adj_1, y_adj_1 = diagrams[2].tips[1] - diagrams[0].tips[4]
-        # Matching CHARGED PARTICLES and DIVERTOR 'Charged P.' branches
-        # x_adj_2, y_adj_2 = diagrams[4].tips[3] - diagrams[2].tips[3]
-        # x_adj_3, y_adj_3 = diagrams[3].tips[3] - diagrams[4].tips[0]
-
-    # --------------------------------------- Label Positioning ---------------------------------------
-
-    # Munipulating the positioning of the branch labels
-    # -ve to left and down; +ve to right and up
-    # pos[0] = x-axis; pos[1] = y-axis
-    """for d in diagrams:
-        y = 0
-        for t in d.texts:
-            pos = tuple(np.ndarray.tolist(d.tips[y]))
-            t.set_position(pos)
-            if t == diagrams[0].texts[0]: # Fusion Power
-                t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.2,pos[1]))
-            if t == diagrams[0].texts[1]: # H&CD
-                t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*(p_hcd_injected_total_mw/totalplasma)-0.05,pos[1]))
-            if t == diagrams[0].texts[2]: # Ohmic
-                t.set_horizontalalignment('left')
-                t.set_position((pos[0]+0.5*(p_plasma_ohmic_mw/totalplasma)+0.05,pos[1]))
-            if t == diagrams[0].texts[3]: # Neutrons
-                t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.2,pos[1]))
-            if t == diagrams[0].texts[4]: # Charged Particles
-                t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*(p_non_alpha_charged_mw/totalplasma)-0.05,pos[1]))
-            if t == diagrams[0].texts[5]: # Alphas
-                t.set_horizontalalignment('left')
-                t.set_position((pos[0]+0.5*(p_alpha_total_mw/totalplasma)+0.05,pos[1]-0.1))
-            if t == diagrams[1].texts[0]: # H&CD power
-                t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*((p_hcd_electric_loss_mw+p_hcd_injected_total_mw)/totalplasma)-0.05,pos[1]))
-            if t == diagrams[1].texts[2]: # H&CD losses
-                t.set_horizontalalignment('left')
-                t.set_position((pos[0]+(p_hcd_electric_loss_mw/totalplasma)+0.05,pos[1]))
-            if t == diagrams[2].texts[1]: # Energy Multiplication
-                t.set_horizontalalignment('center')
-                t.set_position((pos[0],pos[1]-0.2))
-            if t == diagrams[2].texts[2]: # Blanket
-                t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.2,pos[1]))
-            if t == diagrams[2].texts[3]: # Divertor
-                t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*(p_div_nuclear_heat_total_mw/totalplasma)-0.1,pos[1]))
-            if t == diagrams[3].texts[2]: # Rad.FW
-                t.set_horizontalalignment('right')
-                t.set_position((pos[0],pos[1]+0.5*(p_fw_rad_total_mw/totalplasma)+0.15))
-            if t == diagrams[3].texts[3]: # Charged P.
-                t.set_horizontalalignment('left')
-                t.set_position((pos[0]+0.5*((p_plasma_separatrix_mw+p_fw_alpha_mw)/totalplasma)+0.1,pos[1]+0.05))
-            if t == diagrams[3].texts[4]: # Rad. Div.
-                t.set_horizontalalignment('right')
-                t.set_position((pos[0]-0.5*(p_div_rad_total_mw/totalplasma)-0.1,pos[1]))
-            y += 1"""
+        x0 = np.zeros(2)
+        result = minimize(minimise_dxdy, x0, method="SLSQP")
+        self.extent = extent  # Finish clean-up
+        return result.x
 
 
 def plot_sankey(
@@ -975,189 +694,190 @@ def plot_sankey(
         + p_cp_coolant_pump_elec_mw
     )
 
-    # Initialising x and y variables for adjusting 'Plasma Heating' branch tip location
-    x_adj, y_adj = 0, 0
+    # -------------------------------- Visual Settings ------------------------------------
 
-    # Loop 1 to get 'Plasma Heating' branch tip coords; loop 2 to match 'PLASMA' branch
-    for _ in range(2):
-        # ------------------------------------ Visual Settings ------------------------------------
+    plt.rcParams.update({"font.size": 9})  # Setting font size to 9
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1, xticks=[], yticks=[], frameon=False)
+    sankey = SuperSankey(
+        ax=ax, unit="MW", margin=0.0, format="%1.0f", scale=1.0 / (totalplasma)
+    )
+    trunk = 0.7
+    len1 = 0.5
+    len2 = 0.8
+    # --------------------------------------- PLASMA - 0 --------------------------------------
 
-        plt.rcParams.update({"font.size": 9})  # Setting font size to 9
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1, xticks=[], yticks=[], frameon=False)
-        sankey = Sankey(
-            ax=ax, unit="MW", margin=0.0, format="%1.0f", scale=1.0 / (totalplasma)
+    # Fusion power, Injected power + ohmic power, - total plasma power
+    plasma = [
+        p_fusion_total_mw,
+        p_hcd_injected_total_mw + p_plasma_ohmic_mw,
+        -totalplasma,
+    ]
+    sankey.add(
+        flows=plasma,
+        orientations=[0, -1, 0],  # [right(in), down(in), right(out)]
+        pathlengths=[
+            len1,
+            len2,
+            -0.1 + len1,
+        ],  # 'Plasma Heating' adjust
+        trunklength=trunk,
+        labels=["Fusion Power", None, "Plasma"],
+    )
+
+    # --------------------------------- ENERGY DEPOSITION - 1 ---------------------------------
+
+    # Plasma power, - divertor deposited power, - blanket deposited power
+    deposition = [totalplasma, -totalblktetc - totaldivetc - totalcpetc]
+    # Check if difference >2 between plasma and divertor + blanket
+    if sqrt(sum(deposition) ** 2) > 2:
+        print(
+            "\ncomponents power balance difference =",
+            totalplasma - totaldivetc - totalblktetc - totalcpetc,
         )
+    sankey.add(
+        flows=deposition,
+        orientations=[0, 0],  # [right(in), up(in), right(out)]
+        prior=0,  # PLASMA
+        connect=(2, 0),  # Plasma --> None
+        pathlengths=[0.2, len2],  # 'Plasma Heating' adjust
+        trunklength=trunk,
+        labels=[None, "Blanket/etc."],
+    )
 
-        # --------------------------------------- PLASMA - 0 --------------------------------------
+    # -------------------------------------- BLANKET - 2 --------------------------------------
 
-        # Fusion power, Injected power + ohmic power, - total plasma power
-        plasma = [
-            p_fusion_total_mw,
-            p_hcd_injected_total_mw + p_plasma_ohmic_mw,
-            -totalplasma,
+    # Blanket deposited power, blanket energy multiplication, - primary heat
+    blanketsetc = [
+        totalblktetc + totaldivetc + totalcpetc,
+        p_blkt_multiplication_mw,
+        -pthermmw_p - totaldivetc - totalcpetc - p_shld_nuclear_heat_mw,
+    ]
+    # Check if difference >2 between primary heat and blanket + blanket multiplication
+    if sqrt(sum(blanketsetc) ** 2) > 2:
+        print(
+            "blankets etc. power balance",
+            totalblktetc + p_blkt_multiplication_mw,
+            -pthermmw_p - p_shld_nuclear_heat_mw,
+        )
+    sankey.add(
+        flows=blanketsetc,
+        orientations=[0, -1, 0],  # [right(in), down(in), right(out)]
+        prior=1,  # DEPOSITION
+        connect=(1, 0),  # Blanket/etc. --> None
+        pathlengths=[len1, len1 / 2, 0.0],
+        trunklength=trunk,
+        labels=[None, "Energy Mult.", "Primary Heat"],
+    )
+
+    # ------------------------------------- HEAT LOSS - 3 -------------------------------------
+
+    # Primary heat, -Gross electric power, -difference (loss)
+    primary = [
+        pthermmw_p + totaldivetc + totalcpetc + p_shld_nuclear_heat_mw,
+        -p_plant_electric_gross_mw,
+        -pthermmw_p
+        + p_plant_electric_gross_mw
+        - totaldivetc
+        - totalcpetc
+        - p_shld_nuclear_heat_mw,
+    ]
+    sankey.add(
+        flows=primary,
+        orientations=[0, -1, 0],  # [right(in), down(out), right(out)]
+        prior=2,  # BLANKETSETC
+        connect=(2, 0),  # Primary Heat --> None
+        pathlengths=[len2 / 4, len2, len1 / 2],
+        trunklength=trunk,
+        labels=[None, "Gross electric", "Losses"],
+    )
+
+    # ------------------------------------ ELECTRICITY - 4 ------------------------------------
+
+    # If net electric is +ve or -ve changes the flow organisation
+    if p_plant_electric_net_mw >= 0:  # net electric is +ve
+        # Gross electric power, -net electric power, -recirculated power
+        net = [
+            p_plant_electric_gross_mw,
+            -p_plant_electric_net_mw,
+            -p_plant_electric_recirc_mw,
         ]
         sankey.add(
-            flows=plasma,
-            orientations=[0, -1, 0],  # [right(in), down(in), right(out)]
-            pathlengths=[
-                0.5,
-                0.8 + 0.5 * y_adj,
-                -0.1 + 0.5 * x_adj,
-            ],  # 'Plasma Heating' adjust
-            labels=["Fusion Power", None, "Plasma"],
+            flows=net,
+            orientations=[0, 0, -1],  # [down(in), down(out), left(out)]
+            prior=3,  # PRIMARY
+            connect=(1, 0),  # Gross electric --> None
+            pathlengths=[len2 / 4, len1 / 2, 3 * len1],
+            trunklength=trunk,
+            labels=[None, "Net elec.", "Recirc. Power"],
         )
-
-        # --------------------------------- ENERGY DEPOSITION - 1 ---------------------------------
-
-        # Plasma power, - divertor deposited power, - blanket deposited power
-        deposition = [totalplasma, -totalblktetc - totaldivetc - totalcpetc]
-        # Check if difference >2 between plasma and divertor + blanket
-        if _ == 1 and sqrt(sum(deposition) ** 2) > 2:
-            print(
-                "\ncomponents power balance difference =",
-                totalplasma - totaldivetc - totalblktetc - totalcpetc,
-            )
-        sankey.add(
-            flows=deposition,
-            orientations=[0, 0],  # [right(in), up(in), right(out)]
-            prior=0,  # PLASMA
-            connect=(2, 0),  # Plasma --> None
-            pathlengths=[0.2, 0.2 + 0.5 * x_adj],  # 'Plasma Heating' adjust
-            labels=[None, "Blanket/etc."],
-        )
-
-        # -------------------------------------- BLANKET - 2 --------------------------------------
-
-        # Blanket deposited power, blanket energy multiplication, - primary heat
-        blanketsetc = [
-            totalblktetc + totaldivetc + totalcpetc,
-            p_blkt_multiplication_mw,
-            -pthermmw_p - totaldivetc - totalcpetc - p_shld_nuclear_heat_mw,
-        ]
-        # Check if difference >2 between primary heat and blanket + blanket multiplication
-        if _ == 1 and sqrt(sum(blanketsetc) ** 2) > 2:
-            print(
-                "blankets etc. power balance",
-                totalblktetc + p_blkt_multiplication_mw,
-                -pthermmw_p - p_shld_nuclear_heat_mw,
-            )
-        sankey.add(
-            flows=blanketsetc,
-            orientations=[0, -1, 0],  # [right(in), down(in), right(out)]
-            prior=1,  # DEPOSITION
-            connect=(1, 0),  # Blanket/etc. --> None
-            pathlengths=[0.5, 0.25, 0.0],
-            labels=[None, "Energy Mult.", "Primary Heat"],
-        )
-
-        # ------------------------------------- HEAT LOSS - 3 -------------------------------------
-
-        # Primary heat, -Gross electric power, -difference (loss)
-        primary = [
-            pthermmw_p + totaldivetc + totalcpetc + p_shld_nuclear_heat_mw,
-            -p_plant_electric_gross_mw,
-            -pthermmw_p
-            + p_plant_electric_gross_mw
-            - totaldivetc
-            - totalcpetc
-            - p_shld_nuclear_heat_mw,
+    elif p_plant_electric_net_mw < 0:  # net electric is -ve
+        # Gross electric power, -net electric power, -recirculated power
+        net = [
+            -p_plant_electric_net_mw,
+            p_plant_electric_gross_mw,
+            -p_plant_electric_recirc_mw,
         ]
         sankey.add(
-            flows=primary,
-            orientations=[0, -1, 0],  # [right(in), down(out), right(out)]
-            prior=2,  # BLANKETSETC
-            connect=(2, 0),  # Primary Heat --> None
-            pathlengths=[0.2, 0.7, 0.4],
-            labels=[None, "Gross electric", "Losses"],
+            flows=net,
+            orientations=[0, -1, 0],  # [left(in), down(in), left(out)]
+            prior=3,  # PRIMARY
+            connect=(1, 1),  # Gross electric --> None
+            pathlengths=[len1 / 2, 2 * len1, len1],
+            trunklength=trunk,
+            labels=["Net elec.", None, "Recirc. Power"],
         )
 
-        # ------------------------------------ ELECTRICITY - 4 ------------------------------------
+    # -------------------------------- RECIRCULATING POWER - 5 --------------------------------
 
-        # If net electric is +ve or -ve changes the flow organisation
-        if p_plant_electric_net_mw >= 0:  # net electric is +ve
-            # Gross electric power, -net electric power, -recirculated power
-            net = [
-                p_plant_electric_gross_mw,
-                -p_plant_electric_net_mw,
-                -p_plant_electric_recirc_mw,
-            ]
-            sankey.add(
-                flows=net,
-                orientations=[0, 0, -1],  # [down(in), down(out), left(out)]
-                prior=3,  # PRIMARY
-                connect=(1, 0),  # Gross electric --> None
-                pathlengths=[0.1, 0.25, 1.5],
-                labels=[None, "Net elec.", "Recirc. Power"],
-            )
-        elif p_plant_electric_net_mw < 0:  # net electric is -ve
-            # Gross electric power, -net electric power, -recirculated power
-            net = [
-                -p_plant_electric_net_mw,
-                p_plant_electric_gross_mw,
-                -p_plant_electric_recirc_mw,
-            ]
-            sankey.add(
-                flows=net,
-                orientations=[0, -1, 0],  # [left(in), down(in), left(out)]
-                prior=3,  # PRIMARY
-                connect=(1, 1),  # Gross electric --> None
-                pathlengths=[0.25, 1.0, 0.5],
-                labels=["Net elec.", None, "Recirc. Power"],
-            )
-
-        # -------------------------------- RECIRCULATING POWER - 5 --------------------------------
-
-        # Recirculated power, -Core Systems, -Heating System
-        recirc = [
+    # Recirculated power, -Core Systems, -Heating System
+    recirc = [
+        p_plant_electric_recirc_mw,
+        -p_plant_core_systems_elec_mw - p_coolant_pump_elec_total_mw,
+        -p_hcd_electric_total_mw + p_cp_coolant_pump_elec_mw,
+    ]
+    # Check if difference >2 between recirculated power and the output sum
+    if sum(recirc) ** 2 > 2:
+        print(
+            "Recirc. Power Balance",
             p_plant_electric_recirc_mw,
-            -p_plant_core_systems_elec_mw - p_coolant_pump_elec_total_mw,
-            -p_hcd_electric_total_mw + p_cp_coolant_pump_elec_mw,
-        ]
-        # Check if difference >2 between recirculated power and the output sum
-        if sum(recirc) ** 2 > 2:
-            print(
-                "Recirc. Power Balance",
-                p_plant_electric_recirc_mw,
-                -p_plant_core_systems_elec_mw
-                + p_cp_coolant_pump_elec_mw
-                - p_hcd_electric_total_mw
-                - p_coolant_pump_elec_total_mw,
-            )
-        sankey.add(
-            flows=recirc,
-            orientations=[0, 1, 0],  # [left(in), down(out), left(out)]
-            prior=4,  # NET
-            connect=(2, 0),  # Recirc. Power --> None
-            pathlengths=[0.1, 0.25, 0.8],
-            labels=[None, "Core Systems", "Heating System"],
+            -p_plant_core_systems_elec_mw
+            + p_cp_coolant_pump_elec_mw
+            - p_hcd_electric_total_mw
+            - p_coolant_pump_elec_total_mw,
         )
+    sankey.add(
+        flows=recirc,
+        orientations=[0, 1, 0],  # [left(in), down(out), left(out)]
+        prior=4,  # NET
+        connect=(2, 0),  # Recirc. Power --> None
+        pathlengths=[0.1, len1 / 2, len2],
+        trunklength=trunk * 1.2,
+        labels=[None, "Core Systems", "Heating System"],
+    )
 
-        # --------------------------------------- LOSSES - 6 --------------------------------------
+    # --------------------------------------- LOSSES - 6 --------------------------------------
 
-        # HCD: Heating system, -Plasma heating, -losses
-        hcd = [
-            p_hcd_electric_total_mw - p_cp_coolant_pump_elec_mw,
-            -p_hcd_injected_total_mw,
-            -p_hcd_electric_total_mw
-            + p_hcd_injected_total_mw
-            + p_cp_coolant_pump_elec_mw,
-        ]
-        sankey.add(
-            flows=hcd,
-            orientations=[0, -1, 0],  # [left(in), up(out), left(out)]
-            prior=5,  # RECIRC
-            connect=(2, 0),  # Heating System --> None
-            pathlengths=[0.5, 0.8 + 0.5 * y_adj, 0.4],  # 'Plasma Heating' adjust
-            labels=[None, "Plasma Heating", "Losses"],
-        )
+    # HCD: Heating system, -Plasma heating, -losses
+    hcd = [
+        p_hcd_electric_total_mw - p_cp_coolant_pump_elec_mw,
+        -p_hcd_injected_total_mw,
+        -p_hcd_electric_total_mw + p_hcd_injected_total_mw + p_cp_coolant_pump_elec_mw,
+    ]
+    sankey.add(
+        flows=hcd,
+        orientations=[0, 0, -1],  # [left(in), up(out), left(out)]
+        prior=5,  # RECIRC
+        future=0,
+        connect=[(2, 0), (1, 2)],  # Heating System --> None
+        pathlengths=[None, len1, None],  # 'Plasma Heating' adjust
+        trunklength=trunk,
+        labels=[None, "Losses", "Plasma Heating"],
+    )
 
-        # Collecting Sankey diagram and applying a condensed layout
-        diagrams = sankey.finish()
-        fig.tight_layout()
-
-        # Difference in branch tip locations for 'Plasma Heating'
-        x_adj, y_adj = diagrams[0].tips[1] - diagrams[6].tips[1]
+    # Collecting Sankey diagram and applying a condensed layout
+    diagrams = sankey.finish()
+    fig.tight_layout()
 
     # --------------------------------------- Label Positioning ---------------------------------------
 
@@ -1225,13 +945,13 @@ def plot_sankey(
                         pos[0] + 0.15,
                         pos[1] + 0.5 * (p_hcd_electric_total_mw / totalplasma) + 0.2,
                     ))
-            if t == diagrams[6].texts[1]:  # Plasma Heating
+            if t == diagrams[6].texts[2]:  # Plasma Heating
                 t.set_horizontalalignment("left")
                 t.set_position((
                     pos[0] + 0.5 * (p_hcd_injected_total_mw / totalplasma) + 0.1,
                     pos[1] - 0.05,
                 ))
-            if t == diagrams[6].texts[2]:  # Losses
+            if t == diagrams[6].texts[1]:  # Losses
                 t.set_horizontalalignment("left")
                 t.set_position((
                     pos[0] + 0.15,
