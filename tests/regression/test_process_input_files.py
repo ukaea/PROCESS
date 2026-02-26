@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 from regression_test_assets import RegressionTestAssetCollector
 
-from process.io.mfile import MFile
+from process.core.io.mfile import MFile
 from process.main import main
 
 logger = logging.getLogger(__name__)

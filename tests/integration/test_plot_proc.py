@@ -2,7 +2,7 @@
 
 from shutil import copy
 
-from process.io import plot_proc
+from process.core.io import plot_proc
 
 
 def test_input_file(temp_data, mfile_name):

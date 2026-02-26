@@ -2,7 +2,7 @@ import numpy as np
 from numba import njit
 
 import process.data_structure as data_structure
-from process import constants
+from process.core import constants
 
 
 class CsFatigue:

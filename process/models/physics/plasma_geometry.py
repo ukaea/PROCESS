@@ -2,7 +2,7 @@ import logging
 
 import numpy as np
 
-from process import constants
+from process.core import constants
 from process.data_structure import build_variables, physics_variables
 
 logger = logging.getLogger(__name__)

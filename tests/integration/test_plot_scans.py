@@ -1,6 +1,6 @@
 """Integration tests for plot_scans.py."""
 
-from process.io import plot_scans
+from process.core.io import plot_scans
 
 
 def test_plot_scans(temp_data, scan_mfile_name):

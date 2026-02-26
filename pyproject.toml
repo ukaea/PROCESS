@@ -84,7 +84,7 @@ process = "process.main:main"
 [tool.hatch.build.targets.wheel]
 artifacts = [
   "process/data/lz_non_corona_14_elements/*.dat",
-  "process/io/*.png"
+  "process/core/io/*.png"
 ]
 
 [tool.hatch.envs.default]

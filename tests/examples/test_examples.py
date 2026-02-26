@@ -29,7 +29,7 @@ def examples_temp_data(tmp_path_factory):
         ignore=ignore_patterns("*.md", "*log", "__pycache__", "*.ipynb*"),
     )
     csv_json_path = (
-        Path(__file__).parent.parent.parent / "process/io/mfile_to_csv_vars.json"
+        Path(__file__).parent.parent.parent / "process/core/io/mfile_to_csv_vars.json"
     )
     copy(csv_json_path, tmp_path)
 
@@ -59,7 +59,7 @@ def test_introductory_examples(examples_temp_data):
     with (
         testbook(example_notebook_location, execute=False, timeout=600) as tb,
         tb.patch(
-            "process.repository._PROCESS_ROOT",
+            "process.core.repository._PROCESS_ROOT",
             new=example_notebook_location.parent.resolve().as_posix(),
         ),
     ):
@@ -95,7 +95,7 @@ def test_scan(examples_temp_data):
     with (
         testbook(scan_notebook_location, execute=False, timeout=1200) as tb,
         tb.patch(
-            "process.repository._PROCESS_ROOT",
+            "process.core.repository._PROCESS_ROOT",
             new=scan_notebook_location.parent.resolve().as_posix(),
         ),
     ):
@@ -116,7 +116,7 @@ def test_no_assertion_solutions(name, examples_temp_data):
     with (
         testbook(notebook_location, execute=False, timeout=600) as tb,
         tb.patch(
-            "process.repository._PROCESS_ROOT",
+            "process.core.repository._PROCESS_ROOT",
             new=notebook_location.parent.resolve().as_posix(),
         ),
     ):

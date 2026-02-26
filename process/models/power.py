@@ -4,8 +4,9 @@ import math
 import numpy as np
 import scipy as sp
 
-from process import constants
-from process import process_output as po
+from process.core import constants
+from process.core import process_output as po
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -23,7 +24,6 @@ from process.data_structure import (
     tfcoil_variables,
     times_variables,
 )
-from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 

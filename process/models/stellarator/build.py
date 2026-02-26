@@ -1,4 +1,4 @@
-from process import process_output as po
+from process.core import process_output as po
 from process.data_structure import (
     build_variables,
     first_wall_variables,

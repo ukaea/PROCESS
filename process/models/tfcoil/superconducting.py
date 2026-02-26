@@ -6,8 +6,9 @@ from scipy import optimize
 
 import process.models.superconductors as superconductors
 import process.models.tfcoil.quench as quench
-from process import constants
-from process import process_output as po
+from process.core import constants
+from process.core import process_output as po
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -20,7 +21,6 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.exceptions import ProcessValueError
 from process.models.tfcoil.base import TFCoil
 
 logger = logging.getLogger(__name__)

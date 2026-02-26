@@ -1,6 +1,6 @@
 """Integration tests for mfile_to_csv.py."""
 
-from process.io import mfile_to_csv
+from process.core.io import mfile_to_csv
 
 
 def test_mfile_to_csv(temp_data, mfile_name):

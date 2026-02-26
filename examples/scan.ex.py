@@ -33,8 +33,8 @@
 # - `sweep`: array of values for the scanned variable to take; one for each run. Should be of length `isweep`
 
 # %% slideshow={"slide_type": "subslide"}
+from process.core.repository import get_process_root
 from process.main import SingleRun
-from process.repository import get_process_root
 
 data_dir = get_process_root() / "../examples/data/"
 input_name = data_dir / "scan_example_file_IN.DAT"
@@ -48,7 +48,7 @@ single_run.run()
 
 # %% slideshow={"slide_type": "subslide"}
 # %matplotlib inline
-from process.io import plot_scans
+from process.core.io import plot_scans
 
 # Define working directory relative to project dir and input file name
 mfile_name = data_dir / "scan_example_file_MFILE.DAT"

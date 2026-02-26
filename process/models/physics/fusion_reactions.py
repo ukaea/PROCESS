@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import numpy as np
 from scipy import integrate
 
-from process import constants
+from process.core import constants
 from process.data_structure import physics_variables
 from process.models.physics.plasma_profiles import PlasmaProfile
 

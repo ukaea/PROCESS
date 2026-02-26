@@ -2,9 +2,9 @@ import contextlib
 
 import pytest
 
-from process.constraints import ConstraintManager
-from process.exceptions import ProcessValueError
-from process.init import init_all_module_vars
+from process.core.exceptions import ProcessValueError
+from process.core.init import init_all_module_vars
+from process.core.solver.constraints import ConstraintManager
 
 
 @pytest.mark.parametrize(

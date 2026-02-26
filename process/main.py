@@ -46,19 +46,19 @@ from pathlib import Path
 from typing import Any, Protocol
 
 import process
+import process.core.init as init
 import process.data_structure as data_structure
-import process.init as init
-from process import constants
-from process.io import (
+from process.core import constants
+from process.core.io import (
     mfile,
     plot_plotly_sankey,
     plot_proc,
 )
-from process.io import obsolete_vars as ov
+from process.core.io import obsolete_vars as ov
 
 # For VaryRun
-from process.io.process_config import RunProcessConfig
-from process.io.process_funcs import (
+from process.core.io.process_config import RunProcessConfig
+from process.core.io.process_funcs import (
     check_input_error,
     get_neqns_itervars,
     get_variable_range,
@@ -67,7 +67,9 @@ from process.io.process_funcs import (
     process_warnings,
     vary_iteration_variables,
 )
-from process.log import logging_model_handler, show_errors
+from process.core.log import logging_model_handler, show_errors
+from process.core.process_output import OutputFileManager, oheadr
+from process.core.scan import Scan
 from process.models.availability import Availability
 from process.models.blankets.blanket_library import BlanketLibrary
 from process.models.blankets.dcll import DCLL
@@ -114,8 +116,6 @@ from process.models.tfcoil.resistive import (
 from process.models.tfcoil.superconducting import SuperconductingTFCoil
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
-from process.process_output import OutputFileManager, oheadr
-from process.scan import Scan
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 

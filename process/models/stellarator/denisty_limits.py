@@ -3,12 +3,12 @@ from copy import copy
 
 import numpy as np
 
-from process import process_output as po
+from process.core import process_output as po
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     physics_variables,
     stellarator_variables,
 )
-from process.exceptions import ProcessValueError
 
 logger = logging.getLogger(__name__)
 

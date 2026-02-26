@@ -38,12 +38,12 @@
 # %load_ext autoreload
 # %autoreload 2
 
-from process.io.plot_solutions import (
+from process.core.io.plot_solutions import (
     RunMetadata,
     plot_mfile_solutions,
     plot_mfile_solutions_constraints,
 )
-from process.repository import get_process_root
+from process.core.repository import get_process_root
 
 # %% [markdown]
 # ## Plot single solution

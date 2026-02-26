@@ -3,10 +3,10 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+import process.core.init as init
+import process.core.input as process_input
 import process.data_structure as data_structure
-import process.init as init
-import process.input as process_input
-from process.exceptions import ProcessValidationError
+from process.core.exceptions import ProcessValidationError
 
 
 def _create_input_file(directory, content: str):

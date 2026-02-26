@@ -2,9 +2,10 @@ import logging
 
 import numpy as np
 
-from process import constants
-from process import process_output as po
-from process.coolprop_interface import FluidProperties
+from process.core import constants
+from process.core import process_output as po
+from process.core.coolprop_interface import FluidProperties
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -13,7 +14,6 @@ from process.data_structure import (
     fwbs_variables,
     physics_variables,
 )
-from process.exceptions import ProcessValueError
 from process.models.blankets.blanket_library import (
     BlanketLibrary,
     dshellarea,

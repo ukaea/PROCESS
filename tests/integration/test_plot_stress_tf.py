@@ -1,6 +1,6 @@
 """Integration tests for plot_stress_tf.py."""
 
-from process.io import plot_stress_tf
+from process.core.io import plot_stress_tf
 
 
 def test_input_file(temp_data_cwd):
