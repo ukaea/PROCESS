@@ -1,7 +1,12 @@
+import json
 import shutil
+import tempfile
 from pathlib import Path
 
-from process.core.io.mfile_utils import get_mfile_initial_ixc_values
+import pytest
+
+from process.core.io.mfile import MFile
+from process.core.io.mfile.utils import get_mfile_initial_ixc_values
 
 
 def test_get_mfile_initial_ixc_values(input_file, tmp_path):
@@ -24,3 +29,28 @@ def test_get_mfile_initial_ixc_values(input_file, tmp_path):
     # A default not provided in the MFile
     assert iteration_variable_names[-4] == "f_nd_alpha_electron"
     assert iteration_variable_values[-4] == 0.1
+
+
+@pytest.fixture(scope="module")
+def read_mfile():
+    """Read-in MFILE for testing.
+
+    :return: parsed mfile
+    :rtype: mfile2dict.MFILEParser
+    """
+    data_path = Path(__file__).parent / "data"
+
+    return MFile(data_path / "large_tokamak_MFILE.DAT")
+
+
+@pytest.fixture(scope="module")
+def temporary_dir():
+    return tempfile.mkdtemp()
+
+
+def test_write_json(read_mfile, temporary_dir):
+    json_f = Path(temporary_dir, "2017_baseline.json")
+    read_mfile.to_json(json_f)
+    assert json_f.is_file()
+    with open(json_f) as file:
+        assert json.load(file)

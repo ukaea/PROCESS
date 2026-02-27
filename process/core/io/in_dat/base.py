@@ -1823,8 +1823,3 @@ class StructuredInputData:
             value = var_dict.get("value")
 
         return value
-
-
-if __name__ == "__main__":
-    i = InDat(filename="IN.DAT")
-    i.write_in_dat()

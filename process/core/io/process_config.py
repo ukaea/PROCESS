@@ -15,8 +15,8 @@ from typing import ClassVar
 
 from numpy.random import default_rng
 
-from process.core.io.in_dat import InDat
-from process.core.io.mfile import MFile
+from process.core.io.in_dat.base import InDat
+from process.core.io.mfile.mfile import MFile
 from process.core.io.process_funcs import (
     check_in_dat,
     set_variable_in_indat,

@@ -1,8 +1,8 @@
 import re
 from pathlib import Path
 
-import process.core.solver.iteration_variables as iteration_variables
-import process.data_structure as data_structure
+from process import data_structure
+from process.core.solver import iteration_variables
 from process.main import SingleRun
 
 

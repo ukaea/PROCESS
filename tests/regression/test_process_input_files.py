@@ -9,14 +9,16 @@ by changes made off of main.
 import logging
 import re
 import shutil
+import traceback
 from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
+from click.testing import CliRunner
 from regression_test_assets import RegressionTestAssetCollector
 
 from process.core.io.mfile import MFile
-from process.main import main
+from process.main import process_cli
 
 logger = logging.getLogger(__name__)
 
@@ -60,12 +62,14 @@ class RegressionTestScenario:
         logger.info(
             f"Running regression test {self.scenario_name} using input file {self.input_file}"
         )
-        try:
-            main(["--input", str(self.input_file), "--solver", solver])
-        except Exception as e:
+        runner = CliRunner()
+        result = runner.invoke(
+            process_cli, ["--input", str(self.input_file), "--solver", solver]
+        )
+        if result.exit_code != 0:
             raise RuntimeError(
-                f"\033[1;101m An error occured while running PROCESS: {e}\033[0m"
-            ) from e
+                f"An error occured while running PROCESS: {result.exception}{''.join(traceback.format_exception(result.exc_info[1]))}"
+            )
 
     def compare(
         self, reference_mfile_location: Path, tolerance: float, opt_params_only: bool

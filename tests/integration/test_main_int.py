@@ -3,10 +3,10 @@
 import json
 from shutil import copy
 
-from process import main
+from process.main import process_cli
 
 
-def test_single_run(temp_data):
+def test_single_run(temp_data, cli_runner):
     """Test a SingleRun Process run with CLI args.
 
     This will just check that an exception isn't thrown.
@@ -18,10 +18,10 @@ def test_single_run(temp_data):
     input_file = str(input_path.resolve())
 
     # Run a SingleRun with an explicitly defined IN.DAT
-    main.main(args=["-i", input_file])
+    cli_runner(process_cli, args=["-i", input_file])
 
 
-def test_single_run_cwd(temp_data_cwd):
+def test_single_run_cwd(temp_data_cwd, cli_runner):
     """SingleRun without defining an input file.
 
     Try running without a defined input file (no args). This will look for
@@ -32,10 +32,11 @@ def test_single_run_cwd(temp_data_cwd):
     # Copy input file to make a file named "IN.DAT"
     copy(temp_data_cwd / "large_tokamak_IN.DAT", temp_data_cwd / "IN.DAT")
     # Run: args must be emptylist; if None, argparse tries to use CLI args
-    main.main(args=[])
+    result = cli_runner(process_cli, args=["-i", "IN.DAT"])
+    assert result.exit_code == 0
 
 
-def test_vary_run(temp_data):
+def test_vary_run(temp_data, cli_runner):
     """Test a VaryRun with CLI args.
 
     :param temp_data: temporary dir containing data files
@@ -45,22 +46,23 @@ def test_vary_run(temp_data):
     # Chosen because it's the only VaryRun in the test suite, and is fast
     conf_path = temp_data / "run_process.conf"
     conf_file = str(conf_path.resolve())
-
     # Run a VaryRun with an explicit conf file name
-    main.main(args=["--varyiterparams", "--varyiterparamsconfig", conf_file])
+    cli_runner(
+        process_cli, args=["--varyiterparams", "--varyiterparamsconfig", conf_file]
+    )
 
 
-def test_vary_run_cwd(temp_data_cwd):
+def test_vary_run_cwd(temp_data_cwd, cli_runner):
     """Test VaryRun without explicitly defining the conf file name.
 
     This will look for a run_process.conf in the cwd.
     :param temp_data_cwd: temporary data dir, which is also the cwd
     :type temp_data_cwd: Path
     """
-    main.main(args=["--varyiterparams"])
+    cli_runner(process_cli, args=["--varyiterparams"])
 
 
-def test_plot_proc(temp_data, mfile_name):
+def test_plot_proc(temp_data, mfile_name, cli_runner):
     """Run plot proc via CLI.
 
     Currently, Process needs to run on an input file, then it can run plot_proc
@@ -75,13 +77,13 @@ def test_plot_proc(temp_data, mfile_name):
     input_file_str = str(input_file.resolve())
 
     # Run on input, then plot custom mfile name
-    main.main(args=["-i", input_file_str, "--full-output"])
+    cli_runner(process_cli, args=["-i", input_file_str, "--full-output"])
 
     # Assert a pdf has been created
     assert len(list(temp_data.glob("*.pdf")))
 
 
-def test_single_run_with_mfilejson(temp_data):
+def test_single_run_with_mfilejson(temp_data, cli_runner):
     """Test a SingleRun Process run with CLI args including --mfilejson.
 
     This will check that the process runs without throwing an exception
@@ -98,7 +100,7 @@ def test_single_run_with_mfilejson(temp_data):
     mfile = str(mfile_path.resolve())
 
     # Run a SingleRun with the --mfilejson flag.
-    main.main(args=["-i", input_file, "--mfilejson", "-m", mfile])
+    cli_runner(process_cli, args=["-i", input_file, "--mfilejson", "-m", mfile])
 
     # Assert that 'large_tokamak_eval.MFILE.DAT.json' has been produced in the temp_data directory.
     expected_json = temp_data / "large_tokamak_eval.MFILE.DAT.json"

@@ -2,15 +2,10 @@
 Code to display the cost breakdown as a pie chart
 """
 
-# Imported libraries
-import argparse
-
 import matplotlib.pyplot as plt
 
-import process.core.io.mfile as mf
 
-
-def orig_cost_model(m_file, args):
+def cost_model_1990(m_file, save: bool = False):
     """Plot pie chart for the orginal 1990 cost model.
     Two plots produced: (1) Breakdown of the direct costs and (2) Direct, indirect, etc.
     """
@@ -113,14 +108,14 @@ def orig_cost_model(m_file, args):
     ax2.axis("equal")  # Equal aspect ratio ensures that pie is drawn as a circle.
 
     # Save figures if option selected
-    if args.save:
+    if save:
         fig1.savefig("direct_cost_pie.pdf")
         fig2.savefig("cost_pie.pdf")
     else:
         plt.show()
 
 
-def new_cost_model(m_file, args):
+def cost_model_2014(m_file, save: bool = False):
     """Plot pie chart for the new 2014 cost model."""
     # Read Cost Values
     s09 = m_file.data["s09"].get_scan(-1)  # Buildings
@@ -169,41 +164,7 @@ def new_cost_model(m_file, args):
     ax1.axis("equal")  # Equal aspect ratio ensures that pie is drawn as a circle.
 
     # Save figures if option selected
-    if args.save:
+    if save:
         fig1.savefig("cost_pie.pdf")
     else:
         plt.show()
-
-
-def main(args=None):
-    # Setup command line arguments
-    parser = argparse.ArgumentParser(
-        description="Displays the cost breakdown as a pie chart.  "
-    )
-
-    parser.add_argument(
-        "-f",
-        metavar="MFILE",
-        type=str,
-        default="MFILE.DAT",
-        help="specify the MFILE (default=MFILE.DAT)",
-    )
-
-    parser.add_argument("-s", "--save", help="save figure", action="store_true")
-
-    args = parser.parse_args(args)
-
-    m_file = mf.MFile(args.f)
-
-    # Check which cost model is being used
-    if "c21" in m_file.data:
-        orig_cost_model(m_file, args)
-    elif "s01" in m_file.data:
-        new_cost_model(m_file, args)
-    else:
-        print("ERROR: Cannot identify cost data, check MFILE!")
-
-
-# Main code
-if __name__ == "__main__":
-    main()

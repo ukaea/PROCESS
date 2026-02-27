@@ -1,9 +1,9 @@
 """Integration tests for plot_scans.py."""
 
-from process.core.io import plot_scans
+from process.core.io.plot.cli import plot_scans_cli
 
 
-def test_plot_scans(temp_data, scan_mfile_name):
+def test_plot_scans(temp_data, scan_mfile_name, cli_runner):
     """Run plot_scans script on a scan MFILE.DAT and check for a PDF output.
 
     :param temp_data: temporary data dir
@@ -13,21 +13,21 @@ def test_plot_scans(temp_data, scan_mfile_name):
     """
     mfile = temp_data / scan_mfile_name
 
-    plot_scans.main(
+    cli_runner(
+        plot_scans_cli,
         args=[
-            "-f",
             str(mfile),
             "-yv",
             "p_plant_electric_net_mw",
             "--outputdir",
             str(temp_data),
-        ]
+        ],
     )
 
     assert len(list(temp_data.glob("*.pdf")))
 
 
-def test_plot_scans_stack(temp_data, scan_mfile_name):
+def test_plot_scans_stack(temp_data, scan_mfile_name, cli_runner):
     """Run plot_scans script with stacked plots switch on a scan MFILE.DAT and check for a PDF output.
 
     :param temp_data: temporary data dir
@@ -37,22 +37,22 @@ def test_plot_scans_stack(temp_data, scan_mfile_name):
     """
     mfile = temp_data / scan_mfile_name
 
-    plot_scans.main(
+    cli_runner(
+        plot_scans_cli,
         args=[
-            "-f",
             str(mfile),
             "-yv",
             "p_plant_electric_net_mw b_plasma_toroidal_on_axis rmajor",
             "-stc",
             "--outputdir",
             str(temp_data),
-        ]
+        ],
     )
 
     assert len(list(temp_data.glob("*.pdf")))
 
 
-def test_plot_scans_2d_contour(temp_data, scan_2d_mfile_name):
+def test_plot_scans_2d_contour(temp_data, scan_2d_mfile_name, cli_runner):
     """Run plot_scans script with 2D contour plot switch on a scan MFILE.DAT and check for a PDF output.
 
     :param temp_data: temporary data dir
@@ -62,16 +62,16 @@ def test_plot_scans_2d_contour(temp_data, scan_2d_mfile_name):
     """
     mfile = temp_data / scan_2d_mfile_name
 
-    plot_scans.main(
+    cli_runner(
+        plot_scans_cli,
         args=[
-            "-f",
             str(mfile),
             "-yv",
             "beta_total_vol_avg",
             "-2DC",
             "--outputdir",
             str(temp_data),
-        ]
+        ],
     )
 
     assert len(list(temp_data.glob("*.pdf")))
