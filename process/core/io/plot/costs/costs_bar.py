@@ -10,7 +10,7 @@ from operator import itemgetter
 import matplotlib.pyplot as plt
 import numpy as np
 
-import process.io.mfile.mfile as mf
+import process.core.io.mfile.mfile as mf
 
 
 def _format_fig(ax, fig, label, save, filename, index, inflate, ylabel_suffix, n_mfiles):

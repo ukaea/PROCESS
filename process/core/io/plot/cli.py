@@ -2,16 +2,16 @@ from pathlib import Path
 
 import click
 
-from process.io.plot.plot_proc import setup_plot
-from process.io.plot.plot_scans import plot_scan
-from process.io.plot.plot_stress_tf import plot_stress
-from process.io.plot.sankey import plot_sankey, plot_sankey_plotly
-from process.io.tools import LazyGroup, mfile_arg, mfile_opt, split_callback
+from process.core.io.plot.plot_proc import setup_plot
+from process.core.io.plot.plot_scans import plot_scan
+from process.core.io.plot.plot_stress_tf import plot_stress
+from process.core.io.plot.sankey import plot_sankey, plot_sankey_plotly
+from process.core.io.tools import LazyGroup, mfile_arg, mfile_opt, split_callback
 
 
 @click.group(
     cls=LazyGroup,
-    lazy_subcommands={"costs": "process.io.plot.costs.cli.costs"},
+    lazy_subcommands={"costs": "process.core.io.plot.costs.cli.costs"},
 )
 def plot():
     """Plotting utilities for PROCESS"""

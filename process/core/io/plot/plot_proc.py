@@ -1,11 +1,4 @@
-"""
-
-PROCESS plot_proc using process_io_lib functions and MFILE.DAT
-
-24/11/2021: Global dictionary variables moved within the functions
-            to avoid cyclic dependencies. This is because the dicts
-            generation script imports, and inspects, process.
-"""
+"""PROCESS plot_proc"""
 
 import json
 import os
