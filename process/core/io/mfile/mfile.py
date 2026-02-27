@@ -382,7 +382,11 @@ class MFile:
         )
 
     def to_json(
-        self, filename, keys_to_write=None, scan: int | None = -1, verbose=False
+        self,
+        filename: Path | None = None,
+        keys_to_write=None,
+        scan: int | None = -1,
+        verbose=False,
     ):
         """Write MFILE object to JSON file
 
@@ -399,7 +403,11 @@ class MFile:
             json.dump(self.to_dict(keys_to_write, scan, verbose), fp, indent=4)
 
     def to_toml(
-        self, filename, keys_to_write=None, scan: int | None = -1, verbose=False
+        self,
+        filename: Path | None = None,
+        keys_to_write=None,
+        scan: int | None = -1,
+        verbose=False,
     ):
         """Write MFILE object to JSON file
 

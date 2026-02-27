@@ -1,9 +1,9 @@
 """Integration tests for plot_sankey.py."""
 
-from process.core.io import plot_sankey
+from process.core.io.plot.cli import sankey
 
 
-def test_plot_sankey(temp_data_cwd, mfile_name):
+def test_plot_sankey(temp_data_cwd, mfile_name, cli_runner):
     """Assert plot_sankey can make a pdf in the cwd from an mfile.
 
     :param temp_data_cwd: temp path to data dir, which is also the cwd
@@ -13,7 +13,7 @@ def test_plot_sankey(temp_data_cwd, mfile_name):
     """
     mfile_path = temp_data_cwd / mfile_name
     mfile_path_str = str(mfile_path)
-    plot_sankey.main(args=["-m", mfile_path_str])
+    cli_runner(sankey, args=["-f", mfile_path_str])
 
     # Assert a pdf has been created
     assert len(list(temp_data_cwd.glob("*.pdf"))) > 0

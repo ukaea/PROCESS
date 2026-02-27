@@ -61,7 +61,7 @@ def sankey(mfile, format_):
     "-o",
     "--outputdir",
     default=Path.cwd(),
-    type=click.Path(),
+    type=click.Path(path_type=Path),
     help="Output directory for plots, defaults to current working directory.",
 )
 @click.option(
@@ -176,7 +176,7 @@ def sankey(mfile, format_):
 @click.option(
     "-2DC",
     "--two-dimensional-contour",
-    "twoD_contour",
+    "twod_contour",
     is_flag=True,
     help=(
         "Option to plot 2D scans as a coloured contour plot instead of a line plot \n  "
@@ -218,22 +218,22 @@ def plot_scans_cli(
     """Plot optimisation information"""
     return plot_scan(
         mfiles,
-        output_names,
-        output_names2,
+        list(filter(None, output_names)),
+        list(filter(None, output_names2)),
         outputdir,
         term_output,
         save_format,
         axis_font_size,
         axis_tick_size,
         x_axis_percent,
-        list(map(float, x_axis_max)),
-        list(map(float, x_axis_range)),
+        list(map(float, filter(None, x_axis_max))),
+        list(map(float, filter(None, x_axis_range))),
         y_axis_percent,
         y_axis_percent2,
-        list(map(float, y_axis_max)),
-        list(map(float, y_axis2_max)),
-        list(map(float, y_axis_range)),
-        list(map(float, y_axis_range2)),
+        list(map(float, filter(None, y_axis_max))),
+        list(map(float, filter(None, y_axis2_max))),
+        list(map(float, filter(None, y_axis_range))),
+        list(map(float, filter(None, y_axis_range2))),
         label_name,
         twod_contour,
         stack_plots,
