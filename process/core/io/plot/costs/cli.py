@@ -4,7 +4,7 @@ import click
 
 import process.core.io.mfile.mfile as mf
 from process.core.io.plot.costs.costs_bar import cost_comp_1990, cost_comp_2014
-from process.core.io.plot.costs.costs_pie import new_cost_model, orig_cost_model
+from process.core.io.plot.costs.costs_pie import cost_model_1990, cost_model_2014
 from process.core.io.tools import mfile_arg, save
 
 save = save("Save figure")
@@ -25,9 +25,9 @@ def pie_plot(mfiles, save):
 
         # Check which cost model is being used
         if "c21" in m_file.data:
-            orig_cost_model(m_file, save)
+            cost_model_1990(m_file, save)
         elif "s01" in m_file.data:
-            new_cost_model(m_file, save)
+            cost_model_2014(m_file, save)
         else:
             print("ERROR: Cannot identify cost data, check MFILE!")
 
