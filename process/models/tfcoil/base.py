@@ -1944,7 +1944,6 @@ class TFCoil:
                 "(dr_tf_plasma_case)",
             )
 
-            radius = radius / np.cos(np.pi / tfcoil_variables.n_tf_coils)
             po.obuild(
                 self.outfile,
                 "Plasma side case max radius",
@@ -2020,26 +2019,14 @@ class TFCoil:
             )
 
         # Radial build consistency check
-        if (
+        if not (
             abs(radius - build_variables.r_tf_inboard_in - build_variables.dr_tf_inboard)
             < 10.0e0 * np.finfo(float(radius)).eps
         ):
-            po.ocmmnt(self.outfile, "TF coil dimensions are consistent")
-        else:
-            po.ocmmnt(self.outfile, "ERROR: TF coil dimensions are NOT consistent:")
-            po.ovarre(
-                self.outfile,
-                "Radius of plasma-facing side of inner leg SHOULD BE [m]",
-                "",
-                build_variables.r_tf_inboard_in + build_variables.dr_tf_inboard,
+            logger.error(
+                "TF coil dimensions are not consistent. Radius of plasma-facing side of inner leg should be "
+                f"{build_variables.r_tf_inboard_in + build_variables.dr_tf_inboard}m"
             )
-            po.ovarre(
-                self.outfile,
-                "Inboard TF coil radial thickness [m]",
-                "(dr_tf_inboard)",
-                build_variables.dr_tf_inboard,
-            )
-            po.oblnkl(self.outfile)
 
         tf_total_height = (
             build_variables.dh_tf_inner_bore + 2 * build_variables.dr_tf_inboard
