@@ -32,7 +32,7 @@ If no input file name is given as the first argument to the code, it assumes an
 ## Constraints
 
 PROCESS permits a large number of constraint equations, all of which are formulated 
-in the source file `constraint equations.f90`. 
+in the source file `process/core/optimisation/constraints.py`. 
 
 In the input file constraint equations are specified as in the following example:
 
