@@ -39,6 +39,9 @@ def split_callback(ctx: click.Context, param, value: str | None) -> list[str] | 
     return value.split(":") if isinstance(value, str) else value
 
 
+scan_opt = click.option("--scan", type=int, help="Scan to select")
+
+
 ### Taken from click documentation
 class LazyGroup(click.Group):
     def __init__(self, *args, lazy_subcommands=None, **kwargs):

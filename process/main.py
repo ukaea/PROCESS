@@ -47,11 +47,10 @@ from typing import Protocol
 import click
 
 import process  # noqa: F401
-import process.core.init as init
-import process.data_structure as data_structure
-from process.core import constants
+from process import data_structure
+from process.core import constants, init
 from process.core.io import obsolete_vars as ov
-from process.core.io.mfile import mfile
+from process.core.io.mfile import MFile
 from process.core.io.plot import plot_proc
 from process.core.io.plot.sankey import plot_sankey_plotly
 from process.core.io.process_config import RunProcessConfig
@@ -215,9 +214,9 @@ def process_cli(
         if mfilejson:
             # Produce a json file containing mfile output, useful for VVUQ work.
             mfile_path = Path(mfile_path)
-            mfile_data = mfile.MFile(filename=mfile_path)
+            mfile_data = MFile(filename=mfile_path)
             mfile_data.open_mfile()
-            mfile_data.write_to_json()
+            mfile_data.to_json()
 
         if full_output:
             # Run all summary plotting scripts for the output

@@ -1,8 +1,10 @@
+import json
+
 import click
 
+from process.core.io.mfile import MFile
 from process.core.io.mfile.mfile_comparison import compare_mfiles
-from process.core.io.mfile.mfile_to_csv import to_csv
-from process.core.io.tools import mfile_arg, mfile_opt, save
+from process.core.io.tools import mfile_arg, mfile_opt, save, scan_opt
 
 
 @click.group()
@@ -16,17 +18,27 @@ def mfile():
     "-v",
     "--variables",
     type=str,
-    help="Optional list of variables or file with list of variables to extract",
+    help="Optional list of variables or json file with list of variables to extract",
 )
 @click.option(
     "-fmt",
     "--format",
     "format_",
-    type=click.Choice(["json", "csv", "toml", "yaml", "pickle"]),
+    type=click.Choice(["json", "csv", "toml"]),
 )
-def convert(mfile, variables, format_):
+@scan_opt
+@click.option("--verbose", is_flag=True)
+def convert(mfile, variables, format_, scan, verbose):
     """Convert MFile to other formats."""
-    to_csv(mfile, variables)
+    if variables.endswith(".json"):
+        with open(variables) as f:
+            variables = json.load(f)["variables"]
+    else:
+        variables = list(filter(None, variables.replace(" ", ":").split(":")))
+
+    getattr(MFile(mfile), f"to_{format_}")(
+        keys_to_write=variables, scan=scan, verbose=verbose
+    )
 
 
 @mfile.command("compare", no_args_is_help=True)
