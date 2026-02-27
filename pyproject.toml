@@ -18,6 +18,7 @@ requires-python = ">=3.10"
 license = "MIT"
 dynamic = ["version"]
 dependencies = [
+    "click>=8.1.2",
     "numpy>=1.23",
     "scipy>=1.10",
     "cvxpy~=1.7.3",
