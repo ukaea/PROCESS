@@ -9,6 +9,7 @@ by changes made off of main.
 import logging
 import re
 import shutil
+import traceback
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -67,7 +68,7 @@ class RegressionTestScenario:
         )
         if result.exit_code != 0:
             raise RuntimeError(
-                f"\033[1;101m An error occured while running PROCESS: {result.exception}\033[0m"
+                f"An error occured while running PROCESS: {result.exception}{''.join(traceback.format_exception(result.exc_info[1]))}"
             )
 
     def compare(

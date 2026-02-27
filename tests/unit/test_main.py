@@ -32,7 +32,8 @@ def single_run(monkeypatch, input_file, tmp_path):
 
     temp_input_file = shutil.copy(input_file, tmp_path / Path(input_file).name)
 
-    single_run.input_file = str(temp_input_file)
+    single_run.input_file = temp_input_file
+    single_run.filepath = tmp_path
     single_run.models = None
     single_run.set_filenames()
     single_run.initialise()
@@ -58,10 +59,10 @@ def test_set_input(single_run, monkeypatch, input_file):
     :param input_file: fixture for input file
     :type input_file: str
     """
-    expected = input_file
+    expected = Path(input_file)
     # Mock the input file path to isolate this test from the other Process
     # methods (don't have to run Process.parse_args() first to set up this way)
-    monkeypatch.setattr(single_run, "input_file", input_file, raising=False)
+    monkeypatch.setattr(single_run, "input_file", Path(input_file), raising=False)
 
     # Mocking undo trys to set the value as none
 
@@ -82,7 +83,7 @@ def test_set_output(single_run, monkeypatch):
     # Expected output prefix
     expected = "output_prefix"
     # Mock self.filename_prefix on single_run with the value of expected
-    monkeypatch.setattr(single_run, "filename_prefix", expected, raising=False)
+    monkeypatch.setattr(single_run, "filename_prefix", Path(expected), raising=False)
 
     # Mocking undo trys to set the value as none
     # monkeypatch.setattr(data_structure.global_variables, "output_prefix", None)
@@ -114,9 +115,9 @@ def test_set_mfile(single_run, monkeypatch):
     prefix = "test"
     expected = Path(prefix + "MFILE.DAT")
     # Mock filename_prefix and run
-    monkeypatch.setattr(single_run, "filename_prefix", prefix, raising=False)
+    monkeypatch.setattr(single_run, "filename_prefix", Path(prefix), raising=False)
     single_run.set_mfile()
-    assert single_run.mfile_path == expected
+    assert single_run.mfile_path.name == expected.name
 
 
 def test_finish(single_run, monkeypatch):

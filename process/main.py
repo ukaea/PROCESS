@@ -202,25 +202,25 @@ def process_cli(
     GitHub        : https://github.com/ukaea/PROCESS
     """
     if ctx.invoked_subcommand is None:
-        if indat is None:
-            raise click.BadParameter("IN.DAT not specified")
         if varyiterparams:
             runtype = VaryRun(config_file, solver)
+            mfile_path = runtype.config_file.parent / "MFILE.DAT"
+        elif indat is None:
+            raise click.BadParameter("IN.DAT not specified")
         else:
             runtype = SingleRun(indat, solver, update_obsolete=update_obsolete)
+            mfile_path = runtype.mfile_path
 
         runtype.run()
 
         if mfilejson:
             # Produce a json file containing mfile output, useful for VVUQ work.
-            mfile_path = Path(mfile_path)
             mfile_data = MFile(filename=mfile_path)
             mfile_data.open_mfile()
             mfile_data.to_json()
 
         if full_output:
             # Run all summary plotting scripts for the output
-            mfile_path = Path(mfile_path)
             if mfile_path.exists():
                 mfile_str = mfile_path.resolve().as_posix()
                 print(f"Plotting mfile {mfile_str}")
@@ -347,7 +347,12 @@ class SingleRun:
     """Perform a single run of PROCESS."""
 
     def __init__(
-        self, input_file: str, solver: str = "vmcon", *, update_obsolete: bool = False
+        self,
+        input_file: Path | str,
+        solver: str = "vmcon",
+        *,
+        filepath_out: Path | str | None = None,
+        update_obsolete: bool = False,
     ):
         """Read input file and initialise variables.
 
@@ -358,7 +363,8 @@ class SingleRun:
         solver:
             which solver to use, as specified in solver.py
         """
-        self.input_file = input_file
+        self.input_file = Path(input_file)
+        self.filepath = Path(filepath_out or self.input_file.parent)
 
         self.validate_input(update_obsolete)
         self.init_module_vars()
@@ -396,10 +402,10 @@ class SingleRun:
         """Validate and set the input file path."""
         # Check input file ends in "IN.DAT", then save prefix
         # (the part before the IN.DAT)
-        if self.input_file[-6:] != "IN.DAT":
+        if not self.input_file.name.endswith("IN.DAT"):
             raise ValueError("Input filename must end in IN.DAT.")
 
-        self.filename_prefix = self.input_file[:-6]
+        self.filename_prefix = self.filepath / self.input_file.name[:-6]
 
         # Check input file exists (path specified as CLI argument)
         input_path = Path(self.input_file)
@@ -415,19 +421,19 @@ class SingleRun:
             )
 
         # Set the input file in the Fortran
-        data_structure.global_variables.fileprefix = str(self.input_path.resolve())
+        data_structure.global_variables.fileprefix = self.input_path.resolve()
 
     def set_output(self):
         """Set the output file name.
 
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
-        self.output_path = Path(self.filename_prefix + "OUT.DAT")
-        data_structure.global_variables.output_prefix = self.filename_prefix
+        self.output_path = Path(self.filepath, self.filename_prefix.name + "OUT.DAT")
+        data_structure.global_variables.output_prefix = self.filename_prefix.as_posix()
 
     def set_mfile(self):
         """Set the mfile filename."""
-        self.mfile_path = Path(self.filename_prefix + "MFILE.DAT")
+        self.mfile_path = Path(self.filepath, self.filename_prefix.name + "MFILE.DAT")
 
     def initialise(self):
         """Run the init module to call all initialisation routines."""

@@ -6,6 +6,7 @@ import pathlib
 import textwrap
 from dataclasses import dataclass
 from importlib import resources
+from pathlib import Path
 from typing import Any, Literal
 
 import matplotlib as mpl
@@ -16,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.patches import Circle, Rectangle
-from matplotlib.path import Path
+from matplotlib.path import Path as mplPath
 from scipy.interpolate import interp1d
 
 import process.core.constants as constants
@@ -3649,7 +3650,7 @@ def TF_outboard(axis: plt.Axes, item, n_tf_coils, r3, r4, w, facecolor):
     x4 = r3 * np.cos(ang) - dx
     y4 = r3 * np.sin(ang) + dy
     verts = [(x1, y1), (x2, y2), (x3, y3), (x4, y4), (x1, y1)]
-    path = Path(verts, closed=True)
+    path = mplPath(verts, closed=True)
     patch = patches.PathPatch(path, facecolor=facecolor, lw=0)
     axis.add_patch(patch)
 
@@ -3704,7 +3705,7 @@ def arc_fill(axis: plt.Axes, r1, r2, color="pink"):
     verts.extend(list(zip(xs2, ys2, strict=False)))
     endpoint = [(r2, 0)]
     verts.extend(endpoint)
-    path = Path(verts, closed=True)
+    path = mplPath(verts, closed=True)
     patch = patches.PathPatch(path, facecolor=color, lw=0)
     axis.add_patch(patch)
 
@@ -4600,7 +4601,7 @@ def plot_vacuum_vessel_and_divertor(
     upper = radial_build.upper
     lower = radial_build.lower
 
-    i_single_null = mfile.get("i_single_null", scan=scan)
+    i_single_null = int(mfile.get("i_single_null", scan=scan))
     triang_95 = mfile.get("triang95", scan=scan)
     dz_divertor = mfile.get("dz_divertor", scan=scan)
     dz_xpoint_divertor = mfile.get("dz_xpoint_divertor", scan=scan)
@@ -5409,7 +5410,7 @@ def plot_tf_coils(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Litera
             )
 
             for vert in verts:
-                path = Path(vert, closed=True)
+                path = mplPath(vert, closed=True)
                 patch = patches.PathPatch(path, facecolor=colour, lw=0)
                 axis.add_patch(patch)
 
@@ -10242,7 +10243,9 @@ def plot_tf_stress(axis: plt.Axes, mfile: MFile):
     bound_vertical_strain = []
     bound_radial_displacement = []
 
-    with open(mfile.filename.replace("MFILE.DAT", "SIG_TF.json")) as f:
+    with open(
+        mfile.filename.with_name(mfile.filename.name.replace("MFILE.DAT", "SIG_TF.json"))
+    ) as f:
         sig_data = json.load(f)
 
     # Getting the data to be plotted
@@ -13410,11 +13413,11 @@ def setup_plot(
     )
 
     if output_format == "pdf":
-        with bpdf.PdfPages(mfile + "SUMMARY.pdf") as pdf:
+        with bpdf.PdfPages(mfile.with_name(mfile.name + "SUMMARY.pdf")) as pdf:
             for p in pages:
                 pdf.savefig(p)
     elif output_format == "png":
-        folder = pathlib.Path(mfile.removesuffix(".DAT") + "_SUMMARY")
+        folder = pathlib.Path(mfile.with_name(mfile.stem + "_SUMMARY"))
         folder.mkdir(parents=True, exist_ok=True)
         for no, page in enumerate(pages):
             page.savefig(pathlib.Path(folder, f"page{no}.png"), format="png")
