@@ -110,7 +110,7 @@ Switch `ioptimz` should be set to 1 for optimisation mode.
 
 If `ioptimz = 0`, a non-optimisation pass is performed first. Occasionally this provides a feasible set of initial conditions that aids convergence of the optimiser, but it is recommended to use `ioptimz = 1`.
 
-Enable all the relevant consistency equations, and it is advisable to enable the corresponding iterations variables. A number of limit equations (inequality constraints) can also be activated. In optimisation more, the number of iteration variables is unlimited.
+Enable all the relevant consistency equations, and it is advisable to enable the corresponding iterations variables. A number of limit equations (inequality constraints) can also be activated. In optimisation mode, the number of iteration variables is unlimited.
 
 It may still be difficult, if not impossible, to reconcile the fusion power and the net electric power with the required values. This may well be due to the power conversion efficiency values being used.
 
