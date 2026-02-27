@@ -51,7 +51,7 @@ import process.core.init as init
 import process.data_structure as data_structure
 from process.core import constants
 from process.core.io import obsolete_vars as ov
-from process.core.io.mfile.mfile import mfile
+from process.core.io.mfile import mfile
 from process.core.io.plot import plot_proc
 from process.core.io.plot.sankey import plot_sankey_plotly
 from process.core.io.process_config import RunProcessConfig
