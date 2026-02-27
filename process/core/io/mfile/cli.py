@@ -1,8 +1,8 @@
 import click
 
-from process.io.mfile.mfile_comparison import compare_mfiles
-from process.io.mfile.mfile_to_csv import to_csv
-from process.io.tools import mfile_arg, mfile_opt, save
+from process.core.io.mfile.mfile_comparison import compare_mfiles
+from process.core.io.mfile.mfile_to_csv import to_csv
+from process.core.io.tools import mfile_arg, mfile_opt, save
 
 
 @click.group()

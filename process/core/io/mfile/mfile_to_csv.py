@@ -16,14 +16,9 @@ import json
 from collections.abc import Sequence
 from pathlib import Path, PurePath
 
-<<<<<<<< HEAD:process/core/io/mfile_to_csv.py
-# PROCESS-specific modules
-from process.core.io.mfile import MFile
-========
 import numpy as np
->>>>>>>> 71bdc991 (Overhall CI):process/core/io/mfile/mfile_to_csv.py
 
-from process.io.mfile.mfile import MFile
+from process.core.io.mfile.mfile import MFile
 
 default_vars = (
     "minmax",
@@ -149,7 +144,7 @@ def write_to_csv(csv_outfile, output_data=None):
         output_data or [],
         fmt="%.5e",
         delimiter=",",
-        header=", ".join(["Description", "Varname", "Value"]),
+        header="Description, Varname, Value",
         footer="",
         comments="",
     )

@@ -7,8 +7,8 @@ given their values from the output file MFILE.DAT.
 
 import re
 
-import process.io.mfile.mfile as mf
-from process.io.in_dat.base import InDat
+import process.core.io.mfile.mfile as mf
+from process.core.io.in_dat.base import InDat
 
 
 def feasible_point(filename, position: int):

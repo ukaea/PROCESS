@@ -1,11 +1,4 @@
-"""
-
-PROCESS plot_proc using process_io_lib functions and MFILE.DAT
-
-24/11/2021: Global dictionary variables moved within the functions
-            to avoid cyclic dependencies. This is because the dicts
-            generation script imports, and inspects, process.
-"""
+"""PROCESS plot_proc"""
 
 import json
 import os
@@ -2821,7 +2814,9 @@ def plot_main_plasma_information(
     )
 
     # =========================================
-    with resources.path("process.core.io.plot.images", "neutron.png") as neutron_image_path:
+    with resources.path(
+        "process.core.io.plot.images", "neutron.png"
+    ) as neutron_image_path:
         neutron = mpimg.imread(neutron_image_path.open("rb"))
     new_ax = axis.inset_axes(
         [0.975, 0.75, 0.075, 0.075], transform=axis.transAxes, zorder=10

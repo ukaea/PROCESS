@@ -4,10 +4,6 @@ Code to display the cost breakdown as a pie chart
 
 import matplotlib.pyplot as plt
 
-<<<<<<<< HEAD:process/core/io/costs_pie.py
-import process.core.io.mfile as mf
-========
->>>>>>>> 71bdc991 (Overhall CI):process/core/io/plot/costs/costs_pie.py
 
 def orig_cost_model(m_file, save):
     """Plot pie chart for the orginal 1990 cost model.

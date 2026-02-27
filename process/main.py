@@ -46,14 +46,14 @@ from typing import Protocol
 
 import click
 
-import process
+import process  # noqa: F401
 import process.core.init as init
 import process.data_structure as data_structure
 from process.core import constants
 from process.core.io import obsolete_vars as ov
 from process.core.io.mfile.mfile import mfile
 from process.core.io.plot import plot_proc
-from process.core.io.plot.sankey import plot_plotly_sankey
+from process.core.io.plot.sankey import plot_sankey_plotly
 from process.core.io.process_config import RunProcessConfig
 from process.core.io.process_funcs import (
     check_input_error,
@@ -125,9 +125,9 @@ logger = logging.getLogger("process")
 @click.group(
     cls=LazyGroup,
     lazy_subcommands={
-        "mfile": "process.io.mfile.cli.mfile",
-        "plot": "process.io.plot.cli.plot",
-        "indat": "process.io.in_dat.cli.new_indat",
+        "mfile": "process.core.io.mfile.cli.mfile",
+        "plot": "process.core.io.plot.cli.plot",
+        "indat": "process.core.io.in_dat.cli.new_indat",
     },
     invoke_without_command=True,
     no_args_is_help=True,
