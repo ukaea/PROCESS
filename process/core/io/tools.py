@@ -1,4 +1,5 @@
 import importlib
+from pathlib import Path
 
 import click
 
@@ -9,20 +10,22 @@ def mfile_opt(exists: bool = False):
         "--mfile",
         "mfile",
         default="MFILE.DAT",
-        type=click.Path(exists=exists),
+        type=click.Path(exists=exists, path_type=Path),
         help="The mfile to read",
     )
 
 
-mfile_arg = click.argument("mfiles", nargs=-1, type=click.Path(exists=True))
+mfile_arg = click.argument(
+    "mfiles", nargs=-1, type=click.Path(exists=True, path_type=Path)
+)
 
 
-def indat_opt(default="IN.DAT"):
+def indat_opt(default="IN.DAT", exists=True):
     return click.option(
         "-i",
         "--input",
         "indat",
-        type=click.Path(exists=True),
+        type=click.Path(exists, path_type=Path),
         help="The path to the input file",
         default=default,
     )

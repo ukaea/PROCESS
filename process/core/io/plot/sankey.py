@@ -22,7 +22,7 @@ except ImportError:
     PLOT_SANKEY = False
 
 
-def plot_sankey_plotly(m_file):
+def plot_sankey_plotly(m_file: Path):
     if not PLOT_SANKEY:
         print(
             "\nPlotly is not installed, unable to create sankey diagram!\n"
@@ -33,7 +33,7 @@ def plot_sankey_plotly(m_file):
     return plotly(power_balance_sankey(m_file), m_file)
 
 
-def power_balance_sankey(m_file):
+def power_balance_sankey(m_file: Path):
     m_file = MFile(m_file)
     p_hcd_injected_total_mw = m_file.get("p_hcd_injected_total_mw", scan=-1)
     p_plasma_ohmic_mw = m_file.get("p_plasma_ohmic_mw", scan=-1)
@@ -356,7 +356,7 @@ def power_balance_sankey(m_file):
     }
 
 
-def plotly(sankey_dict, m_file):
+def plotly(sankey_dict, m_file: Path):
     fig = go.Figure(data=[sankey_dict])
 
     fig.update_layout({
@@ -366,11 +366,9 @@ def plotly(sankey_dict, m_file):
         "margin": {"l": 40, "r": 40, "t": 40, "b": 40},
     })
     # Strip 'MFILE' from the filename for the HTML output
-    html_output_path = (
-        Path(m_file)
-        .with_stem(Path(m_file).stem.replace("MFILE", "plotly_sankey"))
-        .with_suffix(".html")
-    )
+    html_output_path = m_file.with_stem(
+        m_file.stem.replace("MFILE", "plotly_sankey")
+    ).with_suffix(".html")
     fig.write_html(str(html_output_path))
     print(f"Interactive Sankey diagram saved to {html_output_path}")
     return fig
