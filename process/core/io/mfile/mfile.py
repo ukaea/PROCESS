@@ -25,6 +25,7 @@ Compatible with PROCESS version 286
 import json
 import logging
 from collections import OrderedDict
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -380,7 +381,9 @@ class MFile:
             else output
         )
 
-    def to_json(self, keys_to_write=None, scan: int | None = -1, verbose=False):
+    def to_json(
+        self, filename, keys_to_write=None, scan: int | None = -1, verbose=False
+    ):
         """Write MFILE object to JSON file
 
         Parameters
@@ -392,13 +395,12 @@ class MFile:
         verbose :
              verbosity of output
         """
-
-        filename = f"{self.filename}.json"
-
-        with open(filename, "w") as fp:
+        with open(filename or f"{self.filename}.json", "w") as fp:
             json.dump(self.to_dict(keys_to_write, scan, verbose), fp, indent=4)
 
-    def to_toml(self, keys_to_write=None, scan: int | None = -1, verbose=False):
+    def to_toml(
+        self, filename, keys_to_write=None, scan: int | None = -1, verbose=False
+    ):
         """Write MFILE object to JSON file
 
         Parameters
@@ -412,10 +414,16 @@ class MFile:
         """
         import toml
 
-        with open(f"{self.filename}.toml", "w") as file:
+        with open(filename or f"{self.filename}.toml", "w") as file:
             toml.dump(self.to_dict(keys_to_write, scan, verbose), file)
 
-    def to_csv(self, keys_to_write=None, scan=-1, verbose=False):
+    def to_csv(
+        self,
+        filename: Path | None = None,
+        keys_to_write=None,
+        scan=-1,
+        verbose=False,
+    ):
         """Write to csv file.
 
         Parameters
@@ -443,7 +451,7 @@ class MFile:
             for k, v in self.to_dict(keys_to_write, scan=scan, verbose=verbose).items():
                 output_data.append((v["description"], k, v["value"]))
         np.savetxt(
-            f"{self.filename}.csv",
+            filename or f"{self.filename}.csv",
             output_data or [],
             fmt="%.5e",
             delimiter=",",
