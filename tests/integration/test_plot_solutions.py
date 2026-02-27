@@ -4,7 +4,7 @@ from collections.abc import Sequence
 
 import pytest
 
-from process.core.io.plot_solutions import RunMetadata, plot_mfile_solutions
+from process.core.io.plot.plot_solutions import RunMetadata, plot_mfile_solutions
 
 
 @pytest.fixture

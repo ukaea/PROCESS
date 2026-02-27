@@ -36,7 +36,7 @@ def save(help_):
 
 
 def split_callback(ctx: click.Context, param, value: str | None) -> list[str] | None:  # noqa: ARG001
-    return value.split(":") if isinstance(value, str) else value
+    return value.replace(" ", ":").split(":") if isinstance(value, str) else value
 
 
 scan_opt = click.option("--scan", type=int, help="Scan to select")

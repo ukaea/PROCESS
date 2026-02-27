@@ -32,7 +32,9 @@ def _format_fig(ax, fig, label, save, filename, index, inflate, ylabel_suffix, n
         plt.show()
 
 
-def cost_comp_1990(mfile_list: list[mf.MFile], inflate: float, save: bool) -> None:
+def cost_comp_1990(
+    mfile_list: list[mf.MFile], inflate: float = 1, save: bool = False
+) -> None:
     """
     Plot bar chart for the orginal 1990 cost model.
     Two plots produced: (1) Breakdown of the direct costs and (2) Direct, indirect, etc.
@@ -103,7 +105,7 @@ def cost_comp_1990(mfile_list: list[mf.MFile], inflate: float, save: bool) -> No
         # Simplify grouping
         sizes = [
             cost[2] + cost[5],
-            *itemgetter(0, 9, 3, 1, 7, 8, 6)(cost),
+            *itemgetter(0, 9, 3, 1, 7, 8, 10, 6)(cost),
             sum(itemgetter(4, 11, 12, 13)(cost)),
         ]
 
@@ -114,15 +116,15 @@ def cost_comp_1990(mfile_list: list[mf.MFile], inflate: float, save: bool) -> No
         ax.bar(index + identity * bar_width, sizes, bar_width, label=item.filename)
         ax2.bar(index2 + identity * bar_width, sizes2, bar_width, label=item.filename)
 
-    for _ax, _fig, _lab, _save_name, _ind in zip(
+    for ax_, fig_, lab, save_name, ind in zip(
         [ax, ax2], [fig, fig2], labels, fnames, [index, index2], strict=True
     ):
         _format_fig(
-            _ax, _fig, _lab, save, _save_name, _ind, inflate, ylabel_suffix, n_mfiles
+            ax_, fig_, lab, save, save_name, ind, inflate, ylabel_suffix, n_mfiles
         )
 
 
-def cost_comp_2014(mfile_list: list[mf.MFile], inflate: float, save: bool):
+def cost_comp_2014(mfile_list: list[mf.MFile], inflate: float = 1, save: bool = False):
     """Plot bar chart for the new 2014 cost model."""
     variables = (
         "s09",  # Buildings

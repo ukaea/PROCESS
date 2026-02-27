@@ -5,7 +5,7 @@ Code to display the cost breakdown as a pie chart
 import matplotlib.pyplot as plt
 
 
-def cost_model_1990(m_file, save):
+def cost_model_1990(m_file, save: bool = False):
     """Plot pie chart for the orginal 1990 cost model.
     Two plots produced: (1) Breakdown of the direct costs and (2) Direct, indirect, etc.
     """
@@ -115,7 +115,7 @@ def cost_model_1990(m_file, save):
         plt.show()
 
 
-def cost_model_2014(m_file, save):
+def cost_model_2014(m_file, save: bool = False):
     """Plot pie chart for the new 2014 cost model."""
     # Read Cost Values
     s09 = m_file.data["s09"].get_scan(-1)  # Buildings
