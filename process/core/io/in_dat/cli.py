@@ -1,7 +1,7 @@
 import click
 
-from process.io.in_dat.create import write_indat
-from process.io.tools import indat_opt, mfile_opt
+from process.core.io.in_dat.create import write_indat
+from process.core.io.tools import indat_opt, mfile_opt
 
 
 @click.command("indat", no_args_is_help=True)
