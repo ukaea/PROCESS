@@ -4966,8 +4966,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Pdivt / R ratio (MW/m) (On peak divertor)",
-                "(p_div_separatrix_rmajor_mw)",
-                physics_variables.p_div_separatrix_rmajor_mw,
+                "(p_plasma_separatrix_rmajor_mw)",
+                physics_variables.p_plasma_separatrix_rmajor_mw,
                 "OP ",
             )
             po.ovarre(
