@@ -13066,6 +13066,366 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
     axis.set_xticklabels([])
 
 
+def plot_divertor_cross_section(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
+    """Plot the divertor cross section on the given axis."""
+
+    #  Conventional tokamak divertor model
+    #  options for seperate upper and lower physics_variables.triangularity
+
+    kappa = mfile_data.data["kappa"].get_scan(scan)
+    triang = mfile_data.data["triang"].get_scan(scan)
+    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+    rminor = mfile_data.data["rminor"].get_scan(scan)
+    dz_xpoint_divertor = mfile_data.data["dz_xpoint_divertor"].get_scan(scan)
+    dr_blkt_inboard = mfile_data.data["dr_blkt_inboard"].get_scan(scan)
+    dr_blkt_outboard = mfile_data.data["dr_blkt_outboard"].get_scan(scan)
+    dr_fw_plasma_gap_inboard = mfile_data.data["dr_fw_plasma_gap_inboard"].get_scan(scan)
+    dr_fw_plasma_gap_outboard = mfile_data.data["dr_fw_plasma_gap_outboard"].get_scan(
+        scan
+    )
+    dz_divertor = mfile_data.data["dz_divertor"].get_scan(scan)
+
+    len_div_plate_inner = np.mean([dr_blkt_inboard, dr_fw_plasma_gap_inboard])
+    len_div_plate_outer = np.mean([dr_blkt_outboard, dr_fw_plasma_gap_outboard])
+
+    #  Position of lower x-point
+    r_plasma_x_point_lower = rmajor - triang * rminor
+    z_plasma_x_point_lower = -1.0e0 * kappa * rminor
+
+    # Divertor leg angles
+    # Keep as 45 degrees for now as this is a common assumption in simple divertor models and allows for easy calculation of strike point positions and leg lengths
+    thetao = np.pi / 4.0  # Outboard leg angle
+    thetai = np.pi / 4.0  # Inboard leg angle
+
+    # Plate strike angles
+    rad_div_plate_inner_strike = 0.5
+    rad_div_plate_outer_strike = 0.6
+
+    # ==========================================
+
+    z_div_strike_outer = (
+        z_plasma_x_point_lower
+        - dz_xpoint_divertor
+        + (0.5 * len_div_plate_outer * np.sin(rad_div_plate_outer_strike + np.pi / 4))
+    )
+
+    r_div_strike_outer = rmajor
+
+    # This is only true if thetao is 45 degrees, but we are keeping it at 45 degrees for now to allow for easy calculation of strike point positions and leg lengths
+    len_xpoint_div_strike_outboard = np.sqrt(
+        (r_div_strike_outer - r_plasma_x_point_lower) ** 2
+        + (z_div_strike_outer - z_plasma_x_point_lower) ** 2
+    )
+
+    # Position of outer plate ends
+    r_outer_plate_top = r_div_strike_outer - (len_div_plate_outer / 2.0e0) * np.cos(
+        thetao + rad_div_plate_outer_strike
+    )
+
+    z_outer_plate_top = z_div_strike_outer + (len_div_plate_outer / 2.0e0) * np.sin(
+        thetao + rad_div_plate_outer_strike
+    )
+
+    r_outer_plate_bottom = r_div_strike_outer + (len_div_plate_outer / 2.0e0) * np.cos(
+        thetao + rad_div_plate_outer_strike
+    )
+    z_outer_plate_bottom = z_div_strike_outer - (len_div_plate_outer / 2.0e0) * np.sin(
+        thetao + rad_div_plate_outer_strike
+    )
+
+    # ===========================================
+
+    z_div_inner_strike = z_outer_plate_top + len_div_plate_outer
+
+    r_div_inner_strike = rmajor - rminor * 0.9
+
+    # This is only true if thetao is 45 degrees, but we are keeping it at 45 degrees for now to allow for easy calculation of strike point positions and leg lengths
+    len_xpoint_div_strike_inboard = np.sqrt(
+        (r_div_inner_strike - r_plasma_x_point_lower) ** 2
+        + (z_div_inner_strike - z_plasma_x_point_lower) ** 2
+    )
+
+    # Position of inner plate ends
+    r_div_inner_plate_top = r_div_inner_strike + (len_div_plate_inner / 2.0e0) * np.cos(
+        thetai + rad_div_plate_inner_strike
+    )
+    z_div_inner_plate_top = z_div_inner_strike + (len_div_plate_inner / 2.0e0) * np.sin(
+        thetai + rad_div_plate_inner_strike
+    )
+    r_div_inner_plate_bottom = r_div_inner_strike - (
+        len_div_plate_inner / 2.0e0
+    ) * np.cos(thetai + rad_div_plate_inner_strike)
+    z_div_inner_plate_bottom = z_div_inner_strike - (
+        len_div_plate_inner / 2.0e0
+    ) * np.sin(thetai + rad_div_plate_inner_strike)
+
+    # ============================================
+
+    # ===================================================
+    # Plot line connecting outer and inner plate bottoms with a slight curve
+
+    # Create a curved path between the two points
+    t = np.linspace(0, 1, 50)
+    # Midpoint for the curve
+    r_mid = (r_outer_plate_bottom + r_div_inner_plate_bottom) / 2
+    z_mid = (
+        z_outer_plate_bottom + z_div_inner_plate_bottom
+    ) / 2 - 0.5  # Offset for curvature (doubled)
+
+    # Quadratic Bezier curve
+    r_curve_upper = (
+        (1 - t) ** 2 * r_outer_plate_bottom
+        + 2 * (1 - t) * t * r_mid
+        + t**2 * r_div_inner_plate_bottom
+    )
+    z_curve_upper = (
+        (1 - t) ** 2 * z_outer_plate_bottom
+        + 2 * (1 - t) * t * z_mid
+        + t**2 * z_div_inner_plate_bottom
+    )
+
+    axis.plot(
+        r_curve_upper,
+        z_curve_upper,
+        color="gray",
+        linewidth=1.5,
+        label="Outer to inner plate connection",
+    )
+    # ==================================================
+
+    r_div_bottom_right = r_outer_plate_top * 1.07
+    z_div_bottom_right = z_outer_plate_top - dz_divertor
+    r_div_bottom_left = cumulative_radial_build("dr_blkt_inboard", mfile_data, scan)
+    z_div_bottom_left = z_div_inner_plate_top - dz_divertor * 0.5
+
+    # Plot line connecting outer and inner plate bottoms with a slight curve
+
+    # Create a curved path between the two points
+    t = np.linspace(0, 1, 50)
+    # Midpoint for the curve
+    r_mid = (
+        r_div_bottom_right + r_div_bottom_left
+    ) / 2 - dz_divertor  # Offset to the left
+    z_mid = (
+        z_div_bottom_right + z_div_bottom_left
+    ) / 2 - 2.3  # Offset for curvature (increased from 2.0)
+
+    # Quadratic Bezier curve
+    r_curve_lower = (
+        (1 - t) ** 2 * r_div_bottom_right
+        + 2 * (1 - t) * t * r_mid
+        + t**2 * r_div_bottom_left
+    )
+    z_curve_lower = (
+        (1 - t) ** 2 * z_div_bottom_right
+        + 2 * (1 - t) * t * z_mid
+        + t**2 * z_div_bottom_left
+    )
+
+    axis.plot(
+        r_curve_lower,
+        z_curve_lower,
+        color="gray",
+        linewidth=1.5,
+        label="Outer to inner plate connection",
+    )
+
+    # ============================================
+
+    # Plot line from top of outer plate to where dz_divertor starts below it
+    axis.plot(
+        [r_outer_plate_top, r_div_bottom_right],
+        [z_outer_plate_top, z_div_bottom_right],
+        color="gray",
+        linewidth=1.5,
+        label="Outer plate to divertor gap start",
+    )
+
+    # ========================================
+
+    # Fill the area enclosed by the divertor structure with a light gray shade
+    # Combine the outer plate, bezier curves, and inner plate into a single polygon
+    # Trace the boundary continuously: outer plate bottom -> lower curve -> inner plate bottom -> inner plate top -> back to outer plate bottom
+    divertor_r = (
+        [r_outer_plate_bottom]
+        + list(r_curve_lower)
+        + [r_div_bottom_left]
+        + [r_div_inner_plate_bottom]
+        + [r_div_inner_plate_top]
+        + list(r_curve_upper[::-1])
+        + [r_div_bottom_right]
+    )
+    divertor_z = (
+        [z_outer_plate_bottom]
+        + list(z_curve_lower)
+        + [z_div_bottom_left]
+        + [z_div_inner_plate_bottom]
+        + [z_div_inner_plate_top]
+        + list(z_curve_upper[::-1])
+        + [z_div_bottom_right]
+    )
+
+    axis.fill(
+        divertor_r, divertor_z, color="lightgray", alpha=1.0, label="Divertor region"
+    )
+
+    # Fill areas behind the divertor plates
+    # Outer plate backing region
+    outer_backing_r = [
+        r_outer_plate_top,
+        r_outer_plate_bottom,
+        r_div_bottom_right,
+        r_outer_plate_top,
+    ]
+    outer_backing_z = [
+        z_outer_plate_top,
+        z_outer_plate_bottom,
+        z_div_bottom_right,
+        z_outer_plate_top,
+    ]
+    axis.fill(
+        outer_backing_r,
+        outer_backing_z,
+        color="darkgray",
+        alpha=0.6,
+        label="Outer plate backing",
+    )
+
+    # Inner plate backing region
+    inner_backing_r = [
+        r_div_inner_plate_top,
+        r_div_inner_plate_bottom,
+        r_div_bottom_left,
+        r_div_inner_plate_top,
+    ]
+    inner_backing_z = [
+        z_div_inner_plate_top,
+        z_div_inner_plate_bottom,
+        z_div_bottom_left,
+        z_div_inner_plate_top,
+    ]
+    axis.fill(
+        inner_backing_r,
+        inner_backing_z,
+        color="darkgray",
+        alpha=0.6,
+        label="Inner plate backing",
+    )
+
+    # ======================================
+
+    # Plot from top of inner plate to wall
+
+    axis.plot(
+        [
+            r_div_inner_plate_top,
+            r_div_bottom_left,
+        ],
+        [z_div_inner_plate_top, z_div_bottom_left],
+        color="gray",
+        linewidth=1.5,
+        label="Inner plate to wall",
+    )
+
+    # ========================================
+
+    # Plot inner divertor plate
+    axis.plot(
+        [r_div_inner_plate_top, r_div_inner_plate_bottom],
+        [z_div_inner_plate_top, z_div_inner_plate_bottom],
+        "k-",
+        linewidth=2,
+        label="Inner plate",
+    )
+
+    # Plot outer divertor plate
+    axis.plot(
+        [r_outer_plate_top, r_outer_plate_bottom],
+        [z_outer_plate_top, z_outer_plate_bottom],
+        "k-",
+        linewidth=2,
+        label="Outer plate",
+    )
+
+    # Plot arrow from x-point to inner strike point
+    axis.annotate(
+        "",
+        xy=(r_div_inner_strike, z_div_inner_strike),
+        xytext=(r_plasma_x_point_lower, z_plasma_x_point_lower),
+        arrowprops={"arrowstyle": "<->", "lw": 1.0, "color": "black"},
+    )
+
+    # Plot arrow from x-point to outer strike point
+    axis.annotate(
+        "",
+        xy=(r_div_strike_outer, z_div_strike_outer),
+        xytext=(r_plasma_x_point_lower, z_plasma_x_point_lower),
+        arrowprops={"arrowstyle": "<->", "lw": 1.0, "color": "black"},
+    )
+
+    # Plot vertical line at major radius
+    axis.axvline(
+        rmajor,
+        color="red",
+        linestyle="--",
+        linewidth=0.5,
+        label="Major Radius",
+    )
+
+    # Plot vertical line at plasma inner boundary
+    axis.axvline(
+        rmajor - rminor,
+        color="red",
+        linestyle="--",
+        linewidth=0.5,
+        label="Plasma Inner Boundary",
+    )
+
+    # Plot strike points
+    axis.plot(
+        r_div_inner_strike,
+        z_div_inner_strike,
+        "ro",
+        markersize=2,
+        label="Inner strike point",
+    )
+    axis.plot(
+        r_div_strike_outer,
+        z_div_strike_outer,
+        "ro",
+        markersize=2,
+        label="Outer strike point",
+    )
+
+    # Plot X-point
+    axis.plot(
+        r_plasma_x_point_lower,
+        z_plasma_x_point_lower,
+        "ro",
+        markersize=3,
+        label="X-point",
+    )
+
+    axis.axhline(
+        z_plasma_x_point_lower - dz_xpoint_divertor,
+        color="green",
+        linestyle="--",
+        linewidth=1.5,
+        label="X-point to divertor gap",
+    )
+
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Divertor Cross-Section")
+    # axis.legend()
+    axis.grid(True, linestyle="--", alpha=0.3)
+    axis.minorticks_on()
+
+    divht = max(z_div_inner_plate_top, z_outer_plate_top) - min(
+        z_outer_plate_bottom, z_outer_plate_bottom
+    )
+
+
 def main_plot(
     figs: list[Axes],
     m_file: mf.MFile,
@@ -13400,6 +13760,9 @@ def main_plot(
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[29])
 
+    ax25 = figs[30].add_subplot(121, aspect="equal")
+    plot_divertor_cross_section(ax25, m_file, scan)
+
 
 def create_thickness_builds(m_file, scan: int):
     # Build the dictionaries of radial and vertical build values and cumulative values
@@ -13475,7 +13838,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(30)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(31)]
 
     # run main_plot
     main_plot(
