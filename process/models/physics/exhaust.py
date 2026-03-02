@@ -1,6 +1,6 @@
 import logging
 
-from process import constants
+from process.core import constants
 
 logger = logging.getLogger(__name__)
 
