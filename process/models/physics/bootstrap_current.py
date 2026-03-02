@@ -5,13 +5,13 @@ import numpy as np
 import scipy
 import scipy.integrate as integrate
 
-from process import constants
-from process import process_output as po
+from process.core import constants
+from process.core import process_output as po
+from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     current_drive_variables,
     physics_variables,
 )
-from process.exceptions import ProcessValueError
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
