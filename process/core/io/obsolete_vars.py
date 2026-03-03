@@ -448,6 +448,12 @@ OBS_VARS = {
     "vcool": "vel_cp_coolant_midplane",
     "rcool": "radius_cp_coolant_channel",
     "fl_h_threshold": None,
+    "betai": "rad_div_inner_leg_plate_poloidal",
+    "betao": "rad_div_outer_leg_plate_poloidal",
+    "plleni": "len_div_inner_plate_poloidal",
+    "plleno": "len_div_outer_plate_poloidal",
+    "plsepi": "len_div_leg_inner_poloidal",
+    "plsepo": "len_div_leg_outer_poloidal",
 }
 
 OBS_VARS_HELP = {
