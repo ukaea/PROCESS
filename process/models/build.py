@@ -961,13 +961,13 @@ class Build:
 
         # Position of inner plate ends
         # r_div_inner_plate_top = r_div_inner_strike_point - (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
-        # zplti = z_div_inner_strike_point + (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
+        # z_div_inner_plate_top = z_div_inner_strike_point + (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
         # rplbi = r_div_inner_strike_point + (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
         # zplbi = z_div_inner_strike_point - (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
         r_div_inner_plate_top = r_div_inner_strike_point + (
             build_variables.len_div_inner_plate_poloidal / 2.0e0
         ) * np.cos(thetai + divertor_variables.rad_div_inner_leg_plate_poloidal)
-        zplti = z_div_inner_strike_point + (
+        z_div_inner_plate_top = z_div_inner_strike_point + (
             build_variables.len_div_inner_plate_poloidal / 2.0e0
         ) * np.sin(thetai + divertor_variables.rad_div_inner_leg_plate_poloidal)
         rplbi = r_div_inner_strike_point - (
@@ -995,7 +995,7 @@ class Build:
             thetao + divertor_variables.rad_div_outer_leg_plate_poloidal
         )
 
-        divht = max(zplti, zplto) - min(zplbo, zplbi)
+        divht = max(z_div_inner_plate_top, zplto) - min(zplbo, zplbi)
 
         if output:
             if divertor_variables.n_divertors == 1:
@@ -1151,8 +1151,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Inner plate top, vertical (m)",
-                    "(zplti)",
-                    zplti,
+                    "(z_div_inner_plate_top)",
+                    z_div_inner_plate_top,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1373,8 +1373,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Upper inner plate top, vertical (m)",
-                    "(-zplti)",
-                    -zplti,
+                    "(-z_div_inner_plate_top)",
+                    -z_div_inner_plate_top,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1457,8 +1457,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Lower inner plate top, vertical (m)",
-                    "(zplti)",
-                    zplti,
+                    "(z_div_inner_plate_top)",
+                    z_div_inner_plate_top,
                     "OP ",
                 )
                 po.ovarrf(
