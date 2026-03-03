@@ -31,7 +31,7 @@ class DivgeomParam(NamedTuple):
 
     plleni: Any = None
 
-    plsepo: Any = None
+    len_div_leg_outer_poloidal: Any = None
 
     betao: Any = None
 
@@ -65,7 +65,7 @@ class DivgeomParam(NamedTuple):
             dz_tf_plasma_centre_offset=0,
             len_div_leg_inner_poloidal=1,
             plleni=1,
-            plsepo=1.5,
+            len_div_leg_outer_poloidal=1.5,
             betao=1,
             betai=1,
             itart=0,
@@ -84,7 +84,7 @@ class DivgeomParam(NamedTuple):
             dz_tf_plasma_centre_offset=0,
             len_div_leg_inner_poloidal=1,
             plleni=1,
-            plsepo=1.5,
+            len_div_leg_outer_poloidal=1.5,
             betao=1,
             betai=1,
             itart=0,
@@ -133,7 +133,11 @@ def test_divgeom(divgeomparam, monkeypatch, build):
 
     monkeypatch.setattr(build_variables, "plleni", divgeomparam.plleni)
 
-    monkeypatch.setattr(build_variables, "plsepo", divgeomparam.plsepo)
+    monkeypatch.setattr(
+        build_variables,
+        "len_div_leg_outer_poloidal",
+        divgeomparam.len_div_leg_outer_poloidal,
+    )
 
     monkeypatch.setattr(divertor_variables, "betao", divgeomparam.betao)
 

@@ -880,14 +880,14 @@ class Build:
         # Old method: assumes that divertor arms are continuations of arcs
         #
         # Outboard side
-        # build_variables.plsepo = poloidal length along the separatrix from null to
+        # build_variables.len_div_leg_outer_poloidal = poloidal length along the separatrix from null to
         # strike point on outboard [default 1.5 m]
         # thetao = arc angle between the strike point and the null point
         #
         # xpointo = physics_variables.rmajor + 0.5e0*physics_variables.rminor*(kap**2 + tri**2 - 1.0e0) /     #     (1.0e0 - tri)
         # rprimeo = (xpointo - physics_variables.rmajor + physics_variables.rminor)
         # phio = asin(kap*physics_variables.rminor/rprimeo)
-        # thetao = build_variables.plsepo/rprimeo
+        # thetao = build_variables.len_div_leg_outer_poloidal/rprimeo
         #
         # Initial strike point
         #
@@ -948,10 +948,12 @@ class Build:
         zspi = zxpt - build_variables.len_div_leg_inner_poloidal * np.sin(thetai)
 
         # Position of outer strike point
-        # build_variables.rspo = rxpt + build_variables.plsepo*cos((pi/2.0e0)-alphad)
-        # zspo = zxpt - build_variables.plsepo*sin((pi/2.0e0)-alphad)
-        build_variables.rspo = rxpt + build_variables.plsepo * np.cos(thetao)
-        zspo = zxpt - build_variables.plsepo * np.sin(thetao)
+        # build_variables.rspo = rxpt + build_variables.len_div_leg_outer_poloidal*cos((pi/2.0e0)-alphad)
+        # zspo = zxpt - build_variables.len_div_leg_outer_poloidal*sin((pi/2.0e0)-alphad)
+        build_variables.rspo = (
+            rxpt + build_variables.len_div_leg_outer_poloidal * np.cos(thetao)
+        )
+        zspo = zxpt - build_variables.len_div_leg_outer_poloidal * np.sin(thetao)
 
         # Position of inner plate ends
         # rplti = rspi - (build_variables.plleni/2.0e0)*sin(divertor_variables.betai + alphad - pi/2.0e0)
@@ -1106,8 +1108,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Outer divertor leg poloidal length (m)",
-                    "(plsepo)",
-                    build_variables.plsepo,
+                    "(len_div_leg_outer_poloidal)",
+                    build_variables.len_div_leg_outer_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1324,8 +1326,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Outer divertor leg poloidal length (m)",
-                    "(plsepo)",
-                    build_variables.plsepo,
+                    "(len_div_leg_outer_poloidal)",
+                    build_variables.len_div_leg_outer_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,

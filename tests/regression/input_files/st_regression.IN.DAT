@@ -726,11 +726,11 @@ pseprmax = 40.0
 * DESCRIPTION:   Poloidal length, x-point to inboard strike point (m) (default =  1.0)
 * JUSTIFICATION: Not yet set
 
-*plsepo = 
+*len_div_leg_outer_poloidal = 
 * DESCRIPTION:   Poloidal length, x-point to outboard strike point (m) (default =  1.5)
 * JUSTIFICATION: Not yet set
 
-*plsepo = 
+*len_div_leg_outer_poloidal = 
 * DESCRIPTION:   Poloidal length, x-point to outboard strike point (m) (default =  1.5)
 * JUSTIFICATION: Not yet set
 
