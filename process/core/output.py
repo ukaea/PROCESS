@@ -118,6 +118,9 @@ def write(models, _outfile):
     # First wall geometry
     models.fw.output_fw_geometry()
 
+    # First wall surface loads
+    models.fw.output_fw_surface_loads()
+
     # First wall pumping
     models.fw.output_fw_pumping()
 
