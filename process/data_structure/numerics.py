@@ -1,6 +1,6 @@
 import numpy as np
 
-ipnvars: int = 177
+ipnvars: int = 179
 """total number of variables available for iteration"""
 
 ipeqns: int = 92

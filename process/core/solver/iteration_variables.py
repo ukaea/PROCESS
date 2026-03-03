@@ -291,6 +291,12 @@ ITERATION_VARIABLES = {
     176: IterationVariable(
         "f_st_coil_aspect", data_structure.stellarator_variables, 0.70, 1.30
     ),
+    177: IterationVariable(
+        "len_div_inner_plate_poloidal", data_structure.build_variables, 0.01, 2.0
+    ),
+    178: IterationVariable(
+        "len_div_outer_plate_poloidal", data_structure.stellarator_variables, 0.1, 2.0
+    ),
 }
 
 
