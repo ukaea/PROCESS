@@ -953,11 +953,13 @@ class Build:
 
         # Position of outer strike point
         # build_variables.r_div_outer_strike_point = rxpt + build_variables.len_div_leg_outer_poloidal*cos((pi/2.0e0)-alphad)
-        # zspo = zxpt - build_variables.len_div_leg_outer_poloidal*sin((pi/2.0e0)-alphad)
+        # z_div_outer_strike_point = zxpt - build_variables.len_div_leg_outer_poloidal*sin((pi/2.0e0)-alphad)
         build_variables.r_div_outer_strike_point = (
             rxpt + build_variables.len_div_leg_outer_poloidal * np.cos(thetao)
         )
-        zspo = zxpt - build_variables.len_div_leg_outer_poloidal * np.sin(thetao)
+        z_div_outer_strike_point = (
+            zxpt - build_variables.len_div_leg_outer_poloidal * np.sin(thetao)
+        )
 
         # Position of inner plate ends
         # r_div_inner_plate_top = r_div_inner_strike_point - (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
@@ -979,21 +981,21 @@ class Build:
 
         # Position of outer plate ends
         # rplto = build_variables.r_div_outer_strike_point + (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
-        # zplto = zspo + (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
+        # zplto = z_div_outer_strike_point + (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
         # rplbo = build_variables.r_div_outer_strike_point - (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
-        # zplbo = zspo - (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
+        # zplbo = z_div_outer_strike_point - (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
         rplto = build_variables.r_div_outer_strike_point - (
             build_variables.len_div_outer_plate_poloidal / 2.0e0
         ) * np.cos(thetao + divertor_variables.rad_div_outer_leg_plate_poloidal)
-        zplto = zspo + (build_variables.len_div_outer_plate_poloidal / 2.0e0) * np.sin(
-            thetao + divertor_variables.rad_div_outer_leg_plate_poloidal
-        )
+        zplto = z_div_outer_strike_point + (
+            build_variables.len_div_outer_plate_poloidal / 2.0e0
+        ) * np.sin(thetao + divertor_variables.rad_div_outer_leg_plate_poloidal)
         rplbo = build_variables.r_div_outer_strike_point + (
             build_variables.len_div_outer_plate_poloidal / 2.0e0
         ) * np.cos(thetao + divertor_variables.rad_div_outer_leg_plate_poloidal)
-        zplbo = zspo - (build_variables.len_div_outer_plate_poloidal / 2.0e0) * np.sin(
-            thetao + divertor_variables.rad_div_outer_leg_plate_poloidal
-        )
+        zplbo = z_div_outer_strike_point - (
+            build_variables.len_div_outer_plate_poloidal / 2.0e0
+        ) * np.sin(thetao + divertor_variables.rad_div_outer_leg_plate_poloidal)
 
         divht = max(z_div_inner_plate_top, zplto) - min(zplbo, z_div_inner_plate_bottom)
 
@@ -1179,8 +1181,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Outer strike point, vertical (m)",
-                    "(zspo)",
-                    zspo,
+                    "(z_div_outer_strike_point)",
+                    z_div_outer_strike_point,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1401,8 +1403,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Upper outer strike point, vertical (m)",
-                    "(-zspo)",
-                    -zspo,
+                    "(-z_div_outer_strike_point)",
+                    -z_div_outer_strike_point,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1485,8 +1487,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Lower outer strike point, vertical (m)",
-                    "(zspo)",
-                    zspo,
+                    "(z_div_outer_strike_point)",
+                    z_div_outer_strike_point,
                     "OP ",
                 )
                 po.ovarrf(
