@@ -974,21 +974,21 @@ class Build:
         )
 
         # Position of outer plate ends
-        # rplto = build_variables.rspo + (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.betao - alphad)
-        # zplto = zspo + (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.betao - alphad)
-        # rplbo = build_variables.rspo - (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.betao - alphad)
-        # zplbo = zspo - (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.betao - alphad)
+        # rplto = build_variables.rspo + (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
+        # zplto = zspo + (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
+        # rplbo = build_variables.rspo - (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
+        # zplbo = zspo - (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
         rplto = build_variables.rspo - (
             build_variables.len_div_outer_plate_poloidal / 2.0e0
-        ) * np.cos(thetao + divertor_variables.betao)
+        ) * np.cos(thetao + divertor_variables.rad_div_outer_leg_plate_poloidal)
         zplto = zspo + (build_variables.len_div_outer_plate_poloidal / 2.0e0) * np.sin(
-            thetao + divertor_variables.betao
+            thetao + divertor_variables.rad_div_outer_leg_plate_poloidal
         )
         rplbo = build_variables.rspo + (
             build_variables.len_div_outer_plate_poloidal / 2.0e0
-        ) * np.cos(thetao + divertor_variables.betao)
+        ) * np.cos(thetao + divertor_variables.rad_div_outer_leg_plate_poloidal)
         zplbo = zspo - (build_variables.len_div_outer_plate_poloidal / 2.0e0) * np.sin(
-            thetao + divertor_variables.betao
+            thetao + divertor_variables.rad_div_outer_leg_plate_poloidal
         )
 
         divht = max(zplti, zplto) - min(zplbo, zplbi)
@@ -1096,8 +1096,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Poloidal plane angle between outer leg and plate (rad)",
-                    "(betao)",
-                    divertor_variables.betao,
+                    "(rad_div_outer_leg_plate_poloidal)",
+                    divertor_variables.rad_div_outer_leg_plate_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1314,8 +1314,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Poloidal plane angle between outer leg and plate (rad)",
-                    "(betao)",
-                    divertor_variables.betao,
+                    "(rad_div_outer_leg_plate_poloidal)",
+                    divertor_variables.rad_div_outer_leg_plate_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,

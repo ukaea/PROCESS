@@ -33,7 +33,7 @@ class DivgeomParam(NamedTuple):
 
     len_div_leg_outer_poloidal: Any = None
 
-    betao: Any = None
+    rad_div_outer_leg_plate_poloidal: Any = None
 
     rad_div_inner_leg_plate_poloidal: Any = None
 
@@ -66,7 +66,7 @@ class DivgeomParam(NamedTuple):
             len_div_leg_inner_poloidal=1,
             len_div_inner_plate_poloidal=1,
             len_div_leg_outer_poloidal=1.5,
-            betao=1,
+            rad_div_outer_leg_plate_poloidal=1,
             rad_div_inner_leg_plate_poloidal=1,
             itart=0,
             rmajor=8.8901000000000003,
@@ -85,7 +85,7 @@ class DivgeomParam(NamedTuple):
             len_div_leg_inner_poloidal=1,
             len_div_inner_plate_poloidal=1,
             len_div_leg_outer_poloidal=1.5,
-            betao=1,
+            rad_div_outer_leg_plate_poloidal=1,
             rad_div_inner_leg_plate_poloidal=1,
             itart=0,
             rmajor=8.8901000000000003,
@@ -147,7 +147,11 @@ def test_divgeom(divgeomparam, monkeypatch, build):
         divgeomparam.len_div_leg_outer_poloidal,
     )
 
-    monkeypatch.setattr(divertor_variables, "betao", divgeomparam.betao)
+    monkeypatch.setattr(
+        divertor_variables,
+        "rad_div_outer_leg_plate_poloidal",
+        divgeomparam.rad_div_outer_leg_plate_poloidal,
+    )
 
     monkeypatch.setattr(
         divertor_variables,

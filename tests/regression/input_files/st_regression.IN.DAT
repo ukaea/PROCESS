@@ -756,7 +756,7 @@ pseprmax = 40.0
 * DESCRIPTION:   Poloidal plane angle between inner divertor leg and plate (rad) (default = 1.0)
 * JUSTIFICATION: Not yet set
 
-*betao = 
+*rad_div_outer_leg_plate_poloidal = 
 * DESCRIPTION:   Poloidal plane angle between outer divertor leg and plate (rad) (default = 1.0)
 * JUSTIFICATION: Not yet set
 

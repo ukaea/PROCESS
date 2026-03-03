@@ -7,7 +7,7 @@ deg_div_field_plate: float = None
 rad_div_inner_leg_plate_poloidal: float = None
 """poloidal plane angle between divertor plate and leg, inboard (rad)"""
 
-betao: float = None
+rad_div_outer_leg_plate_poloidal: float = None
 """poloidal plane angle between divertor plate and leg, outboard (rad)"""
 
 f_vol_div_coolant: float = None
@@ -77,7 +77,7 @@ def init_divertor_variables():
         anginc, \
         deg_div_field_plate, \
         rad_div_inner_leg_plate_poloidal, \
-        betao, \
+        rad_div_outer_leg_plate_poloidal, \
         f_vol_div_coolant, \
         den_div_structure, \
         dz_divertor, \
@@ -101,7 +101,7 @@ def init_divertor_variables():
     anginc = 0.262
     deg_div_field_plate = 1.0
     rad_div_inner_leg_plate_poloidal = 1.0
-    betao = 1.0
+    rad_div_outer_leg_plate_poloidal = 1.0
     f_vol_div_coolant = 0.3
     den_div_structure = 1.0e4
     dz_divertor = 0.2

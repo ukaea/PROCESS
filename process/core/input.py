@@ -243,7 +243,7 @@ INPUT_VARIABLES = {
     "rad_div_inner_leg_plate_poloidal": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
     ),
-    "betao": InputVariable(
+    "rad_div_outer_leg_plate_poloidal": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
     ),
     "big_q_plasma_min": InputVariable(
