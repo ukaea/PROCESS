@@ -240,7 +240,7 @@ INPUT_VARIABLES = {
     "beta_poloidal_max": InputVariable(
         data_structure.constraint_variables, float, range=(0.01, 2.0)
     ),
-    "betai": InputVariable(
+    "rad_div_inner_leg_plate_poloidal": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
     ),
     "betao": InputVariable(

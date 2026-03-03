@@ -956,21 +956,21 @@ class Build:
         zspo = zxpt - build_variables.len_div_leg_outer_poloidal * np.sin(thetao)
 
         # Position of inner plate ends
-        # rplti = rspi - (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.betai + alphad - pi/2.0e0)
-        # zplti = zspi + (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.betai + alphad - pi/2.0e0)
-        # rplbi = rspi + (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.betai + alphad - pi/2.0e0)
-        # zplbi = zspi - (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.betai + alphad - pi/2.0e0)
+        # rplti = rspi - (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
+        # zplti = zspi + (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
+        # rplbi = rspi + (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
+        # zplbi = zspi - (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
         rplti = rspi + (build_variables.len_div_inner_plate_poloidal / 2.0e0) * np.cos(
-            thetai + divertor_variables.betai
+            thetai + divertor_variables.rad_div_inner_leg_plate_poloidal
         )
         zplti = zspi + (build_variables.len_div_inner_plate_poloidal / 2.0e0) * np.sin(
-            thetai + divertor_variables.betai
+            thetai + divertor_variables.rad_div_inner_leg_plate_poloidal
         )
         rplbi = rspi - (build_variables.len_div_inner_plate_poloidal / 2.0e0) * np.cos(
-            thetai + divertor_variables.betai
+            thetai + divertor_variables.rad_div_inner_leg_plate_poloidal
         )
         zplbi = zspi - (build_variables.len_div_inner_plate_poloidal / 2.0e0) * np.sin(
-            thetai + divertor_variables.betai
+            thetai + divertor_variables.rad_div_inner_leg_plate_poloidal
         )
 
         # Position of outer plate ends
@@ -1090,8 +1090,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Poloidal plane angle between inner leg and plate (rad)",
-                    "(betai)",
-                    divertor_variables.betai,
+                    "(rad_div_inner_leg_plate_poloidal)",
+                    divertor_variables.rad_div_inner_leg_plate_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1308,8 +1308,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Poloidal plane angle between inner leg and plate (rad)",
-                    "(betai)",
-                    divertor_variables.betai,
+                    "(rad_div_inner_leg_plate_poloidal)",
+                    divertor_variables.rad_div_inner_leg_plate_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,

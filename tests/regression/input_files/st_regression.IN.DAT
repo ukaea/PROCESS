@@ -752,7 +752,7 @@ pseprmax = 40.0
 * DESCRIPTION:   Field line angle wrt divertor target plate (degrees) (default = 1.0)
 * JUSTIFICATION: Not yet set
 
-*betai = 
+*rad_div_inner_leg_plate_poloidal = 
 * DESCRIPTION:   Poloidal plane angle between inner divertor leg and plate (rad) (default = 1.0)
 * JUSTIFICATION: Not yet set
 
