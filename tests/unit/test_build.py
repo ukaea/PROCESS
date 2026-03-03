@@ -23,7 +23,7 @@ def build():
 class DivgeomParam(NamedTuple):
     rspo: Any = None
 
-    plleno: Any = None
+    len_div_outer_plate_poloidal: Any = None
 
     dz_tf_plasma_centre_offset: Any = None
 
@@ -61,7 +61,7 @@ class DivgeomParam(NamedTuple):
     (
         DivgeomParam(
             rspo=8.2125352340518898,
-            plleno=1,
+            len_div_outer_plate_poloidal=1,
             dz_tf_plasma_centre_offset=0,
             len_div_leg_inner_poloidal=1,
             len_div_inner_plate_poloidal=1,
@@ -80,7 +80,7 @@ class DivgeomParam(NamedTuple):
         ),
         DivgeomParam(
             rspo=8.2125352340518898,
-            plleno=1,
+            len_div_outer_plate_poloidal=1,
             dz_tf_plasma_centre_offset=0,
             len_div_leg_inner_poloidal=1,
             len_div_inner_plate_poloidal=1,
@@ -117,7 +117,11 @@ def test_divgeom(divgeomparam, monkeypatch, build):
 
     monkeypatch.setattr(build_variables, "rspo", divgeomparam.rspo)
 
-    monkeypatch.setattr(build_variables, "plleno", divgeomparam.plleno)
+    monkeypatch.setattr(
+        build_variables,
+        "len_div_outer_plate_poloidal",
+        divgeomparam.len_div_outer_plate_poloidal,
+    )
 
     monkeypatch.setattr(
         build_variables,

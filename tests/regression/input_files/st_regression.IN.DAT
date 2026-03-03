@@ -718,7 +718,7 @@ pseprmax = 40.0
 * DESCRIPTION:   Length of inboard divertor plate (m) (default =  1.0)
 * JUSTIFICATION: Not yet set
 
-*plleno = 
+*len_div_outer_plate_poloidal = 
 * DESCRIPTION:   Length of outboard divertor plate (m) (default =  1.0)
 * JUSTIFICATION: Not yet set
 

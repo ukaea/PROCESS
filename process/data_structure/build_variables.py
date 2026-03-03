@@ -355,7 +355,7 @@ len_div_inner_plate_poloidal: float = None
 """length of inboard divertor plate (m)"""
 
 
-plleno: float = None
+len_div_outer_plate_poloidal: float = None
 """length of outboard divertor plate (m)"""
 
 
@@ -470,7 +470,7 @@ def init_build_variables():
         dz_fw_plasma_gap, \
         dr_shld_blkt_gap, \
         len_div_inner_plate_poloidal, \
-        plleno, \
+        len_div_outer_plate_poloidal, \
         len_div_leg_inner_poloidal, \
         len_div_leg_outer_poloidal, \
         rspo, \
@@ -560,7 +560,7 @@ def init_build_variables():
     dz_fw_plasma_gap = 0.60
     dr_shld_blkt_gap = 0.05
     len_div_inner_plate_poloidal = 1.0
-    plleno = 1.0
+    len_div_outer_plate_poloidal = 1.0
     len_div_leg_inner_poloidal = 1.0
     len_div_leg_outer_poloidal = 1.5
     rspo = 0.0

@@ -974,20 +974,20 @@ class Build:
         )
 
         # Position of outer plate ends
-        # rplto = build_variables.rspo + (build_variables.plleno/2.0e0)*sin(divertor_variables.betao - alphad)
-        # zplto = zspo + (build_variables.plleno/2.0e0)*cos(divertor_variables.betao - alphad)
-        # rplbo = build_variables.rspo - (build_variables.plleno/2.0e0)*sin(divertor_variables.betao - alphad)
-        # zplbo = zspo - (build_variables.plleno/2.0e0)*cos(divertor_variables.betao - alphad)
-        rplto = build_variables.rspo - (build_variables.plleno / 2.0e0) * np.cos(
+        # rplto = build_variables.rspo + (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.betao - alphad)
+        # zplto = zspo + (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.betao - alphad)
+        # rplbo = build_variables.rspo - (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.betao - alphad)
+        # zplbo = zspo - (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.betao - alphad)
+        rplto = build_variables.rspo - (
+            build_variables.len_div_outer_plate_poloidal / 2.0e0
+        ) * np.cos(thetao + divertor_variables.betao)
+        zplto = zspo + (build_variables.len_div_outer_plate_poloidal / 2.0e0) * np.sin(
             thetao + divertor_variables.betao
         )
-        zplto = zspo + (build_variables.plleno / 2.0e0) * np.sin(
-            thetao + divertor_variables.betao
-        )
-        rplbo = build_variables.rspo + (build_variables.plleno / 2.0e0) * np.cos(
-            thetao + divertor_variables.betao
-        )
-        zplbo = zspo - (build_variables.plleno / 2.0e0) * np.sin(
+        rplbo = build_variables.rspo + (
+            build_variables.len_div_outer_plate_poloidal / 2.0e0
+        ) * np.cos(thetao + divertor_variables.betao)
+        zplbo = zspo - (build_variables.len_div_outer_plate_poloidal / 2.0e0) * np.sin(
             thetao + divertor_variables.betao
         )
 
@@ -1120,8 +1120,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Outer divertor plate length (m)",
-                    "(plleno)",
-                    build_variables.plleno,
+                    "(len_div_outer_plate_poloidal)",
+                    build_variables.len_div_outer_plate_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1338,8 +1338,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Outer divertor plate length (m)",
-                    "(plleno)",
-                    build_variables.plleno,
+                    "(len_div_outer_plate_poloidal)",
+                    build_variables.len_div_outer_plate_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,

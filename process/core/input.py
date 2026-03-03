@@ -1154,7 +1154,9 @@ INPUT_VARIABLES = {
     "len_div_inner_plate_poloidal": InputVariable(
         data_structure.build_variables, float, range=(0.1, 10.0)
     ),
-    "plleno": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
+    "len_div_outer_plate_poloidal": InputVariable(
+        data_structure.build_variables, float, range=(0.1, 10.0)
+    ),
     "len_div_leg_inner_poloidal": InputVariable(
         data_structure.build_variables, float, range=(0.1, 10.0)
     ),
