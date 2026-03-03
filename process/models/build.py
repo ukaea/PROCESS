@@ -982,7 +982,7 @@ class Build:
         # Position of outer plate ends
         # r_div_outer_plate_top = build_variables.r_div_outer_strike_point + (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
         # z_div_outer_plate_top = z_div_outer_strike_point + (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
-        # rplbo = build_variables.r_div_outer_strike_point - (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
+        # r_div_outer_plate_bottom = build_variables.r_div_outer_strike_point - (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
         # zplbo = z_div_outer_strike_point - (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
         r_div_outer_plate_top = build_variables.r_div_outer_strike_point - (
             build_variables.len_div_outer_plate_poloidal / 2.0e0
@@ -990,7 +990,7 @@ class Build:
         z_div_outer_plate_top = z_div_outer_strike_point + (
             build_variables.len_div_outer_plate_poloidal / 2.0e0
         ) * np.sin(thetao + divertor_variables.rad_div_outer_leg_plate_poloidal)
-        rplbo = build_variables.r_div_outer_strike_point + (
+        r_div_outer_plate_bottom = build_variables.r_div_outer_strike_point + (
             build_variables.len_div_outer_plate_poloidal / 2.0e0
         ) * np.cos(thetao + divertor_variables.rad_div_outer_leg_plate_poloidal)
         zplbo = z_div_outer_strike_point - (
@@ -1204,8 +1204,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Outer plate bottom, radial (m)",
-                    "(rplbo)",
-                    rplbo,
+                    "(r_div_outer_plate_bottom)",
+                    r_div_outer_plate_bottom,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1430,8 +1430,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Upper outer plate bottom, radial (m)",
-                    "(rplbo)",
-                    rplbo,
+                    "(r_div_outer_plate_bottom)",
+                    r_div_outer_plate_bottom,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1514,8 +1514,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Lower outer plate bottom, radial (m)",
-                    "(rplbo)",
-                    rplbo,
+                    "(r_div_outer_plate_bottom)",
+                    r_div_outer_plate_bottom,
                     "OP ",
                 )
                 po.ovarrf(
