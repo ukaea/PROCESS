@@ -288,7 +288,7 @@ class StbildParam(NamedTuple):
 
     r_shld_outboard_outer: Any = None
 
-    rspo: Any = None
+    r_div_outer_strike_point: Any = None
 
     dr_fw_plasma_gap_inboard: Any = None
 
@@ -402,7 +402,7 @@ class StbildParam(NamedTuple):
             rbld=0,
             r_shld_inboard_inner=0,
             r_shld_outboard_outer=0,
-            rspo=0,
+            r_div_outer_strike_point=0,
             dr_fw_plasma_gap_inboard=0.15000000000000002,
             dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
@@ -471,7 +471,7 @@ class StbildParam(NamedTuple):
             rbld=22,
             r_shld_inboard_inner=18.948216216000002,
             r_shld_outboard_outer=25.601783784000002,
-            rspo=22,
+            r_div_outer_strike_point=22,
             dr_fw_plasma_gap_inboard=0.15000000000000002,
             dr_fw_plasma_gap_outboard=0.30000000000000004,
             dr_shld_inboard=0.40000000000000002,
@@ -593,7 +593,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         build_variables, "r_shld_outboard_outer", stbildparam.r_shld_outboard_outer
     )
 
-    monkeypatch.setattr(build_variables, "rspo", stbildparam.rspo)
+    monkeypatch.setattr(
+        build_variables, "r_div_outer_strike_point", stbildparam.r_div_outer_strike_point
+    )
 
     monkeypatch.setattr(
         build_variables,
@@ -731,7 +733,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         stbildparam.expected_rsldo
     )
 
-    assert build_variables.rspo == pytest.approx(stbildparam.expected_rspo)
+    assert build_variables.r_div_outer_strike_point == pytest.approx(
+        stbildparam.expected_rspo
+    )
 
     assert build_variables.available_radial_space == pytest.approx(
         stbildparam.expected_available_radial_space

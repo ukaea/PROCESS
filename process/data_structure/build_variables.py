@@ -367,7 +367,7 @@ len_div_leg_outer_poloidal: float = None
 """poloidal length, x-point to outboard strike point (m)"""
 
 
-rspo: float = None
+r_div_outer_strike_point: float = None
 """outboard strike point radius (m)"""
 
 
@@ -473,7 +473,7 @@ def init_build_variables():
         len_div_outer_plate_poloidal, \
         len_div_leg_inner_poloidal, \
         len_div_leg_outer_poloidal, \
-        rspo, \
+        r_div_outer_strike_point, \
         z_plasma_xpoint_upper, \
         z_plasma_xpoint_lower
 
@@ -563,7 +563,7 @@ def init_build_variables():
     len_div_outer_plate_poloidal = 1.0
     len_div_leg_inner_poloidal = 1.0
     len_div_leg_outer_poloidal = 1.5
-    rspo = 0.0
+    r_div_outer_strike_point = 0.0
     r_sh_inboard_in = 0.0
     z_plasma_xpoint_upper = 0.0
     z_plasma_xpoint_lower = 0.0

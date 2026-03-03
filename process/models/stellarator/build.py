@@ -159,7 +159,7 @@ def st_build(stellarator, f_output: bool):
 
     #  Outer divertor strike point radius, set equal to major radius
 
-    build_variables.rspo = physics_variables.rmajor
+    build_variables.r_div_outer_strike_point = physics_variables.rmajor
 
     #  First wall area: scales with minor radius
 

@@ -21,7 +21,7 @@ def build():
 
 
 class DivgeomParam(NamedTuple):
-    rspo: Any = None
+    r_div_outer_strike_point: Any = None
 
     len_div_outer_plate_poloidal: Any = None
 
@@ -60,7 +60,7 @@ class DivgeomParam(NamedTuple):
     "divgeomparam",
     (
         DivgeomParam(
-            rspo=8.2125352340518898,
+            r_div_outer_strike_point=8.2125352340518898,
             len_div_outer_plate_poloidal=1,
             dz_tf_plasma_centre_offset=0,
             len_div_leg_inner_poloidal=1,
@@ -79,7 +79,7 @@ class DivgeomParam(NamedTuple):
             expected_divht=2.002443311884611,
         ),
         DivgeomParam(
-            rspo=8.2125352340518898,
+            r_div_outer_strike_point=8.2125352340518898,
             len_div_outer_plate_poloidal=1,
             dz_tf_plasma_centre_offset=0,
             len_div_leg_inner_poloidal=1,
@@ -115,7 +115,11 @@ def test_divgeom(divgeomparam, monkeypatch, build):
     :type build: tests.unit.test_build.build (functional fixture)
     """
 
-    monkeypatch.setattr(build_variables, "rspo", divgeomparam.rspo)
+    monkeypatch.setattr(
+        build_variables,
+        "r_div_outer_strike_point",
+        divgeomparam.r_div_outer_strike_point,
+    )
 
     monkeypatch.setattr(
         build_variables,

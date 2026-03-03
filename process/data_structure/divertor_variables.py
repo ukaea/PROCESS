@@ -89,6 +89,9 @@ r_div_inner_plate_bottom: float = None
 z_div_inner_plate_bottom: float = None
 """vertical location of bottom of inner divertor plate (m)"""
 
+r_div_outer_strike_point: float = None
+"""radial location of outer divertor strike point (m)"""
+
 
 def init_divertor_variables():
     global \
@@ -120,7 +123,8 @@ def init_divertor_variables():
         r_div_inner_plate_top, \
         z_div_inner_plate_top, \
         r_div_inner_plate_bottom, \
-        z_div_inner_plate_bottom
+        z_div_inner_plate_bottom, \
+        r_div_outer_strike_point
 
     anginc = 0.262
     deg_div_field_plate = 1.0
@@ -151,3 +155,4 @@ def init_divertor_variables():
     z_div_inner_plate_top = 0.0
     r_div_inner_plate_bottom = 0.0
     z_div_inner_plate_bottom = 0.0
+    r_div_outer_strike_point = 0.0
