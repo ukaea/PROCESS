@@ -1151,7 +1151,9 @@ INPUT_VARIABLES = {
     "plasma_square": InputVariable(
         data_structure.physics_variables, float, range=(-5.0, 5.0)
     ),
-    "plleni": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
+    "len_div_inner_plate_poloidal": InputVariable(
+        data_structure.build_variables, float, range=(0.1, 10.0)
+    ),
     "plleno": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
     "len_div_leg_inner_poloidal": InputVariable(
         data_structure.build_variables, float, range=(0.1, 10.0)

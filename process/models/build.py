@@ -956,20 +956,20 @@ class Build:
         zspo = zxpt - build_variables.len_div_leg_outer_poloidal * np.sin(thetao)
 
         # Position of inner plate ends
-        # rplti = rspi - (build_variables.plleni/2.0e0)*sin(divertor_variables.betai + alphad - pi/2.0e0)
-        # zplti = zspi + (build_variables.plleni/2.0e0)*cos(divertor_variables.betai + alphad - pi/2.0e0)
-        # rplbi = rspi + (build_variables.plleni/2.0e0)*sin(divertor_variables.betai + alphad - pi/2.0e0)
-        # zplbi = zspi - (build_variables.plleni/2.0e0)*cos(divertor_variables.betai + alphad - pi/2.0e0)
-        rplti = rspi + (build_variables.plleni / 2.0e0) * np.cos(
+        # rplti = rspi - (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.betai + alphad - pi/2.0e0)
+        # zplti = zspi + (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.betai + alphad - pi/2.0e0)
+        # rplbi = rspi + (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.betai + alphad - pi/2.0e0)
+        # zplbi = zspi - (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.betai + alphad - pi/2.0e0)
+        rplti = rspi + (build_variables.len_div_inner_plate_poloidal / 2.0e0) * np.cos(
             thetai + divertor_variables.betai
         )
-        zplti = zspi + (build_variables.plleni / 2.0e0) * np.sin(
+        zplti = zspi + (build_variables.len_div_inner_plate_poloidal / 2.0e0) * np.sin(
             thetai + divertor_variables.betai
         )
-        rplbi = rspi - (build_variables.plleni / 2.0e0) * np.cos(
+        rplbi = rspi - (build_variables.len_div_inner_plate_poloidal / 2.0e0) * np.cos(
             thetai + divertor_variables.betai
         )
-        zplbi = zspi - (build_variables.plleni / 2.0e0) * np.sin(
+        zplbi = zspi - (build_variables.len_div_inner_plate_poloidal / 2.0e0) * np.sin(
             thetai + divertor_variables.betai
         )
 
@@ -1114,8 +1114,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Inner divertor plate length (m)",
-                    "(plleni)",
-                    build_variables.plleni,
+                    "(len_div_inner_plate_poloidal)",
+                    build_variables.len_div_inner_plate_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1333,7 +1333,7 @@ class Build:
                     self.outfile,
                     "Inner divertor plate length (m)",
                     "(lleni)",
-                    build_variables.plleni,
+                    build_variables.len_div_inner_plate_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,

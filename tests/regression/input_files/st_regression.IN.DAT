@@ -714,7 +714,7 @@ pseprmax = 40.0
 * DESCRIPTION:   Divertor area fudge factor (for ITER, Sept 1990) (default = 1.11)
 * JUSTIFICATION: Not yet set
 
-*plleni = 
+*len_div_inner_plate_poloidal = 
 * DESCRIPTION:   Length of inboard divertor plate (m) (default =  1.0)
 * JUSTIFICATION: Not yet set
 

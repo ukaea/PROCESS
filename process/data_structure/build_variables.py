@@ -351,7 +351,7 @@ dr_shld_blkt_gap: float = None
 """gap between vacuum vessel and blanket (m)"""
 
 
-plleni: float = None
+len_div_inner_plate_poloidal: float = None
 """length of inboard divertor plate (m)"""
 
 
@@ -469,7 +469,7 @@ def init_build_variables():
         dz_xpoint_divertor, \
         dz_fw_plasma_gap, \
         dr_shld_blkt_gap, \
-        plleni, \
+        len_div_inner_plate_poloidal, \
         plleno, \
         len_div_leg_inner_poloidal, \
         len_div_leg_outer_poloidal, \
@@ -559,7 +559,7 @@ def init_build_variables():
     dz_xpoint_divertor = 0.0
     dz_fw_plasma_gap = 0.60
     dr_shld_blkt_gap = 0.05
-    plleni = 1.0
+    len_div_inner_plate_poloidal = 1.0
     plleno = 1.0
     len_div_leg_inner_poloidal = 1.0
     len_div_leg_outer_poloidal = 1.5
