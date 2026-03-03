@@ -12976,7 +12976,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
 
 
 def plot_detailed_lower_divertor(
-    axis: plt.Axes, mfile_data: mf.MFile, scan: int, colour_scheme
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int, radial_build, colour_scheme
 ):
     """Plot the divertor cross section on the given axis."""
 
@@ -13006,6 +13006,12 @@ def plot_detailed_lower_divertor(
         if min(dr_blkt_outboard, dr_fw_plasma_gap_outboard) < 1e-2
         else np.mean([dr_blkt_outboard, dr_fw_plasma_gap_outboard])
     )
+
+    plot_plasma(axis, mfile_data, scan, colour_scheme)
+    plot_blanket(axis, mfile_data, scan, radial_build, colour_scheme)
+    plot_firstwall(axis, mfile_data, scan, radial_build, colour_scheme)
+    plot_shield(axis, mfile_data, scan, radial_build, colour_scheme)
+    plot_vacuum_vessel_and_divertor(axis, mfile_data, scan, radial_build, colour_scheme)
 
     #  Position of lower x-point
     r_plasma_x_point_lower = rmajor - triang * rminor
@@ -13291,6 +13297,36 @@ def plot_detailed_lower_divertor(
         label="Major Radius",
     )
 
+    # Plot dashed lines showing the angle between plate and leg
+    # Outer leg to outer plate angle line
+    # Extend the line above the plate
+    r_outer_extended = r_outer_plate_top + (r_outer_plate_top - r_outer_plate_bottom)
+    z_outer_extended = z_outer_plate_top + (z_outer_plate_top - z_outer_plate_bottom)
+    axis.plot(
+        [r_outer_plate_bottom, r_outer_extended],
+        [z_outer_plate_bottom, z_outer_extended],
+        "k--",
+        linewidth=1.0,
+        alpha=0.5,
+        label="Leg to plate angle",
+    )
+
+    # Inner leg to inner plate angle line
+    # Extend the line above the plate
+    r_inner_extended = r_div_inner_plate_top + (
+        r_div_inner_plate_top - r_div_inner_plate_bottom
+    )
+    z_inner_extended = z_div_inner_plate_top + (
+        z_div_inner_plate_top - z_div_inner_plate_bottom
+    )
+    axis.plot(
+        [r_div_inner_plate_bottom, r_inner_extended],
+        [z_div_inner_plate_bottom, z_inner_extended],
+        "k--",
+        linewidth=1.0,
+        alpha=0.5,
+    )
+
     # Plot vertical line at plasma inner boundary
     axis.axvline(
         rmajor - rminor,
@@ -13338,8 +13374,8 @@ def plot_detailed_lower_divertor(
     axis.plot(
         r_plasma_x_point_lower,
         z_plasma_x_point_lower,
-        "ro",
-        markersize=3,
+        "rx",
+        markersize=8,
         label="X-point",
     )
 
@@ -13360,7 +13396,7 @@ def plot_detailed_lower_divertor(
     )
 
     axis.set_xlabel("R [m]")
-    plot_plasma(axis, mfile_data, scan, colour_scheme)
+
     axis.set_ylabel("Z [m]")
     axis.set_title("Divertor Cross-Section")
     axis.legend(loc="upper left", bbox_to_anchor=(1.05, 1))
@@ -13370,9 +13406,9 @@ def plot_detailed_lower_divertor(
         z_plasma_x_point_lower * 0.9,
     )
     axis.minorticks_on()
-
-    divht = max(z_div_inner_plate_top, z_outer_plate_top) - min(
-        z_outer_plate_bottom, z_outer_plate_bottom
+    axis.set_xlim(
+        cumulative_radial_build("dr_blkt_inboard", mfile_data, scan) * 0.9,
+        rmajor * 1.1,
     )
 
 
@@ -14010,7 +14046,7 @@ def main_plot(
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[29])
 
     ax25 = figs[30].add_subplot(121, aspect="equal")
-    plot_detailed_lower_divertor(ax25, m_file, scan, colour_scheme)
+    plot_detailed_lower_divertor(ax25, m_file, scan, radial_build, colour_scheme)
 
 
 def create_thickness_builds(m_file, scan: int):
