@@ -722,7 +722,7 @@ pseprmax = 40.0
 * DESCRIPTION:   Length of outboard divertor plate (m) (default =  1.0)
 * JUSTIFICATION: Not yet set
 
-*plsepi = 
+*len_div_leg_inner_poloidal = 
 * DESCRIPTION:   Poloidal length, x-point to inboard strike point (m) (default =  1.0)
 * JUSTIFICATION: Not yet set
 

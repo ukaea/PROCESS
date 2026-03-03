@@ -359,7 +359,7 @@ plleno: float = None
 """length of outboard divertor plate (m)"""
 
 
-plsepi: float = None
+len_div_leg_inner_poloidal: float = None
 """poloidal length, x-point to inboard strike point (m)"""
 
 
@@ -471,7 +471,7 @@ def init_build_variables():
         dr_shld_blkt_gap, \
         plleni, \
         plleno, \
-        plsepi, \
+        len_div_leg_inner_poloidal, \
         plsepo, \
         rspo, \
         z_plasma_xpoint_upper, \
@@ -561,7 +561,7 @@ def init_build_variables():
     dr_shld_blkt_gap = 0.05
     plleni = 1.0
     plleno = 1.0
-    plsepi = 1.0
+    len_div_leg_inner_poloidal = 1.0
     plsepo = 1.5
     rspo = 0.0
     r_sh_inboard_in = 0.0

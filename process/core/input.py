@@ -1153,7 +1153,9 @@ INPUT_VARIABLES = {
     ),
     "plleni": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
     "plleno": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
-    "plsepi": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
+    "len_div_leg_inner_poloidal": InputVariable(
+        data_structure.build_variables, float, range=(0.1, 10.0)
+    ),
     "plsepo": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
     "p_plant_electric_net_required_mw": InputVariable(
         data_structure.constraint_variables, float, range=(1.0, 10000.0)

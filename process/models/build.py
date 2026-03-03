@@ -942,10 +942,10 @@ class Build:
         zxpt = -1.0e0 * kap * physics_variables.rminor
 
         # Position of inner strike point
-        # rspi = rxpt - build_variables.plsepi*cos(alphad)
-        # zspi = zxpt - build_variables.plsepi*sin(alphad)
-        rspi = rxpt - build_variables.plsepi * np.cos(thetai)
-        zspi = zxpt - build_variables.plsepi * np.sin(thetai)
+        # rspi = rxpt - build_variables.len_div_leg_inner_poloidal*cos(alphad)
+        # zspi = zxpt - build_variables.len_div_leg_inner_poloidal*sin(alphad)
+        rspi = rxpt - build_variables.len_div_leg_inner_poloidal * np.cos(thetai)
+        zspi = zxpt - build_variables.len_div_leg_inner_poloidal * np.sin(thetai)
 
         # Position of outer strike point
         # build_variables.rspo = rxpt + build_variables.plsepo*cos((pi/2.0e0)-alphad)
@@ -1100,8 +1100,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Inner divertor leg poloidal length (m)",
-                    "(plsepi)",
-                    build_variables.plsepi,
+                    "(len_div_leg_inner_poloidal)",
+                    build_variables.len_div_leg_inner_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1318,8 +1318,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "Inner divertor leg poloidal length (m)",
-                    "(plsepi)",
-                    build_variables.plsepi,
+                    "(len_div_leg_inner_poloidal)",
+                    build_variables.len_div_leg_inner_poloidal,
                 )
                 po.ovarrf(
                     self.outfile,
