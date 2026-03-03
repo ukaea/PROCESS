@@ -85,6 +85,33 @@ class Divertor:
             )
             return
 
+        (
+            dv.z_div_outer_strike_point,
+            dv.r_div_inner_strike_point,
+            _,
+            dv.r_div_outer_plate_top,
+            dv.z_div_outer_plate_top,
+            dv.r_div_outer_plate_bottom,
+            dv.z_div_outer_plate_bottom,
+            dv.z_div_inner_strike_point,
+            dv.r_div_inner_strike_point,
+            _,
+            dv.r_div_inner_plate_top,
+            dv.z_div_inner_plate_top,
+            dv.r_div_inner_plate_bottom,
+            dv.z_div_inner_plate_bottom,
+        ) = self.calculate_eu_demo_divertor_geometry(
+            len_div_plate_inner_poloidal=bv.len_div_plate_inner_poloidal,
+            len_div_plate_outer_poloidal=bv.len_div_plate_outer_poloidal,
+            rmajor=pv.rmajor,
+            triang=pv.triang,
+            rminor=pv.rminor,
+            kappa=pv.kappa,
+            rad_div_inner_leg_plate_poloidal=bv.rad_div_inner_leg_plate_poloidal,
+            rad_div_outer_leg_plate_poloidal=bv.rad_div_outer_leg_plate_poloidal,
+            dz_xpoint_divertor=bv.dz_xpoint_divertor,
+        )
+
     def divtart(
         self,
         rmajor: float,
@@ -405,6 +432,244 @@ class Divertor:
         """
 
         return p_plasma_neutron_mw * f_ster_div_single * n_divertors
+
+    def calculate_eu_demo_divertor_geometry(
+        len_div_plate_inner_poloidal: float,
+        len_div_plate_outer_poloidal: float,
+        rmajor: float,
+        triang: float,
+        rminor: float,
+        kappa: float,
+        rad_div_inner_leg_plate_poloidal: float,
+        rad_div_outer_leg_plate_poloidal: float,
+        dz_xpoint_divertor: float,
+    ):
+        """
+        Calculates the geometry of the inner and outer divertor plates for the EU-DEMO design, based on the input parameters.
+
+        Parameters
+        ----------
+        len_div_plate_inner_poloidal : float
+            Length of the inner divertor plate in the poloidal direction (m)
+        len_div_plate_outer_poloidal : float
+            Length of the outer divertor plate in the poloidal direction (m)
+        rmajor : float
+            Major radius of the plasma (m)
+        triang : float
+            Triangularity of the plasma
+        rminor : float
+            Minor radius of the plasma (m)
+        kappa : float
+            Elongation of the plasma
+        rad_div_inner_leg_plate_poloidal : float
+            Angle of the inner divertor leg plate in the poloidal plane (radians)
+        rad_div_outer_leg_plate_poloidal : float
+            Angle of the outer divertor leg plate in the poloidal plane (radians)
+        dz_xpoint_divertor : float
+            Vertical distance from the X-point to the divertor (m)
+
+        Returns
+        -------
+        tuple
+            A tuple containing the following calculated geometry parameters:
+            - z_div_outer_strike_point: Vertical location of the outer divertor strike point (m)
+            - r_div_outer_strike_point: Radial location of the outer divertor strike point (m)
+            - len_xpoint_div_strike_outboard: Length from the X-point to the outer divertor strike point (m)
+            - r_outer_plate_top: Radial location of the top of the outer divertor plate (m)
+            - z_outer_plate_top: Vertical location of the top of the outer divertor plate (m)
+            - r_outer_plate_bottom: Radial location of the bottom of the outer divertor plate (m)
+            - z_outer_plate_bottom: Vertical location of the bottom of the outer divertor plate (m)
+            - z_div_inner_strike: Vertical location of the inner divertor strike point (m)
+            - r_div_inner_strike: Radial location of the inner divertor strike point (m)
+            - len_xpoint_div_strike_inboard: Length from the X-point to the inner divertor strike point (m)
+            - r_div_inner_plate_top: Radial location of the top of the inner divertor plate (m)
+            - z_div_inner_plate_top: Vertical location of the top of the inner divertor plate (m)
+            - r_div_inner_plate_bottom: Radial location of the bottom of the inner divertor plate (m)
+            - z_div_inner_plate_bottom: Vertical location of the bottom of the inner divertor plate (m)
+
+        """
+
+        THETAO = np.pi / 4
+        THETAI = np.pi / 4
+        r_plasma_x_point_lower = rmajor - triang * rminor
+        z_plasma_x_point_lower = -1.0e0 * kappa * rminor
+
+        z_div_outer_strike_point = (
+            z_plasma_x_point_lower
+            - dz_xpoint_divertor
+            + (
+                0.5
+                * len_div_plate_outer_poloidal
+                * np.sin(rad_div_outer_leg_plate_poloidal + np.pi / 4)
+            )
+        )
+
+        r_div_outer_strike_point = rmajor
+
+        # This is only true if THETAO is 45 degrees, but we are keeping it at 45 degrees for now to allow for easy calculation of strike point positions and leg lengths
+        len_xpoint_div_strike_outboard = np.sqrt(
+            (r_div_outer_strike_point - r_plasma_x_point_lower) ** 2
+            + (z_div_outer_strike_point - z_plasma_x_point_lower) ** 2
+        )
+
+        # Position of outer plate ends
+        r_outer_plate_top = r_div_outer_strike_point - (
+            len_div_plate_outer_poloidal / 2.0e0
+        ) * np.cos(THETAO + rad_div_outer_leg_plate_poloidal)
+
+        z_outer_plate_top = z_div_outer_strike_point + (
+            len_div_plate_outer_poloidal / 2.0e0
+        ) * np.sin(THETAO + rad_div_outer_leg_plate_poloidal)
+
+        r_outer_plate_bottom = r_div_outer_strike_point + (
+            len_div_plate_outer_poloidal / 2.0e0
+        ) * np.cos(THETAO + rad_div_outer_leg_plate_poloidal)
+        z_outer_plate_bottom = z_div_outer_strike_point - (
+            len_div_plate_outer_poloidal / 2.0e0
+        ) * np.sin(THETAO + rad_div_outer_leg_plate_poloidal)
+
+        # =========================================================
+
+        z_div_inner_strike = z_outer_plate_top + len_div_plate_outer_poloidal * 0.5
+
+        r_div_inner_strike = rmajor - rminor * 0.9
+
+        # This is only true if THETAI is 45 degrees, but we are keeping it at 45 degrees for now to allow for easy calculation of strike point positions and leg lengths
+        len_xpoint_div_strike_inboard = np.sqrt(
+            (r_div_inner_strike - r_plasma_x_point_lower) ** 2
+            + (z_div_inner_strike - z_plasma_x_point_lower) ** 2
+        )
+
+        # Position of inner plate ends
+        r_div_inner_plate_top = r_div_inner_strike + (
+            len_div_plate_inner_poloidal / 2.0e0
+        ) * np.cos(THETAI + rad_div_inner_leg_plate_poloidal)
+        z_div_inner_plate_top = z_div_inner_strike + (
+            len_div_plate_inner_poloidal / 2.0e0
+        ) * np.sin(THETAI + rad_div_inner_leg_plate_poloidal)
+        r_div_inner_plate_bottom = r_div_inner_strike - (
+            len_div_plate_inner_poloidal / 2.0e0
+        ) * np.cos(THETAI + rad_div_inner_leg_plate_poloidal)
+        z_div_inner_plate_bottom = z_div_inner_strike - (
+            len_div_plate_inner_poloidal / 2.0e0
+        ) * np.sin(THETAI + rad_div_inner_leg_plate_poloidal)
+
+        return (
+            z_div_outer_strike_point,
+            r_div_outer_strike_point,
+            len_xpoint_div_strike_outboard,
+            r_outer_plate_top,
+            z_outer_plate_top,
+            r_outer_plate_bottom,
+            z_outer_plate_bottom,
+            z_div_inner_strike,
+            r_div_inner_strike,
+            len_xpoint_div_strike_inboard,
+            r_div_inner_plate_top,
+            z_div_inner_plate_top,
+            r_div_inner_plate_bottom,
+            z_div_inner_plate_bottom,
+        )
+
+    def output_eu_demo_divertor_geometry(self):
+        """Outputs the geometry of the inner and outer divertor plates for the EU-DEMO design to the output file."""
+
+        po.osubhd(self.outfile, "Divertor Geometry")
+        po.ocmmnt(
+            self.outfile,
+            "Geometry of the inner and outer divertor plates for the EU-DEMO design",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Vertical location of the outer divertor strike point (m)",
+            "(z_div_outer_strike_point)",
+            dv.z_div_outer_strike_point,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radial location of the outer divertor strike point (m)",
+            "(r_div_outer_strike_point)",
+            dv.r_div_outer_strike_point,
+        )
+        po.ovarre(
+            self.outfile,
+            "Length from the X-point to the outer divertor strike point (m)",
+            "(len_xpoint_div_strike_outboard)",
+            np.sqrt(
+                (dv.r_div_outer_strike_point - (pv.rmajor - triang * pv.rminor)) ** 2
+                + (dv.z_div_outer_strike_point - (-1.0e0 * pv.kappa * pv.rminor)) ** 2
+            ),
+        )
+        po.ovarre(
+            self.outfile,
+            "Radial location of the top of the outer divertor plate (m)",
+            "(r_outer_plate_top)",
+            dv.r_div_outer_plate_top,
+        )
+        po.ovarre(
+            self.outfile,
+            "Vertical location of the top of the outer divertor plate (m)",
+            "(z_outer_plate_top)",
+            dv.z_div_outer_plate_top,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radial location of the bottom of the outer divertor plate (m)",
+            "(r_outer_plate_bottom)",
+            dv.r_div_outer_plate_bottom,
+        )
+        po.ovarre(
+            self.outfile,
+            "Vertical location of the bottom of the outer divertor plate (m)",
+            "(z_outer_plate_bottom)",
+            dv.z_div_outer_plate_bottom,
+        )
+        po.ovarre(
+            self.outfile,
+            "Vertical location of the inner divertor strike point (m)",
+            "(z_div_inner_strike_point)",
+            dv.z_div_inner_strike_point,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radial location of the inner divertor strike point (m)",
+            "(r_div_inner_strike_point)",
+            dv.r_div_inner_strike_point,
+        )
+        po.ovarre(
+            self.outfile,
+            "Length from the X-point to the inner divertor strike point (m)",
+            "(len_xpoint_div_strike_inboard)",
+            np.sqrt(
+                (dv.r_div_inner_strike_point - (pv.rmajor - triang * pv.rminor)) ** 2
+                + (dv.z_div_inner_strike_point - (-1.0e0 * pv.kappa * pv.rminor)) ** 2
+            ),
+        )
+        po.ovarre(
+            self.outfile,
+            "Radial location of the top of the inner divertor plate (m)",
+            "(r_div_inner_plate_top)",
+            dv.r_div_inner_plate_top,
+        )
+        po.ovarre(
+            self.outfile,
+            "Vertical location of the top of the inner divertor plate (m)",
+            "(z_div_inner_plate_top)",
+            dv.z_div_inner_plate_top,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radial location of the bottom of the inner divertor plate (m)",
+            "(r_div_inner_plate_bottom)",
+            dv.r_div_inner_plate_bottom,
+        )
+        po.ovarre(
+            self.outfile,
+            "Vertical location of the bottom of the inner divertor plate (m)",
+            "(z_div_inner_plate_bottom)",
+            dv.z_div_inner_plate_bottom,
+        )
 
 
 class LowerDivertor(Divertor):
