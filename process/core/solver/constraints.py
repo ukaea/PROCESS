@@ -1852,6 +1852,23 @@ def constraint_equation_92(constraint_registration):
     )
 
 
+@ConstraintManager.register_constraint(93, "m", "<=")
+def constraint_equation_93(constraint_registration):
+    """Upper limit to ensure that the divertor to X-point gap can accomodate the target plates for
+    the EU DEMO divertor design
+
+    z_div_outer_plate_bottom: z coordinate of the bottom of the outer divertor plate (m)
+    z_div_inner_plate_top: z coordinate of the top of the inner divertor plate (m)
+    dz_xpoint_divertor: required gap between the X-point and the divertor
+    """
+    return leq(
+        data_structure.divertor_variables.z_div_outer_plate_bottom
+        - data_structure.divertor_variables.z_div_inner_plate_top,
+        data_structure.divertor_variables.dz_xpoint_divertor,
+        constraint_registration,
+    )
+
+
 def constraint_eqns(m: int, ieqn: int):
     """Evaluates the constraints given the current state of PROCESS.
 
