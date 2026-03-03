@@ -151,6 +151,7 @@ VESSEL_COLOUR = ["green", "#b7d4ea"]
 SHIELD_COLOUR = ["green", "#94c4df"]
 BLANKET_COLOUR = ["magenta", "#4a98c9"]
 PLASMA_COLOUR = ["khaki", "#cc8acc"]
+DIVERTOR_COLOUR = ["black", "black"]
 CRYOSTAT_COLOUR = ["red", "#2e7ebc"]
 FIRSTWALL_COLOUR = ["darkblue", "darkblue"]
 NBSHIELD_COLOUR = ["black", "black"]
@@ -409,7 +410,7 @@ def poloidal_cross_section(
     plot_shield(axis, mfile, scan, radial_build, colour_scheme)
     plot_blanket(axis, mfile, scan, radial_build, colour_scheme)
     plot_firstwall(axis, mfile, scan, radial_build, colour_scheme)
-    plot_lower_divertor(axis, mfile, scan)
+    plot_lower_divertor(axis, mfile, scan, colour_scheme)
     plot_plasma(axis, mfile, scan, colour_scheme)
     plot_centre_cross(axis, mfile, scan)
     plot_cryostat(axis, mfile, scan, colour_scheme)
@@ -3480,7 +3481,7 @@ def color_key(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal
         ("First wall", FIRSTWALL_COLOUR[colour_scheme - 1]),
         ("Plasma", PLASMA_COLOUR[colour_scheme - 1]),
         ("PF coils", "none"),
-        ("Divertor", "black"),
+        ("Divertor", DIVERTOR_COLOUR[colour_scheme - 1]),
     ]
 
     if (mfile.get("i_hcd_primary", scan=scan) in [5, 8]) or (
@@ -12997,12 +12998,12 @@ def plot_detailed_lower_divertor(
     dz_divertor = mfile_data.data["dz_divertor"].get_scan(scan)
 
     len_div_plate_inner = (
-        dz_xpoint_divertor
+        dz_xpoint_divertor/2
         if min(dr_blkt_inboard, dr_fw_plasma_gap_inboard) < 1e-2
         else np.mean([dr_blkt_inboard, dr_fw_plasma_gap_inboard])
     )
     len_div_plate_outer = (
-        dz_xpoint_divertor
+        dz_xpoint_divertor/2
         if min(dr_blkt_outboard, dr_fw_plasma_gap_outboard) < 1e-2
         else np.mean([dr_blkt_outboard, dr_fw_plasma_gap_outboard])
     )
@@ -13060,7 +13061,7 @@ def plot_detailed_lower_divertor(
 
     # ===========================================
 
-    z_div_inner_strike = z_outer_plate_top + len_div_plate_outer
+    z_div_inner_strike = z_outer_plate_top + len_div_plate_outer*0.5
 
     r_div_inner_strike = rmajor - rminor * 0.9
 
@@ -13112,7 +13113,7 @@ def plot_detailed_lower_divertor(
     axis.plot(
         r_curve_upper,
         z_curve_upper,
-        color="gray",
+        color=DIVERTOR_COLOUR[colour_scheme - 1],
         linewidth=1.5,
         label="Outer to inner plate connection",
     )
@@ -13120,7 +13121,7 @@ def plot_detailed_lower_divertor(
 
     r_div_bottom_right = r_outer_plate_top * 1.07
     z_div_bottom_right = z_outer_plate_top - dz_divertor
-    r_div_bottom_left = cumulative_radial_build("dr_blkt_inboard", mfile_data, scan)
+    r_div_bottom_left = cumulative_radial_build("dr_fw_plasma_gap_inboard", mfile_data, scan)
     z_div_bottom_left = z_div_inner_plate_top - dz_divertor * 0.5
 
     # Plot line connecting outer and inner plate bottoms with a slight curve
@@ -13150,7 +13151,7 @@ def plot_detailed_lower_divertor(
     axis.plot(
         r_curve_lower,
         z_curve_lower,
-        color="gray",
+        color=DIVERTOR_COLOUR[colour_scheme - 1],
         linewidth=1.5,
         label="Outer to inner plate connection",
     )
@@ -13191,7 +13192,7 @@ def plot_detailed_lower_divertor(
     )
 
     axis.fill(
-        divertor_r, divertor_z, color="lightgray", alpha=1.0, label="Divertor region"
+        divertor_r, divertor_z, color=DIVERTOR_COLOUR[colour_scheme - 1], alpha=1.0, label="Divertor region"
     )
 
     # Fill areas behind the divertor plates
@@ -13232,8 +13233,8 @@ def plot_detailed_lower_divertor(
     axis.fill(
         inner_backing_r,
         inner_backing_z,
-        color="darkgray",
-        alpha=0.6,
+        color=DIVERTOR_COLOUR[colour_scheme - 1],
+        alpha=1.0,
         label="Inner plate backing",
     )
 
@@ -13353,6 +13354,22 @@ def plot_detailed_lower_divertor(
         linewidth=0.5,
         label="First wall inner boundary (with plasma to wall gap)",
     )
+    
+    # Plot horizontal and vertical lines at the x-point
+    axis.axhline(
+        z_plasma_x_point_lower,
+        color="red",
+        linestyle="--",
+        linewidth=1.0,
+        alpha=0.7,
+    )
+    axis.axvline(
+        r_plasma_x_point_lower,
+        color="red",
+        linestyle="--",
+        linewidth=1.0,
+        alpha=0.7,
+    )
 
     # Plot strike points
     axis.plot(
@@ -13412,7 +13429,7 @@ def plot_detailed_lower_divertor(
     )
 
 
-def plot_lower_divertor(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
+def plot_lower_divertor(axis: plt.Axes, mfile_data: mf.MFile, scan: int, colour_scheme: int):
     """Plot a simplified divertor cross section on the given axis."""
 
     """Plot the divertor cross section on the given axis."""
@@ -13543,7 +13560,7 @@ def plot_lower_divertor(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
     axis.plot(
         r_curve_upper,
         z_curve_upper,
-        color="gray",
+        color=DIVERTOR_COLOUR[colour_scheme - 1],
         linewidth=1.5,
         label="Outer to inner plate connection",
     )
@@ -13581,7 +13598,7 @@ def plot_lower_divertor(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
     axis.plot(
         r_curve_lower,
         z_curve_lower,
-        color="gray",
+        color=DIVERTOR_COLOUR[colour_scheme - 1],
         linewidth=1.5,
         label="Outer to inner plate connection",
     )
@@ -13622,7 +13639,7 @@ def plot_lower_divertor(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
     )
 
     axis.fill(
-        divertor_r, divertor_z, color="lightgray", alpha=1.0, label="Divertor region"
+        divertor_r, divertor_z, color=DIVERTOR_COLOUR[colour_scheme - 1], alpha=1.0, label="Divertor region"
     )
 
     # Fill areas behind the divertor plates
@@ -13642,7 +13659,7 @@ def plot_lower_divertor(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
     axis.fill(
         outer_backing_r,
         outer_backing_z,
-        color="darkgray",
+        color=DIVERTOR_COLOUR[colour_scheme - 1],
         alpha=0.6,
         label="Outer plate backing",
     )
@@ -13663,7 +13680,7 @@ def plot_lower_divertor(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
     axis.fill(
         inner_backing_r,
         inner_backing_z,
-        color="darkgray",
+        color=DIVERTOR_COLOUR[colour_scheme - 1],
         alpha=0.6,
         label="Inner plate backing",
     )
