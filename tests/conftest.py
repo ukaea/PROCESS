@@ -13,7 +13,6 @@ from system_check import system_compatible
 
 from process import main
 from process.core.log import logging_model_handler
-from process.core.model import DataStructure
 from process.main import Models
 
 
@@ -232,11 +231,6 @@ def _plot_show_and_close_class(request):
         plt.close()
     else:
         yield
-
-
-@pytest.fixture
-def process_data_structure():
-    return DataStructure()
 
 
 @pytest.fixture
