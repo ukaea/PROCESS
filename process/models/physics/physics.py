@@ -1626,18 +1626,12 @@ def _trapped_particle_fraction_sauter(
 
 class Physics:
     def __init__(
-        
         self,
-       
         plasma_profile,
-       
         current_drive,
-       
         plasma_beta,
-       
         plasma_inductance,
         plasma_density_limit,
-    ,
         plasma_exhaust,
     ):
         self.outfile = constants.NOUT
