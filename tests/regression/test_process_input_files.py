@@ -36,6 +36,27 @@ EXCLUSIONS = {
 }
 
 
+class ProcessModelFilter(logging.Filter):
+    def filter(self, record):
+        return 0 if record.levelno < logging.CRITICAL else 1
+
+
+@pytest.fixture
+def hide_model_logs():
+    """Hides model logs (process.model.*) from being reported if a regression test fails.
+
+    This fixture adds a filter to all of the handlers on the root logger before the tests are run.
+    Modifying the logger handlers is crucial to avoid interfering with PROCESS model log system
+    which adds its own handers when PROCESS is run (hence why this is not done using the caplog fixture).
+    """
+    filter_ = ProcessModelFilter(name="process.models")
+    for handler in logging.getLogger().handlers:
+        handler.addFilter(filter_)
+    yield
+    for handler in logging.getLogger().handlers:
+        handler.removeFilter(filter_)
+
+
 @dataclass
 class MFileVariableDifference:
     name: str
@@ -245,6 +266,7 @@ def test_input_file(
     tracked_regression_test_assets,
     reg_tolerance: float,
     opt_params_only: bool,
+    hide_model_logs,
 ):
     """Tests each input file in the 'input_files' directory.
 
