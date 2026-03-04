@@ -9983,15 +9983,19 @@ class DetailedPhysics:
     def calculate_upper_hybrid_frequency(
         freq_plasma: float | np.ndarray, freq_larmor: float | np.ndarray
     ) -> float | np.ndarray:
-        """
-        Calculate the upper hybrid frequency for a particle species.
+        """Calculate the upper hybrid frequency for a particle species.
 
-        :param freq_plasma: Plasma frequency of the particle species (Hz).
-        :type freq_plasma: float | np.ndarray
-        :param freq_larmor: Larmor frequency of the particle species (Hz).
-        :type freq_larmor: float | np.ndarray
-        :returns: Upper hybrid frequency in Hz.
-        :rtype: float | np.ndarray
+        Parameters
+        ----------
+        freq_plasma : float | np.ndarray
+            Plasma frequency of the particle species (Hz).
+        freq_larmor : float | np.ndarray
+            Larmor frequency of the particle species (Hz).
+
+        Returns
+        -------
+        float | np.ndarray
+            Upper hybrid frequency in Hz.
         """
         return np.sqrt(freq_plasma**2 + freq_larmor**2)
 
@@ -10000,14 +10004,19 @@ class DetailedPhysics:
         vel_perp: float | np.ndarray,
         freq_larmor: float,
     ) -> float | np.ndarray:
-        """
-        Calculate the Larmor radius for a particle species.
-        :param vel_perp: Perpendicular velocity of the particle to the magnetic field (m/s).
-        :type vel_perp: float | np.ndarray
-        :param freq_larmor: Larmor frequency of the particle (Hz).
-        :type freq_larmor: float
-        :returns: Larmor radius in meters.
-        :rtype: float | np.ndarray
+        """Calculate the Larmor radius for a particle species.
+
+        Parameters
+        ----------
+        vel_perp : float | np.ndarray
+            Perpendicular velocity of the particle to the magnetic field (m/s).
+        freq_larmor : float
+            Larmor frequency of the particle (Hz).
+
+        Returns
+        -------
+        float | np.ndarray
+            Larmor radius in meters.
         """
         return vel_perp / (freq_larmor)
 
