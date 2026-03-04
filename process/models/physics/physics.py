@@ -4235,8 +4235,8 @@ class Physics:
             po.oblnkl(self.outfile)
 
             self.inductance.output_volt_second_information()
-
-        self.plasma_bootstrap_current.output_bootstrap_current_information()
+        if stellarator_variables.istell == 0:
+            self.plasma_bootstrap_current.output_bootstrap_current_information()
 
         po.osubhd(self.outfile, "Fuelling :")
         po.ovarre(
