@@ -556,7 +556,7 @@ def init_build_variables():
     dr_shld_thermal_outboard = 0.05
     dz_shld_thermal = 0.05
     dz_shld_vv_gap = 0.163
-    dz_xpoint_divertor = 0.0
+    dz_xpoint_divertor = 0.5
     dz_fw_plasma_gap = 0.60
     dr_shld_blkt_gap = 0.05
     len_div_inner_plate_poloidal = 1.0

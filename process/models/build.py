@@ -805,10 +805,10 @@ class Build:
             )
 
         # Output the cdivertor geometry
-        divht = self.divgeom(output)
-        # Issue #481 Remove build_variables.vgaptf
-        if build_variables.dz_xpoint_divertor < 0.00001e0:
-            build_variables.dz_xpoint_divertor = divht
+        # divht = self.divgeom(output)
+        # # Issue #481 Remove build_variables.vgaptf
+        # if build_variables.dz_xpoint_divertor < 0.00001e0:
+        #     build_variables.dz_xpoint_divertor = divht
 
         # If build_variables.dz_xpoint_divertor /= 0 use the value set by the user.
 

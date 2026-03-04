@@ -71,6 +71,8 @@ def write(models, _outfile):
     # Cryostat build
     models.cryostat.cryostat_output()
 
+    models.divertor.output_eu_demo_divertor_geometry()
+
     # Toroidal field coil copper model
     if data_structure.tfcoil_variables.i_tf_sup == 0:
         models.copper_tf_coil.run(output=True)

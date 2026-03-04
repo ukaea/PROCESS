@@ -12998,12 +12998,12 @@ def plot_detailed_lower_divertor(
     dz_divertor = mfile_data.data["dz_divertor"].get_scan(scan)
 
     len_div_plate_inner = (
-        dz_xpoint_divertor/2
+        dz_xpoint_divertor / 2
         if min(dr_blkt_inboard, dr_fw_plasma_gap_inboard) < 1e-2
         else np.mean([dr_blkt_inboard, dr_fw_plasma_gap_inboard])
     )
     len_div_plate_outer = (
-        dz_xpoint_divertor/2
+        dz_xpoint_divertor / 2
         if min(dr_blkt_outboard, dr_fw_plasma_gap_outboard) < 1e-2
         else np.mean([dr_blkt_outboard, dr_fw_plasma_gap_outboard])
     )
@@ -13061,7 +13061,7 @@ def plot_detailed_lower_divertor(
 
     # ===========================================
 
-    z_div_inner_strike = z_outer_plate_top + len_div_plate_outer*0.5
+    z_div_inner_strike = z_outer_plate_top + len_div_plate_outer * 0.5
 
     r_div_inner_strike = rmajor - rminor * 0.9
 
@@ -13121,7 +13121,9 @@ def plot_detailed_lower_divertor(
 
     r_div_bottom_right = r_outer_plate_top * 1.07
     z_div_bottom_right = z_outer_plate_top - dz_divertor
-    r_div_bottom_left = cumulative_radial_build("dr_fw_plasma_gap_inboard", mfile_data, scan)
+    r_div_bottom_left = cumulative_radial_build(
+        "dr_fw_plasma_gap_inboard", mfile_data, scan
+    )
     z_div_bottom_left = z_div_inner_plate_top - dz_divertor * 0.5
 
     # Plot line connecting outer and inner plate bottoms with a slight curve
@@ -13192,7 +13194,11 @@ def plot_detailed_lower_divertor(
     )
 
     axis.fill(
-        divertor_r, divertor_z, color=DIVERTOR_COLOUR[colour_scheme - 1], alpha=1.0, label="Divertor region"
+        divertor_r,
+        divertor_z,
+        color=DIVERTOR_COLOUR[colour_scheme - 1],
+        alpha=1.0,
+        label="Divertor region",
     )
 
     # Fill areas behind the divertor plates
@@ -13354,7 +13360,7 @@ def plot_detailed_lower_divertor(
         linewidth=0.5,
         label="First wall inner boundary (with plasma to wall gap)",
     )
-    
+
     # Plot horizontal and vertical lines at the x-point
     axis.axhline(
         z_plasma_x_point_lower,
@@ -13429,7 +13435,9 @@ def plot_detailed_lower_divertor(
     )
 
 
-def plot_lower_divertor(axis: plt.Axes, mfile_data: mf.MFile, scan: int, colour_scheme: int):
+def plot_lower_divertor(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int, colour_scheme: int
+):
     """Plot a simplified divertor cross section on the given axis."""
 
     """Plot the divertor cross section on the given axis."""
@@ -13639,7 +13647,11 @@ def plot_lower_divertor(axis: plt.Axes, mfile_data: mf.MFile, scan: int, colour_
     )
 
     axis.fill(
-        divertor_r, divertor_z, color=DIVERTOR_COLOUR[colour_scheme - 1], alpha=1.0, label="Divertor region"
+        divertor_r,
+        divertor_z,
+        color=DIVERTOR_COLOUR[colour_scheme - 1],
+        alpha=1.0,
+        label="Divertor region",
     )
 
     # Fill areas behind the divertor plates

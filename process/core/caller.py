@@ -325,6 +325,35 @@ class Caller:
             self.models.dcll.run(output=False)
 
         self.models.divertor.run(output=False)
+        # print(f"z_div_outer_strike_point: {dv.z_div_outer_strike_point}")
+        # print(f"r_div_outer_strike_point: {dv.r_div_outer_strike_point}")
+        # #print(f"len_xpoint_div_strike_outboard: {len_xpoint_div_strike_outboard}")
+        # print(f"r_div_outer_plate_top: {dv.r_div_outer_plate_top}")
+        # print(f"z_div_outer_plate_top: {dv.z_div_outer_plate_top}")
+        # print(f"r_div_outer_plate_bottom: {dv.r_div_outer_plate_bottom}")
+        # print(f"z_div_outer_plate_bottom: {dv.z_div_outer_plate_bottom}")
+        # print(f"z_div_inner_strike_point: {dv.z_div_inner_strike_point}")
+        # print(f"r_div_inner_strike_point: {dv.r_div_inner_strike_point}")
+        # #print(f"len_xpoint_div_strike_inboard: {len_xpoint_div_strike_inboard}")
+        # print(f"r_div_inner_plate_top: {dv.r_div_inner_plate_top}")
+        # print(f"z_div_inner_plate_top: {dv.z_div_inner_plate_top}")
+        # print(f"r_div_inner_plate_bottom: {dv.r_div_inner_plate_bottom}")
+        # print(f"z_div_inner_plate_bottom: {dv.z_div_inner_plate_bottom}")
+
+        # input_vars = {
+        #     "len_div_inner_plate_poloidal": bv.len_div_inner_plate_poloidal,
+        #     "len_div_outer_plate_poloidal": bv.len_div_outer_plate_poloidal,
+        #     "rmajor": pv.rmajor,
+        #     "triang": pv.triang,
+        #     "rminor": pv.rminor,
+        #     "kappa": pv.kappa,
+        #     "rad_div_inner_leg_plate_poloidal": dv.rad_div_inner_leg_plate_poloidal,
+        #     "rad_div_outer_leg_plate_poloidal": dv.rad_div_outer_leg_plate_poloidal,
+        #     "dz_xpoint_divertor": bv.dz_xpoint_divertor,
+        # }
+        # print("Input variables to calculate_eu_demo_divertor_geometry:")
+        # for key, value in input_vars.items():
+        #     print(f"  {key}: {value}")
 
         self.models.cryostat.run()
 

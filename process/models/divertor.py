@@ -101,16 +101,19 @@ class Divertor:
             dv.r_div_inner_plate_bottom,
             dv.z_div_inner_plate_bottom,
         ) = self.calculate_eu_demo_divertor_geometry(
-            len_div_plate_inner_poloidal=bv.len_div_plate_inner_poloidal,
-            len_div_plate_outer_poloidal=bv.len_div_plate_outer_poloidal,
+            len_div_inner_plate_poloidal=bv.len_div_inner_plate_poloidal,
+            len_div_outer_plate_poloidal=bv.len_div_outer_plate_poloidal,
             rmajor=pv.rmajor,
             triang=pv.triang,
             rminor=pv.rminor,
             kappa=pv.kappa,
-            rad_div_inner_leg_plate_poloidal=bv.rad_div_inner_leg_plate_poloidal,
-            rad_div_outer_leg_plate_poloidal=bv.rad_div_outer_leg_plate_poloidal,
+            rad_div_inner_leg_plate_poloidal=dv.rad_div_inner_leg_plate_poloidal,
+            rad_div_outer_leg_plate_poloidal=dv.rad_div_outer_leg_plate_poloidal,
             dz_xpoint_divertor=bv.dz_xpoint_divertor,
         )
+        
+        
+        
 
     def divtart(
         self,
@@ -434,8 +437,8 @@ class Divertor:
         return p_plasma_neutron_mw * f_ster_div_single * n_divertors
 
     def calculate_eu_demo_divertor_geometry(
-        len_div_plate_inner_poloidal: float,
-        len_div_plate_outer_poloidal: float,
+        len_div_inner_plate_poloidal: float,
+        len_div_outer_plate_poloidal: float,
         rmajor: float,
         triang: float,
         rminor: float,
@@ -449,9 +452,9 @@ class Divertor:
 
         Parameters
         ----------
-        len_div_plate_inner_poloidal : float
+        len_div_inner_plate_poloidal : float
             Length of the inner divertor plate in the poloidal direction (m)
-        len_div_plate_outer_poloidal : float
+        len_div_outer_plate_poloidal : float
             Length of the outer divertor plate in the poloidal direction (m)
         rmajor : float
             Major radius of the plasma (m)
@@ -494,13 +497,19 @@ class Divertor:
         r_plasma_x_point_lower = rmajor - triang * rminor
         z_plasma_x_point_lower = -1.0e0 * kappa * rminor
 
+        if len_div_outer_plate_poloidal == 0:
+            raise ProcessValueError(
+            "Division by zero: len_div_outer_plate_poloidal cannot be zero",
+            len_div_outer_plate_poloidal=len_div_outer_plate_poloidal,
+            )
+
         z_div_outer_strike_point = (
             z_plasma_x_point_lower
             - dz_xpoint_divertor
             + (
-                0.5
-                * len_div_plate_outer_poloidal
-                * np.sin(rad_div_outer_leg_plate_poloidal + np.pi / 4)
+            0.5
+            * len_div_outer_plate_poloidal
+            * np.sin(rad_div_outer_leg_plate_poloidal + np.pi / 4)
             )
         )
 
@@ -514,25 +523,31 @@ class Divertor:
 
         # Position of outer plate ends
         r_outer_plate_top = r_div_outer_strike_point - (
-            len_div_plate_outer_poloidal / 2.0e0
+            len_div_outer_plate_poloidal / 2.0e0
         ) * np.cos(THETAO + rad_div_outer_leg_plate_poloidal)
 
         z_outer_plate_top = z_div_outer_strike_point + (
-            len_div_plate_outer_poloidal / 2.0e0
+            len_div_outer_plate_poloidal / 2.0e0
         ) * np.sin(THETAO + rad_div_outer_leg_plate_poloidal)
 
         r_outer_plate_bottom = r_div_outer_strike_point + (
-            len_div_plate_outer_poloidal / 2.0e0
+            len_div_outer_plate_poloidal / 2.0e0
         ) * np.cos(THETAO + rad_div_outer_leg_plate_poloidal)
         z_outer_plate_bottom = z_div_outer_strike_point - (
-            len_div_plate_outer_poloidal / 2.0e0
+            len_div_outer_plate_poloidal / 2.0e0
         ) * np.sin(THETAO + rad_div_outer_leg_plate_poloidal)
 
         # =========================================================
 
-        z_div_inner_strike = z_outer_plate_top + len_div_plate_outer_poloidal * 0.5
+        z_div_inner_strike = z_outer_plate_top + len_div_outer_plate_poloidal * 0.5
 
         r_div_inner_strike = rmajor - rminor * 0.9
+
+        if rminor == 0:
+            raise ProcessValueError(
+            "Division by zero: rminor cannot be zero",
+            rminor=rminor,
+            )
 
         # This is only true if THETAI is 45 degrees, but we are keeping it at 45 degrees for now to allow for easy calculation of strike point positions and leg lengths
         len_xpoint_div_strike_inboard = np.sqrt(
@@ -540,20 +555,27 @@ class Divertor:
             + (z_div_inner_strike - z_plasma_x_point_lower) ** 2
         )
 
+        if len_div_inner_plate_poloidal == 0:
+            raise ProcessValueError(
+            "Division by zero: len_div_inner_plate_poloidal cannot be zero",
+            len_div_inner_plate_poloidal=len_div_inner_plate_poloidal,
+            )
+
         # Position of inner plate ends
         r_div_inner_plate_top = r_div_inner_strike + (
-            len_div_plate_inner_poloidal / 2.0e0
+            len_div_inner_plate_poloidal / 2.0e0
         ) * np.cos(THETAI + rad_div_inner_leg_plate_poloidal)
         z_div_inner_plate_top = z_div_inner_strike + (
-            len_div_plate_inner_poloidal / 2.0e0
+            len_div_inner_plate_poloidal / 2.0e0
         ) * np.sin(THETAI + rad_div_inner_leg_plate_poloidal)
         r_div_inner_plate_bottom = r_div_inner_strike - (
-            len_div_plate_inner_poloidal / 2.0e0
+            len_div_inner_plate_poloidal / 2.0e0
         ) * np.cos(THETAI + rad_div_inner_leg_plate_poloidal)
         z_div_inner_plate_bottom = z_div_inner_strike - (
-            len_div_plate_inner_poloidal / 2.0e0
+            len_div_inner_plate_poloidal / 2.0e0
         ) * np.sin(THETAI + rad_div_inner_leg_plate_poloidal)
-
+        
+        
         return (
             z_div_outer_strike_point,
             r_div_outer_strike_point,
@@ -597,7 +619,7 @@ class Divertor:
             "Length from the X-point to the outer divertor strike point (m)",
             "(len_xpoint_div_strike_outboard)",
             np.sqrt(
-                (dv.r_div_outer_strike_point - (pv.rmajor - triang * pv.rminor)) ** 2
+                (dv.r_div_outer_strike_point - (pv.rmajor - pv.triang * pv.rminor)) ** 2
                 + (dv.z_div_outer_strike_point - (-1.0e0 * pv.kappa * pv.rminor)) ** 2
             ),
         )
@@ -642,7 +664,7 @@ class Divertor:
             "Length from the X-point to the inner divertor strike point (m)",
             "(len_xpoint_div_strike_inboard)",
             np.sqrt(
-                (dv.r_div_inner_strike_point - (pv.rmajor - triang * pv.rminor)) ** 2
+                (dv.r_div_inner_strike_point - (pv.rmajor - pv.triang * pv.rminor)) ** 2
                 + (dv.z_div_inner_strike_point - (-1.0e0 * pv.kappa * pv.rminor)) ** 2
             ),
         )
