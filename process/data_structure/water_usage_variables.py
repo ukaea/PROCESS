@@ -49,3 +49,11 @@ class WaterUseData:
 
     wateruseonethru: float = 0.0
     """total volume of water used in once-through system (m3)"""
+
+
+# Another disgusting we may need to do in the transition period to support the dicts.
+# Once all variables in the new data structure we can make the dicts from the DataStructure...
+# and then in the long term put metadata on these classes and entierly remove the dicts
+# In the meantime... the dicts will check each module for a '_CREATE_DICTS_FROM_DATACLASS' attribute
+# and, if present, use this to create the dict ...
+CREATE_DICTS_FROM_DATACLASS = WaterUseData
