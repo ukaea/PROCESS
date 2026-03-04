@@ -942,8 +942,6 @@ class Build:
         zxpt = -1.0e0 * kap * physics_variables.rminor
 
         # Position of inner strike point
-        # r_div_inner_strike_point = rxpt - build_variables.len_div_leg_inner_poloidal*cos(alphad)
-        # z_div_inner_strike_point = zxpt - build_variables.len_div_leg_inner_poloidal*sin(alphad)
         r_div_inner_strike_point = (
             rxpt - build_variables.len_div_leg_inner_poloidal * np.cos(thetai)
         )
@@ -952,8 +950,6 @@ class Build:
         )
 
         # Position of outer strike point
-        # build_variables.r_div_outer_strike_point = rxpt + build_variables.len_div_leg_outer_poloidal*cos((pi/2.0e0)-alphad)
-        # z_div_outer_strike_point = zxpt - build_variables.len_div_leg_outer_poloidal*sin((pi/2.0e0)-alphad)
         build_variables.r_div_outer_strike_point = (
             rxpt + build_variables.len_div_leg_outer_poloidal * np.cos(thetao)
         )
@@ -962,10 +958,7 @@ class Build:
         )
 
         # Position of inner plate ends
-        # r_div_inner_plate_top = r_div_inner_strike_point - (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
-        # z_div_inner_plate_top = z_div_inner_strike_point + (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
-        # r_div_inner_plate_bottom = r_div_inner_strike_point + (build_variables.len_div_inner_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
-        # z_div_inner_plate_bottom = z_div_inner_strike_point - (build_variables.len_div_inner_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_inner_leg_plate_poloidal + alphad - pi/2.0e0)
+
         r_div_inner_plate_top = r_div_inner_strike_point + (
             build_variables.len_div_inner_plate_poloidal / 2.0e0
         ) * np.cos(thetai + divertor_variables.rad_div_inner_leg_plate_poloidal)
@@ -980,10 +973,6 @@ class Build:
         ) * np.sin(thetai + divertor_variables.rad_div_inner_leg_plate_poloidal)
 
         # Position of outer plate ends
-        # r_div_outer_plate_top = build_variables.r_div_outer_strike_point + (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
-        # z_div_outer_plate_top = z_div_outer_strike_point + (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
-        # r_div_outer_plate_bottom = build_variables.r_div_outer_strike_point - (build_variables.len_div_outer_plate_poloidal/2.0e0)*sin(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
-        # z_div_outer_plate_bottom = z_div_outer_strike_point - (build_variables.len_div_outer_plate_poloidal/2.0e0)*cos(divertor_variables.rad_div_outer_leg_plate_poloidal - alphad)
         r_div_outer_plate_top = build_variables.r_div_outer_strike_point - (
             build_variables.len_div_outer_plate_poloidal / 2.0e0
         ) * np.cos(thetao + divertor_variables.rad_div_outer_leg_plate_poloidal)
