@@ -9520,6 +9520,22 @@ class DetailedPhysics:
             )
         )
 
+        physics_variables.vel_plasma_alpha_thermal_profile = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT
+                * physics_variables.f_temp_plasma_ion_electron,
+                mass=constants.ALPHA_MASS,
+            )
+        )
+
+        physics_variables.vel_plasma_alpha_birth = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=constants.DT_ALPHA_ENERGY,
+                mass=constants.ALPHA_MASS,
+            )
+        )
+
         # ============================
         # Plasma frequencies
         # ============================
@@ -9555,6 +9571,54 @@ class DetailedPhysics:
                 b_field=physics_variables.b_plasma_toroidal_profile,
                 m_particle=constants.TRITON_MASS,
                 z_particle=1.0,
+            )
+        )
+
+        # ============================
+        # Upper hybrid frequencies
+        # ============================
+
+        physics_variables.freq_plasma_upper_hybrid_profile = self.calculate_upper_hybrid_frequency(
+            freq_plasma=np.concatenate([
+                physics_variables.freq_plasma_electron_profile[::-1],
+                physics_variables.freq_plasma_electron_profile,
+            ]),
+            freq_larmor=physics_variables.freq_plasma_larmor_toroidal_electron_profile,
+        )
+
+        # ============================
+        # Larmor radii
+        # ============================
+
+        # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
+        # we can use the total velocity to calculate the Larmor radius for an isotropic profile
+        physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_profile = self.calculate_larmor_radius(
+            vel_perp=np.sqrt(
+                2
+                * np.concatenate([
+                    physics_variables.vel_plasma_deuteron_profile[::-1],
+                    physics_variables.vel_plasma_deuteron_profile,
+                ])
+                ** 2
+            ),
+            freq_larmor=physics_variables.freq_plasma_larmor_toroidal_deuteron_profile
+            * (2 * np.pi),
+        )
+
+        # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
+        # we can use the total velocity to calculate the Larmor radius for an isotropic profile
+        physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_profile = (
+            self.calculate_larmor_radius(
+                vel_perp=np.sqrt(
+                    2
+                    * np.concatenate([
+                        physics_variables.vel_plasma_triton_profile[::-1],
+                        physics_variables.vel_plasma_triton_profile,
+                    ])
+                    ** 2
+                ),
+                freq_larmor=physics_variables.freq_plasma_larmor_toroidal_triton_profile
+                * (2 * np.pi),
             )
         )
 
@@ -9648,6 +9712,72 @@ class DetailedPhysics:
                         velocity=self.calculate_average_relative_velocity(
                             velocity_1=physics_variables.vel_plasma_triton_profile[i],
                             velocity_2=physics_variables.vel_plasma_electron_profile[i],
+                        ),
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
+        physics_variables.plasma_coulomb_log_deuteron_triton_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.TRITON_MASS,
+                            mass2=constants.DEUTERON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_triton_profile[i],
+                            velocity_2=physics_variables.vel_plasma_deuteron_profile[i],
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.TRITON_MASS,
+                            mass2=constants.DEUTERON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_triton_profile[i],
+                            velocity_2=physics_variables.vel_plasma_deuteron_profile[i],
+                        ),
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
+        physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=2,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ALPHA_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_alpha_thermal_profile[
+                                i
+                            ],
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ALPHA_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_profile[i],
+                            velocity_2=physics_variables.vel_plasma_alpha_thermal_profile[
+                                i
+                            ],
                         ),
                     ),
                 ),
@@ -9850,6 +9980,47 @@ class DetailedPhysics:
         )
 
     @staticmethod
+    def calculate_upper_hybrid_frequency(
+        freq_plasma: float | np.ndarray, freq_larmor: float | np.ndarray
+    ) -> float | np.ndarray:
+        """Calculate the upper hybrid frequency for a particle species.
+
+        Parameters
+        ----------
+        freq_plasma : float | np.ndarray
+            Plasma frequency of the particle species (Hz).
+        freq_larmor : float | np.ndarray
+            Larmor frequency of the particle species (Hz).
+
+        Returns
+        -------
+        float | np.ndarray
+            Upper hybrid frequency in Hz.
+        """
+        return np.sqrt(freq_plasma**2 + freq_larmor**2)
+
+    @staticmethod
+    def calculate_larmor_radius(
+        vel_perp: float | np.ndarray,
+        freq_larmor: float,
+    ) -> float | np.ndarray:
+        """Calculate the Larmor radius for a particle species.
+
+        Parameters
+        ----------
+        vel_perp : float | np.ndarray
+            Perpendicular velocity of the particle to the magnetic field (m/s).
+        freq_larmor : float
+            Larmor frequency of the particle (Hz).
+
+        Returns
+        -------
+        float | np.ndarray
+            Larmor radius in meters.
+        """
+        return vel_perp / (freq_larmor)
+
+    @staticmethod
     def calculate_reduced_mass(mass1: float, mass2: float) -> float:
         """
         Calculate the reduced mass of two particles.
@@ -9909,6 +10080,33 @@ class DetailedPhysics:
                 physics_variables.len_plasma_debye_electron_profile[i],
             )
 
+        po.osubhd(self.outfile, "Larmor radii:")
+
+        for i in range(
+            len(
+                physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_profile
+            )
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma deuteron isotropic Larmor radius at point {i}",
+                f"(radius_plasma_deuteron_toroidal_larmor_isotropic_profile{i})",
+                physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_profile[
+                    i
+                ],
+            )
+        for i in range(
+            len(physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma triton isotropic Larmor radius at point {i}",
+                f"(radius_plasma_triton_toroidal_larmor_isotropic_profile{i})",
+                physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_profile[
+                    i
+                ],
+            )
+
         po.osubhd(self.outfile, "Velocities:")
 
         for i in range(len(physics_variables.vel_plasma_electron_profile)):
@@ -9932,6 +10130,19 @@ class DetailedPhysics:
                 f"(vel_plasma_triton_profile{i})",
                 physics_variables.vel_plasma_triton_profile[i],
             )
+        for i in range(len(physics_variables.vel_plasma_alpha_thermal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma alpha thermal velocity at point {i}",
+                f"(vel_plasma_alpha_thermal_profile{i})",
+                physics_variables.vel_plasma_alpha_thermal_profile[i],
+            )
+        po.ovarre(
+            self.outfile,
+            "Plasma alpha birth velocity (m/s)",
+            "(vel_plasma_alpha_birth)",
+            physics_variables.vel_plasma_alpha_birth,
+        )
 
         po.osubhd(self.outfile, "Frequencies:")
 
@@ -9970,6 +10181,14 @@ class DetailedPhysics:
                 physics_variables.freq_plasma_larmor_toroidal_triton_profile[i],
             )
 
+        for i in range(len(physics_variables.freq_plasma_upper_hybrid_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma upper hybrid frequency at point {i}",
+                f"(freq_plasma_upper_hybrid_profile{i})",
+                physics_variables.freq_plasma_upper_hybrid_profile[i],
+            )
+
         po.osubhd(self.outfile, "Coulomb Logarithms:")
 
         for i in range(
@@ -10000,4 +10219,24 @@ class DetailedPhysics:
                 f"Electron-triton Coulomb log at point {i}",
                 f"(plasma_coulomb_log_electron_triton_profile{i})",
                 physics_variables.plasma_coulomb_log_electron_triton_profile[i],
+            )
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_deuteron_triton_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Deuteron-triton Coulomb log at point {i}",
+                f"(plasma_coulomb_log_deuteron_triton_profile{i})",
+                physics_variables.plasma_coulomb_log_deuteron_triton_profile[i],
+            )
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-alpha thermal Coulomb log at point {i}",
+                f"(plasma_coulomb_log_electron_alpha_thermal_profile{i})",
+                physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile[i],
             )
