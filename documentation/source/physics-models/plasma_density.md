@@ -1,7 +1,7 @@
-# Density Limit
+# Density Limit | `PlasmaDensityLimit`
 
 Several density limit models are available in PROCESS. These are
-calculated in routine `calculate_density_limit()`, which is called by `physics`.
+calculated in the run routine `density_limit.run()`, which is called by `physics()`.
 
 This constraint can be activated by stating `icc = 5` in the input file.
 
@@ -13,7 +13,7 @@ For the models below $P_{\perp}$ is the mean heat flux density across the separa
 
 -----------------
 
-## ASDEX model
+## ASDEX model | `calculate_asdex_density_limit()`
 
 Switch value: `i_density_limit = 1`[^1][^2]
 
@@ -23,7 +23,7 @@ $$
 
 -----------------
 
-## Borrass model for ITER, I
+## Borrass model for ITER, I | `calculate_borrass_iter_i_density_limit()`
 
 Switch value: `i_density_limit = 2` [^1]
 
@@ -35,7 +35,7 @@ $C \approx$  1.8 for ITER-like conditions.
 
 -----------------
 
-## Borrass model for ITER, II 
+## Borrass model for ITER, II | `calculate_borrass_iter_ii_density_limit()`
 
 Switch value: `i_density_limit = 3` [^1]
 
@@ -45,7 +45,7 @@ $$
 
 -----------------
 
-## JET edge radiation model
+## JET edge radiation model | `calculate_jet_edge_radiation_density_limit()`
 
 Switch value: `i_density_limit = 4` [^1]
 
@@ -55,7 +55,7 @@ $$
 
 -----------------
 
-## JET simplified model
+## JET simplified model | `calculate_jet_simple_density_limit()`
 
 Switch value: `i_density_limit = 5` [^1]
 
@@ -73,7 +73,7 @@ where $\kappa \approx 1.5, \Delta \approx 0.1a$ has been taken from JET.
 
 -----------------
 
-## Hugill-Murakami model
+## Hugill-Murakami model | `calculate_hugill_murakami_density_limit()`
 
 Switch value: `i_density_limit = 6` [^2]
 
@@ -84,7 +84,7 @@ $$
 
 -----------------
 
-## Greenwald model
+## Greenwald model | `calculate_greenwald_density_limit()`
 
 Switch value: `i_density_limit = 7` [^3][^4]
 
@@ -96,7 +96,7 @@ For the Greenwald model the limit applies to the line-averaged electron density,
 
 ---------------------
 
-## ASDEX New model
+## ASDEX New model | `calculate_asdex_new_density_limit()`
 
 Switch value: `i_density_limit = 8` [^5][^6]
 
