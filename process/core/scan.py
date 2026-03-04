@@ -76,7 +76,7 @@ class ScanVariables(Enum):
         "f_c_plasma_bootstrap_max", "Bootstrap_fraction", 12
     )
     boundu10 = ScanVariable("boundu(10)", "H_factor_upper_bound", 13)
-    fiooic = ScanVariable("fiooic", "TFC_Iop_/_Icrit_f-value", 14)
+    fiooic = ScanVariable("fiooic", "TFC_Iop_/_Icrit_margin", 14)
     rmajor = ScanVariable("rmajor", "Plasma_major_radius_(m)", 16)
     b_tf_inboard_max = ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)", 17)
     eta_cd_norm_hcd_primary_max = ScanVariable(

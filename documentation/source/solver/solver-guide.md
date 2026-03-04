@@ -3,16 +3,40 @@
 
 Any computer program naturally contains many equations. The built-in equation 
 solvers within PROCESS act on a special class, known as constraint equations, 
-all of which are formulated in the source file `constraint equations.f90`. These 
+all of which are formulated in the source file `process/core/optimisation/constraints.py`. These 
 can be split into two types:
  
-**Equality constraints (consistency equations)** -- that enforce consistency between the physics and 
-engineering parameters in the various models
+**Equality constraints (consistency equations)** that enforce consistency between the physics and 
+engineering parameters in the various models.
 
-**Inequality constraints (limit equations)** -- that enforce various parameters to lie within their allowed 
-limits. The `neqns` constraint equations that the user chooses for a given run are 
-activated by including the equation numbers in the first `neqns` elements of 
-array `icc`.
+**Inequality constraints (limit equations)** that enforce a value be greater/less than or equal to some bound (limit).
+
+A PROCESS input file will, for example, define which constraint equations are being used as follows:
+
+```
+...
+neqns = 3
+
+* Equalities
+icc = 1 * Beta
+icc = 2 * Global power balance
+icc = 11 * Radial build
+
+* Inequalities
+icc = 9 * Fusion power upper limit
+icc = 5 * Density upper limit
+icc = 24 * Beta upper limit
+icc = 15 * LH power threshold limit
+...
+```
+
+Here each `icc=n` statement tells PROCESS to activate a constraint with the name `n`. A list of the constraints and 
+their corresponding names can be found [here](../../source/reference/process/data_structure/numerics/#process.data_structure.numerics.lablcc).
+
+The `neqns = 3` statement is telling PROCESS to treat the first `3` equations as equality constraints, and the rest as inequality constraints. Therefore, it is imperative that all equality constraints are stated before any inequality constraints.
+
+
+In both types of equations, an optimiser/solver uses the normalised residuals $c_i$ of the constraints (and sometimes its gradient, depending on the solver/optimiser) to guide the solution towards one that satisfies all of the constraints.
 
 ## Consistency Equations
 
@@ -30,43 +54,26 @@ $$
 c_i = 1 - \frac{g}{h}
 $$
 
-The equation solvers VMCON and HYBRD need the constraint equations $c_i$ to be given in 
-the form shown, since they adjust the iteration variables so as to obtain $c_i = 0$, 
-thereby ensuring that $g = h$.
+The optimiser/solver will attempt to find a solution that produces $c_i = 0$ for all equality constraints.
 
 ## Limit Equations
 
 The limit equations are inequalities that ensure that various physics or engineering 
 limits are not exceeded. 
 
-The f-values are used as follows. In general, limit equations have the form
-
-$$
-\mathrm{calculated\ quantity} = f \times \mathrm{maximum\ allowable\ value}
-$$
-
-where $f$ is the `f-value`. In optimisation mode, all iteration variables have prescribed 
-lower and upper bounds. If $f$ is chosen to be an iteration variable and is given a 
-lower bound of zero and an upper bound of one, then the limit equation does indeed 
-constrain the calculated quantity to lie between zero and its maximum allowable value, 
-as required. 
-
 As with the consistency equations, the general form of the limit equations is
 
 $$
-c_i = 1 - f.\frac{h_{max}}{h}
+c_i = 1 - \frac{h_{max}}{h}
 $$
 
-where $h_{max}$ is the maximum allowed value of the quantity $h$. Sometimes, the limit 
-equation and `f-value` are used to ensure that quantity $h$ is larger than its minimum
-value $h_{min}$. In this case, $0 ≤ f ≤ 1$ (as before), but the equation takes the form
+where $h_{max}$ is the maximum allowed value of the quantity $h$, or
 
 $$
 c_i = 1 - f.\frac{h}{h_{min}}
 $$
 
-By fixing the `f-value` (i.e. not including it in the `ixc` array), the limit equations 
-can be used as equality constraints. 
+where $h_{min}$ is the minimum allowed value of the quantity $h$.
 
 For example, to set the net electric power to a certain value, the following 
 should be carried out:
@@ -74,15 +81,7 @@ should be carried out:
 1. Activate `constraint 16` (net electric power lower limit) by including it in the `icc` array
 2. Set `p_plant_electric_net_required_mw` to the required net electric power.
 
-Limit equations are not restricted to optimisation mode. In non-optimisation mode, the iteration
-variables are not bounded, but the `f-values` can still be used to provide information about 
-how calculated values compare with limiting values, without having to change the characteristics 
-of the device being benchmarked to find a solution.
-
-It is for this reason that all the constraint equations used in PROCESS are formulated as equalities,
-despite the fact that equation solver VMCON can solve for inequalities as well. The use of `f-values`
-precludes this need, and allows the non-optimising equation solver HYBRD to use the same constraint
-equations.
+The optimiser/solver will attempt to find a solution that produces $c_i \geq 0$ for all inequality constraints.
 
 ## Iteration Variables
 
@@ -111,7 +110,7 @@ Switch `ioptimz` should be set to 1 for optimisation mode.
 
 If `ioptimz = 0`, a non-optimisation pass is performed first. Occasionally this provides a feasible set of initial conditions that aids convergence of the optimiser, but it is recommended to use `ioptimz = 1`.
 
-Enable all the relevant consistency equations, and it is advisable to enable the corresponding iterations variables. A number of limit equations (inequality constraints) can also be activated. For limit equations, the corresponding f-value must be selected as an iteration variable. In optimisation more, the number of iteration variables is unlimited.
+Enable all the relevant consistency equations, and it is advisable to enable the corresponding iterations variables. A number of limit equations (inequality constraints) can also be activated. In optimisation mode, the number of iteration variables is unlimited.
 
 It may still be difficult, if not impossible, to reconcile the fusion power and the net electric power with the required values. This may well be due to the power conversion efficiency values being used.
 
