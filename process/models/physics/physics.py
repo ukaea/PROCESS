@@ -26,6 +26,7 @@ from process.data_structure import (
     stellarator_variables,
     times_variables,
 )
+from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
 
 logger = logging.getLogger(__name__)
 
@@ -639,7 +640,7 @@ class Physics:
         plasma_inductance,
         plasma_density_limit,
         plasma_exhaust,
-        plasma_bootstrap,
+        plasma_bootstrap_current: PlasmaBootstrapCurrent,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -649,7 +650,7 @@ class Physics:
         self.inductance = plasma_inductance
         self.density_limit = plasma_density_limit
         self.exhaust = plasma_exhaust
-        self.bootstrap = plasma_bootstrap
+        self.plasma_bootstrap_current = plasma_bootstrap_current
 
     def physics(self):
         """Routine to calculate tokamak plasma physics information
@@ -931,7 +932,7 @@ class Physics:
                 current_drive_variables.f_c_plasma_pfirsch_schluter_scene
             )
 
-        self.bootstrap.run()
+        self.plasma_bootstrap_current.run()
 
         physics_variables.err242 = 0
         if (
@@ -4235,7 +4236,7 @@ class Physics:
 
             self.inductance.output_volt_second_information()
 
-        self.bootstrap.output_bootstrap_current_information()
+        self.plasma_bootstrap_current.output_bootstrap_current_information()
 
         po.osubhd(self.outfile, "Fuelling :")
         po.ovarre(
