@@ -30,6 +30,7 @@ from process.models.physics.current_drive import (
     NeutralBeam,
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
+from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.physics import (
     Physics,
     PlasmaBeta,
@@ -88,6 +89,7 @@ def stellarator():
             PlasmaBeta(),
             PlasmaInductance(),
             PlasmaDensityLimit(),
+            PlasmaExhaust(),
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),

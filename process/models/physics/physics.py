@@ -1632,6 +1632,7 @@ class Physics:
         plasma_beta,
         plasma_inductance,
         plasma_density_limit,
+        plasma_exhaust,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -1640,6 +1641,7 @@ class Physics:
         self.beta = plasma_beta
         self.inductance = plasma_inductance
         self.density_limit = plasma_density_limit
+        self.exhaust = plasma_exhaust
 
     def physics(self):
         """Routine to calculate tokamak plasma physics information
@@ -2377,12 +2379,31 @@ class Physics:
         )
 
         physics_variables.p_plasma_separatrix_mw = (
-            physics_variables.f_p_alpha_plasma_deposited
-            * physics_variables.p_alpha_total_mw
-            + physics_variables.p_non_alpha_charged_mw
-            + pinj
-            + physics_variables.p_plasma_ohmic_mw
-            - physics_variables.p_plasma_rad_mw
+            self.exhaust.calculate_separatrix_power(
+                f_p_alpha_plasma_deposited=physics_variables.f_p_alpha_plasma_deposited,
+                p_alpha_total_mw=physics_variables.p_alpha_total_mw,
+                p_non_alpha_charged_mw=physics_variables.p_non_alpha_charged_mw,
+                p_hcd_injected_total_mw=pinj,
+                p_plasma_ohmic_mw=physics_variables.p_plasma_ohmic_mw,
+                p_plasma_rad_mw=physics_variables.p_plasma_rad_mw,
+            )
+        )
+
+        physics_variables.p_plasma_separatrix_rmajor_mw = (
+            self.exhaust.calculate_psep_over_r_metric(
+                p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+                rmajor=physics_variables.rmajor,
+            )
+        )
+
+        physics_variables.p_div_bt_q_aspect_rmajor_mw = (
+            self.exhaust.calculate_eu_demo_re_attachment_metric(
+                p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+                b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+                q95=physics_variables.q95,
+                aspect=physics_variables.aspect,
+                rmajor=physics_variables.rmajor,
+            )
         )
 
         physics_variables.pflux_plasma_surface_neutron_avg_mw = (
@@ -4912,7 +4933,7 @@ class Physics:
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Power into divertor zone via charged particles (MW)",
+            "Plasma separatrix power (MW)",
             "(p_plasma_separatrix_mw)",
             physics_variables.p_plasma_separatrix_mw,
             "OP ",
@@ -4939,25 +4960,15 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Pdivt / R ratio (MW/m) (On peak divertor)",
-                "(p_div_separatrix_max_mw/physics_variables.rmajor)",
-                physics_variables.p_div_separatrix_max_mw / physics_variables.rmajor,
+                "(p_plasma_separatrix_rmajor_mw)",
+                physics_variables.p_plasma_separatrix_rmajor_mw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Pdivt Bt / qAR ratio (MWT/m) (On peak divertor)",
-                "(pdivmaxbt/qar)",
-                (
-                    (
-                        physics_variables.p_div_separatrix_max_mw
-                        * physics_variables.b_plasma_toroidal_on_axis
-                    )
-                    / (
-                        physics_variables.q95
-                        * physics_variables.aspect
-                        * physics_variables.rmajor
-                    )
-                ),
+                "(p_div_bt_q_aspect_rmajor_mw)",
+                physics_variables.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
             )
         else:
@@ -4965,25 +4976,15 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Psep / R ratio (MW/m)",
-                "(p_plasma_separatrix_mw/rmajor)",
-                physics_variables.p_plasma_separatrix_mw / physics_variables.rmajor,
+                "(p_plasma_separatrix_rmajor_mw)",
+                physics_variables.p_plasma_separatrix_rmajor_mw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Psep Bt / qAR ratio (MWT/m)",
-                "(pdivtbt_over_qar)",
-                (
-                    (
-                        physics_variables.p_plasma_separatrix_mw
-                        * physics_variables.b_plasma_toroidal_on_axis
-                    )
-                    / (
-                        physics_variables.q95
-                        * physics_variables.aspect
-                        * physics_variables.rmajor
-                    )
-                ),
+                "(p_div_bt_q_aspect_rmajor_mw)",
+                physics_variables.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
             )
 
