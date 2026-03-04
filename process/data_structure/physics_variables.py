@@ -1847,6 +1847,7 @@ def init_physics_variables():
     p_dhe3_total_mw = 0.0
     p_plasma_separatrix_mw = 0.0
     p_plasma_separatrix_rmajor_mw = 0.0
+    p_div_bt_q_aspect_rmajor_mw = 0.0
     p_div_lower_separatrix_mw = 0.0
     p_div_lower_separatrix_mw = 0.0
     p_div_upper_separatrix_mw = 0.0
