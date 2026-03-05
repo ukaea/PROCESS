@@ -59,7 +59,6 @@ from process.data_structure.superconducting_tf_coil_variables import (
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
-from process.data_structure.water_usage_variables import init_watuse_variables
 from process.models.stellarator.initialization import st_init
 
 
@@ -288,7 +287,6 @@ def init_all_module_vars():
     init_pulse_variables()
     init_rebco_variables()
     init_reinke_variables()
-    init_watuse_variables()
     init_cs_fatigue_variables()
     init_blanket_library()
     init_dcll_module()

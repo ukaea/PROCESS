@@ -68,6 +68,7 @@ from process.core.io.process_funcs import (
     vary_iteration_variables,
 )
 from process.core.log import logging_model_handler, show_errors
+from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
 from process.core.scan import Scan
 from process.models.availability import Availability
@@ -737,6 +738,8 @@ class Models:
 
         self.dcll = DCLL(fw=self.fw)
 
+        self.setup_data_structure()
+
     @property
     def costs(self) -> CostsProtocol:
         if data_structure.cost_variables.cost_model == 0:
@@ -753,6 +756,20 @@ class Models:
     @costs.setter
     def costs(self, value: CostsProtocol):
         self._costs_custom = value
+
+    @property
+    def models(self) -> tuple[Model, ...]:
+        # At the moment, this property just returns models that implement the Model interface.
+        # Eventually every Model will comply and then this method can be used as the caller/outputter!
+        return (self.water_use,)
+
+    def setup_data_structure(self):
+        # This Models class should be replaced with a dataclass so we can
+        # iterate over the `fields`.
+        # This can be a disgusting temporary measure :(
+        data = DataStructure()
+        for model in self.models:
+            model.data = data
 
 
 # setup handlers for writing to terminal (on warnings+)

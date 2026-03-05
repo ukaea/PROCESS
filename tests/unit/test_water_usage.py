@@ -2,18 +2,15 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import water_usage_variables
-from process.models.water_use import WaterUse
-
 
 @pytest.fixture
-def water_use():
+def water_use(process_models):
     """Provides WaterUse object for testing.
 
     :return water_use: initialised WaterUse object
     :type water_use: process.water_use.WaterUse
     """
-    return WaterUse()
+    return process_models.water_use
 
 
 class CoolingTowersParam(NamedTuple):
@@ -83,42 +80,46 @@ class CoolingTowersParam(NamedTuple):
     ),
 )
 def test_cooling_towers(coolingtowersparam, monkeypatch, water_use):
-    monkeypatch.setattr(water_usage_variables, "airtemp", coolingtowersparam.airtemp)
-    monkeypatch.setattr(water_usage_variables, "waterdens", coolingtowersparam.waterdens)
+    monkeypatch.setattr(water_use.data.water_use, "airtemp", coolingtowersparam.airtemp)
     monkeypatch.setattr(
-        water_usage_variables, "latentheat", coolingtowersparam.latentheat
-    )
-    monkeypatch.setattr(water_usage_variables, "volheat", coolingtowersparam.volheat)
-    monkeypatch.setattr(water_usage_variables, "evapratio", coolingtowersparam.evapratio)
-    monkeypatch.setattr(water_usage_variables, "evapvol", coolingtowersparam.evapvol)
-    monkeypatch.setattr(
-        water_usage_variables, "energypervol", coolingtowersparam.energypervol
+        water_use.data.water_use, "waterdens", coolingtowersparam.waterdens
     )
     monkeypatch.setattr(
-        water_usage_variables, "volperenergy", coolingtowersparam.volperenergy
+        water_use.data.water_use, "latentheat", coolingtowersparam.latentheat
+    )
+    monkeypatch.setattr(water_use.data.water_use, "volheat", coolingtowersparam.volheat)
+    monkeypatch.setattr(
+        water_use.data.water_use, "evapratio", coolingtowersparam.evapratio
+    )
+    monkeypatch.setattr(water_use.data.water_use, "evapvol", coolingtowersparam.evapvol)
+    monkeypatch.setattr(
+        water_use.data.water_use, "energypervol", coolingtowersparam.energypervol
     )
     monkeypatch.setattr(
-        water_usage_variables, "waterusetower", coolingtowersparam.waterusetower
+        water_use.data.water_use, "volperenergy", coolingtowersparam.volperenergy
+    )
+    monkeypatch.setattr(
+        water_use.data.water_use, "waterusetower", coolingtowersparam.waterusetower
     )
 
     water_use.cooling_towers(wastetherm=coolingtowersparam.wastetherm, output=False)
 
-    assert water_usage_variables.volheat == pytest.approx(
+    assert water_use.data.water_use.volheat == pytest.approx(
         coolingtowersparam.expected_volheat
     )
-    assert water_usage_variables.evapratio == pytest.approx(
+    assert water_use.data.water_use.evapratio == pytest.approx(
         coolingtowersparam.expected_evapratio
     )
-    assert water_usage_variables.evapvol == pytest.approx(
+    assert water_use.data.water_use.evapvol == pytest.approx(
         coolingtowersparam.expected_evapvol
     )
-    assert water_usage_variables.energypervol == pytest.approx(
+    assert water_use.data.water_use.energypervol == pytest.approx(
         coolingtowersparam.expected_energypervol
     )
-    assert water_usage_variables.volperenergy == pytest.approx(
+    assert water_use.data.water_use.volperenergy == pytest.approx(
         coolingtowersparam.expected_volperenergy
     )
-    assert water_usage_variables.waterusetower == pytest.approx(
+    assert water_use.data.water_use.waterusetower == pytest.approx(
         coolingtowersparam.expected_waterusetower
     )
 
@@ -197,54 +198,60 @@ class CoolingWaterBodyParam(NamedTuple):
 )
 def test_cooling_water_body(coolingwaterbodyparam, monkeypatch, water_use):
     monkeypatch.setattr(
-        water_usage_variables, "watertemp", coolingwaterbodyparam.watertemp
+        water_use.data.water_use, "watertemp", coolingwaterbodyparam.watertemp
     )
     monkeypatch.setattr(
-        water_usage_variables, "windspeed", coolingwaterbodyparam.windspeed
+        water_use.data.water_use, "windspeed", coolingwaterbodyparam.windspeed
     )
     monkeypatch.setattr(
-        water_usage_variables, "waterdens", coolingwaterbodyparam.waterdens
+        water_use.data.water_use, "waterdens", coolingwaterbodyparam.waterdens
     )
     monkeypatch.setattr(
-        water_usage_variables, "latentheat", coolingwaterbodyparam.latentheat
-    )
-    monkeypatch.setattr(water_usage_variables, "volheat", coolingwaterbodyparam.volheat)
-    monkeypatch.setattr(
-        water_usage_variables, "evapratio", coolingwaterbodyparam.evapratio
-    )
-    monkeypatch.setattr(water_usage_variables, "evapvol", coolingwaterbodyparam.evapvol)
-    monkeypatch.setattr(
-        water_usage_variables, "energypervol", coolingwaterbodyparam.energypervol
+        water_use.data.water_use, "latentheat", coolingwaterbodyparam.latentheat
     )
     monkeypatch.setattr(
-        water_usage_variables, "volperenergy", coolingwaterbodyparam.volperenergy
+        water_use.data.water_use, "volheat", coolingwaterbodyparam.volheat
     )
     monkeypatch.setattr(
-        water_usage_variables, "wateruserecirc", coolingwaterbodyparam.wateruserecirc
+        water_use.data.water_use, "evapratio", coolingwaterbodyparam.evapratio
     )
     monkeypatch.setattr(
-        water_usage_variables, "wateruseonethru", coolingwaterbodyparam.wateruseonethru
+        water_use.data.water_use, "evapvol", coolingwaterbodyparam.evapvol
+    )
+    monkeypatch.setattr(
+        water_use.data.water_use, "energypervol", coolingwaterbodyparam.energypervol
+    )
+    monkeypatch.setattr(
+        water_use.data.water_use, "volperenergy", coolingwaterbodyparam.volperenergy
+    )
+    monkeypatch.setattr(
+        water_use.data.water_use, "wateruserecirc", coolingwaterbodyparam.wateruserecirc
+    )
+    monkeypatch.setattr(
+        water_use.data.water_use,
+        "wateruseonethru",
+        coolingwaterbodyparam.wateruseonethru,
     )
 
     water_use.cooling_water_body(
         wastetherm=coolingwaterbodyparam.wastetherm, output=False
     )
 
-    assert water_usage_variables.evapratio == pytest.approx(
+    assert water_use.data.water_use.evapratio == pytest.approx(
         coolingwaterbodyparam.expected_evapratio
     )
-    assert water_usage_variables.evapvol == pytest.approx(
+    assert water_use.data.water_use.evapvol == pytest.approx(
         coolingwaterbodyparam.expected_evapvol
     )
-    assert water_usage_variables.energypervol == pytest.approx(
+    assert water_use.data.water_use.energypervol == pytest.approx(
         coolingwaterbodyparam.expected_energypervol
     )
-    assert water_usage_variables.volperenergy == pytest.approx(
+    assert water_use.data.water_use.volperenergy == pytest.approx(
         coolingwaterbodyparam.expected_volperenergy
     )
-    assert water_usage_variables.wateruserecirc == pytest.approx(
+    assert water_use.data.water_use.wateruserecirc == pytest.approx(
         coolingwaterbodyparam.expected_wateruserecirc
     )
-    assert water_usage_variables.wateruseonethru == pytest.approx(
+    assert water_use.data.water_use.wateruseonethru == pytest.approx(
         coolingwaterbodyparam.expected_wateruseonethru
     )
