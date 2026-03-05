@@ -52,11 +52,11 @@ Issues        = "https://github.com/ukaea/process/issues"
 [project.optional-dependencies]
 test = [
   "pytest>=5.4.1",
-  "requests>=2.30",
   "testbook>=0.4",
   "pytest-cov>=3.0.0",
   "pytest-xdist>=2.5.0",
   "platformdirs~=4.5.0",
+  "filelock",
   "process[examples]"
 ]
 examples = ["jupyter==1.0.0", "jupytext"]
