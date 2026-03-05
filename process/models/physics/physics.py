@@ -645,8 +645,8 @@ class Physics:
         plasma_inductance,
         plasma_density_limit: PlasmaDensityLimit,
         plasma_exhaust: PlasmaExhaust,
-        plasma_confinement: PlasmaConfinementTime,
         plasma_bootstrap_current: PlasmaBootstrapCurrent,
+        plasma_confinement: PlasmaConfinementTime,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE

@@ -2341,8 +2341,6 @@ class Stellarator:
         sbar = 1.0e0
         (
             physics_variables.burnup,
-            physics_variables.ntau,
-            physics_variables.nTtau,
             physics_variables.figmer,
             _fusrat,
             physics_variables.molflow_plasma_fuelling_required,
@@ -2351,8 +2349,6 @@ class Stellarator:
             physics_variables.f_alpha_energy_confinement,
         ) = self.physics.phyaux(
             physics_variables.aspect,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.temp_plasma_electron_vol_avg_kev,
             physics_variables.nd_plasma_fuel_ions_vol_avg,
             physics_variables.fusden_total,
             physics_variables.fusden_alpha_total,
