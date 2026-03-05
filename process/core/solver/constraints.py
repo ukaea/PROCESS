@@ -1862,9 +1862,6 @@ def constraint_eqns(m: int, ieqn: int):
     ieqn :
         Evaluates the 'ieqn'th constraint equation (index starts at 1)
         or all equations if <= 0
-    m: int :
-
-    ieqn: int :
 
     """
 

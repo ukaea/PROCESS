@@ -521,7 +521,7 @@ class Scan:
             "The following equality constraint residues should be close to zero:",
         )
 
-        con1, con2, err, sym, lab = constraints.constraint_eqns(
+        con1, con2, err, _, lab = constraints.constraint_eqns(
             numerics.neqns + numerics.nineqns, -1
         )
 
@@ -532,7 +532,7 @@ class Scan:
 
             equality_constraint_table.append([
                 name,
-                sym[i],
+                "=",
                 f"{con2[i]} {lab[i]}",
                 f"{err[i]} {lab[i]}",
                 con1[i],
