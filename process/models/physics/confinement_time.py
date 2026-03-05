@@ -82,9 +82,15 @@ class ConfinementTimeModel(IntEnum):
 class ConfinementRadiationLossModel(IntEnum):
     """Confinement radiation loss model types"""
 
-    FULL_RADIATION = 0
-    CORE_ONLY = 1
-    NO_RADIATION = 2
+    FULL_RADIATION = (0, "All radiation included in loss power term")
+    CORE_ONLY = (1, "Only core radiation included in loss power term")
+    NO_RADIATION = (2, "No radiation included in loss power term")
+
+    def __new__(cls, value, description):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.description = description
+        return obj
 
 
 class PlasmaConfinementTime:
@@ -1269,32 +1275,33 @@ class PlasmaConfinementTime:
             "(i_rad_loss)",
             physics_variables.i_rad_loss,
         )
-        if physics_variables.i_rad_loss == 0:
+        model = ConfinementRadiationLossModel(physics_variables.i_rad_loss)
+
+        if model == ConfinementRadiationLossModel.FULL_RADIATION:
             po.ovarre(
                 self.outfile,
-                "Radiation power subtracted from plasma power balance (MW)",
+                "Radiation power subtracted from plasma heating power balance (MW)",
                 "",
                 physics_variables.p_plasma_rad_mw,
                 "OP ",
             )
-            po.ocmmnt(self.outfile, "  (Radiation correction is total radiation power)")
-        elif physics_variables.i_rad_loss == 1:
+        elif model == ConfinementRadiationLossModel.CORE_ONLY:
             po.ovarre(
                 self.outfile,
-                "Radiation power subtracted from plasma power balance (MW)",
+                "Radiation power subtracted from plasma heating power balance (MW)",
                 "",
                 physics_variables.p_plasma_inner_rad_mw,
                 "OP ",
             )
-            po.ocmmnt(self.outfile, "  (Radiation correction is core radiation power)")
-        else:
+        else:  # NO_RADIATION
             po.ovarre(
                 self.outfile,
-                "Radiation power subtracted from plasma power balance (MW)",
+                "Radiation power subtracted from plasma heating power balance (MW)",
                 "",
                 0.0e0,
             )
-            po.ocmmnt(self.outfile, "  (No radiation correction applied)")
+
+        po.ocmmnt(self.outfile, f"  (Radiation correction: {model.description})")
         po.ovarrf(
             self.outfile,
             "H* non-radiation corrected",
