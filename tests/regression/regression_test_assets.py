@@ -23,7 +23,8 @@ class TrackedMFile:
 
 
 class RegressionTestAssetCollector:
-    def __init__(self):
+    def __init__(self, cache_location: Path | None = None):
+        self._cache_location = cache_location or TEST_ASSET_CACHE_DIR
         self._hashes = self._git_commit_hashes()
         self._repo_dir = self._get_regression_assets()
         self._tracked_mfiles = self._get_tracked_mfiles()
