@@ -2294,7 +2294,7 @@ class Stellarator:
             physics_variables.t_ion_energy_confinement,
             physics_variables.t_energy_confinement,
             physics_variables.p_plasma_loss_mw,
-        ) = self.physics.calculate_confinement_time(
+        ) = self.physics.confinement.calculate_confinement_time(
             physics_variables.m_fuel_amu,
             physics_variables.p_alpha_total_mw,
             physics_variables.aspect,

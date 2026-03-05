@@ -4350,7 +4350,7 @@ class Physics:
                 _,
                 _,
                 _,
-            ) = self.calculate_confinement_time(
+            ) = self.confinement.calculate_confinement_time(
                 physics_variables.m_fuel_amu,
                 physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
@@ -4435,7 +4435,7 @@ class Physics:
                 _,
                 _,
                 _,
-            ) = self.calculate_confinement_time(
+            ) = self.confinement.calculate_confinement_time(
                 physics_variables.m_fuel_amu,
                 physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
