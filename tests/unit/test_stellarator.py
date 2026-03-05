@@ -21,6 +21,7 @@ from process.models.blankets.hcpb import CCFE_HCPB
 from process.models.buildings import Buildings
 from process.models.costs.costs import Costs
 from process.models.fw import FirstWall
+from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -90,9 +91,11 @@ def stellarator():
             PlasmaInductance(),
             PlasmaDensityLimit(),
             PlasmaExhaust(),
+            PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),
+        plasma_bootstrap=PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
     )
 
 
