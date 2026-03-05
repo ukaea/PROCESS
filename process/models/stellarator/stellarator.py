@@ -2294,7 +2294,7 @@ class Stellarator:
             physics_variables.t_ion_energy_confinement,
             physics_variables.t_energy_confinement,
             physics_variables.p_plasma_loss_mw,
-        ) = self.physics.calculate_confinement_time(
+        ) = self.physics.confinement.calculate_confinement_time(
             physics_variables.m_fuel_amu,
             physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
@@ -2341,8 +2341,6 @@ class Stellarator:
         sbar = 1.0e0
         (
             physics_variables.burnup,
-            physics_variables.ntau,
-            physics_variables.nTtau,
             physics_variables.figmer,
             _fusrat,
             physics_variables.molflow_plasma_fuelling_required,
@@ -2351,8 +2349,6 @@ class Stellarator:
             physics_variables.f_alpha_energy_confinement,
         ) = self.physics.phyaux(
             physics_variables.aspect,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.temp_plasma_electron_vol_avg_kev,
             physics_variables.nd_plasma_fuel_ions_vol_avg,
             physics_variables.fusden_total,
             physics_variables.fusden_alpha_total,
