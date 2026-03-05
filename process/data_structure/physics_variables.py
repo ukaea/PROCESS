@@ -89,61 +89,6 @@ first_call: int = None
 N_CONFINEMENT_SCALINGS: int = 51
 """number of energy confinement time scaling laws"""
 
-LABELS_CONFINEMENT_SCALINGS: list[str] = [
-    "User input electron confinement   ",
-    "Neo-Alcator                (Ohmic)",
-    "Mirnov                         (H)",
-    "Merezkhin-Muhkovatov    (Ohmic)(L)",
-    "Shimomura                      (H)",
-    "Kaye-Goldston                  (L)",
-    "ITER 89-P                      (L)",
-    "ITER 89-O                      (L)",
-    "Rebut-Lallia                   (L)",
-    "Goldston                       (L)",
-    "T10                            (L)",
-    "JAERI / Odajima-Shimomura      (L)",
-    "Kaye-Big Complex               (L)",
-    "ITER H90-P                     (H)",
-    "ITER 89-P & 89-O min           (L)",
-    "Riedel                         (L)",
-    "Christiansen                   (L)",
-    "Lackner-Gottardi               (L)",
-    "Neo-Kaye                       (L)",
-    "Riedel                         (H)",
-    "ITER H90-P amended             (H)",
-    "LHD                        (Stell)",
-    "Gyro-reduced Bohm          (Stell)",
-    "Lackner-Gottardi           (Stell)",
-    "ITER-93H  ELM-free             (H)",
-    "TITAN RFP OBSOLETE                ",
-    "ITER H-97P ELM-free            (H)",
-    "ITER H-97P ELMy                (H)",
-    "ITER-96P (ITER-97L)            (L)",
-    "Valovic modified ELMy          (H)",
-    "Kaye 98 modified               (L)",
-    "ITERH-PB98P(y)                 (H)",
-    "IPB98(y)                       (H)",
-    "IPB98(y,1)                     (H)",
-    "IPB98(y,2)                     (H)",
-    "IPB98(y,3)                     (H)",
-    "IPB98(y,4)                     (H)",
-    "ISS95                      (Stell)",
-    "ISS04                      (Stell)",
-    "DS03 beta-independent          (H)",
-    'Murari "Non-power law"         (H)',
-    "Petty 2008                 (ST)(H)",
-    "Lang high density              (H)",
-    "Hubbard 2017 - nominal         (I)",
-    "Hubbard 2017 - lower           (I)",
-    "Hubbard 2017 - upper           (I)",
-    "Menard NSTX                (ST)(H)",
-    "Menard NSTX-Petty08 hybrid (ST)(H)",
-    "Buxton NSTX gyro-Bohm      (ST)(H)",
-    "ITPA20                         (H)",
-    "ITPA20-IL                      (H)",
-]
-"""labels describing energy confinement scaling laws"""
-
 
 m_beam_amu: float = None
 """beam ion mass (amu)"""
@@ -721,7 +666,7 @@ allowance for radiation. This is not recommended for power plant models.
 
 
 i_confinement_time: int = None
-"""switch for energy confinement time scaling law (see description in `LABELS_CONFINEMENT_SCALINGS`)"""
+"""switch for energy confinement time scaling law"""
 
 
 i_plasma_wall_gap: int = None

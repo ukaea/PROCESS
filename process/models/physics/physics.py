@@ -26,7 +26,10 @@ from process.data_structure import (
     times_variables,
 )
 from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
-from process.models.physics.confinement_time import PlasmaConfinementTime
+from process.models.physics.confinement_time import (
+    ConfinementTimeModel,
+    PlasmaConfinementTime,
+)
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 
@@ -4047,9 +4050,7 @@ class Physics:
             )
             po.oblnkl(self.outfile)
 
-        tauelaw = physics_variables.LABELS_CONFINEMENT_SCALINGS[
-            physics_variables.i_confinement_time
-        ]
+        tauelaw = ConfinementTimeModel(physics_variables.i_confinement_time).full_name
 
         po.ocmmnt(
             self.outfile,
@@ -4379,9 +4380,11 @@ class Physics:
                 # just write a NaN--its not worth crashing PROCESS over.
                 physics_variables.hfac[i_confinement_time - 1] = np.nan
 
+            scaling_name = ConfinementTimeModel(i_confinement_time).full_name
+
             po.ocmmnt(
                 self.outfile,
-                f"{'':>2}{physics_variables.LABELS_CONFINEMENT_SCALINGS[i_confinement_time]:<38}"
+                f"{'':>2}{scaling_name:<38}"
                 f"{taueez:<28.3f}{physics_variables.hfac[i_confinement_time - 1]:.3f}",
             )
 

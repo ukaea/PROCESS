@@ -34,7 +34,7 @@ import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.models.tfcoil.superconducting as sctf
 from process.core.io.mfile import MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
-from process.data_structure import impurity_radiation_module, physics_variables
+from process.data_structure import impurity_radiation_module
 from process.models.build import Build
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
@@ -59,7 +59,10 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
-from process.models.physics.confinement_time import PlasmaConfinementTime
+from process.models.physics.confinement_time import (
+    ConfinementTimeModel,
+    PlasmaConfinementTime,
+)
 from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.tfcoil.superconducting import SUPERCONDUCTING_TF_TYPES
@@ -8740,25 +8743,25 @@ def plot_confinement_time_comparison(
 
     # Data for the box plot
     data = {
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[6]}": iter_89p,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[7]}": iter_89_0,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[13]}": iter_h90_p,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[20]}": iter_h90_p_amended,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[24]}": iter_93h,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[26]}": iter_h97p,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[27]}": iter_h97p_elmy,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[28]}": iter_96p,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[31]}": iter_pb98py,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[32]}": iter_ipb98y,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[33]}": iter_ipb98y1,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[34]}": iter_ipb98y2,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[35]}": iter_ipb98y3,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[36]}": iter_ipb98y4,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[41]}": petty08,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[46]}": menard_nstx,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[47]}": menard_nstx_petty08,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[49]}": itpa20,
-        rf"{physics_variables.LABELS_CONFINEMENT_SCALINGS[50]}": itpa20_ilc,
+        rf"{ConfinementTimeModel.ITER_89P.full_name}": iter_89p,
+        rf"{ConfinementTimeModel.ITER_89_0.full_name}": iter_89_0,
+        rf"{ConfinementTimeModel.ITER_H90_P.full_name}": iter_h90_p,
+        rf"{ConfinementTimeModel.ITER_H90_P_AMENDED.full_name}": iter_h90_p_amended,
+        rf"{ConfinementTimeModel.ITER_93H.full_name}": iter_93h,
+        rf"{ConfinementTimeModel.ITER_H97P.full_name}": iter_h97p,
+        rf"{ConfinementTimeModel.ITER_H97P_ELMY.full_name}": iter_h97p_elmy,
+        rf"{ConfinementTimeModel.ITER_96P.full_name}": iter_96p,
+        rf"{ConfinementTimeModel.ITER_PB98P_Y.full_name}": iter_pb98py,
+        rf"{ConfinementTimeModel.IPB98_Y.full_name}": iter_ipb98y,
+        rf"{ConfinementTimeModel.ITER_IPB98Y1.full_name}": iter_ipb98y1,
+        rf"{ConfinementTimeModel.ITER_IPB98Y2.full_name}": iter_ipb98y2,
+        rf"{ConfinementTimeModel.ITER_IPB98Y3.full_name}": iter_ipb98y3,
+        rf"{ConfinementTimeModel.ITER_IPB98Y4.full_name}": iter_ipb98y4,
+        rf"{ConfinementTimeModel.PETTY08.full_name}": petty08,
+        rf"{ConfinementTimeModel.MENARD_NSTX.full_name}": menard_nstx,
+        rf"{ConfinementTimeModel.MENARD_NSTX_PETTY08_HYBRID.full_name}": menard_nstx_petty08,
+        rf"{ConfinementTimeModel.ITPA20.full_name}": itpa20,
+        rf"{ConfinementTimeModel.ITPA20_IL.full_name}": itpa20_ilc,
     }
 
     # Create the violin plot
