@@ -22,6 +22,7 @@ from process.models.buildings import Buildings
 from process.models.costs.costs import Costs
 from process.models.fw import FirstWall
 from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.confinement_time import PlasmaConfinementTime
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -92,6 +93,7 @@ def stellarator():
             PlasmaDensityLimit(),
             PlasmaExhaust(),
             PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
+            PlasmaConfinementTime(),
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),

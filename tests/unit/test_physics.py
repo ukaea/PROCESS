@@ -12,6 +12,7 @@ from process.data_structure import (
     physics_variables,
 )
 from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.confinement_time import PlasmaConfinementTime
 from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -62,6 +63,7 @@ def physics():
         PlasmaDensityLimit(),
         PlasmaExhaust(),
         PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
+        PlasmaConfinementTime(),
     )
 
 

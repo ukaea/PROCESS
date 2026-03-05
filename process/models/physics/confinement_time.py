@@ -1,4 +1,73 @@
+import logging
+from enum import IntEnum
+
 import numpy as np
+
+from process.core import constants
+
+logger = logging.getLogger(__name__)
+
+
+class ConfinementTimeModel(IntEnum):
+    """Confinement time (τ_E) model types"""
+
+    USER_INPUT = 0
+    NEO_ALCATOR = 1
+    MIRNOV = 2
+    MEREZHKIN_MUHKOVATOV = 3
+    SHIMOMURA = 4
+    KAYE_GOLDSTON = 5
+    ITER_89P = 6
+    ITER_89_0 = 7
+    REBUT_LALLIA = 8
+    GOLDSTON = 9
+    T_10 = 10
+    JAERI = 11
+    KAYE_BIG = 12
+    ITER_H90_P = 13
+    RIEDEL_L = 14
+    CHRISTIANSEN = 15
+    LACKNER_GOTTARDI = 16
+    NEO_KAYE = 17
+    RIEDEL_H = 18
+    ITER_H90_P_AMENDED = 19
+    SUDO_ET_AL = 20
+    GYRO_REDUCED_BOHM = 21
+    LACKNER_GOTTARDI_STELLARATOR = 22
+    ITER_93H = 23
+    ITER_H97P = 24
+    ITER_H97P_ELMY = 25
+    ITER_96P = 26
+    VALOVIC_ELMY = 27
+    KAYE = 28
+    ITER_PB98PY = 29
+    ITER_IPB98Y = 30
+    ITER_IPB98Y1 = 31
+    ITER_IPB98Y2 = 32
+    ITER_IPB98Y3 = 33
+    ITER_IPB98Y4 = 34
+    ISS95_STELLARATOR = 35
+    ISS04_STELLARATOR = 36
+    DS03 = 37
+    MURARI = 38
+    PETTY08 = 39
+    LANG_HIGH_DENSITY = 40
+    HUBBARD_NOMINAL = 41
+    HUBBARD_LOWER = 42
+    HUBBARD_UPPER = 43
+    MENARD_NSTX = 44
+    MENARD_NSTX_PETTY08_HYBRID = 45
+    NSTX_GYRO_BOHM = 46
+    ITPA20 = 47
+    ITPA20_IL = 48
+
+
+class PlasmaConfinementTime:
+    """Class to calculate plasma confinement time using various empirical scaling laws"""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
 
 
 def neo_alcator_confinement_time(

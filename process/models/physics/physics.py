@@ -27,6 +27,9 @@ from process.data_structure import (
     times_variables,
 )
 from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.confinement_time import PlasmaConfinementTime
+from process.models.physics.density_limit import PlasmaDensityLimit
+from process.models.physics.exhaust import PlasmaExhaust
 
 logger = logging.getLogger(__name__)
 
@@ -638,8 +641,9 @@ class Physics:
         current_drive,
         plasma_beta,
         plasma_inductance,
-        plasma_density_limit,
-        plasma_exhaust,
+        plasma_density_limit: PlasmaDensityLimit,
+        plasma_exhaust: PlasmaExhaust,
+        plasma_confinement: PlasmaConfinementTime,
         plasma_bootstrap_current: PlasmaBootstrapCurrent,
     ):
         self.outfile = constants.NOUT
@@ -651,6 +655,7 @@ class Physics:
         self.density_limit = plasma_density_limit
         self.exhaust = plasma_exhaust
         self.plasma_bootstrap_current = plasma_bootstrap_current
+        self.confinement = plasma_confinement
 
     def physics(self):
         """Routine to calculate tokamak plasma physics information
