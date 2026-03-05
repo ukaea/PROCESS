@@ -1049,6 +1049,36 @@ class PlasmaConfinementTime:
             p_plasma_loss_mw,
         )
 
+    def calculate_double_and_triple_product(
+        self,
+        nd_plasma_electrons_vol_avg: float,
+        temp_plasma_electrons_vol_avg_kev: float,
+        t_energy_confinement: float,
+    ) -> tuple[float, float]:
+        """Calculate the plasma double (nτ_E) and triple product (nTτ_E)
+
+        Parameters
+        ----------
+        nd_plasma_electrons_vol_avg :
+            Volume averaged electron density [m⁻³]
+        temp_plasma_electrons_vol_avg_kev :
+            Volume averaged electron temperature [keV]
+        t_energy_confinement :
+            Energy confinement time [s]
+
+        Returns
+        -------
+        :
+            Tuple[float, float]: (ntau, nTtau) where ntau is the plasma double product (n * τ_E) in units of m⁻³ * s,
+            and nTtau is the plasma triple product (n * T * τ_E) in units of keV * s * m⁻³
+
+        """
+
+        ntau = t_energy_confinement * nd_plasma_electrons_vol_avg
+        nTtau = ntau * temp_plasma_electrons_vol_avg_kev
+
+        return ntau, nTtau
+
     @staticmethod
     def neo_alcator_confinement_time(
         dene20: float, rminor: float, rmajor: float, qstar: float

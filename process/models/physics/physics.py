@@ -1345,8 +1345,6 @@ class Physics:
         sbar = 1.0e0
         (
             physics_variables.burnup,
-            physics_variables.ntau,
-            physics_variables.nTtau,
             physics_variables.figmer,
             physics_variables.fusrat,
             physics_variables.molflow_plasma_fuelling_required,
@@ -1355,8 +1353,6 @@ class Physics:
             physics_variables.f_alpha_energy_confinement,
         ) = self.phyaux(
             physics_variables.aspect,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.temp_plasma_electron_vol_avg_kev,
             physics_variables.nd_plasma_fuel_ions_vol_avg,
             physics_variables.fusden_total,
             physics_variables.fusden_alpha_total,
@@ -1365,6 +1361,14 @@ class Physics:
             physics_variables.nd_plasma_alphas_vol_avg,
             physics_variables.t_energy_confinement,
             physics_variables.vol_plasma,
+        )
+
+        physics_variables.ntau, physics_variables.nTtau = (
+            self.confinement.calculate_double_and_triple_product(
+                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                t_energy_confinement=physics_variables.t_energy_confinement,
+                temp_plasma_electrons_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            )
         )
 
         # Total transport power from scaling law (MW)
@@ -1834,8 +1838,6 @@ class Physics:
     @staticmethod
     def phyaux(
         aspect: float,
-        nd_plasma_electrons_vol_avg: float,
-        te: float,
         nd_plasma_fuel_ions_vol_avg: float,
         fusden_total: float,
         fusden_alpha_total: float,
@@ -1851,10 +1853,6 @@ class Physics:
         ----------
         aspect : float
             Plasma aspect ratio.
-        nd_plasma_electrons_vol_avg : float
-            Electron density (/m3).
-        te : float
-            Volume avergaed electron temperature (keV).
         nd_plasma_fuel_ions_vol_avg : float
             Fuel ion density (/m3).
         fusden_total : float
@@ -1877,8 +1875,6 @@ class Physics:
         tuple
             A tuple containing:
             - burnup (float): Fractional plasma burnup.
-            - ntau (float): Plasma average n-tau (s/m3).
-            - nTtau (float): Plasma triple product nT-tau (s/m3).
             - figmer (float): Physics figure of merit.
             - fusrat (float): Number of fusion reactions per second.
             - molflow_plasma_fuelling_required (float): Fuelling rate for D-T (nucleus-pairs/sec).
@@ -1889,9 +1885,6 @@ class Physics:
 
         """
         figmer = 1e-6 * plasma_current * aspect**sbar
-
-        ntau = t_energy_confinement * nd_plasma_electrons_vol_avg
-        nTtau = ntau * te
 
         # Fusion reactions per second
         fusrat = fusden_total * vol_plasma
@@ -1932,8 +1925,6 @@ class Physics:
 
         return (
             burnup,
-            ntau,
-            nTtau,
             figmer,
             fusrat,
             molflow_plasma_fuelling_required,

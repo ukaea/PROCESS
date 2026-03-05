@@ -2206,8 +2206,6 @@ class PhyauxParam(NamedTuple):
             tauratio=1,
             burnup_in=0,
             aspect=3,
-            nd_plasma_electrons_vol_avg=7.5e19,
-            te=12.569,
             nd_plasma_fuel_ions_vol_avg=5.8589175702454272e19,
             nd_plasma_alphas_vol_avg=7.5e18,
             fusden_total=1.9852091609123786e17,
@@ -2217,8 +2215,6 @@ class PhyauxParam(NamedTuple):
             t_energy_confinement=3.401323521525641,
             vol_plasma=1888.1711539956691,
             expected_burnup=0.20383432558954095,
-            expected_ntau=2.5509926411442307e20,
-            expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7484146722826997e20,
             expected_molflow_plasma_fuelling_required=1.8389516394951276e21,
@@ -2229,8 +2225,6 @@ class PhyauxParam(NamedTuple):
             tauratio=1,
             burnup_in=0,
             aspect=3,
-            nd_plasma_electrons_vol_avg=7.5e19,
-            te=12.569,
             nd_plasma_fuel_ions_vol_avg=5.8576156204039725e19,
             nd_plasma_alphas_vol_avg=7.5e18,
             fusden_total=1.9843269653375773e17,
@@ -2240,8 +2234,6 @@ class PhyauxParam(NamedTuple):
             t_energy_confinement=3.402116961408892,
             vol_plasma=1888.1711539956691,
             expected_burnup=0.20387039462081086,
-            expected_ntau=2.5515877210566689e20,
-            expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7467489360461772e20,
             expected_molflow_plasma_fuelling_required=1.8378092331723546e21,
@@ -2269,8 +2261,6 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     (
         burnup,
-        ntau,
-        _nTtau,
         figmer,
         fusrat,
         molflow_plasma_fuelling_required,
@@ -2279,8 +2269,6 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         _,
     ) = physics.phyaux(
         aspect=phyauxparam.aspect,
-        nd_plasma_electrons_vol_avg=phyauxparam.nd_plasma_electrons_vol_avg,
-        te=phyauxparam.te,
         nd_plasma_fuel_ions_vol_avg=phyauxparam.nd_plasma_fuel_ions_vol_avg,
         nd_plasma_alphas_vol_avg=phyauxparam.nd_plasma_alphas_vol_avg,
         fusden_total=phyauxparam.fusden_total,
@@ -2292,8 +2280,6 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     )
 
     assert burnup == pytest.approx(phyauxparam.expected_burnup)
-
-    assert ntau == pytest.approx(phyauxparam.expected_ntau)
 
     assert figmer == pytest.approx(phyauxparam.expected_figmer)
 
