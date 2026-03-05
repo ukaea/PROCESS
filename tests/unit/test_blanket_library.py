@@ -445,13 +445,18 @@ def test_calculate_blkt_half_height(componenthalfheightparam, blanket_library_fi
 
 class ApplyCoverageFactorsParam(NamedTuple):
     a_blkt_outboard_surface: Any = None
+    a_blkt_outboard_surface_full_coverage: Any = None
     a_blkt_total_surface: Any = None
+    a_blkt_total_surface_full_coverage: Any = None
     a_blkt_inboard_surface: Any = None
+    a_blkt_inboard_surface_full_coverage: Any = None
     f_ster_div_single: Any = None
     f_a_fw_outboard_hcd: Any = None
     vol_blkt_outboard: Any = None
     vol_blkt_inboard: Any = None
+    vol_blkt_inboard_full_coverage: Any = None
     vol_blkt_total: Any = None
+    vol_blkt_total_full_coverage: Any = None
     fvolsi: Any = None
     fvolso: Any = None
     vol_shld_total: Any = None
@@ -470,13 +475,18 @@ class ApplyCoverageFactorsParam(NamedTuple):
     (
         ApplyCoverageFactorsParam(
             a_blkt_outboard_surface=1101.3666396424403,
+            a_blkt_outboard_surface_full_coverage=1101.3666396424403,
             a_blkt_total_surface=1766.3354109399943,
+            a_blkt_total_surface_full_coverage=1766.3354109399943,
             a_blkt_inboard_surface=664.9687712975541,
+            a_blkt_inboard_surface_full_coverage=664.9687712975541,
             f_ster_div_single=0.115,
             f_a_fw_outboard_hcd=0,
             vol_blkt_outboard=1020.3677420460117,
             vol_blkt_inboard=315.83946385183026,
+            vol_blkt_inboard_full_coverage=315.83946385183026,
             vol_blkt_total=1336.207205897842,
+            vol_blkt_total_full_coverage=1336.207205897842,
             fvolsi=1,
             fvolso=0.64000000000000001,
             n_divertors=1,
@@ -509,13 +519,28 @@ def test_apply_coverage_factors(
     )
     monkeypatch.setattr(
         build_variables,
+        "a_blkt_outboard_surface_full_coverage",
+        applycoveragefactorsparam.a_blkt_outboard_surface_full_coverage,
+    )
+    monkeypatch.setattr(
+        build_variables,
         "a_blkt_total_surface",
         applycoveragefactorsparam.a_blkt_total_surface,
     )
     monkeypatch.setattr(
         build_variables,
+        "a_blkt_total_surface_full_coverage",
+        applycoveragefactorsparam.a_blkt_total_surface_full_coverage,
+    )
+    monkeypatch.setattr(
+        build_variables,
         "a_blkt_inboard_surface",
         applycoveragefactorsparam.a_blkt_inboard_surface,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "a_blkt_inboard_surface_full_coverage",
+        applycoveragefactorsparam.a_blkt_inboard_surface_full_coverage,
     )
     monkeypatch.setattr(
         fwbs_variables, "f_ster_div_single", applycoveragefactorsparam.f_ster_div_single
@@ -532,7 +557,17 @@ def test_apply_coverage_factors(
         fwbs_variables, "vol_blkt_inboard", applycoveragefactorsparam.vol_blkt_inboard
     )
     monkeypatch.setattr(
+        fwbs_variables,
+        "vol_blkt_inboard_full_coverage",
+        applycoveragefactorsparam.vol_blkt_inboard_full_coverage,
+    )
+    monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", applycoveragefactorsparam.vol_blkt_total
+    )
+    monkeypatch.setattr(
+        fwbs_variables,
+        "vol_blkt_total_full_coverage",
+        applycoveragefactorsparam.vol_blkt_total_full_coverage,
     )
     monkeypatch.setattr(fwbs_variables, "fvolsi", applycoveragefactorsparam.fvolsi)
     monkeypatch.setattr(fwbs_variables, "fvolso", applycoveragefactorsparam.fvolso)
