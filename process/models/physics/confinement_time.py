@@ -66,6 +66,14 @@ class ConfinementTimeModel(IntEnum):
     ITPA20_IL = 48
 
 
+class ConfinementRadiationLossModel(IntEnum):
+    """Confinement radiation loss model types"""
+
+    FULL_RADIATION = 0
+    CORE_ONLY = 1
+    NO_RADIATION = 2
+
+
 class PlasmaConfinementTime:
     """Class to calculate plasma confinement time using various empirical scaling laws"""
 
@@ -184,16 +192,24 @@ class PlasmaConfinementTime:
         if i_plasma_ignited == 0:
             p_plasma_loss_mw = p_plasma_loss_mw + p_hcd_injected_total_mw
 
-        # Include the radiation as a loss term if requested
-        if physics_variables.i_rad_loss == 0:
-            p_plasma_loss_mw = (
-                p_plasma_loss_mw - physics_variables.pden_plasma_rad_mw * vol_plasma
-            )
-        elif physics_variables.i_rad_loss == 1:
-            p_plasma_loss_mw = (
-                p_plasma_loss_mw - pden_plasma_core_rad_mw * vol_plasma
-            )  # shouldn't this be vol_core instead of vol_plasma?
-        # else do not adjust p_plasma_loss_mw for radiation
+        # Include the radiation as a loss term based on radiation model
+        try:
+            model = ConfinementRadiationLossModel(int(physics_variables.i_rad_loss))
+
+            if model == ConfinementRadiationLossModel.FULL_RADIATION:
+                p_plasma_loss_mw = (
+                    p_plasma_loss_mw - physics_variables.pden_plasma_rad_mw * vol_plasma
+                )
+            elif model == ConfinementRadiationLossModel.CORE_ONLY:
+                p_plasma_loss_mw = (
+                    p_plasma_loss_mw - pden_plasma_core_rad_mw * vol_plasma
+                )
+            # NO_RADIATION: do not adjust p_plasma_loss_mw for radiation
+        except ValueError:
+            raise ProcessValueError(
+                "Illegal value of i_rad_loss",
+                i_rad_loss=physics_variables.i_rad_loss,
+            ) from None
 
         # Ensure heating power is positive (shouldn't be necessary)
         p_plasma_loss_mw = max(p_plasma_loss_mw, 1.0e-3)
