@@ -4,6 +4,8 @@ from enum import IntEnum
 import numpy as np
 from scipy.optimize import root_scalar
 
+import process.data_structure.constraint_variables as constraint_variables
+import process.data_structure.stellarator_variables as stellarator_variables
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
@@ -1180,6 +1182,151 @@ class PlasmaConfinementTime:
             return fhz_value
 
         return root_scalar(fhz, bracket=(0.01, 150), xtol=0.001).root
+
+    def output_confinement_time_info(self):
+        po.oheadr(self.outfile, "Energy Confinement")
+
+        if physics_variables.i_plasma_ignited == 1:
+            po.ocmmnt(
+                self.outfile,
+                "Device is assumed to be ignited for the calculation of confinement time",
+            )
+            po.oblnkl(self.outfile)
+
+        tauelaw = ConfinementTimeModel(physics_variables.i_confinement_time).full_name
+
+        po.ocmmnt(
+            self.outfile,
+            f"Confinement scaling law: {tauelaw}",
+        )
+
+        po.ovarst(
+            self.outfile,
+            "Confinement scaling law",
+            "(tauelaw)",
+            f'"{tauelaw.strip().split(" ")[0]}"',
+        )
+
+        po.ovarrf(
+            self.outfile, "Confinement H factor", "(hfact)", physics_variables.hfact
+        )
+        po.ovarrf(
+            self.outfile,
+            "Global thermal energy confinement time, from scaling (s)",
+            "(t_energy_confinement)",
+            physics_variables.t_energy_confinement,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Directly calculated total energy confinement time (s)",
+            "(t_energy_confinement_beta)",
+            physics_variables.t_energy_confinement_beta,
+            "OP ",
+        )
+        po.ocmmnt(
+            self.outfile,
+            "(Total thermal energy derived from total plasma beta / loss power)",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ion energy confinement time, from scaling (s)",
+            "(t_ion_energy_confinement)",
+            physics_variables.t_ion_energy_confinement,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Electron energy confinement time, from scaling (s)",
+            "(t_electron_energy_confinement)",
+            physics_variables.t_electron_energy_confinement,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fusion double product (s/m3)",
+            "(ntau)",
+            physics_variables.ntau,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Lawson Triple product (keV s/m3)",
+            "(nTtau)",
+            physics_variables.nTtau,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Transport loss power assumed in scaling law (MW)",
+            "(p_plasma_loss_mw)",
+            physics_variables.p_plasma_loss_mw,
+            "OP ",
+        )
+        po.ovarin(
+            self.outfile,
+            "Switch for radiation loss term usage in power balance",
+            "(i_rad_loss)",
+            physics_variables.i_rad_loss,
+        )
+        if physics_variables.i_rad_loss == 0:
+            po.ovarre(
+                self.outfile,
+                "Radiation power subtracted from plasma power balance (MW)",
+                "",
+                physics_variables.p_plasma_rad_mw,
+                "OP ",
+            )
+            po.ocmmnt(self.outfile, "  (Radiation correction is total radiation power)")
+        elif physics_variables.i_rad_loss == 1:
+            po.ovarre(
+                self.outfile,
+                "Radiation power subtracted from plasma power balance (MW)",
+                "",
+                physics_variables.p_plasma_inner_rad_mw,
+                "OP ",
+            )
+            po.ocmmnt(self.outfile, "  (Radiation correction is core radiation power)")
+        else:
+            po.ovarre(
+                self.outfile,
+                "Radiation power subtracted from plasma power balance (MW)",
+                "",
+                0.0e0,
+            )
+            po.ocmmnt(self.outfile, "  (No radiation correction applied)")
+        po.ovarrf(
+            self.outfile,
+            "H* non-radiation corrected",
+            "(hstar)",
+            physics_variables.hstar,
+            "OP",
+        )
+        po.ocmmnt(self.outfile, "  (H* assumes IPB98(y,2), ELMy H-mode scaling)")
+        po.ovarrf(
+            self.outfile,
+            "Alpha particle confinement time (s)",
+            "(t_alpha_confinement)",
+            physics_variables.t_alpha_confinement,
+            "OP ",
+        )
+        # Note alpha confinement time is no longer equal to fuel particle confinement time.
+        po.ovarrf(
+            self.outfile,
+            "Alpha particle/energy confinement time ratio",
+            "(f_alpha_energy_confinement)",
+            physics_variables.f_alpha_energy_confinement,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Lower limit on f_alpha_energy_confinement",
+            "(f_alpha_energy_confinement_min)",
+            constraint_variables.f_alpha_energy_confinement_min,
+        )
+
+        # Plot table of al the H-factor scalings and coparison values
+        self.output_confinement_comparison(istell=stellarator_variables.istell)
 
     def output_confinement_comparison(self, istell: int):
         """Routine to calculate ignition margin for different confinement scalings and equivalent confinement times for H=1.
