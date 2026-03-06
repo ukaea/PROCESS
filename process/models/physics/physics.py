@@ -9,7 +9,6 @@ from scipy.optimize import root_scalar
 import process.models.physics.confinement_time as confinement
 import process.models.physics.fusion_reactions as reactions
 import process.models.physics.impurity_radiation as impurity_radiation
-import process.models.physics.l_h_transition as transition
 import process.models.physics.radiation_power as physics_funcs
 from process.core import constants
 from process.core import process_output as po
@@ -27,6 +26,7 @@ from process.data_structure import (
     times_variables,
 )
 from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.l_h_transition import PlasmaConfinementTransition
 
 logger = logging.getLogger(__name__)
 
@@ -641,6 +641,7 @@ class Physics:
         plasma_density_limit,
         plasma_exhaust,
         plasma_bootstrap_current: PlasmaBootstrapCurrent,
+        plasma_transition: PlasmaConfinementTransition,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -651,6 +652,7 @@ class Physics:
         self.density_limit = plasma_density_limit
         self.exhaust = plasma_exhaust
         self.plasma_bootstrap_current = plasma_bootstrap_current
+        self.plasma_transition = plasma_transition
 
     def physics(self):
         """Routine to calculate tokamak plasma physics information
@@ -1172,16 +1174,18 @@ class Physics:
         )
 
         # Calculate L- to H-mode power threshold for different scalings
-        physics_variables.l_h_threshold_powers = l_h_threshold_power(
-            physics_variables.nd_plasma_electron_line,
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            physics_variables.kappa,
-            physics_variables.a_plasma_surface,
-            physics_variables.m_ions_total_amu,
-            physics_variables.aspect,
-            physics_variables.plasma_current,
+        physics_variables.l_h_threshold_powers = (
+            self.plasma_transition.l_h_threshold_power(
+                physics_variables.nd_plasma_electron_line,
+                physics_variables.b_plasma_toroidal_on_axis,
+                physics_variables.rmajor,
+                physics_variables.rminor,
+                physics_variables.kappa,
+                physics_variables.a_plasma_surface,
+                physics_variables.m_ions_total_amu,
+                physics_variables.aspect,
+                physics_variables.plasma_current,
+            )
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
@@ -5515,213 +5519,6 @@ def res_diff_time(rmajor, res_plasma, kappa95):
     """
 
     return 2 * constants.RMU0 * rmajor / (res_plasma * kappa95)
-
-
-def l_h_threshold_power(
-    nd_plasma_electron_line: float,
-    b_plasma_toroidal_on_axis: float,
-    rmajor: float,
-    rminor: float,
-    kappa: float,
-    a_plasma_surface: float,
-    m_ions_total_amu: float,
-    aspect: float,
-    plasma_current: float,
-) -> list[float]:
-    """L-mode to H-mode power threshold calculation.
-
-    Parameters
-    ----------
-    nd_plasma_electron_line : float
-        Line-averaged electron density (/m3)
-    b_plasma_toroidal_on_axis : float
-        Toroidal field on axis (T)
-    rmajor : float
-        Plasma major radius (m)
-    rminor : float
-        Plasma minor radius (m)
-    kappa : float
-        Plasma elongation
-    a_plasma_surface : float
-        Plasma surface area (m2)
-    m_ions_total_amu : float
-        Average mass of all ions (amu)
-    aspect : float
-        Aspect ratio
-    plasma_current : float
-        Plasma current (A)
-
-    Returns
-    -------
-    list[float]
-        Array of power thresholds
-
-    """
-
-    dnla20 = 1e-20 * nd_plasma_electron_line
-
-    # ========================================================================
-
-    # ITER-1996 H-mode power threshold database
-    # Fit to 1996 H-mode power threshold database: nominal
-
-    # i_l_h_threshold = 1
-    iterdd = transition.calculate_iter1996_nominal(
-        dnla20, b_plasma_toroidal_on_axis, rmajor
-    )
-
-    # Fit to 1996 H-mode power threshold database: upper bound
-    # i_l_h_threshold = 2
-    iterdd_ub = transition.calculate_iter1996_upper(
-        dnla20, b_plasma_toroidal_on_axis, rmajor
-    )
-
-    # Fit to 1996 H-mode power threshold database: lower bound
-    # i_l_h_threshold = 3
-    iterdd_lb = transition.calculate_iter1996_lower(
-        dnla20, b_plasma_toroidal_on_axis, rmajor
-    )
-
-    # ========================================================================
-
-    # Snipes 1997 ITER H-mode power threshold
-
-    # i_l_h_threshold = 4
-    snipes_1997 = transition.calculate_snipes1997_iter(
-        dnla20, b_plasma_toroidal_on_axis, rmajor
-    )
-
-    # i_l_h_threshold = 5
-    snipes_1997_kappa = transition.calculate_snipes1997_kappa(
-        dnla20, b_plasma_toroidal_on_axis, rmajor, kappa
-    )
-
-    # ========================================================================
-
-    # Martin et al (2008) for recent ITER scaling, with mass correction
-    # and 95% confidence limits
-
-    # i_l_h_threshold = 6
-    martin_nominal = transition.calculate_martin08_nominal(
-        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
-    )
-
-    # i_l_h_threshold = 7
-    martin_ub = transition.calculate_martin08_upper(
-        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
-    )
-
-    # i_l_h_threshold = 8
-    martin_lb = transition.calculate_martin08_lower(
-        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
-    )
-
-    # ========================================================================
-
-    # Snipes et al (2000) scaling with mass correction
-    # Nominal, upper and lower
-
-    # i_l_h_threshold = 9
-    snipes_2000 = transition.calculate_snipes2000_nominal(
-        dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
-    )
-
-    # i_l_h_threshold = 10
-    snipes_2000_ub = transition.calculate_snipes2000_upper(
-        dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
-    )
-
-    # i_l_h_threshold = 11
-    snipes_2000_lb = transition.calculate_snipes2000_lower(
-        dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
-    )
-
-    # ========================================================================
-
-    # Snipes et al (2000) scaling (closed divertor) with mass correction
-    # Nominal, upper and lower
-
-    # i_l_h_threshold = 12
-    snipes_2000_cd = transition.calculate_snipes2000_closed_divertor_nominal(
-        dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
-    )
-
-    # i_l_h_threshold = 13
-    snipes_2000_cd_ub = transition.calculate_snipes2000_closed_divertor_upper(
-        dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
-    )
-
-    # i_l_h_threshold = 14
-    snipes_2000_cd_lb = transition.calculate_snipes2000_closed_divertor_lower(
-        dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
-    )
-
-    # ========================================================================
-
-    # Hubbard et al. 2012 L-I threshold scaling
-
-    # i_l_h_threshold = 15
-    hubbard_2012 = transition.calculate_hubbard2012_nominal(plasma_current, dnla20)
-
-    # i_l_h_threshold = 16
-    hubbard_2012_lb = transition.calculate_hubbard2012_lower(plasma_current, dnla20)
-
-    # i_l_h_threshold = 17
-    hubbard_2012_ub = transition.calculate_hubbard2012_upper(plasma_current, dnla20)
-
-    # ========================================================================
-
-    # Hubbard et al. 2017 L-I threshold scaling
-
-    # i_l_h_threshold = 18
-    hubbard_2017 = transition.calculate_hubbard2017(
-        dnla20, a_plasma_surface, b_plasma_toroidal_on_axis
-    )
-
-    # ========================================================================
-
-    # Aspect ratio corrected Martin et al (2008)
-
-    # i_l_h_threshold = 19
-    martin_nominal_aspect = transition.calculate_martin08_aspect_nominal(
-        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
-    )
-
-    # i_l_h_threshold = 20
-    martin_ub_aspect = transition.calculate_martin08_aspect_upper(
-        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
-    )
-
-    # i_l_h_threshold = 21
-    martin_lb_aspect = transition.calculate_martin08_aspect_lower(
-        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
-    )
-
-    # ========================================================================
-
-    return [
-        iterdd,
-        iterdd_ub,
-        iterdd_lb,
-        snipes_1997,
-        snipes_1997_kappa,
-        martin_nominal,
-        martin_ub,
-        martin_lb,
-        snipes_2000,
-        snipes_2000_ub,
-        snipes_2000_lb,
-        snipes_2000_cd,
-        snipes_2000_cd_ub,
-        snipes_2000_cd_lb,
-        hubbard_2012,
-        hubbard_2012_lb,
-        hubbard_2012_ub,
-        hubbard_2017,
-        martin_nominal_aspect,
-        martin_ub_aspect,
-        martin_lb_aspect,
-    ]
 
 
 def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, lhat):
