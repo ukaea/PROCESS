@@ -23,6 +23,7 @@ from process.models.physics.current_drive import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.impurity_radiation import initialise_imprad
+from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
@@ -62,6 +63,7 @@ def physics():
         PlasmaDensityLimit(),
         PlasmaExhaust(),
         PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
+        PlasmaConfinementTransition(),
     )
 
 
