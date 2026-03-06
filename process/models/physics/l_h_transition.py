@@ -469,7 +469,16 @@ class PlasmaConfinementTransition:
             )
             po.oblnkl(self.outfile)
             logger.warning("Closed divertor only. Limited data used in Snipes fit")
-
+        po.ovarin(
+            self.outfile,
+            "L-H threshold scaling switch",
+            "(i_l_h_threshold)",
+            physics_variables.i_l_h_threshold,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"{PlasmaConfinementTransitionModel(physics_variables.i_l_h_threshold).full_name}",
+        )
         if (numerics.ioptimz > 0) and (numerics.active_constraints[14]):
             po.ovarre(
                 self.outfile,

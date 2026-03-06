@@ -65,6 +65,7 @@ from process.models.physics.confinement_time import (
 )
 from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
 from process.models.physics.impurity_radiation import read_impurity_file
+from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.tfcoil.superconducting import SUPERCONDUCTING_TF_TYPES
 
 mpl.rcParams["figure.max_open_warning"] = 40
@@ -3135,8 +3136,22 @@ def plot_main_plasma_information(
 
     # Add L-H threshold information
     textstr_lh = (
-        f"$\\mathbf{{L-H \\ threshold:}}$\n\n"
+        f"$\\mathbf{{L-H \\ threshold:}}$\n"
+        f"{PlasmaConfinementTransitionModel(int(mfile.get('i_l_h_threshold', scan=scan))).full_name}\n\n"
         f"$P_{{\\text{{L-H}}}}:$ {mfile.get('p_l_h_threshold_mw', scan=scan):.4f} MW\n"
+    )
+
+    # Wrap long model names to new line
+    model_name = PlasmaConfinementTransitionModel(
+        int(mfile.get("i_l_h_threshold", scan=scan))
+    ).full_name
+    if len(model_name) > 20:
+        model_name = "\n".join(textwrap.wrap(model_name, width=20))
+
+    textstr_lh = (
+        f"$\\mathbf{{L-H \\ threshold:}}$\n"
+        f"{model_name}\n\n"
+        f"$P_{{\\text{{L-H}}}}:$ {mfile.get('p_l_h_threshold_mw', scan=scan):.4f} MW"
     )
 
     axis.text(
@@ -3157,12 +3172,12 @@ def plot_main_plasma_information(
     # Add density limit information
     textstr_density_limit = (
         f"$\\mathbf{{Density \\ limit:}}$\n\n"
-        f"$n_{{\\text{{e,limit}}}}: {mfile.get('nd_plasma_electrons_max', scan=scan):.3e} \\ m^{{-3}}$\n"
+        f"$n_{{\\text{{e,limit}}}}: {mfile.get('nd_plasma_electrons_max', scan=scan):.3e} \\ m^{{-3}}$"
     )
 
     axis.text(
         0.22,
-        0.32,
+        0.3,
         textstr_density_limit,
         fontsize=9,
         verticalalignment="top",
