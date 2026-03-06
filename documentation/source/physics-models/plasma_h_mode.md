@@ -1,4 +1,4 @@
-## L-H Power Threshold Scalings
+## L-H Power Threshold Scalings | `PlasmaConfinementTransition`
 
 Transitions from a standard confinement mode (L-mode) to an improved
 confinement regime (H-mode), called L-H transitions, are observed in most
@@ -14,7 +14,7 @@ Depending on the value of the chosen scaling by setting `i_l_h_threshold`, a dif
 We define the net power across the seperatrix for the scaling as `p_plasma_separatrix_mw` below. This is equal to the net heating power of the plasma with radiation losses removed. This is then treated as the excess heating power for the plasma that is given to the divertors.
 
 $$
-\mathtt{p_plasma_separatrix_mw} = \frac{\mathrm{d}W}{\mathrm{d}t} =  \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad}}
+\texttt{p_plasma_separatrix_mw} = \frac{\mathrm{d}W}{\mathrm{d}t} =  \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}} - P_{\text{rad}}
 $$
 
 There are two separate constraint equations for enforcing the L-H threshold.
@@ -63,7 +63,7 @@ $$
 
 ----------------
 
-### ITER-1996 Scalings
+### ITER-1996 Scalings 
 
 The general form is:
 
@@ -77,7 +77,7 @@ where $\alpha$ lies in the range of $-0.25 \le \alpha \le 0.25$,  $\bar{n}_{\tex
 
 ------------------
 
-#### ITER-1996 Nominal Scaling
+#### ITER-1996 Nominal Scaling | `calculate_iter1996_nominal()`
 
 Is selected with `i_l_h_threshold = 1` [^1] [^2]
 
@@ -87,7 +87,7 @@ $$
 
 ---------------
 
-#### ITER-1996 Upper Scaling
+#### ITER-1996 Upper Scaling | `calculate_iter1996_upper()`
 
 Is selected with `i_l_h_threshold = 2` [^1] [^2]
 
@@ -97,7 +97,7 @@ $$
 
 ---------------
 
-#### ITER-1996 Lower Scaling
+#### ITER-1996 Lower Scaling | `calculate_iter1996_lower()`
 
 Is selected with `i_l_h_threshold = 3` [^1] [^2]
 
@@ -108,7 +108,7 @@ $$
 ---------------
 
 
-### Snipes 1997 ITER Scaling I
+### Snipes 1997 ITER Scaling I | `calculate_snipes1997_iter()`
 
 Is selected with `i_l_h_threshold = 4` [^3]
 
@@ -120,7 +120,7 @@ $$
 
 ---------------
 
-###  Snipes 1997 ITER Scaling II
+###  Snipes 1997 ITER Scaling II | `calculate_snipes1997_kappa()`
 
 Is selected with `i_l_h_threshold = 5` [^3]
 
@@ -157,7 +157,7 @@ We thus apply a factor of $\left(\frac{2}{M_{\text{i}}}\right)$ to the end of th
 
 ------------------
 
-#### Martin 2008 Nominal Scaling
+#### Martin 2008 Nominal Scaling | `calculate_martin08_nominal()`
 
 Is selected with `i_l_h_threshold = 6` [^4]
 
@@ -167,7 +167,7 @@ $$
 
 ---------------
 
-#### Martin 2008 Upper Scaling
+#### Martin 2008 Upper Scaling | `calculate_martin08_upper()`
 
 Is selected with `i_l_h_threshold = 7` [^4]
 
@@ -177,7 +177,7 @@ $$
 
 ---------------
 
-#### Martin 2008 Lower Scaling
+#### Martin 2008 Lower Scaling | `calculate_martin08_lower()`
 
 Is selected with `i_l_h_threshold = 8` [^4]
 
@@ -217,7 +217,7 @@ We thus apply a factor of $\left(\frac{2}{M_{\text{i}}}\right)$ to the end of th
 
 ------------------
 
-#### Snipes 2000 Nominal Scaling
+#### Snipes 2000 Nominal Scaling | `calculate_snipes2000_nominal()`
 
 Is selected with `i_l_h_threshold = 9` [^5]
 
@@ -227,7 +227,7 @@ $$
 
 ---------------
 
-#### Snipes 2000 Upper Scaling
+#### Snipes 2000 Upper Scaling | `calculate_snipes2000_upper()`
 
 Is selected with `i_l_h_threshold = 10`  [^5]
 
@@ -237,7 +237,7 @@ $$
 
 ---------------
 
-#### Snipes 2000 Lower Scaling
+#### Snipes 2000 Lower Scaling | `calculate_snipes2000_lower()`
 
 Is selected with `i_l_h_threshold = 11`  [^5]
 
@@ -273,7 +273,7 @@ We thus apply a factor of $\left(\frac{2}{M_{\text{i}}}\right)$ to the end of th
 
 ------------------
 
-#### Snipes 2000 Closed Divertor Nominal Scaling
+#### Snipes 2000 Closed Divertor Nominal Scaling | `calculate_snipes2000_closed_divertor_nominal()`
 
 Is selected with `i_l_h_threshold = 12`  [^5]
 
@@ -283,7 +283,7 @@ $$
 
 ---------------
 
-#### Snipes 2000 Closed Divertor Upper Scaling
+#### Snipes 2000 Closed Divertor Upper Scaling | `calculate_snipes2000_closed_divertor_upper()`
 
 Is selected with `i_l_h_threshold = 13`  [^5]
 
@@ -293,7 +293,7 @@ $$
 
 ---------------
 
-#### Snipes 2000 Closed Divertor Lower Scaling
+#### Snipes 2000 Closed Divertor Lower Scaling | `calculate_snipes2000_closed_divertor_lower()`
 
 Is selected with `i_l_h_threshold = 14`  [^5]
 
@@ -315,7 +315,7 @@ where $I_{\text{p}}$ is the plasma current in $\text{MA}$ and $\bar{n}_{\text{e}
 
 ------------------
 
-#### Hubbard 2012 L-I Nominal Scaling
+#### Hubbard 2012 L-I Nominal Scaling | `calculate_hubbard2012_nominal()`
 
 Is selected with `i_l_h_threshold = 15` [^6]
 
@@ -325,7 +325,7 @@ $$
 
 ---------------
 
-#### Hubbard 2012 L-I Lower Scaling
+#### Hubbard 2012 L-I Lower Scaling | `calculate_hubbard2012_lower()`
 
 Is selected with `i_l_h_threshold = 16` [^6]
 
@@ -335,7 +335,7 @@ $$
 
 ---------------
 
-#### Hubbard 2012 L-I Upper Scaling
+#### Hubbard 2012 L-I Upper Scaling | `calculate_hubbard2012_upper()`
 
 Is selected with `i_l_h_threshold = 17` [^6]
 
@@ -345,7 +345,7 @@ $$
 
 ---------------
 
-###  Hubbard 2017 L-I Scaling
+###  Hubbard 2017 L-I Scaling | `calculate_hubbard2017()`
 
 Is selected with `i_l_h_threshold = 18` [^7]
 
@@ -374,7 +374,7 @@ We apply the same mass-correction done for the original scaling [discussed above
 
 ------------------
 
-#### Martin 2008 Aspect Corrected Nominal Scaling
+#### Martin 2008 Aspect Corrected Nominal Scaling | `calculate_martin08_aspect_nominal()`
 
 Is selected with `i_l_h_threshold = 19` [^4] [^8]
 
@@ -385,7 +385,7 @@ $$
 
 ---------------
 
-#### Martin 2008 Aspect Corrected Upper Scaling
+#### Martin 2008 Aspect Corrected Upper Scaling | `calculate_martin08_aspect_upper()`
 
 Is selected with `i_l_h_threshold = 20` [^4] [^8]
 
@@ -396,7 +396,7 @@ $$
 
 ---------------
 
-#### Martin 2008 Aspect Corrected Lower Scaling
+#### Martin 2008 Aspect Corrected Lower Scaling | `calculate_martin08_aspect_lower()`
 
 Is selected with `i_l_h_threshold = 21` [^4] [^8]
 
