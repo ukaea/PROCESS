@@ -486,7 +486,7 @@ class MaterialMacroInfo:
         self.avg_atomic_mass = float(self.avg_atomic_mass)
         self.sigma_t = np.array(self.sigma_t, dtype=float)
         self.sigma_s = np.array(self.sigma_s, dtype=float)
-        if self.sigma_in:
+        if self.sigma_in is not None:
             self.sigma_in = np.array(self.sigma_in, dtype=float)
         else:
             self.sigma_in = np.zeros_like(self.sigma_s)
