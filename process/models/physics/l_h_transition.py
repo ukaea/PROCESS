@@ -1,8 +1,41 @@
 import logging
+from enum import IntEnum
 
 from process.core import constants
 
 logger = logging.getLogger(__name__)
+
+
+class PlasmaConfinementTransitionModel(IntEnum):
+    """Enum for plasma L -> H and L -> I transition power threshold models."""
+
+    ITER1996_NOMINAL = (1, "ITER-1996 Nominal")
+    ITER1996_UPPER = (2, "ITER-1996 Upper")
+    ITER1996_LOWER = (3, "ITER-1996 Lower")
+    SNIPES1997_ITER = (4, "Snipes 1997 ITER Scaling I")
+    SNIPES1997_KAPPA = (5, "Snipes 1997 ITER Scaling II")
+    MARTIN08_NOMINAL = (6, "Martin 2008 Nominal")
+    MARTIN08_UPPER = (7, "Martin 2008 Upper")
+    MARTIN08_LOWER = (8, "Martin 2008 Lower")
+    SNIPES2000_NOMINAL = (9, "Snipes 2000 Nominal")
+    SNIPES2000_UPPER = (10, "Snipes 2000 Upper")
+    SNIPES2000_LOWER = (11, "Snipes 2000 Lower")
+    SNIPES2000_CLOSED_DIVERTOR_NOMINAL = (12, "Snipes 2000 Closed Divertor Nominal")
+    SNIPES2000_CLOSED_DIVERTOR_UPPER = (13, "Snipes 2000 Closed Divertor Upper")
+    SNIPES2000_CLOSED_DIVERTOR_LOWER = (14, "Snipes 2000 Closed Divertor Lower")
+    HUBBARD2012_NOMINAL = (15, "Hubbard 2012 Nominal")
+    HUBBARD2012_LOWER = (16, "Hubbard 2012 Lower")
+    HUBBARD2012_UPPER = (17, "Hubbard 2012 Upper")
+    HUBBARD2017_I_MODE = (18, "Hubbard 2017 I-Mode")
+    MARTIN08_ASPECT_NOMINAL = (19, "Martin 2008 Aspect Corrected Nominal")
+    MARTIN08_ASPECT_UPPER = (20, "Martin 2008 Aspect Corrected Upper")
+    MARTIN08_ASPECT_LOWER = (21, "Martin 2008 Aspect Corrected Lower")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.full_name = full_name
+        return obj
 
 
 class PlasmaConfinementTransition:
