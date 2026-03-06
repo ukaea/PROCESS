@@ -9,7 +9,6 @@ from scipy.optimize import root_scalar
 import process.models.physics.confinement_time as confinement
 import process.models.physics.fusion_reactions as reactions
 import process.models.physics.impurity_radiation as impurity_radiation
-import process.models.physics.l_h_transition as transition
 import process.models.physics.radiation_power as physics_funcs
 from process.core import constants
 from process.core import process_output as po
@@ -1172,16 +1171,16 @@ class Physics:
         )
 
         # Calculate L- to H-mode power threshold for different scalings
-        physics_variables.l_h_threshold_powers = l_h_threshold_power(
-            physics_variables.nd_plasma_electron_line,
-            physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.rmajor,
-            physics_variables.rminor,
-            physics_variables.kappa,
-            physics_variables.a_plasma_surface,
-            physics_variables.m_ions_total_amu,
-            physics_variables.aspect,
-            physics_variables.plasma_current,
+        physics_variables.l_h_threshold_powers = self.transition.l_h_threshold_power(
+            nd_plasma_electron_line=physics_variables.nd_plasma_electron_line,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            kappa=physics_variables.kappa,
+            a_plasma_surface=physics_variables.a_plasma_surface,
+            m_ions_total_amu=physics_variables.m_ions_total_amu,
+            aspect=physics_variables.aspect,
+            plasma_current=physics_variables.plasma_current,
         )
 
         # Enforced L-H power threshold value (if constraint 15 is turned on)
@@ -5438,70 +5437,112 @@ class Physics:
             p_plasma_loss_mw,
         )
 
-    @staticmethod
-    def calculate_plasma_masses(
-        m_fuel_amu: float,
-        m_ions_total_amu: float,
-        nd_plasma_ions_total_vol_avg: float,
-        nd_plasma_fuel_ions_vol_avg: float,
-        nd_plasma_alphas_vol_avg: float,
-        vol_plasma: float,
-        nd_plasma_electrons_vol_avg: float,
-    ) -> tuple[float, float, float, float, float]:
-        """Calculate the plasma masses.
+    def output_confinement_comparison(self, istell: int):
+        """Routine to calculate ignition margin for different confinement scalings and equivalent confinement times for H=1.
+
+        This routine calculates the ignition margin at the final point with different scalings and outputs the results to a file.
+
+        The output includes:
+        - Energy confinement times
+        - Required H-factors for power balance
+
+        The routine iterates over a range of confinement times, skipping the first user input and a specific index (25). For each confinement time, it calculates various parameters related to confinement and ignition using the `calculate_confinement_time` method. It then calculates the H-factor for when the plasma is ignited using the `find_other_h_factors` method and writes the results to the output file.
+
+        Output format:
+        - Header: "Energy confinement times, and required H-factors :"
+        - Columns: "Scaling law", "Confinement time [s]", "H-factor for power balance"
+
+        Methods used:
+        - `calculate_confinement_time`: Calculates confinement-related parameters.
+        - `find_other_h_factors`: Calculates the H-factor for a given confinement time.
 
         Parameters
         ----------
-        m_fuel_amu : float
-            Average mass of fuel (amu).
-        m_ions_total_amu : float
-            Average mass of all ions (amu).
-        nd_plasma_ions_total_vol_avg : float
-            Total ion density (/m3).
-        nd_plasma_fuel_ions_vol_avg : float
-            Fuel ion density (/m3).
-        nd_plasma_alphas_vol_avg : float
-            Alpha ash density (/m3).
-        vol_plasma : float
-            Plasma volume (m3).
-        nd_plasma_electrons_vol_avg : float
-            Volume averaged electron density (/m3).
-
-        Returns
-        -------
-        tuple[float, float, float, float, float]
-            A tuple containing:
+        istell :
+            Indicator for stellarator (0 for tokamak, >=1 for stellarator).
 
         """
 
-        # Calculate mass of fuel ions
-        m_plasma_fuel_ions = (m_fuel_amu * constants.ATOMIC_MASS_UNIT) * (
-            nd_plasma_fuel_ions_vol_avg * vol_plasma
+        po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
+        po.ocmmnt(
+            self.outfile,
+            f"{'':>2}{'Scaling law':<27}{'Electron confinement time [s]':<32}Equivalent H-factor for",
         )
-
-        m_plasma_ions_total = (m_ions_total_amu * constants.ATOMIC_MASS_UNIT) * (
-            nd_plasma_ions_total_vol_avg * vol_plasma
+        po.ocmmnt(
+            self.outfile,
+            f"{'':>38}{'for H = 1':<23}same confinement time",
         )
+        po.oblnkl(self.outfile)
 
-        m_plasma_alpha = (nd_plasma_alphas_vol_avg * vol_plasma) * constants.ALPHA_MASS
+        # List of key values for stellarator scalings
+        stellarator_scalings = [21, 22, 23, 37, 38]
 
-        m_plasma_electron = constants.ELECTRON_MASS * (
-            nd_plasma_electrons_vol_avg * vol_plasma
-        )
+        # Plot all of the confinement scalings for comparison when H = 1
+        # Start from range 1 as the first i_confinement_time is a user input
+        # If stellarator, use the stellarator scalings
+        for i_confinement_time in (
+            range(1, physics_variables.N_CONFINEMENT_SCALINGS)
+            if istell == 0
+            else stellarator_scalings
+        ):
+            if i_confinement_time == 25:
+                continue
+            (
+                _,
+                _,
+                taueez,
+                _,
+                _,
+                _,
+            ) = self.calculate_confinement_time(
+                physics_variables.m_fuel_amu,
+                physics_variables.p_alpha_total_mw,
+                physics_variables.aspect,
+                physics_variables.b_plasma_toroidal_on_axis,
+                physics_variables.nd_plasma_ions_total_vol_avg,
+                physics_variables.nd_plasma_electrons_vol_avg,
+                physics_variables.nd_plasma_electron_line,
+                physics_variables.eps,
+                1.0,
+                i_confinement_time,
+                physics_variables.i_plasma_ignited,
+                physics_variables.kappa,
+                physics_variables.kappa95,
+                physics_variables.p_non_alpha_charged_mw,
+                current_drive_variables.p_hcd_injected_total_mw,
+                physics_variables.plasma_current,
+                physics_variables.pden_plasma_core_rad_mw,
+                physics_variables.rmajor,
+                physics_variables.rminor,
+                physics_variables.temp_plasma_electron_density_weighted_kev,
+                physics_variables.temp_plasma_ion_density_weighted_kev,
+                physics_variables.q95,
+                physics_variables.qstar,
+                physics_variables.vol_plasma,
+                physics_variables.n_charge_plasma_effective_vol_avg,
+            )
 
-        m_plasma = m_plasma_electron + m_plasma_ions_total
+            try:
+                # Calculate the H-factor for the same confinement time in other scalings
+                physics_variables.hfac[i_confinement_time - 1] = (
+                    self.find_other_h_factors(i_confinement_time)
+                )
+            except ValueError:
+                # This is only used for a table in the OUT.DAT so if it fails
+                # just write a NaN--its not worth crashing PROCESS over.
+                physics_variables.hfac[i_confinement_time - 1] = np.nan
 
-        return (
-            m_plasma_fuel_ions,
-            m_plasma_ions_total,
-            m_plasma_alpha,
-            m_plasma_electron,
-            m_plasma,
-        )
+            po.ocmmnt(
+                self.outfile,
+                f"{'':>2}{physics_variables.LABELS_CONFINEMENT_SCALINGS[i_confinement_time]:<38}"
+                f"{taueez:<28.3f}{physics_variables.hfac[i_confinement_time - 1]:.3f}",
+            )
 
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
 
-def res_diff_time(rmajor, res_plasma, kappa95):
-    """Calculates resistive diffusion time
+    def find_other_h_factors(self, i_confinement_time: int) -> float:
+        """Function to find H-factor for the equivalent confinement time in other scalings.
 
     Parameters
     ----------
