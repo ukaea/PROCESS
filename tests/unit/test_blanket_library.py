@@ -1216,3 +1216,306 @@ def test_liquid_breeder_pressure_drop_mhd(
     assert liquid_breeder_pressure_drop_mhd_out == pytest.approx(
         liquidbreederpressuredropmhdparam.expected_liquid_breeder_pressure_drop_mhd_out
     )
+
+
+class CalculateDshapedBlktAreasParam(NamedTuple):
+    r_shld_inboard_inner: Any = None
+    dr_shld_inboard: Any = None
+    dr_blkt_inboard: Any = None
+    dr_fw_inboard: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    rminor: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
+    dr_fw_outboard: Any = None
+    dz_blkt_half: Any = None
+    expected_a_blkt_inboard_surface: Any = None
+    expected_a_blkt_outboard_surface: Any = None
+    expected_a_blkt_total_surface: Any = None
+
+
+@pytest.mark.parametrize(
+    "calculatedshapedblktareasparam",
+    (
+        CalculateDshapedBlktAreasParam(
+            r_shld_inboard_inner=1.5,
+            dr_shld_inboard=0.4,
+            dr_blkt_inboard=0.0,
+            dr_fw_inboard=0.018,
+            dr_fw_plasma_gap_inboard=0.1,
+            rminor=2.5,
+            dr_fw_plasma_gap_outboard=0.1,
+            dr_fw_outboard=0.018,
+            dz_blkt_half=8.25,
+            expected_a_blkt_inboard_surface=196.97785938008002,
+            expected_a_blkt_outboard_surface=852.24160940262459,
+            expected_a_blkt_total_surface=1049.2194687827046,
+        ),
+    ),
+)
+def test_calculate_dshaped_blkt_areas(
+    calculatedshapedblktareasparam, blanket_library_fixture
+):
+    """
+    Regression Unit Test for calculate_dshaped_blkt_areas.
+
+    This test was generated using data from tests/regression/input_files/st_regression.IN.DAT.
+
+    :param calculatedshapedblktareasparam: the data used in this test.
+    :type calculatedshapedblktareasparam: CalculateDshapedBlktAreasParam
+    """
+    (
+        a_blkt_inboard_surface,
+        a_blkt_outboard_surface,
+        a_blkt_total_surface,
+    ) = blanket_library_fixture.calculate_dshaped_blkt_areas(
+        r_shld_inboard_inner=calculatedshapedblktareasparam.r_shld_inboard_inner,
+        dr_shld_inboard=calculatedshapedblktareasparam.dr_shld_inboard,
+        dr_blkt_inboard=calculatedshapedblktareasparam.dr_blkt_inboard,
+        dr_fw_inboard=calculatedshapedblktareasparam.dr_fw_inboard,
+        dr_fw_plasma_gap_inboard=calculatedshapedblktareasparam.dr_fw_plasma_gap_inboard,
+        rminor=calculatedshapedblktareasparam.rminor,
+        dr_fw_plasma_gap_outboard=calculatedshapedblktareasparam.dr_fw_plasma_gap_outboard,
+        dr_fw_outboard=calculatedshapedblktareasparam.dr_fw_outboard,
+        dz_blkt_half=calculatedshapedblktareasparam.dz_blkt_half,
+    )
+
+    assert a_blkt_inboard_surface == pytest.approx(
+        calculatedshapedblktareasparam.expected_a_blkt_inboard_surface
+    )
+    assert a_blkt_outboard_surface == pytest.approx(
+        calculatedshapedblktareasparam.expected_a_blkt_outboard_surface
+    )
+    assert a_blkt_total_surface == pytest.approx(
+        calculatedshapedblktareasparam.expected_a_blkt_total_surface
+    )
+
+
+class CalculateDshapedBlktVolumesParam(NamedTuple):
+    r_shld_inboard_inner: Any = None
+    dr_shld_inboard: Any = None
+    dr_blkt_inboard: Any = None
+    dr_fw_inboard: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    rminor: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
+    dr_fw_outboard: Any = None
+    dz_blkt_half: Any = None
+    dr_blkt_outboard: Any = None
+    dz_blkt_upper: Any = None
+    expected_vol_blkt_inboard: Any = None
+    expected_vol_blkt_outboard: Any = None
+    expected_vol_blkt_total: Any = None
+
+
+@pytest.mark.parametrize(
+    "calculatedshapedblktvolumesparam",
+    (
+        CalculateDshapedBlktVolumesParam(
+            r_shld_inboard_inner=1.5,
+            dr_shld_inboard=0.4,
+            dr_blkt_inboard=0.6,
+            dr_fw_inboard=0.018,
+            dr_fw_plasma_gap_inboard=0.1,
+            rminor=2.5,
+            dr_fw_plasma_gap_outboard=0.1,
+            dr_fw_outboard=0.018,
+            dz_blkt_half=8.25,
+            dr_blkt_outboard=1.0,
+            dz_blkt_upper=0.85,
+            expected_vol_blkt_inboard=150.94724381968237,
+            expected_vol_blkt_outboard=869.2500537130913,
+            expected_vol_blkt_total=1020.1972975327737,
+        ),
+    ),
+)
+def test_calculate_dshaped_blkt_volumes(
+    calculatedshapedblktvolumesparam, blanket_library_fixture
+):
+    """
+    Regression Unit Test for calculate_dshaped_blkt_volumes.
+
+    This test was generated using data from tests/regression/input_files/st_regression.IN.DAT.
+
+    :param calculatedshapedblktvolumesparam: the data used in this test.
+    :type calculatedshapedblktvolumesparam: CalculateDshapedBlktVolumesParam
+    """
+    (
+        vol_blkt_inboard,
+        vol_blkt_outboard,
+        vol_blkt_total,
+    ) = blanket_library_fixture.calculate_dshaped_blkt_volumes(
+        r_shld_inboard_inner=calculatedshapedblktvolumesparam.r_shld_inboard_inner,
+        dr_shld_inboard=calculatedshapedblktvolumesparam.dr_shld_inboard,
+        dr_blkt_inboard=calculatedshapedblktvolumesparam.dr_blkt_inboard,
+        dr_fw_inboard=calculatedshapedblktvolumesparam.dr_fw_inboard,
+        dr_fw_plasma_gap_inboard=calculatedshapedblktvolumesparam.dr_fw_plasma_gap_inboard,
+        rminor=calculatedshapedblktvolumesparam.rminor,
+        dr_fw_plasma_gap_outboard=calculatedshapedblktvolumesparam.dr_fw_plasma_gap_outboard,
+        dr_fw_outboard=calculatedshapedblktvolumesparam.dr_fw_outboard,
+        dz_blkt_half=calculatedshapedblktvolumesparam.dz_blkt_half,
+        dr_blkt_outboard=calculatedshapedblktvolumesparam.dr_blkt_outboard,
+        dz_blkt_upper=calculatedshapedblktvolumesparam.dz_blkt_upper,
+    )
+
+    assert vol_blkt_inboard == pytest.approx(
+        calculatedshapedblktvolumesparam.expected_vol_blkt_inboard
+    )
+    assert vol_blkt_outboard == pytest.approx(
+        calculatedshapedblktvolumesparam.expected_vol_blkt_outboard
+    )
+    assert vol_blkt_total == pytest.approx(
+        calculatedshapedblktvolumesparam.expected_vol_blkt_total
+    )
+
+
+class CalculateEllipticalBlktAreasParam(NamedTuple):
+    rmajor: Any = None
+    rminor: Any = None
+    triang: Any = None
+    r_shld_inboard_inner: Any = None
+    dr_shld_inboard: Any = None
+    dr_blkt_inboard: Any = None
+    r_shld_outboard_outer: Any = None
+    dr_shld_outboard: Any = None
+    dr_blkt_outboard: Any = None
+    dz_blkt_half: Any = None
+    expected_a_blkt_inboard_surface: Any = None
+    expected_a_blkt_outboard_surface: Any = None
+    expected_a_blkt_total_surface: Any = None
+
+
+@pytest.mark.parametrize(
+    "calculateellipticalblktareasparam",
+    (
+        CalculateEllipticalBlktAreasParam(
+            rmajor=8,
+            rminor=2.6666666666666665,
+            triang=0.5,
+            r_shld_inboard_inner=4.0833333333333339,
+            dr_shld_inboard=0.30000000000000004,
+            dr_blkt_inboard=0.70000000000000007,
+            r_shld_outboard_outer=12.716666666666667,
+            dr_shld_outboard=0.80000000000000004,
+            dr_blkt_outboard=1,
+            dz_blkt_half=5.9532752487304119,
+            expected_a_blkt_inboard_surface=664.9687712975541,
+            expected_a_blkt_outboard_surface=1101.3666396424403,
+            expected_a_blkt_total_surface=1766.3354109399943,
+        ),
+    ),
+)
+def test_calculate_elliptical_blkt_areas(
+    calculateellipticalblktareasparam, blanket_library_fixture
+):
+    """
+    Regression Unit Test for calculate_elliptical_blkt_areas.
+
+    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
+
+    :param calculateellipticalblktareasparam: the data used in this test.
+    :type calculateellipticalblktareasparam: CalculateEllipticalBlktAreasParam
+    """
+    (
+        a_blkt_inboard_surface,
+        a_blkt_outboard_surface,
+        a_blkt_total_surface,
+    ) = blanket_library_fixture.calculate_elliptical_blkt_areas(
+        rmajor=calculateellipticalblktareasparam.rmajor,
+        rminor=calculateellipticalblktareasparam.rminor,
+        triang=calculateellipticalblktareasparam.triang,
+        r_shld_inboard_inner=calculateellipticalblktareasparam.r_shld_inboard_inner,
+        dr_shld_inboard=calculateellipticalblktareasparam.dr_shld_inboard,
+        dr_blkt_inboard=calculateellipticalblktareasparam.dr_blkt_inboard,
+        r_shld_outboard_outer=calculateellipticalblktareasparam.r_shld_outboard_outer,
+        dr_shld_outboard=calculateellipticalblktareasparam.dr_shld_outboard,
+        dr_blkt_outboard=calculateellipticalblktareasparam.dr_blkt_outboard,
+        dz_blkt_half=calculateellipticalblktareasparam.dz_blkt_half,
+    )
+
+    assert a_blkt_inboard_surface == pytest.approx(
+        calculateellipticalblktareasparam.expected_a_blkt_inboard_surface
+    )
+    assert a_blkt_outboard_surface == pytest.approx(
+        calculateellipticalblktareasparam.expected_a_blkt_outboard_surface
+    )
+    assert a_blkt_total_surface == pytest.approx(
+        calculateellipticalblktareasparam.expected_a_blkt_total_surface
+    )
+
+
+class CalculateEllipticalBlktVolumesParam(NamedTuple):
+    rmajor: Any = None
+    rminor: Any = None
+    triang: Any = None
+    r_shld_inboard_inner: Any = None
+    dr_shld_inboard: Any = None
+    dr_blkt_inboard: Any = None
+    r_shld_outboard_outer: Any = None
+    dr_shld_outboard: Any = None
+    dr_blkt_outboard: Any = None
+    dz_blkt_half: Any = None
+    dz_blkt_upper: Any = None
+    expected_vol_blkt_inboard: Any = None
+    expected_vol_blkt_outboard: Any = None
+    expected_vol_blkt_total: Any = None
+
+
+@pytest.mark.parametrize(
+    "calculateellipticalblktvolumesparam",
+    (
+        CalculateEllipticalBlktVolumesParam(
+            rmajor=8,
+            rminor=2.6666666666666665,
+            triang=0.5,
+            r_shld_inboard_inner=4.0833333333333339,
+            dr_shld_inboard=0.30000000000000004,
+            dr_blkt_inboard=0.70000000000000007,
+            r_shld_outboard_outer=12.716666666666667,
+            dr_shld_outboard=0.80000000000000004,
+            dr_blkt_outboard=1,
+            dz_blkt_half=5.9532752487304119,
+            dz_blkt_upper=0.85000000000000009,
+            expected_vol_blkt_inboard=315.83946385183026,
+            expected_vol_blkt_outboard=1020.3677420460117,
+            expected_vol_blkt_total=1336.207205897842,
+        ),
+    ),
+)
+def test_calculate_elliptical_blkt_volumes(
+    calculateellipticalblktvolumesparam, blanket_library_fixture
+):
+    """
+    Regression Unit Test for calculate_elliptical_blkt_volumes.
+
+    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
+
+    :param calculateellipticalblktvolumesparam: the data used in this test.
+    :type calculateellipticalblktvolumesparam: CalculateEllipticalBlktVolumesParam
+    """
+    (
+        vol_blkt_inboard,
+        vol_blkt_outboard,
+        vol_blkt_total,
+    ) = blanket_library_fixture.calculate_elliptical_blkt_volumes(
+        rmajor=calculateellipticalblktvolumesparam.rmajor,
+        rminor=calculateellipticalblktvolumesparam.rminor,
+        triang=calculateellipticalblktvolumesparam.triang,
+        r_shld_inboard_inner=calculateellipticalblktvolumesparam.r_shld_inboard_inner,
+        dr_shld_inboard=calculateellipticalblktvolumesparam.dr_shld_inboard,
+        dr_blkt_inboard=calculateellipticalblktvolumesparam.dr_blkt_inboard,
+        r_shld_outboard_outer=calculateellipticalblktvolumesparam.r_shld_outboard_outer,
+        dr_shld_outboard=calculateellipticalblktvolumesparam.dr_shld_outboard,
+        dr_blkt_outboard=calculateellipticalblktvolumesparam.dr_blkt_outboard,
+        dz_blkt_half=calculateellipticalblktvolumesparam.dz_blkt_half,
+        dz_blkt_upper=calculateellipticalblktvolumesparam.dz_blkt_upper,
+    )
+
+    assert vol_blkt_inboard == pytest.approx(
+        calculateellipticalblktvolumesparam.expected_vol_blkt_inboard
+    )
+    assert vol_blkt_outboard == pytest.approx(
+        calculateellipticalblktvolumesparam.expected_vol_blkt_outboard
+    )
+    assert vol_blkt_total == pytest.approx(
+        calculateellipticalblktvolumesparam.expected_vol_blkt_total
+    )
