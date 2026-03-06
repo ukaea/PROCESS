@@ -2,10 +2,24 @@ import numpy as np
 from scipy.integrate import trapezoid
 
 from process.neutronics import NeutronFluxProfile
-from process.neutronics_data import DT_NEUTRON_E, EV_TO_J, MaterialMacroInfo
+from process.neutronics_data import DT_NEUTRON_E, EV_TO_J, MaterialMacroInfo, scattering_weight_matrix
 
 MAX_E = DT_NEUTRON_E * 1.01
-MIN_E = 1e-9 * EV_TO_J
+MIN_E = 1/40 * EV_TO_J
+
+def _diffusion_equation_in_layer(test_profile, n, num_layer, x):
+    """
+    Get the three terms in the diffusion equation (equation 5 in the paper.
+    """
+    diffusion_out = test_profile.diffusion_const[num_layer, n] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
+    total_removal = test_profile.materials[num_layer].sigma_t[n] * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x)
+
+    source_in_terms = []
+    in_matrix = test_profile.materials[num_layer].sigma_s + test_profile.materials[num_layer].sigma_in
+    for g, all_sources_entering_from_g in enumerate(in_matrix[:, n]):
+        source_in_terms.append(all_sources_entering_from_g * test_profile.groupwise_neutron_flux_in_layer(g, num_layer, x))
+
+    return diffusion_out, total_removal, np.sum(source_in_terms)
 
 
 def test_one_group():
@@ -178,8 +192,52 @@ def test_one_group_with_fission():
         rtol=1e-8,
     ), "Correctly integrated heating in BZ"
 
-
-def test_two_groups():
+def test_two_identical_materials():
     """
-    Same group n=0 values as test_one_group. Second group can have a massive removal cross-section
+    A 2-layer model (both layers being made of material A) should have the same
+    neutron spectrum and flux profiles as a one-layer model.
     """
+    
+def test_5_5():
+    """Create an arbitrary 5-layer 5-group model. Check for continuity and conformity to the equation."""
+    dummy_group_structure = np.geomspace(MAX_E, MIN_E, 5+1)
+    mat_list = []
+    at_masses = np.geomspace(1, 100, 5)[[3,0,2,4,1]]
+    sigma_t_lists = [  # arbitrarily chosen and rearranged numbers
+        1/(80 + np.linspace(-40, 40, 5)[[0,2,4,1,3]]),
+        1/(200 + np.linspace(-30, 30, 5)[[0,3,1,4,2]]),
+        1/(300 + np.linspace(-20, 20, 5)[[1,3,0,2,4]]),
+        1/(100 + np.linspace(-40, 40, 5)[[1,4,2,0,3]]),
+        1/(50 + np.linspace(-10, 10, 5)[[2,0,3,1,4]]),
+    ]
+    sigma_s_list = [
+        sigma_t_lists[0] * [0.8, 0.7, 0.6, 0.6, 0.5],
+        sigma_t_lists[1] * [0.4, 0.3, 0.2, 0.1, 0.0],
+        sigma_t_lists[2] * [0.8, 0.7, 0.6, 0.6, 0.5],
+        sigma_t_lists[3] * [0.9, 0.9, 0.6, 0.4, 0.1],
+        sigma_t_lists[4] * [0.6, 0.5, 0.3, 0.3, 0.2],
+    ]
+    sigma_in_list = [
+        [0.001, 0.002, 0, 0, 0.005],
+        np.where([0,0,1,1,0], sigma_t_lists[1]*1.0, [0,0,0,0,0]),
+        np.where([0,1,0,1,0], sigma_t_lists[2]*0.6, [0,0,0,0,0]),
+        np.where([1,0,1,1,1], sigma_t_lists[3]*2.2, [0,0,0,0,0]),
+        [0,0,0,0,0],
+    ]
+    for i in range(5):
+        mat_list.append(MaterialMacroInfo(
+            dummy_group_structure, at_masses[i],
+            sigma_t=sigma_t_lists[i],
+            sigma_s=(sigma_s_list[i] * scattering_weight_matrix(
+                dummy_group_structure, at_masses[i]
+            ).T).T,
+            sigma_in=(
+                sigma_in_list[i] * scattering_weight_matrix(
+                dummy_group_structure, at_masses[i]
+            ).T).T,
+            name=f"mat{i}"
+        ))
+    neutron_profile = NeutronFluxProfile(
+        1.0, [5, 10, 15, 20, 25], mat_list
+    )
+    neutron_profile.solve_group_n(4)
