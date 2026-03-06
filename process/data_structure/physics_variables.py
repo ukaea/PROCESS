@@ -961,6 +961,31 @@ pden_ion_electron_equilibration_mw: float = None
 plasma_current: float = None
 """plasma current (A)"""
 
+c_plasma_peng_analytic: float = None
+"""Peng analytic plasma current (A)"""
+
+c_plasma_peng_double_null: float = None
+"""Peng double null divertor plasma current (A)"""
+
+c_plasma_cyclindrical: float = None
+"""Cylindrical plasma current (A)"""
+
+c_plasma_ipdg89: float = None
+"""ITER IPDG89 plasma current (A)"""
+
+c_plasma_todd_empirical_i: float = None
+"""Todd empirical plasma current I (A)"""
+
+c_plasma_todd_empirical_ii: float = None
+"""Todd empirical plasma current II (A)"""
+c_plasma_connor_hastie: float = None
+"""Connor-Hastie plasma current (A)"""
+
+c_plasma_sauter: float = None
+"""Sauter plasma current (A)"""
+
+c_plasma_fiesta_st: float = None
+"""FIESTA ST plasma current (A)"""
 
 p_plasma_neutron_mw: float = None
 """Neutron fusion power from just the plasma [MW]"""
@@ -1611,6 +1636,15 @@ def init_physics_variables():
         pflux_fw_rad_mw, \
         pden_ion_electron_equilibration_mw, \
         plasma_current, \
+        c_plasma_peng_analytic, \
+        c_plasma_peng_double_null, \
+        c_plasma_cyclindrical, \
+        c_plasma_ipdg89, \
+        c_plasma_todd_empirical_i, \
+        c_plasma_todd_empirical_ii, \
+        c_plasma_connor_hastie, \
+        c_plasma_sauter, \
+        c_plasma_fiesta_st, \
         p_plasma_neutron_mw, \
         p_neutron_total_mw, \
         pden_neutron_total_mw, \
@@ -1893,6 +1927,15 @@ def init_physics_variables():
     pflux_fw_rad_mw = 0.0
     pden_ion_electron_equilibration_mw = 0.0
     plasma_current = 0.0
+    c_plasma_peng_analytic = 0.0
+    c_plasma_peng_double_null = 0.0
+    c_plasma_cyclindrical = 0.0
+    c_plasma_ipdg89 = 0.0
+    c_plasma_todd_empirical_i = 0.0
+    c_plasma_todd_empirical_ii = 0.0
+    c_plasma_connor_hastie = 0.0
+    c_plasma_sauter = 0.0
+    c_plasma_fiesta_st = 0.0
     p_plasma_neutron_mw = 0.0
     p_neutron_total_mw = 0.0
     pden_neutron_total_mw = 0.0
