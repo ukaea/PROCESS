@@ -1,4 +1,5 @@
 import logging
+from enum import IntEnum
 
 import numpy as np
 
@@ -9,6 +10,18 @@ from process.data_structure import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class PlasmaCurrentModel(IntEnum):
+    PENG_ANALYTIC_FIT = 1
+    PENG_DIVERTOR_SCALING = 2
+    ITER_SCALING = 3
+    IPDG89_SCALING = 4
+    TODD_EMPIRICAL_SCALING_I = 5
+    TODD_EMPIRICAL_SCALING_II = 6
+    CONNOR_HASTIE_MODEL = 7
+    SAUTER_SCALING = 8
+    FIESTA_ST_SCALING = 9
 
 
 class PlasmaCurrent:
@@ -92,65 +105,81 @@ class PlasmaCurrent:
             raise ProcessValueError(
                 f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}"
             )
+        try:
+            model = PlasmaCurrentModel(int(physics_variables.i_plasma_current))
+            # Calculate the function Fq that scales the edge q from the
+            # circular cross-section cylindrical case
 
-        # Calculate the function Fq that scales the edge q from the
-        # circular cross-section cylindrical case
-
-        # Peng analytical fit
-        if i_plasma_current == 1:
-            fq = self.current.calculate_current_coefficient_peng(
-                eps, len_plasma_poloidal, rminor
-            )
-
-        # Peng scaling for double null divertor; TARTs [STAR Code]
-        elif i_plasma_current == 2:
-            plasma_current = 1.0e6 * self.current.calculate_plasma_current_peng(
-                q95, aspect_ratio, eps, rminor, b_plasma_toroidal_on_axis, kappa, triang
-            )
-
-        # Simple ITER scaling (simply the cylindrical case)
-        elif i_plasma_current == 3:
-            fq = 1.0
-
-        # ITER formula (IPDG89)
-        elif i_plasma_current == 4:
-            fq = self.calculate_current_coefficient_ipdg89(eps, kappa95, triang95)
-
-        # Todd empirical scalings
-        # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-        elif i_plasma_current in [5, 6]:
-            fq = self.calculate_current_coefficient_todd(eps, kappa95, triang95, model=1)
-
-            if i_plasma_current == 6:
-                fq = self.calculate_current_coefficient_todd(
-                    eps, kappa95, triang95, model=2
+            # Peng analytical fit
+            if model == PlasmaCurrentModel.PENG_ANALYTIC_FIT:
+                fq = self.current.calculate_current_coefficient_peng(
+                    eps, len_plasma_poloidal, rminor
                 )
 
-        # Connor-Hastie asymptotically-correct expression
-        elif i_plasma_current == 7:
-            fq = self.calculate_current_coefficient_hastie(
-                alphaj,
-                alphap,
-                b_plasma_toroidal_on_axis,
-                triang95,
-                eps,
-                kappa95,
-                pres_plasma_on_axis,
-                constants.RMU0,
-            )
+            # Peng scaling for double null divertor; TARTs [STAR Code]
+            elif model == PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
+                plasma_current = 1.0e6 * self.current.calculate_plasma_current_peng(
+                    q95,
+                    aspect_ratio,
+                    eps,
+                    rminor,
+                    b_plasma_toroidal_on_axis,
+                    kappa,
+                    triang,
+                )
 
-        # Sauter scaling allowing negative triangularity [FED May 2016]
-        # https://doi.org/10.1016/j.fusengdes.2016.04.033.
-        elif i_plasma_current == 8:
-            # Assumes zero squareness, note takes kappa, delta at separatrix not _95
-            fq = self.calculate_current_coefficient_sauter(eps, kappa, triang)
+            # Simple ITER scaling (simply the cylindrical case)
+            elif model == PlasmaCurrentModel.ITER_SCALING:
+                fq = 1.0
 
-        # FIESTA ST scaling
-        # https://doi.org/10.1016/j.fusengdes.2020.111530.
-        elif i_plasma_current == 9:
-            fq = self.calculate_current_coefficient_fiesta(eps, kappa, triang)
-        else:
-            raise ProcessValueError(f"Invalid value {i_plasma_current=}")
+            # ITER formula (IPDG89)
+            elif model == PlasmaCurrentModel.IPDG89_SCALING:
+                fq = self.calculate_current_coefficient_ipdg89(eps, kappa95, triang95)
+
+            # Todd empirical scalings
+            # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
+            elif model in [
+                PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I,
+                PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II,
+            ]:
+                fq = self.calculate_current_coefficient_todd(
+                    eps, kappa95, triang95, model=1
+                )
+
+                if model == PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II:
+                    fq = self.calculate_current_coefficient_todd(
+                        eps, kappa95, triang95, model=2
+                    )
+
+            # Connor-Hastie asymptotically-correct expression
+            elif model == PlasmaCurrentModel.CONNOR_HASTIE_MODEL:
+                fq = self.calculate_current_coefficient_hastie(
+                    alphaj,
+                    alphap,
+                    b_plasma_toroidal_on_axis,
+                    triang95,
+                    eps,
+                    kappa95,
+                    pres_plasma_on_axis,
+                    constants.RMU0,
+                )
+
+            # Sauter scaling allowing negative triangularity [FED May 2016]
+            # https://doi.org/10.1016/j.fusengdes.2016.04.033.
+            elif model == PlasmaCurrentModel.SAUTER_SCALING:
+                # Assumes zero squareness, note takes kappa, delta at separatrix not _95
+                fq = self.calculate_current_coefficient_sauter(eps, kappa, triang)
+
+            # FIESTA ST scaling
+            # https://doi.org/10.1016/j.fusengdes.2020.111530.
+            elif model == PlasmaCurrentModel.FIESTA_ST_SCALING:
+                fq = self.calculate_current_coefficient_fiesta(eps, kappa, triang)
+
+        except ValueError:
+            raise ProcessValueError(
+                "Illegal value of i_plasma_current",
+                i_plasma_current=physics_variables.i_plasma_current,
+            ) from None
 
         # Main plasma current calculation using the fq value from the different settings
         if i_plasma_current != 2:
