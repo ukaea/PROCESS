@@ -189,6 +189,37 @@ class PlasmaCurrent:
         return b_plasma_poloidal_average, qstar, plasma_current
 
     @staticmethod
+    def calculate_cyclindrical_plasma_current(
+        rminor: float, rmajor: float, q95: float, b_plasma_toroidal_on_axis: float
+    ) -> float:
+        """Calculate the plasma current for a cylindrical plasma.
+
+        Parameters
+        ----------
+        rminor :
+            plasma minor radius (m)
+        rmajor :
+            plasma major radius (m)
+        q95 :
+            plasma safety factor at 95% flux
+        b_plasma_toroidal_on_axis :
+            toroidal field on axis (T)
+
+        Returns
+        -------
+        float
+            plasma current (A)
+
+        """
+
+        return (
+            (2.0 * np.pi / constants.RMU0)
+            * rminor**2
+            / (rmajor * q95)
+            * b_plasma_toroidal_on_axis
+        )
+
+    @staticmethod
     def _plascar_bpol(
         aspect: float, eps: float, kappa: float, delta: float
     ) -> tuple[float, float, float, float]:
