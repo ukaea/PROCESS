@@ -673,7 +673,6 @@ class NeutronFluxProfile:
             A scalar.
         """
 
-        print(f"_summation_shorthand is called with {num_layer=}, {n=}, {max_group=}")
         def coef_pair(g: int) -> npt.NDArray[float]:
             """
             A quick function to get the coefficient pair at the specified
@@ -809,7 +808,6 @@ class NeutronFluxProfile:
             The allowed range of values = [0, self.n_groups-1]. Therefore,
             n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         """
-        print(f"solve_group_n({n})")
         if n not in range(self.n_groups):
             raise ValueError(
                 f"n must be a positive integer between 0 and {self.n_groups}!"
@@ -843,17 +841,14 @@ class NeutronFluxProfile:
         include_upscatter = self.contains_upscatter and self.num_iteration[n] != 0
         in_scatter_max_group = self.n_groups if include_upscatter else n + 1
 
-        print(f"Start of solve_group_n({n})")
         try:
             for num_layer in range(self.n_layers):
-                print(f"    Prepopulating layer {num_layer}")
                 # Setting up aliases for shorter code
                 _coefs = Coefficients([], [])
                 mat = self.materials[num_layer]
                 src_matrix = mat.sigma_s + mat.sigma_in
                 diffusion_const_n = self.diffusion_const[num_layer, n]
                 for g in range(in_scatter_max_group):
-                    print(f"        Analysing inscatter group={g}")
                     if g == n:
                         # placeholder zeros, to be properly calculated later.
                         _coefs.c.append(0.0)
@@ -879,7 +874,6 @@ class NeutronFluxProfile:
                     scale_factor = (l2n * l2g) / l2_diff / diffusion_const_n
                     in_scatter_min_group = 0 if include_upscatter else g
 
-                    print(f"        Calculating group coefficients[{num_layer}, {n}].c/s[{g}] using self.coefficients[{num_layer}, {[i for i in range(in_scatter_min_group, in_scatter_max_group) if i != n]}].c/s[{g}]")
                     _coefs.c.append(
                         np.sum([
                             (src_matrix[i, n]
@@ -904,8 +898,6 @@ class NeutronFluxProfile:
                     )
 
                 self.coefficients[num_layer, n] = _coefs
-                print(f"    Prepopulating layer {num_layer} block exited.")
-            print(f"Main diagonal start s: in coefficients[{0}, {n}].s[{n}] using coefficients of self.coefficients[{0}, {n}].s{[g for g in range(in_scatter_max_group) if g != n]}")
             self.coefficients[0, n].s[n] = np.sqrt(abs(self.l2[0, n])) * (
                     -self.fluxes[n] / self.diffusion_const[0, n]
                 ) - (
@@ -916,7 +908,6 @@ class NeutronFluxProfile:
                 ])
             )
 
-            print(f"Main diagonal prep: Obtaining the matrices M and vectors v across all layers [{[num_layer for num_layer in range(self.n_layers - 1)]}, {n}] ")
             m_list, v_list = self._get_all_propagation_operator(
                 n, include_upscatter
             )
@@ -934,7 +925,6 @@ class NeutronFluxProfile:
                 n, self.n_layers - 1, self.extended_boundary[n]
             )
             final_left_vector = row_vector @ affine_transform_matrix_stack
-            print(f"Main diagonal start c: attempting to fill in coefficients[{0}, {n}].c[{n}]")
             final_const = (
                 -self._summation_shorthand(
                     n,
@@ -956,7 +946,6 @@ class NeutronFluxProfile:
                     "cross-section value."
                 )
 
-            print(f"Main diagonal: forward solving the rest of the coefficients[{[num_layer+1 for num_layer in range(self.n_layers-1)]}, {n}].c/s[{n}]")
             for num_layer in range(self.n_layers - 1):
                 [
                     self.coefficients[num_layer + 1, n].c[n],
