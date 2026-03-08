@@ -795,6 +795,10 @@ class NeutronFluxProfile:
             v_list.append(v)
         return m_list, v_list
 
+    def solve(self):
+        """Alias for solving the highest lethargy group."""
+        return self.solve_group_n(self.n_groups - 1)
+
     def solve_group_n(self, n: int) -> None:
         """
         Solve the n-th group of neutron's diffusion equation, where n <=
@@ -941,8 +945,8 @@ class NeutronFluxProfile:
             ) / final_left_vector[0]
             # nonnegativity check for layer 0
             if (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[0]) < 0) or (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[1]) < 0):
-                warnings.warn(f"Negative flux found when solving for group"
-                    f" {n} in layer 0! Likely due to an unphysical "
+                warnings.warn(f"Negative flux found when solving for group {n}"
+                    " in layer 0! Likely due to an unphysical "
                     "cross-section value."
                 )
 
@@ -1378,7 +1382,7 @@ class NeutronFluxProfile:
             Whether to plot each individual group's neutron flux.
             If True, a legend will be added to help label the groups.
         """
-        self.solve_group_n(self.n_groups - 1)
+        self.solve()
         ax = ax or plt.axes()
         method_name = f"neutron_{quantity}_in_layer"
         total_function = getattr(self, method_name)
