@@ -814,7 +814,7 @@ class NeutronFluxProfile:
         """
         if n not in range(self.n_groups):
             raise ValueError(
-                f"n must be a positive integer between 0 and {self.n_groups}!"
+                f"n must be a positive integer between 0 and {self.n_groups-1}!"
             )
         if n>0 and not self.coefficients.has_populated(n-1):
             self.solve_group_n(n-1)
@@ -838,6 +838,12 @@ class NeutronFluxProfile:
                     mat.sigma_in[n, n],
                 )
             )
+            if self.diffusion_const[num_layer, n] > self.layer_x[num_layer]:
+                warnings.warn(
+                    f"Calculation of flux in group {n} may be inaccurate as "
+                    f"layer {num_layer} is thinner than "
+                    r"3\times\lambda_{tr} "f"of group {n}."
+                )
         self.extended_boundary[n] = self.layer_x[-1] + extrapolation_length(
             self.diffusion_const[-1, n]
         )
@@ -903,9 +909,7 @@ class NeutronFluxProfile:
 
                 self.coefficients[num_layer, n] = _coefs
             self.coefficients[0, n].s[n] = np.sqrt(abs(self.l2[0, n])) * (
-                    -self.fluxes[n] / self.diffusion_const[0, n]
-                ) - (
-                np.sum([
+                -(self.fluxes[n] / self.diffusion_const[0, n]) - np.sum([
                     self.coefficients[0, n].s[g] / np.sqrt(abs(self.l2[0, g]))
                     for g in range(in_scatter_max_group)
                     if g != n
@@ -925,10 +929,10 @@ class NeutronFluxProfile:
                 ] or [[0,0]],
                 axis=0,
             )
-            row_vector = self._groupwise_cs_values_in_layer(
+            boundary_cs_vector = self._groupwise_cs_values_in_layer(
                 n, self.n_layers - 1, self.extended_boundary[n]
             )
-            final_left_vector = row_vector @ affine_transform_matrix_stack
+            final_left_vector = boundary_cs_vector @ affine_transform_matrix_stack
             final_const = (
                 -self._summation_shorthand(
                     n,
@@ -937,11 +941,11 @@ class NeutronFluxProfile:
                     self.extended_boundary[n],
                     in_scatter_max_group,
                 )
-                - row_vector @ affine_transformed_column_vector
+                - boundary_cs_vector @ affine_transformed_column_vector
             )
             self.coefficients[0, n].c[n] = (
-                final_const - final_left_vector[1]
-                * self.coefficients[0, n].s[n]
+                final_const
+                - final_left_vector[1] * self.coefficients[0, n].s[n]
             ) / final_left_vector[0]
             # nonnegativity check for layer 0
             if (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[0]) < 0) or (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[1]) < 0):
@@ -1053,7 +1057,7 @@ class NeutronFluxProfile:
             return self.groupwise_neutron_flux_at(n, [x])[0]
         x = np.asarray(x)
 
-        out_flux = np.zeros_like(x)
+        out_flux = np.zeros_like(x, dtype=float)
         for num_layer in range(self.n_layers + 1):
             in_layer = self._check_if_in_layer(x, num_layer)
             if in_layer.any():
@@ -1123,7 +1127,7 @@ class NeutronFluxProfile:
         if np.isscalar(x):
             return self.groupwise_neutron_heating_at(n, [x])[0]
 
-        out_heat = np.zeros_like(x)
+        out_heat = np.zeros_like(x, dtype=float)
         for num_layer in range(self.n_layers + 1):
             in_layer = self._check_if_in_layer(x, num_layer)
             if in_layer.any():
@@ -1190,7 +1194,7 @@ class NeutronFluxProfile:
             return self.groupwise_neutron_current_at(n, [x])[0]
         x = np.asarray(x)
 
-        current = np.zeros_like(x)
+        current = np.zeros_like(x, dtype=float)
         for num_layer in range(self.n_layers + 1):
             in_layer = self._check_if_in_layer(x, num_layer)
             if in_layer.any():

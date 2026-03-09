@@ -99,7 +99,7 @@ def test_one_group():
         atol=0,
         rtol=1e-8,
     ), "Correctly integrated heating in BZ"
-
+    assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
 
 def test_one_group_with_fission():
     """
@@ -224,6 +224,7 @@ def test_5_5():
         np.where([1,0,1,1,1], sigma_t_lists[3]*2.2, [0,0,0,0,0]),
         [0,0,0,0,0],
     ]
+    # sigma_in_list = [[0,0,0,0,0] for _ in range(5)]
     for i in range(5):
         mat_list.append(MaterialMacroInfo(
             dummy_group_structure, at_masses[i],
@@ -237,7 +238,89 @@ def test_5_5():
             ).T).T,
             name=f"mat{i}"
         ))
+    incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
-        1.0, [5, 10, 15, 20, 25], mat_list
+        incoming_flux, [5, 10, 15, 20, 25], mat_list
     )
-    neutron_profile.solve_group_n(4)
+    neutron_profile.solve()
+    for num_layer in range(neutron_profile.n_layers):
+        mid_point = np.mean(neutron_profile.interface_x[num_layer:num_layer+2])
+        layer_x = neutron_profile.layer_x[num_layer]
+        for n in range(neutron_profile.n_groups):
+            # Check for conformity with the diffusion equation
+            diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
+                neutron_profile, n, num_layer, mid_point
+            )
+            assert np.isclose(diffusion_out, total_removal - source_in), (
+                "Check that the diffusion equation holds up at an arbitrary point."
+            )
+            if num_layer == neutron_profile.n_layers-1:
+                continue
+            # Check for continuity of flux and current
+            assert np.isclose(
+                neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer, layer_x),
+                neutron_profile.groupwise_neutron_flux_in_layer(n, num_layer+1, layer_x),
+            )
+            assert np.isclose(
+                neutron_profile.groupwise_neutron_current_in_layer(n, num_layer, layer_x),
+                neutron_profile.groupwise_neutron_current_in_layer(n, num_layer+1, layer_x),
+            )
+        assert np.isclose(
+            neutron_profile.neutron_flux_in_layer(num_layer, layer_x),
+            neutron_profile.neutron_flux_in_layer(num_layer+1, layer_x),
+        )
+        assert np.isclose(
+            neutron_profile.neutron_current_in_layer(num_layer, layer_x),
+            neutron_profile.neutron_current_in_layer(num_layer+1, layer_x),
+        )
+    # Check for extended boundary flux = 0
+    num_layer = neutron_profile.n_layers - 1
+    for n in range(neutron_profile.n_groups):
+        assert np.isclose(
+            neutron_profile.groupwise_neutron_flux_in_layer(
+                n, num_layer, neutron_profile.extended_boundary[n]
+            ), 0
+            ), f"flux at Extended boundary of group {n} should = 0"
+
+    no_incident_flux_err_msg = ("Expected no incident neutron flux from the "
+        "plasma except in energy group 0.")
+    for n in range(neutron_profile.n_groups):
+        assert np.isclose(
+            neutron_profile.groupwise_neutron_current_at(n, 0),
+            incoming_flux * int(n==0)
+        ), no_incident_flux_err_msg
+
+    sigma_t = np.array([mat.sigma_t for mat in neutron_profile.materials])
+    sigma_s = np.array([mat.sigma_s for mat in neutron_profile.materials])
+    sigma_in = np.array([mat.sigma_in for mat in neutron_profile.materials])
+    in_flow = np.zeros([5,5])
+    in_scatter = np.zeros([5,5])
+    removal = np.zeros([5,5])
+    for n in range(neutron_profile.n_groups):
+        for num_layer in range(neutron_profile.n_layers):
+            in_flow[num_layer, n] = neutron_profile.groupwise_neutron_current_in_layer(n, num_layer, neutron_profile.interface_x[num_layer]) - neutron_profile.groupwise_neutron_current_in_layer(n, num_layer, neutron_profile.interface_x[num_layer+1])
+            in_scatter[num_layer, n] = sum((sigma_s[num_layer, in_group, n] + sigma_in[num_layer, in_group, n]) * neutron_profile.groupwise_integrated_flux_in_layer(in_group, num_layer) for in_group in range(neutron_profile.n_groups) if in_group<n)
+            removal[num_layer, n] = (sigma_t[num_layer, n] - sigma_s[num_layer, n, n] - sigma_in[num_layer, n, n]) * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
+            assert np.isclose(in_flow + in_scatter, removal, atol=0, rtol=1E-9), f"Mismatch between {num_layer} group {n} influx and outflux"
+        assert np.isclose(neutron_profile.groupwise_neutron_current_through_interface(n, num_layer+1), neutron_profile.groupwise_neutron_current_escaped(n))
+        assert np.isclose(neutron_profile.groupwise_neutron_current_at(n, neutron_profile.layer_x[num_layer]), neutron_profile.groupwise_neutron_current_through_interface(n, num_layer+1))
+
+    removal_xs = np.zeros([5,5])
+    int_flux = np.zeros([5,5])
+    for num_layer in range(neutron_profile.n_layers):
+        removal_xs[num_layer] = (
+            neutron_profile.materials[num_layer].sigma_t
+            - np.diag(neutron_profile.materials[num_layer].sigma_s)
+            - np.diag(neutron_profile.materials[num_layer].sigma_in)
+        )
+        int_flux[num_layer] = [neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer) for n in range(neutron_profile.n_groups)]
+    assert np.isclose(
+        sum(neutron_profile.fluxes),
+        neutron_profile.neutron_current_escaped()
+        + sum(
+            sum([removal_xs[num_layer][n]
+            * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
+            for n in range(neutron_profile.n_groups)])
+            for num_layer in range(neutron_profile.n_layers)
+        ),
+    ), "Conservation of neutrons"
