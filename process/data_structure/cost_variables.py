@@ -196,7 +196,7 @@ cppa: float = None
 c22128: float = None
 
 abktflnc: float = None
-"""allowable first wall/blanket neutron fluence (MW-yr/m2) (`blktmodel=0`)"""
+"""allowable first wall/blanket neutron fluence (MW-yr/m2) (`i_blanket_type = 0`)"""
 
 
 adivflnc: float = None
@@ -663,7 +663,7 @@ ucblbe: float = None
 
 
 ucblbreed: float = None
-"""unit cost for breeder material ($/kg) (`blktmodel>0`)"""
+"""unit cost for breeder material ($/kg) (`i_blanket_type > 0`)"""
 
 
 ucblli: float = None

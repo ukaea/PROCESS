@@ -30,7 +30,7 @@ denwc: float = None
 
 
 dewmkg: float = None
-"""total mass of vacuum vessel + cryostat [kg] (calculated if blktmodel>0)"""
+"""total mass of vacuum vessel + cryostat [kg] (calculated if i_blanket_type > 0)"""
 
 
 f_p_blkt_multiplication: float = None
@@ -86,6 +86,7 @@ fw_armour_vol: float = None
 
 i_blanket_type: int = None
 """switch for blanket model:
+- =0 Simple blanket model
 - =1 CCFE HCPB model
 - =2 KIT HCPB model  # REMOVED, no longer usable
 - =3 CCFE HCPB model with Tritium Breeding Ratio calculation
@@ -499,7 +500,7 @@ p_tf_nuclear_heat_mw: float = None
 
 
 ptfnucpm3: float = None
-"""nuclear heating in the TF coil (MW/m3) (`blktmodel>0`)"""
+"""nuclear heating in the TF coil (MW/m3) (`i_blanket_type > 0`)"""
 
 
 r_cryostat_inboard: float = None
@@ -615,7 +616,6 @@ f_a_blkt_cooling_channels: float = None
 
 blktmodel: int = None
 """switch for blanket/tritium breeding model (see i_blanket_type):
-- =0 original simple model
 - =1 KIT model based on a helium-cooled pebble-bed blanket (HCPB) reference design
 """
 
@@ -1245,7 +1245,7 @@ def init_fwbs_variables():
     m_blkt_vanadium = 0.0
     m_blkt_lithium = 0.0
     f_a_blkt_cooling_channels = 0.25
-    blktmodel = 0
+    blktmodel = 1
     declblkt = 0.075
     declfw = 0.075
     declshld = 0.075

@@ -28,7 +28,7 @@ def st_build(stellarator, f_output: bool):
 
 
     """
-    if fwbs_variables.blktmodel > 0:
+    if fwbs_variables.i_blanket_type > 0:
         build_variables.dr_blkt_inboard = (
             build_variables.blbuith + build_variables.blbmith + build_variables.blbpith
         )

@@ -28,35 +28,35 @@ a_blkt_outboard_surface_full_coverage: float = None
 
 
 blbmith: float = None
-"""inboard blanket box manifold thickness (m) (`blktmodel>0`)"""
+"""inboard blanket box manifold thickness (m) (`i_blanket_type > 0`)"""
 
 
 blbmoth: float = None
-"""outboard blanket box manifold thickness (m) (`blktmodel>0`)"""
+"""outboard blanket box manifold thickness (m) (`i_blanket_type > 0`)"""
 
 
 blbpith: float = None
-"""inboard blanket base plate thickness (m) (`blktmodel>0`)"""
+"""inboard blanket base plate thickness (m) (`i_blanket_type > 0`)"""
 
 
 blbpoth: float = None
-"""outboard blanket base plate thickness (m) (`blktmodel>0`)"""
+"""outboard blanket base plate thickness (m) (`i_blanket_type > 0`)"""
 
 
 blbuith: float = None
-"""inboard blanket breeding zone thickness (m) (`blktmodel>0`) (`iteration variable 90`)"""
+"""inboard blanket breeding zone thickness (m) (`i_blanket_type > 0`) (`iteration variable 90`)"""
 
 
 blbuoth: float = None
-"""outboard blanket breeding zone thickness (m) (`blktmodel>0`) (`iteration variable 91`)"""
+"""outboard blanket breeding zone thickness (m) (`i_blanket_type > 0`) (`iteration variable 91`)"""
 
 
 dr_blkt_inboard: float = None
-"""inboard blanket thickness (m); (calculated if `blktmodel>0`) (=0.0 if `i_blkt_inboard=0`)"""
+"""inboard blanket thickness (m); (calculated if `i_blanket_type > 0`) (=0.0 if `i_blkt_inboard=0`)"""
 
 
 dr_blkt_outboard: float = None
-"""outboard blanket thickness (m); calculated if `blktmodel>0`"""
+"""outboard blanket thickness (m); calculated if `i_blanket_type > 0`"""
 
 
 dz_blkt_upper: float = None
@@ -291,7 +291,7 @@ dr_shld_outboard: float = None
 
 
 dz_shld_upper: float = None
-"""upper/lower shield thickness (m); calculated if `blktmodel > 0` (= dz_shld_lower if double-null)"""
+"""upper/lower shield thickness (m); calculated if `i_blanket_type > 0` (= dz_shld_lower if double-null)"""
 
 
 sigallpc: float = None

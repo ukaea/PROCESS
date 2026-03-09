@@ -107,7 +107,6 @@ class Availability:
             dpa_fpy = f_scale * ref_dpa_fpy
 
             # First wall / blanket lifetime (years)
-            # TODO MDK Do this calculation whatever the value of blktmodel (whatever that is)
             # For some reason life_fw_fpy is not always calculated, so ignore it if it is still zero.
             if fwbsv.life_fw_fpy < 0.0001e0:
                 # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
@@ -220,7 +219,7 @@ class Availability:
         # Output section
         if output:
             po.oheadr(self.outfile, "Plant Availability")
-            if fwbsv.blktmodel == 0:
+            if fwbsv.i_blanket_type == 0:
                 po.ovarre(
                     self.outfile,
                     "Allowable blanket neutron fluence (MW-yr/m2)",
