@@ -1915,12 +1915,6 @@ class CurrentDrive:
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
                 )
 
-                # Wall plug power
-                current_drive_variables.p_hcd_icrh_electric_mw = (
-                    current_drive_variables.p_hcd_icrh_injected_total_mw
-                    / current_drive_variables.eta_icrh_injector_wall_plug
-                )
-
             # ===========================================================
 
             # Electron cyclotron cases
