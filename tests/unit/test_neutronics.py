@@ -207,12 +207,12 @@ def test_same_l_in_2_groups_warns():
     fw_material = MaterialMacroInfo(
         dummy, a_fw, [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]], name="fw"
     )
-    incoming_flux = 1.0
+    incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
         incoming_flux, [x_fw], [fw_material]
     )
     with pytest.warns(UserWarning):
-        neutron_profile.solve_group_n(1)
+        neutron_profile.solve()
 
 @pytest.mark.filterwarnings("ignore:Group 0 and group 1 has the same neutron diffusion lengths")
 @pytest.mark.filterwarnings("error")
@@ -229,12 +229,12 @@ def test_same_l_in_2_groups_calculate_flux():
     fw_material = MaterialMacroInfo(
         dummy, a_fw, [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]], name="fw"
     )
-    incoming_flux = 1.0
+    incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
         incoming_flux, [x_fw], [fw_material]
     )
 
-    neutron_profile.solve_group_n(1)
+    neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
@@ -267,11 +267,11 @@ def test_two_group():
         dummy, a_fw,
         [1 / mfp_fw_t, 1 / (mfp_fw_t+0.5)], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]], name="fw"
     )
-    incoming_flux = 1.0
+    incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
         incoming_flux, [x_fw], [fw_material]
     )
-    neutron_profile.solve_group_n(1)
+    neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
@@ -291,6 +291,23 @@ def test_two_group():
         assert np.isclose(diffusion_out, total_removal - source_in), (
             "Check that the diffusion equation holds up at an arbitrary point."
         )
+    removal_xs = []
+    for num_layer in range(neutron_profile.n_layers):
+        removal_xs.append(
+            neutron_profile.materials[num_layer].sigma_t
+            - neutron_profile.materials[num_layer].sigma_s.sum(axis=1)
+        )
+    assert np.isclose(
+        sum(neutron_profile.fluxes),
+        neutron_profile.neutron_current_escaped()
+        + sum(
+            sum([removal_xs[num_layer][n]
+            * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
+            for n in range(neutron_profile.n_groups)])
+            for num_layer in range(neutron_profile.n_layers)
+        ),
+    ), "Conservation of neutrons"
+    assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
 
 
 def test_three_group():
@@ -310,11 +327,11 @@ def test_three_group():
         ],
         name="fw"
     )
-    incoming_flux = 1.0
+    incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
         incoming_flux, [x_fw], [fw_material]
     )
-    neutron_profile.solve_group_n(2)
+    neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
@@ -339,6 +356,7 @@ def test_three_group():
         assert np.isclose(diffusion_out, total_removal - source_in), (
             "Check that the diffusion equation holds up at an arbitrary point."
         )
+    assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
 
 @pytest.mark.filterwarnings("ignore:Negative flux found")
 def test_four_group():
@@ -361,11 +379,11 @@ def test_four_group():
         ],
         name="fw"
     )
-    incoming_flux = 1.0
+    incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
         incoming_flux, [x_fw], [fw_material]
     )
-    neutron_profile.solve_group_n(3)
+    neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
@@ -396,3 +414,4 @@ def test_four_group():
         assert np.isclose(diffusion_out, total_removal - source_in), (
             "Check that the diffusion equation holds up at an arbitrary point."
         )
+    assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
