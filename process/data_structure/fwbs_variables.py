@@ -88,7 +88,7 @@ i_blanket_type: int = None
 """switch for blanket model:
 - =1 CCFE HCPB model
 - =2 KIT HCPB model  # REMOVED, no longer usable
-- =3 CCFE HCPB model with Tritium Breeding Ratio calculation
+- =3 CCFE HCPB model with Tritium Breeding Ratio calculation # REMOVED, no longer usable
 - =4 KIT HCLL model  # REMOVED, no longer usable
 - =5 DCLL model -  no nutronics model included (in development) please check/choose values for
 'dual-coolant blanket' fractions (provided in this file).
@@ -182,19 +182,19 @@ breeder_multiplier: float = None
 
 
 vfcblkt: float = None
-"""He coolant fraction of blanket by volume (`i_blanket_type= 1,3` (CCFE HCPB))"""
+"""He coolant fraction of blanket by volume (`i_blanket_type= 1` (CCFE HCPB))"""
 
 
 vfpblkt: float = None
-"""He purge gas fraction of blanket by volume (`i_blanket_type= 1,3` (CCFE HCPB))"""
+"""He purge gas fraction of blanket by volume (`i_blanket_type= 1` (CCFE HCPB))"""
 
 
 m_blkt_li4sio4: float = None
-"""mass of lithium orthosilicate in blanket [kg] (`i_blanket_type=1,3` (CCFE HCPB))"""
+"""mass of lithium orthosilicate in blanket [kg] (`i_blanket_type=1` (CCFE HCPB))"""
 
 
 m_blkt_tibe12: float = None
-"""mass of titanium beryllide in blanket [kg] (`i_blanket_type=1,3` (CCFE HCPB))"""
+"""mass of titanium beryllide in blanket [kg] (`i_blanket_type=1` (CCFE HCPB))"""
 
 
 neut_flux_cp: float = None

@@ -278,32 +278,18 @@ class Costs:
         po.oshead(self.outfile, "Reactor Systems")
         po.ocosts(self.outfile, "(c2211)", "First wall cost (M$)", cost_variables.c2211)
         if ife_variables.ife != 1:
-            if fwbs_variables.i_blanket_type == 4:
-                po.ocosts(
-                    self.outfile,
-                    "(c22121)",
-                    "Blanket lithium-lead cost (M$)",
-                    cost_variables.c22121,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22122)",
-                    "Blanket lithium cost (M$)",
-                    cost_variables.c22122,
-                )
-            else:
-                po.ocosts(
-                    self.outfile,
-                    "(c22121)",
-                    "Blanket beryllium cost (M$)",
-                    cost_variables.c22121,
-                )
-                po.ocosts(
-                    self.outfile,
-                    "(c22122)",
-                    "Blanket breeder material cost (M$)",
-                    cost_variables.c22122,
-                )
+            po.ocosts(
+                self.outfile,
+                "(c22121)",
+                "Blanket beryllium cost (M$)",
+                cost_variables.c22121,
+            )
+            po.ocosts(
+                self.outfile,
+                "(c22122)",
+                "Blanket breeder material cost (M$)",
+                cost_variables.c22122,
+            )
 
             po.ocosts(
                 self.outfile,
@@ -1263,32 +1249,15 @@ class Costs:
         cmlsa = [0.5000e0, 0.7500e0, 0.8750e0, 1.0000e0]
 
         if ife_variables.ife != 1:
-            # i_blanket_type=4 is used for KIT HCLL model. i_blanket_type<4 are all
-            # HCPB (CCFE).
+            #  Solid blanket (Li2O + Be)
+            cost_variables.c22121 = (
+                1.0e-6 * fwbs_variables.m_blkt_beryllium * cost_variables.ucblbe
+            )
 
-            if fwbs_variables.i_blanket_type == 4:
-                #  Liquid blanket (LiPb + Li)
-                cost_variables.c22121 = (
-                    1.0e-6 * fwbs_variables.wtbllipb * cost_variables.ucbllipb
-                )
-                cost_variables.c22122 = (
-                    1.0e-6 * fwbs_variables.m_blkt_lithium * cost_variables.ucblli
-                )
-            else:
-                #  Solid blanket (Li2O + Be)
-                cost_variables.c22121 = (
-                    1.0e-6 * fwbs_variables.m_blkt_beryllium * cost_variables.ucblbe
-                )
-                if fwbs_variables.i_blanket_type == 2:
-                    # KIT model
-                    cost_variables.c22122 = (
-                        1.0e-6 * fwbs_variables.whtblbreed * cost_variables.ucblbreed
-                    )
-                else:
-                    # CCFE model
-                    cost_variables.c22122 = (
-                        1.0e-6 * fwbs_variables.m_blkt_li2o * cost_variables.ucblli2o
-                    )
+            # CCFE model
+            cost_variables.c22122 = (
+                1.0e-6 * fwbs_variables.m_blkt_li2o * cost_variables.ucblli2o
+            )
 
             cost_variables.c22123 = (
                 1.0e-6 * fwbs_variables.m_blkt_steel_total * cost_variables.ucblss
