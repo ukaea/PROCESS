@@ -311,8 +311,9 @@ def test_5_5():
     for num_layer in range(neutron_profile.n_layers):
         removal_xs[num_layer] = (
             neutron_profile.materials[num_layer].sigma_t
-            - np.diag(neutron_profile.materials[num_layer].sigma_s)
-            - np.diag(neutron_profile.materials[num_layer].sigma_in)
+            # Count all neutrons consumed, but not if they popped up anywhere else.
+            - neutron_profile.materials[num_layer].sigma_s.sum(axis=1)
+            - neutron_profile.materials[num_layer].sigma_in.sum(axis=1)
         )
         int_flux[num_layer] = [neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer) for n in range(neutron_profile.n_groups)]
 
