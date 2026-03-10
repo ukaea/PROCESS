@@ -255,6 +255,7 @@ def test_same_l_in_2_groups_calculate_flux():
             "Check that the diffusion equation holds up at an arbitrary point."
         )
         
+@pytest.mark.filterwarnings("ignore:Calculation of flux")
 def test_two_group():
     dummy = np.geomspace(MAX_E, MIN_E, 3)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
@@ -310,6 +311,7 @@ def test_two_group():
     assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
 
 
+@pytest.mark.filterwarnings("ignore:Calculation of flux")
 def test_three_group():
     dummy = np.geomspace(MAX_E, MIN_E, 4)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
@@ -356,9 +358,27 @@ def test_three_group():
         assert np.isclose(diffusion_out, total_removal - source_in), (
             "Check that the diffusion equation holds up at an arbitrary point."
         )
+    removal_xs = []
+    for num_layer in range(neutron_profile.n_layers):
+        removal_xs.append(
+            neutron_profile.materials[num_layer].sigma_t
+            - neutron_profile.materials[num_layer].sigma_s.sum(axis=1)
+        )
+    assert np.isclose(
+        sum(neutron_profile.fluxes),
+        neutron_profile.neutron_current_escaped()
+        + sum(
+            sum([removal_xs[num_layer][n]
+            * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
+            for n in range(neutron_profile.n_groups)])
+            for num_layer in range(neutron_profile.n_layers)
+        ),
+    ), "Conservation of neutrons"
     assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
 
-@pytest.mark.filterwarnings("ignore:Negative flux found")
+
+# @pytest.mark.filterwarnings("ignore:Negative flux found")
+@pytest.mark.filterwarnings("ignore:Calculation of flux")
 def test_four_group():
     dummy = np.geomspace(MAX_E, MIN_E, 5)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
@@ -377,6 +397,12 @@ def test_four_group():
             [0, 0, sigma_fw_s/3, sigma_fw_s],
             [0, 0, 0, 0.3],
         ],
+        # [
+        #     [0,0.001, 0.001, 0.001],
+        #     [0,0.01,0, 0],
+        #     [0,0,0,0],
+        #     [0,0,0,0],
+        # ],
         name="fw"
     )
     incoming_flux = 100.0
@@ -415,3 +441,20 @@ def test_four_group():
             "Check that the diffusion equation holds up at an arbitrary point."
         )
     assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
+    removal_xs = []
+    for num_layer in range(neutron_profile.n_layers):
+        removal_xs.append(
+            neutron_profile.materials[num_layer].sigma_t
+            - neutron_profile.materials[num_layer].sigma_s.sum(axis=1)
+            - neutron_profile.materials[num_layer].sigma_in.sum(axis=1)
+        )
+    assert np.isclose(
+        sum(neutron_profile.fluxes),
+        neutron_profile.neutron_current_escaped()
+        + sum(
+            sum([removal_xs[num_layer][n]
+            * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
+            for n in range(neutron_profile.n_groups)])
+            for num_layer in range(neutron_profile.n_layers)
+        ),
+    ), "Conservation of neutrons"
