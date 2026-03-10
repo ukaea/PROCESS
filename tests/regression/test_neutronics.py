@@ -293,20 +293,21 @@ def test_5_5():
     sigma_t = np.array([mat.sigma_t for mat in neutron_profile.materials])
     sigma_s = np.array([mat.sigma_s for mat in neutron_profile.materials])
     sigma_in = np.array([mat.sigma_in for mat in neutron_profile.materials])
-    in_flow = np.zeros([5,5])
-    in_scatter = np.zeros([5,5])
-    removal = np.zeros([5,5])
+    shape = np.array([neutron_profile.n_layers,neutron_profile.n_groups])
+    in_flow = np.zeros(shape)
+    in_scatter = np.zeros(shape)
+    removal = np.zeros(shape)
     for n in range(neutron_profile.n_groups):
         for num_layer in range(neutron_profile.n_layers):
             in_flow[num_layer, n] = neutron_profile.groupwise_neutron_current_in_layer(n, num_layer, neutron_profile.interface_x[num_layer]) - neutron_profile.groupwise_neutron_current_in_layer(n, num_layer, neutron_profile.interface_x[num_layer+1])
             in_scatter[num_layer, n] = sum((sigma_s[num_layer, in_group, n] + sigma_in[num_layer, in_group, n]) * neutron_profile.groupwise_integrated_flux_in_layer(in_group, num_layer) for in_group in range(neutron_profile.n_groups) if in_group<n)
             removal[num_layer, n] = (sigma_t[num_layer, n] - sigma_s[num_layer, n, n] - sigma_in[num_layer, n, n]) * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
-            assert np.isclose(in_flow + in_scatter, removal, atol=0, rtol=1E-9), f"Mismatch between {num_layer} group {n} influx and outflux"
         assert np.isclose(neutron_profile.groupwise_neutron_current_through_interface(n, num_layer+1), neutron_profile.groupwise_neutron_current_escaped(n))
         assert np.isclose(neutron_profile.groupwise_neutron_current_at(n, neutron_profile.layer_x[num_layer]), neutron_profile.groupwise_neutron_current_through_interface(n, num_layer+1))
+    assert np.isclose(in_flow + in_scatter, removal, atol=0, rtol=1E-9).all(), f"Mismatch between {num_layer} group {n} influx and outflux"
 
-    removal_xs = np.zeros([5,5])
-    int_flux = np.zeros([5,5])
+    removal_xs = np.zeros(shape)
+    int_flux = np.zeros(shape)
     for num_layer in range(neutron_profile.n_layers):
         removal_xs[num_layer] = (
             neutron_profile.materials[num_layer].sigma_t
@@ -314,13 +315,9 @@ def test_5_5():
             - np.diag(neutron_profile.materials[num_layer].sigma_in)
         )
         int_flux[num_layer] = [neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer) for n in range(neutron_profile.n_groups)]
+
     assert np.isclose(
         sum(neutron_profile.fluxes),
         neutron_profile.neutron_current_escaped()
-        + sum(
-            sum([removal_xs[num_layer][n]
-            * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
-            for n in range(neutron_profile.n_groups)])
-            for num_layer in range(neutron_profile.n_layers)
-        ),
+        + (removal_xs * int_flux).sum(),
     ), "Conservation of neutrons"
