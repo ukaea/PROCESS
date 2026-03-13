@@ -8,10 +8,10 @@ The rest of the derivation are done in a paper, the conversion is as follows:
 |indexing from            |  1  |      0      |
 |group index (1)          |  i  |      n      |
 |group index (2)          |  j  |      g      |
-|group index (3)          |(N/A)|      k      |
+|group index (3)          |     |      k      |
 |group index (4)          |  g  |      i      |
 |layer index (1)          |  m  |  num_layer  |
-|layer index (2)          |  l  | num_layer+1 |
+|layer index (2)          |l=m+1| num_layer+1 |
 |layer index (3)          |  k  |      k      |
 |total number of groups(1)|  N  |self.n_groups|
 |total number of layers(2)|  M  |self.n_layers|
@@ -820,11 +820,9 @@ class NeutronFluxProfile:
             self.solve_group_n(n-1)
         if self.contains_upscatter and self.num_iteration[n] > 1:
             raise NotImplementedError(
-                "Will implement solve_group_n in a loop later.\n"
-                "Previous implementation will trigger a ProcessValueError via "
-                "coefficients[:, :].validate_length if allowed to continue; "
-                "current implementation does not guarantee convergence."
-            )
+                "Will implement solve_group_n in a loop later."
+            )  # Sum over the addition in neutron flux due to the 2nd, 3rd, 4th
+            # etc. generation of neutrons, which should eventually converge.
         if self.coefficients.has_populated(n):
             return None  # skip if it has already been solved.
         # Parameter to be changed later, to allow solving non-down-scatter
