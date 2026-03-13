@@ -1,3 +1,5 @@
+import pytest
+
 import numpy as np
 from scipy.integrate import trapezoid
 
@@ -198,6 +200,7 @@ def test_two_identical_materials():
     neutron spectrum and flux profiles as a one-layer model.
     """
     
+@pytest.mark.filterwarnings("ignore:Calculation of flux")
 def test_5_5():
     """Create an arbitrary 5-layer 5-group model. Check for continuity and conformity to the equation."""
     dummy_group_structure = np.geomspace(MAX_E, MIN_E, 5+1)
