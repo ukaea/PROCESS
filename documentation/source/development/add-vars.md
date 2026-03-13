@@ -142,13 +142,13 @@ After following the instruction to add an input variable, you can make the varia
 
 ## Add a constraint equation
 
-Constraint equations are added to *PROCESS* in the `process/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names. 
+Constraint equations are added to *PROCESS* in the `process/core/optimisation/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names. 
 
 A constraint is simply added by registering the constraint to the manager using a decorator.
 
 ```python
 @ConstraintManager.register_constraint(1234, "m", "=")
-def my_constraint_function(): ...
+def my_constraint_function(constraint_registration): ...
 ```
 The arguments to the `register_constraint` function are:
 
@@ -161,13 +161,13 @@ The arguments to the `register_constraint` function are:
 
 - Normalised residual error
 - Constraint value
-- Constraint error
+- Constraint bound
+- Constraint residual
+
+The recommended way to do this is using one of the functions `geq`, `leq`, or `eq` depending on whether the constraint is desired to be $v\geq b$, $v\leq b$, or $v=b$, respectively.
 
 ```python
 @ConstraintManager.register_constraint(1234, "m", "=")
-def my_constraint_function():
-  normalised_residual = ...
-  value = ...
-  error = ...
-  return ConstraintResult(normalised_residual, value, error)
+def my_constraint_function(constraint_registration):
+  return geq(value, bound, constraint_registration)
 ```
