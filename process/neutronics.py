@@ -342,7 +342,8 @@ class LayerSpecificGroupwiseConstants:
                 raise NotImplementedError("Cannot delete slice!")
             del self._dicts[layer_index][group_index]
         else:
-            raise ValueError("Deletion of a single dictionary in "
+            raise ValueError(
+                "Deletion of a single dictionary in "
                 f"{self.__class__} is not permitted."
             )
 
@@ -372,6 +373,7 @@ UNIT_LOOKUP = {
     "integrated_flux": "m^-1 s^-1",
     "integrated_heating": "W m^-2",
     "linear_heating_density": "J m^-1",
+    "linear_tritium_production_density": "moles m^-1",
     "flux": "m^-2 s^-1",
     "current": "m^-2 s^-1",
     "heating": "W m^-3",
@@ -625,15 +627,19 @@ class NeutronFluxProfile:
             l * (np.cos(x_lower / l) - np.cos(x_upper / l)),  # reverse sign
         ])
 
-    def _groupwise_flux_curvature_in_layer(self, n: int, num_layer: int, x: float | npt.NDArray):
+    def _groupwise_flux_curvature_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ):
         """Second derivative of the group n flux in num_layer at location x."""
         abs_x = abs(x)
         trig_funcs = []
-        for g, cs_coefs in enumerate(zip(
+        for g, cs_coefs in enumerate(
+            zip(
                 self.coefficients[num_layer, n].c,
                 self.coefficients[num_layer, n].s,
-                strict=True
-            )):
+                strict=True,
+            )
+        ):
             l2 = self.l2[num_layer, g]
             l = np.sqrt(abs(l2))  # noqa: E741
             c, s = (np.cosh, np.sinh) if l2 > 0 else (np.cos, np.sin)
@@ -814,17 +820,17 @@ class NeutronFluxProfile:
         """
         if n not in range(self.n_groups):
             raise ValueError(
-                f"n must be a positive integer between 0 and {self.n_groups-1}!"
+                f"n must be a positive integer between 0 and {self.n_groups - 1}!"
             )
-        if n>0 and not self.coefficients.has_populated(n-1):
-            self.solve_group_n(n-1)
+        if n > 0 and not self.coefficients.has_populated(n - 1):
+            self.solve_group_n(n - 1)
         if self.contains_upscatter and self.num_iteration[n] > 1:
             raise NotImplementedError(
                 "Will implement solve_group_n in a loop later."
             )  # Sum over the addition in neutron flux due to the 2nd, 3rd, 4th
             # etc. generation of neutrons, which should eventually converge.
         if self.coefficients.has_populated(n):
-            return None  # skip if it has already been solved.
+            return  # skip if it has already been solved.
         # Parameter to be changed later, to allow solving non-down-scatter
         # only systems by iterating.
         for num_layer, mat in enumerate(self.materials):
@@ -840,13 +846,17 @@ class NeutronFluxProfile:
                 warnings.warn(
                     f"Calculation of flux in group {n} may be inaccurate as "
                     f"layer {num_layer} is thinner than "
-                    r"3\times\lambda_{tr} "f"of group {n}."
+                    r"3\times\lambda_{tr} "
+                    f"of group {n}.",
+                    stacklevel=2,
                 )
         self.extended_boundary[n] = self.layer_x[-1] + extrapolation_length(
             self.diffusion_const[-1, n]
         )
 
-        include_upscatter = self.contains_upscatter and self.num_iteration[n] != 0
+        include_upscatter = (
+            self.contains_upscatter and self.num_iteration[n] != 0
+        )
         in_scatter_max_group = self.n_groups if include_upscatter else n + 1
 
         try:
@@ -876,7 +886,8 @@ class NeutronFluxProfile:
                         warnings.warn(
                             f"Group {g} and group {n} has the same neutron "
                             "diffusion lengths, which may lead to an error "
-                            "in the neutron flux profile."
+                            "in the neutron flux profile.",
+                            stacklevel=2,
                         )
                         continue
                     scale_factor = (l2n * l2g) / l2_diff / diffusion_const_n
@@ -884,8 +895,10 @@ class NeutronFluxProfile:
 
                     _coefs.c.append(
                         np.sum([
-                            (src_matrix[i, n]
-                            * self.coefficients[num_layer, i].c[g])
+                            (
+                                src_matrix[i, n]
+                                * self.coefficients[num_layer, i].c[g]
+                            )
                             for i in range(
                                 in_scatter_min_group, in_scatter_max_group
                             )
@@ -895,8 +908,10 @@ class NeutronFluxProfile:
                     )
                     _coefs.s.append(
                         np.sum([
-                            (src_matrix[i, n]
-                            * self.coefficients[num_layer, i].s[g])
+                            (
+                                src_matrix[i, n]
+                                * self.coefficients[num_layer, i].s[g]
+                            )
                             for i in range(
                                 in_scatter_min_group, in_scatter_max_group
                             )
@@ -907,7 +922,8 @@ class NeutronFluxProfile:
 
                 self.coefficients[num_layer, n] = _coefs
             self.coefficients[0, n].s[n] = np.sqrt(abs(self.l2[0, n])) * (
-                -(self.fluxes[n] / self.diffusion_const[0, n]) - np.sum([
+                -(self.fluxes[n] / self.diffusion_const[0, n])
+                - np.sum([
                     self.coefficients[0, n].s[g] / np.sqrt(abs(self.l2[0, g]))
                     for g in range(in_scatter_max_group)
                     if g != n
@@ -924,13 +940,16 @@ class NeutronFluxProfile:
                 [
                     multiply_2_2_matrices(*m_list[:k:-1]) @ v_list[k]
                     for k in range(self.n_layers - 1)
-                ] or [[0,0]],
+                ]
+                or [[0, 0]],
                 axis=0,
             )
             boundary_cs_vector = self._groupwise_cs_values_in_layer(
                 n, self.n_layers - 1, self.extended_boundary[n]
             )
-            final_left_vector = boundary_cs_vector @ affine_transform_matrix_stack
+            final_left_vector = (
+                boundary_cs_vector @ affine_transform_matrix_stack
+            )
             final_const = (
                 -self._summation_shorthand(
                     n,
@@ -946,10 +965,18 @@ class NeutronFluxProfile:
                 - final_left_vector[1] * self.coefficients[0, n].s[n]
             ) / final_left_vector[0]
             # nonnegativity check for layer 0
-            if (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[0]) < 0) or (self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[1]) < 0):
-                warnings.warn(f"Negative flux found when solving for group {n}"
+            if (
+                self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[0])
+                < 0
+            ) or (
+                self.groupwise_neutron_flux_in_layer(n, 0, self.interface_x[1])
+                < 0
+            ):
+                warnings.warn(
+                    f"Negative flux found when solving for group {n}"
                     " in layer 0! Likely due to an unphysical "
-                    "cross-section value."
+                    "cross-section value.",
+                    stacklevel=2,
                 )
 
             for num_layer in range(self.n_layers - 1):
@@ -965,13 +992,17 @@ class NeutronFluxProfile:
                     + v_list[num_layer]
                 )
                 # non-negativity check for group 1:
-                if self.groupwise_neutron_flux_in_layer(
-                    n, num_layer, self.layer_x[num_layer]
-                ) < 0:
+                if (
+                    self.groupwise_neutron_flux_in_layer(
+                        n, num_layer, self.layer_x[num_layer]
+                    )
+                    < 0
+                ):
                     warnings.warn(
                         "Negative flux found when solving for "
                         f"group {n} in layer {num_layer}! Likely due to "
-                        "an unphysical cross-section value."
+                        "an unphysical cross-section value.",
+                        stacklevel=2,
                     )
             self.num_iteration[n] += 1
         except Exception as e:
@@ -979,7 +1010,7 @@ class NeutronFluxProfile:
                 if n in self.coefficients[num_layer]:
                     del self.coefficients[num_layer, n]
             raise e
-        return None
+        return
 
     def _check_if_in_layer(
         self, x: npt.NDArray[np.float64], num_layer: int
