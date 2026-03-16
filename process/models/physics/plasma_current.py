@@ -1,8 +1,10 @@
 import logging
 from enum import IntEnum
 
+import matplotlib.pyplot as plt
 import numpy as np
 
+import process.core.io.mfile as mf
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
@@ -381,6 +383,93 @@ class PlasmaCurrent:
             physics_variables.c_plasma_fiesta_st,
             "OP ",
         )
+
+    @staticmethod
+    def plot_plasma_current_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
+        """Function to plot a scatter box plot of different plasma current comparisons.
+
+        Parameters
+        ----------
+        axis :
+            Axis object to plot to.
+        mfile :
+            MFILE data object.
+        scan :
+            Scan number to use.
+        """
+        c_plasma_peng_analytic = mfile.get("c_plasma_peng_analytic", scan=scan)
+        c_plasma_peng_double_null = mfile.get("c_plasma_peng_double_null", scan=scan)
+        c_plasma_cyclindrical = mfile.get("c_plasma_cyclindrical", scan=scan)
+        c_plasma_ipdg89 = mfile.get("c_plasma_ipdg89", scan=scan)
+        c_plasma_todd_empirical_i = mfile.get("c_plasma_todd_empirical_i", scan=scan)
+        c_plasma_todd_empirical_ii = mfile.get("c_plasma_todd_empirical_ii", scan=scan)
+        c_plasma_connor_hastie = mfile.get("c_plasma_connor_hastie", scan=scan)
+        c_plasma_sauter = mfile.get("c_plasma_sauter", scan=scan)
+        c_plasma_fiesta_st = mfile.get("c_plasma_fiesta_st", scan=scan)
+
+        # Data for the box plot
+        data = {
+            "Peng Analytic Fit": c_plasma_peng_analytic,
+            "Peng Divertor Scaling": c_plasma_peng_double_null,
+            "ITER Scaling": c_plasma_cyclindrical,
+            "IPDG89 Scaling": c_plasma_ipdg89,
+            "Todd Empirical Scaling I": c_plasma_todd_empirical_i,
+            "Todd Empirical Scaling II": c_plasma_todd_empirical_ii,
+            "Connor Hastie Model": c_plasma_connor_hastie,
+            "Sauter Scaling": c_plasma_sauter,
+            "Fiesta ST Scaling": c_plasma_fiesta_st,
+        }
+
+        # Create the violin plot
+        axis.violinplot(data.values(), showextrema=False)
+
+        # Create the box plot
+        axis.boxplot(
+            data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+        )
+
+        # Scatter plot for each data point
+        colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+        for index, (key, value) in enumerate(data.items()):
+            axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+        axis.legend(loc="upper left", bbox_to_anchor=(-0.9, 1))
+
+        # Calculate average, standard deviation, and median
+        data_values = list(data.values())
+        avg_density_limit = np.mean(data_values)
+        std_density_limit = np.std(data_values)
+        median_density_limit = np.median(data_values)
+
+        # Plot average, standard deviation, and median as text
+        axis.text(
+            -0.45,
+            0.15,
+            rf"Average: {avg_density_limit * 1e-6:.4f}",
+            transform=axis.transAxes,
+            fontsize=9,
+        )
+        axis.text(
+            -0.45,
+            0.1,
+            rf"Standard Dev: {std_density_limit * 1e-6:.4f}",
+            transform=axis.transAxes,
+            fontsize=9,
+        )
+        axis.text(
+            -0.45,
+            0.05,
+            rf"Median: {median_density_limit * 1e-6:.4f}",
+            transform=axis.transAxes,
+            fontsize=9,
+        )
+
+        axis.set_title("Plasma Current Comparison")
+        axis.set_ylabel(r"Plasma Current [MA]")
+        axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-6:.1f}"))
+        axis.set_xlim([0.5, 1.5])
+        axis.set_xticks([])
+        axis.set_xticklabels([])
+        axis.set_facecolor("#f0f0f0")
 
     @staticmethod
     def calculate_cyclindrical_plasma_current(
