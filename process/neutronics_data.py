@@ -1,4 +1,6 @@
+from abc import ABC, abstractmethod, abstractproperty
 import warnings
+import json
 from dataclasses import dataclass
 from itertools import islice, pairwise
 from pathlib import Path
@@ -11,25 +13,42 @@ from process.exceptions import ProcessValidationError
 
 BARNS_TO_M2 = 1e-28
 N_A = Avogadro
-N2N_Q_VALUE = ...
-_ATOMIC_MASS = {}
 EV_TO_J = 1.602e-19
 DT_NEUTRON_E = 14.06e6 * EV_TO_J
 
+with open(Path(__file__).parent / "data" / "atomic_data.json") as j:
+    _data = json.load(j)
+    _ATOMIC_MASS_SOURCE = _data["ATOMIC_MASS_SOURCE"]
+    ATOMIC_MASS = _data["ATOMIC_MASS"]
+    _NATURAL_ABUNDANCE_SOURCE = _data["NATURAL_ABUNDANCE_SOURCE"]
+    NATURAL_ABUNDANCE = _data["NATURAL_ABUNDANCE"]
 
-def extract_atomic_mass(isotope: str) -> float:
-    """Copied from openmc 0.15.2: openmc.data.data"""
-    if not _ATOMIC_MASS:
-        mass_file = Path(__file__) / "data" / "mass_1.mas20.txt"
-        with open(mass_file) as ame:
-            # Read lines in file starting at line 37
-            for line in islice(ame, 36, None):
-                name = f"{line[20:22].strip()}{int(line[16:19])}"
-                mass = float(line[106:109]) + 1e-6 * float(
-                    line[110:116] + "." + line[117:123]
-                )
-                _ATOMIC_MASS[name.lower()] = mass
-    return _ATOMIC_MASS[isotope.lower()]
+def get_isotopic_composition(element: str):
+    """Get the isotopic composition of a naturally occurring element."""
+    return {iso:frac for iso,frac in NATURAL_ABUNDANCE.items() if iso.startswith(element)}
+
+
+def elem_to_isotopic_comp(composition: dict[str, float]) -> dict[str, float]:
+    """
+    Convert an element composition dictionary into an isotope composition
+    dictionary using NATURAL_ABUNDANCE.
+    Parameters
+    ----------
+    composition:
+        A dictionary showing the atomic fraction that each relevant element
+        makes up.
+
+    Returns
+    -------
+    new_comp_dict:
+        A dictionary showing the atomic fraction that each relevant isotope
+        makes up.
+    """
+    new_comp_dict = {}
+    for elem, overall_fraction in composition.items():
+        for isotope, fraction in get_isotopic_composition(elem).items():
+            new_comp_dict[isotope] = overall_fraction * fraction
+    return new_comp_dict
 
 
 def get_avg_atomic_mass(composition: dict[str, float]) -> float:
@@ -37,78 +56,191 @@ def get_avg_atomic_mass(composition: dict[str, float]) -> float:
     Parameters
     ----------
     composition:
-        a dictionary showing the fraction that each species makes up.
+        A dictionary showing the atomic fraction that each species makes up.
     """
     total_fraction = sum(composition.values())
     return sum(
-        extract_atomic_mass(species) * (fraction / total_fraction)
+        ATOMIC_MASS[species] * (fraction / total_fraction)
         for species, fraction in composition.items()
     )
 
+class ENDFRecord(ABC):
+    @abstractmethod
+    def get_xs(
+            self, mt: int, group_structure: npt.NDArray[np.float64]
+        ) -> npt.NDArray[np.float64]:
+        """
+        A method that returns the formatted (integrated, weighted by lethargy)
+        cross-section.
+        """
+        pass
+
+@dataclass
+class MTTreeNode:
+    reaction_name: str
+    main_number: int
+    constituents: tuple[int]
+    auxillary: dict[int, str]
+
+    def resolve_xs(self, endf_record: ENDFRecord, group_structure: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+        """
+        Check if the endf record is sesnsible by following the correct summation rules,
+        and then extract the correct cross-section.
+
+        Parameters
+        ----------
+        endf_record:
+            an instance of a class with the method with a signature of (self, group_structure)
+        group_structure:
+            A 1D array of numbers representing the group boundaries, from high
+            energy to low energy (low lethargy to high lethargy).
+
+        Returns
+        -------
+        xs:
+            formatted to the correct group structure.
+        """
+        main_xs = endf_record.get_xs(main_number, group_structure)
+        constituent_xs = np.sum([endf_record.get_xs(mt, group_structure) for mt in constituents], axis=0)
+        if np.sum(main_xs) < np.sum(constituent_xs):
+            raise ValueError(f"MT={main_number} does not match the constituents")
+        if len(main_xs)!=(len(group_structure)-1):
+            raise ValueError(f"{self.mt_tuple} resolves to zero!")
+        return main_xs
+
+class MTResolutionRule():
+    def __init__(self, mt_tuple: tuple[MTTreeNode], redundant_reaction: str, redundant_mt: int):
+        self.redundant_reaction = str(redundant_reaction)
+        self.redundant_mt = int(redundant_mt)
+        self.mt_tuple = mt_tuple
+
+    def resolve_xs(self, endf_record: ENDFRecord, group_structure: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+        """
+        Check if the endf record is sesnsible by following the correct summation rules,
+        and then extract the correct cross-section.
+
+        Parameters
+        ----------
+        endf_record:
+            an instance of a class with the method with a signature of (self, group_structure)
+        group_structure:
+            A 1D array of numbers representing the group boundaries, from high
+            energy to low energy (low lethargy to high lethargy).
+
+        Returns
+        -------
+        xs:
+            formatted to the correct group structure.
+        """
+        redundant_xs = endf_record.get_xs(redundant_mt, group_structure)
+        main_xs = np.sum([mt.resolve_xs(endf_record, group_structure) for mt in self.mt_tuple], axis=0)
+        if redundant_xs:
+            if np.sum(redundant_xs) < np.sum(main_xs):
+                raise ValueError(f"mt={redundant_mt} failed to include everything.")
+            return redundant_xs
+        return main_xs
+
+MT_N2N = MTTreeNode("n,2n", 16, range(875, 892), {11: "n,2nd", 21: "n,2nf", 24: "n,2na", 30: "n,2n2a", 41: "n,2np"}, )
+MT_N3N = MTTreeNode("n,3n", 17, (), {25: "n,3na", 38: "n,3nf", 42: "n,3np"})
+MT_N4N = MTTreeNode("n,4n", 37, (), {}, )
+MT_TRITON = MTTreeNode("n,t", 105, range(700, 750), {33: "n,nt", 113:"n,t2a", 116:"n,pt", })
+MT_SCAT_INELASTIC = MTTreeNode("n,n'", 4, range(50, 92),
+    {20: "n,nf", 22: "n,na", 23: "n,n3a", 28: "n,np", 29: "n,n2a", 32: "n,nd",
+    33: "n,nt", 34: "n,n3He", 35: "n,nd2a", 36: "n,nt2a", 44: "n,n2p",
+    45: "n,npa"}
+)
+
+
+class ExtractedNuclearData:
+    """A class for storing the useful nuclear data extracted out of the ENDFRecord."""
+    rules = {
+        "total" : MTResolutionRule((), "n,tot", 1),
+        "elastic_scattering" : MTResolutionRule((), "n,n", 2),
+        "inelastic_scattering" : MTResolutionRule((MT_SCAT_INELASTIC,), "n,n'", 4),
+        "neutron_producing" : MTResolutionRule((MT_N2N, MT_N3N, MT_N4N), "n,Xn", 201),
+        "triton_producing" : MTResolutionRule((MT_TRITON,), "n,Xt", 205),
+    }
+    def __init__(self,
+        group_structure: npt.NDArray[np.float64],
+        atomic_mass: float,
+        endf_record: ENDFRecord,
+    ):
+        self.group_structure = group_structure
+        self.atomic_mass = atomic_mass
+        self.endf_record = endf_record
+
+        self.sigma_total = self.rules["total"].resolve(self.endf_record, self.group_structure)
+        self.sigma_triton = self.rules["triton_producing"].resolve(self.endf_record, self.group_structure)
+
+        self.sigma_scatter = (
+            self.rules["elastic_scattering"].resolve(
+                self.endf_record, self.group_structure
+            )
+            * scattering_weight_matrix(
+                self.group_structure, self.atomic_mass
+            ).T
+        ).T
+        self.sigma_scatter +=(
+            self.rules["inelastic_scattering"].resolve(
+                self.endf_record, self.group_structure
+            ) * scattering_weight_matrix(
+                self.group_structure, self.atomic_mass,
+                self.endf_record.q_values.get("inelastic_scattering", 0.0)
+            ).T  # TODO: calculate with an inelastic scattering weight matrix instead.
+        ).T
+
+        neutron_producing = self.rules["neutron_producing"].resolve(self.endf_record, self.group_structure)
+        if np.sum(neutron_producing) == 0:
+            return  # skip the whole thing below to save time if 0.
+        n2n = self.endf_record.get_xs(16, self.group_structure)
+        n3n = self.endf_record.get_xs(17, self.group_structure)
+        n4n = self.endf_record.get_xs(37, self.group_structure)
+        all_n2n = MT_N2N.resolve(self.endf_record, self.group_structure)
+        all_n3n = MT_N3N.resolve(self.endf_record, self.group_structure)
+        all_n4n = MT_N4N.resolve(self.endf_record, self.group_structure)
+        mt201 = self.endf_record.get_xs(201, self.group_structure)
+        if np.isclose(n2n + n3n + n4n, neutron_producing, atol=0.0):
+            self.sigma_in = (
+                n2n * nXn(self.group_structure, self.endf_record.q_values.get("n,2n", 0.0), 2).T
+                +n3n * nXn(self.group_structure, self.endf_record.q_values.get("n,3n", 0.0), 3).T
+                +n4n * nXn(self.group_structure, self.endf_record.q_values.get("n,4n", 0.0), 4).T
+            ).T
+        elif np.isclose(n2n + n3n + n4n, neutron_producing, atol=0.0):
+            self.sigma_in = (
+                all_n2n * nXn(self.group_structure, self.endf_record.q_values.get("n,2n", 0.0), 2).T
+                +all_n3n * nXn(self.group_structure, self.endf_record.q_values.get("n,3n", 0.0), 3).T
+                +all_n4n * nXn(self.group_structure, self.endf_record.q_values.get("n,4n", 0.0), 4).T
+            ).T
+        else:
+            self.sigma_in = (
+                neutron_producing * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get("n,2n", 0.0), 2).T
+            ).T
+        self.sigma_in = (
+            _neutron_producing.resolve(self.endf_record, self.group_structure)
+            * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get("n,2n", 0.0), 2).T
+        ).T
 
 material_density_data_bank = {"stainless steel": {"Fe": 6.0}}
 material_composition_data_bank = {"stainless steel": {"Fe60": 1.0}}
 xs_data_bank = ...
-breeding_xs_data_bank = ...
-fission_xs_data_bank = ...
+breeding_xs_data_bank = {}
+fission_xs_data_bank = {}
 
+def read_mass(iso_name: str):
+    length = len(iso_name)
+    name, mass = [], []
+    for i in range(length):
+        name.append(iso_name[i])
+        if iso_name[i+1].isnumeric():
+            break
+    for j in range(i+1, length):
+        mass.append(iso_name[j])
+    return "".join(name), int("".join(mass))
 
-def calculate_average_macro_xs(
-    composition: dict[str, float],
-    micro_xs: dict[str, float | npt.NDArray[np.float64]],
-    density: float,
-) -> float | npt.NDArray[np.float64]:
-    r"""
-    Calculate the macroscopic cross-section for a specific energy group and a specific
-    reaction (a scalar value), when given the microscopic cross-section values of its
-    components and its density.
+def is_natural(iso_name: str):
+    iso_symbol, iso_num = read_mass(iso_name)
+    return iso_num==0
 
-    Parameters
-    ----------
-    composition:
-        Fraction of each species of atoms of the medium. Does not have to be normalised.
-        Given in the format {'species': float(fraction)}.
-    micro_xs:
-        A dictionary of each species, and their microscopic cross-sections, given in
-        [barns].
-        Given in the format {'species': float(microscopic cross-section)}.
-        Possible to have some missing values here.
-    density:
-        Density of the medium, given in [kg/m^3]
-
-    Returns
-    -------
-    :
-        macroscopic cross-section of the material. [m]
-
-    Notes
-    -----
-    .. math::
-        \Sigma &= N_d\sigma
-        &= \frac{N_A}{A} \rho \sigma
-    """
-
-    total_fraction = sum(composition.values())
-    weighted_micro_xs, weighted_atomic_mass = [], []
-    if extra_species := set(micro_xs.keys()).difference(
-        set(composition.keys())
-    ):
-        raise KeyError(
-            f"micro_xs contains species not specified by the composition: {extra_species}"
-        )
-    for species, fraction in composition.items():
-        if species in micro_xs:
-            frac = fraction / total_fraction
-
-            weighted_atomic_mass.append(frac * extract_atomic_mass(species))
-            weighted_micro_xs.append(frac * micro_xs[species])
-
-    avg_sigma = np.sum(weighted_micro_xs, axis=0)
-    avg_mass_amu = sum(weighted_atomic_mass)
-
-    # N_A/A * rho * sigma
-
-    return N_A / (avg_mass_amu / 1000) * density * (avg_sigma * BARNS_TO_M2)
 
 
 def discretize_xs(
@@ -173,7 +305,7 @@ def discretize_scattering_xs(
     ).T
 
 
-def discretize_n2n_xs(
+def discretize_nXn_xs(
     continuous_xs, group_structure: npt.NDArray[np.float64], q_value: float
 ) -> npt.NDArray:
     """
@@ -198,7 +330,7 @@ def discretize_n2n_xs(
     """
     return (
         discretize_xs(continuous_xs, group_structure)
-        * n2n_weight_matrix(group_structure, q_value).T
+        * nXn_weight_matrix(group_structure, q_value, X).T
     ).T
 
 
@@ -246,7 +378,7 @@ def _get_alpha(atomic_mass: float):
 
 
 def scattering_weight_matrix(
-    group_structure: npt.NDArray[np.float64], atomic_mass: float
+    group_structure: npt.NDArray[np.float64], atomic_mass: float, energy_lost=0.0
 ) -> npt.NDArray:
     """
     Parameters
@@ -255,6 +387,9 @@ def scattering_weight_matrix(
         the n+1 energy bin boundaries for the n neutron groups, in descending energies.
     atomic_mass:
         atomic mass of the medium
+    energy_lost:
+        The energy lost in J. Currently a placeholder variable that isn't used.
+        TODO: make the inelastic scattering weight matrix account for this loss.
 
     Returns
     -------
@@ -396,8 +531,8 @@ def _convolved_scattering_fraction(
             return _const * _am1i * (e_g1 - e_g) * _diff_inv_e
 
 
-def n2n_weight_matrix(
-    group_structure: npt.NDArray[np.float64], q_value: float
+def nXn_weight_matrix(
+    group_structure: npt.NDArray[np.float64], q_value: float, X: int,
 ) -> npt.NDArray:
     """
     Parameters
@@ -416,12 +551,12 @@ def n2n_weight_matrix(
         bin neutron ends up in the j-th bin.
         np.sum(axis=1) <= np.ones(len(group_structure)-1) * 2, i.e. the
         probability distribution in each row (i.e. i-th bin) is normalized to
-        2, i.e. the number of neutrons.
+        1, i.e. the number of neutrons.
     """
     # Assume that the two neutrons would share the resulting energy evenly, i.e.
     # each take half of the neutron
     # To make things even simpler, we'll assume the neutron flux is
-    shift_e = -q_value / 2
+    shift_e = -q_value / X
 
     e_i1, e_i = group_structure[:-1], group_structure[1:]
     weight = 1 / (np.log(e_i1) - np.log(e_i))
@@ -437,59 +572,49 @@ def n2n_weight_matrix(
     return (weight * matrix.T).T
 
 
-@dataclass
-class MaterialMacroInfo:
-    """
-    Material information.
-
-    Parameters
-    ----------
-    sigma_t:
-        total macroscopic cross-section, 1D array of len = n.
-    sigma_s:
-        Macroscopic scattering cross-section from group i to j, forming a 2D
-        array of shape (n, n). It should be mostly-upper-triangular, i.e. the
-        lower triangle (excluding the main diagonal) must have small values
-        compared to the average macroscopic cross-section value of the matrix.
-        Neutrons fluxes are assumed to be isotropic before and after scattering.
-
-        e.g. [0,3] would be the cross-section for group 4 neutrons scattered-in
-        from group 1 neutrons.
-    sigma_in:
-        In-source matrix: for now, it includes a sum of the matrix of (n,2n)
-        reactions and fission reactions. Same logic as the scattering matrix,
-        i.e. probability of group j neutrons produced (presumed to be
-        isotropic) per unit flux of group i neutrons.
-
-        e.g. [0,3] would be the cross-section for the proudction of group 4
-        neutrons due to n,2n and fission reactions caused by group 1 neutrons.
-    group_structure:
-        energy bin edges, 1D array of len = n+1, in [J].
-    avg_atomic_mass:
-        average atomic mass (weighted by fraction)
-    """
-
-    group_structure: npt.NDArray
-    avg_atomic_mass: float
-    sigma_t: npt.NDArray[np.float64]
-    sigma_s: npt.NDArray
-    sigma_in: npt.NDArray | None = None
-    name: str = ""
-
-    def __post_init__(self):
+class MaterialMacroInfo():
+    def __init__(self,
+        group_structure: npt.NDArray[np.float64],
+        density: float,
+        elements: dict[str, float],
+        name: str="",
+        source: str="",
+        comment: str="",
+    ):
         """
-        Validation of group_structure, sigma_s and sigma_t to confirm their
-        shapes are correct.
+        Parameters
+        ----------
+        group_structure:
+            energy bin edges, 1D array of len = n+1, in [J].
+        density:
+            density of the material in kg/m3
+        name:
+            name of the material (optional)
+        source:
+            data source described by a string.
+        comment:
+            comment on the data (string)
         """
-        # force into float or numpy arrays of floats.
-        self.group_structure = np.array(self.group_structure, dtype=float)
-        self.avg_atomic_mass = float(self.avg_atomic_mass)
-        self.sigma_t = np.array(self.sigma_t, dtype=float)
-        self.sigma_s = np.array(self.sigma_s, dtype=float)
-        if self.sigma_in is not None:
-            self.sigma_in = np.array(self.sigma_in, dtype=float)
-        else:
-            self.sigma_in = np.zeros_like(self.sigma_s)
+        self.group_structure = np.asarray(group_structure)
+        if (np.diff(self.group_structure) >= 0).any():
+            raise ValueError(
+                "The group structure must be defined descendingly, from the "
+                "highest energy bin (i.e. lowest lethargy bin) edge to the "
+                "lowest energy bin edge, which can't be zero (infinite "
+                "lethargy). Similarly the cross-section must be arranged "
+                "according to these bin edges."
+            )
+        if (self.group_structure <= 0).any():
+            warnings.warn("Zero energy (inf. lethargy) not allowed.")
+            self.group_structure = np.clip(
+                self.group_structure, 1e-9 * EV_TO_J, np.inf
+            )
+        self.density = float(density)
+        self.name = name
+        self._populated = False
+        self.elements = elements
+        self.avg_atomic_mass = get_avg_atomic_mass(elem_to_isotopic_comp(self.elements))
+        self.number_density = N_A / self.avg_atomic_mass * 1000
 
         if (self.group_structure <= 0).any():
             warnings.warn("Zero energy (inf. lethargy) not allowed.")
@@ -504,25 +629,122 @@ class MaterialMacroInfo:
                 "lethargy). Similarly the cross-section must be arranged "
                 "according to these bin edges."
             )
-        if np.shape(self.sigma_t) != (self.n_groups,):
+
+    def __repr__(self):
+        return super().__repr__().replace(" at ", f" '{self.name}' at ")
+
+    def _set_sigma(self, sigma_t, sigma_s, sigma_in=None, sigma_triton=None) -> None:
+        """Populate the values directly. Mainly to make unit-testing easier."""
+        self._sigma_total = np.asarray(sigma_t)
+        self._sigma_scatter = np.asarray(sigma_s)
+        if sigma_in is not None:
+            self._sigma_in = np.asarray(sigma_in)
+        else:
+            self._sigma_in = np.zeros([self.n_groups, self.n_groups])
+        if sigma_triton is not None:
+            self._sigma_triton = np.asarray(sigma_triton)
+        else:
+            self._sigma_triton = np.zeros(self.n_groups)
+        self._confirm_sigma()
+
+    def _confirm_sigma(self) -> None:
+        if np.shape(self._sigma_total) != (self.n_groups,):
             raise ProcessValidationError(
                 f"total group-wise cross-sections should have {self.n_groups} "
                 "groups as specified by the group_structure."
             )
-        if np.shape(self.sigma_s) != (self.n_groups, self.n_groups):
+        if np.shape(self._sigma_scatter) != (self.n_groups, self.n_groups):
             raise ProcessValidationError(
                 "Group-wise scattering cross-sections be a square matrix of "
                 f"shape n*n, where n= number of groups = {self.n_groups}."
             )
-        if (self.sigma_s.sum(axis=1) > self.sigma_t).any():
+        if (self._sigma_scatter.sum(axis=1) > self._sigma_total).any():
             raise ProcessValidationError(
                 "Total cross-section should include the scattering cross-section."
             )
-        if np.tril(self.sigma_s, k=-1).any():
+        if np.tril(self._sigma_scatter, k=-1).any():
             warnings.warn(
                 "Elastic up-scattering seems unlikely in this model! "
                 "Check if the group structure is chosen correctly?",
             )
+        self._populated = True
+        return
+
+    def populate_from_data_library(self, xs_dict: [str, ExtractedNuclearData]) -> None:
+        """Populate the cross-section values according to the nuclear data library."""
+        self._sigma_total = np.zeros(self.n_groups)
+        self._sigma_scatter = np.zeros([self.n_groups, self.n_groups])
+        self._sigma_in = np.zeros([self.n_groups, self.n_groups])
+        self._sigma_triton = np.zeros(self.n_groups)
+        for element, elem_frac in self.elements.items():
+            natural = element + "0"
+            if natural in xs_dict:
+                self._add_data_from_single_record(
+                    xs_dict[natural], elem_frac * self.number_density
+                )
+            else:
+                for isotope, natural_abundance in get_isotopic_composition():
+                    self._add_data_from_single_record(
+                        xs_dict[isotope], natural_abundance * elem_frac * self.number_density
+                    )
+        self._confirm_sigma()
+        return
+
+    def _add_data_from_single_record(
+            self, xs_data: ExtractedNuclearData, partial_number_density: float
+        ) -> None:
+        if not np.isclose(
+            self.group_structure, xs_data.group_structure, atol=0.0
+        ):
+            raise ValueError(f"Mismatched group structure with {xs_data}.")
+        self._sigma_total += xs_data.sigma_total * partial_number_density * BARNS_TO_M2
+        self._sigma_scatter += xs_data.sigma_scatter * partial_number_density * BARNS_TO_M2
+        self._sigma_in += xs_data.sigma_in * partial_number_density * BARNS_TO_M2
+        self._sigma_triton += xs_data.sigma_triton * partial_number_density * BARNS_TO_M2
+
+    @property
+    def sigma_t(self):
+        """total macroscopic cross-section, 1D array of len = n."""
+        if not self._populated:
+            raise ValueError("Empty cross-section data!")
+        return self._sigma_total
+
+    @property
+    def sigma_s(self):
+        """
+        Macroscopic scattering cross-section from group i to j, forming a 2D
+        array of shape (n, n). It should be mostly-upper-triangular, i.e. the
+        lower triangle (excluding the main diagonal) must have small values
+        compared to the average macroscopic cross-section value of the matrix.
+        Neutrons fluxes are assumed to be isotropic before and after scattering.
+
+        e.g. [0,3] would be the cross-section for group 4 neutrons scattered-in
+        from group 1 neutrons.
+        """
+        if not self._populated:
+            raise ValueError("Empty cross-section data!")
+        return self._sigma_scatter
+
+    @property
+    def sigma_in(self):
+        """
+        In-source matrix: for now, it includes a sum of the matrix of (n,2n)
+        reactions and fission reactions. Same logic as the scattering matrix,
+        i.e. probability of group j neutrons produced (presumed to be
+        isotropic) per unit flux of group i neutrons.
+
+        e.g. [0,3] would be the cross-section for the proudction of group 4
+        neutrons due to n,2n and fission reactions caused by group 1 neutrons.
+        """
+        if not self._populated:
+            raise ValueError("Empty cross-section data!")
+        return self._sigma_in
+
+    @property
+    def sigma_triton(self):
+        if not self._populated:
+            raise ValueError("Empty cross-section data!")
+        return self._sigma_triton
 
     @property
     def n_groups(self):
@@ -552,6 +774,11 @@ class MaterialMacroInfo:
             or np.tril(self.sigma_in, k=-1).any()
         )
 
+    @property
+    def element_set(self):
+        if not hasattr(self, "_element_set"):
+            self._element_set = set(self.elements.keys())
+        return self._element_set
 
 def get_material_nuclear_data(
     material: str, group_structure: npt.NDArray[np.float64]
@@ -601,11 +828,11 @@ def get_material_nuclear_data(
         micro_scattering_xs[species] = discretize_scattering_xs(
             elastic_scattering_xs_continuous,
             group_structure,
-            extract_atomic_mass(species),
+            ATOMIC_MASS[species],
         )
         if species in breeding_xs_data_bank:
             n2n_xs_continuous, q_value = breeding_xs_data_bank[species]
-            micro_n2n_xs[species] = discretize_n2n_xs(
+            micro_n2n_xs[species] = discretize_nXn_xs(
                 n2n_xs_continuous,
                 group_structure,
                 q_value,
