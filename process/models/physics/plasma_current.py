@@ -16,15 +16,21 @@ logger = logging.getLogger(__name__)
 
 
 class PlasmaCurrentModel(IntEnum):
-    PENG_ANALYTIC_FIT = 1
-    PENG_DIVERTOR_SCALING = 2
-    ITER_SCALING = 3
-    IPDG89_SCALING = 4
-    TODD_EMPIRICAL_SCALING_I = 5
-    TODD_EMPIRICAL_SCALING_II = 6
-    CONNOR_HASTIE_MODEL = 7
-    SAUTER_SCALING = 8
-    FIESTA_ST_SCALING = 9
+    PENG_ANALYTIC_FIT = (1, "Peng analytic fit")
+    PENG_DIVERTOR_SCALING = (2, "Peng divertor scaling")
+    ITER_SCALING = (3, "Simple ITER scaling (cylindrical case)")
+    IPDG89_SCALING = (4, "IPDG89 scaling")
+    TODD_EMPIRICAL_SCALING_I = (5, "Todd empirical scaling I")
+    TODD_EMPIRICAL_SCALING_II = (6, "Todd empirical scaling II")
+    CONNOR_HASTIE_MODEL = (7, "Connor-Hastie model")
+    SAUTER_SCALING = (8, "Sauter scaling")
+    FIESTA_ST_SCALING = (9, "FIESTA ST scaling")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.full_name = full_name
+        return obj
 
 
 class PlasmaCurrent:
@@ -213,7 +219,7 @@ class PlasmaCurrent:
         rminor: float,
         triang: float,
         triang95: float,
-    ) -> dict[str, float]:
+    ) -> dict[PlasmaCurrentModel, float]:
         """Calculate the plasma current for all models.
 
         This function calculates the plasma current for all models and returns a dictionary of the results.
@@ -248,13 +254,13 @@ class PlasmaCurrent:
             plasma triangularity at 95% surface
         Returns
         -------
-        dict[str, float]
+        dict[PlasmaCurrentModel, float]
             Dictionary containing the plasma current for each model.
         """
         results = {}
         for model in PlasmaCurrentModel:
             physics_variables.i_plasma_current = model.value
-            results[model.name] = self.calculate_plasma_current(
+            results[model] = self.calculate_plasma_current(
                 alphaj=alphaj,
                 alphap=alphap,
                 b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
@@ -276,11 +282,6 @@ class PlasmaCurrent:
         """Output the plasma current for all models.
 
         This function outputs the plasma current for all models to the output file.
-
-        Parameters
-        ----------
-        plasma_currents :
-            Dictionary containing the plasma current for each model.
         """
         plasma_currents = self.calculate_all_plasma_current_models(
             alphaj=physics_variables.alphaj,
@@ -299,86 +300,94 @@ class PlasmaCurrent:
         )
 
         physics_variables.c_plasma_peng_analytic = plasma_currents.get(
-            "PENG_ANALYTIC_FIT"
+            PlasmaCurrentModel.PENG_ANALYTIC_FIT
         )
         physics_variables.c_plasma_peng_double_null = plasma_currents.get(
-            "PENG_DIVERTOR_SCALING"
+            PlasmaCurrentModel.PENG_DIVERTOR_SCALING
         )
-        physics_variables.c_plasma_cyclindrical = plasma_currents.get("ITER_SCALING")
-        physics_variables.c_plasma_ipdg89 = plasma_currents.get("IPDG89_SCALING")
+        physics_variables.c_plasma_cyclindrical = plasma_currents.get(
+            PlasmaCurrentModel.ITER_SCALING
+        )
+        physics_variables.c_plasma_ipdg89 = plasma_currents.get(
+            PlasmaCurrentModel.IPDG89_SCALING
+        )
         physics_variables.c_plasma_todd_empirical_i = plasma_currents.get(
-            "TODD_EMPIRICAL_SCALING_I"
+            PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I
         )
         physics_variables.c_plasma_todd_empirical_ii = plasma_currents.get(
-            "TODD_EMPIRICAL_SCALING_II"
+            PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II
         )
         physics_variables.c_plasma_connor_hastie = plasma_currents.get(
-            "CONNOR_HASTIE_MODEL"
+            PlasmaCurrentModel.CONNOR_HASTIE_MODEL
         )
-        physics_variables.c_plasma_sauter = plasma_currents.get("SAUTER_SCALING")
-        physics_variables.c_plasma_fiesta_st = plasma_currents.get("FIESTA_ST_SCALING")
+        physics_variables.c_plasma_sauter = plasma_currents.get(
+            PlasmaCurrentModel.SAUTER_SCALING
+        )
+        physics_variables.c_plasma_fiesta_st = plasma_currents.get(
+            PlasmaCurrentModel.FIESTA_ST_SCALING
+        )
 
         po.osubhd(self.outfile, "Plasma Currents using different models :")
 
         po.ovarre(
             self.outfile,
-            "Peng Analytic Fit",
+            f"{PlasmaCurrentModel.PENG_ANALYTIC_FIT.full_name}",
             "(c_plasma_peng_analytic)",
             physics_variables.c_plasma_peng_analytic,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Peng Divertor Scaling",
+            f"{PlasmaCurrentModel.PENG_DIVERTOR_SCALING.full_name}",
             "(c_plasma_peng_double_null)",
             physics_variables.c_plasma_peng_double_null,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "ITER Scaling",
+            f"{PlasmaCurrentModel.ITER_SCALING.full_name}",
             "(c_plasma_cyclindrical)",
             physics_variables.c_plasma_cyclindrical,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "IPDG89 Scaling",
+            f"{PlasmaCurrentModel.IPDG89_SCALING.full_name}",
             "(c_plasma_ipdg89)",
             physics_variables.c_plasma_ipdg89,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Todd Empirical Scaling I",
+            f"{PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I.full_name}",
             "(c_plasma_todd_empirical_i)",
             physics_variables.c_plasma_todd_empirical_i,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Todd Empirical Scaling II",
+            f"{PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II.full_name}",
             "(c_plasma_todd_empirical_ii)",
             physics_variables.c_plasma_todd_empirical_ii,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Connor Hastie Model",
+            f"{PlasmaCurrentModel.CONNOR_HASTIE_MODEL.full_name}",
             "(c_plasma_connor_hastie)",
             physics_variables.c_plasma_connor_hastie,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Sauter Scaling",
+            f"{PlasmaCurrentModel.SAUTER_SCALING.full_name}",
             "(c_plasma_sauter)",
             physics_variables.c_plasma_sauter,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fiesta ST Scaling",
+            f"{PlasmaCurrentModel.FIESTA_ST_SCALING.full_name}",
             "(c_plasma_fiesta_st)",
             physics_variables.c_plasma_fiesta_st,
             "OP ",
