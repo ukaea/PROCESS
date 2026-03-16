@@ -265,6 +265,9 @@ those of the fusion reagents by many orders of magnitude. Assumed to be non-rela
 Roughly 79.889% of the energy is carried by the proton
 """
 
+RATE_TRITON_DECAY = 1.78577e-9
+"""Triton decay rate [1/s]"""
+
 DEN_TUNGSTEN = 19250.0
 """Density of Tungsten [kg/m3]"""
 

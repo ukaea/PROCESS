@@ -46,8 +46,6 @@ class TritiumPlantMeschini:
         t_end = 20000  # End time for simulation (s)
         dt = 1  # Time step (s)
 
-        RATE_T_DECAY = 1.78e-9  # Tritium decay rate (1/s)
-
         TBR = 0.5
         # Tritium burn efficiency in the plasma
         TBE = 0.05
@@ -308,7 +306,10 @@ class TritiumPlantMeschini:
             + f_5_1 * (m_tritium_component_5 / t_tritium_residence_component_5)
             - (
                 m_tritium_component_1
-                * (((1 + epsilon_1) / t_tritium_residence_component_1) + RATE_T_DECAY)
+                * (
+                    ((1 + epsilon_1) / t_tritium_residence_component_1)
+                    + constants.RATE_TRITON_DECAY
+                )
             )
         )
 
@@ -322,7 +323,10 @@ class TritiumPlantMeschini:
         """Calculate time derivative of tritium inventory in tritium extraction system (component 2)."""
         return (m_tritium_component_1 / t_tritium_residence_component_1) - (
             m_tritium_component_2
-            * (((1 + epsilon_2) / t_tritium_residence_component_2) + RATE_T_DECAY)
+            * (
+                ((1 + epsilon_2) / t_tritium_residence_component_2)
+                + constants.RATE_TRITON_DECAY
+            )
         )
 
     def calculate_component_3_time_derivative(
@@ -341,7 +345,10 @@ class TritiumPlantMeschini:
             + f_5_3 * (m_tritium_component_5 / t_tritium_residence_component_5)
             - (
                 m_tritium_component_3
-                * (((1 + epsilon_3) / t_tritium_residence_component_3) + RATE_T_DECAY)
+                * (
+                    ((1 + epsilon_3) / t_tritium_residence_component_3)
+                    + constants.RATE_TRITON_DECAY
+                )
             )
         )
 
@@ -361,7 +368,10 @@ class TritiumPlantMeschini:
             + f_5_4 * (m_tritium_component_5 / t_tritium_residence_component_5)
             - (
                 m_tritium_component_4
-                * (((1 + epsilon_4) / t_tritium_residence_component_4) + RATE_T_DECAY)
+                * (
+                    ((1 + epsilon_4) / t_tritium_residence_component_4)
+                    + constants.RATE_TRITON_DECAY
+                )
             )
         )
 
@@ -377,7 +387,10 @@ class TritiumPlantMeschini:
             m_tritium_component_2 / t_tritium_residence_component_2
         ) - (
             m_tritium_component_5
-            * (((1 + epsilon_5) / t_tritium_residence_component_5) + RATE_T_DECAY)
+            * (
+                ((1 + epsilon_5) / t_tritium_residence_component_5)
+                + constants.RATE_TRITON_DECAY
+            )
         )
 
     def calculate_component_6_time_derivative(
@@ -397,7 +410,10 @@ class TritiumPlantMeschini:
             + f_9_6 * (m_tritium_component_9 / t_tritium_residence_component_9)
             - (
                 m_tritium_component_6
-                * (((1 + epsilon_6) / t_tritium_residence_component_6) + RATE_T_DECAY)
+                * (
+                    ((1 + epsilon_6) / t_tritium_residence_component_6)
+                    + constants.RATE_TRITON_DECAY
+                )
             )
         )
 
@@ -412,7 +428,10 @@ class TritiumPlantMeschini:
         """Calculate time derivative of tritium inventory in vacuum pump (component 7)."""
         return (1 - TBE - f_p_3 - f_p_4) * (fusrat_tritium_kg / TBE) - (
             m_tritium_component_7
-            * (((1 + epsilon_7) / t_tritium_residence_component_7) + RATE_T_DECAY)
+            * (
+                ((1 + epsilon_7) / t_tritium_residence_component_7)
+                + constants.RATE_TRITON_DECAY
+            )
         )
 
     def calculate_component_8_time_derivative(
@@ -428,7 +447,10 @@ class TritiumPlantMeschini:
             m_tritium_component_7 / t_tritium_residence_component_7
         ) - (
             m_tritium_component_8
-            * (((1 + epsilon_8) / t_tritium_residence_component_8) + RATE_T_DECAY)
+            * (
+                ((1 + epsilon_8) / t_tritium_residence_component_8)
+                + constants.RATE_TRITON_DECAY
+            )
         )
 
     def calculate_component_9_time_derivative(
@@ -446,7 +468,10 @@ class TritiumPlantMeschini:
             + (m_tritium_component_8 / t_tritium_residence_component_8)
             - (
                 m_tritium_component_9
-                * (((1 + epsilon_9) / t_tritium_residence_component_9) + RATE_T_DECAY)
+                * (
+                    ((1 + epsilon_9) / t_tritium_residence_component_9)
+                    + constants.RATE_TRITON_DECAY
+                )
             )
         )
 
@@ -468,7 +493,7 @@ class TritiumPlantMeschini:
             + f_dir * (m_tritium_component_7 / t_tritium_residence_component_7)
             + (m_tritium_component_12 / t_tritium_residence_component_12)
             - (n_t_burn / TBE)
-            - (RATE_T_DECAY * m_tritium_component_10)
+            - (constants.RATE_TRITON_DECAY * m_tritium_component_10)
         )
 
     def calculate_component_12_time_derivative(
@@ -481,7 +506,10 @@ class TritiumPlantMeschini:
         """Calculate time derivative of tritium inventory in tritium separation membrane (component 12)."""
         return ETA_2 * (m_tritium_component_2 / t_tritium_residence_component_2) - (
             m_tritium_component_12
-            * (((1 + epsilon_12) / t_tritium_residence_component_12) + RATE_T_DECAY)
+            * (
+                ((1 + epsilon_12) / t_tritium_residence_component_12)
+                + constants.RATE_TRITON_DECAY
+            )
         )
 
     def plot_tritium_systems_overview(
