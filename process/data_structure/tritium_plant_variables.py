@@ -70,6 +70,24 @@ f_fuelling_system_non_rad_tritium_loss: float = None
 f_tritium_separation_membrane_non_rad_tritium_loss: float = None
 """Fraction of tritium lost from the tritium separation membrane due to non-radiative processes"""
 
+f_molflow_heat_exchanger_blkt_tritium: float = None
+"""Tritium flow rate fraction from the heat exchanger to the blanket due to molecular flow"""
+
+f_molflow_heat_exchanger_fw_tritium: float = None
+"""Tritium flow rate fraction from the heat exchanger to the first wall due to molecular flow"""
+
+f_molflow_heat_exchanger_detritiation_tritium: float = None
+"""Tritium flow rate fraction from the heat exchanger to the detritiation system due to molecular flow"""
+
+f_molflow_isotope_separation_detritiation_tritium: float = None
+"""Tritium flow rate fraction from the isotope separation system to the detritiation system due to molecular flow"""
+
+f_molflow_plasma_fw_tritium: float = None
+"""Tritium flow rate fraction from the plasma to the first wall due to molecular flow"""
+
+f_molflow_plasma_div_tritium: float = None
+"""Tritium flow rate fraction from the plasma to the divertor due to molecular flow"""
+
 m_plant_tritium_start_up: float = None
 """Mass of tritium at plant start-up (kg)"""
 
@@ -103,6 +121,12 @@ def init_tritium_plant_variables():
         f_tritium_storage_non_rad_tritium_loss, \
         f_fuelling_system_non_rad_tritium_loss, \
         f_tritium_separation_membrane_non_rad_tritium_loss, \
+        f_molflow_heat_exchanger_blkt_tritium, \
+        f_molflow_heat_exchanger_fw_tritium, \
+        f_molflow_heat_exchanger_detritiation_tritium, \
+        f_molflow_isotope_separation_detritiation_tritium, \
+        f_molflow_plasma_fw_tritium, \
+        f_molflow_plasma_div_tritium, \
         m_plant_tritium_start_up, \
         m_plant_tritium_start_up_minimum_required
 
@@ -130,5 +154,11 @@ def init_tritium_plant_variables():
     f_tritium_storage_non_rad_tritium_loss = 0.0
     f_fuelling_system_non_rad_tritium_loss = 1e-4
     f_tritium_separation_membrane_non_rad_tritium_loss = 1e-4
+    f_molflow_heat_exchanger_blkt_tritium = 0.33
+    f_molflow_heat_exchanger_fw_tritium = 0.33
+    f_molflow_heat_exchanger_detritiation_tritium = 1e-4
+    f_molflow_isotope_separation_detritiation_tritium = 0.1
+    f_molflow_plasma_fw_tritium = 1e-4
+    f_molflow_plasma_div_tritium = 1e-4
     m_plant_tritium_start_up = 10.0
     m_plant_tritium_start_up_minimum_required = 0.0
