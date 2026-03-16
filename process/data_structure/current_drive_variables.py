@@ -111,6 +111,8 @@ p_hcd_ecrh_electric_mw: float = None
 p_hcd_ebw_electric_mw: float = None
 """Electron bernstein wall plug power (MW)"""
 
+p_hcd_icrh_electric_mw: float = None
+"""Ion cyclotron wall plug power (MW)"""
 
 eta_cd_hcd_primary: float = None
 """Current drive efficiency of primary HCD system (A/W)"""
@@ -405,6 +407,7 @@ def init_current_drive_variables():
         p_hcd_ecrh_injected_total_mw, \
         p_ebw_injected_mw, \
         p_hcd_ecrh_electric_mw, \
+        p_hcd_icrh_electric_mw, \
         p_hcd_ebw_electric_mw, \
         eta_cd_hcd_primary, \
         eta_cd_hcd_secondary, \
@@ -535,6 +538,7 @@ def init_current_drive_variables():
     eta_cd_hcd_secondary = 0.0
     p_ebw_injected_mw = 0.0
     p_hcd_ecrh_electric_mw = 0.0
+    p_hcd_icrh_electric_mw = 0.0
     p_hcd_ebw_electric_mw = 0.0
     c_hcd_primary_driven = 0.0
     c_hcd_secondary_driven = 0.0
