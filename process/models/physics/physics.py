@@ -309,7 +309,6 @@ class Physics:
                 kappa=physics_variables.kappa,
                 delta=physics_variables.triang,
                 perim=physics_variables.len_plasma_poloidal,
-                rmu0=constants.RMU0,
             )
         )
 

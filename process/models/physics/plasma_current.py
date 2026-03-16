@@ -301,7 +301,6 @@ class PlasmaCurrent:
         kappa: float,
         delta: float,
         perim: float,
-        rmu0: float,
     ) -> float:
         """Function to calculate poloidal field from the plasma current
 
@@ -330,8 +329,6 @@ class PlasmaCurrent:
             plasma triangularity
         perim :
             plasma perimeter (m)
-        rmu0 :
-            vacuum permeability (H/m)
 
         Returns
         -------
@@ -350,7 +347,7 @@ class PlasmaCurrent:
         """
         # Use Ampere's law using the plasma poloidal cross-section
         if i_plasma_current != 2:
-            return rmu0 * ip / perim
+            return constants.RMU0 * ip / perim
         # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
         ff1, ff2, _, _ = self._plascar_bpol(aspect, eps, kappa, delta)
 
