@@ -46,6 +46,7 @@ class TritiumPlantMeschini:
         t_end = 20000  # End time for simulation (s)
         dt = 1  # Time step (s)
 
+
         TBR = 0.5
         # Tritium burn efficiency in the plasma
         TBE = 0.05
@@ -95,6 +96,19 @@ class TritiumPlantMeschini:
         epsilon_10 = 0.0
         epsilon_11 = 1e-4
         epsilon_12 = 1e-4
+        
+        # 1 = Blanket
+                # 2 = Tritium Extraction System
+                # 3 = First Wall
+                # 4 = Divertor
+                # 5 = Heat Exchanger
+                # 6 = Detritiation System
+                # 7 = Vacuum Pump
+                # 8 = Fuel cleanup
+                # 9 = Isotope Separation System
+                # 10 Storage and management
+                # 11 = Fuelling system
+                # 12 = Tritium sepration membrane
 
         # Tritium inventory in the ith component (kg)
         # Initialise plant to be zero and clean with startup inventory in storage and management
@@ -1303,6 +1317,78 @@ class TritiumPlantMeschini:
             "Detritiation System Tritium Residence Time (s)",
             "(t_detritiation_tritium_residence)",
             tritium.t_detritiation_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Blanket Non-Radioactive Tritium Loss Fraction",
+            "(f_blkt_non_rad_tritium_loss)",
+            tritium.f_blkt_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Tritium Extraction System Non-Radioactive Tritium Loss Fraction",
+            "(f_tritium_extraction_system_non_rad_tritium_loss)",
+            tritium.f_tritium_extraction_system_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "First Wall Non-Radioactive Tritium Loss Fraction",
+            "(f_fw_non_rad_tritium_loss)",
+            tritium.f_fw_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Divertor Non-Radioactive Tritium Loss Fraction",
+            "(f_div_non_rad_tritium_loss)",
+            tritium.f_div_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Heat Exchanger Non-Radioactive Tritium Loss Fraction",
+            "(f_heat_exchanger_non_rad_tritium_loss)",
+            tritium.f_heat_exchanger_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Detritiation System Non-Radioactive Tritium Loss Fraction",
+            "(f_detritiation_non_rad_tritium_loss)",
+            tritium.f_detritiation_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Vacuum Pump Non-Radioactive Tritium Loss Fraction",
+            "(f_vacuum_pump_non_rad_tritium_loss)",
+            tritium.f_vacuum_pump_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Fuel Cleanup Non-Radioactive Tritium Loss Fraction",
+            "(f_fuel_cleanup_non_rad_tritium_loss)",
+            tritium.f_fuel_cleanup_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Isotope Separation Non-Radioactive Tritium Loss Fraction",
+            "(f_isotope_separation_non_rad_tritium_loss)",
+            tritium.f_isotope_separation_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Tritium Storage Non-Radioactive Tritium Loss Fraction",
+            "(f_tritium_storage_non_rad_tritium_loss)",
+            tritium.f_tritium_storage_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Fuelling System Non-Radioactive Tritium Loss Fraction",
+            "(f_fuelling_system_non_rad_tritium_loss)",
+            tritium.f_fuelling_system_non_rad_tritium_loss,
+        )
+        po.ovarin(
+            self.outfile,
+            "Tritium Separation Membrane Non-Radioactive Tritium Loss Fraction",
+            "(f_tritium_separation_membrane_non_rad_tritium_loss)",
+            tritium.f_tritium_separation_membrane_non_rad_tritium_loss,
         )
         po.ovarin(
             self.outfile,

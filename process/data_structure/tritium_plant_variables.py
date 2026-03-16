@@ -34,6 +34,42 @@ t_fuel_cleanup_tritium_residence: float = None
 t_detritiation_tritium_residence: float = None
 """Tritium residence time in the detritiation system (s)"""
 
+f_blkt_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the blanket due to non-radiative processes"""
+
+f_tritium_extraction_system_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the tritium extraction system due to non-radiative processes"""
+
+f_fw_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the first wall due to non-radiative processes"""
+
+f_div_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the divertor due to non-radiative processes"""
+
+f_heat_exchanger_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the heat exchanger due to non-radiative processes"""
+
+f_detritiation_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the detritiation system due to non-radiative processes"""
+
+f_vacuum_pump_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the vacuum pump due to non-radiative processes"""
+
+f_fuel_cleanup_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the fuel cleanup system due to non-radiative processes"""
+
+f_isotope_separation_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the isotope separation system due to non-radiative processes"""
+
+f_tritium_storage_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the tritium storage system due to non-radiative processes"""
+
+f_fuelling_system_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the plasma fuelling system due to non-radiative processes"""
+
+f_tritium_separation_membrane_non_rad_tritium_loss: float = None
+"""Fraction of tritium lost from the tritium separation membrane due to non-radiative processes"""
+
 m_plant_tritium_start_up: float = None
 """Mass of tritium at plant start-up (kg)"""
 
@@ -55,6 +91,18 @@ def init_tritium_plant_variables():
         t_isotope_separation_tritium_residence, \
         t_fuel_cleanup_tritium_residence, \
         t_detritiation_tritium_residence, \
+        f_blkt_non_rad_tritium_loss, \
+        f_tritium_extraction_system_non_rad_tritium_loss, \
+        f_fw_non_rad_tritium_loss, \
+        f_div_non_rad_tritium_loss, \
+        f_heat_exchanger_non_rad_tritium_loss, \
+        f_detritiation_non_rad_tritium_loss, \
+        f_vacuum_pump_non_rad_tritium_loss, \
+        f_fuel_cleanup_non_rad_tritium_loss, \
+        f_isotope_separation_non_rad_tritium_loss, \
+        f_tritium_storage_non_rad_tritium_loss, \
+        f_fuelling_system_non_rad_tritium_loss, \
+        f_tritium_separation_membrane_non_rad_tritium_loss, \
         m_plant_tritium_start_up, \
         m_plant_tritium_start_up_minimum_required
 
@@ -70,5 +118,17 @@ def init_tritium_plant_variables():
     t_isotope_separation_tritium_residence = 1000.0
     t_fuel_cleanup_tritium_residence = 300.0
     t_detritiation_tritium_residence = 150.0
+    f_blkt_non_rad_tritium_loss = 1e-4
+    f_tritium_extraction_system_non_rad_tritium_loss = 1e-4
+    f_fw_non_rad_tritium_loss = 0.0
+    f_div_non_rad_tritium_loss = 0.0
+    f_heat_exchanger_non_rad_tritium_loss = 1e-4
+    f_detritiation_non_rad_tritium_loss = 1e-4
+    f_vacuum_pump_non_rad_tritium_loss = 1e-4
+    f_fuel_cleanup_non_rad_tritium_loss = 1e-4
+    f_isotope_separation_non_rad_tritium_loss = 1e-4
+    f_tritium_storage_non_rad_tritium_loss = 0.0
+    f_fuelling_system_non_rad_tritium_loss = 1e-4
+    f_tritium_separation_membrane_non_rad_tritium_loss = 1e-4
     m_plant_tritium_start_up = 10.0
     m_plant_tritium_start_up_minimum_required = 0.0
