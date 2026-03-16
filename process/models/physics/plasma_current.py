@@ -776,7 +776,7 @@ class PlasmaCurrent:
         # Calculate the Todd scaling based on the model
         base_scaling = (
             (1.0 + 2.0 * eps**2)
-            * ((1.0 + kappa95**2) / 0.5)
+            * ((1.0 + kappa95**2) / 2)
             * (
                 1.24
                 - 0.54 * kappa95
