@@ -148,6 +148,8 @@ def write(models, _outfile):
     # Buildings model
     models.buildings.run(output=True)
 
+    models.tritium_plant.output_tritium_plant_info()
+
     # Plant AC power requirements
     models.power.acpow(output=True)
 

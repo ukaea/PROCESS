@@ -119,6 +119,7 @@ from process.models.tfcoil.resistive import (
 from process.models.tfcoil.superconducting import SuperconductingTFCoil
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
+from process.tritium_plant import TritiumPlantMeschini
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
@@ -684,6 +685,7 @@ class Models:
         self.vacuum = Vacuum()
         self.vacuum_vessel = VacuumVessel()
         self.water_use = WaterUse()
+        self.tritium_plant = TritiumPlantMeschini()
         self.pulse = Pulse()
         self.shield = Shield()
         self.ife = IFE(availability=self.availability, costs=self.costs)

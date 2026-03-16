@@ -1,4 +1,12 @@
-from process import constants
+from importlib import resources
+
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+
+import process.core.io.mfile as mf
+import process.data_structure.tritium_plant_variables as tritium
+from process.core import constants
+from process.core import process_output as po
 
 
 class TritiumPlantMeschini:
@@ -476,9 +484,811 @@ class TritiumPlantMeschini:
             * (((1 + epsilon_12) / t_tritium_residence_component_12) + RATE_T_DECAY)
         )
 
-    def plot_tritium_systems_overview(axis: plt.Axes, m_file: mf.MFile, scan: int)
+    def plot_tritium_systems_overview(
+        axis: plt.Axes, m_file: mf.MFile, scan: int, fig: plt.Figure
+    ):
+        """Plot an overview of the tritium systems inventory and flow rates."""
 
+        axis.text(
+            0.1,
+            0.9,
+            "$\\epsilon$ = Non radioactive loss fraction \n$\\tau = $ Tritium residence time (s)",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "lightyellow",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
 
+        # Load the plasma image
+        with resources.path("process.core.io", "plasma.png") as img_path:
+            plasma = mpimg.imread(img_path.open("rb"))
+
+        # Display the plasma image over the figure, not the axes
+        new_ax = axis.inset_axes(
+            [0.35, 0.35, 0.30, 0.30], transform=axis.transAxes, zorder=1
+        )
+        new_ax.imshow(plasma)
+        new_ax.axis("off")
+        axis.axis("off")  # Hide the main axes
+
+        # Add an arrow from the plasma to the first wall box
+        axis.annotate(
+            "",
+            xy=(0.65, 0.5),
+            xytext=(0.55, 0.5),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Draw line from bottom of plasma to inline with divertor box height
+        axis.annotate(
+            "",
+            xy=(0.5, 0.25),
+            xytext=(0.5, 0.35),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 5,
+                "fill": True,
+            },
+        )
+
+        # Draw arrow from line above towards the divertor box
+        axis.annotate(
+            "",
+            xy=(0.65, 0.25),
+            xytext=(0.5, 0.25),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Add an arrow from the plasma to vacuum pump box
+        axis.annotate(
+            "",
+            xy=(0.35, 0.5),
+            xytext=(0.45, 0.5),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # =====================================================
+
+        # Add First Wall box
+        axis.text(
+            0.65,
+            0.5,
+            f"First Wall\n\n $\\epsilon$ = \n $\\tau = {tritium.t_fw_tritium_residence} s $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "lightyellow",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
+        # Add an arrow from the first wall box to the blanket box
+        axis.annotate(
+            "",
+            xy=(0.675, 0.665),
+            xytext=(0.675, 0.55),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Add blanket box
+        axis.text(
+            0.65,
+            0.65,
+            "Blanket\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "lightyellow",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
+        # ============================================
+
+        # Add divertor box
+        axis.text(
+            0.65,
+            0.3,
+            "Divertor\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "lightyellow",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
+        # Add a small line from the right side of the divertor box (no arrow)
+        axis.annotate(
+            "",
+            xy=(0.71, 0.25),
+            xytext=(0.74, 0.25),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Add a vertical line stemming from the line above
+        axis.annotate(
+            "",
+            xy=(0.73, 0.6),
+            xytext=(0.73, 0.25),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Add a small line from the right side of the divertor box (no arrow)
+        axis.annotate(
+            "",
+            xy=(0.71, 0.6),
+            xytext=(0.74, 0.6),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        axis.annotate(
+            "",
+            xy=(0.71, 0.675),
+            xytext=(0.71, 0.6),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # ============================================
+
+        # Add tritium extraction system box
+        axis.text(
+            0.8,
+            0.5,
+            "Tritium Extraction System\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "lightyellow",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
+        # Add an arrow from tritium extraction system to the heat exchanger box
+        axis.annotate(
+            "",
+            xy=(0.875, 0.15),
+            xytext=(0.875, 0.47),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Add line coming from right of tritum extraction system
+        axis.annotate(
+            "",
+            xy=(0.95, 0.5),
+            xytext=(1.0, 0.5),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        axis.annotate(
+            "",
+            xy=(1.0, 0.9),
+            xytext=(1.0, 0.5),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        axis.annotate(
+            "",
+            xy=(0.75, 0.9),
+            xytext=(1.0, 0.9),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # ==========================================
+
+        # Add heat exchanger box
+        axis.text(
+            0.8,
+            0.2,
+            "Heat Exchanger\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "lightyellow",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
+        # Add line from bottom of heat exchanger box to
+        axis.annotate(
+            "",
+            xy=(0.9, 0.1),
+            xytext=(0.9, 0.0),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Add line from bottom of heat exchanger box to
+        axis.annotate(
+            "",
+            xy=(0.2, 0.0),
+            xytext=(0.9, 0.0),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        axis.annotate(
+            "",
+            xy=(0.3, 0.825),
+            xytext=(0.3, 0.9),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        axis.annotate(
+            "",
+            xy=(0.2, 0.2),
+            xytext=(0.2, 0.0),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # =====================================================
+
+        # Add fuelling system box
+        axis.text(
+            0.5,
+            0.7,
+            f"Fuelling System\n\n $\\epsilon$ = \n $\\tau = {m_file.get('t_plasma_fuelling_system_tritium_residence', scan=scan)} s $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "cyan",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
+
+        # Add an arrow from the plasma to the first wall box
+        axis.annotate(
+            "",
+            xy=(0.5, 0.6),
+            xytext=(0.5, 0.65),
+            xycoords=fig.transFigure,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # =====================================================
+
+        # Add tritium seperation membrane box
+        axis.text(
+            0.6,
+            0.8,
+            "Tritium Separation Membrane\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "cyan",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
+
+        # Add line from tritium separation membrane to just above storage and management system box
+        axis.annotate(
+            "",
+            xy=(0.5, 0.9),
+            xytext=(0.3, 0.9),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Add an arrow from the line above to the storage and management system box
+        axis.annotate(
+            "",
+            xy=(0.3, 0.825),
+            xytext=(0.3, 0.9),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # ============================================
+
+        # Add vacuum pump box
+        axis.text(
+            0.35,
+            0.5,
+            "Vacuum Pump\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "cyan",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
+
+        # Add an arrow from vaccum pump to the storage
+        axis.annotate(
+            "",
+            xy=(0.3, 0.7),
+            xytext=(0.3, 0.55),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "linestyle": "--",
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Add an arrow from vaccum pump to fuel cleanup system
+        axis.annotate(
+            "",
+            xy=(0.1, 0.5),
+            xytext=(0.25, 0.5),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # ==============================================
+
+        # Add fuel cleanup system box
+        axis.text(
+            0.15,
+            0.5,
+            "Fuel Cleanup System\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "cyan",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
+
+        # Add an arrow from fuel cleanup system to isotope separation system
+        axis.annotate(
+            "",
+            xy=(0.05, 0.7),
+            xytext=(0.05, 0.55),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # Add an arrow from fuel cleanup system to storage and management system
+        axis.annotate(
+            "",
+            xy=(0.2, 0.75),
+            xytext=(0.125, 0.75),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # =================================================
+
+        # Add isotope speration system box
+        axis.text(
+            0.15,
+            0.7,
+            "Isotope Separation System\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "cyan",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
+
+        axis.annotate(
+            "",
+            xy=(-0.1, 0.75),
+            xytext=(-0.065, 0.75),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        axis.annotate(
+            "",
+            xy=(-0.1, 0.75),
+            xytext=(-0.1, 0.25),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        axis.annotate(
+            "",
+            xy=(0.175, 0.25),
+            xytext=(-0.1, 0.25),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # ===================================================
+
+        # Add detritiation system box
+        axis.text(
+            0.3,
+            0.3,
+            "Detritiation System\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "cyan",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
+
+        axis.annotate(
+            "",
+            xy=(-0.065, 0.8),
+            xytext=(-0.15, 0.8),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        axis.annotate(
+            "",
+            xy=(-0.15, 0.8),
+            xytext=(-0.15, 0.25),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        axis.annotate(
+            "",
+            xy=(0.175, 0.225),
+            xytext=(-0.15, 0.225),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # =================================================
+
+        # Add storage and management system box
+        axis.text(
+            0.35,
+            0.7,
+            "Storage and\n Management System\n\n $\\epsilon$ = \n $\\tau = $",
+            fontsize=9,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "cyan",
+                "alpha": 0.8,
+                "linewidth": 2,
+            },
+        )
+
+        # Add an arrow from storage and management system to fuel system
+        axis.annotate(
+            "",
+            xy=(0.45, 0.75),
+            xytext=(0.375, 0.75),
+            xycoords=axis.transAxes,
+            arrowprops={
+                "arrowstyle": "-|>,head_length=1,head_width=0.3",
+                "color": "black",
+                "linewidth": 1.5,
+                "zorder": 11,
+            },
+            annotation_clip=False,
+        )
+
+        # =================================================
+
+    def output_tritium_plant_info(self):
+        """Output tritium plant information to the output file."""
+        po.oheadr(self.outfile, "Tritium Plant Information")
+
+        po.ovarin(
+            self.outfile,
+            "Divertor Tritium Residence Time (s)",
+            "(t_div_tritium_residence)",
+            tritium.t_div_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "First Wall Tritium Residence Time (s)",
+            "(t_fw_tritium_residence)",
+            tritium.t_fw_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Blanket Tritium Residence Time (s)",
+            "(t_blkt_tritium_residence)",
+            tritium.t_blkt_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Heat Exchanger Tritium Residence Time (s)",
+            "(t_heat_exchanger_tritium_residence)",
+            tritium.t_heat_exchanger_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Tritium Extraction System Residence Time (s)",
+            "(t_tritium_extraction_system_tritium_residence)",
+            tritium.t_tritium_extraction_system_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Tritium Separation Membrane Residence Time (s)",
+            "(t_tritium_separation_membrane_tritium_residence)",
+            tritium.t_tritium_separation_membrane_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Plasma Fuelling System Tritium Residence Time (s)",
+            "(t_plasma_fuelling_system_tritium_residence)",
+            tritium.t_plasma_fuelling_system_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Vacuum Pump Tritium Residence Time (s)",
+            "(t_vacuum_pump_tritium_residence)",
+            tritium.t_vacuum_pump_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Tritium Storage Residence Time (s)",
+            "(t_tritium_storage_tritium_residence)",
+            tritium.t_tritium_storage_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Isotope Separation Tritium Residence Time (s)",
+            "(t_isotope_separation_tritium_residence)",
+            tritium.t_isotope_separation_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Fuel Cleanup Tritium Residence Time (s)",
+            "(t_fuel_cleanup_tritium_residence)",
+            tritium.t_fuel_cleanup_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Detritiation System Tritium Residence Time (s)",
+            "(t_detritiation_tritium_residence)",
+            tritium.t_detritiation_tritium_residence,
+        )
+        po.ovarin(
+            self.outfile,
+            "Plant Tritium Start-up Inventory (kg)",
+            "(m_plant_tritium_start_up)",
+            tritium.m_plant_tritium_start_up,
+        )
+        po.ovarre(
+            self.outfile,
+            "Plant Tritium Start-up Minimum Required (kg)",
+            "(m_plant_tritium_start_up_minimum_required)",
+            tritium.m_plant_tritium_start_up_minimum_required,
+            "OP",
+        )
 
 
 # RATE_T_DECAY = 1.78e-9  # Tritium decay rate (1/s)
