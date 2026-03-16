@@ -417,15 +417,15 @@ class PlasmaCurrent:
 
         # Data for the box plot
         data = {
-            "Peng Analytic Fit": c_plasma_peng_analytic,
-            "Peng Divertor Scaling": c_plasma_peng_double_null,
-            "ITER Scaling": c_plasma_cyclindrical,
-            "IPDG89 Scaling": c_plasma_ipdg89,
-            "Todd Empirical Scaling I": c_plasma_todd_empirical_i,
-            "Todd Empirical Scaling II": c_plasma_todd_empirical_ii,
-            "Connor Hastie Model": c_plasma_connor_hastie,
-            "Sauter Scaling": c_plasma_sauter,
-            "Fiesta ST Scaling": c_plasma_fiesta_st,
+            f"{PlasmaCurrentModel.PENG_ANALYTIC_FIT.full_name}": c_plasma_peng_analytic,
+            f"{PlasmaCurrentModel.PENG_DIVERTOR_SCALING.full_name}": c_plasma_peng_double_null,
+            f"{PlasmaCurrentModel.ITER_SCALING.full_name}": c_plasma_cyclindrical,
+            f"{PlasmaCurrentModel.IPDG89_SCALING.full_name}": c_plasma_ipdg89,
+            f"{PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I.full_name}": c_plasma_todd_empirical_i,
+            f"{PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II.full_name}": c_plasma_todd_empirical_ii,
+            f"{PlasmaCurrentModel.CONNOR_HASTIE_MODEL.full_name}": c_plasma_connor_hastie,
+            f"{PlasmaCurrentModel.SAUTER_SCALING.full_name}": c_plasma_sauter,
+            f"{PlasmaCurrentModel.FIESTA_ST_SCALING.full_name}": c_plasma_fiesta_st,
         }
 
         # Create the violin plot

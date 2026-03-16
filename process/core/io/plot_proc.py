@@ -66,7 +66,7 @@ from process.models.physics.confinement_time import (
 from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
-from process.models.physics.plasma_current import PlasmaCurrent
+from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
 from process.models.tfcoil.superconducting import SUPERCONDUCTING_TF_TYPES
 
 mpl.rcParams["figure.max_open_warning"] = 40
@@ -3028,17 +3028,17 @@ def plot_main_plasma_information(
 
     # Add plasma current information
     textstr_currents = (
-        f"          $\\mathbf{{Plasma\\ currents:}}$\n\n"
-        f"          Plasma current {mfile.get('plasma_current_ma', scan=scan):.4f} MA\n"
-        f"            - Bootstrap fraction {mfile.get('f_c_plasma_bootstrap', scan=scan):.4f}\n"
-        f"            - Diamagnetic fraction {mfile.get('f_c_plasma_diamagnetic', scan=scan):.4f}\n"
-        f"            - Pfirsch-Schlüter fraction {mfile.get('f_c_plasma_pfirsch_schluter', scan=scan):.4f}\n"
-        f"            - Auxiliary fraction {mfile.get('f_c_plasma_auxiliary', scan=scan):.4f}\n"
-        f"            - Inductive fraction {mfile.get('f_c_plasma_inductive', scan=scan):.4f}"
+        f"$\\mathbf{{Plasma\\ currents:}}$\n\n"
+        f"Plasma current ({PlasmaCurrentModel(int(mfile.get('i_plasma_current', scan=scan))).full_name}): {mfile.get('plasma_current_ma', scan=scan):.4f} MA\n"
+        f"  - Bootstrap fraction {mfile.get('f_c_plasma_bootstrap', scan=scan):.4f}\n"
+        f"  - Diamagnetic fraction {mfile.get('f_c_plasma_diamagnetic', scan=scan):.4f}\n"
+        f"  - Pfirsch-Schlüter fraction {mfile.get('f_c_plasma_pfirsch_schluter', scan=scan):.4f}\n"
+        f"  - Auxiliary fraction {mfile.get('f_c_plasma_auxiliary', scan=scan):.4f}\n"
+        f"  - Inductive fraction {mfile.get('f_c_plasma_inductive', scan=scan):.4f}"
     )
 
     axis.text(
-        0.765,
+        0.72,
         0.975,
         textstr_currents,
         fontsize=9,
@@ -3054,8 +3054,8 @@ def plot_main_plasma_information(
 
     # Add plasma current label
     axis.text(
-        0.78,
         0.925,
+        0.9,
         "$I_{\\text{p}} $",
         fontsize=23,
         verticalalignment="top",
