@@ -46,7 +46,6 @@ class TritiumPlantMeschini:
         t_end = 20000  # End time for simulation (s)
         dt = 1  # Time step (s)
 
-
         TBR = 0.5
         # Tritium burn efficiency in the plasma
         TBE = 0.05
@@ -96,19 +95,19 @@ class TritiumPlantMeschini:
         epsilon_10 = 0.0
         epsilon_11 = 1e-4
         epsilon_12 = 1e-4
-        
+
         # 1 = Blanket
-                # 2 = Tritium Extraction System
-                # 3 = First Wall
-                # 4 = Divertor
-                # 5 = Heat Exchanger
-                # 6 = Detritiation System
-                # 7 = Vacuum Pump
-                # 8 = Fuel cleanup
-                # 9 = Isotope Separation System
-                # 10 Storage and management
-                # 11 = Fuelling system
-                # 12 = Tritium sepration membrane
+        # 2 = Tritium Extraction System
+        # 3 = First Wall
+        # 4 = Divertor
+        # 5 = Heat Exchanger
+        # 6 = Detritiation System
+        # 7 = Vacuum Pump
+        # 8 = Fuel cleanup
+        # 9 = Isotope Separation System
+        # 10 Storage and management
+        # 11 = Fuelling system
+        # 12 = Tritium sepration membrane
 
         # Tritium inventory in the ith component (kg)
         # Initialise plant to be zero and clean with startup inventory in storage and management
@@ -625,7 +624,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.65,
             0.5,
-            f"First Wall\n\n $\\epsilon$ = \n $\\tau = {tritium.t_fw_tritium_residence} s $",
+            f"First Wall\n\n $\\epsilon$ = {m_file.get('f_fw_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_fw_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -657,7 +656,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.65,
             0.65,
-            "Blanket\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Blanket\n\n $\\epsilon$ = {m_file.get('f_blkt_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_blkt_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -676,7 +675,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.65,
             0.3,
-            "Divertor\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Divertor\n\n $\\epsilon$ = {m_file.get('f_div_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_div_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -754,7 +753,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.8,
             0.5,
-            "Tritium Extraction System\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Tritium Extraction System\n\n $\\epsilon$ = {m_file.get('f_tritium_extraction_system_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_tritium_extraction_system_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -831,7 +830,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.8,
             0.2,
-            "Heat Exchanger\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Heat Exchanger\n\n $\\epsilon$ = {m_file.get('f_heat_exchanger_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_heat_exchanger_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -908,7 +907,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.5,
             0.7,
-            f"Fuelling System\n\n $\\epsilon$ = \n $\\tau = {m_file.get('t_plasma_fuelling_system_tritium_residence', scan=scan)} s $",
+            f"Fuelling System\n\n $\\epsilon$ = {m_file.get('f_fuelling_system_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_plasma_fuelling_system_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -942,7 +941,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.6,
             0.8,
-            "Tritium Separation Membrane\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Tritium Separation Membrane\n\n $\\epsilon$ = {m_file.get('f_tritium_separation_membrane_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_tritium_separation_membrane_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -991,7 +990,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.35,
             0.5,
-            "Vacuum Pump\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Vacuum Pump\n\n $\\epsilon$ = {m_file.get('f_vacuum_pump_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_vacuum_pump_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -1041,7 +1040,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.15,
             0.5,
-            "Fuel Cleanup System\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Fuel Cleanup System\n\n $\\epsilon$ = {m_file.get('f_fuel_cleanup_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_fuel_cleanup_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -1090,7 +1089,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.15,
             0.7,
-            "Isotope Separation System\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Isotope Separation System\n\n $\\epsilon$ = {m_file.get('f_isotope_separation_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_isotope_separation_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -1151,7 +1150,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.3,
             0.3,
-            "Detritiation System\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Detritiation System\n\n $\\epsilon$ = {m_file.get('f_detritiation_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_detritiation_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
@@ -1212,7 +1211,7 @@ class TritiumPlantMeschini:
         axis.text(
             0.35,
             0.7,
-            "Storage and\n Management System\n\n $\\epsilon$ = \n $\\tau = $",
+            f"Storage and\n Management System\n\n $\\epsilon$ = {m_file.get('f_tritium_storage_non_rad_tritium_loss', scan=scan)} \n $\\tau = {m_file.get('t_tritium_storage_tritium_residence', scan=scan):.2f} s $",
             fontsize=9,
             verticalalignment="center",
             horizontalalignment="center",
