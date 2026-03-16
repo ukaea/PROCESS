@@ -262,6 +262,7 @@ def init_all_module_vars():
     init_buildings_variables()
     init_cost_variables()
     init_divertor_variables()
+    init_tritium_plant_variables()
     init_fwbs_variables()
     data_structure.global_variables.init_global_variables()
     init_ccfe_hcpb_module()

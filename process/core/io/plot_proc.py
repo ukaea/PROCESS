@@ -13988,293 +13988,293 @@ def main_plot(
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
 
-    # plot_0 = figs[0].add_subplot(111)
+    plot_0 = figs[0].add_subplot(111)
 
-    # radial_build = create_thickness_builds(m_file, scan)
+    radial_build = create_thickness_builds(m_file, scan)
 
-    # plot_cover_page(plot_0, m_file, scan, figs[0], radial_build, colour_scheme)
+    plot_cover_page(plot_0, m_file, scan, figs[0], radial_build, colour_scheme)
 
-    # # Plot header info
-    # plot_header(figs[1].add_subplot(231), m_file, scan)
+    # Plot header info
+    plot_header(figs[1].add_subplot(231), m_file, scan)
 
-    # # Geometry
-    # plot_geometry_info(figs[1].add_subplot(232), m_file, scan)
+    # Geometry
+    plot_geometry_info(figs[1].add_subplot(232), m_file, scan)
 
-    # # Physics
-    # plot_physics_info(figs[1].add_subplot(233), m_file, scan)
+    # Physics
+    plot_physics_info(figs[1].add_subplot(233), m_file, scan)
 
-    # # Magnetics
-    # plot_magnetics_info(figs[1].add_subplot(234), m_file, scan)
+    # Magnetics
+    plot_magnetics_info(figs[1].add_subplot(234), m_file, scan)
 
-    # # power/flow economics
-    # plot_power_info(figs[1].add_subplot(235), m_file, scan)
+    # power/flow economics
+    plot_power_info(figs[1].add_subplot(235), m_file, scan)
 
-    # # Current drive
-    # # plot_current_drive_info(figs[1].add_subplot(236), m_file_data, scan)
-    # figs[1].subplots_adjust(wspace=0.25, hspace=0.25)
+    # Current drive
+    # plot_current_drive_info(figs[1].add_subplot(236), m_file_data, scan)
+    figs[1].subplots_adjust(wspace=0.25, hspace=0.25)
 
-    # ax7 = figs[2].add_subplot(111)
-    # ax7.set_position([0.25, 0.1, 0.7, 0.8])  # Move plot slightly to the right
-    # plot_iteration_variables(ax7, m_file, scan)
+    ax7 = figs[2].add_subplot(111)
+    ax7.set_position([0.25, 0.1, 0.7, 0.8])  # Move plot slightly to the right
+    plot_iteration_variables(ax7, m_file, scan)
 
-    # ax7_5 = figs[3].add_subplot(313)
-    # ax7_5.set_position([0.3, 0.1, 0.6, 0.1])
-    # plot_equality_constraint_equations(ax7_5, m_file, scan)
-    # ax7_6 = figs[3].add_subplot(111)
-    # ax7_6.set_position([0.3, 0.25, 0.65, 0.7])
-    # plot_inequality_constraint_equations(ax7_6, m_file, scan)
+    ax7_5 = figs[3].add_subplot(313)
+    ax7_5.set_position([0.3, 0.1, 0.6, 0.1])
+    plot_equality_constraint_equations(ax7_5, m_file, scan)
+    ax7_6 = figs[3].add_subplot(111)
+    ax7_6.set_position([0.3, 0.25, 0.65, 0.7])
+    plot_inequality_constraint_equations(ax7_6, m_file, scan)
 
-    # # Plot main plasma information
-    # plot_main_plasma_information(
-    #     figs[4].add_subplot(111, aspect="equal"),
-    #     m_file,
-    #     scan,
-    #     colour_scheme,
-    #     figs[4],
-    # )
+    # Plot main plasma information
+    plot_main_plasma_information(
+        figs[4].add_subplot(111, aspect="equal"),
+        m_file,
+        scan,
+        colour_scheme,
+        figs[4],
+    )
 
-    # # Plot density profiles
-    # ax9 = figs[5].add_subplot(231)
-    # ax9.set_position([0.075, 0.55, 0.25, 0.4])
-    # plot_n_profiles(ax9, demo_ranges, m_file, scan)
+    # Plot density profiles
+    ax9 = figs[5].add_subplot(231)
+    ax9.set_position([0.075, 0.55, 0.25, 0.4])
+    plot_n_profiles(ax9, demo_ranges, m_file, scan)
 
-    # # Plot temperature profiles
-    # ax10 = figs[5].add_subplot(232)
-    # ax10.set_position([0.375, 0.55, 0.25, 0.4])
-    # plot_t_profiles(ax10, demo_ranges, m_file, scan)
+    # Plot temperature profiles
+    ax10 = figs[5].add_subplot(232)
+    ax10.set_position([0.375, 0.55, 0.25, 0.4])
+    plot_t_profiles(ax10, demo_ranges, m_file, scan)
 
-    # # Plot impurity profiles
-    # ax11 = figs[5].add_subplot(233)
-    # ax11.set_position([0.7, 0.45, 0.25, 0.5])
-    # plot_radprofile(ax11, m_file, scan, imp, demo_ranges)
+    # Plot impurity profiles
+    ax11 = figs[5].add_subplot(233)
+    ax11.set_position([0.7, 0.45, 0.25, 0.5])
+    plot_radprofile(ax11, m_file, scan, imp, demo_ranges)
 
-    # # Plot current density profile
-    # ax12 = figs[5].add_subplot(4, 3, 10)
-    # ax12.set_position([0.075, 0.105, 0.25, 0.15])
-    # plot_jprofile(ax12, m_file, scan)
+    # Plot current density profile
+    ax12 = figs[5].add_subplot(4, 3, 10)
+    ax12.set_position([0.075, 0.105, 0.25, 0.15])
+    plot_jprofile(ax12, m_file, scan)
 
-    # # Plot q profile
-    # ax13 = figs[5].add_subplot(4, 3, 12)
-    # ax13.set_position([0.7, 0.125, 0.25, 0.15])
-    # plot_qprofile(ax13, demo_ranges, m_file, scan)
+    # Plot q profile
+    ax13 = figs[5].add_subplot(4, 3, 12)
+    ax13.set_position([0.7, 0.125, 0.25, 0.15])
+    plot_qprofile(ax13, demo_ranges, m_file, scan)
 
-    # plot_plasma_effective_charge_profile(figs[6].add_subplot(221), m_file, scan)
-    # plot_ion_charge_profile(figs[6].add_subplot(223), m_file, scan)
+    plot_plasma_effective_charge_profile(figs[6].add_subplot(221), m_file, scan)
+    plot_ion_charge_profile(figs[6].add_subplot(223), m_file, scan)
 
-    # if i_shape == 1:
-    #     plot_rad_contour(figs[6].add_subplot(122), m_file, scan, imp)
+    if i_shape == 1:
+        plot_rad_contour(figs[6].add_subplot(122), m_file, scan, imp)
 
-    # if i_shape != 1:
-    #     msg = (
-    #         "Radiation contour plots require a closed (Sauter) plasma boundary "
-    #         "(i_plasma_shape == 1). "
-    #         f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
-    #         "see the 1D radiation plots for available information."
-    #     )
-    #     # Add explanatory text to both figures reserved for contour outputs
-    #     figs[6].text(0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+    if i_shape != 1:
+        msg = (
+            "Radiation contour plots require a closed (Sauter) plasma boundary "
+            "(i_plasma_shape == 1). "
+            f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
+            "see the 1D radiation plots for available information."
+        )
+        # Add explanatory text to both figures reserved for contour outputs
+        figs[6].text(0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    # plot_fusion_rate_profiles(figs[7].add_subplot(122), figs[7], m_file, scan)
+    plot_fusion_rate_profiles(figs[7].add_subplot(122), figs[7], m_file, scan)
 
-    # if m_file.get("i_plasma_shape", scan=scan) == 1:
-    #     plot_fusion_rate_contours(figs[8], figs[9], m_file, scan)
+    if m_file.get("i_plasma_shape", scan=scan) == 1:
+        plot_fusion_rate_contours(figs[8], figs[9], m_file, scan)
 
-    # if i_shape != 1:
-    #     msg = (
-    #         "Fusion-rate contour plots require a closed (Sauter) plasma boundary "
-    #         "(i_plasma_shape == 1). "
-    #         f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
-    #         "see the 1D fusion rate/profile plots for available information."
-    #     )
-    #     # Add explanatory text to both figures reserved for contour outputs
-    #     figs[8].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
-    #     figs[9].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+    if i_shape != 1:
+        msg = (
+            "Fusion-rate contour plots require a closed (Sauter) plasma boundary "
+            "(i_plasma_shape == 1). "
+            f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
+            "see the 1D fusion rate/profile plots for available information."
+        )
+        # Add explanatory text to both figures reserved for contour outputs
+        figs[8].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        figs[9].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    # plot_plasma_pressure_profiles(figs[10].add_subplot(222), m_file, scan)
-    # plot_plasma_pressure_gradient_profiles(figs[10].add_subplot(224), m_file, scan)
-    # # Currently only works with Sauter geometry as plasma has a closed surface
+    plot_plasma_pressure_profiles(figs[10].add_subplot(222), m_file, scan)
+    plot_plasma_pressure_gradient_profiles(figs[10].add_subplot(224), m_file, scan)
+    # Currently only works with Sauter geometry as plasma has a closed surface
 
-    # if i_shape == 1:
-    #     plot_plasma_poloidal_pressure_contours(
-    #         figs[10].add_subplot(121, aspect="equal"), m_file, scan
-    #     )
-    # else:
-    #     ax = figs[10].add_subplot(131, aspect="equal")
-    #     msg = (
-    #         "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
-    #         "(i_plasma_shape == 1). "
-    #         f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
-    #         "see the 1D pressure/profile plots for available information."
-    #     )
-    #     ax.text(
-    #         0.5,
-    #         0.5,
-    #         msg,
-    #         ha="center",
-    #         va="center",
-    #         wrap=True,
-    #         fontsize=10,
-    #         transform=ax.transAxes,
-    #     )
-    #     ax.axis("off")
+    if i_shape == 1:
+        plot_plasma_poloidal_pressure_contours(
+            figs[10].add_subplot(121, aspect="equal"), m_file, scan
+        )
+    else:
+        ax = figs[10].add_subplot(131, aspect="equal")
+        msg = (
+            "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
+            "(i_plasma_shape == 1). "
+            f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
+            "see the 1D pressure/profile plots for available information."
+        )
+        ax.text(
+            0.5,
+            0.5,
+            msg,
+            ha="center",
+            va="center",
+            wrap=True,
+            fontsize=10,
+            transform=ax.transAxes,
+        )
+        ax.axis("off")
 
-    # plot_magnetic_fields_in_plasma(figs[11].add_subplot(122), m_file, scan)
-    # plot_beta_profiles(figs[11].add_subplot(221), m_file, scan)
+    plot_magnetic_fields_in_plasma(figs[11].add_subplot(122), m_file, scan)
+    plot_beta_profiles(figs[11].add_subplot(221), m_file, scan)
 
-    # plot_ebw_ecrh_coupling_graph(figs[12].add_subplot(111), m_file, scan)
+    plot_ebw_ecrh_coupling_graph(figs[12].add_subplot(111), m_file, scan)
 
-    # plot_bootstrap_comparison(figs[13].add_subplot(221), m_file, scan)
-    # plot_h_threshold_comparison(figs[13].add_subplot(224), m_file, scan)
-    # plot_density_limit_comparison(figs[14].add_subplot(221), m_file, scan)
-    # plot_confinement_time_comparison(figs[14].add_subplot(224), m_file, scan)
+    plot_bootstrap_comparison(figs[13].add_subplot(221), m_file, scan)
+    plot_h_threshold_comparison(figs[13].add_subplot(224), m_file, scan)
+    plot_density_limit_comparison(figs[14].add_subplot(221), m_file, scan)
+    plot_confinement_time_comparison(figs[14].add_subplot(224), m_file, scan)
 
-    # plot_debye_length_profile(figs[15].add_subplot(232), m_file, scan)
-    # plot_velocity_profile(figs[15].add_subplot(233), m_file, scan)
-    # plot_plasma_coloumb_logarithms(figs[15].add_subplot(231), m_file, scan)
+    plot_debye_length_profile(figs[15].add_subplot(232), m_file, scan)
+    plot_velocity_profile(figs[15].add_subplot(233), m_file, scan)
+    plot_plasma_coloumb_logarithms(figs[15].add_subplot(231), m_file, scan)
 
-    # plot_electron_frequency_profile(figs[15].add_subplot(212), m_file, scan)
+    plot_electron_frequency_profile(figs[15].add_subplot(212), m_file, scan)
 
-    # plot_ion_frequency_profile(figs[16].add_subplot(311), m_file, scan)
+    plot_ion_frequency_profile(figs[16].add_subplot(311), m_file, scan)
 
-    # plot_larmor_radius_profile(figs[16].add_subplot(313), m_file, scan)
+    plot_larmor_radius_profile(figs[16].add_subplot(313), m_file, scan)
 
-    # # Plot poloidal cross-section
-    # poloidal_cross_section(
-    #     figs[17].add_subplot(121, aspect="equal"),
-    #     m_file,
-    #     scan,
-    #     demo_ranges,
-    #     radial_build,
-    #     colour_scheme,
-    # )
+    # Plot poloidal cross-section
+    poloidal_cross_section(
+        figs[17].add_subplot(121, aspect="equal"),
+        m_file,
+        scan,
+        demo_ranges,
+        radial_build,
+        colour_scheme,
+    )
 
-    # # Plot toroidal cross-section
-    # toroidal_cross_section(
-    #     figs[17].add_subplot(122, aspect="equal"),
-    #     m_file,
-    #     scan,
-    #     demo_ranges,
-    #     colour_scheme,
-    # )
+    # Plot toroidal cross-section
+    toroidal_cross_section(
+        figs[17].add_subplot(122, aspect="equal"),
+        m_file,
+        scan,
+        demo_ranges,
+        colour_scheme,
+    )
 
-    # # Plot color key
-    # ax17 = figs[17].add_subplot(222)
-    # ax17.set_position([0.5, 0.5, 0.5, 0.5])
-    # color_key(ax17, m_file, scan, colour_scheme)
+    # Plot color key
+    ax17 = figs[17].add_subplot(222)
+    ax17.set_position([0.5, 0.5, 0.5, 0.5])
+    color_key(ax17, m_file, scan, colour_scheme)
 
-    # ax18 = figs[18].add_subplot(211)
-    # ax18.set_position([0.1, 0.33, 0.8, 0.6])
-    # plot_radial_build(ax18, m_file, colour_scheme)
+    ax18 = figs[18].add_subplot(211)
+    ax18.set_position([0.1, 0.33, 0.8, 0.6])
+    plot_radial_build(ax18, m_file, colour_scheme)
 
-    # # Make each axes smaller vertically to leave room for the legend
-    # ax185 = figs[19].add_subplot(211)
-    # ax185.set_position([0.1, 0.61, 0.8, 0.32])
+    # Make each axes smaller vertically to leave room for the legend
+    ax185 = figs[19].add_subplot(211)
+    ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    # ax18b = figs[19].add_subplot(212)
-    # ax18b.set_position([0.1, 0.13, 0.8, 0.32])
-    # plot_upper_vertical_build(ax185, m_file, colour_scheme)
-    # plot_lower_vertical_build(ax18b, m_file, colour_scheme)
+    ax18b = figs[19].add_subplot(212)
+    ax18b.set_position([0.1, 0.13, 0.8, 0.32])
+    plot_upper_vertical_build(ax185, m_file, colour_scheme)
+    plot_lower_vertical_build(ax18b, m_file, colour_scheme)
 
-    # # Can only plot WP and turn structure if superconducting coil at the moment
-    # if m_file.get("i_tf_sup", scan=scan) == 1:
-    #     # TF coil with WP
-    #     ax19 = figs[20].add_subplot(221, aspect="equal")
-    #     ax19.set_position([
-    #         0.025,
-    #         0.45,
-    #         0.5,
-    #         0.5,
-    #     ])  # Half height, a bit wider, top left
-    #     plot_superconducting_tf_wp(ax19, m_file, scan, figs[20])
+    # Can only plot WP and turn structure if superconducting coil at the moment
+    if m_file.get("i_tf_sup", scan=scan) == 1:
+        # TF coil with WP
+        ax19 = figs[20].add_subplot(221, aspect="equal")
+        ax19.set_position([
+            0.025,
+            0.45,
+            0.5,
+            0.5,
+        ])  # Half height, a bit wider, top left
+        plot_superconducting_tf_wp(ax19, m_file, scan, figs[20])
 
-    #     # TF coil turn structure
-    #     ax20 = figs[21].add_subplot(325, aspect="equal")
-    #     ax20.set_position([0.025, 0.5, 0.4, 0.4])
-    #     plot_tf_cable_in_conduit_turn(ax20, figs[21], m_file, scan)
-    #     plot_205 = figs[21].add_subplot(223, aspect="equal")
-    #     plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-    #     plot_cable_in_conduit_cable(plot_205, figs[21], m_file, scan)
-    # else:
-    #     ax19 = figs[20].add_subplot(211, aspect="equal")
-    #     ax19.set_position([0.06, 0.55, 0.675, 0.4])
-    #     plot_resistive_tf_wp(ax19, m_file, scan, figs[20])
-    #     plot_resistive_tf_info(ax19, m_file, scan, figs[20])
-    # plot_tf_coil_structure(
-    #     figs[22].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
-    # )
+        # TF coil turn structure
+        ax20 = figs[21].add_subplot(325, aspect="equal")
+        ax20.set_position([0.025, 0.5, 0.4, 0.4])
+        plot_tf_cable_in_conduit_turn(ax20, figs[21], m_file, scan)
+        plot_205 = figs[21].add_subplot(223, aspect="equal")
+        plot_205.set_position([0.075, 0.1, 0.3, 0.3])
+        plot_cable_in_conduit_cable(plot_205, figs[21], m_file, scan)
+    else:
+        ax19 = figs[20].add_subplot(211, aspect="equal")
+        ax19.set_position([0.06, 0.55, 0.675, 0.4])
+        plot_resistive_tf_wp(ax19, m_file, scan, figs[20])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[20])
+    plot_tf_coil_structure(
+        figs[22].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+    )
 
-    # plot_plasma_outboard_toroidal_ripple_map(figs[23], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[23], m_file, scan)
 
-    # plot_tf_stress(figs[24].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    plot_tf_stress(figs[24].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
-    # plot_current_profiles_over_time(figs[25].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[25].add_subplot(111), m_file, scan)
 
-    # plot_cs_coil_structure(
-    #     figs[26].add_subplot(121, aspect="equal"), figs[26], m_file, scan
-    # )
-    # plot_cs_turn_structure(
-    #     figs[26].add_subplot(224, aspect="equal"), figs[26], m_file, scan
-    # )
+    plot_cs_coil_structure(
+        figs[26].add_subplot(121, aspect="equal"), figs[26], m_file, scan
+    )
+    plot_cs_turn_structure(
+        figs[26].add_subplot(224, aspect="equal"), figs[26], m_file, scan
+    )
 
-    # plot_first_wall_top_down_cross_section(
-    #     figs[27].add_subplot(221, aspect="equal"), m_file, scan
-    # )
-    # plot_first_wall_poloidal_cross_section(figs[27].add_subplot(122), m_file, scan)
-    # plot_fw_90_deg_pipe_bend(figs[27].add_subplot(337), m_file, scan)
+    plot_first_wall_top_down_cross_section(
+        figs[27].add_subplot(221, aspect="equal"), m_file, scan
+    )
+    plot_first_wall_poloidal_cross_section(figs[27].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[27].add_subplot(337), m_file, scan)
 
-    # plot_blkt_pipe_bends(figs[28], m_file, scan)
-    # ax_blanket = figs[28].add_subplot(122, aspect="equal")
-    # plot_blanket(ax_blanket, m_file, scan, radial_build, colour_scheme)
-    # plot_firstwall(ax_blanket, m_file, scan, radial_build, colour_scheme)
-    # ax_blanket.set_xlabel("Radial position [m]")
-    # ax_blanket.set_ylabel("Vertical position [m]")
-    # ax_blanket.set_title("Blanket and First Wall Poloidal Cross-Section")
-    # ax_blanket.minorticks_on()
-    # ax_blanket.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
-    # # Plot major radius line (vertical dashed line at rmajor)
-    # ax_blanket.axvline(
-    #     m_file.get("rminor", scan=scan),
-    #     color="black",
-    #     linestyle="--",
-    #     linewidth=1.5,
-    #     label="Major Radius $R_0$",
-    # )
-    # # Plot a horizontal line at dz_blkt_half (blanket half height)
-    # dz_blkt_half = m_file.get("dz_blkt_half", scan=scan)
-    # ax_blanket.axhline(
-    #     dz_blkt_half,
-    #     color="purple",
-    #     linestyle="--",
-    #     linewidth=1.5,
-    #     label="Blanket Half Height",
-    # )
-    # ax_blanket.axhline(
-    #     -dz_blkt_half,
-    #     color="purple",
-    #     linestyle="--",
-    #     linewidth=1.5,
-    #     label="Blanket Half Height",
-    # )
+    plot_blkt_pipe_bends(figs[28], m_file, scan)
+    ax_blanket = figs[28].add_subplot(122, aspect="equal")
+    plot_blanket(ax_blanket, m_file, scan, radial_build, colour_scheme)
+    plot_firstwall(ax_blanket, m_file, scan, radial_build, colour_scheme)
+    ax_blanket.set_xlabel("Radial position [m]")
+    ax_blanket.set_ylabel("Vertical position [m]")
+    ax_blanket.set_title("Blanket and First Wall Poloidal Cross-Section")
+    ax_blanket.minorticks_on()
+    ax_blanket.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+    # Plot major radius line (vertical dashed line at rmajor)
+    ax_blanket.axvline(
+        m_file.get("rminor", scan=scan),
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        label="Major Radius $R_0$",
+    )
+    # Plot a horizontal line at dz_blkt_half (blanket half height)
+    dz_blkt_half = m_file.get("dz_blkt_half", scan=scan)
+    ax_blanket.axhline(
+        dz_blkt_half,
+        color="purple",
+        linestyle="--",
+        linewidth=1.5,
+        label="Blanket Half Height",
+    )
+    ax_blanket.axhline(
+        -dz_blkt_half,
+        color="purple",
+        linestyle="--",
+        linewidth=1.5,
+        label="Blanket Half Height",
+    )
 
-    # # Plot midplane line (horizontal dashed line at Z=0)
-    # ax_blanket.axhline(
-    #     0.0,
-    #     color="black",
-    #     linestyle="--",
-    #     linewidth=1.5,
-    #     label="Midplane",
-    # )
+    # Plot midplane line (horizontal dashed line at Z=0)
+    ax_blanket.axhline(
+        0.0,
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        label="Midplane",
+    )
 
-    plot_tritium_systems_overview(figs[28].add_subplot(111), m_file, scan, figs[28])
+    plot_tritium_systems_overview(figs[29].add_subplot(111), m_file, scan, figs[29])
 
-    # plot_main_power_flow(
-    #     figs[29].add_subplot(111, aspect="equal"), m_file, scan, figs[29]
-    # )
+    plot_main_power_flow(
+        figs[30].add_subplot(111, aspect="equal"), m_file, scan, figs[30]
+    )
 
-    # ax24 = figs[30].add_subplot(111)
-    # # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
-    # ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    # plot_system_power_profiles_over_time(ax24, m_file, scan, figs[30])
+    ax24 = figs[31].add_subplot(111)
+    # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
+    ax24.set_position([0.08, 0.35, 0.84, 0.57])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[31])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -14351,7 +14351,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(31)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(32)]
 
     # run main_plot
     main_plot(
