@@ -79,7 +79,6 @@ class PlasmaCurrent:
             pres_plasma_on_axis (float): Central plasma pressure (Pa).
             len_plasma_poloidal (float): Plasma perimeter length (m).
             q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
-            ind_plasma_internal_norm (float): Plasma normalised internal inductance.
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
             triang (float): Plasma triangularity.

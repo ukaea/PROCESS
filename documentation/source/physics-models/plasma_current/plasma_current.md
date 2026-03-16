@@ -1,4 +1,4 @@
-# Plasma Current 
+# Plasma Current | `PlasmaCurrent`
 
 ## Overview
 
@@ -92,8 +92,7 @@ Instead of $q_a$, $q_{95}$ is used as in plasma configurations with divertors th
 
 ## Plasma Current Calculation | `calculate_plasma_current()`
 
-This function calculates the plasma current shaping factor ($f_q$), plasma current ($I_{\text{p}}$), qstar ($q^*$) and then poloidal field and the profile settings for $\texttt{alphaj}$ ($\alpha_J$) and $\texttt{ind_plasma_internal_norm}$ ($l_{\text{i}}$). This is done in 5 separate steps which are shown in the following numbered sections.
-
+This function calculates the plasma current shaping factor ($f_q$) and then plasma current ($I_{\text{p}}$). 
 
 $$\begin{aligned}
 I_{\text{p}} = f_q \frac{2\pi}{\mu_0}  \frac{a^2 B_{\text{T}}}{R \ q_{95}}
@@ -490,12 +489,12 @@ $$
 
 -----------------------------
 
-### 2. Calculate the cylindrical safety factor
+## Calculate the cylindrical safety factor | `calculate_cylindrical_safety_factor()`
 
 In reactor design the total plasma current $I_{\text{p}}$, is limited by considerations of tearing mode stability, and major disruptions. These considerations place a limit on the safety factor at the plasma boundary, $q_{\psi}$. In a cylindrical plasma model there is a simple relation between this value, $q_{\text{cyl}}$, and the plasma current, given by
 
 $$
-q_{\psi} = q_{\text{cyl}} \equiv \frac{5a^2B_0}{R_0I_p}
+q_{\psi} = q_{\text{cyl}} \equiv \frac{2\pi}{\mu_0}\frac{a^2B_0}{R_0I_p}
 $$
 
 where the minor and major radii are expressed in metres, the toroidal magnetic field $B_0$, in Tesla, and the plasma current $I_{\text{p}}$, in megaamps. Thus a stability requirement of the form  $q_{\psi} > q_{\text{crit}}$ (usually considered to be ~ 2.0) places a limit on $I_{\text{p}}$.
@@ -503,7 +502,7 @@ The effect of toroidicity and of shaping of the plasma cross section is to modif
 
 
 $$
-q_{\psi} =  \frac{5a^2B_0}{R_0I_p}F\left(\epsilon,\kappa,\delta; \text{profiles}\right)
+q_{\psi} =  \frac{2\pi}{\mu_0}\frac{a^2B_0}{R_0I_p}F\left(\epsilon,\kappa,\delta; \text{profiles}\right)
 $$
 
 It is not possible to derive a general analytic expression for $F$, so it has been customary to employ an empirical, or semi-empirical expression involving $\epsilon$,$\kappa$ and $\delta$, chosen to fit data taken from numerical solutions of the Grad Shafranov equation.
@@ -511,7 +510,7 @@ It is not possible to derive a general analytic expression for $F$, so it has be
 The cylindrical equivalent $q$ definition used currently is the one given below from IPDG89[^5]
 
 $$
-q_* = \frac{5 \times 10^6a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa_{95}^2(1+2\delta_{95}^2-1.2\delta_{95}^3))}{2}
+q_* = \frac{2\pi}{\mu_0}\frac{a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa_{95}^2(1+2\delta_{95}^2-1.2\delta_{95}^3))}{2}
 $$
 
 
@@ -524,9 +523,9 @@ $$
 --------------
 
 
-### 3. Plasma Current Poloidal Field
+## Plasma Current Poloidal Field | `calculate_poloidal_field()`
 
-For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the poloidal field is simply returned as:
+For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the plasma edge average poloidal field is simply returned as:
 
 $$
 B_{\text{p}} = \frac{\mu_0 I_{\text{p}}}{\texttt{len_plasma_poloidal}}
