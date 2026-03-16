@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from numpy import typing as npt
 
-from process.neutronics_data import n2n_weight_matrix, scattering_weight_matrix
+from process.neutronics_data import nXn_weight_matrix, scattering_weight_matrix
 
 rng = np.random.default_rng(1)
 
@@ -34,7 +34,7 @@ def test_scattering_matrix(
 
 def test_n2n_matrix_neg1():
     fibo_gs = np.array([8, 5, 3, 2, 1])
-    n2n_matrix = n2n_weight_matrix(fibo_gs, -1)
+    n2n_matrix = nXn_weight_matrix(fibo_gs, -1, 2)
     row_sum = n2n_matrix.sum(axis=1)
     np.testing.assert_allclose(
         row_sum,
@@ -46,7 +46,7 @@ def test_n2n_matrix_neg1():
 
 def test_n2n_matrix_neg2():
     fibo_gs = np.array([8, 5, 3, 2, 1])
-    n2n_matrix = n2n_weight_matrix(fibo_gs, -2)
+    n2n_matrix = nXn_weight_matrix(fibo_gs, -2, 2)
     row_sum = n2n_matrix.sum(axis=1)
     np.testing.assert_allclose(
         row_sum, [1, 1, 1, 0], err_msg="Expected bin 4 to be out-of-bounds"
@@ -56,7 +56,7 @@ def test_n2n_matrix_neg2():
 
 def test_n2n_matrix_neg3():
     fibo_gs = np.array([8, 5, 3, 2, 1])
-    n2n_matrix = n2n_weight_matrix(fibo_gs, -3)
+    n2n_matrix = nXn_weight_matrix(fibo_gs, -3, 2)
     row_sum = n2n_matrix.sum(axis=1)
     np.testing.assert_allclose(
         row_sum,
@@ -68,7 +68,7 @@ def test_n2n_matrix_neg3():
 
 def test_n2n_matrix_pos3():
     fibo_gs = np.array([8, 5, 3, 2, 1])
-    n2n_matrix = n2n_weight_matrix(fibo_gs, 3)
+    n2n_matrix = nXn_weight_matrix(fibo_gs, 3, 2)
     row_sum = n2n_matrix.sum(axis=1)
     np.testing.assert_allclose(
         row_sum,
@@ -80,7 +80,7 @@ def test_n2n_matrix_pos3():
 
 def test_n2n_matrix_pos6():
     fibo_gs = np.array([8, 5, 3, 2, 1])
-    n2n_matrix = n2n_weight_matrix(fibo_gs, 6)
+    n2n_matrix = nXn_weight_matrix(fibo_gs, 6, 2)
     row_sum = n2n_matrix.sum(axis=1)
     np.testing.assert_allclose(
         row_sum,
