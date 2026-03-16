@@ -16,53 +16,28 @@ MIN_E = 1/40 * EV_TO_J
 
 def test_group_structure_0_energy():
     with pytest.warns():
-        MaterialMacroInfo(
-            [1.0, 0.0],
-            0.1,
-            [1.0],
-            [[1.0]],
-        )
-
+        mat = MaterialMacroInfo([1.0, 0.0], 1.0, {"C":1.0})
+        mat._set_sigma([1.0],[[1.0]])
 
 def test_group_structure_too_short():
     with pytest.raises(ProcessValidationError):
-        MaterialMacroInfo(
-            [1.0],
-            0.1,
-            [1.0],
-            [[1.0]],
-        )
-
+        mat = MaterialMacroInfo([1.0], 1.0, {"C":1.0})
+        mat._set_sigma([1.0],[[1.0]])
 
 def test_sigma_s_incorrect_shape():
     with pytest.raises(ProcessValidationError):
-        MaterialMacroInfo(
-            [1000, 10, 1.0],
-            0.1,
-            [1.0, 2.0],
-            [1.0, 1.0],
-        )
-
+        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C":1.0})
+        mat._set_sigma([1.0, 2.0],[1.0, 1.0])
 
 def test_sigma_s_too_large():
     with pytest.raises(ProcessValidationError):
-        MaterialMacroInfo(
-            [1000, 10, 1.0],
-            0.1,
-            [1.0, 2.0],
-            [[1.0, 1.0], [1.0, 1.0]],
-        )
-
+        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C":1.0})
+        mat._set_sigma([1.0, 2.0],[[1.0, 1.0], [1.0, 1.0]])
 
 def test_warn_up_elastic_scatter():
     with pytest.warns():
-        MaterialMacroInfo(
-            [1000, 10, 1.0],
-            0.1,
-            [1.0, 2.0],
-            [[0.5, 0.5], [1.0, 1.0]],
-        )
-
+        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C":1.0})
+        mat._set_sigma([1.0, 2.0],[[0.5, 0.5], [1.0, 1.0]])
 
 def test_throw_index_error():
     layer_specific_const = LayerSpecificGroupwiseConstants(
@@ -202,10 +177,11 @@ def test_same_l_in_2_groups_warns():
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_t = 1 / mfp_fw_t  # [1/m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
-    a_fw = 52
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(
-        dummy, a_fw, [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]], name="fw"
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material._set_sigma(
+        [sigma_fw_t, sigma_fw_t],
+        [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
     )
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
@@ -224,10 +200,11 @@ def test_same_l_in_2_groups_calculate_flux():
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_t = 1 / mfp_fw_t  # [1/m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
-    a_fw = 52
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(
-        dummy, a_fw, [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]], name="fw"
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material._set_sigma(
+        [sigma_fw_t, sigma_fw_t],
+        [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
     )
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
@@ -262,11 +239,11 @@ def test_two_group():
     mfp_fw_s = 118 * 0.01  # [m]
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
-    a_fw = 52
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(
-        dummy, a_fw,
-        [1 / mfp_fw_t, 1 / (mfp_fw_t+0.5)], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]], name="fw"
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material._set_sigma(
+        [1 / mfp_fw_t, 1 / (mfp_fw_t+0.5)],
+        [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
     )
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
@@ -318,16 +295,15 @@ def test_three_group():
     mfp_fw_s = 118 * 0.01  # [m]
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
-    a_fw = 52
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(
-        dummy, a_fw,
-        [1 / mfp_fw_t, 1 / (mfp_fw_t+0.25), 1 / (mfp_fw_t+0.5)], [
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material._set_sigma(
+        [1 / mfp_fw_t, 1 / (mfp_fw_t+0.25), 1 / (mfp_fw_t+0.5)],
+        [
             [sigma_fw_s, sigma_fw_s, sigma_fw_s],
             [0, sigma_fw_s, sigma_fw_s],
             [0, 0, sigma_fw_s],
         ],
-        name="fw"
     )
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
@@ -386,10 +362,9 @@ def test_four_group():
     mfp_fw_t = 16.65 * 0.01  # [m]
 
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
-    a_fw = 52
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(
-        dummy, a_fw,
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material._set_sigma(
         [1 / mfp_fw_t, 1 / (mfp_fw_t+0.25), 1 / (mfp_fw_t+0.5), 1 / (mfp_fw_t+0.75)],
         [
             [sigma_fw_s/4, sigma_fw_s/4, sigma_fw_s, sigma_fw_s],
@@ -403,7 +378,6 @@ def test_four_group():
         #     [0,0,0,0],
         #     [0,0,0,0],
         # ],
-        name="fw"
     )
     incoming_flux = 100.0
     neutron_profile = NeutronFluxProfile(
