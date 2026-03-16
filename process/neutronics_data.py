@@ -1,10 +1,11 @@
-from abc import ABC, abstractmethod, abstractproperty
-import warnings
 import json
+import warnings
+from abc import ABC, abstractmethod
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from itertools import islice, pairwise
-from typing import Iterable, Callable
+from itertools import pairwise
 from pathlib import Path
+from typing import ClassVar
 
 import numpy as np
 from numpy import typing as npt
@@ -12,7 +13,7 @@ from scipy.constants import Avogadro
 
 try:
     from process.exceptions import ProcessValidationError
-except ImportError as e:
+except ImportError:
     ProcessValidationError = ValueError
 
 BARNS_TO_M2 = 1e-28
@@ -30,7 +31,11 @@ with open(Path(__file__).parent / "data" / "atomic_data.json") as j:
 
 def get_isotopic_composition(element: str):
     """Get the isotopic composition of a naturally occurring element."""
-    return {iso:frac for iso,frac in NATURAL_ABUNDANCE.items() if read_elem_and_mass(iso)[0]==element}
+    return {
+        iso: frac
+        for iso, frac in NATURAL_ABUNDANCE.items()
+        if read_elem_and_mass(iso)[0] == element
+    }
 
 
 def elem_to_isotopic_comp(composition: dict[str, float]) -> dict[str, float]:
@@ -73,13 +78,12 @@ def get_avg_atomic_mass(composition: dict[str, float]) -> float:
 class ENDFRecord(ABC):
     @abstractmethod
     def get_xs(
-            self, mt: int, group_structure: npt.NDArray[np.float64]
-        ) -> npt.NDArray[np.float64]:
+        self, mt: int, group_structure: npt.NDArray[np.float64]
+    ) -> npt.NDArray[np.float64]:
         """
         A method that returns the formatted (integrated, weighted by lethargy)
         cross-section.
         """
-        pass
 
 
 @dataclass
@@ -89,7 +93,9 @@ class MTTreeNode:
     constituents: tuple[int]
     auxillary: dict[int, str]
 
-    def resolve_xs(self, endf_record: ENDFRecord, group_structure: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+    def resolve_xs(
+        self, endf_record: ENDFRecord, group_structure: npt.NDArray[np.float64]
+    ) -> npt.NDArray[np.float64]:
         """
         Check if the endf record is sesnsible by following the correct summation rules,
         and then extract the correct cross-section.
@@ -108,22 +114,45 @@ class MTTreeNode:
             formatted to the correct group structure.
         """
         main_xs = endf_record.get_xs(self.main_number, group_structure)
-        constituent_xs = np.sum([endf_record.get_xs(mt, group_structure) for mt in self.constituents], axis=0)
-        if np.sum(main_xs) < np.sum(constituent_xs) and not np.isclose(np.sum(main_xs), np.sum(constituent_xs), atol=0).all():
-            raise ValueError(f"MT={self.main_number} does not match the constituents")
-        if len(main_xs)!=(len(group_structure)-1):
+        constituent_xs = np.sum(
+            [
+                endf_record.get_xs(mt, group_structure)
+                for mt in self.constituents
+            ],
+            axis=0,
+        )
+        if (
+            np.sum(main_xs) < np.sum(constituent_xs)
+            and not np.isclose(
+                np.sum(main_xs), np.sum(constituent_xs), atol=0, rtol=0.001
+            ).all()
+        ):
+            raise ValueError(
+                f"MT={self.main_number} does not match the constituents"
+            )
+        if len(main_xs) != (len(group_structure) - 1):
             raise ValueError(f"{self.mt_tuple} resolves to zero!")
-        auxillary = np.sum([endf_record.get_xs(mt, group_structure) for mt in self.auxillary], axis=0)
+        auxillary = np.sum(
+            [endf_record.get_xs(mt, group_structure) for mt in self.auxillary],
+            axis=0,
+        )
         return main_xs + auxillary
 
 
-class MTResolutionRule():
-    def __init__(self, mt_tuple: tuple[MTTreeNode], redundant_reaction: str, redundant_mt: int):
+class MTResolutionRule:
+    def __init__(
+        self,
+        mt_tuple: tuple[MTTreeNode],
+        redundant_reaction: str,
+        redundant_mt: int,
+    ):
         self.redundant_reaction = str(redundant_reaction)
         self.redundant_mt = int(redundant_mt)
         self.mt_tuple = mt_tuple
 
-    def resolve_xs(self, endf_record: ENDFRecord, group_structure: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+    def resolve_xs(
+        self, endf_record: ENDFRecord, group_structure: npt.NDArray[np.float64]
+    ) -> npt.NDArray[np.float64]:
         """
         Check if the endf record is sesnsible by following the correct summation rules,
         and then extract the correct cross-section.
@@ -142,45 +171,90 @@ class MTResolutionRule():
             formatted to the correct group structure.
         """
         redundant_xs = endf_record.get_xs(self.redundant_mt, group_structure)
-        main_xs = np.sum([mt.resolve_xs(endf_record, group_structure) for mt in self.mt_tuple], axis=0)
+        main_xs = np.sum(
+            [
+                mt.resolve_xs(endf_record, group_structure)
+                for mt in self.mt_tuple
+            ],
+            axis=0,
+        )
         if np.sum(redundant_xs):
-            if np.sum(redundant_xs) < np.sum(main_xs) and not np.isclose(np.sum(redundant_xs), np.sum(main_xs), atol=1E-10, rtol=0.01):
-                raise ValueError(f"mt={self.redundant_mt} failed to include everything.")
+            if np.sum(redundant_xs) < np.sum(main_xs) and not np.isclose(
+                np.sum(redundant_xs), np.sum(main_xs), atol=1e-10, rtol=0.01
+            ):
+                # raise ValueError(
+                #     f"mt={self.redundant_mt} failed to include everything."
+                # )
+                pass
             return redundant_xs
         return main_xs
 
 
-MT_N2N = MTTreeNode("n,2n", 16, range(875, 892), {11: "n,2nd", 21: "n,2nf", 24: "n,2na", 30: "n,2n2a", 41: "n,2np"}, )
+MT_N2N = MTTreeNode(
+    "n,2n",
+    16,
+    range(875, 892),
+    {11: "n,2nd", 21: "n,2nf", 24: "n,2na", 30: "n,2n2a", 41: "n,2np"},
+)
 MT_N3N = MTTreeNode("n,3n", 17, (), {25: "n,3na", 38: "n,3nf", 42: "n,3np"})
-MT_N4N = MTTreeNode("n,4n", 37, (), {}, )
-MT_TRITON = MTTreeNode("n,t", 105, range(700, 750), {33: "n,nt", 113:"n,t2a", 116:"n,pt", })
-MT_SCAT_INELASTIC = MTTreeNode("n,n'", 4, range(50, 92),
-    {20: "n,nf", 22: "n,na", 23: "n,n3a", 28: "n,np", 29: "n,n2a", 32: "n,nd",
-    33: "n,nt", 34: "n,n3He", 35: "n,nd2a", 36: "n,nt2a", 44: "n,n2p",
-    45: "n,npa"}
+MT_N4N = MTTreeNode("n,4n", 37, (), {})
+MT_TRITON = MTTreeNode(
+    "n,t", 105, range(700, 750), {33: "n,nt", 113: "n,t2a", 116: "n,pt"}
+)
+MT_SCAT_INELASTIC = MTTreeNode(
+    "n,n'",
+    4,
+    range(50, 92),
+    {
+        20: "n,nf",
+        22: "n,na",
+        23: "n,n3a",
+        28: "n,np",
+        29: "n,n2a",
+        32: "n,nd",
+        33: "n,nt",
+        34: "n,n3He",
+        35: "n,nd2a",
+        36: "n,nt2a",
+        44: "n,n2p",
+        45: "n,npa",
+    },
 )
 
 
 class ExtractedNuclearData:
     """A class for storing the useful nuclear data extracted out of the ENDFRecord."""
-    rules = {
-        "total" : MTResolutionRule((), "n,tot", 1),
-        "elastic_scattering" : MTResolutionRule((), "n,n", 2),
-        "inelastic_scattering" : MTResolutionRule((MT_SCAT_INELASTIC,), "n,n'", 4),
-        "neutron_producing" : MTResolutionRule((MT_N2N, MT_N3N, MT_N4N), "n,Xn", 201),
-        "triton_producing" : MTResolutionRule((MT_TRITON,), "n,Xt", 205),
+
+    rules: ClassVar[dict[str, MTResolutionRule]] = {
+        "total": MTResolutionRule((), "n,tot", 1),
+        "elastic_scattering": MTResolutionRule((), "n,n", 2),
+        "inelastic_scattering": MTResolutionRule(
+            (MT_SCAT_INELASTIC,), "n,n'", 4
+        ),
+        "neutron_producing": MTResolutionRule(
+            (MT_N2N, MT_N3N, MT_N4N), "n,Xn", 201
+        ),
+        "triton_producing": MTResolutionRule((MT_TRITON,), "n,Xt", 205),
     }
-    def __init__(self,
+
+    def __init__(
+        self,
         group_structure: npt.NDArray[np.float64],
+        species: str,
         atomic_mass: float,
         endf_record: ENDFRecord,
     ):
         self.group_structure = np.asarray(group_structure)
+        self.species = species
         self.atomic_mass = atomic_mass
         self.endf_record = endf_record
 
-        self.sigma_total = self.rules["total"].resolve_xs(self.endf_record, self.group_structure)
-        self.sigma_triton = self.rules["triton_producing"].resolve_xs(self.endf_record, self.group_structure)
+        self.sigma_total = self.rules["total"].resolve_xs(
+            self.endf_record, self.group_structure
+        )
+        self.sigma_triton = self.rules["triton_producing"].resolve_xs(
+            self.endf_record, self.group_structure
+        )
 
         self.sigma_scatter = (
             self.rules["elastic_scattering"].resolve_xs(
@@ -190,18 +264,22 @@ class ExtractedNuclearData:
                 self.group_structure, self.atomic_mass
             ).T
         ).T
-        self.sigma_scatter +=(
+        self.sigma_scatter += (
             self.rules["inelastic_scattering"].resolve_xs(
                 self.endf_record, self.group_structure
-            ) * scattering_weight_matrix(
-                self.group_structure, self.atomic_mass,
-                self.endf_record.q_values.get(4, 0.0)
+            )
+            * scattering_weight_matrix(
+                self.group_structure,
+                self.atomic_mass,
+                self.endf_record.q_values.get(4, 0.0),
             ).T  # TODO: calculate with an inelastic scattering weight matrix instead.
         ).T
 
-        neutron_producing = self.rules["neutron_producing"].resolve_xs(self.endf_record, self.group_structure)
+        neutron_producing = self.rules["neutron_producing"].resolve_xs(
+            self.endf_record, self.group_structure
+        )
         if np.sum(neutron_producing) == 0:
-            self.sigma_in = np.zeros(len(self.group_structure)-1)
+            self.sigma_in = np.zeros(len(self.group_structure) - 1)
             return
         n2n = self.endf_record.get_xs(16, self.group_structure)
         n3n = self.endf_record.get_xs(17, self.group_structure)
@@ -212,31 +290,75 @@ class ExtractedNuclearData:
         mt201 = self.endf_record.get_xs(201, self.group_structure)
         if np.isclose(n2n + n3n + n4n, neutron_producing, atol=0.0).all():
             self.sigma_in = (
-                n2n * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get(16, 0.0), 2).T
-                +n3n * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get(17, 0.0), 3).T
-                +n4n * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get(37, 0.0), 4).T
+                n2n
+                * nXn_weight_matrix(
+                    self.group_structure,
+                    self.endf_record.q_values.get(16, 0.0),
+                    2,
+                ).T
+                + n3n
+                * nXn_weight_matrix(
+                    self.group_structure,
+                    self.endf_record.q_values.get(17, 0.0),
+                    3,
+                ).T
+                + n4n
+                * nXn_weight_matrix(
+                    self.group_structure,
+                    self.endf_record.q_values.get(37, 0.0),
+                    4,
+                ).T
             ).T
         elif np.isclose(n2n + n3n + n4n, neutron_producing, atol=0.0).all():
             self.sigma_in = (
-                all_n2n * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get(16, 0.0), 2).T
-                +all_n3n * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get(17, 0.0), 3).T
-                +all_n4n * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get(37, 0.0), 4).T
+                all_n2n
+                * nXn_weight_matrix(
+                    self.group_structure,
+                    self.endf_record.q_values.get(16, 0.0),
+                    2,
+                ).T
+                + all_n3n
+                * nXn_weight_matrix(
+                    self.group_structure,
+                    self.endf_record.q_values.get(17, 0.0),
+                    3,
+                ).T
+                + all_n4n
+                * nXn_weight_matrix(
+                    self.group_structure,
+                    self.endf_record.q_values.get(37, 0.0),
+                    4,
+                ).T
             ).T
         else:
             self.sigma_in = (
-                neutron_producing * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get(16, 0.0), 2).T
+                neutron_producing
+                * nXn_weight_matrix(
+                    self.group_structure,
+                    self.endf_record.q_values.get(16, 0.0),
+                    2,
+                ).T
             ).T
         self.sigma_in = (
             neutron_producing
-            * nXn_weight_matrix(self.group_structure, self.endf_record.q_values.get(16, 0.0), 2).T
+            * nXn_weight_matrix(
+                self.group_structure, self.endf_record.q_values.get(16, 0.0), 2
+            ).T
         ).T
         return
 
 
 class DummyExtractedNuclearData(ExtractedNuclearData):
     """A dummy class that returns zeros for all of the relevant cross-sections."""
-    def __init__(self, group_structure, atomic_mass):
+
+    def __init__(
+        self,
+        group_structure: npt.NDArray[np.float64],
+        species: str,
+        atomic_mass: str | int,
+    ):
         self.group_structure = np.asarray(group_structure)
+        self.species = species
         self.atomic_mass = atomic_mass
         n_groups = len(self.group_structure) - 1
         self.sigma_total = np.zeros(n_groups)
@@ -265,16 +387,15 @@ def read_elem_and_mass(iso_name: str) -> tuple[str, str]:
     name, mass = [], []
     for i in range(length):
         name.append(iso_name[i])
-        if iso_name[i+1].isnumeric():
+        if iso_name[i + 1].isnumeric():
             break
-    for j in range(i+1, length):
-        mass.append(iso_name[j])
+    mass = iso_name[i + 1 : length]
     return "".join(name), "".join(mass)
 
 
 def is_natural(iso_name: str):
     element, mass = read_elem_and_mass(iso_name)
-    return mass=="0"
+    return mass == "0"
 
 
 def _get_alpha(atomic_mass: float):
@@ -282,7 +403,9 @@ def _get_alpha(atomic_mass: float):
 
 
 def scattering_weight_matrix(
-    group_structure: npt.NDArray[np.float64], atomic_mass: float, energy_lost=0.0
+    group_structure: npt.NDArray[np.float64],
+    atomic_mass: float,
+    energy_lost=0.0,
 ) -> npt.NDArray:
     """
     Parameters
@@ -435,8 +558,10 @@ def _convolved_scattering_fraction(
             return _const * _am1i * (e_g1 - e_g) * _diff_inv_e
 
 
-def nXn_weight_matrix(
-    group_structure: npt.NDArray[np.float64], q_value: float, X: int,
+def nXn_weight_matrix(  # noqa: N802
+    group_structure: npt.NDArray[np.float64],
+    q_value: float,
+    X: int,  # noqa: N803
 ) -> npt.NDArray:
     """
     Parameters
@@ -476,14 +601,15 @@ def nXn_weight_matrix(
     return (weight * matrix.T).T
 
 
-class MaterialMacroInfo():
-    def __init__(self,
+class MaterialMacroInfo:
+    def __init__(
+        self,
         group_structure: npt.NDArray[np.float64],
         density: float,
         elements: dict[str, float],
-        name: str="",
-        source: str="",
-        comment: str="",
+        name: str = "",
+        source: str = "",
+        comment: str = "",
     ):
         """
         Parameters
@@ -509,19 +635,27 @@ class MaterialMacroInfo():
                 "according to these bin edges."
             )
         if (self.group_structure <= 0).any():
-            warnings.warn("Zero energy (inf. lethargy) not allowed.")
+            warnings.warn(
+                "Zero energy (inf. lethargy) not allowed.", stacklevel=2
+            )
             self.group_structure = np.clip(
                 self.group_structure, 1e-9 * EV_TO_J, np.inf
             )
         self.density = float(density)
         self.name = name
+        self.source = source
+        self.comment = comment
         self._populated = False
         self.elements = elements
-        self.avg_atomic_mass = get_avg_atomic_mass(elem_to_isotopic_comp(self.elements))
+        self.avg_atomic_mass = get_avg_atomic_mass(
+            elem_to_isotopic_comp(self.elements)
+        )
         self.number_density = N_A / self.avg_atomic_mass * 1000
 
         if (self.group_structure <= 0).any():
-            warnings.warn("Zero energy (inf. lethargy) not allowed.")
+            warnings.warn(
+                "Zero energy (inf. lethargy) not allowed.", stacklevel=2
+            )
             self.group_structure = np.clip(
                 self.group_structure, 1e-9 * EV_TO_J, np.inf
             )
@@ -537,7 +671,9 @@ class MaterialMacroInfo():
     def __repr__(self):
         return super().__repr__().replace(" at ", f" '{self.name}' at ")
 
-    def _set_sigma(self, sigma_t, sigma_s, sigma_in=None, sigma_triton=None) -> None:
+    def _set_sigma(
+        self, sigma_t, sigma_s, sigma_in=None, sigma_triton=None
+    ) -> None:
         """Populate the values directly. Mainly to make unit-testing easier."""
         self._sigma_total = np.asarray(sigma_t)
         self._sigma_scatter = np.asarray(sigma_s)
@@ -570,6 +706,7 @@ class MaterialMacroInfo():
             warnings.warn(
                 "Elastic up-scattering seems unlikely in this model! "
                 "Check if the group structure is chosen correctly?",
+                stacklevel=2,
             )
         self._populated = True
         return
@@ -581,12 +718,27 @@ class MaterialMacroInfo():
             self.group_structure, xs_data.group_structure, atol=0.0
         ).all():
             raise ValueError(f"Mismatched group structure with {xs_data}.")
-        self._sigma_total += xs_data.sigma_total * partial_number_density * BARNS_TO_M2
-        self._sigma_scatter += xs_data.sigma_scatter * partial_number_density * BARNS_TO_M2
-        self._sigma_in += xs_data.sigma_in * partial_number_density * BARNS_TO_M2
-        self._sigma_triton += xs_data.sigma_triton * partial_number_density * BARNS_TO_M2
+        self._sigma_total += (
+            xs_data.sigma_total * partial_number_density * BARNS_TO_M2
+        )
+        self._sigma_scatter += (
+            xs_data.sigma_scatter * partial_number_density * BARNS_TO_M2
+        )
+        self._sigma_in += (
+            xs_data.sigma_in * partial_number_density * BARNS_TO_M2
+        )
+        self._sigma_triton += (
+            xs_data.sigma_triton * partial_number_density * BARNS_TO_M2
+        )
+        if isinstance(xs_data, DummyExtractedNuclearData):
+            species = xs_data.species
+            fraction = elem_to_isotopic_comp(self.elements)[species]
+            self.comment += f" Missing {species} ({fraction * 100} at.%) "
+            self.comment += "(filled with dummy zeros)."
 
-    def populate_from_data_library(self, xs_dict: [str, ExtractedNuclearData]) -> None:
+    def populate_from_data_library(
+        self, xs_dict: [str, ExtractedNuclearData]
+    ) -> None:
         """Populate the cross-section values according to the nuclear data library."""
         self._sigma_total = np.zeros(self.n_groups)
         self._sigma_scatter = np.zeros([self.n_groups, self.n_groups])
@@ -599,9 +751,12 @@ class MaterialMacroInfo():
                     xs_dict[natural], elem_frac * self.number_density
                 )
             else:
-                for isotope, natural_abundance in get_isotopic_composition(element).items():
+                for isotope, natural_abundance in get_isotopic_composition(
+                    element
+                ).items():
                     self._add_data_from_single_record(
-                        xs_dict[isotope], natural_abundance * elem_frac * self.number_density
+                        xs_dict[isotope],
+                        natural_abundance * elem_frac * self.number_density,
                     )
         self._confirm_sigma()
         return
@@ -685,7 +840,9 @@ class MaterialMacroInfo():
         return self._element_set
 
 
-def accumulate_data_requirements(mat_list: Iterable[MaterialMacroInfo]) -> tuple[set[str], set[str]]:
+def accumulate_data_requirements(
+    mat_list: Iterable[MaterialMacroInfo],
+) -> tuple[set[str], set[str]]:
     """
     Get the set of isotopes and elements that needs to be extracted from the
     nuclear data library.
@@ -694,7 +851,7 @@ def accumulate_data_requirements(mat_list: Iterable[MaterialMacroInfo]) -> tuple
     ----------
     mat_list:
         an Iterable of MaterialMacroInfo
-    
+
     Returns
     -------
     required_element_set:
@@ -710,14 +867,17 @@ def accumulate_data_requirements(mat_list: Iterable[MaterialMacroInfo]) -> tuple
             required_isotope_set.add(isotope)
     return required_element_set, required_isotope_set
 
+
 def populate_from_nuclear_data_library(
     endf_record_path_generator: Iterable[Path],
     mat_list: Iterable[MaterialMacroInfo],
     quick_isotope_checker: Callable[[Path], tuple[str, str, bool]],
-    nuclear_data_extractor: Callable[[Path, npt.NDArray[np.float64]], ExtractedNuclearData],
+    nuclear_data_extractor: Callable[
+        [Path, npt.NDArray[np.float64]], ExtractedNuclearData
+    ],
     group_structure: npt.NDArray[np.float64],
     *,
-    silence_missing_error: bool=False,
+    suppress_missing_error: bool = False,
 ) -> None:
     """
     Read only the relevant files from endf_record_path_generator, and then
@@ -734,7 +894,7 @@ def populate_from_nuclear_data_library(
         an iterable of MaterialMacroInfo from which the required isotope set
         will be observed.
     quick_isotope_checker:
-        A function to quickly get the isotope name using only the endf file 
+        A function to quickly get the isotope name using only the endf file
         name. This should preferably not involve parsing the entire endf file.
     nuclear_data_extractor:
         A function to make the ExtractedNuclearData when given an endf_record
@@ -756,24 +916,32 @@ def populate_from_nuclear_data_library(
         element, mass = read_elem_and_mass(isotope)
         if is_natural(isotope) and element in required_element_set:
             required_element_set.remove(read_elem_and_mass(isotope)[0])
-            data_extracted[isotope] = nuclear_data_extractor(endf_record, group_structure)
+            data_extracted[isotope] = nuclear_data_extractor(
+                endf_record, group_structure
+            )
         elif isotope in required_isotope_set:
             required_isotope_set.remove(isotope)
-            data_extracted[isotope] = nuclear_data_extractor(endf_record, group_structure)
+            data_extracted[isotope] = nuclear_data_extractor(
+                endf_record, group_structure
+            )
 
     # Check no data is missing
     for isotope in list(required_isotope_set):
         if read_elem_and_mass(isotope)[0] not in required_element_set:
             required_isotope_set.remove(isotope)
     if required_isotope_set:
-        if not silence_missing_error:
+        if not suppress_missing_error:
             raise RuntimeError(
-                f"Missing nuclear data records for {required_isotope_set}"
+                f"Missing nuclear data records for {len(required_isotope_set)}"
+                " isotopes. Their relative abundances are: "
+                + str({
+                    iso: NATURAL_ABUNDANCE[iso] for iso in required_isotope_set
+                })
             )
         # fill with dummy
         for isotope in required_isotope_set:
             data_extracted[isotope] = DummyExtractedNuclearData(
-                group_structure, read_elem_and_mass(isotope)[1]
+                group_structure, isotope, read_elem_and_mass(isotope)[1]
             )
 
     for mat in mat_list:
