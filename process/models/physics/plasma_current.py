@@ -4,6 +4,7 @@ from enum import IntEnum
 import numpy as np
 
 from process.core import constants
+from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     physics_variables,
@@ -112,13 +113,13 @@ class PlasmaCurrent:
 
             # Peng analytical fit
             if model == PlasmaCurrentModel.PENG_ANALYTIC_FIT:
-                fq = self.current.calculate_current_coefficient_peng(
+                fq = self.calculate_current_coefficient_peng(
                     eps, len_plasma_poloidal, rminor
                 )
 
             # Peng scaling for double null divertor; TARTs [STAR Code]
             elif model == PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
-                plasma_current = 1.0e6 * self.current.calculate_plasma_current_peng(
+                plasma_current = 1.0e6 * self.calculate_plasma_current_peng(
                     q95,
                     aspect_ratio,
                     eps,
@@ -194,6 +195,192 @@ class PlasmaCurrent:
             )
 
         return plasma_current
+
+    def calculate_all_plasma_current_models(
+        self,
+        alphaj: float,
+        alphap: float,
+        b_plasma_toroidal_on_axis: float,
+        eps: float,
+        kappa: float,
+        kappa95: float,
+        pres_plasma_on_axis: float,
+        len_plasma_poloidal: float,
+        q95: float,
+        rmajor: float,
+        rminor: float,
+        triang: float,
+        triang95: float,
+    ) -> dict[str, float]:
+        """Calculate the plasma current for all models.
+
+        This function calculates the plasma current for all models and returns a dictionary of the results.
+
+        Parameters
+        ----------
+        alphaj :
+            current profile index
+        alphap :
+            pressure profile index
+        b_plasma_toroidal_on_axis :
+            toroidal field on axis (T)
+        eps :
+            inverse aspect ratio
+        kappa :
+            plasma elongation
+        kappa95 :
+            plasma elongation at 95% surface
+        pres_plasma_on_axis :
+            central plasma pressure (Pa)
+        len_plasma_poloidal :
+            plasma perimeter length (m)
+        q95 :
+            plasma safety factor at 95% flux
+        rmajor :
+            major radius (m)
+        rminor :
+            minor radius (m)
+        triang :
+            plasma triangularity
+        triang95 :
+            plasma triangularity at 95% surface
+        Returns
+        -------
+        dict[str, float]
+            Dictionary containing the plasma current for each model.
+        """
+        results = {}
+        for model in PlasmaCurrentModel:
+            physics_variables.i_plasma_current = model.value
+            results[model.name] = self.calculate_plasma_current(
+                alphaj=alphaj,
+                alphap=alphap,
+                b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
+                eps=eps,
+                i_plasma_current=model.value,
+                kappa=kappa,
+                kappa95=kappa95,
+                pres_plasma_on_axis=pres_plasma_on_axis,
+                len_plasma_poloidal=len_plasma_poloidal,
+                q95=q95,
+                rmajor=rmajor,
+                rminor=rminor,
+                triang=triang,
+                triang95=triang95,
+            )
+        return results
+
+    def output_plasma_current_models(self) -> None:
+        """Output the plasma current for all models.
+
+        This function outputs the plasma current for all models to the output file.
+
+        Parameters
+        ----------
+        plasma_currents :
+            Dictionary containing the plasma current for each model.
+        """
+        plasma_currents = self.calculate_all_plasma_current_models(
+            alphaj=physics_variables.alphaj,
+            alphap=physics_variables.alphap,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+            eps=physics_variables.eps,
+            kappa=physics_variables.kappa,
+            kappa95=physics_variables.kappa95,
+            pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
+            len_plasma_poloidal=physics_variables.len_plasma_poloidal,
+            q95=physics_variables.q95,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            triang=physics_variables.triang,
+            triang95=physics_variables.triang95,
+        )
+
+        physics_variables.c_plasma_peng_analytic = plasma_currents.get(
+            "PENG_ANALYTIC_FIT"
+        )
+        physics_variables.c_plasma_peng_double_null = plasma_currents.get(
+            "PENG_DIVERTOR_SCALING"
+        )
+        physics_variables.c_plasma_cyclindrical = plasma_currents.get("ITER_SCALING")
+        physics_variables.c_plasma_ipdg89 = plasma_currents.get("IPDG89_SCALING")
+        physics_variables.c_plasma_todd_empirical_i = plasma_currents.get(
+            "TODD_EMPIRICAL_SCALING_I"
+        )
+        physics_variables.c_plasma_todd_empirical_ii = plasma_currents.get(
+            "TODD_EMPIRICAL_SCALING_II"
+        )
+        physics_variables.c_plasma_connor_hastie = plasma_currents.get(
+            "CONNOR_HASTIE_MODEL"
+        )
+        physics_variables.c_plasma_sauter = plasma_currents.get("SAUTER_SCALING")
+        physics_variables.c_plasma_fiesta_st = plasma_currents.get("FIESTA_ST_SCALING")
+
+        po.osubhd(self.outfile, "Plasma Currents using different models :")
+
+        po.ovarre(
+            self.outfile,
+            "Peng Analytic Fit",
+            "(c_plasma_peng_analytic)",
+            physics_variables.c_plasma_peng_analytic,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Peng Divertor Scaling",
+            "(c_plasma_peng_double_null)",
+            physics_variables.c_plasma_peng_double_null,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "ITER Scaling",
+            "(c_plasma_cyclindrical)",
+            physics_variables.c_plasma_cyclindrical,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "IPDG89 Scaling",
+            "(c_plasma_ipdg89)",
+            physics_variables.c_plasma_ipdg89,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Todd Empirical Scaling I",
+            "(c_plasma_todd_empirical_i)",
+            physics_variables.c_plasma_todd_empirical_i,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Todd Empirical Scaling II",
+            "(c_plasma_todd_empirical_ii)",
+            physics_variables.c_plasma_todd_empirical_ii,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Connor Hastie Model",
+            "(c_plasma_connor_hastie)",
+            physics_variables.c_plasma_connor_hastie,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Sauter Scaling",
+            "(c_plasma_sauter)",
+            physics_variables.c_plasma_sauter,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fiesta ST Scaling",
+            "(c_plasma_fiesta_st)",
+            physics_variables.c_plasma_fiesta_st,
+            "OP ",
+        )
 
     @staticmethod
     def calculate_cyclindrical_plasma_current(

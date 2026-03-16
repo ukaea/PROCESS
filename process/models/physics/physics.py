@@ -1961,10 +1961,12 @@ class Physics:
                     "OP ",
                 )
 
+                self.current.output_plasma_current_models()
+
                 if physics_variables.i_alphaj == 1:
                     po.ovarrf(
                         self.outfile,
-                        "Current density profile factor",
+                        "\nCurrent density profile factor",
                         "(alphaj)",
                         physics_variables.alphaj,
                         "OP ",
