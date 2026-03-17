@@ -644,6 +644,15 @@ INPUT_VARIABLES = {
     "f_volflow_vac_pumps_impedance": InputVariable("vacuum", float, range=(1e-06, 1.0)),
     "volflow_vac_pumps_max": InputVariable("vacuum", float, range=(1e-06, 1000.0)),
     "molflow_vac_pumps": InputVariable("vacuum", float, range=(0.0, 1e30)),
+    "f_plasma_particles_lcfs_recycled": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
+    "eta_plasma_fuelling": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
+    "molflow_plasma_fuelling_vv_injected": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1e24)
+    ),
     "pflux_plant_floor_electric": InputVariable(
         "heat_transport", float, range=(0.0, 1000.0)
     ),
