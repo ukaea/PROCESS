@@ -1864,7 +1864,7 @@ def constraint_equation_93(constraint_registration):
     numerator = (
         data_structure.physics_variables.eta_plasma_fuelling
         * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
-        - data_structure.physics_variables.fusrat_total
+        - data_structure.physics_variables.fusrat_dt_total
     ) - (
         (
             data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
@@ -1889,7 +1889,7 @@ def constraint_equation_94(constraint_registration):
     numerator = (
         data_structure.physics_variables.eta_plasma_fuelling
         * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
-        - data_structure.physics_variables.fusrat_total
+        - data_structure.physics_variables.fusrat_dt_total
     ) - (
         (
             data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
@@ -1912,7 +1912,7 @@ def constraint_equation_95(constraint_registration):
     """
 
     # Alpha particle balance
-    numerator = data_structure.physics_variables.fusrat_total - (
+    numerator = data_structure.physics_variables.fusrat_dt_total - (
         data_structure.physics_variables.nd_plasma_alphas_vol_avg
         * data_structure.physics_variables.vol_plasma
     ) / (

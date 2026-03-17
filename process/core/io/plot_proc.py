@@ -11137,9 +11137,11 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # ============================================================================
 
     textstr_dt = (
-        f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
-        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW                     \n"
-        f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW\n"
+        f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.4f} MW\n"
+        f"Total fusion rate: {mfile.get('fusrat_dt_total', scan=scan):.4e} reactions/s\n"
+        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.4f} MW                              \n"
+        f"Plasma fusion rate: {mfile.get('fusrat_plasma_dt', scan=scan):.4e} reactions/s\n"
+        f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.4f} MW"
     )
 
     axis.text(
@@ -11159,7 +11161,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     )
 
     axis.text(
-        0.24,
+        0.275,
         0.8,
         "$\\text{D - T}$",
         fontsize=20,
