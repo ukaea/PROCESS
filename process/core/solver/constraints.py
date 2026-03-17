@@ -1855,7 +1855,7 @@ def constraint_equation_92(constraint_registration):
     )
 
 
-@ConstraintManager.register_constraint(93, "particles/s", "<=")
+@ConstraintManager.register_constraint(93, "particles/s", "=")
 def constraint_equation_93(constraint_registration):
     """
     Tritium particle balance
@@ -1880,10 +1880,10 @@ def constraint_equation_93(constraint_registration):
         )
     )
 
-    return leq(numerator, 1e10, constraint_registration)
+    return eq(numerator / 1e20, 1e-8, constraint_registration)
 
 
-@ConstraintManager.register_constraint(94, "particles/s", "<=")
+@ConstraintManager.register_constraint(94, "particles/s", "=")
 def constraint_equation_94(constraint_registration):
     """
     Deuterium particle balance
@@ -1905,10 +1905,10 @@ def constraint_equation_94(constraint_registration):
         )
     )
 
-    return leq(numerator, 1e10, constraint_registration)
+    return eq(numerator / 1e20, 1e-8, constraint_registration)
 
 
-@ConstraintManager.register_constraint(95, "particles/s", "<=")
+@ConstraintManager.register_constraint(95, "particles/s", "=")
 def constraint_equation_95(constraint_registration):
     """
     Alpha particle balance
@@ -1918,9 +1918,12 @@ def constraint_equation_95(constraint_registration):
     numerator = data_structure.physics_variables.fusrat_total - (
         data_structure.physics_variables.nd_plasma_alphas_vol_avg
         * data_structure.physics_variables.vol_plasma
-    ) / (data_structure.physics_variables.t_alpha_confinement)
+    ) / (
+        (data_structure.physics_variables.t_energy_confinement * 4.0)
+        / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
+    )
 
-    return leq(numerator, 1e10, constraint_registration)
+    return eq(numerator / 1e20, 1e-8, constraint_registration)
 
 
 def constraint_eqns(m: int, ieqn: int):
