@@ -881,6 +881,14 @@ class PhysicsData:
     molflow_plasma_fuelling_required: float = 0.0
     """plasma fuelling rate (nucleus-pairs/s)"""
 
+f_plasma_particles_lcfs_recycled: float = None
+"""fraction of plasma particles that are recycled at the LCFS. Recycling coefficent (R)"""
+
+eta_plasma_fuelling: float = None
+"""fuelling efficiency (fraction of fuel particles injected that become confined in the plasma)"""
+
+molflow_plasma_fuelling_vv_injected: float = None
+"""plasma fuelling rate into the vacuum vessel (nucleus-pairs/s)"""
     tauratio: float = 1.0
     """tauratio /1.0/ : ratio of He and pellet particle confinement times"""
 
