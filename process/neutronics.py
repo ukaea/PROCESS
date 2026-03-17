@@ -1029,41 +1029,6 @@ class NeutronFluxProfile:
         )
 
     @summarize_values
-    def groupwise_neutron_flux_in_layer(
-        self, n: int, num_layer: int, x: float | npt.NDArray
-    ) -> float | npt.NDArray:
-        """
-        Neutron flux[m^-2 s^-1] of the n-th group in the specified layer,
-        at location x [m].
-
-        Parameters
-        ----------
-        n:
-            The index of the neutron group whose flux is being evaluated.
-            n <= n_groups - 1.
-            Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
-        num_layer:
-            The index of the layer that we want to get the neutron flux for.
-        x:
-            The position where the neutron flux has to be evaluated.
-
-        Returns
-        -------
-        flux:
-            Neutron flux at x meter from the first wall.
-        """
-        if num_layer == self.n_layers:
-            return self.groupwise_neutron_flux_in_layer(
-                n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
-            )
-        trig_funcs = []
-        for g in range(len(self.coefficients[num_layer, n])):
-            c_val, s_val = self._groupwise_cs_values_in_layer(g, num_layer, x)
-            trig_funcs.append(self.coefficients[num_layer, n].c[g] * c_val)
-            trig_funcs.append(self.coefficients[num_layer, n].s[g] * s_val)
-        return np.sum(trig_funcs, axis=0)
-
-    @summarize_values
     def groupwise_neutron_flux_at(
         self, n: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
@@ -1096,38 +1061,36 @@ class NeutronFluxProfile:
         return out_flux
 
     @summarize_values
-    def groupwise_neutron_heating_in_layer(
-        self, n: int, num_layer: int, x: float | npt.NDArray
+    def groupwise_neutron_current_at(
+        self, n: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
         """
-        Calculate volumetric heating (unit: [W m^-3]) in the specified group
-        and layer.
-
-        We do not recommend manually integrating this curve by sampling points
-        in [self.interface_x[n], self.interface_x[n+1]] to get the total amount
-        of heating across this entire layer, per unit area. Instead, use
-        groupwise_integrated_heating_in_layer/ integrated_heating_in_layer,
-        which is faster and more accurate.
+        Neutron current [m^-2 s^-1]. Neutron current is assumed to be
+        unperturbed once it leaves the final layer.
 
         Parameters
         ----------
         n:
             Neutron group index. n <= n_groups - 1.
-            Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
-        num_layer:
-            The index of the layer that we want to get the neutron heating for.
+            Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
         x:
-            The depth where we want the neutron heating [m].
-
-        Returns
-        -------
-        :
-            The neutron heating in that specific layer at position x, due to
-            group n's neutrons.
+            The depth where we want the neutron current [m]. Neutron current at
+            infinity is assumed to be the same as the neutron flux at the
+            nearest layer-void interface; this is achieved by clipping all out-
+            of-bounds x back to the the nearest interface_x.
         """
-        return self.groupwise_linear_heating_density_in_layer(
-            n, num_layer
-        ) * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+        if np.isscalar(x):
+            return self.groupwise_neutron_current_at(n, [x])[0]
+        x = np.asarray(x)
+
+        current = np.zeros_like(x, dtype=float)
+        for num_layer in range(self.n_layers + 1):
+            in_layer = self._check_if_in_layer(x, num_layer)
+            if in_layer.any():
+                current[in_layer] = self.groupwise_neutron_current_in_layer(
+                    n, num_layer, x[in_layer]
+                )
+        return current
 
     @summarize_values
     def groupwise_neutron_heating_at(
@@ -1166,6 +1129,41 @@ class NeutronFluxProfile:
         return out_heat
 
     @summarize_values
+    def groupwise_neutron_flux_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Neutron flux[m^-2 s^-1] of the n-th group in the specified layer,
+        at location x [m].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose flux is being evaluated.
+            n <= n_groups - 1.
+            Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron flux for.
+        x:
+            The position where the neutron flux has to be evaluated.
+
+        Returns
+        -------
+        flux:
+            Neutron flux at x meter from the first wall.
+        """
+        if num_layer == self.n_layers:
+            return self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers - 1, np.sign(x) * self.layer_x[-1]
+            )
+        trig_funcs = []
+        for g in range(len(self.coefficients[num_layer, n])):
+            c_val, s_val = self._groupwise_cs_values_in_layer(g, num_layer, x)
+            trig_funcs.append(self.coefficients[num_layer, n].c[g] * c_val)
+            trig_funcs.append(self.coefficients[num_layer, n].s[g] * s_val)
+        return np.sum(trig_funcs, axis=0)
+
+    @summarize_values
     def groupwise_neutron_current_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
@@ -1201,36 +1199,73 @@ class NeutronFluxProfile:
         )
 
     @summarize_values
-    def groupwise_neutron_current_at(
-        self, n: int, x: float | npt.NDArray
+    def groupwise_neutron_heating_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
         """
-        Neutron current [m^-2 s^-1]. Neutron current is assumed to be
-        unperturbed once it leaves the final layer.
+        Calculate volumetric heating (unit: [W m^-3]) in the specified group
+        and layer.
+
+        We do not recommend manually integrating this curve by sampling points
+        in [self.interface_x[n], self.interface_x[n+1]] to get the total amount
+        of heating across this entire layer, per unit area. Instead, use
+        groupwise_integrated_heating_in_layer/ integrated_heating_in_layer,
+        which is faster and more accurate.
 
         Parameters
         ----------
         n:
             Neutron group index. n <= n_groups - 1.
-            Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
+            Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron heating for.
         x:
-            The depth where we want the neutron current [m]. Neutron current at
-            infinity is assumed to be the same as the neutron flux at the
-            nearest layer-void interface; this is achieved by clipping all out-
-            of-bounds x back to the the nearest interface_x.
-        """
-        if np.isscalar(x):
-            return self.groupwise_neutron_current_at(n, [x])[0]
-        x = np.asarray(x)
+            The depth where we want the neutron heating [m].
 
-        current = np.zeros_like(x, dtype=float)
-        for num_layer in range(self.n_layers + 1):
-            in_layer = self._check_if_in_layer(x, num_layer)
-            if in_layer.any():
-                current[in_layer] = self.groupwise_neutron_current_in_layer(
-                    n, num_layer, x[in_layer]
-                )
-        return current
+        Returns
+        -------
+        :
+            The neutron heating in that specific layer at position x, due to
+            group n's neutrons.
+        """
+        return self.groupwise_linear_heating_density_in_layer(
+            n, num_layer
+        ) * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+    
+    # scalar values (one such float per neutron group, and per layer.)
+    @summarize_values
+    def groupwise_integrated_flux_in_layer(
+        self, n: int, num_layer: int
+    ) -> float:
+        """
+        Calculate the integrated flux[m^-1 s^-1], which can be mulitplied to any
+        macroscopic cross-section [m^-1] to get the reaction rate [s^-1] in
+        any layer specified.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that needs to be solved. n <= n_groups - 1.
+            Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the integrated flux for.
+        """
+        if num_layer == self.n_layers:
+            return np.nan
+        integrals = []
+        # set integration limits
+        x_start = self.layer_x[num_layer - 1]
+        if num_layer == 0:
+            x_start = 0.0
+        x_end = self.layer_x[num_layer]
+
+        for g in range(len(self.coefficients[num_layer, n])):
+            c_int, s_int = self._groupwise_cs_definite_integral_in_layer(
+                g, num_layer, x_start, x_end
+            )
+            integrals.append(self.coefficients[num_layer, n].c[g] * c_int)
+            integrals.append(self.coefficients[num_layer, n].s[g] * s_int)
+        return np.sum(integrals, axis=0)
 
     @summarize_values
     def groupwise_neutron_current_through_interface(
@@ -1289,41 +1324,6 @@ class NeutronFluxProfile:
         return self.groupwise_neutron_current_through_interface(
             n, self.n_layers
         )
-
-    # scalar values (one such float per neutron group, and per layer.)
-    @summarize_values
-    def groupwise_integrated_flux_in_layer(
-        self, n: int, num_layer: int
-    ) -> float:
-        """
-        Calculate the integrated flux[m^-1 s^-1], which can be mulitplied to any
-        macroscopic cross-section [m^-1] to get the reaction rate [s^-1] in
-        any layer specified.
-
-        Parameters
-        ----------
-        n:
-            The index of the neutron group that needs to be solved. n <= n_groups - 1.
-            Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
-        num_layer:
-            The index of the layer that we want to get the integrated flux for.
-        """
-        if num_layer == self.n_layers:
-            return np.nan
-        integrals = []
-        # set integration limits
-        x_start = self.layer_x[num_layer - 1]
-        if num_layer == 0:
-            x_start = 0.0
-        x_end = self.layer_x[num_layer]
-
-        for g in range(len(self.coefficients[num_layer, n])):
-            c_int, s_int = self._groupwise_cs_definite_integral_in_layer(
-                g, num_layer, x_start, x_end
-            )
-            integrals.append(self.coefficients[num_layer, n].c[g] * c_int)
-            integrals.append(self.coefficients[num_layer, n].s[g] * s_int)
-        return np.sum(integrals, axis=0)
 
     @summarize_values
     def groupwise_integrated_heating_in_layer(
