@@ -1855,10 +1855,10 @@ def constraint_equation_92(constraint_registration):
     )
 
 
-@ConstraintManager.register_constraint(93, "particles/s", "=")
+@ConstraintManager.register_constraint(93, "particles/s", "<=")
 def constraint_equation_93(constraint_registration):
     """
-    Particle balance
+    Tritium particle balance
     """
     # pscaling: total transport power per volume (MW/m3)
     # NEED TO ADD PROPER FUSION RATES FOR EACH REACTION
@@ -1880,13 +1880,47 @@ def constraint_equation_93(constraint_registration):
         )
     )
 
+    return leq(numerator, 1e10, constraint_registration)
+
+
+@ConstraintManager.register_constraint(94, "particles/s", "<=")
+def constraint_equation_94(constraint_registration):
+    """
+    Deuterium particle balance
+    """
+
+    numerator = (
+        data_structure.physics_variables.eta_plasma_fuelling
+        * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
+        - data_structure.physics_variables.fusrat_total
+    ) - (
+        (
+            data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
+            * data_structure.physics_variables.vol_plasma
+            * data_structure.physics_variables.f_plasma_fuel_deuterium
+        )
+        / (
+            data_structure.physics_variables.t_energy_confinement
+            / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
+        )
+    )
+
+    return leq(numerator, 1e10, constraint_registration)
+
+
+@ConstraintManager.register_constraint(95, "particles/s", "<=")
+def constraint_equation_95(constraint_registration):
+    """
+    Alpha particle balance
+    """
+
     # Alpha particle balance
-    denominator = data_structure.physics_variables.fusrat_total - (
+    numerator = data_structure.physics_variables.fusrat_total - (
         data_structure.physics_variables.nd_plasma_alphas_vol_avg
         * data_structure.physics_variables.vol_plasma
     ) / (data_structure.physics_variables.t_alpha_confinement)
 
-    return eq(numerator, denominator, constraint_registration)
+    return leq(numerator, 1e10, constraint_registration)
 
 
 def constraint_eqns(m: int, ieqn: int):
