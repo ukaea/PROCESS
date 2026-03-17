@@ -11,10 +11,7 @@ import numpy as np
 from numpy import typing as npt
 from scipy.constants import Avogadro
 
-try:
-    from process.exceptions import ProcessValidationError
-except ImportError:
-    ProcessValidationError = ValueError
+from process.exceptions import ProcessValidationError
 
 BARNS_TO_M2 = 1e-28
 N_A = Avogadro
@@ -935,7 +932,11 @@ def populate_from_nuclear_data_library(
                 f"Missing nuclear data records for {len(required_isotope_set)}"
                 " isotopes. Their relative abundances are: "
                 + str({
-                    iso: NATURAL_ABUNDANCE[iso] for iso in required_isotope_set
+                    iso: NATURAL_ABUNDANCE[iso]
+                    for iso in sorted(
+                        required_isotope_set,
+                        key=lambda i: read_elem_and_mass(i)[1].zfill(4),
+                    )
                 })
             )
         # fill with dummy
