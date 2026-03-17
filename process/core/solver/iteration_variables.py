@@ -300,7 +300,7 @@ ITERATION_VARIABLES = {
     179: IterationVariable(
         "molflow_plasma_fuelling_vv_injected",
         data_structure.physics_variables,
-        0.0,
+        1.0,
         1e24,
     ),
 }
