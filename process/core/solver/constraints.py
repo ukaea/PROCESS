@@ -1852,6 +1852,42 @@ def constraint_equation_92(constraint_registration):
     )
 
 
+@ConstraintManager.register_constraint(93, "particles/s", "=")
+def constraint_equation_93():
+    """
+    Particle balance
+    """
+    # pscaling: total transport power per volume (MW/m3)
+    # NEED TO ADD PROPER FUSION RATES FOR EACH REACTION
+
+    # Numerator shall be the tritium particle balance
+    numerator = (
+        data_structure.physics_variables.eta_plasma_fuelling
+        * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
+        - data_structure.physics_variables.fusrat_total
+    ) - (
+        (
+            data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
+            * data_structure.physics_variables.vol_plasma
+            * data_structure.physics_variables.f_plasma_fuel_tritium
+        )
+        / (
+            data_structure.physics_variables.t_energy_confinement
+            / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
+        )
+    )
+
+    # Alpha particle balance
+    denominator = data_structure.physics_variables.fusrat_total - (
+        data_structure.physics_variables.nd_plasma_alphas_vol_avg
+        * data_structure.physics_variables.vol_plasma
+    ) / (data_structure.physics_variables.t_alpha_confinement)
+
+    cc = 1.0 - numerator / numerator
+
+    return ConstraintResult(cc, denominator * (1.0 - cc), denominator * cc)
+
+
 def constraint_eqns(m: int, ieqn: int):
     """Evaluates the constraints given the current state of PROCESS.
 
