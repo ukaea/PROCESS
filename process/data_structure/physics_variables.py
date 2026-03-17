@@ -366,6 +366,12 @@ class PhysicsData:
     fusrat_total: float = 0.0
     """fusion reaction rate, from beams and plasma (reactions/sec)"""
 
+fusrat_plasma_dt: float = None
+""" D-T fusion reaction rate in plasma, (reactions/sec)"""
+
+fusrat_dt_total: float = None
+""" Total D-T fusion reaction rate from beams and plasma, (reactions/sec)"""
+
     fusrat_plasma_dt_profile: list[float] = field(default_factory=list)
     """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
 

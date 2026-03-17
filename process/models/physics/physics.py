@@ -631,6 +631,13 @@ class Physics(Model):
         self.data.physics.fusrat_total = (
             self.data.physics.fusden_total * self.data.physics.vol_plasma
         )
+        physics_variables.fusrat_plasma_dt = (physics_variables.p_plasma_dt_mw * 1e6) / (
+            constants.D_T_ENERGY
+        )
+
+        physics_variables.fusrat_dt_total = (
+            physics_variables.p_dt_total_mw * 1e6 / (constants.D_T_ENERGY)
+        )
 
         # Create some derived values and add beam contribution to fusion power
         (
@@ -1774,6 +1781,20 @@ class Physics(Model):
             "Fusion rate: total (reactions/sec)",
             "(fusrat_total)",
             self.data.physics.fusrat_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-T Fusion rate: total (reactions/sec)",
+            "(fusrat_dt_total)",
+            physics_variables.fusrat_dt_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-T Fusion rate: plasma (reactions/sec)",
+            "(fusrat_plasma_dt)",
+            physics_variables.fusrat_plasma_dt,
             "OP ",
         )
         po.ovarre(
