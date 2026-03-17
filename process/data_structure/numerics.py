@@ -188,6 +188,7 @@ lablcc: list[str] = None
 * (90) Lower Limit on number of stress load cycles for CS
 * (91) Checking if the design point is ECRH ignitable
 * (92) D/T/He3 ratio in fuel sums to 1
+* (93) Particle balance consistency constraint
 """
 
 ixc: list[int] = None
@@ -314,6 +315,7 @@ lablxc: list[str] = None
 * (115) NOT USED
 * (116) NOT USED
 * (117) NOT USED
+* (118) NOT USED
 * (119) temp_plasma_separatrix_kev:  separatrix temperature calculated by the Kallenbach divertor model
 * (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
 * (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
@@ -621,6 +623,7 @@ def init_numerics():
         "CS stress load cycles            ",
         "ECRH ignitability                ",
         "Fuel composition consistency     ",
+        "Particle balance consistency        ",
     ]
 
     ixc = np.array([0] * ipnvars)
