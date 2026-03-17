@@ -197,7 +197,7 @@ class FiguresOfMerit(IntEnum):
 ipnvars: int = 180
 """total number of variables available for iteration"""
 
-ipeqns: int = 93
+ipeqns: int = 95
 """number of constraint equations available"""
 
 ipnfoms: int = 19
@@ -765,7 +765,9 @@ def init_numerics():
         "CS achievable stress load cycles lower limit           ",
         "ECRH ignitability                ",  # Stellarator constraint
         "Fuel composition consistency     ",
-        "Particle balance consistency        ",
+        "Tritium particle balance consistency        ",
+        "Deuterium particle balance consistency     ",
+        "Alpha particle balance consistency     ",
     ]
 
     ixc = np.array([0] * ipnvars)
