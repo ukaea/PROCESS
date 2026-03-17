@@ -1853,7 +1853,7 @@ def constraint_equation_92(constraint_registration):
 
 
 @ConstraintManager.register_constraint(93, "particles/s", "=")
-def constraint_equation_93():
+def constraint_equation_93(constraint_registration):
     """
     Particle balance
     """
@@ -1883,9 +1883,7 @@ def constraint_equation_93():
         * data_structure.physics_variables.vol_plasma
     ) / (data_structure.physics_variables.t_alpha_confinement)
 
-    cc = 1.0 - numerator / numerator
-
-    return ConstraintResult(cc, denominator * (1.0 - cc), denominator * cc)
+    return eq(numerator, denominator, constraint_registration)
 
 
 def constraint_eqns(m: int, ieqn: int):
