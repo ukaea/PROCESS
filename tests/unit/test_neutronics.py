@@ -11,33 +11,38 @@ from process.neutronics import (
 from process.neutronics_data import DT_NEUTRON_E, EV_TO_J, MaterialMacroInfo
 
 MAX_E = DT_NEUTRON_E * 1.01
-MIN_E = 1/40 * EV_TO_J
+MIN_E = 1 / 40 * EV_TO_J
 
 
 def test_group_structure_0_energy():
     with pytest.warns():
-        mat = MaterialMacroInfo([1.0, 0.0], 1.0, {"C":1.0})
-        mat._set_sigma([1.0],[[1.0]])
+        mat = MaterialMacroInfo([1.0, 0.0], 1.0, {"C": 1.0})
+        mat._set_sigma([1.0], [[1.0]])
+
 
 def test_group_structure_too_short():
     with pytest.raises(ProcessValidationError):
-        mat = MaterialMacroInfo([1.0], 1.0, {"C":1.0})
-        mat._set_sigma([1.0],[[1.0]])
+        mat = MaterialMacroInfo([1.0], 1.0, {"C": 1.0})
+        mat._set_sigma([1.0], [[1.0]])
+
 
 def test_sigma_s_incorrect_shape():
     with pytest.raises(ProcessValidationError):
-        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C":1.0})
-        mat._set_sigma([1.0, 2.0],[1.0, 1.0])
+        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0})
+        mat._set_sigma([1.0, 2.0], [1.0, 1.0])
+
 
 def test_sigma_s_too_large():
     with pytest.raises(ProcessValidationError):
-        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C":1.0})
-        mat._set_sigma([1.0, 2.0],[[1.0, 1.0], [1.0, 1.0]])
+        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0})
+        mat._set_sigma([1.0, 2.0], [[1.0, 1.0], [1.0, 1.0]])
+
 
 def test_warn_up_elastic_scatter():
     with pytest.warns():
-        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C":1.0})
-        mat._set_sigma([1.0, 2.0],[[0.5, 0.5], [1.0, 1.0]])
+        mat = MaterialMacroInfo([1000, 10, 1.0], 1.0, {"C": 1.0})
+        mat._set_sigma([1.0, 2.0], [[0.5, 0.5], [1.0, 1.0]])
+
 
 def test_throw_index_error():
     layer_specific_const = LayerSpecificGroupwiseConstants(
@@ -160,15 +165,26 @@ def _diffusion_equation_in_layer(test_profile, n, num_layer, x):
     """
     Get the three terms in the diffusion equation (equation 5 in the paper.
     """
-    diffusion_out = test_profile.diffusion_const[num_layer, n] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
-    total_removal = test_profile.materials[num_layer].sigma_t[n] * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x)
+    diffusion_out = test_profile.diffusion_const[
+        num_layer, n
+    ] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
+    total_removal = test_profile.materials[num_layer].sigma_t[
+        n
+    ] * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x)
 
     source_in_terms = []
-    in_matrix = test_profile.materials[num_layer].sigma_s + test_profile.materials[num_layer].sigma_in
+    in_matrix = (
+        test_profile.materials[num_layer].sigma_s
+        + test_profile.materials[num_layer].sigma_in
+    )
     for g, all_sources_entering_from_g in enumerate(in_matrix[:, n]):
-        source_in_terms.append(all_sources_entering_from_g * test_profile.groupwise_neutron_flux_in_layer(g, num_layer, x))
+        source_in_terms.append(
+            all_sources_entering_from_g
+            * test_profile.groupwise_neutron_flux_in_layer(g, num_layer, x)
+        )
 
     return diffusion_out, total_removal, np.sum(source_in_terms)
+
 
 def test_same_l_in_2_groups_warns():
     dummy = np.geomspace(MAX_E, MIN_E, 3)  # dummy group structure
@@ -178,19 +194,19 @@ def test_same_l_in_2_groups_warns():
     sigma_fw_t = 1 / mfp_fw_t  # [1/m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material._set_sigma(
-        [sigma_fw_t, sigma_fw_t],
-        [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
+        [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
     )
     incoming_flux = 100.0
-    neutron_profile = NeutronFluxProfile(
-        incoming_flux, [x_fw], [fw_material]
-    )
+    neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
     with pytest.warns(UserWarning):
         neutron_profile.solve()
 
-@pytest.mark.filterwarnings("ignore:Group 0 and group 1 has the same neutron diffusion lengths")
+
+@pytest.mark.filterwarnings(
+    "ignore:Group 0 and group 1 has the same neutron diffusion lengths"
+)
 @pytest.mark.filterwarnings("error")
 @pytest.mark.xfail
 def test_same_l_in_2_groups_calculate_flux():
@@ -201,29 +217,28 @@ def test_same_l_in_2_groups_calculate_flux():
     sigma_fw_t = 1 / mfp_fw_t  # [1/m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material._set_sigma(
-        [sigma_fw_t, sigma_fw_t],
-        [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
+        [sigma_fw_t, sigma_fw_t], [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
     )
     incoming_flux = 100.0
-    neutron_profile = NeutronFluxProfile(
-        incoming_flux, [x_fw], [fw_material]
-    )
+    neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
 
     neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
-        ), 0
-        ), "Extended boundary condition check for group 0"
+        ),
+        0,
+    ), "Extended boundary condition check for group 0"
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             1, 0, neutron_profile.extended_boundary[1]
-        ), 0
-        ), "Extended boundary condition check for group 1"
+        ),
+        0,
+    ), "Extended boundary condition check for group 1"
     num_layer = 0
-    mid_point = np.mean(neutron_profile.interface_x[num_layer:num_layer+2])
+    mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
     for n in range(neutron_profile.n_groups):
         diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
             neutron_profile, n, 0, mid_point
@@ -231,7 +246,8 @@ def test_same_l_in_2_groups_calculate_flux():
         assert np.isclose(diffusion_out, total_removal - source_in), (
             "Check that the diffusion equation holds up at an arbitrary point."
         )
-        
+
+
 @pytest.mark.filterwarnings("ignore:Calculation of flux")
 def test_two_group():
     dummy = np.geomspace(MAX_E, MIN_E, 3)  # dummy group structure
@@ -240,28 +256,28 @@ def test_two_group():
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material._set_sigma(
-        [1 / mfp_fw_t, 1 / (mfp_fw_t+0.5)],
-        [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]]
+        [1 / mfp_fw_t, 1 / (mfp_fw_t + 0.5)],
+        [[sigma_fw_s, sigma_fw_s], [0.0, sigma_fw_s]],
     )
     incoming_flux = 100.0
-    neutron_profile = NeutronFluxProfile(
-        incoming_flux, [x_fw], [fw_material]
-    )
+    neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
     neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
-        ), 0
-        ), "Extended boundary condition check for group 0"
+        ),
+        0,
+    ), "Extended boundary condition check for group 0"
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             1, 0, neutron_profile.extended_boundary[1]
-        ), 0
-        ), "Extended boundary condition check for group 1"
+        ),
+        0,
+    ), "Extended boundary condition check for group 1"
     num_layer = 0
-    mid_point = np.mean(neutron_profile.interface_x[num_layer:num_layer+2])
+    mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
     for n in range(neutron_profile.n_groups):
         diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
             neutron_profile, n, 0, mid_point
@@ -279,9 +295,13 @@ def test_two_group():
         sum(neutron_profile.fluxes),
         neutron_profile.neutron_current_escaped()
         + sum(
-            sum([removal_xs[num_layer][n]
-            * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
-            for n in range(neutron_profile.n_groups)])
+            sum([
+                removal_xs[num_layer][n]
+                * neutron_profile.groupwise_integrated_flux_in_layer(
+                    n, num_layer
+                )
+                for n in range(neutron_profile.n_groups)
+            ])
             for num_layer in range(neutron_profile.n_layers)
         ),
     ), "Conservation of neutrons"
@@ -296,9 +316,9 @@ def test_three_group():
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material._set_sigma(
-        [1 / mfp_fw_t, 1 / (mfp_fw_t+0.25), 1 / (mfp_fw_t+0.5)],
+        [1 / mfp_fw_t, 1 / (mfp_fw_t + 0.25), 1 / (mfp_fw_t + 0.5)],
         [
             [sigma_fw_s, sigma_fw_s, sigma_fw_s],
             [0, sigma_fw_s, sigma_fw_s],
@@ -306,27 +326,28 @@ def test_three_group():
         ],
     )
     incoming_flux = 100.0
-    neutron_profile = NeutronFluxProfile(
-        incoming_flux, [x_fw], [fw_material]
-    )
+    neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
     neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
-        ), 0
-        ), "Extended boundary condition check for group 0"
+        ),
+        0,
+    ), "Extended boundary condition check for group 0"
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             1, 0, neutron_profile.extended_boundary[1]
-        ), 0
-        ), "Extended boundary condition check for group 1"
+        ),
+        0,
+    ), "Extended boundary condition check for group 1"
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             2, 0, neutron_profile.extended_boundary[2]
-        ), 0
-        ), "Extended boundary condition check for group 2"
+        ),
+        0,
+    ), "Extended boundary condition check for group 2"
     num_layer = 0
-    mid_point = np.mean(neutron_profile.interface_x[num_layer:num_layer+2])
+    mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
     for n in range(neutron_profile.n_groups):
         diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
             neutron_profile, n, 0, mid_point
@@ -344,9 +365,13 @@ def test_three_group():
         sum(neutron_profile.fluxes),
         neutron_profile.neutron_current_escaped()
         + sum(
-            sum([removal_xs[num_layer][n]
-            * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
-            for n in range(neutron_profile.n_groups)])
+            sum([
+                removal_xs[num_layer][n]
+                * neutron_profile.groupwise_integrated_flux_in_layer(
+                    n, num_layer
+                )
+                for n in range(neutron_profile.n_groups)
+            ])
             for num_layer in range(neutron_profile.n_layers)
         ),
     ), "Conservation of neutrons"
@@ -363,13 +388,18 @@ def test_four_group():
 
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     x_fw = 5.72 * 0.01
-    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te":1.0}, name="fw")
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material._set_sigma(
-        [1 / mfp_fw_t, 1 / (mfp_fw_t+0.25), 1 / (mfp_fw_t+0.5), 1 / (mfp_fw_t+0.75)],
         [
-            [sigma_fw_s/4, sigma_fw_s/4, sigma_fw_s, sigma_fw_s],
-            [0, sigma_fw_s/3, sigma_fw_s/3, sigma_fw_s],
-            [0, 0, sigma_fw_s/3, sigma_fw_s],
+            1 / mfp_fw_t,
+            1 / (mfp_fw_t + 0.25),
+            1 / (mfp_fw_t + 0.5),
+            1 / (mfp_fw_t + 0.75),
+        ],
+        [
+            [sigma_fw_s / 4, sigma_fw_s / 4, sigma_fw_s, sigma_fw_s],
+            [0, sigma_fw_s / 3, sigma_fw_s / 3, sigma_fw_s],
+            [0, 0, sigma_fw_s / 3, sigma_fw_s],
             [0, 0, 0, 0.3],
         ],
         # [
@@ -380,33 +410,35 @@ def test_four_group():
         # ],
     )
     incoming_flux = 100.0
-    neutron_profile = NeutronFluxProfile(
-        incoming_flux, [x_fw], [fw_material]
-    )
+    neutron_profile = NeutronFluxProfile(incoming_flux, [x_fw], [fw_material])
     neutron_profile.solve()
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             0, 0, neutron_profile.extended_boundary[0]
-        ), 0
-        ), "Extended boundary condition check for group 0"
+        ),
+        0,
+    ), "Extended boundary condition check for group 0"
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             1, 0, neutron_profile.extended_boundary[1]
-        ), 0
-        ), "Extended boundary condition check for group 1"
+        ),
+        0,
+    ), "Extended boundary condition check for group 1"
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             2, 0, neutron_profile.extended_boundary[2]
-        ), 0
-        ), "Extended boundary condition check for group 2"
+        ),
+        0,
+    ), "Extended boundary condition check for group 2"
     assert np.isclose(
         neutron_profile.groupwise_neutron_flux_in_layer(
             3, 0, neutron_profile.extended_boundary[3]
-        ), 0
-        ), "Extended boundary condition check for group 3"
+        ),
+        0,
+    ), "Extended boundary condition check for group 3"
 
     num_layer = 0
-    mid_point = np.mean(neutron_profile.interface_x[num_layer:num_layer+2])
+    mid_point = np.mean(neutron_profile.interface_x[num_layer : num_layer + 2])
     for n in range(neutron_profile.n_groups):
         diffusion_out, total_removal, source_in = _diffusion_equation_in_layer(
             neutron_profile, n, 0, mid_point
@@ -426,9 +458,13 @@ def test_four_group():
         sum(neutron_profile.fluxes),
         neutron_profile.neutron_current_escaped()
         + sum(
-            sum([removal_xs[num_layer][n]
-            * neutron_profile.groupwise_integrated_flux_in_layer(n, num_layer)
-            for n in range(neutron_profile.n_groups)])
+            sum([
+                removal_xs[num_layer][n]
+                * neutron_profile.groupwise_integrated_flux_in_layer(
+                    n, num_layer
+                )
+                for n in range(neutron_profile.n_groups)
+            ])
             for num_layer in range(neutron_profile.n_layers)
         ),
     ), "Conservation of neutrons"
