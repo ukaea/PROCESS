@@ -458,6 +458,12 @@ fusden_total: float = None
 fusrat_total: float = None
 """fusion reaction rate, from beams and plasma (reactions/sec)"""
 
+fusrat_plasma_dt: float = None
+""" D-T fusion reaction rate in plasma, (reactions/sec)"""
+
+fusrat_dt_total: float = None
+""" Total D-T fusion reaction rate from beams and plasma, (reactions/sec)"""
+
 fusrat_plasma_dt_profile: list[float] = None
 """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
 
@@ -1502,6 +1508,8 @@ def init_physics_variables():
         f_plasma_fuel_tritium, \
         fusden_total, \
         fusrat_total, \
+        fusrat_plasma_dt, \
+        fusrat_dt_total, \
         fusrat_plasma_dt_profile, \
         fusrat_plasma_dd_triton_profile, \
         fusrat_plasma_dd_helion_profile, \
@@ -1794,6 +1802,8 @@ def init_physics_variables():
     f_plasma_fuel_tritium = 0.5
     fusden_total = 0.0
     fusrat_total = 0.0
+    fusrat_plasma_dt = 0.0
+    fusrat_dt_total = 0.0
     fusrat_plasma_dt_profile = []
     fusrat_plasma_dd_triton_profile = []
     fusrat_plasma_dd_helion_profile = []
