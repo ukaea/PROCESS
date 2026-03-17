@@ -3,7 +3,7 @@ import numpy as np
 ipnvars: int = 180
 """total number of variables available for iteration"""
 
-ipeqns: int = 92
+ipeqns: int = 93
 """number of constraint equations available"""
 
 ipnfoms: int = 19
