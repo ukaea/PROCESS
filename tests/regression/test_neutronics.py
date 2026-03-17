@@ -211,6 +211,46 @@ def test_one_group_with_fission():
     ), "Correctly integrated heating in BZ"
 
 
+def test_fission_plot():
+    """Same regression test as test_one_group_with_fission
+    https://www.desmos.com/calculator/cd830add9c
+    But we also plot.
+    """
+    dummy = [MAX_E, MIN_E]
+    mfp_fw_s = 118 * 0.01  # [m]
+    mfp_fw_t = 16.65 * 0.01  # [m]
+    sigma_fw_t = 1 / mfp_fw_t  # [1/m]
+    sigma_fw_s = 1 / mfp_fw_s  # [1/m]
+    a_fw = 52
+    fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
+    fw_material.avg_atomic_mass = a_fw
+    fw_material._set_sigma([sigma_fw_t], [[sigma_fw_s]])
+
+    mfp_bz_s = 97 * 0.01  # [m]
+    mfp_bz_t = 35.8 * 0.01  # [m]
+    sigma_bz_s = 1 / mfp_bz_s  # [1/m]
+    sigma_bz_t = 1 / mfp_bz_t  # [1/m]
+    a_bz = 71
+
+    g = 1.2
+    nu_sigma_bz_f = g * (sigma_bz_t - sigma_bz_s)
+    bz_material = MaterialMacroInfo(dummy, 1.0, {"Lu": 1.0}, name="bz")
+    bz_material.avg_atomic_mass = a_bz
+    bz_material._set_sigma([sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]])
+
+    x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
+    incoming_flux = 41
+    neutron_profile = NeutronFluxProfile(
+        incoming_flux,
+        [x_fw, x_bz],
+        [fw_material, bz_material],
+    )
+    neutron_profile.plot("flux")
+    neutron_profile.plot("heating")
+    neutron_profile.plot("tritium_production")
+    neutron_profile.plot("current")
+
+
 def test_two_identical_materials():
     """
     A 2-layer model (both layers being made of material A) should have the same

@@ -36,7 +36,7 @@ from matplotlib import pyplot as plt
 from numpy import typing as npt
 
 from process.exceptions import ProcessValidationError, ProcessValueError
-from process.neutronics_data import DT_NEUTRON_E, MaterialMacroInfo
+from process.neutronics_data import DT_NEUTRON_E, N_A, MaterialMacroInfo
 
 
 def summarize_values(func):
@@ -370,13 +370,14 @@ class LayerSpecificGroupwiseConstants:
 
 
 UNIT_LOOKUP = {
+    "linear_heating_density": "J m^-1",
     "integrated_flux": "m^-1 s^-1",
     "integrated_heating": "W m^-2",
-    "linear_heating_density": "J m^-1",
-    "linear_tritium_production_density": "moles m^-1",
+    "integrated_tritium_production": "mole m^-2",
     "flux": "m^-2 s^-1",
     "current": "m^-2 s^-1",
     "heating": "W m^-3",
+    "tritium_production": "mole m^-3",
 }
 
 
@@ -1040,7 +1041,7 @@ class NeutronFluxProfile:
         ----------
         n:
             Neutron group index. n <= n_groups - 1.
-            Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
+            Therefore n=0 shows the heating for group 1, n=1 for group 2, etc.
         x:
             The depth where we want the neutron flux [m]. Neutron flux at
             infinity is assumed to be the same as the neutron flux at the
@@ -1097,8 +1098,7 @@ class NeutronFluxProfile:
         self, n: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
         """
-        Neutron heating [W m^-3] of the n-th group in the specified layer,
-        at location x [m].
+        Neutron heating [W m^-3] of the n-th group at location x [m].
 
         Parameters
         ----------
@@ -1115,6 +1115,7 @@ class NeutronFluxProfile:
         -------
         heating:
             Volumetric neutron heating due to group n's neutrons at x.
+            unit: [W m^-3]
         """
         if np.isscalar(x):
             return self.groupwise_neutron_heating_at(n, [x])[0]
@@ -1129,6 +1130,47 @@ class NeutronFluxProfile:
         return out_heat
 
     @summarize_values
+    def groupwise_tritium_production_at(
+        self, n: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Volumetric tritium production rate [mole m^-3] of the n-th group in the
+        specified layer, at location x [m].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose tritium production rate is
+            being evaluated. n <= n_groups - 1. Therefore n=0 shows the tritium
+            production rate for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the volumetric tritium
+            production rate for.
+        x:
+            The position where the volumetric tritium production rate has to
+            be evaluated.
+
+        Returns
+        -------
+        tritium_production:
+            Volumetric tritium production rate due to group n's neutrons at x.
+            unit: [mole m^-3]
+        """
+        if np.isscalar(x):
+            return self.groupwise_tritium_production_at(n, [x])[0]
+
+        tritium_out = np.zeros_like(x, dtype=float)
+        for num_layer in range(self.n_layers + 1):
+            in_layer = self._check_if_in_layer(x, num_layer)
+            if in_layer.any():
+                tritium_out[in_layer] = (
+                    self.groupwise_tritium_production_in_layer(
+                        n, num_layer, x[in_layer]
+                    )
+                )
+        return tritium_out
+
+    @summarize_values
     def groupwise_neutron_flux_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
@@ -1141,7 +1183,7 @@ class NeutronFluxProfile:
         n:
             The index of the neutron group whose flux is being evaluated.
             n <= n_groups - 1.
-            Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
+            Therefore n=0 shows the heating for group 1, n=1 for group 2, etc.
         num_layer:
             The index of the layer that we want to get the neutron flux for.
         x:
@@ -1216,7 +1258,7 @@ class NeutronFluxProfile:
         ----------
         n:
             Neutron group index. n <= n_groups - 1.
-            Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
+            Therefore n=0 shows the heating for group 1, n=1 for group 2, etc.
         num_layer:
             The index of the layer that we want to get the neutron heating for.
         x:
@@ -1231,7 +1273,50 @@ class NeutronFluxProfile:
         return self.groupwise_linear_heating_density_in_layer(
             n, num_layer
         ) * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
-    
+
+    @summarize_values
+    def groupwise_tritium_production_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Calculate volumetric tritium production rate (unit: [mole m^-3]) in
+        the specified group and layer.
+
+        We do not recommend manually integrating this curve by sampling points
+        in [self.interface_x[n], self.interface_x[n+1]] to get the total amount
+        of tritium production rate across this entire layer, per unit area.
+        Instead, use groupwise_integrated_tritium_production_in_layer/
+        integrated_tritium_production_in_layer, which is faster and
+        more accurate.
+
+        Parameters
+        ----------
+        n:
+            Neutron group index. n <= n_groups - 1. Therefore n=0 shows the
+            tritium production rate for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the tritium production
+            rate for.
+        x:
+            The depth where we want the tritium production rate [m].
+
+        Returns
+        -------
+        :
+            The tritium production rate in that specific layer at position x,
+            due to group n's neutrons. unit: [mole ^-3]
+        """
+        if num_layer == self.n_layers:
+            tritium_production_macro_xs_as_mole = 0.0
+        else:
+            tritium_production_macro_xs_as_mole = (
+                self.materials[num_layer].sigma_triton[n] / N_A
+            )
+        return (
+            tritium_production_macro_xs_as_mole
+            * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+        )
+
     # scalar values (one such float per neutron group, and per layer.)
     @summarize_values
     def groupwise_integrated_flux_in_layer(
@@ -1343,6 +1428,35 @@ class NeutronFluxProfile:
             n, num_layer
         ) * self.groupwise_integrated_flux_in_layer(n, num_layer)
 
+    @summarize_values
+    def groupwise_integrated_tritium_production_in_layer(
+        self,
+        n: int,
+        num_layer: int,
+    ) -> float:
+        """
+        The total amount of tritium produced (per unit area) due to (n,t*)
+        reactions across the entire num_layer-th layer. unit: [mole m^-2]. It should
+        yield the same result as integrating the curve tritium_production_in_layer
+        from self.interface_x[n] to self.interface_x[n+1].
+
+        Returns
+        -------
+        :
+            tritium production rate integrated across the entire layer.
+            unit: [mole m^-2]
+        """
+        if num_layer == self.n_layers:
+            tritium_production_macro_xs_as_mole = 0.0
+        else:
+            tritium_production_macro_xs_as_mole = (
+                self.materials[num_layer].sigma_triton[n] / N_A
+            )
+        return (
+            tritium_production_macro_xs_as_mole
+            * self.groupwise_integrated_flux_in_layer(n, num_layer)
+        )
+
     # Do NOT add a summarize_values decorator, as you can't add cross-sections
     # from different groups together without first multiplying by flux to get reaction rate.
     def groupwise_linear_heating_density_in_layer(
@@ -1363,7 +1477,7 @@ class NeutronFluxProfile:
         mat = self.materials[num_layer]
         non_scatter_xs = mat.sigma_t[n] - mat.sigma_s[n, :].sum()
         lost_energy = (
-            (self.group_energy[n] - self.group_energy) * mat.sigma_s[n, :]
+            (self.group_energy[n] - self.group_energy[n:]) * mat.sigma_s[n, n:]
         ).sum()
         return self.group_energy[n] * non_scatter_xs + lost_energy
 
@@ -1418,6 +1532,8 @@ class NeutronFluxProfile:
         self.solve()
         ax = ax or plt.axes()
         method_name = f"neutron_{quantity}_in_layer"
+        if quantity == "tritium_production":
+            method_name = "tritium_production_in_layer"
         total_function = getattr(self, method_name)
         unit = self.get_output_unit(total_function)
         ylabel = f"{quantity}({unit})"
