@@ -617,6 +617,12 @@ class Scan:
                 )
                 process_output.ovarre(
                     constants.MFILE,
+                    f"{name} error",
+                    f"(ineq_err{numerics.icc[i]:03d})",
+                    -constraint.residual,
+                )
+                process_output.ovarre(
+                    constants.MFILE,
                     f"{name} physical value",
                     f"(ineq_value_con{numerics.icc[i]:03d})",
                     constraint.constraint_value,
