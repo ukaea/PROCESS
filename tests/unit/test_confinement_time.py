@@ -247,3 +247,18 @@ from process.models.physics.confinement_time import PlasmaConfinementTime
 def test_confinement_time(func, args, expected):
     result = func(*args)
     assert result == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "func, args, expected",
+    [
+        (
+            PlasmaConfinementTime().calculate_double_and_triple_product,
+            (7.5e19, 12.569, 3.402116961408892),
+            (2.5515877210566689e20, 3.2070906065961275e21),
+        ),
+    ],
+)
+def test_calculate_double_and_triple_product(func, args, expected):
+    result = func(*args)
+    assert result == pytest.approx(expected)

@@ -2322,6 +2322,14 @@ class Stellarator:
             physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
+        physics_variables.ntau, physics_variables.nTtau = (
+            self.physics.confinement.calculate_double_and_triple_product(
+                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                t_energy_confinement=physics_variables.t_energy_confinement,
+                temp_plasma_electrons_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            )
+        )
+
         physics_variables.p_electron_transport_loss_mw = (
             physics_variables.pden_electron_transport_loss_mw
             * physics_variables.vol_plasma

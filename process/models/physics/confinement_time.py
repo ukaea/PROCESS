@@ -224,11 +224,11 @@ class PlasmaConfinementTime:
                     p_plasma_loss_mw - pden_plasma_core_rad_mw * vol_plasma
                 )
             # NO_RADIATION: do not adjust p_plasma_loss_mw for radiation
-        except ValueError:
+        except ValueError as e:
             raise ProcessValueError(
                 "Illegal value of i_rad_loss",
                 i_rad_loss=physics_variables.i_rad_loss,
-            ) from None
+            ) from e
 
         # Ensure heating power is positive (shouldn't be necessary)
         p_plasma_loss_mw = max(p_plasma_loss_mw, 1.0e-3)
@@ -261,11 +261,11 @@ class PlasmaConfinementTime:
 
         try:
             model = ConfinementTimeModel(i_confinement_time)
-        except ValueError:
+        except ValueError as e:
             raise ProcessValueError(
                 "Illegal value for i_confinement_time",
                 i_confinement_time=i_confinement_time,
-            ) from None
+            ) from e
 
         # ========================================================================
 
@@ -980,8 +980,8 @@ class PlasmaConfinementTime:
 
         else:
             raise ProcessValueError(
-                "Illegal value for model",
-                model=model.value,
+                "Illegal value for i_confinement_time",
+                i_confinement_time=i_confinement_time,
             )
 
         # Apply H-factor correction to chosen scaling
