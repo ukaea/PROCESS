@@ -1865,19 +1865,17 @@ def constraint_equation_93(constraint_registration):
         data_structure.physics_variables.eta_plasma_fuelling
         * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
         - data_structure.physics_variables.fusrat_dt_total
-    ) - (
-        (
-            data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
-            * data_structure.physics_variables.vol_plasma
-            * data_structure.physics_variables.f_plasma_fuel_tritium
-        )
-        / (
-            data_structure.physics_variables.t_energy_confinement
-            / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
-        )
+    )
+    denominator = (
+        data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
+        * data_structure.physics_variables.vol_plasma
+        * data_structure.physics_variables.f_plasma_fuel_tritium
+    ) / (
+        data_structure.physics_variables.t_energy_confinement
+        / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
     )
 
-    return eq(numerator / 1e20, 1e-8, constraint_registration)
+    return eq(numerator, denominator, constraint_registration)
 
 
 @ConstraintManager.register_constraint(94, "particles/s", "=")
@@ -1890,19 +1888,17 @@ def constraint_equation_94(constraint_registration):
         data_structure.physics_variables.eta_plasma_fuelling
         * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
         - data_structure.physics_variables.fusrat_dt_total
-    ) - (
-        (
-            data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
-            * data_structure.physics_variables.vol_plasma
-            * data_structure.physics_variables.f_plasma_fuel_deuterium
-        )
-        / (
-            data_structure.physics_variables.t_energy_confinement
-            / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
-        )
+    )
+    denominator = (
+        data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
+        * data_structure.physics_variables.vol_plasma
+        * data_structure.physics_variables.f_plasma_fuel_deuterium
+    ) / (
+        data_structure.physics_variables.t_energy_confinement
+        / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
     )
 
-    return eq(numerator / 1e20, 1e-8, constraint_registration)
+    return eq(numerator, denominator, constraint_registration)
 
 
 @ConstraintManager.register_constraint(95, "particles/s", "=")
@@ -1912,7 +1908,8 @@ def constraint_equation_95(constraint_registration):
     """
 
     # Alpha particle balance
-    numerator = data_structure.physics_variables.fusrat_dt_total - (
+    numerator = data_structure.physics_variables.fusrat_dt_total
+    denominator = (
         data_structure.physics_variables.nd_plasma_alphas_vol_avg
         * data_structure.physics_variables.vol_plasma
     ) / (
@@ -1920,7 +1917,7 @@ def constraint_equation_95(constraint_registration):
         / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
     )
 
-    return eq(numerator / 1e20, 1e-8, constraint_registration)
+    return eq(numerator, denominator, constraint_registration)
 
 
 def constraint_eqns(m: int, ieqn: int):
