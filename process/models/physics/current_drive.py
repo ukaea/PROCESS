@@ -1,4 +1,5 @@
 import logging
+from enum import IntEnum
 
 import numpy as np
 
@@ -15,6 +16,28 @@ from process.data_structure import (
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
+
+
+class CurrentDriveModel(IntEnum):
+    """Heating and current drive models for use in current drive calculations"""
+
+    FENSTERMACHER_LOWER_HYBRID = (1, "Lower Hybrid")
+    IPDG89_ION_CYCLOTRON = (2, "Ion Cyclotron")
+    FENSTERMACHER_ELECTRON_CYCLOTRON = (3, "Electron Cyclotron")
+    EHST_LOWER_HYBRID = (4, "Lower Hybrid")
+    ITER_NEUTRAL_BEAM = (5, "Neutral Beam")
+    CULHAM_LOWER_HYBRID = (6, "Lower Hybrid")
+    CULHAM_ELECTRON_CYCLOTRON = (7, "Electron Cyclotron")
+    CULHAM_NEUTRAL_BEAM = (8, "Neutral Beam")
+    USER_INPUT_ELECTRON_CYCLOTRON = (10, "Electron Cyclotron")
+    USER_INPUT_ELECTRON_BERNSTEIN = (12, "Electron Bernstein")
+    FREETHY_ELECTRON_CYCLOTRON = (13, "Electron Cyclotron")
+
+    def __new__(cls, value, type):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj.type = type
+        return obj
 
 
 class NeutralBeam:
