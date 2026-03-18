@@ -11405,7 +11405,8 @@ def plot_cover_page(
         f"{objective_text}\n"
         f"• Constraint Residuals (sqrt sum sq): {sqsumsq}\n"
         f"• Convergence Parameter: {convergence_parameter}\n"
-        f"• Solver Iterations: {nviter}"
+        f"• Solver Iterations: {nviter}\n"
+        f"• Runtime: {mfile.get('process_runtime', scan=-1):.6f} seconds"
     )
     axis.text(
         0.1,
