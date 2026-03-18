@@ -40,8 +40,8 @@ class ConstraintResult(ConstraintRegistration):
 
     residual: float
     """The residual of the constraint. Ie the amount a constraint is or is not violated.
-    A negative residual indicates infeasibility.
-    A positive residual indicates feasibility.
+    A positive residual indicates infeasibility.
+    A negative residual indicates feasibility.
     A 0 residual indicates that a constraint value is exactly equal to its bound (feasible, just).
 
     The residual will have the same physical units as the constraint value/bound.
@@ -149,7 +149,7 @@ class ConstraintManager:
 def leq(value: float, bound: float, registration: ConstraintRegistration):
     """The equation `value <= bound`."""
     residual = value - bound
-    normalised_residual = (value / bound) - 1.0
+    normalised_residual = np.sign(bound) * ((value / bound) - 1.0)
     return ConstraintResult(
         **asdict(registration),
         constraint_value=value,
@@ -162,7 +162,7 @@ def leq(value: float, bound: float, registration: ConstraintRegistration):
 def geq(value: float, bound: float, registration: ConstraintRegistration):
     """The equation `value >= bound`."""
     residual = bound - value
-    normalised_residual = 1.0 - (value / bound)
+    normalised_residual = np.sign(bound) * (1.0 - (value / bound))
     return ConstraintResult(
         **asdict(registration),
         constraint_value=value,
