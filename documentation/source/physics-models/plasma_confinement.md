@@ -1,4 +1,4 @@
-# Plasma confinement time
+# Plasma confinement time | `PlasmaConfinementTime`
 
 ## Overview
 
@@ -22,7 +22,7 @@ P_{\text{L}} = \frac{W}{\tau_{\text{E}}}
 $$
 
 where $W$ is the total thermal energy of the plasma. We can look at it mainly as the difference in heating and loss powers in the plasma, as such we interpret it as power transported out from the
-“core” by charged particles. This leads to the classic definition of loss power for the scaling:
+"core" by charged particles. This leads to the classic definition of loss power for the scaling:
 
 $$
 P_{\text{L}} = \underbrace{f_{\alpha}P_{\alpha} + P_{\text{c}} + P_{\text{OH}} + P_{\text{HCD}}}_{\text{Plasma heating}}
@@ -49,7 +49,7 @@ The loss power $P_{\text{L}}$ [$\mathtt{p\_plasma\_loss\_mw}$] is calculated fro
 
 -------------
 
-### Effect of radiation on energy confinement
+### Effect of radiation on energy confinement | `ConfinementRadiationLossModel`
 
 Published confinement scalings are all based on low radiation pulses. A power
 plant will certainly be a high radiation machine, both in the core, due to
@@ -113,7 +113,7 @@ $$
 
 ------------
 
-#### 1: Nec-Alcator scaling (Ohmic)
+#### 1: Nec-Alcator scaling (Ohmic) | `neo_alcator_confinement_time()`
 
 Is selected with `i_confinement_time = 1`[^1]
 
@@ -123,7 +123,7 @@ $$
 
 ------------
 
-#### 2: Mirnov scaling (H-mode)
+#### 2: Mirnov scaling (H-mode) | `mirnov_confinement_time()`
 
 Is selected with `i_confinement_time = 2`[^1]
 
@@ -133,7 +133,7 @@ $$
 
 ------------
 
-#### 3: Merezhkin-Mukhovatov scaling (Ohmic / L-mode)
+#### 3: Merezhkin-Mukhovatov scaling (Ohmic / L-mode) | `merezhkin_muhkovatov_confinement_time()`
 
 Is selected with `i_confinement_time = 3`[^1]
 
@@ -144,7 +144,7 @@ $$
 
 ---------------
 
-#### 4: Shimomura scaling (H-mode)
+#### 4: Shimomura scaling (H-mode) | `shimomura_confinement_time()`
 
 Is selected with `i_confinement_time = 4`[^1]
 
@@ -154,7 +154,7 @@ $$
 
 ----------------
 
-#### 5: Kaye-Goldston scaling (L-mode)
+#### 5: Kaye-Goldston scaling (L-mode) | `kaye_goldston_confinement_time()`
 
 Is selected with `i_confinement_time = 5`[^1]
 
@@ -164,7 +164,7 @@ $$
 
 ----------------
 
-#### 6: ITER 89-P scaling (L-mode)
+#### 6: ITER 89-P scaling (L-mode) | `iter_89p_confinement_time()`
 
 Is selected with `i_confinement_time = 6`[^1] [^2]
 
@@ -174,7 +174,7 @@ $$
 
 ----------------
 
-#### 7: ITER 89-0 scaling (L-mode)
+#### 7: ITER 89-0 scaling (L-mode) | `iter_89_0_confinement_time()`
 
 Is selected with `i_confinement_time = 7` [^2]
 
@@ -187,7 +187,7 @@ $$
 
 ----------------
 
-#### 8: Rebut-Lallia scaling (L-mode)
+#### 8: Rebut-Lallia scaling (L-mode) | `rebut_lallia_confinement_time()`
 
 Is selected with `i_confinement_time = 8` [^2]
 
@@ -202,7 +202,7 @@ where $\ell = \left(a^2R\kappa\right)^{\frac{1}{3}}$
 
 ----------------
 
-#### 9: Goldston scaling (L-mode)
+#### 9: Goldston scaling (L-mode) | `goldston_confinement_time()`
 
 Is selected with `i_confinement_time = 9` [^1]
 
@@ -212,7 +212,7 @@ $$
 
 ----------------
 
-#### 10: T-10 scaling (L-mode)
+#### 10: T-10 scaling (L-mode) | `t10_confinement_time()`
 
 Is selected with `i_confinement_time = 10` [^1]
 
@@ -225,7 +225,7 @@ where $\overline{n}_{20*} = 1.3\left(\frac{B_{\text{T}}}{Rq_{\text{cyl}}}\right)
 
 ----------------
 
-#### 11: JAERI / Odajima-Shimomura scaling (L-mode)
+#### 11: JAERI / Odajima-Shimomura scaling (L-mode) | `jaeri_confinement_time()`
 
 Is selected with `i_confinement_time = 11` [^1]
 
@@ -239,7 +239,7 @@ where $G\left(q_{\text{cyl}},Z_{\text{eff}}\right) = Z_{\text{eff}}^{0.4}\left[\
 
 ----------------
 
-#### 12: Kaye "big" scaling (L-mode)
+#### 12: Kaye "big" scaling (L-mode) | `kaye_big_confinement_time()`
 
 Is selected with `i_confinement_time = 12` [^1]
 
@@ -249,7 +249,7 @@ $$
 
 -------------------------
 
-#### 13: ITER H90-P scaling (H-mode)
+#### 13: ITER H90-P scaling (H-mode) | `iter_h90_p_confinement_time()`
 
 Is selected with `i_confinement_time = 13` [^2]
 
@@ -267,7 +267,7 @@ Will return the value of [ITER 89-P](#6-iter-89-p-l-mode-scaling) or [ITER 89-O]
 
 -------------------------
 
-#### 15: Riedel scaling (L-mode)
+#### 15: Riedel scaling (L-mode) | `riedel_l_confinement_time()`
 
 Is selected with `i_confinement_time = 15` [^2]
 
@@ -277,7 +277,7 @@ $$
 
 -------------------------
 
-#### 16: Christiansen scaling (L-mode)
+#### 16: Christiansen scaling (L-mode) | `christiansen_confinement_time()`
 
 Is selected with `i_confinement_time = 16` [^2]
 
@@ -287,7 +287,7 @@ $$
 
 -------------------------
 
-#### 17: Lackner-Gottardi scaling (L-mode)
+#### 17: Lackner-Gottardi scaling (L-mode) | `lackner_gottardi_confinement_time()`
 
 Is selected with `i_confinement_time = 17` [^2]
 
@@ -299,7 +299,7 @@ where $\hat{q} = \frac{(1+\kappa_{95}a^2B_{\text{T}})}{0.4 I_{\text{p}} R}$
 
 -------------------------
 
-#### 18: Neo-Kaye scaling (L-mode)
+#### 18: Neo-Kaye scaling (L-mode) | `neo_kaye_confinement_time()`
 
 Is selected with `i_confinement_time = 18` [^2]
 
@@ -309,7 +309,7 @@ $$
 
 -------------------------
 
-#### 19: Riedel scaling (H-mode)
+#### 19: Riedel scaling (H-mode) | `riedel_h_confinement_time()`
 
 Is selected with `i_confinement_time = 19` [^2]
 
@@ -319,7 +319,7 @@ $$
 
 -------------------------
 
-#### 20: Amended ITER H90-P scaling (H-mode)
+#### 20: Amended ITER H90-P scaling (H-mode) | `iter_h90_p_amended_confinement_time()`
 
 Is selected with `i_confinement_time = 20` [^3]
 
@@ -329,7 +329,7 @@ $$
 
 -------------------------
 
-#### 21: Sudo et al. scaling (Stellarator)
+#### 21: Sudo et al. scaling (Stellarator) | `sudo_et_al_confinement_time()`
 
 Is selected with `i_confinement_time = 21` [^4]
 
@@ -339,7 +339,7 @@ $$
 
 -------------------------
 
-#### 22: Gyro reduced Bohm scaling (Stellarator)
+#### 22: Gyro reduced Bohm scaling (Stellarator) | `gyro_reduced_bohm_confinement_time()`
 
 Is selected with `i_confinement_time = 22` [^5]
 
@@ -349,7 +349,7 @@ $$
 
 -------------------------
 
-#### 23: Lackner-Gottardi scaling (Stellarator)
+#### 23: Lackner-Gottardi scaling (Stellarator) | `lackner_gottardi_stellarator_confinement_time()`
 
 Is selected with `i_confinement_time = 23` [^6]
 
@@ -359,7 +359,7 @@ $$
 
 -------------------------
 
-#### 24: ITER H93 ELM-free scaling (H-mode)
+#### 24: ITER H93 ELM-free scaling (H-mode) | `iter_93h_confinement_time()`
 
 Is selected with `i_confinement_time = 24` [^7]
 
@@ -378,7 +378,7 @@ Is selected with `i_confinement_time = 25`
 
 -------------------------
 
-#### 26: ITER H-97P ELM-free scaling (H-mode)
+#### 26: ITER H-97P ELM-free scaling (H-mode) | `iter_h97p_confinement_time()`
 
 Is selected with `i_confinement_time = 26` [^8]
 
@@ -388,7 +388,7 @@ $$
 
 -------------------------
 
-#### 27: ITER H-97P ELMy scaling (H-mode)
+#### 27: ITER H-97P ELMy scaling (H-mode) | `iter_h97p_elmy_confinement_time()`
 
 Is selected with `i_confinement_time = 27` [^8] [^9]
 
@@ -398,7 +398,7 @@ $$
 
 -------------------------
 
-#### 28: ITER-96P (ITER-97L) scaling (L-mode)
+#### 28: ITER-96P (ITER-97L) scaling (L-mode) | `iter_96p_confinement_time()`
 
 Is selected with `i_confinement_time = 28` [^10]
 
@@ -408,7 +408,7 @@ $$
 
 -------------------------
 
-#### 29: Valovic modified ELMy scaling (H-mode)
+#### 29: Valovic modified ELMy scaling (H-mode) | `valovic_elmy_confinement_time()`
 
 Is selected with `i_confinement_time = 29`
 
@@ -421,7 +421,7 @@ $$
 
 -------------------------
 
-#### 30: Kaye 98 modified scaling (L-mode)
+#### 30: Kaye 98 modified scaling (L-mode) | `kaye_confinement_time()`
 
 Is selected with `i_confinement_time = 30`
 
@@ -434,7 +434,7 @@ $$
 
 -------------------------
 
-#### 31: ITERH-PB98P(y) scaling (H-mode)
+#### 31: ITERH-PB98P(y) scaling (H-mode) | `iter_pb98py_confinement_time()`
 
 Is selected with `i_confinement_time = 31` 
 
@@ -447,7 +447,7 @@ $$
 
 -------------------------
 
-#### 32: IPB98(y) ELMy scaling (H-mode)
+#### 32: IPB98(y) ELMy scaling (H-mode) | `iter_ipb98y_confinement_time()`
 
 Is selected with `i_confinement_time = 32` [^11] [^12]
 
@@ -457,7 +457,7 @@ $$
 
 -------------------------
 
-#### 33: IPB98(y,1) ELMy scaling (H-mode)
+#### 33: IPB98(y,1) ELMy scaling (H-mode) | `iter_ipb98y1_confinement_time()`
 
 Is selected with `i_confinement_time = 33` [^11] [^12]
 
@@ -467,7 +467,7 @@ $$
 
 -------------------------
 
-#### 34: IPB98(y,2) ELMy scaling (H-mode)
+#### 34: IPB98(y,2) ELMy scaling (H-mode) | `iter_ipb98y2_confinement_time()`
 
 Is selected with `i_confinement_time = 34` [^11] [^12]
 
@@ -477,7 +477,7 @@ $$
 
 -------------------------
 
-#### 35: IPB98(y,3) ELMy scaling (H-mode)
+#### 35: IPB98(y,3) ELMy scaling (H-mode) | `iter_ipb98y3_confinement_time()`
 
 Is selected with `i_confinement_time = 35` [^11] [^12]
 
@@ -487,7 +487,7 @@ $$
 
 -------------------------
 
-#### 36: IPB98(y,4) ELMy scaling (H-mode)
+#### 36: IPB98(y,4) ELMy scaling (H-mode) | `iter_ipb98y4_confinement_time()`
 
 Is selected with `i_confinement_time = 36` [^11] [^12]
 
@@ -498,7 +498,7 @@ $$
 -------------------------
 
 
-#### 37: ISS95 scaling (Stellarator)
+#### 37: ISS95 scaling (Stellarator) | `iss95_stellarator_confinement_time()`
 
 Is selected with `i_confinement_time = 37` [^13]
 
@@ -509,7 +509,7 @@ $$
 -------------------------
 
 
-#### 38: ISS04 scaling (Stellarator)
+#### 38: ISS04 scaling (Stellarator) | `iss04_stellarator_confinement_time()`
 
 Is selected with `i_confinement_time = 38` [^14]
 
@@ -519,7 +519,7 @@ $$
 
 -------------------------
 
-#### 39: DS03 beta-independent scaling (H-mode)
+#### 39: DS03 beta-independent scaling (H-mode) | `ds03_confinement_time()`
 
 Is selected with `i_confinement_time = 39` [^15]
 
@@ -529,7 +529,7 @@ $$
 
 -------------------------
 
-#### 40: Murari "Non-power law" scaling (H-mode)
+#### 40: Murari "Non-power law" scaling (H-mode) | `murari_confinement_time()`
 
 Is selected with `i_confinement_time = 40` [^16]
 
@@ -540,7 +540,7 @@ $$
 
 -------------------------
 
-#### 41: Petty08 scaling (H-mode)
+#### 41: Petty08 scaling (H-mode) | `petty08_confinement_time()`
 
 Is selected with `i_confinement_time = 41` [^17]
 
@@ -550,7 +550,7 @@ $$
 
 -------------------------
 
-#### 42: Lang high density scaling (H-mode)
+#### 42: Lang high density scaling (H-mode) | `lang_high_density_confinement_time()`
 
 Is selected with `i_confinement_time = 42` [^18]
 
@@ -561,7 +561,7 @@ $$
 
 -------------------------
 
-#### 43: Hubbard nominal scaling (I-mode)
+#### 43: Hubbard nominal scaling (I-mode) | `hubbard_nominal_confinement_time()`
 
 Is selected with `i_confinement_time = 43` [^19]
 
@@ -571,7 +571,7 @@ $$
 
 -------------------------
 
-#### 44: Hubbard lower scaling (I-mode)
+#### 44: Hubbard lower scaling (I-mode) | `hubbard_lower_confinement_time()`
 
 Is selected with `i_confinement_time = 44` [^19]
 
@@ -581,7 +581,7 @@ $$
 
 -------------------------
 
-#### 45: Hubbard upper scaling (I-mode)
+#### 45: Hubbard upper scaling (I-mode) | `hubbard_upper_confinement_time()`
 
 Is selected with `i_confinement_time = 45` [^19]
 
@@ -592,7 +592,7 @@ $$
 -------------------------
 
 
-#### 46: Menard NSTX scaling (H-mode)
+#### 46: Menard NSTX scaling (H-mode) | `menard_nstx_confinement_time()`
 
 Is selected with `i_confinement_time = 46` [^20]
 
@@ -602,11 +602,11 @@ $$
 
 -------------------------
 
-#### 47: Menard NSTX-Petty08 hybrid scaling
+#### 47: Menard NSTX-Petty08 hybrid scaling | `menard_nstx_petty08_hybrid_confinement_time()`
 
 Is selected with `i_confinement_time = 47` [^20]
 
-- If $\epsilon \le 0.4 \  (A \ge 2.5)$ apply the [Petty08 scaling](#41-petty-h-mode-scaling)
+- If $\epsilon \le 0.4 \  (A \ge 2.5)$ apply the [Petty08 scaling](#41-petty08-h-mode-scaling)
 - If $\epsilon \ge 0.6 \ (A \le 1.7)$ apply the [Menard NSTX scaling](#46-menard-nstx-h-mode-scaling)
 
 Otherwise:
@@ -617,7 +617,7 @@ $$
 
 -------------------------
 
-#### 48: Buxton NSTX Gyro-Bohm scaling (H-mode)
+#### 48: Buxton NSTX Gyro-Bohm scaling (H-mode) | `nstx_gyro_bohm_confinement_time()`
 
 Is selected with `i_confinement_time = 48` [^21]
 
@@ -627,7 +627,7 @@ $$
 
 -------------------------
 
-#### 49: ITPA20 scaling (H-mode)
+#### 49: ITPA20 scaling (H-mode) | `itpa20_confinement_time()`
 
 Is selected with `i_confinement_time = 49` [^22]
 
@@ -637,7 +637,7 @@ $$
 
 -------------------------
 
-#### 50: ITPA20-IL scaling (H-mode)
+#### 50: ITPA20-IL scaling (H-mode) | `itpa20_il_confinement_time()`
 
 Is selected with `i_confinement_time = 50` [^23]
 
