@@ -6627,6 +6627,7 @@ Martin_2008_aspect_ratio_corrected_scaling:_nominal_(MW)_________________ (l_h_t
 Martin_2008_aspect_ratio_corrected_scaling:_95%_upper_bound_(MW)_________ (l_h_threshold_powers(20))_____ 1.19861242817052371e+02 OP 
 Martin_2008_aspect_ratio_corrected_scaling:_95%_lower_bound_(MW)_________ (l_h_threshold_powers(21))_____ 7.41612006825925363e+01 OP 
 L-H_threshold_power_(enforced)_(MW)______________________________________ (boundl(103)*p_l_h_threshold_mw)_ 9.42817780974050945e-02 OP 
+L-H_threshold_scaling_switch_____________________________________________ (i_l_h_threshold)______________           19
 L-H_threshold_power_(MW)_________________________________________________ (p_l_h_threshold_mw)___________ 9.42817780974050947e+01 OP 
 Confinement_scaling_law__________________________________________________ (tauelaw)______________________ "IPB98(y,2)" 
 Confinement_H_factor_____________________________________________________ (hfact)________________________ 1.10294192474134545e+00 
