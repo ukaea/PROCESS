@@ -60,7 +60,11 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
-from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
+from process.models.physics.current_drive import (
+    CurrentDriveModel,
+    ElectronBernstein,
+    ElectronCyclotron,
+)
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.tfcoil.superconducting import SUPERCONDUCTING_TF_TYPES
 
@@ -2618,45 +2622,18 @@ def plot_main_plasma_information(
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
     i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan)
 
-    # Determine heating type for primary and secondary systems
-    if i_hcd_primary in [5, 8]:
-        primary_heating = "NBI"
-    elif i_hcd_primary in [3, 7, 10, 11, 13]:
-        primary_heating = "ECRH"
-    elif i_hcd_primary == 12:
-        primary_heating = "EBW"
-    elif i_hcd_primary in [1, 4, 6]:
-        primary_heating = "LHCD"
-    elif i_hcd_primary == 2:
-        primary_heating = "ICCD"
-    else:
-        primary_heating = ""
-
-    if i_hcd_secondary in [5, 8]:
-        secondary_heating = "NBI"
-    elif i_hcd_secondary in [3, 7, 10, 11, 13]:
-        secondary_heating = "ECRH"
-    elif i_hcd_secondary == 12:
-        secondary_heating = "EBW"
-    elif i_hcd_secondary in [1, 4, 6]:
-        secondary_heating = "LHCD"
-    elif i_hcd_secondary == 2:
-        secondary_heating = "ICCD"
-    else:
-        secondary_heating = ""
-
     # Add heating and current drive information
     textstr_hcd = (
         f"$\\mathbf{{Heating \\ & \\ current \\ drive:}}$\n \n"
         f"Total injected heat: {mfile.get('p_hcd_injected_total_mw', scan=scan):.3f} MW                       \n"
         f"Ohmic heating power: {mfile.get('p_plasma_ohmic_mw', scan=scan):.3f} MW         \n\n"
-        f"$\\mathbf{{Primary \\ system: {primary_heating}}}$ \n"
+        f"$\\mathbf{{Primary \\ system: {CurrentDriveModel(i_hcd_primary).abbreviation}}}$ \n"
         f"Current driving power {mfile.get('p_hcd_primary_injected_mw', scan=scan):.4f} MW\n"
         f"Extra heat power: {mfile.get('p_hcd_primary_extra_heat_mw', scan=scan):.4f} MW\n"
         f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_hcd_primary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,prim}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_primary', scan=scan):.4f}  \n"
         f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_norm_hcd_primary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by primary: {mfile.get('c_hcd_primary_driven', scan=scan) / 1e6:.3f} MA\n\n"
-        f"$\\mathbf{{Secondary \\ system: {secondary_heating}}}$ \n"
+        f"$\\mathbf{{Secondary \\ system: {CurrentDriveModel(i_hcd_secondary).abbreviation}}}$ \n"
         f"Current driving power {mfile.get('p_hcd_secondary_injected_mw', scan=scan):.4f} MW\n"
         f"Extra heat power: {mfile.get('p_hcd_secondary_extra_heat_mw', scan=scan):.4f} MW\n"
         f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_hcd_secondary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,sec}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_secondary', scan=scan):.4f}  \n"
