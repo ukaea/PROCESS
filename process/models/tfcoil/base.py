@@ -1,6 +1,7 @@
 import copy
 import json
 import logging
+from enum import IntEnum
 
 import numba
 import numpy as np
@@ -22,6 +23,12 @@ from process.data_structure import build_variables as bv
 from process.models.build import Build
 
 logger = logging.getLogger(__name__)
+
+
+class TFCoilShapeModel(IntEnum):
+    DEFAULT = 0
+    D_SHAPE = 1
+    PICTURE_FRAME = 2
 
 
 class TFCoil:
