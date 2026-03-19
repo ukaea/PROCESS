@@ -83,9 +83,6 @@ from process.core.io.mfile_utils import get_mfile_initial_ixc_values
 from process.core.repository import get_process_root
 from process.main import VaryRun
 
-# Define project root dir; when running a notebook, the cwd is the dir the notebook is in
-PROJ_DIR = Path.cwd().parent
-
 # Path to files
 data_dir = get_process_root() / "../examples/data/"
 conf_file = data_dir / "run_process.conf"

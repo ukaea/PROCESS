@@ -64,10 +64,10 @@ def test_introductory_examples(examples_temp_data):
         ),
     ):
         tb.execute()
-        assert os.path.exists(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
+        assert os.path.exists(examples_temp_data / "data/large_tokamak_MFILE.csv")
 
         # Read in the csv file created by test and check it contains positive floats
-        readcsv = pd.read_csv(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
+        readcsv = pd.read_csv(examples_temp_data / "data/large_tokamak_MFILE.csv")
         value_array = np.array(readcsv["Value"])
         check_float = False
         check_positive = False
@@ -105,7 +105,8 @@ def test_scan(examples_temp_data):
 
 
 @pytest.mark.parametrize(
-    "name", ("plot_solutions", "single_model_evaluation", "vary_run_example")
+    "name",
+    ("single_model_evaluation", "vary_run_example", "optimum_solutions_comparison"),
 )
 def test_no_assertion_solutions(name, examples_temp_data):
     """Run examples and check no exceptions are raised.
