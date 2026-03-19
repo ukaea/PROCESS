@@ -808,7 +808,10 @@ class TFCoil:
             "(i_tf_shape)",
             tfcoil_variables.i_tf_shape,
         )
-        if tfcoil_variables.i_tf_shape == 1:
+        if (
+            TFCoilShapeModel(i_tf_shape=tfcoil_variables.i_tf_shape)
+            == TFCoilShapeModel.D_SHAPE
+        ):
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "D-shape coil, inner surface shape approximated by")
             po.ocmmnt(
@@ -816,7 +819,10 @@ class TFCoil:
                 "by a straight segment and elliptical arcs between the following points:",
             )
             po.oblnkl(self.outfile)
-        elif tfcoil_variables.i_tf_shape == 2:
+        elif (
+            TFCoilShapeModel(i_tf_shape=tfcoil_variables.i_tf_shape)
+            == TFCoilShapeModel.PICTURE_FRAME
+        ):
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Picture frame coil, inner surface approximated by")
             po.ocmmnt(
@@ -1768,7 +1774,10 @@ class TFCoil:
 
         # Ripple calculations
         po.osubhd(self.outfile, "Ripple information:")
-        if tfcoil_variables.i_tf_shape == 1:
+        if (
+            TFCoilShapeModel(i_tf_shape=tfcoil_variables.i_tf_shape)
+            == TFCoilShapeModel.D_SHAPE
+        ):
             po.ovarre(
                 self.outfile,
                 "Max allowed tfcoil_variables.ripple amplitude at plasma outboard midplane (%)",
