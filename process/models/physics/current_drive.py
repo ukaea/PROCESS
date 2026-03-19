@@ -21,22 +21,54 @@ logger = logging.getLogger(__name__)
 class CurrentDriveModel(IntEnum):
     """Heating and current drive models for use in current drive calculations"""
 
-    FENSTERMACHER_LOWER_HYBRID = (1, "Lower Hybrid")
-    IPDG89_ION_CYCLOTRON = (2, "Ion Cyclotron")
-    FENSTERMACHER_ELECTRON_CYCLOTRON = (3, "Electron Cyclotron")
-    EHST_LOWER_HYBRID = (4, "Lower Hybrid")
-    ITER_NEUTRAL_BEAM = (5, "Neutral Beam")
-    CULHAM_LOWER_HYBRID = (6, "Lower Hybrid")
-    CULHAM_ELECTRON_CYCLOTRON = (7, "Electron Cyclotron")
-    CULHAM_NEUTRAL_BEAM = (8, "Neutral Beam")
-    USER_INPUT_ELECTRON_CYCLOTRON = (10, "Electron Cyclotron")
-    USER_INPUT_ELECTRON_BERNSTEIN = (12, "Electron Bernstein")
-    FREETHY_ELECTRON_CYCLOTRON = (13, "Electron Cyclotron")
+    FENSTERMACHER_LOWER_HYBRID = (
+        1,
+        "Lower Hybrid",
+        "LHCD",
+        "Fenstermacher Lower Hybrid",
+    )
+    IPDG89_ION_CYCLOTRON = (2, "Ion Cyclotron", "ICCD", "IPDG89 Ion Cyclotron")
+    FENSTERMACHER_ELECTRON_CYCLOTRON = (
+        3,
+        "Electron Cyclotron",
+        "ECRH",
+        "Fenstermacher Electron Cyclotron",
+    )
+    EHST_LOWER_HYBRID = (4, "Lower Hybrid", "LHCD", "EHST Lower Hybrid")
+    ITER_NEUTRAL_BEAM = (5, "Neutral Beam", "NBI", "ITER Neutral Beam")
+    CULHAM_LOWER_HYBRID = (6, "Lower Hybrid", "LHCD", "Culham Lower Hybrid")
+    CULHAM_ELECTRON_CYCLOTRON = (
+        7,
+        "Electron Cyclotron",
+        "ECRH",
+        "Culham Electron Cyclotron",
+    )
+    CULHAM_NEUTRAL_BEAM = (8, "Neutral Beam", "NBI", "Culham Neutral Beam")
+    USER_INPUT_ELECTRON_CYCLOTRON = (
+        10,
+        "Electron Cyclotron",
+        "ECRH",
+        "User Input Electron Cyclotron",
+    )
+    USER_INPUT_ELECTRON_BERNSTEIN = (
+        12,
+        "Electron Bernstein",
+        "EBW",
+        "User Input Electron Bernstein",
+    )
+    FREETHY_ELECTRON_CYCLOTRON = (
+        13,
+        "Electron Cyclotron",
+        "ECRH",
+        "Freethy Electron Cyclotron",
+    )
 
-    def __new__(cls, value, type):
+    def __new__(cls, value, type, abbreviation, full_name):
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj.type = type
+        obj.abbreviation = abbreviation
+        obj.full_name = full_name
         return obj
 
 
