@@ -50,6 +50,25 @@ class PlasmaConfinementTransition:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
+    def run(self) -> None:
+        # Calculate L- to H-mode power threshold for different scalings
+        physics_variables.l_h_threshold_powers = self.l_h_threshold_power(
+            physics_variables.nd_plasma_electron_line,
+            physics_variables.b_plasma_toroidal_on_axis,
+            physics_variables.rmajor,
+            physics_variables.rminor,
+            physics_variables.kappa,
+            physics_variables.a_plasma_surface,
+            physics_variables.m_ions_total_amu,
+            physics_variables.aspect,
+            physics_variables.plasma_current,
+        )
+
+        # Enforced L-H power threshold value (if constraint 15 is turned on)
+        physics_variables.p_l_h_threshold_mw = physics_variables.l_h_threshold_powers[
+            physics_variables.i_l_h_threshold - 1
+        ]
+
     def l_h_threshold_power(
         self,
         nd_plasma_electron_line: float,
