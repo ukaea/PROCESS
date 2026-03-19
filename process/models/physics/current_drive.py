@@ -21,6 +21,8 @@ logger = logging.getLogger(__name__)
 class CurrentDriveModel(IntEnum):
     """Heating and current drive models for use in current drive calculations"""
 
+    NO_CURRENT_DRIVE = (0, "No current drive", "None", "No Current Drive")
+
     FENSTERMACHER_LOWER_HYBRID = (
         1,
         "Lower Hybrid",
