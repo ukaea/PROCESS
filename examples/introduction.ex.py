@@ -104,7 +104,7 @@ from process.core.io import mfile_to_csv
 mfile_to_csv.main(
     args=[
         "-f",
-        (data_dir / "large_tokamak_MFILE.DAT").as_posix(),
+        (Path(temp_dir.name) / "large_tokamak_MFILE.DAT").as_posix(),
         "-v",
         (data_dir / "mfile_to_csv_vars.json").as_posix(),
     ]
