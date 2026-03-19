@@ -2282,26 +2282,10 @@ class CurrentDrive:
             current_drive_variables.i_hcd_primary,
         )
 
-        if current_drive_variables.i_hcd_primary in [1, 4, 6]:
-            po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
-        elif current_drive_variables.i_hcd_primary == 2:
-            po.ocmmnt(self.outfile, "Ion Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_primary in [3, 7]:
-            po.ocmmnt(self.outfile, "Electron Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_primary in [5, 8]:
-            po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
-        elif current_drive_variables.i_hcd_primary == 10:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (input normalised efficiency)",
-            )
-        elif current_drive_variables.i_hcd_primary == 12:
-            po.ocmmnt(self.outfile, "Electron Bernstein Wave Current Drive")
-        elif current_drive_variables.i_hcd_primary == 13:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (with Zeff & Te dependance)",
-            )
+        po.ocmmnt(
+            self.outfile,
+            f"{CurrentDriveModel(current_drive_variables.i_hcd_primary).full_name}",
+        )
 
         po.oblnkl(self.outfile)
 
@@ -2523,26 +2507,10 @@ class CurrentDrive:
             current_drive_variables.i_hcd_secondary,
         )
 
-        if current_drive_variables.i_hcd_secondary in [1, 4, 6]:
-            po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
-        elif current_drive_variables.i_hcd_secondary == 2:
-            po.ocmmnt(self.outfile, "Ion Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_secondary in [3, 7]:
-            po.ocmmnt(self.outfile, "Electron Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_secondary in [5, 8]:
-            po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
-        elif current_drive_variables.i_hcd_secondary == 10:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (input normalised efficiency)",
-            )
-        elif current_drive_variables.i_hcd_secondary == 12:
-            po.ocmmnt(self.outfile, "Electron Bernstein Wave Current Drive")
-        elif current_drive_variables.i_hcd_secondary == 13:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (with Zeff & Te dependance)",
-            )
+        po.ocmmnt(
+            self.outfile,
+            f"{CurrentDriveModel(current_drive_variables.i_hcd_secondary).full_name}",
+        )
         po.oblnkl(self.outfile)
 
         po.ovarre(
