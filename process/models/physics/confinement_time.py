@@ -1066,8 +1066,8 @@ class PlasmaConfinementTime:
             p_plasma_loss_mw,
         )
 
+    @staticmethod
     def calculate_double_and_triple_product(
-        self,
         nd_plasma_electrons_vol_avg: float,
         temp_plasma_electrons_vol_avg_kev: float,
         t_energy_confinement: float,
@@ -3687,8 +3687,9 @@ class PlasmaConfinementTime:
             * afuel**0.19e0
         )
 
+    @classmethod
     def menard_nstx_petty08_hybrid_confinement_time(
-        self,
+        cls,
         pcur: float,
         b_plasma_toroidal_on_axis: float,
         dnla19: float,
@@ -3734,7 +3735,7 @@ class PlasmaConfinementTime:
         """
         # Equivalent to A > 2.5, use Petty scaling
         if (1.0e0 / aspect) <= 0.4e0:
-            return self.petty08_confinement_time(
+            return cls.petty08_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -3746,7 +3747,7 @@ class PlasmaConfinementTime:
 
         #  Equivalent to A < 1.7, use NSTX scaling
         if (1.0e0 / aspect) >= 0.6e0:
-            return self.menard_nstx_confinement_time(
+            return cls.menard_nstx_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -3757,7 +3758,7 @@ class PlasmaConfinementTime:
                 afuel,
             )
         return (((1.0e0 / aspect) - 0.4e0) / (0.6e0 - 0.4e0)) * (
-            self.menard_nstx_confinement_time(
+            cls.menard_nstx_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
@@ -3768,7 +3769,7 @@ class PlasmaConfinementTime:
                 afuel,
             )
         ) + ((0.6e0 - (1.0e0 / aspect)) / (0.6e0 - 0.4e0)) * (
-            self.petty08_confinement_time(
+            cls.petty08_confinement_time(
                 pcur,
                 b_plasma_toroidal_on_axis,
                 dnla19,
