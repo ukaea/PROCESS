@@ -1117,7 +1117,6 @@ class PlasmaBootstrapCurrent:
         )
 
     @staticmethod
-    @nb.njit(cache=True)
     def bootstrap_fraction_sugiyama_h_mode(
         eps: float,
         beta_poloidal: float,
