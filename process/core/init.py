@@ -61,6 +61,7 @@ from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
 from process.models.stellarator.initialization import st_init
+from process.models.tfcoil.base import TFCoilShapeModel
 
 
 def init_process():
@@ -733,8 +734,11 @@ def check_process(inputs):  # noqa: ARG001
             warn("Operating with a single null in a double null machine", stacklevel=2)
 
         # Set the TF coil shape to picture frame (if default value)
-        if data_structure.tfcoil_variables.i_tf_shape == 0:
-            data_structure.tfcoil_variables.i_tf_shape = 2
+        if (
+            TFCoilShapeModel(data_structure.tfcoil_variables.i_tf_shape)
+            == TFCoilShapeModel.DEFAULT
+        ):
+            data_structure.tfcoil_variables.i_tf_shape = TFCoilShapeModel.PICTURE_FRAME
 
         # Warning stating that the CP fast neutron fluence calculation
         # is not addapted for cryoaluminium calculations yet
@@ -781,8 +785,11 @@ def check_process(inputs):  # noqa: ARG001
             )
 
         # Set the TF coil shape to PROCESS D-shape (if default value)
-        if data_structure.tfcoil_variables.i_tf_shape == 0:
-            data_structure.tfcoil_variables.i_tf_shape = 1
+        if (
+            TFCoilShapeModel(data_structure.tfcoil_variables.i_tf_shape)
+            == TFCoilShapeModel.DEFAULT
+        ):
+            data_structure.tfcoil_variables.i_tf_shape = TFCoilShapeModel.D_SHAPE
 
         # Check PF coil configurations
         j = 0
