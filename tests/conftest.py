@@ -13,6 +13,7 @@ from system_check import system_compatible
 
 from process import main
 from process.core.log import logging_model_handler
+from process.main import Models
 
 
 def pytest_addoption(parser):
@@ -230,3 +231,8 @@ def _plot_show_and_close_class(request):
         plt.close()
     else:
         yield
+
+
+@pytest.fixture
+def process_models():
+    return Models()
