@@ -304,6 +304,7 @@ def main(args=None):
         5: "oacdcp",
         6: "pflux_fw_neutron_max_mw",
         7: "beamfus0",
+        8: "Obsolete",# OBSOLETE
         9: "temp_plasma_electron_vol_avg_kev",
         10: "boundu(15)",
         11: "beta_norm_max",
@@ -347,6 +348,7 @@ def main(args=None):
         50: "f_nd_impurity_electrons(13)",
         51: "f_p_div_lower",
         52: "rad_fraction_sol",
+        53: "obsolete", # Removed
         54: "b_crit_upper_nbti",
         55: "dr_shld_inboard",
         56: "p_cryo_plant_electric_max_mw",
@@ -375,6 +377,7 @@ def main(args=None):
         79: "eta_ecrh_injector_wall_plug",
         80: "fcoolcp",
         81: "n_tf_coil_turns",
+        82: "f_p_plasma_separatrix_rad", # really fradpwr
     }
     # -------------------
 
@@ -951,6 +954,8 @@ def main(args=None):
             # Output file naming
             if output_name == "plasma_current_MA":
                 extra_str = f"plasma_current{f'_vs_{output_name2}' if output_names2 != [] else ''}"
+            if output_name == "p_div_separatrix_max_mw/physics_variables.rmajor":
+                extra_str = f"p_div_separatrix_max_mwrmajor{f'_vs_{output_name2}' if output_names2 != [] else ''}"
             elif stack_plots and output_names[-1] == output_name:
                 extra_str = f"{output_name}{f'_vs_{output_name2}' if output_names2 != [] else '_vs_'.join(output_names)}"
             else:

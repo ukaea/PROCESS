@@ -752,7 +752,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fiooic": InputVariable(
-        data_structure.constraint_variables, float, range=(0.001, 1.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fjohc": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 1.0)
@@ -1295,6 +1295,7 @@ INPUT_VARIABLES = {
         data_structure.pfcoil_variables, float, range=(0.0, 1e-05)
     ),
     "rinboard": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
+    "routboard": InputVariable(data_structure.build_variables, float, range=(0.1, 20.0)),
     "ripple_b_tf_plasma_edge_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.1, 100.0)
     ),
@@ -1816,7 +1817,7 @@ INPUT_VARIABLES = {
         data_structure.vacuum_variables, int, choices=[0, 1, 2]
     ),
     "i_fw_blkt_vv_shape": InputVariable(
-        data_structure.fwbs_variables, int, range=(1, 2)
+        data_structure.fwbs_variables, int, range=(1, 3)
     ),
     "hcdportsize": InputVariable(data_structure.fwbs_variables, int, range=(1, 2)),
     "i_blkt_liquid_breeder_type": InputVariable(
@@ -1865,7 +1866,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, int, range=(1, 9)
     ),
     "i_plasma_geometry": InputVariable(
-        data_structure.physics_variables, int, range=(0, 11)
+        data_structure.physics_variables, int, range=(0, 12)
     ),
     "i_plasma_shape": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1]
