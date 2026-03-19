@@ -45,9 +45,6 @@ from pathlib import Path
 from process.core.repository import get_process_root
 from process.main import SingleRun
 
-# Define project root dir; this is using the current working directory
-PROJ_DIR = Path.cwd().parent
-
 # Define input file name relative to project dir, then copy to temp dir
 data_dir = get_process_root() / "../examples/data/"
 input_file = data_dir / "large_tokamak_IN.DAT"
@@ -107,7 +104,7 @@ from process.core.io import mfile_to_csv
 mfile_to_csv.main(
     args=[
         "-f",
-        (data_dir / "large_tokamak_1_MFILE.DAT").as_posix(),
+        (data_dir / "large_tokamak_MFILE.DAT").as_posix(),
         "-v",
         (data_dir / "mfile_to_csv_vars.json").as_posix(),
     ]
