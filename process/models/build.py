@@ -17,6 +17,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.models.tfcoil.base import TFCoilShapeModel
+from process.models.physics.current_drive import CurrentDriveModel
 
 logger = logging.getLogger(__name__)
 
@@ -2383,8 +2384,12 @@ class Build:
                     radius,
                 )
 
-            if (current_drive_variables.i_hcd_primary in [5, 8]) or (
-                current_drive_variables.i_hcd_secondary in [5, 8]
+            if (
+                CurrentDriveModel(
+                    current_drive_variables.i_hcd_primary
+                    or current_drive_variables.i_hcd_secondary
+                ).type
+                == "Neutral Beam"
             ):
                 po.ovarre(
                     self.mfile,

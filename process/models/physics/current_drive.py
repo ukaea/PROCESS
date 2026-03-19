@@ -2390,7 +2390,10 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
-        if current_drive_variables.i_hcd_primary in [5, 8]:
+        if (
+            CurrentDriveModel(current_drive_variables.i_hcd_primary).type
+            == "Neutral Beam"
+        ):
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Neutral beam power balance :")
             po.ocmmnt(self.outfile, "----------------------------")
@@ -2587,7 +2590,10 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
-        if current_drive_variables.i_hcd_secondary in [5, 8]:
+        if (
+            CurrentDriveModel(current_drive_variables.i_hcd_secondary).type
+            == "Neutral Beam"
+        ):
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Neutral beam power balance :")
             po.ocmmnt(self.outfile, "----------------------------")
