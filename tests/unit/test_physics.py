@@ -30,6 +30,7 @@ from process.models.physics.physics import (
     Physics,
     PlasmaBeta,
     PlasmaInductance,
+    calculate_cylindrical_safety_factor,
     diamagnetic_fraction_hender,
     diamagnetic_fraction_scene,
     ps_fraction_scene,
@@ -3636,3 +3637,33 @@ def test_detailed_physics_run_computes_profiles():
     assert np.all(
         np.isfinite(physics_variables.plasma_coulomb_log_electron_electron_profile)
     )
+
+
+@pytest.mark.parametrize(
+    "rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95, expected",
+    (
+        (
+            8.0,
+            2.6666666666666665,
+            18398455.678867526,
+            5.7000000000000002,
+            1.6517857142857142,
+            0.33333333333333331,
+            2.90080289950078,
+        ),
+    ),
+)
+def test_calculate_cylindrical_safety_factor_parametrized(
+    rmajor,
+    rminor,
+    plasma_current,
+    b_plasma_toroidal_on_axis,
+    kappa95,
+    triang95,
+    expected,
+):
+    """Parametrized test for calculate_cylindrical_safety_factor."""
+    result = calculate_cylindrical_safety_factor(
+        rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95
+    )
+    assert result == pytest.approx(expected, rel=1e-12)
