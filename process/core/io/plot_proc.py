@@ -64,6 +64,7 @@ from process.models.physics.confinement_time import (
     PlasmaConfinementTime,
 )
 from process.models.physics.current_drive import ElectronBernstein, ElectronCyclotron
+from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.tfcoil.superconducting import SUPERCONDUCTING_TF_TYPES
@@ -13669,6 +13670,9 @@ def main_plot(
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[30])
 
+    ax25 = figs[31].add_subplot(221)
+    PlasmaExhaust().plot_tritium_flow_contour(ax25, m_file, scan)
+
 
 def create_thickness_builds(m_file, scan: int):
     # Build the dictionaries of radial and vertical build values and cumulative values
@@ -13744,7 +13748,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(31)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(32)]
 
     # run main_plot
     main_plot(
