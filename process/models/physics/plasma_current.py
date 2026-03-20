@@ -114,7 +114,7 @@ class PlasmaCurrent:
                 f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}"
             )
         try:
-            model = PlasmaCurrentModel(int(physics_variables.i_plasma_current))
+            model = PlasmaCurrentModel(int(i_plasma_current))
             # Calculate the function Fq that scales the edge q from the
             # circular cross-section cylindrical case
 
@@ -190,7 +190,7 @@ class PlasmaCurrent:
             ) from e
 
         # Main plasma current calculation using the fq value from the different settings
-        if i_plasma_current != 2:
+        if model != PlasmaCurrentModel.PENG_DIVERTOR_SCALING:
             plasma_current = (
                 self.calculate_cyclindrical_plasma_current(
                     rminor=rminor,
@@ -258,7 +258,7 @@ class PlasmaCurrent:
         """
         results = {}
         for model in PlasmaCurrentModel:
-            physics_variables.i_plasma_current = model.value
+            # physics_variables.i_plasma_current = model.value
             results[model] = self.calculate_plasma_current(
                 alphaj=alphaj,
                 alphap=alphap,
