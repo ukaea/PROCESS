@@ -3295,6 +3295,13 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
+            "Fuelling rate (nucleus-pairs/s)",
+            "(molflow_plasma_fuelling_vv_injected)",
+            physics_variables.molflow_plasma_fuelling_vv_injected,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Fuel burn-up rate (reactions/s)",
             "(rndfuel)",
             physics_variables.rndfuel,

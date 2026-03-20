@@ -67,6 +67,7 @@ from process.models.physics.current_drive import (
     ElectronBernstein,
     ElectronCyclotron,
 )
+from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
@@ -13863,6 +13864,10 @@ def main_plot(
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[33])
+
+    
+    ax25 = figs[31].add_subplot(221)
+    PlasmaExhaust().plot_tritium_flow_contour(ax25, m_file, scan)
 
 
 def create_thickness_builds(m_file, scan: int):
