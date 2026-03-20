@@ -2663,6 +2663,21 @@ class Physics(Model):
             physics_variables.fusrat_plasma_dt,
             "OP ",
         )
+
+        po.ovarre(
+            self.outfile,
+            "D-D -> 3He Fusion rate: plasma (reactions/sec)",
+            "(fusrat_plasma_dd_helion)",
+            physics_variables.fusrat_plasma_dd_helion,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-D -> T Fusion rate: plasma (reactions/sec)",
+            "(fusrat_plasma_dd_triton)",
+            physics_variables.fusrat_plasma_dd_triton,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "Fusion rate density: total (reactions/m3/sec)",
