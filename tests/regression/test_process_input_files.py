@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
+from filelock import FileLock
 from regression_test_assets import RegressionTestAssetCollector
 
 from process.core.io.mfile import MFile
@@ -222,15 +223,21 @@ class RegressionTestScenario:
         return diffs
 
 
-@pytest.fixture(scope="session")
-def tracked_regression_test_assets():
+@pytest.fixture(scope="module")
+def tracked_regression_test_assets(tmp_path_factory, worker_id):
     """Session fixture providing a RegressionTestAssetCollector
-    for finding remote tracked MFiles.
+    for finding tracked MFiles.
 
-    This fixture creates one asset collector that is shared
-    between all regression tests and reduces the number of
-    API calls made to the remote repository."""
-    return RegressionTestAssetCollector()
+    When running using pytest-xdist this fixture stops multiple workers operating on
+    the asset directory at once using a file lock.
+    """
+    if worker_id == "master":
+        return RegressionTestAssetCollector()
+
+    tmpdir = tmp_path_factory.getbasetemp().parent
+
+    with FileLock(tmpdir / "regression_tests.lock"):
+        return RegressionTestAssetCollector()
 
 
 @pytest.mark.parametrize(
