@@ -1,5 +1,9 @@
 import logging
 
+import matplotlib.pyplot as plt
+import numpy as np
+
+import process.core.io.mfile as mf
 from process.core import constants
 
 logger = logging.getLogger(__name__)
@@ -118,3 +122,95 @@ class PlasmaExhaust:
         return (p_plasma_separatrix_mw * b_plasma_toroidal_on_axis) / (
             q95 * aspect * rmajor
         )
+
+    @staticmethod
+    def calculate_plasma_tritium_flow_rate(
+        eta_plasma_fuelling,
+        molflow_plasma_fuelling_vv_injected,
+        fusrat_dt_total,
+        fusrat_plasma_dd,
+        t_energy_confinement,
+        f_plasma_particles_lcfs_recycled,
+        nd_plasma_fuel_ions_vol_avg,
+        vol_plasma,
+        f_plasma_fuel_tritium,
+    ):
+        """Calculate the tritium flow rate in the plasma exhaust."""
+
+        return (
+            eta_plasma_fuelling * molflow_plasma_fuelling_vv_injected
+            - fusrat_dt_total
+            + fusrat_plasma_dd
+            - (
+                (nd_plasma_fuel_ions_vol_avg * vol_plasma * f_plasma_fuel_tritium)
+                / (t_energy_confinement / (1 - f_plasma_particles_lcfs_recycled))
+            )
+        )
+
+    @staticmethod
+    def calculate_plasma_deuterium_flow_rate(
+        eta_plasma_fuelling,
+        molflow_plasma_fuelling_vv_injected,
+        fusrat_dt_total,
+        fusrat_plasma_dd,
+        t_energy_confinement,
+        f_plasma_particles_lcfs_recycled,
+        nd_plasma_fuel_ions_vol_avg,
+        vol_plasma,
+        f_plasma_fuel_tritium,
+    ):
+        """Calculate the tritium flow rate in the plasma exhaust."""
+
+        return (
+            eta_plasma_fuelling * molflow_plasma_fuelling_vv_injected
+            - fusrat_dt_total
+            + fusrat_plasma_dd
+            - (
+                (nd_plasma_fuel_ions_vol_avg * vol_plasma * f_plasma_fuel_tritium)
+                / (t_energy_confinement / (1 - f_plasma_particles_lcfs_recycled))
+            )
+        )
+
+    def plot_tritium_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
+        """Plot contour of tritium flow rate vs recycling and fuelling rate."""
+
+        recycling_range = np.linspace(0.01, 0.99, 20)
+        fuelling_range = np.linspace(0.01, 1.0, 20)
+        tritium_flow = np.zeros((len(recycling_range), len(fuelling_range)))
+
+        for i, recycling in enumerate(recycling_range):
+            for j, fuelling in enumerate(fuelling_range):
+                tritium_flow[i, j] = self.calculate_plasma_tritium_flow_rate(
+                    eta_plasma_fuelling=fuelling,
+                    molflow_plasma_fuelling_vv_injected=mfile.get(
+                        "molflow_plasma_fuelling_vv_injected", scan=scan
+                    ),
+                    fusrat_dt_total=mfile.get("fusrat_dt_total", scan=scan),
+                    fusrat_plasma_dd=mfile.get("fusrat_plasma_dd_helion", scan=scan),
+                    t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                    f_plasma_particles_lcfs_recycled=recycling,
+                    nd_plasma_fuel_ions_vol_avg=mfile.get(
+                        "nd_plasma_fuel_ions_vol_avg", scan=scan
+                    ),
+                    vol_plasma=mfile.get("vol_plasma", scan=scan),
+                    f_plasma_fuel_tritium=mfile.get("f_plasma_fuel_tritium", scan=scan),
+                )
+
+        contour = axis.contourf(
+            fuelling_range, recycling_range, tritium_flow, levels=15, cmap="RdBu_r"
+        )
+        axis.contour(
+            fuelling_range,
+            recycling_range,
+            tritium_flow,
+            levels=[0],
+            colors="black",
+            linewidths=2,
+        )
+        axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
+        axis.set_ylabel("Recycling Fraction [$R$]")
+        axis.set_title("Plasma Tritium Flow Rate (particles/s)")
+        axis.minorticks_on()
+        axis.grid(True, which="major", linestyle="-", alpha=0.7)
+        axis.grid(True, which="minor", linestyle=":", alpha=0.4)
+        plt.colorbar(contour, ax=axis, label="Tritium Flow Rate")
