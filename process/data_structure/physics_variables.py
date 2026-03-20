@@ -1888,7 +1888,7 @@ def init_physics_variables():
     molflow_plasma_fuelling_required = 0.0
     f_plasma_particles_lcfs_recycled = 0.0
     eta_plasma_fuelling = 0.0
-    molflow_plasma_fuelling_vv_injected = 0.0
+    molflow_plasma_fuelling_vv_injected = 1e20
     tauratio = 1.0
     q95_min = 0.0
     qstar = 0.0
