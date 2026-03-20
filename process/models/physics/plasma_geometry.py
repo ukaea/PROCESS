@@ -396,8 +396,8 @@ class PlasmaGeom:
 
             physics_variables.kappa = 2.93e0 * ( 1.8e0 / physics_variables.aspect ) ** 0.4e0
         
-        physics_variables.kappa95 = physics_variables.kappa / 1.12e0
-        physics_variables.triang95 = physics_variables.triang / 1.50e0            
+            physics_variables.kappa95 = physics_variables.kappa / 1.12e0
+            physics_variables.triang95 = physics_variables.triang / 1.50e0      
 
         # ======================================================================
 
