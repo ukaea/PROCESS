@@ -1830,9 +1830,7 @@ INPUT_VARIABLES = {
     "i_beta_fast_alpha": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1]
     ),
-    "i_blanket_type": InputVariable(
-        data_structure.fwbs_variables, int, choices=[1, 3, 5]
-    ),
+    "i_blanket_type": InputVariable(data_structure.fwbs_variables, int, choices=[1, 5]),
     "i_bldgs_size": InputVariable(
         data_structure.buildings_variables, int, choices=[0, 1]
     ),
