@@ -1215,7 +1215,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "molflow_plasma_fuelling_vv_injected": InputVariable(
-        data_structure.physics_variables, float, range=(0.0, 1e24)
+        data_structure.physics_variables, float, range=(1e18, 1e24)
     ),
     "pflux_plant_floor_electric": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
