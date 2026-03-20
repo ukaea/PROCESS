@@ -11384,7 +11384,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
         f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.4f} MW\n"
         f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                                    \n"
         f"D+D -> T fusion rate: {mfile.get('fusrat_plasma_dd_triton', scan=scan):.4e} reactions/s                       \n"
-        f"D+D -> 3He fusion rate: {mfile.get('fusrat_plasma_dd_helion', scan=scan):.4e} reactions/s                     "
+        f"D+D -> 3He fusion rate: {mfile.get('fusrat_plasma_dd_helion', scan=scan):.4e} reactions/s                     \n"
+        f"Total D-D fusion rate: {mfile.get('fusrat_plasma_dd_total', scan=scan):.4e} reactions/s"
     )
 
     axis.text(
