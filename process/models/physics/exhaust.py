@@ -227,6 +227,20 @@ class PlasmaExhaust:
             colors="black",
             linewidths=2,
         )
+
+        # Plot star for mfile values
+        recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+        fuelling_mfile = mfile.get("eta_plasma_fuelling", scan=scan)
+        axis.plot(
+            fuelling_mfile,
+            recycling_mfile,
+            marker="*",
+            markersize=15,
+            color="yellow",
+            markeredgecolor="black",
+            markeredgewidth=1.5,
+        )
+
         axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
         axis.set_ylabel("Recycling Fraction [$R$]")
         axis.set_title("Plasma Tritium Flow Rate (particles/s)")
@@ -275,6 +289,20 @@ class PlasmaExhaust:
             colors="black",
             linewidths=2,
         )
+
+        # Plot star for mfile values
+        recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+        fuelling_mfile = mfile.get("eta_plasma_fuelling", scan=scan)
+        axis.plot(
+            fuelling_mfile,
+            recycling_mfile,
+            marker="*",
+            markersize=15,
+            color="yellow",
+            markeredgecolor="black",
+            markeredgewidth=1.5,
+        )
+
         axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
         axis.set_ylabel("Recycling Fraction [$R$]")
         axis.set_title("Plasma Deuterium Flow Rate (particles/s)")
@@ -287,7 +315,7 @@ class PlasmaExhaust:
         """Plot contour of alpha particle flow rate vs recycling and fuelling rate."""
 
         recycling_range = np.linspace(0.01, 0.99, 20)
-        f_t_alpha_energy_confinement_range = np.linspace(4.0, 8.0, 20)
+        f_t_alpha_energy_confinement_range = np.linspace(4.0, 10.0, 20)
         alpha_flow = np.zeros((
             len(recycling_range),
             len(f_t_alpha_energy_confinement_range),
@@ -323,6 +351,20 @@ class PlasmaExhaust:
             colors="black",
             linewidths=2,
         )
+
+        # Plot star for mfile values
+        recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+        f_t_alpha_mfile = mfile.get("f_alpha_energy_confinement", scan=scan)
+        axis.plot(
+            f_t_alpha_mfile,
+            recycling_mfile,
+            marker="*",
+            markersize=15,
+            color="yellow",
+            markeredgecolor="black",
+            markeredgewidth=1.5,
+        )
+
         axis.set_xlabel(
             "Alpha to Energy Confinement Time Ratio ($f_{\\alpha, \\text{energy confinement}}$)"
         )
