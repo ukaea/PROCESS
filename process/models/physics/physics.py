@@ -34,6 +34,7 @@ from process.models.physics.l_h_transition import PlasmaConfinementTransition
 logger = logging.getLogger(__name__)
 
 
+@nb.jit(nopython=True, cache=True)
 def calculate_cylindrical_safety_factor(
     rmajor: float,
     rminor: float,
@@ -58,10 +59,12 @@ def calculate_cylindrical_safety_factor(
         Elongation at 95% of the plasma boundary.
     triang95 : float
         Triangularity at 95% of the plasma boundary.
+
     Returns
     -------
     float
         Cylindrical safety factor (dimensionless).
+
     Notes
     -----
     The cylindrical safety factor is calculated following the IPDG89 guidelines.
@@ -1962,11 +1965,12 @@ class Physics:
                 )
 
                 self.current.output_plasma_current_models()
+                po.oblnkl(self.outfile)
 
                 if physics_variables.i_alphaj == 1:
                     po.ovarrf(
                         self.outfile,
-                        "\nCurrent density profile factor",
+                        "Current density profile factor",
                         "(alphaj)",
                         physics_variables.alphaj,
                         "OP ",

@@ -183,11 +183,11 @@ class PlasmaCurrent:
             elif model == PlasmaCurrentModel.FIESTA_ST_SCALING:
                 fq = self.calculate_current_coefficient_fiesta(eps, kappa, triang)
 
-        except ValueError:
+        except ValueError as e:
             raise ProcessValueError(
                 "Illegal value of i_plasma_current",
                 i_plasma_current=physics_variables.i_plasma_current,
-            ) from None
+            ) from e
 
         # Main plasma current calculation using the fq value from the different settings
         if i_plasma_current != 2:
