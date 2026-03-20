@@ -30,6 +30,7 @@ from process.models.physics.confinement_time import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
+from process.models.physics.plasma_current import PlasmaCurrent
 
 logger = logging.getLogger(__name__)
 
@@ -211,7 +212,7 @@ class Physics:
         plasma_bootstrap_current: PlasmaBootstrapCurrent,
         plasma_confinement: PlasmaConfinementTime,
         plasma_transition: PlasmaConfinementTransition,
-        plasma_current,
+        plasma_current: PlasmaCurrent,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE

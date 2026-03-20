@@ -3667,3 +3667,48 @@ def test_calculate_cylindrical_safety_factor_parametrized(
         rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95
     )
     assert result == pytest.approx(expected, rel=1e-12)
+
+
+@pytest.mark.parametrize(
+    "i_plasma_current, c_plasma, q95, aspect, eps,b_plasma_toroidal_on_axis, kappa, delta, perim, expected",
+    (
+        (
+            4,
+            18398455.678867526,
+            3.5,
+            (8.0 / 2.6666666666666665),
+            (2.6666666666666665 / 8.0),
+            5.7000000000000002,
+            1.8500000000000001,
+            0.5,
+            24.081367139525412,
+            0.96008591022564971,
+        ),
+    ),
+)
+def test_calculate_polidal_field(
+    i_plasma_current,
+    c_plasma,
+    q95,
+    b_plasma_toroidal_on_axis,
+    aspect,
+    eps,
+    kappa,
+    delta,
+    perim,
+    expected,
+    physics,
+):
+    """Parametrized test for calculate_poloidal_field."""
+    result = physics.current.calculate_poloidal_field(
+        i_plasma_current,
+        c_plasma,
+        q95,
+        b_plasma_toroidal_on_axis,
+        aspect,
+        eps,
+        kappa,
+        delta,
+        perim,
+    )
+    assert result == pytest.approx(expected, rel=1e-12)
