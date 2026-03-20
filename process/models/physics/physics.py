@@ -3920,6 +3920,20 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
+            "Fuelling efficiency",
+            "(eta_plasma_fuelling)",
+            physics_variables.eta_plasma_fuelling,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma particles recycled at the LCFS",
+            "(f_plasma_particles_lcfs_recycled)",
+            physics_variables.f_plasma_particles_lcfs_recycled,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Fuel burn-up rate (reactions/s)",
             "(rndfuel)",
             physics_variables.rndfuel,
