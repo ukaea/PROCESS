@@ -13673,6 +13673,10 @@ def main_plot(
 
     ax25 = figs[31].add_subplot(221)
     PlasmaExhaust().plot_tritium_flow_contour(ax25, m_file, scan)
+    ax26 = figs[31].add_subplot(222)
+    PlasmaExhaust().plot_deuterium_flow_contour(ax26, m_file, scan)
+    ax27 = figs[31].add_subplot(223)
+    PlasmaExhaust().plot_alpha_flow_contour(ax27, m_file, scan)
 
 
 def create_thickness_builds(m_file, scan: int):
