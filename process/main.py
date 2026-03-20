@@ -104,6 +104,7 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
 )
+from process.models.physics.plasma_current import PlasmaCurrent
 from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.power import Power
@@ -710,6 +711,7 @@ class Models:
         )
         self.plasma_confinement = PlasmaConfinementTime()
         self.plasma_transition = PlasmaConfinementTransition()
+        self.plasma_current = PlasmaCurrent()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
@@ -720,6 +722,7 @@ class Models:
             plasma_bootstrap_current=self.plasma_bootstrap_current,
             plasma_confinement=self.plasma_confinement,
             plasma_transition=self.plasma_transition,
+            plasma_current=self.plasma_current,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
