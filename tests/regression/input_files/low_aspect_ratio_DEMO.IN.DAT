@@ -186,7 +186,7 @@ nd_plasma_electrons_vol_avg = 6.88360041658364314e+19
 *ixc = 9
 fdene = 1.2
 *boundu(9) = 1.2
-* DESCRIPTION:   f-value for density limit (used to set max greenwald fraction)
+* DESCRIPTION:   margin for density limit (used to set max greenwald fraction)
 * JUSTIFICATION: Used with icc=5 to enforce density limit
 
 *ixc = 11 * pheat
@@ -242,7 +242,7 @@ f_c_plasma_non_inductive = 4.92677875380845121e-01
 * JUSTIFICATION: We have a pulsed reactor so this can vary 
 
 fiooic = 1.0
-* DESCRIPTION:   f-value for TF coil operating current / critical current density ratio
+* DESCRIPTION:   margin for TF coil operating current / critical current density ratio
 * JUSTIFICATION: Constraint equation 33 is used
 
 ixc = 56 * tdmptf
@@ -282,7 +282,7 @@ dr_shld_vv_gap_inboard = 0.02
 f_h_mode_margin = 1.1
 *boundl(103) = 1.1
 *boundu(103) = 1.2
-* DESCRIPTION:   f-value for L-H Power Threshold (now used to set lower bound)
+* DESCRIPTION:   margin for L-H Power Threshold (now used to set lower bound)
 * JUSTIFICATION: Used with icc=15 to enforce H-mode
 
 ixc = 109
