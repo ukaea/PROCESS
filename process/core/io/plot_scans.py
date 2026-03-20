@@ -73,6 +73,7 @@ def parse_args(args):
         "-yv",
         "--y_vars",
         required=True,
+        nargs="*",
         help=(
             "Select the output variables\nMore than one output can be plotted "
             "eg: -yv 'var1 var2'\nA separate plot will be created for each "
@@ -255,7 +256,11 @@ def main(args=None):
     # Parameters to be used as function input
     # ---------------------------------------
     input_files = str(args.input_files)
-    output_names = str(args.y_vars)
+    if len(args.y_vars) == 1:
+        output_names = str(args.y_vars[0])
+        output_names = list(filter(None, output_names.split(" ")))
+    else:
+        output_names = args.y_vars
     output_names2 = str(args.y_vars2)
     save_format = str(args.save_format)
     term_output = args.term_output
@@ -273,7 +278,6 @@ def main(args=None):
     # Input checks
     # ------------
     # Formting the inputs
-    output_names = list(filter(None, output_names.split(" ")))
     output_names2 = list(filter(None, output_names2.split(" ")))
     input_files = list(filter(None, input_files.split(" ")))
     label_name = list(filter(None, label_name.split(" ")))
