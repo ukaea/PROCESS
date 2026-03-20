@@ -451,6 +451,10 @@ class FusionReactionRate:
         alpha_rate_density = 0.0
         proton_rate_density = 0.0
 
+        physics_variables.fusrat_plasma_dd_helion = (
+            fusion_rate_density * physics_variables.vol_plasma
+        )
+
         # Update the cumulative D-D power density
         self.dd_power_density += fusion_power_density
 
@@ -550,6 +554,10 @@ class FusionReactionRate:
         alpha_rate_density = 0.0
         # Proton production rate [particles/m³/s]
         proton_rate_density = fusion_rate_density
+
+        physics_variables.fusrat_plasma_dd_triton = (
+            fusion_rate_density * physics_variables.vol_plasma
+        )
 
         # Update the cumulative D-D power density
         self.dd_power_density += fusion_power_density
