@@ -85,7 +85,6 @@ def parse_args(args):
         "-yv2",
         "--y_vars2",
         default="",
-        # nargs="*",
         help=(
             "Select the 2nd axis output variable\n "
             "eg: -yv2 'var'\n 2nd variable will be plotted on shared figure "
@@ -257,7 +256,11 @@ def main(args=None):
     # Parameters to be used as function input
     # ---------------------------------------
     input_files = str(args.input_files)
-    output_names = args.y_vars
+    if len(args.y_vars) == 1:
+        output_names = str(args.y_vars[0])
+        output_names = list(filter(None, output_names.split(" ")))
+    else:
+        output_names = args.y_vars
     output_names2 = str(args.y_vars2)
     save_format = str(args.save_format)
     term_output = args.term_output
