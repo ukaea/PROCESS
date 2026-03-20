@@ -378,6 +378,9 @@ class PhysicsData:
     fusrat_plasma_dd_triton: float = None
     """D-D fusion reaction rate (tritium branch) in plasma, (reactions/sec)"""
 
+fusrat_plasma_dd_total: float = None
+"""Total D-D fusion reaction rate in plasma, (reactions/sec)"""
+
     fusrat_plasma_dd_helion: float = None
     """D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
 
