@@ -752,7 +752,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fiooic": InputVariable(
-        data_structure.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "fjohc": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 1.0)
@@ -1817,7 +1817,7 @@ INPUT_VARIABLES = {
         data_structure.vacuum_variables, int, choices=[0, 1, 2]
     ),
     "i_fw_blkt_vv_shape": InputVariable(
-        data_structure.fwbs_variables, int, range=(1, 3)
+        data_structure.fwbs_variables, int, range=(1, 2)
     ),
     "hcdportsize": InputVariable(data_structure.fwbs_variables, int, range=(1, 2)),
     "i_blkt_liquid_breeder_type": InputVariable(
