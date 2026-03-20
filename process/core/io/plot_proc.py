@@ -2929,7 +2929,7 @@ def plot_main_plasma_information(
         f"|  D: {mfile.get('f_plasma_fuel_deuterium', scan=scan):.2f}  |  T: {mfile.get('f_plasma_fuel_tritium', scan=scan):.2f}  |  3He: {mfile.get('f_plasma_fuel_helium3', scan=scan):.2f}  |\n\n"
         f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile.get('p_fusion_total_mw', scan=scan):,.2f} MW\n"
         f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
-        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
+        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile.get('p_dd_total_mw', scan=scan):,.4f} MW\n"
         f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW\n"
         f"Alpha Power, $P_{{\\alpha}}:$ {mfile.get('p_alpha_total_mw', scan=scan):,.2f} MW"
     )
@@ -11114,8 +11114,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # Add plasma volume, areas and shaping information
     textstr_general = (
         f"Total fusion rate: {mfile.get('fusrat_total', scan=scan):.4e} reactions/s\n"
-        f"Total fusion rate density: {mfile.get('fusden_total', scan=scan):.4e} reactions/m3/s\n"
-        f"Plasma fusion rate density: {mfile.get('fusden_plasma', scan=scan):.4e} reactions/m3/s\n"
+        f"Total fusion rate density: {mfile.get('fusden_total', scan=scan):.4e} reactions/m$^3$/s\n"
+        f"Plasma fusion rate density: {mfile.get('fusden_plasma', scan=scan):.4e} reactions/m$^3$/s"
     )
 
     axis.text(
@@ -11161,7 +11161,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     )
 
     axis.text(
-        0.275,
+        0.285,
         0.8,
         "$\\text{D - T}$",
         fontsize=20,
@@ -11172,7 +11172,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # =================================================
 
     textstr_dd = (
-        f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
+        f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.4f} MW\n"
         f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                      \n"
     )
 
@@ -11203,7 +11203,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
 
     # =================================================
 
-    textstr_dhe3 = f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW                                 \n\n"
+    textstr_dhe3 = f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.4f} MW                                 \n\n"
 
     axis.text(
         0.05,
@@ -11233,15 +11233,15 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # =================================================
 
     textstr_alpha = (
-        f"Total power: {mfile.get('p_alpha_total_mw', scan=scan):.2f} MW\n"
-        f"Plasma power: {mfile.get('p_plasma_alpha_mw', scan=scan):.2f} MW\n"
-        f"Beam power: {mfile.get('p_beam_alpha_mw', scan=scan):.2f} MW\n\n"
-        f"Rate density total: {mfile.get('fusden_alpha_total', scan=scan):.4e} particles/m3/sec\n"
-        f"Rate density, plasma: {mfile.get('fusden_plasma_alpha', scan=scan):.4e} particles/m3/sec\n\n"
-        f"Total power density: {mfile.get('pden_alpha_total_mw', scan=scan):.4e} MW/m3\n"
-        f"Plasma power density: {mfile.get('pden_plasma_alpha_mw', scan=scan):.4e} MW/m3\n\n"
-        f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m3\n"
-        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m3\n\n"
+        f"Total power: {mfile.get('p_alpha_total_mw', scan=scan):.4f} MW\n"
+        f"Plasma power: {mfile.get('p_plasma_alpha_mw', scan=scan):.4f} MW\n"
+        f"Beam power: {mfile.get('p_beam_alpha_mw', scan=scan):.4f} MW\n\n"
+        f"Rate density total: {mfile.get('fusden_alpha_total', scan=scan):.4e} particles/m$^3$/sec\n"
+        f"Rate density, plasma: {mfile.get('fusden_plasma_alpha', scan=scan):.4e} particles/m$^3$/sec\n\n"
+        f"Total power density: {mfile.get('pden_alpha_total_mw', scan=scan):.4e} MW/m$^3$\n"
+        f"Plasma power density: {mfile.get('pden_plasma_alpha_mw', scan=scan):.4e} MW/m$^3$\n\n"
+        f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m$^3$\n"
+        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m$^3$"
     )
 
     axis.text(
@@ -11272,11 +11272,11 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # =================================================
 
     textstr_neutron = (
-        f"Total power: {mfile.get('p_neutron_total_mw', scan=scan):,.2f} MW\n"
-        f"Plasma power: {mfile.get('p_plasma_neutron_mw', scan=scan):,.2f} MW\n"
-        f"Beam power: {mfile.get('p_beam_neutron_mw', scan=scan):,.2f} MW\n\n"
-        f"Total power density: {mfile.get('pden_neutron_total_mw', scan=scan):,.4e} MW/m3\n"
-        f"Plasma power density: {mfile.get('pden_plasma_neutron_mw', scan=scan):,.4e} MW/m3\n"
+        f"Total power: {mfile.get('p_neutron_total_mw', scan=scan):,.4f} MW\n"
+        f"Plasma power: {mfile.get('p_plasma_neutron_mw', scan=scan):,.4f} MW\n"
+        f"Beam power: {mfile.get('p_beam_neutron_mw', scan=scan):,.4f} MW\n\n"
+        f"Total power density: {mfile.get('pden_neutron_total_mw', scan=scan):,.4e} MW/m$^3$\n"
+        f"Plasma power density: {mfile.get('pden_plasma_neutron_mw', scan=scan):,.4e} MW/m$^3$"
     )
 
     axis.text(
