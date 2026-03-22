@@ -2352,7 +2352,7 @@ class Stellarator:
             physics_variables.figmer,
             _fusrat,
             physics_variables.molflow_plasma_fuelling_required,
-            physics_variables.rndfuel,
+            _,
             physics_variables.t_alpha_confinement,
             physics_variables.f_alpha_energy_confinement,
         ) = self.physics.phyaux(

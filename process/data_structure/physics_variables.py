@@ -1167,10 +1167,6 @@ f_nd_plasma_carbon_electron: float = None
 """n_carbon / n_e"""
 
 
-rndfuel: float = None
-"""fuel burnup rate (reactions/second)"""
-
-
 f_nd_plasma_iron_argon_electron: float = None
 """n_highZ / n_e"""
 
@@ -1685,7 +1681,6 @@ def init_physics_variables():
         rminor, \
         f_nd_beam_electron, \
         f_nd_plasma_carbon_electron, \
-        rndfuel, \
         f_nd_plasma_iron_argon_electron, \
         f_nd_plasma_oxygen_electron, \
         f_res_plasma_neo, \
@@ -1989,7 +1984,6 @@ def init_physics_variables():
     rminor = 0.0
     f_nd_beam_electron = 0.005
     f_nd_plasma_carbon_electron = 0.0
-    rndfuel = 0.0
     f_nd_plasma_iron_argon_electron = 0.0
     f_nd_plasma_oxygen_electron = 0.0
     f_res_plasma_neo = 0.0
