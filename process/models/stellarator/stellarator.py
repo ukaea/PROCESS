@@ -2357,7 +2357,7 @@ class Stellarator(Model):
 
         sbar = 1.0e0
         (
-            physics_variables.burnup,
+            physics_variables.f_plasma_fuel_burnup,
             physics_variables.figmer,
             _fusrat,
             physics_variables.molflow_plasma_fuelling_required,
