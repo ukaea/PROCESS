@@ -7643,6 +7643,17 @@ def plot_pf_coils(
             width=x_scale * central_coil.width,
             height=central_coil.height,
             facecolor=SOLENOID_COLOUR[colour_scheme - 1],
+            edgecolor="black",
+            linewidth=1,
+        )
+    )
+    axis.add_patch(
+        patches.Rectangle(
+            xy=(0.0, central_coil.anchor_z),
+            width=x_scale * central_coil.anchor_x,
+            height=central_coil.height,
+            facecolor="grey",
+            alpha=0.5,
         )
     )
 
