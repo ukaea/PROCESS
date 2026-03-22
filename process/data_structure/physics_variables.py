@@ -206,7 +206,7 @@ class PhysicsData:
     e_plasma_magnetic_stored: float = 0.0
     """Plasma stored magnetic energy (J)"""
 
-    burnup: float = 0.0
+    f_plasma_fuel_burnup: float = 0.0
     """fractional plasma burnup"""
 
     burnup_in: float = 0.0

@@ -2262,7 +2262,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     monkeypatch.setattr(physics.data.physics, "burnup_in", phyauxparam.burnup_in)
 
     (
-        burnup,
+        f_plasma_fuel_burnup,
         figmer,
         fusrat,
         molflow_plasma_fuelling_required,
@@ -2283,7 +2283,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         tauratio=phyauxparam.tauratio,
     )
 
-    assert burnup == pytest.approx(phyauxparam.expected_burnup)
+    assert f_plasma_fuel_burnup == pytest.approx(phyauxparam.expected_burnup)
 
     assert figmer == pytest.approx(phyauxparam.expected_figmer)
 

@@ -905,7 +905,7 @@ class Physics(Model):
         # Calculate auxiliary physics related information
         sbar = 1.0e0
         (
-            self.data.physics.burnup,
+            self.data.physics.f_plasma_fuel_burnup,
             self.data.physics.figmer,
             self.data.physics.fusrat,
             self.data.physics.molflow_plasma_fuelling_required,
@@ -1454,7 +1454,7 @@ class Physics(Model):
         -------
         tuple
             A tuple containing:
-            - burnup (float): Fractional plasma burnup.
+            - f_plasma_fuel_burnup (float): Fractional plasma burnup.
             - figmer (float): Physics figure of merit.
             - fusrat (float): Number of fusion reactions per second.
             - molflow_plasma_fuelling_required (float): Fuelling rate for D-T
@@ -1486,14 +1486,14 @@ class Physics(Model):
         # The ratio of ash to fuel particle confinement times is given by
         # tauratio
         # Possible logic...
-        # burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
+        # f_plasma_fuel_burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
         # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and
         # D-He3 reactions)
         # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion
         # pairs/m3
         # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
         if burnup_in <= 1.0e-9:
-            burnup = (
+            f_plasma_fuel_burnup = (
                 nd_plasma_alphas_vol_avg
                 / (nd_plasma_alphas_vol_avg + 0.5 * nd_plasma_fuel_ions_vol_avg)
                 / tauratio
@@ -1505,12 +1505,12 @@ class Physics(Model):
         rndfuel = fusrat
 
         # Required fuelling rate (fuel ion pairs/second) (previously Amps)
-        molflow_plasma_fuelling_required = rndfuel / burnup
+        molflow_plasma_fuelling_required = rndfuel / f_plasma_fuel_burnup
 
         f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
         return (
-            burnup,
+            f_plasma_fuel_burnup,
             figmer,
             fusrat,
             molflow_plasma_fuelling_required,
@@ -2462,8 +2462,8 @@ class Physics(Model):
         po.ovarrf(
             self.outfile,
             "Burn-up fraction",
-            "(burnup)",
-            self.data.physics.burnup,
+            "(f_plasma_fuel_burnup)",
+            self.data.physics.f_plasma_fuel_burnup,
             "OP ",
         )
 
