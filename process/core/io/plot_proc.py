@@ -4834,7 +4834,7 @@ def plot_vacuum_vessel_and_divertor(
         axis.add_patch(
             patches.Rectangle(
                 (
-                    x_scale * r_min if mirror_negative_x else x_scale * r_min,
+                    x_scale * r_min,
                     z_divertor_lower_bottom,
                 ),
                 x_scale * (r_max - r_min),
@@ -4894,7 +4894,7 @@ def plot_vacuum_vessel_and_divertor(
         axis.add_patch(
             patches.Rectangle(
                 (
-                    x_scale * r_min if mirror_negative_x else x_scale * r_min,
+                    x_scale * r_min,
                     z_divertor_lower_bottom,
                 ),
                 x_scale * (r_max - r_min),
@@ -4927,7 +4927,7 @@ def plot_vacuum_vessel_and_divertor(
         axis.add_patch(
             patches.Rectangle(
                 (
-                    x_scale * r_min if mirror_negative_x else x_scale * r_min,
+                    x_scale * r_min,
                     z_divertor_upper_bottom,
                 ),
                 x_scale * (r_max - r_min),
@@ -13774,6 +13774,39 @@ def main_plot(
     ax.set_ylabel("Vertical position [m]")
     ax.minorticks_on()
     ax.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+
+    # Load the plasma image
+    with resources.path("process.core.io", "scale_person.png") as img_path:
+        img = mpimg.imread(img_path.open("rb"))  # shape: (Hpx, Wpx, ...)
+
+    # Desired image height in axis data units (e.g., meters)
+    target_h = 1.8
+
+    # Preserve pixel aspect ratio
+    h_px, w_px = img.shape[0], img.shape[1]
+    target_w = target_h * (w_px / h_px)
+
+    # Choose where to place it in data coords
+    x_left = (
+        m_file.get("r_cryostat_inboard", scan=scan)
+        + m_file.get("dr_cryostat", scan=scan)
+        + 0.5
+    )
+    y_bottom = -0.9
+    x_right = x_left + target_w
+    y_top = y_bottom + target_h
+
+    # Keep existing axis limits so adding the image does not autoscale the axes.
+    x_limits = ax.get_xlim()
+    y_limits = ax.get_ylim()
+
+    ax.imshow(
+        img,
+        extent=[x_left, x_right, y_bottom, y_top],  # [xmin, xmax, ymin, ymax]
+        aspect="auto",  # let extent control size on axes
+    )
+    ax.set_xlim(x_limits)
+    ax.set_ylim(y_limits)
 
     ax18 = figs[19].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
