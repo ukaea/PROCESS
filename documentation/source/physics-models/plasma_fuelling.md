@@ -3,15 +3,15 @@
 The control of fuelling is governed by 4 key particle flux equations for each of the primary fuel species and the helium ash, $\alpha$.
 
 $$
-\frac{dn_{\text{T}}}{dt} = \eta_{\text{fuelling}}\Gamma_{\text{T}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
+\frac{dn_{\text{T}}}{dt} = f_{\text{fuel,T}}\eta_{\text{fuelling}}\Gamma_{\text{T}} + \Gamma_{\text{D+D} \rightarrow \text{T}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{T}}^*}
 $$
 
 $$
-\frac{dn_{\text{D}}}{dt} = \eta_{\text{fuelling}}\Gamma_{\text{T}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
+\frac{dn_{\text{D}}}{dt} = f_{\text{fuel,D}}\eta_{\text{fuelling}}\Gamma_{\text{T}} -2 \Gamma_{\text{D+D}}- \Gamma_{\text{D+3He}} - \Gamma_{\text{D+T}} - \frac{N_{\text{T}}}{\tau_{\text{D}}^*}
 $$
 
 $$
-\frac{dn_{\text{3He}}}{dt} = \eta_{\text{fuelling}}\Gamma_{\text{3He}} + \Gamma_{\text{D+D} \rightarrow \text{3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
+\frac{dn_{\text{3He}}}{dt} = f_{\text{fuel,3He}}\eta_{\text{fuelling}}\Gamma_{\text{3He}} + \Gamma_{\text{D+D} \rightarrow \text{3He}} - \frac{N_{\text{T}}}{\tau_{\text{3He}}^*}
 $$
 
 $$
@@ -25,6 +25,9 @@ $$
 $$
 
 Here $\eta_{\text{fuelling}}$ is the fuelling efficiecny which represents the method of injecting fuel into the plasma. Gas puffing on the low field side is probably around 0.01-0.1, supersonic gas is 0.1 and 0.2 and using pellets can get you close to unity with 0.5-0.9. $\Gamma_{\text{fuelling}}$ is the fuel injection rate into the vacuum vessel, so $\eta_{\text{fuelling}} \Gamma_{\text{fuelling}}$ together presents the fraction of injected fuel that actually makes it into the plasma core to fuse. 
+
+
+The fuelling fractional compositions is given by $f$
 
  - $N$ is the total amount of ions in the plasma.
 

@@ -653,6 +653,15 @@ INPUT_VARIABLES = {
     "molflow_plasma_fuelling_vv_injected": InputVariable(
         data_structure.physics_variables, float, range=(1e18, 1e24)
     ),
+    "f_molflow_plasma_fuelling_deuterium": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
+    "f_molflow_plasma_fuelling_tritium": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
+    "f_molflow_plasma_fuelling_helium3": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
     "pflux_plant_floor_electric": InputVariable(
         "heat_transport", float, range=(0.0, 1000.0)
     ),

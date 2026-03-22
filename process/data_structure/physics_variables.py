@@ -924,6 +924,15 @@ eta_plasma_fuelling: float = None
 
 molflow_plasma_fuelling_vv_injected: float = None
 """plasma fuelling rate into the vacuum vessel (nucleus-pairs/s)"""
+
+f_molflow_plasma_fuelling_deuterium: float = None
+"""fraction of plasma fuelling that is deuterium"""
+
+f_molflow_plasma_fuelling_tritium: float = None
+"""fraction of plasma fuelling that is tritium"""
+
+f_molflow_plasma_fuelling_helium3: float = None
+"""fraction of plasma fuelling that is helium-3"""
     tauratio: float = 1.0
     """tauratio /1.0/ : ratio of He and pellet particle confinement times"""
 
