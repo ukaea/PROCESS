@@ -239,7 +239,7 @@ ITERATION_VARIABLES = {
         "molflow_plasma_fuelling_vv_injected",
         "physics",
         1e18,
-        1e24,
+        1e22,
     ),
     180: IterationVariable(
         "f_molflow_plasma_fuelling_deuterium",
