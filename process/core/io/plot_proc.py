@@ -5534,7 +5534,11 @@ def plot_firstwall(
 
 
 def plot_tf_coils(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal[1, 2]
+    axis: plt.Axes,
+    mfile: mf.MFile,
+    scan: int,
+    colour_scheme: Literal[1, 2],
+    mirror_negative_x: bool = False,
 ):
     """Function to plot TF coils
 
@@ -5548,7 +5552,12 @@ def plot_tf_coils(
         scan number to use
     colour_scheme :
         colour scheme to use for plots
+    mirror_negative_x :
+        if True, mirror the plot to the negative x-axis (Default value = False)
     """
+
+    # Apply mirror transformation if requested
+    x_scale = -1 if mirror_negative_x else 1
 
     # Arc points
     # MDK Only 4 points now required for elliptical arcs
@@ -5629,15 +5638,17 @@ def plot_tf_coils(
             )
 
             for vert in verts:
-                path = Path(vert, closed=True)
+                # Mirror vertices if needed
+                mirrored_vert = [[x_scale * point[0], point[1]] for point in vert]
+                path = Path(mirrored_vert, closed=True)
                 patch = patches.PathPatch(path, facecolor=colour, lw=0)
                 axis.add_patch(patch)
 
         for rec in rects:
             axis.add_patch(
                 patches.Rectangle(
-                    xy=(rec.anchor_x, rec.anchor_z),
-                    width=rec.width,
+                    xy=(x_scale * rec.anchor_x, rec.anchor_z),
+                    width=x_scale * rec.width,
                     height=rec.height,
                     facecolor=colour,
                 )
@@ -7531,7 +7542,11 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int)
 
 
 def plot_pf_coils(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal[1, 2]
+    axis: plt.Axes,
+    mfile: mf.MFile,
+    scan: int,
+    colour_scheme: Literal[1, 2],
+    mirror_negative_x: bool = False,
 ):
     """Function to plot PF coils
 
@@ -7545,7 +7560,12 @@ def plot_pf_coils(
         scan number to use
     colour_scheme :
         colour scheme to use for plots
+    mirror_negative_x :
+        if True, mirror the plot to the negative x-axis (Default value = False)
     """
+
+    # Apply mirror transformation if requested
+    x_scale = -1 if mirror_negative_x else 1
 
     coils_r = []
     coils_z = []
@@ -7593,8 +7613,8 @@ def plot_pf_coils(
     )
     axis.add_patch(
         patches.Rectangle(
-            xy=(r_precomp_inner, central_coil.anchor_z),
-            width=r_precomp_outer - r_precomp_inner,
+            xy=(x_scale * r_precomp_inner, central_coil.anchor_z),
+            width=(x_scale * (r_precomp_outer - r_precomp_inner)),
             height=central_coil.height,
             facecolor=CSCOMPRESSION_COLOUR[colour_scheme - 1],
         )
@@ -7605,11 +7625,12 @@ def plot_pf_coils(
     axis_height = bbox.height
 
     for i in range(len(coils_r)):
-        axis.plot(r_points[i], z_points[i], color="black")
+        mirrored_r_points = [x_scale * r for r in r_points[i]]
+        axis.plot(mirrored_r_points, z_points[i], color="black")
         # Scale fontsize relative to axis height and coil size
         fontsize = max(6, axis_height * abs(coils_dr[i] * coils_dz[i]) * 1.5)
         axis.text(
-            coils_r[i],
+            x_scale * coils_r[i],
             coils_z[i] - 0.05,
             coil_text[i],
             ha="center",
@@ -7618,8 +7639,8 @@ def plot_pf_coils(
         )
     axis.add_patch(
         patches.Rectangle(
-            xy=(central_coil.anchor_x, central_coil.anchor_z),
-            width=central_coil.width,
+            xy=(x_scale * central_coil.anchor_x, central_coil.anchor_z),
+            width=x_scale * central_coil.width,
             height=central_coil.height,
             facecolor=SOLENOID_COLOUR[colour_scheme - 1],
         )
@@ -13715,6 +13736,34 @@ def main_plot(
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
+    ax = figs[18].add_subplot(111, aspect="equal")
+    plot_vacuum_vessel_and_divertor(ax, m_file, scan, radial_build, colour_scheme)
+    plot_vacuum_vessel_and_divertor(
+        ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True
+    )
+    plot_shield(ax, m_file, scan, radial_build, colour_scheme)
+    plot_shield(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
+
+    plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
+    plot_blanket(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
+    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme)
+    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
+    plot_plasma(ax, m_file, scan, colour_scheme)
+    plot_plasma(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
+    plot_centre_cross(ax, m_file, scan)
+    plot_centre_cross(ax, m_file, scan, mirror_negative_x=True)
+    plot_cryostat(ax, m_file, scan, colour_scheme)
+    plot_cryostat(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
+    plot_tf_coils(ax, m_file, scan, colour_scheme)
+    plot_tf_coils(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
+    plot_pf_coils(ax, m_file, scan, colour_scheme)
+    plot_pf_coils(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
+
+    ax.set_xlabel("Radial position [m]")
+    ax.set_ylabel("Vertical position [m]")
+    ax.minorticks_on()
+    ax.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+
     ax18 = figs[19].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
@@ -13786,29 +13835,7 @@ def main_plot(
     ax24 = figs[31].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[31])
-
-    ax = figs[32].add_subplot(111, aspect="equal")
-    plot_vacuum_vessel_and_divertor(ax, m_file, scan, radial_build, colour_scheme)
-    plot_vacuum_vessel_and_divertor(
-        ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True
-    )
-    plot_shield(ax, m_file, scan, radial_build, colour_scheme)
-    plot_shield(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
-
-    plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
-    plot_blanket(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
-    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme)
-    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
-    plot_plasma(ax, m_file, scan, colour_scheme)
-    plot_plasma(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
-    plot_centre_cross(ax, m_file, scan)
-    plot_centre_cross(ax, m_file, scan, mirror_negative_x=True)
-    plot_cryostat(ax, m_file, scan, colour_scheme)
-    plot_cryostat(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
-    plot_tf_coils(ax, m_file, scan, colour_scheme)
-    plot_pf_coils(ax, m_file, scan, colour_scheme)
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -13885,7 +13912,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(33)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(32)]
 
     # run main_plot
     main_plot(
