@@ -52,6 +52,7 @@ nav:
                   - Overview: physics-models/plasma_beta/plasma_beta.md
                   - Fast Alpha: physics-models/plasma_beta/plasma_alpha_beta_contribution.md
               - Density Limit: physics-models/plasma_density.md
+              - Fuelling: physics-models/plasma_fuelling.md
               - Composition & Impurities: physics-models/plasma_composition.md
               - Radiation: physics-models/plasma_radiation.md
               - Plasma Current:
