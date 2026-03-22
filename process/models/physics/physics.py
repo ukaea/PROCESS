@@ -674,6 +674,10 @@ class Physics:
             + physics_variables.fusrat_plasma_dd_triton
         )
 
+        physics_variables.fusrat_neutron_production_total = (
+            physics_variables.fusrat_plasma_dd_helion + physics_variables.fusrat_dt_total
+        )
+
         physics_variables.fusrat_dt_total = (
             physics_variables.p_dt_total_mw * 1e6 / (constants.D_T_ENERGY)
         )
@@ -2681,6 +2685,20 @@ class Physics:
             "D-D Fusion rate: total (reactions/sec)",
             "(fusrat_plasma_dd_total)",
             physics_variables.fusrat_plasma_dd_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-3He Fusion rate: total (reactions/sec)",
+            "(fusrat_plasma_dhe3)",
+            physics_variables.fusrat_plasma_dhe3,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutron production rate: total (particles/sec)",
+            "(fusrat_neutron_production_total)",
+            physics_variables.fusrat_neutron_production_total,
             "OP ",
         )
         po.ovarre(
