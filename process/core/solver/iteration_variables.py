@@ -303,6 +303,24 @@ ITERATION_VARIABLES = {
         1e18,
         1e24,
     ),
+    180: IterationVariable(
+        "f_molflow_plasma_fuelling_deuterium",
+        data_structure.physics_variables,
+        0.0,
+        1.0,
+    ),
+    181: IterationVariable(
+        "f_molflow_plasma_fuelling_tritium",
+        data_structure.physics_variables,
+        0.0,
+        1.0,
+    ),
+    182: IterationVariable(
+        "f_molflow_plasma_fuelling_helium3",
+        data_structure.physics_variables,
+        0.0,
+        1.0,
+    ),
 }
 
 

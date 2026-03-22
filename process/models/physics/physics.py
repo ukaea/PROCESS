@@ -3325,6 +3325,27 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
+            "Fraction of plasma fuelling that is deuterium",
+            "(f_molflow_plasma_fuelling_deuterium)",
+            physics_variables.f_molflow_plasma_fuelling_deuterium,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma fuelling that is tritium",
+            "(f_molflow_plasma_fuelling_tritium)",
+            physics_variables.f_molflow_plasma_fuelling_tritium,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of plasma fuelling that is helium-3",
+            "(f_molflow_plasma_fuelling_helium3)",
+            physics_variables.f_molflow_plasma_fuelling_helium3,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Fuelling efficiency",
             "(eta_plasma_fuelling)",
             physics_variables.eta_plasma_fuelling,
