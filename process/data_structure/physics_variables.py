@@ -381,6 +381,19 @@ class PhysicsData:
 fusrat_plasma_dd_total: float = None
 """Total D-D fusion reaction rate in plasma, (reactions/sec)"""
 
+fusrat_plasma_dhe3: float = None
+"""D-3He fusion reaction rate in plasma, (reactions/sec)"""
+
+fusrat_neutron_production_total: float = None
+"""Total neutron production rate from plasma and beams (neutrons/sec)"""
+
+
+fusrat_plasma_dhe3: float = None
+"""D-3He fusion reaction rate in plasma, (reactions/sec)"""
+
+fusrat_neutron_production_total: float = None
+"""Total neutron production rate from plasma and beams (neutrons/sec)"""
+
     fusrat_plasma_dd_helion: float = None
     """D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
 
