@@ -978,11 +978,9 @@ f_molflow_plasma_fuelling_helium3: float = None
     f_nd_beam_electron: float = 0.005
     """hot beam density / n_e (`iteration variable 7`)"""
 
-    f_nd_plasma_carbon_electron: float = 0.0
-    """n_carbon / n_e"""
 
-    rndfuel: float = 0.0
-    """fuel burnup rate (reactions/second)"""
+f_nd_plasma_carbon_electron: float = None
+"""n_carbon / n_e"""
 
     f_nd_plasma_iron_argon_electron: float = 0.0
     """n_highZ / n_e"""

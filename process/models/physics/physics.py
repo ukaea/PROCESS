@@ -905,13 +905,13 @@ class Physics(Model):
         # Calculate auxiliary physics related information
         sbar = 1.0e0
         (
-            self.data.physics.f_plasma_fuel_burnup,
-            self.data.physics.figmer,
-            self.data.physics.fusrat,
-            self.data.physics.molflow_plasma_fuelling_required,
-            self.data.physics.rndfuel,
-            self.data.physics.t_alpha_confinement,
-            self.data.physics.f_alpha_energy_confinement,
+            physics_variables.f_plasma_fuel_burnup,
+            physics_variables.figmer,
+            physics_variables.fusrat,
+            physics_variables.molflow_plasma_fuelling_required,
+            _,
+            physics_variables.t_alpha_confinement,
+            physics_variables.f_alpha_energy_confinement,
         ) = self.phyaux(
             self.data.physics.aspect,
             self.data.physics.nd_plasma_fuel_ions_vol_avg,
@@ -2455,8 +2455,8 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Fuel burn-up rate (reactions/s)",
-            "(rndfuel)",
-            self.data.physics.rndfuel,
+            "(fusrat_total)",
+            self.data.physics.fusrat_total,
             "OP ",
         )
         po.ovarrf(
