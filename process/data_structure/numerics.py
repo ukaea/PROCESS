@@ -1,9 +1,9 @@
 import numpy as np
 
-ipnvars: int = 180
+ipnvars: int = 183
 """total number of variables available for iteration"""
 
-ipeqns: int = 95
+ipeqns: int = 96
 """number of constraint equations available"""
 
 ipnfoms: int = 19
@@ -626,6 +626,7 @@ def init_numerics():
         "Tritium particle balance consistency        ",
         "Deuterium particle balance consistency     ",
         "Alpha particle balance consistency     ",
+        "Fuelling composition consistency     ",
     ]
 
     ixc = np.array([0] * ipnvars)

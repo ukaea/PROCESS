@@ -1095,6 +1095,15 @@ eta_plasma_fuelling: float = None
 molflow_plasma_fuelling_vv_injected: float = None
 """plasma fuelling rate into the vacuum vessel (nucleus-pairs/s)"""
 
+f_molflow_plasma_fuelling_deuterium: float = None
+"""fraction of plasma fuelling that is deuterium"""
+
+f_molflow_plasma_fuelling_tritium: float = None
+"""fraction of plasma fuelling that is tritium"""
+
+f_molflow_plasma_fuelling_helium3: float = None
+"""fraction of plasma fuelling that is helium-3"""
+
 tauratio: float = None
 """tauratio /1.0/ : ratio of He and pellet particle confinement times"""
 
@@ -1656,6 +1665,9 @@ def init_physics_variables():
         f_plasma_particles_lcfs_recycled, \
         eta_plasma_fuelling, \
         molflow_plasma_fuelling_vv_injected, \
+        f_molflow_plasma_fuelling_deuterium, \
+        f_molflow_plasma_fuelling_tritium, \
+        f_molflow_plasma_fuelling_helium3, \
         tauratio, \
         q95_min, \
         qstar, \
@@ -1957,6 +1969,9 @@ def init_physics_variables():
     f_plasma_particles_lcfs_recycled = 0.0
     eta_plasma_fuelling = 0.0
     molflow_plasma_fuelling_vv_injected = 1e20
+    f_molflow_plasma_fuelling_deuterium = 0.5
+    f_molflow_plasma_fuelling_tritium = 0.5
+    f_molflow_plasma_fuelling_helium3 = 0.0
     tauratio = 1.0
     q95_min = 0.0
     qstar = 0.0
