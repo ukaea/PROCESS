@@ -3028,7 +3028,7 @@ def plot_main_plasma_information(
         f"   - Average mass of all fuel ions: {mfile.get('m_fuel_amu', scan=scan):.3f} amu\n\n"
         f"Fueling rate: {mfile.get('molflow_plasma_fuelling_required', scan=scan):.3e} nucleus-pairs/s\n"
         f"Fuel burn-up rate: {mfile.get('rndfuel', scan=scan):.3e} reactions/s \n"
-        f"Burn-up fraction: {mfile.get('burnup', scan=scan):.4f} \n"
+        f"Burn-up fraction: {mfile.get('f_plasma_fuel_burnup', scan=scan):.4f} \n"
     )
 
     axis.text(

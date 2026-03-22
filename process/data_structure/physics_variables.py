@@ -253,7 +253,7 @@ e_plasma_magnetic_stored: float = None
 """Plasma stored magnetic energy (J)"""
 
 
-burnup: float = None
+f_plasma_fuel_burnup: float = None
 """fractional plasma burnup"""
 
 
@@ -1486,7 +1486,7 @@ def init_physics_variables():
         b_plasma_toroidal_profile, \
         b_plasma_total, \
         e_plasma_magnetic_stored, \
-        burnup, \
+        f_plasma_fuel_burnup, \
         burnup_in, \
         b_plasma_vertical_required, \
         c_beta, \
@@ -1788,7 +1788,7 @@ def init_physics_variables():
     b_plasma_toroidal_profile = []
     b_plasma_total = 0.0
     e_plasma_magnetic_stored = 0.0
-    burnup = 0.0
+    f_plasma_fuel_burnup = 0.0
     burnup_in = 0.0
     b_plasma_vertical_required = 0.0
     c_beta = 0.5
