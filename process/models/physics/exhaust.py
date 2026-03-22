@@ -125,6 +125,7 @@ class PlasmaExhaust:
 
     @staticmethod
     def calculate_plasma_tritium_flow_rate(
+        f_molflow_plasma_fuelling_tritium,
         eta_plasma_fuelling,
         molflow_plasma_fuelling_vv_injected,
         fusrat_dt_total,
@@ -136,9 +137,12 @@ class PlasmaExhaust:
         f_plasma_fuel_tritium,
     ):
         """Calculate the tritium flow rate in the plasma exhaust."""
-        # Assuming 50/50 D-T fuel mix, the tritium fuelling rate is half the total fuelling rate, and the tritium loss includes both D and T contributions from fusion reactions.
         return (
-            (eta_plasma_fuelling * molflow_plasma_fuelling_vv_injected / 2)
+            (
+                f_molflow_plasma_fuelling_tritium
+                * eta_plasma_fuelling
+                * molflow_plasma_fuelling_vv_injected
+            )
             - fusrat_dt_total
             + fusrat_plasma_dd_triton
             - (
@@ -149,9 +153,11 @@ class PlasmaExhaust:
 
     @staticmethod
     def calculate_plasma_deuterium_flow_rate(
+        f_molflow_plasma_fuelling_deuterium,
         eta_plasma_fuelling,
         molflow_plasma_fuelling_vv_injected,
         fusrat_dt_total,
+        fusrat_plasma_dhe3,
         fusrat_plasma_dd_total,
         t_energy_confinement,
         f_plasma_particles_lcfs_recycled,
@@ -160,11 +166,15 @@ class PlasmaExhaust:
         f_plasma_fuel_deuterium,
     ):
         """Calculate the deuterium flow rate in the plasma exhaust."""
-        # Assuming 50/50 D-T fuel mix, the deuterium fuelling rate is half the total fuelling rate, and the deuterium loss includes both D and T contributions from fusion reactions.
         return (
-            (eta_plasma_fuelling * molflow_plasma_fuelling_vv_injected / 2)
+            (
+                f_molflow_plasma_fuelling_deuterium
+                * eta_plasma_fuelling
+                * molflow_plasma_fuelling_vv_injected
+            )
             - fusrat_dt_total
             - 2 * fusrat_plasma_dd_total
+            - fusrat_plasma_dhe3
             - (
                 (nd_plasma_fuel_ions_vol_avg * vol_plasma * f_plasma_fuel_deuterium)
                 / (t_energy_confinement / (1 - f_plasma_particles_lcfs_recycled))
@@ -174,9 +184,9 @@ class PlasmaExhaust:
     @staticmethod
     def calculate_plasma_alphas_flow_rate(
         fusrat_dt_total,
+        fusrat_plasma_dhe3,
         t_energy_confinement,
         f_t_alpha_energy_confinement,
-        f_plasma_particles_lcfs_recycled,
         nd_plasma_alphas_vol_avg,
         vol_plasma,
     ):
@@ -184,9 +194,11 @@ class PlasmaExhaust:
 
         # Alpha particle balance
 
-        return fusrat_dt_total - (nd_plasma_alphas_vol_avg * vol_plasma) / (
-            (t_energy_confinement * f_t_alpha_energy_confinement)
-            / (1 - f_plasma_particles_lcfs_recycled)
+        return (
+            fusrat_dt_total
+            + fusrat_plasma_dhe3
+            - (nd_plasma_alphas_vol_avg * vol_plasma)
+            / (t_energy_confinement * f_t_alpha_energy_confinement)
         )
 
     def plot_tritium_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
@@ -199,6 +211,9 @@ class PlasmaExhaust:
         for i, recycling in enumerate(recycling_range):
             for j, fuelling in enumerate(fuelling_range):
                 tritium_flow[i, j] = self.calculate_plasma_tritium_flow_rate(
+                    f_molflow_plasma_fuelling_tritium=mfile.get(
+                        "f_molflow_plasma_fuelling_tritium", scan=scan
+                    ),
                     eta_plasma_fuelling=fuelling,
                     molflow_plasma_fuelling_vv_injected=mfile.get(
                         "molflow_plasma_fuelling_vv_injected", scan=scan
@@ -259,11 +274,15 @@ class PlasmaExhaust:
         for i, recycling in enumerate(recycling_range):
             for j, fuelling in enumerate(fuelling_range):
                 deuterium_flow[i, j] = self.calculate_plasma_deuterium_flow_rate(
+                    f_molflow_plasma_fuelling_deuterium=mfile.get(
+                        "f_molflow_plasma_fuelling_deuterium", scan=scan
+                    ),
                     eta_plasma_fuelling=fuelling,
                     molflow_plasma_fuelling_vv_injected=mfile.get(
                         "molflow_plasma_fuelling_vv_injected", scan=scan
                     ),
                     fusrat_dt_total=mfile.get("fusrat_dt_total", scan=scan),
+                    fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
                     fusrat_plasma_dd_total=mfile.get(
                         "fusrat_plasma_dd_total", scan=scan
                     ),
@@ -314,21 +333,21 @@ class PlasmaExhaust:
     def plot_alpha_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
         """Plot contour of alpha particle flow rate vs recycling and fuelling rate."""
 
-        recycling_range = np.linspace(0.01, 0.99, 20)
-        f_t_alpha_energy_confinement_range = np.linspace(4.0, 10.0, 20)
+        fusion_dt_range = np.linspace(1e19, 5e21, 20)
+        f_t_alpha_energy_confinement_range = np.linspace(2.0, 10.0, 20)
         alpha_flow = np.zeros((
-            len(recycling_range),
+            len(fusion_dt_range),
             len(f_t_alpha_energy_confinement_range),
         ))
 
-        for i, recycling in enumerate(recycling_range):
+        for i, fusion_dt in enumerate(fusion_dt_range):
             for j, f_t_alpha_energy_confinement in enumerate(
                 f_t_alpha_energy_confinement_range
             ):
                 alpha_flow[i, j] = self.calculate_plasma_alphas_flow_rate(
-                    fusrat_dt_total=mfile.get("fusrat_dt_total", scan=scan),
+                    fusrat_dt_total=fusion_dt,
+                    fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
                     t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
-                    f_plasma_particles_lcfs_recycled=recycling,
                     nd_plasma_alphas_vol_avg=mfile.get(
                         "nd_plasma_alphas_vol_avg", scan=scan
                     ),
@@ -338,14 +357,14 @@ class PlasmaExhaust:
 
         contour = axis.contourf(
             f_t_alpha_energy_confinement_range,
-            recycling_range,
+            fusion_dt_range,
             alpha_flow,
             levels=15,
             cmap="RdBu_r",
         )
         axis.contour(
             f_t_alpha_energy_confinement_range,
-            recycling_range,
+            fusion_dt_range,
             alpha_flow,
             levels=[0],
             colors="black",
@@ -353,11 +372,11 @@ class PlasmaExhaust:
         )
 
         # Plot star for mfile values
-        recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+        fusion_dt_mfile = mfile.get("fusrat_dt_total", scan=scan)
         f_t_alpha_mfile = mfile.get("f_alpha_energy_confinement", scan=scan)
         axis.plot(
             f_t_alpha_mfile,
-            recycling_mfile,
+            fusion_dt_mfile,
             marker="*",
             markersize=15,
             color="yellow",
@@ -368,7 +387,7 @@ class PlasmaExhaust:
         axis.set_xlabel(
             "Alpha to Energy Confinement Time Ratio ($f_{\\alpha, \\text{energy confinement}}$)"
         )
-        axis.set_ylabel("Recycling Fraction [$R$]")
+        axis.set_ylabel("Fusion DT Rate [$\\text{particles/s}$]")
         axis.set_title("Plasma Alpha Particle Flow Rate (particles/s)")
         axis.minorticks_on()
         axis.grid(True, which="major", linestyle="-", alpha=0.7)
