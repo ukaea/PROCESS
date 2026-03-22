@@ -214,7 +214,11 @@ rtangle2 = 2 * rtangle
 
 
 def plot_plasma(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal[1, 2]
+    axis: plt.Axes,
+    mfile: mf.MFile,
+    scan: int,
+    colour_scheme: Literal[1, 2],
+    mirror_negative_x: bool = False,
 ):
     """Plots the plasma boundary arcs.
 
@@ -228,6 +232,8 @@ def plot_plasma(
         scan number to use
     colour_scheme :
         colour scheme to use for plots
+    mirror_negative_x :
+        if True, mirror the plot to the negative x-axis (Default value = False)
     """
 
     (r_0, a, triang, kappa, i_single_null, i_plasma_shape, plasma_square) = (
@@ -252,10 +258,14 @@ def plot_plasma(
         i_plasma_shape=i_plasma_shape,
         square=plasma_square,
     )
+
+    # Apply mirror transformation if requested
+    x_scale = -1 if mirror_negative_x else 1
+
     if i_plasma_shape == 0:
         # Plot the 2 plasma outline arcs.
-        axis.plot(pg.rs[0], pg.zs[0], color="black")
-        axis.plot(pg.rs[1], pg.zs[1], color="black")
+        axis.plot(x_scale * np.array(pg.rs[0]), pg.zs[0], color="black")
+        axis.plot(x_scale * np.array(pg.rs[1]), pg.zs[1], color="black")
 
         # Set triang_95 to stop plotting plasma past boundary
         # Assume IPDG scaling
@@ -263,25 +273,29 @@ def plot_plasma(
 
         # Colour in right side of plasma
         axis.fill_between(
-            x=pg.rs[0],
+            x=x_scale * np.array(pg.rs[0]),
             y1=pg.zs[0],
             where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
             color=PLASMA_COLOUR[colour_scheme - 1],
         )
         # Colour in left side of plasma
         axis.fill_between(
-            x=pg.rs[1],
+            x=x_scale * np.array(pg.rs[1]),
             y1=pg.zs[1],
             where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
             color=PLASMA_COLOUR[colour_scheme - 1],
         )
 
     elif i_plasma_shape == 1:
-        axis.plot(pg.rs, pg.zs, color="black")
-        axis.fill(pg.rs, pg.zs, color=PLASMA_COLOUR[colour_scheme - 1])
+        axis.plot(x_scale * np.array(pg.rs), pg.zs, color="black")
+        axis.fill(
+            x_scale * np.array(pg.rs), pg.zs, color=PLASMA_COLOUR[colour_scheme - 1]
+        )
 
 
-def plot_centre_cross(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_centre_cross(
+    axis: plt.Axes, mfile: mf.MFile, scan: int, mirror_negative_x: bool = False
+):
     """Function to plot centre cross on plot
 
     Parameters
@@ -292,10 +306,13 @@ def plot_centre_cross(axis: plt.Axes, mfile: mf.MFile, scan: int):
         MFILE data object
     scan :
         scan number to use
+    mirror_negative_x :
+        if True, mirror the plot to the negative x-axis (Default value = False)
     """
     rmajor = mfile.get("rmajor", scan=scan)
+    x_scale = -1 if mirror_negative_x else 1
     axis.plot(
-        [rmajor - 0.25, rmajor + 0.25, rmajor, rmajor, rmajor],
+        x_scale * np.array([rmajor - 0.25, rmajor + 0.25, rmajor, rmajor, rmajor]),
         [0, 0, 0, 0.25, -0.25],
         color="black",
     )
@@ -3454,9 +3471,27 @@ def plot_system_power_profiles_over_time(
 
 
 def plot_cryostat(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal[1, 2]
+    axis: plt.Axes,
+    mfile: mf.MFile,
+    scan: int,
+    colour_scheme: Literal[1, 2],
+    mirror_negative_x: bool = False,
 ):
-    """Function to plot cryostat in poloidal cross-section"""
+    """Function to plot cryostat in poloidal cross-section
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        axis object to plot to
+    mfile : mf.MFile
+        MFILE data object
+    scan : int
+        scan number to use
+    colour_scheme : Literal[1, 2]
+        colour scheme to use for plots
+    mirror_negative_x : bool
+        if True, mirror the plot to the negative x-axis (Default value = False)
+    """
 
     rects = cryostat_geometry(
         r_cryostat_inboard=mfile.get("r_cryostat_inboard", scan=scan),
@@ -3464,11 +3499,14 @@ def plot_cryostat(
         z_cryostat_half_inside=mfile.get("z_cryostat_half_inside", scan=scan),
     )
 
+    # Apply mirror transformation if requested
+    x_scale = -1 if mirror_negative_x else 1
+
     for rec in rects:
         axis.add_patch(
             patches.Rectangle(
-                xy=(rec.anchor_x, rec.anchor_z),
-                width=rec.width,
+                xy=(x_scale * rec.anchor_x, rec.anchor_z),
+                width=x_scale * rec.width,
                 height=rec.height,
                 facecolor=CRYOSTAT_COLOUR[colour_scheme - 1],
             )
@@ -4673,7 +4711,12 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
 
 
 def plot_vacuum_vessel_and_divertor(
-    axis, mfile: mf.MFile, scan, radial_build, colour_scheme
+    axis,
+    mfile: mf.MFile,
+    scan,
+    radial_build,
+    colour_scheme,
+    mirror_negative_x: bool = False,
 ):
     """Function to plot vacuum vessel and divertor boxes
 
@@ -4689,6 +4732,8 @@ def plot_vacuum_vessel_and_divertor(
 
     colour_scheme :
         colour scheme to use for plots
+    mirror_negative_x :
+        if True, mirror the plot to the negative x-axis (Default value = False)
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
@@ -4735,6 +4780,9 @@ def plot_vacuum_vessel_and_divertor(
         z_divertor_upper_bottom = (kappa * rminor) + dz_xpoint_divertor
         z_divertor_upper_top = z_divertor_upper_bottom + dz_divertor
 
+    # Apply mirror transformation if requested
+    x_scale = -1 if mirror_negative_x else 1
+
     if i_single_null == 1:
         vvg_single_null = vacuum_vessel_geometry_single_null(
             cumulative_upper=cumulative_upper,
@@ -4749,7 +4797,7 @@ def plot_vacuum_vessel_and_divertor(
         )
 
         axis.plot(
-            vvg_single_null.rs,
+            x_scale * np.array(vvg_single_null.rs),
             vvg_single_null.zs,
             color="black",
             lw=thin,
@@ -4757,7 +4805,7 @@ def plot_vacuum_vessel_and_divertor(
         )
 
         axis.fill(
-            vvg_single_null.rs,
+            x_scale * np.array(vvg_single_null.rs),
             vvg_single_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
             lw=0.01,
@@ -4785,8 +4833,11 @@ def plot_vacuum_vessel_and_divertor(
         # Draw a rectangle (box) between the two lines and inside the vessel
         axis.add_patch(
             patches.Rectangle(
-                (r_min, z_divertor_lower_bottom),
-                r_max - r_min,
+                (
+                    x_scale * r_min if mirror_negative_x else x_scale * r_min,
+                    z_divertor_lower_bottom,
+                ),
+                x_scale * (r_max - r_min),
                 z_divertor_lower_top - z_divertor_lower_bottom,
                 facecolor="black",
                 alpha=0.8,
@@ -4805,11 +4856,15 @@ def plot_vacuum_vessel_and_divertor(
             triang=triang_95,
         )
         axis.plot(
-            vvg_double_null.rs, vvg_double_null.zs, color="black", lw=thin, zorder=5
+            x_scale * np.array(vvg_double_null.rs),
+            vvg_double_null.zs,
+            color="black",
+            lw=thin,
+            zorder=5,
         )
 
         axis.fill(
-            vvg_double_null.rs,
+            x_scale * np.array(vvg_double_null.rs),
             vvg_double_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
             lw=0.01,
@@ -4838,8 +4893,11 @@ def plot_vacuum_vessel_and_divertor(
         # Draw a rectangle (box) between the two lines and inside the vessel
         axis.add_patch(
             patches.Rectangle(
-                (r_min, z_divertor_lower_bottom),
-                r_max - r_min,
+                (
+                    x_scale * r_min if mirror_negative_x else x_scale * r_min,
+                    z_divertor_lower_bottom,
+                ),
+                x_scale * (r_max - r_min),
                 z_divertor_lower_top - z_divertor_lower_bottom,
                 facecolor="black",
                 alpha=0.8,
@@ -4868,8 +4926,11 @@ def plot_vacuum_vessel_and_divertor(
         # Draw a rectangle (box) between the two lines and inside the vessel
         axis.add_patch(
             patches.Rectangle(
-                (r_min, z_divertor_upper_bottom),
-                r_max - r_min,
+                (
+                    x_scale * r_min if mirror_negative_x else x_scale * r_min,
+                    z_divertor_upper_bottom,
+                ),
+                x_scale * (r_max - r_min),
                 z_divertor_upper_top - z_divertor_upper_bottom,
                 facecolor="black",
                 alpha=0.8,
@@ -4878,7 +4939,14 @@ def plot_vacuum_vessel_and_divertor(
         )
 
 
-def plot_shield(axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour_scheme):
+def plot_shield(
+    axis: plt.Axes,
+    mfile: mf.MFile,
+    scan: int,
+    radial_build,
+    colour_scheme,
+    mirror_negative_x: bool = False,
+):
     """Function to plot shield
 
     Parameters
@@ -4893,6 +4961,8 @@ def plot_shield(axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour
 
     colour_scheme :
         colour scheme to use for plots
+    mirror_negative_x :
+        if True, mirror the plot to the negative x-axis (Default value = False)
 
     """
     cumulative_upper = radial_build.cumulative_upper
@@ -4921,6 +4991,9 @@ def plot_shield(axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour
         - cumulative_radial_build("dr_shld_inboard", mfile, scan)
     ) / 2.0
 
+    # Apply mirror transformation if requested
+    x_scale = -1 if mirror_negative_x else 1
+
     if i_single_null == 1:
         shield_geometry = shield_geometry_single_null(
             cumulative_upper=cumulative_upper,
@@ -4941,16 +5014,28 @@ def plot_shield(axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour
             triang=triang_95,
         )
 
-    axis.plot(shield_geometry.rs, shield_geometry.zs, color="black", lw=thin)
+    axis.plot(
+        x_scale * np.array(shield_geometry.rs),
+        shield_geometry.zs,
+        color="black",
+        lw=thin,
+    )
     axis.fill(
-        shield_geometry.rs,
+        x_scale * np.array(shield_geometry.rs),
         shield_geometry.zs,
         color=SHIELD_COLOUR[colour_scheme - 1],
         lw=0.01,
     )
 
 
-def plot_blanket(axis: plt.Axes, mfile: mf.MFile, scan, radial_build, colour_scheme):
+def plot_blanket(
+    axis: plt.Axes,
+    mfile: mf.MFile,
+    scan,
+    radial_build,
+    colour_scheme,
+    mirror_negative_x: bool = False,
+):
     """Function to plot blanket
 
     Parameters
@@ -4965,6 +5050,8 @@ def plot_blanket(axis: plt.Axes, mfile: mf.MFile, scan, radial_build, colour_sch
 
     colour_scheme :
         colour scheme to use for plots
+    mirror_negative_x :
+        if True, mirror the plot to the negative x-axis (Default value = False)
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
@@ -4982,6 +5069,9 @@ def plot_blanket(axis: plt.Axes, mfile: mf.MFile, scan, radial_build, colour_sch
 
     c_shldith = cumulative_radial_build("dr_shld_inboard", mfile, scan)
     c_blnkoth = cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+
+    # Apply mirror transformation if requested
+    x_scale = -1 if mirror_negative_x else 1
 
     if i_single_null == 1:
         # Upper blanket: outer surface
@@ -5020,7 +5110,7 @@ def plot_blanket(axis: plt.Axes, mfile: mf.MFile, scan, radial_build, colour_sch
 
         # Plot blanket
         axis.plot(
-            bg_single_null.rs,
+            x_scale * np.array(bg_single_null.rs),
             bg_single_null.zs,
             color="black",
             lw=thin,
@@ -5028,7 +5118,7 @@ def plot_blanket(axis: plt.Axes, mfile: mf.MFile, scan, radial_build, colour_sch
         )
 
         axis.fill(
-            bg_single_null.rs,
+            x_scale * np.array(bg_single_null.rs),
             bg_single_null.zs,
             color=BLANKET_COLOUR[colour_scheme - 1],
             lw=0.01,
@@ -5046,9 +5136,14 @@ def plot_blanket(axis: plt.Axes, mfile: mf.MFile, scan, radial_build, colour_sch
             dr_blkt_outboard=dr_blkt_outboard,
         )
         # Plot blanket
-        axis.plot(bg_double_null.rs[0], bg_double_null.zs[0], color="black", lw=thin)
+        axis.plot(
+            x_scale * np.array(bg_double_null.rs[0]),
+            bg_double_null.zs[0],
+            color="black",
+            lw=thin,
+        )
         axis.fill(
-            bg_double_null.rs[0],
+            x_scale * np.array(bg_double_null.rs[0]),
             bg_double_null.zs[0],
             color=BLANKET_COLOUR[colour_scheme - 1],
             lw=0.01,
@@ -5057,14 +5152,14 @@ def plot_blanket(axis: plt.Axes, mfile: mf.MFile, scan, radial_build, colour_sch
         if dr_blkt_inboard > 0.0:
             # only plot inboard blanket if inboard blanket thickness > 0
             axis.plot(
-                bg_double_null.rs[1],
+                x_scale * np.array(bg_double_null.rs[1]),
                 bg_double_null.zs[1],
                 color="black",
                 lw=thin,
                 zorder=5,
             )
             axis.fill(
-                bg_double_null.rs[1],
+                x_scale * np.array(bg_double_null.rs[1]),
                 bg_double_null.zs[1],
                 color=BLANKET_COLOUR[colour_scheme - 1],
                 lw=0.01,
@@ -5305,7 +5400,12 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: mf.MFile, scan
 
 
 def plot_firstwall(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, radial_build, colour_scheme
+    axis: plt.Axes,
+    mfile: mf.MFile,
+    scan: int,
+    radial_build,
+    colour_scheme,
+    mirror_negative_x: bool = False,
 ):
     """Function to plot first wall
 
@@ -5321,6 +5421,8 @@ def plot_firstwall(
 
     colour_scheme :
         colour scheme to use for plots
+    mirror_negative_x :
+        if True, mirror the plot to the negative x-axis (Default value = False)
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
@@ -5338,6 +5440,10 @@ def plot_firstwall(
 
     dr_fw_inboard = mfile.get("dr_fw_inboard", scan=scan)
     dr_fw_outboard = mfile.get("dr_fw_outboard", scan=scan)
+
+    # Apply mirror transformation if requested
+    x_scale = -1 if mirror_negative_x else 1
+
     if i_single_null == 1:
         # Upper first wall: outer surface
         radx_outer = (
@@ -5376,9 +5482,14 @@ def plot_firstwall(
         )
 
         # Plot first wall
-        axis.plot(fwg_single_null.rs, fwg_single_null.zs, color="black", lw=thin)
+        axis.plot(
+            x_scale * np.array(fwg_single_null.rs),
+            fwg_single_null.zs,
+            color="black",
+            lw=thin,
+        )
         axis.fill(
-            fwg_single_null.rs,
+            x_scale * np.array(fwg_single_null.rs),
             fwg_single_null.zs,
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
             lw=0.01,
@@ -5396,16 +5507,26 @@ def plot_firstwall(
             tfwvt=tfwvt,
         )
         # Plot first wall
-        axis.plot(fwg_double_null.rs[0], fwg_double_null.zs[0], color="black", lw=thin)
-        axis.plot(fwg_double_null.rs[1], fwg_double_null.zs[1], color="black", lw=thin)
+        axis.plot(
+            x_scale * np.array(fwg_double_null.rs[0]),
+            fwg_double_null.zs[0],
+            color="black",
+            lw=thin,
+        )
+        axis.plot(
+            x_scale * np.array(fwg_double_null.rs[1]),
+            fwg_double_null.zs[1],
+            color="black",
+            lw=thin,
+        )
         axis.fill(
-            fwg_double_null.rs[0],
+            x_scale * np.array(fwg_double_null.rs[0]),
             fwg_double_null.zs[0],
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
             lw=0.01,
         )
         axis.fill(
-            fwg_double_null.rs[1],
+            x_scale * np.array(fwg_double_null.rs[1]),
             fwg_double_null.zs[1],
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
             lw=0.01,
@@ -13665,7 +13786,29 @@ def main_plot(
     ax24 = figs[31].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
+    
     plot_system_power_profiles_over_time(ax24, m_file, scan, figs[31])
+
+    ax = figs[32].add_subplot(111, aspect="equal")
+    plot_vacuum_vessel_and_divertor(ax, m_file, scan, radial_build, colour_scheme)
+    plot_vacuum_vessel_and_divertor(
+        ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True
+    )
+    plot_shield(ax, m_file, scan, radial_build, colour_scheme)
+    plot_shield(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
+
+    plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
+    plot_blanket(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
+    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme)
+    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
+    plot_plasma(ax, m_file, scan, colour_scheme)
+    plot_plasma(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
+    plot_centre_cross(ax, m_file, scan)
+    plot_centre_cross(ax, m_file, scan, mirror_negative_x=True)
+    plot_cryostat(ax, m_file, scan, colour_scheme)
+    plot_cryostat(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
+    plot_tf_coils(ax, m_file, scan, colour_scheme)
+    plot_pf_coils(ax, m_file, scan, colour_scheme)
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -13742,7 +13885,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(32)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(33)]
 
     # run main_plot
     main_plot(
