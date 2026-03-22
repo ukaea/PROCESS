@@ -1862,10 +1862,14 @@ def constraint_equation_93(constraint_registration):
 
     # Numerator shall be the tritium particle balance
     numerator = (
-        data_structure.physics_variables.eta_plasma_fuelling
-        * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
-        * data_structure.physics_variables.f_molflow_plasma_fuelling_tritium
-    ) + data_structure.physics_variables.fusrat_plasma_dd_triton
+        (
+            data_structure.physics_variables.eta_plasma_fuelling
+            * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
+            * data_structure.physics_variables.f_molflow_plasma_fuelling_tritium
+        )
+        + data_structure.physics_variables.fusrat_plasma_dd_triton
+        - data_structure.physics_variables.fusrat_dt_total
+    )
     denominator = (
         data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
         * data_structure.physics_variables.vol_plasma
@@ -1873,7 +1877,7 @@ def constraint_equation_93(constraint_registration):
     ) / (
         data_structure.physics_variables.t_energy_confinement
         / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
-    ) - data_structure.physics_variables.fusrat_dt_total
+    )
 
     return eq(numerator, denominator, constraint_registration)
 
@@ -1885,10 +1889,15 @@ def constraint_equation_94(constraint_registration):
     """
 
     numerator = (
-        data_structure.physics_variables.eta_plasma_fuelling
-        * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
-        * data_structure.physics_variables.f_molflow_plasma_fuelling_deuterium
-    ) - data_structure.physics_variables.fusrat_dt_total
+        (
+            data_structure.physics_variables.eta_plasma_fuelling
+            * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
+            * data_structure.physics_variables.f_molflow_plasma_fuelling_deuterium
+        )
+        - data_structure.physics_variables.fusrat_dt_total
+        - data_structure.physics_variables.fusrat_plasma_dhe3
+        - 2.0 * data_structure.physics_variables.fusrat_plasma_dd_total
+    )
     denominator = (
         data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
         * data_structure.physics_variables.vol_plasma
