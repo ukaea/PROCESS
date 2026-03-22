@@ -946,7 +946,7 @@ class Physics(Model):
             physics_variables.figmer,
             physics_variables.fusrat,
             physics_variables.molflow_plasma_fuelling_required,
-            physics_variables.rndfuel,
+            _,
             physics_variables.t_alpha_confinement,
             physics_variables.f_alpha_energy_confinement,
         ) = self.phyaux(
@@ -3367,8 +3367,8 @@ class Physics(Model):
         po.ovarre(
             self.outfile,
             "Fuel burn-up rate (reactions/s)",
-            "(rndfuel)",
-            physics_variables.rndfuel,
+            "(fusrat_total)",
+            physics_variables.fusrat_total,
             "OP ",
         )
         po.ovarrf(
