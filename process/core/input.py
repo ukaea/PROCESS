@@ -1802,9 +1802,8 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(1.0, 10.0)
     ),
     "i_blanket_type_stellarator": InputVariable(
-        data_structure.fwbs_variables, int, choices=[0, 1]
+        data_structure.fwbs_variables, int, choices=[0, 1, 2, 3, 4]
     ),
-    "blkttype": InputVariable(data_structure.fwbs_variables, int, choices=[1, 2, 3]),
     "breedmat": InputVariable(data_structure.fwbs_variables, int, choices=[1, 2, 3]),
     "ccl0_ma": InputVariable(data_structure.pfcoil_variables, float, array=True),
     "ccls_ma": InputVariable(data_structure.pfcoil_variables, float, array=True),

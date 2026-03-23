@@ -250,12 +250,14 @@ All items external to the fusion power core (buildings, turbines, power conversi
 ## Stellarator Blanket
 
 There are two blanket modules implemented in stellarator-PROCESS at the moment,
- - `i_blanket_type_stellarator = 1`: Calls the KIT HCPB model
- - `i_blanket_type_stellarator = 0` AND `ipowerflow=1`: Calls a "simple" model (`ipowerflow=0` is even simpler and not advised)
+- `i_blanket_type_stellarator = 0` AND `ipowerflow=1`: Calls a "simple" model (`ipowerflow=0` is even simpler and not advised)
+- `i_blanket_type_stellarator = 1`: Calls the KIT HCPB model
+- `i_blanket_type_stellarator = 2`: WCLL; efficiency taken from WP13-DAS08-T02, EFDA_D_2M97B7
+- `i_blanket_type_stellarator = 3`: HCLL; efficiency taken from WP12-DAS08-T01, EFDA_D_2LLNBX and M. Kovari 2016 "PROCESS": A systems code for fusion power plants - Part 2: Engineering https://www.sciencedirect.com/science/article/pii/S0920379616300072 Feedheat & reheat cycle assumed
+- `i_blanket_type_stellarator = 4`: HCPB; efficiency taken from WP12-DAS08-T01, EFDA_D_2LLNBX and M. Kovari 2016 "PROCESS": A systems code for fusion power plants - Part 2: Engineering https://www.sciencedirect.com/science/article/pii/S0920379616300072 Feedheat & reheat cycle assumed
 
 The KIT HCPB model is documented elsewhere, for the simple module the following set of input parameters should be provided:
 ```
-blkttype = 0,1,2 (only relevant for mass calculations)
 f_p_blkt_multiplication = 1.18 *Energy multiplication in blanket and shield
 eta_coolant_pump_electric = 1. *Electrical efficiency of primary coolant pumps
 fblbe = 0.47 *Beryllium fraction of blanket by volume (only relevant for mass calculations)

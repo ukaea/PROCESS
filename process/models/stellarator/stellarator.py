@@ -1037,47 +1037,9 @@ class Stellarator:
         )
 
         #  Blanket mass, excluding coolant
-
-        if fwbs_variables.i_blanket_type_stellarator == 0:
-            if (fwbs_variables.blkttype == 1) or (
-                fwbs_variables.blkttype == 2
-            ):  # liquid breeder (WCLL or HCLL)
-                fwbs_variables.wtbllipb = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fbllipb * 9400.0e0
-                )
-                fwbs_variables.m_blkt_lithium = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli * 534.0e0
-                )
-                fwbs_variables.m_blkt_total = (
-                    fwbs_variables.wtbllipb + fwbs_variables.m_blkt_lithium
-                )
-            else:  # solid breeder (HCPB); always for ipowerflow=0
-                fwbs_variables.m_blkt_li2o = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli2o * 2010.0e0
-                )
-                fwbs_variables.m_blkt_beryllium = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fblbe * 1850.0e0
-                )
-                fwbs_variables.m_blkt_total = (
-                    fwbs_variables.m_blkt_li2o + fwbs_variables.m_blkt_beryllium
-                )
-
-            fwbs_variables.m_blkt_steel_total = (
-                fwbs_variables.vol_blkt_total
-                * fwbs_variables.den_steel
-                * fwbs_variables.fblss
-            )
-            fwbs_variables.m_blkt_vanadium = (
-                fwbs_variables.vol_blkt_total * 5870.0e0 * fwbs_variables.fblvd
-            )
-
-            fwbs_variables.m_blkt_total = (
-                fwbs_variables.m_blkt_total
-                + fwbs_variables.m_blkt_steel_total
-                + fwbs_variables.m_blkt_vanadium
-            )
-
-        else:  # volume fractions proportional to sub-assembly thicknesses
+        if (
+            fwbs_variables.i_blanket_type_stellarator == 1
+        ):  # volume fractions proportional to sub-assembly thicknesses
             fwbs_variables.m_blkt_steel_total = fwbs_variables.den_steel * (
                 fwbs_variables.vol_blkt_inboard
                 / build_variables.dr_blkt_inboard
@@ -1166,6 +1128,45 @@ class Stellarator:
                     + (build_variables.blbpoth / build_variables.dr_blkt_outboard)
                     * fwbs_variables.fblhebpo
                 )
+            )
+
+        else:
+            if fwbs_variables.i_blanket_type_stellarator in [2, 3]:
+                # liquid breeder (WCLL or HCLL)
+                fwbs_variables.wtbllipb = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fbllipb * 9400.0e0
+                )
+                fwbs_variables.m_blkt_lithium = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli * 534.0e0
+                )
+                fwbs_variables.m_blkt_total = (
+                    fwbs_variables.wtbllipb + fwbs_variables.m_blkt_lithium
+                )
+            elif fwbs_variables.i_blanket_type_stellarator == 4:
+                # solid breeder (HCPB); always for ipowerflow=0
+                fwbs_variables.m_blkt_li2o = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli2o * 2010.0e0
+                )
+                fwbs_variables.m_blkt_beryllium = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblbe * 1850.0e0
+                )
+                fwbs_variables.m_blkt_total = (
+                    fwbs_variables.m_blkt_li2o + fwbs_variables.m_blkt_beryllium
+                )
+
+            fwbs_variables.m_blkt_steel_total = (
+                fwbs_variables.vol_blkt_total
+                * fwbs_variables.den_steel
+                * fwbs_variables.fblss
+            )
+            fwbs_variables.m_blkt_vanadium = (
+                fwbs_variables.vol_blkt_total * 5870.0e0 * fwbs_variables.fblvd
+            )
+
+            fwbs_variables.m_blkt_total = (
+                fwbs_variables.m_blkt_total
+                + fwbs_variables.m_blkt_steel_total
+                + fwbs_variables.m_blkt_vanadium
             )
 
         #  When fwbs_variables.i_blanket_type_stellarator > 0, although the blanket is by definition helium-cooled
