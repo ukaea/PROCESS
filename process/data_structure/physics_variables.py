@@ -1104,9 +1104,6 @@ f_molflow_plasma_fuelling_tritium: float = None
 f_molflow_plasma_fuelling_helium3: float = None
 """fraction of plasma fuelling that is helium-3"""
 
-tauratio: float = None
-"""tauratio /1.0/ : ratio of He and pellet particle confinement times"""
-
 
 q95_min: float = None
 """lower limit for edge safety factor"""
@@ -1664,7 +1661,6 @@ def init_physics_variables():
         f_molflow_plasma_fuelling_deuterium, \
         f_molflow_plasma_fuelling_tritium, \
         f_molflow_plasma_fuelling_helium3, \
-        tauratio, \
         q95_min, \
         qstar, \
         rad_fraction_sol, \
@@ -1967,7 +1963,6 @@ def init_physics_variables():
     f_molflow_plasma_fuelling_deuterium = 0.5
     f_molflow_plasma_fuelling_tritium = 0.5
     f_molflow_plasma_fuelling_helium3 = 0.0
-    tauratio = 1.0
     q95_min = 0.0
     qstar = 0.0
     rad_fraction_sol = 0.8
