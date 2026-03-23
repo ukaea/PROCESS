@@ -258,7 +258,6 @@ class PlasmaCurrent:
         """
         results = {}
         for model in PlasmaCurrentModel:
-            # physics_variables.i_plasma_current = model.value
             results[model] = self.calculate_plasma_current(
                 alphaj=alphaj,
                 alphap=alphap,
