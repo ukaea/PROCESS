@@ -452,6 +452,60 @@ def poloidal_cross_section(
     # ---
 
 
+def plot_full_machine_poloidal_cross_section(
+    axis: plt.Axes,
+    mfile: mf.MFile,
+    scan: int,
+    radial_build: RadialBuild,
+    colour_scheme: Literal[1, 2],
+):
+    """Function to plot full machine poloidal cross-section, including mirrored negative x-axis
+
+    Parameters
+    ----------
+    axis :
+        axis object to add plot to
+    mfile :
+        MFILE data object
+    scan :
+        scan number to use
+    radial_build :
+        radial build data
+    colour_scheme :
+        colour scheme to use for plots
+    """
+
+    plot_vacuum_vessel_and_divertor(axis, mfile, scan, radial_build, colour_scheme)
+    plot_vacuum_vessel_and_divertor(
+        axis, mfile, scan, radial_build, colour_scheme, mirror_negative_x=True
+    )
+    plot_shield(axis, mfile, scan, radial_build, colour_scheme)
+    plot_shield(axis, mfile, scan, radial_build, colour_scheme, mirror_negative_x=True)
+
+    plot_blanket(axis, mfile, scan, radial_build, colour_scheme)
+    plot_blanket(axis, mfile, scan, radial_build, colour_scheme, mirror_negative_x=True)
+    plot_firstwall(axis, mfile, scan, radial_build, colour_scheme)
+    plot_firstwall(
+        axis, mfile, scan, radial_build, colour_scheme, mirror_negative_x=True
+    )
+    plot_plasma(axis, mfile, scan, colour_scheme)
+    plot_plasma(axis, mfile, scan, colour_scheme, mirror_negative_x=True)
+    plot_centre_cross(axis, mfile, scan)
+    plot_centre_cross(axis, mfile, scan, mirror_negative_x=True)
+    plot_cryostat(axis, mfile, scan, colour_scheme)
+    plot_cryostat(axis, mfile, scan, colour_scheme, mirror_negative_x=True)
+    plot_tf_coils(axis, mfile, scan, colour_scheme)
+    plot_tf_coils(axis, mfile, scan, colour_scheme, mirror_negative_x=True)
+    plot_pf_coils(axis, mfile, scan, colour_scheme)
+    plot_pf_coils(axis, mfile, scan, colour_scheme, mirror_negative_x=True)
+
+    axis.set_xlabel("Radial position [m]")
+    axis.set_ylabel("Vertical position [m]")
+    axis.set_aspect("equal")
+    axis.minorticks_on()
+    axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+
+
 def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Figure):
     """Plots the main power flow diagram for the fusion reactor, including plasma, heating and current drive,
     first wall, blanket, vacuum vessel, divertor, coolant pumps, turbine, generator, and auxiliary systems.
@@ -13747,66 +13801,13 @@ def main_plot(
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
-    ax = figs[18].add_subplot(111, aspect="equal")
-    plot_vacuum_vessel_and_divertor(ax, m_file, scan, radial_build, colour_scheme)
-    plot_vacuum_vessel_and_divertor(
-        ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True
+    plot_full_machine_poloidal_cross_section(
+        figs[18].add_subplot(111, aspect="equal"),
+        m_file,
+        scan,
+        radial_build,
+        colour_scheme,
     )
-    plot_shield(ax, m_file, scan, radial_build, colour_scheme)
-    plot_shield(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
-
-    plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
-    plot_blanket(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
-    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme)
-    plot_firstwall(ax, m_file, scan, radial_build, colour_scheme, mirror_negative_x=True)
-    plot_plasma(ax, m_file, scan, colour_scheme)
-    plot_plasma(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
-    plot_centre_cross(ax, m_file, scan)
-    plot_centre_cross(ax, m_file, scan, mirror_negative_x=True)
-    plot_cryostat(ax, m_file, scan, colour_scheme)
-    plot_cryostat(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
-    plot_tf_coils(ax, m_file, scan, colour_scheme)
-    plot_tf_coils(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
-    plot_pf_coils(ax, m_file, scan, colour_scheme)
-    plot_pf_coils(ax, m_file, scan, colour_scheme, mirror_negative_x=True)
-
-    ax.set_xlabel("Radial position [m]")
-    ax.set_ylabel("Vertical position [m]")
-    ax.minorticks_on()
-    ax.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
-
-    # Load the plasma image
-    with resources.path("process.core.io", "scale_person.png") as img_path:
-        img = mpimg.imread(img_path.open("rb"))  # shape: (Hpx, Wpx, ...)
-
-    # Desired image height in axis data units (e.g., meters)
-    target_h = 1.8
-
-    # Preserve pixel aspect ratio
-    h_px, w_px = img.shape[0], img.shape[1]
-    target_w = target_h * (w_px / h_px)
-
-    # Choose where to place it in data coords
-    x_left = (
-        m_file.get("r_cryostat_inboard", scan=scan)
-        + m_file.get("dr_cryostat", scan=scan)
-        + 0.5
-    )
-    y_bottom = -0.9
-    x_right = x_left + target_w
-    y_top = y_bottom + target_h
-
-    # Keep existing axis limits so adding the image does not autoscale the axes.
-    x_limits = ax.get_xlim()
-    y_limits = ax.get_ylim()
-
-    ax.imshow(
-        img,
-        extent=[x_left, x_right, y_bottom, y_top],  # [xmin, xmax, ymin, ymax]
-        aspect="auto",  # let extent control size on axes
-    )
-    ax.set_xlim(x_limits)
-    ax.set_ylim(y_limits)
 
     ax18 = figs[19].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
