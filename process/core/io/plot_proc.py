@@ -13250,7 +13250,7 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, sc
 
         # Add the value as a number to the right of the bar
         axis.text(
-            con_norm_residual + 0.02,
+            con_norm_residual + 0.52,
             n_plot,
             f"{con_norm_residual:.8g}",
             va="center",
@@ -13261,21 +13261,22 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, sc
 
         # Add the constraint value as text to the left of the y-axis
         axis.text(
-            -0.05,
+            0.45,
             n_plot,
             f"{con_value:.8g} {con_units}",
             va="center",
             ha="right",
-            fontsize=10,
+            fontsize=8,
             color="black",
         )
 
         y_labels.append(var_label)
         y_pos.append(n_plot)
 
-    axis.axvline(0, color="red", linewidth=2, zorder=0)
+    axis.axvline(0.5, color="red", linewidth=2, zorder=0)
     axis.set_yticks(y_pos)
     axis.set_yticklabels(y_labels)
+    axis.set_facecolor("#f5f5f5")
     axis.set_xlim(-0.4, 1.2)  # Normalised bounds
     axis.set_title("Equality Constraint Equations")
     axis.set_xticks([])
@@ -13656,51 +13657,51 @@ def main_plot(
     plot_iteration_variables(ax7, m_file, scan)
 
     ax7_5 = figs[3].add_subplot(313)
-    ax7_5.set_position([0.3, 0.1, 0.6, 0.1])
+    ax7_5.set_position([0.25, 0.1, 0.7, 0.8])
     plot_equality_constraint_equations(ax7_5, m_file, scan)
-    ax7_6 = figs[3].add_subplot(111)
-    ax7_6.set_position([0.3, 0.25, 0.65, 0.7])
+    ax7_6 = figs[4].add_subplot(111)
+    ax7_6.set_position([0.3, 0.1, 0.65, 0.8])
     plot_inequality_constraint_equations(ax7_6, m_file, scan)
 
     # Plot main plasma information
     plot_main_plasma_information(
-        figs[4].add_subplot(111, aspect="equal"),
+        figs[5].add_subplot(111, aspect="equal"),
         m_file,
         scan,
         colour_scheme,
-        figs[4],
+        figs[5],
     )
 
     # Plot density profiles
-    ax9 = figs[5].add_subplot(231)
+    ax9 = figs[6].add_subplot(231)
     ax9.set_position([0.075, 0.55, 0.25, 0.4])
     plot_n_profiles(ax9, demo_ranges, m_file, scan)
 
     # Plot temperature profiles
-    ax10 = figs[5].add_subplot(232)
+    ax10 = figs[6].add_subplot(232)
     ax10.set_position([0.375, 0.55, 0.25, 0.4])
     plot_t_profiles(ax10, demo_ranges, m_file, scan)
 
     # Plot impurity profiles
-    ax11 = figs[5].add_subplot(233)
+    ax11 = figs[6].add_subplot(233)
     ax11.set_position([0.7, 0.45, 0.25, 0.5])
     plot_radprofile(ax11, m_file, scan, imp, demo_ranges)
 
     # Plot current density profile
-    ax12 = figs[5].add_subplot(4, 3, 10)
+    ax12 = figs[6].add_subplot(4, 3, 10)
     ax12.set_position([0.075, 0.105, 0.25, 0.15])
     plot_jprofile(ax12, m_file, scan)
 
     # Plot q profile
-    ax13 = figs[5].add_subplot(4, 3, 12)
+    ax13 = figs[6].add_subplot(4, 3, 12)
     ax13.set_position([0.7, 0.125, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file, scan)
 
-    plot_plasma_effective_charge_profile(figs[6].add_subplot(221), m_file, scan)
-    plot_ion_charge_profile(figs[6].add_subplot(223), m_file, scan)
+    plot_plasma_effective_charge_profile(figs[7].add_subplot(221), m_file, scan)
+    plot_ion_charge_profile(figs[7].add_subplot(223), m_file, scan)
 
     if i_shape == 1:
-        plot_rad_contour(figs[6].add_subplot(122), m_file, scan, imp)
+        plot_rad_contour(figs[7].add_subplot(122), m_file, scan, imp)
 
     if i_shape != 1:
         msg = (
@@ -13710,12 +13711,12 @@ def main_plot(
             "see the 1D radiation plots for available information."
         )
         # Add explanatory text to both figures reserved for contour outputs
-        figs[6].text(0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        figs[7].text(0.75, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    plot_fusion_rate_profiles(figs[7].add_subplot(122), figs[7], m_file, scan)
+    plot_fusion_rate_profiles(figs[8].add_subplot(122), figs[8], m_file, scan)
 
     if m_file.get("i_plasma_shape", scan=scan) == 1:
-        plot_fusion_rate_contours(figs[8], figs[9], m_file, scan)
+        plot_fusion_rate_contours(figs[9], figs[10], m_file, scan)
 
     if i_shape != 1:
         msg = (
@@ -13725,19 +13726,19 @@ def main_plot(
             "see the 1D fusion rate/profile plots for available information."
         )
         # Add explanatory text to both figures reserved for contour outputs
-        figs[8].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
         figs[9].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        figs[10].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    plot_plasma_pressure_profiles(figs[10].add_subplot(222), m_file, scan)
-    plot_plasma_pressure_gradient_profiles(figs[10].add_subplot(224), m_file, scan)
+    plot_plasma_pressure_profiles(figs[11].add_subplot(222), m_file, scan)
+    plot_plasma_pressure_gradient_profiles(figs[11].add_subplot(224), m_file, scan)
     # Currently only works with Sauter geometry as plasma has a closed surface
 
     if i_shape == 1:
         plot_plasma_poloidal_pressure_contours(
-            figs[10].add_subplot(121, aspect="equal"), m_file, scan
+            figs[11].add_subplot(121, aspect="equal"), m_file, scan
         )
     else:
-        ax = figs[10].add_subplot(131, aspect="equal")
+        ax = figs[11].add_subplot(131, aspect="equal")
         msg = (
             "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
             "(i_plasma_shape == 1). "
@@ -13756,10 +13757,10 @@ def main_plot(
         )
         ax.axis("off")
 
-    plot_magnetic_fields_in_plasma(figs[11].add_subplot(122), m_file, scan)
-    plot_beta_profiles(figs[11].add_subplot(221), m_file, scan)
+    plot_magnetic_fields_in_plasma(figs[12].add_subplot(122), m_file, scan)
+    plot_beta_profiles(figs[12].add_subplot(221), m_file, scan)
 
-    plot_ebw_ecrh_coupling_graph(figs[12].add_subplot(111), m_file, scan)
+    plot_ebw_ecrh_coupling_graph(figs[13].add_subplot(111), m_file, scan)
 
     plot_bootstrap_comparison(figs[13].add_subplot(221), m_file, scan)
     PlasmaCurrent.plot_plasma_current_comparison(figs[13].add_subplot(224), m_file, scan)
