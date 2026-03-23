@@ -2147,7 +2147,6 @@ def test_vscalc(voltsecondreqparam):
 
 
 class PhyauxParam(NamedTuple):
-
     burnup_in: Any = None
 
     aspect: Any = None
@@ -2242,7 +2241,6 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-
 
     monkeypatch.setattr(physics_variables, "burnup_in", phyauxparam.burnup_in)
 
