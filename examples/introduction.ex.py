@@ -84,32 +84,6 @@ import process.data_structure
 print(f"Heat transport system: {process.data_structure.cost_variables.c226:.3e} M$")
 print(f"Electrical plant equipment: {process.data_structure.cost_variables.c24:.3e} M$")
 
-# %% [markdown]
-# ## Convert to CSV format
-# This demonstrates how you would read from a PROCESS MFILE and write specified values into a csv using the `mfile_to_csv` function
-
-# %%
-from process.core.io import mfile_to_csv
-
-# mfile_to_csv requires two inputs:
-# - path to the MFILE
-# - .json containing the variable names to include in the csv file
-
-# This routine attempts to find every variable listed in the json file
-# in the MFILE and writes the variable name, description and value
-# to the output csv.
-# Any listed variable that isn't in that MFILE will be skipped.
-# The .csv file is saved to the directory of the input file
-
-mfile_to_csv.main(
-    args=[
-        "-f",
-        (Path(temp_dir.name) / "large_tokamak_MFILE.DAT").as_posix(),
-        "-v",
-        (data_dir / "mfile_to_csv_vars.json").as_posix(),
-    ]
-)
-
 # %%
 # Clean up
 temp_dir.cleanup()

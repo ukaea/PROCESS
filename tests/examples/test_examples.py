@@ -2,11 +2,9 @@
 
 import os
 from pathlib import Path
-from shutil import copy, copytree, ignore_patterns
+from shutil import copytree, ignore_patterns
 
 import jupytext
-import numpy as np
-import pandas as pd
 import pytest
 from testbook import testbook
 
@@ -28,10 +26,6 @@ def examples_temp_data(tmp_path_factory):
         tmp_path / "examples",
         ignore=ignore_patterns("*.md", "*log", "__pycache__", "*.ipynb*"),
     )
-    csv_json_path = (
-        Path(__file__).parent.parent.parent / "process/core/io/mfile_to_csv_vars.json"
-    )
-    copy(csv_json_path, tmp_path)
 
     # This change of directory is undone by the return_to_root fixture, hence we do not need to change back directories here
     os.chdir(tmp_path / "examples")
@@ -45,41 +39,6 @@ def _get_location(loc, name):
     notebook = jupytext.read(loc / name.format(".ex.py"))
     jupytext.write(notebook, loc / name.format(".ex.ipynb"), fmt="ipynb")
     return loc / name.format(".ex.ipynb")
-
-
-def test_introductory_examples(examples_temp_data):
-    """Run the introduction.ex.py and check no exceptions are raised.
-
-    introduction.ex.py uses temp dirs to clean up any produced files itself.
-    :param examples_temp_data: temporary dir containing examples files
-    :type examples_temp_data: Path
-    """
-    example_notebook_location = _get_location(examples_temp_data, "introduction")
-
-    with (
-        testbook(example_notebook_location, execute=False, timeout=600) as tb,
-        tb.patch(
-            "process.core.repository._PROCESS_ROOT",
-            new=example_notebook_location.parent.resolve().as_posix(),
-        ),
-    ):
-        tb.execute()
-        assert os.path.exists(examples_temp_data / "data/large_tokamak_MFILE.csv")
-
-        # Read in the csv file created by test and check it contains positive floats
-        readcsv = pd.read_csv(examples_temp_data / "data/large_tokamak_MFILE.csv")
-        value_array = np.array(readcsv["Value"])
-        check_float = False
-        check_positive = False
-        value_array_type = value_array.dtype
-        if value_array_type.kind == "f":
-            check_float = True
-        assert check_float
-
-        check_positive_count = np.sum(value_array > 0)
-        if check_positive_count == len(value_array):
-            check_positive = True
-        assert check_positive
 
 
 def test_scan(examples_temp_data):
@@ -106,7 +65,12 @@ def test_scan(examples_temp_data):
 
 @pytest.mark.parametrize(
     "name",
-    ("single_model_evaluation", "vary_run_example", "optimum_solutions_comparison"),
+    (
+        "introduction",
+        "single_model_evaluation",
+        "vary_run_example",
+        "optimum_solutions_comparison",
+    ),
 )
 def test_no_assertion_solutions(name, examples_temp_data):
     """Run examples and check no exceptions are raised.
