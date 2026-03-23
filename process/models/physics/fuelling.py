@@ -468,12 +468,6 @@ class PlasmaFuelling:
         po.oheadr(self.outfile, "Plasma Fuelling")
         po.ovarre(
             self.outfile,
-            "Ratio of He and pellet particle confinement times",
-            "(tauratio)",
-            physics_variables.tauratio,
-        )
-        po.ovarre(
-            self.outfile,
             "Fuelling rate (nucleus-pairs/s)",
             "(molflow_plasma_fuelling_required)",
             physics_variables.molflow_plasma_fuelling_required,
