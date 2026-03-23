@@ -207,7 +207,14 @@ class PhysicsData:
     """Plasma stored magnetic energy (J)"""
 
     f_plasma_fuel_burnup: float = 0.0
-    """fractional plasma burnup"""
+    """Total fuel burnup fraction in plasma"""
+
+
+f_plasma_tritium_burnup: float = None
+"""Tritium burnup fraction in plasma"""
+
+f_plasma_deuterium_burnup: float = None
+"""Deuterium burnup fraction in plasma"""
 
     burnup_in: float = 0.0
     """fractional plasma burnup user input"""
