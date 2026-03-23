@@ -67,7 +67,7 @@ from process.models.physics.current_drive import (
     ElectronBernstein,
     ElectronCyclotron,
 )
-from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
