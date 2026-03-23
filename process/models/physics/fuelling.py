@@ -39,9 +39,82 @@ class PlasmaFuelling:
         -------
         float            Fuel burnup fraction (dimensionless).
 
+
+        Notes
+        -----
+        The fusion rate is multiplied by two to convert from nucleus pairs to particles, as the fuelling rate is in particles/s.
+
         """
 
-        return fusrat_total / molflow_plasma_fuelling_vv_injected
+        return 2 * fusrat_total / molflow_plasma_fuelling_vv_injected
+
+    @staticmethod
+    def calculate_tritium_burnup_fraction(
+        fusrat_dt_total: float,
+        molflow_plasma_fuelling_vv_injected: float,
+        f_molflow_plasma_fuelling_tritium: float,
+    ) -> float:
+        """Calculate the tritium burnup fraction
+
+        Parameters
+        ----------
+        fusrat_dt_total : float
+            Total DT fusion rate (particles/s).
+        molflow_plasma_fuelling_vv_injected : float
+            Total fuelling rate into vacuum vessel (particles/s).
+        f_molflow_plasma_fuelling_tritium : float
+            Fraction of tritium in the plasma fuelling.
+
+        Returns
+        -------
+        float            Tritium burnup fraction (dimensionless).
+
+        Notes
+        -----
+        The fusion rate is multiplied by two to convert from nucleus pairs to particles, as the fuelling rate is in particles/s.
+
+        """
+
+        return fusrat_dt_total / (
+            molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_tritium
+        )
+
+    @staticmethod
+    def calculate_deuterium_burnup_fraction(
+        fusrat_dt_total: float,
+        molflow_plasma_fuelling_vv_injected: float,
+        f_molflow_plasma_fuelling_deuterium: float,
+        fusrat_plasma_dd_total: float,
+        fusrat_plasma_dhe3: float,
+    ) -> float:
+        """Calculate the deuterium burnup fraction
+
+        Parameters
+        ----------
+        fusrat_dt_total : float
+            Total DT fusion rate (particles/s).
+        molflow_plasma_fuelling_vv_injected : float
+            Total fuelling rate into vacuum vessel (particles/s).
+        f_molflow_plasma_fuelling_deuterium : float
+            Fraction of deuterium in the plasma fuelling.
+        fusrat_plasma_dd_total : float
+            Total deuterium consumption rate from DD fusion (particles/s).
+        fusrat_plasma_dhe3 : float
+            Deuterium consumption rate from D-He3 fusion (particles/s).
+
+        Returns
+        -------
+        float            Deuterium burnup fraction (dimensionless).
+
+        Notes
+        -----
+        The fusion rate is multiplied by two to convert from nucleus pairs to particles, as the fuelling rate is in particles/s.
+
+        """
+
+        return (fusrat_dt_total + 2 * fusrat_plasma_dd_total + fusrat_plasma_dhe3) / (
+            molflow_plasma_fuelling_vv_injected * f_molflow_plasma_fuelling_deuterium
+        )
 
     @staticmethod
     def calculate_plasma_tritium_flow_rate(
@@ -449,8 +522,12 @@ class PlasmaFuelling:
             f"{mfile.get('f_molflow_plasma_fuelling_deuterium', scan=scan):.4f}\n"
             f"Fraction of 3-Helium Fuelling: "
             f"{mfile.get('f_molflow_plasma_fuelling_helium3', scan=scan):.4f}\n\n"
-            f"Fuel Burnup Fraction: "
+            f"Total Fuel Burnup Fraction: "
             f"{mfile.get('f_plasma_fuel_burnup', scan=scan):.4f}\n"
+            f"Tritium Burnup Fraction: "
+            f"{mfile.get('f_plasma_tritium_burnup', scan=scan):.4f}\n"
+            f"Deuterium Burnup Fraction: "
+            f"{mfile.get('f_plasma_deuterium_burnup', scan=scan):.4f}"
         )
         fig.text(
             0.75,
@@ -524,9 +601,23 @@ class PlasmaFuelling:
         )
         po.ovarrf(
             self.outfile,
-            "Burn-up fraction",
+            "Total fuel burn-up fraction",
             "(f_plasma_fuel_burnup)",
             physics_variables.f_plasma_fuel_burnup,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Tritium burn-up fraction",
+            "(f_plasma_tritium_burnup)",
+            physics_variables.f_plasma_tritium_burnup,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Deuterium burn-up fraction",
+            "(f_plasma_deuterium_burnup)",
+            physics_variables.f_plasma_deuterium_burnup,
             "OP ",
         )
 

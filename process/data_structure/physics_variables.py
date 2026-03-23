@@ -254,7 +254,14 @@ e_plasma_magnetic_stored: float = None
 
 
 f_plasma_fuel_burnup: float = None
-"""fractional plasma burnup"""
+"""Total fuel burnup fraction in plasma"""
+
+
+f_plasma_tritium_burnup: float = None
+"""Tritium burnup fraction in plasma"""
+
+f_plasma_deuterium_burnup: float = None
+"""Deuterium burnup fraction in plasma"""
 
 
 burnup_in: float = None
@@ -1480,6 +1487,8 @@ def init_physics_variables():
         b_plasma_total, \
         e_plasma_magnetic_stored, \
         f_plasma_fuel_burnup, \
+        f_plasma_tritium_burnup, \
+        f_plasma_deuterium_burnup, \
         burnup_in, \
         b_plasma_vertical_required, \
         c_beta, \
@@ -1780,6 +1789,8 @@ def init_physics_variables():
     b_plasma_total = 0.0
     e_plasma_magnetic_stored = 0.0
     f_plasma_fuel_burnup = 0.0
+    f_plasma_tritium_burnup = 0.0
+    f_plasma_deuterium_burnup = 0.0
     burnup_in = 0.0
     b_plasma_vertical_required = 0.0
     c_beta = 0.5
