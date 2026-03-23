@@ -42,7 +42,7 @@ class TestVacuum:
         :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
         """
         monkeypatch.setattr(
-            pv, "molflow_plasma_fuelling_required", 7.5745668997694112e22
+            pv, "molflow_plasma_fuelling_vv_injected", 7.5745668997694112e22
         )
         monkeypatch.setattr(pv, "a_plasma_surface", 1500.3146527709359)
         monkeypatch.setattr(tfv, "n_tf_coils", 18)

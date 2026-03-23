@@ -546,13 +546,6 @@ class PlasmaFuelling:
         po.ovarre(
             self.outfile,
             "Fuelling rate (nucleus-pairs/s)",
-            "(molflow_plasma_fuelling_required)",
-            physics_variables.molflow_plasma_fuelling_required,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Fuelling rate (nucleus-pairs/s)",
             "(molflow_plasma_fuelling_vv_injected)",
             physics_variables.molflow_plasma_fuelling_vv_injected,
             "OP ",
