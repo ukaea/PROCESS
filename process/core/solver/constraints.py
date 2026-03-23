@@ -1244,7 +1244,7 @@ def constraint_equation_54(constraint_registration):
     """Equation for peak TF coil nuclear heating upper limit
 
     ptfnucmax: maximum nuclear heating in TF coil (MW/m3)
-    ptfnucpm3: nuclear heating in the TF coil (MW/m3) (blktmodel>0)
+    ptfnucpm3: nuclear heating in the TF coil (MW/m3) (i_blanket_type_stellarator>0)
     """
     return leq(
         data_structure.fwbs_variables.ptfnucpm3,

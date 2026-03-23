@@ -1454,7 +1454,7 @@ tftmp = 20.0
 * VARIABLES:     nflutfmax(max fast neutron fluence on TF coil (n/m2)),nflutf calculated in situ
 
 * nflutfmax = 
-* DESCRIPTION:   max fast neutron fluence on TF coil (n/m2) (`blktmodel>0`) (`constraint equation 53`)
+* DESCRIPTION:   max fast neutron fluence on TF coil (n/m2) (`i_blanket_type_stellarator>0`) (`constraint equation 53`)
 * Also used for demontable magnets (itart = 1) and superconducting coils (i_tf_sup = 1)
 * To set the CP lifetime (`constraint equation 85`) 
 * JUSTIFICATION: Not set, not using icc = 53
@@ -1893,15 +1893,15 @@ dr_blkt_inboard = 0.0
 * JUSTIFICATION: Design choice, no inboard blanket
 
 *blbmith =
-* DESCRIPTION:   Inboard blanket box manifold thickness (m) (blktmodel>0)
+* DESCRIPTION:   Inboard blanket box manifold thickness (m) (i_blanket_type_stellarator>0)
 * JUSTIFICATION: Design choice, no inboard blanket
 
 *blbpith =
-* DESCRIPTION:   Inboard blanket back plate thickness (m) (blktmodel>0)
+* DESCRIPTION:   Inboard blanket back plate thickness (m) (i_blanket_type_stellarator>0)
 * JUSTIFICATION: Design choice, no inboard blanket
 
 *blbuith =
-* DESCRIPTION:   Inboard blanket breeding unit thickness (m) (blktmodel>0)
+* DESCRIPTION:   Inboard blanket breeding unit thickness (m) (i_blanket_type_stellarator>0)
 * JUSTIFICATION: Design choice, no inboard blanket
 
 *i_plasma_wall_gap = 
@@ -1933,15 +1933,15 @@ dr_fw_plasma_gap_outboard = 0.1
 *---------*
 
 *blbmoth =
-* DESCRIPTION:   Outboard blanket box manifold thickness (m) (blktmodel>0)
+* DESCRIPTION:   Outboard blanket box manifold thickness (m) (i_blanket_type_stellarator>0)
 * JUSTIFICATION: Not used with model.
 
 *blbpoth =
-* DESCRIPTION:   Outboard blanket back plate thickness (m)' (blktmodel>0)
+* DESCRIPTION:   Outboard blanket back plate thickness (m)' (i_blanket_type_stellarator>0)
 * JUSTIFICATION: Not used with model
 
 *blbuoth =
-* DESCRIPTION:   Outboard blanket breeding unit thickness (m) (blktmodel>0)
+* DESCRIPTION:   Outboard blanket breeding unit thickness (m) (i_blanket_type_stellarator>0)
 * JUSTIFICATION: Not used with model
 
 dr_blkt_outboard = 1.0

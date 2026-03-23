@@ -250,8 +250,8 @@ All items external to the fusion power core (buildings, turbines, power conversi
 ## Stellarator Blanket
 
 There are two blanket modules implemented in stellarator-PROCESS at the moment,
- - `blktmodel = 1`: Calls the KIT HCPB model
- - `blktmodel = 0` AND `ipowerflow=1`: Calls a "simple" model (`ipowerflow=0` is even simpler and not advised)
+ - `i_blanket_type_stellarator = 1`: Calls the KIT HCPB model
+ - `i_blanket_type_stellarator = 0` AND `ipowerflow=1`: Calls a "simple" model (`ipowerflow=0` is even simpler and not advised)
 
 The KIT HCPB model is documented elsewhere, for the simple module the following set of input parameters should be provided:
 ```
@@ -270,7 +270,7 @@ p_blkt_coolant_pump_mw = 120. *Blanket coolant mechanical pumping power (MW)
 p_fw_coolant_pump_mw = 56. *First wall coolant mechanical pumping power (MW)
 p_div_coolant_pump_mw = 24. *Divertor coolant mechanical pumping power (MW)
 i_thermal_electric_conversion = 2 *Switch for power conversion cycle (2: user input thermal-electric efficiency)
-f_a_blkt_cooling_channels = 0.1 *Coolant void fraction in blanket (blktmodel=0) (only relevant for mass calculations)
+f_a_blkt_cooling_channels = 0.1 *Coolant void fraction in blanket (i_blanket_type_stellarator=0) (only relevant for mass calculations)
 vfshld = 0.6 *Coolant void fraction in shield
 declblkt = 0.075 *Neutron decay length in blanket area (m)
 declfw = 0.075 *Neutron decay length in first wall (m)
@@ -291,7 +291,7 @@ vgap = 0. *Vertical gap between x-point and divertor (m)
 
 The simple stellarator blanket module is largely reduced to calculating masses given on blanket and shield sizes as defined in the input file.
 It also calculates neutron heat depositions based on the neutron decay length (this enters the cost function via shield pumping powers e.g.).
-Most of the blanket constraints implemented in tokamak PROCESS, namely `icc=52,53,54,55` are not available with `blktmodel = 0` and the KIT HCPB model, `blktmodel = 1` should be used instead.
+Most of the blanket constraints implemented in tokamak PROCESS, namely `icc=52,53,54,55` are not available with `i_blanket_type_stellarator = 0` and the KIT HCPB model, `i_blanket_type_stellarator = 1` should be used instead.
 Note, that PROCESS also features other blanket models (HCLL, WCLL) and thermohydraulic blanket models but they are not yet available for stellarators.
 
 

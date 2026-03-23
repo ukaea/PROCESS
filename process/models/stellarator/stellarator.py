@@ -596,7 +596,7 @@ class Stellarator:
         )
 
         #  Blanket neutronics calculations
-        if fwbs_variables.blktmodel == 1:
+        if fwbs_variables.i_blanket_type_stellarator == 1:
             self.blanket_neutronics()
 
             if heat_transport_variables.ipowerflow == 1:
@@ -1038,7 +1038,7 @@ class Stellarator:
 
         #  Blanket mass, excluding coolant
 
-        if fwbs_variables.blktmodel == 0:
+        if fwbs_variables.i_blanket_type_stellarator == 0:
             if (fwbs_variables.blkttype == 1) or (
                 fwbs_variables.blkttype == 2
             ):  # liquid breeder (WCLL or HCLL)
@@ -1168,13 +1168,13 @@ class Stellarator:
                 )
             )
 
-        #  When fwbs_variables.blktmodel > 0, although the blanket is by definition helium-cooled
+        #  When fwbs_variables.i_blanket_type_stellarator > 0, although the blanket is by definition helium-cooled
         #  in this case, the shield etc. are assumed to be water-cooled, and since
         #  water is heavier the calculation for fwbs_variables.m_fw_blkt_div_coolant_total is better done with
-        #  i_blkt_coolant_type=2 if fwbs_variables.blktmodel > 0; thus we can ignore the helium coolant mass
+        #  i_blkt_coolant_type=2 if fwbs_variables.i_blanket_type_stellarator > 0; thus we can ignore the helium coolant mass
         #  in the blanket.
 
-        if fwbs_variables.blktmodel == 0:
+        if fwbs_variables.i_blanket_type_stellarator == 0:
             coolvol = (
                 coolvol
                 + fwbs_variables.vol_blkt_total
@@ -1253,10 +1253,10 @@ class Stellarator:
 
         #  Mass of coolant = volume * density at typical coolant
         #  temperatures and pressures
-        #  N.B. for fwbs_variables.blktmodel > 0, mass of *water* coolant in the non-blanket
+        #  N.B. for fwbs_variables.i_blanket_type_stellarator > 0, mass of *water* coolant in the non-blanket
         #  structures is used (see comment above)
 
-        if (fwbs_variables.blktmodel > 0) or (
+        if (fwbs_variables.i_blanket_type_stellarator > 0) or (
             fwbs_variables.i_blkt_coolant_type == 2
         ):  # pressurised water coolant
             fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 806.719e0
@@ -1328,7 +1328,7 @@ class Stellarator:
                 "(pflux_fw_neutron_mw)",
                 physics_variables.pflux_fw_neutron_mw,
             )
-            if fwbs_variables.blktmodel > 0:
+            if fwbs_variables.i_blanket_type_stellarator > 0:
                 po.ovarre(
                     self.outfile,
                     "Neutron wall load peaking factor",
@@ -1362,7 +1362,7 @@ class Stellarator:
                 build_variables.dz_shld_upper,
             )
 
-            if fwbs_variables.blktmodel > 0:
+            if fwbs_variables.i_blanket_type_stellarator > 0:
                 po.ovarre(
                     self.outfile,
                     "Inboard breeding zone thickness (m)",
@@ -1388,7 +1388,7 @@ class Stellarator:
                 "(dr_blkt_inboard)",
                 build_variables.dr_blkt_inboard,
             )
-            if fwbs_variables.blktmodel > 0:
+            if fwbs_variables.i_blanket_type_stellarator > 0:
                 po.ovarre(
                     self.outfile,
                     "Outboard breeding zone thickness (m)",
@@ -1422,7 +1422,7 @@ class Stellarator:
             )
 
             if (heat_transport_variables.ipowerflow == 0) and (
-                fwbs_variables.blktmodel == 0
+                fwbs_variables.i_blanket_type_stellarator == 0
             ):
                 po.osubhd(self.outfile, "Coil nuclear parameters :")
                 po.ovarre(
@@ -1463,7 +1463,7 @@ class Stellarator:
                     dpacop,
                 )
 
-            if fwbs_variables.blktmodel == 0:
+            if fwbs_variables.i_blanket_type_stellarator == 0:
                 po.osubhd(self.outfile, "Nuclear heating :")
                 po.ovarre(
                     self.outfile,
@@ -1627,7 +1627,7 @@ class Stellarator:
                 )
 
             if (heat_transport_variables.ipowerflow == 1) and (
-                fwbs_variables.blktmodel == 0
+                fwbs_variables.i_blanket_type_stellarator == 0
             ):
                 po.oblnkl(self.outfile)
                 po.ovarin(

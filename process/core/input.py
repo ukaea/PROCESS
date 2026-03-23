@@ -1801,7 +1801,9 @@ INPUT_VARIABLES = {
     "zeff_max": InputVariable(
         data_structure.constraint_variables, float, range=(1.0, 10.0)
     ),
-    "blktmodel": InputVariable(data_structure.fwbs_variables, int, choices=[0, 1]),
+    "i_blanket_type_stellarator": InputVariable(
+        data_structure.fwbs_variables, int, choices=[0, 1]
+    ),
     "blkttype": InputVariable(data_structure.fwbs_variables, int, choices=[1, 2, 3]),
     "breedmat": InputVariable(data_structure.fwbs_variables, int, choices=[1, 2, 3]),
     "ccl0_ma": InputVariable(data_structure.pfcoil_variables, float, array=True),

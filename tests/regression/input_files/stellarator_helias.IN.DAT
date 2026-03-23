@@ -186,7 +186,7 @@ fblss    = 0.0985               *Stainless steel fraction of blanket by volume
 fblvd    = 0.00                 *Vanadium fraction of blanket by volume
 fhole    = 0.0                  *Area fraction taken up by other holes (not used)
 fwclfr   = 0.35                 *First wall coolant fraction
-f_a_blkt_cooling_channels   = 0.386    *Coolant void fraction in blanket (blktmodel=0)
+f_a_blkt_cooling_channels   = 0.386    *Coolant void fraction in blanket (i_blanket_type_stellarator=0)
 vfshld   = 0.40                 *Coolant void fraction in shield
 
 declblkt = 0.1        *Neutron Power Deposition Decay Length Of Blanket Structural Material [M] (Stellarators Only)
