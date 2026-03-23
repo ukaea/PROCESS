@@ -7,6 +7,13 @@ NOUT = 11
 MFILE = 13
 """Machine-optimised output file unit"""
 
+
+AVOGADRO_NUMBER = 6.02214076e23
+"""Avogadro's number [1/mol]
+Reference: National Institute of Standards and Technology (NIST)
+https://physics.nist.gov/cgi-bin/cuu/Value?na|search_for=avogadro
+"""
+
 ELECTRON_CHARGE = 1.602176634e-19
 """Electron / elementary charge [C]
 Reference: National Institute of Standards and Technology (NIST)
