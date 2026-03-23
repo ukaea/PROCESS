@@ -1090,9 +1090,6 @@ in which case q95 = mean edge safety factor qbar)
 """
 
 
-molflow_plasma_fuelling_required: float = None
-"""plasma fuelling rate (nucleus-pairs/s)"""
-
 f_plasma_particles_lcfs_recycled: float = None
 """fraction of plasma particles that are recycled at the LCFS. Recycling coefficent (R)"""
 
@@ -1100,7 +1097,7 @@ eta_plasma_fuelling: float = None
 """fuelling efficiency (fraction of fuel particles injected that become confined in the plasma)"""
 
 molflow_plasma_fuelling_vv_injected: float = None
-"""plasma fuelling rate into the vacuum vessel (nucleus-pairs/s)"""
+"""plasma fuelling rate into the vacuum vessel (particles/s)"""
 
 f_molflow_plasma_fuelling_deuterium: float = None
 """fraction of plasma fuelling that is deuterium"""
@@ -1663,7 +1660,6 @@ def init_physics_variables():
         pden_ion_transport_loss_mw, \
         q0, \
         q95, \
-        molflow_plasma_fuelling_required, \
         f_plasma_particles_lcfs_recycled, \
         eta_plasma_fuelling, \
         molflow_plasma_fuelling_vv_injected, \
@@ -1967,7 +1963,6 @@ def init_physics_variables():
     pden_ion_transport_loss_mw = 0.0
     q0 = 1.0
     q95 = 0.0
-    molflow_plasma_fuelling_required = 0.0
     f_plasma_particles_lcfs_recycled = 0.0
     eta_plasma_fuelling = 0.0
     molflow_plasma_fuelling_vv_injected = 1e20

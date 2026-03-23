@@ -2248,7 +2248,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         f_plasma_fuel_burnup,
         figmer,
         fusrat,
-        molflow_plasma_fuelling_required,
+        molflow_plasma_fuelling_vv_injected,
         rndfuel,
         t_alpha_confinement,
         _,
@@ -2270,7 +2270,7 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     assert fusrat == pytest.approx(phyauxparam.expected_fusrat)
 
-    assert molflow_plasma_fuelling_required == pytest.approx(
+    assert molflow_plasma_fuelling_vv_injected == pytest.approx(
         phyauxparam.expected_molflow_plasma_fuelling_required
     )
 
