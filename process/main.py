@@ -594,12 +594,14 @@ class SingleRun:
                     else:
                         # If replacement is False, add the line as-is
                         modified_lines.append(line)
+                        variables_in_in_dat.append(variable_name)
                 else:
                     modified_lines.append(line)
 
         obs_vars_in_in_dat = [
             var for var in variables_in_in_dat if var in obsolete_variables
         ]
+
         if obs_vars_in_in_dat:
             if replace_obsolete:
                 # If replace_obsolete is True, write the modified content to the file
