@@ -96,6 +96,7 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.impurity_radiation import initialise_imprad
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.physics import (
@@ -708,6 +709,7 @@ class Models:
         self.plasma_inductance = PlasmaInductance()
         self.plasma_density_limit = PlasmaDensityLimit()
         self.plasma_exhaust = PlasmaExhaust()
+        self.plasma_fuelling = PlasmaFuelling()
         self.plasma_bootstrap_current = PlasmaBootstrapCurrent(
             plasma_profile=self.plasma_profile
         )
@@ -725,6 +727,7 @@ class Models:
             plasma_confinement=self.plasma_confinement,
             plasma_transition=self.plasma_transition,
             plasma_current=self.plasma_current,
+            plasma_fuelling=self.plasma_fuelling,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
