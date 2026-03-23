@@ -788,7 +788,6 @@ INPUT_VARIABLES = {
     "t_plasma_energy_confinement_max": InputVariable(
         "physics", float, range=(0.1, 100.0)
     ),
-    "tauratio": InputVariable("physics", float, range=(0.1, 100.0)),
     "n_beam_decay_lengths_core_required": InputVariable(
         "current_drive", float, range=(0.0, 10.0)
     ),

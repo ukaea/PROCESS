@@ -2157,7 +2157,6 @@ def test_vscalc(voltsecondreqparam):
 
 
 class PhyauxParam(NamedTuple):
-    tauratio: Any = None
 
     burnup_in: Any = None
 
@@ -2204,7 +2203,6 @@ class PhyauxParam(NamedTuple):
     "phyauxparam",
     [
         PhyauxParam(
-            tauratio=1,
             burnup_in=0,
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8589175702454272e19,
@@ -2223,7 +2221,6 @@ class PhyauxParam(NamedTuple):
             expected_t_alpha_confinement=37.993985551650177,
         ),
         PhyauxParam(
-            tauratio=1,
             burnup_in=0,
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8576156204039725e19,
@@ -2257,7 +2254,6 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics.data.physics, "tauratio", phyauxparam.tauratio)
 
     monkeypatch.setattr(physics.data.physics, "burnup_in", phyauxparam.burnup_in)
 

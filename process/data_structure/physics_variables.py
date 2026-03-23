@@ -933,8 +933,6 @@ f_molflow_plasma_fuelling_tritium: float = None
 
 f_molflow_plasma_fuelling_helium3: float = None
 """fraction of plasma fuelling that is helium-3"""
-    tauratio: float = 1.0
-    """tauratio /1.0/ : ratio of He and pellet particle confinement times"""
 
     q95_min: float = 0.0
     """lower limit for edge safety factor"""
