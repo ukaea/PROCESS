@@ -442,7 +442,9 @@ class PlasmaFuelling:
             f"Fraction of Deuterium Fuelling: "
             f"{mfile.get('f_molflow_plasma_fuelling_deuterium', scan=scan):.4f}\n"
             f"Fraction of 3-Helium Fuelling: "
-            f"{mfile.get('f_molflow_plasma_fuelling_helium3', scan=scan):.4f}"
+            f"{mfile.get('f_molflow_plasma_fuelling_helium3', scan=scan):.4f}\n\n"
+            f"Fuel Burnup Fraction: "
+            f"{mfile.get('f_plasma_fuel_burnup', scan=scan):.4f}\n"
         )
         fig.text(
             0.75,

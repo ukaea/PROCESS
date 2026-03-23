@@ -34,7 +34,8 @@ if TYPE_CHECKING:
     )
     from process.models.physics.density_limit import PlasmaDensityLimit
     from process.models.physics.exhaust import PlasmaExhaust
-    from process.models.physics.l_h_transition import PlasmaConfinementTransition
+    from process.models.physics.fuelling import PlasmaFuelling
+from process.models.physics.l_h_transition import PlasmaConfinementTransition
     from process.models.physics.plasma_current import (
         PlasmaCurrent,
         PlasmaDiamagneticCurrent,
@@ -192,6 +193,7 @@ class Physics(Model):
         plasma_fields: PlasmaFields,
         plasma_dia_current: PlasmaDiamagneticCurrent,
         plasma_geometry: PlasmaGeom,
+        plasma_fuelling: PlasmaFuelling,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -208,6 +210,7 @@ class Physics(Model):
         self.fields = plasma_fields
         self.dia_current = plasma_dia_current
         self.geometry = plasma_geometry
+        self.fuelling = plasma_fuelling
 
     def output(self) -> None:
         """Output plasma physics information."""
@@ -898,35 +901,25 @@ class Physics(Model):
             self.data.physics.ind_plasma_internal_norm,
         )
 
-        self.data.physics.e_plasma_magnetic_stored = (
-            0.5e0 * self.data.physics.ind_plasma * self.data.physics.plasma_current**2
+        physics_variables.e_plasma_magnetic_stored = (
+            0.5e0 * physics_variables.ind_plasma * physics_variables.plasma_current**2
         )
 
-        # Calculate auxiliary physics related information
-        sbar = 1.0e0
         (
-            physics_variables.f_plasma_fuel_burnup,
-            physics_variables.figmer,
-            physics_variables.fusrat,
-            physics_variables.molflow_plasma_fuelling_required,
-            _,
             physics_variables.t_alpha_confinement,
             physics_variables.f_alpha_energy_confinement,
         ) = self.phyaux(
-            self.data.physics.aspect,
-            self.data.physics.nd_plasma_fuel_ions_vol_avg,
-            self.data.physics.fusden_total,
-            self.data.physics.fusden_alpha_total,
-            self.data.physics.plasma_current,
-            sbar,
-            self.data.physics.nd_plasma_alphas_vol_avg,
-            self.data.physics.t_energy_confinement,
-            self.data.physics.vol_plasma,
-            self.data.physics.burnup_in,
-            self.data.physics.tauratio,
+            physics_variables.fusden_alpha_total,
+            physics_variables.nd_plasma_alphas_vol_avg,
+            physics_variables.t_energy_confinement,
         )
 
-        self.data.physics.ntau, self.data.physics.nTtau = (
+        physics_variables.f_plasma_fuel_burnup = self.fuelling.calculate_fuel_burnup_fraction(
+            fusrat_total=physics_variables.fusrat_total,
+            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
+        )
+
+        physics_variables.ntau, physics_variables.nTtau = (
             self.confinement.calculate_double_and_triple_product(
                 nd_plasma_electrons_vol_avg=self.data.physics.nd_plasma_electrons_vol_avg,
                 t_energy_confinement=self.data.physics.t_energy_confinement,
@@ -1411,18 +1404,12 @@ class Physics(Model):
     @staticmethod
     @nb.njit(cache=True)
     def phyaux(
-        aspect: float,
-        nd_plasma_fuel_ions_vol_avg: float,
-        fusden_total: float,
         fusden_alpha_total: float,
-        plasma_current: float,
-        sbar: float,
         nd_plasma_alphas_vol_avg: float,
         t_energy_confinement: float,
-        vol_plasma: float,
         burnup_in: float,
         tauratio: float,
-    ) -> tuple[float, float, float, float, float, float, float, float]:
+    ) -> tuple[float, float]:
         """Auxiliary physics quantities
 
         Parameters
@@ -1454,22 +1441,12 @@ class Physics(Model):
         -------
         tuple
             A tuple containing:
-            - f_plasma_fuel_burnup (float): Fractional plasma burnup.
-            - figmer (float): Physics figure of merit.
-            - fusrat (float): Number of fusion reactions per second.
-            - molflow_plasma_fuelling_required (float): Fuelling rate for D-T
-              (nucleus-pairs/sec).
-            - rndfuel (float): Fuel burnup rate (reactions/s).
             - t_alpha_confinement (float): Alpha particle confinement time (s).
             - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
             This subroutine calculates extra physics related items needed by other
             parts of the code.
 
         """
-        figmer = 1e-6 * plasma_current * aspect**sbar
-
-        # Fusion reactions per second
-        fusrat = fusden_total * vol_plasma
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
@@ -1480,41 +1457,9 @@ class Physics(Model):
             else nd_plasma_alphas_vol_avg / fusden_alpha_total
         )
 
-        # Fractional burnup
-        # (Consider detailed model in: G. L. Jackson, V. S. Chan, R. D. Stambaugh,
-        # Fusion Science and Technology, vol.64, no.1, July 2013, pp.8-12)
-        # The ratio of ash to fuel particle confinement times is given by
-        # tauratio
-        # Possible logic...
-        # f_plasma_fuel_burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
-        # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and
-        # D-He3 reactions)
-        # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion
-        # pairs/m3
-        # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
-        if burnup_in <= 1.0e-9:
-            f_plasma_fuel_burnup = (
-                nd_plasma_alphas_vol_avg
-                / (nd_plasma_alphas_vol_avg + 0.5 * nd_plasma_fuel_ions_vol_avg)
-                / tauratio
-            )
-        else:
-            burnup = burnup_in
-
-        # Fuel burnup rate (reactions/second) (previously Amps)
-        rndfuel = fusrat
-
-        # Required fuelling rate (fuel ion pairs/second) (previously Amps)
-        molflow_plasma_fuelling_required = rndfuel / f_plasma_fuel_burnup
-
         f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
         return (
-            f_plasma_fuel_burnup,
-            figmer,
-            fusrat,
-            molflow_plasma_fuelling_required,
-            rndfuel,
             t_alpha_confinement,
             f_alpha_energy_confinement,
         )
