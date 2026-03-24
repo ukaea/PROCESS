@@ -226,7 +226,11 @@ def acc2273_fix(request, monkeypatch, costs):
 
     # Mock variables used by acc2273()
     # Some may be parameterised
-    monkeypatch.setattr(data_structure.buildings_variables, "vol_plant_warm_shop_building", param["vol_plant_warm_shop_building"])
+    monkeypatch.setattr(
+        data_structure.buildings_variables,
+        "vol_plant_warm_shop_building",
+        param["vol_plant_warm_shop_building"],
+    )
     monkeypatch.setattr(data_structure.buildings_variables, "volrci", param["volrci"])
     monkeypatch.setattr(
         physics_variables, "f_plasma_fuel_tritium", param["f_plasma_fuel_tritium"]
@@ -258,7 +262,9 @@ def test_acc2274(monkeypatch, costs):
     :param monkeypatch: Mock fixture
     :type monkeypatch: object
     """
-    monkeypatch.setattr(data_structure.buildings_variables, "vol_plant_warm_shop_building", 132304.1)
+    monkeypatch.setattr(
+        data_structure.buildings_variables, "vol_plant_warm_shop_building", 132304.1
+    )
     monkeypatch.setattr(data_structure.buildings_variables, "volrci", 1299783.4)
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "c2274", 0)
@@ -705,7 +711,7 @@ class Acc21Param(NamedTuple):
 
     cryvol: Any = None
 
-    rmbvol: Any = None
+    vol_plant_maintenance_assembly_building: Any = None
 
     admvol: Any = None
 
@@ -791,7 +797,7 @@ class Acc21Param(NamedTuple):
             elevol=51601.097615432001,
             rbvol=1356973.2891062023,
             cryvol=15247.180612719381,
-            rmbvol=421473.52130148414,
+            vol_plant_maintenance_assembly_building=421473.52130148414,
             admvol=100000,
             convol=60000,
             vol_plant_warm_shop_building=130018.25667917728,
@@ -836,7 +842,7 @@ class Acc21Param(NamedTuple):
             elevol=51609.268177478581,
             rbvol=1358540.6868905292,
             cryvol=25826.919937316459,
-            rmbvol=423252.94369581528,
+            vol_plant_maintenance_assembly_building=423252.94369581528,
             admvol=100000,
             convol=60000,
             vol_plant_warm_shop_building=130255.93791329287,
@@ -900,13 +906,21 @@ def test_acc21(acc21param, monkeypatch, costs):
 
     monkeypatch.setattr(buildings_variables, "cryvol", acc21param.cryvol)
 
-    monkeypatch.setattr(buildings_variables, "rmbvol", acc21param.rmbvol)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_maintenance_assembly_building",
+        acc21param.vol_plant_maintenance_assembly_building,
+    )
 
     monkeypatch.setattr(buildings_variables, "admvol", acc21param.admvol)
 
     monkeypatch.setattr(buildings_variables, "convol", acc21param.convol)
 
-    monkeypatch.setattr(buildings_variables, "vol_plant_warm_shop_building", acc21param.vol_plant_warm_shop_building)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_warm_shop_building",
+        acc21param.vol_plant_warm_shop_building,
+    )
 
     monkeypatch.setattr(cost_variables, "ucrb", acc21param.ucrb)
 
@@ -4532,7 +4546,11 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(buildings_variables, "vol_plant_warm_shop_building", acc2273param.vol_plant_warm_shop_building)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_warm_shop_building",
+        acc2273param.vol_plant_warm_shop_building,
+    )
 
     monkeypatch.setattr(buildings_variables, "volrci", acc2273param.volrci)
 
@@ -4605,7 +4623,11 @@ def test_acc2274_rut(acc2274param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(buildings_variables, "vol_plant_warm_shop_building", acc2274param.vol_plant_warm_shop_building)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_warm_shop_building",
+        acc2274param.vol_plant_warm_shop_building,
+    )
 
     monkeypatch.setattr(buildings_variables, "volrci", acc2274param.volrci)
 

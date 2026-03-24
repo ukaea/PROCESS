@@ -394,7 +394,7 @@ reactor_wall_thk: float = None
 """reactor building wall thickness (m)"""
 
 
-rmbvol: float = None
+vol_plant_maintenance_assembly_building: float = None
 """volume of maintenance and assembly building (m3)"""
 
 
@@ -711,7 +711,7 @@ def init_buildings_variables():
         reactor_hall_h, \
         reactor_roof_thk, \
         reactor_wall_thk, \
-        rmbvol, \
+        vol_plant_maintenance_assembly_building, \
         robotics_l, \
         robotics_w, \
         robotics_h, \
@@ -865,7 +865,7 @@ def init_buildings_variables():
     reactor_hall_h = 0.0
     reactor_roof_thk = 1.0
     reactor_wall_thk = 2.0
-    rmbvol = 0.0
+    vol_plant_maintenance_assembly_building = 0.0
     robotics_l = 50.0
     robotics_w = 30.0
     robotics_h = 30.0

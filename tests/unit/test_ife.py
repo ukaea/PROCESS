@@ -2875,7 +2875,7 @@ class IfebdgParam(NamedTuple):
     convol: Any = None
     elevol: Any = None
     rbvol: Any = None
-    rmbvol: Any = None
+    vol_plant_maintenance_assembly_building: Any = None
     shovol: Any = None
     volrci: Any = None
     vol_plant_warm_shop_building: Any = None
@@ -2924,7 +2924,7 @@ class IfebdgParam(NamedTuple):
             convol=0.0,
             elevol=0.0,
             rbvol=0.0,
-            rmbvol=0.0,
+            vol_plant_maintenance_assembly_building=0.0,
             shovol=0.0,
             volrci=0.0,
             vol_plant_warm_shop_building=0.0,
@@ -2986,10 +2986,18 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     monkeypatch.setattr(buildings_variables, "convol", ifebdgparam.convol)
     monkeypatch.setattr(buildings_variables, "elevol", ifebdgparam.elevol)
     monkeypatch.setattr(buildings_variables, "rbvol", ifebdgparam.rbvol)
-    monkeypatch.setattr(buildings_variables, "rmbvol", ifebdgparam.rmbvol)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_maintenance_assembly_building",
+        ifebdgparam.vol_plant_maintenance_assembly_building,
+    )
     monkeypatch.setattr(buildings_variables, "shovol", ifebdgparam.shovol)
     monkeypatch.setattr(buildings_variables, "volrci", ifebdgparam.volrci)
-    monkeypatch.setattr(buildings_variables, "vol_plant_warm_shop_building", ifebdgparam.vol_plant_warm_shop_building)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_warm_shop_building",
+        ifebdgparam.vol_plant_warm_shop_building,
+    )
     monkeypatch.setattr(buildings_variables, "volnucb", ifebdgparam.volnucb)
     monkeypatch.setattr(fwbs_variables, "whtshld", ifebdgparam.whtshld)
     monkeypatch.setattr(heat_transport_variables, "helpow", ifebdgparam.helpow)
@@ -3010,10 +3018,14 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     assert buildings_variables.convol == pytest.approx(ifebdgparam.expected_convol)
     assert buildings_variables.elevol == pytest.approx(ifebdgparam.expected_elevol)
     assert buildings_variables.rbvol == pytest.approx(ifebdgparam.expected_rbvol)
-    assert buildings_variables.rmbvol == pytest.approx(ifebdgparam.expected_rmbvol)
+    assert buildings_variables.vol_plant_maintenance_assembly_building == pytest.approx(
+        ifebdgparam.expected_rmbvol
+    )
     assert buildings_variables.shovol == pytest.approx(ifebdgparam.expected_shovol)
     assert buildings_variables.volrci == pytest.approx(ifebdgparam.expected_volrci)
-    assert buildings_variables.vol_plant_warm_shop_building == pytest.approx(ifebdgparam.expected_wsvol)
+    assert buildings_variables.vol_plant_warm_shop_building == pytest.approx(
+        ifebdgparam.expected_wsvol
+    )
     assert buildings_variables.volnucb == pytest.approx(ifebdgparam.expected_volnucb)
 
 
