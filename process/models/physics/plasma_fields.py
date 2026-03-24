@@ -83,4 +83,52 @@ class PlasmaFields:
 
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
-    
+    @staticmethod
+    def calculate_plasma_inboard_toroidal_field(
+        b_plasma_toroidal_on_axis: float,
+        rmajor: float,
+        rminor: float,
+    ) -> float:
+        """Calculate the toroidal field at the plasma inboard midplane (Bᴛ(R₀-a))
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis :
+            toroidal field on axis (T)
+        rmajor :
+            plasma major radius (m)
+        rminor :
+            plasma minor radius (m)
+
+        Returns
+        -------
+        :
+            toroidal field at the plasma inboard midplane (T)
+        """
+
+        return rmajor * b_plasma_toroidal_on_axis / (rmajor - rminor)
+
+    @staticmethod
+    def calculate_plasma_outboard_toroidal_field(
+        b_plasma_toroidal_on_axis: float,
+        rmajor: float,
+        rminor: float,
+    ) -> float:
+        """Calculate the toroidal field at the plasma outboard midplane (Bᴛ(R₀+a))
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis :
+            toroidal field on axis (T)
+        rmajor :
+            plasma major radius (m)
+        rminor :
+            plasma minor radius (m)
+
+        Returns
+        -------
+        :
+            toroidal field at the plasma outboard midplane (T)
+        """
+
+        return rmajor * b_plasma_toroidal_on_axis / (rmajor + rminor)

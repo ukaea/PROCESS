@@ -1323,9 +1323,9 @@ def test_calculate_plasma_current_peng(arguments, expected, physics):
     ),
 )
 def test_calculate_poloidal_field(arguments, expected, physics):
-    assert physics.current.calculate_surface_averaged_poloidal_field(**arguments) == pytest.approx(
-        expected
-    )
+    assert physics.current.calculate_surface_averaged_poloidal_field(
+        **arguments
+    ) == pytest.approx(expected)
 
 
 def test_calculate_beta_limit():
