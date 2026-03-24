@@ -1,5 +1,6 @@
 import logging
 from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 
@@ -68,10 +69,22 @@ class CurrentDriveModel(IntEnum):
     def __new__(cls, value, method, abbreviation, full_name):
         obj = int.__new__(cls, value)
         obj._value_ = value
-        obj.method = method
-        obj.abbreviation = abbreviation
-        obj.full_name = full_name
+        obj._method_ = method
+        obj._abbreviation_ = abbreviation
+        obj._full_name_ = full_name
         return obj
+
+    @DynamicClassAttribute
+    def method(self):
+        return self._method_
+
+    @DynamicClassAttribute
+    def abbreviation(self):
+        return self._abbreviation_
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class NeutralBeam:
