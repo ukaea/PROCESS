@@ -550,7 +550,7 @@ wrbi: float = None
 """distance from centre of machine to building wall (m)"""
 
 
-wsvol: float = None
+vol_plant_warm_shop_building: float = None
 """volume of warm shop building (m3)"""
 
 
@@ -750,7 +750,7 @@ def init_buildings_variables():
         workshop_w, \
         workshop_h, \
         wrbi, \
-        wsvol, \
+        vol_plant_warm_shop_building, \
         wsvfac, \
         a_reactor_bldg, \
         a_ee_ps_bldg, \
@@ -905,7 +905,7 @@ def init_buildings_variables():
     wgt2 = 1.0e5
     wrbi = 0.0
     wsvfac = 1.9
-    wsvol = 0.0
+    vol_plant_warm_shop_building = 0.0
     a_reactor_bldg = 8.32e3
     a_ee_ps_bldg = 2.133e4
     a_aux_services_bldg = 1.0e3
