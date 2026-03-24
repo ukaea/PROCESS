@@ -2278,7 +2278,7 @@ class IFE:
         # RBWT = wall thickness
         # RBRT = roof thickness
         # FNDT = foundation thickness
-        rbw = 2.0 * (ife_variables.r7 + buildings_variables.rbwt)
+        rbw = 2.0 * (ife_variables.r7 + buildings_variables.dx_plant_reactor_building_wall)
         rbl = rbw
         rbh = hrbi + buildings_variables.rbrt + buildings_variables.fndt
 

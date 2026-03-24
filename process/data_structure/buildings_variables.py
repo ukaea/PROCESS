@@ -362,7 +362,7 @@ vol_plant_reactor_building: float = None
 """reactor building volume (m3)"""
 
 
-rbwt: float = None
+dx_plant_reactor_building_wall: float = None
 """reactor building wall thickness (m)"""
 
 
@@ -703,7 +703,7 @@ def init_buildings_variables():
         rbvfac, \
         rbrt, \
         vol_plant_reactor_building, \
-        rbwt, \
+        dx_plant_reactor_building_wall, \
         reactor_clrnc, \
         reactor_fndtn_thk, \
         reactor_hall_l, \
@@ -857,7 +857,7 @@ def init_buildings_variables():
     rbvfac = 1.6
     rbrt = 1.0
     vol_plant_reactor_building = 0.0
-    rbwt = 2.0
+    dx_plant_reactor_building_wall = 2.0
     reactor_clrnc = 4.0
     reactor_fndtn_thk = 2.0
     reactor_hall_l = 0.0
