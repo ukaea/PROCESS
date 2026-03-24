@@ -87,7 +87,7 @@ class Buildings(Model):
             # Previous estimation work
             (
                 buildings_variables.cryvol,
-                buildings_variables.volrci,
+                buildings_variables.vol_plant_reactor_building_internal,
                 buildings_variables.vol_plant_reactor_building,
                 buildings_variables.vol_plant_maintenance_assembly_building,
                 buildings_variables.vol_plant_warm_shop_building,
