@@ -1128,7 +1128,7 @@ class Costs:
         cost_variables.c216 = (
             1.0e-6
             * cost_variables.UCEL
-            * buildings_variables.elevol**exprb
+            * buildings_variables.vol_plant_electrical_building**exprb
             * cmlsa[cost_variables.lsa - 1]
         )
 
