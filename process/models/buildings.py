@@ -271,11 +271,18 @@ class BuildingsITER1992:
 
         # External dimensions of reactor building (m)
         # dx_plant_reactor_building_wall : reactor building wall thickness, m
-        # rbrt : reactor building roof thickness, m
+        # dz_plant_reactor_building_roof : reactor building roof thickness, m
         # fndt : foundation thickness, m
-        rbw = 2.0e0 * buildings_variables.wrbi + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
+        rbw = (
+            2.0e0 * buildings_variables.wrbi
+            + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
+        )
         rbl = drbi + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
-        rbh = hrbi + buildings_variables.rbrt + buildings_variables.fndt
+        rbh = (
+            hrbi
+            + buildings_variables.dz_plant_reactor_building_roof
+            + buildings_variables.fndt
+        )
         rbv = buildings_variables.rbvfac * rbw * rbl * rbh
 
         # Maintenance building
