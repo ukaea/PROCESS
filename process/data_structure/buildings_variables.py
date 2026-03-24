@@ -358,7 +358,7 @@ rbrt: float = None
 """reactor building roof thickness (m)"""
 
 
-rbvol: float = None
+vol_plant_reactor_building: float = None
 """reactor building volume (m3)"""
 
 
@@ -702,7 +702,7 @@ def init_buildings_variables():
         qnty_sfty_fac, \
         rbvfac, \
         rbrt, \
-        rbvol, \
+        vol_plant_reactor_building, \
         rbwt, \
         reactor_clrnc, \
         reactor_fndtn_thk, \
@@ -856,7 +856,7 @@ def init_buildings_variables():
     qnty_sfty_fac = 2.0
     rbvfac = 1.6
     rbrt = 1.0
-    rbvol = 0.0
+    vol_plant_reactor_building = 0.0
     rbwt = 2.0
     reactor_clrnc = 4.0
     reactor_fndtn_thk = 2.0

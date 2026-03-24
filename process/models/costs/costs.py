@@ -1087,7 +1087,7 @@ class Costs:
         cost_variables.c212 = (
             1.0e-6
             * cost_variables.ucrb
-            * buildings_variables.rbvol**exprb
+            * buildings_variables.vol_plant_reactor_building**exprb
             * cmlsa[cost_variables.lsa - 1]
         )
 
