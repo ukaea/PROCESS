@@ -22,6 +22,38 @@ class PlasmaFuelling:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
+    def run(self):
+        physics_variables.molflow_plasma_fuelling_vv_injected_moles = (
+            physics_variables.molflow_plasma_fuelling_vv_injected
+            / constants.AVOGADRO_NUMBER
+        )
+
+        physics_variables.molflow_plasma_fuelling_loss = (
+            physics_variables.molflow_plasma_fuelling_vv_injected
+            * (1 - physics_variables.eta_plasma_fuelling)
+        )
+        physics_variables.molflow_plasma_fuelling_loss_moles = (
+            physics_variables.molflow_plasma_fuelling_loss / constants.AVOGADRO_NUMBER
+        )
+
+        physics_variables.f_plasma_fuel_burnup = self.calculate_fuel_burnup_fraction(
+            fusrat_total=physics_variables.fusrat_total,
+            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
+        )
+        physics_variables.f_plasma_tritium_burnup = self.calculate_tritium_burnup_fraction(
+            fusrat_dt_total=physics_variables.fusrat_dt_total,
+            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
+            f_molflow_plasma_fuelling_tritium=physics_variables.f_molflow_plasma_fuelling_tritium,
+        )
+
+        physics_variables.f_plasma_deuterium_burnup = self.calculate_deuterium_burnup_fraction(
+            fusrat_plasma_dd_total=physics_variables.fusrat_plasma_dd_total,
+            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
+            f_molflow_plasma_fuelling_deuterium=physics_variables.f_molflow_plasma_fuelling_deuterium,
+            fusrat_dt_total=physics_variables.fusrat_dt_total,
+            fusrat_plasma_dhe3=physics_variables.fusrat_plasma_dhe3,
+        )
+
     @staticmethod
     def calculate_fuel_burnup_fraction(
         fusrat_total: float, molflow_plasma_fuelling_vv_injected: float
@@ -512,6 +544,12 @@ class PlasmaFuelling:
             f"$\\mathbf{{Plasma \\ Fuelling \\ Information:}}$\n\n"
             f"Total fuelling rate:"
             f"{mfile.get('molflow_plasma_fuelling_vv_injected', scan=scan):.4e} particles/s\n"
+            f"Total fuelling rate: "
+            f"{mfile.get('molflow_plasma_fuelling_vv_injected_moles', scan=scan):.4e} moles/s\n"
+            f"Total fuelling loss: "
+            f"{mfile.get('molflow_plasma_fuelling_loss', scan=scan):.4e} particles/s\n"
+            f"Total fuelling loss: "
+            f"{mfile.get('molflow_plasma_fuelling_loss_moles', scan=scan):.4e} moles/s\n"
             f"Fuelling Rate Efficiency ($\\eta_{{\\text{{fuelling}}}}$): "
             f"{mfile.get('eta_plasma_fuelling', scan=scan):.4f}\n"
             f"Recycling Fraction ($R$): "
@@ -548,6 +586,27 @@ class PlasmaFuelling:
             "Fuelling rate (nucleus-pairs/s)",
             "(molflow_plasma_fuelling_vv_injected)",
             physics_variables.molflow_plasma_fuelling_vv_injected,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuelling rate (moles/s)",
+            "(molflow_plasma_fuelling_vv_injected_moles)",
+            physics_variables.molflow_plasma_fuelling_vv_injected_moles,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuelling loss (nucleus-pairs/s)",
+            "(molflow_plasma_fuelling_loss)",
+            physics_variables.molflow_plasma_fuelling_loss,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuelling loss (moles/s)",
+            "(molflow_plasma_fuelling_loss_moles)",
+            physics_variables.molflow_plasma_fuelling_loss_moles,
             "OP ",
         )
         po.ovarre(

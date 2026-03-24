@@ -1099,6 +1099,15 @@ eta_plasma_fuelling: float = None
 molflow_plasma_fuelling_vv_injected: float = None
 """plasma fuelling rate into the vacuum vessel (particles/s)"""
 
+molflow_plasma_fuelling_vv_injected_moles: float = None
+"""plasma fuelling rate into the vacuum vessel (moles/s)"""
+
+molflow_plasma_fuelling_loss: float = None
+"""plasma fuelling rate that dosent make it to plasma (particles/s)"""
+
+molflow_plasma_fuelling_loss_moles: float = None
+"""plasma fuelling rate that dosent make it to plasma (moles/s)"""
+
 f_molflow_plasma_fuelling_deuterium: float = None
 """fraction of plasma fuelling that is deuterium"""
 
@@ -1663,6 +1672,9 @@ def init_physics_variables():
         f_plasma_particles_lcfs_recycled, \
         eta_plasma_fuelling, \
         molflow_plasma_fuelling_vv_injected, \
+        molflow_plasma_fuelling_vv_injected_moles, \
+        molflow_plasma_fuelling_loss, \
+        molflow_plasma_fuelling_loss_moles, \
         f_molflow_plasma_fuelling_deuterium, \
         f_molflow_plasma_fuelling_tritium, \
         f_molflow_plasma_fuelling_helium3, \
@@ -1966,6 +1978,9 @@ def init_physics_variables():
     f_plasma_particles_lcfs_recycled = 0.0
     eta_plasma_fuelling = 0.0
     molflow_plasma_fuelling_vv_injected = 1e20
+    molflow_plasma_fuelling_vv_injected_moles = 0.0
+    molflow_plasma_fuelling_loss = 0.0
+    molflow_plasma_fuelling_loss_moles = 0.0
     f_molflow_plasma_fuelling_deuterium = 0.5
     f_molflow_plasma_fuelling_tritium = 0.5
     f_molflow_plasma_fuelling_helium3 = 0.0
