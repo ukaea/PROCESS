@@ -3000,7 +3000,11 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
         ifebdgparam.vol_plant_maintenance_assembly_building,
     )
     monkeypatch.setattr(buildings_variables, "shovol", ifebdgparam.shovol)
-    monkeypatch.setattr(buildings_variables, "vol_plant_reactor_building_internal", ifebdgparam.vol_plant_reactor_building_internal)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_reactor_building_internal",
+        ifebdgparam.vol_plant_reactor_building_internal,
+    )
     monkeypatch.setattr(
         buildings_variables,
         "vol_plant_warm_shop_building",
@@ -3034,7 +3038,9 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
         ifebdgparam.expected_rmbvol
     )
     assert buildings_variables.shovol == pytest.approx(ifebdgparam.expected_shovol)
-    assert buildings_variables.vol_plant_reactor_building_internal == pytest.approx(ifebdgparam.expected_volrci)
+    assert buildings_variables.vol_plant_reactor_building_internal == pytest.approx(
+        ifebdgparam.expected_volrci
+    )
     assert buildings_variables.vol_plant_warm_shop_building == pytest.approx(
         ifebdgparam.expected_wsvol
     )

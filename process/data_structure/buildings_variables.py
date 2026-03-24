@@ -114,7 +114,7 @@ cryostat_clrnc: float = None
 """vertical clearance from TF coil to cryostat (m)"""
 
 
-cryvol: float = None
+vol_plant_cryoplant_building: float = None
 """volume of cryoplant building (m3)"""
 
 
@@ -641,7 +641,7 @@ def init_buildings_variables():
         cryostore_w, \
         cryostore_h, \
         cryostat_clrnc, \
-        cryvol, \
+        vol_plant_cryoplant_building, \
         a_plant_floor_effective, \
         elecdist_l, \
         elecdist_w, \
@@ -795,7 +795,7 @@ def init_buildings_variables():
     cryostore_w = 30.0
     cryostore_h = 20.0
     cryostat_clrnc = 2.5
-    cryvol = 0.0
+    vol_plant_cryoplant_building = 0.0
     a_plant_floor_effective = 0.0
     elecdist_l = 380.0
     elecdist_w = 350.0
