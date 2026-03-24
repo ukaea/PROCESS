@@ -2289,7 +2289,13 @@ class Power:
                 "OP ",
             )
 
-        return (tfckw, len_tf_bus, drarea, vol_plant_tf_power_supplies_building, p_tf_electric_supplies_mw)
+        return (
+            tfckw,
+            len_tf_bus,
+            drarea,
+            vol_plant_tf_power_supplies_building,
+            p_tf_electric_supplies_mw,
+        )
 
     def power_profiles_over_time(
         self,
