@@ -930,6 +930,15 @@ eta_plasma_fuelling: float = None
 molflow_plasma_fuelling_vv_injected: float = None
 """plasma fuelling rate into the vacuum vessel (particles/s)"""
 
+molflow_plasma_fuelling_vv_injected_moles: float = None
+"""plasma fuelling rate into the vacuum vessel (moles/s)"""
+
+molflow_plasma_fuelling_loss: float = None
+"""plasma fuelling rate that dosent make it to plasma (particles/s)"""
+
+molflow_plasma_fuelling_loss_moles: float = None
+"""plasma fuelling rate that dosent make it to plasma (moles/s)"""
+
 f_molflow_plasma_fuelling_deuterium: float = None
 """fraction of plasma fuelling that is deuterium"""
 
