@@ -82,7 +82,7 @@ class Buildings:
                 buildings_variables.volrci,
                 buildings_variables.rbvol,
                 buildings_variables.rmbvol,
-                buildings_variables.wsvol,
+                buildings_variables.vol_plant_warm_shop_building,
                 buildings_variables.elevol,
             ) = self.iter_1992.calculate_building_sizes_1992(
                 output,
