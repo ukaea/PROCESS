@@ -13802,22 +13802,22 @@ def main_plot(
     color_key(ax17, m_file, scan, colour_scheme)
 
     plot_full_machine_poloidal_cross_section(
-        figs[18].add_subplot(111, aspect="equal"),
+        figs[19].add_subplot(111, aspect="equal"),
         m_file,
         scan,
         radial_build,
         colour_scheme,
     )
 
-    ax18 = figs[19].add_subplot(211)
+    ax18 = figs[20].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = figs[20].add_subplot(211)
+    ax185 = figs[21].add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = figs[20].add_subplot(212)
+    ax18b = figs[21].add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
@@ -13825,62 +13825,62 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == 1:
         # TF coil with WP
-        ax19 = figs[21].add_subplot(221, aspect="equal")
+        ax19 = figs[22].add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, figs[21])
+        plot_superconducting_tf_wp(ax19, m_file, scan, figs[22])
 
         # TF coil turn structure
-        ax20 = figs[22].add_subplot(325, aspect="equal")
+        ax20 = figs[23].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[22], m_file, scan)
-        plot_205 = figs[22].add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, figs[23], m_file, scan)
+        plot_205 = figs[23].add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, figs[22], m_file, scan)
+        plot_cable_in_conduit_cable(plot_205, figs[23], m_file, scan)
     else:
-        ax19 = figs[21].add_subplot(211, aspect="equal")
+        ax19 = figs[22].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file, scan, figs[21])
-        plot_resistive_tf_info(ax19, m_file, scan, figs[21])
+        plot_resistive_tf_wp(ax19, m_file, scan, figs[22])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[22])
     plot_tf_coil_structure(
-        figs[23].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[24].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(figs[24], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[25], m_file, scan)
 
-    plot_tf_stress(figs[25].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    plot_tf_stress(figs[26].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
-    plot_current_profiles_over_time(figs[26].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[27].add_subplot(111), m_file, scan)
 
     plot_cs_coil_structure(
-        figs[27].add_subplot(121, aspect="equal"), figs[27], m_file, scan
+        figs[28].add_subplot(121, aspect="equal"), figs[28], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[27].add_subplot(224, aspect="equal"), figs[27], m_file, scan
+        figs[28].add_subplot(224, aspect="equal"), figs[28], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[28].add_subplot(221, aspect="equal"), m_file, scan
+        figs[29].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[28].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[28].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[29].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[29].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[29], m_file, scan)
-    ax_blanket = figs[29].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[29], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[30], m_file, scan)
+    ax_blanket = figs[30].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[30], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[30].add_subplot(111, aspect="equal"), m_file, scan, figs[30]
+        figs[31].add_subplot(111, aspect="equal"), m_file, scan, figs[31]
     )
 
-    ax24 = figs[31].add_subplot(111)
+    ax24 = figs[32].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[31])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[32])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -13957,7 +13957,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(32)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(33)]
 
     # run main_plot
     main_plot(
