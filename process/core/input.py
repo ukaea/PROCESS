@@ -1234,7 +1234,7 @@ INPUT_VARIABLES = {
     ),
     "rbrt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "rbvfac": InputVariable(data_structure.buildings_variables, float, range=(0.9, 3.0)),
-    "rbwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "dx_plant_reactor_building_wall": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "radius_cp_coolant_channel": InputVariable(
         data_structure.tfcoil_variables, float, range=(1e-06, 1.0)
     ),

@@ -769,7 +769,7 @@ class BldgsParam(NamedTuple):
     dz_tf_cryostat: Any
     stcl: Any
     rbvfac: Any
-    rbwt: Any
+    dx_plant_reactor_building_wall: Any
     rbrt: Any
     fndt: Any
     hcwt: Any
@@ -833,7 +833,7 @@ class BldgsParam(NamedTuple):
             dz_tf_cryostat=5.7514039424138126,
             stcl=3,
             rbvfac=1.6000000000000001,
-            rbwt=2,
+            dx_plant_reactor_building_wall=2,
             rbrt=1,
             fndt=2,
             hcwt=1.5,
@@ -893,7 +893,7 @@ class BldgsParam(NamedTuple):
             dz_tf_cryostat=5.8405005070918357,
             stcl=3,
             rbvfac=1.6000000000000001,
-            rbwt=2,
+            dx_plant_reactor_building_wall=2,
             rbrt=1,
             fndt=2,
             hcwt=1.5,
@@ -955,7 +955,7 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat)
     monkeypatch.setattr(buildings_variables, "stcl", bldgsparam.stcl)
     monkeypatch.setattr(buildings_variables, "rbvfac", bldgsparam.rbvfac)
-    monkeypatch.setattr(buildings_variables, "rbwt", bldgsparam.rbwt)
+    monkeypatch.setattr(buildings_variables, "dx_plant_reactor_building_wall", bldgsparam.dx_plant_reactor_building_wall)
     monkeypatch.setattr(buildings_variables, "rbrt", bldgsparam.rbrt)
     monkeypatch.setattr(buildings_variables, "fndt", bldgsparam.fndt)
     monkeypatch.setattr(buildings_variables, "hcwt", bldgsparam.hcwt)
