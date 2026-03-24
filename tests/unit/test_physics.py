@@ -30,15 +30,14 @@ from process.models.physics.physics import (
     Physics,
     PlasmaBeta,
     PlasmaInductance,
-    calculate_current_coefficient_hastie,
-    calculate_plasma_current_peng,
-    calculate_poloidal_field,
+    calculate_cylindrical_safety_factor,
     diamagnetic_fraction_hender,
     diamagnetic_fraction_scene,
     ps_fraction_scene,
     res_diff_time,
     rether,
 )
+from process.models.physics.plasma_current import PlasmaCurrent
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 
@@ -66,6 +65,7 @@ def physics():
         PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
         PlasmaConfinementTime(),
         PlasmaConfinementTransition(),
+        PlasmaCurrent(),
     )
 
 
@@ -1157,10 +1157,6 @@ class PlasmaCurrentParam(NamedTuple):
 
     expected_normalised_total_beta: Any = None
 
-    expected_bp: Any = None
-
-    expected_qstar: Any = None
-
     expected_plasma_current: Any = None
 
 
@@ -1185,8 +1181,6 @@ class PlasmaCurrentParam(NamedTuple):
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
-            expected_bp=0.96008591022564971,
-            expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
         ),
         PlasmaCurrentParam(
@@ -1207,8 +1201,6 @@ class PlasmaCurrentParam(NamedTuple):
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
-            expected_bp=0.96008591022564971,
-            expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
         ),
     ),
@@ -1228,11 +1220,11 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta)
 
-    b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
+    plasma_current = physics.current.calculate_plasma_current(
         i_plasma_current=plasmacurrentparam.i_plasma_current,
         alphaj=plasmacurrentparam.alphaj,
         alphap=plasmacurrentparam.alphap,
-        b_plasma_toroidal_on_axis=plasmacurrentparam.b_plasma_toroidal_on_axis,
+        b_plasma_toroidal_on_axis=(plasmacurrentparam.b_plasma_toroidal_on_axis),
         eps=plasmacurrentparam.eps,
         kappa=plasmacurrentparam.kappa,
         kappa95=plasmacurrentparam.kappa95,
@@ -1244,10 +1236,6 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         triang=plasmacurrentparam.triang,
         triang95=plasmacurrentparam.triang95,
     )
-
-    assert b_plasma_poloidal_average == pytest.approx(plasmacurrentparam.expected_bp)
-
-    assert qstar == pytest.approx(plasmacurrentparam.expected_qstar)
 
     assert plasma_current == pytest.approx(plasmacurrentparam.expected_plasma_current)
 
@@ -1281,8 +1269,10 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         ),
     ),
 )
-def test_calculate_plasma_current_peng(arguments, expected):
-    assert calculate_plasma_current_peng(**arguments) == pytest.approx(expected)
+def test_calculate_plasma_current_peng(arguments, expected, physics):
+    assert physics.current.calculate_plasma_current_peng(**arguments) == pytest.approx(
+        expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -1299,7 +1289,6 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
-                "rmu0": constants.RMU0,
             },
             3.4401302177092803,
         ),
@@ -1314,7 +1303,6 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
-                "rmu0": constants.RMU0,
             },
             2.9310284627233205,
         ),
@@ -1329,14 +1317,15 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
-                "rmu0": constants.RMU0,
             },
             0.8377580413333333,
         ),
     ),
 )
-def test_calculate_poloidal_field(arguments, expected):
-    assert calculate_poloidal_field(**arguments) == pytest.approx(expected)
+def test_calculate_poloidal_field(arguments, expected, physics):
+    assert physics.current.calculate_poloidal_field(**arguments) == pytest.approx(
+        expected
+    )
 
 
 def test_calculate_beta_limit():
@@ -1345,8 +1334,8 @@ def test_calculate_beta_limit():
     ) == pytest.approx(0.0297619)
 
 
-def test_conhas():
-    assert calculate_current_coefficient_hastie(
+def test_conhas(physics):
+    assert physics.current.calculate_current_coefficient_hastie(
         5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.RMU0
     ) == pytest.approx(2.518876726889116)
 
@@ -3648,3 +3637,78 @@ def test_detailed_physics_run_computes_profiles():
     assert np.all(
         np.isfinite(physics_variables.plasma_coulomb_log_electron_electron_profile)
     )
+
+
+@pytest.mark.parametrize(
+    "rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95, expected",
+    (
+        (
+            8.0,
+            2.6666666666666665,
+            18398455.678867526,
+            5.7000000000000002,
+            1.6517857142857142,
+            0.33333333333333331,
+            2.90080289950078,
+        ),
+    ),
+)
+def test_calculate_cylindrical_safety_factor_parametrized(
+    rmajor,
+    rminor,
+    plasma_current,
+    b_plasma_toroidal_on_axis,
+    kappa95,
+    triang95,
+    expected,
+):
+    """Parametrized test for calculate_cylindrical_safety_factor."""
+    result = calculate_cylindrical_safety_factor(
+        rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95
+    )
+    assert result == pytest.approx(expected, rel=1e-12)
+
+
+@pytest.mark.parametrize(
+    "i_plasma_current, c_plasma, q95, aspect, eps,b_plasma_toroidal_on_axis, kappa, delta, perim, expected",
+    (
+        (
+            4,
+            18398455.678867526,
+            3.5,
+            (8.0 / 2.6666666666666665),
+            (2.6666666666666665 / 8.0),
+            5.7000000000000002,
+            1.8500000000000001,
+            0.5,
+            24.081367139525412,
+            0.96008591022564971,
+        ),
+    ),
+)
+def test_calculate_polidal_field(
+    i_plasma_current,
+    c_plasma,
+    q95,
+    b_plasma_toroidal_on_axis,
+    aspect,
+    eps,
+    kappa,
+    delta,
+    perim,
+    expected,
+    physics,
+):
+    """Parametrized test for calculate_poloidal_field."""
+    result = physics.current.calculate_poloidal_field(
+        i_plasma_current,
+        c_plasma,
+        q95,
+        b_plasma_toroidal_on_axis,
+        aspect,
+        eps,
+        kappa,
+        delta,
+        perim,
+    )
+    assert result == pytest.approx(expected, rel=1e-12)
