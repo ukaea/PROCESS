@@ -2381,7 +2381,7 @@ class IFE:
         buildings_variables.vol_plant_reactor_building = rbv
         buildings_variables.vol_plant_maintenance_assembly_building = rmbv
         buildings_variables.shovol = buildings_variables.shov
-        buildings_variables.volrci = vrci
+        buildings_variables.vol_plant_reactor_building_internal = vrci
         buildings_variables.vol_plant_warm_shop_building = wsv
 
         # Total volume of nuclear buildings

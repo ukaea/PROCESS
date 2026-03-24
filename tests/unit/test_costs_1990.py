@@ -182,7 +182,7 @@ def acc2273_param(**kwargs):
     # Default parameters
     defaults = {
         "f_plasma_fuel_tritium": 0.0001,
-        "volrci": data_structure.buildings_variables.volrci,
+        "vol_plant_reactor_building_internal": data_structure.buildings_variables.vol_plant_reactor_building_internal,
         "vol_plant_warm_shop_building": data_structure.buildings_variables.vol_plant_warm_shop_building,
         "expected": approx(0.0, abs=0.00001),
     }
@@ -204,7 +204,7 @@ def acc2273_params():
         acc2273_param(),
         acc2273_param(
             f_plasma_fuel_tritium=0.5,
-            volrci=1299783.4,
+            vol_plant_reactor_building_internal=1299783.4,
             vol_plant_warm_shop_building=132304.1,
             expected=approx(74.12, abs=0.01),
         ),
@@ -231,7 +231,7 @@ def acc2273_fix(request, monkeypatch, costs):
         "vol_plant_warm_shop_building",
         param["vol_plant_warm_shop_building"],
     )
-    monkeypatch.setattr(data_structure.buildings_variables, "volrci", param["volrci"])
+    monkeypatch.setattr(data_structure.buildings_variables, "vol_plant_reactor_building_internal", param["vol_plant_reactor_building_internal"])
     monkeypatch.setattr(
         physics_variables, "f_plasma_fuel_tritium", param["f_plasma_fuel_tritium"]
     )
@@ -265,7 +265,7 @@ def test_acc2274(monkeypatch, costs):
     monkeypatch.setattr(
         data_structure.buildings_variables, "vol_plant_warm_shop_building", 132304.1
     )
-    monkeypatch.setattr(data_structure.buildings_variables, "volrci", 1299783.4)
+    monkeypatch.setattr(data_structure.buildings_variables, "vol_plant_reactor_building_internal", 1299783.4)
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "c2274", 0)
 
@@ -4501,7 +4501,7 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
 class Acc2273Param(NamedTuple):
     vol_plant_warm_shop_building: Any = None
 
-    volrci: Any = None
+    vol_plant_reactor_building_internal: Any = None
 
     fkind: Any = None
 
@@ -4521,7 +4521,7 @@ class Acc2273Param(NamedTuple):
     (
         Acc2273Param(
             vol_plant_warm_shop_building=130018.25667917728,
-            volrci=1205439.8543893537,
+            vol_plant_reactor_building_internal=1205439.8543893537,
             fkind=1,
             f_plasma_fuel_tritium=0.5,
             c227=0,
@@ -4531,7 +4531,7 @@ class Acc2273Param(NamedTuple):
         ),
         Acc2273Param(
             vol_plant_warm_shop_building=130255.93791329287,
-            volrci=1206887.4047542624,
+            vol_plant_reactor_building_internal=1206887.4047542624,
             fkind=1,
             f_plasma_fuel_tritium=0.5,
             c227=284.96904049038437,
@@ -4560,7 +4560,7 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
         acc2273param.vol_plant_warm_shop_building,
     )
 
-    monkeypatch.setattr(buildings_variables, "volrci", acc2273param.volrci)
+    monkeypatch.setattr(buildings_variables, "vol_plant_reactor_building_internal", acc2273param.vol_plant_reactor_building_internal)
 
     monkeypatch.setattr(cost_variables, "fkind", acc2273param.fkind)
 
@@ -4582,7 +4582,7 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
 class Acc2274Param(NamedTuple):
     vol_plant_warm_shop_building: Any = None
 
-    volrci: Any = None
+    vol_plant_reactor_building_internal: Any = None
 
     fkind: Any = None
 
@@ -4600,7 +4600,7 @@ class Acc2274Param(NamedTuple):
     (
         Acc2274Param(
             vol_plant_warm_shop_building=130018.25667917728,
-            volrci=1205439.8543893537,
+            vol_plant_reactor_building_internal=1205439.8543893537,
             fkind=1,
             c227=0,
             c2274=0,
@@ -4609,7 +4609,7 @@ class Acc2274Param(NamedTuple):
         ),
         Acc2274Param(
             vol_plant_warm_shop_building=130255.93791329287,
-            volrci=1206887.4047542624,
+            vol_plant_reactor_building_internal=1206887.4047542624,
             fkind=1,
             c227=284.96904049038437,
             c2274=79.525098581749191,
@@ -4637,7 +4637,7 @@ def test_acc2274_rut(acc2274param, monkeypatch, costs):
         acc2274param.vol_plant_warm_shop_building,
     )
 
-    monkeypatch.setattr(buildings_variables, "volrci", acc2274param.volrci)
+    monkeypatch.setattr(buildings_variables, "vol_plant_reactor_building_internal", acc2274param.vol_plant_reactor_building_internal)
 
     monkeypatch.setattr(cost_variables, "fkind", acc2274param.fkind)
 

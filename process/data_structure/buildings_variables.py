@@ -494,7 +494,7 @@ tw_storage_h: float = None
 """tritiated waste storage building height (m)"""
 
 
-volrci: float = None
+vol_plant_reactor_building_internal: float = None
 """internal volume of reactor building (m3)"""
 
 
@@ -736,7 +736,7 @@ def init_buildings_variables():
         tw_storage_l, \
         tw_storage_w, \
         tw_storage_h, \
-        volrci, \
+        vol_plant_reactor_building_internal, \
         volnucb, \
         warm_shop_l, \
         warm_shop_w, \
@@ -891,7 +891,7 @@ def init_buildings_variables():
     tw_storage_w = 30.0
     tw_storage_h = 5.0
     volnucb = 0.0
-    volrci = 0.0
+    vol_plant_reactor_building_internal = 0.0
     warm_shop_l = 100.0
     warm_shop_w = 50.0
     warm_shop_h = 10.0

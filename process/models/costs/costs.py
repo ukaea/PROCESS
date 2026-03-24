@@ -2427,7 +2427,7 @@ class Costs:
                 * (
                     (cfrht / 1.0e4) ** 0.6e0
                     * (
-                        buildings_variables.volrci
+                        buildings_variables.vol_plant_reactor_building_internal
                         + buildings_variables.vol_plant_warm_shop_building
                     )
                 )
@@ -2445,7 +2445,7 @@ class Costs:
             1.0e-6
             * cost_variables.UCNBV
             * (
-                buildings_variables.volrci
+                buildings_variables.vol_plant_reactor_building_internal
                 + buildings_variables.vol_plant_warm_shop_building
             )
             ** 0.8e0
