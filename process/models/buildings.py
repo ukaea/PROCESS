@@ -1,4 +1,5 @@
 import logging
+from enum import IntEnum
 
 import numpy as np
 
@@ -18,6 +19,12 @@ from process.data_structure import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class BuildingsModel(IntEnum):
+    """Enum for building size estimation models"""
+    ITER_1992 = 1
+    CHAPMAN_2024 = 2
 
 
 class Buildings:
@@ -56,7 +63,10 @@ class Buildings:
 
         # Calculate building areas and volumes
 
-        if buildings_variables.i_bldgs_size == 1:
+        if (
+            BuildingsModel(buildings_variables.i_bldgs_size)
+            == BuildingsModel.CHAPMAN_2024
+        ):
             # Updated building estimates
             self.calculate_building_sizes_chapman(output, tf_radial_dim, tf_vertical_dim)
 
