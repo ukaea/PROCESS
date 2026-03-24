@@ -777,7 +777,7 @@ class BldgsParam(NamedTuple):
     wgt2: Any
     mbvfac: Any
     wsvfac: Any
-    tfcbv: Any
+    vol_plant_tf_power_supplies_building: Any
     pfbldgm3: Any
     esbldgm3: Any
     pibv: Any
@@ -841,7 +841,7 @@ class BldgsParam(NamedTuple):
             wgt2=100000,
             mbvfac=2.7999999999999998,
             wsvfac=1.8999999999999999,
-            tfcbv=10601.097615432001,
+            vol_plant_tf_power_supplies_building=10601.097615432001,
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
@@ -901,7 +901,7 @@ class BldgsParam(NamedTuple):
             wgt2=100000,
             mbvfac=2.7999999999999998,
             wsvfac=1.8999999999999999,
-            tfcbv=10609.268177478583,
+            vol_plant_tf_power_supplies_building=10609.268177478583,
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
@@ -971,7 +971,7 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "wgt2", bldgsparam.wgt2)
     monkeypatch.setattr(buildings_variables, "mbvfac", bldgsparam.mbvfac)
     monkeypatch.setattr(buildings_variables, "wsvfac", bldgsparam.wsvfac)
-    monkeypatch.setattr(buildings_variables, "tfcbv", bldgsparam.tfcbv)
+    monkeypatch.setattr(buildings_variables, "vol_plant_tf_power_supplies_building", bldgsparam.vol_plant_tf_power_supplies_building)
     monkeypatch.setattr(buildings_variables, "pfbldgm3", bldgsparam.pfbldgm3)
     monkeypatch.setattr(buildings_variables, "esbldgm3", bldgsparam.esbldgm3)
     monkeypatch.setattr(buildings_variables, "pibv", bldgsparam.pibv)

@@ -1520,7 +1520,7 @@ INPUT_VARIABLES = {
     "temp_plasma_separatrix_kev": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 20.0)
     ),
-    "tfcbv": InputVariable(
+    "vol_plant_tf_power_supplies_building": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "dx_tf_wp_insertion_gap": InputVariable(
