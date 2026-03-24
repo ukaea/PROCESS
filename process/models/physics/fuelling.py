@@ -327,14 +327,36 @@ class PlasmaFuelling:
 
     @staticmethod
     def calculate_plasma_alphas_flow_rate(
-        fusrat_dt_total,
-        fusrat_plasma_dhe3,
-        t_energy_confinement,
-        f_t_alpha_energy_confinement,
-        nd_plasma_alphas_vol_avg,
-        vol_plasma,
-    ):
-        """Calculate the alpha particle flow rate in the plasma exhaust."""
+        fusrat_dt_total: float,
+        fusrat_plasma_dhe3: float,
+        t_energy_confinement: float,
+        f_t_alpha_energy_confinement: float,
+        nd_plasma_alphas_vol_avg: float,
+        vol_plasma: float,
+    ) -> float:
+        """Calculate the alpha particle flow rate in the plasma exhaust.
+
+        Parameters
+        ----------
+        fusrat_dt_total : float
+            Total DT fusion rate (particles/s).
+        fusrat_plasma_dhe3 : float
+            Deuterium consumption rate from D-He3 fusion (particles/s).
+        t_energy_confinement : float
+            Energy confinement time (s).
+        f_t_alpha_energy_confinement : float
+            Ratio of alpha particle confinement time to energy confinement time (dimensionless).
+        nd_plasma_alphas_vol_avg : float
+            Volume-averaged density of alpha particles in the plasma (particles/m^3).
+        vol_plasma : float
+            Plasma volume (m^3).
+
+        Returns
+        -------
+        float
+            Alpha particle flow rate in the plasma exhaust (particles/s).
+
+        """
 
         # Alpha particle balance
 
@@ -376,8 +398,14 @@ class PlasmaFuelling:
                 )
 
         contour = axis.contourf(
-            fuelling_range, recycling_range, tritium_flow, levels=15, cmap="RdBu_r"
+            fuelling_range,
+            recycling_range,
+            tritium_flow,
+            levels=15,
+            cmap="seismic",
+            norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
         )
+
         axis.contour(
             fuelling_range,
             recycling_range,
@@ -402,11 +430,12 @@ class PlasmaFuelling:
 
         axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
         axis.set_ylabel("Recycling Fraction [$R$]")
-        axis.set_title("Plasma Tritium Flow Rate (particles/s)")
+        axis.set_title("Plasma Tritium Flow Rate (particles/s)", pad=20)
         axis.minorticks_on()
         axis.grid(True, which="major", linestyle="-", alpha=0.7)
         axis.grid(True, which="minor", linestyle=":", alpha=0.4)
-        plt.colorbar(contour, ax=axis, label="Tritium Flow Rate")
+        cbar = plt.colorbar(contour, ax=axis, label="Tritium Flow Rate")
+        cbar.ax.axhline(y=0, color="black", linewidth=2)
 
     def plot_deuterium_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
         """Plot contour of deuterium flow rate vs recycling and fuelling rate."""
@@ -442,7 +471,12 @@ class PlasmaFuelling:
                 )
 
         contour = axis.contourf(
-            fuelling_range, recycling_range, deuterium_flow, levels=15, cmap="RdBu_r"
+            fuelling_range,
+            recycling_range,
+            deuterium_flow,
+            levels=15,
+            cmap="seismic",
+            norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
         )
         axis.contour(
             fuelling_range,
@@ -467,12 +501,12 @@ class PlasmaFuelling:
         )
 
         axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
-        axis.set_ylabel("Recycling Fraction [$R$]")
-        axis.set_title("Plasma Deuterium Flow Rate (particles/s)")
+        axis.set_title("Plasma Deuterium Flow Rate (particles/s)", pad=20)
         axis.minorticks_on()
         axis.grid(True, which="major", linestyle="-", alpha=0.7)
         axis.grid(True, which="minor", linestyle=":", alpha=0.4)
-        plt.colorbar(contour, ax=axis, label="Deuterium Flow Rate")
+        cbar = plt.colorbar(contour, ax=axis, label="Deuterium Flow Rate")
+        cbar.ax.axhline(y=0, color="black", linewidth=2)
 
     def plot_alpha_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
         """Plot contour of alpha particle flow rate vs recycling and fuelling rate."""
@@ -504,7 +538,8 @@ class PlasmaFuelling:
             fusion_dt_range,
             alpha_flow,
             levels=15,
-            cmap="RdBu_r",
+            cmap="seismic",
+            norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
         )
         axis.contour(
             f_t_alpha_energy_confinement_range,
@@ -532,11 +567,75 @@ class PlasmaFuelling:
             "Alpha to Energy Confinement Time Ratio ($f_{\\alpha, \\text{energy confinement}}$)"
         )
         axis.set_ylabel("Fusion DT Rate [$\\text{particles/s}$]")
-        axis.set_title("Plasma Alpha Particle Flow Rate (particles/s)")
+        axis.set_title("Plasma Alpha Particle Flow Rate (particles/s)", pad=20)
         axis.minorticks_on()
         axis.grid(True, which="major", linestyle="-", alpha=0.7)
         axis.grid(True, which="minor", linestyle=":", alpha=0.4)
-        plt.colorbar(contour, ax=axis, label="Alpha Particle Flow Rate")
+        cbar = plt.colorbar(contour, ax=axis, label="Alpha Particle Flow Rate")
+        cbar.ax.axhline(y=0, color="black", linewidth=2)
+
+    def plot_helium3_flow_contour(self, axis: plt.Axes, mfile: mf.MFile, scan: int):
+        """Plot contour of helium-3 flow rate vs recycling and fuelling rate."""
+
+        recycling_range = np.linspace(0.01, 0.99, 20)
+        fuelling_range = np.linspace(0.01, 1.0, 20)
+        helium3_flow = np.zeros((len(recycling_range), len(fuelling_range)))
+
+        for i, recycling in enumerate(recycling_range):
+            for j, fuelling in enumerate(fuelling_range):
+                helium3_flow[i, j] = self.calculate_plasma_helium3_flow_rate(
+                    f_molflow_plasma_fuelling_helium3=mfile.get(
+                        "f_molflow_plasma_fuelling_helium3", scan=scan
+                    ),
+                    eta_plasma_fuelling=fuelling,
+                    molflow_plasma_fuelling_vv_injected=mfile.get(
+                        "molflow_plasma_fuelling_vv_injected", scan=scan
+                    ),
+                    fusrat_plasma_dhe3=mfile.get("fusrat_plasma_dhe3", scan=scan),
+                    t_energy_confinement=mfile.get("t_energy_confinement", scan=scan),
+                    f_plasma_particles_lcfs_recycled=recycling,
+                    nd_plasma_fuel_ions_vol_avg=mfile.get(
+                        "nd_plasma_fuel_ions_vol_avg", scan=scan
+                    ),
+                    vol_plasma=mfile.get("vol_plasma", scan=scan),
+                    f_plasma_fuel_helium3=mfile.get("f_plasma_fuel_helium3", scan=scan),
+                )
+
+        contour = axis.contourf(
+            fuelling_range,
+            recycling_range,
+            helium3_flow,
+            levels=15,
+            cmap="seismic",
+            norm=plt.matplotlib.colors.CenteredNorm(vcenter=0),
+        )
+        axis.contour(
+            fuelling_range,
+            recycling_range,
+            helium3_flow,
+            levels=[0],
+            colors="black",
+            linewidths=2,
+        )
+
+        # Plot star for mfile values
+        recycling_mfile = mfile.get("f_plasma_particles_lcfs_recycled", scan=scan)
+        fuelling_mfile = mfile.get("eta_plasma_fuelling", scan=scan)
+        axis.plot(
+            fuelling_mfile,
+            recycling_mfile,
+            marker="*",
+            markersize=15,
+            color="yellow",
+            markeredgecolor="black",
+        )
+        axis.set_xlabel("Fuelling Rate Efficiency ($\\eta_{\\text{fuelling}}$)")
+        cbar = plt.colorbar(contour, ax=axis, label="Helium-3 Flow Rate")
+        cbar.ax.axhline(y=0, color="black", linewidth=2)
+        axis.set_title("Plasma Helium-3 Flow Rate (particles/s)", pad=20)
+        axis.minorticks_on()
+        axis.grid(True, which="major", linestyle="-", alpha=0.7)
+        axis.grid(True, which="minor", linestyle=":", alpha=0.4)
 
     def plot_fuelling_info(self, fig: plt.Figure, mfile: mf.MFile, scan: int):
         """Plot fuelling information."""
