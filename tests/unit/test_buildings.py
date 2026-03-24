@@ -770,7 +770,7 @@ class BldgsParam(NamedTuple):
     stcl: Any
     rbvfac: Any
     dx_plant_reactor_building_wall: Any
-    rbrt: Any
+    dz_plant_reactor_building_roof: Any
     fndt: Any
     hcwt: Any
     hccl: Any
@@ -834,7 +834,7 @@ class BldgsParam(NamedTuple):
             stcl=3,
             rbvfac=1.6000000000000001,
             dx_plant_reactor_building_wall=2,
-            rbrt=1,
+            dz_plant_reactor_building_roof=1,
             fndt=2,
             hcwt=1.5,
             hccl=5,
@@ -894,7 +894,7 @@ class BldgsParam(NamedTuple):
             stcl=3,
             rbvfac=1.6000000000000001,
             dx_plant_reactor_building_wall=2,
-            rbrt=1,
+            dz_plant_reactor_building_roof=1,
             fndt=2,
             hcwt=1.5,
             hccl=5,
@@ -955,8 +955,16 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat)
     monkeypatch.setattr(buildings_variables, "stcl", bldgsparam.stcl)
     monkeypatch.setattr(buildings_variables, "rbvfac", bldgsparam.rbvfac)
-    monkeypatch.setattr(buildings_variables, "dx_plant_reactor_building_wall", bldgsparam.dx_plant_reactor_building_wall)
-    monkeypatch.setattr(buildings_variables, "rbrt", bldgsparam.rbrt)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dx_plant_reactor_building_wall",
+        bldgsparam.dx_plant_reactor_building_wall,
+    )
+    monkeypatch.setattr(
+        buildings_variables,
+        "dz_plant_reactor_building_roof",
+        bldgsparam.dz_plant_reactor_building_roof,
+    )
     monkeypatch.setattr(buildings_variables, "fndt", bldgsparam.fndt)
     monkeypatch.setattr(buildings_variables, "hcwt", bldgsparam.hcwt)
     monkeypatch.setattr(buildings_variables, "hccl", bldgsparam.hccl)

@@ -251,7 +251,7 @@ ucme        = 3.0D8    *Cost of maintenance equipment ($)
 
 *---------------Buildings Variables----------------*
 pibv        = 4.0D4    *Power injection building volume (m3)
-rbrt        = 3.2      *Reactor building roof thickness (m)
+dz_plant_reactor_building_roof        = 3.2      *Reactor building roof thickness (m)
 dx_plant_reactor_building_wall        = 3.2      *Reactor building wall thickness (m)
 
 *---------------Heat Transport Variables-----------*

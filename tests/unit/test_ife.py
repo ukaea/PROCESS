@@ -2858,7 +2858,7 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
 class IfebdgParam(NamedTuple):
     wrbi: Any = None
     dx_plant_reactor_building_wall: Any = None
-    rbrt: Any = None
+    dz_plant_reactor_building_roof: Any = None
     fndt: Any = None
     trcl: Any = None
     hcwt: Any = None
@@ -2907,7 +2907,7 @@ class IfebdgParam(NamedTuple):
         IfebdgParam(
             wrbi=0.0,
             dx_plant_reactor_building_wall=3.2000000000000002,
-            rbrt=3.2000000000000002,
+            dz_plant_reactor_building_roof=3.2000000000000002,
             fndt=2.0,
             trcl=1.0,
             hcwt=1.5,
@@ -2964,8 +2964,16 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(buildings_variables, "wrbi", ifebdgparam.wrbi)
-    monkeypatch.setattr(buildings_variables, "dx_plant_reactor_building_wall", ifebdgparam.dx_plant_reactor_building_wall)
-    monkeypatch.setattr(buildings_variables, "rbrt", ifebdgparam.rbrt)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dx_plant_reactor_building_wall",
+        ifebdgparam.dx_plant_reactor_building_wall,
+    )
+    monkeypatch.setattr(
+        buildings_variables,
+        "dz_plant_reactor_building_roof",
+        ifebdgparam.dz_plant_reactor_building_roof,
+    )
     monkeypatch.setattr(buildings_variables, "fndt", ifebdgparam.fndt)
     monkeypatch.setattr(buildings_variables, "trcl", ifebdgparam.trcl)
     monkeypatch.setattr(buildings_variables, "hcwt", ifebdgparam.hcwt)
