@@ -60,7 +60,7 @@ class Buildings(Model):
         tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_inboard * 0.5e0)
 
         # Find width, in radial dimension, of TF coil (m)
-        tf_radial_dim = r_tf_outboard_out - tfri
+        tf_radial_dim = tfcoil_variables.dr_tf_full_midplane
 
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
@@ -113,6 +113,9 @@ class Buildings(Model):
 
 
 class BuildingsITER1992:
+    def __init__(self):
+        self.outfile = constants.NOUT
+
     def calculate_building_sizes_1992(
         self,
         output: bool,
@@ -431,6 +434,9 @@ class BuildingsITER1992:
 
 
 class BuildingsChapman2024:
+    def __init__(self):
+        self.outfile = constants.NOUT
+
     def calculate_building_sizes_chapman(self, output, tf_radial_dim, tf_vertical_dim):
         """Subroutine that estimates the sizes (footprints and volumes) of
         buildings within a fusion power plant.
