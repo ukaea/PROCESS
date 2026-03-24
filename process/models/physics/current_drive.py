@@ -65,10 +65,10 @@ class CurrentDriveModel(IntEnum):
         "Freethy Electron Cyclotron",
     )
 
-    def __new__(cls, value, type, abbreviation, full_name):
+    def __new__(cls, value, method, abbreviation, full_name):
         obj = int.__new__(cls, value)
         obj._value_ = value
-        obj.type = type
+        obj.method = method
         obj.abbreviation = abbreviation
         obj.full_name = full_name
         return obj
@@ -1635,7 +1635,7 @@ class CurrentDrive:
 
             # Assign outputs for models that return multiple values
             if (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
                 == "Neutral Beam"
             ):
                 _, f_p_beam_injected_ions, f_p_beam_shine_through = (
@@ -1739,7 +1739,7 @@ class CurrentDrive:
 
             # Lower hybrid cases
             if (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
                 == "Lower Hybrid"
             ):
                 # Injected power
@@ -1794,7 +1794,7 @@ class CurrentDrive:
 
             # Electron cyclotron cases
             if (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
                 == "Electron Cyclotron"
             ):
                 # Injected power
@@ -1823,7 +1823,7 @@ class CurrentDrive:
 
             # Electron berstein cases
             if (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
                 == "Electron Bernstein"
             ):
                 # Injected power
@@ -1852,7 +1852,7 @@ class CurrentDrive:
 
             # Neutral beam cases
             elif (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
                 == "Neutral Beam"
             ):
                 # Account for first orbit losses
@@ -1935,7 +1935,7 @@ class CurrentDrive:
 
             # Lower hybrid cases
             if (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
                 == "Lower Hybrid"
             ):
                 p_hcd_primary_electrons_mw = (
@@ -1969,7 +1969,7 @@ class CurrentDrive:
 
             # Ion cyclotron cases
             if (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
                 == "Ion Cyclotron"
             ):
                 p_hcd_primary_ions_mw = (
@@ -2004,7 +2004,7 @@ class CurrentDrive:
             # Electron cyclotron cases
 
             if (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
                 == "Electron Cyclotron"
             ):
                 p_hcd_primary_electrons_mw = (
@@ -2038,7 +2038,7 @@ class CurrentDrive:
             # Electron bernstein cases
 
             if (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
                 == "Electron Bernstein"
             ):
                 p_hcd_primary_electrons_mw = (
@@ -2070,7 +2070,7 @@ class CurrentDrive:
             # ===========================================================
 
             elif (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).type
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
                 == "Neutral Beam"
             ):
                 # Account for first orbit losses
@@ -2391,7 +2391,7 @@ class CurrentDrive:
         po.oblnkl(self.outfile)
 
         if (
-            CurrentDriveModel(current_drive_variables.i_hcd_primary).type
+            CurrentDriveModel(current_drive_variables.i_hcd_primary).method
             == "Neutral Beam"
         ):
             po.oblnkl(self.outfile)
@@ -2591,7 +2591,7 @@ class CurrentDrive:
         po.oblnkl(self.outfile)
 
         if (
-            CurrentDriveModel(current_drive_variables.i_hcd_secondary).type
+            CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
             == "Neutral Beam"
         ):
             po.oblnkl(self.outfile)

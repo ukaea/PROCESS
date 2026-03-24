@@ -2388,7 +2388,7 @@ class Build:
                 CurrentDriveModel(
                     current_drive_variables.i_hcd_primary
                     or current_drive_variables.i_hcd_secondary
-                ).type
+                ).method
                 == "Neutral Beam"
             ):
                 po.ovarre(
