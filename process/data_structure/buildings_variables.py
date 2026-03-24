@@ -454,7 +454,7 @@ stcl: float = None
 """clearance above crane to roof (m)"""
 
 
-tfcbv: float = None
+vol_plant_tf_power_supplies_building: float = None
 """volume of TF coil power supply building (m3) (calculated if TF coils are superconducting)"""
 
 
@@ -726,7 +726,7 @@ def init_buildings_variables():
         staff_buildings_area, \
         staff_buildings_h, \
         stcl, \
-        tfcbv, \
+        vol_plant_tf_power_supplies_building, \
         transp_clrnc, \
         trcl, \
         triv, \
@@ -880,7 +880,7 @@ def init_buildings_variables():
     staff_buildings_h = 5.0
     staff_buildings_area = 4.8e5
     stcl = 3.0
-    tfcbv = 2.0e4
+    vol_plant_tf_power_supplies_building = 2.0e4
     transp_clrnc = 1.0
     trcl = 1.0
     triv = 4.0e4

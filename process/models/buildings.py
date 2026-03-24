@@ -340,7 +340,7 @@ class BuildingsITER1992:
         # pibv : power injection building volume, m3
         # esbldgm3 is forced to be zero if no energy storage is required (i_pulsed_plant=0)
         elev = (
-            buildings_variables.tfcbv
+            buildings_variables.vol_plant_tf_power_supplies_building
             + buildings_variables.pfbldgm3
             + buildings_variables.esbldgm3
             + buildings_variables.pibv

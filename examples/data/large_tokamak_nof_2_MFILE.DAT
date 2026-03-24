@@ -7341,7 +7341,7 @@ Total_TF_coil_bus_resistance_(ohm)_______________________________________ (rtfbu
 TF_coil_bus_voltage_drop_(V)_____________________________________________ (vtfbus)_______________________ 7.53041571156424681e+01 OP 
 Dump_resistor_floor_area_(m2)____________________________________________ (drarea)_______________________ 4.69611808013603786e+03 OP 
 TF_coil_power_conversion_floor_space_(m2)________________________________ (tfcfsp)_______________________ 1.71341909879137052e+03 OP 
-TF_coil_power_conv._building_volume_(m3)_________________________________ (tfcbv)________________________ 1.02805145927482226e+04 OP 
+TF_coil_power_conv._building_volume_(m3)_________________________________ (vol_plant_tf_power_supplies_building)________________________ 1.02805145927482226e+04 OP 
 TF_coil_AC_inductive_power_demand_(MW)___________________________________ (xpwrmw)_______________________ 1.74831542918251444e+01 OP 
 Total_steady_state_AC_power_demand_(MW)__________________________________ (p_tf_electric_supplies_mw)____ 6.85171494973175133e+00 OP 
 # PF Coils and Central Solenoid: Power and Energy #
