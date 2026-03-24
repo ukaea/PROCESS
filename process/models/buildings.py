@@ -66,7 +66,7 @@ class Buildings(Model):
 
         if buildings_variables.i_bldgs_size == 1:
             # Updated building estimates
-            self.bldgs_sizes(output, tf_radial_dim, tf_vertical_dim)
+            self.calculate_building_sizes_chapman(output, tf_radial_dim, tf_vertical_dim)
 
         else:
             # Previous estimation work
@@ -406,7 +406,7 @@ class Buildings(Model):
 
         return cryv, vrci, rbv, rmbv, wsv, elev
 
-    def bldgs_sizes(self, output, tf_radial_dim, tf_vertical_dim):
+    def calculate_building_sizes_chapman(self, output, tf_radial_dim, tf_vertical_dim):
         """Subroutine that estimates the sizes (footprints and volumes) of
         buildings within a fusion power plant.
         Some estimates are scaled with parameters of the fusion plant,
