@@ -16,6 +16,7 @@ from process.data_structure import (
     heat_transport_variables,
     pfcoil_variables,
     physics_variables,
+    superconducting_tf_coil_variables,
     tfcoil_variables,
 )
 from process.models.physics.current_drive import (
@@ -54,14 +55,12 @@ class Buildings(Model):
     def run(self, output: bool = False):
         # Find TF coil radial positions
         # outboard edge: outboard mid-leg radial position + half-thickness of outboard leg
-        tfro = build_variables.r_tf_outboard_mid + (
-            build_variables.dr_tf_outboard * 0.5e0
-        )
+        r_tf_outboard_out = superconducting_tf_coil_variables.r_tf_outboard_out
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
         tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_inboard * 0.5e0)
 
         # Find width, in radial dimension, of TF coil (m)
-        tf_radial_dim = tfro - tfri
+        tf_radial_dim = r_tf_outboard_out - tfri
 
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
@@ -96,7 +95,7 @@ class Buildings(Model):
                 output,
                 pfcoil_variables.r_pf_coil_outer_max,
                 pfcoil_variables.m_pf_coil_max,
-                tfro,
+                r_tf_outboard_out,
                 tfri,
                 tf_vertical_dim,
                 tfmtn,
@@ -119,7 +118,7 @@ class BuildingsITER1992:
         output: bool,
         pfr,
         pfm,
-        tfro,
+        r_tf_outboard_out,
         tfri,
         tfh,
         tfm,
@@ -151,7 +150,7 @@ class BuildingsITER1992:
              largest PF coil outer radius, m
         pfm :
             largest PF coil mass, tonne
-        tfro :
+        r_tf_outboard_out :
             outer radius of TF coil, m
         tfri :
             inner radius of TF coil, m
@@ -195,12 +194,12 @@ class BuildingsITER1992:
         # Determine basic machine radius (m)
         # crr  :  cryostat radius (m)
         # pfr  :  radius of largest PF coil (m)
-        # tfro :  outer radius of TF coil (m)
-        bmr = max(crr, pfr, tfro)
+        # r_tf_outboard_out :  outer radius of TF coil (m)
+        bmr = max(crr, pfr, r_tf_outboard_out)
 
         # Determine largest transported piece
         sectl = shro - shri  # Shield thicknes (m)
-        coill = tfro - tfri  # TF coil thickness (m)
+        coill = r_tf_outboard_out - tfri  # TF coil thickness (m)
         sectl = max(coill, sectl)
 
         # Calculate half width of building (m)

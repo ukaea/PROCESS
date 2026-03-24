@@ -971,7 +971,11 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "wgt2", bldgsparam.wgt2)
     monkeypatch.setattr(buildings_variables, "mbvfac", bldgsparam.mbvfac)
     monkeypatch.setattr(buildings_variables, "wsvfac", bldgsparam.wsvfac)
-    monkeypatch.setattr(buildings_variables, "vol_plant_tf_power_supplies_building", bldgsparam.vol_plant_tf_power_supplies_building)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_tf_power_supplies_building",
+        bldgsparam.vol_plant_tf_power_supplies_building,
+    )
     monkeypatch.setattr(buildings_variables, "pfbldgm3", bldgsparam.pfbldgm3)
     monkeypatch.setattr(buildings_variables, "esbldgm3", bldgsparam.esbldgm3)
     monkeypatch.setattr(buildings_variables, "pibv", bldgsparam.pibv)
