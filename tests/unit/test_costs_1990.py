@@ -231,7 +231,11 @@ def acc2273_fix(request, monkeypatch, costs):
         "vol_plant_warm_shop_building",
         param["vol_plant_warm_shop_building"],
     )
-    monkeypatch.setattr(data_structure.buildings_variables, "vol_plant_reactor_building_internal", param["vol_plant_reactor_building_internal"])
+    monkeypatch.setattr(
+        data_structure.buildings_variables,
+        "vol_plant_reactor_building_internal",
+        param["vol_plant_reactor_building_internal"],
+    )
     monkeypatch.setattr(
         physics_variables, "f_plasma_fuel_tritium", param["f_plasma_fuel_tritium"]
     )
@@ -265,7 +269,11 @@ def test_acc2274(monkeypatch, costs):
     monkeypatch.setattr(
         data_structure.buildings_variables, "vol_plant_warm_shop_building", 132304.1
     )
-    monkeypatch.setattr(data_structure.buildings_variables, "vol_plant_reactor_building_internal", 1299783.4)
+    monkeypatch.setattr(
+        data_structure.buildings_variables,
+        "vol_plant_reactor_building_internal",
+        1299783.4,
+    )
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "c2274", 0)
 
@@ -709,7 +717,7 @@ class Acc21Param(NamedTuple):
 
     vol_plant_reactor_building: Any = None
 
-    cryvol: Any = None
+    vol_plant_cryoplant_building: Any = None
 
     vol_plant_maintenance_assembly_building: Any = None
 
@@ -796,7 +804,7 @@ class Acc21Param(NamedTuple):
             triv=40000,
             vol_plant_electrical_building=51601.097615432001,
             vol_plant_reactor_building=1356973.2891062023,
-            cryvol=15247.180612719381,
+            vol_plant_cryoplant_building=15247.180612719381,
             vol_plant_maintenance_assembly_building=421473.52130148414,
             admvol=100000,
             convol=60000,
@@ -841,7 +849,7 @@ class Acc21Param(NamedTuple):
             triv=40000,
             vol_plant_electrical_building=51609.268177478581,
             vol_plant_reactor_building=1358540.6868905292,
-            cryvol=25826.919937316459,
+            vol_plant_cryoplant_building=25826.919937316459,
             vol_plant_maintenance_assembly_building=423252.94369581528,
             admvol=100000,
             convol=60000,
@@ -912,7 +920,11 @@ def test_acc21(acc21param, monkeypatch, costs):
         acc21param.vol_plant_reactor_building,
     )
 
-    monkeypatch.setattr(buildings_variables, "cryvol", acc21param.cryvol)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_cryoplant_building",
+        acc21param.vol_plant_cryoplant_building,
+    )
 
     monkeypatch.setattr(
         buildings_variables,
@@ -4560,7 +4572,11 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
         acc2273param.vol_plant_warm_shop_building,
     )
 
-    monkeypatch.setattr(buildings_variables, "vol_plant_reactor_building_internal", acc2273param.vol_plant_reactor_building_internal)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_reactor_building_internal",
+        acc2273param.vol_plant_reactor_building_internal,
+    )
 
     monkeypatch.setattr(cost_variables, "fkind", acc2273param.fkind)
 
@@ -4637,7 +4653,11 @@ def test_acc2274_rut(acc2274param, monkeypatch, costs):
         acc2274param.vol_plant_warm_shop_building,
     )
 
-    monkeypatch.setattr(buildings_variables, "vol_plant_reactor_building_internal", acc2274param.vol_plant_reactor_building_internal)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_reactor_building_internal",
+        acc2274param.vol_plant_reactor_building_internal,
+    )
 
     monkeypatch.setattr(cost_variables, "fkind", acc2274param.fkind)
 

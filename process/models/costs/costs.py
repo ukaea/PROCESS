@@ -1157,7 +1157,7 @@ class Costs:
         cost_variables.c2174 = (
             1.0e-6
             * cost_variables.UCCR
-            * buildings_variables.cryvol**exprb
+            * buildings_variables.vol_plant_cryoplant_building**exprb
             * cmlsa[cost_variables.lsa - 1]
         )
         cost_variables.c217 = (
