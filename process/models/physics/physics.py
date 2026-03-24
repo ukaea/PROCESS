@@ -945,23 +945,7 @@ class Physics:
             physics_variables.t_energy_confinement,
         )
 
-        physics_variables.f_plasma_fuel_burnup = self.fuelling.calculate_fuel_burnup_fraction(
-            fusrat_total=physics_variables.fusrat_total,
-            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
-        )
-        physics_variables.f_plasma_tritium_burnup = self.fuelling.calculate_tritium_burnup_fraction(
-            fusrat_dt_total=physics_variables.fusrat_dt_total,
-            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
-            f_molflow_plasma_fuelling_tritium=physics_variables.f_molflow_plasma_fuelling_tritium,
-        )
-
-        physics_variables.f_plasma_deuterium_burnup = self.fuelling.calculate_deuterium_burnup_fraction(
-            fusrat_plasma_dd_total=physics_variables.fusrat_plasma_dd_total,
-            molflow_plasma_fuelling_vv_injected=physics_variables.molflow_plasma_fuelling_vv_injected,
-            f_molflow_plasma_fuelling_deuterium=physics_variables.f_molflow_plasma_fuelling_deuterium,
-            fusrat_dt_total=physics_variables.fusrat_dt_total,
-            fusrat_plasma_dhe3=physics_variables.fusrat_plasma_dhe3,
-        )
+        self.fuelling.run()
 
         physics_variables.ntau, physics_variables.nTtau = (
             self.confinement.calculate_double_and_triple_product(
