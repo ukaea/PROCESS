@@ -1767,7 +1767,10 @@ class CurrentDrive:
             # ==========================================================
 
             # Ion cyclotron cases
-            if current_drive_variables.i_hcd_secondary == 2:
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
+                == "Ion Cyclotron"
+            ):
                 # Injected power
                 p_hcd_secondary_ions_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -2404,8 +2407,9 @@ class CurrentDrive:
                 "(e_beam_kev)",
                 current_drive_variables.e_beam_kev,
             )
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                == "Neutral Beam"
             ):
                 po.ovarre(
                     self.outfile,
@@ -2436,8 +2440,9 @@ class CurrentDrive:
                 "OP ",
             )
 
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                == "Neutral Beam"
             ):
                 po.ovarrf(
                     self.outfile,
@@ -2604,8 +2609,9 @@ class CurrentDrive:
                 "(e_beam_kev)",
                 current_drive_variables.e_beam_kev,
             )
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                == "Neutral Beam"
             ):
                 po.ovarre(
                     self.outfile,
@@ -2636,8 +2642,9 @@ class CurrentDrive:
                 "OP ",
             )
 
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                == "Neutral Beam"
             ):
                 po.ovarrf(
                     self.outfile,

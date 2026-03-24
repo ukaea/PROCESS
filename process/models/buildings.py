@@ -16,6 +16,7 @@ from process.data_structure import (
     physics_variables,
     tfcoil_variables,
 )
+from process.models.physics.current_drive import CurrentDriveModel
 
 logger = logging.getLogger(__name__)
 
@@ -470,8 +471,9 @@ class Buildings:
         # Heating and Current Drive facility
         # Dimensions based upon estimates from M. Henderson, HCD Development Group
         # current_drive_variables.i_hcd_primary = switch for current drive model
-        if (current_drive_variables.i_hcd_primary == 5) or (
-            current_drive_variables.i_hcd_primary == 8
+        if (
+            CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+            == "Neutral Beam"
         ):
             # NBI technology will be situated within the reactor building
             buildings_variables.reactor_hall_l = (
@@ -1026,8 +1028,9 @@ class Buildings:
                 "(reactor_hall_h)",
                 buildings_variables.reactor_hall_h,
             )
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                == "Neutral Beam"
             ):
                 po.ocmmnt(
                     self.outfile,
