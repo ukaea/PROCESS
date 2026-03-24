@@ -83,7 +83,7 @@ class Buildings:
                 buildings_variables.rbvol,
                 buildings_variables.vol_plant_maintenance_assembly_building,
                 buildings_variables.vol_plant_warm_shop_building,
-                buildings_variables.elevol,
+                buildings_variables.vol_plant_electrical_building,
             ) = self.iter_1992.calculate_building_sizes_1992(
                 output,
                 pfcoil_variables.r_pf_coil_outer_max,

@@ -158,7 +158,7 @@ elecstore_h: float = None
 """Energy Storage facilities height (m)"""
 
 
-elevol: float = None
+vol_plant_electrical_building: float = None
 """volume of electrical equipment building (m3)"""
 
 
@@ -652,7 +652,7 @@ def init_buildings_variables():
         elecstore_l, \
         elecstore_w, \
         elecstore_h, \
-        elevol, \
+        vol_plant_electrical_building, \
         esbldgm3, \
         fc_building_l, \
         fc_building_w, \
@@ -806,7 +806,7 @@ def init_buildings_variables():
     elecstore_l = 100.0
     elecstore_w = 60.0
     elecstore_h = 12.0
-    elevol = 0.0
+    vol_plant_electrical_building = 0.0
     esbldgm3 = 1.0e3
     fc_building_l = 60.0
     fc_building_w = 60.0

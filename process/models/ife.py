@@ -2377,7 +2377,7 @@ class IFE:
 
         buildings_variables.admvol = buildings_variables.admv
         buildings_variables.convol = buildings_variables.conv
-        buildings_variables.elevol = elev
+        buildings_variables.vol_plant_electrical_building = elev
         buildings_variables.rbvol = rbv
         buildings_variables.vol_plant_maintenance_assembly_building = rmbv
         buildings_variables.shovol = buildings_variables.shov
