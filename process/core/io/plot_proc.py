@@ -10148,7 +10148,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
     axis.text(
         (r_tf_inboard_out + r_tf_outboard_in) / 1.5,
         0.0,
-        f"{(r_tf_outboard_in + dr_tf_outboard) - r_tf_inboard_in:.3f} m",
+        f"{mfile.get('dr_tf_full_midplane', scan=scan):.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",

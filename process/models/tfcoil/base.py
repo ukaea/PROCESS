@@ -45,6 +45,7 @@ class TFCoil:
             superconducting_tf_coil_variables.r_tf_outboard_out,
             tfcoil_variables.dx_tf_inboard_out_toroidal,
             tfcoil_variables.a_tf_leg_outboard,
+            tfcoil_variables.dr_tf_full_midplane,
             tfcoil_variables.dr_tf_plasma_case,
             tfcoil_variables.dx_tf_side_case_min,
         ) = self.tf_global_geometry(
@@ -168,6 +169,7 @@ class TFCoil:
             - **rad_tf_coil_inboard_toroidal_half** (*float*): Toroidal angular spacing of each TF coil [radians].
             - **tan_theta_coil** (*float*): Tangent of the toroidal angular spacing.
             - **a_tf_inboard_total** (*float*): Cross-sectional area of the inboard leg of the TF coil [m²].
+            - **dr_tf_full_midplane** (*float*): Full external coil width at mid-plane [m].
             - **r_tf_outboard_in** (*float*): Inner radius of the outboard leg of the TF coil [m].
             - **r_tf_outboard_out** (*float*): Outer radius of the outboard leg of the TF coil [m].
             - **dx_tf_inboard_out_toroidal** (*float*): Width of the inboard leg at the outer edge in the toroidal direction [m].
@@ -208,6 +210,11 @@ class TFCoil:
 
         # Area of rectangular cross-section TF outboard leg [m^2]
         a_tf_leg_outboard = dx_tf_inboard_out_toroidal * dr_tf_outboard
+
+        # =====================================================================
+        # Full external coil width at mid-plane [m]
+
+        dr_tf_full_midplane = r_tf_outboard_out - r_tf_inboard_in
 
         # ======================================================================
         # Plasma facing front case thickness [m]
@@ -257,6 +264,7 @@ class TFCoil:
             r_tf_outboard_out,
             dx_tf_inboard_out_toroidal,
             a_tf_leg_outboard,
+            dr_tf_full_midplane,
             dr_tf_plasma_case,
             dx_tf_side_case_min,
         )
@@ -741,6 +749,13 @@ class TFCoil:
             "Total outboard leg radial thickness (m)",
             "(dr_tf_outboard)",
             build_variables.dr_tf_outboard,
+        )
+        po.ovarre(
+            self.outfile,
+            "Full external coil width at mid-plane (m)",
+            "(dr_tf_full_midplane)",
+            tfcoil_variables.dr_tf_full_midplane,
+            "OP ",
         )
         po.ovarre(
             self.outfile,
