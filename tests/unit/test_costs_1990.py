@@ -707,7 +707,7 @@ class Acc21Param(NamedTuple):
 
     vol_plant_electrical_building: Any = None
 
-    rbvol: Any = None
+    vol_plant_reactor_building: Any = None
 
     cryvol: Any = None
 
@@ -795,7 +795,7 @@ class Acc21Param(NamedTuple):
             shovol=100000,
             triv=40000,
             vol_plant_electrical_building=51601.097615432001,
-            rbvol=1356973.2891062023,
+            vol_plant_reactor_building=1356973.2891062023,
             cryvol=15247.180612719381,
             vol_plant_maintenance_assembly_building=421473.52130148414,
             admvol=100000,
@@ -840,7 +840,7 @@ class Acc21Param(NamedTuple):
             shovol=100000,
             triv=40000,
             vol_plant_electrical_building=51609.268177478581,
-            rbvol=1358540.6868905292,
+            vol_plant_reactor_building=1358540.6868905292,
             cryvol=25826.919937316459,
             vol_plant_maintenance_assembly_building=423252.94369581528,
             admvol=100000,
@@ -906,7 +906,11 @@ def test_acc21(acc21param, monkeypatch, costs):
         acc21param.vol_plant_electrical_building,
     )
 
-    monkeypatch.setattr(buildings_variables, "rbvol", acc21param.rbvol)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_reactor_building",
+        acc21param.vol_plant_reactor_building,
+    )
 
     monkeypatch.setattr(buildings_variables, "cryvol", acc21param.cryvol)
 
