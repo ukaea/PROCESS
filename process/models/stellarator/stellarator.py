@@ -1562,69 +1562,15 @@ class Stellarator:
                 )
                 po.ovarre(
                     self.outfile,
-                    "Nuclear heating on i/b coil (MW/m3)",
-                    "(pnuctfi)",
-                    fwbs_variables.pnuctfi,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Nuclear heating on o/b coil (MW/m3)",
-                    "(pnuctfo)",
-                    fwbs_variables.pnuctfo,
-                )
-                po.ovarre(
-                    self.outfile,
                     "Total nuclear heating on coil (MW)",
                     "(p_tf_nuclear_heat_mw)",
                     fwbs_variables.p_tf_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
-                    "Fast neut. fluence on i/b coil (n/m2)",
-                    "(nflutfi)",
-                    fwbs_variables.nflutfi * 1.0e4,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Fast neut. fluence on o/b coil (n/m2)",
-                    "(nflutfo)",
-                    fwbs_variables.nflutfo * 1.0e4,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Minimum final He conc. in IB VV (appm)",
-                    "(vvhemini)",
-                    fwbs_variables.vvhemini,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Minimum final He conc. in OB VV (appm)",
-                    "(vvhemino)",
-                    fwbs_variables.vvhemino,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Maximum final He conc. in IB VV (appm)",
-                    "(vvhemaxi)",
-                    fwbs_variables.vvhemaxi,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Maximum final He conc. in OB VV (appm)",
-                    "(vvhemaxo)",
-                    fwbs_variables.vvhemaxo,
-                )
-                po.ovarre(
-                    self.outfile,
                     "Blanket lifetime (full power years)",
                     "(life_blkt_fpy)",
                     fwbs_variables.life_blkt_fpy,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Blanket lifetime (calendar years)",
-                    "(t_bl_y)",
-                    fwbs_variables.t_bl_y,
                 )
 
             if (heat_transport_variables.ipowerflow == 1) and (
