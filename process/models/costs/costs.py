@@ -1103,7 +1103,7 @@ class Costs:
         cost_variables.c2141 = (
             1.0e-6
             * cost_variables.UCMB
-            * buildings_variables.rmbvol**exprb
+            * buildings_variables.vol_plant_maintenance_assembly_building**exprb
             * cmlsa[cost_variables.lsa - 1]
         )
         cost_variables.c2142 = (
@@ -2401,7 +2401,10 @@ class Costs:
                 * cost_variables.UCDTC
                 * (
                     (cfrht / 1.0e4) ** 0.6e0
-                    * (buildings_variables.volrci + buildings_variables.vol_plant_warm_shop_building)
+                    * (
+                        buildings_variables.volrci
+                        + buildings_variables.vol_plant_warm_shop_building
+                    )
                 )
             )
         else:
@@ -2416,7 +2419,11 @@ class Costs:
         cost_variables.c2274 = (
             1.0e-6
             * cost_variables.UCNBV
-            * (buildings_variables.volrci + buildings_variables.vol_plant_warm_shop_building) ** 0.8e0
+            * (
+                buildings_variables.volrci
+                + buildings_variables.vol_plant_warm_shop_building
+            )
+            ** 0.8e0
         )
 
         #  Apply Nth kind factor
