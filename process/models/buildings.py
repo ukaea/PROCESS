@@ -28,8 +28,9 @@ logger = logging.getLogger(__name__)
 
 class BuildingsModel(IntEnum):
     """Enum for building size estimation models"""
-    ITER_1992 = 1
-    CHAPMAN_2024 = 2
+
+    ITER_1992 = 0
+    CHAPMAN_2024 = 1
 
 
 class Buildings(Model):
@@ -44,6 +45,8 @@ class Buildings(Model):
         This routine calls the buildings calculations.
         """
         self.outfile = constants.NOUT  # output file unit
+        self.iter_1992 = BuildingsITER1992()
+        self.chapman_2024 = BuildingsChapman2024()
 
     def output(self):
         self.run(output=True)
@@ -76,7 +79,9 @@ class Buildings(Model):
             == BuildingsModel.CHAPMAN_2024
         ):
             # Updated building estimates
-            self.calculate_building_sizes_chapman(output, tf_radial_dim, tf_vertical_dim)
+            self.chapman_2024.calculate_building_sizes_chapman(
+                output, tf_radial_dim, tf_vertical_dim
+            )
 
         else:
             # Previous estimation work
@@ -87,7 +92,7 @@ class Buildings(Model):
                 buildings_variables.rmbvol,
                 buildings_variables.wsvol,
                 buildings_variables.elevol,
-            ) = self.calculate_building_sizes_1992(
+            ) = self.iter_1992.calculate_building_sizes_1992(
                 output,
                 pfcoil_variables.r_pf_coil_outer_max,
                 pfcoil_variables.m_pf_coil_max,
@@ -107,6 +112,8 @@ class Buildings(Model):
                 heat_transport_variables.helpow,
             )
 
+
+class BuildingsITER1992:
     def calculate_building_sizes_1992(
         self,
         output: bool,
@@ -416,6 +423,8 @@ class Buildings(Model):
 
         return cryv, vrci, rbv, rmbv, wsv, elev
 
+
+class BuildingsChapman2024:
     def calculate_building_sizes_chapman(self, output, tf_radial_dim, tf_vertical_dim):
         """Subroutine that estimates the sizes (footprints and volumes) of
         buildings within a fusion power plant.
