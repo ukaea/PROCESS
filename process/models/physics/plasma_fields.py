@@ -17,7 +17,7 @@ class PlasmaFields:
         self.mfile = constants.MFILE
         self.current = PlasmaCurrent()
 
-    def calculate_poloidal_field(
+    def calculate_surface_averaged_poloidal_field(
         self,
         i_plasma_current: int,
         ip: float,
@@ -82,3 +82,5 @@ class PlasmaFields:
         qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
         return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
+
+    

@@ -523,7 +523,7 @@ $$
 --------------
 
 
-## Plasma Current Poloidal Field | `calculate_poloidal_field()`
+## Plasma Current Poloidal Field | `calculate_surface_averaged_poloidal_field()`
 
 For calculating the poloidal magnetic field created due to the presence of the plasma current, [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) can be used. In this case the plasma edge average poloidal field is simply returned as:
 
