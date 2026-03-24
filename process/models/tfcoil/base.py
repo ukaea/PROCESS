@@ -26,6 +26,13 @@ logger = logging.getLogger(__name__)
 
 
 class TFCoilShapeModel(IntEnum):
+    """Enumeration for TF coil shape models.
+    0: Auto-select
+    1: D-shape
+    2: Picture frame coil
+
+    """
+
     DEFAULT = 0
     D_SHAPE = 1
     PICTURE_FRAME = 2
@@ -390,7 +397,7 @@ class TFCoil:
         tfa = np.zeros(4)
         tfb = np.zeros(4)
 
-        if i_tf_shape == 1 and itart == 0:
+        if TFCoilShapeModel(i_tf_shape) == TFCoilShapeModel.D_SHAPE and itart == 0:
             # PROCESS D-shape parameterisation
             r_tf_arc[0] = r_tf_inboard_out
             r_tf_arc[1] = rmajor - 0.2e0 * rminor
@@ -420,7 +427,7 @@ class TFCoil:
                 bb = tfb[ii] + 0.5e0 * dr_tf_inboard
                 len_tf_coil += 0.25e0 * self.circumference(aa, bb)
 
-        elif i_tf_shape == 1 and itart == 1:
+        elif TFCoilShapeModel(i_tf_shape) == TFCoilShapeModel.D_SHAPE and itart == 1:
             # Centrepost with D-shaped
             r_tf_arc[0] = r_cp_top
             r_tf_arc[1] = rmajor - 0.2e0 * rminor
@@ -443,7 +450,7 @@ class TFCoil:
                 bb = tfb[ii] + 0.5e0 * dr_tf_outboard
                 len_tf_coil += 0.25e0 * self.circumference(aa, bb)
 
-        elif i_tf_shape == 2:
+        elif TFCoilShapeModel(i_tf_shape) == TFCoilShapeModel.PICTURE_FRAME:
             # Picture frame coil
             if itart == 0:
                 r_tf_arc[0] = r_tf_inboard_out

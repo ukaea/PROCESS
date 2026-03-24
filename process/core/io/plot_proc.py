@@ -67,6 +67,7 @@ from process.models.physics.current_drive import ElectronBernstein, ElectronCycl
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
+from process.models.tfcoil.base import TFCoilShapeModel
 from process.models.tfcoil.superconducting import SUPERCONDUCTING_TF_TYPES
 
 mpl.rcParams["figure.max_open_warning"] = 40
@@ -5659,7 +5660,7 @@ def plot_tf_coils(
         else:
             i_tf_shape = 1
 
-        if i_tf_shape == 2:
+        if TFCoilShapeModel(i_tf_shape) == TFCoilShapeModel.PICTURE_FRAME:
             rects = tfcoil_geometry_rectangular_shape(
                 x1=x1,
                 x2=x2,
