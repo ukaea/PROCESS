@@ -768,7 +768,10 @@ dr_tf_nose_case: float = None
 """
 
 dr_tf_full_midplane: float = None
-"""Full radial thickness of TF coil at midplane (m) (`iteration variable 141`)"""
+"""Full radial thickness of TF coil at midplane (m)"""
+
+dr_tf_internal_midplane: float = None
+"""Internal radial thickness of TF coil at midplane (m)"""
 
 
 dr_tf_wp_with_insulation: float = None
@@ -1225,6 +1228,7 @@ def init_tfcoil_variables():
         layer_ins, \
         dr_tf_nose_case, \
         dr_tf_full_midplane, \
+        dr_tf_internal_midplane, \
         dr_tf_wp_with_insulation, \
         dx_tf_turn_steel, \
         dx_tf_wp_insulation, \
@@ -1459,6 +1463,7 @@ def init_tfcoil_variables():
     layer_ins = 0.0
     dr_tf_nose_case = 0.3
     dr_tf_full_midplane = 0.0
+    dr_tf_internal_midplane = 0.0
     dr_tf_wp_with_insulation = 0.0
     dx_tf_turn_steel = 8e-3
     dx_tf_wp_insulation = 0.018
