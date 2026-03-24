@@ -17,8 +17,15 @@
 # %% [markdown]
 # # Optimum solutions comparison notebook
 #
-# Notebook to demonstrate how changing input parameters changed the optimum solution found by PROCESS.
+# %% [markdown]
+# A Jupyter notebook to demonstrate how changing input parameters changes the optimum solution found by PROCESS.
 #
+# %% [markdown]
+# <div class="alert alert-block alert-info">
+# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied there and the outputs contained there before the directory is removed when the example has finished running. This keeps the examples directory tidy and does not permanently modify any data files. The use of temporary directories is not needed for regular use of PROCESS.
+# </div>
+
+# %% [markdown]
 # This notebook demonstrates how the optimum solution found by `PROCESS` changes as we vary input parameters. We will use the large tokamak example input file to do this. The figure of merit for this example is to minimise the major radius, `rmajor`.
 #
 # We use the functionality from `plot_solutions.py` and from `plot_proc.py` to demonstrate this.
@@ -34,9 +41,10 @@
 # - The solutions plotted in this example are fictitious.
 
 # %% [markdown]
-# Setup
+# ## Setup
 #
-# First we need to generate the necessary MFILES to be used in the rest of this notebook. We run the examples in a temporary directory so all the inputs are copied there and the outputs contained there before the directory is removed when the example has finished running. This keeps the examples directory tidy and does not permanently modify any data files. The use of temporary directories is not needed for regular use of PROCESS.
+# First we need to generate the necessary MFILES to be used in the rest of this notebook.
+#
 
 # %%
 # %load_ext autoreload
@@ -51,10 +59,7 @@ from process.core.io.plot_solutions import (
     plot_mfile_solutions,
 )
 from process.core.repository import get_process_root
-from process.main import SingleRun, setup_loggers
-
-# setup the loggers so that the output is not spammed with model errors/warnings
-setup_loggers()
+from process.main import SingleRun
 
 # Define input file name relative to project dir, then copy to temp dir
 script_dir = Path("__file__").parent.resolve()
@@ -63,6 +68,7 @@ data_dir = get_process_root() / "../examples/data/"
 input_file = data_dir / "large_tokamak_IN.DAT"
 input_file2 = data_dir / "large_tokamak_varied_min_net_electric_IN.DAT"
 
+# %%
 # Copy the file to avoid polluting the project directory with example files
 temp_dir = tempfile.TemporaryDirectory()
 input_path = Path(temp_dir.name) / "large_tokamak_IN.DAT"
@@ -70,6 +76,7 @@ input_path2 = Path(temp_dir.name) / "large_tokamak_varied_min_net_electric_IN.DA
 shutil.copy(input_file, input_path)
 shutil.copy(input_file2, input_path2)
 
+# %%
 # Run process on these input files in a temporary directory
 single_run = SingleRun(input_path.as_posix())
 single_run.run()
@@ -83,10 +90,10 @@ single_run.run()
 # First we will look at the original large tokamak optimum solution. We will plot its solution, showing optimisation parameters normalised to their initial values.
 
 # %%
-
+large_tokamak_mfile = Path(temp_dir.name) / "large_tokamak_MFILE.DAT"
 # Plot the solution
 runs_metadata = [
-    RunMetadata(Path(temp_dir.name) / "large_tokamak_MFILE.DAT", "large tokamak"),
+    RunMetadata(large_tokamak_mfile, "large tokamak"),
 ]
 
 # Figure and dataframe returned for optional further modification
@@ -106,10 +113,13 @@ df1
 # We can plot the two MFILEs together, showing normalised values of the optimisation parameters at the solution points, as well as the objective function values.
 
 # %%
+large_tokamak_varied_min_net_electric_mfile = (
+    Path(temp_dir.name) / "large_tokamak_varied_min_net_electric_MFILE.DAT"
+)
 runs_metadata = [
-    RunMetadata(Path(temp_dir.name) / "large_tokamak_MFILE.DAT", "original"),
+    RunMetadata(large_tokamak_mfile, "original"),
     RunMetadata(
-        Path(temp_dir.name) / "large_tokamak_varied_min_net_electric_MFILE.DAT",
+        large_tokamak_varied_min_net_electric_mfile,
         "changed min net electric",
     ),
 ]
@@ -129,10 +139,8 @@ import matplotlib.pyplot as plt
 import process.core.io.mfile as mf
 from process.core.io.plot_proc import plot_inequality_constraint_equations
 
-original_mfile = mf.MFile((Path(temp_dir.name) / "large_tokamak_MFILE.DAT").as_posix())
-new_mfile = mf.MFile(
-    (Path(temp_dir.name) / "large_tokamak_varied_min_net_electric_MFILE.DAT").as_posix()
-)
+original_mfile = mf.MFile((large_tokamak_mfile).as_posix())
+new_mfile = mf.MFile((large_tokamak_varied_min_net_electric_mfile).as_posix())
 
 f, axs = plt.subplots(1, 2)
 axs[0].set_position([0.0, 0.0, 1.2, 1.5])
@@ -162,9 +170,9 @@ f.suptitle("Inequality Constraint Equations", y=1.6, x=1.4)
 
 # %%
 runs_metadata = [
-    RunMetadata(Path(temp_dir.name) / "large_tokamak_MFILE.DAT", "large tokamak 1"),
+    RunMetadata(large_tokamak_mfile, "large tokamak 1"),
     RunMetadata(
-        Path(temp_dir.name) / "large_tokamak_varied_min_net_electric_MFILE.DAT",
+        large_tokamak_varied_min_net_electric_mfile,
         "large tokamak 2",
     ),
 ]

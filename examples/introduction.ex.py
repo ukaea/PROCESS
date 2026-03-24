@@ -17,16 +17,19 @@
 # %% [markdown]
 # # Introduction to running PROCESS
 #
+# %% [markdown]
 # A Jupyter notebook to demonstrate usage of the `process` package.
 #
+
+# %% [markdown]
+# <div class="alert alert-block alert-info">
+# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied there and the outputs contained there before the directory is removed when the example has finished running. This keeps the examples directory tidy and does not permanently modify any data files. The use of temporary directories is not needed for regular use of PROCESS.
+# </div>
+
+# %% [markdown]
 # Process can be run from the command line with the `process` command or as a standard python package.
 # Using process as a package allows for more complex scripting of a process run for different tasks.
-#
-# ## Setup
-# We run the examples in a temporary directory so all the inputs are copied there and the outputs
-# contained there before the directory is removed when the example has finished running.
-# This keeps the examples directory tidy and does not permanently modify any data files.
-# Use of temporary directories is not needed for regular use of `PROCESS`.
+
 
 # %% [markdown]
 # ## Basic run of Process
