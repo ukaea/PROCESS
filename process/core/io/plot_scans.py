@@ -258,7 +258,7 @@ def main(args=None):
     input_files = str(args.input_files)
     if len(args.y_vars) == 1:
         output_names = str(args.y_vars[0])
-        output_names = list(filter(None, output_names.split(" ")))
+        output_names = output_names.split(" ")
     else:
         output_names = args.y_vars
     output_names2 = str(args.y_vars2)
