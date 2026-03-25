@@ -6686,7 +6686,7 @@ Pfirsch-Schlueter_fraction_(enforced)____________________________________ (f_c_p
 Ratio_of_He_and_pellet_particle_confinement_times________________________ (tauratio)_____________________ 1.00000000000000000e+00 
 Fuelling_rate_(nucleus-pairs/s)__________________________________________ (molflow_plasma_fuelling_required)_ 3.41361113901567312e+21 OP 
 Fuel_burn-up_rate_(reactions/s)__________________________________________ (rndfuel)______________________ 5.77984779141551555e+20 OP 
-Burn-up_fraction_________________________________________________________ (burnup)_______________________ 1.69317697770407311e-01 OP 
+Burn-up_fraction_________________________________________________________ (f_plasma_fuel_burnupma_fuel_burnup)_______________________ 1.69317697770407311e-01 OP 
 # Heating & Current Drive System #
 Fusion_gain_factor_Q_____________________________________________________ (big_q_plasma)_________________ 2.09870963169205424e+01 OP 
 Primary_current_drive_efficiency_model___________________________________ (i_hcd_primary)________________           10 

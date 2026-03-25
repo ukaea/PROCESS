@@ -2147,8 +2147,6 @@ def test_vscalc(voltsecondreqparam):
 
 
 class PhyauxParam(NamedTuple):
-    tauratio: Any = None
-
     burnup_in: Any = None
 
     aspect: Any = None
@@ -2194,7 +2192,6 @@ class PhyauxParam(NamedTuple):
     "phyauxparam",
     (
         PhyauxParam(
-            tauratio=1,
             burnup_in=0,
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8589175702454272e19,
@@ -2213,7 +2210,6 @@ class PhyauxParam(NamedTuple):
             expected_t_alpha_confinement=37.993985551650177,
         ),
         PhyauxParam(
-            tauratio=1,
             burnup_in=0,
             aspect=3,
             nd_plasma_fuel_ions_vol_avg=5.8576156204039725e19,
@@ -2246,15 +2242,13 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "tauratio", phyauxparam.tauratio)
-
     monkeypatch.setattr(physics_variables, "burnup_in", phyauxparam.burnup_in)
 
     (
-        burnup,
+        f_plasma_fuel_burnup,
         figmer,
         fusrat,
-        molflow_plasma_fuelling_required,
+        molflow_plasma_fuelling_vv_injected,
         rndfuel,
         t_alpha_confinement,
         _,
@@ -2270,13 +2264,13 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         vol_plasma=phyauxparam.vol_plasma,
     )
 
-    assert burnup == pytest.approx(phyauxparam.expected_burnup)
+    assert f_plasma_fuel_burnup == pytest.approx(phyauxparam.expected_burnup)
 
     assert figmer == pytest.approx(phyauxparam.expected_figmer)
 
     assert fusrat == pytest.approx(phyauxparam.expected_fusrat)
 
-    assert molflow_plasma_fuelling_required == pytest.approx(
+    assert molflow_plasma_fuelling_vv_injected == pytest.approx(
         phyauxparam.expected_molflow_plasma_fuelling_required
     )
 
