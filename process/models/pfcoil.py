@@ -23,6 +23,7 @@ from process.data_structure import physics_variables as pv
 from process.data_structure import rebco_variables as rcv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
+from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
 
@@ -1268,7 +1269,10 @@ class PFCoil:
                 rminor * zref[n_pf_group] * sign
             )
             # Coil radius is constant / stacked for picture frame TF or if placement switch is set
-            if i_tf_shape == 2 or i_r_pf_outside_tf_placement == 1:
+            if (
+                i_tf_shape == TFCoilShapeModel.PICTURE_FRAME
+                or i_r_pf_outside_tf_placement == 1
+            ):
                 r_pf_coil_middle_group_array[n_pf_group, coil] = r_pf_outside_tf_midplane
             else:
                 # Coil radius follows TF coil curve for TF (D-shape)

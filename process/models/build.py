@@ -16,6 +16,7 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
+from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
 
@@ -1620,7 +1621,7 @@ class Build:
             dx_tf_wp_conductor_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
 
         flag = 0
-        if i_tf_shape == 2:
+        if i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
             # Ken McClements ST picture frame coil analytical ripple calc
             # Calculated ripple for coil at r_tf_outboard_mid (%)
             ripple = 100.0e0 * ((rmajor + rminor) / r_tf_outboard_mid) ** (n_tf_coils)
