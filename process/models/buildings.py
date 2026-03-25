@@ -1,4 +1,5 @@
 import logging
+from enum import IntEnum
 
 import numpy as np
 
@@ -20,6 +21,13 @@ from process.data_structure import (
 logger = logging.getLogger(__name__)
 
 
+class BuildingsModel(IntEnum):
+    """Enum for building size estimation models"""
+
+    ITER_1992 = 0
+    CHAPMAN_2024 = 1
+
+
 class Buildings:
     """
 
@@ -32,18 +40,20 @@ class Buildings:
         This routine calls the buildings calculations.
         """
         self.outfile = constants.NOUT  # output file unit
+        self.iter_1992 = BuildingsITER1992()
+        self.chapman_2024 = BuildingsChapman2024()
 
     def run(self, output: bool = False):
         # Find TF coil radial positions
         # outboard edge: outboard mid-leg radial position + half-thickness of outboard leg
-        tfro = build_variables.r_tf_outboard_mid + (
+        r_tf_outboard_out = build_variables.r_tf_outboard_mid + (
             build_variables.dr_tf_outboard * 0.5e0
         )
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
         tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_inboard * 0.5e0)
 
         # Find width, in radial dimension, of TF coil (m)
-        tf_radial_dim = tfro - tfri
+        tf_radial_dim = r_tf_outboard_out - tfri
 
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
@@ -56,24 +66,29 @@ class Buildings:
 
         # Calculate building areas and volumes
 
-        if buildings_variables.i_bldgs_size == 1:
+        if (
+            BuildingsModel(buildings_variables.i_bldgs_size)
+            == BuildingsModel.CHAPMAN_2024
+        ):
             # Updated building estimates
-            self.bldgs_sizes(output, tf_radial_dim, tf_vertical_dim)
+            self.chapman_2024.calculate_building_sizes_chapman(
+                output, tf_radial_dim, tf_vertical_dim
+            )
 
         else:
             # Previous estimation work
             (
-                buildings_variables.cryvol,
-                buildings_variables.volrci,
-                buildings_variables.rbvol,
-                buildings_variables.rmbvol,
-                buildings_variables.wsvol,
-                buildings_variables.elevol,
-            ) = self.bldgs(
+                buildings_variables.vol_plant_cryoplant_building,
+                buildings_variables.vol_plant_reactor_building_internal,
+                buildings_variables.vol_plant_reactor_building,
+                buildings_variables.vol_plant_maintenance_assembly_building,
+                buildings_variables.vol_plant_warm_shop_building,
+                buildings_variables.vol_plant_electrical_building,
+            ) = self.iter_1992.calculate_building_sizes_1992(
                 output,
                 pfcoil_variables.r_pf_coil_outer_max,
                 pfcoil_variables.m_pf_coil_max,
-                tfro,
+                r_tf_outboard_out,
                 tfri,
                 tf_vertical_dim,
                 tfmtn,
@@ -89,12 +104,17 @@ class Buildings:
                 heat_transport_variables.helpow,
             )
 
-    def bldgs(
+
+class BuildingsITER1992:
+    def __init__(self):
+        self.outfile = constants.NOUT
+
+    def calculate_building_sizes_1992(
         self,
         output: bool,
         pfr,
         pfm,
-        tfro,
+        r_tf_outboard_out,
         tfri,
         tfh,
         tfm,
@@ -126,7 +146,7 @@ class Buildings:
              largest PF coil outer radius, m
         pfm :
             largest PF coil mass, tonne
-        tfro :
+        r_tf_outboard_out :
             outer radius of TF coil, m
         tfri :
             inner radius of TF coil, m
@@ -170,12 +190,12 @@ class Buildings:
         # Determine basic machine radius (m)
         # crr  :  cryostat radius (m)
         # pfr  :  radius of largest PF coil (m)
-        # tfro :  outer radius of TF coil (m)
-        bmr = max(crr, pfr, tfro)
+        # r_tf_outboard_out :  outer radius of TF coil (m)
+        bmr = max(crr, pfr, r_tf_outboard_out)
 
         # Determine largest transported piece
         sectl = shro - shri  # Shield thicknes (m)
-        coill = tfro - tfri  # TF coil thickness (m)
+        coill = r_tf_outboard_out - tfri  # TF coil thickness (m)
         sectl = max(coill, sectl)
 
         # Calculate half width of building (m)
@@ -253,12 +273,19 @@ class Buildings:
             vrci = 1e10
 
         # External dimensions of reactor building (m)
-        # rbwt : reactor building wall thickness, m
-        # rbrt : reactor building roof thickness, m
+        # dx_plant_reactor_building_wall : reactor building wall thickness, m
+        # dz_plant_reactor_building_roof : reactor building roof thickness, m
         # fndt : foundation thickness, m
-        rbw = 2.0e0 * buildings_variables.wrbi + 2.0e0 * buildings_variables.rbwt
-        rbl = drbi + 2.0e0 * buildings_variables.rbwt
-        rbh = hrbi + buildings_variables.rbrt + buildings_variables.fndt
+        rbw = (
+            2.0e0 * buildings_variables.wrbi
+            + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
+        )
+        rbl = drbi + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
+        rbh = (
+            hrbi
+            + buildings_variables.dz_plant_reactor_building_roof
+            + buildings_variables.fndt
+        )
         rbv = buildings_variables.rbvfac * rbw * rbl * rbh
 
         # Maintenance building
@@ -316,7 +343,7 @@ class Buildings:
         # pibv : power injection building volume, m3
         # esbldgm3 is forced to be zero if no energy storage is required (i_pulsed_plant=0)
         elev = (
-            buildings_variables.tfcbv
+            buildings_variables.vol_plant_tf_power_supplies_building
             + buildings_variables.pfbldgm3
             + buildings_variables.esbldgm3
             + buildings_variables.pibv
@@ -398,7 +425,12 @@ class Buildings:
 
         return cryv, vrci, rbv, rmbv, wsv, elev
 
-    def bldgs_sizes(self, output, tf_radial_dim, tf_vertical_dim):
+
+class BuildingsChapman2024:
+    def __init__(self):
+        self.outfile = constants.NOUT
+
+    def calculate_building_sizes_chapman(self, output, tf_radial_dim, tf_vertical_dim):
         """Subroutine that estimates the sizes (footprints and volumes) of
         buildings within a fusion power plant.
         Some estimates are scaled with parameters of the fusion plant,

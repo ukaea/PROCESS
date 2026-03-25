@@ -2278,9 +2278,15 @@ class IFE:
         # RBWT = wall thickness
         # RBRT = roof thickness
         # FNDT = foundation thickness
-        rbw = 2.0 * (ife_variables.r7 + buildings_variables.rbwt)
+        rbw = 2.0 * (
+            ife_variables.r7 + buildings_variables.dx_plant_reactor_building_wall
+        )
         rbl = rbw
-        rbh = hrbi + buildings_variables.rbrt + buildings_variables.fndt
+        rbh = (
+            hrbi
+            + buildings_variables.dz_plant_reactor_building_roof
+            + buildings_variables.fndt
+        )
 
         # External volume
         rbv = rbw * rbl * rbh
@@ -2377,12 +2383,12 @@ class IFE:
 
         buildings_variables.admvol = buildings_variables.admv
         buildings_variables.convol = buildings_variables.conv
-        buildings_variables.elevol = elev
-        buildings_variables.rbvol = rbv
-        buildings_variables.rmbvol = rmbv
+        buildings_variables.vol_plant_electrical_building = elev
+        buildings_variables.vol_plant_reactor_building = rbv
+        buildings_variables.vol_plant_maintenance_assembly_building = rmbv
         buildings_variables.shovol = buildings_variables.shov
-        buildings_variables.volrci = vrci
-        buildings_variables.wsvol = wsv
+        buildings_variables.vol_plant_reactor_building_internal = vrci
+        buildings_variables.vol_plant_warm_shop_building = wsv
 
         # Total volume of nuclear buildings
 

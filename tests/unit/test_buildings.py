@@ -741,7 +741,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(physics_variables, "rmajor", bldgssizesparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", bldgssizesparam.rminor)
 
-    buildings.bldgs_sizes(
+    buildings.chapman_2024.calculate_building_sizes_chapman(
         tf_radial_dim=bldgssizesparam.tf_radial_dim,
         tf_vertical_dim=bldgssizesparam.tf_vertical_dim,
         output=False,
@@ -769,15 +769,15 @@ class BldgsParam(NamedTuple):
     dz_tf_cryostat: Any
     stcl: Any
     rbvfac: Any
-    rbwt: Any
-    rbrt: Any
+    dx_plant_reactor_building_wall: Any
+    dz_plant_reactor_building_roof: Any
     fndt: Any
     hcwt: Any
     hccl: Any
     wgt2: Any
     mbvfac: Any
     wsvfac: Any
-    tfcbv: Any
+    vol_plant_tf_power_supplies_building: Any
     pfbldgm3: Any
     esbldgm3: Any
     pibv: Any
@@ -833,15 +833,15 @@ class BldgsParam(NamedTuple):
             dz_tf_cryostat=5.7514039424138126,
             stcl=3,
             rbvfac=1.6000000000000001,
-            rbwt=2,
-            rbrt=1,
+            dx_plant_reactor_building_wall=2,
+            dz_plant_reactor_building_roof=1,
             fndt=2,
             hcwt=1.5,
             hccl=5,
             wgt2=100000,
             mbvfac=2.7999999999999998,
             wsvfac=1.8999999999999999,
-            tfcbv=10601.097615432001,
+            vol_plant_tf_power_supplies_building=10601.097615432001,
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
@@ -893,15 +893,15 @@ class BldgsParam(NamedTuple):
             dz_tf_cryostat=5.8405005070918357,
             stcl=3,
             rbvfac=1.6000000000000001,
-            rbwt=2,
-            rbrt=1,
+            dx_plant_reactor_building_wall=2,
+            dz_plant_reactor_building_roof=1,
             fndt=2,
             hcwt=1.5,
             hccl=5,
             wgt2=100000,
             mbvfac=2.7999999999999998,
             wsvfac=1.8999999999999999,
-            tfcbv=10609.268177478583,
+            vol_plant_tf_power_supplies_building=10609.268177478583,
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
@@ -955,15 +955,27 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat)
     monkeypatch.setattr(buildings_variables, "stcl", bldgsparam.stcl)
     monkeypatch.setattr(buildings_variables, "rbvfac", bldgsparam.rbvfac)
-    monkeypatch.setattr(buildings_variables, "rbwt", bldgsparam.rbwt)
-    monkeypatch.setattr(buildings_variables, "rbrt", bldgsparam.rbrt)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dx_plant_reactor_building_wall",
+        bldgsparam.dx_plant_reactor_building_wall,
+    )
+    monkeypatch.setattr(
+        buildings_variables,
+        "dz_plant_reactor_building_roof",
+        bldgsparam.dz_plant_reactor_building_roof,
+    )
     monkeypatch.setattr(buildings_variables, "fndt", bldgsparam.fndt)
     monkeypatch.setattr(buildings_variables, "hcwt", bldgsparam.hcwt)
     monkeypatch.setattr(buildings_variables, "hccl", bldgsparam.hccl)
     monkeypatch.setattr(buildings_variables, "wgt2", bldgsparam.wgt2)
     monkeypatch.setattr(buildings_variables, "mbvfac", bldgsparam.mbvfac)
     monkeypatch.setattr(buildings_variables, "wsvfac", bldgsparam.wsvfac)
-    monkeypatch.setattr(buildings_variables, "tfcbv", bldgsparam.tfcbv)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_tf_power_supplies_building",
+        bldgsparam.vol_plant_tf_power_supplies_building,
+    )
     monkeypatch.setattr(buildings_variables, "pfbldgm3", bldgsparam.pfbldgm3)
     monkeypatch.setattr(buildings_variables, "esbldgm3", bldgsparam.esbldgm3)
     monkeypatch.setattr(buildings_variables, "pibv", bldgsparam.pibv)
@@ -981,11 +993,11 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "convol", bldgsparam.convol)
     monkeypatch.setattr(buildings_variables, "volnucb", bldgsparam.volnucb)
 
-    cryv, vrci, rbv, rmbv, wsv, elev = buildings.bldgs(
+    cryv, vrci, rbv, rmbv, wsv, elev = buildings.iter_1992.calculate_building_sizes_1992(
         output=False,
         pfr=bldgsparam.pfr,
         pfm=bldgsparam.pfm,
-        tfro=bldgsparam.tfro,
+        r_tf_outboard_out=bldgsparam.tfro,
         tfri=bldgsparam.tfri,
         tfh=bldgsparam.tfh,
         tfm=bldgsparam.tfm,
