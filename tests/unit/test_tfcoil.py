@@ -275,6 +275,8 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
                 pytest.approx(5.15),  # r_tf_outboard_out
                 pytest.approx(0.780361288064513),  # dx_tf_inboard_out_toroidal
                 pytest.approx(0.2341083864193539),  # a_tf_leg_outboard
+                pytest.approx(5.15 - 1.5),  # dr_tf_full_midplane
+                pytest.approx(4.85 - 2.0),  # dr_tf_internal_midplane
                 pytest.approx(0.03842943919353914),  # dr_tf_plasma_case
                 pytest.approx(0.0),  # dx_tf_side_case_min
             ),
@@ -300,6 +302,8 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
                 pytest.approx(4.625),  # r_tf_outboard_out
                 pytest.approx(0.9317485623690747),  # dx_tf_inboard_out_toroidal
                 pytest.approx(0.23293714059226867),  # a_tf_leg_outboard
+                pytest.approx(4.625 - 1.4),  # dr_tf_full_midplane
+                pytest.approx(4.375 - 1.8),  # dr_tf_internal_midplane
                 pytest.approx(0.04),  # dr_tf_plasma_case
                 pytest.approx(0.019426316451256392),  # dx_tf_side_case_min
             ),
