@@ -15455,16 +15455,33 @@ def main_plot(
         figs[9].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
         figs[10].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    plot_plasma_pressure_profiles(figs[11].add_subplot(222), m_file, scan)
-    plot_plasma_pressure_gradient_profiles(figs[11].add_subplot(224), m_file, scan)
+    PlasmaFuelling().plot_tritium_flow_contour(
+        axis=figs[11].add_subplot(231), mfile=m_file, scan=scan
+    )
+    PlasmaFuelling().plot_deuterium_flow_contour(
+        axis=figs[11].add_subplot(232), mfile=m_file, scan=scan
+    )
+    PlasmaFuelling().plot_helium3_flow_contour(
+        axis=figs[11].add_subplot(233), mfile=m_file, scan=scan
+    )
+    PlasmaFuelling().plot_alpha_flow_contour(
+        axis=figs[11].add_subplot(223), mfile=m_file, scan=scan
+    )
+
+    PlasmaFuelling().plot_fuelling_info(figs[11], m_file, scan)
+
+    figs[11].subplots_adjust(wspace=0.3, hspace=0.35)
+
+    plot_plasma_pressure_profiles(figs[12].add_subplot(222), m_file, scan)
+    plot_plasma_pressure_gradient_profiles(figs[12].add_subplot(224), m_file, scan)
     # Currently only works with Sauter geometry as plasma has a closed surface
 
     if i_shape == PlasmaShapeModelType.SAUTER:
         plot_plasma_poloidal_pressure_contours(
-            figs[11].add_subplot(121, aspect="equal"), m_file, scan
+            figs[12].add_subplot(121, aspect="equal"), m_file, scan
         )
     else:
-        ax = figs[11].add_subplot(131, aspect="equal")
+        ax = figs[12].add_subplot(131, aspect="equal")
         msg = (
             "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
             f"(i_plasma_shape == {PlasmaShapeModelType.SAUTER}). "
@@ -15483,10 +15500,10 @@ def main_plot(
         )
         ax.axis("off")
 
-    plot_magnetic_fields_in_plasma(figs[12].add_subplot(122), m_file, scan)
-    plot_beta_profiles(figs[12].add_subplot(221), m_file, scan)
+    plot_magnetic_fields_in_plasma(figs[13].add_subplot(122), m_file, scan)
+    plot_beta_profiles(figs[13].add_subplot(221), m_file, scan)
 
-    plot_ebw_ecrh_coupling_graph(figs[13].add_subplot(111), m_file, scan)
+    plot_ebw_ecrh_coupling_graph(figs[14].add_subplot(111), m_file, scan)
 
     plot_bootstrap_comparison(figs[14].add_subplot(221), m_file, scan)
     plot_plasma_current_comparison(figs[14].add_subplot(224), m_file, scan)
@@ -15726,9 +15743,9 @@ def main_plot(
     
     ax25 = figs[36].add_subplot(221)
     PlasmaExhaust().plot_tritium_flow_contour(ax25, m_file, scan)
-    ax26 = figs[31].add_subplot(222)
+    ax26 = figs[36].add_subplot(222)
     PlasmaExhaust().plot_deuterium_flow_contour(ax26, m_file, scan)
-    ax27 = figs[31].add_subplot(223)
+    ax27 = figs[36].add_subplot(223)
     PlasmaExhaust().plot_alpha_flow_contour(ax27, m_file, scan)
 
 
