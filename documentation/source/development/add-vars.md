@@ -142,7 +142,7 @@ After following the instruction to add an input variable, you can make the varia
 
 ## Add a constraint equation
 
-Constraint equations are added to *PROCESS* in the `process/core/optimisation/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names. 
+Constraint equations are added to *PROCESS* in the `process/core/solver/constraints.py` file. They are registered with the `ConstraintManager` whenever the application is run. Each equation has a unique name that is currently an integer, however upgrades to the input file format in the future will allow arbitrary hashable constraint names. 
 
 A constraint is simply added by registering the constraint to the manager using a decorator.
 

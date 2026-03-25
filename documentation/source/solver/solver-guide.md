@@ -3,7 +3,7 @@
 
 Any computer program naturally contains many equations. The built-in equation 
 solvers within PROCESS act on a special class, known as constraint equations, 
-all of which are formulated in the source file `process/core/optimisation/constraints.py`. These 
+all of which are formulated in the source file `process/core/solver/constraints.py`. These 
 can be split into two types:
  
 **Equality constraints (consistency equations)** that enforce consistency between the physics and 
