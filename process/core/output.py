@@ -156,7 +156,7 @@ def write(models, _outfile):
     models.power.output_power_profiles_over_time()
 
     # Water usage in secondary cooling system
-    models.water_use.run(output=True)
+    models.water_use.output()
 
     # stop capturing warnings so that Outfile does not end up with
     # a lot of non-model logs

@@ -6,79 +6,54 @@ https://www.usgs.gov/special-topic/water-science-school/science/water-density
 https://www.thermal-engineering.org/what-is-latent-heat-of-vaporization-definition/
 """
 
-airtemp: float = None
-"""ambient air temperature (degrees Celsius)"""
-
-watertemp: float = None
-"""water temperature (degrees Celsius)"""
-
-windspeed: float = None
-"""wind speed (m/s)"""
-
-waterdens: float = None
-"""density of water (kg/m3)
-for simplicity, set to static value applicable to water at 21 degC
-"""
-
-latentheat: float = None
-"""latent heat of vaporization (J/kg)
-for simplicity, set to static value applicable at 1 atm (100 kPa) air pressure
-"""
-
-volheat: float = None
-"""volumetric heat of vaporization (J/m3)"""
-
-evapratio: float = None
-"""evaporation ratio: ratio of the heat used to evaporate water
-to the total heat discharged through the tower
-"""
-
-evapvol: float = None
-"""evaporated volume of water (m3)"""
-
-energypervol: float = None
-"""input waste (heat) energy cooled per evaporated volume (J/m3)"""
-
-volperenergy: float = None
-"""volume evaporated by units of heat energy (m3/MJ)"""
-
-waterusetower: float = None
-"""total volume of water used in cooling tower (m3)"""
-
-wateruserecirc: float = None
-"""total volume of water used in recirculating system (m3)"""
-
-wateruseonethru: float = None
-"""total volume of water used in once-through system (m3)"""
+from dataclasses import dataclass
 
 
-def init_watuse_variables():
-    """Initialise water variables"""
-    global \
-        airtemp, \
-        watertemp, \
-        windspeed, \
-        waterdens, \
-        latentheat, \
-        volheat, \
-        evapratio, \
-        evapvol, \
-        energypervol, \
-        volperenergy, \
-        waterusetower, \
-        wateruserecirc, \
-        wateruseonethru
+@dataclass
+class WaterUseData:
+    airtemp: float = 15.0
+    """ambient air temperature (degrees Celsius)"""
+    watertemp: float = 5.0
+    """water temperature (degrees Celsius)"""
+    windspeed: float = 4.0
+    """wind speed (m/s)"""
+    waterdens: float = 998.02
+    """density of water (kg/m3)
+    for simplicity, set to static value applicable to water at 21 degC
+    """
+    latentheat: float = 2257000.0
+    """latent heat of vaporization (J/kg)
+    for simplicity, set to static value applicable at 1 atm (100 kPa) air pressure
+    """
+    volheat: float = 0.0
+    """volumetric heat of vaporization (J/m3)"""
+    evapratio: float = 0.0
+    """evaporation ratio: ratio of the heat used to evaporate water
+    to the total heat discharged through the tower
+    """
 
-    airtemp = 15.0
-    watertemp = 5.0
-    windspeed = 4.0
-    waterdens = 998.02
-    latentheat = 2257000.0
-    volheat = 0.0
-    evapratio = 0.0
-    evapvol = 0.0
-    energypervol = 0.0
-    volperenergy = 0.0
-    waterusetower = 0.0
-    wateruserecirc = 0.0
-    wateruseonethru = 0.0
+    evapvol: float = 0.0
+    """evaporated volume of water (m3)"""
+
+    energypervol: float = 0.0
+    """input waste (heat) energy cooled per evaporated volume (J/m3)"""
+
+    volperenergy: float = 0.0
+    """volume evaporated by units of heat energy (m3/MJ)"""
+
+    waterusetower: float = 0.0
+    """total volume of water used in cooling tower (m3)"""
+
+    wateruserecirc: float = 0.0
+    """total volume of water used in recirculating system (m3)"""
+
+    wateruseonethru: float = 0.0
+    """total volume of water used in once-through system (m3)"""
+
+
+# Another disgusting we may need to do in the transition period to support the dicts.
+# Once all variables in the new data structure we can make the dicts from the DataStructure...
+# and then in the long term put metadata on these classes and entierly remove the dicts
+# In the meantime... the dicts will check each module for a '_CREATE_DICTS_FROM_DATACLASS' attribute
+# and, if present, use this to create the dict ...
+CREATE_DICTS_FROM_DATACLASS = WaterUseData

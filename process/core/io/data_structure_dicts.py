@@ -403,6 +403,14 @@ def get_dicts():
         dict_module_entry = {}
         variable_types = {}
 
+        # Check whether to get the initial value from the global data structure
+        # or some dataclass
+        object_containing_initial_values = (
+            module
+            if not hasattr(module, "CREATE_DICTS_FROM_DATACLASS")
+            else module.CREATE_DICTS_FROM_DATACLASS()
+        )
+
         # get the variable names and initial values
         for node in ast.walk(module_tree):
             if isinstance(node, ast.AnnAssign):
@@ -410,7 +418,7 @@ def get_dicts():
                 # (either is None, or value initialised in init_variables fn)
                 # set default to be None if variable is not being initialised eg if you
                 # just have `example_double: float` instead of `example_double: float = None`
-                initial_value = getattr(module, node.target.id)
+                initial_value = getattr(object_containing_initial_values, node.target.id)
                 # JSON doesn't like np arrays
                 if type(initial_value) is np.ndarray:
                     initial_value = initial_value.tolist()

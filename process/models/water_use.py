@@ -2,16 +2,20 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
-from process.data_structure import heat_transport_variables, water_usage_variables
+from process.core.model import Model
+from process.data_structure import heat_transport_variables
 
 SECDAY = 86400e0
 
 
-class WaterUse:
+class WaterUse(Model):
     def __init__(self):
         self.outfile = constants.NOUT
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+
+    def run(self, output: bool = False):
         """Routine to call the water usage calculation routines.
         This routine calls the different water usage routines.
 
@@ -58,33 +62,33 @@ class WaterUse:
         output:
 
         """
-        water_usage_variables.evapratio = 1.0e0 - (
+        self.data.water_use.evapratio = 1.0e0 - (
             (
-                -0.000279e0 * water_usage_variables.airtemp**3
-                + 0.00109e0 * water_usage_variables.airtemp**2
-                - 0.345e0 * water_usage_variables.airtemp
+                -0.000279e0 * self.data.water_use.airtemp**3
+                + 0.00109e0 * self.data.water_use.airtemp**2
+                - 0.345e0 * self.data.water_use.airtemp
                 + 26.7e0
             )
             / 100.0e0
         )
         # Diehl et al. USGS Report 2013-5188, http://dx.doi.org/10.3133/sir20135188
 
-        water_usage_variables.volheat = (
-            water_usage_variables.waterdens * water_usage_variables.latentheat
+        self.data.water_use.volheat = (
+            self.data.water_use.waterdens * self.data.water_use.latentheat
         )
 
-        water_usage_variables.energypervol = (
-            water_usage_variables.volheat / water_usage_variables.evapratio
+        self.data.water_use.energypervol = (
+            self.data.water_use.volheat / self.data.water_use.evapratio
         )
 
-        water_usage_variables.volperenergy = (
-            1.0e0 / water_usage_variables.energypervol * 1000000.0e0
+        self.data.water_use.volperenergy = (
+            1.0e0 / self.data.water_use.energypervol * 1000000.0e0
         )
 
-        water_usage_variables.evapvol = wastetherm * water_usage_variables.volperenergy
+        self.data.water_use.evapvol = wastetherm * self.data.water_use.volperenergy
 
         # find water withdrawn from external source
-        water_usage_variables.waterusetower = 1.4e0 * water_usage_variables.evapvol
+        self.data.water_use.waterusetower = 1.4e0 * self.data.water_use.evapvol
         # Estimated as a ratio to evaporated water (averaged across observed dataset)
         #  as per Diehl et al. USGS Report 2014-5184, http://dx.doi.org/10.3133/sir20145184
 
@@ -96,7 +100,7 @@ class WaterUse:
                 self.outfile,
                 "Volume used in cooling tower (m3/day)",
                 "(waterusetower)",
-                water_usage_variables.waterusetower,
+                self.data.water_use.waterusetower,
                 "OP ",
             )
 
@@ -175,12 +179,10 @@ class WaterUse:
             # Unfortunately, the source spreadsheet was from the US, so the fits for
             #   water body heating due to heat loading and the cooling wind functions
             #   are in non-metric units, hence the conversions required here.
-            # Limitations: maximum wind speed of ~5 m/s; initial water_usage_variables.watertemp < 25 degC
+            # Limitations: maximum wind speed of ~5 m/s; initial self.data.water_use.watertemp < 25 degC
 
-            # convert water_usage_variables.windspeed to mph
-            water_usage_variables.windspeedmph = (
-                water_usage_variables.windspeed * 2.237e0
-            )
+            # convert self.data.water_use.windspeed to mph
+            self.data.water_use.windspeedmph = self.data.water_use.windspeed * 2.237e0
 
             # convert heat loading into cal/(cm2.sec)
             heatloadimp = heatload * 1000000.0e0 * 0.239e0 / 40469000.0e0
@@ -188,45 +190,45 @@ class WaterUse:
             # estimate how heat loading will raise temperature, for this water body
             heatratio = (
                 d
-                + (e * water_usage_variables.watertemp)
-                + (f * water_usage_variables.windspeedmph)
+                + (e * self.data.water_use.watertemp)
+                + (f * self.data.water_use.windspeedmph)
                 + (g * heatload)
-                + (h * water_usage_variables.watertemp**2)
-                + (i * water_usage_variables.windspeedmph**2)
+                + (h * self.data.water_use.watertemp**2)
+                + (i * self.data.water_use.windspeedmph**2)
                 + (j * heatload**2)
             )
 
             # estimate resultant heated water temperature
-            water_usage_variables.watertempheated = water_usage_variables.watertemp + (
+            self.data.water_use.watertempheated = self.data.water_use.watertemp + (
                 heatloadimp * heatratio
             )
 
             # find wind function, m/(day.kPa), applicable to this water body:
             windfunction = (
                 a
-                + (b * water_usage_variables.windspeed)
-                + (c * water_usage_variables.windspeed**2)
+                + (b * self.data.water_use.windspeed)
+                + (c * self.data.water_use.windspeed**2)
             ) / 1000.0e0
 
             # difference in saturation vapour pressure (Clausius-Clapeyron approximation)
             satvapdelta = (
                 0.611e0
                 * np.exp(
-                    (17.27e0 * water_usage_variables.watertempheated)
-                    / (237.3e0 + water_usage_variables.watertempheated)
+                    (17.27e0 * self.data.water_use.watertempheated)
+                    / (237.3e0 + self.data.water_use.watertempheated)
                 )
             ) - (
                 0.611e0
                 * np.exp(
-                    (17.27e0 * water_usage_variables.watertemp)
-                    / (237.3e0 + water_usage_variables.watertemp)
+                    (17.27e0 * self.data.water_use.watertemp)
+                    / (237.3e0 + self.data.water_use.watertemp)
                 )
             )
 
             # find 'forced evaporation' driven by heat inserted into system
             deltae = (
-                water_usage_variables.waterdens
-                * water_usage_variables.latentheat
+                self.data.water_use.waterdens
+                * self.data.water_use.latentheat
                 * windfunction
                 * satvapdelta
             )
@@ -236,28 +238,26 @@ class WaterUse:
 
             # find evaporation ratio: ratio of the heat used to evaporate water
             #   to the total heat discharged through the tower
-            water_usage_variables.evapratio = deltae / heatloadmet
+            self.data.water_use.evapratio = deltae / heatloadmet
             # Diehl et al. USGS Report 2013-5188, http://dx.doi.org/10.3133/sir20135188
 
-            water_usage_variables.volheat = (
-                water_usage_variables.waterdens * water_usage_variables.latentheat
+            self.data.water_use.volheat = (
+                self.data.water_use.waterdens * self.data.water_use.latentheat
             )
 
-            water_usage_variables.energypervol = (
-                water_usage_variables.volheat / water_usage_variables.evapratio
+            self.data.water_use.energypervol = (
+                self.data.water_use.volheat / self.data.water_use.evapratio
             )
 
-            water_usage_variables.volperenergy = (
-                1.0e0 / water_usage_variables.energypervol * 1000000.0e0
+            self.data.water_use.volperenergy = (
+                1.0e0 / self.data.water_use.energypervol * 1000000.0e0
             )
 
-            water_usage_variables.evapvol = (
-                wastetherm * water_usage_variables.volperenergy
-            )
+            self.data.water_use.evapvol = wastetherm * self.data.water_use.volperenergy
 
             # using this method the estimates for pond, lake and river evaporation produce similar results,
             #   the average will be taken and used in the next stage of calculation
-            evapsum = evapsum + water_usage_variables.evapvol
+            evapsum = evapsum + self.data.water_use.evapvol
 
         evapsum = evapsum / icool
 
@@ -266,10 +266,10 @@ class WaterUse:
         #   as per Diehl et al. USGS Report 2014-5184, http://dx.doi.org/10.3133/sir20145184
 
         # recirculating water system:
-        water_usage_variables.wateruserecirc = 1.0e0 * evapsum
+        self.data.water_use.wateruserecirc = 1.0e0 * evapsum
 
         # once-through water system:
-        water_usage_variables.wateruseonethru = 98.0e0 * evapsum
+        self.data.water_use.wateruseonethru = 98.0e0 * evapsum
 
         # end break
 
@@ -279,13 +279,13 @@ class WaterUse:
                 self.outfile,
                 "Volume used in recirculating water system (m3/day)",
                 "(wateruserecirc)",
-                water_usage_variables.wateruserecirc,
+                self.data.water_use.wateruserecirc,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Volume used in once-through water system (m3/day)",
                 "(wateruseonethru)",
-                water_usage_variables.wateruseonethru,
+                self.data.water_use.wateruseonethru,
                 "OP ",
             )
