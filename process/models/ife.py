@@ -2269,10 +2269,12 @@ class IFE:
         hrbi = ife_variables.zl7 + ife_variables.zu7
 
         # Distance from centre of device to wall
-        buildings_variables.wrbi = ife_variables.r7
+        buildings_variables.dr_plant_reactor_building_internal_half = ife_variables.r7
 
         # Internal volume (square floor)
-        vrci = (2.0 * buildings_variables.wrbi) ** 2 * hrbi
+        vrci = (
+            2.0 * buildings_variables.dr_plant_reactor_building_internal_half
+        ) ** 2 * hrbi
 
         # External dimensions
         # RBWT = wall thickness
@@ -2407,8 +2409,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Dist from device centre to bldg wall (m)",
-            "(wrbi)",
-            buildings_variables.wrbi,
+            "(dr_plant_reactor_building_internal_half)",
+            buildings_variables.dr_plant_reactor_building_internal_half,
         )
         process_output.ovarre(
             self.outfile,

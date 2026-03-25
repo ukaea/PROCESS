@@ -2860,7 +2860,7 @@ def test_ifeacp(ifeacpparam, monkeypatch, ife):
 
 
 class IfebdgParam(NamedTuple):
-    wrbi: Any = None
+    dr_plant_reactor_building_internal_half: Any = None
     dx_plant_reactor_building_wall: Any = None
     dz_plant_reactor_building_roof: Any = None
     fndt: Any = None
@@ -2909,7 +2909,7 @@ class IfebdgParam(NamedTuple):
     "ifebdgparam",
     (
         IfebdgParam(
-            wrbi=0.0,
+            dr_plant_reactor_building_internal_half=0.0,
             dx_plant_reactor_building_wall=3.2000000000000002,
             dz_plant_reactor_building_roof=3.2000000000000002,
             fndt=2.0,
@@ -2967,7 +2967,11 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(buildings_variables, "wrbi", ifebdgparam.wrbi)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dr_plant_reactor_building_internal_half",
+        ifebdgparam.dr_plant_reactor_building_internal_half,
+    )
     monkeypatch.setattr(
         buildings_variables,
         "dx_plant_reactor_building_wall",
@@ -3038,7 +3042,9 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
 
     ife.ifebdg()
 
-    assert buildings_variables.wrbi == pytest.approx(ifebdgparam.expected_wrbi)
+    assert buildings_variables.dr_plant_reactor_building_internal_half == pytest.approx(
+        ifebdgparam.expected_wrbi
+    )
     assert buildings_variables.a_plant_floor_effective == pytest.approx(
         ifebdgparam.expected_a_plant_floor_effective
     )
