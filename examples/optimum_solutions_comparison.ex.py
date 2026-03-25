@@ -61,6 +61,8 @@ from process.core.io.plot_solutions import (
 from process.core.repository import get_process_root
 from process.main import SingleRun
 
+working_dir = Path.cwd()
+
 # Define input file name relative to project dir, then copy to temp dir
 script_dir = Path("__file__").parent.resolve()
 
@@ -71,6 +73,7 @@ input_file2 = data_dir / "large_tokamak_varied_min_net_electric_IN.DAT"
 # %%
 # Copy the file to avoid polluting the project directory with example files
 temp_dir = tempfile.TemporaryDirectory()
+working_dir = Path(temp_dir.name)
 input_path = Path(temp_dir.name) / "large_tokamak_IN.DAT"
 input_path2 = Path(temp_dir.name) / "large_tokamak_varied_min_net_electric_IN.DAT"
 shutil.copy(input_file, input_path)
@@ -90,7 +93,7 @@ single_run.run()
 # First we will look at the original large tokamak optimum solution. We will plot its solution, showing optimisation parameters normalised to their initial values.
 
 # %%
-large_tokamak_mfile = Path(temp_dir.name) / "large_tokamak_MFILE.DAT"
+large_tokamak_mfile = working_dir / "large_tokamak_MFILE.DAT"
 # Plot the solution
 runs_metadata = [
     RunMetadata(large_tokamak_mfile, "large tokamak"),
@@ -114,7 +117,7 @@ df1
 
 # %%
 large_tokamak_varied_min_net_electric_mfile = (
-    Path(temp_dir.name) / "large_tokamak_varied_min_net_electric_MFILE.DAT"
+    working_dir / "large_tokamak_varied_min_net_electric_MFILE.DAT"
 )
 runs_metadata = [
     RunMetadata(large_tokamak_mfile, "original"),
