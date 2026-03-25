@@ -132,3 +132,37 @@ class PlasmaFields:
         """
 
         return rmajor * b_plasma_toroidal_on_axis / (rmajor + rminor)
+
+    @staticmethod
+    def calculate_toroidal_field_profile(
+        b_plasma_toroidal_on_axis: float,
+        rmajor: float,
+        rminor: float,
+        n_plasma_profile_elements: int,
+    ) -> np.ndarray:
+        """Calculate the toroidal field profile across the plasma midplane
+
+        Parameters
+        ----------
+        b_plasma_toroidal_on_axis :
+            toroidal field on axis (T)
+        rmajor :
+            plasma major radius (m)
+        rminor :
+            plasma minor radius (m)
+        n_plasma_profile_elements :
+            Number of elements to use in the plasma profile calculation
+        """
+
+        # Calculate the toroidal field across the plasma
+        # Calculate the toroidal field profile across the plasma (1/R dependence)
+        # Double element size to include both sides of the plasma
+        rho = np.linspace(
+            rmajor - rminor,
+            rmajor + rminor,
+            2 * n_plasma_profile_elements,
+        )
+
+        # Avoid division by zero at the magnetic axis
+        rho = np.where(rho == 0, 1e-10, rho)
+        return rmajor * b_plasma_toroidal_on_axis / rho

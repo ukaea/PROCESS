@@ -386,32 +386,33 @@ class Physics:
             + physics_variables.b_plasma_poloidal_average**2
         )
 
-        # Calculate the toroidal field across the plasma
-        # Calculate the toroidal field profile across the plasma (1/R dependence)
-        # Double element size to include both sides of the plasma
-        rho = np.linspace(
-            physics_variables.rmajor - physics_variables.rminor,
-            physics_variables.rmajor + physics_variables.rminor,
-            2 * physics_variables.n_plasma_profile_elements,
-        )
-
         # Calculate the inboard and outboard toroidal field
         physics_variables.b_plasma_inboard_toroidal = (
-            physics_variables.rmajor
-            * physics_variables.b_plasma_toroidal_on_axis
-            / (physics_variables.rmajor - physics_variables.rminor)
+            self.fields.calculate_plasma_inboard_toroidal_field(
+                b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+            )
         )
 
         physics_variables.b_plasma_outboard_toroidal = (
-            physics_variables.rmajor
-            * physics_variables.b_plasma_toroidal_on_axis
-            / (physics_variables.rmajor + physics_variables.rminor)
+            self.fields.calculate_plasma_outboard_toroidal_field(
+                b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+            )
         )
 
-        # Avoid division by zero at the magnetic axis
-        rho = np.where(rho == 0, 1e-10, rho)
+        # Calculate the toroidal field across the plasma
+        # Calculate the toroidal field profile across the plasma (1/R dependence)
+        # Double element size to include both sides of the plasma
         physics_variables.b_plasma_toroidal_profile = (
-            physics_variables.rmajor * physics_variables.b_plasma_toroidal_on_axis / rho
+            self.fields.calculate_toroidal_field_profile(
+                b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
+                rmajor=physics_variables.rmajor,
+                rminor=physics_variables.rminor,
+                n_plasma_profile_elements=physics_variables.n_plasma_profile_elements,
+            )
         )
 
         # ============================================
