@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import copy
 import json
 import logging
 from enum import IntEnum
+from typing import TYPE_CHECKING
 
 import numba
 import numpy as np
@@ -20,7 +23,9 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.data_structure import build_variables as bv
-from process.models.build import Build
+
+if TYPE_CHECKING:
+    from process.models.build import Build
 
 logger = logging.getLogger(__name__)
 
