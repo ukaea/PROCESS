@@ -2998,7 +2998,11 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
         "a_plant_floor_effective",
         ifebdgparam.a_plant_floor_effective,
     )
-    monkeypatch.setattr(buildings_variables, "vol_plant_tritium_fuel_building", ifebdgparam.vol_plant_tritium_fuel_building)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_tritium_fuel_building",
+        ifebdgparam.vol_plant_tritium_fuel_building,
+    )
     monkeypatch.setattr(buildings_variables, "conv", ifebdgparam.conv)
     monkeypatch.setattr(buildings_variables, "admv", ifebdgparam.admv)
     monkeypatch.setattr(buildings_variables, "shov", ifebdgparam.shov)
@@ -3030,7 +3034,11 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
         "vol_plant_warm_shop_building",
         ifebdgparam.vol_plant_warm_shop_building,
     )
-    monkeypatch.setattr(buildings_variables, "vol_plant_nuclear_buildings", ifebdgparam.vol_plant_nuclear_buildings)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_nuclear_buildings",
+        ifebdgparam.vol_plant_nuclear_buildings,
+    )
     monkeypatch.setattr(fwbs_variables, "whtshld", ifebdgparam.whtshld)
     monkeypatch.setattr(heat_transport_variables, "helpow", ifebdgparam.helpow)
     monkeypatch.setattr(ife_variables, "zl7", ifebdgparam.zl7)
@@ -3066,7 +3074,9 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     assert buildings_variables.vol_plant_warm_shop_building == pytest.approx(
         ifebdgparam.expected_wsvol
     )
-    assert buildings_variables.vol_plant_nuclear_buildings == pytest.approx(ifebdgparam.expected_volnucb)
+    assert buildings_variables.vol_plant_nuclear_buildings == pytest.approx(
+        ifebdgparam.expected_volnucb
+    )
 
 
 class Ifepw2Param(NamedTuple):

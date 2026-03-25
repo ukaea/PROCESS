@@ -456,7 +456,11 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         "a_plant_floor_effective",
         bldgssizesparam.a_plant_floor_effective,
     )
-    monkeypatch.setattr(buildings_variables, "vol_plant_nuclear_buildings", bldgssizesparam.vol_plant_nuclear_buildings)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_nuclear_buildings",
+        bldgssizesparam.vol_plant_nuclear_buildings,
+    )
     monkeypatch.setattr(buildings_variables, "bioshld_thk", bldgssizesparam.bioshld_thk)
     monkeypatch.setattr(
         buildings_variables, "reactor_wall_thk", bldgssizesparam.reactor_wall_thk
@@ -957,7 +961,11 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         bldgsparam.dr_plant_reactor_building_transport_clearance,
     )
     monkeypatch.setattr(buildings_variables, "row", bldgsparam.row)
-    monkeypatch.setattr(buildings_variables, "m_plant_reactor_building_crane_capacity", bldgsparam.m_plant_reactor_building_crane_capacity)
+    monkeypatch.setattr(
+        buildings_variables,
+        "m_plant_reactor_building_crane_capacity",
+        bldgsparam.m_plant_reactor_building_crane_capacity,
+    )
     monkeypatch.setattr(buildings_variables, "shmf", bldgsparam.shmf)
     monkeypatch.setattr(buildings_variables, "clh2", bldgsparam.clh2)
     monkeypatch.setattr(buildings_variables, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat)
@@ -993,13 +1001,21 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         bldgsparam.a_plant_floor_effective,
     )
     monkeypatch.setattr(buildings_variables, "admvol", bldgsparam.admvol)
-    monkeypatch.setattr(buildings_variables, "vol_plant_tritium_fuel_building", bldgsparam.vol_plant_tritium_fuel_building)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_tritium_fuel_building",
+        bldgsparam.vol_plant_tritium_fuel_building,
+    )
     monkeypatch.setattr(buildings_variables, "conv", bldgsparam.conv)
     monkeypatch.setattr(buildings_variables, "admv", bldgsparam.admv)
     monkeypatch.setattr(buildings_variables, "shov", bldgsparam.shov)
     monkeypatch.setattr(buildings_variables, "shovol", bldgsparam.shovol)
     monkeypatch.setattr(buildings_variables, "convol", bldgsparam.convol)
-    monkeypatch.setattr(buildings_variables, "vol_plant_nuclear_buildings", bldgsparam.vol_plant_nuclear_buildings)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_nuclear_buildings",
+        bldgsparam.vol_plant_nuclear_buildings,
+    )
 
     cryv, vrci, rbv, rmbv, wsv, elev = buildings.iter_1992.calculate_building_sizes_1992(
         output=False,
@@ -1027,7 +1043,9 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     assert buildings_variables.admvol == pytest.approx(bldgsparam.expected_admvol)
     assert buildings_variables.shovol == pytest.approx(bldgsparam.expected_shovol)
     assert buildings_variables.convol == pytest.approx(bldgsparam.expected_convol)
-    assert buildings_variables.vol_plant_nuclear_buildings == pytest.approx(bldgsparam.expected_volnucb)
+    assert buildings_variables.vol_plant_nuclear_buildings == pytest.approx(
+        bldgsparam.expected_volnucb
+    )
 
     assert cryv == pytest.approx(bldgsparam.expected_cryv)
     assert vrci == pytest.approx(bldgsparam.expected_vrci)
