@@ -1,4 +1,4 @@
-from typing import Any, NamedTuple
+from dataclasses import dataclass
 
 import pytest
 
@@ -13,25 +13,24 @@ def water_use(process_models):
     return process_models.water_use
 
 
-class CoolingTowersParam(NamedTuple):
-    airtemp: Any
-    waterdens: Any
-    latentheat: Any
-    volheat: Any
-    evapratio: Any
-    evapvol: Any
-    energypervol: Any
-    volperenergy: Any
-    waterusetower: Any
-    outfile: Any
-    iprint: Any
-    wastetherm: Any
-    expected_volheat: Any
-    expected_evapratio: Any
-    expected_evapvol: Any
-    expected_energypervol: Any
-    expected_volperenergy: Any
-    expected_waterusetower: Any
+@dataclass
+class CoolingTowersParam:
+    airtemp: float
+    waterdens: float
+    latentheat: float
+    volheat: float
+    evapratio: float
+    evapvol: float
+    energypervol: float
+    volperenergy: float
+    waterusetower: float
+    wastetherm: float
+    expected_volheat: float
+    expected_evapratio: float
+    expected_evapvol: float
+    expected_energypervol: float
+    expected_volperenergy: float
+    expected_waterusetower: float
 
 
 @pytest.mark.parametrize(
@@ -47,8 +46,6 @@ class CoolingTowersParam(NamedTuple):
             energypervol=0,
             volperenergy=0,
             waterusetower=0,
-            outfile=11,
-            iprint=0,
             wastetherm=141491977.80211401,
             expected_volheat=2252531140,
             expected_evapratio=0.79171374999999999,
@@ -67,8 +64,6 @@ class CoolingTowersParam(NamedTuple):
             energypervol=6071017075.9073286,
             volperenergy=0.00016471704617146833,
             waterusetower=69623.722083984059,
-            outfile=11,
-            iprint=0,
             wastetherm=141448808.82309783,
             expected_volheat=2252531140,
             expected_evapratio=0.79171374999999999,
@@ -80,27 +75,20 @@ class CoolingTowersParam(NamedTuple):
     ),
 )
 def test_cooling_towers(coolingtowersparam, monkeypatch, water_use):
-    monkeypatch.setattr(water_use.data.water_use, "airtemp", coolingtowersparam.airtemp)
-    monkeypatch.setattr(
-        water_use.data.water_use, "waterdens", coolingtowersparam.waterdens
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "latentheat", coolingtowersparam.latentheat
-    )
-    monkeypatch.setattr(water_use.data.water_use, "volheat", coolingtowersparam.volheat)
-    monkeypatch.setattr(
-        water_use.data.water_use, "evapratio", coolingtowersparam.evapratio
-    )
-    monkeypatch.setattr(water_use.data.water_use, "evapvol", coolingtowersparam.evapvol)
-    monkeypatch.setattr(
-        water_use.data.water_use, "energypervol", coolingtowersparam.energypervol
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "volperenergy", coolingtowersparam.volperenergy
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "waterusetower", coolingtowersparam.waterusetower
-    )
+    for field in [
+        "airtemp",
+        "waterdens",
+        "latentheat",
+        "volheat",
+        "evapratio",
+        "evapvol",
+        "energypervol",
+        "volperenergy",
+        "waterusetower",
+    ]:
+        monkeypatch.setattr(
+            water_use.data.water_use, field, getattr(coolingtowersparam, field)
+        )
 
     water_use.cooling_towers(wastetherm=coolingtowersparam.wastetherm, output=False)
 
@@ -124,27 +112,26 @@ def test_cooling_towers(coolingtowersparam, monkeypatch, water_use):
     )
 
 
-class CoolingWaterBodyParam(NamedTuple):
-    watertemp: Any
-    windspeed: Any
-    waterdens: Any
-    latentheat: Any
-    volheat: Any
-    evapratio: Any
-    evapvol: Any
-    energypervol: Any
-    volperenergy: Any
-    wateruserecirc: Any
-    wateruseonethru: Any
-    outfile: Any
-    iprint: Any
-    wastetherm: Any
-    expected_evapratio: Any
-    expected_evapvol: Any
-    expected_energypervol: Any
-    expected_volperenergy: Any
-    expected_wateruserecirc: Any
-    expected_wateruseonethru: Any
+@dataclass
+class CoolingWaterBodyParam:
+    watertemp: float
+    windspeed: float
+    waterdens: float
+    latentheat: float
+    volheat: float
+    evapratio: float
+    evapvol: float
+    energypervol: float
+    volperenergy: float
+    wateruserecirc: float
+    wateruseonethru: float
+    wastetherm: float
+    expected_evapratio: float
+    expected_evapvol: float
+    expected_energypervol: float
+    expected_volperenergy: float
+    expected_wateruserecirc: float
+    expected_wateruseonethru: float
 
 
 @pytest.mark.parametrize(
@@ -162,8 +149,6 @@ class CoolingWaterBodyParam(NamedTuple):
             volperenergy=0.000351477382905348,
             wateruserecirc=0,
             wateruseonethru=0,
-            outfile=11,
-            iprint=0,
             wastetherm=141491977.80211401,
             expected_evapratio=0.37103027579005016,
             expected_evapvol=23306.140640523186,
@@ -184,8 +169,6 @@ class CoolingWaterBodyParam(NamedTuple):
             volperenergy=0.000351477382905348,
             wateruserecirc=23306.140640523186,
             wateruseonethru=2284001.7827712721,
-            outfile=11,
-            iprint=0,
             wastetherm=141448808.82309783,
             expected_evapratio=0.37103027579005016,
             expected_evapvol=23299.029973813402,
@@ -197,41 +180,24 @@ class CoolingWaterBodyParam(NamedTuple):
     ),
 )
 def test_cooling_water_body(coolingwaterbodyparam, monkeypatch, water_use):
-    monkeypatch.setattr(
-        water_use.data.water_use, "watertemp", coolingwaterbodyparam.watertemp
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "windspeed", coolingwaterbodyparam.windspeed
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "waterdens", coolingwaterbodyparam.waterdens
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "latentheat", coolingwaterbodyparam.latentheat
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "volheat", coolingwaterbodyparam.volheat
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "evapratio", coolingwaterbodyparam.evapratio
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "evapvol", coolingwaterbodyparam.evapvol
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "energypervol", coolingwaterbodyparam.energypervol
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "volperenergy", coolingwaterbodyparam.volperenergy
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use, "wateruserecirc", coolingwaterbodyparam.wateruserecirc
-    )
-    monkeypatch.setattr(
-        water_use.data.water_use,
+    for field in [
+        "watertemp",
+        "windspeed",
+        "waterdens",
+        "latentheat",
+        "volheat",
+        "evapratio",
+        "energypervol",
+        "energypervol",
+        "volperenergy",
+        "wateruserecirc",
         "wateruseonethru",
-        coolingwaterbodyparam.wateruseonethru,
-    )
+    ]:
+        monkeypatch.setattr(
+            water_use.data.water_use,
+            field,
+            getattr(coolingwaterbodyparam, field),
+        )
 
     water_use.cooling_water_body(
         wastetherm=coolingwaterbodyparam.wastetherm, output=False
