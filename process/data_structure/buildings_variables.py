@@ -526,7 +526,7 @@ water_buildings_h: float = None
 """water, laundry & drainage buildings height (m)"""
 
 
-wgt: float = None
+m_plant_reactor_building_crane_capacity: float = None
 """reactor building crane capacity (kg) (calculated if 0 is input)"""
 
 
@@ -744,7 +744,7 @@ def init_buildings_variables():
         water_buildings_l, \
         water_buildings_w, \
         water_buildings_h, \
-        wgt, \
+        m_plant_reactor_building_crane_capacity, \
         wgt2, \
         workshop_l, \
         workshop_w, \
@@ -901,7 +901,7 @@ def init_buildings_variables():
     workshop_l = 150.0
     workshop_w = 125.0
     workshop_h = 10.0
-    wgt = 5.0e5
+    m_plant_reactor_building_crane_capacity = 5.0e5
     wgt2 = 1.0e5
     dr_plant_reactor_building_internal_half = 0.0
     wsvfac = 1.9
