@@ -906,7 +906,11 @@ def test_acc21(acc21param, monkeypatch, costs):
 
     monkeypatch.setattr(buildings_variables, "shovol", acc21param.shovol)
 
-    monkeypatch.setattr(buildings_variables, "vol_plant_tritium_fuel_building", acc21param.vol_plant_tritium_fuel_building)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_tritium_fuel_building",
+        acc21param.vol_plant_tritium_fuel_building,
+    )
 
     monkeypatch.setattr(
         buildings_variables,

@@ -181,7 +181,7 @@ class BuildingsITER1992:
 
         Returns
         -------
-        cryv:
+        vol_plant_cryogenics_building:
             volume of cryogenic building, m3
         vrci:
             inner volume of reactor building, m3
@@ -228,7 +228,7 @@ class BuildingsITER1992:
         # Calculate length to allow PF or cryostat laydown (m)
 
         # Laydown length (m)
-        layl = max(r_cryostat_outboard, r_pf_coil_outer_max)
+        len_reactor_laydown = max(r_cryostat_outboard, r_pf_coil_outer_max)
 
         # Diagonal length (m)
         hy = (
@@ -236,14 +236,14 @@ class BuildingsITER1992:
             + buildings_variables.rxcl
             + dz_shld_full
             + buildings_variables.dr_plant_reactor_building_transport_clearance
-            + layl
+            + len_reactor_laydown
         )
 
         # Angle between diagonal length and floor (m)
         ang = (
             buildings_variables.dr_plant_reactor_building_internal_half
             - buildings_variables.dr_plant_reactor_building_transport_clearance
-            - layl
+            - len_reactor_laydown
         ) / hy
 
         # Cap angle at 1
@@ -253,7 +253,7 @@ class BuildingsITER1992:
         # Length to allow laydown (m)
         drbi = (
             buildings_variables.dr_plant_reactor_building_transport_clearance
-            + layl
+            + len_reactor_laydown
             + hy * np.sin(np.arccos(ang))
             + buildings_variables.dr_plant_reactor_building_internal_half
         )
@@ -264,25 +264,35 @@ class BuildingsITER1992:
         # shmf : fraction of shield mass per TF coil to be moved in
         #        the maximum shield lift
         if buildings_variables.m_plant_reactor_building_crane_capacity > 1.0e0:
-            wt = buildings_variables.m_plant_reactor_building_crane_capacity
+            m_plant_reactor_building_crane_capacity = (
+                buildings_variables.m_plant_reactor_building_crane_capacity
+            )
         else:
-            wt = buildings_variables.shmf * m_shld_total / n_tf_coils
-            wt = max(wt, 1.0e3 * m_pf_coil_max, 1.0e3 * m_tf_coil_tonne)
+            m_plant_reactor_building_crane_capacity = (
+                buildings_variables.shmf * m_shld_total / n_tf_coils
+            )
+            m_plant_reactor_building_crane_capacity = max(
+                m_plant_reactor_building_crane_capacity,
+                1.0e3 * m_pf_coil_max,
+                1.0e3 * m_tf_coil_tonne,
+            )
 
         # Crane height (m)
-        crcl = 9.41e-6 * wt + 5.1e0
+        dz_plant_reactor_building_crane = (
+            9.41e-6 * m_plant_reactor_building_crane_capacity + 5.1e0
+        )
 
         # Building height (m)
         # dz_tf_cryostat : clearance from TF coil to cryostat top, m
         # clh2 : clearance beneath TF coil to foundation, including basement, m
         # stcl : clearance above crane to roof, m
         # Additional dz_tf_full allows TF coil to be lifted right out
-        hrbi = (
+        dz_plant_reactor_building_internal = (
             buildings_variables.clh2
             + 2.0e0 * dz_tf_full
             + buildings_variables.dz_tf_cryostat
             + buildings_variables.dr_plant_reactor_building_transport_clearance
-            + crcl
+            + dz_plant_reactor_building_crane
             + buildings_variables.stcl
         )
 
@@ -292,7 +302,7 @@ class BuildingsITER1992:
             * 2.0e0
             * buildings_variables.dr_plant_reactor_building_internal_half
             * drbi
-            * hrbi
+            * dz_plant_reactor_building_internal
         )
         try:
             assert vrci < np.inf
@@ -310,7 +320,7 @@ class BuildingsITER1992:
         )
         rbl = drbi + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
         rbh = (
-            hrbi
+            dz_plant_reactor_building_internal
             + buildings_variables.dz_plant_reactor_building_roof
             + buildings_variables.fndt
         )
@@ -324,15 +334,15 @@ class BuildingsITER1992:
 
         # Transport corridor size
         # hcwt : hot cell wall thickness, m
-        tcw = (
+        dr_plant_transport_corridor = (
             r_shld_outboard_outer
             - r_shld_inboard_inner
             + 4.0e0 * buildings_variables.dr_plant_reactor_building_transport_clearance
         )
-        tcl = 5.0e0 * tcw + 2.0e0 * buildings_variables.hcwt
+        tcl = 5.0e0 * dr_plant_transport_corridor + 2.0e0 * buildings_variables.hcwt
 
         # Decontamination cell size
-        dcw = 2.0e0 * tcw + 1.0e0
+        dcw = 2.0e0 * dr_plant_transport_corridor + 1.0e0
 
         # Hot cell size
         # hccl : clearance around components in hot cell, m
@@ -345,7 +355,7 @@ class BuildingsITER1992:
         hcl = (
             3.0e0 * (r_shld_outboard_outer - r_shld_inboard_inner)
             + 4.0e0 * buildings_variables.hccl
-            + tcw
+            + dr_plant_transport_corridor
         )
 
         # Maintenance building dimensions
@@ -372,14 +382,17 @@ class BuildingsITER1992:
         tch = dz_shld + buildings_variables.stcl + buildings_variables.fndt
 
         # Volume
-        rmbv = buildings_variables.mbvfac * rmbw * rmbl * rmbh + tcw * tcl * tch
+        rmbv = (
+            buildings_variables.mbvfac * rmbw * rmbl * rmbh
+            + dr_plant_transport_corridor * tcl * tch
+        )
 
         # Warm shop and hot cell gallery
         wsa = (rmbw + 7.0e0) * 20.0e0 + rmbl * 7.0e0
         wsv = buildings_variables.wsvfac * wsa * rmbh
 
         # Cryogenic building volume
-        cryv = 55.0e0 * helpow**0.5
+        vol_plant_cryogenics_building = 55.0e0 * helpow**0.5
         # Other building volumes
         # pibv : power injection building volume, m3
         # esbldgm3 is forced to be zero if no energy storage is required (i_pulsed_plant=0)
@@ -398,7 +411,7 @@ class BuildingsITER1992:
             + buildings_variables.vol_plant_tritium_fuel_building
             + elev
             + buildings_variables.conv
-            + cryv
+            + vol_plant_cryogenics_building
             + buildings_variables.admv
             + buildings_variables.shov
         ) / 6.0e0
@@ -407,7 +420,13 @@ class BuildingsITER1992:
         buildings_variables.convol = buildings_variables.conv
 
         # Total volume of nuclear buildings
-        buildings_variables.vol_plant_nuclear_buildings = vrci + rmbv + wsv + buildings_variables.vol_plant_tritium_fuel_building + cryv
+        buildings_variables.vol_plant_nuclear_buildings = (
+            vrci
+            + rmbv
+            + wsv
+            + buildings_variables.vol_plant_tritium_fuel_building
+            + vol_plant_cryogenics_building
+        )
 
         # Output !
         # !!!!!!!!!
@@ -447,7 +466,12 @@ class BuildingsITER1992:
                 "(conv)",
                 buildings_variables.conv,
             )
-            po.ovarre(self.outfile, "Cryogenics building volume (m3)", "(cryv)", cryv)
+            po.ovarre(
+                self.outfile,
+                "Cryogenics building volume (m3)",
+                "(vol_plant_cryogenics_building)",
+                vol_plant_cryogenics_building,
+            )
             po.ovarre(
                 self.outfile,
                 "Administration building volume (m3)",
@@ -464,7 +488,7 @@ class BuildingsITER1992:
                 buildings_variables.vol_plant_nuclear_buildings,
             )
 
-        return cryv, vrci, rbv, rmbv, wsv, elev
+        return vol_plant_cryogenics_building, vrci, rbv, rmbv, wsv, elev
 
 
 class BuildingsChapman2024:
@@ -1065,7 +1089,9 @@ class BuildingsChapman2024:
         buildings_variables.a_plant_floor_effective = buildings_total_vol / 6.0e0
 
         # Total volume of nuclear buildings
-        buildings_variables.vol_plant_nuclear_buildings = reactor_build_totvol + hotcell_vol_ext
+        buildings_variables.vol_plant_nuclear_buildings = (
+            reactor_build_totvol + hotcell_vol_ext
+        )
 
         # Output
         if output:
