@@ -1,4 +1,4 @@
-*************************************************************************
+************************************************************************************************************************
 *****                                                               *****
 *****                  Generic large tokamak file                   *****
 *****                    James Morris, UKAEA                        *****
@@ -59,7 +59,7 @@ icc = 15
 *--------------------------------*
 icc = 16
 * Minimum allowable value for net electric power [MW]
-p_plant_electric_net_required_mw = 400.0
+p_plant_electric_net_required_mw = 200.0
 
 * Beta upper limit *
 *------------------*

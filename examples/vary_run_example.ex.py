@@ -20,6 +20,13 @@
 # %% [markdown]
 # A Jupyter notebook to demonstrate usage of `VaryRun` in `PROCESS`.
 #
+
+# %% [markdown]
+# <div class="alert alert-block alert-info">
+# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied there and the outputs contained there before the directory is removed when the example has finished running. This keeps the examples directory tidy and does not permanently modify any data files. The use of temporary directories is not needed for regular use of PROCESS.
+# </div>
+
+# %% [markdown]
 # `VaryRun` is a tool which takes an input file that does not converge and varies the initial values of the
 # iteration variables, within a tolerance, to find an initial point that converges, and creates
 # a new input file using these values.
@@ -29,10 +36,6 @@
 #
 # If `VaryRun` is able to find a new initial point within the maximum number of iterations, it produces a new input file, called `IN.DAT`, in the same directory as your initial input file. This new file will now converge when you run `PROCESS`.
 #
-# ## Setup
-# We run the examples in a temporary directory so all the inputs are copied there and the outputs contained there before the directory is removed when the example has finished
-# running. This keeps the examples directory tidy and does not permanently modify any data files. This use of temporary directories is not needed for regular use of `PROCESS`.
-
 # %% [markdown]
 # # VaryRun setup
 #
@@ -82,9 +85,6 @@ from pathlib import Path
 from process.core.io.mfile_utils import get_mfile_initial_ixc_values
 from process.core.repository import get_process_root
 from process.main import VaryRun
-
-# Define project root dir; when running a notebook, the cwd is the dir the notebook is in
-PROJ_DIR = Path.cwd().parent
 
 # Path to files
 data_dir = get_process_root() / "../examples/data/"

@@ -17,16 +17,19 @@
 # %% [markdown]
 # # Introduction to running PROCESS
 #
+# %% [markdown]
 # A Jupyter notebook to demonstrate usage of the `process` package.
 #
+
+# %% [markdown]
+# <div class="alert alert-block alert-info">
+# <b>NOTE</b> We run the examples in a temporary directory so all the inputs are copied there and the outputs contained there before the directory is removed when the example has finished running. This keeps the examples directory tidy and does not permanently modify any data files. The use of temporary directories is not needed for regular use of PROCESS.
+# </div>
+
+# %% [markdown]
 # Process can be run from the command line with the `process` command or as a standard python package.
 # Using process as a package allows for more complex scripting of a process run for different tasks.
-#
-# ## Setup
-# We run the examples in a temporary directory so all the inputs are copied there and the outputs
-# contained there before the directory is removed when the example has finished running.
-# This keeps the examples directory tidy and does not permanently modify any data files.
-# Use of temporary directories is not needed for regular use of `PROCESS`.
+
 
 # %% [markdown]
 # ## Basic run of Process
@@ -44,9 +47,6 @@ from pathlib import Path
 
 from process.core.repository import get_process_root
 from process.main import SingleRun
-
-# Define project root dir; this is using the current working directory
-PROJ_DIR = Path.cwd().parent
 
 # Define input file name relative to project dir, then copy to temp dir
 data_dir = get_process_root() / "../examples/data/"
@@ -86,32 +86,6 @@ import process.data_structure
 # Print some values on the CostModel instance
 print(f"Heat transport system: {process.data_structure.cost_variables.c226:.3e} M$")
 print(f"Electrical plant equipment: {process.data_structure.cost_variables.c24:.3e} M$")
-
-# %% [markdown]
-# ## Convert to CSV format
-# This demonstrates how you would read from a PROCESS MFILE and write specified values into a csv using the `mfile_to_csv` function
-
-# %%
-from process.core.io import mfile_to_csv
-
-# mfile_to_csv requires two inputs:
-# - path to the MFILE
-# - .json containing the variable names to include in the csv file
-
-# This routine attempts to find every variable listed in the json file
-# in the MFILE and writes the variable name, description and value
-# to the output csv.
-# Any listed variable that isn't in that MFILE will be skipped.
-# The .csv file is saved to the directory of the input file
-
-mfile_to_csv.main(
-    args=[
-        "-f",
-        (data_dir / "large_tokamak_1_MFILE.DAT").as_posix(),
-        "-v",
-        (data_dir / "mfile_to_csv_vars.json").as_posix(),
-    ]
-)
 
 # %%
 # Clean up
