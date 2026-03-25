@@ -3116,14 +3116,14 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
         f"Toroidal field at $R_0$, $B_{{T}}$: {mfile.get('b_plasma_toroidal_on_axis', scan=scan):.4f} T                  \n"
         f"  Ripple at outboard , $\\delta$: {mfile.get('ripple_b_tf_plasma_edge', scan=scan):.2f}%                  \n"
-        f"Average poloidal field, $B_{{p}}$: {mfile.get('b_plasma_poloidal_average', scan=scan):.4f} T              \n"
+        f"Surface average poloidal field, $\\langle B_{{p}}(a) \\rangle$: {mfile.get('b_plasma_surface_poloidal_average', scan=scan):.4f} T\n"
         f"Total field, $B_{{tot}}$: {mfile.get('b_plasma_total', scan=scan):.4f} T                \n"
         f"Vertical field, $B_{{vert}}$: {mfile.get('b_plasma_vertical_required', scan=scan):.4f} T"
     )
 
     axis.text(
-        0.55,
-        0.13,
+        0.5325,
+        0.14,
         textstr_fields,
         fontsize=9,
         verticalalignment="top",
@@ -3139,7 +3139,7 @@ def plot_main_plasma_information(
     # Add magnetic field label
     axis.text(
         0.75,
-        0.1,
+        0.12,
         "$B$",
         fontsize=23,
         verticalalignment="top",

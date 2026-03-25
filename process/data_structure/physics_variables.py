@@ -229,8 +229,8 @@ betbm0: float = None
 """leading coefficient for NB beta fraction"""
 
 
-b_plasma_poloidal_average: float = None
-"""Plasma average poloidal field (T)"""
+b_plasma_surface_poloidal_average: float = None
+"""Plasma surface average poloidal field (T)"""
 
 
 b_plasma_toroidal_on_axis: float = None
@@ -1441,7 +1441,7 @@ def init_physics_variables():
         e_plasma_beta_thermal, \
         beta_norm_toroidal, \
         betbm0, \
-        b_plasma_poloidal_average, \
+        b_plasma_surface_poloidal_average, \
         b_plasma_toroidal_on_axis, \
         b_plasma_toroidal_inboard, \
         b_plasma_toroidal_outboard, \
@@ -1730,7 +1730,7 @@ def init_physics_variables():
     e_plasma_beta_thermal = 0.0
     beta_norm_toroidal = 0.0
     betbm0 = 1.5
-    b_plasma_poloidal_average = 0.0
+    b_plasma_surface_poloidal_average = 0.0
     b_plasma_toroidal_on_axis = 5.68
     b_plasma_toroidal_inboard = 0.0
     b_plasma_toroidal_outboard = 0.0
