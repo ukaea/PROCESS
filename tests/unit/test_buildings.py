@@ -741,7 +741,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(physics_variables, "rmajor", bldgssizesparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", bldgssizesparam.rminor)
 
-    buildings.calculate_building_sizes_chapman(
+    buildings.chapman_2024.calculate_building_sizes_chapman(
         tf_radial_dim=bldgssizesparam.tf_radial_dim,
         tf_vertical_dim=bldgssizesparam.tf_vertical_dim,
         output=False,
@@ -993,11 +993,11 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "convol", bldgsparam.convol)
     monkeypatch.setattr(buildings_variables, "volnucb", bldgsparam.volnucb)
 
-    cryv, vrci, rbv, rmbv, wsv, elev = buildings.calculate_building_sizes_1992(
+    cryv, vrci, rbv, rmbv, wsv, elev = buildings.iter_1992.calculate_building_sizes_1992(
         output=False,
         pfr=bldgsparam.pfr,
         pfm=bldgsparam.pfm,
-        tfro=bldgsparam.tfro,
+        r_tf_outboard_out=bldgsparam.tfro,
         tfri=bldgsparam.tfri,
         tfh=bldgsparam.tfh,
         tfm=bldgsparam.tfm,
