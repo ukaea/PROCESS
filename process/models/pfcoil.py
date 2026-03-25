@@ -1270,7 +1270,7 @@ class PFCoil:
             )
             # Coil radius is constant / stacked for picture frame TF or if placement switch is set
             if (
-                TFCoilShapeModel(i_tf_shape) == TFCoilShapeModel.PICTURE_FRAME
+                i_tf_shape == TFCoilShapeModel.PICTURE_FRAME
                 or i_r_pf_outside_tf_placement == 1
             ):
                 r_pf_coil_middle_group_array[n_pf_group, coil] = r_pf_outside_tf_midplane

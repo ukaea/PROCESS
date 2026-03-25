@@ -5660,7 +5660,7 @@ def plot_tf_coils(
         else:
             i_tf_shape = 1
 
-        if TFCoilShapeModel(i_tf_shape) == TFCoilShapeModel.PICTURE_FRAME:
+        if i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
             rects = tfcoil_geometry_rectangular_shape(
                 x1=x1,
                 x2=x2,

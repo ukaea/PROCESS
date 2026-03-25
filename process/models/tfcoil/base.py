@@ -402,7 +402,7 @@ class TFCoil:
         tfa = np.zeros(4)
         tfb = np.zeros(4)
 
-        if TFCoilShapeModel(i_tf_shape) == TFCoilShapeModel.D_SHAPE and itart == 0:
+        if i_tf_shape == TFCoilShapeModel.D_SHAPE and itart == 0:
             # PROCESS D-shape parameterisation
             r_tf_arc[0] = r_tf_inboard_out
             r_tf_arc[1] = rmajor - 0.2e0 * rminor
@@ -432,7 +432,7 @@ class TFCoil:
                 bb = tfb[ii] + 0.5e0 * dr_tf_inboard
                 len_tf_coil += 0.25e0 * self.circumference(aa, bb)
 
-        elif TFCoilShapeModel(i_tf_shape) == TFCoilShapeModel.D_SHAPE and itart == 1:
+        elif i_tf_shape == TFCoilShapeModel.D_SHAPE and itart == 1:
             # Centrepost with D-shaped
             r_tf_arc[0] = r_cp_top
             r_tf_arc[1] = rmajor - 0.2e0 * rminor
@@ -455,7 +455,7 @@ class TFCoil:
                 bb = tfb[ii] + 0.5e0 * dr_tf_outboard
                 len_tf_coil += 0.25e0 * self.circumference(aa, bb)
 
-        elif TFCoilShapeModel(i_tf_shape) == TFCoilShapeModel.PICTURE_FRAME:
+        elif i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
             # Picture frame coil
             if itart == 0:
                 r_tf_arc[0] = r_tf_inboard_out
@@ -820,7 +820,7 @@ class TFCoil:
             "(i_tf_shape)",
             tfcoil_variables.i_tf_shape,
         )
-        if TFCoilShapeModel(tfcoil_variables.i_tf_shape) == TFCoilShapeModel.D_SHAPE:
+        if tfcoil_variables.i_tf_shape == TFCoilShapeModel.D_SHAPE:
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "D-shape coil, inner surface shape approximated by")
             po.ocmmnt(
@@ -828,10 +828,7 @@ class TFCoil:
                 "by a straight segment and elliptical arcs between the following points:",
             )
             po.oblnkl(self.outfile)
-        elif (
-            TFCoilShapeModel(tfcoil_variables.i_tf_shape)
-            == TFCoilShapeModel.PICTURE_FRAME
-        ):
+        elif tfcoil_variables.i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Picture frame coil, inner surface approximated by")
             po.ocmmnt(
@@ -1783,7 +1780,7 @@ class TFCoil:
 
         # Ripple calculations
         po.osubhd(self.outfile, "Ripple information:")
-        if TFCoilShapeModel(tfcoil_variables.i_tf_shape) == TFCoilShapeModel.D_SHAPE:
+        if tfcoil_variables.i_tf_shape == TFCoilShapeModel.D_SHAPE:
             po.ovarre(
                 self.outfile,
                 "Max allowed tfcoil_variables.ripple amplitude at plasma outboard midplane (%)",
