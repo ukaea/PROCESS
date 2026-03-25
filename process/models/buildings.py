@@ -193,12 +193,16 @@ class BuildingsITER1992:
         # r_cryostat_outboard  :  cryostat radius (m)
         # r_pf_coil_outer_max  :  radius of largest PF coil (m)
         # r_tf_outboard_out :  outer radius of TF coil (m)
-        bmr = max(r_cryostat_outboard, r_pf_coil_outer_max, r_tf_outboard_out)
+        r_machine = max(r_cryostat_outboard, r_pf_coil_outer_max, r_tf_outboard_out)
 
         # Determine largest transported piece
-        sectl = r_shld_outboard_outer - r_shld_inboard_inner  # Shield thicknes (m)
-        coill = r_tf_outboard_out - r_tf_inboard_in  # TF coil thickness (m)
-        sectl = max(coill, sectl)
+        dz_shld_full = (
+            r_shld_outboard_outer - r_shld_inboard_inner
+        )  # Shield thicknes (m)
+        dz_tf_full_midplane = (
+            r_tf_outboard_out - r_tf_inboard_in
+        )  # TF coil thickness (m)
+        dz_shld_full = max(dz_tf_full_midplane, dz_shld_full)
 
         # Calculate half width of building (m)
         # rxcl : clearance around reactor, m
@@ -206,9 +210,9 @@ class BuildingsITER1992:
         # row  : clearance to building wall for crane operation, m
         # 19.48258241468535 + 4 + max(13.764874193548387 - 4.7423258064516141, 17.123405859443331 - 2.9939411851091102) + 1 + 4 = 42.61204708901957
         buildings_variables.wrbi = (
-            bmr
+            r_machine
             + buildings_variables.rxcl
-            + sectl
+            + dz_shld_full
             + buildings_variables.trcl
             + buildings_variables.row
         )
@@ -219,7 +223,13 @@ class BuildingsITER1992:
         layl = max(r_cryostat_outboard, r_pf_coil_outer_max)
 
         # Diagonal length (m)
-        hy = bmr + buildings_variables.rxcl + sectl + buildings_variables.trcl + layl
+        hy = (
+            r_machine
+            + buildings_variables.rxcl
+            + dz_shld_full
+            + buildings_variables.trcl
+            + layl
+        )
 
         # Angle between diagonal length and floor (m)
         ang = (buildings_variables.wrbi - buildings_variables.trcl - layl) / hy
