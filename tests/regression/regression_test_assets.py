@@ -1,13 +1,13 @@
 """Provides the classes to find, download, and access tracked MFiles on
-a remote data repository
+a remote data repository.
 """
 
 import dataclasses
 import logging
 import re
 import subprocess
+from pathlib import Path
 
-import requests
 from platformdirs import user_cache_path
 
 logger = logging.getLogger(__name__)
@@ -19,16 +19,35 @@ TEST_ASSET_CACHE_DIR = user_cache_path("PROCESS-regression-tests", "ukaea")
 class TrackedMFile:
     hash: str
     scenario_name: str
-    download_link: str
+    location: Path
 
 
 class RegressionTestAssetCollector:
-    remote_repository_owner = "timothy-nunn"
-    remote_repository_repo = "process-tracking-data"
-
-    def __init__(self):
+    def __init__(self, cache_location: Path = TEST_ASSET_CACHE_DIR):
+        self._cache_location = cache_location
         self._hashes = self._git_commit_hashes()
+        self._repo_dir = self._get_regression_assets()
         self._tracked_mfiles = self._get_tracked_mfiles()
+
+    def _get_regression_assets(self):
+        """Ensures the user has an up-to-date local copy of the regression references by cloning/pulling
+        the remote repository to a local cache.
+        """
+        repo_dir = self._cache_location / "process-tracking-data"
+        if not repo_dir.exists():
+            repo_dir.mkdir(parents=True)
+
+            subprocess.run(
+                f"git clone https://github.com/timothy-nunn/process-tracking-data.git '{repo_dir.as_posix()}'",
+                shell=True,
+                check=True,
+            )
+        else:
+            subprocess.run(
+                "git pull", shell=True, check=True, cwd=repo_dir, capture_output=True
+            )
+
+        return repo_dir
 
     def get_reference_mfile(self, scenario_name: str, target_hash: str | None = None):
         """Finds the most recent reference MFile for `<scenario_name>.IN.DAT`
@@ -55,24 +74,7 @@ class RegressionTestAssetCollector:
             if (mf.scenario_name == scenario_name and target_hash is None) or (
                 mf.scenario_name == scenario_name and target_hash == mf.hash
             ):
-                cache_directory = TEST_ASSET_CACHE_DIR / mf.hash
-                cached_location = cache_directory / f"ref.{scenario_name}.MFILE.DAT"
-
-                if cached_location.exists():
-                    logger.info(
-                        f"Using cached reference MFile ({cached_location}) found for commit {mf.hash}."
-                    )
-                    return cached_location
-
-                cache_directory.mkdir(parents=True, exist_ok=True)
-                cached_location.write_text(
-                    requests.get(mf.download_link).content.decode()
-                )
-
-                logger.info(
-                    f"Reference MFile found for commit {mf.hash}. Writing to {cached_location}"
-                )
-                return cached_location
+                return mf.location
 
         return None
 
@@ -94,27 +96,20 @@ class RegressionTestAssetCollector:
         )
 
     def _get_tracked_mfiles(self):
-        """Gets a list of tracked MFiles from the remote repository.
+        """Gets a list of tracked MFiles.
 
         :returns: a list of tracked MFiles sorted to match the order of
         hashes returned from `_git_commit_hashes`.
         :rtype: list[TrackedMFile]
         """
-        repository_files_request = requests.get(
-            f"https://api.github.com/repos/"
-            f"{self.remote_repository_owner}/{self.remote_repository_repo}/git/trees/master"
-        )
-        repository_files_request.raise_for_status()
-        repository_files = repository_files_request.json()["tree"]
-
         # create a list of tracked MFiles from the list of all files
-        # in the remote repository.
+        # in the repository.
         # Only keep TrackedMFiles that are tracked for a commit on the
         # current branch. This stops issues arising from main being
         # ahead of the feature branch and having newer tracks.
         tracked_mfiles = [
             mfile
-            for f in repository_files
+            for f in self._repo_dir.glob("*.DAT")
             if (mfile := self._get_tracked_mfile(f)) is not None
             and mfile.hash in self._hashes
         ]
@@ -125,7 +120,7 @@ class RegressionTestAssetCollector:
             key=lambda m: self._hashes.index(m.hash),
         )
 
-    def _get_tracked_mfile(self, json_data):
+    def _get_tracked_mfile(self, file: Path):
         """Converts JSON data of a file tracked on GitHub into a
         `TrackedMFile`, if appropriate
 
@@ -137,13 +132,10 @@ class RegressionTestAssetCollector:
         tracked mfile.
         :rtype: TrackedMFile | None
         """
-        rematch = re.match(r"([a-zA-Z0-9_.]+)_MFILE_([a-z0-9]+).DAT", json_data["path"])
+        rematch = re.match(r"([a-zA-Z0-9_.]+)_MFILE_([a-z0-9]+).DAT", file.name)
 
         if rematch is None:
             return None
         return TrackedMFile(
-            hash=rematch.group(2),
-            scenario_name=rematch.group(1),
-            download_link=f"https://raw.githubusercontent.com/"
-            f"{self.remote_repository_owner}/{self.remote_repository_repo}/master/{json_data['path']}",
+            hash=rematch.group(2), scenario_name=rematch.group(1), location=file
         )
