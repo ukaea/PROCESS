@@ -39,6 +39,7 @@ from process.models.physics.physics import (
 )
 from process.models.physics.plasma_current import PlasmaCurrent
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.physics.plasma_fields import PlasmaFields
 
 
 @pytest.fixture
@@ -66,6 +67,7 @@ def physics():
         PlasmaConfinementTime(),
         PlasmaConfinementTransition(),
         PlasmaCurrent(),
+        PlasmaFields(),
     )
 
 
@@ -1323,7 +1325,7 @@ def test_calculate_plasma_current_peng(arguments, expected, physics):
     ),
 )
 def test_calculate_poloidal_field(arguments, expected, physics):
-    assert physics.current.calculate_surface_averaged_poloidal_field(
+    assert physics.fields.calculate_surface_averaged_poloidal_field(
         **arguments
     ) == pytest.approx(expected)
 
@@ -3700,7 +3702,7 @@ def test_calculate_polidal_field(
     physics,
 ):
     """Parametrized test for calculate_poloidal_field."""
-    result = physics.current.calculate_surface_averaged_poloidal_field(
+    result = physics.fields.calculate_surface_averaged_poloidal_field(
         i_plasma_current,
         c_plasma,
         q95,
