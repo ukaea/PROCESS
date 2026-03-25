@@ -1649,7 +1649,7 @@ class Power:
                 # Feedheat & reheat cycle assumed
                 eta_turbine = 0.411e0
             else:
-                logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
+                logger.log(f"{'i_blanket_type is not equal to 1'}")
 
             #  Etath from reference. Div power to primary
         elif fwbs_variables.i_thermal_electric_conversion == 1:
@@ -1661,7 +1661,7 @@ class Power:
                 # Feedheat & reheat cycle assumed
                 eta_turbine = 0.411e0 - power_variables.delta_eta
             else:
-                logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
+                logger.log(f"{'i_blanket_type is not equal to 1.'}")
 
             #  User input used, eta_turbine not changed
         elif fwbs_variables.i_thermal_electric_conversion == 2:
@@ -1700,7 +1700,7 @@ class Power:
                 )
 
             else:
-                logger.log(f"{'i_blanket_type does not have a value in range 1-3.'}")
+                logger.log(f"{'i_blanket_type is not equal to 1.'}")
 
             #  Supercritical CO2 cycle to be used
         elif fwbs_variables.i_thermal_electric_conversion == 4:

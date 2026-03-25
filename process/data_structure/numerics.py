@@ -148,7 +148,7 @@ lablcc: list[str] = None
 * (52) Tritium breeding ratio lower limit (itv 89,90,91)
 * (53) Neutron fluence on TF coil upper limit (itv 92,93,94)
 * (54) Peak TF coil nuclear heating upper limit (itv 95,93,94)
-* (55) Vacuum vessel helium concentration upper limit i_blanket_type =2 (itv 96,93,94)
+* (55) NOT USED
 * (56) Pseparatrix/Rmajor upper limit (itv 97,1,3)
 * (57) NOT USED
 * (58) NOT USED
