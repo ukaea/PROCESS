@@ -15,7 +15,6 @@ from process.data_structure import (
     heat_transport_variables,
     pfcoil_variables,
     physics_variables,
-    superconducting_tf_coil_variables,
     tfcoil_variables,
 )
 
@@ -47,12 +46,14 @@ class Buildings:
     def run(self, output: bool = False):
         # Find TF coil radial positions
         # outboard edge: outboard mid-leg radial position + half-thickness of outboard leg
-        r_tf_outboard_out = superconducting_tf_coil_variables.r_tf_outboard_out
+        r_tf_outboard_out = build_variables.r_tf_outboard_mid + (
+            build_variables.dr_tf_outboard * 0.5e0
+        )
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
         tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_inboard * 0.5e0)
 
         # Find width, in radial dimension, of TF coil (m)
-        tf_radial_dim = tfcoil_variables.dr_tf_full_midplane
+        tf_radial_dim = r_tf_outboard_out - tfri
 
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
