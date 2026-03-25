@@ -763,7 +763,7 @@ class BldgsParam(NamedTuple):
     rxcl: Any
     dr_plant_reactor_building_transport_clearance: Any
     row: Any
-    wgt: Any
+    m_plant_reactor_building_crane_capacity: Any
     shmf: Any
     clh2: Any
     dz_tf_cryostat: Any
@@ -827,7 +827,7 @@ class BldgsParam(NamedTuple):
             rxcl=4,
             dr_plant_reactor_building_transport_clearance=1,
             row=4,
-            wgt=500000,
+            m_plant_reactor_building_crane_capacity=500000,
             shmf=0.5,
             clh2=15,
             dz_tf_cryostat=5.7514039424138126,
@@ -887,7 +887,7 @@ class BldgsParam(NamedTuple):
             rxcl=4,
             dr_plant_reactor_building_transport_clearance=1,
             row=4,
-            wgt=500000,
+            m_plant_reactor_building_crane_capacity=500000,
             shmf=0.5,
             clh2=15,
             dz_tf_cryostat=5.8405005070918357,
@@ -957,7 +957,7 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         bldgsparam.dr_plant_reactor_building_transport_clearance,
     )
     monkeypatch.setattr(buildings_variables, "row", bldgsparam.row)
-    monkeypatch.setattr(buildings_variables, "wgt", bldgsparam.wgt)
+    monkeypatch.setattr(buildings_variables, "m_plant_reactor_building_crane_capacity", bldgsparam.m_plant_reactor_building_crane_capacity)
     monkeypatch.setattr(buildings_variables, "shmf", bldgsparam.shmf)
     monkeypatch.setattr(buildings_variables, "clh2", bldgsparam.clh2)
     monkeypatch.setattr(buildings_variables, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat)

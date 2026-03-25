@@ -251,12 +251,12 @@ class BuildingsITER1992:
         )
 
         # Crane height based on maximum lift (m)
-        # wgt : reactor building crane capacity (kg)
+        # m_plant_reactor_building_crane_capacity : reactor building crane capacity (kg)
         #       Calculated if 0 is input
         # shmf : fraction of shield mass per TF coil to be moved in
         #        the maximum shield lift
-        if buildings_variables.wgt > 1.0e0:
-            wt = buildings_variables.wgt
+        if buildings_variables.m_plant_reactor_building_crane_capacity > 1.0e0:
+            wt = buildings_variables.m_plant_reactor_building_crane_capacity
         else:
             wt = buildings_variables.shmf * m_shld_total / n_tf_coils
             wt = max(wt, 1.0e3 * m_pf_coil_max, 1.0e3 * m_tf_coil_tonne)

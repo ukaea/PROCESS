@@ -1779,7 +1779,7 @@ INPUT_VARIABLES = {
     "watertemp": InputVariable(
         data_structure.water_usage_variables, float, range=(0.0, 25.0)
     ),
-    "wgt": InputVariable(
+    "m_plant_reactor_building_crane_capacity": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "wgt2": InputVariable(
