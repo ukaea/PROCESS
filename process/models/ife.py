@@ -2397,7 +2397,7 @@ class IFE:
 
         # Total volume of nuclear buildings
 
-        buildings_variables.volnucb = vrci + rmbv + wsv + buildings_variables.vol_plant_tritium_fuel_building + cryv
+        buildings_variables.vol_plant_nuclear_buildings = vrci + rmbv + wsv + buildings_variables.vol_plant_tritium_fuel_building + cryv
 
         if not output:
             return
@@ -2453,8 +2453,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Total volume of nuclear buildings (m3)",
-            "(volnucb)",
-            buildings_variables.volnucb,
+            "(vol_plant_nuclear_buildings)",
+            buildings_variables.vol_plant_nuclear_buildings,
         )
 
     def ifevac(self):
