@@ -58,10 +58,12 @@ class Buildings(Model):
             build_variables.dr_tf_outboard * 0.5e0
         )
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
-        tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_inboard * 0.5e0)
+        r_tf_inboard_in = build_variables.r_tf_inboard_mid - (
+            build_variables.dr_tf_inboard * 0.5e0
+        )
 
         # Find width, in radial dimension, of TF coil (m)
-        tf_radial_dim = r_tf_outboard_out - tfri
+        tf_radial_dim = r_tf_outboard_out - r_tf_inboard_in
 
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
@@ -94,22 +96,22 @@ class Buildings(Model):
                 buildings_variables.vol_plant_electrical_building,
             ) = self.iter_1992.calculate_building_sizes_1992(
                 output,
-                pfcoil_variables.r_pf_coil_outer_max,
-                pfcoil_variables.m_pf_coil_max,
-                r_tf_outboard_out,
-                tfri,
-                tf_vertical_dim,
-                tfmtn,
-                tfcoil_variables.n_tf_coils,
-                build_variables.r_shld_outboard_outer,
-                build_variables.r_shld_inboard_inner,
-                2.0e0
+                r_pf_coil_outer_max=pfcoil_variables.r_pf_coil_outer_max,
+                m_pf_coil_max=pfcoil_variables.m_pf_coil_max,
+                r_tf_outboard_out=r_tf_outboard_out,
+                r_tf_inboard_in=r_tf_inboard_in,
+                dz_tf_full=tf_vertical_dim,
+                m_tf_coil_tonne=tfmtn,
+                n_tf_coils=tfcoil_variables.n_tf_coils,
+                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
+                dz_shld=2.0e0
                 * (build_variables.z_tf_inside_half - build_variables.dz_shld_vv_gap)
                 - build_variables.dz_vv_upper
                 - build_variables.dz_vv_lower,
-                fwbs_variables.whtshld,
-                fwbs_variables.r_cryostat_inboard,
-                heat_transport_variables.helpow,
+                m_shld_total=fwbs_variables.whtshld,
+                r_cryostat_outboard=fwbs_variables.r_cryostat_inboard,
+                helpow=heat_transport_variables.helpow,
             )
 
 
@@ -120,18 +122,18 @@ class BuildingsITER1992:
     def calculate_building_sizes_1992(
         self,
         output: bool,
-        pfr,
-        pfm,
+        r_pf_coil_outer_max,
+        m_pf_coil_max,
         r_tf_outboard_out,
-        tfri,
-        tfh,
-        tfm,
+        r_tf_inboard_in,
+        dz_tf_full,
+        m_tf_coil_tonne,
         n_tf_coils,
-        shro,
-        shri,
-        shh,
-        shm,
-        crr,
+        r_shld_outboard_outer,
+        r_shld_inboard_inner,
+        dz_shld,
+        m_shld_total,
+        r_cryostat_outboard,
         helpow,
     ):
         """Determines the sizes of the plant buildings
@@ -150,29 +152,29 @@ class BuildingsITER1992:
         ----------
         output:
 
-        pfr :
+        r_pf_coil_outer_max :
              largest PF coil outer radius, m
-        pfm :
+        m_pf_coil_max :
             largest PF coil mass, tonne
         r_tf_outboard_out :
             outer radius of TF coil, m
-        tfri :
+        r_tf_inboard_in :
             inner radius of TF coil, m
-        tfh :
+        dz_tf_full :
             full height of TF coil, m
-        tfm :
+        m_tf_coil_tonne :
             mass of one TF coil, tonne
         n_tf_coils :
             number of tf coils
-        shro :
+        r_shld_outboard_outer :
             outer radius of attached shield, m
-        shri :
+        r_shld_inboard_inner :
             inner radius of attached shield, m
-        shh :
+        dz_shld :
             height of attached shield, m
-        shm :
+        m_shld_total :
             total mass of attached shield, kg
-        crr :
+        r_cryostat_outboard :
             outer radius of common cryostat, m
         helpow :
             total cryogenic load, W
@@ -196,14 +198,14 @@ class BuildingsITER1992:
         # Reactor building
 
         # Determine basic machine radius (m)
-        # crr  :  cryostat radius (m)
-        # pfr  :  radius of largest PF coil (m)
+        # r_cryostat_outboard  :  cryostat radius (m)
+        # r_pf_coil_outer_max  :  radius of largest PF coil (m)
         # r_tf_outboard_out :  outer radius of TF coil (m)
-        bmr = max(crr, pfr, r_tf_outboard_out)
+        bmr = max(r_cryostat_outboard, r_pf_coil_outer_max, r_tf_outboard_out)
 
         # Determine largest transported piece
-        sectl = shro - shri  # Shield thicknes (m)
-        coill = r_tf_outboard_out - tfri  # TF coil thickness (m)
+        sectl = r_shld_outboard_outer - r_shld_inboard_inner  # Shield thicknes (m)
+        coill = r_tf_outboard_out - r_tf_inboard_in  # TF coil thickness (m)
         sectl = max(coill, sectl)
 
         # Calculate half width of building (m)
@@ -222,7 +224,7 @@ class BuildingsITER1992:
         # Calculate length to allow PF or cryostat laydown (m)
 
         # Laydown length (m)
-        layl = max(crr, pfr)
+        layl = max(r_cryostat_outboard, r_pf_coil_outer_max)
 
         # Diagonal length (m)
         hy = bmr + buildings_variables.rxcl + sectl + buildings_variables.trcl + layl
@@ -250,8 +252,8 @@ class BuildingsITER1992:
         if buildings_variables.wgt > 1.0e0:
             wt = buildings_variables.wgt
         else:
-            wt = buildings_variables.shmf * shm / n_tf_coils
-            wt = max(wt, 1.0e3 * pfm, 1.0e3 * tfm)
+            wt = buildings_variables.shmf * m_shld_total / n_tf_coils
+            wt = max(wt, 1.0e3 * m_pf_coil_max, 1.0e3 * m_tf_coil_tonne)
 
         # Crane height (m)
         crcl = 9.41e-6 * wt + 5.1e0
@@ -260,10 +262,10 @@ class BuildingsITER1992:
         # dz_tf_cryostat : clearance from TF coil to cryostat top, m
         # clh2 : clearance beneath TF coil to foundation, including basement, m
         # stcl : clearance above crane to roof, m
-        # Additional tfh allows TF coil to be lifted right out
+        # Additional dz_tf_full allows TF coil to be lifted right out
         hrbi = (
             buildings_variables.clh2
-            + 2.0e0 * tfh
+            + 2.0e0 * dz_tf_full
             + buildings_variables.dz_tf_cryostat
             + buildings_variables.trcl
             + crcl
@@ -304,7 +306,11 @@ class BuildingsITER1992:
 
         # Transport corridor size
         # hcwt : hot cell wall thickness, m
-        tcw = shro - shri + 4.0e0 * buildings_variables.trcl
+        tcw = (
+            r_shld_outboard_outer
+            - r_shld_inboard_inner
+            + 4.0e0 * buildings_variables.trcl
+        )
         tcl = 5.0e0 * tcw + 2.0e0 * buildings_variables.hcwt
 
         # Decontamination cell size
@@ -312,8 +318,17 @@ class BuildingsITER1992:
 
         # Hot cell size
         # hccl : clearance around components in hot cell, m
-        hcw = shro - shri + 3.0e0 * buildings_variables.hccl + 2.0e0
-        hcl = 3.0e0 * (shro - shri) + 4.0e0 * buildings_variables.hccl + tcw
+        hcw = (
+            r_shld_outboard_outer
+            - r_shld_inboard_inner
+            + 3.0e0 * buildings_variables.hccl
+            + 2.0e0
+        )
+        hcl = (
+            3.0e0 * (r_shld_outboard_outer - r_shld_inboard_inner)
+            + 4.0e0 * buildings_variables.hccl
+            + tcw
+        )
 
         # Maintenance building dimensions
         rmbw = hcw + dcw + 3.0e0 * buildings_variables.hcwt
@@ -325,18 +340,18 @@ class BuildingsITER1992:
         if buildings_variables.wgt2 > 1.0e0:
             wgts = buildings_variables.wgt2
         else:
-            wgts = buildings_variables.shmf * shm / n_tf_coils
+            wgts = buildings_variables.shmf * m_shld_total / n_tf_coils
 
         cran = 9.41e-6 * wgts + 5.1e0
         rmbh = (
             10.0e0
-            + shh
+            + dz_shld
             + buildings_variables.trcl
             + cran
             + buildings_variables.stcl
             + buildings_variables.fndt
         )
-        tch = shh + buildings_variables.stcl + buildings_variables.fndt
+        tch = dz_shld + buildings_variables.stcl + buildings_variables.fndt
 
         # Volume
         rmbv = buildings_variables.mbvfac * rmbw * rmbl * rmbh + tcw * tcl * tch
