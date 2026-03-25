@@ -930,7 +930,7 @@ class IFE(Model):
 
         ife_variables.v3dzu = (
             (ife_variables.zu6 + ife_variables.zl6)
-            + buildings_variables.trcl
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
             + buildings_variables.stcl
             + 5.1
             + 9.41e-6 * 1.0e5
@@ -2309,7 +2309,10 @@ class IFE(Model):
 
         # Transport corridor size
 
-        tcw = ife_variables.r6 + 4.0 * buildings_variables.trcl
+        tcw = (
+            ife_variables.r6
+            + 4.0 * buildings_variables.dr_plant_reactor_building_transport_clearance
+        )
         tcl = 5.0 * tcw + 2.0 * buildings_variables.hcwt
 
         # Decontamination cell size
@@ -2341,7 +2344,7 @@ class IFE(Model):
         rmbh = (
             10.0
             + (ife_variables.zl6 + ife_variables.zu6)
-            + buildings_variables.trcl
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
             + cran
             + 5.1
             + buildings_variables.stcl

@@ -1590,7 +1590,9 @@ INPUT_VARIABLES = {
     "f_temp_plasma_ion_electron": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 2.0)
     ),
-    "trcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "dr_plant_reactor_building_transport_clearance": InputVariable(
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
+    ),
     "triang": InputVariable(data_structure.physics_variables, float, range=(-1.0, 1.0)),
     "triang95": InputVariable(data_structure.physics_variables, float, range=(0.0, 1.0)),
     "p_tritium_plant_electric_mw": InputVariable(

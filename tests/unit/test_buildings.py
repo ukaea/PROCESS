@@ -761,7 +761,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
 class BldgsParam(NamedTuple):
     wrbi: Any
     rxcl: Any
-    trcl: Any
+    dr_plant_reactor_building_transport_clearance: Any
     row: Any
     wgt: Any
     shmf: Any
@@ -825,7 +825,7 @@ class BldgsParam(NamedTuple):
         BldgsParam(
             wrbi=0,
             rxcl=4,
-            trcl=1,
+            dr_plant_reactor_building_transport_clearance=1,
             row=4,
             wgt=500000,
             shmf=0.5,
@@ -885,7 +885,7 @@ class BldgsParam(NamedTuple):
         BldgsParam(
             wrbi=42.612047089019569,
             rxcl=4,
-            trcl=1,
+            dr_plant_reactor_building_transport_clearance=1,
             row=4,
             wgt=500000,
             shmf=0.5,
@@ -947,7 +947,11 @@ class BldgsParam(NamedTuple):
 def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "wrbi", bldgsparam.wrbi)
     monkeypatch.setattr(buildings_variables, "rxcl", bldgsparam.rxcl)
-    monkeypatch.setattr(buildings_variables, "trcl", bldgsparam.trcl)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dr_plant_reactor_building_transport_clearance",
+        bldgsparam.dr_plant_reactor_building_transport_clearance,
+    )
     monkeypatch.setattr(buildings_variables, "row", bldgsparam.row)
     monkeypatch.setattr(buildings_variables, "wgt", bldgsparam.wgt)
     monkeypatch.setattr(buildings_variables, "shmf", bldgsparam.shmf)

@@ -462,7 +462,7 @@ transp_clrnc: float = None
 """transportation clearance between components (m)"""
 
 
-trcl: float = None
+dr_plant_reactor_building_transport_clearance: float = None
 """transportation clearance between components (m)"""
 
 
@@ -728,7 +728,7 @@ def init_buildings_variables():
         stcl, \
         vol_plant_tf_power_supplies_building, \
         transp_clrnc, \
-        trcl, \
+        dr_plant_reactor_building_transport_clearance, \
         triv, \
         turbine_hall_l, \
         turbine_hall_w, \
@@ -882,7 +882,7 @@ def init_buildings_variables():
     stcl = 3.0
     vol_plant_tf_power_supplies_building = 2.0e4
     transp_clrnc = 1.0
-    trcl = 1.0
+    dr_plant_reactor_building_transport_clearance = 1.0
     triv = 4.0e4
     turbine_hall_l = 109.0
     turbine_hall_w = 62.0

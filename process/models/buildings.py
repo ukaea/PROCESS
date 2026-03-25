@@ -214,14 +214,14 @@ class BuildingsITER1992:
 
         # Calculate half width of building (m)
         # rxcl : clearance around reactor, m
-        # trcl : transportation clearance between components, m
+        # dr_plant_reactor_building_transport_clearance : transportation clearance between components, m
         # row  : clearance to building wall for crane operation, m
         # 19.48258241468535 + 4 + max(13.764874193548387 - 4.7423258064516141, 17.123405859443331 - 2.9939411851091102) + 1 + 4 = 42.61204708901957
         buildings_variables.wrbi = (
             r_machine
             + buildings_variables.rxcl
             + dz_shld_full
-            + buildings_variables.trcl
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
             + buildings_variables.row
         )
 
@@ -235,12 +235,16 @@ class BuildingsITER1992:
             r_machine
             + buildings_variables.rxcl
             + dz_shld_full
-            + buildings_variables.trcl
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
             + layl
         )
 
         # Angle between diagonal length and floor (m)
-        ang = (buildings_variables.wrbi - buildings_variables.trcl - layl) / hy
+        ang = (
+            buildings_variables.wrbi
+            - buildings_variables.dr_plant_reactor_building_transport_clearance
+            - layl
+        ) / hy
 
         # Cap angle at 1
         if abs(ang) > 1.0e0:
@@ -248,7 +252,7 @@ class BuildingsITER1992:
 
         # Length to allow laydown (m)
         drbi = (
-            buildings_variables.trcl
+            buildings_variables.dr_plant_reactor_building_transport_clearance
             + layl
             + hy * np.sin(np.arccos(ang))
             + buildings_variables.wrbi
@@ -277,7 +281,7 @@ class BuildingsITER1992:
             buildings_variables.clh2
             + 2.0e0 * dz_tf_full
             + buildings_variables.dz_tf_cryostat
-            + buildings_variables.trcl
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
             + crcl
             + buildings_variables.stcl
         )
@@ -319,7 +323,7 @@ class BuildingsITER1992:
         tcw = (
             r_shld_outboard_outer
             - r_shld_inboard_inner
-            + 4.0e0 * buildings_variables.trcl
+            + 4.0e0 * buildings_variables.dr_plant_reactor_building_transport_clearance
         )
         tcl = 5.0e0 * tcw + 2.0e0 * buildings_variables.hcwt
 
@@ -356,7 +360,7 @@ class BuildingsITER1992:
         rmbh = (
             10.0e0
             + dz_shld
-            + buildings_variables.trcl
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
             + cran
             + buildings_variables.stcl
             + buildings_variables.fndt
