@@ -23,8 +23,8 @@ class TrackedMFile:
 
 
 class RegressionTestAssetCollector:
-    def __init__(self, cache_location: Path | None = None):
-        self._cache_location = cache_location or TEST_ASSET_CACHE_DIR
+    def __init__(self, cache_location: Path = TEST_ASSET_CACHE_DIR):
+        self._cache_location = cache_location
         self._hashes = self._git_commit_hashes()
         self._repo_dir = self._get_regression_assets()
         self._tracked_mfiles = self._get_tracked_mfiles()
@@ -33,7 +33,7 @@ class RegressionTestAssetCollector:
         """Ensures the user has an up-to-date local copy of the regression references by cloning/pulling
         the remote repository to a local cache.
         """
-        repo_dir = TEST_ASSET_CACHE_DIR / "process-tracking-data"
+        repo_dir = self._cache_location / "process-tracking-data"
         if not repo_dir.exists():
             repo_dir.mkdir(parents=True)
 
