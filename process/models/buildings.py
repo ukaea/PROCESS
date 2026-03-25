@@ -407,7 +407,7 @@ class BuildingsITER1992:
         buildings_variables.convol = buildings_variables.conv
 
         # Total volume of nuclear buildings
-        buildings_variables.volnucb = vrci + rmbv + wsv + buildings_variables.vol_plant_tritium_fuel_building + cryv
+        buildings_variables.vol_plant_nuclear_buildings = vrci + rmbv + wsv + buildings_variables.vol_plant_tritium_fuel_building + cryv
 
         # Output !
         # !!!!!!!!!
@@ -460,8 +460,8 @@ class BuildingsITER1992:
             po.ovarre(
                 self.outfile,
                 "Total volume of nuclear buildings (m3)",
-                "(volnucb)",
-                buildings_variables.volnucb,
+                "(vol_plant_nuclear_buildings)",
+                buildings_variables.vol_plant_nuclear_buildings,
             )
 
         return cryv, vrci, rbv, rmbv, wsv, elev
@@ -1065,7 +1065,7 @@ class BuildingsChapman2024:
         buildings_variables.a_plant_floor_effective = buildings_total_vol / 6.0e0
 
         # Total volume of nuclear buildings
-        buildings_variables.volnucb = reactor_build_totvol + hotcell_vol_ext
+        buildings_variables.vol_plant_nuclear_buildings = reactor_build_totvol + hotcell_vol_ext
 
         # Output
         if output:
@@ -1272,8 +1272,8 @@ class BuildingsChapman2024:
             po.ovarre(
                 self.outfile,
                 "Total volume of nuclear buildings (m3)",
-                "(volnucb)",
-                buildings_variables.volnucb,
+                "(vol_plant_nuclear_buildings)",
+                buildings_variables.vol_plant_nuclear_buildings,
             )
 
             if buildings_variables.i_bldgs_v == 1:

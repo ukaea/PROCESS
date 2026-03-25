@@ -2883,7 +2883,7 @@ class IfebdgParam(NamedTuple):
     shovol: Any = None
     vol_plant_reactor_building_internal: Any = None
     vol_plant_warm_shop_building: Any = None
-    volnucb: Any = None
+    vol_plant_nuclear_buildings: Any = None
     whtshld: Any = None
     helpow: Any = None
     zl7: Any = None
@@ -2932,7 +2932,7 @@ class IfebdgParam(NamedTuple):
             shovol=0.0,
             vol_plant_reactor_building_internal=0.0,
             vol_plant_warm_shop_building=0.0,
-            volnucb=0.0,
+            vol_plant_nuclear_buildings=0.0,
             whtshld=1067310.9593707009,
             helpow=20277.29636048527,
             zl7=5.8499999999999996,
@@ -3030,7 +3030,7 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
         "vol_plant_warm_shop_building",
         ifebdgparam.vol_plant_warm_shop_building,
     )
-    monkeypatch.setattr(buildings_variables, "volnucb", ifebdgparam.volnucb)
+    monkeypatch.setattr(buildings_variables, "vol_plant_nuclear_buildings", ifebdgparam.vol_plant_nuclear_buildings)
     monkeypatch.setattr(fwbs_variables, "whtshld", ifebdgparam.whtshld)
     monkeypatch.setattr(heat_transport_variables, "helpow", ifebdgparam.helpow)
     monkeypatch.setattr(ife_variables, "zl7", ifebdgparam.zl7)
@@ -3066,7 +3066,7 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     assert buildings_variables.vol_plant_warm_shop_building == pytest.approx(
         ifebdgparam.expected_wsvol
     )
-    assert buildings_variables.volnucb == pytest.approx(ifebdgparam.expected_volnucb)
+    assert buildings_variables.vol_plant_nuclear_buildings == pytest.approx(ifebdgparam.expected_volnucb)
 
 
 class Ifepw2Param(NamedTuple):

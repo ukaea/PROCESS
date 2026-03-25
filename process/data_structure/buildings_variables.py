@@ -498,7 +498,7 @@ vol_plant_reactor_building_internal: float = None
 """internal volume of reactor building (m3)"""
 
 
-volnucb: float = None
+vol_plant_nuclear_buildings: float = None
 """sum of nuclear buildings volumes (m3)"""
 
 
@@ -737,7 +737,7 @@ def init_buildings_variables():
         tw_storage_w, \
         tw_storage_h, \
         vol_plant_reactor_building_internal, \
-        volnucb, \
+        vol_plant_nuclear_buildings, \
         warm_shop_l, \
         warm_shop_w, \
         warm_shop_h, \
@@ -890,7 +890,7 @@ def init_buildings_variables():
     tw_storage_l = 90.0
     tw_storage_w = 30.0
     tw_storage_h = 5.0
-    volnucb = 0.0
+    vol_plant_nuclear_buildings = 0.0
     vol_plant_reactor_building_internal = 0.0
     warm_shop_l = 100.0
     warm_shop_w = 50.0
