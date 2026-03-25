@@ -546,7 +546,7 @@ workshop_h: float = None
 """[cold] workshop buildings height (m)"""
 
 
-wrbi: float = None
+dr_plant_reactor_building_internal_half: float = None
 """distance from centre of machine to building wall (m)"""
 
 
@@ -749,7 +749,7 @@ def init_buildings_variables():
         workshop_l, \
         workshop_w, \
         workshop_h, \
-        wrbi, \
+        dr_plant_reactor_building_internal_half, \
         vol_plant_warm_shop_building, \
         wsvfac, \
         a_reactor_bldg, \
@@ -903,7 +903,7 @@ def init_buildings_variables():
     workshop_h = 10.0
     wgt = 5.0e5
     wgt2 = 1.0e5
-    wrbi = 0.0
+    dr_plant_reactor_building_internal_half = 0.0
     wsvfac = 1.9
     vol_plant_warm_shop_building = 0.0
     a_reactor_bldg = 8.32e3

@@ -759,7 +759,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
 
 
 class BldgsParam(NamedTuple):
-    wrbi: Any
+    dr_plant_reactor_building_internal_half: Any
     rxcl: Any
     dr_plant_reactor_building_transport_clearance: Any
     row: Any
@@ -823,7 +823,7 @@ class BldgsParam(NamedTuple):
     "bldgsparam",
     (
         BldgsParam(
-            wrbi=0,
+            dr_plant_reactor_building_internal_half=0,
             rxcl=4,
             dr_plant_reactor_building_transport_clearance=1,
             row=4,
@@ -883,7 +883,7 @@ class BldgsParam(NamedTuple):
             expected_elev=51601.097615432001,
         ),
         BldgsParam(
-            wrbi=42.612047089019569,
+            dr_plant_reactor_building_internal_half=42.612047089019569,
             rxcl=4,
             dr_plant_reactor_building_transport_clearance=1,
             row=4,
@@ -945,7 +945,11 @@ class BldgsParam(NamedTuple):
     ),
 )
 def test_bldgs(buildings, bldgsparam, monkeypatch):
-    monkeypatch.setattr(buildings_variables, "wrbi", bldgsparam.wrbi)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dr_plant_reactor_building_internal_half",
+        bldgsparam.dr_plant_reactor_building_internal_half,
+    )
     monkeypatch.setattr(buildings_variables, "rxcl", bldgsparam.rxcl)
     monkeypatch.setattr(
         buildings_variables,
@@ -1014,7 +1018,9 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         helpow=bldgsparam.helpow,
     )
 
-    assert buildings_variables.wrbi == pytest.approx(bldgsparam.expected_wrbi)
+    assert buildings_variables.dr_plant_reactor_building_internal_half == pytest.approx(
+        bldgsparam.expected_wrbi
+    )
     assert buildings_variables.a_plant_floor_effective == pytest.approx(
         bldgsparam.expected_a_plant_floor_effective
     )

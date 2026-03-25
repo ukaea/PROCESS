@@ -217,7 +217,7 @@ class BuildingsITER1992:
         # dr_plant_reactor_building_transport_clearance : transportation clearance between components, m
         # row  : clearance to building wall for crane operation, m
         # 19.48258241468535 + 4 + max(13.764874193548387 - 4.7423258064516141, 17.123405859443331 - 2.9939411851091102) + 1 + 4 = 42.61204708901957
-        buildings_variables.wrbi = (
+        buildings_variables.dr_plant_reactor_building_internal_half = (
             r_machine
             + buildings_variables.rxcl
             + dz_shld_full
@@ -241,7 +241,7 @@ class BuildingsITER1992:
 
         # Angle between diagonal length and floor (m)
         ang = (
-            buildings_variables.wrbi
+            buildings_variables.dr_plant_reactor_building_internal_half
             - buildings_variables.dr_plant_reactor_building_transport_clearance
             - layl
         ) / hy
@@ -255,7 +255,7 @@ class BuildingsITER1992:
             buildings_variables.dr_plant_reactor_building_transport_clearance
             + layl
             + hy * np.sin(np.arccos(ang))
-            + buildings_variables.wrbi
+            + buildings_variables.dr_plant_reactor_building_internal_half
         )
 
         # Crane height based on maximum lift (m)
@@ -288,7 +288,11 @@ class BuildingsITER1992:
 
         # Internal volume (m3)
         vrci = (
-            buildings_variables.rbvfac * 2.0e0 * buildings_variables.wrbi * drbi * hrbi
+            buildings_variables.rbvfac
+            * 2.0e0
+            * buildings_variables.dr_plant_reactor_building_internal_half
+            * drbi
+            * hrbi
         )
         try:
             assert vrci < np.inf
@@ -301,7 +305,7 @@ class BuildingsITER1992:
         # dz_plant_reactor_building_roof : reactor building roof thickness, m
         # fndt : foundation thickness, m
         rbw = (
-            2.0e0 * buildings_variables.wrbi
+            2.0e0 * buildings_variables.dr_plant_reactor_building_internal_half
             + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
         )
         rbl = drbi + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
@@ -416,8 +420,8 @@ class BuildingsITER1992:
             po.ovarre(
                 self.outfile,
                 "Dist from centre of torus to bldg wall (m)",
-                "(wrbi)",
-                buildings_variables.wrbi,
+                "(dr_plant_reactor_building_internal_half)",
+                buildings_variables.dr_plant_reactor_building_internal_half,
             )
             po.ovarre(
                 self.outfile,
