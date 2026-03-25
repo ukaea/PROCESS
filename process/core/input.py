@@ -1598,7 +1598,7 @@ INPUT_VARIABLES = {
     "p_tritium_plant_electric_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "triv": InputVariable(
+    "vol_plant_tritium_fuel_building": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "turbine_hall_h": InputVariable(
