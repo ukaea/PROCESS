@@ -2272,7 +2272,7 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
 
 class Bld2019Param(NamedTuple):
     a_fw_total: Any = None
-    trcl: Any = None
+    dr_plant_reactor_building_transport_clearance: Any = None
     stcl: Any = None
     tbr: Any = None
     f_p_blkt_multiplication: Any = None
@@ -2364,7 +2364,7 @@ class Bld2019Param(NamedTuple):
     (
         Bld2019Param(
             a_fw_total=0.0,
-            trcl=1.0,
+            dr_plant_reactor_building_transport_clearance=1.0,
             stcl=3.0,
             tbr=0.0,
             f_p_blkt_multiplication=1.26,
@@ -2645,7 +2645,11 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(first_wall_variables, "a_fw_total", bld2019param.a_fw_total)
-    monkeypatch.setattr(buildings_variables, "trcl", bld2019param.trcl)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dr_plant_reactor_building_transport_clearance",
+        bld2019param.dr_plant_reactor_building_transport_clearance,
+    )
     monkeypatch.setattr(buildings_variables, "stcl", bld2019param.stcl)
     monkeypatch.setattr(fwbs_variables, "tbr", bld2019param.tbr)
     monkeypatch.setattr(
@@ -2860,7 +2864,7 @@ class IfebdgParam(NamedTuple):
     dx_plant_reactor_building_wall: Any = None
     dz_plant_reactor_building_roof: Any = None
     fndt: Any = None
-    trcl: Any = None
+    dr_plant_reactor_building_transport_clearance: Any = None
     hcwt: Any = None
     hccl: Any = None
     wgt2: Any = None
@@ -2909,7 +2913,7 @@ class IfebdgParam(NamedTuple):
             dx_plant_reactor_building_wall=3.2000000000000002,
             dz_plant_reactor_building_roof=3.2000000000000002,
             fndt=2.0,
-            trcl=1.0,
+            dr_plant_reactor_building_transport_clearance=1.0,
             hcwt=1.5,
             hccl=5.0,
             wgt2=100000.0,
@@ -2975,7 +2979,11 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
         ifebdgparam.dz_plant_reactor_building_roof,
     )
     monkeypatch.setattr(buildings_variables, "fndt", ifebdgparam.fndt)
-    monkeypatch.setattr(buildings_variables, "trcl", ifebdgparam.trcl)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dr_plant_reactor_building_transport_clearance",
+        ifebdgparam.dr_plant_reactor_building_transport_clearance,
+    )
     monkeypatch.setattr(buildings_variables, "hcwt", ifebdgparam.hcwt)
     monkeypatch.setattr(buildings_variables, "hccl", ifebdgparam.hccl)
     monkeypatch.setattr(buildings_variables, "wgt2", ifebdgparam.wgt2)
