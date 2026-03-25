@@ -1129,7 +1129,7 @@ class Costs:
         cost_variables.c215 = (
             1.0e-6
             * cost_variables.UCTR
-            * buildings_variables.triv**exprb
+            * buildings_variables.vol_plant_tritium_fuel_building**exprb
             * cmlsa[cost_variables.lsa - 1]
         )
 

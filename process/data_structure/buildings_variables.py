@@ -466,7 +466,7 @@ dr_plant_reactor_building_transport_clearance: float = None
 """transportation clearance between components (m)"""
 
 
-triv: float = None
+vol_plant_tritium_fuel_building: float = None
 """volume of tritium, fuel handling and health physics buildings (m3)"""
 
 
@@ -729,7 +729,7 @@ def init_buildings_variables():
         vol_plant_tf_power_supplies_building, \
         transp_clrnc, \
         dr_plant_reactor_building_transport_clearance, \
-        triv, \
+        vol_plant_tritium_fuel_building, \
         turbine_hall_l, \
         turbine_hall_w, \
         turbine_hall_h, \
@@ -883,7 +883,7 @@ def init_buildings_variables():
     vol_plant_tf_power_supplies_building = 2.0e4
     transp_clrnc = 1.0
     dr_plant_reactor_building_transport_clearance = 1.0
-    triv = 4.0e4
+    vol_plant_tritium_fuel_building = 4.0e4
     turbine_hall_l = 109.0
     turbine_hall_w = 62.0
     turbine_hall_h = 15.0

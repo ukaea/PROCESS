@@ -2376,7 +2376,7 @@ class IFE:
             rbv
             + rmbv
             + wsv
-            + buildings_variables.triv
+            + buildings_variables.vol_plant_tritium_fuel_building
             + elev
             + buildings_variables.conv
             + cryv
@@ -2397,7 +2397,7 @@ class IFE:
 
         # Total volume of nuclear buildings
 
-        buildings_variables.volnucb = vrci + rmbv + wsv + buildings_variables.triv + cryv
+        buildings_variables.volnucb = vrci + rmbv + wsv + buildings_variables.vol_plant_tritium_fuel_building + cryv
 
         if not output:
             return
@@ -2426,8 +2426,8 @@ class IFE:
         process_output.ovarre(
             self.outfile,
             "Tritium building volume (m3)",
-            "(triv)",
-            buildings_variables.triv,
+            "(vol_plant_tritium_fuel_building)",
+            buildings_variables.vol_plant_tritium_fuel_building,
         )
         process_output.ovarre(
             self.outfile, "Electrical building volume (m3)", "(elev)", elev

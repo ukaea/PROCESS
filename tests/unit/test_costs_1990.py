@@ -711,7 +711,7 @@ def test_acc9(monkeypatch, costs):
 class Acc21Param(NamedTuple):
     shovol: Any = None
 
-    triv: Any = None
+    vol_plant_tritium_fuel_building: Any = None
 
     vol_plant_electrical_building: Any = None
 
@@ -801,7 +801,7 @@ class Acc21Param(NamedTuple):
     (
         Acc21Param(
             shovol=100000,
-            triv=40000,
+            vol_plant_tritium_fuel_building=40000,
             vol_plant_electrical_building=51601.097615432001,
             vol_plant_reactor_building=1356973.2891062023,
             vol_plant_cryoplant_building=15247.180612719381,
@@ -846,7 +846,7 @@ class Acc21Param(NamedTuple):
         ),
         Acc21Param(
             shovol=100000,
-            triv=40000,
+            vol_plant_tritium_fuel_building=40000,
             vol_plant_electrical_building=51609.268177478581,
             vol_plant_reactor_building=1358540.6868905292,
             vol_plant_cryoplant_building=25826.919937316459,
@@ -906,7 +906,7 @@ def test_acc21(acc21param, monkeypatch, costs):
 
     monkeypatch.setattr(buildings_variables, "shovol", acc21param.shovol)
 
-    monkeypatch.setattr(buildings_variables, "triv", acc21param.triv)
+    monkeypatch.setattr(buildings_variables, "vol_plant_tritium_fuel_building", acc21param.vol_plant_tritium_fuel_building)
 
     monkeypatch.setattr(
         buildings_variables,
