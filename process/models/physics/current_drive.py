@@ -1731,14 +1731,16 @@ class CurrentDrive:
                 )
 
             # Calculate the normalised current drive efficieny for the primary heating method
-            current_drive_variables.eta_cd_norm_hcd_primary = (
-                current_drive_variables.eta_cd_hcd_primary
-                * (dene20 * physics_variables.rmajor)
+            current_drive_variables.eta_cd_norm_hcd_primary = self.calculate_normalised_current_drive_efficiency(
+                eta_cd_hcd=current_drive_variables.eta_cd_hcd_primary,
+                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                rmajor=physics_variables.rmajor,
             )
             # Calculate the normalised current drive efficieny for the secondary heating method
-            current_drive_variables.eta_cd_norm_hcd_secondary = (
-                current_drive_variables.eta_cd_hcd_secondary
-                * (dene20 * physics_variables.rmajor)
+            current_drive_variables.eta_cd_norm_hcd_secondary = self.calculate_normalised_current_drive_efficiency(
+                eta_cd_hcd=current_drive_variables.eta_cd_hcd_secondary,
+                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                rmajor=physics_variables.rmajor,
             )
 
             # Calculate the driven current for the secondary heating method
@@ -2227,6 +2229,33 @@ class CurrentDrive:
                     + physics_variables.p_plasma_ohmic_mw
                 )
             )
+
+    def calculate_normalised_current_drive_efficiency(
+        self,
+        eta_cd_hcd: float,
+        nd_plasma_electrons_vol_avg: float,
+        rmajor: float,
+    ) -> float:
+        """Calculate the normalised current drive efficiency, η_cd_norm.
+
+        This function computes the normalised current drive efficiency based on
+        the absolute current drive efficiency, average electron density, and major radius.
+
+        Parameters
+        ----------
+        eta_cd_hcd:
+            Absolute current drive efficiency in A/W.
+        nd_plasma_electrons_vol_avg:
+            Volume averaged electron density in m⁻³.
+        rmajor:
+            Major radius of the plasma in meters.
+        Returns
+        -------
+        float            The calculated normalised current drive efficiency in 10²⁰ A / Wm².
+
+        """
+
+        return eta_cd_hcd * (nd_plasma_electrons_vol_avg * rmajor) * 1.0e-20
 
     def calculate_dimensionless_current_drive_efficiency(
         self,
