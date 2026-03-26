@@ -40,7 +40,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
     """
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+
+    def run(self, output: bool = False):
         # Coolant type
         fwbs_variables.i_blkt_coolant_type = 1
         # Note that the first wall coolant is now input separately.

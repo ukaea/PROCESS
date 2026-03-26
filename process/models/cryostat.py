@@ -2,6 +2,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -11,9 +12,12 @@ from process.data_structure import (
 )
 
 
-class Cryostat:
+class Cryostat(Model):
     def __init__(self):
         self.outfile = constants.NOUT
+
+    def output(self):
+        self.cryostat_output()
 
     def run(self):
         """Run the cryostat calculations.

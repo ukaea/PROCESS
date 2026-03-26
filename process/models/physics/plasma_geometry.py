@@ -12,6 +12,9 @@ class PlasmaGeom:
     def __init__(self):
         self.outfile = constants.NOUT
 
+    def run(self):
+        self.plasma_geometry()
+
     def plasma_geometry(self):
         """Plasma geometry parameters
 

@@ -5,6 +5,7 @@ import numpy as np
 
 from process.core import constants, process_output
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -20,7 +21,7 @@ from process.models.blankets.blanket_library import dshellvol, eshellvol
 logger = logging.getLogger(__name__)
 
 
-class Vacuum:
+class Vacuum(Model):
     """Module containing vacuum system routines
 
     This module contains routines for calculating the
@@ -30,7 +31,10 @@ class Vacuum:
     def __init__(self):
         self.outfile: int = constants.NOUT
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+
+    def run(self, output: bool = False):
         """Routine to call the vacuum module
         This routine calls the main vacuum package.
 
@@ -715,11 +719,14 @@ class Vacuum:
         return pumpn, nduct, dlscalc, mvdsh, dimax
 
 
-class VacuumVessel:
+class VacuumVessel(Model):
     """Class containing vacuum vessel routines"""
 
     def __init__(self):
         self.outfile = constants.NOUT
+
+    def output(self):
+        self.output_vv_areas_and_volumes()
 
     def run(self):
         blanket_library.dz_vv_half = self.calculate_vessel_half_height(

@@ -2,6 +2,7 @@ import logging
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import blanket_library as blanket_library
 from process.data_structure import build_variables as build_variables
 from process.data_structure import ccfe_hcpb_module as ccfe_hcpb_module
@@ -18,9 +19,12 @@ from process.models.blankets.blanket_library import (
 logger = logging.getLogger(__name__)
 
 
-class Shield:
+class Shield(Model):
     def __init__(self):
         self.outfile = constants.NOUT
+
+    def output(self):
+        self.output_shld_areas_and_volumes()
 
     def run(self):
         blanket_library.dz_shld_half = self.calculate_shield_half_height(

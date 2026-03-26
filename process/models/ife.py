@@ -9,6 +9,7 @@ import numpy as np
 
 from process.core import constants, process_output
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     buildings_variables,
     cost_variables,
@@ -34,7 +35,7 @@ MATERIALS = [
 ]
 
 
-class IFE:
+class IFE(Model):
     """Module containing Inertial Fusion Energy device routines
 
     N/A
@@ -55,7 +56,10 @@ class IFE:
         self.availability = availability
         self.costs = costs
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+
+    def run(self, output: bool = False):
         """Routine to output the physics and engineering information
         relevant to inertial fusion energy power plants
 
