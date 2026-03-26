@@ -1,4 +1,6 @@
 import logging
+from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 
@@ -15,6 +17,112 @@ from process.data_structure import (
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
+
+
+class CurrentDriveMethodType(IntEnum):
+    """Enum for heating and current drive method types"""
+
+    NONE = (0, "None")
+    LOWER_HYBRID = (1, "LHCD")
+    ION_CYCLOTRON = (2, "ICCD")
+    ELECTRON_CYCLOTRON = (3, "ECRH")
+    NEUTRAL_BEAM = (4, "NBI")
+    ELECTRON_BERNSTEIN = (5, "EBW")
+
+    def __new__(cls, value, abbreviation):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._abbreviation_ = abbreviation
+        return obj
+
+    @DynamicClassAttribute
+    def abbreviation(self):
+        return self._abbreviation_
+
+
+class CurrentDriveModel(IntEnum):
+    """Heating and current drive models for use in current drive calculations"""
+
+    NO_CURRENT_DRIVE = (
+        0,
+        CurrentDriveMethodType.NONE,
+        "No Current Drive",
+    )
+
+    FENSTERMACHER_LOWER_HYBRID = (
+        1,
+        CurrentDriveMethodType.LOWER_HYBRID,
+        "Fenstermacher Lower Hybrid",
+    )
+    IPDG89_ION_CYCLOTRON = (
+        2,
+        CurrentDriveMethodType.ION_CYCLOTRON,
+        "IPDG89 Ion Cyclotron",
+    )
+    FENSTERMACHER_ELECTRON_CYCLOTRON = (
+        3,
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON,
+        "Fenstermacher Electron Cyclotron",
+    )
+    EHST_LOWER_HYBRID = (
+        4,
+        CurrentDriveMethodType.LOWER_HYBRID,
+        "EHST Lower Hybrid",
+    )
+    ITER_NEUTRAL_BEAM = (
+        5,
+        CurrentDriveMethodType.NEUTRAL_BEAM,
+        "ITER Neutral Beam",
+    )
+    CULHAM_LOWER_HYBRID = (
+        6,
+        CurrentDriveMethodType.LOWER_HYBRID,
+        "Culham Lower Hybrid",
+    )
+    CULHAM_ELECTRON_CYCLOTRON = (
+        7,
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON,
+        "Culham Electron Cyclotron",
+    )
+    CULHAM_NEUTRAL_BEAM = (
+        8,
+        CurrentDriveMethodType.NEUTRAL_BEAM,
+        "Culham Neutral Beam",
+    )
+    USER_INPUT_ELECTRON_CYCLOTRON = (
+        10,
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON,
+        "User Input Electron Cyclotron",
+    )
+    USER_INPUT_ELECTRON_BERNSTEIN = (
+        12,
+        CurrentDriveMethodType.ELECTRON_BERNSTEIN,
+        "User Input Electron Bernstein",
+    )
+    FREETHY_ELECTRON_CYCLOTRON = (
+        13,
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON,
+        "Freethy Electron Cyclotron",
+    )
+
+    def __new__(cls, value, method, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._method_ = method
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def method(self):
+        return self._method_
+
+    @DynamicClassAttribute
+    def abbreviation(self):
+        return self.method.abbreviation
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class NeutralBeam:
@@ -1483,6 +1591,9 @@ class CurrentDrive:
         p_hcd_secondary_electrons_mw = 0.0
         p_hcd_secondary_ions_mw = 0.0
 
+        primary_cdm = CurrentDriveModel(current_drive_variables.i_hcd_primary)
+        secondary_cdm = CurrentDriveModel(current_drive_variables.i_hcd_secondary)
+
         # To stop issues with input file we force
         # zero secondary heating if no injection method
         if current_drive_variables.i_hcd_secondary == 0:
@@ -1577,7 +1688,7 @@ class CurrentDrive:
             }
 
             # Assign outputs for models that return multiple values
-            if current_drive_variables.i_hcd_secondary in [5, 8]:
+            if secondary_cdm.method == CurrentDriveMethodType.NEUTRAL_BEAM:
                 _, f_p_beam_injected_ions, f_p_beam_shine_through = (
                     self.neutral_beam.iternb()
                     if current_drive_variables.i_hcd_secondary == 5
@@ -1607,14 +1718,16 @@ class CurrentDrive:
                 )
 
             # Calculate the normalised current drive efficieny for the primary heating method
-            current_drive_variables.eta_cd_norm_hcd_primary = (
-                current_drive_variables.eta_cd_hcd_primary
-                * (dene20 * physics_variables.rmajor)
+            current_drive_variables.eta_cd_norm_hcd_primary = self.calculate_normalised_current_drive_efficiency(
+                eta_cd_hcd=current_drive_variables.eta_cd_hcd_primary,
+                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                rmajor=physics_variables.rmajor,
             )
             # Calculate the normalised current drive efficieny for the secondary heating method
-            current_drive_variables.eta_cd_norm_hcd_secondary = (
-                current_drive_variables.eta_cd_hcd_secondary
-                * (dene20 * physics_variables.rmajor)
+            current_drive_variables.eta_cd_norm_hcd_secondary = self.calculate_normalised_current_drive_efficiency(
+                eta_cd_hcd=current_drive_variables.eta_cd_hcd_secondary,
+                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                rmajor=physics_variables.rmajor,
             )
 
             # Calculate the driven current for the secondary heating method
@@ -1678,7 +1791,7 @@ class CurrentDrive:
             # ==============================================================
 
             # Lower hybrid cases
-            if current_drive_variables.i_hcd_secondary in [1, 4, 6]:
+            if secondary_cdm.method == CurrentDriveMethodType.LOWER_HYBRID:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1704,7 +1817,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Ion cyclotron cases
-            if current_drive_variables.i_hcd_secondary == 2:
+            if secondary_cdm.method == CurrentDriveMethodType.ION_CYCLOTRON:
                 # Injected power
                 p_hcd_secondary_ions_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1730,7 +1843,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Electron cyclotron cases
-            if current_drive_variables.i_hcd_secondary in [3, 7, 10, 13]:
+            if secondary_cdm.method == CurrentDriveMethodType.ELECTRON_CYCLOTRON:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1756,7 +1869,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Electron berstein cases
-            if current_drive_variables.i_hcd_secondary == 12:
+            if secondary_cdm.method == CurrentDriveMethodType.ELECTRON_BERNSTEIN:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1782,7 +1895,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Neutral beam cases
-            elif current_drive_variables.i_hcd_secondary in [5, 8]:
+            elif secondary_cdm.method == CurrentDriveMethodType.NEUTRAL_BEAM:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)
@@ -1862,7 +1975,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Lower hybrid cases
-            if current_drive_variables.i_hcd_primary in [1, 4, 6]:
+            if primary_cdm.method == CurrentDriveMethodType.LOWER_HYBRID:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -1893,7 +2006,7 @@ class CurrentDrive:
             # ===========================================================
 
             # Ion cyclotron cases
-            if current_drive_variables.i_hcd_primary == 2:
+            if primary_cdm.method == CurrentDriveMethodType.ION_CYCLOTRON:
                 p_hcd_primary_ions_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -1925,7 +2038,7 @@ class CurrentDrive:
 
             # Electron cyclotron cases
 
-            if current_drive_variables.i_hcd_primary in [3, 7, 10, 13]:
+            if primary_cdm.method == CurrentDriveMethodType.ELECTRON_CYCLOTRON:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -1956,7 +2069,7 @@ class CurrentDrive:
 
             # Electron bernstein cases
 
-            if current_drive_variables.i_hcd_primary == 12:
+            if primary_cdm.method == CurrentDriveMethodType.ELECTRON_BERNSTEIN:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_ebw_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -1985,7 +2098,7 @@ class CurrentDrive:
 
             # ===========================================================
 
-            elif current_drive_variables.i_hcd_primary in [5, 8]:
+            elif primary_cdm.method == CurrentDriveMethodType.NEUTRAL_BEAM:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)
@@ -2104,6 +2217,33 @@ class CurrentDrive:
                 )
             )
 
+    def calculate_normalised_current_drive_efficiency(
+        self,
+        eta_cd_hcd: float,
+        nd_plasma_electrons_vol_avg: float,
+        rmajor: float,
+    ) -> float:
+        """Calculate the normalised current drive efficiency, η_cd_norm.
+
+        This function computes the normalised current drive efficiency based on
+        the absolute current drive efficiency, average electron density, and major radius.
+
+        Parameters
+        ----------
+        eta_cd_hcd:
+            Absolute current drive efficiency in A/W.
+        nd_plasma_electrons_vol_avg:
+            Volume averaged electron density in m⁻³.
+        rmajor:
+            Major radius of the plasma in meters.
+        Returns
+        -------
+        float            The calculated normalised current drive efficiency in 10²⁰ A / Wm².
+
+        """
+
+        return eta_cd_hcd * (nd_plasma_electrons_vol_avg * rmajor) * 1.0e-20
+
     def calculate_dimensionless_current_drive_efficiency(
         self,
         nd_plasma_electrons_vol_avg: float,
@@ -2195,26 +2335,10 @@ class CurrentDrive:
             current_drive_variables.i_hcd_primary,
         )
 
-        if current_drive_variables.i_hcd_primary in [1, 4, 6]:
-            po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
-        elif current_drive_variables.i_hcd_primary == 2:
-            po.ocmmnt(self.outfile, "Ion Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_primary in [3, 7]:
-            po.ocmmnt(self.outfile, "Electron Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_primary in [5, 8]:
-            po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
-        elif current_drive_variables.i_hcd_primary == 10:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (input normalised efficiency)",
-            )
-        elif current_drive_variables.i_hcd_primary == 12:
-            po.ocmmnt(self.outfile, "Electron Bernstein Wave Current Drive")
-        elif current_drive_variables.i_hcd_primary == 13:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (with Zeff & Te dependance)",
-            )
+        po.ocmmnt(
+            self.outfile,
+            f"{CurrentDriveModel(current_drive_variables.i_hcd_primary).full_name}",
+        )
 
         po.oblnkl(self.outfile)
 
@@ -2319,7 +2443,10 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
-        if current_drive_variables.i_hcd_primary in [5, 8]:
+        if (
+            CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+            == CurrentDriveMethodType.NEUTRAL_BEAM
+        ):
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Neutral beam power balance :")
             po.ocmmnt(self.outfile, "----------------------------")
@@ -2330,8 +2457,9 @@ class CurrentDrive:
                 "(e_beam_kev)",
                 current_drive_variables.e_beam_kev,
             )
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ovarre(
                     self.outfile,
@@ -2362,8 +2490,9 @@ class CurrentDrive:
                 "OP ",
             )
 
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ovarrf(
                     self.outfile,
@@ -2436,26 +2565,10 @@ class CurrentDrive:
             current_drive_variables.i_hcd_secondary,
         )
 
-        if current_drive_variables.i_hcd_secondary in [1, 4, 6]:
-            po.ocmmnt(self.outfile, "Lower Hybrid Current Drive")
-        elif current_drive_variables.i_hcd_secondary == 2:
-            po.ocmmnt(self.outfile, "Ion Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_secondary in [3, 7]:
-            po.ocmmnt(self.outfile, "Electron Cyclotron Current Drive")
-        elif current_drive_variables.i_hcd_secondary in [5, 8]:
-            po.ocmmnt(self.outfile, "Neutral Beam Current Drive")
-        elif current_drive_variables.i_hcd_secondary == 10:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (input normalised efficiency)",
-            )
-        elif current_drive_variables.i_hcd_secondary == 12:
-            po.ocmmnt(self.outfile, "Electron Bernstein Wave Current Drive")
-        elif current_drive_variables.i_hcd_secondary == 13:
-            po.ocmmnt(
-                self.outfile,
-                "Electron Cyclotron Current Drive (with Zeff & Te dependance)",
-            )
+        po.ocmmnt(
+            self.outfile,
+            f"{CurrentDriveModel(current_drive_variables.i_hcd_secondary).full_name}",
+        )
         po.oblnkl(self.outfile)
 
         po.ovarre(
@@ -2532,7 +2645,10 @@ class CurrentDrive:
 
         po.oblnkl(self.outfile)
 
-        if current_drive_variables.i_hcd_secondary in [5, 8]:
+        if (
+            CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
+            == CurrentDriveMethodType.NEUTRAL_BEAM
+        ):
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Neutral beam power balance :")
             po.ocmmnt(self.outfile, "----------------------------")
@@ -2543,8 +2659,9 @@ class CurrentDrive:
                 "(e_beam_kev)",
                 current_drive_variables.e_beam_kev,
             )
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ovarre(
                     self.outfile,
@@ -2575,8 +2692,9 @@ class CurrentDrive:
                 "OP ",
             )
 
-            if (current_drive_variables.i_hcd_primary == 5) or (
-                current_drive_variables.i_hcd_primary == 8
+            if (
+                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ovarrf(
                     self.outfile,

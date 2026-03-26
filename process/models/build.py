@@ -16,6 +16,10 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
+from process.models.physics.current_drive import (
+    CurrentDriveMethodType,
+    CurrentDriveModel,
+)
 from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
@@ -2383,8 +2387,12 @@ class Build:
                     radius,
                 )
 
-            if (current_drive_variables.i_hcd_primary in [5, 8]) or (
-                current_drive_variables.i_hcd_secondary in [5, 8]
+            if (
+                CurrentDriveModel(
+                    current_drive_variables.i_hcd_primary
+                    or current_drive_variables.i_hcd_secondary
+                ).method
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ovarre(
                     self.mfile,
