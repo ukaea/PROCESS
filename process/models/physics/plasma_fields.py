@@ -171,3 +171,24 @@ class PlasmaFields:
         # Avoid division by zero at the magnetic axis
         rho = np.where(rho == 0, 1e-10, rho)
         return rmajor * b_plasma_toroidal_on_axis / rho
+
+    @staticmethod
+    @nb.jit(cache=True)
+    def calculate_total_magnetic_field(
+        b_plasma_toroidal: float, b_plasma_poloidal: float
+    ) -> float:
+        """Calculate the total magnetic field at the plasma edge
+
+        Parameters
+        ----------
+        b_plasma_toroidal :
+            toroidal field at point of interest (T)
+        b_plasma_poloidal :
+            poloidal field at point of interest (T)
+
+        Returns
+        -------
+        :
+            total magnetic field at the plasma edge (T)
+        """
+        return np.sqrt(b_plasma_toroidal**2 + b_plasma_poloidal**2)

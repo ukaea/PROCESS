@@ -381,9 +381,9 @@ class Physics:
         self.plasma_profile.run()
 
         # Calculate total magnetic field [T]
-        physics_variables.b_plasma_total = np.sqrt(
-            physics_variables.b_plasma_toroidal_on_axis**2
-            + physics_variables.b_plasma_surface_poloidal_average**2
+        physics_variables.b_plasma_total = self.fields.calculate_total_magnetic_field(
+            b_plasma_toroidal=physics_variables.b_plasma_toroidal_on_axis,
+            b_plasma_poloidal=physics_variables.b_plasma_surface_poloidal_average,
         )
 
         # Calculate the inboard and outboard toroidal field
