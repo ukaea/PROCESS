@@ -78,7 +78,7 @@ class PlasmaFields:
         if i_plasma_current != 2:
             return constants.RMU0 * ip / perim
         # Use the relation from Peng, Galambos and Shipe (1992) [STAR code] otherwise
-        ff1, ff2, _, _ = self.current._plascar_bpol(aspect, eps, kappa, delta)
+        ff1, ff2, _, _ = self.current.plascar_bpol(aspect, eps, kappa, delta)
 
         # Transform q95 to qbar
         qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0

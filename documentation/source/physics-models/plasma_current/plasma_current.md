@@ -133,7 +133,7 @@ $$
 I_{\text{p}} = \frac{5a B_{\text{T}}\kappa}{2\pi^2 \bar{q}}(F_1+F_2)\left(\frac{\arcsin{E_1}}{E_1}+\frac{\arcsin{E_2}}{E_2}\right)
 $$
 
-The values of $F_1$, $F_2$, $d_1$ & $d_2$ are first calculated from the [`_plascar_bpol()`](#_plasc_bpol) function.
+The values of $F_1$, $F_2$, $d_1$ & $d_2$ are first calculated from the [`plascar_bpol()`](#_plasc_bpol) function.
 
 The values of $E_1$ & $E_2$ are then calculated such as
 
