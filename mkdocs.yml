@@ -48,6 +48,7 @@ nav:
                   - Overview: physics-models/fusion_reactions/plasma_reactions.md
                   - Beam reactions: physics-models/fusion_reactions/beam_reactions.md
                   - Bosch-Hale Methods: physics-models/fusion_reactions/plasma_bosch_hale.md
+              - Magnetic Fields: physics-models/plasma_magnetic_fields.md
               - Beta Limit:
                   - Overview: physics-models/plasma_beta/plasma_beta.md
                   - Fast Alpha: physics-models/plasma_beta/plasma_alpha_beta_contribution.md
@@ -217,9 +218,9 @@ plugins:
   - literate-nav
   - git-revision-date-localized:
       enable_creation_date: true
-  - mkdocs-jupyter:
-      execute: true
-      ignore: [scripts/**/*.py]
+#   - mkdocs-jupyter:
+#       execute: true
+#       ignore: [scripts/**/*.py]
   - mkdocstrings:
       handlers:
         python:
