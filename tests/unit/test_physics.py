@@ -38,8 +38,8 @@ from process.models.physics.physics import (
     rether,
 )
 from process.models.physics.plasma_current import PlasmaCurrent
-from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.physics.plasma_fields import PlasmaFields
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture
