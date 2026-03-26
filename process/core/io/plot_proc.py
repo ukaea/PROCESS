@@ -13697,9 +13697,7 @@ def main_plot(
     )
 
     # Plot density profiles
-    # ax9 = figs[6].add_subplot(231)
-    # ax9.set_position([0.075, 0.55, 0.25, 0.4])
-    plot_n_profiles(figs[5], demo_ranges, m_file, scan)
+    plot_n_profiles(figs[6], demo_ranges, m_file, scan)
 
     # Plot temperature profiles
     ax10 = figs[6].add_subplot(232)
