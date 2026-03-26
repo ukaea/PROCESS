@@ -118,7 +118,7 @@ class CurrentDriveModel(IntEnum):
 
     @DynamicClassAttribute
     def abbreviation(self):
-        return self._method_.abbreviation
+        return self.method.abbreviation
 
     @DynamicClassAttribute
     def full_name(self):
