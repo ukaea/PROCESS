@@ -46,82 +46,69 @@ class CurrentDriveModel(IntEnum):
     NO_CURRENT_DRIVE = (
         0,
         CurrentDriveMethodType.NONE,
-        CurrentDriveMethodType.NONE.abbreviation,
         "No Current Drive",
     )
 
     FENSTERMACHER_LOWER_HYBRID = (
         1,
         CurrentDriveMethodType.LOWER_HYBRID,
-        CurrentDriveMethodType.LOWER_HYBRID.abbreviation,
         "Fenstermacher Lower Hybrid",
     )
     IPDG89_ION_CYCLOTRON = (
         2,
         CurrentDriveMethodType.ION_CYCLOTRON,
-        CurrentDriveMethodType.ION_CYCLOTRON.abbreviation,
         "IPDG89 Ion Cyclotron",
     )
     FENSTERMACHER_ELECTRON_CYCLOTRON = (
         3,
         CurrentDriveMethodType.ELECTRON_CYCLOTRON,
-        CurrentDriveMethodType.ELECTRON_CYCLOTRON.abbreviation,
         "Fenstermacher Electron Cyclotron",
     )
     EHST_LOWER_HYBRID = (
         4,
         CurrentDriveMethodType.LOWER_HYBRID,
-        CurrentDriveMethodType.LOWER_HYBRID.abbreviation,
         "EHST Lower Hybrid",
     )
     ITER_NEUTRAL_BEAM = (
         5,
         CurrentDriveMethodType.NEUTRAL_BEAM,
-        CurrentDriveMethodType.NEUTRAL_BEAM.abbreviation,
         "ITER Neutral Beam",
     )
     CULHAM_LOWER_HYBRID = (
         6,
         CurrentDriveMethodType.LOWER_HYBRID,
-        CurrentDriveMethodType.LOWER_HYBRID.abbreviation,
         "Culham Lower Hybrid",
     )
     CULHAM_ELECTRON_CYCLOTRON = (
         7,
         CurrentDriveMethodType.ELECTRON_CYCLOTRON,
-        CurrentDriveMethodType.ELECTRON_CYCLOTRON.abbreviation,
         "Culham Electron Cyclotron",
     )
     CULHAM_NEUTRAL_BEAM = (
         8,
         CurrentDriveMethodType.NEUTRAL_BEAM,
-        CurrentDriveMethodType.NEUTRAL_BEAM.abbreviation,
         "Culham Neutral Beam",
     )
     USER_INPUT_ELECTRON_CYCLOTRON = (
         10,
         CurrentDriveMethodType.ELECTRON_CYCLOTRON,
-        CurrentDriveMethodType.ELECTRON_CYCLOTRON.abbreviation,
         "User Input Electron Cyclotron",
     )
     USER_INPUT_ELECTRON_BERNSTEIN = (
         12,
         CurrentDriveMethodType.ELECTRON_BERNSTEIN,
-        CurrentDriveMethodType.ELECTRON_BERNSTEIN.abbreviation,
         "User Input Electron Bernstein",
     )
     FREETHY_ELECTRON_CYCLOTRON = (
         13,
         CurrentDriveMethodType.ELECTRON_CYCLOTRON,
-        CurrentDriveMethodType.ELECTRON_CYCLOTRON.abbreviation,
         "Freethy Electron Cyclotron",
     )
 
-    def __new__(cls, value, method, abbreviation, full_name):
+    def __new__(cls, value, method, full_name):
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._method_ = method
-        obj._abbreviation_ = abbreviation
         obj._full_name_ = full_name
         return obj
 
@@ -131,7 +118,7 @@ class CurrentDriveModel(IntEnum):
 
     @DynamicClassAttribute
     def abbreviation(self):
-        return self._abbreviation_
+        return self._method_.abbreviation
 
     @DynamicClassAttribute
     def full_name(self):
