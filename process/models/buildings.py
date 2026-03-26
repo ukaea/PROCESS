@@ -16,7 +16,10 @@ from process.data_structure import (
     physics_variables,
     tfcoil_variables,
 )
-from process.models.physics.current_drive import CurrentDriveModel
+from process.models.physics.current_drive import (
+    CurrentDriveMethodType,
+    CurrentDriveModel,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -473,7 +476,7 @@ class Buildings:
         # current_drive_variables.i_hcd_primary = switch for current drive model
         if (
             CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-            == "Neutral Beam"
+            == CurrentDriveMethodType.NEUTRAL_BEAM
         ):
             # NBI technology will be situated within the reactor building
             buildings_variables.reactor_hall_l = (
@@ -1030,7 +1033,7 @@ class Buildings:
             )
             if (
                 CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Neutral Beam"
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ocmmnt(
                     self.outfile,
