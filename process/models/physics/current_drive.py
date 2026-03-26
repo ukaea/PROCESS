@@ -2458,7 +2458,7 @@ class CurrentDrive:
 
         if (
             CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-            == "Neutral Beam"
+            == CurrentDriveMethodType.NEUTRAL_BEAM
         ):
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Neutral beam power balance :")
@@ -2472,7 +2472,7 @@ class CurrentDrive:
             )
             if (
                 CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Neutral Beam"
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ovarre(
                     self.outfile,
@@ -2505,7 +2505,7 @@ class CurrentDrive:
 
             if (
                 CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Neutral Beam"
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ovarrf(
                     self.outfile,
@@ -2660,7 +2660,7 @@ class CurrentDrive:
 
         if (
             CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
-            == "Neutral Beam"
+            == CurrentDriveMethodType.NEUTRAL_BEAM
         ):
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Neutral beam power balance :")
@@ -2674,7 +2674,7 @@ class CurrentDrive:
             )
             if (
                 CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Neutral Beam"
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ovarre(
                     self.outfile,
@@ -2707,7 +2707,7 @@ class CurrentDrive:
 
             if (
                 CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Neutral Beam"
+                == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ovarrf(
                     self.outfile,
