@@ -19,50 +19,101 @@ from process.models.physics.plasma_profiles import PlasmaProfile
 logger = logging.getLogger(__name__)
 
 
+class CurrentDriveMethodType(IntEnum):
+    """Enum for heating and current drive method types"""
+
+    NONE = (0, "None")
+    LOWER_HYBRID = (1, "LHCD")
+    ION_CYCLOTRON = (2, "ICCD")
+    ELECTRON_CYCLOTRON = (3, "ECRH")
+    NEUTRAL_BEAM = (4, "NBI")
+    ELECTRON_BERNSTEIN = (5, "EBW")
+
+    def __new__(cls, value, abbreviation):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._abbreviation_ = abbreviation
+        return obj
+
+    @DynamicClassAttribute
+    def abbreviation(self):
+        return self._abbreviation_
+
+
 class CurrentDriveModel(IntEnum):
     """Heating and current drive models for use in current drive calculations"""
 
-    NO_CURRENT_DRIVE = (0, "No current drive", "None", "No Current Drive")
+    NO_CURRENT_DRIVE = (
+        0,
+        CurrentDriveMethodType.NONE,
+        CurrentDriveMethodType.NONE.abbreviation,
+        "No Current Drive",
+    )
 
     FENSTERMACHER_LOWER_HYBRID = (
         1,
-        "Lower Hybrid",
-        "LHCD",
+        CurrentDriveMethodType.LOWER_HYBRID,
+        CurrentDriveMethodType.LOWER_HYBRID.abbreviation,
         "Fenstermacher Lower Hybrid",
     )
-    IPDG89_ION_CYCLOTRON = (2, "Ion Cyclotron", "ICCD", "IPDG89 Ion Cyclotron")
+    IPDG89_ION_CYCLOTRON = (
+        2,
+        CurrentDriveMethodType.ION_CYCLOTRON,
+        CurrentDriveMethodType.ION_CYCLOTRON.abbreviation,
+        "IPDG89 Ion Cyclotron",
+    )
     FENSTERMACHER_ELECTRON_CYCLOTRON = (
         3,
-        "Electron Cyclotron",
-        "ECRH",
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON,
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON.abbreviation,
         "Fenstermacher Electron Cyclotron",
     )
-    EHST_LOWER_HYBRID = (4, "Lower Hybrid", "LHCD", "EHST Lower Hybrid")
-    ITER_NEUTRAL_BEAM = (5, "Neutral Beam", "NBI", "ITER Neutral Beam")
-    CULHAM_LOWER_HYBRID = (6, "Lower Hybrid", "LHCD", "Culham Lower Hybrid")
+    EHST_LOWER_HYBRID = (
+        4,
+        CurrentDriveMethodType.LOWER_HYBRID,
+        CurrentDriveMethodType.LOWER_HYBRID.abbreviation,
+        "EHST Lower Hybrid",
+    )
+    ITER_NEUTRAL_BEAM = (
+        5,
+        CurrentDriveMethodType.NEUTRAL_BEAM,
+        CurrentDriveMethodType.NEUTRAL_BEAM.abbreviation,
+        "ITER Neutral Beam",
+    )
+    CULHAM_LOWER_HYBRID = (
+        6,
+        CurrentDriveMethodType.LOWER_HYBRID,
+        CurrentDriveMethodType.LOWER_HYBRID.abbreviation,
+        "Culham Lower Hybrid",
+    )
     CULHAM_ELECTRON_CYCLOTRON = (
         7,
-        "Electron Cyclotron",
-        "ECRH",
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON,
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON.abbreviation,
         "Culham Electron Cyclotron",
     )
-    CULHAM_NEUTRAL_BEAM = (8, "Neutral Beam", "NBI", "Culham Neutral Beam")
+    CULHAM_NEUTRAL_BEAM = (
+        8,
+        CurrentDriveMethodType.NEUTRAL_BEAM,
+        CurrentDriveMethodType.NEUTRAL_BEAM.abbreviation,
+        "Culham Neutral Beam",
+    )
     USER_INPUT_ELECTRON_CYCLOTRON = (
         10,
-        "Electron Cyclotron",
-        "ECRH",
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON,
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON.abbreviation,
         "User Input Electron Cyclotron",
     )
     USER_INPUT_ELECTRON_BERNSTEIN = (
         12,
-        "Electron Bernstein",
-        "EBW",
+        CurrentDriveMethodType.ELECTRON_BERNSTEIN,
+        CurrentDriveMethodType.ELECTRON_BERNSTEIN.abbreviation,
         "User Input Electron Bernstein",
     )
     FREETHY_ELECTRON_CYCLOTRON = (
         13,
-        "Electron Cyclotron",
-        "ECRH",
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON,
+        CurrentDriveMethodType.ELECTRON_CYCLOTRON.abbreviation,
         "Freethy Electron Cyclotron",
     )
 
@@ -1553,6 +1604,9 @@ class CurrentDrive:
         p_hcd_secondary_electrons_mw = 0.0
         p_hcd_secondary_ions_mw = 0.0
 
+        primary_cdm = CurrentDriveModel(current_drive_variables.i_hcd_primary)
+        secondary_cdm = CurrentDriveModel(current_drive_variables.i_hcd_secondary)
+
         # To stop issues with input file we force
         # zero secondary heating if no injection method
         if current_drive_variables.i_hcd_secondary == 0:
@@ -1647,10 +1701,7 @@ class CurrentDrive:
             }
 
             # Assign outputs for models that return multiple values
-            if (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
-                == "Neutral Beam"
-            ):
+            if secondary_cdm.method == CurrentDriveMethodType.NEUTRAL_BEAM:
                 _, f_p_beam_injected_ions, f_p_beam_shine_through = (
                     self.neutral_beam.iternb()
                     if current_drive_variables.i_hcd_secondary == 5
@@ -1751,10 +1802,7 @@ class CurrentDrive:
             # ==============================================================
 
             # Lower hybrid cases
-            if (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
-                == "Lower Hybrid"
-            ):
+            if secondary_cdm.method == CurrentDriveMethodType.LOWER_HYBRID:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1780,10 +1828,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Ion cyclotron cases
-            if (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
-                == "Ion Cyclotron"
-            ):
+            if secondary_cdm.method == CurrentDriveMethodType.ION_CYCLOTRON:
                 # Injected power
                 p_hcd_secondary_ions_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1809,10 +1854,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Electron cyclotron cases
-            if (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
-                == "Electron Cyclotron"
-            ):
+            if secondary_cdm.method == CurrentDriveMethodType.ELECTRON_CYCLOTRON:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1838,10 +1880,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Electron berstein cases
-            if (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
-                == "Electron Bernstein"
-            ):
+            if secondary_cdm.method == CurrentDriveMethodType.ELECTRON_BERNSTEIN:
                 # Injected power
                 p_hcd_secondary_electrons_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
@@ -1867,10 +1906,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Neutral beam cases
-            elif (
-                CurrentDriveModel(current_drive_variables.i_hcd_secondary).method
-                == "Neutral Beam"
-            ):
+            elif secondary_cdm.method == CurrentDriveMethodType.NEUTRAL_BEAM:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)
@@ -1950,10 +1986,7 @@ class CurrentDrive:
             # ==========================================================
 
             # Lower hybrid cases
-            if (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Lower Hybrid"
-            ):
+            if primary_cdm.method == CurrentDriveMethodType.LOWER_HYBRID:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -1984,10 +2017,7 @@ class CurrentDrive:
             # ===========================================================
 
             # Ion cyclotron cases
-            if (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Ion Cyclotron"
-            ):
+            if primary_cdm.method == CurrentDriveMethodType.ION_CYCLOTRON:
                 p_hcd_primary_ions_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -2019,10 +2049,7 @@ class CurrentDrive:
 
             # Electron cyclotron cases
 
-            if (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Electron Cyclotron"
-            ):
+            if primary_cdm.method == CurrentDriveMethodType.ELECTRON_CYCLOTRON:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -2053,10 +2080,7 @@ class CurrentDrive:
 
             # Electron bernstein cases
 
-            if (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Electron Bernstein"
-            ):
+            if primary_cdm.method == CurrentDriveMethodType.ELECTRON_BERNSTEIN:
                 p_hcd_primary_electrons_mw = (
                     current_drive_variables.p_ebw_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
@@ -2085,10 +2109,7 @@ class CurrentDrive:
 
             # ===========================================================
 
-            elif (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
-                == "Neutral Beam"
-            ):
+            elif primary_cdm.method == CurrentDriveMethodType.NEUTRAL_BEAM:
                 # Account for first orbit losses
                 # (power due to particles that are ionised but not thermalised) [MW]:
                 # This includes a second order term in shinethrough*(first orbit loss)

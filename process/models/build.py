@@ -16,8 +16,8 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.models.tfcoil.base import TFCoilShapeModel
 from process.models.physics.current_drive import CurrentDriveModel
+from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
 
