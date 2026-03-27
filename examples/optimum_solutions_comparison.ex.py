@@ -54,7 +54,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from process.core.io.plot_solutions import (
+from process.core.io.plot.plot_solutions import (
     RunMetadata,
     plot_mfile_solutions,
 )
@@ -140,7 +140,7 @@ df2
 import matplotlib.pyplot as plt
 
 import process.core.io.mfile as mf
-from process.core.io.plot_proc import plot_inequality_constraint_equations
+from process.core.io.plot.plot_proc import plot_inequality_constraint_equations
 
 original_mfile = mf.MFile((large_tokamak_mfile).as_posix())
 new_mfile = mf.MFile((large_tokamak_varied_min_net_electric_mfile).as_posix())
