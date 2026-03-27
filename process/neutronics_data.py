@@ -598,6 +598,54 @@ def nXn_weight_matrix(  # noqa: N802
     return (weight * matrix.T).T
 
 
+def get_diffusion_coefficient_and_length(
+    avg_atomic_mass: float,
+    total_xs: float,
+    scattering_xs: float,
+    in_source_xs: float,
+) -> tuple[float, float]:
+    r"""
+    Calculate the diffusion coefficient for a given scattering and total macro-scopic
+    cross-section in a given medium.
+
+    Parameters
+    ----------
+    total_xs:
+        macroscopic total cross-section `\sigma_{total}`, i.e. any reaction between
+        nuclei and neutrons, that either changes the neutron's path or remove it from
+        that energy group.
+        Unit: m^-1
+    scattering_xs:
+        macroscopic total cross-section `\sigma_{scatter}`, i.e. number of reactions per
+        unit distance travelled by the neutron that leads to it being scattered (without
+        getting absorbed).
+        Unit: m^-1
+    avg_atomic_mass:
+        Average atomic mass in [amu]. This can be approximated by the atomic number 'A'
+        of the medium that the neutron passes through. The effect of the more-anisotropic
+        scattering due to smaller atomic number can be accounted for by increasing the
+        diffusion coefficient (which decreases the transport macroscopic cross-section,
+        :math:`\Sigma_{tr}=\frac{1}{3D}`).
+
+    Returns
+    -------
+    diffusion_const:
+        The diffusion coefficient as given by Reactor Analysis, Duderstadt and Hamilton.
+        unit: [m]
+    diffusion_len_2:
+        The square of the characteristic diffusion length as given by Reactor Analysis,
+        Duderstadt and Hamilton.
+        unit: [m^2]
+    """
+
+    transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
+    diffusion_const = 1 / 3 / transport_xs
+    diffusion_len_2 = diffusion_const / (
+        total_xs - scattering_xs - in_source_xs
+    )
+    return diffusion_const, diffusion_len_2
+
+
 class MaterialMacroInfo:
     def __init__(
         self,
@@ -705,6 +753,14 @@ class MaterialMacroInfo:
                 "Check if the group structure is chosen correctly?",
                 stacklevel=2,
             )
+        self._diffusion_const, self._l2 = [], []
+        for i in range(self.n_groups):
+            _diff_const, _l2 = get_diffusion_coefficient_and_length(
+                self.avg_atomic_mass, self._sigma_total[i],
+                self._sigma_scatter[i,i], self._sigma_in[i,i]
+            )
+            self._diffusion_const.append(_diff_const)
+            self._l2.append(_l2)
         self._populated = True
         return
 
@@ -811,6 +867,26 @@ class MaterialMacroInfo:
         if not hasattr(self, "_n_groups"):
             self._n_groups = len(self.group_structure) - 1
         return self._n_groups
+
+    @property
+    def diffusion_const(self) -> float:
+        """
+        The diffusion coefficient as given by Reactor Analysis, Duderstadt and Hamilton.
+        unit: [m]
+        """
+        if not self._populated:
+            raise ValueError("Empty diffusion constant data!")
+        return self._diffusion_const
+
+    @property
+    def l2(self) -> float:
+        """
+        The square of the characteristic diffusion length as given by Reactor Analysis,
+        Duderstadt and Hamilton.
+        """
+        if not self._populated:
+            raise ValueError("Empty diffusion length data!")
+        return self._l2
 
     @property
     def downscatter_only(self):
