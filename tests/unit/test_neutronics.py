@@ -279,14 +279,13 @@ def test_same_l_in_2_groups_calculate_flux():
         )
 
 
-@pytest.mark.filterwarnings("ignore:Calculation of flux")
 def test_two_group():
     dummy = np.geomspace(MAX_E, MIN_E, 3)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
     mfp_fw_s = 118 * 0.01  # [m]
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
-    x_fw = 5.72 * 0.01
+    x_fw = 5.72 * 0.1
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material._set_sigma(
         [1 / mfp_fw_t, 1 / (mfp_fw_t + 0.5)],
@@ -346,7 +345,7 @@ def test_three_group():
     mfp_fw_s = 118 * 0.01  # [m]
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
-    x_fw = 5.72 * 0.01
+    x_fw = 5.72 * 0.1
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material._set_sigma(
         [1 / mfp_fw_t, 1 / (mfp_fw_t + 0.25), 1 / (mfp_fw_t + 0.5)],
@@ -409,8 +408,6 @@ def test_three_group():
     assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
 
 
-# @pytest.mark.filterwarnings("ignore:Negative flux found")
-@pytest.mark.filterwarnings("ignore:Calculation of flux")
 def test_four_group():
     dummy = np.geomspace(MAX_E, MIN_E, 5)  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
@@ -418,7 +415,7 @@ def test_four_group():
     mfp_fw_t = 16.65 * 0.01  # [m]
 
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
-    x_fw = 5.72 * 0.01
+    x_fw = 5.72 * 0.1
     fw_material = MaterialMacroInfo(dummy, 1.0, {"Te": 1.0}, name="fw")
     fw_material._set_sigma(
         [

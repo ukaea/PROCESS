@@ -1518,7 +1518,10 @@ class NeutronFluxProfile:
                         **plot_dict,
                     )
         ax.legend()
-        ax.set_title(f"Neutron {quantity} profile")
+        if quantity == "tritium_production":
+            ax.set_title(f"Tritium production profile")
+        else:
+            ax.set_title(f"Neutron {quantity} profile")
         ax.set_xlabel("Distance from the plasma-fw interface [m]")
         ax.set_ylabel(ylabel)
 
