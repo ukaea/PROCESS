@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
-        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
       - name: Run unit tests with coverage report
         run: |
           hatch run test:tests-cov tests/unit
@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
-        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
           python-version: ${{ env.python-version }}
       - name: Run integration tests
@@ -52,7 +52,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
-        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
           python-version: ${{ env.python-version }}
       - name: Run example tests
@@ -72,7 +72,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup python and hatch
-        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
           python-version: ${{ env.python-version }}
       - name: Run regression tests
@@ -84,7 +84,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
-        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
           python-version: ${{ env.python-version }}
       - name: Run regression input files
@@ -107,7 +107,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
-        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
           python-version: ${{ env.python-version }}
       - name: Run pre-commit
@@ -125,7 +125,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
-        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
           python-version: ${{ env.python-version }}
       - name: Setup SSH identity
@@ -175,7 +175,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup python and hatch
-        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
         with:
           python-version: ${{ env.python-version }}
       - run: git config --global --add safe.directory '*'
