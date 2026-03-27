@@ -23,14 +23,14 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
       - name: Run unit tests with coverage report
         run: |
           hatch run test:tests-cov tests/unit
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
@@ -39,7 +39,7 @@ jobs:
   integration-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
@@ -50,7 +50,7 @@ jobs:
   example-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
@@ -68,7 +68,7 @@ jobs:
       matrix:
         tolerance: [0.2, 5]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
       - name: Setup python and hatch
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
@@ -92,12 +92,12 @@ jobs:
       - name: Move other files
         run: mv tests/regression/input_files/*.json tracking/
       - name: Archive tracked MFILEs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
         with:
           name: tracked-mfiles
           path: tracking/*_MFILE.DAT
       - name: Archive tracked SIG_TF.json
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
         with:
           name: sig-tfs
           path: tracking/*.json
@@ -105,7 +105,7 @@ jobs:
   pre-commit-quality-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
@@ -123,19 +123,19 @@ jobs:
     env:
       COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Setup python and hatch
         uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@main
         with:
           python-version: ${{ env.python-version }}
       - name: Setup SSH identity
-        uses: webfactory/ssh-agent@v0.7.0
+        uses: webfactory/ssh-agent@836c84ec59a0e7bc0eabc79988384eb567561ee2
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Download tracking data
         run: git clone git@github.com:timothy-nunn/process-tracking-data.git process-tracking-data
       - name: Download MFILEs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: tracked-mfiles
           path: tracking/
@@ -148,7 +148,7 @@ jobs:
       - name: Create the tracking dashboard
         run: hatch run python tracking/tracking_data.py plot process-tracking-data --out tracking.html
       - name: Archive tracking dashboard
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
         with:
           name: tracking-html
           path: tracking.html
@@ -171,7 +171,7 @@ jobs:
     needs: tracking
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
       - name: Setup python and hatch
@@ -180,12 +180,12 @@ jobs:
           python-version: ${{ env.python-version }}
       - run: git config --global --add safe.directory '*'
       - name: Download STF_TF.json files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: sig-tfs
           path: tracking/
       - name: Download MFILEs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: tracked-mfiles
           path: tracking/
@@ -196,14 +196,14 @@ jobs:
         run: mv tracking/large_tokamak_nof_MFILE.DATSUMMARY.pdf documentation/source/images/plot_proc.pdf
       - run: hatch run docs:build
       - name: Download tracking html
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: tracking-html
       - run: mv tracking.html site || cp site/404.html site/tracking.html
       - name: Upload documentation page
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
         with:
           path: site/
       - name: Deploy GitHub pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
