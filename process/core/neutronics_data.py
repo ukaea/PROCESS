@@ -112,10 +112,7 @@ class MTTreeNode:
         """
         main_xs = endf_record.get_xs(self.main_number, group_structure)
         constituent_xs = np.sum(
-            [
-                endf_record.get_xs(mt, group_structure)
-                for mt in self.constituents
-            ],
+            [endf_record.get_xs(mt, group_structure) for mt in self.constituents],
             axis=0,
         )
         if (
@@ -124,9 +121,7 @@ class MTTreeNode:
                 np.sum(main_xs), np.sum(constituent_xs), atol=0, rtol=0.001
             ).all()
         ):
-            raise ValueError(
-                f"MT={self.main_number} does not match the constituents"
-            )
+            raise ValueError(f"MT={self.main_number} does not match the constituents")
         if len(main_xs) != (len(group_structure) - 1):
             raise ValueError(f"{self.mt_tuple} resolves to zero!")
         auxillary = np.sum(
@@ -169,10 +164,7 @@ class MTResolutionRule:
         """
         redundant_xs = endf_record.get_xs(self.redundant_mt, group_structure)
         main_xs = np.sum(
-            [
-                mt.resolve_xs(endf_record, group_structure)
-                for mt in self.mt_tuple
-            ],
+            [mt.resolve_xs(endf_record, group_structure) for mt in self.mt_tuple],
             axis=0,
         )
         if np.sum(redundant_xs):
@@ -225,12 +217,8 @@ class ExtractedNuclearData:
     rules: ClassVar[dict[str, MTResolutionRule]] = {
         "total": MTResolutionRule((), "n,tot", 1),
         "elastic_scattering": MTResolutionRule((), "n,n", 2),
-        "inelastic_scattering": MTResolutionRule(
-            (MT_SCAT_INELASTIC,), "n,n'", 4
-        ),
-        "neutron_producing": MTResolutionRule(
-            (MT_N2N, MT_N3N, MT_N4N), "n,Xn", 201
-        ),
+        "inelastic_scattering": MTResolutionRule((MT_SCAT_INELASTIC,), "n,n'", 4),
+        "neutron_producing": MTResolutionRule((MT_N2N, MT_N3N, MT_N4N), "n,Xn", 201),
         "triton_producing": MTResolutionRule((MT_TRITON,), "n,Xt", 205),
     }
 
@@ -257,9 +245,7 @@ class ExtractedNuclearData:
             self.rules["elastic_scattering"].resolve_xs(
                 self.endf_record, self.group_structure
             )
-            * scattering_weight_matrix(
-                self.group_structure, self.atomic_mass
-            ).T
+            * scattering_weight_matrix(self.group_structure, self.atomic_mass).T
         ).T
         self.sigma_scatter += (
             self.rules["inelastic_scattering"].resolve_xs(
@@ -284,7 +270,7 @@ class ExtractedNuclearData:
         all_n2n = MT_N2N.resolve_xs(self.endf_record, self.group_structure)
         all_n3n = MT_N3N.resolve_xs(self.endf_record, self.group_structure)
         all_n4n = MT_N4N.resolve_xs(self.endf_record, self.group_structure)
-        mt201 = self.endf_record.get_xs(201, self.group_structure)
+        mt201 = self.endf_record.get_xs(201, self.group_structure)  # noqa: F841
         if np.isclose(n2n + n3n + n4n, neutron_producing, atol=0.0).all():
             self.sigma_in = (
                 n2n
@@ -391,7 +377,7 @@ def read_elem_and_mass(iso_name: str) -> tuple[str, str]:
 
 
 def is_natural(iso_name: str):
-    element, mass = read_elem_and_mass(iso_name)
+    _element, mass = read_elem_and_mass(iso_name)
     return mass == "0"
 
 
@@ -402,7 +388,7 @@ def _get_alpha(atomic_mass: float):
 def scattering_weight_matrix(
     group_structure: npt.NDArray[np.float64],
     atomic_mass: float,
-    energy_lost=0.0,
+    energy_lost=0.0,  # noqa: ARG001
 ) -> npt.NDArray:
     """
     Parameters
@@ -540,19 +526,19 @@ def _convolved_scattering_fraction(
     e_i1, e_i = in_group
     e_g1, e_g = out_group
 
-    _const = 1 / (np.log(e_i1) - np.log(e_i))
-    _am1i = 1 / (1 - alpha)
-    _diff_log_e = np.log(e_max) - np.log(e_min)
-    _diff_inv_e = 1 / e_min - 1 / e_max
+    const = 1 / (np.log(e_i1) - np.log(e_i))
+    am1i = 1 / (1 - alpha)
+    diff_log_e = np.log(e_max) - np.log(e_min)
+    diff_inv_e = 1 / e_min - 1 / e_max
     match case_description:
         case "self, complete":
-            return _const * _diff_log_e
+            return const * diff_log_e
         case "self, upper-half":
-            return _const * _am1i * (_diff_log_e - e_g * _diff_inv_e)
+            return const * am1i * (diff_log_e - e_g * diff_inv_e)
         case "down, upper-half":
-            return _const * _am1i * -(alpha * _diff_log_e - e_g1 * _diff_inv_e)
+            return const * am1i * -(alpha * diff_log_e - e_g1 * diff_inv_e)
         case "down, middle":
-            return _const * _am1i * (e_g1 - e_g) * _diff_inv_e
+            return const * am1i * (e_g1 - e_g) * diff_inv_e
 
 
 def nXn_weight_matrix(  # noqa: N802
@@ -640,9 +626,7 @@ def get_diffusion_coefficient_and_length(
 
     transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
     diffusion_const = 1 / 3 / transport_xs
-    diffusion_len_2 = diffusion_const / (
-        total_xs - scattering_xs - in_source_xs
-    )
+    diffusion_len_2 = diffusion_const / (total_xs - scattering_xs - in_source_xs)
     return diffusion_const, diffusion_len_2
 
 
@@ -680,30 +664,20 @@ class MaterialMacroInfo:
                 "according to these bin edges."
             )
         if (self.group_structure <= 0).any():
-            warnings.warn(
-                "Zero energy (inf. lethargy) not allowed.", stacklevel=2
-            )
-            self.group_structure = np.clip(
-                self.group_structure, 1e-9 * EV_TO_J, np.inf
-            )
+            warnings.warn("Zero energy (inf. lethargy) not allowed.", stacklevel=2)
+            self.group_structure = np.clip(self.group_structure, 1e-9 * EV_TO_J, np.inf)
         self.density = float(density)
         self.name = name
         self.source = source
         self.comment = comment
         self._populated = False
         self.elements = elements
-        self.avg_atomic_mass = get_avg_atomic_mass(
-            elem_to_isotopic_comp(self.elements)
-        )
+        self.avg_atomic_mass = get_avg_atomic_mass(elem_to_isotopic_comp(self.elements))
         self.number_density = N_A / self.avg_atomic_mass * 1000
 
         if (self.group_structure <= 0).any():
-            warnings.warn(
-                "Zero energy (inf. lethargy) not allowed.", stacklevel=2
-            )
-            self.group_structure = np.clip(
-                self.group_structure, 1e-9 * EV_TO_J, np.inf
-            )
+            warnings.warn("Zero energy (inf. lethargy) not allowed.", stacklevel=2)
+            self.group_structure = np.clip(self.group_structure, 1e-9 * EV_TO_J, np.inf)
         if (np.diff(self.group_structure) >= 0).any():
             raise ValueError(
                 "The group structure must be defined descendingly, from the "
@@ -716,9 +690,7 @@ class MaterialMacroInfo:
     def __repr__(self):
         return super().__repr__().replace(" at ", f" '{self.name}' at ")
 
-    def _set_sigma(
-        self, sigma_t, sigma_s, sigma_in=None, sigma_triton=None
-    ) -> None:
+    def _set_sigma(self, sigma_t, sigma_s, sigma_in=None, sigma_triton=None) -> None:
         """Populate the values directly. Mainly to make unit-testing easier."""
         self._sigma_total = np.asarray(sigma_t)
         self._sigma_scatter = np.asarray(sigma_s)
@@ -755,45 +727,35 @@ class MaterialMacroInfo:
             )
         self._diffusion_const, self._l2 = [], []
         for i in range(self.n_groups):
-            _diff_const, _l2 = get_diffusion_coefficient_and_length(
+            diff_const, l2_i = get_diffusion_coefficient_and_length(
                 self.avg_atomic_mass,
                 self._sigma_total[i],
                 self._sigma_scatter[i, i],
                 self._sigma_in[i, i],
             )
-            self._diffusion_const.append(_diff_const)
-            self._l2.append(_l2)
+            self._diffusion_const.append(diff_const)
+            self._l2.append(l2_i)
         self._populated = True
         return
 
     def _add_data_from_single_record(
         self, xs_data: ExtractedNuclearData, partial_number_density: float
     ) -> None:
-        if not np.isclose(
-            self.group_structure, xs_data.group_structure, atol=0.0
-        ).all():
+        if not np.isclose(self.group_structure, xs_data.group_structure, atol=0.0).all():
             raise ValueError(f"Mismatched group structure with {xs_data}.")
-        self._sigma_total += (
-            xs_data.sigma_total * partial_number_density * BARNS_TO_M2
-        )
+        self._sigma_total += xs_data.sigma_total * partial_number_density * BARNS_TO_M2
         self._sigma_scatter += (
             xs_data.sigma_scatter * partial_number_density * BARNS_TO_M2
         )
-        self._sigma_in += (
-            xs_data.sigma_in * partial_number_density * BARNS_TO_M2
-        )
-        self._sigma_triton += (
-            xs_data.sigma_triton * partial_number_density * BARNS_TO_M2
-        )
+        self._sigma_in += xs_data.sigma_in * partial_number_density * BARNS_TO_M2
+        self._sigma_triton += xs_data.sigma_triton * partial_number_density * BARNS_TO_M2
         if isinstance(xs_data, DummyExtractedNuclearData):
             species = xs_data.species
             fraction = elem_to_isotopic_comp(self.elements)[species]
             self.comment += f" Missing {species} ({fraction * 100} at.%) "
             self.comment += "(filled with dummy zeros)."
 
-    def populate_from_data_library(
-        self, xs_dict: [str, ExtractedNuclearData]
-    ) -> None:
+    def populate_from_data_library(self, xs_dict: [str, ExtractedNuclearData]) -> None:
         """Populate the cross-section values according to the nuclear data library."""
         self._sigma_total = np.zeros(self.n_groups)
         self._sigma_scatter = np.zeros([self.n_groups, self.n_groups])
@@ -903,10 +865,7 @@ class MaterialMacroInfo:
         as neutron fluxes in higher-lethargy groups in turn affects the neutron
         flux in lower-lethargy groups.
         """
-        return ~(
-            np.tril(self.sigma_s, k=-1).any()
-            or np.tril(self.sigma_in, k=-1).any()
-        )
+        return ~(np.tril(self.sigma_s, k=-1).any() or np.tril(self.sigma_in, k=-1).any())
 
     @property
     def element_set(self):
@@ -938,8 +897,7 @@ def accumulate_data_requirements(
     for mat in mat_list:
         required_element_set = required_element_set.union(mat.element_set)
     for elem in required_element_set:
-        for isotope in get_isotopic_composition(elem):
-            required_isotope_set.add(isotope)
+        required_isotope_set.update(get_isotopic_composition(elem))
     return required_element_set, required_isotope_set
 
 
@@ -980,15 +938,13 @@ def populate_from_nuclear_data_library(
     :
     """
     # scrape for all isotopes required.
-    required_element_set, required_isotope_set = accumulate_data_requirements(
-        mat_list
-    )
+    required_element_set, required_isotope_set = accumulate_data_requirements(mat_list)
 
     # Gather the records
     data_extracted = {}
     for endf_record in endf_record_path_generator:
         isotope = quick_isotope_checker(endf_record)
-        element, mass = read_elem_and_mass(isotope)
+        element, _mass = read_elem_and_mass(isotope)
         if is_natural(isotope) and element in required_element_set:
             required_element_set.remove(read_elem_and_mass(isotope)[0])
             data_extracted[isotope] = nuclear_data_extractor(
