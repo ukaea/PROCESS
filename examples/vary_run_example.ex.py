@@ -82,7 +82,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from process.core.io.mfile_utils import get_mfile_initial_ixc_values
+from process.core.io.mfile.utils import get_mfile_initial_ixc_values
 from process.core.repository import get_process_root
 from process.main import VaryRun
 
