@@ -82,6 +82,8 @@ all = ["process[test,docs,lint,examples,plotly]"]
 [project.scripts]
 process = "process.main:process_cli"
 
+[tool.hatch.metadata]
+allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 artifacts = [
   "process/data/lz_non_corona_14_elements/*.dat",
