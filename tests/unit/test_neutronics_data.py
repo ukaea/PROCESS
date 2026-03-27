@@ -17,9 +17,7 @@ rng = np.random.default_rng(1)
         (np.cumsum(100 ** abs(rng.normal(40)))[::-1], 2),
     ],
 )
-def test_scattering_matrix(
-    group_structure: npt.NDArray[np.float64], atomic_mass: float
-):
+def test_scattering_matrix(group_structure: npt.NDArray[np.float64], atomic_mass: float):
     """
     Check that even randomly generated scattering matrix are normalized
     and non-negative.
