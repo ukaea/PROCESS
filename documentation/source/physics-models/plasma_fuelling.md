@@ -35,11 +35,30 @@ The fuelling fractional compositions is given by $f$
 
     $\tau_{\text{fuel}}^* = (\tau_p) /  (1-R)$
 
+The (effective) exhaust efficiency is is given by , $\eta_{\text{eff}} = 1- R$ 
+
+The factor $\frac{R}{1-R}$ is the mean number of recycling events back into the burning region experieced by a particle before it is pumped away.
+
+The definition of the recycling coefficient $R = 1- \frac{\Gamma_{\text{pumps}}}{\Gamma_{\text{out}}}$, where $\Gamma_{\text{pumps}}$ is the number of particles exhausted by the pumps per second and $\Gamma_{\text{out}}$ is the number of particles per second transported radially outwards across the separatrix.
+
+
 
 Where $\tau_p$ is the particle confinement time which we can assume is approximately equal to the energy confinement time ($\tau_p = \tau_E$). 
 
-The recycling coefficient $R$, defined as the fraction of particles crossing the LCFS that return to the plasma, can depend on numerous factors—including vessel pumping speed, neutral pressure in the private‑divertor region, impurity seeding levels, and the detailed properties of the SOL. Among these parameters, $R$ is the least certain and the most difficult to quantify. In next‑step devices, the SOL temperature is expected to be high, so particles reflected from the vessel walls are mostly ionized within the SOL and are removed by pumping before they can effectively refuel the burning plasma. As a result, the recycling coefficient is anticipated to be lower than in present‑day tokamaks, where $R$ can often approach unity. An additional uncertainty is the extent of neutral penetration at the plasma edge, which influences both the pedestal density and the density profile, and therefore also affects $R$[^1].
+!!! note "Quantifying $R$"
 
+    The recycling coefficient $R$, defined as the fraction of particles crossing the LCFS that return to the plasma, can depend on numerous factors—including vessel pumping speed, neutral pressure in the private‑divertor region, impurity seeding levels, and the detailed properties of the SOL. Among these parameters, $R$ is the least certain and the most difficult to quantify. In next‑step devices, the SOL temperature is expected to be high, so particles reflected from the vessel walls are mostly ionized within the SOL and are removed by pumping before they can effectively refuel the burning plasma. As a result, the recycling coefficient is anticipated to be lower than in present‑day tokamaks, where $R$ can often approach unity. An additional uncertainty is the extent of neutral penetration at the plasma edge, which influences both the pedestal density and the density profile, and therefore also affects $R$[^1].
+
+
+
+
+## METIS Alpha Confinement
+
+$$
+\tau_{\alpha} = f_{\alpha}\tau_{\text{E}}\frac{R}{1-R}\tau_{\text{ne}}
+$$
+
+This is the model currently in METIS[^2] and is found in [^3]
 
 
 --------------
@@ -126,4 +145,10 @@ $$
 
 
 [^1]: G. L. Jackson, V. S. Chan, and R. D. Stambaugh, “An Analytic Expression for the Tritium Burnup Fraction in Burning-Plasma Devices,” Fusion Science and Technology, vol. 64, no. 1, pp. 8–12, Jul. 2013, doi: https://doi.org/10.13182/fst13-a17042.
+
+[^2]: J. F. Artaud et al., “Metis: a fast integrated tokamak modelling tool for scenario design,” Nuclear Fusion, vol. 58, no. 10, pp. 105001–105001, Aug. 2018, doi: https://doi.org/10.1088/1741-4326/aad5b1.
+
+[^3]: D. Reiter, H. Kever, G. H. Wolf, M. Baelmans, R. Behrisch, and R. Schneider, “Helium removal from tokamaks,” Plasma Physics and Controlled Fusion, vol. 33, no. 13, pp. 1579–1600, Nov. 1991, doi: https://doi.org/10.1088/0741-3335/33/13/008.
+‌
+‌
 ‌
