@@ -25,7 +25,10 @@ Compatible with PROCESS version 286
 import json
 import logging
 from collections import OrderedDict
+from pathlib import Path
 from typing import Any
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -337,52 +340,133 @@ class MFile:
             self.data[var_key] = var
             self.data[var_key].set_scan(1, value)
 
-    def write_to_json(self, keys_to_write=None, scan=-1, verbose=False):
+    def to_dict(self, keys=None, scan: int | None = -1, verbose=False) -> dict:
+        """Convert MFile to dictionary
+
+        Parameters
+        ----------
+        keys :
+             keys to select
+        scan :
+             scan to select
+        verbose :
+             verbosity of output
+        """
+
+        if keys is None:
+            keys = self.data.keys()
+
+        def _get_data(item, dat_key):
+            data = self.data[item].get_scan(dat_key)
+            des = self.data[item].var_description.replace("_", " ")
+            return {"value": data, "description": des} if verbose else data
+
+        save_range = (
+            range(1, self.data["rmajor"].get_number_of_scans() + 1)
+            if scan is None
+            else [scan]
+        )
+        output = {
+            f"scan-{i + 1}": {
+                item: _get_data(
+                    item, -1 if self.data[item].get_number_of_scans() == 1 else i
+                )
+                for item in keys
+            }
+            for i in save_range
+        }
+        return (
+            output[next(iter(output.keys()))]
+            if len(output.keys()) == 1 and scan is not None
+            else output
+        )
+
+    def to_json(
+        self,
+        filename: Path | None = None,
+        keys_to_write=None,
+        scan: int | None = -1,
+        verbose=False,
+    ):
         """Write MFILE object to JSON file
 
         Parameters
         ----------
         keys_to_write :
-             (Default value = None)
+             keys to select
         scan :
-             (Default value = -1)
+             scan to select
         verbose :
-             (Default value = False)
+             verbosity of output
         """
+        with open(filename or f"{self.filename}.json", "w") as fp:
+            json.dump(self.to_dict(keys_to_write, scan, verbose), fp, indent=4)
 
-        if keys_to_write is None:
-            keys_to_write = self.data.keys()
+    def to_toml(
+        self,
+        filename: Path | None = None,
+        keys_to_write=None,
+        scan: int | None = -1,
+        verbose=False,
+    ):
+        """Write MFILE object to JSON file
 
-        filename = f"{self.filename}.json"
+        Parameters
+        ----------
+        keys_to_write :
+             keys to select
+        scan :
+             scan to select
+        verbose :
+             verbosity of output
+        """
+        import toml
 
-        dict_to_write = {}
+        with open(filename or f"{self.filename}.toml", "w") as file:
+            toml.dump(self.to_dict(keys_to_write, scan, verbose), file)
 
-        if scan == 0:
-            for i in range(self.data["rmajor"].get_number_of_scans()):
-                sub_dict = {}
-                for item in keys_to_write:
-                    dat_key = -1 if self.data[item].get_number_of_scans() == 1 else i + 1
-                    data = self.data[item].get_scan(dat_key)
-                    des = self.data[item].var_description.replace("_", " ")
-                    entry = {"value": data, "description": des} if verbose else data
-                    sub_dict[item] = entry
-                dict_to_write[f"scan-{i + 1}"] = sub_dict
+    def to_csv(
+        self,
+        filename: Path | None = None,
+        keys_to_write=None,
+        scan=-1,
+        verbose=False,
+    ):
+        """Write to csv file.
+
+        Parameters
+        ----------
+        args : string, list of tuples
+            input filename, variable data
+        csv_outfile :
+
+        output_data :
+             (Default value = None)
+        """
+        output_data = []
+        if scan is None:
+            for scan_key, vals in self.to_dict(
+                keys_to_write, scan=scan, verbose=verbose
+            ).items():
+                output_data.extend((
+                    (scan_key, "", ""),
+                    ("Description", "Varname", "Value"),
+                ))
+                for k, v in vals.items():
+                    output_data.append((v["description"], k, v["value"]))
         else:
-            for item in keys_to_write:
-                # Initialize dat_key properly based on the number of scans
-                if self.data[item].get_number_of_scans() == 1:
-                    dat_key = -1
-                else:
-                    dat_key = (
-                        scan if scan > 0 else 1
-                    )  # Default to scan 1 if not specified
-                data = self.data[item].get_scan(dat_key)
-                des = self.data[item].var_description.replace("_", " ")
-                entry = {"value": data, "description": des} if verbose else data
-                dict_to_write[item] = entry
-
-        with open(filename, "w") as fp:
-            json.dump(dict_to_write, fp, indent=4)
+            output_data.append(("Description", "Varname", "Value"))
+            for k, v in self.to_dict(keys_to_write, scan=scan, verbose=verbose).items():
+                output_data.append((v["description"], k, v["value"]))
+        np.savetxt(
+            filename or f"{self.filename}.csv",
+            output_data or [],
+            fmt="%.5e",
+            delimiter=",",
+            header="PROCESS MFILE converted to csv",
+            footer="",
+            comments="",
+        )
 
 
 def sort_value(value_words: list[str]) -> str | float:

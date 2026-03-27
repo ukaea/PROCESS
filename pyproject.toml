@@ -18,6 +18,7 @@ requires-python = ">=3.10"
 license = "MIT"
 dynamic = ["version"]
 dependencies = [
+    "click @ git+https://github.com/pallets/click@5db412ad777a40881c884dc0e17ade539dd58b67",
     "numpy>=1.23",
     "scipy>=1.10",
     "cvxpy~=1.7.3",
@@ -79,8 +80,10 @@ lint = ["pre-commit>=2.16.0", "ruff==0.9.3", "ty"]
 all = ["process[test,docs,lint,examples,plotly]"]
 
 [project.scripts]
-process = "process.main:main"
+process = "process.main:process_cli"
 
+[tool.hatch.metadata]
+allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 artifacts = [
   "process/data/lz_non_corona_14_elements/*.dat",
