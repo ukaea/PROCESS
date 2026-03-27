@@ -87,54 +87,6 @@ class RegisterLater:
         self.installer(owner)
 
 
-def get_diffusion_coefficient_and_length(
-    avg_atomic_mass: float,
-    total_xs: float,
-    scattering_xs: float,
-    in_source_xs: float,
-) -> tuple[float, float]:
-    r"""
-    Calculate the diffusion coefficient for a given scattering and total macro-scopic
-    cross-section in a given medium.
-
-    Parameters
-    ----------
-    total_xs:
-        macroscopic total cross-section `\sigma_{total}`, i.e. any reaction between
-        nuclei and neutrons, that either changes the neutron's path or remove it from
-        that energy group.
-        Unit: m^-1
-    scattering_xs:
-        macroscopic total cross-section `\sigma_{scatter}`, i.e. number of reactions per
-        unit distance travelled by the neutron that leads to it being scattered (without
-        getting absorbed).
-        Unit: m^-1
-    avg_atomic_mass:
-        Average atomic mass in [amu]. This can be approximated by the atomic number 'A'
-        of the medium that the neutron passes through. The effect of the more-anisotropic
-        scattering due to smaller atomic number can be accounted for by increasing the
-        diffusion coefficient (which decreases the transport macroscopic cross-section,
-        :math:`\Sigma_{tr}=\frac{1}{3D}`).
-
-    Returns
-    -------
-    diffusion_const:
-        The diffusion coefficient as given by Reactor Analysis, Duderstadt and Hamilton.
-        unit: [m]
-    diffusion_len_2:
-        The square of the characteristic diffusion length as given by Reactor Analysis,
-        Duderstadt and Hamilton.
-        unit: [m^2]
-    """
-
-    transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
-    diffusion_const = 1 / 3 / transport_xs
-    diffusion_len_2 = diffusion_const / (
-        total_xs - scattering_xs - in_source_xs
-    )
-    return diffusion_const, diffusion_len_2
-
-
 def extrapolation_length(diffusion_constficient: float) -> float:
     """Get the extrapolation length of the final medium :math:`\\delta`.
 
@@ -502,14 +454,6 @@ class NeutronFluxProfile:
         self.coefficients = LayerSpecificGroupwiseConstants(
             self.solve_group_n, mat_name_list, "Coefficients"
         )
-        self.l2 = LayerSpecificGroupwiseConstants(
-            self.solve_group_n,
-            mat_name_list,
-            "Characteristic diffusion length squared",
-        )
-        self.diffusion_const = LayerSpecificGroupwiseConstants(
-            self.solve_group_n, mat_name_list, "Diffusion coefficient D"
-        )
         self.extended_boundary = AutoPopulatingDict(
             self.solve_group_n, "extended_boundary"
         )
@@ -587,11 +531,11 @@ class NeutronFluxProfile:
         x position(s).
         """
         abs_x = abs(x)
-        if self.l2[num_layer, n] > 0:
-            l = np.sqrt(self.l2[num_layer, n])  # noqa: E741
+        if self.materials[num_layer].l2[n] > 0:
+            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             c, s = np.cosh, np.sinh
         else:
-            l = np.sqrt(-self.l2[num_layer, n])  # noqa: E741
+            l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
             c, s = np.cos, np.sin
         return np.array([c(abs_x / l), s(abs_x / l)])
 
@@ -603,10 +547,10 @@ class NeutronFluxProfile:
         it at position(s) x.
         """
         abs_x = abs(x)
-        if self.l2[num_layer, n] > 0:
-            l = np.sqrt(self.l2[num_layer, n])  # noqa: E741
+        if self.materials[num_layer].l2[n] > 0:
+            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([np.sinh(abs_x / l) / l, np.cosh(abs_x / l) / l])
-        l = np.sqrt(-self.l2[num_layer, n])  # noqa: E741
+        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
         return np.array([-np.sin(abs_x / l) / l, np.cos(abs_x / l) / l])
 
     def _groupwise_cs_definite_integral_in_layer(
@@ -616,13 +560,13 @@ class NeutronFluxProfile:
         Integrate the num_layer-th layer n-th basis function
         from x_lower to x_upper.
         """
-        if self.l2[num_layer, n] > 0:
-            l = np.sqrt(self.l2[num_layer, n])  # noqa: E741
+        if self.materials[num_layer].l2[n] > 0:
+            l = np.sqrt(self.materials[num_layer].l2[n])  # noqa: E741
             return np.array([
                 l * (np.sinh(x_upper / l) - np.sinh(x_lower / l)),
                 l * (np.cosh(x_upper / l) - np.cosh(x_lower / l)),
             ])
-        l = np.sqrt(-self.l2[num_layer, n])  # noqa: E741
+        l = np.sqrt(-self.materials[num_layer].l2[n])  # noqa: E741
         return np.array([
             l * (np.sin(x_upper / l) - np.sin(x_lower / l)),
             l * (np.cos(x_lower / l) - np.cos(x_upper / l)),  # reverse sign
@@ -641,7 +585,7 @@ class NeutronFluxProfile:
                 strict=True,
             )
         ):
-            l2 = self.l2[num_layer, g]
+            l2 = self.materials[num_layer].l2[g]
             l = np.sqrt(abs(l2))  # noqa: E741
             c, s = (np.cosh, np.sinh) if l2 > 0 else (np.cos, np.sin)
             trig_funcs.append(
@@ -721,12 +665,12 @@ class NeutronFluxProfile:
 
         a_mmn = np.array([
             self._groupwise_cs_values_in_layer(n, num_layer, xm),
-            self.diffusion_const[num_layer, n]
+            self.materials[num_layer].diffusion_const[n]
             * self._groupwise_cs_differential_in_layer(n, num_layer, xm),
         ])
         a_lmn = np.array([
             self._groupwise_cs_values_in_layer(n, num_layer + 1, xm),
-            self.diffusion_const[num_layer + 1, n]
+            self.materials[num_layer + 1].diffusion_const[n]
             * self._groupwise_cs_differential_in_layer(n, num_layer + 1, xm),
         ])
 
@@ -739,7 +683,7 @@ class NeutronFluxProfile:
                 xm,
                 in_scatter_max_group,
             ),
-            self.diffusion_const[num_layer, n]
+            self.materials[num_layer].diffusion_const[n]
             * self._summation_shorthand(
                 n,
                 num_layer,
@@ -756,7 +700,7 @@ class NeutronFluxProfile:
                 xm,
                 in_scatter_max_group,
             ),
-            self.diffusion_const[num_layer + 1, n]
+            self.materials[num_layer + 1].diffusion_const[n]
             * self._summation_shorthand(
                 n,
                 num_layer + 1,
@@ -810,7 +754,7 @@ class NeutronFluxProfile:
         """
         Solve the n-th group of neutron's diffusion equation, where n <=
         n_groups-1. Store the solved constants in self.extended_boundary[n],
-        self.l2[:, n], and self.coefficients[:, n].
+        and self.coefficients[:, n].
 
         Parameters
         ----------
@@ -835,24 +779,16 @@ class NeutronFluxProfile:
         # Parameter to be changed later, to allow solving non-down-scatter
         # only systems by iterating.
         for num_layer, mat in enumerate(self.materials):
-            self.diffusion_const[num_layer, n], self.l2[num_layer, n] = (
-                get_diffusion_coefficient_and_length(
-                    mat.avg_atomic_mass,
-                    mat.sigma_t[n],
-                    mat.sigma_s[n, n],
-                    mat.sigma_in[n, n],
-                )
-            )
-            if self.diffusion_const[num_layer, n] > self.layer_x[num_layer]:
+            if self.materials[num_layer].diffusion_const[n] > self.layer_x[num_layer]:
                 warnings.warn(
                     f"Calculation of flux in group {n} may be inaccurate as "
                     f"layer {num_layer} is thinner than "
-                    r"3\times\lambda_{tr} "
+                    r"λ_{tr} "
                     f"of group {n}.",
                     stacklevel=2,
                 )
         self.extended_boundary[n] = self.layer_x[-1] + extrapolation_length(
-            self.diffusion_const[-1, n]
+            self.materials[-1].diffusion_const[n]
         )
 
         include_upscatter = (
@@ -866,14 +802,15 @@ class NeutronFluxProfile:
                 _coefs = Coefficients([], [])
                 mat = self.materials[num_layer]
                 src_matrix = mat.sigma_s + mat.sigma_in
-                diffusion_const_n = self.diffusion_const[num_layer, n]
+                diffusion_const_n = self.materials[num_layer].diffusion_const[n]
+                l2n = mat.l2[n]
                 for g in range(in_scatter_max_group):
                     if g == n:
                         # placeholder zeros, to be properly calculated later.
                         _coefs.c.append(0.0)
                         _coefs.s.append(0.0)
                         continue
-                    l2n, l2g = self.l2[num_layer, n], self.l2[num_layer, g]
+                    l2g = mat.l2[g]
                     l2_diff = l2g - l2n
                     if np.isclose(l2_diff, 0):
                         # if the characteristic length of group [g] coincides with
@@ -922,10 +859,10 @@ class NeutronFluxProfile:
                     )
 
                 self.coefficients[num_layer, n] = _coefs
-            self.coefficients[0, n].s[n] = np.sqrt(abs(self.l2[0, n])) * (
-                -(self.fluxes[n] / self.diffusion_const[0, n])
+            self.coefficients[0, n].s[n] = np.sqrt(abs(self.materials[0].l2[n])) * (
+                -(self.fluxes[n] / self.materials[0].diffusion_const[n])
                 - np.sum([
-                    self.coefficients[0, n].s[g] / np.sqrt(abs(self.l2[0, g]))
+                    self.coefficients[0, n].s[g] / np.sqrt(abs(self.materials[0].l2[g]))
                     for g in range(in_scatter_max_group)
                     if g != n
                 ])
@@ -976,7 +913,8 @@ class NeutronFluxProfile:
                 warnings.warn(
                     f"Negative flux found when solving for group {n}"
                     " in layer 0! Likely due to an unphysical "
-                    "cross-section value.",
+                    "cross-section value or a previous warning about"
+                    r"layer thickness < 3 × λ_{tr}.",
                     stacklevel=2,
                 )
 
@@ -1235,7 +1173,7 @@ class NeutronFluxProfile:
             differentials.append(self.coefficients[num_layer, n].s[g] * s_diff)
 
         return (
-            -self.diffusion_const[num_layer, n]
+            -self.materials[num_layer].diffusion_const[n]
             * np.sum(differentials, axis=0)
             * _get_sign_of(x)
         )

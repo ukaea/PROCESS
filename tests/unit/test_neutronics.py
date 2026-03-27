@@ -196,9 +196,9 @@ def _diffusion_equation_in_layer(test_profile, n, num_layer, x):
     """
     Get the three terms in the diffusion equation (equation 5 in the paper.
     """
-    diffusion_out = test_profile.diffusion_const[
-        num_layer, n
-    ] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
+    diffusion_out = (test_profile.materials[num_layer].diffusion_const[n]
+        * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
+    )
     total_removal = test_profile.materials[num_layer].sigma_t[
         n
     ] * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x)
