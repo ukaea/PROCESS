@@ -53,9 +53,6 @@ class TFCoil(Model):
         self.build = build
         self.a_tf_inboard_total = tfcoil_variables.a_tf_inboard_total
 
-    def run(self):
-        self.cntrpst()
-
     def run_base_tf(self):
         """Run main tfcoil subroutine without outputting."""
 
@@ -129,7 +126,7 @@ class TFCoil(Model):
 
     def output(self):
         """Run main tfcoil subroutine and write output."""
-        self.cntrpst(output=True)
+        self.run(output=True)
 
     def tf_global_geometry(
         self,
@@ -2178,7 +2175,7 @@ class TFCoil(Model):
             * (1.0e0 + (3.0e0 * hh) / (10.0e0 + np.sqrt(4.0e0 - 3.0e0 * hh)))
         )
 
-    def cntrpst(self, output: bool = False):
+    def run(self, output: bool = False):
         """Evaluates the properties of a TART centrepost
 
         This subroutine evaluates the parameters of the centrepost for a

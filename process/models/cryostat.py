@@ -16,9 +16,6 @@ class Cryostat(Model):
     def __init__(self):
         self.outfile = constants.NOUT
 
-    def output(self):
-        self.cryostat_output()
-
     def run(self):
         """Run the cryostat calculations.
 
@@ -87,7 +84,7 @@ class Cryostat(Model):
             fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
         ) * fwbs_variables.den_steel
 
-    def cryostat_output(self):
+    def output(self):
         """Outputs the cryostat geometry details to the output file."""
         po.oheadr(self.outfile, "Cryostat build")
 

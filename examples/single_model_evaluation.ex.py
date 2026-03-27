@@ -70,7 +70,7 @@ print_values()
 process.data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13] = (
     5.0e-5
 )
-single_run.models.physics.physics()
+single_run.models.physics.run()
 print_values()
 
 # %% [markdown]
@@ -97,7 +97,7 @@ def run_impurities(w_imp_fracs):
         process.data_structure.impurity_radiation_module.f_nd_impurity_electron_array[
             13
         ] = imp_frac
-        single_run.models.physics.physics()
+        single_run.models.physics.run()
 
         # Evaluate constraint equation 15 (L-H threshold constraint)
         con15_value = ConstraintManager.evaluate_constraint(15).normalised_residual
