@@ -196,9 +196,9 @@ def _diffusion_equation_in_layer(test_profile, n, num_layer, x):
     """
     Get the three terms in the diffusion equation (equation 5 in the paper.
     """
-    diffusion_out = (test_profile.materials[num_layer].diffusion_const[n]
-        * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
-    )
+    diffusion_out = test_profile.materials[num_layer].diffusion_const[
+        n
+    ] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
     total_removal = test_profile.materials[num_layer].sigma_t[
         n
     ] * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x)
@@ -315,12 +315,10 @@ def test_two_group():
         assert np.isclose(diffusion_out, total_removal - source_in), (
             "Check that the diffusion equation holds up at an arbitrary point."
         )
-    removal_xs = []
-    for num_layer in range(neutron_profile.n_layers):
-        removal_xs.append(
-            neutron_profile.materials[num_layer].sigma_t
-            - neutron_profile.materials[num_layer].sigma_s.sum(axis=1)
-        )
+    removal_xs = [
+        mat.sigma_t - mat.sigma_s.sum(axis=1)
+        for mat in neutron_profile.materials
+    ]
     assert np.isclose(
         sum(neutron_profile.fluxes),
         neutron_profile.neutron_current_escaped()
@@ -385,12 +383,10 @@ def test_three_group():
         assert np.isclose(diffusion_out, total_removal - source_in), (
             "Check that the diffusion equation holds up at an arbitrary point."
         )
-    removal_xs = []
-    for num_layer in range(neutron_profile.n_layers):
-        removal_xs.append(
-            neutron_profile.materials[num_layer].sigma_t
-            - neutron_profile.materials[num_layer].sigma_s.sum(axis=1)
-        )
+    removal_xs = [
+        mat.sigma_t - mat.sigma_s.sum(axis=1)
+        for mat in neutron_profile.materials
+    ]
     assert np.isclose(
         sum(neutron_profile.fluxes),
         neutron_profile.neutron_current_escaped()
@@ -475,13 +471,10 @@ def test_four_group():
             "Check that the diffusion equation holds up at an arbitrary point."
         )
     assert np.isclose(neutron_profile.neutron_current_at(0), incoming_flux)
-    removal_xs = []
-    for num_layer in range(neutron_profile.n_layers):
-        removal_xs.append(
-            neutron_profile.materials[num_layer].sigma_t
-            - neutron_profile.materials[num_layer].sigma_s.sum(axis=1)
-            - neutron_profile.materials[num_layer].sigma_in.sum(axis=1)
-        )
+    removal_xs = [
+        mat.sigma_t - mat.sigma_s.sum(axis=1) - mat.sigma_in.sum(axis=1)
+        for mat in neutron_profile.materials
+    ]
     assert np.isclose(
         sum(neutron_profile.fluxes),
         neutron_profile.neutron_current_escaped()

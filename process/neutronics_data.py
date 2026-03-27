@@ -756,8 +756,10 @@ class MaterialMacroInfo:
         self._diffusion_const, self._l2 = [], []
         for i in range(self.n_groups):
             _diff_const, _l2 = get_diffusion_coefficient_and_length(
-                self.avg_atomic_mass, self._sigma_total[i],
-                self._sigma_scatter[i,i], self._sigma_in[i,i]
+                self.avg_atomic_mass,
+                self._sigma_total[i],
+                self._sigma_scatter[i, i],
+                self._sigma_in[i, i],
             )
             self._diffusion_const.append(_diff_const)
             self._l2.append(_l2)

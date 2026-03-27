@@ -779,10 +779,10 @@ class NeutronFluxProfile:
         # Parameter to be changed later, to allow solving non-down-scatter
         # only systems by iterating.
         for num_layer, mat in enumerate(self.materials):
-            if self.materials[num_layer].diffusion_const[n] > self.layer_x[num_layer]:
+            if mat.diffusion_const[n] > self.layer_x[num_layer]:
                 warnings.warn(
                     f"Calculation of flux in group {n} may be inaccurate as "
-                    f"layer {num_layer} is thinner than "
+                    f"layer {num_layer}: {mat} is thinner than "
                     r"λ_{tr} "
                     f"of group {n}.",
                     stacklevel=2,
@@ -802,7 +802,9 @@ class NeutronFluxProfile:
                 _coefs = Coefficients([], [])
                 mat = self.materials[num_layer]
                 src_matrix = mat.sigma_s + mat.sigma_in
-                diffusion_const_n = self.materials[num_layer].diffusion_const[n]
+                diffusion_const_n = self.materials[num_layer].diffusion_const[
+                    n
+                ]
                 l2n = mat.l2[n]
                 for g in range(in_scatter_max_group):
                     if g == n:
@@ -859,10 +861,13 @@ class NeutronFluxProfile:
                     )
 
                 self.coefficients[num_layer, n] = _coefs
-            self.coefficients[0, n].s[n] = np.sqrt(abs(self.materials[0].l2[n])) * (
+            self.coefficients[0, n].s[n] = np.sqrt(
+                abs(self.materials[0].l2[n])
+            ) * (
                 -(self.fluxes[n] / self.materials[0].diffusion_const[n])
                 - np.sum([
-                    self.coefficients[0, n].s[g] / np.sqrt(abs(self.materials[0].l2[g]))
+                    self.coefficients[0, n].s[g]
+                    / np.sqrt(abs(self.materials[0].l2[g]))
                     for g in range(in_scatter_max_group)
                     if g != n
                 ])
@@ -914,7 +919,7 @@ class NeutronFluxProfile:
                     f"Negative flux found when solving for group {n}"
                     " in layer 0! Likely due to an unphysical "
                     "cross-section value or a previous warning about"
-                    r"layer thickness < 3 × λ_{tr}.",
+                    r"layer thickness < 3 λ_{tr}.",
                     stacklevel=2,
                 )
 
@@ -1519,7 +1524,7 @@ class NeutronFluxProfile:
                     )
         ax.legend()
         if quantity == "tritium_production":
-            ax.set_title(f"Tritium production profile")
+            ax.set_title("Tritium production profile")
         else:
             ax.set_title(f"Neutron {quantity} profile")
         ax.set_xlabel("Distance from the plasma-fw interface [m]")
