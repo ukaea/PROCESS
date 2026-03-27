@@ -18,9 +18,9 @@ def _diffusion_equation_in_layer(test_profile, n, num_layer, x):
     """
     Get the three terms in the diffusion equation (equation 5 in the paper.
     """
-    diffusion_out = test_profile.diffusion_const[
-        num_layer, n
-    ] * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
+    diffusion_out = (test_profile.materials[num_layer].diffusion_const[n]
+        * test_profile._groupwise_flux_curvature_in_layer(n, num_layer, x)
+    )
     total_removal = test_profile.materials[num_layer].sigma_t[
         n
     ] * test_profile.groupwise_neutron_flux_in_layer(n, num_layer, x)
@@ -154,7 +154,7 @@ def test_one_group_with_fission():
         [x_fw, x_bz],
         [fw_material, bz_material],
     )
-    assert np.isclose(neutron_profile.l2[1, 0], -((58.2869567709 / 100) ** 2))
+    assert np.isclose(neutron_profile.materials[1].l2[0], -((58.2869567709 / 100) ** 2))
     assert np.isclose(
         neutron_profile.neutron_flux_at(-4.79675 / 100), 159.9434
     ), "Minimum flux in FW"
