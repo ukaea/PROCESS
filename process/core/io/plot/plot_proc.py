@@ -19,11 +19,9 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
 from scipy.interpolate import interp1d
 
+import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.models.tfcoil.superconducting as sctf
 from process.core import constants
-import process.data_structure.pfcoil_variables as pfcoil_variables
-import process.models.physics.confinement_time as confine
-import process.models.tfcoil.superconducting as sctf
 from process.core.io.mfile import MFile, MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
 from process.data_structure import impurity_radiation_module
@@ -3443,7 +3441,7 @@ def plot_cryostat(
     ----------
     axis : plt.Axes
         axis object to plot to
-    mfile : mf.MFile
+    mfile : MFile
         MFILE data object
     scan : int
         scan number to use
@@ -13365,7 +13363,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
 def plot_blkt_structure(
     ax: plt.Axes,
     fig: plt.Figure,
-    m_file: mf.MFile,
+    m_file: MFile,
     scan: int,
     radial_build: dict[str, float],
     colour_scheme: Literal[1, 2],
