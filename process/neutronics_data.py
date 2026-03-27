@@ -815,14 +815,14 @@ class MaterialMacroInfo:
         return
 
     @property
-    def sigma_t(self):
+    def sigma_t(self) -> npt.NDArray[np.float64]:
         """total macroscopic cross-section, 1D array of len = n."""
         if not self._populated:
             raise ValueError("Empty cross-section data!")
         return self._sigma_total
 
     @property
-    def sigma_s(self):
+    def sigma_s(self) -> npt.NDArray:
         """
         Macroscopic scattering cross-section from group i to j, forming a 2D
         array of shape (n, n). It should be mostly-upper-triangular, i.e. the
@@ -838,7 +838,7 @@ class MaterialMacroInfo:
         return self._sigma_scatter
 
     @property
-    def sigma_in(self):
+    def sigma_in(self) -> npt.NDArray:
         """
         In-source matrix: for now, it includes a sum of the matrix of (n,2n)
         reactions and fission reactions. Same logic as the scattering matrix,
@@ -853,13 +853,13 @@ class MaterialMacroInfo:
         return self._sigma_in
 
     @property
-    def sigma_triton(self):
+    def sigma_triton(self) -> npt.NDArray[np.float64]:
         if not self._populated:
             raise ValueError("Empty cross-section data!")
         return self._sigma_triton
 
     @property
-    def n_groups(self):
+    def n_groups(self) -> int:
         """
         Number of groups in the group structure.
         Store this attribute upon first retrieval.
