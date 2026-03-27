@@ -12,6 +12,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     build_variables,
     fwbs_variables,
@@ -43,13 +44,12 @@ class TFCoilShapeModel(IntEnum):
     PICTURE_FRAME = 2
 
 
-class TFCoil:
+class TFCoil(Model):
     """Calculates the parameters of a resistive TF coil system for a fusion power plant"""
 
     def __init__(self, build: Build):
         """Initialise Fortran module variables."""
         self.outfile = constants.NOUT  # output file unit
-        self.iprint = 0  # switch for writing to output file (1=yes)
         self.build = build
         self.a_tf_inboard_total = tfcoil_variables.a_tf_inboard_total
 
@@ -126,8 +126,7 @@ class TFCoil:
 
     def output(self):
         """Run main tfcoil subroutine and write output."""
-        self.iprint = 1
-        self.tfcoil(output=bool(self.iprint))
+        self.run(output=True)
 
     def tf_global_geometry(
         self,
@@ -2176,11 +2175,9 @@ class TFCoil:
             * (1.0e0 + (3.0e0 * hh) / (10.0e0 + np.sqrt(4.0e0 - 3.0e0 * hh)))
         )
 
-    def cntrpst(self):
+    def run(self, output: bool = False):
         """Evaluates the properties of a TART centrepost
 
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
         This subroutine evaluates the parameters of the centrepost for a
         tight aspect ratio tokamak. The centrepost is assumed to be tapered,
         i.e. narrowest on the midplane (z=0).
@@ -2468,7 +2465,7 @@ class TFCoil:
         presin = psat + dpres
 
         # Output section
-        if self.iprint == 1:
+        if output:
             po.oheadr(self.outfile, "Centrepost Coolant Parameters")
             po.ovarre(
                 self.outfile,

@@ -8,6 +8,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -36,11 +37,17 @@ logger = logging.getLogger(__name__)
 # FCI         Flow Channel Insert
 
 
-class BlanketLibrary:
+class BlanketLibrary(Model):
     def __init__(self, fw):
         self.outfile = constants.NOUT
 
         self.fw = fw
+
+    def output(self):
+        """This model doesn't have any output"""
+
+    def run(self):
+        """This model doesn't need to be run"""
 
     def component_volumes(self):
         """Calculate the blanket, shield, vacuum vessel and cryostat volumes

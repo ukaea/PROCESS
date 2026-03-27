@@ -86,10 +86,13 @@ class DCLL(InboardBlanket, OutboardBlanket):
                      Design 167, 112380
 
 
-    Note: request for when CCFE Bluemira nutronics work is added: output maximum values, as well as average values, for wall neutronics calculation if possible.
+    Note: request for when CCFE Bluemira neutronics work is added: output maximum values, as well as average values, for wall neutronics calculation if possible.
     """
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+
+    def run(self, output: bool = False):
         self.component_volumes()
         dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
         fwbs_variables.radius_blkt_channel = dia_blkt_channel / 2

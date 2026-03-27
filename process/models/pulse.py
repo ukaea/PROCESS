@@ -2,6 +2,7 @@ import logging
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import (
     constraint_variables,
     numerics,
@@ -15,11 +16,14 @@ from process.data_structure import (
 logger = logging.getLogger(__name__)
 
 
-class Pulse:
+class Pulse(Model):
     def __init__(self):
         self.outfile = constants.NOUT
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+
+    def run(self, output: bool = False):
         """Caller for the pulsed reactor model
 
         This calls the routines relevant to a pulsed reactor scenario.

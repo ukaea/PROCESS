@@ -2,6 +2,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -11,7 +12,7 @@ from process.data_structure import (
 )
 
 
-class Cryostat:
+class Cryostat(Model):
     def __init__(self):
         self.outfile = constants.NOUT
 
@@ -83,7 +84,7 @@ class Cryostat:
             fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
         ) * fwbs_variables.den_steel
 
-    def cryostat_output(self):
+    def output(self):
         """Outputs the cryostat geometry details to the output file."""
         po.oheadr(self.outfile, "Cryostat build")
 

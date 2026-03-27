@@ -5,6 +5,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import fwbs_variables as fwbs
@@ -12,7 +13,7 @@ from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 
 
-class Divertor:
+class Divertor(Model):
     """Module containing divertor routines
 
     This module contains routines relevant for calculating the
@@ -22,7 +23,10 @@ class Divertor:
     def __init__(self):
         self.outfile = constants.NOUT  # output file unit
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+
+    def run(self, output: bool = False):
         """Routine to call the divertor model
 
         This subroutine calls the divertor routine. This routine scales

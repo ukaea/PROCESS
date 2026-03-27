@@ -11,6 +11,7 @@ import process.models.physics.radiation_power as physics_funcs
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     constraint_variables,
     current_drive_variables,
@@ -200,7 +201,7 @@ def ps_fraction_scene(beta: float) -> float:
     return -9e-2 * beta
 
 
-class Physics:
+class Physics(Model):
     def __init__(
         self,
         plasma_profile,
@@ -227,7 +228,12 @@ class Physics:
         self.plasma_transition = plasma_transition
         self.current = plasma_current
 
-    def physics(self):
+    def output(self):
+        self.calculate_effective_charge_ionisation_profiles()
+        self.outplas()
+        self.outtim()
+
+    def run(self):
         """Routine to calculate tokamak plasma physics information
         This routine calculates all the primary plasma physics parameters for a tokamak fusion reactor.
 
@@ -3234,7 +3240,7 @@ class Physics:
 
             self.inductance.output_volt_second_information()
         if stellarator_variables.istell == 0:
-            self.plasma_bootstrap_current.output_bootstrap_current_information()
+            self.plasma_bootstrap_current.output()
 
         po.osubhd(self.outfile, "Fuelling :")
         po.ovarre(
@@ -4735,13 +4741,17 @@ class PlasmaInductance:
         po.oblnkl(self.outfile)
 
 
-class DetailedPhysics:
+class DetailedPhysics(Model):
     """Class to hold detailed physics models for plasma processing."""
 
     def __init__(self, plasma_profile):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
+
+    def output(self):
+        self.run()
+        self.output_detailed_physics()
 
     def run(self):
         # ---------------------------

@@ -6,6 +6,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -24,10 +25,20 @@ from process.models.blankets.blanket_library import (
 logger = logging.getLogger(__name__)
 
 
-class FirstWall:
+class FirstWall(Model):
     def __init__(self):
         self.outfile = constants.NOUT
         self.blanket_library = BlanketLibrary(fw=self)
+
+    def output(self):
+        # First wall geometry
+        self.output_fw_geometry()
+
+        # First wall surface loads
+        self.output_fw_surface_loads()
+
+        # First wall pumping
+        self.output_fw_pumping()
 
     def run(self):
         fwbs_variables.dz_fw_half = self.calculate_first_wall_half_height(

@@ -23,7 +23,10 @@ class ResistiveTFCoil(TFCoil):
     def __init__(self):
         self.outfile = constants.NOUT
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+
+    def run(self, output: bool = False):
         """Run main tfcoil subroutine without outputting.
 
         Parameters
@@ -31,8 +34,6 @@ class ResistiveTFCoil(TFCoil):
         output: bool
 
         """
-        self.iprint = 0
-
         # Set up TF values share by all coil types
         self.run_base_tf()
 

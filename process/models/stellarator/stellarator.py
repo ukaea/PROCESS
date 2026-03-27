@@ -12,6 +12,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -58,7 +59,7 @@ logger = logging.getLogger(__name__)
 KEV = 1e3 * constants.ELECTRON_CHARGE  # Kiloelectron-volt (keV)
 
 
-class Stellarator:
+class Stellarator(Model):
     """Module containing stellarator routines
 
     This module contains routines for calculating the
@@ -118,7 +119,10 @@ class Stellarator:
         self.beta = plasma_beta
         self.bootstrap = plasma_bootstrap
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+
+    def run(self, output: bool = False):
         """Routine to call the physics and engineering modules
         relevant to stellarators
 
