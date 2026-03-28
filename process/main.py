@@ -51,7 +51,7 @@ from process import data_structure
 from process.core import constants, init
 from process.core.io import obsolete_vars as ov
 from process.core.io.mfile import MFile
-from process.core.io.plot import plot_proc
+from process.core.io.plot.plot_proc import plot_proc
 from process.core.io.plot.sankey import plot_sankey_plotly
 from process.core.io.process_config import RunProcessConfig
 from process.core.io.process_funcs import (
@@ -232,7 +232,7 @@ def process_cli(
             if mfile_path.exists():
                 mfile_str = mfile_path.resolve().as_posix()
                 print(f"Plotting mfile {mfile_str}")
-                plot_proc.setup_plot(mfile_path)
+                plot_proc(mfile_path)
                 plot_sankey_plotly(mfile_path)
             else:
                 logger.error(f"Cannot find mfile for plotting {mfile_path}")

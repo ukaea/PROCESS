@@ -2,7 +2,7 @@ from pathlib import Path
 
 import click
 
-from process.core.io.plot.plot_proc import setup_plot
+from process.core.io.plot.plot_proc import plot_proc
 from process.core.io.plot.plot_scans import plot_scan
 from process.core.io.plot.plot_stress_tf import plot_stress
 from process.core.io.plot.sankey import plot_sankey, plot_sankey_plotly
@@ -316,6 +316,6 @@ def plot_tf_stress(plot_selec, save_format, axis_font_size, term_output, input_f
     type=click.Choice(["pdf", "png", "none"]),
 )
 @click.option("-s", "--show", help="show plot", is_flag=True)
-def plot_proc(mfile, scan, demo_ranges, colour, output_format, show):
+def plot_proc_cli(mfile, scan, demo_ranges, colour, output_format, show):
     """Produces a summary of the PROCESS MFILE output."""
-    setup_plot(mfile, scan, demo_ranges, colour, output_format, show)
+    plot_proc(mfile, scan, demo_ranges, colour, output_format, show)

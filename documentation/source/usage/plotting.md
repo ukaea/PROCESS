@@ -12,7 +12,7 @@
 `plot_proc` is used for plotting an overview of the results from an MFILE. It can be run using its own CLI (see [here](https://ukaea.github.io/process/core/io/utilities/) for full details):
 
 ```bash
-python process/core/io/plot_proc.py -f path/to/MFILE.DAT
+process plot summary -f path/to/MFILE.DAT
 ```
 
 or through PROCESS's main CLI:
@@ -32,7 +32,7 @@ An example of a plot proc output PDF for the large tokamak regression test is sh
 Scans can be done in one or two dimensions.
 
 ```bash
-python process/core/io/plot_scans.py -f path/to/MFILE.DAT
+process plot scans -f path/to/MFILE.DAT
 ```
 <figure markdown>
 ![2D_contour_plot](../images/2D_contour_plot_example.png){figures-side, width="100%"}  
@@ -51,7 +51,7 @@ python process/core/io/plot_scans.py -f path/to/MFILE.DAT
 `plot_plotly_sankey` is to plot an interactive `.html` Sankey diagram for looking at the plants power balance. It can be run as follows:
 
 ```bash
-python process/core/io/plot_plotly_sankey.py -m path/to/MFILE.DAT
+process plot sankey -m path/to/MFILE.DAT --format html
 ```
 
 <figure markdown>

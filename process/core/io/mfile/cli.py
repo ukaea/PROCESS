@@ -2,8 +2,8 @@ import json
 
 import click
 
-from process.core.io.comparison import compare_mfiles
 from process.core.io.mfile.base import MFile
+from process.core.io.mfile.comparison import compare_mfiles
 from process.core.io.tools import mfile_arg, mfile_opt, save, scan_opt
 
 

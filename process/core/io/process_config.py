@@ -266,7 +266,13 @@ class RunProcessConfig(ProcessConfig):
 
     filename: str | Path | None = "run_process.conf"
     dictvar: dict[str, str] = field(default_factory=dict, init=False)
+    """Dictionary mapping variable name to new value"""
     del_var: list[str] = field(default_factory=list, init=False)
+    """List of variables to be deleted from IN.DAT"""
+    no_allowed_unfeasible: int = 0
+    """the number of allowed unfeasible points in a sweep"""
+    create_itervar_diff: bool = False
+    """boolean to indicate the creation of a summary file of the iteration variable values at each stage"""
 
     def __post_init__(self):
         super().__post_init__()
@@ -276,8 +282,6 @@ class RunProcessConfig(ProcessConfig):
             self.no_allowed_unfeasible = int(buf)
 
         buf = self.get_attribute("create_itervar_diff")
-        self.create_itervar_diff = False
-        """boolean to indicate the creation of a summary file of the iteration variable values at each stage"""
 
         if buf is not None:
             if buf.lower() in ["true", "y", "yes"]:
@@ -303,10 +307,8 @@ class RunProcessConfig(ProcessConfig):
         """List of constrained equations to be deleted from IN.DAT"""
 
         self.set_del_var()
-        """List of variables to be deleted from IN.DAT"""
 
         self.set_dictvar()
-        """Dictionary mapping variable name to new value (replaces old or gets appended)"""
 
     def get_attribute_csv_list(self, attributename):
         """get class attribute list from configuration file

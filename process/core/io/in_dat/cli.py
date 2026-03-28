@@ -17,12 +17,12 @@ from process.core.io.tools import indat_opt, mfile_opt
 )
 @click.option(
     "-fpi",
-    "--feasuble-point-index",
+    "--feasible-point-index",
     type=int,
     default=-1,
     help="Create indat from the Nth feasible point in mfile",
 )
-def new_indat(mfile, indat, indat_out, feasuble_point_index):
+def new_indat(mfile, indat, indat_out, feasible_point_index):
     """Creates a new IN.DAT using MFILE.DAT iteration variables."""
 
-    write_indat(mfile, indat, indat_out, feasuble_point_index)
+    write_indat(mfile, indat, indat_out, feasible_point_index)

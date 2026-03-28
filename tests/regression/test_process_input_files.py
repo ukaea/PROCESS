@@ -9,12 +9,10 @@ by changes made off of main.
 import logging
 import re
 import shutil
-import traceback
 from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
-from click.testing import CliRunner
 from filelock import FileLock
 from regression_test_assets import RegressionTestAssetCollector
 
@@ -79,19 +77,12 @@ class RegressionTestScenario:
         self.input_file = input_file
         self.scenario_name = input_file.name.replace(".IN.DAT", "")
 
-    def run(self, solver: str):
+    def run(self, solver: str, cli_runner):
         """Runs the scenario input file using PROCESS"""
         logger.info(
             f"Running regression test {self.scenario_name} using input file {self.input_file}"
         )
-        runner = CliRunner()
-        result = runner.invoke(
-            process_cli, ["--input", str(self.input_file), "--solver", solver]
-        )
-        if result.exit_code != 0:
-            raise RuntimeError(
-                f"An error occured while running PROCESS: {result.exception}{''.join(traceback.format_exception(result.exc_info[1]))}"
-            )
+        cli_runner(process_cli, ["--input", str(self.input_file), "--solver", solver])
 
     def compare(
         self, reference_mfile_location: Path, tolerance: float, opt_params_only: bool
@@ -278,6 +269,7 @@ def test_input_file(
     reg_tolerance: float,
     opt_params_only: bool,
     hide_model_logs,
+    cli_runner,
 ):
     """Tests each input file in the 'input_files' directory.
 
@@ -323,7 +315,7 @@ def test_input_file(
         scenario.scenario_name
     )
 
-    scenario.run(solver_name)
+    scenario.run(solver_name, cli_runner)
 
     # reference MFile cannot be found?
     # raise an error after the file is run so that any errors while running the input file

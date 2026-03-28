@@ -13908,7 +13908,7 @@ def create_thickness_builds(m_file, scan: int):
     )
 
 
-def setup_plot(
+def plot_proc(
     mfile: Path,
     scan: int = -1,
     demo_ranges: bool = False,
