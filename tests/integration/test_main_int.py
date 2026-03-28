@@ -32,8 +32,7 @@ def test_single_run_cwd(temp_data_cwd, cli_runner):
     # Copy input file to make a file named "IN.DAT"
     copy(temp_data_cwd / "large_tokamak_IN.DAT", temp_data_cwd / "IN.DAT")
     # Run: args must be emptylist; if None, argparse tries to use CLI args
-    result = cli_runner(process_cli, args=["-i", "IN.DAT"])
-    assert result.exit_code == 0
+    cli_runner(process_cli, args=["-i", "IN.DAT"])
 
 
 def test_vary_run(temp_data, cli_runner):

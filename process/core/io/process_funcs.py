@@ -196,44 +196,15 @@ def check_in_dat():
     in_dat.write_in_dat(output_filename="IN.DAT")
 
 
-def check_logfile(logfile="process.log"):
-    """Checks the log file of the PROCESS output.
-    Stops, if an error occured that needs to be
-    fixed before rerunning.
-    XXX should be deprecated!! and replaced by check_input_error!
-
-    Parameters
-    ----------
-    logfile :
-         (Default value = "process.log")
-    """
-
-    with open(logfile) as outlogfile:
-        errormessage = "Please check the output file for further information."
-        for line in outlogfile:
-            if errormessage in line:
-                print(
-                    "An Error has occured. Please check the output file for more information.",
-                    file=stderr,
-                )
-                exit()
-
-
 def check_input_error(wdir="."):
     """Checks, if an input error has occurred.
     Stops as a consequence.
     Will also fail if the MFILE.DAT isn't found.
     """
     try:
-        mfile_path = Path(wdir) / "MFILE.DAT"
+        mfile = MFile(filename=Path(wdir, "MFILE.DAT"))
 
-        if mfile_path.exists():
-            mfile_path_str = str(mfile_path)
-            mfile = MFile(filename=mfile_path_str)
-        else:
-            raise FileNotFoundError("MFile doesn't exist")
-
-        error_id = mfile.data["error_id"].get_scan(-1)
+        error_id = mfile.get("error_id")
 
         if error_id == 130:
             print(
@@ -293,7 +264,7 @@ def no_unfeasible_mfile(wdir="."):
         return 100000
 
 
-def vary_iteration_variables(itervars, lbs, ubs, generator):
+def vary_iteration_variables(itervars, lbs, ubs, generator, wdir=".", i: int = 0):
     """Routine to change the iteration variables in IN.DAT
     within given bounds.
 

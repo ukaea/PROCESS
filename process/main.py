@@ -297,37 +297,25 @@ class VaryRun:
         init.init_all_module_vars()
         init.init_process(self.data)
 
-        _neqns, itervars = get_neqns_itervars()
-        lbs, ubs = get_variable_range(itervars, config.factor)
-
-        # If config file contains WDIR, use that. Otherwise, use the directory
-        # containing the config file (used when running regression tests in
-        # temp dirs)
-        # TODO Not sure this is required any more
-        wdir = config.wdir or Path(self.config_file).parent
+        _neqns, itervars = get_neqns_itervars(wdir=config.wdir)
+        lbs, ubs = get_variable_range(itervars, config.factor, config.wdir)
 
         # Check IN.DAT exists
         if not input_path.exists():
             raise FileNotFoundError
-
         # TODO add diff ixc summary part
         for i in range(config.niter):
+            print("INP", input_path)
+            print("WDIR", config.wdir)
             print(i, end=" ")
 
-            # Run single runs (SingleRun()) of process as subprocesses. This
-            # is the only way to deal with Fortran "stop" statements when
-            # running VaryRun(), which otherwise cause the Python
-            # interpreter to exit, when we want to vary the parameters and
-            # run again
-            # TODO Don't do this; remove stop statements from Fortran and
-            # handle error codes
             # Run process on an IN.DAT file
             config.run_process(input_path, self.solver)
 
-            check_input_error(wdir=wdir)
+            check_input_error(wdir=config.wdir)
 
-            if not process_stopped():
-                no_unfeasible = no_unfeasible_mfile()
+            if not process_stopped(wdir=config.wdir):
+                no_unfeasible = no_unfeasible_mfile(config.wdir)
                 if no_unfeasible <= config.no_allowed_unfeasible:
                     if no_unfeasible > 0:
                         print(
@@ -347,7 +335,10 @@ class VaryRun:
             else:
                 print("PROCESS has stopped without finishing!")
 
-            vary_iteration_variables(itervars, lbs, ubs, config.generator)
+            print(itervars, lbs, ubs, config.generator, i + 1)
+            input_path, _ = vary_iteration_variables(
+                itervars, lbs, ubs, config.generator, config.wdir, i + 1
+            )
 
         config.error_status2readme()
 
