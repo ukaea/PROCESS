@@ -74,7 +74,7 @@ class Divertor:
                 pv.rminor,
                 pv.aspect,
                 pv.b_plasma_toroidal_on_axis,
-                pv.b_plasma_poloidal_average,
+                pv.b_plasma_surface_poloidal_average,
                 pv.p_plasma_separatrix_mw,
                 dv.f_div_flux_expansion,
                 pv.nd_plasma_separatrix_electron,

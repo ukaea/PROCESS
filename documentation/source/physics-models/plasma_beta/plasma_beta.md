@@ -117,7 +117,7 @@ $$
 
 
 $$
-\overbrace{\langle \beta_p \rangle_{\text{V}}}^{\texttt{beta_poloidal_thermal_vol_avg}} = \frac{2\mu_0 \overbrace{\langle p_{\text{thermal}} \rangle}^{\texttt{pres_plasma_thermal_vol_avg}}}{\underbrace{\langle B_{\text{P,average}} \rangle^2}_{\texttt{b_plasma_poloidal_average}}}
+\overbrace{\langle \beta_p \rangle_{\text{V}}}^{\texttt{beta_poloidal_thermal_vol_avg}} = \frac{2\mu_0 \overbrace{\langle p_{\text{thermal}} \rangle}^{\texttt{pres_plasma_thermal_vol_avg}}}{\underbrace{\langle B_{\text{P,average}} \rangle^2}_{\texttt{b_plasma_surface_poloidal_average}}}
 $$
 
 ### Volume averaged thermal beta
