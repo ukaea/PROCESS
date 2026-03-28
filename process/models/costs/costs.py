@@ -2229,7 +2229,7 @@ class Costs:
         exphts = 0.7e0
 
         #  Pumps and piping system
-        #  N.B. with blktmodel > 0, the blanket is assumed to be helium-cooled,
+        #  N.B. with i_blanket_type_stellarator > 0, the blanket is assumed to be helium-cooled,
         #  but the shield etc. is water-cooled (i_blkt_coolant_type=2). Therefore, a slight
         #  inconsistency exists here...
         cost_variables.cpp = (
