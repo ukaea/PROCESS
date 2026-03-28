@@ -10,7 +10,7 @@ from operator import itemgetter
 import matplotlib.pyplot as plt
 import numpy as np
 
-import process.core.io.mfile.mfile as mf
+from process.core.io.mfile import MFile
 
 
 def _format_fig(ax, fig, label, save, filename, index, inflate, ylabel_suffix, n_mfiles):
@@ -33,7 +33,7 @@ def _format_fig(ax, fig, label, save, filename, index, inflate, ylabel_suffix, n
 
 
 def cost_comp_1990(
-    mfile_list: list[mf.MFile], inflate: float = 1, save: bool = False
+    mfile_list: list[MFile], inflate: float = 1, save: bool = False
 ) -> None:
     """
     Plot bar chart for the orginal 1990 cost model.
@@ -124,7 +124,7 @@ def cost_comp_1990(
         )
 
 
-def cost_comp_2014(mfile_list: list[mf.MFile], inflate: float = 1, save: bool = False):
+def cost_comp_2014(mfile_list: list[MFile], inflate: float = 1, save: bool = False):
     """Plot bar chart for the new 2014 cost model."""
     variables = (
         "s09",  # Buildings

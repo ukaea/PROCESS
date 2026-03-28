@@ -7,8 +7,8 @@ given their values from the output file MFILE.DAT.
 
 import re
 
-import process.core.io.mfile.mfile as mf
 from process.core.io.in_dat.base import InDat
+from process.core.io.mfile import MFile
 
 
 def feasible_point(filename, position: int):
@@ -26,7 +26,7 @@ def feasible_point(filename, position: int):
     scan_point:
         scan number to use when writing new file
     """
-    mfile_data = mf.MFile(filename)
+    mfile_data = MFile(filename)
     scan_point = 0
     num_scans = int(mfile_data.get("isweep", scan=-1) or 1)
 
@@ -71,7 +71,7 @@ def get_iteration_variables(filename, scan):
         dictionary of iteration variables in MFILE and their
         values.
     """
-    mfile_data = mf.MFile(filename)
+    mfile_data = MFile(filename)
     iteration_vars = {}
 
     for value in mfile_data.data:

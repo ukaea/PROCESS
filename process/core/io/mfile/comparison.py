@@ -1,22 +1,22 @@
 """
-
 Python tool for comparing MFILE and outputting differences.
 The tool does not work for MFiles that are not the result of
 a full PROCESS run (ie if an error or exception occured).
-
-Notes:
-    + 24/11/2021: Global dictionary variables moved within the functions
-                to avoid cyclic dependencies. This is because the dicts
-                generation script imports, and inspects, process.
 """
+
+from typing import Literal
+
+from pathlib import Path
+
+from collections.abc import Iterable
 
 import sys
 
 import numpy as np
 from numpy import isfinite
 
-import process.core.io.mfile as mf
 from process.core.io.data_structure_dicts import get_dicts
+from process.core.io.mfile.base import MFile
 
 # Dictionary for parameter descriptions
 DICT_DESCRIPTIONS = get_dicts()["DICT_DESCRIPTIONS"]
@@ -278,7 +278,13 @@ comparison_dict = {
 }
 
 
-def compare_mfiles(files, comparison, acc, save, verbose):
+def compare_mfiles(
+    files: Iterable[Path],
+    comparison: Literal["defaults", "baseline", "blanket", "generic", "all"],
+    acc: float = 5,
+    save: bool = False,
+    verbose: bool = False,
+):
     """Main function for comparing MFILEs
 
     Parameters
@@ -291,7 +297,7 @@ def compare_mfiles(files, comparison, acc, save, verbose):
     n = 2
     mfile_list = []
     for item in files:
-        mfile = mf.MFile(filename=item)
+        mfile = MFile(filename=item)
         if mfile.get("error_status", scan=-1) == 3:
             raise RuntimeError(
                 f"{item} is an MFile from a PROCESS run that did not converge"
@@ -348,8 +354,8 @@ def compare_mfiles(files, comparison, acc, save, verbose):
         if len(norm_vals) >= 1:
             key = v.strip(".").strip(" ")
             des = dts["DICT_DESCRIPTIONS"].get(key, "-")
-            a = norm_vals >= 1.0 + acc / 100.0
-            b = norm_vals <= 1.0 - acc / 100.0
+            a: list[bool] = norm_vals >= 1.0 + acc / 100.0
+            b: list[bool] = norm_vals <= 1.0 - acc / 100.0
             rounded = round((norm_vals[1] - 1) * 100.0, 2)
             vals = f"{values[0]}\t{values[1]}"
             if a[1] or b[1]:

@@ -12,7 +12,7 @@ from matplotlib.sankey import Sankey
 from numpy import sqrt
 from scipy.optimize import minimize
 
-from process.core.io.mfile.mfile import MFile
+from process.core.io.mfile import MFile
 
 try:
     import plotly.graph_objects as go
@@ -34,7 +34,7 @@ def plot_sankey_plotly(m_file: Path):
 
 
 def power_balance_sankey(m_file: Path):
-    m_file = MFile(m_file)
+    m_file: MFile = MFile(m_file)
     p_hcd_injected_total_mw = m_file.get("p_hcd_injected_total_mw", scan=-1)
     p_plasma_ohmic_mw = m_file.get("p_plasma_ohmic_mw", scan=-1)
     p_alpha_total_mw = m_file.get("p_alpha_total_mw", scan=-1)

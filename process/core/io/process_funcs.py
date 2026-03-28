@@ -3,14 +3,13 @@ A selection of functions for using the PROCESS code
 """
 
 import logging
-from os.path import join as pjoin
 from pathlib import Path
 from sys import stderr
 from time import sleep
 
 from process.core.io.data_structure_dicts import get_dicts
-from process.core.io.in_dat.base import InDat
-from process.core.io.mfile.mfile import MFile
+from process.core.io.in_dat import InDat
+from process.core.io.mfile import MFile
 from process.data_structure import numerics
 
 logger = logging.getLogger(__name__)
@@ -22,7 +21,7 @@ def get_neqns_itervars(wdir="."):
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
-    in_dat = InDat(pjoin(wdir, "IN.DAT"))
+    in_dat = InDat(Path(wdir, "IN.DAT"))
 
     ixc_list = in_dat.data["ixc"].get_value
 
@@ -42,7 +41,7 @@ def update_ixc_bounds(wdir="."):
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
-    in_dat = InDat(pjoin(wdir, "IN.DAT"))
+    in_dat = InDat(Path(wdir, "IN.DAT"))
 
     bounds = in_dat.data["bounds"].get_value
 
@@ -75,7 +74,7 @@ def get_variable_range(itervars, factor, wdir="."):
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
-    in_dat = InDat(pjoin(wdir, "IN.DAT"))
+    in_dat = InDat(Path(wdir, "IN.DAT"))
 
     lbs = []
     ubs = []
@@ -251,46 +250,24 @@ def process_stopped(wdir="."):
     """Checks the process Mfile whether it has
     prematurely stopped.
     """
-    # Check for MFILE
     try:
-        m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
-    except FileNotFoundError as err:
-        print(f"No MFILE has been found! FYI:qn {err}", file=stderr)
+        # Process did prematurely exit
+        return MFile(Path(wdir, "MFILE.DAT")).get("error_status") >= 3
+    except KeyError:
+        # Get error status; missing key indicates premature exit of Process
+        # (usually a STOP 1)
+        return True
+    except FileNotFoundError:
+        print("No MFILE has been found!", file=stderr)
         print("Code continues to run!", file=stderr)
         return True
-
-    # Get error status; missing key indicates premature exit of Process
-    # (usually a STOP 1)
-    try:
-        error_status = m_file.data["error_status"].get_scan(-1)
-    except KeyError:
-        return True
-
-    # Process did prematurely exit
-    return error_status >= 3
 
 
 def process_warnings(wdir="."):
     """Checks the process Mfile whether any
     warnings have occurred.
     """
-
-    m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
-    error_status = m_file.data["error_status"].get_scan(-1)
-
-    return error_status >= 2
-
-
-def mfile_exists():
-    """checks whether MFILE.DAT exists"""
-
-    try:
-        with open("MFILE.DAT") as m_file:
-            m_file.close()
-        return True
-
-    except FileNotFoundError:
-        return False
+    return MFile(filename=Path(wdir, "MFILE.DAT")).get("error_status") >= 2
 
 
 def no_unfeasible_mfile(wdir="."):
@@ -298,11 +275,11 @@ def no_unfeasible_mfile(wdir="."):
     in a scan in MFILE.DAT
     """
 
-    m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
+    m_file = MFile(filename=Path(wdir, "MFILE.DAT"))
 
     # no scans
     if not m_file.data["isweep"].exists:
-        if m_file.data["ifail"].get_scan(-1) == 1:
+        if m_file.get("ifail") == 1:
             return 0
         return 1
 
@@ -357,22 +334,18 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
     If the run was a scan, the values of the last scan point
     will be returned.
     """
-    m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
+    m_file = MFile(filename=Path(wdir, "MFILE.DAT"))
 
-    ifail = m_file.data["ifail"].get_scan(-1)
+    ifail = m_file.get("ifail")
 
     # figure of merit objective function
-    objective_function = m_file.data["f"].get_scan(-1)
+    objective_function = m_file.get("f")
 
     # estimate of the constraints
-    constraints = m_file.data["sqsumsq"].get_scan(-1)
+    constraints = m_file.get("sqsumsq")
 
-    table_sol = [
-        m_file.data[f"itvar{var_no + 1:03}"].get_scan(-1) for var_no in range(nvars)
-    ]
-    table_res = [
-        m_file.data[f"normres{con_no + 1:03}"].get_scan(-1) for con_no in range(neqns)
-    ]
+    table_sol = [m_file.get(f"itvar{var_no + 1:03}") for var_no in range(nvars)]
+    table_res = [m_file.get(f"normres{con_no + 1:03}") for con_no in range(neqns)]
 
     if ifail != 1:
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns

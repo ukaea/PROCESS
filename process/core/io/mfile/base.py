@@ -1,34 +1,18 @@
 """
-
 PROCESS MFILE.DAT IO library
-
-process.core.io.mfile.
-
-Notes:
-  + 12/03/2014: Initial version
-  + 12/03/2014: Added MFILE variable class
-  + 12/03/2014: Added MFILE class for containing all info from file.
-  + 12/03/2014: Added ability to read MFILE.DAT into class
-  + 12/03/2014: Added ability write MFILE.DAT from class
-  + 12/05/2014: Fixed mfile issue with strings in MFILE.DAT with no scans
-  + 16/05/2014: Cleaned up MFileVariable
-  + 19/05/2014: Cleaned up MFile and put some functions outside class.
-  + 12/06/2014: Fixed error handling for "variable not in MFILE" errors
-  + 16/06/2014: Fixed library path error; fix in get_scans
-  + 24/11/2021: Global dictionary variables moved within the functions
-                to avoid cyclic dependencies. This is because the dicts
-                generation script imports, and inspects, process.
-
-Compatible with PROCESS version 286
 """
 
 import json
 import logging
+import re
 from collections import OrderedDict
 from pathlib import Path
 from typing import Any
 
 import numpy as np
+
+from process import data_structure
+from process.core.solver import iteration_variables
 
 logger = logging.getLogger(__name__)
 
@@ -205,7 +189,7 @@ class MFile:
     """Class object to store the MFile Objects"""
 
     def __init__(self, filename="MFILE.DAT"):
-        self.filename = filename
+        self.filename = Path(filename)
         self.data = DefaultOrderedDict()
         self.mfile_lines = []
         self.mfile_modules = {}
@@ -242,6 +226,9 @@ class MFile:
 
     def open_mfile(self):
         """Function to open MFILE.DAT"""
+        if not self.filename.is_file():
+            raise FileNotFoundError(f"MFile '{self.filename}' doesn't exist")
+
         with open(self.filename, encoding="utf-8") as mfile:
             self.mfile_lines = mfile.readlines()
 
@@ -583,18 +570,40 @@ def get_unit(variable_desc):
     return None
 
 
-def is_number(val):
-    """Check MFILE data entry
+def get_mfile_initial_ixc_values(file_path: Path):
+    """Initialise the input file and obtain the initial values of the iteration variables
 
     Parameters
     ----------
-    val :
+    file_path :
+        The path to the MFile to get the initial iteration variable values from.
 
+    Notes
+    -----
+    This method initialises a SingleRun. At present, this involves mutating the global
+    data structure so it is not safe to run this method during a PROCESS run.
     """
-    try:
-        float(val)
-        return True
-    except ValueError:
-        pass
+    from process.main import SingleRun
 
-    return False
+    SingleRun(file_path.as_posix())
+    iteration_variables.load_iteration_variables()
+
+    iteration_variable_names = []
+    iteration_variable_values = []
+
+    for i in range(data_structure.numerics.nvar):
+        ivar = data_structure.numerics.ixc[i].item()
+
+        itv = iteration_variables.ITERATION_VARIABLES[ivar]
+
+        iteration_variable_names.append(itv.name)
+        if array := re.match(r"(\w+)\(([0-9]+)\)", itv.name):
+            var_name = array.group(1)
+            index = array.group(2)
+            iteration_variable_values.append(
+                getattr(itv.module, var_name)[int(index) - 1]
+            )
+        else:
+            iteration_variable_values.append(getattr(itv.module, itv.name))
+
+    return iteration_variable_names, iteration_variable_values

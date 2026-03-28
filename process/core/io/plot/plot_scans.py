@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import numpy as np
 
-import process.core.io.mfile.mfile as mf
+from process.core.io.mfile import MFile
 from process.core.io.variable_metadata import var_dicts as meta
 
 
@@ -159,7 +159,7 @@ def plot_scan(
     # -------------------
 
     # Getting the scanned variable name
-    m_file = mf.MFile(filename=input_files[-1])
+    m_file = MFile(filename=input_files[-1])
     nsweep_ref = int(m_file.data["nsweep"].get_scan(-1))
     scan_var_name = nsweep_dict[nsweep_ref]
     # Get the eventual second scan variable
@@ -253,7 +253,7 @@ def plot_scan(
         scan_var_array = {}
         for input_file in input_files:
             # Opening the MFILE.DAT
-            m_file = mf.MFile(filename=input_file)
+            m_file = MFile(filename=input_file)
 
             # Check if the the scan variable is the same for all inputs
             # ---
@@ -720,7 +720,7 @@ def plot_scan(
     # ----------------------------------------------------------------------------------------------
     else:
         # Opening the MFILE.DAT
-        m_file = mf.MFile(filename=input_files[0])
+        m_file = MFile(filename=input_files[0])
 
         # Number of scan points
         n_scan_1 = int(m_file.data["isweep"].get_scan(-1))

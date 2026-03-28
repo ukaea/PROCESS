@@ -7,12 +7,12 @@ from typing import TYPE_CHECKING
 import numpy as np
 from tabulate import tabulate
 
-import process.core.solver.constraints as constraints
 from process import data_structure
 from process.core import constants
 from process.core.final import finalise
-from process.core.io.mfile.mfile import MFile
+from process.core.io.mfile import MFile
 from process.core.process_output import OutputFileManager, ovarre
+from process.core.solver import constraints
 from process.core.solver.iteration_variables import set_scaled_iteration_variable
 from process.core.solver.objectives import objective_function
 from process.models.tfcoil.base import TFConductorModel
