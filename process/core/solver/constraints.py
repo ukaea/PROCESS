@@ -5,7 +5,7 @@ from typing import ClassVar, Literal
 
 import numpy as np
 
-import process.data_structure as data_structure
+from process import data_structure
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.models.physics.physics import BetaComponentLimits

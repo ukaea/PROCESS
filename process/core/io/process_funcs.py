@@ -318,9 +318,10 @@ def vary_iteration_variables(itervars, lbs, ubs, generator):
         new_values += [new_value]
         in_dat.add_parameter(varname, new_value)
 
-    in_dat.write_in_dat(output_filename="IN.DAT")
+    new_path = Path(wdir, f"{i}_IN.DAT")
+    in_dat.write_in_dat(output_filename=new_path)
 
-    return new_values
+    return new_path, new_values
 
 
 def get_solution_from_mfile(neqns, nvars, wdir="."):

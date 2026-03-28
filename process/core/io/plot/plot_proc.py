@@ -19,12 +19,10 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path as mplPath
 from scipy.interpolate import interp1d
 
-import process.data_structure.pfcoil_variables as pfcoil_variables
-import process.models.tfcoil.superconducting as sctf
 from process.core import constants
 from process.core.io.mfile import MFile, MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
-from process.data_structure import impurity_radiation_module
+from process.data_structure import impurity_radiation_module, pfcoil_variables
 from process.models.build import Build
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,

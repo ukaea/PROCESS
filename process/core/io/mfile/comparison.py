@@ -4,13 +4,10 @@ The tool does not work for MFiles that are not the result of
 a full PROCESS run (ie if an error or exception occured).
 """
 
-from typing import Literal
-
-from pathlib import Path
-
-from collections.abc import Iterable
-
 import sys
+from collections.abc import Iterable
+from pathlib import Path
+from typing import Literal
 
 import numpy as np
 from numpy import isfinite
