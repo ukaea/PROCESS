@@ -5081,6 +5081,19 @@ class DetailedPhysics(Model):
             n_charge_ion=1,
         )
 
+        physics_variables.t_plasma_electron_alpha_thermal_collision_profile = self.calculate_electron_ion_collision_time(
+            temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+            nd_plasma_ions=(
+                self.plasma_profile.neprofile.profile_y
+                * (
+                    physics_variables.nd_plasma_alphas_vol_avg
+                    / physics_variables.nd_plasma_electrons_vol_avg
+                )
+            ),
+            plasma_coulomb_log_electron_ion=physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile,
+            n_charge_ion=2,
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -5656,6 +5669,16 @@ class DetailedPhysics(Model):
                 physics_variables.t_plasma_electron_triton_collision_profile[i],
             )
 
+        for i in range(
+            len(physics_variables.t_plasma_electron_alpha_thermal_collision_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-alpha thermal collision time at point {i}",
+                f"(t_plasma_electron_alpha_thermal_collision_profile{i})",
+                physics_variables.t_plasma_electron_alpha_thermal_collision_profile[i],
+            )
+
     @staticmethod
     def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
         """Plot the Larmor radius profile on the given axis."""
@@ -6152,6 +6175,15 @@ class DetailedPhysics(Model):
             )
         ]
 
+        t_plasma_electron_alpha_thermal_collision_profile = [
+            mfile_data.data[
+                f"t_plasma_electron_alpha_thermal_collision_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
         axis.plot(
             np.linspace(0, 1, len(t_plasma_electron_electron_collision_profile)),
             t_plasma_electron_electron_collision_profile,
@@ -6174,6 +6206,14 @@ class DetailedPhysics(Model):
             color="green",
             linestyle="-",
             label=r"$\tau_{e-T}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(t_plasma_electron_alpha_thermal_collision_profile)),
+            t_plasma_electron_alpha_thermal_collision_profile,
+            color="red",
+            linestyle="-",
+            label=r"$\tau_{e-\alpha,thermal}$",
         )
 
         axis.set_yscale("log")
