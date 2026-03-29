@@ -5138,6 +5138,16 @@ class DetailedPhysics(Model):
             * physics_variables.vel_plasma_electron_profile
         )
 
+        # ============================
+        # Spitzer slow down time
+        # ============================
+
+        physics_variables.t_plasma_electron_alpha_spitzer_slow_profile = self.calculate_spitzer_ion_slowing_down_time(
+            m_ion=constants.ALPHA_MASS,
+            plasma_coulomb_log_electron_ion=physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile,
+            n_charge_ion=2,
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -5523,10 +5533,9 @@ class DetailedPhysics(Model):
         """
 
         return (
-            (3 / (4 * np.sqrt(np.pi)))
+            (3 * (2 * np.pi) ** 1.5 * constants.EPSILON0**2)
             * (
                 m_ion
-                * constants.ELECTRON_MASS
                 * (self.plasma_profile.teprofile.profile_y * constants.KILOELECTRON_VOLT)
                 ** 1.5
             )
@@ -5535,6 +5544,7 @@ class DetailedPhysics(Model):
                 * constants.ELECTRON_CHARGE**4
                 * plasma_coulomb_log_electron_ion
                 * n_charge_ion**2
+                * np.sqrt(constants.ELECTRON_MASS)
             )
         )
 
@@ -5845,6 +5855,18 @@ class DetailedPhysics(Model):
                 physics_variables.len_plasma_electron_alpha_thermal_mean_free_path_profile[
                     i
                 ],
+            )
+
+        po.osubhd(self.outfile, "Spitzer slowing down times:")
+
+        for i in range(
+            len(physics_variables.t_plasma_electron_alpha_spitzer_slow_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-alpha Spitzer slowing down time at point {i}",
+                f"(t_plasma_electron_alpha_spitzer_slow_profile{i})",
+                physics_variables.t_plasma_electron_alpha_spitzer_slow_profile[i],
             )
 
     @staticmethod
@@ -6567,6 +6589,46 @@ class DetailedPhysics(Model):
         )
         axis.set_yscale("log")
         axis.set_ylabel("Mean Free Path [m]")
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.minorticks_on()
+        axis.legend()
+
+    @staticmethod
+    def plot_ion_slowing_down_time_profile(
+        axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    ) -> None:
+        """Plot the plasma Spitzer slowing down time on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+
+        """
+        t_plasma_electron_alpha_spitzer_slow_profile = [
+            mfile_data.data[f"t_plasma_electron_alpha_spitzer_slow_profile{i}"].get_scan(
+                scan
+            )
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        axis.plot(
+            np.linspace(0, 1, len(t_plasma_electron_alpha_spitzer_slow_profile)),
+            t_plasma_electron_alpha_spitzer_slow_profile,
+            color="red",
+            linestyle="-",
+            label=r"$\tau_{e-\alpha,Spitzer}$",
+        )
+
+        axis.set_yscale("log")
+        axis.set_ylabel("Spitzer Slowing Down Time [s]")
         axis.set_xlabel("$\\rho \\ [r/a]$")
         axis.grid(True, which="both", linestyle="--", alpha=0.5)
         axis.minorticks_on()
