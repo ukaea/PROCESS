@@ -6,9 +6,11 @@ from enum import IntEnum
 from types import DynamicClassAttribute
 from typing import TYPE_CHECKING
 
+import matplotlib.pyplot as plt
 import numba as nb
 import numpy as np
 
+import process.core.io.mfile as mf
 import process.models.physics.fusion_reactions as reactions
 import process.models.physics.radiation_power as physics_funcs
 from process.core import constants
@@ -5358,3 +5360,456 @@ class DetailedPhysics(Model):
                 f"(plasma_coulomb_log_electron_alpha_thermal_profile{i})",
                 physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile[i],
             )
+
+    @staticmethod
+    def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
+        """Plot the Larmor radius profile on the given axis."""
+        radius_plasma_deuteron_larmor_profile = [
+            mfile_data.data[
+                f"radius_plasma_deuteron_toroidal_larmor_isotropic_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        radius_plasma_triton_larmor_profile = [
+            mfile_data.data[
+                f"radius_plasma_triton_toroidal_larmor_isotropic_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        radius_plasma_deuteron_larmor_profile_mm = [
+            radius * 1e3 for radius in radius_plasma_deuteron_larmor_profile
+        ]
+
+        radius_plasma_triton_larmor_profile_mm = [
+            radius * 1e3 for radius in radius_plasma_triton_larmor_profile
+        ]
+
+        axis.plot(
+            np.linspace(-1, 1, len(radius_plasma_deuteron_larmor_profile_mm)),
+            radius_plasma_deuteron_larmor_profile_mm,
+            color="red",
+            linestyle="-",
+            label=r"$\rho_{Larmor,toroidal,D}$",
+        )
+
+        axis.plot(
+            np.linspace(-1, 1, len(radius_plasma_triton_larmor_profile_mm)),
+            radius_plasma_triton_larmor_profile_mm,
+            color="green",
+            linestyle="-",
+            label=r"$\rho_{Larmor,toroidal,T}$",
+        )
+
+        axis.set_ylabel(r"Larmor Radii [mm]")
+        axis.set_title(r" Toroidal Larmor Radii ($v_{\perp}^2 = 2v_{th}^2$)")
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.minorticks_on()
+        axis.legend()
+
+    @staticmethod
+    def plot_debye_length_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
+        """Plot the Debye length profile on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+
+        """
+        len_plasma_debye_electron_profile = [
+            mfile_data.data[f"len_plasma_debye_electron_profile{i}"].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        # Convert to micrometres (1e-6 m)
+        len_plasma_debye_electron_profile_um = [
+            length * 1e6 for length in len_plasma_debye_electron_profile
+        ]
+
+        axis.plot(
+            np.linspace(0, 1, len(len_plasma_debye_electron_profile_um)),
+            len_plasma_debye_electron_profile_um,
+            color="blue",
+            linestyle="-",
+            label=r"$\lambda_{Debye,e}$",
+        )
+
+        axis.set_ylabel(r"Debye Length [$\mu$m]")
+
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.set_xlim([0, 1.025])
+        axis.minorticks_on()
+        axis.legend()
+
+    @staticmethod
+    def plot_velocity_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int) -> None:
+        """Plot the electron thermal velocity profile on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+        """
+
+        vel_plasma_electron_profile = [
+            mfile_data.data[f"vel_plasma_electron_profile{i}"].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+        vel_plasma_deuteron_profile = [
+            mfile_data.data[f"vel_plasma_deuteron_profile{i}"].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+        vel_plasma_triton_profile = [
+            mfile_data.data[f"vel_plasma_triton_profile{i}"].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+        vel_plasma_alpha_thermal_profile = [
+            mfile_data.data[f"vel_plasma_alpha_thermal_profile{i}"].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        vel_plasma_alpha_birth = mfile_data.data["vel_plasma_alpha_birth"].get_scan(scan)
+
+        axis.plot(
+            np.linspace(0, 1, len(vel_plasma_electron_profile)),
+            vel_plasma_electron_profile,
+            color="blue",
+            linestyle="-",
+            label=r"$v_{e}$",
+        )
+        axis.plot(
+            np.linspace(0, 1, len(vel_plasma_deuteron_profile)),
+            vel_plasma_deuteron_profile,
+            color="pink",
+            linestyle="-",
+            label=r"$v_{D}$",
+        )
+        axis.plot(
+            np.linspace(0, 1, len(vel_plasma_triton_profile)),
+            vel_plasma_triton_profile,
+            color="green",
+            linestyle="-",
+            label=r"$v_{T}$",
+        )
+        axis.plot(
+            np.linspace(0, 1, len(vel_plasma_alpha_thermal_profile)),
+            vel_plasma_alpha_thermal_profile,
+            color="red",
+            linestyle="-",
+            label=r"$v_{\alpha,thermal}$",
+        )
+        axis.axhline(
+            vel_plasma_alpha_birth,
+            color="red",
+            linestyle="--",
+            linewidth=1.5,
+            label=r"$v_{\alpha,birth}$",
+        )
+
+        axis.set_yscale("log")
+        axis.set_ylabel("Velocity [m/s]")
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.set_xlim([0, 1.025])
+        axis.minorticks_on()
+        axis.legend()
+
+    @staticmethod
+    def plot_electron_frequency_profile(
+        axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    ) -> None:
+        """Plot the electron thermal frequency profile on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+        """
+
+        freq_plasma_electron_profile = [
+            mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+        freq_plasma_larmor_toroidal_electron_profile = [
+            mfile_data.data[f"freq_plasma_larmor_toroidal_electron_profile{i}"].get_scan(
+                scan
+            )
+            for i in range(
+                2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        freq_plasma_upper_hybrid_electron_profile = [
+            mfile_data.data[f"freq_plasma_upper_hybrid_profile{i}"].get_scan(scan)
+            for i in range(
+                2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        axis.plot(
+            np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+            np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+            color="red",
+            linestyle="-",
+            label=r"$f_{Larmor,toroidal,e}$ | Fundamental",
+        )
+
+        axis.plot(
+            np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+            2 * np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+            color="red",
+            linestyle="--",
+            label=r"$f_{Larmor,toroidal,e}$ | 2nd harmonic",
+        )
+
+        axis.plot(
+            np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+            3 * np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+            color="red",
+            linestyle=":",
+            label=r"$f_{Larmor,toroidal,e}$ | 3rd harmonic",
+        )
+
+        x = np.linspace(0, 1, len(freq_plasma_electron_profile))
+        y = np.array(freq_plasma_electron_profile) / 1e9
+        # original curve
+        axis.plot(
+            x, y, color="blue", linestyle="-", label=r"$\omega_{p,e}$ | Plasma Frequency"
+        )
+        # mirrored across the y-axis (drawn at negative rho)
+        axis.plot(-x, y, color="blue", linestyle="-", label="_nolegend_")
+
+        axis.plot(
+            np.linspace(-1, 1, len(freq_plasma_upper_hybrid_electron_profile)),
+            np.array(freq_plasma_upper_hybrid_electron_profile) / 1e9,
+            color="purple",
+            linestyle="-",
+            label=r"$\omega_{UH,e}$ | Upper Hybrid",
+        )
+
+        axis.set_xlim(-1.025, 1.025)
+        axis.set_ylim(
+            None, max(freq_plasma_larmor_toroidal_electron_profile) / 1e9 * 1.6
+        )
+
+        axis.set_xlabel("$\\rho$ [r/a]")
+        axis.set_ylabel("Frequency [GHz]")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+
+        # Add secondary x-axis showing radius in metres below the primary axis
+        ax2 = axis.twiny()
+        rmajor = mfile_data.get("rmajor", scan=scan)
+        rminor = mfile_data.get("rminor", scan=scan)
+
+        # Convert normalized radius to actual radius
+        # rho ranges from -1 to 1, which corresponds to r = rmajor - rminor to rmajor + rminor
+        rho_ticks = np.array([-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1])
+        r_ticks = rmajor + rho_ticks * rminor
+
+        ax2.set_xticks(rho_ticks)
+        ax2.set_xticklabels([f"{r:.2f}" for r in r_ticks])
+        ax2.set_xlabel("Radius [m]")
+        ax2.minorticks_on()
+        ax2.set_xlim(axis.get_xlim())
+
+        # Move secondary axis to the bottom
+        ax2.xaxis.set_ticks_position("bottom")
+        ax2.xaxis.set_label_position("bottom")
+        ax2.spines["bottom"].set_position(("outward", 30))
+
+        axis.legend()
+
+    @staticmethod
+    def plot_ion_frequency_profile(
+        axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    ) -> None:
+        """Plot the ion thermal frequency profile on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+
+        """
+
+        freq_plasma_larmor_toroidal_deuteron_profile = [
+            mfile_data.data[f"freq_plasma_larmor_toroidal_deuteron_profile{i}"].get_scan(
+                scan
+            )
+            for i in range(
+                2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        freq_plasma_larmor_toroidal_triton_profile = [
+            mfile_data.data[f"freq_plasma_larmor_toroidal_triton_profile{i}"].get_scan(
+                scan
+            )
+            for i in range(
+                2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        axis.plot(
+            np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_deuteron_profile)),
+            np.array(freq_plasma_larmor_toroidal_deuteron_profile) / 1e6,
+            color="red",
+            linestyle="-",
+            label=r"$f_{Larmor,toroidal,D}$",
+        )
+        axis.plot(
+            np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_triton_profile)),
+            np.array(freq_plasma_larmor_toroidal_triton_profile) / 1e6,
+            color="green",
+            linestyle="-",
+            label=r"$f_{Larmor,toroidal,T}$",
+        )
+
+        axis.set_ylabel("Frequency [MHz]")
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.minorticks_on()
+        axis.legend()
+
+    @staticmethod
+    def plot_plasma_coloumb_logarithms(
+        axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    ) -> None:
+        """Plot the plasma coloumb logarithms on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+
+        """
+        plasma_coulomb_log_electron_electron_profile = [
+            mfile_data.data[f"plasma_coulomb_log_electron_electron_profile{i}"].get_scan(
+                scan
+            )
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        plasma_coulomb_log_electron_deuteron_profile = [
+            mfile_data.data[f"plasma_coulomb_log_electron_deuteron_profile{i}"].get_scan(
+                scan
+            )
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        plasma_coulomb_log_electron_triton_profile = [
+            mfile_data.data[f"plasma_coulomb_log_electron_triton_profile{i}"].get_scan(
+                scan
+            )
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        plasma_coulomb_log_deuteron_triton_profile = [
+            mfile_data.data[f"plasma_coulomb_log_deuteron_triton_profile{i}"].get_scan(
+                scan
+            )
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        plasma_coulomb_log_electron_alpha_thermal_profile = [
+            mfile_data.data[
+                f"plasma_coulomb_log_electron_alpha_thermal_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        axis.plot(
+            np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
+            plasma_coulomb_log_electron_electron_profile,
+            color="blue",
+            linestyle="-",
+            label=r"$ln \Lambda_{e-e}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(plasma_coulomb_log_electron_deuteron_profile)),
+            plasma_coulomb_log_electron_deuteron_profile,
+            color="pink",
+            linestyle="-",
+            label=r"$ln \Lambda_{e-D}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(plasma_coulomb_log_electron_triton_profile)),
+            plasma_coulomb_log_electron_triton_profile,
+            color="green",
+            linestyle="-",
+            label=r"$ln \Lambda_{e-T}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(plasma_coulomb_log_deuteron_triton_profile)),
+            plasma_coulomb_log_deuteron_triton_profile,
+            color="orange",
+            linestyle="-",
+            label=r"$ln \Lambda_{D-T}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(plasma_coulomb_log_electron_alpha_thermal_profile)),
+            plasma_coulomb_log_electron_alpha_thermal_profile,
+            color="red",
+            linestyle="-",
+            label=r"$ln \Lambda_{e-\alpha,thermal}$",
+        )
+
+        axis.set_ylabel("Coulomb Logarithm")
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.minorticks_on()
+        axis.legend()
