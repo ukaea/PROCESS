@@ -13419,6 +13419,7 @@ def main_plot(
     DetailedPhysics.plot_collision_frequency_profile(
         figs[17].add_subplot(235), m_file, scan
     )
+    DetailedPhysics.plot_mean_free_path_profile(figs[17].add_subplot(236), m_file, scan)
 
     ax_electron_freq = figs[18].add_subplot(211)
     DetailedPhysics.plot_electron_frequency_profile(ax_electron_freq, m_file, scan)

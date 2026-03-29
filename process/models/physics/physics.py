@@ -5114,6 +5114,30 @@ class DetailedPhysics(Model):
             1 / physics_variables.t_plasma_electron_alpha_thermal_collision_profile
         )
 
+        # ============================
+        # Mean free paths
+        # ============================
+
+        physics_variables.len_plasma_electron_electron_mean_free_path_profile = (
+            physics_variables.t_plasma_electron_electron_collision_profile
+            * physics_variables.vel_plasma_electron_profile
+        )
+
+        physics_variables.len_plasma_electron_deuteron_mean_free_path_profile = (
+            physics_variables.t_plasma_electron_deuteron_collision_profile
+            * physics_variables.vel_plasma_electron_profile
+        )
+
+        physics_variables.len_plasma_electron_triton_mean_free_path_profile = (
+            physics_variables.t_plasma_electron_triton_collision_profile
+            * physics_variables.vel_plasma_electron_profile
+        )
+
+        physics_variables.len_plasma_electron_alpha_thermal_mean_free_path_profile = (
+            physics_variables.t_plasma_electron_alpha_thermal_collision_profile
+            * physics_variables.vel_plasma_electron_profile
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -5736,6 +5760,49 @@ class DetailedPhysics(Model):
                 f"Electron-alpha thermal collision frequency at point {i}",
                 f"(freq_plasma_electron_alpha_thermal_collision_profile{i})",
                 physics_variables.freq_plasma_electron_alpha_thermal_collision_profile[
+                    i
+                ],
+            )
+
+        po.osubhd(self.outfile, "Mean Free Paths:")
+
+        for i in range(
+            len(physics_variables.len_plasma_electron_electron_mean_free_path_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-electron mean free path at point {i}",
+                f"(len_plasma_electron_electron_mean_free_path_profile{i})",
+                physics_variables.len_plasma_electron_electron_mean_free_path_profile[i],
+            )
+        for i in range(
+            len(physics_variables.len_plasma_electron_deuteron_mean_free_path_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-deuteron mean free path at point {i}",
+                f"(len_plasma_electron_deuteron_mean_free_path_profile{i})",
+                physics_variables.len_plasma_electron_deuteron_mean_free_path_profile[i],
+            )
+        for i in range(
+            len(physics_variables.len_plasma_electron_triton_mean_free_path_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-triton mean free path at point {i}",
+                f"(len_plasma_electron_triton_mean_free_path_profile{i})",
+                physics_variables.len_plasma_electron_triton_mean_free_path_profile[i],
+            )
+        for i in range(
+            len(
+                physics_variables.len_plasma_electron_alpha_thermal_mean_free_path_profile
+            )
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-alpha thermal mean free path at point {i}",
+                f"(len_plasma_electron_alpha_thermal_mean_free_path_profile{i})",
+                physics_variables.len_plasma_electron_alpha_thermal_mean_free_path_profile[
                     i
                 ],
             )
@@ -6369,6 +6436,97 @@ class DetailedPhysics(Model):
         )
         axis.set_yscale("log")
         axis.set_ylabel("Collision Frequency [Hz]")
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.minorticks_on()
+        axis.legend()
+
+    @staticmethod
+    def plot_mean_free_path_profile(
+        axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    ) -> None:
+        """Plot the plasma mean free path on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+
+        """
+        len_plasma_electron_electron_mean_free_path_profile = [
+            mfile_data.data[
+                f"len_plasma_electron_electron_mean_free_path_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        len_plasma_electron_deuteron_mean_free_path_profile = [
+            mfile_data.data[
+                f"len_plasma_electron_deuteron_mean_free_path_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        len_plasma_electron_triton_mean_free_path_profile = [
+            mfile_data.data[
+                f"len_plasma_electron_triton_mean_free_path_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        len_plasma_electron_alpha_thermal_mean_free_path_profile = [
+            mfile_data.data[
+                f"len_plasma_electron_alpha_thermal_mean_free_path_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        axis.plot(
+            np.linspace(0, 1, len(len_plasma_electron_electron_mean_free_path_profile)),
+            len_plasma_electron_electron_mean_free_path_profile,
+            color="blue",
+            linestyle="-",
+            label=r"$\lambda_{mfp,e-e}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(len_plasma_electron_deuteron_mean_free_path_profile)),
+            len_plasma_electron_deuteron_mean_free_path_profile,
+            color="pink",
+            linestyle="-",
+            label=r"$\lambda_{mfp,e-D}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(len_plasma_electron_triton_mean_free_path_profile)),
+            len_plasma_electron_triton_mean_free_path_profile,
+            color="green",
+            linestyle="-",
+            label=r"$\lambda_{mfp,e-T}$",
+        )
+        axis.plot(
+            np.linspace(
+                0, 1, len(len_plasma_electron_alpha_thermal_mean_free_path_profile)
+            ),
+            len_plasma_electron_alpha_thermal_mean_free_path_profile,
+            color="red",
+            linestyle="-",
+            label=r"$\lambda_{mfp,e-\alpha,thermal}$",
+        )
+        axis.set_yscale("log")
+        axis.set_ylabel("Mean Free Path [m]")
         axis.set_xlabel("$\\rho \\ [r/a]$")
         axis.grid(True, which="both", linestyle="--", alpha=0.5)
         axis.minorticks_on()
