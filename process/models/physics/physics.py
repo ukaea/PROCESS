@@ -4925,6 +4925,15 @@ class DetailedPhysics(Model):
             n_charge_ion=2,
         )
 
+        # ============================
+        # Resistivites
+        # ============================
+
+        physics_variables.res_plasma_spitzer_profile = self.calculate_spitzer_resistivity(
+            n_charge=physics_variables.n_charge_plasma_effective_profile,
+            electron_ion_coulomb_log=physics_variables.plasma_coulomb_log_electron_deuteron_profile,
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -5324,6 +5333,38 @@ class DetailedPhysics(Model):
             )
         )
 
+    def calculate_spitzer_resistivity(
+        self, n_charge: float | np.ndarray, electron_ion_coulomb_log: float | np.ndarray
+    ) -> float | np.ndarray:
+        """
+        Calculate the classical Spitzer resistivity for a plasma.
+
+        Parameters
+        ----------
+        n_charge : float | np.ndarray
+            Charge number (Z) of the ion.
+        electron_ion_coulomb_log : float | np.ndarray
+            Coulomb logarithm for electron-ion collisions.
+
+        Returns
+        -------
+        float | np.ndarray
+            Spitzer resistivity (Ohm m).
+        """
+
+        return (
+            (4 * np.sqrt(2 * np.pi) / 3)
+            * (1 / (4 * np.pi * constants.EPSILON0) ** 2)
+            * (
+                n_charge
+                * constants.ELECTRON_CHARGE**2
+                * constants.ELECTRON_MASS**0.5
+                * electron_ion_coulomb_log
+            )
+            / (self.plasma_profile.teprofile.profile_y * constants.KILOELECTRON_VOLT)
+            ** 1.5
+        )
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
         po.oheadr(self.outfile, "Detailed Plasma")
@@ -5642,6 +5683,16 @@ class DetailedPhysics(Model):
                 f"Electron-alpha Spitzer slowing down time at point {i}",
                 f"(t_plasma_electron_alpha_spitzer_slow_profile{i})",
                 physics_variables.t_plasma_electron_alpha_spitzer_slow_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Resistivities:")
+
+        for i in range(len(physics_variables.res_plasma_spitzer_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma Spitzer resistivity at point {i}",
+                f"(res_plasma_spitzer_profile{i})",
+                physics_variables.res_plasma_spitzer_profile[i],
             )
 
     @staticmethod
@@ -6404,6 +6455,44 @@ class DetailedPhysics(Model):
 
         axis.set_yscale("log")
         axis.set_ylabel("Spitzer Slowing Down Time [s]")
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.minorticks_on()
+        axis.legend()
+
+    @staticmethod
+    def plot_resistivity_profile(
+        axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    ) -> None:
+        """Plot the plasma resistivity on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+
+        """
+        res_plasma_spitzer_profile = [
+            mfile_data.data[f"res_plasma_spitzer_profile{i}"].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        axis.plot(
+            np.linspace(0, 1, len(res_plasma_spitzer_profile)),
+            res_plasma_spitzer_profile,
+            color="red",
+            linestyle="-",
+            label=r"$\eta_{Spitzer}$",
+        )
+
+        axis.set_yscale("log")
+        axis.set_ylabel("Resistivity [Ohm m]")
         axis.set_xlabel("$\\rho \\ [r/a]$")
         axis.grid(True, which="both", linestyle="--", alpha=0.5)
         axis.minorticks_on()
