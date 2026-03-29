@@ -1345,6 +1345,9 @@ freq_plasma_larmor_toroidal_triton_profile: list[float] = None
 freq_plasma_upper_hybrid_profile: list[float] = None
 """Profile of upper hybrid frequency in plasma (Hz)"""
 
+t_plasma_electron_electron_collision_profile: list[float] = None
+"""Profile of electron-electron collision time in plasma (s)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1693,7 +1696,8 @@ def init_physics_variables():
         freq_plasma_larmor_toroidal_electron_profile, \
         freq_plasma_larmor_toroidal_deuteron_profile, \
         freq_plasma_larmor_toroidal_triton_profile, \
-        freq_plasma_upper_hybrid_profile
+        freq_plasma_upper_hybrid_profile, \
+        t_plasma_electron_electron_collision_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1984,3 +1988,4 @@ def init_physics_variables():
     freq_plasma_larmor_toroidal_deuteron_profile = []
     freq_plasma_larmor_toroidal_triton_profile = []
     freq_plasma_upper_hybrid_profile = []
+    t_plasma_electron_electron_collision_profile = []
