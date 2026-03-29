@@ -5043,6 +5043,16 @@ class DetailedPhysics(Model):
             for i in range(len(physics_variables.len_plasma_debye_electron_profile))
         ])
 
+        # ============================
+        # Collision times
+        # ============================
+
+        physics_variables.t_plasma_electron_electron_collision_profile = self.calculate_electron_electron_collision_time(
+            temp_plasma_electron_vol_avg_kev=self.plasma_profile.teprofile.profile_y,
+            nd_plasma_electrons_vol_avg=self.plasma_profile.neprofile.profile_y,
+            plasma_coulomb_log_electron_electron=physics_variables.plasma_coulomb_log_electron_electron_profile,
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -5586,6 +5596,18 @@ class DetailedPhysics(Model):
                 physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile[i],
             )
 
+        po.osubhd(self.outfile, "Collision Times:")
+
+        for i in range(
+            len(physics_variables.t_plasma_electron_electron_collision_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-electron collision time at point {i}",
+                f"(t_plasma_electron_electron_collision_profile{i})",
+                physics_variables.t_plasma_electron_electron_collision_profile[i],
+            )
+
     @staticmethod
     def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
         """Plot the Larmor radius profile on the given axis."""
@@ -6034,6 +6056,46 @@ class DetailedPhysics(Model):
         )
 
         axis.set_ylabel("Coulomb Logarithm")
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.minorticks_on()
+        axis.legend()
+
+    @staticmethod
+    def plot_collision_time_profile(
+        axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    ) -> None:
+        """Plot the plasma collision times on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+
+        """
+        t_plasma_electron_electron_collision_profile = [
+            mfile_data.data[f"t_plasma_electron_electron_collision_profile{i}"].get_scan(
+                scan
+            )
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        axis.plot(
+            np.linspace(0, 1, len(t_plasma_electron_electron_collision_profile)),
+            t_plasma_electron_electron_collision_profile,
+            color="blue",
+            linestyle="-",
+            label=r"$\tau_{e-e}$",
+        )
+
+        axis.set_yscale("log")
+        axis.set_ylabel("Collision Time [s]")
         axis.set_xlabel("$\\rho \\ [r/a]$")
         axis.grid(True, which="both", linestyle="--", alpha=0.5)
         axis.minorticks_on()
