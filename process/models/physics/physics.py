@@ -5325,6 +5325,82 @@ class DetailedPhysics(Model):
         """
         return np.sqrt(velocity_1**2 + velocity_2**2)
 
+    @staticmethod
+    @nb.njit(cache=True)
+    def calculate_electron_electron_collision_time(
+        temp_plasma_electron_vol_avg_kev: float | np.ndarray,
+        nd_plasma_electrons_vol_avg: float | np.ndarray,
+        plasma_coulomb_log_electron_electron: float | np.ndarray,
+    ) -> float | np.ndarray:
+        """Calculate the electron-electron collision time for a plasma (τₑₑ).
+
+        Parameters
+        ----------
+        temp_plasma_electron_vol_avg_kev : float | np.ndarray
+            Volume averaged electron temperature in keV.
+        nd_plasma_electrons_vol_avg : float | np.ndarray
+            Volume averaged electron density (m^-3).
+        plasma_coulomb_log_electron_electron : float | np.ndarray
+            Coulomb logarithm for electron-electron collisions.
+
+        Returns
+        -------
+        float | np.ndarray
+            Electron-electron collision time (s).
+        """
+        return (
+            12
+            * np.sqrt(2)
+            * np.pi**1.5
+            * constants.EPSILON0**2
+            * constants.ELECTRON_MASS**0.5
+            * (temp_plasma_electron_vol_avg_kev * constants.KILOELECTRON_VOLT) ** 1.5
+        ) / (
+            plasma_coulomb_log_electron_electron
+            * constants.ELECTRON_CHARGE**4
+            * nd_plasma_electrons_vol_avg
+        )
+
+    @staticmethod
+    @nb.njit(cache=True)
+    def calculate_electron_ion_collision_time(
+        temp_plasma_electron_vol_avg_kev: float | np.ndarray,
+        nd_plasma_ions: float | np.ndarray,
+        plasma_coulomb_log_electron_ion: float | np.ndarray,
+        n_charge_ion: float = 1.0,
+    ) -> float | np.ndarray:
+        """Calculate the electron-ion collision time for a plasma (τₑᵢ).
+
+        Parameters
+        ----------
+        temp_plasma_electron_vol_avg_kev : float | np.ndarray
+            Volume averaged electron temperature in keV.
+        nd_plasma_ions : float | np.ndarray
+            Volume averaged ion density (m^-3).
+        plasma_coulomb_log_electron_ion : float | np.ndarray
+            Coulomb logarithm for electron-ion collisions.
+        n_charge_ion : float
+            Charge number (Z) of the ion.
+
+        Returns
+        -------
+        float | np.ndarray
+            Electron-ion collision time (s).
+        """
+        return (
+            12
+            * np.pi**1.5
+            * constants.EPSILON0**2
+            * constants.ELECTRON_MASS**0.5
+            * (temp_plasma_electron_vol_avg_kev * constants.KILOELECTRON_VOLT) ** 1.5
+        ) / (
+            np.sqrt(2)
+            * nd_plasma_ions
+            * n_charge_ion**2
+            * plasma_coulomb_log_electron_ion
+            * constants.ELECTRON_CHARGE**4
+        )
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
 
