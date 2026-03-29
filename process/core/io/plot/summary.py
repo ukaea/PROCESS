@@ -13417,6 +13417,8 @@ def main_plot(
     ax_larmor = figs[19].add_subplot(414, sharex=ax_electron_freq)
     DetailedPhysics.plot_larmor_radius_profile(ax_larmor, m_file, scan)
 
+    figs[19].subplots_adjust(hspace=0.5)
+
     # Plot poloidal cross-section
     poloidal_cross_section(
         figs[20].add_subplot(121, aspect="equal"),
