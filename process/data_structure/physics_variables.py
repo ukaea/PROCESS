@@ -1369,6 +1369,18 @@ freq_plasma_electron_triton_collision_profile: list[float] = None
 freq_plasma_electron_alpha_thermal_collision_profile: list[float] = None
 """Profile of electron-alpha collision frequency in plasma (Hz)"""
 
+len_plasma_electron_electron_mean_free_path_profile: list[float] = None
+"""Profile of electron-electron mean free path in plasma (m)"""
+
+len_plasma_electron_deuteron_mean_free_path_profile: list[float] = None
+"""Profile of electron-deuteron mean free path in plasma (m)"""
+
+len_plasma_electron_triton_mean_free_path_profile: list[float] = None
+"""Profile of electron-triton mean free path in plasma (m)"""
+
+len_plasma_electron_alpha_thermal_mean_free_path_profile: list[float] = None
+"""Profile of electron-alpha mean free path in plasma (m)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1725,7 +1737,11 @@ def init_physics_variables():
         freq_plasma_electron_electron_collision_profile, \
         freq_plasma_electron_deuteron_collision_profile, \
         freq_plasma_electron_triton_collision_profile, \
-        freq_plasma_electron_alpha_thermal_collision_profile
+        freq_plasma_electron_alpha_thermal_collision_profile, \
+        len_plasma_electron_electron_mean_free_path_profile, \
+        len_plasma_electron_deuteron_mean_free_path_profile, \
+        len_plasma_electron_triton_mean_free_path_profile, \
+        len_plasma_electron_alpha_thermal_mean_free_path_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -2024,3 +2040,7 @@ def init_physics_variables():
     freq_plasma_electron_deuteron_collision_profile = []
     freq_plasma_electron_triton_collision_profile = []
     freq_plasma_electron_alpha_thermal_collision_profile = []
+    len_plasma_electron_electron_mean_free_path_profile = []
+    len_plasma_electron_deuteron_mean_free_path_profile = []
+    len_plasma_electron_triton_mean_free_path_profile = []
+    len_plasma_electron_alpha_thermal_mean_free_path_profile = []
