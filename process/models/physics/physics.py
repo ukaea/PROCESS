@@ -5274,6 +5274,46 @@ class DetailedPhysics(Model):
             * constants.ELECTRON_CHARGE**4
         )
 
+    def calculate_spitzer_ion_slowing_down_time(
+        self,
+        m_ion: float,
+        plasma_coulomb_log_electron_ion: float | np.ndarray,
+        n_charge_ion: float = 1.0,
+    ) -> float:
+        """
+        Calculate the Spitzer slowing down time for ions in a plasma.
+
+        Parameters
+        ----------
+        m_ion : float
+            Mass of the ion (kg).
+        plasma_coulomb_log_electron_ion : float | np.ndarray
+            Coulomb logarithm for electron-ion collisions.
+        n_charge_ion : float
+            Charge number (Z) of the ion.
+
+        Returns
+        -------
+        float
+            Spitzer slowing down time (s).
+        """
+
+        return (
+            (3 / (4 * np.sqrt(np.pi)))
+            * (
+                m_ion
+                * constants.ELECTRON_MASS
+                * (self.plasma_profile.teprofile.profile_y * constants.KILOELECTRON_VOLT)
+                ** 1.5
+            )
+            / (
+                self.plasma_profile.neprofile.profile_y
+                * constants.ELECTRON_CHARGE**4
+                * plasma_coulomb_log_electron_ion
+                * n_charge_ion**2
+            )
+        )
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
         po.oheadr(self.outfile, "Detailed Plasma")
