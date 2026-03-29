@@ -13396,14 +13396,16 @@ def main_plot(
     DetailedPhysics.plot_plasma_coloumb_logarithms(
         figs[17].add_subplot(231), m_file, scan
     )
+    DetailedPhysics.plot_collision_time_profile(figs[17].add_subplot(234), m_file, scan)
 
-    DetailedPhysics.plot_electron_frequency_profile(
-        figs[17].add_subplot(212), m_file, scan
-    )
+    ax_electron_freq = figs[18].add_subplot(211)
+    DetailedPhysics.plot_electron_frequency_profile(ax_electron_freq, m_file, scan)
 
-    DetailedPhysics.plot_ion_frequency_profile(figs[18].add_subplot(311), m_file, scan)
+    ax_ion_freq = figs[18].add_subplot(413, sharex=ax_electron_freq)
+    DetailedPhysics.plot_ion_frequency_profile(ax_ion_freq, m_file, scan)
 
-    DetailedPhysics.plot_larmor_radius_profile(figs[18].add_subplot(313), m_file, scan)
+    ax_larmor = figs[18].add_subplot(414, sharex=ax_electron_freq)
+    DetailedPhysics.plot_larmor_radius_profile(ax_larmor, m_file, scan)
 
     # Plot poloidal cross-section
     poloidal_cross_section(
