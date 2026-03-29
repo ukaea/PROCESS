@@ -5094,6 +5094,26 @@ class DetailedPhysics(Model):
             n_charge_ion=2,
         )
 
+        # ============================
+        # Collision frequencies
+        # ============================
+
+        physics_variables.freq_plasma_electron_electron_collision_profile = (
+            1 / physics_variables.t_plasma_electron_electron_collision_profile
+        )
+
+        physics_variables.freq_plasma_electron_deuteron_collision_profile = (
+            1 / physics_variables.t_plasma_electron_deuteron_collision_profile
+        )
+
+        physics_variables.freq_plasma_electron_triton_collision_profile = (
+            1 / physics_variables.t_plasma_electron_triton_collision_profile
+        )
+
+        physics_variables.freq_plasma_electron_alpha_thermal_collision_profile = (
+            1 / physics_variables.t_plasma_electron_alpha_thermal_collision_profile
+        )
+
     @staticmethod
     @nb.njit(cache=True)
     def calculate_debye_length(
@@ -5679,6 +5699,47 @@ class DetailedPhysics(Model):
                 physics_variables.t_plasma_electron_alpha_thermal_collision_profile[i],
             )
 
+        po.osubhd(self.outfile, "Collision Frequencies:")
+
+        for i in range(
+            len(physics_variables.freq_plasma_electron_electron_collision_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-electron collision frequency at point {i}",
+                f"(freq_plasma_electron_electron_collision_profile{i})",
+                physics_variables.freq_plasma_electron_electron_collision_profile[i],
+            )
+        for i in range(
+            len(physics_variables.freq_plasma_electron_deuteron_collision_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-deuteron collision frequency at point {i}",
+                f"(freq_plasma_electron_deuteron_collision_profile{i})",
+                physics_variables.freq_plasma_electron_deuteron_collision_profile[i],
+            )
+        for i in range(
+            len(physics_variables.freq_plasma_electron_triton_collision_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-triton collision frequency at point {i}",
+                f"(freq_plasma_electron_triton_collision_profile{i})",
+                physics_variables.freq_plasma_electron_triton_collision_profile[i],
+            )
+        for i in range(
+            len(physics_variables.freq_plasma_electron_alpha_thermal_collision_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-alpha thermal collision frequency at point {i}",
+                f"(freq_plasma_electron_alpha_thermal_collision_profile{i})",
+                physics_variables.freq_plasma_electron_alpha_thermal_collision_profile[
+                    i
+                ],
+            )
+
     @staticmethod
     def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
         """Plot the Larmor radius profile on the given axis."""
@@ -6218,6 +6279,96 @@ class DetailedPhysics(Model):
 
         axis.set_yscale("log")
         axis.set_ylabel("Collision Time [s]")
+        axis.set_xlabel("$\\rho \\ [r/a]$")
+        axis.grid(True, which="both", linestyle="--", alpha=0.5)
+        axis.minorticks_on()
+        axis.legend()
+
+    @staticmethod
+    def plot_collision_frequency_profile(
+        axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    ) -> None:
+        """Plot the plasma collision frequencies on the given axis.
+
+        Parameters
+        ----------
+        axis : plt.Axes
+            Axis object to plot on
+        mfile_data : mf.MFile
+            MFILE data object
+        scan : int
+            Scan number to use
+
+        """
+        freq_plasma_electron_electron_collision_profile = [
+            mfile_data.data[
+                f"freq_plasma_electron_electron_collision_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        freq_plasma_electron_deuteron_collision_profile = [
+            mfile_data.data[
+                f"freq_plasma_electron_deuteron_collision_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        freq_plasma_electron_triton_collision_profile = [
+            mfile_data.data[
+                f"freq_plasma_electron_triton_collision_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        freq_plasma_electron_alpha_thermal_collision_profile = [
+            mfile_data.data[
+                f"freq_plasma_electron_alpha_thermal_collision_profile{i}"
+            ].get_scan(scan)
+            for i in range(
+                int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+            )
+        ]
+
+        axis.plot(
+            np.linspace(0, 1, len(freq_plasma_electron_electron_collision_profile)),
+            freq_plasma_electron_electron_collision_profile,
+            color="blue",
+            linestyle="-",
+            label=r"$\nu_{e-e}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(freq_plasma_electron_deuteron_collision_profile)),
+            freq_plasma_electron_deuteron_collision_profile,
+            color="pink",
+            linestyle="-",
+            label=r"$\nu_{e-D}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(freq_plasma_electron_triton_collision_profile)),
+            freq_plasma_electron_triton_collision_profile,
+            color="green",
+            linestyle="-",
+            label=r"$\nu_{e-T}$",
+        )
+
+        axis.plot(
+            np.linspace(0, 1, len(freq_plasma_electron_alpha_thermal_collision_profile)),
+            freq_plasma_electron_alpha_thermal_collision_profile,
+            color="red",
+            linestyle="-",
+            label=r"$\nu_{e-\alpha,thermal}$",
+        )
+        axis.set_yscale("log")
+        axis.set_ylabel("Collision Frequency [Hz]")
         axis.set_xlabel("$\\rho \\ [r/a]$")
         axis.grid(True, which="both", linestyle="--", alpha=0.5)
         axis.minorticks_on()
