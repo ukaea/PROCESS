@@ -13425,6 +13425,8 @@ def main_plot(
         figs[18].add_subplot(231), m_file, scan
     )
 
+    DetailedPhysics.plot_resistivity_profile(figs[18].add_subplot(232), m_file, scan)
+
     ax_electron_freq = figs[19].add_subplot(211)
     DetailedPhysics.plot_electron_frequency_profile(ax_electron_freq, m_file, scan)
 

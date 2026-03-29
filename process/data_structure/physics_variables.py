@@ -1148,6 +1148,9 @@ f_res_plasma_neo: float = None
 res_plasma: float = None
 """plasma resistance (ohm)"""
 
+rho_plasma_spitzer_classical_profile: list[float] = None
+"""Profile of plasma Spitzer classical resistivity (ohm m)"""
+
 
 t_plasma_res_diffusion: float = None
 """plasma current resistive diffusion time (s)"""
@@ -1678,6 +1681,7 @@ def init_physics_variables():
         f_nd_plasma_oxygen_electron, \
         f_res_plasma_neo, \
         res_plasma, \
+        rho_plasma_spitzer_classical_profile, \
         t_plasma_res_diffusion, \
         a_plasma_surface, \
         a_plasma_surface_outboard, \
@@ -1982,6 +1986,7 @@ def init_physics_variables():
     f_nd_plasma_oxygen_electron = 0.0
     f_res_plasma_neo = 0.0
     res_plasma = 0.0
+    rho_plasma_spitzer_classical_profile = []
     t_plasma_res_diffusion = 0.0
     a_plasma_surface = 0.0
     a_plasma_surface_outboard = 0.0
