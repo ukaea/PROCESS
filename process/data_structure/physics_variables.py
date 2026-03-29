@@ -1357,6 +1357,18 @@ t_plasma_electron_triton_collision_profile: list[float] = None
 t_plasma_electron_alpha_thermal_collision_profile: list[float] = None
 """Profile of electron-alpha collision time in plasma (s)"""
 
+freq_plasma_electron_electron_collision_profile: list[float] = None
+"""Profile of electron-electron collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_deuteron_collision_profile: list[float] = None
+"""Profile of electron-deuteron collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_triton_collision_profile: list[float] = None
+"""Profile of electron-triton collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_alpha_thermal_collision_profile: list[float] = None
+"""Profile of electron-alpha collision frequency in plasma (Hz)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1709,7 +1721,11 @@ def init_physics_variables():
         t_plasma_electron_electron_collision_profile, \
         t_plasma_electron_deuteron_collision_profile, \
         t_plasma_electron_triton_collision_profile, \
-        t_plasma_electron_alpha_thermal_collision_profile
+        t_plasma_electron_alpha_thermal_collision_profile, \
+        freq_plasma_electron_electron_collision_profile, \
+        freq_plasma_electron_deuteron_collision_profile, \
+        freq_plasma_electron_triton_collision_profile, \
+        freq_plasma_electron_alpha_thermal_collision_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -2004,3 +2020,7 @@ def init_physics_variables():
     t_plasma_electron_deuteron_collision_profile = []
     t_plasma_electron_triton_collision_profile = []
     t_plasma_electron_alpha_thermal_collision_profile = []
+    freq_plasma_electron_electron_collision_profile = []
+    freq_plasma_electron_deuteron_collision_profile = []
+    freq_plasma_electron_triton_collision_profile = []
+    freq_plasma_electron_alpha_thermal_collision_profile = []
