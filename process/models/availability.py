@@ -16,6 +16,7 @@ from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
+from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
 
@@ -1275,7 +1276,7 @@ class Availability(Model):
                 cv.life_div_fpy,
                 "OP ",
             )
-            if tfv.i_tf_sup == 1:
+            if tfv.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.ovarre(
                     self.outfile,
                     "Max fast neutron fluence on TF coil (n/m2)",
@@ -1399,7 +1400,7 @@ class Availability(Model):
         """
         # SC magnets CP lifetime
         # Rem : only the TF maximum fluence is considered for now
-        if tfv.i_tf_sup == 1:
+        if tfv.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             cplife = (
                 cv.life_plant
                 if fwbsv.neut_flux_cp <= 0.0
