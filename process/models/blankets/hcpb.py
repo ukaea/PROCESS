@@ -1402,7 +1402,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         if physics_variables.itart == 1:
             if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
                 po.osubhd(self.outfile, "(Copper resistive centrepost used)")
-            elif tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
+            elif tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.osubhd(self.outfile, "(Superdonducting magnet centrepost used)")
                 po.ovarre(
                     self.outfile,

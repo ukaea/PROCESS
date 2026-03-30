@@ -69,7 +69,7 @@ def write(models, _outfile):
         models.copper_tf_coil.output()
 
     # Toroidal field coil superconductor model
-    if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
+    if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
         models.sctfcoil.output()
 
     # Toroidal field coil aluminium model
@@ -82,7 +82,7 @@ def write(models, _outfile):
     # Tight aspect ratio machine model
     if (
         data_structure.physics_variables.itart == 1
-        and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTOR
+        and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
     ):
         models.tfcoil.output()
 

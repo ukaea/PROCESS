@@ -289,7 +289,7 @@ class Caller:
             self.models.copper_tf_coil.run()
 
         # Toroidal field coil superconductor model
-        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
+        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             self.models.sctfcoil.run()
 
         if (

@@ -691,7 +691,9 @@ def check_process(inputs):  # noqa: ARG001
                 )
 
         # Call a lvl 3 error if superconductor magnets are used
-        elif data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
+        elif (
+            data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
+        ):
             warn(
                 "Joints res not cal. for SC (itart = 1) TF (data_structure.tfcoil_variables.i_tf_sup = 1)",
                 stacklevel=2,
@@ -769,7 +771,7 @@ def check_process(inputs):  # noqa: ARG001
         if data_structure.tfcoil_variables.i_cp_joints == -1:
             if (
                 data_structure.tfcoil_variables.i_tf_sup
-                == TFConductorModel.SUPERCONDUCTOR
+                == TFConductorModel.SUPERCONDUCTING
             ):
                 data_structure.tfcoil_variables.i_cp_joints = 0
             else:
@@ -896,7 +898,7 @@ def check_process(inputs):  # noqa: ARG001
     # Make sure that plane stress model is not used for resistive magnets
     if (
         data_structure.tfcoil_variables.i_tf_stress_model == 1
-        and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTOR
+        and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
     ):
         raise ProcessValidationError(
             "Use generalized plane strain for resistive magnets (i_tf_stress_model = 0 or 2)"
@@ -954,7 +956,7 @@ def check_process(inputs):  # noqa: ARG001
     # Setting the default cryo-plants efficiencies
     if abs(data_structure.tfcoil_variables.eff_tf_cryo + 1) < 1e-6:
         # The ITER cyoplant efficiency is used for SC
-        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
+        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             data_structure.tfcoil_variables.eff_tf_cryo = 0.13
 
         # Strawbrige plot extrapolation is used for Cryo-Al
@@ -992,7 +994,7 @@ def check_process(inputs):  # noqa: ARG001
             data_structure.tfcoil_variables.i_tf_sup
             == TFConductorModel.WATER_COOLED_COPPER
             or data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.SUPERCONDUCTOR
+            == TFConductorModel.SUPERCONDUCTING
         ):
             # SC magnets
             # Value from DDD11-2 v2 2 (2009)
@@ -1060,7 +1062,7 @@ def check_process(inputs):  # noqa: ARG001
     # Rem : Only verified if the WP thickness is used
     if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 140).any():
         # Minimal WP thickness
-        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
+        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             dr_tf_wp_min = 2.0 * (
                 data_structure.tfcoil_variables.dx_tf_wp_insulation
                 + data_structure.tfcoil_variables.dx_tf_wp_insertion_gap
