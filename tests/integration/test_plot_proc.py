@@ -2,7 +2,7 @@
 
 from shutil import copy
 
-from process.core.io.plot.cli import plot_proc
+from process.core.io.plot.cli import plot_proc_cli
 
 
 def test_input_file(temp_data, mfile_name, cli_runner):
@@ -16,7 +16,7 @@ def test_input_file(temp_data, mfile_name, cli_runner):
     mfile = temp_data / mfile_name
     mfile_str = str(mfile)
     mfile_str = str(mfile)
-    cli_runner(plot_proc, args=["-f", mfile_str])
+    cli_runner(plot_proc_cli, args=["-f", mfile_str])
 
     # Assert a pdf has been created
     assert len(list(temp_data.glob("*.pdf")))
@@ -34,7 +34,7 @@ def test_input_file_cwd(temp_data_cwd, mfile_name, cli_runner):
     copy(temp_data_cwd / mfile_name, temp_data_cwd / "MFILE.DAT")
 
     # Run plot_proc with no args, which will look for the default-named mfile
-    cli_runner(plot_proc, args=["-f", (temp_data_cwd / "MFILE.DAT").as_posix()])
+    cli_runner(plot_proc_cli, args=["-f", (temp_data_cwd / "MFILE.DAT").as_posix()])
 
     # Assert a pdf has been created
     assert len(list(temp_data_cwd.glob("*.pdf")))

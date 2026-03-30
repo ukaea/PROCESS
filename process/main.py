@@ -55,12 +55,6 @@ from process.core.io.plot.plot_proc import plot_proc
 from process.core.io.plot.sankey import plot_sankey_plotly
 from process.core.io.process_config import RunProcessConfig
 from process.core.io.process_funcs import (
-    check_input_error,
-    get_neqns_itervars,
-    get_variable_range,
-    no_unfeasible_mfile,
-    process_stopped,
-    process_warnings,
     vary_iteration_variables,
 )
 from process.core.io.tools import LazyGroup, indat_opt
@@ -284,12 +278,7 @@ class VaryRun:
         FileNotFoundError
             if input file doesn't exist
         """
-        # The input path for the varied input file
-        input_path = self.config_file.parent / "IN.DAT"
-
-        # Taken without much modification from the original run_process.py
-        # Something changes working dir in config lines below
-        config = RunProcessConfig(self.config_file)
+        config = RunProcessConfig.from_file(self.config_file, self.solver)
         config.setup()
 
         setup_loggers(Path(config.wdir) / "process.log")
@@ -297,50 +286,9 @@ class VaryRun:
         init.init_all_module_vars()
         init.init_process(self.data)
 
-        _neqns, itervars = get_neqns_itervars(wdir=config.wdir)
-        lbs, ubs = get_variable_range(itervars, config.factor, config.wdir)
-
-        # Check IN.DAT exists
-        if not input_path.exists():
-            raise FileNotFoundError
         # TODO add diff ixc summary part
-        for i in range(config.niter):
-            print("INP", input_path)
-            print("WDIR", config.wdir)
-            print(i, end=" ")
-
-            # Run process on an IN.DAT file
-            config.run_process(input_path, self.solver)
-
-            check_input_error(wdir=config.wdir)
-
-            if not process_stopped(wdir=config.wdir):
-                no_unfeasible = no_unfeasible_mfile(config.wdir)
-                if no_unfeasible <= config.no_allowed_unfeasible:
-                    if no_unfeasible > 0:
-                        print(
-                            "WARNING: Non feasible point(s) in sweep, "
-                            f"But finished anyway! {no_unfeasible} "
-                        )
-                    if process_warnings():
-                        print(
-                            "\nThere were warnings in the final PROCESS run. "
-                            "Please check the log file!\n"
-                        )
-                    # This means success: feasible solution found
-                    break
-                print(
-                    f"WARNING: {no_unfeasible} non-feasible point(s) in sweep! Rerunning!"
-                )
-            else:
-                print("PROCESS has stopped without finishing!")
-
-            print(itervars, lbs, ubs, config.generator, i + 1)
-            input_path, _ = vary_iteration_variables(
-                itervars, lbs, ubs, config.generator, config.wdir, i + 1
-            )
-
-        config.error_status2readme()
+        for _indat, _mfile, itervars, lbs, ubs in config:
+            vary_iteration_variables(itervars, lbs, ubs, config)
 
 
 class SingleRun:
@@ -406,7 +354,9 @@ class SingleRun:
         if not self.input_file.name.endswith("IN.DAT"):
             raise ValueError("Input filename must end in IN.DAT.")
 
-        self.filename_prefix = self.filepath / self.input_file.name[:-6]
+        name = " " if (name := self.input_file.name[:-6]) == "" else name
+
+        self.filename_prefix = self.filepath / name
 
         # Check input file exists (path specified as CLI argument)
         input_path = Path(self.input_file)
@@ -429,12 +379,18 @@ class SingleRun:
 
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
-        self.output_path = Path(self.filepath, self.filename_prefix.name + "OUT.DAT")
-        data_structure.global_variables.output_prefix = self.filename_prefix.as_posix()
+        self.output_path = Path(
+            self.filepath, self.filename_prefix.name.strip() + "OUT.DAT"
+        )
+        data_structure.global_variables.output_prefix = (
+            self.filename_prefix.as_posix().strip()
+        )
 
     def set_mfile(self):
         """Set the mfile filename."""
-        self.mfile_path = Path(self.filepath, self.filename_prefix.name + "MFILE.DAT")
+        self.mfile_path = Path(
+            self.filepath, self.filename_prefix.name.strip() + "MFILE.DAT"
+        )
 
     def initialise(self):
         """Run the init module to call all initialisation routines."""

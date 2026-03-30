@@ -35,13 +35,13 @@ def get_neqns_itervars(wdir="."):
     return in_dat.number_of_constraints, itervars
 
 
-def update_ixc_bounds(wdir="."):
+def update_ixc_bounds(wdir=".", indat="IN.DAT"):
     """updates the lower and upper bounds in DICT_IXC_BOUNDS
     from IN.DAT
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
-    in_dat = InDat(Path(wdir, "IN.DAT"))
+    in_dat = InDat(Path(wdir, indat))
 
     bounds = in_dat.data["bounds"].get_value
 
@@ -54,7 +54,7 @@ def update_ixc_bounds(wdir="."):
             dicts["DICT_IXC_BOUNDS"][name]["ub"] = float(value["u"])
 
 
-def get_variable_range(itervars, factor, wdir="."):
+def get_variable_range(itervars, factor, wdir=".", indat="IN.DAT"):
     """Returns the lower and upper bounds of the variable range
     for each iteration variable.
 
@@ -74,7 +74,7 @@ def get_variable_range(itervars, factor, wdir="."):
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
-    in_dat = InDat(Path(wdir, "IN.DAT"))
+    in_dat = InDat(Path(wdir, indat))
 
     lbs = []
     ubs = []
@@ -128,18 +128,18 @@ def get_variable_range(itervars, factor, wdir="."):
     return lbs, ubs
 
 
-def check_in_dat():
+def check_in_dat(filename="IN.DAT"):
     """Tests IN.DAT during setup:
     1)Are ixc bounds outside of allowed input ranges?
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
 
-    in_dat = InDat()
+    in_dat = InDat(filename)
 
     # Necessary for the correct use of this function as well as
     # get_variable_range
-    update_ixc_bounds()
+    update_ixc_bounds(indat=filename)
 
     # 1) Are ixc bounds outside of allowed input ranges?
 
@@ -196,13 +196,13 @@ def check_in_dat():
     in_dat.write_in_dat(output_filename="IN.DAT")
 
 
-def check_input_error(wdir="."):
+def check_input_error(wdir=".", mfile="MFILE.DAT"):
     """Checks, if an input error has occurred.
     Stops as a consequence.
     Will also fail if the MFILE.DAT isn't found.
     """
     try:
-        mfile = MFile(filename=Path(wdir, "MFILE.DAT"))
+        mfile = MFile(filename=Path(wdir, mfile))
 
         error_id = mfile.get("error_id")
 
@@ -217,13 +217,13 @@ def check_input_error(wdir="."):
         raise
 
 
-def process_stopped(wdir="."):
+def process_stopped(wdir=".", mfile="MFILE.DAT"):
     """Checks the process Mfile whether it has
     prematurely stopped.
     """
     try:
         # Process did prematurely exit
-        return MFile(Path(wdir, "MFILE.DAT")).get("error_status") >= 3
+        return MFile(Path(wdir, mfile)).get("error_status") >= 3
     except KeyError:
         # Get error status; missing key indicates premature exit of Process
         # (usually a STOP 1)
@@ -234,19 +234,19 @@ def process_stopped(wdir="."):
         return True
 
 
-def process_warnings(wdir="."):
+def process_warnings(wdir=".", mfile="MFILE.DAT"):
     """Checks the process Mfile whether any
     warnings have occurred.
     """
-    return MFile(filename=Path(wdir, "MFILE.DAT")).get("error_status") >= 2
+    return MFile(filename=Path(wdir, mfile)).get("error_status") >= 2
 
 
-def no_unfeasible_mfile(wdir="."):
+def no_unfeasible_mfile(wdir=".", mfile="MFILE.DAT"):
     """returns the number of unfeasible points
     in a scan in MFILE.DAT
     """
 
-    m_file = MFile(filename=Path(wdir, "MFILE.DAT"))
+    m_file = MFile(filename=Path(wdir, mfile))
 
     # no scans
     if not m_file.data["isweep"].exists:
@@ -264,7 +264,7 @@ def no_unfeasible_mfile(wdir="."):
         return 100000
 
 
-def vary_iteration_variables(itervars, lbs, ubs, generator, wdir=".", i: int = 0):
+def vary_iteration_variables(itervars, lbs, ubs, config):
     """Routine to change the iteration variables in IN.DAT
     within given bounds.
 
@@ -285,17 +285,16 @@ def vary_iteration_variables(itervars, lbs, ubs, generator, wdir=".", i: int = 0
     new_values = []
 
     for varname, lbnd, ubnd in zip(itervars, lbs, ubs, strict=False):
-        new_value = generator.uniform(lbnd, ubnd)
+        new_value = config.generator.uniform(lbnd, ubnd)
         new_values += [new_value]
         in_dat.add_parameter(varname, new_value)
 
-    new_path = Path(wdir, f"{i}_IN.DAT")
-    in_dat.write_in_dat(output_filename=new_path)
+    in_dat.write_in_dat(output_filename=Path(config.wdir, config.infile))
 
-    return new_path, new_values
+    return new_values
 
 
-def get_solution_from_mfile(neqns, nvars, wdir="."):
+def get_solution_from_mfile(neqns, nvars, wdir=".", mfile="MFILE.DAT"):
     """returns
     ifail - error_value of VMCON/PROCESS
     the objective functions
@@ -306,7 +305,7 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
     If the run was a scan, the values of the last scan point
     will be returned.
     """
-    m_file = MFile(filename=Path(wdir, "MFILE.DAT"))
+    m_file = MFile(filename=Path(wdir, mfile))
 
     ifail = m_file.get("ifail")
 

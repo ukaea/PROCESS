@@ -11,7 +11,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from shutil import SameFileError, copy
 from sys import stderr
-from time import sleep
 
 import click
 from numpy.random import default_rng
@@ -20,6 +19,12 @@ from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
 from process.core.io.process_funcs import (
     check_in_dat,
+    check_input_error,
+    get_neqns_itervars,
+    get_variable_range,
+    no_unfeasible_mfile,
+    process_stopped,
+    process_warnings,
     set_variable_in_indat,
 )
 
@@ -30,8 +35,6 @@ logger = logging.getLogger(__name__)
 class ProcessConfig:
     """Configuration parameters for PROCESS runs"""
 
-    filename: str | Path = ""
-    """Configuration file name"""
     wdir: Path = field(default_factory=Path.cwd)
     """Working directory"""
     or_in_dat: Path = Path("IN.DAT")
@@ -43,58 +46,127 @@ class ProcessConfig:
     factor: float = 1.5
     """Multiplication factor adjusting the range in which the original
 iteration variables should get varied"""
+    solver: str = "vmcon"
+    """Solver to use"""
     comment: str = " "
     """additional comment to be written into README.txt"""
+    _filename: Path | None = None
+    """filename if supplied"""
+
+    @classmethod
+    def from_file(cls, filename: str | Path, solver: str = "vmcon"):
+        if isinstance(filename, str):
+            filename = Path(filename)
+
+        if not filename.is_file():
+            raise FileNotFoundError(f"Config file '{filename}' not found")
+
+        wdir = (
+            None if (buf := cls.get_attribute(filename, "wdir")) is None else Path(buf)
+        )
+
+        if wdir in {None, Path(".")}:
+            wdir = filename.parent
+
+        or_in_dat = (
+            None
+            if (buf := cls.get_attribute(filename, "ORIGINAL_IN_DAT")) is None
+            else Path(buf)
+        )
+        or_in_dat = (
+            cls.get_attribute(filename, "original_in_dat")
+            if or_in_dat is None
+            else or_in_dat
+        )
+        or_in_dat = Path("ref_IN.DAT") if or_in_dat is None else Path(or_in_dat)
+        if not or_in_dat.is_file():
+            or_in_dat = wdir / or_in_dat
+
+        niter = 10 if (buf := cls.get_attribute(filename, "niter")) is None else int(buf)
+        u_seed = (
+            None
+            if (buf := cls.get_attribute(filename, "seed")) in {None, "None"}
+            else int(buf)
+        )
+        factor = (
+            1.5 if (buf := cls.get_attribute(filename, "factor")) is None else float(buf)
+        )
+
+        comment = cls.get_comment(filename)
+        if not comment:
+            print(f"No comment in config file {filename}")
+
+        return cls(
+            wdir, or_in_dat, niter, u_seed, factor, solver, comment or " ", filename
+        )
+
+    @staticmethod
+    def get_attribute(filename: Path, attributename: str):
+        """gets class attribute from configuration file"""
+
+        with open(filename) as configfile:
+            for line in configfile:
+                condense = line.replace(" ", "")
+                if (condense[0] != "*") and len(condense) > 1 and "=" in line:
+                    varname = line[: line.find("=")]
+                    varname = varname.replace(" ", "")
+                    varname = varname.upper()
+                    auxvar = line[line.find("=") + 1 :]
+                    auxvar = auxvar.replace(" ", "")
+                    auxvar = auxvar.rstrip()
+                    if varname == attributename.upper() and auxvar == "":
+                        return None
+                    if varname == attributename.upper() and auxvar != "":
+                        return auxvar
+
+        return None
+
+    @staticmethod
+    def get_comment(filename):
+        """gets the comment line from the configuration file"""
+        with open(filename) as configfile:
+            for line in configfile:
+                condense = line.replace(" ", "")
+                condense = condense.rstrip()
+                lcase = condense.lower()
+                if len(condense) > 0 and (condense[0] != "*") and lcase[:7] == "comment":
+                    return line[line.find("=") + 1 :]
+        return ""
 
     def __post_init__(self):
-        if isinstance(self.filename, str) and not self.filename:
-            # run_process is not being run by the test suite
-            # Get working dir and input files from run_process.conf
-            self.wdir = (
-                Path(self.wdir)
-                if (buf := self.get_attribute("wdir")) is None
-                else Path(buf)
-            )
-
-            buf = self.get_attribute("ORIGINAL_IN_DAT")
-            if buf is not None:
-                self.or_in_dat = Path(buf)
-        else:
-            self.filename = Path(self.filename)
-            self.wdir = self.filename.parent
-            # TODO It appears that the input file for run_process shouldn't be
-            # called IN.DAT. Calling it ref_IN.DAT for now
-            original_in_dat = self.get_attribute("original_in_dat") or "ref_IN.DAT"
-            self.or_in_dat = self.filename.parent / original_in_dat
+        self._current_iteration = 0
+        self._base_input = "{}_IN.DAT"
+        self._base_output = "{}_MFILE.DAT"
 
         if not isinstance(self.or_in_dat, Path) or not self.or_in_dat.is_file():
             raise FileNotFoundError(
                 f"Error: {self.or_in_dat} does not exist! Create file or modify config file!",
             )
 
-        buf = self.get_attribute("niter")
-        if buf is not None:
-            self.niter = int(buf)
+    def __iter__(self):
+        return self
 
-        buf = self.get_attribute("seed")
-        if buf is not None:
-            if buf == "None":
-                self.u_seed = None
-            else:
-                self.u_seed = int(buf)
+    def __next__(self):
+        _neqns, itervars = get_neqns_itervars(wdir=self.wdir)
+        lbs, ubs = get_variable_range(itervars, self.factor, self.wdir)
+        indat = self._base_input.format(self._current_iteration)
+        mfile = self._base_output.format(self._current_iteration)
+        self._current_iteration += 1
+        if self._current_iteration >= self.niter:
+            self.error_status2readme(mfile=mfile)
+            raise StopIteration
+        self.run_process(self.wdir / indat, self.solver)
+        check_input_error(wdir=self.wdir, mfile=mfile)
 
-        buf = self.get_attribute("factor")
-        if buf is not None:
-            self.factor = float(buf)
-
-        if not self.get_comment():
-            print(f"No comment in config file {self.filename}")
+        return indat, mfile, itervars, lbs, ubs
 
     @property
-    def configfileexists(self):
-        if self.filename is None:
-            return False
-        return Path(self.filename).is_file()
+    def infile(self):
+        return self._base_input.format(self._current_iteration)
+
+    @property
+    def outfile(self):
+        return self._base_output.format(self._current_iteration)
 
     def echo(self):
         """echos the attributes of the class"""
@@ -107,8 +179,8 @@ iteration variables should get varied"""
         if self.u_seed is not None:
             print(f"random seed          {self.u_seed}")
         print(f"variable range factor {self.factor}")
-        if self.filename is not None:
-            print(f"Config file          {self.filename}")
+        if self._filename is not None:
+            print(f"Config file          {self._filename}")
         if self.comment != "":
             print(f"Comment  {self.comment}")
 
@@ -118,14 +190,11 @@ iteration variables should get varied"""
         if not self.wdir.is_dir():
             self.wdir.mkdir(exist_ok=True, parents=True)
 
-        if self.or_in_dat != Path("IN.DAT") or self.wdir != Path.cwd():
-            copy(self.or_in_dat, self.wdir / "IN.DAT")
-        else:
-            copy(self.or_in_dat, "Input_IN.DAT")
+        copy(self.or_in_dat, self.wdir / "0_IN.DAT")
 
-        if self.configfileexists:
+        if self._filename is not None:
             with suppress(SameFileError):
-                copy(self.filename, self.wdir)
+                copy(self._filename, self.wdir)
 
         for file in (
             "OUT.DAT",
@@ -148,10 +217,10 @@ iteration variables should get varied"""
         if self.comment != "":
             Path(self.wdir, "README.txt").write_text(self.comment)
 
-    def error_status2readme(self):
+    def error_status2readme(self, mfile="MFILE.DAT"):
         """appends PROCESS outcome to README.txt"""
 
-        m_file = MFile(filename=self.wdir / "MFILE.DAT")
+        m_file = MFile(filename=self.wdir / mfile)
 
         error_status = (
             f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
@@ -178,49 +247,9 @@ iteration variables should get varied"""
 
         self.modify_in_dat()
 
-        check_in_dat()
+        check_in_dat("0_IN.DAT")
 
         self.generator = default_rng(seed=self.u_seed)
-
-    def get_comment(self):
-        """gets the comment line from the configuration file"""
-
-        if not self.configfileexists:
-            return False
-
-        with open(self.filename) as configfile:
-            for line in configfile:
-                condense = line.replace(" ", "")
-                condense = condense.rstrip()
-                lcase = condense.lower()
-                if len(condense) > 0 and (condense[0] != "*") and lcase[:7] == "comment":
-                    self.comment = line[line.find("=") + 1 :]
-                    return True
-
-            return False
-
-    def get_attribute(self, attributename):
-        """gets class attribute from configuration file"""
-
-        if not self.configfileexists:
-            return None
-
-        with open(self.filename) as configfile:
-            for line in configfile:
-                condense = line.replace(" ", "")
-                if (condense[0] != "*") and len(condense) > 1 and "=" in line:
-                    varname = line[: line.find("=")]
-                    varname = varname.replace(" ", "")
-                    varname = varname.upper()
-                    auxvar = line[line.find("=") + 1 :]
-                    auxvar = auxvar.replace(" ", "")
-                    auxvar = auxvar.rstrip()
-                    if varname == attributename.upper() and auxvar == "":
-                        return None
-                    if varname == attributename.upper() and auxvar != "":
-                        return auxvar
-
-        return None
 
     def run_process(self, input_path: Path, solver: str = "vmcon"):
         """Perform a single run of PROCESS, catching any errors.
@@ -251,8 +280,7 @@ iteration variables should get varied"""
                 )
         except (KeyboardInterrupt, click.exceptions.Abort):
             raise KeyboardInterrupt from None
-        except Exception as e:
-            print(e)
+        except Exception as e:  # noqa: BLE001
             logger.error(
                 f"There was a problem with the PROCESS execution! {e}",
             )
@@ -264,62 +292,80 @@ iteration variables should get varied"""
 class RunProcessConfig(ProcessConfig):
     """Configuration parameters of the run_process.py program"""
 
-    filename: str | Path | None = "run_process.conf"
-    dictvar: dict[str, str] = field(default_factory=dict, init=False)
-    """Dictionary mapping variable name to new value"""
-    del_var: list[str] = field(default_factory=list, init=False)
-    """List of variables to be deleted from IN.DAT"""
     no_allowed_unfeasible: int = 0
     """the number of allowed unfeasible points in a sweep"""
     create_itervar_diff: bool = False
     """boolean to indicate the creation of a summary file of the iteration variable values at each stage"""
+    dictvar: dict[str, str] = field(default_factory=dict)
+    """Dictionary mapping variable name to new value"""
+    del_var: list[str] = field(default_factory=list)
+    """List of variables to be deleted from IN.DAT"""
+    add_ixc: list[str] = field(default_factory=list)
+    """ List of iteration variables to be added to IN.DAT"""
+    del_ixc: list[str] = field(default_factory=list)
+    """List of iteration variables to be deleted from IN.DAT"""
+    add_icc: list[str] = field(default_factory=list)
+    """List of constrained equations to be added to IN.DAT"""
+    del_icc: list[str] = field(default_factory=list)
+    """List of constrained equations to be deleted from IN.DAT"""
 
-    def __post_init__(self):
-        super().__post_init__()
+    @classmethod
+    def from_file(cls, filename: str | Path = "run_process.conf", solver: str = "vmcon"):
+        self = super().from_file(filename, solver)
 
-        buf = self.get_attribute("no_allowed_unfeasible")
-        if buf is not None:
-            self.no_allowed_unfeasible = int(buf)
+        no_allowed_unfeasible = (
+            0
+            if (buf := cls.get_attribute(self._filename, "no_allowed_unfeasible"))
+            is None
+            else int(buf)
+        )
 
-        buf = self.get_attribute("create_itervar_diff")
+        buf = cls.get_attribute(self._filename, "create_itervar_diff")
 
+        create_itervar_diff = False
         if buf is not None:
             if buf.lower() in ["true", "y", "yes"]:
-                self.create_itervar_diff = True
+                create_itervar_diff = True
             elif buf.lower() in ["false", "n", "no"]:
-                self.create_itervar_diff = False
+                create_itervar_diff = False
             else:
                 print(
                     "WARNING: Value for create_itervar_diff is not defined!",
                     file=stderr,
                 )
 
-        self.add_ixc = self.get_attribute_csv_list("add_ixc")
-        """ List of iteration variables to be added to IN.DAT"""
+        add_ixc = cls.get_attribute_csv_list(self._filename, "add_ixc")
+        del_ixc = cls.get_attribute_csv_list(self._filename, "del_ixc")
+        add_icc = cls.get_attribute_csv_list(self._filename, "add_icc")
+        del_icc = cls.get_attribute_csv_list(self._filename, "del_icc")
 
-        self.del_ixc = self.get_attribute_csv_list("del_ixc")
-        """List of iteration variables to be deleted from IN.DAT"""
+        return cls(
+            self.wdir,
+            self.or_in_dat,
+            self.niter,
+            self.u_seed,
+            self.factor,
+            self.solver,
+            self.comment,
+            self._filename,
+            no_allowed_unfeasible,
+            create_itervar_diff,
+            cls.get_dictvar(self._filename),
+            cls.get_del_var(self._filename),
+            add_ixc,
+            del_ixc,
+            add_icc,
+            del_icc,
+        )
 
-        self.add_icc = self.get_attribute_csv_list("add_icc")
-        """List of constrained equations to be added to IN.DAT"""
-
-        self.del_icc = self.get_attribute_csv_list("del_icc")
-        """List of constrained equations to be deleted from IN.DAT"""
-
-        self.set_del_var()
-
-        self.set_dictvar()
-
-    def get_attribute_csv_list(self, attributename):
+    @staticmethod
+    def get_attribute_csv_list(filename, attributename):
         """get class attribute list from configuration file
         expects comma separated values
         """
         attribute_list = []
 
-        if not self.configfileexists:
-            return attribute_list
-
-        with open(self.filename) as configfile:
+        with open(filename) as configfile:
             for line in configfile:
                 condense = line.replace(" ", "").rstrip()
                 lcase = condense.lower()
@@ -334,13 +380,11 @@ class RunProcessConfig(ProcessConfig):
                     attribute_list += buf
         return attribute_list
 
-    def set_del_var(self):
+    @staticmethod
+    def get_del_var(filename):
         """sets the del_var attribute from the config file"""
-
-        if not self.configfileexists:
-            return
-
-        with open(self.filename) as configfile:
+        del_var = []
+        with open(filename) as configfile:
             for line in configfile:
                 condense = line.replace(" ", "")
                 condense = condense.rstrip()
@@ -351,15 +395,14 @@ class RunProcessConfig(ProcessConfig):
                     and (lcase[:8] == "del_var_")
                     and (len(condense) > 8)
                 ):
-                    self.del_var += [condense[8:]]
+                    del_var += [condense[8:]]
+        return del_var
 
-    def set_dictvar(self):
+    @staticmethod
+    def get_dictvar(filename):
         """sets the dictvar attribute from config file"""
-
-        if not self.configfileexists:
-            return
-
-        with open(self.filename) as configfile:
+        dictvar = {}
+        with open(filename) as configfile:
             for line in configfile:
                 condense = line.replace(" ", "")
                 condense = condense.rstrip()
@@ -368,33 +411,57 @@ class RunProcessConfig(ProcessConfig):
                     varname = lcase[: lcase.find("=")]
                     auxvar = condense[condense.find("=") + 1 :]
                     if varname[:4] == "var_" and auxvar != "":
-                        self.dictvar[varname[4:]] = auxvar
+                        dictvar[varname[4:]] = auxvar
+        return dictvar
+
+    def __next__(self):
+        indat, mfile, itervars, lbs, ubs = super().__next__()
+
+        if not process_stopped(wdir=self.wdir, mfile=mfile):
+            no_unfeasible = no_unfeasible_mfile(self.wdir, mfile)
+            if no_unfeasible <= self.no_allowed_unfeasible:
+                if no_unfeasible > 0:
+                    print(
+                        "WARNING: Non feasible point(s) in sweep, "
+                        f"But finished anyway! {no_unfeasible} "
+                    )
+                if process_warnings(self.wdir, mfile):
+                    print(
+                        "\nThere were warnings in the final PROCESS run. "
+                        "Please check the log file!\n"
+                    )
+                    # This means success: feasible solution found
+                    raise StopIteration
+                print(
+                    f"WARNING: {no_unfeasible} non-feasible point(s) in sweep! Rerunning!"
+                )
+        else:
+            print("PROCESS has stopped without finishing!")
+
+        return indat, mfile, itervars, lbs, ubs
 
     def echo(self):
         """echos the values of the current class"""
 
-        print()
         super().echo()
 
         print(f"no. allowed UNFEASIBLE points {self.no_allowed_unfeasible:d}")
         if self.create_itervar_diff:
             print("Set to create a summary file of the iteration variable values!")
 
-        if self.add_ixc != []:
-            print("add_ixc", self.add_ixc)
-        if self.del_ixc != []:
-            print("del_ixc", self.del_ixc)
-        if self.add_icc != []:
-            print("add_icc", self.add_icc)
-        if self.del_icc != []:
-            print("del_icc", self.del_icc)
+        for n, v in (
+            ("add_ixc", self.add_ixc),
+            ("del_ixc", self.del_ixc),
+            ("add_icc", self.add_icc),
+            ("del_icc", self.del_icc),
+        ):
+            if v != []:
+                print(n, v)
+
         for key, value in self.dictvar.items():
             print(f"set {key}  to {value}")
         if self.del_var != []:
             print("del_var", self.del_var)
-
-        print()
-        sleep(1)
 
     def modify_in_dat(self):
         """modifies IN.DAT using the configuration parameters"""
@@ -410,7 +477,7 @@ class RunProcessConfig(ProcessConfig):
     def modify_vars(self):
         """modifies IN.DAT by adding, deleting and modifiying variables"""
 
-        in_dat = InDat()
+        in_dat = InDat(filename="0_IN.DAT")
 
         # add and modify variables
         for key in self.dictvar:
@@ -428,7 +495,7 @@ class RunProcessConfig(ProcessConfig):
             else:
                 in_dat.remove_parameter(key)
 
-        in_dat.write_in_dat(output_filename=self.wdir / "IN.DAT")
+        in_dat.write_in_dat(output_filename=self.wdir / "0_IN.DAT")
 
     def modify_ixc(self):
         """modifies the array of iteration variables in IN.DAT"""
@@ -441,7 +508,7 @@ class RunProcessConfig(ProcessConfig):
             )
             exit()
 
-        in_dat = InDat()
+        in_dat = InDat(filename="0_IN.DAT")
 
         for iter_var in self.add_ixc:
             in_dat.add_iteration_variable(int(iter_var))
@@ -449,7 +516,7 @@ class RunProcessConfig(ProcessConfig):
         for iter_var in self.del_ixc:
             in_dat.remove_iteration_variable(int(iter_var))
 
-        in_dat.write_in_dat(output_filename=self.wdir / "IN.DAT")
+        in_dat.write_in_dat(output_filename=self.wdir / "0_IN.DAT")
 
     def modify_icc(self):
         """modifies the array of constraint equations in IN.DAT"""
@@ -462,7 +529,7 @@ class RunProcessConfig(ProcessConfig):
             )
             exit()
 
-        in_dat = InDat()
+        in_dat = InDat(filename="0_IN.DAT")
 
         for constr in self.add_icc:
             in_dat.add_constraint_equation(int(constr))
@@ -470,4 +537,4 @@ class RunProcessConfig(ProcessConfig):
         for constr in self.del_icc:
             in_dat.remove_constraint_equation(int(constr))
 
-        in_dat.write_in_dat(output_filename=self.wdir / "IN.DAT")
+        in_dat.write_in_dat(output_filename=self.wdir / "0_IN.DAT")
