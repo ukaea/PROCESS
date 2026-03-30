@@ -24,6 +24,7 @@ from process.data_structure import (
     times_variables,
     vacuum_variables,
 )
+from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
 
@@ -406,7 +407,9 @@ class Costs:
         if ife_variables.ife != 1:
             po.oshead(self.outfile, "Magnets")
 
-            if tfcoil_variables.i_tf_sup != 1:  # Resistive TF coils
+            if (
+                tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+            ):  # Resistive TF coils
                 if physics_variables.itart == 1:
                     po.ocosts(
                         self.outfile,
@@ -1465,7 +1468,9 @@ class Costs:
         """
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
 
-        if tfcoil_variables.i_tf_sup != 1:  # Resistive TF coils
+        if (
+            tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+        ):  # Resistive TF coils
             #  Account 222.1.1 : Inboard TF coil legs
 
             cost_variables.c22211 = (
@@ -2073,7 +2078,7 @@ class Costs:
 
         #  Account 225.1.2 : TF coil breakers (zero cost for copper coils)
 
-        if tfcoil_variables.i_tf_sup == 1:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             cost_variables.c22512 = 1.0e-6 * (
                 cost_variables.uctfbr
                 * tfcoil_variables.n_tf_coils
@@ -2109,7 +2114,7 @@ class Costs:
 
         #  Account 225.1.5 : TF coil bussing
 
-        if tfcoil_variables.i_tf_sup != 1:
+        if tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING:
             cost_variables.c22515 = (
                 1.0e-6 * cost_variables.uctfbus * tfcoil_variables.m_tf_bus
             )
