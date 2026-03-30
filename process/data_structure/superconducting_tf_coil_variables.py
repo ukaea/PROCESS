@@ -386,5 +386,5 @@ def init_superconducting_tf_coil_variables():
     f_a_tf_turn_cable_space_cooling = 0.0
     c_tf_turn_cables_critical = 0.0
     j_tf_superconductor = 0.0
-    i_tf_turn_type = 0
+    i_tf_turn_type = 1
     vv_stress_quench = 0.0

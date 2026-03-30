@@ -1,6 +1,9 @@
 from process import data_structure
 from process.core.log import logging_model_handler
 from process.models.tfcoil.base import TFConductorModel
+from process.models.tfcoil.superconducting import (
+    SuperconductingTFTurnType,
+)
 
 
 def write(models, _outfile):
@@ -70,7 +73,20 @@ def write(models, _outfile):
 
     # Toroidal field coil superconductor model
     if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-        models.sctfcoil.output()
+        if (
+            SuperconductingTFTurnType(
+                data_structure.superconducting_tf_coil_variables.i_tf_turn_type
+            )
+            == SuperconductingTFTurnType.CABLE_IN_CONDUIT
+        ):
+            models.cicc_sctfcoil.output()
+        elif (
+            SuperconductingTFTurnType(
+                data_structure.superconducting_tf_coil_variables.i_tf_turn_type
+            )
+            == SuperconductingTFTurnType.CROSS_CONDUCTOR
+        ):
+            models.croco_sctfcoil.output()
 
     # Toroidal field coil aluminium model
     if (

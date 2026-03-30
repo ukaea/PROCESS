@@ -14,7 +14,11 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.models.tfcoil import superconducting as sctf
-from process.models.tfcoil.superconducting import SuperconductingTFCoil
+from process.models.tfcoil.superconducting import (
+    CICCSuperconductingTFCoil,
+    CROCOSuperconductingTFCoil,
+    SuperconductingTFCoil,
+)
 
 
 @pytest.fixture
@@ -25,6 +29,26 @@ def sctfcoil():
     :rtype: process.sctfcoil.SuperconductingTFCoil
     """
     return SuperconductingTFCoil()
+
+
+@pytest.fixture
+def cicc_sctfcoil():
+    """Provides CICCSuperconductingTFCoil object for testing.
+
+    :returns: initialised CICCSuperconductingTFCoil object
+    :rtype: process.sctfcoil.CICCSuperconductingTFCoil
+    """
+    return CICCSuperconductingTFCoil()
+
+
+@pytest.fixture
+def croco_sctfcoil():
+    """Provides CROCOSuperconductingTFCoil object for testing.
+
+    :returns: initialised CROCOSuperconductingTFCoil object
+    :rtype: process.sctfcoil.CROCOSuperconductingTFCoil
+    """
+    return CROCOSuperconductingTFCoil()
 
 
 class ProtectParam(NamedTuple):
@@ -335,7 +359,7 @@ class SuperconParam(NamedTuple):
         ),
     ],
 )
-def test_supercon(superconparam, monkeypatch, sctfcoil):
+def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     """
     Automatically generated Regression Unit Test for supercon.
 
@@ -420,7 +444,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         bc20m,
         tc0m,
         c_turn_cables_critical,
-    ) = sctfcoil.tf_cable_in_conduit_superconductor_properties(
+    ) = cicc_sctfcoil.tf_cable_in_conduit_superconductor_properties(
         i_tf_superconductor=superconparam.i_tf_superconductor,
         a_tf_turn_cable_space=superconparam.a_tf_turn_cable_space,
         a_tf_turn=superconparam.a_tf_turn,
@@ -1115,7 +1139,9 @@ class TfIntegerTurnGeomParam(NamedTuple):
         ),
     ],
 )
-def test_tf_cable_in_conduit_integer_turn_geometry(tfintegerturngeomparam, sctfcoil):
+def test_tf_cable_in_conduit_integer_turn_geometry(
+    tfintegerturngeomparam, cicc_sctfcoil
+):
     """
     Automatically generated Regression Unit Test for tf_cable_in_conduit_integer_turn_geometry.
 
@@ -1143,7 +1169,7 @@ def test_tf_cable_in_conduit_integer_turn_geometry(tfintegerturngeomparam, sctfc
         dr_tf_turn_cable_space,
         dx_tf_turn_cable_space,
         dx_tf_turn_cable_space_average,
-    ) = sctfcoil.tf_cable_in_conduit_integer_turn_geometry(
+    ) = cicc_sctfcoil.tf_cable_in_conduit_integer_turn_geometry(
         dr_tf_wp_with_insulation=tfintegerturngeomparam.dr_tf_wp_with_insulation,
         dx_tf_wp_insulation=tfintegerturngeomparam.dx_tf_wp_insulation,
         dx_tf_wp_insertion_gap=tfintegerturngeomparam.dx_tf_wp_insertion_gap,
@@ -1368,7 +1394,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
     ],
 )
 def test_tf_cable_in_conduit_averaged_turn_geometry(
-    tfaveragedturngeomparam, monkeypatch, sctfcoil
+    tfaveragedturngeomparam, monkeypatch, cicc_sctfcoil
 ):
     """
     Automatically generated Regression Unit Test for tf_cable_in_conduit_averaged_turn_geometry.
@@ -1397,7 +1423,7 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
         dx_tf_turn_cable_space_average,
         _a_tf_turn_cable_space_effective,
         f_a_tf_turn_cable_space_cooling,
-    ) = sctfcoil.tf_cable_in_conduit_averaged_turn_geometry(
+    ) = cicc_sctfcoil.tf_cable_in_conduit_averaged_turn_geometry(
         j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
         dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
         dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
