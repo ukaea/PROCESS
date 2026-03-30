@@ -24,6 +24,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
+from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
 
@@ -1089,7 +1090,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # CP fast neutron flux (E > 0.1 MeV) [m^{-2}.s^}{-1}]
         neut_flux_cp = 0
 
-        if tfcoil_variables.i_tf_sup == 1:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             # Effecting shield width, removing steel structures
             sh_width_eff = sh_width * (1.0 - f_steel_struct)
 
@@ -1167,7 +1168,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # ------------
         # From Pfus = 1 GW ST MCNP neutronic calculations assuming
         # Tungsten carbyde with 13% water cooling fraction
-        if tfcoil_variables.i_tf_sup == 2:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             pnuc_cp_tf = (pneut / 800) * np.exp(3.882 - 16.69 * sh_width_eff)
 
             # WARINING, this is an extraoilation from TF heat ...
@@ -1399,9 +1400,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         #  ST centre post
         if physics_variables.itart == 1:
-            if tfcoil_variables.i_tf_sup == 0:
+            if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
                 po.osubhd(self.outfile, "(Copper resistive centrepost used)")
-            elif tfcoil_variables.i_tf_sup == 1:
+            elif tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
                 po.osubhd(self.outfile, "(Superdonducting magnet centrepost used)")
                 po.ovarre(
                     self.outfile,
@@ -1410,7 +1411,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     fwbs_variables.neut_flux_cp,
                     "OP ",
                 )
-            elif tfcoil_variables.i_tf_sup == 2:
+            elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
                 po.osubhd(self.outfile, "(Aluminium magnet centrepost used)")
 
             po.ovarre(
