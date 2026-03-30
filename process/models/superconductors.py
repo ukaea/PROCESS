@@ -1,4 +1,6 @@
 import logging
+from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 from scipy import optimize
@@ -7,6 +9,68 @@ from process.core.exceptions import ProcessValueError
 from process.data_structure import rebco_variables
 
 logger = logging.getLogger(__name__)
+
+
+class SuperconductorType(IntEnum):
+    """Enumeration of superconductor types."""
+
+    LOW_TEMPERATURE = (1, "LTS")
+    HIGH_TEMPERATURE = (2, "HTS")
+
+    def __new__(cls, value, abbreviation):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._abbreviation_ = abbreviation
+        return obj
+
+    @DynamicClassAttribute
+    def abbreviation(self):
+        return self._abbreviation_
+
+
+class SuperconductorModel(IntEnum):
+    """Enumeration of superconductor models."""
+
+    ITER_NB3SN = (
+        1,
+        SuperconductorType.LOW_TEMPERATURE,
+        "ITER Nb3Sn critical surface model",
+    )
+    BI2212 = (2, SuperconductorType.HIGH_TEMPERATURE, "Bi-2212")
+    OLD_LUBELL_NBTI = (3, SuperconductorType.LOW_TEMPERATURE, "Old Lubell NbTi")
+    USER_DEFINED_NB3SN = (
+        4,
+        SuperconductorType.LOW_TEMPERATURE,
+        "User-defined ITER Nb₃Sn",
+    )
+    WST_NB3SN = (5, SuperconductorType.LOW_TEMPERATURE, "Western Superconducting Nb₃Sn")
+    CROCO_REBCO = (6, SuperconductorType.HIGH_TEMPERATURE, "CROCO REBCO")
+    DURHAM_NBTI = (7, SuperconductorType.LOW_TEMPERATURE, "Durham Ginzburg-Landau NbTi")
+    DURHAM_REBCO = (
+        8,
+        SuperconductorType.HIGH_TEMPERATURE,
+        "Durham Ginzburg-Landau REBCO",
+    )
+    HAZELTON_ZHAI_REBCO = (9, SuperconductorType.HIGH_TEMPERATURE, "Hazelton-Zhai REBCO")
+
+    def __new__(cls, value, method, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._method_ = method
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def method(self):
+        return self._method_
+
+    @DynamicClassAttribute
+    def abbreviation(self):
+        return self.method.abbreviation
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]:
