@@ -4,6 +4,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import (
     build_variables,
     cost_2015_variables,
@@ -22,7 +23,7 @@ from process.data_structure import (
 logger = logging.getLogger(__name__)
 
 
-class Costs2015:
+class Costs2015(Model):
     def __init__(self):
         self.outfile = constants.NOUT
 

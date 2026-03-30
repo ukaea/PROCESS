@@ -94,6 +94,7 @@ class Costs:
             self.coelc()
 
     def output(self):
+        self.run()
         if cost_variables.output_costs == 0:
             return
 

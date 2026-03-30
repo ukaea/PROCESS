@@ -9,6 +9,7 @@ from process.core import (
     process_output as po,
 )
 from process.core.exceptions import ProcessError, ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     current_drive_variables,
     heat_transport_variables,
@@ -1541,7 +1542,7 @@ class LowerHybrid:
         )
 
 
-class CurrentDrive:
+class CurrentDrive(Model):
     def __init__(
         self,
         plasma_profile: PlasmaProfile,
@@ -1559,6 +1560,9 @@ class CurrentDrive:
         self.lower_hybrid = lower_hybrid
         self.neutral_beam = neutral_beam
         self.electron_bernstein = electron_bernstein
+
+    def run(self):
+        """This model doesn't need to be run"""
 
     def cudriv(self):
         """Calculate the current drive power requirements.
@@ -2294,7 +2298,7 @@ class CurrentDrive:
             * (c_hcd_driven / p_hcd_injected)
         )
 
-    def output_current_drive(self):
+    def output(self):
         """Output the current drive information to the output file.
         This method writes the current drive information to the output file.
         """

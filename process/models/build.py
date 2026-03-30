@@ -4,6 +4,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -25,10 +26,17 @@ from process.models.tfcoil.base import TFCoilShapeModel
 logger = logging.getLogger(__name__)
 
 
-class Build:
+class Build(Model):
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def output(self):
+        # Radial build
+        self.calculate_radial_build(output=True)
+
+        # Vertical build
+        self.calculate_vertical_build(output=True)
 
     def run(self):
         self.calculate_radial_build(output=False)

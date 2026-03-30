@@ -9,6 +9,7 @@ import scipy.integrate as integrate
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     current_drive_variables,
     physics_variables,
@@ -37,7 +38,7 @@ class BootstrapCurrentFractionModel(IntEnum):
     SUGIYAMA_H_MODE = 13
 
 
-class PlasmaBootstrapCurrent:
+class PlasmaBootstrapCurrent(Model):
     """Class to hold plasma bootstrap current for plasma processing."""
 
     def __init__(self, plasma_profile: PlasmaProfile) -> None:
@@ -1195,7 +1196,7 @@ class PlasmaBootstrapCurrent:
             * temp_plasma_pedestal_kev**0.0552
         )
 
-    def output_bootstrap_current_information(self):
+    def output(self):
         """Output the calculated bootstrap current information to the output file."""
 
         po.ovarrf(

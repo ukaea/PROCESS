@@ -259,43 +259,43 @@ class Caller:
         # Perform the various function calls
         # Stellarator caller
         if data_structure.stellarator_variables.istell != 0:
-            self.models.stellarator.run(output=False)
+            self.models.stellarator.run()
             # TODO Is this return safe?
             return
 
         # Inertial Fusion Energy calls
         if data_structure.ife_variables.ife != 0:
-            self.models.ife.run(output=False)
+            self.models.ife.run()
             return
 
         # Tokamak calls
         # Plasma geometry model
-        self.models.plasma_geom.plasma_geometry()
+        self.models.plasma_geom.run()
 
         # Machine Build Model
         # Radial build
         self.models.build.run()
 
-        self.models.physics.physics()
+        self.models.physics.run()
 
         # Toroidal field coil model
 
         # Toroidal field coil resistive model
         if data_structure.tfcoil_variables.i_tf_sup == 0:
-            self.models.copper_tf_coil.run(output=False)
+            self.models.copper_tf_coil.run()
 
         # Toroidal field coil superconductor model
         if data_structure.tfcoil_variables.i_tf_sup == 1:
-            self.models.sctfcoil.run(output=False)
+            self.models.sctfcoil.run()
 
         if data_structure.tfcoil_variables.i_tf_sup == 2:
-            self.models.aluminium_tf_coil.run(output=False)
+            self.models.aluminium_tf_coil.run()
 
         # Poloidal field and central solenoid model
         self.models.pfcoil.run()
 
         # Pulsed reactor model
-        self.models.pulse.run(output=False)
+        self.models.pulse.run()
 
         # First wall model
         self.models.fw.run()
@@ -316,52 +316,37 @@ class Caller:
         """
         if data_structure.fwbs_variables.i_blanket_type == 1:
             # CCFE HCPB model
-            self.models.ccfe_hcpb.run(output=False)
+            self.models.ccfe_hcpb.run()
 
         elif data_structure.fwbs_variables.i_blanket_type == 5:
             # DCLL model
-            self.models.dcll.run(output=False)
+            self.models.dcll.run()
 
-        self.models.divertor.run(output=False)
+        self.models.divertor.run()
 
         self.models.cryostat.run()
 
         # Structure Model
-        self.models.structure.run(output=False)
+        self.models.structure.run()
 
         # Tight aspect ratio machine model
         if (
             data_structure.physics_variables.itart == 1
             and data_structure.tfcoil_variables.i_tf_sup != 1
         ):
-            self.models.tfcoil.cntrpst()
+            self.models.tfcoil.run()
 
-        # Toroidal field coil power model
-        self.models.power.tfpwr(output=False)
-
-        # Poloidal field coil power model
-        self.models.power.pfpwr(output=False)
-
-        # Plant heat transport part 1
-        self.models.power.component_thermal_powers()
-
-        # Cryoplant loads
-        self.models.power.calculate_cryo_loads()
+        # Power model
+        self.models.power.run()
 
         # Vacuum model
-        self.models.vacuum.run(output=False)
+        self.models.vacuum.run()
 
         # Buildings model
-        self.models.buildings.run(output=False)
-
-        # Plant AC power requirements
-        self.models.power.acpow(output=False)
-
-        # Plant heat transport pt 2 & 3
-        self.models.power.plant_electric_production()
+        self.models.buildings.run()
 
         # Availability model
-        self.models.availability.run(output=False)
+        self.models.availability.run()
 
         # Water usage in secondary cooling system
         self.models.water_use.run()

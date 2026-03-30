@@ -22,12 +22,12 @@ def write(models, _outfile):
 
     # Call stellarator output routine instead if relevant
     if data_structure.stellarator_variables.istell != 0:
-        models.stellarator.run(output=True)
+        models.stellarator.output()
         return
 
     #  Call IFE output routine instead if relevant
     if data_structure.ife_variables.ife != 0:
-        models.ife.run(output=True)
+        models.ife.output()
         return
 
     # Costs model
@@ -37,70 +37,56 @@ def write(models, _outfile):
     # 0    |  1990 costs model
     # 1    |  2015 Kovari model
     # 2    |  Custom model
-    models.costs.run()
     models.costs.output()
 
     # Availability model
-    models.availability.run(output=True)
+    models.availability.output()
 
-    # Writing the output from physics.f90 into OUT.DAT + MFILE.DAT
-    models.physics.calculate_effective_charge_ionisation_profiles()
-    models.physics.outplas()
+    # Physics model
+    models.physics.output()
 
     # Detailed physics, currently only done at final point as values are not used
     # by any other functions
-    models.physics_detailed.run()
-    models.physics_detailed.output_detailed_physics()
+    models.physics_detailed.output()
 
-    # TODO what is this? Not in caller.f90?
-    models.current_drive.output_current_drive()
+    # TODO what is this? Not in caller.py?
+    models.current_drive.output()
 
     # Pulsed reactor model
-    models.pulse.run(output=True)
-    models.physics.outtim()
+    models.pulse.output()
 
-    models.divertor.run(output=True)
+    models.divertor.output()
 
     # Machine Build Model
-    # Radial build
-    models.build.calculate_radial_build(output=True)
-
-    # Vertical build
-    models.build.calculate_vertical_build(output=True)
+    models.build.output()
 
     # Cryostat build
-    models.cryostat.cryostat_output()
+    models.cryostat.output()
 
     # Toroidal field coil copper model
     if data_structure.tfcoil_variables.i_tf_sup == 0:
-        models.copper_tf_coil.run(output=True)
+        models.copper_tf_coil.output()
 
     # Toroidal field coil superconductor model
     if data_structure.tfcoil_variables.i_tf_sup == 1:
-        models.sctfcoil.run(output=True)
-        models.sctfcoil.output_tf_superconductor_info()
+        models.sctfcoil.output()
 
     # Toroidal field coil aluminium model
     if data_structure.tfcoil_variables.i_tf_sup == 2:
-        models.aluminium_tf_coil.run(output=True)
+        models.aluminium_tf_coil.output()
 
     # Tight aspect ratio machine model
     if (
         data_structure.physics_variables.itart == 1
         and data_structure.tfcoil_variables.i_tf_sup != 1
     ):
-        models.tfcoil.iprint = 1
-        models.tfcoil.cntrpst()
-        models.tfcoil.iprint = 0
+        models.tfcoil.output()
 
     # Poloidal field coil model
     models.pfcoil.output()
 
     # Structure Model
-    models.structure.run(output=True)
-
-    # Poloidal field coil inductance calculation
-    models.pfcoil.output_induct()
+    models.structure.output()
 
     # Blanket model
     # Blanket switch values
@@ -112,48 +98,30 @@ def write(models, _outfile):
     # 4    |  KIT HCLL model
     # 5    |  DCLL model
 
-    models.shield.output_shld_areas_and_volumes()
-    models.vacuum_vessel.output_vv_areas_and_volumes()
+    models.shield.output()
+    models.vacuum_vessel.output()
 
     # First wall geometry
-    models.fw.output_fw_geometry()
-
-    # First wall surface loads
-    models.fw.output_fw_surface_loads()
-
-    # First wall pumping
-    models.fw.output_fw_pumping()
+    models.fw.output()
 
     if data_structure.fwbs_variables.i_blanket_type == 1:
         # CCFE HCPB model
-        models.ccfe_hcpb.run(output=True)
+        models.ccfe_hcpb.output()
 
     elif data_structure.fwbs_variables.i_blanket_type == 5:
         # DCLL model
-        models.dcll.run(output=True)
+        models.dcll.output()
 
     # FISPACT and LOCA model (not used)- removed
 
-    # Toroidal field coil power model
-    models.power.tfpwr(output=True)
-
-    # Poloidal field coil power model !
-    models.power.pfpwr(output=True)
+    # Power model
+    models.power.output()
 
     # Vacuum model
-    models.vacuum.run(output=True)
+    models.vacuum.output()
 
     # Buildings model
-    models.buildings.run(output=True)
-
-    # Plant AC power requirements
-    models.power.acpow(output=True)
-
-    # Plant heat transport pt 2 & 3
-    models.power.output_cryogenics()
-    models.power.output_plant_thermal_powers()
-    models.power.output_plant_electric_powers()
-    models.power.output_power_profiles_over_time()
+    models.buildings.output()
 
     # Water usage in secondary cooling system
     models.water_use.output()

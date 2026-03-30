@@ -11,6 +11,7 @@ import process.models.superconductors as superconductors
 from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import build_variables as bv
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import cs_fatigue_variables as csfv
@@ -28,7 +29,7 @@ from process.models.tfcoil.base import TFCoilShapeModel
 logger = logging.getLogger(__name__)
 
 
-class PFCoil:
+class PFCoil(Model):
     """Calculate poloidal field coil system parameters."""
 
     def __init__(self, cs_fatigue):
@@ -54,6 +55,7 @@ class PFCoil:
         self.cs_coil.output_cs_structure()
         self.outpf()
         self.outvolt()
+        self.output_induct()
 
     def output_induct(self):
         """Output poloidal field coil inductance calculation."""

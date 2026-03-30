@@ -42,7 +42,11 @@ class SuperconductingTFCoil(TFCoil):
     def __init__(self):
         self.outfile = constants.NOUT
 
-    def run(self, output: bool):
+    def output(self):
+        self.run(output=True)
+        self.output_tf_superconductor_info()
+
+    def run(self, output: bool = False):
         """Routine to call the superconductor module for the TF coils
 
         Parameters

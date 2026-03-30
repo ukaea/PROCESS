@@ -7,6 +7,7 @@ import scipy as sp
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -28,10 +29,45 @@ from process.data_structure import (
 logger = logging.getLogger(__name__)
 
 
-class Power:
+class Power(Model):
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def output(self):
+        # Toroidal field coil power model
+        self.tfpwr(output=True)
+
+        # Poloidal field coil power model !
+        self.pfpwr(output=True)
+
+        # Plant AC power requirements
+        self.acpow(output=True)
+
+        # Plant heat transport pt 2 & 3
+        self.output_cryogenics()
+        self.output_plant_thermal_powers()
+        self.output_plant_electric_powers()
+        self.output_power_profiles_over_time()
+
+    def run(self):
+        # Toroidal field coil power model
+        self.tfpwr(output=False)
+
+        # Poloidal field coil power model
+        self.pfpwr(output=False)
+
+        # Plant heat transport part 1
+        self.component_thermal_powers()
+
+        # Cryoplant loads
+        self.calculate_cryo_loads()
+
+        # Plant AC power requirements
+        self.acpow(output=False)
+
+        # Plant heat transport pt 2 & 3
+        self.plant_electric_production()
 
     def pfpwr(self, output: bool):
         """PF coil power supply requirements

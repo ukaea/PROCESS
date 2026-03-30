@@ -6,6 +6,7 @@ from scipy.special import comb as combinations
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
@@ -35,7 +36,7 @@ AVAILABILITY_MODELS = {
 }
 
 
-class Availability:
+class Availability(Model):
     """Module containing plant availability routines
 
 
@@ -45,6 +46,9 @@ class Availability:
 
     def __init__(self):
         self.outfile = constants.NOUT  # output file unit
+
+    def output(self):
+        self.run(output=True)
 
     def run(self, output: bool = False):
         """Run appropriate availability model

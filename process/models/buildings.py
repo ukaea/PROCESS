@@ -4,6 +4,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -24,7 +25,7 @@ from process.models.physics.current_drive import (
 logger = logging.getLogger(__name__)
 
 
-class Buildings:
+class Buildings(Model):
     """
 
     This module contains routines for calculating the
@@ -36,6 +37,9 @@ class Buildings:
         This routine calls the buildings calculations.
         """
         self.outfile = constants.NOUT  # output file unit
+
+    def output(self):
+        self.run(output=True)
 
     def run(self, output: bool = False):
         # Find TF coil radial positions
