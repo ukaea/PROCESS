@@ -329,10 +329,7 @@ class RunProcessConfig(ProcessConfig):
             elif buf.lower() in ["false", "n", "no"]:
                 create_itervar_diff = False
             else:
-                print(
-                    "WARNING: Value for create_itervar_diff is not defined!",
-                    file=stderr,
-                )
+                logger.warning("Value for create_itervar_diff is not defined!")
 
         add_ixc = cls.get_attribute_csv_list(self._filename, "add_ixc")
         del_ixc = cls.get_attribute_csv_list(self._filename, "del_ixc")
@@ -421,8 +418,8 @@ class RunProcessConfig(ProcessConfig):
             no_unfeasible = no_unfeasible_mfile(self.wdir, mfile)
             if no_unfeasible <= self.no_allowed_unfeasible:
                 if no_unfeasible > 0:
-                    print(
-                        "WARNING: Non feasible point(s) in sweep, "
+                    logger.warning(
+                        "Non feasible point(s) in sweep, "
                         f"But finished anyway! {no_unfeasible} "
                     )
                 if process_warnings(self.wdir, mfile):
@@ -432,8 +429,8 @@ class RunProcessConfig(ProcessConfig):
                     )
                     # This means success: feasible solution found
                     raise StopIteration
-                print(
-                    f"WARNING: {no_unfeasible} non-feasible point(s) in sweep! Rerunning!"
+                logger.warning(
+                    f"{no_unfeasible} non-feasible point(s) in sweep! Rerunning!"
                 )
         else:
             print("PROCESS has stopped without finishing!")
@@ -502,8 +499,8 @@ class RunProcessConfig(ProcessConfig):
 
         # check that there is no variable in both lists
         if set(self.add_ixc).intersection(self.del_ixc) != set():
-            print(
-                "Error: You are trying to add and delete the same variable from ixc!",
+            logger.error(
+                "You are trying to add and delete the same variable from ixc!",
                 file=stderr,
             )
             exit()
@@ -523,8 +520,8 @@ class RunProcessConfig(ProcessConfig):
 
         # check that there is no variable in both lists
         if set(self.add_icc).intersection(self.del_icc) != set():
-            print(
-                "Error: You are trying to add and delete the same variable from icc!",
+            logger.error(
+                "You are trying to add and delete the same variable from icc!",
                 file=stderr,
             )
             exit()

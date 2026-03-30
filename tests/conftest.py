@@ -243,22 +243,11 @@ def process_models():
 
 @pytest.fixture()
 def cli_runner():
-    from dataclasses import dataclass
-    @dataclass
-    class Result:
-        exit_code: int
-
     def _cli_runner(command, args: list[str] | None = None, exit_code=0):
-        try:
+        result = CliRunner().invoke(command, args=args or [])
 
-            command.main(args=args, standalone_mode=False)
-        except SystemExit as se:
-            raise ValueError
-        # result = CliRunner().invoke(command, args=args or [])
-
-        # assert result.exit_code == 0, (
-        #     f"{result.exception} {''.join(traceback.format_exception(result.exc_info[1]))}"
-        # )
-        return Result(0)
+        assert result.exit_code == exit_code, (
+            f"{result.exception} {''.join(traceback.format_exception(result.exc_info[1]))}"
+        )
 
     return _cli_runner
