@@ -25,6 +25,7 @@ class SuperconductorType(IntEnum):
 
     @DynamicClassAttribute
     def abbreviation(self):
+        """Return the abbreviation for this superconductor type."""
         return self._abbreviation_
 
 
@@ -45,10 +46,12 @@ class SuperconductorMaterial(IntEnum):
 
     @DynamicClassAttribute
     def sc_type(self):
+        """Return the superconductor type (LTS or HTS) for this material."""
         return self._sc_type_.abbreviation
 
     @DynamicClassAttribute
     def material_name(self):
+        """Return the name of the superconductor material."""
         return self._material_name_
 
 
@@ -86,18 +89,22 @@ class SuperconductorModel(IntEnum):
 
     @DynamicClassAttribute
     def material(self):
+        """Return the superconductor material associated with this model."""
         return self._material_
 
     @DynamicClassAttribute
     def material_name(self):
+        """Return the name of the superconductor material associated with this model."""
         return self._material_.material_name
 
     @DynamicClassAttribute
     def sc_type(self):
+        """Return the superconductor type (LTS or HTS) associated with this model."""
         return self._material_.sc_type
 
     @DynamicClassAttribute
     def full_name(self):
+        """Return the full name of this superconductor model."""
         return self._full_name_
 
 
