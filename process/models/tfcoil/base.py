@@ -565,6 +565,12 @@ class TFCoil(Model):
             "(i_tf_sup)",
             tfcoil_variables.i_tf_sup,
         )
+        po.ovarin(
+            self.outfile,
+            "Superconducting TF coil turn type",
+            "(i_tf_turn_type)",
+            superconducting_tf_coil_variables.i_tf_turn_type,
+        )
 
         if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             po.ocmmnt(

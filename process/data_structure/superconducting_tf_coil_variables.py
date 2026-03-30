@@ -216,6 +216,9 @@ c_tf_turn_cables_critical: float = None
 j_tf_superconductor: float = None
 """Current density in the superconducting cable [A/m^2]"""
 
+i_tf_turn_type: int = None
+"""Switch for TF turn geometry type"""
+
 # Vacuum Vessel stress on TF coil quench
 
 vv_stress_quench: float = None
@@ -321,6 +324,7 @@ def init_superconducting_tf_coil_variables():
         f_a_tf_turn_cable_space_cooling, \
         c_tf_turn_cables_critical, \
         j_tf_superconductor, \
+        i_tf_turn_type, \
         vv_stress_quench
 
     is_leg_cp_temp_same = 0
@@ -382,4 +386,5 @@ def init_superconducting_tf_coil_variables():
     f_a_tf_turn_cable_space_cooling = 0.0
     c_tf_turn_cables_critical = 0.0
     j_tf_superconductor = 0.0
+    i_tf_turn_type = 0
     vv_stress_quench = 0.0
