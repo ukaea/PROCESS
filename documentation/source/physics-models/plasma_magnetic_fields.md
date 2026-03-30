@@ -56,13 +56,13 @@ $$
 \overbrace{\langle B_{\text{p}} (a) \rangle}^{\texttt{b_plasma_surface_poloidal_average}} = \frac{I_{\text{p}}}{L_{\text{plasma,perimeter}}}
 $$
 
-As most plasmas are non ciruclar, the poloidal field thus varies with poloidal angle so only the average value can be inferred from this method. If the plasma was a perfect torus then this would be the poloidal field at any point of the plasma surface
+As most plasmas are non-circular, the poloidal field thus varies with poloidal angle so only the average value can be inferred from this method. If the plasma was a perfect torus then this would be the poloidal field at any point of the plasma surface
 
 ------------------------------------
 
 ## Total Field | `calculate_total_magnetic_field()`
 
-As the poloidal and toroidal fields are orthogonal to eachother, the total magnetic field at any point is simply:
+As the poloidal and toroidal fields are orthogonal to each other, the total magnetic field at any point is simply:
 
 $$
 \overbrace{B_{\text{total}}}^{\texttt{b_plasma_total}} = \sqrt{B_{\text{T}}^2 + B_{\text{P}}^2}
