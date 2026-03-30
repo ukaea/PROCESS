@@ -28,45 +28,73 @@ class SuperconductorType(IntEnum):
         return self._abbreviation_
 
 
+class SuperconductorMaterial(IntEnum):
+    """Enumeration of superconductor materials."""
+
+    NB3SN = (1, SuperconductorType.LOW_TEMPERATURE, "Nb₃Sn")
+    NBTI = (2, SuperconductorType.LOW_TEMPERATURE, "NbTi")
+    BI2212 = (3, SuperconductorType.HIGH_TEMPERATURE, "Bi-2212")
+    REBCO = (4, SuperconductorType.HIGH_TEMPERATURE, "REBCO")
+
+    def __new__(cls, value, sc_type, material_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._sc_type_ = sc_type
+        obj._material_name_ = material_name
+        return obj
+
+    @DynamicClassAttribute
+    def sc_type(self):
+        return self._sc_type_.abbreviation
+
+    @DynamicClassAttribute
+    def material_name(self):
+        return self._material_name_
+
+
 class SuperconductorModel(IntEnum):
     """Enumeration of superconductor models."""
 
     ITER_NB3SN = (
         1,
-        SuperconductorType.LOW_TEMPERATURE,
-        "ITER Nb3Sn critical surface model",
+        SuperconductorMaterial.NB3SN,
+        "ITER Nb₃Sn critical surface model",
     )
-    BI2212 = (2, SuperconductorType.HIGH_TEMPERATURE, "Bi-2212")
-    OLD_LUBELL_NBTI = (3, SuperconductorType.LOW_TEMPERATURE, "Old Lubell NbTi")
+    BI2212 = (2, SuperconductorMaterial.BI2212, "Bi-2212")
+    OLD_LUBELL_NBTI = (3, SuperconductorMaterial.NBTI, "Old Lubell NbTi")
     USER_DEFINED_NB3SN = (
         4,
-        SuperconductorType.LOW_TEMPERATURE,
+        SuperconductorMaterial.NB3SN,
         "User-defined ITER Nb₃Sn",
     )
-    WST_NB3SN = (5, SuperconductorType.LOW_TEMPERATURE, "Western Superconducting Nb₃Sn")
-    CROCO_REBCO = (6, SuperconductorType.HIGH_TEMPERATURE, "CROCO REBCO")
-    DURHAM_NBTI = (7, SuperconductorType.LOW_TEMPERATURE, "Durham Ginzburg-Landau NbTi")
+    WST_NB3SN = (5, SuperconductorMaterial.NB3SN, "Western Superconducting Nb₃Sn")
+    CROCO_REBCO = (6, SuperconductorMaterial.REBCO, "CROCO REBCO")
+    DURHAM_NBTI = (7, SuperconductorMaterial.NBTI, "Durham Ginzburg-Landau NbTi")
     DURHAM_REBCO = (
         8,
-        SuperconductorType.HIGH_TEMPERATURE,
+        SuperconductorMaterial.REBCO,
         "Durham Ginzburg-Landau REBCO",
     )
-    HAZELTON_ZHAI_REBCO = (9, SuperconductorType.HIGH_TEMPERATURE, "Hazelton-Zhai REBCO")
+    HAZELTON_ZHAI_REBCO = (9, SuperconductorMaterial.REBCO, "Hazelton-Zhai REBCO")
 
-    def __new__(cls, value, method, full_name):
+    def __new__(cls, value, material, full_name):
         obj = int.__new__(cls, value)
         obj._value_ = value
-        obj._method_ = method
+        obj._material_ = material
         obj._full_name_ = full_name
         return obj
 
     @DynamicClassAttribute
-    def method(self):
-        return self._method_
+    def material(self):
+        return self._material_
 
     @DynamicClassAttribute
-    def abbreviation(self):
-        return self.method.abbreviation
+    def material_name(self):
+        return self._material_.material_name
+
+    @DynamicClassAttribute
+    def sc_type(self):
+        return self._material_.sc_type
 
     @DynamicClassAttribute
     def full_name(self):
