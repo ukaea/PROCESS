@@ -65,7 +65,7 @@ from process.models.superconductors import (
     SuperconductorModel,
     SuperconductorType,
 )
-from process.models.tfcoil.base import TFCoilShapeModel
+from process.models.tfcoil.base import TFCoilShapeModel, TFConductorModel
 
 
 def init_process():
@@ -662,7 +662,10 @@ def check_process(inputs):  # noqa: ARG001
             data_structure.pfcoil_variables.i_pf_location[2] = 3
 
         # Water cooled copper magnets initalisation / checks
-        if data_structure.tfcoil_variables.i_tf_sup == 0:
+        if (
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.WATER_COOLED_COPPER
+        ):
             # Check if the initial centrepost coolant loop adapted to the magnet technology
             # Ice cannot flow so temp_cp_coolant_inlet > 273.15 K
             if data_structure.tfcoil_variables.temp_cp_coolant_inlet < 273.15:
@@ -688,7 +691,7 @@ def check_process(inputs):  # noqa: ARG001
                 )
 
         # Call a lvl 3 error if superconductor magnets are used
-        elif data_structure.tfcoil_variables.i_tf_sup == 1:
+        elif data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
             warn(
                 "Joints res not cal. for SC (itart = 1) TF (data_structure.tfcoil_variables.i_tf_sup = 1)",
                 stacklevel=2,
@@ -696,7 +699,10 @@ def check_process(inputs):  # noqa: ARG001
 
         # Aluminium magnets initalisation / checks
         # Initialize the CP conductor temperature to cryogenic temperature for cryo-al magnets (20 K)
-        elif data_structure.tfcoil_variables.i_tf_sup == 2:
+        elif (
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
+        ):
             # Call a lvl 3 error if the inlet coolant temperature is too large
             # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
             if data_structure.tfcoil_variables.temp_cp_coolant_inlet > 40.0:
@@ -743,7 +749,8 @@ def check_process(inputs):  # noqa: ARG001
         # Warning stating that the CP fast neutron fluence calculation
         # is not addapted for cryoaluminium calculations yet
         if (
-            data_structure.tfcoil_variables.i_tf_sup == 2
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
             and (
                 data_structure.numerics.icc[
                     : data_structure.numerics.neqns + data_structure.numerics.nineqns
@@ -760,7 +767,10 @@ def check_process(inputs):  # noqa: ARG001
         #  0 : No joints for superconducting magents (data_structure.tfcoil_variables.i_tf_sup = 1)
         #  1 : Sliding joints for resistive magnets (data_structure.tfcoil_variables.i_tf_sup = 0, 2)
         if data_structure.tfcoil_variables.i_cp_joints == -1:
-            if data_structure.tfcoil_variables.i_tf_sup == 1:
+            if (
+                data_structure.tfcoil_variables.i_tf_sup
+                == TFConductorModel.SUPERCONDUCTOR
+            ):
                 data_structure.tfcoil_variables.i_cp_joints = 0
             else:
                 data_structure.tfcoil_variables.i_cp_joints = 1
@@ -886,7 +896,7 @@ def check_process(inputs):  # noqa: ARG001
     # Make sure that plane stress model is not used for resistive magnets
     if (
         data_structure.tfcoil_variables.i_tf_stress_model == 1
-        and data_structure.tfcoil_variables.i_tf_sup != 1
+        and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTOR
     ):
         raise ProcessValidationError(
             "Use generalized plane strain for resistive magnets (i_tf_stress_model = 0 or 2)"
@@ -897,7 +907,10 @@ def check_process(inputs):  # noqa: ARG001
     # - No bucking for copper magnets ( i_tf_bucking = 0 )
     # - Bucking for aluminium magnets ( i_tf_bucking = 1 )
     if data_structure.tfcoil_variables.i_tf_bucking == -1:
-        if data_structure.tfcoil_variables.i_tf_sup == 0:
+        if (
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.WATER_COOLED_COPPER
+        ):
             data_structure.tfcoil_variables.i_tf_bucking = 0
         else:
             data_structure.tfcoil_variables.i_tf_bucking = 1
@@ -941,11 +954,14 @@ def check_process(inputs):  # noqa: ARG001
     # Setting the default cryo-plants efficiencies
     if abs(data_structure.tfcoil_variables.eff_tf_cryo + 1) < 1e-6:
         # The ITER cyoplant efficiency is used for SC
-        if data_structure.tfcoil_variables.i_tf_sup == 1:
+        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
             data_structure.tfcoil_variables.eff_tf_cryo = 0.13
 
         # Strawbrige plot extrapolation is used for Cryo-Al
-        elif data_structure.tfcoil_variables.i_tf_sup == 2:
+        elif (
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
+        ):
             data_structure.tfcoil_variables.eff_tf_cryo = 0.40
 
     # Cryo-plane efficiency must be in [0-1.0]
@@ -973,15 +989,20 @@ def check_process(inputs):  # noqa: ARG001
         # Copper magnets, no insulation material defined
         # But use the ITER design by default
         if (
-            data_structure.tfcoil_variables.i_tf_sup == 0
-            or data_structure.tfcoil_variables.i_tf_sup == 1
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.WATER_COOLED_COPPER
+            or data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.SUPERCONDUCTOR
         ):
             # SC magnets
             # Value from DDD11-2 v2 2 (2009)
             data_structure.tfcoil_variables.eyoung_ins = 20.0e9
 
         # Cryo-aluminum magnets (Kapton polymer)
-        elif data_structure.tfcoil_variables.i_tf_sup == 2:
+        elif (
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
+        ):
             data_structure.tfcoil_variables.eyoung_ins = 2.5e9
 
     # Setting the default WP geometry
@@ -1039,7 +1060,7 @@ def check_process(inputs):  # noqa: ARG001
     # Rem : Only verified if the WP thickness is used
     if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 140).any():
         # Minimal WP thickness
-        if data_structure.tfcoil_variables.i_tf_sup == 1:
+        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTOR:
             dr_tf_wp_min = 2.0 * (
                 data_structure.tfcoil_variables.dx_tf_wp_insulation
                 + data_structure.tfcoil_variables.dx_tf_wp_insertion_gap
@@ -1057,8 +1078,10 @@ def check_process(inputs):  # noqa: ARG001
 
         # Minimal conductor layer thickness
         elif (
-            data_structure.tfcoil_variables.i_tf_sup == 0
-            or data_structure.tfcoil_variables.i_tf_sup == 2
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.WATER_COOLED_COPPER
+            or data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
         ):
             dr_tf_wp_min = (
                 2.0
