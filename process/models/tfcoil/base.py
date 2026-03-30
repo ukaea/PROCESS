@@ -45,6 +45,34 @@ class TFCoilShapeModel(IntEnum):
     PICTURE_FRAME = 2
 
 
+class TFConductorModel(IntEnum):
+    """Enumeration for TF conductor models.
+
+    1: Water cooled copper (GLIDCOP AL-15)
+    2: Superconducting coil (SC)
+    3: Helium cooled aluminium
+
+    """
+
+    WATER_COOLED_COPPER = 1
+    SUPERCONDUCTING = 2
+    HELIUM_COOLED_ALUMINIUM = 3
+
+
+class TFConductorModel(IntEnum):
+    """Enumeration for TF conductor models.
+
+    1: Water cooled copper (GLIDCOP AL-15)
+    2: Superconducting coil (SC)
+    3: Helium cooled aluminium
+
+    """
+
+    WATER_COOLED_COPPER = 1
+    SUPERCONDUCTING = 2
+    HELIUM_COOLED_ALUMINIUM = 3
+
+
 class TFCoil(Model):
     """Calculates the parameters of a resistive TF coil system for a fusion power plant"""
 
