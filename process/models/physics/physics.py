@@ -234,9 +234,6 @@ class Physics(Model):
         self.outtim()
 
     def run(self):
-        self.physics()
-
-    def physics(self):
         """Routine to calculate tokamak plasma physics information
         This routine calculates all the primary plasma physics parameters for a tokamak fusion reactor.
 

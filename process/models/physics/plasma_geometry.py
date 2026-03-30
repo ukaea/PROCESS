@@ -13,9 +13,6 @@ class PlasmaGeom:
         self.outfile = constants.NOUT
 
     def run(self):
-        self.plasma_geometry()
-
-    def plasma_geometry(self):
         """Plasma geometry parameters
 
         This method calculates the plasma geometry parameters based on various shaping terms and input values.

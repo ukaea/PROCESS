@@ -725,9 +725,6 @@ class VacuumVessel(Model):
     def __init__(self):
         self.outfile = constants.NOUT
 
-    def output(self):
-        self.output_vv_areas_and_volumes()
-
     def run(self):
         blanket_library.dz_vv_half = self.calculate_vessel_half_height(
             z_tf_inside_half=build_variables.z_tf_inside_half,
@@ -954,7 +951,7 @@ class VacuumVessel(Model):
         )
         return vol_vv_inboard, vol_vv_outboard, vol_vv
 
-    def output_vv_areas_and_volumes(self):
+    def output(self):
         """Output shield areas and volumes to log."""
 
         po.oheadr(self.outfile, "Vacuum Vessel Areas and Volumes")
