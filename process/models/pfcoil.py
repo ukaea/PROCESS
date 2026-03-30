@@ -23,6 +23,7 @@ from process.data_structure import physics_variables as pv
 from process.data_structure import rebco_variables as rcv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
+from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
@@ -2397,19 +2398,18 @@ class PFCoil:
 
                 # REBCO fractures in strains above ~+/- 0.7%
                 if (
-                    pfcoil_variables.i_cs_superconductor == 6
-                    or pfcoil_variables.i_cs_superconductor == 8
-                    or pfcoil_variables.i_cs_superconductor == 9
+                    SuperconductorModel(pfcoil_variables.i_pf_superconductor).material
+                    == SuperconductorMaterial.REBCO
                 ) and abs(tfv.str_cs_con_res) > 0.7e-2:
                     logger.error(
                         "Non physical strain used in CS. Use superconductor strain < +/- 0.7%"
                     )
 
                 if (
-                    pfcoil_variables.i_pf_superconductor == 6
-                    or pfcoil_variables.i_pf_superconductor == 8
-                    or pfcoil_variables.i_pf_superconductor == 9
-                ) and abs(tfv.str_pf_con_res) > 0.7e-2:
+                    SuperconductorModel(pfcoil_variables.i_pf_superconductor).material
+                    == SuperconductorMaterial.REBCO
+                    and abs(tfv.str_pf_con_res) > 0.7e-2
+                ):
                     logger.error(
                         "Non physical strain used in PF. Use superconductor strain < +/- 0.7%"
                     )
@@ -2428,39 +2428,10 @@ class PFCoil:
                 pfcoil_variables.i_pf_superconductor,
             )
 
-            if pfcoil_variables.i_pf_superconductor == 1:
-                op.ocmmnt(self.outfile, "  (ITER Nb3Sn critical surface model)")
-            elif pfcoil_variables.i_pf_superconductor == 2:
-                op.ocmmnt(self.outfile, "  (Bi-2212 high temperature superconductor)")
-            elif pfcoil_variables.i_pf_superconductor == 3:
-                op.ocmmnt(self.outfile, "  (NbTi)")
-            elif pfcoil_variables.i_pf_superconductor == 4:
-                op.ocmmnt(
-                    self.outfile,
-                    "  (ITER Nb3Sn critical surface model, user-defined parameters)",
-                )
-            elif pfcoil_variables.i_pf_superconductor == 5:
-                op.ocmmnt(self.outfile, " (WST Nb3Sn critical surface model)")
-            elif pfcoil_variables.i_pf_superconductor == 6:
-                op.ocmmnt(
-                    self.outfile,
-                    " (REBCO 2nd generation HTS superconductor in CrCo strand)",
-                )
-            elif pfcoil_variables.i_pf_superconductor == 7:
-                op.ocmmnt(
-                    self.outfile,
-                    " (Durham Ginzburg-Landau critical surface model for Nb-Ti)",
-                )
-            elif pfcoil_variables.i_pf_superconductor == 8:
-                op.ocmmnt(
-                    self.outfile,
-                    " (Durham Ginzburg-Landau critical surface model for REBCO)",
-                )
-            elif pfcoil_variables.i_pf_superconductor == 9:
-                op.ocmmnt(
-                    self.outfile,
-                    " (Hazelton experimental data + Zhai conceptual model for REBCO)",
-                )
+            op.ocmmnt(
+                self.outfile,
+                f"  -> {SuperconductorModel(pfcoil_variables.i_pf_superconductor).full_name}",
+            )
 
             op.ovarre(
                 self.outfile,
