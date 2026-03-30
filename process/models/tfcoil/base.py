@@ -2660,7 +2660,7 @@ class TFCoil(Model):
         """
 
         # Outer/inner WP radius removing the ground insulation layer and the insertion gap [m]
-        if i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if i_tf_sup == 1:
             r_tf_wp_inboard_outer_conductor = (
                 r_tf_wp_inboard_outer - dx_tf_wp_insulation - dx_tf_wp_insertion_gap
             )
@@ -2687,7 +2687,7 @@ class TFCoil(Model):
         #        sliding joints, the in/outboard vertical tension repartition is
         # -#
         # Ouboard leg WP plasma side radius without ground insulation/insertion gat [m]
-        if i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if i_tf_sup == 1:
             r_tf_wp_outboard_inner_conductor = (
                 r_tf_outboard_in
                 + dr_tf_plasma_case
@@ -3660,7 +3660,7 @@ class TFCoil(Model):
             # No current in bucking cylinder/casing
             jeff[n_tf_bucking - 1] = 0.0e0
 
-            if i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+            if i_tf_sup == 1:
                 eyoung_trans[n_tf_bucking - 1] = eyoung_steel
                 eyoung_axial[n_tf_bucking - 1] = eyoung_steel
                 poisson_trans[n_tf_bucking - 1] = poisson_steel
@@ -3681,7 +3681,7 @@ class TFCoil(Model):
         # (Super)conductor layer properties
         # ---
         # SC coil
-        if i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if i_tf_sup == 1:
             # Inner/outer radii of the layer representing the WP in stress calculations [m]
             # These radii are chosen to preserve the true WP area; see Issue #1048
             r_wp_inner_eff = r_tf_wp_inboard_inner * np.sqrt(
@@ -3827,10 +3827,10 @@ class TFCoil(Model):
         # Resistive coil
         else:
             # Picking the conductor material Young's modulus
-            if i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+            if i_tf_sup == 0:
                 eyoung_cond = eyoung_copper
                 poisson_cond = poisson_copper
-            elif i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+            elif i_tf_sup == 2:
                 eyoung_cond = eyoung_al
                 poisson_cond = poisson_al
 
@@ -4044,7 +4044,7 @@ class TFCoil(Model):
         # Toroidal coil unsmearing
         # ---
         # Copper magnets
-        if i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
+        if i_tf_sup == 0:
             # Vertical force unsmearing factor
             fac_sig_z = eyoung_copper / eyoung_wp_axial_eff
 
@@ -4052,7 +4052,7 @@ class TFCoil(Model):
             fac_sig_t = 1.0e0
             fac_sig_r = 1.0e0
 
-        elif i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        elif i_tf_sup == 1:
             # Vertical WP steel stress unsmearing factor
             if i_tf_stress_model != 1:
                 fac_sig_z = eyoung_steel / eyoung_wp_axial_eff
@@ -4066,7 +4066,7 @@ class TFCoil(Model):
             # Radial WP steel conduit stress unsmearing factor
             fac_sig_r = eyoung_wp_stiffest_leg / eyoung_wp_trans_eff
 
-        elif i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
+        elif i_tf_sup == 2:
             # Vertical WP steel stress unsmearing factor
             fac_sig_z = eyoung_al / eyoung_wp_axial_eff
 
@@ -4126,7 +4126,7 @@ class TFCoil(Model):
 
         # SC conducting layer stress distribution corrections
         # ---
-        if i_tf_sup == TFConductorModel.SUPERCONDUCTING:
+        if i_tf_sup == 1:
             # GRADED MODIF : add another do loop to allow the graded properties
             #                to be taken into account
             for ii in range(
@@ -4155,11 +4155,7 @@ class TFCoil(Model):
 
             for jj in range(ii * n_radial_array, (ii + 1) * n_radial_array):
                 # CEA out of plane approximation
-                if (
-                    i_tf_tresca == 1
-                    and i_tf_sup == TFConductorModel.SUPERCONDUCTING
-                    and ii >= i_tf_bucking + 1
-                ):
+                if i_tf_tresca == 1 and i_tf_sup == 0 and ii >= i_tf_bucking + 1:
                     if sig_max < s_shear_cea_tf_cond[jj]:
                         sig_max = s_shear_cea_tf_cond[jj]
                         ii_max = jj
@@ -4179,11 +4175,7 @@ class TFCoil(Model):
 
             # Maximum shear stress for the Tresca yield criterion (or CEA OOP correction)
 
-            if (
-                i_tf_tresca == 1
-                and i_tf_sup == TFConductorModel.SUPERCONDUCTING
-                and ii >= i_tf_bucking + 1
-            ):
+            if i_tf_tresca == 1 and i_tf_sup == 1 and ii >= i_tf_bucking + 1:
                 s_shear_tf_peak[ii] = s_shear_cea_tf_cond[ii_max]
             else:
                 s_shear_tf_peak[ii] = s_shear_tf[ii_max]
