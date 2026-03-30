@@ -31,7 +31,6 @@ from scipy.interpolate import interp1d
 import process.core.constants as constants
 import process.core.io.mfile as mf
 import process.data_structure.pfcoil_variables as pfcoil_variables
-import process.models.tfcoil.superconducting as sctf
 from process.core.io.mfile import MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
 from process.data_structure import impurity_radiation_module
@@ -71,8 +70,8 @@ from process.models.physics.current_drive import (
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
+from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
-from process.models.tfcoil.superconducting import SUPERCONDUCTING_TF_TYPES
 
 mpl.rcParams["figure.max_open_warning"] = 40
 
@@ -7448,7 +7447,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: mf.MFile, scan: in
 
     textstr_superconductor = (
         f"$\\mathbf{{Superconductor:}}$\n \n"
-        f"Superconductor used: {sctf.SUPERCONDUCTING_TF_TYPES[mfile.get('i_tf_sc_mat', scan=scan)]}\n"
+        f"Superconductor used: {SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
         f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
         f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
         f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
@@ -8077,7 +8076,7 @@ def plot_magnetics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
         i_tf_sc_mat = 0
 
     if i_tf_sc_mat > 0:
-        tftype = SUPERCONDUCTING_TF_TYPES[int(mfile.get("i_tf_sc_mat", scan=scan))]
+        tftype = SuperconductorModel(int(mfile.get("i_tf_sc_mat", scan=scan))).full_name
     else:
         tftype = "Resistive Copper"
 
