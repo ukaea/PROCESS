@@ -12,7 +12,7 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.models.tfcoil.base import TFCoil
+from process.models.tfcoil.base import TFCoil, TFConductorModel
 
 logger = logging.getLogger(__name__)
 
@@ -465,7 +465,7 @@ class ResistiveTFCoil(TFCoil):
         """
 
         # Resistivity of the Glidcop copper centerpost
-        if tfcoil_variables.i_tf_sup == 0:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             tfcoil_variables.rho_cp = (
                 # 1.86 is the resistivity at `20°C` for GLIDCOP AL-15
                 # 0.00393 is the coefficient of resistivity for copper
@@ -475,7 +475,7 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Resistivity of the aluminium centerpost
-        if tfcoil_variables.i_tf_sup == 2:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             tfcoil_variables.rho_cp = tfcoil_variables.frhocp * (
                 2.00016e-14 * tfcoil_variables.temp_cp_average**3
                 - 6.75384e-13 * tfcoil_variables.temp_cp_average**2
@@ -493,7 +493,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.temp_tf_legs_outboard = tfcoil_variables.temp_cp_average
 
             # Leg resistivity (different leg temperature as separate cooling channels)
-            if tfcoil_variables.i_tf_sup == 0:
+            if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
                 tfcoil_variables.rho_tf_leg = (
                     tfcoil_variables.frholeg
                     * (
@@ -502,7 +502,7 @@ class ResistiveTFCoil(TFCoil):
                     )
                     * 1.0e-8
                 )
-            elif tfcoil_variables.i_tf_sup == 2:
+            elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
                 tfcoil_variables.rho_tf_leg = tfcoil_variables.frholeg * (
                     2.00016e-14 * tfcoil_variables.temp_tf_legs_outboard**3
                     - 6.75384e-13 * tfcoil_variables.temp_tf_legs_outboard**2
@@ -745,7 +745,7 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Copper magnets casing/conductor weights per coil [kg]
-        if tfcoil_variables.i_tf_sup == 0:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             tfcoil_variables.m_tf_coil_case = (
                 fwbs_variables.den_steel * vol_case / tfcoil_variables.n_tf_coils
             )  # Per TF leg, no casing for outer leg
@@ -777,7 +777,7 @@ class ResistiveTFCoil(TFCoil):
 
         # Cryo-aluminium conductor weights
         # Casing made of re-inforced aluminium alloy
-        elif tfcoil_variables.i_tf_sup == 2:
+        elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             # Casing weight (CP only if physics_variables.itart = 1)bper leg/coil
             tfcoil_variables.m_tf_coil_case = (
                 constants.den_aluminium * vol_case / tfcoil_variables.n_tf_coils
