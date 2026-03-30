@@ -1,5 +1,7 @@
 import copy
 import logging
+from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 from scipy import optimize
@@ -25,6 +27,22 @@ from process.models.superconductors import SuperconductorMaterial, Superconducto
 from process.models.tfcoil.base import TFCoil
 
 logger = logging.getLogger(__name__)
+
+
+class SuperconductingTFTurnType(IntEnum):
+    CABLE_IN_CONDUIT = (1, "CICC")
+    CROSS_CONDUCTOR = (2, "CroCo")
+
+    def __new__(cls, value, abbreviation):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._abbreviation_ = abbreviation
+        return obj
+
+    @DynamicClassAttribute
+    def abbreviation(self):
+        """Return the abbreviation for this superconductor type."""
+        return self._abbreviation_
 
 
 class SuperconductingTFCoil(TFCoil):
