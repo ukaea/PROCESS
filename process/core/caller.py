@@ -16,6 +16,7 @@ from process.core.process_output import OutputFileManager, ovarre
 from process.core.solver.iteration_variables import set_scaled_iteration_variable
 from process.core.solver.objectives import objective_function
 from process.models.tfcoil.base import TFConductorModel
+from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
 if TYPE_CHECKING:
     from process.main import Models
@@ -290,7 +291,20 @@ class Caller:
 
         # Toroidal field coil superconductor model
         if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            self.models.sctfcoil.run()
+            if (
+                SuperconductingTFTurnType(
+                    data_structure.superconducting_tf_coil_variables.i_tf_turn_type
+                )
+                == SuperconductingTFTurnType.CABLE_IN_CONDUIT
+            ):
+                self.models.cicc_sctfcoil.run()
+            elif (
+                SuperconductingTFTurnType(
+                    data_structure.superconducting_tf_coil_variables.i_tf_turn_type
+                )
+                == SuperconductingTFTurnType.CROSS_CONDUCTOR
+            ):
+                self.models.croco_sctfcoil.run()
 
         if (
             data_structure.tfcoil_variables.i_tf_sup
