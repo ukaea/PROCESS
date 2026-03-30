@@ -1819,7 +1819,7 @@ def init_physics_variables():
     i_confinement_time = 34
     i_plasma_wall_gap = 1
     i_plasma_geometry = 0
-    i_plasma_shape = 0
+    i_plasma_shape = 1
     itart = 0
     itartpf = 0
     i_pflux_fw_neutron = 1
