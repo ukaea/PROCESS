@@ -60,6 +60,11 @@ from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.models.stellarator.initialization import st_init
+from process.models.superconductors import (
+    SuperconductorMaterial,
+    SuperconductorModel,
+    SuperconductorType,
+)
 from process.models.tfcoil.base import TFCoilShapeModel
 
 
@@ -955,7 +960,7 @@ def check_process(inputs):  # noqa: ARG001
     # Integer turns option not yet available for REBCO taped turns
 
     if (
-        data_structure.tfcoil_variables.i_tf_sc_mat == 6
+        data_structure.tfcoil_variables.i_tf_sc_mat == SuperconductorModel.CROCO_REBCO
         and data_structure.tfcoil_variables.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
@@ -995,16 +1000,28 @@ def check_process(inputs):  # noqa: ARG001
         data_structure.tfcoil_variables.eyoung_cond_trans = 0
     elif data_structure.tfcoil_variables.i_tf_cond_eyoung_axial == 2:
         # Select sensible defaults from the literature
-        if data_structure.tfcoil_variables.i_tf_sc_mat in [1, 4, 5]:
+        if (
+            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            == SuperconductorMaterial.NB3SN
+        ):
             # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16, no. 9 (2003): 1036-42. https://doi.org/10.1088/0953-2048/16/9/313.
             data_structure.tfcoil_variables.eyoung_cond_axial = 32e9
-        elif data_structure.tfcoil_variables.i_tf_sc_mat == 2:
+        elif (
+            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            == SuperconductorMaterial.BI2212
+        ):
             # Bi-2212: Brown, M. et al, IOP Conference Series: Materials Science and Engineering 279 (2017): 012022. https://doi.org/10.1088/1757-899X/279/1/012022.
             data_structure.tfcoil_variables.eyoung_cond_axial = 80e9
-        elif data_structure.tfcoil_variables.i_tf_sc_mat in [3, 7]:
+        elif (
+            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            == SuperconductorMaterial.NBTI
+        ):
             # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity 9, no. 2 (1999): 236-39. https://doi.org/10.1109/77.783280.
             data_structure.tfcoil_variables.eyoung_cond_axial = 6.8e9
-        elif data_structure.tfcoil_variables.i_tf_sc_mat in [6, 8, 9]:
+        elif (
+            SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).material
+            == SuperconductorMaterial.REBCO
+        ):
             # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity, 426-431 (2005): 699-704. https://doi.org/10.1016/j.physc.2005.01.045.
             data_structure.tfcoil_variables.eyoung_cond_axial = 145e9
 
@@ -1113,7 +1130,8 @@ def check_process(inputs):  # noqa: ARG001
 
     # Checking the SC temperature for LTS
     if (
-        data_structure.tfcoil_variables.i_tf_sc_mat in [1, 3, 4, 5]
+        SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).sc_type
+        == SuperconductorType.LOW_TEMPERATURE
         and data_structure.tfcoil_variables.tftmp > 10.0
     ):
         raise ProcessValidationError(
@@ -1213,8 +1231,8 @@ def check_process(inputs):  # noqa: ARG001
         ]
         == 36
     ).any() and (
-        data_structure.tfcoil_variables.i_tf_sc_mat == 8
-        or data_structure.tfcoil_variables.i_tf_sc_mat == 9
+        SuperconductorModel(data_structure.tfcoil_variables.i_tf_sc_mat).sc_type
+        == SuperconductorMaterial.REBCO
     ):
         raise ProcessValidationError(
             "turn off TF temperature margin constraint icc = 36 when using REBCO"

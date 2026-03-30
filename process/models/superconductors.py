@@ -1,4 +1,6 @@
 import logging
+from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 from scipy import optimize
@@ -7,6 +9,103 @@ from process.core.exceptions import ProcessValueError
 from process.data_structure import rebco_variables
 
 logger = logging.getLogger(__name__)
+
+
+class SuperconductorType(IntEnum):
+    """Enumeration of superconductor types."""
+
+    LOW_TEMPERATURE = (1, "LTS")
+    HIGH_TEMPERATURE = (2, "HTS")
+
+    def __new__(cls, value, abbreviation):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._abbreviation_ = abbreviation
+        return obj
+
+    @DynamicClassAttribute
+    def abbreviation(self):
+        """Return the abbreviation for this superconductor type."""
+        return self._abbreviation_
+
+
+class SuperconductorMaterial(IntEnum):
+    """Enumeration of superconductor materials."""
+
+    NB3SN = (1, SuperconductorType.LOW_TEMPERATURE, "Nb₃Sn")
+    NBTI = (2, SuperconductorType.LOW_TEMPERATURE, "NbTi")
+    BI2212 = (3, SuperconductorType.HIGH_TEMPERATURE, "Bi-2212")
+    REBCO = (4, SuperconductorType.HIGH_TEMPERATURE, "REBCO")
+
+    def __new__(cls, value, sc_type, material_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._sc_type_ = sc_type
+        obj._material_name_ = material_name
+        return obj
+
+    @DynamicClassAttribute
+    def sc_type(self):
+        """Return the superconductor type (LTS or HTS) for this material."""
+        return self._sc_type_.abbreviation
+
+    @DynamicClassAttribute
+    def material_name(self):
+        """Return the name of the superconductor material."""
+        return self._material_name_
+
+
+class SuperconductorModel(IntEnum):
+    """Enumeration of superconductor models."""
+
+    ITER_NB3SN = (
+        1,
+        SuperconductorMaterial.NB3SN,
+        "ITER Nb₃Sn critical surface model",
+    )
+    BI2212 = (2, SuperconductorMaterial.BI2212, "Bi-2212")
+    OLD_LUBELL_NBTI = (3, SuperconductorMaterial.NBTI, "Old Lubell NbTi")
+    USER_DEFINED_NB3SN = (
+        4,
+        SuperconductorMaterial.NB3SN,
+        "User-defined ITER Nb₃Sn",
+    )
+    WST_NB3SN = (5, SuperconductorMaterial.NB3SN, "Western Superconducting Nb₃Sn")
+    CROCO_REBCO = (6, SuperconductorMaterial.REBCO, "CROCO REBCO")
+    DURHAM_NBTI = (7, SuperconductorMaterial.NBTI, "Durham Ginzburg-Landau NbTi")
+    DURHAM_REBCO = (
+        8,
+        SuperconductorMaterial.REBCO,
+        "Durham Ginzburg-Landau REBCO",
+    )
+    HAZELTON_ZHAI_REBCO = (9, SuperconductorMaterial.REBCO, "Hazelton-Zhai REBCO")
+
+    def __new__(cls, value, material, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._material_ = material
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def material(self):
+        """Return the superconductor material associated with this model."""
+        return self._material_
+
+    @DynamicClassAttribute
+    def material_name(self):
+        """Return the name of the superconductor material associated with this model."""
+        return self._material_.material_name
+
+    @DynamicClassAttribute
+    def sc_type(self):
+        """Return the superconductor type (LTS or HTS) associated with this model."""
+        return self._material_.sc_type
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """Return the full name of this superconductor model."""
+        return self._full_name_
 
 
 def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]:

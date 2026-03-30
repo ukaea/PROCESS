@@ -24,6 +24,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.data_structure import build_variables as bv
+from process.models.superconductors import SuperconductorModel
 
 if TYPE_CHECKING:
     from process.models.build import Build
@@ -573,39 +574,10 @@ class TFCoil(Model):
                 tfcoil_variables.i_tf_sc_mat,
             )
 
-            if tfcoil_variables.i_tf_sc_mat == 1:
-                po.ocmmnt(self.outfile, "  -> ITER Nb3Sn critical surface model")
-            elif tfcoil_variables.i_tf_sc_mat == 2:
-                po.ocmmnt(self.outfile, "  -> Bi-2212 high temperature superconductor")
-            elif tfcoil_variables.i_tf_sc_mat == 3:
-                po.ocmmnt(self.outfile, "  -> NbTi")
-            elif tfcoil_variables.i_tf_sc_mat == 4:
-                po.ocmmnt(
-                    self.outfile,
-                    "  -> ITER Nb3Sn critical surface model, user-defined parameters",
-                )
-            elif tfcoil_variables.i_tf_sc_mat == 5:
-                po.ocmmnt(self.outfile, "  -> WST Nb3Sn")
-            elif tfcoil_variables.i_tf_sc_mat == 6:
-                po.ocmmnt(
-                    self.outfile,
-                    "  -> High temperature superconductor: REBCO HTS tape in CroCo strand",
-                )
-            elif tfcoil_variables.i_tf_sc_mat == 7:
-                po.ocmmnt(
-                    self.outfile,
-                    "  ->  Durham Ginzburg-Landau critical surface model for Nb-Ti",
-                )
-            elif tfcoil_variables.i_tf_sc_mat == 8:
-                po.ocmmnt(
-                    self.outfile,
-                    "  ->  Durham Ginzburg-Landau critical surface model for REBCO",
-                )
-            elif tfcoil_variables.i_tf_sc_mat == 9:
-                po.ocmmnt(
-                    self.outfile,
-                    "  ->  Hazelton experimental data + Zhai conceptual model for REBCO",
-                )
+            po.ocmmnt(
+                self.outfile,
+                f"  -> {SuperconductorModel(tfcoil_variables.i_tf_sc_mat).full_name}",
+            )
 
         # Joints strategy
         po.ovarin(
