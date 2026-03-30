@@ -21,6 +21,7 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
+from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
 from process.models.tfcoil.base import TFCoil
 
 logger = logging.getLogger(__name__)
@@ -308,7 +309,10 @@ class SuperconductingTFCoil(TFCoil):
             * tfcoil_variables.n_tf_coil_turns
         )
 
-        if tfcoil_variables.i_tf_sc_mat == 6:
+        if (
+            SuperconductorModel(tfcoil_variables.i_tf_sc_mat)
+            == SuperconductorModel.CROCO_REBCO
+        ):
             (
                 tfcoil_variables.j_tf_wp_critical,
                 tfcoil_variables.temp_tf_superconductor_margin,
@@ -368,7 +372,10 @@ class SuperconductingTFCoil(TFCoil):
 
         # Do current density protection calculation
         # Only setup for Nb3Sn at present.
-        if tfcoil_variables.i_tf_sc_mat not in {1, 4, 5}:
+        if (
+            SuperconductorModel(tfcoil_variables.i_tf_sc_mat).material
+            != SuperconductorMaterial.NB3SN
+        ):
             logger.warning(
                 "Calculating current density protection limit for Nb3Sn TF coil (LTS windings only)"
             )
@@ -2080,7 +2087,10 @@ class SuperconductingTFCoil(TFCoil):
 
         # Calculate number of cables in turn if CICC conductor
         # ---------------------------------------------------
-        if tfcoil_variables.i_tf_sc_mat != 6:
+        if (
+            SuperconductorModel(tfcoil_variables.i_tf_sc_mat)
+            != SuperconductorModel.CROCO_REBCO
+        ):
             superconducting_tf_coil_variables.n_tf_turn_superconducting_cables = self.calculate_cable_in_conduit_strand_count(
                 a_cable_space=superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
                 dia_superconductor_strand=superconducting_tf_coil_variables.dia_tf_turn_superconducting_cable,
