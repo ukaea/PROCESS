@@ -8,6 +8,7 @@ import numpy as np
 import process.data_structure as data_structure
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
+from process.models.tfcoil.base import TFConductorModel
 
 ConstraintSymbolType = Literal["=", ">=", "<="]
 
@@ -1081,7 +1082,7 @@ def constraint_equation_43(constraint_registration):
     if data_structure.physics_variables.itart == 0:
         raise ProcessValueError("Do not use constraint 43 if itart=0")
 
-    if data_structure.tfcoil_variables.i_tf_sup == 0:
+    if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
         temp_cp_average = data_structure.tfcoil_variables.temp_cp_average - 273.15
         tcpav2 = data_structure.tfcoil_variables.tcpav2 - 273.15
     else:
@@ -1104,7 +1105,9 @@ def constraint_equation_44(constraint_registration):
     if data_structure.physics_variables.itart == 0:
         raise ProcessValueError("Do not use constraint 44 if itart=0")
 
-    if data_structure.tfcoil_variables.i_tf_sup == 0:  # ! Copper case
+    if (
+        data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER
+    ):  # ! Copper case
         temp_cp_max = data_structure.tfcoil_variables.temp_cp_max - 273.15
         temp_cp_peak = data_structure.tfcoil_variables.temp_cp_peak - 273.15
     else:

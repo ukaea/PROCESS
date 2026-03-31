@@ -15,6 +15,7 @@ from process.core.io.mfile import MFile
 from process.core.process_output import OutputFileManager, ovarre
 from process.core.solver.iteration_variables import set_scaled_iteration_variable
 from process.core.solver.objectives import objective_function
+from process.models.tfcoil.base import TFConductorModel
 
 if TYPE_CHECKING:
     from process.main import Models
@@ -281,14 +282,20 @@ class Caller:
         # Toroidal field coil model
 
         # Toroidal field coil resistive model
-        if data_structure.tfcoil_variables.i_tf_sup == 0:
+        if (
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.WATER_COOLED_COPPER
+        ):
             self.models.copper_tf_coil.run()
 
         # Toroidal field coil superconductor model
-        if data_structure.tfcoil_variables.i_tf_sup == 1:
+        if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             self.models.sctfcoil.run()
 
-        if data_structure.tfcoil_variables.i_tf_sup == 2:
+        if (
+            data_structure.tfcoil_variables.i_tf_sup
+            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
+        ):
             self.models.aluminium_tf_coil.run()
 
         # Poloidal field and central solenoid model
@@ -332,7 +339,8 @@ class Caller:
         # Tight aspect ratio machine model
         if (
             data_structure.physics_variables.itart == 1
-            and data_structure.tfcoil_variables.i_tf_sup != 1
+            and data_structure.tfcoil_variables.i_tf_sup
+            != TFConductorModel.SUPERCONDUCTING
         ):
             self.models.tfcoil.run()
 

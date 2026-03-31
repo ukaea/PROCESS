@@ -45,6 +45,20 @@ class TFCoilShapeModel(IntEnum):
     PICTURE_FRAME = 2
 
 
+class TFConductorModel(IntEnum):
+    """Enumeration for TF conductor models.
+
+    0: Water cooled copper (GLIDCOP AL-15)
+    1: Superconducting coil (SC)
+    2: Helium cooled aluminium
+
+    """
+
+    WATER_COOLED_COPPER = 0
+    SUPERCONDUCTING = 1
+    HELIUM_COOLED_ALUMINIUM = 2
+
+
 class TFCoil(Model):
     """Calculates the parameters of a resistive TF coil system for a fusion power plant"""
 
@@ -556,17 +570,17 @@ class TFCoil(Model):
             tfcoil_variables.i_tf_sup,
         )
 
-        if tfcoil_variables.i_tf_sup == 0:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             po.ocmmnt(
                 self.outfile, "  -> resistive coil : Water cooled copper (GLIDCOP AL-15)"
             )
-        elif tfcoil_variables.i_tf_sup == 1:
+        elif tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             po.ocmmnt(self.outfile, "  -> Superconducting coil (SC)")
-        elif tfcoil_variables.i_tf_sup == 2:
+        elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             po.ocmmnt(self.outfile, "  -> Resistive coil : Helium cooled aluminium")
 
         # SC material scaling
-        if tfcoil_variables.i_tf_sup == 1:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             po.ovarin(
                 self.outfile,
                 "Superconductor material",
@@ -605,7 +619,7 @@ class TFCoil(Model):
         if tfcoil_variables.i_tf_bucking == 0:
             po.ocmmnt(self.outfile, "  -> No support structure")
         elif tfcoil_variables.i_tf_bucking == 1:
-            if tfcoil_variables.i_tf_sup == 1:
+            if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.ocmmnt(self.outfile, "  -> Steel casing")
             elif (
                 abs(tfcoil_variables.eyoung_res_tf_buck - 205.0e9)
@@ -830,7 +844,10 @@ class TFCoil(Model):
             )
 
         # CP tapering geometry
-        if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
+        if (
+            physics_variables.itart == 1
+            and tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+        ):
             po.osubhd(self.outfile, "Tapered Centrepost TF coil Dimensions:")
             po.ovarre(
                 self.outfile,
@@ -864,7 +881,7 @@ class TFCoil(Model):
             )
 
         # Turn/WP gemoetry
-        if tfcoil_variables.i_tf_sup == 1:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             # Total material fraction
             po.osubhd(self.outfile, "Global material area/fractions:")
             po.ovarre(
@@ -1510,7 +1527,7 @@ class TFCoil(Model):
             tfcoil_variables.m_tf_coil_wp_turn_insulation,
             "OP ",
         )
-        if tfcoil_variables.i_tf_sup == 1:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             po.ovarre(
                 self.outfile,
                 "Total conduit mass per coil (kg)",
@@ -1579,7 +1596,7 @@ class TFCoil(Model):
             "(c_tf_total)",
             tfcoil_variables.c_tf_total,
         )
-        if tfcoil_variables.i_tf_sup == 1:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             po.ovarre(
                 self.outfile,
                 "Actual peak field at discrete conductor (T)",
@@ -1670,14 +1687,14 @@ class TFCoil(Model):
         )
 
         # Resistive coil parameters
-        if tfcoil_variables.i_tf_sup != 1:
+        if tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING:
             po.osubhd(self.outfile, "Resitive loss parameters:")
-            if tfcoil_variables.i_tf_sup == 0:
+            if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
                 po.ocmmnt(
                     self.outfile,
                     "Resistive Material : GLIDCOP AL-15 - Dispersion Strengthened Copper",
                 )
-            elif tfcoil_variables.i_tf_sup == 2:
+            elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
                 po.ocmmnt(
                     self.outfile, "Resistive Material : Pure Aluminium (99.999+ %)"
                 )
@@ -1787,7 +1804,7 @@ class TFCoil(Model):
             )
 
         # Quench information
-        if tfcoil_variables.i_tf_sup == 1:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             po.osubhd(self.outfile, "Quench information :")
             po.ovarre(
                 self.outfile,
@@ -1850,7 +1867,7 @@ class TFCoil(Model):
         po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
         # Radial build for SC TF coils
-        if tfcoil_variables.i_tf_sup == 1:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             radius = radius + tfcoil_variables.dr_tf_nose_case
             po.obuild(
                 self.outfile,
@@ -2038,7 +2055,10 @@ class TFCoil(Model):
         )
 
         # Top section TF coil radial build (physics_variables.itart = 1 only)
-        if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
+        if (
+            physics_variables.itart == 1
+            and tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+        ):
             po.osubhd(self.outfile, "Radial build of TF coil at central collumn top :")
             # write(self.outfile,5)
 
@@ -2164,7 +2184,10 @@ class TFCoil(Model):
                 build_variables.z_plasma_xpoint_upper + tfcoil_variables.dztop
             )
 
-        if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
+        if (
+            physics_variables.itart == 1
+            and tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+        ):
             tfcoil_variables.dx_tf_inboard_out_toroidal = (
                 2.0e0
                 * build_variables.r_cp_top
@@ -2207,7 +2230,7 @@ class TFCoil(Model):
         # **********************************************
         # Water coollant
         # --------------
-        if tfcoil_variables.i_tf_sup == 0:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             # Water coolant physical properties
             coolant_density = constants.DENH2O
             coolant_cp = constants.CPH2O
@@ -2228,7 +2251,7 @@ class TFCoil(Model):
 
         # Helium coolant
         # --------------
-        elif tfcoil_variables.i_tf_sup == 2:
+        elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             # Inlet coolant density [kg/m3]
             coolant_density = self.he_density(tfcoil_variables.temp_cp_coolant_inlet)
 
@@ -2273,7 +2296,7 @@ class TFCoil(Model):
         # this is not an exact approximation for average temperature rise
 
         # Helium viscosity
-        if tfcoil_variables.i_tf_sup == 2:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             coolant_visco = self.he_visco(tcool_av)
 
         # Reynolds number
@@ -2285,7 +2308,7 @@ class TFCoil(Model):
         )
 
         # Helium thermal conductivity [W/(m.K)]
-        if tfcoil_variables.i_tf_sup == 2:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             coolant_th_cond = self.he_th_cond(tcool_av)
 
         # Prandlt number
@@ -2314,11 +2337,11 @@ class TFCoil(Model):
         # Conductor thermal conductivity
         # ******
         # Copper conductor
-        if tfcoil_variables.i_tf_sup == 0:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             conductor_th_cond = constants.K_COPPER
 
         # Aluminium
-        elif tfcoil_variables.i_tf_sup == 2:
+        elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
             conductor_th_cond = self.al_th_cond(tcool_film)
         # ******
 
@@ -2396,9 +2419,13 @@ class TFCoil(Model):
         )
 
         # Pumping efficiency
-        if tfcoil_variables.i_tf_sup == 0:  # Water cooled
+        if (
+            tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER
+        ):  # Water cooled
             tfcoil_variables.etapump = 0.8e0
-        elif tfcoil_variables.i_tf_sup == 2:  # Cryogenic helium
+        elif (
+            tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM
+        ):  # Cryogenic helium
             tfcoil_variables.etapump = 0.6e0
 
         # Pressure drop calculation
@@ -2537,7 +2564,7 @@ class TFCoil(Model):
             po.osubhd(self.outfile, "Pump Power :")
             po.ovarre(self.outfile, "Coolant pressure drop (Pa)", "(dpres)", dpres)
             if (
-                tfcoil_variables.i_tf_sup == 0
+                tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER
             ):  # Saturation pressure calculated with Water data ...
                 po.ovarre(
                     self.outfile, "Coolant inlet pressure (Pa)", "(presin)", presin
@@ -4114,7 +4141,7 @@ class TFCoil(Model):
 
             for jj in range(ii * n_radial_array, (ii + 1) * n_radial_array):
                 # CEA out of plane approximation
-                if i_tf_tresca == 1 and i_tf_sup == 1 and ii >= i_tf_bucking + 1:
+                if i_tf_tresca == 1 and i_tf_sup == 0 and ii >= i_tf_bucking + 1:
                     if sig_max < s_shear_cea_tf_cond[jj]:
                         sig_max = s_shear_cea_tf_cond[jj]
                         ii_max = jj
@@ -4307,7 +4334,10 @@ class TFCoil(Model):
             "(sig_tf_wp_max)",
             tfcoil_variables.sig_tf_wp_max,
         )
-        if tfcoil_variables.i_tf_tresca == 1 and tfcoil_variables.i_tf_sup == 1:
+        if (
+            tfcoil_variables.i_tf_tresca == 1
+            and tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
+        ):
             po.ocmmnt(
                 self.outfile,
                 "WP conduit Tresca criterion corrected using CEA formula (i_tf_tresca = 1)",
@@ -4332,13 +4362,13 @@ class TFCoil(Model):
         )
 
         if tfcoil_variables.i_tf_bucking == 0:
-            if tfcoil_variables.i_tf_sup == 1:
+            if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.write(self.outfile, "  Layers \t\t\t\t WP \t\t Outer case")
             else:
                 po.write(self.outfile, "  Layers \t\t\t\t conductor \t\t Outer case")
 
         elif tfcoil_variables.i_tf_bucking == 1:
-            if tfcoil_variables.i_tf_sup == 1:
+            if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.write(
                     self.outfile, "  Layers \t\t\t\t Steel case \t\t WP \t\t Outer case"
                 )
@@ -4349,7 +4379,7 @@ class TFCoil(Model):
                 )
 
         elif tfcoil_variables.i_tf_bucking == 2:
-            if tfcoil_variables.i_tf_sup == 1:
+            if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.write(
                     self.outfile,
                     "  Layers \t\t\t\t CS \t\t Steel case \t\t WP \t\t Outer case",
@@ -4361,7 +4391,7 @@ class TFCoil(Model):
                 )
 
         elif tfcoil_variables.i_tf_bucking == 3:
-            if tfcoil_variables.i_tf_sup == 1:
+            if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.write(
                     self.outfile,
                     "  Layers \t\t\t\t CS \t\t interface \t\t Steel case \t\t WP \t\t Outer case",
@@ -4389,7 +4419,10 @@ class TFCoil(Model):
             f"  Von-Mises stress \t\t\t (MPa) \t\t {table_format_arrays(sig_tf_vmises_max, 1e-6)}",
         )
 
-        if tfcoil_variables.i_tf_tresca == 1 and tfcoil_variables.i_tf_sup == 1:
+        if (
+            tfcoil_variables.i_tf_tresca == 1
+            and tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
+        ):
             po.write(
                 self.outfile,
                 f"  Shear (CEA Tresca) \t\t\t (MPa) \t\t {table_format_arrays(s_shear_tf_peak, 1e-6)}",
@@ -4465,7 +4498,10 @@ class TFCoil(Model):
                 f"(sig_tf_vmises_max({ii + 1}))",
                 sig_tf_vmises_max[ii],
             )
-            if tfcoil_variables.i_tf_tresca == 1 and tfcoil_variables.i_tf_sup == 1:
+            if (
+                tfcoil_variables.i_tf_tresca == 1
+                and tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
+            ):
                 po.ovarre(
                     constants.MFILE,
                     f"Maximum shear stress for CEA Tresca yield criterion {ii + 1} (Pa)",
@@ -4493,7 +4529,7 @@ class TFCoil(Model):
             "Von-Mises stress (MPa)": sig_tf_vmises * 1e-6,
             "CEA Tresca stress (MPa)": (
                 s_shear_cea_tf_cond * 1e-6
-                if tfcoil_variables.i_tf_sup == 1
+                if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
                 else s_shear_tf * 1e-6
             ),
             "rad. displacement (mm)": deflect * 1e3,
@@ -4506,7 +4542,7 @@ class TFCoil(Model):
                 "Vertical strain": str_tf_z,
             }
 
-        if tfcoil_variables.i_tf_sup == 1:
+        if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             sig_file_data = {
                 **sig_file_data,
                 "WP smeared stress (MPa)": sig_tf_wp_av_z * 1.0e-6,
@@ -4527,7 +4563,10 @@ class TFCoil(Model):
         #
 
         # Quantities from the plane stress stress formulation (no resitive coil output)
-        if tfcoil_variables.i_tf_stress_model == 1 and tfcoil_variables.i_tf_sup == 1:
+        if (
+            tfcoil_variables.i_tf_stress_model == 1
+            and tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
+        ):
             # Other quantities (displacement strain, etc..)
             po.ovarre(
                 self.outfile,

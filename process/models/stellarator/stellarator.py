@@ -40,6 +40,7 @@ from process.models.stellarator.denisty_limits import (
 from process.models.stellarator.divertor import st_div
 from process.models.stellarator.heating import st_heat
 from process.models.stellarator.preset_config import load_stellarator_config
+from process.models.tfcoil.base import TFConductorModel
 
 if TYPE_CHECKING:
     from process.models.availability import Availability
@@ -1009,7 +1010,9 @@ class Stellarator(Model):
                 #  (for superconducting coils at least) to be absorbed by the
                 #  coils, and so contributes to the cryogenic load
 
-                if tfcoil_variables.i_tf_sup == 1:
+                if (
+                    tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
+                ):  # superconducting coils
                     fwbs_variables.p_tf_nuclear_heat_mw = (
                         pnucsi + pnucso - pnucshldi - pnucshldo
                     )
@@ -1763,7 +1766,9 @@ class Stellarator(Model):
 
         ishmat = 0  # stainless steel coil casing is assumed
 
-        if tfcoil_variables.i_tf_sup != 1:  # Resistive coils
+        if (
+            tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
+        ):  # Resistive coils
             coilhtmx = 0.0
             ptfiwp = 0.0
             ptfowp = 0.0

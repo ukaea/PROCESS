@@ -1,5 +1,6 @@
 from process import data_structure
 from process.core.log import logging_model_handler
+from process.models.tfcoil.base import TFConductorModel
 
 
 def write(models, _outfile):
@@ -64,21 +65,24 @@ def write(models, _outfile):
     models.cryostat.output()
 
     # Toroidal field coil copper model
-    if data_structure.tfcoil_variables.i_tf_sup == 0:
+    if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
         models.copper_tf_coil.output()
 
     # Toroidal field coil superconductor model
-    if data_structure.tfcoil_variables.i_tf_sup == 1:
+    if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
         models.sctfcoil.output()
 
     # Toroidal field coil aluminium model
-    if data_structure.tfcoil_variables.i_tf_sup == 2:
+    if (
+        data_structure.tfcoil_variables.i_tf_sup
+        == TFConductorModel.HELIUM_COOLED_ALUMINIUM
+    ):
         models.aluminium_tf_coil.output()
 
     # Tight aspect ratio machine model
     if (
         data_structure.physics_variables.itart == 1
-        and data_structure.tfcoil_variables.i_tf_sup != 1
+        and data_structure.tfcoil_variables.i_tf_sup != TFConductorModel.SUPERCONDUCTING
     ):
         models.tfcoil.output()
 
