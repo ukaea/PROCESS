@@ -308,7 +308,8 @@ class VaryRun:
         # dir changes happen in old run_process code
         self.config_file = Path(config_file).resolve()
         self.solver = solver
-        self.models = Models()
+        self.data = DataStructure()
+        self.models = Models(self.data)
 
     def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
@@ -329,7 +330,7 @@ class VaryRun:
         setup_loggers(Path(config.wdir) / "process.log")
 
         init.init_all_module_vars()
-        init.init_process(self.models.data)
+        init.init_process(self.data)
 
         _neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
@@ -406,8 +407,9 @@ class SingleRun:
         self.validate_input(update_obsolete)
         self.init_module_vars()
         self.set_filenames()
-        self.models = Models()
+        self.data = DataStructure()
         self.initialise()
+        self.models = Models(self.data)
         self.solver = solver
 
     def run(self):
@@ -480,7 +482,7 @@ class SingleRun:
 
         initialise_imprad()
         # Reads in input file
-        init.init_process(self.models)
+        init.init_process(self.data)
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
@@ -665,11 +667,13 @@ class Models:
     engineering modules.
     """
 
-    def __init__(self):
+    def __init__(self, data: DataStructure):
         """Create physics and engineering model objects.
 
         This also initialises module variables in the Fortran for that module.
         """
+        self.data = data
+
         self._costs_custom = None
         self._costs_1990 = Costs()
         self._costs_2015 = Costs2015()
@@ -732,21 +736,20 @@ class Models:
             plasma_profile=self.plasma_profile,
         )
         self.neoclassics = Neoclassics()
-        if data_structure.stellarator_variables.istell != 0:
-            self.stellarator = Stellarator(
-                availability=self.availability,
-                buildings=self.buildings,
-                vacuum=self.vacuum,
-                costs=self.costs,
-                power=self.power,
-                plasma_profile=self.plasma_profile,
-                hcpb=self.ccfe_hcpb,
-                current_drive=self.current_drive,
-                physics=self.physics,
-                neoclassics=self.neoclassics,
-                plasma_beta=self.plasma_beta,
-                plasma_bootstrap=self.plasma_bootstrap_current,
-            )
+        self.stellarator = Stellarator(
+            availability=self.availability,
+            buildings=self.buildings,
+            vacuum=self.vacuum,
+            costs=self.costs,
+            power=self.power,
+            plasma_profile=self.plasma_profile,
+            hcpb=self.ccfe_hcpb,
+            current_drive=self.current_drive,
+            physics=self.physics,
+            neoclassics=self.neoclassics,
+            plasma_beta=self.plasma_beta,
+            plasma_bootstrap=self.plasma_bootstrap_current,
+        )
 
         self.dcll = DCLL(fw=self.fw)
 
@@ -779,7 +782,6 @@ class Models:
         # This Models class should be replaced with a dataclass so we can
         # iterate over the `fields`.
         # This can be a disgusting temporary measure :(
-        self.data = DataStructure()
         for model in self.models:
             model.data = self.data
 
