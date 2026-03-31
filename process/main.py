@@ -308,6 +308,7 @@ class VaryRun:
         # dir changes happen in old run_process code
         self.config_file = Path(config_file).resolve()
         self.solver = solver
+        self.models = Models()
 
     def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
@@ -328,7 +329,7 @@ class VaryRun:
         setup_loggers(Path(config.wdir) / "process.log")
 
         init.init_all_module_vars()
-        init.init_process()
+        init.init_process(self.models.data)
 
         _neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
