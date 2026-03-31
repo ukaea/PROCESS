@@ -35,8 +35,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 from numpy import typing as npt
 
-from process.exceptions import ProcessValidationError, ProcessValueError
-from process.neutronics_data import DT_NEUTRON_E, N_A, MaterialMacroInfo
+from process.core.exceptions import ProcessValidationError, ProcessValueError
+from process.models.neutronics.data import DT_NEUTRON_E, N_A, MaterialMacroInfo
 
 
 def summarize_values(func):
@@ -833,6 +833,7 @@ class NeutronFluxProfile:
                     )
 
                 self.coefficients[num_layer, n] = coefs_num_layer
+
             self.coefficients[0, n].s[n] = np.sqrt(abs(self.materials[0].l2[n])) * (
                 -(self.fluxes[n] / self.materials[0].diffusion_const[n])
                 - np.sum([
@@ -1100,7 +1101,7 @@ class NeutronFluxProfile:
         trig_funcs = []
         for g in range(len(self.coefficients[num_layer, n])):
             c_val, s_val = self._groupwise_cs_values_in_layer(g, num_layer, x)
-            trig_funcs.append([
+            trig_funcs.extend([
                 self.coefficients[num_layer, n].c[g] * c_val,
                 self.coefficients[num_layer, n].s[g] * s_val,
             ])

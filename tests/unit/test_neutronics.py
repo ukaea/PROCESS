@@ -1,14 +1,18 @@
 import numpy as np
 import pytest
 
-from process.exceptions import ProcessValidationError
-from process.neutronics import (
+from process.core.exceptions import ProcessValidationError
+from process.models.neutronics.base import (
     AutoPopulatingDict,
     LayerSpecificGroupwiseConstants,
     NeutronFluxProfile,
     _get_sign_of,
 )
-from process.neutronics_data import DT_NEUTRON_E, EV_TO_J, MaterialMacroInfo
+from process.models.neutronics.data import (
+    DT_NEUTRON_E,
+    EV_TO_J,
+    MaterialMacroInfo
+)
 
 MAX_E = DT_NEUTRON_E * 1.01
 MIN_E = 1 / 40 * EV_TO_J
