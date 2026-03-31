@@ -1,6 +1,7 @@
 import logging
 import math
 from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numba as nb
 import numpy as np
@@ -3427,12 +3428,22 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
 class BetaNormMaxModel(IntEnum):
     """Beta norm max (β_N_max) model types"""
 
-    USER_INPUT = 0
-    WESSON = 1
-    ORIGINAL_SCALING = 2
-    MENARD = 3
-    THLOREUS = 4
-    STAMBAUGH = 5
+    USER_INPUT = (0, "User Input")
+    WESSON = (1, "Wesson Scaling")
+    ORIGINAL_SCALING = (2, "Original Scaling")
+    MENARD = (3, "Menard Scaling")
+    THLOREUS = (4, "Thloreus Scaling")
+    STAMBAUGH = (5, "Stambaugh Scaling")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class PlasmaBeta:
@@ -4234,7 +4245,10 @@ class PlasmaBeta:
         )
         po.osubhd(self.outfile, "Normalised Beta Information :")
         if stellarator_variables.istell == 0:
-            if physics_variables.i_beta_norm_max != 0:
+            if (
+                BetaNormMaxModel(physics_variables.i_beta_norm_max)
+                != BetaNormMaxModel.USER_INPUT
+            ):
                 po.ovarrf(
                     self.outfile,
                     "Beta g coefficient",

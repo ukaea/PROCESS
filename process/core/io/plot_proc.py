@@ -69,6 +69,7 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
+from process.models.physics.physics import BetaNormMaxModel
 from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
@@ -2520,9 +2521,9 @@ def plot_main_plasma_information(
     # Plot the centre of the plasma
     axis.plot(rmajor, 0, "r+", markersize=20, markeredgewidth=2)
 
-    # Add injected power label
+    # Add Q plasma information box
     axis.text(
-        0.325,
+        0.45,
         0.925,
         f"$Q_{{\\text{{plasma}}}}$: {mfile.get('big_q_plasma', scan=scan):.2f}",
         fontsize=15,
@@ -2755,6 +2756,7 @@ def plot_main_plasma_information(
         f"Fast-alpha beta,$ \\ \\langle \\beta_{{\\alpha}} \\rangle$: {mfile.get('beta_fast_alpha', scan=scan):.4f}\n"
         f"Normalised total beta,$ \\ \\beta_{{\\text{{N}}}}$: {mfile.get('beta_norm_total', scan=scan):.4f}\n"
         f"Normalised thermal beta,$ \\ \\beta_{{\\text{{N,thermal}}}}$: {mfile.get('beta_norm_thermal', scan=scan):.4f}\n"
+        f"Maximum normalised beta ({BetaNormMaxModel(int(mfile.get('i_beta_norm_max', scan=scan))).full_name}),$ \\ \\beta_{{\\text{{N,max}}}}$: {mfile.get('beta_norm_max', scan=scan):.4f}"
     )
 
     axis.text(
