@@ -1,7 +1,9 @@
 import logging
 from enum import IntEnum
+from types import DynamicClassAttribute
 
 import matplotlib.pyplot as plt
+import numba as nb
 import numpy as np
 
 import process.core.io.mfile as mf
@@ -9,6 +11,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
+    current_drive_variables,
     physics_variables,
 )
 
@@ -925,3 +928,98 @@ class PlasmaCurrent:
         Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
         """
         return 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
+
+
+class PlasmaDiamagneticCurrentModel(IntEnum):
+    """Enum for heating and current drive method types"""
+
+    NONE = (0, "None")
+    HENDER_ST_FIT = (1, "Hender ST fit")
+    SCENE_FIT = (2, "SCENE fit")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def abbreviation(self):
+        return self._full_name_
+
+
+class PlasmaDiamagneticCurrent:
+    """Class to hold plasma diamagnetic current calculations for plasma processing."""
+
+    def __init__(self):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+
+    def run(self):
+        # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
+        current_drive_variables.f_c_plasma_diamagnetic_hender = (
+            self.diamagnetic_fraction_hender(physics_variables.beta_total_vol_avg)
+        )
+
+        # SCENE scaling for diamagnetic current
+        current_drive_variables.f_c_plasma_diamagnetic_scene = (
+            self.diamagnetic_fraction_scene(
+                physics_variables.beta_total_vol_avg,
+                physics_variables.q95,
+                physics_variables.q0,
+            )
+        )
+
+        if (
+            PlasmaDiamagneticCurrentModel(physics_variables.i_diamagnetic_current)
+            == PlasmaDiamagneticCurrentModel.HENDER_ST_FIT
+        ):
+            current_drive_variables.f_c_plasma_diamagnetic = (
+                current_drive_variables.f_c_plasma_diamagnetic_hender
+            )
+        elif (
+            PlasmaDiamagneticCurrentModel(physics_variables.i_diamagnetic_current)
+            == PlasmaDiamagneticCurrentModel.SCENE_FIT
+        ):
+            current_drive_variables.f_c_plasma_diamagnetic = (
+                current_drive_variables.f_c_plasma_diamagnetic_scene
+            )
+
+    @staticmethod
+    @nb.jit(nopython=True, cache=True)
+    def diamagnetic_fraction_hender(beta: float) -> float:
+        """Calculate the diamagnetic fraction based on the Hender fit.
+
+        Parameters
+        ----------
+        beta :
+            the plasma beta value
+
+        Returns
+        -------
+        float
+            the diamagnetic fraction
+
+        """
+        return beta / 2.8
+
+    @staticmethod
+    @nb.jit(nopython=True, cache=True)
+    def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
+        """Calculate the diamagnetic fraction based on the SCENE fit by Tim Hender.
+
+        Parameters
+        ----------
+        beta :
+            the plasma beta value
+        q95 :
+            the normalized safety factor at 95% of the plasma radius
+        q0 :
+            the normalized safety factor at the magnetic axis
+
+        Returns
+        -------
+        float
+            the diamagnetic fraction
+        """
+        return beta * (0.1 * q95 / q0 + 0.44) * 0.414
