@@ -4120,7 +4120,15 @@ class PlasmaBeta:
     def output_beta_information(self):
         """Output beta information to file."""
 
-        po.osubhd(self.outfile, "Beta Information :")
+        po.oheadr(self.outfile, "Plasma Beta:")
+
+        po.ovarin(
+            self.outfile,
+            "Beta component for limits",
+            "(i_beta_component)",
+            physics_variables.i_beta_component,
+        )
+
         if (
             BetaComponentLimits(physics_variables.i_beta_component)
             == BetaComponentLimits.TOTAL
@@ -4289,6 +4297,14 @@ class PlasmaBeta:
             physics_variables.beta_poloidal_eps_max,
         )
         po.osubhd(self.outfile, "Normalised Beta Information :")
+
+        po.ovarin(
+            self.outfile,
+            "Maximum normalised beta model",
+            "(i_beta_norm_max)",
+            physics_variables.i_beta_norm_max,
+        )
+
         if stellarator_variables.istell == 0:
             if (
                 BetaNormMaxModel(physics_variables.i_beta_norm_max)
