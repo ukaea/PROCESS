@@ -1,3 +1,11 @@
+"""
+Some simple constants used by the neutronics module, as well as functions used
+to load in nuclear data.
+
+A mock class ENDFRecord with the method get_xs is used. This allows process to
+extract nuclear data from any other external module, as long as that module can
+be used to produce an object with the get_xs method.
+"""
 import json
 import warnings
 from abc import ABC, abstractmethod
@@ -11,14 +19,14 @@ import numpy as np
 from numpy import typing as npt
 from scipy.constants import Avogadro
 
-from process.exceptions import ProcessValidationError
+from process.core.exceptions import ProcessValidationError
 
 BARNS_TO_M2 = 1e-28
 N_A = Avogadro
 EV_TO_J = 1.602e-19
 DT_NEUTRON_E = 14.06e6 * EV_TO_J
 
-with open(Path(__file__).parent / "data" / "atomic_data.json") as j:
+with open(Path(__file__).parent / "atomic_data.json") as j:
     _data = json.load(j)
     _ATOMIC_MASS_SOURCE = _data["ATOMIC_MASS_SOURCE"]
     ATOMIC_MASS = _data["ATOMIC_MASS"]
