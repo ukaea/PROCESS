@@ -63,12 +63,6 @@ class Power(Model):
         # Cryoplant loads
         self.calculate_cryo_loads()
 
-        # Plant AC power requirements
-        self.acpow(output=False)
-
-        # Plant heat transport pt 2 & 3
-        self.plant_electric_production()
-
     def pfpwr(self, output: bool):
         """PF coil power supply requirements
 

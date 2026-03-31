@@ -353,6 +353,14 @@ class Caller:
         # Buildings model
         self.models.buildings.run()
 
+        # These two methods need to be run after vacuum/buildings otherwise output changes quite a lot
+        # TODO: split these two sections into a new model with a .run method
+        # Plant AC power requirements
+        self.models.power.acpow(output=False)
+
+        # Plant heat transport pt 2 & 3
+        self.models.power.plant_electric_production()
+
         # Availability model
         self.models.availability.run()
 
