@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from numpy import typing as npt
 
-from process.neutronics_data import nXn_weight_matrix, scattering_weight_matrix
+from process.models.neutronics.data import nXn_weight_matrix, scattering_weight_matrix
 
 rng = np.random.default_rng(1)
 

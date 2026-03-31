@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 from scipy.integrate import trapezoid
 
-from process.neutronics import NeutronFluxProfile
-from process.neutronics_data import (
+from process.models.neutronics.base import NeutronFluxProfile
+from process.models.neutronics.data import (
     DT_NEUTRON_E,
     EV_TO_J,
     MaterialMacroInfo,
