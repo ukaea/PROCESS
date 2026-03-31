@@ -944,7 +944,7 @@ class PlasmaDiamagneticCurrentModel(IntEnum):
         return obj
 
     @DynamicClassAttribute
-    def abbreviation(self):
+    def full_name(self):
         return self._full_name_
 
 
