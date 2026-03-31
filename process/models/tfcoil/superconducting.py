@@ -341,6 +341,18 @@ class SuperconductingTFCoil(TFCoil):
             f_vforce_inboard=tfcoil_variables.f_vforce_inboard,
         )
 
+        # ======================================================
+
+        # Peak inboard toroidal field including ripple
+        tfcoil_variables.b_tf_inboard_peak_with_ripple = self.peak_b_tf_inboard_with_ripple(
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
+            dr_tf_wp_no_insulation=superconducting_tf_coil_variables.dr_tf_wp_no_insulation,
+            r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
+            b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
+        )
+        # ======================================================
+
     def output_tf_superconductor_info(self):
         """Output TF superconductor information"""
         po.oheadr(self.outfile, "TF Coils Superconductor Information")
@@ -1772,18 +1784,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         self.vv_stress_on_quench()
 
-        # ======================================================
-
-        # Peak inboard toroidal field including ripple
-        tfcoil_variables.b_tf_inboard_peak_with_ripple = self.peak_b_tf_inboard_with_ripple(
-            n_tf_coils=tfcoil_variables.n_tf_coils,
-            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
-            dr_tf_wp_no_insulation=superconducting_tf_coil_variables.dr_tf_wp_no_insulation,
-            r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
-            b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
-        )
-        # ======================================================
-
         # Cross-sectional area per turn
         a_tf_turn = tfcoil_variables.c_tf_total / (
             tfcoil_variables.j_tf_wp
@@ -3107,18 +3107,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 tfcoil_variables.sig_tf_wp = 0.0e0
 
         self.vv_stress_on_quench()
-
-        # ======================================================
-
-        # Peak inboard toroidal field including ripple
-        tfcoil_variables.b_tf_inboard_peak_with_ripple = self.peak_b_tf_inboard_with_ripple(
-            n_tf_coils=tfcoil_variables.n_tf_coils,
-            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
-            dr_tf_wp_no_insulation=superconducting_tf_coil_variables.dr_tf_wp_no_insulation,
-            r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
-            b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
-        )
-        # ======================================================
 
         # Cross-sectional area per turn
         a_tf_turn = tfcoil_variables.c_tf_total / (
