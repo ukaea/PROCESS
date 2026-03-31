@@ -4,6 +4,7 @@ import numba as nb
 import numpy as np
 
 from process.core import constants
+from process.core import process_output as po
 from process.data_structure import (
     physics_variables,
 )
@@ -192,3 +193,56 @@ class PlasmaFields:
             total magnetic field at the plasma edge (T)
         """
         return np.sqrt(b_plasma_toroidal**2 + b_plasma_poloidal**2)
+
+    def output_magnetic_field_info(self):
+        po.oheadr(self.outfile, "Plasma magnetic fields")
+
+        po.ovarrf(
+            self.outfile,
+            "Vertical field at plasma (T)",
+            "(b_plasma_vertical_required)",
+            physics_variables.b_plasma_vertical_required,
+            "OP ",
+        )
+
+        po.ovarrf(
+            self.outfile,
+            "Vacuum toroidal field at R (T)",
+            "(b_plasma_toroidal_on_axis)",
+            physics_variables.b_plasma_toroidal_on_axis,
+        )
+        po.ovarrf(
+            self.outfile,
+            "Toroidal field at plasma inboard (T)",
+            "(b_plasma_inboard_toroidal)",
+            physics_variables.b_plasma_inboard_toroidal,
+        )
+        po.ovarrf(
+            self.outfile,
+            "Toroidal field at plasma outboard (T)",
+            "(b_plasma_outboard_toroidal)",
+            physics_variables.b_plasma_outboard_toroidal,
+        )
+
+        for i in range(len(physics_variables.b_plasma_toroidal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Toroidal field in plasma at point {i}",
+                f"b_plasma_toroidal_profile{i}",
+                physics_variables.b_plasma_toroidal_profile[i],
+            )
+        po.ovarrf(
+            self.outfile,
+            "Plasma surface averaged poloidal field (T)",
+            "(b_plasma_surface_poloidal_average)",
+            physics_variables.b_plasma_surface_poloidal_average,
+            "OP ",
+        )
+
+        po.ovarrf(
+            self.outfile,
+            "Total field (sqrt(b_plasma_surface_poloidal_average^2 + b_plasma_toroidal_on_axis^2)) (T)",
+            "(b_plasma_total)",
+            physics_variables.b_plasma_total,
+            "OP ",
+        )
