@@ -405,8 +405,8 @@ class SingleRun:
         self.validate_input(update_obsolete)
         self.init_module_vars()
         self.set_filenames()
-        self.initialise()
         self.models = Models()
+        self.initialise()
         self.solver = solver
 
     def run(self):
@@ -479,7 +479,7 @@ class SingleRun:
 
         initialise_imprad()
         # Reads in input file
-        init.init_process()
+        init.init_process(self.models)
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
@@ -778,9 +778,9 @@ class Models:
         # This Models class should be replaced with a dataclass so we can
         # iterate over the `fields`.
         # This can be a disgusting temporary measure :(
-        data = DataStructure()
+        self.data = DataStructure()
         for model in self.models:
-            model.data = data
+            model.data = self.data
 
 
 # setup handlers for writing to terminal (on warnings+)

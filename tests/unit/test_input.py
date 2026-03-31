@@ -7,6 +7,12 @@ import process.core.init as init
 import process.core.input as process_input
 import process.data_structure as data_structure
 from process.core.exceptions import ProcessValidationError
+from process.main import DataStructure
+
+
+@pytest.fixture
+def data_structure_obj():
+    return DataStructure()
 
 
 def _create_input_file(directory, content: str):
@@ -54,7 +60,7 @@ def _create_input_file(directory, content: str):
     ]
     + [("0.546816593988753", 0.546816593988753)],
 )
-def test_parse_real(epsvmc, expected, tmp_path):
+def test_parse_real(epsvmc, expected, tmp_path, data_structure_obj):
     """Tests the parsing of real numbers into PROCESS.
 
     Program to get the expected value for 0.008 provided at https://github.com/ukaea/PROCESS/pull/3067
@@ -62,7 +68,7 @@ def test_parse_real(epsvmc, expected, tmp_path):
     data_structure.global_variables.fileprefix = _create_input_file(
         tmp_path, f"epsvmc = {epsvmc}"
     )
-    init.init_process()
+    init.init_process(data_structure_obj)
 
     assert data_structure.numerics.epsvmc == expected
 
@@ -78,7 +84,7 @@ def test_parse_real(epsvmc, expected, tmp_path):
         [0.1293140904093427],
     ],
 )
-def test_exact_parsing(value, tmp_path):
+def test_exact_parsing(value, tmp_path, data_structure_obj):
     """Tests the parsing of real numbers into PROCESS.
 
     These tests failed using the old input parser and serve to show that the Python parser generally
@@ -87,17 +93,17 @@ def test_exact_parsing(value, tmp_path):
     data_structure.global_variables.fileprefix = _create_input_file(
         tmp_path, f"epsvmc = {value}"
     )
-    init.init_process()
+    init.init_process(data_structure_obj)
 
     assert data_structure.numerics.epsvmc == value
 
 
-def test_parse_input(tmp_path):
+def test_parse_input(tmp_path, data_structure_obj):
     data_structure.global_variables.fileprefix = _create_input_file(
         tmp_path,
         ("runtitle = my run title\nioptimz = -2\nepsvmc = 0.6\nboundl(1) = 0.5"),
     )
-    init.init_process()
+    init.init_process(data_structure_obj)
 
     assert data_structure.global_variables.runtitle == "my run title"
     assert data_structure.numerics.ioptimz == -2
@@ -105,19 +111,19 @@ def test_parse_input(tmp_path):
     assert pytest.approx(data_structure.numerics.boundl[0]) == 0.5
 
 
-def test_input_choices(tmp_path):
+def test_input_choices(tmp_path, data_structure_obj):
     data_structure.global_variables.fileprefix = _create_input_file(
         tmp_path, ("ioptimz = -1")
     )
 
     with pytest.raises(ProcessValidationError):
-        init.init_process()
+        init.init_process(data_structure_obj)
 
 
 @pytest.mark.parametrize(
     ("input_file_value"), ((-0.01,), (1.1,)), ids=("violate lower", "violate upper")
 )
-def test_input_range(tmp_path, input_file_value):
+def test_input_range(tmp_path, input_file_value, data_structure_obj):
     data_structure.global_variables.fileprefix = _create_input_file(
         tmp_path, (f"epsvmc = {input_file_value}")
     )
@@ -126,42 +132,51 @@ def test_input_range(tmp_path, input_file_value):
     assert process_input.INPUT_VARIABLES["epsvmc"].range == (0.0, 1.0)
 
     with pytest.raises(ProcessValidationError):
-        init.init_process()
+        init.init_process(data_structure_obj)
 
 
-def test_input_array_when_not(tmp_path):
+def test_input_array_when_not(tmp_path, data_structure_obj):
     data_structure.global_variables.fileprefix = _create_input_file(
         tmp_path, ("epsvmc(1) = 0.5")
     )
 
     with pytest.raises(ProcessValidationError):
-        init.init_process()
+        init.init_process(data_structure_obj)
 
 
-def test_input_not_array_when_is(tmp_path):
+def test_input_not_array_when_is(tmp_path, data_structure_obj):
     data_structure.global_variables.fileprefix = _create_input_file(
         tmp_path, ("boundl = 0.5")
     )
 
     with pytest.raises(ProcessValidationError):
-        init.init_process()
+        init.init_process(data_structure_obj)
 
 
-def test_input_float_when_int(tmp_path):
+def test_input_float_when_int(tmp_path, data_structure_obj):
     data_structure.global_variables.fileprefix = _create_input_file(
         tmp_path, ("ioptimz = 0.5")
     )
 
     with pytest.raises(ProcessValidationError):
-        init.init_process()
+        init.init_process(data_structure_obj)
 
 
-def test_input_array(tmp_path):
+def test_input_array(tmp_path, data_structure_obj):
     data_structure.global_variables.fileprefix = _create_input_file(
         tmp_path, ("boundl = 0.1, 0.2, 1.0, 0.0, 1.0e2")
     )
 
-    init.init_process()
+    init.init_process(data_structure_obj)
     np.testing.assert_array_equal(
         data_structure.numerics.boundl[:6], [0.1, 0.2, 1.0, 0.0, 1.0e2, 0]
     )
+
+
+def test_input_on_new_data_structure(tmp_path, data_structure_obj):
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path, ("windspeed = 1.22")
+    )
+
+    init.init_process(data_structure_obj)
+    assert data_structure_obj.water_use.windspeed == 1.22

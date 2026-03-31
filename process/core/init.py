@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import datetime
 import getpass
 import socket
 import subprocess
 from pathlib import Path
+from typing import TYPE_CHECKING
 from warnings import warn
 
 import process
@@ -62,8 +65,11 @@ from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.models.stellarator.initialization import st_init
 from process.models.tfcoil.base import TFCoilShapeModel
 
+if TYPE_CHECKING:
+    from process.main import DataStructure
 
-def init_process():
+
+def init_process(data_structure: DataStructure):
     """Routine that calls the initialisation routines
 
     This routine calls the main initialisation routines that set
@@ -77,7 +83,7 @@ def init_process():
     process_output.OutputFileManager.open_files()
 
     # Input any desired new initial values
-    inputs = parse_input_file()
+    inputs = parse_input_file(data_structure)
 
     # Set active constraints
     set_active_constraints()
