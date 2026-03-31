@@ -66,7 +66,7 @@ from process.models.stellarator.initialization import st_init
 from process.models.tfcoil.base import TFCoilShapeModel
 
 if TYPE_CHECKING:
-    from process.main import DataStructure
+    from process.core.model import DataStructure
 
 
 def init_process(data_structure: DataStructure):

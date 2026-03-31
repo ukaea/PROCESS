@@ -7,7 +7,7 @@ import process.core.init as init
 import process.core.input as process_input
 import process.data_structure as data_structure
 from process.core.exceptions import ProcessValidationError
-from process.main import DataStructure
+from process.core.model import DataStructure
 
 
 @pytest.fixture

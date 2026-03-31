@@ -16,7 +16,7 @@ from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.core.solver.constraints import ConstraintManager
 
 if TYPE_CHECKING:
-    from process.main import DataStructure
+    from process.core.model import DataStructure
 
 NumberType = int | float
 ValidInputTypes = NumberType | str
