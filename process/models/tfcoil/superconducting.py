@@ -1429,6 +1429,11 @@ class SuperconductingTFCoil(TFCoil):
 
 
 class CICCSuperconductingTFCoil(SuperconductingTFCoil):
+    """Cable in Conduit Superconducting TF Coil class."""
+
+    def __init__(self):
+        super().__init__()
+
     def run(self, output: bool = False):
         """Run the superconducting TF coil model for a CroCo conductor with REBCO tape.
 
@@ -2752,6 +2757,11 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
 
 class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
+    """Cross Conductor Superconducting TF Coil class."""
+
+    def __init__(self):
+        super().__init__()
+
     def run(self, output: bool = False):
         """Run the superconducting TF coil model for a CroCo conductor with REBCO tape.
 
