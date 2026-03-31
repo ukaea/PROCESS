@@ -32,8 +32,12 @@ class PlasmaCurrentModel(IntEnum):
     def __new__(cls, value, full_name):
         obj = int.__new__(cls, value)
         obj._value_ = value
-        obj.full_name = full_name
+        obj._full_name_ = full_name
         return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class PlasmaCurrent:
@@ -931,7 +935,7 @@ class PlasmaCurrent:
 
 
 class PlasmaDiamagneticCurrentModel(IntEnum):
-    """Enum for heating and current drive method types"""
+    """Enum for plasma diamagnetic current method types"""
 
     NONE = (0, "None")
     HENDER_ST_FIT = (1, "Hender ST fit")
