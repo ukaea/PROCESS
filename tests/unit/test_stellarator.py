@@ -33,6 +33,7 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.physics import (
     Physics,
@@ -98,6 +99,7 @@ def stellarator():
             PlasmaConfinementTime(),
             PlasmaConfinementTransition(),
             PlasmaCurrent(),
+            plasma_fuelling=PlasmaFuelling(),
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),

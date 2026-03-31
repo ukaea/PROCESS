@@ -1436,24 +1436,12 @@ class Physics(Model):
 
         Parameters
         ----------
-        aspect : float
-            Plasma aspect ratio.
-        nd_plasma_fuel_ions_vol_avg : float
-            Fuel ion density (/m3).
-        fusden_total : float
-            Fusion reaction rate from plasma and beams (/m3/s).
         fusden_alpha_total : float
-            Alpha particle production rate (/m3/s).
-        plasma_current : float
-            Plasma current (A).
-        sbar : float
-            Exponent for aspect ratio (normally 1).
+            Total alpha particle production rate density (m^-3 s^-1).
         nd_plasma_alphas_vol_avg : float
-            Alpha ash density (/m3).
+            Volume averaged alpha particle density (m^-3).
         t_energy_confinement : float
-            Global energy confinement time (s).
-        vol_plasma : float
-            Plasma volume (m3).
+            Energy confinement time (s).
 
         Returns
         -------
