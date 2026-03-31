@@ -6,6 +6,7 @@ A mock class ENDFRecord with the method get_xs is used. This allows process to
 extract nuclear data from any other external module, as long as that module can
 be used to produce an object with the get_xs method.
 """
+
 import json
 import warnings
 from abc import ABC, abstractmethod
