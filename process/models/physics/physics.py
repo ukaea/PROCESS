@@ -2368,6 +2368,16 @@ class Physics(Model):
                     str2,
                     impurity_radiation_module.f_nd_impurity_electrons[imp],
                 )
+                if impurity_radiation_module.f_nd_impurity_electrons[imp] != 0.0:
+                    for i in range(physics_variables.n_plasma_profile_elements):
+                        po.ovarre(
+                            self.mfile,
+                            str1 + f" at point {i}",
+                            f"(f_nd_impurity_electrons{imp}_{i})",
+                            impurity_radiation_module.f_nd_impurity_electrons[imp]
+                            * self.plasma_profile.neprofile.profile_y[i],
+                            "OP ",
+                        )
 
         po.ovarre(
             self.outfile,
