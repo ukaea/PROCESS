@@ -8,11 +8,7 @@ from process.models.neutronics.base import (
     NeutronFluxProfile,
     _get_sign_of,
 )
-from process.models.neutronics.data import (
-    DT_NEUTRON_E,
-    EV_TO_J,
-    MaterialMacroInfo
-)
+from process.models.neutronics.data import DT_NEUTRON_E, EV_TO_J, MaterialMacroInfo
 
 MAX_E = DT_NEUTRON_E * 1.01
 MIN_E = 1 / 40 * EV_TO_J
