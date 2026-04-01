@@ -309,7 +309,6 @@ class VaryRun:
         self.config_file = Path(config_file).resolve()
         self.solver = solver
         self.data = DataStructure()
-        self.models = Models(self.data)
 
     def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
