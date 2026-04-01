@@ -755,15 +755,13 @@ def constraint_equation_24(constraint_registration):
     """
     # Include all beta components: relevant for both tokamaks and stellarators
     if (
-        BetaComponentLimits(data_structure.physics_variables.i_beta_component)
-        == BetaComponentLimits.TOTAL
+        data_structure.physics_variables.i_beta_component == BetaComponentLimits.TOTAL
         or data_structure.stellarator_variables.istell != 0
     ):
         value = data_structure.physics_variables.beta_total_vol_avg
     # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
     elif (
-        BetaComponentLimits(data_structure.physics_variables.i_beta_component)
-        == BetaComponentLimits.THERMAL
+        data_structure.physics_variables.i_beta_component == BetaComponentLimits.THERMAL
     ):
         value = (
             data_structure.physics_variables.beta_total_vol_avg
@@ -772,7 +770,7 @@ def constraint_equation_24(constraint_registration):
         )
     # Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
     elif (
-        BetaComponentLimits(data_structure.physics_variables.i_beta_component)
+        data_structure.physics_variables.i_beta_component
         == BetaComponentLimits.THERMAL_AND_BEAM
     ):
         value = (
@@ -781,8 +779,7 @@ def constraint_equation_24(constraint_registration):
         )
     # Beta limit applies to toroidal beta
     elif (
-        BetaComponentLimits(data_structure.physics_variables.i_beta_component)
-        == BetaComponentLimits.TOROIDAL
+        data_structure.physics_variables.i_beta_component == BetaComponentLimits.TOROIDAL
     ):
         value = (
             data_structure.physics_variables.beta_total_vol_avg

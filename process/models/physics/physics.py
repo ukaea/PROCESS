@@ -4129,10 +4129,7 @@ class PlasmaBeta:
             physics_variables.i_beta_component,
         )
 
-        if (
-            BetaComponentLimits(physics_variables.i_beta_component)
-            == BetaComponentLimits.TOTAL
-        ):
+        if physics_variables.i_beta_component == BetaComponentLimits.TOTAL:
             po.ovarrf(
                 self.outfile,
                 "Upper limit on total beta",
@@ -4140,10 +4137,7 @@ class PlasmaBeta:
                 physics_variables.beta_vol_avg_max,
                 "OP ",
             )
-        elif (
-            BetaComponentLimits(physics_variables.i_beta_component)
-            == BetaComponentLimits.THERMAL
-        ):
+        elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL:
             po.ovarrf(
                 self.outfile,
                 "Upper limit on thermal beta",
@@ -4151,10 +4145,7 @@ class PlasmaBeta:
                 physics_variables.beta_vol_avg_max,
                 "OP ",
             )
-        elif (
-            BetaComponentLimits(physics_variables.i_beta_component)
-            == BetaComponentLimits.THERMAL_AND_BEAM
-        ):
+        elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL_AND_BEAM:
             po.ovarrf(
                 self.outfile,
                 "Upper limit on thermal + NB beta",
@@ -4162,10 +4153,7 @@ class PlasmaBeta:
                 physics_variables.beta_vol_avg_max,
                 "OP ",
             )
-        elif (
-            BetaComponentLimits(physics_variables.i_beta_component)
-            == BetaComponentLimits.TOROIDAL
-        ):
+        elif physics_variables.i_beta_component == BetaComponentLimits.TOROIDAL:
             po.ovarrf(
                 self.outfile,
                 "Upper limit on toroidal beta",
@@ -4180,10 +4168,7 @@ class PlasmaBeta:
             "(beta_total_vol_avg)",
             physics_variables.beta_total_vol_avg,
         )
-        if (
-            BetaComponentLimits(physics_variables.i_beta_component)
-            == BetaComponentLimits.TOTAL
-        ):
+        if physics_variables.i_beta_component == BetaComponentLimits.TOTAL:
             po.ovarrf(
                 self.outfile,
                 "Lower limit on total beta",
@@ -4191,10 +4176,7 @@ class PlasmaBeta:
                 physics_variables.beta_vol_avg_min,
                 "IP",
             )
-        elif (
-            BetaComponentLimits(physics_variables.i_beta_component)
-            == BetaComponentLimits.THERMAL
-        ):
+        elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL:
             po.ovarrf(
                 self.outfile,
                 "Lower limit on thermal beta",
