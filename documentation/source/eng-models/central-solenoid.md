@@ -157,7 +157,7 @@ to the maximum at the midplane, $F_{z}(0)$.
 --------------------------
 
 
-### Hoop stress | `hoop_stress()`
+### Hoop stress | `calculate_cs_hoop_stress()`
 
 
 
