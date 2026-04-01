@@ -253,8 +253,15 @@ e_plasma_magnetic_stored: float = None
 """Plasma stored magnetic energy (J)"""
 
 
-burnup: float = None
-"""fractional plasma burnup"""
+f_plasma_fuel_burnup: float = None
+"""Total fuel burnup fraction in plasma"""
+
+
+f_plasma_tritium_burnup: float = None
+"""Tritium burnup fraction in plasma"""
+
+f_plasma_deuterium_burnup: float = None
+"""Deuterium burnup fraction in plasma"""
 
 
 burnup_in: float = None
@@ -457,6 +464,27 @@ fusden_total: float = None
 
 fusrat_total: float = None
 """fusion reaction rate, from beams and plasma (reactions/sec)"""
+
+fusrat_plasma_dt: float = None
+""" D-T fusion reaction rate in plasma, (reactions/sec)"""
+
+fusrat_dt_total: float = None
+""" Total D-T fusion reaction rate from beams and plasma, (reactions/sec)"""
+
+fusrat_plasma_dd_helion: float = None
+"""D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
+
+fusrat_plasma_dd_triton: float = None
+"""D-D fusion reaction rate (tritium branch) in plasma, (reactions/sec)"""
+
+fusrat_plasma_dd_total: float = None
+"""Total D-D fusion reaction rate in plasma, (reactions/sec)"""
+
+fusrat_plasma_dhe3: float = None
+"""D-3He fusion reaction rate in plasma, (reactions/sec)"""
+
+fusrat_neutron_production_total: float = None
+"""Total neutron production rate from plasma and beams (neutrons/sec)"""
 
 fusrat_plasma_dt_profile: list[float] = None
 """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
@@ -1062,12 +1090,32 @@ in which case q95 = mean edge safety factor qbar)
 """
 
 
-molflow_plasma_fuelling_required: float = None
-"""plasma fuelling rate (nucleus-pairs/s)"""
+f_plasma_particles_lcfs_recycled: float = None
+"""fraction of plasma particles that are recycled at the LCFS. Recycling coefficent (R)"""
 
+eta_plasma_fuelling: float = None
+"""fuelling efficiency (fraction of fuel particles injected that become confined in the plasma)"""
 
-tauratio: float = None
-"""tauratio /1.0/ : ratio of He and pellet particle confinement times"""
+molflow_plasma_fuelling_vv_injected: float = None
+"""plasma fuelling rate into the vacuum vessel (particles/s)"""
+
+molflow_plasma_fuelling_vv_injected_moles: float = None
+"""plasma fuelling rate into the vacuum vessel (moles/s)"""
+
+molflow_plasma_fuelling_loss: float = None
+"""plasma fuelling rate that dosent make it to plasma (particles/s)"""
+
+molflow_plasma_fuelling_loss_moles: float = None
+"""plasma fuelling rate that dosent make it to plasma (moles/s)"""
+
+f_molflow_plasma_fuelling_deuterium: float = None
+"""fraction of plasma fuelling that is deuterium"""
+
+f_molflow_plasma_fuelling_tritium: float = None
+"""fraction of plasma fuelling that is tritium"""
+
+f_molflow_plasma_fuelling_helium3: float = None
+"""fraction of plasma fuelling that is helium-3"""
 
 
 q95_min: float = None
@@ -1127,10 +1175,6 @@ f_nd_beam_electron: float = None
 
 f_nd_plasma_carbon_electron: float = None
 """n_carbon / n_e"""
-
-
-rndfuel: float = None
-"""fuel burnup rate (reactions/second)"""
 
 
 f_nd_plasma_iron_argon_electron: float = None
@@ -1448,7 +1492,9 @@ def init_physics_variables():
         b_plasma_toroidal_profile, \
         b_plasma_total, \
         e_plasma_magnetic_stored, \
-        burnup, \
+        f_plasma_fuel_burnup, \
+        f_plasma_tritium_burnup, \
+        f_plasma_deuterium_burnup, \
         burnup_in, \
         b_plasma_vertical_required, \
         c_beta, \
@@ -1494,6 +1540,13 @@ def init_physics_variables():
         f_plasma_fuel_tritium, \
         fusden_total, \
         fusrat_total, \
+        fusrat_plasma_dt, \
+        fusrat_dt_total, \
+        fusrat_plasma_dd_helion, \
+        fusrat_plasma_dd_triton, \
+        fusrat_plasma_dd_total, \
+        fusrat_plasma_dhe3, \
+        fusrat_neutron_production_total, \
         fusrat_plasma_dt_profile, \
         fusrat_plasma_dd_triton_profile, \
         fusrat_plasma_dd_helion_profile, \
@@ -1616,8 +1669,15 @@ def init_physics_variables():
         pden_ion_transport_loss_mw, \
         q0, \
         q95, \
-        molflow_plasma_fuelling_required, \
-        tauratio, \
+        f_plasma_particles_lcfs_recycled, \
+        eta_plasma_fuelling, \
+        molflow_plasma_fuelling_vv_injected, \
+        molflow_plasma_fuelling_vv_injected_moles, \
+        molflow_plasma_fuelling_loss, \
+        molflow_plasma_fuelling_loss_moles, \
+        f_molflow_plasma_fuelling_deuterium, \
+        f_molflow_plasma_fuelling_tritium, \
+        f_molflow_plasma_fuelling_helium3, \
         q95_min, \
         qstar, \
         rad_fraction_sol, \
@@ -1634,7 +1694,6 @@ def init_physics_variables():
         rminor, \
         f_nd_beam_electron, \
         f_nd_plasma_carbon_electron, \
-        rndfuel, \
         f_nd_plasma_iron_argon_electron, \
         f_nd_plasma_oxygen_electron, \
         f_res_plasma_neo, \
@@ -1737,7 +1796,9 @@ def init_physics_variables():
     b_plasma_toroidal_profile = []
     b_plasma_total = 0.0
     e_plasma_magnetic_stored = 0.0
-    burnup = 0.0
+    f_plasma_fuel_burnup = 0.0
+    f_plasma_tritium_burnup = 0.0
+    f_plasma_deuterium_burnup = 0.0
     burnup_in = 0.0
     b_plasma_vertical_required = 0.0
     c_beta = 0.5
@@ -1783,6 +1844,13 @@ def init_physics_variables():
     f_plasma_fuel_tritium = 0.5
     fusden_total = 0.0
     fusrat_total = 0.0
+    fusrat_plasma_dt = 0.0
+    fusrat_plasma_dd_helion = 0.0
+    fusrat_plasma_dd_triton = 0.0
+    fusrat_plasma_dd_total = 0.0
+    fusrat_plasma_dhe3 = 0.0
+    fusrat_neutron_production_total = 0.0
+    fusrat_dt_total = 0.0
     fusrat_plasma_dt_profile = []
     fusrat_plasma_dd_triton_profile = []
     fusrat_plasma_dd_helion_profile = []
@@ -1907,8 +1975,15 @@ def init_physics_variables():
     pden_ion_transport_loss_mw = 0.0
     q0 = 1.0
     q95 = 0.0
-    molflow_plasma_fuelling_required = 0.0
-    tauratio = 1.0
+    f_plasma_particles_lcfs_recycled = 0.0
+    eta_plasma_fuelling = 0.0
+    molflow_plasma_fuelling_vv_injected = 1e20
+    molflow_plasma_fuelling_vv_injected_moles = 0.0
+    molflow_plasma_fuelling_loss = 0.0
+    molflow_plasma_fuelling_loss_moles = 0.0
+    f_molflow_plasma_fuelling_deuterium = 0.5
+    f_molflow_plasma_fuelling_tritium = 0.5
+    f_molflow_plasma_fuelling_helium3 = 0.0
     q95_min = 0.0
     qstar = 0.0
     rad_fraction_sol = 0.8
@@ -1925,7 +2000,6 @@ def init_physics_variables():
     rminor = 0.0
     f_nd_beam_electron = 0.005
     f_nd_plasma_carbon_electron = 0.0
-    rndfuel = 0.0
     f_nd_plasma_iron_argon_electron = 0.0
     f_nd_plasma_oxygen_electron = 0.0
     f_res_plasma_neo = 0.0

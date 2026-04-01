@@ -30,6 +30,7 @@ from process.models.physics.confinement_time import (
 )
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.plasma_current import PlasmaCurrent
 
@@ -214,6 +215,7 @@ class Physics(Model):
         plasma_confinement: PlasmaConfinementTime,
         plasma_transition: PlasmaConfinementTransition,
         plasma_current: PlasmaCurrent,
+        plasma_fuelling: PlasmaFuelling,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -227,6 +229,7 @@ class Physics(Model):
         self.confinement = plasma_confinement
         self.plasma_transition = plasma_transition
         self.current = plasma_current
+        self.fuelling = plasma_fuelling
 
     def output(self):
         self.calculate_effective_charge_ionisation_profiles()
@@ -655,6 +658,7 @@ class Physics(Model):
                 + (1.0 / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION))
                 * physics_variables.p_beam_alpha_mw
             )
+
             physics_variables.p_beam_neutron_mw = physics_variables.p_beam_alpha_mw * (
                 constants.DT_NEUTRON_ENERGY_FRACTION
                 / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
@@ -670,6 +674,21 @@ class Physics(Model):
 
         physics_variables.fusrat_total = (
             physics_variables.fusden_total * physics_variables.vol_plasma
+        )
+        physics_variables.fusrat_plasma_dt = (physics_variables.p_plasma_dt_mw * 1e6) / (
+            constants.D_T_ENERGY
+        )
+        physics_variables.fusrat_plasma_dd_total = (
+            physics_variables.fusrat_plasma_dd_helion
+            + physics_variables.fusrat_plasma_dd_triton
+        )
+
+        physics_variables.fusrat_neutron_production_total = (
+            physics_variables.fusrat_plasma_dd_helion + physics_variables.fusrat_dt_total
+        )
+
+        physics_variables.fusrat_dt_total = (
+            physics_variables.p_dt_total_mw * 1e6 / (constants.D_T_ENERGY)
         )
 
         # Create some derived values and add beam contribution to fusion power
@@ -923,27 +942,16 @@ class Physics(Model):
             0.5e0 * physics_variables.ind_plasma * physics_variables.plasma_current**2
         )
 
-        # Calculate auxiliary physics related information
-        sbar = 1.0e0
         (
-            physics_variables.burnup,
-            physics_variables.figmer,
-            physics_variables.fusrat,
-            physics_variables.molflow_plasma_fuelling_required,
-            physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
             physics_variables.f_alpha_energy_confinement,
         ) = self.phyaux(
-            physics_variables.aspect,
-            physics_variables.nd_plasma_fuel_ions_vol_avg,
-            physics_variables.fusden_total,
             physics_variables.fusden_alpha_total,
-            physics_variables.plasma_current,
-            sbar,
             physics_variables.nd_plasma_alphas_vol_avg,
             physics_variables.t_energy_confinement,
-            physics_variables.vol_plasma,
         )
+
+        self.fuelling.run()
 
         physics_variables.ntau, physics_variables.nTtau = (
             self.confinement.calculate_double_and_triple_product(
@@ -1420,57 +1428,30 @@ class Physics(Model):
     @staticmethod
     @nb.njit(cache=True)
     def phyaux(
-        aspect: float,
-        nd_plasma_fuel_ions_vol_avg: float,
-        fusden_total: float,
         fusden_alpha_total: float,
-        plasma_current: float,
-        sbar: float,
         nd_plasma_alphas_vol_avg: float,
         t_energy_confinement: float,
-        vol_plasma: float,
-    ) -> tuple[float, float, float, float, float, float, float, float]:
+    ) -> tuple[float, float]:
         """Auxiliary physics quantities
 
         Parameters
         ----------
-        aspect : float
-            Plasma aspect ratio.
-        nd_plasma_fuel_ions_vol_avg : float
-            Fuel ion density (/m3).
-        fusden_total : float
-            Fusion reaction rate from plasma and beams (/m3/s).
         fusden_alpha_total : float
-            Alpha particle production rate (/m3/s).
-        plasma_current : float
-            Plasma current (A).
-        sbar : float
-            Exponent for aspect ratio (normally 1).
+            Total alpha particle production rate density (m^-3 s^-1).
         nd_plasma_alphas_vol_avg : float
-            Alpha ash density (/m3).
+            Volume averaged alpha particle density (m^-3).
         t_energy_confinement : float
-            Global energy confinement time (s).
-        vol_plasma : float
-            Plasma volume (m3).
+            Energy confinement time (s).
 
         Returns
         -------
         tuple
             A tuple containing:
-            - burnup (float): Fractional plasma burnup.
-            - figmer (float): Physics figure of merit.
-            - fusrat (float): Number of fusion reactions per second.
-            - molflow_plasma_fuelling_required (float): Fuelling rate for D-T (nucleus-pairs/sec).
-            - rndfuel (float): Fuel burnup rate (reactions/s).
             - t_alpha_confinement (float): Alpha particle confinement time (s).
             - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
             This subroutine calculates extra physics related items needed by other parts of the code.
 
         """
-        figmer = 1e-6 * plasma_current * aspect**sbar
-
-        # Fusion reactions per second
-        fusrat = fusden_total * vol_plasma
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
@@ -1479,39 +1460,9 @@ class Physics(Model):
         else:  # only likely if DD is only active fusion reaction
             t_alpha_confinement = 0.0
 
-        # Fractional burnup
-        # (Consider detailed model in: G. L. Jackson, V. S. Chan, R. D. Stambaugh,
-        # Fusion Science and Technology, vol.64, no.1, July 2013, pp.8-12)
-        # The ratio of ash to fuel particle confinement times is given by
-        # tauratio
-        # Possible logic...
-        # burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
-        # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and D-He3 reactions)
-        # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion pairs/m3
-        # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
-        if physics_variables.burnup_in <= 1.0e-9:
-            burnup = (
-                nd_plasma_alphas_vol_avg
-                / (nd_plasma_alphas_vol_avg + 0.5 * nd_plasma_fuel_ions_vol_avg)
-                / physics_variables.tauratio
-            )
-        else:
-            burnup = physics_variables.burnup_in
-
-        # Fuel burnup rate (reactions/second) (previously Amps)
-        rndfuel = fusrat
-
-        # Required fuelling rate (fuel ion pairs/second) (previously Amps)
-        molflow_plasma_fuelling_required = rndfuel / burnup
-
         f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
         return (
-            burnup,
-            figmer,
-            fusrat,
-            molflow_plasma_fuelling_required,
-            rndfuel,
             t_alpha_confinement,
             f_alpha_energy_confinement,
         )
@@ -2653,6 +2604,56 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
+            "D-T Fusion rate: total (reactions/sec)",
+            "(fusrat_dt_total)",
+            physics_variables.fusrat_dt_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-T Fusion rate: plasma (reactions/sec)",
+            "(fusrat_plasma_dt)",
+            physics_variables.fusrat_plasma_dt,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "D-D -> 3He Fusion rate: plasma (reactions/sec)",
+            "(fusrat_plasma_dd_helion)",
+            physics_variables.fusrat_plasma_dd_helion,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-D -> T Fusion rate: plasma (reactions/sec)",
+            "(fusrat_plasma_dd_triton)",
+            physics_variables.fusrat_plasma_dd_triton,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-D Fusion rate: total (reactions/sec)",
+            "(fusrat_plasma_dd_total)",
+            physics_variables.fusrat_plasma_dd_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "D-3He Fusion rate: total (reactions/sec)",
+            "(fusrat_plasma_dhe3)",
+            physics_variables.fusrat_plasma_dhe3,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutron production rate: total (particles/sec)",
+            "(fusrat_neutron_production_total)",
+            physics_variables.fusrat_neutron_production_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Fusion rate density: total (reactions/m3/sec)",
             "(fusden_total)",
             physics_variables.fusden_total,
@@ -3252,56 +3253,7 @@ class Physics(Model):
         if stellarator_variables.istell == 0:
             self.plasma_bootstrap_current.output()
 
-        po.osubhd(self.outfile, "Fuelling :")
-        po.ovarre(
-            self.outfile,
-            "Ratio of He and pellet particle confinement times",
-            "(tauratio)",
-            physics_variables.tauratio,
-        )
-        po.ovarre(
-            self.outfile,
-            "Fuelling rate (nucleus-pairs/s)",
-            "(molflow_plasma_fuelling_required)",
-            physics_variables.molflow_plasma_fuelling_required,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Fuel burn-up rate (reactions/s)",
-            "(rndfuel)",
-            physics_variables.rndfuel,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Burn-up fraction",
-            "(burnup)",
-            physics_variables.burnup,
-            "OP ",
-        )
-
-        if 78 in numerics.icc:
-            po.osubhd(self.outfile, "Reinke Criterion :")
-            po.ovarin(
-                self.outfile,
-                "index of impurity to be iterated for divertor detachment",
-                "(impvardiv)",
-                reinke_variables.impvardiv,
-            )
-            po.ovarre(
-                self.outfile,
-                "Minimum Impurity fraction from Reinke",
-                "(fzmin)",
-                reinke_variables.fzmin,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Actual Impurity fraction",
-                "(fzactual)",
-                reinke_variables.fzactual,
-            )
+        self.fuelling.output_fuelling_info()
 
     @staticmethod
     @nb.njit(cache=True)

@@ -2362,7 +2362,7 @@ class Costs:
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
             physics_variables.wtgpd = (
                 2.0e0
-                * physics_variables.rndfuel
+                * physics_variables.fusrat_total
                 * physics_variables.m_fuel_amu
                 * constants.UMASS
                 * 1000.0e0

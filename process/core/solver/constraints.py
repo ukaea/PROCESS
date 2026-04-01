@@ -1855,6 +1855,103 @@ def constraint_equation_92(constraint_registration):
     )
 
 
+@ConstraintManager.register_constraint(93, "particles/s", "=")
+def constraint_equation_93(constraint_registration):
+    """
+    Tritium particle balance
+    """
+    # pscaling: total transport power per volume (MW/m3)
+    # NEED TO ADD PROPER FUSION RATES FOR EACH REACTION
+
+    # Numerator shall be the tritium particle balance
+    numerator = (
+        (
+            data_structure.physics_variables.eta_plasma_fuelling
+            * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
+            * data_structure.physics_variables.f_molflow_plasma_fuelling_tritium
+        )
+        + data_structure.physics_variables.fusrat_plasma_dd_triton
+        - data_structure.physics_variables.fusrat_dt_total
+    )
+    denominator = (
+        data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
+        * data_structure.physics_variables.vol_plasma
+        * data_structure.physics_variables.f_plasma_fuel_tritium
+    ) / (
+        data_structure.physics_variables.t_energy_confinement
+        / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
+    )
+
+    return eq(numerator, denominator, constraint_registration)
+
+
+@ConstraintManager.register_constraint(94, "particles/s", "=")
+def constraint_equation_94(constraint_registration):
+    """
+    Deuterium particle balance
+    """
+
+    numerator = (
+        (
+            data_structure.physics_variables.eta_plasma_fuelling
+            * data_structure.physics_variables.molflow_plasma_fuelling_vv_injected
+            * data_structure.physics_variables.f_molflow_plasma_fuelling_deuterium
+        )
+        - data_structure.physics_variables.fusrat_dt_total
+        - data_structure.physics_variables.fusrat_plasma_dhe3
+        - 2.0 * data_structure.physics_variables.fusrat_plasma_dd_total
+    )
+    denominator = (
+        data_structure.physics_variables.nd_plasma_fuel_ions_vol_avg
+        * data_structure.physics_variables.vol_plasma
+        * data_structure.physics_variables.f_plasma_fuel_deuterium
+    ) / (
+        data_structure.physics_variables.t_energy_confinement
+        / (1 - data_structure.physics_variables.f_plasma_particles_lcfs_recycled)
+    )
+
+    return eq(numerator, denominator, constraint_registration)
+
+
+@ConstraintManager.register_constraint(95, "particles/s", "=")
+def constraint_equation_95(constraint_registration):
+    """
+    Alpha particle balance
+    """
+
+    # Alpha particle balance
+    numerator = (
+        data_structure.physics_variables.fusrat_dt_total
+        + data_structure.physics_variables.fusrat_plasma_dhe3
+    )
+    denominator = (
+        data_structure.physics_variables.nd_plasma_alphas_vol_avg
+        * data_structure.physics_variables.vol_plasma
+    ) / (
+        data_structure.physics_variables.t_energy_confinement
+        * data_structure.physics_variables.f_alpha_energy_confinement
+    )
+
+    return eq(numerator, denominator, constraint_registration)
+
+
+@ConstraintManager.register_constraint(96, "", "=")
+def constraint_equation_96(constraint_registration):
+    """Equation for checking the fuelling composition is consistent.
+
+    f_molflow_plasma_fuelling_deuterium: fraction of deuterium ions
+    f_molflow_plasma_fuelling_tritium: fraction of tritium ions
+    f_molflow_plasma_fuelling_helium3: fraction of helium-3 ions
+    """
+    return eq(
+        data_structure.physics_variables.f_molflow_plasma_fuelling_deuterium
+        + data_structure.physics_variables.f_molflow_plasma_fuelling_tritium
+        + data_structure.physics_variables.f_molflow_plasma_fuelling_helium3,
+        1.0,
+        constraint_registration,
+    )
+
+
 def constraint_eqns(m: int, ieqn: int):
     """Evaluates the constraints given the current state of PROCESS.
 

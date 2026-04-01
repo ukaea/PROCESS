@@ -67,6 +67,7 @@ from process.models.physics.current_drive import (
     ElectronBernstein,
     ElectronCyclotron,
 )
+from process.models.physics.fuelling import PlasmaFuelling
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
@@ -2978,7 +2979,7 @@ def plot_main_plasma_information(
         f"|  D: {mfile.get('f_plasma_fuel_deuterium', scan=scan):.2f}  |  T: {mfile.get('f_plasma_fuel_tritium', scan=scan):.2f}  |  3He: {mfile.get('f_plasma_fuel_helium3', scan=scan):.2f}  |\n\n"
         f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile.get('p_fusion_total_mw', scan=scan):,.2f} MW\n"
         f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
-        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
+        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile.get('p_dd_total_mw', scan=scan):,.4f} MW\n"
         f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW\n"
         f"Alpha Power, $P_{{\\alpha}}:$ {mfile.get('p_alpha_total_mw', scan=scan):,.2f} MW"
     )
@@ -3002,9 +3003,9 @@ def plot_main_plasma_information(
         f"   - Average mass of all plasma ions: {mfile.get('m_ions_total_amu', scan=scan):.3f} amu\n"
         f"Fuel mass: {mfile.get('m_plasma_fuel_ions', scan=scan) * 1000:.4f} g\n"
         f"   - Average mass of all fuel ions: {mfile.get('m_fuel_amu', scan=scan):.3f} amu\n\n"
-        f"Fueling rate: {mfile.get('molflow_plasma_fuelling_required', scan=scan):.3e} nucleus-pairs/s\n"
-        f"Fuel burn-up rate: {mfile.get('rndfuel', scan=scan):.3e} reactions/s \n"
-        f"Burn-up fraction: {mfile.get('burnup', scan=scan):.4f} \n"
+        f"Fueling rate: {mfile.get('molflow_plasma_fuelling_vv_injected', scan=scan):.3e} nucleus-pairs/s\n"
+        f"Fuel burn-up rate: {mfile.get('fusrat_total', scan=scan):.3e} reactions/s \n"
+        f"Burn-up fraction: {mfile.get('f_plasma_fuel_burnup', scan=scan):.4f} \n"
     )
 
     axis.text(
@@ -11345,8 +11346,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # Add plasma volume, areas and shaping information
     textstr_general = (
         f"Total fusion rate: {mfile.get('fusrat_total', scan=scan):.4e} reactions/s\n"
-        f"Total fusion rate density: {mfile.get('fusden_total', scan=scan):.4e} reactions/m3/s\n"
-        f"Plasma fusion rate density: {mfile.get('fusden_plasma', scan=scan):.4e} reactions/m3/s\n"
+        f"Total fusion rate density: {mfile.get('fusden_total', scan=scan):.4e} reactions/m$^3$/s\n"
+        f"Plasma fusion rate density: {mfile.get('fusden_plasma', scan=scan):.4e} reactions/m$^3$/s"
     )
 
     axis.text(
@@ -11368,9 +11369,11 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # ============================================================================
 
     textstr_dt = (
-        f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.2f} MW\n"
-        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.2f} MW                     \n"
-        f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.2f} MW\n"
+        f"Total fusion power: {mfile.get('p_dt_total_mw', scan=scan):,.4f} MW\n"
+        f"Total fusion rate: {mfile.get('fusrat_dt_total', scan=scan):.4e} reactions/s\n"
+        f"Plasma fusion power: {mfile.get('p_plasma_dt_mw', scan=scan):,.4f} MW                              \n"
+        f"Plasma fusion rate: {mfile.get('fusrat_plasma_dt', scan=scan):.4e} reactions/s\n"
+        f"Beam fusion power: {mfile.get('p_beam_dt_mw', scan=scan):,.4f} MW"
     )
 
     axis.text(
@@ -11390,7 +11393,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     )
 
     axis.text(
-        0.24,
+        0.285,
         0.8,
         "$\\text{D - T}$",
         fontsize=20,
@@ -11401,13 +11404,16 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # =================================================
 
     textstr_dd = (
-        f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.2f} MW\n"
-        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                      \n"
+        f"Total fusion power: {mfile.get('p_dd_total_mw', scan=scan):,.4f} MW\n"
+        f"Tritium branching ratio: {mfile.get('f_dd_branching_trit', scan=scan):.4f}                                  \n\n"
+        f"D+D -> T fusion rate: {mfile.get('fusrat_plasma_dd_triton', scan=scan):.4e} reactions/s                       \n"
+        f"D+D -> 3He fusion rate: {mfile.get('fusrat_plasma_dd_helion', scan=scan):.4e} reactions/s                     \n"
+        f"Total D-D fusion rate: {mfile.get('fusrat_plasma_dd_total', scan=scan):.4e} reactions/s"
     )
 
     axis.text(
         0.05,
-        0.65,
+        0.625,
         textstr_dd,
         fontsize=9,
         verticalalignment="bottom",
@@ -11422,8 +11428,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     )
 
     axis.text(
-        0.22,
-        0.685,
+        0.31,
+        0.69,
         "$\\text{D - D}$",
         fontsize=20,
         verticalalignment="top",
@@ -11432,11 +11438,14 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
 
     # =================================================
 
-    textstr_dhe3 = f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.2f} MW                                 \n\n"
+    textstr_dhe3 = (
+        f"Total fusion power: {mfile.get('p_dhe3_total_mw', scan=scan):,.4f} MW                                         \n"
+        f"D+3He fusion rate: {mfile.get('fusrat_plasma_dhe3', scan=scan):.4e} reactions/s                               \n"
+    )
 
     axis.text(
         0.05,
-        0.55,
+        0.525,
         textstr_dhe3,
         fontsize=9,
         verticalalignment="bottom",
@@ -11451,8 +11460,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     )
 
     axis.text(
-        0.21,
-        0.59,
+        0.285,
+        0.56,
         "$\\text{D - 3He}$",
         fontsize=20,
         verticalalignment="top",
@@ -11462,15 +11471,15 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # =================================================
 
     textstr_alpha = (
-        f"Total power: {mfile.get('p_alpha_total_mw', scan=scan):.2f} MW\n"
-        f"Plasma power: {mfile.get('p_plasma_alpha_mw', scan=scan):.2f} MW\n"
-        f"Beam power: {mfile.get('p_beam_alpha_mw', scan=scan):.2f} MW\n\n"
-        f"Rate density total: {mfile.get('fusden_alpha_total', scan=scan):.4e} particles/m3/sec\n"
-        f"Rate density, plasma: {mfile.get('fusden_plasma_alpha', scan=scan):.4e} particles/m3/sec\n\n"
-        f"Total power density: {mfile.get('pden_alpha_total_mw', scan=scan):.4e} MW/m3\n"
-        f"Plasma power density: {mfile.get('pden_plasma_alpha_mw', scan=scan):.4e} MW/m3\n\n"
-        f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m3\n"
-        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m3\n\n"
+        f"Total power: {mfile.get('p_alpha_total_mw', scan=scan):.4f} MW\n"
+        f"Plasma power: {mfile.get('p_plasma_alpha_mw', scan=scan):.4f} MW\n"
+        f"Beam power: {mfile.get('p_beam_alpha_mw', scan=scan):.4f} MW\n\n"
+        f"Rate density total: {mfile.get('fusden_alpha_total', scan=scan):.4e} particles/m$^3$/sec\n"
+        f"Rate density, plasma: {mfile.get('fusden_plasma_alpha', scan=scan):.4e} particles/m$^3$/sec\n\n"
+        f"Total power density: {mfile.get('pden_alpha_total_mw', scan=scan):.4e} MW/m$^3$\n"
+        f"Plasma power density: {mfile.get('pden_plasma_alpha_mw', scan=scan):.4e} MW/m$^3$\n\n"
+        f"Power per unit volume transferred to electrons: {mfile.get('f_pden_alpha_electron_mw', scan=scan):.4e} MW/m$^3$\n"
+        f"Power per unit volume transferred to ions: {mfile.get('f_pden_alpha_ions_mw', scan=scan):.4e} MW/m$^3$"
     )
 
     axis.text(
@@ -11501,11 +11510,12 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     # =================================================
 
     textstr_neutron = (
-        f"Total power: {mfile.get('p_neutron_total_mw', scan=scan):,.2f} MW\n"
-        f"Plasma power: {mfile.get('p_plasma_neutron_mw', scan=scan):,.2f} MW\n"
-        f"Beam power: {mfile.get('p_beam_neutron_mw', scan=scan):,.2f} MW\n\n"
-        f"Total power density: {mfile.get('pden_neutron_total_mw', scan=scan):,.4e} MW/m3\n"
-        f"Plasma power density: {mfile.get('pden_plasma_neutron_mw', scan=scan):,.4e} MW/m3\n"
+        f"Total power: {mfile.get('p_neutron_total_mw', scan=scan):,.4f} MW\n"
+        f"Plasma power: {mfile.get('p_plasma_neutron_mw', scan=scan):,.4f} MW\n"
+        f"Beam power: {mfile.get('p_beam_neutron_mw', scan=scan):,.4f} MW\n\n"
+        f"Total power density: {mfile.get('pden_neutron_total_mw', scan=scan):,.4e} MW/m$^3$\n"
+        f"Plasma power density: {mfile.get('pden_plasma_neutron_mw', scan=scan):,.4e} MW/m$^3$\n\n"
+        f"Neutron production rate: {mfile.get('fusrat_neutron_production_total', scan=scan):.4e} particles/s"
     )
 
     axis.text(
@@ -11525,8 +11535,8 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     )
 
     axis.text(
-        0.25,
-        0.2,
+        0.26,
+        0.21,
         "$n$",
         fontsize=20,
         verticalalignment="top",
@@ -13750,16 +13760,33 @@ def main_plot(
         figs[9].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
         figs[10].text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    plot_plasma_pressure_profiles(figs[11].add_subplot(222), m_file, scan)
-    plot_plasma_pressure_gradient_profiles(figs[11].add_subplot(224), m_file, scan)
+    PlasmaFuelling().plot_tritium_flow_contour(
+        axis=figs[11].add_subplot(231), mfile=m_file, scan=scan
+    )
+    PlasmaFuelling().plot_deuterium_flow_contour(
+        axis=figs[11].add_subplot(232), mfile=m_file, scan=scan
+    )
+    PlasmaFuelling().plot_helium3_flow_contour(
+        axis=figs[11].add_subplot(233), mfile=m_file, scan=scan
+    )
+    PlasmaFuelling().plot_alpha_flow_contour(
+        axis=figs[11].add_subplot(223), mfile=m_file, scan=scan
+    )
+
+    PlasmaFuelling().plot_fuelling_info(figs[11], m_file, scan)
+
+    figs[11].subplots_adjust(wspace=0.3, hspace=0.35)
+
+    plot_plasma_pressure_profiles(figs[12].add_subplot(222), m_file, scan)
+    plot_plasma_pressure_gradient_profiles(figs[12].add_subplot(224), m_file, scan)
     # Currently only works with Sauter geometry as plasma has a closed surface
 
     if i_shape == 1:
         plot_plasma_poloidal_pressure_contours(
-            figs[11].add_subplot(121, aspect="equal"), m_file, scan
+            figs[12].add_subplot(121, aspect="equal"), m_file, scan
         )
     else:
-        ax = figs[11].add_subplot(131, aspect="equal")
+        ax = figs[12].add_subplot(131, aspect="equal")
         msg = (
             "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
             "(i_plasma_shape == 1). "
@@ -13778,30 +13805,30 @@ def main_plot(
         )
         ax.axis("off")
 
-    plot_magnetic_fields_in_plasma(figs[12].add_subplot(122), m_file, scan)
-    plot_beta_profiles(figs[12].add_subplot(221), m_file, scan)
+    plot_magnetic_fields_in_plasma(figs[13].add_subplot(122), m_file, scan)
+    plot_beta_profiles(figs[13].add_subplot(221), m_file, scan)
 
-    plot_ebw_ecrh_coupling_graph(figs[13].add_subplot(111), m_file, scan)
+    plot_ebw_ecrh_coupling_graph(figs[14].add_subplot(111), m_file, scan)
 
-    plot_bootstrap_comparison(figs[14].add_subplot(221), m_file, scan)
-    PlasmaCurrent.plot_plasma_current_comparison(figs[14].add_subplot(224), m_file, scan)
-    plot_h_threshold_comparison(figs[15].add_subplot(224), m_file, scan)
-    plot_density_limit_comparison(figs[15].add_subplot(221), m_file, scan)
-    plot_confinement_time_comparison(figs[16].add_subplot(224), m_file, scan)
+    plot_bootstrap_comparison(figs[15].add_subplot(221), m_file, scan)
+    PlasmaCurrent.plot_plasma_current_comparison(figs[15].add_subplot(224), m_file, scan)
+    plot_h_threshold_comparison(figs[16].add_subplot(224), m_file, scan)
+    plot_density_limit_comparison(figs[16].add_subplot(221), m_file, scan)
+    plot_confinement_time_comparison(figs[17].add_subplot(224), m_file, scan)
 
-    plot_debye_length_profile(figs[17].add_subplot(232), m_file, scan)
-    plot_velocity_profile(figs[17].add_subplot(233), m_file, scan)
-    plot_plasma_coloumb_logarithms(figs[17].add_subplot(231), m_file, scan)
+    plot_debye_length_profile(figs[18].add_subplot(232), m_file, scan)
+    plot_velocity_profile(figs[18].add_subplot(233), m_file, scan)
+    plot_plasma_coloumb_logarithms(figs[18].add_subplot(231), m_file, scan)
 
-    plot_electron_frequency_profile(figs[17].add_subplot(212), m_file, scan)
+    plot_electron_frequency_profile(figs[18].add_subplot(212), m_file, scan)
 
-    plot_ion_frequency_profile(figs[18].add_subplot(311), m_file, scan)
+    plot_ion_frequency_profile(figs[19].add_subplot(311), m_file, scan)
 
-    plot_larmor_radius_profile(figs[18].add_subplot(313), m_file, scan)
+    plot_larmor_radius_profile(figs[19].add_subplot(313), m_file, scan)
 
     # Plot poloidal cross-section
     poloidal_cross_section(
-        figs[19].add_subplot(121, aspect="equal"),
+        figs[20].add_subplot(121, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -13811,7 +13838,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        figs[19].add_subplot(122, aspect="equal"),
+        figs[20].add_subplot(122, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -13819,27 +13846,27 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = figs[19].add_subplot(222)
+    ax17 = figs[20].add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
     plot_full_machine_poloidal_cross_section(
-        figs[20].add_subplot(111, aspect="equal"),
+        figs[21].add_subplot(111, aspect="equal"),
         m_file,
         scan,
         radial_build,
         colour_scheme,
     )
 
-    ax18 = figs[21].add_subplot(211)
+    ax18 = figs[22].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = figs[22].add_subplot(211)
+    ax185 = figs[23].add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = figs[22].add_subplot(212)
+    ax18b = figs[23].add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
@@ -13847,62 +13874,62 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == 1:
         # TF coil with WP
-        ax19 = figs[23].add_subplot(221, aspect="equal")
+        ax19 = figs[24].add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, figs[23])
+        plot_superconducting_tf_wp(ax19, m_file, scan, figs[24])
 
         # TF coil turn structure
-        ax20 = figs[24].add_subplot(325, aspect="equal")
+        ax20 = figs[25].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[24], m_file, scan)
-        plot_205 = figs[24].add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, figs[25], m_file, scan)
+        plot_205 = figs[25].add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, figs[24], m_file, scan)
+        plot_cable_in_conduit_cable(plot_205, figs[25], m_file, scan)
     else:
-        ax19 = figs[23].add_subplot(211, aspect="equal")
+        ax19 = figs[24].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file, scan, figs[23])
-        plot_resistive_tf_info(ax19, m_file, scan, figs[23])
+        plot_resistive_tf_wp(ax19, m_file, scan, figs[24])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[24])
     plot_tf_coil_structure(
-        figs[25].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[26].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(figs[26], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[27], m_file, scan)
 
-    plot_tf_stress(figs[27].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    plot_tf_stress(figs[28].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
-    plot_current_profiles_over_time(figs[28].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[29].add_subplot(111), m_file, scan)
 
     plot_cs_coil_structure(
-        figs[29].add_subplot(121, aspect="equal"), figs[29], m_file, scan
+        figs[30].add_subplot(121, aspect="equal"), figs[30], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[29].add_subplot(224, aspect="equal"), figs[29], m_file, scan
+        figs[30].add_subplot(224, aspect="equal"), figs[30], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[30].add_subplot(221, aspect="equal"), m_file, scan
+        figs[31].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[30].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[30].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[31].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[31].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[31], m_file, scan)
-    ax_blanket = figs[31].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[31], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[32], m_file, scan)
+    ax_blanket = figs[32].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[32], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[32].add_subplot(111, aspect="equal"), m_file, scan, figs[32]
+        figs[33].add_subplot(111, aspect="equal"), m_file, scan, figs[33]
     )
 
-    ax24 = figs[33].add_subplot(111)
+    ax24 = figs[34].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[33])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[34])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -13979,7 +14006,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(34)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(35)]
 
     # run main_plot
     main_plot(
