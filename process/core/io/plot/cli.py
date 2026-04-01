@@ -6,18 +6,26 @@ from process.core.io.plot.plot_proc import plot_proc
 from process.core.io.plot.plot_scans import plot_scan
 from process.core.io.plot.plot_stress_tf import plot_stress
 from process.core.io.plot.sankey import plot_sankey, plot_sankey_plotly
-from process.core.io.tools import LazyGroup, mfile_arg, mfile_opt, split_callback
+from process.core.io.tools import (
+    LazyGroup,
+    help_opt,
+    mfile_arg,
+    mfile_opt,
+    split_callback,
+)
 
 
 @click.group(
     cls=LazyGroup,
     lazy_subcommands={"costs": "process.core.io.plot.costs.cli.costs"},
 )
+@help_opt
 def plot():
     """Plotting utilities for PROCESS"""
 
 
 @plot.command("sankey", no_args_is_help=True)
+@help_opt
 @mfile_opt(exists=True)
 @click.option("-fmt", "--format", "format_", default="pdf", help="file format []")
 def sankey(mfile, format_):
@@ -31,6 +39,7 @@ def sankey(mfile, format_):
 
 
 @plot.command("scans", no_args_is_help=True)
+@help_opt
 @mfile_arg
 # At least one output variable must be supplied in order to plot
 @click.option(
@@ -241,6 +250,7 @@ def plot_scans_cli(
 
 
 @plot.command("tf-stress", no_args_is_help=True)
+@help_opt
 @click.option(
     "-p",
     "--plot-selec",
@@ -286,6 +296,7 @@ def plot_tf_stress(plot_selec, save_format, axis_font_size, term_output, input_f
 
 
 @plot.command("summary", no_args_is_help=True)
+@help_opt
 @mfile_opt(exists=True)
 @click.option("-n", "scan", type=int, default=-1, help="Which scan to plot?")
 @click.option(

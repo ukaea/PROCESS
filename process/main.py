@@ -57,7 +57,7 @@ from process.core.io.process_config import RunProcessConfig
 from process.core.io.process_funcs import (
     vary_iteration_variables,
 )
-from process.core.io.tools import LazyGroup, indat_opt
+from process.core.io.tools import LazyGroup, help_opt, indat_opt
 from process.core.log import logging_model_handler, show_errors
 from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
@@ -134,6 +134,7 @@ logger = logging.getLogger("process")
     no_args_is_help=True,
 )
 @click.version_option()
+@help_opt
 @indat_opt(default=None)
 @click.option(
     "-s",

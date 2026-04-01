@@ -39,6 +39,8 @@ def split_callback(ctx: click.Context, param, value: str | None) -> list[str] | 
     return value.replace(" ", ":").split(":") if isinstance(value, str) else value
 
 
+help_opt = click.help_option("-h", "--help")
+
 scan_opt = click.option("--scan", type=int, help="Scan to select")
 
 

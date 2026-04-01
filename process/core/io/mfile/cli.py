@@ -4,15 +4,17 @@ import click
 
 from process.core.io.mfile.base import MFile
 from process.core.io.mfile.comparison import compare_mfiles
-from process.core.io.tools import mfile_arg, mfile_opt, save, scan_opt
+from process.core.io.tools import help_opt, mfile_arg, mfile_opt, save, scan_opt
 
 
 @click.group()
+@help_opt
 def mfile():
     """MFile tools"""
 
 
 @mfile.command("convert", no_args_is_help=True)
+@help_opt
 @mfile_opt(exists=True)
 @click.option(
     "-v",
@@ -42,6 +44,7 @@ def convert(mfile, variables, format_, scan, verbose):
 
 
 @mfile.command("compare", no_args_is_help=True)
+@help_opt
 @mfile_arg
 @save("Save output to file called comp.txt")
 @click.option(

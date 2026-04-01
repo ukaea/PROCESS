@@ -4,6 +4,8 @@ The tool does not work for MFiles that are not the result of
 a full PROCESS run (ie if an error or exception occured).
 """
 
+from __future__ import annotations
+
 import sys
 from collections.abc import Iterable
 from pathlib import Path
