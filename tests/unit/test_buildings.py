@@ -29,7 +29,7 @@ def buildings():
 class BldgsSizesParam(NamedTuple):
     i_bldgs_v: Any
     a_plant_floor_effective: Any
-    volnucb: Any
+    vol_plant_nuclear_buildings: Any
     bioshld_thk: Any
     reactor_wall_thk: Any
     reactor_roof_thk: Any
@@ -172,7 +172,7 @@ class BldgsSizesParam(NamedTuple):
         BldgsSizesParam(
             i_bldgs_v=0,
             a_plant_floor_effective=0,
-            volnucb=0,
+            vol_plant_nuclear_buildings=0,
             bioshld_thk=2.5,
             reactor_wall_thk=2,
             reactor_roof_thk=1,
@@ -311,7 +311,7 @@ class BldgsSizesParam(NamedTuple):
         BldgsSizesParam(
             i_bldgs_v=0,
             a_plant_floor_effective=1539392.0963074313,
-            volnucb=5212998.1139194397,
+            vol_plant_nuclear_buildings=5212998.1139194397,
             bioshld_thk=2.5,
             reactor_wall_thk=2,
             reactor_roof_thk=1,
@@ -456,7 +456,11 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         "a_plant_floor_effective",
         bldgssizesparam.a_plant_floor_effective,
     )
-    monkeypatch.setattr(buildings_variables, "volnucb", bldgssizesparam.volnucb)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_nuclear_buildings",
+        bldgssizesparam.vol_plant_nuclear_buildings,
+    )
     monkeypatch.setattr(buildings_variables, "bioshld_thk", bldgssizesparam.bioshld_thk)
     monkeypatch.setattr(
         buildings_variables, "reactor_wall_thk", bldgssizesparam.reactor_wall_thk
@@ -741,7 +745,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(physics_variables, "rmajor", bldgssizesparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", bldgssizesparam.rminor)
 
-    buildings.bldgs_sizes(
+    buildings.chapman_2024.calculate_building_sizes_chapman(
         tf_radial_dim=bldgssizesparam.tf_radial_dim,
         tf_vertical_dim=bldgssizesparam.tf_vertical_dim,
         output=False,
@@ -759,37 +763,37 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
 
 
 class BldgsParam(NamedTuple):
-    wrbi: Any
+    dr_plant_reactor_building_internal_half: Any
     rxcl: Any
-    trcl: Any
+    dr_plant_reactor_building_transport_clearance: Any
     row: Any
-    wgt: Any
+    m_plant_reactor_building_crane_capacity: Any
     shmf: Any
     clh2: Any
     dz_tf_cryostat: Any
     stcl: Any
     rbvfac: Any
-    rbwt: Any
-    rbrt: Any
+    dx_plant_reactor_building_wall: Any
+    dz_plant_reactor_building_roof: Any
     fndt: Any
     hcwt: Any
     hccl: Any
     wgt2: Any
     mbvfac: Any
     wsvfac: Any
-    tfcbv: Any
+    vol_plant_tf_power_supplies_building: Any
     pfbldgm3: Any
     esbldgm3: Any
     pibv: Any
     a_plant_floor_effective: Any
     admvol: Any
-    triv: Any
+    vol_plant_tritium_fuel_building: Any
     conv: Any
     admv: Any
     shov: Any
     shovol: Any
     convol: Any
-    volnucb: Any
+    vol_plant_nuclear_buildings: Any
     iprint: Any
     outfile: Any
     pfr: Any
@@ -823,37 +827,37 @@ class BldgsParam(NamedTuple):
     "bldgsparam",
     (
         BldgsParam(
-            wrbi=0,
+            dr_plant_reactor_building_internal_half=0,
             rxcl=4,
-            trcl=1,
+            dr_plant_reactor_building_transport_clearance=1,
             row=4,
-            wgt=500000,
+            m_plant_reactor_building_crane_capacity=500000,
             shmf=0.5,
             clh2=15,
             dz_tf_cryostat=5.7514039424138126,
             stcl=3,
             rbvfac=1.6000000000000001,
-            rbwt=2,
-            rbrt=1,
+            dx_plant_reactor_building_wall=2,
+            dz_plant_reactor_building_roof=1,
             fndt=2,
             hcwt=1.5,
             hccl=5,
             wgt2=100000,
             mbvfac=2.7999999999999998,
             wsvfac=1.8999999999999999,
-            tfcbv=10601.097615432001,
+            vol_plant_tf_power_supplies_building=10601.097615432001,
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
             a_plant_floor_effective=0,
             admvol=0,
-            triv=40000,
+            vol_plant_tritium_fuel_building=40000,
             conv=60000,
             admv=100000,
             shov=100000,
             shovol=0,
             convol=0,
-            volnucb=0,
+            vol_plant_nuclear_buildings=0,
             iprint=0,
             outfile=11,
             pfr=18.98258241468535,
@@ -883,37 +887,37 @@ class BldgsParam(NamedTuple):
             expected_elev=51601.097615432001,
         ),
         BldgsParam(
-            wrbi=42.612047089019569,
+            dr_plant_reactor_building_internal_half=42.612047089019569,
             rxcl=4,
-            trcl=1,
+            dr_plant_reactor_building_transport_clearance=1,
             row=4,
-            wgt=500000,
+            m_plant_reactor_building_crane_capacity=500000,
             shmf=0.5,
             clh2=15,
             dz_tf_cryostat=5.8405005070918357,
             stcl=3,
             rbvfac=1.6000000000000001,
-            rbwt=2,
-            rbrt=1,
+            dx_plant_reactor_building_wall=2,
+            dz_plant_reactor_building_roof=1,
             fndt=2,
             hcwt=1.5,
             hccl=5,
             wgt2=100000,
             mbvfac=2.7999999999999998,
             wsvfac=1.8999999999999999,
-            tfcbv=10609.268177478583,
+            vol_plant_tf_power_supplies_building=10609.268177478583,
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
             a_plant_floor_effective=379235.17804514873,
             admvol=100000,
-            triv=40000,
+            vol_plant_tritium_fuel_building=40000,
             conv=60000,
             admv=100000,
             shov=100000,
             shovol=100000,
             convol=60000,
-            volnucb=1812276.5359386117,
+            vol_plant_nuclear_buildings=1812276.5359386117,
             iprint=0,
             outfile=11,
             pfr=18.982980877139834,
@@ -945,25 +949,49 @@ class BldgsParam(NamedTuple):
     ),
 )
 def test_bldgs(buildings, bldgsparam, monkeypatch):
-    monkeypatch.setattr(buildings_variables, "wrbi", bldgsparam.wrbi)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dr_plant_reactor_building_internal_half",
+        bldgsparam.dr_plant_reactor_building_internal_half,
+    )
     monkeypatch.setattr(buildings_variables, "rxcl", bldgsparam.rxcl)
-    monkeypatch.setattr(buildings_variables, "trcl", bldgsparam.trcl)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dr_plant_reactor_building_transport_clearance",
+        bldgsparam.dr_plant_reactor_building_transport_clearance,
+    )
     monkeypatch.setattr(buildings_variables, "row", bldgsparam.row)
-    monkeypatch.setattr(buildings_variables, "wgt", bldgsparam.wgt)
+    monkeypatch.setattr(
+        buildings_variables,
+        "m_plant_reactor_building_crane_capacity",
+        bldgsparam.m_plant_reactor_building_crane_capacity,
+    )
     monkeypatch.setattr(buildings_variables, "shmf", bldgsparam.shmf)
     monkeypatch.setattr(buildings_variables, "clh2", bldgsparam.clh2)
     monkeypatch.setattr(buildings_variables, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat)
     monkeypatch.setattr(buildings_variables, "stcl", bldgsparam.stcl)
     monkeypatch.setattr(buildings_variables, "rbvfac", bldgsparam.rbvfac)
-    monkeypatch.setattr(buildings_variables, "rbwt", bldgsparam.rbwt)
-    monkeypatch.setattr(buildings_variables, "rbrt", bldgsparam.rbrt)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dx_plant_reactor_building_wall",
+        bldgsparam.dx_plant_reactor_building_wall,
+    )
+    monkeypatch.setattr(
+        buildings_variables,
+        "dz_plant_reactor_building_roof",
+        bldgsparam.dz_plant_reactor_building_roof,
+    )
     monkeypatch.setattr(buildings_variables, "fndt", bldgsparam.fndt)
     monkeypatch.setattr(buildings_variables, "hcwt", bldgsparam.hcwt)
     monkeypatch.setattr(buildings_variables, "hccl", bldgsparam.hccl)
     monkeypatch.setattr(buildings_variables, "wgt2", bldgsparam.wgt2)
     monkeypatch.setattr(buildings_variables, "mbvfac", bldgsparam.mbvfac)
     monkeypatch.setattr(buildings_variables, "wsvfac", bldgsparam.wsvfac)
-    monkeypatch.setattr(buildings_variables, "tfcbv", bldgsparam.tfcbv)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_tf_power_supplies_building",
+        bldgsparam.vol_plant_tf_power_supplies_building,
+    )
     monkeypatch.setattr(buildings_variables, "pfbldgm3", bldgsparam.pfbldgm3)
     monkeypatch.setattr(buildings_variables, "esbldgm3", bldgsparam.esbldgm3)
     monkeypatch.setattr(buildings_variables, "pibv", bldgsparam.pibv)
@@ -973,19 +1001,27 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         bldgsparam.a_plant_floor_effective,
     )
     monkeypatch.setattr(buildings_variables, "admvol", bldgsparam.admvol)
-    monkeypatch.setattr(buildings_variables, "triv", bldgsparam.triv)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_tritium_fuel_building",
+        bldgsparam.vol_plant_tritium_fuel_building,
+    )
     monkeypatch.setattr(buildings_variables, "conv", bldgsparam.conv)
     monkeypatch.setattr(buildings_variables, "admv", bldgsparam.admv)
     monkeypatch.setattr(buildings_variables, "shov", bldgsparam.shov)
     monkeypatch.setattr(buildings_variables, "shovol", bldgsparam.shovol)
     monkeypatch.setattr(buildings_variables, "convol", bldgsparam.convol)
-    monkeypatch.setattr(buildings_variables, "volnucb", bldgsparam.volnucb)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_nuclear_buildings",
+        bldgsparam.vol_plant_nuclear_buildings,
+    )
 
-    cryv, vrci, rbv, rmbv, wsv, elev = buildings.bldgs(
+    cryv, vrci, rbv, rmbv, wsv, elev = buildings.iter_1992.calculate_building_sizes_1992(
         output=False,
         pfr=bldgsparam.pfr,
         pfm=bldgsparam.pfm,
-        tfro=bldgsparam.tfro,
+        r_tf_outboard_out=bldgsparam.tfro,
         tfri=bldgsparam.tfri,
         tfh=bldgsparam.tfh,
         tfm=bldgsparam.tfm,
@@ -998,14 +1034,18 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         helpow=bldgsparam.helpow,
     )
 
-    assert buildings_variables.wrbi == pytest.approx(bldgsparam.expected_wrbi)
+    assert buildings_variables.dr_plant_reactor_building_internal_half == pytest.approx(
+        bldgsparam.expected_wrbi
+    )
     assert buildings_variables.a_plant_floor_effective == pytest.approx(
         bldgsparam.expected_a_plant_floor_effective
     )
     assert buildings_variables.admvol == pytest.approx(bldgsparam.expected_admvol)
     assert buildings_variables.shovol == pytest.approx(bldgsparam.expected_shovol)
     assert buildings_variables.convol == pytest.approx(bldgsparam.expected_convol)
-    assert buildings_variables.volnucb == pytest.approx(bldgsparam.expected_volnucb)
+    assert buildings_variables.vol_plant_nuclear_buildings == pytest.approx(
+        bldgsparam.expected_volnucb
+    )
 
     assert cryv == pytest.approx(bldgsparam.expected_cryv)
     assert vrci == pytest.approx(bldgsparam.expected_vrci)

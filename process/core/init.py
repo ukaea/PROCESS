@@ -403,7 +403,7 @@ def check_process(inputs):  # noqa: ARG001
     if (
         data_structure.physics_variables.f_plasma_fuel_tritium < 1.0e-3
     ):  # tritium fraction is negligible
-        data_structure.buildings_variables.triv = 0.0
+        data_structure.buildings_variables.vol_plant_tritium_fuel_building = 0.0
         data_structure.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
     if data_structure.impurity_radiation_module.f_nd_impurity_electrons[1] != 0.1:

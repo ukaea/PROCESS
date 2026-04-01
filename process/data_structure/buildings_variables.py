@@ -114,7 +114,7 @@ cryostat_clrnc: float = None
 """vertical clearance from TF coil to cryostat (m)"""
 
 
-cryvol: float = None
+vol_plant_cryoplant_building: float = None
 """volume of cryoplant building (m3)"""
 
 
@@ -158,7 +158,7 @@ elecstore_h: float = None
 """Energy Storage facilities height (m)"""
 
 
-elevol: float = None
+vol_plant_electrical_building: float = None
 """volume of electrical equipment building (m3)"""
 
 
@@ -354,15 +354,15 @@ rbvfac: float = None
 """reactor building volume multiplication factor"""
 
 
-rbrt: float = None
+dz_plant_reactor_building_roof: float = None
 """reactor building roof thickness (m)"""
 
 
-rbvol: float = None
+vol_plant_reactor_building: float = None
 """reactor building volume (m3)"""
 
 
-rbwt: float = None
+dx_plant_reactor_building_wall: float = None
 """reactor building wall thickness (m)"""
 
 
@@ -394,7 +394,7 @@ reactor_wall_thk: float = None
 """reactor building wall thickness (m)"""
 
 
-rmbvol: float = None
+vol_plant_maintenance_assembly_building: float = None
 """volume of maintenance and assembly building (m3)"""
 
 
@@ -454,7 +454,7 @@ stcl: float = None
 """clearance above crane to roof (m)"""
 
 
-tfcbv: float = None
+vol_plant_tf_power_supplies_building: float = None
 """volume of TF coil power supply building (m3) (calculated if TF coils are superconducting)"""
 
 
@@ -462,11 +462,11 @@ transp_clrnc: float = None
 """transportation clearance between components (m)"""
 
 
-trcl: float = None
+dr_plant_reactor_building_transport_clearance: float = None
 """transportation clearance between components (m)"""
 
 
-triv: float = None
+vol_plant_tritium_fuel_building: float = None
 """volume of tritium, fuel handling and health physics buildings (m3)"""
 
 
@@ -494,11 +494,11 @@ tw_storage_h: float = None
 """tritiated waste storage building height (m)"""
 
 
-volrci: float = None
+vol_plant_reactor_building_internal: float = None
 """internal volume of reactor building (m3)"""
 
 
-volnucb: float = None
+vol_plant_nuclear_buildings: float = None
 """sum of nuclear buildings volumes (m3)"""
 
 
@@ -526,7 +526,7 @@ water_buildings_h: float = None
 """water, laundry & drainage buildings height (m)"""
 
 
-wgt: float = None
+m_plant_reactor_building_crane_capacity: float = None
 """reactor building crane capacity (kg) (calculated if 0 is input)"""
 
 
@@ -546,11 +546,11 @@ workshop_h: float = None
 """[cold] workshop buildings height (m)"""
 
 
-wrbi: float = None
+dr_plant_reactor_building_internal_half: float = None
 """distance from centre of machine to building wall (m)"""
 
 
-wsvol: float = None
+vol_plant_warm_shop_building: float = None
 """volume of warm shop building (m3)"""
 
 
@@ -641,7 +641,7 @@ def init_buildings_variables():
         cryostore_w, \
         cryostore_h, \
         cryostat_clrnc, \
-        cryvol, \
+        vol_plant_cryoplant_building, \
         a_plant_floor_effective, \
         elecdist_l, \
         elecdist_w, \
@@ -652,7 +652,7 @@ def init_buildings_variables():
         elecstore_l, \
         elecstore_w, \
         elecstore_h, \
-        elevol, \
+        vol_plant_electrical_building, \
         esbldgm3, \
         fc_building_l, \
         fc_building_w, \
@@ -701,9 +701,9 @@ def init_buildings_variables():
         pibv, \
         qnty_sfty_fac, \
         rbvfac, \
-        rbrt, \
-        rbvol, \
-        rbwt, \
+        dz_plant_reactor_building_roof, \
+        vol_plant_reactor_building, \
+        dx_plant_reactor_building_wall, \
         reactor_clrnc, \
         reactor_fndtn_thk, \
         reactor_hall_l, \
@@ -711,7 +711,7 @@ def init_buildings_variables():
         reactor_hall_h, \
         reactor_roof_thk, \
         reactor_wall_thk, \
-        rmbvol, \
+        vol_plant_maintenance_assembly_building, \
         robotics_l, \
         robotics_w, \
         robotics_h, \
@@ -726,31 +726,31 @@ def init_buildings_variables():
         staff_buildings_area, \
         staff_buildings_h, \
         stcl, \
-        tfcbv, \
+        vol_plant_tf_power_supplies_building, \
         transp_clrnc, \
-        trcl, \
-        triv, \
+        dr_plant_reactor_building_transport_clearance, \
+        vol_plant_tritium_fuel_building, \
         turbine_hall_l, \
         turbine_hall_w, \
         turbine_hall_h, \
         tw_storage_l, \
         tw_storage_w, \
         tw_storage_h, \
-        volrci, \
-        volnucb, \
+        vol_plant_reactor_building_internal, \
+        vol_plant_nuclear_buildings, \
         warm_shop_l, \
         warm_shop_w, \
         warm_shop_h, \
         water_buildings_l, \
         water_buildings_w, \
         water_buildings_h, \
-        wgt, \
+        m_plant_reactor_building_crane_capacity, \
         wgt2, \
         workshop_l, \
         workshop_w, \
         workshop_h, \
-        wrbi, \
-        wsvol, \
+        dr_plant_reactor_building_internal_half, \
+        vol_plant_warm_shop_building, \
         wsvfac, \
         a_reactor_bldg, \
         a_ee_ps_bldg, \
@@ -795,7 +795,7 @@ def init_buildings_variables():
     cryostore_w = 30.0
     cryostore_h = 20.0
     cryostat_clrnc = 2.5
-    cryvol = 0.0
+    vol_plant_cryoplant_building = 0.0
     a_plant_floor_effective = 0.0
     elecdist_l = 380.0
     elecdist_w = 350.0
@@ -806,7 +806,7 @@ def init_buildings_variables():
     elecstore_l = 100.0
     elecstore_w = 60.0
     elecstore_h = 12.0
-    elevol = 0.0
+    vol_plant_electrical_building = 0.0
     esbldgm3 = 1.0e3
     fc_building_l = 60.0
     fc_building_w = 60.0
@@ -855,9 +855,9 @@ def init_buildings_variables():
     pibv = 2.0e4
     qnty_sfty_fac = 2.0
     rbvfac = 1.6
-    rbrt = 1.0
-    rbvol = 0.0
-    rbwt = 2.0
+    dz_plant_reactor_building_roof = 1.0
+    vol_plant_reactor_building = 0.0
+    dx_plant_reactor_building_wall = 2.0
     reactor_clrnc = 4.0
     reactor_fndtn_thk = 2.0
     reactor_hall_l = 0.0
@@ -865,7 +865,7 @@ def init_buildings_variables():
     reactor_hall_h = 0.0
     reactor_roof_thk = 1.0
     reactor_wall_thk = 2.0
-    rmbvol = 0.0
+    vol_plant_maintenance_assembly_building = 0.0
     robotics_l = 50.0
     robotics_w = 30.0
     robotics_h = 30.0
@@ -880,18 +880,18 @@ def init_buildings_variables():
     staff_buildings_h = 5.0
     staff_buildings_area = 4.8e5
     stcl = 3.0
-    tfcbv = 2.0e4
+    vol_plant_tf_power_supplies_building = 2.0e4
     transp_clrnc = 1.0
-    trcl = 1.0
-    triv = 4.0e4
+    dr_plant_reactor_building_transport_clearance = 1.0
+    vol_plant_tritium_fuel_building = 4.0e4
     turbine_hall_l = 109.0
     turbine_hall_w = 62.0
     turbine_hall_h = 15.0
     tw_storage_l = 90.0
     tw_storage_w = 30.0
     tw_storage_h = 5.0
-    volnucb = 0.0
-    volrci = 0.0
+    vol_plant_nuclear_buildings = 0.0
+    vol_plant_reactor_building_internal = 0.0
     warm_shop_l = 100.0
     warm_shop_w = 50.0
     warm_shop_h = 10.0
@@ -901,11 +901,11 @@ def init_buildings_variables():
     workshop_l = 150.0
     workshop_w = 125.0
     workshop_h = 10.0
-    wgt = 5.0e5
+    m_plant_reactor_building_crane_capacity = 5.0e5
     wgt2 = 1.0e5
-    wrbi = 0.0
+    dr_plant_reactor_building_internal_half = 0.0
     wsvfac = 1.9
-    wsvol = 0.0
+    vol_plant_warm_shop_building = 0.0
     a_reactor_bldg = 8.32e3
     a_ee_ps_bldg = 2.133e4
     a_aux_services_bldg = 1.0e3

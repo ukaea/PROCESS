@@ -1,4 +1,5 @@
 import logging
+from enum import IntEnum
 
 import numpy as np
 
@@ -25,6 +26,13 @@ from process.models.physics.current_drive import (
 logger = logging.getLogger(__name__)
 
 
+class BuildingsModel(IntEnum):
+    """Enum for building size estimation models"""
+
+    ITER_1992 = 0
+    CHAPMAN_2024 = 1
+
+
 class Buildings(Model):
     """
 
@@ -37,6 +45,8 @@ class Buildings(Model):
         This routine calls the buildings calculations.
         """
         self.outfile = constants.NOUT  # output file unit
+        self.iter_1992 = BuildingsITER1992()
+        self.chapman_2024 = BuildingsChapman2024()
 
     def output(self):
         self.run(output=True)
@@ -44,14 +54,16 @@ class Buildings(Model):
     def run(self, output: bool = False):
         # Find TF coil radial positions
         # outboard edge: outboard mid-leg radial position + half-thickness of outboard leg
-        tfro = build_variables.r_tf_outboard_mid + (
+        r_tf_outboard_out = build_variables.r_tf_outboard_mid + (
             build_variables.dr_tf_outboard * 0.5e0
         )
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
-        tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_inboard * 0.5e0)
+        r_tf_inboard_in = build_variables.r_tf_inboard_mid - (
+            build_variables.dr_tf_inboard * 0.5e0
+        )
 
         # Find width, in radial dimension, of TF coil (m)
-        tf_radial_dim = tfro - tfri
+        tf_radial_dim = r_tf_outboard_out - r_tf_inboard_in
 
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
@@ -64,54 +76,64 @@ class Buildings(Model):
 
         # Calculate building areas and volumes
 
-        if buildings_variables.i_bldgs_size == 1:
+        if (
+            BuildingsModel(buildings_variables.i_bldgs_size)
+            == BuildingsModel.CHAPMAN_2024
+        ):
             # Updated building estimates
-            self.bldgs_sizes(output, tf_radial_dim, tf_vertical_dim)
+            self.chapman_2024.calculate_building_sizes_chapman(
+                output, tf_radial_dim, tf_vertical_dim
+            )
 
         else:
             # Previous estimation work
             (
-                buildings_variables.cryvol,
-                buildings_variables.volrci,
-                buildings_variables.rbvol,
-                buildings_variables.rmbvol,
-                buildings_variables.wsvol,
-                buildings_variables.elevol,
-            ) = self.bldgs(
+                buildings_variables.vol_plant_cryoplant_building,
+                buildings_variables.vol_plant_reactor_building_internal,
+                buildings_variables.vol_plant_reactor_building,
+                buildings_variables.vol_plant_maintenance_assembly_building,
+                buildings_variables.vol_plant_warm_shop_building,
+                buildings_variables.vol_plant_electrical_building,
+            ) = self.iter_1992.calculate_building_sizes_1992(
                 output,
-                pfcoil_variables.r_pf_coil_outer_max,
-                pfcoil_variables.m_pf_coil_max,
-                tfro,
-                tfri,
-                tf_vertical_dim,
-                tfmtn,
-                tfcoil_variables.n_tf_coils,
-                build_variables.r_shld_outboard_outer,
-                build_variables.r_shld_inboard_inner,
-                2.0e0
+                r_pf_coil_outer_max=pfcoil_variables.r_pf_coil_outer_max,
+                m_pf_coil_max=pfcoil_variables.m_pf_coil_max,
+                r_tf_outboard_out=r_tf_outboard_out,
+                r_tf_inboard_in=r_tf_inboard_in,
+                dz_tf_full=tf_vertical_dim,
+                m_tf_coil_tonne=tfmtn,
+                n_tf_coils=tfcoil_variables.n_tf_coils,
+                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
+                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
+                dz_shld=2.0e0
                 * (build_variables.z_tf_inside_half - build_variables.dz_shld_vv_gap)
                 - build_variables.dz_vv_upper
                 - build_variables.dz_vv_lower,
-                fwbs_variables.whtshld,
-                fwbs_variables.r_cryostat_inboard,
-                heat_transport_variables.helpow,
+                m_shld_total=fwbs_variables.whtshld,
+                r_cryostat_outboard=fwbs_variables.r_cryostat_inboard,
+                helpow=heat_transport_variables.helpow,
             )
 
-    def bldgs(
+
+class BuildingsITER1992:
+    def __init__(self):
+        self.outfile = constants.NOUT
+
+    def calculate_building_sizes_1992(
         self,
         output: bool,
-        pfr,
-        pfm,
-        tfro,
-        tfri,
-        tfh,
-        tfm,
+        r_pf_coil_outer_max,
+        m_pf_coil_max,
+        r_tf_outboard_out,
+        r_tf_inboard_in,
+        dz_tf_full,
+        m_tf_coil_tonne,
         n_tf_coils,
-        shro,
-        shri,
-        shh,
-        shm,
-        crr,
+        r_shld_outboard_outer,
+        r_shld_inboard_inner,
+        dz_shld,
+        m_shld_total,
+        r_cryostat_outboard,
         helpow,
     ):
         """Determines the sizes of the plant buildings
@@ -130,36 +152,36 @@ class Buildings(Model):
         ----------
         output:
 
-        pfr :
+        r_pf_coil_outer_max :
              largest PF coil outer radius, m
-        pfm :
+        m_pf_coil_max :
             largest PF coil mass, tonne
-        tfro :
+        r_tf_outboard_out :
             outer radius of TF coil, m
-        tfri :
+        r_tf_inboard_in :
             inner radius of TF coil, m
-        tfh :
+        dz_tf_full :
             full height of TF coil, m
-        tfm :
+        m_tf_coil_tonne :
             mass of one TF coil, tonne
         n_tf_coils :
             number of tf coils
-        shro :
+        r_shld_outboard_outer :
             outer radius of attached shield, m
-        shri :
+        r_shld_inboard_inner :
             inner radius of attached shield, m
-        shh :
+        dz_shld :
             height of attached shield, m
-        shm :
+        m_shld_total :
             total mass of attached shield, kg
-        crr :
+        r_cryostat_outboard :
             outer radius of common cryostat, m
         helpow :
             total cryogenic load, W
 
         Returns
         -------
-        cryv:
+        vol_plant_cryogenics_building:
             volume of cryogenic building, m3
         vrci:
             inner volume of reactor building, m3
@@ -176,39 +198,53 @@ class Buildings(Model):
         # Reactor building
 
         # Determine basic machine radius (m)
-        # crr  :  cryostat radius (m)
-        # pfr  :  radius of largest PF coil (m)
-        # tfro :  outer radius of TF coil (m)
-        bmr = max(crr, pfr, tfro)
+        # r_cryostat_outboard  :  cryostat radius (m)
+        # r_pf_coil_outer_max  :  radius of largest PF coil (m)
+        # r_tf_outboard_out :  outer radius of TF coil (m)
+        r_machine = max(r_cryostat_outboard, r_pf_coil_outer_max, r_tf_outboard_out)
 
         # Determine largest transported piece
-        sectl = shro - shri  # Shield thicknes (m)
-        coill = tfro - tfri  # TF coil thickness (m)
-        sectl = max(coill, sectl)
+        dz_shld_full = (
+            r_shld_outboard_outer - r_shld_inboard_inner
+        )  # Shield thicknes (m)
+        dz_tf_full_midplane = (
+            r_tf_outboard_out - r_tf_inboard_in
+        )  # TF coil thickness (m)
+        dz_shld_full = max(dz_tf_full_midplane, dz_shld_full)
 
         # Calculate half width of building (m)
         # rxcl : clearance around reactor, m
-        # trcl : transportation clearance between components, m
+        # dr_plant_reactor_building_transport_clearance : transportation clearance between components, m
         # row  : clearance to building wall for crane operation, m
         # 19.48258241468535 + 4 + max(13.764874193548387 - 4.7423258064516141, 17.123405859443331 - 2.9939411851091102) + 1 + 4 = 42.61204708901957
-        buildings_variables.wrbi = (
-            bmr
+        buildings_variables.dr_plant_reactor_building_internal_half = (
+            r_machine
             + buildings_variables.rxcl
-            + sectl
-            + buildings_variables.trcl
+            + dz_shld_full
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
             + buildings_variables.row
         )
 
         # Calculate length to allow PF or cryostat laydown (m)
 
         # Laydown length (m)
-        layl = max(crr, pfr)
+        len_reactor_laydown = max(r_cryostat_outboard, r_pf_coil_outer_max)
 
         # Diagonal length (m)
-        hy = bmr + buildings_variables.rxcl + sectl + buildings_variables.trcl + layl
+        hy = (
+            r_machine
+            + buildings_variables.rxcl
+            + dz_shld_full
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
+            + len_reactor_laydown
+        )
 
         # Angle between diagonal length and floor (m)
-        ang = (buildings_variables.wrbi - buildings_variables.trcl - layl) / hy
+        ang = (
+            buildings_variables.dr_plant_reactor_building_internal_half
+            - buildings_variables.dr_plant_reactor_building_transport_clearance
+            - len_reactor_laydown
+        ) / hy
 
         # Cap angle at 1
         if abs(ang) > 1.0e0:
@@ -216,43 +252,57 @@ class Buildings(Model):
 
         # Length to allow laydown (m)
         drbi = (
-            buildings_variables.trcl
-            + layl
+            buildings_variables.dr_plant_reactor_building_transport_clearance
+            + len_reactor_laydown
             + hy * np.sin(np.arccos(ang))
-            + buildings_variables.wrbi
+            + buildings_variables.dr_plant_reactor_building_internal_half
         )
 
         # Crane height based on maximum lift (m)
-        # wgt : reactor building crane capacity (kg)
+        # m_plant_reactor_building_crane_capacity : reactor building crane capacity (kg)
         #       Calculated if 0 is input
         # shmf : fraction of shield mass per TF coil to be moved in
         #        the maximum shield lift
-        if buildings_variables.wgt > 1.0e0:
-            wt = buildings_variables.wgt
+        if buildings_variables.m_plant_reactor_building_crane_capacity > 1.0e0:
+            m_plant_reactor_building_crane_capacity = (
+                buildings_variables.m_plant_reactor_building_crane_capacity
+            )
         else:
-            wt = buildings_variables.shmf * shm / n_tf_coils
-            wt = max(wt, 1.0e3 * pfm, 1.0e3 * tfm)
+            m_plant_reactor_building_crane_capacity = (
+                buildings_variables.shmf * m_shld_total / n_tf_coils
+            )
+            m_plant_reactor_building_crane_capacity = max(
+                m_plant_reactor_building_crane_capacity,
+                1.0e3 * m_pf_coil_max,
+                1.0e3 * m_tf_coil_tonne,
+            )
 
         # Crane height (m)
-        crcl = 9.41e-6 * wt + 5.1e0
+        dz_plant_reactor_building_crane = (
+            9.41e-6 * m_plant_reactor_building_crane_capacity + 5.1e0
+        )
 
         # Building height (m)
         # dz_tf_cryostat : clearance from TF coil to cryostat top, m
         # clh2 : clearance beneath TF coil to foundation, including basement, m
         # stcl : clearance above crane to roof, m
-        # Additional tfh allows TF coil to be lifted right out
-        hrbi = (
+        # Additional dz_tf_full allows TF coil to be lifted right out
+        dz_plant_reactor_building_internal = (
             buildings_variables.clh2
-            + 2.0e0 * tfh
+            + 2.0e0 * dz_tf_full
             + buildings_variables.dz_tf_cryostat
-            + buildings_variables.trcl
-            + crcl
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
+            + dz_plant_reactor_building_crane
             + buildings_variables.stcl
         )
 
         # Internal volume (m3)
         vrci = (
-            buildings_variables.rbvfac * 2.0e0 * buildings_variables.wrbi * drbi * hrbi
+            buildings_variables.rbvfac
+            * 2.0e0
+            * buildings_variables.dr_plant_reactor_building_internal_half
+            * drbi
+            * dz_plant_reactor_building_internal
         )
         try:
             assert vrci < np.inf
@@ -261,12 +311,19 @@ class Buildings(Model):
             vrci = 1e10
 
         # External dimensions of reactor building (m)
-        # rbwt : reactor building wall thickness, m
-        # rbrt : reactor building roof thickness, m
+        # dx_plant_reactor_building_wall : reactor building wall thickness, m
+        # dz_plant_reactor_building_roof : reactor building roof thickness, m
         # fndt : foundation thickness, m
-        rbw = 2.0e0 * buildings_variables.wrbi + 2.0e0 * buildings_variables.rbwt
-        rbl = drbi + 2.0e0 * buildings_variables.rbwt
-        rbh = hrbi + buildings_variables.rbrt + buildings_variables.fndt
+        rbw = (
+            2.0e0 * buildings_variables.dr_plant_reactor_building_internal_half
+            + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
+        )
+        rbl = drbi + 2.0e0 * buildings_variables.dx_plant_reactor_building_wall
+        rbh = (
+            dz_plant_reactor_building_internal
+            + buildings_variables.dz_plant_reactor_building_roof
+            + buildings_variables.fndt
+        )
         rbv = buildings_variables.rbvfac * rbw * rbl * rbh
 
         # Maintenance building
@@ -277,16 +334,29 @@ class Buildings(Model):
 
         # Transport corridor size
         # hcwt : hot cell wall thickness, m
-        tcw = shro - shri + 4.0e0 * buildings_variables.trcl
-        tcl = 5.0e0 * tcw + 2.0e0 * buildings_variables.hcwt
+        dr_plant_transport_corridor = (
+            r_shld_outboard_outer
+            - r_shld_inboard_inner
+            + 4.0e0 * buildings_variables.dr_plant_reactor_building_transport_clearance
+        )
+        tcl = 5.0e0 * dr_plant_transport_corridor + 2.0e0 * buildings_variables.hcwt
 
         # Decontamination cell size
-        dcw = 2.0e0 * tcw + 1.0e0
+        dcw = 2.0e0 * dr_plant_transport_corridor + 1.0e0
 
         # Hot cell size
         # hccl : clearance around components in hot cell, m
-        hcw = shro - shri + 3.0e0 * buildings_variables.hccl + 2.0e0
-        hcl = 3.0e0 * (shro - shri) + 4.0e0 * buildings_variables.hccl + tcw
+        hcw = (
+            r_shld_outboard_outer
+            - r_shld_inboard_inner
+            + 3.0e0 * buildings_variables.hccl
+            + 2.0e0
+        )
+        hcl = (
+            3.0e0 * (r_shld_outboard_outer - r_shld_inboard_inner)
+            + 4.0e0 * buildings_variables.hccl
+            + dr_plant_transport_corridor
+        )
 
         # Maintenance building dimensions
         rmbw = hcw + dcw + 3.0e0 * buildings_variables.hcwt
@@ -298,33 +368,36 @@ class Buildings(Model):
         if buildings_variables.wgt2 > 1.0e0:
             wgts = buildings_variables.wgt2
         else:
-            wgts = buildings_variables.shmf * shm / n_tf_coils
+            wgts = buildings_variables.shmf * m_shld_total / n_tf_coils
 
         cran = 9.41e-6 * wgts + 5.1e0
         rmbh = (
             10.0e0
-            + shh
-            + buildings_variables.trcl
+            + dz_shld
+            + buildings_variables.dr_plant_reactor_building_transport_clearance
             + cran
             + buildings_variables.stcl
             + buildings_variables.fndt
         )
-        tch = shh + buildings_variables.stcl + buildings_variables.fndt
+        tch = dz_shld + buildings_variables.stcl + buildings_variables.fndt
 
         # Volume
-        rmbv = buildings_variables.mbvfac * rmbw * rmbl * rmbh + tcw * tcl * tch
+        rmbv = (
+            buildings_variables.mbvfac * rmbw * rmbl * rmbh
+            + dr_plant_transport_corridor * tcl * tch
+        )
 
         # Warm shop and hot cell gallery
         wsa = (rmbw + 7.0e0) * 20.0e0 + rmbl * 7.0e0
         wsv = buildings_variables.wsvfac * wsa * rmbh
 
         # Cryogenic building volume
-        cryv = 55.0e0 * helpow**0.5
+        vol_plant_cryogenics_building = 55.0e0 * helpow**0.5
         # Other building volumes
         # pibv : power injection building volume, m3
         # esbldgm3 is forced to be zero if no energy storage is required (i_pulsed_plant=0)
         elev = (
-            buildings_variables.tfcbv
+            buildings_variables.vol_plant_tf_power_supplies_building
             + buildings_variables.pfbldgm3
             + buildings_variables.esbldgm3
             + buildings_variables.pibv
@@ -335,10 +408,10 @@ class Buildings(Model):
             rbv
             + rmbv
             + wsv
-            + buildings_variables.triv
+            + buildings_variables.vol_plant_tritium_fuel_building
             + elev
             + buildings_variables.conv
-            + cryv
+            + vol_plant_cryogenics_building
             + buildings_variables.admv
             + buildings_variables.shov
         ) / 6.0e0
@@ -347,7 +420,13 @@ class Buildings(Model):
         buildings_variables.convol = buildings_variables.conv
 
         # Total volume of nuclear buildings
-        buildings_variables.volnucb = vrci + rmbv + wsv + buildings_variables.triv + cryv
+        buildings_variables.vol_plant_nuclear_buildings = (
+            vrci
+            + rmbv
+            + wsv
+            + buildings_variables.vol_plant_tritium_fuel_building
+            + vol_plant_cryogenics_building
+        )
 
         # Output !
         # !!!!!!!!!
@@ -360,8 +439,8 @@ class Buildings(Model):
             po.ovarre(
                 self.outfile,
                 "Dist from centre of torus to bldg wall (m)",
-                "(wrbi)",
-                buildings_variables.wrbi,
+                "(dr_plant_reactor_building_internal_half)",
+                buildings_variables.dr_plant_reactor_building_internal_half,
             )
             po.ovarre(
                 self.outfile,
@@ -377,8 +456,8 @@ class Buildings(Model):
             po.ovarre(
                 self.outfile,
                 "Tritium building volume (m3)",
-                "(triv)",
-                buildings_variables.triv,
+                "(vol_plant_tritium_fuel_building)",
+                buildings_variables.vol_plant_tritium_fuel_building,
             )
             po.ovarre(self.outfile, "Electrical building volume (m3)", "(elev)", elev)
             po.ovarre(
@@ -387,7 +466,12 @@ class Buildings(Model):
                 "(conv)",
                 buildings_variables.conv,
             )
-            po.ovarre(self.outfile, "Cryogenics building volume (m3)", "(cryv)", cryv)
+            po.ovarre(
+                self.outfile,
+                "Cryogenics building volume (m3)",
+                "(vol_plant_cryogenics_building)",
+                vol_plant_cryogenics_building,
+            )
             po.ovarre(
                 self.outfile,
                 "Administration building volume (m3)",
@@ -400,13 +484,18 @@ class Buildings(Model):
             po.ovarre(
                 self.outfile,
                 "Total volume of nuclear buildings (m3)",
-                "(volnucb)",
-                buildings_variables.volnucb,
+                "(vol_plant_nuclear_buildings)",
+                buildings_variables.vol_plant_nuclear_buildings,
             )
 
-        return cryv, vrci, rbv, rmbv, wsv, elev
+        return vol_plant_cryogenics_building, vrci, rbv, rmbv, wsv, elev
 
-    def bldgs_sizes(self, output, tf_radial_dim, tf_vertical_dim):
+
+class BuildingsChapman2024:
+    def __init__(self):
+        self.outfile = constants.NOUT
+
+    def calculate_building_sizes_chapman(self, output, tf_radial_dim, tf_vertical_dim):
         """Subroutine that estimates the sizes (footprints and volumes) of
         buildings within a fusion power plant.
         Some estimates are scaled with parameters of the fusion plant,
@@ -1000,7 +1089,9 @@ class Buildings(Model):
         buildings_variables.a_plant_floor_effective = buildings_total_vol / 6.0e0
 
         # Total volume of nuclear buildings
-        buildings_variables.volnucb = reactor_build_totvol + hotcell_vol_ext
+        buildings_variables.vol_plant_nuclear_buildings = (
+            reactor_build_totvol + hotcell_vol_ext
+        )
 
         # Output
         if output:
@@ -1207,8 +1298,8 @@ class Buildings(Model):
             po.ovarre(
                 self.outfile,
                 "Total volume of nuclear buildings (m3)",
-                "(volnucb)",
-                buildings_variables.volnucb,
+                "(vol_plant_nuclear_buildings)",
+                buildings_variables.vol_plant_nuclear_buildings,
             )
 
             if buildings_variables.i_bldgs_v == 1:

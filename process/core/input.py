@@ -1232,9 +1232,13 @@ INPUT_VARIABLES = {
     "outgrat_fw": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-10, 1e-06)
     ),
-    "rbrt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "dz_plant_reactor_building_roof": InputVariable(
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
+    ),
     "rbvfac": InputVariable(data_structure.buildings_variables, float, range=(0.9, 3.0)),
-    "rbwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "dx_plant_reactor_building_wall": InputVariable(
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
+    ),
     "radius_cp_coolant_channel": InputVariable(
         data_structure.tfcoil_variables, float, range=(1e-06, 1.0)
     ),
@@ -1516,7 +1520,7 @@ INPUT_VARIABLES = {
     "temp_plasma_separatrix_kev": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 20.0)
     ),
-    "tfcbv": InputVariable(
+    "vol_plant_tf_power_supplies_building": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "dx_tf_wp_insertion_gap": InputVariable(
@@ -1586,13 +1590,15 @@ INPUT_VARIABLES = {
     "f_temp_plasma_ion_electron": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 2.0)
     ),
-    "trcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "dr_plant_reactor_building_transport_clearance": InputVariable(
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
+    ),
     "triang": InputVariable(data_structure.physics_variables, float, range=(-1.0, 1.0)),
     "triang95": InputVariable(data_structure.physics_variables, float, range=(0.0, 1.0)),
     "p_tritium_plant_electric_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "triv": InputVariable(
+    "vol_plant_tritium_fuel_building": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "turbine_hall_h": InputVariable(
@@ -1773,7 +1779,7 @@ INPUT_VARIABLES = {
     "watertemp": InputVariable(
         data_structure.water_usage_variables, float, range=(0.0, 25.0)
     ),
-    "wgt": InputVariable(
+    "m_plant_reactor_building_crane_capacity": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "wgt2": InputVariable(
