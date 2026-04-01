@@ -122,6 +122,9 @@ a_plant_floor_effective: float = None
 """effective total floor space (m2)"""
 
 
+dz_plant_reactor_building_internal: float = None
+"""Internal height of the reactor building (m)"""
+
 elecdist_l: float = None
 """Transformers and electrical distribution facilities length (m)"""
 
@@ -643,6 +646,7 @@ def init_buildings_variables():
         cryostat_clrnc, \
         vol_plant_cryoplant_building, \
         a_plant_floor_effective, \
+        dz_plant_reactor_building_internal, \
         elecdist_l, \
         elecdist_w, \
         elecdist_h, \
@@ -797,6 +801,7 @@ def init_buildings_variables():
     cryostat_clrnc = 2.5
     vol_plant_cryoplant_building = 0.0
     a_plant_floor_effective = 0.0
+    dz_plant_reactor_building_internal = 0.0
     elecdist_l = 380.0
     elecdist_w = 350.0
     elecdist_h = 5.0

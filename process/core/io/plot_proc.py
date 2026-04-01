@@ -35,6 +35,7 @@ from process.core.io.mfile import MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
 from process.data_structure import impurity_radiation_module
 from process.models.build import Build
+from process.models.buildings import BuildingsITER1992
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -13902,7 +13903,24 @@ def main_plot(
     ax24 = figs[33].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[33])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[34])
+
+    reactor_hall_ax = figs[34].add_subplot(111, aspect="equal")
+    plot_full_machine_poloidal_cross_section(
+        reactor_hall_ax,
+        m_file,
+        scan,
+        radial_build,
+        colour_scheme,
+    )
+
+    BuildingsITER1992.plot_reactor_hall(
+        axis=reactor_hall_ax,
+        mfile=m_file,
+        scan=scan,
+        radial_build=radial_build,
+        colour_scheme=colour_scheme,
+    )
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -13979,7 +13997,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(34)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(35)]
 
     # run main_plot
     main_plot(

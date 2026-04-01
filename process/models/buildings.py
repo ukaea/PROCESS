@@ -1,8 +1,11 @@
 import logging
 from enum import IntEnum
+from typing import TYPE_CHECKING, Literal
 
+import matplotlib.pyplot as plt
 import numpy as np
 
+import process.core.io.mfile as mf
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
@@ -22,6 +25,9 @@ from process.models.physics.current_drive import (
     CurrentDriveMethodType,
     CurrentDriveModel,
 )
+
+if TYPE_CHECKING:
+    pass
 
 logger = logging.getLogger(__name__)
 
@@ -288,6 +294,8 @@ class BuildingsITER1992:
         # stcl : clearance above crane to roof, m
         # Additional dz_tf_full allows TF coil to be lifted right out
         dz_plant_reactor_building_internal = (
+            buildings_variables.dz_plant_reactor_building_internal
+        ) = (
             buildings_variables.clh2
             + 2.0e0 * dz_tf_full
             + buildings_variables.dz_tf_cryostat
@@ -444,6 +452,12 @@ class BuildingsITER1992:
             )
             po.ovarre(
                 self.outfile,
+                "Internal reactor building height (m)",
+                "(dz_plant_reactor_building_internal)",
+                buildings_variables.dz_plant_reactor_building_internal,
+            )
+            po.ovarre(
+                self.outfile,
                 "Effective floor area (m2)",
                 "(a_plant_floor_effective)",
                 buildings_variables.a_plant_floor_effective,
@@ -489,6 +503,32 @@ class BuildingsITER1992:
             )
 
         return vol_plant_cryogenics_building, vrci, rbv, rmbv, wsv, elev
+
+    @staticmethod
+    def plot_reactor_hall(
+        axis: plt.Axes,
+        mfile: mf.MFile,
+        scan: int,
+        radial_build,
+        colour_scheme: Literal[1, 2],
+    ):
+        """Plots the reactor hall dimensions as a rectangle on the provided axis."""
+
+        dr_half = mfile.get("dr_plant_reactor_building_internal_half", scan=scan)
+        height = mfile.get("dz_plant_reactor_building_internal", scan=scan)
+        dx_plant_reactor_building_wall = mfile.get(
+            "dx_plant_reactor_building_wall", scan=scan
+        )
+
+        rect = plt.Rectangle(
+            (-dr_half, -height / 2),
+            2 * dr_half,
+            height,
+            fill=False,
+            edgecolor="grey",
+            linewidth=2,
+        )
+        axis.add_patch(rect)
 
 
 class BuildingsChapman2024:
