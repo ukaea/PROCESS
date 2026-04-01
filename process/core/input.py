@@ -1,17 +1,22 @@
 """Handle parsing, validation, and actioning of a PROCESS input file (*IN.DAT)."""
 
+from __future__ import annotations
+
 import copy
 import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from warnings import warn
 
 import process
 import process.data_structure as data_structure
 from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.core.solver.constraints import ConstraintManager
+
+if TYPE_CHECKING:
+    from process.core.model import DataStructure
 
 NumberType = int | float
 ValidInputTypes = NumberType | str
@@ -45,7 +50,7 @@ class InputVariable:
     array: bool = False
     """Is this input assigning values to an array?"""
     additional_validation: (
-        Callable[[str, ValidInputTypes, int | None, "InputVariable"], ValidInputTypes]
+        Callable[[str, ValidInputTypes, int | None, InputVariable], ValidInputTypes]
         | None
     ) = None
     """A function that takes the input variable: name, value, array index, and config (this dataclass)
@@ -56,7 +61,7 @@ class InputVariable:
     been cast to the specified `type`.
     """
     additional_actions: (
-        Callable[[str, ValidInputTypes, int | None, "InputVariable"], None] | None
+        Callable[[str, ValidInputTypes, int | None, InputVariable], None] | None
     ) = None
     """A function that takes the input variable: name, value, array index, and config (this dataclass)
     as input and performs some additional action in addition to the default actions prescribed by the variables
@@ -184,9 +189,7 @@ INPUT_VARIABLES = {
     "admv": InputVariable(
         data_structure.buildings_variables, float, range=(1.0e4, 1.0e6)
     ),
-    "airtemp": InputVariable(
-        data_structure.water_usage_variables, float, range=(-15.0, 40.0)
-    ),
+    "airtemp": InputVariable("water_use", float, range=(-15.0, 40.0)),
     "alfapf": InputVariable(data_structure.pfcoil_variables, float, range=(1e-12, 1.0)),
     "alstroh": InputVariable(
         data_structure.pfcoil_variables, float, range=(1000000.0, 100000000000.0)
@@ -1770,18 +1773,14 @@ INPUT_VARIABLES = {
     "water_buildings_w": InputVariable(
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "watertemp": InputVariable(
-        data_structure.water_usage_variables, float, range=(0.0, 25.0)
-    ),
+    "watertemp": InputVariable("water_use", float, range=(0.0, 25.0)),
     "wgt": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "wgt2": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
-    "windspeed": InputVariable(
-        data_structure.water_usage_variables, float, range=(0.0, 10.0)
-    ),
+    "windspeed": InputVariable("water_use", float, range=(0.0, 10.0)),
     "workshop_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -2148,7 +2147,7 @@ INPUT_VARIABLES = {
 }
 
 
-def parse_input_file():
+def parse_input_file(data_structure_obj: DataStructure):
     input_file = data_structure.global_variables.fileprefix
 
     input_file_path = Path("IN.DAT")
@@ -2185,6 +2184,14 @@ def parse_input_file():
         variable_name = variable_name.lower()
 
         variable_config = INPUT_VARIABLES.get(variable_name)
+
+        # string indicates it should be set on the new object data structure
+        if isinstance(variable_config.module, str):
+            module = data_structure_obj
+            for name in variable_config.module.split("."):
+                module = getattr(module, name)
+
+            variable_config.module = module
 
         if variable_config is None:
             error_msg = (

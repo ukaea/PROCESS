@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from process import data_structure, main
+from process.core.model import DataStructure
 from process.main import Process, SingleRun, VaryRun
 
 
@@ -136,6 +137,7 @@ def single_run(monkeypatch, input_file, tmp_path):
 
     single_run.input_file = str(temp_input_file)
     single_run.models = None
+    single_run.data = DataStructure()
     single_run.set_filenames()
     single_run.initialise()
     return single_run
