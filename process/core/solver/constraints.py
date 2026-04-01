@@ -8,6 +8,7 @@ import numpy as np
 import process.data_structure as data_structure
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
+from process.models.physics.physics import BetaComponentLimits
 from process.models.tfcoil.base import TFConductorModel
 
 ConstraintSymbolType = Literal["=", ">=", "<="]
@@ -754,25 +755,32 @@ def constraint_equation_24(constraint_registration):
     """
     # Include all beta components: relevant for both tokamaks and stellarators
     if (
-        data_structure.physics_variables.i_beta_component == 0
+        data_structure.physics_variables.i_beta_component == BetaComponentLimits.TOTAL
         or data_structure.stellarator_variables.istell != 0
     ):
         value = data_structure.physics_variables.beta_total_vol_avg
     # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
-    elif data_structure.physics_variables.i_beta_component == 1:
+    elif (
+        data_structure.physics_variables.i_beta_component == BetaComponentLimits.THERMAL
+    ):
         value = (
             data_structure.physics_variables.beta_total_vol_avg
             - data_structure.physics_variables.beta_fast_alpha
             - data_structure.physics_variables.beta_beam
         )
     # Beta limit applies to thermal + neutral beam: components of the total beta, i.e. excludes alphas
-    elif data_structure.physics_variables.i_beta_component == 2:
+    elif (
+        data_structure.physics_variables.i_beta_component
+        == BetaComponentLimits.THERMAL_AND_BEAM
+    ):
         value = (
             data_structure.physics_variables.beta_total_vol_avg
             - data_structure.physics_variables.beta_fast_alpha
         )
     # Beta limit applies to toroidal beta
-    elif data_structure.physics_variables.i_beta_component == 3:
+    elif (
+        data_structure.physics_variables.i_beta_component == BetaComponentLimits.TOROIDAL
+    ):
         value = (
             data_structure.physics_variables.beta_total_vol_avg
             * (

@@ -1,6 +1,7 @@
 import logging
 import math
 from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numba as nb
 import numpy as np
@@ -3427,12 +3428,41 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
 class BetaNormMaxModel(IntEnum):
     """Beta norm max (β_N_max) model types"""
 
-    USER_INPUT = 0
-    WESSON = 1
-    ORIGINAL_SCALING = 2
-    MENARD = 3
-    THLOREUS = 4
-    STAMBAUGH = 5
+    USER_INPUT = (0, "User Input")
+    WESSON = (1, "Wesson Scaling")
+    ORIGINAL_SCALING = (2, "Original Scaling")
+    MENARD = (3, "Menard Scaling")
+    THLOREUS = (4, "Thloreus Scaling")
+    STAMBAUGH = (5, "Stambaugh Scaling")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
+
+
+class BetaComponentLimits(IntEnum):
+    """Beta component to apply limit types"""
+
+    TOTAL = (0, "Total Beta")
+    THERMAL = (1, "Thermal Beta")
+    THERMAL_AND_BEAM = (2, "Thermal and Beam Beta")
+    TOROIDAL = (3, "Toroidal Beta")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class PlasmaBeta:
@@ -4090,8 +4120,16 @@ class PlasmaBeta:
     def output_beta_information(self):
         """Output beta information to file."""
 
-        po.osubhd(self.outfile, "Beta Information :")
-        if physics_variables.i_beta_component == 0:
+        po.oheadr(self.outfile, "Plasma Beta:")
+
+        po.ovarin(
+            self.outfile,
+            "Beta component for limits",
+            "(i_beta_component)",
+            physics_variables.i_beta_component,
+        )
+
+        if physics_variables.i_beta_component == BetaComponentLimits.TOTAL:
             po.ovarrf(
                 self.outfile,
                 "Upper limit on total beta",
@@ -4099,7 +4137,7 @@ class PlasmaBeta:
                 physics_variables.beta_vol_avg_max,
                 "OP ",
             )
-        elif physics_variables.i_beta_component == 1:
+        elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL:
             po.ovarrf(
                 self.outfile,
                 "Upper limit on thermal beta",
@@ -4107,10 +4145,18 @@ class PlasmaBeta:
                 physics_variables.beta_vol_avg_max,
                 "OP ",
             )
-        else:
+        elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL_AND_BEAM:
             po.ovarrf(
                 self.outfile,
                 "Upper limit on thermal + NB beta",
+                "(beta_vol_avg_max)",
+                physics_variables.beta_vol_avg_max,
+                "OP ",
+            )
+        elif physics_variables.i_beta_component == BetaComponentLimits.TOROIDAL:
+            po.ovarrf(
+                self.outfile,
+                "Upper limit on toroidal beta",
                 "(beta_vol_avg_max)",
                 physics_variables.beta_vol_avg_max,
                 "OP ",
@@ -4122,7 +4168,7 @@ class PlasmaBeta:
             "(beta_total_vol_avg)",
             physics_variables.beta_total_vol_avg,
         )
-        if physics_variables.i_beta_component == 0:
+        if physics_variables.i_beta_component == BetaComponentLimits.TOTAL:
             po.ovarrf(
                 self.outfile,
                 "Lower limit on total beta",
@@ -4130,7 +4176,7 @@ class PlasmaBeta:
                 physics_variables.beta_vol_avg_min,
                 "IP",
             )
-        elif physics_variables.i_beta_component == 1:
+        elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL:
             po.ovarrf(
                 self.outfile,
                 "Lower limit on thermal beta",
@@ -4233,8 +4279,19 @@ class PlasmaBeta:
             physics_variables.beta_poloidal_eps_max,
         )
         po.osubhd(self.outfile, "Normalised Beta Information :")
+
+        po.ovarin(
+            self.outfile,
+            "Maximum normalised beta model",
+            "(i_beta_norm_max)",
+            physics_variables.i_beta_norm_max,
+        )
+
         if stellarator_variables.istell == 0:
-            if physics_variables.i_beta_norm_max != 0:
+            if (
+                BetaNormMaxModel(physics_variables.i_beta_norm_max)
+                != BetaNormMaxModel.USER_INPUT
+            ):
                 po.ovarrf(
                     self.outfile,
                     "Beta g coefficient",
