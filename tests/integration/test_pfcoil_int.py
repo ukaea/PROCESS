@@ -299,7 +299,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(pv, "rmajor", 8.938)
     monkeypatch.setattr(pv, "plasma_current", 1.8254e7)
 
-    # Mocks for hoop_stress()
+    # Mocks for calculate_cs_hoop_stress()
     monkeypatch.setattr(tfv, "poisson_steel", 3.0e-1)
 
     # Mocks for superconpf()
