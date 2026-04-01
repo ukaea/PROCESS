@@ -1309,20 +1309,6 @@ class PlasmaBootstrapCurrent(Model):
 
         po.ovarrf(
             self.outfile,
-            "Diamagnetic fraction (Hender)",
-            "(f_c_plasma_diamagnetic_hender)",
-            current_drive_variables.f_c_plasma_diamagnetic_hender,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Diamagnetic fraction (SCENE)",
-            "(f_c_plasma_diamagnetic_scene)",
-            current_drive_variables.f_c_plasma_diamagnetic_scene,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
             "Pfirsch-Schlueter fraction (SCENE)",
             "(f_c_plasma_pfirsch_schluter_scene)",
             current_drive_variables.f_c_plasma_pfirsch_schluter_scene,

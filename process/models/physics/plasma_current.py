@@ -10,6 +10,7 @@ import process.core.io.mfile as mf
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     current_drive_variables,
     physics_variables,
@@ -952,7 +953,7 @@ class PlasmaDiamagneticCurrentModel(IntEnum):
         return self._full_name_
 
 
-class PlasmaDiamagneticCurrent:
+class PlasmaDiamagneticCurrent(Model):
     """Class to hold plasma diamagnetic current calculations for plasma processing."""
 
     def __init__(self):
@@ -975,22 +976,40 @@ class PlasmaDiamagneticCurrent:
         )
 
         if (
-            PlasmaDiamagneticCurrentModel(physics_variables.i_diamagnetic_current)
+            physics_variables.i_diamagnetic_current
             == PlasmaDiamagneticCurrentModel.HENDER_ST_FIT
         ):
             current_drive_variables.f_c_plasma_diamagnetic = (
                 current_drive_variables.f_c_plasma_diamagnetic_hender
             )
         elif (
-            PlasmaDiamagneticCurrentModel(physics_variables.i_diamagnetic_current)
+            physics_variables.i_diamagnetic_current
             == PlasmaDiamagneticCurrentModel.SCENE_FIT
         ):
             current_drive_variables.f_c_plasma_diamagnetic = (
                 current_drive_variables.f_c_plasma_diamagnetic_scene
             )
 
+    def output(self):
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "Diamagnetic fraction (Hender)",
+            "(f_c_plasma_diamagnetic_hender)",
+            current_drive_variables.f_c_plasma_diamagnetic_hender,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Diamagnetic fraction (SCENE)",
+            "(f_c_plasma_diamagnetic_scene)",
+            current_drive_variables.f_c_plasma_diamagnetic_scene,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+
     @staticmethod
-    @nb.jit(nopython=True, cache=True)
+    @nb.jit(cache=True)
     def diamagnetic_fraction_hender(beta: float) -> float:
         """Calculate the diamagnetic fraction based on the Hender fit.
 
@@ -1008,7 +1027,7 @@ class PlasmaDiamagneticCurrent:
         return beta / 2.8
 
     @staticmethod
-    @nb.jit(nopython=True, cache=True)
+    @nb.jit(cache=True)
     def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
         """Calculate the diamagnetic fraction based on the SCENE fit by Tim Hender.
 

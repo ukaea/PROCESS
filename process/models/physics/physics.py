@@ -3154,6 +3154,7 @@ class Physics(Model):
             self.inductance.output_volt_second_information()
         if stellarator_variables.istell == 0:
             self.plasma_bootstrap_current.output()
+            self.dia_current.output()
 
         po.osubhd(self.outfile, "Fuelling :")
         po.ovarre(
