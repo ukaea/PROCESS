@@ -3309,7 +3309,7 @@ class CSCoil(Model):
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
-            pfcoil_variables.sig_hoop = self.hoop_stress(
+            pfcoil_variables.sig_hoop = self.calculate_cs_hoop_stress(
                 pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1]
             )
 
@@ -3775,7 +3775,7 @@ class CSCoil(Model):
             )
             pfcoil_variables.stress_z_cs_self_midplane_profile[time] = stress_value
 
-    def hoop_stress(self, r):
+    def calculate_cs_hoop_stress(self, r):
         """Calculation of hoop stress of central solenoid.
 
         This routine calculates the hoop stress of the central solenoid

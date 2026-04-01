@@ -1972,7 +1972,7 @@ def test_vsec(pfcoil, monkeypatch):
 def test_hoop_stress(cs_coil, monkeypatch):
     """Test hoop_stress subroutine.
 
-    hoop_stress() requires specific mocked variables in order to work; these were
+    calculate_cs_hoop_stress() requires specific mocked variables in order to work; these were
     discovered using gdb to break on the first subroutine call when running the
     baseline 2018 IN.DAT.
 
@@ -2045,7 +2045,7 @@ def test_hoop_stress(cs_coil, monkeypatch):
 
     r = 2.3
     s_hoop_exp = 6.737108e8
-    s_hoop = cs_coil.hoop_stress(r)
+    s_hoop = cs_coil.calculate_cs_hoop_stress(r)
 
     assert pytest.approx(s_hoop) == s_hoop_exp
 
