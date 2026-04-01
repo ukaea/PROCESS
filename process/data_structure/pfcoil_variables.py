@@ -587,7 +587,7 @@ def init_pfcoil_module():
     ricpf = 0.0
     ssq0 = 0.0
     stress_z_cs_self_peak_midplane = 0.0
-    stress_z_cs_self_midplane_profile = []
+    stress_z_cs_self_midplane_profile = np.zeros(6)
     sig_hoop = 0.0
     forc_z_cs_self_peak_midplane = 0.0
 
