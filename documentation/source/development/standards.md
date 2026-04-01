@@ -298,7 +298,7 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ##### Currents
 
-- Currents should start with the `c_` prefix
+- Currents should start with the `cur_` prefix
 
 ---------------------
 
