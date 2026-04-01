@@ -2052,7 +2052,7 @@ class Physics:
             )
 
             po.oblnkl(self.outfile)
-            self.fields.output_magnetic_field_info()
+            self.fields.output()
             po.oblnkl(self.outfile)
             po.ostars(self.outfile, 110)
             po.oblnkl(self.outfile)

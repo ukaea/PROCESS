@@ -5,6 +5,7 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import Model
 from process.data_structure import (
     physics_variables,
 )
@@ -13,11 +14,14 @@ from process.models.physics.plasma_current import PlasmaCurrent
 logger = logging.getLogger(__name__)
 
 
-class PlasmaFields:
+class PlasmaFields(Model):
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.current = PlasmaCurrent()
+
+    def run(self):
+        """Run the model. This model cannot yet be 'run'."""
 
     def calculate_surface_averaged_poloidal_field(
         self,
@@ -194,7 +198,7 @@ class PlasmaFields:
         """
         return np.sqrt(b_plasma_toroidal**2 + b_plasma_poloidal**2)
 
-    def output_magnetic_field_info(self):
+    def output(self):
         po.oheadr(self.outfile, "Plasma magnetic fields")
 
         po.ovarrf(
