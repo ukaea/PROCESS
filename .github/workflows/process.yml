@@ -61,7 +61,8 @@ jobs:
   regression-test:
     runs-on: ubuntu-latest
     needs: [tracking]
-    # depend on make and tracking job but dont skip if tracking was skipped
+    # depend on make and tracking job but don't skip if tracking was skipped
+    # run PROCESS on the regression test input files and compare results to the tracked files
     if: always()
     continue-on-error: true
     strategy:
@@ -80,6 +81,8 @@ jobs:
 
   run-tracking-inputs:
     runs-on: ubuntu-latest
+    # run PROCESS on the regression test input files and archive output MFILEs
+    # only runs upon merge to main
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -114,10 +117,12 @@ jobs:
         run: hatch run lint:fmt
 
   tracking:
+    # update tracker to include the MFILEs created by the run-tracked-files job
     concurrency:
       group: tracking-jobs
       cancel-in-progress: false
     runs-on: ubuntu-latest
+    # depends on run-tracking-inputs; only runs upon merge to main
     needs: run-tracking-inputs
     if: github.ref == 'refs/heads/main'
     env:
@@ -168,6 +173,7 @@ jobs:
       group: docs-jobs
       cancel-in-progress: false
     runs-on: ubuntu-latest
+    # depends on tracking; only runs upon merge to main
     needs: tracking
     if: github.ref == 'refs/heads/main'
     steps:
