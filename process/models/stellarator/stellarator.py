@@ -1956,7 +1956,7 @@ class Stellarator(Model):
         #  Total field
         physics_variables.b_plasma_total = np.sqrt(
             physics_variables.b_plasma_toroidal_on_axis**2
-            + physics_variables.b_plasma_poloidal_average**2
+            + physics_variables.b_plasma_surface_poloidal_average**2
         )
 
         # Check if physics_variables.beta (iteration variable 5) is an iteration variable
@@ -2008,7 +2008,7 @@ class Stellarator(Model):
         )
 
         #  Calculate poloidal field using rotation transform
-        physics_variables.b_plasma_poloidal_average = (
+        physics_variables.b_plasma_surface_poloidal_average = (
             physics_variables.rminor
             * physics_variables.b_plasma_toroidal_on_axis
             / physics_variables.rmajor
@@ -2052,7 +2052,7 @@ class Stellarator(Model):
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
-                physics_variables.b_plasma_poloidal_average,
+                physics_variables.b_plasma_surface_poloidal_average,
                 physics_variables.b_plasma_toroidal_on_axis,
                 current_drive_variables.c_beam_total,
                 physics_variables.nd_plasma_electrons_vol_avg,
@@ -2116,7 +2116,7 @@ class Stellarator(Model):
         )
 
         physics_variables.beta_fast_alpha = self.beta.fast_alpha_beta(
-            physics_variables.b_plasma_poloidal_average,
+            physics_variables.b_plasma_surface_poloidal_average,
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_plasma_fuel_ions_vol_avg,
