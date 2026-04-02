@@ -117,7 +117,7 @@ jobs:
         run: hatch run lint:fmt
 
   tracking:
-    # update tracker to include the MFILEs created by the run-tracked-files job
+    # update tracker to include the MFILEs created by the run-tracking-inputs job
     concurrency:
       group: tracking-jobs
       cancel-in-progress: false

@@ -27,16 +27,16 @@ filename, then call a method to create a plot file, then check that the plot was
 Regression tests detect changes in the entire program's behaviour by checking that for a given
 input, it produces exactly the same output as before those changes. It detects changes in the 
 program's output. Therefore, if your code changes the program's output, it will fail the regression 
-test on the CI for your PR. In this case, that output difference will need to be reviewed and, if accepted,
-the expected (or reference) output will be updated to reflect these changes when your code is merged into `main`.
+test. In this case, that output difference will need to be reviewed and, if accepted,
+the expected (or reference) output will be updated to reflect these changes when your code is merged into main.
 
 Regression tests compare the output of PROCESS locally when running an input file to a reference output stored in a 
 [repository](https://github.com/timothy-nunn/process-tracking-data). The test suite will download the reference output for the commit where the current branch branched off main. This means **each branch is accountable for only its changes since it branched off main**. 
 
 
-!!! Info CI System
+!!! Info "CI System"
     Our tests are run automatically using the Continous Integration (CI) system on GitHub.
-    More information about the jobs run on our CI can be found [here](https://ukaea.github.io/PROCESS/development/ci-guide/)
+    More information about how the jobs run on our CI and update the tracked files can be found [here](https://ukaea.github.io/PROCESS/development/ci-guide/).
 
 
 ## pytest
