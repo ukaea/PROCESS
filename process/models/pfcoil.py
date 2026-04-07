@@ -3795,7 +3795,15 @@ class CSCoil:
             )
             pfcoil_variables.stress_z_cs_self_midplane_profile[time] = stress_value
 
-    def calculate_cs_hoop_stress(self, r):
+    def calculate_cs_hoop_stress(
+        self,
+        r_stress_point,
+        r_cs_inner=None,
+        r_cs_outer=None,
+        dz_cs_half=None,
+        j_cs=None,
+        b_cs_inner=None,
+    ) -> float:
         """Calculation of hoop stress of central solenoid.
 
         This routine calculates the hoop stress of the central solenoid
@@ -3804,39 +3812,40 @@ class CSCoil:
         Parameters
         ----------
         r : float
-            radial position a < r < b
+            radial position r_cs_inner < r < b
 
+        
+        
+        
+        
         Returns
         -------
         float
             hoop stress (MPa)
         """
-        a = pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1]
 
-        # Outer radius of central Solenoid [m]
-        b = pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1]
+        beta = dz_cs_half / r_cs_inner
+        alpha = r_cs_outer / r_cs_inner
 
         # alpha
-        alpha = b / a
+        alpha = r_cs_outer / r_cs_inner
 
         # epsilon
-        epsilon = r / a
+        epsilon = r_stress_point / r_cs_inner
 
-        # Field at inner radius of coil [T]
-        b_a = pfcoil_variables.b_cs_peak_pulse_start
 
         # Field at outer radius of coil [T]
         # Assume to be 0 for now
         b_b = 0.0e0
 
         # current density [A/m^2]
-        j = pfcoil_variables.j_cs_pulse_start
+        j_cs = pfcoil_variables.j_cs_pulse_start
 
         # K term
-        k = ((alpha * b_a - b_b) * j * a) / (alpha - 1.0e0)
+        k = ((alpha * b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
 
         # M term
-        m = ((b_a - b_b) * j * a) / (alpha - 1.0e0)
+        m = ((b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
 
         # calculate hoop stress terms
         hp_term_1 = k * ((2.0e0 + tfv.poisson_steel) / (3.0e0 * (alpha + 1.0e0)))
