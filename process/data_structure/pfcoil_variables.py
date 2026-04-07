@@ -386,6 +386,12 @@ j_pf_wp_critical: list[float] = None
 r_cs_middle: float = None
 """radius to the centre of the central solenoid (m)"""
 
+r_cs_inner: float = None
+"""inner radius of the central solenoid (m)"""
+
+r_cs_outer: float = None
+"""outer radius of the central solenoid (m)"""
+
 dz_cs_full: float = None
 """Full height of the central solenoid (m)"""
 
@@ -676,6 +682,8 @@ def init_pfcoil_variables():
         j_cs_critical_pulse_start, \
         j_pf_wp_critical, \
         r_cs_middle, \
+        r_cs_inner, \
+        r_cs_outer, \
         dz_cs_full, \
         dr_pf_tf_outboard_out_offset, \
         r_pf_coil_middle, \
@@ -777,6 +785,8 @@ def init_pfcoil_variables():
     j_cs_critical_pulse_start = 0.0
     j_pf_wp_critical = np.zeros(NGC2)
     r_cs_middle = 0.0
+    r_cs_inner = 0.0
+    r_cs_outer = 0.0
     dz_cs_full = 0.0
     dr_pf_tf_outboard_out_offset = 1.5
     r_pf_coil_middle = np.zeros(NGC2)
