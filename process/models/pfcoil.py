@@ -3363,7 +3363,9 @@ class CSCoil(Model):
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
+            pfcoil_variables.a_cs_steel_poloidal = (
+                pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
+            )
 
             if pfcoil_variables.i_cs_stress == 1:
                 pfcoil_variables.s_shear_cs_peak = max(
@@ -3386,17 +3388,19 @@ class CSCoil(Model):
             # throughout the conductor
             pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = (
                 0.25e0
-                * areaspf
+                * pfcoil_variables.a_cs_steel_poloidal
                 / pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
             )
 
         else:
-            areaspf = 0.0e0  # Resistive Central Solenoid - no steel needed
+            pfcoil_variables.a_cs_steel_poloidal = (
+                0.0e0  # Resistive Central Solenoid - no steel needed
+            )
             pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = 0.0e0
 
         # Weight of steel
         pfcoil_variables.m_pf_coil_structure[pfcoil_variables.n_cs_pf_coils - 1] = (
-            areaspf
+            pfcoil_variables.a_cs_steel_poloidal
             * 2.0e0
             * np.pi
             * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
@@ -3404,7 +3408,9 @@ class CSCoil(Model):
         )
 
         # Non-steel cross-sectional area
-        pfcoil_variables.awpoh = pfcoil_variables.a_cs_poloidal - areaspf
+        pfcoil_variables.awpoh = (
+            pfcoil_variables.a_cs_poloidal - pfcoil_variables.a_cs_steel_poloidal
+        )
 
         # Issue #97. Fudge to ensure awpoh is positive; result is continuous, smooth and
         # monotonically decreases
