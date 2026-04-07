@@ -3552,16 +3552,11 @@ class CSCoil(Model):
                 )
                 * 1.0e6,
                 self.data.pf_coil.i_cs_superconductor,
-                self.data.tfcoil.fhts,
-                self.data.tfcoil.str_cs_con_res,
-                self.data.tfcoil.tftmp,
-                self.data.tfcoil.bcritsc,
-                self.data.tfcoil.tcritsc,
-                self.data.tfcoil.b_crit_upper_nbti,
-                self.data.tfcoil.t_crit_nbti,
-                self.data.superconducting_tfcoil.dr_tf_hts_tape,
-                self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+                tfv.fhts,
+                tfv.str_cs_con_res,
+                pfcoil_variables.temp_cs_superconductor_operating,
+                tfv.bcritsc,
+                tfv.tcritsc,
             )
             # Strand critical current calculation for costing in $/kAm
             # = superconducting filaments jc * (1 - strand copper fraction)
@@ -3602,16 +3597,11 @@ class CSCoil(Model):
                 )
                 * 1.0e6,
                 self.data.pf_coil.i_cs_superconductor,
-                self.data.tfcoil.fhts,
-                self.data.tfcoil.str_cs_con_res,
-                self.data.tfcoil.tftmp,
-                self.data.tfcoil.bcritsc,
-                self.data.tfcoil.tcritsc,
-                self.data.tfcoil.b_crit_upper_nbti,
-                self.data.tfcoil.t_crit_nbti,
-                self.data.superconducting_tfcoil.dr_tf_hts_tape,
-                self.data.superconducting_tfcoil.dx_tf_hts_tape_rebco,
-                self.data.superconducting_tfcoil.dx_tf_hts_tape_total,
+                tfv.fhts,
+                tfv.str_cs_con_res,
+                pfcoil_variables.temp_cs_superconductor_operating,
+                tfv.bcritsc,
+                tfv.tcritsc,
             )
 
             pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1] = (
