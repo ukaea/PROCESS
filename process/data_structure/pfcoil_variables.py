@@ -104,6 +104,8 @@ a_cs_turn: float = None
 a_cs_cable_space: float = None
 """central solenoid conductor+void area with area of steel subtracted (m2)"""
 
+b_cs_self_outer_midplane: float = None
+"""magnetic field at outer edge of central solenoid at midplane due to its own current (T)"""
 
 b_cs_peak_flat_top_end: float = None
 """maximum field in central solenoid at end of flat-top (EoF) (T)"""
@@ -631,6 +633,7 @@ def init_pfcoil_variables():
         a_cs_turn, \
         a_cs_cable_space, \
         b_cs_peak_flat_top_end, \
+        b_cs_self_outer_midplane, \
         b_cs_bore_peak, \
         b_cs_peak_pulse_start, \
         b_pf_coil_peak, \
@@ -735,6 +738,7 @@ def init_pfcoil_variables():
     a_cs_turn = 0.0
     a_cs_cable_space = 0.0
     b_cs_peak_flat_top_end = 0.0
+    b_cs_self_outer_midplane = 0.0
     b_cs_peak_pulse_start = 0.0
     b_cs_bore_peak = 0.0
     b_pf_coil_peak = np.zeros(NGC2)
