@@ -3310,7 +3310,17 @@ class CSCoil(Model):
 
             # New calculation from M. N. Wilson for hoop stress
             pfcoil_variables.sig_hoop = self.calculate_cs_hoop_stress(
-                pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1]
+                r_stress_point=pfcoil_variables.r_pf_coil_inner[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                j_cs=pfcoil_variables.j_cs_pulse_start,
+                b_cs_inner=pfcoil_variables.b_cs_peak_pulse_start,
             )
 
             # New calculation from Y. Iwasa for axial stress
@@ -3780,7 +3790,6 @@ class CSCoil(Model):
         r_stress_point,
         r_cs_inner=None,
         r_cs_outer=None,
-        dz_cs_half=None,
         j_cs=None,
         b_cs_inner=None,
     ) -> float:
@@ -3794,17 +3803,16 @@ class CSCoil(Model):
         r : float
             radial position r_cs_inner < r < b
 
-        
-        
-        
-        
+
+
+
+
         Returns
         -------
         float
             hoop stress (MPa)
         """
 
-        beta = dz_cs_half / r_cs_inner
         alpha = r_cs_outer / r_cs_inner
 
         # alpha
@@ -3812,7 +3820,6 @@ class CSCoil(Model):
 
         # epsilon
         epsilon = r_stress_point / r_cs_inner
-
 
         # Field at outer radius of coil [T]
         # Assume to be 0 for now
