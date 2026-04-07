@@ -887,7 +887,7 @@ def beam_fusion(
     f_beam_tritium: float,
     sigmav_dt_average: float,
     temp_plasma_electron_density_weighted_kev: float,
-    temp_plasma_ion_density_weighted_kev: float,
+    plasma_profile: PlasmaProfile,
     vol_plasma: float,
     n_charge_plasma_effective_mass_weighted_vol_avg: float,
 ) -> tuple:
@@ -1005,7 +1005,7 @@ def beam_fusion(
         beam_slow_time,
         f_beam_tritium,
         c_beam_total,
-        temp_plasma_ion_density_weighted_kev,
+        plasma_profile,
         vol_plasma,
         sigmav_dt_average,
     )
@@ -1035,7 +1035,7 @@ def beamcalc(
     beam_slow_time: float,
     f_beam_tritium: float,
     c_beam_total: float,
-    temp_plasma_ion_vol_avg_kev: float,
+    plasma_profile: PlasmaProfile,
     vol_plasma: float,
     svdt: float,
 ) -> tuple[float, float, float, float]:
@@ -1214,18 +1214,17 @@ def beamcalc(
         nt,
         hot_deuterium_rate,
         vol_plasma,
-        temp_plasma_ion_vol_avg_kev,
         svdt,
+        plasma_profile,
     )
     tritium_beam_alpha_power = alpha_power_beam(
         tritium_beam_density,
         nd,
         hot_tritium_rate,
         vol_plasma,
-        temp_plasma_ion_vol_avg_kev,
         svdt,
+        plasma_profile,
     )
-
     return (
         deuterium_beam_alpha_power,
         tritium_beam_alpha_power,
@@ -1284,8 +1283,8 @@ def alpha_power_beam(
     plasma_ion_desnity: float,
     sigv: float,
     vol_plasma: float,
-    temp_plasma_ion_vol_avg_kev: float,
     sigmav_dt: float,
+    plasma_profile: PlasmaProfile,
 ) -> float:
     """Calculate alpha power from beam-background fusion.
 
@@ -1323,16 +1322,21 @@ def alpha_power_beam(
     Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
     doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
-    # Calculate the reactivity ratio
-    ratio = (
-        sigmav_dt
-        / bosch_hale_reactivity(
-            np.array([temp_plasma_ion_vol_avg_kev]),
+
+    # Use the same profile/integration treatment as the main fusion-rate calculation
+    bh_profile_average = integrate.simpson(
+        fusion_rate_integral(
+            plasma_profile,
             BoschHaleConstants(**REACTION_CONSTANTS_DT),
-        ).item()
+        ),
+        x=plasma_profile.neprofile.profile_x,
+        dx=plasma_profile.neprofile.profile_dx,
     )
 
-    # Calculate and return the alpha power
+    # Correction factor between the reference profile-averaged DT reactivity
+    # and the Bosch-Hale reactivity evaluated with the same profile integral.
+    ratio = sigmav_dt / bh_profile_average
+
     return (
         beam_ion_desnity
         * plasma_ion_desnity
