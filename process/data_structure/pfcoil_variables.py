@@ -107,6 +107,9 @@ stress_hoop_cs_inner_profile: list[float] = None
     a_cs_poloidal: float = 0.0
     """Central solenoid vertical cross-sectional area (m2)"""
 
+a_cs_steel_poloidal: float = None
+"""Central solenoid vertical cross-sectional area of steel (m2)"""
+
     a_cs_turn: float = 0.0
     """Central solenoid (OH) trun cross-sectional area (m2)"""
 
