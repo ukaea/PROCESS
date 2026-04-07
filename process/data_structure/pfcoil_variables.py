@@ -101,7 +101,7 @@ a_cs_turn: float = None
 """Central solenoid (OH) trun cross-sectional area (m2)"""
 
 
-awpoh: float = None
+a_cs_cable_space: float = None
 """central solenoid conductor+void area with area of steel subtracted (m2)"""
 
 
@@ -621,7 +621,7 @@ def init_pfcoil_variables():
         a_cs_poloidal, \
         a_cs_steel_poloidal, \
         a_cs_turn, \
-        awpoh, \
+        a_cs_cable_space, \
         b_cs_peak_flat_top_end, \
         b_cs_peak_pulse_start, \
         b_pf_coil_peak, \
@@ -722,7 +722,7 @@ def init_pfcoil_variables():
     a_cs_poloidal = 0.0
     a_cs_steel_poloidal = 0.0
     a_cs_turn = 0.0
-    awpoh = 0.0
+    a_cs_cable_space = 0.0
     b_cs_peak_flat_top_end = 0.0
     b_cs_peak_pulse_start = 0.0
     b_pf_coil_peak = np.zeros(NGC2)
