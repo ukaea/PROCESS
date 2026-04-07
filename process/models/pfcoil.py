@@ -3575,6 +3575,50 @@ class CSCoil(Model):
             )
         self.calculate_cs_self_midplane_axial_stress_time_profile()
 
+    @staticmethod
+    @numba.njit(cache=True)
+    def calculate_cs_bore_magnetic_field(
+        j_cs: float,
+        r_cs_inner: float,
+        r_cs_outer: float,
+        dz_cs_half: float,
+    ) -> float:
+        """Calculates the magnetic field at the centre of the bore of a solenoid of circular winding and rectangular cross-section.
+
+        Parameters
+        ----------
+        j_cs : float
+            Overall current density (A/m²)
+        r_cs_inner : float
+            Solenoid inner radius (m)
+        r_cs_outer : float
+            Solenoid outer radius (m)
+        dz_cs_half : float
+            Solenoid half height (m)
+
+        Returns
+        -------
+        float
+            Magnetic field at the centre of the bore of the solenoid (T)
+
+        References
+        ----------
+            -"Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983,
+            ISBN 13: 9780198548102
+        """
+        beta = dz_cs_half / r_cs_inner
+        alpha = r_cs_outer / r_cs_inner
+
+        return (
+            j_cs
+            * constants.RMU0
+            * dz_cs_half
+            * math.log(
+                (alpha + math.sqrt(alpha**2 + beta**2))
+                / (1.0 + math.sqrt(1.0 + beta**2))
+            )
+        )
+
     def calculate_cs_self_peak_magnetic_field(
         self,
         j_cs: float,
@@ -3610,14 +3654,11 @@ class CSCoil(Model):
         alpha = r_cs_outer / r_cs_inner
 
         # Field at the centre of the bore R=0, Z=0 of the solenoid
-        b_cs_bore_centre = (
-            j_cs
-            * constants.RMU0
-            * dz_cs_half
-            * math.log(
-                (alpha + math.sqrt(alpha**2 + beta**2))
-                / (1.0 + math.sqrt(1.0 + beta**2))
-            )
+        b_cs_bore_centre = self.calculate_cs_bore_magnetic_field(
+            j_cs=j_cs,
+            r_cs_inner=r_cs_inner,
+            r_cs_outer=r_cs_outer,
+            dz_cs_half=dz_cs_half,
         )
 
         # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
