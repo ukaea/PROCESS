@@ -3841,11 +3841,11 @@ class CSCoil:
 
     def calculate_cs_hoop_stress(
         self,
-        r_stress_point,
-        r_cs_inner=None,
-        r_cs_outer=None,
-        j_cs=None,
-        b_cs_inner=None,
+        r_stress_point: float | np.ndarray,
+        r_cs_inner: float,
+        r_cs_outer: float,
+        j_cs: float,
+        b_cs_inner: float,
     ) -> float:
         """Calculation of hoop stress of central solenoid.
 
@@ -3854,7 +3854,7 @@ class CSCoil:
 
                 Parameters
                 ----------
-                r_stress_point : float
+                r_stress_point : float/np.ndarray
                     Radial location at which to calculate the hoop stress (m)
                 r_cs_inner : float
                     Inner radius of the central solenoid (m)
@@ -3967,13 +3967,51 @@ class CSCoil:
             "o-",
             linewidth=2,
             markersize=8,
-            label="Midplane Axial Stress",
+            label=r"$\sigma_{{z}}$,Midplane Axial Stress",
         )
         axis.set_xlabel("Pulse Time (s)")
         axis.set_ylabel("Stress (MPa)")
         axis.minorticks_on()
         axis.legend(loc="best")
         axis.set_title("Central Solenoid Stress")
+        axis.grid(True, alpha=0.3)
+
+    def plot_cs_radial_hoop_stress_profile(
+        self,
+        axis: plt.Axes,
+        mfile: mf.MFile,
+        scan: int,
+        j_cs: float,
+        b_cs_inner: float,
+    ):
+        r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+        r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+        radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+        stress_values = np.array([
+            self.calculate_cs_hoop_stress(
+                r_stress_point=radius,
+                r_cs_inner=r_cs_inner,
+                r_cs_outer=r_cs_outer,
+                j_cs=j_cs,
+                b_cs_inner=b_cs_inner,
+            )
+            for radius in radii
+        ])
+
+        axis.plot(
+            radii,
+            stress_values / 1e6,
+            "o-",
+            linewidth=2,
+            markersize=8,
+            label="$\\sigma_{\\theta}$,Hoop Stress",
+        )
+        axis.set_xlabel("Radial Position (m)")
+        axis.set_ylabel("Hoop Stress (MPa)")
+        axis.minorticks_on()
+        axis.legend(loc="best")
+        axis.set_title("Central Solenoid Radial Hoop Stress Profile")
         axis.grid(True, alpha=0.3)
 
 
