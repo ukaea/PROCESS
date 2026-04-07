@@ -354,6 +354,12 @@ a_cs_steel_poloidal: float = None
     r_cs_middle: float = 0.0
     """radius to the centre of the central solenoid (m)"""
 
+r_cs_inner: float = None
+"""inner radius of the central solenoid (m)"""
+
+r_cs_outer: float = None
+"""outer radius of the central solenoid (m)"""
+
     dz_cs_full: float = 0.0
     """Full height of the central solenoid (m)"""
 
