@@ -3894,11 +3894,11 @@ class CSCoil(Model):
 
     def calculate_cs_hoop_stress(
         self,
-        r_stress_point,
-        r_cs_inner=None,
-        r_cs_outer=None,
-        j_cs=None,
-        b_cs_inner=None,
+        r_stress_point: float | np.ndarray,
+        r_cs_inner: float,
+        r_cs_outer: float,
+        j_cs: float,
+        b_cs_inner: float,
     ) -> float:
         """Calculation of hoop stress of central solenoid.
 
@@ -3907,7 +3907,7 @@ class CSCoil(Model):
 
                 Parameters
                 ----------
-                r_stress_point : float
+                r_stress_point : float/np.ndarray
                     Radial location at which to calculate the hoop stress (m)
                 r_cs_inner : float
                     Inner radius of the central solenoid (m)
@@ -3982,7 +3982,95 @@ class CSCoil(Model):
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
-        return s_hoop_nom / self.data.pf_coil.f_a_cs_turn_steel
+        return s_hoop_nom / pfcoil_variables.f_a_cs_turn_steel
+
+    @staticmethod
+    def plot_stress_time_profile(axis: plt.Axes, mfile: mf.MFile, scan: int):
+        t_plant_pulse_coil_precharge = mfile.get(
+            "t_plant_pulse_coil_precharge", scan=scan
+        )
+        t_plant_pulse_plasma_current_ramp_up = mfile.get(
+            "t_plant_pulse_plasma_current_ramp_up", scan=scan
+        )
+        t_plant_pulse_fusion_ramp = mfile.get("t_plant_pulse_fusion_ramp", scan=scan)
+        t_plant_pulse_burn = mfile.get("t_plant_pulse_burn", scan=scan)
+        t_plant_pulse_plasma_current_ramp_down = mfile.get(
+            "t_plant_pulse_plasma_current_ramp_down", scan=scan
+        )
+
+        # Define a cumulative sum list for each point in the pulse
+        t_steps = np.cumsum([
+            0,
+            t_plant_pulse_coil_precharge,
+            t_plant_pulse_plasma_current_ramp_up,
+            t_plant_pulse_fusion_ramp,
+            t_plant_pulse_burn,
+            t_plant_pulse_plasma_current_ramp_down,
+        ])
+
+        stress_times = t_steps[
+            :6
+        ]  # Get the first 6 time points corresponding to the stress profile
+
+        stress_z_cs_self_midplane_profile = np.zeros(6)
+        for i in range(6):
+            stress_z_cs_self_midplane_profile[i] = mfile.get(
+                f"stress_z_cs_self_midplane_profile[{i}]", scan=scan
+            )
+
+        # Plot stress vs time
+        axis.plot(
+            stress_times,
+            stress_z_cs_self_midplane_profile / 1e6,
+            "o-",
+            linewidth=2,
+            markersize=8,
+            label=r"$\sigma_{{z}}$,Midplane Axial Stress",
+        )
+        axis.set_xlabel("Pulse Time (s)")
+        axis.set_ylabel("Stress (MPa)")
+        axis.minorticks_on()
+        axis.legend(loc="best")
+        axis.set_title("Central Solenoid Stress")
+        axis.grid(True, alpha=0.3)
+
+    def plot_cs_radial_hoop_stress_profile(
+        self,
+        axis: plt.Axes,
+        mfile: mf.MFile,
+        scan: int,
+        j_cs: float,
+        b_cs_inner: float,
+    ):
+        r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+        r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+        radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+        stress_values = np.array([
+            self.calculate_cs_hoop_stress(
+                r_stress_point=radius,
+                r_cs_inner=r_cs_inner,
+                r_cs_outer=r_cs_outer,
+                j_cs=j_cs,
+                b_cs_inner=b_cs_inner,
+            )
+            for radius in radii
+        ])
+
+        axis.plot(
+            radii,
+            stress_values / 1e6,
+            "o-",
+            linewidth=2,
+            markersize=8,
+            label="$\\sigma_{\\theta}$,Hoop Stress",
+        )
+        axis.set_xlabel("Radial Position (m)")
+        axis.set_ylabel("Hoop Stress (MPa)")
+        axis.minorticks_on()
+        axis.legend(loc="best")
+        axis.set_title("Central Solenoid Radial Hoop Stress Profile")
+        axis.grid(True, alpha=0.3)
 
 
 def peak_b_field_at_pf_coil(

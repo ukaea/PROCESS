@@ -24,6 +24,7 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.pfcoil_variables import NFIXMX
 from process.models.build import Build
+from process.models.cs_fatigue import CsFatigue
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -15589,7 +15590,18 @@ def main_plot(
 
     plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
 
-    plot_cs_stress_time_profile(axis=figs[32].add_subplot(311), mfile=m_file, scan=scan)
+    CSCoil.plot_stress_time_profile(
+        axis=figs[29].add_subplot(222), mfile=m_file, scan=scan
+    )
+
+    cs_coil = CSCoil(cs_fatigue=CsFatigue())
+    cs_coil.plot_cs_radial_hoop_stress_profile(
+        axis=figs[29].add_subplot(224),
+        mfile=m_file,
+        scan=scan,
+        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
+        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
+    )
 
     plot_cs_coil_structure(
         figs[32].add_subplot(223, aspect="equal"), figs[32], m_file, scan
