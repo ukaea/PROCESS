@@ -13887,27 +13887,27 @@ def main_plot(
         figs[29].add_subplot(223, aspect="equal"), figs[29], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[29].add_subplot(326, aspect="equal"), figs[29], m_file, scan
+        figs[30].add_subplot(326, aspect="equal"), figs[30], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[30].add_subplot(221, aspect="equal"), m_file, scan
+        figs[31].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[30].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[30].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[31].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[31].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[31], m_file, scan)
-    ax_blanket = figs[31].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[31], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[32], m_file, scan)
+    ax_blanket = figs[32].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[32], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[32].add_subplot(111, aspect="equal"), m_file, scan, figs[32]
+        figs[33].add_subplot(111, aspect="equal"), m_file, scan, figs[33]
     )
 
-    ax24 = figs[33].add_subplot(111)
+    ax24 = figs[34].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[33])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[34])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -13984,7 +13984,7 @@ def main(args=None):
 
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(34)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(35)]
 
     # run main_plot
     main_plot(
