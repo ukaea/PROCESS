@@ -112,6 +112,8 @@ b_cs_peak_flat_top_end: float = None
 b_cs_peak_pulse_start: float = None
 """maximum field in central solenoid at beginning of pulse (T)"""
 
+b_cs_bore_peak: float = None
+"""peak field in central solenoid bore (T)"""
 
 b_pf_coil_peak: list[float] = None
 """peak field at coil i (T)"""
@@ -629,6 +631,7 @@ def init_pfcoil_variables():
         a_cs_turn, \
         a_cs_cable_space, \
         b_cs_peak_flat_top_end, \
+        b_cs_bore_peak, \
         b_cs_peak_pulse_start, \
         b_pf_coil_peak, \
         ccl0_ma, \
@@ -733,6 +736,7 @@ def init_pfcoil_variables():
     a_cs_cable_space = 0.0
     b_cs_peak_flat_top_end = 0.0
     b_cs_peak_pulse_start = 0.0
+    b_cs_bore_peak = 0.0
     b_pf_coil_peak = np.zeros(NGC2)
     ccl0_ma = np.zeros(N_PF_GROUPS_MAX)
     ccls_ma = np.zeros(N_PF_GROUPS_MAX)
