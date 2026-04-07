@@ -3425,8 +3425,8 @@ class CSCoil(Model):
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = (
-                self.data.pf_coil.f_a_cs_turn_steel * self.data.pf_coil.a_cs_poloidal
+            pfcoil_variables.a_cs_steel_poloidal = (
+                pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
             )
 
             if self.data.pf_coil.i_cs_stress == 1:
@@ -3450,17 +3450,19 @@ class CSCoil(Model):
             # throughout the conductor
             self.data.pf_coil.pfcaseth[self.data.pf_coil.n_cs_pf_coils - 1] = (
                 0.25e0
-                * areaspf
-                / self.data.pf_coil.z_pf_coil_upper[self.data.pf_coil.n_cs_pf_coils - 1]
+                * pfcoil_variables.a_cs_steel_poloidal
+                / pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
             )
 
         else:
-            areaspf = 0.0e0  # Resistive Central Solenoid - no steel needed
-            self.data.pf_coil.pfcaseth[self.data.pf_coil.n_cs_pf_coils - 1] = 0.0e0
+            pfcoil_variables.a_cs_steel_poloidal = (
+                0.0e0  # Resistive Central Solenoid - no steel needed
+            )
+            pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = 0.0e0
 
         # Weight of steel
-        self.data.pf_coil.m_pf_coil_structure[self.data.pf_coil.n_cs_pf_coils - 1] = (
-            areaspf
+        pfcoil_variables.m_pf_coil_structure[pfcoil_variables.n_cs_pf_coils - 1] = (
+            pfcoil_variables.a_cs_steel_poloidal
             * 2.0e0
             * np.pi
             * self.data.pf_coil.r_pf_coil_middle[self.data.pf_coil.n_cs_pf_coils - 1]
@@ -3468,7 +3470,9 @@ class CSCoil(Model):
         )
 
         # Non-steel cross-sectional area
-        self.data.pf_coil.awpoh = self.data.pf_coil.a_cs_poloidal - areaspf
+        pfcoil_variables.awpoh = (
+            pfcoil_variables.a_cs_poloidal - pfcoil_variables.a_cs_steel_poloidal
+        )
 
         # Issue #97. Fudge to ensure awpoh is positive; result is continuous, smooth and
         # monotonically decreases
