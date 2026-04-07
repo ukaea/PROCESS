@@ -190,12 +190,12 @@ jobs:
           name: tracked-mfiles
           path: tracking/
       - run: mv tracking/large_tokamak_nof.SIG_TF.json tracking/large_tokamak_nof_SIG_TF.json
-      - name: Create an example plot proc
+      - name: Create an example plot summary
         run: |
           hatch shell
           process plot summary -f tracking/large_tokamak_nof_MFILE.DAT
-      - name: Move plot proc file to docs images
-        run: mv tracking/large_tokamak_nof_MFILE.DATSUMMARY.pdf documentation/source/images/plot_proc.pdf
+      - name: Move plot summary file to docs images
+        run: mv tracking/large_tokamak_nof_MFILE.DATSUMMARY.pdf documentation/source/images/plot_summary.pdf
       - run: hatch run docs:build
       - name: Download tracking html
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c

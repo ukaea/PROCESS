@@ -52,7 +52,7 @@ from process.core import constants, init
 from process.core.io import obsolete_vars as ov
 from process.core.io.cli_tools import LazyGroup, help_opt, indat_opt
 from process.core.io.mfile import MFile
-from process.core.io.plot import plot_proc, plot_sankey_plotly
+from process.core.io.plot import plot_sankey_plotly, plot_summary
 from process.core.io.vary_run import RunProcessConfig, vary_iteration_variables
 from process.core.log import logging_model_handler, show_errors
 from process.core.model import DataStructure, Model
@@ -226,7 +226,7 @@ def process_cli(
             # Run all summary plotting scripts for the output
             if mfile_path.exists():
                 print(f"Plotting mfile {mfile_path.resolve().as_posix()}")
-                plot_proc(mfile_path)
+                plot_summary(mfile_path)
                 plot_sankey_plotly(mfile_path)
             else:
                 logger.error(f"Cannot find mfile for plotting {mfile_path}")

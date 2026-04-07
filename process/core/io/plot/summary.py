@@ -1,4 +1,4 @@
-"""PROCESS plot_proc"""
+"""PROCESS plot_summary"""
 
 import json
 import os
@@ -13908,7 +13908,7 @@ def create_thickness_builds(m_file, scan: int):
     )
 
 
-def plot_proc(
+def plot_summary(
     mfile: Path,
     scan: int = -1,
     demo_ranges: bool = False,

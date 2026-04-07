@@ -7,9 +7,9 @@
     The majority of the output plots can be automatically generated at the end of the `PROCESS` run by using the `--full-output` flag.
     See the [running process](./running-process.md) section for more info.
 
-### Summary document | `plot_proc.py`
+### Summary document
 
-`plot_proc` is used for plotting an overview of the results from an MFILE. It can be run using its own CLI (see [here](https://ukaea.github.io/process/core/io/utilities/) for full details):
+`plot summary` is used for plotting an overview of the results from an MFILE. It can be run using its own CLI (see [here](https://ukaea.github.io/process/core/io/utilities/) for full details):
 
 ```bash
 process plot summary -f path/to/MFILE.DAT
@@ -21,8 +21,8 @@ or through PROCESS's main CLI:
 process -i path/to/IN.DAT --full-output
 ``` 
 
-An example of a plot proc output PDF for the large tokamak regression test is shown below:
-<embed src="../../images/plot_proc.pdf" type="application/pdf" width="100%" height="600">
+An example of a plot summary output PDF for the large tokamak regression test is shown below:
+<embed src="../../images/plot_summary.pdf" type="application/pdf" width="100%" height="600">
 
 ----------------
 

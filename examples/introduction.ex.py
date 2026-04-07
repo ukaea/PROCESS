@@ -63,15 +63,15 @@ single_run.run()
 
 # %% [markdown]
 # ## Plot summary
-# Create a summary of the generated `MFILE.DAT` using `plot_proc`.
+# Create a summary of the generated `MFILE.DAT` using `plot_summary`.
 #
-# You can also call `plot_proc` from the cli with `process plot summary`
+# You can also call `plot_summary` from the cli with `process plot summary`
 
 # %%
-from process.core.io.plot.plot_proc import plot_proc
+from process.core.io.plot import plot_summary
 
 # Pdf and png output are also available
-plot_proc(single_run.mfile_path, output_format="none", show=True)
+plot_summary(single_run.mfile_path, output_format="none", show=True)
 
 # %% [markdown]
 # ## View key output variables

@@ -61,10 +61,10 @@ def test_vary_run_cwd(temp_data_cwd, cli_runner):
     cli_runner(process_cli, args=["--varyiterparams"])
 
 
-def test_plot_proc(temp_data, mfile_name, cli_runner):
-    """Run plot proc via CLI.
+def test_plot_summary(temp_data, mfile_name, cli_runner):
+    """Run plot summary via CLI.
 
-    Currently, Process needs to run on an input file, then it can run plot_proc
+    Currently, Process needs to run on an input file, then it can run plot_summary
     on a produced MFILE.DAT.
     :param temp_data: temporary dir containing data files
     :type temp_data: Path

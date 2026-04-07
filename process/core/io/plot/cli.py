@@ -9,10 +9,10 @@ from process.core.io.cli_tools import (
     mfile_opt,
     split_callback,
 )
-from process.core.io.plot.plot_proc import plot_proc
-from process.core.io.plot.plot_scans import plot_scan
-from process.core.io.plot.plot_stress_tf import plot_stress
 from process.core.io.plot.sankey import plot_sankey, plot_sankey_plotly
+from process.core.io.plot.scans import plot_scan
+from process.core.io.plot.stress_tf import plot_stress
+from process.core.io.plot.summary import plot_summary
 
 
 @click.group(
@@ -327,6 +327,6 @@ def plot_tf_stress(plot_selec, save_format, axis_font_size, term_output, input_f
     type=click.Choice(["pdf", "png", "none"]),
 )
 @click.option("-s", "--show", help="show plot", is_flag=True)
-def plot_proc_cli(mfile, scan, demo_ranges, colour, output_format, show):
+def plot_summary_cli(mfile, scan, demo_ranges, colour, output_format, show):
     """Produces a summary of the PROCESS MFILE output."""
-    plot_proc(mfile, scan, demo_ranges, colour, output_format, show)
+    plot_summary(mfile, scan, demo_ranges, colour, output_format, show)
