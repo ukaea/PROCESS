@@ -1009,7 +1009,7 @@ class PlasmaDiamagneticCurrent(Model):
         po.oblnkl(self.outfile)
 
     @staticmethod
-    @nb.jit(cache=True)
+    @nb.njit(cache=True)
     def diamagnetic_fraction_hender(beta: float) -> float:
         """Calculate the diamagnetic fraction based on the Hender fit.
 
@@ -1027,7 +1027,7 @@ class PlasmaDiamagneticCurrent(Model):
         return beta / 2.8
 
     @staticmethod
-    @nb.jit(cache=True)
+    @nb.njit(cache=True)
     def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
         """Calculate the diamagnetic fraction based on the SCENE fit by Tim Hender.
 
