@@ -113,7 +113,7 @@ a_cs_steel_poloidal: float = None
     a_cs_turn: float = 0.0
     """Central solenoid (OH) trun cross-sectional area (m2)"""
 
-    awpoh: float = 0.0
+    a_cs_cable_space: float = 0.0
     """central solenoid conductor+void area with area of steel subtracted (m2)"""
 
     b_cs_peak_flat_top_end: float = 0.0
