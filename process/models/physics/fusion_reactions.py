@@ -926,8 +926,8 @@ def beam_fusion(
         Profile averaged <sigma v> for D-T (m^3/s).
     temp_plasma_electron_density_weighted_kev:
         Density-weighted electron temperature (keV).
-    temp_plasma_ion_density_weighted_kev:
-        Density-weighted ion temperature (keV).
+    plasma_profile:
+        Plasma profile object.
     vol_plasma:
         Plasma volume (m^3).
     n_charge_plasma_effective_mass_weighted_vol_avg:
@@ -1302,10 +1302,10 @@ def alpha_power_beam(
         Hot beam fusion reaction rate (m^3/s).
     vol_plasma :
         Plasma volume (m^3).
-    temp_plasma_ion_vol_avg_kev :
-        Thermal ion temperature (keV).
     sigmav_dt :
         Profile averaged <sigma v> for D-T (m^3/s).
+    plasma_profile :
+        Plasma profile object.
 
     Returns
     -------
