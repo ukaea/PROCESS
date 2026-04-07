@@ -810,7 +810,7 @@ def init_pfcoil_variables():
     sigpfcf = 1.0
     ind_pf_cs_plasma_mutual = np.zeros((NGC2, NGC2))
     temp_cs_superconductor_margin = 0.0
-    temp_cs_superconductor_operating = 4.5
+    temp_cs_superconductor_operating = 4.75
     n_pf_coil_turns = np.zeros(NGC2)
     f_a_pf_coil_void = np.full(NGC2, 0.3)
     f_a_cs_void = 0.3

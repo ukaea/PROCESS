@@ -3510,7 +3510,7 @@ class CSCoil:
                 pfcoil_variables.i_cs_superconductor,
                 tfv.fhts,
                 tfv.str_cs_con_res,
-                tfv.tftmp,
+                pfcoil_variables.temp_cs_superconductor_operating,
                 tfv.bcritsc,
                 tfv.tcritsc,
             )
@@ -3555,7 +3555,7 @@ class CSCoil:
                 pfcoil_variables.i_cs_superconductor,
                 tfv.fhts,
                 tfv.str_cs_con_res,
-                tfv.tftmp,
+                pfcoil_variables.temp_cs_superconductor_operating,
                 tfv.bcritsc,
                 tfv.tcritsc,
             )
