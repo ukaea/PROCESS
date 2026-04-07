@@ -412,6 +412,9 @@ r_cs_outer: float = None
     temp_cs_superconductor_margin: float = 0.0
     """Central solenoid temperature margin (K)"""
 
+temp_cs_superconductor_operating: float = None
+"""Central solenoid operating temperature (K)"""
+
     n_pf_coil_turns: list[float] = field(default_factory=lambda: np.zeros(NGC2))
     """number of turns in PF coil i"""
 
