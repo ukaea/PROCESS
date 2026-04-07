@@ -3311,6 +3311,9 @@ class CSCoil:
 
         # Peak field on outboard side of central Solenoid
         # (self-field is assumed to be zero - long solenoid approximation)
+
+        pfcoil_variables.b_cs_self_outer_midplane = 0.0
+
         bohco = abs(bzo)
 
         # Peak field at the Beginning-Of-Pulse (BOP)
