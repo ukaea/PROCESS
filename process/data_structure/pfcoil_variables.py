@@ -116,6 +116,8 @@ a_cs_steel_poloidal: float = None
     a_cs_cable_space: float = 0.0
     """central solenoid conductor+void area with area of steel subtracted (m2)"""
 
+b_cs_self_outer_midplane: float = None
+"""magnetic field at outer edge of central solenoid at midplane due to its own current (T)"""
     b_cs_peak_flat_top_end: float = 0.0
     """maximum field in central solenoid at end of flat-top (EoF) (T)"""
 
