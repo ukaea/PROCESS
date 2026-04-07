@@ -3820,17 +3820,26 @@ class CSCoil:
 
         Parameters
         ----------
-        r : float
-            radial position r_cs_inner < r < b
-
-
-
-
+        r_stress_point : float
+            Radial location at which to calculate the hoop stress (m)
+        r_cs_inner : float
+            Inner radius of the central solenoid (m)
+        r_cs_outer : float
+            Outer radius of the central solenoid (m)
+        j_cs : float
+            Current density in the central solenoid (A/m^2)
+        b_cs_inner : float
+            Magnetic field at the inner radius of the central solenoid (T)
 
         Returns
         -------
         float
-            hoop stress (MPa)
+            hoop stress at the specified radial location (MPa)
+            
+        References
+        ----------
+        - M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983.
+‌
         """
 
         alpha = r_cs_outer / r_cs_inner
