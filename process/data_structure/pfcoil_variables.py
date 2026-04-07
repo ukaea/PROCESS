@@ -122,6 +122,8 @@ a_cs_steel_poloidal: float = None
     b_cs_peak_pulse_start: float = 0.0
     """maximum field in central solenoid at beginning of pulse (T)"""
 
+b_cs_bore_peak: float = None
+"""peak field in central solenoid bore (T)"""
     b_pf_coil_peak: list[float] = field(default_factory=lambda: np.zeros(NGC2))
     """peak field at coil i (T)"""
 
