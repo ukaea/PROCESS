@@ -2182,8 +2182,8 @@ class PFCoil(Model):
             op.ovarre(
                 self.outfile,
                 "Hoop stress in CS steel (Pa)",
-                "(sig_hoop)",
-                pfcoil_variables.sig_hoop,
+                "(stress_hoop_cs)",
+                pfcoil_variables.stress_hoop_cs,
                 "OP ",
             )
             op.ovarre(
@@ -3309,7 +3309,7 @@ class CSCoil(Model):
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
-            pfcoil_variables.sig_hoop = self.calculate_cs_hoop_stress(
+            pfcoil_variables.stress_hoop_cs = self.calculate_cs_hoop_stress(
                 r_stress_point=pfcoil_variables.r_pf_coil_inner[
                     pfcoil_variables.n_cs_pf_coils - 1
                 ],
@@ -3352,7 +3352,7 @@ class CSCoil(Model):
                     self.data.cs_fatigue.n_cycle,
                     self.data.cs_fatigue.t_crack_radial,
                 ) = self.cs_fatigue.ncycle(
-                    pfcoil_variables.sig_hoop,
+                    pfcoil_variables.stress_hoop_cs,
                     self.data.cs_fatigue.residual_sig_hoop,
                     self.data.cs_fatigue.t_crack_vertical,
                     self.data.cs_fatigue.dz_cs_turn_conduit,
@@ -3368,17 +3368,17 @@ class CSCoil(Model):
             if pfcoil_variables.i_cs_stress == 1:
                 pfcoil_variables.s_shear_cs_peak = max(
                     abs(
-                        pfcoil_variables.sig_hoop
+                        pfcoil_variables.stress_hoop_cs
                         - pfcoil_variables.stress_z_cs_self_peak_midplane
                     ),
                     abs(pfcoil_variables.stress_z_cs_self_peak_midplane - 0.0e0),
-                    abs(0.0e0 - pfcoil_variables.sig_hoop),
+                    abs(0.0e0 - pfcoil_variables.stress_hoop_cs),
                 )
             else:
                 pfcoil_variables.s_shear_cs_peak = max(
-                    abs(pfcoil_variables.sig_hoop - 0.0e0),
+                    abs(pfcoil_variables.stress_hoop_cs - 0.0e0),
                     abs(0.0e0 - 0.0e0),
-                    abs(0.0e0 - pfcoil_variables.sig_hoop),
+                    abs(0.0e0 - pfcoil_variables.stress_hoop_cs),
                 )
 
             # Thickness of hypothetical steel cylinders assumed to encase the CS along
