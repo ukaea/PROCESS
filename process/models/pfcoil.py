@@ -2182,8 +2182,8 @@ class PFCoil(Model):
             op.ovarre(
                 self.outfile,
                 "Hoop stress in CS steel (Pa)",
-                "(stress_hoop_cs)",
-                pfcoil_variables.stress_hoop_cs,
+                "(stress_hoop_cs_inner)",
+                pfcoil_variables.stress_hoop_cs_inner,
                 "OP ",
             )
             op.ovarre(
@@ -3309,7 +3309,7 @@ class CSCoil(Model):
             # Superconducting coil
 
             # New calculation from M. N. Wilson for hoop stress
-            pfcoil_variables.stress_hoop_cs = self.calculate_cs_hoop_stress(
+            pfcoil_variables.stress_hoop_cs_inner = self.calculate_cs_hoop_stress(
                 r_stress_point=pfcoil_variables.r_pf_coil_inner[
                     pfcoil_variables.n_cs_pf_coils - 1
                 ],
@@ -3352,7 +3352,7 @@ class CSCoil(Model):
                     self.data.cs_fatigue.n_cycle,
                     self.data.cs_fatigue.t_crack_radial,
                 ) = self.cs_fatigue.ncycle(
-                    pfcoil_variables.stress_hoop_cs,
+                    pfcoil_variables.stress_hoop_cs_inner,
                     self.data.cs_fatigue.residual_sig_hoop,
                     self.data.cs_fatigue.t_crack_vertical,
                     self.data.cs_fatigue.dz_cs_turn_conduit,
@@ -3368,17 +3368,17 @@ class CSCoil(Model):
             if pfcoil_variables.i_cs_stress == 1:
                 pfcoil_variables.s_shear_cs_peak = max(
                     abs(
-                        pfcoil_variables.stress_hoop_cs
+                        pfcoil_variables.stress_hoop_cs_inner
                         - pfcoil_variables.stress_z_cs_self_peak_midplane
                     ),
                     abs(pfcoil_variables.stress_z_cs_self_peak_midplane - 0.0e0),
-                    abs(0.0e0 - pfcoil_variables.stress_hoop_cs),
+                    abs(0.0e0 - pfcoil_variables.stress_hoop_cs_inner),
                 )
             else:
                 pfcoil_variables.s_shear_cs_peak = max(
-                    abs(pfcoil_variables.stress_hoop_cs - 0.0e0),
+                    abs(pfcoil_variables.stress_hoop_cs_inner - 0.0e0),
                     abs(0.0e0 - 0.0e0),
-                    abs(0.0e0 - pfcoil_variables.stress_hoop_cs),
+                    abs(0.0e0 - pfcoil_variables.stress_hoop_cs_inner),
                 )
 
             # Thickness of hypothetical steel cylinders assumed to encase the CS along
@@ -3795,31 +3795,31 @@ class CSCoil(Model):
     ) -> float:
         """Calculation of hoop stress of central solenoid.
 
-        This routine calculates the hoop stress of the central solenoid
-        from "Superconducting magnets", M. N. Wilson OUP
+                This routine calculates the hoop stress of the central solenoid
+                from "Superconducting magnets", M. N. Wilson OUP
 
-        Parameters
-        ----------
-        r_stress_point : float
-            Radial location at which to calculate the hoop stress (m)
-        r_cs_inner : float
-            Inner radius of the central solenoid (m)
-        r_cs_outer : float
-            Outer radius of the central solenoid (m)
-        j_cs : float
-            Current density in the central solenoid (A/m^2)
-        b_cs_inner : float
-            Magnetic field at the inner radius of the central solenoid (T)
+                Parameters
+                ----------
+                r_stress_point : float
+                    Radial location at which to calculate the hoop stress (m)
+                r_cs_inner : float
+                    Inner radius of the central solenoid (m)
+                r_cs_outer : float
+                    Outer radius of the central solenoid (m)
+                j_cs : float
+                    Current density in the central solenoid (A/m^2)
+                b_cs_inner : float
+                    Magnetic field at the inner radius of the central solenoid (T)
 
-        Returns
-        -------
-        float
-            hoop stress at the specified radial location (MPa)
-            
-        References
-        ----------
-        - M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983.
-‌
+                Returns
+                -------
+                float
+                    hoop stress at the specified radial location (MPa)
+
+                References
+                ----------
+                - M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983.
+        ‌
         """
 
         alpha = r_cs_outer / r_cs_inner
