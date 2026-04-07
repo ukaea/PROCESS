@@ -156,7 +156,6 @@ logger = logging.getLogger("process")
     "-m",
     "--mfile",
     "mfile_path",
-    default=Path("MFILE.DAT"),
     type=click.Path(dir_okay=False, resolve_path=True, path_type=Path),
     help="Output mfile location",
 )
