@@ -2152,8 +2152,8 @@ class PFCoil(Model):
             op.ovarre(
                 self.outfile,
                 "CS steel cross-sectional area (m2)",
-                "(a_cs_poloidal-awpoh)",
-                pfcoil_variables.a_cs_poloidal - pfcoil_variables.awpoh,
+                "(a_cs_steel_poloidal)",
+                pfcoil_variables.a_cs_steel_poloidal,
                 "OP ",
             )
             op.ovarre(
