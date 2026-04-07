@@ -1743,7 +1743,7 @@ class Costs(Model):
                 if pfcoil_variables.i_pf_conductor == 0:
                     costpfsc = (
                         cost_variables.ucsc[pfcoil_variables.i_cs_superconductor - 1]
-                        * pfcoil_variables.awpoh
+                        * pfcoil_variables.a_cs_cable_space
                         * (1 - pfcoil_variables.f_a_cs_void)
                         * (1 - pfcoil_variables.fcuohsu)
                         / pfcoil_variables.n_pf_coil_turns[
@@ -1773,7 +1773,7 @@ class Costs(Model):
             if pfcoil_variables.i_pf_conductor == 0:
                 costpfcu = (
                     cost_variables.uccu
-                    * pfcoil_variables.awpoh
+                    * pfcoil_variables.a_cs_cable_space
                     * (1 - pfcoil_variables.f_a_cs_void)
                     * pfcoil_variables.fcuohsu
                     / pfcoil_variables.n_pf_coil_turns[
@@ -1785,7 +1785,7 @@ class Costs(Model):
                 # MDK I don't know if this is ccorrect as we never use the resistive model
                 costpfcu = (
                     cost_variables.uccu
-                    * pfcoil_variables.awpoh
+                    * pfcoil_variables.a_cs_cable_space
                     * (1 - pfcoil_variables.f_a_cs_void)
                     / pfcoil_variables.n_pf_coil_turns[
                         pfcoil_variables.n_cs_pf_coils - 1

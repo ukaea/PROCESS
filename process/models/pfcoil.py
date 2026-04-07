@@ -2131,22 +2131,23 @@ class PFCoil(Model):
             op.ovarre(
                 self.outfile,
                 "CS conductor+void cross-sectional area (m2)",
-                "(awpoh)",
-                pfcoil_variables.awpoh,
+                "(a_cs_cable_space)",
+                pfcoil_variables.a_cs_cable_space,
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
                 "   CS conductor cross-sectional area (m2)",
-                "(awpoh*(1-f_a_cs_void))",
-                pfcoil_variables.awpoh * (1.0e0 - pfcoil_variables.f_a_cs_void),
+                "(a_cs_cable_space*(1-f_a_cs_void))",
+                pfcoil_variables.a_cs_cable_space
+                    * (1.0e0 - pfcoil_variables.f_a_cs_void),
                 "OP ",
             )
             op.ovarre(
                 self.outfile,
                 "   CS void cross-sectional area (m2)",
-                "(awpoh*f_a_cs_void)",
-                pfcoil_variables.awpoh * pfcoil_variables.f_a_cs_void,
+                "(a_cs_cable_space*f_a_cs_void)",
+                pfcoil_variables.a_cs_cable_space * pfcoil_variables.f_a_cs_void,
                 "OP ",
             )
             op.ovarre(
@@ -3408,21 +3409,23 @@ class CSCoil(Model):
         )
 
         # Non-steel cross-sectional area
-        pfcoil_variables.awpoh = (
+        pfcoil_variables.a_cs_cable_space = (
             pfcoil_variables.a_cs_poloidal - pfcoil_variables.a_cs_steel_poloidal
         )
 
-        # Issue #97. Fudge to ensure awpoh is positive; result is continuous, smooth and
+        # Issue #97. Fudge to ensure a_cs_cable_space is positive; result is continuous, smooth and
         # monotonically decreases
 
         da = 0.0001e0  # 1 cm^2
-        if pfcoil_variables.awpoh < da:
-            pfcoil_variables.awpoh = da * da / (2.0e0 * da - pfcoil_variables.awpoh)
+        if pfcoil_variables.a_cs_cable_space < da:
+            pfcoil_variables.a_cs_cable_space = (
+                da * da / (2.0e0 * da - pfcoil_variables.a_cs_cable_space)
+            )
 
         # Weight of conductor in central Solenoid
         if pfcoil_variables.i_pf_conductor == 0:
             pfcoil_variables.m_pf_coil_conductor[pfcoil_variables.n_cs_pf_coils - 1] = (
-                pfcoil_variables.awpoh
+                pfcoil_variables.a_cs_cable_space
                 * (1.0e0 - pfcoil_variables.f_a_cs_void)
                 * 2.0e0
                 * np.pi
@@ -3431,7 +3434,7 @@ class CSCoil(Model):
             )
         else:
             pfcoil_variables.m_pf_coil_conductor[pfcoil_variables.n_cs_pf_coils - 1] = (
-                pfcoil_variables.awpoh
+                pfcoil_variables.a_cs_cable_space
                 * (1.0e0 - pfcoil_variables.f_a_cs_void)
                 * 2.0e0
                 * np.pi
@@ -3458,7 +3461,7 @@ class CSCoil(Model):
                             pfcoil_variables.n_cs_pf_coils - 1
                         ]
                     )
-                    / pfcoil_variables.awpoh
+                    / pfcoil_variables.a_cs_cable_space
                 )
                 * 1.0e6,
                 pfcoil_variables.i_cs_superconductor,
@@ -3481,7 +3484,9 @@ class CSCoil(Model):
                 )
 
             pfcoil_variables.j_cs_critical_flat_top_end = (
-                jcritwp * pfcoil_variables.awpoh / pfcoil_variables.a_cs_poloidal
+                jcritwp
+                * pfcoil_variables.a_cs_cable_space
+                / pfcoil_variables.a_cs_poloidal
             )
 
             # Allowable coil overall current density at BOP
@@ -3501,7 +3506,7 @@ class CSCoil(Model):
                             pfcoil_variables.n_cs_pf_coils - 1
                         ]
                     )
-                    / pfcoil_variables.awpoh
+                    / pfcoil_variables.a_cs_cable_space
                 )
                 * 1.0e6,
                 pfcoil_variables.i_cs_superconductor,
@@ -3513,7 +3518,9 @@ class CSCoil(Model):
             )
 
             pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1] = (
-                jcritwp * pfcoil_variables.awpoh / pfcoil_variables.a_cs_poloidal
+                jcritwp
+                * pfcoil_variables.a_cs_cable_space
+                / pfcoil_variables.a_cs_poloidal
             )
             pfcoil_variables.j_cs_critical_pulse_start = (
                 pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1]

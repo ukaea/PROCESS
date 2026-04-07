@@ -2070,7 +2070,7 @@ class Acc2222Param(NamedTuple):
 
     f_a_pf_coil_void: Any = None
 
-    awpoh: Any = None
+    a_cs_cable_space: Any = None
 
     fncmass: Any = None
 
@@ -2277,7 +2277,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            awpoh=3.8004675824985918,
+            a_cs_cable_space=3.8004675824985918,
             fncmass=310716.52923547616,
             dcond=np.array(
                 np.array(
@@ -2473,7 +2473,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            awpoh=3.8004675824985918,
+            a_cs_cable_space=3.8004675824985918,
             fncmass=310716.52923547616,
             dcond=np.array(
                 np.array(
@@ -2669,7 +2669,7 @@ class Acc2222Param(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            awpoh=3.8004675824985918,
+            a_cs_cable_space=3.8004675824985918,
             fncmass=310716.52923547616,
             dcond=np.array(
                 np.array(
@@ -2777,7 +2777,9 @@ def test_acc2222(acc2222param, monkeypatch, costs):
         pfcoil_variables, "f_a_pf_coil_void", acc2222param.f_a_pf_coil_void
     )
 
-    monkeypatch.setattr(pfcoil_variables, "awpoh", acc2222param.awpoh)
+    monkeypatch.setattr(
+        pfcoil_variables, "a_cs_cable_space", acc2222param.a_cs_cable_space
+    )
 
     monkeypatch.setattr(structure_variables, "fncmass", acc2222param.fncmass)
 
