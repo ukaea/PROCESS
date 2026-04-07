@@ -2175,6 +2175,20 @@ class PFCoil(Model):
                 self.data.pf_coil.r_cs_middle,
                 "OP ",
             )
+                op.ovarre(
+                    self.outfile,
+                    "CS radial inner (m)",
+                    "(r_cs_inner)",
+                    pfcoil_variables.r_cs_inner,
+                    "OP ",
+                )
+                op.ovarre(
+                    self.outfile,
+                    "CS radial outer (m)",
+                    "(r_cs_outer)",
+                    pfcoil_variables.r_cs_outer,
+                    "OP ",
+                )
             op.ovarre(
                 self.outfile,
                 "CS conductor+void cross-sectional area (m2)",
@@ -3238,6 +3252,13 @@ class CSCoil(Model):
             dr_cs=self.data.build.dr_cs,
             dr_bore=self.data.build.dr_bore,
         )
+
+        pfcoil_variables.r_cs_inner = pfcoil_variables.r_pf_coil_inner[
+            pfcoil_variables.n_cs_pf_coils - 1
+        ]
+        pfcoil_variables.r_cs_outer = pfcoil_variables.r_pf_coil_outer[
+            pfcoil_variables.n_cs_pf_coils - 1
+        ]
 
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
         if self.data.pf_coil.j_cs_pulse_start > self.data.pf_coil.j_cs_flat_top_end:
