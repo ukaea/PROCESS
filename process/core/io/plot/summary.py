@@ -15591,12 +15591,20 @@ def main_plot(
     plot_pf_cs_plasma_mutual_inductance(figs[31].add_subplot(111), m_file, scan)
 
     CSCoil.plot_stress_time_profile(
-        axis=figs[29].add_subplot(222), mfile=m_file, scan=scan
+        axis=figs[29].add_subplot(322), mfile=m_file, scan=scan
     )
 
     cs_coil = CSCoil(cs_fatigue=CsFatigue())
     cs_coil.plot_cs_radial_hoop_stress_profile(
-        axis=figs[29].add_subplot(224),
+        axis=figs[29].add_subplot(324),
+        mfile=m_file,
+        scan=scan,
+        j_cs=m_file.get("j_cs_pulse_start", scan=scan),
+        b_cs_inner=m_file.get("b_cs_peak_pulse_start", scan=scan),
+    )
+
+    cs_coil.plot_cs_radial_stress_profile(
+        axis=figs[29].add_subplot(326),
         mfile=m_file,
         scan=scan,
         j_cs=m_file.get("j_cs_pulse_start", scan=scan),
