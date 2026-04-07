@@ -93,6 +93,9 @@ i_cs_stress: int = None
 a_cs_poloidal: float = None
 """Central solenoid vertical cross-sectional area (m2)"""
 
+a_cs_steel_poloidal: float = None
+"""Central solenoid vertical cross-sectional area of steel (m2)"""
+
 
 a_cs_turn: float = None
 """Central solenoid (OH) trun cross-sectional area (m2)"""
@@ -616,6 +619,7 @@ def init_pfcoil_variables():
         alstroh, \
         i_cs_stress, \
         a_cs_poloidal, \
+        a_cs_steel_poloidal, \
         a_cs_turn, \
         awpoh, \
         b_cs_peak_flat_top_end, \
@@ -716,6 +720,7 @@ def init_pfcoil_variables():
     alstroh = 4.0e8
     i_cs_stress = 1
     a_cs_poloidal = 0.0
+    a_cs_steel_poloidal = 0.0
     a_cs_turn = 0.0
     awpoh = 0.0
     b_cs_peak_flat_top_end = 0.0

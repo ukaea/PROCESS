@@ -3261,10 +3261,10 @@ class CSCoil:
         )
 
         # Peak field at the End-Of-Flattop (EOF)
-        # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
+        # Occurs at inner edge of coil; b_cs_self_peak_flat_top_end and bzi are of opposite sign at EOF
 
         # Peak field due to central Solenoid itself
-        bmaxoh2 = self.calculate_cs_self_peak_magnetic_field(
+        b_cs_self_peak_flat_top_end = self.calculate_cs_self_peak_magnetic_field(
             j_cs=pfcoil_variables.j_cs_flat_top_end,
             r_cs_inner=pfcoil_variables.r_pf_coil_inner[
                 pfcoil_variables.n_cs_pf_coils - 1
@@ -3279,13 +3279,13 @@ class CSCoil:
 
         # Peak field due to other PF coils plus plasma
         timepoint = 5
-        _bri, _bro, bzi, bzo = peak_b_field_at_pf_coil(
+        _, _, bzi, bzo = peak_b_field_at_pf_coil(
             n_coil=pfcoil_variables.n_cs_pf_coils,
             n_coil_group=99,
             t_b_field_peak=timepoint,
         )
 
-        pfcoil_variables.b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
+        pfcoil_variables.b_cs_peak_flat_top_end = abs(bzi - b_cs_self_peak_flat_top_end)
 
         # Peak field on outboard side of central Solenoid
         # (self-field is assumed to be zero - long solenoid approximation)
@@ -3308,7 +3308,7 @@ class CSCoil:
             )
         )
         timepoint = 2
-        _bri, _bro, bzi, bzo = peak_b_field_at_pf_coil(
+        _, _, bzi, bzo = peak_b_field_at_pf_coil(
             n_coil=pfcoil_variables.n_cs_pf_coils,
             n_coil_group=99,
             t_b_field_peak=timepoint,
