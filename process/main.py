@@ -50,14 +50,10 @@ import process  # noqa: F401
 from process import data_structure
 from process.core import constants, init
 from process.core.io import obsolete_vars as ov
+from process.core.io.cli_tools import LazyGroup, help_opt, indat_opt
 from process.core.io.mfile import MFile
-from process.core.io.plot.plot_proc import plot_proc
-from process.core.io.plot.sankey import plot_sankey_plotly
-from process.core.io.process_config import RunProcessConfig
-from process.core.io.process_funcs import (
-    vary_iteration_variables,
-)
-from process.core.io.tools import LazyGroup, help_opt, indat_opt
+from process.core.io.plot import plot_proc, plot_sankey_plotly
+from process.core.io.vary_run import RunProcessConfig, vary_iteration_variables
 from process.core.log import logging_model_handler, show_errors
 from process.core.model import DataStructure, Model
 from process.core.process_output import OutputFileManager, oheadr
@@ -160,8 +156,9 @@ logger = logging.getLogger("process")
     "-m",
     "--mfile",
     "mfile_path",
-    default="MFILE.DAT",
-    help="mfile for post-processing/plotting",
+    default=Path("MFILE.DAT"),
+    type=click.Path(dir_okay=False, resolve_path=True, path_type=Path),
+    help="Output mfile location",
 )
 @click.option(
     "-mj",
@@ -207,14 +204,18 @@ def process_cli(
     if ctx.invoked_subcommand is None:
         if varyiterparams:
             runtype = VaryRun(config_file, solver)
-            mfile_path = runtype.config_file.parent / "MFILE.DAT"
         elif indat is None:
             raise click.BadParameter("IN.DAT not specified")
         else:
             runtype = SingleRun(indat, solver, update_obsolete=update_obsolete)
-            mfile_path = runtype.mfile_path
 
         runtype.run()
+
+        mfile_path = (
+            runtype.mfile_path
+            if mfile_path is None
+            else runtype.mfile_path.rename(mfile_path)
+        )
 
         if mfilejson:
             # Produce a json file containing mfile output, useful for VVUQ work.
@@ -225,8 +226,7 @@ def process_cli(
         if full_output:
             # Run all summary plotting scripts for the output
             if mfile_path.exists():
-                mfile_str = mfile_path.resolve().as_posix()
-                print(f"Plotting mfile {mfile_str}")
+                print(f"Plotting mfile {mfile_path.resolve().as_posix()}")
                 plot_proc(mfile_path)
                 plot_sankey_plotly(mfile_path)
             else:
@@ -267,9 +267,12 @@ class VaryRun:
         """
         # Store the absolute path to the config file immediately: various
         # dir changes happen in old run_process code
-        self.config_file = Path(config_file).resolve()
-        self.solver = solver
+        self.config = RunProcessConfig.from_file(Path(config_file).resolve(), solver)
         self.data = DataStructure()
+
+    @property
+    def mfile_path(self):
+        return self.config.outfile
 
     def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
@@ -279,17 +282,16 @@ class VaryRun:
         FileNotFoundError
             if input file doesn't exist
         """
-        config = RunProcessConfig.from_file(self.config_file, self.solver)
-        config.setup()
+        self.config.setup()
 
-        setup_loggers(Path(config.wdir) / "process.log")
+        setup_loggers(Path(self.config.wdir) / "process.log")
 
         init.init_all_module_vars()
         init.init_process(self.data)
 
         # TODO add diff ixc summary part
-        for _indat, _mfile, itervars, lbs, ubs in config:
-            vary_iteration_variables(itervars, lbs, ubs, config)
+        for _indat, _mfile, itervars, lbs, ubs in self.config:
+            vary_iteration_variables(itervars, lbs, ubs, self.config)
 
 
 class SingleRun:

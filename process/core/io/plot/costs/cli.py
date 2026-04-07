@@ -2,10 +2,10 @@ import sys
 
 import click
 
+from process.core.io.cli_tools import help_opt, mfile_arg, save
 from process.core.io.mfile import MFile
 from process.core.io.plot.costs.costs_bar import cost_comp_1990, cost_comp_2014
 from process.core.io.plot.costs.costs_pie import cost_model_1990, cost_model_2014
-from process.core.io.tools import help_opt, mfile_arg, save
 
 save = save("Save figure")
 

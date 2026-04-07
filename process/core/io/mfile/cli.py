@@ -2,9 +2,9 @@ import json
 
 import click
 
+from process.core.io.cli_tools import help_opt, mfile_arg, mfile_opt, save, scan_opt
 from process.core.io.mfile.base import MFile
 from process.core.io.mfile.comparison import compare_mfiles
-from process.core.io.tools import help_opt, mfile_arg, mfile_opt, save, scan_opt
 
 
 @click.group()

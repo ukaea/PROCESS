@@ -3,6 +3,12 @@ from pathlib import Path
 
 import click
 
+help_opt = click.help_option("-h", "--help")
+scan_opt = click.option("--scan", type=int, help="Scan to select")
+mfile_arg = click.argument(
+    "mfiles", nargs=-1, type=click.Path(exists=True, path_type=Path)
+)
+
 
 def mfile_opt(exists: bool = False):
     return click.option(
@@ -13,11 +19,6 @@ def mfile_opt(exists: bool = False):
         type=click.Path(exists=exists, path_type=Path),
         help="The mfile to read",
     )
-
-
-mfile_arg = click.argument(
-    "mfiles", nargs=-1, type=click.Path(exists=True, path_type=Path)
-)
 
 
 def indat_opt(default="IN.DAT", exists=True):
@@ -37,11 +38,6 @@ def save(help_):
 
 def split_callback(ctx: click.Context, param, value: str | None) -> list[str] | None:  # noqa: ARG001
     return value.replace(" ", ":").split(":") if isinstance(value, str) else value
-
-
-help_opt = click.help_option("-h", "--help")
-
-scan_opt = click.option("--scan", type=int, help="Scan to select")
 
 
 ### Taken from click documentation

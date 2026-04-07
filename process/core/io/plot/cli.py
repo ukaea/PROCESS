@@ -2,17 +2,17 @@ from pathlib import Path
 
 import click
 
-from process.core.io.plot.plot_proc import plot_proc
-from process.core.io.plot.plot_scans import plot_scan
-from process.core.io.plot.plot_stress_tf import plot_stress
-from process.core.io.plot.sankey import plot_sankey, plot_sankey_plotly
-from process.core.io.tools import (
+from process.core.io.cli_tools import (
     LazyGroup,
     help_opt,
     mfile_arg,
     mfile_opt,
     split_callback,
 )
+from process.core.io.plot.plot_proc import plot_proc
+from process.core.io.plot.plot_scans import plot_scan
+from process.core.io.plot.plot_stress_tf import plot_stress
+from process.core.io.plot.sankey import plot_sankey, plot_sankey_plotly
 
 
 @click.group(
@@ -27,7 +27,7 @@ def plot():
 @plot.command("sankey", no_args_is_help=True)
 @help_opt
 @mfile_opt(exists=True)
-@click.option("-fmt", "--format", "format_", default="pdf", help="file format []")
+@click.option("-fmt", "--format", "format_", default="pdf", help="file format")
 def sankey(mfile, format_):
     """Plot the power flow in PROCESS using a Sankey diagram."""
     if format_ in {"html", "plotly"}:
@@ -35,7 +35,7 @@ def sankey(mfile, format_):
         if out is not None:
             return out
 
-    return plot_sankey(mfile)
+    return plot_sankey(mfile, format_=format_)
 
 
 @plot.command("scans", no_args_is_help=True)

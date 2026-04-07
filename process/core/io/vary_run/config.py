@@ -17,7 +17,7 @@ from numpy.random import default_rng
 
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
-from process.core.io.process_funcs import (
+from process.core.io.vary_run.tools import (
     check_in_dat,
     check_input_error,
     get_neqns_itervars,
@@ -149,8 +149,7 @@ iteration variables should get varied"""
     def __next__(self):
         _neqns, itervars = get_neqns_itervars(wdir=self.wdir)
         lbs, ubs = get_variable_range(itervars, self.factor, self.wdir)
-        indat = self._base_input.format(self._current_iteration)
-        mfile = self._base_output.format(self._current_iteration)
+        indat, mfile = self.infile, self.outfile
         self._current_iteration += 1
         if self._current_iteration >= self.niter:
             self.error_status2readme(mfile=mfile)
