@@ -3364,6 +3364,7 @@ class CSCoil:
                 ],
                 j_cs=pfcoil_variables.j_cs_pulse_start,
                 b_cs_inner=pfcoil_variables.b_cs_peak_pulse_start,
+                f_poisson_cs_structure=tfv.poisson_steel,
             )
 
             # New calculation from Y. Iwasa for axial stress
@@ -3839,40 +3840,44 @@ class CSCoil:
             )
             pfcoil_variables.stress_z_cs_self_midplane_profile[time] = stress_value
 
+    @staticmethod
+    @numba.njit(cache=True)
     def calculate_cs_hoop_stress(
-        self,
         r_stress_point: float | np.ndarray,
         r_cs_inner: float,
         r_cs_outer: float,
         j_cs: float,
         b_cs_inner: float,
+        f_poisson_cs_structure: float,
     ) -> float:
         """Calculation of hoop stress of central solenoid.
 
-                This routine calculates the hoop stress of the central solenoid
-                from "Superconducting magnets", M. N. Wilson OUP
+        This routine calculates the hoop stress of the central solenoid
+        from "Superconducting magnets", M. N. Wilson OUP
 
-                Parameters
-                ----------
-                r_stress_point : float/np.ndarray
-                    Radial location at which to calculate the hoop stress (m)
-                r_cs_inner : float
-                    Inner radius of the central solenoid (m)
-                r_cs_outer : float
-                    Outer radius of the central solenoid (m)
-                j_cs : float
-                    Current density in the central solenoid (A/m^2)
-                b_cs_inner : float
-                    Magnetic field at the inner radius of the central solenoid (T)
+        Parameters
+        ----------
+        r_stress_point : float/np.ndarray
+            Radial location at which to calculate the hoop stress (m)
+        r_cs_inner : float
+            Inner radius of the central solenoid (m)
+        r_cs_outer : float
+            Outer radius of the central solenoid (m)
+        j_cs : float
+            Current density in the central solenoid (A/m^2)
+        b_cs_inner : float
+            Magnetic field at the inner radius of the central solenoid (T)
+        f_poisson_cs_structure : float
+            Poisson's ratio of the central solenoid structure (dimensionless)
 
-                Returns
-                -------
-                float
-                    hoop stress at the specified radial location (MPa)
+        Returns
+        -------
+        float
+            hoop stress at the specified radial location (MPa)
 
-                References
-                ----------
-                - M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983.
+        References
+        ----------
+        - M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983.
         ‌
         """
 
@@ -3898,7 +3903,7 @@ class CSCoil:
         m = ((b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
 
         # calculate hoop stress terms
-        hp_term_1 = k * ((2.0e0 + tfv.poisson_steel) / (3.0e0 * (alpha + 1.0e0)))
+        hp_term_1 = k * ((2.0e0 + f_poisson_cs_structure) / (3.0e0 * (alpha + 1.0e0)))
 
         hp_term_2 = (
             alpha**2
@@ -3907,24 +3912,102 @@ class CSCoil:
             + alpha**2 / epsilon**2
             - epsilon
             * (
-                ((1.0e0 + 2.0e0 * tfv.poisson_steel) * (alpha + 1.0e0))
-                / (2.0e0 + tfv.poisson_steel)
+                ((1.0e0 + 2.0e0 * f_poisson_cs_structure) * (alpha + 1.0e0))
+                / (2.0e0 + f_poisson_cs_structure)
             )
         )
 
-        hp_term_3 = m * ((3.0e0 + tfv.poisson_steel) / (8.0e0))
+        hp_term_3 = m * ((3.0e0 + f_poisson_cs_structure) / (8.0e0))
 
         hp_term_4 = (
             alpha**2
             + 1.0e0
             + alpha**2 / epsilon**2
             - epsilon**2
-            * ((1.0e0 + 3.0e0 * tfv.poisson_steel) / (3.0e0 + tfv.poisson_steel))
+            * (
+                (1.0e0 + 3.0e0 * f_poisson_cs_structure)
+                / (3.0e0 + f_poisson_cs_structure)
+            )
         )
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
         return s_hoop_nom / pfcoil_variables.f_a_cs_turn_steel
+
+    @staticmethod
+    @numba.njit(cache=True)
+    def calculate_cs_radial_stress(
+        r_stress_point: float | np.ndarray,
+        r_cs_inner: float,
+        r_cs_outer: float,
+        j_cs: float,
+        b_cs_inner: float,
+        f_poisson_cs_structure: float,
+    ) -> float:
+        """Calculation of radial stress of central solenoid.
+
+        This routine calculates the radial stress of the central solenoid
+        from "Superconducting magnets", M. N. Wilson OUP
+
+        Parameters
+        ----------
+        r_stress_point : float/np.ndarray
+            Radial location at which to calculate the hoop stress (m)
+        r_cs_inner : float
+            Inner radius of the central solenoid (m)
+        r_cs_outer : float
+            Outer radius of the central solenoid (m)
+        j_cs : float
+            Current density in the central solenoid (A/m^2)
+        b_cs_inner : float
+            Magnetic field at the inner radius of the central solenoid (T)
+        f_poisson_cs_structure : float
+            Poisson's ratio of the central solenoid structure (dimensionless)
+
+        Returns
+        -------
+        float
+            radial stress at the specified radial location (MPa)
+
+        References
+        ----------
+        - M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983.
+        ‌
+        """
+
+        alpha = r_cs_outer / r_cs_inner
+
+        # alpha
+        alpha = r_cs_outer / r_cs_inner
+
+        # epsilon
+        epsilon = r_stress_point / r_cs_inner
+
+        # Field at outer radius of coil [T]
+        # Assume to be 0 for now
+        b_b = 0.0e0
+
+        # current density [A/m^2]
+        j_cs = pfcoil_variables.j_cs_pulse_start
+
+        # K term
+        k = ((alpha * b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
+
+        # M term
+        m = ((b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
+
+        # calculate hoop stress terms
+        hp_term_1 = k * ((2.0e0 + f_poisson_cs_structure) / (3.0e0 * (alpha + 1.0e0)))
+
+        hp_term_2 = (
+            alpha**2 + alpha + 1.0e0 - alpha**2 / epsilon**2 - epsilon * (alpha + 1.0e0)
+        )
+
+        hp_term_3 = m * ((3.0e0 + f_poisson_cs_structure) / (8.0e0))
+
+        hp_term_4 = alpha**2 + 1.0e0 - alpha**2 / epsilon**2 - epsilon**2
+
+        return hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
     @staticmethod
     def plot_stress_time_profile(axis: plt.Axes, mfile: mf.MFile, scan: int):
@@ -3995,6 +4078,7 @@ class CSCoil:
                 r_cs_outer=r_cs_outer,
                 j_cs=j_cs,
                 b_cs_inner=b_cs_inner,
+                f_poisson_cs_structure=tfv.poisson_steel,
             )
             for radius in radii
         ])
@@ -4013,6 +4097,44 @@ class CSCoil:
         axis.legend(loc="best")
         axis.set_title("Central Solenoid Radial Hoop Stress Profile")
         axis.grid(True, alpha=0.3)
+
+    def plot_cs_radial_stress_profile(
+        self,
+        axis: plt.Axes,
+        mfile: mf.MFile,
+        scan: int,
+        j_cs: float,
+        b_cs_inner: float,
+    ):
+        r_cs_inner = mfile.get("r_cs_inner", scan=scan)
+        r_cs_outer = mfile.get("r_cs_outer", scan=scan)
+
+        radii = np.linspace(r_cs_inner, r_cs_outer, num=10)
+        stress_values = np.array([
+            self.calculate_cs_radial_stress(
+                r_stress_point=radius,
+                r_cs_inner=r_cs_inner,
+                r_cs_outer=r_cs_outer,
+                j_cs=j_cs,
+                b_cs_inner=b_cs_inner,
+                f_poisson_cs_structure=tfv.poisson_steel,
+            )
+            for radius in radii
+        ])
+
+        axis.plot(
+            radii,
+            stress_values / 1e6,
+            "o-",
+            linewidth=2,
+            markersize=8,
+            label="$\\sigma_{r}$,Radial Stress",
+        )
+        axis.set_xlabel("Radial Position (m)")
+        axis.set_ylabel("Radial Stress (MPa)")
+        axis.minorticks_on()
+        axis.grid(True, alpha=0.3)
+        axis.legend(loc="best")
 
 
 def peak_b_field_at_pf_coil(
