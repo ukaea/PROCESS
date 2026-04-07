@@ -38,6 +38,8 @@ stress_z_cs_self_midplane_profile: list[float] = None
 stress_hoop_cs_inner: float = None
 """Hoop stress in central solenoid at inboard edge due to its own field (when at peak current) (Pa)"""
 
+stress_hoop_cs_inner_profile: list[float] = None
+"""Hoop stress in central solenoid at inboard edge due to its own field at each time point (Pa)"""
 
 forc_z_cs_self_peak_midplane: float = None
 """Axial force (z) on central solenoid at midplane due to its own field (when at peak current) (N)"""
@@ -570,6 +572,7 @@ def init_pfcoil_module():
         stress_z_cs_self_peak_midplane, \
         stress_z_cs_self_midplane_profile, \
         stress_hoop_cs_inner, \
+        stress_hoop_cs_inner_profile, \
         forc_z_cs_self_peak_midplane, \
         r_pf_cs_current_filaments, \
         z_pf_cs_current_filaments, \
@@ -591,6 +594,7 @@ def init_pfcoil_module():
     stress_z_cs_self_peak_midplane = 0.0
     stress_z_cs_self_midplane_profile = np.zeros(6)
     stress_hoop_cs_inner = 0.0
+    stress_hoop_cs_inner_profile = np.zeros(6)
     forc_z_cs_self_peak_midplane = 0.0
 
     r_pf_cs_current_filaments = np.zeros(NFIXMX)
