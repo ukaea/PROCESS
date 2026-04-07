@@ -167,14 +167,24 @@ Wilson (1983).  This is divided by the fraction of the area occupied by steel to
 stress in the steel, $\sigma_{hoop}$.
 
 $$
-\sigma_{\theta} = \frac{K(2+v)}{3(\alpha+1)}\times \left(\alpha^2+\alpha+1+\frac{\alpha^2}{\eps^2}-\eps \frac{(1+2v)(\alpha+1)}{(2+v)}\right) \\
-- \frac{M(3+v)}{8}\left(\alpha^2+1+\frac{\alpha^2}{\eps^2}-\frac{(1+3v)}{(3+v)}\eps^2\right)
+\sigma_{\theta} = \frac{K(2+v)}{3(\alpha+1)}\times \left(\alpha^2+\alpha+1+\frac{\alpha^2}{\epsilon^2}-\epsilon \frac{(1+2v)(\alpha+1)}{(2+v)}\right) \\
+- \frac{M(3+v)}{8}\left(\alpha^2+1+\frac{\alpha^2}{\epsilon^2}-\frac{(1+3v)}{(3+v)}\epsilon^2\right)
 $$
 
 Where:
 
 - $\epsilon = \frac{r}{r_{CS,inner}}$
 - $\alpha = \frac{r_{CS,outer}}{r_{CS,inner}}$
+
+The terms $K$ and $M$ are given by:
+
+$$
+K = \frac{Ja\left(\alpha B_{\text{a}} - B_{\text{b}}\right)}{(\alpha-1)}
+$$
+
+$$
+M = \frac{Ja\left(B_{\text{a}} - B_{\text{b}}\right)}{(\alpha-1)}
+$$
 
 For a special infinite solenoid case $B$
 
