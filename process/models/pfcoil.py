@@ -3854,7 +3854,15 @@ class CSCoil(Model):
             )
             self.data.pf_coil.stress_z_cs_self_midplane_profile[time] = stress_value
 
-    def calculate_cs_hoop_stress(self, r):
+    def calculate_cs_hoop_stress(
+        self,
+        r_stress_point,
+        r_cs_inner=None,
+        r_cs_outer=None,
+        dz_cs_half=None,
+        j_cs=None,
+        b_cs_inner=None,
+    ) -> float:
         """Calculation of hoop stress of central solenoid.
 
         This routine calculates the hoop stress of the central solenoid
@@ -3863,39 +3871,40 @@ class CSCoil(Model):
         Parameters
         ----------
         r : float
-            radial position a < r < b
+            radial position r_cs_inner < r < b
 
+        
+        
+        
+        
         Returns
         -------
         float
             hoop stress (MPa)
         """
-        a = self.data.pf_coil.r_pf_coil_inner[self.data.pf_coil.n_cs_pf_coils - 1]
 
-        # Outer radius of central Solenoid [m]
-        b = self.data.pf_coil.r_pf_coil_outer[self.data.pf_coil.n_cs_pf_coils - 1]
+        beta = dz_cs_half / r_cs_inner
+        alpha = r_cs_outer / r_cs_inner
 
         # alpha
-        alpha = b / a
+        alpha = r_cs_outer / r_cs_inner
 
         # epsilon
-        epsilon = r / a
+        epsilon = r_stress_point / r_cs_inner
 
-        # Field at inner radius of coil [T]
-        b_a = self.data.pf_coil.b_cs_peak_pulse_start
 
         # Field at outer radius of coil [T]
         # Assume to be 0 for now
         b_b = 0.0e0
 
         # current density [A/m^2]
-        j = self.data.pf_coil.j_cs_pulse_start
+        j_cs = pfcoil_variables.j_cs_pulse_start
 
         # K term
-        k = ((alpha * b_a - b_b) * j * a) / (alpha - 1.0e0)
+        k = ((alpha * b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
 
         # M term
-        m = ((b_a - b_b) * j * a) / (alpha - 1.0e0)
+        m = ((b_cs_inner - b_b) * j_cs * r_cs_inner) / (alpha - 1.0e0)
 
         # calculate hoop stress terms
         hp_term_1 = k * (

@@ -166,6 +166,18 @@ The hoop stress is calculated using equations 4.10 and 4.11 from "Superconductin
 Wilson (1983).  This is divided by the fraction of the area occupied by steel to obtain the hoop 
 stress in the steel, $\sigma_{hoop}$.
 
+$$
+\sigma_{\theta} = \frac{K(2+v)}{3(\alpha+1)}\times \left(\alpha^2+\alpha+1+\frac{\alpha^2}{\eps^2}-\eps \frac{(1+2v)(\alpha+1)}{(2+v)}\right) \\
+- \frac{M(3+v)}{8}\left(\alpha^2+1+\frac{\alpha^2}{\eps^2}-\frac{(1+3v)}{(3+v)}\eps^2\right)
+$$
+
+Where:
+
+- $\epsilon = \frac{r}{r_{CS,inner}}$
+- $\alpha = \frac{r_{CS,outer}}{r_{CS,inner}}$
+
+For a special infinite solenoid case $B$
+
 The axial stress can be calculated using "Case studies in superconducting magnets", Y. Iwasa, p. 
 86, 3.5.2, Special Case 4: Midplane force.  This applies exactly only to a thin-walled solenoid. 
 The axial stress in the steel is given by:
