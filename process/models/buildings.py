@@ -220,13 +220,13 @@ class BuildingsITER1992:
         dz_shld_full = max(dz_tf_full_midplane, dz_shld_full)
 
         # Calculate half width of building (m)
-        # rxcl : clearance around reactor, m
+        # dr_plant_reactor_extra_clearance : clearance around reactor, m
         # dr_plant_reactor_building_transport_clearance : transportation clearance between components, m
         # row  : clearance to building wall for crane operation, m
         # 19.48258241468535 + 4 + max(13.764874193548387 - 4.7423258064516141, 17.123405859443331 - 2.9939411851091102) + 1 + 4 = 42.61204708901957
         buildings_variables.dr_plant_reactor_building_internal_half = (
             r_machine
-            + buildings_variables.rxcl
+            + buildings_variables.dr_plant_reactor_extra_clearance
             + dz_shld_full
             + buildings_variables.dr_plant_reactor_building_transport_clearance
             + buildings_variables.row
@@ -240,7 +240,7 @@ class BuildingsITER1992:
         # Diagonal length (m)
         hy = (
             r_machine
-            + buildings_variables.rxcl
+            + buildings_variables.dr_plant_reactor_extra_clearance
             + dz_shld_full
             + buildings_variables.dr_plant_reactor_building_transport_clearance
             + len_reactor_laydown

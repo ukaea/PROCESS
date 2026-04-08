@@ -1330,7 +1330,9 @@ INPUT_VARIABLES = {
     "rrr_tf_cu": InputVariable(
         data_structure.tfcoil_variables, float, range=(1.0, 1000.0)
     ),
-    "rxcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "dr_plant_reactor_extra_clearance": InputVariable(
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
+    ),
     "sec_buildings_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),

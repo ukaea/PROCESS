@@ -764,7 +764,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
 
 class BldgsParam(NamedTuple):
     dr_plant_reactor_building_internal_half: Any
-    rxcl: Any
+    dr_plant_reactor_extra_clearance: Any
     dr_plant_reactor_building_transport_clearance: Any
     row: Any
     m_plant_reactor_building_crane_capacity: Any
@@ -828,7 +828,7 @@ class BldgsParam(NamedTuple):
     (
         BldgsParam(
             dr_plant_reactor_building_internal_half=0,
-            rxcl=4,
+            dr_plant_reactor_extra_clearance=4,
             dr_plant_reactor_building_transport_clearance=1,
             row=4,
             m_plant_reactor_building_crane_capacity=500000,
@@ -888,7 +888,7 @@ class BldgsParam(NamedTuple):
         ),
         BldgsParam(
             dr_plant_reactor_building_internal_half=42.612047089019569,
-            rxcl=4,
+            dr_plant_reactor_extra_clearance=4,
             dr_plant_reactor_building_transport_clearance=1,
             row=4,
             m_plant_reactor_building_crane_capacity=500000,
@@ -954,7 +954,11 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         "dr_plant_reactor_building_internal_half",
         bldgsparam.dr_plant_reactor_building_internal_half,
     )
-    monkeypatch.setattr(buildings_variables, "rxcl", bldgsparam.rxcl)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dr_plant_reactor_extra_clearance",
+        bldgsparam.dr_plant_reactor_extra_clearance,
+    )
     monkeypatch.setattr(
         buildings_variables,
         "dr_plant_reactor_building_transport_clearance",

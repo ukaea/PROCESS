@@ -417,7 +417,7 @@ row: float = None
 """clearance to building wall for crane operation (m)"""
 
 
-rxcl: float = None
+dr_plant_reactor_extra_clearance: float = None
 """clearance around reactor (m)"""
 
 
@@ -720,7 +720,7 @@ def init_buildings_variables():
         robotics_w, \
         robotics_h, \
         row, \
-        rxcl, \
+        dr_plant_reactor_extra_clearance, \
         sec_buildings_l, \
         sec_buildings_w, \
         sec_buildings_h, \
@@ -875,7 +875,7 @@ def init_buildings_variables():
     robotics_w = 30.0
     robotics_h = 30.0
     row = 4.0
-    rxcl = 4.0
+    dr_plant_reactor_extra_clearance = 4.0
     sec_buildings_l = 30.0
     sec_buildings_w = 25.0
     sec_buildings_h = 6.0
