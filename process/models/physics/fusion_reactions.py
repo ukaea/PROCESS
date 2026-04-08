@@ -891,74 +891,72 @@ def beam_fusion(
     vol_plasma: float,
     n_charge_plasma_effective_mass_weighted_vol_avg: float,
 ) -> tuple:
-    """Routine to calculate beam slowing down properties.
+    """Calculate neutral beam slowing-down properties and beam-target fusion.
 
-    This function computes the neutral beam beta component, hot beam ion density,
-    and alpha power from hot neutral beam ions based on the provided plasma parameters.
+    This function computes the neutral beam beta contribution, hot beam ion density,
+    and alpha power generated from beam-background fusion reactions in the plasma.
 
     Parameters
     ----------
-    beamfus0:
-        Multiplier for beam-background fusion calculation.
-    betbm0:
+    beamfus0 :
+        Multiplier for beam background fusion calculation.
+    betbm0 :
         Leading coefficient for neutral beam beta fraction.
-    b_plasma_poloidal_average:
-        Poloidal field (T).
-    b_plasma_toroidal_on_axis:
-         Toroidal field on axis (T).
-    c_beam_total:
-        Neutral beam current (A).
-    nd_plasma_electrons_vol_avg:
-        Electron density (m^-3).
-    nd_plasma_fuel_ions_vol_avg:
-        Fuel ion density (m^-3).
-    ion_electron_coulomb_log:
-        Ion-electron coulomb logarithm.
-    e_beam_kev:
-        Neutral beam energy (keV).
-    f_deuterium_plasma:
-        Deuterium fraction of main plasma.
-    f_tritium_plasma:
-        Tritium fraction of main plasma.
-    f_beam_tritium:
-        Tritium fraction of neutral beam.
-    sigmav_dt_average:
-        Profile averaged <sigma v> for D-T (m^3/s).
-    temp_plasma_electron_density_weighted_kev:
+    b_plasma_poloidal_average :
+        Poloidal magnetic field (T).
+    b_plasma_toroidal_on_axis :
+        Toroidal magnetic field on axis (T).
+    c_beam_total :
+        Total neutral beam current (A).
+    nd_plasma_electrons_vol_avg :
+        Volume-averaged electron density (m^-3).
+    nd_plasma_fuel_ions_vol_avg :
+        Volume-averaged fuel ion density (m^-3).
+    ion_electron_coulomb_log :
+        Ion-electron Coulomb logarithm.
+    e_beam_kev :
+        Neutral beam injection energy (keV).
+    f_deuterium_plasma :
+        Deuterium fraction in the bulk plasma.
+    f_tritium_plasma :
+        Tritium fraction in the bulk plasma.
+    f_beam_tritium :
+        Tritium fraction in the injected beam.
+    sigmav_dt_average :
+        Profile-averaged D-T reactivity ⟨sigmav⟩ (m^3/s).
+    temp_plasma_electron_density_weighted_kev :
         Density-weighted electron temperature (keV).
-    plasma_profile:
-        Plasma profile object.
-    vol_plasma:
+    plasma_profile :
+        Plasma profile object containing radial structure.
+    vol_plasma :
         Plasma volume (m^3).
-    n_charge_plasma_effective_mass_weighted_vol_avg:
-        Mass weighted plasma effective charge.
+    n_charge_plasma_effective_mass_weighted_vol_avg :
+        Mass-weighted effective plasma charge.
 
     Returns
     -------
     :
-        tuple: A tuple containing the following elements:
-        - beta_beam (float): Neutral beam beta component.
-        - nd_beam_ions_out (float): Hot beam ion density (m^-3).
-        - p_beam_alpha_mw (float): Alpha power from hot neutral beam ions (MW).
+        tuple[float, float, float]: A tuple containing:
+        - Neutral beam beta contribution.
+        - Hot beam ion density (m^-3).
+        - Alpha power from beam-background fusion (MW).
 
     Notes:
-        - The function uses the Bosch-Hale parametrization to compute the reactivity.
-        - The critical energy for electron/ion slowing down of the beam ion is calculated
-        for both deuterium and tritium neutral beams.
-        - The function integrates the hot beam fusion reaction rate integrand over the
-        range of beam velocities up to the critical velocity.
+        - The function uses the Bosch-Hale parametrization to evaluate fusion reactivity.
+        - Beam ion slowing-down properties are computed using Coulomb collision physics.
+        - Fusion power is obtained by integrating the beam-target reaction rate over
+        the fast-ion distribution.
 
     References:
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
         Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
-        - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015-1103,
-        Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
+        - J. W. Sheffield, “The physics of magnetic fusion reactors,”
+        Rev. Mod. Phys., vol. 66, no. 3, pp. 1015-1103, Jul. 1994.
 
-        - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-        vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
-        ‌
+        - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,”
+        Nuclear Fusion and Plasma Physics, vol. 9, no. 3, pp. 136-141, 2022.
     """
 
     # Beam ion slowing down time given by Deng Baiquan and G. A. Emmert 1987
@@ -992,22 +990,57 @@ def beam_fusion(
     tritium_density = nd_plasma_fuel_ions_vol_avg * f_tritium_plasma
 
     (
-        deuterium_beam_alpha_power,
-        tritium_beam_alpha_power,
+        deuterium_beam_density,
+        tritium_beam_density,
+        deuterium_critical_energy_speed,
+        tritium_critical_energy_speed,
         hot_beam_density,
         beam_deposited_energy,
-    ) = beamcalc(
-        deuterium_density,
-        tritium_density,
+    ) = beam_slowing_down_state(
         e_beam_kev,
         critical_energy_deuterium,
         critical_energy_tritium,
         beam_slow_time,
         f_beam_tritium,
         c_beam_total,
-        plasma_profile,
         vol_plasma,
-        sigmav_dt_average,
+    )
+
+    bh_profile_average = integrate.simpson(
+        fusion_rate_integral(
+            plasma_profile,
+            BoschHaleConstants(**REACTION_CONSTANTS_DT),
+        ),
+        x=plasma_profile.neprofile.profile_x,
+        dx=plasma_profile.neprofile.profile_dx,
+    )
+
+    # Correction factor between the reference profile-averaged DT reactivity
+    # and the Bosch-Hale reactivity evaluated with the same profile integral.
+    sigmav_dt_correction = sigmav_dt_average / bh_profile_average
+
+    hot_deuterium_rate = 1e-4 * beam_reaction_rate(
+        constants.M_DEUTERON_AMU, deuterium_critical_energy_speed, e_beam_kev
+    )
+
+    hot_tritium_rate = 1e-4 * beam_reaction_rate(
+        constants.M_TRITON_AMU, tritium_critical_energy_speed, e_beam_kev
+    )
+
+    deuterium_beam_alpha_power = alpha_power_beam(
+        deuterium_beam_density,
+        tritium_density,
+        hot_deuterium_rate,
+        vol_plasma,
+        sigmav_dt_correction,
+    )
+
+    tritium_beam_alpha_power = alpha_power_beam(
+        tritium_beam_density,
+        deuterium_density,
+        hot_tritium_rate,
+        vol_plasma,
+        sigmav_dt_correction,
     )
 
     # Neutral beam alpha power
@@ -1026,79 +1059,54 @@ def beam_fusion(
     return beta_beam, hot_beam_density, p_beam_alpha_mw
 
 
-def beamcalc(
-    nd: float,
-    nt: float,
+def beam_slowing_down_state(
     e_beam_kev: float,
     critical_energy_deuterium: float,
     critical_energy_tritium: float,
     beam_slow_time: float,
     f_beam_tritium: float,
     c_beam_total: float,
-    plasma_profile: PlasmaProfile,
     vol_plasma: float,
-    svdt: float,
-) -> tuple[float, float, float, float]:
-    """Calculate neutral beam alpha power and ion energy.
+) -> tuple[float, float, float, float, float, float]:
+    """Calculate beam slowing-down state and hot ion properties.
 
-    This function computes the alpha power generated from the interaction between
-    hot beam ions and thermal ions in the plasma, as well as the hot beam ion density
-    and average hot beam ion energy.
+    This function computes the densities of hot beam ions, their critical
+    slowing-down speeds, and the average deposited energy of the beam ions
+    in the plasma.
 
     Parameters
     ----------
-    nd :
-        Thermal deuterium density (m^-3).
-    nt :
-        Thermal tritium density (m^-3).
     e_beam_kev :
         Beam energy (keV).
     critical_energy_deuterium :
-        Critical energy for electron/ion slowing down of the beam ion (deuterium neutral beam) (keV).
+        Critical energy for electron/ion slowing down of deuterium beam ions (keV).
     critical_energy_tritium :
-        Critical energy for beam slowing down (tritium neutral beam) (keV).
+        Critical energy for electron/ion slowing down of tritium beam ions (keV).
     beam_slow_time :
-        Beam ion slowing down time on electrons (s).
+        Beam ion slowing-down time on electrons (s).
     f_beam_tritium :
-        Beam tritium fraction (0.0 = deuterium beam).
+        Tritium fraction in the injected beam (0.0 = pure deuterium beam).
     c_beam_total :
-        Beam current (A).
-    temp_plasma_ion_vol_avg_kev :
-        Thermal ion temperature (keV).
+        Total neutral beam current (A).
     vol_plasma :
         Plasma volume (m^3).
-    svdt :
-        Profile averaged <sigma v> for D-T (m^3/s).
 
     Returns
     -------
     :
-        tuple[float, float, float, float]: A tuple containing the following elements:
-        - Alpha power from deuterium beam-background fusion (MW).
-        - Alpha power from tritium beam-background fusion (MW).
-        - Hot beam ion density (m^-3).
-        - Average hot beam ion energy (keV).
+        tuple[float, float, float, float, float, float]: A tuple containing:
+        - Deuterium beam ion density (m^-3).
+        - Tritium beam ion density (m^-3).
+        - Deuterium critical speed (m/s).
+        - Tritium critical speed (m/s).
+        - Total hot beam ion density (m^-3).
+        - Average deposited beam ion energy (keV).
 
     Notes:
-        - The function uses the Bosch-Hale parametrization to compute the reactivity.
-        - The critical energy for electron/ion slowing down of the beam ion is calculated
-        for both deuterium and tritium neutral beams.
-        - The function integrates the hot beam fusion reaction rate integrand over the
-        range of beam velocities up to the critical velocity.
-
-    References:
-        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
-        Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
-        doi: https://doi.org/10.1088/0029-5515/32/4/i07.
-
-        - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
-        vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
-
-        - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
-        International Series of Monographs on Physics, Volume 149.
-
-        - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015-1103,
-        Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
+        - Beam ion densities are derived from the beam source rate and slowing-down time.
+        - Critical energies define the transition between electron- and ion-dominated slowing down.
+        - Critical speeds are computed from the corresponding critical energies.
+        - The deposited energy represents the average energy retained by beam ions during slowing down.
     """
 
     # D and T beam current fractions
@@ -1196,40 +1204,18 @@ def beamcalc(
     deuterium_deposited_energy = 1.5 * deuterium_pressure / deuterium_beam_density
     tritium_deposited_energy = 1.5 * tritium_pressure / tritium_beam_density
 
-    total_depsoited_energy = (
+    total_deposited_energy = (
         (deuterium_beam_density * deuterium_deposited_energy)
         + (tritium_beam_density * tritium_deposited_energy)
     ) / hot_beam_density
 
-    hot_deuterium_rate = 1e-4 * beam_reaction_rate(
-        constants.M_DEUTERON_AMU, deuterium_critical_energy_speed, e_beam_kev
-    )
-
-    hot_tritium_rate = 1e-4 * beam_reaction_rate(
-        constants.M_TRITON_AMU, tritium_critical_energy_speed, e_beam_kev
-    )
-
-    deuterium_beam_alpha_power = alpha_power_beam(
-        deuterium_beam_density,
-        nt,
-        hot_deuterium_rate,
-        vol_plasma,
-        svdt,
-        plasma_profile,
-    )
-    tritium_beam_alpha_power = alpha_power_beam(
-        tritium_beam_density,
-        nd,
-        hot_tritium_rate,
-        vol_plasma,
-        svdt,
-        plasma_profile,
-    )
     return (
-        deuterium_beam_alpha_power,
-        tritium_beam_alpha_power,
+        deuterium_beam_density,
+        tritium_beam_density,
+        deuterium_critical_energy_speed,
+        tritium_critical_energy_speed,
         hot_beam_density,
-        total_depsoited_energy,
+        total_deposited_energy,
     )
 
 
