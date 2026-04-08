@@ -344,7 +344,7 @@ INPUT_VARIABLES = {
     "control_buildings_w": InputVariable(
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "conv": InputVariable(
+    "vol_plant_control_building": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "coolp": InputVariable(

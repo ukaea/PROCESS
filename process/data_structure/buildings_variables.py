@@ -66,7 +66,7 @@ control_buildings_h: float = None
 """control building height (m)"""
 
 
-conv: float = None
+vol_plant_control_building: float = None
 """control building volume (m3)"""
 
 
@@ -632,7 +632,7 @@ def init_buildings_variables():
         control_buildings_l, \
         control_buildings_w, \
         control_buildings_h, \
-        conv, \
+        vol_plant_control_building, \
         convol, \
         crane_arm_h, \
         crane_clrnc_h, \
@@ -787,7 +787,7 @@ def init_buildings_variables():
     control_buildings_l = 80.0
     control_buildings_w = 60.0
     control_buildings_h = 6.0
-    conv = 6.0e4
+    vol_plant_control_building = 6.0e4
     convol = 0.0
     crane_arm_h = 10.0
     crane_clrnc_h = 4.0

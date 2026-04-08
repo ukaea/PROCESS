@@ -425,7 +425,7 @@ class BuildingsITER1992:
             + buildings_variables.vol_plant_warm_shop_building
             + buildings_variables.vol_plant_tritium_fuel_building
             + buildings_variables.vol_plant_electrical_building
-            + buildings_variables.conv
+            + buildings_variables.vol_plant_control_building
             + buildings_variables.vol_plant_cryoplant_building
             + buildings_variables.vol_plant_administration_building
             + buildings_variables.shov
@@ -434,7 +434,7 @@ class BuildingsITER1992:
             buildings_variables.vol_plant_administration_building
         )
         buildings_variables.shovol = buildings_variables.shov
-        buildings_variables.convol = buildings_variables.conv
+        buildings_variables.convol = buildings_variables.vol_plant_control_building
 
         # Total volume of nuclear buildings
         buildings_variables.vol_plant_nuclear_buildings = (
@@ -513,8 +513,8 @@ class BuildingsITER1992:
         po.ovarre(
             self.outfile,
             "Control building volume (m3)",
-            "(conv)",
-            buildings_variables.conv,
+            "(vol_plant_control_building)",
+            buildings_variables.vol_plant_control_building,
         )
         po.ovarre(
             self.outfile,

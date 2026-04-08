@@ -2382,7 +2382,7 @@ class IFE(Model):
             + wsv
             + buildings_variables.vol_plant_tritium_fuel_building
             + elev
-            + buildings_variables.conv
+            + buildings_variables.vol_plant_control_building
             + cryv
             + buildings_variables.vol_plant_administration_building
             + buildings_variables.shov
@@ -2393,7 +2393,7 @@ class IFE(Model):
         buildings_variables.admvol = (
             buildings_variables.vol_plant_administration_building
         )
-        buildings_variables.convol = buildings_variables.conv
+        buildings_variables.convol = buildings_variables.vol_plant_control_building
         buildings_variables.vol_plant_electrical_building = elev
         buildings_variables.vol_plant_reactor_building = rbv
         buildings_variables.vol_plant_maintenance_assembly_building = rmbv
@@ -2447,8 +2447,8 @@ class IFE(Model):
         process_output.ovarre(
             self.outfile,
             "Control building volume (m3)",
-            "(conv)",
-            buildings_variables.conv,
+            "(vol_plant_control_building)",
+            buildings_variables.vol_plant_control_building,
         )
         process_output.ovarre(
             self.outfile, "Cryogenics building volume (m3)", "(cryv)", cryv

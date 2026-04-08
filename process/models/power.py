@@ -2305,7 +2305,7 @@ class Power(Model):
             )
             po.ovarre(
                 self.outfile,
-                "TF coil power conv. building volume (m3)",
+                "TF coil power vol_plant_control_building. building volume (m3)",
                 "(vol_plant_tf_power_supplies_building)",
                 vol_plant_tf_power_supplies_building,
                 "OP ",
