@@ -2385,7 +2385,7 @@ class IFE(Model):
             + buildings_variables.vol_plant_control_building
             + cryv
             + buildings_variables.vol_plant_administration_building
-            + buildings_variables.shov
+            + buildings_variables.vol_plant_shops_warehouse_buildings
         ) / 6.0
 
         # Convert local into global variables
@@ -2397,7 +2397,9 @@ class IFE(Model):
         buildings_variables.vol_plant_electrical_building = elev
         buildings_variables.vol_plant_reactor_building = rbv
         buildings_variables.vol_plant_maintenance_assembly_building = rmbv
-        buildings_variables.shovol = buildings_variables.shov
+        buildings_variables.shovol = (
+            buildings_variables.vol_plant_shops_warehouse_buildings
+        )
         buildings_variables.vol_plant_reactor_building_internal = vrci
         buildings_variables.vol_plant_warm_shop_building = wsv
 
@@ -2460,7 +2462,10 @@ class IFE(Model):
             buildings_variables.vol_plant_administration_building,
         )
         process_output.ovarre(
-            self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov
+            self.outfile,
+            "Shops volume (m3)",
+            "(vol_plant_shops_warehouse_buildings)",
+            buildings_variables.vol_plant_shops_warehouse_buildings,
         )
         process_output.ovarre(
             self.outfile,

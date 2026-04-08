@@ -1362,7 +1362,7 @@ INPUT_VARIABLES = {
         data_structure.build_variables, float, range=(0.0, 10.0)
     ),
     "shmf": InputVariable(data_structure.buildings_variables, float, range=(0.0, 1.0)),
-    "shov": InputVariable(
+    "vol_plant_shops_warehouse_buildings": InputVariable(
         data_structure.buildings_variables, float, range=(1000.0, 1000000.0)
     ),
     "sig_tf_case_max": InputVariable(

@@ -437,7 +437,7 @@ shmf: float = None
 """fraction of shield mass per TF coil to be moved in the maximum shield lift"""
 
 
-shov: float = None
+vol_plant_shops_warehouse_buildings: float = None
 """shops and warehouse volume (m3)"""
 
 
@@ -725,7 +725,7 @@ def init_buildings_variables():
         sec_buildings_w, \
         sec_buildings_h, \
         shmf, \
-        shov, \
+        vol_plant_shops_warehouse_buildings, \
         shovol, \
         staff_buildings_area, \
         staff_buildings_h, \
@@ -880,7 +880,7 @@ def init_buildings_variables():
     sec_buildings_w = 25.0
     sec_buildings_h = 6.0
     shmf = 0.5
-    shov = 1.0e5
+    vol_plant_shops_warehouse_buildings = 1.0e5
     shovol = 0.0
     staff_buildings_h = 5.0
     staff_buildings_area = 4.8e5

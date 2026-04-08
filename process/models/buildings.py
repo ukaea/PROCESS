@@ -428,12 +428,14 @@ class BuildingsITER1992:
             + buildings_variables.vol_plant_control_building
             + buildings_variables.vol_plant_cryoplant_building
             + buildings_variables.vol_plant_administration_building
-            + buildings_variables.shov
+            + buildings_variables.vol_plant_shops_warehouse_buildings
         ) / 6.0e0
         buildings_variables.admvol = (
             buildings_variables.vol_plant_administration_building
         )
-        buildings_variables.shovol = buildings_variables.shov
+        buildings_variables.shovol = (
+            buildings_variables.vol_plant_shops_warehouse_buildings
+        )
         buildings_variables.convol = buildings_variables.vol_plant_control_building
 
         # Total volume of nuclear buildings
@@ -528,7 +530,12 @@ class BuildingsITER1992:
             "(vol_plant_administration_building)",
             buildings_variables.vol_plant_administration_building,
         )
-        po.ovarre(self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov)
+        po.ovarre(
+            self.outfile,
+            "Shops volume (m3)",
+            "(vol_plant_shops_warehouse_buildings)",
+            buildings_variables.vol_plant_shops_warehouse_buildings,
+        )
         po.ovarre(
             self.outfile,
             "Total volume of nuclear buildings (m3)",
