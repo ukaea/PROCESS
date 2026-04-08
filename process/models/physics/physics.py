@@ -614,10 +614,12 @@ class Physics(Model):
 
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
-
+        current_drive_variables.c_beam_total = 2.0
         if (current_drive_variables.c_beam_total != 0.0e0) and (
             physics_variables.i_plasma_ignited == 0
         ):
+            print("this is called")
+
             (
                 physics_variables.beta_beam,
                 physics_variables.nd_beam_ions_out,
@@ -636,8 +638,8 @@ class Physics(Model):
                 physics_variables.f_plasma_fuel_tritium,
                 current_drive_variables.f_beam_tritium,
                 physics_variables.sigmav_dt_average,
-                self.plasma_profile,
                 physics_variables.temp_plasma_ion_density_weighted_kev,
+                self.plasma_profile,
                 physics_variables.vol_plasma,
                 physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
