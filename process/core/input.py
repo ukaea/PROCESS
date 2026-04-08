@@ -181,7 +181,7 @@ INPUT_VARIABLES = {
     "fkzohm": InputVariable(data_structure.physics_variables, float, range=(0.5, 2.0)),
     "abktflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
     "adivflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
-    "admv": InputVariable(
+    "vol_plant_administration_building": InputVariable(
         data_structure.buildings_variables, float, range=(1.0e4, 1.0e6)
     ),
     "airtemp": InputVariable(

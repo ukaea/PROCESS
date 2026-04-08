@@ -2873,7 +2873,7 @@ class IfebdgParam(NamedTuple):
     a_plant_floor_effective: Any = None
     vol_plant_tritium_fuel_building: Any = None
     conv: Any = None
-    admv: Any = None
+    vol_plant_administration_building: Any = None
     shov: Any = None
     admvol: Any = None
     convol: Any = None
@@ -2922,7 +2922,7 @@ class IfebdgParam(NamedTuple):
             a_plant_floor_effective=0.0,
             vol_plant_tritium_fuel_building=40000.0,
             conv=60000.0,
-            admv=100000.0,
+            vol_plant_administration_building=100000.0,
             shov=100000.0,
             admvol=0.0,
             convol=0.0,
@@ -3004,7 +3004,11 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
         ifebdgparam.vol_plant_tritium_fuel_building,
     )
     monkeypatch.setattr(buildings_variables, "conv", ifebdgparam.conv)
-    monkeypatch.setattr(buildings_variables, "admv", ifebdgparam.admv)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_administration_building",
+        ifebdgparam.vol_plant_administration_building,
+    )
     monkeypatch.setattr(buildings_variables, "shov", ifebdgparam.shov)
     monkeypatch.setattr(buildings_variables, "admvol", ifebdgparam.admvol)
     monkeypatch.setattr(buildings_variables, "convol", ifebdgparam.convol)

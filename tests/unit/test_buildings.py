@@ -789,7 +789,7 @@ class BldgsParam(NamedTuple):
     admvol: Any
     vol_plant_tritium_fuel_building: Any
     conv: Any
-    admv: Any
+    vol_plant_administration_building: Any
     shov: Any
     shovol: Any
     convol: Any
@@ -853,7 +853,7 @@ class BldgsParam(NamedTuple):
             admvol=0,
             vol_plant_tritium_fuel_building=40000,
             conv=60000,
-            admv=100000,
+            vol_plant_administration_building=100000,
             shov=100000,
             shovol=0,
             convol=0,
@@ -913,7 +913,7 @@ class BldgsParam(NamedTuple):
             admvol=100000,
             vol_plant_tritium_fuel_building=40000,
             conv=60000,
-            admv=100000,
+            vol_plant_administration_building=100000,
             shov=100000,
             shovol=100000,
             convol=60000,
@@ -1007,7 +1007,11 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         bldgsparam.vol_plant_tritium_fuel_building,
     )
     monkeypatch.setattr(buildings_variables, "conv", bldgsparam.conv)
-    monkeypatch.setattr(buildings_variables, "admv", bldgsparam.admv)
+    monkeypatch.setattr(
+        buildings_variables,
+        "vol_plant_administration_building",
+        bldgsparam.vol_plant_administration_building,
+    )
     monkeypatch.setattr(buildings_variables, "shov", bldgsparam.shov)
     monkeypatch.setattr(buildings_variables, "shovol", bldgsparam.shovol)
     monkeypatch.setattr(buildings_variables, "convol", bldgsparam.convol)

@@ -427,10 +427,12 @@ class BuildingsITER1992:
             + buildings_variables.vol_plant_electrical_building
             + buildings_variables.conv
             + buildings_variables.vol_plant_cryoplant_building
-            + buildings_variables.admv
+            + buildings_variables.vol_plant_administration_building
             + buildings_variables.shov
         ) / 6.0e0
-        buildings_variables.admvol = buildings_variables.admv
+        buildings_variables.admvol = (
+            buildings_variables.vol_plant_administration_building
+        )
         buildings_variables.shovol = buildings_variables.shov
         buildings_variables.convol = buildings_variables.conv
 
@@ -523,8 +525,8 @@ class BuildingsITER1992:
         po.ovarre(
             self.outfile,
             "Administration building volume (m3)",
-            "(admv)",
-            buildings_variables.admv,
+            "(vol_plant_administration_building)",
+            buildings_variables.vol_plant_administration_building,
         )
         po.ovarre(self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov)
         po.ovarre(

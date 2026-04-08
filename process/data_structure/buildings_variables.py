@@ -1,4 +1,4 @@
-admv: float = None
+vol_plant_administration_building: float = None
 """administration building volume (m3)"""
 
 
@@ -615,7 +615,7 @@ a_security_bldg: float = None
 
 def init_buildings_variables():
     global \
-        admv, \
+        vol_plant_administration_building, \
         admvol, \
         aux_build_l, \
         aux_build_w, \
@@ -770,7 +770,7 @@ def init_buildings_variables():
         a_cryo_inert_gas_bldg, \
         a_security_bldg
 
-    admv = 1.0e5
+    vol_plant_administration_building = 1.0e5
     admvol = 0.0
     aux_build_l = 60.0
     aux_build_w = 30.0
