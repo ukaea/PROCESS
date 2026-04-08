@@ -229,7 +229,7 @@ class BuildingsITER1992:
             + buildings_variables.dr_plant_reactor_extra_clearance
             + dz_shld_full
             + buildings_variables.dr_plant_reactor_building_transport_clearance
-            + buildings_variables.row
+            + buildings_variables.dr_plant_reactor_crane_clearance
         )
 
         # Calculate length to allow PF or cryostat laydown (m)

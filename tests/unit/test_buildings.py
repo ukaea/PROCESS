@@ -964,7 +964,9 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         "dr_plant_reactor_building_transport_clearance",
         bldgsparam.dr_plant_reactor_building_transport_clearance,
     )
-    monkeypatch.setattr(buildings_variables, "row", bldgsparam.row)
+    monkeypatch.setattr(
+        buildings_variables, "row", bldgsparam.dr_plant_reactor_crane_clearance
+    )
     monkeypatch.setattr(
         buildings_variables,
         "m_plant_reactor_building_crane_capacity",
