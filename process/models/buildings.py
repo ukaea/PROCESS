@@ -285,7 +285,7 @@ class BuildingsITER1992:
             )
 
         # Crane height (m)
-        dz_plant_reactor_building_crane = (
+        buildings_variables.dz_plant_reactor_building_crane = (
             9.41e-6 * m_plant_reactor_building_crane_capacity + 5.1e0
         )
 
@@ -301,7 +301,7 @@ class BuildingsITER1992:
             + 2.0e0 * dz_tf_full
             + buildings_variables.dz_tf_cryostat
             + buildings_variables.dr_plant_reactor_building_transport_clearance
-            + dz_plant_reactor_building_crane
+            + buildings_variables.dz_plant_reactor_building_crane
             + buildings_variables.stcl
         )
 

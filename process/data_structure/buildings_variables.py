@@ -416,6 +416,8 @@ robotics_h: float = None
 dr_plant_reactor_crane_clearance: float = None
 """clearance to building wall for crane operation (m)"""
 
+dz_plant_reactor_building_crane: float = None
+"""Height of crane operation in the reactor building (m)"""
 
 dr_plant_reactor_extra_clearance: float = None
 """clearance around reactor (m)"""
@@ -720,6 +722,7 @@ def init_buildings_variables():
         robotics_w, \
         robotics_h, \
         dr_plant_reactor_crane_clearance, \
+        dz_plant_reactor_building_crane, \
         dr_plant_reactor_extra_clearance, \
         sec_buildings_l, \
         sec_buildings_w, \
@@ -875,6 +878,7 @@ def init_buildings_variables():
     robotics_w = 30.0
     robotics_h = 30.0
     dr_plant_reactor_crane_clearance = 4.0
+    dz_plant_reactor_building_crane = 4.0
     dr_plant_reactor_extra_clearance = 4.0
     sec_buildings_l = 30.0
     sec_buildings_w = 25.0
