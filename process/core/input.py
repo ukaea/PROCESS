@@ -794,7 +794,9 @@ INPUT_VARIABLES = {
     "fmgdmw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "fndt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "dz_plant_reactor_building_foundation": InputVariable(
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
+    ),
     "f_p_beam_orbit_loss": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 0.999)
     ),

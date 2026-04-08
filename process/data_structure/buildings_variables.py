@@ -177,7 +177,7 @@ fc_building_w: float = None
 """Fuel Cycle facilities width (m)"""
 
 
-fndt: float = None
+dz_plant_reactor_building_foundation: float = None
 """foundation thickness (m)"""
 
 
@@ -662,7 +662,7 @@ def init_buildings_variables():
         esbldgm3, \
         fc_building_l, \
         fc_building_w, \
-        fndt, \
+        dz_plant_reactor_building_foundation, \
         gas_buildings_l, \
         gas_buildings_w, \
         gas_buildings_h, \
@@ -818,7 +818,7 @@ def init_buildings_variables():
     esbldgm3 = 1.0e3
     fc_building_l = 60.0
     fc_building_w = 60.0
-    fndt = 2.0
+    dz_plant_reactor_building_foundation = 2.0
     gas_buildings_l = 25.0
     gas_buildings_w = 15.0
     gas_buildings_h = 5.0

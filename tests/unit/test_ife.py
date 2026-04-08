@@ -2863,7 +2863,7 @@ class IfebdgParam(NamedTuple):
     dr_plant_reactor_building_internal_half: Any = None
     dx_plant_reactor_building_wall: Any = None
     dz_plant_reactor_building_roof: Any = None
-    fndt: Any = None
+    dz_plant_reactor_building_foundation: Any = None
     dr_plant_reactor_building_transport_clearance: Any = None
     hcwt: Any = None
     hccl: Any = None
@@ -2912,7 +2912,7 @@ class IfebdgParam(NamedTuple):
             dr_plant_reactor_building_internal_half=0.0,
             dx_plant_reactor_building_wall=3.2000000000000002,
             dz_plant_reactor_building_roof=3.2000000000000002,
-            fndt=2.0,
+            dz_plant_reactor_building_foundation=2.0,
             dr_plant_reactor_building_transport_clearance=1.0,
             hcwt=1.5,
             hccl=5.0,
@@ -2982,7 +2982,11 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
         "dz_plant_reactor_building_roof",
         ifebdgparam.dz_plant_reactor_building_roof,
     )
-    monkeypatch.setattr(buildings_variables, "fndt", ifebdgparam.fndt)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dz_plant_reactor_building_foundation",
+        ifebdgparam.dz_plant_reactor_building_foundation,
+    )
     monkeypatch.setattr(
         buildings_variables,
         "dr_plant_reactor_building_transport_clearance",

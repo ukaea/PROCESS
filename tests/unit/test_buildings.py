@@ -775,7 +775,7 @@ class BldgsParam(NamedTuple):
     rbvfac: Any
     dx_plant_reactor_building_wall: Any
     dz_plant_reactor_building_roof: Any
-    fndt: Any
+    dz_plant_reactor_building_foundation: Any
     hcwt: Any
     hccl: Any
     wgt2: Any
@@ -839,7 +839,7 @@ class BldgsParam(NamedTuple):
             rbvfac=1.6000000000000001,
             dx_plant_reactor_building_wall=2,
             dz_plant_reactor_building_roof=1,
-            fndt=2,
+            dz_plant_reactor_building_foundation=2,
             hcwt=1.5,
             hccl=5,
             wgt2=100000,
@@ -899,7 +899,7 @@ class BldgsParam(NamedTuple):
             rbvfac=1.6000000000000001,
             dx_plant_reactor_building_wall=2,
             dz_plant_reactor_building_roof=1,
-            fndt=2,
+            dz_plant_reactor_building_foundation=2,
             hcwt=1.5,
             hccl=5,
             wgt2=100000,
@@ -987,7 +987,11 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         "dz_plant_reactor_building_roof",
         bldgsparam.dz_plant_reactor_building_roof,
     )
-    monkeypatch.setattr(buildings_variables, "fndt", bldgsparam.fndt)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dz_plant_reactor_building_foundation",
+        bldgsparam.dz_plant_reactor_building_foundation,
+    )
     monkeypatch.setattr(buildings_variables, "hcwt", bldgsparam.hcwt)
     monkeypatch.setattr(buildings_variables, "hccl", bldgsparam.hccl)
     monkeypatch.setattr(buildings_variables, "wgt2", bldgsparam.wgt2)

@@ -2291,7 +2291,7 @@ class IFE(Model):
         rbh = (
             hrbi
             + buildings_variables.dz_plant_reactor_building_roof
-            + buildings_variables.fndt
+            + buildings_variables.dz_plant_reactor_building_foundation
         )
 
         # External volume
@@ -2350,9 +2350,13 @@ class IFE(Model):
             + cran
             + 5.1
             + buildings_variables.stcl
-            + buildings_variables.fndt
+            + buildings_variables.dz_plant_reactor_building_foundation
         )
-        tch = shh + buildings_variables.stcl + buildings_variables.fndt
+        tch = (
+            shh
+            + buildings_variables.stcl
+            + buildings_variables.dz_plant_reactor_building_foundation
+        )
 
         # Volume
 
