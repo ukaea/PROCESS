@@ -1393,7 +1393,9 @@ INPUT_VARIABLES = {
     "startupratio": InputVariable(
         data_structure.cost_variables, float, range=(0.0, 10.0)
     ),
-    "stcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "dz_plant_reactor_building_crane_roof_clearance": InputVariable(
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
+    ),
     "str_cs_con_res": InputVariable(
         data_structure.tfcoil_variables, float, range=(-0.02, 0.02)
     ),

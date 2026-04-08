@@ -931,7 +931,7 @@ class IFE(Model):
         ife_variables.v3dzu = (
             (ife_variables.zu6 + ife_variables.zl6)
             + buildings_variables.dr_plant_reactor_building_transport_clearance
-            + buildings_variables.stcl
+            + buildings_variables.dz_plant_reactor_building_crane_roof_clearance
             + 5.1
             + 9.41e-6 * 1.0e5
         )
@@ -2349,12 +2349,12 @@ class IFE(Model):
             + buildings_variables.dr_plant_reactor_building_transport_clearance
             + cran
             + 5.1
-            + buildings_variables.stcl
+            + buildings_variables.dz_plant_reactor_building_crane_roof_clearance
             + buildings_variables.dz_plant_reactor_building_foundation
         )
         tch = (
             shh
-            + buildings_variables.stcl
+            + buildings_variables.dz_plant_reactor_building_crane_roof_clearance
             + buildings_variables.dz_plant_reactor_building_foundation
         )
 

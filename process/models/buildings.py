@@ -292,7 +292,7 @@ class BuildingsITER1992:
         # Building height (m)
         # dz_tf_cryostat : clearance from TF coil to cryostat top, m
         # clh2 : clearance beneath TF coil to foundation, including basement, m
-        # stcl : clearance above crane to roof, m
+        # dz_plant_reactor_building_crane_roof_clearance : clearance above crane to roof, m
         # Additional dz_tf_full allows TF coil to be lifted right out
         dz_plant_reactor_building_internal = (
             buildings_variables.dz_plant_reactor_building_internal
@@ -302,7 +302,7 @@ class BuildingsITER1992:
             + buildings_variables.dz_tf_cryostat
             + buildings_variables.dr_plant_reactor_building_transport_clearance
             + buildings_variables.dz_plant_reactor_building_crane
-            + buildings_variables.stcl
+            + buildings_variables.dz_plant_reactor_building_crane_roof_clearance
         )
 
         # Internal volume (m3)
@@ -389,12 +389,12 @@ class BuildingsITER1992:
             + dz_shld
             + buildings_variables.dr_plant_reactor_building_transport_clearance
             + cran
-            + buildings_variables.stcl
+            + buildings_variables.dz_plant_reactor_building_crane_roof_clearance
             + buildings_variables.dz_plant_reactor_building_foundation
         )
         tch = (
             dz_shld
-            + buildings_variables.stcl
+            + buildings_variables.dz_plant_reactor_building_crane_roof_clearance
             + buildings_variables.dz_plant_reactor_building_foundation
         )
 

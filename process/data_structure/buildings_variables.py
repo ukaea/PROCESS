@@ -455,7 +455,7 @@ staff_buildings_h: float = None
 """staff buildings height (m)"""
 
 
-stcl: float = None
+dz_plant_reactor_building_crane_roof_clearance: float = None
 """clearance above crane to roof (m)"""
 
 
@@ -732,7 +732,7 @@ def init_buildings_variables():
         shovol, \
         staff_buildings_area, \
         staff_buildings_h, \
-        stcl, \
+        dz_plant_reactor_building_crane_roof_clearance, \
         vol_plant_tf_power_supplies_building, \
         transp_clrnc, \
         dr_plant_reactor_building_transport_clearance, \
@@ -888,7 +888,7 @@ def init_buildings_variables():
     shovol = 0.0
     staff_buildings_h = 5.0
     staff_buildings_area = 4.8e5
-    stcl = 3.0
+    dz_plant_reactor_building_crane_roof_clearance = 3.0
     vol_plant_tf_power_supplies_building = 2.0e4
     transp_clrnc = 1.0
     dr_plant_reactor_building_transport_clearance = 1.0

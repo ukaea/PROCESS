@@ -2273,7 +2273,7 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
 class Bld2019Param(NamedTuple):
     a_fw_total: Any = None
     dr_plant_reactor_building_transport_clearance: Any = None
-    stcl: Any = None
+    dz_plant_reactor_building_crane_roof_clearance: Any = None
     tbr: Any = None
     f_p_blkt_multiplication: Any = None
     ifetyp: Any = None
@@ -2365,7 +2365,7 @@ class Bld2019Param(NamedTuple):
         Bld2019Param(
             a_fw_total=0.0,
             dr_plant_reactor_building_transport_clearance=1.0,
-            stcl=3.0,
+            dz_plant_reactor_building_crane_roof_clearance=3.0,
             tbr=0.0,
             f_p_blkt_multiplication=1.26,
             ifetyp=4,
@@ -2650,7 +2650,11 @@ def test_bld2019(bld2019param, monkeypatch, ife):
         "dr_plant_reactor_building_transport_clearance",
         bld2019param.dr_plant_reactor_building_transport_clearance,
     )
-    monkeypatch.setattr(buildings_variables, "stcl", bld2019param.stcl)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dz_plant_reactor_building_crane_roof_clearance",
+        bld2019param.dz_plant_reactor_building_crane_roof_clearance,
+    )
     monkeypatch.setattr(fwbs_variables, "tbr", bld2019param.tbr)
     monkeypatch.setattr(
         fwbs_variables, "f_p_blkt_multiplication", bld2019param.f_p_blkt_multiplication
@@ -2868,7 +2872,7 @@ class IfebdgParam(NamedTuple):
     hcwt: Any = None
     hccl: Any = None
     wgt2: Any = None
-    stcl: Any = None
+    dz_plant_reactor_building_crane_roof_clearance: Any = None
     pibv: Any = None
     a_plant_floor_effective: Any = None
     vol_plant_tritium_fuel_building: Any = None
@@ -2917,7 +2921,7 @@ class IfebdgParam(NamedTuple):
             hcwt=1.5,
             hccl=5.0,
             wgt2=100000.0,
-            stcl=3.0,
+            dz_plant_reactor_building_crane_roof_clearance=3.0,
             pibv=40000.0,
             a_plant_floor_effective=0.0,
             vol_plant_tritium_fuel_building=40000.0,
@@ -2995,7 +2999,11 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     monkeypatch.setattr(buildings_variables, "hcwt", ifebdgparam.hcwt)
     monkeypatch.setattr(buildings_variables, "hccl", ifebdgparam.hccl)
     monkeypatch.setattr(buildings_variables, "wgt2", ifebdgparam.wgt2)
-    monkeypatch.setattr(buildings_variables, "stcl", ifebdgparam.stcl)
+    monkeypatch.setattr(
+        buildings_variables,
+        "dz_plant_reactor_building_crane_roof_clearance",
+        ifebdgparam.dz_plant_reactor_building_crane_roof_clearance,
+    )
     monkeypatch.setattr(buildings_variables, "pibv", ifebdgparam.pibv)
     monkeypatch.setattr(
         buildings_variables,
