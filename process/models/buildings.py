@@ -101,7 +101,6 @@ class Buildings(Model):
                 buildings_variables.vol_plant_warm_shop_building,
                 buildings_variables.vol_plant_electrical_building,
             ) = self.iter_1992.calculate_building_sizes_1992(
-                output,
                 r_pf_coil_outer_max=pfcoil_variables.r_pf_coil_outer_max,
                 m_pf_coil_max=pfcoil_variables.m_pf_coil_max,
                 r_tf_outboard_out=r_tf_outboard_out,
@@ -120,6 +119,9 @@ class Buildings(Model):
                 helpow=heat_transport_variables.helpow,
             )
 
+            if output:
+                self.iter_1992.output_buildings()
+
 
 class BuildingsITER1992:
     def __init__(self):
@@ -127,7 +129,6 @@ class BuildingsITER1992:
 
     def calculate_building_sizes_1992(
         self,
-        output: bool,
         r_pf_coil_outer_max,
         m_pf_coil_max,
         r_tf_outboard_out,
@@ -187,17 +188,17 @@ class BuildingsITER1992:
 
         Returns
         -------
-        vol_plant_cryogenics_building:
+        vol_plant_cryoplant_building:
             volume of cryogenic building, m3
-        vrci:
+        vol_plant_reactor_building_internal:
             inner volume of reactor building, m3
-        rbv:
+        vol_plant_reactor_building:
             outer volume of reactor building, m3
-        rmbv:
+        vol_plant_maintenance_assembly_building:
             volume of reactor maintenance building, m3
-        wsv:
+        vol_plant_warm_shop_building:
             volume of warm shop, m3
-        elev:
+        vol_plant_electrical_building:
             volume of electrical buildings, m3
         """
 
@@ -305,7 +306,7 @@ class BuildingsITER1992:
         )
 
         # Internal volume (m3)
-        vrci = (
+        buildings_variables.vol_plant_reactor_building_internal = (
             buildings_variables.rbvfac
             * 2.0e0
             * buildings_variables.dr_plant_reactor_building_internal_half
@@ -313,10 +314,12 @@ class BuildingsITER1992:
             * dz_plant_reactor_building_internal
         )
         try:
-            assert vrci < np.inf
+            assert buildings_variables.vol_plant_reactor_building_internal < np.inf
         except AssertionError:
-            logger.exception("vrci is inf. Kludging to 1e10.")
-            vrci = 1e10
+            logger.exception(
+                "vol_plant_reactor_building_internal is inf. Kludging to 1e10."
+            )
+            buildings_variables.vol_plant_reactor_building_internal = 1e10
 
         # External dimensions of reactor building (m)
         # dx_plant_reactor_building_wall : reactor building wall thickness, m
@@ -332,7 +335,9 @@ class BuildingsITER1992:
             + buildings_variables.dz_plant_reactor_building_roof
             + buildings_variables.fndt
         )
-        rbv = buildings_variables.rbvfac * rbw * rbl * rbh
+        buildings_variables.vol_plant_reactor_building = (
+            buildings_variables.rbvfac * rbw * rbl * rbh
+        )
 
         # Maintenance building
         # The reactor maintenance building includes the hot cells, the
@@ -390,21 +395,23 @@ class BuildingsITER1992:
         tch = dz_shld + buildings_variables.stcl + buildings_variables.fndt
 
         # Volume
-        rmbv = (
+        buildings_variables.vol_plant_maintenance_assembly_building = (
             buildings_variables.mbvfac * rmbw * rmbl * rmbh
             + dr_plant_transport_corridor * tcl * tch
         )
 
         # Warm shop and hot cell gallery
         wsa = (rmbw + 7.0e0) * 20.0e0 + rmbl * 7.0e0
-        wsv = buildings_variables.wsvfac * wsa * rmbh
+        buildings_variables.vol_plant_warm_shop_building = (
+            buildings_variables.wsvfac * wsa * rmbh
+        )
 
         # Cryogenic building volume
-        vol_plant_cryogenics_building = 55.0e0 * helpow**0.5
+        buildings_variables.vol_plant_cryoplant_building = 55.0e0 * helpow**0.5
         # Other building volumes
         # pibv : power injection building volume, m3
         # esbldgm3 is forced to be zero if no energy storage is required (i_pulsed_plant=0)
-        elev = (
+        buildings_variables.vol_plant_electrical_building = (
             buildings_variables.vol_plant_tf_power_supplies_building
             + buildings_variables.pfbldgm3
             + buildings_variables.esbldgm3
@@ -413,13 +420,13 @@ class BuildingsITER1992:
 
         # Calculate effective floor area for ac power module
         buildings_variables.a_plant_floor_effective = (
-            rbv
-            + rmbv
-            + wsv
+            buildings_variables.vol_plant_reactor_building
+            + buildings_variables.vol_plant_maintenance_assembly_building
+            + buildings_variables.vol_plant_warm_shop_building
             + buildings_variables.vol_plant_tritium_fuel_building
-            + elev
+            + buildings_variables.vol_plant_electrical_building
             + buildings_variables.conv
-            + vol_plant_cryogenics_building
+            + buildings_variables.vol_plant_cryoplant_building
             + buildings_variables.admv
             + buildings_variables.shov
         ) / 6.0e0
@@ -429,80 +436,103 @@ class BuildingsITER1992:
 
         # Total volume of nuclear buildings
         buildings_variables.vol_plant_nuclear_buildings = (
-            vrci
-            + rmbv
-            + wsv
+            buildings_variables.vol_plant_reactor_building_internal
+            + buildings_variables.vol_plant_maintenance_assembly_building
+            + buildings_variables.vol_plant_warm_shop_building
             + buildings_variables.vol_plant_tritium_fuel_building
-            + vol_plant_cryogenics_building
+            + buildings_variables.vol_plant_cryoplant_building
         )
 
-        # Output !
-        # !!!!!!!!!
+        return (
+            buildings_variables.vol_plant_cryoplant_building,
+            buildings_variables.vol_plant_reactor_building_internal,
+            buildings_variables.vol_plant_reactor_building,
+            buildings_variables.vol_plant_maintenance_assembly_building,
+            buildings_variables.vol_plant_warm_shop_building,
+            buildings_variables.vol_plant_electrical_building,
+        )
 
-        if output:
-            po.oheadr(self.outfile, "Plant Buildings System")
-            po.ovarre(
-                self.outfile, "Internal volume of reactor building (m3)", "(vrci)", vrci
-            )
-            po.ovarre(
-                self.outfile,
-                "Dist from centre of torus to bldg wall (m)",
-                "(dr_plant_reactor_building_internal_half)",
-                buildings_variables.dr_plant_reactor_building_internal_half,
-            )
-            po.ovarre(
-                self.outfile,
-                "Internal reactor building height (m)",
-                "(dz_plant_reactor_building_internal)",
-                buildings_variables.dz_plant_reactor_building_internal,
-            )
-            po.ovarre(
-                self.outfile,
-                "Effective floor area (m2)",
-                "(a_plant_floor_effective)",
-                buildings_variables.a_plant_floor_effective,
-            )
-            po.ovarre(self.outfile, "Reactor building volume (m3)", "(rbv)", rbv)
-            po.ovarre(
-                self.outfile, "Reactor maintenance building volume (m3)", "(rmbv)", rmbv
-            )
-            po.ovarre(self.outfile, "Warmshop volume (m3)", "(wsv)", wsv)
-            po.ovarre(
-                self.outfile,
-                "Tritium building volume (m3)",
-                "(vol_plant_tritium_fuel_building)",
-                buildings_variables.vol_plant_tritium_fuel_building,
-            )
-            po.ovarre(self.outfile, "Electrical building volume (m3)", "(elev)", elev)
-            po.ovarre(
-                self.outfile,
-                "Control building volume (m3)",
-                "(conv)",
-                buildings_variables.conv,
-            )
-            po.ovarre(
-                self.outfile,
-                "Cryogenics building volume (m3)",
-                "(vol_plant_cryogenics_building)",
-                vol_plant_cryogenics_building,
-            )
-            po.ovarre(
-                self.outfile,
-                "Administration building volume (m3)",
-                "(admv)",
-                buildings_variables.admv,
-            )
-            po.ovarre(
-                self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov
-            )
-            po.ovarre(
-                self.outfile,
-                "Total volume of nuclear buildings (m3)",
-                "(vol_plant_nuclear_buildings)",
-                buildings_variables.vol_plant_nuclear_buildings,
-            )
-
-        return vol_plant_cryogenics_building, vrci, rbv, rmbv, wsv, elev
+    def output_buildings(self):
+        po.oheadr(self.outfile, "Plant Buildings System")
+        po.ovarre(
+            self.outfile,
+            "Internal volume of reactor building (m3)",
+            "(vol_plant_reactor_building_internal)",
+            buildings_variables.vol_plant_reactor_building_internal,
+        )
+        po.ovarre(
+            self.outfile,
+            "Dist from centre of torus to bldg wall (m)",
+            "(dr_plant_reactor_building_internal_half)",
+            buildings_variables.dr_plant_reactor_building_internal_half,
+        )
+        po.ovarre(
+            self.outfile,
+            "Internal reactor building height (m)",
+            "(dz_plant_reactor_building_internal)",
+            buildings_variables.dz_plant_reactor_building_internal,
+        )
+        po.ovarre(
+            self.outfile,
+            "Effective floor area (m2)",
+            "(a_plant_floor_effective)",
+            buildings_variables.a_plant_floor_effective,
+        )
+        po.ovarre(
+            self.outfile,
+            "Reactor building volume (m3)",
+            "(vol_plant_reactor_building)",
+            buildings_variables.vol_plant_reactor_building,
+        )
+        po.ovarre(
+            self.outfile,
+            "Reactor maintenance building volume (m3)",
+            "(vol_plant_maintenance_assembly_building)",
+            buildings_variables.vol_plant_maintenance_assembly_building,
+        )
+        po.ovarre(
+            self.outfile,
+            "Warmshop volume (m3)",
+            "(vol_plant_warm_shop_building)",
+            buildings_variables.vol_plant_warm_shop_building,
+        )
+        po.ovarre(
+            self.outfile,
+            "Tritium building volume (m3)",
+            "(vol_plant_tritium_fuel_building)",
+            buildings_variables.vol_plant_tritium_fuel_building,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electrical building volume (m3)",
+            "(vol_plant_electrical_building)",
+            buildings_variables.vol_plant_electrical_building,
+        )
+        po.ovarre(
+            self.outfile,
+            "Control building volume (m3)",
+            "(conv)",
+            buildings_variables.conv,
+        )
+        po.ovarre(
+            self.outfile,
+            "Cryogenics building volume (m3)",
+            "(vol_plant_cryoplant_building)",
+            buildings_variables.vol_plant_cryoplant_building,
+        )
+        po.ovarre(
+            self.outfile,
+            "Administration building volume (m3)",
+            "(admv)",
+            buildings_variables.admv,
+        )
+        po.ovarre(self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov)
+        po.ovarre(
+            self.outfile,
+            "Total volume of nuclear buildings (m3)",
+            "(vol_plant_nuclear_buildings)",
+            buildings_variables.vol_plant_nuclear_buildings,
+        )
 
     @staticmethod
     def plot_reactor_hall(
