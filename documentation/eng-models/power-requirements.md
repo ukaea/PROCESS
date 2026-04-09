@@ -144,7 +144,7 @@ $$
 Summing losses over all pulse phases:
 
 $$
-EnergyLoss = \sum_n \left( E_{\text{loss},\text{s},n} + E_{\text{loss},\text{ps},n} + E_{\text{loss},\text{bus},n} \right)
+E_{\text{loss,total}} = \sum_n \left( E_{\text{loss},\text{s},n} + E_{\text{loss},\text{ps},n} + E_{\text{loss},\text{bus},n} \right)
 $$
 
 The mean PF electrical power demand is obtained by dividing the total pulse energy loss by the flat-top duration.
