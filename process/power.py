@@ -115,7 +115,7 @@ class Power:
         n_pf_coil_groups: int,
         pf_group_circuit_index: np.ndarray,
         c_pf_coil_turn: np.ndarray,
-        pfbusr: np.ndarray,
+        res_pf_bus: np.ndarray,
     ) -> float:
         """
         Busbar resistive loss over interval idx_time_interval -> idx_time_interval+1 [J]
@@ -134,7 +134,7 @@ class Power:
             mapping from PF group to representative circuit index
         c_pf_coil_turn : np.ndarray
             PF circuit current per turn at pulse times [A]
-        pfbusr : np.ndarray
+        res_pf_bus : np.ndarray
             PF busbar resistance for each circuit/group [ohm]
 
         Returns
@@ -150,7 +150,9 @@ class Power:
                 c_pf_coil_turn[idx_group_circuit, idx_time_interval + 1]
                 + c_pf_coil_turn[idx_group_circuit, idx_time_interval]
             )
-            e_loss_pf_bus_j += dt_pulse_phase_s * (c_pf_mean_a**2) * pfbusr[idx_group]
+            e_loss_pf_bus_j += (
+                dt_pulse_phase_s * (c_pf_mean_a**2) * res_pf_bus[idx_group]
+            )
 
         return e_loss_pf_bus_j
 
@@ -165,7 +167,7 @@ class Power:
         n_pf_cs_plasma_circuits: int,
         c_pf_coil_turn: np.ndarray,
         ind_pf_cs_plasma_mutual: np.ndarray,
-        pfbusr: np.ndarray,
+        res_pf_bus: np.ndarray,
     ) -> float:
         """
         Total PF electrical energy dissipated over interval idx_time_interval -> idx_time_interval+1 [J]
@@ -190,7 +192,7 @@ class Power:
             PF circuit current per turn at pulse times [A]
         ind_pf_cs_plasma_mutual : np.ndarray
             mutual inductance matrix between PF circuits [H]
-        pfbusr : np.ndarray
+        res_pf_bus : np.ndarray
             PF busbar resistance for each circuit/group [ohm]
 
         Returns
@@ -222,7 +224,7 @@ class Power:
             n_pf_coil_groups=n_pf_coil_groups,
             pf_group_circuit_index=pf_group_circuit_index,
             c_pf_coil_turn=c_pf_coil_turn,
-            pfbusr=pfbusr,
+            res_pf_bus=res_pf_bus,
         )
 
         return e_loss_pf_store_j + e_loss_pf_psu_j + e_loss_pf_bus_j
@@ -260,7 +262,7 @@ class Power:
         res_pf_coil = np.zeros((pfcoil_variables.NGC2,))
         res_pf_circuit_total = np.zeros((pfcoil_variables.NGC2,))
         albusa = np.zeros((pfcoil_variables.NGC2,))
-        pfbusr = np.zeros((pfcoil_variables.NGC2,))
+        res_pf_bus = np.zeros((pfcoil_variables.NGC2,))
         v_pf_circuit_peak = np.zeros((pfcoil_variables.NGC2,))
         p_pf_circuit_resistive_peak = np.zeros((pfcoil_variables.NGC2,))
         vpfi = np.zeros((pfcoil_variables.NGC2,))
@@ -299,9 +301,9 @@ class Power:
 
             #  Resistance of bussing for circuit (ohm)
             #  pfbusl : bus length for each PF circuit (m)
-            #  pfbusr[idx_n_pf] = 1.5e0 * 2.62e-4 * pfbusl / albusa[idx_n_pf]
+            #  res_pf_bus[idx_n_pf] = 1.5e0 * 2.62e-4 * pfbusl / albusa[idx_n_pf]
             #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
-            pfbusr[idx_n_pf] = (
+            res_pf_bus[idx_n_pf] = (
                 pfcoil_variables.rhopfbus * pfbusl / (albusa[idx_n_pf] / 10000)
             )
 
@@ -325,7 +327,7 @@ class Power:
             )
 
             res_pf_circuit_total[idx_n_pf] = (
-                res_pf_coil[idx_n_pf] + pfbusr[idx_n_pf]
+                res_pf_coil[idx_n_pf] + res_pf_bus[idx_n_pf]
             )  # total resistance of circuit (ohms)
             cptburn = (
                 pfcoil_variables.c_pf_coil_turn_peak_input[ic]
@@ -340,7 +342,7 @@ class Power:
             )  # peak resistive power (MW)
 
             #  Compute the sum of resistive power in the PF circuits, kW
-            pfbuspwr = pfbuspwr + 1.0e-3 * pfbusr[idx_n_pf] * cptburn**2
+            pfbuspwr = pfbuspwr + 1.0e-3 * res_pf_bus[idx_n_pf] * cptburn**2
             pf_power_variables.srcktpm = (
                 pf_power_variables.srcktpm
                 + 1.0e3 * p_pf_circuit_resistive_peak[idx_n_pf]
@@ -463,7 +465,7 @@ class Power:
                 n_pf_cs_plasma_circuits=n_pf_cs_plasma_circuits,
                 c_pf_coil_turn=c_pf_coil_turn,
                 ind_pf_cs_plasma_mutual=ind_pf_cs_plasma_mutual,
-                pfbusr=pfbusr,
+                res_pf_bus=res_pf_bus,
             )
         # Mean power dissipated
         # The flat top duration (time 4 to 5) is the denominator, as this is the time when electricity is generated.
