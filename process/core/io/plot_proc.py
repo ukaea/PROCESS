@@ -58,6 +58,7 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
+from process.models.pfcoil import CSCoil
 from process.models.physics.confinement_time import (
     ConfinementTimeModel,
     PlasmaConfinementTime,
@@ -9809,8 +9810,8 @@ def plot_cs_coil_structure(
     )
 
     axis.text(
-        0.6,
-        0.75,
+        0.45,
+        0.375,
         textstr_cs,
         fontsize=9,
         verticalalignment="bottom",
@@ -9924,8 +9925,8 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     )
 
     axis.text(
-        0.6,
-        0.5,
+        0.7,
+        0.375,
         textstr_turn,
         fontsize=9,
         verticalalignment="bottom",
@@ -13885,11 +13886,15 @@ def main_plot(
 
     plot_current_profiles_over_time(figs[28].add_subplot(111), m_file, scan)
 
+    CSCoil.plot_stress_time_profile(
+        axis=figs[29].add_subplot(311), mfile=m_file, scan=scan
+    )
+
     plot_cs_coil_structure(
-        figs[29].add_subplot(121, aspect="equal"), figs[29], m_file, scan
+        figs[29].add_subplot(223, aspect="equal"), figs[29], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[29].add_subplot(224, aspect="equal"), figs[29], m_file, scan
+        figs[29].add_subplot(326, aspect="equal"), figs[29], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
