@@ -77,7 +77,7 @@ docs = [
   "mkdocs-literate-nav",
 ]
 lint = ["pre-commit>=2.16.0", "ruff==0.9.3", "ty"]
-all = ["process[test,docs,lint,examples,plotly]"]
+all = ["process[test,docs,lint,examples,plotly]", "toml"]
 
 [project.scripts]
 process = "process.main:process_cli"
