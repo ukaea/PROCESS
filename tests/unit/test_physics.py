@@ -31,13 +31,11 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
     calculate_cylindrical_safety_factor,
-    diamagnetic_fraction_hender,
-    diamagnetic_fraction_scene,
     ps_fraction_scene,
     res_diff_time,
     rether,
 )
-from process.models.physics.plasma_current import PlasmaCurrent
+from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagneticCurrent
 from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_profiles import PlasmaProfile
 
@@ -68,6 +66,7 @@ def physics():
         PlasmaConfinementTransition(),
         PlasmaCurrent(),
         PlasmaFields(),
+        plasma_dia_current=PlasmaDiamagneticCurrent(),
     )
 
 
@@ -83,19 +82,19 @@ def test_res_diff_time():
     assert t_plasma_res_diffusion == pytest.approx(4784.3, abs=0.1)
 
 
-def test_diamagnetic_fraction_hender():
+def test_diamagnetic_fraction_hender(physics):
     """Test diamagnetic_fraction_hender()."""
     beta = 0.14
-    diacf = diamagnetic_fraction_hender(beta)
+    diacf = physics.dia_current.diamagnetic_fraction_hender(beta)
     assert diacf == pytest.approx(0.05, abs=0.0001)
 
 
-def test_diamagnetic_fraction_scene():
+def test_diamagnetic_fraction_scene(physics):
     """Test diamagnetic_fraction_scene."""
     beta = 0.15
     q95 = 3.0
     q0 = 1.0
-    diacf = diamagnetic_fraction_scene(beta, q95, q0)
+    diacf = physics.dia_current.diamagnetic_fraction_scene(beta, q95, q0)
     assert diacf == pytest.approx(0.0460, abs=0.0001)
 
 

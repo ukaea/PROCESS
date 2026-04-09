@@ -70,7 +70,11 @@ from process.models.physics.current_drive import (
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import BetaComponentLimits, BetaNormMaxModel
-from process.models.physics.plasma_current import PlasmaCurrent, PlasmaCurrentModel
+from process.models.physics.plasma_current import (
+    PlasmaCurrent,
+    PlasmaCurrentModel,
+    PlasmaDiamagneticCurrentModel,
+)
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
 
@@ -3080,9 +3084,9 @@ def plot_main_plasma_information(
     # Add plasma current information
     textstr_currents = (
         f"$\\mathbf{{Plasma\\ currents:}}$\n\n"
-        f"Plasma current ({PlasmaCurrentModel(int(mfile.get('i_plasma_current', scan=scan))).full_name}): {mfile.get('plasma_current_ma', scan=scan):.4f} MA\n"
+        f"Plasma current ({PlasmaCurrentModel(int(mfile.get('i_plasma_current', scan=scan))).full_name}): {mfile.get('plasma_current_ma', scan=scan):.4f} MA    \n"
         f"  - Bootstrap fraction {mfile.get('f_c_plasma_bootstrap', scan=scan):.4f}\n"
-        f"  - Diamagnetic fraction {mfile.get('f_c_plasma_diamagnetic', scan=scan):.4f}\n"
+        f"  - Diamagnetic fraction ({PlasmaDiamagneticCurrentModel(int(mfile.get('i_diamagnetic_current', scan=scan))).full_name}): {mfile.get('f_c_plasma_diamagnetic', scan=scan):.4f}\n"
         f"  - Pfirsch-Schlüter fraction {mfile.get('f_c_plasma_pfirsch_schluter', scan=scan):.4f}\n"
         f"  - Auxiliary fraction {mfile.get('f_c_plasma_auxiliary', scan=scan):.4f}\n"
         f"  - Inductive fraction {mfile.get('f_c_plasma_inductive', scan=scan):.4f}"
@@ -3105,7 +3109,7 @@ def plot_main_plasma_information(
 
     # Add plasma current label
     axis.text(
-        0.925,
+        0.93,
         0.9,
         "$I_{\\text{p}} $",
         fontsize=23,

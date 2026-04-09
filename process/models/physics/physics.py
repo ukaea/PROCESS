@@ -32,7 +32,7 @@ from process.models.physics.confinement_time import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
-from process.models.physics.plasma_current import PlasmaCurrent
+from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagneticCurrent
 from process.models.physics.plasma_fields import PlasmaFields
 
 logger = logging.getLogger(__name__)
@@ -146,45 +146,6 @@ def rether(
 
 
 @nb.jit(nopython=True, cache=True)
-def diamagnetic_fraction_hender(beta: float) -> float:
-    """Calculate the diamagnetic fraction based on the Hender fit.
-
-    Parameters
-    ----------
-    beta :
-        the plasma beta value
-
-    Returns
-    -------
-    :
-        the diamagnetic fraction
-
-    """
-    return beta / 2.8
-
-
-@nb.jit(nopython=True, cache=True)
-def diamagnetic_fraction_scene(beta: float, q95: float, q0: float) -> float:
-    """Calculate the diamagnetic fraction based on the SCENE fit by Tim Hender.
-
-    Parameters
-    ----------
-    beta :
-        the plasma beta value
-    q95 :
-        the normalized safety factor at 95% of the plasma radius
-    q0 :
-        the normalized safety factor at the magnetic axis
-
-    Returns
-    -------
-    :
-        the diamagnetic fraction
-    """
-    return beta * (0.1 * q95 / q0 + 0.44) * 0.414
-
-
-@nb.jit(nopython=True, cache=True)
 def ps_fraction_scene(beta: float) -> float:
     """Calculate the Pfirsch-Schlüter fraction based on the SCENE fit by Tim Hender 2019.
 
@@ -217,6 +178,7 @@ class Physics(Model):
         plasma_transition: PlasmaConfinementTransition,
         plasma_current: PlasmaCurrent,
         plasma_fields: PlasmaFields,
+        plasma_dia_current: PlasmaDiamagneticCurrent,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -231,6 +193,7 @@ class Physics(Model):
         self.plasma_transition = plasma_transition
         self.current = plasma_current
         self.fields = plasma_fields
+        self.dia_current = plasma_dia_current
 
     def output(self):
         self.calculate_effective_charge_ionisation_profiles()
@@ -501,28 +464,7 @@ class Physics(Model):
         #      DIAMAGNETIC CURRENT      #
         # ***************************** #
 
-        # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
-        current_drive_variables.f_c_plasma_diamagnetic_hender = (
-            diamagnetic_fraction_hender(physics_variables.beta_total_vol_avg)
-        )
-
-        # SCENE scaling for diamagnetic current
-        current_drive_variables.f_c_plasma_diamagnetic_scene = (
-            diamagnetic_fraction_scene(
-                physics_variables.beta_total_vol_avg,
-                physics_variables.q95,
-                physics_variables.q0,
-            )
-        )
-
-        if physics_variables.i_diamagnetic_current == 1:
-            current_drive_variables.f_c_plasma_diamagnetic = (
-                current_drive_variables.f_c_plasma_diamagnetic_hender
-            )
-        elif physics_variables.i_diamagnetic_current == 2:
-            current_drive_variables.f_c_plasma_diamagnetic = (
-                current_drive_variables.f_c_plasma_diamagnetic_scene
-            )
+        self.dia_current.run()
 
         # ***************************** #
         #    PFIRSCH-SCHLÜTER CURRENT   #
@@ -3211,6 +3153,7 @@ class Physics(Model):
             self.inductance.output_volt_second_information()
         if stellarator_variables.istell == 0:
             self.plasma_bootstrap_current.output()
+            self.dia_current.output()
 
         po.osubhd(self.outfile, "Fuelling :")
         po.ovarre(

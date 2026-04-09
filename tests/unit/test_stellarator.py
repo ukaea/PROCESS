@@ -39,7 +39,7 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
 )
-from process.models.physics.plasma_current import PlasmaCurrent
+from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagneticCurrent
 from process.models.physics.plasma_fields import PlasmaFields
 from process.models.physics.plasma_profiles import PlasmaProfile
 from process.models.power import Power
@@ -100,6 +100,7 @@ def stellarator():
             PlasmaConfinementTransition(),
             PlasmaCurrent(),
             PlasmaFields(),
+            plasma_dia_current=PlasmaDiamagneticCurrent(),
         ),
         Neoclassics(),
         plasma_beta=PlasmaBeta(),
