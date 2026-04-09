@@ -3875,8 +3875,8 @@ class PlasmaConfinementTime:
             * pcur**0.98
             * b_plasma_toroidal_on_axis**0.22
             * dnla19**0.24
-            * p_plasma_loss_mw ** (-0.669)
-            * rmajor**1.71
+            * p_plasma_loss_mw ** (-0.67)
+            * rmajor**1.7
             * (1 + triang) ** 0.36
             * kappa_ipb**0.8
             * eps**0.35
@@ -3933,10 +3933,10 @@ class PlasmaConfinementTime:
             0.067
             * pcur**1.29
             * b_plasma_toroidal_on_axis**-0.13
-            * p_plasma_loss_mw ** (-0.644)
             * dnla19**0.15
-            * aion**0.3
-            * rmajor**1.19
+            * p_plasma_loss_mw ** (-0.644)
+            * rmajor**1.2
             * (1 + triang) ** 0.56
             * kappa_ipb**0.67
+            * aion**0.3
         )
