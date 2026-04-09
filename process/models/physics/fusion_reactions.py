@@ -951,10 +951,12 @@ def beam_fusion(
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
         - J. W. Sheffield, “The physics of magnetic fusion reactors,”
-        Rev. Mod. Phys., vol. 66, no. 3, pp. 1015-1103, Jul. 1994.
+        Rev. Mod. Phys., vol. 66, no. 3, pp. 1015-1103, Jul. 1994, Jul. 1994,
+        doi: https://doi.org/10.1103/revmodphys.66.1015.
 
         - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,”
         Nuclear Fusion and Plasma Physics, vol. 9, no. 3, pp. 136-141, 2022.
+        Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
     """
 
     # Beam ion slowing down time given by Deng Baiquan and G. A. Emmert 1987
