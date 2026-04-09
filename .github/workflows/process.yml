@@ -197,9 +197,7 @@ jobs:
           path: tracking/
       - run: mv tracking/large_tokamak_nof.SIG_TF.json tracking/large_tokamak_nof_SIG_TF.json
       - name: Create an example plot summary
-        run: |
-          hatch shell
-          process plot summary -f tracking/large_tokamak_nof_MFILE.DAT
+        run: hatch run process plot summary -f tracking/large_tokamak_nof_MFILE.DAT
       - name: Move plot summary file to docs images
         run: mv tracking/large_tokamak_nof_MFILE.DATSUMMARY.pdf documentation/source/images/plot_summary.pdf
       - run: hatch run docs:build
