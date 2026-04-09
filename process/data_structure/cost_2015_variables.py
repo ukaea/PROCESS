@@ -1,53 +1,33 @@
+from dataclasses import dataclass, field
+
 import numpy as np
 
-mean_electric_output: float = None
 
-annual_electric_output: float = None
+@dataclass
+class Cost2015Data:
+    mean_electric_output: float = 0.0
 
-maintenance: float = None
+    annual_electric_output: float = 0.0
 
-total_costs: float = None
+    maintenance: float = 0.0
 
-s_label: list[str] = None
+    total_costs: float = 0.0
 
-s_kref: list[float] = None
+    s_label: list[str] = field(
+        default_factory=lambda: np.array(["not used"] * 100, dtype=object)
+    )
 
-s_k: list[float] = None
+    s_kref: list[float] = field(default_factory=lambda: np.zeros(100, dtype=np.float64))
 
-s_cref: list[float] = None
+    s_k: list[float] = field(default_factory=lambda: np.zeros(100, dtype=np.float64))
 
-s_cost: list[float] = None
+    s_cref: list[float] = field(default_factory=lambda: np.zeros(100, dtype=np.float64))
 
-s_cost_factor: list[float] = None
+    s_cost: list[float] = field(default_factory=lambda: np.zeros(100, dtype=np.float64))
+
+    s_cost_factor: list[float] = field(
+        default_factory=lambda: np.zeros(100, dtype=np.float64)
+    )
 
 
-def init_cost_2015_variables():
-    global mean_electric_output
-    mean_electric_output = 0.0
-
-    global annual_electric_output
-    annual_electric_output = 0.0
-
-    global maintenance
-    maintenance = 0.0
-
-    global total_costs
-    total_costs = 0.0
-
-    global s_label
-    s_label = np.array(["not used"] * 100, dtype=object)
-
-    global s_kref
-    s_kref = np.zeros(100, dtype=np.float64)
-
-    global s_k
-    s_k = np.zeros(100, dtype=np.float64)
-
-    global s_cref
-    s_cref = np.zeros(100, dtype=np.float64)
-
-    global s_cost
-    s_cost = np.zeros(100, dtype=np.float64)
-
-    global s_cost_factor
-    s_cost_factor = np.zeros(100, dtype=np.float64)
+CREATE_DICTS_FROM_DATACLASS = Cost2015Data
