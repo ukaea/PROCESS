@@ -17,6 +17,7 @@ from process.data_structure import (
     vacuum_variables,
 )
 from process.models.blankets.blanket_library import dshellvol, eshellvol
+from process.models.build import FwBlktVVShape
 
 logger = logging.getLogger(__name__)
 
@@ -740,7 +741,10 @@ class VacuumVessel(Model):
             dr_fw_outboard=build_variables.dr_fw_outboard,
         )
         # D-shaped blanket and shield
-        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+        if (
+            physics_variables.itart == 1
+            or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
+        ):
             (
                 blanket_library.vol_vv_inboard,
                 blanket_library.vol_vv_outboard,

@@ -21,6 +21,7 @@ from process.models.blankets.blanket_library import (
     dshellarea,
     eshellarea,
 )
+from process.models.build import FwBlktVVShape
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +54,10 @@ class FirstWall(Model):
             dr_fw_outboard=build_variables.dr_fw_outboard,
         )
 
-        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+        if (
+            physics_variables.itart == 1
+            or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
+        ):
             (
                 first_wall_variables.a_fw_inboard_full_coverage,
                 first_wall_variables.a_fw_outboard_full_coverage,

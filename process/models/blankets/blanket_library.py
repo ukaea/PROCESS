@@ -19,6 +19,7 @@ from process.data_structure import (
     physics_variables,
     primary_pumping_variables,
 )
+from process.models.build import FwBlktVVShape
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +72,10 @@ class BlanketLibrary(Model):
         )
 
         # D-shaped blanket and shield
-        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+        if (
+            physics_variables.itart == 1
+            or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
+        ):
             (
                 build_variables.a_blkt_inboard_surface_full_coverage,
                 build_variables.a_blkt_outboard_surface_full_coverage,
@@ -884,7 +888,10 @@ class BlanketLibrary(Model):
             fwbs_variables.n_blkt_inboard_modules_poloidal = 1
             fwbs_variables.n_blkt_outboard_modules_poloidal = 1
 
-        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+        if (
+            physics_variables.itart == 1
+            or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
+        ):
             blanket_library.len_blkt_inboard_segment_poloidal = self.calculate_dshaped_inboard_blkt_segment_poloidal(
                 dz_blkt_half=blanket_library.dz_blkt_half,
                 n_blkt_inboard_modules_poloidal=fwbs_variables.n_blkt_inboard_modules_poloidal,
