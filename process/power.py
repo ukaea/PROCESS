@@ -257,14 +257,12 @@ class Power:
         n_pf_cs_plasma_circuits = pfcoil_variables.n_pf_cs_plasma_circuits  # [unitless]
 
         powpfii = np.zeros((pfcoil_variables.NGC2,))
-        cktr = np.zeros((pfcoil_variables.NGC2,))
-        pfcr = np.zeros((pfcoil_variables.NGC2,))
+        res_pf_coil = np.zeros((pfcoil_variables.NGC2,))
+        res_pf_circuit_total = np.zeros((pfcoil_variables.NGC2,))
         albusa = np.zeros((pfcoil_variables.NGC2,))
         pfbusr = np.zeros((pfcoil_variables.NGC2,))
-        pfcr = np.zeros((pfcoil_variables.NGC2,))
-        cktr = np.zeros((pfcoil_variables.NGC2,))
-        rcktvm = np.zeros((pfcoil_variables.NGC2,))
-        rcktpm = np.zeros((pfcoil_variables.NGC2,))
+        v_pf_circuit_peak = np.zeros((pfcoil_variables.NGC2,))
+        p_pf_circuit_resistive_peak = np.zeros((pfcoil_variables.NGC2,))
         vpfi = np.zeros((pfcoil_variables.NGC2,))
         psmva = np.zeros((pfcoil_variables.NGC2,))
         poloidalenergy = np.zeros((6,))
@@ -309,7 +307,7 @@ class Power:
 
             #  Total PF coil resistance (during burn)
             #  pfcoil_variables.c_pf_cs_coils_peak_ma : maximum current in coil (A)
-            pfcr[idx_n_pf] = (
+            res_pf_coil[idx_n_pf] = (
                 pfcoil_variables.rho_pf_coil
                 * 2.0e0
                 * np.pi
@@ -326,25 +324,26 @@ class Power:
                 * pfcoil_variables.n_pf_coils_in_group[idx_n_pf]
             )
 
-            cktr[idx_n_pf] = (
-                pfcr[idx_n_pf] + pfbusr[idx_n_pf]
+            res_pf_circuit_total[idx_n_pf] = (
+                res_pf_coil[idx_n_pf] + pfbusr[idx_n_pf]
             )  # total resistance of circuit (ohms)
             cptburn = (
                 pfcoil_variables.c_pf_coil_turn_peak_input[ic]
                 * pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic]
                 / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
-            rcktvm[idx_n_pf] = (
-                abs(cptburn) * cktr[idx_n_pf]
+            v_pf_circuit_peak[idx_n_pf] = (
+                abs(cptburn) * res_pf_circuit_total[idx_n_pf]
             )  # peak resistive voltage (V)
-            rcktpm[idx_n_pf] = (
-                1.0e-6 * rcktvm[idx_n_pf] * abs(cptburn)
+            p_pf_circuit_resistive_peak[idx_n_pf] = (
+                1.0e-6 * v_pf_circuit_peak[idx_n_pf] * abs(cptburn)
             )  # peak resistive power (MW)
 
             #  Compute the sum of resistive power in the PF circuits, kW
             pfbuspwr = pfbuspwr + 1.0e-3 * pfbusr[idx_n_pf] * cptburn**2
             pf_power_variables.srcktpm = (
-                pf_power_variables.srcktpm + 1.0e3 * rcktpm[idx_n_pf]
+                pf_power_variables.srcktpm
+                + 1.0e3 * p_pf_circuit_resistive_peak[idx_n_pf]
             )
 
         #  Inductive MVA requirements, and stored energy
@@ -414,14 +413,14 @@ class Power:
                     powpfr
                     + pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
                     * c_pf_coil_turn[idx_pf_coil, 2]
-                    * cktr[idx_group]
+                    * res_pf_circuit_total[idx_group]
                     / 1.0e6
                 )
                 powpfr2 = (
                     powpfr2
                     + pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
                     * c_pf_coil_turn[idx_pf_coil, 4]
-                    * cktr[idx_group]
+                    * res_pf_circuit_total[idx_group]
                     / 1.0e6
                 )
                 powpfi = powpfi + powpfii[idx_pf_coil]
