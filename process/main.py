@@ -121,7 +121,11 @@ from process.models.tfcoil.resistive import (
     CopperTFCoil,
     ResistiveTFCoil,
 )
-from process.models.tfcoil.superconducting import SuperconductingTFCoil
+from process.models.tfcoil.superconducting import (
+    CICCSuperconductingTFCoil,
+    CROCOSuperconductingTFCoil,
+    SuperconductingTFCoil,
+)
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
 
@@ -683,6 +687,8 @@ class Models:
         self.cryostat = Cryostat()
         self.build = Build()
         self.sctfcoil = SuperconductingTFCoil()
+        self.cicc_sctfcoil = CICCSuperconductingTFCoil()
+        self.croco_sctfcoil = CROCOSuperconductingTFCoil()
         self.tfcoil = TFCoil(build=self.build)
         self.resistive_tf_coil = ResistiveTFCoil()
         self.copper_tf_coil = CopperTFCoil()
