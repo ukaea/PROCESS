@@ -1,5 +1,6 @@
 import copy
 import logging
+from dataclasses import dataclass
 from enum import IntEnum
 from types import DynamicClassAttribute
 
@@ -45,6 +46,21 @@ class SuperconductingTFTurnType(IntEnum):
     def abbreviation(self):
         """Return the abbreviation for this superconductor type."""
         return self._abbreviation_
+
+
+@dataclass
+class TFWPGeometry:
+    r_tf_wp_inboard_inner: float
+    r_tf_wp_inboard_outer: float
+    r_tf_wp_inboard_centre: float
+    dx_tf_wp_toroidal_min: float
+    dr_tf_wp_no_insulation: float
+    dx_tf_wp_primary_toroidal: float
+    dx_tf_wp_secondary_toroidal: float
+    dx_tf_wp_toroidal_average: float
+    a_tf_wp_with_insulation: float
+    a_tf_wp_no_insulation: float
+    a_tf_wp_ground_insulation: float
 
 
 class SuperconductingTFCoil(TFCoil):
@@ -242,19 +258,8 @@ class SuperconductingTFCoil(TFCoil):
         self.run_base_tf()
 
         # Calculating the WP / ground insulation areas
-        (
-            superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
-            superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
-            superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
-            superconducting_tf_coil_variables.dx_tf_wp_toroidal_min,
-            superconducting_tf_coil_variables.dr_tf_wp_no_insulation,
-            tfcoil_variables.dx_tf_wp_primary_toroidal,
-            tfcoil_variables.dx_tf_wp_secondary_toroidal,
-            superconducting_tf_coil_variables.dx_tf_wp_toroidal_average,
-            superconducting_tf_coil_variables.a_tf_wp_with_insulation,
-            superconducting_tf_coil_variables.a_tf_wp_no_insulation,
-            superconducting_tf_coil_variables.a_tf_wp_ground_insulation,
-        ) = self.superconducting_tf_wp_geometry(
+        wp_geometry = TFWPGeometry
+        wp_geometry = self.superconducting_tf_wp_geometry(
             i_tf_wp_geom=tfcoil_variables.i_tf_wp_geom,
             r_tf_inboard_in=build_variables.r_tf_inboard_in,
             dr_tf_nose_case=tfcoil_variables.dr_tf_nose_case,
@@ -263,6 +268,40 @@ class SuperconductingTFCoil(TFCoil):
             dx_tf_side_case_min=tfcoil_variables.dx_tf_side_case_min,
             dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
             dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
+        )
+
+        superconducting_tf_coil_variables.r_tf_wp_inboard_inner = (
+            wp_geometry.r_tf_wp_inboard_inner
+        )
+        superconducting_tf_coil_variables.r_tf_wp_inboard_outer = (
+            wp_geometry.r_tf_wp_inboard_outer
+        )
+        superconducting_tf_coil_variables.r_tf_wp_inboard_centre = (
+            wp_geometry.r_tf_wp_inboard_centre
+        )
+        superconducting_tf_coil_variables.dx_tf_wp_toroidal_min = (
+            wp_geometry.dx_tf_wp_toroidal_min
+        )
+        superconducting_tf_coil_variables.dr_tf_wp_no_insulation = (
+            wp_geometry.dr_tf_wp_no_insulation
+        )
+        tfcoil_variables.dx_tf_wp_primary_toroidal = (
+            wp_geometry.dx_tf_wp_primary_toroidal
+        )
+        tfcoil_variables.dx_tf_wp_secondary_toroidal = (
+            wp_geometry.dx_tf_wp_secondary_toroidal
+        )
+        superconducting_tf_coil_variables.dx_tf_wp_toroidal_average = (
+            wp_geometry.dx_tf_wp_toroidal_average
+        )
+        superconducting_tf_coil_variables.a_tf_wp_with_insulation = (
+            wp_geometry.a_tf_wp_with_insulation
+        )
+        superconducting_tf_coil_variables.a_tf_wp_no_insulation = (
+            wp_geometry.a_tf_wp_no_insulation
+        )
+        superconducting_tf_coil_variables.a_tf_wp_ground_insulation = (
+            wp_geometry.a_tf_wp_ground_insulation
         )
 
         # Calculating the TF steel casing areas
@@ -915,19 +954,7 @@ class SuperconductingTFCoil(TFCoil):
         dx_tf_side_case_min: float,
         dx_tf_wp_insulation: float,
         dx_tf_wp_insertion_gap: float,
-    ) -> tuple[
-        float,  # r_tf_wp_inboard_inner
-        float,  # r_tf_wp_inboard_outer
-        float,  # r_tf_wp_inboard_centre
-        float,  # dx_tf_wp_toroidal_min
-        float,  # dr_tf_wp_no_insulation
-        float,  # dx_tf_wp_primary_toroidal
-        float,  # dx_tf_wp_secondary_toroidal
-        float,  # dx_tf_wp_toroidal_average
-        float,  # a_tf_wp_with_insulation
-        float,  # a_tf_wp_no_insulation
-        float,  # a_tf_wp_ground_insulation
-    ]:
+    ) -> TFWPGeometry:
         """Calculates the winding pack (WP) geometry and cross-sectional areas for superconducting toroidal field (TF) coils.
 
         Parameters
@@ -1139,18 +1166,18 @@ class SuperconductingTFCoil(TFCoil):
                 a_tf_wp_with_insulation,
             )
 
-        return (
-            r_tf_wp_inboard_inner,
-            r_tf_wp_inboard_outer,
-            r_tf_wp_inboard_centre,
-            dx_tf_wp_toroidal_min,
-            dr_tf_wp_no_insulation,
-            dx_tf_wp_primary_toroidal,
-            dx_tf_wp_secondary_toroidal,
-            dx_tf_wp_toroidal_average,
-            a_tf_wp_with_insulation,
-            a_tf_wp_no_insulation,
-            a_tf_wp_ground_insulation,
+        return TFWPGeometry(
+            r_tf_wp_inboard_inner=r_tf_wp_inboard_inner,
+            r_tf_wp_inboard_outer=r_tf_wp_inboard_outer,
+            r_tf_wp_inboard_centre=r_tf_wp_inboard_centre,
+            dx_tf_wp_toroidal_min=dx_tf_wp_toroidal_min,
+            dr_tf_wp_no_insulation=dr_tf_wp_no_insulation,
+            dx_tf_wp_primary_toroidal=dx_tf_wp_primary_toroidal,
+            dx_tf_wp_secondary_toroidal=dx_tf_wp_secondary_toroidal,
+            dx_tf_wp_toroidal_average=dx_tf_wp_toroidal_average,
+            a_tf_wp_with_insulation=a_tf_wp_with_insulation,
+            a_tf_wp_no_insulation=a_tf_wp_no_insulation,
+            a_tf_wp_ground_insulation=a_tf_wp_ground_insulation,
         )
 
     def superconducting_tf_case_geometry(
