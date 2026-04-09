@@ -1105,6 +1105,20 @@ def beam_slowing_down_state(
         - Critical energies define the transition between electron- and ion-dominated slowing down.
         - Critical speeds are computed from the corresponding critical energies.
         - The deposited energy represents the average energy retained by beam ions during slowing down.
+
+    References:
+        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”Collapse commentComment on line L1090chris-ashe commented on Apr 9, 2026 chris-asheon Apr 9, 2026CollaboratorMore actionsWhy have references been removedReactAdd diff commentMarkdown input:  edit mode selected.WritePreviewHeadingBoldItalicQuoteCodeLinkUnordered listNumbered listTask listMentionReferenceSaved repliesMistake, I've added them back in.Add FilesPaste, drop, or click to add filesCancelReplyStart a reviewResolve comment
+        Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
+        doi: https://doi.org/10.1088/0029-5515/32/4/i07.
+
+        - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
+        vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
+
+        - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
+        International Series of Monographs on Physics, Volume 149.
+
+        - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015-1103,
+        Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
     """
 
     # D and T beam current fractions
