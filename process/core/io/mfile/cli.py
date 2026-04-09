@@ -57,7 +57,7 @@ def convert(mfile, variables, format_, scan, verbose):
     "comparison",
     type=click.Choice(["defaults", "baseline", "blanket", "generic", "all"]),
     default="all",
-    help="Format to save the eqdsk file in.",
+    help="Comparison output sets",
 )
 @click.option("-v", "--verbose", default=False, is_flag=True)
 @click.option("--acc", type=float, default=5.0)
