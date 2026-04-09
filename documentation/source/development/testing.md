@@ -24,14 +24,20 @@ filename, then call a method to create a plot file, then check that the plot was
 
 ### Regression tests
 
-Regression tests detect changes in the entire program's behaviour by checking that for a given 
+Regression tests detect changes in the entire program's behaviour by checking that for a given
 input, it produces exactly the same output as before those changes. It detects changes in the 
-program's output. Therefore if your code changes the program's output, it will fail the regression 
-test. In this case that output difference will need to be reviewed and if accepted, the expected (or 
-reference) will be updated.
+program's output. Therefore, if your code changes the program's output, it will fail the regression 
+test. In this case, that output difference will need to be reviewed and, if accepted,
+the expected (or reference) output will be updated to reflect these changes when your code is merged into main.
 
 Regression tests compare the output of PROCESS locally when running an input file to a reference output stored in a 
-[repository](https://github.com/timothy-nunn/process-tracking-data). The test suite will download the reference output for the commit where the your current branch branched off of main. This means **each branch is accountable for only its changes since it branched off of main**. 
+[repository](https://github.com/timothy-nunn/process-tracking-data). The test suite will download the reference output for the commit where the current branch branched off main. This means **each branch is accountable for only its changes since it branched off main**. 
+
+
+!!! Info "CI System"
+    Our tests are run automatically using the Continous Integration (CI) system on GitHub.
+    More information about how the jobs run on our CI and update the tracked files can be found [here](https://ukaea.github.io/PROCESS/development/ci-guide/).
+
 
 ## pytest
 
@@ -154,7 +160,7 @@ something has changed, in this case by >5%.
 ### Running the CI on a branch
 
 When those local changes are committed and pushed, the CI system for the branch runs. This runs 5% 
-and 0% tolerance regression jobs, which are allowed to fail. This shows the author and reviewer 
+and 0.2% tolerance regression jobs, which are allowed to fail. This shows the author and reviewer 
 what the changes to the regression results are as a result of the code changes on that branch.
 
 ## Drawbacks to this approach
