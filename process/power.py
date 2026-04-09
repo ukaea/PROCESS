@@ -172,24 +172,31 @@ class Power:
         = storage + power supply + busbar
         Ref: M. Kovari, "PF power supplies accounting 2, Issue #972".
 
-        :param idx_time_interval: index of time interval (n -> n+1)
-        :type idx_time_interval: int
-        :param dt_pulse_phase_s: duration of pulse interval [s]
-        :type dt_pulse_phase_s: float
-        :param poloidalenergy: stored poloidal magnetic energy at pulse times [J]
-        :type poloidalenergy: np.ndarray
-        :param n_pf_coil_groups: number of PF coil groups/circuits
-        :type n_pf_coil_groups: int
-        :param pf_group_circuit_index: mapping from PF group to representative circuit index
-        :type pf_group_circuit_index: np.ndarray
-        :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
-        :type c_pf_coil_turn: np.ndarray
-        :param ind_pf_cs_plasma_mutual: mutual inductance matrix between PF circuits [H]
-        :type ind_pf_cs_plasma_mutual: np.ndarray
-        :param pfbusr: PF busbar resistance for each circuit/group [ohm]
-        :type pfbusr: np.ndarray
-        :return: total PF electrical energy dissipated over interval [J]
-        :rtype: float
+        Parameters
+        ----------
+        idx_time_interval : int
+            index of time interval (n -> n+1)
+        f_p_pf_energy_store_loss : float
+        dt_pulse_phase_s : float
+            duration of pulse interval [s]
+        poloidalenergy : np.ndarray
+            stored poloidal magnetic energy at pulse times [J]
+        n_pf_coil_groups : int
+            number of PF coil groups/circuits
+        pf_group_circuit_index : np.ndarray
+            mapping from PF group to representative circuit index
+        n_pf_cs_plasma_circuits : int
+        c_pf_coil_turn : np.ndarray
+            PF circuit current per turn at pulse times [A]
+        ind_pf_cs_plasma_mutual : np.ndarray
+            mutual inductance matrix between PF circuits [H]
+        pfbusr : np.ndarray
+            PF busbar resistance for each circuit/group [ohm]
+
+        Returns
+        -------
+        float
+            total PF electrical energy dissipated over interval [J]
         """
         if dt_pulse_phase_s <= 0.0e0:
             return 0.0e0
