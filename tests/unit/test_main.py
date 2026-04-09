@@ -37,7 +37,7 @@ def single_run(monkeypatch, input_file, tmp_path):
     single_run.filepath = tmp_path
     single_run.models = None
     single_run.data = DataStructure()
-    single_run.set_filenames()
+    single_run.set_filenames(tmp_path)
     single_run.initialise()
     return single_run
 
@@ -85,14 +85,14 @@ def test_set_output(single_run, monkeypatch):
     # Expected output prefix
     expected = "output_prefix"
     # Mock self.filename_prefix on single_run with the value of expected
-    monkeypatch.setattr(single_run, "filename_prefix", Path(expected), raising=False)
+    monkeypatch.setattr(single_run, "filename_prefix", expected, raising=False)
 
     # Mocking undo trys to set the value as none
     # monkeypatch.setattr(data_structure.global_variables, "output_prefix", None)
     # Run the method, and extract the value
     single_run.set_output()
 
-    assert data_structure.global_variables.output_prefix == expected
+    assert Path(data_structure.global_variables.output_prefix).name == expected
 
 
 def test_initialise(single_run, monkeypatch):
@@ -117,7 +117,7 @@ def test_set_mfile(single_run, monkeypatch):
     prefix = "test"
     expected = Path(prefix + "MFILE.DAT")
     # Mock filename_prefix and run
-    monkeypatch.setattr(single_run, "filename_prefix", Path(prefix), raising=False)
+    monkeypatch.setattr(single_run, "filename_prefix", prefix, raising=False)
     single_run.set_mfile()
     assert single_run.mfile_path.name == expected.name
 

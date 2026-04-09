@@ -216,6 +216,8 @@ def process_cli(
 
         runtype.run()
 
+        mfile_path = runtype.mfile_path
+
         if mfilejson:
             # Produce a json file containing mfile output, useful for VVUQ work.
             mfile_data = MFile(filename=mfile_path)
@@ -314,11 +316,10 @@ class SingleRun:
             which solver to use, as specified in solver.py
         """
         self.input_file = Path(input_file)
-        self.filepath = Path(Path(filepath_out).parent or self.input_file.parent)
 
         self.validate_input(update_obsolete)
         self.init_module_vars()
-        self.set_filenames()
+        self.set_filenames(filepath_out)
         self.data = DataStructure()
         self.initialise()
         self.models = Models(self.data)
@@ -343,8 +344,17 @@ class SingleRun:
         """
         init.init_all_module_vars()
 
-    def set_filenames(self):
+    def set_filenames(self, filepath_out):
         """Validate the input filename and create other filenames from it."""
+        filepath = Path(filepath_out or self.input_file)
+        if filepath.is_file() or filepath.name.endswith(("MFILE.DAT", "IN.DAT")):
+            filepath = filepath.parent
+        self.filepath = filepath
+        self.filename_prefix = (
+            Path(filepath_out or self.input_file)
+            .name.replace("IN.DAT", "")
+            .replace("MFILE.DAT", "")
+        )
         self.set_input()
         self.set_output()
         self.set_mfile()
@@ -355,10 +365,6 @@ class SingleRun:
         # (the part before the IN.DAT)
         if not self.input_file.name.endswith("IN.DAT"):
             raise ValueError("Input filename must end in IN.DAT.")
-
-        name = " " if (name := self.input_file.name[:-6]) == "" else name
-
-        self.filename_prefix = self.filepath / name
 
         # Check input file exists (path specified as CLI argument)
         input_path = Path(self.input_file)
@@ -381,18 +387,14 @@ class SingleRun:
 
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
-        self.output_path = Path(
-            self.filepath, self.filename_prefix.name.strip() + "OUT.DAT"
-        )
+        self.output_path = Path(self.filepath, self.filename_prefix.strip() + "OUT.DAT")
         data_structure.global_variables.output_prefix = (
-            self.filename_prefix.as_posix().strip()
+            Path(self.filepath, self.filename_prefix).as_posix().strip()
         )
 
     def set_mfile(self):
         """Set the mfile filename."""
-        self.mfile_path = Path(
-            self.filepath, self.filename_prefix.name.strip() + "MFILE.DAT"
-        )
+        self.mfile_path = Path(self.filepath, self.filename_prefix.strip() + "MFILE.DAT")
 
     def initialise(self):
         """Run the init module to call all initialisation routines."""
