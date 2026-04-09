@@ -1,31 +1,19 @@
 """
-
 PROCESS MFILE.DAT IO library
-
-process.core.io.mfile.
-
-Notes:
-  + 12/03/2014: Initial version
-  + 12/03/2014: Added MFILE variable class
-  + 12/03/2014: Added MFILE class for containing all info from file.
-  + 12/03/2014: Added ability to read MFILE.DAT into class
-  + 12/03/2014: Added ability write MFILE.DAT from class
-  + 12/05/2014: Fixed mfile issue with strings in MFILE.DAT with no scans
-  + 16/05/2014: Cleaned up MFileVariable
-  + 19/05/2014: Cleaned up MFile and put some functions outside class.
-  + 12/06/2014: Fixed error handling for "variable not in MFILE" errors
-  + 16/06/2014: Fixed library path error; fix in get_scans
-  + 24/11/2021: Global dictionary variables moved within the functions
-                to avoid cyclic dependencies. This is because the dicts
-                generation script imports, and inspects, process.
-
-Compatible with PROCESS version 286
 """
 
 import json
 import logging
+import re
 from collections import OrderedDict
+from itertools import starmap
+from pathlib import Path
 from typing import Any
+
+import numpy as np
+
+from process import data_structure
+from process.core.solver import iteration_variables
 
 logger = logging.getLogger(__name__)
 
@@ -202,7 +190,7 @@ class MFile:
     """Class object to store the MFile Objects"""
 
     def __init__(self, filename="MFILE.DAT"):
-        self.filename = filename
+        self.filename = Path(filename)
         self.data = DefaultOrderedDict()
         self.mfile_lines = []
         self.mfile_modules = {}
@@ -239,6 +227,9 @@ class MFile:
 
     def open_mfile(self):
         """Function to open MFILE.DAT"""
+        if not self.filename.is_file():
+            raise FileNotFoundError(f"MFile '{self.filename}' doesn't exist")
+
         with open(self.filename, encoding="utf-8") as mfile:
             self.mfile_lines = mfile.readlines()
 
@@ -337,52 +328,148 @@ class MFile:
             self.data[var_key] = var
             self.data[var_key].set_scan(1, value)
 
-    def write_to_json(self, keys_to_write=None, scan=-1, verbose=False):
+    def to_dict(self, keys=None, scan: int | None = -1, verbose=False) -> dict:
+        """Convert MFile to dictionary
+
+        Parameters
+        ----------
+        keys :
+             keys to select
+        scan :
+             scan to select
+        verbose :
+             verbosity of output
+        """
+
+        if keys is None:
+            keys = self.data.keys()
+
+        def _get_data(item, dat_key):
+            data = self.data[item].get_scan(dat_key)
+            des = self.data[item].var_description.replace("_", " ")
+            return {"value": data, "description": des} if verbose else data
+
+        save_range = (
+            range(1, self.data["rmajor"].get_number_of_scans() + 1)
+            if scan is None
+            else [scan]
+        )
+        output = {
+            f"scan-{i + 1}": {
+                item: _get_data(
+                    item, -1 if self.data[item].get_number_of_scans() == 1 else i
+                )
+                for item in keys
+            }
+            for i in save_range
+        }
+        return (
+            output[next(iter(output.keys()))]
+            if len(output.keys()) == 1 and scan is not None
+            else output
+        )
+
+    def to_json(
+        self,
+        filename: Path | None = None,
+        keys_to_write=None,
+        scan: int | None = -1,
+        verbose=False,
+    ):
         """Write MFILE object to JSON file
 
         Parameters
         ----------
         keys_to_write :
-             (Default value = None)
+             keys to select
         scan :
-             (Default value = -1)
+             scan to select
         verbose :
-             (Default value = False)
+             verbosity of output
         """
+        with open(filename or f"{self.filename}.json", "w") as fp:
+            json.dump(self.to_dict(keys_to_write, scan, verbose), fp, indent=4)
 
-        if keys_to_write is None:
-            keys_to_write = self.data.keys()
+    def to_toml(
+        self,
+        filename: Path | None = None,
+        keys_to_write=None,
+        scan: int | None = -1,
+        verbose=False,
+    ):
+        """Write MFILE object to JSON file
 
-        filename = f"{self.filename}.json"
+        Parameters
+        ----------
+        keys_to_write :
+             keys to select
+        scan :
+             scan to select
+        verbose :
+             verbosity of output
+        """
+        import toml
 
-        dict_to_write = {}
+        with open(filename or f"{self.filename}.toml", "w") as file:
+            toml.dump(self.to_dict(keys_to_write, scan, verbose), file)
 
-        if scan == 0:
-            for i in range(self.data["rmajor"].get_number_of_scans()):
-                sub_dict = {}
-                for item in keys_to_write:
-                    dat_key = -1 if self.data[item].get_number_of_scans() == 1 else i + 1
-                    data = self.data[item].get_scan(dat_key)
-                    des = self.data[item].var_description.replace("_", " ")
-                    entry = {"value": data, "description": des} if verbose else data
-                    sub_dict[item] = entry
-                dict_to_write[f"scan-{i + 1}"] = sub_dict
+    def to_csv(
+        self,
+        filename: Path | None = None,
+        keys_to_write=None,
+        scan=-1,
+        verbose=False,
+    ):
+        """Write to csv file.
+
+        Parameters
+        ----------
+        args : string, list of tuples
+            input filename, variable data
+        csv_outfile :
+
+        output_data :
+             (Default value = None)
+        """
+        columns = (
+            ("Description", "Varname", "Value") if verbose else ("Varname", "Value")
+        )
+        fmt = ("%s", "%s", "%.5e") if verbose else ("%s", "%.5e")
+
+        def save(filename, output_data, header):
+            np.savetxt(
+                filename,
+                np.asarray(output_data or [], dtype=object),
+                fmt=fmt,
+                delimiter=",",
+                header=header,
+                footer="",
+                comments="",
+            )
+
+        def get_cells(k, v):
+            if verbose:
+                return [v["description"], k, v["value"]]
+            return [k, v]
+
+        if scan is None:
+            with open(filename or f"{self.filename}.csv", "w") as f:
+                f.write("PROCESS MFILE converted to csv\n")
+                for scan_key, vals in self.to_dict(
+                    keys_to_write, scan=scan, verbose=verbose
+                ).items():
+                    header = f"{scan_key}\n" + ",".join(columns)
+                    output_data = list(starmap(get_cells, vals.items()))
+                    save(f, output_data, header)
         else:
-            for item in keys_to_write:
-                # Initialize dat_key properly based on the number of scans
-                if self.data[item].get_number_of_scans() == 1:
-                    dat_key = -1
-                else:
-                    dat_key = (
-                        scan if scan > 0 else 1
-                    )  # Default to scan 1 if not specified
-                data = self.data[item].get_scan(dat_key)
-                des = self.data[item].var_description.replace("_", " ")
-                entry = {"value": data, "description": des} if verbose else data
-                dict_to_write[item] = entry
-
-        with open(filename, "w") as fp:
-            json.dump(dict_to_write, fp, indent=4)
+            output_data = list(
+                starmap(
+                    get_cells,
+                    self.to_dict(keys_to_write, scan=scan, verbose=verbose).items(),
+                )
+            )
+            header = "PROCESS MFILE converted to csv\n" + ",".join(columns)
+            save(filename or f"{self.filename}.csv", output_data, header)
 
 
 def sort_value(value_words: list[str]) -> str | float:
@@ -499,18 +586,40 @@ def get_unit(variable_desc):
     return None
 
 
-def is_number(val):
-    """Check MFILE data entry
+def get_mfile_initial_ixc_values(file_path: Path):
+    """Initialise the input file and obtain the initial values of the iteration variables
 
     Parameters
     ----------
-    val :
+    file_path :
+        The path to the MFile to get the initial iteration variable values from.
 
+    Notes
+    -----
+    This method initialises a SingleRun. At present, this involves mutating the global
+    data structure so it is not safe to run this method during a PROCESS run.
     """
-    try:
-        float(val)
-        return True
-    except ValueError:
-        pass
+    from process.main import SingleRun
 
-    return False
+    SingleRun(file_path.as_posix())
+    iteration_variables.load_iteration_variables()
+
+    iteration_variable_names = []
+    iteration_variable_values = []
+
+    for i in range(data_structure.numerics.nvar):
+        ivar = data_structure.numerics.ixc[i].item()
+
+        itv = iteration_variables.ITERATION_VARIABLES[ivar]
+
+        iteration_variable_names.append(itv.name)
+        if array := re.match(r"(\w+)\(([0-9]+)\)", itv.name):
+            var_name = array.group(1)
+            index = array.group(2)
+            iteration_variable_values.append(
+                getattr(itv.module, var_name)[int(index) - 1]
+            )
+        else:
+            iteration_variable_values.append(getattr(itv.module, itv.name))
+
+    return iteration_variable_names, iteration_variable_values

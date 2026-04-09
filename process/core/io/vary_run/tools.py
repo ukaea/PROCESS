@@ -3,7 +3,6 @@ A selection of functions for using the PROCESS code
 """
 
 import logging
-from os.path import join as pjoin
 from pathlib import Path
 from sys import stderr
 from time import sleep
@@ -22,7 +21,7 @@ def get_neqns_itervars(wdir="."):
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
-    in_dat = InDat(pjoin(wdir, "IN.DAT"))
+    in_dat = InDat(Path(wdir, "IN.DAT"))
 
     ixc_list = in_dat.data["ixc"].get_value
 
@@ -36,13 +35,13 @@ def get_neqns_itervars(wdir="."):
     return in_dat.number_of_constraints, itervars
 
 
-def update_ixc_bounds(wdir="."):
+def update_ixc_bounds(wdir=".", indat="IN.DAT"):
     """updates the lower and upper bounds in DICT_IXC_BOUNDS
     from IN.DAT
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
-    in_dat = InDat(pjoin(wdir, "IN.DAT"))
+    in_dat = InDat(Path(wdir, indat))
 
     bounds = in_dat.data["bounds"].get_value
 
@@ -55,7 +54,7 @@ def update_ixc_bounds(wdir="."):
             dicts["DICT_IXC_BOUNDS"][name]["ub"] = float(value["u"])
 
 
-def get_variable_range(itervars, factor, wdir="."):
+def get_variable_range(itervars, factor, wdir=".", indat="IN.DAT"):
     """Returns the lower and upper bounds of the variable range
     for each iteration variable.
 
@@ -75,7 +74,7 @@ def get_variable_range(itervars, factor, wdir="."):
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
-    in_dat = InDat(pjoin(wdir, "IN.DAT"))
+    in_dat = InDat(Path(wdir, indat))
 
     lbs = []
     ubs = []
@@ -129,18 +128,18 @@ def get_variable_range(itervars, factor, wdir="."):
     return lbs, ubs
 
 
-def check_in_dat():
+def check_in_dat(filename="IN.DAT"):
     """Tests IN.DAT during setup:
     1)Are ixc bounds outside of allowed input ranges?
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
 
-    in_dat = InDat()
+    in_dat = InDat(filename)
 
     # Necessary for the correct use of this function as well as
     # get_variable_range
-    update_ixc_bounds()
+    update_ixc_bounds(indat=filename)
 
     # 1) Are ixc bounds outside of allowed input ranges?
 
@@ -197,44 +196,15 @@ def check_in_dat():
     in_dat.write_in_dat(output_filename="IN.DAT")
 
 
-def check_logfile(logfile="process.log"):
-    """Checks the log file of the PROCESS output.
-    Stops, if an error occured that needs to be
-    fixed before rerunning.
-    XXX should be deprecated!! and replaced by check_input_error!
-
-    Parameters
-    ----------
-    logfile :
-         (Default value = "process.log")
-    """
-
-    with open(logfile) as outlogfile:
-        errormessage = "Please check the output file for further information."
-        for line in outlogfile:
-            if errormessage in line:
-                print(
-                    "An Error has occured. Please check the output file for more information.",
-                    file=stderr,
-                )
-                exit()
-
-
-def check_input_error(wdir="."):
+def check_input_error(wdir=".", mfile="MFILE.DAT"):
     """Checks, if an input error has occurred.
     Stops as a consequence.
     Will also fail if the MFILE.DAT isn't found.
     """
     try:
-        mfile_path = Path(wdir) / "MFILE.DAT"
+        mfile = MFile(filename=Path(wdir, mfile))
 
-        if mfile_path.exists():
-            mfile_path_str = str(mfile_path)
-            mfile = MFile(filename=mfile_path_str)
-        else:
-            raise FileNotFoundError("MFile doesn't exist")
-
-        error_id = mfile.data["error_id"].get_scan(-1)
+        error_id = mfile.get("error_id")
 
         if error_id == 130:
             print(
@@ -247,62 +217,40 @@ def check_input_error(wdir="."):
         raise
 
 
-def process_stopped(wdir="."):
+def process_stopped(wdir=".", mfile="MFILE.DAT"):
     """Checks the process Mfile whether it has
     prematurely stopped.
     """
-    # Check for MFILE
     try:
-        m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
-    except FileNotFoundError as err:
-        print(f"No MFILE has been found! FYI:qn {err}", file=stderr)
+        # Process did prematurely exit
+        return MFile(Path(wdir, mfile)).get("error_status") >= 3
+    except KeyError:
+        # Get error status; missing key indicates premature exit of Process
+        # (usually a STOP 1)
+        return True
+    except FileNotFoundError:
+        print("No MFILE has been found!", file=stderr)
         print("Code continues to run!", file=stderr)
         return True
 
-    # Get error status; missing key indicates premature exit of Process
-    # (usually a STOP 1)
-    try:
-        error_status = m_file.data["error_status"].get_scan(-1)
-    except KeyError:
-        return True
 
-    # Process did prematurely exit
-    return error_status >= 3
-
-
-def process_warnings(wdir="."):
+def process_warnings(wdir=".", mfile="MFILE.DAT"):
     """Checks the process Mfile whether any
     warnings have occurred.
     """
-
-    m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
-    error_status = m_file.data["error_status"].get_scan(-1)
-
-    return error_status >= 2
+    return MFile(filename=Path(wdir, mfile)).get("error_status") >= 2
 
 
-def mfile_exists():
-    """checks whether MFILE.DAT exists"""
-
-    try:
-        with open("MFILE.DAT") as m_file:
-            m_file.close()
-        return True
-
-    except FileNotFoundError:
-        return False
-
-
-def no_unfeasible_mfile(wdir="."):
+def no_unfeasible_mfile(wdir=".", mfile="MFILE.DAT"):
     """returns the number of unfeasible points
     in a scan in MFILE.DAT
     """
 
-    m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
+    m_file = MFile(filename=Path(wdir, mfile))
 
     # no scans
     if not m_file.data["isweep"].exists:
-        if m_file.data["ifail"].get_scan(-1) == 1:
+        if m_file.get("ifail") == 1:
             return 0
         return 1
 
@@ -316,7 +264,7 @@ def no_unfeasible_mfile(wdir="."):
         return 100000
 
 
-def vary_iteration_variables(itervars, lbs, ubs, generator):
+def vary_iteration_variables(itervars, lbs, ubs, config):
     """Routine to change the iteration variables in IN.DAT
     within given bounds.
 
@@ -337,16 +285,16 @@ def vary_iteration_variables(itervars, lbs, ubs, generator):
     new_values = []
 
     for varname, lbnd, ubnd in zip(itervars, lbs, ubs, strict=False):
-        new_value = generator.uniform(lbnd, ubnd)
+        new_value = config.generator.uniform(lbnd, ubnd)
         new_values += [new_value]
         in_dat.add_parameter(varname, new_value)
 
-    in_dat.write_in_dat(output_filename="IN.DAT")
+    in_dat.write_in_dat(output_filename=Path(config.wdir, config.infile))
 
     return new_values
 
 
-def get_solution_from_mfile(neqns, nvars, wdir="."):
+def get_solution_from_mfile(neqns, nvars, wdir=".", mfile="MFILE.DAT"):
     """returns
     ifail - error_value of VMCON/PROCESS
     the objective functions
@@ -357,22 +305,18 @@ def get_solution_from_mfile(neqns, nvars, wdir="."):
     If the run was a scan, the values of the last scan point
     will be returned.
     """
-    m_file = MFile(filename=pjoin(wdir, "MFILE.DAT"))
+    m_file = MFile(filename=Path(wdir, mfile))
 
-    ifail = m_file.data["ifail"].get_scan(-1)
+    ifail = m_file.get("ifail")
 
     # figure of merit objective function
-    objective_function = m_file.data["f"].get_scan(-1)
+    objective_function = m_file.get("f")
 
     # estimate of the constraints
-    constraints = m_file.data["sqsumsq"].get_scan(-1)
+    constraints = m_file.get("sqsumsq")
 
-    table_sol = [
-        m_file.data[f"itvar{var_no + 1:03}"].get_scan(-1) for var_no in range(nvars)
-    ]
-    table_res = [
-        m_file.data[f"normres{con_no + 1:03}"].get_scan(-1) for con_no in range(neqns)
-    ]
+    table_sol = [m_file.get(f"itvar{var_no + 1:03}") for var_no in range(nvars)]
+    table_res = [m_file.get(f"normres{con_no + 1:03}") for con_no in range(neqns)]
 
     if ifail != 1:
         return ifail, "0", "0", ["0"] * nvars, ["0"] * neqns

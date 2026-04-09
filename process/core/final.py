@@ -2,10 +2,10 @@
 
 from tabulate import tabulate
 
-import process.core.solver.constraints as constraints
 from process.core import constants
 from process.core import output as op
 from process.core import process_output as po
+from process.core.solver import constraints
 from process.core.solver.objectives import objective_function
 from process.data_structure import numerics
 
