@@ -1,4 +1,5 @@
 import logging
+from enum import IntEnum
 
 import numpy as np
 
@@ -24,6 +25,13 @@ from process.models.physics.current_drive import (
 from process.models.tfcoil.base import TFCoilShapeModel
 
 logger = logging.getLogger(__name__)
+
+
+class FwBlktVVShape(IntEnum):
+    """Enum for first wall, blanket, and vacuum vessel shape options."""
+
+    D_SHAPED = 1
+    ELLIPTICAL_SHAPED = 2
 
 
 class Build(Model):
