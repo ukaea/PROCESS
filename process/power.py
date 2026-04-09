@@ -67,14 +67,20 @@ class Power:
         Implements: sum_i (k_ps/2) * | (I_i[n+1] + I_i[n]) * sum_j M_ij (I_j[n+1] - I_j[n]) |
         Ref: M. Kovari, "PF power supplies accounting 2, Issue #972"
 
-        :param idx_time_interval: index of time interval (n -> n+1)
-        :type idx_time_interval: int
-        :param c_pf_coil_turn: PF circuit current per turn at pulse times [A]
-        :type c_pf_coil_turn: np.ndarray
-        :param ind_pf_cs_plasma_mutual: mutual inductance matrix between PF circuits [H]
-        :type ind_pf_cs_plasma_mutual: np.ndarray
-        :return: power supply electrical energy loss over interval [J]
-        :rtype: float
+        Parameters
+        ----------
+        idx_time_interval : int
+            index of time interval (n -> n+1)
+        n_pf_cs_plasma_circuits : int
+        c_pf_coil_turn : np.ndarray
+            PF circuit current per turn at pulse times [A]
+        ind_pf_cs_plasma_mutual : np.ndarray
+            mutual inductance matrix between PF circuits [H]
+
+        Returns
+        -------
+        float
+            power supply electrical energy loss over interval [J]
         """
         e_loss_pf_psu_j = 0.0e0
 
