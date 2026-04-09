@@ -1266,10 +1266,6 @@ class Costs2015(Model):
         Function for separative work unit calculation for enrichment cost
         PROCESS Costs Paper (M. Kovari, J. Morris)
 
-        Parameters
-        ----------
-        x :
-
         """
         return (1.0e0 - 2.0e0 * x) * np.log((1.0e0 - x) / x)
 
@@ -1277,24 +1273,9 @@ class Costs2015(Model):
         """Routine to print out the code, description and value
         of a cost item from array s in costs_2015
 
-        Parameters
-        ----------
-        file :
-
-        descr :
-
-        vname :
-
-        value :
-
         """
-
-        #  Local variables
-        # character(len=70) :: dum70
 
         if descr == "not used":
             return
-
-        # Create variable name of format s + array entry
 
         po.ovarrf(file, descr, str(vname), value)
