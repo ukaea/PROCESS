@@ -1,13 +1,12 @@
-"""Unit tests for costs_2015.f90."""
+"""Unit tests for costs_2015.py."""
 
-from typing import Any, NamedTuple
+from dataclasses import dataclass
 
 import numpy as np
 import pytest
 
 from process.data_structure import (
     build_variables,
-    cost_2015_variables,
     cost_variables,
     current_drive_variables,
     fwbs_variables,
@@ -17,65 +16,43 @@ from process.data_structure import (
     physics_variables,
     tfcoil_variables,
 )
-from process.models.costs.costs_2015 import Costs2015
 
 
 @pytest.fixture
-def costs2015():
+def costs2015(process_models):
     """Provides Costs2015 object for testing.
 
     :return costs2015: initialised costs2015 object
     :type costs2015: process.costs2015.Costs2015
     """
-    return Costs2015()
+    return process_models._costs_2015  # noqa: SLF001
 
 
-class CalcBuildingCostsParam(NamedTuple):
-    pwpnb: Any = None
-
-    r_pf_coil_outer_max: Any = None
-
-    p_plant_primary_heat_mw: Any = None
-
-    p_plant_secondary_heat_mw: Any = None
-
-    helpow: Any = None
-
-    c_tf_total: Any = None
-
-    n_tf_coils: Any = None
-
-    e_tf_magnetic_stored_total_gj: Any = None
-
-    r_cryostat_inboard: Any = None
-
-    z_cryostat_half_inside: Any = None
-
-    cost_factor_buildings: Any = None
-
-    light_build_cost_per_vol: Any = None
-
-    tok_build_cost_per_vol: Any = None
-
-    s_kref: Any = None
-
-    s_k: Any = None
-
-    s_cref: Any = None
-
-    s_cost: Any = None
-
-    s_cost_factor: Any = None
-
-    expected_s_kref: Any = None
-
-    expected_s_k: Any = None
-
-    expected_s_cref: Any = None
-
-    expected_s_cost: Any = None
-
-    expected_s_cost_factor: Any = None
+@dataclass
+class CalcBuildingCostsParam:
+    pwpnb: float
+    r_pf_coil_outer_max: float
+    p_plant_primary_heat_mw: float
+    p_plant_secondary_heat_mw: float
+    helpow: float
+    c_tf_total: float
+    n_tf_coils: float
+    e_tf_magnetic_stored_total_gj: float
+    r_cryostat_inboard: float
+    z_cryostat_half_inside: float
+    cost_factor_buildings: float
+    light_build_cost_per_vol: float
+    tok_build_cost_per_vol: float
+    s_kref: list[float]
+    s_k: list[float]
+    s_cref: list[float]
+    s_cost: list[float]
+    s_cost_factor: list[float]
+    expected_s_kref: list[float]
+    expected_s_k: list[float]
+    expected_s_cref: list[float]
+    expected_s_cost: list[float]
+    expected_s_cost_factor: list[float]
 
 
 @pytest.mark.parametrize(
@@ -2356,72 +2333,52 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
         "tok_build_cost_per_vol",
         calcbuildingcostsparam.tok_build_cost_per_vol,
     )
-
-    monkeypatch.setattr(cost_2015_variables, "s_kref", calcbuildingcostsparam.s_kref)
-
-    monkeypatch.setattr(cost_2015_variables, "s_k", calcbuildingcostsparam.s_k)
-
-    monkeypatch.setattr(cost_2015_variables, "s_cref", calcbuildingcostsparam.s_cref)
-
-    monkeypatch.setattr(cost_2015_variables, "s_cost", calcbuildingcostsparam.s_cost)
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cost_factor", calcbuildingcostsparam.s_cost_factor
-    )
+    for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
+        monkeypatch.setattr(
+            costs2015.data.costs_2015, field, getattr(calcbuildingcostsparam, field)
+        )
 
     costs2015.calc_building_costs()
 
-    assert cost_2015_variables.s_kref == pytest.approx(
+    assert costs2015.data.costs_2015.s_kref == pytest.approx(
         calcbuildingcostsparam.expected_s_kref
     )
 
-    assert cost_2015_variables.s_k == pytest.approx(calcbuildingcostsparam.expected_s_k)
+    assert costs2015.data.costs_2015.s_k == pytest.approx(
+        calcbuildingcostsparam.expected_s_k
+    )
 
-    assert cost_2015_variables.s_cref == pytest.approx(
+    assert costs2015.data.costs_2015.s_cref == pytest.approx(
         calcbuildingcostsparam.expected_s_cref
     )
 
-    assert cost_2015_variables.s_cost == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost == pytest.approx(
         calcbuildingcostsparam.expected_s_cost
     )
 
-    assert cost_2015_variables.s_cost_factor == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost_factor == pytest.approx(
         calcbuildingcostsparam.expected_s_cost_factor
     )
 
 
-class CalcLandCostsParam(NamedTuple):
-    dr_tf_inner_bore: Any = None
-
-    dh_tf_inner_bore: Any = None
-
-    dr_tf_inboard: Any = None
-
-    r_cryostat_inboard: Any = None
-
-    cost_factor_land: Any = None
-
-    costexp: Any = None
-
-    s_kref: Any = None
-
-    s_k: Any = None
-
-    s_cref: Any = None
-
-    s_cost: Any = None
-
-    s_cost_factor: Any = None
-
-    expected_s_kref: Any = None
-
-    expected_s_k: Any = None
-
-    expected_s_cref: Any = None
-
-    expected_s_cost: Any = None
-
-    expected_s_cost_factor: Any = None
+@dataclass
+class CalcLandCostsParam:
+    dr_tf_inner_bore: float
+    dh_tf_inner_bore: float
+    dr_tf_inboard: float
+    r_cryostat_inboard: float
+    cost_factor_land: float
+    costexp: float
+    s_kref: float
+    s_k: float
+    s_cref: float
+    s_cost: float
+    s_cost_factor: float
+    expected_s_kref: float
+    expected_s_k: float
+    expected_s_cref: float
+    expected_s_cost: float
+    expected_s_cost_factor: float
 
 
 @pytest.mark.parametrize(
@@ -4639,74 +4596,53 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     )
 
     monkeypatch.setattr(cost_variables, "costexp", calclandcostsparam.costexp)
-
-    monkeypatch.setattr(cost_2015_variables, "s_kref", calclandcostsparam.s_kref)
-
-    monkeypatch.setattr(cost_2015_variables, "s_k", calclandcostsparam.s_k)
-
-    monkeypatch.setattr(cost_2015_variables, "s_cref", calclandcostsparam.s_cref)
-
-    monkeypatch.setattr(cost_2015_variables, "s_cost", calclandcostsparam.s_cost)
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cost_factor", calclandcostsparam.s_cost_factor
-    )
+    for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
+        monkeypatch.setattr(
+            costs2015.data.costs_2015, field, getattr(calclandcostsparam, field)
+        )
 
     costs2015.calc_land_costs()
 
-    assert cost_2015_variables.s_kref == pytest.approx(
+    assert costs2015.data.costs_2015.s_kref == pytest.approx(
         calclandcostsparam.expected_s_kref
     )
 
-    assert cost_2015_variables.s_k == pytest.approx(calclandcostsparam.expected_s_k)
+    assert costs2015.data.costs_2015.s_k == pytest.approx(
+        calclandcostsparam.expected_s_k
+    )
 
-    assert cost_2015_variables.s_cref == pytest.approx(
+    assert costs2015.data.costs_2015.s_cref == pytest.approx(
         calclandcostsparam.expected_s_cref
     )
 
-    assert cost_2015_variables.s_cost == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost == pytest.approx(
         calclandcostsparam.expected_s_cost
     )
 
-    assert cost_2015_variables.s_cost_factor == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost_factor == pytest.approx(
         calclandcostsparam.expected_s_cost_factor
     )
 
 
-class CalcTfCoilCostsParam(NamedTuple):
-    n_tf_coils: Any = None
-
-    len_tf_coil: Any = None
-
-    n_tf_coil_turns: Any = None
-
-    m_tf_coil_copper: Any = None
-
-    m_tf_coil_superconductor: Any = None
-
-    cost_factor_tf_coils: Any = None
-
-    costexp: Any = None
-
-    s_kref: Any = None
-
-    s_k: Any = None
-
-    s_cref: Any = None
-
-    s_cost: Any = None
-
-    s_cost_factor: Any = None
-
-    expected_s_kref: Any = None
-
-    expected_s_k: Any = None
-
-    expected_s_cref: Any = None
-
-    expected_s_cost: Any = None
-
-    expected_s_cost_factor: Any = None
+@dataclass
+class CalcTfCoilCostsParam:
+    n_tf_coils: float
+    len_tf_coil: float
+    n_tf_coil_turns: float
+    m_tf_coil_copper: float
+    m_tf_coil_superconductor: float
+    cost_factor_tf_coils: float
+    costexp: float
+    s_kref: float
+    s_k: float
+    s_cref: float
+    s_cost: float
+    s_cost_factor: float
+    expected_s_kref: float
+    expected_s_k: float
+    expected_s_cref: float
+    expected_s_cost: float
+    expected_s_cost_factor: float
 
 
 @pytest.mark.parametrize(
@@ -6933,67 +6869,50 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
 
     monkeypatch.setattr(cost_variables, "costexp", calctfcoilcostsparam.costexp)
 
-    monkeypatch.setattr(cost_2015_variables, "s_kref", calctfcoilcostsparam.s_kref)
-
-    monkeypatch.setattr(cost_2015_variables, "s_k", calctfcoilcostsparam.s_k)
-
-    monkeypatch.setattr(cost_2015_variables, "s_cref", calctfcoilcostsparam.s_cref)
-
-    monkeypatch.setattr(cost_2015_variables, "s_cost", calctfcoilcostsparam.s_cost)
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cost_factor", calctfcoilcostsparam.s_cost_factor
-    )
+    for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
+        monkeypatch.setattr(
+            costs2015.data.costs_2015, field, getattr(calctfcoilcostsparam, field)
+        )
 
     costs2015.calc_tf_coil_costs()
 
-    assert cost_2015_variables.s_kref == pytest.approx(
+    assert costs2015.data.costs_2015.s_kref == pytest.approx(
         calctfcoilcostsparam.expected_s_kref
     )
 
-    assert cost_2015_variables.s_k == pytest.approx(calctfcoilcostsparam.expected_s_k)
+    assert costs2015.data.costs_2015.s_k == pytest.approx(
+        calctfcoilcostsparam.expected_s_k
+    )
 
-    assert cost_2015_variables.s_cref == pytest.approx(
+    assert costs2015.data.costs_2015.s_cref == pytest.approx(
         calctfcoilcostsparam.expected_s_cref
     )
 
-    assert cost_2015_variables.s_cost == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost == pytest.approx(
         calctfcoilcostsparam.expected_s_cost
     )
 
-    assert cost_2015_variables.s_cost_factor == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost_factor == pytest.approx(
         calctfcoilcostsparam.expected_s_cost_factor
     )
 
 
-class CalcRemoteHandlingCostsParam(NamedTuple):
-    armour_fw_bl_mass: Any = None
-
-    cost_factor_rh: Any = None
-
-    costexp: Any = None
-
-    num_rh_systems: Any = None
-
-    s_kref: Any = None
-
-    s_k: Any = None
-
-    s_cref: Any = None
-
-    s_cost: Any = None
-
-    s_cost_factor: Any = None
-
-    expected_s_kref: Any = None
-
-    expected_s_k: Any = None
-
-    expected_s_cref: Any = None
-
-    expected_s_cost: Any = None
-
-    expected_s_cost_factor: Any = None
+@dataclass
+class CalcRemoteHandlingCostsParam:
+    armour_fw_bl_mass: float
+    cost_factor_rh: float
+    costexp: float
+    num_rh_systems: float
+    s_kref: float
+    s_k: float
+    s_cref: float
+    s_cost: float
+    s_cost_factor: float
+    expected_s_kref: float
+    expected_s_k: float
+    expected_s_cref: float
+    expected_s_cost: float
+    expected_s_cost_factor: float
 
 
 @pytest.mark.parametrize(
@@ -9203,78 +9122,53 @@ def test_calc_remote_handling_costs(
     monkeypatch.setattr(
         cost_variables, "num_rh_systems", calcremotehandlingcostsparam.num_rh_systems
     )
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_kref", calcremotehandlingcostsparam.s_kref
-    )
-
-    monkeypatch.setattr(cost_2015_variables, "s_k", calcremotehandlingcostsparam.s_k)
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cref", calcremotehandlingcostsparam.s_cref
-    )
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cost", calcremotehandlingcostsparam.s_cost
-    )
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cost_factor", calcremotehandlingcostsparam.s_cost_factor
-    )
+    for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
+        monkeypatch.setattr(
+            costs2015.data.costs_2015,
+            field,
+            getattr(calcremotehandlingcostsparam, field),
+        )
 
     costs2015.calc_remote_handling_costs()
 
-    assert cost_2015_variables.s_kref == pytest.approx(
+    assert costs2015.data.costs_2015.s_kref == pytest.approx(
         calcremotehandlingcostsparam.expected_s_kref
     )
 
-    assert cost_2015_variables.s_k == pytest.approx(
+    assert costs2015.data.costs_2015.s_k == pytest.approx(
         calcremotehandlingcostsparam.expected_s_k
     )
 
-    assert cost_2015_variables.s_cref == pytest.approx(
+    assert costs2015.data.costs_2015.s_cref == pytest.approx(
         calcremotehandlingcostsparam.expected_s_cref
     )
 
-    assert cost_2015_variables.s_cost == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost == pytest.approx(
         calcremotehandlingcostsparam.expected_s_cost
     )
 
-    assert cost_2015_variables.s_cost_factor == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost_factor == pytest.approx(
         calcremotehandlingcostsparam.expected_s_cost_factor
     )
 
 
-class CalcNPlantAndVvCostsParam(NamedTuple):
-    r_shld_outboard_outer: Any = None
-
-    dr_vv_outboard: Any = None
-
-    helpow: Any = None
-
-    cost_factor_vv: Any = None
-
-    costexp: Any = None
-
-    s_kref: Any = None
-
-    s_k: Any = None
-
-    s_cref: Any = None
-
-    s_cost: Any = None
-
-    s_cost_factor: Any = None
-
-    expected_s_kref: Any = None
-
-    expected_s_k: Any = None
-
-    expected_s_cref: Any = None
-
-    expected_s_cost: Any = None
-
-    expected_s_cost_factor: Any = None
+@dataclass
+class CalcNPlantAndVvCostsParam:
+    r_shld_outboard_outer: float
+    dr_vv_outboard: float
+    helpow: float
+    cost_factor_vv: float
+    costexp: float
+    s_kref: float
+    s_k: float
+    s_cref: float
+    s_cost: float
+    s_cost_factor: float
+    expected_s_kref: float
+    expected_s_k: float
+    expected_s_cref: float
+    expected_s_cost: float
+    expected_s_cost_factor: float
 
 
 @pytest.mark.parametrize(
@@ -11489,67 +11383,51 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
 
     monkeypatch.setattr(cost_variables, "costexp", calcnplantandvvcostsparam.costexp)
 
-    monkeypatch.setattr(cost_2015_variables, "s_kref", calcnplantandvvcostsparam.s_kref)
-
-    monkeypatch.setattr(cost_2015_variables, "s_k", calcnplantandvvcostsparam.s_k)
-
-    monkeypatch.setattr(cost_2015_variables, "s_cref", calcnplantandvvcostsparam.s_cref)
-
-    monkeypatch.setattr(cost_2015_variables, "s_cost", calcnplantandvvcostsparam.s_cost)
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cost_factor", calcnplantandvvcostsparam.s_cost_factor
-    )
+    for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
+        monkeypatch.setattr(
+            costs2015.data.costs_2015,
+            field,
+            getattr(calcnplantandvvcostsparam, field),
+        )
 
     costs2015.calc_n_plant_and_vv_costs()
 
-    assert cost_2015_variables.s_kref == pytest.approx(
+    assert costs2015.data.costs_2015.s_kref == pytest.approx(
         calcnplantandvvcostsparam.expected_s_kref
     )
 
-    assert cost_2015_variables.s_k == pytest.approx(
+    assert costs2015.data.costs_2015.s_k == pytest.approx(
         calcnplantandvvcostsparam.expected_s_k
     )
 
-    assert cost_2015_variables.s_cref == pytest.approx(
+    assert costs2015.data.costs_2015.s_cref == pytest.approx(
         calcnplantandvvcostsparam.expected_s_cref
     )
 
-    assert cost_2015_variables.s_cost == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost == pytest.approx(
         calcnplantandvvcostsparam.expected_s_cost
     )
 
-    assert cost_2015_variables.s_cost_factor == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost_factor == pytest.approx(
         calcnplantandvvcostsparam.expected_s_cost_factor
     )
 
 
-class CalcEnergyConversionSystemParam(NamedTuple):
-    p_plant_electric_gross_mw: Any = None
-
-    cost_factor_bop: Any = None
-
-    costexp: Any = None
-
-    s_kref: Any = None
-
-    s_k: Any = None
-
-    s_cref: Any = None
-
-    s_cost: Any = None
-
-    s_cost_factor: Any = None
-
-    expected_s_kref: Any = None
-
-    expected_s_k: Any = None
-
-    expected_s_cref: Any = None
-
-    expected_s_cost: Any = None
-
-    expected_s_cost_factor: Any = None
+@dataclass
+class CalcEnergyConversionSystemParam:
+    p_plant_electric_gross_mw: float
+    cost_factor_bop: float
+    costexp: float
+    s_kref: float
+    s_k: float
+    s_cref: float
+    s_cost: float
+    s_cost_factor: float
+    expected_s_kref: float
+    expected_s_k: float
+    expected_s_cref: float
+    expected_s_cost: float
+    expected_s_cost_factor: float
 
 
 @pytest.mark.parametrize(
@@ -13757,98 +13635,62 @@ def test_calc_energy_conversion_system(
     monkeypatch.setattr(
         cost_variables, "costexp", calcenergyconversionsystemparam.costexp
     )
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_kref", calcenergyconversionsystemparam.s_kref
-    )
-
-    monkeypatch.setattr(cost_2015_variables, "s_k", calcenergyconversionsystemparam.s_k)
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cref", calcenergyconversionsystemparam.s_cref
-    )
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cost", calcenergyconversionsystemparam.s_cost
-    )
-
-    monkeypatch.setattr(
-        cost_2015_variables,
-        "s_cost_factor",
-        calcenergyconversionsystemparam.s_cost_factor,
-    )
+    for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
+        monkeypatch.setattr(
+            costs2015.data.costs_2015,
+            field,
+            getattr(calcenergyconversionsystemparam, field),
+        )
 
     costs2015.calc_energy_conversion_system()
 
-    assert cost_2015_variables.s_kref == pytest.approx(
+    assert costs2015.data.costs_2015.s_kref == pytest.approx(
         calcenergyconversionsystemparam.expected_s_kref
     )
 
-    assert cost_2015_variables.s_k == pytest.approx(
+    assert costs2015.data.costs_2015.s_k == pytest.approx(
         calcenergyconversionsystemparam.expected_s_k
     )
 
-    assert cost_2015_variables.s_cref == pytest.approx(
+    assert costs2015.data.costs_2015.s_cref == pytest.approx(
         calcenergyconversionsystemparam.expected_s_cref
     )
 
-    assert cost_2015_variables.s_cost == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost == pytest.approx(
         calcenergyconversionsystemparam.expected_s_cost
     )
 
-    assert cost_2015_variables.s_cost_factor == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost_factor == pytest.approx(
         calcenergyconversionsystemparam.expected_s_cost_factor
     )
 
 
-class CalcRemainingSubsystemsParam(NamedTuple):
-    p_hcd_injected_total_mw: Any = None
-
-    p_plasma_separatrix_mw: Any = None
-
-    p_fusion_total_mw: Any = None
-
-    t_plasma_res_diffusion: Any = None
-
-    itr_sum: Any = None
-
-    ensxpfm: Any = None
-
-    p_plant_primary_heat_mw: Any = None
-
-    p_plant_secondary_heat_mw: Any = None
-
-    helpow: Any = None
-
-    m_vv: Any = None
-
-    r_cryostat_inboard: Any = None
-
-    z_cryostat_half_inside: Any = None
-
-    cost_factor_misc: Any = None
-
-    costexp: Any = None
-
-    s_kref: Any = None
-
-    s_k: Any = None
-
-    s_cref: Any = None
-
-    s_cost: Any = None
-
-    s_cost_factor: Any = None
-
-    expected_s_kref: Any = None
-
-    expected_s_k: Any = None
-
-    expected_s_cref: Any = None
-
-    expected_s_cost: Any = None
-
-    expected_s_cost_factor: Any = None
+@dataclass
+class CalcRemainingSubsystemsParam:
+    p_hcd_injected_total_mw: float
+    p_plasma_separatrix_mw: float
+    p_fusion_total_mw: float
+    t_plasma_res_diffusion: float
+    itr_sum: float
+    ensxpfm: float
+    p_plant_primary_heat_mw: float
+    p_plant_secondary_heat_mw: float
+    helpow: float
+    m_vv: float
+    r_cryostat_inboard: float
+    z_cryostat_half_inside: float
+    cost_factor_misc: float
+    costexp: float
+    s_kref: float
+    s_k: float
+    s_cref: float
+    s_cost: float
+    s_cost_factor: float
+    expected_s_kref: float
+    expected_s_k: float
+    expected_s_cref: float
+    expected_s_cost: float
+    expected_s_cost_factor: float
 
 
 @pytest.mark.parametrize(
@@ -16133,51 +15975,40 @@ def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, co
 
     monkeypatch.setattr(cost_variables, "costexp", calcremainingsubsystemsparam.costexp)
 
-    monkeypatch.setattr(
-        cost_2015_variables, "s_kref", calcremainingsubsystemsparam.s_kref
-    )
-
-    monkeypatch.setattr(cost_2015_variables, "s_k", calcremainingsubsystemsparam.s_k)
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cref", calcremainingsubsystemsparam.s_cref
-    )
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cost", calcremainingsubsystemsparam.s_cost
-    )
-
-    monkeypatch.setattr(
-        cost_2015_variables, "s_cost_factor", calcremainingsubsystemsparam.s_cost_factor
-    )
+    for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
+        monkeypatch.setattr(
+            costs2015.data.costs_2015,
+            field,
+            getattr(calcremainingsubsystemsparam, field),
+        )
 
     costs2015.calc_remaining_subsystems()
 
-    assert cost_2015_variables.s_kref == pytest.approx(
+    assert costs2015.data.costs_2015.s_kref == pytest.approx(
         calcremainingsubsystemsparam.expected_s_kref
     )
 
-    assert cost_2015_variables.s_k == pytest.approx(
+    assert costs2015.data.costs_2015.s_k == pytest.approx(
         calcremainingsubsystemsparam.expected_s_k
     )
 
-    assert cost_2015_variables.s_cref == pytest.approx(
+    assert costs2015.data.costs_2015.s_cref == pytest.approx(
         calcremainingsubsystemsparam.expected_s_cref
     )
 
-    assert cost_2015_variables.s_cost == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost == pytest.approx(
         calcremainingsubsystemsparam.expected_s_cost
     )
 
-    assert cost_2015_variables.s_cost_factor == pytest.approx(
+    assert costs2015.data.costs_2015.s_cost_factor == pytest.approx(
         calcremainingsubsystemsparam.expected_s_cost_factor
     )
 
 
-class ValueFunctionParam(NamedTuple):
-    x: Any = None
-
-    expected_v: Any = None
+@dataclass
+class ValueFunctionParam:
+    x: float
+    expected_v: float
 
 
 @pytest.mark.parametrize(
