@@ -15,6 +15,7 @@ from process.models.blankets.blanket_library import (
     eshellarea,
     eshellvol,
 )
+from process.models.build import FwBlktVVShape
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +41,10 @@ class Shield(Model):
             dz_blkt_upper=build_variables.dz_blkt_upper,
         )
         # D-shaped blanket and shield
-        if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
+        if (
+            physics_variables.itart == 1
+            or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
+        ):
             (
                 build_variables.a_shld_inboard_surface,
                 build_variables.a_shld_outboard_surface,
