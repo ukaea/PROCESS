@@ -6,6 +6,7 @@ import json
 import logging
 import re
 from collections import OrderedDict
+from itertools import starmap
 from pathlib import Path
 from typing import Any
 
@@ -430,30 +431,45 @@ class MFile:
         output_data :
              (Default value = None)
         """
-        output_data = []
-        if scan is None:
-            for scan_key, vals in self.to_dict(
-                keys_to_write, scan=scan, verbose=verbose
-            ).items():
-                output_data.extend((
-                    (scan_key, "", ""),
-                    ("Description", "Varname", "Value"),
-                ))
-                for k, v in vals.items():
-                    output_data.append((v["description"], k, v["value"]))
-        else:
-            output_data.append(("Description", "Varname", "Value"))
-            for k, v in self.to_dict(keys_to_write, scan=scan, verbose=verbose).items():
-                output_data.append((v["description"], k, v["value"]))
-        np.savetxt(
-            filename or f"{self.filename}.csv",
-            output_data or [],
-            fmt="%.5e",
-            delimiter=",",
-            header="PROCESS MFILE converted to csv",
-            footer="",
-            comments="",
+        columns = (
+            ("Description", "Varname", "Value") if verbose else ("Varname", "Value")
         )
+        fmt = ("%s", "%s", "%.5e") if verbose else ("%s", "%.5e")
+
+        def save(filename, output_data, header):
+            np.savetxt(
+                filename,
+                np.asarray(output_data or [], dtype=object),
+                fmt=fmt,
+                delimiter=",",
+                header=header,
+                footer="",
+                comments="",
+            )
+
+        def get_cells(k, v):
+            if verbose:
+                return [v["description"], k, v["value"]]
+            return [k, v]
+
+        if scan is None:
+            with open(filename or f"{self.filename}.csv", "w") as f:
+                f.write("PROCESS MFILE converted to csv\n")
+                for scan_key, vals in self.to_dict(
+                    keys_to_write, scan=scan, verbose=verbose
+                ).items():
+                    header = f"{scan_key}\n" + ",".join(columns)
+                    output_data = list(starmap(get_cells, vals.items()))
+                    save(f, output_data, header)
+        else:
+            output_data = list(
+                starmap(
+                    get_cells,
+                    self.to_dict(keys_to_write, scan=scan, verbose=verbose).items(),
+                )
+            )
+            header = "PROCESS MFILE converted to csv\n" + ",".join(columns)
+            save(filename or f"{self.filename}.csv", output_data, header)
 
 
 def sort_value(value_words: list[str]) -> str | float:
