@@ -9,15 +9,15 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-import process.tf_coil as tfcoil_module
-from process.build import Build
+import process.models.tfcoil.base as tfcoil_module
 from process.data_structure import (
     build_variables,
     fwbs_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.tf_coil import TFCoil
+from process.models.build import Build
+from process.models.tfcoil.base import TFCoil
 
 
 @pytest.fixture

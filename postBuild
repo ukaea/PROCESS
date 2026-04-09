@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# install examples dependencies on binder
+pip install -e '.[examples]'

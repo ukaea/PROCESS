@@ -15,7 +15,7 @@ plot = figure(
     height=400,
     title="Parabolic Profile | L-mode",
 )
-plot.xaxis.axis_label = r"Normalized Radius, $$ \rho $$"
+plot.xaxis.axis_label = r"Normalised Radius, $$ \rho $$"
 plot.yaxis.axis_label = r"Density, $$n_e$$"
 
 plot.line("x", "y", source=source, line_width=3, line_alpha=0.6)

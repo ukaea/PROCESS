@@ -2,9 +2,9 @@ import contextlib
 
 import pytest
 
-from process.constraints import ConstraintManager
-from process.exceptions import ProcessValueError
-from process.init import init_all_module_vars
+from process.core.exceptions import ProcessValueError
+from process.core.init import init_all_module_vars
+from process.core.solver.constraints import ConstraintManager
 
 
 @pytest.mark.parametrize(
@@ -24,4 +24,4 @@ def test_constraint_functions(constraint_registration):
     # default flags (i_pulsed_plant=0 or itart=0).
     with contextlib.suppress(ZeroDivisionError, ProcessValueError):
         # call the constraint equation and check no error occurs
-        constraint_registration.constraint_equation()
+        constraint_registration.constraint_equation(constraint_registration)

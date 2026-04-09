@@ -4,8 +4,8 @@ from typing import Any, NamedTuple
 
 import pytest
 
-import process.plasma_geometry as pg
-from process.plasma_geometry import PlasmaGeom
+import process.models.physics.plasma_geometry as pg
+from process.models.physics.plasma_geometry import PlasmaGeom
 
 
 @pytest.fixture
@@ -225,7 +225,6 @@ def test_fvol(r, a, kap, tri, expected_fvol):
 
     :param expected_fvol: expected result of the function.
     :type expected_fvol: float
-
     """
     fvol = pg.fvol(r, a, kap, tri)
 
@@ -257,7 +256,6 @@ def test_xsect0(a, kap, tri, expected_xsect0):
 
     :param expected_xsect0: expected result of the function.
     :type expected_xsect0: float
-
     """
     xsect0 = pg.xsect0(a, kap, tri)
 

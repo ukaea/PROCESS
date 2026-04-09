@@ -13,9 +13,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
+from filelock import FileLock
 from regression_test_assets import RegressionTestAssetCollector
 
-from process.io.mfile import MFile
+from process.core.io.mfile import MFile
 from process.main import main
 
 logger = logging.getLogger(__name__)
@@ -32,7 +33,29 @@ EXCLUSIONS = {
     r"sig_tf_r_max\(1\)",  # weird value, flips between 0 and very low?
     r"normres[0-9]+",
     r"nitvar[0-9]+",
+    "process_runtime",
 }
+
+
+class ProcessModelFilter(logging.Filter):
+    def filter(self, record):
+        return 0 if record.levelno < logging.CRITICAL else 1
+
+
+@pytest.fixture
+def hide_model_logs():
+    """Hides model logs (process.model.*) from being reported if a regression test fails.
+
+    This fixture adds a filter to all of the handlers on the root logger before the tests are run.
+    Modifying the logger handlers is crucial to avoid interfering with PROCESS model log system
+    which adds its own handers when PROCESS is run (hence why this is not done using the caplog fixture).
+    """
+    filter_ = ProcessModelFilter(name="process.models")
+    for handler in logging.getLogger().handlers:
+        handler.addFilter(filter_)
+    yield
+    for handler in logging.getLogger().handlers:
+        handler.removeFilter(filter_)
 
 
 @dataclass
@@ -44,7 +67,7 @@ class MFileVariableDifference:
 
 
 class RegressionTestScenario:
-    def __init__(self, input_file: Path) -> None:
+    def __init__(self, input_file: Path):
         """
         Represents an input scenario (input file) to PROCESS that is to be regression tested.
 
@@ -221,15 +244,21 @@ class RegressionTestScenario:
         return diffs
 
 
-@pytest.fixture(scope="session")
-def tracked_regression_test_assets():
+@pytest.fixture(scope="module")
+def tracked_regression_test_assets(tmp_path_factory, worker_id):
     """Session fixture providing a RegressionTestAssetCollector
-    for finding remote tracked MFiles.
+    for finding tracked MFiles.
 
-    This fixture creates one asset collector that is shared
-    between all regression tests and reduces the number of
-    API calls made to the remote repository."""
-    return RegressionTestAssetCollector()
+    When running using pytest-xdist this fixture stops multiple workers operating on
+    the asset directory at once using a file lock.
+    """
+    if worker_id == "master":
+        return RegressionTestAssetCollector()
+
+    tmpdir = tmp_path_factory.getbasetemp().parent
+
+    with FileLock(tmpdir / "regression_tests.lock"):
+        return RegressionTestAssetCollector()
 
 
 @pytest.mark.parametrize(
@@ -244,6 +273,7 @@ def test_input_file(
     tracked_regression_test_assets,
     reg_tolerance: float,
     opt_params_only: bool,
+    hide_model_logs,
 ):
     """Tests each input file in the 'input_files' directory.
 

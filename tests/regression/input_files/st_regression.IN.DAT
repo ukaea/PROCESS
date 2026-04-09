@@ -28,7 +28,7 @@
 *________________________________________________________________________*
 *----------------------------Global Variables---------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
-maxcal = 200
+maxcal = 100
 * DESCRIPTION:   Maximum number of VMCON iterations
 * JUSTIFICATION: Twice default, no impact on result
 

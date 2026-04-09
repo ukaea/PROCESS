@@ -10,8 +10,6 @@ Fortran "program" statement. This Python module effectively acts as the Fortran
 "program".
 
 Power Reactor Optimisation Code for Environmental and Safety Studies
-P J Knight, CCFE, Culham Science Centre
-J Morris, CCFE, Culham Science Centre
 
 This is a systems code that evaluates various physics and
 engineering aspects of a fusion power plant subject to given
@@ -45,44 +43,22 @@ import argparse
 import logging
 import os
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol
 
 import process
+import process.core.init as init
 import process.data_structure as data_structure
-import process.init as init
-from process import constants
-from process.availability import Availability
-from process.blanket_library import BlanketLibrary
-from process.build import Build
-from process.buildings import Buildings
-from process.costs import Costs
-from process.costs_2015 import Costs2015
-from process.cryostat import Cryostat
-from process.cs_fatigue import CsFatigue
-from process.current_drive import (
-    CurrentDrive,
-    ElectronBernstein,
-    ElectronCyclotron,
-    IonCyclotron,
-    LowerHybrid,
-    NeutralBeam,
-)
-from process.dcll import DCLL
-from process.divertor import Divertor
-from process.fw import FirstWall
-from process.hcpb import CCFE_HCPB
-from process.ife import IFE
-from process.impurity_radiation import initialise_imprad
-from process.io import (
+from process.core import constants
+from process.core.io import (
     mfile,
     plot_plotly_sankey,
     plot_proc,
 )
-from process.io import obsolete_vars as ov
+from process.core.io import obsolete_vars as ov
 
 # For VaryRun
-from process.io.process_config import RunProcessConfig
-from process.io.process_funcs import (
+from process.core.io.process_config import RunProcessConfig
+from process.core.io.process_funcs import (
     check_input_error,
     get_neqns_itervars,
     get_variable_range,
@@ -91,23 +67,63 @@ from process.io.process_funcs import (
     process_warnings,
     vary_iteration_variables,
 )
-from process.log import logging_model_handler, show_errors
-from process.pfcoil import PFCoil
-from process.physics import DetailedPhysics, Physics, PlasmaBeta, PlasmaInductance
-from process.plasma_geometry import PlasmaGeom
-from process.plasma_profiles import PlasmaProfile
-from process.power import Power
-from process.process_output import OutputFileManager, oheadr
-from process.pulse import Pulse
-from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
-from process.scan import Scan
-from process.shield import Shield
-from process.stellarator import Neoclassics, Stellarator
-from process.structure import Structure
-from process.superconducting_tf_coil import SuperconductingTFCoil
-from process.tf_coil import TFCoil
-from process.vacuum import Vacuum, VacuumVessel
-from process.water_use import WaterUse
+from process.core.log import logging_model_handler, show_errors
+from process.core.model import DataStructure, Model
+from process.core.process_output import OutputFileManager, oheadr
+from process.core.scan import Scan
+from process.models.availability import Availability
+from process.models.blankets.blanket_library import BlanketLibrary
+from process.models.blankets.dcll import DCLL
+from process.models.blankets.hcpb import CCFE_HCPB
+from process.models.build import Build
+from process.models.buildings import Buildings
+from process.models.costs.costs import Costs
+from process.models.costs.costs_2015 import Costs2015
+from process.models.cryostat import Cryostat
+from process.models.cs_fatigue import CsFatigue
+from process.models.divertor import Divertor
+from process.models.fw import FirstWall
+from process.models.ife import IFE
+from process.models.pfcoil import PFCoil
+from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.confinement_time import PlasmaConfinementTime
+from process.models.physics.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
+from process.models.physics.density_limit import PlasmaDensityLimit
+from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.impurity_radiation import initialise_imprad
+from process.models.physics.l_h_transition import PlasmaConfinementTransition
+from process.models.physics.physics import (
+    DetailedPhysics,
+    Physics,
+    PlasmaBeta,
+    PlasmaInductance,
+)
+from process.models.physics.plasma_current import PlasmaCurrent
+from process.models.physics.plasma_fields import PlasmaFields
+from process.models.physics.plasma_geometry import PlasmaGeom
+from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.power import Power
+from process.models.pulse import Pulse
+from process.models.shield import Shield
+from process.models.stellarator.neoclassics import Neoclassics
+from process.models.stellarator.stellarator import Stellarator
+from process.models.structure import Structure
+from process.models.tfcoil.base import TFCoil
+from process.models.tfcoil.resistive import (
+    AluminiumTFCoil,
+    CopperTFCoil,
+    ResistiveTFCoil,
+)
+from process.models.tfcoil.superconducting import SuperconductingTFCoil
+from process.models.vacuum import Vacuum, VacuumVessel
+from process.models.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
@@ -119,21 +135,22 @@ logger = logging.getLogger("process")
 class Process:
     """The main Process class."""
 
-    def __init__(self, args=None):
+    def __init__(self, args: list[Any] | None = None):
         """Run Process.
 
         :param args: Arguments to parse, defaults to None
-        :type args: list, optional
         """
         self.parse_args(args)
         self.run_mode()
         self.post_process()
 
-    def parse_args(self, args):
+    def parse_args(self, args: list[Any] | None):
         """Parse the command-line arguments, such as the input filename.
 
-        :param args: Arguments to parse
-        :type args: list
+        Parameters
+        ----------
+        args :
+            Arguments to parse
         """
         parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -278,23 +295,29 @@ class VaryRun:
     README.txt  - contains comments from config file
     """
 
-    def __init__(self, config_file, solver="vmcon"):
+    def __init__(self, config_file: str, solver: str = "vmcon"):
         """Initialise and perform a VaryRun.
 
-        :param config_file: config file for run parameters
-        :type config_file: str
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str, optional
+        Parameters
+        ----------
+        config_file:
+            config file for run parameters
+        solver:
+            which solver to use, as specified in solver.py
         """
         # Store the absolute path to the config file immediately: various
         # dir changes happen in old run_process code
         self.config_file = Path(config_file).resolve()
         self.solver = solver
+        self.data = DataStructure()
 
     def run(self):
         """Perform a VaryRun by running multiple SingleRuns.
 
-        :raises FileNotFoundError: if input file doesn't exist
+        Raises
+        ------
+        FileNotFoundError
+            if input file doesn't exist
         """
         # The input path for the varied input file
         input_path = self.config_file.parent / "IN.DAT"
@@ -307,7 +330,7 @@ class VaryRun:
         setup_loggers(Path(config.wdir) / "process.log")
 
         init.init_all_module_vars()
-        init.init_process()
+        init.init_process(self.data)
 
         _neqns, itervars = get_neqns_itervars()
         lbs, ubs = get_variable_range(itervars, config.factor)
@@ -367,20 +390,26 @@ class VaryRun:
 class SingleRun:
     """Perform a single run of PROCESS."""
 
-    def __init__(self, input_file, solver="vmcon", *, update_obsolete=False):
+    def __init__(
+        self, input_file: str, solver: str = "vmcon", *, update_obsolete: bool = False
+    ):
         """Read input file and initialise variables.
-        :param input_file: input file named <optional_name>IN.DAT
-        :type input_file: str
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str, optional
+
+        Parameters
+        ----------
+        input_file:
+            input file named <optional_name>IN.DAT
+        solver:
+            which solver to use, as specified in solver.py
         """
         self.input_file = input_file
 
         self.validate_input(update_obsolete)
         self.init_module_vars()
         self.set_filenames()
+        self.data = DataStructure()
         self.initialise()
-        self.models = Models()
+        self.models = Models(self.data)
         self.solver = solver
 
     def run(self):
@@ -453,7 +482,7 @@ class SingleRun:
 
         initialise_imprad()
         # Reads in input file
-        init.init_process()
+        init.init_process(self.data)
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
@@ -508,16 +537,11 @@ class SingleRun:
             mfile_file.write("***********************************************")
             mfile_file.writelines(input_lines)
 
-    def validate_input(self, replace_obsolete=False):
-        """
-        Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
+    def validate_input(self, replace_obsolete: bool = False):
+        """Checks the input IN.DAT file for any obsolete variables in the OBS_VARS dict contained
         within obsolete_variables.py. If obsolete variables are found, and if `replace_obsolete`
         is set to True, they are either removed or replaced by their updated names as specified
         in the OBS_VARS dictionary.
-
-        Parameters:
-            replace_obsolete (bool): If True, modifies the IN.DAT file to replace or comment out
-                                    obsolete variables. If False, only reports obsolete variables.
         """
 
         obsolete_variables = ov.OBS_VARS
@@ -575,12 +599,14 @@ class SingleRun:
                     else:
                         # If replacement is False, add the line as-is
                         modified_lines.append(line)
+                        variables_in_in_dat.append(variable_name)
                 else:
                     modified_lines.append(line)
 
         obs_vars_in_in_dat = [
             var for var in variables_in_in_dat if var in obsolete_variables
         ]
+
         if obs_vars_in_in_dat:
             if replace_obsolete:
                 # If replace_obsolete is True, write the modified content to the file
@@ -641,11 +667,13 @@ class Models:
     engineering modules.
     """
 
-    def __init__(self):
+    def __init__(self, data: DataStructure):
         """Create physics and engineering model objects.
 
         This also initialises module variables in the Fortran for that module.
         """
+        self.data = data
+
         self._costs_custom = None
         self._costs_1990 = Costs()
         self._costs_2015 = Costs2015()
@@ -684,31 +712,51 @@ class Models:
         )
         self.plasma_beta = PlasmaBeta()
         self.plasma_inductance = PlasmaInductance()
+        self.plasma_density_limit = PlasmaDensityLimit()
+        self.plasma_exhaust = PlasmaExhaust()
+        self.plasma_bootstrap_current = PlasmaBootstrapCurrent(
+            plasma_profile=self.plasma_profile
+        )
+        self.plasma_confinement = PlasmaConfinementTime()
+        self.plasma_transition = PlasmaConfinementTransition()
+        self.plasma_current = PlasmaCurrent()
+        self.plasma_fields = PlasmaFields()
         self.physics = Physics(
             plasma_profile=self.plasma_profile,
             current_drive=self.current_drive,
             plasma_beta=self.plasma_beta,
             plasma_inductance=self.plasma_inductance,
+            plasma_density_limit=self.plasma_density_limit,
+            plasma_exhaust=self.plasma_exhaust,
+            plasma_bootstrap_current=self.plasma_bootstrap_current,
+            plasma_confinement=self.plasma_confinement,
+            plasma_transition=self.plasma_transition,
+            plasma_current=self.plasma_current,
+            plasma_fields=self.plasma_fields,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,
         )
         self.neoclassics = Neoclassics()
-        self.stellarator = Stellarator(
-            availability=self.availability,
-            buildings=self.buildings,
-            vacuum=self.vacuum,
-            costs=self.costs,
-            power=self.power,
-            plasma_profile=self.plasma_profile,
-            hcpb=self.ccfe_hcpb,
-            current_drive=self.current_drive,
-            physics=self.physics,
-            neoclassics=self.neoclassics,
-            plasma_beta=self.plasma_beta,
-            plasma_inductance=self.plasma_inductance,
-        )
+        if data_structure.stellarator_variables.istell != 0:
+            self.stellarator = Stellarator(
+                availability=self.availability,
+                buildings=self.buildings,
+                vacuum=self.vacuum,
+                costs=self.costs,
+                power=self.power,
+                plasma_profile=self.plasma_profile,
+                hcpb=self.ccfe_hcpb,
+                current_drive=self.current_drive,
+                physics=self.physics,
+                neoclassics=self.neoclassics,
+                plasma_beta=self.plasma_beta,
+                plasma_bootstrap=self.plasma_bootstrap_current,
+            )
+
         self.dcll = DCLL(fw=self.fw)
+
+        self.setup_data_structure()
 
     @property
     def costs(self) -> CostsProtocol:
@@ -727,6 +775,19 @@ class Models:
     def costs(self, value: CostsProtocol):
         self._costs_custom = value
 
+    @property
+    def models(self) -> tuple[Model, ...]:
+        # At the moment, this property just returns models that implement the Model interface.
+        # Eventually every Model will comply and then this method can be used as the caller/outputter!
+        return (self.water_use,)
+
+    def setup_data_structure(self):
+        # This Models class should be replaced with a dataclass so we can
+        # iterate over the `fields`.
+        # This can be a disgusting temporary measure :(
+        for model in self.models:
+            model.data = self.data
+
 
 # setup handlers for writing to terminal (on warnings+)
 # or writing to the log file (on info+)
@@ -744,7 +805,13 @@ logging_model_handler.setFormatter(logging_formatter)
 
 
 def setup_loggers(working_directory_log_path: Path | None = None):
-    """A function that adds our handlers to the appropriate logger object."""
+    """A function that adds our handlers to the appropriate logger object.
+
+    Parameters
+    ----------
+    working_directory_log_path: Path | None :
+         (Default value = None)
+    """
     # Remove all of the existing handlers from the 'process' package logger
 
     logger.handlers.clear()
@@ -769,7 +836,7 @@ def setup_loggers(working_directory_log_path: Path | None = None):
         logger.addHandler(logging_file_input_location_handler)
 
 
-def main(args=None):
+def main(args: list[Any] | None = None):
     """Run Process.
 
     The args parameter is used to control command-line arguments when running
@@ -777,8 +844,10 @@ def main(args=None):
     used instead of command-line arguments by argparse. This allows testing of
     different command-line arguments from the test suite.
 
-    :param args: Arguments to parse, defaults to None
-    :type args: list, optional
+    Parameters
+    ----------
+    args :
+        Arguments to parse, defaults to None
     """
 
     Process(args)

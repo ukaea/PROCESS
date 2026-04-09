@@ -16,7 +16,7 @@ plot = figure(
     height=400,
     title="PROCESS vs Hastie Current Profile",
 )
-plot.xaxis.axis_label = "Normalized Plasma Radius"
+plot.xaxis.axis_label = "Normalised Plasma Radius"
 plot.yaxis.axis_label = "Current Density, J"
 
 plot.line(

@@ -3,15 +3,14 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.blanket_library import BlanketLibrary
 from process.data_structure import (
-    blanket_library,
     build_variables,
     divertor_variables,
     fwbs_variables,
     physics_variables,
 )
-from process.fw import FirstWall
+from process.models.blankets.blanket_library import BlanketLibrary
+from process.models.fw import FirstWall
 
 
 @pytest.fixture
@@ -392,7 +391,6 @@ class ComponentHalfHeightParam(NamedTuple):
     z_plasma_xpoint_upper: Any = None
     n_divertors: Any = None
     dz_divertor: Any = None
-    icomponent: Any = None
     expected_icomponent: Any = None
     expected_half_height: Any = None
 
@@ -416,611 +414,49 @@ class ComponentHalfHeightParam(NamedTuple):
             z_plasma_xpoint_upper=4.93333333333333333,
             n_divertors=1,
             dz_divertor=0.62000000000000011,
-            icomponent=0,
-            expected_icomponent=0,
             expected_half_height=5.9532752487304119,
         ),
     ),
 )
-def test_component_half_height(
-    componenthalfheightparam, monkeypatch, blanket_library_fixture
-):
+def test_calculate_blkt_half_height(componenthalfheightparam, blanket_library_fixture):
     """
-    Automatically generated Regression Unit Test for component_half_height.
+    Regression Unit Test for component_half_height.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak.IN.DAT.
+    This test was generated using data from large_tokamak.IN.DAT.
 
-    :param componenthalfheightparam: the data used to mock and assert in this test.
+    :param componenthalfheightparam: the data used in this test.
     :type componenthalfheightparam: componenthalfheightparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", componenthalfheightparam.z_tf_inside_half
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dz_xpoint_divertor",
-        componenthalfheightparam.dz_xpoint_divertor,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dz_shld_vv_gap",
-        componenthalfheightparam.dz_shld_vv_gap,
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_blkt_upper", componenthalfheightparam.dz_blkt_upper
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_shld_upper", componenthalfheightparam.dz_shld_upper
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_inboard",
-        componenthalfheightparam.dr_fw_plasma_gap_inboard,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_outboard",
-        componenthalfheightparam.dr_fw_plasma_gap_outboard,
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_fw_inboard", componenthalfheightparam.dr_fw_inboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_fw_outboard", componenthalfheightparam.dr_fw_outboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_vv_lower", componenthalfheightparam.dz_vv_lower
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_vv_upper", componenthalfheightparam.dz_vv_upper
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "z_plasma_xpoint_lower",
-        componenthalfheightparam.z_plasma_xpoint_lower,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "z_plasma_xpoint_upper",
-        componenthalfheightparam.z_plasma_xpoint_upper,
-    )
-    monkeypatch.setattr(
-        divertor_variables, "n_divertors", componenthalfheightparam.n_divertors
-    )
-    monkeypatch.setattr(
-        divertor_variables, "dz_divertor", componenthalfheightparam.dz_divertor
-    )
-
-    half_height = blanket_library_fixture.component_half_height(
-        componenthalfheightparam.icomponent
+    half_height = blanket_library_fixture.calculate_blkt_half_height(
+        z_plasma_xpoint_lower=componenthalfheightparam.z_plasma_xpoint_lower,
+        dz_xpoint_divertor=componenthalfheightparam.dz_xpoint_divertor,
+        dz_divertor=componenthalfheightparam.dz_divertor,
+        z_plasma_xpoint_upper=componenthalfheightparam.z_plasma_xpoint_upper,
+        dr_fw_plasma_gap_inboard=componenthalfheightparam.dr_fw_plasma_gap_inboard,
+        dr_fw_plasma_gap_outboard=componenthalfheightparam.dr_fw_plasma_gap_outboard,
+        dr_fw_inboard=componenthalfheightparam.dr_fw_inboard,
+        dr_fw_outboard=componenthalfheightparam.dr_fw_outboard,
+        dz_blkt_upper=componenthalfheightparam.dz_blkt_upper,
+        n_divertors=componenthalfheightparam.n_divertors,
     )
 
     assert half_height == pytest.approx(componenthalfheightparam.expected_half_height)
 
 
-class DshapedComponentParam(NamedTuple):
-    r_shld_inboard_inner: Any = None
-    dr_shld_inboard: Any = None
-    dr_blkt_inboard: Any = None
-    dr_fw_inboard: Any = None
-    dr_fw_plasma_gap_inboard: Any = None
-    dr_fw_plasma_gap_outboard: Any = None
-    dr_fw_outboard: Any = None
-    a_blkt_inboard_surface: Any = None
-    a_blkt_outboard_surface: Any = None
-    a_blkt_total_surface: Any = None
-    dr_blkt_outboard: Any = None
-    dz_blkt_upper: Any = None
-    a_shld_inboard_surface: Any = None
-    a_shld_outboard_surface: Any = None
-    a_shld_total_surface: Any = None
-    dr_shld_outboard: Any = None
-    dz_shld_upper: Any = None
-    r_shld_outboard_outer: Any = None
-    dr_vv_inboard: Any = None
-    dr_vv_outboard: Any = None
-    dz_vv_upper: Any = None
-    dz_vv_lower: Any = None
-    vol_blkt_inboard: Any = None
-    vol_blkt_outboard: Any = None
-    vol_blkt_total: Any = None
-    vol_shld_total: Any = None
-    vol_vv: Any = None
-    rminor: Any = None
-    vol_shld_inboard: Any = None
-    vol_shld_outboard: Any = None
-    vol_vv_inboard: Any = None
-    vol_vv_outboard: Any = None
-    dz_blkt_half: Any = None
-    dz_shld_half: Any = None
-    dz_vv_half: Any = None
-    expected_a_blkt_inboard_surface: Any = None
-    expected_a_blkt_outboard_surface: Any = None
-    expected_a_blkt_total_surface: Any = None
-    expected_a_shld_inboard_surface: Any = None
-    expected_a_shld_outboard_surface: Any = None
-    expected_a_shld_total_surface: Any = None
-    expected_vol_blkt_outboard: Any = None
-    expected_volblkt: Any = None
-    expected_vol_shld_total: Any = None
-    expected_vol_vv: Any = None
-    expected_vol_shld_inboard: Any = None
-    expected_vol_shld_outboard: Any = None
-    expected_vol_vv_inboard: Any = None
-    expected_vol_vv_outboard: Any = None
-    expected_icomponent: Any = None
-
-
-@pytest.mark.parametrize(
-    "dshapedcomponentparam",
-    (
-        DshapedComponentParam(
-            r_shld_inboard_inner=1.5,
-            dr_shld_inboard=0.40000000000000002,
-            dr_blkt_inboard=0,
-            dr_fw_inboard=0.018000000000000002,
-            dr_fw_plasma_gap_inboard=0.10000000000000001,
-            dr_fw_plasma_gap_outboard=0.10000000000000001,
-            dr_fw_outboard=0.018000000000000002,
-            a_blkt_inboard_surface=0,
-            a_blkt_outboard_surface=0,
-            a_blkt_total_surface=0,
-            dr_blkt_outboard=1,
-            dz_blkt_upper=0.5,
-            a_shld_inboard_surface=0,
-            a_shld_outboard_surface=0,
-            a_shld_total_surface=0,
-            dr_shld_outboard=0.30000000000000004,
-            dz_shld_upper=0.60000000000000009,
-            r_shld_outboard_outer=8.4000000000000004,
-            dr_vv_inboard=0.20000000000000001,
-            dr_vv_outboard=0.30000000000000004,
-            dz_vv_upper=0.30000000000000004,
-            dz_vv_lower=0.30000000000000004,
-            vol_blkt_inboard=0,
-            vol_blkt_outboard=0,
-            vol_blkt_total=0,
-            vol_shld_total=0,
-            vol_vv=0,
-            rminor=2.5,
-            vol_shld_inboard=0,
-            vol_shld_outboard=0,
-            vol_vv_inboard=0,
-            vol_vv_outboard=0,
-            dz_blkt_half=8.25,
-            dz_shld_half=8.75,
-            dz_vv_half=9.4349999999999987,
-            expected_a_blkt_inboard_surface=196.97785938008002,
-            expected_a_blkt_outboard_surface=852.24160940262459,
-            expected_a_blkt_total_surface=1049.2194687827046,
-            expected_a_shld_inboard_surface=0,
-            expected_a_shld_outboard_surface=0,
-            expected_a_shld_total_surface=0,
-            expected_vol_blkt_outboard=691.06561956756764,
-            expected_volblkt=691.06561956756764,
-            expected_vol_shld_total=0,
-            expected_vol_vv=0,
-            expected_vol_shld_inboard=0,
-            expected_vol_shld_outboard=0,
-            expected_vol_vv_inboard=0,
-            expected_vol_vv_outboard=0,
-            expected_icomponent=0,
-        ),
-    ),
-)
-def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_fixture):
-    """
-    Automatically generated Regression Unit Test for dshaped_component.
-
-    This test was generated using data from tests/regression/input_files/st_regression.IN.DAT.
-
-    :param dshapedcomponentparam: the data used to mock and assert in this test.
-    :type dshapedcomponentparam: dshapedcomponentparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-    monkeypatch.setattr(
-        build_variables,
-        "r_shld_inboard_inner",
-        dshapedcomponentparam.r_shld_inboard_inner,
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_shld_inboard", dshapedcomponentparam.dr_shld_inboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_blkt_inboard", dshapedcomponentparam.dr_blkt_inboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_fw_inboard", dshapedcomponentparam.dr_fw_inboard
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_inboard",
-        dshapedcomponentparam.dr_fw_plasma_gap_inboard,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_outboard",
-        dshapedcomponentparam.dr_fw_plasma_gap_outboard,
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_fw_outboard", dshapedcomponentparam.dr_fw_outboard
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_blkt_inboard_surface",
-        dshapedcomponentparam.a_blkt_inboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_blkt_outboard_surface",
-        dshapedcomponentparam.a_blkt_outboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_blkt_total_surface",
-        dshapedcomponentparam.a_blkt_total_surface,
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_blkt_outboard", dshapedcomponentparam.dr_blkt_outboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_blkt_upper", dshapedcomponentparam.dz_blkt_upper
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_shld_inboard_surface",
-        dshapedcomponentparam.a_shld_inboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_shld_outboard_surface",
-        dshapedcomponentparam.a_shld_outboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_shld_total_surface",
-        dshapedcomponentparam.a_shld_total_surface,
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_shld_outboard", dshapedcomponentparam.dr_shld_outboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_shld_upper", dshapedcomponentparam.dz_shld_upper
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "r_shld_outboard_outer",
-        dshapedcomponentparam.r_shld_outboard_outer,
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_vv_inboard", dshapedcomponentparam.dr_vv_inboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_vv_outboard", dshapedcomponentparam.dr_vv_outboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_vv_upper", dshapedcomponentparam.dz_vv_upper
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_vv_lower", dshapedcomponentparam.dz_vv_lower
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_inboard", dshapedcomponentparam.vol_blkt_inboard
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_outboard", dshapedcomponentparam.vol_blkt_outboard
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_total", dshapedcomponentparam.vol_blkt_total
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "vol_shld_total", dshapedcomponentparam.vol_shld_total
-    )
-    monkeypatch.setattr(fwbs_variables, "vol_vv", dshapedcomponentparam.vol_vv)
-    monkeypatch.setattr(physics_variables, "rminor", dshapedcomponentparam.rminor)
-    monkeypatch.setattr(
-        blanket_library, "vol_shld_inboard", dshapedcomponentparam.vol_shld_inboard
-    )
-    monkeypatch.setattr(
-        blanket_library, "vol_shld_outboard", dshapedcomponentparam.vol_shld_outboard
-    )
-    monkeypatch.setattr(
-        blanket_library, "vol_vv_inboard", dshapedcomponentparam.vol_vv_inboard
-    )
-    monkeypatch.setattr(
-        blanket_library, "vol_vv_outboard", dshapedcomponentparam.vol_vv_outboard
-    )
-    monkeypatch.setattr(
-        blanket_library, "dz_blkt_half", dshapedcomponentparam.dz_blkt_half
-    )
-    monkeypatch.setattr(
-        blanket_library, "dz_shld_half", dshapedcomponentparam.dz_shld_half
-    )
-    monkeypatch.setattr(blanket_library, "dz_vv_half", dshapedcomponentparam.dz_vv_half)
-
-    blanket_library_fixture.dshaped_component()
-
-    assert build_variables.a_blkt_inboard_surface == pytest.approx(
-        dshapedcomponentparam.expected_a_blkt_inboard_surface
-    )
-    assert build_variables.a_blkt_outboard_surface == pytest.approx(
-        dshapedcomponentparam.expected_a_blkt_outboard_surface
-    )
-    assert build_variables.a_blkt_total_surface == pytest.approx(
-        dshapedcomponentparam.expected_a_blkt_total_surface
-    )
-    assert fwbs_variables.vol_blkt_outboard == pytest.approx(
-        dshapedcomponentparam.expected_vol_blkt_outboard
-    )
-    assert fwbs_variables.vol_blkt_total == pytest.approx(
-        dshapedcomponentparam.expected_volblkt
-    )
-
-
-class EllipticalComponentParam(NamedTuple):
-    r_shld_inboard_inner: Any = None
-    dr_shld_inboard: Any = None
-    dr_blkt_inboard: Any = None
-    r_shld_outboard_outer: Any = None
-    dr_shld_outboard: Any = None
-    dr_blkt_outboard: Any = None
-    a_blkt_inboard_surface: Any = None
-    a_blkt_outboard_surface: Any = None
-    a_blkt_total_surface: Any = None
-    dz_blkt_upper: Any = None
-    a_shld_inboard_surface: Any = None
-    a_shld_outboard_surface: Any = None
-    a_shld_total_surface: Any = None
-    dz_shld_upper: Any = None
-    dr_vv_inboard: Any = None
-    dr_vv_outboard: Any = None
-    dz_vv_upper: Any = None
-    dz_vv_lower: Any = None
-    vol_blkt_inboard: Any = None
-    vol_blkt_outboard: Any = None
-    vol_blkt_total: Any = None
-    vol_shld_total: Any = None
-    vol_vv: Any = None
-    rmajor: Any = None
-    rminor: Any = None
-    triang: Any = None
-    vol_shld_inboard: Any = None
-    vol_shld_outboard: Any = None
-    vol_vv_inboard: Any = None
-    vol_vv_outboard: Any = None
-    dz_blkt_half: Any = None
-    dz_shld_half: Any = None
-    dz_vv_half: Any = None
-    icomponent: Any = None
-    expected_a_blkt_inboard_surface: Any = None
-    expected_a_blkt_outboard_surface: Any = None
-    expected_a_blkt_total_surface: Any = None
-    expected_a_shld_inboard_surface: Any = None
-    expected_a_shld_outboard_surface: Any = None
-    expected_a_shld_total_surface: Any = None
-    expected_vol_blkt_inboard: Any = None
-    expected_vol_blkt_outboard: Any = None
-    expected_volblkt: Any = None
-    expected_vol_shld_total: Any = None
-    expected_vol_vv: Any = None
-    expected_vol_shld_inboard: Any = None
-    expected_vol_shld_outboard: Any = None
-    expected_vol_vv_inboard: Any = None
-    expected_vol_vv_outboard: Any = None
-    expected_icomponent: Any = None
-
-
-@pytest.mark.parametrize(
-    "ellipticalcomponentparam",
-    (
-        EllipticalComponentParam(
-            r_shld_inboard_inner=4.0833333333333339,
-            dr_shld_inboard=0.30000000000000004,
-            dr_blkt_inboard=0.70000000000000007,
-            r_shld_outboard_outer=12.716666666666667,
-            dr_shld_outboard=0.80000000000000004,
-            dr_blkt_outboard=1,
-            a_blkt_inboard_surface=0,
-            a_blkt_outboard_surface=0,
-            a_blkt_total_surface=0,
-            dz_blkt_upper=0.85000000000000009,
-            a_shld_inboard_surface=0,
-            a_shld_outboard_surface=0,
-            a_shld_total_surface=0,
-            dz_shld_upper=0.59999999999999998,
-            dr_vv_inboard=0.30000000000000004,
-            dr_vv_outboard=0.30000000000000004,
-            dz_vv_upper=0.30000000000000004,
-            dz_vv_lower=0.30000000000000004,
-            vol_blkt_inboard=0,
-            vol_blkt_outboard=0,
-            vol_blkt_total=0,
-            vol_shld_total=0,
-            vol_vv=0,
-            rmajor=8,
-            rminor=2.6666666666666665,
-            triang=0.5,
-            vol_shld_inboard=0,
-            vol_shld_outboard=0,
-            vol_vv_inboard=0,
-            vol_vv_outboard=0,
-            dz_blkt_half=5.9532752487304119,
-            dz_shld_half=6.8032752487304133,
-            dz_vv_half=7.5032752487304135,
-            icomponent=0,
-            expected_a_blkt_inboard_surface=664.9687712975541,
-            expected_a_blkt_outboard_surface=1101.3666396424403,
-            expected_a_blkt_total_surface=1766.3354109399943,
-            expected_a_shld_inboard_surface=0,
-            expected_a_shld_outboard_surface=0,
-            expected_a_shld_total_surface=0,
-            expected_vol_blkt_inboard=315.83946385183026,
-            expected_vol_blkt_outboard=1020.3677420460117,
-            expected_volblkt=1336.207205897842,
-            expected_vol_shld_total=0,
-            expected_vol_vv=0,
-            expected_vol_shld_inboard=0,
-            expected_vol_shld_outboard=0,
-            expected_vol_vv_inboard=0,
-            expected_vol_vv_outboard=0,
-            expected_icomponent=0,
-        ),
-    ),
-)
-def test_elliptical_component(
-    ellipticalcomponentparam, monkeypatch, blanket_library_fixture
-):
-    """
-    Automatically generated Regression Unit Test for elliptical_component.
-
-    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
-
-    :param ellipticalcomponentparam: the data used to mock and assert in this test.
-    :type ellipticalcomponentparam: ellipticalcomponentparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-    monkeypatch.setattr(
-        build_variables,
-        "r_shld_inboard_inner",
-        ellipticalcomponentparam.r_shld_inboard_inner,
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_shld_inboard", ellipticalcomponentparam.dr_shld_inboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_blkt_inboard", ellipticalcomponentparam.dr_blkt_inboard
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "r_shld_outboard_outer",
-        ellipticalcomponentparam.r_shld_outboard_outer,
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_shld_outboard", ellipticalcomponentparam.dr_shld_outboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_blkt_outboard", ellipticalcomponentparam.dr_blkt_outboard
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_blkt_inboard_surface",
-        ellipticalcomponentparam.a_blkt_inboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_blkt_outboard_surface",
-        ellipticalcomponentparam.a_blkt_outboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_blkt_total_surface",
-        ellipticalcomponentparam.a_blkt_total_surface,
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_blkt_upper", ellipticalcomponentparam.dz_blkt_upper
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_shld_inboard_surface",
-        ellipticalcomponentparam.a_shld_inboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_shld_outboard_surface",
-        ellipticalcomponentparam.a_shld_outboard_surface,
-    )
-    monkeypatch.setattr(
-        build_variables,
-        "a_shld_total_surface",
-        ellipticalcomponentparam.a_shld_total_surface,
-    )
-    monkeypatch.setattr(
-        build_variables, "dz_shld_upper", ellipticalcomponentparam.dz_shld_upper
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_inboard", ellipticalcomponentparam.vol_blkt_inboard
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_outboard", ellipticalcomponentparam.vol_blkt_outboard
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_total", ellipticalcomponentparam.vol_blkt_total
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "vol_shld_total", ellipticalcomponentparam.vol_shld_total
-    )
-    monkeypatch.setattr(physics_variables, "rmajor", ellipticalcomponentparam.rmajor)
-    monkeypatch.setattr(physics_variables, "rminor", ellipticalcomponentparam.rminor)
-    monkeypatch.setattr(physics_variables, "triang", ellipticalcomponentparam.triang)
-    monkeypatch.setattr(
-        blanket_library, "vol_shld_inboard", ellipticalcomponentparam.vol_shld_inboard
-    )
-    monkeypatch.setattr(
-        blanket_library, "vol_shld_outboard", ellipticalcomponentparam.vol_shld_outboard
-    )
-    monkeypatch.setattr(
-        blanket_library, "dz_blkt_half", ellipticalcomponentparam.dz_blkt_half
-    )
-    monkeypatch.setattr(
-        blanket_library, "dz_shld_half", ellipticalcomponentparam.dz_shld_half
-    )
-
-    blanket_library_fixture.elliptical_component()
-
-    assert build_variables.a_blkt_inboard_surface == pytest.approx(
-        ellipticalcomponentparam.expected_a_blkt_inboard_surface
-    )
-    assert build_variables.a_blkt_outboard_surface == pytest.approx(
-        ellipticalcomponentparam.expected_a_blkt_outboard_surface
-    )
-    assert build_variables.a_blkt_total_surface == pytest.approx(
-        ellipticalcomponentparam.expected_a_blkt_total_surface
-    )
-    assert build_variables.a_shld_inboard_surface == pytest.approx(
-        ellipticalcomponentparam.expected_a_shld_inboard_surface
-    )
-    assert build_variables.a_shld_outboard_surface == pytest.approx(
-        ellipticalcomponentparam.expected_a_shld_outboard_surface
-    )
-    assert build_variables.a_shld_total_surface == pytest.approx(
-        ellipticalcomponentparam.expected_a_shld_total_surface
-    )
-    assert fwbs_variables.vol_blkt_inboard == pytest.approx(
-        ellipticalcomponentparam.expected_vol_blkt_inboard
-    )
-    assert fwbs_variables.vol_blkt_outboard == pytest.approx(
-        ellipticalcomponentparam.expected_vol_blkt_outboard
-    )
-    assert fwbs_variables.vol_blkt_total == pytest.approx(
-        ellipticalcomponentparam.expected_volblkt
-    )
-    assert fwbs_variables.vol_shld_total == pytest.approx(
-        ellipticalcomponentparam.expected_vol_shld_total
-    )
-    assert blanket_library.vol_shld_inboard == pytest.approx(
-        ellipticalcomponentparam.expected_vol_shld_inboard
-    )
-    assert blanket_library.vol_shld_outboard == pytest.approx(
-        ellipticalcomponentparam.expected_vol_shld_outboard
-    )
-
-
 class ApplyCoverageFactorsParam(NamedTuple):
     a_blkt_outboard_surface: Any = None
+    a_blkt_outboard_surface_full_coverage: Any = None
     a_blkt_total_surface: Any = None
+    a_blkt_total_surface_full_coverage: Any = None
     a_blkt_inboard_surface: Any = None
+    a_blkt_inboard_surface_full_coverage: Any = None
     f_ster_div_single: Any = None
     f_a_fw_outboard_hcd: Any = None
     vol_blkt_outboard: Any = None
     vol_blkt_inboard: Any = None
+    vol_blkt_inboard_full_coverage: Any = None
     vol_blkt_total: Any = None
+    vol_blkt_total_full_coverage: Any = None
     fvolsi: Any = None
     fvolso: Any = None
     vol_shld_total: Any = None
@@ -1039,13 +475,18 @@ class ApplyCoverageFactorsParam(NamedTuple):
     (
         ApplyCoverageFactorsParam(
             a_blkt_outboard_surface=1101.3666396424403,
+            a_blkt_outboard_surface_full_coverage=1101.3666396424403,
             a_blkt_total_surface=1766.3354109399943,
+            a_blkt_total_surface_full_coverage=1766.3354109399943,
             a_blkt_inboard_surface=664.9687712975541,
+            a_blkt_inboard_surface_full_coverage=664.9687712975541,
             f_ster_div_single=0.115,
             f_a_fw_outboard_hcd=0,
             vol_blkt_outboard=1020.3677420460117,
             vol_blkt_inboard=315.83946385183026,
+            vol_blkt_inboard_full_coverage=315.83946385183026,
             vol_blkt_total=1336.207205897842,
+            vol_blkt_total_full_coverage=1336.207205897842,
             fvolsi=1,
             fvolso=0.64000000000000001,
             n_divertors=1,
@@ -1078,13 +519,28 @@ def test_apply_coverage_factors(
     )
     monkeypatch.setattr(
         build_variables,
+        "a_blkt_outboard_surface_full_coverage",
+        applycoveragefactorsparam.a_blkt_outboard_surface_full_coverage,
+    )
+    monkeypatch.setattr(
+        build_variables,
         "a_blkt_total_surface",
         applycoveragefactorsparam.a_blkt_total_surface,
     )
     monkeypatch.setattr(
         build_variables,
+        "a_blkt_total_surface_full_coverage",
+        applycoveragefactorsparam.a_blkt_total_surface_full_coverage,
+    )
+    monkeypatch.setattr(
+        build_variables,
         "a_blkt_inboard_surface",
         applycoveragefactorsparam.a_blkt_inboard_surface,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "a_blkt_inboard_surface_full_coverage",
+        applycoveragefactorsparam.a_blkt_inboard_surface_full_coverage,
     )
     monkeypatch.setattr(
         fwbs_variables, "f_ster_div_single", applycoveragefactorsparam.f_ster_div_single
@@ -1101,7 +557,17 @@ def test_apply_coverage_factors(
         fwbs_variables, "vol_blkt_inboard", applycoveragefactorsparam.vol_blkt_inboard
     )
     monkeypatch.setattr(
+        fwbs_variables,
+        "vol_blkt_inboard_full_coverage",
+        applycoveragefactorsparam.vol_blkt_inboard_full_coverage,
+    )
+    monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", applycoveragefactorsparam.vol_blkt_total
+    )
+    monkeypatch.setattr(
+        fwbs_variables,
+        "vol_blkt_total_full_coverage",
+        applycoveragefactorsparam.vol_blkt_total_full_coverage,
     )
     monkeypatch.setattr(fwbs_variables, "fvolsi", applycoveragefactorsparam.fvolsi)
     monkeypatch.setattr(fwbs_variables, "fvolso", applycoveragefactorsparam.fvolso)
@@ -1125,138 +591,170 @@ def test_apply_coverage_factors(
     )
 
 
-class BlanketModPolHeightParam(NamedTuple):
-    dr_fw_plasma_gap_inboard: Any = None
-    dr_fw_plasma_gap_outboard: Any = None
-    i_fw_blkt_vv_shape: Any = None
-    n_blkt_inboard_modules_poloidal: Any = None
-    f_ster_div_single: Any = None
-    n_blkt_outboard_modules_poloidal: Any = None
-    itart: Any = None
-    rminor: Any = None
-    n_divertors: Any = None
-    rmajor: Any = None
-    triang: Any = None
-    len_blkt_inboard_segment_poloidal: Any = None
-    len_blkt_outboard_segment_poloidal: Any = None
+class DshapedInboardBlktSegmentParam(NamedTuple):
     dz_blkt_half: Any = None
+    n_blkt_inboard_modules_poloidal: Any = None
     expected_len_blkt_inboard_segment_poloidal: Any = None
+
+
+@pytest.mark.parametrize(
+    "dshaped_inboard_param",
+    (
+        DshapedInboardBlktSegmentParam(
+            dz_blkt_half=8.25,
+            n_blkt_inboard_modules_poloidal=7,
+            expected_len_blkt_inboard_segment_poloidal=2.3571428571428572,
+        ),
+    ),
+)
+def test_calculate_dshaped_inboard_blkt_segment_poloidal(
+    dshaped_inboard_param, blanket_library_fixture
+):
+    """Test for calculate_dshaped_inboard_blkt_segment_poloidal."""
+    result = blanket_library_fixture.calculate_dshaped_inboard_blkt_segment_poloidal(
+        dz_blkt_half=dshaped_inboard_param.dz_blkt_half,
+        n_blkt_inboard_modules_poloidal=dshaped_inboard_param.n_blkt_inboard_modules_poloidal,
+    )
+    assert result == pytest.approx(
+        dshaped_inboard_param.expected_len_blkt_inboard_segment_poloidal
+    )
+
+
+class DshapedOutboardBlktSegmentParam(NamedTuple):
+    n_blkt_outboard_modules_poloidal: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    rminor: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
+    dz_blkt_half: Any = None
+    n_divertors: Any = None
+    f_ster_div_single: Any = None
     expected_len_blkt_outboard_segment_poloidal: Any = None
 
 
 @pytest.mark.parametrize(
-    "blanketmodpolheightparam",
+    "dshaped_outboard_param",
     (
-        BlanketModPolHeightParam(
-            dr_fw_plasma_gap_inboard=0.25,
-            dr_fw_plasma_gap_outboard=0.25,
-            i_fw_blkt_vv_shape=2,
-            n_blkt_inboard_modules_poloidal=7,
-            f_ster_div_single=0.115,
+        DshapedOutboardBlktSegmentParam(
             n_blkt_outboard_modules_poloidal=8,
-            itart=0,
-            rminor=2.6666666666666665,
-            n_divertors=1,
-            rmajor=8,
-            triang=0.5,
-            len_blkt_inboard_segment_poloidal=0,
-            len_blkt_outboard_segment_poloidal=0,
-            dz_blkt_half=5.9532752487304119,
-            expected_len_blkt_inboard_segment_poloidal=1.6252823720672551,
-            expected_len_blkt_outboard_segment_poloidal=1.7853902013340495,
-        ),
-        BlanketModPolHeightParam(
             dr_fw_plasma_gap_inboard=0.10000000000000001,
-            dr_fw_plasma_gap_outboard=0.10000000000000001,
-            i_fw_blkt_vv_shape=1,
-            n_blkt_inboard_modules_poloidal=7,
-            f_ster_div_single=0.115,
-            n_blkt_outboard_modules_poloidal=8,
-            itart=1,
             rminor=2.5,
-            n_divertors=2,
-            rmajor=4.5,
-            triang=0.5,
-            len_blkt_inboard_segment_poloidal=0,
-            len_blkt_outboard_segment_poloidal=0,
+            dr_fw_plasma_gap_outboard=0.10000000000000001,
             dz_blkt_half=8.25,
-            expected_len_blkt_inboard_segment_poloidal=2.3571428571428572,
+            n_divertors=2,
+            f_ster_div_single=0.115,
             expected_len_blkt_outboard_segment_poloidal=2.0597205347177807,
         ),
     ),
 )
-def test_blanket_mod_pol_height(
-    blanketmodpolheightparam,
-    monkeypatch,
-    blanket_library_fixture,
+def test_calculate_dshaped_outboard_blkt_segment_poloidal(
+    dshaped_outboard_param, blanket_library_fixture
 ):
-    """
-    Automatically generated Regression Unit Test for blanket_mod_pol_height.
-
-    This test was generated using data from blanket_files/large_tokamak_primary_pumping2.IN.DAT.
-
-    :param blanketmodpolheightparam: the data used to mock and assert in this test.
-    :type blanketmodpolheightparam: blanketmodpolheightparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_inboard",
-        blanketmodpolheightparam.dr_fw_plasma_gap_inboard,
+    """Test for calculate_dshaped_outboard_blkt_segment_poloidal."""
+    result = blanket_library_fixture.calculate_dshaped_outboard_blkt_segment_poloidal(
+        n_blkt_outboard_modules_poloidal=dshaped_outboard_param.n_blkt_outboard_modules_poloidal,
+        dr_fw_plasma_gap_inboard=dshaped_outboard_param.dr_fw_plasma_gap_inboard,
+        rminor=dshaped_outboard_param.rminor,
+        dr_fw_plasma_gap_outboard=dshaped_outboard_param.dr_fw_plasma_gap_outboard,
+        dz_blkt_half=dshaped_outboard_param.dz_blkt_half,
+        n_divertors=dshaped_outboard_param.n_divertors,
+        f_ster_div_single=dshaped_outboard_param.f_ster_div_single,
     )
-    monkeypatch.setattr(
-        build_variables,
-        "dr_fw_plasma_gap_outboard",
-        blanketmodpolheightparam.dr_fw_plasma_gap_outboard,
-    )
-    monkeypatch.setattr(
-        fwbs_variables,
-        "i_fw_blkt_vv_shape",
-        blanketmodpolheightparam.i_fw_blkt_vv_shape,
-    )
-    monkeypatch.setattr(
-        fwbs_variables,
-        "n_blkt_inboard_modules_poloidal",
-        blanketmodpolheightparam.n_blkt_inboard_modules_poloidal,
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "f_ster_div_single", blanketmodpolheightparam.f_ster_div_single
-    )
-    monkeypatch.setattr(
-        fwbs_variables,
-        "n_blkt_outboard_modules_poloidal",
-        blanketmodpolheightparam.n_blkt_outboard_modules_poloidal,
-    )
-    monkeypatch.setattr(physics_variables, "itart", blanketmodpolheightparam.itart)
-    monkeypatch.setattr(physics_variables, "rminor", blanketmodpolheightparam.rminor)
-    monkeypatch.setattr(
-        divertor_variables, "n_divertors", blanketmodpolheightparam.n_divertors
-    )
-    monkeypatch.setattr(physics_variables, "rmajor", blanketmodpolheightparam.rmajor)
-    monkeypatch.setattr(physics_variables, "triang", blanketmodpolheightparam.triang)
-    monkeypatch.setattr(
-        blanket_library,
-        "len_blkt_inboard_segment_poloidal",
-        blanketmodpolheightparam.len_blkt_inboard_segment_poloidal,
-    )
-    monkeypatch.setattr(
-        blanket_library,
-        "len_blkt_outboard_segment_poloidal",
-        blanketmodpolheightparam.len_blkt_outboard_segment_poloidal,
-    )
-    monkeypatch.setattr(
-        blanket_library, "dz_blkt_half", blanketmodpolheightparam.dz_blkt_half
+    assert result == pytest.approx(
+        dshaped_outboard_param.expected_len_blkt_outboard_segment_poloidal
     )
 
-    blanket_library_fixture.blanket_module_poloidal_height()
 
-    assert blanket_library.len_blkt_inboard_segment_poloidal == pytest.approx(
-        blanketmodpolheightparam.expected_len_blkt_inboard_segment_poloidal
+class EllipticalInboardBlktSegmentParam(NamedTuple):
+    rmajor: Any = None
+    rminor: Any = None
+    triang: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    dz_blkt_half: Any = None
+    n_blkt_inboard_modules_poloidal: Any = None
+    n_divertors: Any = None
+    f_ster_div_single: Any = None
+    expected_len_blkt_inboard_segment_poloidal: Any = None
+
+
+@pytest.mark.parametrize(
+    "elliptical_inboard_param",
+    (
+        EllipticalInboardBlktSegmentParam(
+            rmajor=8,
+            rminor=2.6666666666666665,
+            triang=0.5,
+            dr_fw_plasma_gap_inboard=0.25,
+            dz_blkt_half=5.9532752487304119,
+            n_blkt_inboard_modules_poloidal=7,
+            n_divertors=1,
+            f_ster_div_single=0.115,
+            expected_len_blkt_inboard_segment_poloidal=1.6252823720672551,
+        ),
+    ),
+)
+def test_calculate_elliptical_inboard_blkt_segment_poloidal(
+    elliptical_inboard_param, blanket_library_fixture
+):
+    """Test for calculate_elliptical_inboard_blkt_segment_poloidal."""
+    result = blanket_library_fixture.calculate_elliptical_inboard_blkt_segment_poloidal(
+        rmajor=elliptical_inboard_param.rmajor,
+        rminor=elliptical_inboard_param.rminor,
+        triang=elliptical_inboard_param.triang,
+        dr_fw_plasma_gap_inboard=elliptical_inboard_param.dr_fw_plasma_gap_inboard,
+        dz_blkt_half=elliptical_inboard_param.dz_blkt_half,
+        n_blkt_inboard_modules_poloidal=elliptical_inboard_param.n_blkt_inboard_modules_poloidal,
+        n_divertors=elliptical_inboard_param.n_divertors,
+        f_ster_div_single=elliptical_inboard_param.f_ster_div_single,
     )
-    assert blanket_library.len_blkt_outboard_segment_poloidal == pytest.approx(
-        blanketmodpolheightparam.expected_len_blkt_outboard_segment_poloidal
+    assert result == pytest.approx(
+        elliptical_inboard_param.expected_len_blkt_inboard_segment_poloidal
+    )
+
+
+class EllipticalOutboardBlktSegmentParam(NamedTuple):
+    rmajor: Any = None
+    rminor: Any = None
+    triang: Any = None
+    dz_blkt_half: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
+    n_blkt_outboard_modules_poloidal: Any = None
+    n_divertors: Any = None
+    f_ster_div_single: Any = None
+    expected_len_blkt_outboard_segment_poloidal: Any = None
+
+
+@pytest.mark.parametrize(
+    "elliptical_outboard_param",
+    (
+        EllipticalOutboardBlktSegmentParam(
+            rmajor=8,
+            rminor=2.6666666666666665,
+            triang=0.5,
+            dz_blkt_half=5.9532752487304119,
+            dr_fw_plasma_gap_outboard=0.25,
+            n_blkt_outboard_modules_poloidal=8,
+            n_divertors=1,
+            f_ster_div_single=0.115,
+            expected_len_blkt_outboard_segment_poloidal=1.7853902013340495,
+        ),
+    ),
+)
+def test_calculate_elliptical_outboard_blkt_segment_poloidal(
+    elliptical_outboard_param, blanket_library_fixture
+):
+    """Test for calculate_elliptical_outboard_blkt_segment_poloidal."""
+    result = blanket_library_fixture.calculate_elliptical_outboard_blkt_segment_poloidal(
+        rmajor=elliptical_outboard_param.rmajor,
+        rminor=elliptical_outboard_param.rminor,
+        triang=elliptical_outboard_param.triang,
+        dz_blkt_half=elliptical_outboard_param.dz_blkt_half,
+        dr_fw_plasma_gap_outboard=elliptical_outboard_param.dr_fw_plasma_gap_outboard,
+        n_blkt_outboard_modules_poloidal=elliptical_outboard_param.n_blkt_outboard_modules_poloidal,
+        n_divertors=elliptical_outboard_param.n_divertors,
+        f_ster_div_single=elliptical_outboard_param.f_ster_div_single,
+    )
+    assert result == pytest.approx(
+        elliptical_outboard_param.expected_len_blkt_outboard_segment_poloidal
     )
 
 
@@ -1717,4 +1215,307 @@ def test_liquid_breeder_pressure_drop_mhd(
 
     assert liquid_breeder_pressure_drop_mhd_out == pytest.approx(
         liquidbreederpressuredropmhdparam.expected_liquid_breeder_pressure_drop_mhd_out
+    )
+
+
+class CalculateDshapedBlktAreasParam(NamedTuple):
+    r_shld_inboard_inner: Any = None
+    dr_shld_inboard: Any = None
+    dr_blkt_inboard: Any = None
+    dr_fw_inboard: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    rminor: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
+    dr_fw_outboard: Any = None
+    dz_blkt_half: Any = None
+    expected_a_blkt_inboard_surface: Any = None
+    expected_a_blkt_outboard_surface: Any = None
+    expected_a_blkt_total_surface: Any = None
+
+
+@pytest.mark.parametrize(
+    "calculatedshapedblktareasparam",
+    (
+        CalculateDshapedBlktAreasParam(
+            r_shld_inboard_inner=1.5,
+            dr_shld_inboard=0.4,
+            dr_blkt_inboard=0.0,
+            dr_fw_inboard=0.018,
+            dr_fw_plasma_gap_inboard=0.1,
+            rminor=2.5,
+            dr_fw_plasma_gap_outboard=0.1,
+            dr_fw_outboard=0.018,
+            dz_blkt_half=8.25,
+            expected_a_blkt_inboard_surface=196.97785938008002,
+            expected_a_blkt_outboard_surface=852.24160940262459,
+            expected_a_blkt_total_surface=1049.2194687827046,
+        ),
+    ),
+)
+def test_calculate_dshaped_blkt_areas(
+    calculatedshapedblktareasparam, blanket_library_fixture
+):
+    """
+    Regression Unit Test for calculate_dshaped_blkt_areas.
+
+    This test was generated using data from tests/regression/input_files/st_regression.IN.DAT.
+
+    :param calculatedshapedblktareasparam: the data used in this test.
+    :type calculatedshapedblktareasparam: CalculateDshapedBlktAreasParam
+    """
+    (
+        a_blkt_inboard_surface,
+        a_blkt_outboard_surface,
+        a_blkt_total_surface,
+    ) = blanket_library_fixture.calculate_dshaped_blkt_areas(
+        r_shld_inboard_inner=calculatedshapedblktareasparam.r_shld_inboard_inner,
+        dr_shld_inboard=calculatedshapedblktareasparam.dr_shld_inboard,
+        dr_blkt_inboard=calculatedshapedblktareasparam.dr_blkt_inboard,
+        dr_fw_inboard=calculatedshapedblktareasparam.dr_fw_inboard,
+        dr_fw_plasma_gap_inboard=calculatedshapedblktareasparam.dr_fw_plasma_gap_inboard,
+        rminor=calculatedshapedblktareasparam.rminor,
+        dr_fw_plasma_gap_outboard=calculatedshapedblktareasparam.dr_fw_plasma_gap_outboard,
+        dr_fw_outboard=calculatedshapedblktareasparam.dr_fw_outboard,
+        dz_blkt_half=calculatedshapedblktareasparam.dz_blkt_half,
+    )
+
+    assert a_blkt_inboard_surface == pytest.approx(
+        calculatedshapedblktareasparam.expected_a_blkt_inboard_surface
+    )
+    assert a_blkt_outboard_surface == pytest.approx(
+        calculatedshapedblktareasparam.expected_a_blkt_outboard_surface
+    )
+    assert a_blkt_total_surface == pytest.approx(
+        calculatedshapedblktareasparam.expected_a_blkt_total_surface
+    )
+
+
+class CalculateDshapedBlktVolumesParam(NamedTuple):
+    r_shld_inboard_inner: Any = None
+    dr_shld_inboard: Any = None
+    dr_blkt_inboard: Any = None
+    dr_fw_inboard: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    rminor: Any = None
+    dr_fw_plasma_gap_outboard: Any = None
+    dr_fw_outboard: Any = None
+    dz_blkt_half: Any = None
+    dr_blkt_outboard: Any = None
+    dz_blkt_upper: Any = None
+    expected_vol_blkt_inboard: Any = None
+    expected_vol_blkt_outboard: Any = None
+    expected_vol_blkt_total: Any = None
+
+
+@pytest.mark.parametrize(
+    "calculatedshapedblktvolumesparam",
+    (
+        CalculateDshapedBlktVolumesParam(
+            r_shld_inboard_inner=1.5,
+            dr_shld_inboard=0.4,
+            dr_blkt_inboard=0.6,
+            dr_fw_inboard=0.018,
+            dr_fw_plasma_gap_inboard=0.1,
+            rminor=2.5,
+            dr_fw_plasma_gap_outboard=0.1,
+            dr_fw_outboard=0.018,
+            dz_blkt_half=8.25,
+            dr_blkt_outboard=1.0,
+            dz_blkt_upper=0.85,
+            expected_vol_blkt_inboard=150.94724381968237,
+            expected_vol_blkt_outboard=869.2500537130913,
+            expected_vol_blkt_total=1020.1972975327737,
+        ),
+    ),
+)
+def test_calculate_dshaped_blkt_volumes(
+    calculatedshapedblktvolumesparam, blanket_library_fixture
+):
+    """
+    Regression Unit Test for calculate_dshaped_blkt_volumes.
+
+    This test was generated using data from tests/regression/input_files/st_regression.IN.DAT.
+
+    :param calculatedshapedblktvolumesparam: the data used in this test.
+    :type calculatedshapedblktvolumesparam: CalculateDshapedBlktVolumesParam
+    """
+    (
+        vol_blkt_inboard,
+        vol_blkt_outboard,
+        vol_blkt_total,
+    ) = blanket_library_fixture.calculate_dshaped_blkt_volumes(
+        r_shld_inboard_inner=calculatedshapedblktvolumesparam.r_shld_inboard_inner,
+        dr_shld_inboard=calculatedshapedblktvolumesparam.dr_shld_inboard,
+        dr_blkt_inboard=calculatedshapedblktvolumesparam.dr_blkt_inboard,
+        dr_fw_inboard=calculatedshapedblktvolumesparam.dr_fw_inboard,
+        dr_fw_plasma_gap_inboard=calculatedshapedblktvolumesparam.dr_fw_plasma_gap_inboard,
+        rminor=calculatedshapedblktvolumesparam.rminor,
+        dr_fw_plasma_gap_outboard=calculatedshapedblktvolumesparam.dr_fw_plasma_gap_outboard,
+        dr_fw_outboard=calculatedshapedblktvolumesparam.dr_fw_outboard,
+        dz_blkt_half=calculatedshapedblktvolumesparam.dz_blkt_half,
+        dr_blkt_outboard=calculatedshapedblktvolumesparam.dr_blkt_outboard,
+        dz_blkt_upper=calculatedshapedblktvolumesparam.dz_blkt_upper,
+    )
+
+    assert vol_blkt_inboard == pytest.approx(
+        calculatedshapedblktvolumesparam.expected_vol_blkt_inboard
+    )
+    assert vol_blkt_outboard == pytest.approx(
+        calculatedshapedblktvolumesparam.expected_vol_blkt_outboard
+    )
+    assert vol_blkt_total == pytest.approx(
+        calculatedshapedblktvolumesparam.expected_vol_blkt_total
+    )
+
+
+class CalculateEllipticalBlktAreasParam(NamedTuple):
+    rmajor: Any = None
+    rminor: Any = None
+    triang: Any = None
+    r_shld_inboard_inner: Any = None
+    dr_shld_inboard: Any = None
+    dr_blkt_inboard: Any = None
+    r_shld_outboard_outer: Any = None
+    dr_shld_outboard: Any = None
+    dr_blkt_outboard: Any = None
+    dz_blkt_half: Any = None
+    expected_a_blkt_inboard_surface: Any = None
+    expected_a_blkt_outboard_surface: Any = None
+    expected_a_blkt_total_surface: Any = None
+
+
+@pytest.mark.parametrize(
+    "calculateellipticalblktareasparam",
+    (
+        CalculateEllipticalBlktAreasParam(
+            rmajor=8,
+            rminor=2.6666666666666665,
+            triang=0.5,
+            r_shld_inboard_inner=4.0833333333333339,
+            dr_shld_inboard=0.30000000000000004,
+            dr_blkt_inboard=0.70000000000000007,
+            r_shld_outboard_outer=12.716666666666667,
+            dr_shld_outboard=0.80000000000000004,
+            dr_blkt_outboard=1,
+            dz_blkt_half=5.9532752487304119,
+            expected_a_blkt_inboard_surface=664.9687712975541,
+            expected_a_blkt_outboard_surface=1101.3666396424403,
+            expected_a_blkt_total_surface=1766.3354109399943,
+        ),
+    ),
+)
+def test_calculate_elliptical_blkt_areas(
+    calculateellipticalblktareasparam, blanket_library_fixture
+):
+    """
+    Regression Unit Test for calculate_elliptical_blkt_areas.
+
+    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
+
+    :param calculateellipticalblktareasparam: the data used in this test.
+    :type calculateellipticalblktareasparam: CalculateEllipticalBlktAreasParam
+    """
+    (
+        a_blkt_inboard_surface,
+        a_blkt_outboard_surface,
+        a_blkt_total_surface,
+    ) = blanket_library_fixture.calculate_elliptical_blkt_areas(
+        rmajor=calculateellipticalblktareasparam.rmajor,
+        rminor=calculateellipticalblktareasparam.rminor,
+        triang=calculateellipticalblktareasparam.triang,
+        r_shld_inboard_inner=calculateellipticalblktareasparam.r_shld_inboard_inner,
+        dr_shld_inboard=calculateellipticalblktareasparam.dr_shld_inboard,
+        dr_blkt_inboard=calculateellipticalblktareasparam.dr_blkt_inboard,
+        r_shld_outboard_outer=calculateellipticalblktareasparam.r_shld_outboard_outer,
+        dr_shld_outboard=calculateellipticalblktareasparam.dr_shld_outboard,
+        dr_blkt_outboard=calculateellipticalblktareasparam.dr_blkt_outboard,
+        dz_blkt_half=calculateellipticalblktareasparam.dz_blkt_half,
+    )
+
+    assert a_blkt_inboard_surface == pytest.approx(
+        calculateellipticalblktareasparam.expected_a_blkt_inboard_surface
+    )
+    assert a_blkt_outboard_surface == pytest.approx(
+        calculateellipticalblktareasparam.expected_a_blkt_outboard_surface
+    )
+    assert a_blkt_total_surface == pytest.approx(
+        calculateellipticalblktareasparam.expected_a_blkt_total_surface
+    )
+
+
+class CalculateEllipticalBlktVolumesParam(NamedTuple):
+    rmajor: Any = None
+    rminor: Any = None
+    triang: Any = None
+    r_shld_inboard_inner: Any = None
+    dr_shld_inboard: Any = None
+    dr_blkt_inboard: Any = None
+    r_shld_outboard_outer: Any = None
+    dr_shld_outboard: Any = None
+    dr_blkt_outboard: Any = None
+    dz_blkt_half: Any = None
+    dz_blkt_upper: Any = None
+    expected_vol_blkt_inboard: Any = None
+    expected_vol_blkt_outboard: Any = None
+    expected_vol_blkt_total: Any = None
+
+
+@pytest.mark.parametrize(
+    "calculateellipticalblktvolumesparam",
+    (
+        CalculateEllipticalBlktVolumesParam(
+            rmajor=8,
+            rminor=2.6666666666666665,
+            triang=0.5,
+            r_shld_inboard_inner=4.0833333333333339,
+            dr_shld_inboard=0.30000000000000004,
+            dr_blkt_inboard=0.70000000000000007,
+            r_shld_outboard_outer=12.716666666666667,
+            dr_shld_outboard=0.80000000000000004,
+            dr_blkt_outboard=1,
+            dz_blkt_half=5.9532752487304119,
+            dz_blkt_upper=0.85000000000000009,
+            expected_vol_blkt_inboard=315.83946385183026,
+            expected_vol_blkt_outboard=1020.3677420460117,
+            expected_vol_blkt_total=1336.207205897842,
+        ),
+    ),
+)
+def test_calculate_elliptical_blkt_volumes(
+    calculateellipticalblktvolumesparam, blanket_library_fixture
+):
+    """
+    Regression Unit Test for calculate_elliptical_blkt_volumes.
+
+    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
+
+    :param calculateellipticalblktvolumesparam: the data used in this test.
+    :type calculateellipticalblktvolumesparam: CalculateEllipticalBlktVolumesParam
+    """
+    (
+        vol_blkt_inboard,
+        vol_blkt_outboard,
+        vol_blkt_total,
+    ) = blanket_library_fixture.calculate_elliptical_blkt_volumes(
+        rmajor=calculateellipticalblktvolumesparam.rmajor,
+        rminor=calculateellipticalblktvolumesparam.rminor,
+        triang=calculateellipticalblktvolumesparam.triang,
+        r_shld_inboard_inner=calculateellipticalblktvolumesparam.r_shld_inboard_inner,
+        dr_shld_inboard=calculateellipticalblktvolumesparam.dr_shld_inboard,
+        dr_blkt_inboard=calculateellipticalblktvolumesparam.dr_blkt_inboard,
+        r_shld_outboard_outer=calculateellipticalblktvolumesparam.r_shld_outboard_outer,
+        dr_shld_outboard=calculateellipticalblktvolumesparam.dr_shld_outboard,
+        dr_blkt_outboard=calculateellipticalblktvolumesparam.dr_blkt_outboard,
+        dz_blkt_half=calculateellipticalblktvolumesparam.dz_blkt_half,
+        dz_blkt_upper=calculateellipticalblktvolumesparam.dz_blkt_upper,
+    )
+
+    assert vol_blkt_inboard == pytest.approx(
+        calculateellipticalblktvolumesparam.expected_vol_blkt_inboard
+    )
+    assert vol_blkt_outboard == pytest.approx(
+        calculateellipticalblktvolumesparam.expected_vol_blkt_outboard
+    )
+    assert vol_blkt_total == pytest.approx(
+        calculateellipticalblktvolumesparam.expected_vol_blkt_total
     )

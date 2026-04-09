@@ -52,25 +52,28 @@ Issues        = "https://github.com/ukaea/process/issues"
 [project.optional-dependencies]
 test = [
   "pytest>=5.4.1",
-  "requests>=2.30",
   "testbook>=0.4",
   "pytest-cov>=3.0.0",
   "pytest-xdist>=2.5.0",
   "platformdirs~=4.5.0",
+  "filelock",
   "process[examples]"
 ]
-examples = ["jupyter==1.0.0"]
+examples = ["jupyter==1.0.0", "jupytext"]
 plotly = ["plotly>=5.15.0,<6"]
 docs = [
   "mkdocs>=1.1",
+  "mkdocs-literate-nav",
   "mkdocs-material>=4.6.3",
-  "mkdocs-git-revision-date-localized-plugin >= 1.2",
-  "mkdocs-glightbox >= 0.3.4",
+  "mkdocs-git-revision-date-localized-plugin>=1.2",
+  "mkdocs-glightbox>=0.3.4",
   "pymdown-extensions>=6.3",
   "bokeh>=3.4.0,<4",
-  "mkdocstrings==0.18.0",
+  "mkdocstrings[python]==1.0.3",
   "Jinja2>=3.0",
-  "mkdocs-jupyter>=0.24",
+  "mkdocs-jupyter>=0.24,<0.26",
+  "mkdocs-gen-files",
+  "mkdocs-literate-nav",
 ]
 lint = ["pre-commit>=2.16.0", "ruff==0.9.3", "ty"]
 all = ["process[test,docs,lint,examples,plotly]"]
@@ -81,7 +84,7 @@ process = "process.main:main"
 [tool.hatch.build.targets.wheel]
 artifacts = [
   "process/data/lz_non_corona_14_elements/*.dat",
-  "process/io/*.png"
+  "process/core/io/*.png"
 ]
 
 [tool.hatch.envs.default]
@@ -135,10 +138,6 @@ extend-exclude = ["env", ".env"]
 [tool.ruff.format]
 preview = true
 
-[tool.ruff.lint.per-file-ignores]
-# Tests can use magic values, assertions, and relative imports
-"tests/**" = ["ARG"]
-
 [tool.ruff.lint.isort]
 known-first-party = ["process"]
 
@@ -158,6 +157,11 @@ max-complexity = 12
 # These should be made stricter
 max-args = 17
 max-locals = 17
+
+[tool.ruff.lint.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**" = ["ARG"]
+"examples/**" = ['B018', 'E402']
 
 [tool.ruff.lint]
 preview = true
@@ -226,4 +230,5 @@ ignore-names = [
     "Kr",
     "Xe",
     "W",
+    "*W7X*",
 ]

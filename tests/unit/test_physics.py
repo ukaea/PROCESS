@@ -5,8 +5,15 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process import constants
-from process.current_drive import (
+from process.core import constants
+from process.data_structure import (
+    current_drive_variables,
+    impurity_radiation_module,
+    physics_variables,
+)
+from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.confinement_time import PlasmaConfinementTime
+from process.models.physics.current_drive import (
     CurrentDrive,
     ElectronBernstein,
     ElectronCyclotron,
@@ -14,27 +21,25 @@ from process.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.data_structure import (
-    current_drive_variables,
-    impurity_radiation_module,
-    physics_variables,
-)
-from process.impurity_radiation import initialise_imprad
-from process.physics import (
+from process.models.physics.density_limit import PlasmaDensityLimit
+from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.impurity_radiation import initialise_imprad
+from process.models.physics.l_h_transition import PlasmaConfinementTransition
+from process.models.physics.physics import (
     DetailedPhysics,
     Physics,
     PlasmaBeta,
     PlasmaInductance,
-    calculate_current_coefficient_hastie,
-    calculate_plasma_current_peng,
-    calculate_poloidal_field,
+    calculate_cylindrical_safety_factor,
     diamagnetic_fraction_hender,
     diamagnetic_fraction_scene,
     ps_fraction_scene,
     res_diff_time,
     rether,
 )
-from process.plasma_profiles import PlasmaProfile
+from process.models.physics.plasma_current import PlasmaCurrent
+from process.models.physics.plasma_fields import PlasmaFields
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture
@@ -56,6 +61,13 @@ def physics():
         ),
         PlasmaBeta(),
         PlasmaInductance(),
+        PlasmaDensityLimit(),
+        PlasmaExhaust(),
+        PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
+        PlasmaConfinementTime(),
+        PlasmaConfinementTransition(),
+        PlasmaCurrent(),
+        PlasmaFields(),
     )
 
 
@@ -143,7 +155,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    f_c_plasma_bootstrap = physics.bootstrap_fraction_iter89(
+    f_c_plasma_bootstrap = physics.plasma_bootstrap_current.bootstrap_fraction_iter89(
         aspect=bootstrapfractioniter89param.aspect,
         beta=bootstrapfractioniter89param.beta,
         b_plasma_toroidal_on_axis=bootstrapfractioniter89param.b_plasma_toroidal_on_axis,
@@ -238,7 +250,7 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, ph
         bootstrapfractionnevinsparam.nd_plasma_electron_on_axis,
     )
 
-    fibs = physics.bootstrap_fraction_nevins(
+    fibs = physics.plasma_bootstrap_current.bootstrap_fraction_nevins(
         alphan=bootstrapfractionnevinsparam.alphan,
         alphat=bootstrapfractionnevinsparam.alphat,
         beta_toroidal=bootstrapfractionnevinsparam.beta_toroidal,
@@ -316,7 +328,7 @@ def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    bfw = physics.bootstrap_fraction_wilson(
+    bfw = physics.plasma_bootstrap_current.bootstrap_fraction_wilson(
         alphaj=bootstrapfractionwilsonparam.alphaj,
         alphap=bootstrapfractionwilsonparam.alphap,
         alphat=bootstrapfractionwilsonparam.alphat,
@@ -555,7 +567,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
     monkeypatch.setattr(physics_variables, "alphat", bootstrapfractionsauterparam.alphat)
     physics.plasma_profile.run()
-    bfs, _ = physics.bootstrap_fraction_sauter(physics.plasma_profile)
+    bfs, _ = physics.plasma_bootstrap_current.bootstrap_fraction_sauter(
+        physics.plasma_profile
+    )
 
     assert bfs == pytest.approx(bootstrapfractionsauterparam.expected_bfs)
 
@@ -639,7 +653,7 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
         bootstrapfractionsakaiparam.ind_plasma_internal_norm,
     )
 
-    bfs = physics.bootstrap_fraction_sakai(
+    bfs = physics.plasma_bootstrap_current.bootstrap_fraction_sakai(
         beta_poloidal=bootstrapfractionsakaiparam.beta_poloidal,
         q95=bootstrapfractionsakaiparam.q95,
         q0=bootstrapfractionsakaiparam.q0,
@@ -689,7 +703,7 @@ def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_aries(
+    bfs = physics.plasma_bootstrap_current.bootstrap_fraction_aries(
         beta_poloidal=bootstrapfractionariesparam.beta_poloidal,
         ind_plasma_internal_norm=bootstrapfractionariesparam.ind_plasma_internal_norm,
         core_density=bootstrapfractionariesparam.core_density,
@@ -734,7 +748,7 @@ def test_bootstrap_fraction_andrade(bootstrapfractionandradeparam, physics):
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_andrade(
+    bfs = physics.plasma_bootstrap_current.bootstrap_fraction_andrade(
         beta_poloidal=bootstrapfractionandradeparam.beta_poloidal,
         core_pressure=bootstrapfractionandradeparam.core_pressure,
         average_pressure=bootstrapfractionandradeparam.average_pressure,
@@ -778,7 +792,7 @@ def test_bootstrap_fraction_hoang(bootstrapfractionhoangparam, physics):
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_hoang(
+    bfs = physics.plasma_bootstrap_current.bootstrap_fraction_hoang(
         beta_poloidal=bootstrapfractionhoangparam.beta_poloidal,
         pressure_index=bootstrapfractionhoangparam.pressure_index,
         current_index=bootstrapfractionhoangparam.current_index,
@@ -825,7 +839,7 @@ def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_wong(
+    bfs = physics.plasma_bootstrap_current.bootstrap_fraction_wong(
         beta_poloidal=bootstrapfractionwongparam.beta_poloidal,
         density_index=bootstrapfractionwongparam.density_index,
         temperature_index=bootstrapfractionwongparam.temperature_index,
@@ -879,7 +893,7 @@ def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):  # noqa: N
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_gi_I(
+    bfs = physics.plasma_bootstrap_current.bootstrap_fraction_gi_I(
         beta_poloidal=bootstrapfractiongiiparam.beta_poloidal,
         pressure_index=bootstrapfractiongiiparam.pressure_index,
         temperature_index=bootstrapfractiongiiparam.temperature_index,
@@ -929,7 +943,7 @@ def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):  # noqa:
     :type bootstrapfractionsauterparam: bootstrapfractionsauterparam
     """
 
-    bfs = physics.bootstrap_fraction_gi_II(
+    bfs = physics.plasma_bootstrap_current.bootstrap_fraction_gi_II(
         beta_poloidal=bootstrapfractiongiiiparam.beta_poloidal,
         pressure_index=bootstrapfractiongiiiparam.pressure_index,
         temperature_index=bootstrapfractiongiiiparam.temperature_index,
@@ -986,7 +1000,7 @@ def test_bootstrap_fraction_sugiyama_l_mode(bootstrapfractionsugiyamalparam, phy
     :param bootstrapfractionsugiyamalparam: Parameters for the test case.
     :type bootstrapfractionsugiyamalparam: BootstrapFractionSugiyamaLModeParam
     """
-    bfs = physics.bootstrap_fraction_sugiyama_l_mode(
+    bfs = physics.plasma_bootstrap_current.bootstrap_fraction_sugiyama_l_mode(
         eps=bootstrapfractionsugiyamalparam.eps,
         beta_poloidal=bootstrapfractionsugiyamalparam.beta_poloidal,
         alphan=bootstrapfractionsugiyamalparam.alphan,
@@ -1092,7 +1106,7 @@ def test_bootstrap_fraction_sugiyama_h_mode(bootstrapfractionsugiyamahparam, phy
     :param bootstrapfractionsugiyamahparam: Parameters for the test case.
     :type bootstrapfractionsugiyamahparam: BootstrapFractionSugiyamaHModeParam
     """
-    bfs = physics.bootstrap_fraction_sugiyama_h_mode(
+    bfs = physics.plasma_bootstrap_current.bootstrap_fraction_sugiyama_h_mode(
         eps=bootstrapfractionsugiyamahparam.eps,
         beta_poloidal=bootstrapfractionsugiyamahparam.beta_poloidal,
         alphan=bootstrapfractionsugiyamahparam.alphan,
@@ -1145,10 +1159,6 @@ class PlasmaCurrentParam(NamedTuple):
 
     expected_normalised_total_beta: Any = None
 
-    expected_bp: Any = None
-
-    expected_qstar: Any = None
-
     expected_plasma_current: Any = None
 
 
@@ -1173,8 +1183,6 @@ class PlasmaCurrentParam(NamedTuple):
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
-            expected_bp=0.96008591022564971,
-            expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
         ),
         PlasmaCurrentParam(
@@ -1195,8 +1203,6 @@ class PlasmaCurrentParam(NamedTuple):
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
-            expected_bp=0.96008591022564971,
-            expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
         ),
     ),
@@ -1216,11 +1222,11 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta)
 
-    b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
+    plasma_current = physics.current.calculate_plasma_current(
         i_plasma_current=plasmacurrentparam.i_plasma_current,
         alphaj=plasmacurrentparam.alphaj,
         alphap=plasmacurrentparam.alphap,
-        b_plasma_toroidal_on_axis=plasmacurrentparam.b_plasma_toroidal_on_axis,
+        b_plasma_toroidal_on_axis=(plasmacurrentparam.b_plasma_toroidal_on_axis),
         eps=plasmacurrentparam.eps,
         kappa=plasmacurrentparam.kappa,
         kappa95=plasmacurrentparam.kappa95,
@@ -1232,10 +1238,6 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         triang=plasmacurrentparam.triang,
         triang95=plasmacurrentparam.triang95,
     )
-
-    assert b_plasma_poloidal_average == pytest.approx(plasmacurrentparam.expected_bp)
-
-    assert qstar == pytest.approx(plasmacurrentparam.expected_qstar)
 
     assert plasma_current == pytest.approx(plasmacurrentparam.expected_plasma_current)
 
@@ -1269,8 +1271,10 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         ),
     ),
 )
-def test_calculate_plasma_current_peng(arguments, expected):
-    assert calculate_plasma_current_peng(**arguments) == pytest.approx(expected)
+def test_calculate_plasma_current_peng(arguments, expected, physics):
+    assert physics.current.calculate_plasma_current_peng(**arguments) == pytest.approx(
+        expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -1287,7 +1291,6 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
-                "rmu0": constants.RMU0,
             },
             3.4401302177092803,
         ),
@@ -1302,7 +1305,6 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
-                "rmu0": constants.RMU0,
             },
             2.9310284627233205,
         ),
@@ -1317,14 +1319,15 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
-                "rmu0": constants.RMU0,
             },
             0.8377580413333333,
         ),
     ),
 )
-def test_calculate_poloidal_field(arguments, expected):
-    assert calculate_poloidal_field(**arguments) == pytest.approx(expected)
+def test_calculate_poloidal_field(arguments, expected, physics):
+    assert physics.fields.calculate_surface_averaged_poloidal_field(
+        **arguments
+    ) == pytest.approx(expected)
 
 
 def test_calculate_beta_limit():
@@ -1333,8 +1336,8 @@ def test_calculate_beta_limit():
     ) == pytest.approx(0.0297619)
 
 
-def test_conhas():
-    assert calculate_current_coefficient_hastie(
+def test_conhas(physics):
+    assert physics.current.calculate_current_coefficient_hastie(
         5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.RMU0
     ) == pytest.approx(2.518876726889116)
 
@@ -2196,8 +2199,6 @@ class PhyauxParam(NamedTuple):
             tauratio=1,
             burnup_in=0,
             aspect=3,
-            nd_plasma_electrons_vol_avg=7.5e19,
-            te=12.569,
             nd_plasma_fuel_ions_vol_avg=5.8589175702454272e19,
             nd_plasma_alphas_vol_avg=7.5e18,
             fusden_total=1.9852091609123786e17,
@@ -2207,8 +2208,6 @@ class PhyauxParam(NamedTuple):
             t_energy_confinement=3.401323521525641,
             vol_plasma=1888.1711539956691,
             expected_burnup=0.20383432558954095,
-            expected_ntau=2.5509926411442307e20,
-            expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7484146722826997e20,
             expected_molflow_plasma_fuelling_required=1.8389516394951276e21,
@@ -2219,8 +2218,6 @@ class PhyauxParam(NamedTuple):
             tauratio=1,
             burnup_in=0,
             aspect=3,
-            nd_plasma_electrons_vol_avg=7.5e19,
-            te=12.569,
             nd_plasma_fuel_ions_vol_avg=5.8576156204039725e19,
             nd_plasma_alphas_vol_avg=7.5e18,
             fusden_total=1.9843269653375773e17,
@@ -2230,8 +2227,6 @@ class PhyauxParam(NamedTuple):
             t_energy_confinement=3.402116961408892,
             vol_plasma=1888.1711539956691,
             expected_burnup=0.20387039462081086,
-            expected_ntau=2.5515877210566689e20,
-            expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7467489360461772e20,
             expected_molflow_plasma_fuelling_required=1.8378092331723546e21,
@@ -2259,8 +2254,6 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     (
         burnup,
-        ntau,
-        _nTtau,
         figmer,
         fusrat,
         molflow_plasma_fuelling_required,
@@ -2269,8 +2262,6 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
         _,
     ) = physics.phyaux(
         aspect=phyauxparam.aspect,
-        nd_plasma_electrons_vol_avg=phyauxparam.nd_plasma_electrons_vol_avg,
-        te=phyauxparam.te,
         nd_plasma_fuel_ions_vol_avg=phyauxparam.nd_plasma_fuel_ions_vol_avg,
         nd_plasma_alphas_vol_avg=phyauxparam.nd_plasma_alphas_vol_avg,
         fusden_total=phyauxparam.fusden_total,
@@ -2282,8 +2273,6 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
     )
 
     assert burnup == pytest.approx(phyauxparam.expected_burnup)
-
-    assert ntau == pytest.approx(phyauxparam.expected_ntau)
 
     assert figmer == pytest.approx(phyauxparam.expected_figmer)
 
@@ -2473,7 +2462,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     """
 
     nd_plasma_electron_max_array, nd_plasma_electrons_max = (
-        physics.calculate_density_limit(
+        physics.density_limit.calculate_density_limit(
             i_density_limit=calculatedensitylimitparam.i_density_limit,
             b_plasma_toroidal_on_axis=calculatedensitylimitparam.b_plasma_toroidal_on_axis,
             p_plasma_separatrix_mw=calculatedensitylimitparam.p_plasma_separatrix_mw,
@@ -3299,7 +3288,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         t_ion_energy_confinement,
         t_energy_confinement,
         p_plasma_loss_mw,
-    ) = physics.calculate_confinement_time(
+    ) = physics.confinement.calculate_confinement_time(
         i_confinement_time=confinementtimeparam.i_confinement_time,
         i_plasma_ignited=confinementtimeparam.i_plasma_ignited,
         m_fuel_amu=confinementtimeparam.m_fuel_amu,
@@ -3617,7 +3606,7 @@ def test_detailed_physics_run_computes_profiles():
     )
     # toroidal field profile for larmor frequency calc
     physics_variables.b_plasma_toroidal_profile = (
-        np.ones_like(plasma.neprofile.profile_y) * 5.0
+        np.ones(2 * len(plasma.neprofile.profile_y)) * 5.0
     )
 
     dp = DetailedPhysics(plasma)
@@ -3637,7 +3626,8 @@ def test_detailed_physics_run_computes_profiles():
     assert np.all(np.isfinite(physics_variables.freq_plasma_electron_profile))
 
     assert (
-        np.shape(physics_variables.freq_plasma_larmor_toroidal_electron_profile)[0] == n
+        np.shape(physics_variables.freq_plasma_larmor_toroidal_electron_profile)[0]
+        == n * 2
     )
     assert np.all(
         np.isfinite(physics_variables.freq_plasma_larmor_toroidal_electron_profile)
@@ -3649,3 +3639,78 @@ def test_detailed_physics_run_computes_profiles():
     assert np.all(
         np.isfinite(physics_variables.plasma_coulomb_log_electron_electron_profile)
     )
+
+
+@pytest.mark.parametrize(
+    "rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95, expected",
+    (
+        (
+            8.0,
+            2.6666666666666665,
+            18398455.678867526,
+            5.7000000000000002,
+            1.6517857142857142,
+            0.33333333333333331,
+            2.90080289950078,
+        ),
+    ),
+)
+def test_calculate_cylindrical_safety_factor_parametrized(
+    rmajor,
+    rminor,
+    plasma_current,
+    b_plasma_toroidal_on_axis,
+    kappa95,
+    triang95,
+    expected,
+):
+    """Parametrized test for calculate_cylindrical_safety_factor."""
+    result = calculate_cylindrical_safety_factor(
+        rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95
+    )
+    assert result == pytest.approx(expected, rel=1e-12)
+
+
+@pytest.mark.parametrize(
+    "i_plasma_current, c_plasma, q95, aspect, eps,b_plasma_toroidal_on_axis, kappa, delta, perim, expected",
+    (
+        (
+            4,
+            18398455.678867526,
+            3.5,
+            (8.0 / 2.6666666666666665),
+            (2.6666666666666665 / 8.0),
+            5.7000000000000002,
+            1.8500000000000001,
+            0.5,
+            24.081367139525412,
+            0.96008591022564971,
+        ),
+    ),
+)
+def test_calculate_polidal_field(
+    i_plasma_current,
+    c_plasma,
+    q95,
+    b_plasma_toroidal_on_axis,
+    aspect,
+    eps,
+    kappa,
+    delta,
+    perim,
+    expected,
+    physics,
+):
+    """Parametrized test for calculate_poloidal_field."""
+    result = physics.fields.calculate_surface_averaged_poloidal_field(
+        i_plasma_current,
+        c_plasma,
+        q95,
+        b_plasma_toroidal_on_axis,
+        aspect,
+        eps,
+        kappa,
+        delta,
+        perim,
+    )
+    assert result == pytest.approx(expected, rel=1e-12)

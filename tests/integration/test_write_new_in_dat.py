@@ -2,9 +2,9 @@
 
 from pytest import approx
 
-from process.io import write_new_in_dat
-from process.io.in_dat import InDat
-from process.io.mfile import MFile
+from process.core.io import write_new_in_dat
+from process.core.io.in_dat import InDat
+from process.core.io.mfile import MFile
 
 
 def test_write_new_in_dat(temp_data, mfile_name):

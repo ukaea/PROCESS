@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go
 
-import process.superconductors as superconductors
+import process.models.superconductors as superconductors
 
 # Create a grid of temperature and field values
 temp_conductor = np.linspace(1, 8.0, 50)  # Temperature range (K)

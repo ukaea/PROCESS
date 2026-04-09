@@ -11,13 +11,13 @@ plot = figure(
     y_range=(2, 8),
     width=400,
     height=400,
-    title="Menard Normalized Beta Limit",
+    title="Menard Normalised Beta Limit",
 )
 plot.xaxis.axis_label = r"Aspect ratio, \  $$[A]$$"
-plot.yaxis.axis_label = r"Normalized beta limit, \  $$[\beta_N]$$"
+plot.yaxis.axis_label = r"Normalised beta limit, \  $$[\beta_N]$$"
 
 plot.line("x", "y", source=source, line_width=3, line_alpha=0.6)
 
 # Save the plot as HTML
-output_file("menard_beta_norm.html", title="Menard Normalized Beta Limit")
+output_file("menard_beta_norm.html", title="Menard Normalised Beta Limit")
 save(plot)

@@ -12,9 +12,9 @@ from abc import ABC, abstractmethod
 import numpy as np
 import pytest
 
-from process.evaluators import Evaluators
-from process.init import init_all_module_vars
-from process.solver import get_solver
+from process.core.init import init_all_module_vars
+from process.core.solver.evaluators import Evaluators
+from process.core.solver.solver import get_solver
 
 # Debug-level terminal output logging
 logger = logging.getLogger(__name__)

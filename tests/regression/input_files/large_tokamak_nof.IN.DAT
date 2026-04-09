@@ -17,7 +17,12 @@ minmax = 1
 * Error tolerance for VMCON
 epsvmc = 1e-7
 
+* Number of equality constraints
+* (the first neqns icc=... statements are equality constraints)
 neqns = 3
+
+* Maximum number of solver iterations
+maxcal = 100
 
 * Constraint Equations - Consistency Equations *
 ************************************************

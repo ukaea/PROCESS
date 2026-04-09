@@ -5,7 +5,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.costs_2015 import Costs2015
 from process.data_structure import (
     build_variables,
     cost_2015_variables,
@@ -18,6 +17,7 @@ from process.data_structure import (
     physics_variables,
     tfcoil_variables,
 )
+from process.models.costs.costs_2015 import Costs2015
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 import pytest
 
-from process.coolprop_interface import FluidProperties
+from process.core.coolprop_interface import FluidProperties
 
 
 class WATER_PROPERTIES:

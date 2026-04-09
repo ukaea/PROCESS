@@ -21,7 +21,7 @@ from process.data_structure import (
     times_variables,
 )
 from process.data_structure import primary_pumping_variables as ppv
-from process.power import Power
+from process.models.power import Power
 
 
 @pytest.fixture

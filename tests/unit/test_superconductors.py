@@ -2,7 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-import process.superconductors as superconductors
+import process.models.superconductors as superconductors
 
 
 class IterscParam(NamedTuple):

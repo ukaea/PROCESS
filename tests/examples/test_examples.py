@@ -2,16 +2,15 @@
 
 import os
 from pathlib import Path
-from shutil import copy, copytree
+from shutil import copytree, ignore_patterns
 
-import numpy as np
-import pandas as pd
+import jupytext
 import pytest
 from testbook import testbook
 
 
-@pytest.fixture
-def examples_temp_data(tmp_path):
+@pytest.fixture(scope="module")
+def examples_temp_data(tmp_path_factory):
     """Copy examples dir contents into temp dir for testing.
 
     Any changes are discarded on fixture teardown.
@@ -21,11 +20,12 @@ def examples_temp_data(tmp_path):
     :rtype: Path
     """
     data_path = Path(__file__).parent.parent.parent / "examples"
-    copytree(data_path, tmp_path / "examples")
-    csv_json_path = (
-        Path(__file__).parent.parent.parent / "process/io/mfile_to_csv_vars.json"
+    tmp_path = tmp_path_factory.mktemp("examples")
+    copytree(
+        data_path,
+        tmp_path / "examples",
+        ignore=ignore_patterns("*.md", "*log", "__pycache__", "*.ipynb*"),
     )
-    copy(csv_json_path, tmp_path)
 
     # This change of directory is undone by the return_to_root fixture, hence we do not need to change back directories here
     os.chdir(tmp_path / "examples")
@@ -34,80 +34,55 @@ def examples_temp_data(tmp_path):
     return tmp_path / "examples"
 
 
-def test_examples(examples_temp_data):
-    """Run the examples.ipynb and check no exceptions are raised.
-
-    examples.ipynb uses temp dirs to clean up any produced files itself.
-    :param examples_temp_data: temporary dir containing examples files
-    :type examples_temp_data: Path
-
-    """
-    example_notebook_location = examples_temp_data / "examples.ipynb"
-    with testbook(example_notebook_location, execute=True, timeout=600):
-        # Check csv file is created
-        assert os.path.exists(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
-
-        # Read in the csv file created by test and check it contains positive floats
-        readcsv = pd.read_csv(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
-        value_array = np.array(readcsv["Value"])
-        check_float = False
-        check_positive = False
-        value_array_type = value_array.dtype
-        if value_array_type.kind == "f":
-            check_float = True
-        assert check_float
-
-        check_positive_count = np.sum(value_array > 0)
-        if check_positive_count == len(value_array):
-            check_positive = True
-        assert check_positive
+def _get_location(loc, name):
+    name = Path(name).stem + "{}"
+    notebook = jupytext.read(loc / name.format(".ex.py"))
+    jupytext.write(notebook, loc / name.format(".ex.ipynb"), fmt="ipynb")
+    return loc / name.format(".ex.ipynb")
 
 
 def test_scan(examples_temp_data):
-    """Run scan.ipynb notebook check no exceptions are raised and that an MFILE is created.
+    """Run scan.ex.py notebook check no exceptions are raised and that an MFILE is created.
 
-    scan.ipynb intentionally produces files when running the notebook, but remove
+    scan.ex.py intentionally produces files when running the notebook, but remove
     them when testing.
     :param examples_temp_data: temporary dir containing examples files
     :type examples_temp_data: Path
     """
-    scan_notebook_location = examples_temp_data / "scan.ipynb"
-    with testbook(scan_notebook_location, execute=True, timeout=1200):
-        # Run entire scan.ipynb notebook and assert an MFILE is created
+    scan_notebook_location = _get_location(examples_temp_data, "scan")
+
+    with (
+        testbook(scan_notebook_location, execute=False, timeout=1200) as tb,
+        tb.patch(
+            "process.core.repository._PROCESS_ROOT",
+            new=scan_notebook_location.parent.resolve().as_posix(),
+        ),
+    ):
+        tb.execute()
+        # Run entire scan.ex.py notebook and assert an MFILE is created
         assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
 
 
-def test_plot_solutions(examples_temp_data):
-    """Run plot_solutions.ipynb and check no exceptions are raised.
+@pytest.mark.parametrize(
+    "name",
+    (
+        "introduction",
+        "single_model_evaluation",
+        "vary_run_example",
+        "optimum_solutions_comparison",
+    ),
+)
+def test_no_assertion_solutions(name, examples_temp_data):
+    """Run examples and check no exceptions are raised.
 
     :param examples_temp_data: temporary dir containing examples files
-     :type examples_temp_data: Path
     """
-    plot_solutions_notebook_location = examples_temp_data / "plot_solutions.ipynb"
-    with testbook(plot_solutions_notebook_location, execute=True, timeout=600):
-        pass
-
-
-def test_single_model_evaluation(examples_temp_data):
-    """Run single_model_evaluation.ipynb and check no exceptions are raised.
-
-    :param examples_temp_data: temporary dir containing examples files
-    :type examples_temp_data: Path
-
-    """
-    single_model_evaluation_notebook_location = (
-        examples_temp_data / "single_model_evaluation.ipynb"
-    )
-    with testbook(single_model_evaluation_notebook_location, execute=True, timeout=600):
-        pass
-
-
-def test_varyrun_example(examples_temp_data):
-    """Run vary_run_example.ipynb and check no exceptions are raised.
-
-    :param examples_temp_data: temporary dir containing examples files
-    :type examples_temp_data: Path
-    """
-    varyrun_example_notebook_location = examples_temp_data / "vary_run_example.ipynb"
-    with testbook(varyrun_example_notebook_location, execute=True, timeout=600):
-        pass
+    notebook_location = _get_location(examples_temp_data, name)
+    with (
+        testbook(notebook_location, execute=False, timeout=600) as tb,
+        tb.patch(
+            "process.core.repository._PROCESS_ROOT",
+            new=notebook_location.parent.resolve().as_posix(),
+        ),
+    ):
+        tb.execute()

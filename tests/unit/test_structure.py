@@ -2,7 +2,7 @@
 
 import pytest
 
-from process.structure import Structure
+from process.models.structure import Structure
 
 
 @pytest.fixture

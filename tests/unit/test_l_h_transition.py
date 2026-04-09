@@ -1,28 +1,49 @@
 import pytest
 
-from process.l_h_transition import (
-    calculate_hubbard2012_lower,
-    calculate_hubbard2012_nominal,
-    calculate_hubbard2012_upper,
-    calculate_hubbard2017,
-    calculate_iter1996_lower,
-    calculate_iter1996_nominal,
-    calculate_iter1996_upper,
-    calculate_martin08_aspect_lower,
-    calculate_martin08_aspect_nominal,
-    calculate_martin08_aspect_upper,
-    calculate_martin08_lower,
-    calculate_martin08_nominal,
-    calculate_martin08_upper,
-    calculate_snipes1997_iter,
-    calculate_snipes1997_kappa,
-    calculate_snipes2000_closed_divertor_lower,
-    calculate_snipes2000_closed_divertor_nominal,
-    calculate_snipes2000_closed_divertor_upper,
-    calculate_snipes2000_lower,
-    calculate_snipes2000_nominal,
-    calculate_snipes2000_upper,
+from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+from process.models.physics.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
 )
+from process.models.physics.density_limit import PlasmaDensityLimit
+from process.models.physics.exhaust import PlasmaExhaust
+from process.models.physics.l_h_transition import PlasmaConfinementTransition
+from process.models.physics.physics import (
+    Physics,
+    PlasmaBeta,
+    PlasmaInductance,
+)
+from process.models.physics.plasma_profiles import PlasmaProfile
+
+
+@pytest.fixture
+def physics():
+    """Provides Physics object for testing.
+
+    :returns: initialised Physics object
+    :rtype: process.physics.Physics
+    """
+    return Physics(
+        PlasmaProfile(),
+        CurrentDrive(
+            PlasmaProfile(),
+            electron_cyclotron=ElectronCyclotron(plasma_profile=PlasmaProfile()),
+            ion_cyclotron=IonCyclotron(plasma_profile=PlasmaProfile()),
+            neutral_beam=NeutralBeam(plasma_profile=PlasmaProfile()),
+            electron_bernstein=ElectronBernstein(plasma_profile=PlasmaProfile()),
+            lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
+        ),
+        PlasmaBeta(),
+        PlasmaInductance(),
+        PlasmaDensityLimit(),
+        PlasmaExhaust(),
+        PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
+        PlasmaConfinementTransition(),
+    )
 
 
 @pytest.mark.parametrize(
@@ -32,7 +53,9 @@ from process.l_h_transition import (
     ],
 )
 def test_calculate_iter1996_nominal(a, b, c, expected):
-    assert calculate_iter1996_nominal(a, b, c) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_iter1996_nominal(
+        a, b, c
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -42,7 +65,9 @@ def test_calculate_iter1996_nominal(a, b, c, expected):
     ],
 )
 def test_calculate_iter1996_upper(a, b, c, expected):
-    assert calculate_iter1996_upper(a, b, c) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_iter1996_upper(
+        a, b, c
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -52,7 +77,9 @@ def test_calculate_iter1996_upper(a, b, c, expected):
     ],
 )
 def test_calculate_iter1996_lower(a, b, c, expected):
-    assert calculate_iter1996_lower(a, b, c) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_iter1996_lower(
+        a, b, c
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -62,7 +89,9 @@ def test_calculate_iter1996_lower(a, b, c, expected):
     ],
 )
 def test_calculate_snipes1997_iter(a, b, c, expected):
-    assert calculate_snipes1997_iter(a, b, c) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_snipes1997_iter(
+        a, b, c
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -72,7 +101,9 @@ def test_calculate_snipes1997_iter(a, b, c, expected):
     ],
 )
 def test_calculate_snipes1997_kappa(a, b, c, d, expected):
-    assert calculate_snipes1997_kappa(a, b, c, d) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_snipes1997_kappa(
+        a, b, c, d
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -82,7 +113,9 @@ def test_calculate_snipes1997_kappa(a, b, c, d, expected):
     ],
 )
 def test_calculate_martin08_nominal(a, b, c, d, expected):
-    assert calculate_martin08_nominal(a, b, c, d) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_martin08_nominal(
+        a, b, c, d
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -92,7 +125,9 @@ def test_calculate_martin08_nominal(a, b, c, d, expected):
     ],
 )
 def test_calculate_martin08_upper(a, b, c, d, expected):
-    assert calculate_martin08_upper(a, b, c, d) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_martin08_upper(
+        a, b, c, d
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -102,7 +137,9 @@ def test_calculate_martin08_upper(a, b, c, d, expected):
     ],
 )
 def test_calculate_martin08_lower(a, b, c, d, expected):
-    assert calculate_martin08_lower(a, b, c, d) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_martin08_lower(
+        a, b, c, d
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -112,7 +149,9 @@ def test_calculate_martin08_lower(a, b, c, d, expected):
     ],
 )
 def test_calculate_snipes2000_nominal(a, b, c, d, e, expected):
-    assert calculate_snipes2000_nominal(a, b, c, d, e) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_snipes2000_nominal(
+        a, b, c, d, e
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -122,7 +161,9 @@ def test_calculate_snipes2000_nominal(a, b, c, d, e, expected):
     ],
 )
 def test_calculate_snipes2000_upper(a, b, c, d, e, expected):
-    assert calculate_snipes2000_upper(a, b, c, d, e) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_snipes2000_upper(
+        a, b, c, d, e
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -132,7 +173,9 @@ def test_calculate_snipes2000_upper(a, b, c, d, e, expected):
     ],
 )
 def test_calculate_snipes2000_lower(a, b, c, d, e, expected):
-    assert calculate_snipes2000_lower(a, b, c, d, e) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_snipes2000_lower(
+        a, b, c, d, e
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -142,9 +185,9 @@ def test_calculate_snipes2000_lower(a, b, c, d, e, expected):
     ],
 )
 def test_calculate_snipes2000_closed_divertor_nominal(a, b, c, d, expected):
-    assert calculate_snipes2000_closed_divertor_nominal(a, b, c, d) == pytest.approx(
-        expected
-    )
+    assert PlasmaConfinementTransition().calculate_snipes2000_closed_divertor_nominal(
+        a, b, c, d
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -154,9 +197,9 @@ def test_calculate_snipes2000_closed_divertor_nominal(a, b, c, d, expected):
     ],
 )
 def test_calculate_snipes2000_closed_divertor_upper(a, b, c, d, expected):
-    assert calculate_snipes2000_closed_divertor_upper(a, b, c, d) == pytest.approx(
-        expected
-    )
+    assert PlasmaConfinementTransition().calculate_snipes2000_closed_divertor_upper(
+        a, b, c, d
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -166,9 +209,9 @@ def test_calculate_snipes2000_closed_divertor_upper(a, b, c, d, expected):
     ],
 )
 def test_calculate_snipes2000_closed_divertor_lower(a, b, c, d, expected):
-    assert calculate_snipes2000_closed_divertor_lower(a, b, c, d) == pytest.approx(
-        expected
-    )
+    assert PlasmaConfinementTransition().calculate_snipes2000_closed_divertor_lower(
+        a, b, c, d
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -178,7 +221,9 @@ def test_calculate_snipes2000_closed_divertor_lower(a, b, c, d, expected):
     ],
 )
 def test_calculate_hubbard2012_nominal(a, b, expected):
-    assert calculate_hubbard2012_nominal(a, b) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_hubbard2012_nominal(
+        a, b
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -188,7 +233,9 @@ def test_calculate_hubbard2012_nominal(a, b, expected):
     ],
 )
 def test_calculate_hubbard2012_upper(a, b, expected):
-    assert calculate_hubbard2012_upper(a, b) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_hubbard2012_upper(
+        a, b
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -198,7 +245,9 @@ def test_calculate_hubbard2012_upper(a, b, expected):
     ],
 )
 def test_calculate_hubbard2012_lower(a, b, expected):
-    assert calculate_hubbard2012_lower(a, b) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_hubbard2012_lower(
+        a, b
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -208,7 +257,9 @@ def test_calculate_hubbard2012_lower(a, b, expected):
     ],
 )
 def test_calculate_hubbard2017(a, b, c, expected):
-    assert calculate_hubbard2017(a, b, c) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_hubbard2017(a, b, c) == pytest.approx(
+        expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -218,7 +269,9 @@ def test_calculate_hubbard2017(a, b, c, expected):
     ],
 )
 def test_calculate_martin08_aspect_nominal(a, b, c, d, e, expected):
-    assert calculate_martin08_aspect_nominal(a, b, c, d, e) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_martin08_aspect_nominal(
+        a, b, c, d, e
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -228,7 +281,9 @@ def test_calculate_martin08_aspect_nominal(a, b, c, d, e, expected):
     ],
 )
 def test_calculate_martin08_aspect_upper(a, b, c, d, e, expected):
-    assert calculate_martin08_aspect_upper(a, b, c, d, e) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_martin08_aspect_upper(
+        a, b, c, d, e
+    ) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize(
@@ -238,4 +293,6 @@ def test_calculate_martin08_aspect_upper(a, b, c, d, e, expected):
     ],
 )
 def test_calculate_martin08_aspect_lower(a, b, c, d, e, expected):
-    assert calculate_martin08_aspect_lower(a, b, c, d, e) == pytest.approx(expected)
+    assert PlasmaConfinementTransition().calculate_martin08_aspect_lower(
+        a, b, c, d, e
+    ) == pytest.approx(expected)

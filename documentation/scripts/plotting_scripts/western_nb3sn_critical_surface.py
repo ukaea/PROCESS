@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly.graph_objects as go
 
-import process.superconductors as superconductors
+import process.models.superconductors as superconductors
 
 temp_c0max = 16.34  # Critical temperature (K) at zero field and strain
 b_c20max = (

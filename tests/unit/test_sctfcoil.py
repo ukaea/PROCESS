@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process import superconducting_tf_coil as sctf
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -14,7 +13,8 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.superconducting_tf_coil import SuperconductingTFCoil
+from process.models.tfcoil import superconducting as sctf
+from process.models.tfcoil.superconducting import SuperconductingTFCoil
 
 
 @pytest.fixture
@@ -779,7 +779,6 @@ def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
 
     :param tfwpgeomparam: the data used to mock and assert in this test.
     :type tfwpgeomparam: tfwpgeomparam
-
     """
 
     (
@@ -951,7 +950,6 @@ def test_superconducting_tf_case_geometry(tfcasegeomparam, sctfcoil):
 
     :param tfcasegeomparam: the data used to mock and assert in this test.
     :type tfcasegeomparam: tfcasegeomparam
-
     """
     (
         a_tf_coil_inboard_case,

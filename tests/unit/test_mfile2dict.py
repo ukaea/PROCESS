@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from process.io import mfile2dict
+from process.core.io import mfile2dict
 
 
 @pytest.fixture(scope="module")

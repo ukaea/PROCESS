@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.cryostat import Cryostat
 from process.data_structure import (
     blanket_library,
     build_variables,
@@ -11,6 +10,7 @@ from process.data_structure import (
     fwbs_variables,
     pfcoil_variables,
 )
+from process.models.cryostat import Cryostat
 
 
 @pytest.fixture

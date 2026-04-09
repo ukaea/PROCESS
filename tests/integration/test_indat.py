@@ -2,7 +2,7 @@
 
 import pytest
 
-from process.io.in_dat import InDat, INVariable
+from process.core.io.in_dat import InDat, INVariable
 
 
 @pytest.mark.parametrize("value", ["1", "1.0", "1,2,3", "1.0, 2.0", "string"])

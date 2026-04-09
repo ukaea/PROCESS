@@ -1,4 +1,4 @@
-"""author: J. Morris (UKAEA), M. Kovari (UKAEA)
+"""
 Module containing global variables relating to the first wall, blanket and
 shield components
 ### References
@@ -88,7 +88,7 @@ i_blanket_type: int = None
 """switch for blanket model:
 - =1 CCFE HCPB model
 - =2 KIT HCPB model  # REMOVED, no longer usable
-- =3 CCFE HCPB model with Tritium Breeding Ratio calculation
+- =3 CCFE HCPB model with Tritium Breeding Ratio calculation # REMOVED, no longer usable
 - =4 KIT HCLL model  # REMOVED, no longer usable
 - =5 DCLL model -  no nutronics model included (in development) please check/choose values for
 'dual-coolant blanket' fractions (provided in this file).
@@ -182,19 +182,19 @@ breeder_multiplier: float = None
 
 
 vfcblkt: float = None
-"""He coolant fraction of blanket by volume (`i_blanket_type= 1,3` (CCFE HCPB))"""
+"""He coolant fraction of blanket by volume (`i_blanket_type= 1` (CCFE HCPB))"""
 
 
 vfpblkt: float = None
-"""He purge gas fraction of blanket by volume (`i_blanket_type= 1,3` (CCFE HCPB))"""
+"""He purge gas fraction of blanket by volume (`i_blanket_type= 1` (CCFE HCPB))"""
 
 
 m_blkt_li4sio4: float = None
-"""mass of lithium orthosilicate in blanket [kg] (`i_blanket_type=1,3` (CCFE HCPB))"""
+"""mass of lithium orthosilicate in blanket [kg] (`i_blanket_type=1` (CCFE HCPB))"""
 
 
 m_blkt_tibe12: float = None
-"""mass of titanium beryllide in blanket [kg] (`i_blanket_type=1,3` (CCFE HCPB))"""
+"""mass of titanium beryllide in blanket [kg] (`i_blanket_type=1` (CCFE HCPB))"""
 
 
 neut_flux_cp: float = None
@@ -244,7 +244,7 @@ f_vol_blkt_tibe12: float = None
 
 
 breedmat: int = None
-"""breeder material switch (i_blanket_type=2 (KIT HCPB)):
+"""breeder material switch:
 - =1 Lithium orthosilicate
 - =2 Lithium methatitanate
 - =3 Lithium zirconate
@@ -252,70 +252,70 @@ breedmat: int = None
 
 
 densbreed: float = None
-"""density of breeder material [kg m^-3] (`i_blanket_type=2` (KIT HCPB))"""
+"""density of breeder material [kg m^-3]"""
 
 
 fblbe: float = None
-"""beryllium fraction of blanket by volume (if `i_blanket_type=2`, is Be fraction of breeding zone)"""
+"""beryllium fraction of blanket by volume"""
 
 
 fblbreed: float = None
-"""breeder fraction of blanket breeding zone by volume (`i_blanket_type=2` (KIT HCPB))"""
+"""breeder fraction of blanket breeding zone by volume"""
 
 
 fblhebmi: float = None
-"""helium fraction of inboard blanket box manifold by volume (`i_blanket_type=2` (KIT HCPB))"""
+"""helium fraction of inboard blanket box manifold by volume"""
 
 
 fblhebmo: float = None
-"""helium fraction of outboard blanket box manifold by volume (`i_blanket_type=2` (KIT HCPB))"""
+"""helium fraction of outboard blanket box manifold by volume """
 
 
 fblhebpi: float = None
-"""helium fraction of inboard blanket back plate by volume (`i_blanket_type=2` (KIT HCPB))"""
+"""helium fraction of inboard blanket back plate by volume """
 
 
 fblhebpo: float = None
-"""helium fraction of outboard blanket back plate by volume (`i_blanket_type=2` (KIT HCPB))"""
+"""helium fraction of outboard blanket back plate by volume """
 
 
 hcdportsize: int = None
-"""switch for size of heating/current drive ports (`i_blanket_type=2` (KIT HCPB)):
+"""switch for size of heating/current drive ports :
 - =1 'small'
 - =2 'large'
 """
 
 
 nflutf: float = None
-"""peak fast neutron fluence on TF coil superconductor [n m^-2] (`i_blanket_type=2` (KIT HCPB))"""
+"""peak fast neutron fluence on TF coil superconductor [n m^-2] """
 
 
 npdiv: int = None
-"""number of divertor ports (`i_blanket_type=2` (KIT HCPB))"""
+"""number of divertor ports """
 
 
 nphcdin: int = None
-"""number of inboard ports for heating/current drive (`i_blanket_type=2` (KIT HCPB))"""
+"""number of inboard ports for heating/current drive """
 
 
 nphcdout: int = None
-"""number of outboard ports for heating/current drive (`i_blanket_type=2` (KIT HCPB))"""
+"""number of outboard ports for heating/current drive """
 
 
 tbr: float = None
-"""tritium breeding ratio (`i_blanket_type=2,3` (KIT HCPB/HCLL))"""
+"""tritium breeding ratio"""
 
 
 tritprate: float = None
-"""tritium production rate [g day^-1] (`i_blanket_type=2` (KIT HCPB))"""
+"""tritium production rate [g day^-1] """
 
 
 wallpf: float = None
-"""neutron wall load peaking factor (`i_blanket_type=2` (KIT HCPB))"""
+"""neutron wall load peaking factor """
 
 
 whtblbreed: float = None
-"""mass of blanket - breeder part [kg] (`i_blanket_type=2` (KIT HCPB))"""
+"""mass of blanket - breeder part [kg] """
 
 
 m_blkt_beryllium: float = None

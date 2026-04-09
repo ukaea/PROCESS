@@ -1,6 +1,6 @@
 """Integration tests for costs_pie.py."""
 
-from process.io import costs_pie
+from process.core.io import costs_pie
 
 
 def test_input_file(temp_data_cwd, mfile_name):

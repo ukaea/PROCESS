@@ -3,7 +3,7 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import fwbs_variables
-from process.fw import FirstWall
+from process.models.fw import FirstWall
 
 
 @pytest.fixture

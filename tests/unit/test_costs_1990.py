@@ -7,7 +7,6 @@ import pytest
 from pytest import approx
 
 from process import data_structure
-from process.costs import Costs
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -27,6 +26,7 @@ from process.data_structure import (
     times_variables,
     vacuum_variables,
 )
+from process.models.costs.costs import Costs
 
 
 @pytest.fixture

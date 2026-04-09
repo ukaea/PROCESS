@@ -56,12 +56,13 @@ from bokeh.palettes import Category10
 from bokeh.plotting import figure
 from bokeh.resources import CDN
 
-from process.io import mfile as mf
+from process.core.io import mfile as mf
 
 logging.basicConfig(level=logging.INFO, filename="tracker.log")
 logger = logging.getLogger("PROCESS Tracker")
 
 DEFAULT_TRACKING_VARIABLES = {
+    "Metadata.process_runtime",
     "CurrentDrive.p_hcd_primary_extra_heat_mw",
     "CurrentDrive.f_c_plasma_bootstrap",
     "CurrentDrive.p_hcd_injected_total_mw",
@@ -145,7 +146,7 @@ class TrackingFile:
     e.g. starfire_MFILE-<date>-<time>.json
     """
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.meta: dict = {}
         # metadata (e.g. commit message and date generated) as a key-value pair
 
@@ -170,7 +171,7 @@ class ProcessTracker:
         hashid: str | None = None,
         tracking_variables_file: pathlib.Path | None = None,
         strict: bool = False,
-    ) -> None:
+    ):
         """Drive the creation of tracking JSON files.
 
         :param mfile: the path to an mfile to create tracking data for.
@@ -296,7 +297,7 @@ class TrackedVariable:
     of this variable.
     """
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str):
         self.name = name
         # Name of the graph this variable is plotted under
         self._data = []
@@ -337,7 +338,7 @@ class TrackedVariable:
 class TrackedData:
     """Holds the entire tracking history of a database"""
 
-    def __init__(self, database) -> None:
+    def __init__(self, database):
         self.database = pathlib.Path(database)
 
         self.tracked_variables = {}

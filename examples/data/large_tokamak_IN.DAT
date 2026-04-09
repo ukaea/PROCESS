@@ -58,7 +58,7 @@ icc = 15
 * Net electric power lower limit *
 *--------------------------------*
 icc = 16
-* Minimum allowable value for net eletric power [MW]
+* Minimum allowable value for net electric power [MW]
 p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *

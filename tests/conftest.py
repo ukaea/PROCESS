@@ -12,7 +12,9 @@ from _pytest.fixtures import SubRequest
 from system_check import system_compatible
 
 from process import main
-from process.log import logging_model_handler
+from process.core.log import logging_model_handler
+from process.core.model import DataStructure
+from process.main import Models
 
 
 def pytest_addoption(parser):
@@ -157,7 +159,6 @@ def reinitialise_error_module():
 
     If a subroutine raises an error and writes to error variables, this should
     be cleaned up when the test finishes to prevent any side-effects.
-
     """
     # TODO Perhaps this should be autoused by all tests? Specify use explicitly
     # for now for known error-raisers
@@ -231,3 +232,8 @@ def _plot_show_and_close_class(request):
         plt.close()
     else:
         yield
+
+
+@pytest.fixture
+def process_models():
+    return Models(DataStructure())
