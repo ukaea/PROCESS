@@ -1295,43 +1295,6 @@ class Costs2015(Model):
         if descr == "not used":
             return
 
-        # !TODO: Convert this
-
-        # Replace descr with dummy string of the correct length.
-        #       dum70 = descr
-        #       write(file,10) dum70, value, ' '
-        # 10    format(1x,a,t73,f10.0, tl1, a)
-
         # Create variable name of format s + array entry
 
-        po.ovarrf(file, descr, vname, value)
-
-    def ocost_vname(self, file, descr, vname, value):
-        """Routine to print out the code, description and value
-        of a cost item not in the array s in costs_2015
-
-        Parameters
-        ----------
-        file :
-
-        descr :
-
-        vname :
-
-        value :
-
-        """
-
-        # character(len=70) :: dum70
-
-        if descr == "not used":
-            return
-
-        # !TODO: Convert this
-
-        # Replace descr with dummy string of the correct length.
-        #       dum70 = descr
-        #       write(file,10) dum70, value, ' '
-        # 10    format(1x,a,t73,f10.0, tl1, a)
-
-        po.ovarrf(file, descr, vname, value)
+        po.ovarrf(file, descr, str(vname), value)
