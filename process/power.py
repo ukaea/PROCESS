@@ -38,13 +38,20 @@ class Power:
     ) -> float:
         """
         Energy storage loss over an interval [J]
+
         Loss = f_p_pf_energy_store_loss * |ΔE_PF|
         Ref: M. Kovari, "PF power supplies accounting 2, Issue #972"
 
-        :param e_pf_delta_j: change in stored poloidal magnetic energy over interval [J]
-        :type e_pf_delta_j: float
-        :return: energy storage electrical loss over interval [J]
-        :rtype: float
+        Parameters
+        ----------
+        e_pf_delta_j : float
+            change in stored poloidal magnetic energy over interval [J]
+        f_p_pf_energy_store_loss : float
+
+        Returns
+        -------
+        float
+            energy storage electrical loss over interval [J]
         """
         return f_p_pf_energy_store_loss * abs(e_pf_delta_j)
 
