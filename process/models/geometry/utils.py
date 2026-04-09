@@ -1,5 +1,5 @@
 """
-Module to hold plotting functions, used in plot_proc.py, which are common to multiple reactor components
+Module to hold plotting functions, used in plot_summary, which are common to multiple reactor components
 """
 
 import numpy as np

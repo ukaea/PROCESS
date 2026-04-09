@@ -1,13 +1,15 @@
+from __future__ import annotations
+
 import logging
 import math
 from enum import IntEnum
 from types import DynamicClassAttribute
+from typing import TYPE_CHECKING
 
 import numba as nb
 import numpy as np
 
 import process.models.physics.fusion_reactions as reactions
-import process.models.physics.impurity_radiation as impurity_radiation
 import process.models.physics.radiation_power as physics_funcs
 from process.core import constants
 from process.core import process_output as po
@@ -25,6 +27,7 @@ from process.data_structure import (
     stellarator_variables,
     times_variables,
 )
+from process.models.physics import impurity_radiation
 from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
 from process.models.physics.confinement_time import (
     PlasmaConfinementTime,
@@ -32,8 +35,13 @@ from process.models.physics.confinement_time import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
-from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagneticCurrent
-from process.models.physics.plasma_fields import PlasmaFields
+
+if TYPE_CHECKING:
+    from process.models.physics.plasma_current import (
+        PlasmaCurrent,
+        PlasmaDiamagneticCurrent,
+    )
+    from process.models.physics.plasma_fields import PlasmaFields
 
 logger = logging.getLogger(__name__)
 

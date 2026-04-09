@@ -1,0 +1,74 @@
+import sys
+
+import click
+
+from process.core.io.cli_tools import help_opt, mfile_arg, save
+from process.core.io.mfile import MFile
+from process.core.io.plot.costs.costs_bar import cost_comp_1990, cost_comp_2014
+from process.core.io.plot.costs.costs_pie import cost_model_1990, cost_model_2014
+
+save = save("Save figure")
+
+
+@click.group()
+@help_opt
+def costs():
+    """Cost plotting utilities"""
+
+
+@costs.command("pie", no_args_is_help=True)
+@help_opt
+@mfile_arg
+@save
+def pie_plot(mfiles, save):
+    """Displays the cost breakdown as a pie chart."""
+    for m_file in mfiles:
+        m_file = MFile(m_file)
+
+        # Check which cost model is being used
+        if "c21" in m_file.data:
+            cost_model_1990(m_file, save)
+        elif "s01" in m_file.data:
+            cost_model_2014(m_file, save)
+        else:
+            print("ERROR: Cannot identify cost data, check MFILE!")
+
+
+@costs.command("bar", no_args_is_help=True)
+@mfile_arg
+@help_opt
+@save
+@click.option(
+    "-inf",
+    "--inflate",
+    type=float,
+    help="Inflation Factor (multiplies costs)",
+    default=1.0,
+)
+def bar_plot(mfiles, save, inflate):
+    """Displays the cost breakdown as a bar chart.
+
+    Multiple MFILEs can be given and will be plotted on the same chart.
+    """
+    # Get file names
+    mfile_list = [MFile(filename=item) for item in mfiles]
+
+    # Check which cost model is being used
+    if "c21" in mfile_list[0].data:
+        # Check all MFILEs use original cost model
+        for item in mfile_list:
+            if "c21" not in item.data:
+                sys.exit("ERROR: Inconsistent cost models used between MFILEs!")
+
+        cost_comp_1990(mfile_list=mfile_list, inflate=inflate, save=save)
+
+    elif "s01" in mfile_list[0].data:
+        # Check all MFILEs use new cost model
+        for item in mfile_list:
+            if "s01" not in item.data:
+                sys.exit("ERROR: Inconsistent cost models used between MFILEs!")
+
+        cost_comp_2014(mfile_list=mfile_list, inflate=inflate, save=save)
+
+    else:
+        print("ERROR: Failed to identify cost data, check MFILE!")

@@ -9,13 +9,12 @@ from typing import TYPE_CHECKING
 from warnings import warn
 
 import process
-import process.core.process_output as process_output
-import process.core.solver.iteration_variables as iteration_variables
 from process import data_structure
-from process.core import constants
+from process.core import constants, process_output
 from process.core.exceptions import ProcessValidationError
 from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
+from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.blanket_library import init_blanket_library
 from process.data_structure.build_variables import init_build_variables
