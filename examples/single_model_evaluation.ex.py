@@ -22,7 +22,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-import process
+from process import data_structure
 from process.main import SingleRun
 
 # %% [markdown]
@@ -31,7 +31,7 @@ from process.main import SingleRun
 
 # %%
 print(
-    f"p_plasma_separatrix_mw = {process.data_structure.physics_variables.p_plasma_separatrix_mw}"
+    f"p_plasma_separatrix_mw = {data_structure.physics_variables.p_plasma_separatrix_mw}"
 )
 
 # %% [markdown]
@@ -51,13 +51,11 @@ single_run.run()
 # Print initial values of interest
 def print_values():
     print(
-        f"W frac = {process.data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13]:.3e}"
+        f"W frac = {data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13]:.3e}"
     )
+    print(f"p_plasma_rad_mw = {data_structure.physics_variables.p_plasma_rad_mw:.3e}")
     print(
-        f"p_plasma_rad_mw = {process.data_structure.physics_variables.p_plasma_rad_mw:.3e}"
-    )
-    print(
-        f"p_plasma_separatrix_mw = {process.data_structure.physics_variables.p_plasma_separatrix_mw:.3e}"
+        f"p_plasma_separatrix_mw = {data_structure.physics_variables.p_plasma_separatrix_mw:.3e}"
     )
 
 
@@ -67,9 +65,7 @@ print_values()
 # Now try increasing the tungsten impurity fraction to see if there's a change in the divertor power.
 
 # %%
-process.data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13] = (
-    5.0e-5
-)
+data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13] = 5.0e-5
 single_run.models.physics.run()
 print_values()
 
@@ -94,23 +90,21 @@ def run_impurities(w_imp_fracs):
     # Loop over W impurity values, evaluate model and store responses at each point
     for i, imp_frac in enumerate(w_imp_fracs):
         # Set W impurity fraction, then run physics model
-        process.data_structure.impurity_radiation_module.f_nd_impurity_electron_array[
-            13
-        ] = imp_frac
+        data_structure.impurity_radiation_module.f_nd_impurity_electron_array[13] = (
+            imp_frac
+        )
         single_run.models.physics.run()
 
         # Evaluate constraint equation 15 (L-H threshold constraint)
         con15_value = ConstraintManager.evaluate_constraint(15).normalised_residual
 
         # Need to copy values
-        p_plasma_rad_mw[i] = (
-            process.data_structure.physics_variables.p_plasma_rad_mw.item()
-        )
+        p_plasma_rad_mw[i] = data_structure.physics_variables.p_plasma_rad_mw.item()
         p_plasma_separatrix_mw[i] = (
-            process.data_structure.physics_variables.p_plasma_separatrix_mw.item()
+            data_structure.physics_variables.p_plasma_separatrix_mw.item()
         )
         p_l_h_threshold_mw[i] = (
-            process.data_structure.physics_variables.p_l_h_threshold_mw.item()
+            data_structure.physics_variables.p_l_h_threshold_mw.item()
         )
         # Need to flip sign of constraint so negative means violated
         con15[i] = -con15_value

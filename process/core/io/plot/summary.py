@@ -1,39 +1,28 @@
-"""
+"""PROCESS plot_summary"""
 
-PROCESS plot_proc using process_io_lib functions and MFILE.DAT
-
-24/11/2021: Global dictionary variables moved within the functions
-            to avoid cyclic dependencies. This is because the dicts
-            generation script imports, and inspects, process.
-"""
-
-import argparse
 import json
 import os
-import pathlib
 import textwrap
-from argparse import RawTextHelpFormatter
 from dataclasses import dataclass
 from importlib import resources
+from pathlib import Path
 from typing import Any, Literal
 
 import matplotlib as mpl
 import matplotlib.backends.backend_pdf as bpdf
 import matplotlib.image as mpimg
-import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import patches
 from matplotlib.axes import Axes
 from matplotlib.patches import Circle, Rectangle
-from matplotlib.path import Path
+from matplotlib.path import Path as mplPath
 from scipy.interpolate import interp1d
 
-import process.core.constants as constants
-import process.core.io.mfile as mf
-import process.data_structure.pfcoil_variables as pfcoil_variables
-from process.core.io.mfile import MFileErrorClass
+from process.core import constants
+from process.core.io.mfile import MFile, MFileErrorClass
 from process.core.solver.objectives import OBJECTIVE_NAMES
-from process.data_structure import impurity_radiation_module
+from process.data_structure import impurity_radiation_module, pfcoil_variables
 from process.models.build import Build
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
@@ -78,8 +67,6 @@ from process.models.physics.plasma_current import (
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
 
-mpl.rcParams["figure.max_open_warning"] = 40
-
 
 @dataclass
 class RadialBuild:
@@ -90,70 +77,6 @@ class RadialBuild:
     cumulative_upper: dict[str, float]
     cumulative_lower: dict[str, float]
     cumulative_radial: dict[str, float]
-
-
-def parse_args(args):
-    """Parse supplied arguments.
-
-    Parameters
-    ----------
-    args : list, None
-        arguments to parse
-
-    Returns
-    -------
-    Namespace
-        parsed arguments
-    """
-    # Setup command line arguments
-    parser = argparse.ArgumentParser(
-        description="Produces a summary of the PROCESS MFILE output, using the MFILE.  "
-        "For info please see https://github.com/ukaea/PROCESS?tab=readme-ov-file#contacts ",
-        formatter_class=RawTextHelpFormatter,
-    )
-
-    parser.add_argument(
-        "-f",
-        metavar="FILENAME",
-        type=str,
-        default="",
-        help="specify input/output file path",
-    )
-    parser.add_argument("-s", "--show", help="show plot", action="store_true")
-
-    parser.add_argument("-n", type=int, help="Which scan to plot?")
-
-    parser.add_argument(
-        "-d",
-        "--DEMO-ranges",
-        help="Uses the DEMO dimensions as ranges for all graphics",
-        action="store_true",
-    )
-
-    parser.add_argument(
-        "-c",
-        "--colour",
-        type=int,
-        help=(
-            "Which colour scheme to use for cross-section plots\n"
-            "1: Original PROCESS (default)\n"
-            "2: BLUEMIRA"
-        ),
-        default=1,
-        choices=[1, 2],
-    )
-    parser.add_argument(
-        "-o",
-        "--output-format",
-        type=str,
-        help=(
-            "Output file format\npdf: pdf output (default)\npng: png output\nnone: no output file written"
-        ),
-        default="pdf",
-        choices=["pdf", "png", "none"],
-    )
-
-    return parser.parse_args(args)
 
 
 # Colours are PROCESS defualt, BLUEMIRA
@@ -224,7 +147,7 @@ rtangle2 = 2 * rtangle
 
 def plot_plasma(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
     mirror_negative_x: bool = False,
@@ -303,7 +226,7 @@ def plot_plasma(
 
 
 def plot_centre_cross(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, mirror_negative_x: bool = False
+    axis: plt.Axes, mfile: MFile, scan: int, mirror_negative_x: bool = False
 ):
     """Function to plot centre cross on plot
 
@@ -327,7 +250,7 @@ def plot_centre_cross(
     )
 
 
-def cumulative_radial_build(section, mfile: mf.MFile, scan: int):
+def cumulative_radial_build(section, mfile: MFile, scan: int):
     """Function for calculating the cumulative radial build up to and
     including the given section.
 
@@ -367,7 +290,7 @@ def cumulative_radial_build(section, mfile: mf.MFile, scan: int):
     return cumulative_build
 
 
-def cumulative_radial_build2(section, mfile: mf.MFile, scan: int):
+def cumulative_radial_build2(section, mfile: MFile, scan: int):
     """Function for calculating the cumulative radial build up to and
     including the given section.
 
@@ -409,7 +332,7 @@ def cumulative_radial_build2(section, mfile: mf.MFile, scan: int):
 
 def poloidal_cross_section(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     demo_ranges: bool,
     radial_build: RadialBuild,
@@ -463,7 +386,7 @@ def poloidal_cross_section(
 
 def plot_full_machine_poloidal_cross_section(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     radial_build: RadialBuild,
     colour_scheme: Literal[1, 2],
@@ -515,7 +438,7 @@ def plot_full_machine_poloidal_cross_section(
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
 
 
-def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Figure):
+def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figure):
     """Plots the main power flow diagram for the fusion reactor, including plasma, heating and current drive,
     first wall, blanket, vacuum vessel, divertor, coolant pumps, turbine, generator, and auxiliary systems.
     Annotates the diagram with power values and draws arrows to indicate power flows.
@@ -548,7 +471,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     # ===========================================
 
     # Load the plasma image
-    with resources.path("process.core.io", "plasma.png") as img_path:
+    with resources.path("process.core.io.plot.images", "plasma.png") as img_path:
         plasma = mpimg.imread(img_path.open("rb"))
 
     # Display the plasma image over the figure, not the axes
@@ -570,7 +493,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
         fontsize=11,
     )
     # Load the neutron image
-    with resources.path("process.core.io", "neutron.png") as img_path:
+    with resources.path("process.core.io.plot.images", "neutron.png") as img_path:
         neutron = mpimg.imread(img_path.open("rb"))
 
     new_ax = axis.inset_axes(
@@ -716,7 +639,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the alpha particle image
-    with resources.path("process.core.io", "alpha_particle.png") as img_path:
+    with resources.path("process.core.io.plot.images", "alpha_particle.png") as img_path:
         alpha = mpimg.imread(img_path.open("rb"))
 
     # Display the alpha particle image over the figure, not the axes
@@ -802,7 +725,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the HCD injector image
-    with resources.path("process.core.io", "hcd_injector.png") as img_path:
+    with resources.path("process.core.io.plot.images", "hcd_injector.png") as img_path:
         hcd_injector_1 = hcd_injector_2 = mpimg.imread(img_path.open("rb"))
 
     # Display the injector image over the figure, not the axes
@@ -1070,7 +993,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     # ===========================================
 
     # Load the turbine image
-    with resources.path("process.core.io", "turbine.png") as img_path:
+    with resources.path("process.core.io.plot.images", "turbine.png") as img_path:
         turbine = mpimg.imread(img_path.open("rb"))
 
     # Display the turbine image over the figure, not the axes
@@ -1126,7 +1049,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the generator image
-    with resources.path("process.core.io", "generator.png") as img_path:
+    with resources.path("process.core.io.plot.images", "generator.png") as img_path:
         generator = mpimg.imread(img_path.open("rb"))
 
     # Display the generator image over the figure, not the axes
@@ -1195,7 +1118,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the pylon image
-    with resources.path("process.core.io", "pylon.png") as img_path:
+    with resources.path("process.core.io.plot.images", "pylon.png") as img_path:
         pylon = mpimg.imread(img_path.open("rb"))
 
     # Display the pylon image over the figure, not the axes
@@ -1404,7 +1327,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     # ================================
 
     # Load the first wall image
-    with resources.path("process.core.io", "fw.png") as img_path:
+    with resources.path("process.core.io.plot.images", "fw.png") as img_path:
         fw = mpimg.imread(img_path.open("rb"))
 
     # Display the first wall image over the figure, not the axes
@@ -1660,7 +1583,9 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the blanket image
-    with resources.path("process.core.io", "blanket_with_coolant.png") as img_path:
+    with resources.path(
+        "process.core.io.plot.images", "blanket_with_coolant.png"
+    ) as img_path:
         blanket = mpimg.imread(img_path.open("rb"))
 
     # Display the blanket image over the figure, not the axes
@@ -1703,7 +1628,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the vacuum vessel image
-    with resources.path("process.core.io", "vv.png") as img_path:
+    with resources.path("process.core.io.plot.images", "vv.png") as img_path:
         vv = mpimg.imread(img_path.open("rb"))
 
     # Display the vacuum vessel image over the figure, not the axes
@@ -1807,7 +1732,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
     )
 
     # Load the divertor image
-    with resources.path("process.core.io", "divertor.png") as img_path:
+    with resources.path("process.core.io.plot.images", "divertor.png") as img_path:
         divertor = mpimg.imread(img_path.open("rb"))
 
     # Display the divertor image over the figure, not the axes
@@ -2475,7 +2400,7 @@ def plot_main_power_flow(axis: plt.Axes, mfile: mf.MFile, scan: int, fig: plt.Fi
 
 def plot_main_plasma_information(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
     fig: plt.Figure,
@@ -2487,7 +2412,7 @@ def plot_main_plasma_information(
     ----------
     axis : plt.Axes
         The matplotlib axis object to plot on.
-    mfile : mf.MFile
+    mfile : MFile
         The MFILE data object containing plasma parameters.
     scan : int
         The scan number to use for extracting data.
@@ -2910,7 +2835,7 @@ def plot_main_plasma_information(
 
     # Load the neutron image
     with resources.path(
-        "process.core.io", "alpha_particle.png"
+        "process.core.io.plot.images", "alpha_particle.png"
     ) as alpha_particle_image_path:
         # Use importlib.resources to locate the image
         alpha_particle = mpimg.imread(alpha_particle_image_path.open("rb"))
@@ -2945,7 +2870,9 @@ def plot_main_plasma_information(
     )
 
     # =========================================
-    with resources.path("process.core.io", "neutron.png") as neutron_image_path:
+    with resources.path(
+        "process.core.io.plot.images", "neutron.png"
+    ) as neutron_image_path:
         neutron = mpimg.imread(neutron_image_path.open("rb"))
     new_ax = axis.inset_axes(
         [0.975, 0.75, 0.075, 0.075], transform=axis.transAxes, zorder=10
@@ -3247,7 +3174,7 @@ def plot_main_plasma_information(
     )
 
 
-def plot_current_profiles_over_time(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
     """Plots the current profiles over time for PF circuits, CS coil, and plasma."""
     t_plant_pulse_coil_precharge = mfile.get("t_plant_pulse_coil_precharge", scan=scan)
     t_plant_pulse_plasma_current_ramp_up = mfile.get(
@@ -3346,9 +3273,7 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.grid(True, linestyle="--", alpha=0.6)
 
 
-def plot_system_power_profiles_over_time(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, fig
-):
+def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int, fig):
     """Plots the power profiles over time for various systems."""
 
     t_precharge = mfile.get("t_plant_pulse_coil_precharge", scan=scan)
@@ -3510,7 +3435,7 @@ def plot_system_power_profiles_over_time(
 
 def plot_cryostat(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
     mirror_negative_x: bool = False,
@@ -3521,7 +3446,7 @@ def plot_cryostat(
     ----------
     axis : plt.Axes
         axis object to plot to
-    mfile : mf.MFile
+    mfile : MFile
         MFILE data object
     scan : int
         scan number to use
@@ -3551,7 +3476,7 @@ def plot_cryostat(
         )
 
 
-def color_key(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal[1, 2]):
+def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2]):
     """Function to plot the colour key"""
 
     axis.set_ylim([0, 10])
@@ -3616,7 +3541,7 @@ def secs_to_hms(s):
 
 def toroidal_cross_section(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     demo_ranges: bool,
     colour_scheme: Literal[1, 2],
@@ -3820,7 +3745,7 @@ def TF_outboard(axis: plt.Axes, item, n_tf_coils, r3, r4, w, facecolor):
     x4 = r3 * np.cos(ang) - dx
     y4 = r3 * np.sin(ang) + dy
     verts = [(x1, y1), (x2, y2), (x3, y3), (x4, y4), (x1, y1)]
-    path = Path(verts, closed=True)
+    path = mplPath(verts, closed=True)
     patch = patches.PathPatch(path, facecolor=facecolor, lw=0)
     axis.add_patch(patch)
 
@@ -3875,12 +3800,12 @@ def arc_fill(axis: plt.Axes, r1, r2, color="pink"):
     verts.extend(list(zip(xs2, ys2, strict=False)))
     endpoint = [(r2, 0)]
     verts.extend(endpoint)
-    path = Path(verts, closed=True)
+    path = mplPath(verts, closed=True)
     patch = patches.PathPatch(path, facecolor=color, lw=0)
     axis.add_patch(patch)
 
 
-def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
+def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     """Function to plot density profile
 
     Parameters
@@ -3889,7 +3814,7 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
         axis object to add plot to
     demo_ranges: bool :
 
-    mfile: mf.MFile :
+    mfile: MFile :
 
     scan: int :
 
@@ -4151,14 +4076,14 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     # ---
 
 
-def plot_jprofile(prof, mfile: mf.MFile, scan: int):
+def plot_jprofile(prof, mfile: MFile, scan: int):
     """Function to plot density profile
 
     Parameters
     ----------
     prof :
         axis object to add plot to
-    mfile: mf.MFile :
+    mfile: MFile :
 
     scan: int :
 
@@ -4226,7 +4151,7 @@ def plot_jprofile(prof, mfile: mf.MFile, scan: int):
     prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
 
-def plot_t_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
+def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     """Function to plot temperature profile
 
     Parameters
@@ -4235,7 +4160,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
         axis object to add plot to
     demo_ranges: bool :
 
-    mfile: mf.MFile :
+    mfile: MFile :
 
     scan: int :
 
@@ -4347,7 +4272,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
     # ---
 
 
-def plot_qprofile(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
+def plot_qprofile(prof, demo_ranges: bool, mfile: MFile, scan: int):
     """Function to plot q profile, formula taken from Nevins bootstrap model.
 
     Parameters
@@ -4356,7 +4281,7 @@ def plot_qprofile(prof, demo_ranges: bool, mfile: mf.MFile, scan: int):
         axis object to add plot to
     demo_ranges: bool :
 
-    mfile: mf.MFile :
+    mfile: MFile :
 
     scan: int :
 
@@ -4547,7 +4472,7 @@ def profiles_with_pedestal(mfile, scan: int):
     return rho, ne, te
 
 
-def plot_radprofile(prof, mfile: mf.MFile, scan: int, impp, demo_ranges: bool):
+def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
     """Function to plot radiation profile, formula taken from ???.
 
     Parameters
@@ -4560,7 +4485,7 @@ def plot_radprofile(prof, mfile: mf.MFile, scan: int, impp, demo_ranges: bool):
         scan number to use
     impp :
         impurity path
-    mfile: mf.MFile :
+    mfile: MFile :
 
     scan: int :
 
@@ -4796,7 +4721,7 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
 
 def plot_vacuum_vessel_and_divertor(
     axis,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan,
     radial_build,
     colour_scheme,
@@ -4824,7 +4749,7 @@ def plot_vacuum_vessel_and_divertor(
     upper = radial_build.upper
     lower = radial_build.lower
 
-    i_single_null = mfile.get("i_single_null", scan=scan)
+    i_single_null = int(mfile.get("i_single_null", scan=scan))
     triang_95 = mfile.get("triang95", scan=scan)
     dz_divertor = mfile.get("dz_divertor", scan=scan)
     dz_xpoint_divertor = mfile.get("dz_xpoint_divertor", scan=scan)
@@ -5025,7 +4950,7 @@ def plot_vacuum_vessel_and_divertor(
 
 def plot_shield(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     radial_build,
     colour_scheme,
@@ -5114,7 +5039,7 @@ def plot_shield(
 
 def plot_blanket(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan,
     radial_build,
     colour_scheme,
@@ -5251,7 +5176,7 @@ def plot_blanket(
             )
 
 
-def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
     # Import required variables
     radius_fw_channel = mfile.get("radius_fw_channel", scan=scan) * 100
     dr_fw_wall = mfile.get("dr_fw_wall", scan=scan) * 100
@@ -5362,7 +5287,7 @@ def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: mf.MFile, scan
     axis.set_ylim([-1, 2 * (dr_fw_wall + radius_fw_channel) + 1])
 
 
-def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
     # Import required variables
     radius_fw_channel = mfile.get("radius_fw_channel", scan=scan)
     dr_fw_wall = mfile.get("dr_fw_wall", scan=scan)
@@ -5485,7 +5410,7 @@ def plot_first_wall_poloidal_cross_section(axis: plt.Axes, mfile: mf.MFile, scan
 
 def plot_firstwall(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     radial_build,
     colour_scheme,
@@ -5619,7 +5544,7 @@ def plot_firstwall(
 
 def plot_tf_coils(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
     mirror_negative_x: bool = False,
@@ -5724,7 +5649,7 @@ def plot_tf_coils(
             for vert in verts:
                 # Mirror vertices if needed
                 mirrored_vert = [[x_scale * point[0], point[1]] for point in vert]
-                path = Path(mirrored_vert, closed=True)
+                path = mplPath(mirrored_vert, closed=True)
                 patch = patches.PathPatch(path, facecolor=colour, lw=0)
                 axis.add_patch(patch)
 
@@ -5739,7 +5664,7 @@ def plot_tf_coils(
             )
 
 
-def plot_superconducting_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig):
+def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     """Plots inboard TF coil and winding pack.
 
     Parameters
@@ -6437,7 +6362,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig):
         axis.legend(loc="upper left")
 
 
-def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig):
+def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     """Plots inboard TF coil and winding pack.
 
     Parameters
@@ -6824,7 +6749,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: mf.MFile, scan: int, fig):
     )
 
 
-def plot_resistive_tf_info(axis: plt.Axes, mfile: mf.MFile, scan: int, fig):
+def plot_resistive_tf_info(axis: plt.Axes, mfile: MFile, scan: int, fig):
     # Add info about the steel casing surrounding the WP
     textstr_casing = (
         f"$\\mathbf{{Casing:}}$\n \n"
@@ -6945,7 +6870,7 @@ def plot_resistive_tf_info(axis: plt.Axes, mfile: mf.MFile, scan: int, fig):
     )
 
 
-def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
+def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     """Plots inboard TF coil CICC individual turn structure.
 
     Parameters
@@ -7531,7 +7456,7 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: mf.MFile, scan: in
     )
 
 
-def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
+def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
     """Plots TF coil CICC cable cross-section.
 
     Parameters
@@ -7540,7 +7465,7 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int)
 
     fig :
 
-    mfile: mf.MFile :
+    mfile: MFile :
 
     scan: int :
 
@@ -7627,7 +7552,7 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int)
 
 def plot_pf_coils(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     colour_scheme: Literal[1, 2],
     mirror_negative_x: bool = False,
@@ -7742,7 +7667,7 @@ def plot_pf_coils(
     )
 
 
-def plot_info(axis: plt.Axes, data, mfile: mf.MFile, scan: int):
+def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
     """Function to plot data in written form on a matplotlib plot.
 
     Parameters
@@ -7819,7 +7744,7 @@ def plot_info(axis: plt.Axes, data, mfile: mf.MFile, scan: int):
             )
 
 
-def plot_header(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot header info: date, rutitle etc
 
     Parameters
@@ -7939,7 +7864,7 @@ def plot_header(axis: plt.Axes, mfile: mf.MFile, scan: int):
     plot_info(axis, data2, mfile, scan)
 
 
-def plot_geometry_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_geometry_info(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot geometry info
 
     Parameters
@@ -7988,7 +7913,7 @@ def plot_geometry_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_physics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_physics_info(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot geometry info
 
     Parameters
@@ -8065,7 +7990,7 @@ def plot_physics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_magnetics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_magnetics_info(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot magnet info
 
     Parameters
@@ -8194,7 +8119,7 @@ def plot_magnetics_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_power_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot power info
 
     Parameters
@@ -8286,7 +8211,7 @@ def plot_power_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_current_drive_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot current drive info
 
     Parameters
@@ -8547,7 +8472,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: mf.MFile, scan: int):
     plot_info(axis, data, mfile, scan)
 
 
-def plot_bootstrap_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot a scatter box plot of bootstrap current fractions.
 
     Parameters
@@ -8637,7 +8562,7 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_h_threshold_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int, u_seed=None):
+def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=None):
     """Function to plot a scatter box plot of L-H threshold power comparisons.
 
     Parameters
@@ -8772,7 +8697,7 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int, u_se
 
 
 def plot_confinement_time_comparison(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, u_seed=None
+    axis: plt.Axes, mfile: MFile, scan: int, u_seed=None
 ):
     """Function to plot a scatter box plot of confinement time comparisons.
 
@@ -9113,7 +9038,7 @@ def plot_confinement_time_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_radial_build(axis: plt.Axes, mfile: mf.MFile, colour_scheme: Literal[1, 2]):
+def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]):
     """Plots the radial build of a fusion device on the given matplotlib axis.
 
     This function visualizes the different layers/components of the machine's radial build
@@ -9129,7 +9054,7 @@ def plot_radial_build(axis: plt.Axes, mfile: mf.MFile, colour_scheme: Literal[1,
     ----------
     axis : matplotlib.axes.Axes
         The matplotlib axis on which to plot the radial build.
-    mfile : mf.MFile
+    mfile : MFile
         An object containing the machine build data, with required fields for each
         radial component and the "i_tf_inside_cs" flag.
     colour_scheme:
@@ -9294,7 +9219,7 @@ def plot_radial_build(axis: plt.Axes, mfile: mf.MFile, colour_scheme: Literal[1,
 
 
 def plot_lower_vertical_build(
-    axis: plt.Axes, mfile: mf.MFile, colour_scheme: Literal[1, 2]
+    axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
 ):
     """Plots the lower vertical build of a fusion device on the given matplotlib axis.
 
@@ -9400,7 +9325,7 @@ def plot_lower_vertical_build(
 
 
 def plot_upper_vertical_build(
-    axis: plt.Axes, mfile: mf.MFile, colour_scheme: Literal[1, 2]
+    axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
 ):
     """Plots the upper vertical build of a fusion device on the given matplotlib axis.
 
@@ -9552,7 +9477,7 @@ def plot_upper_vertical_build(
     axis.title.set_text("Upper Vertical Build")
 
 
-def plot_density_limit_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_density_limit_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     """Function to plot a scatter box plot of different density limit comparisons.
 
     Parameters
@@ -9639,7 +9564,7 @@ def plot_density_limit_comparison(axis: plt.Axes, mfile: mf.MFile, scan: int):
 
 
 def plot_cs_coil_structure(
-    axis: plt.Axes, fig, mfile: mf.MFile, scan: int, colour_scheme=1
+    axis: plt.Axes, fig, mfile: MFile, scan: int, colour_scheme=1
 ):
     """Function to plot the coil structure of the CS.
 
@@ -9844,7 +9769,7 @@ def plot_cs_coil_structure(
     axis.legend()
 
 
-def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
+def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: MFile, scan: int):
     a_cs_turn = mfile.get("a_cs_turn", scan=scan)
     dz_cs_turn = mfile.get("dz_cs_turn", scan=scan)
     dr_cs_turn = mfile.get("dr_cs_turn", scan=scan)
@@ -9949,7 +9874,7 @@ def plot_cs_turn_structure(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
     axis.grid(True, linestyle="--", alpha=0.3)
 
 
-def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme=1):
+def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme=1):
     # Plot the TF coil poloidal cross-section
     plot_tf_coils(axis, mfile, scan, colour_scheme)
 
@@ -10363,14 +10288,14 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: mf.MFile, scan: int, colour_sc
     axis.legend(labels, loc="upper center", bbox_to_anchor=(1.01, 0.85), ncol=1)
 
 
-def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
+def plot_iteration_variables(axis: plt.Axes, m_file: MFile, scan: int):
     """Plot the iteration variables and where they lay in their bounds on a given axes
 
     Parameters
     ----------
     axis: plt.Axes :
 
-    m_file: mf.MFile :
+    m_file: MFile :
 
     scan: int :
 
@@ -10526,7 +10451,7 @@ def plot_iteration_variables(axis: plt.Axes, m_file: mf.MFile, scan: int):
     axis.legend(loc="upper left", bbox_to_anchor=(-0.15, 1.05), ncol=1)
 
 
-def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
+def plot_tf_stress(axis: plt.Axes, mfile: MFile):
     """Function to plot the TF coil stress from the SIG_TF.json file.
 
     Input file:
@@ -10536,7 +10461,7 @@ def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
     ----------
     axis: plt.Axes :
 
-    mfile: mf.MFile :
+    mfile: MFile :
 
     """
 
@@ -10582,7 +10507,9 @@ def plot_tf_stress(axis: plt.Axes, mfile: mf.MFile):
     bound_vertical_strain = []
     bound_radial_displacement = []
 
-    with open(mfile.filename.replace("MFILE.DAT", "SIG_TF.json")) as f:
+    with open(
+        mfile.filename.with_name(mfile.filename.name.replace("MFILE.DAT", "SIG_TF.json"))
+    ) as f:
         sig_data = json.load(f)
 
     # Getting the data to be plotted
@@ -11138,7 +11065,7 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
     )
 
 
-def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
+def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: MFile, scan: int):
     # Plot the fusion rate profiles on the given axis
     fusrat_plasma_dt_profile = []
     fusrat_plasma_dd_triton_profile = []
@@ -11543,7 +11470,7 @@ def plot_fusion_rate_profiles(axis: plt.Axes, fig, mfile: mf.MFile, scan: int):
 
 def plot_cover_page(
     axis: plt.Axes,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
     fig,
     radial_build: RadialBuild,
@@ -11555,7 +11482,7 @@ def plot_cover_page(
     ----------
     axis : plt.Axes
         The matplotlib axis object to plot on.
-    mfile : mf.MFile
+    mfile : MFile
         The MFILE data object containing run info.
     scan : int
         The scan number to use for extracting data.
@@ -11707,7 +11634,7 @@ def plot_cover_page(
     inset_ax.axis("off")
 
 
-def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     # Plot the plasma pressure profiles on the given axis
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -11797,7 +11724,7 @@ def plot_plasma_pressure_profiles(axis: plt.Axes, mfile: mf.MFile, scan: int):
     )
 
 
-def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     # Get the plasma pressure profiles
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
@@ -11845,7 +11772,7 @@ def plot_plasma_pressure_gradient_profiles(axis: plt.Axes, mfile: mf.MFile, scan
     axis.legend()
 
 
-def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: MFile, scan: int):
     """Plot plasma poloidal pressure contours inside the plasma boundary.
 
     This function visualizes the poloidal pressure distribution inside the plasma boundary
@@ -11856,7 +11783,7 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: mf.MFile, scan
     ----------
     axis : matplotlib.axes.Axes
         Matplotlib axis object to plot on.
-    mfile : mfile: mf.MFile
+    mfile : mfile: MFile
         MFILE data object containing plasma and geometry data.
     scan : int
         Scan number to use for extracting data.
@@ -11922,7 +11849,7 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: mf.MFile, scan
     )
 
 
-def interp1d_profile(profile, mfile: mf.MFile, scan: int):
+def interp1d_profile(profile, mfile: MFile, scan: int):
     # Get plasma geometry and boundary
     pg = plasma_geometry(
         rmajor=mfile.get("rmajor", scan=scan),
@@ -12144,7 +12071,7 @@ def reaction_plot_grid(
 def plot_fusion_rate_contours(
     fig1,
     fig2,
-    mfile: mf.MFile,
+    mfile: MFile,
     scan: int,
 ):
     fusrat_plasma_dt_profile = []
@@ -12206,7 +12133,7 @@ def plot_fusion_rate_contours(
     reaction_plot_grid(rminor, rmajor, kappa, r_grid, z_grid, dhe3_grid, dhe3_axes)
 
 
-def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: MFile, scan: int):
     # Plot magnetic field profiles inside the plasma boundary
 
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
@@ -12286,7 +12213,7 @@ def plot_magnetic_fields_in_plasma(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.set_xlim(rmajor - 1.25 * rminor, rmajor + 1.25 * rminor)
 
 
-def plot_beta_profiles(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_beta_profiles(axis: plt.Axes, mfile: MFile, scan: int):
     # Plot the beta profiles on the given axis
 
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
@@ -12322,7 +12249,7 @@ def plot_beta_profiles(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.set_ylim(bottom=0.0)
 
 
-def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: mf.MFile, scan: int):
+def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
     r_tf_outboard_mid = mfile.get("r_tf_outboard_mid", scan=scan)
     n_tf_coils = mfile.get("n_tf_coils", scan=scan)
     rmajor = mfile.get("rmajor", scan=scan)
@@ -12633,7 +12560,7 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: mf.MFile, scan: int):
     fig.tight_layout()
 
 
-def plot_plasma_effective_charge_profile(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_plasma_effective_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     n_charge_plasma_effective_vol_avg = mfile.get(
@@ -12668,7 +12595,7 @@ def plot_plasma_effective_charge_profile(axis: plt.Axes, mfile: mf.MFile, scan: 
     axis.legend()
 
 
-def plot_ion_charge_profile(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_ion_charge_profile(axis: plt.Axes, mfile: MFile, scan: int):
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     # find impurity densities
@@ -12737,7 +12664,7 @@ def plot_ion_charge_profile(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.grid(which="both", linestyle="--", alpha=0.5)
 
 
-def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: mf.MFile, scan: int):
+def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: MFile, scan: int):
     # Plot EBW and ECRH coupling efficiency graph
     ebw = ElectronBernstein(plasma_profile=0)
     ecrg = ElectronCyclotron(plasma_profile=0)
@@ -12821,7 +12748,7 @@ def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.minorticks_on()
 
 
-def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
+def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
     """Plot the Larmor radius profile on the given axis."""
     radius_plasma_deuteron_larmor_profile = [
         mfile_data.data[
@@ -12873,7 +12800,7 @@ def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
     axis.legend()
 
 
-def plot_debye_length_profile(axis: plt.Axes, mfile_data: mf.MFile, scan: int):
+def plot_debye_length_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
     """Plot the Debye length profile on the given axis.
 
     Parameters
@@ -13221,14 +13148,14 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
     axis.legend()
 
 
-def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, scan: int):
+def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan: int):
     """Plot the equality constraints for a solution and their normalised residuals
 
     Parameters
     ----------
     axis: plt.Axes :
 
-    m_file_data: mf.MFile :
+    m_file_data: MFile :
 
     scan: int :
 
@@ -13313,14 +13240,14 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: mf.MFile, sc
     axis.legend()
 
 
-def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan: int):
+def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: int):
     """Plot the inequality constraints for a solution and where they lay within their bounds
 
     Parameters
     ----------
     axis: plt.Axes :
 
-    m_file: mf.MFile :
+    m_file: MFile :
 
     scan: int :
 
@@ -13487,7 +13414,7 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: mf.MFile, scan:
 def plot_blkt_structure(
     ax: plt.Axes,
     fig: plt.Figure,
-    m_file: mf.MFile,
+    m_file: MFile,
     scan: int,
     radial_build: dict[str, float],
     colour_scheme: Literal[1, 2],
@@ -13613,7 +13540,7 @@ def plot_blkt_structure(
 
 def main_plot(
     figs: list[Axes],
-    m_file: mf.MFile,
+    m_file: MFile,
     scan: int,
     imp: str = "../data/lz_non_corona_14_elements/",
     demo_ranges: bool = False,
@@ -13981,9 +13908,14 @@ def create_thickness_builds(m_file, scan: int):
     )
 
 
-def main(args=None):
-    args = parse_args(args)
-
+def plot_summary(
+    mfile: Path,
+    scan: int = -1,
+    demo_ranges: bool = False,
+    colour: Literal[1, 2] = 1,
+    output_format: str = "pdf",
+    show: bool = False,
+):
     # create main plot
     # Increase range when adding new page
     pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(34)]
@@ -13991,28 +13923,24 @@ def main(args=None):
     # run main_plot
     main_plot(
         pages,
-        mf.MFile(args.f) if args.f != "" else mf.MFile("MFILE.DAT"),
-        scan=args.n or -1,
-        demo_ranges=bool(args.DEMO_ranges),
-        colour_scheme=int(args.colour),
+        MFile(mfile) if mfile != "" else MFile("MFILE.DAT"),
+        scan=scan or -1,
+        demo_ranges=demo_ranges,
+        colour_scheme=colour,
     )
 
-    if args.output_format == "pdf":
-        with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
+    if output_format == "pdf":
+        with bpdf.PdfPages(mfile.with_name(mfile.name + "SUMMARY.pdf")) as pdf:
             for p in pages:
                 pdf.savefig(p)
-    elif args.output_format == "png":
-        folder = pathlib.Path(args.f.removesuffix(".DAT") + "_SUMMARY")
+    elif output_format == "png":
+        folder = Path(mfile.with_name(mfile.stem + "_SUMMARY"))
         folder.mkdir(parents=True, exist_ok=True)
         for no, page in enumerate(pages):
-            page.savefig(pathlib.Path(folder, f"page{no}.png"), format="png")
+            page.savefig(Path(folder, f"page{no}.png"), format="png")
 
     # show fig if option used
-    if args.show:
+    if show:
         plt.show(block=True)
 
     plt.close("all")
-
-
-if __name__ == "__main__":
-    main()

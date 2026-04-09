@@ -6,12 +6,11 @@ from enum import Enum
 import numpy as np
 from tabulate import tabulate
 
-import process.core.process_output as process_output
-import process.core.solver.constraints as constraints
-from process.core import constants
+from process.core import constants, process_output
 from process.core.caller import write_output_files
 from process.core.exceptions import ProcessValueError
 from process.core.log import logging_model_handler, show_errors
+from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
     build_variables,

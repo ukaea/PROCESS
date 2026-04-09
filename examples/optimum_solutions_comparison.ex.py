@@ -28,7 +28,7 @@
 # %% [markdown]
 # This notebook demonstrates how the optimum solution found by `PROCESS` changes as we vary input parameters. We will use the large tokamak example input file to do this. The figure of merit for this example is to minimise the major radius, `rmajor`.
 #
-# We use the functionality from `plot_solutions.py` and from `plot_proc.py` to demonstrate this.
+# We use the functionality from `plot.solutions` and from `plot.summary` to demonstrate this.
 #
 # These tools plot the solution vectors (i.e. final values of optimisation parameters) for different runs of `PROCESS`. This allows visual comparisons of different solution points.
 #
@@ -54,7 +54,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from process.core.io.plot_solutions import (
+from process.core.io.plot.solutions import (
     RunMetadata,
     plot_mfile_solutions,
 )
@@ -140,7 +140,7 @@ df2
 import matplotlib.pyplot as plt
 
 import process.core.io.mfile as mf
-from process.core.io.plot_proc import plot_inequality_constraint_equations
+from process.core.io.plot.summary import plot_inequality_constraint_equations
 
 original_mfile = mf.MFile((large_tokamak_mfile).as_posix())
 new_mfile = mf.MFile((large_tokamak_varied_min_net_electric_mfile).as_posix())

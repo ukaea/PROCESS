@@ -2678,7 +2678,7 @@ class Power(Model):
             + p_hcd_electric_total_profile_mw
         )
 
-        if p_plant_electric_net_profile_mw[3] != p_plant_electric_net_mw:
+        if not np.isclose(p_plant_electric_net_profile_mw[3], p_plant_electric_net_mw):
             logger.error(
                 "Calculated net electric power during burn does not match input value."
                 f"Calculated: {p_plant_electric_net_profile_mw[3]}, Input: {p_plant_electric_net_mw}"

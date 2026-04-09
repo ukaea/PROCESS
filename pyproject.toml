@@ -18,6 +18,7 @@ requires-python = ">=3.10"
 license = "MIT"
 dynamic = ["version"]
 dependencies = [
+    "click>=8.3.2",
     "numpy>=1.23",
     "scipy>=1.10",
     "cvxpy~=1.7.3",
@@ -76,10 +77,10 @@ docs = [
   "mkdocs-literate-nav",
 ]
 lint = ["pre-commit>=2.16.0", "ruff==0.9.3", "ty"]
-all = ["process[test,docs,lint,examples,plotly]"]
+all = ["process[test,docs,lint,examples,plotly]", "toml"]
 
 [project.scripts]
-process = "process.main:main"
+process = "process.main:process_cli"
 
 [tool.hatch.build.targets.wheel]
 artifacts = [
