@@ -1,6 +1,7 @@
 import abc
 from dataclasses import dataclass, fields
 
+from process.data_structure.cost_2015_variables import Cost2015Data
 from process.data_structure.water_usage_variables import WaterUseData
 
 initialise_later = object()
@@ -9,6 +10,7 @@ initialise_later = object()
 @dataclass(kw_only=True)
 class DataStructure:
     water_use: WaterUseData = initialise_later
+    costs_2015: Cost2015Data = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

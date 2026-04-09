@@ -703,7 +703,7 @@ class Models:
     def models(self) -> tuple[Model, ...]:
         # At the moment, this property just returns models that implement the Model interface.
         # Eventually every Model will comply and then this method can be used as the caller/outputter!
-        return (self.water_use,)
+        return (self.water_use, self._costs_2015)
 
     def setup_data_structure(self):
         # This Models class should be replaced with a dataclass so we can
