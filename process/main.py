@@ -202,19 +202,19 @@ def process_cli(
     """
     if ctx.invoked_subcommand is None:
         if varyiterparams:
+            if mfile_path is not None:
+                raise click.BadParameter(
+                    "--mfile not supported on vary run please specify in the configuration file"
+                )
             runtype = VaryRun(config_file, solver)
         elif indat is None:
             raise click.BadParameter("IN.DAT not specified")
         else:
-            runtype = SingleRun(indat, solver, update_obsolete=update_obsolete)
+            runtype = SingleRun(
+                indat, solver, update_obsolete=update_obsolete, filepath_out=mfile_path
+            )
 
         runtype.run()
-
-        mfile_path = (
-            runtype.mfile_path
-            if mfile_path is None
-            else runtype.mfile_path.rename(mfile_path)
-        )
 
         if mfilejson:
             # Produce a json file containing mfile output, useful for VVUQ work.
