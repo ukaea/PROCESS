@@ -386,9 +386,7 @@ class Power(Model):
         powpfr = 0.0e0
         powpfr2 = 0.0e0
 
-        #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils (including Central Solenoid and plasma)
-        #  plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
-        #  pfcoil_variables.ind_pf_cs_plasma_mutual(i,j) : mutual inductance between coil i and j
+        # Circuits include PF coils, CS, and plasma (last index = plasma)
         for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits):
             powpfii[idx_circuit] = 0.0e0
             vpfi[idx_circuit] = 0.0e0
