@@ -314,7 +314,7 @@ class SingleRun:
             which solver to use, as specified in solver.py
         """
         self.input_file = Path(input_file)
-        self.filepath = Path(filepath_out or self.input_file.parent)
+        self.filepath = Path(Path(filepath_out).parent or self.input_file.parent)
 
         self.validate_input(update_obsolete)
         self.init_module_vars()
