@@ -269,6 +269,17 @@ class Power(Model):
         peak MVA, and at the end of flattop for the peak stored energy.
         The reactive (inductive) components use waves to calculate the
         <I>dI/dt</I> at the time periods.
+<<<<<<< HEAD
+=======
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+>>>>>>> 4e29479f (updated pfpwr docstring)
 
         Parameters
         ----------
