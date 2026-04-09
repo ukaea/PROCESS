@@ -19,6 +19,7 @@ def mfile():
 @click.option(
     "-v",
     "--variables",
+    default="",
     type=str,
     help="Optional list of variables or json file with list of variables to extract",
 )
@@ -31,7 +32,10 @@ def mfile():
 @scan_opt
 @click.option("--verbose", is_flag=True)
 def convert(mfile, variables, format_, scan, verbose):
-    """Convert MFile to other formats."""
+    """Convert MFile to other formats.
+
+    Currently all variables must be specified
+    """
     if variables.endswith(".json"):
         with open(variables) as f:
             variables = json.load(f)["variables"]
