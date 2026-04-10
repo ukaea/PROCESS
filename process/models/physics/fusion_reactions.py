@@ -1019,7 +1019,7 @@ def beam_fusion(
 
     # Correction factor between the reference profile-averaged DT reactivity
     # and the Bosch-Hale reactivity evaluated with the same profile integral.
-    sigmav_dt_correction = sigmav_dt_average / bh_profile_average
+    f_sigmav_dt_profile_correction = sigmav_dt_average / bh_profile_average
 
     sigv_beam_deuterium = beam_reaction_rate(
         constants.M_DEUTERON_AMU, deuterium_critical_energy_speed, e_beam_kev
@@ -1034,7 +1034,7 @@ def beam_fusion(
         tritium_density,
         sigv_beam_deuterium,
         vol_plasma,
-        sigmav_dt_correction,
+        f_sigmav_dt_profile_correction,
     )
 
     p_beam_tritium_dt = alpha_power_beam(
@@ -1042,7 +1042,7 @@ def beam_fusion(
         deuterium_density,
         sigv_beam_tritium,
         vol_plasma,
-        sigmav_dt_correction,
+        f_sigmav_dt_profile_correction,
     )
 
     # Neutral beam alpha power
@@ -1285,7 +1285,7 @@ def alpha_power_beam(
     plasma_ion_density: float,
     sigv: float,
     vol_plasma: float,
-    sigmav_dt_correction: float,
+    f_sigmav_dt_profile_correction: float,
 ) -> float:
     """Calculate alpha power from beam-target fusion.
 
@@ -1303,7 +1303,7 @@ def alpha_power_beam(
         Beam-target fusion reactivity (m^3/s).
     vol_plasma :
         Plasma volume (m^3).
-    sigmav_dt_correction :
+    f_sigmav_dt_profile_correction :
         Scaling factor relating the reference reactivity to the effective
         value used in the model.
 
@@ -1327,7 +1327,7 @@ def alpha_power_beam(
         * sigv
         * (constants.DT_ALPHA_ENERGY / 1e6)
         * vol_plasma
-        * sigmav_dt_correction
+        * f_sigmav_dt_profile_correction
     )
 
 
