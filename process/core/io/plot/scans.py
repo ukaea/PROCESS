@@ -353,20 +353,7 @@ def plot_scan(
         # Plot section
         # -----------
         for index, output_name in enumerate(output_names):
-            if stack_plots:
-                # check stack plots will work
-                if len(output_names) <= 1:
-                    raise ValueError(
-                        "For stack plots to be used need more than 1 output variable"
-                    )
-                fig, axs = plt.subplots(
-                    len(output_names),
-                    1,
-                    figsize=(8.0, (3.5 + (1 * len(output_names)))),
-                    sharex=True,
-                )
-                fig.subplots_adjust(hspace=0.0)
-            else:
+            if not stack_plots:
                 fig, ax = plt.subplots()
                 if len(output_names2) > 0:
                     ax2 = ax.twinx()
@@ -442,7 +429,22 @@ def plot_scan(
                     plt.tight_layout()
                 else:
                     if stack_plots:
-                        axs[output_names.index(output_name)].plot(
+                        # check stack plots will work
+                        if len(output_names) <= 1:
+                            raise ValueError(
+                                "stack_plots requires at least two output variables"
+                            )
+                        # Create subplots only once for the first output
+                        if index == 0:
+                            fig, axs = plt.subplots(
+                                len(output_names),
+                                1,
+                                figsize=(8.0, (3.5 + (1 * len(output_names)))),
+                                sharex=True,
+                            )
+                            fig.subplots_adjust(hspace=0.0)
+
+                        axs[index].plot(
                             scan_var_array[input_file],
                             output_arrays[input_file][output_name],
                             "--o",
@@ -707,13 +709,14 @@ def plot_scan(
             else:
                 extra_str = f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"
 
-            plt.savefig(
-                outputdir / f"scan_{scan_var_name}_vs_{extra_str}.{save_format}",
-                dpi=300,
-            )
-            if not stack_plots:  # Display plot (used in Jupyter notebooks)
+            if (not stack_plots) or (stack_plots and output_names[-1] == output_name):
+                plt.savefig(
+                    f"{outputdir}/scan_{scan_var_name}_vs_{extra_str}.{save_format}",
+                    dpi=300,
+                )
                 plt.show()
                 plt.clf()
+                plt.close()
         # ------------
 
     # In case of a 2D scan
