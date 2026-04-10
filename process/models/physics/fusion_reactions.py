@@ -960,7 +960,7 @@ def beam_fusion(
     """
 
     # Beam ion slowing down time given by Deng Baiquan and G. A. Emmert 1987
-    beam_slow_time = (
+    t_beam_slow = (
         1.99e19
         * (
             constants.M_DEUTERON_AMU * (1.0 - f_beam_tritium)
@@ -1000,7 +1000,7 @@ def beam_fusion(
         e_beam_kev,
         critical_energy_deuterium,
         critical_energy_tritium,
-        beam_slow_time,
+        t_beam_slow,
         f_beam_tritium,
         c_beam_total,
         vol_plasma,
@@ -1063,7 +1063,7 @@ def beam_slowing_down_state(
     e_beam_kev: float,
     critical_energy_deuterium: float,
     critical_energy_tritium: float,
-    beam_slow_time: float,
+    t_beam_slow: float,
     f_beam_tritium: float,
     c_beam_total: float,
     vol_plasma: float,
@@ -1082,7 +1082,7 @@ def beam_slowing_down_state(
         Critical energy for electron/ion slowing down of deuterium beam ions (keV).
     critical_energy_tritium :
         Critical energy for electron/ion slowing down of tritium beam ions (keV).
-    beam_slow_time :
+    t_beam_slow :
         Beam ion slowing-down time on electrons (s).
     f_beam_tritium :
         Tritium fraction in the injected beam (0.0 = pure deuterium beam).
@@ -1134,13 +1134,13 @@ def beam_slowing_down_state(
     beam_energy_ratio_deuterium = e_beam_kev / critical_energy_deuterium
 
     # Calculate the characterstic time for the deuterium ions to slow down to the thermal energy, eg E = 0.
-    characteristic_deuterium_beam_slow_time = (
-        beam_slow_time / 3.0 * np.log(1.0 + (beam_energy_ratio_deuterium) ** 1.5)
+    characteristic_deuterium_t_beam_slow = (
+        t_beam_slow / 3.0 * np.log(1.0 + (beam_energy_ratio_deuterium) ** 1.5)
     )
 
     deuterium_beam_density = (
         beam_current_deuterium
-        * characteristic_deuterium_beam_slow_time
+        * characteristic_deuterium_t_beam_slow
         / (constants.ELECTRON_CHARGE * vol_plasma)
     )
 
@@ -1149,13 +1149,13 @@ def beam_slowing_down_state(
 
     # Calculate the characterstic time for the tritium to slow down to the thermal energy, eg E = 0.
     # Wesson, J. (2011) Tokamaks.
-    characteristic_tritium_beam_slow_time = (
-        beam_slow_time / 3.0 * np.log(1.0 + (beam_energy_ratio_tritium) ** 1.5)
+    characteristic_tritium_t_beam_slow = (
+        t_beam_slow / 3.0 * np.log(1.0 + (beam_energy_ratio_tritium) ** 1.5)
     )
 
     tritium_beam_density = (
         beam_current_tritium
-        * characteristic_tritium_beam_slow_time
+        * characteristic_tritium_t_beam_slow
         / (constants.ELECTRON_CHARGE * vol_plasma)
     )
 
@@ -1190,7 +1190,7 @@ def beam_slowing_down_state(
     pressure_coeff_deuterium = (
         constants.M_DEUTERON_AMU
         * constants.ATOMIC_MASS_UNIT
-        * beam_slow_time
+        * t_beam_slow
         * deuterium_critical_energy_speed**2
         * source_deuterium
         / (constants.KILOELECTRON_VOLT * 3.0)
@@ -1198,7 +1198,7 @@ def beam_slowing_down_state(
     pressure_coeff_tritium = (
         constants.M_TRITON_AMU
         * constants.ATOMIC_MASS_UNIT
-        * beam_slow_time
+        * t_beam_slow
         * tritium_critical_energy_speed**2
         * source_tritium
         / (constants.KILOELECTRON_VOLT * 3.0)
