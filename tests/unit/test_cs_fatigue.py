@@ -1,38 +1,27 @@
-from typing import Any, NamedTuple
+from typing import NamedTuple
 
 import pytest
 
-from process.models.cs_fatigue import CsFatigue
-
 
 @pytest.fixture
-def cs_fatigue_python():
+def cs_fatigue_python(process_models):
     """Fixture to create a CsFatigue object.
 
     :return: an instance of CsFatigue
     :rtype: process.cs_fatigue.CsFatigue
     """
-    return CsFatigue()
+    return process_models.cs_fatigue
 
 
 class NcycleParam(NamedTuple):
-    max_hoop_stress: Any = None
-
-    residual_stress: Any = None
-
-    t_crack_vertical: Any = None
-
-    dz_cs_turn_conduit: Any = None
-
-    dr_cs_turn_conduit: Any = None
-
-    n_cycle: Any = None
-
-    t_crack_radial: Any = None
-
-    expected_n_cycle: Any = None
-
-    expected_t_crack_radial: Any = None
+    max_hoop_stress: float
+    residual_stress: float
+    t_crack_vertical: float
+    dz_cs_turn_conduit: float
+    dr_cs_turn_conduit: float
+    t_crack_radial: float
+    expected_n_cycle: float
+    expected_t_crack_radial: float
 
 
 @pytest.mark.parametrize(

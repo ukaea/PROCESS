@@ -427,7 +427,7 @@ class SingleRun:
                 f"Invalid ioptimz value: {data_structure.numerics.ioptimz}. Please "
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
-        self.scan = Scan(self.models, self.solver)
+        self.scan = Scan(self.models, self.solver, self.data)
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
@@ -703,7 +703,7 @@ class Models:
     def models(self) -> tuple[Model, ...]:
         # At the moment, this property just returns models that implement the Model interface.
         # Eventually every Model will comply and then this method can be used as the caller/outputter!
-        return (self.water_use, self._costs_2015)
+        return (self.water_use, self._costs_2015, self.cs_fatigue)
 
     def setup_data_structure(self):
         # This Models class should be replaced with a dataclass so we can
