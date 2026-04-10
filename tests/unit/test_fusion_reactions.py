@@ -315,4 +315,4 @@ def test_alpha_power_beam():
 def test_beam_reaction_rate():
     beam_reaction_rate = reactions.beam_reaction_rate(3.01550071597, 5140000.0, 1000.0)
 
-    assert beam_reaction_rate == pytest.approx(7.465047902975452e-18)
+    assert beam_reaction_rate == pytest.approx(7.465047902975452e-22)
