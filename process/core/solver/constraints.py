@@ -1811,13 +1811,11 @@ def constraint_equation_90(constraint_registration, data):
         data_structure.cost_variables.ibkt_life == 1
         and data.cs_fatigue.bkt_life_csf == 1
     ):
-        data_structure.cs_fatigue_variables.n_cycle_min = (
-            data_structure.cost_variables.bktcycles
-        )
+        data.cs_fatigue.n_cycle_min = data_structure.cost_variables.bktcycles
 
     return geq(
-        data_structure.cs_fatigue_variables.n_cycle,
-        data_structure.cs_fatigue_variables.n_cycle_min,
+        data.cs_fatigue.n_cycle,
+        data.cs_fatigue.n_cycle_min,
         constraint_registration,
     )
 
