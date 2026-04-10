@@ -2,7 +2,7 @@
 
 The main function called for calculating the fusion reactions produced by neutral beam injection is `beam_fusion()`
 Due to the small contribution of fusion power from the neutral beams only D-T reactions are taken into account, as D-D additions to fusion power are deemed to be negligible.
-The beam fusion calculations will only run if the calculated beam current is greater than 0. This is done by having a NBI heating and current drive configuration. 
+The beam fusion calculations will only run if the calculated beam current is greater than 0. This is done by having a NBI heating and current drive configuration.
 
 The NBI parameters taken from the current drive module to be used in the beam fusion calculations are the beam current (`c_beam_total`), beam energy (`e_beam_kev`) and the tritium component of the beam (`f_beam_tritium`).
 
@@ -46,7 +46,7 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 
     ---------------------------
 
-    ### Derivation of beam slowing down rate and critical energy
+   ### Derivation of beam slowing down rate and critical energy
 
     The rate of slowing down of a test particle of mass $M$, charge $Z\text{e}$ and energy $E$, due to Coulomb collisions with a background species off mass $m_{\text{j}}$, charge $Z_{\text{j}}\text{e}$, density $n_{\text{j}}$ and temperature $T_{\text{j}}$ is given by[^2]:
 
@@ -103,21 +103,29 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 3. **Set the plasma tritium and ion densities**
 
     $$
-    \mathtt{deuterium\_density = nd_plasma_fuel_ions_vol_avg * f\_deuterium\_plasma} \\
-    \mathtt{tritium\_density = nd_plasma_fuel_ions_vol_avg * f\_tritium\_plasma}
+    \mathtt{nd\_plasma\_deuterium = nd\_plasma\_fuel\_ions\_vol\_avg * f\_deuterium\_plasma} \\
+    \mathtt{nd\_plasma\_tritium = nd\_plasma\_fuel\_ions\_vol\_avg * f\_tritium\_plasma}
     $$
 
-4. **Calculate the beam alpha powers, density and deposited energy**
+4. **Calculate the beam densities, critical speeds and deposited energy**
 
-    [`beamcalc()`](#neutral-beam-alpha-power-and-ion-energy--beamcalc) is ran to find the alpha power from the beams, the beam densities and the total energy deposited into the plasma.
+    [`beam_slowing_down_state()`](#neutral-beam-alpha-power-and-ion-energy--beamcalc) is ran to find the beam densities, the critical speeds and the total energy deposited into the plasma.
 
-5. **Set the returned alpha power**
+5. **Calculate the Bosch-Hale profile correction factor**
+
+    A profile-averaged Bosch-Hale D-T reactivity is evaluated from [`fusion_rate_integral()`](#fusion-rate-integral--fusion_rate_integral) and used to define the correction factor:
+
+    $$
+    f_{\sigma v,\text{DT}} = \frac{\langle\langle \sigma v \rangle\rangle_{\text{DT}}}{\langle\langle \sigma v \rangle\rangle_{\text{BH,profile}}}
+    $$
+
+6. **Set the returned alpha power**
 
     $$
     P_{\alpha,\text{beam}} = \mathtt{beamfus0} \times \left(P_{\alpha,\text{D-beam}} + P_{\alpha,\text{T-beam}}\right)
     $$
 
-6. **Calculate the neutral beam beta**
+7. **Calculate the neutral beam beta**
 
     $$
     \beta_{\text{beam}} = \mathtt{betbm0}\times \frac{2}{3}4.03\times10^{-22} \frac{n_{\text{beam}}E_{\text{hot,beam}}}{B_{\text{tot}}^2}
@@ -176,7 +184,7 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
     $$
 
 5. **Calculate the fast ion pressures**
-    
+
     The fast ion pressure is set as:
 
     $$
@@ -188,13 +196,13 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 
     ---------------------------------
 
-    ### Beam fast ion pressure integral | `fast_ion_pressure_integral()`
+   ### Beam fast ion pressure integral | `fast_ion_pressure_integral()`
 
     This internal function is for returning the main integral value for the fast ion pressure. It takes the initial beam energy ($E_{\text{beam}}$) and the critical energy ($E_{\text{crit}}$) for the required ion species.
 
     This integral derivation is originally of the form derived by D.Baiquan et.al.[^2]
 
-    #### Derivation
+   #### Derivation
 
     The fast ions, because of their finite slowing down time, develop a certain amount of pressure which has to be supported by the magnetic field.
 
@@ -271,13 +279,13 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
     E_{\text{hot,total}} = \frac{\left( E_{\text{hot,D}}  \langle n_{\text{beam}} \rangle_{\text{D}}\right) + \left( E_{\text{hot,T}}  \langle n_{\text{beam}} \rangle_{\text{T}}\right)}{\langle n_{\text{beam}} \rangle_{\text{total}}}
     $$
 
-7. **Calculate the hot ion species fusion rates**
+7. **Calculate the hot ion species fusion rate coefficients**
 
-    The D-T fusion reaction rate is calculated from the [`beam_reaction_rate()`](#beam-fusion-reaction-rate--beam_reaction_rate) function.
+    The D-T beam-background fusion rate coefficients are calculated from the [`beam_reaction_rate()`](#beam-fusion-reaction-rate--beam_reaction_rate) function.
 
     ------------------------
 
-    ### Beam fusion reaction rate | `beam_reaction_rate()`
+   ### Beam fusion reaction rate | `beam_reaction_rate()`
 
     1. **Calculate beam velocity**
 
@@ -289,17 +297,17 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
         \frac{3v_{\text{critical}}}{\ln\left(1+\frac{v_{\text{beam}}}{v_{\text{critical}}}\right)^{3}}
         $$
 
-    3. **Perform the fusion rate integral**
+    3. **Perform the fusion rate coefficient integral**
 
         $$
         \int_0^{v_{\text{relative}}} \frac{u^3}{1+u^3}\sigma_{\text{bmfus}}(E_{\text{amu}})
         $$
-        
+
         --------------------
 
-        #### Hot Beam Fusion Reaction Rate Integrand | `_hot_beam_fusion_reaction_rate_integrand()`
+       #### Hot Beam Fusion Reaction Rate Integrand | `_hot_beam_fusion_reaction_rate_integrand()`
 
-        This function computes the integrand for the hot beam fusion reaction rate based on the ratio of beam velocity to the critical velocity and the critical velocity for electron/ion slowing down of the beam ion.
+        This function computes the integrand for the hot beam fusion rate coefficient based on the ratio of beam velocity to the critical velocity and the critical velocity for electron/ion slowing down of the beam ion.
 
         The integrand function is:
 
@@ -314,14 +322,14 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 
         ------------------------
 
-        #### Beam fusion cross section | `_beam_fusion_cross_section()`
+       #### Beam fusion cross section | `_beam_fusion_cross_section()`
 
         This internal function is used to find the beam cross section.
         It sets limits on cross-section at low and high beam energies. The plasma ions are assumed to be stationary:
 
         $$
-        \sigma_{\text{bm}}(E) = 
-        \begin{cases} 
+        \sigma_{\text{bm}}(E) =
+        \begin{cases}
         1.0 \times 10^{-27} \ \text{cm}^2 & \text{if } E < 10.0 \ \text{keV/amu} \\
         8.0 \times 10^{-26} \ \text{cm}^2 & \text{if } E > 10^4 \ \text{keV/amu} \\
         \frac{1.0 \times 10^{-24} \cdot \left( \frac{a_2}{1.0 + (a_3 E - a_4)^2} + a_5 \right)}{E \left( \exp\left(\frac{a_1}{\sqrt{E}}\right) - 1.0 \right)} \ \text{cm}^2 & \text{otherwise}
@@ -344,13 +352,18 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 
         ----------------------
 
-    4. **Multiply by the coefficient to get the full fusion rate**
+    4. **Convert the cross-section contribution to SI units and multiply by the coefficient to get the full rate coefficient**
 
         $$
-        \frac{3v_{\text{critical}}}{\ln\left(1+\frac{v_{\text{beam}}}{v_{\text{critical}}}\right)^{3}}\int_0^{v_{\text{relative}}} \frac{u^3}{1+u^3}\sigma_{\text{bmfus}}(E_{\text{amu}})
+        \langle \sigma v \rangle_{\text{beam}} =
+        10^{-4}
+        \frac{3v_{\text{critical}}}{\ln\left(1+\frac{v_{\text{beam}}}{v_{\text{critical}}}\right)^{3}}
+        \int_0^{v_{\text{relative}}} \frac{u^3}{1+u^3}\sigma_{\text{bmfus}}(E_{\text{amu}})
         $$
 
-    -------------------------    
+        where the factor of $10^{-4}$ converts the beam fusion cross section from $\text{cm}^2$ to $\text{m}^2$.
+
+    -------------------------
 
 8. **Calculate the alpha power produced by the hot ion species**
 
@@ -358,14 +371,14 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 
     -----------------------
 
-    ### Beam fusion alpha power | `alpha_power_beam()`
+   ### Beam fusion alpha power | `alpha_power_beam()`
 
     1. **Calculate reactivity ratio**
 
-        The ratio between the profile averaged reactivity for D-T reactions and the reactivity for the D-T reactions if the plasma is assumed to be homogeneously at the volume averaged ion temperature ($T_{\text{i}}$) is calculated.
+        The ratio between the profile averaged reactivity for D-T reactions and the Bosch-Hale profile-averaged D-T reactivity is calculated.
 
         $$
-        f_{\text{DT}} = \frac{\langle\langle \sigma v \rangle\rangle_{\text{DT}}}{\langle \sigma v \rangle_{\text{DT}}}
+        f_{\text{DT}} = \frac{\langle\langle \sigma v \rangle\rangle_{\text{DT}}}{\langle\langle \sigma v \rangle\rangle_{\text{BH,profile}}}
         $$
 
     2. **Calculate the alpha fusion power**
@@ -387,6 +400,6 @@ This constraint can be activated by stating `icc = 7` in the input file.
 
 The desired value of the hot ion beam density calculated from the code (`nd_beam_ions_out`) can be constrained using the input variable, `f_nd_beam_electron`. Which is the ratio of the beam density to the plasma electron density. It can be set as an iteration variable by setting `ixc = 7`.
 
-[^1]: J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
-[^2]: Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf  
+[^1]: J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,Jul. 1994, doi: <https://doi.org/10.1103/revmodphys.66.1015>.
+[^2]: Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,vol. 9, no. 3, pp. 136–141, 2022, Available: <https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf>  
 [^3]: Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,International Series of Monographs on Physics, Volume 149.
