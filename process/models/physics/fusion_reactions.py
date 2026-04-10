@@ -1029,7 +1029,7 @@ def beam_fusion(
         constants.M_TRITON_AMU, tritium_critical_energy_speed, e_beam_kev
     )
 
-    p_beam_deuterium_dt = alpha_power_beam(
+    p_alpha_beam_deuterium_dt_mw = alpha_power_beam(
         deuterium_beam_density,
         nd_plasma_tritium,
         sigv_beam_deuterium,
@@ -1037,7 +1037,7 @@ def beam_fusion(
         f_sigmav_dt_profile_correction,
     )
 
-    p_beam_tritium_dt = alpha_power_beam(
+    p_alpha_beam_tritium_dt_mw = alpha_power_beam(
         tritium_beam_density,
         nd_plasma_deuterium,
         sigv_beam_tritium,
@@ -1046,7 +1046,9 @@ def beam_fusion(
     )
 
     # Neutral beam alpha power
-    p_beam_alpha_mw = beamfus0 * (p_beam_deuterium_dt + p_beam_tritium_dt)
+    p_beam_alpha_mw = beamfus0 * (
+        p_alpha_beam_deuterium_dt_mw + p_alpha_beam_tritium_dt_mw
+    )
 
     # Neutral beam beta
     beta_beam = (
