@@ -5143,6 +5143,8 @@ class DetailedPhysics(Model):
         physics_variables.t_plasma_electron_alpha_spitzer_slow_profile = self.calculate_spitzer_ion_slowing_down_time(
             m_ion=constants.ALPHA_MASS,
             plasma_coulomb_log_electron_ion=physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile,
+            temp_plasma_electrons_kev=self.plasma_profile.teprofile.profile_y,
+            nd_plasma_electrons=self.plasma_profile.neprofile.profile_y,
             n_charge_ion=2,
         )
 
@@ -5153,6 +5155,7 @@ class DetailedPhysics(Model):
         physics_variables.res_plasma_spitzer_profile = self.calculate_spitzer_resistivity(
             n_charge=physics_variables.n_charge_plasma_effective_profile,
             electron_ion_coulomb_log=physics_variables.plasma_coulomb_log_electron_deuteron_profile,
+            temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
         )
 
     @staticmethod
@@ -5225,8 +5228,10 @@ class DetailedPhysics(Model):
             ** 0.5
         )
 
+    @staticmethod
+    @nb.njit(cache=True)
     def calculate_coulomb_log_from_impact(
-        self, impact_param_max: float, impact_param_min: float
+        impact_param_max: float, impact_param_min: float
     ) -> float:
         """Calculate the Coulomb logarithm from maximum and minimum impact parameters.
 
@@ -5295,7 +5300,10 @@ class DetailedPhysics(Model):
         float | np.ndarray
             de Broglie wavelength in meters.
 
-        :note: Reduced Planck constant (h-bar) is used in the calculation as this is for scattering.
+
+        Note
+        ----
+        - Reduced Planck constant (h-bar) is used in the calculation as this is for scattering.
 
         """
         return (constants.PLANCK_CONSTANT / (2 * np.pi)) / (mass * velocity)
@@ -5322,12 +5330,9 @@ class DetailedPhysics(Model):
             Plasma frequency in Hz.
 
         """
-        return (
-            (
-                (nd_particle * z_particle**2 * constants.ELECTRON_CHARGE**2)
-                / (m_particle * constants.EPSILON0)
-            )
-            ** 0.5
+        return np.sqrt(
+            (nd_particle * z_particle**2 * constants.ELECTRON_CHARGE**2)
+            / (m_particle * constants.EPSILON0)
         ) / (2 * np.pi)
 
     @staticmethod
@@ -5515,10 +5520,13 @@ class DetailedPhysics(Model):
             * constants.ELECTRON_CHARGE**4
         )
 
+    @staticmethod
+    @nb.njit(cache=True)
     def calculate_spitzer_ion_slowing_down_time(
-        self,
         m_ion: float,
         plasma_coulomb_log_electron_ion: float | np.ndarray,
+        temp_plasma_electrons_kev: float | np.ndarray,
+        nd_plasma_electrons: float | np.ndarray,
         n_charge_ion: float = 1.0,
     ) -> float:
         """
@@ -5530,6 +5538,10 @@ class DetailedPhysics(Model):
             Mass of the ion (kg).
         plasma_coulomb_log_electron_ion : float | np.ndarray
             Coulomb logarithm for electron-ion collisions.
+        temp_plasma_electrons_kev : float | np.ndarray
+            Electron temperature in keV.
+        nd_plasma_electrons : float | np.ndarray
+            Electron density (m^-3).
         n_charge_ion : float
             Charge number (Z) of the ion.
 
@@ -5541,13 +5553,9 @@ class DetailedPhysics(Model):
 
         return (
             (3 * (2 * np.pi) ** 1.5 * constants.EPSILON0**2)
-            * (
-                m_ion
-                * (self.plasma_profile.teprofile.profile_y * constants.KILOELECTRON_VOLT)
-                ** 1.5
-            )
+            * (m_ion * (temp_plasma_electrons_kev * constants.KILOELECTRON_VOLT) ** 1.5)
             / (
-                self.plasma_profile.neprofile.profile_y
+                nd_plasma_electrons
                 * constants.ELECTRON_CHARGE**4
                 * plasma_coulomb_log_electron_ion
                 * n_charge_ion**2
@@ -5555,18 +5563,24 @@ class DetailedPhysics(Model):
             )
         )
 
+    @staticmethod
+    @nb.njit(cache=True)
     def calculate_spitzer_resistivity(
-        self, n_charge: float | np.ndarray, electron_ion_coulomb_log: float | np.ndarray
+        n_charge: int,
+        electron_ion_coulomb_log: float | np.ndarray,
+        temp_plasma_electron_kev: float | np.ndarray,
     ) -> float | np.ndarray:
         """
-        Calculate the classical Spitzer resistivity for a plasma.
+        Calculate the classical Spitzer resistivity (η) for a plasma.
 
         Parameters
         ----------
-        n_charge : float | np.ndarray
+        n_charge : int
             Charge number (Z) of the ion.
         electron_ion_coulomb_log : float | np.ndarray
             Coulomb logarithm for electron-ion collisions.
+        temp_plasma_electron_kev : float | np.ndarray
+            Electron temperature in keV.
 
         Returns
         -------
@@ -5583,8 +5597,7 @@ class DetailedPhysics(Model):
                 * constants.ELECTRON_MASS**0.5
                 * electron_ion_coulomb_log
             )
-            / (self.plasma_profile.teprofile.profile_y * constants.KILOELECTRON_VOLT)
-            ** 1.5
+            / (temp_plasma_electron_kev * constants.KILOELECTRON_VOLT) ** 1.5
         )
 
     def output_detailed_physics(self):
