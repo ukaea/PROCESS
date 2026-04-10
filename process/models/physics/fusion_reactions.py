@@ -1021,18 +1021,18 @@ def beam_fusion(
     # and the Bosch-Hale reactivity evaluated with the same profile integral.
     sigmav_dt_correction = sigmav_dt_average / bh_profile_average
 
-    hot_deuterium_rate = 1e-4 * beam_reaction_rate(
+    sigv_beam_deuterium = beam_reaction_rate(
         constants.M_DEUTERON_AMU, deuterium_critical_energy_speed, e_beam_kev
     )
 
-    hot_tritium_rate = 1e-4 * beam_reaction_rate(
+    sigv_beam_tritium = beam_reaction_rate(
         constants.M_TRITON_AMU, tritium_critical_energy_speed, e_beam_kev
     )
 
     p_beam_deuterium_dt = alpha_power_beam(
         deuterium_beam_density,
         tritium_density,
-        hot_deuterium_rate,
+        sigv_beam_deuterium,
         vol_plasma,
         sigmav_dt_correction,
     )
@@ -1040,7 +1040,7 @@ def beam_fusion(
     p_beam_tritium_dt = alpha_power_beam(
         tritium_beam_density,
         deuterium_density,
-        hot_tritium_rate,
+        sigv_beam_tritium,
         vol_plasma,
         sigmav_dt_correction,
     )
@@ -1332,55 +1332,59 @@ def alpha_power_beam(
 
 
 def beam_reaction_rate(
-    relative_mass_ion: float, critical_velocity: float, beam_energy_keV: float
+    relative_mass_ion: float, critical_velocity: float, beam_energy_kev: float
 ) -> float:
-    """Calculate the hot beam fusion reaction rate.
+    """Calculate the hot beam fusion rate coefficient.
 
-    This function computes the fusion reaction rate for hot beam ions
-    using the critical velocity for electron/ion slowing down and the
-    neutral beam energy.
+    This function computes the beam-target fusion rate coefficient for hot beam
+    ions using the critical velocity for electron/ion slowing down and the neutral
+    beam energy.
 
     Parameters
     ----------
     relative_mass_ion :
-        Relative atomic mass of the ion (e.g., approx 2.0 for D, 3.0 for T).
+        Relative atomic mass of the ion (e.g. approx 2.0 for D, 3.0 for T).
     critical_velocity :
         Critical velocity for electron/ion slowing down of the beam ion [m/s].
-    beam_energy_keV :
+    beam_energy_kev :
         Neutral beam energy [keV].
 
     Returns
     -------
     :
-        float: Hot beam fusion reaction rate (cm^2·m/s).
+        float: Hot beam fusion rate coefficient [m^3/s].
 
     Notes
     -----
-    - The function integrates the hot beam fusion reaction rate integrand
-    over the range of beam velocities up to the critical velocity.
-    - The integration is performed using the quad function from scipy.integrate.
-
+    - The integration variable is the beam speed normalised to the critical speed.
+    - The underlying beam fusion cross-section is evaluated in cm^2 and converted
+      internally to m^2 so that this function returns an SI rate coefficient.
+    - The integration is performed using scipy.integrate.quad.
     """
 
     # Find the speed of the beam particle when it has the critical energy.
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
     beam_velocity = np.sqrt(
-        (beam_energy_keV * constants.KILOELECTRON_VOLT)
+        (beam_energy_kev * constants.KILOELECTRON_VOLT)
         * 2.0
         / (relative_mass_ion * constants.ATOMIC_MASS_UNIT)
     )
 
     relative_velocity = beam_velocity / critical_velocity
-    integral_coefficient = 3.0 * critical_velocity / np.log(1.0 + (relative_velocity**3))
+    integral_coefficient = 3.0 * critical_velocity / np.log(1.0 + relative_velocity**3)
 
-    fusion_integral = integrate.quad(
+    fusion_integral_cm2 = integrate.quad(
         _hot_beam_fusion_reaction_rate_integrand,
         0.0,
         relative_velocity,
         args=(critical_velocity,),
     )[0]
 
-    return integral_coefficient * fusion_integral
+    # _hot_beam_fusion_cross_section returns cm^2, so the integrated quantity is in
+    # cm^2. Convert to m^2 here so the final rate coefficient is returned in m^3/s.
+    fusion_integral_m2 = fusion_integral_cm2 * 1.0e-4
+
+    return integral_coefficient * fusion_integral_m2
 
 
 def _hot_beam_fusion_reaction_rate_integrand(
