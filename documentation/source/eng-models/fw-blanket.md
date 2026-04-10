@@ -10,7 +10,7 @@ landing on the armour. It does not breed tritium. Due to the hostile environment
 the first wall and armour have only a short lifetime and therefore need to be 
 replaced regularly. It is cooled either by gaseous helium or by pressurised 
 liquid water, depending on the selection of blanket type using the switch 
-`blkttype`.
+`i_blanket_type_stellarator`.
 
 ## Wall Load Calculation
 

@@ -61,7 +61,7 @@ nsweep: int = None
 <LI> 24 p_fusion_total_max_mw
 <LI> 25 kappa
 <LI> 26 triang
-<LI> 27 tbrmin (for blktmodel > 0 only)
+<LI> 27 tbrmin (for i_blanket_type_stellarator > 0 only)
 <LI> 28 b_plasma_toroidal_on_axis
 <LI> 29 radius_plasma_core_norm
 <LI> 30 fimpvar # OBSOLETE
