@@ -3641,6 +3641,50 @@ def test_detailed_physics_run_computes_profiles():
         np.isfinite(physics_variables.plasma_coulomb_log_electron_electron_profile)
     )
 
+    assert (
+        np.shape(physics_variables.plasma_coulomb_log_electron_electron_profile)[0] == n
+    )
+    assert np.all(
+        np.isfinite(physics_variables.plasma_coulomb_log_electron_electron_profile)
+    )
+
+    assert (
+        np.shape(physics_variables.t_plasma_electron_electron_collision_profile)[0] == n
+    )
+    assert np.all(
+        np.isfinite(physics_variables.t_plasma_electron_electron_collision_profile)
+    )
+
+    assert (
+        np.shape(physics_variables.freq_plasma_electron_electron_collision_profile)[0]
+        == n
+    )
+    assert np.all(
+        np.isfinite(physics_variables.freq_plasma_electron_electron_collision_profile)
+    )
+
+    assert (
+        np.shape(physics_variables.len_plasma_electron_electron_mean_free_path_profile)[
+            0
+        ]
+        == n
+    )
+    assert np.all(
+        np.isfinite(
+            physics_variables.len_plasma_electron_electron_mean_free_path_profile
+        )
+    )
+
+    assert (
+        np.shape(physics_variables.t_plasma_electron_alpha_spitzer_slow_profile)[0] == n
+    )
+    assert np.all(
+        np.isfinite(physics_variables.t_plasma_electron_alpha_spitzer_slow_profile)
+    )
+
+    assert np.shape(physics_variables.res_plasma_fuel_spitzer_profile)[0] == n
+    assert np.all(np.isfinite(physics_variables.res_plasma_fuel_spitzer_profile))
+
 
 @pytest.mark.parametrize(
     (

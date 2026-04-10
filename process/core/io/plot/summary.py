@@ -13505,7 +13505,7 @@ def plot_ion_slowing_down_time_profile(
         t_plasma_electron_alpha_spitzer_slow_profile,
         color="red",
         linestyle="-",
-        label=r"$\tau_{e-\alpha,Spitzer}$",
+        label=r"$\tau_{e-\alpha,Spitzer-fuel}$",
     )
 
     axis.set_yscale("log")
@@ -13529,14 +13529,14 @@ def plot_resistivity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> No
         Scan number to use
 
     """
-    res_plasma_spitzer_profile = [
-        mfile_data.data[f"res_plasma_spitzer_profile{i}"].get_scan(scan)
+    res_plasma_fuel_spitzer_profile = [
+        mfile_data.data[f"res_plasma_fuel_spitzer_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
     axis.plot(
-        np.linspace(0, 1, len(res_plasma_spitzer_profile)),
-        res_plasma_spitzer_profile,
+        np.linspace(0, 1, len(res_plasma_fuel_spitzer_profile)),
+        res_plasma_fuel_spitzer_profile,
         color="red",
         linestyle="-",
         label=r"$\eta_{Spitzer}$",

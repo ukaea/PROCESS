@@ -4929,8 +4929,8 @@ class DetailedPhysics(Model):
         # Resistivites
         # ============================
 
-        physics_variables.res_plasma_spitzer_profile = self.calculate_spitzer_resistivity(
-            n_charge=physics_variables.n_charge_plasma_effective_profile,
+        physics_variables.res_plasma_fuel_spitzer_profile = self.calculate_spitzer_resistivity(
+            n_charge=1,
             electron_ion_coulomb_log=physics_variables.plasma_coulomb_log_electron_deuteron_profile,
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
         )
@@ -5698,10 +5698,10 @@ class DetailedPhysics(Model):
 
         po.osubhd(self.outfile, "Resistivities:")
 
-        for i in range(len(physics_variables.res_plasma_spitzer_profile)):
+        for i in range(len(physics_variables.res_plasma_fuel_spitzer_profile)):
             po.ovarre(
                 self.mfile,
                 f"Plasma Spitzer resistivity at point {i}",
-                f"(res_plasma_spitzer_profile{i})",
-                physics_variables.res_plasma_spitzer_profile[i],
+                f"(res_plasma_fuel_spitzer_profile{i})",
+                physics_variables.res_plasma_fuel_spitzer_profile[i],
             )
