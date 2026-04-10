@@ -1008,7 +1008,7 @@ def beam_fusion(
         vol_plasma,
     )
 
-    bh_profile_average = integrate.simpson(
+    sigv_dt_bosch_hale_profile_avg = integrate.simpson(
         fusion_rate_integral(
             plasma_profile,
             BoschHaleConstants(**REACTION_CONSTANTS_DT),
@@ -1019,7 +1019,7 @@ def beam_fusion(
 
     # Correction factor between the reference profile-averaged DT reactivity
     # and the Bosch-Hale reactivity evaluated with the same profile integral.
-    f_sigmav_dt_profile_correction = sigmav_dt_average / bh_profile_average
+    f_sigmav_dt_profile_correction = sigmav_dt_average / sigv_dt_bosch_hale_profile_avg
 
     sigv_beam_deuterium = beam_reaction_rate(
         constants.M_DEUTERON_AMU, deuterium_critical_energy_speed, e_beam_kev
