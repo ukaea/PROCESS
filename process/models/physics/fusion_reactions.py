@@ -1352,7 +1352,7 @@ def beam_reaction_rate(
     Returns
     -------
     :
-        float: Hot beam fusion reaction rate (m^3/s).
+        float: Hot beam fusion reaction rate (cm^2·m/s).
 
     Notes
     -----
