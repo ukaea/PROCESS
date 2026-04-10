@@ -988,7 +988,7 @@ def beam_fusion(
     )
 
     # Deuterium and tritium ion densities
-    deuterium_density = nd_plasma_fuel_ions_vol_avg * f_deuterium_plasma
+    nd_plasma_deuterium = nd_plasma_fuel_ions_vol_avg * f_deuterium_plasma
     tritium_density = nd_plasma_fuel_ions_vol_avg * f_tritium_plasma
 
     (
@@ -1039,7 +1039,7 @@ def beam_fusion(
 
     p_beam_tritium_dt = alpha_power_beam(
         tritium_beam_density,
-        deuterium_density,
+        nd_plasma_deuterium,
         sigv_beam_tritium,
         vol_plasma,
         f_sigmav_dt_profile_correction,
