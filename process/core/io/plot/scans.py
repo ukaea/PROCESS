@@ -432,7 +432,7 @@ def plot_scan(
                         # check stack plots will work
                         if len(output_names) <= 1:
                             raise ValueError(
-                                "For stack plots need more than 1 output variable"
+                                "stack_plots requires at least two output variables"
                             )
                         # Create subplots only once for the first output
                         if index == 0:
@@ -709,13 +709,14 @@ def plot_scan(
             else:
                 extra_str = f"{output_name}{f'_vs_{output_name2}' if len(output_names2) > 0 else ''}"
 
-            if not stack_plots:  # Display plot (used in Jupyter notebooks)
+            if (not stack_plots) or (stack_plots and output_names[-1] == output_name):
                 plt.savefig(
-                    outputdir / f"scan_{scan_var_name}_vs_{extra_str}.{save_format}",
+                    f"{outputdir}/scan_{scan_var_name}_vs_{extra_str}.{save_format}",
                     dpi=300,
                 )
                 plt.show()
                 plt.clf()
+                plt.close()
         # ------------
 
     # In case of a 2D scan
