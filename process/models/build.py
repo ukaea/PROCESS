@@ -2070,6 +2070,12 @@ class Build(Model):
 
             po.ovarin(
                 self.outfile,
+                "FW, blanket and VV shaping switch",
+                "(i_fw_blkt_vv_shape)",
+                fwbs_variables.i_fw_blkt_vv_shape,
+            )
+            po.ovarin(
+                self.outfile,
                 "TF coil radial placement switch",
                 "(i_tf_inside_cs)",
                 build_variables.i_tf_inside_cs,
