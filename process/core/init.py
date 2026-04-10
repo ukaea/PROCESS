@@ -22,7 +22,6 @@ from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.ccfe_hcpb_module import init_ccfe_hcpb_module
 from process.data_structure.constraint_variables import init_constraint_variables
 from process.data_structure.cost_variables import init_cost_variables
-from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
 from process.data_structure.current_drive_variables import init_current_drive_variables
 from process.data_structure.dcll_variables import init_dcll_module
 from process.data_structure.divertor_variables import init_divertor_variables
@@ -297,7 +296,6 @@ def init_all_module_vars():
     init_pulse_variables()
     init_rebco_variables()
     init_reinke_variables()
-    init_cs_fatigue_variables()
     init_blanket_library()
     init_dcll_module()
     init_power_variables()

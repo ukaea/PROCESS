@@ -4,6 +4,7 @@ import pytest
 
 from process.core.exceptions import ProcessValueError
 from process.core.init import init_all_module_vars
+from process.core.model import DataStructure
 from process.core.solver.constraints import ConstraintManager
 
 
@@ -24,4 +25,6 @@ def test_constraint_functions(constraint_registration):
     # default flags (i_pulsed_plant=0 or itart=0).
     with contextlib.suppress(ZeroDivisionError, ProcessValueError):
         # call the constraint equation and check no error occurs
-        constraint_registration.constraint_equation(constraint_registration)
+        constraint_registration.constraint_equation(
+            constraint_registration, DataStructure()
+        )

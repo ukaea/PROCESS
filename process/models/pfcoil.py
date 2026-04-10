@@ -14,7 +14,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import build_variables as bv
 from process.data_structure import constraint_variables as ctv
-from process.data_structure import cs_fatigue_variables as csfv
 from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import (
     pfcoil_variables,
@@ -2286,7 +2285,7 @@ class PFCoil(Model):
                         self.outfile,
                         "Residual hoop stress in CS Steel (Pa)",
                         "(residual_sig_hoop)",
-                        csfv.residual_sig_hoop,
+                        self.cs_fatigue.data.cs_fatigue.residual_sig_hoop,
                     )
                     op.ovarre(
                         self.outfile,
@@ -2298,13 +2297,13 @@ class PFCoil(Model):
                         self.outfile,
                         "Initial vertical crack size (m)",
                         "(t_crack_vertical)",
-                        csfv.t_crack_vertical,
+                        self.cs_fatigue.data.cs_fatigue.t_crack_vertical,
                     )
                     op.ovarre(
                         self.outfile,
                         "Initial radial crack size (m)",
                         "(t_crack_radial)",
-                        csfv.t_crack_radial,
+                        self.cs_fatigue.data.cs_fatigue.t_crack_radial,
                     )
                     op.ovarre(
                         self.outfile,
@@ -2334,26 +2333,26 @@ class PFCoil(Model):
                         self.outfile,
                         "CS structural vertical thickness (m)",
                         "(dz_cs_turn_conduit)",
-                        csfv.dz_cs_turn_conduit,
+                        self.cs_fatigue.data.cs_fatigue.dz_cs_turn_conduit,
                     )
                     op.ovarre(
                         self.outfile,
                         "CS structural radial thickness (m)",
                         "(dr_cs_turn_conduit)",
-                        csfv.dr_cs_turn_conduit,
+                        self.cs_fatigue.data.cs_fatigue.dr_cs_turn_conduit,
                     )
                     op.ovarre(
                         self.outfile,
                         "Allowable number of cycles till CS fracture",
                         "(n_cycle)",
-                        csfv.n_cycle,
+                        self.cs_fatigue.data.cs_fatigue.n_cycle,
                         "OP ",
                     )
                     op.ovarre(
                         self.outfile,
                         "Minimum number of cycles required till CS fracture",
                         "(n_cycle_min)",
-                        csfv.n_cycle_min,
+                        self.cs_fatigue.data.cs_fatigue.n_cycle_min,
                         "OP ",
                     )
                 # Check whether CS coil is hitting any limits
@@ -2938,7 +2937,7 @@ class PFCoil(Model):
             pfcoil_variables.f_c_pf_cs_peak_time_array[ic, 5] = 0.0e0
 
 
-class CSCoil:
+class CSCoil(Model):
     """Calculate central solenoid coil system parameters."""
 
     def __init__(self, cs_fatigue):
@@ -2946,6 +2945,12 @@ class CSCoil:
         self.outfile = constants.NOUT  # output file unit``
         self.mfile = constants.MFILE  # mfile file unit
         self.cs_fatigue = cs_fatigue
+
+    def output(self):
+        """This model doesn't have any output"""
+
+    def run(self):
+        """This model doesn't need to be run"""
 
     def calculate_cs_geometry(
         self,
@@ -3237,8 +3242,8 @@ class CSCoil:
             pfcoil_variables.dz_cs_turn,
             pfcoil_variables.dr_cs_turn,
             pfcoil_variables.radius_cs_turn_cable_space,
-            csfv.dr_cs_turn_conduit,
-            csfv.dz_cs_turn_conduit,
+            self.cs_fatigue.data.cs_fatigue.dr_cs_turn_conduit,
+            self.cs_fatigue.data.cs_fatigue.dz_cs_turn_conduit,
         ) = self.calculate_cs_turn_geometry_eu_demo(
             a_cs_turn=pfcoil_variables.a_cs_turn,
             f_dr_dz_cs_turn=pfcoil_variables.f_dr_dz_cs_turn,
@@ -3350,12 +3355,15 @@ class CSCoil:
             # Calculation of CS fatigue
             # this is only valid for pulsed reactor design
             if pv.f_c_plasma_inductive > 0.0e-4:
-                csfv.n_cycle, csfv.t_crack_radial = self.cs_fatigue.ncycle(
+                (
+                    self.cs_fatigue.data.cs_fatigue.n_cycle,
+                    self.cs_fatigue.data.cs_fatigue.t_crack_radial,
+                ) = self.cs_fatigue.ncycle(
                     pfcoil_variables.sig_hoop,
-                    csfv.residual_sig_hoop,
-                    csfv.t_crack_vertical,
-                    csfv.dz_cs_turn_conduit,
-                    csfv.dr_cs_turn_conduit,
+                    self.cs_fatigue.data.cs_fatigue.residual_sig_hoop,
+                    self.cs_fatigue.data.cs_fatigue.t_crack_vertical,
+                    self.cs_fatigue.data.cs_fatigue.dz_cs_turn_conduit,
+                    self.cs_fatigue.data.cs_fatigue.dr_cs_turn_conduit,
                 )
 
             # Now steel area fraction is iteration variable and constraint
@@ -3661,14 +3669,14 @@ class CSCoil:
             self.outfile,
             "Radial thickness of steel conduit to cable space [m]",
             "(dr_cs_turn_conduit)",
-            csfv.dr_cs_turn_conduit,
+            self.cs_fatigue.data.cs_fatigue.dr_cs_turn_conduit,
             "OP ",
         )
         op.ovarre(
             self.outfile,
             "Vertical thickness of steel conduit to cable space [m]",
             "(dz_cs_turn_conduit)",
-            csfv.dz_cs_turn_conduit,
+            self.cs_fatigue.data.cs_fatigue.dz_cs_turn_conduit,
             "OP ",
         )
         op.ovarre(

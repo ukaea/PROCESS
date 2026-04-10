@@ -16,7 +16,6 @@ from process.data_structure import (
     build_variables,
     constraint_variables,
     cost_variables,
-    cs_fatigue_variables,
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
@@ -195,17 +194,20 @@ class ScanVariables(Enum):
 class Scan:
     """Perform a parameter scan using the Fortran scan module."""
 
-    def __init__(self, models, solver):
+    def __init__(self, models, solver, data):
         """Immediately run the run_scan() method.
 
         :param models: physics and engineering model objects
         :type models: process.main.Models
         :param solver: which solver to use, as specified in solver.py
         :type solver: str
+        :param data: data structure object
+        :type data: DataStructure
         """
         self.models = models
         self.solver = solver
-        self.solver_handler = SolverHandler(models, solver)
+        self.data = data
+        self.solver_handler = SolverHandler(models, solver, data)
         self.run_scan()
 
     def run_scan(self):
@@ -223,7 +225,10 @@ class Scan:
             start_time = time.time()
             ifail = self.doopt()
             write_output_files(
-                models=self.models, ifail=ifail, runtime=time.time() - start_time
+                models=self.models,
+                data=self.data,
+                ifail=ifail,
+                runtime=time.time() - start_time,
             )
             show_errors(constants.NOUT)
             return
@@ -521,7 +526,7 @@ class Scan:
         )
 
         con1, con2, err, _, lab = constraints.constraint_eqns(
-            numerics.neqns + numerics.nineqns, -1
+            numerics.neqns + numerics.nineqns, -1, self.data
         )
 
         # Write equality constraints to mfile
@@ -597,7 +602,7 @@ class Scan:
             for i in range(numerics.neqns, numerics.neqns + numerics.nineqns):
                 name = numerics.lablcc[numerics.icc[i] - 1]
                 constraint = constraints.ConstraintManager.evaluate_constraint(
-                    int(numerics.icc[i])
+                    int(numerics.icc[i]), self.data
                 )
 
                 inequality_constraint_table.append([
@@ -825,7 +830,10 @@ class Scan:
             ifail = self.doopt()
             scan_1d_ifail_dict[iscan] = ifail
             write_output_files(
-                models=self.models, ifail=ifail, runtime=time.time() - start_time
+                models=self.models,
+                data=self.data,
+                ifail=ifail,
+                runtime=time.time() - start_time,
             )
 
             show_errors(constants.NOUT)
@@ -882,7 +890,10 @@ class Scan:
                 start_time = time.time()
                 ifail = self.doopt()
                 write_output_files(
-                    models=self.models, ifail=ifail, runtime=time.time() - start_time
+                    models=self.models,
+                    data=self.data,
+                    ifail=ifail,
+                    runtime=time.time() - start_time,
                 )
 
                 show_errors(constants.NOUT)
@@ -1171,11 +1182,11 @@ class Scan:
             case 64:
                 pfcoil_variables.ohhghf = swp[iscn - 1]
             case 65:
-                cs_fatigue_variables.n_cycle_min = swp[iscn - 1]
+                self.data.cs_fatigue.n_cycle_min = swp[iscn - 1]
             case 66:
                 pfcoil_variables.oh_steel_frac = swp[iscn - 1]
             case 67:
-                cs_fatigue_variables.t_crack_vertical = swp[iscn - 1]
+                self.data.cs_fatigue.t_crack_vertical = swp[iscn - 1]
             case 68:
                 fwbs_variables.inlet_temp_liq = swp[iscn - 1]
             case 69:

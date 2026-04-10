@@ -238,7 +238,10 @@ def _plot_show_and_close_class(request):
 
 @pytest.fixture
 def process_models():
-    return Models(DataStructure())
+    models = Models(DataStructure())
+    for model in models.models:
+        model.data = models.data
+    return models
 
 
 @pytest.fixture()
