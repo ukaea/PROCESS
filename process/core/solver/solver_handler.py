@@ -18,11 +18,14 @@ class SolverHandler:
         physics and engineering model objects
     solver_name : str
         which solver to use, as specified in solver.py
+    data: DataStructure
+        data structure object
     """
 
-    def __init__(self, models, solver_name):
+    def __init__(self, models, solver_name, data):
         self.models = models
         self.solver_name = solver_name
+        self.data = data
 
     def run(self):
         """Run solver and retry if it fails in certain ways."""
@@ -44,7 +47,7 @@ class SolverHandler:
 
         # Evaluators() calculates the objective and constraint functions and
         # their gradients for a given vector x
-        evaluators = Evaluators(self.models, x)
+        evaluators = Evaluators(self.models, self.data, x)
 
         # Configure solver for problem
         self.solver = get_solver(self.solver_name)

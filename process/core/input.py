@@ -255,9 +255,7 @@ INPUT_VARIABLES = {
     "bioshld_thk": InputVariable(
         data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
-    "bkt_life_csf": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(0.0, 1.0)
-    ),
+    "bkt_life_csf": InputVariable("cs_fatigue", float, range=(0.0, 1.0)),
     "blbmith": InputVariable(data_structure.build_variables, float, range=(0.0, 2.0)),
     "blbmoth": InputVariable(data_structure.build_variables, float, range=(0.0, 2.0)),
     "blbpith": InputVariable(data_structure.build_variables, float, range=(0.0, 2.0)),
@@ -813,9 +811,7 @@ INPUT_VARIABLES = {
     "f_p_shld_coolant_pump_total_heat": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 0.2)
     ),
-    "fracture_toughness": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(0.1, 100000000.0)
-    ),
+    "fracture_toughness": InputVariable("cs_fatigue", float, range=(0.1, 100000000.0)),
     "fradpwr": InputVariable(
         data_structure.constraint_variables, float, range=(0.0, 1.0)
     ),
@@ -1056,9 +1052,7 @@ INPUT_VARIABLES = {
     "mvalim": InputVariable(
         data_structure.constraint_variables, float, range=(0.0, 1000.0)
     ),
-    "n_cycle_min": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(0.0, 100000000.0)
-    ),
+    "n_cycle_min": InputVariable("cs_fatigue", float, range=(0.0, 100000000.0)),
     "n_tf_coils": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 100.0)
     ),
@@ -1110,12 +1104,8 @@ INPUT_VARIABLES = {
     "p_he": InputVariable(
         data_structure.primary_pumping_variables, float, range=(0.0, 100000000.0)
     ),
-    "paris_coefficient": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(1e-20, 10.0)
-    ),
-    "paris_power_law": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
-    ),
+    "paris_coefficient": InputVariable("cs_fatigue", float, range=(1e-20, 10.0)),
+    "paris_power_law": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
     "pres_vv_chamber_base": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-08, 0.001)
     ),
@@ -1281,9 +1271,7 @@ INPUT_VARIABLES = {
     "redun_vacp": InputVariable(
         data_structure.cost_variables, float, range=(0.0, 100.0)
     ),
-    "residual_sig_hoop": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(0.0, 1000000000.0)
-    ),
+    "residual_sig_hoop": InputVariable("cs_fatigue", float, range=(0.0, 1000000000.0)),
     "rho_tf_bus": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1e-05)
     ),
@@ -1339,15 +1327,9 @@ INPUT_VARIABLES = {
     "sec_buildings_w": InputVariable(
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "sf_fast_fracture": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
-    ),
-    "sf_radial_crack": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
-    ),
-    "sf_vertical_crack": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
-    ),
+    "sf_fast_fracture": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
+    "sf_radial_crack": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
+    "sf_vertical_crack": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
     "shdr": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "shdzl": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "shdzu": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
@@ -1413,12 +1395,8 @@ INPUT_VARIABLES = {
     "dx_tf_turn_cable_space_general": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "t_crack_radial": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(1e-05, 1.0)
-    ),
-    "t_crack_vertical": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(1e-05, 1.0)
-    ),
+    "t_crack_radial": InputVariable("cs_fatigue", float, range=(1e-05, 1.0)),
+    "t_crack_vertical": InputVariable("cs_fatigue", float, range=(1e-05, 1.0)),
     "t_crit_nbti": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 15.0)
     ),
@@ -1443,12 +1421,8 @@ INPUT_VARIABLES = {
     "t_plant_pulse_plasma_current_ramp_down": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
-    "dr_cs_turn_conduit": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
-    ),
-    "dz_cs_turn_conduit": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
-    ),
+    "dr_cs_turn_conduit": InputVariable("cs_fatigue", float, range=(0.001, 1.0)),
+    "dz_cs_turn_conduit": InputVariable("cs_fatigue", float, range=(0.001, 1.0)),
     "dx_tf_turn_general": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
@@ -1751,9 +1725,7 @@ INPUT_VARIABLES = {
     "pflux_fw_neutron_max_mw": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 50.0)
     ),
-    "walker_coefficient": InputVariable(
-        data_structure.cs_fatigue_variables, float, range=(0.1, 10.0)
-    ),
+    "walker_coefficient": InputVariable("cs_fatigue", float, range=(0.1, 10.0)),
     "wallpf": InputVariable(data_structure.fwbs_variables, float, range=(1.0, 2.0)),
     "warm_shop_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)

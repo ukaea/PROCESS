@@ -1,91 +1,52 @@
-residual_sig_hoop: float = None
-"""residual hoop stress in strucutal material (Pa)"""
-
-n_cycle: float = None
-"""Allowable number of cycles for CS stress model"""
-
-n_cycle_min: float = None
-"""Minimum allowable number of cycles for CS stress model"""
-
-t_crack_radial: float = None
-"""Initial depth of crack in thickness of conduit (m)"""
-
-t_crack_vertical: float = None
-"""Inital vertical crack size (m)"""
-
-dr_cs_turn_conduit: float = None
-"""Thickness of CS conductor conduit (m)"""
-
-dz_cs_turn_conduit: float = None
-"""Vertical thickness of CS conductor conduit (m)"""
-
-bkt_life_csf: float = None
-"""Switch to pass bkt_life cycles to n_cycle_min"""
-
-sf_vertical_crack: float = None
-"""Safety factor for vertical crack size (-)"""
-
-sf_radial_crack: float = None
-"""Safety factor for radial crack size (-)"""
-
-sf_fast_fracture: float = None
-"""safety factor for stress intensity factor (-)"""
-
-paris_coefficient: float = None
-"""Paris equation material coefficient (-)"""
-
-paris_power_law: float = None
-"""Paris equation material power law (-)"""
-
-walker_coefficient: float = None
-"""walker coefficent (-)"""
-
-fracture_toughness: float = None
-"""fracture toughness (MPa m^1/2)"""
+from dataclasses import dataclass
 
 
-def init_cs_fatigue_variables():
-    global residual_sig_hoop
-    residual_sig_hoop = 2.4e8
+@dataclass
+class CSFatigueData:
+    residual_sig_hoop: float = 2.4e8
+    """residual hoop stress in strucutal material (Pa)"""
 
-    global t_crack_radial
-    t_crack_radial = 6.0e-3
+    n_cycle: float = 0.0
+    """Allowable number of cycles for CS stress model"""
 
-    global t_crack_vertical
-    t_crack_vertical = 0.89e-3
+    n_cycle_min: float = 2.0e4
+    """Minimum allowable number of cycles for CS stress model"""
 
-    global n_cycle
-    n_cycle = 0.0
+    t_crack_radial: float = 6.0e-3
+    """Initial depth of crack in thickness of conduit (m)"""
 
-    global n_cycle_min
-    n_cycle_min = 2.0e4
+    t_crack_vertical: float = 0.89e-3
+    """Inital vertical crack size (m)"""
 
-    global dz_cs_turn_conduit
-    dz_cs_turn_conduit = 0.022
+    dr_cs_turn_conduit: float = 0.07
+    """Thickness of CS conductor conduit (m)"""
 
-    global dr_cs_turn_conduit
-    dr_cs_turn_conduit = 0.07
+    dz_cs_turn_conduit: float = 0.022
+    """Vertical thickness of CS conductor conduit (m)"""
 
-    global bkt_life_csf
-    bkt_life_csf = 0.0
+    bkt_life_csf: float = 0.0
+    """Switch to pass bkt_life cycles to n_cycle_min"""
 
-    global sf_vertical_crack
-    sf_vertical_crack = 2.0
+    sf_vertical_crack: float = 2.0
+    """Safety factor for vertical crack size (-)"""
 
-    global sf_radial_crack
-    sf_radial_crack = 2.0
+    sf_radial_crack: float = 2.0
+    """Safety factor for radial crack size (-)"""
 
-    global sf_fast_fracture
-    sf_fast_fracture = 1.5
+    sf_fast_fracture: float = 1.5
+    """safety factor for stress intensity factor (-)"""
 
-    global paris_coefficient
-    paris_coefficient = 65.0e-14
+    paris_coefficient: float = 65.0e-14
+    """Paris equation material coefficient (-)"""
 
-    global paris_power_law
-    paris_power_law = 3.5
+    paris_power_law: float = 3.5
+    """Paris equation material power law (-)"""
 
-    global walker_coefficient
-    walker_coefficient = 0.436
+    walker_coefficient: float = 0.436
+    """walker coefficent (-)"""
 
-    global fracture_toughness
-    fracture_toughness = 2.0e2
+    fracture_toughness: float = 2.0e2
+    """fracture toughness (MPa m^1/2)"""
+
+
+CREATE_DICTS_FROM_DATACLASS = CSFatigueData
