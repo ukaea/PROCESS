@@ -1148,6 +1148,9 @@ f_res_plasma_neo: float = None
 res_plasma: float = None
 """plasma resistance (ohm)"""
 
+rho_plasma_spitzer_classical_profile: list[float] = None
+"""Profile of plasma Spitzer classical resistivity (ohm m)"""
+
 
 t_plasma_res_diffusion: float = None
 """plasma current resistive diffusion time (s)"""
@@ -1327,6 +1330,9 @@ plasma_coulomb_log_deuteron_triton_profile: list[float] = None
 plasma_coulomb_log_electron_alpha_thermal_profile: list[float] = None
 """Profile of electron-alpha Coulomb logarithm in plasma"""
 
+t_plasma_electron_alpha_spitzer_slow_profile: list[float] = None
+"""Profile of electron-alpha Spitzer slowing down time in plasma (s)"""
+
 freq_plasma_electron_profile: list[float] = None
 """Electron plasma frequency profile (Hz)"""
 
@@ -1344,6 +1350,45 @@ freq_plasma_larmor_toroidal_triton_profile: list[float] = None
 
 freq_plasma_upper_hybrid_profile: list[float] = None
 """Profile of upper hybrid frequency in plasma (Hz)"""
+
+t_plasma_electron_electron_collision_profile: list[float] = None
+"""Profile of electron-electron collision time in plasma (s)"""
+
+t_plasma_electron_deuteron_collision_profile: list[float] = None
+"""Profile of electron-deuteron collision time in plasma (s)"""
+
+t_plasma_electron_triton_collision_profile: list[float] = None
+"""Profile of electron-triton collision time in plasma (s)"""
+
+t_plasma_electron_alpha_thermal_collision_profile: list[float] = None
+"""Profile of electron-alpha collision time in plasma (s)"""
+
+freq_plasma_electron_electron_collision_profile: list[float] = None
+"""Profile of electron-electron collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_deuteron_collision_profile: list[float] = None
+"""Profile of electron-deuteron collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_triton_collision_profile: list[float] = None
+"""Profile of electron-triton collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_alpha_thermal_collision_profile: list[float] = None
+"""Profile of electron-alpha collision frequency in plasma (Hz)"""
+
+len_plasma_electron_electron_mean_free_path_profile: list[float] = None
+"""Profile of electron-electron mean free path in plasma (m)"""
+
+len_plasma_electron_deuteron_mean_free_path_profile: list[float] = None
+"""Profile of electron-deuteron mean free path in plasma (m)"""
+
+len_plasma_electron_triton_mean_free_path_profile: list[float] = None
+"""Profile of electron-triton mean free path in plasma (m)"""
+
+len_plasma_electron_alpha_thermal_mean_free_path_profile: list[float] = None
+"""Profile of electron-alpha mean free path in plasma (m)"""
+
+res_plasma_fuel_spitzer_profile: list[float] = None
+"""Profile of plasma Spitzer resistivity due to fuel ions (ohm m)"""
 
 
 def init_physics_module():
@@ -1639,6 +1684,7 @@ def init_physics_variables():
         f_nd_plasma_oxygen_electron, \
         f_res_plasma_neo, \
         res_plasma, \
+        rho_plasma_spitzer_classical_profile, \
         t_plasma_res_diffusion, \
         a_plasma_surface, \
         a_plasma_surface_outboard, \
@@ -1688,12 +1734,26 @@ def init_physics_variables():
         plasma_coulomb_log_electron_triton_profile, \
         plasma_coulomb_log_deuteron_triton_profile, \
         plasma_coulomb_log_electron_alpha_thermal_profile, \
+        t_plasma_electron_alpha_spitzer_slow_profile, \
         freq_plasma_electron_profile, \
         freq_plasma_deuteron_profile, \
         freq_plasma_larmor_toroidal_electron_profile, \
         freq_plasma_larmor_toroidal_deuteron_profile, \
         freq_plasma_larmor_toroidal_triton_profile, \
-        freq_plasma_upper_hybrid_profile
+        freq_plasma_upper_hybrid_profile, \
+        t_plasma_electron_electron_collision_profile, \
+        t_plasma_electron_deuteron_collision_profile, \
+        t_plasma_electron_triton_collision_profile, \
+        t_plasma_electron_alpha_thermal_collision_profile, \
+        freq_plasma_electron_electron_collision_profile, \
+        freq_plasma_electron_deuteron_collision_profile, \
+        freq_plasma_electron_triton_collision_profile, \
+        freq_plasma_electron_alpha_thermal_collision_profile, \
+        len_plasma_electron_electron_mean_free_path_profile, \
+        len_plasma_electron_deuteron_mean_free_path_profile, \
+        len_plasma_electron_triton_mean_free_path_profile, \
+        len_plasma_electron_alpha_thermal_mean_free_path_profile, \
+        res_plasma_fuel_spitzer_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1930,6 +1990,7 @@ def init_physics_variables():
     f_nd_plasma_oxygen_electron = 0.0
     f_res_plasma_neo = 0.0
     res_plasma = 0.0
+    rho_plasma_spitzer_classical_profile = []
     t_plasma_res_diffusion = 0.0
     a_plasma_surface = 0.0
     a_plasma_surface_outboard = 0.0
@@ -1984,3 +2045,17 @@ def init_physics_variables():
     freq_plasma_larmor_toroidal_deuteron_profile = []
     freq_plasma_larmor_toroidal_triton_profile = []
     freq_plasma_upper_hybrid_profile = []
+    t_plasma_electron_electron_collision_profile = []
+    t_plasma_electron_deuteron_collision_profile = []
+    t_plasma_electron_triton_collision_profile = []
+    t_plasma_electron_alpha_thermal_collision_profile = []
+    t_plasma_electron_alpha_spitzer_slow_profile = []
+    freq_plasma_electron_electron_collision_profile = []
+    freq_plasma_electron_deuteron_collision_profile = []
+    freq_plasma_electron_triton_collision_profile = []
+    freq_plasma_electron_alpha_thermal_collision_profile = []
+    len_plasma_electron_electron_mean_free_path_profile = []
+    len_plasma_electron_deuteron_mean_free_path_profile = []
+    len_plasma_electron_triton_mean_free_path_profile = []
+    len_plasma_electron_alpha_thermal_mean_free_path_profile = []
+    res_plasma_fuel_spitzer_profile = []
