@@ -26,10 +26,12 @@ from process.data_structure import impurity_radiation_module, pfcoil_variables
 from process.models.build import Build
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
+    blanket_geometry_lower,
     blanket_geometry_single_null,
 )
 from process.models.geometry.cryostat import cryostat_geometry
 from process.models.geometry.firstwall import (
+    dh_vertices,
     first_wall_geometry_double_null,
     first_wall_geometry_single_null,
 )
@@ -151,6 +153,7 @@ def plot_plasma(
     scan: int,
     colour_scheme: Literal[1, 2],
     mirror_negative_x: bool = False,
+    high_zorder: bool = False,
 ):
     """Plots the plasma boundary arcs.
 
@@ -194,6 +197,10 @@ def plot_plasma(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
+    # z-order control
+    z_fill = 60 if high_zorder else 5
+    z_edge = 61 if high_zorder else 6
+
     if i_plasma_shape == 0:
         # Plot the 2 plasma outline arcs.
         axis.plot(x_scale * np.array(pg.rs[0]), pg.zs[0], color="black")
@@ -209,6 +216,7 @@ def plot_plasma(
             y1=pg.zs[0],
             where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
             color=PLASMA_COLOUR[colour_scheme - 1],
+            zorder=z_fill,
         )
         # Colour in left side of plasma
         axis.fill_between(
@@ -216,12 +224,16 @@ def plot_plasma(
             y1=pg.zs[1],
             where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
             color=PLASMA_COLOUR[colour_scheme - 1],
+            zorder=z_fill,
         )
 
     elif i_plasma_shape == 1:
-        axis.plot(x_scale * np.array(pg.rs), pg.zs, color="black")
+        axis.plot(x_scale * np.array(pg.rs), pg.zs, color="black", zorder=z_edge)
         axis.fill(
-            x_scale * np.array(pg.rs), pg.zs, color=PLASMA_COLOUR[colour_scheme - 1]
+            x_scale * np.array(pg.rs),
+            pg.zs,
+            color=PLASMA_COLOUR[colour_scheme - 1],
+            zorder=z_fill,
         )
 
 
@@ -364,7 +376,7 @@ def poloidal_cross_section(
     plot_blanket(axis, mfile, scan, radial_build, colour_scheme)
     plot_firstwall(axis, mfile, scan, radial_build, colour_scheme)
 
-    plot_plasma(axis, mfile, scan, colour_scheme)
+    plot_plasma(axis, mfile, scan, colour_scheme, high_zorder=True)
     plot_centre_cross(axis, mfile, scan)
     plot_cryostat(axis, mfile, scan, colour_scheme)
 
@@ -420,8 +432,10 @@ def plot_full_machine_poloidal_cross_section(
     plot_firstwall(
         axis, mfile, scan, radial_build, colour_scheme, mirror_negative_x=True
     )
-    plot_plasma(axis, mfile, scan, colour_scheme)
-    plot_plasma(axis, mfile, scan, colour_scheme, mirror_negative_x=True)
+    plot_plasma(axis, mfile, scan, colour_scheme, high_zorder=True)
+    plot_plasma(
+        axis, mfile, scan, colour_scheme, mirror_negative_x=True, high_zorder=True
+    )
     plot_centre_cross(axis, mfile, scan)
     plot_centre_cross(axis, mfile, scan, mirror_negative_x=True)
     plot_cryostat(axis, mfile, scan, colour_scheme)
@@ -2429,7 +2443,7 @@ def plot_main_plasma_information(
     axis.axis("off")
 
     # Plot the main plasma shape
-    plot_plasma(axis, mfile, scan, colour_scheme)
+    plot_plasma(axis, mfile, scan, colour_scheme, high_zorder=False)
 
     rmajor = mfile.get("rmajor", scan=scan)
     rminor = mfile.get("rminor", scan=scan)
@@ -2460,6 +2474,7 @@ def plot_main_plasma_information(
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
         transform=fig.transFigure,
+        zorder=100,
     )
 
     # =========================================
@@ -2481,6 +2496,7 @@ def plot_main_plasma_information(
         color="black",
         ha="center",
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        zorder=100,
     )
 
     # ============================================
@@ -2491,6 +2507,7 @@ def plot_main_plasma_information(
         xy=(axis.get_xlim()[0], -rminor * 0.3 * kappa),  # Inner plasma edge
         xytext=(rmajor, -rminor * 0.3 * kappa),  # Center
         arrowprops={"arrowstyle": "<-", "color": "black"},
+        zorder=100,
     )
 
     # Add a label for the major radius
@@ -2502,6 +2519,7 @@ def plot_main_plasma_information(
         color="black",
         ha="center",
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        zorder=100,
     )
 
     # ============================================
@@ -2512,6 +2530,7 @@ def plot_main_plasma_information(
         xy=(rmajor - rminor * triang, kappa * rminor),  # Inner plasma edge
         xytext=(rmajor - rminor * triang, 0),  # Center
         arrowprops={"arrowstyle": "<->", "color": "black"},
+        zorder=100,
     )
 
     # Write the elongation beside the vertical line, position relative to figure axes
@@ -2525,6 +2544,7 @@ def plot_main_plasma_information(
         verticalalignment="center",
         transform=axis.transAxes,
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        zorder=100,
     )
 
     # =============================================
@@ -2535,6 +2555,7 @@ def plot_main_plasma_information(
         xy=(rmajor - rminor * triang, kappa * rminor * 0.25),  # Inner plasma edge
         xytext=(rmajor, kappa * rminor * 0.25),  # Center
         arrowprops={"arrowstyle": "<->", "color": "black"},
+        zorder=100,
     )
 
     # Write the triangularity to the left of the cross, position relative to figure axes
@@ -2547,6 +2568,7 @@ def plot_main_plasma_information(
         rotation=0,
         verticalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        zorder=100,
     )
 
     # =============================================
@@ -2559,6 +2581,7 @@ def plot_main_plasma_information(
         xy=(rmajor, -rminor * 0.1 * kappa),  # Inner plasma edge
         xytext=(rmajor + (rminor * radius_plasma_core_norm), -rminor * 0.1 * kappa),
         arrowprops={"arrowstyle": "<->", "color": "black"},
+        zorder=100,
     )
     # Add a label for core region
     axis.text(
@@ -2570,6 +2593,7 @@ def plot_main_plasma_information(
         rotation=0,
         verticalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        zorder=100,
     )
 
     # ================================================
@@ -2599,6 +2623,7 @@ def plot_main_plasma_information(
             "alpha": 1.0,
             "linewidth": 2,
         },
+        zorder=100,
     )
 
     # ============================================
@@ -2612,6 +2637,7 @@ def plot_main_plasma_information(
             kappa * rminor * 0.2,
         ),  # Starting point of the arrow
         arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
+        zorder=100,
     )
 
     # Draw a red arrow coming from the right and pointing at the plasma
@@ -2623,6 +2649,7 @@ def plot_main_plasma_information(
             -kappa * rminor * 0.2,
         ),  # Starting point of the arrow
         arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
+        zorder=100,
     )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
@@ -4750,19 +4777,18 @@ def plot_vacuum_vessel_and_divertor(
     lower = radial_build.lower
 
     i_single_null = int(mfile.get("i_single_null", scan=scan))
-    triang_95 = mfile.get("triang95", scan=scan)
-    dz_divertor = mfile.get("dz_divertor", scan=scan)
-    dz_xpoint_divertor = mfile.get("dz_xpoint_divertor", scan=scan)
-    kappa = mfile.get("kappa", scan=scan)
-    rminor = mfile.get("rminor", scan=scan)
-    dr_vv_inboard = mfile.get("dr_vv_inboard", scan=scan)
-    dr_vv_outboard = mfile.get("dr_vv_outboard", scan=scan)
-    dr_shld_inboard = mfile.get("dr_shld_inboard", scan=scan)
-    dr_shld_outboard = mfile.get("dr_shld_outboard", scan=scan)
-    dr_blkt_inboard = mfile.get("dr_blkt_inboard", scan=scan)
-    dr_blkt_outboard = mfile.get("dr_blkt_outboard", scan=scan)
+    triang_95 = float(mfile.get("triang95", scan=scan))
+    dz_divertor = float(mfile.get("dz_divertor", scan=scan))
+    dz_xpoint_divertor = float(mfile.get("dz_xpoint_divertor", scan=scan))
+    kappa = float(mfile.get("kappa", scan=scan))
+    rminor = float(mfile.get("rminor", scan=scan))
+    dr_vv_inboard = float(mfile.get("dr_vv_inboard", scan=scan))
+    dr_vv_outboard = float(mfile.get("dr_vv_outboard", scan=scan))
+    dr_shld_inboard = float(mfile.get("dr_shld_inboard", scan=scan))
+    dr_shld_outboard = float(mfile.get("dr_shld_outboard", scan=scan))
+    dr_blkt_inboard = float(mfile.get("dr_blkt_inboard", scan=scan))
+    dr_blkt_outboard = float(mfile.get("dr_blkt_outboard", scan=scan))
 
-    # Outer side (furthest from plasma)
     radx_outer = (
         cumulative_radial_build("dr_vv_outboard", mfile, scan)
         + cumulative_radial_build("dr_shld_vv_gap_inboard", mfile, scan)
@@ -4792,6 +4818,87 @@ def plot_vacuum_vessel_and_divertor(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
+    if _use_dshape_component_geometry(mfile, scan):
+        vvg_ref = vacuum_vessel_geometry_single_null(
+            cumulative_upper=cumulative_upper,
+            upper=upper,
+            triang=triang_95,
+            radx_outer=radx_outer,
+            rminx_outer=rminx_outer,
+            radx_inner=radx_inner,
+            rminx_inner=rminx_inner,
+            cumulative_lower=cumulative_lower,
+            lower=lower,
+        )
+        rmin_out_t = float(np.min(vvg_ref.rs))
+        rmax_out_t = float(np.max(vvg_ref.rs))
+        zmax_out_t = float(np.max(vvg_ref.zs))
+        rmin_in_t, rmax_in_t, zmax_in_t = shrink_envelope_from_outer(
+            vvg_ref.rs,
+            vvg_ref.zs,
+            dr_inboard=dr_vv_inboard,
+            dr_outboard=dr_vv_outboard,
+            dz_top=upper["dz_vv_upper"],
+        )
+
+        rs_raw, zs_raw = _tf_raw_dshape_curve(mfile, scan)
+        rs_out, zs_out = map_curve_to_envelope(
+            rs_raw, zs_raw, rmin_out_t, rmax_out_t, zmax_out_t
+        )
+        rs_in, zs_in = map_curve_to_envelope(
+            rs_raw, zs_raw, rmin_in_t, rmax_in_t, zmax_in_t
+        )
+
+        if rs_out[0] != rs_out[-1] or zs_out[0] != zs_out[-1]:
+            rs_out = np.append(rs_out, rs_out[0])
+            zs_out = np.append(zs_out, zs_out[0])
+        if rs_in[0] != rs_in[-1] or zs_in[0] != zs_in[-1]:
+            rs_in = np.append(rs_in, rs_in[0])
+            zs_in = np.append(zs_in, zs_in[0])
+
+        draw_hollow(
+            axis,
+            rs_out,
+            zs_out,
+            rs_in,
+            zs_in,
+            facecolor=VESSEL_COLOUR[colour_scheme - 1],
+            x_scale=x_scale,
+            edgecolor="black",
+            lw=thin,
+            z_outer=5,
+            z_cut=6,
+            z_edge=7,
+        )
+
+        mask = (zs_in >= z_divertor_lower_bottom) & (zs_in <= z_divertor_lower_top)
+        if np.any(mask):
+            r_min = (
+                np.min(rs_in[mask])
+                + dr_vv_inboard
+                + dr_shld_inboard
+                + (dr_blkt_inboard * 0.5)
+            )
+            r_max = (
+                np.max(rs_in[mask])
+                - dr_vv_outboard
+                - dr_shld_outboard
+                - (dr_blkt_outboard * 0.5)
+            )
+
+            if r_max > r_min:
+                axis.add_patch(
+                    patches.Rectangle(
+                        (x_scale * r_min, z_divertor_lower_bottom),
+                        x_scale * (r_max - r_min),
+                        z_divertor_lower_top - z_divertor_lower_bottom,
+                        facecolor="black",
+                        alpha=0.8,
+                        zorder=1000,
+                    )
+                )
+        return
+
     if i_single_null == 1:
         vvg_single_null = vacuum_vessel_geometry_single_null(
             cumulative_upper=cumulative_upper,
@@ -4804,7 +4911,6 @@ def plot_vacuum_vessel_and_divertor(
             cumulative_lower=cumulative_lower,
             lower=lower,
         )
-
         axis.plot(
             x_scale * np.array(vvg_single_null.rs),
             vvg_single_null.zs,
@@ -4812,7 +4918,6 @@ def plot_vacuum_vessel_and_divertor(
             lw=thin,
             zorder=5,
         )
-
         axis.fill(
             x_scale * np.array(vvg_single_null.rs),
             vvg_single_null.zs,
@@ -4842,51 +4947,45 @@ def plot_vacuum_vessel_and_divertor(
         # Draw a rectangle (box) between the two lines and inside the vessel
         axis.add_patch(
             patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_lower_bottom,
-                ),
+                (x_scale * r_min, z_divertor_lower_bottom),
                 x_scale * (r_max - r_min),
                 z_divertor_lower_top - z_divertor_lower_bottom,
                 facecolor="black",
                 alpha=0.8,
-                zorder=1,
+                zorder=1000,
             )
         )
+        return
 
-    if i_single_null == 0:
-        vvg_double_null = vacuum_vessel_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            lower=lower,
-            radx_inner=radx_inner,
-            radx_outer=radx_outer,
-            rminx_inner=rminx_inner,
-            rminx_outer=rminx_outer,
-            triang=triang_95,
-        )
-        axis.plot(
-            x_scale * np.array(vvg_double_null.rs),
-            vvg_double_null.zs,
-            color="black",
-            lw=thin,
-            zorder=5,
-        )
+    vvg_double_null = vacuum_vessel_geometry_double_null(
+        cumulative_lower=cumulative_lower,
+        lower=lower,
+        radx_inner=radx_inner,
+        radx_outer=radx_outer,
+        rminx_inner=rminx_inner,
+        rminx_outer=rminx_outer,
+        triang=triang_95,
+    )
+    axis.plot(
+        x_scale * np.array(vvg_double_null.rs),
+        vvg_double_null.zs,
+        color="black",
+        lw=thin,
+        zorder=5,
+    )
+    axis.fill(
+        x_scale * np.array(vvg_double_null.rs),
+        vvg_double_null.zs,
+        color=VESSEL_COLOUR[colour_scheme - 1],
+        lw=0.01,
+        zorder=5,
+    )
 
-        axis.fill(
-            x_scale * np.array(vvg_double_null.rs),
-            vvg_double_null.zs,
-            color=VESSEL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-
-        # Plot lower divertor
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_double_null.zs >= z_divertor_lower_bottom) & (
-            vvg_double_null.zs <= z_divertor_lower_top
-        )
-        # Get the min/max R for the region between the divertor lines
+    for z_bottom, z_top in (
+        (z_divertor_lower_bottom, z_divertor_lower_top),
+        (z_divertor_upper_bottom, z_divertor_upper_top),
+    ):
+        mask = (vvg_double_null.zs >= z_bottom) & (vvg_double_null.zs <= z_top)
         r_min = (
             np.min(vvg_double_null.rs[mask])
             + dr_vv_inboard
@@ -4902,45 +5001,9 @@ def plot_vacuum_vessel_and_divertor(
         # Draw a rectangle (box) between the two lines and inside the vessel
         axis.add_patch(
             patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_lower_bottom,
-                ),
+                (x_scale * r_min, z_bottom),
                 x_scale * (r_max - r_min),
-                z_divertor_lower_top - z_divertor_lower_bottom,
-                facecolor="black",
-                alpha=0.8,
-                zorder=1,
-            )
-        )
-        # Plot upper divertor
-        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
-        # Find the min and max R values of the vessel boundary between the divertor lines
-        mask = (vvg_double_null.zs >= z_divertor_upper_bottom) & (
-            vvg_double_null.zs <= z_divertor_upper_top
-        )
-        # Get the min/max R for the region between the divertor lines
-        r_min = (
-            np.min(vvg_double_null.rs[mask])
-            + dr_vv_inboard
-            + dr_shld_inboard
-            + (dr_blkt_inboard * 0.5)
-        )
-        r_max = (
-            np.max(vvg_double_null.rs[mask])
-            - dr_vv_outboard
-            - dr_shld_outboard
-            - (dr_blkt_outboard * 0.5)
-        )
-        # Draw a rectangle (box) between the two lines and inside the vessel
-        axis.add_patch(
-            patches.Rectangle(
-                (
-                    x_scale * r_min,
-                    z_divertor_upper_bottom,
-                ),
-                x_scale * (r_max - r_min),
-                z_divertor_upper_top - z_divertor_upper_bottom,
+                z_top - z_bottom,
                 facecolor="black",
                 alpha=0.8,
                 zorder=1,
@@ -4976,9 +5039,10 @@ def plot_shield(
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
+    upper = radial_build.upper
 
-    i_single_null = mfile.get("i_single_null", scan=scan)
-    triang_95 = mfile.get("triang95", scan=scan)
+    i_single_null = int(mfile.get("i_single_null", scan=scan))
+    triang_95 = float(mfile.get("triang95", scan=scan))
 
     # Side furthest from plasma
     radx_far = (
@@ -5003,6 +5067,58 @@ def plot_shield(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
+    if _use_dshape_component_geometry(mfile, scan):
+        dr_shld_inboard = float(mfile.get("dr_shld_inboard", scan=scan))
+        dr_shld_outboard = float(mfile.get("dr_shld_outboard", scan=scan))
+        sh_ref = shield_geometry_single_null(
+            cumulative_upper=cumulative_upper,
+            radx_far=radx_far,
+            rminx_far=rminx_far,
+            radx_near=radx_near,
+            rminx_near=rminx_near,
+            triang=triang_95,
+            cumulative_lower=cumulative_lower,
+        )
+        rmin_out_t = float(np.min(sh_ref.rs))
+        rmax_out_t = float(np.max(sh_ref.rs))
+        zmax_out_t = float(np.max(sh_ref.zs))
+        dz_shld_top = float(upper.get("dz_shld_upper", 0.0))
+        rmin_in_t, rmax_in_t, zmax_in_t = shrink_envelope_from_outer(
+            sh_ref.rs,
+            sh_ref.zs,
+            dr_inboard=dr_shld_inboard,
+            dr_outboard=dr_shld_outboard,
+            dz_top=dz_shld_top,
+        )
+        rs_raw, zs_raw = _tf_raw_dshape_curve(mfile, scan)
+        rs_out, zs_out = map_curve_to_envelope(
+            rs_raw, zs_raw, rmin_out_t, rmax_out_t, zmax_out_t
+        )
+        rs_in, zs_in = map_curve_to_envelope(
+            rs_raw, zs_raw, rmin_in_t, rmax_in_t, zmax_in_t
+        )
+        if rs_out[0] != rs_out[-1] or zs_out[0] != zs_out[-1]:
+            rs_out = np.append(rs_out, rs_out[0])
+            zs_out = np.append(zs_out, zs_out[0])
+        if rs_in[0] != rs_in[-1] or zs_in[0] != zs_in[-1]:
+            rs_in = np.append(rs_in, rs_in[0])
+            zs_in = np.append(zs_in, zs_in[0])
+        draw_hollow(
+            axis,
+            rs_out,
+            zs_out,
+            rs_in,
+            zs_in,
+            facecolor=SHIELD_COLOUR[colour_scheme - 1],
+            x_scale=x_scale,
+            edgecolor="black",
+            lw=thin,
+            z_outer=10,
+            z_cut=11,
+            z_edge=12,
+        )
+        return
+
     if i_single_null == 1:
         shield_geometry = shield_geometry_single_null(
             cumulative_upper=cumulative_upper,
@@ -5022,7 +5138,6 @@ def plot_shield(
             rminx_near=rminx_near,
             triang=triang_95,
         )
-
     axis.plot(
         x_scale * np.array(shield_geometry.rs),
         shield_geometry.zs,
@@ -5040,49 +5155,54 @@ def plot_shield(
 def plot_blanket(
     axis: plt.Axes,
     mfile: MFile,
-    scan,
+    scan: int,
     radial_build,
     colour_scheme,
     mirror_negative_x: bool = False,
 ):
-    """Function to plot blanket
+    """Plot the blanket region on the poloidal cross-section.
 
     Parameters
     ----------
-    axis :
-        axis object to plot to
-    mfile :
-        MFILE
-    scan :
-        scan number to use
-    radial_build :
+    axis : matplotlib.axes.Axes
+        Axis to plot on.
+    mfile : process.core.io.mfile.MFile
+        MFILE object containing PROCESS output data for the selected scan.
+    scan : int
+        Scan index to plot.
+    radial_build : RadialBuild
+        Radial build data structure containing cumulative upper and lower
+        build coordinates used to construct component geometry.
+    colour_scheme : int
+        Colour scheme index used to select the blanket fill colour.
+    mirror_negative_x : bool, optional
+        If True, mirror the geometry about the vertical axis by plotting on
+        the negative-x side. Default is False.
 
-    colour_scheme :
-        colour scheme to use for plots
-    mirror_negative_x :
-        if True, mirror the plot to the negative x-axis (Default value = False)
+    Notes
+    -----
+    For cases where ``i_fw_blkt_vv_shape`` activates D-shaped internal
+    component geometry, the blanket is constructed by mapping the TF-coil
+    D-shaped curve onto blanket outer and inner envelopes and plotting the
+    result as a hollow region.
+
+    If D-shaped internal component geometry is not enabled, the function
+    falls back to the existing single-null or double-null blanket geometry
+    parameterisations.
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
-
-    dr_blkt_inboard = mfile.get("dr_blkt_inboard", scan=scan)
-    dr_blkt_outboard = mfile.get("dr_blkt_outboard", scan=scan)
-    # Single null: Draw top half from output
-    # Double null: Reflect bottom half to top
-    i_single_null = mfile.get("i_single_null", scan=scan)
-    triang_95 = mfile.get("triang95", scan=scan)
-    if int(i_single_null) == 1:
-        dz_blkt_upper = mfile.get("dz_blkt_upper", scan=scan)
-    else:
-        dz_blkt_upper = 0.0
-
-    c_shldith = cumulative_radial_build("dr_shld_inboard", mfile, scan)
-    c_blnkoth = cumulative_radial_build("dr_blkt_outboard", mfile, scan)
-
-    # Apply mirror transformation if requested
+    triang_95 = float(mfile.get("triang95", scan=scan))
+    i_single_null = int(mfile.get("i_single_null", scan=scan))
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
+    if _use_dshape_component_geometry(mfile, scan):
+        dz_blkt_upper = float(mfile.get("dz_blkt_upper", scan=scan))
+        dr_blkt_inboard = float(mfile.get("dr_blkt_inboard", scan=scan))
+        dr_blkt_outboard = float(mfile.get("dr_blkt_outboard", scan=scan))
+        c_shldith = cumulative_radial_build("dr_shld_inboard", mfile, scan)
+        c_blnkoth = cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+
         # Upper blanket: outer surface
         radx_outer = (
             cumulative_radial_build("dr_blkt_outboard", mfile, scan)
@@ -5102,78 +5222,178 @@ def plot_blanket(
             cumulative_radial_build("dr_fw_outboard", mfile, scan)
             - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
         ) / 2.0
+
+        # Original lower blanket geometry: preserve real divertor cut-back
+        divgap = cumulative_lower["dz_divertor"]
+        (
+            rs_lower_outboard,
+            zs_lower_outboard,
+            rs_lower_inboard,
+            zs_lower_inboard,
+        ) = blanket_geometry_lower(
+            triang=triang_95,
+            dz_blkt_upper=dz_blkt_upper,
+            c_shldith=c_shldith,
+            c_blnkoth=c_blnkoth,
+            dr_blkt_inboard=dr_blkt_inboard,
+            dr_blkt_outboard=dr_blkt_outboard,
+            divgap=divgap,
+        )
+
+        # Original upper reference segments
+        kapx_outer = cumulative_upper["dz_blkt_upper"] / rminx_outer
+        rs_upper_outboard_ref, zs_upper_outboard_ref = dh_vertices(
+            radx_outer,
+            rminx_outer,
+            triang_95,
+            kapx_outer,
+        )
+
+        kapx_inner = cumulative_upper["dz_fw_upper"] / rminx_inner
+        rs_upper_inboard_ref, zs_upper_inboard_ref = dh_vertices(
+            radx_inner,
+            rminx_inner,
+            triang_95,
+            kapx_inner,
+        )
+
+        # Raw TF D-shape curve
+        rs_raw, zs_raw = _tf_raw_dshape_curve(mfile, scan)
+
+        # Map only the upper sections to D-shape, preserving reference ordering/endpoints
+        rs_upper_outboard, zs_upper_outboard = _mapped_upper_dshape_segment(
+            rs_raw,
+            zs_raw,
+            np.asarray(rs_upper_outboard_ref, dtype=float),
+            np.asarray(zs_upper_outboard_ref, dtype=float),
+        )
+
+        rs_upper_inboard, zs_upper_inboard = _mapped_upper_dshape_segment(
+            rs_raw,
+            zs_raw,
+            np.asarray(rs_upper_inboard_ref, dtype=float),
+            np.asarray(zs_upper_inboard_ref, dtype=float),
+        )
+
+        # Rebuild full blanket polygon:
+        # upper outboard -> lower inboard -> reversed upper inboard -> reversed lower outboard
+        rs = np.concatenate([
+            rs_upper_outboard,
+            rs_lower_inboard,
+            rs_upper_inboard[::-1],
+            rs_lower_outboard[::-1],
+        ])
+        zs = np.concatenate([
+            zs_upper_outboard,
+            zs_lower_inboard,
+            zs_upper_inboard[::-1],
+            zs_lower_outboard[::-1],
+        ])
+
+        axis.plot(
+            x_scale * np.array(rs),
+            zs,
+            color="black",
+            lw=thin,
+            zorder=20,
+        )
+        axis.fill(
+            x_scale * np.array(rs),
+            zs,
+            color=BLANKET_COLOUR[colour_scheme - 1],
+            lw=0.01,
+            zorder=20,
+        )
+        return
+
+    if i_single_null == 1:
+        dz_blkt_upper = mfile.get("dz_blkt_upper", scan=scan)
+        c_shldith = cumulative_radial_build("dr_shld_inboard", mfile, scan)
+        c_bktoth = cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+        dr_blkt_inboard = mfile.get("dr_blkt_inboard", scan=scan)
+        dr_blkt_outboard = mfile.get("dr_blkt_outboard", scan=scan)
+        radx_outer = (
+            cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+            + cumulative_radial_build("vvblgapi", mfile, scan)
+        ) / 2.0
+        rminx_outer = (
+            cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+            - cumulative_radial_build("vvblgapi", mfile, scan)
+        ) / 2.0
+        radx_inner = (
+            cumulative_radial_build("dr_fw_outboard", mfile, scan)
+            + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+        ) / 2.0
+        rminx_inner = (
+            cumulative_radial_build("dr_fw_outboard", mfile, scan)
+            - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+        ) / 2.0
         bg_single_null = blanket_geometry_single_null(
+            cumulative_upper=cumulative_upper,
+            triang=triang_95,
             radx_outer=radx_outer,
             rminx_outer=rminx_outer,
             radx_inner=radx_inner,
             rminx_inner=rminx_inner,
-            cumulative_upper=cumulative_upper,
-            triang=triang_95,
             cumulative_lower=cumulative_lower,
             dz_blkt_upper=dz_blkt_upper,
             c_shldith=c_shldith,
-            c_blnkoth=c_blnkoth,
+            c_blnkoth=c_bktoth,
             dr_blkt_inboard=dr_blkt_inboard,
             dr_blkt_outboard=dr_blkt_outboard,
         )
-
-        # Plot blanket
         axis.plot(
             x_scale * np.array(bg_single_null.rs),
             bg_single_null.zs,
             color="black",
             lw=thin,
-            zorder=5,
         )
-
         axis.fill(
             x_scale * np.array(bg_single_null.rs),
             bg_single_null.zs,
             color=BLANKET_COLOUR[colour_scheme - 1],
             lw=0.01,
-            zorder=5,
         )
+        return
 
-    if i_single_null == 0:
-        bg_double_null = blanket_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            triang=triang_95,
-            dz_blkt_upper=dz_blkt_upper,
-            c_shldith=c_shldith,
-            c_blnkoth=c_blnkoth,
-            dr_blkt_inboard=dr_blkt_inboard,
-            dr_blkt_outboard=dr_blkt_outboard,
-        )
-        # Plot blanket
-        axis.plot(
-            x_scale * np.array(bg_double_null.rs[0]),
-            bg_double_null.zs[0],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            x_scale * np.array(bg_double_null.rs[0]),
-            bg_double_null.zs[0],
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=5,
-        )
-        if dr_blkt_inboard > 0.0:
-            # only plot inboard blanket if inboard blanket thickness > 0
-            axis.plot(
-                x_scale * np.array(bg_double_null.rs[1]),
-                bg_double_null.zs[1],
-                color="black",
-                lw=thin,
-                zorder=5,
-            )
-            axis.fill(
-                x_scale * np.array(bg_double_null.rs[1]),
-                bg_double_null.zs[1],
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                lw=0.01,
-                zorder=5,
-            )
+    dz_blkt_upper = mfile.get("dz_blkt_upper", scan=scan)
+    c_shldith = cumulative_radial_build("dr_shld_inboard", mfile, scan)
+    c_bktoth = cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+    dr_blkt_inboard = mfile.get("dr_blkt_inboard", scan=scan)
+    dr_blkt_outboard = mfile.get("dr_blkt_outboard", scan=scan)
+    bg_double_null = blanket_geometry_double_null(
+        cumulative_lower=cumulative_lower,
+        triang=triang_95,
+        dz_blkt_upper=dz_blkt_upper,
+        c_shldith=c_shldith,
+        c_blnkoth=c_bktoth,
+        dr_blkt_inboard=dr_blkt_inboard,
+        dr_blkt_outboard=dr_blkt_outboard,
+    )
+    axis.plot(
+        x_scale * np.array(bg_double_null.rs[0]),
+        bg_double_null.zs[0],
+        color="black",
+        lw=thin,
+    )
+    axis.plot(
+        x_scale * np.array(bg_double_null.rs[1]),
+        bg_double_null.zs[1],
+        color="black",
+        lw=thin,
+    )
+    axis.fill(
+        x_scale * np.array(bg_double_null.rs[0]),
+        bg_double_null.zs[0],
+        color=BLANKET_COLOUR[colour_scheme - 1],
+        lw=0.01,
+    )
+    axis.fill(
+        x_scale * np.array(bg_double_null.rs[1]),
+        bg_double_null.zs[1],
+        color=BLANKET_COLOUR[colour_scheme - 1],
+        lw=0.01,
+    )
 
 
 def plot_first_wall_top_down_cross_section(axis: plt.Axes, mfile: MFile, scan: int):
@@ -5416,45 +5636,43 @@ def plot_firstwall(
     colour_scheme,
     mirror_negative_x: bool = False,
 ):
-    """Function to plot first wall
+    """Plot the first wall region on the poloidal cross-section.
 
     Parameters
     ----------
-    axis :
-        axis object to plot to
-    mfile :
-        MFILE
-    scan :
-        scan number to use
-    radial_build :
+    axis : matplotlib.axes.Axes
+        Axis to plot on.
+    mfile : process.core.io.mfile.MFile
+        MFILE object containing PROCESS output data for the selected scan.
+    scan : int
+        Scan index to plot.
+    radial_build : RadialBuild
+        Radial build data structure containing cumulative upper and lower
+        build coordinates used to construct component geometry.
+    colour_scheme : int
+        Colour scheme index used to select the first wall fill colour.
+    mirror_negative_x : bool, optional
+        If True, mirror the geometry about the vertical axis by plotting on
+        the negative-x side. Default is False.
 
-    colour_scheme :
-        colour scheme to use for plots
-    mirror_negative_x :
-        if True, mirror the plot to the negative x-axis (Default value = False)
+    Notes
+    -----
     """
     cumulative_upper = radial_build.cumulative_upper
     cumulative_lower = radial_build.cumulative_lower
-
-    i_single_null = mfile.get("i_single_null", scan=scan)
-    triang_95 = mfile.get("triang95", scan=scan)
-    if int(i_single_null) == 1:
-        dz_blkt_upper = mfile.get("dz_blkt_upper", scan=scan)
-        tfwvt = mfile.get("dz_fw_upper", scan=scan)
-    else:
-        dz_blkt_upper = tfwvt = 0.0
-
+    triang_95 = float(mfile.get("triang95", scan=scan))
+    i_single_null = int(mfile.get("i_single_null", scan=scan))
+    dz_blkt_upper = (
+        float(mfile.get("dz_blkt_upper", scan=scan)) if i_single_null == 1 else 0.0
+    )
+    tfwvt = float(mfile.get("dz_fw_upper", scan=scan)) if i_single_null == 1 else 0.0
     c_blnkith = cumulative_radial_build("dr_blkt_inboard", mfile, scan)
     c_fwoth = cumulative_radial_build("dr_fw_outboard", mfile, scan)
-
-    dr_fw_inboard = mfile.get("dr_fw_inboard", scan=scan)
-    dr_fw_outboard = mfile.get("dr_fw_outboard", scan=scan)
-
-    # Apply mirror transformation if requested
+    dr_fw_inboard = float(mfile.get("dr_fw_inboard", scan=scan))
+    dr_fw_outboard = float(mfile.get("dr_fw_outboard", scan=scan))
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_single_null == 1:
-        # Upper first wall: outer surface
+    if _use_dshape_component_geometry(mfile, scan):
         radx_outer = (
             cumulative_radial_build("dr_fw_outboard", mfile, scan)
             + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
@@ -5463,8 +5681,6 @@ def plot_firstwall(
             cumulative_radial_build("dr_fw_outboard", mfile, scan)
             - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
         ) / 2.0
-
-        # Upper first wall: inner surface
         radx_inner = (
             cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
             + cumulative_radial_build("dr_fw_inboard", mfile, scan)
@@ -5473,7 +5689,77 @@ def plot_firstwall(
             cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
             - cumulative_radial_build("dr_fw_inboard", mfile, scan)
         ) / 2.0
+        fw_ref = first_wall_geometry_single_null(
+            radx_outer=radx_outer,
+            rminx_outer=rminx_outer,
+            radx_inner=radx_inner,
+            rminx_inner=rminx_inner,
+            cumulative_upper=cumulative_upper,
+            triang=triang_95,
+            cumulative_lower=cumulative_lower,
+            dz_blkt_upper=dz_blkt_upper,
+            c_blnkith=c_blnkith,
+            c_fwoth=c_fwoth,
+            dr_fw_inboard=dr_fw_inboard,
+            dr_fw_outboard=dr_fw_outboard,
+            tfwvt=tfwvt,
+        )
+        rmin_out_t = float(np.min(fw_ref.rs))
+        rmax_out_t = float(np.max(fw_ref.rs))
+        zmax_out_t = float(np.max(fw_ref.zs))
+        rmin_in_t, rmax_in_t, zmax_in_t = shrink_envelope_from_outer(
+            fw_ref.rs,
+            fw_ref.zs,
+            dr_inboard=dr_fw_inboard,
+            dr_outboard=dr_fw_outboard,
+            dz_top=tfwvt,
+        )
+        rs_raw, zs_raw = _tf_raw_dshape_curve(mfile, scan)
+        rs_out, zs_out = map_curve_to_envelope(
+            rs_raw, zs_raw, rmin_out_t, rmax_out_t, zmax_out_t
+        )
+        rs_in, zs_in = map_curve_to_envelope(
+            rs_raw, zs_raw, rmin_in_t, rmax_in_t, zmax_in_t
+        )
+        if rs_out[0] != rs_out[-1] or zs_out[0] != zs_out[-1]:
+            rs_out = np.append(rs_out, rs_out[0])
+            zs_out = np.append(zs_out, zs_out[0])
+        if rs_in[0] != rs_in[-1] or zs_in[0] != zs_in[-1]:
+            rs_in = np.append(rs_in, rs_in[0])
+            zs_in = np.append(zs_in, zs_in[0])
+        draw_hollow(
+            axis,
+            rs_out,
+            zs_out,
+            rs_in,
+            zs_in,
+            facecolor=FIRSTWALL_COLOUR[colour_scheme - 1],
+            x_scale=x_scale,
+            edgecolor="black",
+            lw=thin,
+            z_outer=30,
+            z_cut=31,
+            z_edge=32,
+        )
+        return
 
+    if i_single_null == 1:
+        radx_outer = (
+            cumulative_radial_build("dr_fw_outboard", mfile, scan)
+            + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+        ) / 2.0
+        rminx_outer = (
+            cumulative_radial_build("dr_fw_outboard", mfile, scan)
+            - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
+        ) / 2.0
+        radx_inner = (
+            cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
+            + cumulative_radial_build("dr_fw_inboard", mfile, scan)
+        ) / 2.0
+        rminx_inner = (
+            cumulative_radial_build("dr_fw_plasma_gap_outboard", mfile, scan)
+            - cumulative_radial_build("dr_fw_inboard", mfile, scan)
+        ) / 2.0
         fwg_single_null = first_wall_geometry_single_null(
             radx_outer=radx_outer,
             rminx_outer=rminx_outer,
@@ -5489,8 +5775,6 @@ def plot_firstwall(
             dr_fw_outboard=dr_fw_outboard,
             tfwvt=tfwvt,
         )
-
-        # Plot first wall
         axis.plot(
             x_scale * np.array(fwg_single_null.rs),
             fwg_single_null.zs,
@@ -5503,43 +5787,42 @@ def plot_firstwall(
             color=FIRSTWALL_COLOUR[colour_scheme - 1],
             lw=0.01,
         )
+        return
 
-    if i_single_null == 0:
-        fwg_double_null = first_wall_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            triang=triang_95,
-            dz_blkt_upper=dz_blkt_upper,
-            c_blnkith=c_blnkith,
-            c_fwoth=c_fwoth,
-            dr_fw_inboard=dr_fw_inboard,
-            dr_fw_outboard=dr_fw_outboard,
-            tfwvt=tfwvt,
-        )
-        # Plot first wall
-        axis.plot(
-            x_scale * np.array(fwg_double_null.rs[0]),
-            fwg_double_null.zs[0],
-            color="black",
-            lw=thin,
-        )
-        axis.plot(
-            x_scale * np.array(fwg_double_null.rs[1]),
-            fwg_double_null.zs[1],
-            color="black",
-            lw=thin,
-        )
-        axis.fill(
-            x_scale * np.array(fwg_double_null.rs[0]),
-            fwg_double_null.zs[0],
-            color=FIRSTWALL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
-        axis.fill(
-            x_scale * np.array(fwg_double_null.rs[1]),
-            fwg_double_null.zs[1],
-            color=FIRSTWALL_COLOUR[colour_scheme - 1],
-            lw=0.01,
-        )
+    fwg_double_null = first_wall_geometry_double_null(
+        cumulative_lower=cumulative_lower,
+        triang=triang_95,
+        dz_blkt_upper=dz_blkt_upper,
+        c_blnkith=c_blnkith,
+        c_fwoth=c_fwoth,
+        dr_fw_inboard=dr_fw_inboard,
+        dr_fw_outboard=dr_fw_outboard,
+        tfwvt=tfwvt,
+    )
+    axis.plot(
+        x_scale * np.array(fwg_double_null.rs[0]),
+        fwg_double_null.zs[0],
+        color="black",
+        lw=thin,
+    )
+    axis.plot(
+        x_scale * np.array(fwg_double_null.rs[1]),
+        fwg_double_null.zs[1],
+        color="black",
+        lw=thin,
+    )
+    axis.fill(
+        x_scale * np.array(fwg_double_null.rs[0]),
+        fwg_double_null.zs[0],
+        color=FIRSTWALL_COLOUR[colour_scheme - 1],
+        lw=0.01,
+    )
+    axis.fill(
+        x_scale * np.array(fwg_double_null.rs[1]),
+        fwg_double_null.zs[1],
+        color=FIRSTWALL_COLOUR[colour_scheme - 1],
+        lw=0.01,
+    )
 
 
 def plot_tf_coils(
@@ -13944,3 +14227,390 @@ def plot_summary(
         plt.show(block=True)
 
     plt.close("all")
+
+
+def _convex_hull(points: np.ndarray) -> np.ndarray:
+    """Compute the convex hull of a set of 2D points using Andrew's monotonic chain algorithm.
+
+    Parameters
+    ----------
+    points : ndarray of shape (N, 2)
+        Input array of 2D points (R, Z coordinates).
+
+    Returns
+    -------
+    ndarray of shape (M, 2)
+        Vertices of the convex hull in counterclockwise order, without
+        repeating the first point at the end.
+
+    Notes
+    -----
+    Used to construct a stable outer envelope from mapped geometry points
+    and avoid self-intersections in the plotted boundary.
+    Duplicate points are removed prior to processing. For fewer than three
+    unique points, the input is returned unchanged.
+    """
+    pts = np.unique(points, axis=0)
+    if len(pts) <= 2:
+        return pts
+
+    pts = pts[np.lexsort((pts[:, 1], pts[:, 0]))]
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+    lower = []
+    for p in pts:
+        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
+            lower.pop()
+        lower.append(tuple(p))
+
+    upper = []
+    for p in pts[::-1]:
+        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
+            upper.pop()
+        upper.append(tuple(p))
+
+    return np.array(lower[:-1] + upper[:-1], dtype=float)
+
+
+def vv_outline_from_tfcoil_dshape(
+    *,
+    x1,
+    x2,
+    x3,
+    x4,
+    x5,
+    y1,
+    y2,
+    y4,
+    y5,
+    dr_tf_inboard,
+    rtangle,
+    rtangle2,
+    offset_in: float,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Construct a closed outer envelope for the TF coil D-shape geometry.
+
+    Parameters
+    ----------
+    x1, x2, x3, x4, x5 : float
+        Radial coordinates defining the TF coil D-shape geometry.
+    y1, y2, y4, y5 : float
+        Vertical coordinates defining the TF coil D-shape geometry.
+    dr_tf_inboard : float
+        Inboard TF coil thickness.
+    rtangle : float
+        Quarter-turn angle used in TF coil geometry construction (typically π/2).
+    rtangle2 : float
+        Half-turn angle used in TF coil geometry construction (typically π).
+    offset_in : float
+        Inward offset applied to the TF coil geometry.
+
+    Returns
+    -------
+    rs : ndarray of shape (N,)
+        Radial coordinates of the closed convex hull representing the TF coil
+        outer envelope.
+    zs : ndarray of shape (N,)
+        Vertical coordinates of the closed convex hull representing the TF coil
+        outer envelope.
+
+    Notes
+    -----
+    The TF coil geometry is constructed from a combination of curved segments
+    and rectangular sections. All vertices are collected and reduced to a
+    single outer boundary using a convex hull to ensure a clean, non-
+    self-intersecting envelope suitable for plotting.
+    """
+    rects, verts = tfcoil_geometry_d_shape(
+        x1=x1,
+        x2=x2,
+        x3=x3,
+        x4=x4,
+        x5=x5,
+        y1=y1,
+        y2=y2,
+        y4=y4,
+        y5=y5,
+        dr_tf_inboard=dr_tf_inboard,
+        rtangle=rtangle,
+        rtangle2=rtangle2,
+        offset_in=offset_in,
+    )
+
+    pts = [np.asarray(v, dtype=float) for v in verts]
+
+    for rec in rects:
+        x0, z0 = rec.anchor_x, rec.anchor_z
+        w, h = rec.width, rec.height
+        pts.append(
+            np.array(
+                [[x0, z0], [x0 + w, z0], [x0 + w, z0 + h], [x0, z0 + h]],
+                dtype=float,
+            )
+        )
+
+    pts = np.vstack(pts)
+    hull = _convex_hull(pts)
+    hull = np.vstack([hull, hull[0]])
+    return hull[:, 0], hull[:, 1]
+
+
+def map_curve_to_envelope(
+    rs: np.ndarray,
+    zs: np.ndarray,
+    rmin_target: float,
+    rmax_target: float,
+    zmax_target: float,
+    eps: float = 1e-12,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Map a parametric curve onto a target radial and vertical envelope.
+
+    Parameters
+    ----------
+    rs : ndarray of shape (N,)
+        Radial coordinates of the input curve.
+    zs : ndarray of shape (N,)
+        Vertical coordinates of the input curve.
+    rmin_target : float
+        Target minimum radial extent of the mapped curve.
+    rmax_target : float
+        Target maximum radial extent of the mapped curve.
+    zmax_target : float
+        Target maximum vertical extent of the mapped curve.
+    eps : float, optional
+        Small value to avoid division by zero when computing scaling factors.
+        Default is 1e-12.
+
+    Returns
+    -------
+    rs_mapped : ndarray of shape (N,)
+        Radial coordinates of the curve mapped to the target radial envelope.
+    zs_mapped : ndarray of shape (N,)
+        Vertical coordinates of the curve scaled to the target vertical extent.
+
+    Notes
+    -----
+    The mapping applies a transformation in the radial direction and
+    a uniform scaling in the vertical direction. This preserves the overall
+    shape of the input curve while fitting it within the specified envelope.
+    """
+    rmin0, rmax0 = float(np.min(rs)), float(np.max(rs))
+    zmax0 = float(np.max(zs))
+
+    scale_r = (rmax_target - rmin_target) / max((rmax0 - rmin0), eps)
+    rs_mapped = rmin_target + (rs - rmin0) * scale_r
+    zs_mapped = zs * (zmax_target / max(zmax0, eps)) if zmax_target > 0 else zs * 0.0
+    return rs_mapped, zs_mapped
+
+
+def shrink_envelope_from_outer(
+    rs_out: np.ndarray,
+    zs_out: np.ndarray,
+    *,
+    dr_inboard: float,
+    dr_outboard: float,
+    dz_top: float,
+) -> tuple[float, float, float]:
+    """Compute an inner target envelope by shrinking an outer envelope."""
+    rmin_out = float(np.min(rs_out))
+    rmax_out = float(np.max(rs_out))
+    zmax_out = float(np.max(zs_out))
+
+    rmin_in = rmin_out + float(dr_inboard)
+    rmax_in = rmax_out - float(dr_outboard)
+    zmax_in = max(0.0, zmax_out - float(dz_top))
+    return rmin_in, rmax_in, zmax_in
+
+
+def draw_hollow(
+    axis: plt.Axes,
+    rs_out: np.ndarray,
+    zs_out: np.ndarray,
+    rs_in: np.ndarray,
+    zs_in: np.ndarray,
+    *,
+    facecolor,
+    x_scale: float = 1.0,
+    edgecolor: str = "black",
+    lw: float = 0.5,
+    z_outer: int = 5,
+    z_cut: int = 6,
+    z_edge: int = 7,
+):
+    """Draw a hollow component by subtracting an inner contour from an outer contour.
+
+    Parameters
+    ----------
+    axis : matplotlib.axes.Axes
+        Axis to plot on.
+    rs_out : ndarray of shape (N,)
+        Radial coordinates of the outer boundary.
+    zs_out : ndarray of shape (N,)
+        Vertical coordinates of the outer boundary.
+    rs_in : ndarray of shape (M,)
+        Radial coordinates of the inner boundary.
+    zs_in : ndarray of shape (M,)
+        Vertical coordinates of the inner boundary.
+    facecolor : str or tuple
+        Fill colour for the component.
+    x_scale : float, optional
+        Scaling factor applied to radial coordinates. Use -1.0 to mirror
+        geometry about the vertical axis. Default is 1.0.
+    edgecolor : str, optional
+        Colour of the boundary lines. Default is "black".
+    lw : float, optional
+        Line width of the boundary edges. Default is 0.5.
+    z_outer : int, optional
+        Z-order for the outer fill. Default is 5.
+    z_cut : int, optional
+        Z-order for the inner cut-out fill. Default is 6.
+    z_edge : int, optional
+        Z-order for the boundary edges. Default is 7.
+
+    Notes
+    -----
+    The hollow region is created by first filling the outer boundary and then
+    overplotting the inner boundary using the axis background colour to
+    create a cut-out. Both boundaries are outlined.
+    """
+    axis.fill(x_scale * rs_out, zs_out, color=facecolor, lw=0.01, zorder=z_outer)
+    axis.fill(x_scale * rs_in, zs_in, color=axis.get_facecolor(), lw=0.01, zorder=z_cut)
+    axis.plot(x_scale * rs_out, zs_out, color=edgecolor, lw=lw, zorder=z_edge)
+    axis.plot(x_scale * rs_in, zs_in, color=edgecolor, lw=lw, zorder=z_edge)
+
+
+def _tf_raw_dshape_curve(mfile: MFile, scan: int) -> tuple[np.ndarray, np.ndarray]:
+    """Construct a raw D-shaped curve from TF coil geometry inputs.
+
+    Parameters
+    ----------
+    mfile : process.core.io.mfile.MFile
+        MFILE object containing PROCESS output data for the selected scan.
+    scan : int
+        Scan index to extract TF coil geometry from.
+
+    Returns
+    -------
+    rs : ndarray of shape (N,)
+        Radial coordinates of the closed D-shaped curve.
+    zs : ndarray of shape (N,)
+        Vertical coordinates of the closed D-shaped curve.
+
+    Notes
+    -----
+    The curve is constructed from TF coil arc parameters (``r_tf_arc(i)``,
+    ``z_tf_arc(i)``) and inboard thickness, and represents a closed outer
+    envelope of the TF coil geometry. No scaling or envelope fitting is
+    applied at this stage.
+    """
+    x1 = mfile.get("r_tf_arc(1)", scan=scan)
+    y1 = mfile.get("z_tf_arc(1)", scan=scan)
+    x2 = mfile.get("r_tf_arc(2)", scan=scan)
+    y2 = mfile.get("z_tf_arc(2)", scan=scan)
+    x3 = mfile.get("r_tf_arc(3)", scan=scan)
+    x4 = mfile.get("r_tf_arc(4)", scan=scan)
+    y4 = mfile.get("z_tf_arc(4)", scan=scan)
+    x5 = mfile.get("r_tf_arc(5)", scan=scan)
+    y5 = mfile.get("z_tf_arc(5)", scan=scan)
+    dr_tf_inboard = mfile.get("dr_tf_inboard", scan=scan)
+
+    return vv_outline_from_tfcoil_dshape(
+        x1=x1,
+        x2=x2,
+        x3=x3,
+        x4=x4,
+        x5=x5,
+        y1=y1,
+        y2=y2,
+        y4=y4,
+        y5=y5,
+        dr_tf_inboard=dr_tf_inboard,
+        rtangle=rtangle,
+        rtangle2=rtangle2,
+        offset_in=0.0,
+    )
+
+
+def _use_dshape_component_geometry(mfile: MFile, scan: int) -> bool:
+    """Determine whether D-shaped internal component geometry is enabled.
+
+    Parameters
+    ----------
+    mfile : process.core.io.mfile.MFile
+        MFILE object containing PROCESS output data for the selected scan.
+    scan : int
+        Scan index to extract the geometry flag from.
+
+    Returns
+    -------
+    bool
+        True if D-shaped internal component geometry should be used,
+        otherwise False.
+
+    Notes
+    -----
+    The decision is based on the ``i_fw_blkt_vv_shape`` variable from the
+    MFILE. If the variable is missing or invalid, the function defaults to
+    False.
+    """
+    try:
+        return (
+            int(mfile.get("i_fw_blkt_vv_shape", scan=scan)) == 1
+            and int(mfile.get("i_single_null", scan=scan)) == 1
+        )
+    except (KeyError, ValueError):
+        return False
+
+
+def _mapped_upper_dshape_segment(
+    rs_raw: np.ndarray,
+    zs_raw: np.ndarray,
+    rs_target: np.ndarray,
+    zs_target: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Map the upper half of the raw TF D-shape curve onto a target upper segment.
+
+    The mapped segment is oriented to match the reference segment ordering,
+    and its end points are snapped to the reference end points so that it
+    joins cleanly to the lower single-null geometry.
+    """
+    rmin_t = float(np.min(rs_target))
+    rmax_t = float(np.max(rs_target))
+    zmax_t = float(np.max(zs_target))
+
+    rs_map, zs_map = map_curve_to_envelope(rs_raw, zs_raw, rmin_t, rmax_t, zmax_t)
+
+    mask = zs_map >= -1.0e-9
+    rs_upper = rs_map[mask]
+    zs_upper = zs_map[mask]
+
+    if len(rs_upper) < 2:
+        return np.array(rs_target, dtype=float), np.array(zs_target, dtype=float)
+
+    # Choose orientation that best matches the reference segment endpoints
+    d_forward = (
+        (rs_upper[0] - rs_target[0]) ** 2
+        + (zs_upper[0] - zs_target[0]) ** 2
+        + (rs_upper[-1] - rs_target[-1]) ** 2
+        + (zs_upper[-1] - zs_target[-1]) ** 2
+    )
+    d_reverse = (
+        (rs_upper[-1] - rs_target[0]) ** 2
+        + (zs_upper[-1] - zs_target[0]) ** 2
+        + (rs_upper[0] - rs_target[-1]) ** 2
+        + (zs_upper[0] - zs_target[-1]) ** 2
+    )
+
+    if d_reverse < d_forward:
+        rs_upper = rs_upper[::-1]
+        zs_upper = zs_upper[::-1]
+
+    # Snap endpoints to the original reference endpoints
+    rs_upper[0] = rs_target[0]
+    zs_upper[0] = zs_target[0]
+    rs_upper[-1] = rs_target[-1]
+    zs_upper[-1] = zs_target[-1]
+
+    return rs_upper, zs_upper
