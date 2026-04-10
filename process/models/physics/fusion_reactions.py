@@ -995,7 +995,7 @@ def beam_fusion(
         deuterium_critical_energy_speed,
         tritium_critical_energy_speed,
         nd_beam_hot,
-        beam_deposited_energy,
+        e_beam_deposited_kev,
     ) = beam_slowing_down_state(
         e_beam_kev,
         critical_energy_deuterium,
@@ -1052,7 +1052,7 @@ def beam_fusion(
         * 4.03e-22
         * (2 / 3)
         * nd_beam_hot
-        * beam_deposited_energy
+        * e_beam_deposited_kev
         / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
     )
 
