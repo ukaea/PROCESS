@@ -996,7 +996,7 @@ def beam_fusion(
         tritium_beam_density,
         deuterium_critical_energy_speed,
         tritium_critical_energy_speed,
-        hot_beam_density,
+        nd_beam_hot,
         beam_deposited_energy,
     ) = beam_slowing_down_state(
         e_beam_kev,
@@ -1053,12 +1053,12 @@ def beam_fusion(
         betbm0
         * 4.03e-22
         * (2 / 3)
-        * hot_beam_density
+        * nd_beam_hot
         * beam_deposited_energy
         / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
     )
 
-    return beta_beam, hot_beam_density, p_beam_alpha_mw
+    return beta_beam, nd_beam_hot, p_beam_alpha_mw
 
 
 def beam_slowing_down_state(
@@ -1161,7 +1161,7 @@ def beam_slowing_down_state(
         / (constants.ELECTRON_CHARGE * vol_plasma)
     )
 
-    hot_beam_density = deuterium_beam_density + tritium_beam_density
+    nd_beam_hot = deuterium_beam_density + tritium_beam_density
 
     # Find the speed of the deuterium particle when it has the critical energy.
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
@@ -1223,14 +1223,14 @@ def beam_slowing_down_state(
     total_deposited_energy = (
         (deuterium_beam_density * deuterium_deposited_energy)
         + (tritium_beam_density * tritium_deposited_energy)
-    ) / hot_beam_density
+    ) / nd_beam_hot
 
     return (
         deuterium_beam_density,
         tritium_beam_density,
         deuterium_critical_energy_speed,
         tritium_critical_energy_speed,
-        hot_beam_density,
+        nd_beam_hot,
         total_deposited_energy,
     )
 
