@@ -1035,7 +1035,7 @@ def beam_fusion(
         sigmav_dt_correction,
     )
 
-    tritium_beam_alpha_power = alpha_power_beam(
+    p_beam_tritium_dt = alpha_power_beam(
         tritium_beam_density,
         deuterium_density,
         hot_tritium_rate,
@@ -1044,7 +1044,7 @@ def beam_fusion(
     )
 
     # Neutral beam alpha power
-    p_beam_alpha_mw = beamfus0 * (p_beam_deuterium_dt + tritium_beam_alpha_power)
+    p_beam_alpha_mw = beamfus0 * (p_beam_deuterium_dt + p_beam_tritium_dt)
 
     # Neutral beam beta
     beta_beam = (
