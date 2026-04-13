@@ -601,6 +601,12 @@ nd_plasma_pedestal_electron: float = None
 nd_plasma_separatrix_electron: float = None
 """electron density at separatrix [m-3] (`i_plasma_pedestal==1)"""
 
+i_nd_plasma_pedestal_separatrix: int = None
+"""switch for pedestal and separatrix density calculation:
+- =0 User input pedestal and separatrix density
+- =1 Calculate pedestal and separatrix density as fraction of Greenwald limit (see `f_nd_plasma_pedestal_greenwald` and `f_nd_plasma_separatrix_greenwald`)
+"""
+
 
 alpha_crit: float = None
 """critical ballooning parameter value"""
@@ -1488,6 +1494,7 @@ def init_physics_variables():
         ffwal, \
         f_nd_plasma_pedestal_greenwald, \
         f_nd_plasma_separatrix_greenwald, \
+        i_nd_plasma_pedestal_separatrix, \
         f_plasma_fuel_helium3, \
         figmer, \
         fkzohm, \
@@ -1777,6 +1784,7 @@ def init_physics_variables():
     ffwal = 0.92
     f_nd_plasma_pedestal_greenwald = 0.85
     f_nd_plasma_separatrix_greenwald = 0.50
+    i_nd_plasma_pedestal_separatrix = 0
     f_plasma_fuel_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0
