@@ -21,6 +21,7 @@ from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.numerics import FiguresOfMerit, PROCESSRunMode
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.data_structure.scan_variables import init_scan_variables
+from process.models.physics.profiles import DensityProfilePedestalType
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -423,10 +424,10 @@ def check_process(inputs, data):  # noqa: ARG001
         # Density checks
         # Case where pedestal density is set manually
         if (
-            data.physics.f_nd_plasma_pedestal_greenwald < 0
-            or not (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
-            ).any()
+            DensityProfilePedestalType(
+                data.physics.i_nd_plasma_pedestal_separatrix
+            )
+            == DensityProfilePedestalType.USER_INPUT
         ):
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
             if (

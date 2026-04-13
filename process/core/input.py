@@ -149,9 +149,9 @@ INPUT_VARIABLES = {
     "f_p_div_lower": InputVariable("physics", float, range=(0.0, 1.0)),
     "f_plasma_fuel_deuterium": InputVariable("physics", float, range=(0.0, 1.0)),
     "ffwal": InputVariable("physics", float, range=(0.0, 10.0)),
-    "f_nd_plasma_pedestal_greenwald": InputVariable("physics", float, range=(-1.0, 5.0)),
+    "f_nd_plasma_pedestal_greenwald": InputVariable("physics", float, range=(0.1, 1.5)),
     "f_nd_plasma_separatrix_greenwald": InputVariable(
-        "physics", float, range=(-1.0, 5.0)
+        "physics", float, range=(0.01, 0.9)
     ),
     "f_plasma_fuel_helium3": InputVariable("physics", float, range=(-1.0, 5.0)),
     # TODO: does f_nd_impurity_electrons require an additional range?
