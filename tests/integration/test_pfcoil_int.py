@@ -14,7 +14,6 @@ import pytest
 from numpy.testing import assert_array_almost_equal
 
 from process.core import constants
-from process.core.init import init_all_module_vars
 from process.data_structure import build_variables as bv
 from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import pfcoil_variables, superconducting_tf_coil_variables
@@ -37,8 +36,7 @@ def pfcoil(process_models):
     :return: a PFCoil instance
     :rtype: process.pfcoil.PFCoil
     """
-    init_all_module_vars()
-    return PFCoil(cs_fatigue=process_models.cs_fatigue, cs_coil=process_models.cs_coil)
+    return process_models.pfcoil
 
 
 @pytest.fixture
