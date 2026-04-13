@@ -4015,8 +4015,10 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
 
     # Add text box with density profile parameters
     textstr_density = "\n".join((
-        rf"$\langle n_{{\text{{e}}}} \rangle$: {nd_plasma_electrons_vol_avg:.3e} m$^{{-3}}$"
-        rf"$\hspace{{4}} \overline{{n_{{e}}}}$: {mfile.get('nd_plasma_electron_line', scan=scan):.3e} m$^{{-3}}$",
+        (
+            rf"$\langle n_{{\text{{e}}}} \rangle$: {nd_plasma_electrons_vol_avg:.3e} m$^{{-3}}$"
+            rf"$\hspace{{4}} \overline{{n_{{e}}}}$: {mfile.get('nd_plasma_electron_line', scan=scan):.3e} m$^{{-3}}$"
+        ),
         (
             rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
             rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}"
@@ -4264,7 +4266,7 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
         (
             rf"$\langle T_{{\text{{e}}}} \rangle_\text{{V}}$:  {mfile.get('temp_plasma_electron_vol_avg_kev', scan=scan):.3f} keV"
             rf"$\hspace{{2}} \langle T_{{\text{{e}}}} \rangle_\text{{n}}$: {mfile.get('temp_plasma_electron_density_weighted_kev', scan=scan):.3f} keV"
-        rf"$\hspace{{2}} \overline{{T_{{e}}}}$: {mfile.get('temp_plasma_electron_line_average_kev', scan=scan):.3f} keV"
+            rf"$\hspace{{2}} \overline{{T_{{e}}}}$: {mfile.get('temp_plasma_electron_line_average_kev', scan=scan):.3f} keV"
         ),
         (
             rf"$T_{{\text{{e,0}}}}$:    {te0:.3f} keV"
