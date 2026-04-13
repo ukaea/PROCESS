@@ -206,7 +206,7 @@ extend-select = [
     "W",
     "YTT",
 ]
-ignore = ["COM812", "FBT", "G004", "PD901"]
+ignore = ["COM812", "FBT", "G004"]
 
 [tool.ruff.lint.pep8-naming]
 ignore-names = [

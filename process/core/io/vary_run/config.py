@@ -10,7 +10,7 @@ from contextlib import suppress
 from dataclasses import dataclass, field
 from pathlib import Path
 from shutil import SameFileError, copy
-from sys import stderr
+from sys import exit, stderr
 
 import click
 from numpy.random import default_rng

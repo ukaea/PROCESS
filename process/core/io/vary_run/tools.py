@@ -4,7 +4,7 @@ A selection of functions for using the PROCESS code
 
 import logging
 from pathlib import Path
-from sys import stderr
+from sys import exit, stderr
 from time import sleep
 
 from process.core.io.data_structure_dicts import get_dicts
