@@ -4905,8 +4905,7 @@ def extended_plane_strain(
     # will need a switch here.
     nonslip_layer = i_tf_bucking
 
-    if nonslip_layer < 1:
-        nonslip_layer = 1
+    nonslip_layer = max(nonslip_layer, 1)
 
     # Stiffness tensor factors
     # Section 3 in the writeup
@@ -4949,7 +4948,7 @@ def extended_plane_strain(
     f_int_a[:] = 0.5e0 * f_lin_fac * (
         rad[1 : nlayers + 1] ** 2 - rad[:nlayers] ** 2
     ) + f_rec_fac * np.log(rad[1 : nlayers + 1] / rad[:nlayers])
-    if f_rec_fac[0] == 0e0:
+    if f_rec_fac[0] == 0e0:  # noqa: RUF069
         f_int_a[0] = 0.5e0 * f_lin_fac[0] * (rad[1] ** 2 - rad[0] ** 2)
 
     # Force density integral that adds to Lame parameter B
@@ -5638,7 +5637,6 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
         eyoung_j_3 = (l_1 + l_2) / (l_1 / eyoung_j_1 + l_2 / eyoung_j_2)
         l_3 = l_1 + l_2
 
-    eyoung_j_3 = eyoung_j_3
     poisson_j_perp_3 = np.array(poisson_j_perp_3)
 
     return eyoung_j_3, l_3, poisson_j_perp_3

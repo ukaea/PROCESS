@@ -276,11 +276,10 @@ def power_balance_sankey(m_file: Path):
         #
         # Neutrons to CP shield, should only show if CP shield is present
         m_file.get("p_cp_shield_nuclear_heat_mw", scan=-1),  # 51
-        #
         m_file.get("p_plasma_separatrix_mw", scan=-1),  # 52
         m_file.get("p_div_secondary_heat_mw", scan=-1),  # 53
         m_file.get("p_shld_secondary_heat_mw", scan=-1),  # 54
-        m_file.get("p_fw_hcd_nuclear_heat_mw", scan=-1),  #
+        m_file.get("p_fw_hcd_nuclear_heat_mw", scan=-1),
         m_file.get("p_fw_hcd_rad_total_mw", scan=-1),  # 56
         m_file.get("p_plant_secondary_heat_mw", scan=-1),  # 57
         m_file.get("p_hcd_secondary_heat_mw", scan=-1),  # 58
@@ -399,7 +398,7 @@ class SuperSankey(Sankey):
         rotation: float = 0,
         **kwargs,
     ):
-        __doc__ = super().__doc__  # noqa: F841, A001
+        __doc__ = super().__doc__  # noqa: F841
         # Here we first check if the "add" method has received arguments that
         # the Sankey class can't handle.
         if future is None:

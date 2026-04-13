@@ -2169,7 +2169,7 @@ class Costs:
 
         #  Account 225.2.4 : PF coil burn power supplies
 
-        if pf_power_variables.pfckts != 0.0e0:
+        if pf_power_variables.pfckts != 0.0e0:  # noqa: RUF069
             cost_variables.c22524 = (
                 1.0e-6
                 * cost_variables.ucpfbs
@@ -2750,8 +2750,7 @@ class Costs:
         # SJP Issue #836
         # Check for the condition when kwhpy=0
 
-        if kwhpy < 1.0e-10:
-            kwhpy = 1.0e-10
+        kwhpy = max(kwhpy, 1.0e-10)
 
         #  Cost of electricity due to plant capital cost
 

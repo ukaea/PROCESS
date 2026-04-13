@@ -9,8 +9,8 @@ Notes:
                 generation script imports, and inspects, process.
 """
 
+import sys
 from re import sub
-from sys import stderr
 
 from process.core.exceptions import ProcessValidationError
 from process.core.io.data_structure_dicts import get_dicts
@@ -679,7 +679,7 @@ def add_parameter(data, parameter_name, parameter_value):
                 print(
                     f"Warning: Description for {parameter_name}",
                     "specified in IN.DAT not in dictionary.",
-                    file=stderr,
+                    file=sys.stderr,
                 )
                 comment = ""
 
@@ -938,7 +938,7 @@ def variable_constraint_type_check(item_number, var_type):
         except ValueError:
             print(
                 f"Value {item_number} for {var_type} not valid. Check value!",
-                file=stderr,
+                file=sys.stderr,
             )
 
     # Check if item is in float format
@@ -959,7 +959,7 @@ def variable_constraint_type_check(item_number, var_type):
 
     # Value not recognised
     else:
-        raise ValueError(
+        raise ValueError(  # noqa: TRY004
             f"Value {item_number} for {var_type} not a recognised format. Check value!"
         )
 
@@ -1063,7 +1063,7 @@ class INVariable:
 
     @property
     def get_value(self):
-        """ """
+        """Get value of variables"""
         if self.v_type != "Bound":
             return parameter_type(self.name, self.value)
         return self.value
@@ -1132,7 +1132,7 @@ class InDat:
                     print(
                         "Warning: Line below is causing a problem. Check "
                         f"that line in IN.DAT is valid. Line skipped!\n{line}",
-                        file=stderr,
+                        file=sys.stderr,
                     )
 
                     # Store the first part of the unrecognised line (probably a
@@ -1246,9 +1246,9 @@ class InDat:
                     no_comment_line,
                     "\n Please note, that our Python Library cannot cope with",
                     " variable definitions on multiple lines.",
-                    file=stderr,
+                    file=sys.stderr,
                 )
-                exit()
+                sys.exit()
         else:
             try:
                 value = no_comment_line[1].strip().replace(",", "")
@@ -1258,9 +1258,9 @@ class InDat:
                     no_comment_line,
                     "\n Please note, that our Python Library cannot cope with",
                     " variable definitions on multiple lines.",
-                    file=stderr,
+                    file=sys.stderr,
                 )
-                exit()
+                sys.exit()
 
         # Find group of variables the parameter belongs to
         parameter_group = find_parameter_group(name)

@@ -254,14 +254,14 @@ class Vmcon(_Solver):
             x = e.x
             res = e.result
 
-        except ValueError as e:
+        except ValueError:
             itervar_name_list = ""
             for count, iter_var in enumerate(numerics.ixc[: numerics.nvar]):
                 itervar_name = numerics.lablxc[iter_var - 1]
                 itervar_name_list += f"{count}: {itervar_name} \n"
 
             logger.warning(f"Active iteration variables are : \n{itervar_name_list}")
-            raise e
+            raise
 
         else:
             self.info = 1

@@ -62,8 +62,7 @@ class MFileVariable(dict):  # noqa: FURB189
             value of parameter for scan
         """
         self[f"scan{scan_number:02}"] = scan_value
-        if scan_number > self.latest_scan:
-            self.latest_scan = scan_number
+        self.latest_scan = max(self.latest_scan, scan_number)
 
     def get_scan(self, scan_number):
         """Returns the value of a specific scan. For scan = -1 or None the last

@@ -2036,8 +2036,6 @@ class Build(Model):
             dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
         )
 
-        #
-
         if output:
             #  Print out device build
 

@@ -748,7 +748,7 @@ def bosch_hale_reactivity(
     )
 
     # if t = 0, sigmav = 0. Use this mask to set sigmav to zero.
-    t_mask = ion_temperature_profile == 0.0
+    t_mask = ion_temperature_profile == 0.0  # noqa: RUF069
     sigmav[t_mask] = 0.0
 
     # Return np.ndarray of sigmav for each point in the ion temperature profile

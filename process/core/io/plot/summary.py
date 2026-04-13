@@ -4016,17 +4016,25 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     # Add text box with density profile parameters
     textstr_density = "\n".join((
         rf"$\langle n_{{\text{{e}}}} \rangle$: {nd_plasma_electrons_vol_avg:.3e} m$^{{-3}}$",
-        rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
-        rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
-        rf"$n_{{\text{{e,ped}}}}$: {nd_plasma_pedestal_electron:.3e} m$^{{-3}}$"
-        r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
-        f"{nd_fuel_ions / nd_plasma_electrons_vol_avg:.3f}",
-        rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
-        r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
-        f"{ne0 / nd_plasma_electrons_vol_avg:.3f}",
-        rf"$\rho_{{\text{{ped,n}}}}$: {radius_plasma_pedestal_density_norm:.3f}"
-        r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
-        f"{mfile.get('nd_plasma_electron_line', scan=scan) / mfile.get('nd_plasma_electron_max_array(7)', scan=scan):.3f}",
+        (
+            rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
+            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}"
+        ),
+        (
+            rf"$n_{{\text{{e,ped}}}}$: {nd_plasma_pedestal_electron:.3e} m$^{{-3}}$"
+            r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
+            f"{nd_fuel_ions / nd_plasma_electrons_vol_avg:.3f}"
+        ),
+        (
+            rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
+            r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
+            f"{ne0 / nd_plasma_electrons_vol_avg:.3f}"
+        ),
+        (
+            rf"$\rho_{{\text{{ped,n}}}}$: {radius_plasma_pedestal_density_norm:.3f}"
+            r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
+            f"{mfile.get('nd_plasma_electron_line', scan=scan) / mfile.get('nd_plasma_electron_max_array(7)', scan=scan):.3f}"
+        ),
         rf"$n_{{\text{{e,sep}}}}$: {nd_plasma_separatrix_electron:.3e} m$^{{-3}}$",
         rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
     ))
@@ -4043,16 +4051,26 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     )
 
     textstr_ions = "\n".join((
-        r"$\langle n_{\text{ions-total}} \rangle $: "
-        f"{mfile.get('nd_plasma_ions_total_vol_avg', scan=scan):.3e} m$^{{-3}}$",
-        r"$\langle n_{\text{fuel}} \rangle $: "
-        f"{mfile.get('nd_plasma_fuel_ions_vol_avg', scan=scan):.3e} m$^{{-3}}$",
-        r"$\langle n_{\text{alpha}} \rangle $: "
-        f"{mfile.get('nd_plasma_alphas_vol_avg', scan=scan):.3e} m$^{{-3}}$",
-        r"$\langle n_{\text{impurities}} \rangle $: "
-        f"{mfile.get('nd_plasma_impurities_vol_avg', scan=scan):.3e} m$^{{-3}}$",
-        r"$\langle n_{\text{protons}} \rangle $:"
-        f"{mfile.get('nd_plasma_protons_vol_avg', scan=scan):.3e} m$^{{-3}}$",
+        (
+            r"$\langle n_{\text{ions-total}} \rangle $: "
+            f"{mfile.get('nd_plasma_ions_total_vol_avg', scan=scan):.3e} m$^{{-3}}$"
+        ),
+        (
+            r"$\langle n_{\text{fuel}} \rangle $: "
+            f"{mfile.get('nd_plasma_fuel_ions_vol_avg', scan=scan):.3e} m$^{{-3}}$"
+        ),
+        (
+            r"$\langle n_{\text{alpha}} \rangle $: "
+            f"{mfile.get('nd_plasma_alphas_vol_avg', scan=scan):.3e} m$^{{-3}}$"
+        ),
+        (
+            r"$\langle n_{\text{impurities}} \rangle $: "
+            f"{mfile.get('nd_plasma_impurities_vol_avg', scan=scan):.3e} m$^{{-3}}$"
+        ),
+        (
+            r"$\langle n_{\text{protons}} \rangle $:"
+            f"{mfile.get('nd_plasma_protons_vol_avg', scan=scan):.3e} m$^{{-3}}$"
+        ),
     ))
 
     ax_impurity.text(
@@ -4242,19 +4260,29 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     te = mfile.get("temp_plasma_electron_vol_avg_kev", scan=scan)
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
-        rf"$\langle T_{{\text{{e}}}} \rangle_\text{{V}}$: {mfile.get('temp_plasma_electron_vol_avg_kev', scan=scan):.3f} keV"
-        rf"$\hspace{{3}} \langle T_{{\text{{e}}}} \rangle_\text{{n}}$: {mfile.get('temp_plasma_electron_density_weighted_kev', scan=scan):.3f} keV",
-        rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
-        rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
-        rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
-        r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
-        f"{f_temp_plasma_ion_electron:.3f}",
-        rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
-        r"$ \hspace{6} \frac{T_{e,0}}{\langle T_e \rangle}$: "
-        f"{te0 / te:.3f}",
-        rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV"
-        r"$ \hspace{4} \frac{{{\langle T_e \rangle_n}}}{{{\langle T_e \rangle_V}}}$: "
-        f"{mfile.get('f_temp_plasma_electron_density_vol_avg', scan=scan):.3f}",
+        (
+            rf"$\langle T_{{\text{{e}}}} \rangle_\text{{V}}$: {mfile.get('temp_plasma_electron_vol_avg_kev', scan=scan):.3f} keV"
+            rf"$\hspace{{3}} \langle T_{{\text{{e}}}} \rangle_\text{{n}}$: {mfile.get('temp_plasma_electron_density_weighted_kev', scan=scan):.3f} keV"
+        ),
+        (
+            rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
+            rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}"
+        ),
+        (
+            rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
+            r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
+            f"{f_temp_plasma_ion_electron:.3f}"
+        ),
+        (
+            rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
+            r"$ \hspace{6} \frac{T_{e,0}}{\langle T_e \rangle}$: "
+            f"{te0 / te:.3f}"
+        ),
+        (
+            rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV"
+            r"$ \hspace{4} \frac{{{\langle T_e \rangle_n}}}{{{\langle T_e \rangle_V}}}$: "
+            f"{mfile.get('f_temp_plasma_electron_density_vol_avg', scan=scan):.3f}"
+        ),
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -4525,7 +4553,7 @@ def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
                 lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
             pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
 
-        for l in range(imp_data.shape[0]):  # noqa: E741
+        for l in range(imp_data.shape[0]):
             prad[k] = prad[k] + pimpden[l][k] * 1.0e-6
 
     prof.plot(rho, prad, label="Total", linestyle="dotted")
@@ -7792,7 +7820,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     Be = mfile.get("f_nd_impurity_electrons(03)", scan=scan)
     C = mfile.get("f_nd_impurity_electrons(04)", scan=scan)
     N = mfile.get("f_nd_impurity_electrons(05)", scan=scan)
-    O = mfile.get("f_nd_impurity_electrons(06)", scan=scan)  # noqa: E741
+    O = mfile.get("f_nd_impurity_electrons(06)", scan=scan)
     Ne = mfile.get("f_nd_impurity_electrons(07)", scan=scan)
     Si = mfile.get("f_nd_impurity_electrons(08)", scan=scan)
     Ar = mfile.get("f_nd_impurity_electrons(09)", scan=scan)
@@ -8459,7 +8487,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
             data.insert(2, (pinjie, "Total auxillary power", "MW"))
 
     coe = mfile.get("coe", scan=scan)
-    if coe == 0.0:
+    if coe == 0.0:  # noqa: RUF069
         data.append(("", "", ""))
         data.append(("#Costs", "", ""))
         data.append(("", "Cost output not selected", ""))
@@ -9293,7 +9321,7 @@ def plot_lower_vertical_build(
     ]
 
     # Remove build parts equal to zero
-    mask = ~(lower_vertical_build[:, 0] == 0.0)
+    mask = ~(lower_vertical_build[:, 0] == 0.0)  # noqa: RUF069
     filtered_vertical_build = lower_vertical_build[mask]
     filtered_labels = [lbl for i, lbl in enumerate(lower_vertical_labels) if mask[i]]
     filtered_colors = [col for i, col in enumerate(lower_vertical_color) if mask[i]]
@@ -9441,7 +9469,7 @@ def plot_upper_vertical_build(
     ])
 
     # Remove build parts equal to zero
-    mask = ~(upper_vertical_build == 0.0)
+    mask = ~(upper_vertical_build == 0.0)  # noqa: RUF069
     filtered_build = upper_vertical_build[mask]
     filtered_labels = [lbl for i, lbl in enumerate(upper_vertical_labels) if mask[i]]
     filtered_colors = [col for i, col in enumerate(upper_vertical_colours) if mask[i]]

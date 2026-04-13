@@ -2050,7 +2050,7 @@ class Power(Model):
         fspc2 = 0.8e0  # floor space coefficient for circuit breakers
         fspc3 = 0.4e0  # floor space coefficient for load centres
 
-        if rptfc == 0.0e0:
+        if rptfc == 0.0e0:  # noqa: RUF069
             tchghr = 4.0e0  # charge time of the coils, hours
             nsptfc = 1.0e0  # superconducting (1.0 = superconducting, 0.0 = resistive)
         else:

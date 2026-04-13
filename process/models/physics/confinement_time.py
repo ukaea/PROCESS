@@ -4,14 +4,14 @@ from enum import IntEnum
 import numpy as np
 from scipy.optimize import root_scalar
 
-import process.data_structure.constraint_variables as constraint_variables
-import process.data_structure.stellarator_variables as stellarator_variables
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
+    constraint_variables,
     current_drive_variables,
     physics_variables,
+    stellarator_variables,
 )
 
 logger = logging.getLogger(__name__)

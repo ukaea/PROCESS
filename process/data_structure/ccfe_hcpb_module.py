@@ -66,7 +66,6 @@ exp_shield2: float = None
 
 def init_ccfe_hcpb_module():
     global \
-        iso_fortran_env, \
         armour_density, \
         fw_density, \
         blanket_density, \
@@ -77,7 +76,6 @@ def init_ccfe_hcpb_module():
         tfc_nuc_heating, \
         fw_armour_u_nuc_heating, \
         shld_u_nuc_heating, \
-        pnuc_tot_blk_sector, \
         exp_blanket, \
         exp_shield1, \
         exp_shield2

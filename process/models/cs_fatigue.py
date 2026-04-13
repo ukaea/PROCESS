@@ -1,7 +1,7 @@
 import numpy as np
 from numba import njit
 
-import process.data_structure as data_structure
+from process import data_structure
 from process.core import constants
 
 

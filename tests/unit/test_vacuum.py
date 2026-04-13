@@ -116,10 +116,10 @@ class TestVacuum:
             output=False,
         )
 
-        assert pumpn == 36.0
+        assert pumpn == pytest.approx(36.0)
         assert nduct == 18
         assert dlscalc == pytest.approx(2.798765707267961)
-        assert mvdsh == 0.0
+        assert mvdsh == pytest.approx(0.0)
         assert dimax == pytest.approx(0.42414752916950604)
 
 

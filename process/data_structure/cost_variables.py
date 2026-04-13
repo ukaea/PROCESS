@@ -303,7 +303,7 @@ cost_factor_tf_coils: float = None
 """cost scaling factor for TF coils"""
 
 
-cost_factor_tf_coils: float = None
+cost_factor_fwbs: float = None
 """cost scaling factor for fwbs"""
 
 
@@ -1280,9 +1280,7 @@ def init_cost_variables():
         cconshtf, \
         cdcost, \
         cdirt, \
-        cdrlife, \
         cdrlife_cal, \
-        cfactr, \
         cpfact, \
         cfind, \
         cland, \
@@ -1318,8 +1316,6 @@ def init_cost_variables():
         decomf, \
         dintrt, \
         divcst, \
-        divlife, \
-        divlife_cal, \
         dtlife, \
         fcap0, \
         fcap0cp, \
@@ -1328,7 +1324,6 @@ def init_cost_variables():
         fcr0, \
         fkind, \
         fwallcst, \
-        iavail, \
         ibkt_life, \
         life_dpa, \
         bktcycles, \
@@ -1347,10 +1342,7 @@ def init_cost_variables():
         fwbs_umain_time, \
         redun_vacp, \
         redun_vac, \
-        t_operation, \
-        tbktrepl, \
         tcomrepl, \
-        tdivrepl, \
         uubop, \
         uucd, \
         uudiv, \
@@ -1368,8 +1360,6 @@ def init_cost_variables():
         startupratio, \
         startuppwr, \
         supercond_cost_model, \
-        tlife, \
-        tmain, \
         u_unplanned_cp, \
         ucblbe, \
         ucblbreed, \
@@ -1387,8 +1377,6 @@ def init_cost_variables():
         uccu, \
         ucdiv, \
         ucech, \
-        uces1, \
-        uces2, \
         ucf1, \
         ucfnc, \
         ucfuel, \
@@ -1417,11 +1405,9 @@ def init_cost_variables():
         uctfbus, \
         uctfps, \
         uctfsw, \
-        uctpmp, \
         ucturb, \
         ucwindpf, \
         ucwindtf, \
-        ucws, \
         ucwst, \
         ucpfic, \
         life_hcd_fpy, \
