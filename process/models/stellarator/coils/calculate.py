@@ -2,7 +2,6 @@ import logging
 
 import numpy as np
 
-import process.models.stellarator.coils.forces as forces
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -11,6 +10,7 @@ from process.data_structure import (
     stellarator_variables,
     tfcoil_variables,
 )
+from process.models.stellarator.coils import forces
 from process.models.stellarator.coils.coils import (
     bmax_from_awp,
     intersect,
@@ -132,7 +132,6 @@ def st_coil(stellarator, output: bool):
 
     # Units: MN/m
     max_force_density_mnm = forces.calculate_max_force_density_mnm()
-    #
     max_lateral_force_density = forces.calculate_max_lateral_force_density(
         a_tf_wp_no_insulation
     )

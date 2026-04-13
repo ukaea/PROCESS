@@ -6,11 +6,11 @@ Interfaces for Configuration values for programs
 
 import logging
 import os
+import sys
 from contextlib import suppress
 from dataclasses import dataclass, field
 from pathlib import Path
 from shutil import SameFileError, copy
-from sys import stderr
 
 import click
 from numpy.random import default_rng
@@ -500,9 +500,9 @@ class RunProcessConfig(ProcessConfig):
         if set(self.add_ixc).intersection(self.del_ixc) != set():
             logger.error(
                 "You are trying to add and delete the same variable from ixc!",
-                file=stderr,
+                file=sys.stderr,
             )
-            exit()
+            sys.exit()
 
         in_dat = InDat(filename="0_IN.DAT")
 
@@ -521,9 +521,9 @@ class RunProcessConfig(ProcessConfig):
         if set(self.add_icc).intersection(self.del_icc) != set():
             logger.error(
                 "You are trying to add and delete the same variable from icc!",
-                file=stderr,
+                file=sys.stderr,
             )
-            exit()
+            sys.exit()
 
         in_dat = InDat(filename="0_IN.DAT")
 

@@ -70,7 +70,7 @@ class LazyGroup(click.Group):
         cmd_object = getattr(mod, cmd_object_name)
         # check the result to make debugging easier
         if not isinstance(cmd_object, click.Command):
-            raise ValueError(
+            raise ValueError(  # noqa: TRY004
                 f"Lazy loading of {import_path} failed by returning a non-command object"
             )
         return cmd_object

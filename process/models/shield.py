@@ -3,12 +3,13 @@ import logging
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import blanket_library as blanket_library
-from process.data_structure import build_variables as build_variables
-from process.data_structure import ccfe_hcpb_module as ccfe_hcpb_module
-from process.data_structure import divertor_variables as divertor_variables
-from process.data_structure import fwbs_variables as fwbs_variables
-from process.data_structure import physics_variables as physics_variables
+from process.data_structure import (
+    blanket_library,
+    build_variables,
+    divertor_variables,
+    fwbs_variables,
+    physics_variables,
+)
 from process.models.blankets.blanket_library import (
     dshellarea,
     dshellvol,

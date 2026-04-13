@@ -4,7 +4,7 @@ from enum import IntEnum
 import numba as nb
 import numpy as np
 import scipy
-import scipy.integrate as integrate
+from scipy import integrate
 
 from process.core import constants
 from process.core import process_output as po

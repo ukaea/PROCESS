@@ -1,4 +1,3 @@
-import process.models.blankets.blanket_library as blanket_library
 from process.core import constants
 from process.core import (
     process_output as po,
@@ -14,6 +13,7 @@ from process.data_structure import (
     physics_variables,
     primary_pumping_variables,
 )
+from process.models.blankets import blanket_library
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 
 

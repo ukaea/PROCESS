@@ -645,7 +645,7 @@ class NeutralBeam:
                     )
 
         sz = 0.0
-        for l in range(4):  # noqa: E741
+        for l in range(4):
             for k in range(2):
                 for j in range(2):
                     for i in range(3):
@@ -1110,8 +1110,7 @@ class ElectronCyclotron:
             )
             palpha = palpha + pterm
             palphap = palphap - n * pterm / (1.0e0 - arg2)
-        else:
-            raise ProcessError("legend: Solution has not converged")
+        raise ProcessError("legend: Solution has not converged")
 
 
 class IonCyclotron:

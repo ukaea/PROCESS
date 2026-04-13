@@ -3,11 +3,10 @@ import logging
 import numpy as np
 import scipy as sp
 
-import process.models.physics.profiles as profiles
 from process.core import constants
 from process.core.exceptions import ProcessValueError
 from process.data_structure import divertor_variables, physics_variables
-from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.profiles import NeProfile, PlasmaProfileShapeType, TeProfile
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +30,8 @@ class PlasmaProfile:
         self.profile_size = 501
         physics_variables.n_plasma_profile_elements = self.profile_size
         self.outfile = constants.NOUT
-        self.neprofile = profiles.NeProfile(self.profile_size)
-        self.teprofile = profiles.TeProfile(self.profile_size)
+        self.neprofile = NeProfile(self.profile_size)
+        self.teprofile = TeProfile(self.profile_size)
 
     def run(self):
         """Subroutine to execute PlasmaProfile functions.
@@ -79,6 +78,7 @@ class PlasmaProfile:
         It sets the necessary physics variables for the parabolic profile case.
         """
         # Reset pedestal values to agree with original parabolic profiles
+        # ruff: disable[RUF069]
         if (
             physics_variables.radius_plasma_pedestal_temp_norm != 1.0
             or physics_variables.radius_plasma_pedestal_density_norm != 1.0
@@ -102,7 +102,7 @@ class PlasmaProfile:
             physics_variables.nd_plasma_pedestal_electron = 0.0e0
             physics_variables.nd_plasma_separatrix_electron = 0.0e0
             physics_variables.tbeta = 2.0e0
-
+        # ruff: enable[RUF069]
         # Re-caluclate core and profile values
         self.teprofile.run()
         self.neprofile.run()
