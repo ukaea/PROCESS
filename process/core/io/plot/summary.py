@@ -4525,7 +4525,7 @@ def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
                 lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
             pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
 
-        for l in range(imp_data.shape[0]):  # noqa: E741
+        for l in range(imp_data.shape[0]):
             prad[k] = prad[k] + pimpden[l][k] * 1.0e-6
 
     prof.plot(rho, prad, label="Total", linestyle="dotted")
@@ -7792,7 +7792,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     Be = mfile.get("f_nd_impurity_electrons(03)", scan=scan)
     C = mfile.get("f_nd_impurity_electrons(04)", scan=scan)
     N = mfile.get("f_nd_impurity_electrons(05)", scan=scan)
-    O = mfile.get("f_nd_impurity_electrons(06)", scan=scan)  # noqa: E741
+    O = mfile.get("f_nd_impurity_electrons(06)", scan=scan)
     Ne = mfile.get("f_nd_impurity_electrons(07)", scan=scan)
     Si = mfile.get("f_nd_impurity_electrons(08)", scan=scan)
     Ar = mfile.get("f_nd_impurity_electrons(09)", scan=scan)

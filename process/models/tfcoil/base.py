@@ -4905,8 +4905,7 @@ def extended_plane_strain(
     # will need a switch here.
     nonslip_layer = i_tf_bucking
 
-    if nonslip_layer < 1:
-        nonslip_layer = 1
+    nonslip_layer = max(nonslip_layer, 1)
 
     # Stiffness tensor factors
     # Section 3 in the writeup

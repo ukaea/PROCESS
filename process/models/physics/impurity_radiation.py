@@ -514,7 +514,8 @@ def element2index(element: str):
     """
     try:
         return (
-            impurity_radiation_module.impurity_arr_label.astype(str)
+            impurity_radiation_module.impurity_arr_label
+            .astype(str)
             .tolist()
             .index(element)
         )

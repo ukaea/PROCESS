@@ -5,8 +5,8 @@ from typing import NamedTuple
 import numpy as np
 import pytest
 
-import process.models.physics.impurity_radiation as impurity_radiation
 from process.data_structure import impurity_radiation_module
+from process.models.physics import impurity_radiation
 
 
 @pytest.fixture(autouse=True)

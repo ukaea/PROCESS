@@ -351,7 +351,7 @@ class Costs2015(Model):
             )
 
         po.oshead(self.outfile, "First wall and blanket (M$)")
-        for l in range(21, 27):  # noqa: E741
+        for l in range(21, 27):
             self.ocost(
                 self.outfile,
                 self.data.costs_2015.s_label[l],

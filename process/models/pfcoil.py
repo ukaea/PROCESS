@@ -7,7 +7,6 @@ from scipy import optimize
 from scipy.linalg import svd
 from scipy.special import ellipe, ellipk
 
-import process.models.superconductors as superconductors
 from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
@@ -24,6 +23,7 @@ from process.data_structure import physics_variables as pv
 from process.data_structure import rebco_variables as rcv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
+from process.models import superconductors
 from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
 
@@ -1724,8 +1724,7 @@ class PFCoil(Model):
 
         # TODO In FNSF case, noh = -7! noh should always be positive. Fortran
         # array allocation with -ve bound previously coerced to 0
-        if noh < 0:
-            noh = 0
+        noh = max(noh, 0)
 
         roh = np.zeros(noh)
         zoh = np.zeros(noh)
@@ -4342,8 +4341,7 @@ def calculate_b_field_at_point(
         s = 4.0 * r_test_point * r_current_loop[i] / d
 
         # Kludge: avoid s >= 1.0, a goes inf
-        if s > 0.999999:
-            s = 0.999999
+        s = min(s, 0.999999)
 
         t = 1.0 - s
         a = np.log(1.0 / t)

@@ -3,7 +3,6 @@ import logging
 import numpy as np
 
 import process.data_structure.blanket_library as blanket_vars
-import process.models.blankets.blanket_library as blanket_library
 from process.core import constants
 from process.core import (
     process_output as po,
@@ -23,6 +22,7 @@ from process.data_structure import (
     primary_pumping_variables,
     tfcoil_variables,
 )
+from process.models.blankets import blanket_library
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 from process.models.tfcoil.base import TFConductorModel
 
@@ -375,10 +375,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             fwbs_variables.fw_armour_vol * constants.DEN_TUNGSTEN
         )
 
-        if fwbs_variables.breeder_f < 1.0e-10:
-            fwbs_variables.breeder_f = 1.0e-10
-        if fwbs_variables.breeder_f > 1.0:
-            fwbs_variables.breeder_f = 1.0
+        fwbs_variables.breeder_f = max(fwbs_variables.breeder_f, 1.0e-10)
+        fwbs_variables.breeder_f = min(fwbs_variables.breeder_f, 1.0)
 
         # f_vol_blkt_tibe12 = f_vol_blkt_li4sio4 * (1 - breeder_f)/breeder_f
         # New combined variable breeder_multiplier
@@ -481,8 +479,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
         # Picking the largest value for VV thickness
         d_vv_all = build_variables.dr_vv_inboard
-        if build_variables.dr_vv_outboard > d_vv_all:
-            d_vv_all = build_variables.dr_vv_outboard
+        d_vv_all = max(d_vv_all, build_variables.dr_vv_outboard)
 
         if d_vv_all > 1.0e-6:
             ccfe_hcpb_module.vv_density = fwbs_variables.m_vv / fwbs_variables.vol_vv
@@ -1033,8 +1030,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         for _ in range(n_integral):
             # Little tricks to avoild NaNs due to rounding
             int_calc_3 = 1.0 - rho_maj**2 * np.sin(phy_cp_calc) ** 2
-            if int_calc_3 < 0.0:
-                int_calc_3 = 0.0
+            int_calc_3 = max(int_calc_3, 0.0)
 
             int_calc_1 = 1.0 / np.sqrt(
                 z_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
@@ -1044,8 +1040,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
             # Little tricks to avoild NaNs due to rounding
             int_calc_3 = 1.0 - rho_maj**2 * np.sin(phy_cp_calc) ** 2
-            if int_calc_3 < 0.0:
-                int_calc_3 = 0.0
+            int_calc_3 = max(int_calc_3, 0.0)
 
             int_calc_2 = 1.0 / np.sqrt(
                 z_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2

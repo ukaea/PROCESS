@@ -144,8 +144,7 @@ class Availability(Model):
 
             # TODO Issue #834
             # Add a test for pflux_div_heat_load_mw=0
-            if dv.pflux_div_heat_load_mw < 1.0e-10:
-                dv.pflux_div_heat_load_mw = 1.0e-10
+            dv.pflux_div_heat_load_mw = max(dv.pflux_div_heat_load_mw, 1.0e-10)
 
             # Divertor lifetime (years)
             cv.life_div_fpy = self.divertor_lifetime()

@@ -2750,8 +2750,7 @@ class Costs:
         # SJP Issue #836
         # Check for the condition when kwhpy=0
 
-        if kwhpy < 1.0e-10:
-            kwhpy = 1.0e-10
+        kwhpy = max(kwhpy, 1.0e-10)
 
         #  Cost of electricity due to plant capital cost
 

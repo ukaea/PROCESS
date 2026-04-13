@@ -4,8 +4,6 @@ import logging
 import numpy as np
 from scipy import optimize
 
-import process.models.superconductors as superconductors
-import process.models.tfcoil.quench as quench
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
@@ -21,7 +19,9 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
+from process.models import superconductors
 from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
+from process.models.tfcoil import quench
 from process.models.tfcoil.base import TFCoil
 
 logger = logging.getLogger(__name__)
@@ -977,8 +977,7 @@ class SuperconductingTFCoil(TFCoil):
         # Guard against negative conductor fraction f_a_tf_turn_cable_space_conductor
         # Kludge to allow solver to continue and hopefully be constrained away
         # from this point
-        if f_a_tf_turn_cable_space_cooling > 0.99:
-            f_a_tf_turn_cable_space_cooling = 0.99
+        f_a_tf_turn_cable_space_cooling = min(f_a_tf_turn_cable_space_cooling, 0.99)
 
         #  Conductor fraction (including central helium channel)
         f_a_tf_turn_cable_space_conductor = 1.0e0 - f_a_tf_turn_cable_space_cooling
@@ -3031,8 +3030,7 @@ class SuperconductingTFCoil(TFCoil):
             * tfcoil_variables.f_a_tf_turn_cable_copper
             - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * constants.den_copper
-        if tfcoil_variables.m_tf_coil_copper <= 0.0e0:
-            tfcoil_variables.m_tf_coil_copper = 0.0e0
+        tfcoil_variables.m_tf_coil_copper = max(0.0e0, tfcoil_variables.m_tf_coil_copper)
 
         # Steel conduit (sheath) mass [kg]
         tfcoil_variables.m_tf_wp_steel_conduit = (

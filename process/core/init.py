@@ -108,7 +108,8 @@ def get_git_summary() -> tuple[str, str]:
         directory = Path(process.__file__).parent
 
         git_branch = (
-            subprocess.run(
+            subprocess
+            .run(
                 "git rev-parse --abbrev-ref HEAD",
                 shell=True,
                 capture_output=True,
@@ -120,7 +121,8 @@ def get_git_summary() -> tuple[str, str]:
         )
 
         git_tag = (
-            subprocess.run(
+            subprocess
+            .run(
                 "git describe --tags",
                 shell=True,
                 capture_output=True,

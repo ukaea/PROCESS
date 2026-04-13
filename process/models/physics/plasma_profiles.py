@@ -3,11 +3,10 @@ import logging
 import numpy as np
 import scipy as sp
 
-import process.models.physics.profiles as profiles
 from process.core import constants
 from process.core.exceptions import ProcessValueError
 from process.data_structure import divertor_variables, physics_variables
-from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.profiles import NeProfile, PlasmaProfileShapeType, TeProfile
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +30,8 @@ class PlasmaProfile:
         self.profile_size = 501
         physics_variables.n_plasma_profile_elements = self.profile_size
         self.outfile = constants.NOUT
-        self.neprofile = profiles.NeProfile(self.profile_size)
-        self.teprofile = profiles.TeProfile(self.profile_size)
+        self.neprofile = NeProfile(self.profile_size)
+        self.teprofile = TeProfile(self.profile_size)
 
     def run(self):
         """Subroutine to execute PlasmaProfile functions.
