@@ -76,7 +76,7 @@ docs = [
   "mkdocs-gen-files",
   "mkdocs-literate-nav",
 ]
-lint = ["pre-commit>=2.16.0", "ruff==0.9.3", "ty"]
+lint = ["pre-commit>=2.16.0", "ruff==0.15.10", "ty"]
 all = ["process[test,docs,lint,examples,plotly]", "toml"]
 
 [project.scripts]
