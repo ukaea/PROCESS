@@ -35,7 +35,10 @@ from process.models.physics.confinement_time import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
-from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.profiles import (
+    DensityProfilePedestalType,
+    PlasmaProfileShapeType,
+)
 
 if TYPE_CHECKING:
     from process.models.physics.plasma_current import (
@@ -2404,7 +2407,12 @@ class Physics(Model):
                 "(radius_plasma_pedestal_density_norm)",
                 physics_variables.radius_plasma_pedestal_density_norm,
             )
-            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
+            if (
+                DensityProfilePedestalType(
+                    physics_variables.i_nd_plasma_pedestal_separatrix
+                )
+                == DensityProfilePedestalType.GREENWALD_FRACTION
+            ):
                 po.ovarre(
                     self.outfile,
                     "Electron density pedestal height (/m3)",

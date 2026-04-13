@@ -422,16 +422,12 @@ load calculation (`i_pflux_fw_neutron=1`)
 
 
 f_nd_plasma_pedestal_greenwald: float = None
-"""fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top
-density set manually using nd_plasma_pedestal_electron (`i_plasma_pedestal==1`).
-(`iteration variable 145`)
+"""fraction of Greenwald density to set as pedestal-top density.
 """
 
 
 f_nd_plasma_separatrix_greenwald: float = None
-"""fraction of Greenwald density to set as separatrix density. If `<0`, separatrix
-density set manually using nd_plasma_separatrix_electron (`i_plasma_pedestal==1`).
-(`iteration variable 152`)
+"""fraction of Greenwald density to set as separatrix density.
 """
 
 

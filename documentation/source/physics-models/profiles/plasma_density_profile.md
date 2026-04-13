@@ -148,4 +148,32 @@ $$\begin{aligned}
 
 5. Profile is then integrated with `integrate_profile_y()` using Simpsons integration from the profile abstract base class
 
+-----------------------
+
+### Setting pedestal and separatrix values | `set_pedestal_and_separatrix_values()`
+
+The switch `i_nd_plasma_pedestal_separatrix` controls how the values of the density pedestal and separatrix are set.
+
+#### User input
+
+If `i_nd_plasma_pedestal_separatrix == 0` then the values of `nd_plasma_pedestal_electron` and `nd_plasma_separatrix_electron` are taken directly from the input file
+
+#### Fraction of Greenwald Limit
+
+If `i_nd_plasma_pedestal_separatrix == 1`, the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ are set as fractions of the [Greenwald](https://wiki.fusion.ciemat.es/wiki/Greenwald_limit) limit such as:
+
+$$
+n_{\text{ped}} = \overbrace{f_{\text{GW,ped}}}^{\texttt{f_nd_plasma_pedestal_greenwald}} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
+$$
+
+$$
+n_{\text{sep}} = \overbrace{f_{\text{GW,sep}}}^{\texttt{f_nd_plasma_separatrix_greenwald}} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
+$$
+
+
+$\texttt{f_nd_plasma_pedestal_greenwald}$ and $\texttt{f_nd_plasma_separatrix_greenwald}$ can be set as iteration variables respectively by using `ixc = 45`
+and `ixc = 152` respectively
+
+------
+
 [^1]: Jean, J. (2011). *HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies*. Fusion Science and Technology, 59(2), 308–349. <https://doi.org/10.13182/FST11-A11650>
