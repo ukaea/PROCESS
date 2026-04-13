@@ -2071,6 +2071,12 @@ class Physics(Model):
         )
         po.ovarrf(
             self.outfile,
+            "Line averaged electron temperature (keV)",
+            "(temp_plasma_electron_line_average_kev)",
+            physics_variables.temp_plasma_electron_line_average_kev,
+        )
+        po.ovarrf(
+            self.outfile,
             "Ratio of ion to electron volume-averaged temperature",
             "(f_temp_plasma_ion_electron)",
             physics_variables.f_temp_plasma_ion_electron,

@@ -127,6 +127,14 @@ class PlasmaProfile:
             / sp.special.gamma(physics_variables.alphan + 1.5)
         )
 
+        physics_variables.temp_plasma_electron_line_average_kev = (
+            physics_variables.temp_plasma_electron_vol_avg_kev
+            * (1.0 + physics_variables.alphat)
+            * (sp.special.gamma(0.5) / 2.0)
+            * sp.special.gamma(physics_variables.alphat + 1.0)
+            / sp.special.gamma(physics_variables.alphat + 1.5)
+        )
+
         #  Density-weighted temperatures
 
         physics_variables.temp_plasma_electron_density_weighted_kev = (
@@ -203,10 +211,14 @@ class PlasmaProfile:
             / physics_variables.temp_plasma_electron_vol_avg_kev
         )
 
-        #  Line-averaged electron density
+        #  Line-averaged electron density and temperature
         #  = integral(n(rho).drho)
 
         physics_variables.nd_plasma_electron_line = self.neprofile.profile_integ
+
+        physics_variables.temp_plasma_electron_line_average_kev = (
+            self.teprofile.profile_integ
+        )
 
         #  Scrape-off density / volume averaged density
         #  (Input value is used if i_plasma_pedestal = 0)
