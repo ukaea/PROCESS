@@ -3,8 +3,8 @@ A selection of functions for using the PROCESS code
 """
 
 import logging
+import sys
 from pathlib import Path
-from sys import exit, stderr
 from time import sleep
 
 from process.core.io.data_structure_dicts import get_dicts
@@ -96,7 +96,7 @@ def get_variable_range(itervars, factor, wdir=".", indat="IN.DAT"):
 
             if value is None:
                 print(f"Error: Iteration variable {varname} has None value!")
-                exit()
+                sys.exit()
 
             # to allow the factor to have some influence
             if value == 0.0:  # noqa: RUF069
@@ -119,10 +119,10 @@ def get_variable_range(itervars, factor, wdir=".", indat="IN.DAT"):
             print(
                 f"Error: Iteration variable {varname} has BOUNDL={lbs[-1]} >"
                 f"BOUNDU={ubs[-1]}\n Update process_dicts or input file!",
-                file=stderr,
+                file=sys.stderr,
             )
 
-            exit()
+            sys.exit()
         # assert lbs[-1] < ubs[-1]
 
     return lbs, ubs
@@ -159,7 +159,7 @@ def check_in_dat(filename="IN.DAT"):
             print("Please flag this up for a developer to investigate!")
             print(itervarname, err)
             print(dicts["DICT_INPUT_BOUNDS"][itervarname])
-            exit()
+            sys.exit()
 
         if dicts["DICT_IXC_BOUNDS"][itervarname]["lb"] < lowerinputbound:
             print(
@@ -169,7 +169,7 @@ def check_in_dat(filename="IN.DAT"):
                 itervarno,
                 ") to ",
                 lowerinputbound,
-                file=stderr,
+                file=sys.stderr,
             )
             dicts["DICT_IXC_BOUNDS"][itervarname]["lb"] = lowerinputbound
             set_variable_in_indat(
@@ -185,7 +185,7 @@ def check_in_dat(filename="IN.DAT"):
                 itervarname,
                 f"lies out of allowed input range!\n Reset boundu({itervarno}) to",
                 upperinputbound,
-                file=stderr,
+                file=sys.stderr,
             )
             dicts["DICT_IXC_BOUNDS"][itervarname]["ub"] = upperinputbound
             set_variable_in_indat(
@@ -209,9 +209,9 @@ def check_input_error(wdir=".", mfile="MFILE.DAT"):
         if error_id == 130:
             print(
                 "Error in input file. Please check OUT.DAT for more information.",
-                file=stderr,
+                file=sys.stderr,
             )
-            exit()
+            sys.exit()
     except Exception:
         logger.exception("Check input error exception")
         raise
@@ -229,8 +229,8 @@ def process_stopped(wdir=".", mfile="MFILE.DAT"):
         # (usually a STOP 1)
         return True
     except FileNotFoundError:
-        print("No MFILE has been found!", file=stderr)
-        print("Code continues to run!", file=stderr)
+        print("No MFILE has been found!", file=sys.stderr)
+        print("Code continues to run!", file=sys.stderr)
         return True
 
 
