@@ -208,20 +208,16 @@ class PlasmaConfinementTime:
 
         # If the device is not ignited, add the injected auxiliary power
         if i_plasma_ignited == 0:
-            p_plasma_loss_mw = p_plasma_loss_mw + p_hcd_injected_total_mw
+            p_plasma_loss_mw += p_hcd_injected_total_mw
 
         # Include the radiation as a loss term based on radiation model
         try:
             model = ConfinementRadiationLossModel(int(physics_variables.i_rad_loss))
 
             if model == ConfinementRadiationLossModel.FULL_RADIATION:
-                p_plasma_loss_mw = (
-                    p_plasma_loss_mw - physics_variables.pden_plasma_rad_mw * vol_plasma
-                )
+                p_plasma_loss_mw -= physics_variables.pden_plasma_rad_mw * vol_plasma
             elif model == ConfinementRadiationLossModel.CORE_ONLY:
-                p_plasma_loss_mw = (
-                    p_plasma_loss_mw - pden_plasma_core_rad_mw * vol_plasma
-                )
+                p_plasma_loss_mw -= pden_plasma_core_rad_mw * vol_plasma
             # NO_RADIATION: do not adjust p_plasma_loss_mw for radiation
         except ValueError as e:
             raise ProcessValueError(

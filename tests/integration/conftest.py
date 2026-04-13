@@ -41,7 +41,7 @@ def temp_data_cwd(temp_data):
     :rtype: Path
     """
     # Setup by changing cwd to temp_data and yielding it
-    old_wd = os.getcwd()
+    old_wd = Path.cwd()
     os.chdir(temp_data)
     yield temp_data
 

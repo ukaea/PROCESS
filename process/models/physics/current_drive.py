@@ -1108,8 +1108,8 @@ class ElectronCyclotron:
                 / (2.0e0 * n) ** 2
                 * sinsq
             )
-            palpha = palpha + pterm
-            palphap = palphap - n * pterm / (1.0e0 - arg2)
+            palpha += pterm
+            palphap -= n * pterm / (1.0e0 - arg2)
         raise ProcessError("legend: Solution has not converged")
 
 
@@ -2416,7 +2416,7 @@ class CurrentDrive(Model):
             "OP ",
         )
 
-        if current_drive_variables.i_hcd_primary in [12, 13]:
+        if current_drive_variables.i_hcd_primary in {12, 13}:
             po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,

@@ -57,7 +57,7 @@ class Profile(ABC):
 
 
         """
-        self.profile_x = self.profile_x / max(self.profile_x)
+        self.profile_x /= max(self.profile_x)
 
     def calculate_profile_dx(self):
         """Calculates the differential between points in the profile.

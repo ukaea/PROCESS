@@ -58,7 +58,7 @@ class DivgeomParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "divgeomparam",
-    (
+    [
         DivgeomParam(
             rspo=8.2125352340518898,
             plleno=1,
@@ -78,7 +78,7 @@ class DivgeomParam(NamedTuple):
             outfile=11,
             expected_divht=2.002443311884611,
         ),
-    ),
+    ],
 )
 def test_divgeom(divgeomparam, monkeypatch, build):
     """
@@ -161,7 +161,7 @@ class PortszParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "portszparam",
-    (
+    [
         PortszParam(
             r_tf_outboard_mid=16.519405859443332,
             dr_tf_outboard=1.208,
@@ -190,7 +190,7 @@ class PortszParam(NamedTuple):
             expected_radius_beam_tangency=9.3346050000000016,
             expected_radius_beam_tangency_max=14.735821603386416,
         ),
-    ),
+    ],
 )
 def test_calculate_beam_port_size(portszparam, build):
     """
@@ -243,7 +243,7 @@ class PlasmaRippleParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "param",
-    (
+    [
         # Picture-frame analytical model (i_tf_shape == 2)
         PlasmaRippleParam(
             ripple_b_tf_plasma_edge_max=0.6,
@@ -339,7 +339,7 @@ class PlasmaRippleParam(NamedTuple):
             dx_tf_wp_insulation=0.0,
             dx_tf_wp_insertion_gap=0.0,
         ),
-    ),
+    ],
 )
 def test_plasma_outboard_edge_toroidal_ripple_additional(param, build):
     """

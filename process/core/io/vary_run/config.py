@@ -268,14 +268,14 @@ iteration variables should get varied"""
             if err.code != 0:
                 # Process has exited with a non-zero exit code.
                 # Catch this exception to allow execution to continue without exiting
-                logger.error(
+                logger.exception(
                     "There was a problem with the PROCESS execution! %s",
                     err,
                 )
         except (KeyboardInterrupt, click.exceptions.Abort):
             raise KeyboardInterrupt from None
-        except Exception as e:  # noqa: BLE001
-            logger.error(
+        except Exception as e:
+            logger.exception(
                 "There was a problem with the PROCESS execution! %s",
                 e,
             )
@@ -319,9 +319,9 @@ class RunProcessConfig(ProcessConfig):
 
         create_itervar_diff = False
         if buf is not None:
-            if buf.lower() in ["true", "y", "yes"]:
+            if buf.lower() in {"true", "y", "yes"}:
                 create_itervar_diff = True
-            elif buf.lower() in ["false", "n", "no"]:
+            elif buf.lower() in {"false", "n", "no"}:
                 create_itervar_diff = False
             else:
                 logger.warning("Value for create_itervar_diff is not defined!")

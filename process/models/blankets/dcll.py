@@ -327,7 +327,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 p_div_rad_total_mw=fwbs_variables.p_div_rad_total_mw,
             )
 
-        elif fwbs_variables.i_p_coolant_pumping in [2, 3]:
+        elif fwbs_variables.i_p_coolant_pumping in {2, 3}:
             # Mechanical pumping power is calculated for first wall and blanket
             self.thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
@@ -348,9 +348,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
         if output:
             po.osubhd(self.outfile, "DCLL model: Thermal-hydraulics Component Totals")
 
-            if (fwbs_variables.i_p_coolant_pumping != 2) and (
-                fwbs_variables.i_p_coolant_pumping != 3
-            ):
+            if fwbs_variables.i_p_coolant_pumping not in {2, 3}:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for first wall (MW)",

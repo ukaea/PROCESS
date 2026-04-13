@@ -181,12 +181,12 @@ class Availability(Model):
             # against the total availability becoming zero or negative
 
             uutot = cv.uubop  # balance of plant
-            uutot = uutot + (1.0e0 - uutot) * cv.uucd  # current drive
-            uutot = uutot + (1.0e0 - uutot) * cv.uudiv  # divertor
-            uutot = uutot + (1.0e0 - uutot) * cv.uufuel  # fuel system
-            uutot = uutot + (1.0e0 - uutot) * cv.uufw  # first wall + blanket
-            uutot = uutot + (1.0e0 - uutot) * cv.uumag  # magnets
-            uutot = uutot + (1.0e0 - uutot) * cv.uuves  # vacuum vessel
+            uutot += (1.0e0 - uutot) * cv.uucd  # current drive
+            uutot += (1.0e0 - uutot) * cv.uudiv  # divertor
+            uutot += (1.0e0 - uutot) * cv.uufuel  # fuel system
+            uutot += (1.0e0 - uutot) * cv.uufw  # first wall + blanket
+            uutot += (1.0e0 - uutot) * cv.uumag  # magnets
+            uutot += (1.0e0 - uutot) * cv.uuves  # vacuum vessel
 
             # Total availability
             cv.f_t_plant_available = 1.0e0 - (uplanned + uutot - (uplanned * uutot))
@@ -1036,9 +1036,12 @@ class Availability(Model):
             # Probability for n failures in the operational period, n > number of redundant pumps
 
             # calculate sum in formula for downtime
-            sum_prob = sum_prob + combinations(total_pumps, n) * (
-                cryo_nfailure_rate ** (total_pumps - n)
-            ) * (cryo_failure_rate**n) * (n - cv.redun_vac)
+            sum_prob += (
+                combinations(total_pumps, n)
+                * (cryo_nfailure_rate ** (total_pumps - n))
+                * (cryo_failure_rate**n)
+                * (n - cv.redun_vac)
+            )
 
         # Total down-time in reactor life
         t_down = (n_shutdown + 1.0e0) * cryo_main_time * sum_prob

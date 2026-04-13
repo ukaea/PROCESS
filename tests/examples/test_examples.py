@@ -65,12 +65,12 @@ def test_scan(examples_temp_data):
 
 @pytest.mark.parametrize(
     "name",
-    (
+    [
         "introduction",
         "single_model_evaluation",
         "vary_run_example",
         "optimum_solutions_comparison",
-    ),
+    ],
 )
 def test_no_assertion_solutions(name, examples_temp_data):
     """Run examples and check no exceptions are raised.

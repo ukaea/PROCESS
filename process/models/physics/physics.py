@@ -28,22 +28,22 @@ from process.data_structure import (
     times_variables,
 )
 from process.models.physics import impurity_radiation
-from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
-from process.models.physics.confinement_time import (
-    PlasmaConfinementTime,
-)
-from process.models.physics.density_limit import PlasmaDensityLimit
-from process.models.physics.exhaust import PlasmaExhaust
-from process.models.physics.l_h_transition import PlasmaConfinementTransition
-from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.profiles import PlasmaProfileShapeType
 
 if TYPE_CHECKING:
+    from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
+    from process.models.physics.confinement_time import (
+        PlasmaConfinementTime,
+    )
+    from process.models.physics.density_limit import PlasmaDensityLimit
+    from process.models.physics.exhaust import PlasmaExhaust
+    from process.models.physics.l_h_transition import PlasmaConfinementTransition
     from process.models.physics.plasma_current import (
         PlasmaCurrent,
         PlasmaDiamagneticCurrent,
     )
     from process.models.physics.plasma_fields import PlasmaFields
+    from process.models.physics.plasma_geometry import PlasmaGeom
 
 logger = logging.getLogger(__name__)
 
@@ -777,9 +777,8 @@ class Physics(Model):
         # KLUDGE: Ensure p_plasma_separatrix_mw is continuously positive (physical, rather than
         # negative potential power), as required by other models (e.g.
         # Physics.calculate_density_limit())
-        physics_variables.p_plasma_separatrix_mw = (
-            physics_variables.p_plasma_separatrix_mw
-            / (1 - np.exp(-physics_variables.p_plasma_separatrix_mw))
+        physics_variables.p_plasma_separatrix_mw /= 1 - np.exp(
+            -physics_variables.p_plasma_separatrix_mw
         )
 
         # if double null configuration share the power
@@ -1321,9 +1320,8 @@ class Physics(Model):
                     * impurity_radiation_module.m_impurity_amu_array[imp]
                 )
 
-        physics_variables.m_ions_total_amu = (
-            physics_variables.m_ions_total_amu
-            / physics_variables.nd_plasma_ions_total_vol_avg
+        physics_variables.m_ions_total_amu /= (
+            physics_variables.nd_plasma_ions_total_vol_avg
         )
 
         # ======================================================================
@@ -1542,7 +1540,7 @@ class Physics(Model):
             1.0 if 2.5 >= rmajor / rminor <= 4.0 else 4.3 - 0.6 * rmajor / rminor
         )
 
-        res_plasma = res_plasma * f_res_plasma_neo
+        res_plasma *= f_res_plasma_neo
 
         # Check to see if plasma resistance is negative
         # (possible if aspect ratio is too high)

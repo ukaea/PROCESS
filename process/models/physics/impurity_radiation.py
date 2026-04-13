@@ -207,7 +207,7 @@ def read_impurity_file(impurity_file: Path):
     for line in data:
         # do not parse comments
         clean_line = line.strip().replace("\n", "")
-        if clean_line[0:3].upper() in ["C  ", "C ", "C", "C--"]:
+        if clean_line[0:3].upper() in {"C  ", "C ", "C", "C--"}:
             continue
 
         if re.fullmatch(r"[0-9\.e+\- ]+", clean_line) is not None:

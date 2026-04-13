@@ -188,7 +188,7 @@ class Shield(Model):
                 + dr_fw_outboard
             )
 
-            z_top = z_top + dz_blkt_upper
+            z_top += dz_blkt_upper
 
         # Average of top and bottom (m)
         return 0.5 * (z_top + z_bottom)
@@ -360,10 +360,10 @@ class Shield(Model):
         r_1 = rmajor - rminor * triang
         r_2 = r_1 - r_shld_inboard_inner
 
-        r_2 = r_2 - dr_shld_inboard
+        r_2 -= dr_shld_inboard
 
         r_3 = r_shld_outboard_outer - r_1
-        r_3 = r_3 - dr_shld_outboard
+        r_3 -= dr_shld_outboard
 
         (
             vol_shld_inboard,
@@ -418,10 +418,10 @@ class Shield(Model):
         r_1 = rmajor - rminor * triang
         r_2 = r_1 - r_shld_inboard_inner
 
-        r_2 = r_2 - dr_shld_inboard
+        r_2 -= dr_shld_inboard
 
         r_3 = r_shld_outboard_outer - r_1
-        r_3 = r_3 - dr_shld_outboard
+        r_3 -= dr_shld_outboard
 
         (
             a_shld_inboard_surface,

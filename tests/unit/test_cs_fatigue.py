@@ -26,7 +26,7 @@ class NcycleParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "ncycleparam",
-    (
+    [
         NcycleParam(
             max_hoop_stress=659999225.25370133,
             residual_stress=240000000,
@@ -37,7 +37,7 @@ class NcycleParam(NamedTuple):
             expected_n_cycle=1113.5875631615095,
             expected_t_crack_radial=0.0026699999999999996,
         ),
-    ),
+    ],
 )
 def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
     """
@@ -66,7 +66,7 @@ def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
 
 
 @pytest.mark.parametrize(
-    "hoop_stress, t, w, a, c, phi, expected_k",
+    ("hoop_stress", "t", "w", "a", "c", "phi", "expected_k"),
     [
         (
             659.99351867335338,
@@ -105,7 +105,7 @@ def test_embedded_stress_intensity_factor(
 
 
 @pytest.mark.parametrize(
-    "hoop_stress, t, w, a, c, phi, expected_k",
+    ("hoop_stress", "t", "w", "a", "c", "phi", "expected_k"),
     [
         (
             659.99351867335338,

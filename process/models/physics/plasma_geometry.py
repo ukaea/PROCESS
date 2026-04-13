@@ -321,7 +321,6 @@ class PlasmaGeom:
 
     def output(self):
         """Output plasma geometry parameters to file."""
-
         po.oheadr(self.outfile, "Plasma Geometry")
 
         if stellarator_variables.istell == 0:
@@ -386,7 +385,7 @@ class PlasmaGeom:
             "IP",
         )
         if stellarator_variables.istell == 0:
-            if physics_variables.i_plasma_geometry in [0, 6, 8]:
+            if physics_variables.i_plasma_geometry in {0, 6, 8}:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (input value used)",
@@ -402,7 +401,7 @@ class PlasmaGeom:
                     physics_variables.kappa,
                     "OP ",
                 )
-            elif physics_variables.i_plasma_geometry in [2, 3]:
+            elif physics_variables.i_plasma_geometry in {2, 3}:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (Zohm scaling)",
@@ -416,7 +415,7 @@ class PlasmaGeom:
                     "(fkzohm)",
                     physics_variables.fkzohm,
                 )
-            elif physics_variables.i_plasma_geometry in [4, 5, 7]:
+            elif physics_variables.i_plasma_geometry in {4, 5, 7}:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, X-point (calculated from kappa95)",
@@ -454,7 +453,7 @@ class PlasmaGeom:
                     i_plasma_geometry=physics_variables.i_plasma_geometry,
                 )
 
-            if physics_variables.i_plasma_geometry in [4, 5, 7]:
+            if physics_variables.i_plasma_geometry in {4, 5, 7}:
                 po.ovarrf(
                     self.outfile,
                     "Elongation, 95% surface (input value used)",
@@ -471,7 +470,7 @@ class PlasmaGeom:
                     "OP ",
                 )
 
-            if physics_variables.i_plasma_geometry in [0, 2, 6, 8, 9, 10, 11]:
+            if physics_variables.i_plasma_geometry in {0, 2, 6, 8, 9, 10, 11}:
                 po.ovarrf(
                     self.outfile,
                     "Triangularity, X-point (input value used)",
@@ -496,7 +495,7 @@ class PlasmaGeom:
                     "OP ",
                 )
 
-            if physics_variables.i_plasma_geometry in [3, 4, 5, 7]:
+            if physics_variables.i_plasma_geometry in {3, 4, 5, 7}:
                 po.ovarrf(
                     self.outfile,
                     "Triangularity, 95% surface (input value used)",

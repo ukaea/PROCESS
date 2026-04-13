@@ -105,7 +105,7 @@ class TestDivertor:
 
 
 @pytest.mark.parametrize(
-    "p_plasma_rad_mw, f_ster_div_single, n_divertors, expected",
+    ("p_plasma_rad_mw", "f_ster_div_single", "n_divertors", "expected"),
     [
         (10.0, 0.5, 2, 10.0),
         (0.0, 1.0, 1, 0.0),
@@ -124,7 +124,7 @@ def test_set_incident_radiation_power(
 
 
 @pytest.mark.parametrize(
-    "p_plasma_neutron_mw, f_ster_div_single, n_divertors, expected",
+    ("p_plasma_neutron_mw", "f_ster_div_single", "n_divertors", "expected"),
     [
         (20.0, 0.5, 2, 20.0),
         (0.0, 1.0, 1, 0.0),

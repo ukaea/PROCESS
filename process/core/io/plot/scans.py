@@ -372,7 +372,7 @@ def plot_scan(
                     labl = input_file.name
                 else:
                     labl = label_name[kk]
-                    kk = kk + 1
+                    kk += 1
 
                 # Plot the graph
                 if len(output_names2) > 0 and not stack_plots:

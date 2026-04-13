@@ -483,7 +483,7 @@ class Vacuum(Model):
                 if a1 < a1max:
                     break
 
-                ceff[i] = 0.9e0 * ceff[i]
+                ceff[i] *= 0.9e0
                 if ceff[i] <= (1.1e0 * s[i]):
                     #  Ducts are not big enough. Flag and continue.
                     nflag = 1
@@ -491,7 +491,7 @@ class Vacuum(Model):
 
             cmax = ceff[i]
 
-        pumpn = pumpn * nduct
+        pumpn *= nduct
 
         #  d[imax]= diameter of passage from divertor to pumping ducts (m)
         #  dout    = diameter of ducts from passage to hi-vac pumps (m)
@@ -515,7 +515,7 @@ class Vacuum(Model):
         #  for continuous operation with regeneration.
 
         if vacuum_variables.i_vacuum_pump_type == 1:
-            pumpn = pumpn * 2.0e0
+            pumpn *= 2.0e0
 
         #  Information for costing routine
 

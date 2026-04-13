@@ -112,7 +112,7 @@ from process.models.tfcoil.superconducting import SuperconductingTFCoil
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
 
-os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
+os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(Path(__file__).parent)
 
 PACKAGE_LOGGING = True
 """Can be set False to disable package-level logging, e.g. in the test suite"""

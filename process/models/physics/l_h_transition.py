@@ -427,7 +427,7 @@ class PlasmaConfinementTransition:
             "OP ",
         )
         po.oblnkl(self.outfile)
-        if physics_variables.i_l_h_threshold in [9, 10, 11]:
+        if physics_variables.i_l_h_threshold in {9, 10, 11}:
             if (physics_variables.b_plasma_toroidal_on_axis < 0.78e0) or (
                 physics_variables.b_plasma_toroidal_on_axis > 7.94e0
             ):
@@ -480,7 +480,7 @@ class PlasmaConfinementTransition:
 
         po.oblnkl(self.outfile)
 
-        if physics_variables.i_l_h_threshold in [12, 13, 14]:
+        if physics_variables.i_l_h_threshold in {12, 13, 14}:
             po.ocmmnt(
                 self.outfile,
                 "(L-H threshold for closed divertor only. Limited data used in Snipes fit)",

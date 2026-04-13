@@ -1614,7 +1614,7 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Temperature margin (already calculated in superconductors.bi2212 for i_tf_superconductor=2)
 
-        if i_tf_superconductor in (
+        if i_tf_superconductor in {
             1,
             3,
             4,
@@ -1622,7 +1622,7 @@ class SuperconductingTFCoil(TFCoil):
             7,
             8,
             9,
-        ):  # Find temperature at which current density margin = 0
+        }:  # Find temperature at which current density margin = 0
             if i_tf_superconductor == 3:
                 arguments = (
                     i_tf_superconductor,
@@ -3170,7 +3170,7 @@ def _theta_factor_integral(
     chi2 = 0.0
 
     for k in range(len(omega)):
-        chi2 = chi2 + np.abs(
+        chi2 += np.abs(
             lambda_term(tau[1, k], omega[k]) - lambda_term(tau[0, k], omega[k])
         )
 

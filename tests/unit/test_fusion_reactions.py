@@ -68,7 +68,7 @@ class SetFusionPowersParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "setfusionpowersparam",
-    (
+    [
         SetFusionPowersParam(
             f_p_alpha_plasma_deposited=0.95,
             f_plasma_fuel_deuterium=0.5,
@@ -129,7 +129,7 @@ class SetFusionPowersParam(NamedTuple):
             expected_charged_particle_power=497.580075,
             expected_fusion_power=2483.0442725879434,
         ),
-    ),
+    ],
 )
 def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     """
@@ -202,13 +202,13 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "t, reaction, expected_bosch_hale",
-    (
+    ("t", "reaction", "expected_bosch_hale"),
+    [
         (55.73, reactions.REACTION_CONSTANTS_DT, 8.832857074192583e-22),
         (55.73, reactions.REACTION_CONSTANTS_DHE3, 7.067916724597656e-23),
         (55.73, reactions.REACTION_CONSTANTS_DD1, 1.3127277533210717e-23),
         (55.73, reactions.REACTION_CONSTANTS_DD2, 1.1329338540436287e-23),
-    ),
+    ],
     ids=["DT", "DHE3", "DD1", "DD2"],
 )
 def test_bosch_hale(t, reaction, expected_bosch_hale):

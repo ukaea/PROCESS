@@ -156,10 +156,10 @@ class PlasmaCurrent:
 
             # Todd empirical scalings
             # D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-            elif model in [
+            elif model in {
                 PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_I,
                 PlasmaCurrentModel.TODD_EMPIRICAL_SCALING_II,
-            ]:
+            }:
                 fq = self.calculate_current_coefficient_todd(
                     eps, kappa95, triang95, model=1
                 )

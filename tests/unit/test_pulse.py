@@ -64,7 +64,7 @@ class TohswgParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tohswgparam",
-    (
+    [
         TohswgParam(
             t_current_ramp_up_min=0,
             vpfskv=0,
@@ -1181,7 +1181,7 @@ class TohswgParam(NamedTuple):
             iprint=0,
             expected_tohsmn=51.251726699574235,
         ),
-    ),
+    ],
 )
 def test_tohswg(tohswgparam, monkeypatch, pulse):
     """
@@ -1248,7 +1248,12 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
 
 @pytest.mark.parametrize(
-    "vs_cs_pf_total_burn, v_plasma_loop_burn, t_plant_pulse_fusion_ramp, expected",
+    (
+        "vs_cs_pf_total_burn",
+        "v_plasma_loop_burn",
+        "t_plant_pulse_fusion_ramp",
+        "expected",
+    ),
     [
         (100.0, 10.0, 2.0, 8.0),
         (-100.0, 10.0, 2.0, 8.0),  # abs() should be used

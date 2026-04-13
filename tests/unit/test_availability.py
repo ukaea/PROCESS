@@ -27,8 +27,8 @@ def availability():
 
 
 @pytest.mark.parametrize(
-    "life_fw_fpy, ibkt_life, bktlife_exp_param",
-    ((0.0000001, 0, 0.5), (0.0000001, 1, 2.5), (1.0, 0, 0.5), (1.0, 1, 1.25)),
+    ("life_fw_fpy", "ibkt_life", "bktlife_exp_param"),
+    [(0.0000001, 0, 0.5), (0.0000001, 1, 2.5), (1.0, 0, 0.5), (1.0, 1, 1.25)],
 )
 def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_param):
     """Test avail for i_plant_availability = 0
@@ -608,7 +608,7 @@ def test_avail_st(monkeypatch, availability):
     assert pytest.approx(cv.cpfact, abs=1.0e-8) == 0.00015005
 
 
-@pytest.mark.parametrize("i_tf_sup, exp", ((1, 6.337618), (0, 4)))
+@pytest.mark.parametrize(("i_tf_sup", "exp"), [(1, 6.337618), (0, 4)])
 def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
     """Test cp_lifetime routine
 

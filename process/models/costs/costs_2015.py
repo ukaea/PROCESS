@@ -306,9 +306,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_label[26] = "Total first wall and blanket cost"
         self.data.costs_2015.s_cost[26] = 0.0e0
         for j in range(21, 26):
-            self.data.costs_2015.s_cost[26] = (
-                self.data.costs_2015.s_cost[26] + self.data.costs_2015.s_cost[j]
-            )
+            self.data.costs_2015.s_cost[26] += self.data.costs_2015.s_cost[j]
 
     def output(self):
         """Function to output the costs calculations
@@ -588,9 +586,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_label[8] = "Total cost of buildings"
         self.data.costs_2015.s_cost[8] = 0.0e0
         for j in range(8):
-            self.data.costs_2015.s_cost[8] = (
-                self.data.costs_2015.s_cost[8] + self.data.costs_2015.s_cost[j]
-            )
+            self.data.costs_2015.s_cost[8] += self.data.costs_2015.s_cost[j]
 
     def calc_land_costs(self):
         """Function to calculate the cost of land for the power plant
@@ -661,9 +657,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_label[12] = "Total land costs"
         self.data.costs_2015.s_cost[12] = 0.0e0
         for j in range(9, 12):
-            self.data.costs_2015.s_cost[12] = (
-                self.data.costs_2015.s_cost[12] + self.data.costs_2015.s_cost[j]
-            )
+            self.data.costs_2015.s_cost[12] += self.data.costs_2015.s_cost[j]
 
     def calc_tf_coil_costs(self):
         """Function to calculate the cost of the TF coils for the power plant
@@ -772,9 +766,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_label[20] = "Total TF coil costs"
         self.data.costs_2015.s_cost[20] = 0.0e0
         for j in range(13, 20):
-            self.data.costs_2015.s_cost[20] = (
-                self.data.costs_2015.s_cost[20] + self.data.costs_2015.s_cost[j]
-            )
+            self.data.costs_2015.s_cost[20] += self.data.costs_2015.s_cost[j]
 
     def calc_remote_handling_costs(self):
         """Function to calculate the cost of the remote handling facilities
@@ -867,9 +859,7 @@ class Costs2015(Model):
         )
         self.data.costs_2015.s_cost[33] = 0.0e0
         for j in range(31, 33):
-            self.data.costs_2015.s_cost[33] = (
-                self.data.costs_2015.s_cost[33] + self.data.costs_2015.s_cost[j]
-            )
+            self.data.costs_2015.s_cost[33] += self.data.costs_2015.s_cost[j]
 
     def calc_energy_conversion_system(self):
         """Function to calculate the cost of the energy conversion system
@@ -1256,9 +1246,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_label[60] = "Total remaining subsystem costs"
         self.data.costs_2015.s_cost[60] = 0.0e0
         for j in range(35, 60):
-            self.data.costs_2015.s_cost[60] = (
-                self.data.costs_2015.s_cost[60] + self.data.costs_2015.s_cost[j]
-            )
+            self.data.costs_2015.s_cost[60] += self.data.costs_2015.s_cost[j]
 
     def value_function(self, x):
         """Value function

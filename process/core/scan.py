@@ -898,7 +898,7 @@ class Scan:
                 show_errors(constants.NOUT)
                 logging_model_handler.clear_logs()
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail
-                iscan = iscan + 1
+                iscan += 1
 
         print(
             " ****************************************** Scan Convergence Summary ****************************************** \n"

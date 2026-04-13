@@ -67,7 +67,7 @@ class Evaluators:
         if gv.verbose == 1:
             summ = 0.0
             for i in range(m):
-                summ = summ + conf[i] ** 2
+                summ += conf[i] ** 2
 
             sqsumconfsq = math.sqrt(summ)
             logger.debug("Key evaluator values:")

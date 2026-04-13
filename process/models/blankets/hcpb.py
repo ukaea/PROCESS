@@ -277,13 +277,12 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
 
         # Blanket coolant volume (m3)
-        coolvol = (
-            coolvol
-            + fwbs_variables.vol_blkt_total * fwbs_variables.f_a_blkt_cooling_channels
+        coolvol += (
+            fwbs_variables.vol_blkt_total * fwbs_variables.f_a_blkt_cooling_channels
         )
 
         # Shield coolant volume (m3)
-        coolvol = coolvol + fwbs_variables.vol_shld_total * fwbs_variables.vfshld
+        coolvol += fwbs_variables.vol_shld_total * fwbs_variables.vfshld
 
         # First wall coolant volume (m3)
         coolvol = (
@@ -330,9 +329,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             * physics_variables.rminor
         )
         if divertor_variables.n_divertors == 2:
-            divertor_variables.a_div_surface_total = (
-                divertor_variables.a_div_surface_total * 2.0
-            )
+            divertor_variables.a_div_surface_total *= 2.0
         divertor_variables.m_div_plate = (
             divertor_variables.a_div_surface_total
             * divertor_variables.den_div_structure
@@ -1033,7 +1030,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 z_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
-            phy_cp_calc = phy_cp_calc + d_phy_cp
+            phy_cp_calc += d_phy_cp
 
             # Little tricks to avoild NaNs due to rounding
             int_calc_3 = 1.0 - rho_maj**2 * np.sin(phy_cp_calc) ** 2
@@ -1043,7 +1040,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 z_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
-            cp_sol_angle = cp_sol_angle + d_phy_cp * 0.5 * (int_calc_1 + int_calc_2)
+            cp_sol_angle += d_phy_cp * 0.5 * (int_calc_1 + int_calc_2)
 
         cp_sol_angle = cp_sol_angle * 4.0 * z_cp_top
 
@@ -1092,7 +1089,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             ) * np.exp(-24.722 * sh_width_eff)
 
             # Units conversion [10^{-13}.cm^{-2}] -> [m^{-2}]
-            neut_flux_cp = neut_flux_cp * 1.0e17
+            neut_flux_cp *= 1.0e17
 
             # Scaling to the actual plasma neutron power
             neut_flux_cp = (
@@ -1244,7 +1241,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
 
             # Tungsten density correction
-            pnuc_cp_tf = pnuc_cp_tf * f_wc_density
+            pnuc_cp_tf *= f_wc_density
 
             # Shield nuclear heat [MW]
             p_cp_shield_nuclear_heat_mw = pnuc_cp_sh_gam + pnuc_cp_sh_n

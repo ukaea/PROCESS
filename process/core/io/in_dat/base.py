@@ -970,7 +970,7 @@ def variable_bound_check(bound_number, bound_type):
     bound_type = bound_type.lower()
 
     # check if bound is one of the allowed values if not warn user
-    if bound_type not in ["l", "u", "upper", "lower"]:
+    if bound_type not in {"l", "u", "upper", "lower"}:
         print(
             f"Bound type '{bound_type}' not recognised. Must be one of "
             "['u', 'l', 'U', 'L', 'lower', 'upper', 'LOWER', 'UPPER']"
@@ -978,7 +978,7 @@ def variable_bound_check(bound_number, bound_type):
 
     # if bound is given as full word shorten for consistency for dictionary
     # keys
-    elif bound_type in ["upper", "lower"]:
+    elif bound_type in {"upper", "lower"}:
         if bound_type == "upper":
             bound_type = "u"
         elif bound_type == "lower":
@@ -1108,7 +1108,7 @@ class InDat:
             line_type = find_line_type(l_line)
 
             # Ignore title, header and commented lines
-            if line_type != "Title" and line_type != "Comment":
+            if line_type not in {"Title", "Comment"}:
                 try:
                     # for non-title lines process line and store data.
                     self.process_line(line_type, l_line)

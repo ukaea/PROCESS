@@ -292,7 +292,7 @@ def dict_input_bounds():
         if config.range is not None:
             lb, ub = config.range
 
-        elif config.choices is not None and config.type in [int, float]:
+        elif config.choices is not None and config.type in {int, float}:
             lb = min(config.choices)
             ub = max(config.choices)
 

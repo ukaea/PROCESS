@@ -436,7 +436,7 @@ class Buildings(Model):
             tf_radial_dim,
         )
         # Allow for biological shielding around reactor
-        width_reactor_piece = width_reactor_piece + buildings_variables.bioshld_thk
+        width_reactor_piece += buildings_variables.bioshld_thk
 
         # Calculate key-width of building (m)
         # include radial width of largest component *twice*, to allow for construction;
@@ -504,12 +504,8 @@ class Buildings(Model):
 
         # Fuel Cycle facilities: include within reactor building
         # Dimensions based upon estimates from W. Smith
-        buildings_variables.reactor_hall_l = (
-            buildings_variables.reactor_hall_l + buildings_variables.fc_building_l
-        )
-        buildings_variables.reactor_hall_w = (
-            buildings_variables.reactor_hall_w + buildings_variables.fc_building_w
-        )
+        buildings_variables.reactor_hall_l += buildings_variables.fc_building_l
+        buildings_variables.reactor_hall_w += buildings_variables.fc_building_w
 
         # Reactor hall internal footprint and volume
         reactor_hall_area = (
@@ -724,7 +720,7 @@ class Buildings(Model):
             + buildings_variables.reactor_fndtn_thk
         )
 
-        buildings_total_vol = buildings_total_vol + hotcell_vol
+        buildings_total_vol += hotcell_vol
 
         # Reactor Auxiliary Buildings
         # Derived from W. Smith's estimates of necessary facilities and their sizes;
@@ -754,7 +750,7 @@ class Buildings(Model):
         reactor_aux_area = chemlab_area + heat_sink_area + aux_build_area
         reactor_aux_vol = chemlab_vol + heat_sink_vol + aux_build_vol
 
-        buildings_total_vol = buildings_total_vol + reactor_aux_vol
+        buildings_total_vol += reactor_aux_vol
 
         # Magnet power facilities
         # Providing specific electrical supplies for reactor magnets;
@@ -774,7 +770,7 @@ class Buildings(Model):
         power_buildings_area = hcd_building_area + magnet_trains_area + magnet_pulse_area
         power_buildings_vol = hcd_building_vol + magnet_trains_vol + magnet_pulse_vol
 
-        buildings_total_vol = buildings_total_vol + power_buildings_vol
+        buildings_total_vol += power_buildings_vol
 
         # Control
         # Derived from W. Smith's estimates of necessary facilities and their sizes:
@@ -790,7 +786,7 @@ class Buildings(Model):
             control_buildings_area * buildings_variables.control_buildings_h
         )
 
-        buildings_total_vol = buildings_total_vol + control_buildings_vol
+        buildings_total_vol += control_buildings_vol
 
         # Warm Shop
         # Values taken from W. Smith's estimates of necessary facility size:
@@ -800,7 +796,7 @@ class Buildings(Model):
         )
         warm_shop_vol = warm_shop_area * buildings_variables.warm_shop_h
 
-        buildings_total_vol = buildings_total_vol + warm_shop_vol
+        buildings_total_vol += warm_shop_vol
 
         # Maintenance
         # Derived from W. Smith's estimates of necessary facilities and their sizes;
@@ -828,7 +824,7 @@ class Buildings(Model):
         maintenance_area = workshop_area + robotics_area + maint_cont_area
         maintenance_vol = workshop_vol + robotics_vol + maint_cont_vol
 
-        buildings_total_vol = buildings_total_vol + maintenance_vol
+        buildings_total_vol += maintenance_vol
 
         # Cryogenic & cooling facilities
         # Derived from W. Smith's estimates of necessary facilities and their sizes.
@@ -851,7 +847,7 @@ class Buildings(Model):
         cryocool_area = cryomag_area + cryostore_area + auxcool_area
         cryocool_vol = cryomag_vol + cryostore_vol + auxcool_vol
 
-        buildings_total_vol = buildings_total_vol + cryocool_vol
+        buildings_total_vol += cryocool_vol
 
         # Electrical
         # Derived from W. Smith's estimates of necessary facilities and their sizes;
@@ -875,7 +871,7 @@ class Buildings(Model):
         elec_buildings_area = elecdist_area + elecload_area + elecstore_area
         elec_buildings_vol = elecdist_vol + elecload_vol + elecstore_vol
 
-        buildings_total_vol = buildings_total_vol + elec_buildings_vol
+        buildings_total_vol += elec_buildings_vol
 
         # Turbine Hall
         # As proposed by R. Gowland, based on assessment of 18 existing fission power plants:
@@ -888,7 +884,7 @@ class Buildings(Model):
         )
         turbine_hall_vol = turbine_hall_area * buildings_variables.turbine_hall_h
 
-        buildings_total_vol = buildings_total_vol + turbine_hall_vol
+        buildings_total_vol += turbine_hall_vol
 
         # Waste
         # Derived from W. Smith's estimates of necessary facilities and their sizes.
@@ -939,7 +935,7 @@ class Buildings(Model):
             + tw_storage_vol
         )
 
-        buildings_total_vol = buildings_total_vol + waste_buildings_vol
+        buildings_total_vol += waste_buildings_vol
 
         # Site Services
         # Derived from W. Smith's estimates of necessary facilities and their sizes;
@@ -990,7 +986,7 @@ class Buildings(Model):
             * buildings_variables.staff_buildings_h
         )
 
-        buildings_total_vol = buildings_total_vol + staff_buildings_vol
+        buildings_total_vol += staff_buildings_vol
 
         # Calculate 'effective floor area for AC power module'
         # This is the total floor area (m2) across the site, allowing for multiple floors
@@ -1128,9 +1124,7 @@ class Buildings(Model):
                 hotcell_vol_ext,
             )
             po.oblnkl(self.outfile)
-            if (current_drive_variables.i_hcd_primary != 5) and (
-                current_drive_variables.i_hcd_primary != 8
-            ):
+            if current_drive_variables.i_hcd_primary not in {5, 8}:
                 po.ovarre(
                     self.outfile,
                     "HCD (EC/EBW) building footprint (m2)",

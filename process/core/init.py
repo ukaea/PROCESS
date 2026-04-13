@@ -645,10 +645,7 @@ def check_process(inputs):  # noqa: ARG001
         # Check if the choice of plasma current is addapted for ST
         # 2 : Peng Ip scaling (See STAR code documentation)
         # 9 : Fiesta Ip scaling
-        if (
-            data_structure.physics_variables.i_plasma_current != 2
-            and data_structure.physics_variables.i_plasma_current != 9
-        ):
+        if data_structure.physics_variables.i_plasma_current not in {2, 9}:
             warn(
                 "Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used",
                 stacklevel=2,
@@ -740,13 +737,10 @@ def check_process(inputs):  # noqa: ARG001
             )
 
         # Check if a single null divertor is used in double null machine
-        # ruff: disable[RUF069]
         if data_structure.physics_variables.i_single_null == 0 and (
-            data_structure.physics_variables.f_p_div_lower == 1.0
-            or data_structure.physics_variables.f_p_div_lower == 0.0
+            data_structure.physics_variables.f_p_div_lower in {1.0, 0.0}
         ):
             warn("Operating with a single null in a double null machine", stacklevel=2)
-        # ruff: enable[RUF069]
 
         # Set the TF coil shape to picture frame (if default value)
         if data_structure.tfcoil_variables.i_tf_shape == TFCoilShapeModel.DEFAULT:
@@ -792,10 +786,7 @@ def check_process(inputs):  # noqa: ARG001
 
     # Conventionnal aspect ratios specific
     else:
-        if (
-            data_structure.physics_variables.i_plasma_current == 2
-            or data_structure.physics_variables.i_plasma_current == 9
-        ):
+        if data_structure.physics_variables.i_plasma_current in {2, 9}:
             raise ProcessValidationError(
                 "i_plasma_current=2,9 is not a valid option for a non-TART device"
             )
@@ -817,8 +808,8 @@ def check_process(inputs):  # noqa: ARG001
                 )
 
             if data_structure.pfcoil_variables.i_pf_location[i] == 2:
-                j = j + 1
-                k = k + data_structure.pfcoil_variables.n_pf_coils_in_group[i]
+                j += 1
+                k += data_structure.pfcoil_variables.n_pf_coils_in_group[i]
 
         if k == 1:
             raise ProcessValidationError(
@@ -994,12 +985,10 @@ def check_process(inputs):  # noqa: ARG001
     if data_structure.tfcoil_variables.eyoung_ins <= 1.0e8:
         # Copper magnets, no insulation material defined
         # But use the ITER design by default
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-            or data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.SUPERCONDUCTING
-        ):
+        if data_structure.tfcoil_variables.i_tf_sup in {
+            TFConductorModel.WATER_COOLED_COPPER,
+            TFConductorModel.SUPERCONDUCTING,
+        }:
             # SC magnets
             # Value from DDD11-2 v2 2 (2009)
             data_structure.tfcoil_variables.eyoung_ins = 20.0e9
@@ -1076,19 +1065,15 @@ def check_process(inputs):  # noqa: ARG001
 
             # Steel conduit thickness (can be an iteration variable)
             if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58).any():
-                dr_tf_wp_min = dr_tf_wp_min + 2.0 * data_structure.numerics.boundl[57]
+                dr_tf_wp_min += 2.0 * data_structure.numerics.boundl[57]
             else:
-                dr_tf_wp_min = (
-                    dr_tf_wp_min + 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
-                )
+                dr_tf_wp_min += 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
 
         # Minimal conductor layer thickness
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-            or data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
+        elif data_structure.tfcoil_variables.i_tf_sup in {
+            TFConductorModel.WATER_COOLED_COPPER,
+            TFConductorModel.HELIUM_COOLED_ALUMINIUM,
+        }:
             dr_tf_wp_min = (
                 2.0
                 * (
@@ -1173,10 +1158,7 @@ def check_process(inputs):  # noqa: ARG001
 
     # If there is no NBI, then hot beam density should be zero
     if data_structure.current_drive_variables.i_hcd_calculations == 1:
-        if (
-            data_structure.current_drive_variables.i_hcd_primary != 5
-            and data_structure.current_drive_variables.i_hcd_primary != 8
-        ):
+        if data_structure.current_drive_variables.i_hcd_primary not in {5, 8}:
             data_structure.physics_variables.f_nd_beam_electron = 0.0
     else:
         data_structure.physics_variables.f_nd_beam_electron = 0.0

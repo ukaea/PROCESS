@@ -165,7 +165,7 @@ class Structure(Model):
         if i_tf_sup == 1:
             coldmass = coldmass + tfmass + aintmass + dewmass
         if i_pf_conductor != 1:
-            coldmass = coldmass + pfmass
+            coldmass += pfmass
 
         #  Coil gravity support mass
         #  Set density (kg/m3) and allowable stress (Pa)

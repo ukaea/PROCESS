@@ -1054,7 +1054,7 @@ class BlanketLibrary(Model):
         N_FW_PIPE_180_DEG_BENDS = 0
 
         # N.B. This is for BZ only, does not include MF/BSS.
-        if fwbs_variables.i_blkt_dual_coolant in (1, 2):
+        if fwbs_variables.i_blkt_dual_coolant in {1, 2}:
             N_BLKT_PIPE_90_DEG_BENDS = 4
             N_BLKT_PIPE_180_DEG_BENDS = 1
             no90bz_liq = 2

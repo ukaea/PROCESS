@@ -35,7 +35,7 @@ class CoolingTowersParam:
 
 @pytest.mark.parametrize(
     "coolingtowersparam",
-    (
+    [
         CoolingTowersParam(
             airtemp=15,
             waterdens=998.01999999999998,
@@ -72,7 +72,7 @@ class CoolingTowersParam:
             expected_volperenergy=0.000351477382905348,
             expected_waterusetower=69602.479996309834,
         ),
-    ),
+    ],
 )
 def test_cooling_towers(coolingtowersparam, monkeypatch, water_use):
     for field in [
@@ -136,7 +136,7 @@ class CoolingWaterBodyParam:
 
 @pytest.mark.parametrize(
     "coolingwaterbodyparam",
-    (
+    [
         CoolingWaterBodyParam(
             watertemp=5,
             windspeed=4,
@@ -177,7 +177,7 @@ class CoolingWaterBodyParam:
             expected_wateruserecirc=23353.12285355,
             expected_wateruseonethru=2288606.0396483,
         ),
-    ),
+    ],
 )
 def test_cooling_water_body(coolingwaterbodyparam, monkeypatch, water_use):
     for field in [

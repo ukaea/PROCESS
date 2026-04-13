@@ -4,6 +4,7 @@ Defines fixtures that will be shared across all test modules.
 """
 
 import os
+import pathlib
 import traceback
 import warnings
 
@@ -174,7 +175,7 @@ def return_to_root():
     This fixture ensures that, at the end of each test, the cwd is reset to what it
     was at the beginning of the test.
     """
-    cwd = os.getcwd()
+    cwd = pathlib.Path.cwd()
     yield
     os.chdir(cwd)
 

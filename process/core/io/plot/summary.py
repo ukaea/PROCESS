@@ -269,9 +269,9 @@ def cumulative_radial_build(section, mfile: MFile, scan: int):
     complete = False
     cumulative_build = 0
     for item in RADIAL_BUILD:
-        if item == "rminori" or item == "rminoro":
+        if item in {"rminori", "rminoro"}:
             cumulative_build += mfile.get("rminor", scan=scan)
-        elif item == "vvblgapi" or item == "vvblgapo":
+        elif item in {"vvblgapi", "vvblgapo"}:
             cumulative_build += mfile.get("dr_shld_blkt_gap", scan=scan)
         elif "dr_vv_inboard" in item:
             cumulative_build += mfile.get("dr_vv_inboard", scan=scan)
@@ -311,9 +311,9 @@ def cumulative_radial_build2(section, mfile: MFile, scan: int):
     cumulative_build = 0
     build = 0
     for item in RADIAL_BUILD:
-        if item == "rminori" or item == "rminoro":
+        if item in {"rminori", "rminoro"}:
             build = mfile.get("rminor", scan=scan)
-        elif item == "vvblgapi" or item == "vvblgapo":
+        elif item in {"vvblgapi", "vvblgapo"}:
             build = mfile.get("dr_shld_blkt_gap", scan=scan)
         elif "dr_vv_inboard" in item:
             build = mfile.get("dr_vv_inboard", scan=scan)
@@ -3495,8 +3495,8 @@ def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1,
         ("Divertor", "black"),
     ]
 
-    if (mfile.get("i_hcd_primary", scan=scan) in [5, 8]) or (
-        mfile.get("i_hcd_secondary", scan=scan) in [5, 8]
+    if (mfile.get("i_hcd_primary", scan=scan) in {5, 8}) or (
+        mfile.get("i_hcd_secondary", scan=scan) in {5, 8}
     ):
         labels.extend((
             ("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]),
@@ -3641,7 +3641,7 @@ def toroidal_cross_section(
         )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
-    if (i_hcd_primary == 5) or (i_hcd_primary == 8):
+    if i_hcd_primary in {5, 8}:
         # Neutral beam geometry
         a = w
         b = dr_tf_outboard
@@ -4544,7 +4544,7 @@ def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
             pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
 
         for l in range(imp_data.shape[0]):
-            prad[k] = prad[k] + pimpden[l][k] * 1.0e-6
+            prad[k] += pimpden[l][k] * 1.0e-6
 
     prof.plot(rho, prad, label="Total", linestyle="dotted")
     prof.plot(rho, pimpden[0] * 1.0e-6, label="H")
@@ -4681,7 +4681,7 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
             )
 
         for impurity in range(imp_data.shape[0]):
-            prad[rho] = prad[rho] + pimpden[impurity][rho] * 1.0e-6
+            prad[rho] += pimpden[impurity][rho] * 1.0e-6
 
     p_rad_grid, r_grid, z_grid = interp1d_profile(prad, mfile, scan)
 
@@ -7869,7 +7869,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
             ha="left",
             va="center",
         )
-    data2 = data2 + data
+    data2 += data
 
     plot_info(axis, data2, mfile, scan)
 
@@ -8243,22 +8243,16 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     lhcd = False
     iccd = False
 
-    if (i_hcd_primary == 5) or (i_hcd_primary == 8):
+    if i_hcd_primary in {5, 8}:
         nbi = True
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
-    if (
-        (i_hcd_primary == 3)
-        or (i_hcd_primary == 7)
-        or (i_hcd_primary == 10)
-        or (i_hcd_primary == 11)
-        or (i_hcd_primary == 13)
-    ):
+    if i_hcd_primary in {3, 7, 10, 11, 13}:
         ecrh = True
         axis.text(-0.05, 1, "Electron Cyclotron Current Drive:", ha="left", va="center")
     if i_hcd_primary == 12:
         ebw = True
         axis.text(-0.05, 1, "Electron Bernstein Wave Drive:", ha="left", va="center")
-    if i_hcd_primary in [1, 4, 6]:
+    if i_hcd_primary in {1, 4, 6}:
         lhcd = True
         axis.text(
             -0.05,
@@ -8275,19 +8269,13 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
         secondary_heating = ""
         i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan)
 
-        if (i_hcd_secondary == 5) or (i_hcd_secondary == 8):
+        if i_hcd_secondary in {5, 8}:
             secondary_heating = "NBI"
-        if (
-            (i_hcd_secondary == 3)
-            or (i_hcd_secondary == 7)
-            or (i_hcd_secondary == 10)
-            or (i_hcd_secondary == 11)
-            or (i_hcd_secondary == 13)
-        ):
+        if i_hcd_secondary in {3, 7, 10, 11, 13}:
             secondary_heating = "ECH"
         if i_hcd_secondary == 12:
             secondary_heating = "EBW"
-        if i_hcd_secondary in [1, 4, 6]:
+        if i_hcd_secondary in {1, 4, 6}:
             secondary_heating = "LHCD"
         if i_hcd_secondary == 2:
             secondary_heating = "ICCD"
@@ -9111,7 +9099,7 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
     radial_build = np.array(radial_build)
 
     for kk in range(radial_build.shape[0]):
-        radial_build[kk, 14] = 2.0 * radial_build[kk, 14]
+        radial_build[kk, 14] *= 2.0
 
     radial_build = np.transpose(radial_build)
     # ====================
@@ -12419,8 +12407,8 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
 
         # Guard against degenerate range
         if np.isclose(vmin, vmax, atol=1e-12) or np.isnan(vmin) or np.isnan(vmax):
-            vmin = vmin - 0.25
-            vmax = vmax + 0.25
+            vmin -= 0.25
+            vmax += 0.25
 
         # Smooth filled contour levels
         levels = np.linspace(vmin, vmax, 50)
@@ -13956,9 +13944,9 @@ def create_thickness_builds(m_file, scan: int):
     cumulative_radial = {}
     subtotal = 0
     for item in RADIAL_BUILD:
-        if item == "rminori" or item == "rminoro":
+        if item in {"rminori", "rminoro"}:
             build = m_file.get("rminor", scan=scan)
-        elif item == "vvblgapi" or item == "vvblgapo":
+        elif item in {"vvblgapi", "vvblgapo"}:
             build = m_file.get("dr_shld_blkt_gap", scan=scan)
         elif "dr_vv_inboard" in item:
             build = m_file.get("dr_vv_inboard", scan=scan)

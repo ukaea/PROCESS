@@ -137,7 +137,7 @@ class EllipticalVesselVolumes(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "elliptical_vessel_volumes, expected",
+    ("elliptical_vessel_volumes", "expected"),
     [
         (
             EllipticalVesselVolumes(
@@ -199,7 +199,7 @@ class DShapedVesselVolumes(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "dshaped_vessel_volumes, expected",
+    ("dshaped_vessel_volumes", "expected"),
     [
         (
             DShapedVesselVolumes(

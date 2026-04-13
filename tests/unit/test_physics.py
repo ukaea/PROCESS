@@ -129,7 +129,7 @@ class BootstrapFractionIter89Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractioniter89param",
-    (
+    [
         BootstrapFractionIter89Param(
             aspect=3,
             beta=0.030000000000000006,
@@ -141,7 +141,7 @@ class BootstrapFractionIter89Param(NamedTuple):
             vol_plasma=1888.1711539956691,
             expected_bootipf=0.30255906256775245,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     """
@@ -206,7 +206,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionnevinsparam",
-    (
+    [
         BootstrapFractionNevinsParam(
             temp_plasma_electron_on_axis_kev=24.402321098330372,
             nd_plasma_electron_on_axis=8.515060981068918e19,
@@ -224,7 +224,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
             zeff=2.0909945616489103,
             expected_fibs=889258771342.7881,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, physics):
     """
@@ -291,7 +291,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionwilsonparam",
-    (
+    [
         BootstrapFractionWilsonParam(
             alphaj=1.9008029008029004,
             alphap=2.4500000000000002,
@@ -314,7 +314,7 @@ class BootstrapFractionWilsonParam(NamedTuple):
             rminor=2.6666666666666665,
             expected_bfw=0.38559122143951252,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
     """
@@ -401,7 +401,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionsauterparam",
-    (
+    [
         BootstrapFractionSauterParam(
             nd_plasma_ions_total_vol_avg=7.1297522422781575e19,
             rminor=2.6666666666666665,
@@ -431,7 +431,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             alphat=1.45,
             expected_bfs=0.4052168782500341,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, physics):
     """
@@ -595,7 +595,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionsakaiparam",
-    (
+    [
         BootstrapFractionSakaiParam(
             beta_poloidal=1.3184383457774960,
             q95=3.5151046634673557,
@@ -616,7 +616,7 @@ class BootstrapFractionSakaiParam(NamedTuple):
             ind_plasma_internal_norm=0.3,
             expected_bfs=0.81877746774625,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, physics):
     """
@@ -683,7 +683,7 @@ class BootstrapFractionAriesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionariesparam",
-    (
+    [
         BootstrapFractionAriesParam(
             beta_poloidal=1.2708883332338736,
             ind_plasma_internal_norm=1.4279108047138775,
@@ -692,7 +692,7 @@ class BootstrapFractionAriesParam(NamedTuple):
             inverse_aspect=1 / 3,
             expected_bfs=4.3237405809568441e-01,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_aries(bootstrapfractionariesparam, physics):
     """
@@ -729,7 +729,7 @@ class BootstrapFractionAndradeParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionandradeparam",
-    (
+    [
         BootstrapFractionAndradeParam(
             beta_poloidal=1.2708883332338736,
             core_pressure=8.3049163275475602e05,
@@ -737,7 +737,7 @@ class BootstrapFractionAndradeParam(NamedTuple):
             inverse_aspect=1 / 3,
             expected_bfs=4.6240007834873120e-01,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_andrade(bootstrapfractionandradeparam, physics):
     """
@@ -773,7 +773,7 @@ class BootstrapFractionHoangParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionhoangparam",
-    (
+    [
         BootstrapFractionHoangParam(
             beta_poloidal=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
@@ -781,7 +781,7 @@ class BootstrapFractionHoangParam(NamedTuple):
             inverse_aspect=1 / 3,
             expected_bfs=0.27190974213794156,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_hoang(bootstrapfractionhoangparam, physics):
     """
@@ -819,7 +819,7 @@ class BootstrapFractionWongParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionwongparam",
-    (
+    [
         BootstrapFractionWongParam(
             beta_poloidal=1.2708883332338736,
             density_index=1.0000000000000000e00,
@@ -828,7 +828,7 @@ class BootstrapFractionWongParam(NamedTuple):
             elongation=1.8500000000000001e00,
             expected_bfs=7.0706527916080808e-01,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_wong(bootstrapfractionwongparam, physics):
     """
@@ -871,7 +871,7 @@ class BootstrapFractionGiIParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractiongiiparam",
-    (
+    [
         BootstrapFractionGiIParam(
             beta_poloidal=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
@@ -882,7 +882,7 @@ class BootstrapFractionGiIParam(NamedTuple):
             q0=1.0,
             expected_bfs=7.9639753138719782e-01,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):
     """
@@ -923,7 +923,7 @@ class BootstrapFractionGiIIParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractiongiiiparam",
-    (
+    [
         BootstrapFractionGiIIParam(
             beta_poloidal=1.2708883332338736,
             pressure_index=2.4500000000000002e00,
@@ -932,7 +932,7 @@ class BootstrapFractionGiIIParam(NamedTuple):
             effective_charge=2.5368733516769737e00,
             expected_bfs=8.8502865710180589e-01,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):
     """
@@ -968,7 +968,7 @@ class BootstrapFractionSugiyamaLModeParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionsugiyamalparam",
-    (
+    [
         BootstrapFractionSugiyamaLModeParam(
             eps=0.33333333,
             beta_poloidal=1.2708883332338736,
@@ -989,7 +989,7 @@ class BootstrapFractionSugiyamaLModeParam(NamedTuple):
             q0=1.2,
             expected_bfs=0.42806341892858024,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_sugiyama_l_mode(bootstrapfractionsugiyamalparam, physics):
     """
@@ -1032,7 +1032,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bootstrapfractionsugiyamahparam",
-    (
+    [
         BootstrapFractionSugiyamaHModeParam(
             eps=0.33333333,
             beta_poloidal=1.2708883332338736,
@@ -1095,7 +1095,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             temp_plasma_pedestal_kev=6.0,
             expected_bfs=0.2770187998673241,
         ),
-    ),
+    ],
 )
 def test_bootstrap_fraction_sugiyama_h_mode(bootstrapfractionsugiyamahparam, physics):
     """
@@ -1165,7 +1165,7 @@ class PlasmaCurrentParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "plasmacurrentparam",
-    (
+    [
         PlasmaCurrentParam(
             beta_norm_total=0,
             beta=0.030000000000000006,
@@ -1206,7 +1206,7 @@ class PlasmaCurrentParam(NamedTuple):
             expected_normalised_total_beta=2.4784688886891844,
             expected_plasma_current=18398455.678867526,
         ),
-    ),
+    ],
 )
 def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
     """
@@ -1245,7 +1245,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
 @pytest.mark.parametrize(
     ("arguments", "expected"),
-    (
+    [
         (
             {
                 "q95": 2.5,
@@ -1270,7 +1270,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
             },
             31.594671010223617,
         ),
-    ),
+    ],
 )
 def test_calculate_plasma_current_peng(arguments, expected, physics):
     assert physics.current.calculate_plasma_current_peng(**arguments) == pytest.approx(
@@ -1280,7 +1280,7 @@ def test_calculate_plasma_current_peng(arguments, expected, physics):
 
 @pytest.mark.parametrize(
     ("arguments", "expected"),
-    (
+    [
         (
             {
                 "i_plasma_current": 2,
@@ -1323,7 +1323,7 @@ def test_calculate_plasma_current_peng(arguments, expected, physics):
             },
             0.8377580413333333,
         ),
-    ),
+    ],
 )
 def test_calculate_poloidal_field(arguments, expected, physics):
     assert physics.fields.calculate_surface_averaged_poloidal_field(
@@ -1471,7 +1471,7 @@ class PlasmaCompositionParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "plasmacompositionparam",
-    (
+    [
         PlasmaCompositionParam(
             f_beam_tritium=9.9999999999999995e-07,
             f_nd_impurity_electron_array=np.array([
@@ -1714,7 +1714,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_nd_protons=20519498414548412,
             expected_first_call=0,
         ),
-    ),
+    ],
 )
 def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     """
@@ -2040,7 +2040,7 @@ class VoltSecondReqParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "voltsecondreqparam",
-    (
+    [
         VoltSecondReqParam(
             csawth=1,
             eps=0.33333333333333331,
@@ -2083,7 +2083,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_vs_plasma_total_required=314.87659791057968,
             expected_v_plasma_loop_burn=0.0416922571264963,
         ),
-    ),
+    ],
 )
 def test_vscalc(voltsecondreqparam):
     """
@@ -2195,7 +2195,7 @@ class PhyauxParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "phyauxparam",
-    (
+    [
         PhyauxParam(
             tauratio=1,
             burnup_in=0,
@@ -2234,7 +2234,7 @@ class PhyauxParam(NamedTuple):
             expected_rndfuel=3.7467489360461772e20,
             expected_t_alpha_confinement=38.010876984618747,
         ),
-    ),
+    ],
 )
 def test_phyaux(phyauxparam, monkeypatch, physics):
     """
@@ -2326,7 +2326,7 @@ class PohmParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "pohmparam",
-    (
+    [
         PohmParam(
             aspect=3,
             plasma_res_factor=0.70000000000000007,
@@ -2343,7 +2343,7 @@ class PohmParam(NamedTuple):
             expected_f_res_plasma_neo=2.5,
             expected_res_plasma=3.7767895536275952e-09,
         ),
-    ),
+    ],
 )
 def test_pohm(pohmparam, monkeypatch, physics):
     """
@@ -2421,7 +2421,7 @@ class CalculateDensityLimitParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "calculatedensitylimitparam",
-    (
+    [
         CalculateDensityLimitParam(
             i_density_limit=7,
             b_plasma_toroidal_on_axis=5.1847188735686647,
@@ -2447,7 +2447,7 @@ class CalculateDensityLimitParam(NamedTuple):
                 8.7406037163890049e20,
             ),
         ),
-    ),
+    ],
 )
 def test_calculate_density_limit(calculatedensitylimitparam, physics):
     """
@@ -2574,7 +2574,7 @@ class ConfinementTimeParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "confinementtimeparam",
-    (
+    [
         ConfinementTimeParam(
             i_rad_loss=1,
             tauee_in=0,
@@ -3247,7 +3247,7 @@ class ConfinementTimeParam(NamedTuple):
             expected_t_energy_confinement=3.7242785823911264,
             expected_p_plasma_loss_mw=290.18368660937881,
         ),
-    ),
+    ],
 )
 def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     """
@@ -3477,7 +3477,7 @@ def test_calculate_plasma_energy_from_beta():
 
 
 @pytest.mark.parametrize(
-    "b_field, m_particle, z_particle, expected",
+    ("b_field", "m_particle", "z_particle", "expected"),
     [
         (
             1.0,
@@ -3500,13 +3500,13 @@ def test_calculate_larmor_frequency(b_field, m_particle, z_particle, expected):
 
 
 @pytest.mark.parametrize(
-    "nd_particle,m_particle,z_particle, expected",
-    (
+    ("nd_particle", "m_particle", "z_particle", "expected"),
+    [
         (1.0e20, constants.ELECTRON_MASS, 1.0, 89786628157.96086),
         (1.0e19, constants.PROTON_MASS, 1.0, 662608904.2919972),
         (5.0e19, constants.PROTON_MASS, 2.0, 2963277104.987116),
         (0.0, constants.ELECTRON_MASS, 1.0, 0.0),
-    ),
+    ],
 )
 def test_calculate_plasma_frequency(nd_particle, m_particle, z_particle, expected):
     """Parametrised tests for DetailedPhysics.calculate_plasma_frequency()."""
@@ -3518,8 +3518,8 @@ def test_calculate_plasma_frequency(nd_particle, m_particle, z_particle, expecte
 
 
 @pytest.mark.parametrize(
-    "mass,velocity,expected",
-    (
+    ("mass", "velocity", "expected"),
+    [
         (
             constants.ELECTRON_MASS,
             constants.SPEED_LIGHT * 0.1,
@@ -3535,7 +3535,7 @@ def test_calculate_plasma_frequency(nd_particle, m_particle, z_particle, expecte
             1e3,
             6.304902508360882e-11,
         ),
-    ),
+    ],
 )
 def test_calculate_debroglie_wavelength(mass, velocity, expected):
     """Test DetailedPhysics.calculate_debroglie_wavelength with several parameters."""
@@ -3544,13 +3544,13 @@ def test_calculate_debroglie_wavelength(mass, velocity, expected):
 
 
 @pytest.mark.parametrize(
-    "e_kev, mass, expected",
-    (
+    ("e_kev", "mass", "expected"),
+    [
         (0.0, constants.ELECTRON_MASS, 0.0),
         (1.6e-19, constants.ELECTRON_MASS, 592693.0770572403),
         (1.0e-13, constants.ELECTRON_MASS, 267699064.11978555),
         (1.0e-10, constants.PROTON_MASS, 239716127.82335472),
-    ),
+    ],
 )
 def test_calculate_relativistic_particle_speed(e_kev, mass, expected):
     """Parametrised tests for DetailedPhysics.calculate_relativistic_particle_speed"""
@@ -3562,12 +3562,12 @@ def test_calculate_relativistic_particle_speed(e_kev, mass, expected):
 
 
 @pytest.mark.parametrize(
-    "velocity, expected_gamma",
-    (
+    ("velocity", "expected_gamma"),
+    [
         (0.0, 1.0),
         (0.6 * constants.SPEED_LIGHT, 1.25),
         (0.99 * constants.SPEED_LIGHT, 7.088812050083354),
-    ),
+    ],
 )
 def test_calculate_lorentz_factor(velocity, expected_gamma):
     """Test DetailedPhysics.calculate_lorentz_factor for several velocities."""
@@ -3577,12 +3577,12 @@ def test_calculate_lorentz_factor(velocity, expected_gamma):
 
 
 @pytest.mark.parametrize(
-    "temp_keV, nd, expected",
-    (
+    ("temp_keV", "nd", "expected"),
+    [
         (1.0, 1e19, 7.433941993525029e-05),
         (10.0, 1e20, 7.433941993525029e-05),
         (0.1, 1e18, 7.433941993525029e-05),
-    ),
+    ],
 )
 def test_calculate_debye_length_parametrized(temp_keV, nd, expected):
     """Parametrized test for DetailedPhysics.calculate_debye_length."""
@@ -3643,8 +3643,16 @@ def test_detailed_physics_run_computes_profiles():
 
 
 @pytest.mark.parametrize(
-    "rmajor, rminor, plasma_current, b_plasma_toroidal_on_axis, kappa95, triang95, expected",
     (
+        "rmajor",
+        "rminor",
+        "plasma_current",
+        "b_plasma_toroidal_on_axis",
+        "kappa95",
+        "triang95",
+        "expected",
+    ),
+    [
         (
             8.0,
             2.6666666666666665,
@@ -3654,7 +3662,7 @@ def test_detailed_physics_run_computes_profiles():
             0.33333333333333331,
             2.90080289950078,
         ),
-    ),
+    ],
 )
 def test_calculate_cylindrical_safety_factor_parametrized(
     rmajor,
@@ -3673,8 +3681,19 @@ def test_calculate_cylindrical_safety_factor_parametrized(
 
 
 @pytest.mark.parametrize(
-    "i_plasma_current, c_plasma, q95, aspect, eps,b_plasma_toroidal_on_axis, kappa, delta, perim, expected",
     (
+        "i_plasma_current",
+        "c_plasma",
+        "q95",
+        "aspect",
+        "eps",
+        "b_plasma_toroidal_on_axis",
+        "kappa",
+        "delta",
+        "perim",
+        "expected",
+    ),
+    [
         (
             4,
             18398455.678867526,
@@ -3687,7 +3706,7 @@ def test_calculate_cylindrical_safety_factor_parametrized(
             24.081367139525412,
             0.96008591022564971,
         ),
-    ),
+    ],
 )
 def test_calculate_polidal_field(
     i_plasma_current,

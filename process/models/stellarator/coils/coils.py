@@ -234,7 +234,7 @@ def intersect(x1, y1, x2, y2, xin):
 
         #  Adjust x using Newton-Raphson method
 
-        x = x - 2.0e0 * dx * y / (yright - yleft)
+        x -= 2.0e0 * dx * y / (yright - yleft)
 
         if x < xmin:
             logger.error(
