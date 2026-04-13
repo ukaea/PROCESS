@@ -2056,8 +2056,8 @@ class Physics(Model):
         po.ovarrf(
             self.outfile,
             "Line averaged electron temperature (keV)",
-            "(temp_plasma_electron_line_average_kev)",
-            physics_variables.temp_plasma_electron_line_average_kev,
+            "(temp_plasma_electron_line_avg_kev)",
+            physics_variables.temp_plasma_electron_line_avg_kev,
         )
         po.ovarrf(
             self.outfile,
