@@ -493,6 +493,12 @@ class PhysicsData:
     nd_plasma_separatrix_electron: float = 3.0e19
     """electron density at separatrix [m-3] (`i_plasma_pedestal==1)"""
 
+i_nd_plasma_pedestal_separatrix: int = None
+"""switch for pedestal and separatrix density calculation:
+- =0 User input pedestal and separatrix density
+- =1 Calculate pedestal and separatrix density as fraction of Greenwald limit (see `f_nd_plasma_pedestal_greenwald` and `f_nd_plasma_separatrix_greenwald`)
+"""
+
     alpha_crit: float = 0.0
     """critical ballooning parameter value"""
 
