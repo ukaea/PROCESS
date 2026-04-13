@@ -30,12 +30,10 @@ def test_hydraulic_diameter(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(fwbs, "b_bz_liq", 1.0)
 
     # hydraulic_diameter input = i_channel_shape: 1 = circle, 2 = rectangle
-    assert (
-        blanket_library_fixture.pipe_hydraulic_diameter(1) == 2.0
-    )  # 2.0D0*radius_fw_channel
-    assert (
-        blanket_library_fixture.pipe_hydraulic_diameter(2) == 1.0
-    )  # 2*a_bz_liq*b_bz_liq/(a_bz_liq+b_bz_liq)
+    # 2.0D0*radius_fw_channel
+    assert blanket_library_fixture.pipe_hydraulic_diameter(1) == pytest.approx(2.0)
+    # 2*a_bz_liq*b_bz_liq/(a_bz_liq+b_bz_liq)
+    assert blanket_library_fixture.pipe_hydraulic_diameter(2) == pytest.approx(1.0)
 
 
 def test_elbow_coeff(blanket_library_fixture):
@@ -76,9 +74,9 @@ def test_flow_velocity(monkeypatch, blanket_library_fixture):
     assert blanket_library_fixture.flow_velocity(1, 1, 1) == pytest.approx(
         0.318, rel=1e-3
     )
-    assert blanket_library_fixture.flow_velocity(2, 1, 1) == 1.0
-    assert blanket_library_fixture.flow_velocity(1, 0, 1) == 0.0
-    assert blanket_library_fixture.flow_velocity(2, 0, 1) == 0.0
+    assert blanket_library_fixture.flow_velocity(2, 1, 1) == pytest.approx(1.0)
+    assert blanket_library_fixture.flow_velocity(1, 0, 1) == pytest.approx(0.0)
+    assert blanket_library_fixture.flow_velocity(2, 0, 1) == pytest.approx(0.0)
 
 
 def test_liquid_breeder_properties_part_1(monkeypatch, blanket_library_fixture):

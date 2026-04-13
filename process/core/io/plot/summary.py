@@ -8487,7 +8487,7 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
             data.insert(2, (pinjie, "Total auxillary power", "MW"))
 
     coe = mfile.get("coe", scan=scan)
-    if coe == 0.0:
+    if coe == 0.0:  # noqa: RUF069
         data.append(("", "", ""))
         data.append(("#Costs", "", ""))
         data.append(("", "Cost output not selected", ""))
@@ -9321,7 +9321,7 @@ def plot_lower_vertical_build(
     ]
 
     # Remove build parts equal to zero
-    mask = ~(lower_vertical_build[:, 0] == 0.0)
+    mask = ~(lower_vertical_build[:, 0] == 0.0)  # noqa: RUF069
     filtered_vertical_build = lower_vertical_build[mask]
     filtered_labels = [lbl for i, lbl in enumerate(lower_vertical_labels) if mask[i]]
     filtered_colors = [col for i, col in enumerate(lower_vertical_color) if mask[i]]
@@ -9469,7 +9469,7 @@ def plot_upper_vertical_build(
     ])
 
     # Remove build parts equal to zero
-    mask = ~(upper_vertical_build == 0.0)
+    mask = ~(upper_vertical_build == 0.0)  # noqa: RUF069
     filtered_build = upper_vertical_build[mask]
     filtered_labels = [lbl for i, lbl in enumerate(upper_vertical_labels) if mask[i]]
     filtered_colors = [col for i, col in enumerate(upper_vertical_colours) if mask[i]]

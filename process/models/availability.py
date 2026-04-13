@@ -120,7 +120,7 @@ class Availability(Model):
                 if cv.ibkt_life == 0:
                     fwbsv.life_blkt_fpy = (
                         cv.life_plant
-                        if pv.pflux_fw_neutron_mw == 0.0
+                        if pv.pflux_fw_neutron_mw == 0.0  # noqa: RUF069
                         else min(
                             (cv.abktflnc / pv.pflux_fw_neutron_mw),
                             cv.life_plant,

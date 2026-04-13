@@ -338,7 +338,7 @@ class PFCoil(Model):
         # coils.
 
         # Flux swing coils:
-        if pfcoil_variables.j_cs_pulse_start != 0.0e0:
+        if pfcoil_variables.j_cs_pulse_start != 0.0e0:  # noqa: RUF069
             # Find currents for plasma initiation to null field across plasma
             npts = 32  # Number of test points across plasma midplane
             if npts > pfcoil_variables.NPTSMX:
@@ -4351,7 +4351,7 @@ def calculate_b_field_at_point(
         dr = r_test_point - r_current_loop[i]
         sd = np.sqrt(d)
 
-        if dr == 0.0:
+        if dr == 0.0:  # noqa: RUF069
             # Kludge to avoid NaNs
             dr = 1e-6
 

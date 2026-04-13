@@ -99,7 +99,7 @@ def get_variable_range(itervars, factor, wdir=".", indat="IN.DAT"):
                 exit()
 
             # to allow the factor to have some influence
-            if value == 0.0:
+            if value == 0.0:  # noqa: RUF069
                 value = 1.0
 
             # assure value is within bounds!

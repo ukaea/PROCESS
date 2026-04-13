@@ -179,4 +179,4 @@ def test_input_on_new_data_structure(tmp_path, data_structure_obj):
     )
 
     init.init_process(data_structure_obj)
-    assert data_structure_obj.water_use.windspeed == 1.22
+    assert data_structure_obj.water_use.windspeed == pytest.approx(1.22)
