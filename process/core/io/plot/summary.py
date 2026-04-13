@@ -4015,7 +4015,8 @@ def plot_n_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
 
     # Add text box with density profile parameters
     textstr_density = "\n".join((
-        rf"$\langle n_{{\text{{e}}}} \rangle$: {nd_plasma_electrons_vol_avg:.3e} m$^{{-3}}$",
+        rf"$\langle n_{{\text{{e}}}} \rangle$: {nd_plasma_electrons_vol_avg:.3e} m$^{{-3}}$"
+        rf"$\hspace{{4}} \overline{{n_{{e}}}}$: {mfile.get('nd_plasma_electron_line', scan=scan):.3e} m$^{{-3}}$",
         (
             rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
             rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}"
