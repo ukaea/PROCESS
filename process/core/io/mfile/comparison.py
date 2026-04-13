@@ -291,7 +291,6 @@ def compare_mfiles(
     arg :
         List of arguments
     """
-
     print_counter = 0
     n = 2
     mfile_list = []

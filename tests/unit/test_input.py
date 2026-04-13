@@ -74,14 +74,14 @@ def test_parse_real(epsvmc, expected, tmp_path, data_structure_obj):
 
 
 @pytest.mark.parametrize(
-    ["value"],
+    "value",
     [
-        [0.546816593988753],
-        [0.13134204235647895],
-        [0.75],
-        [0.7],
-        [0.3],
-        [0.1293140904093427],
+        0.546816593988753,
+        0.13134204235647895,
+        0.75,
+        0.7,
+        0.3,
+        0.1293140904093427,
     ],
 )
 def test_exact_parsing(value, tmp_path, data_structure_obj):

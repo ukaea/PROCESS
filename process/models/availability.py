@@ -67,7 +67,6 @@ class Availability(Model):
         output :
             indicate whether output should be written to the output file, or not (default = False)
         """
-
         if cv.i_plant_availability == 3:
             if pv.itart != 1:
                 raise ProcessValueError(
@@ -92,7 +91,6 @@ class Availability(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-
         # Full power lifetime (in years)
         if ifev.ife != 1:
             # Calculate DPA per FPY - based on neutronics-derived fusion power relation to DEMO blanket lifetime provided by Matti Coleman
@@ -130,17 +128,16 @@ class Availability(Model):
                     fwbsv.life_blkt_fpy = min(
                         cv.life_dpa / dpa_fpy, cv.life_plant
                     )  # DEMO
+            elif cv.ibkt_life == 0:
+                fwbsv.life_blkt_fpy = min(
+                    fwbsv.life_fw_fpy,
+                    cv.abktflnc / pv.pflux_fw_neutron_mw,
+                    cv.life_plant,
+                )
             else:
-                if cv.ibkt_life == 0:
-                    fwbsv.life_blkt_fpy = min(
-                        fwbsv.life_fw_fpy,
-                        cv.abktflnc / pv.pflux_fw_neutron_mw,
-                        cv.life_plant,
-                    )
-                else:
-                    fwbsv.life_blkt_fpy = min(
-                        fwbsv.life_fw_fpy, cv.life_dpa / dpa_fpy, cv.life_plant
-                    )  # DEMO
+                fwbsv.life_blkt_fpy = min(
+                    fwbsv.life_fw_fpy, cv.life_dpa / dpa_fpy, cv.life_plant
+                )  # DEMO
 
             # TODO Issue #834
             # Add a test for pflux_div_heat_load_mw=0
@@ -349,7 +346,6 @@ class Availability(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-
         # Plant Availability
 
         # Planned unavailability
@@ -513,7 +509,6 @@ class Availability(Model):
         float
             planned unavailability of plant
         """
-
         # Full power lifetimes (in years) !
 
         # Caculate DPA per FPY
@@ -654,7 +649,6 @@ class Availability(Model):
         float
             unplanned unavailability of magnets
         """
-
         # Magnet temperature margin limit (K)
         # Use the lower of the two values.  Issue #526
         tmargmin = min(
@@ -734,7 +728,6 @@ class Availability(Model):
         float
             unplanned unavailability of the divertor
         """
-
         # Calculate cycle limit in terms of days
         # Number of cycles between planned blanket replacements, N
         n = cv.life_div_fpy * YEAR_SECONDS / tv.t_plant_pulse_total
@@ -833,7 +826,6 @@ class Availability(Model):
         float
             unplanned unavailability of first wall and blanket
         """
-
         # Calculate cycle limit in terms of days
 
         # Number of cycles between planned blanket replacements, N
@@ -930,7 +922,6 @@ class Availability(Model):
         float
             unplanned unavailability of balance of plant
         """
-
         # Balance of plant failure rate (failures per hour)
         # ENEA study WP13-DTM02-T01
         bop_fail_rate = 9.39e-5
@@ -989,7 +980,6 @@ class Availability(Model):
         float
             unplanned unavailability of hcd
         """
-
         # Currently just a fixed value until more information available or Q.
         # Tran's response provides useful data.
 
@@ -1015,7 +1005,6 @@ class Availability(Model):
         float
             unplanned unavailability of vacuum system
         """
-
         # Number of shutdowns
         n_shutdown: int = round(
             (cv.life_plant - cv.t_plant_operational_total_yrs)
@@ -1101,8 +1090,8 @@ class Availability(Model):
         This routine calculates the availability of a plant by considering various factors such as
         the lifetime of different components, planned and unplanned unavailability, and maintenance cycles.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         output : bool
             Indicates whether the output should be written to the output file or not.
 
@@ -1118,13 +1107,13 @@ class Availability(Model):
 
         If `output` is True, the method writes detailed availability information to the output file.
 
-        References:
-        -----------
+        References
+        ----------
         - T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
           https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
 
-        Notes:
-        ------
+        Notes
+        -----
         - The method assumes certain constants and reference points for calculations.
         - The method modifies the lifetimes of components to account for the calculated availability.
 
@@ -1133,7 +1122,6 @@ class Availability(Model):
         output: bool
            indicate whether output should be written to the output file, or no
         """
-
         ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
         f_scale = pv.p_fusion_total_mw / ref_powfmw
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY

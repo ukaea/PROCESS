@@ -321,7 +321,6 @@ def check_iteration_variable(iteration_variable_value, name: str = ""):
 
 def load_iteration_variables():
     """Loads the physics and engineering variables into the optimisation variable array."""
-
     for i in range(data_structure.numerics.nvar):
         variable_index = data_structure.numerics.ixc[i]
         iteration_variable = ITERATION_VARIABLES[variable_index]
@@ -394,7 +393,6 @@ def set_scaled_iteration_variable(xc, nn: int):
         number of iteration variables
 
     """
-
     for i in range(nn):
         # there is less error handling here than in load_iteration_variables
         # because many errors will be caught in load_iteration_variables which is
@@ -430,7 +428,6 @@ def set_scaled_iteration_variable(xc, nn: int):
 
 def load_scaled_bounds():
     """Sets the scaled bounds of the iteration variables."""
-
     for i in range(data_structure.numerics.nvar):
         variable_index = data_structure.numerics.ixc[i] - 1
         data_structure.numerics.itv_scaled_lower_bounds[i] = (

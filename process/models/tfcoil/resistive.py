@@ -454,16 +454,17 @@ class ResistiveTFCoil(TFCoil):
         - Clamped joints in superconductors might have resistive power losses on the joints.
         - Sliding joints might have a region of high resistivity.
 
-        Notes:
+        Notes
+        -----
         - The copper resistivity is set to be that for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
         - The coefficient of resistivity is set to be that of pure copper
 
-        References:
+        References
+        ----------
             - https://www.spotweldingconsultants.com/GlidCop_AL_15.pdf
 
             - https://cirris.com/temperature-coefficient-of-copper/
         """
-
         # Resistivity of the Glidcop copper centerpost
         if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             tfcoil_variables.rho_cp = (
@@ -655,7 +656,6 @@ class ResistiveTFCoil(TFCoil):
 
     def resistive_tf_coil_areas_and_masses(self):
         """Calculate the areas and masses of the resistive TF coil"""
-
         vol_case = 0.0e0  # Total TF case volume [m3]
         vol_ins = 0.0e0  # Total leg turn insulation volume [m3]
         vol_gr_ins = 0.0e0  # Total leg turn insulation volume [m3]

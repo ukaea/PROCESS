@@ -238,14 +238,14 @@ def intersect(x1, y1, x2, y2, xin):
 
         if x < xmin:
             logger.error(
-                f"X has dropped below Xmin; X={x} has been set equal to Xmin={xmin}"
+                "X has dropped below Xmin; X=%s has been set equal to Xmin=%s", x, xmin
             )
             x = xmin
             break
 
         if x > xmax:
             logger.error(
-                f"X has risen above Xmax; X={x} has been set equal to Xmax={xmin}"
+                "X has risen above Xmax; X=%s has been set equal to Xmax=%s", x, xmin
             )
             x = xmax
             break
@@ -276,7 +276,6 @@ def bmax_from_awp(wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_min
 
 
     """
-
     return (
         2e-1  # this is mu x 1e6, to use current in MA
         * current

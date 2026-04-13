@@ -22,7 +22,7 @@ def reinit_fix():
     init_all_module_vars()
 
 
-@pytest.fixture()
+@pytest.fixture
 def input_file():
     """Input file for testing.
 

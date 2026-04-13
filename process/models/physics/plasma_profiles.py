@@ -45,10 +45,10 @@ class PlasmaProfile:
         profile averages and peak values, given the main
         parameters describing these profiles.
 
-        References:
+        References
+        ----------
         T&M/PKNIGHT/LOGBOOK24, pp.4-7
         """
-
         #  Volume-averaged ion temperature
         #  (input value used directly if f_temp_plasma_ion_electron=0.0)
 
@@ -223,7 +223,6 @@ class PlasmaProfile:
         This method calculates the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
         It sets the value of the physics variable `pres_plasma_thermal_on_axis`.
         """
-
         #  Central pressure (Pa), from ideal gas law : p = nkT
 
         physics_variables.pres_plasma_thermal_on_axis = (

@@ -59,7 +59,6 @@ def plasma_geometry(
     PlasmaGeometry
         A dataclass containing the plasma elongation and the radial and vertical coordinates of the plasma.
     """
-
     # Original PROCESS double arc plasma shape
     if i_plasma_shape == PlasmaShapeModelType.PROCESS_ORIGINAL:
         x1 = (2.0 * rmajor * (1.0 + triang) - rminor * (triang**2 + kappa**2 - 1.0)) / (

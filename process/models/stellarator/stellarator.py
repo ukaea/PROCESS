@@ -134,7 +134,6 @@ class Stellarator(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-
         if output:
             self.costs.run()
             self.costs.output()
@@ -219,7 +218,6 @@ class Stellarator(Model):
         )
 
         """
-
         load_stellarator_config(
             stellarator_variables.istell,
             Path(f"{global_variables.output_prefix}stella_conf.json"),
@@ -422,7 +420,6 @@ class Stellarator(Model):
 
     def blanket_neutronics(self):
         """Routine to calculate neutronic properties for a stellarator"""
-
         # heating of the blanket
         if fwbs_variables.breedmat == 1:
             fwbs_variables.breeder = "Orthosilicate"
@@ -1763,7 +1760,6 @@ class Stellarator(Model):
         p_tf_nuclear_heat_mw :
              TF coil nuclear heating (MW)
         """
-
         ishmat = 0  # stainless steel coil casing is assumed
 
         if (
@@ -2136,24 +2132,23 @@ class Stellarator(Model):
                 * physics_variables.p_neutron_total_mw
                 / physics_variables.a_plasma_surface
             )
+        elif heat_transport_variables.ipowerflow == 0:
+            physics_variables.pflux_fw_neutron_mw = (
+                (1.0e0 - fwbs_variables.fhole)
+                * physics_variables.p_neutron_total_mw
+                / first_wall_variables.a_fw_total
+            )
         else:
-            if heat_transport_variables.ipowerflow == 0:
-                physics_variables.pflux_fw_neutron_mw = (
-                    (1.0e0 - fwbs_variables.fhole)
-                    * physics_variables.p_neutron_total_mw
-                    / first_wall_variables.a_fw_total
+            physics_variables.pflux_fw_neutron_mw = (
+                (
+                    1.0e0
+                    - fwbs_variables.fhole
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                    - fwbs_variables.f_ster_div_single
                 )
-            else:
-                physics_variables.pflux_fw_neutron_mw = (
-                    (
-                        1.0e0
-                        - fwbs_variables.fhole
-                        - fwbs_variables.f_a_fw_outboard_hcd
-                        - fwbs_variables.f_ster_div_single
-                    )
-                    * physics_variables.p_neutron_total_mw
-                    / first_wall_variables.a_fw_total
-                )
+                * physics_variables.p_neutron_total_mw
+                / first_wall_variables.a_fw_total
+            )
 
         #  Calculate ion/electron equilibration power
 
@@ -2261,24 +2256,23 @@ class Stellarator(Model):
                 * physics_variables.p_plasma_rad_mw
                 / physics_variables.a_plasma_surface
             )
+        elif heat_transport_variables.ipowerflow == 0:
+            physics_variables.pflux_fw_rad_mw = (
+                (1.0e0 - fwbs_variables.fhole)
+                * physics_variables.p_plasma_rad_mw
+                / first_wall_variables.a_fw_total
+            )
         else:
-            if heat_transport_variables.ipowerflow == 0:
-                physics_variables.pflux_fw_rad_mw = (
-                    (1.0e0 - fwbs_variables.fhole)
-                    * physics_variables.p_plasma_rad_mw
-                    / first_wall_variables.a_fw_total
+            physics_variables.pflux_fw_rad_mw = (
+                (
+                    1.0e0
+                    - fwbs_variables.fhole
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                    - fwbs_variables.f_ster_div_single
                 )
-            else:
-                physics_variables.pflux_fw_rad_mw = (
-                    (
-                        1.0e0
-                        - fwbs_variables.fhole
-                        - fwbs_variables.f_a_fw_outboard_hcd
-                        - fwbs_variables.f_ster_div_single
-                    )
-                    * physics_variables.p_plasma_rad_mw
-                    / first_wall_variables.a_fw_total
-                )
+                * physics_variables.p_plasma_rad_mw
+                / first_wall_variables.a_fw_total
+            )
 
         constraint_variables.pflux_fw_rad_max_mw = (
             physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max

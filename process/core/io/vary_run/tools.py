@@ -36,7 +36,7 @@ def get_neqns_itervars(wdir="."):
 
 
 def update_ixc_bounds(wdir=".", indat="IN.DAT"):
-    """updates the lower and upper bounds in DICT_IXC_BOUNDS
+    """Updates the lower and upper bounds in DICT_IXC_BOUNDS
     from IN.DAT
     """
     # Load dicts from dicts JSON file
@@ -242,10 +242,9 @@ def process_warnings(wdir=".", mfile="MFILE.DAT"):
 
 
 def no_unfeasible_mfile(wdir=".", mfile="MFILE.DAT"):
-    """returns the number of unfeasible points
+    """Returns the number of unfeasible points
     in a scan in MFILE.DAT
     """
-
     m_file = MFile(filename=Path(wdir, mfile))
 
     # no scans
@@ -279,7 +278,6 @@ def vary_iteration_variables(itervars, lbs, ubs, config):
     generator :
         Generator numpy generator to create random numbers
     """
-
     in_dat = InDat()
 
     new_values = []
@@ -295,7 +293,7 @@ def vary_iteration_variables(itervars, lbs, ubs, config):
 
 
 def get_solution_from_mfile(neqns, nvars, wdir=".", mfile="MFILE.DAT"):
-    """returns
+    """Returns
     ifail - error_value of VMCON/PROCESS
     the objective functions
     the square root of the sum of the squares of the constraints
@@ -325,8 +323,9 @@ def get_solution_from_mfile(neqns, nvars, wdir=".", mfile="MFILE.DAT"):
 
 
 def get_from_indat_or_default(in_dat, varname):
-    """quick function to get variable value from IN.DAT
-    or PROCESS default value"""
+    """Quick function to get variable value from IN.DAT
+    or PROCESS default value
+    """
     dicts = get_dicts()
     if varname in in_dat.data:
         return in_dat.data[varname].get_value
@@ -337,9 +336,9 @@ def get_from_indat_or_default(in_dat, varname):
 
 
 def set_variable_in_indat(in_dat, varname, value):
-    """quick function that sets a variable value in
-    IN.DAT and creates it if necessary"""
-
+    """Quick function that sets a variable value in
+    IN.DAT and creates it if necessary
+    """
     varname = varname.lower()
     if "bound" in varname:
         number = (varname.split("("))[1].split(")")[0]

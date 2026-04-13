@@ -988,7 +988,6 @@ class Power(Model):
         the miscellaneous allowance and total heat removal at cryogenic temperatures.
         The results are stored in the corresponding instance variables.
         """
-
         #  Cryogenic power
         # ---
         # Initialisation (unchanged if all coil resisitive)
@@ -1795,7 +1794,6 @@ class Power(Model):
         efficiencies of the cryogenic systems, as well as the electric power required for the
         cryogenic plant.
         """
-
         po.oheadr(self.outfile, "Cryogenics")
         po.ovarre(
             self.outfile,
@@ -2257,7 +2255,6 @@ class Power(Model):
         rptfc :
 
         """
-
         ncpbkr = 1.0e0  # number of TF coils per circuit breaker
         djmka = 0.125e0  # design current density of TF bus, kA/cm2
         rtfps = 1.05e0  # rating factor for TF coil power supplies
@@ -2605,7 +2602,6 @@ class Power(Model):
         - Assumes step-function changes in power at each phase transition.
         - Negative values indicate power consumption (loads).
         """
-
         t_steps = np.cumsum([
             0,
             t_precharge,

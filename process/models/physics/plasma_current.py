@@ -90,17 +90,21 @@ class PlasmaCurrent:
             triang (float): Plasma triangularity.
             triang95 (float): Plasma triangularity at 95% surface.
 
-        Returns:
+        Returns
+        -------
             Tuple[float, float, float,]: Tuple containing b_plasma_poloidal_average, qstar, plasma_current,
 
-        Raises:
+        Raises
+        ------
             ValueError: If invalid value for i_plasma_current is provided.
 
-        Notes:
+        Notes
+        -----
             This routine calculates the plasma current based on the edge safety factor q95.
             It will also make the current profile parameters consistent with the q-profile if required.
 
-        References:
+        References
+        ----------
             - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
             - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
               'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
@@ -257,6 +261,7 @@ class PlasmaCurrent:
             plasma triangularity
         triang95 :
             plasma triangularity at 95% surface
+
         Returns
         -------
         dict[PlasmaCurrentModel, float]
@@ -420,7 +425,6 @@ class PlasmaCurrent:
             plasma current (A)
 
         """
-
         return (
             (2.0 * np.pi / constants.RMU0)
             * rminor**2
@@ -577,7 +581,6 @@ class PlasmaCurrent:
 
         :references: None
         """
-
         return (
             (1.22 - 0.68 * eps)
             / ((1.0 - eps * eps) ** 2)
@@ -597,7 +600,8 @@ class PlasmaCurrent:
         """
         Function to calculate plasma current (Peng scaling from the STAR code)
 
-        Parameters:
+        Parameters
+        ----------
         - q95: float, 95% flux surface safety factor
         - aspect: float, plasma aspect ratio
         - eps: float, inverse aspect ratio
@@ -606,7 +610,8 @@ class PlasmaCurrent:
         - kappa: float, plasma elongation
         - delta: float, plasma triangularity
 
-        Returns:
+        Returns
+        -------
         - float, plasma current in MA
 
         This function calculates the plasma current in MA,
@@ -614,14 +619,14 @@ class PlasmaCurrent:
         It is primarily used for Tight Aspect Ratio Tokamaks and is
         selected via i_plasma_current=2.
 
-        References:
+        References
+        ----------
         - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
         unpublished internal Oak Ridge document
         - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
         'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
         1729-1738. https://doi.org/10.13182/FST92-A29971
         """
-
         # Transform q95 to qbar
         qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
@@ -648,18 +653,21 @@ class PlasmaCurrent:
         """
         Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
 
-        Parameters:
+        Parameters
+        ----------
         - eps: float, plasma inverse aspect ratio
         - kappa95: float, plasma elongation 95%
         - triang95: float, plasma triangularity 95%
 
-        Returns:
+        Returns
+        -------
         - float, the fq plasma current coefficient
 
         This function calculates the fq coefficient used in the IPDG89 plasma current scaling,
         based on the given plasma parameters.
 
-        References:
+        References
+        ----------
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
@@ -677,17 +685,20 @@ class PlasmaCurrent:
         """
         Calculate the fq coefficient used in the two Todd plasma current scalings.
 
-        Parameters:
+        Parameters
+        ----------
         - eps: float, plasma inverse aspect ratio
         - kappa95: float, plasma elongation 95%
         - triang95: float, plasma triangularity 95%
 
-        Returns:
+        Returns
+        -------
         - float, the fq plasma current coefficient
 
         This function calculates the fq coefficient based on the given plasma parameters for the two Todd scalings.
 
-        References:
+        References
+        ----------
         - D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
         - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
@@ -722,7 +733,8 @@ class PlasmaCurrent:
         """
         Routine to calculate the f_q coefficient for the Connor-Hastie model used for scaling the plasma current.
 
-        Parameters:
+        Parameters
+        ----------
         - alphaj: float, the current profile index
         - alphap: float, the pressure profile index
         - b_plasma_toroidal_on_axis: float, the toroidal field on axis (T)
@@ -732,7 +744,8 @@ class PlasmaCurrent:
         - pres_plasma_on_axis: float, the central plasma pressure (Pa)
         - rmu0: float, the vacuum permeability (H/m)
 
-        Returns:
+        Returns
+        -------
         - float, the F coefficient
 
         This routine calculates the f_q coefficient used for scaling the plasma current,
@@ -798,12 +811,14 @@ class PlasmaCurrent:
         """
         Routine to calculate the f_q coefficient for the Sauter model used for scaling the plasma current.
 
-        Parameters:
+        Parameters
+        ----------
         - eps: float, inverse aspect ratio
         - kappa: float, plasma elongation at the separatrix
         - triang: float, plasma triangularity at the separatrix
 
-        Returns:
+        Returns
+        -------
         - float, the fq coefficient
 
         Reference:
@@ -829,17 +844,20 @@ class PlasmaCurrent:
         """
         Calculate the fq coefficient used in the FIESTA plasma current scaling.
 
-        Parameters:
+        Parameters
+        ----------
         - eps: float, plasma inverse aspect ratio
         - kappa: float, plasma elongation at the separatrix
         - triang: float, plasma triangularity at the separatrix
 
-        Returns:
+        Returns
+        -------
         - float, the fq plasma current coefficient
 
         This function calculates the fq coefficient based on the given plasma parameters for the FIESTA scaling.
 
-        References:
+        References
+        ----------
         - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design,
         Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
         """

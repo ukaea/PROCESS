@@ -884,7 +884,7 @@ class BootstrapFractionGiIParam(NamedTuple):
         ),
     ),
 )
-def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):  # noqa: N802
+def test_bootstrap_fraction_gi_I(bootstrapfractiongiiparam, physics):
     """
     Automatically generated Regression Unit Test for bootstrap_fraction_gi.
 
@@ -934,7 +934,7 @@ class BootstrapFractionGiIIParam(NamedTuple):
         ),
     ),
 )
-def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):  # noqa: N802
+def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):
     """
     Automatically generated Regression Unit Test for bootstrap_fraction_gi.
 

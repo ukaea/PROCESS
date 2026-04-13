@@ -174,7 +174,6 @@ class Shield(Model):
         dz_blkt_upper:
 
         """
-
         z_bottom = z_plasma_xpoint_lower + dz_xpoint_divertor + dz_divertor
 
         # Calculate component internal upper half-height (m)
@@ -238,7 +237,6 @@ class Shield(Model):
         dz_shld_upper:
 
         """
-
         r_1 = r_shld_inboard_inner + dr_shld_inboard
         r_2 = (
             dr_fw_inboard
@@ -303,7 +301,6 @@ class Shield(Model):
         dz_shld_half:
 
         """
-
         r_1 = r_shld_inboard_inner + dr_shld_inboard
         r_2 = (
             dr_fw_inboard
@@ -358,7 +355,6 @@ class Shield(Model):
         dz_shld_upper:
 
         """
-
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
         r_1 = rmajor - rminor * triang
@@ -417,7 +413,6 @@ class Shield(Model):
         dr_shld_outboard:
 
         """
-
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
         r_1 = rmajor - rminor * triang
@@ -438,7 +433,6 @@ class Shield(Model):
 
     def output_shld_areas_and_volumes(self):
         """Output shield areas and volumes to log."""
-
         po.oheadr(self.outfile, "Shield Areas and Volumes")
 
         po.ovarrf(

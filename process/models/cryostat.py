@@ -21,7 +21,6 @@ class Cryostat(Model):
 
         This method runs the cryostat calculations, including the calculation of the cryostat geometry.
         """
-
         # Calculate cryostat geometry
         self.external_cryo_geometry()
 
@@ -34,7 +33,6 @@ class Cryostat(Model):
         of the cryostat, the vertical clearance between the TF coil and the cryostat, the cryostat volume,
         the vacuum vessel mass, and the sum of internal vacuum vessel and cryostat masses.
         """
-
         # Cryostat radius [m]
         # Take radius of furthest PF coil and add clearance
         fwbs_variables.r_cryostat_inboard = (

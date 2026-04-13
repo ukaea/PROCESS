@@ -110,7 +110,6 @@ class PlasmaConfinementTransition:
             Array of power thresholds
 
         """
-
         dnla20 = 1e-20 * nd_plasma_electron_line
 
         # ========================================================================
@@ -752,6 +751,7 @@ class PlasmaConfinementTransition:
             - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
             "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
             reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
         References
         ----------
             - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
@@ -1263,7 +1263,6 @@ class PlasmaConfinementTransition:
             doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
-
         if aspect <= 2.7:
             aspect_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
         else:
@@ -1326,7 +1325,6 @@ class PlasmaConfinementTransition:
             doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
-
         if aspect <= 2.7:
             aspect_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
         else:
@@ -1389,7 +1387,6 @@ class PlasmaConfinementTransition:
             doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
-
         if aspect <= 2.7:
             aspect_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
         else:

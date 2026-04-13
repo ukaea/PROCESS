@@ -101,7 +101,6 @@ def to_type(string):
     :
         Either a float, int or string depending on input
     """
-
     try:
         if "." in string:
             # try a float conversion
@@ -137,7 +136,6 @@ def grep(file, regexp, flags=re.UNICODE):
     lines:
         List of matching lines
     """
-
     lines = []
 
     try:
@@ -170,7 +168,6 @@ def slice_file(file, re1, re2):
     :
         lines:List of lines from file between re1 and re2 inclusive
     """
-
     with open(file, encoding="utf-8") as fh:
         filetext = fh.readlines()
     start = None
@@ -229,7 +226,6 @@ def dict_ixc2nsweep():
     Example dictionary entry:
         DICT_IXC2NSWEEP['1'] = '1'
     """
-
     name_to_nsweep = {
         sv.value.variable_name: sv.value.variable_num for sv in ScanVariables
     }
@@ -249,7 +245,6 @@ def dict_nsweep2ixc():
     """Returns a dict mapping nsweep_no to ixc_no; the inverse of
     dict_ixc2nsweep
     """
-
     # Use dict_ixc2nsweep from output_dict to produce dict_nsweep2ixc
     ixc2nsweep = output_dict["DICT_IXC2NSWEEP"]
     return {b: a for a, b in ixc2nsweep.items()}
@@ -318,7 +313,6 @@ def dict_ixc_full():
     Example dictionary entry:
         DICT_IXC_FULL['5'] = {'name' : 'beta', 'lb' : 0.001, 'ub' : 1.0}
     """
-
     return {
         str(k): {"name": v.name, "lb": v.lower_bound, "ub": v.upper_bound}
         for k, v in ITERATION_VARIABLES.items()
@@ -445,22 +439,21 @@ def get_dicts():
                                 "this variable. PROCESS recognises the following type annotations: "
                                 "list[float], list[int], list[str], list[bool]."
                             )
+                elif node.annotation.id == "float":
+                    var_type = "real_variable"
+                elif node.annotation.id == "int":
+                    var_type = "int_variable"
+                elif node.annotation.id == "str":
+                    var_type = "str_variable"
+                elif node.annotation.id == "bool":
+                    var_type = "bool_variable"
                 else:
-                    if node.annotation.id == "float":
-                        var_type = "real_variable"
-                    elif node.annotation.id == "int":
-                        var_type = "int_variable"
-                    elif node.annotation.id == "str":
-                        var_type = "str_variable"
-                    elif node.annotation.id == "bool":
-                        var_type = "bool_variable"
-                    else:
-                        raise TypeError(
-                            f"The type annotation of variable {node.target.id} is "
-                            f"{node.annotation.id}, and this is not recognised. Please change your "
-                            "type annotation for this variable. PROCESS recognises the following "
-                            "type annotations: float, int, str, bool."
-                        )
+                    raise TypeError(
+                        f"The type annotation of variable {node.target.id} is "
+                        f"{node.annotation.id}, and this is not recognised. Please change your "
+                        "type annotation for this variable. PROCESS recognises the following "
+                        "type annotations: float, int, str, bool."
+                    )
 
                 variable_types[node.target.id] = var_type
         # get the variable descriptions

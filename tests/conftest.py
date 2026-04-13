@@ -244,7 +244,7 @@ def process_models():
     return models
 
 
-@pytest.fixture()
+@pytest.fixture
 def cli_runner():
     def _cli_runner(command, args: list[str] | None = None, exit_code=0):
         result = CliRunner().invoke(command, args=args or [])

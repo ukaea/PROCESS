@@ -80,8 +80,8 @@ class Evaluators:
             logger.debug(f"{pv.p_fusion_total_mw = }")
             logger.debug(f"{pv.b_plasma_toroidal_on_axis = }")
             logger.debug(f"{tv.t_plant_pulse_burn = }")
-            logger.debug(f"{sqsumconfsq = }")
-            logger.debug(f"{xv = }")
+            logger.debug("%s", sqsumconfsq)
+            logger.debug("%s", xv)
 
         return objf, conf
 

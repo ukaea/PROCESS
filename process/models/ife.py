@@ -51,7 +51,6 @@ class IFE(Model):
         :param costs: a pointer to the costs model, allowing the use of costs' variables/methods
         :type costs: process.costs.Costs
         """
-
         self.outfile: int = constants.NOUT
         self.availability = availability
         self.costs = costs
@@ -270,7 +269,6 @@ class IFE(Model):
         device, based on the design of the OSIRIS study, and to calculate
         the material volumes for the device core.
         """
-
         # Careful choice of thicknesses, and assuming that the FLiBe
         # inlet radius is small, allows the generic build calculation
         # to be roughly applicable.
@@ -291,7 +289,6 @@ class IFE(Model):
         the material volumes for the device core.
         Sviatoslavsky et al, Fusion Technology vol.21 (1992) 1470
         """
-
         # Radial build
         ife_variables.r1 = ife_variables.chrad
         ife_variables.r2 = ife_variables.r1 + ife_variables.fwdr
@@ -1135,7 +1132,6 @@ class IFE(Model):
         the material volumes for the device core.
         F/MI/PJK/LOGBOOK12, p.52
         """
-
         # Radial build
 
         ife_variables.r1 = ife_variables.chrad
@@ -1498,7 +1494,6 @@ class IFE(Model):
         Gain and driver efficiency data are interpolated from input data.
         F/MI/PJK/LOGBOOK12, p.85
         """
-
         # The arrays contain data points for EDRIVE = 1MJ, 2MJ, ... , 10MJ
 
         e = 1e-6 * edrive
@@ -1549,7 +1544,6 @@ class IFE(Model):
         Meier and Rosenberg, Fusion Technology vol.21 (1992) p.1552
         F/MI/PJK/LOGBOOK12, p.86
         """
-
         # GVE(K): target gain at EDRIVE = K MegaJoules
         gve = [63.0, 95.0, 112.0, 125.0, 136.0, 144.0, 151.0, 157.0, 162.0, 166.0]
 
@@ -1600,7 +1594,6 @@ class IFE(Model):
 
         Notes
         -----
-
         This routine calculates the parameters of a heavy ion driver
         suitable for inertial fusion energy.
 
@@ -1608,7 +1601,6 @@ class IFE(Model):
         Fusion Technology, vol.21 (1992) 1583
         Meier and Bieri, Fusion Technology, vol.21 (1992) 1547
         """
-
         # NOTE: TN and SM agree that the "incomplete" IONDRV model should
         # be removed. It is impossible to use without modifications to the
         # source code indicating is probably should not be used.
@@ -1656,7 +1648,6 @@ class IFE(Model):
 
         The outputs are all, trivially, 0 as they are magnetic fusion specific.
         """
-
         structure_variables.aintmass = 0.0
         structure_variables.clgsmass = 0.0
         structure_variables.coldmass = 0.0
@@ -1692,7 +1683,6 @@ class IFE(Model):
         output: bool
              (Default value = False)
         """
-
         # Material densities
         # 0 = void
         # 1 = steel

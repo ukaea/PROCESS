@@ -446,7 +446,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         output: bool
 
         """
-
         # Model factors and coefficients
         a = 2.830  # Exponential factor (m2/tonne)
         b = 0.583  # Exponential factor (m2/tonne)
@@ -616,7 +615,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         ProcessValueError
             If the calculated nuclear heating is negative.
         """
-
         # Total nuclear heating in FW (MW)
         p_fw_nuclear_heat_total_mw = (
             m_fw_total
@@ -668,9 +666,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         if p_blkt_nuclear_heat_total_mw < 1:
             logger.error(
-                "Blanket heating is <1 MW or NaN. Is something wrong?"
-                f"{p_blkt_nuclear_heat_total_mw=} {exp_blanket=}"
-                f" {p_fusion_total_mw=} {m_blkt_total_tonnes=}"
+                "Blanket heating is <1 MW or NaN. Is something wrong?%s %s %s %s",
+                p_blkt_nuclear_heat_total_mw,
+                exp_blanket,
+                p_fusion_total_mw,
+                m_blkt_total_tonnes,
             )
 
         return p_blkt_nuclear_heat_total_mw, exp_blanket
@@ -717,7 +717,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             - shld_u_nuc_heating (float): Unit nuclear heating of shield (W/kg/GW of fusion power) x mass.
 
         """
-
         # Shield nuclear heating coefficients and exponents
         f = 6.88e2  # Shield nuclear heating coefficient (W/kg/W)
         g = 2.723  # Shield nuclear heating exponent m²/tonne
@@ -752,7 +751,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         output:
 
         """
-
         # Radiation power incident on HCD apparatus (MW)
         fwbs_variables.p_fw_hcd_rad_total_mw = (
             physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_outboard_hcd
@@ -1003,7 +1001,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         type
             Solid angle fraction covered by the CP [-]
         """
-
         n_integral = 10
 
         # Initial calculation

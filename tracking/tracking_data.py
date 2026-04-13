@@ -235,7 +235,7 @@ class ProcessTracker:
                 # value of var in the mfile
                 variable_data = self.mfile.data[var]
             except KeyError:
-                logger.info(f"{var} is not present in the MFile and will be skipped.")
+                logger.info("%s is not present in the MFile and will be skipped.", var)
                 continue
 
             self.tracking_file.meta[var] = variable_data.get_scan(1)
@@ -249,14 +249,15 @@ class ProcessTracker:
                     _, var = var.split(".")
                 except (AttributeError, ValueError):
                     logger.warning(
-                        f"{var} is a dotted variable and must be in the form OVERRIDINGNAME.VARIABLE"
+                        "%s is a dotted variable and must be in the form OVERRIDINGNAME.VARIABLE",
+                        var,
                     )
 
             # value of the variable extracted from the mfile
             mfile_var_value = self.mfile.data[var]
 
             if isinstance(mfile_var_value, mf.MFileErrorClass):
-                logger.info(f"{var} is not present in the MFile and will be skipped.")
+                logger.info("%s is not present in the MFile and will be skipped.", var)
                 continue
 
             if mfile_var_value.get_number_of_scans() > 1:
@@ -351,7 +352,6 @@ class TrackedData:
         file to an internal store before being
         transformed into a dataframe, to then be plotted.
         """
-
         # extract the metadata from our file as all datapoints of this file will require them
         metadata = json_file_data["meta"]
         title = metadata.get("title", "-")
@@ -515,7 +515,6 @@ def plot_tracking_data(database, tracked_variables):
 
 def write_tracking_html_file(database, output, tracking_variables_file):
     """Writes the visual tracking data to an appropriate file"""
-
     if tracking_variables_file is None:
         tracked_variables = DEFAULT_TRACKING_VARIABLES
     else:

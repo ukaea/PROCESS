@@ -73,7 +73,6 @@ class TFCoil(Model):
 
     def run_base_tf(self):
         """Run main tfcoil subroutine without outputting."""
-
         (
             superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half,
             superconducting_tf_coil_variables.tan_theta_coil,
@@ -209,7 +208,6 @@ class TFCoil(Model):
             - **dx_tf_inboard_out_toroidal** (*float*): Width of the inboard leg at the outer edge in the toroidal direction [m].
             - **a_tf_leg_outboard** (*float*): Cross-sectional area of the outboard leg of the TF coil [m²].
         """
-
         # The angular space of each TF coil in the toroidal direction [rad]
         # The angular space between each coil is the same as that of the coils
 
@@ -329,7 +327,6 @@ class TFCoil(Model):
             - **c_tf_coil** (*float*): Current per TF coil [A].
             - **oacdcp** (*float*): Global inboard leg average current density in TF coils [A/m²].
         """
-
         # Calculation of the maximum B field on the magnet [T]
         b_tf_inboard_peak_symmetric = (
             b_plasma_toroidal_on_axis * rmajor / r_b_tf_inboard_peak
@@ -560,7 +557,6 @@ class TFCoil(Model):
         to the output file.
         PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
         """
-
         # General coil parameters
         po.osubhd(self.outfile, "TF design")
         po.ovarin(
@@ -2177,7 +2173,6 @@ class TFCoil(Model):
         tight aspect ratio tokamak. The centrepost is assumed to be tapered,
         i.e. narrowest on the midplane (z=0).
         """
-
         # Vertical distance from the midplane to the top of the tapered section [m]
         if physics_variables.itart == 1:
             superconducting_tf_coil_variables.z_cp_top = (
@@ -2644,7 +2639,6 @@ class TFCoil(Model):
             - vforce_inboard_tot (float): Total inboard vertical force [N]
             - f_vforce_inboard (float): Inboard vertical tension fraction
         """
-
         # Outer/inner WP radius removing the ground insulation layer and the insertion gap [m]
         if i_tf_sup == 1:
             r_tf_wp_inboard_outer_conductor = (
@@ -2795,11 +2789,11 @@ class TFCoil(Model):
         type
             density: Heliyn density [kg/m3]
         """
-
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
             logger.error(
-                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+                "Helium temperature out of helium property fiting range [4-50] K. %s",
+                temp,
             )
 
         # Oder 3 polynomial fit
@@ -2839,11 +2833,11 @@ class TFCoil(Model):
         :
             Themal capacity at constant pressure [K/(kg.K)]
         """
-
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
             logger.error(
-                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+                "Helium temperature out of helium property fiting range [4-50] K. %s",
+                temp,
             )
 
         # Order 3 polynomial fit in [4-30] K on the dimenion [K/(g.K)]
@@ -2886,10 +2880,10 @@ class TFCoil(Model):
         :
             Themal capacity at constant pressure [Pa.s]
         """
-
         if temp < 4.0e0 or temp > 50.0e0:
             logger.error(
-                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+                "Helium temperature out of helium property fiting range [4-50] K. %s",
+                temp,
             )
 
         # Order 4 polynomial exponential fit in [4-25] K
@@ -2929,11 +2923,11 @@ class TFCoil(Model):
         :
             Themal conductivity [W/(m.K)]
         """
-
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
             logger.error(
-                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+                "Helium temperature out of helium property fiting range [4-50] K. %s",
+                temp,
             )
 
         # Order 4 polynomial fit
@@ -2984,11 +2978,11 @@ class TFCoil(Model):
         :
             Themal conductivity [W/(m.K)]
         """
-
         # Fiting range verification
         if temp < 15.0e0 or temp > 150.0e0:
             logger.error(
-                f"Aluminium temperature out of the th conductivity fit range [15-60] K. {temp=}"
+                "Aluminium temperature out of the th conductivity fit range [15-60] K. %s",
+                temp,
             )
 
         # fit 15 < T < 60 K (order 3 poly)
@@ -3145,7 +3139,6 @@ class TFCoil(Model):
 
     def generic_tf_coil_area_and_masses(self):
         """Subroutine to calculate the TF coil areas and masses"""
-
         # Surface areas (for cryo system) [m²]
         wbtf = (
             build_variables.r_tf_inboard_out
@@ -4147,10 +4140,9 @@ class TFCoil(Model):
                         ii_max = jj
 
                 # Conventional Tresca
-                else:
-                    if sig_max < s_shear_tf[jj]:
-                        sig_max = s_shear_tf[jj]
-                        ii_max = jj
+                elif sig_max < s_shear_tf[jj]:
+                    sig_max = s_shear_tf[jj]
+                    ii_max = jj
 
             # OUT.DAT output
 
@@ -4677,7 +4669,6 @@ def sigvm(sx: float, sy: float, sz: float, txy: float, txz: float, tyz: float) -
     :
         Von Mises combination of stresses (Pa) in a TF coil.
     """
-
     return np.sqrt(
         0.5
         * (
@@ -5623,7 +5614,6 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
     poisson_j_perp_2 :
 
     """
-
     if eyoung_j_1 * eyoung_j_2 == 0:
         # poisson_j_perp_3 = 0
         poisson_j_perp_3 = poisson_j_perp_1 if eyoung_j_1 == 0 else poisson_j_perp_2

@@ -747,7 +747,6 @@ class Neoclassics:
         dr_temperatures :
 
         """
-
         z = np.array([-1.0, 1.0, 1.0, 2.0])
 
         return (
@@ -763,7 +762,6 @@ class Neoclassics:
 
     def neoclassics_calc_q_flux(self):
         """Calculates the Energy flux by neoclassicsal energy transport"""
-
         z = np.array([-1.0, 1.0, 1.0, 2.0])
 
         return (

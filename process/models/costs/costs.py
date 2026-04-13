@@ -1676,19 +1676,18 @@ class Costs:
                     )
                 else:
                     costpfsc = 0.0e0
+            elif pfcoil_variables.i_pf_conductor == 0:
+                costpfsc = (
+                    cost_variables.sc_mat_cost_0[
+                        pfcoil_variables.i_pf_superconductor - 1
+                    ]
+                    * tfcoil_variables.j_crit_str_0[
+                        pfcoil_variables.i_pf_superconductor - 1
+                    ]
+                    / pfcoil_variables.j_crit_str_pf
+                )
             else:
-                if pfcoil_variables.i_pf_conductor == 0:
-                    costpfsc = (
-                        cost_variables.sc_mat_cost_0[
-                            pfcoil_variables.i_pf_superconductor - 1
-                        ]
-                        * tfcoil_variables.j_crit_str_0[
-                            pfcoil_variables.i_pf_superconductor - 1
-                        ]
-                        / pfcoil_variables.j_crit_str_pf
-                    )
-                else:
-                    costpfsc = 0.0
+                costpfsc = 0.0
 
             #  Copper ($/m)
             if pfcoil_variables.i_pf_conductor == 0:
@@ -1757,19 +1756,18 @@ class Costs:
                     )
                 else:
                     costpfsc = 0.0e0
+            elif pfcoil_variables.i_pf_conductor == 0:
+                costpfsc = (
+                    cost_variables.sc_mat_cost_0[
+                        pfcoil_variables.i_cs_superconductor - 1
+                    ]
+                    * tfcoil_variables.j_crit_str_0[
+                        pfcoil_variables.i_cs_superconductor - 1
+                    ]
+                    / pfcoil_variables.j_crit_str_cs
+                )
             else:
-                if pfcoil_variables.i_pf_conductor == 0:
-                    costpfsc = (
-                        cost_variables.sc_mat_cost_0[
-                            pfcoil_variables.i_cs_superconductor - 1
-                        ]
-                        * tfcoil_variables.j_crit_str_0[
-                            pfcoil_variables.i_cs_superconductor - 1
-                        ]
-                        / pfcoil_variables.j_crit_str_cs
-                    )
-                else:
-                    costpfsc = 0.0e0
+                costpfsc = 0.0e0
 
             #  Copper ($/m)
 
@@ -1876,7 +1874,6 @@ class Costs:
         fraction (fcdfuel) is considered a recurring fuel cost due
         to the system's short life.
         """
-
         exprf = 1.0e0
         if ife_variables.ife != 1:
             #  Account 223.1 : ECH
@@ -2067,7 +2064,6 @@ class Costs:
         of the tfcpwr module.  A multiplier is used to account for bulk
         materials and installation.
         """
-
         expel = 0.7e0
         cost_variables.c22511 = (
             1.0e-6
@@ -2445,7 +2441,6 @@ class Costs:
 
         This routine evaluates the Account 23 (turbine plant equipment) costs.
         """
-
         exptpe = 0.83e0
         if cost_variables.ireactor == 1:
             cost_variables.c23 = (

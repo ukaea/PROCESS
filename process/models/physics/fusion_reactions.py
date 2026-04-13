@@ -75,7 +75,8 @@ class FusionReactionRate:
     rate <sigma v> and integrates over the plasma cross-section to find the core plasma
     fusion power.
 
-    Attributes:
+    Attributes
+    ----------
          plasma_profile (PlasmaProfile): The parameterized temperature and density profiles of the plasma.
          sigmav_dt_average (float): Average fusion reaction rate <sigma v> for D-T.
          dhe3_power_density (float): Fusion power density produced by the D-3He reaction.
@@ -89,7 +90,8 @@ class FusionReactionRate:
          proton_rate_density (float): Proton production rate density.
          f_dd_branching_trit (float): The rate of tritium producing D-D reactions to 3He ones.
 
-    References:
+    References
+    ----------
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
           Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
           doi: https://doi.org/10.1088/0029-5515/32/4/i07.
@@ -132,7 +134,8 @@ class FusionReactionRate:
         For ion temperatures between 0.5 keV and 200 keV.
         The deviation of the fit from the R-matrix branching ratio is always smaller than 0.5%.
 
-        References:
+        References
+        ----------
             - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
               Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
               doi: https://doi.org/10.1088/0029-5515/32/4/i07.
@@ -649,12 +652,12 @@ def fusion_rate_integral(
     :
         np.ndarray: Integrand for the fusion power.
 
-    References:
+    References
+    ----------
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
         Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
     """
-
     # Since the electron temperature profile is only calculated directly, we scale the ion temperature
     # profile by the ratio of the volume averaged ion to electron temperature
     ion_temperature_profile = (
@@ -708,7 +711,8 @@ def bosch_hale_reactivity(
     :
         np.ndarray: Volumetric fusion reaction rate 〈sigmav〉 in m^3/s for each point in the ion temperature profile.
 
-    References:
+    References
+    ----------
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
         Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
@@ -799,7 +803,8 @@ def set_fusion_powers(
         - p_charged_particle_mw (float): Charged particle fusion power [MW].
         - p_fusion_total_mw (float): Total fusion power [MW].
 
-    References:
+    References
+    ----------
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
         - ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
     """
@@ -941,14 +946,16 @@ def beam_fusion(
         - nd_beam_ions_out (float): Hot beam ion density (m^-3).
         - p_beam_alpha_mw (float): Alpha power from hot neutral beam ions (MW).
 
-    Notes:
+    Notes
+    -----
         - The function uses the Bosch-Hale parametrization to compute the reactivity.
         - The critical energy for electron/ion slowing down of the beam ion is calculated
         for both deuterium and tritium neutral beams.
         - The function integrates the hot beam fusion reaction rate integrand over the
         range of beam velocities up to the critical velocity.
 
-    References:
+    References
+    ----------
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
         Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
@@ -960,7 +967,6 @@ def beam_fusion(
         vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
         ‌
     """
-
     # Beam ion slowing down time given by Deng Baiquan and G. A. Emmert 1987
     beam_slow_time = (
         1.99e19
@@ -1079,14 +1085,16 @@ def beamcalc(
         - Hot beam ion density (m^-3).
         - Average hot beam ion energy (keV).
 
-    Notes:
+    Notes
+    -----
         - The function uses the Bosch-Hale parametrization to compute the reactivity.
         - The critical energy for electron/ion slowing down of the beam ion is calculated
         for both deuterium and tritium neutral beams.
         - The function integrates the hot beam fusion reaction rate integrand over the
         range of beam velocities up to the critical velocity.
 
-    References:
+    References
+    ----------
         - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
         Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
@@ -1100,7 +1108,6 @@ def beamcalc(
         - J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015-1103,
         Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
     """
-
     # D and T beam current fractions
     beam_current_deuterium = c_beam_total * (1.0 - f_beam_tritium)
     beam_current_tritium = c_beam_total * f_beam_tritium
@@ -1252,20 +1259,21 @@ def fast_ion_pressure_integral(e_beam_kev: float, critical_energy: float) -> flo
     :
         float: Fraction of initial beam energy given to the ions.
 
-    Notes:
+    Notes
+    -----
         - The function uses the ratio of the beam energy to the critical energy to compute
         the hot ion energy parameter.
         - The calculation involves logarithmic and arctangent functions to account for
         the energy distribution of the hot ions.
 
-    References:
+    References
+    ----------
         - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
         vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
         - W.A Houlberg, “Thermalization of an Energetic Heavy Ion in a Multi-species Plasma,” University of Wisconsin Fusion Technology Institute,
         Report UWFDM-103 1974, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm103.pdf
     """
-
     xcs = e_beam_kev / critical_energy
     xc = np.sqrt(xcs)
 
@@ -1318,7 +1326,8 @@ def alpha_power_beam(
     - The ratio of the profile-averaged <sigma v> to the reactivity at the given
     thermal ion temperature is used to scale the alpha power.
 
-    References:
+    References
+    ----------
     - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
     Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
     doi: https://doi.org/10.1088/0029-5515/32/4/i07.
@@ -1373,7 +1382,6 @@ def beam_reaction_rate(
     - The integration is performed using the quad function from scipy.integrate.
 
     """
-
     # Find the speed of the beam particle when it has the critical energy.
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
     beam_velocity = np.sqrt(

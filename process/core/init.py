@@ -311,7 +311,6 @@ def check_process(inputs):  # noqa: ARG001
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.
     """
-
     # Check that there are sufficient iteration variables
     if data_structure.numerics.nvar < data_structure.numerics.neqns:
         raise ProcessValidationError(

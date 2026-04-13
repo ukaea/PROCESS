@@ -24,10 +24,12 @@ class Profile(ABC):
         """
         Initialize a Profiles object.
 
-        Parameters:
+        Parameters
+        ----------
         - profile_size (int): The size of the profile.
 
-        Attributes:
+        Attributes
+        ----------
         - profile_size (int): The size of the profile.
         - profile_x (ndarray): An array of values ranging from 0 to profile_size-1.
         - profile_y (ndarray): An array of zeros with length profile_size.
@@ -130,7 +132,6 @@ class NeProfile(Profile):
         alphan :
             Density peaking parameter.
         """
-
         if (
             PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
@@ -141,7 +142,9 @@ class NeProfile(Profile):
 
         if n0 < nped:
             logger.info(
-                f"NPROFILE: density pedestal is higher than core density. {nped = }, {n0 = }"
+                "NPROFILE: density pedestal is higher than core density. %s, %s",
+                nped,
+                n0,
             )
         rho_index = rho <= radius_plasma_pedestal_density_norm
         self.profile_y[rho_index] = (
@@ -187,10 +190,10 @@ class NeProfile(Profile):
         :
             The core density.
 
-        References:
+        References
+        ----------
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
         """
-
         ncore = (
             1
             / (3 * radius_plasma_pedestal_density_norm**2)
@@ -222,7 +225,6 @@ class NeProfile(Profile):
 
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the profile."""
-
         if (
             PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
@@ -298,7 +300,8 @@ class TeProfile(Profile):
         tbeta : float
             Second temperature exponent.
 
-        References:
+        References
+        ----------
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
         """
         if (
@@ -312,7 +315,9 @@ class TeProfile(Profile):
 
         if t0 < temp_plasma_pedestal_kev:
             logger.info(
-                f"TPROFILE: temperature pedestal is higher than core temperature. {temp_plasma_pedestal_kev = }, {t0 = }"
+                "TPROFILE: temperature pedestal is higher than core temperature. %s, %s",
+                temp_plasma_pedestal_kev,
+                t0,
             )
 
         rho_index = rho <= radius_plasma_pedestal_temp_norm
@@ -341,7 +346,9 @@ class TeProfile(Profile):
         to an added rho term in each part of the profile. When dividing by the volume of integration to get the average temperature
         the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
         This function for the average temperature can then be re-arranged to calculate the central plasma temeprature T_0 / tcore.
-        References:
+
+        References
+        ----------
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
 
         Parameters

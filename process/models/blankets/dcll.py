@@ -61,8 +61,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
              (inlet_temp_liq)
              (outlet_temp_liq)
 
-    References:
-
+    References
+    ----------
          [Nat1995]   Natesan et al. (1995), Assessment of alkali metal coolants for
                      for the ITER blanket, Fusion Engineering and Design 27, 457-466
 
@@ -143,7 +143,6 @@ class DCLL(InboardBlanket, OutboardBlanket):
         output: bool
 
         """
-
         if divertor_variables.n_divertors == 2:
             # Double null configuration
             covf = (

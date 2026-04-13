@@ -25,7 +25,7 @@ def costs2015(process_models):
     :return costs2015: initialised costs2015 object
     :type costs2015: process.costs2015.Costs2015
     """
-    return process_models._costs_2015  # noqa: SLF001
+    return process_models._costs_2015
 
 
 @dataclass

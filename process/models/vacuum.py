@@ -119,7 +119,6 @@ class Vacuum(Model):
             number of pumps for pumpdown and steady-state
             indicate whether output should be written to the output file, or not
         """
-
         # Steady-state model (super simple)
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
@@ -825,7 +824,6 @@ class VacuumVessel(Model):
         dr_fw_outboard:
 
         """
-
         z_bottom = z_tf_inside_half - dz_shld_vv_gap - dz_vv_lower
 
         # Calculate component internal upper half-height (m)
@@ -874,7 +872,6 @@ class VacuumVessel(Model):
         dz_vv_lower:
 
         """
-
         r_1 = r_shld_inboard_inner
         r_2 = r_shld_outboard_outer - r_1
 
@@ -957,7 +954,6 @@ class VacuumVessel(Model):
 
     def output(self):
         """Output shield areas and volumes to log."""
-
         po.oheadr(self.outfile, "Vacuum Vessel Areas and Volumes")
 
         po.ovarrf(

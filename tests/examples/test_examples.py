@@ -60,7 +60,7 @@ def test_scan(examples_temp_data):
     ):
         tb.execute()
         # Run entire scan.ex.py notebook and assert an MFILE is created
-        assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
+        assert Path(examples_temp_data / "data/scan_example_file_MFILE.DAT").exists()
 
 
 @pytest.mark.parametrize(

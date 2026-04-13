@@ -153,16 +153,17 @@ def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]
     if temp_conductor < 65:
         if (b_conductor < 0.0) or (b_conductor > 15.0):
             validity = False
-    else:
-        if (b_conductor < 0.0) or (b_conductor > 11.5):
-            validity = False
+    elif (b_conductor < 0.0) or (b_conductor > 11.5):
+        validity = False
 
     if not validity:
         logger.error(
-            f"""jcrit_rebco: input out of range
-            temperature: {temp_conductor}
-            Field: {b_conductor}
-            """
+            """jcrit_rebco: input out of range
+            temperature: %s
+            Field: %s
+            """,
+            temp_conductor,
+            b_conductor,
         )
 
     if temp_conductor < temp_c0max:
@@ -411,7 +412,7 @@ def bi2212(b_conductor, jstrand, temp_conductor, f_strain):
             B > 6 T
 
     References
-    -----------
+    ----------
         - D. C. Larbalestier, J. Jiang, U. P. Trociewitz, F. Kametani, and E. E. Hellstrom,
         “A transformative superconducting magnet technology for fields well above 30 T using isotropic round wire multifilament Bi2Sr2CaCu2O8-x conductor,”
         May 06, 2013. https://www.researchgate.net/publication/236627864_A_transformative_superconducting_magnet_technology_for_fields_well_above_30_T_using_isotropic_round_wire_multifilament_Bi2Sr2CaCu2O8-x_conductor
@@ -421,7 +422,6 @@ def bi2212(b_conductor, jstrand, temp_conductor, f_strain):
     ProcessValueError
         If the input parameters are outside the range of validity.
     """
-
     b = b_conductor / np.exp(-0.168 * (temp_conductor - 4.2))
 
     #  Engineering (i.e. strand) critical current density (A/m2)
@@ -493,7 +493,6 @@ def gl_nbti(
     Journal of Physics Conference Series, vol. 1559, no. 1, pp. 012063-012063, Jun. 2020, doi:
     https://doi.org/10.1088/1742-6596/1559/1/012063.
     """
-
     a_0 = 1102e6
     p = 0.49
     q = 0.56
@@ -711,7 +710,6 @@ def hijc_rebco(
     Fusion Engineering and Design, vol. 168, p. 112611, Jul. 2021,
     doi: https://doi.org/10.1016/j.fusengdes.2021.112611.
     """
-
     a = 1.4
     b = 2.005
     # critical current density prefactor
@@ -916,7 +914,6 @@ def bottura_scaling(
     IEEE Transactions on Applied Superconductivity, vol. 19, no. 3, pp. 1521-1524, Jun. 2009,
     doi: https://doi.org/10.1109/tasc.2009.2018278.
     """
-
     epsilon_sh = (c_a2 * epsilon_0a) / (np.sqrt(c_a1**2 - c_a2**2))
 
     # Strain function
@@ -938,7 +935,9 @@ def bottura_scaling(
     # If input temperature is over the strain adjusted critical temperature then report error
     if temp_conductor / temp_c0_eps >= 1.0:
         logger.error(
-            f"Reduced temperature t artificially lowered {temp_conductor=} {temp_c0_eps=}"
+            "Reduced temperature t artificially lowered %s %s",
+            temp_conductor,
+            temp_c0_eps,
         )
 
     # Reduced temperature at zero field, corrected for strain
@@ -948,7 +947,7 @@ def bottura_scaling(
     # If input field is over the strain adjusted critical field then report error
     if b_conductor / b_c20_eps >= 1.0:
         logger.error(
-            f"Reduced field bzero artificially lowered {b_conductor=} {b_c20_eps=}"
+            "Reduced field bzero artificially lowered %s %s", b_conductor, b_c20_eps
         )
 
     # Reduced field at zero temperature, taking account of strain
@@ -1044,7 +1043,6 @@ def calculate_croco_cable_geometry(
         - a_croco_strand: Total area of CroCo strand (m²)
         - dr_hts_tape: Width of the tape (m)
     """
-
     # Calculate the inner diameter of the CroCo strand tape region
     dia_croco_strand_tape_region = dia_croco_strand - 2.0 * dx_croco_strand_copper
     if dia_croco_strand_tape_region <= 0.0:
@@ -1112,7 +1110,6 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     dx_croco_strand_copper :
 
     """
-
     (
         rebco_variables.dia_croco_strand_tape_region,
         rebco_variables.n_croco_strand_hts_tapes,

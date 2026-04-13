@@ -231,7 +231,7 @@ def process_cli(
                 plot_summary(mfile_path)
                 plot_sankey_plotly(mfile_path)
             else:
-                logger.error(f"Cannot find mfile for plotting {mfile_path}")
+                logger.error("Cannot find mfile for plotting %s", mfile_path)
 
 
 class VaryRun:
@@ -465,7 +465,6 @@ class SingleRun:
         is set to True, they are either removed or replaced by their updated names as specified
         in the OBS_VARS dictionary.
         """
-
         obsolete_variables = ov.OBS_VARS
         obsolete_vars_help_message = ov.OBS_VARS_HELP
 
@@ -579,7 +578,7 @@ class CostsProtocol(Protocol):
         """Run the model"""
 
     def output(self):
-        """write model output"""
+        """Write model output"""
 
 
 class Models:

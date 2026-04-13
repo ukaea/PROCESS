@@ -1880,7 +1880,6 @@ def constraint_eqns(m: int, ieqn: int, data: DataStructure):
         NOTE: this is only for getting data, not setting it
 
     """
-
     if ieqn > 0:
         i1 = ieqn - 1
         i2 = ieqn

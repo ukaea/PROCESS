@@ -20,7 +20,6 @@ def initialise_imprad():
 
     This routine initialises the impurity radiation data.
     """
-
     errorflag = 0
 
     table_length = 200  # Number of temperature and Lz values in data file
@@ -266,7 +265,6 @@ def init_imp_element(
     ProcessError
         If required data cannot be located in files
     """
-
     if error == 1:
         return
 
@@ -563,14 +561,14 @@ class ImpurityRadiation:
         imp_element_index : Int
             Index used to access different impurity radiation elements
 
-        References:
+        References
+        ----------
             Bremsstrahlung equation from Johner, L(z) data (coronal equilibrium)
             from Marco Sertoli, Asdex-U, ref. Kallenbach et al.
             Johner, Fusion Science and Technology 59 (2011), pp 308-349
             Sertoli, private communication
             Kallenbach et al., Plasma Phys. Control. Fus. 55(2013) 124041
         """
-
         pimp = pimpden(
             imp_element_index,
             self.plasma_profile.neprofile.profile_y,
@@ -584,7 +582,6 @@ class ImpurityRadiation:
         from the core (pden_impurity_core_rad_total_mw) and total impurity radiation (pden_impurity_rad_total_mw). Update the stored arrays with
         the values.
         """
-
         pden_impurity_rad_total = self.pimp_profile * self.rho
         pden_impurity_core_rad_total = self.pimp_profile * (
             self.rho
@@ -606,7 +603,6 @@ class ImpurityRadiation:
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss.
         """
-
         # 2.0e-6 converts from W/m^3 to MW/m^3 and also accounts for both sides of the plasma
         self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
             self.pden_impurity_rad_profile, x=self.rho, dx=self.rhodx

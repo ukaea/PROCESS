@@ -13,4 +13,4 @@ def test_input_file(cmd, temp_data_cwd, mfile_name, cli_runner):
     cli_runner(cmd, args=[mfile_str, "-s"])
 
     # Assert a pdf has been created
-    assert len(list(temp_data_cwd.glob("*.pdf")))
+    assert list(temp_data_cwd.glob("*.pdf"))

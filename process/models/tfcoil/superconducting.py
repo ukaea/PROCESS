@@ -449,7 +449,6 @@ class SuperconductingTFCoil(TFCoil):
         output:
 
         """
-
         j_crit_sc: float = 0.0
         #  Find critical current density in superconducting cable, j_crit_cable
         j_crit_sc, _ = superconductors.jcrit_rebco(thelium, b_tf_inboard_peak_symmetric)
@@ -771,7 +770,7 @@ class SuperconductingTFCoil(TFCoil):
                     total,
                     "OP ",
                 )
-                logger.error(f"conductor areas do not add up. total: {total}")
+                logger.error("conductor areas do not add up. total: %s", total)
 
             po.ovarre(
                 self.outfile,
@@ -973,7 +972,6 @@ class SuperconductingTFCoil(TFCoil):
         conductor copper fraction (i.e., the copper in the superconducting strands and any additional
         copper, such as REBCO tape support).
         """
-
         # Guard against negative conductor fraction f_a_tf_turn_cable_space_conductor
         # Kludge to allow solver to continue and hopefully be constrained away
         # from this point
@@ -998,7 +996,8 @@ class SuperconductingTFCoil(TFCoil):
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.5e-2:
                 logger.error(
-                    f"TF strain={strain} was outside the region of applicability. Used lower strain."
+                    "TF strain=%s was outside the region of applicability. Used lower strain.",
+                    strain,
                 )
                 strain = np.sign(strain) * 0.5e-2
 
@@ -1097,7 +1096,8 @@ class SuperconductingTFCoil(TFCoil):
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.5e-2:
                 logger.error(
-                    f"TF strain={strain} was outside the region of applicability. Used lower strain."
+                    "TF strain=%s was outside the region of applicability. Used lower strain.",
+                    strain,
                 )
                 strain = np.sign(strain) * 0.5e-2
 
@@ -1132,7 +1132,8 @@ class SuperconductingTFCoil(TFCoil):
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.5e-2:
                 logger.error(
-                    f"TF strain={strain} was outside the region of applicability. Used lower strain."
+                    "TF strain=%s was outside the region of applicability. Used lower strain.",
+                    strain,
                 )
                 strain = np.sign(strain) * 0.5e-2
 
@@ -1207,7 +1208,8 @@ class SuperconductingTFCoil(TFCoil):
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.7e-2:
                 logger.error(
-                    f"TF strain={strain} was outside the region of applicability. Used lower strain."
+                    "TF strain=%s was outside the region of applicability. Used lower strain.",
+                    strain,
                 )
                 strain = np.sign(strain) * 0.7e-2
 
@@ -1246,7 +1248,8 @@ class SuperconductingTFCoil(TFCoil):
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.7e-2:
                 logger.error(
-                    f"TF strain={strain} was outside the region of applicability. Used lower strain."
+                    "TF strain=%s was outside the region of applicability. Used lower strain.",
+                    strain,
                 )
                 strain = np.sign(strain) * 0.7e-2
 
@@ -1343,7 +1346,6 @@ class SuperconductingTFCoil(TFCoil):
         int
             The maximum number of strands that can fit in the available space, accounting for the void fraction.
         """
-
         # Effective area available for strands (excluding voids)
         effective_area = a_cable_space
 
@@ -1380,7 +1382,6 @@ class SuperconductingTFCoil(TFCoil):
             - Length of superconductor in one TF coil (in meters).
             - Total length of superconductor in all TF coils (in meters).
         """
-
         # Length of superconductor in one TF coil
         len_tf_coil_superconductor = (
             n_tf_coil_turns * len_tf_coil * n_tf_turn_superconducting_cables
@@ -1393,7 +1394,6 @@ class SuperconductingTFCoil(TFCoil):
 
     def output_tf_superconductor_info(self):
         """Output TF superconductor information"""
-
         po.oheadr(self.outfile, "TF Coils Superconductor Information")
         po.ovarin(
             self.outfile,
@@ -1609,7 +1609,6 @@ class SuperconductingTFCoil(TFCoil):
         type
             temp_tf_superconductor_margin.
         """
-
         # =================================================================
         # Calculate temperature margin of superconductor
 
@@ -1735,7 +1734,6 @@ class SuperconductingTFCoil(TFCoil):
         - L. Bottura, “Magnet Quench 101,” arXiv (Cornell University), Jan. 2014,
         doi: https://doi.org/10.48550/arxiv.1401.3927.
         """
-
         #  Peak Dump voltage
         v_tf_dump_voltage_peak = (
             2.0e0 * e_tf_coil_magnetic_stored / (t_tf_quench_dump * c_tf_turn)
@@ -1959,7 +1957,6 @@ class SuperconductingTFCoil(TFCoil):
         i_tf_turns_integer :
 
         """
-
         # Calculating the WP / ground insulation areas
         (
             superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
@@ -2244,7 +2241,6 @@ class SuperconductingTFCoil(TFCoil):
         ValueError
             If calculated winding pack area (with or without insulation) is non-positive.
         """
-
         r_tf_wp_inboard_inner = r_tf_inboard_in + dr_tf_nose_case
 
         # Radial position of outer edge of winding pack [m]
@@ -2407,7 +2403,9 @@ class SuperconductingTFCoil(TFCoil):
         # Negative WP area error reporting
         if a_tf_wp_no_insulation <= 0.0e0 or a_tf_wp_with_insulation <= 0.0e0:
             logger.error(
-                f"Winding pack cross-section problem... {a_tf_wp_no_insulation=} {a_tf_wp_with_insulation=}"
+                "Winding pack cross-section problem... %s %s",
+                a_tf_wp_no_insulation,
+                a_tf_wp_with_insulation,
             )
 
         return (
@@ -2488,7 +2486,6 @@ class SuperconductingTFCoil(TFCoil):
             - dx_tf_side_case_average (float): Average lateral casing thickness [m].
             - dx_tf_side_case_peak (float): Peak lateral casing thickness [m].
         """
-
         # Total area of inboard TF coil case [m²]
         a_tf_coil_inboard_case = (
             a_tf_inboard_total / n_tf_coils
@@ -2519,7 +2516,9 @@ class SuperconductingTFCoil(TFCoil):
         # Report error if the casing area is negative
         if a_tf_coil_inboard_case <= 0.0e0 or a_tf_coil_outboard_case <= 0.0e0:
             logger.error(
-                f"Winding pack cross-section problem... {a_tf_coil_inboard_case=} {a_tf_coil_outboard_case=}"
+                "Winding pack cross-section problem... %s %s",
+                a_tf_coil_inboard_case,
+                a_tf_coil_outboard_case,
             )
 
         # Average lateral casing thickness [m]
@@ -2640,7 +2639,6 @@ class SuperconductingTFCoil(TFCoil):
             - dx_tf_turn_cable_space
             - dx_tf_turn_cable_space_average
         """
-
         # Radius of rounded corners in the cable space [m]
         radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
 
@@ -2652,8 +2650,10 @@ class SuperconductingTFCoil(TFCoil):
 
         if dr_tf_turn <= (2.0e0 * dx_tf_turn_insulation + 2.0e0 * dx_tf_turn_steel):
             logger.error(
-                "Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn. "
-                f"{dr_tf_turn=} {dx_tf_turn_insulation=} {dx_tf_turn_steel=}"
+                "Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn. %s %s %s",
+                dr_tf_turn,
+                dx_tf_turn_insulation,
+                dx_tf_turn_steel,
             )
 
         # Toroidal turn dimension [m]
@@ -2664,8 +2664,10 @@ class SuperconductingTFCoil(TFCoil):
 
         if dx_tf_turn <= (2.0e0 * dx_tf_turn_insulation + 2.0e0 * dx_tf_turn_steel):
             logger.error(
-                "Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn. "
-                f"{dx_tf_turn=} {dx_tf_turn_insulation=} {dx_tf_turn_steel=}"
+                "Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn. %s %s %s",
+                dx_tf_turn,
+                dx_tf_turn_insulation,
+                dx_tf_turn_steel,
             )
 
         # Average turn dimension [m]
@@ -2721,14 +2723,17 @@ class SuperconductingTFCoil(TFCoil):
         if a_tf_turn_cable_space_no_void <= 0.0e0:
             if (dr_tf_turn_cable_space < 0.0e0) or (dx_tf_turn_cable_space < 0.0e0):
                 logger.error(
-                    f"Negative cable space dimension. {a_tf_turn_cable_space_no_void=} "
-                    f"{dr_tf_turn_cable_space=} {dx_tf_turn_cable_space=}"
+                    "Negative cable space dimension. %s %s %s",
+                    a_tf_turn_cable_space_no_void,
+                    dr_tf_turn_cable_space,
+                    dx_tf_turn_cable_space,
                 )
             else:
                 logger.error(
-                    "Cable space area problem; artificially set rounded corner radius to 0. "
-                    f"{a_tf_turn_cable_space_no_void=} {dr_tf_turn_cable_space=}"
-                    f" {dx_tf_turn_cable_space=}"
+                    "Cable space area problem; artificially set rounded corner radius to 0. %s %s %s",
+                    a_tf_turn_cable_space_no_void,
+                    dr_tf_turn_cable_space,
+                    dx_tf_turn_cable_space,
                 )
                 radius_tf_turn_cable_space_corners = 0.0e0
                 a_tf_turn_cable_space_no_void = (
@@ -2792,7 +2797,7 @@ class SuperconductingTFCoil(TFCoil):
         dia_tf_turn_coolant_channel,
         f_a_tf_turn_cable_space_extra_void,
     ):
-        """subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
+        """Subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
         Setting the TF WP turn geometry for SC magnets from the number
         the current per turn.
         This calculation has two purposes, first to check if a turn can exist
@@ -2828,7 +2833,6 @@ class SuperconductingTFCoil(TFCoil):
         f_a_tf_turn_cable_space_extra_void :
 
         """
-
         # Turn dimension is a an input
         if i_dx_tf_turn_general_input:
             # Turn area [m2]
@@ -2922,13 +2926,15 @@ class SuperconductingTFCoil(TFCoil):
             if a_tf_turn_cable_space_no_void <= 0.0e0:
                 if t_conductor < 0.0e0:
                     logger.error(
-                        f"Negative cable space dimension. {a_tf_turn_cable_space_no_void=} "
-                        f"{dx_tf_turn_cable_space_average=}"
+                        "Negative cable space dimension. %s %s",
+                        a_tf_turn_cable_space_no_void,
+                        dx_tf_turn_cable_space_average,
                     )
                 else:
                     logger.error(
-                        "Cable space area problem; artificially set rounded corner radius to 0. "
-                        f"{a_tf_turn_cable_space_no_void=} {dx_tf_turn_cable_space_average=}"
+                        "Cable space area problem; artificially set rounded corner radius to 0. %s %s",
+                        a_tf_turn_cable_space_no_void,
+                        dx_tf_turn_cable_space_average,
                     )
                     radius_tf_turn_cable_space_corners = 0.0e0
                     a_tf_turn_cable_space_no_void = dx_tf_turn_cable_space_average**2

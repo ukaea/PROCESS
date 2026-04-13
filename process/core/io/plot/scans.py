@@ -428,142 +428,137 @@ def plot_scan(
                         plt.xlim(x_range[0], x_range[1])
                         ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
                     plt.tight_layout()
-                else:
-                    if stack_plots:
-                        # check stack plots will work
-                        if len(output_names) <= 1:
-                            raise ValueError(
-                                "stack_plots requires at least two output variables"
-                            )
-                        # Create subplots only once for the first output
-                        if index == 0:
-                            fig, axs = plt.subplots(
-                                len(output_names),
-                                1,
-                                figsize=(8.0, (3.5 + (1 * len(output_names)))),
-                                sharex=True,
-                            )
-                            fig.subplots_adjust(hspace=0.0)
+                elif stack_plots:
+                    # check stack plots will work
+                    if len(output_names) <= 1:
+                        raise ValueError(
+                            "stack_plots requires at least two output variables"
+                        )
+                    # Create subplots only once for the first output
+                    if index == 0:
+                        fig, axs = plt.subplots(
+                            len(output_names),
+                            1,
+                            figsize=(8.0, (3.5 + (1 * len(output_names)))),
+                            sharex=True,
+                        )
+                        fig.subplots_adjust(hspace=0.0)
 
-                        axs[index].plot(
-                            scan_var_array[input_file],
-                            output_arrays[input_file][output_name],
-                            "--o",
-                            color="blue" if len(output_names2) > 0 else None,
-                            label=labl,
+                    axs[index].plot(
+                        scan_var_array[input_file],
+                        output_arrays[input_file][output_name],
+                        "--o",
+                        color="blue" if len(output_names2) > 0 else None,
+                        label=labl,
+                    )
+                    if len(y_axis_range) > 0:
+                        y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
+                    if y_axis_percent:
+                        if y_max[index] is None:
+                            y_max[index] = max(
+                                np.abs(output_arrays[input_file][output_name])
+                            )
+                        yticks = mtick.PercentFormatter(y_max[index])
+                        if len(y_axis_range) > 0:
+                            y_divisions = (
+                                5 * math.ceil(y_divisions / 5) * y_max[index] / 100
+                            )
+                            y_range = (
+                                y_axis_range[0] * y_max[index] / 100,
+                                y_axis_range[1] * y_max[index] / 100,
+                            )
+                        axs[output_names.index(output_name)].yaxis.set_major_formatter(
+                            yticks
                         )
-                        if len(y_axis_range) > 0:
-                            y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
-                        if y_axis_percent:
-                            if y_max[index] is None:
-                                y_max[index] = max(
-                                    np.abs(output_arrays[input_file][output_name])
-                                )
-                            yticks = mtick.PercentFormatter(y_max[index])
-                            if len(y_axis_range) > 0:
-                                y_divisions = (
-                                    5 * math.ceil(y_divisions / 5) * y_max[index] / 100
-                                )
-                                y_range = (
-                                    y_axis_range[0] * y_max[index] / 100,
-                                    y_axis_range[1] * y_max[index] / 100,
-                                )
-                            axs[
-                                output_names.index(output_name)
-                            ].yaxis.set_major_formatter(yticks)
-                        if len(y_axis_range) > 0:
-                            if y_axis_percent is False:
-                                y_range = y_axis_range
-                            axs[output_names.index(output_name)].set_ylim(
-                                y_range[0], y_range[1]
-                            )
-                            axs[output_names.index(output_name)].yaxis.set_major_locator(
-                                mtick.MultipleLocator(y_divisions)
-                            )
-                        if len(x_axis_range) > 0:
-                            x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
-                        if x_axis_percent:
-                            if x_max[index] is None:
-                                x_max[index] = max(np.abs(scan_var_array[input_file]))
-                            xticks = mtick.PercentFormatter(x_max[index])
-                            if len(x_axis_range) > 0:
-                                x_divisions = (
-                                    5 * math.ceil(x_divisions / 5) * x_max[index] / 100
-                                )
-                                x_range = (
-                                    x_axis_range[0] * x_max[index] / 100,
-                                    x_axis_range[1] * x_max[index] / 100,
-                                )
-                            axs[
-                                output_names.index(output_name)
-                            ].xaxis.set_major_formatter(xticks)
-                        if len(x_axis_range) > 0:
-                            if x_axis_percent is False:
-                                x_range = x_axis_range
-                            plt.xlim(x_range[0], x_range[1])
-                            axs[output_names.index(output_name)].xaxis.set_major_locator(
-                                mtick.MultipleLocator(x_divisions)
-                            )
-                        plt.rc("xtick", labelsize=axis_tick_size)
-                        plt.rc("ytick", labelsize=axis_tick_size)
-                        plt.tight_layout()
-                    else:
-                        ax.plot(
-                            scan_var_array[input_file],
-                            output_arrays[input_file][output_name],
-                            "--o",
-                            color="blue" if len(output_names2) > 0 else None,
-                            label=labl,
+                    if len(y_axis_range) > 0:
+                        if y_axis_percent is False:
+                            y_range = y_axis_range
+                        axs[output_names.index(output_name)].set_ylim(
+                            y_range[0], y_range[1]
                         )
-                        if len(y_axis_range) > 0:
-                            y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
-                        if y_axis_percent:
-                            if y_max[index] is None:
-                                y_max[index] = max(
-                                    np.abs(output_arrays[input_file][output_name])
-                                )
-                            yticks = mtick.PercentFormatter(y_max[index])
-                            if len(y_axis_range) > 0:
-                                y_divisions = (
-                                    5 * math.ceil(y_divisions / 5) * y_max[index] / 100
-                                )
-                                y_range = (
-                                    y_axis_range[0] * y_max[index] / 100,
-                                    y_axis_range[1] * y_max[index] / 100,
-                                )
-                            ax.yaxis.set_major_formatter(yticks)
-                        if len(y_axis_range) > 0:
-                            if y_axis_percent is False:
-                                y_range = y_axis_range
-                            ax.set_ylim(y_range[0], y_range[1])
-                            ax.yaxis.set_major_locator(
-                                mtick.MultipleLocator(y_divisions)
-                            )
+                        axs[output_names.index(output_name)].yaxis.set_major_locator(
+                            mtick.MultipleLocator(y_divisions)
+                        )
+                    if len(x_axis_range) > 0:
+                        x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
+                    if x_axis_percent:
+                        if x_max[index] is None:
+                            x_max[index] = max(np.abs(scan_var_array[input_file]))
+                        xticks = mtick.PercentFormatter(x_max[index])
                         if len(x_axis_range) > 0:
-                            x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
-                        if x_axis_percent:
-                            if x_max[index] is None:
-                                x_max[index] = max(np.abs(scan_var_array[input_file]))
-                            xticks = mtick.PercentFormatter(x_max[index])
-                            if len(x_axis_range) > 0:
-                                x_divisions = (
-                                    5 * math.ceil(x_divisions / 5) * x_max[index] / 100
-                                )
-                                x_range = (
-                                    x_axis_range[0] * x_max[index] / 100,
-                                    x_axis_range[1] * x_max[index] / 100,
-                                )
-                            ax.xaxis.set_major_formatter(xticks)
-                        if len(x_axis_range) > 0:
-                            if x_axis_percent is False:
-                                x_range = x_axis_range
-                            plt.xlim(x_range[0], x_range[1])
-                            ax.xaxis.set_major_locator(
-                                mtick.MultipleLocator(x_divisions)
+                            x_divisions = (
+                                5 * math.ceil(x_divisions / 5) * x_max[index] / 100
                             )
-                        plt.rc("xtick", labelsize=axis_tick_size)
-                        plt.rc("ytick", labelsize=axis_tick_size)
-                        plt.tight_layout()
+                            x_range = (
+                                x_axis_range[0] * x_max[index] / 100,
+                                x_axis_range[1] * x_max[index] / 100,
+                            )
+                        axs[output_names.index(output_name)].xaxis.set_major_formatter(
+                            xticks
+                        )
+                    if len(x_axis_range) > 0:
+                        if x_axis_percent is False:
+                            x_range = x_axis_range
+                        plt.xlim(x_range[0], x_range[1])
+                        axs[output_names.index(output_name)].xaxis.set_major_locator(
+                            mtick.MultipleLocator(x_divisions)
+                        )
+                    plt.rc("xtick", labelsize=axis_tick_size)
+                    plt.rc("ytick", labelsize=axis_tick_size)
+                    plt.tight_layout()
+                else:
+                    ax.plot(
+                        scan_var_array[input_file],
+                        output_arrays[input_file][output_name],
+                        "--o",
+                        color="blue" if len(output_names2) > 0 else None,
+                        label=labl,
+                    )
+                    if len(y_axis_range) > 0:
+                        y_divisions = (y_axis_range[1] - y_axis_range[0]) / 10
+                    if y_axis_percent:
+                        if y_max[index] is None:
+                            y_max[index] = max(
+                                np.abs(output_arrays[input_file][output_name])
+                            )
+                        yticks = mtick.PercentFormatter(y_max[index])
+                        if len(y_axis_range) > 0:
+                            y_divisions = (
+                                5 * math.ceil(y_divisions / 5) * y_max[index] / 100
+                            )
+                            y_range = (
+                                y_axis_range[0] * y_max[index] / 100,
+                                y_axis_range[1] * y_max[index] / 100,
+                            )
+                        ax.yaxis.set_major_formatter(yticks)
+                    if len(y_axis_range) > 0:
+                        if y_axis_percent is False:
+                            y_range = y_axis_range
+                        ax.set_ylim(y_range[0], y_range[1])
+                        ax.yaxis.set_major_locator(mtick.MultipleLocator(y_divisions))
+                    if len(x_axis_range) > 0:
+                        x_divisions = (x_axis_range[1] - x_axis_range[0]) / 10
+                    if x_axis_percent:
+                        if x_max[index] is None:
+                            x_max[index] = max(np.abs(scan_var_array[input_file]))
+                        xticks = mtick.PercentFormatter(x_max[index])
+                        if len(x_axis_range) > 0:
+                            x_divisions = (
+                                5 * math.ceil(x_divisions / 5) * x_max[index] / 100
+                            )
+                            x_range = (
+                                x_axis_range[0] * x_max[index] / 100,
+                                x_axis_range[1] * x_max[index] / 100,
+                            )
+                        ax.xaxis.set_major_formatter(xticks)
+                    if len(x_axis_range) > 0:
+                        if x_axis_percent is False:
+                            x_range = x_axis_range
+                        plt.xlim(x_range[0], x_range[1])
+                        ax.xaxis.set_major_locator(mtick.MultipleLocator(x_divisions))
+                    plt.rc("xtick", labelsize=axis_tick_size)
+                    plt.rc("ytick", labelsize=axis_tick_size)
+                    plt.tight_layout()
                 if len(output_names2) > 0:
                     ax2.plot(
                         scan_var_array[input_file],

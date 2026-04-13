@@ -101,7 +101,6 @@ class Build(Model):
         tuple[float, float]
             Tuple containing (radius_beam_tangency, radius_beam_tangency_max)
         """
-
         # Have kept the single letter variable names to match the original code and documentation diagram.
         radius_beam_tangency = f_radius_beam_tangency_rmajor * rmajor
 
@@ -145,7 +144,9 @@ class Build(Model):
             radius_beam_tangency_max = f * np.cos(eps) - 0.5e0 * c
         else:
             logger.error(
-                f"Max beam tangency radius set =0 temporarily; change dx_beam_duct. {g=} {c=}"
+                "Max beam tangency radius set =0 temporarily; change dx_beam_duct. %s %s",
+                g,
+                c,
             )
             radius_beam_tangency_max = 0.0e0
 
@@ -1710,7 +1711,6 @@ class Build(Model):
         output : bool
             Flag indicating whether to output the results
         """
-
         if fwbs_variables.blktmodel > 0:
             build_variables.dr_blkt_inboard = (
                 build_variables.blbuith
@@ -2059,7 +2059,8 @@ class Build(Model):
                         / physics_variables.rmajor
                     )
                     logger.warning(
-                        f"(TF coil ripple calculation) Dimensionless coil width X out of fitted range. {diagnostic=}"
+                        "(TF coil ripple calculation) Dimensionless coil width X out of fitted range. %s",
+                        diagnostic,
                     )
                 elif build_variables.ripflag == 2:
                     logger.warning(
@@ -2071,7 +2072,8 @@ class Build(Model):
                     ) / build_variables.r_tf_outboard_mid
 
                     logger.warning(
-                        f"(TF coil ripple calculation) (R+a)/rtot={diagnostic} out of fitted range."
+                        "(TF coil ripple calculation) (R+a)/rtot=%s out of fitted range.",
+                        diagnostic,
                     )
 
             po.ovarin(

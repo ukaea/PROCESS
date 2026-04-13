@@ -172,7 +172,6 @@ class Buildings(Model):
         elev:
             volume of electrical buildings, m3
         """
-
         # Reactor building
 
         # Determine basic machine radius (m)
@@ -425,7 +424,6 @@ class Buildings(Model):
         tf_vertical_dim :
 
         """
-
         buildings_total_vol = 0.0e0
 
         # Reactor building

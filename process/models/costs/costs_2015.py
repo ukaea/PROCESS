@@ -141,7 +141,6 @@ class Costs2015(Model):
         coils for a fusion power plant based on the costings in the PROCESS costs paper.
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
-
         for i in range(21, 27):
             self.data.costs_2015.s_cost_factor[i] = cost_variables.cost_factor_fwbs
 
@@ -1274,7 +1273,6 @@ class Costs2015(Model):
         of a cost item from array s in costs_2015
 
         """
-
         if descr == "not used":
             return
 

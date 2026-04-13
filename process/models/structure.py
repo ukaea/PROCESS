@@ -41,7 +41,6 @@ class Structure(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-
         # Total weight of the PF coil conductor and its structure
         total_weight_pf = pfv.m_pf_coil_conductor_total + pfv.m_pf_coil_structure_total
 
@@ -146,7 +145,6 @@ class Structure(Model):
             - coldmass (`float`) total mass of cryogenic temp. stuff (kg)
             - gsm (`float`) gravity support for magnets, and shield/blanket (kg)
         """
-
         #  Outer PF coil fence (1990 ITER fit)
         fncmass = 2.1e-11 * ai * ai * r0 * akappa * a
 

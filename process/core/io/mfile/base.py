@@ -78,7 +78,6 @@ class MFileVariable(dict):  # noqa: FURB189
         type
             [single scan requested]
         """
-
         if scan_number is None or scan_number == -1:
             return self[f"scan{self.latest_scan:02}"]
         return self[f"scan{scan_number:02}"]
@@ -88,7 +87,6 @@ class MFileVariable(dict):  # noqa: FURB189
 
         Returns
         -------
-
             [List of all scans for variable]
         """
         return [v for k, v in sorted(filter(lambda x: "scan" in x[0], self.items()))]
@@ -339,7 +337,6 @@ class MFile:
         verbose :
              verbosity of output
         """
-
         if keys is None:
             keys = self.data.keys()
 
@@ -496,7 +493,7 @@ def sort_value(value_words: list[str]) -> str | float:
         return float(value_words[0])
     except ValueError:
         # Log the exception with details
-        logger.exception(f"Can't parse value in MFILE: {value_words}")
+        logger.exception("Can't parse value in MFILE: %s", value_words)
         # Return the original string as a fallback
         return " ".join(value_words).strip()
 
