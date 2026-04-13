@@ -10,18 +10,18 @@ from process.data_structure import build_variables as bv
 from process.data_structure import pfcoil_variables
 from process.data_structure import tfcoil_variables as tfv
 from process.models.cs_fatigue import CsFatigue
-from process.models.pfcoil import CSCoil, PFCoil, calculate_b_field_at_point, rsid
+from process.models.pfcoil import CSCoil, calculate_b_field_at_point, rsid
 
 
 @pytest.fixture
-def pfcoil():
+def pfcoil(process_models):
     """Fixture to create a PFCoil object.
 
     :return: an instance of PFCoil
     :rtype: process.pfcoil.PFCoil
     """
 
-    return PFCoil(cs_fatigue=CsFatigue())
+    return process_models.pfcoil
 
 
 @pytest.fixture

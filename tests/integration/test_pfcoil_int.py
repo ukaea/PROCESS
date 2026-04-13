@@ -14,16 +14,13 @@ import pytest
 from numpy.testing import assert_array_almost_equal
 
 from process.core import constants
-from process.core.init import init_all_module_vars
 from process.data_structure import build_variables as bv
 from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import pfcoil_variables, superconducting_tf_coil_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
-from process.models.cs_fatigue import CsFatigue
 from process.models.pfcoil import (
-    CSCoil,
     PFCoil,
     fixb,
     mtrx,
@@ -33,25 +30,24 @@ from process.models.pfcoil import (
 
 
 @pytest.fixture
-def pfcoil():
+def pfcoil(process_models):
     """Fixture to create PFCoil object.
 
     :return: a PFCoil instance
     :rtype: process.pfcoil.PFCoil
     """
-    init_all_module_vars()
-    return PFCoil(cs_fatigue=CsFatigue())
+    return process_models.pfcoil
 
 
 @pytest.fixture
-def cs_coil():
-    """Fixture to create CSCoil object.
+def cs_coil(process_models):
+    """Fixture to get the CSCoil from process_models.
 
     :return: a CSCoil instance
     :rtype: process.pfcoil.CSCoil
     """
 
-    return CSCoil(cs_fatigue=CsFatigue())
+    return process_models.cs_coil
 
 
 def test_pfcoil(monkeypatch, pfcoil):

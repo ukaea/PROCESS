@@ -8,6 +8,7 @@ import numpy as np
 from process import data_structure
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
+from process.core.model import DataStructure
 from process.models.physics.physics import BetaComponentLimits
 from process.models.tfcoil.base import TFConductorModel
 
@@ -126,13 +127,16 @@ class ConstraintManager:
         return cls._constraint_registry.get(name)
 
     @classmethod
-    def evaluate_constraint(cls, name: Hashable):
+    def evaluate_constraint(cls, name: Hashable, data: DataStructure):
         """Evalutes a constraint with a given name.
 
         Parameters
         ----------
         name : Hashable
             the name of the constraint
+        data: DataStructure
+            data structure object for providing constraint data to evaluate
+            constraint equations
 
         Returns
         -------
@@ -145,7 +149,7 @@ class ConstraintManager:
             error_msg = f"Constraint '{name}' cannot be found."
             raise ProcessError(error_msg)
 
-        return registration.constraint_equation(registration)
+        return registration.constraint_equation(registration, data)
 
 
 def leq(value: float, bound: float, registration: ConstraintRegistration):
@@ -188,7 +192,7 @@ def eq(value: float, bound: float, registration: ConstraintRegistration):
 
 
 @ConstraintManager.register_constraint(1, "", "=")
-def constraint_equation_1(constraint_registration):
+def constraint_equation_1(constraint_registration, _data):
     """Relationship between beta, temperature (keV) and density
 
     beta_total_vol_avg: total plasma beta
@@ -222,7 +226,7 @@ def constraint_equation_1(constraint_registration):
 
 
 @ConstraintManager.register_constraint(2, "MW/m3", "=")
-def constraint_equation_2(constraint_registration):
+def constraint_equation_2(constraint_registration, _data):
     """
 
      i_rad_loss: switch for radiation loss term usage in power balance (see User Guide):
@@ -283,7 +287,7 @@ def constraint_equation_2(constraint_registration):
 
 
 @ConstraintManager.register_constraint(3, "MW/m3", "=")
-def constraint_equation_3(constraint_registration):
+def constraint_equation_3(constraint_registration, _data):
     """Global power balance equation for ions
     i_plasma_ignited: switch for ignition assumption
     - 0 do not assume plasma ignition;
@@ -327,7 +331,7 @@ def constraint_equation_3(constraint_registration):
 
 
 @ConstraintManager.register_constraint(4, "MW/m3", "=")
-def constraint_equation_4(constraint_registration):
+def constraint_equation_4(constraint_registration, _data):
     """Global power balance equation for electrons
 
     i_rad_loss: switch for radiation loss term usage in power balance
@@ -381,7 +385,7 @@ def constraint_equation_4(constraint_registration):
 
 
 @ConstraintManager.register_constraint(5, "/m3", "<=")
-def constraint_equation_5(constraint_registration):
+def constraint_equation_5(constraint_registration, _data):
     """Equation for density upper limit
 
     fdene: density limit scale
@@ -424,7 +428,7 @@ def constraint_equation_5(constraint_registration):
 
 
 @ConstraintManager.register_constraint(6, "", "<=")
-def constraint_equation_6(constraint_registration):
+def constraint_equation_6(constraint_registration, _data):
     """Equation for epsilon beta-poloidal upper limit
 
     beta_poloidal_eps_max: maximum (eps*beta_poloidal)
@@ -442,7 +446,7 @@ def constraint_equation_6(constraint_registration):
 
 
 @ConstraintManager.register_constraint(7, "/m3", "=")
-def constraint_equation_7(constraint_registration):
+def constraint_equation_7(constraint_registration, _data):
     """Equation for hot beam ion density
 
     i_plasma_ignited: switch for ignition assumption:
@@ -466,7 +470,7 @@ def constraint_equation_7(constraint_registration):
 
 
 @ConstraintManager.register_constraint(8, "MW/m2", "<=")
-def constraint_equation_8(constraint_registration):
+def constraint_equation_8(constraint_registration, _data):
     """Equation for neutron wall load upper limit
 
     pflux_fw_neutron_max_mw: allowable wall-load (MW/m2)
@@ -480,7 +484,7 @@ def constraint_equation_8(constraint_registration):
 
 
 @ConstraintManager.register_constraint(9, "MW", "<=")
-def constraint_equation_9(constraint_registration):
+def constraint_equation_9(constraint_registration, _data):
     """Equation for fusion power upper limit
 
     p_fusion_total_max_mw: maximum fusion power (MW)
@@ -494,7 +498,7 @@ def constraint_equation_9(constraint_registration):
 
 
 @ConstraintManager.register_constraint(11, "m", "=")
-def constraint_equation_11(constraint_registration):
+def constraint_equation_11(constraint_registration, _data):
     """Equation for radial build
 
     rbld: sum of thicknesses to the major radius (m)
@@ -508,7 +512,7 @@ def constraint_equation_11(constraint_registration):
 
 
 @ConstraintManager.register_constraint(12, "V.sec", ">=")
-def constraint_equation_12(constraint_registration):
+def constraint_equation_12(constraint_registration, _data):
     """Equation for volt-second capability lower limit
 
     vs_plasma_total_required: total V-s needed (Wb)
@@ -524,7 +528,7 @@ def constraint_equation_12(constraint_registration):
 
 
 @ConstraintManager.register_constraint(13, "sec", ">=")
-def constraint_equation_13(constraint_registration):
+def constraint_equation_13(constraint_registration, _data):
     """Equation for burn time lower limit
 
     t_plant_pulse_burn: burn time (s) (calculated if i_pulsed_plant=1)
@@ -538,7 +542,7 @@ def constraint_equation_13(constraint_registration):
 
 
 @ConstraintManager.register_constraint(14, "", "=")
-def constraint_equation_14(constraint_registration):
+def constraint_equation_14(constraint_registration, _data):
     """Equation to fix number of NBI decay lengths to plasma centre
 
     n_beam_decay_lengths_core: neutral beam e-decay lengths to plasma centre
@@ -552,7 +556,7 @@ def constraint_equation_14(constraint_registration):
 
 
 @ConstraintManager.register_constraint(15, "MW", ">=")
-def constraint_equation_15(constraint_registration):
+def constraint_equation_15(constraint_registration, _data):
     """Equation for L-H power threshold limit to enforce H-mode
 
     f_h_mode_margin: a margin on the constraint
@@ -576,7 +580,7 @@ def constraint_equation_15(constraint_registration):
 
 
 @ConstraintManager.register_constraint(16, "MW", ">=")
-def constraint_equation_16(constraint_registration):
+def constraint_equation_16(constraint_registration, _data):
     """Equation for net electric power lower limit
 
     p_plant_electric_net_mw: net electric power (MW)
@@ -590,7 +594,7 @@ def constraint_equation_16(constraint_registration):
 
 
 @ConstraintManager.register_constraint(17, "MW/m3", "<=")
-def constraint_equation_17(constraint_registration):
+def constraint_equation_17(constraint_registration, _data):
     """Equation for radiation power upper limit
 
     f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
@@ -624,7 +628,7 @@ def constraint_equation_17(constraint_registration):
 
 
 @ConstraintManager.register_constraint(18, "MW/m2", "<=")
-def constraint_equation_18(constraint_registration):
+def constraint_equation_18(constraint_registration, _data):
     """Equation for divertor heat load upper limit
 
     pflux_div_heat_load_max_mw: heat load limit (MW/m2)
@@ -638,7 +642,7 @@ def constraint_equation_18(constraint_registration):
 
 
 @ConstraintManager.register_constraint(19, "MVA", "<=")
-def constraint_equation_19(constraint_registration):
+def constraint_equation_19(constraint_registration, _data):
     """Equation for MVA (power) upper limit: resistive TF coil set
 
     p_cp_resistive_mw: peak resistive TF coil inboard leg power (total) (MW)
@@ -656,7 +660,7 @@ def constraint_equation_19(constraint_registration):
 
 
 @ConstraintManager.register_constraint(20, "m", "<=")
-def constraint_equation_20(constraint_registration):
+def constraint_equation_20(constraint_registration, _data):
     """Equation for neutral beam tangency radius upper limit
 
     radius_beam_tangency_max: maximum tangency radius for centreline of beam (m)
@@ -670,7 +674,7 @@ def constraint_equation_20(constraint_registration):
 
 
 @ConstraintManager.register_constraint(21, "", ">=")
-def constraint_equation_21(constraint_registration):
+def constraint_equation_21(constraint_registration, _data):
     """Equation for minor radius lower limit
 
     rminor: plasma minor radius (m)
@@ -684,7 +688,7 @@ def constraint_equation_21(constraint_registration):
 
 
 @ConstraintManager.register_constraint(22, "MW", ">=")
-def constraint_equation_22(constraint_registration):
+def constraint_equation_22(constraint_registration, _data):
     """Equation for L-H power threshold limit to enforce L-mode
 
     f_l_mode_margin: a margin on the constraint
@@ -708,7 +712,7 @@ def constraint_equation_22(constraint_registration):
 
 
 @ConstraintManager.register_constraint(23, "m", "<=")
-def constraint_equation_23(constraint_registration):
+def constraint_equation_23(constraint_registration, _data):
     """Equation for conducting shell radius / rminor upper limit
 
     rminor: plasma minor radius (m)
@@ -735,7 +739,7 @@ def constraint_equation_23(constraint_registration):
 
 
 @ConstraintManager.register_constraint(24, "", "<=")
-def constraint_equation_24(constraint_registration):
+def constraint_equation_24(constraint_registration, _data):
     """Equation for beta upper limit
 
     i_beta_component: switch for beta limit scaling (constraint equation  24):
@@ -798,7 +802,7 @@ def constraint_equation_24(constraint_registration):
 
 
 @ConstraintManager.register_constraint(25, "T", "<=")
-def constraint_equation_25(constraint_registration):
+def constraint_equation_25(constraint_registration, _data):
     """Equation for peak toroidal field upper limit
 
     b_tf_inboard_max: maximum peak toroidal field (T)
@@ -812,7 +816,7 @@ def constraint_equation_25(constraint_registration):
 
 
 @ConstraintManager.register_constraint(26, "A/m2", "<=")
-def constraint_equation_26(constraint_registration):
+def constraint_equation_26(constraint_registration, _data):
     """Equation for Central Solenoid current density upper limit at EOF
 
     fjohc: margin for central solenoid current at end-of-flattop
@@ -830,7 +834,7 @@ def constraint_equation_26(constraint_registration):
 
 
 @ConstraintManager.register_constraint(27, "A/m2", "<=")
-def constraint_equation_27(constraint_registration):
+def constraint_equation_27(constraint_registration, _data):
     """Equation for Central Solenoid current density upper limit at BOP
 
     fjohc0: margin for central solenoid current at beginning of pulse
@@ -848,7 +852,7 @@ def constraint_equation_27(constraint_registration):
 
 
 @ConstraintManager.register_constraint(28, "", ">=")
-def constraint_equation_28(constraint_registration):
+def constraint_equation_28(constraint_registration, _data):
     """Equation for fusion gain (big Q) lower limit
 
     big_q_plasma: Fusion gain; P_fusion / (P_injection + P_ohmic)
@@ -872,7 +876,7 @@ def constraint_equation_28(constraint_registration):
 
 
 @ConstraintManager.register_constraint(29, "m", "=")
-def constraint_equation_29(constraint_registration):
+def constraint_equation_29(constraint_registration, _data):
     """Equation for inboard major radius: This is a consistency equation
 
     rmajor: plasma major radius (m) (iteration variable 3)
@@ -890,7 +894,7 @@ def constraint_equation_29(constraint_registration):
 
 
 @ConstraintManager.register_constraint(30, "MW", "<=")
-def constraint_equation_30(constraint_registration):
+def constraint_equation_30(constraint_registration, _data):
     """Equation for injection power upper limit
 
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
@@ -904,7 +908,7 @@ def constraint_equation_30(constraint_registration):
 
 
 @ConstraintManager.register_constraint(31, "Pa", "<=")
-def constraint_equation_31(constraint_registration):
+def constraint_equation_31(constraint_registration, _data):
     """Equation for TF coil case stress upper limit (SCTF)
 
     sig_tf_case_max: Allowable maximum shear stress in TF coil case (Tresca criterion) (Pa)
@@ -918,7 +922,7 @@ def constraint_equation_31(constraint_registration):
 
 
 @ConstraintManager.register_constraint(32, "Pa", "<=")
-def constraint_equation_32(constraint_registration):
+def constraint_equation_32(constraint_registration, _data):
     """Equation for TF coil conduit stress upper limit (SCTF)
 
     sig_tf_wp_max: Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)
@@ -932,7 +936,7 @@ def constraint_equation_32(constraint_registration):
 
 
 @ConstraintManager.register_constraint(33, "A/m2", "<=")
-def constraint_equation_33(constraint_registration):
+def constraint_equation_33(constraint_registration, _data):
     """Equation for TF coil operating/critical J upper limit (SCTF)
 
     args : output structure : residual error; constraint value;
@@ -955,7 +959,7 @@ def constraint_equation_33(constraint_registration):
 
 
 @ConstraintManager.register_constraint(34, "V", "<=")
-def constraint_equation_34(constraint_registration):
+def constraint_equation_34(constraint_registration, _data):
     """Equation for TF coil dump voltage upper limit (SCTF)
 
     v_tf_coil_dump_quench_max_kv: max voltage across TF coil during quench (kV)
@@ -969,7 +973,7 @@ def constraint_equation_34(constraint_registration):
 
 
 @ConstraintManager.register_constraint(35, "A/m2", "<=")
-def constraint_equation_35(constraint_registration):
+def constraint_equation_35(constraint_registration, _data):
     """Equation for TF coil J_wp/J_prot upper limit (SCTF)
 
     j_tf_wp_quench_heat_max: allowable TF coil winding pack current density, for dump temperature
@@ -984,7 +988,7 @@ def constraint_equation_35(constraint_registration):
 
 
 @ConstraintManager.register_constraint(36, "K", ">=")
-def constraint_equation_36(constraint_registration):
+def constraint_equation_36(constraint_registration, _data):
     """Equation for TF coil s/c temperature margin lower limit (SCTF)
 
     temp_tf_superconductor_margin: TF coil temperature margin (K)
@@ -998,7 +1002,7 @@ def constraint_equation_36(constraint_registration):
 
 
 @ConstraintManager.register_constraint(37, "1E20 A/Wm2", "<=")
-def constraint_equation_37(constraint_registration):
+def constraint_equation_37(constraint_registration, _data):
     """Equation for current drive gamma upper limit
 
     eta_cd_norm_hcd_primary_max: maximum current drive gamma
@@ -1012,7 +1016,7 @@ def constraint_equation_37(constraint_registration):
 
 
 @ConstraintManager.register_constraint(39, "K", "<=")
-def constraint_equation_39(constraint_registration):
+def constraint_equation_39(constraint_registration, _data):
     """Equation for first wall temperature upper limit
 
     temp_fw_max: maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
@@ -1031,7 +1035,7 @@ def constraint_equation_39(constraint_registration):
 
 
 @ConstraintManager.register_constraint(40, "MW", ">=")
-def constraint_equation_40(constraint_registration):
+def constraint_equation_40(constraint_registration, _data):
     """Equation for auxiliary power lower limit
 
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
@@ -1045,7 +1049,7 @@ def constraint_equation_40(constraint_registration):
 
 
 @ConstraintManager.register_constraint(41, "sec", ">=")
-def constraint_equation_41(constraint_registration):
+def constraint_equation_41(constraint_registration, _data):
     """Equation for plasma current ramp-up time lower limit
 
     t_plant_pulse_plasma_current_ramp_up: plasma current ramp-up time for current initiation (s)
@@ -1059,7 +1063,7 @@ def constraint_equation_41(constraint_registration):
 
 
 @ConstraintManager.register_constraint(42, "sec", ">=")
-def constraint_equation_42(constraint_registration):
+def constraint_equation_42(constraint_registration, _data):
     """Equation for cycle time lower limit
 
     t_plant_pulse_total: full cycle time (s)
@@ -1078,7 +1082,7 @@ def constraint_equation_42(constraint_registration):
 
 
 @ConstraintManager.register_constraint(43, "deg C", "=")
-def constraint_equation_43(constraint_registration):
+def constraint_equation_43(constraint_registration, _data):
     """Equation for average centrepost temperature: This is a consistency equation (TART)
 
     temp_cp_average: average temp of TF coil inboard leg conductor (C)e
@@ -1101,7 +1105,7 @@ def constraint_equation_43(constraint_registration):
 
 
 @ConstraintManager.register_constraint(44, "deg C", "<=")
-def constraint_equation_44(constraint_registration):
+def constraint_equation_44(constraint_registration, _data):
     """Equation for centrepost temperature upper limit (TART)
 
     temp_cp_max: maximum peak centrepost temperature (K)
@@ -1126,7 +1130,7 @@ def constraint_equation_44(constraint_registration):
 
 
 @ConstraintManager.register_constraint(45, "", ">=")
-def constraint_manager_45(constraint_registration):
+def constraint_manager_45(constraint_registration, _data):
     """Equation for edge safety factor lower limit (TART)
 
     q95 : safety factor 'near' plasma edge
@@ -1147,7 +1151,7 @@ def constraint_manager_45(constraint_registration):
 
 
 @ConstraintManager.register_constraint(46, "", "<=")
-def constraint_equation_46(constraint_registration):
+def constraint_equation_46(constraint_registration, _data):
     """Equation for Ip/Irod upper limit (TART)
 
     eps: inverse aspect ratio
@@ -1174,7 +1178,7 @@ def constraint_equation_46(constraint_registration):
 
 
 @ConstraintManager.register_constraint(48, "", "<=")
-def constraint_equation_48(constraint_registration):
+def constraint_equation_48(constraint_registration, _data):
     """Equation for poloidal beta upper limit
 
     beta_poloidal_max: maximum poloidal beta
@@ -1188,7 +1192,7 @@ def constraint_equation_48(constraint_registration):
 
 
 @ConstraintManager.register_constraint(50, "Hz", "<=")
-def constraint_equation_50(constraint_registration):
+def constraint_equation_50(constraint_registration, _data):
     """IFE option: Equation for repetition rate upper limit"""
     return leq(
         data_structure.ife_variables.reprat,
@@ -1198,7 +1202,7 @@ def constraint_equation_50(constraint_registration):
 
 
 @ConstraintManager.register_constraint(51, "V.s", "=")
-def constraint_equation_51(constraint_registration):
+def constraint_equation_51(constraint_registration, _data):
     """Equation to enforce startup flux = available startup flux
 
     vs_plasma_res_ramp: resistive losses in startup V-s (Wb)
@@ -1216,7 +1220,7 @@ def constraint_equation_51(constraint_registration):
 
 
 @ConstraintManager.register_constraint(52, "", ">=")
-def constraint_equation_52(constraint_registration):
+def constraint_equation_52(constraint_registration, _data):
     """Equation for tritium breeding ratio lower limit
 
     The tritium breeding ratio is only calculated when using the IFE model.
@@ -1237,7 +1241,7 @@ def constraint_equation_52(constraint_registration):
 
 
 @ConstraintManager.register_constraint(53, "neutron/m2", "<=")
-def constraint_equation_53(constraint_registration):
+def constraint_equation_53(constraint_registration, _data):
     """Equation for fast neutron fluence on TF coil upper limit
 
     nflutfmax: max fast neutron fluence on TF coil (n/m2)
@@ -1251,7 +1255,7 @@ def constraint_equation_53(constraint_registration):
 
 
 @ConstraintManager.register_constraint(54, "MW/m3", "<=")
-def constraint_equation_54(constraint_registration):
+def constraint_equation_54(constraint_registration, _data):
     """Equation for peak TF coil nuclear heating upper limit
 
     ptfnucmax: maximum nuclear heating in TF coil (MW/m3)
@@ -1265,7 +1269,7 @@ def constraint_equation_54(constraint_registration):
 
 
 @ConstraintManager.register_constraint(56, "MW/m", "<=")
-def constraint_equation_56(constraint_registration):
+def constraint_equation_56(constraint_registration, _data):
     """Equation for power through separatrix / major radius upper limit
 
     pseprmax: maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
@@ -1283,7 +1287,7 @@ def constraint_equation_56(constraint_registration):
 
 
 @ConstraintManager.register_constraint(59, "", "<=")
-def constraint_equation_59(constraint_registration):
+def constraint_equation_59(constraint_registration, _data):
     """Equation for neutral beam shine-through fraction upper limit
 
     f_p_beam_shine_through_max: maximum neutral beam shine-through fraction
@@ -1297,7 +1301,7 @@ def constraint_equation_59(constraint_registration):
 
 
 @ConstraintManager.register_constraint(60, "K", ">=")
-def constraint_equation_60(constraint_registration):
+def constraint_equation_60(constraint_registration, _data):
     """Equation for Central Solenoid s/c temperature margin lower limit
 
     temp_cs_superconductor_margin: Central solenoid temperature margin (K)
@@ -1311,7 +1315,7 @@ def constraint_equation_60(constraint_registration):
 
 
 @ConstraintManager.register_constraint(61, "", ">=")
-def constraint_equation_61(constraint_registration):
+def constraint_equation_61(constraint_registration, _data):
     """Equation for availability lower limit
 
     f_t_plant_available: Total plant availability fraction
@@ -1325,7 +1329,7 @@ def constraint_equation_61(constraint_registration):
 
 
 @ConstraintManager.register_constraint(62, "", ">=")
-def constraint_equation_62(constraint_registration):
+def constraint_equation_62(constraint_registration, _data):
     """Lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
 
     t_alpha_confinement: alpha particle confinement time (s)
@@ -1341,7 +1345,7 @@ def constraint_equation_62(constraint_registration):
 
 
 @ConstraintManager.register_constraint(63, "", "<=")
-def constraint_equation_63(constraint_registration):
+def constraint_equation_63(constraint_registration, _data):
     """Upper limit on n_iter_vacuum_pumps (i_vacuum_pumping = simple)
 
     tfno: number of TF coils (default = 50 for stellarators)
@@ -1355,7 +1359,7 @@ def constraint_equation_63(constraint_registration):
 
 
 @ConstraintManager.register_constraint(64, "", "<=")
-def constraint_equation_64(constraint_registration):
+def constraint_equation_64(constraint_registration, _data):
     """Upper limit on Zeff
 
     zeff_max: maximum value for Zeff
@@ -1369,7 +1373,7 @@ def constraint_equation_64(constraint_registration):
 
 
 @ConstraintManager.register_constraint(65, "Pa", "<=")
-def constraint_equation_65(constraint_registration):
+def constraint_equation_65(constraint_registration, _data):
     """Upper limit on stress of the vacuum vessel that occurs when the TF coil quenches.
 
     max_vv_stress: Maximum permitted stress of the VV (Pa)
@@ -1383,7 +1387,7 @@ def constraint_equation_65(constraint_registration):
 
 
 @ConstraintManager.register_constraint(66, "MW", "<=")
-def constrain_equation_66(constraint_registration):
+def constrain_equation_66(constraint_registration, _data):
     """Upper limit on rate of change of energy in poloidal field
 
     maxpoloidalpower: Maximum permitted absolute rate of change of stored energy in poloidal field (MW)
@@ -1397,7 +1401,7 @@ def constrain_equation_66(constraint_registration):
 
 
 @ConstraintManager.register_constraint(67, "MW/m2", "<=")
-def constraint_equation_67(constraint_registration):
+def constraint_equation_67(constraint_registration, _data):
     """Simple upper limit on radiation wall load
 
     pflux_fw_rad_max: Maximum permitted radiation wall load (MW/m^2)
@@ -1411,7 +1415,7 @@ def constraint_equation_67(constraint_registration):
 
 
 @ConstraintManager.register_constraint(68, "MWT/m", "<=")
-def constraint_equation_68(constraint_registration):
+def constraint_equation_68(constraint_registration, _data):
     """Upper limit on Psep scaling (PsepB/qAR)
 
     psepbqarmax: maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
@@ -1458,7 +1462,7 @@ def constraint_equation_68(constraint_registration):
 
 
 @ConstraintManager.register_constraint(72, "Pa", "<=")
-def constraint_equation_72(constraint_registration):
+def constraint_equation_72(constraint_registration, _data):
     """Upper limit on central Solenoid Tresca yield stress
 
     In the case if the bucked and wedged option ( i_tf_bucking >= 2 ) the constrained
@@ -1499,7 +1503,7 @@ def constraint_equation_72(constraint_registration):
 
 
 @ConstraintManager.register_constraint(73, "MW", ">=")
-def constraint_equation_73(constraint_registration):
+def constraint_equation_73(constraint_registration, _data):
     """Lower limit to ensure separatrix power is greater than the L-H power + auxiliary power
     Related to constraint 15
 
@@ -1518,7 +1522,7 @@ def constraint_equation_73(constraint_registration):
 
 
 @ConstraintManager.register_constraint(74, "K", "<=")
-def constraint_equation_74(constraint_registration):
+def constraint_equation_74(constraint_registration, _data):
     """Upper limit to ensure TF coil quench temperature < temp_croco_quench_max
     ONLY used for croco HTS coil
 
@@ -1533,7 +1537,7 @@ def constraint_equation_74(constraint_registration):
 
 
 @ConstraintManager.register_constraint(75, "A/m2", "<=")
-def constraint_equation_75(constraint_registration):
+def constraint_equation_75(constraint_registration, _data):
     """Upper limit to ensure that TF coil current / copper area < Maximum value
     ONLY used for croco HTS coil
 
@@ -1548,7 +1552,7 @@ def constraint_equation_75(constraint_registration):
 
 
 @ConstraintManager.register_constraint(76, "m-3", "<=")
-def constraint_equation_76(constraint_registration):
+def constraint_equation_76(constraint_registration, _data):
     """Upper limit for Eich critical separatrix density model: Added for issue 558
 
     Eich critical separatrix density model
@@ -1586,7 +1590,7 @@ def constraint_equation_76(constraint_registration):
 
 
 @ConstraintManager.register_constraint(77, "A/turn", "<=")
-def constraint_equation_77(constraint_registration):
+def constraint_equation_77(constraint_registration, _data):
     """Equation for maximum TF current per turn upper limit
 
     c_tf_turn_max : allowable TF coil current per turn [A/turn]
@@ -1600,7 +1604,7 @@ def constraint_equation_77(constraint_registration):
 
 
 @ConstraintManager.register_constraint(78, "", ">=")
-def constraint_equation_78(constraint_registration):
+def constraint_equation_78(constraint_registration, _data):
     """Equation for Reinke criterion, divertor impurity fraction lower limit
 
     fzmin : input : minimum impurity fraction from Reinke model
@@ -1614,7 +1618,7 @@ def constraint_equation_78(constraint_registration):
 
 
 @ConstraintManager.register_constraint(79, "A/turn", "<=")
-def constraint_equation_79(constraint_registration):
+def constraint_equation_79(constraint_registration, _data):
     """Equation for maximum CS field
 
     b_cs_limit_max: Central solenoid max field limit [T]
@@ -1633,7 +1637,7 @@ def constraint_equation_79(constraint_registration):
 
 
 @ConstraintManager.register_constraint(80, "MW", ">=")
-def constraint_equation_80(constraint_registration):
+def constraint_equation_80(constraint_registration, _data):
     """Equation for p_plasma_separatrix_mw lower limit
 
     args : output structure : residual error; constraint value; residual error in physical units;
@@ -1651,7 +1655,7 @@ def constraint_equation_80(constraint_registration):
 
 
 @ConstraintManager.register_constraint(81, "m-3", ">=")
-def constraint_equation_81(constraint_registration):
+def constraint_equation_81(constraint_registration, _data):
     """Lower limit to ensure central density is larger that the pedestal one
 
     args : output structure : residual error; constraint value;
@@ -1669,7 +1673,7 @@ def constraint_equation_81(constraint_registration):
 
 
 @ConstraintManager.register_constraint(82, "m", ">=")
-def constraint_equation_82(constraint_registration):
+def constraint_equation_82(constraint_registration, _data):
     """Equation for toroidal consistency of stellarator build
 
     toroidalgap: minimal gap between two stellarator coils
@@ -1683,7 +1687,7 @@ def constraint_equation_82(constraint_registration):
 
 
 @ConstraintManager.register_constraint(83, "m", ">=")
-def constraint_equation_83(constraint_registration):
+def constraint_equation_83(constraint_registration, _data):
     """Equation for radial consistency of stellarator build
 
     available_radial_space: avaible space in radial direction as given by each s.-configuration
@@ -1697,7 +1701,7 @@ def constraint_equation_83(constraint_registration):
 
 
 @ConstraintManager.register_constraint(84, "", ">=")
-def constraint_equation_84(constraint_registration):
+def constraint_equation_84(constraint_registration, _data):
     """Equation for the lower limit of beta
 
     beta_vol_avg_min: Lower limit for beta
@@ -1711,7 +1715,7 @@ def constraint_equation_84(constraint_registration):
 
 
 @ConstraintManager.register_constraint(85, "years", "=")
-def constraint_equation_85(constraint_registration):
+def constraint_equation_85(constraint_registration, _data):
     """Equality constraint for the centerpost (CP) lifetime
 
     Depending on the chosen option i_cp_lifetime:
@@ -1744,7 +1748,7 @@ def constraint_equation_85(constraint_registration):
 
 
 @ConstraintManager.register_constraint(86, "m", "<=")
-def constraint_equation_86(constraint_registration):
+def constraint_equation_86(constraint_registration, _data):
     """Upper limit on the turn edge length in the TF winding pack
 
     dx_tf_turn_general: TF coil turn edge length including turn insulation [m]
@@ -1758,7 +1762,7 @@ def constraint_equation_86(constraint_registration):
 
 
 @ConstraintManager.register_constraint(87, "MW", "<=")
-def constraint_equation_87(constraint_registration):
+def constraint_equation_87(constraint_registration, _data):
     """Equation for TF coil cryogenic power upper limit
 
     p_cryo_plant_electric_mw: cryogenic plant power (MW)
@@ -1772,7 +1776,7 @@ def constraint_equation_87(constraint_registration):
 
 
 @ConstraintManager.register_constraint(88, "", "<=")
-def constraint_equation_88(constraint_registration):
+def constraint_equation_88(constraint_registration, _data):
     """Equation for TF coil vertical strain upper limit (absolute value)
 
     str_wp_max: Allowable maximum TF coil vertical strain
@@ -1786,7 +1790,7 @@ def constraint_equation_88(constraint_registration):
 
 
 @ConstraintManager.register_constraint(89, "A/m2", "<=")
-def constraint_equation_89(constraint_registration):
+def constraint_equation_89(constraint_registration, _data):
     """Upper limit to ensure that the Central Solenoid [OH] coil current / copper area < Maximum value
 
     copperaoh_m2: CS coil current at EOF / copper area [A/m2]
@@ -1800,7 +1804,7 @@ def constraint_equation_89(constraint_registration):
 
 
 @ConstraintManager.register_constraint(90, "", ">=")
-def constraint_equation_90(constraint_registration):
+def constraint_equation_90(constraint_registration, data):
     """Lower limit for CS coil stress load cycles
 
     n_cycle: Allowable number of cycles for CS
@@ -1808,21 +1812,19 @@ def constraint_equation_90(constraint_registration):
     """
     if (
         data_structure.cost_variables.ibkt_life == 1
-        and data_structure.cs_fatigue_variables.bkt_life_csf == 1
+        and data.cs_fatigue.bkt_life_csf == 1
     ):
-        data_structure.cs_fatigue_variables.n_cycle_min = (
-            data_structure.cost_variables.bktcycles
-        )
+        data.cs_fatigue.n_cycle_min = data_structure.cost_variables.bktcycles
 
     return geq(
-        data_structure.cs_fatigue_variables.n_cycle,
-        data_structure.cs_fatigue_variables.n_cycle_min,
+        data.cs_fatigue.n_cycle,
+        data.cs_fatigue.n_cycle_min,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(91, "MW", ">=")
-def constraint_equation_91(constraint_registration):
+def constraint_equation_91(constraint_registration, _data):
     """Lower limit to ensure ECRH te is greater than required te for ignition
     at lower values for n and B. Or if the design point is ECRH heatable (if i_plasma_ignited==0)
     stellarators only (but in principle usable also for tokamaks).
@@ -1847,7 +1849,7 @@ def constraint_equation_91(constraint_registration):
 
 
 @ConstraintManager.register_constraint(92, "", "=")
-def constraint_equation_92(constraint_registration):
+def constraint_equation_92(constraint_registration, _data):
     """Equation for checking is D/T ratio is consistent, and sums to 1.
 
     f_plasma_fuel_deuterium: fraction of deuterium ions
@@ -1863,7 +1865,7 @@ def constraint_equation_92(constraint_registration):
     )
 
 
-def constraint_eqns(m: int, ieqn: int):
+def constraint_eqns(m: int, ieqn: int, data: DataStructure):
     """Evaluates the constraints given the current state of PROCESS.
 
     Parameters
@@ -1873,6 +1875,9 @@ def constraint_eqns(m: int, ieqn: int):
     ieqn :
         Evaluates the 'ieqn'th constraint equation (index starts at 1)
         or all equations if <= 0
+    data:
+        DataStructure object to provide data to evaluate the constraints
+        NOTE: this is only for getting data, not setting it
 
     """
 
@@ -1887,7 +1892,7 @@ def constraint_eqns(m: int, ieqn: int):
 
     for i in range(i1, i2):
         constraint_id = data_structure.numerics.icc[i]
-        result = ConstraintManager.evaluate_constraint(constraint_id)
+        result = ConstraintManager.evaluate_constraint(constraint_id, data)
 
         tmp_cc, tmp_con, tmp_err = (
             result.normalised_residual,

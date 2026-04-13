@@ -96,7 +96,9 @@ def run_impurities(w_imp_fracs):
         single_run.models.physics.run()
 
         # Evaluate constraint equation 15 (L-H threshold constraint)
-        con15_value = ConstraintManager.evaluate_constraint(15).normalised_residual
+        con15_value = ConstraintManager.evaluate_constraint(
+            15, single_run.data
+        ).normalised_residual
 
         # Need to copy values
         p_plasma_rad_mw[i] = data_structure.physics_variables.p_plasma_rad_mw.item()

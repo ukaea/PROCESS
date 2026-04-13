@@ -18,6 +18,7 @@ from process.core.solver.objectives import objective_function
 from process.models.tfcoil.base import TFConductorModel
 
 if TYPE_CHECKING:
+    from process.core.model import DataStructure
     from process.main import Models
 
 logger = logging.getLogger(__name__)
@@ -26,17 +27,21 @@ logger = logging.getLogger(__name__)
 class Caller:
     """Calls physics and engineering models."""
 
-    def __init__(self, models: Models):
+    def __init__(self, models: Models, data: DataStructure):
         """Initialise all physics and engineering models.
 
         To ensure that, at the start of a run, all physics/engineering
         variables are fully initialised with consistent values, the models are
-        called with the initial optimisation paramters, x.
+        called with the initial optimisation parameters, x.
 
         :param models: physics and engineering model objects
         :type models: Models
+        :param data: data structure object to be passed on to the constraint
+            evaluators
+        :type data: DataStructure
         """
         self.models = models
+        self.data = data
 
     @staticmethod
     def check_agreement(
@@ -92,7 +97,7 @@ class Caller:
             self._call_models_once(xc)
             # Evaluate objective function and constraints
             objf = objective_function(data_structure.numerics.minmax)
-            conf, _, _, _, _ = constraints.constraint_eqns(m, -1)
+            conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
 
             if objf_prev is None and conf_prev is None:
                 # First run: run again to check idempotence
@@ -156,7 +161,7 @@ class Caller:
                 OutputFileManager.open_idempotence_files()
                 self._call_models_once(xc)
                 # Write mfile
-                finalise(self.models, ifail)
+                finalise(self.models, self.data, ifail)
 
                 # Extract data from intermediate idempotence-checking mfile
                 mfile_path = (
@@ -198,7 +203,7 @@ class Caller:
                     # now idempotence checking complete
                     OutputFileManager.close_idempotence_files()
                     # Write final output file and mfile
-                    finalise(self.models, ifail)
+                    finalise(self.models, self.data, ifail)
                     return
 
                 # Mfiles not yet idempotent: need to re-evaluate models
@@ -225,6 +230,7 @@ class Caller:
             OutputFileManager.close_idempotence_files()
             finalise(
                 self.models,
+                self.data,
                 ifail,
                 non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
             )
@@ -380,20 +386,24 @@ class Caller:
         # FISPACT and LOCA model (not used)- removed
 
 
-def write_output_files(models: Models, ifail: int, *, runtime: float | None = None):
+def write_output_files(
+    models: Models, data: DataStructure, ifail: int, *, runtime: float | None = None
+):
     """Evaluate models and write output files (OUT.DAT and MFILE.DAT).
 
     Parameters
     ----------
     models : Models
         physics and engineering models
+    data: DataStructure
+        data structure object
     ifail : int
         solver return code
     """
     n = data_structure.numerics.nvar
     x = data_structure.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
-    caller = Caller(models)
+    caller = Caller(models, data)
     if runtime is not None:
         ovarre(
             constants.MFILE,
