@@ -2463,6 +2463,12 @@ class Physics(Model):
         )
         po.ovarrf(
             self.outfile,
+            "Line averaged electron temperature (keV)",
+            "(temp_plasma_electron_line_average_kev)",
+            physics_variables.temp_plasma_electron_line_average_kev,
+        )
+        po.ovarrf(
+            self.outfile,
             "Volume averaged density weighted electron temperature (⟨Tₑ⟩ₙ) (keV)",
             "(temp_plasma_electron_density_weighted_kev)",
             self.data.physics.temp_plasma_electron_density_weighted_kev,
