@@ -1,5 +1,4 @@
 import logging
-from enum import IntEnum
 
 import numpy as np
 import scipy as sp
@@ -8,15 +7,9 @@ import process.models.physics.profiles as profiles
 from process.core import constants
 from process.core.exceptions import ProcessValueError
 from process.data_structure import divertor_variables, physics_variables
+from process.models.physics.profiles import PlasmaProfileShapeType
 
 logger = logging.getLogger(__name__)
-
-
-class PlasmaProfileShapeType(IntEnum):
-    """Enum for i_plasma_pedestal method types"""
-
-    PARABOLIC_PROFILE = 0
-    PEDESTAL_PROFILE = 1
 
 
 class PlasmaProfile:

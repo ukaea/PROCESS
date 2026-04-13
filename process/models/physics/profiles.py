@@ -1,13 +1,20 @@
 import logging
 from abc import ABC, abstractmethod
+from enum import IntEnum
 
 import numpy as np
 import scipy as sp
 
 from process.data_structure import physics_variables
-from process.models.physics.plasma_profiles import PlasmaProfileShapeType
 
 logger = logging.getLogger(__name__)
+
+
+class PlasmaProfileShapeType(IntEnum):
+    """Enum for i_plasma_pedestal method types"""
+
+    PARABOLIC_PROFILE = 0
+    PEDESTAL_PROFILE = 1
 
 
 class Profile(ABC):

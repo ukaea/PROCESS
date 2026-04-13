@@ -35,7 +35,7 @@ from process.models.physics.confinement_time import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
-from process.models.physics.plasma_profiles import PlasmaProfileShapeType
+from process.models.physics.profiles import PlasmaProfileShapeType
 
 if TYPE_CHECKING:
     from process.models.physics.plasma_current import (
