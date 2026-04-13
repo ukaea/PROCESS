@@ -1113,8 +1113,7 @@ def beam_slowing_down_state(
         - The deposited energy represents the average energy retained by beam ions during slowing down.
 
     References:
-        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”Collapse commentComment on line L1090chris-ashe commented on Apr 9, 2026 chris-asheon Apr 9, 2026CollaboratorMore actionsWhy have references been removedReactAdd diff commentMarkdown input:  edit mode selected.WritePreviewHeadingBoldItalicQuoteCodeLinkUnordered listNumbered listTask listMentionReferenceSaved repliesMistake, I've added them back in.Add FilesPaste, drop, or click to add filesCancelReplyStart a reviewResolve comment
-        Nuclear Fusion, vol. 32, no. 4, pp. 611-631, Apr. 1992,
+        - H.-S. Bosch and G. M. Hale, “Improved formulas for fusion cross-sections and thermal reactivities,”
         doi: https://doi.org/10.1088/0029-5515/32/4/i07.
 
         - Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
