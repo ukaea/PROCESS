@@ -446,15 +446,12 @@ NOTE: has no effect if `force_vmcon_inequality_satisfication` is 0
 NOTE: this only affects the VMCON solver.
 """
 
+factor: float = None
+ftol: float = None
+
 
 def init_numerics():
     global \
-        ipnvars, \
-        ipeqns, \
-        ipnfoms, \
-        ipvlam, \
-        iptnt, \
-        ipvp1, \
         ioptimz, \
         minmax, \
         lablmm, \

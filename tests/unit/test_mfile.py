@@ -17,17 +17,17 @@ def test_get_mfile_initial_ixc_values(input_file, tmp_path):
     )
 
     assert iteration_variable_names[0] == "b_plasma_toroidal_on_axis"
-    assert iteration_variable_values[0] == 5.7
+    assert iteration_variable_values[0] == pytest.approx(5.7)
 
     assert iteration_variable_names[1] == "rmajor"
-    assert iteration_variable_values[1] == 8.0
+    assert iteration_variable_values[1] == pytest.approx(8.0)
 
     assert iteration_variable_names[-1] == "dr_tf_wp_with_insulation"
-    assert iteration_variable_values[-1] == 0.5
+    assert iteration_variable_values[-1] == pytest.approx(0.5)
 
     # A default not provided in the MFile
     assert iteration_variable_names[-4] == "f_nd_alpha_electron"
-    assert iteration_variable_values[-4] == 0.1
+    assert iteration_variable_values[-4] == pytest.approx(0.1)
 
 
 @pytest.fixture(scope="module")

@@ -108,7 +108,8 @@ def get_git_summary() -> tuple[str, str]:
         directory = Path(process.__file__).parent
 
         git_branch = (
-            subprocess.run(
+            subprocess
+            .run(
                 "git rev-parse --abbrev-ref HEAD",
                 shell=True,
                 capture_output=True,
@@ -120,7 +121,8 @@ def get_git_summary() -> tuple[str, str]:
         )
 
         git_tag = (
-            subprocess.run(
+            subprocess
+            .run(
                 "git describe --tags",
                 shell=True,
                 capture_output=True,
@@ -409,7 +411,7 @@ def check_process(inputs):  # noqa: ARG001
         data_structure.buildings_variables.triv = 0.0
         data_structure.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
-    if data_structure.impurity_radiation_module.f_nd_impurity_electrons[1] != 0.1:
+    if data_structure.impurity_radiation_module.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
         raise ProcessValidationError(
             "The thermal alpha/electron density ratio should be controlled using f_nd_alpha_electron (itv 109) and not f_nd_impurity_electrons(2)."
             "f_nd_impurity_electrons(2) should be removed from the input file, or set to the default value 0.1D0."
@@ -741,11 +743,13 @@ def check_process(inputs):  # noqa: ARG001
             )
 
         # Check if a single null divertor is used in double null machine
+        # ruff: disable[RUF069]
         if data_structure.physics_variables.i_single_null == 0 and (
             data_structure.physics_variables.f_p_div_lower == 1.0
             or data_structure.physics_variables.f_p_div_lower == 0.0
         ):
             warn("Operating with a single null in a double null machine", stacklevel=2)
+        # ruff: enable[RUF069]
 
         # Set the TF coil shape to picture frame (if default value)
         if data_structure.tfcoil_variables.i_tf_shape == TFCoilShapeModel.DEFAULT:

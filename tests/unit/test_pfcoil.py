@@ -41,7 +41,7 @@ def test_init_pfcoil(pfcoil):
     :type pfcoil: process.pfcoil.PFCoil
     """
     # Test a selection of module variables
-    assert pfcoil_variables.ssq0 == 0.0
+    assert pfcoil_variables.ssq0 == pytest.approx(0.0)
     assert pfcoil_variables.cslimit == 0
     assert pfcoil_variables.nef == 0
 

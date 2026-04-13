@@ -85,7 +85,8 @@ class RegressionTestAssetCollector:
         :rtype: list[str]
         """
         return (
-            subprocess.run(
+            subprocess
+            .run(
                 'git log --format="%H"',
                 shell=True,
                 capture_output=True,

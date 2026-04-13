@@ -576,7 +576,7 @@ class Buildings(Model):
 
         # Inboard 'component': shield, blanket, first wall:
         # find height, maximum radial dimension, maximum toroidal dimension
-        if cost_variables.life_plant != 0.0e0:
+        if cost_variables.life_plant != 0.0e0:  # noqa: RUF069
             hcomp_height = 2 * (
                 build_variables.z_tf_inside_half
                 - (
@@ -666,7 +666,7 @@ class Buildings(Model):
 
         # Divertor
         # Note: this estimation developed before the divertor design has been finalised
-        if cost_variables.life_div_fpy != 0.0e0:
+        if cost_variables.life_div_fpy != 0.0e0:  # noqa: RUF069
             hcomp_height = divertor_variables.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
@@ -686,7 +686,7 @@ class Buildings(Model):
             div_hotcell_vol = 0.0e0
 
         # Centre post
-        if cost_variables.cplife != 0.0e0:
+        if cost_variables.cplife != 0.0e0:  # noqa: RUF069
             hcomp_height = 2 * build_variables.z_tf_inside_half
             if tfcoil_variables.i_tf_sup != 1:
                 hcomp_rad_thk = build_variables.r_cp_top

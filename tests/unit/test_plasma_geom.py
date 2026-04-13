@@ -47,15 +47,6 @@ class PlasmaAnglesArcsParam(NamedTuple):
             expected_xo=5.4154130183225808,
             expected_thetao=1.3636548755403939,
         ),
-        PlasmaAnglesArcsParam(
-            a=2.8677741935483869,
-            kap=1.8480000000000001,
-            tri=0.5,
-            expected_xi=10.510690667870968,
-            expected_thetai=0.52847258461252744,
-            expected_xo=5.4154130183225808,
-            expected_thetao=1.3636548755403939,
-        ),
     ),
 )
 def test_plasma_angles_arcs(plasmaanglesarcsparam, monkeypatch, plasma):
@@ -293,16 +284,6 @@ class SurfaceAreaParam(NamedTuple):
             expected_xsi=454.0423505329922,
             expected_xso=949.22962703393853,
         ),
-        SurfaceAreaParam(
-            rmajor=8.8901000000000003,
-            rminor=2.8677741935483869,
-            xi=10.510690667870968,
-            thetai=0.52847258461252744,
-            xo=5.4154130183225808,
-            thetao=1.3636548755403939,
-            expected_xsi=454.0423505329922,
-            expected_xso=949.22962703393853,
-        ),
     ),
 )
 def test_plasma_surface_area(surfaceareaparam, monkeypatch, plasma):
@@ -349,14 +330,6 @@ class SurfaParam(NamedTuple):
 @pytest.mark.parametrize(
     "surfaparam",
     (
-        SurfaParam(
-            a=0.97142857142857153,
-            r=1.7000000000000002,
-            k=2.75,
-            d=0.5,
-            expected_sa=117.06185446474473,
-            expected_so=86.489845577107758,
-        ),
         SurfaParam(
             a=0.97142857142857153,
             r=1.7000000000000002,

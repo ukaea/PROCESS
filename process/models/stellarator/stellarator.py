@@ -2042,7 +2042,7 @@ class Stellarator(Model):
         #  Calculate neutral beam slowing down effects
         #  If ignited, then ignore beam fusion effects
 
-        if (current_drive_variables.p_hcd_beam_injected_total_mw != 0.0e0) and (
+        if (current_drive_variables.p_hcd_beam_injected_total_mw != 0.0e0) and (  # noqa: RUF069
             physics_variables.i_plasma_ignited == 0
         ):
             (

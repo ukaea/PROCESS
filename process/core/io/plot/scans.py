@@ -23,6 +23,7 @@ Performed checks:
 """
 
 import math
+import sys
 from collections.abc import Iterable, Sequence
 from pathlib import Path
 
@@ -179,7 +180,7 @@ def plot_scan(
             f"ERROR : nsweep = {nsweep_ref} not supported by the utility\n"
             "ERROR : Please update the 'nsweep_dict' dict"
         )
-        exit()
+        sys.exit()
 
     # Check if the scan variable is present in the
     if scan_var_name not in m_file.data:
@@ -188,7 +189,7 @@ def plot_scan(
             "ERROR : The scan variable is probably an upper/lower boundary\n"
             "ERROR : Please modify 'nsweep_dict' dict with the constrained var"
         )
-        exit()
+        sys.exit()
 
     # Check if the second scan variable is present in the
     if is_2D_scan and (scan_2_var_name not in m_file.data):
@@ -197,12 +198,12 @@ def plot_scan(
             "ERROR : The scan variable is probably an upper/lower boundary\n"
             "ERROR : Please modify 'nsweep_dict' dict with the constrained var"
         )
-        exit()
+        sys.exit()
 
     # Only one imput must be used for a 2D scan
     if is_2D_scan and len(input_files) > 1:
         print("ERROR : Only one input file can be used for 2D scans\nERROR : Exiting")
-        exit()
+        sys.exit()
     # ------
 
     # Plot settings
@@ -264,12 +265,12 @@ def plot_scan(
                     "ERROR : You must use inputs files with the same scan variables\n"
                     "ERROR : Exiting"
                 )
-                exit()
+                sys.exit()
 
             # No D scans
             if "nsweep_2" in m_file.data:
                 print("ERROR : You cannot mix 1D with 2D scans\nERROR : Exiting")
-                exit()
+                sys.exit()
             # ---
 
             # Only selecting the scans that has converged

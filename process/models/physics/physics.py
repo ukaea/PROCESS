@@ -420,7 +420,7 @@ class Physics(Model):
                 )
 
         else:
-            if times_variables.pulsetimings == 0.0e0:
+            if times_variables.pulsetimings == 0.0e0:  # noqa: RUF069
                 # times_variables.t_plant_pulse_coil_precharge is input
                 times_variables.t_plant_pulse_plasma_current_ramp_up = (
                     physics_variables.plasma_current / 1.0e5
@@ -567,7 +567,8 @@ class Physics(Model):
 
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
-        if (current_drive_variables.c_beam_total != 0.0e0) and (
+
+        if (current_drive_variables.c_beam_total != 0.0e0) and (  # noqa: RUF069
             physics_variables.i_plasma_ignited == 0
         ):
             (
@@ -1431,10 +1432,12 @@ class Physics(Model):
 
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
-        if fusden_alpha_total != 0.0:
-            t_alpha_confinement = nd_plasma_alphas_vol_avg / fusden_alpha_total
-        else:  # only likely if DD is only active fusion reaction
-            t_alpha_confinement = 0.0
+        # only likely if DD is only active fusion reaction
+        t_alpha_confinement = (
+            0.0
+            if fusden_alpha_total == 0.0  # noqa: RUF069
+            else nd_plasma_alphas_vol_avg / fusden_alpha_total
+        )
 
         # Fractional burnup
         # (Consider detailed model in: G. L. Jackson, V. S. Chan, R. D. Stambaugh,
@@ -2281,7 +2284,7 @@ class Physics(Model):
                     str2,
                     impurity_radiation_module.f_nd_impurity_electrons[imp],
                 )
-                if impurity_radiation_module.f_nd_impurity_electrons[imp] != 0.0:
+                if impurity_radiation_module.f_nd_impurity_electrons[imp] != 0.0:  # noqa: RUF069
                     for i in range(physics_variables.n_plasma_profile_elements):
                         po.ovarre(
                             self.mfile,
