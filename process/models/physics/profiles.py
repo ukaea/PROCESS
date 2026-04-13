@@ -5,6 +5,7 @@ import numpy as np
 import scipy as sp
 
 from process.data_structure import physics_variables
+from process.models.physics.plasma_profiles import PlasmaProfileShapeType
 
 logger = logging.getLogger(__name__)
 
@@ -123,7 +124,10 @@ class NeProfile(Profile):
             Density peaking parameter.
         """
 
-        if physics_variables.i_plasma_pedestal == 0:
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
             self.profile_y = n0 * (1 - rho**2) ** alphan
 
         # Input checks
@@ -212,12 +216,18 @@ class NeProfile(Profile):
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the profile."""
 
-        if physics_variables.i_plasma_pedestal == 0:
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
             physics_variables.nd_plasma_electron_on_axis = (
                 physics_variables.nd_plasma_electrons_vol_avg
                 * (1.0 + physics_variables.alphan)
             )
-        elif physics_variables.i_plasma_pedestal == 1:
+        elif (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
             physics_variables.nd_plasma_electron_on_axis = self.ncore(
                 physics_variables.radius_plasma_pedestal_density_norm,
                 physics_variables.nd_plasma_pedestal_electron,
@@ -284,7 +294,10 @@ class TeProfile(Profile):
         References:
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
         """
-        if physics_variables.i_plasma_pedestal == 0:
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
             # profile values of 0 cause divide by 0 errors so ensure the profile value is at least 1e-8
             # which is small enough that it won't make a difference to any calculations
             self.profile_y = np.maximum(t0 * (1 - rho**2) ** alphat, 1e-8)
@@ -374,12 +387,18 @@ class TeProfile(Profile):
 
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the temperature profile."""
-        if physics_variables.i_plasma_pedestal == 0:
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
             physics_variables.temp_plasma_electron_on_axis_kev = (
                 physics_variables.temp_plasma_electron_vol_avg_kev
                 * (1.0 + physics_variables.alphat)
             )
-        elif physics_variables.i_plasma_pedestal == 1:
+        elif (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
             physics_variables.temp_plasma_electron_on_axis_kev = self.tcore(
                 physics_variables.radius_plasma_pedestal_temp_norm,
                 physics_variables.temp_plasma_pedestal_kev,
