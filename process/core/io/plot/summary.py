@@ -26,12 +26,10 @@ from process.data_structure import impurity_radiation_module, pfcoil_variables
 from process.models.build import Build
 from process.models.geometry.blanket import (
     blanket_geometry_double_null,
-    blanket_geometry_lower,
     blanket_geometry_single_null,
 )
 from process.models.geometry.cryostat import cryostat_geometry
 from process.models.geometry.firstwall import (
-    dh_vertices,
     first_wall_geometry_double_null,
     first_wall_geometry_single_null,
 )
@@ -5200,10 +5198,8 @@ def plot_blanket(
         dz_blkt_upper = float(mfile.get("dz_blkt_upper", scan=scan))
         dr_blkt_inboard = float(mfile.get("dr_blkt_inboard", scan=scan))
         dr_blkt_outboard = float(mfile.get("dr_blkt_outboard", scan=scan))
-        c_shldith = cumulative_radial_build("dr_shld_inboard", mfile, scan)
-        c_blnkoth = cumulative_radial_build("dr_blkt_outboard", mfile, scan)
 
-        # Upper blanket: outer surface
+        # Blanket outer envelope radii
         radx_outer = (
             cumulative_radial_build("dr_blkt_outboard", mfile, scan)
             + cumulative_radial_build("vvblgapi", mfile, scan)
@@ -5213,7 +5209,7 @@ def plot_blanket(
             - cumulative_radial_build("vvblgapi", mfile, scan)
         ) / 2.0
 
-        # Upper blanket: inner surface
+        # Blanket inner envelope radii
         radx_inner = (
             cumulative_radial_build("dr_fw_outboard", mfile, scan)
             + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
@@ -5223,86 +5219,62 @@ def plot_blanket(
             - cumulative_radial_build("dr_blkt_inboard", mfile, scan)
         ) / 2.0
 
-        # Original lower blanket geometry: preserve real divertor cut-back
-        divgap = cumulative_lower["dz_divertor"]
-        (
-            rs_lower_outboard,
-            zs_lower_outboard,
-            rs_lower_inboard,
-            zs_lower_inboard,
-        ) = blanket_geometry_lower(
+        # Use the single-null geometry purely to get the correct envelope bounds
+        c_shldith = cumulative_radial_build("dr_shld_inboard", mfile, scan)
+        c_blnkoth = cumulative_radial_build("dr_blkt_outboard", mfile, scan)
+        bg_ref = blanket_geometry_single_null(
+            cumulative_upper=cumulative_upper,
             triang=triang_95,
+            radx_outer=radx_outer,
+            rminx_outer=rminx_outer,
+            radx_inner=radx_inner,
+            rminx_inner=rminx_inner,
+            cumulative_lower=cumulative_lower,
             dz_blkt_upper=dz_blkt_upper,
             c_shldith=c_shldith,
             c_blnkoth=c_blnkoth,
             dr_blkt_inboard=dr_blkt_inboard,
             dr_blkt_outboard=dr_blkt_outboard,
-            divgap=divgap,
+        )
+        rmin_out_t = float(np.min(bg_ref.rs))
+        rmax_out_t = float(np.max(bg_ref.rs))
+        zmax_out_t = float(np.max(bg_ref.zs))
+        rmin_in_t, rmax_in_t, zmax_in_t = shrink_envelope_from_outer(
+            bg_ref.rs,
+            bg_ref.zs,
+            dr_inboard=dr_blkt_inboard,
+            dr_outboard=dr_blkt_outboard,
+            dz_top=dz_blkt_upper,
         )
 
-        # Original upper reference segments
-        kapx_outer = cumulative_upper["dz_blkt_upper"] / rminx_outer
-        rs_upper_outboard_ref, zs_upper_outboard_ref = dh_vertices(
-            radx_outer,
-            rminx_outer,
-            triang_95,
-            kapx_outer,
-        )
-
-        kapx_inner = cumulative_upper["dz_fw_upper"] / rminx_inner
-        rs_upper_inboard_ref, zs_upper_inboard_ref = dh_vertices(
-            radx_inner,
-            rminx_inner,
-            triang_95,
-            kapx_inner,
-        )
-
-        # Raw TF D-shape curve
         rs_raw, zs_raw = _tf_raw_dshape_curve(mfile, scan)
-
-        # Map only the upper sections to D-shape, preserving reference ordering/endpoints
-        rs_upper_outboard, zs_upper_outboard = _mapped_upper_dshape_segment(
-            rs_raw,
-            zs_raw,
-            np.asarray(rs_upper_outboard_ref, dtype=float),
-            np.asarray(zs_upper_outboard_ref, dtype=float),
+        rs_out, zs_out = map_curve_to_envelope(
+            rs_raw, zs_raw, rmin_out_t, rmax_out_t, zmax_out_t
+        )
+        rs_in, zs_in = map_curve_to_envelope(
+            rs_raw, zs_raw, rmin_in_t, rmax_in_t, zmax_in_t
         )
 
-        rs_upper_inboard, zs_upper_inboard = _mapped_upper_dshape_segment(
-            rs_raw,
-            zs_raw,
-            np.asarray(rs_upper_inboard_ref, dtype=float),
-            np.asarray(zs_upper_inboard_ref, dtype=float),
-        )
+        if rs_out[0] != rs_out[-1] or zs_out[0] != zs_out[-1]:
+            rs_out = np.append(rs_out, rs_out[0])
+            zs_out = np.append(zs_out, zs_out[0])
+        if rs_in[0] != rs_in[-1] or zs_in[0] != zs_in[-1]:
+            rs_in = np.append(rs_in, rs_in[0])
+            zs_in = np.append(zs_in, zs_in[0])
 
-        # Rebuild full blanket polygon:
-        # upper outboard -> lower inboard -> reversed upper inboard -> reversed lower outboard
-        rs = np.concatenate([
-            rs_upper_outboard,
-            rs_lower_inboard,
-            rs_upper_inboard[::-1],
-            rs_lower_outboard[::-1],
-        ])
-        zs = np.concatenate([
-            zs_upper_outboard,
-            zs_lower_inboard,
-            zs_upper_inboard[::-1],
-            zs_lower_outboard[::-1],
-        ])
-
-        axis.plot(
-            x_scale * np.array(rs),
-            zs,
-            color="black",
+        draw_hollow(
+            axis,
+            rs_out,
+            zs_out,
+            rs_in,
+            zs_in,
+            facecolor=BLANKET_COLOUR[colour_scheme - 1],
+            x_scale=x_scale,
+            edgecolor="black",
             lw=thin,
-            zorder=20,
-        )
-        axis.fill(
-            x_scale * np.array(rs),
-            zs,
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            lw=0.01,
-            zorder=20,
+            z_outer=20,
+            z_cut=21,
+            z_edge=22,
         )
         return
 
@@ -5673,6 +5645,13 @@ def plot_firstwall(
     x_scale = -1 if mirror_negative_x else 1
 
     if _use_dshape_component_geometry(mfile, scan):
+        # Clip the FW at z_divertor_lower_top — the top of the divertor box,
+        # which equals -kappa*rminor - dz_xpoint_divertor (same as VV convention)
+        kappa = float(mfile.get("kappa", scan=scan))
+        rminor_val = float(mfile.get("rminor", scan=scan))
+        dz_xpoint_divertor = float(mfile.get("dz_xpoint_divertor", scan=scan))
+        z_clip = (-kappa * rminor_val) - dz_xpoint_divertor
+
         radx_outer = (
             cumulative_radial_build("dr_fw_outboard", mfile, scan)
             + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
@@ -5721,24 +5700,19 @@ def plot_firstwall(
         rs_in, zs_in = map_curve_to_envelope(
             rs_raw, zs_raw, rmin_in_t, rmax_in_t, zmax_in_t
         )
-        if rs_out[0] != rs_out[-1] or zs_out[0] != zs_out[-1]:
-            rs_out = np.append(rs_out, rs_out[0])
-            zs_out = np.append(zs_out, zs_out[0])
-        if rs_in[0] != rs_in[-1] or zs_in[0] != zs_in[-1]:
-            rs_in = np.append(rs_in, rs_in[0])
-            zs_in = np.append(zs_in, zs_in[0])
-        draw_hollow(
+
+        draw_hollow_open_bottom(
             axis,
             rs_out,
             zs_out,
             rs_in,
             zs_in,
+            z_clip,
             facecolor=FIRSTWALL_COLOUR[colour_scheme - 1],
             x_scale=x_scale,
             edgecolor="black",
             lw=thin,
-            z_outer=30,
-            z_cut=31,
+            z_fill=30,
             z_edge=32,
         )
         return
@@ -14424,6 +14398,224 @@ def shrink_envelope_from_outer(
     return rmin_in, rmax_in, zmax_in
 
 
+def _clip_dshape_at_z(
+    rs: np.ndarray,
+    zs: np.ndarray,
+    z_clip: float,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Clip a closed D-shaped curve at a given z height and close with a flat bottom.
+
+    Takes a closed D-shape polygon (the output of ``map_curve_to_envelope``,
+    which is symmetric about z=0 and spans from -zmax to +zmax), keeps only
+    the portion at or above ``z_clip``, and closes the open bottom with a
+    flat horizontal edge at exactly ``z = z_clip``.
+
+    The result is an open-bottomed D: the top half curves smoothly following
+    the D-shape, and the bottom is a flat horizontal line at the cutoff height.
+
+    Parameters
+    ----------
+    rs : ndarray
+        Radial coordinates of the closed D-shaped curve.
+    zs : ndarray
+        Vertical coordinates of the closed D-shaped curve.
+    z_clip : float
+        Vertical coordinate at which to clip. Points below this are removed.
+
+    Returns
+    -------
+    rs_clipped, zs_clipped : ndarray
+        Coordinates of the clipped, re-closed polygon.
+    """
+    rs = np.asarray(rs, dtype=float)
+    zs = np.asarray(zs, dtype=float)
+
+    # Collect vertices that are at or above z_clip, with linear interpolation
+    # at crossing points so the polygon edge lands exactly on z = z_clip.
+    rs_out: list[float] = []
+    zs_out: list[float] = []
+    n = len(rs)
+
+    for i in range(n):
+        j = (i + 1) % n
+        above_i = zs[i] >= z_clip
+        above_j = zs[j] >= z_clip
+
+        if above_i:
+            rs_out.append(rs[i])
+            zs_out.append(zs[i])
+
+        # Edge crosses the clip plane — interpolate the crossing point
+        if above_i != above_j:
+            t = (z_clip - zs[i]) / (zs[j] - zs[i])
+            rs_out.append(rs[i] + t * (rs[j] - rs[i]))
+            zs_out.append(z_clip)
+
+    if len(rs_out) < 2:
+        return rs, zs  # fallback: nothing to clip
+
+    rs_c = np.array(rs_out)
+    zs_c = np.array(zs_out)
+
+    # Close the polygon (the last point should already be back at z_clip if
+    # the curve crossed the boundary twice, but ensure explicit closure)
+    if rs_c[0] != rs_c[-1] or zs_c[0] != zs_c[-1]:
+        rs_c = np.append(rs_c, rs_c[0])
+        zs_c = np.append(zs_c, zs_c[0])
+
+    return rs_c, zs_c
+
+
+def draw_hollow_open_bottom(
+    axis: plt.Axes,
+    rs_out: np.ndarray,
+    zs_out: np.ndarray,
+    rs_in: np.ndarray,
+    zs_in: np.ndarray,
+    z_clip: float,
+    *,
+    facecolor,
+    x_scale: float = 1.0,
+    edgecolor: str = "black",
+    lw: float = 0.5,
+    z_fill: int = 5,
+    z_edge: int = 6,
+):
+    """Draw a hollow D-shaped component open at the bottom (divertor opening).
+
+    Both ``rs_out``/``zs_out`` and ``rs_in``/``zs_in`` must be the full
+    closed D-shape curves from ``map_curve_to_envelope`` (not pre-clipped).
+
+    The component is drawn as a single annular polygon whose bottom is open:
+    no material spans the gap between the two arms below ``z_clip``.  The
+    polygon stitches the outer boundary (above z_clip) to the reversed inner
+    boundary (above z_clip), with the crossing points as shared vertices.
+
+    Parameters
+    ----------
+    axis : matplotlib.axes.Axes
+    rs_out, zs_out : ndarray
+        Full closed outer D-shape curve.
+    rs_in, zs_in : ndarray
+        Full closed inner D-shape curve.
+    z_clip : float
+        Height at which to open the bottom.  Points below are excluded.
+    facecolor : colour
+        Fill colour.
+    x_scale : float
+        Mirror factor (1.0 or -1.0).
+    edgecolor : str
+        Boundary line colour.
+    lw : float
+        Line width.
+    z_fill, z_edge : int
+        Z-orders for fill and edge respectively.
+    """
+
+    def _clipped_open_chain(
+        rs: np.ndarray, zs: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray] | None:
+        """Clip the closed curve at z_clip and return an open polyline of the
+        portion above z_clip, oriented so that rs[0] < rs[-1] (inboard to
+        outboard at the z_clip level).
+
+        Uses Sutherland-Hodgman-style edge walking: inserts exact crossing
+        points at z = z_clip so the endpoints sit precisely on the clip line.
+        """
+        rs = np.asarray(rs, dtype=float)
+        zs = np.asarray(zs, dtype=float)
+        n = len(rs)
+
+        out_r: list[float] = []
+        out_z: list[float] = []
+
+        for i in range(n):
+            j = (i + 1) % n
+            above_i = zs[i] >= z_clip
+            above_j = zs[j] >= z_clip
+
+            if above_i:
+                out_r.append(float(rs[i]))
+                out_z.append(float(zs[i]))
+
+            if above_i != above_j:
+                # Edge crosses the clip plane — insert the exact crossing point
+                t = (z_clip - zs[i]) / (zs[j] - zs[i])
+                out_r.append(float(rs[i] + t * (rs[j] - rs[i])))
+                out_z.append(z_clip)
+
+        if len(out_r) < 3:
+            return None
+
+        arr_r = np.array(out_r)
+        arr_z = np.array(out_z)
+
+        # The first and last points should both be on z_clip (the two crossings).
+        # If the first point is NOT on z_clip, rotate the array so that it is —
+        # i.e. find a crossing point and make it the start.
+        on_clip = np.isclose(arr_z, z_clip)
+        if not on_clip[0]:
+            idx = np.argmax(on_clip)
+            arr_r = np.roll(arr_r, -idx)
+            arr_z = np.roll(arr_z, -idx)
+
+        # Now arr_r[0] and arr_r[-1] (or arr_r[last_clip]) are both at z_clip.
+        # Trim any trailing points that are also at z_clip (keep exactly two
+        # crossing points: one at each end).
+        clip_indices = np.where(np.isclose(arr_z, z_clip))[0]
+        if len(clip_indices) >= 2:
+            end = int(clip_indices[1]) + 1
+            arr_r = arr_r[:end]
+            arr_z = arr_z[:end]
+
+        # Orient so inboard (lower R) crossing is first
+        if arr_r[0] > arr_r[-1]:
+            arr_r = arr_r[::-1]
+            arr_z = arr_z[::-1]
+
+        return arr_r, arr_z
+
+    result_out = _clipped_open_chain(rs_out, zs_out)
+    result_in = _clipped_open_chain(rs_in, zs_in)
+
+    if result_out is None or result_in is None:
+        return
+
+    outer_r, outer_z = result_out
+    inner_r, inner_z = result_in
+
+    # Annular polygon (open at bottom):
+    #   outer chain:  inboard-crossing → [curve above z_clip] → outboard-crossing
+    #   inner chain reversed: outboard-crossing → [curve above z_clip] → inboard-crossing
+    # This gives a single closed winding with the gap at the bottom.
+    poly_r = np.concatenate([outer_r, inner_r[::-1]])
+    poly_z = np.concatenate([outer_z, inner_z[::-1]])
+
+    axis.fill(x_scale * poly_r, poly_z, color=facecolor, lw=0.01, zorder=z_fill)
+
+    # Outer edge (open polyline — no closing segment across the bottom)
+    axis.plot(x_scale * outer_r, outer_z, color=edgecolor, lw=lw, zorder=z_edge)
+    # Inner edge
+    axis.plot(x_scale * inner_r, inner_z, color=edgecolor, lw=lw, zorder=z_edge)
+    # Horizontal bottom caps on the two arms (inboard arm and outboard arm)
+    # Inboard arm cap: outer inboard crossing → inner inboard crossing
+    axis.plot(
+        x_scale * np.array([outer_r[0], inner_r[-1]]),
+        [z_clip, z_clip],
+        color=edgecolor,
+        lw=lw,
+        zorder=z_edge,
+    )
+    # Outboard arm cap: outer outboard crossing → inner outboard crossing
+    axis.plot(
+        x_scale * np.array([outer_r[-1], inner_r[0]]),
+        [z_clip, z_clip],
+        color=edgecolor,
+        lw=lw,
+        zorder=z_edge,
+    )
+
+
 def draw_hollow(
     axis: plt.Axes,
     rs_out: np.ndarray,
@@ -14562,55 +14754,3 @@ def _use_dshape_component_geometry(mfile: MFile, scan: int) -> bool:
         )
     except (KeyError, ValueError):
         return False
-
-
-def _mapped_upper_dshape_segment(
-    rs_raw: np.ndarray,
-    zs_raw: np.ndarray,
-    rs_target: np.ndarray,
-    zs_target: np.ndarray,
-) -> tuple[np.ndarray, np.ndarray]:
-    """Map the upper half of the raw TF D-shape curve onto a target upper segment.
-
-    The mapped segment is oriented to match the reference segment ordering,
-    and its end points are snapped to the reference end points so that it
-    joins cleanly to the lower single-null geometry.
-    """
-    rmin_t = float(np.min(rs_target))
-    rmax_t = float(np.max(rs_target))
-    zmax_t = float(np.max(zs_target))
-
-    rs_map, zs_map = map_curve_to_envelope(rs_raw, zs_raw, rmin_t, rmax_t, zmax_t)
-
-    mask = zs_map >= -1.0e-9
-    rs_upper = rs_map[mask]
-    zs_upper = zs_map[mask]
-
-    if len(rs_upper) < 2:
-        return np.array(rs_target, dtype=float), np.array(zs_target, dtype=float)
-
-    # Choose orientation that best matches the reference segment endpoints
-    d_forward = (
-        (rs_upper[0] - rs_target[0]) ** 2
-        + (zs_upper[0] - zs_target[0]) ** 2
-        + (rs_upper[-1] - rs_target[-1]) ** 2
-        + (zs_upper[-1] - zs_target[-1]) ** 2
-    )
-    d_reverse = (
-        (rs_upper[-1] - rs_target[0]) ** 2
-        + (zs_upper[-1] - zs_target[0]) ** 2
-        + (rs_upper[0] - rs_target[-1]) ** 2
-        + (zs_upper[0] - zs_target[-1]) ** 2
-    )
-
-    if d_reverse < d_forward:
-        rs_upper = rs_upper[::-1]
-        zs_upper = zs_upper[::-1]
-
-    # Snap endpoints to the original reference endpoints
-    rs_upper[0] = rs_target[0]
-    zs_upper[0] = zs_target[0]
-    rs_upper[-1] = rs_target[-1]
-    zs_upper[-1] = zs_target[-1]
-
-    return rs_upper, zs_upper
