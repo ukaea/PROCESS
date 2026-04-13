@@ -69,7 +69,6 @@ from process.models.physics.current_drive import (
 from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.exhaust import calculate_brunner_divertor_power_splits
 from process.models.physics.impurity_radiation import read_impurity_file
-from process.models.physics.solovev_equilibrium import plot_analytic_equilibrium
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import (
     BetaComponentLimits,
@@ -86,6 +85,7 @@ from process.models.physics.plasma_geometry import (
 )
 from process.models.physics.profiles import PlasmaProfileShapeType
 from process.models.pulse import PulseTimings
+from process.models.physics.solovev_equilibrium import plot_analytic_equilibrium
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import (
     TFCoilShapeModel,
@@ -16755,27 +16755,12 @@ def main_plot(
 
     plot_resistivity_profile(pages["detailed_params"].add_subplot(232), m_file, scan)
 
-    plot_detailed_plasma_parameters(
-        pages["detailed_params"].add_subplot(233),
-        fig=pages["detailed_params"],
-        mfile=m_file,
-        scan=scan,
-    )
 
-    ax_electron_freq = _add_page("freq").add_subplot(211)
-    plot_electron_frequency_profile(ax_electron_freq, m_file, scan)
+    plot_larmor_radius_profile(_add_page("larmor_radius").add_subplot(313), m_file, scan)
 
-    ax_ion_freq = pages["freq"].add_subplot(413, sharex=ax_electron_freq)
-    plot_ion_frequency_profile(ax_ion_freq, m_file, scan)
-
-    ax_larmor = pages["freq"].add_subplot(414, sharex=ax_electron_freq)
-    plot_larmor_radius_profile(ax_larmor, m_file, scan)
-
-    pages["freq"].subplots_adjust(hspace=0.5)
-
-    ax25 = figs[16].add_subplot(222, aspect="equal")
+    ax25 = _add_page("analytic_equilibrium").add_subplot(222, aspect="equal")
     ax25.set_position([0.6, 0.55, 0.45, 0.45])
-    plot_analytic_equilibrium(ax25, m_file, scan, figs[16])
+    plot_analytic_equilibrium(ax25, m_file, scan, pages["analytic_equilibrium"])
 
     # Plot poloidal cross-section
     poloidal_cross_section(
