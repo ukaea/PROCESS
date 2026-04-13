@@ -115,7 +115,7 @@ detached     = true                           # Don't inherit from default (does
 dependencies = ["pre-commit", "ruff", "ty"]
 
 [tool.hatch.envs.lint.scripts]
-fmt    = ["pre-commit run --all-files --hook-stage manual"]
+fmt    = ["pre-commit run --all-files --hook-stage manual {args:}"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
