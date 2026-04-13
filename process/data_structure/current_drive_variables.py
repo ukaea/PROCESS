@@ -457,7 +457,6 @@ def init_current_drive_variables():
         p_hcd_lowhyb_injected_total_mw, \
         p_hcd_icrh_injected_total_mw, \
         p_hcd_ebw_injected_total_mw, \
-        p_beam_plasma_coupled_mw, \
         p_hcd_beam_injected_total_mw, \
         p_beam_orbit_loss_mw, \
         f_c_plasma_pfirsch_schluter, \
