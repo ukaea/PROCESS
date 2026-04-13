@@ -35,6 +35,7 @@ from process.models.physics.confinement_time import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
+from process.models.physics.profiles import PlasmaProfileShapeType
 
 if TYPE_CHECKING:
     from process.models.physics.plasma_current import (
@@ -336,9 +337,10 @@ class Physics(Model):
         # If physics_variables.i_plasma_pedestal = 1 then set pedestal density to
         #   physics_variables.f_nd_plasma_pedestal_greenwald * Greenwald density limit
         # Note: this used to be done before plasma current
-        if (physics_variables.i_plasma_pedestal == 1) and (
-            physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0
-        ):
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ) and (physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0):
             physics_variables.nd_plasma_pedestal_electron = (
                 physics_variables.f_nd_plasma_pedestal_greenwald
                 * 1.0e14
@@ -346,9 +348,10 @@ class Physics(Model):
                 / (np.pi * physics_variables.rminor * physics_variables.rminor)
             )
 
-        if (physics_variables.i_plasma_pedestal == 1) and (
-            physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0
-        ):
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ) and (physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0):
             physics_variables.nd_plasma_separatrix_electron = (
                 physics_variables.f_nd_plasma_separatrix_greenwald
                 * 1.0e14
@@ -2391,7 +2394,10 @@ class Physics(Model):
             physics_variables.i_plasma_pedestal,
         )
 
-        if physics_variables.i_plasma_pedestal >= 1:
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
             if (
                 physics_variables.nd_plasma_electron_on_axis
                 < physics_variables.nd_plasma_pedestal_electron
