@@ -1787,7 +1787,7 @@ def init_physics_variables():
     ffwal = 0.92
     f_nd_plasma_pedestal_greenwald = 0.85
     f_nd_plasma_separatrix_greenwald = 0.50
-    i_nd_plasma_pedestal_separatrix = 0
+    i_nd_plasma_pedestal_separatrix = 1
     f_plasma_fuel_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0

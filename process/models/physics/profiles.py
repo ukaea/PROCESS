@@ -242,16 +242,16 @@ class NeProfile(Profile):
         ):
             physics_variables.nd_plasma_pedestal_electron = (
                 physics_variables.f_nd_plasma_pedestal_greenwald
-                * 1.0e14
                 * PlasmaDensityLimit.calculate_greenwald_density_limit(
-                    c_plasma=physics_variables.c_plasma, rminor=physics_variables.rminor
+                    c_plasma=physics_variables.plasma_current,
+                    rminor=physics_variables.rminor,
                 )
             )
             physics_variables.nd_plasma_separatrix_electron = (
                 physics_variables.f_nd_plasma_separatrix_greenwald
-                * 1.0e14
                 * PlasmaDensityLimit.calculate_greenwald_density_limit(
-                    c_plasma=physics_variables.c_plasma, rminor=physics_variables.rminor
+                    c_plasma=physics_variables.plasma_current,
+                    rminor=physics_variables.rminor,
                 )
             )
 

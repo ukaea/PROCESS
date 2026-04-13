@@ -260,10 +260,10 @@ ITERATION_VARIABLES = {
         1.0e20,
     ),
     145: IterationVariable(
-        "f_nd_plasma_pedestal_greenwald", data_structure.physics_variables, 0.1, 0.9
+        "f_nd_plasma_pedestal_greenwald", data_structure.physics_variables, 0.1, 1.5
     ),
     152: IterationVariable(
-        "f_nd_plasma_separatrix_greenwald", data_structure.physics_variables, 0.001, 0.5
+        "f_nd_plasma_separatrix_greenwald", data_structure.physics_variables, 0.001, 0.9
     ),
     155: IterationVariable("pfusife", data_structure.ife_variables, 5.0e2, 3.0e3),
     156: IterationVariable("rrin", data_structure.ife_variables, 1.0, 1.0e1),
