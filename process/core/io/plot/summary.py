@@ -5645,13 +5645,6 @@ def plot_firstwall(
     x_scale = -1 if mirror_negative_x else 1
 
     if _use_dshape_component_geometry(mfile, scan):
-        # Clip the FW at z_divertor_lower_top — the top of the divertor box,
-        # which equals -kappa*rminor - dz_xpoint_divertor (same as VV convention)
-        kappa = float(mfile.get("kappa", scan=scan))
-        rminor_val = float(mfile.get("rminor", scan=scan))
-        dz_xpoint_divertor = float(mfile.get("dz_xpoint_divertor", scan=scan))
-        z_clip = (-kappa * rminor_val) - dz_xpoint_divertor
-
         radx_outer = (
             cumulative_radial_build("dr_fw_outboard", mfile, scan)
             + cumulative_radial_build("dr_blkt_inboard", mfile, scan)
@@ -5701,18 +5694,18 @@ def plot_firstwall(
             rs_raw, zs_raw, rmin_in_t, rmax_in_t, zmax_in_t
         )
 
-        draw_hollow_open_bottom(
+        draw_hollow(
             axis,
             rs_out,
             zs_out,
             rs_in,
             zs_in,
-            z_clip,
             facecolor=FIRSTWALL_COLOUR[colour_scheme - 1],
             x_scale=x_scale,
             edgecolor="black",
             lw=thin,
-            z_fill=30,
+            z_outer=30,
+            z_cut=31,
             z_edge=32,
         )
         return
@@ -14464,156 +14457,6 @@ def _clip_dshape_at_z(
         zs_c = np.append(zs_c, zs_c[0])
 
     return rs_c, zs_c
-
-
-def draw_hollow_open_bottom(
-    axis: plt.Axes,
-    rs_out: np.ndarray,
-    zs_out: np.ndarray,
-    rs_in: np.ndarray,
-    zs_in: np.ndarray,
-    z_clip: float,
-    *,
-    facecolor,
-    x_scale: float = 1.0,
-    edgecolor: str = "black",
-    lw: float = 0.5,
-    z_fill: int = 5,
-    z_edge: int = 6,
-):
-    """Draw a hollow D-shaped component open at the bottom (divertor opening).
-
-    Both ``rs_out``/``zs_out`` and ``rs_in``/``zs_in`` must be the full
-    closed D-shape curves from ``map_curve_to_envelope`` (not pre-clipped).
-
-    The component is drawn as a single annular polygon whose bottom is open:
-    no material spans the gap between the two arms below ``z_clip``.  The
-    polygon stitches the outer boundary (above z_clip) to the reversed inner
-    boundary (above z_clip), with the crossing points as shared vertices.
-
-    Parameters
-    ----------
-    axis : matplotlib.axes.Axes
-    rs_out, zs_out : ndarray
-        Full closed outer D-shape curve.
-    rs_in, zs_in : ndarray
-        Full closed inner D-shape curve.
-    z_clip : float
-        Height at which to open the bottom.  Points below are excluded.
-    facecolor : colour
-        Fill colour.
-    x_scale : float
-        Mirror factor (1.0 or -1.0).
-    edgecolor : str
-        Boundary line colour.
-    lw : float
-        Line width.
-    z_fill, z_edge : int
-        Z-orders for fill and edge respectively.
-    """
-
-    def _clipped_open_chain(
-        rs: np.ndarray, zs: np.ndarray
-    ) -> tuple[np.ndarray, np.ndarray] | None:
-        """Clip the closed curve at z_clip and return an open polyline of the
-        portion above z_clip, oriented so that rs[0] < rs[-1] (inboard to
-        outboard at the z_clip level).
-
-        Uses Sutherland-Hodgman-style edge walking: inserts exact crossing
-        points at z = z_clip so the endpoints sit precisely on the clip line.
-        """
-        rs = np.asarray(rs, dtype=float)
-        zs = np.asarray(zs, dtype=float)
-        n = len(rs)
-
-        out_r: list[float] = []
-        out_z: list[float] = []
-
-        for i in range(n):
-            j = (i + 1) % n
-            above_i = zs[i] >= z_clip
-            above_j = zs[j] >= z_clip
-
-            if above_i:
-                out_r.append(float(rs[i]))
-                out_z.append(float(zs[i]))
-
-            if above_i != above_j:
-                # Edge crosses the clip plane — insert the exact crossing point
-                t = (z_clip - zs[i]) / (zs[j] - zs[i])
-                out_r.append(float(rs[i] + t * (rs[j] - rs[i])))
-                out_z.append(z_clip)
-
-        if len(out_r) < 3:
-            return None
-
-        arr_r = np.array(out_r)
-        arr_z = np.array(out_z)
-
-        # The first and last points should both be on z_clip (the two crossings).
-        # If the first point is NOT on z_clip, rotate the array so that it is —
-        # i.e. find a crossing point and make it the start.
-        on_clip = np.isclose(arr_z, z_clip)
-        if not on_clip[0]:
-            idx = np.argmax(on_clip)
-            arr_r = np.roll(arr_r, -idx)
-            arr_z = np.roll(arr_z, -idx)
-
-        # Now arr_r[0] and arr_r[-1] (or arr_r[last_clip]) are both at z_clip.
-        # Trim any trailing points that are also at z_clip (keep exactly two
-        # crossing points: one at each end).
-        clip_indices = np.where(np.isclose(arr_z, z_clip))[0]
-        if len(clip_indices) >= 2:
-            end = int(clip_indices[1]) + 1
-            arr_r = arr_r[:end]
-            arr_z = arr_z[:end]
-
-        # Orient so inboard (lower R) crossing is first
-        if arr_r[0] > arr_r[-1]:
-            arr_r = arr_r[::-1]
-            arr_z = arr_z[::-1]
-
-        return arr_r, arr_z
-
-    result_out = _clipped_open_chain(rs_out, zs_out)
-    result_in = _clipped_open_chain(rs_in, zs_in)
-
-    if result_out is None or result_in is None:
-        return
-
-    outer_r, outer_z = result_out
-    inner_r, inner_z = result_in
-
-    # Annular polygon (open at bottom):
-    #   outer chain:  inboard-crossing → [curve above z_clip] → outboard-crossing
-    #   inner chain reversed: outboard-crossing → [curve above z_clip] → inboard-crossing
-    # This gives a single closed winding with the gap at the bottom.
-    poly_r = np.concatenate([outer_r, inner_r[::-1]])
-    poly_z = np.concatenate([outer_z, inner_z[::-1]])
-
-    axis.fill(x_scale * poly_r, poly_z, color=facecolor, lw=0.01, zorder=z_fill)
-
-    # Outer edge (open polyline — no closing segment across the bottom)
-    axis.plot(x_scale * outer_r, outer_z, color=edgecolor, lw=lw, zorder=z_edge)
-    # Inner edge
-    axis.plot(x_scale * inner_r, inner_z, color=edgecolor, lw=lw, zorder=z_edge)
-    # Horizontal bottom caps on the two arms (inboard arm and outboard arm)
-    # Inboard arm cap: outer inboard crossing → inner inboard crossing
-    axis.plot(
-        x_scale * np.array([outer_r[0], inner_r[-1]]),
-        [z_clip, z_clip],
-        color=edgecolor,
-        lw=lw,
-        zorder=z_edge,
-    )
-    # Outboard arm cap: outer outboard crossing → inner outboard crossing
-    axis.plot(
-        x_scale * np.array([outer_r[-1], inner_r[0]]),
-        [z_clip, z_clip],
-        color=edgecolor,
-        lw=lw,
-        zorder=z_edge,
-    )
 
 
 def draw_hollow(
