@@ -356,24 +356,8 @@ class Physics(Model):
         if (
             PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
-        ) and (self.data.physics.f_nd_plasma_pedestal_greenwald >= 0e0):
-            self.data.physics.nd_plasma_pedestal_electron = (
-                self.data.physics.f_nd_plasma_pedestal_greenwald
-                * 1.0e14
-                * self.data.physics.plasma_current
-                / (np.pi * self.data.physics.rminor * self.data.physics.rminor)
-            )
-
-        if (
-            PlasmaProfileShapeType(self.data.physics.i_plasma_pedestal)
-            == PlasmaProfileShapeType.PEDESTAL_PROFILE
-        ) and (self.data.physics.f_nd_plasma_separatrix_greenwald >= 0e0):
-            self.data.physics.nd_plasma_separatrix_electron = (
-                self.data.physics.f_nd_plasma_separatrix_greenwald
-                * 1.0e14
-                * self.data.physics.plasma_current
-                / (np.pi * self.data.physics.rminor * self.data.physics.rminor)
-            )
+        ):
+            self.plasma_profile.neprofile.set_pedestal_and_separatrix_values()
 
         self.plasma_profile.run()
 
