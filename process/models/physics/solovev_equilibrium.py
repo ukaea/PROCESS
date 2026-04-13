@@ -8,7 +8,7 @@ import scipy.constants as const
 from scipy.interpolate import interp1d
 from skimage import measure
 
-import process.io.mfile as mf
+import process.core.io.mfile as mf
 
 logger = logging.getLogger(__name__)
 
