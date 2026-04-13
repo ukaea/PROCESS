@@ -42,6 +42,12 @@ maxpoloidalpower: float = None
 poloidalpower: list[float] = None
 """Poloidal power usage at time t (MW)"""
 
+f_p_pf_energy_store_loss: float = None
+"""Fraction of PF magnetic energy moved into/out of storage that is lost each time"""
+
+f_p_pf_psu_loss: float = None
+"""Fraction of inductive power flow lost in the PF power supplies/converters."""
+
 
 def init_pf_power_variables():
     """Initialise PF coil power variables"""
@@ -56,7 +62,9 @@ def init_pf_power_variables():
         vpfskv, \
         peakpoloidalpower, \
         maxpoloidalpower, \
-        poloidalpower
+        poloidalpower, \
+        f_p_pf_energy_store_loss, \
+        f_p_pf_psu_loss
 
     acptmax = 0.0
     ensxpfm = 0.0
@@ -69,3 +77,5 @@ def init_pf_power_variables():
     peakpoloidalpower = 0.0
     maxpoloidalpower = 1000.0
     poloidalpower = np.zeros(5)
+    f_p_pf_energy_store_loss = 0.1
+    f_p_pf_psu_loss = 0.1
