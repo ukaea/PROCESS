@@ -1213,6 +1213,8 @@ temp_plasma_electron_on_axis_kev: float = None
 temp_plasma_electron_density_weighted_kev: float = None
 """density weighted average electron temperature (keV)"""
 
+temp_plasma_electron_line_average_kev: float = None
+"""line averaged electron temperature (keV)"""
 
 temp_plasma_ion_vol_avg_kev: float = None
 """volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
@@ -1660,6 +1662,7 @@ def init_physics_variables():
         temp_plasma_electron_vol_avg_kev, \
         temp_plasma_electron_on_axis_kev, \
         temp_plasma_electron_density_weighted_kev, \
+        temp_plasma_electron_line_average_kev, \
         temp_plasma_ion_vol_avg_kev, \
         temp_plasma_ion_on_axis_kev, \
         temp_plasma_ion_density_weighted_kev, \
@@ -1952,6 +1955,7 @@ def init_physics_variables():
     temp_plasma_electron_vol_avg_kev = 12.9
     temp_plasma_electron_on_axis_kev = 0.0
     temp_plasma_electron_density_weighted_kev = 0.0
+    temp_plasma_electron_line_average_kev = 0.0
     temp_plasma_ion_vol_avg_kev = 12.9
     temp_plasma_ion_on_axis_kev = 0.0
     temp_plasma_ion_density_weighted_kev = 0.0
