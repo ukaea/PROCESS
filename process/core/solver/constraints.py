@@ -127,13 +127,16 @@ class ConstraintManager:
         return cls._constraint_registry.get(name)
 
     @classmethod
-    def evaluate_constraint(cls, name: Hashable, data):
+    def evaluate_constraint(cls, name: Hashable, data: DataStructure):
         """Evalutes a constraint with a given name.
 
         Parameters
         ----------
         name : Hashable
             the name of the constraint
+        data: DataStructure
+            data structure object for providing constraint data to evaluate
+            constraint equations
 
         Returns
         -------
@@ -1873,7 +1876,8 @@ def constraint_eqns(m: int, ieqn: int, data: DataStructure):
         Evaluates the 'ieqn'th constraint equation (index starts at 1)
         or all equations if <= 0
     data:
-        DataStructure object
+        DataStructure object to provide data to evaluate the constraints
+        NOTE: this is only for getting data, not setting it
 
     """
 

@@ -20,7 +20,7 @@ def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
     models : process.main.Models
         physics and engineering model objects
     data: DataStructure
-        data structure object
+        data structure object to provide data to evaluate the constraints
     ifail : int
         error flag
     non_idempotent_msg : None | str, optional
@@ -45,7 +45,12 @@ def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
 
 
 def output_evaluation(data):
-    """Write output for an evaluation run of PROCESS"""
+    """Write output for an evaluation run of PROCESS
+    Parameters
+    ----------
+    data: DataStructure
+        data structure object to provide data to evaluate the constraints
+    """
     po.oheadr(constants.NOUT, "Numerics")
     po.ocmmnt(constants.NOUT, "PROCESS has performed an evaluation run.")
     po.oblnkl(constants.NOUT)

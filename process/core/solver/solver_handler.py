@@ -19,7 +19,8 @@ class SolverHandler:
     solver_name : str
         which solver to use, as specified in solver.py
     data: DataStructure
-        data structure object
+        data structure object for providing objective/constraint data to
+        the solver
     """
 
     def __init__(self, models, solver_name, data):

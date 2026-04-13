@@ -36,7 +36,8 @@ class Caller:
 
         :param models: physics and engineering model objects
         :type models: Models
-        :param data: data structure object
+        :param data: data structure object to be passed on to the constraint
+            evaluators
         :type data: DataStructure
         """
         self.models = models

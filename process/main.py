@@ -71,7 +71,7 @@ from process.models.cs_fatigue import CsFatigue
 from process.models.divertor import Divertor
 from process.models.fw import FirstWall
 from process.models.ife import IFE
-from process.models.pfcoil import PFCoil
+from process.models.pfcoil import CSCoil, PFCoil
 from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
 from process.models.physics.confinement_time import PlasmaConfinementTime
 from process.models.physics.current_drive import (
@@ -600,7 +600,8 @@ class Models:
         self._costs_1990 = Costs()
         self._costs_2015 = Costs2015()
         self.cs_fatigue = CsFatigue()
-        self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue)
+        self.cs_coil = CSCoil(cs_fatigue=self.cs_fatigue)
+        self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue, cs_coil=self.cs_coil)
         self.power = Power()
         self.cryostat = Cryostat()
         self.build = Build()
@@ -703,7 +704,7 @@ class Models:
     def models(self) -> tuple[Model, ...]:
         # At the moment, this property just returns models that implement the Model interface.
         # Eventually every Model will comply and then this method can be used as the caller/outputter!
-        return (self.water_use, self._costs_2015, self.cs_fatigue)
+        return (self.water_use, self._costs_2015, self.cs_fatigue, self.cs_coil)
 
     def setup_data_structure(self):
         # This Models class should be replaced with a dataclass so we can

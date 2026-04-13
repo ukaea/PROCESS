@@ -22,7 +22,6 @@ from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.models.pfcoil import (
-    CSCoil,
     PFCoil,
     fixb,
     mtrx,
@@ -32,35 +31,25 @@ from process.models.pfcoil import (
 
 
 @pytest.fixture
-def cs_fatigue(process_models):
-    """Provides CSFatigue object for testing.
-
-    :return cs_fatigue: initialised cs_fatigue object
-    :type cs_fatigue: process.cs_fatigue.CSFatigue
-    """
-    return process_models.cs_fatigue
-
-
-@pytest.fixture
-def pfcoil(cs_fatigue):
+def pfcoil(process_models):
     """Fixture to create PFCoil object.
 
     :return: a PFCoil instance
     :rtype: process.pfcoil.PFCoil
     """
     init_all_module_vars()
-    return PFCoil(cs_fatigue=cs_fatigue)
+    return PFCoil(cs_fatigue=process_models.cs_fatigue, cs_coil=process_models.cs_coil)
 
 
 @pytest.fixture
-def cs_coil(cs_fatigue):
-    """Fixture to create CSCoil object.
+def cs_coil(process_models):
+    """Fixture to get the CSCoil from process_models.
 
     :return: a CSCoil instance
     :rtype: process.pfcoil.CSCoil
     """
 
-    return CSCoil(cs_fatigue=cs_fatigue)
+    return process_models.cs_coil
 
 
 def test_pfcoil(monkeypatch, pfcoil):

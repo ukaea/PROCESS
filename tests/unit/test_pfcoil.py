@@ -14,14 +14,14 @@ from process.models.pfcoil import CSCoil, PFCoil, calculate_b_field_at_point, rs
 
 
 @pytest.fixture
-def pfcoil():
+def pfcoil(process_models):
     """Fixture to create a PFCoil object.
 
     :return: an instance of PFCoil
     :rtype: process.pfcoil.PFCoil
     """
 
-    return PFCoil(cs_fatigue=CsFatigue())
+    return PFCoil(cs_fatigue=process_models.cs_fatigue, cs_coil=process_models.cs_coil)
 
 
 @pytest.fixture

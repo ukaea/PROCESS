@@ -21,7 +21,8 @@ class Evaluators:
 
         :param models: physics and engineering model objects
         :type models: process.main.Models
-        :param data: data structure object
+        :param data: data structure object for providing constraint
+            data to the Caller
         :type data: DataStructure
         :param x: optimisation parameters
         :type x: np.ndarray
