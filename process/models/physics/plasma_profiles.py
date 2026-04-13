@@ -1,4 +1,5 @@
 import logging
+from enum import IntEnum
 
 import numpy as np
 import scipy as sp
@@ -9,6 +10,13 @@ from process.core.exceptions import ProcessValueError
 from process.data_structure import divertor_variables, physics_variables
 
 logger = logging.getLogger(__name__)
+
+
+class PlasmaProfileShapeType(IntEnum):
+    """Enum for i_plasma_pedestal method types"""
+
+    PARABOLIC_PROFILE = 0
+    PEDESTAL_PROFILE = 1
 
 
 class PlasmaProfile:
@@ -59,7 +67,10 @@ class PlasmaProfile:
             )
 
         # Parabolic profile case
-        if physics_variables.i_plasma_pedestal == 0:
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
             self.parabolic_paramterisation()
             self.calculate_profile_factors()
             self.calculate_parabolic_profile_factors()
@@ -297,7 +308,10 @@ class PlasmaProfile:
         The function uses analytical parametric formulas to calculate the gradient information.
         The maximum normalized radius (rho_max) is obtained by equating the second derivative to zero.
         """
-        if physics_variables.i_plasma_pedestal == 0:
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PARABOLIC_PROFILE
+        ):
             if physics_variables.alphat > 1.0:
                 # Rho (normalized radius), where temperature derivative is largest
                 rho_te_max = 1.0 / np.sqrt(-1.0 + 2.0 * physics_variables.alphat)
