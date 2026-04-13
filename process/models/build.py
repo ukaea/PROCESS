@@ -1711,7 +1711,7 @@ class Build(Model):
             Flag indicating whether to output the results
         """
 
-        if fwbs_variables.blktmodel > 0:
+        if fwbs_variables.i_blanket_type_stellarator > 0:
             build_variables.dr_blkt_inboard = (
                 build_variables.blbuith
                 + build_variables.blbmith

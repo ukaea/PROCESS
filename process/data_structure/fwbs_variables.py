@@ -30,7 +30,7 @@ denwc: float = None
 
 
 dewmkg: float = None
-"""total mass of vacuum vessel + cryostat [kg] (calculated if blktmodel>0)"""
+"""total mass of vacuum vessel + cryostat [kg] (calculated if i_blanket_type_stellarator>0)"""
 
 
 f_p_blkt_multiplication: float = None
@@ -357,7 +357,7 @@ secondary_cycle_liq: int = None
 
 
 i_blkt_coolant_type: int = None
-"""Switch for blanket coolant (set via blkttype):
+"""Switch for blanket coolant:
 - =1 helium
 - =2 pressurized water
 """
@@ -499,7 +499,7 @@ p_tf_nuclear_heat_mw: float = None
 
 
 ptfnucpm3: float = None
-"""nuclear heating in the TF coil (MW/m3) (`blktmodel>0`)"""
+"""nuclear heating in the TF coil (MW/m3) (`i_blanket_type_stellarator>0`)"""
 
 
 r_cryostat_inboard: float = None
@@ -613,10 +613,19 @@ f_a_blkt_cooling_channels: float = None
 """coolant void fraction in blanket."""
 
 
-blktmodel: int = None
+i_blanket_type_stellarator: int = None
 """switch for blanket/tritium breeding model (see i_blanket_type):
 - =0 original simple model
 - =1 KIT model based on a helium-cooled pebble-bed blanket (HCPB) reference design
+- =2 WCLL; efficiency taken from WP13-DAS08-T02, EFDA_D_2M97B7
+- =3 HCLL; efficiency taken from WP12-DAS08-T01, EFDA_D_2LLNBX and M. Kovari 2016
+"PROCESS": A systems code for fusion power plants - Part 2: Engineering
+https://www.sciencedirect.com/science/article/pii/S0920379616300072
+Feedheat & reheat cycle assumed
+- =4 HCPB; efficiency taken from WP12-DAS08-T01, EFDA_D_2LLNBX and M. Kovari 2016
+"PROCESS": A systems code for fusion power plants - Part 2: Engineering
+https://www.sciencedirect.com/science/article/pii/S0920379616300072
+Feedheat & reheat cycle assumed
 """
 
 
@@ -630,20 +639,6 @@ declfw: float = None
 
 declshld: float = None
 """neutron power deposition decay length of shield structural material [m] (stellarators only)"""
-
-
-blkttype: int = None
-"""Switch for blanket type:
-- =1 WCLL;
-- =2 HCLL; efficiency taken from M. Kovari 2016
-"PROCESS": A systems code for fusion power plants - Part 2: Engineering
-https://www.sciencedirect.com/science/article/pii/S0920379616300072
-Feedheat & reheat cycle assumed
-- =3 HCPB; efficiency taken from M. Kovari 2016
-"PROCESS": A systems code for fusion power plants - Part 2: Engineering
-https://www.sciencedirect.com/science/article/pii/S0920379616300072
-Feedheat & reheat cycle assumed
-"""
 
 
 etaiso: float = None
@@ -1049,11 +1044,10 @@ def init_fwbs_variables():
         m_blkt_vanadium, \
         m_blkt_lithium, \
         f_a_blkt_cooling_channels, \
-        blktmodel, \
+        i_blanket_type_stellarator, \
         declblkt, \
         declfw, \
         declshld, \
-        blkttype, \
         etaiso, \
         eta_coolant_pump_electric, \
         i_fw_blkt_shared_coolant, \
@@ -1245,11 +1239,10 @@ def init_fwbs_variables():
     m_blkt_vanadium = 0.0
     m_blkt_lithium = 0.0
     f_a_blkt_cooling_channels = 0.25
-    blktmodel = 0
+    i_blanket_type_stellarator = 0
     declblkt = 0.075
     declfw = 0.075
     declshld = 0.075
-    blkttype = 3
     etaiso = 0.85
     eta_coolant_pump_electric = 0.95
     pnuc_cp = 0.0

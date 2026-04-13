@@ -601,7 +601,7 @@ class Stellarator(Model):
         )
 
         #  Blanket neutronics calculations
-        if fwbs_variables.blktmodel == 1:
+        if fwbs_variables.i_blanket_type_stellarator == 1:
             self.blanket_neutronics()
 
             if heat_transport_variables.ipowerflow == 1:
@@ -1044,47 +1044,9 @@ class Stellarator(Model):
         )
 
         #  Blanket mass, excluding coolant
-
-        if fwbs_variables.blktmodel == 0:
-            if (fwbs_variables.blkttype == 1) or (
-                fwbs_variables.blkttype == 2
-            ):  # liquid breeder (WCLL or HCLL)
-                fwbs_variables.wtbllipb = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fbllipb * 9400.0e0
-                )
-                fwbs_variables.m_blkt_lithium = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli * 534.0e0
-                )
-                fwbs_variables.m_blkt_total = (
-                    fwbs_variables.wtbllipb + fwbs_variables.m_blkt_lithium
-                )
-            else:  # solid breeder (HCPB); always for ipowerflow=0
-                fwbs_variables.m_blkt_li2o = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli2o * 2010.0e0
-                )
-                fwbs_variables.m_blkt_beryllium = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fblbe * 1850.0e0
-                )
-                fwbs_variables.m_blkt_total = (
-                    fwbs_variables.m_blkt_li2o + fwbs_variables.m_blkt_beryllium
-                )
-
-            fwbs_variables.m_blkt_steel_total = (
-                fwbs_variables.vol_blkt_total
-                * fwbs_variables.den_steel
-                * fwbs_variables.fblss
-            )
-            fwbs_variables.m_blkt_vanadium = (
-                fwbs_variables.vol_blkt_total * 5870.0e0 * fwbs_variables.fblvd
-            )
-
-            fwbs_variables.m_blkt_total = (
-                fwbs_variables.m_blkt_total
-                + fwbs_variables.m_blkt_steel_total
-                + fwbs_variables.m_blkt_vanadium
-            )
-
-        else:  # volume fractions proportional to sub-assembly thicknesses
+        if (
+            fwbs_variables.i_blanket_type_stellarator == 1
+        ):  # volume fractions proportional to sub-assembly thicknesses
             fwbs_variables.m_blkt_steel_total = fwbs_variables.den_steel * (
                 fwbs_variables.vol_blkt_inboard
                 / build_variables.dr_blkt_inboard
@@ -1175,13 +1137,52 @@ class Stellarator(Model):
                 )
             )
 
-        #  When fwbs_variables.blktmodel > 0, although the blanket is by definition helium-cooled
+        else:
+            if fwbs_variables.i_blanket_type_stellarator in [2, 3]:
+                # liquid breeder (WCLL or HCLL)
+                fwbs_variables.wtbllipb = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fbllipb * 9400.0e0
+                )
+                fwbs_variables.m_blkt_lithium = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli * 534.0e0
+                )
+                fwbs_variables.m_blkt_total = (
+                    fwbs_variables.wtbllipb + fwbs_variables.m_blkt_lithium
+                )
+            elif fwbs_variables.i_blanket_type_stellarator == 4:
+                # solid breeder (HCPB); always for ipowerflow=0
+                fwbs_variables.m_blkt_li2o = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli2o * 2010.0e0
+                )
+                fwbs_variables.m_blkt_beryllium = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblbe * 1850.0e0
+                )
+                fwbs_variables.m_blkt_total = (
+                    fwbs_variables.m_blkt_li2o + fwbs_variables.m_blkt_beryllium
+                )
+
+            fwbs_variables.m_blkt_steel_total = (
+                fwbs_variables.vol_blkt_total
+                * fwbs_variables.den_steel
+                * fwbs_variables.fblss
+            )
+            fwbs_variables.m_blkt_vanadium = (
+                fwbs_variables.vol_blkt_total * 5870.0e0 * fwbs_variables.fblvd
+            )
+
+            fwbs_variables.m_blkt_total = (
+                fwbs_variables.m_blkt_total
+                + fwbs_variables.m_blkt_steel_total
+                + fwbs_variables.m_blkt_vanadium
+            )
+
+        #  When fwbs_variables.i_blanket_type_stellarator > 0, although the blanket is by definition helium-cooled
         #  in this case, the shield etc. are assumed to be water-cooled, and since
         #  water is heavier the calculation for fwbs_variables.m_fw_blkt_div_coolant_total is better done with
-        #  i_blkt_coolant_type=2 if fwbs_variables.blktmodel > 0; thus we can ignore the helium coolant mass
+        #  i_blkt_coolant_type=2 if fwbs_variables.i_blanket_type_stellarator > 0; thus we can ignore the helium coolant mass
         #  in the blanket.
 
-        if fwbs_variables.blktmodel == 0:
+        if fwbs_variables.i_blanket_type_stellarator == 0:
             coolvol = (
                 coolvol
                 + fwbs_variables.vol_blkt_total
@@ -1260,10 +1261,10 @@ class Stellarator(Model):
 
         #  Mass of coolant = volume * density at typical coolant
         #  temperatures and pressures
-        #  N.B. for fwbs_variables.blktmodel > 0, mass of *water* coolant in the non-blanket
+        #  N.B. for fwbs_variables.i_blanket_type_stellarator > 0, mass of *water* coolant in the non-blanket
         #  structures is used (see comment above)
 
-        if (fwbs_variables.blktmodel > 0) or (
+        if (fwbs_variables.i_blanket_type_stellarator > 0) or (
             fwbs_variables.i_blkt_coolant_type == 2
         ):  # pressurised water coolant
             fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 806.719e0
@@ -1335,7 +1336,7 @@ class Stellarator(Model):
                 "(pflux_fw_neutron_mw)",
                 physics_variables.pflux_fw_neutron_mw,
             )
-            if fwbs_variables.blktmodel > 0:
+            if fwbs_variables.i_blanket_type_stellarator > 0:
                 po.ovarre(
                     self.outfile,
                     "Neutron wall load peaking factor",
@@ -1369,7 +1370,7 @@ class Stellarator(Model):
                 build_variables.dz_shld_upper,
             )
 
-            if fwbs_variables.blktmodel > 0:
+            if fwbs_variables.i_blanket_type_stellarator > 0:
                 po.ovarre(
                     self.outfile,
                     "Inboard breeding zone thickness (m)",
@@ -1395,7 +1396,7 @@ class Stellarator(Model):
                 "(dr_blkt_inboard)",
                 build_variables.dr_blkt_inboard,
             )
-            if fwbs_variables.blktmodel > 0:
+            if fwbs_variables.i_blanket_type_stellarator > 0:
                 po.ovarre(
                     self.outfile,
                     "Outboard breeding zone thickness (m)",
@@ -1429,7 +1430,7 @@ class Stellarator(Model):
             )
 
             if (heat_transport_variables.ipowerflow == 0) and (
-                fwbs_variables.blktmodel == 0
+                fwbs_variables.i_blanket_type_stellarator == 0
             ):
                 po.osubhd(self.outfile, "Coil nuclear parameters :")
                 po.ovarre(
@@ -1470,7 +1471,7 @@ class Stellarator(Model):
                     dpacop,
                 )
 
-            if fwbs_variables.blktmodel == 0:
+            if fwbs_variables.i_blanket_type_stellarator == 0:
                 po.osubhd(self.outfile, "Nuclear heating :")
                 po.ovarre(
                     self.outfile,
@@ -1568,57 +1569,9 @@ class Stellarator(Model):
                 )
                 po.ovarre(
                     self.outfile,
-                    "Nuclear heating on i/b coil (MW/m3)",
-                    "(pnuctfi)",
-                    fwbs_variables.pnuctfi,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Nuclear heating on o/b coil (MW/m3)",
-                    "(pnuctfo)",
-                    fwbs_variables.pnuctfo,
-                )
-                po.ovarre(
-                    self.outfile,
                     "Total nuclear heating on coil (MW)",
                     "(p_tf_nuclear_heat_mw)",
                     fwbs_variables.p_tf_nuclear_heat_mw,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Fast neut. fluence on i/b coil (n/m2)",
-                    "(nflutfi)",
-                    fwbs_variables.nflutfi * 1.0e4,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Fast neut. fluence on o/b coil (n/m2)",
-                    "(nflutfo)",
-                    fwbs_variables.nflutfo * 1.0e4,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Minimum final He conc. in IB VV (appm)",
-                    "(vvhemini)",
-                    fwbs_variables.vvhemini,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Minimum final He conc. in OB VV (appm)",
-                    "(vvhemino)",
-                    fwbs_variables.vvhemino,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Maximum final He conc. in IB VV (appm)",
-                    "(vvhemaxi)",
-                    fwbs_variables.vvhemaxi,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Maximum final He conc. in OB VV (appm)",
-                    "(vvhemaxo)",
-                    fwbs_variables.vvhemaxo,
                 )
                 po.ovarre(
                     self.outfile,
@@ -1626,15 +1579,9 @@ class Stellarator(Model):
                     "(life_blkt_fpy)",
                     fwbs_variables.life_blkt_fpy,
                 )
-                po.ovarre(
-                    self.outfile,
-                    "Blanket lifetime (calendar years)",
-                    "(t_bl_y)",
-                    fwbs_variables.t_bl_y,
-                )
 
             if (heat_transport_variables.ipowerflow == 1) and (
-                fwbs_variables.blktmodel == 0
+                fwbs_variables.i_blanket_type_stellarator == 0
             ):
                 po.oblnkl(self.outfile)
                 po.ovarin(

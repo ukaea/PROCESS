@@ -176,6 +176,7 @@ shear    = 0.5          *Magnetic shear, derivative of iotabar
 
 *------------------FWBs Variables------------------*
 
+i_blanket_type_stellarator = 4 * (HCPB)
 den_steel   = 7800.0               *Density of steel (kg/m3)
 f_p_blkt_multiplication = 1.35  *Energy multiplication in blanket and shield
 eta_coolant_pump_electric = 1.0 *Electrical efficiency of primary coolant pumps
@@ -186,7 +187,7 @@ fblss    = 0.0985               *Stainless steel fraction of blanket by volume
 fblvd    = 0.00                 *Vanadium fraction of blanket by volume
 fhole    = 0.0                  *Area fraction taken up by other holes (not used)
 fwclfr   = 0.35                 *First wall coolant fraction
-f_a_blkt_cooling_channels   = 0.386    *Coolant void fraction in blanket (blktmodel=0)
+f_a_blkt_cooling_channels   = 0.386    *Coolant void fraction in blanket (i_blanket_type_stellarator=0)
 vfshld   = 0.40                 *Coolant void fraction in shield
 
 declblkt = 0.1        *Neutron Power Deposition Decay Length Of Blanket Structural Material [M] (Stellarators Only)

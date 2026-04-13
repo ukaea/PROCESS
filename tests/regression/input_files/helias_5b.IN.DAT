@@ -105,6 +105,7 @@ xpertin  = 1.5          *Perpendicular heat transport coefficient (m2/s)
 
 *------------------FWBs Variables------------------*
 
+i_blanket_type_stellarator = 4 * (HCPB)
 den_steel   = 7800.0       *Density of steel (kg/m3)
 f_p_blkt_multiplication    = 1.18         *Energy multiplication in blanket and shield
 eta_coolant_pump_electric   = 1.0          *Electrical efficiency of primary coolant pumps
@@ -120,7 +121,7 @@ p_fw_coolant_pump_mw = 56.0         *First wall coolant mechanical pumping power
 p_div_coolant_pump_mw = 24.0        *Divertor coolant mechanical pumping power (MW)
 i_p_coolant_pumping = 0     *Switch for pumping power (0: User sets pump power directly)
 i_thermal_electric_conversion = 2     *Switch for power conversion cycle (2: user input thermal-electric efficiency)
-f_a_blkt_cooling_channels   = 0.10         *Coolant void fraction in blanket (blktmodel=0)
+f_a_blkt_cooling_channels   = 0.10         *Coolant void fraction in blanket (i_blanket_type_stellarator=0)
 vfshld   = 0.60         *Coolant void fraction in shield
 radius_fw_channel = 0.008 *Inner radius of first wall coolant channel (m) is 0.008 for stellarator
 
