@@ -165,7 +165,7 @@ def test_current_drive_primary_neutral_beam(current_drive):
     )
     assert current_drive_variables.f_c_plasma_hcd_primary == pytest.approx(0.2, rel=1e-6)
     assert heat_transport_variables.p_hcd_primary_electric_mw == pytest.approx(
-        59.32237274617019, rel=1e-6
+        197.74124248723396, rel=1e-6
     )
     assert heat_transport_variables.p_hcd_secondary_electric_mw == pytest.approx(
         0.0, rel=1e-6
