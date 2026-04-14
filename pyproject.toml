@@ -116,7 +116,7 @@ dependencies = ["pre-commit", "ruff", "ty"]
 
 [tool.hatch.envs.lint.scripts]
 fmt    = ["pre-commit run --all-files --hook-stage manual {args:}"]
-fmt_extra = ["ruff check --select E501 PLR6301 C901 PLR0904 PLR0911 PLR0912 PLR0913 PLR0914 PLR0915 PLR0916 PLR0917 PLR1702 D100 D101 D102 D103 DOC501 D404 DOC102 D104 D105 PLC1901 S307 {args:.}"]
+fmt_extra = ["ruff check --select=E501,PLR6301,C901,PLR0904,PLR0911,PLR0912,PLR0913,PLR0914,PLR0915,PLR0916,PLR0917,PLR1702,D100,D101,D102,D103,DOC501,D404,DOC102,D104,D105,PLC1901,S307 {args:.}"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
