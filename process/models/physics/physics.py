@@ -5005,10 +5005,30 @@ class DetailedPhysics(Model):
         # Collision times
         # ============================
 
+        physics_variables.t_plasma_electron_electron_collision_vol_avg = self.calculate_electron_electron_collision_time(
+            temp_plasma_electron_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_electrons=physics_variables.nd_plasma_electrons_vol_avg,
+            plasma_coulomb_log_electron_electron=physics_variables.plasma_coulomb_log_electron_electron_vol_avg,
+        )
+
         physics_variables.t_plasma_electron_electron_collision_profile = self.calculate_electron_electron_collision_time(
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
             nd_plasma_electrons=self.plasma_profile.neprofile.profile_y,
             plasma_coulomb_log_electron_electron=physics_variables.plasma_coulomb_log_electron_electron_profile,
+        )
+
+        physics_variables.t_plasma_electron_deuteron_collision_vol_avg = self.calculate_electron_ion_collision_time(
+            temp_plasma_electron_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_ions=(
+                physics_variables.nd_plasma_electrons_vol_avg
+                * physics_variables.f_plasma_fuel_deuterium
+                * (
+                    physics_variables.nd_plasma_fuel_ions_vol_avg
+                    / physics_variables.nd_plasma_electrons_vol_avg
+                )
+            ),
+            plasma_coulomb_log_electron_ion=physics_variables.plasma_coulomb_log_electron_deuteron_vol_avg,
+            n_charge_ion=1,
         )
 
         physics_variables.t_plasma_electron_deuteron_collision_profile = self.calculate_electron_ion_collision_time(
@@ -5025,6 +5045,20 @@ class DetailedPhysics(Model):
             n_charge_ion=1,
         )
 
+        physics_variables.t_plasma_electron_triton_collision_vol_avg = self.calculate_electron_ion_collision_time(
+            temp_plasma_electron_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_ions=(
+                physics_variables.nd_plasma_electrons_vol_avg
+                * physics_variables.f_plasma_fuel_tritium
+                * (
+                    physics_variables.nd_plasma_fuel_ions_vol_avg
+                    / physics_variables.nd_plasma_electrons_vol_avg
+                )
+            ),
+            plasma_coulomb_log_electron_ion=physics_variables.plasma_coulomb_log_electron_triton_vol_avg,
+            n_charge_ion=1,
+        )
+
         physics_variables.t_plasma_electron_triton_collision_profile = self.calculate_electron_ion_collision_time(
             temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
             nd_plasma_ions=(
@@ -5037,6 +5071,19 @@ class DetailedPhysics(Model):
             ),
             plasma_coulomb_log_electron_ion=physics_variables.plasma_coulomb_log_electron_triton_profile,
             n_charge_ion=1,
+        )
+
+        physics_variables.t_plasma_electron_alpha_thermal_collision_vol_avg = self.calculate_electron_ion_collision_time(
+            temp_plasma_electron_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_ions=(
+                physics_variables.nd_plasma_electrons_vol_avg
+                * (
+                    physics_variables.nd_plasma_alphas_vol_avg
+                    / physics_variables.nd_plasma_electrons_vol_avg
+                )
+            ),
+            plasma_coulomb_log_electron_ion=physics_variables.plasma_coulomb_log_electron_alpha_thermal_vol_avg,
+            n_charge_ion=2,
         )
 
         physics_variables.t_plasma_electron_alpha_thermal_collision_profile = self.calculate_electron_ion_collision_time(
@@ -5811,6 +5858,14 @@ class DetailedPhysics(Model):
 
         po.osubhd(self.outfile, "Collision Times:")
 
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron-electron collision time (τₑₑ) (s)",
+            "(t_plasma_electron_electron_collision_vol_avg)",
+            physics_variables.t_plasma_electron_electron_collision_vol_avg,
+            "OP ",
+        )
+
         for i in range(
             len(physics_variables.t_plasma_electron_electron_collision_profile)
         ):
@@ -5820,6 +5875,14 @@ class DetailedPhysics(Model):
                 f"(t_plasma_electron_electron_collision_profile{i})",
                 physics_variables.t_plasma_electron_electron_collision_profile[i],
             )
+
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron-deuteron collision time (τₑD) (s)",
+            "(t_plasma_electron_deuteron_collision_vol_avg)",
+            physics_variables.t_plasma_electron_deuteron_collision_vol_avg,
+            "OP ",
+        )
 
         for i in range(
             len(physics_variables.t_plasma_electron_deuteron_collision_profile)
@@ -5831,6 +5894,14 @@ class DetailedPhysics(Model):
                 physics_variables.t_plasma_electron_deuteron_collision_profile[i],
             )
 
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron-triton collision time (τₑT) (s)",
+            "(t_plasma_electron_triton_collision_vol_avg)",
+            physics_variables.t_plasma_electron_triton_collision_vol_avg,
+            "OP ",
+        )
+
         for i in range(
             len(physics_variables.t_plasma_electron_triton_collision_profile)
         ):
@@ -5840,6 +5911,14 @@ class DetailedPhysics(Model):
                 f"(t_plasma_electron_triton_collision_profile{i})",
                 physics_variables.t_plasma_electron_triton_collision_profile[i],
             )
+
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron-alpha thermal collision time (τₑαₜₕ) (s)",
+            "(t_plasma_electron_alpha_thermal_collision_vol_avg)",
+            physics_variables.t_plasma_electron_alpha_thermal_collision_vol_avg,
+            "OP ",
+        )
 
         for i in range(
             len(physics_variables.t_plasma_electron_alpha_thermal_collision_profile)

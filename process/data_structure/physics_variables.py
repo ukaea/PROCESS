@@ -1381,14 +1381,26 @@ freq_plasma_upper_hybrid_profile: list[float] = None
 t_plasma_electron_electron_collision_profile: list[float] = None
 """Profile of electron-electron collision time in plasma (s)"""
 
+t_plasma_electron_electron_collision_vol_avg: float = None
+"""Volume averaged electron-electron collision time in plasma (s)"""
+
 t_plasma_electron_deuteron_collision_profile: list[float] = None
 """Profile of electron-deuteron collision time in plasma (s)"""
+
+t_plasma_electron_deuteron_collision_vol_avg: float = None
+"""Volume averaged electron-deuteron collision time in plasma (s)"""
 
 t_plasma_electron_triton_collision_profile: list[float] = None
 """Profile of electron-triton collision time in plasma (s)"""
 
+t_plasma_electron_triton_collision_vol_avg: float = None
+"""Volume averaged electron-triton collision time in plasma (s)"""
+
 t_plasma_electron_alpha_thermal_collision_profile: list[float] = None
 """Profile of electron-alpha collision time in plasma (s)"""
+
+t_plasma_electron_alpha_thermal_collision_vol_avg: float = None
+"""Volume averaged electron-alpha collision time in plasma (s)"""
 
 freq_plasma_electron_electron_collision_profile: list[float] = None
 """Profile of electron-electron collision frequency in plasma (Hz)"""
@@ -1778,9 +1790,13 @@ def init_physics_variables():
         freq_plasma_larmor_toroidal_triton_profile, \
         freq_plasma_upper_hybrid_profile, \
         t_plasma_electron_electron_collision_profile, \
+        t_plasma_electron_electron_collision_vol_avg, \
         t_plasma_electron_deuteron_collision_profile, \
+        t_plasma_electron_deuteron_collision_vol_avg, \
         t_plasma_electron_triton_collision_profile, \
+        t_plasma_electron_triton_collision_vol_avg, \
         t_plasma_electron_alpha_thermal_collision_profile, \
+        t_plasma_electron_alpha_thermal_collision_vol_avg, \
         freq_plasma_electron_electron_collision_profile, \
         freq_plasma_electron_deuteron_collision_profile, \
         freq_plasma_electron_triton_collision_profile, \
@@ -2091,9 +2107,13 @@ def init_physics_variables():
     freq_plasma_larmor_toroidal_triton_profile = []
     freq_plasma_upper_hybrid_profile = []
     t_plasma_electron_electron_collision_profile = []
+    t_plasma_electron_electron_collision_vol_avg = 0.0
     t_plasma_electron_deuteron_collision_profile = []
+    t_plasma_electron_deuteron_collision_vol_avg = 0.0
     t_plasma_electron_triton_collision_profile = []
+    t_plasma_electron_triton_collision_vol_avg = 0.0
     t_plasma_electron_alpha_thermal_collision_profile = []
+    t_plasma_electron_alpha_thermal_collision_vol_avg = 0.0
     t_plasma_electron_alpha_spitzer_slow_profile = []
     freq_plasma_electron_electron_collision_profile = []
     freq_plasma_electron_deuteron_collision_profile = []
