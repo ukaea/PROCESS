@@ -327,7 +327,7 @@ def compare_mfiles(
         if "normres" in v:
             continue
 
-        values = np.zeros(n)  # replaced scipy with numpy
+        values = np.zeros(n)
 
         if v not in dts["DICT_VAR_TYPE"]:
             try:

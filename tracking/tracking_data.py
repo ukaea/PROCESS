@@ -246,7 +246,7 @@ class ProcessTracker:
                 # a dotted variable is for variables that no longer exist in Fortran module variables
                 # see tracking_variables docstring
                 try:
-                    _, var = var.split(".")
+                    _, var = var.split(".")  # noqa: PLW2901
                 except (AttributeError, ValueError):
                     logger.warning(
                         "%s is a dotted variable and must be in the form OVERRIDINGNAME.VARIABLE",

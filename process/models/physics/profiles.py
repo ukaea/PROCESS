@@ -37,7 +37,7 @@ class Profile(ABC):
         - profile_dx (int): The step size between consecutive values in profile_x.
         """
         self.profile_size = profile_size
-        self.profile_x = np.arange(self.profile_size)
+        self.profile_x = np.arange(self.profile_size, dtype=float)
         self.profile_y = np.zeros(self.profile_size)
         self.profile_integ = 0
         self.profile_dx = 0

@@ -1041,6 +1041,9 @@ class INVariable:
             and self.parameter_group == value.parameter_group
         )
 
+    def __hash__(self):
+        return hash((self.name, self.value, self.v_type, self.parameter_group))
+
     def __repr__(self):
         return (
             f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, v_type={self.v_type!r}, "
@@ -1415,11 +1418,6 @@ class InDat:
             Line from IN.DAT to process
         empty_array:
             Default array for this array name
-
-        Returns
-        -------
-        type
-            nothing
         """
         # TODO This is a mess after the Fortran module variable
         # re-initialisation work. It is hard to see how this can be improved
