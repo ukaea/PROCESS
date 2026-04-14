@@ -1818,7 +1818,7 @@ class Physics(Model):
             elif physics_variables.i_plasma_geometry == 12:
                 po.ovarrf(
                     self.outfile,
-                    "Elongation, X-point (calculated from aspect ratio via scaling iva JETTO)",
+                    "Elongation, X-point (calculated from aspect ratio via scaling via Menard 1997",
                     "(kappa)",
                     physics_variables.kappa,
                     "OP ",

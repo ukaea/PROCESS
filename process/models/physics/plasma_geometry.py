@@ -394,8 +394,9 @@ class PlasmaGeom:
 
         if physics_variables.i_plasma_geometry == 12:
             # physics_variables.triang is an input
-            # physics_variables.kappa found from physics_variables.aspect ratio
-            # scaling taken from JETTO.
+            # physics_variables.kappa found from physics_variables.aspect ratio scaling from
+            # J.E. Menard et al 1997 Nucl. Fusion 37 595 and assume max controllable kappa
+            # and assume li(3) is held constant
 
             physics_variables.kappa = (
                 2.93e0 * (1.8e0 / physics_variables.aspect) ** 0.4e0
