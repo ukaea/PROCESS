@@ -4694,6 +4694,36 @@ class DetailedPhysics(Model):
         # Coulomb logarithm
         # ============================
 
+        physics_variables.plasma_coulomb_log_electron_electron_vol_avg = (
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_vol_avg,
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_vol_avg,
+                            velocity_2=physics_variables.vel_plasma_electron_vol_avg,
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.ELECTRON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_vol_avg,
+                            velocity_2=physics_variables.vel_plasma_electron_vol_avg,
+                        ),
+                    ),
+                ),
+            )
+        )
+
         physics_variables.plasma_coulomb_log_electron_electron_profile = np.array([
             self.calculate_coulomb_log_from_impact(
                 impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
@@ -4724,6 +4754,36 @@ class DetailedPhysics(Model):
             )
             for i in range(len(physics_variables.len_plasma_debye_electron_profile))
         ])
+
+        physics_variables.plasma_coulomb_log_electron_deuteron_vol_avg = (
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_vol_avg,
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.DEUTERON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_vol_avg,
+                            velocity_2=physics_variables.vel_plasma_deuteron_vol_avg,
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.DEUTERON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_vol_avg,
+                            velocity_2=physics_variables.vel_plasma_deuteron_vol_avg,
+                        ),
+                    ),
+                ),
+            )
+        )
 
         physics_variables.plasma_coulomb_log_electron_deuteron_profile = np.array([
             self.calculate_coulomb_log_from_impact(
@@ -4756,6 +4816,36 @@ class DetailedPhysics(Model):
             for i in range(len(physics_variables.len_plasma_debye_electron_profile))
         ])
 
+        physics_variables.plasma_coulomb_log_electron_triton_vol_avg = (
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_vol_avg,
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.TRITON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_vol_avg,
+                            velocity_2=physics_variables.vel_plasma_triton_vol_avg,
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.ELECTRON_MASS,
+                            mass2=constants.TRITON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_electron_vol_avg,
+                            velocity_2=physics_variables.vel_plasma_triton_vol_avg,
+                        ),
+                    ),
+                ),
+            )
+        )
+
         physics_variables.plasma_coulomb_log_electron_triton_profile = np.array([
             self.calculate_coulomb_log_from_impact(
                 impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
@@ -4787,6 +4877,36 @@ class DetailedPhysics(Model):
             for i in range(len(physics_variables.len_plasma_debye_electron_profile))
         ])
 
+        physics_variables.plasma_coulomb_log_deuteron_triton_vol_avg = (
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_vol_avg,
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        m_reduced=self.calculate_reduced_mass(
+                            mass1=constants.DEUTERON_MASS,
+                            mass2=constants.TRITON_MASS,
+                        ),
+                        vel_relative=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_deuteron_vol_avg,
+                            velocity_2=physics_variables.vel_plasma_triton_vol_avg,
+                        ),
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=self.calculate_reduced_mass(
+                            mass1=constants.DEUTERON_MASS,
+                            mass2=constants.TRITON_MASS,
+                        ),
+                        velocity=self.calculate_average_relative_velocity(
+                            velocity_1=physics_variables.vel_plasma_deuteron_vol_avg,
+                            velocity_2=physics_variables.vel_plasma_triton_vol_avg,
+                        ),
+                    ),
+                ),
+            )
+        )
+
         physics_variables.plasma_coulomb_log_deuteron_triton_profile = np.array([
             self.calculate_coulomb_log_from_impact(
                 impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
@@ -4817,6 +4937,34 @@ class DetailedPhysics(Model):
             )
             for i in range(len(physics_variables.len_plasma_debye_electron_profile))
         ])
+
+        physics_variables.plasma_coulomb_log_electron_alpha_thermal_vol_avg = self.calculate_coulomb_log_from_impact(
+            impact_param_max=physics_variables.len_plasma_debye_electron_vol_avg,
+            impact_param_min=max(
+                self.calculate_classical_distance_of_closest_approach(
+                    charge1=1,
+                    charge2=1,
+                    m_reduced=self.calculate_reduced_mass(
+                        mass1=constants.ELECTRON_MASS,
+                        mass2=constants.ALPHA_MASS,
+                    ),
+                    vel_relative=self.calculate_average_relative_velocity(
+                        velocity_1=physics_variables.vel_plasma_electron_vol_avg,
+                        velocity_2=physics_variables.vel_plasma_alpha_thermal_vol_avg,
+                    ),
+                ),
+                self.calculate_debroglie_wavelength(
+                    mass=self.calculate_reduced_mass(
+                        mass1=constants.ELECTRON_MASS,
+                        mass2=constants.ALPHA_MASS,
+                    ),
+                    velocity=self.calculate_average_relative_velocity(
+                        velocity_1=physics_variables.vel_plasma_electron_vol_avg,
+                        velocity_2=physics_variables.vel_plasma_alpha_thermal_vol_avg,
+                    ),
+                ),
+            ),
+        )
 
         physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile = np.array([
             self.calculate_coulomb_log_from_impact(
@@ -5571,6 +5719,14 @@ class DetailedPhysics(Model):
 
         po.osubhd(self.outfile, "Coulomb Logarithms:")
 
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron-electron Coulomb log (Λₑₑ)",
+            "(plasma_coulomb_log_electron_electron_vol_avg)",
+            physics_variables.plasma_coulomb_log_electron_electron_vol_avg,
+            "OP ",
+        )
+
         for i in range(
             len(physics_variables.plasma_coulomb_log_electron_electron_profile)
         ):
@@ -5580,6 +5736,14 @@ class DetailedPhysics(Model):
                 f"(plasma_coulomb_log_electron_electron_profile{i})",
                 physics_variables.plasma_coulomb_log_electron_electron_profile[i],
             )
+
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron-deuteron Coulomb log (ΛₑD)",
+            "(plasma_coulomb_log_electron_deuteron_vol_avg)",
+            physics_variables.plasma_coulomb_log_electron_deuteron_vol_avg,
+            "OP ",
+        )
 
         for i in range(
             len(physics_variables.plasma_coulomb_log_electron_deuteron_profile)
@@ -5591,6 +5755,14 @@ class DetailedPhysics(Model):
                 physics_variables.plasma_coulomb_log_electron_deuteron_profile[i],
             )
 
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron-triton Coulomb log (ΛₑT)",
+            "(plasma_coulomb_log_electron_triton_vol_avg)",
+            physics_variables.plasma_coulomb_log_electron_triton_vol_avg,
+            "OP ",
+        )
+
         for i in range(
             len(physics_variables.plasma_coulomb_log_electron_triton_profile)
         ):
@@ -5601,6 +5773,14 @@ class DetailedPhysics(Model):
                 physics_variables.plasma_coulomb_log_electron_triton_profile[i],
             )
 
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged deuteron-triton Coulomb log (Λ_DT)",
+            "(plasma_coulomb_log_deuteron_triton_vol_avg)",
+            physics_variables.plasma_coulomb_log_deuteron_triton_vol_avg,
+            "OP ",
+        )
+
         for i in range(
             len(physics_variables.plasma_coulomb_log_deuteron_triton_profile)
         ):
@@ -5610,6 +5790,14 @@ class DetailedPhysics(Model):
                 f"(plasma_coulomb_log_deuteron_triton_profile{i})",
                 physics_variables.plasma_coulomb_log_deuteron_triton_profile[i],
             )
+
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron-alpha thermal Coulomb log (Λₑαₜₕ)",
+            "(plasma_coulomb_log_electron_alpha_thermal_vol_avg)",
+            physics_variables.plasma_coulomb_log_electron_alpha_thermal_vol_avg,
+            "OP ",
+        )
 
         for i in range(
             len(physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile)

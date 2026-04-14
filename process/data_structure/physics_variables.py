@@ -1336,14 +1336,26 @@ plasma_coulomb_log_electron_electron_vol_avg: float = None
 plasma_coulomb_log_electron_deuteron_profile: list[float] = None
 """Profile of electron-deuteron Coulomb logarithm in plasma"""
 
+plasma_coulomb_log_electron_deuteron_vol_avg: float = None
+"""Volume averaged electron-deuteron Coulomb logarithm in plasma"""
+
 plasma_coulomb_log_electron_triton_profile: list[float] = None
 """Profile of electron-triton Coulomb logarithm in plasma"""
+
+plasma_coulomb_log_electron_triton_vol_avg: float = None
+"""Volume averaged electron-triton Coulomb logarithm in plasma"""
 
 plasma_coulomb_log_deuteron_triton_profile: list[float] = None
 """Profile of deuteron-triton Coulomb logarithm in plasma"""
 
+plasma_coulomb_log_deuteron_triton_vol_avg: float = None
+"""Volume averaged deuteron-triton Coulomb logarithm in plasma"""
+
 plasma_coulomb_log_electron_alpha_thermal_profile: list[float] = None
 """Profile of electron-alpha Coulomb logarithm in plasma"""
+
+plasma_coulomb_log_electron_alpha_thermal_vol_avg: float = None
+"""Volume averaged electron-alpha Coulomb logarithm in plasma"""
 
 t_plasma_electron_alpha_spitzer_slow_profile: list[float] = None
 """Profile of electron-alpha Spitzer slowing down time in plasma (s)"""
@@ -1751,9 +1763,13 @@ def init_physics_variables():
         plasma_coulomb_log_electron_electron_profile, \
         plasma_coulomb_log_electron_electron_vol_avg, \
         plasma_coulomb_log_electron_deuteron_profile, \
+        plasma_coulomb_log_electron_deuteron_vol_avg, \
         plasma_coulomb_log_electron_triton_profile, \
+        plasma_coulomb_log_electron_triton_vol_avg, \
         plasma_coulomb_log_deuteron_triton_profile, \
+        plasma_coulomb_log_deuteron_triton_vol_avg, \
         plasma_coulomb_log_electron_alpha_thermal_profile, \
+        plasma_coulomb_log_electron_alpha_thermal_vol_avg, \
         t_plasma_electron_alpha_spitzer_slow_profile, \
         freq_plasma_electron_profile, \
         freq_plasma_deuteron_profile, \
@@ -2061,9 +2077,13 @@ def init_physics_variables():
     plasma_coulomb_log_electron_electron_profile = []
     plasma_coulomb_log_electron_electron_vol_avg = 0.0
     plasma_coulomb_log_electron_deuteron_profile = []
+    plasma_coulomb_log_electron_deuteron_vol_avg = 0.0
     plasma_coulomb_log_electron_triton_profile = []
+    plasma_coulomb_log_electron_triton_vol_avg = 0.0
     plasma_coulomb_log_deuteron_triton_profile = []
+    plasma_coulomb_log_deuteron_triton_vol_avg = 0.0
     plasma_coulomb_log_electron_alpha_thermal_profile = []
+    plasma_coulomb_log_electron_alpha_thermal_vol_avg = 0.0
     freq_plasma_electron_profile = []
     freq_plasma_deuteron_profile = []
     freq_plasma_larmor_toroidal_electron_profile = []
