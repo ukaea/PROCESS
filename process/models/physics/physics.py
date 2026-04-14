@@ -5236,6 +5236,14 @@ class DetailedPhysics(Model):
         # Spitzer slow down time
         # ============================
 
+        physics_variables.t_plasma_electron_alpha_spitzer_slow_vol_avg = self.calculate_spitzer_ion_slowing_down_time(
+            m_ion=constants.ALPHA_MASS,
+            plasma_coulomb_log_electron_ion=physics_variables.plasma_coulomb_log_electron_alpha_thermal_vol_avg,
+            temp_plasma_electrons_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_electrons=physics_variables.nd_plasma_electrons_vol_avg,
+            n_charge_ion=2,
+        )
+
         physics_variables.t_plasma_electron_alpha_spitzer_slow_profile = self.calculate_spitzer_ion_slowing_down_time(
             m_ion=constants.ALPHA_MASS,
             plasma_coulomb_log_electron_ion=physics_variables.plasma_coulomb_log_electron_alpha_thermal_profile,
@@ -6226,6 +6234,13 @@ class DetailedPhysics(Model):
 
         po.osubhd(self.outfile, "Spitzer slowing down times:")
 
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-alpha Spitzer slowing down time (s)",
+            "(t_plasma_electron_alpha_spitzer_slow_vol_avg)",
+            physics_variables.t_plasma_electron_alpha_spitzer_slow_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.t_plasma_electron_alpha_spitzer_slow_profile)
         ):
@@ -6240,7 +6255,7 @@ class DetailedPhysics(Model):
 
         po.ovarre(
             self.outfile,
-            "Volume averaged plasma fuel Spitzer resistivity (Ohm m)",
+            "Volume averaged plasma fuel Spitzer resistivity (η) (Ohm m)",
             "(res_plasma_fuel_spitzer_vol_avg)",
             physics_variables.res_plasma_fuel_spitzer_vol_avg,
         )

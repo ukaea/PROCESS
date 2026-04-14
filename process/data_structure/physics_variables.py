@@ -1366,6 +1366,9 @@ plasma_coulomb_log_electron_alpha_thermal_vol_avg: float = None
 t_plasma_electron_alpha_spitzer_slow_profile: list[float] = None
 """Profile of electron-alpha Spitzer slowing down time in plasma (s)"""
 
+t_plasma_electron_alpha_spitzer_slow_vol_avg: float = None
+"""Volume averaged electron-alpha Spitzer slowing down time in plasma (s)"""
+
 freq_plasma_electron_profile: list[float] = None
 """Electron plasma frequency profile (Hz)"""
 
@@ -1833,6 +1836,7 @@ def init_physics_variables():
         plasma_coulomb_log_electron_alpha_thermal_profile, \
         plasma_coulomb_log_electron_alpha_thermal_vol_avg, \
         t_plasma_electron_alpha_spitzer_slow_profile, \
+        t_plasma_electron_alpha_spitzer_slow_vol_avg, \
         freq_plasma_electron_profile, \
         freq_plasma_electron_vol_avg, \
         freq_plasma_deuteron_profile, \
@@ -2180,6 +2184,7 @@ def init_physics_variables():
     t_plasma_electron_alpha_thermal_collision_profile = []
     t_plasma_electron_alpha_thermal_collision_vol_avg = 0.0
     t_plasma_electron_alpha_spitzer_slow_profile = []
+    t_plasma_electron_alpha_spitzer_slow_vol_avg = 0.0
     freq_plasma_electron_electron_collision_profile = []
     freq_plasma_electron_electron_collision_vol_avg = 0.0
     freq_plasma_electron_deuteron_collision_profile = []
