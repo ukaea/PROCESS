@@ -1,4 +1,6 @@
 import logging
+from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 
@@ -6,6 +8,23 @@ from process.core import constants
 from process.data_structure import build_variables, physics_variables
 
 logger = logging.getLogger(__name__)
+
+
+class PlasmaShapeModelType(IntEnum):
+    """Enum for plasma shape model types."""
+
+    PROCESS_ORIGINAL = (0, "Process Original Double Arc")
+    SAUTER = (1, "Sauter")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class PlasmaGeom:
@@ -250,7 +269,8 @@ class PlasmaGeom:
         # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma current.
         if (
             physics_variables.i_plasma_current == 8
-            or physics_variables.i_plasma_shape == 1
+            or PlasmaShapeModelType(physics_variables.i_plasma_shape)
+            == PlasmaShapeModelType.SAUTER
         ):
             (
                 physics_variables.len_plasma_poloidal,
