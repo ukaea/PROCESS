@@ -1563,7 +1563,7 @@ class CurrentDrive(Model):
     def run(self):
         """This model doesn't need to be run"""
 
-    def cudriv(self):
+    def current_drive(self):
         """Calculate the current drive power requirements.
 
         This method computes the power requirements of the current drive system
