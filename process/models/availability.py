@@ -15,7 +15,6 @@ from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
-from process.data_structure import vacuum_variables as vacv
 from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
@@ -375,7 +374,9 @@ class Availability(Model):
         # Vacuum systems
 
         # Number of redundant pumps
-        cv.redun_vac = math.floor(vacv.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0)
+        cv.redun_vac = math.floor(
+            self.data.vacuum.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0
+        )
 
         u_unplanned_vacuum = self.calc_u_unplanned_vacuum(output)
 
@@ -1018,7 +1019,7 @@ class Availability(Model):
         cryo_main_time = 1.0e0 / 6.0e0
 
         # Total pumps = pumps + redundant pumps
-        total_pumps = vacv.n_vac_pumps_high + cv.redun_vac
+        total_pumps = self.data.vacuum.n_vac_pumps_high + cv.redun_vac
 
         # Cryopump failure rate per machine operational period
         # From "Selected component failure rate values from fusion
@@ -1059,7 +1060,7 @@ class Availability(Model):
                 self.outfile,
                 "Number of pumps (excluding redundant pumps)",
                 "(n_vac_pumps_high)",
-                vacv.n_vac_pumps_high,
+                self.data.vacuum.n_vac_pumps_high,
                 "OP ",
             )
             po.ovarin(
@@ -1184,7 +1185,9 @@ class Availability(Model):
         # Vacuum systems
 
         # Number of redundant pumps
-        cv.redun_vac = math.floor(vacv.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0)
+        cv.redun_vac = math.floor(
+            self.data.vacuum.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0
+        )
 
         u_unplanned_vacuum = self.calc_u_unplanned_vacuum(output)
 

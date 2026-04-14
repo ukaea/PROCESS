@@ -14,7 +14,6 @@ from process.data_structure import (
     physics_variables,
     tfcoil_variables,
     times_variables,
-    vacuum_variables,
 )
 from process.models.blankets.blanket_library import dshellvol, eshellvol
 from process.models.build import FwBlktVVShape
@@ -60,17 +59,17 @@ class Vacuum(Model):
             * constants.UMASS
         )
 
-        self.i_vacuum_pumping = vacuum_variables.i_vacuum_pumping
+        self.i_vacuum_pumping = self.data.vacuum.i_vacuum_pumping
 
         # i_vacuum_pumping required to be compared to a b string
         # as this is what f2py returns
         if self.i_vacuum_pumping == "old":
             (
                 pumpn,
-                vacuum_variables.n_vv_vacuum_ducts,
-                vacuum_variables.dlscal,
-                vacuum_variables.m_vv_vacuum_duct_shield,
-                vacuum_variables.dia_vv_vacuum_ducts,
+                self.data.vacuum.n_vv_vacuum_ducts,
+                self.data.vacuum.dlscal,
+                self.data.vacuum.m_vv_vacuum_duct_shield,
+                self.data.vacuum.dia_vv_vacuum_ducts,
             ) = self.vacuum(
                 physics_variables.p_fusion_total_mw,
                 physics_variables.rmajor,
@@ -97,12 +96,12 @@ class Vacuum(Model):
                 output=output,
             )
             # MDK pumpn is real: convert to integer by rounding.
-            vacuum_variables.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
+            self.data.vacuum.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
         elif self.i_vacuum_pumping == "simple":
-            vacuum_variables.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
+            self.data.vacuum.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
         else:
             logger.error(
-                f"i_vacuum_pumping is invalid: {vacuum_variables.i_vacuum_pumping}"
+                f"i_vacuum_pumping is invalid: {self.data.vacuum.i_vacuum_pumping}"
             )
 
     def vacuum_simple(self, output) -> float:
@@ -124,15 +123,15 @@ class Vacuum(Model):
         # Issue #304
         n_iter_vacuum_pumps = (
             physics_variables.molflow_plasma_fuelling_required
-            / vacuum_variables.molflow_vac_pumps
+            / self.data.vacuum.molflow_vac_pumps
         )
 
         # Pump-down:
         # Pumping speed per pump m3/s
         pumpspeed = (
-            vacuum_variables.volflow_vac_pumps_max
-            * vacuum_variables.f_a_vac_pump_port_plasma_surface
-            * vacuum_variables.f_volflow_vac_pumps_impedance
+            self.data.vacuum.volflow_vac_pumps_max
+            * self.data.vacuum.f_a_vac_pump_port_plasma_surface
+            * self.data.vacuum.f_volflow_vac_pumps_impedance
             * physics_variables.a_plasma_surface
             / tfcoil_variables.n_tf_coils
         )
@@ -140,10 +139,10 @@ class Vacuum(Model):
         wallarea = (physics_variables.a_plasma_surface / 1084.0e0) * 2000.0e0
         # Required pumping speed for pump-down
         pumpdownspeed = (
-            vacuum_variables.outgasfactor
+            self.data.vacuum.outgasfactor
             * wallarea
-            / vacuum_variables.pres_vv_chamber_base
-        ) * times_variables.t_plant_pulse_dwell ** (-vacuum_variables.outgasindex)
+            / self.data.vacuum.pres_vv_chamber_base
+        ) * times_variables.t_plant_pulse_dwell ** (-self.data.vacuum.outgasindex)
         # Number of pumps required for pump-down
         npumpdown = pumpdownspeed / pumpspeed
 
@@ -318,7 +317,7 @@ class Vacuum(Model):
         # nitrogen, DT, helium, DT again
         sp = (
             [1.95, 1.8, 1.8, 1.8]
-            if vacuum_variables.i_vacuum_pump_type == 0
+            if self.data.vacuum.i_vacuum_pump_type == 0
             else [9.0, 25.0, 5.0, 25.0]
         )
 
@@ -336,8 +335,8 @@ class Vacuum(Model):
 
         area = plasma_sarea * (aw + dsol) / aw
 
-        ogas = vacuum_variables.outgrat_fw * area * 10.0e0  # Outgassing rate (Pa-m^3/s)
-        s.append(ogas / vacuum_variables.pres_vv_chamber_base)
+        ogas = self.data.vacuum.outgrat_fw * area * 10.0e0  # Outgassing rate (Pa-m^3/s)
+        s.append(ogas / self.data.vacuum.pres_vv_chamber_base)
 
         #  Pumpdown between burns
         #  s(2) = net pump speed (DT) required for pumpdown between burns (m^3/s)
@@ -345,7 +344,7 @@ class Vacuum(Model):
         #  t_plant_pulse_dwell = dwell time between burns (s)
 
         pend = (
-            0.5e0 * nplasma * k * vacuum_variables.temp_vv_chamber_gas_burn_end
+            0.5e0 * nplasma * k * self.data.vacuum.temp_vv_chamber_gas_burn_end
         )  # pressure in plasma chamber after burn (Pa)
         pstart = 0.01e0 * pend  # pressure in chamber before start of burn (Pa)
 
@@ -356,9 +355,9 @@ class Vacuum(Model):
         volume = plasma_vol * (aw + dsol) * (aw + dsol) / (aw * aw)
 
         #  dwell pumping options
-        if (vacuum_variables.i_vac_pump_dwell == 1) or (t_plant_pulse_dwell == 0):
+        if (self.data.vacuum.i_vac_pump_dwell == 1) or (t_plant_pulse_dwell == 0):
             tpump = times_variables.t_plant_pulse_coil_precharge
-        elif vacuum_variables.i_vac_pump_dwell == 2:
+        elif self.data.vacuum.i_vac_pump_dwell == 2:
             tpump = t_plant_pulse_dwell + times_variables.t_plant_pulse_coil_precharge
         else:
             tpump = t_plant_pulse_dwell
@@ -375,12 +374,12 @@ class Vacuum(Model):
         fhe = source / (frate * 4.985e5)
         s.extend(
             (
-                (source / vacuum_variables.pres_div_chamber_burn / fhe),
+                (source / self.data.vacuum.pres_div_chamber_burn / fhe),
                 #  Removal of dt on steady state basis
                 #  s(4) = net speed (D-T) required to remove dt at fuelling rate (m^3/s)
                 (
                     (frate * 4.985e5 - source)
-                    / (vacuum_variables.pres_div_chamber_burn * (1.0e0 - fhe))
+                    / (self.data.vacuum.pres_div_chamber_burn * (1.0e0 - fhe))
                 ),
             ),
         )
@@ -514,8 +513,8 @@ class Vacuum(Model):
         #  If cryopumps are used then an additional pump is required
         #  for continuous operation with regeneration.
 
-        if vacuum_variables.i_vacuum_pump_type == 1:
-            pumpn *= 2.0e0
+        if self.data.vacuum.i_vacuum_pump_type == 1:
+            pumpn = pumpn * 2.0e0
 
         #  Information for costing routine
 
@@ -541,7 +540,7 @@ class Vacuum(Model):
                 self.outfile,
                 "First wall outgassing rate (Pa m/s)",
                 "(outgrat_fw)",
-                vacuum_variables.outgrat_fw,
+                self.data.vacuum.outgrat_fw,
             )
             process_output.ovarre(
                 self.outfile, "Total outgassing load (Pa m3/s)", "(ogas)", ogas, "OP "
@@ -550,7 +549,7 @@ class Vacuum(Model):
                 self.outfile,
                 "Base pressure required (Pa)",
                 "(pres_vv_chamber_base)",
-                vacuum_variables.pres_vv_chamber_base,
+                self.data.vacuum.pres_vv_chamber_base,
             )
             process_output.ovarre(
                 self.outfile, "Required N2 pump speed (m3/s)", "(s(1))", s[0], "OP "
@@ -577,7 +576,7 @@ class Vacuum(Model):
                 self.outfile,
                 "Allowable pumping time switch",
                 "(i_vac_pump_dwell)",
-                vacuum_variables.i_vac_pump_dwell,
+                self.data.vacuum.i_vac_pump_dwell,
             )
             process_output.ovarre(
                 self.outfile,
@@ -613,7 +612,7 @@ class Vacuum(Model):
                 self.outfile,
                 "Divertor chamber gas pressure (Pa)",
                 "(pres_div_chamber_burn)",
-                vacuum_variables.pres_div_chamber_burn,
+                self.data.vacuum.pres_div_chamber_burn,
             )
             process_output.ovarre(
                 self.outfile,
@@ -660,7 +659,7 @@ class Vacuum(Model):
                 process_output.oblnkl(self.outfile)
 
             i_fw_blkt_shared_coolant = (
-                "cryo " if vacuum_variables.i_vacuum_pump_type == 1 else "turbo"
+                "cryo " if self.data.vacuum.i_vacuum_pump_type == 1 else "turbo"
             )
 
             process_output.oblnkl(self.outfile)

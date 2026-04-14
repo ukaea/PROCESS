@@ -19,7 +19,6 @@ from process.data_structure import (
     ife_variables,
     physics_variables,
     structure_variables,
-    vacuum_variables,
 )
 
 MATERIALS = [
@@ -2432,11 +2431,11 @@ class IFE(Model):
         <P>The calculated values are hard-wired; they are based loosely
         on those for a tokamak of 6m major radius. F/MI/PJK/LOGBOOK12, p.87
         """
-        vacuum_variables.dlscal = 2.0
-        vacuum_variables.n_vv_vacuum_ducts = 16
-        vacuum_variables.m_vv_vacuum_duct_shield = 0.0
-        vacuum_variables.dia_vv_vacuum_ducts = 0.3
-        vacuum_variables.n_vac_pumps_high = 32
+        self.data.vacuum.dlscal = 2.0
+        self.data.vacuum.n_vv_vacuum_ducts = 16
+        self.data.vacuum.m_vv_vacuum_duct_shield = 0.0
+        self.data.vacuum.dia_vv_vacuum_ducts = 0.3
+        self.data.vacuum.n_vac_pumps_high = 32
 
 
 def _material_string_generator(chmatv, fwmatv, v1matv, blmatv, v2matv, shmatv, v3matv):
