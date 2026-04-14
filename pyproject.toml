@@ -194,7 +194,8 @@ max-locals = 17
     "RUF059",
     "T201",
 ]
-"examples/**" = ['B018', 'E402']
+"examples/**" = ['INP001', 'B018', 'E402']
+"documentation/scripts/**" = ['INP001']
 
 [tool.ruff.lint]
 preview = true
