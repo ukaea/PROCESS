@@ -171,10 +171,10 @@ INPUT_VARIABLES = {
     ),
     "ffwal": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
     "f_nd_plasma_pedestal_greenwald": InputVariable(
-        data_structure.physics_variables, float, range=(-1.0, 5.0)
+        data_structure.physics_variables, float, range=(0.1, 1.5)
     ),
     "f_nd_plasma_separatrix_greenwald": InputVariable(
-        data_structure.physics_variables, float, range=(-1.0, 5.0)
+        data_structure.physics_variables, float, range=(0.01, 0.9)
     ),
     "f_plasma_fuel_helium3": InputVariable(
         data_structure.physics_variables, float, range=(-1.0, 5.0)
@@ -1076,6 +1076,9 @@ INPUT_VARIABLES = {
     ),
     "nd_plasma_separatrix_electron": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1e21)
+    ),
+    "i_nd_plasma_pedestal_electron": InputVariable(
+        data_structure.physics_variables, int, choices=[0, 1]
     ),
     "nflutfmax": InputVariable(
         data_structure.constraint_variables, float, range=(0.0, 1e24)

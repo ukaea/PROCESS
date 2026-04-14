@@ -636,24 +636,6 @@ The same function is run from the `i_plasma_pedestal == 0 ` profile case, found 
 
 --------
 
-### Setting pedestal values as fractions of the Greenwald limit
-
-By default, the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ are set as fractions of the [Greenwald](https://wiki.fusion.ciemat.es/wiki/Greenwald_limit) limit such as:
-
-$$
-n_{\text{ped}} = \overbrace{f_{\text{GW,ped}}}^{\texttt{f_nd_plasma_pedestal_greenwald}} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
-$$
-
-$$
-n_{\text{sep}} = \overbrace{f_{\text{GW,sep}}}^{\texttt{f_nd_plasma_separatrix_greenwald}} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
-$$
-
-To set the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ directly, the user can input the value of $\texttt{f_nd_plasma_pedestal_greenwald}$ or $\texttt{f_nd_plasma_separatrix_greenwald}$ to be less than 0.0 (i.e negative) to prevent the Greenwald fraction value being set.
-
-$\texttt{f_nd_plasma_pedestal_greenwald}$ and $\texttt{f_nd_plasma_separatrix_greenwald}$ can be set as iteration variables respectively by using `ixc = 45`
-and `ixc = 152` respectively
-
-------
 
 ### Pedestal Density Upper limit
 

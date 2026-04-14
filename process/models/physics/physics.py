@@ -35,7 +35,10 @@ from process.models.physics.confinement_time import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
-from process.models.physics.profiles import PlasmaProfileShapeType
+from process.models.physics.profiles import (
+    DensityProfilePedestalType,
+    PlasmaProfileShapeType,
+)
 
 if TYPE_CHECKING:
     from process.models.physics.plasma_current import (
@@ -340,24 +343,8 @@ class Physics(Model):
         if (
             PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
             == PlasmaProfileShapeType.PEDESTAL_PROFILE
-        ) and (physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0):
-            physics_variables.nd_plasma_pedestal_electron = (
-                physics_variables.f_nd_plasma_pedestal_greenwald
-                * 1.0e14
-                * physics_variables.plasma_current
-                / (np.pi * physics_variables.rminor * physics_variables.rminor)
-            )
-
-        if (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
-            == PlasmaProfileShapeType.PEDESTAL_PROFILE
-        ) and (physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0):
-            physics_variables.nd_plasma_separatrix_electron = (
-                physics_variables.f_nd_plasma_separatrix_greenwald
-                * 1.0e14
-                * physics_variables.plasma_current
-                / (np.pi * physics_variables.rminor * physics_variables.rminor)
-            )
+        ):
+            self.plasma_profile.neprofile.set_pedestal_and_separatrix_values()
 
         self.plasma_profile.run()
 
@@ -2071,6 +2058,12 @@ class Physics(Model):
         )
         po.ovarrf(
             self.outfile,
+            "Line averaged electron temperature (keV)",
+            "(temp_plasma_electron_line_avg_kev)",
+            physics_variables.temp_plasma_electron_line_avg_kev,
+        )
+        po.ovarrf(
+            self.outfile,
             "Ratio of ion to electron volume-averaged temperature",
             "(f_temp_plasma_ion_electron)",
             physics_variables.f_temp_plasma_ion_electron,
@@ -2414,7 +2407,12 @@ class Physics(Model):
                 "(radius_plasma_pedestal_density_norm)",
                 physics_variables.radius_plasma_pedestal_density_norm,
             )
-            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
+            if (
+                DensityProfilePedestalType(
+                    physics_variables.i_nd_plasma_pedestal_separatrix
+                )
+                == DensityProfilePedestalType.GREENWALD_FRACTION
+            ):
                 po.ovarre(
                     self.outfile,
                     "Electron density pedestal height (/m3)",

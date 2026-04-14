@@ -6,6 +6,7 @@ import numpy as np
 import scipy as sp
 
 from process.data_structure import physics_variables
+from process.models.physics.density_limit import PlasmaDensityLimit
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +82,13 @@ class Profile(ABC):
         self.profile_integ = sp.integrate.simpson(
             self.profile_y, x=self.profile_x, dx=self.profile_dx
         )
+
+
+class DensityProfilePedestalType(IntEnum):
+    """Enum for i_nd_plasma_pedestal_separatrix types"""
+
+    USER_INPUT = 0
+    GREENWALD_FRACTION = 1
 
 
 class NeProfile(Profile):
@@ -219,6 +227,33 @@ class NeProfile(Profile):
             )
             ncore = 1.0e-6
         return ncore
+
+    def set_pedestal_and_separatrix_values(self):
+        """Sets the pedestal and separatrix density values based on the user input or greenwald fraction method."""
+
+        if (
+            DensityProfilePedestalType(physics_variables.i_nd_plasma_pedestal_separatrix)
+            == DensityProfilePedestalType.USER_INPUT
+        ):
+            pass
+        elif (
+            DensityProfilePedestalType(physics_variables.i_nd_plasma_pedestal_separatrix)
+            == DensityProfilePedestalType.GREENWALD_FRACTION
+        ):
+            physics_variables.nd_plasma_pedestal_electron = (
+                physics_variables.f_nd_plasma_pedestal_greenwald
+                * PlasmaDensityLimit.calculate_greenwald_density_limit(
+                    c_plasma=physics_variables.plasma_current,
+                    rminor=physics_variables.rminor,
+                )
+            )
+            physics_variables.nd_plasma_separatrix_electron = (
+                physics_variables.f_nd_plasma_separatrix_greenwald
+                * PlasmaDensityLimit.calculate_greenwald_density_limit(
+                    c_plasma=physics_variables.plasma_current,
+                    rminor=physics_variables.rminor,
+                )
+            )
 
     def set_physics_variables(self):
         """Calculates and sets physics variables required for the profile."""

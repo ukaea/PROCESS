@@ -422,16 +422,12 @@ load calculation (`i_pflux_fw_neutron=1`)
 
 
 f_nd_plasma_pedestal_greenwald: float = None
-"""fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top
-density set manually using nd_plasma_pedestal_electron (`i_plasma_pedestal==1`).
-(`iteration variable 145`)
+"""fraction of Greenwald density to set as pedestal-top density.
 """
 
 
 f_nd_plasma_separatrix_greenwald: float = None
-"""fraction of Greenwald density to set as separatrix density. If `<0`, separatrix
-density set manually using nd_plasma_separatrix_electron (`i_plasma_pedestal==1`).
-(`iteration variable 152`)
+"""fraction of Greenwald density to set as separatrix density.
 """
 
 
@@ -600,6 +596,12 @@ nd_plasma_pedestal_electron: float = None
 
 nd_plasma_separatrix_electron: float = None
 """electron density at separatrix [m-3] (`i_plasma_pedestal==1)"""
+
+i_nd_plasma_pedestal_separatrix: int = None
+"""switch for pedestal and separatrix density calculation:
+- =0 User input pedestal and separatrix density
+- =1 Calculate pedestal and separatrix density as fraction of Greenwald limit (see `f_nd_plasma_pedestal_greenwald` and `f_nd_plasma_separatrix_greenwald`)
+"""
 
 
 alpha_crit: float = None
@@ -1207,6 +1209,8 @@ temp_plasma_electron_on_axis_kev: float = None
 temp_plasma_electron_density_weighted_kev: float = None
 """density weighted average electron temperature (keV)"""
 
+temp_plasma_electron_line_avg_kev: float = None
+"""line averaged electron temperature (keV)"""
 
 temp_plasma_ion_vol_avg_kev: float = None
 """volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
@@ -1488,6 +1492,7 @@ def init_physics_variables():
         ffwal, \
         f_nd_plasma_pedestal_greenwald, \
         f_nd_plasma_separatrix_greenwald, \
+        i_nd_plasma_pedestal_separatrix, \
         f_plasma_fuel_helium3, \
         figmer, \
         fkzohm, \
@@ -1653,6 +1658,7 @@ def init_physics_variables():
         temp_plasma_electron_vol_avg_kev, \
         temp_plasma_electron_on_axis_kev, \
         temp_plasma_electron_density_weighted_kev, \
+        temp_plasma_electron_line_avg_kev, \
         temp_plasma_ion_vol_avg_kev, \
         temp_plasma_ion_on_axis_kev, \
         temp_plasma_ion_density_weighted_kev, \
@@ -1777,6 +1783,7 @@ def init_physics_variables():
     ffwal = 0.92
     f_nd_plasma_pedestal_greenwald = 0.85
     f_nd_plasma_separatrix_greenwald = 0.50
+    i_nd_plasma_pedestal_separatrix = 1
     f_plasma_fuel_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0
@@ -1944,6 +1951,7 @@ def init_physics_variables():
     temp_plasma_electron_vol_avg_kev = 12.9
     temp_plasma_electron_on_axis_kev = 0.0
     temp_plasma_electron_density_weighted_kev = 0.0
+    temp_plasma_electron_line_avg_kev = 0.0
     temp_plasma_ion_vol_avg_kev = 12.9
     temp_plasma_ion_on_axis_kev = 0.0
     temp_plasma_ion_density_weighted_kev = 0.0

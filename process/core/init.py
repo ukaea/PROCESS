@@ -59,6 +59,7 @@ from process.data_structure.superconducting_tf_coil_variables import (
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
+from process.models.physics.profiles import DensityProfilePedestalType
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -501,10 +502,10 @@ def check_process(inputs):  # noqa: ARG001
         # Density checks
         # Case where pedestal density is set manually
         if (
-            data_structure.physics_variables.f_nd_plasma_pedestal_greenwald < 0
-            or not (
-                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
-            ).any()
+            DensityProfilePedestalType(
+                data_structure.physics_variables.i_nd_plasma_pedestal_separatrix
+            )
+            == DensityProfilePedestalType.USER_INPUT
         ):
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
             if (
