@@ -13505,7 +13505,7 @@ def plot_ion_slowing_down_time_profile(
         t_plasma_electron_alpha_spitzer_slow_profile,
         color="red",
         linestyle="-",
-        label=r"$\tau_{e-\alpha,Spitzer-fuel}$",
+        label=r"$\tau_{e-\alpha,Spitzer}$",
     )
 
     axis.set_yscale("log")
@@ -13539,7 +13539,7 @@ def plot_resistivity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> No
         res_plasma_fuel_spitzer_profile,
         color="red",
         linestyle="-",
-        label=r"$\eta_{Spitzer}$",
+        label=r"$\eta_{Spitzer-fuel}$",
     )
 
     axis.set_yscale("log")
