@@ -1363,20 +1363,35 @@ t_plasma_electron_alpha_spitzer_slow_profile: list[float] = None
 freq_plasma_electron_profile: list[float] = None
 """Electron plasma frequency profile (Hz)"""
 
+freq_plasma_electron_vol_avg: float = None
+"""Volume averaged electron plasma frequency (Hz)"""
+
 freq_plasma_deuteron_profile: list[float] = None
 """Deuteron plasma frequency profile (Hz)"""
 
 freq_plasma_larmor_toroidal_electron_profile: list[float] = None
 """Profile of electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
+freq_plasma_larmor_toroidal_electron_vol_avg: float = None
+"""Volume averaged electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
 freq_plasma_larmor_toroidal_deuteron_profile: list[float] = None
 """Profile of deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
+freq_plasma_larmor_toroidal_deuteron_vol_avg: float = None
+"""Volume averaged deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
 freq_plasma_larmor_toroidal_triton_profile: list[float] = None
 """Profile of triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
+freq_plasma_larmor_toroidal_triton_vol_avg: float = None
+"""Volume averaged triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
 freq_plasma_upper_hybrid_profile: list[float] = None
 """Profile of upper hybrid frequency in plasma (Hz)"""
+
+freq_plasma_upper_hybrid_vol_avg: float = None
+"""Volume averaged upper hybrid frequency in plasma (Hz)"""
 
 t_plasma_electron_electron_collision_profile: list[float] = None
 """Profile of electron-electron collision time in plasma (s)"""
@@ -1811,11 +1826,13 @@ def init_physics_variables():
         plasma_coulomb_log_electron_alpha_thermal_vol_avg, \
         t_plasma_electron_alpha_spitzer_slow_profile, \
         freq_plasma_electron_profile, \
+        freq_plasma_electron_vol_avg, \
         freq_plasma_deuteron_profile, \
         freq_plasma_larmor_toroidal_electron_profile, \
         freq_plasma_larmor_toroidal_deuteron_profile, \
         freq_plasma_larmor_toroidal_triton_profile, \
         freq_plasma_upper_hybrid_profile, \
+        freq_plasma_upper_hybrid_vol_avg, \
         t_plasma_electron_electron_collision_profile, \
         t_plasma_electron_electron_collision_vol_avg, \
         t_plasma_electron_deuteron_collision_profile, \
@@ -2137,11 +2154,13 @@ def init_physics_variables():
     plasma_coulomb_log_electron_alpha_thermal_profile = []
     plasma_coulomb_log_electron_alpha_thermal_vol_avg = 0.0
     freq_plasma_electron_profile = []
+    freq_plasma_electron_vol_avg = 0.0
     freq_plasma_deuteron_profile = []
     freq_plasma_larmor_toroidal_electron_profile = []
     freq_plasma_larmor_toroidal_deuteron_profile = []
     freq_plasma_larmor_toroidal_triton_profile = []
     freq_plasma_upper_hybrid_profile = []
+    freq_plasma_upper_hybrid_vol_avg = 0.0
     t_plasma_electron_electron_collision_profile = []
     t_plasma_electron_electron_collision_vol_avg = 0.0
     t_plasma_electron_deuteron_collision_profile = []

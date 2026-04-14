@@ -4608,6 +4608,12 @@ class DetailedPhysics(Model):
         # Plasma frequencies
         # ============================
 
+        physics_variables.freq_plasma_electron_vol_avg = self.calculate_plasma_frequency(
+            nd_particle=physics_variables.nd_plasma_electrons_vol_avg,
+            m_particle=constants.ELECTRON_MASS,
+            z_particle=1.0,
+        )
+
         physics_variables.freq_plasma_electron_profile = self.calculate_plasma_frequency(
             nd_particle=self.plasma_profile.neprofile.profile_y,
             m_particle=constants.ELECTRON_MASS,
@@ -4618,6 +4624,14 @@ class DetailedPhysics(Model):
         # Larmor frequencies
         # ============================
 
+        physics_variables.freq_plasma_larmor_toroidal_electron_vol_avg = (
+            self.calculate_larmor_frequency(
+                b_field=physics_variables.b_plasma_toroidal_on_axis,
+                m_particle=constants.ELECTRON_MASS,
+                z_particle=1.0,
+            )
+        )
+
         physics_variables.freq_plasma_larmor_toroidal_electron_profile = (
             self.calculate_larmor_frequency(
                 b_field=physics_variables.b_plasma_toroidal_profile,
@@ -4626,10 +4640,26 @@ class DetailedPhysics(Model):
             )
         )
 
+        physics_variables.freq_plasma_larmor_toroidal_deuteron_vol_avg = (
+            self.calculate_larmor_frequency(
+                b_field=physics_variables.b_plasma_toroidal_on_axis,
+                m_particle=constants.DEUTERON_MASS,
+                z_particle=1.0,
+            )
+        )
+
         physics_variables.freq_plasma_larmor_toroidal_deuteron_profile = (
             self.calculate_larmor_frequency(
                 b_field=physics_variables.b_plasma_toroidal_profile,
                 m_particle=constants.DEUTERON_MASS,
+                z_particle=1.0,
+            )
+        )
+
+        physics_variables.freq_plasma_larmor_toroidal_triton_vol_avg = (
+            self.calculate_larmor_frequency(
+                b_field=physics_variables.b_plasma_toroidal_on_axis,
+                m_particle=constants.TRITON_MASS,
                 z_particle=1.0,
             )
         )
@@ -4645,6 +4675,11 @@ class DetailedPhysics(Model):
         # ============================
         # Upper hybrid frequencies
         # ============================
+
+        physics_variables.freq_plasma_upper_hybrid_vol_avg = self.calculate_upper_hybrid_frequency(
+            freq_plasma=physics_variables.freq_plasma_electron_vol_avg,
+            freq_larmor=physics_variables.freq_plasma_larmor_toroidal_electron_vol_avg,
+        )
 
         physics_variables.freq_plasma_upper_hybrid_profile = self.calculate_upper_hybrid_frequency(
             freq_plasma=np.concatenate([
@@ -5763,6 +5798,13 @@ class DetailedPhysics(Model):
 
         po.osubhd(self.outfile, "Frequencies:")
 
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron plasma frequency (ωₚₑ) (Hz)",
+            "(freq_plasma_electron_vol_avg)",
+            physics_variables.freq_plasma_electron_vol_avg,
+        )
+
         for i in range(len(physics_variables.freq_plasma_electron_profile)):
             po.ovarre(
                 self.mfile,
@@ -5770,6 +5812,14 @@ class DetailedPhysics(Model):
                 f"(freq_plasma_electron_profile{i})",
                 physics_variables.freq_plasma_electron_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron toroidal Larmor frequency (ωc) (Hz)",
+            "(freq_plasma_larmor_toroidal_electron_vol_avg)",
+            physics_variables.freq_plasma_larmor_toroidal_electron_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.freq_plasma_larmor_toroidal_electron_profile)
         ):
@@ -5779,6 +5829,14 @@ class DetailedPhysics(Model):
                 f"(freq_plasma_larmor_toroidal_electron_profile{i})",
                 physics_variables.freq_plasma_larmor_toroidal_electron_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged deuteron toroidal Larmor frequency (ωc) (Hz)",
+            "(freq_plasma_larmor_toroidal_deuteron_vol_avg)",
+            physics_variables.freq_plasma_larmor_toroidal_deuteron_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.freq_plasma_larmor_toroidal_deuteron_profile)
         ):
@@ -5788,6 +5846,14 @@ class DetailedPhysics(Model):
                 f"(freq_plasma_larmor_toroidal_deuteron_profile{i})",
                 physics_variables.freq_plasma_larmor_toroidal_deuteron_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged triton toroidal Larmor frequency (ωc) (Hz)",
+            "(freq_plasma_larmor_toroidal_triton_vol_avg)",
+            physics_variables.freq_plasma_larmor_toroidal_triton_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.freq_plasma_larmor_toroidal_triton_profile)
         ):
@@ -5797,6 +5863,13 @@ class DetailedPhysics(Model):
                 f"(freq_plasma_larmor_toroidal_triton_profile{i})",
                 physics_variables.freq_plasma_larmor_toroidal_triton_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron upper hybrid frequency (ωₕ) (Hz)",
+            "(freq_plasma_upper_hybrid_vol_avg)",
+            physics_variables.freq_plasma_upper_hybrid_vol_avg,
+        )
 
         for i in range(len(physics_variables.freq_plasma_upper_hybrid_profile)):
             po.ovarre(
