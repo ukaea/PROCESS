@@ -323,10 +323,10 @@ class PlasmaGeom:
 
         # ======================================================================
 
-    def output_plasma_geometry(self):
+    def output(self):
         """Output plasma geometry parameters to file."""
 
-        po.oheadr(self.outfile, "Plasma")
+        po.oheadr(self.outfile, "Plasma Geometry")
 
         if stellarator_variables.istell == 0:
             if divertor_variables.n_divertors == 0:
@@ -361,7 +361,6 @@ class PlasmaGeom:
                     physics_variables.itart_r,
                 )
 
-        po.osubhd(self.outfile, "Plasma Geometry :")
         po.ovarin(
             self.outfile,
             "Plasma shaping model",
@@ -528,25 +527,28 @@ class PlasmaGeom:
 
             po.ovarre(
                 self.outfile,
-                "Plasma cross-sectional area (m2)",
+                "Plasma cross-sectional area (m²)",
                 "(a_plasma_poloidal)",
                 physics_variables.a_plasma_poloidal,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Plasma surface area (m2)",
+                "Plasma surface area (m²)",
                 "(a_plasma_surface)",
                 physics_variables.a_plasma_surface,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Plasma volume (m3)",
+                "Plasma volume (m³)",
                 "(vol_plasma)",
                 physics_variables.vol_plasma,
                 "OP ",
             )
+
+        po.oblnkl(self.outfile)
+        po.ostars(self.outfile, 110)
 
     @staticmethod
     def plasma_angles_arcs(

@@ -1696,7 +1696,7 @@ class Physics(Model):
             )
         )
 
-        self.geometry.output_plasma_geometry()
+        self.geometry.output()
 
         if stellarator_variables.istell == 0:
             po.osubhd(self.outfile, "Current and Field :")
