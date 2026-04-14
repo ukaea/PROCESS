@@ -34,6 +34,144 @@ class PlasmaShapeModelType(IntEnum):
         return self._full_name_
 
 
+class PlasmaGeometryModels(IntEnum):
+    """Enum for plasma geometry model types."""
+
+    USER_INPUT = (0, "User Input")
+    IPDG89 = (1, "IPDG89")
+    STAR_CODE = (2, "STAR Code")
+    ZOHM_ITER = (3, "Zohm ITER Scaling")
+    MAST_DATA = (4, "Fit to MAST data")
+    FIESTA_RUNS = (5, "Fiesta Runs")
+    CREATE_DATA_EU_DEMO = (6, "CREATE Data EU Demo")
+    MENARD_2016 = (7, "Menard 2016 ST Scaling")
+    UNKNOWN = (8, "Unknown")
+
+    def __new__(cls, value, description):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        return self._description_
+
+
+class PlasmaGeometryModelType(IntEnum):
+    """Enum for i_plasma_geometry plasma geometry model types."""
+
+    MODEL_0 = (
+        0,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.IPDG89,
+    )
+    MODEL_1 = (
+        1,
+        PlasmaGeometryModels.STAR_CODE,
+        PlasmaGeometryModels.STAR_CODE,
+        PlasmaGeometryModels.FIESTA_RUNS,
+        PlasmaGeometryModels.FIESTA_RUNS,
+    )
+    MODEL_2 = (
+        2,
+        PlasmaGeometryModels.ZOHM_ITER,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.IPDG89,
+    )
+    MODEL_3 = (
+        3,
+        PlasmaGeometryModels.ZOHM_ITER,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.USER_INPUT,
+    )
+    MODEL_4 = (
+        4,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.USER_INPUT,
+    )
+    MODEL_5 = (
+        5,
+        PlasmaGeometryModels.MAST_DATA,
+        PlasmaGeometryModels.MAST_DATA,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.USER_INPUT,
+    )
+    MODEL_6 = (
+        6,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.MAST_DATA,
+        PlasmaGeometryModels.MAST_DATA,
+    )
+    MODEL_7 = (
+        7,
+        PlasmaGeometryModels.FIESTA_RUNS,
+        PlasmaGeometryModels.FIESTA_RUNS,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.USER_INPUT,
+    )
+    MODEL_8 = (
+        8,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.FIESTA_RUNS,
+        PlasmaGeometryModels.FIESTA_RUNS,
+    )
+    MODEL_9 = (
+        9,
+        PlasmaGeometryModels.UNKNOWN,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.IPDG89,
+    )
+    MODEL_10 = (
+        10,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.CREATE_DATA_EU_DEMO,
+        PlasmaGeometryModels.IPDG89,
+    )
+    MODEL_11 = (
+        11,
+        PlasmaGeometryModels.MENARD_2016,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.IPDG89,
+    )
+
+    def __new__(cls, value, kappa_model, triang_model, kappa95_model, triang95_model):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._kappa_model_ = kappa_model
+        obj._triang_model_ = triang_model
+        obj._kappa95_model_ = kappa95_model
+        obj._triang95_model_ = triang95_model
+        return obj
+
+    @DynamicClassAttribute
+    def kappa_model(self):
+        return self._kappa_model_
+
+    @DynamicClassAttribute
+    def triang_model(self):
+        return self._triang_model_
+
+    @DynamicClassAttribute
+    def kappa95_model(self):
+        return self._kappa95_model_
+
+    @DynamicClassAttribute
+    def triang95_model(self):
+        return self._triang95_model_
+
+
 class PlasmaGeom:
     def __init__(self):
         self.outfile = constants.NOUT
