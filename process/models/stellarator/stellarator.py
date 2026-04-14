@@ -16,7 +16,6 @@ from process.core.model import Model
 from process.data_structure import (
     build_variables,
     constraint_variables,
-    cost_variables,
     current_drive_variables,
     divertor_variables,
     first_wall_variables,
@@ -507,8 +506,8 @@ class Stellarator(Model):
 
         """
         fwbs_variables.life_fw_fpy = min(
-            cost_variables.abktflnc / physics_variables.pflux_fw_neutron_mw,
-            cost_variables.life_plant,
+            self.data.costs.abktflnc / physics_variables.pflux_fw_neutron_mw,
+            self.data.costs.life_plant,
         )
 
         #  First wall inboard, outboard areas (assume 50% of total each)
@@ -1868,7 +1867,7 @@ class Stellarator(Model):
             # Full power DT operation years for replacement of TF Coil
             # (or plant life)
 
-            fpydt = cost_variables.f_t_plant_available * cost_variables.life_plant
+            fpydt = self.data.costs.f_t_plant_available * self.data.costs.life_plant
             fpsdt = fpydt * 3.154e7  # seconds
 
             # Insulator dose (rad)

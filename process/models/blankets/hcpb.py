@@ -12,7 +12,6 @@ from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     build_variables,
     ccfe_hcpb_module,
-    cost_variables,
     current_drive_variables,
     divertor_variables,
     first_wall_variables,
@@ -1563,7 +1562,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "Allowable nominal neutron fluence at first wall (MW.year/m2)",
             "(abktflnc)",
-            cost_variables.abktflnc,
+            self.data.costs.abktflnc,
         )
         po.ovarre(
             self.outfile,

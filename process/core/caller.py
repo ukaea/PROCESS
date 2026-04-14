@@ -98,7 +98,7 @@ class Caller:
         for _ in range(10):
             self._call_models_once(xc)
             # Evaluate objective function and constraints
-            objf = objective_function(data_structure.numerics.minmax)
+            objf = objective_function(data_structure.numerics.minmax, self.data)
             conf, _, _, _, _ = constraints.constraint_eqns(m, -1, self.data)
 
             if objf_prev is None and conf_prev is None:

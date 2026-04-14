@@ -12,7 +12,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
     buildings_variables,
-    cost_variables,
     first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
@@ -1768,14 +1767,14 @@ class IFE(Model):
 
         # Blanket and first wall lifetimes (HYLIFE-II: = plant life)
         if ife_variables.ifetyp in {3, 4}:
-            life = cost_variables.life_plant
+            life = self.data.costs.life_plant
         else:
             life = min(
-                cost_variables.life_plant,
-                cost_variables.abktflnc
+                self.data.costs.life_plant,
+                self.data.costs.abktflnc
                 / (
                     physics_variables.pflux_fw_neutron_mw
-                    * cost_variables.f_t_plant_available
+                    * self.data.costs.f_t_plant_available
                 ),
             )
 
@@ -1938,7 +1937,7 @@ class IFE(Model):
         )
 
         # Calculate powers relevant to a power-producing plant
-        if cost_variables.ireactor == 1:
+        if self.data.costs.ireactor == 1:
             # Gross electric power
             heat_transport_variables.p_plant_electric_gross_mw = (
                 heat_transport_variables.p_plant_primary_heat_mw
@@ -2074,7 +2073,7 @@ class IFE(Model):
                 heat_transport_variables.n_primary_heat_exchangers,
             )
 
-            if cost_variables.ireactor == 1:
+            if self.data.costs.ireactor == 1:
                 process_output.osubhd(self.outfile, "Reactor powers :")
                 process_output.ovarre(
                     self.outfile,
