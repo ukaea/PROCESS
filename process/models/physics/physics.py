@@ -4535,9 +4535,26 @@ class DetailedPhysics(Model):
             )
         )
 
+        physics_variables.vel_plasma_electron_vol_avg = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=physics_variables.temp_plasma_electron_vol_avg_kev
+                * constants.KILOELECTRON_VOLT,
+                mass=constants.ELECTRON_MASS,
+            )
+        )
+
         physics_variables.vel_plasma_deuteron_profile = (
             self.calculate_relativistic_particle_speed(
                 e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT
+                * physics_variables.f_temp_plasma_ion_electron,
+                mass=constants.DEUTERON_MASS,
+            )
+        )
+
+        physics_variables.vel_plasma_deuteron_vol_avg = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=physics_variables.temp_plasma_electron_vol_avg_kev
                 * constants.KILOELECTRON_VOLT
                 * physics_variables.f_temp_plasma_ion_electron,
                 mass=constants.DEUTERON_MASS,
@@ -4553,9 +4570,27 @@ class DetailedPhysics(Model):
             )
         )
 
+        physics_variables.vel_plasma_triton_vol_avg = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=physics_variables.temp_plasma_electron_vol_avg_kev
+                * constants.KILOELECTRON_VOLT
+                * physics_variables.f_temp_plasma_ion_electron,
+                mass=constants.TRITON_MASS,
+            )
+        )
+
         physics_variables.vel_plasma_alpha_thermal_profile = (
             self.calculate_relativistic_particle_speed(
                 e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT
+                * physics_variables.f_temp_plasma_ion_electron,
+                mass=constants.ALPHA_MASS,
+            )
+        )
+
+        physics_variables.vel_plasma_alpha_thermal_vol_avg = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=physics_variables.temp_plasma_electron_vol_avg_kev
                 * constants.KILOELECTRON_VOLT
                 * physics_variables.f_temp_plasma_ion_electron,
                 mass=constants.ALPHA_MASS,
@@ -5426,6 +5461,13 @@ class DetailedPhysics(Model):
 
         po.osubhd(self.outfile, "Velocities:")
 
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron thermal velocity (m/s)",
+            "(vel_plasma_electron_vol_avg)",
+            physics_variables.vel_plasma_electron_vol_avg,
+        )
+
         for i in range(len(physics_variables.vel_plasma_electron_profile)):
             po.ovarre(
                 self.mfile,
@@ -5433,6 +5475,13 @@ class DetailedPhysics(Model):
                 f"(vel_plasma_electron_profile{i})",
                 physics_variables.vel_plasma_electron_profile[i],
             )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged deuteron thermal velocity (m/s)",
+            "(vel_plasma_deuteron_vol_avg)",
+            physics_variables.vel_plasma_deuteron_vol_avg,
+        )
+
         for i in range(len(physics_variables.vel_plasma_deuteron_profile)):
             po.ovarre(
                 self.mfile,
@@ -5440,6 +5489,14 @@ class DetailedPhysics(Model):
                 f"(vel_plasma_deuteron_profile{i})",
                 physics_variables.vel_plasma_deuteron_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged triton thermal velocity (m/s)",
+            "(vel_plasma_triton_vol_avg)",
+            physics_variables.vel_plasma_triton_vol_avg,
+        )
+
         for i in range(len(physics_variables.vel_plasma_triton_profile)):
             po.ovarre(
                 self.mfile,
@@ -5447,6 +5504,12 @@ class DetailedPhysics(Model):
                 f"(vel_plasma_triton_profile{i})",
                 physics_variables.vel_plasma_triton_profile[i],
             )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged alpha thermal velocity (m/s)",
+            "(vel_plasma_alpha_thermal_vol_avg)",
+            physics_variables.vel_plasma_alpha_thermal_vol_avg,
+        )
         for i in range(len(physics_variables.vel_plasma_alpha_thermal_profile)):
             po.ovarre(
                 self.mfile,

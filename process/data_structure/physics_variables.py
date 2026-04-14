@@ -1303,20 +1303,35 @@ len_plasma_debye_electron_vol_avg: float = None
 vel_plasma_electron_profile: list[float] = None
 """Profile of electron thermal velocity in plasma (m/s)"""
 
+vel_plasma_deuteron_vol_avg: float = None
+"""Volume averaged deuteron thermal velocity in plasma (m/s)"""
+
+vel_plasma_electron_vol_avg: float = None
+"""Volume averaged electron thermal velocity in plasma (m/s)"""
+
 vel_plasma_deuteron_profile: list[float] = None
 """Profile of deuteron thermal velocity in plasma (m/s)"""
 
 vel_plasma_triton_profile: list[float] = None
 """Profile of triton thermal velocity in plasma (m/s)"""
 
+vel_plasma_triton_vol_avg: float = None
+"""Volume averaged triton thermal velocity in plasma (m/s)"""
+
 vel_plasma_alpha_thermal_profile: list[float] = None
 """Profile of thermal alpha particle velocity in plasma (m/s)"""
+
+vel_plasma_alpha_thermal_vol_avg: float = None
+"""Volume averaged thermal alpha particle velocity in plasma (m/s)"""
 
 vel_plasma_alpha_birth: float = None
 """Birth velocity of alpha particles in plasma (m/s)"""
 
 plasma_coulomb_log_electron_electron_profile: list[float] = None
 """Profile of electron-electron Coulomb logarithm in plasma"""
+
+plasma_coulomb_log_electron_electron_vol_avg: float = None
+"""Volume averaged electron-electron Coulomb logarithm in plasma"""
 
 plasma_coulomb_log_electron_deuteron_profile: list[float] = None
 """Profile of electron-deuteron Coulomb logarithm in plasma"""
@@ -1725,11 +1740,16 @@ def init_physics_variables():
         radius_plasma_triton_toroidal_larmor_isotropic_profile, \
         len_plasma_debye_electron_vol_avg, \
         vel_plasma_electron_profile, \
+        vel_plasma_deuteron_vol_avg, \
+        vel_plasma_electron_vol_avg, \
         vel_plasma_deuteron_profile, \
         vel_plasma_triton_profile, \
+        vel_plasma_triton_vol_avg, \
         vel_plasma_alpha_thermal_profile, \
+        vel_plasma_alpha_thermal_vol_avg, \
         vel_plasma_alpha_birth, \
         plasma_coulomb_log_electron_electron_profile, \
+        plasma_coulomb_log_electron_electron_vol_avg, \
         plasma_coulomb_log_electron_deuteron_profile, \
         plasma_coulomb_log_electron_triton_profile, \
         plasma_coulomb_log_deuteron_triton_profile, \
@@ -2030,11 +2050,16 @@ def init_physics_variables():
     radius_plasma_triton_toroidal_larmor_isotropic_profile = []
     len_plasma_debye_electron_vol_avg = 0.0
     vel_plasma_electron_profile = []
+    vel_plasma_electron_vol_avg = 0.0
     vel_plasma_deuteron_profile = []
+    vel_plasma_deuteron_vol_avg = 0.0
     vel_plasma_triton_profile = []
+    vel_plasma_triton_vol_avg = 0.0
     vel_plasma_alpha_thermal_profile = []
+    vel_plasma_alpha_thermal_vol_avg = 0.0
     vel_plasma_alpha_birth = 0.0
     plasma_coulomb_log_electron_electron_profile = []
+    plasma_coulomb_log_electron_electron_vol_avg = 0.0
     plasma_coulomb_log_electron_deuteron_profile = []
     plasma_coulomb_log_electron_triton_profile = []
     plasma_coulomb_log_deuteron_triton_profile = []
