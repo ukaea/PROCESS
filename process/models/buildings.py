@@ -8,7 +8,6 @@ from process.core.model import Model
 from process.data_structure import (
     build_variables,
     buildings_variables,
-    cost_variables,
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
@@ -568,7 +567,7 @@ class Buildings(Model):
 
         # Inboard 'component': shield, blanket, first wall:
         # find height, maximum radial dimension, maximum toroidal dimension
-        if cost_variables.life_plant != 0.0e0:  # noqa: RUF069
+        if self.data.costs.life_plant != 0.0e0:  # noqa: RUF069
             hcomp_height = 2 * (
                 build_variables.z_tf_inside_half
                 - (
@@ -608,7 +607,7 @@ class Buildings(Model):
             #   ( number in build * (plant lifetime / component lifetime) ) * quantity safety factor
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.life_plant / cost_variables.life_plant)
+                * (self.data.costs.life_plant / self.data.costs.life_plant)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of inboard shield-blanket-wall
             ib_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -648,7 +647,7 @@ class Buildings(Model):
             )
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.life_plant / cost_variables.life_plant)
+                * (self.data.costs.life_plant / self.data.costs.life_plant)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of outboard wall-blanket-shield
             ob_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -658,7 +657,7 @@ class Buildings(Model):
 
         # Divertor
         # Note: this estimation developed before the divertor design has been finalised
-        if cost_variables.life_div_fpy != 0.0e0:  # noqa: RUF069
+        if self.data.costs.life_div_fpy != 0.0e0:  # noqa: RUF069
             hcomp_height = divertor_variables.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
@@ -670,7 +669,7 @@ class Buildings(Model):
             )
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.life_plant / cost_variables.life_div_fpy)
+                * (self.data.costs.life_plant / self.data.costs.life_div_fpy)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of divertor segments
             div_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -678,7 +677,7 @@ class Buildings(Model):
             div_hotcell_vol = 0.0e0
 
         # Centre post
-        if cost_variables.cplife != 0.0e0:  # noqa: RUF069
+        if self.data.costs.cplife != 0.0e0:  # noqa: RUF069
             hcomp_height = 2 * build_variables.z_tf_inside_half
             if tfcoil_variables.i_tf_sup != 1:
                 hcomp_rad_thk = build_variables.r_cp_top
@@ -692,7 +691,7 @@ class Buildings(Model):
                 hcomp_rad_thk + buildings_variables.hot_sepdist
             )
             hcomp_req_supply = (
-                cost_variables.life_plant / cost_variables.cplife
+                self.data.costs.life_plant / self.data.costs.cplife
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of centre posts
             cp_hotcell_vol = hcomp_req_supply * hcomp_vol

@@ -4,7 +4,6 @@ import math
 import numpy as np
 
 from process.core.caller import Caller
-from process.data_structure import cost_variables as cv
 from process.data_structure import global_variables as gv
 from process.data_structure import numerics
 from process.data_structure import physics_variables as pv
@@ -28,6 +27,7 @@ class Evaluators:
         :type x: np.ndarray
         """
         self.caller = Caller(models, data)
+        self.data = data
 
     def fcnvmc1(self, _n, m, xv, ifail):
         """Function evaluator for VMCON.
@@ -75,7 +75,7 @@ class Evaluators:
             logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
             logger.debug(f"{(numerics.nviter % 2) - 1 = }")
             logger.debug(f"{pv.temp_plasma_electron_vol_avg_kev = }")
-            logger.debug(f"{cv.coe = }")
+            logger.debug(f"{self.data.costs.coe = }")
             logger.debug(f"{pv.rmajor = }")
             logger.debug(f"{pv.p_fusion_total_mw = }")
             logger.debug(f"{pv.b_plasma_toroidal_on_axis = }")

@@ -79,11 +79,10 @@ plot_summary(single_run.mfile_path, output_format="none", show=True)
 # we have set some values on the `CostModel` instance and can print them.
 
 # %%
-import process.data_structure
 
 # Print some values on the CostModel instance
-print(f"Heat transport system: {process.data_structure.cost_variables.c226:.3e} M$")
-print(f"Electrical plant equipment: {process.data_structure.cost_variables.c24:.3e} M$")
+print(f"Heat transport system: {single_run.data.costs.c226:.3e} M$")
+print(f"Electrical plant equipment: {single_run.data.costs.c24:.3e} M$")
 
 # %%
 # Clean up

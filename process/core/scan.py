@@ -15,7 +15,6 @@ from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
     build_variables,
     constraint_variables,
-    cost_variables,
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
@@ -1103,11 +1102,11 @@ class Scan:
             case 20:
                 constraint_variables.t_burn_min = swp[iscn - 1]
             case 22:
-                if cost_variables.i_plant_availability == 1:
+                if self.data.costs.i_plant_availability == 1:
                     raise ProcessValueError(
                         "Do not scan f_t_plant_available if i_plant_availability=1"
                     )
-                cost_variables.f_t_plant_available = swp[iscn - 1]
+                self.data.costs.f_t_plant_available = swp[iscn - 1]
             case 24:
                 constraint_variables.p_fusion_total_max_mw = swp[iscn - 1]
             case 25:
@@ -1205,9 +1204,9 @@ class Scan:
             case 76:
                 heat_transport_variables.eta_turbine = swp[iscn - 1]
             case 77:
-                cost_variables.startupratio = swp[iscn - 1]
+                self.data.costs.startupratio = swp[iscn - 1]
             case 78:
-                cost_variables.fkind = swp[iscn - 1]
+                self.data.costs.fkind = swp[iscn - 1]
             case 79:
                 current_drive_variables.eta_ecrh_injector_wall_plug = swp[iscn - 1]
             case 80:

@@ -1315,15 +1315,15 @@ def constraint_equation_60(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(61, "", ">=")
-def constraint_equation_61(constraint_registration, _data):
+def constraint_equation_61(constraint_registration, data):
     """Equation for availability lower limit
 
     f_t_plant_available: Total plant availability fraction
     avail_min: Minimum availability
     """
     return geq(
-        data_structure.cost_variables.f_t_plant_available,
-        data_structure.cost_variables.avail_min,
+        data.costs.f_t_plant_available,
+        data.costs.avail_min,
         constraint_registration,
     )
 
@@ -1715,7 +1715,7 @@ def constraint_equation_84(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(85, "years", "=")
-def constraint_equation_85(constraint_registration, _data):
+def constraint_equation_85(constraint_registration, data):
     """Equality constraint for the centerpost (CP) lifetime
 
     Depending on the chosen option i_cp_lifetime:
@@ -1731,20 +1731,20 @@ def constraint_equation_85(constraint_registration, _data):
         the CP lifetime must equate
     """
     # The CP lifetime is equal to the the divertor one
-    if data_structure.cost_variables.i_cp_lifetime == 0:
-        bound = data_structure.cost_variables.cplife_input
+    if data.costs.i_cp_lifetime == 0:
+        bound = data.costs.cplife_input
 
-    elif data_structure.cost_variables.i_cp_lifetime == 1:
-        bound = data_structure.cost_variables.life_div_fpy
+    elif data.costs.i_cp_lifetime == 1:
+        bound = data.costs.life_div_fpy
 
     # The CP lifetime is equal to the tritium breeding blankets / FW one
-    elif data_structure.cost_variables.i_cp_lifetime == 2:
+    elif data.costs.i_cp_lifetime == 2:
         bound = data_structure.fwbs_variables.life_blkt_fpy
 
-    elif data_structure.cost_variables.i_cp_lifetime == 3:
-        bound = data_structure.cost_variables.life_plant
+    elif data.costs.i_cp_lifetime == 3:
+        bound = data.costs.life_plant
 
-    return eq(data_structure.cost_variables.cplife, bound, constraint_registration)
+    return eq(data.costs.cplife, bound, constraint_registration)
 
 
 @ConstraintManager.register_constraint(86, "m", "<=")
@@ -1810,11 +1810,8 @@ def constraint_equation_90(constraint_registration, data):
     n_cycle: Allowable number of cycles for CS
     n_cycle_min: Minimum required cycles for CS
     """
-    if (
-        data_structure.cost_variables.ibkt_life == 1
-        and data.cs_fatigue.bkt_life_csf == 1
-    ):
-        data.cs_fatigue.n_cycle_min = data_structure.cost_variables.bktcycles
+    if data.costs.ibkt_life == 1 and data.cs_fatigue.bkt_life_csf == 1:
+        data.cs_fatigue.n_cycle_min = data.costs.bktcycles
 
     return geq(
         data.cs_fatigue.n_cycle,

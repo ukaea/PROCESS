@@ -5,7 +5,6 @@ import pytest
 
 from process.data_structure import (
     build_variables,
-    cost_variables,
     first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
@@ -16,34 +15,6 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
 )
-from process.models.availability import Availability
-from process.models.blankets.hcpb import CCFE_HCPB
-from process.models.buildings import Buildings
-from process.models.costs.costs import Costs
-from process.models.fw import FirstWall
-from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
-from process.models.physics.confinement_time import PlasmaConfinementTime
-from process.models.physics.current_drive import (
-    CurrentDrive,
-    ElectronBernstein,
-    ElectronCyclotron,
-    IonCyclotron,
-    LowerHybrid,
-    NeutralBeam,
-)
-from process.models.physics.density_limit import PlasmaDensityLimit
-from process.models.physics.exhaust import PlasmaExhaust
-from process.models.physics.l_h_transition import PlasmaConfinementTransition
-from process.models.physics.physics import (
-    Physics,
-    PlasmaBeta,
-    PlasmaInductance,
-)
-from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagneticCurrent
-from process.models.physics.plasma_fields import PlasmaFields
-from process.models.physics.plasma_geometry import PlasmaGeom
-from process.models.physics.plasma_profiles import PlasmaProfile
-from process.models.power import Power
 from process.models.stellarator.build import st_build
 from process.models.stellarator.coils.coils import bmax_from_awp, intersect
 from process.models.stellarator.coils.quench import (
@@ -54,60 +25,16 @@ from process.models.stellarator.denisty_limits import (
     st_d_limit_ecrh,
     st_sudo_density_limit,
 )
-from process.models.stellarator.neoclassics import Neoclassics
-from process.models.stellarator.stellarator import Stellarator
-from process.models.vacuum import Vacuum
 
 
 @pytest.fixture
-def stellarator():
+def stellarator(process_models):
     """Provides Stellarator object for testing.
 
     :returns: initialised Stellarator object
     :rtype: process.stellerator.Stellarator
     """
-    return Stellarator(
-        Availability(),
-        Vacuum(),
-        Buildings(),
-        Costs(),
-        Power(),
-        PlasmaProfile(),
-        CCFE_HCPB(FirstWall()),
-        CurrentDrive(
-            PlasmaProfile(),
-            ElectronCyclotron(plasma_profile=PlasmaProfile()),
-            IonCyclotron(plasma_profile=PlasmaProfile()),
-            NeutralBeam(plasma_profile=PlasmaProfile()),
-            LowerHybrid(plasma_profile=PlasmaProfile()),
-            ElectronBernstein(plasma_profile=PlasmaProfile()),
-        ),
-        Physics(
-            PlasmaProfile(),
-            CurrentDrive(
-                PlasmaProfile(),
-                ElectronCyclotron(plasma_profile=PlasmaProfile()),
-                IonCyclotron(plasma_profile=PlasmaProfile()),
-                NeutralBeam(plasma_profile=PlasmaProfile()),
-                LowerHybrid(plasma_profile=PlasmaProfile()),
-                ElectronBernstein(plasma_profile=PlasmaProfile()),
-            ),
-            PlasmaBeta(),
-            PlasmaInductance(),
-            PlasmaDensityLimit(),
-            PlasmaExhaust(),
-            PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
-            PlasmaConfinementTime(),
-            PlasmaConfinementTransition(),
-            PlasmaCurrent(),
-            PlasmaFields(),
-            plasma_dia_current=PlasmaDiamagneticCurrent(),
-            plasma_geometry=PlasmaGeom(),
-        ),
-        Neoclassics(),
-        plasma_beta=PlasmaBeta(),
-        plasma_bootstrap=PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
-    )
+    return process_models.stellarator
 
 
 class StgeomParam(NamedTuple):
@@ -2214,7 +2141,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     ],
 )
 def test_sctfcoil_nuclear_heating_iter90(
-    sctfcoilnuclearheatingiter90param, monkeypatch, stellarator
+    sctfcoilnuclearheatingiter90param, monkeypatch, stellarator, process_models
 ):
     """
     Automatically generated Regression Unit Test for sctfcoil_nuclear_heating_iter90.
@@ -2258,12 +2185,14 @@ def test_sctfcoil_nuclear_heating_iter90(
         sctfcoilnuclearheatingiter90param.dr_shld_outboard,
     )
     monkeypatch.setattr(
-        cost_variables,
+        stellarator.data.costs,
         "f_t_plant_available",
         sctfcoilnuclearheatingiter90param.f_t_plant_available,
     )
     monkeypatch.setattr(
-        cost_variables, "life_plant", sctfcoilnuclearheatingiter90param.life_plant
+        stellarator.data.costs,
+        "life_plant",
+        sctfcoilnuclearheatingiter90param.life_plant,
     )
     monkeypatch.setattr(
         physics_variables,
