@@ -13937,6 +13937,240 @@ def plot_blkt_structure(
     )
 
 
+def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int):
+    """Function to plot detailed plasma parameters from physics data.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        Axis object to plot to
+    fig : plt.Figure
+        Figure object for text placement
+    mfile : MFile
+        MFILE data object
+    scan : int
+        Scan number to use
+    """
+
+    textstr_debye = (
+        f"$\\mathbf{{Debye \\ Lengths:}}$\n\n"
+        f"$\\langle\\lambda_{{Debye,e}}\\rangle$: {mfile.get('len_plasma_debye_electron_vol_avg', scan=scan):.4e} m"
+    )
+
+    textstr_larmor = (
+        f"$\\mathbf{{Larmor \\ Radii:}}$\n\n"
+        f"$\\langle\\rho_{{Larmor,toroidal,D}}\\rangle$: {mfile.get('radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg', scan=scan):.4e} m\n"
+        f"$\\langle\\rho_{{Larmor,toroidal,T}}\\rangle$: {mfile.get('radius_plasma_triton_toroidal_larmor_isotropic_vol_avg', scan=scan):.4e} m"
+    )
+
+    textstr_velocities = (
+        f"$\\mathbf{{Velocities:}}$\n\n"
+        f"$\\langle v_{{e}}\\rangle$: {mfile.get('vel_plasma_electron_vol_avg', scan=scan):.4e} m/s\n"
+        f"$\\langle v_{{D}}\\rangle$: {mfile.get('vel_plasma_deuteron_vol_avg', scan=scan):.4e} m/s\n"
+        f"$\\langle v_{{T}}\\rangle$: {mfile.get('vel_plasma_triton_vol_avg', scan=scan):.4e} m/s\n"
+        f"$\\langle v_{{\\alpha,thermal}}\\rangle$: {mfile.get('vel_plasma_alpha_thermal_vol_avg', scan=scan):.4e} m/s\n"
+        f"$v_{{\\alpha,birth}}$: {mfile.get('vel_plasma_alpha_birth', scan=scan):.4e} m/s"
+    )
+
+    textstr_frequencies = (
+        f"$\\mathbf{{Frequencies:}}$\n\n"
+        f"$\\langle\\omega_{{p,e}}\\rangle$: {mfile.get('freq_plasma_electron_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle f_{{Larmor,toroidal,e}}\\rangle$: {mfile.get('freq_plasma_larmor_toroidal_electron_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle f_{{Larmor,toroidal,D}}\\rangle$: {mfile.get('freq_plasma_larmor_toroidal_deuteron_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle f_{{Larmor,toroidal,T}}\\rangle$: {mfile.get('freq_plasma_larmor_toroidal_triton_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle\\omega_{{UH,e}}\\rangle$: {mfile.get('freq_plasma_upper_hybrid_vol_avg', scan=scan):.4e} Hz"
+    )
+
+    textstr_coulomb = (
+        f"$\\mathbf{{Coulomb \\ Logarithms:}}$\n\n"
+        f"$\\langle\\ln \\Lambda_{{e-e}}\\rangle$: {mfile.get('plasma_coulomb_log_electron_electron_vol_avg', scan=scan):.4f}\n"
+        f"$\\langle\\ln \\Lambda_{{e-D}}\\rangle$: {mfile.get('plasma_coulomb_log_electron_deuteron_vol_avg', scan=scan):.4f}\n"
+        f"$\\langle\\ln \\Lambda_{{e-T}}\\rangle$: {mfile.get('plasma_coulomb_log_electron_triton_vol_avg', scan=scan):.4f}\n"
+        f"$\\langle\\ln \\Lambda_{{D-T}}\\rangle$: {mfile.get('plasma_coulomb_log_deuteron_triton_vol_avg', scan=scan):.4f}\n"
+        f"$\\langle\\ln \\Lambda_{{e-\\alpha}}\\rangle$: {mfile.get('plasma_coulomb_log_electron_alpha_thermal_vol_avg', scan=scan):.4f}"
+    )
+
+    textstr_collision_times = (
+        f"$\\mathbf{{Collision \\ Times:}}$\n\n"
+        f"$\\langle\\tau_{{e-e}}\\rangle$: {mfile.get('t_plasma_electron_electron_collision_vol_avg', scan=scan):.4e} s\n"
+        f"$\\langle\\tau_{{e-D}}\\rangle$: {mfile.get('t_plasma_electron_deuteron_collision_vol_avg', scan=scan):.4e} s\n"
+        f"$\\langle\\tau_{{e-T}}\\rangle$: {mfile.get('t_plasma_electron_triton_collision_vol_avg', scan=scan):.4e} s\n"
+        f"$\\langle\\tau_{{e-\\alpha}}\\rangle$: {mfile.get('t_plasma_electron_alpha_thermal_collision_vol_avg', scan=scan):.4e} s"
+    )
+
+    textstr_collision_freq = (
+        f"$\\mathbf{{Collision \\ Frequencies:}}$\n\n"
+        f"$\\langle\\nu_{{e-e}}\\rangle$: {mfile.get('freq_plasma_electron_electron_collision_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle\\nu_{{e-D}}\\rangle$: {mfile.get('freq_plasma_electron_deuteron_collision_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle\\nu_{{e-T}}\\rangle$: {mfile.get('freq_plasma_electron_triton_collision_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle\\nu_{{e-\\alpha}}\\rangle$: {mfile.get('freq_plasma_electron_alpha_thermal_collision_vol_avg', scan=scan):.4e} Hz"
+    )
+
+    textstr_mfp = (
+        f"$\\mathbf{{Mean \\ Free \\ Paths:}}$\n\n"
+        f"$\\langle\\lambda_{{mfp,e-e}}\\rangle$: {mfile.get('len_plasma_electron_electron_mean_free_path_vol_avg', scan=scan):.4e} m\n"
+        f"$\\langle\\lambda_{{mfp,e-D}}\\rangle$: {mfile.get('len_plasma_electron_deuteron_mean_free_path_vol_avg', scan=scan):.4e} m\n"
+        f"$\\langle\\lambda_{{mfp,e-T}}\\rangle$: {mfile.get('len_plasma_electron_triton_mean_free_path_vol_avg', scan=scan):.4e} m\n"
+        f"$\\langle\\lambda_{{mfp,e-\\alpha}}\\rangle$: {mfile.get('len_plasma_electron_alpha_thermal_mean_free_path_vol_avg', scan=scan):.4e} m"
+    )
+
+    textstr_spitzer = (
+        f"$\\mathbf{{Spitzer \\ Slowing \\ Down:}}$\n\n"
+        f"$\\langle\\tau_{{e-\\alpha,Spitzer}}\\rangle$: {mfile.get('t_plasma_electron_alpha_spitzer_slow_vol_avg', scan=scan):.4e} s"
+    )
+
+    textstr_resistivity = (
+        f"$\\mathbf{{Resistivities:}}$\n\n"
+        f"$\\langle\\eta_{{Spitzer}}\\rangle$: {mfile.get('res_plasma_fuel_spitzer_vol_avg', scan=scan):.4e} $\\Omega\\mathrm{{m}}$"
+    )
+
+    axis.text(
+        0.05,
+        0.45,
+        textstr_debye,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.25,
+        0.45,
+        textstr_larmor,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.45,
+        0.45,
+        textstr_velocities,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.05,
+        0.31,
+        textstr_frequencies,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightcyan",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.25,
+        0.31,
+        textstr_coulomb,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightcyan",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.45,
+        0.31,
+        textstr_collision_times,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightcyan",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.05,
+        0.17,
+        textstr_collision_freq,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightgreen",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.25,
+        0.17,
+        textstr_mfp,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightgreen",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.45,
+        0.17,
+        textstr_spitzer + "\n" + textstr_resistivity,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightgreen",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.axis("off")
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -14131,6 +14365,10 @@ def main_plot(
     plot_ion_slowing_down_time_profile(figs[18].add_subplot(231), m_file, scan)
 
     plot_resistivity_profile(figs[18].add_subplot(232), m_file, scan)
+
+    plot_detailed_plasma_parameters(
+        figs[18].add_subplot(233), fig=figs[18], mfile=m_file, scan=scan
+    )
 
     ax_electron_freq = figs[19].add_subplot(211)
     plot_electron_frequency_profile(ax_electron_freq, m_file, scan)
