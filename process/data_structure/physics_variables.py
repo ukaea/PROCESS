@@ -1405,14 +1405,26 @@ t_plasma_electron_alpha_thermal_collision_vol_avg: float = None
 freq_plasma_electron_electron_collision_profile: list[float] = None
 """Profile of electron-electron collision frequency in plasma (Hz)"""
 
+freq_plasma_electron_electron_collision_vol_avg: float = None
+"""Volume averaged electron-electron collision frequency in plasma (Hz)"""
+
 freq_plasma_electron_deuteron_collision_profile: list[float] = None
 """Profile of electron-deuteron collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_deuteron_collision_vol_avg: float = None
+"""Volume averaged electron-deuteron collision frequency in plasma (Hz)"""
 
 freq_plasma_electron_triton_collision_profile: list[float] = None
 """Profile of electron-triton collision frequency in plasma (Hz)"""
 
+freq_plasma_electron_triton_collision_vol_avg: float = None
+"""Volume averaged electron-triton collision frequency in plasma (Hz)"""
+
 freq_plasma_electron_alpha_thermal_collision_profile: list[float] = None
 """Profile of electron-alpha collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_alpha_thermal_collision_vol_avg: float = None
+"""Volume averaged electron-alpha collision frequency in plasma (Hz)"""
 
 len_plasma_electron_electron_mean_free_path_profile: list[float] = None
 """Profile of electron-electron mean free path in plasma (m)"""
@@ -1798,9 +1810,13 @@ def init_physics_variables():
         t_plasma_electron_alpha_thermal_collision_profile, \
         t_plasma_electron_alpha_thermal_collision_vol_avg, \
         freq_plasma_electron_electron_collision_profile, \
+        freq_plasma_electron_electron_collision_vol_avg, \
         freq_plasma_electron_deuteron_collision_profile, \
+        freq_plasma_electron_deuteron_collision_vol_avg, \
         freq_plasma_electron_triton_collision_profile, \
+        freq_plasma_electron_triton_collision_vol_avg, \
         freq_plasma_electron_alpha_thermal_collision_profile, \
+        freq_plasma_electron_alpha_thermal_collision_vol_avg, \
         len_plasma_electron_electron_mean_free_path_profile, \
         len_plasma_electron_deuteron_mean_free_path_profile, \
         len_plasma_electron_triton_mean_free_path_profile, \
@@ -2116,9 +2132,13 @@ def init_physics_variables():
     t_plasma_electron_alpha_thermal_collision_vol_avg = 0.0
     t_plasma_electron_alpha_spitzer_slow_profile = []
     freq_plasma_electron_electron_collision_profile = []
+    freq_plasma_electron_electron_collision_vol_avg = 0.0
     freq_plasma_electron_deuteron_collision_profile = []
+    freq_plasma_electron_deuteron_collision_vol_avg = 0.0
     freq_plasma_electron_triton_collision_profile = []
+    freq_plasma_electron_triton_collision_vol_avg = 0.0
     freq_plasma_electron_alpha_thermal_collision_profile = []
+    freq_plasma_electron_alpha_thermal_collision_vol_avg = 0.0
     len_plasma_electron_electron_mean_free_path_profile = []
     len_plasma_electron_deuteron_mean_free_path_profile = []
     len_plasma_electron_triton_mean_free_path_profile = []

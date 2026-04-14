@@ -5103,16 +5103,32 @@ class DetailedPhysics(Model):
         # Collision frequencies
         # ============================
 
+        physics_variables.freq_plasma_electron_electron_collision_vol_avg = (
+            1 / physics_variables.t_plasma_electron_electron_collision_vol_avg
+        )
+
         physics_variables.freq_plasma_electron_electron_collision_profile = (
             1 / physics_variables.t_plasma_electron_electron_collision_profile
+        )
+
+        physics_variables.freq_plasma_electron_deuteron_collision_vol_avg = (
+            1 / physics_variables.t_plasma_electron_deuteron_collision_vol_avg
         )
 
         physics_variables.freq_plasma_electron_deuteron_collision_profile = (
             1 / physics_variables.t_plasma_electron_deuteron_collision_profile
         )
 
+        physics_variables.freq_plasma_electron_triton_collision_vol_avg = (
+            1 / physics_variables.t_plasma_electron_triton_collision_vol_avg
+        )
+
         physics_variables.freq_plasma_electron_triton_collision_profile = (
             1 / physics_variables.t_plasma_electron_triton_collision_profile
+        )
+
+        physics_variables.freq_plasma_electron_alpha_thermal_collision_vol_avg = (
+            1 / physics_variables.t_plasma_electron_alpha_thermal_collision_vol_avg
         )
 
         physics_variables.freq_plasma_electron_alpha_thermal_collision_profile = (
@@ -5932,6 +5948,13 @@ class DetailedPhysics(Model):
 
         po.osubhd(self.outfile, "Collision Frequencies:")
 
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-electron collision frequency (Hz)",
+            "(freq_plasma_electron_electron_collision_vol_avg)",
+            physics_variables.freq_plasma_electron_electron_collision_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.freq_plasma_electron_electron_collision_profile)
         ):
@@ -5941,6 +5964,14 @@ class DetailedPhysics(Model):
                 f"(freq_plasma_electron_electron_collision_profile{i})",
                 physics_variables.freq_plasma_electron_electron_collision_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-deuteron collision frequency (Hz)",
+            "(freq_plasma_electron_deuteron_collision_vol_avg)",
+            physics_variables.freq_plasma_electron_deuteron_collision_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.freq_plasma_electron_deuteron_collision_profile)
         ):
@@ -5950,6 +5981,14 @@ class DetailedPhysics(Model):
                 f"(freq_plasma_electron_deuteron_collision_profile{i})",
                 physics_variables.freq_plasma_electron_deuteron_collision_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-triton collision frequency (Hz)",
+            "(freq_plasma_electron_triton_collision_vol_avg)",
+            physics_variables.freq_plasma_electron_triton_collision_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.freq_plasma_electron_triton_collision_profile)
         ):
@@ -5959,6 +5998,14 @@ class DetailedPhysics(Model):
                 f"(freq_plasma_electron_triton_collision_profile{i})",
                 physics_variables.freq_plasma_electron_triton_collision_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-alpha thermal collision frequency (Hz)",
+            "(freq_plasma_electron_alpha_thermal_collision_vol_avg)",
+            physics_variables.freq_plasma_electron_alpha_thermal_collision_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.freq_plasma_electron_alpha_thermal_collision_profile)
         ):
