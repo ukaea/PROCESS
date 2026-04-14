@@ -163,7 +163,6 @@ max-locals = 17
 # Tests can use magic values, assertions, and relative imports
 "tests/**" = [
     "ARG",
-    "INP001",
     "PLR2004",
     "PLR6301",
     "PLR0904",
@@ -194,8 +193,8 @@ max-locals = 17
     "RUF059",
     "T201",
 ]
-"examples/**" = ['INP001', 'B018', 'E402']
-"documentation/scripts/**" = ['INP001']
+"examples/**" = [ 'B018', 'E402']
+"{tests,tracking,documentation/scripts,examples}/**" = ['INP001']
 
 [tool.ruff.lint]
 preview = true
@@ -254,6 +253,12 @@ ignore =  [
     "D101",
     "D102",
     "D103",
+    "DOC501",  # docstring-missing-exception
+    "D404",    # docstring-starts-with-this
+    "DOC102",  # docstring-extraneous-parameter
+    "D104",    # undocumented-public-package
+    "D105",    # undocumented-magic-method
+    "PLC1901", # compare-to-empty-string
 
 ]
 

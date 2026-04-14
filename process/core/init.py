@@ -3,7 +3,7 @@ from __future__ import annotations
 import datetime
 import getpass
 import socket
-import subprocess
+import subprocess  # noqa: S404
 from pathlib import Path
 from typing import TYPE_CHECKING
 from warnings import warn
@@ -106,9 +106,9 @@ def get_git_summary() -> tuple[str, str]:
     directory = Path(process.__file__).parent
     try:
         git_branch = (
-            subprocess
+            subprocess  # noqa: S602
             .run(
-                "git rev-parse --abbrev-ref HEAD",
+                "git rev-parse --abbrev-ref HEAD",  # noqa: S607
                 shell=True,
                 capture_output=True,
                 cwd=directory,
@@ -119,9 +119,9 @@ def get_git_summary() -> tuple[str, str]:
         )
 
         git_tag = (
-            subprocess
+            subprocess  # noqa: S602
             .run(
-                "git describe --tags",
+                "git describe --tags",  # noqa: S607
                 shell=True,
                 capture_output=True,
                 cwd=directory,
