@@ -5139,9 +5139,19 @@ class DetailedPhysics(Model):
         # Mean free paths
         # ============================
 
+        physics_variables.len_plasma_electron_electron_mean_free_path_vol_avg = (
+            physics_variables.t_plasma_electron_electron_collision_vol_avg
+            * physics_variables.vel_plasma_electron_vol_avg
+        )
+
         physics_variables.len_plasma_electron_electron_mean_free_path_profile = (
             physics_variables.t_plasma_electron_electron_collision_profile
             * physics_variables.vel_plasma_electron_profile
+        )
+
+        physics_variables.len_plasma_electron_deuteron_mean_free_path_vol_avg = (
+            physics_variables.t_plasma_electron_deuteron_collision_vol_avg
+            * physics_variables.vel_plasma_electron_vol_avg
         )
 
         physics_variables.len_plasma_electron_deuteron_mean_free_path_profile = (
@@ -5149,9 +5159,19 @@ class DetailedPhysics(Model):
             * physics_variables.vel_plasma_electron_profile
         )
 
+        physics_variables.len_plasma_electron_triton_mean_free_path_vol_avg = (
+            physics_variables.t_plasma_electron_triton_collision_vol_avg
+            * physics_variables.vel_plasma_electron_vol_avg
+        )
+
         physics_variables.len_plasma_electron_triton_mean_free_path_profile = (
             physics_variables.t_plasma_electron_triton_collision_profile
             * physics_variables.vel_plasma_electron_profile
+        )
+
+        physics_variables.len_plasma_electron_alpha_thermal_mean_free_path_vol_avg = (
+            physics_variables.t_plasma_electron_alpha_thermal_collision_vol_avg
+            * physics_variables.vel_plasma_electron_vol_avg
         )
 
         physics_variables.len_plasma_electron_alpha_thermal_mean_free_path_profile = (
@@ -6020,6 +6040,13 @@ class DetailedPhysics(Model):
 
         po.osubhd(self.outfile, "Mean Free Paths:")
 
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-electron mean free path (λₑₑ) (m)",
+            "(len_plasma_electron_electron_mean_free_path_vol_avg)",
+            physics_variables.len_plasma_electron_electron_mean_free_path_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.len_plasma_electron_electron_mean_free_path_profile)
         ):
@@ -6029,6 +6056,14 @@ class DetailedPhysics(Model):
                 f"(len_plasma_electron_electron_mean_free_path_profile{i})",
                 physics_variables.len_plasma_electron_electron_mean_free_path_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-deuteron mean free path (λₑD) (m)",
+            "(len_plasma_electron_deuteron_mean_free_path_vol_avg)",
+            physics_variables.len_plasma_electron_deuteron_mean_free_path_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.len_plasma_electron_deuteron_mean_free_path_profile)
         ):
@@ -6038,6 +6073,14 @@ class DetailedPhysics(Model):
                 f"(len_plasma_electron_deuteron_mean_free_path_profile{i})",
                 physics_variables.len_plasma_electron_deuteron_mean_free_path_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-triton mean free path (λₑT) (m)",
+            "(len_plasma_electron_triton_mean_free_path_vol_avg)",
+            physics_variables.len_plasma_electron_triton_mean_free_path_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.len_plasma_electron_triton_mean_free_path_profile)
         ):
@@ -6047,6 +6090,14 @@ class DetailedPhysics(Model):
                 f"(len_plasma_electron_triton_mean_free_path_profile{i})",
                 physics_variables.len_plasma_electron_triton_mean_free_path_profile[i],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron-alpha thermal mean free path (λₑα) (m)",
+            "(len_plasma_electron_alpha_thermal_mean_free_path_vol_avg)",
+            physics_variables.len_plasma_electron_alpha_thermal_mean_free_path_vol_avg,
+        )
+
         for i in range(
             len(
                 physics_variables.len_plasma_electron_alpha_thermal_mean_free_path_profile

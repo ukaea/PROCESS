@@ -1429,14 +1429,26 @@ freq_plasma_electron_alpha_thermal_collision_vol_avg: float = None
 len_plasma_electron_electron_mean_free_path_profile: list[float] = None
 """Profile of electron-electron mean free path in plasma (m)"""
 
+len_plasma_electron_electron_mean_free_path_vol_avg: float = None
+"""Volume averaged electron-electron mean free path in plasma (m)"""
+
 len_plasma_electron_deuteron_mean_free_path_profile: list[float] = None
 """Profile of electron-deuteron mean free path in plasma (m)"""
+
+len_plasma_electron_deuteron_mean_free_path_vol_avg: float = None
+"""Volume averaged electron-deuteron mean free path in plasma (m)"""
 
 len_plasma_electron_triton_mean_free_path_profile: list[float] = None
 """Profile of electron-triton mean free path in plasma (m)"""
 
+len_plasma_electron_triton_mean_free_path_vol_avg: float = None
+"""Volume averaged electron-triton mean free path in plasma (m)"""
+
 len_plasma_electron_alpha_thermal_mean_free_path_profile: list[float] = None
 """Profile of electron-alpha mean free path in plasma (m)"""
+
+len_plasma_electron_alpha_thermal_mean_free_path_vol_avg: float = None
+"""Volume averaged electron-alpha mean free path in plasma (m)"""
 
 res_plasma_fuel_spitzer_profile: list[float] = None
 """Profile of plasma Spitzer resistivity due to fuel ions (ohm m)"""
@@ -1818,9 +1830,13 @@ def init_physics_variables():
         freq_plasma_electron_alpha_thermal_collision_profile, \
         freq_plasma_electron_alpha_thermal_collision_vol_avg, \
         len_plasma_electron_electron_mean_free_path_profile, \
+        len_plasma_electron_electron_mean_free_path_vol_avg, \
         len_plasma_electron_deuteron_mean_free_path_profile, \
+        len_plasma_electron_deuteron_mean_free_path_vol_avg, \
         len_plasma_electron_triton_mean_free_path_profile, \
+        len_plasma_electron_triton_mean_free_path_vol_avg, \
         len_plasma_electron_alpha_thermal_mean_free_path_profile, \
+        len_plasma_electron_alpha_thermal_mean_free_path_vol_avg, \
         res_plasma_fuel_spitzer_profile
 
     m_beam_amu = 0.0
@@ -2140,7 +2156,11 @@ def init_physics_variables():
     freq_plasma_electron_alpha_thermal_collision_profile = []
     freq_plasma_electron_alpha_thermal_collision_vol_avg = 0.0
     len_plasma_electron_electron_mean_free_path_profile = []
+    len_plasma_electron_electron_mean_free_path_vol_avg = 0.0
     len_plasma_electron_deuteron_mean_free_path_profile = []
+    len_plasma_electron_deuteron_mean_free_path_vol_avg = 0.0
     len_plasma_electron_triton_mean_free_path_profile = []
+    len_plasma_electron_triton_mean_free_path_vol_avg = 0.0
     len_plasma_electron_alpha_thermal_mean_free_path_profile = []
+    len_plasma_electron_alpha_thermal_mean_free_path_vol_avg = 0.0
     res_plasma_fuel_spitzer_profile = []
