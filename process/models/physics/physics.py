@@ -29,7 +29,7 @@ from process.data_structure import (
 )
 from process.models.physics import impurity_radiation
 from process.models.physics.profiles import PlasmaProfileShapeType
-
+from process.models.physics.plasma_geometry import PlasmaGeom, PlasmaGeometryModelType
 if TYPE_CHECKING:
     from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
     from process.models.physics.confinement_time import (
@@ -1776,7 +1776,7 @@ class Physics(Model):
                 "OP ",
             )
 
-            if physics_variables.i_plasma_geometry == 1:
+            if physics_variables.i_plasma_geometry == PlasmaGeometryModelType.MODEL_1:
                 po.ovarrf(
                     self.outfile,
                     "Lower limit for edge safety factor q95",
