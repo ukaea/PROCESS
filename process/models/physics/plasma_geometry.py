@@ -43,7 +43,7 @@ class PlasmaGeometryModels(IntEnum):
     ZOHM_ITER = (3, "Zohm ITER Scaling")
     MAST_DATA = (4, "Fit to MAST data")
     FIESTA_RUNS = (5, "Fiesta Runs")
-    CREATE_DATA_EU_DEMO = (6, "CREATE Data EU Demo")
+    CREATE_DATA_EU_DEMO = (6, "CREATE Data EU DEMO")
     MENARD_2016 = (7, "Menard 2016 ST Scaling")
     UNKNOWN = (8, "Unknown")
 
@@ -521,6 +521,14 @@ class PlasmaGeom:
             "(plasma_square)",
             physics_variables.plasma_square,
             "IP",
+        )
+        po.oblnkl(self.outfile)
+
+        po.ovarin(
+            self.outfile,
+            "Plasma geometry model",
+            "(i_plasma_geometry)",
+            physics_variables.i_plasma_geometry,
         )
         po.oblnkl(self.outfile)
 
