@@ -1588,7 +1588,6 @@ class CurrentDrive(Model):
         current_drive_variables.c_beam_total = 0.0e0
         current_drive_variables.p_beam_orbit_loss_mw = 0.0e0
 
-        pinjmw1 = 0.0
         p_hcd_primary_ions_mw = 0.0
         p_hcd_primary_electrons_mw = 0.0
         p_hcd_secondary_electrons_mw = 0.0
@@ -1911,8 +1910,7 @@ class CurrentDrive(Model):
                 current_drive_variables.p_beam_shine_through_mw = (
                     current_drive_variables.p_hcd_secondary_injected_mw
                     + current_drive_variables.p_hcd_secondary_extra_heat_mw
-                    * (1.0 - current_drive_variables.f_p_beam_shine_through)
-                )
+                ) * (current_drive_variables.f_p_beam_shine_through)
 
                 # First orbit loss
                 current_drive_variables.p_beam_orbit_loss_mw = (
@@ -2113,8 +2111,7 @@ class CurrentDrive(Model):
                 current_drive_variables.p_beam_shine_through_mw = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
-                    * (1.0 - current_drive_variables.f_p_beam_shine_through)
-                )
+                ) * (current_drive_variables.f_p_beam_shine_through)
 
                 # First orbit loss
                 current_drive_variables.p_beam_orbit_loss_mw = (
@@ -2135,17 +2132,18 @@ class CurrentDrive(Model):
                 )
 
                 p_hcd_primary_ions_mw = (
-                    pinjmw1 * current_drive_variables.f_p_beam_injected_ions
+                    current_drive_variables.p_beam_plasma_coupled_mw
+                    * current_drive_variables.f_p_beam_injected_ions
                 )
-                p_hcd_primary_electrons_mw = pinjmw1 * (
-                    1.0e0 - current_drive_variables.f_p_beam_injected_ions
+                p_hcd_primary_electrons_mw = (
+                    current_drive_variables.p_beam_plasma_coupled_mw
+                    * (1.0e0 - current_drive_variables.f_p_beam_injected_ions)
                 )
 
                 current_drive_variables.pwpnb = (
                     current_drive_variables.p_hcd_primary_injected_mw
                     + current_drive_variables.p_hcd_primary_extra_heat_mw
-                    / current_drive_variables.eta_beam_injector_wall_plug
-                )
+                ) / current_drive_variables.eta_beam_injector_wall_plug
 
                 # Neutral beam wall plug power
                 heat_transport_variables.p_hcd_primary_electric_mw = (
@@ -2187,8 +2185,6 @@ class CurrentDrive(Model):
                 current_drive_variables.p_hcd_primary_injected_mw
                 + current_drive_variables.p_hcd_secondary_injected_mw
             )
-
-            pinjmw1 = p_hcd_primary_electrons_mw + p_hcd_primary_ions_mw
 
             # Total injected power given to electrons
             current_drive_variables.p_hcd_injected_electrons_mw = (
