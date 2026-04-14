@@ -348,12 +348,12 @@ class Costs2015(Model):
             )
 
         po.oshead(self.outfile, "First wall and blanket (M$)")
-        for l in range(21, 27):
+        for l_ in range(21, 27):
             self.ocost(
                 self.outfile,
-                self.data.costs_2015.s_label[l],
-                l + 1,
-                self.data.costs_2015.s_cost[l] / 1.0e6,
+                self.data.costs_2015.s_label[l_],
+                l_ + 1,
+                self.data.costs_2015.s_cost[l_] / 1.0e6,
             )
 
         po.oshead(self.outfile, "Active maintenance and remote handling (M$)")

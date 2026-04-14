@@ -1,7 +1,6 @@
 """Unit tests for availability.f90."""
 
 import pytest
-from pytest import approx
 
 from process import data_structure
 from process.core.init import init_all_module_vars
@@ -136,7 +135,7 @@ def test_calc_u_unplanned_bop(monkeypatch, availability):
 
     # Call subroutine and check result is within an absolute tolerance
     result = availability.calc_u_unplanned_bop(output=False)
-    assert result == approx(0.009, abs=0.0005)
+    assert result == pytest.approx(0.009, abs=0.0005)
 
 
 def calc_u_planned_param(**kwargs):
@@ -155,7 +154,7 @@ def calc_u_planned_param(**kwargs):
         "pflux_fw_neutron_mw": 1.0,
         "pflux_div_heat_load_mw": 10.0,
         "itart": 0,
-        "expected": approx(0.3, abs=0.05),
+        "expected": pytest.approx(0.3, abs=0.05),
     }
 
     # Merge default dict with any optional keyword arguments to override values
@@ -181,7 +180,7 @@ def calc_u_planned_params():
             pflux_fw_neutron_mw=1.0,
             pflux_div_heat_load_mw=1.0,
             itart=1,
-            expected=approx(0.03, abs=0.005),
+            expected=pytest.approx(0.03, abs=0.005),
         ),  # Nominal ST
     ]
 
@@ -257,7 +256,7 @@ def calc_u_unplanned_magnets_param(**kwargs):
         "temp_cs_superconductor_margin_min": 1.5,
         "t_plant_operational_total_yrs": 30,
         "conf_mag": 1.0,
-        "expected": approx(0.02, abs=0.005),
+        "expected": pytest.approx(0.02, abs=0.005),
     }
 
     # Merge default values with optional keyword args to override them
@@ -288,7 +287,7 @@ def calc_u_unplanned_magnets_params():
             temp_tf_superconductor_margin_min=1.6,
             temp_cs_superconductor_margin_min=1.6,
             conf_mag=0.8,
-            expected=approx(0.03, abs=0.005),
+            expected=pytest.approx(0.03, abs=0.005),
         ),
     ]
 
@@ -354,7 +353,7 @@ def calc_u_unplanned_divertor_param(**kwargs):
     defaults = {
         "life_div_fpy": 1.99,
         "t_plant_pulse_total": 9000,
-        "expected": approx(0.02, abs=0.005),
+        "expected": pytest.approx(0.02, abs=0.005),
     }
 
     # Merge default dict with any optional keyword arguments to override values
@@ -373,8 +372,12 @@ def calc_u_unplanned_divertor_params():
     """
     return [
         calc_u_unplanned_divertor_param(),
-        calc_u_unplanned_divertor_param(life_div_fpy=4, expected=approx(1, abs=0)),
-        calc_u_unplanned_divertor_param(life_div_fpy=3, expected=approx(0.1, abs=0.05)),
+        calc_u_unplanned_divertor_param(
+            life_div_fpy=4, expected=pytest.approx(1, abs=0)
+        ),
+        calc_u_unplanned_divertor_param(
+            life_div_fpy=3, expected=pytest.approx(0.1, abs=0.05)
+        ),
     ]
 
 
@@ -430,7 +433,7 @@ def calc_u_unplanned_fwbs_param(**kwargs):
     defaults = {
         "life_blkt_fpy": 5,
         "t_plant_pulse_total": 9000,
-        "expected": approx(0.02, abs=0.005),
+        "expected": pytest.approx(0.02, abs=0.005),
     }
 
     # Merge default dict with any optional keyword arguments to override values
@@ -449,8 +452,10 @@ def calc_u_unplanned_fwbs_params():
     """
     return [
         calc_u_unplanned_fwbs_param(),
-        calc_u_unplanned_fwbs_param(life_blkt_fpy=15, expected=approx(1, abs=0)),
-        calc_u_unplanned_fwbs_param(life_blkt_fpy=8.5, expected=approx(0.1, abs=0.005)),
+        calc_u_unplanned_fwbs_param(life_blkt_fpy=15, expected=pytest.approx(1, abs=0)),
+        calc_u_unplanned_fwbs_param(
+            life_blkt_fpy=8.5, expected=pytest.approx(0.1, abs=0.005)
+        ),
     ]
 
 

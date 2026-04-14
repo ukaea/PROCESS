@@ -255,7 +255,7 @@ iteration variables should get varied"""
             which solver to use, as specified in solver.py, defaults to "vmcon"
         """
         # TODO should call SingleRun directly...at least this is not a subprocess!
-        from process.main import process_cli
+        from process.main import process_cli  # noqa:PLC0415
 
         print("PROCESS run started ...", end="")
 
@@ -269,15 +269,13 @@ iteration variables should get varied"""
                 # Process has exited with a non-zero exit code.
                 # Catch this exception to allow execution to continue without exiting
                 logger.exception(
-                    "There was a problem with the PROCESS execution! %s",
-                    err,
+                    "There was a problem with the PROCESS execution!",
                 )
         except (KeyboardInterrupt, click.exceptions.Abort):
             raise KeyboardInterrupt from None
-        except Exception as e:
+        except Exception:
             logger.exception(
-                "There was a problem with the PROCESS execution! %s",
-                e,
+                "There was a problem with the PROCESS execution!",
             )
 
         print("finished.")
@@ -473,8 +471,8 @@ class RunProcessConfig(ProcessConfig):
             set_variable_in_indat(in_dat, key, self.dictvar[key])
 
         # delete variables
-        for key in self.del_var:
-            key = key.lower()
+        for key_ in self.del_var:
+            key = key_.lower()
             if "bound" in key:
                 number = (key.split("("))[1].split(")")[0]
                 if "boundu" in key:

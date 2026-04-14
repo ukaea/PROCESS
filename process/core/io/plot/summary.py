@@ -4543,8 +4543,8 @@ def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
                 lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
             pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
 
-        for l in range(imp_data.shape[0]):
-            prad[k] += pimpden[l][k] * 1.0e-6
+        for l_ in range(imp_data.shape[0]):
+            prad[k] += pimpden[l_][k] * 1.0e-6
 
     prof.plot(rho, prad, label="Total", linestyle="dotted")
     prof.plot(rho, pimpden[0] * 1.0e-6, label="H")
@@ -4623,11 +4623,6 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
         The scan index to extract profile data for plotting.
     impp : str
         The impurity data path
-
-    Returns
-    -------
-    None
-        This function modifies the provided axis in-place and does not return any value.
 
     Notes
     -----
@@ -7803,7 +7798,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     Be = mfile.get("f_nd_impurity_electrons(03)", scan=scan)
     C = mfile.get("f_nd_impurity_electrons(04)", scan=scan)
     N = mfile.get("f_nd_impurity_electrons(05)", scan=scan)
-    O = mfile.get("f_nd_impurity_electrons(06)", scan=scan)
+    O = mfile.get("f_nd_impurity_electrons(06)", scan=scan)  # noqa: E741
     Ne = mfile.get("f_nd_impurity_electrons(07)", scan=scan)
     Si = mfile.get("f_nd_impurity_electrons(08)", scan=scan)
     Ar = mfile.get("f_nd_impurity_electrons(09)", scan=scan)

@@ -644,18 +644,18 @@ class NeutralBeam:
                     )
 
         sz = 0.0
-        for l in range(4):
+        for l_ in range(4):
             for k in range(2):
                 for j in range(2):
                     for i in range(3):
                         sz += (
-                            b[i, j, k, l]
+                            b[i, j, k, l_]
                             * (np.log(eb)) ** i
                             * (np.log(nen)) ** j
                             * (np.log(te)) ** k
-                            * nn[l]
-                            * z[l]
-                            * (z[l] - 1.0)
+                            * nn[l_]
+                            * z[l_]
+                            * (z[l_] - 1.0)
                         )
 
         return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)

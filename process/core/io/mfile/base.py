@@ -403,7 +403,7 @@ class MFile:
         verbose :
              verbosity of output
         """
-        import toml
+        import toml  # noqa:PLC0415
 
         with open(filename or f"{self.filename}.toml", "w") as file:
             toml.dump(self.to_dict(keys_to_write, scan, verbose), file)
@@ -594,7 +594,7 @@ def get_mfile_initial_ixc_values(file_path: Path):
     This method initialises a SingleRun. At present, this involves mutating the global
     data structure so it is not safe to run this method during a PROCESS run.
     """
-    from process.main import SingleRun
+    from process.main import SingleRun  # noqa:PLC0415
 
     SingleRun(file_path.as_posix())
     iteration_variables.load_iteration_variables()

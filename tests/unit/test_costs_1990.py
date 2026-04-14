@@ -4,7 +4,6 @@ from typing import Any, NamedTuple
 
 import numpy as np
 import pytest
-from pytest import approx
 
 from process import data_structure
 from process.data_structure import (
@@ -46,7 +45,7 @@ def acc2261_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"i_blkt_coolant_type": 1, "expected": approx(49.68, abs=0.01)}
+    defaults = {"i_blkt_coolant_type": 1, "expected": pytest.approx(49.68, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -63,7 +62,7 @@ def acc2261_params():
     """
     return [
         acc2261_param(),
-        acc2261_param(i_blkt_coolant_type=2, expected=approx(53.85, abs=0.01)),
+        acc2261_param(i_blkt_coolant_type=2, expected=pytest.approx(53.85, abs=0.01)),
     ]
 
 
@@ -124,7 +123,7 @@ def test_acc2262(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2262", 0)
 
     costs.acc2262()
-    assert cost_variables.c2262 == approx(29.408, abs=0.01)
+    assert cost_variables.c2262 == pytest.approx(29.408, abs=0.01)
 
 
 def test_acc2263(monkeypatch, costs):
@@ -141,7 +140,7 @@ def test_acc2263(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2263", 0)
 
     costs.acc2263()
-    assert cost_variables.c2263 == approx(180.76, abs=0.01)
+    assert cost_variables.c2263 == pytest.approx(180.76, abs=0.01)
 
 
 def test_acc2271(monkeypatch, costs):
@@ -155,7 +154,7 @@ def test_acc2271(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2271", 0)
 
     costs.acc2271()
-    assert cost_variables.c2271 == approx(22.3, abs=0.01)
+    assert cost_variables.c2271 == pytest.approx(22.3, abs=0.01)
 
 
 def test_acc2272(monkeypatch, costs):
@@ -170,7 +169,7 @@ def test_acc2272(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2271", 0)
 
     costs.acc2272()
-    assert cost_variables.c2272 == approx(114.707, abs=0.01)
+    assert cost_variables.c2272 == pytest.approx(114.707, abs=0.01)
 
 
 def acc2273_param(**kwargs):
@@ -184,7 +183,7 @@ def acc2273_param(**kwargs):
         "f_plasma_fuel_tritium": 0.0001,
         "volrci": data_structure.buildings_variables.volrci,
         "wsvol": data_structure.buildings_variables.wsvol,
-        "expected": approx(0.0, abs=0.00001),
+        "expected": pytest.approx(0.0, abs=0.00001),
     }
 
     # Merge default dict with any optional keyword arguments to override values
@@ -206,7 +205,7 @@ def acc2273_params():
             f_plasma_fuel_tritium=0.5,
             volrci=1299783.4,
             wsvol=132304.1,
-            expected=approx(74.12, abs=0.01),
+            expected=pytest.approx(74.12, abs=0.01),
         ),
     ]
 
@@ -264,7 +263,7 @@ def test_acc2274(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2274", 0)
 
     costs.acc2274()
-    assert cost_variables.c2274 == approx(84.10, abs=0.01)
+    assert cost_variables.c2274 == pytest.approx(84.10, abs=0.01)
 
 
 def acc228_param(**kwargs):
@@ -274,7 +273,7 @@ def acc228_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"fkind": 1.0, "expected": approx(150.0, abs=0.01)}
+    defaults = {"fkind": 1.0, "expected": pytest.approx(150.0, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -289,7 +288,10 @@ def acc228_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    return [acc228_param(), acc228_param(fkind=0.5, expected=approx(75.0, abs=0.01))]
+    return [
+        acc228_param(),
+        acc228_param(fkind=0.5, expected=pytest.approx(75.0, abs=0.01)),
+    ]
 
 
 @pytest.fixture(params=acc228_params(), ids=["fkind_1", "fkind_0p5"])
@@ -333,7 +335,7 @@ def acc229_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"fkind": 1.0, "expected": approx(125.0, abs=0.01)}
+    defaults = {"fkind": 1.0, "expected": pytest.approx(125.0, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -348,7 +350,10 @@ def acc229_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    return [acc229_param(), acc229_param(fkind=0.5, expected=approx(62.5, abs=0.01))]
+    return [
+        acc229_param(),
+        acc229_param(fkind=0.5, expected=pytest.approx(62.5, abs=0.01)),
+    ]
 
 
 @pytest.fixture(params=acc229_params(), ids=["fkind_1", "fkind_0p5"])
@@ -392,7 +397,7 @@ def acc23_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"i_blkt_coolant_type": 1, "expected": approx(230, abs=0.01)}
+    defaults = {"i_blkt_coolant_type": 1, "expected": pytest.approx(230, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -409,7 +414,7 @@ def acc23_params():
     """
     return [
         acc23_param(),
-        acc23_param(i_blkt_coolant_type=2, expected=approx(245, abs=0.01)),
+        acc23_param(i_blkt_coolant_type=2, expected=pytest.approx(245, abs=0.01)),
     ]
 
 
@@ -460,7 +465,7 @@ def test_acc241(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c241", 0)
 
     costs.acc241()
-    assert cost_variables.c241 == approx(18.4, abs=0.01)
+    assert cost_variables.c241 == pytest.approx(18.4, abs=0.01)
 
 
 def test_acc242(monkeypatch, costs):
@@ -475,7 +480,7 @@ def test_acc242(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c242", 0)
 
     costs.acc242()
-    assert cost_variables.c242 == approx(9.06, abs=0.01)
+    assert cost_variables.c242 == pytest.approx(9.06, abs=0.01)
 
 
 def test_acc243(monkeypatch, costs):
@@ -489,7 +494,7 @@ def test_acc243(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c243", 0)
 
     costs.acc243()
-    assert cost_variables.c243 == approx(8.08, abs=0.01)
+    assert cost_variables.c243 == pytest.approx(8.08, abs=0.01)
 
 
 def test_acc244(monkeypatch, costs):
@@ -502,7 +507,7 @@ def test_acc244(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c244", 0)
 
     costs.acc244()
-    assert cost_variables.c244 == approx(6.80, abs=0.01)
+    assert cost_variables.c244 == pytest.approx(6.80, abs=0.01)
 
 
 def test_acc245(monkeypatch, costs):
@@ -515,7 +520,7 @@ def test_acc245(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c245", 0)
 
     costs.acc245()
-    assert cost_variables.c245 == approx(1.5, abs=0.01)
+    assert cost_variables.c245 == pytest.approx(1.5, abs=0.01)
 
 
 def acc25_param(**kwargs):
@@ -525,7 +530,7 @@ def acc25_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"lsa": 4, "expected": approx(25, abs=0.01)}
+    defaults = {"lsa": 4, "expected": pytest.approx(25, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -540,7 +545,7 @@ def acc25_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    return [acc25_param(), acc25_param(lsa=1, expected=approx(19.25, abs=0.01))]
+    return [acc25_param(), acc25_param(lsa=1, expected=pytest.approx(19.25, abs=0.01))]
 
 
 @pytest.fixture(params=acc25_params(), ids=["lsa_4", "lsa_1"])
@@ -592,7 +597,7 @@ def acc26_param(**kwargs):
         "tfcmw": 50.0,
         "p_plant_primary_heat_mw": heat_transport_variables.p_plant_primary_heat_mw,
         "p_plant_electric_gross_mw": heat_transport_variables.p_plant_electric_gross_mw,
-        "expected": approx(87.9, abs=0.01),
+        "expected": pytest.approx(87.9, abs=0.01),
     }
 
     # Merge default dict with any optional keyword arguments to override values
@@ -690,8 +695,8 @@ def test_acc9(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "cindrt", 0)
 
     costs.acc9()
-    assert cost_variables.cindrt == approx(10005.0, abs=0.1)
-    assert cost_variables.ccont == approx(7800.98, abs=0.1)
+    assert cost_variables.cindrt == pytest.approx(10005.0, abs=0.1)
+    assert cost_variables.ccont == pytest.approx(7800.98, abs=0.1)
 
 
 class Acc21Param(NamedTuple):

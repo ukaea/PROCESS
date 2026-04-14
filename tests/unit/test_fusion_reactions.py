@@ -4,7 +4,6 @@ from typing import Any, NamedTuple
 
 import numpy as np
 import pytest
-from pytest import approx
 
 from process.data_structure import physics_variables as pv
 from process.models.physics import fusion_reactions as reactions
@@ -226,7 +225,7 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
         np.array([t]), reactions.BoschHaleConstants(**reaction)
     )
 
-    assert bosch_hale == approx(expected_bosch_hale, abs=1e-23)
+    assert bosch_hale == pytest.approx(expected_bosch_hale, abs=1e-23)
 
 
 def test_beam_fusion():
