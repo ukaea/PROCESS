@@ -62,8 +62,10 @@ from process.models.physics.plasma_current import (
     PlasmaCurrentModel,
     PlasmaDiamagneticCurrentModel,
 )
-from process.models.physics.plasma_geometry import PlasmaShapeModelType
-from process.models.physics.plasma_geometry import PlasmaGeometryModelType
+from process.models.physics.plasma_geometry import (
+    PlasmaGeometryModelType,
+    PlasmaShapeModelType,
+)
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
 
