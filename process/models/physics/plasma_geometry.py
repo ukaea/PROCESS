@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import logging
 from enum import IntEnum
 from types import DynamicClassAttribute
@@ -278,8 +276,7 @@ class PlasmaGeom:
         # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma current.
         if (
             physics_variables.i_plasma_current == 8
-            or physics_variables.i_plasma_shape
-            == PlasmaShapeModelType.SAUTER
+            or physics_variables.i_plasma_shape == PlasmaShapeModelType.SAUTER
         ):
             (
                 physics_variables.len_plasma_poloidal,
