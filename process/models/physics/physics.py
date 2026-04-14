@@ -570,7 +570,6 @@ class Physics(Model):
 
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
-        current_drive_variables.c_beam_total = 2.0
         if (current_drive_variables.c_beam_total != 0.0e0) and (  # noqa: RUF069
             physics_variables.i_plasma_ignited == 0
         ):
