@@ -4695,6 +4695,14 @@ class DetailedPhysics(Model):
 
         # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
         # we can use the total velocity to calculate the Larmor radius for an isotropic profile
+        physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg = self.calculate_larmor_radius(
+            vel_perp=np.sqrt(2 * physics_variables.vel_plasma_deuteron_vol_avg**2),
+            freq_larmor=physics_variables.freq_plasma_larmor_toroidal_deuteron_vol_avg
+            * (2 * np.pi),
+        )
+
+        # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
+        # we can use the total velocity to calculate the Larmor radius for an isotropic profile
         physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_profile = self.calculate_larmor_radius(
             vel_perp=np.sqrt(
                 2
@@ -4706,6 +4714,16 @@ class DetailedPhysics(Model):
             ),
             freq_larmor=physics_variables.freq_plasma_larmor_toroidal_deuteron_profile
             * (2 * np.pi),
+        )
+
+        # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
+        # we can use the total velocity to calculate the Larmor radius for an isotropic profile
+        physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_vol_avg = (
+            self.calculate_larmor_radius(
+                vel_perp=np.sqrt(2 * physics_variables.vel_plasma_triton_vol_avg**2),
+                freq_larmor=physics_variables.freq_plasma_larmor_toroidal_triton_vol_avg
+                * (2 * np.pi),
+            )
         )
 
         # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
@@ -5706,6 +5724,13 @@ class DetailedPhysics(Model):
 
         po.osubhd(self.outfile, "Larmor radii:")
 
+        po.ovarre(
+            self.outfile,
+            "Volume averaged deuteron isotropic toroidal Larmor radius (m)",
+            "(radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg)",
+            physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg,
+        )
+
         for i in range(
             len(
                 physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_profile
@@ -5719,6 +5744,14 @@ class DetailedPhysics(Model):
                     i
                 ],
             )
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged triton isotropic toroidal Larmor radius (m)",
+            "(radius_plasma_triton_toroidal_larmor_isotropic_vol_avg)",
+            physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_vol_avg,
+        )
+
         for i in range(
             len(physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_profile)
         ):
