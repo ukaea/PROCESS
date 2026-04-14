@@ -278,7 +278,7 @@ class PlasmaGeom:
         # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma current.
         if (
             physics_variables.i_plasma_current == 8
-            or PlasmaShapeModelType(physics_variables.i_plasma_shape)
+            or physics_variables.i_plasma_shape
             == PlasmaShapeModelType.SAUTER
         ):
             (
