@@ -17,11 +17,6 @@ def calculate_coils_mass(a_tf_wp_with_insulation: float, a_tf_wp_no_insulation: 
     a_tf_wp_no_insulation:
         Area of the toroidal field coil winding pack without insulation.
 
-    Returns
-    -------
-    :
-        The function performs calculations and updates external state.
-
     """
     #  Masses of conductor constituents
     casing()
