@@ -63,6 +63,7 @@ from process.models.physics.plasma_current import (
     PlasmaCurrentModel,
     PlasmaDiamagneticCurrentModel,
 )
+from process.models.physics.plasma_geometry import PlasmaShapeModelType
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
 
@@ -193,7 +194,7 @@ def plot_plasma(
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
-    if i_plasma_shape == 0:
+    if i_plasma_shape == PlasmaShapeModelType.PROCESS_ORIGINAL:
         # Plot the 2 plasma outline arcs.
         axis.plot(x_scale * np.array(pg.rs[0]), pg.zs[0], color="black")
         axis.plot(x_scale * np.array(pg.rs[1]), pg.zs[1], color="black")
@@ -217,7 +218,7 @@ def plot_plasma(
             color=PLASMA_COLOUR[colour_scheme - 1],
         )
 
-    elif i_plasma_shape == 1:
+    elif i_plasma_shape == PlasmaShapeModelType.SAUTER:
         axis.plot(x_scale * np.array(pg.rs), pg.zs, color="black")
         axis.fill(
             x_scale * np.array(pg.rs), pg.zs, color=PLASMA_COLOUR[colour_scheme - 1]
@@ -13784,10 +13785,10 @@ def main_plot(
 
     plot_fusion_rate_profiles(figs[8].add_subplot(122), figs[8], m_file, scan)
 
-    if m_file.get("i_plasma_shape", scan=scan) == 1:
+    if m_file.get("i_plasma_shape", scan=scan) == PlasmaShapeModelType.SAUTER:
         plot_fusion_rate_contours(figs[9], figs[10], m_file, scan)
 
-    if i_shape != 1:
+    if i_shape != PlasmaShapeModelType.SAUTER:
         msg = (
             "Fusion-rate contour plots require a closed (Sauter) plasma boundary "
             "(i_plasma_shape == 1). "
@@ -13802,7 +13803,7 @@ def main_plot(
     plot_plasma_pressure_gradient_profiles(figs[11].add_subplot(224), m_file, scan)
     # Currently only works with Sauter geometry as plasma has a closed surface
 
-    if i_shape == 1:
+    if i_shape == PlasmaShapeModelType.SAUTER:
         plot_plasma_poloidal_pressure_contours(
             figs[11].add_subplot(121, aspect="equal"), m_file, scan
         )
@@ -13810,7 +13811,7 @@ def main_plot(
         ax = figs[11].add_subplot(131, aspect="equal")
         msg = (
             "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
-            "(i_plasma_shape == 1). "
+            f"(i_plasma_shape == {PlasmaShapeModelType.SAUTER}). "
             f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
             "see the 1D pressure/profile plots for available information."
         )
