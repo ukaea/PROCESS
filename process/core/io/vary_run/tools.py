@@ -30,7 +30,8 @@ def get_neqns_itervars(wdir="."):
         if var != "":
             itervars += [dicts["DICT_IXC_SIMPLE"][str(var)]]
 
-    assert in_dat.number_of_itvars == len(itervars)
+    if in_dat.number_of_itvars != len(itervars):
+        raise ValueError("Number of iteration vars is not consistent")
 
     return in_dat.number_of_constraints, itervars
 

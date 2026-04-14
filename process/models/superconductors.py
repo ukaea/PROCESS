@@ -404,6 +404,11 @@ def bi2212(b_conductor, jstrand, temp_conductor, f_strain):
         - j_critical: Critical current density in strand (A/m²).
         - temp_margin: Temperature margin (K).
 
+    Raises
+    ------
+    ProcessValueError
+        If the input parameters are outside the range of validity.
+
     Notes
     -----
         -The model's range of validity is:
@@ -416,11 +421,6 @@ def bi2212(b_conductor, jstrand, temp_conductor, f_strain):
         - D. C. Larbalestier, J. Jiang, U. P. Trociewitz, F. Kametani, and E. E. Hellstrom,
         “A transformative superconducting magnet technology for fields well above 30 T using isotropic round wire multifilament Bi2Sr2CaCu2O8-x conductor,”
         May 06, 2013. https://www.researchgate.net/publication/236627864_A_transformative_superconducting_magnet_technology_for_fields_well_above_30_T_using_isotropic_round_wire_multifilament_Bi2Sr2CaCu2O8-x_conductor
-
-    Raises
-    ------
-    ProcessValueError
-        If the input parameters are outside the range of validity.
     """
     b = b_conductor / np.exp(-0.168 * (temp_conductor - 4.2))
 

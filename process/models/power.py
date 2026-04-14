@@ -262,7 +262,6 @@ class Power(Model):
     def pfpwr(self, output: bool):
         """PF coil power supply requirements
 
-        outfile : input integer : output file unit
         This routine calculates the MVA, power and energy requirements
         for the PF coil systems.  Units are MW and MVA for power terms.
         The routine checks at the beginning of the flattop for the
@@ -272,15 +271,7 @@ class Power(Model):
 
         Parameters
         ----------
-        None
-
-        Returns
-        -------
-        None
-
-        Parameters
-        ----------
-        output: bool
+        output:
 
         """
         # Local aliases for readability (no functional change)
@@ -315,7 +306,7 @@ class Power(Model):
         ic = -1
         n_pf_coil_groups = pfcoil_variables.n_pf_coil_groups
         if build_variables.iohcl != 0:
-            n_pf_coil_groups = n_pf_coil_groups + 1
+            n_pf_coil_groups += 1
 
         # Map PF group to representative circuit index (used for busbar I^2R per circuit)
         pf_group_circuit_index = np.zeros((n_pf_coil_groups,), dtype=int)
@@ -324,7 +315,7 @@ class Power(Model):
         pfbuspwr = 0.0e0
 
         for a_pf_bus_cm in range(n_pf_coil_groups):
-            ic = ic + pfcoil_variables.n_pf_coils_in_group[a_pf_bus_cm]
+            ic += pfcoil_variables.n_pf_coils_in_group[a_pf_bus_cm]
             pf_group_circuit_index[a_pf_bus_cm] = ic
 
             #  Section area of aluminium bussing for circuit (cm**2)
@@ -376,10 +367,9 @@ class Power(Model):
             )  # peak resistive power (MW)
 
             #  Compute the sum of resistive power in the PF circuits, kW
-            pfbuspwr = pfbuspwr + 1.0e-3 * res_pf_bus[a_pf_bus_cm] * cptburn**2
-            pf_power_variables.srcktpm = (
-                pf_power_variables.srcktpm
-                + 1.0e3 * p_pf_circuit_resistive_peak[a_pf_bus_cm]
+            pfbuspwr += 1.0e-3 * res_pf_bus[a_pf_bus_cm] * cptburn**2
+            pf_power_variables.srcktpm += (
+                1.0e3 * p_pf_circuit_resistive_peak[a_pf_bus_cm]
             )
 
         #  Inductive MVA requirements, and stored energy
@@ -404,7 +394,7 @@ class Power(Model):
             for _ in range(
                 pfcoil_variables.n_pf_coils_in_group[idx_group]
             ):  # Loop over all coils in each group
-                idx_pf_coil = idx_pf_coil + 1
+                idx_pf_coil += 1
                 inductxcurrent[:] = 0.0e0
                 for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits):
                     #  Voltage in circuit idx_pf_coil due to change in current from circuit idx_circuit
@@ -418,48 +408,43 @@ class Power(Model):
                     )
 
                     #  Voltage in circuit idx_pf_coil at time, times_variables.t_pulse_cumulative(3), due to changes in coil currents
-                    vpfi[idx_pf_coil] = vpfi[idx_pf_coil] + vpfij
+                    vpfi[idx_pf_coil] += vpfij
 
                     #  MVA in circuit idx_pf_coil at time, times_variables.t_pulse_cumulative(3) due to changes in current
-                    powpfii[idx_pf_coil] = (
-                        powpfii[idx_pf_coil]
-                        + vpfij * c_pf_coil_turn[idx_pf_coil, 2] / 1.0e6
+                    powpfii[idx_pf_coil] += (
+                        vpfij * c_pf_coil_turn[idx_pf_coil, 2] / 1.0e6
                     )
 
                     # Term used for calculating stored energy at each time
                     for idx_time in range(6):
-                        inductxcurrent[idx_time] = (
-                            inductxcurrent[idx_time]
-                            + ind_pf_cs_plasma_mutual[idx_pf_coil, idx_circuit]
+                        inductxcurrent[idx_time] += (
+                            ind_pf_cs_plasma_mutual[idx_pf_coil, idx_circuit]
                             * c_pf_coil_turn[idx_circuit, idx_time]
                         )
 
                 #  Stored magnetic energy of the poloidal field at each time
                 # idx_time is the time INDEX. 't_pulse_cumulative' is the time.
                 for idx_time in range(6):
-                    poloidalenergy[idx_time] = (
-                        poloidalenergy[idx_time]
-                        + 0.5e0
+                    poloidalenergy[idx_time] += (
+                        0.5e0
                         * inductxcurrent[idx_time]
                         * c_pf_coil_turn[idx_pf_coil, idx_time]
                     )
 
                 # Resistive power in circuits at times times_variables.t_pulse_cumulative(3) and times_variables.t_pulse_cumulative(5) respectively (MW)
-                powpfr = (
-                    powpfr
-                    + pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
+                powpfr += (
+                    pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
                     * c_pf_coil_turn[idx_pf_coil, 2]
                     * res_pf_circuit_total[idx_group]
                     / 1.0e6
                 )
-                powpfr2 = (
-                    powpfr2
-                    + pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
+                powpfr2 += (
+                    pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
                     * c_pf_coil_turn[idx_pf_coil, 4]
                     * res_pf_circuit_total[idx_group]
                     / 1.0e6
                 )
-                powpfi = powpfi + powpfii[idx_pf_coil]
+                powpfi += powpfii[idx_pf_coil]
 
         for idx_time_interval in range(5):
             # Stored magnetic energy of the poloidal field at each time
@@ -541,12 +526,11 @@ class Power(Model):
             )
 
             #  Sum of the power supply MVA of the PF circuits
-            pf_power_variables.spsmva = pf_power_variables.spsmva + psmva[idx_circuit]
+            pf_power_variables.spsmva += psmva[idx_circuit]
 
             #  Average of the maximum currents in the PF circuits, kA
-            pf_power_variables.acptmax = (
-                pf_power_variables.acptmax
-                + 1.0e-3
+            pf_power_variables.acptmax += (
+                1.0e-3
                 * abs(pfcoil_variables.c_pf_coil_turn_peak_input[idx_circuit])
                 / pf_power_variables.pfckts
             )
@@ -666,7 +650,7 @@ class Power(Model):
         ptfmw = heat_transport_variables.p_tf_electric_supplies_mw
         ppfmw = 1.0e-3 * pf_power_variables.srcktpm
         if pf_power_variables.i_pf_energy_storage_source == 2:
-            ppfmw = ppfmw + heat_transport_variables.peakmva
+            ppfmw += heat_transport_variables.peakmva
 
         #  Power to plasma heating supplies, MW
         pheatingmw = (
@@ -694,9 +678,7 @@ class Power(Model):
         #  Add contribution from motor-generator flywheels if these are part of
         #  the PF coil energy storage system
         if pf_power_variables.i_pf_energy_storage_source != 2:
-            heat_transport_variables.pacpmw = (
-                heat_transport_variables.pacpmw + heat_transport_variables.fmgdmw
-            )
+            heat_transport_variables.pacpmw += heat_transport_variables.fmgdmw
 
         # Estimate of the total low voltage power, MW
         # MDK No idea what this is - especially the last term
@@ -777,7 +759,7 @@ class Power(Model):
         and plant power balance constituents.
         None
         """
-        if int(fwbs_variables.i_p_coolant_pumping) not in (2, 3):
+        if int(fwbs_variables.i_p_coolant_pumping) not in {2, 3}:
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
                 heat_transport_variables.p_fw_coolant_pump_mw
                 + heat_transport_variables.p_blkt_coolant_pump_mw
@@ -849,7 +831,7 @@ class Power(Model):
             )
 
         # Liquid breeder also acts a coolant
-        if int(fwbs_variables.i_blkt_dual_coolant) in [1, 2]:
+        if int(fwbs_variables.i_blkt_dual_coolant) in {1, 2}:
             power_variables.p_fw_blkt_heat_deposited_mw = (
                 fwbs_variables.p_fw_nuclear_heat_total_mw
                 + fwbs_variables.p_fw_rad_total_mw
@@ -1044,9 +1026,7 @@ class Power(Model):
             )
 
             # Add to electric power requirement for cryogenic plant (MW)
-            heat_transport_variables.p_cryo_plant_electric_mw = (
-                heat_transport_variables.p_cryo_plant_electric_mw + p_tf_cryoal_cryo
-            )
+            heat_transport_variables.p_cryo_plant_electric_mw += p_tf_cryoal_cryo
 
         # Calculate cryo cooling requirement at 4.5K (kW)
         tfcoil_variables.cryo_cool_req = (
@@ -1753,7 +1733,7 @@ class Power(Model):
         """
         power_variables.qss = 4.3e-4 * coldmass
         if i_tf_sup == 1:
-            power_variables.qss = power_variables.qss + 2.0e0 * tfcryoarea
+            power_variables.qss += 2.0e0 * tfcryoarea
 
         #  Nuclear heating of TF coils (W) (zero if resistive)
         if fwbs_variables.inuclear == 0 and i_tf_sup == 1:
@@ -2383,9 +2363,7 @@ class Power(Model):
         xpwrmw = xpower / 0.9e0
 
         #  Total steady state AC power demand, MW
-        p_tf_electric_supplies_mw = (
-            p_tf_electric_supplies_mw + rpower / heat_transport_variables.etatf
-        )
+        p_tf_electric_supplies_mw += rpower / heat_transport_variables.etatf
         #  Total TF coil power conversion building floor area, m2
 
         # tftsp = tfcfsp

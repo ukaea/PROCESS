@@ -218,6 +218,7 @@ ignore =  [
     "RUF052",  # not dummy variables just private
     "RUF067",  # things in init
     "TRY003",  # put error messages in error class
+    "TRY400",   # Error instead of exception
     "FURB152",  # 3.14 != pi
     # should remove
     "ERA",  # remove commented out code
@@ -229,7 +230,30 @@ ignore =  [
     "FBT002",
     "FBT003",
     "PLR2004",
-    "PLW0603"
+    "PLW0603",
+    "TD",
+    "G004",
+
+    # urgent removal remainder
+    "E501",
+    "PLR6301",
+    # complexity
+    "C901",
+    "PLR0904",
+    "PLR0911",
+    "PLR0912",
+    "PLR0913",
+    "PLR0914",
+    "PLR0915",
+    "PLR0916",
+    "PLR0917",
+    "PLR1702",
+    # docs
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+
 ]
 
 [tool.ruff.lint.pep8-naming]

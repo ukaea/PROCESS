@@ -107,26 +107,21 @@ class Build(Model):
         omega = 2.0 * np.pi / n_tf_coils
 
         a = 0.5e0 * dx_tf_inboard_out_toroidal
-        try:
-            assert a < np.inf
-        except AssertionError:
-            logger.exception("a is inf. Kludging to 1e10.")
+
+        if np.isinf(a):
+            logger.error("a is inf. Kludging to 1e10.")
             a = 1e10
 
         b = dr_tf_outboard
-        try:
-            assert b < np.inf
-        except AssertionError:
-            logger.exception("b is inf. Kludging to 1e10.")
+        if np.isinf(b):
+            logger.error("b is inf. Kludging to 1e10.")
             b = 1e10
 
         c = dx_beam_duct + 2.0e0 * dx_beam_shield
 
         d = r_tf_outboard_mid - 0.5e0 * b
-        try:
-            assert d < np.inf
-        except AssertionError:
-            logger.exception("d is inf. Kludging to 1e10.")
+        if np.isinf(d):
+            logger.error("d is inf. Kludging to 1e10.")
             d = 1e10
 
         e = np.sqrt(a**2 + (d + b) ** 2)
@@ -1635,20 +1630,16 @@ class Build(Model):
             base = 0.01 * ripple_b_tf_plasma_edge_max / c1
             # Avoid potential negative or complex result: kludge base to be
             # small and positive if required
-            try:
-                assert base > 1e-6
-            except AssertionError:
-                logger.exception("base is <= 1e-6. Kludging to 1e-6.")
+            if base <= 1e-6:
+                logger.error("base is <= 1e-6. Kludging to 1e-6.")
                 base = 1e-6
 
             r_tf_outboard_midmin = (rmajor + rminor) / (
                 base ** (1.0 / (n_tf_coils - c2))
             )
 
-            try:
-                assert r_tf_outboard_midmin < np.inf
-            except AssertionError:
-                logger.exception(
+            if np.isinf(r_tf_outboard_midmin):
+                logger.error(
                     "r_tf_outboard_midmin is inf. Kludging to a large value instead."
                 )
                 r_tf_outboard_midmin = (rmajor + rminor) * 3

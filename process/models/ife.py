@@ -441,7 +441,7 @@ class IFE(Model):
             2.0 * (1.0 / 3.0) * np.pi * ife_variables.somtdr * ife_variables.somtdr * ddz
         )
 
-        ife_variables.blvol[1] = ife_variables.blvol[1] + dvol
+        ife_variables.blvol[1] += dvol
 
         # Ditto for bottom region...
 
@@ -481,7 +481,7 @@ class IFE(Model):
             2.0 * (1.0 / 3.0) * np.pi * ife_variables.sombdr * ife_variables.sombdr * ddz
         )
 
-        ife_variables.blvol[2] = ife_variables.blvol[2] + dvol
+        ife_variables.blvol[2] += dvol
 
         # Second void
         ife_variables.v2vol[0] = (
@@ -795,13 +795,12 @@ class IFE(Model):
         first_wall_variables.a_fw_total = (
             2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl5)
         )
-        first_wall_variables.a_fw_total = first_wall_variables.a_fw_total + np.pi * (
+        first_wall_variables.a_fw_total += np.pi * (
             ife_variables.r1 * ife_variables.r1
             - ife_variables.flirad * ife_variables.flirad
         )
-        first_wall_variables.a_fw_total = (
-            first_wall_variables.a_fw_total
-            + np.pi
+        first_wall_variables.a_fw_total += (
+            np.pi
             * ife_variables.r1
             * np.sqrt(
                 ife_variables.r1 * ife_variables.r1
@@ -1407,7 +1406,7 @@ class IFE(Model):
             phi = np.arctan(ife_variables.r1 / ife_variables.zu1)
             sang = 1.0 - np.cos(phi)
             phi = np.arctan(ife_variables.flirad / ife_variables.zu1)
-            sang = sang - (1.0 - np.cos(phi))
+            sang -= 1.0 - np.cos(phi)
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.p_fusion_total_mw
                 * 0.5
@@ -1724,15 +1723,9 @@ class IFE(Model):
         fwbs_variables.whtshld = 0.0
         for i in range(5):
             for j in range(3):
-                fwbs_variables.m_fw_total = (
-                    fwbs_variables.m_fw_total + ife_variables.fwmatm[j, i]
-                )
-                fwbs_variables.m_blkt_total = (
-                    fwbs_variables.m_blkt_total + ife_variables.blmatm[j, i]
-                )
-                fwbs_variables.whtshld = (
-                    fwbs_variables.whtshld + ife_variables.shmatm[j, i]
-                )
+                fwbs_variables.m_fw_total += ife_variables.fwmatm[j, i]
+                fwbs_variables.m_blkt_total += ife_variables.blmatm[j, i]
+                fwbs_variables.whtshld += ife_variables.shmatm[j, i]
 
         # Other masses
         fwbs_variables.m_blkt_beryllium = 0.0
@@ -1742,15 +1735,9 @@ class IFE(Model):
         fwbs_variables.m_blkt_lithium = 0.0
 
         for j in range(3):
-            fwbs_variables.m_blkt_steel_total = (
-                fwbs_variables.m_blkt_steel_total + ife_variables.blmatm[j, 1]
-            )
-            fwbs_variables.m_blkt_li2o = (
-                fwbs_variables.m_blkt_li2o + ife_variables.blmatm[j, 4]
-            )
-            fwbs_variables.m_blkt_lithium = (
-                fwbs_variables.m_blkt_lithium + ife_variables.blmatm[j, 8]
-            )
+            fwbs_variables.m_blkt_steel_total += ife_variables.blmatm[j, 1]
+            fwbs_variables.m_blkt_li2o += ife_variables.blmatm[j, 4]
+            fwbs_variables.m_blkt_lithium += ife_variables.blmatm[j, 8]
 
         # Total mass of FLiBe
         ife_variables.mflibe = ife_variables.chmatm[3]
@@ -1772,16 +1759,12 @@ class IFE(Model):
 
         #  Following assumes that use of FLiBe and Li2O are
         # mutually exclusive
-        ife_variables.mflibe = ife_variables.mflibe / (1.0 - ife_variables.fbreed)
-        fwbs_variables.m_blkt_li2o = fwbs_variables.m_blkt_li2o / (
-            1.0 - ife_variables.fbreed
-        )
-        fwbs_variables.m_blkt_lithium = fwbs_variables.m_blkt_lithium / (
-            1.0 - ife_variables.fbreed
-        )
+        ife_variables.mflibe /= 1.0 - ife_variables.fbreed
+        fwbs_variables.m_blkt_li2o /= 1.0 - ife_variables.fbreed
+        fwbs_variables.m_blkt_lithium /= 1.0 - ife_variables.fbreed
 
         # Blanket and first wall lifetimes (HYLIFE-II: = plant life)
-        if (ife_variables.ifetyp == 3) or (ife_variables.ifetyp == 4):
+        if ife_variables.ifetyp in {3, 4}:
             life = cost_variables.life_plant
         else:
             life = min(
@@ -1865,7 +1848,7 @@ class IFE(Model):
         # and provide the energy multiplication as though it were a
         # conventional blanket
 
-        if (ife_variables.ifetyp != 3) and (ife_variables.ifetyp != 4):
+        if ife_variables.ifetyp not in {3, 4}:
             heat_transport_variables.p_fw_div_heat_deposited_mw = (
                 0.24 * heat_transport_variables.p_plant_primary_heat_mw
             )

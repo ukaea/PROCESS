@@ -1114,14 +1114,11 @@ class PlasmaConfinementTransition:
         float
             The Hubbard 2012 L-I transition power threshold [MW]
 
-        Notes
-        -----
-
         References
         ----------
-            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
-            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+          Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+          doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
         """
         return 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65
@@ -1142,14 +1139,11 @@ class PlasmaConfinementTransition:
         float
             The Hubbard 2012 L-I transition power threshold [MW]
 
-        Notes
-        -----
-
         References
         ----------
-            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
-            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+          Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+          doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
         """
         return 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
@@ -1170,14 +1164,11 @@ class PlasmaConfinementTransition:
         float
             The Hubbard 2012 L-I transition power threshold [MW]
 
-        Notes
-        -----
-
         References
         ----------
-            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
-            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+          Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+          doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
         """
         return 2.11 * (plasma_current / 1e6) ** 0.7 * dnla20**0.47
@@ -1204,13 +1195,13 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - The scaling is given in the caption of Figure 6 in the reference.
+        - The scaling is given in the caption of Figure 6 in the reference.
 
         References
         ----------
-            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
-            Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017,
-            doi: https://doi.org/10.1088/1741-4326/aa8570.
+        - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
+          Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017,
+          doi: https://doi.org/10.1088/1741-4326/aa8570.
 
         """
         return 0.162 * dnla20 * a_plasma_surface * b_plasma_toroidal_on_axis**0.26

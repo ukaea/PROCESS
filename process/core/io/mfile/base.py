@@ -2,6 +2,7 @@
 PROCESS MFILE.DAT IO library
 """
 
+import copy
 import json
 import logging
 import re
@@ -145,7 +146,7 @@ class MFileDataDictionary(OrderedDict):
 class DefaultOrderedDict(OrderedDict):
     # Source: http://stackoverflow.com/a/6190500/562769
     def __init__(self, default_factory=None, *a, **kw):
-        if default_factory is not None and not isinstance(default_factory):
+        if default_factory is not None and not callable(default_factory):
             raise TypeError("first argument must be callable")
         OrderedDict.__init__(self, *a, **kw)
         self.default_factory = default_factory
@@ -167,14 +168,12 @@ class DefaultOrderedDict(OrderedDict):
         return type(self), args, None, None, self.items()
 
     def copy(self):
-        return self.__copy__()
+        return copy.copy(self)
 
     def __copy__(self):
         return type(self)(self.default_factory, self)
 
     def __deepcopy__(self, memo):
-        import copy
-
         return type(self)(self.default_factory, copy.deepcopy(self.items()))
 
     def __repr__(self):

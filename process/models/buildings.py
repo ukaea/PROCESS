@@ -253,10 +253,8 @@ class Buildings(Model):
         vrci = (
             buildings_variables.rbvfac * 2.0e0 * buildings_variables.wrbi * drbi * hrbi
         )
-        try:
-            assert vrci < np.inf
-        except AssertionError:
-            logger.exception("vrci is inf. Kludging to 1e10.")
+        if np.isinf(vrci):
+            logger.error("vrci is inf. Kludging to 1e10.")
             vrci = 1e10
 
         # External dimensions of reactor building (m)

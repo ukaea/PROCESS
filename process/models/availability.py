@@ -1098,8 +1098,8 @@ class Availability(Model):
         output : bool
             Indicates whether the output should be written to the output file or not.
 
-        Detailed Description:
-        ---------------------
+        Notes
+        -----
         - The method calculates the Displacements Per Atom (DPA) per Full Power Year (FPY) based on the fusion power.
         - It determines the lifetime of the first wall and blanket, divertor, and current drive.
         - It calculates the time for a maintenance cycle and the number of maintenance cycles over the plant's lifetime.
@@ -1109,21 +1109,13 @@ class Availability(Model):
         - Finally, it calculates the capacity factor and operational time of the plant.
 
         If `output` is True, the method writes detailed availability information to the output file.
+        - The method assumes certain constants and reference points for calculations.
+        - The method modifies the lifetimes of components to account for the calculated availability.
 
         References
         ----------
         - T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
           https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
-
-        Notes
-        -----
-        - The method assumes certain constants and reference points for calculations.
-        - The method modifies the lifetimes of components to account for the calculated availability.
-
-        Parameters
-        ----------
-        output: bool
-           indicate whether output should be written to the output file, or no
         """
         ref_powfmw = 2.0e3  # (MW) fusion power for EU-DEMO
         f_scale = pv.p_fusion_total_mw / ref_powfmw

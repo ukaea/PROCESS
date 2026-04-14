@@ -1676,24 +1676,22 @@ class BlanketLibrary(Model):
         Uses middle value of input and output temperatures of Liquid Metal Breeder/Coolant
         Curently have PbLi but can expand with e.g., Lithium
 
-
-
-        References
-        ----------
-             [Mal1995]   Malang and Mattas (1995), Comparison of lithium and the eutectic
-                         lead-lithium alloy, two candidate liquid metal breeder materials
-                         for self-cooled blankets, Fusion Engineering and Design 27, 399-406.
-
-             [Mas2008]   Mas de les Valles et al. (2008), Lead-lithium material database for
-                         nuclear fusion technology, Journal of Nuclear Materials, Vol. 376(6).
-
-             [Mar2019]   Martelli et al. (2019), Literature review of lead-lithium
-                         thermophysical properties, Fusion Engineering and Design, 138, 183-195.
-
         Parameters
         ----------
         output: bool
              (Default value = False)
+
+        References
+        ----------
+        [Mal1995]   Malang and Mattas (1995), Comparison of lithium and the eutectic
+                    lead-lithium alloy, two candidate liquid metal breeder materials
+                    for self-cooled blankets, Fusion Engineering and Design 27, 399-406.
+
+        [Mas2008]   Mas de les Valles et al. (2008), Lead-lithium material database for
+                    nuclear fusion technology, Journal of Nuclear Materials, Vol. 376(6).
+
+        [Mar2019]   Martelli et al. (2019), Literature review of lead-lithium
+                    thermophysical properties, Fusion Engineering and Design, 138, 183-195.
         """
         # Use mid temp
         if fwbs_variables.inlet_temp_liq == fwbs_variables.outlet_temp_liq:

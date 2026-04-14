@@ -151,10 +151,8 @@ class Structure(Model):
         #  Intercoil support between TF coils to react overturning moment
         #  (scaled to 1990 ITER fit)
         aintmass = 1.4e6 * (ai / 2.2e7) * b0 / 4.85e0 * tf_h_width**2 / 50.0e0
-        try:
-            assert aintmass < np.inf
-        except AssertionError:
-            logger.exception("aintmass is inf. Kludging to 1e10.")
+        if np.isinf(aintmass):
+            logger.error("aintmass is inf. Kludging to 1e10.")
             aintmass = 1e10
 
         #  Total mass of coils plus support plus vacuum vessel + cryostat

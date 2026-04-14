@@ -564,7 +564,7 @@ class Stellarator(Model):
         #  Shield volume
         #  Uses fvolsi, fwbs_variables.fvolso as area coverage factors
 
-        r1 = r1 + 0.5e0 * (
+        r1 += 0.5e0 * (
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
         build_variables.a_shld_total_surface = (
@@ -934,10 +934,8 @@ class Stellarator(Model):
                     pnucbzi + pnucbzo
                 ) * fwbs_variables.f_p_blkt_multiplication
 
-                fwbs_variables.p_blkt_multiplication_mw = (
-                    fwbs_variables.p_blkt_multiplication_mw
-                    + (pnucbzi + pnucbzo)
-                    * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
+                fwbs_variables.p_blkt_multiplication_mw += (pnucbzi + pnucbzo) * (
+                    fwbs_variables.f_p_blkt_multiplication - 1.0e0
                 )
 
                 #  Calculation of shield and divertor powers
@@ -1043,9 +1041,7 @@ class Stellarator(Model):
         #  Blanket mass, excluding coolant
 
         if fwbs_variables.blktmodel == 0:
-            if (fwbs_variables.blkttype == 1) or (
-                fwbs_variables.blkttype == 2
-            ):  # liquid breeder (WCLL or HCLL)
+            if fwbs_variables.blkttype in {1, 2}:  # liquid breeder (WCLL or HCLL)
                 fwbs_variables.wtbllipb = (
                     fwbs_variables.vol_blkt_total * fwbs_variables.fbllipb * 9400.0e0
                 )
@@ -1153,9 +1149,8 @@ class Stellarator(Model):
                     * fwbs_variables.fblhebpi
                 )
             )
-            fwbs_variables.f_a_blkt_cooling_channels = (
-                fwbs_variables.f_a_blkt_cooling_channels
-                + fwbs_variables.vol_blkt_outboard
+            fwbs_variables.f_a_blkt_cooling_channels += (
+                fwbs_variables.vol_blkt_outboard
                 / fwbs_variables.vol_blkt_total
                 * (  # outboard portion
                     (build_variables.blbuoth / build_variables.dr_blkt_outboard)
@@ -1179,10 +1174,8 @@ class Stellarator(Model):
         #  in the blanket.
 
         if fwbs_variables.blktmodel == 0:
-            coolvol = (
-                coolvol
-                + fwbs_variables.vol_blkt_total
-                * fwbs_variables.f_a_blkt_cooling_channels
+            coolvol += (
+                fwbs_variables.vol_blkt_total * fwbs_variables.f_a_blkt_cooling_channels
             )
 
         # Shield mass
@@ -1192,7 +1185,7 @@ class Stellarator(Model):
             * (1.0e0 - fwbs_variables.vfshld)
         )
 
-        coolvol = coolvol + fwbs_variables.vol_shld_total * fwbs_variables.vfshld
+        coolvol += fwbs_variables.vol_shld_total * fwbs_variables.vfshld
 
         #  Penetration shield (set = internal shield)
 
@@ -1212,9 +1205,8 @@ class Stellarator(Model):
 
             #  Surface areas adjacent to plasma
 
-            coolvol = (
-                coolvol
-                + first_wall_variables.a_fw_total
+            coolvol += (
+                first_wall_variables.a_fw_total
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 / 2.0e0
                 * fwbs_variables.fwclfr
@@ -2217,9 +2209,8 @@ class Stellarator(Model):
         )  # To avoid negative heating power. This line is VERY important
 
         if physics_variables.i_plasma_ignited == 0:
-            powht = (
-                powht + current_drive_variables.p_hcd_injected_total_mw
-            )  # if not ignited add the auxiliary power
+            # if not ignited add the auxiliary power
+            powht += current_drive_variables.p_hcd_injected_total_mw
 
         # Here the implementation sometimes leaves the accessible regime when p_plasma_rad_mw> powht which is unphysical and
         # is not taken care of by the rad module. We restrict the radiation power here by the heating power:
@@ -2232,9 +2223,7 @@ class Stellarator(Model):
         physics_variables.p_plasma_separatrix_mw = powht - physics_variables.psolradmw
 
         # Add SOL Radiation to total
-        physics_variables.p_plasma_rad_mw = (
-            physics_variables.p_plasma_rad_mw + physics_variables.psolradmw
-        )
+        physics_variables.p_plasma_rad_mw += physics_variables.psolradmw
 
         #  The following line is unphysical, but prevents -ve sqrt argument
         #  Should be obsolete if constraint eqn 17 is turned on (but beware -

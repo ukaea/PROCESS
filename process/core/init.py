@@ -103,9 +103,8 @@ def init_process(data_structure: DataStructure):
 
 
 def get_git_summary() -> tuple[str, str]:
+    directory = Path(process.__file__).parent
     try:
-        directory = Path(process.__file__).parent
-
         git_branch = (
             subprocess
             .run(
@@ -132,9 +131,10 @@ def get_git_summary() -> tuple[str, str]:
             .strip()
         )
 
-        return git_branch, git_tag
     except (subprocess.CalledProcessError, AttributeError):
         return "", ""
+    else:
+        return git_branch, git_tag
 
 
 def run_summary():

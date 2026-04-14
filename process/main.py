@@ -40,7 +40,6 @@ Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
 
 import logging
-import os
 from pathlib import Path
 from typing import Protocol
 
@@ -111,8 +110,6 @@ from process.models.tfcoil.resistive import (
 from process.models.tfcoil.superconducting import SuperconductingTFCoil
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
-
-os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(Path(__file__).parent)
 
 PACKAGE_LOGGING = True
 """Can be set False to disable package-level logging, e.g. in the test suite"""

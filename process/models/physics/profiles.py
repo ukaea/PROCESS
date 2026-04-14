@@ -347,10 +347,6 @@ class TeProfile(Profile):
         the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
         This function for the average temperature can then be re-arranged to calculate the central plasma temeprature T_0 / tcore.
 
-        References
-        ----------
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
-
         Parameters
         ----------
         radius_plasma_pedestal_temp_norm : float
@@ -370,6 +366,10 @@ class TeProfile(Profile):
         -------
         float
             Core temperature.
+
+        References
+        ----------
+        Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
         """
         #  Calculate core temperature
 
