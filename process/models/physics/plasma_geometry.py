@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class PlasmaShapeModelType(IntEnum):
     """Enum for plasma shape model types."""
 
-    PROCESS_ORIGINAL = (0, "Process Original Double Arc")
+    PROCESS_ORIGINAL = (0, "PROCESS Original Double Arc")
     SAUTER = (1, "Sauter")
 
     def __new__(cls, value, full_name):
@@ -368,10 +368,12 @@ class PlasmaGeom:
             "(i_plasma_shape)",
             physics_variables.i_plasma_shape,
         )
-        if physics_variables.i_plasma_shape == 0:
-            po.osubhd(self.outfile, "Classic PROCESS plasma shape model is used :")
-        elif physics_variables.i_plasma_shape == 1:
-            po.osubhd(self.outfile, "Sauter plasma shape model is used :")
+
+        po.osubhd(
+            self.outfile,
+            f"{PlasmaShapeModelType(physics_variables.i_plasma_shape).full_name} plasma shape model is used :",
+        )
+
         po.ovarrf(self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor)
         po.ovarrf(
             self.outfile,
