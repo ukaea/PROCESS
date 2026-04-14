@@ -5195,6 +5195,12 @@ class DetailedPhysics(Model):
         # Resistivites
         # ============================
 
+        physics_variables.res_plasma_fuel_spitzer_vol_avg = self.calculate_spitzer_resistivity(
+            n_charge=1,
+            electron_ion_coulomb_log=physics_variables.plasma_coulomb_log_electron_deuteron_vol_avg,
+            temp_plasma_electron_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+        )
+
         physics_variables.res_plasma_fuel_spitzer_profile = self.calculate_spitzer_resistivity(
             n_charge=1,
             electron_ion_coulomb_log=physics_variables.plasma_coulomb_log_electron_deuteron_profile,
@@ -6125,6 +6131,13 @@ class DetailedPhysics(Model):
             )
 
         po.osubhd(self.outfile, "Resistivities:")
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma fuel Spitzer resistivity (Ohm m)",
+            "(res_plasma_fuel_spitzer_vol_avg)",
+            physics_variables.res_plasma_fuel_spitzer_vol_avg,
+        )
 
         for i in range(len(physics_variables.res_plasma_fuel_spitzer_profile)):
             po.ovarre(

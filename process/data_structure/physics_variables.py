@@ -1453,6 +1453,9 @@ len_plasma_electron_alpha_thermal_mean_free_path_vol_avg: float = None
 res_plasma_fuel_spitzer_profile: list[float] = None
 """Profile of plasma Spitzer resistivity due to fuel ions (ohm m)"""
 
+res_plasma_fuel_spitzer_vol_avg: float = None
+"""Volume averaged plasma Spitzer resistivity due to fuel ions (ohm m)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1837,7 +1840,8 @@ def init_physics_variables():
         len_plasma_electron_triton_mean_free_path_vol_avg, \
         len_plasma_electron_alpha_thermal_mean_free_path_profile, \
         len_plasma_electron_alpha_thermal_mean_free_path_vol_avg, \
-        res_plasma_fuel_spitzer_profile
+        res_plasma_fuel_spitzer_profile, \
+        res_plasma_fuel_spitzer_vol_avg
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -2164,3 +2168,4 @@ def init_physics_variables():
     len_plasma_electron_alpha_thermal_mean_free_path_profile = []
     len_plasma_electron_alpha_thermal_mean_free_path_vol_avg = 0.0
     res_plasma_fuel_spitzer_profile = []
+    res_plasma_fuel_spitzer_vol_avg = 0.0
