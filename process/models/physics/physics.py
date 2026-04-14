@@ -1815,6 +1815,14 @@ class Physics(Model):
                     physics_variables.kappa,
                     "OP ",
                 )
+            elif physics_variables.i_plasma_geometry == 12:
+                po.ovarrf(
+                    self.outfile,
+                    "Elongation, X-point (calculated from aspect ratio via scaling iva JETTO)",
+                    "(kappa)",
+                    physics_variables.kappa,
+                    "OP ",
+                )
             else:
                 raise ProcessValueError(
                     "Illegal value of i_plasma_geometry",
