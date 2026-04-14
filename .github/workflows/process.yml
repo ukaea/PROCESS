@@ -116,6 +116,27 @@ jobs:
       - name: Run Hatch linting tasks
         uses: Fusion-Power-Plant-Framework/fppf-actions/hatch-lint@c6af22fc8d00be67cca53a61177301462f499fb2
 
+  improve_quality_check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: [pre-commit-quality-check]
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: Setup python and hatch
+        uses: Fusion-Power-Plant-Framework/fppf-actions/setup-hatch@c6af22fc8d00be67cca53a61177301462f499fb2
+        with:
+          python-version: ${{ env.python-version }}
+
+      - name: Get changed files
+        id: changes
+        run: |
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          git diff --name-only origin/${{ github.base_ref }} >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Run improvement lint
+        run: hatch run lint:fmt_extra {{ steps.changes.outputs.files }}
+
   tracking:
     # update tracker to include the MFILEs created by the run-tracking-inputs job
     concurrency:
