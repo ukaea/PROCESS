@@ -3590,13 +3590,59 @@ def test_calculate_debye_length_parametrized(temp_keV, nd, expected):
     assert result == pytest.approx(expected, rel=1e-12)
 
 
-def test_detailed_physics_run_computes_profiles():
+def test_detailed_physics_run_computes_profiles(monkeypatch):
     # Minimal plasma profile
     plasma = PlasmaProfile()
     plasma.teprofile.profile_x = np.array([0.0, 0.5, 1.0])
     plasma.teprofile.profile_y = np.array([1.0, 2.0, 3.0])  # keV
     plasma.neprofile.profile_x = plasma.teprofile.profile_x
     plasma.neprofile.profile_y = np.array([1.0e19, 2.0e19, 3.0e19])  # m^-3
+
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_electron_vol_avg_kev",
+        np.mean(plasma.teprofile.profile_y),
+    )
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_electrons_vol_avg",
+        np.mean(plasma.neprofile.profile_y),
+    )
+    monkeypatch.setattr(
+        physics_variables,
+        "b_plasma_toroidal_profile",
+        np.ones(2 * len(plasma.neprofile.profile_y)) * 5.0,
+    )
+    monkeypatch.setattr(
+        physics_variables,
+        "b_plasma_toroidal_on_axis",
+        5.0,
+    )
+    monkeypatch.setattr(
+        physics_variables,
+        "f_temp_plasma_ion_electron",
+        1.0,
+    )
+    monkeypatch.setattr(
+        physics_variables,
+        "f_plasma_fuel_deuterium",
+        0.5,
+    )
+    monkeypatch.setattr(
+        physics_variables,
+        "f_plasma_fuel_tritium",
+        0.5,
+    )
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_fuel_ions_vol_avg",
+        np.mean(plasma.neprofile.profile_y),
+    )
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_alphas_vol_avg",
+        np.mean(plasma.neprofile.profile_y) * 0.1,
+    )
 
     # Set global physics variables required by DetailedPhysics.run
     physics_variables.temp_plasma_electron_vol_avg_kev = float(
