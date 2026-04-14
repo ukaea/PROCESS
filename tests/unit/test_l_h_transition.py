@@ -17,6 +17,7 @@ from process.models.physics.physics import (
     PlasmaBeta,
     PlasmaInductance,
 )
+from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 
@@ -43,6 +44,7 @@ def physics():
         PlasmaExhaust(),
         PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
         PlasmaConfinementTransition(),
+        plasma_geometry=PlasmaGeom(),
     )
 
 

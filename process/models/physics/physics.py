@@ -35,6 +35,7 @@ from process.models.physics.confinement_time import (
 from process.models.physics.density_limit import PlasmaDensityLimit
 from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.l_h_transition import PlasmaConfinementTransition
+from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.profiles import PlasmaProfileShapeType
 
 if TYPE_CHECKING:
@@ -188,6 +189,7 @@ class Physics(Model):
         plasma_current: PlasmaCurrent,
         plasma_fields: PlasmaFields,
         plasma_dia_current: PlasmaDiamagneticCurrent,
+        plasma_geometry: PlasmaGeom,
     ):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -203,6 +205,7 @@ class Physics(Model):
         self.current = plasma_current
         self.fields = plasma_fields
         self.dia_current = plasma_dia_current
+        self.geometry = plasma_geometry
 
     def output(self):
         self.calculate_effective_charge_ionisation_profiles()
@@ -1693,226 +1696,9 @@ class Physics(Model):
             )
         )
 
-        po.oheadr(self.outfile, "Plasma")
+        self.geometry.output()
 
         if stellarator_variables.istell == 0:
-            if divertor_variables.n_divertors == 0:
-                po.ocmmnt(self.outfile, "Plasma configuration = limiter")
-            elif divertor_variables.n_divertors == 1:
-                po.ocmmnt(self.outfile, "Plasma configuration = single null divertor")
-            elif divertor_variables.n_divertors == 2:
-                po.ocmmnt(self.outfile, "Plasma configuration = double null divertor")
-            else:
-                raise ProcessValueError(
-                    "Illegal value of n_divertors",
-                    n_divertors=divertor_variables.n_divertors,
-                )
-        else:
-            po.ocmmnt(self.outfile, "Plasma configuration = stellarator")
-
-        if stellarator_variables.istell == 0:
-            if physics_variables.itart == 0:
-                physics_variables.itart_r = physics_variables.itart
-                po.ovarin(
-                    self.outfile,
-                    "Tokamak aspect ratio = Conventional, itart = 0",
-                    "(itart)",
-                    physics_variables.itart_r,
-                )
-            elif physics_variables.itart == 1:
-                physics_variables.itart_r = physics_variables.itart
-                po.ovarin(
-                    self.outfile,
-                    "Tokamak aspect ratio = Spherical, itart = 1",
-                    "(itart)",
-                    physics_variables.itart_r,
-                )
-
-        po.osubhd(self.outfile, "Plasma Geometry :")
-        po.ovarin(
-            self.outfile,
-            "Plasma shaping model",
-            "(i_plasma_shape)",
-            physics_variables.i_plasma_shape,
-        )
-        if physics_variables.i_plasma_shape == 0:
-            po.osubhd(self.outfile, "Classic PROCESS plasma shape model is used :")
-        elif physics_variables.i_plasma_shape == 1:
-            po.osubhd(self.outfile, "Sauter plasma shape model is used :")
-        po.ovarrf(self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor)
-        po.ovarrf(
-            self.outfile,
-            "Minor radius (m)",
-            "(rminor)",
-            physics_variables.rminor,
-            "OP ",
-        )
-        po.ovarrf(self.outfile, "Aspect ratio", "(aspect)", physics_variables.aspect)
-        po.ovarrf(
-            self.outfile,
-            "Plasma squareness",
-            "(plasma_square)",
-            physics_variables.plasma_square,
-            "IP",
-        )
-        if stellarator_variables.istell == 0:
-            if physics_variables.i_plasma_geometry in [0, 6, 8]:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (input value used)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "IP ",
-                )
-            elif physics_variables.i_plasma_geometry == 1:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (TART scaling)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            elif physics_variables.i_plasma_geometry in [2, 3]:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (Zohm scaling)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Zohm scaling adjustment factor",
-                    "(fkzohm)",
-                    physics_variables.fkzohm,
-                )
-            elif physics_variables.i_plasma_geometry in [4, 5, 7]:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (calculated from kappa95)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            elif physics_variables.i_plasma_geometry == 9:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (calculated from aspect ratio and li(3))",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            elif physics_variables.i_plasma_geometry == 10:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (calculated from aspect ratio and stability margin)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            elif physics_variables.i_plasma_geometry == 11:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (calculated from aspect ratio via Menard 2016)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            else:
-                raise ProcessValueError(
-                    "Illegal value of i_plasma_geometry",
-                    i_plasma_geometry=physics_variables.i_plasma_geometry,
-                )
-
-            if physics_variables.i_plasma_geometry in [4, 5, 7]:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, 95% surface (input value used)",
-                    "(kappa95)",
-                    physics_variables.kappa95,
-                    "IP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, 95% surface (calculated from kappa)",
-                    "(kappa95)",
-                    physics_variables.kappa95,
-                    "OP ",
-                )
-
-            if physics_variables.i_plasma_geometry in [0, 2, 6, 8, 9, 10, 11]:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, X-point (input value used)",
-                    "(triang)",
-                    physics_variables.triang,
-                    "IP ",
-                )
-            elif physics_variables.i_plasma_geometry == 1:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, X-point (TART scaling)",
-                    "(triang)",
-                    physics_variables.triang,
-                    "OP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, X-point (calculated from triang95)",
-                    "(triang)",
-                    physics_variables.triang,
-                    "OP ",
-                )
-
-            if physics_variables.i_plasma_geometry in [3, 4, 5, 7]:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, 95% surface (input value used)",
-                    "(triang95)",
-                    physics_variables.triang95,
-                    "IP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, 95% surface (calculated from triang)",
-                    "(triang95)",
-                    physics_variables.triang95,
-                    "OP ",
-                )
-
-            po.ovarrf(
-                self.outfile,
-                "Plasma poloidal perimeter (m)",
-                "(len_plasma_poloidal)",
-                physics_variables.len_plasma_poloidal,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Plasma cross-sectional area (m2)",
-                "(a_plasma_poloidal)",
-                physics_variables.a_plasma_poloidal,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma surface area (m2)",
-                "(a_plasma_surface)",
-                physics_variables.a_plasma_surface,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Plasma volume (m3)",
-                "(vol_plasma)",
-                physics_variables.vol_plasma,
-                "OP ",
-            )
-
             po.osubhd(self.outfile, "Current and Field :")
 
             if stellarator_variables.istell == 0:

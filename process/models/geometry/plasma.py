@@ -7,6 +7,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from process.models.physics.plasma_geometry import PlasmaShapeModelType
+
 
 @dataclass
 class PlasmaGeometry:
@@ -59,7 +61,7 @@ def plasma_geometry(
     """
 
     # Original PROCESS double arc plasma shape
-    if i_plasma_shape == 0:
+    if i_plasma_shape == PlasmaShapeModelType.PROCESS_ORIGINAL:
         x1 = (2.0 * rmajor * (1.0 + triang) - rminor * (triang**2 + kappa**2 - 1.0)) / (
             2.0 * (1.0 + triang)
         )
@@ -100,7 +102,7 @@ def plasma_geometry(
         return PlasmaGeometry(rs=rs, zs=zs, kappa=kappa)
 
     # Sauter plasma shape
-    if i_plasma_shape == 1:
+    if i_plasma_shape == PlasmaShapeModelType.SAUTER:
         x = np.linspace(-np.pi, np.pi, 256)
 
         # Sauter

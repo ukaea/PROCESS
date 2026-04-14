@@ -658,6 +658,7 @@ class Models:
             plasma_current=self.plasma_current,
             plasma_fields=self.plasma_fields,
             plasma_dia_current=self.plasma_dia_current,
+            plasma_geometry=self.plasma_geom,
         )
         self.physics_detailed = DetailedPhysics(
             plasma_profile=self.plasma_profile,

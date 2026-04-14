@@ -37,6 +37,7 @@ from process.models.physics.physics import (
 )
 from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagneticCurrent
 from process.models.physics.plasma_fields import PlasmaFields
+from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 
@@ -67,6 +68,7 @@ def physics():
         PlasmaCurrent(),
         PlasmaFields(),
         plasma_dia_current=PlasmaDiamagneticCurrent(),
+        plasma_geometry=PlasmaGeom(),
     )
 
 
