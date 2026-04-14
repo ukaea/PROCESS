@@ -522,133 +522,94 @@ class PlasmaGeom:
             physics_variables.plasma_square,
             "IP",
         )
+        po.oblnkl(self.outfile)
+
         if stellarator_variables.istell == 0:
-            if physics_variables.i_plasma_geometry in {0, 6, 8}:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (input value used)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "IP ",
-                )
-            elif physics_variables.i_plasma_geometry == 1:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (TART scaling)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            elif physics_variables.i_plasma_geometry in {2, 3}:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (Zohm scaling)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
+            po.ocmmnt(
+                self.outfile,
+                f"X-Point Elongation set from: {PlasmaGeometryModelType(physics_variables.i_plasma_geometry).kappa_model.description}",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Elongation, X-point (κ)",
+                "(kappa)",
+                physics_variables.kappa,
+                "IP"
+                if PlasmaGeometryModelType(
+                    physics_variables.i_plasma_geometry
+                ).kappa_model
+                == PlasmaGeometryModels.USER_INPUT
+                else "OP",
+            )
+            if (
+                PlasmaGeometryModelType(physics_variables.i_plasma_geometry).kappa_model
+                == PlasmaGeometryModels.ZOHM_ITER
+            ):
                 po.ovarrf(
                     self.outfile,
                     "Zohm scaling adjustment factor",
                     "(fkzohm)",
                     physics_variables.fkzohm,
                 )
-            elif physics_variables.i_plasma_geometry in {4, 5, 7}:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (calculated from kappa95)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            elif physics_variables.i_plasma_geometry == 9:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (calculated from aspect ratio and li(3))",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            elif physics_variables.i_plasma_geometry == 10:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (calculated from aspect ratio and stability margin)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            elif physics_variables.i_plasma_geometry == 11:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, X-point (calculated from aspect ratio via Menard 2016)",
-                    "(kappa)",
-                    physics_variables.kappa,
-                    "OP ",
-                )
-            else:
-                raise ProcessValueError(
-                    "Illegal value of i_plasma_geometry",
-                    i_plasma_geometry=physics_variables.i_plasma_geometry,
-                )
 
-            if physics_variables.i_plasma_geometry in {4, 5, 7}:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, 95% surface (input value used)",
-                    "(kappa95)",
-                    physics_variables.kappa95,
-                    "IP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Elongation, 95% surface (calculated from kappa)",
-                    "(kappa95)",
-                    physics_variables.kappa95,
-                    "OP ",
-                )
+            po.oblnkl(self.outfile)
 
-            if physics_variables.i_plasma_geometry in {0, 2, 6, 8, 9, 10, 11}:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, X-point (input value used)",
-                    "(triang)",
-                    physics_variables.triang,
-                    "IP ",
-                )
-            elif physics_variables.i_plasma_geometry == 1:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, X-point (TART scaling)",
-                    "(triang)",
-                    physics_variables.triang,
-                    "OP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, X-point (calculated from triang95)",
-                    "(triang)",
-                    physics_variables.triang,
-                    "OP ",
-                )
+            po.ocmmnt(
+                self.outfile,
+                f"95% Elongation set from: {PlasmaGeometryModelType(physics_variables.i_plasma_geometry).kappa95_model.description}",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Elongation, 95% surface (κ₉₅)",
+                "(kappa95)",
+                physics_variables.kappa95,
+                "IP"
+                if PlasmaGeometryModelType(
+                    physics_variables.i_plasma_geometry
+                ).kappa95_model
+                == PlasmaGeometryModels.USER_INPUT
+                else "OP",
+            )
 
-            if physics_variables.i_plasma_geometry in {3, 4, 5, 7}:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, 95% surface (input value used)",
-                    "(triang95)",
-                    physics_variables.triang95,
-                    "IP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Triangularity, 95% surface (calculated from triang)",
-                    "(triang95)",
-                    physics_variables.triang95,
-                    "OP ",
-                )
+            po.oblnkl(self.outfile)
+
+            po.ocmmnt(
+                self.outfile,
+                f"X-Point Triangularity set from: {PlasmaGeometryModelType(physics_variables.i_plasma_geometry).triang_model.description}",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Triangularity, X-point (δ)",
+                "(triang)",
+                physics_variables.triang,
+                "IP "
+                if PlasmaGeometryModelType(
+                    physics_variables.i_plasma_geometry
+                ).triang_model
+                == PlasmaGeometryModels.USER_INPUT
+                else "OP",
+            )
+            po.oblnkl(self.outfile)
+            po.ocmmnt(
+                self.outfile,
+                f"95% Triangularity set from: {PlasmaGeometryModelType(physics_variables.i_plasma_geometry).triang95_model.description}",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Triangularity, 95% surface (δ₉₅)",
+                "(triang95)",
+                physics_variables.triang95,
+                "IP "
+                if PlasmaGeometryModelType(
+                    physics_variables.i_plasma_geometry
+                ).triang95_model
+                == PlasmaGeometryModels.USER_INPUT
+                else "OP",
+            )
+            po.oblnkl(self.outfile)
 
             po.ovarrf(
                 self.outfile,
