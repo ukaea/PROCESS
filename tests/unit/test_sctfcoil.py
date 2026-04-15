@@ -805,7 +805,7 @@ def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
     :type tfwpgeomparam: tfwpgeomparam
     """
 
-    (TFWPGeometry) = sctfcoil.superconducting_tf_wp_geometry(
+    tfwp_geometry = sctfcoil.superconducting_tf_wp_geometry(
         i_tf_wp_geom=tfwpgeomparam.i_tf_wp_geom,
         r_tf_inboard_in=tfwpgeomparam.r_tf_inboard_in,
         dr_tf_nose_case=tfwpgeomparam.dr_tf_nose_case,
