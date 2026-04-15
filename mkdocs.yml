@@ -25,6 +25,7 @@ nav:
           - Usage: development/git-usage.md
           - Pre-commit: development/pre-commit.md
           - Continuous Integration: development/ci-guide.md
+          - Versioning: development/versioning.md
       - Maintenance:
           - Testing: development/testing.md
           - Debugging: development/debugging.md
@@ -33,7 +34,6 @@ nav:
           - Python Optimisation and Numba: development/numba.md
       - Style:
           - Standards: development/standards.md
-          - Versioning: development/versioning.md
   - Models:
       - Physics Models:
           - Plasma:
