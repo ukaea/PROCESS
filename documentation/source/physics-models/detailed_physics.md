@@ -122,12 +122,25 @@ $$
 
 ### Electron-ion collision time | `calculate_electron_ion_collision_time()`
 
-For $T_\text{e}$ in eV
+For $T_\text{e}$ in eV.
+
+This method takes the ion density $n_i$ (`nd_plasma_ions`). For a quasi-neutral single-species plasma,
+
+$$
+n_{\text{e}} = Z_i n_i
+$$
+
+so the standard form written in terms of electron density,
 
 $$
 \tau_{\text{ei}} = \frac{12 \pi^{\frac{3}{2}}\epsilon_0^2 \sqrt{m_{\text{e}}}T_{\text{e}}^{\frac{3}{2}}}{\sqrt{2} Z_i^2 \ln \Lambda_{\text{ei}} \text{e}^4 n_{\text{e}}}
 $$
 
+is equivalent to the form used with ion density,
+
+$$
+\tau_{\text{ei}} = \frac{12 \pi^{\frac{3}{2}}\epsilon_0^2 \sqrt{m_{\text{e}}}T_{\text{e}}^{\frac{3}{2}}}{\sqrt{2} Z_i^3 \ln \Lambda_{\text{ei}} \text{e}^4 n_i}
+$$
 --------------------
 
 ### Spitzer ion slowing down time | `calculate_spitzer_ion_slowing_down_time()`
@@ -135,7 +148,7 @@ $$
 For $T_\text{e}$ in eV
 
 $$
-\tau_{\text{spitzer}} = \frac{3 (2\pi)^{\frac{3}{2}}\epsilon_0^2 m_{\text{i}} T_{\text{e}}^{\frac{3}{2}}}{n_{\text{e}} Z_i^2 \ln \Lambda_{\text{ei}} \text{e}^4 n_{\text{e}}}
+\tau_{\text{spitzer}} = \frac{3 (2\pi)^{\frac{3}{2}}\epsilon_0^2 \sqrt{m_{\text{e}}} m_{\text{i}} T_{\text{e}}^{\frac{3}{2}}}{Z_i^2 \ln \Lambda_{\text{ei}} \text{e}^4 n_{\text{e}}}
 $$
 
 --------------------

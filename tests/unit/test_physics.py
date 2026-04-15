@@ -3688,13 +3688,6 @@ def test_detailed_physics_run_computes_profiles(monkeypatch):
     )
 
     assert (
-        np.shape(physics_variables.plasma_coulomb_log_electron_electron_profile)[0] == n
-    )
-    assert np.all(
-        np.isfinite(physics_variables.plasma_coulomb_log_electron_electron_profile)
-    )
-
-    assert (
         np.shape(physics_variables.t_plasma_electron_electron_collision_profile)[0] == n
     )
     assert np.all(

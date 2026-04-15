@@ -1148,10 +1148,6 @@ f_res_plasma_neo: float = None
 res_plasma: float = None
 """plasma resistance (ohm)"""
 
-rho_plasma_spitzer_classical_profile: list[float] = None
-"""Profile of plasma Spitzer classical resistivity (ohm m)"""
-
-
 t_plasma_res_diffusion: float = None
 """plasma current resistive diffusion time (s)"""
 
