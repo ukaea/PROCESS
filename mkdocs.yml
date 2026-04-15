@@ -33,7 +33,7 @@ nav:
           - Python Optimisation and Numba: development/numba.md
       - Style:
           - Standards: development/standards.md
-              # - Versioning: development/versioning.md
+          - Versioning: development/versioning.md
   - Models:
       - Physics Models:
           - Plasma:
