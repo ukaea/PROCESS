@@ -514,7 +514,7 @@ class Vacuum(Model):
         #  for continuous operation with regeneration.
 
         if self.data.vacuum.i_vacuum_pump_type == 1:
-            pumpn = pumpn * 2.0e0
+            pumpn *= 2.0e0
 
         #  Information for costing routine
 
