@@ -816,47 +816,47 @@ def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
         dx_tf_wp_insertion_gap=tfwpgeomparam.dx_tf_wp_insertion_gap,
     )
 
-    assert TFWPGeometry.dx_tf_wp_primary_toroidal == pytest.approx(
+    assert tfwp_geometry.dx_tf_wp_primary_toroidal == pytest.approx(
         tfwpgeomparam.expected_dx_tf_wp_primary_toroidal
     )
 
-    assert TFWPGeometry.dx_tf_wp_secondary_toroidal == pytest.approx(
+    assert tfwp_geometry.dx_tf_wp_secondary_toroidal == pytest.approx(
         tfwpgeomparam.expected_dx_tf_wp_secondary_toroidal
     )
 
-    assert TFWPGeometry.a_tf_wp_with_insulation == pytest.approx(
+    assert tfwp_geometry.a_tf_wp_with_insulation == pytest.approx(
         tfwpgeomparam.expected_a_tf_wp_with_insulation
     )
 
-    assert TFWPGeometry.a_tf_wp_no_insulation == pytest.approx(
+    assert tfwp_geometry.a_tf_wp_no_insulation == pytest.approx(
         tfwpgeomparam.expected_a_tf_wp_no_insulation
     )
 
-    assert TFWPGeometry.dr_tf_wp_no_insulation == pytest.approx(
+    assert tfwp_geometry.dr_tf_wp_no_insulation == pytest.approx(
         tfwpgeomparam.expected_dr_tf_wp_no_insulation
     )
 
-    assert TFWPGeometry.r_tf_wp_inboard_inner == pytest.approx(
+    assert tfwp_geometry.r_tf_wp_inboard_inner == pytest.approx(
         tfwpgeomparam.expected_r_tf_wp_inboard_inner
     )
 
-    assert TFWPGeometry.r_tf_wp_inboard_outer == pytest.approx(
+    assert tfwp_geometry.r_tf_wp_inboard_outer == pytest.approx(
         tfwpgeomparam.expected_r_tf_wp_inboard_outer
     )
 
-    assert TFWPGeometry.r_tf_wp_inboard_centre == pytest.approx(
+    assert tfwp_geometry.r_tf_wp_inboard_centre == pytest.approx(
         tfwpgeomparam.expected_r_tf_wp_inboard_centre
     )
 
-    assert TFWPGeometry.dx_tf_wp_toroidal_min == pytest.approx(
+    assert tfwp_geometry.dx_tf_wp_toroidal_min == pytest.approx(
         tfwpgeomparam.expected_t_wp_toroidal
     )
 
-    assert TFWPGeometry.dx_tf_wp_toroidal_average == pytest.approx(
+    assert tfwp_geometry.dx_tf_wp_toroidal_average == pytest.approx(
         tfwpgeomparam.expected_dx_tf_wp_toroidal_average
     )
 
-    assert TFWPGeometry.a_tf_wp_ground_insulation == pytest.approx(
+    assert tfwp_geometry.a_tf_wp_ground_insulation == pytest.approx(
         tfwpgeomparam.expected_a_tf_wp_ground_insulation
     )
 
