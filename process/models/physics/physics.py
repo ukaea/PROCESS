@@ -5637,7 +5637,7 @@ class DetailedPhysics(Model):
         temp_plasma_electrons_kev: float | np.ndarray,
         nd_plasma_electrons: float | np.ndarray,
         n_charge_ion: float = 1.0,
-    ) -> float:
+    ) -> float | np.ndarray:
         """
         Calculate the Spitzer slowing down time for ions in a plasma.
 
@@ -5656,10 +5656,9 @@ class DetailedPhysics(Model):
 
         Returns
         -------
-        float
+        float | np.ndarray
             Spitzer slowing down time (s).
         """
-
         return (
             (3 * (2 * np.pi) ** 1.5 * constants.EPSILON0**2)
             * (m_ion * (temp_plasma_electrons_kev * constants.KILOELECTRON_VOLT) ** 1.5)
@@ -5696,7 +5695,6 @@ class DetailedPhysics(Model):
         float | np.ndarray
             Spitzer resistivity (Ohm m).
         """
-
         return (
             (4 * np.sqrt(2 * np.pi) / 3)
             * (1 / (4 * np.pi * constants.EPSILON0) ** 2)
