@@ -1500,7 +1500,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         output : bool
             If True, print the results of the calculations.
         """
-
         self.run_base_superconducting_tf()
 
         # Setting the WP turn geometry / areas
@@ -2063,7 +2062,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         conductor copper fraction (i.e., the copper in the superconducting strands and any additional
         copper, such as REBCO tape support).
         """
-
         # Guard against negative conductor fraction f_a_tf_turn_cable_space_conductor
         # Kludge to allow solver to continue and hopefully be constrained away
         # from this point
@@ -2433,7 +2431,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         int
             The maximum number of strands that can fit in the available space, accounting for the void fraction.
         """
-
         # Effective area available for strands (excluding voids)
         effective_area = a_cable_space
 
@@ -2470,7 +2467,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             - Length of superconductor in one TF coil (in meters).
             - Total length of superconductor in all TF coils (in meters).
         """
-
         # Length of superconductor in one TF coil
         len_tf_coil_superconductor = (
             n_tf_coil_turns * len_tf_coil * n_tf_turn_superconducting_cables
@@ -2497,7 +2493,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         dia_tf_turn_coolant_channel: float,
         f_a_tf_turn_cable_space_extra_void: float,
     ) -> CICCAveragedTurnGeometry:
-        """subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
+        """Subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
         Setting the TF WP turn geometry for SC magnets from the number
         the current per turn.
         This calculation has two purposes, first to check if a turn can exist
@@ -2750,7 +2746,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             - f_a_tf_turn_cable_space_cooling: Fraction of the cable space used for cooling.
 
         """
-
         # Radius of rounded corners in the cable space [m]
         radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
 
@@ -2885,7 +2880,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         output : bool
             If True, print the results of the calculations.
         """
-
         self.run_base_superconducting_tf()
 
         # Setting the WP turn geometry / areas
@@ -3330,7 +3324,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         output:
 
         """
-
         j_crit_sc: float = 0.0
         #  Find critical current density in superconducting cable, j_crit_cable
         j_crit_sc, _ = superconductors.jcrit_rebco(thelium, b_tf_inboard_peak_symmetric)
