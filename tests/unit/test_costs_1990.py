@@ -33,7 +33,7 @@ def costs(process_models):
     :returns: initialised Costs object
     :rtype: process.costs.Costs
     """
-    return process_models._costs_1990  # noqa: SLF001
+    return process_models._costs_1990
 
 
 def acc2261_param(**kwargs):
