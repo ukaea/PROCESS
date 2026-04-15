@@ -7,32 +7,6 @@ Process attempts to use [semantic versioning](https://semver.org/), which takes 
 2. MINOR version when you add functionality in a backwards compatible manner, and
 3. PATCH version when you make backwards compatible bug fixes.
 
-## Upversioning
-Process uses a `develop` and `master` release model. All development work is merged into `develop`, whereas users of the code use `master`. When a new version is required to be released to users, the version is incremented on `develop`, `develop` is merged into `master` and the merge commit tagged with the version number on `master`. Users will always use the latest tagged version on `master`.
-
-To upversion Process:
-
-1. Create a branch from `main` and merge request for the upversion
-2. Increment the version in `setup.py` according to the semver rules
-3. Similarly increment the version in `main_module.f90`:`inform()`. This Fortran version step will be removed in time as the Python conversion progresses
-4. Push and merge into `main`
-5. Create a release through GitHub and create a tag according to semantic versioning
-
-### Extracting merge commits from git log
-A useful command for getting merge commits from git log for writing the changelog is:
-```bash
-git log v2.1..HEAD --merges --first-parent develop --pretty=format:%Cblue%B%n >> mergeCommits.log
-```
-`v2.1..HEAD` is the log range: from the last tag (`v2.1`) to `HEAD`
-
-`--merges` filters for merge commits
-
-`--first-parent develop` filters for the branch you're merging into (`develop`): i.e. only include merges into `develop`
-
-`%B` is subject and body together: full merge commit content
-
-`>> mergeCommits.log` output to file (optional)
-
 ## Tags
 ### Tagging a commit
 ```
@@ -65,3 +39,5 @@ Between user tags `git` will create tags in the following format:
 
 This allows the user to checkout a specific commit between tagged versions. PROCESS now outputs this information into the `OUT.DAT` and `MFILE.DAT` and is 
 updated upon compilation. This way each output file is trackable to a specific commit.
+
+**DISCLAIMER**: PROCESS is still undergoing a significant restructure and, as such, PROCESS version 3 is unstable and does not guarantee backward compatibility. PROCESS version 4 will be the first major version to enforce backward-compatible API changes and will be released following a refactor of the data structure.
