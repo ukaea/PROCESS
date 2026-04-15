@@ -28,8 +28,9 @@ from process.data_structure import (
     times_variables,
 )
 from process.models.physics import impurity_radiation
-from process.models.physics.profiles import PlasmaProfileShapeType
 from process.models.physics.plasma_geometry import PlasmaGeom, PlasmaGeometryModelType
+from process.models.physics.profiles import PlasmaProfileShapeType
+
 if TYPE_CHECKING:
     from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
     from process.models.physics.confinement_time import (
