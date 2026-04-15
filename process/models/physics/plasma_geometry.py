@@ -532,10 +532,12 @@ class PlasmaGeom:
         )
         po.oblnkl(self.outfile)
 
+        geom_type = PlasmaGeometryModelType(physics_variables.i_plasma_geometry)
+
         if stellarator_variables.istell == 0:
             po.ocmmnt(
                 self.outfile,
-                f"X-Point Elongation set from: {PlasmaGeometryModelType(physics_variables.i_plasma_geometry).kappa_model.description}",
+                f"X-Point Elongation set from: {geom_type.kappa_model.description}",
             )
 
             po.ovarrf(
@@ -544,16 +546,10 @@ class PlasmaGeom:
                 "(kappa)",
                 physics_variables.kappa,
                 "IP"
-                if PlasmaGeometryModelType(
-                    physics_variables.i_plasma_geometry
-                ).kappa_model
-                == PlasmaGeometryModels.USER_INPUT
+                if geom_type.kappa_model == PlasmaGeometryModels.USER_INPUT
                 else "OP",
             )
-            if (
-                PlasmaGeometryModelType(physics_variables.i_plasma_geometry).kappa_model
-                == PlasmaGeometryModels.ZOHM_ITER
-            ):
+            if geom_type.kappa_model == PlasmaGeometryModels.ZOHM_ITER:
                 po.ovarrf(
                     self.outfile,
                     "Zohm scaling adjustment factor",
@@ -565,7 +561,7 @@ class PlasmaGeom:
 
             po.ocmmnt(
                 self.outfile,
-                f"95% Elongation set from: {PlasmaGeometryModelType(physics_variables.i_plasma_geometry).kappa95_model.description}",
+                f"95% Elongation set from: {geom_type.kappa95_model.description}",
             )
             po.ovarrf(
                 self.outfile,
@@ -573,10 +569,7 @@ class PlasmaGeom:
                 "(kappa95)",
                 physics_variables.kappa95,
                 "IP"
-                if PlasmaGeometryModelType(
-                    physics_variables.i_plasma_geometry
-                ).kappa95_model
-                == PlasmaGeometryModels.USER_INPUT
+                if geom_type.kappa95_model == PlasmaGeometryModels.USER_INPUT
                 else "OP",
             )
 
@@ -584,7 +577,7 @@ class PlasmaGeom:
 
             po.ocmmnt(
                 self.outfile,
-                f"X-Point Triangularity set from: {PlasmaGeometryModelType(physics_variables.i_plasma_geometry).triang_model.description}",
+                f"X-Point Triangularity set from: {geom_type.triang_model.description}",
             )
 
             po.ovarrf(
@@ -593,16 +586,13 @@ class PlasmaGeom:
                 "(triang)",
                 physics_variables.triang,
                 "IP "
-                if PlasmaGeometryModelType(
-                    physics_variables.i_plasma_geometry
-                ).triang_model
-                == PlasmaGeometryModels.USER_INPUT
+                if geom_type.triang_model == PlasmaGeometryModels.USER_INPUT
                 else "OP",
             )
             po.oblnkl(self.outfile)
             po.ocmmnt(
                 self.outfile,
-                f"95% Triangularity set from: {PlasmaGeometryModelType(physics_variables.i_plasma_geometry).triang95_model.description}",
+                f"95% Triangularity set from: {geom_type.triang95_model.description}",
             )
 
             po.ovarrf(
@@ -611,12 +601,10 @@ class PlasmaGeom:
                 "(triang95)",
                 physics_variables.triang95,
                 "IP "
-                if PlasmaGeometryModelType(
-                    physics_variables.i_plasma_geometry
-                ).triang95_model
-                == PlasmaGeometryModels.USER_INPUT
+                if geom_type.triang95_model == PlasmaGeometryModels.USER_INPUT
                 else "OP",
             )
+
             po.oblnkl(self.outfile)
 
             po.ovarrf(

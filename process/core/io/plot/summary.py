@@ -2573,10 +2573,13 @@ def plot_main_plasma_information(
     # ================================================
 
     # Add plasma volume, areas and shaping information
+
+    geom_type = PlasmaGeometryModelType(mfile.get("i_plasma_geometry", scan=scan))
+
     textstr_plasma = (
         f"$\\mathbf{{Shaping:}}$\n \n"
-        f"$\\kappa_{{95}}$: {mfile.get('kappa95', scan=scan):.2f} ({PlasmaGeometryModelType(mfile.get('i_plasma_geometry', scan=scan)).kappa95_model.description}) | $\\delta_{{95}}$: {mfile.get('triang95', scan=scan):.2f} ({PlasmaGeometryModelType(mfile.get('i_plasma_geometry', scan=scan)).triang95_model.description}) | $\\zeta$: {mfile.get('plasma_square', scan=scan):.2f}\n"
-        f"$\\kappa$: {mfile.get('kappa', scan=scan):.2f} ({PlasmaGeometryModelType(mfile.get('i_plasma_geometry', scan=scan)).kappa_model.description}) | $\\delta$: {mfile.get('triang', scan=scan):.2f} ({PlasmaGeometryModelType(mfile.get('i_plasma_geometry', scan=scan)).triang_model.description}) | A: {mfile.get('aspect', scan=scan):.2f}\n"
+        f"$\\kappa_{{95}}$: {mfile.get('kappa95', scan=scan):.2f} ({geom_type.kappa95_model.description}) | $\\delta_{{95}}$: {mfile.get('triang95', scan=scan):.2f} ({geom_type.triang95_model.description}) | $\\zeta$: {mfile.get('plasma_square', scan=scan):.2f}\n"
+        f"$\\kappa$: {mfile.get('kappa', scan=scan):.2f} ({geom_type.kappa_model.description}) | $\\delta$: {mfile.get('triang', scan=scan):.2f} ({geom_type.triang_model.description}) | A: {mfile.get('aspect', scan=scan):.2f}\n"
         f"$ V_{{\\text{{p}}}}:$ {mfile.get('vol_plasma', scan=scan):,.2f}$ \\ \\text{{m}}^3$ | $ A_{{\\text{{p,surface}}}}:$ {mfile.get('a_plasma_surface', scan=scan):,.2f}$ \\ \\text{{m}}^2$ | $ A_{{\\text{{p,poloidal}}}}:$ {mfile.get('a_plasma_poloidal', scan=scan):,.3f}$ \\ \\text{{m}}^2$\n"
         f"$ L_{{\\text{{p,poloidal}}}}:$ {mfile.get('len_plasma_poloidal', scan=scan):,.3f}$ \\ \\text{{m}}$"
     )
