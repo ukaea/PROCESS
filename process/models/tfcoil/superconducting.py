@@ -1552,22 +1552,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         else:
             # Integer number of turns
-            (
-                superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners,
-                superconducting_tf_coil_variables.dr_tf_turn,
-                superconducting_tf_coil_variables.dx_tf_turn,
-                tfcoil_variables.a_tf_turn_cable_space_no_void,
-                tfcoil_variables.a_tf_turn_steel,
-                tfcoil_variables.a_tf_turn_insulation,
-                tfcoil_variables.c_tf_turn,
-                tfcoil_variables.n_tf_coil_turns,
-                superconducting_tf_coil_variables.t_conductor_radial,
-                superconducting_tf_coil_variables.t_conductor_toroidal,
-                tfcoil_variables.t_conductor,
-                superconducting_tf_coil_variables.dr_tf_turn_cable_space,
-                superconducting_tf_coil_variables.dx_tf_turn_cable_space,
-                superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
-            ) = self.tf_cable_in_conduit_integer_turn_geometry(
+            int_turn_geometry = CICCIntegerTurnGeometry
+            (int_turn_geometry) = self.tf_cable_in_conduit_integer_turn_geometry(
                 dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
                 dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
                 dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
@@ -1580,38 +1566,34 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             )
 
             superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners = (
-                CICCIntegerTurnGeometry.radius_tf_turn_cable_space_corners
+                int_turn_geometry.radius_tf_turn_cable_space_corners
             )
-            superconducting_tf_coil_variables.dr_tf_turn = (
-                CICCIntegerTurnGeometry.dr_tf_turn
-            )
-            superconducting_tf_coil_variables.dx_tf_turn = (
-                CICCIntegerTurnGeometry.dx_tf_turn
-            )
+            superconducting_tf_coil_variables.dr_tf_turn = int_turn_geometry.dr_tf_turn
+            superconducting_tf_coil_variables.dx_tf_turn = int_turn_geometry.dx_tf_turn
             tfcoil_variables.a_tf_turn_cable_space_no_void = (
-                CICCIntegerTurnGeometry.a_tf_turn_cable_space_no_void
+                int_turn_geometry.a_tf_turn_cable_space_no_void
             )
-            tfcoil_variables.a_tf_turn_steel = CICCIntegerTurnGeometry.a_tf_turn_steel
+            tfcoil_variables.a_tf_turn_steel = int_turn_geometry.a_tf_turn_steel
             tfcoil_variables.a_tf_turn_insulation = (
-                CICCIntegerTurnGeometry.a_tf_turn_insulation
+                int_turn_geometry.a_tf_turn_insulation
             )
-            tfcoil_variables.c_tf_turn = CICCIntegerTurnGeometry.c_tf_turn
-            tfcoil_variables.n_tf_coil_turns = CICCIntegerTurnGeometry.n_tf_coil_turns
+            tfcoil_variables.c_tf_turn = int_turn_geometry.c_tf_turn
+            tfcoil_variables.n_tf_coil_turns = int_turn_geometry.n_tf_coil_turns
             superconducting_tf_coil_variables.t_conductor_radial = (
-                CICCIntegerTurnGeometry.t_conductor_radial
+                int_turn_geometry.t_conductor_radial
             )
             superconducting_tf_coil_variables.t_conductor_toroidal = (
-                CICCIntegerTurnGeometry.t_conductor_toroidal
+                int_turn_geometry.t_conductor_toroidal
             )
-            tfcoil_variables.t_conductor = CICCIntegerTurnGeometry.t_conductor
+            tfcoil_variables.t_conductor = int_turn_geometry.t_conductor
             superconducting_tf_coil_variables.dr_tf_turn_cable_space = (
-                CICCIntegerTurnGeometry.dr_tf_turn_cable_space
+                int_turn_geometry.dr_tf_turn_cable_space
             )
             superconducting_tf_coil_variables.dx_tf_turn_cable_space = (
-                CICCIntegerTurnGeometry.dx_tf_turn_cable_space
+                int_turn_geometry.dx_tf_turn_cable_space
             )
             superconducting_tf_coil_variables.dx_tf_turn_cable_space_average = (
-                CICCIntegerTurnGeometry.dx_tf_turn_cable_space_average
+                int_turn_geometry.dx_tf_turn_cable_space_average
             )
 
         # Calculate number of cables in turn if CICC conductor
