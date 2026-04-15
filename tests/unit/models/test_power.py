@@ -7,7 +7,6 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     constraint_variables,
-    cost_variables,
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
@@ -21,17 +20,16 @@ from process.data_structure import (
     times_variables,
 )
 from process.data_structure import primary_pumping_variables as ppv
-from process.models.power import Power
 
 
 @pytest.fixture
-def power():
-    """Provides power object for testing.
+def power(process_models):
+    """Fixture to get the Power instance from process_models.
 
     :returns: initialised power object
     :rtype: process.power.Power
     """
-    return Power()
+    return process_models.power
 
 
 class CryoParam(NamedTuple):
@@ -2491,7 +2489,7 @@ class Power2Param(NamedTuple):
         ),
     ],
 )
-def test_power2(power2param, monkeypatch, power):
+def test_power2(power2param, monkeypatch, power, process_models):
     """
     Automatically generated Regression Unit Test for power2.
 
@@ -2510,9 +2508,9 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_plant_electric_net_required_mw,
     )
 
-    monkeypatch.setattr(cost_variables, "ipnet", power2param.ipnet)
+    monkeypatch.setattr(power.data.costs, "ipnet", power2param.ipnet)
 
-    monkeypatch.setattr(cost_variables, "ireactor", power2param.ireactor)
+    monkeypatch.setattr(power.data.costs, "ireactor", power2param.ireactor)
 
     monkeypatch.setattr(
         current_drive_variables,

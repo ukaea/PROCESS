@@ -57,7 +57,7 @@ def output_evaluation(data):
     po.oblnkl(constants.NOUT)
 
     # Evaluate objective function
-    norm_objf = objective_function(numerics.minmax)
+    norm_objf = objective_function(numerics.minmax, data)
     po.ovarre(constants.MFILE, "Normalised objective function", "(norm_objf)", norm_objf)
 
     # Print the residuals of the constraint equations

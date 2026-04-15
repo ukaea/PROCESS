@@ -1,11 +1,10 @@
-"""Unit tests for availability.f90."""
+"""Unit tests for availability.py."""
 
 import pytest
 
 from process import data_structure
 from process.core.init import init_all_module_vars
 from process.data_structure import constraint_variables as ctv
-from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import ife_variables as ifev
@@ -16,7 +15,7 @@ from process.data_structure import times_variables as tv
 
 @pytest.fixture
 def availability(process_models):
-    """Provides Availability object for testing.
+    """Fixture to get the Availability instance from process_models.
 
     :return availability: initialised Availability object
     :type availability: process.availability.Availability
@@ -41,21 +40,21 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "p_fusion_total_mw", 4.0e3)
     monkeypatch.setattr(fwbsv, "life_fw_fpy", life_fw_fpy)
-    monkeypatch.setattr(cv, "ibkt_life", ibkt_life)
-    monkeypatch.setattr(cv, "abktflnc", 4.0)
+    monkeypatch.setattr(availability.data.costs, "ibkt_life", ibkt_life)
+    monkeypatch.setattr(availability.data.costs, "abktflnc", 4.0)
     monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 10.0)
-    monkeypatch.setattr(cv, "life_plant", 30.0)
-    monkeypatch.setattr(cv, "life_dpa", 40.0)
-    monkeypatch.setattr(cv, "adivflnc", 8.0)
+    monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
+    monkeypatch.setattr(availability.data.costs, "life_dpa", 40.0)
+    monkeypatch.setattr(availability.data.costs, "adivflnc", 8.0)
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(tv, "t_plant_pulse_total", 5.0)
-    monkeypatch.setattr(cv, "i_plant_availability", 0)
-    monkeypatch.setattr(cv, "f_t_plant_available", 0.8)
+    monkeypatch.setattr(availability.data.costs, "i_plant_availability", 0)
+    monkeypatch.setattr(availability.data.costs, "f_t_plant_available", 0.8)
     monkeypatch.setattr(tv, "t_plant_pulse_burn", 500.0)
     monkeypatch.setattr(pv, "itart", 1)
 
     availability.avail(output=False)
-    cpfact_obs = cv.cpfact
+    cpfact_obs = availability.data.costs.cpfact
     cpfact_exp = 80.0
     assert pytest.approx(cpfact_obs) == cpfact_exp
 
@@ -63,11 +62,11 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     bktlife_exp = bktlife_exp_param
     assert pytest.approx(bktlife_obs) == bktlife_exp
 
-    divlife_obs = cv.life_div_fpy
+    divlife_obs = availability.data.costs.life_div_fpy
     divlife_exp = 1.0
     assert pytest.approx(divlife_obs) == divlife_exp
 
-    cplife_obs = cv.cplife
+    cplife_obs = availability.data.costs.cplife
     cplife_exp = 30.0
     assert pytest.approx(cplife_obs) == cplife_exp
 
@@ -84,23 +83,23 @@ def test_avail_1(monkeypatch, availability):
     init_all_module_vars()
 
     # Mock module vars
-    monkeypatch.setattr(cv, "i_plant_availability", 1)
-    monkeypatch.setattr(cv, "life_div_fpy", 1.0)
+    monkeypatch.setattr(availability.data.costs, "i_plant_availability", 1)
+    monkeypatch.setattr(availability.data.costs, "life_div_fpy", 1.0)
     monkeypatch.setattr(fwbsv, "life_blkt_fpy", 7.0)
-    monkeypatch.setattr(cv, "t_div_replace_yrs", 0.1)
-    monkeypatch.setattr(cv, "t_blkt_replace_yrs", 0.2)
-    monkeypatch.setattr(cv, "tcomrepl", 0.3)
-    monkeypatch.setattr(cv, "uubop", 0.4)
-    monkeypatch.setattr(cv, "uucd", 0.5)
-    monkeypatch.setattr(cv, "uudiv", 0.6)
-    monkeypatch.setattr(cv, "uufuel", 0.7)
-    monkeypatch.setattr(cv, "uufw", 0.8)
-    monkeypatch.setattr(cv, "uumag", 0.9)
-    monkeypatch.setattr(cv, "uuves", 0.11)
+    monkeypatch.setattr(availability.data.costs, "t_div_replace_yrs", 0.1)
+    monkeypatch.setattr(availability.data.costs, "t_blkt_replace_yrs", 0.2)
+    monkeypatch.setattr(availability.data.costs, "tcomrepl", 0.3)
+    monkeypatch.setattr(availability.data.costs, "uubop", 0.4)
+    monkeypatch.setattr(availability.data.costs, "uucd", 0.5)
+    monkeypatch.setattr(availability.data.costs, "uudiv", 0.6)
+    monkeypatch.setattr(availability.data.costs, "uufuel", 0.7)
+    monkeypatch.setattr(availability.data.costs, "uufw", 0.8)
+    monkeypatch.setattr(availability.data.costs, "uumag", 0.9)
+    monkeypatch.setattr(availability.data.costs, "uuves", 0.11)
     monkeypatch.setattr(tv, "t_plant_pulse_total", 1e4)
 
     availability.avail(output=False)
-    cfactr_obs = cv.f_t_plant_available
+    cfactr_obs = availability.data.costs.f_t_plant_available
     cfactr_exp = 0.0006344554455445239
     assert pytest.approx(cfactr_exp) == cfactr_obs
 
@@ -130,7 +129,7 @@ def test_calc_u_unplanned_bop(monkeypatch, availability):
     """
 
     # Mock module variable t_plant_operational_total_yrs
-    monkeypatch.setattr(cv, "t_plant_operational_total_yrs", 25.0)
+    monkeypatch.setattr(availability.data.costs, "t_plant_operational_total_yrs", 25.0)
 
     # Call subroutine and check result is within an absolute tolerance
     result = availability.calc_u_unplanned_bop(output=False)
@@ -185,7 +184,7 @@ def calc_u_planned_params():
 
 
 @pytest.fixture(params=calc_u_planned_params(), ids=["nominal", "ST"])
-def calc_u_planned_fix(request, monkeypatch):
+def calc_u_planned_fix(availability, request, monkeypatch):
     """Fixture for the calc_u_planned() variables.
 
     This fixture is parameterised using calc_u_planned_params(). This runs the
@@ -212,14 +211,16 @@ def calc_u_planned_fix(request, monkeypatch):
     monkeypatch.setattr(data_structure.fwbs_variables, "life_blkt_fpy", 0.0)
     monkeypatch.setattr(pv, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"])
     monkeypatch.setattr(pv, "itart", param["itart"])
-    monkeypatch.setattr(cv, "life_plant", param["life_plant"])
-    monkeypatch.setattr(cv, "life_div_fpy", 0.0)
-    monkeypatch.setattr(cv, "adivflnc", param["adivflnc"])
-    monkeypatch.setattr(cv, "abktflnc", param["abktflnc"])
-    monkeypatch.setattr(cv, "life_hcd_fpy", 0.0)
-    monkeypatch.setattr(cv, "cplife", 0.0)
-    monkeypatch.setattr(cv, "cpstflnc", param["cpstflnc"])
-    monkeypatch.setattr(cv, "num_rh_systems", param["num_rh_systems"])
+    monkeypatch.setattr(availability.data.costs, "life_plant", param["life_plant"])
+    monkeypatch.setattr(availability.data.costs, "life_div_fpy", 0.0)
+    monkeypatch.setattr(availability.data.costs, "adivflnc", param["adivflnc"])
+    monkeypatch.setattr(availability.data.costs, "abktflnc", param["abktflnc"])
+    monkeypatch.setattr(availability.data.costs, "life_hcd_fpy", 0.0)
+    monkeypatch.setattr(availability.data.costs, "cplife", 0.0)
+    monkeypatch.setattr(availability.data.costs, "cpstflnc", param["cpstflnc"])
+    monkeypatch.setattr(
+        availability.data.costs, "num_rh_systems", param["num_rh_systems"]
+    )
     monkeypatch.setattr(fwbsv, "neut_flux_cp", 1e18)
 
     # Return the expected result for the given parameter list
@@ -295,7 +296,7 @@ def calc_u_unplanned_magnets_params():
     params=calc_u_unplanned_magnets_params(),
     ids=["no_degredation", "no_degradation_conf", "degradation_conf"],
 )
-def calc_u_unplanned_magnets_fix(request, monkeypatch):
+def calc_u_unplanned_magnets_fix(availability, request, monkeypatch):
     """Fixture for the calc_u_unplanned_magnets() test.
 
     :param request: Allows access to parameters
@@ -311,9 +312,11 @@ def calc_u_unplanned_magnets_fix(request, monkeypatch):
 
     # Mock module variables
     monkeypatch.setattr(
-        cv, "t_plant_operational_total_yrs", param["t_plant_operational_total_yrs"]
+        availability.data.costs,
+        "t_plant_operational_total_yrs",
+        param["t_plant_operational_total_yrs"],
     )
-    monkeypatch.setattr(cv, "conf_mag", param["conf_mag"])
+    monkeypatch.setattr(availability.data.costs, "conf_mag", param["conf_mag"])
     monkeypatch.setattr(
         tfv,
         "temp_cs_superconductor_margin_min",
@@ -383,7 +386,7 @@ def calc_u_unplanned_divertor_params():
 @pytest.fixture(
     params=calc_u_unplanned_divertor_params(), ids=["below_nref", "above_nu", "between"]
 )
-def calc_u_unplanned_divertor_fix(request, monkeypatch):
+def calc_u_unplanned_divertor_fix(availability, request, monkeypatch):
     """Fixture for the calc_u_unplanned_divertor() variables.
 
     :param request: Request object for accessing parameters
@@ -399,7 +402,7 @@ def calc_u_unplanned_divertor_fix(request, monkeypatch):
     # Mock variables used by calc_u_unplanned_divertor()
     # Some may be parameterised
     monkeypatch.setattr(tv, "t_plant_pulse_total", param["t_plant_pulse_total"])
-    monkeypatch.setattr(cv, "life_div_fpy", param["life_div_fpy"])
+    monkeypatch.setattr(availability.data.costs, "life_div_fpy", param["life_div_fpy"])
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -555,16 +558,16 @@ def test_avail_2(monkeypatch, availability):
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "itart", 1)
     monkeypatch.setattr(fwbsv, "life_blkt_fpy", 5.0)
-    monkeypatch.setattr(cv, "life_div_fpy", 10.0)
-    monkeypatch.setattr(cv, "cplife", 15.0)
+    monkeypatch.setattr(availability.data.costs, "life_div_fpy", 10.0)
+    monkeypatch.setattr(availability.data.costs, "cplife", 15.0)
 
     availability.avail_2(False)
 
-    cfactr_obs = cv.f_t_plant_available
+    cfactr_obs = availability.data.costs.f_t_plant_available
     cfactr_exp = 0.7173
     assert pytest.approx(cfactr_obs) == cfactr_exp
 
-    cpfact_obs = cv.cpfact
+    cpfact_obs = availability.data.costs.cpfact
     cpfact_exp = 0.07173
     assert pytest.approx(cpfact_obs) == cpfact_exp
 
@@ -572,11 +575,11 @@ def test_avail_2(monkeypatch, availability):
     bktlife_exp = 6.97058413
     assert pytest.approx(bktlife_obs) == bktlife_exp
 
-    divlife_obs = cv.life_div_fpy
+    divlife_obs = availability.data.costs.life_div_fpy
     divlife_exp = 13.94116827
     assert pytest.approx(divlife_obs) == divlife_exp
 
-    cplife_obs = cv.cplife
+    cplife_obs = availability.data.costs.cplife
     cplife_exp = 20.9117524
     assert pytest.approx(cplife_obs) == cplife_exp
 
@@ -592,24 +595,24 @@ def test_avail_st(monkeypatch, availability):
     """
     # Initialise fortran variables to keep test isolated from others
     init_all_module_vars()
-    monkeypatch.setattr(cv, "tmain", 1.0)
-    monkeypatch.setattr(cv, "life_plant", 30.0)
-    monkeypatch.setattr(cv, "u_unplanned_cp", 0.05)
+    monkeypatch.setattr(availability.data.costs, "tmain", 1.0)
+    monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
+    monkeypatch.setattr(availability.data.costs, "u_unplanned_cp", 0.05)
     monkeypatch.setattr(tv, "t_plant_pulse_burn", 5.0)
     monkeypatch.setattr(tv, "t_plant_pulse_total", 9000.0)
-    monkeypatch.setattr(cv, "adivflnc", 10.0)
+    monkeypatch.setattr(availability.data.costs, "adivflnc", 10.0)
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
-    monkeypatch.setattr(cv, "ibkt_life", 0)
-    monkeypatch.setattr(cv, "abktflnc", 10.0)
+    monkeypatch.setattr(availability.data.costs, "ibkt_life", 0)
+    monkeypatch.setattr(availability.data.costs, "abktflnc", 10.0)
     monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 10.0)
-    monkeypatch.setattr(cv, "cplife", 5.0)
-    monkeypatch.setattr(cv, "life_hcd_fpy", 15.0)
+    monkeypatch.setattr(availability.data.costs, "cplife", 5.0)
+    monkeypatch.setattr(availability.data.costs, "life_hcd_fpy", 15.0)
 
     availability.avail_st(output=False)
 
-    assert pytest.approx(cv.t_plant_operational_total_yrs) == 15.0
-    assert pytest.approx(cv.f_t_plant_available) == 0.27008858
-    assert pytest.approx(cv.cpfact, abs=1.0e-8) == 0.00015005
+    assert pytest.approx(availability.data.costs.t_plant_operational_total_yrs) == 15.0
+    assert pytest.approx(availability.data.costs.f_t_plant_available) == 0.27008858
+    assert pytest.approx(availability.data.costs.cpfact, abs=1.0e-8) == 0.00015005
 
 
 @pytest.mark.parametrize(("i_tf_sup", "exp"), [(1, 6.337618), (0, 4)])
@@ -626,9 +629,9 @@ def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
     monkeypatch.setattr(tfv, "i_tf_sup", i_tf_sup)
     monkeypatch.setattr(ctv, "nflutfmax", 1.0e23)
     monkeypatch.setattr(fwbsv, "neut_flux_cp", 5.0e14)
-    monkeypatch.setattr(cv, "cpstflnc", 20.0)
+    monkeypatch.setattr(availability.data.costs, "cpstflnc", 20.0)
     monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 5.0)
-    monkeypatch.setattr(cv, "life_plant", 30.0)
+    monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
 
     cplife = availability.cp_lifetime()
 
@@ -645,9 +648,9 @@ def test_divertor_lifetime(monkeypatch, availability):
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
 
-    monkeypatch.setattr(cv, "adivflnc", 100.0)
+    monkeypatch.setattr(availability.data.costs, "adivflnc", 100.0)
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
-    monkeypatch.setattr(cv, "life_plant", 30.0)
+    monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
 
     divlife_obs = availability.divertor_lifetime()
     divlife_exp = 10.0
