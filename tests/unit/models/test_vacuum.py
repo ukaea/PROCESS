@@ -78,45 +78,23 @@ class TestVacuum:
         monkeypatch.setattr(vacuum.data.vacuum, "outgrat_fw", 1.3000000000000001e-08)
         monkeypatch.setattr(vacuum.data.vacuum, "temp_vv_chamber_gas_burn_end", 300)
 
-        ndiv = 1
-        pfusmw = 2115.3899563651776
-        r0 = 8.1386000000000003
-        aw = 3.2664151549205331
-        dsol = 0.22500000000000003
-        plasma_a_plasma_surface = 1468.3151179059994
-        plasma_vol = 2907.2299918381777
-        thshldo = 0.40000000000000002
-        thshldi = 0.12000000000000001
-        thtf = 0.63812000000000002
-        ritf = 3.6371848450794664
-        n_tf_coils = 18
-        t_plant_pulse_dwell = 1800
-        nplasma = 7.2834e19
-        qtorus = 0
-        gasld = 2.7947500651998464e-05
-        nduct = 0
-        pumpn = 0
-        dlscalc = 0
-        mvdsh = 0
-        dimax = 0
-
         pumpn, nduct, dlscalc, mvdsh, dimax = vacuum.vacuum(
-            pfusmw,
-            r0,
-            aw,
-            dsol,
-            plasma_a_plasma_surface,
-            plasma_vol,
-            thshldo,
-            thshldi,
-            thtf,
-            ritf,
-            n_tf_coils,
-            t_plant_pulse_dwell,
-            nplasma,
-            ndiv,
-            qtorus,
-            gasld,
+            pfusmw=2115.3899563651776,
+            r0=8.1386000000000003,
+            aw=3.2664151549205331,
+            dsol=0.22500000000000003,
+            plasma_sarea=1468.3151179059994,
+            plasma_vol=2907.2299918381777,
+            thshldo=0.40000000000000002,
+            thshldi=0.12000000000000001,
+            thtf=0.63812000000000002,
+            ritf=3.6371848450794664,
+            n_tf_coils=18,
+            t_plant_pulse_dwell=1800,
+            nplasma=7.2834e19,
+            ndiv=1,
+            qtorus=0,
+            gasld=2.7947500651998464e-05,
             output=False,
         )
 

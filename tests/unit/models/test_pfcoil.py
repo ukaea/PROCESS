@@ -56,10 +56,21 @@ def test_rsid(pfcoil):
     :param pfcoil: PFCoil object
     :type pfcoil: process.pfcoil.PFCoil
     """
-    nptsmx = 32
-    npts = 32
-    brin = np.zeros(nptsmx)
-    bzin = np.zeros(nptsmx)
+    # unused
+    # brssq = 1.7347234759768071e-18
+    # brnrm = 0
+    # bzssq = 164.92735114640433
+    # bznrm = -0.12924373312291032
+    # ssq = 0
+
+    brssq_exp = 0.0005682062650683896
+    brnrm_exp = 0.0
+    bzssq_exp = 7.188474446020582e-05
+    bznrm_exp = 0.0
+    ssq_exp = 0.0006400910095285954
+
+    nptsmx = npts = 32
+    brin, bzin = np.zeros(2, nptsmx)
     nfix = 14
     n_pf_coil_groups = 4
     ccls = np.array([
@@ -74,12 +85,7 @@ def test_rsid(pfcoil):
         0.0,
         0.0,
     ])
-    brssq = 1.7347234759768071e-18
-    brnrm = 0
 
-    bzssq = 164.92735114640433
-    bznrm = -0.12924373312291032
-    ssq = 0
     bfix = np.array([
         -2.7755575615628914e-17,
         -2.7755575615628914e-17,
@@ -903,12 +909,6 @@ def test_rsid(pfcoil):
         order="F",
     )
 
-    brssq_exp = 0.0005682062650683896
-    brnrm_exp = 0.0
-    bzssq_exp = 7.188474446020582e-05
-    bznrm_exp = 0.0
-    ssq_exp = 0.0006400910095285954
-
     brssq, brnrm, bzssq, bznrm, ssq = rsid(
         npts, brin, bzin, nfix, n_pf_coil_groups, ccls, bfix, gmat
     )
@@ -923,29 +923,15 @@ def test_rsid(pfcoil):
 def test_bfield():
     """Test bfield function.
 
-    calculate_b_field_at_point() requires specific arguments in order to work; these were discovered
+    calculate_b_field_at_point() requires specific arguments in order to work;
+    these were discovered
     using gdb to break on the first subroutine call when running the baseline
     2018 IN.DAT.
 
     :param pfcoil: PFCoil object
     :type pfcoil: process.pfcoil.PFCoil
     """
-    rc = np.array([
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-        2.6084100000000001,
-    ])
+    rc = np.full(14, 2.6084100000000001)
     zc = np.array([
         0.58327007281470211,
         1.7498102184441064,
@@ -962,22 +948,7 @@ def test_bfield():
         -6.4159708009617233,
         -7.5825109465911273,
     ])
-    cc = np.array([
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-        12444820.564847374,
-    ])
+    cc = np.full(14, 12444820.564847374)
     rp = 6.0223258064516134
     zp = 0
 
@@ -1065,8 +1036,9 @@ def test_waveform(monkeypatch, pfcoil):
     discovered using gdb to break on the first subroutine call when running the
     baseline 2018 IN.DAT.
 
-    waveform() alters both c_pf_cs_coils_peak_ma and f_c_pf_cs_peak_time_array in the pfcoil_variables module, so
-    these are asserted on.
+    waveform() alters both c_pf_cs_coils_peak_ma and f_c_pf_cs_peak_time_array
+    in the pfcoil_variables module, so these are asserted on.
+
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     :param pfcoil: PFCoil object
@@ -2357,7 +2329,7 @@ def test_calculate_cs_turn_geometry_eu_demo_high_aspect(
 def test_calculate_cs_turn_geometry_eu_demo_output_consistency(
     cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
 ):
-    # Check that the sum of cable space and conduit thicknesses does not exceed half-width
+    # Check that the sum of cable space and conduit thicknesses doesn't exceed half-width
     (
         dz_cs_turn,
         _dr_cs_turn,

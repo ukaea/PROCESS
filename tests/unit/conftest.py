@@ -38,14 +38,20 @@ def input_file():
 
 
 @pytest.fixture
-def temp_data(tmp_path):
+def temp_data(tmp_path: Path) -> Path:
     """Copy data dir contents into temp dir for testing.
 
     Any changes are discarded on fixture teardown.
-    :param tmp_path: temporary path fixture
-    :type tmp_path: Path
-    :return: temporary path containing data files
-    :rtype: Path
+
+    Parameters
+    ----------
+    tmp_path:
+        temporary path fixture
+
+    Returns
+    -------
+    :
+        temporary path containing data files
     """
     data_path = Path(__file__).parent.parent / "integration" / "data"
 
@@ -58,17 +64,23 @@ def temp_data(tmp_path):
 
 
 @pytest.fixture
-def temp_data_cwd(temp_data):
+def temp_data_cwd(temp_data: Path):
     """Change cwd to temp_data dir, then yield it.
 
     Used when testing command-line args that look for files in the cwd.
-    :param temp_data: temporary path containing data files
-    :type temp_data: Path
-    :yield: temporary path containing data files
-    :rtype: Path
+
+    Parameters
+    ----------
+    temp_data:
+        temporary path containing data files
+
+    Yields
+    ------
+    :
+        temporary path containing data files
     """
     # Setup by changing cwd to temp_data and yielding it
-    old_wd = os.getcwd()
+    old_wd = Path.cwd()
     os.chdir(temp_data)
     yield temp_data
 
