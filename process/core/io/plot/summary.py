@@ -13912,6 +13912,13 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         f"$\\langle\\eta_{{Spitzer}}\\rangle$: {mfile.get('res_plasma_fuel_spitzer_vol_avg', scan=scan):.4e} $\\Omega\\mathrm{{m}}$"
     )
 
+    light_yellow_box = {
+        "boxstyle": "round",
+        "facecolor": "lightyellow",
+        "alpha": 1.0,
+        "linewidth": 2,
+    }
+
     axis.text(
         0.05,
         0.45,
@@ -13920,12 +13927,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=light_yellow_box,
     )
 
     axis.text(
@@ -13936,12 +13938,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=light_yellow_box,
     )
 
     axis.text(
@@ -13952,13 +13949,15 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightyellow",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=light_yellow_box,
     )
+
+    light_cyan_box = {
+        "boxstyle": "round",
+        "facecolor": "lightcyan",
+        "alpha": 1.0,
+        "linewidth": 2,
+    }
 
     axis.text(
         0.05,
@@ -13968,12 +13967,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightcyan",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=light_cyan_box,
     )
 
     axis.text(
@@ -13984,12 +13978,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightcyan",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=light_cyan_box,
     )
 
     axis.text(
@@ -14000,13 +13989,15 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightcyan",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=light_cyan_box,
     )
+
+    light_green_box = {
+        "boxstyle": "round",
+        "facecolor": "lightgreen",
+        "alpha": 1.0,
+        "linewidth": 2,
+    }
 
     axis.text(
         0.05,
@@ -14016,12 +14007,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightgreen",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=light_green_box,
     )
 
     axis.text(
@@ -14032,12 +14018,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightgreen",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=light_green_box,
     )
 
     axis.text(
@@ -14048,12 +14029,7 @@ def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
-        bbox={
-            "boxstyle": "round",
-            "facecolor": "lightgreen",
-            "alpha": 1.0,
-            "linewidth": 2,
-        },
+        bbox=light_green_box,
     )
 
     axis.axis("off")
