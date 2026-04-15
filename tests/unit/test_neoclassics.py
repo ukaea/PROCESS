@@ -65,7 +65,7 @@ class InitNeoclassicsParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "initneoclassicsparam",
-    (
+    [
         InitNeoclassicsParam(
             nd_plasma_electron_on_axis=2.7956610000000002e20,
             temp_plasma_electron_on_axis_kev=13.241800000000001,
@@ -957,7 +957,7 @@ class InitNeoclassicsParam(NamedTuple):
                 order="F",
             ).transpose(),
         ),
-    ),
+    ],
 )
 def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     """

@@ -44,7 +44,6 @@ class PlasmaExhaust:
         float
             Power crossing the separatrix (MW).
         """
-
         return (
             f_p_alpha_plasma_deposited * p_alpha_total_mw
             + p_non_alpha_charged_mw
@@ -114,7 +113,6 @@ class PlasmaExhaust:
           Nuclear Fusion, vol. 57, no. 8, pp. 086002-086002, May 2017,
           doi: https://doi.org/10.1088/1741-4326/aa739e.
         """
-
         return (p_plasma_separatrix_mw * b_plasma_toroidal_on_axis) / (
             q95 * aspect * rmajor
         )

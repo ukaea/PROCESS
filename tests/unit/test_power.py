@@ -76,7 +76,7 @@ class CryoParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "cryoparam",
-    (
+    [
         CryoParam(
             qnuc=12920,
             inuclear=1,
@@ -119,7 +119,7 @@ class CryoParam(NamedTuple):
             expected_qmisc=68432.80867525778,
             expected_helpow=220505.71684249729,
         ),
-    ),
+    ],
 )
 def test_cryo(cryoparam, monkeypatch, power):
     """
@@ -266,7 +266,7 @@ class PfpwrParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "pfpwrparam",
-    (
+    [
         PfpwrParam(
             iohcl=1,
             peakmva=0,
@@ -1755,7 +1755,7 @@ class PfpwrParam(NamedTuple):
             expected_acptmax=24.816666666666666,
             expected_srcktpm=1069.8879533693198,
         ),
-    ),
+    ],
 )
 def test_pfpwr(pfpwrparam, monkeypatch, power):
     """
@@ -1945,7 +1945,7 @@ class AcpowParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "acpowparam",
-    (
+    [
         AcpowParam(
             a_plant_floor_effective=379218.8908858358,
             p_plant_electric_base=5000000,
@@ -1988,7 +1988,7 @@ class AcpowParam(NamedTuple):
             outfile=11,
             expected_pacpmw=589.3014463957436,
         ),
-    ),
+    ],
 )
 def test_acpow(acpowparam, monkeypatch, power):
     """
@@ -2284,7 +2284,7 @@ class Power2Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "power2param",
-    (
+    [
         Power2Param(
             p_plant_electric_net_required_mw=500,
             ipnet=0,
@@ -2489,7 +2489,7 @@ class Power2Param(NamedTuple):
             expected_p_plant_secondary_heat_mw=246.92536896,
             expected_pcoresystems=138.46404809114904,
         ),
-    ),
+    ],
 )
 def test_power2(power2param, monkeypatch, power):
     """

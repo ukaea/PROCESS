@@ -154,7 +154,7 @@ class SombldParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "sombldparam",
-    (
+    [
         SombldParam(
             a_fw_total=0.0,
             ifetyp=2,
@@ -536,7 +536,7 @@ class SombldParam(NamedTuple):
                 ),
             ).T,
         ),
-    ),
+    ],
 )
 def test_sombld(sombldparam, monkeypatch, ife):
     """
@@ -670,7 +670,7 @@ class DriverParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "driverparam",
-    (
+    [
         DriverParam(
             edrive=5000000.0,
             etave=np.array(
@@ -693,7 +693,7 @@ class DriverParam(NamedTuple):
             expected_etadrv=0.069000000000000006,
             expected_gain=133.0,
         ),
-    ),
+    ],
 )
 def test_driver(driverparam, ife):
     """
@@ -721,13 +721,13 @@ class LasdrvParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "lasdrvparam",
-    (
+    [
         LasdrvParam(
             edrive=5000000.0,
             expected_etadrv=0.069000000000000006,
             expected_gain=136.0,
         ),
-    ),
+    ],
 )
 def test_lasdrv(lasdrvparam, ife):
     """
@@ -830,7 +830,7 @@ class HylbldParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "hylbldparam",
-    (
+    [
         HylbldParam(
             a_fw_total=0.0,
             ifetyp=3,
@@ -1123,7 +1123,7 @@ class HylbldParam(NamedTuple):
                 0.0,
             ]),
         ),
-    ),
+    ],
 )
 def test_hylbld(hylbldparam, monkeypatch, ife):
     """
@@ -1232,13 +1232,13 @@ class IondrvParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "iondrvparam",
-    (
+    [
         IondrvParam(
             edrive=5000000.0,
             expected_gain=87.0,
             expected_etadrv=0.28199999999999997,
         ),
-    ),
+    ],
 )
 def test_iondrv(iondrvparam, ife):
     """
@@ -1305,7 +1305,7 @@ class IfefbsParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "ifefbsparam",
-    (
+    [
         IfefbsParam(
             a_fw_total=188.02432031734912,
             life_plant=30.0,
@@ -1560,7 +1560,7 @@ class IfefbsParam(NamedTuple):
             ).T,
             expected_mflibe=939298.9596781712,
         ),
-    ),
+    ],
 )
 def test_ifefbs(ifefbsparam, monkeypatch, ife):
     """
@@ -1718,7 +1718,7 @@ class GenbldParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "genbldparam",
-    (
+    [
         GenbldParam(
             a_fw_total=0.0,
             ifetyp=0.0,
@@ -2011,7 +2011,7 @@ class GenbldParam(NamedTuple):
                 0.0,
             ]),
         ),
-    ),
+    ],
 )
 def test_genbld(genbldparam, monkeypatch, ife):
     """
@@ -2144,7 +2144,7 @@ class Ifepw1Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "ifepw1param",
-    (
+    [
         Ifepw1Param(
             f_p_blkt_multiplication=1.26,
             fhole=0.0,
@@ -2174,7 +2174,7 @@ class Ifepw1Param(NamedTuple):
             expected_p_cryo_plant_electric_mw=10.0,
             expected_helpow=20266.75905075,
         ),
-    ),
+    ],
 )
 def test_ifepw1(ifepw1param, monkeypatch, ife):
     """
@@ -2361,7 +2361,7 @@ class Bld2019Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "bld2019param",
-    (
+    [
         Bld2019Param(
             a_fw_total=0.0,
             trcl=1.0,
@@ -2630,7 +2630,7 @@ class Bld2019Param(NamedTuple):
                 0.0,
             ]),
         ),
-    ),
+    ],
 )
 def test_bld2019(bld2019param, monkeypatch, ife):
     """
@@ -2765,7 +2765,7 @@ class IfeacpParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "ifeacpparam",
-    (
+    [
         IfeacpParam(
             a_plant_floor_effective=128814.70697706047,
             p_plant_electric_base=5000000.0,
@@ -2787,7 +2787,7 @@ class IfeacpParam(NamedTuple):
             expected_fcsht=24.322206046559071,
             expected_tlvpmw=54.187816751050391,
         ),
-    ),
+    ],
 )
 def test_ifeacp(ifeacpparam, monkeypatch, ife):
     """
@@ -2903,7 +2903,7 @@ class IfebdgParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "ifebdgparam",
-    (
+    [
         IfebdgParam(
             wrbi=0.0,
             rbwt=3.2000000000000002,
@@ -2949,7 +2949,7 @@ class IfebdgParam(NamedTuple):
             expected_wsvol=110101.88589999999,
             expected_volnucb=461884.59386236279,
         ),
-    ),
+    ],
 )
 def test_ifebdg(ifebdgparam, monkeypatch, ife):
     """
@@ -3055,7 +3055,7 @@ class Ifepw2Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "ifepw2param",
-    (
+    [
         Ifepw2Param(
             ireactor=1,
             pnucloss=0.0,
@@ -3091,7 +3091,7 @@ class Ifepw2Param(NamedTuple):
             expected_precircmw=141.11271036807165,
             expected_p_plant_electric_net_mw=998.38718963192832,
         ),
-    ),
+    ],
 )
 def test_ifepw2(ifepw2param, monkeypatch, ife):
     """

@@ -123,7 +123,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "nuclearheatingmagnetsparam",
-    (
+    [
         NuclearHeatingMagnetsParam(
             dr_fw_inboard=0.018000000000000002,
             dr_vv_inboard=0.30000000000000004,
@@ -218,7 +218,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             expected_x_shield=4.056,
             expected_tfc_nuc_heating=22441.651240901861,
         ),
-    ),
+    ],
 )
 def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_hcpb):
     """
@@ -436,7 +436,7 @@ class NuclearHeatingFwParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "nuclearheatingfwparam",
-    (
+    [
         NuclearHeatingFwParam(
             p_fw_nuclear_heat_total_mw=0,
             m_fw_total=224802.80270851994,
@@ -451,7 +451,7 @@ class NuclearHeatingFwParam(NamedTuple):
             fw_armour_u_nuc_heating=6.2500000000000005e-07,
             expected_p_fw_nuclear_heat_total_mw=225.98781165610032,
         ),
-    ),
+    ],
 )
 def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     """
@@ -511,7 +511,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "nuclearheatingblanketparam",
-    (
+    [
         NuclearHeatingBlanketParam(
             m_blkt_total=3501027.3252278985,
             p_blkt_nuclear_heat_total_mw=0,
@@ -528,7 +528,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
             expected_p_blkt_nuclear_heat_total_mw=1516.6213709741428,
             expected_exp_blanket=0.99983082524994527,
         ),
-    ),
+    ],
 )
 def test_nuclear_heating_blanket(nuclearheatingblanketparam, ccfe_hcpb):
     """
@@ -586,7 +586,7 @@ class NuclearHeatingShieldParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "nuclearheatingshieldparam",
-    (
+    [
         NuclearHeatingShieldParam(
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
@@ -621,7 +621,7 @@ class NuclearHeatingShieldParam(NamedTuple):
             expected_exp_shield1=0.0017209365527675303,
             expected_exp_shield2=0.25426760591013942,
         ),
-    ),
+    ],
 )
 def test_nuclear_heating_shield(nuclearheatingshieldparam, ccfe_hcpb):
     """
@@ -752,7 +752,7 @@ class PowerflowCalcParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "powerflowcalcparam",
-    (
+    [
         PowerflowCalcParam(
             a_fw_outboard=988.92586580655245,
             a_fw_total=1601.1595634509963,
@@ -845,7 +845,7 @@ class PowerflowCalcParam(NamedTuple):
             expected_p_div_coolant_pump_mw=1.7961533897828594,
             expected_p_fw_blkt_coolant_pump_mw=201.94492795635171,
         ),
-    ),
+    ],
 )
 def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     """
@@ -1073,7 +1073,7 @@ class StCpAngleFractionParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "stcpanglefractionparam",
-    (
+    [
         StCpAngleFractionParam(
             z_cp_top=2.6714285714285717,
             r_cp_top=0.92643571428571436,
@@ -1081,7 +1081,7 @@ class StCpAngleFractionParam(NamedTuple):
             rmajor=1.7000000000000002,
             expected_f_geom_cp=0.08375588625302606,
         ),
-    ),
+    ],
 )
 def test_st_cp_angle_fraction(stcpanglefractionparam, ccfe_hcpb):
     """
@@ -1117,7 +1117,7 @@ class StTfCentrepostFastNeutFluxParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "sttfcentrepostfastneutfluxparam",
-    (
+    [
         StTfCentrepostFastNeutFluxParam(
             i_tf_sup=1,
             p_neutron_total_mw=400.65875490746737,
@@ -1132,7 +1132,7 @@ class StTfCentrepostFastNeutFluxParam(NamedTuple):
             rmajor=3,
             expected_neut_flux_cp=148012428028364.28,
         ),
-    ),
+    ],
 )
 def test_st_tf_centrepost_fast_neut_flux(
     sttfcentrepostfastneutfluxparam, monkeypatch, ccfe_hcpb
@@ -1182,7 +1182,7 @@ class StCentrepostNuclearHeatingParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "stcentrepostnuclearheatingparam",
-    (
+    [
         StCentrepostNuclearHeatingParam(
             rmajor=3,
             i_tf_sup=1,
@@ -1201,7 +1201,7 @@ class StCentrepostNuclearHeatingParam(NamedTuple):
             expected_p_cp_shield_nuclear_heat_mw=114.3809576553144,
             expected_pnuc_cp=114.38843306629822,
         ),
-    ),
+    ],
 )
 def test_st_centrepost_nuclear_heating(
     stcentrepostnuclearheatingparam, monkeypatch, ccfe_hcpb
@@ -1334,7 +1334,7 @@ class ComponentMassesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "componentmassesparam",
-    (
+    [
         ComponentMassesParam(
             a_div_surface_total=0,
             f_vol_div_coolant=0.29999999999999999,
@@ -1422,7 +1422,7 @@ class ComponentMassesParam(NamedTuple):
             expected_f_vol_blkt_li4sio4=0.375,
             expected_f_vol_blkt_tibe12=0.375,
         ),
-    ),
+    ],
 )
 def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     """

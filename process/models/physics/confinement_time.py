@@ -197,7 +197,6 @@ class PlasmaConfinementTime:
             - p_plasma_loss_mw (float): Heating power (MW) assumed in calculation
 
         """
-
         # ========================================================================
 
         # Calculate heating power (MW)
@@ -209,20 +208,16 @@ class PlasmaConfinementTime:
 
         # If the device is not ignited, add the injected auxiliary power
         if i_plasma_ignited == 0:
-            p_plasma_loss_mw = p_plasma_loss_mw + p_hcd_injected_total_mw
+            p_plasma_loss_mw += p_hcd_injected_total_mw
 
         # Include the radiation as a loss term based on radiation model
         try:
             model = ConfinementRadiationLossModel(int(physics_variables.i_rad_loss))
 
             if model == ConfinementRadiationLossModel.FULL_RADIATION:
-                p_plasma_loss_mw = (
-                    p_plasma_loss_mw - physics_variables.pden_plasma_rad_mw * vol_plasma
-                )
+                p_plasma_loss_mw -= physics_variables.pden_plasma_rad_mw * vol_plasma
             elif model == ConfinementRadiationLossModel.CORE_ONLY:
-                p_plasma_loss_mw = (
-                    p_plasma_loss_mw - pden_plasma_core_rad_mw * vol_plasma
-                )
+                p_plasma_loss_mw -= pden_plasma_core_rad_mw * vol_plasma
             # NO_RADIATION: do not adjust p_plasma_loss_mw for radiation
         except ValueError as e:
             raise ProcessValueError(
@@ -1090,7 +1085,6 @@ class PlasmaConfinementTime:
             and nTtau is the plasma triple product (n * T * τ_E) in units of keV * s * m⁻³
 
         """
-
         ntau = t_energy_confinement * nd_plasma_electrons_vol_avg
         nTtau = ntau * temp_plasma_electrons_vol_avg_kev
 
@@ -1360,7 +1354,6 @@ class PlasmaConfinementTime:
             Indicator for stellarator (0 for tokamak, >=1 for stellarator).
 
         """
-
         po.oheadr(self.outfile, "Energy confinement times, and required H-factors :")
         po.ocmmnt(
             self.outfile,
@@ -1464,7 +1457,8 @@ class PlasmaConfinementTime:
             float: Neo-Alcator confinement time [s]
 
 
-        References:
+        References
+        ----------
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
         """
@@ -1488,7 +1482,8 @@ class PlasmaConfinementTime:
         :
             float: Mirnov scaling confinement time [s]
 
-        References:
+        References
+        ----------
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
         """
@@ -1529,7 +1524,8 @@ class PlasmaConfinementTime:
             float: Merezhkin-Mukhovatov confinement time [s]
 
 
-        References:
+        References
+        ----------
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
         """
@@ -1572,7 +1568,8 @@ class PlasmaConfinementTime:
         :
             float: Shimomura confinement time [s]
 
-        References:
+        References
+        ----------
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
         """
@@ -1622,11 +1619,13 @@ class PlasmaConfinementTime:
         :
             float: Kaye-Goldston confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - An isotope correction factor (M_i/1.5)^0.5 is added to the original scaling to reflect the fact
             that the empirical fits to the data were from experiments with H and D mixture, M_i = 1.5
 
-        References:
+        References
+        ----------
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
         """
@@ -1682,7 +1681,8 @@ class PlasmaConfinementTime:
             float: ITER 89-P confinement time [s]
 
 
-        References:
+        References
+        ----------
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
 
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
@@ -1737,7 +1737,8 @@ class PlasmaConfinementTime:
         :
             float: ITER 89-O confinement time [s]
 
-        References:
+        References
+        ----------
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         term1 = (
@@ -1802,7 +1803,8 @@ class PlasmaConfinementTime:
             float: Rebut-Lallia confinement time [s]
 
 
-        References:
+        References
+        ----------
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         rll = (rminor**2 * rmajor * kappa) ** (1.0e0 / 3.0e0)
@@ -1849,7 +1851,8 @@ class PlasmaConfinementTime:
         :
             float: Goldston confinement time [s]
 
-        References:
+        References
+        ----------
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
         """
@@ -1903,7 +1906,8 @@ class PlasmaConfinementTime:
         :
             float: T-10 confinement time [s]
 
-        References:
+        References
+        ----------
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
         """
@@ -1964,7 +1968,8 @@ class PlasmaConfinementTime:
         :
             float: JAERI confinement time [s]
 
-        References:
+        References
+        ----------
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
         """
@@ -2026,7 +2031,8 @@ class PlasmaConfinementTime:
             float: Kaye-Big confinement time [s]
 
 
-        References:
+        References
+        ----------
             - N. A. Uckan, International Atomic Energy Agency, Vienna (Austria)and ITER Physics Group,
             "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
         """
@@ -2080,7 +2086,8 @@ class PlasmaConfinementTime:
             float: ITER H90-P confinement time [s]
 
 
-        References:
+        References
+        ----------
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         return (
@@ -2129,7 +2136,8 @@ class PlasmaConfinementTime:
         :
             float: Riedel confinement time [s]
 
-        References:
+        References
+        ----------
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         return (
@@ -2180,7 +2188,8 @@ class PlasmaConfinementTime:
         :
             float: Christiansen confinement time [s]
 
-        References:
+        References
+        ----------
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         return (
@@ -2228,7 +2237,8 @@ class PlasmaConfinementTime:
         :
             float: Lackner-Gottardi confinement time [s]
 
-        References:
+        References
+        ----------
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         qhat = (
@@ -2284,7 +2294,8 @@ class PlasmaConfinementTime:
             float: Neo-Kaye confinement time [s]
 
 
-        References:
+        References
+        ----------
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         return (
@@ -2335,7 +2346,8 @@ class PlasmaConfinementTime:
         :
             float: Riedel H-mode confinement time [s]
 
-        References:
+        References
+        ----------
             - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
         return (
@@ -2381,7 +2393,8 @@ class PlasmaConfinementTime:
         :
             float: Amended ITER H90-P confinement time [s]
 
-        References:
+        References
+        ----------
             - J. P. Christiansen et al., “Global energy confinement H-mode database for ITER,”
             Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992,
             doi: https://doi.org/10.1088/0029-5515/32/2/i11.
@@ -2423,12 +2436,12 @@ class PlasmaConfinementTime:
         :
             float: Sudo et al. confinement time [s]
 
-        References:
+        References
+        ----------
             - S. Sudo et al., “Scalings of energy confinement and density limit in stellarator/heliotron devices,”
             Nuclear Fusion, vol. 30, no. 1, pp. 11-21, Jan. 1990,
             doi: https://doi.org/10.1088/0029-5515/30/1/002.
         """
-
         return (
             0.17e0
             * rmajor**0.75e0
@@ -2466,7 +2479,8 @@ class PlasmaConfinementTime:
         :
             float: Gyro-reduced Bohm confinement time [s]
 
-        References:
+        References
+        ----------
             - Goldston, R. J., H. Biglari, and G. W. Hammett. "E x B/B 2 vs. μ B/B as the Cause of Transport in Tokamaks."
             Bull. Am. Phys. Soc 34 (1989): 1964.
         """
@@ -2510,7 +2524,8 @@ class PlasmaConfinementTime:
         :
             float: Lackner-Gottardi stellarator confinement time [s]
 
-        References:
+        References
+        ----------
             - K. Lackner and N. A. O. Gottardi, “Tokamak confinement in relation to plateau scaling,”
             Nuclear Fusion, vol. 30, no. 4, pp. 767-770, Apr. 1990,
             doi: https://doi.org/10.1088/0029-5515/30/4/018.
@@ -2562,7 +2577,8 @@ class PlasmaConfinementTime:
         :
             float: ITER-93H confinement time [s]
 
-        References:
+        References
+        ----------
             - K. Thomsen et al., “ITER H mode confinement database update,”
             vol. 34, no. 1, pp. 131-167, Jan. 1994, doi: https://doi.org/10.1088/0029-5515/34/1/i10.
         """
@@ -2615,7 +2631,8 @@ class PlasmaConfinementTime:
         :
             float: ITER H97-P confinement time [s]
 
-        References:
+        References
+        ----------
             - I. C. Database and M. W. G. (presented Cordey), “Energy confinement scaling and the extrapolation to ITER,”
             Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127, Dec. 1997,
             doi: https://doi.org/10.1088/0741-3335/39/12b/009.
@@ -2669,7 +2686,8 @@ class PlasmaConfinementTime:
         :
             float: ITER H97-P(y) confinement time [s]
 
-        References:
+        References
+        ----------
             - I. C. Database and M. W. G. (presented Cordey), “Energy confinement scaling and the extrapolation to ITER,”
             Plasma Physics and Controlled Fusion, vol. 39, no. 12B, pp. B115-B127, Dec. 1997,
             doi: https://doi.org/10.1088/0741-3335/39/12b/009.
@@ -2726,10 +2744,12 @@ class PlasmaConfinementTime:
         :
             float: ITER-96P confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - The thermal energy confinement time is given below
 
-        References:
+        References
+        ----------
             - S. B. Kaye et al., “ITER L mode confinement database,”
             Nuclear Fusion, vol. 37, no. 9, pp. 1303-1328, Sep. 1997,
             doi: https://doi.org/10.1088/0029-5515/37/9/i10.
@@ -2834,7 +2854,8 @@ class PlasmaConfinementTime:
         :
             float: Kaye PPPL Workshop confinement time [s]
 
-        References:
+        References
+        ----------
             - Kaye PPPL Workshop April 1998
         """
         return (
@@ -2935,11 +2956,13 @@ class PlasmaConfinementTime:
         :
             float: IPB98(y) ELMy H-mode confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - Unlike the other IPB98 scaling laws, the IPB98(y) scaling law uses the true separatrix elongation.
             - See correction paper below for more information
 
-        References:
+        References
+        ----------
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -2995,10 +3018,12 @@ class PlasmaConfinementTime:
         :
             float: IPB98(y,1) ELMy H-mode confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - See correction paper below for more information about the re-definition of the elongation used.
 
-        References:
+        References
+        ----------
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -3054,10 +3079,12 @@ class PlasmaConfinementTime:
         :
             float: IPB98(y,2) ELMy H-mode confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - See correction paper below for more information about the re-definition of the elongation used.
 
-        References:
+        References
+        ----------
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -3113,10 +3140,12 @@ class PlasmaConfinementTime:
         :
             float: IPB98(y,3) ELMy H-mode confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - See correction paper below for more information about the re-definition of the elongation used.
 
-        References:
+        References
+        ----------
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -3172,10 +3201,12 @@ class PlasmaConfinementTime:
         :
             float: IPB98(y,4) ELMy H-mode confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - See correction paper below for more information about the re-definition of the elongation used.
 
-        References:
+        References
+        ----------
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
@@ -3225,7 +3256,8 @@ class PlasmaConfinementTime:
         :
             float: ISS95 stellarator confinement time [s]
 
-        References:
+        References
+        ----------
             - U. Stroth et al., “Energy confinement scaling from the international stellarator database,”
             vol. 36, no. 8, pp. 1063-1077, Aug. 1996, doi: https://doi.org/10.1088/0029-5515/36/8/i11.
         """
@@ -3270,7 +3302,8 @@ class PlasmaConfinementTime:
         :
             float: ISS04 stellarator confinement time [s]
 
-        References:
+        References
+        ----------
             - H. Yamada et al., “Characterization of energy confinement in net-current free plasmas using the extended International Stellarator Database,”
             vol. 45, no. 12, pp. 1684-1693, Nov. 2005, doi: https://doi.org/10.1088/0029-5515/45/12/024.
         """
@@ -3321,7 +3354,8 @@ class PlasmaConfinementTime:
         :
             float: DS03 beta-independent H-mode confinement time [s]
 
-        References:
+        References
+        ----------
             - T. C. Luce, C. C. Petty, and J. G. Cordey, “Application of dimensionless parameter scaling techniques to the design and interpretation of magnetic fusion experiments,”
             Plasma Physics and Controlled Fusion, vol. 50, no. 4, p. 043001, Mar. 2008,
             doi: https://doi.org/10.1088/0741-3335/50/4/043001.
@@ -3369,10 +3403,12 @@ class PlasmaConfinementTime:
         :
             float: Murari confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - This scaling uses the IPB defintiion of elongation, see reference for more information.
 
-        References:
+        References
+        ----------
             - A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio, “A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks,”
             Nuclear Fusion, vol. 55, no. 7, pp. 073009-073009, Jun. 2015, doi: https://doi.org/10.1088/0029-5515/55/7/073009.
 
@@ -3425,10 +3461,12 @@ class PlasmaConfinementTime:
         :
             float: Petty08 confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - This scaling uses the IPB defintiion of elongation, see reference for more information.
 
-        References:
+        References
+        ----------
             - C. C. Petty, “Sizing up plasmas using dimensionless parameters,”
             Physics of Plasmas, vol. 15, no. 8, Aug. 2008, doi: https://doi.org/10.1063/1.2961043.
 
@@ -3492,7 +3530,8 @@ class PlasmaConfinementTime:
         :
             float: High density relevant confinement time [s]
 
-        References:
+        References
+        ----------
             - P. T. Lang, C. Angioni, R. M. M. Dermott, R. Fischer, and H. Zohm, “Pellet Induced High Density Phases during ELM Suppression in ASDEX Upgrade,”
             24th IAEA Conference Fusion Energy, 2012, Oct. 2012,
             Available: https://www.researchgate.net/publication/274456104_Pellet_Induced_High_Density_Phases_during_ELM_Suppression_in_ASDEX_Upgrade
@@ -3540,7 +3579,8 @@ class PlasmaConfinementTime:
         :
             float: Hubbard confinement time [s]
 
-        References:
+        References
+        ----------
             - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
             Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
         """
@@ -3577,7 +3617,8 @@ class PlasmaConfinementTime:
         :
             float: Hubbard confinement time [s]
 
-        References:
+        References
+        ----------
             - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
             Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
         """
@@ -3614,7 +3655,8 @@ class PlasmaConfinementTime:
         :
             float: Hubbard confinement time [s]
 
-        References:
+        References
+        ----------
             - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
             Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
         """
@@ -3663,14 +3705,16 @@ class PlasmaConfinementTime:
         :
             float: Menard NSTX ELMy H-mode confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - "The leading NSTX conﬁnement scaling coefﬁcient is chosen such that the ITER and ST energy conﬁnement times are
             identical for a reference NSTX scenario"
             - Assumes IPB98(y,2) exponents are applicable where the ST exponents are not yet determined, i.e.
             the species mass, major radius, inverse aspect ratio and elongation. Hence here we use the IPB98(y,2) definition
             of elongation.
 
-        References:
+        References
+        ----------
             - J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,”
             Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019,
             doi: https://doi.org/10.1098/rsta.2017.0440.
@@ -3725,10 +3769,12 @@ class PlasmaConfinementTime:
         :
             float: Menard NSTX-Petty hybrid confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - Assuming a linear interpolation in (1/aspect) between the two scalings
 
-        References:
+        References
+        ----------
             - J. E. Menard, “Compact steady-state tokamak performance dependence on magnet and core physics limits,”
             Philosophical Transactions of the Royal Society A, vol. 377, no. 2141, pp. 20170440-20170440, Feb. 2019,
             doi: https://doi.org/10.1098/rsta.2017.0440.
@@ -3808,7 +3854,8 @@ class PlasmaConfinementTime:
         :
             float: NSTX gyro-Bohm confinement time [s]
 
-        References:
+        References
+        ----------
             - P. F. Buxton, L. Connor, A. E. Costley, Mikhail Gryaznevich, and S. McNamara,
             “On the energy confinement time in spherical tokamaks: implications for the design of pilot plants and fusion reactors,”
             vol. 61, no. 3, pp. 035006-035006, Jan. 2019, doi: https://doi.org/10.1088/1361-6587/aaf7e5.
@@ -3862,11 +3909,13 @@ class PlasmaConfinementTime:
         :
             float: ITPA20 confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - Mass term is the effective mass of the plasma, so we assume the total ion mass here
             - This scaling uses the IPB defintiion of elongation, see reference for more information.
 
-        References:
+        References
+        ----------
             - G. Verdoolaege et al., “The updated ITPA global H-mode confinement database: description and analysis,”
             Nuclear Fusion, vol. 61, no. 7, pp. 076006-076006, Jan. 2021, doi: https://doi.org/10.1088/1741-4326/abdb91.
         """
@@ -3920,15 +3969,16 @@ class PlasmaConfinementTime:
         :
             float: ITPA20-IL confinement time [s]
 
-        Notes:
+        Notes
+        -----
             - Mass term is the effective mass of the plasma, so we assume the total ion mass here
             - This scaling uses the IPB defintiion of elongation, see reference for more information.
 
-        References:
+        References
+        ----------
             - T. Luda et al., “Validation of a full-plasma integrated modeling approach on ASDEX Upgrade,”
             Nuclear Fusion, vol. 61, no. 12, pp. 126048-126048, Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
         """
-
         return (
             0.067
             * pcur**1.29

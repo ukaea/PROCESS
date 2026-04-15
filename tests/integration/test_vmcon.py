@@ -685,8 +685,8 @@ def log_failure(case):
     for i in range(case.vmcon.n):
         summ = case.vmcon.fgrd[i]
         for j in range(case.vmcon.m):
-            summ = summ - case.vmcon.vlam[j] * case.vmcon.cnorm[i, j]
-        errlg = errlg + abs(summ)
+            summ -= case.vmcon.vlam[j] * case.vmcon.cnorm[i, j]
+        errlg += abs(summ)
     logger.debug(f"{errlg}, {case.exp.errlg}")
 
     logger.debug("Lagrange multiplier error: calculated vs expected")
@@ -694,13 +694,13 @@ def log_failure(case):
     for i in range(case.vmcon.m):
         if (i <= case.vmcon.meq) or (case.vmcon.vlam[i] >= 0.0):
             continue
-        errlm = errlm + abs(case.vmcon.vlam[i])
+        errlm += abs(case.vmcon.vlam[i])
     logger.debug(f"{errlm}, {case.exp.errlm}")
 
     logger.debug("Complementarity error: calculated vs expected")
     errcom = 0.0
     for i in range(case.vmcon.m):
-        errcom = errcom + abs(case.vmcon.vlam[i] * case.vmcon.conf[i])
+        errcom += abs(case.vmcon.vlam[i] * case.vmcon.conf[i])
     logger.debug(f"{errcom}, {case.exp.errcom}")
 
     logger.debug("Constraint error: calculated vs expected")
@@ -708,5 +708,5 @@ def log_failure(case):
     for i in range(case.vmcon.m):
         if (i > case.vmcon.meq) and (case.vmcon.conf[i] >= 0.0):
             continue
-        errcon = errcon + abs(case.vmcon.conf[i])
+        errcon += abs(case.vmcon.conf[i])
     logger.debug(f"{errcon}, {case.exp.errcon}")

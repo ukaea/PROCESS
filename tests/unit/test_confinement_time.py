@@ -4,7 +4,7 @@ from process.models.physics.confinement_time import PlasmaConfinementTime
 
 
 @pytest.mark.parametrize(
-    "func, args, expected",
+    ("func", "args", "expected"),
     [
         (
             PlasmaConfinementTime.neo_alcator_confinement_time,
@@ -250,7 +250,7 @@ def test_confinement_time(func, args, expected):
 
 
 @pytest.mark.parametrize(
-    "func, args, expected",
+    ("func", "args", "expected"),
     [
         (
             PlasmaConfinementTime.calculate_double_and_triple_product,

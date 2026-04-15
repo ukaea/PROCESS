@@ -119,7 +119,6 @@ class Vacuum(Model):
             number of pumps for pumpdown and steady-state
             indicate whether output should be written to the output file, or not
         """
-
         # Steady-state model (super simple)
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
@@ -484,7 +483,7 @@ class Vacuum(Model):
                 if a1 < a1max:
                     break
 
-                ceff[i] = 0.9e0 * ceff[i]
+                ceff[i] *= 0.9e0
                 if ceff[i] <= (1.1e0 * s[i]):
                     #  Ducts are not big enough. Flag and continue.
                     nflag = 1
@@ -492,7 +491,7 @@ class Vacuum(Model):
 
             cmax = ceff[i]
 
-        pumpn = pumpn * nduct
+        pumpn *= nduct
 
         #  d[imax]= diameter of passage from divertor to pumping ducts (m)
         #  dout    = diameter of ducts from passage to hi-vac pumps (m)
@@ -516,7 +515,7 @@ class Vacuum(Model):
         #  for continuous operation with regeneration.
 
         if vacuum_variables.i_vacuum_pump_type == 1:
-            pumpn = pumpn * 2.0e0
+            pumpn *= 2.0e0
 
         #  Information for costing routine
 
@@ -825,7 +824,6 @@ class VacuumVessel(Model):
         dr_fw_outboard:
 
         """
-
         z_bottom = z_tf_inside_half - dz_shld_vv_gap - dz_vv_lower
 
         # Calculate component internal upper half-height (m)
@@ -874,7 +872,6 @@ class VacuumVessel(Model):
         dz_vv_lower:
 
         """
-
         r_1 = r_shld_inboard_inner
         r_2 = r_shld_outboard_outer - r_1
 
@@ -957,7 +954,6 @@ class VacuumVessel(Model):
 
     def output(self):
         """Output shield areas and volumes to log."""
-
         po.oheadr(self.outfile, "Vacuum Vessel Areas and Volumes")
 
         po.ovarrf(

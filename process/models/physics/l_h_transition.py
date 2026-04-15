@@ -110,7 +110,6 @@ class PlasmaConfinementTransition:
             Array of power thresholds
 
         """
-
         dnla20 = 1e-20 * nd_plasma_electron_line
 
         # ========================================================================
@@ -428,7 +427,7 @@ class PlasmaConfinementTransition:
             "OP ",
         )
         po.oblnkl(self.outfile)
-        if physics_variables.i_l_h_threshold in [9, 10, 11]:
+        if physics_variables.i_l_h_threshold in {9, 10, 11}:
             if (physics_variables.b_plasma_toroidal_on_axis < 0.78e0) or (
                 physics_variables.b_plasma_toroidal_on_axis > 7.94e0
             ):
@@ -481,7 +480,7 @@ class PlasmaConfinementTransition:
 
         po.oblnkl(self.outfile)
 
-        if physics_variables.i_l_h_threshold in [12, 13, 14]:
+        if physics_variables.i_l_h_threshold in {12, 13, 14}:
             po.ocmmnt(
                 self.outfile,
                 "(L-H threshold for closed divertor only. Limited data used in Snipes fit)",
@@ -752,6 +751,7 @@ class PlasmaConfinementTransition:
             - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
             "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
             reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+
         References
         ----------
             - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
@@ -1114,14 +1114,11 @@ class PlasmaConfinementTransition:
         float
             The Hubbard 2012 L-I transition power threshold [MW]
 
-        Notes
-        -----
-
         References
         ----------
-            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
-            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+          Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+          doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
         """
         return 2.11 * (plasma_current / 1e6) ** 0.94 * dnla20**0.65
@@ -1142,14 +1139,11 @@ class PlasmaConfinementTransition:
         float
             The Hubbard 2012 L-I transition power threshold [MW]
 
-        Notes
-        -----
-
         References
         ----------
-            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
-            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+          Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+          doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
         """
         return 2.11 * (plasma_current / 1e6) ** 1.18 * dnla20**0.83
@@ -1170,14 +1164,11 @@ class PlasmaConfinementTransition:
         float
             The Hubbard 2012 L-I transition power threshold [MW]
 
-        Notes
-        -----
-
         References
         ----------
-            - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
-            Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
-            doi: https://doi.org/10.1088/0029-5515/52/11/114009.
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+          Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
+          doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
         """
         return 2.11 * (plasma_current / 1e6) ** 0.7 * dnla20**0.47
@@ -1204,13 +1195,13 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - The scaling is given in the caption of Figure 6 in the reference.
+        - The scaling is given in the caption of Figure 6 in the reference.
 
         References
         ----------
-            - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
-            Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017,
-            doi: https://doi.org/10.1088/1741-4326/aa8570.
+        - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
+          Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017,
+          doi: https://doi.org/10.1088/1741-4326/aa8570.
 
         """
         return 0.162 * dnla20 * a_plasma_surface * b_plasma_toroidal_on_axis**0.26
@@ -1263,7 +1254,6 @@ class PlasmaConfinementTransition:
             doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
-
         if aspect <= 2.7:
             aspect_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
         else:
@@ -1326,7 +1316,6 @@ class PlasmaConfinementTransition:
             doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
-
         if aspect <= 2.7:
             aspect_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
         else:
@@ -1389,7 +1378,6 @@ class PlasmaConfinementTransition:
             doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
-
         if aspect <= 2.7:
             aspect_correction = 0.098 * aspect / (1.0 - (2.0 / (1.0 + aspect)) ** 0.5)
         else:

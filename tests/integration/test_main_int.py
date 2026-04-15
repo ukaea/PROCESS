@@ -79,7 +79,7 @@ def test_plot_summary(temp_data, mfile_name, cli_runner):
     cli_runner(process_cli, args=["-i", input_file_str, "--full-output"])
 
     # Assert a pdf has been created
-    assert len(list(temp_data.glob("*.pdf")))
+    assert list(temp_data.glob("*.pdf"))
 
 
 def test_single_run_with_mfilejson(temp_data, cli_runner):

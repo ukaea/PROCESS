@@ -211,13 +211,13 @@ def output(stellarator):
     drbild = (
         build_variables.dr_bore + build_variables.dr_cs + build_variables.dr_cs_tf_gap
     )
-    radius = radius + drbild
+    radius += drbild
     po.obuild(stellarator.outfile, "Machine dr_bore", drbild, radius, "(dr_bore)")
     po.ovarre(
         stellarator.outfile, "Machine build_variables.dr_bore (m)", "(dr_bore)", drbild
     )
 
-    radius = radius + build_variables.dr_tf_inboard
+    radius += build_variables.dr_tf_inboard
     po.obuild(
         stellarator.outfile,
         "Coil inboard leg",
@@ -232,7 +232,7 @@ def output(stellarator):
         build_variables.dr_tf_inboard,
     )
 
-    radius = radius + build_variables.dr_shld_vv_gap_inboard
+    radius += build_variables.dr_shld_vv_gap_inboard
     po.obuild(
         stellarator.outfile,
         "Gap",
@@ -247,7 +247,7 @@ def output(stellarator):
         build_variables.dr_shld_vv_gap_inboard,
     )
 
-    radius = radius + build_variables.dr_vv_inboard
+    radius += build_variables.dr_vv_inboard
     po.obuild(
         stellarator.outfile,
         "Vacuum vessel",
@@ -262,7 +262,7 @@ def output(stellarator):
         build_variables.dr_vv_inboard,
     )
 
-    radius = radius + build_variables.dr_shld_inboard
+    radius += build_variables.dr_shld_inboard
     po.obuild(
         stellarator.outfile,
         "Inboard shield",
@@ -277,7 +277,7 @@ def output(stellarator):
         build_variables.dr_shld_inboard,
     )
 
-    radius = radius + build_variables.dr_blkt_inboard
+    radius += build_variables.dr_blkt_inboard
     po.obuild(
         stellarator.outfile,
         "Inboard blanket",
@@ -292,7 +292,7 @@ def output(stellarator):
         build_variables.dr_blkt_inboard,
     )
 
-    radius = radius + build_variables.dr_fw_inboard
+    radius += build_variables.dr_fw_inboard
     po.obuild(
         stellarator.outfile,
         "Inboard first wall",
@@ -307,7 +307,7 @@ def output(stellarator):
         build_variables.dr_fw_inboard,
     )
 
-    radius = radius + build_variables.dr_fw_plasma_gap_inboard
+    radius += build_variables.dr_fw_plasma_gap_inboard
     po.obuild(
         stellarator.outfile,
         "Inboard scrape-off",
@@ -322,7 +322,7 @@ def output(stellarator):
         build_variables.dr_fw_plasma_gap_inboard,
     )
 
-    radius = radius + physics_variables.rminor
+    radius += physics_variables.rminor
     po.obuild(
         stellarator.outfile,
         "Plasma geometric centre",
@@ -331,7 +331,7 @@ def output(stellarator):
         "(rminor)",
     )
 
-    radius = radius + physics_variables.rminor
+    radius += physics_variables.rminor
     po.obuild(
         stellarator.outfile,
         "Plasma outboard edge",
@@ -340,7 +340,7 @@ def output(stellarator):
         "(rminor)",
     )
 
-    radius = radius + build_variables.dr_fw_plasma_gap_outboard
+    radius += build_variables.dr_fw_plasma_gap_outboard
     po.obuild(
         stellarator.outfile,
         "Outboard scrape-off",
@@ -355,7 +355,7 @@ def output(stellarator):
         build_variables.dr_fw_plasma_gap_outboard,
     )
 
-    radius = radius + build_variables.dr_fw_outboard
+    radius += build_variables.dr_fw_outboard
     po.obuild(
         stellarator.outfile,
         "Outboard first wall",
@@ -370,7 +370,7 @@ def output(stellarator):
         build_variables.dr_fw_outboard,
     )
 
-    radius = radius + build_variables.dr_blkt_outboard
+    radius += build_variables.dr_blkt_outboard
     po.obuild(
         stellarator.outfile,
         "Outboard blanket",
@@ -385,7 +385,7 @@ def output(stellarator):
         build_variables.dr_blkt_outboard,
     )
 
-    radius = radius + build_variables.dr_shld_outboard
+    radius += build_variables.dr_shld_outboard
     po.obuild(
         stellarator.outfile,
         "Outboard shield",
@@ -400,7 +400,7 @@ def output(stellarator):
         build_variables.dr_shld_outboard,
     )
 
-    radius = radius + build_variables.dr_vv_outboard
+    radius += build_variables.dr_vv_outboard
     po.obuild(
         stellarator.outfile,
         "Vacuum vessel",
@@ -409,7 +409,7 @@ def output(stellarator):
         "(dr_vv_outboard)",
     )
 
-    radius = radius + build_variables.dr_shld_vv_gap_outboard
+    radius += build_variables.dr_shld_vv_gap_outboard
     po.obuild(
         stellarator.outfile,
         "Gap",
@@ -424,7 +424,7 @@ def output(stellarator):
         build_variables.dr_shld_vv_gap_outboard,
     )
 
-    radius = radius + build_variables.dr_tf_outboard
+    radius += build_variables.dr_tf_outboard
     po.obuild(
         stellarator.outfile,
         "Coil outboard leg",

@@ -4,6 +4,7 @@ Defines fixtures that will be shared across all test modules.
 """
 
 import os
+import pathlib
 import traceback
 import warnings
 
@@ -174,7 +175,7 @@ def return_to_root():
     This fixture ensures that, at the end of each test, the cwd is reset to what it
     was at the beginning of the test.
     """
-    cwd = os.getcwd()
+    cwd = pathlib.Path.cwd()
     yield
     os.chdir(cwd)
 
@@ -196,7 +197,7 @@ def _plot_show_and_close(request):
     -----
     Does not do anything if testclass marked with 'classplot'
     """
-    import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt  # noqa:PLC0415
 
     cls = request.node.getparent(pytest.Class)
 
@@ -222,7 +223,7 @@ def _plot_show_and_close_class(request):
     -----
     Only shows and closes figures on classes marked with 'classplot'
     """
-    import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt  # noqa:PLC0415
 
     if "classplot" in request.keywords:
         yield
@@ -244,7 +245,7 @@ def process_models():
     return models
 
 
-@pytest.fixture()
+@pytest.fixture
 def cli_runner():
     def _cli_runner(command, args: list[str] | None = None, exit_code=0):
         result = CliRunner().invoke(command, args=args or [])

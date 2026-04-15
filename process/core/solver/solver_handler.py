@@ -65,20 +65,20 @@ class SolverHandler:
                 # epsfcn is only used in evaluators.Evaluators()
                 # TODO epsfcn could be set in Evaluators instance now, don't need to
                 # set/unset in numerics module
-                numerics.epsfcn = numerics.epsfcn * 10  # try new larger value
+                numerics.epsfcn *= 10  # try new larger value
                 print("new epsfcn = ", numerics.epsfcn)
 
                 ifail = self.solver.solve()
                 # First solution attempt failed (ifail != 1): supply ifail value
                 # to next attempt
-                numerics.epsfcn = numerics.epsfcn / 10  # reset value
+                numerics.epsfcn /= 10  # reset value
 
             if ifail != 1:
                 print("Trying again with new epsfcn")
-                numerics.epsfcn = numerics.epsfcn / 10  # try new smaller value
+                numerics.epsfcn /= 10  # try new smaller value
                 print("new epsfcn = ", numerics.epsfcn)
                 ifail = self.solver.solve()
-                numerics.epsfcn = numerics.epsfcn * 10  # reset value
+                numerics.epsfcn *= 10  # reset value
 
             # If VMCON has exited with error code 5 try another run using a multiple
             # of the identity matrix as input for the Hessian b(n,n)

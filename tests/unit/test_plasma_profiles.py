@@ -25,7 +25,7 @@ class NeProfileParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "neprofileparam",
-    (
+    [
         NeProfileParam(
             nd_plasma_separatrix_electron=3.6421334486704804e19,
             i_plasma_pedestal=1,
@@ -46,7 +46,7 @@ class NeProfileParam(NamedTuple):
                 4.00000000e19,
             ],
         ),
-    ),
+    ],
     ids=["baseline_2018"],
 )
 def test_neprofile(neprofileparam: ProfileParam, monkeypatch):
@@ -79,7 +79,7 @@ class TeProfileParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "teprofileparam",
-    (
+    [
         TeProfileParam(
             radius_plasma_pedestal_temp_norm=0.94000000000000006,
             tbeta=2,
@@ -100,7 +100,7 @@ class TeProfileParam(NamedTuple):
                 1.0,
             ],
         ),
-    ),
+    ],
     ids=["baseline_2018"],
 )
 def test_teprofile(teprofileparam: ProfileParam, monkeypatch):
@@ -216,7 +216,7 @@ class PlasmaProfilesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "plasmaprofilesparam",
-    (
+    [
         PlasmaProfilesParam(
             prn1=0.40000000000000002,
             radius_plasma_pedestal_temp_norm=0.94000000000000006,
@@ -307,7 +307,7 @@ class PlasmaProfilesParam(NamedTuple):
             expected_nd_electron_line=8.8687354645836431e19,
             expected_ti=13.07,
         ),
-    ),
+    ],
 )
 def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
     """

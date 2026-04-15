@@ -146,7 +146,7 @@ class StgeomParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "stgeomparam",
-    (
+    [
         StgeomParam(
             aspect=12.33,
             rmajor=22,
@@ -183,7 +183,7 @@ class StgeomParam(NamedTuple):
             expected_vol=1385.2745877380669,
             expected_a_plasma_poloidal=10.001590778710231,
         ),
-    ),
+    ],
 )
 def test_stgeom(stgeomparam, monkeypatch, stellarator):
     """
@@ -397,7 +397,7 @@ class StbildParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "stbildparam",
-    (
+    [
         StbildParam(
             blbmith=0.17000000000000001,
             blbmoth=0.27000000000000002,
@@ -536,7 +536,7 @@ class StbildParam(NamedTuple):
             expected_available_radial_space=1.8828828828828827,
             expected_required_radial_space=2.0332922403587861,
         ),
-    ),
+    ],
 )
 def test_stbild(stbildparam, monkeypatch, stellarator):
     """
@@ -812,7 +812,7 @@ class StstrcParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "ststrcparam",
-    (
+    [
         StstrcParam(
             dewmkg=0,
             den_steel=7800,
@@ -861,7 +861,7 @@ class StstrcParam(NamedTuple):
             expected_clgsmass=1041420.5168202254,
             expected_coldmass=32809906.884893194,
         ),
-    ),
+    ],
 )
 def test_ststrc(ststrcparam, monkeypatch, stellarator):
     """
@@ -1012,7 +1012,7 @@ class IntersectParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "intersectparam",
-    (
+    [
         IntersectParam(
             x1=np.array(
                 np.array(
@@ -1843,7 +1843,7 @@ class IntersectParam(NamedTuple):
             xin=0.22251193896599297,
             expected_x=0.624584480717571,
         ),
-    ),
+    ],
 )
 def test_intersect(intersectparam):
     """
@@ -1888,7 +1888,7 @@ class StdlimParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "stdlimparam",
-    (
+    [
         StdlimParam(
             nd_plasma_electrons_vol_avg=2.0914e20,
             nd_plasma_electron_line=2.357822619799476e20,
@@ -1911,7 +1911,7 @@ class StdlimParam(NamedTuple):
             expected_dnelimt=1.2915514639846759e20,
             expected_dlimit=1.2915514639846759e20,
         ),
-    ),
+    ],
 )
 def test_stdlim(stdlimparam, monkeypatch, stellarator):
     """
@@ -1972,7 +1972,7 @@ class StdlimEcrhParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "stdlimecrhparam",
-    (
+    [
         StdlimEcrhParam(
             i_plasma_pedestal=0,
             bt_input=6.9100000000000001,
@@ -1980,7 +1980,7 @@ class StdlimEcrhParam(NamedTuple):
             expected_dlimit_ecrh=4.6472737339514113e20,
             expected_bt_max=14.279966607226331,
         ),
-    ),
+    ],
 )
 def test_stdlim_ecrh(stdlimecrhparam, monkeypatch):
     """
@@ -2040,7 +2040,7 @@ class StCalcEffChiParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "stcalceffchiparam",
-    (
+    [
         StCalcEffChiParam(
             temp_plasma_electron_on_axis_kev=19.108573496973477,
             nd_plasma_electron_on_axis=3.4479000000000007e20,
@@ -2075,7 +2075,7 @@ class StCalcEffChiParam(NamedTuple):
             expected_output=0.2368034193234161,
             # expected_output=0.23684190261197124, used old e_
         ),
-    ),
+    ],
 )
 def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     """
@@ -2183,7 +2183,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "sctfcoilnuclearheatingiter90param",
-    (
+    [
         SctfcoilNuclearHeatingIter90Param(
             dr_blkt_inboard=0.83499999999999996,
             dr_blkt_outboard=1.085,
@@ -2211,7 +2211,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             expected_raddose=588883584.03266943,
             expected_p_tf_nuclear_heat_mw=0,
         ),
-    ),
+    ],
 )
 def test_sctfcoil_nuclear_heating_iter90(
     sctfcoilnuclearheatingiter90param, monkeypatch, stellarator

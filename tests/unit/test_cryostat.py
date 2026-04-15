@@ -50,7 +50,7 @@ class ExternalCryoGeometryParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "externalcryogeometryparam",
-    (
+    [
         ExternalCryoGeometryParam(
             f_z_cryostat=4.2679999999999998,
             z_tf_inside_half=8.8182171641274945,
@@ -133,7 +133,7 @@ class ExternalCryoGeometryParam(NamedTuple):
             expected_dz_tf_cryostat=5.514694530398824,
             expected_dz_pf_cryostat=5.3441455565624985,
         ),
-    ),
+    ],
 )
 def test_external_cryo_geometry(
     externalcryogeometryparam, monkeypatch, cryostat_fixture

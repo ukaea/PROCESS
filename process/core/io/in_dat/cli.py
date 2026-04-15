@@ -25,5 +25,4 @@ from process.core.io.in_dat.create import write_indat
 )
 def new_indat(mfile, indat, indat_out, feasible_point_index):
     """Creates a new IN.DAT using MFILE.DAT iteration variables."""
-
     write_indat(mfile, indat, indat_out, feasible_point_index)

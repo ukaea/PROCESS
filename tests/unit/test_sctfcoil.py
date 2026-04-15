@@ -61,7 +61,7 @@ class ProtectParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "protectparam",
-    (
+    [
         ProtectParam(
             aio=74026.751437500003,
             tfes=9561415368.8360519,
@@ -98,7 +98,7 @@ class ProtectParam(NamedTuple):
             expected_ajwpro=15248071.694109693,
             expected_vd=10001.287165953383,
         ),
-    ),
+    ],
 )
 def test_protect(protectparam, sctfcoil):
     """
@@ -232,7 +232,7 @@ class SuperconParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "superconparam",
-    (
+    [
         SuperconParam(
             temp_tf_superconductor_margin_min=1.5,
             n_tf_coils=16,
@@ -333,7 +333,7 @@ class SuperconParam(NamedTuple):
             expected_c_turn_cables_critical=159162.9081148869,
             expected_j_superconductor=387250216.7686755,
         ),
-    ),
+    ],
 )
 def test_supercon(superconparam, monkeypatch, sctfcoil):
     """
@@ -487,7 +487,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "peaktfwithrippleparam",
-    (
+    [
         PeakTfWithRippleParam(
             tf_fit_t=0,
             tf_fit_z=0,
@@ -516,7 +516,7 @@ class PeakTfWithRippleParam(NamedTuple):
             expected_f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             expected_b_tf_inboard_peak_with_ripple=12.48976756562082,
         ),
-    ),
+    ],
 )
 def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     """
@@ -645,7 +645,7 @@ class TfWpGeomParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tfwpgeomparam",
-    (
+    [
         TfWpGeomParam(
             dr_tf_inboard=1.208,
             r_tf_inboard_in=2.9939411851091102,
@@ -768,7 +768,7 @@ class TfWpGeomParam(NamedTuple):
             expected_dx_tf_wp_toroidal_average=1.4077146193242376,
             expected_a_tf_wp_ground_insulation=0.030309207963043927,
         ),
-    ),
+    ],
 )
 def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
     """
@@ -893,7 +893,7 @@ class TfCaseGeomParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tfcasegeomparam",
-    (
+    [
         TfCaseGeomParam(
             a_tf_leg_outboard=1.9805354702921749,
             a_tf_inboard_total=27.308689677971632,
@@ -917,7 +917,7 @@ class TfCaseGeomParam(NamedTuple):
             expected_a_tf_plasma_case=0.18607458590131154,
             expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
-    ),
+    ],
 )
 def test_superconducting_tf_case_geometry(tfcasegeomparam, sctfcoil):
     """
@@ -1044,7 +1044,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tfintegerturngeomparam",
-    (
+    [
         TfIntegerTurnGeomParam(
             dr_tf_wp_with_insulation=0.54261087836601019,
             dx_tf_wp_insulation=0.0080000000000000019,
@@ -1113,7 +1113,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             expected_cpttf=74026.751437500003,
             expected_n_tf_coil_turns=200,
         ),
-    ),
+    ],
 )
 def test_tf_cable_in_conduit_integer_turn_geometry(tfintegerturngeomparam, sctfcoil):
     """
@@ -1260,7 +1260,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tfaveragedturngeomparam",
-    (
+    [
         TfAveragedTurnGeomParam(
             layer_ins=0,
             t_conductor=0,
@@ -1365,7 +1365,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_a_tf_turn_insulation=0.00018910719999999962,
             expected_n_tf_coil_turns=168.6701961481806,
         ),
-    ),
+    ],
 )
 def test_tf_cable_in_conduit_averaged_turn_geometry(
     tfaveragedturngeomparam, monkeypatch, sctfcoil
@@ -1466,7 +1466,7 @@ class TfWpCurrentsParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tfwpcurrentsparam",
-    (
+    [
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
@@ -1481,7 +1481,7 @@ class TfWpCurrentsParam(NamedTuple):
             a_tf_wp_no_insulation=0.60510952642236249,
             expected_j_tf_wp=26493137.688284047,
         ),
-    ),
+    ],
 )
 def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
     """
@@ -1757,7 +1757,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tfcoilareaandmassesparam",
-    (
+    [
         TfCoilAreaAndMassesParam(
             hr1=0.0,
             r_tf_outboard_mid=16.519405859443332,
@@ -1906,7 +1906,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_m_tf_coil_wp_turn_insulation=7990.5249666247555,
             expected_cplen=20.562180043124066,
         ),
-    ),
+    ],
 )
 def test_superconducting_tf_coil_area_and_masses(
     tfcoilareaandmassesparam, monkeypatch, sctfcoil
@@ -2177,7 +2177,17 @@ def test_superconducting_tf_coil_area_and_masses(
 
 
 @pytest.mark.parametrize(
-    "i_tf_superconductor, j_superconductor, b_tf_inboard_peak, strain, bc20m, tc0m, c0, temp_tf_coolant_peak_field, expected_margin",
+    (
+        "i_tf_superconductor",
+        "j_superconductor",
+        "b_tf_inboard_peak",
+        "strain",
+        "bc20m",
+        "tc0m",
+        "c0",
+        "temp_tf_coolant_peak_field",
+        "expected_margin",
+    ),
     [
         # ITER Nb3Sn, standard parameters
         (1, 1e8, 12.0, 0.0, 32.97, 16.06, 1e10, 4.5, 5.679499736095401),

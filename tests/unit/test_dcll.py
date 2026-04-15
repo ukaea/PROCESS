@@ -85,7 +85,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "dcllneutronicsandpowerparam",
-    (
+    [
         DcllNeutronicsAndPowerParam(
             a_fw_outboard=988.92586580655245,
             a_fw_total=1601.1595634509963,
@@ -146,7 +146,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             expected_p_blkt_nuclear_heat_total_mw=1533.0163252173013,
             expected_p_blkt_multiplication_mw=324.96563552675644,
         ),
-    ),
+    ],
 )
 def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcll):
     """
@@ -546,7 +546,7 @@ class DcllMassesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "dcllmassesparam",
-    (
+    [
         DcllMassesParam(
             a_fw_inboard=612.23369764444396,
             dr_fw_inboard=0.018000000000000002,
@@ -785,7 +785,7 @@ class DcllMassesParam(NamedTuple):
             expected_mass_segm_ib=99845.314502560635,
             expected_mass_segm_ob=163380.10530832107,
         ),
-    ),
+    ],
 )
 def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
     """

@@ -1,6 +1,6 @@
 """Integration tests for write_new_in_dat.py."""
 
-from pytest import approx
+import pytest
 
 from process.core.io.in_dat import InDat
 from process.core.io.in_dat.cli import new_indat
@@ -33,5 +33,5 @@ def test_write_new_in_dat(temp_data, mfile_name, cli_runner):
     fimp13_obs = in_dat.data["f_nd_impurity_electrons"].get_value[12]
 
     # Assert mfile values are now the same as IN.DAT value
-    assert te_obs == approx(te_exp)
-    assert fimp13_obs == approx(fimp13_exp)
+    assert te_obs == pytest.approx(te_exp)
+    assert fimp13_obs == pytest.approx(fimp13_exp)

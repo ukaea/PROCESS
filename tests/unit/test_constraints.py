@@ -10,8 +10,8 @@ from process.core.solver.constraints import ConstraintManager
 
 @pytest.mark.parametrize(
     "constraint_registration",
-    ConstraintManager._constraint_registry.values(),  # noqa: SLF001
-    ids=[f"constraint_{i}" for i in ConstraintManager._constraint_registry],  # noqa: SLF001
+    ConstraintManager._constraint_registry.values(),
+    ids=[f"constraint_{i}" for i in ConstraintManager._constraint_registry],
 )
 def test_constraint_functions(constraint_registration):
     """A simple test that runs a constraint with PROCESS' default initialisation to check

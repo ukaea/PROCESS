@@ -228,19 +228,19 @@ class Caller:
 
             # Close idempotence files, write final output file and mfile
             OutputFileManager.close_idempotence_files()
-            finalise(
-                self.models,
-                self.data,
-                ifail,
-                non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
-            )
-            return
 
         except Exception:
             # If exception in model evaluations delete intermediate idempotence
             # files to clean up
             OutputFileManager.close_idempotence_files()
             raise
+        else:
+            finalise(
+                self.models,
+                self.data,
+                ifail,
+                non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
+            )
 
     def _call_models_once(self, xc: np.ndarray):
         """Call the physics and engineering models.
@@ -258,7 +258,7 @@ class Caller:
         nvars = len(xc)
 
         # Increment the call counter
-        data_structure.numerics.ncalls = data_structure.numerics.ncalls + 1
+        data_structure.numerics.ncalls += 1
 
         # Convert variables
         set_scaled_iteration_variable(xc, nvars)

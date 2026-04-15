@@ -60,7 +60,7 @@ class FwTempParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "fwtempparam",
-    (
+    [
         FwTempParam(
             fw_th_conductivity=28.34,
             i_fw_coolant_type="helium",
@@ -105,7 +105,7 @@ class FwTempParam(NamedTuple):
             expected_rhofmean=5.7616377393642955,
             expected_massrate=0.005816503189155049,
         ),
-    ),
+    ],
 )
 def test_fw_temp(fwtempparam, monkeypatch, fw):
     """

@@ -55,7 +55,6 @@ class BlanketLibrary(Model):
 
         Calculate the blanket, shield, vacuum vessel and cryostat volumes
         """
-
         # Calculate half-height
         # Blanket
         blanket_library.dz_blkt_half = self.calculate_blkt_half_height(
@@ -567,7 +566,6 @@ class BlanketLibrary(Model):
 
     def output_blkt_volumes_and_areas(self):
         """Outputs blanket volumes and areas to the output file"""
-
         po.oheadr(self.outfile, "Blanket Volumes and Surface Areas")
 
         po.ovarst(
@@ -658,7 +656,6 @@ class BlanketLibrary(Model):
         output: bool
 
         """
-
         # Make sure that, if the inputs for the FW and blanket inputs are different,
         # the i_fw_blkt_shared_coolant variable is appropriately set for separate coolants
         if (
@@ -862,7 +859,6 @@ class BlanketLibrary(Model):
         Error
             If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
         """
-
         if fwbs_variables.i_blanket_type == 5:
             # Unless DCLL then we will use BZ
             blanket_library.len_blkt_inboard_coolant_channel_radial = (
@@ -1058,7 +1054,7 @@ class BlanketLibrary(Model):
         N_FW_PIPE_180_DEG_BENDS = 0
 
         # N.B. This is for BZ only, does not include MF/BSS.
-        if fwbs_variables.i_blkt_dual_coolant in (1, 2):
+        if fwbs_variables.i_blkt_dual_coolant in {1, 2}:
             N_BLKT_PIPE_90_DEG_BENDS = 4
             N_BLKT_PIPE_180_DEG_BENDS = 1
             no90bz_liq = 2
@@ -1476,7 +1472,6 @@ class BlanketLibrary(Model):
         :rtype: float
 
         """
-
         # D-shaped machine
         # Segment vertical inboard surface (m)
         return (2.0 * dz_blkt_half) / n_blkt_inboard_modules_poloidal
@@ -1514,7 +1509,6 @@ class BlanketLibrary(Model):
 
 
         """
-
         # Calculate perimeter of ellipse that defines the internal
         # surface of the outboard first wall / blanket
 
@@ -1580,7 +1574,6 @@ class BlanketLibrary(Model):
         :rtype: float
 
         """
-
         # Major radius where half-ellipses 'meet' (m)
         r1 = rmajor - rminor * triang
 
@@ -1649,7 +1642,6 @@ class BlanketLibrary(Model):
 
 
         """
-
         # Major radius where half-ellipses 'meet' (m)
         r1 = rmajor - rminor * triang
 
@@ -1684,26 +1676,23 @@ class BlanketLibrary(Model):
         Uses middle value of input and output temperatures of Liquid Metal Breeder/Coolant
         Curently have PbLi but can expand with e.g., Lithium
 
-
-
-        References:
-
-             [Mal1995]   Malang and Mattas (1995), Comparison of lithium and the eutectic
-                         lead-lithium alloy, two candidate liquid metal breeder materials
-                         for self-cooled blankets, Fusion Engineering and Design 27, 399-406.
-
-             [Mas2008]   Mas de les Valles et al. (2008), Lead-lithium material database for
-                         nuclear fusion technology, Journal of Nuclear Materials, Vol. 376(6).
-
-             [Mar2019]   Martelli et al. (2019), Literature review of lead-lithium
-                         thermophysical properties, Fusion Engineering and Design, 138, 183-195.
-
         Parameters
         ----------
         output: bool
              (Default value = False)
-        """
 
+        References
+        ----------
+        [Mal1995]   Malang and Mattas (1995), Comparison of lithium and the eutectic
+                    lead-lithium alloy, two candidate liquid metal breeder materials
+                    for self-cooled blankets, Fusion Engineering and Design 27, 399-406.
+
+        [Mas2008]   Mas de les Valles et al. (2008), Lead-lithium material database for
+                    nuclear fusion technology, Journal of Nuclear Materials, Vol. 376(6).
+
+        [Mar2019]   Martelli et al. (2019), Literature review of lead-lithium
+                    thermophysical properties, Fusion Engineering and Design, 138, 183-195.
+        """
         # Use mid temp
         if fwbs_variables.inlet_temp_liq == fwbs_variables.outlet_temp_liq:
             mid_temp_liq = fwbs_variables.outlet_temp_liq
@@ -1955,7 +1944,6 @@ class BlanketLibrary(Model):
         flow_density :
             Coolant density
         """
-
         if i_channel_shape == 1:
             return mass_flow_rate / (
                 flow_density
@@ -2321,9 +2309,8 @@ class BlanketLibrary(Model):
                     deltap_bli_liq = deltap[5]
                 else:
                     deltap_blo_liq = deltap[3]
-            else:
-                if fwbs_variables.i_blkt_inboard == 1:
-                    deltap_bli = deltap[3]
+            elif fwbs_variables.i_blkt_inboard == 1:
+                deltap_bli = deltap[3]
 
         # Pumping Power
         # If FW and BB have the same coolant...
@@ -2734,7 +2721,6 @@ class BlanketLibrary(Model):
         float
             Total pressure drop (Pa).
         """
-
         radius_pipe_90_deg_bend, radius_pipe_180_deg_bend = (
             self.calculate_pipe_bend_radius(i_ps=icoolpump)
         )
@@ -2822,7 +2808,6 @@ class BlanketLibrary(Model):
 
         References
         ----------
-
         [Miy1986]   Miyazaki et al. (1986), Magneto-Hydro-Dynamic Pressure Drop of Lithium
         Flow in Rectangular Ducts, Fusion Technology, 10:3P2A, 830-836, DOI: 10.13182/FST10-830
 
@@ -3020,7 +3005,6 @@ class BlanketLibrary(Model):
 
             N.B. Darcy friction factor is estimated from the Haaland approximation.
         """
-
         # Calculate hydraulic dimater for round or retancular pipe (m)
         dia_pipe = self.pipe_hydraulic_diameter(i_ps)
 
@@ -3193,7 +3177,6 @@ class BlanketLibrary(Model):
         - [Ide1969] Idel'Cik, I. E. (1969), Memento des pertes de charge,
         Collection de la Direction des Etudes et Recherches d'Electricité de France.
         """
-
         if deg_pipe_elbow == 90:
             a = 1.0
         elif deg_pipe_elbow < 70:
@@ -3276,7 +3259,6 @@ class BlanketLibrary(Model):
             - Idel'Cik, I. E. (1969), Memento des pertes de charge
             - S.P. Sukhatme (2005), A Textbook on Heat Transfer
         """
-
         # Pump outlet pressure (Pa)
         # The pump adds the pressure lost going through the coolant channels back
         pres_coolant_pump_outlet = pres_coolant_pump_inlet + dpres_coolant
@@ -3499,7 +3481,6 @@ def eshellarea(rshell, rmini, rmino, zminor):
     zminor :
 
     """
-
     # Inboard section
     elong = zminor / rmini
     ain = 2.0 * np.pi * elong * (np.pi * rshell * rmini - 2.0 * rmini * rmini)
@@ -3518,6 +3499,7 @@ def dshellarea(
 
     The inboard section is assumed to be a cylinder.
     The outboard section is defined by a semi-ellipse, centred on the major radius of the inboard section.
+
     Parameters
     ----------
     rmajor : float

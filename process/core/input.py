@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import copy
 import re
-from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -16,6 +15,8 @@ from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.core.solver.constraints import ConstraintManager
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from process.core.model import DataStructure
 
 NumberType = int | float
@@ -84,7 +85,7 @@ class InputVariable:
             )
             raise ProcessValueError(error_msg)
 
-        if self.type not in (int, float) and self.range is not None:
+        if self.type not in {int, float} and self.range is not None:
             error_msg = "Can only apply a range to integer or float variables"
             raise ProcessValueError(error_msg)
 
@@ -2281,7 +2282,7 @@ def validate_variable(
         error_msg = f"Not expecting '{name}' at line {line_number} to be an array."
         raise ProcessValidationError(error_msg)
 
-    if config.type in [float, int]:
+    if config.type in {float, int}:
         value = value.lower().replace("d", "e")
 
     try:

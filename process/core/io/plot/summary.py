@@ -1,7 +1,6 @@
 """PROCESS plot_summary"""
 
 import json
-import os
 import textwrap
 from dataclasses import dataclass
 from importlib import resources
@@ -167,7 +166,6 @@ def plot_plasma(
     mirror_negative_x :
         if True, mirror the plot to the negative x-axis (Default value = False)
     """
-
     (r_0, a, triang, kappa, i_single_null, i_plasma_shape, plasma_square) = (
         mfile.get_variables(
             "rmajor",
@@ -271,9 +269,9 @@ def cumulative_radial_build(section, mfile: MFile, scan: int):
     complete = False
     cumulative_build = 0
     for item in RADIAL_BUILD:
-        if item == "rminori" or item == "rminoro":
+        if item in {"rminori", "rminoro"}:
             cumulative_build += mfile.get("rminor", scan=scan)
-        elif item == "vvblgapi" or item == "vvblgapo":
+        elif item in {"vvblgapi", "vvblgapo"}:
             cumulative_build += mfile.get("dr_shld_blkt_gap", scan=scan)
         elif "dr_vv_inboard" in item:
             cumulative_build += mfile.get("dr_vv_inboard", scan=scan)
@@ -313,9 +311,9 @@ def cumulative_radial_build2(section, mfile: MFile, scan: int):
     cumulative_build = 0
     build = 0
     for item in RADIAL_BUILD:
-        if item == "rminori" or item == "rminoro":
+        if item in {"rminori", "rminoro"}:
             build = mfile.get("rminor", scan=scan)
-        elif item == "vvblgapi" or item == "vvblgapo":
+        elif item in {"vvblgapi", "vvblgapo"}:
             build = mfile.get("dr_shld_blkt_gap", scan=scan)
         elif "dr_vv_inboard" in item:
             build = mfile.get("dr_vv_inboard", scan=scan)
@@ -353,7 +351,6 @@ def poloidal_cross_section(
     colour_scheme :
         colour scheme to use for plots
     """
-
     axis.set_xlabel("R / m")
     axis.set_ylabel("Z / m")
     axis.set_title("Poloidal cross-section")
@@ -406,7 +403,6 @@ def plot_full_machine_poloidal_cross_section(
     colour_scheme :
         colour scheme to use for plots
     """
-
     plot_vacuum_vessel_and_divertor(axis, mfile, scan, radial_build, colour_scheme)
     plot_vacuum_vessel_and_divertor(
         axis, mfile, scan, radial_build, colour_scheme, mirror_negative_x=True
@@ -454,7 +450,6 @@ def plot_main_power_flow(axis: plt.Axes, mfile: MFile, scan: int, fig: plt.Figur
     fig:
         The matplotlib figure object for additional annotations.
     """
-
     axis.text(
         0.05,
         0.95,
@@ -3275,7 +3270,6 @@ def plot_current_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int):
 
 def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int, fig):
     """Plots the power profiles over time for various systems."""
-
     t_precharge = mfile.get("t_plant_pulse_coil_precharge", scan=scan)
     t_current_ramp_up = mfile.get("t_plant_pulse_plasma_current_ramp_up", scan=scan)
     t_fusion_ramp = mfile.get("t_plant_pulse_fusion_ramp", scan=scan)
@@ -3455,7 +3449,6 @@ def plot_cryostat(
     mirror_negative_x : bool
         if True, mirror the plot to the negative x-axis (Default value = False)
     """
-
     rects = cryostat_geometry(
         r_cryostat_inboard=mfile.get("r_cryostat_inboard", scan=scan),
         dr_cryostat=mfile.get("dr_cryostat", scan=scan),
@@ -3478,7 +3471,6 @@ def plot_cryostat(
 
 def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1, 2]):
     """Function to plot the colour key"""
-
     axis.set_ylim([0, 10])
     axis.set_xlim([0, 10])
     axis.set_axis_off()
@@ -3503,8 +3495,8 @@ def color_key(axis: plt.Axes, mfile: MFile, scan: int, colour_scheme: Literal[1,
         ("Divertor", "black"),
     ]
 
-    if (mfile.get("i_hcd_primary", scan=scan) in [5, 8]) or (
-        mfile.get("i_hcd_secondary", scan=scan) in [5, 8]
+    if (mfile.get("i_hcd_primary", scan=scan) in {5, 8}) or (
+        mfile.get("i_hcd_secondary", scan=scan) in {5, 8}
     ):
         labels.extend((
             ("NB duct shield", NBSHIELD_COLOUR[colour_scheme - 1]),
@@ -3547,7 +3539,6 @@ def toroidal_cross_section(
     colour_scheme: Literal[1, 2],
 ):
     """Function to plot toroidal cross-section"""
-
     axis.set_xlabel("x / m")
     axis.set_ylabel("y / m")
     axis.set_title("Toroidal cross-section")
@@ -3650,7 +3641,7 @@ def toroidal_cross_section(
         )
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
-    if (i_hcd_primary == 5) or (i_hcd_primary == 8):
+    if i_hcd_primary in {5, 8}:
         # Neutral beam geometry
         a = w
         b = dr_tf_outboard
@@ -4183,7 +4174,6 @@ def plot_t_profiles(prof, demo_ranges: bool, mfile: MFile, scan: int):
     scan: int :
 
     """
-
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel("$T$ [keV]")
     prof.set_title("Temperature profile")
@@ -4520,7 +4510,6 @@ def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
     demo_ranges: bool :
 
     """
-
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
     prof.set_title("Raw Data: Line & Bremsstrahlung radiation profile")
@@ -4554,8 +4543,8 @@ def plot_radprofile(prof, mfile: MFile, scan: int, impp, demo_ranges: bool):
                 lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
             pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
 
-        for l in range(imp_data.shape[0]):
-            prad[k] = prad[k] + pimpden[l][k] * 1.0e-6
+        for l_ in range(imp_data.shape[0]):
+            prad[k] += pimpden[l_][k] * 1.0e-6
 
     prof.plot(rho, prad, label="Total", linestyle="dotted")
     prof.plot(rho, pimpden[0] * 1.0e-6, label="H")
@@ -4635,11 +4624,6 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
     impp : str
         The impurity data path
 
-    Returns
-    -------
-    None
-        This function modifies the provided axis in-place and does not return any value.
-
     Notes
     -----
     - The function assumes the existence of several global or previously defined variables and functions,
@@ -4692,7 +4676,7 @@ def plot_rad_contour(axis: "mpl.axes.Axes", mfile: "Any", scan: int, impp: str):
             )
 
         for impurity in range(imp_data.shape[0]):
-            prad[rho] = prad[rho] + pimpden[impurity][rho] * 1.0e-6
+            prad[rho] += pimpden[impurity][rho] * 1.0e-6
 
     p_rad_grid, r_grid, z_grid = interp1d_profile(prad, mfile, scan)
 
@@ -5592,7 +5576,6 @@ def plot_tf_coils(
     mirror_negative_x :
         if True, mirror the plot to the negative x-axis (Default value = False)
     """
-
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
@@ -5704,7 +5687,6 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     scan : int
         Scan number to use.
     """
-
     # Import the TF variables
     r_tf_inboard_in = mfile.get("r_tf_inboard_in", scan=scan)
     r_tf_inboard_out = mfile.get("r_tf_inboard_out", scan=scan)
@@ -6402,7 +6384,6 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     scan : int
         Scan number to use.
     """
-
     # Import the TF variables
     r_tf_inboard_in = mfile.get("r_tf_inboard_in", scan=scan)
     r_tf_inboard_out = mfile.get("r_tf_inboard_out", scan=scan)
@@ -6945,7 +6926,6 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         f_a_tf_turn_cable_copper :
 
         """
-
         x, y, width, height = cable_space_bounds
 
         radius = strand_diameter / 2
@@ -7498,7 +7478,6 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
     scan: int :
 
     """
-
     dia_tf_turn_superconducting_cable = mfile.get(
         "dia_tf_turn_superconducting_cable", scan=scan
     )
@@ -7600,7 +7579,6 @@ def plot_pf_coils(
     mirror_negative_x :
         if True, mirror the plot to the negative x-axis (Default value = False)
     """
-
     # Apply mirror transformation if requested
     x_scale = -1 if mirror_negative_x else 1
 
@@ -7732,33 +7710,32 @@ def plot_info(axis: plt.Axes, data, mfile: MFile, scan: int):
                     ha="left",
                     va="center",
                 )
-            else:
-                if mfile.data[data[i][0]].exists:
-                    dat = mfile.get(data[i][0], scan=scan)
-                    if isinstance(dat, str):
-                        value = dat
-                    else:
-                        value = f"{mfile.get(data[i][0], scan=scan):.4g}"
-                    if "alpha" in data[i][0]:
-                        value = str(float(value) + 1.0)
-                    axis.text(
-                        eqpos,
-                        -i,
-                        f"= {value} {data[i][2]}",
-                        color=colorflag,
-                        ha="left",
-                        va="center",
-                    )
+            elif mfile.data[data[i][0]].exists:
+                dat = mfile.get(data[i][0], scan=scan)
+                if isinstance(dat, str):
+                    value = dat
                 else:
-                    mfile.get(data[i][0], scan=-1)
-                    axis.text(
-                        eqpos,
-                        -i,
-                        "= ERROR! Var missing",
-                        color=colorflag,
-                        ha="left",
-                        va="center",
-                    )
+                    value = f"{mfile.get(data[i][0], scan=scan):.4g}"
+                if "alpha" in data[i][0]:
+                    value = str(float(value) + 1.0)
+                axis.text(
+                    eqpos,
+                    -i,
+                    f"= {value} {data[i][2]}",
+                    color=colorflag,
+                    ha="left",
+                    va="center",
+                )
+            else:
+                mfile.get(data[i][0], scan=-1)
+                axis.text(
+                    eqpos,
+                    -i,
+                    "= ERROR! Var missing",
+                    color=colorflag,
+                    ha="left",
+                    va="center",
+                )
         else:
             dat = data[i][0]
             value = dat if isinstance(dat, str) else f"{data[i][0]:.4g}"
@@ -7821,7 +7798,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
     Be = mfile.get("f_nd_impurity_electrons(03)", scan=scan)
     C = mfile.get("f_nd_impurity_electrons(04)", scan=scan)
     N = mfile.get("f_nd_impurity_electrons(05)", scan=scan)
-    O = mfile.get("f_nd_impurity_electrons(06)", scan=scan)
+    O = mfile.get("f_nd_impurity_electrons(06)", scan=scan)  # noqa: E741
     Ne = mfile.get("f_nd_impurity_electrons(07)", scan=scan)
     Si = mfile.get("f_nd_impurity_electrons(08)", scan=scan)
     Ar = mfile.get("f_nd_impurity_electrons(09)", scan=scan)
@@ -7887,7 +7864,7 @@ def plot_header(axis: plt.Axes, mfile: MFile, scan: int):
             ha="left",
             va="center",
         )
-    data2 = data2 + data
+    data2 += data
 
     plot_info(axis, data2, mfile, scan)
 
@@ -8159,7 +8136,6 @@ def plot_power_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-
     xmin = 0
     xmax = 1
     ymin = -16
@@ -8251,7 +8227,6 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-
     xmin = 0
     xmax = 1
     ymin = -16
@@ -8263,22 +8238,16 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
     lhcd = False
     iccd = False
 
-    if (i_hcd_primary == 5) or (i_hcd_primary == 8):
+    if i_hcd_primary in {5, 8}:
         nbi = True
         axis.text(-0.05, 1, "Neutral Beam Current Drive:", ha="left", va="center")
-    if (
-        (i_hcd_primary == 3)
-        or (i_hcd_primary == 7)
-        or (i_hcd_primary == 10)
-        or (i_hcd_primary == 11)
-        or (i_hcd_primary == 13)
-    ):
+    if i_hcd_primary in {3, 7, 10, 11, 13}:
         ecrh = True
         axis.text(-0.05, 1, "Electron Cyclotron Current Drive:", ha="left", va="center")
     if i_hcd_primary == 12:
         ebw = True
         axis.text(-0.05, 1, "Electron Bernstein Wave Drive:", ha="left", va="center")
-    if i_hcd_primary in [1, 4, 6]:
+    if i_hcd_primary in {1, 4, 6}:
         lhcd = True
         axis.text(
             -0.05,
@@ -8295,19 +8264,13 @@ def plot_current_drive_info(axis: plt.Axes, mfile: MFile, scan: int):
         secondary_heating = ""
         i_hcd_secondary = mfile.get("i_hcd_secondary", scan=scan)
 
-        if (i_hcd_secondary == 5) or (i_hcd_secondary == 8):
+        if i_hcd_secondary in {5, 8}:
             secondary_heating = "NBI"
-        if (
-            (i_hcd_secondary == 3)
-            or (i_hcd_secondary == 7)
-            or (i_hcd_secondary == 10)
-            or (i_hcd_secondary == 11)
-            or (i_hcd_secondary == 13)
-        ):
+        if i_hcd_secondary in {3, 7, 10, 11, 13}:
             secondary_heating = "ECH"
         if i_hcd_secondary == 12:
             secondary_heating = "EBW"
-        if i_hcd_secondary in [1, 4, 6]:
+        if i_hcd_secondary in {1, 4, 6}:
             secondary_heating = "LHCD"
         if i_hcd_secondary == 2:
             secondary_heating = "ICCD"
@@ -8512,7 +8475,6 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
     scan :
         scan number to use
     """
-
     boot_ipdg = mfile.get("f_c_plasma_bootstrap_iter89", scan=scan)
     boot_sauter = mfile.get("f_c_plasma_bootstrap_sauter", scan=scan)
     boot_nenins = mfile.get("f_c_plasma_bootstrap_nevins", scan=scan)
@@ -9132,7 +9094,7 @@ def plot_radial_build(axis: plt.Axes, mfile: MFile, colour_scheme: Literal[1, 2]
     radial_build = np.array(radial_build)
 
     for kk in range(radial_build.shape[0]):
-        radial_build[kk, 14] = 2.0 * radial_build[kk, 14]
+        radial_build[kk, 14] *= 2.0
 
     radial_build = np.transpose(radial_build)
     # ====================
@@ -9273,7 +9235,6 @@ def plot_lower_vertical_build(
     - Components with zero thickness are omitted from the plot.
     - The legend displays the name and thickness (in meters) of each component.
     """
-
     lower_vertical_variables = [
         "z_plasma_xpoint_upper",
         "dz_xpoint_divertor",
@@ -10328,7 +10289,6 @@ def plot_iteration_variables(axis: plt.Axes, m_file: MFile, scan: int):
     scan: int :
 
     """
-
     # Get total number of iteration variables
     n_itvars = int(m_file.get("nvar", scan=scan))
 
@@ -10492,7 +10452,6 @@ def plot_tf_stress(axis: plt.Axes, mfile: MFile):
     mfile: MFile :
 
     """
-
     # Step 1 : Data extraction
     # ----------------------------------------------------------------------------------------------
     # Number of physical quantity value per coil layer
@@ -10964,7 +10923,6 @@ def plot_blkt_pipe_bends(fig, m_file, scan: int):
     scan: int :
 
     """
-
     ax_90 = fig.add_subplot(341)
     ax_180 = fig.add_subplot(342)
 
@@ -11056,7 +11014,6 @@ def plot_fw_90_deg_pipe_bend(ax, m_file, scan: int):
     scan: int :
 
     """
-
     # Get pipe radius from m_file, fallback to 0.1 m
     r = m_file.get("radius_fw_channel", scan=scan)
     elbow_radius = m_file.get("radius_fw_channel_90_bend", scan=scan)
@@ -11903,7 +11860,6 @@ def plot_plasma_poloidal_pressure_contours(axis: plt.Axes, mfile: MFile, scan: i
     scan : int
         Scan number to use for extracting data.
     """
-
     n_plasma_profile_elements = int(mfile.get("n_plasma_profile_elements", scan=scan))
 
     # Get pressure profile (function of normalised radius rho, 0..1)
@@ -12446,8 +12402,8 @@ def plot_plasma_outboard_toroidal_ripple_map(fig, mfile: MFile, scan: int):
 
         # Guard against degenerate range
         if np.isclose(vmin, vmax, atol=1e-12) or np.isnan(vmin) or np.isnan(vmax):
-            vmin = vmin - 0.25
-            vmax = vmax + 0.25
+            vmin -= 0.25
+            vmax += 0.25
 
         # Smooth filled contour levels
         levels = np.linspace(vmin, vmax, 50)
@@ -13275,7 +13231,6 @@ def plot_equality_constraint_equations(axis: plt.Axes, m_file_data: MFile, scan:
     scan: int :
 
     """
-
     y_labels = []
     y_pos = []
     n_plot = 0
@@ -13367,7 +13322,6 @@ def plot_inequality_constraint_equations(axis: plt.Axes, m_file: MFile, scan: in
     scan: int :
 
     """
-
     y_labels = []
     y_pos = []
     n_plot = 0
@@ -13535,7 +13489,6 @@ def plot_blkt_structure(
     colour_scheme: Literal[1, 2],
 ):
     """Plot the BLKT structure on the given axis."""
-
     rmajor = m_file.get("rmajor", scan=scan)
 
     plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
@@ -13678,7 +13631,6 @@ def main_plot(
     colour_scheme:
 
     """
-
     # Checking the impurity data folder
     # Get path to impurity data dir
     # TODO use Path objects throughout module, not strings
@@ -13688,7 +13640,7 @@ def main_plot(
     ) as imp_path:
         data_folder = str(imp_path.parent) + "/"
 
-    if os.path.isdir(data_folder):
+    if Path(data_folder).is_dir():
         imp = data_folder
     else:
         print(
@@ -13987,9 +13939,9 @@ def create_thickness_builds(m_file, scan: int):
     cumulative_radial = {}
     subtotal = 0
     for item in RADIAL_BUILD:
-        if item == "rminori" or item == "rminoro":
+        if item in {"rminori", "rminoro"}:
             build = m_file.get("rminor", scan=scan)
-        elif item == "vvblgapi" or item == "vvblgapo":
+        elif item in {"vvblgapi", "vvblgapo"}:
             build = m_file.get("dr_shld_blkt_gap", scan=scan)
         elif "dr_vv_inboard" in item:
             build = m_file.get("dr_vv_inboard", scan=scan)

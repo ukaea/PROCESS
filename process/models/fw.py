@@ -178,7 +178,6 @@ class FirstWall(Model):
         dr_fw_outboard:
 
         """
-
         #  Half-height of first wall (internal surface)
         z_bottom = (
             z_plasma_xpoint_lower
@@ -250,7 +249,6 @@ class FirstWall(Model):
         dr_fw_plasma_gap_outboard:
 
         """
-
         # Cross-section is assumed to be defined by two ellipses
         #  Major radius to centre of inboard and outboard ellipses
         #  (coincident in radius with top of plasma)
@@ -381,7 +379,6 @@ class FirstWall(Model):
         This is in turn taken from "Methods of First Wall Structural Analysis with Application to the Long Pulse Commercial Tokamak Reactor Design", R.J. LeClaire, MIT, PFC/RR-84-9.
         Contains peak first wall temperature (K), coolant specific heat capacity at constant pressure (J/kg/K),
         """
-
         # First wall volume (inboard or outboard depending on arguments) (m^3)
         vol_fw = a_fw * dr_fw
 
@@ -456,7 +453,7 @@ class FirstWall(Model):
             logger.error("NaN first wall temperature")
         elif (temp_k <= 100) or (temp_k > 1500):
             logger.error(
-                f"First wall temperature (temp_k) out of range : [100-1500] K. {temp_k=}"
+                "First wall temperature (temp_k) out of range : [100-1500] K. %s", temp_k
             )
 
         # Thermal conductivity of first wall material (W/m.K)
@@ -675,7 +672,6 @@ class FirstWall(Model):
             - Tavassoli, F. "Fusion Demo Interim Structural Design Criteria (DISDC)/Appendix A Material Design Limit Data/A3. S18E Eurofer Steel."
               CEA, EFDA_TASK_TW4-TTMS-005-D01 (2004)
         """
-
         # temp in Kelvin
         return (
             (5.4308 + 0.13565 * temp - 0.00023862 * temp**2 + 1.3393e-7 * temp**3)
@@ -759,15 +755,15 @@ class FirstWall(Model):
 
         # Check that Reynolds number is in valid range for the Gnielinski correlation
         if (reynolds <= 3000.0) or (reynolds > 5.0e6):
-            logger.error(f"Reynolds number out of range : [3e3-5000e3]. {reynolds=}")
+            logger.error("Reynolds number out of range : [3e3-5000e3]. %s", reynolds)
 
         # Check that Prandtl number is in valid range for the Gnielinski correlation
         if (pr < 0.5) or (pr > 2000.0):
-            logger.error(f"Prandtl number out of range : [0.5-2000]. {pr=}")
+            logger.error("Prandtl number out of range : [0.5-2000]. %s", pr)
 
         # Check that the Darcy friction factor is in valid range for the Gnielinski correlation
         if f <= 0.0:
-            logger.error(f"Negative Darcy friction factor (f). {f=}")
+            logger.error("Negative Darcy friction factor (f). %s", f)
 
         return heat_transfer_coefficient
 
@@ -799,7 +795,6 @@ class FirstWall(Model):
         ----------
             - https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
         """
-
         # Bracketed term in Haaland equation
         bracket = (
             roughness_fw_channel / radius_fw_channel / 3.7

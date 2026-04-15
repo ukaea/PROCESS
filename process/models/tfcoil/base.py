@@ -73,7 +73,6 @@ class TFCoil(Model):
 
     def run_base_tf(self):
         """Run main tfcoil subroutine without outputting."""
-
         (
             superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half,
             superconducting_tf_coil_variables.tan_theta_coil,
@@ -209,7 +208,6 @@ class TFCoil(Model):
             - **dx_tf_inboard_out_toroidal** (*float*): Width of the inboard leg at the outer edge in the toroidal direction [m].
             - **a_tf_leg_outboard** (*float*): Cross-sectional area of the outboard leg of the TF coil [m²].
         """
-
         # The angular space of each TF coil in the toroidal direction [rad]
         # The angular space between each coil is the same as that of the coils
 
@@ -329,7 +327,6 @@ class TFCoil(Model):
             - **c_tf_coil** (*float*): Current per TF coil [A].
             - **oacdcp** (*float*): Global inboard leg average current density in TF coils [A/m²].
         """
-
         # Calculation of the maximum B field on the magnet [T]
         b_tf_inboard_peak_symmetric = (
             b_plasma_toroidal_on_axis * rmajor / r_b_tf_inboard_peak
@@ -560,7 +557,6 @@ class TFCoil(Model):
         to the output file.
         PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
         """
-
         # General coil parameters
         po.osubhd(self.outfile, "TF design")
         po.ovarin(
@@ -630,7 +626,7 @@ class TFCoil(Model):
                 po.ocmmnt(self.outfile, "  -> Bucking cylinder")
 
         elif (
-            tfcoil_variables.i_tf_bucking in (2, 3)
+            tfcoil_variables.i_tf_bucking in {2, 3}
             and build_variables.i_tf_inside_cs == 1
         ):
             po.ocmmnt(
@@ -639,7 +635,7 @@ class TFCoil(Model):
             )
 
         elif (
-            tfcoil_variables.i_tf_bucking in (2, 3)
+            tfcoil_variables.i_tf_bucking in {2, 3}
             and build_variables.i_tf_inside_cs == 0
         ):
             po.ocmmnt(
@@ -1202,7 +1198,7 @@ class TFCoil(Model):
                 tfcoil_variables.dx_tf_turn_insulation,
             )
 
-            if tfcoil_variables.i_tf_sc_mat in (1, 2, 3, 4, 5, 7, 8, 9):
+            if tfcoil_variables.i_tf_sc_mat in {1, 2, 3, 4, 5, 7, 8, 9}:
                 po.osubhd(self.outfile, "Conductor information:")
                 po.ovarre(
                     self.outfile,
@@ -1833,7 +1829,7 @@ class TFCoil(Model):
                 "OP ",
             )
 
-            if tfcoil_variables.i_tf_sc_mat in (1, 2, 3, 4, 5):
+            if tfcoil_variables.i_tf_sc_mat in {1, 2, 3, 4, 5}:
                 po.ovarre(
                     self.outfile,
                     "Maximum allowed temp during a quench (K)",
@@ -1868,7 +1864,7 @@ class TFCoil(Model):
 
         # Radial build for SC TF coils
         if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            radius = radius + tfcoil_variables.dr_tf_nose_case
+            radius += tfcoil_variables.dr_tf_nose_case
             po.obuild(
                 self.outfile,
                 'Coil case ("nose")',
@@ -1877,7 +1873,7 @@ class TFCoil(Model):
                 "(dr_tf_nose_case)",
             )
 
-            radius = radius + tfcoil_variables.dx_tf_wp_insertion_gap
+            radius += tfcoil_variables.dx_tf_wp_insertion_gap
             po.obuild(
                 self.outfile,
                 "Insertion gap for winding pack",
@@ -1886,7 +1882,7 @@ class TFCoil(Model):
                 "(dx_tf_wp_insertion_gap)",
             )
 
-            radius = radius + tfcoil_variables.dx_tf_wp_insulation
+            radius += tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Winding pack ground insulation",
@@ -1927,7 +1923,7 @@ class TFCoil(Model):
                 "(dr_tf_wp_with_insulation/2-dx_tf_wp_insulation-dx_tf_wp_insertion_gap)",
             )
 
-            radius = radius + tfcoil_variables.dx_tf_wp_insulation
+            radius += tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Winding pack insulation",
@@ -1936,7 +1932,7 @@ class TFCoil(Model):
                 "(dx_tf_wp_insulation)",
             )
 
-            radius = radius + tfcoil_variables.dx_tf_wp_insertion_gap
+            radius += tfcoil_variables.dx_tf_wp_insertion_gap
             po.obuild(
                 self.outfile,
                 "Insertion gap for winding pack",
@@ -1945,7 +1941,7 @@ class TFCoil(Model):
                 "(dx_tf_wp_insertion_gap)",
             )
 
-            radius = radius + tfcoil_variables.dr_tf_plasma_case
+            radius += tfcoil_variables.dr_tf_plasma_case
             po.obuild(
                 self.outfile,
                 "Plasma side case min radius",
@@ -1964,7 +1960,7 @@ class TFCoil(Model):
 
         # Radial build for restive coil
         else:
-            radius = radius + tfcoil_variables.dr_tf_nose_case
+            radius += tfcoil_variables.dr_tf_nose_case
             po.obuild(
                 self.outfile,
                 "Coil bucking cylindre",
@@ -1973,7 +1969,7 @@ class TFCoil(Model):
                 "(dr_tf_nose_case)",
             )
 
-            radius = radius + tfcoil_variables.dx_tf_wp_insulation
+            radius += tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
@@ -2010,7 +2006,7 @@ class TFCoil(Model):
                 "(tfcoil_variables.dr_tf_wp_with_insulation/2-tfcoil_variables.dx_tf_wp_insulation)",
             )
 
-            radius = radius + tfcoil_variables.dx_tf_wp_insulation
+            radius += tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
@@ -2019,7 +2015,7 @@ class TFCoil(Model):
                 "(dx_tf_wp_insulation)",
             )
 
-            radius = radius + tfcoil_variables.dr_tf_plasma_case
+            radius += tfcoil_variables.dr_tf_plasma_case
             po.obuild(
                 self.outfile,
                 "Plasma side TF coil support",
@@ -2066,7 +2062,7 @@ class TFCoil(Model):
             radius = build_variables.r_tf_inboard_in
             po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
-            radius = radius + tfcoil_variables.dr_tf_nose_case
+            radius += tfcoil_variables.dr_tf_nose_case
             po.obuild(
                 self.outfile,
                 "Coil bucking cylindre",
@@ -2075,7 +2071,7 @@ class TFCoil(Model):
                 "(dr_tf_nose_case)",
             )
 
-            radius = radius + tfcoil_variables.dx_tf_wp_insulation
+            radius += tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
@@ -2112,7 +2108,7 @@ class TFCoil(Model):
                 "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
             )
 
-            radius = radius + tfcoil_variables.dx_tf_wp_insulation
+            radius += tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
@@ -2121,7 +2117,7 @@ class TFCoil(Model):
                 "(dx_tf_wp_insulation)",
             )
 
-            radius = radius + tfcoil_variables.dr_tf_plasma_case
+            radius += tfcoil_variables.dr_tf_plasma_case
             po.obuild(
                 self.outfile,
                 "Plasma side TF coil support",
@@ -2177,7 +2173,6 @@ class TFCoil(Model):
         tight aspect ratio tokamak. The centrepost is assumed to be tapered,
         i.e. narrowest on the midplane (z=0).
         """
-
         # Vertical distance from the midplane to the top of the tapered section [m]
         if physics_variables.itart == 1:
             superconducting_tf_coil_variables.z_cp_top = (
@@ -2644,7 +2639,6 @@ class TFCoil(Model):
             - vforce_inboard_tot (float): Total inboard vertical force [N]
             - f_vforce_inboard (float): Inboard vertical tension fraction
         """
-
         # Outer/inner WP radius removing the ground insulation layer and the insertion gap [m]
         if i_tf_sup == 1:
             r_tf_wp_inboard_outer_conductor = (
@@ -2795,11 +2789,11 @@ class TFCoil(Model):
         type
             density: Heliyn density [kg/m3]
         """
-
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
             logger.error(
-                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+                "Helium temperature out of helium property fiting range [4-50] K. %s",
+                temp,
             )
 
         # Oder 3 polynomial fit
@@ -2839,11 +2833,11 @@ class TFCoil(Model):
         :
             Themal capacity at constant pressure [K/(kg.K)]
         """
-
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
             logger.error(
-                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+                "Helium temperature out of helium property fiting range [4-50] K. %s",
+                temp,
             )
 
         # Order 3 polynomial fit in [4-30] K on the dimenion [K/(g.K)]
@@ -2886,10 +2880,10 @@ class TFCoil(Model):
         :
             Themal capacity at constant pressure [Pa.s]
         """
-
         if temp < 4.0e0 or temp > 50.0e0:
             logger.error(
-                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+                "Helium temperature out of helium property fiting range [4-50] K. %s",
+                temp,
             )
 
         # Order 4 polynomial exponential fit in [4-25] K
@@ -2929,11 +2923,11 @@ class TFCoil(Model):
         :
             Themal conductivity [W/(m.K)]
         """
-
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
             logger.error(
-                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+                "Helium temperature out of helium property fiting range [4-50] K. %s",
+                temp,
             )
 
         # Order 4 polynomial fit
@@ -2984,11 +2978,11 @@ class TFCoil(Model):
         :
             Themal conductivity [W/(m.K)]
         """
-
         # Fiting range verification
         if temp < 15.0e0 or temp > 150.0e0:
             logger.error(
-                f"Aluminium temperature out of the th conductivity fit range [15-60] K. {temp=}"
+                "Aluminium temperature out of the th conductivity fit range [15-60] K. %s",
+                temp,
             )
 
         # fit 15 < T < 60 K (order 3 poly)
@@ -3106,7 +3100,7 @@ class TFCoil(Model):
                 # Assume B in TF coil = 1/2  B in dr_bore
                 # Multiply by 2 for upper and lower halves of coil
                 ind_tf_coil += b * dr * (2.0e0 * h_bore + h_thick)
-                r = r - dr
+                r -= dr
 
             # Outboard arc
             ai = r_tf_arc[2] - r_tf_arc[1]
@@ -3131,7 +3125,7 @@ class TFCoil(Model):
                 # Assume B in TF coil = 1/2  B in dr_bore
                 # Multiply by 2 for upper and lower halves of coil
                 ind_tf_coil += b * dr * (2.0e0 * h_bore + h_thick)
-                r = r + dr
+                r += dr
         else:
             # Picture frame TF coil
             ind_tf_coil = (
@@ -3145,7 +3139,6 @@ class TFCoil(Model):
 
     def generic_tf_coil_area_and_masses(self):
         """Subroutine to calculate the TF coil areas and masses"""
-
         # Surface areas (for cryo system) [m²]
         wbtf = (
             build_variables.r_tf_inboard_out
@@ -3907,9 +3900,7 @@ class TFCoil(Model):
         # Correct for the missing axial stiffness from the missing
         # outer case steel as per the updated description of
         # Issue #1509
-        eyoung_axial[n_tf_layer - 1] = (
-            eyoung_axial[n_tf_layer - 1] * f_tf_stress_front_case
-        )
+        eyoung_axial[n_tf_layer - 1] *= f_tf_stress_front_case
 
         # ---
         # ------------------------
@@ -3963,7 +3954,7 @@ class TFCoil(Model):
         # New generalized plane strain formulation
         # ---
         # See #1670 for why i_tf_stress_model=0 was removed
-        elif i_tf_stress_model in (0, 2):
+        elif i_tf_stress_model in {0, 2}:
             # Extended plane strain calculation [Pa]
             # Issues #1414 and #998
             # Permits build_variables.dr_bore >= 0, O(n) in layers
@@ -4074,9 +4065,9 @@ class TFCoil(Model):
             sig_tf_wp_av_z[ii - n_tf_bucking * n_radial_array] = (
                 sig_tf_z[ii] * fac_sig_z_wp_av
             )
-            sig_tf_r[ii] = sig_tf_r[ii] * fac_sig_r
-            sig_tf_t[ii] = sig_tf_t[ii] * fac_sig_t
-            sig_tf_z[ii] = sig_tf_z[ii] * fac_sig_z
+            sig_tf_r[ii] *= fac_sig_r
+            sig_tf_t[ii] *= fac_sig_t
+            sig_tf_z[ii] *= fac_sig_z
 
         # For each point within the front case,
         # remove the correction for the missing axial
@@ -4086,7 +4077,7 @@ class TFCoil(Model):
             (n_tf_bucking + n_tf_graded_layers) * n_radial_array,
             (n_tf_layer * n_radial_array),
         ):
-            sig_tf_z[ii] = sig_tf_z[ii] / f_tf_stress_front_case
+            sig_tf_z[ii] /= f_tf_stress_front_case
         # ---
 
         # Tresca / Von Mises yield criteria calculations
@@ -4147,10 +4138,9 @@ class TFCoil(Model):
                         ii_max = jj
 
                 # Conventional Tresca
-                else:
-                    if sig_max < s_shear_tf[jj]:
-                        sig_max = s_shear_tf[jj]
-                        ii_max = jj
+                elif sig_max < s_shear_tf[jj]:
+                    sig_max = s_shear_tf[jj]
+                    ii_max = jj
 
             # OUT.DAT output
 
@@ -4677,7 +4667,6 @@ def sigvm(sx: float, sy: float, sz: float, txy: float, txz: float, tyz: float) -
     :
         Von Mises combination of stresses (Pa) in a TF coil.
     """
-
     return np.sqrt(
         0.5
         * (
@@ -5129,7 +5118,7 @@ def extended_plane_strain(
     m_bc[1, :] = np.ascontiguousarray(m_bc[1, :]) @ np.ascontiguousarray(m_tot[:, :, 0])
     # Axial force boundary condition
     m_bc[2, :] = v_force_row[0, :]
-    m_bc[2, 3] = m_bc[2, 3] - v_force
+    m_bc[2, 3] -= v_force
     # Axial force boundary condition of slip layers
     m_bc[3, :] = v_force_row_slip[0, :]
 
@@ -5285,7 +5274,7 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
         area[ii] = np.pi * (rad[ii + 1] ** 2 - rad[ii] ** 2)
 
         # Total current carried by the inners layers
-        inner_layer_curr = inner_layer_curr + area[ii] * j[ii]
+        inner_layer_curr += area[ii] * j[ii]
     # ***
 
     # Null radial stress at R(1)
@@ -5623,7 +5612,6 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
     poisson_j_perp_2 :
 
     """
-
     if eyoung_j_1 * eyoung_j_2 == 0:
         # poisson_j_perp_3 = 0
         poisson_j_perp_3 = poisson_j_perp_1 if eyoung_j_1 == 0 else poisson_j_perp_2

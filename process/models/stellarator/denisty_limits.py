@@ -26,7 +26,6 @@ def st_denisty_limits(stellarator, f_output):
 
 
     """
-
     #  Set the required value for icc=5
     physics_variables.nd_plasma_electrons_max = st_sudo_density_limit(
         physics_variables.b_plasma_toroidal_on_axis,

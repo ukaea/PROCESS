@@ -182,15 +182,17 @@ class Pulse(Model):
         float
             Calculated burn time (s)
         """
-
         t_plant_pulse_burn = (
             abs(vs_cs_pf_total_burn) / v_plasma_loop_burn
         ) - t_plant_pulse_fusion_ramp
 
         if t_plant_pulse_burn < 0.0e0:
             logger.error(
-                "Negative burn time available; reduce t_plant_pulse_fusion_ramp or raise PF coil V-s capabilit. "
-                f"{t_plant_pulse_burn=} {vs_cs_pf_total_burn=} {v_plasma_loop_burn=} {t_plant_pulse_fusion_ramp=}"
+                "Negative burn time available; reduce t_plant_pulse_fusion_ramp or raise PF coil V-s capabilit. %s %s %s %s",
+                t_plant_pulse_burn,
+                vs_cs_pf_total_burn,
+                v_plasma_loop_burn,
+                t_plant_pulse_fusion_ramp,
             )
 
         return t_plant_pulse_burn

@@ -40,7 +40,6 @@ Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 """
 
 import logging
-import os
 from pathlib import Path
 from typing import Protocol
 
@@ -111,8 +110,6 @@ from process.models.tfcoil.resistive import (
 from process.models.tfcoil.superconducting import SuperconductingTFCoil
 from process.models.vacuum import Vacuum, VacuumVessel
 from process.models.water_use import WaterUse
-
-os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
 PACKAGE_LOGGING = True
 """Can be set False to disable package-level logging, e.g. in the test suite"""
@@ -231,7 +228,7 @@ def process_cli(
                 plot_summary(mfile_path)
                 plot_sankey_plotly(mfile_path)
             else:
-                logger.error(f"Cannot find mfile for plotting {mfile_path}")
+                logger.error("Cannot find mfile for plotting %s", mfile_path)
 
 
 class VaryRun:
@@ -465,7 +462,6 @@ class SingleRun:
         is set to True, they are either removed or replaced by their updated names as specified
         in the OBS_VARS dictionary.
         """
-
         obsolete_variables = ov.OBS_VARS
         obsolete_vars_help_message = ov.OBS_VARS_HELP
 
@@ -579,7 +575,7 @@ class CostsProtocol(Protocol):
         """Run the model"""
 
     def output(self):
-        """write model output"""
+        """Write model output"""
 
 
 class Models:

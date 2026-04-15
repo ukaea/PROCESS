@@ -51,7 +51,6 @@ class IFE(Model):
         :param costs: a pointer to the costs model, allowing the use of costs' variables/methods
         :type costs: process.costs.Costs
         """
-
         self.outfile: int = constants.NOUT
         self.availability = availability
         self.costs = costs
@@ -270,7 +269,6 @@ class IFE(Model):
         device, based on the design of the OSIRIS study, and to calculate
         the material volumes for the device core.
         """
-
         # Careful choice of thicknesses, and assuming that the FLiBe
         # inlet radius is small, allows the generic build calculation
         # to be roughly applicable.
@@ -291,7 +289,6 @@ class IFE(Model):
         the material volumes for the device core.
         Sviatoslavsky et al, Fusion Technology vol.21 (1992) 1470
         """
-
         # Radial build
         ife_variables.r1 = ife_variables.chrad
         ife_variables.r2 = ife_variables.r1 + ife_variables.fwdr
@@ -444,7 +441,7 @@ class IFE(Model):
             2.0 * (1.0 / 3.0) * np.pi * ife_variables.somtdr * ife_variables.somtdr * ddz
         )
 
-        ife_variables.blvol[1] = ife_variables.blvol[1] + dvol
+        ife_variables.blvol[1] += dvol
 
         # Ditto for bottom region...
 
@@ -484,7 +481,7 @@ class IFE(Model):
             2.0 * (1.0 / 3.0) * np.pi * ife_variables.sombdr * ife_variables.sombdr * ddz
         )
 
-        ife_variables.blvol[2] = ife_variables.blvol[2] + dvol
+        ife_variables.blvol[2] += dvol
 
         # Second void
         ife_variables.v2vol[0] = (
@@ -798,13 +795,12 @@ class IFE(Model):
         first_wall_variables.a_fw_total = (
             2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl5)
         )
-        first_wall_variables.a_fw_total = first_wall_variables.a_fw_total + np.pi * (
+        first_wall_variables.a_fw_total += np.pi * (
             ife_variables.r1 * ife_variables.r1
             - ife_variables.flirad * ife_variables.flirad
         )
-        first_wall_variables.a_fw_total = (
-            first_wall_variables.a_fw_total
-            + np.pi
+        first_wall_variables.a_fw_total += (
+            np.pi
             * ife_variables.r1
             * np.sqrt(
                 ife_variables.r1 * ife_variables.r1
@@ -1135,7 +1131,6 @@ class IFE(Model):
         the material volumes for the device core.
         F/MI/PJK/LOGBOOK12, p.52
         """
-
         # Radial build
 
         ife_variables.r1 = ife_variables.chrad
@@ -1411,7 +1406,7 @@ class IFE(Model):
             phi = np.arctan(ife_variables.r1 / ife_variables.zu1)
             sang = 1.0 - np.cos(phi)
             phi = np.arctan(ife_variables.flirad / ife_variables.zu1)
-            sang = sang - (1.0 - np.cos(phi))
+            sang -= 1.0 - np.cos(phi)
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.p_fusion_total_mw
                 * 0.5
@@ -1498,7 +1493,6 @@ class IFE(Model):
         Gain and driver efficiency data are interpolated from input data.
         F/MI/PJK/LOGBOOK12, p.85
         """
-
         # The arrays contain data points for EDRIVE = 1MJ, 2MJ, ... , 10MJ
 
         e = 1e-6 * edrive
@@ -1549,7 +1543,6 @@ class IFE(Model):
         Meier and Rosenberg, Fusion Technology vol.21 (1992) p.1552
         F/MI/PJK/LOGBOOK12, p.86
         """
-
         # GVE(K): target gain at EDRIVE = K MegaJoules
         gve = [63.0, 95.0, 112.0, 125.0, 136.0, 144.0, 151.0, 157.0, 162.0, 166.0]
 
@@ -1600,7 +1593,6 @@ class IFE(Model):
 
         Notes
         -----
-
         This routine calculates the parameters of a heavy ion driver
         suitable for inertial fusion energy.
 
@@ -1608,7 +1600,6 @@ class IFE(Model):
         Fusion Technology, vol.21 (1992) 1583
         Meier and Bieri, Fusion Technology, vol.21 (1992) 1547
         """
-
         # NOTE: TN and SM agree that the "incomplete" IONDRV model should
         # be removed. It is impossible to use without modifications to the
         # source code indicating is probably should not be used.
@@ -1656,7 +1647,6 @@ class IFE(Model):
 
         The outputs are all, trivially, 0 as they are magnetic fusion specific.
         """
-
         structure_variables.aintmass = 0.0
         structure_variables.clgsmass = 0.0
         structure_variables.coldmass = 0.0
@@ -1692,7 +1682,6 @@ class IFE(Model):
         output: bool
              (Default value = False)
         """
-
         # Material densities
         # 0 = void
         # 1 = steel
@@ -1734,15 +1723,9 @@ class IFE(Model):
         fwbs_variables.whtshld = 0.0
         for i in range(5):
             for j in range(3):
-                fwbs_variables.m_fw_total = (
-                    fwbs_variables.m_fw_total + ife_variables.fwmatm[j, i]
-                )
-                fwbs_variables.m_blkt_total = (
-                    fwbs_variables.m_blkt_total + ife_variables.blmatm[j, i]
-                )
-                fwbs_variables.whtshld = (
-                    fwbs_variables.whtshld + ife_variables.shmatm[j, i]
-                )
+                fwbs_variables.m_fw_total += ife_variables.fwmatm[j, i]
+                fwbs_variables.m_blkt_total += ife_variables.blmatm[j, i]
+                fwbs_variables.whtshld += ife_variables.shmatm[j, i]
 
         # Other masses
         fwbs_variables.m_blkt_beryllium = 0.0
@@ -1752,15 +1735,9 @@ class IFE(Model):
         fwbs_variables.m_blkt_lithium = 0.0
 
         for j in range(3):
-            fwbs_variables.m_blkt_steel_total = (
-                fwbs_variables.m_blkt_steel_total + ife_variables.blmatm[j, 1]
-            )
-            fwbs_variables.m_blkt_li2o = (
-                fwbs_variables.m_blkt_li2o + ife_variables.blmatm[j, 4]
-            )
-            fwbs_variables.m_blkt_lithium = (
-                fwbs_variables.m_blkt_lithium + ife_variables.blmatm[j, 8]
-            )
+            fwbs_variables.m_blkt_steel_total += ife_variables.blmatm[j, 1]
+            fwbs_variables.m_blkt_li2o += ife_variables.blmatm[j, 4]
+            fwbs_variables.m_blkt_lithium += ife_variables.blmatm[j, 8]
 
         # Total mass of FLiBe
         ife_variables.mflibe = ife_variables.chmatm[3]
@@ -1782,16 +1759,12 @@ class IFE(Model):
 
         #  Following assumes that use of FLiBe and Li2O are
         # mutually exclusive
-        ife_variables.mflibe = ife_variables.mflibe / (1.0 - ife_variables.fbreed)
-        fwbs_variables.m_blkt_li2o = fwbs_variables.m_blkt_li2o / (
-            1.0 - ife_variables.fbreed
-        )
-        fwbs_variables.m_blkt_lithium = fwbs_variables.m_blkt_lithium / (
-            1.0 - ife_variables.fbreed
-        )
+        ife_variables.mflibe /= 1.0 - ife_variables.fbreed
+        fwbs_variables.m_blkt_li2o /= 1.0 - ife_variables.fbreed
+        fwbs_variables.m_blkt_lithium /= 1.0 - ife_variables.fbreed
 
         # Blanket and first wall lifetimes (HYLIFE-II: = plant life)
-        if (ife_variables.ifetyp == 3) or (ife_variables.ifetyp == 4):
+        if ife_variables.ifetyp in {3, 4}:
             life = cost_variables.life_plant
         else:
             life = min(
@@ -1875,7 +1848,7 @@ class IFE(Model):
         # and provide the energy multiplication as though it were a
         # conventional blanket
 
-        if (ife_variables.ifetyp != 3) and (ife_variables.ifetyp != 4):
+        if ife_variables.ifetyp not in {3, 4}:
             heat_transport_variables.p_fw_div_heat_deposited_mw = (
                 0.24 * heat_transport_variables.p_plant_primary_heat_mw
             )

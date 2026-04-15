@@ -40,7 +40,7 @@ def split_callback(ctx: click.Context, param, value: str | None) -> list[str] | 
     return value.replace(" ", ":").split(":") if isinstance(value, str) else value
 
 
-### Taken from click documentation
+# Taken from click documentation
 class LazyGroup(click.Group):
     def __init__(self, *args, lazy_subcommands=None, **kwargs):
         super().__init__(*args, **kwargs)

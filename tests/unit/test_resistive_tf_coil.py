@@ -75,7 +75,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "restfinternalgeomparam",
-    (
+    [
         ResTfInternalGeomParam(
             n_tf_coil_turns=0,
             dx_tf_turn_insulation=0.00080000000000000004,
@@ -130,7 +130,7 @@ class ResTfInternalGeomParam(NamedTuple):
             expected_a_tf_coil_wp_turn_insulation=0.00029439388680367086,
             expected_a_tf_coil_inboard_case=0.00061190425043863676,
         ),
-    ),
+    ],
 )
 def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_coil):
     """
@@ -328,7 +328,7 @@ class TfResHeatingParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tfresheatingparam",
-    (
+    [
         TfResHeatingParam(
             rho_cp=0,
             temp_tf_legs_outboard=-1,
@@ -429,7 +429,7 @@ class TfResHeatingParam(NamedTuple):
             expected_a_cp_cool=0.00068328705812121333,
             expected_is_leg_cp_temp_same=1,
         ),
-    ),
+    ],
 )
 def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     """
@@ -661,7 +661,7 @@ class CpostParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "cpostparam",
-    (
+    [
         CpostParam(
             n_tf_coils=12,
             z_tf_inside_half=4.4214285714285717,
@@ -708,7 +708,7 @@ class CpostParam(NamedTuple):
             expected_vol_cond_cp=11.545770024935592,
             expected_a_cp_cool=0.00068328705812121333,
         ),
-    ),
+    ],
 )
 def test_cpost(cpostparam, monkeypatch, resistive_tf_coil):
     """

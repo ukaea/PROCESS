@@ -14,4 +14,4 @@ def test_input_file(temp_data_cwd, cli_runner):
     cli_runner(plot_tf_stress, args=["-f", mfile_str])
 
     # Assert a pdf has been created
-    assert len(list(temp_data_cwd.glob("*.pdf")))
+    assert list(temp_data_cwd.glob("*.pdf"))

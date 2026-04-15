@@ -2,6 +2,7 @@
 PROCESS MFILE.DAT IO library
 """
 
+import copy
 import json
 import logging
 import re
@@ -78,7 +79,6 @@ class MFileVariable(dict):  # noqa: FURB189
         type
             [single scan requested]
         """
-
         if scan_number is None or scan_number == -1:
             return self[f"scan{self.latest_scan:02}"]
         return self[f"scan{scan_number:02}"]
@@ -88,7 +88,6 @@ class MFileVariable(dict):  # noqa: FURB189
 
         Returns
         -------
-
             [List of all scans for variable]
         """
         return [v for k, v in sorted(filter(lambda x: "scan" in x[0], self.items()))]
@@ -147,7 +146,7 @@ class MFileDataDictionary(OrderedDict):
 class DefaultOrderedDict(OrderedDict):
     # Source: http://stackoverflow.com/a/6190500/562769
     def __init__(self, default_factory=None, *a, **kw):
-        if default_factory is not None and not isinstance(default_factory):
+        if default_factory is not None and not callable(default_factory):
             raise TypeError("first argument must be callable")
         OrderedDict.__init__(self, *a, **kw)
         self.default_factory = default_factory
@@ -169,14 +168,12 @@ class DefaultOrderedDict(OrderedDict):
         return type(self), args, None, None, self.items()
 
     def copy(self):
-        return self.__copy__()
+        return copy.copy(self)
 
     def __copy__(self):
         return type(self)(self.default_factory, self)
 
     def __deepcopy__(self, memo):
-        import copy
-
         return type(self)(self.default_factory, copy.deepcopy(self.items()))
 
     def __repr__(self):
@@ -339,7 +336,6 @@ class MFile:
         verbose :
              verbosity of output
         """
-
         if keys is None:
             keys = self.data.keys()
 
@@ -407,7 +403,7 @@ class MFile:
         verbose :
              verbosity of output
         """
-        import toml
+        import toml  # noqa:PLC0415
 
         with open(filename or f"{self.filename}.toml", "w") as file:
             toml.dump(self.to_dict(keys_to_write, scan, verbose), file)
@@ -496,7 +492,7 @@ def sort_value(value_words: list[str]) -> str | float:
         return float(value_words[0])
     except ValueError:
         # Log the exception with details
-        logger.exception(f"Can't parse value in MFILE: {value_words}")
+        logger.exception("Can't parse value in MFILE: %s", value_words)
         # Return the original string as a fallback
         return " ".join(value_words).strip()
 
@@ -598,7 +594,7 @@ def get_mfile_initial_ixc_values(file_path: Path):
     This method initialises a SingleRun. At present, this involves mutating the global
     data structure so it is not safe to run this method during a PROCESS run.
     """
-    from process.main import SingleRun
+    from process.main import SingleRun  # noqa:PLC0415
 
     SingleRun(file_path.as_posix())
     iteration_variables.load_iteration_variables()
