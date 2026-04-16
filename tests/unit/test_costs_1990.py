@@ -3209,7 +3209,7 @@ class Acc224Param(NamedTuple):
         ),
     ],
 )
-def test_acc224(acc224param, monkeypatch, costs, process_models):
+def test_acc224(acc224param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc224.
 
