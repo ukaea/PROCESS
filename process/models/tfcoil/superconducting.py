@@ -22,7 +22,7 @@ from process.data_structure import (
 from process.models import superconductors
 from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
 from process.models.tfcoil import quench
-from process.models.tfcoil.base import TFCoil
+from process.models.tfcoil.base import TFCoil, TFPLasmaCaseType
 
 logger = logging.getLogger(__name__)
 
@@ -2495,12 +2495,12 @@ class SuperconductingTFCoil(TFCoil):
         a_tf_coil_outboard_case = a_tf_leg_outboard - a_tf_wp_with_insulation
 
         # Front casing area [m²]
-        if i_tf_case_geom == 0:
+        if i_tf_case_geom == TFPLasmaCaseType.CIRCULAR:
             # Circular front case
             a_tf_plasma_case = (
                 rad_tf_coil_inboard_toroidal_half * r_tf_inboard_out**2
             ) - (tan_theta_coil * r_tf_wp_inboard_outer**2)
-        else:
+        elif i_tf_case_geom == TFPLasmaCaseType.STRAIGHT:
             # Straight front case [m²]
             a_tf_plasma_case = (
                 (r_tf_wp_inboard_outer + dr_tf_plasma_case) ** 2
