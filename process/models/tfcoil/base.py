@@ -60,7 +60,7 @@ class TFConductorModel(IntEnum):
     HELIUM_COOLED_ALUMINIUM = 2
 
 
-class TFPLasmaCaseType(IntEnum):
+class TFPlasmaCaseType(IntEnum):
     """Enumeration for TF plasma-facing case types (i_tf_case_geom).
 
     0: Circular plasma facing front case
@@ -239,10 +239,10 @@ class TFCoil(Model):
         tan_theta_coil = np.tan(rad_tf_coil_inboard_toroidal_half)
 
         # TF coil inboard legs total mid-plane cross-section area [m^2]
-        if i_tf_case_geom == TFPLasmaCaseType.CIRCULAR:
+        if i_tf_case_geom == TFPlasmaCaseType.CIRCULAR:
             # Circular plasma facing front case
             a_tf_inboard_total = np.pi * (r_tf_inboard_out**2 - r_tf_inboard_in**2)
-        elif i_tf_case_geom == TFPLasmaCaseType.STRAIGHT:
+        elif i_tf_case_geom == TFPlasmaCaseType.STRAIGHT:
             # Straight plasma facing front case
             a_tf_inboard_total = (
                 n_tf_coils
