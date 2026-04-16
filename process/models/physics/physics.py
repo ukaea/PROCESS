@@ -1777,7 +1777,10 @@ class Physics(Model):
                 "OP ",
             )
 
-            if physics_variables.i_plasma_geometry == PlasmaGeometryModelType.MODEL_1:
+            if (
+                physics_variables.i_plasma_geometry
+                == PlasmaGeometryModelType.STAR_FIESTA
+            ):
                 po.ovarrf(
                     self.outfile,
                     "Lower limit for edge safety factor q95",

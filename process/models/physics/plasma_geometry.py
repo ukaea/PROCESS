@@ -61,84 +61,84 @@ class PlasmaGeometryModels(IntEnum):
 class PlasmaGeometryModelType(IntEnum):
     """Enum for i_plasma_geometry plasma geometry model types."""
 
-    MODEL_0 = (
+    IPDG89_X_POINT = (
         0,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.IPDG89,
     )
-    MODEL_1 = (
+    STAR_FIESTA = (
         1,
         PlasmaGeometryModels.STAR_CODE,
         PlasmaGeometryModels.STAR_CODE,
         PlasmaGeometryModels.FIESTA_RUNS,
         PlasmaGeometryModels.FIESTA_RUNS,
     )
-    MODEL_2 = (
+    ZOHM_ITER_X_POINT = (
         2,
         PlasmaGeometryModels.ZOHM_ITER,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.IPDG89,
     )
-    MODEL_3 = (
+    ZOHM_ITER_95 = (
         3,
         PlasmaGeometryModels.ZOHM_ITER,
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.USER_INPUT,
     )
-    MODEL_4 = (
+    IPDG89_95 = (
         4,
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.USER_INPUT,
     )
-    MODEL_5 = (
+    MAST_DATA_95 = (
         5,
         PlasmaGeometryModels.MAST_DATA,
         PlasmaGeometryModels.MAST_DATA,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.USER_INPUT,
     )
-    MODEL_6 = (
+    MAST_DATA_X_POINT = (
         6,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.MAST_DATA,
         PlasmaGeometryModels.MAST_DATA,
     )
-    MODEL_7 = (
+    FIESTA_RUNS_95 = (
         7,
         PlasmaGeometryModels.FIESTA_RUNS,
         PlasmaGeometryModels.FIESTA_RUNS,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.USER_INPUT,
     )
-    MODEL_8 = (
+    FIESTA_RUNS_X_POINT = (
         8,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.FIESTA_RUNS,
         PlasmaGeometryModels.FIESTA_RUNS,
     )
-    MODEL_9 = (
+    INDUCTANCE_SCALING_X_POINT = (
         9,
         PlasmaGeometryModels.UNKNOWN,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.IPDG89,
     )
-    MODEL_10 = (
+    CREATE_DATA_EU_DEMO_X_POINT = (
         10,
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.CREATE_DATA_EU_DEMO,
         PlasmaGeometryModels.IPDG89,
     )
-    MODEL_11 = (
+    MENARD_2016_X_POINT = (
         11,
         PlasmaGeometryModels.MENARD_2016,
         PlasmaGeometryModels.USER_INPUT,
@@ -205,7 +205,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 0
+            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.IPDG89_X_POINT
         ):  # Use input kappa, physics_variables.triang values
             #  Rough estimate of 95% values
             #  ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
@@ -218,7 +218,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 1
+            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.STAR_FIESTA
         ):  # ST scaling with physics_variables.aspect ratio [STAR Code]
             physics_variables.q95_min = 3.0e0 * (
                 1.0e0 + 2.6e0 * physics_variables.eps**2.8e0
@@ -242,7 +242,8 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 2
+            physics_variables.i_plasma_geometry
+            == PlasmaGeometryModelType.ZOHM_ITER_X_POINT
         ):  # Zohm et al. ITER scaling for elongation, input physics_variables.triang
             physics_variables.kappa = physics_variables.fkzohm * min(
                 2.0e0, 1.5e0 + 0.5e0 / (physics_variables.aspect - 1.0e0)
@@ -255,7 +256,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 3
+            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.ZOHM_ITER_95
         ):  # Zohm et al. ITER scaling for elongation, input physics_variables.triang95
             physics_variables.kappa = physics_variables.fkzohm * min(
                 2.0e0, 1.5e0 + 0.5e0 / (physics_variables.aspect - 1.0e0)
@@ -269,7 +270,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 4
+            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.IPDG89_95
         ):  # Use input kappa95, physics_variables.triang95 values
             # ITER Physics Design Guidlines: 1989 (Uckan et al. 1990)
             physics_variables.kappa = 1.12e0 * physics_variables.kappa95
@@ -278,7 +279,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 5
+            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.MAST_DATA_95
         ):  # Use input kappa95, physics_variables.triang95 values
             # Fit to MAST data (Issue #1086)
             physics_variables.kappa = 0.91300e0 * physics_variables.kappa95 + 0.38654e0
@@ -287,7 +288,8 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 6
+            physics_variables.i_plasma_geometry
+            == PlasmaGeometryModelType.MAST_DATA_X_POINT
         ):  # Use input kappa, physics_variables.triang values
             # Fit to MAST data (Issue #1086)
             physics_variables.kappa95 = (physics_variables.kappa - 0.38654e0) / 0.91300e0
@@ -298,7 +300,7 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 7
+            physics_variables.i_plasma_geometry == PlasmaGeometryModelType.FIESTA_RUNS_95
         ):  # Use input kappa95, physics_variables.triang95 values
             # Fit to FIESTA (Issue #1086)
             physics_variables.kappa = 0.90698e0 * physics_variables.kappa95 + 0.39467e0
@@ -307,7 +309,8 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 8
+            physics_variables.i_plasma_geometry
+            == PlasmaGeometryModelType.FIESTA_RUNS_X_POINT
         ):  # Use input kappa, physics_variables.triang values
             # Fit to FIESTA (Issue #1086)
             physics_variables.kappa95 = (physics_variables.kappa - 0.39467e0) / 0.90698e0
@@ -318,7 +321,8 @@ class PlasmaGeom:
         # ======================================================================
 
         if (
-            physics_variables.i_plasma_geometry == 9
+            physics_variables.i_plasma_geometry
+            == PlasmaGeometryModelType.INDUCTANCE_SCALING_X_POINT
         ):  # Use input triang, physics_variables.ind_plasma_internal_norm values
             # physics_variables.kappa found from physics_variables.aspect ratio and plasma internal inductance li(3)
             physics_variables.kappa = (
@@ -330,7 +334,10 @@ class PlasmaGeom:
 
         # ======================================================================
 
-        if physics_variables.i_plasma_geometry == 10:
+        if (
+            physics_variables.i_plasma_geometry
+            == PlasmaGeometryModelType.CREATE_DATA_EU_DEMO_X_POINT
+        ):
             # physics_variables.kappa95 found from physics_variables.aspect ratio and stabilty margin
             # Based on fit to CREATE data. ref Issue #1399
             # valid for EU-DEMO like machine - physics_variables.aspect ratio 2.6 - 3.6
@@ -366,7 +373,10 @@ class PlasmaGeom:
 
         # ======================================================================
 
-        if physics_variables.i_plasma_geometry == 11:
+        if (
+            physics_variables.i_plasma_geometry
+            == PlasmaGeometryModelType.MENARD_2016_X_POINT
+        ):
             # See Issue #1439
             # physics_variables.triang is an input
             # physics_variables.kappa found from physics_variables.aspect ratio scaling on p32 of Menard:
