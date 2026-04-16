@@ -4,6 +4,7 @@ import copy
 import json
 import logging
 from enum import IntEnum
+from types import DynamicClassAttribute
 from typing import TYPE_CHECKING
 
 import numba
@@ -57,6 +58,29 @@ class TFConductorModel(IntEnum):
     WATER_COOLED_COPPER = 0
     SUPERCONDUCTING = 1
     HELIUM_COOLED_ALUMINIUM = 2
+
+
+class TFPlasmaCaseType(IntEnum):
+    """Enumeration for TF plasma-facing case types (i_tf_case_geom).
+
+    0: Circular plasma facing front case
+    1: Straight plasma facing front case
+
+    """
+
+    CIRCULAR = (0, "Circular edge plasma-facing front case")
+    STRAIGHT = (1, "Straight edge plasma-facing front case")
+
+    def __new__(cls, value, description):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        """Returns the description of the plasma-facing case type."""
+        return self._description_
 
 
 class TFCoil(Model):
@@ -215,10 +239,10 @@ class TFCoil(Model):
         tan_theta_coil = np.tan(rad_tf_coil_inboard_toroidal_half)
 
         # TF coil inboard legs total mid-plane cross-section area [m^2]
-        if i_tf_case_geom == 0:
+        if i_tf_case_geom == TFPlasmaCaseType.CIRCULAR:
             # Circular plasma facing front case
             a_tf_inboard_total = np.pi * (r_tf_inboard_out**2 - r_tf_inboard_in**2)
-        else:
+        elif i_tf_case_geom == TFPlasmaCaseType.STRAIGHT:
             # Straight plasma facing front case
             a_tf_inboard_total = (
                 n_tf_coils
