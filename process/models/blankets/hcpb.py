@@ -14,7 +14,6 @@ from process.data_structure import (
     ccfe_hcpb_module,
     current_drive_variables,
     divertor_variables,
-    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
@@ -286,10 +285,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # First wall coolant volume (m3)
         coolvol = (
             coolvol
-            + first_wall_variables.a_fw_inboard
+            + self.data.first_wall.a_fw_inboard
             * build_variables.dr_fw_inboard
             * fwbs_variables.f_a_fw_coolant_inboard
-            + first_wall_variables.a_fw_outboard
+            + self.data.first_wall.a_fw_outboard
             * build_variables.dr_fw_outboard
             * fwbs_variables.f_a_fw_coolant_outboard
         )
@@ -299,14 +298,14 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # Average first wall coolant fraction, only used by old routines in fispact.f90, safety.f90
         fwbs_variables.fwclfr = (
-            first_wall_variables.a_fw_inboard
+            self.data.first_wall.a_fw_inboard
             * build_variables.dr_fw_inboard
             * fwbs_variables.f_a_fw_coolant_inboard
-            + first_wall_variables.a_fw_outboard
+            + self.data.first_wall.a_fw_outboard
             * build_variables.dr_fw_outboard
             * fwbs_variables.f_a_fw_coolant_outboard
         ) / (
-            first_wall_variables.a_fw_total
+            self.data.first_wall.a_fw_total
             * 0.5
             * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
@@ -348,10 +347,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # First wall volume (m^3)
         fwbs_variables.vol_fw_total = (
-            first_wall_variables.a_fw_inboard
+            self.data.first_wall.a_fw_inboard
             * build_variables.dr_fw_inboard
             * (1.0 - fwbs_variables.f_a_fw_coolant_inboard)
-            + first_wall_variables.a_fw_outboard
+            + self.data.first_wall.a_fw_outboard
             * build_variables.dr_fw_outboard
             * (1.0 - fwbs_variables.f_a_fw_coolant_outboard)
         )
@@ -775,13 +774,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # All of the fast particle losses go to the outer wall.
         fwbs_variables.psurffwo = (
             fwbs_variables.p_fw_rad_total_mw
-            * first_wall_variables.a_fw_outboard
-            / first_wall_variables.a_fw_total
+            * self.data.first_wall.a_fw_outboard
+            / self.data.first_wall.a_fw_total
             + current_drive_variables.p_beam_orbit_loss_mw
             + physics_variables.p_fw_alpha_mw
         )
         fwbs_variables.psurffwi = fwbs_variables.p_fw_rad_total_mw * (
-            1 - first_wall_variables.a_fw_outboard / first_wall_variables.a_fw_total
+            1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total
         )
 
         if fwbs_variables.i_p_coolant_pumping == 1:
@@ -1599,13 +1598,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "First wall area (m^2)",
             "(a_fw_total)",
-            first_wall_variables.a_fw_total,
+            self.data.first_wall.a_fw_total,
         )
         po.ovarre(
             self.outfile,
             "First wall area, no holes (m^2)",
             "(a_fw_total_full_coverage)",
-            first_wall_variables.a_fw_total_full_coverage,
+            self.data.first_wall.a_fw_total_full_coverage,
         )
         po.ovarre(
             self.outfile,

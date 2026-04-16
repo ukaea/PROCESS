@@ -12,7 +12,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
     buildings_variables,
-    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
@@ -273,7 +272,7 @@ class IFE(Model):
         self.genbld()
 
         # First wall area: no true first wall at bottom of chamber
-        first_wall_variables.a_fw_total = (
+        self.data.first_wall.a_fw_total = (
             2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl1)
             + np.pi * ife_variables.r1 * ife_variables.r1
         )
@@ -580,7 +579,7 @@ class IFE(Model):
                 )
 
         # First wall area
-        first_wall_variables.a_fw_total = (
+        self.data.first_wall.a_fw_total = (
             2.0
             * np.pi
             * ife_variables.r1
@@ -790,14 +789,14 @@ class IFE(Model):
                 )
 
         # First wall area
-        first_wall_variables.a_fw_total = (
+        self.data.first_wall.a_fw_total = (
             2.0 * np.pi * ife_variables.r1 * (ife_variables.zu1 + ife_variables.zl5)
         )
-        first_wall_variables.a_fw_total += np.pi * (
+        self.data.first_wall.a_fw_total += np.pi * (
             ife_variables.r1 * ife_variables.r1
             - ife_variables.flirad * ife_variables.flirad
         )
-        first_wall_variables.a_fw_total += (
+        self.data.first_wall.a_fw_total += (
             np.pi
             * ife_variables.r1
             * np.sqrt(
@@ -1116,7 +1115,7 @@ class IFE(Model):
         # with only the top being solid.  This is considered part
         # of the shield. There is a target injector tube at the
         # centre of this area.
-        first_wall_variables.a_fw_total = np.pi * (
+        self.data.first_wall.a_fw_total = np.pi * (
             ife_variables.r1 * ife_variables.r1
             - ife_variables.flirad * ife_variables.flirad
         )
@@ -1320,7 +1319,7 @@ class IFE(Model):
 
         # First wall area
 
-        first_wall_variables.a_fw_total = (
+        self.data.first_wall.a_fw_total = (
             2.0
             * np.pi
             * ife_variables.r1
@@ -1394,7 +1393,7 @@ class IFE(Model):
                 physics_variables.p_fusion_total_mw
                 * 0.5
                 * sang
-                / first_wall_variables.a_fw_total
+                / self.data.first_wall.a_fw_total
             )
 
         elif ife_variables.ifetyp == 4:
@@ -1409,12 +1408,12 @@ class IFE(Model):
                 physics_variables.p_fusion_total_mw
                 * 0.5
                 * sang
-                / first_wall_variables.a_fw_total
+                / self.data.first_wall.a_fw_total
             )
 
         else:
             physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.p_fusion_total_mw / first_wall_variables.a_fw_total
+                physics_variables.p_fusion_total_mw / self.data.first_wall.a_fw_total
             )
 
         if not output:
@@ -1785,7 +1784,7 @@ class IFE(Model):
             self.outfile,
             "First wall area (m2)",
             "(a_fw_total)",
-            first_wall_variables.a_fw_total,
+            self.data.first_wall.a_fw_total,
         )
         process_output.ovarre(
             self.outfile,
