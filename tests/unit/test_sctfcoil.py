@@ -15,6 +15,8 @@ from process.data_structure import (
 )
 from process.models.tfcoil import superconducting as sctf
 from process.models.tfcoil.superconducting import (
+    CICCAveragedTurnGeometry,
+    CICCIntegerTurnGeometry,
     CICCSuperconductingTFCoil,
     CROCOSuperconductingTFCoil,
     SuperconductingTFCoil,
@@ -1143,23 +1145,9 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
+    integer_turn_geometry = CICCIntegerTurnGeometry
 
-    (
-        radius_tf_turn_cable_space_corners,
-        dr_tf_turn,
-        dx_tf_turn,
-        a_tf_turn_cable_space_no_void,
-        a_tf_turn_steel,
-        a_tf_turn_insulation,
-        c_tf_turn,
-        n_tf_coil_turns,
-        t_conductor_radial,
-        t_conductor_toroidal,
-        t_conductor,
-        dr_tf_turn_cable_space,
-        dx_tf_turn_cable_space,
-        dx_tf_turn_cable_space_average,
-    ) = cicc_sctfcoil.tf_cable_in_conduit_integer_turn_geometry(
+    integer_turn_geometry = cicc_sctfcoil.tf_cable_in_conduit_integer_turn_geometry(
         dr_tf_wp_with_insulation=tfintegerturngeomparam.dr_tf_wp_with_insulation,
         dx_tf_wp_insulation=tfintegerturngeomparam.dx_tf_wp_insulation,
         dx_tf_wp_insertion_gap=tfintegerturngeomparam.dx_tf_wp_insertion_gap,
@@ -1171,55 +1159,63 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
         dx_tf_turn_insulation=tfintegerturngeomparam.dx_tf_turn_insulation,
     )
 
-    assert radius_tf_turn_cable_space_corners == pytest.approx(
+    assert integer_turn_geometry.radius_tf_turn_cable_space_corners == pytest.approx(
         0.75 * tfintegerturngeomparam.dx_tf_turn_steel
     )
 
-    assert t_conductor == pytest.approx(tfintegerturngeomparam.expected_t_conductor)
+    assert integer_turn_geometry.t_conductor == pytest.approx(
+        tfintegerturngeomparam.expected_t_conductor
+    )
 
     assert tfcoil_variables.dx_tf_turn_general == pytest.approx(
         tfintegerturngeomparam.expected_dx_tf_turn_general
     )
 
-    assert t_conductor_radial == pytest.approx(
+    assert integer_turn_geometry.t_conductor_radial == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor_radial
     )
 
-    assert t_conductor_toroidal == pytest.approx(
+    assert integer_turn_geometry.t_conductor_toroidal == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor_toroidal
     )
 
-    assert dr_tf_turn_cable_space == pytest.approx(
+    assert integer_turn_geometry.dr_tf_turn_cable_space == pytest.approx(
         tfintegerturngeomparam.expected_dr_tf_turn_cable_space
     )
 
-    assert dx_tf_turn_cable_space == pytest.approx(
+    assert integer_turn_geometry.dx_tf_turn_cable_space == pytest.approx(
         tfintegerturngeomparam.expected_dx_tf_turn_cable_space
     )
 
-    assert dr_tf_turn == pytest.approx(tfintegerturngeomparam.expected_t_turn_radial)
+    assert integer_turn_geometry.dr_tf_turn == pytest.approx(
+        tfintegerturngeomparam.expected_t_turn_radial
+    )
 
-    assert dx_tf_turn == pytest.approx(tfintegerturngeomparam.expected_dx_tf_turn)
+    assert integer_turn_geometry.dx_tf_turn == pytest.approx(
+        tfintegerturngeomparam.expected_dx_tf_turn
+    )
 
-    assert dx_tf_turn_cable_space_average == pytest.approx(
+    assert integer_turn_geometry.dx_tf_turn_cable_space_average == pytest.approx(
         tfintegerturngeomparam.expected_t_cable
     )
 
-    assert a_tf_turn_cable_space_no_void == pytest.approx(
+    assert integer_turn_geometry.a_tf_turn_cable_space_no_void == pytest.approx(
         tfintegerturngeomparam.expected_a_tf_turn_cable_space
     )
 
-    assert a_tf_turn_steel == pytest.approx(
+    assert integer_turn_geometry.a_tf_turn_steel == pytest.approx(
         tfintegerturngeomparam.expected_a_tf_turn_steel
     )
 
-    assert a_tf_turn_insulation == pytest.approx(
+    assert integer_turn_geometry.a_tf_turn_insulation == pytest.approx(
         tfintegerturngeomparam.expected_a_tf_turn_insulation
     )
 
-    assert c_tf_turn == pytest.approx(tfintegerturngeomparam.expected_cpttf)
+    assert integer_turn_geometry.c_tf_turn == pytest.approx(
+        tfintegerturngeomparam.expected_cpttf
+    )
 
-    assert n_tf_coil_turns == pytest.approx(
+    assert integer_turn_geometry.n_tf_coil_turns == pytest.approx(
         tfintegerturngeomparam.expected_n_tf_coil_turns
     )
 
@@ -1398,22 +1394,9 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    (
-        a_tf_turn_cable_space_no_void,
-        a_tf_turn_steel,
-        a_tf_turn_insulation,
-        n_tf_coil_turns,
-        dx_tf_turn_general,
-        c_tf_turn,
-        dx_tf_turn_general2,
-        dr_tf_turn,
-        dx_tf_turn,
-        t_conductor,
-        radius_tf_turn_cable_space_corners,
-        dx_tf_turn_cable_space_average,
-        _a_tf_turn_cable_space_effective,
-        f_a_tf_turn_cable_space_cooling,
-    ) = cicc_sctfcoil.tf_cable_in_conduit_averaged_turn_geometry(
+    avg_turn_geometry = CICCAveragedTurnGeometry
+
+    avg_turn_geometry = cicc_sctfcoil.tf_cable_in_conduit_averaged_turn_geometry(
         j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
         dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
         dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
@@ -1430,30 +1413,36 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     )
 
     # Existing checks
-    assert t_conductor == pytest.approx(tfaveragedturngeomparam.expected_t_conductor)
-    assert dx_tf_turn_general == pytest.approx(
+    assert avg_turn_geometry.t_conductor == pytest.approx(
+        tfaveragedturngeomparam.expected_t_conductor
+    )
+    assert avg_turn_geometry.dx_tf_turn_general == pytest.approx(
         tfaveragedturngeomparam.expected_dx_tf_turn_general
     )
-    assert dr_tf_turn == pytest.approx(tfaveragedturngeomparam.expected_t_turn_radial)
-    assert dx_tf_turn == pytest.approx(tfaveragedturngeomparam.expected_dx_tf_turn)
-    assert dx_tf_turn_cable_space_average == pytest.approx(
+    assert avg_turn_geometry.dr_tf_turn == pytest.approx(
+        tfaveragedturngeomparam.expected_t_turn_radial
+    )
+    assert avg_turn_geometry.dx_tf_turn == pytest.approx(
+        tfaveragedturngeomparam.expected_dx_tf_turn
+    )
+    assert avg_turn_geometry.dx_tf_turn_cable_space_average == pytest.approx(
         tfaveragedturngeomparam.expected_t_cable
     )
-    assert a_tf_turn_cable_space_no_void == pytest.approx(
+    assert avg_turn_geometry.a_tf_turn_cable_space_no_void == pytest.approx(
         tfaveragedturngeomparam.expected_a_tf_turn_cable_space
     )
-    assert a_tf_turn_steel == pytest.approx(
+    assert avg_turn_geometry.a_tf_turn_steel == pytest.approx(
         tfaveragedturngeomparam.expected_a_tf_turn_steel
     )
-    assert a_tf_turn_insulation == pytest.approx(
+    assert avg_turn_geometry.a_tf_turn_insulation == pytest.approx(
         tfaveragedturngeomparam.expected_a_tf_turn_insulation
     )
-    assert n_tf_coil_turns == pytest.approx(
+    assert avg_turn_geometry.n_tf_coil_turns == pytest.approx(
         tfaveragedturngeomparam.expected_n_tf_coil_turns
     )
 
     # Expanded checks for unchecked variables
-    assert radius_tf_turn_cable_space_corners == pytest.approx(
+    assert avg_turn_geometry.radius_tf_turn_cable_space_corners == pytest.approx(
         0.75 * tfaveragedturngeomparam.dx_tf_turn_steel
     )
     # c_tf_turn is an input, so just check it matches input if input is used
@@ -1461,11 +1450,13 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
         not tfaveragedturngeomparam.i_dx_tf_turn_general_input
         and tfaveragedturngeomparam.c_tf_turn != 0
     ):
-        assert c_tf_turn == pytest.approx(tfaveragedturngeomparam.c_tf_turn)
+        assert avg_turn_geometry.c_tf_turn == pytest.approx(
+            tfaveragedturngeomparam.c_tf_turn
+        )
     # dx_tf_turn_general2 should match dx_tf_turn_general
-    assert dx_tf_turn_general2 == pytest.approx(dx_tf_turn_general)
+    assert avg_turn_geometry.dx_tf_turn == pytest.approx(avg_turn_geometry.dx_tf_turn)
     # f_a_tf_turn_cable_space_cooling should be a float between 0 and 1
-    assert 0.0 <= f_a_tf_turn_cable_space_cooling <= 1.0
+    assert 0.0 <= avg_turn_geometry.f_a_tf_turn_cable_space_cooling <= 1.0
 
 
 class TfWpCurrentsParam(NamedTuple):

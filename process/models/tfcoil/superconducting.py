@@ -1455,20 +1455,19 @@ class SuperconductingTFCoil(TFCoil):
 
 @dataclass
 class CICCAveragedTurnGeometry:
-    radius_tf_turn_cable_space_corners: float
-    dr_tf_turn: float
-    dx_tf_turn: float
     a_tf_turn_cable_space_no_void: float
     a_tf_turn_steel: float
     a_tf_turn_insulation: float
-    c_tf_turn: float
     n_tf_coil_turns: int
-    t_conductor_radial: float
-    t_conductor_toroidal: float
+    c_tf_turn: float
+    dx_tf_turn_general: float
+    dr_tf_turn: float
+    dx_tf_turn: float
     t_conductor: float
-    dr_tf_turn_cable_space: float
-    dx_tf_turn_cable_space: float
+    radius_tf_turn_cable_space_corners: float
     dx_tf_turn_cable_space_average: float
+    a_tf_turn_cable_space_effective: float
+    f_a_tf_turn_cable_space_cooling: float
 
 
 @dataclass
@@ -2656,21 +2655,20 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             # Cross-sectional area of conduit jacket per turn [m2]
             a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
 
-        return (
-            a_tf_turn_cable_space_no_void,
-            a_tf_turn_steel,
-            a_tf_turn_insulation,
-            n_tf_coil_turns,
-            dx_tf_turn_general,
-            c_tf_turn,
-            dx_tf_turn_general,
-            dr_tf_turn,
-            dx_tf_turn,
-            t_conductor,
-            radius_tf_turn_cable_space_corners,
-            dx_tf_turn_cable_space_average,
-            a_tf_turn_cable_space_effective,
-            f_a_tf_turn_cable_space_cooling,
+        return CICCAveragedTurnGeometry(
+            a_tf_turn_cable_space_no_void=a_tf_turn_cable_space_no_void,
+            a_tf_turn_steel=a_tf_turn_steel,
+            a_tf_turn_insulation=a_tf_turn_insulation,
+            n_tf_coil_turns=n_tf_coil_turns,
+            c_tf_turn=c_tf_turn,
+            dx_tf_turn_general=dx_tf_turn_general,
+            dr_tf_turn=dr_tf_turn,
+            dx_tf_turn=dx_tf_turn,
+            t_conductor=t_conductor,
+            radius_tf_turn_cable_space_corners=radius_tf_turn_cable_space_corners,
+            dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
+            a_tf_turn_cable_space_effective=a_tf_turn_cable_space_effective,
+            f_a_tf_turn_cable_space_cooling=f_a_tf_turn_cable_space_cooling,
         )
 
     def tf_cable_in_conduit_integer_turn_geometry(
@@ -2831,21 +2829,21 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         a_tf_turn_insulation = (
             dr_tf_turn * dx_tf_turn - a_tf_turn_steel - a_tf_turn_cable_space_no_void
         )
-        return (
-            radius_tf_turn_cable_space_corners,
-            dr_tf_turn,
-            dx_tf_turn,
-            a_tf_turn_cable_space_no_void,
-            a_tf_turn_steel,
-            a_tf_turn_insulation,
-            c_tf_turn,
-            n_tf_coil_turns,
-            t_conductor_radial,
-            t_conductor_toroidal,
-            t_conductor,
-            dr_tf_turn_cable_space,
-            dx_tf_turn_cable_space,
-            dx_tf_turn_cable_space_average,
+        return CICCIntegerTurnGeometry(
+            radius_tf_turn_cable_space_corners=radius_tf_turn_cable_space_corners,
+            dr_tf_turn=dr_tf_turn,
+            dx_tf_turn=dx_tf_turn,
+            a_tf_turn_cable_space_no_void=a_tf_turn_cable_space_no_void,
+            a_tf_turn_steel=a_tf_turn_steel,
+            a_tf_turn_insulation=a_tf_turn_insulation,
+            c_tf_turn=c_tf_turn,
+            n_tf_coil_turns=n_tf_coil_turns,
+            t_conductor_radial=t_conductor_radial,
+            t_conductor_toroidal=t_conductor_toroidal,
+            t_conductor=t_conductor,
+            dr_tf_turn_cable_space=dr_tf_turn_cable_space,
+            dx_tf_turn_cable_space=dx_tf_turn_cable_space,
+            dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
         )
 
         # -------------
