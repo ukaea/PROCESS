@@ -2050,9 +2050,7 @@ class Stellarator(Model):
                 physics_variables.f_plasma_fuel_deuterium,
                 physics_variables.f_plasma_fuel_tritium,
                 current_drive_variables.f_beam_tritium,
-                physics_variables.sigmav_dt_average,
                 physics_variables.temp_plasma_electron_density_weighted_kev,
-                physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
                 physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
