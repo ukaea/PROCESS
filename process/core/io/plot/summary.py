@@ -64,7 +64,7 @@ from process.models.physics.plasma_current import (
 )
 from process.models.physics.plasma_geometry import PlasmaShapeModelType
 from process.models.superconductors import SuperconductorModel
-from process.models.tfcoil.base import TFCoilShapeModel
+from process.models.tfcoil.base import TFCoilShapeModel, TFPLasmaCaseType
 
 
 @dataclass
@@ -5727,7 +5727,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             ),
         )
 
-        if i_tf_case_geom == 0:
+        if i_tf_case_geom == TFPLasmaCaseType.CIRCULAR:
             axis.add_patch(
                 Circle(
                     [0, 0],
@@ -5762,7 +5762,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             )
         )
         # Check for plasma side case type
-        if i_tf_case_geom == 0:
+        if i_tf_case_geom == TFPLasmaCaseType.CIRCULAR:
             # Rounded case
 
             # X points for outboard case curve
@@ -5775,7 +5775,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
                 )
             )
 
-        elif i_tf_case_geom == 1:
+        elif i_tf_case_geom == TFPLasmaCaseType.STRAIGHT:
             # Flat case
 
             # X points for outboard case
@@ -5809,7 +5809,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         # Fill in the case segemnts
 
         # Upper main
-        if i_tf_case_geom == 0:
+        if i_tf_case_geom == TFPLasmaCaseType.CIRCULAR:
             axis.fill_between(
                 [
                     (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
@@ -5835,7 +5835,7 @@ def plot_superconducting_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
                 color="grey",
                 alpha=0.25,
             )
-        elif i_tf_case_geom == 1:
+        elif i_tf_case_geom == TFPLasmaCaseType.STRAIGHT:
             axis.fill_between(
                 [
                     (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
@@ -6406,7 +6406,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         ),
     )
 
-    if i_tf_case_geom == 0:
+    if i_tf_case_geom == TFPLasmaCaseType.CIRCULAR:
         axis.add_patch(
             Circle(
                 [0, 0],
@@ -6441,7 +6441,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
         )
     )
     # Check for plasma side case type
-    if i_tf_case_geom == 0:
+    if i_tf_case_geom == TFPLasmaCaseType.CIRCULAR:
         # Rounded case
 
         # X points for outboard case curve
@@ -6454,7 +6454,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             )
         )
 
-    elif i_tf_case_geom == 1:
+    elif i_tf_case_geom == TFPLasmaCaseType.STRAIGHT:
         # Flat case
 
         # X points for outboard case
@@ -6488,7 +6488,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     # Fill in the case segemnts
 
     # Upper main
-    if i_tf_case_geom == 0:
+    if i_tf_case_geom == TFPLasmaCaseType.CIRCULAR:
         axis.fill_between(
             [
                 (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
@@ -6514,7 +6514,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
             color="grey",
             alpha=0.25,
         )
-    elif i_tf_case_geom == 1:
+    elif i_tf_case_geom == TFPLasmaCaseType.STRAIGHT:
         axis.fill_between(
             [
                 (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
@@ -6602,7 +6602,7 @@ def plot_resistive_tf_wp(axis: plt.Axes, mfile: MFile, scan: int, fig):
     axis.plot(x14, y14, color="black")
 
     # Upper main
-    if i_tf_case_geom == 0:
+    if i_tf_case_geom == TFPLasmaCaseType.CIRCULAR:
         axis.fill_between(
             [
                 (r_tf_wp_inboard_inner * np.cos(rad_tf_coil_inboard_toroidal_half)),
