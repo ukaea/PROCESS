@@ -1943,6 +1943,9 @@ INPUT_VARIABLES = {
     "n_tf_wp_layers": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 100)
     ),
+    "i_tf_turn_type": InputVariable(
+        data_structure.superconducting_tf_coil_variables, int, choices=[1, 2]
+    ),
     "n_liq_recirc": InputVariable(data_structure.fwbs_variables, int, range=(1, 50)),
     "n_tf_wp_pancakes": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 100)

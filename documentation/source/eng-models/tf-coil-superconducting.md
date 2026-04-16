@@ -629,3 +629,29 @@ It is also worth mentioning that the the ripple must be evaluated layer-by-layer
 used to quantify the SC cross-section area per layer. Finally, resistive
 coils do not suffer from on-coil ripple as there is no radial case present.
 
+-----------------------------
+
+## Cable in Conduit TF coil class | `CICCSuperconductingTFCoil(SuperconductingTFCoil)`
+
+WIP
+
+### Averaged turn geometry | `tf_cable_in_conduit_averaged_turn_geometry()`
+
+### Integer turn geometry | `tf_cable_in_conduit_integer_turn_geometry()`
+
+### Superconductor length | `calculate_cable_in_conduit_superconductor_length()`
+
+### Superconductor strand count | `calculate_cable_in_conduit_strand_count()`
+
+### Superconductor properties | `tf_cable_in_conduit_superconductor_properties()`
+
+
+-----------------------------
+
+## Cross Conductor TF coil class | `CROCOSuperconductingTFCoil(SuperconductingTFCoil)`
+
+WIP
+
+### Superconductor properties | `supercon_croco()`
+
+### Quench voltage | `croco_voltage()`
