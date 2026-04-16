@@ -48,6 +48,25 @@ class SuperconductingTFTurnType(IntEnum):
         return self._abbreviation_
 
 
+class SuperconductingTFWPShapeType(IntEnum):
+    """Enum for the type of TF coil WP shape, which determines the geometry of the winding pack and ground insulation."""
+
+    RECTANGULAR = (0, "Rectangular")
+    DOUBLE_RECTANGULAR = (1, "Double Rectangular")
+    TRAPEZOIDAL = (2, "Trapezoidal")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        """Return the full name for this WP geometry type."""
+        return self._full_name_
+
+
 @dataclass
 class TFWPGeometry:
     r_tf_wp_inboard_inner: float
@@ -1020,7 +1039,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Rectangular WP
         # --------------
-        if i_tf_wp_geom == 0:
+        if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
             # Outer WP layer toroidal thickness [m]
             dx_tf_wp_primary_toroidal = dx_tf_wp_toroidal_min
 
@@ -1053,7 +1072,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Double rectangular WP
         # ---------------------
-        elif i_tf_wp_geom == 1:
+        elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
             # Thickness of winding pack section at R > superconducting_tf_coil_variables.r_tf_wp_inboard_centre [m]
             dx_tf_wp_primary_toroidal = 2.0e0 * (
                 r_tf_wp_inboard_centre * tan_theta_coil - dx_tf_side_case_min
@@ -1103,7 +1122,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Trapezoidal WP
         # --------------
-        else:
+        elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
             # Thickness of winding pack section at r_tf_wp_inboard_outer [m]
             dx_tf_wp_primary_toroidal = 2.0e0 * (
                 r_tf_wp_inboard_outer * tan_theta_coil - dx_tf_side_case_min
@@ -1282,38 +1301,38 @@ class SuperconductingTFCoil(TFCoil):
         # Average lateral casing thickness [m]
         # --------------
         # Rectangular casing
-        if i_tf_wp_geom == 0:
+        if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
             dx_tf_side_case_average = (
                 dx_tf_side_case_min + 0.5e0 * tan_theta_coil * dr_tf_wp_with_insulation
             )
 
         # Double rectangular WP
-        elif i_tf_wp_geom == 1:
+        elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
             dx_tf_side_case_average = (
                 dx_tf_side_case_min + 0.25e0 * tan_theta_coil * dr_tf_wp_with_insulation
             )
 
         # Trapezoidal WP
-        else:
+        elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
             dx_tf_side_case_average = dx_tf_side_case_min
 
         # Peak lateral casing thickness [m]
         # --------------
         # Rectangular casing
 
-        if i_tf_wp_geom == 0:
+        if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
             dx_tf_side_case_peak = (
                 dx_tf_side_case_min + tan_theta_coil * dr_tf_wp_with_insulation
             )
         # Double rectangular WP
-        elif i_tf_wp_geom == 1:
+        elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
             dx_tf_side_case_peak = (
                 dx_tf_side_case_min + 0.5 * tan_theta_coil * dr_tf_wp_with_insulation
             )
 
         # Trapezoidal WP
         # Constant thickness so min = average
-        else:
+        elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
             dx_tf_side_case_peak = dx_tf_side_case_min
 
         return (
