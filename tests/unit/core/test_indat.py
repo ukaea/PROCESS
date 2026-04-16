@@ -21,25 +21,25 @@ def test_invariable_equality(value):
     assert v1 == v2
 
 
-def test_rewritten_indat_identical(temp_data_cwd):
-    indat = InDat(filename=str(temp_data_cwd / "large_tokamak_IN.DAT"))
+def test_rewritten_indat_identical(temp_int_data_cwd):
+    indat = InDat(filename=str(temp_int_data_cwd / "large_tokamak_IN.DAT"))
     indat.write_in_dat("new.IN.DAT")
 
-    new_indat = InDat(filename=str(temp_data_cwd / "new.IN.DAT"))
+    new_indat = InDat(filename=str(temp_int_data_cwd / "new.IN.DAT"))
 
     assert indat.data == new_indat.data
 
 
 @pytest.fixture
-def input_file_path(temp_data):
-    """Create a path to a scenario's input file.
+def input_file_path(temp_int_data: Path):
+    """Create a path to a scenario's input file using integration data.
 
-    :param temp_data: temporary path containing data files
-    :type temp_data: Path
-    :return: Path to that scenario's IN.DAT
-    :rtype: Path
+    Parameters
+    ----------
+    temp_int_data:
+        temporary path containing data files
     """
-    return temp_data / "large_tokamak_IN.DAT"
+    return temp_int_data / "large_tokamak_IN.DAT"
 
 
 def test_in_dat_lib(input_file_path, tmp_path):

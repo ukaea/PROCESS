@@ -171,23 +171,27 @@ def test_plasma_volume(
     ],
 )
 def test_plasma_cross_section(
-    xi, thetai, xo, thetao, expected_plasma_cross_section, plasma
+    xi: float,
+    thetai: float,
+    xo: float,
+    thetao: float,
+    expected_plasma_cross_section: float,
+    plasma,
 ):
     """Tests `plasma_cross_section()` function.
-    xi: the radius of arc describing inboard surface (m).
-    :type xi: float
 
-    thetai: the half-angle of arc describing inboard surface.
-    :type thetai: float
-
-    xo: the radius of arc describing outboard surface (m).
-    :type xo: float
-
-    thetao: the half-angle of arc describing outboard surface.
-    :type thetao: float
-
-    expected_plasma_cross_section: expected result of the function.
-    :type expected_plasma_cross_section: float
+    Parameters
+    ----------
+    xi:
+        the radius of arc describing inboard surface (m).
+    thetai:
+        the half-angle of arc describing inboard surface.
+    xo:
+        the radius of arc describing outboard surface (m).
+    thetao:
+        the half-angle of arc describing outboard surface.
+    expected_plasma_cross_section:
+        expected result of the function.
     """
     plasma_cross_section = plasma.plasma_cross_section(xi, thetai, xo, thetao)
 
