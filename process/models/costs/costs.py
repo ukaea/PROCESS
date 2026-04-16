@@ -11,7 +11,6 @@ from process.data_structure import (
     buildings_variables,
     current_drive_variables,
     divertor_variables,
-    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
@@ -1199,7 +1198,7 @@ class Costs(Model):
                 * cmlsa[self.data.costs.lsa - 1]
                 * (
                     (self.data.costs.UCFWA + self.data.costs.UCFWS)
-                    * first_wall_variables.a_fw_total
+                    * self.data.first_wall.a_fw_total
                     + self.data.costs.UCFWPS
                 )
             )

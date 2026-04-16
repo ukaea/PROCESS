@@ -7,7 +7,6 @@ import pytest
 
 from process.data_structure import (
     buildings_variables,
-    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
@@ -546,7 +545,7 @@ def test_sombld(sombldparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(first_wall_variables, "a_fw_total", sombldparam.a_fw_total)
+    monkeypatch.setattr(ife.data.first_wall, "a_fw_total", sombldparam.a_fw_total)
 
     for name, val in (
         ("ifetyp", sombldparam.ifetyp),
@@ -620,7 +619,7 @@ def test_sombld(sombldparam, monkeypatch, ife):
 
     ife.sombld()
 
-    assert first_wall_variables.a_fw_total == pytest.approx(
+    assert ife.data.first_wall.a_fw_total == pytest.approx(
         sombldparam.expected_a_fw_total
     )
     assert ife_variables.r1 == pytest.approx(sombldparam.expected_r1)
@@ -1137,7 +1136,7 @@ def test_hylbld(hylbldparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(first_wall_variables, "a_fw_total", hylbldparam.a_fw_total)
+    monkeypatch.setattr(ife.data.first_wall, "a_fw_total", hylbldparam.a_fw_total)
     for name, val in (
         ("ifetyp", hylbldparam.ifetyp),
         ("chrad", hylbldparam.chrad),
@@ -1194,7 +1193,7 @@ def test_hylbld(hylbldparam, monkeypatch, ife):
 
     ife.hylbld()
 
-    assert first_wall_variables.a_fw_total == pytest.approx(
+    assert ife.data.first_wall.a_fw_total == pytest.approx(
         hylbldparam.expected_a_fw_total
     )
     assert ife_variables.r1 == pytest.approx(hylbldparam.expected_r1)
@@ -1577,7 +1576,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(first_wall_variables, "a_fw_total", ifefbsparam.a_fw_total)
+    monkeypatch.setattr(ife.data.first_wall, "a_fw_total", ifefbsparam.a_fw_total)
     monkeypatch.setattr(ife.data.costs, "life_plant", ifefbsparam.life_plant)
     monkeypatch.setattr(ife.data.costs, "abktflnc", ifefbsparam.abktflnc)
     monkeypatch.setattr(
@@ -2030,7 +2029,7 @@ def test_genbld(genbldparam, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(first_wall_variables, "a_fw_total", genbldparam.a_fw_total)
+    monkeypatch.setattr(ife.data.first_wall, "a_fw_total", genbldparam.a_fw_total)
     for name, val in (
         ("ifetyp", genbldparam.ifetyp),
         ("chrad", genbldparam.chrad),
@@ -2087,7 +2086,7 @@ def test_genbld(genbldparam, monkeypatch, ife):
 
     ife.genbld()
 
-    assert first_wall_variables.a_fw_total == pytest.approx(
+    assert ife.data.first_wall.a_fw_total == pytest.approx(
         genbldparam.expected_a_fw_total
     )
     assert ife_variables.r1 == pytest.approx(genbldparam.expected_r1)
@@ -2652,7 +2651,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(first_wall_variables, "a_fw_total", bld2019param.a_fw_total)
+    monkeypatch.setattr(ife.data.first_wall, "a_fw_total", bld2019param.a_fw_total)
     monkeypatch.setattr(buildings_variables, "trcl", bld2019param.trcl)
     monkeypatch.setattr(buildings_variables, "stcl", bld2019param.stcl)
     monkeypatch.setattr(fwbs_variables, "tbr", bld2019param.tbr)
@@ -2715,7 +2714,7 @@ def test_bld2019(bld2019param, monkeypatch, ife):
 
     ife.bld2019()
 
-    assert first_wall_variables.a_fw_total == pytest.approx(
+    assert ife.data.first_wall.a_fw_total == pytest.approx(
         bld2019param.expected_a_fw_total
     )
     assert fwbs_variables.tbr == pytest.approx(bld2019param.expected_tbr)

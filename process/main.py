@@ -711,6 +711,8 @@ class Models:
             self.power,
             self.stellarator,
             self.ccfe_hcpb,
+            self.fw,
+            self.dcll,
         )
 
     def setup_data_structure(self):
