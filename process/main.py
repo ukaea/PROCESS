@@ -720,6 +720,7 @@ class Models:
             self.buildings,
             self.power,
             self.stellarator,
+            self.ccfe_hcpb,
         )
 
     def setup_data_structure(self):
