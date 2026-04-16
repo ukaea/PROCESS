@@ -65,6 +65,7 @@ from process.models.superconductors import (
     SuperconductorType,
 )
 from process.models.tfcoil.base import TFCoilShapeModel, TFConductorModel
+from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
 if TYPE_CHECKING:
     from process.core.model import DataStructure
@@ -1002,9 +1003,13 @@ def check_process(inputs, data):  # noqa: ARG001
 
     if data_structure.tfcoil_variables.i_tf_wp_geom == -1:
         if data_structure.tfcoil_variables.i_tf_turns_integer == 0:
-            data_structure.tfcoil_variables.i_tf_wp_geom = 1
+            data_structure.tfcoil_variables.i_tf_wp_geom = (
+                SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
+            )
         if data_structure.tfcoil_variables.i_tf_turns_integer == 1:
-            data_structure.tfcoil_variables.i_tf_wp_geom = 0
+            data_structure.tfcoil_variables.i_tf_wp_geom = (
+                SuperconductingTFWPShapeType.RECTANGULAR
+            )
 
     # Setting the TF coil conductor elastic properties
 
@@ -1102,7 +1107,8 @@ def check_process(inputs, data):  # noqa: ARG001
         )
 
     if (
-        data_structure.tfcoil_variables.i_tf_wp_geom != 0
+        data_structure.tfcoil_variables.i_tf_wp_geom
+        != SuperconductingTFWPShapeType.RECTANGULAR
         and data_structure.tfcoil_variables.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
