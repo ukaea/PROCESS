@@ -2132,7 +2132,7 @@ def parse_input_file(data_structure_obj: DataStructure):
         variable_name, array_index, variable_value = line_match.groups()
         variable_name = variable_name.lower()
 
-        variable_config = INPUT_VARIABLES.get(variable_name)
+        variable_config = copy.copy(INPUT_VARIABLES.get(variable_name))
 
         # string indicates it should be set on the new object data structure
         if isinstance(variable_config.module, str):
