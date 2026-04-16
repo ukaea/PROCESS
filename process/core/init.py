@@ -58,7 +58,6 @@ from process.data_structure.superconducting_tf_coil_variables import (
 )
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
-from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -71,7 +70,7 @@ if TYPE_CHECKING:
     from process.core.model import DataStructure
 
 
-def init_process(data_structure: DataStructure):
+def init_process(data: DataStructure):
     """Routine that calls the initialisation routines
 
     This routine calls the main initialisation routines that set
@@ -85,7 +84,7 @@ def init_process(data_structure: DataStructure):
     process_output.OutputFileManager.open_files()
 
     # Input any desired new initial values
-    inputs = parse_input_file(data_structure)
+    inputs = parse_input_file(data)
 
     # Set active constraints
     set_active_constraints()
@@ -97,7 +96,7 @@ def init_process(data_structure: DataStructure):
     st_init()
 
     # Check input data for errors/ambiguities
-    check_process(inputs)
+    check_process(inputs, data)
 
     run_summary()
 
@@ -291,7 +290,6 @@ def init_all_module_vars():
     init_primary_pumping_variables()
     init_pfcoil_variables()
     init_structure_variables()
-    init_vacuum_variables()
     init_pf_power_variables()
     init_build_variables()
     init_constraint_variables()
@@ -304,7 +302,7 @@ def init_all_module_vars():
     init_neoclassics_variables()
 
 
-def check_process(inputs):  # noqa: ARG001
+def check_process(inputs, data):  # noqa: ARG001
     """Routine to reset specific variables if certain options are
     being used
 
@@ -380,7 +378,7 @@ def check_process(inputs):  # noqa: ARG001
             : data_structure.numerics.neqns + data_structure.numerics.nineqns
         ]
         == 63
-    ).any() and data_structure.vacuum_variables.i_vacuum_pumping != "simple":
+    ).any() and data.vacuum.i_vacuum_pumping != "simple":
         raise ProcessValidationError(
             "Constraint 63 is requested without the correct vacuum model (simple)"
         )

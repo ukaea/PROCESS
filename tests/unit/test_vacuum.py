@@ -5,28 +5,26 @@ import pytest
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
-from process.data_structure import vacuum_variables as vacv
-from process.models.vacuum import Vacuum, VacuumVessel
 
 
 @pytest.fixture
-def vacuum():
-    """Provides Vacuum object for testing.
+def vacuum(process_models):
+    """Fixture to get the Vacuum instance from process_models.
 
     :return vacuum: initialised Vacuum object
     :type vacuum: process.vacuum.Vacuum
     """
-    return Vacuum()
+    return process_models.vacuum
 
 
 @pytest.fixture
-def vacuum_vessel():
-    """Provides Vacuum object for testing.
+def vacuum_vessel(process_models):
+    """Fixture to get the VacuumVessel instance from process_models.
 
-    :return vacuum: initialised Vacuum object
-    :type vacuum: process.vacuum.Vacuum
+    :return vacuum: initialised VacuumVessel object
+    :type vacuum: process.vacuum.VacuumVessel
     """
-    return VacuumVessel()
+    return process_models.vacuum_vessel
 
 
 class TestVacuum:
@@ -47,13 +45,15 @@ class TestVacuum:
         monkeypatch.setattr(pv, "a_plasma_surface", 1500.3146527709359)
         monkeypatch.setattr(tfv, "n_tf_coils", 18)
         monkeypatch.setattr(tv, "t_plant_pulse_dwell", 500)
-        monkeypatch.setattr(vacv, "outgasfactor", 0.0235)
-        monkeypatch.setattr(vacv, "outgasindex", 1)
-        monkeypatch.setattr(vacv, "pres_vv_chamber_base", 0.0005)
-        monkeypatch.setattr(vacv, "f_a_vac_pump_port_plasma_surface", 0.0203)
-        monkeypatch.setattr(vacv, "f_volflow_vac_pumps_impedance", 0.4)
-        monkeypatch.setattr(vacv, "volflow_vac_pumps_max", 27.3)
-        monkeypatch.setattr(vacv, "molflow_vac_pumps", 1.2155e22)
+        monkeypatch.setattr(vacuum.data.vacuum, "outgasfactor", 0.0235)
+        monkeypatch.setattr(vacuum.data.vacuum, "outgasindex", 1)
+        monkeypatch.setattr(vacuum.data.vacuum, "pres_vv_chamber_base", 0.0005)
+        monkeypatch.setattr(
+            vacuum.data.vacuum, "f_a_vac_pump_port_plasma_surface", 0.0203
+        )
+        monkeypatch.setattr(vacuum.data.vacuum, "f_volflow_vac_pumps_impedance", 0.4)
+        monkeypatch.setattr(vacuum.data.vacuum, "volflow_vac_pumps_max", 27.3)
+        monkeypatch.setattr(vacuum.data.vacuum, "molflow_vac_pumps", 1.2155e22)
 
         n_iter_vacuum_pumps = vacuum.vacuum_simple(output=False)
 
@@ -67,12 +67,16 @@ class TestVacuum:
         monkeypatch.setattr(pv, "p_fusion_total_mw", 2115.3899563651776)
         monkeypatch.setattr(pv, "temp_plasma_electron_vol_avg_kev", 15.872999999999999)
         monkeypatch.setattr(tv, "t_plant_pulse_coil_precharge", 30)
-        monkeypatch.setattr(vacv, "i_vac_pump_dwell", 0)
-        monkeypatch.setattr(vacv, "i_vacuum_pump_type", 1)
-        monkeypatch.setattr(vacv, "pres_vv_chamber_base", 0.00050000000000000001)
-        monkeypatch.setattr(vacv, "pres_div_chamber_burn", 0.35999999999999999)
-        monkeypatch.setattr(vacv, "outgrat_fw", 1.3000000000000001e-08)
-        monkeypatch.setattr(vacv, "temp_vv_chamber_gas_burn_end", 300)
+        monkeypatch.setattr(vacuum.data.vacuum, "i_vac_pump_dwell", 0)
+        monkeypatch.setattr(vacuum.data.vacuum, "i_vacuum_pump_type", 1)
+        monkeypatch.setattr(
+            vacuum.data.vacuum, "pres_vv_chamber_base", 0.00050000000000000001
+        )
+        monkeypatch.setattr(
+            vacuum.data.vacuum, "pres_div_chamber_burn", 0.35999999999999999
+        )
+        monkeypatch.setattr(vacuum.data.vacuum, "outgrat_fw", 1.3000000000000001e-08)
+        monkeypatch.setattr(vacuum.data.vacuum, "temp_vv_chamber_gas_burn_end", 300)
 
         ndiv = 1
         pfusmw = 2115.3899563651776

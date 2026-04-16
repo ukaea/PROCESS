@@ -1345,14 +1345,14 @@ def constraint_equation_62(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(63, "", "<=")
-def constraint_equation_63(constraint_registration, _data):
+def constraint_equation_63(constraint_registration, data):
     """Upper limit on n_iter_vacuum_pumps (i_vacuum_pumping = simple)
 
     tfno: number of TF coils (default = 50 for stellarators)
     n_iter_vacuum_pumps: number of high vacuum pumps (real number), each with the throughput
     """
     return leq(
-        data_structure.vacuum_variables.n_iter_vacuum_pumps,
+        data.vacuum.n_iter_vacuum_pumps,
         data_structure.tfcoil_variables.n_tf_coils,
         constraint_registration,
     )

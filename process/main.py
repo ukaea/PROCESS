@@ -707,6 +707,11 @@ class Models:
             self.cs_fatigue,
             self.cs_coil,
             self.pfcoil,
+            self.vacuum,
+            self.vacuum_vessel,
+            self._costs_1990,
+            self.availability,
+            self.ife,
         )
 
     def setup_data_structure(self):

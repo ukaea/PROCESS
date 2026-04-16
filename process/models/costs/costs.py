@@ -5,6 +5,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -22,14 +23,13 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
     times_variables,
-    vacuum_variables,
 )
 from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
 
 
-class Costs:
+class Costs(Model):
     def __init__(self):
         self.outfile = constants.NOUT
 
@@ -1990,13 +1990,13 @@ class Costs:
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
         """
-        if vacuum_variables.i_vacuum_pump_type == 1:
+        if self.data.vacuum.i_vacuum_pump_type == 1:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.UCCPMP
+                1.0e-6 * self.data.vacuum.n_vac_pumps_high * cost_variables.UCCPMP
             )
         else:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.uctpmp
+                1.0e-6 * self.data.vacuum.n_vac_pumps_high * cost_variables.UCTPMP
             )
 
         cost_variables.c2241 = cost_variables.fkind * cost_variables.c2241
@@ -2004,7 +2004,7 @@ class Costs:
         #  Account 224.2 : Backing pumps
 
         cost_variables.c2242 = (
-            1.0e-6 * vacuum_variables.n_vv_vacuum_ducts * cost_variables.UCBPMP
+            1.0e-6 * self.data.vacuum.n_vv_vacuum_ducts * cost_variables.UCBPMP
         )
         cost_variables.c2242 = cost_variables.fkind * cost_variables.c2242
 
@@ -2012,8 +2012,8 @@ class Costs:
 
         cost_variables.c2243 = (
             1.0e-6
-            * vacuum_variables.n_vv_vacuum_ducts
-            * vacuum_variables.dlscal
+            * self.data.vacuum.n_vv_vacuum_ducts
+            * self.data.vacuum.dlscal
             * cost_variables.UCDUCT
         )
         cost_variables.c2243 = cost_variables.fkind * cost_variables.c2243
@@ -2023,8 +2023,8 @@ class Costs:
         cost_variables.c2244 = (
             1.0e-6
             * 2.0e0
-            * vacuum_variables.n_vv_vacuum_ducts
-            * (vacuum_variables.dia_vv_vacuum_ducts * 1.2e0) ** 1.4e0
+            * self.data.vacuum.n_vv_vacuum_ducts
+            * (self.data.vacuum.dia_vv_vacuum_ducts * 1.2e0) ** 1.4e0
             * cost_variables.UCVALV
         )
         cost_variables.c2244 = cost_variables.fkind * cost_variables.c2244
@@ -2033,8 +2033,8 @@ class Costs:
 
         cost_variables.c2245 = (
             1.0e-6
-            * vacuum_variables.n_vv_vacuum_ducts
-            * vacuum_variables.m_vv_vacuum_duct_shield
+            * self.data.vacuum.n_vv_vacuum_ducts
+            * self.data.vacuum.m_vv_vacuum_duct_shield
             * cost_variables.UCVDSH
         )
         cost_variables.c2245 = cost_variables.fkind * cost_variables.c2245

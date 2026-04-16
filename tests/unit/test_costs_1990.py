@@ -23,19 +23,17 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
     times_variables,
-    vacuum_variables,
 )
-from process.models.costs.costs import Costs
 
 
 @pytest.fixture
-def costs():
-    """Provides Pulse object for testing.
+def costs(process_models):
+    """Provides Costs object for testing.
 
-    :returns: initialised Pulse object
-    :rtype: process.pulse.Pulse
+    :returns: initialised Costs object
+    :rtype: process.costs.Costs
     """
-    return Costs()
+    return process_models._costs_1990
 
 
 def acc2261_param(**kwargs):
@@ -3226,26 +3224,40 @@ def test_acc224(acc224param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc224param.fkind)
 
-    monkeypatch.setattr(vacuum_variables, "dlscal", acc224param.dlscal)
-
     monkeypatch.setattr(
-        vacuum_variables, "m_vv_vacuum_duct_shield", acc224param.m_vv_vacuum_duct_shield
+        costs.data.vacuum,
+        "dlscal",
+        acc224param.dlscal,
     )
 
     monkeypatch.setattr(
-        vacuum_variables, "n_vac_pumps_high", acc224param.n_vac_pumps_high
+        costs.data.vacuum,
+        "m_vv_vacuum_duct_shield",
+        acc224param.m_vv_vacuum_duct_shield,
     )
 
     monkeypatch.setattr(
-        vacuum_variables, "dia_vv_vacuum_ducts", acc224param.dia_vv_vacuum_ducts
+        costs.data.vacuum,
+        "n_vac_pumps_high",
+        acc224param.n_vac_pumps_high,
     )
 
     monkeypatch.setattr(
-        vacuum_variables, "i_vacuum_pump_type", acc224param.i_vacuum_pump_type
+        costs.data.vacuum,
+        "dia_vv_vacuum_ducts",
+        acc224param.dia_vv_vacuum_ducts,
     )
 
     monkeypatch.setattr(
-        vacuum_variables, "n_vv_vacuum_ducts", acc224param.n_vv_vacuum_ducts
+        costs.data.vacuum,
+        "i_vacuum_pump_type",
+        acc224param.i_vacuum_pump_type,
+    )
+
+    monkeypatch.setattr(
+        costs.data.vacuum,
+        "n_vv_vacuum_ducts",
+        acc224param.n_vv_vacuum_ducts,
     )
 
     monkeypatch.setattr(cost_variables, "c22", acc224param.c22)

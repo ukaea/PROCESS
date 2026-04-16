@@ -12,17 +12,16 @@ from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
-from process.models.availability import Availability
 
 
 @pytest.fixture
-def availability():
+def availability(process_models):
     """Provides Availability object for testing.
 
     :return availability: initialised Availability object
     :type availability: process.availability.Availability
     """
-    return Availability()
+    return process_models.availability
 
 
 @pytest.mark.parametrize(
