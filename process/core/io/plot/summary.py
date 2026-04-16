@@ -62,7 +62,10 @@ from process.models.physics.plasma_current import (
     PlasmaCurrentModel,
     PlasmaDiamagneticCurrentModel,
 )
-from process.models.physics.plasma_geometry import PlasmaShapeModelType
+from process.models.physics.plasma_geometry import (
+    PlasmaGeometryModelType,
+    PlasmaShapeModelType,
+)
 from process.models.superconductors import SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
 
@@ -2447,8 +2450,8 @@ def plot_main_plasma_information(
 
     # Add Q plasma information box
     axis.text(
-        0.45,
-        0.925,
+        0.725,
+        0.175,
         f"$Q_{{\\text{{plasma}}}}$: {mfile.get('big_q_plasma', scan=scan):.2f}",
         fontsize=15,
         verticalalignment="center",
@@ -2570,18 +2573,19 @@ def plot_main_plasma_information(
     # ================================================
 
     # Add plasma volume, areas and shaping information
+
+    geom_type = PlasmaGeometryModelType(mfile.get("i_plasma_geometry", scan=scan))
+
     textstr_plasma = (
         f"$\\mathbf{{Shaping:}}$\n \n"
-        f"$\\kappa_{{95}}$: {mfile.get('kappa95', scan=scan):.2f} | $\\delta_{{95}}$: {mfile.get('triang95', scan=scan):.2f} | $\\zeta$: {mfile.get('plasma_square', scan=scan):.2f}\n"
-        f"A: {mfile.get('aspect', scan=scan):.2f}\n"
-        f"$ V_{{\\text{{p}}}}:$ {mfile.get('vol_plasma', scan=scan):,.2f}$ \\ \\text{{m}}^3$\n"
-        f"$ A_{{\\text{{p,surface}}}}:$ {mfile.get('a_plasma_surface', scan=scan):,.2f}$ \\ \\text{{m}}^2$\n"
-        f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile.get('a_plasma_poloidal', scan=scan):,.2f}$ \\ \\text{{m}}^2$\n"
-        f"$ L_{{\\text{{p_poloidal}}}}:$ {mfile.get('len_plasma_poloidal', scan=scan):,.2f}$ \\ \\text{{m}}$"
+        f"$\\kappa_{{95}}$: {mfile.get('kappa95', scan=scan):.2f} ({geom_type.kappa95_model.description}) | $\\delta_{{95}}$: {mfile.get('triang95', scan=scan):.2f} ({geom_type.triang95_model.description}) | $\\zeta$: {mfile.get('plasma_square', scan=scan):.2f}\n"
+        f"$\\kappa$: {mfile.get('kappa', scan=scan):.2f} ({geom_type.kappa_model.description}) | $\\delta$: {mfile.get('triang', scan=scan):.2f} ({geom_type.triang_model.description}) | A: {mfile.get('aspect', scan=scan):.2f}\n"
+        f"$ V_{{\\text{{p}}}}:$ {mfile.get('vol_plasma', scan=scan):,.2f}$ \\ \\text{{m}}^3$ | $ A_{{\\text{{p,surface}}}}:$ {mfile.get('a_plasma_surface', scan=scan):,.2f}$ \\ \\text{{m}}^2$ | $ A_{{\\text{{p,poloidal}}}}:$ {mfile.get('a_plasma_poloidal', scan=scan):,.3f}$ \\ \\text{{m}}^2$\n"
+        f"$ L_{{\\text{{p,poloidal}}}}:$ {mfile.get('len_plasma_poloidal', scan=scan):,.3f}$ \\ \\text{{m}}$"
     )
 
     axis.text(
-        0.55,
+        0.365,
         0.975,
         textstr_plasma,
         fontsize=9,
