@@ -690,6 +690,7 @@ i_plasma_geometry: int = None
 - =9 set kappa to the natural elongation value, triang input
 - =10 set kappa to maximum stable value at a given aspect ratio (2.6<A<3.6)), triang input (#1399)
 - =11 set kappa Menard 2016 aspect-ratio-dependent scaling, triang input (#1439)
+- =12 set kappa Menard 1997 aspect-ratio-dependent scaling, triang input
 """
 
 
