@@ -1315,6 +1315,11 @@ class SuperconductingTFCoil(TFCoil):
         # Trapezoidal WP
         elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
             dx_tf_side_case_average = dx_tf_side_case_min
+        else:
+            raise ProcessValueError(
+                "Unsupported TF winding pack geometry for average lateral casing thickness",
+                {"i_tf_wp_geom": i_tf_wp_geom},
+            )
 
         # Peak lateral casing thickness [m]
         # --------------
@@ -1334,6 +1339,10 @@ class SuperconductingTFCoil(TFCoil):
         # Constant thickness so min = average
         elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
             dx_tf_side_case_peak = dx_tf_side_case_min
+        else:
+            raise ProcessValueError(
+                f"Unsupported TF winding pack geometry: {i_tf_wp_geom}"
+            )
 
         return (
             a_tf_coil_inboard_case,
