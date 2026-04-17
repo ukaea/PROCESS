@@ -7543,7 +7543,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
     he_pipe_diameter = mfile.get("dia_tf_turn_coolant_channel", scan=scan)
-    dia_croco_strand = mfile.get("dia_croco_strand", scan=scan)
+    dia_tf_turn_croco_cable = mfile.get("dia_tf_turn_croco_cable", scan=scan)
 
     # Plot the total turn shape
     if i_tf_turns_integer == 0:
@@ -7571,7 +7571,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         axis.add_patch(
             Circle(
                 [(turn_width / 2), (turn_width / 2)],
-                1.5 * dia_croco_strand,
+                1.5 * dia_tf_turn_croco_cable,
                 facecolor="white",
                 edgecolor="black",
                 linewidth=1.2,
@@ -7582,7 +7582,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         axis.add_patch(
             Circle(
                 [(turn_width / 2), (turn_width / 2)],
-                dia_croco_strand / 2,
+                dia_tf_turn_croco_cable / 2,
                 facecolor="#B87333",
                 edgecolor="#B87333",
                 linewidth=1.2,
@@ -7592,13 +7592,13 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
         # Plot six surrounding Croco cables in a hexagonal layout.
         center_x = turn_width / 2
         center_y = turn_width / 2
-        ring_radius = dia_croco_strand
+        ring_radius = dia_tf_turn_croco_cable
         for angle in np.linspace(0, 2 * np.pi, 6, endpoint=False):
             plot_corc_cable_geometry(
                 axis=axis,
                 r_centre=center_x + ring_radius * np.cos(angle),
                 z_centre=center_y + ring_radius * np.sin(angle),
-                dia_croco_strand=mfile.get("dia_croco_strand", scan=scan),
+                dia_croco_strand=mfile.get("dia_tf_turn_croco_cable", scan=scan),
                 dx_croco_strand_copper=mfile.get("dx_croco_strand_copper", scan=scan),
                 dr_hts_tape=mfile.get("dr_hts_tape", scan=scan),
                 dx_croco_strand_tape_stack=mfile.get(
@@ -14756,7 +14756,7 @@ def main_plot(
                 plot_205,
                 r_centre=0.0,
                 z_centre=0.0,
-                dia_croco_strand=m_file.get("dia_croco_strand", scan=scan),
+                dia_croco_strand=m_file.get("dia_tf_turn_croco_cable", scan=scan),
                 dx_croco_strand_copper=m_file.get("dx_croco_strand_copper", scan=scan),
                 dr_hts_tape=m_file.get("dr_hts_tape", scan=scan),
                 dx_croco_strand_tape_stack=m_file.get(
