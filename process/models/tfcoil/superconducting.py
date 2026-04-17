@@ -3601,9 +3601,16 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             tfcoil_variables.t_conductor / 3.0e0
             - tfcoil_variables.dx_tf_turn_steel * (2.0e0 / 3.0e0)
         )
+        # Area of the full cable circle in the turn
         tfcoil_variables.a_tf_turn_cable_space_no_void = (
             9.0e0 / 4.0e0 * np.pi * rebco_variables.dia_croco_strand**2
         )
+        # Area of the full cable spac circle minus the central copper strand
+        superconducting_tf_coil_variables.a_tf_turn_cable_space_effective = (
+            tfcoil_variables.a_tf_turn_cable_space_no_void
+            - 0.25e0 * np.pi * rebco_variables.dia_croco_strand**2
+        )
+
         superconducting_tf_coil_variables.conductor_area = (
             tfcoil_variables.t_conductor**2
         )  # does this not assume it's a sqaure???
