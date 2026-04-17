@@ -23,7 +23,7 @@ def _create_input_file(directory, content: str):
 
 
 @pytest.mark.parametrize(
-    ["epsvmc", "expected"],
+    ("epsvmc", "expected"),
     [
         (string, 1.0)
         for string in [
@@ -74,14 +74,14 @@ def test_parse_real(epsvmc, expected, tmp_path, data_structure_obj):
 
 
 @pytest.mark.parametrize(
-    ["value"],
+    "value",
     [
-        [0.546816593988753],
-        [0.13134204235647895],
-        [0.75],
-        [0.7],
-        [0.3],
-        [0.1293140904093427],
+        0.546816593988753,
+        0.13134204235647895,
+        0.75,
+        0.7,
+        0.3,
+        0.1293140904093427,
     ],
 )
 def test_exact_parsing(value, tmp_path, data_structure_obj):
@@ -121,7 +121,7 @@ def test_input_choices(tmp_path, data_structure_obj):
 
 
 @pytest.mark.parametrize(
-    ("input_file_value"), ((-0.01,), (1.1,)), ids=("violate lower", "violate upper")
+    ("input_file_value"), [(-0.01,), (1.1,)], ids=("violate lower", "violate upper")
 )
 def test_input_range(tmp_path, input_file_value, data_structure_obj):
     data_structure.global_variables.fileprefix = _create_input_file(

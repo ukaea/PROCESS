@@ -5,7 +5,7 @@ a remote data repository.
 import dataclasses
 import logging
 import re
-import subprocess
+import subprocess  # noqa: S404
 from pathlib import Path
 
 from platformdirs import user_cache_path
@@ -37,14 +37,18 @@ class RegressionTestAssetCollector:
         if not repo_dir.exists():
             repo_dir.mkdir(parents=True)
 
-            subprocess.run(
+            subprocess.run(  # noqa: S602
                 f"git clone https://github.com/timothy-nunn/process-tracking-data.git '{repo_dir.as_posix()}'",
                 shell=True,
                 check=True,
             )
         else:
-            subprocess.run(
-                "git pull", shell=True, check=True, cwd=repo_dir, capture_output=True
+            subprocess.run(  # noqa: S602
+                "git pull",  # noqa: S607
+                shell=True,
+                check=True,
+                cwd=repo_dir,
+                capture_output=True,
             )
 
         return repo_dir
@@ -85,9 +89,9 @@ class RegressionTestAssetCollector:
         :rtype: list[str]
         """
         return (
-            subprocess
+            subprocess  # noqa: S602
             .run(
-                'git log --format="%H"',
+                'git log --format="%H"',  # noqa: S607
                 shell=True,
                 capture_output=True,
                 check=True,

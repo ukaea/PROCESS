@@ -3,6 +3,7 @@ from dataclasses import dataclass, fields
 
 from process.data_structure.cost_2015_variables import Cost2015Data
 from process.data_structure.cs_fatigue_variables import CSFatigueData
+from process.data_structure.vacuum_variables import VacuumData
 from process.data_structure.water_usage_variables import WaterUseData
 
 initialise_later = object()
@@ -13,6 +14,7 @@ class DataStructure:
     water_use: WaterUseData = initialise_later
     costs_2015: Cost2015Data = initialise_later
     cs_fatigue: CSFatigueData = initialise_later
+    vacuum: VacuumData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):
@@ -27,7 +29,7 @@ class Model(abc.ABC):
     def run(self) -> None:
         """Run the model.
 
-        The run method is resposible for 'running' the model, ensuring it updates the data
+        The run method is responsible for 'running' the model, ensuring it updates the data
         structure with variables that subsequent models will require.
         """
 

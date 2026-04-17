@@ -257,8 +257,8 @@ def tracked_regression_test_assets(tmp_path_factory, worker_id):
 
 
 @pytest.mark.parametrize(
-    ["input_file"],
-    [[f] for f in INPUT_FILES_FOLDER.glob("*.IN.DAT")],
+    "input_file",
+    list(INPUT_FILES_FOLDER.glob("*.IN.DAT")),
     ids=lambda v: v.stem.replace(".IN", ""),
 )
 def test_input_file(

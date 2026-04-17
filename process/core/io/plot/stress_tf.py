@@ -7,7 +7,6 @@ SIG_TF.json
 """
 
 import json
-import os
 from dataclasses import dataclass
 from operator import itemgetter
 from pathlib import Path
@@ -27,8 +26,8 @@ class StressPlotConfig:
     def __post_init__(self):
         if self.outdir is None:
             self.outdir = Path.cwd()
-        if not os.path.isdir(self.outdir):
-            os.mkdir(self.outdir)
+        if not Path(self.outdir).is_dir():
+            Path(self.outdir).mkdir()
 
 
 def plot_stress(

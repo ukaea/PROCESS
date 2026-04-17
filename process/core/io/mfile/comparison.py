@@ -7,15 +7,17 @@ a full PROCESS run (ie if an error or exception occured).
 from __future__ import annotations
 
 import sys
-from collections.abc import Iterable
-from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 import numpy as np
 from numpy import isfinite
 
 from process.core.io.data_structure_dicts import get_dicts
 from process.core.io.mfile.base import MFile
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+    from pathlib import Path
 
 # Dictionary for parameter descriptions
 DICT_DESCRIPTIONS = get_dicts()["DICT_DESCRIPTIONS"]
@@ -291,7 +293,6 @@ def compare_mfiles(
     arg :
         List of arguments
     """
-
     print_counter = 0
     n = 2
     mfile_list = []
@@ -326,7 +327,7 @@ def compare_mfiles(
         if "normres" in v:
             continue
 
-        values = np.zeros(n)  # replaced scipy with numpy
+        values = np.zeros(n)
 
         if v not in dts["DICT_VAR_TYPE"]:
             try:

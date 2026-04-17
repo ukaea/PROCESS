@@ -522,7 +522,6 @@ class NeutralBeam:
 
 
         """
-
         zbeam = 1.0
         bbd = 1.0
 
@@ -645,18 +644,18 @@ class NeutralBeam:
                     )
 
         sz = 0.0
-        for l in range(4):
+        for l_ in range(4):
             for k in range(2):
                 for j in range(2):
                     for i in range(3):
                         sz += (
-                            b[i, j, k, l]
+                            b[i, j, k, l_]
                             * (np.log(eb)) ** i
                             * (np.log(nen)) ** j
                             * (np.log(te)) ** k
-                            * nn[l]
-                            * z[l]
-                            * (z[l] - 1.0)
+                            * nn[l_]
+                            * z[l_]
+                            * (z[l_] - 1.0)
                         )
 
         return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)
@@ -698,6 +697,7 @@ class NeutralBeam:
         -------
         f_p_beam_injected_ions:
              fraction of fast particle energy coupled to ions
+
         Notes
         -----
         This routine calculates the fast particle energy coupled to
@@ -761,7 +761,6 @@ class NeutralBeam:
         nelec:
             volume averaged electron density (m**-3)
         """
-
         x1 = (t / 10.0) * (eb / 1000.0) * mb / (nelec / 1e20)
         x2 = mth / (mth + mb)
 
@@ -946,10 +945,10 @@ class ElectronCyclotron:
         float
             The calculated electron cyclotron heating efficiency in A/W.
 
-        references:
+        References
+        ----------
         - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
         """
-
         return (0.21e0 * temp_plasma_electron_density_weighted_kev) / (
             rmajor * dene20 * dlamee
         )
@@ -992,14 +991,15 @@ class ElectronCyclotron:
         float
             The calculated absolute ECCD efficiency in A/W.
 
-        notes:
+        Notes
+        -----
         - Plasma coupling only occurs if the plasma cut-off is below the cyclotron harmonic.
         - The density factor accounts for this behavior.
 
-        references:
+        References
+        ----------
         - Freethy, S., PROCESS issue #2994.
         """
-
         # Cyclotron frequency
         fc = (
             1
@@ -1108,8 +1108,8 @@ class ElectronCyclotron:
                 / (2.0e0 * n) ** 2
                 * sinsq
             )
-            palpha = palpha + pterm
-            palphap = palphap - n * pterm / (1.0e0 - arg2)
+            palpha += pterm
+            palphap -= n * pterm / (1.0e0 - arg2)
         raise ProcessError("legend: Solution has not converged")
 
 
@@ -1159,7 +1159,6 @@ class IonCyclotron:
 
         - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
         """
-
         return (
             (0.63e0 * 0.1e0 * temp_plasma_electron_density_weighted_kev) / (2.0e0 + zeff)
         ) / (rmajor * dene20)
@@ -1213,7 +1212,6 @@ class ElectronBernstein:
         ----------
         - Freethy, S., PROCESS issue #1262.
         """
-
         # Normalised current drive efficiency gamma
         eta_cd_norm = (xi_ebw / 32.7e0) * te
 
@@ -1494,7 +1492,6 @@ class LowerHybrid:
 
             - R.L.Reid et al, Oak Ridge Report ORNL/FEDC-87-7, 1988
         """
-
         return (0.36e0 * (1.0e0 + (te / 25.0e0) ** 1.16e0)) / (rmajor * dene20)
 
     def lower_hybrid_ehst(
@@ -1579,7 +1576,6 @@ class CurrentDrive(Model):
         ProcessValueError
             If an invalid current drive switch is encountered.
         """
-
         current_drive_variables.p_hcd_ecrh_injected_total_mw = 0.0e0
         current_drive_variables.p_hcd_beam_injected_total_mw = 0.0e0
         current_drive_variables.p_hcd_lowhyb_injected_total_mw = 0.0e0
@@ -2235,12 +2231,12 @@ class CurrentDrive(Model):
             Volume averaged electron density in m⁻³.
         rmajor:
             Major radius of the plasma in meters.
+
         Returns
         -------
         float            The calculated normalised current drive efficiency in 10²⁰ A / Wm².
 
         """
-
         return eta_cd_hcd * (nd_plasma_electrons_vol_avg * rmajor) * 1.0e-20
 
     def calculate_dimensionless_current_drive_efficiency(
@@ -2283,7 +2279,6 @@ class CurrentDrive(Model):
             Physical Review Letters, vol. 83, no. 22, pp. 4550-4553, Nov. 1999,
             doi: https://doi.org/10.1103/physrevlett.83.4550.
         """
-
         return (
             (constants.ELECTRON_CHARGE**3 / constants.EPSILON0**2)
             * (
@@ -2297,7 +2292,6 @@ class CurrentDrive(Model):
         """Output the current drive information to the output file.
         This method writes the current drive information to the output file.
         """
-
         po.oheadr(self.outfile, "Heating & Current Drive System")
 
         if physics_variables.i_plasma_ignited == 1:
@@ -2418,7 +2412,7 @@ class CurrentDrive(Model):
             "OP ",
         )
 
-        if current_drive_variables.i_hcd_primary in [12, 13]:
+        if current_drive_variables.i_hcd_primary in {12, 13}:
             po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,

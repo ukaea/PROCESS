@@ -115,7 +115,8 @@ detached     = true                           # Don't inherit from default (does
 dependencies = ["pre-commit", "ruff", "ty"]
 
 [tool.hatch.envs.lint.scripts]
-fmt    = ["pre-commit run --all-files --hook-stage manual"]
+fmt    = ["pre-commit run --all-files --hook-stage manual {args:}"]
+fmt_extra = ["ruff check --select=E501,PLR6301,C901,PLR0904,PLR0911,PLR0912,PLR0913,PLR0914,PLR0915,PLR0916,PLR0917,PLR1702,D100,D101,D102,D103,DOC501,D404,DOC102,D104,D105,PLC1901,S307 {args:.}"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
@@ -161,52 +162,107 @@ max-locals = 17
 
 [tool.ruff.lint.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
-"tests/**" = ["ARG"]
-"examples/**" = ['B018', 'E402']
+"tests/**" = [
+    "ARG",
+    "PLR2004",
+    "PLR6301",
+    "PLR0904",
+    "PLC1901",
+    "S101",
+    "F841",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D202",
+    "D205",
+    "D210",
+    "D300",
+    "D301",
+    "D401",
+    "D403",
+    "D404",
+    "D406",
+    "D409",
+    "DOC201",
+    "DOC501",
+    "N802",
+    "PLC2701",
+    "PT023",
+    "RUF059",
+    "T201",
+]
+"examples/**" = [ 'B018', 'E402']
+"{tests,tracking,documentation/scripts,examples}/**" = ['INP001']
 
 [tool.ruff.lint]
 preview = true
-extend-select = [
-    "A",
-    "ARG",
-    "ASYNC",
-    "B",
-    "BLE",
-    "C4",
-    "COM",
-    "DTZ",
-    "EXE",
-    "F",
-    "FA",
-    "FLY",
-    "FURB",
-    "G",
-    "I",
-    "ICN",
-    "INT",
-    "ISC",
-    "LOG",
-    "N",
-    "NPY",
-    "PD",
-    "PERF",
-    "PGH",
-    "PIE",
-    "PYI",
-    "Q",
-    "RET",
-    "RSE",
-    "RUF",
-    "SIM",
-    "SLF",
-    "SLOT",
-    "T10",
-    "TID",
-    "UP",
-    "W",
-    "YTT",
+select = ["ALL"]
+ignore =  [
+    "ANN",     # type annotations
+    "EM",      # string in error messages
+    "B019",    # using cache memory leaks
+    "COM812",  # enforce trailing comma, disagrees with black/ruff format
+    "D200",    # docs stuff
+    "D203",
+    "D205",
+    "D301",
+    "D400",
+    "D401",
+    "DOC502",  # Omit non-explicit exceptions from docstrings
+    "DTZ005",  # datetime timezone arg
+    "FIX002",  # Line contains todo
+    "PLW1514", # Specify file open encoding
+    "PTH123",  # use Path.open
+    "RUF052",  # not dummy variables just private
+    "RUF067",  # things in init
+    "TRY003",  # put error messages in error class
+    "TRY400",   # Error instead of exception
+    "FURB152",  # 3.14 != pi
+    # should remove
+    "ERA",  # remove commented out code
+    "SLF001",  # private method use
+    "DOC201",
+    "CPY001",
+    "T201",
+    "FBT001",
+    "FBT002",
+    "FBT003",
+    "PLR2004",
+    "PLW0603",
+    "TD",
+    "G004",
+
+    # urgent removal remainder
+    "E501",
+    "PLR6301",
+    # complexity
+    "C901",
+    "PLR0904",
+    "PLR0911",
+    "PLR0912",
+    "PLR0913",
+    "PLR0914",
+    "PLR0915",
+    "PLR0916",
+    "PLR0917",
+    "PLR1702",
+    # docs
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "DOC501",  # docstring-missing-exception
+    "D404",    # docstring-starts-with-this
+    "DOC102",  # docstring-extraneous-parameter
+    "D104",    # undocumented-public-package
+    "D105",    # undocumented-magic-method
+    "PLC1901", # compare-to-empty-string
+    "S307",
+
 ]
-ignore = ["COM812", "FBT", "G004"]
 
 [tool.ruff.lint.pep8-naming]
 ignore-names = [

@@ -25,7 +25,7 @@ class IterscParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "iterscparam",
-    (
+    [
         IterscParam(
             thelium=4.75,
             bmax=13.008974843466492,
@@ -46,7 +46,7 @@ class IterscParam(NamedTuple):
             expected_bcrit=24.442648486388464,
             expected_tcrit=11.338458919718571,
         ),
-    ),
+    ],
 )
 def test_itersc(iterscparam):
     """
@@ -94,7 +94,7 @@ class JcritNbtiParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "jcritnbtiparam",
-    (
+    [
         JcritNbtiParam(
             temperature=4.75,
             bmax=8.0517923638507547,
@@ -113,7 +113,7 @@ class JcritNbtiParam(NamedTuple):
             expected_jcrit=-73718607.547511846,
             expected_tcrit=5.9060082696285683,
         ),
-    ),
+    ],
 )
 def test_jcrit_nbti(jcritnbtiparam):
     """
@@ -204,7 +204,14 @@ def test_hijc_rebco():
 
 
 @pytest.mark.parametrize(
-    "dia_croco_strand, dx_croco_strand_copper, dx_hts_tape_rebco, dx_hts_tape_copper, dx_hts_tape_hastelloy, expected",
+    (
+        "dia_croco_strand",
+        "dx_croco_strand_copper",
+        "dx_hts_tape_rebco",
+        "dx_hts_tape_copper",
+        "dx_hts_tape_hastelloy",
+        "expected",
+    ),
     [
         (
             0.010,  # 10 mm

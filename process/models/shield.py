@@ -174,7 +174,6 @@ class Shield(Model):
         dz_blkt_upper:
 
         """
-
         z_bottom = z_plasma_xpoint_lower + dz_xpoint_divertor + dz_divertor
 
         # Calculate component internal upper half-height (m)
@@ -189,7 +188,7 @@ class Shield(Model):
                 + dr_fw_outboard
             )
 
-            z_top = z_top + dz_blkt_upper
+            z_top += dz_blkt_upper
 
         # Average of top and bottom (m)
         return 0.5 * (z_top + z_bottom)
@@ -238,7 +237,6 @@ class Shield(Model):
         dz_shld_upper:
 
         """
-
         r_1 = r_shld_inboard_inner + dr_shld_inboard
         r_2 = (
             dr_fw_inboard
@@ -303,7 +301,6 @@ class Shield(Model):
         dz_shld_half:
 
         """
-
         r_1 = r_shld_inboard_inner + dr_shld_inboard
         r_2 = (
             dr_fw_inboard
@@ -358,16 +355,15 @@ class Shield(Model):
         dz_shld_upper:
 
         """
-
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
         r_1 = rmajor - rminor * triang
         r_2 = r_1 - r_shld_inboard_inner
 
-        r_2 = r_2 - dr_shld_inboard
+        r_2 -= dr_shld_inboard
 
         r_3 = r_shld_outboard_outer - r_1
-        r_3 = r_3 - dr_shld_outboard
+        r_3 -= dr_shld_outboard
 
         (
             vol_shld_inboard,
@@ -417,16 +413,15 @@ class Shield(Model):
         dr_shld_outboard:
 
         """
-
         # Major radius to centre of inboard and outboard ellipses (m)
         # (coincident in radius with top of plasma)
         r_1 = rmajor - rminor * triang
         r_2 = r_1 - r_shld_inboard_inner
 
-        r_2 = r_2 - dr_shld_inboard
+        r_2 -= dr_shld_inboard
 
         r_3 = r_shld_outboard_outer - r_1
-        r_3 = r_3 - dr_shld_outboard
+        r_3 -= dr_shld_outboard
 
         (
             a_shld_inboard_surface,
@@ -438,7 +433,6 @@ class Shield(Model):
 
     def output_shld_areas_and_volumes(self):
         """Output shield areas and volumes to log."""
-
         po.oheadr(self.outfile, "Shield Areas and Volumes")
 
         po.ovarrf(

@@ -218,7 +218,6 @@ class Scan:
         number of output variable values are written to the MFILE.DAT file at
         each scan point, for plotting or other post-processing purposes.
         """
-
         if scan_variables.isweep == 0:
             # Solve single problem, rather than an array of problems (scan)
             # doopt() can also run just an evaluation
@@ -280,7 +279,7 @@ class Scan:
             )
             process_output.oblnkl(constants.IOTTY)
 
-            logger.critical(f"Solver returns with ifail /= 1. {ifail=}")
+            logger.critical("Solver returns with ifail /= 1. %s", ifail)
 
             # Error code handler for VMCON
             if self.solver == "vmcon":
@@ -899,7 +898,7 @@ class Scan:
                 show_errors(constants.NOUT)
                 logging_model_handler.clear_logs()
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail
-                iscan = iscan + 1
+                iscan += 1
 
         print(
             " ****************************************** Scan Convergence Summary ****************************************** \n"

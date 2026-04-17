@@ -2093,11 +2093,12 @@ def test_brookscoil(pfcoil):
     l_self_p = pfcoil.selfinductance(a, b, c, n)
     # Self-inductance of 1m Brooks coil: PROCESS formula
 
-    assert (l_self / l_self_p < 1.05e0) and (l_self / l_self_p > 0.95e0)
+    assert l_self / l_self_p < 1.05e0
+    assert l_self / l_self_p > 0.95e0
 
 
 @pytest.mark.parametrize(
-    "z_tf_inside_half, f_z_cs_tf_internal, dr_cs, dr_bore, expected",
+    ("z_tf_inside_half", "f_z_cs_tf_internal", "dr_cs", "dr_bore", "expected"),
     [
         # Typical values
         (2.0, 0.5, 0.3, 0.15, (1.0, -1.0, 0.3, 0.3, 0.0, 0.45, 0.15, 0.6, 2.0, 0.9)),
@@ -2120,7 +2121,17 @@ def test_calculate_cs_geometry(
 
 
 @pytest.mark.parametrize(
-    "n_pf_coils_in_group, n_pf_group, r_cs_middle, dr_pf_cs_middle_offset, z_tf_inside_half, dr_tf_inboard, z_cs_coil_upper, expected_r, expected_z",
+    (
+        "n_pf_coils_in_group",
+        "n_pf_group",
+        "r_cs_middle",
+        "dr_pf_cs_middle_offset",
+        "z_tf_inside_half",
+        "dr_tf_inboard",
+        "z_cs_coil_upper",
+        "expected_r",
+        "expected_z",
+    ),
     [
         # Single coil, above CS
         (np.array([1, 0]), 0, 2.0, 0.1, 5.0, 0.2, 2.5, [2.1], [4.0]),
@@ -2160,7 +2171,24 @@ def test_place_pf_above_cs(
 
 
 @pytest.mark.parametrize(
-    "n_pf_coils_in_group, n_pf_group, rmajor, triang, rminor, itart, itartpf, z_tf_inside_half, dz_tf_upper_lower_midplane, z_tf_top, top_bottom, rpf2, zref, expected_r, expected_z, expected_top_bottom",
+    (
+        "n_pf_coils_in_group",
+        "n_pf_group",
+        "rmajor",
+        "triang",
+        "rminor",
+        "itart",
+        "itartpf",
+        "z_tf_inside_half",
+        "dz_tf_upper_lower_midplane",
+        "z_tf_top",
+        "top_bottom",
+        "rpf2",
+        "zref",
+        "expected_r",
+        "expected_z",
+        "expected_top_bottom",
+    ),
     [
         # Test case 1: ST configuration, coil above midplane
         (
@@ -2274,7 +2302,7 @@ def test_calculate_cs_turn_geometry_eu_demo_basic(cs_coil):
 
 
 @pytest.mark.parametrize(
-    "a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel",
+    ("a_cs_turn", "f_dr_dz_cs_turn", "radius_cs_turn_corners", "f_a_cs_turn_steel"),
     [
         (0.01, 1.5, 0.0, 0.2),
     ],
@@ -2298,7 +2326,7 @@ def test_calculate_cs_turn_geometry_eu_demo_zero_corner(
 
 
 @pytest.mark.parametrize(
-    "a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel",
+    ("a_cs_turn", "f_dr_dz_cs_turn", "radius_cs_turn_corners", "f_a_cs_turn_steel"),
     [
         (0.05, 10.0, 0.005, 0.05),
     ],
@@ -2321,7 +2349,7 @@ def test_calculate_cs_turn_geometry_eu_demo_high_aspect(
 
 
 @pytest.mark.parametrize(
-    "a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel",
+    ("a_cs_turn", "f_dr_dz_cs_turn", "radius_cs_turn_corners", "f_a_cs_turn_steel"),
     [
         (0.03, 2.5, 0.002, 0.15),
     ],

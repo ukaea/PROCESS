@@ -4,7 +4,6 @@ from typing import Any, NamedTuple
 
 import numpy as np
 import pytest
-from pytest import approx
 
 from process import data_structure
 from process.data_structure import (
@@ -24,19 +23,17 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
     times_variables,
-    vacuum_variables,
 )
-from process.models.costs.costs import Costs
 
 
 @pytest.fixture
-def costs():
-    """Provides Pulse object for testing.
+def costs(process_models):
+    """Provides Costs object for testing.
 
-    :returns: initialised Pulse object
-    :rtype: process.pulse.Pulse
+    :returns: initialised Costs object
+    :rtype: process.costs.Costs
     """
-    return Costs()
+    return process_models._costs_1990
 
 
 def acc2261_param(**kwargs):
@@ -46,7 +43,7 @@ def acc2261_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"i_blkt_coolant_type": 1, "expected": approx(49.68, abs=0.01)}
+    defaults = {"i_blkt_coolant_type": 1, "expected": pytest.approx(49.68, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -63,7 +60,7 @@ def acc2261_params():
     """
     return [
         acc2261_param(),
-        acc2261_param(i_blkt_coolant_type=2, expected=approx(53.85, abs=0.01)),
+        acc2261_param(i_blkt_coolant_type=2, expected=pytest.approx(53.85, abs=0.01)),
     ]
 
 
@@ -124,7 +121,7 @@ def test_acc2262(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2262", 0)
 
     costs.acc2262()
-    assert cost_variables.c2262 == approx(29.408, abs=0.01)
+    assert cost_variables.c2262 == pytest.approx(29.408, abs=0.01)
 
 
 def test_acc2263(monkeypatch, costs):
@@ -141,7 +138,7 @@ def test_acc2263(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2263", 0)
 
     costs.acc2263()
-    assert cost_variables.c2263 == approx(180.76, abs=0.01)
+    assert cost_variables.c2263 == pytest.approx(180.76, abs=0.01)
 
 
 def test_acc2271(monkeypatch, costs):
@@ -155,7 +152,7 @@ def test_acc2271(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2271", 0)
 
     costs.acc2271()
-    assert cost_variables.c2271 == approx(22.3, abs=0.01)
+    assert cost_variables.c2271 == pytest.approx(22.3, abs=0.01)
 
 
 def test_acc2272(monkeypatch, costs):
@@ -170,7 +167,7 @@ def test_acc2272(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2271", 0)
 
     costs.acc2272()
-    assert cost_variables.c2272 == approx(114.707, abs=0.01)
+    assert cost_variables.c2272 == pytest.approx(114.707, abs=0.01)
 
 
 def acc2273_param(**kwargs):
@@ -184,7 +181,7 @@ def acc2273_param(**kwargs):
         "f_plasma_fuel_tritium": 0.0001,
         "volrci": data_structure.buildings_variables.volrci,
         "wsvol": data_structure.buildings_variables.wsvol,
-        "expected": approx(0.0, abs=0.00001),
+        "expected": pytest.approx(0.0, abs=0.00001),
     }
 
     # Merge default dict with any optional keyword arguments to override values
@@ -206,7 +203,7 @@ def acc2273_params():
             f_plasma_fuel_tritium=0.5,
             volrci=1299783.4,
             wsvol=132304.1,
-            expected=approx(74.12, abs=0.01),
+            expected=pytest.approx(74.12, abs=0.01),
         ),
     ]
 
@@ -264,7 +261,7 @@ def test_acc2274(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c2274", 0)
 
     costs.acc2274()
-    assert cost_variables.c2274 == approx(84.10, abs=0.01)
+    assert cost_variables.c2274 == pytest.approx(84.10, abs=0.01)
 
 
 def acc228_param(**kwargs):
@@ -274,7 +271,7 @@ def acc228_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"fkind": 1.0, "expected": approx(150.0, abs=0.01)}
+    defaults = {"fkind": 1.0, "expected": pytest.approx(150.0, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -289,7 +286,10 @@ def acc228_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    return [acc228_param(), acc228_param(fkind=0.5, expected=approx(75.0, abs=0.01))]
+    return [
+        acc228_param(),
+        acc228_param(fkind=0.5, expected=pytest.approx(75.0, abs=0.01)),
+    ]
 
 
 @pytest.fixture(params=acc228_params(), ids=["fkind_1", "fkind_0p5"])
@@ -333,7 +333,7 @@ def acc229_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"fkind": 1.0, "expected": approx(125.0, abs=0.01)}
+    defaults = {"fkind": 1.0, "expected": pytest.approx(125.0, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -348,7 +348,10 @@ def acc229_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    return [acc229_param(), acc229_param(fkind=0.5, expected=approx(62.5, abs=0.01))]
+    return [
+        acc229_param(),
+        acc229_param(fkind=0.5, expected=pytest.approx(62.5, abs=0.01)),
+    ]
 
 
 @pytest.fixture(params=acc229_params(), ids=["fkind_1", "fkind_0p5"])
@@ -392,7 +395,7 @@ def acc23_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"i_blkt_coolant_type": 1, "expected": approx(230, abs=0.01)}
+    defaults = {"i_blkt_coolant_type": 1, "expected": pytest.approx(230, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -409,7 +412,7 @@ def acc23_params():
     """
     return [
         acc23_param(),
-        acc23_param(i_blkt_coolant_type=2, expected=approx(245, abs=0.01)),
+        acc23_param(i_blkt_coolant_type=2, expected=pytest.approx(245, abs=0.01)),
     ]
 
 
@@ -460,7 +463,7 @@ def test_acc241(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c241", 0)
 
     costs.acc241()
-    assert cost_variables.c241 == approx(18.4, abs=0.01)
+    assert cost_variables.c241 == pytest.approx(18.4, abs=0.01)
 
 
 def test_acc242(monkeypatch, costs):
@@ -475,7 +478,7 @@ def test_acc242(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c242", 0)
 
     costs.acc242()
-    assert cost_variables.c242 == approx(9.06, abs=0.01)
+    assert cost_variables.c242 == pytest.approx(9.06, abs=0.01)
 
 
 def test_acc243(monkeypatch, costs):
@@ -489,7 +492,7 @@ def test_acc243(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c243", 0)
 
     costs.acc243()
-    assert cost_variables.c243 == approx(8.08, abs=0.01)
+    assert cost_variables.c243 == pytest.approx(8.08, abs=0.01)
 
 
 def test_acc244(monkeypatch, costs):
@@ -502,7 +505,7 @@ def test_acc244(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c244", 0)
 
     costs.acc244()
-    assert cost_variables.c244 == approx(6.80, abs=0.01)
+    assert cost_variables.c244 == pytest.approx(6.80, abs=0.01)
 
 
 def test_acc245(monkeypatch, costs):
@@ -515,7 +518,7 @@ def test_acc245(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "c245", 0)
 
     costs.acc245()
-    assert cost_variables.c245 == approx(1.5, abs=0.01)
+    assert cost_variables.c245 == pytest.approx(1.5, abs=0.01)
 
 
 def acc25_param(**kwargs):
@@ -525,7 +528,7 @@ def acc25_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"lsa": 4, "expected": approx(25, abs=0.01)}
+    defaults = {"lsa": 4, "expected": pytest.approx(25, abs=0.01)}
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}
@@ -540,7 +543,7 @@ def acc25_params():
     :return: List of parameter dicts
     :rtype: list
     """
-    return [acc25_param(), acc25_param(lsa=1, expected=approx(19.25, abs=0.01))]
+    return [acc25_param(), acc25_param(lsa=1, expected=pytest.approx(19.25, abs=0.01))]
 
 
 @pytest.fixture(params=acc25_params(), ids=["lsa_4", "lsa_1"])
@@ -592,7 +595,7 @@ def acc26_param(**kwargs):
         "tfcmw": 50.0,
         "p_plant_primary_heat_mw": heat_transport_variables.p_plant_primary_heat_mw,
         "p_plant_electric_gross_mw": heat_transport_variables.p_plant_electric_gross_mw,
-        "expected": approx(87.9, abs=0.01),
+        "expected": pytest.approx(87.9, abs=0.01),
     }
 
     # Merge default dict with any optional keyword arguments to override values
@@ -690,8 +693,8 @@ def test_acc9(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "cindrt", 0)
 
     costs.acc9()
-    assert cost_variables.cindrt == approx(10005.0, abs=0.1)
-    assert cost_variables.ccont == approx(7800.98, abs=0.1)
+    assert cost_variables.cindrt == pytest.approx(10005.0, abs=0.1)
+    assert cost_variables.ccont == pytest.approx(7800.98, abs=0.1)
 
 
 class Acc21Param(NamedTuple):
@@ -784,7 +787,7 @@ class Acc21Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc21param",
-    (
+    [
         Acc21Param(
             shovol=100000,
             triv=40000,
@@ -875,7 +878,7 @@ class Acc21Param(NamedTuple):
             expected_c2173=9.6599999999999984,
             expected_c2174=9.9795218637790786,
         ),
-    ),
+    ],
 )
 def test_acc21(acc21param, monkeypatch, costs):
     """
@@ -1011,7 +1014,7 @@ class Acc2211Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2211param",
-    (
+    [
         Acc2211Param(
             a_fw_total=1601.1595634509963,
             ucblss=90,
@@ -1070,7 +1073,7 @@ class Acc2211Param(NamedTuple):
             c2211=0,
             expected_fwallcst=167.7865317453867,
         ),
-    ),
+    ],
 )
 def test_acc2211(acc2211param, monkeypatch, costs):
     """
@@ -1198,7 +1201,7 @@ class Acc2212Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2212param",
-    (
+    [
         Acc2212Param(
             ucblss=90,
             ucblbreed=875,
@@ -1307,7 +1310,7 @@ class Acc2212Param(NamedTuple):
             expected_c22122=567.19686097722013,
             expected_c22123=71.560391965190959,
         ),
-    ),
+    ],
 )
 def test_acc2212(acc2212param, monkeypatch, costs):
     """
@@ -1447,7 +1450,7 @@ class Acc2213Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2213param",
-    (
+    [
         Acc2213Param(
             ucpens=32,
             ucshld=32,
@@ -1514,7 +1517,7 @@ class Acc2213Param(NamedTuple):
             expected_c22131=55.147401444419671,
             expected_c22132=55.147401444419671,
         ),
-    ),
+    ],
 )
 def test_acc2213(acc2213param, monkeypatch, costs):
     """
@@ -1584,7 +1587,7 @@ class Acc2214Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2214param",
-    (
+    [
         Acc2214Param(
             fkind=1,
             lsa=2,
@@ -1601,7 +1604,7 @@ class Acc2214Param(NamedTuple):
             c2214=47.672639200037878,
             expected_c2214=47.545504767024411,
         ),
-    ),
+    ],
 )
 def test_acc2214(acc2214param, monkeypatch, costs):
     """
@@ -1653,7 +1656,7 @@ class Acc2215Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2215param",
-    (
+    [
         Acc2215Param(
             ifueltyp=1,
             divcst=0,
@@ -1676,7 +1679,7 @@ class Acc2215Param(NamedTuple):
             c2215=0,
             expected_divcst=88.904644548525795,
         ),
-    ),
+    ],
 )
 def test_acc2215(acc2215param, monkeypatch, costs):
     """
@@ -1790,7 +1793,7 @@ class Acc2221Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2221param",
-    (
+    [
         Acc2221Param(
             uccpclb=150,
             uccase=50,
@@ -1914,7 +1917,7 @@ class Acc2221Param(NamedTuple):
             expected_c22211=1462760.833721748,
             expected_c22212=65.563151615791654,
         ),
-    ),
+    ],
 )
 def test_acc2221(acc2221param, monkeypatch, costs):
     """
@@ -2098,7 +2101,7 @@ class Acc2222Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2222param",
-    (
+    [
         Acc2222Param(
             iohcl=1,
             uccase=50,
@@ -2687,7 +2690,7 @@ class Acc2222Param(NamedTuple):
             expected_c22223=106.06545230249935,
             expected_c22224=9.1894413521392071,
         ),
-    ),
+    ],
 )
 def test_acc2222(acc2222param, monkeypatch, costs):
     """
@@ -2823,7 +2826,7 @@ class Acc2223Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2223param",
-    (
+    [
         Acc2223Param(
             uccryo=32,
             lsa=2,
@@ -2842,7 +2845,7 @@ class Acc2223Param(NamedTuple):
             c2223=244.54807816241447,
             expected_c2223=244.89942933425411,
         ),
-    ),
+    ],
 )
 def test_acc2223(acc2223param, monkeypatch, costs):
     """
@@ -2944,7 +2947,7 @@ class Acc223Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc223param",
-    (
+    [
         Acc223Param(
             ucich=3,
             fkind=1,
@@ -3015,7 +3018,7 @@ class Acc223Param(NamedTuple):
             expected_c223=140.341808845157,
             expected_c2231=140.341808845157,
         ),
-    ),
+    ],
 )
 def test_acc223(acc223param, monkeypatch, costs):
     """
@@ -3157,7 +3160,7 @@ class Acc224Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc224param",
-    (
+    [
         Acc224Param(
             fkind=1,
             dlscal=4.9196133171476717,
@@ -3204,7 +3207,7 @@ class Acc224Param(NamedTuple):
             expected_c2244=7.346224349417187,
             expected_c2246=1.3,
         ),
-    ),
+    ],
 )
 def test_acc224(acc224param, monkeypatch, costs):
     """
@@ -3221,26 +3224,40 @@ def test_acc224(acc224param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc224param.fkind)
 
-    monkeypatch.setattr(vacuum_variables, "dlscal", acc224param.dlscal)
-
     monkeypatch.setattr(
-        vacuum_variables, "m_vv_vacuum_duct_shield", acc224param.m_vv_vacuum_duct_shield
+        costs.data.vacuum,
+        "dlscal",
+        acc224param.dlscal,
     )
 
     monkeypatch.setattr(
-        vacuum_variables, "n_vac_pumps_high", acc224param.n_vac_pumps_high
+        costs.data.vacuum,
+        "m_vv_vacuum_duct_shield",
+        acc224param.m_vv_vacuum_duct_shield,
     )
 
     monkeypatch.setattr(
-        vacuum_variables, "dia_vv_vacuum_ducts", acc224param.dia_vv_vacuum_ducts
+        costs.data.vacuum,
+        "n_vac_pumps_high",
+        acc224param.n_vac_pumps_high,
     )
 
     monkeypatch.setattr(
-        vacuum_variables, "i_vacuum_pump_type", acc224param.i_vacuum_pump_type
+        costs.data.vacuum,
+        "dia_vv_vacuum_ducts",
+        acc224param.dia_vv_vacuum_ducts,
     )
 
     monkeypatch.setattr(
-        vacuum_variables, "n_vv_vacuum_ducts", acc224param.n_vv_vacuum_ducts
+        costs.data.vacuum,
+        "i_vacuum_pump_type",
+        acc224param.i_vacuum_pump_type,
+    )
+
+    monkeypatch.setattr(
+        costs.data.vacuum,
+        "n_vv_vacuum_ducts",
+        acc224param.n_vv_vacuum_ducts,
     )
 
     monkeypatch.setattr(cost_variables, "c22", acc224param.c22)
@@ -3336,7 +3353,7 @@ class Acc2251Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2251param",
-    (
+    [
         Acc2251Param(
             uctfsw=1,
             fkind=1,
@@ -3399,7 +3416,7 @@ class Acc2251Param(NamedTuple):
             expected_c22514=4.7999999999999998,
             expected_c22515=30.930789792023205,
         ),
-    ),
+    ],
 )
 def test_acc2251(acc2251param, monkeypatch, costs):
     """
@@ -3545,7 +3562,7 @@ class Acc2252Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2252param",
-    (
+    [
         Acc2252Param(
             ucpfcb=75000,
             ucpfbk=16600,
@@ -3608,7 +3625,7 @@ class Acc2252Param(NamedTuple):
             expected_c22523=13.203072590399998,
             expected_c22524=1.3629730294999658,
         ),
-    ),
+    ],
 )
 def test_acc2252(acc2252param, monkeypatch, costs):
     """
@@ -3712,7 +3729,7 @@ class Acc2253Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2253param",
-    (
+    [
         Acc2253Param(
             ucblss=90,
             fkind=1,
@@ -3741,7 +3758,7 @@ class Acc2253Param(NamedTuple):
             c2253=20.785622343242554,
             expected_c2253=17.809219633598371,
         ),
-    ),
+    ],
 )
 def test_acc2253(acc2253param, monkeypatch, costs):
     """
@@ -3809,7 +3826,7 @@ class Acc226Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc226param",
-    (
+    [
         Acc226Param(
             c226=0,
             c2261=85.82488824875719,
@@ -3826,7 +3843,7 @@ class Acc226Param(NamedTuple):
             c22=3474.7391916096453,
             expected_c226=359.08682482489269,
         ),
-    ),
+    ],
 )
 def test_acc226(acc226param, monkeypatch, costs):
     """
@@ -3894,7 +3911,7 @@ class Acc2261Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2261param",
-    (
+    [
         Acc2261Param(
             uchts=np.array(
                 np.array((15.300000000000001, 19.100000000000001), order="F"),
@@ -3939,7 +3956,7 @@ class Acc2261Param(NamedTuple):
             expected_chx=57.157016301470911,
             expected_cpp=29.255948217627452,
         ),
-    ),
+    ],
 )
 def test_acc2261_rut(acc2261param, monkeypatch, costs):
     """
@@ -4049,7 +4066,7 @@ class Acc2262Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2262param",
-    (
+    [
         Acc2262Param(
             lsa=2,
             fkind=1,
@@ -4088,7 +4105,7 @@ class Acc2262Param(NamedTuple):
             expected_c2262=25.118525150548585,
             expected_cppa=25.118525150548585,
         ),
-    ),
+    ],
 )
 def test_acc2262_rut(acc2262param, monkeypatch, costs):
     """
@@ -4174,7 +4191,7 @@ class Acc2263Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2263param",
-    (
+    [
         Acc2263Param(
             uccry=93000,
             lsa=2,
@@ -4197,7 +4214,7 @@ class Acc2263Param(NamedTuple):
             c22=3474.7391916096453,
             expected_c2263=247.55533515524576,
         ),
-    ),
+    ],
 )
 def test_acc2263_rut(acc2263param, monkeypatch, costs):
     """
@@ -4251,7 +4268,7 @@ class Acc227Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc227param",
-    (
+    [
         Acc227Param(
             c227=0,
             c2271=22.300000000000001,
@@ -4270,7 +4287,7 @@ class Acc227Param(NamedTuple):
             c22=3474.7391916096453,
             expected_c227=285.11728482771127,
         ),
-    ),
+    ],
 )
 def test_acc227(acc227param, monkeypatch, costs):
     """
@@ -4318,7 +4335,7 @@ class Acc2271Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2271param",
-    (
+    [
         Acc2271Param(
             ucf1=22300000,
             fkind=1,
@@ -4335,7 +4352,7 @@ class Acc2271Param(NamedTuple):
             c22=3474.7391916096453,
             expected_c2271=22.300000000000001,
         ),
-    ),
+    ],
 )
 def test_acc2271_rut(acc2271param, monkeypatch, costs):
     """
@@ -4397,7 +4414,7 @@ class Acc2272Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2272param",
-    (
+    [
         Acc2272Param(
             fkind=1,
             fburn=0.33329999999999999,
@@ -4430,7 +4447,7 @@ class Acc2272Param(NamedTuple):
             expected_wtgpd=507.72524666099866,
             expected_c2272=114.00948752346841,
         ),
-    ),
+    ],
 )
 def test_acc2272_rut(acc2272param, monkeypatch, costs):
     """
@@ -4496,7 +4513,7 @@ class Acc2273Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2273param",
-    (
+    [
         Acc2273Param(
             wsvol=130018.25667917728,
             volrci=1205439.8543893537,
@@ -4517,7 +4534,7 @@ class Acc2273Param(NamedTuple):
             c22=3474.7391916096453,
             expected_c2273=69.202425860597359,
         ),
-    ),
+    ],
 )
 def test_acc2273_rut(acc2273param, monkeypatch, costs):
     """
@@ -4571,7 +4588,7 @@ class Acc2274Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2274param",
-    (
+    [
         Acc2274Param(
             wsvol=130018.25667917728,
             volrci=1205439.8543893537,
@@ -4590,7 +4607,7 @@ class Acc2274Param(NamedTuple):
             c22=3474.7391916096453,
             expected_c2274=79.60537144364551,
         ),
-    ),
+    ],
 )
 def test_acc2274_rut(acc2274param, monkeypatch, costs):
     """
@@ -4636,7 +4653,7 @@ class Acc228Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc228param",
-    (
+    [
         Acc228Param(
             uciac=150000000,
             fkind=1,
@@ -4651,7 +4668,7 @@ class Acc228Param(NamedTuple):
             c22=3474.7391916096453,
             expected_c228=150,
         ),
-    ),
+    ],
 )
 def test_acc228_rut(acc228param, monkeypatch, costs):
     """
@@ -4693,7 +4710,7 @@ class Acc229Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc229param",
-    (
+    [
         Acc229Param(
             ucme=300000000,
             fkind=1,
@@ -4708,7 +4725,7 @@ class Acc229Param(NamedTuple):
             c22=3474.7391916096453,
             expected_c229=300,
         ),
-    ),
+    ],
 )
 def test_acc229_rut(acc229param, monkeypatch, costs):
     """
@@ -4752,7 +4769,7 @@ class Acc23Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc23param",
-    (
+    [
         Acc23Param(
             ucturb=np.array(
                 np.array((230000000, 245000000), order="F"), order="F"
@@ -4773,7 +4790,7 @@ class Acc23Param(NamedTuple):
             c23=194.83812507173698,
             expected_c23=194.78878460447092,
         ),
-    ),
+    ],
 )
 def test_acc23_rut(acc23param, monkeypatch, costs):
     """
@@ -4827,7 +4844,7 @@ class Acc24Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc24param",
-    (
+    [
         Acc24Param(
             c24=0,
             c241=14.443999999999999,
@@ -4846,7 +4863,7 @@ class Acc24Param(NamedTuple):
             c245=1.1775,
             expected_c24=34.698164218587536,
         ),
-    ),
+    ],
 )
 def test_acc24(acc24param, monkeypatch, costs):
     """
@@ -4890,7 +4907,7 @@ class Acc241Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc241param",
-    (
+    [
         Acc241Param(
             lsa=2,
             c24=0,
@@ -4903,7 +4920,7 @@ class Acc241Param(NamedTuple):
             c241=14.443999999999999,
             expected_c241=14.443999999999999,
         ),
-    ),
+    ],
 )
 def test_acc241_rut(acc241param, monkeypatch, costs):
     """
@@ -4947,7 +4964,7 @@ class Acc242Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc242param",
-    (
+    [
         Acc242Param(
             lsa=2,
             pacpmw=1226.1273281650574,
@@ -4966,7 +4983,7 @@ class Acc242Param(NamedTuple):
             cpp=29.255948217627452,
             expected_c242=7.2671621358073075,
         ),
-    ),
+    ],
 )
 def test_acc242_rut(acc242param, monkeypatch, costs):
     """
@@ -5016,7 +5033,7 @@ class Acc243Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc243param",
-    (
+    [
         Acc243Param(
             lsa=2,
             tlvpmw=699.34943812129745,
@@ -5031,7 +5048,7 @@ class Acc243Param(NamedTuple):
             c243=10.979786178504369,
             expected_c243=6.471502082780229,
         ),
-    ),
+    ],
 )
 def test_acc243_rut(acc243param, monkeypatch, costs):
     """
@@ -5071,7 +5088,7 @@ class Acc244Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc244param",
-    (
+    [
         Acc244Param(
             lsa=2,
             c24=0,
@@ -5084,7 +5101,7 @@ class Acc244Param(NamedTuple):
             c244=5.3380000000000001,
             expected_c244=5.3380000000000001,
         ),
-    ),
+    ],
 )
 def test_acc244_rut(acc244param, monkeypatch, costs):
     """
@@ -5122,7 +5139,7 @@ class Acc245Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc245param",
-    (
+    [
         Acc245Param(
             lsa=2,
             c24=0,
@@ -5135,7 +5152,7 @@ class Acc245Param(NamedTuple):
             c245=1.1775,
             expected_c245=1.1775,
         ),
-    ),
+    ],
 )
 def test_acc245_rut(acc245param, monkeypatch, costs):
     """
@@ -5173,7 +5190,7 @@ class Acc25Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc25param",
-    (
+    [
         Acc25Param(
             ucmisc=25000000,
             lsa=2,
@@ -5186,7 +5203,7 @@ class Acc25Param(NamedTuple):
             c25=22.125,
             expected_c25=22.125,
         ),
-    ),
+    ],
 )
 def test_acc25_rut(acc25param, monkeypatch, costs):
     """
@@ -5236,7 +5253,7 @@ class Acc26Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc26param",
-    (
+    [
         Acc26Param(
             ireactor=1,
             uchrs=87900000,
@@ -5261,7 +5278,7 @@ class Acc26Param(NamedTuple):
             c26=56.327648771765475,
             expected_c26=56.310463295064743,
         ),
-    ),
+    ],
 )
 def test_acc26_rut(acc26param, monkeypatch, costs):
     """
@@ -5337,7 +5354,7 @@ class Acc9Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc9param",
-    (
+    [
         Acc9Param(
             fcontng=0.15000000000000002,
             lsa=2,
@@ -5382,7 +5399,7 @@ class Acc9Param(NamedTuple):
             expected_cindrt=1302.5413344371934,
             expected_ccont=891.67913375638113,
         ),
-    ),
+    ],
 )
 def test_acc9_rut(acc9param, monkeypatch, costs):
     """
@@ -5446,7 +5463,7 @@ class Acc2253Param(NamedTuple):
 
 @pytest.mark.parametrize(
     "acc2253param",
-    (
+    [
         Acc2253Param(
             ucblss=90,
             fkind=1,
@@ -5475,7 +5492,7 @@ class Acc2253Param(NamedTuple):
             c2253=20.785622343242554,
             expected_c2253=17.809219633598371,
         ),
-    ),
+    ],
 )
 def test_acc2253_urt(acc2253param, monkeypatch, costs):
     """
@@ -5639,7 +5656,7 @@ class CoelcParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "coelcparam",
-    (
+    [
         CoelcParam(
             fcdfuel=0.10000000000000001,
             uche3=1000000,
@@ -5808,7 +5825,7 @@ class CoelcParam(NamedTuple):
             expected_moneyint=1025.4310038198375,
             expected_capcost=7861.6376959520912,
         ),
-    ),
+    ],
 )
 def test_coelc(coelcparam, monkeypatch, costs):
     """

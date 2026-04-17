@@ -277,13 +277,12 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
 
         # Blanket coolant volume (m3)
-        coolvol = (
-            coolvol
-            + fwbs_variables.vol_blkt_total * fwbs_variables.f_a_blkt_cooling_channels
+        coolvol += (
+            fwbs_variables.vol_blkt_total * fwbs_variables.f_a_blkt_cooling_channels
         )
 
         # Shield coolant volume (m3)
-        coolvol = coolvol + fwbs_variables.vol_shld_total * fwbs_variables.vfshld
+        coolvol += fwbs_variables.vol_shld_total * fwbs_variables.vfshld
 
         # First wall coolant volume (m3)
         coolvol = (
@@ -330,9 +329,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             * physics_variables.rminor
         )
         if divertor_variables.n_divertors == 2:
-            divertor_variables.a_div_surface_total = (
-                divertor_variables.a_div_surface_total * 2.0
-            )
+            divertor_variables.a_div_surface_total *= 2.0
         divertor_variables.m_div_plate = (
             divertor_variables.a_div_surface_total
             * divertor_variables.den_div_structure
@@ -446,7 +443,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         output: bool
 
         """
-
         # Model factors and coefficients
         a = 2.830  # Exponential factor (m2/tonne)
         b = 0.583  # Exponential factor (m2/tonne)
@@ -616,7 +612,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         ProcessValueError
             If the calculated nuclear heating is negative.
         """
-
         # Total nuclear heating in FW (MW)
         p_fw_nuclear_heat_total_mw = (
             m_fw_total
@@ -668,9 +663,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         if p_blkt_nuclear_heat_total_mw < 1:
             logger.error(
-                "Blanket heating is <1 MW or NaN. Is something wrong?"
-                f"{p_blkt_nuclear_heat_total_mw=} {exp_blanket=}"
-                f" {p_fusion_total_mw=} {m_blkt_total_tonnes=}"
+                "Blanket heating is <1 MW or NaN. Is something wrong?%s %s %s %s",
+                p_blkt_nuclear_heat_total_mw,
+                exp_blanket,
+                p_fusion_total_mw,
+                m_blkt_total_tonnes,
             )
 
         return p_blkt_nuclear_heat_total_mw, exp_blanket
@@ -717,7 +714,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             - shld_u_nuc_heating (float): Unit nuclear heating of shield (W/kg/GW of fusion power) x mass.
 
         """
-
         # Shield nuclear heating coefficients and exponents
         f = 6.88e2  # Shield nuclear heating coefficient (W/kg/W)
         g = 2.723  # Shield nuclear heating exponent m²/tonne
@@ -752,7 +748,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         output:
 
         """
-
         # Radiation power incident on HCD apparatus (MW)
         fwbs_variables.p_fw_hcd_rad_total_mw = (
             physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_outboard_hcd
@@ -1003,7 +998,6 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         type
             Solid angle fraction covered by the CP [-]
         """
-
         n_integral = 10
 
         # Initial calculation
@@ -1036,7 +1030,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 z_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
-            phy_cp_calc = phy_cp_calc + d_phy_cp
+            phy_cp_calc += d_phy_cp
 
             # Little tricks to avoild NaNs due to rounding
             int_calc_3 = 1.0 - rho_maj**2 * np.sin(phy_cp_calc) ** 2
@@ -1046,7 +1040,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 z_cp_top**2 + (rho_maj * np.cos(phy_cp_calc) - np.sqrt(int_calc_3)) ** 2
             )
 
-            cp_sol_angle = cp_sol_angle + d_phy_cp * 0.5 * (int_calc_1 + int_calc_2)
+            cp_sol_angle += d_phy_cp * 0.5 * (int_calc_1 + int_calc_2)
 
         cp_sol_angle = cp_sol_angle * 4.0 * z_cp_top
 
@@ -1095,7 +1089,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             ) * np.exp(-24.722 * sh_width_eff)
 
             # Units conversion [10^{-13}.cm^{-2}] -> [m^{-2}]
-            neut_flux_cp = neut_flux_cp * 1.0e17
+            neut_flux_cp *= 1.0e17
 
             # Scaling to the actual plasma neutron power
             neut_flux_cp = (
@@ -1247,7 +1241,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
 
             # Tungsten density correction
-            pnuc_cp_tf = pnuc_cp_tf * f_wc_density
+            pnuc_cp_tf *= f_wc_density
 
             # Shield nuclear heat [MW]
             p_cp_shield_nuclear_heat_mw = pnuc_cp_sh_gam + pnuc_cp_sh_n

@@ -29,7 +29,7 @@ class EllipticalShieldVolumes(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "elliptical_shield_volumes, expected",
+    ("elliptical_shield_volumes", "expected"),
     [
         (
             EllipticalShieldVolumes(
@@ -93,7 +93,7 @@ class EllipticalShieldAreas(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "elliptical_shield_areas, expected",
+    ("elliptical_shield_areas", "expected"),
     [
         (
             EllipticalShieldAreas(
@@ -156,7 +156,7 @@ class DShapedShieldVolumes(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "dshaped_shield_volumes, expected",
+    ("dshaped_shield_volumes", "expected"),
     [
         (
             DShapedShieldVolumes(
@@ -225,7 +225,7 @@ class DShapedShieldAreas(NamedTuple):
 
 
 @pytest.mark.parametrize(
-    "dshaped_shield_areas, expected",
+    ("dshaped_shield_areas", "expected"),
     [
         (
             DShapedShieldAreas(

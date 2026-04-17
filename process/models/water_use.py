@@ -257,9 +257,9 @@ class WaterUse(Model):
 
             # using this method the estimates for pond, lake and river evaporation produce similar results,
             #   the average will be taken and used in the next stage of calculation
-            evapsum = evapsum + self.data.water_use.evapvol
+            evapsum += self.data.water_use.evapvol
 
-        evapsum = evapsum / icool
+        evapsum /= icool
 
         # water volume withdrawn from external source depends on recirculation or 'once-through' system choice
         #   Estimated as a ratio to evaporated water (averaged across observed dataset)

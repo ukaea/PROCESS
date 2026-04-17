@@ -183,7 +183,6 @@ def psync_albajar_fidone(
     - I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,”
       Nuclear Fusion, vol. 41, no. 12, pp. 1755-1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
     """
-
     # Variable names are created to closely match those from the reference papers.
 
     ne0_20 = 1.0e-20 * nd_plasma_electron_on_axis

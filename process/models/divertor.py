@@ -38,7 +38,6 @@ class Divertor(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-
         fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
             f_ster_div_single=fwbs.f_ster_div_single,
@@ -150,7 +149,6 @@ class Divertor(Model):
             - Y.-K. M. Peng, J. B. Hicks, “Engineering feasibility of tight aspect ratio tokamak (spherical torus) reactors,”
               Osti.gov, 1991. https://www.osti.gov/biblio/1022679 (accessed Mar. 24, 2025).
         """
-
         #  Thickness of centrepost + first wall at divertor height
 
         r1 = rmajor - rminor * triang - 3.0e0 * dr_fw_plasma_gap_inboard + tfv.drtop
@@ -279,7 +277,6 @@ class Divertor(Model):
         float
             divertor heat load for a tight aspect ratio machine
         """
-
         # Radius on midplane
         r_omp = rmajor + rminor
 
@@ -382,7 +379,6 @@ class Divertor(Model):
         float
             Total incident radiation power on the divertor box in megawatts (MW).
         """
-
         return p_plasma_rad_mw * f_ster_div_single * n_divertors
 
     def incident_neutron_power(
@@ -407,7 +403,6 @@ class Divertor(Model):
         float
             Total incident radiation power on the divertor box in megawatts (MW).
         """
-
         return p_plasma_neutron_mw * f_ster_div_single * n_divertors
 
 

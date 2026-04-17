@@ -24,7 +24,7 @@ def test_plot_scans(temp_data, scan_mfile_name, cli_runner):
         ],
     )
 
-    assert len(list(temp_data.glob("*.pdf")))
+    assert list(temp_data.glob("*.pdf"))
 
 
 def test_plot_scans_stack(temp_data, scan_mfile_name, cli_runner):
@@ -49,7 +49,7 @@ def test_plot_scans_stack(temp_data, scan_mfile_name, cli_runner):
         ],
     )
 
-    assert len(list(temp_data.glob("*.pdf")))
+    assert list(temp_data.glob("*.pdf"))
 
 
 def test_plot_scans_2d_contour(temp_data, scan_2d_mfile_name, cli_runner):
@@ -74,4 +74,4 @@ def test_plot_scans_2d_contour(temp_data, scan_2d_mfile_name, cli_runner):
         ],
     )
 
-    assert len(list(temp_data.glob("*.pdf")))
+    assert list(temp_data.glob("*.pdf"))

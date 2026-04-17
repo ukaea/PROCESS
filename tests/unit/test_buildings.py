@@ -168,7 +168,7 @@ class BldgsSizesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bldgssizesparam",
-    (
+    [
         BldgsSizesParam(
             i_bldgs_v=0,
             a_plant_floor_effective=0,
@@ -447,7 +447,7 @@ class BldgsSizesParam(NamedTuple):
             expected_reactor_hall_w=218.897885262839,
             expected_reactor_hall_h=67.624360086248132,
         ),
-    ),
+    ],
 )
 def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "i_bldgs_v", bldgssizesparam.i_bldgs_v)
@@ -821,7 +821,7 @@ class BldgsParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "bldgsparam",
-    (
+    [
         BldgsParam(
             wrbi=0,
             rxcl=4,
@@ -942,7 +942,7 @@ class BldgsParam(NamedTuple):
             expected_wsv=130255.93791329287,
             expected_elev=51609.268177478581,
         ),
-    ),
+    ],
 )
 def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "wrbi", bldgsparam.wrbi)

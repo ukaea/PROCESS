@@ -37,7 +37,7 @@ class PlasmaAnglesArcsParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "plasmaanglesarcsparam",
-    (
+    [
         PlasmaAnglesArcsParam(
             a=2.8677741935483869,
             kap=1.8480000000000001,
@@ -47,7 +47,7 @@ class PlasmaAnglesArcsParam(NamedTuple):
             expected_xo=5.4154130183225808,
             expected_thetao=1.3636548755403939,
         ),
-    ),
+    ],
 )
 def test_plasma_angles_arcs(plasmaanglesarcsparam, monkeypatch, plasma):
     """
@@ -78,7 +78,7 @@ def test_plasma_angles_arcs(plasmaanglesarcsparam, monkeypatch, plasma):
 
 
 @pytest.mark.parametrize(
-    "a, kap, tri, expected_perim",
+    ("a", "kap", "tri", "expected_perim"),
     [
         (
             2.8677741935483869,
@@ -109,7 +109,7 @@ def test_perim(a, kap, tri, expected_perim):
 
 
 @pytest.mark.parametrize(
-    "rmajor, rminor, xi, thetai, xo, thetao, expected_plasma_volume",
+    ("rmajor", "rminor", "xi", "thetai", "xo", "thetao", "expected_plasma_volume"),
     [
         (
             9.2995201822511735,
@@ -153,7 +153,7 @@ def test_plasma_volume(
 
 
 @pytest.mark.parametrize(
-    "xi, thetai, xo ,thetao, expected_plasma_cross_section",
+    ("xi", "thetai", "xo", "thetao", "expected_plasma_cross_section"),
     [
         (
             10.261919050584332,
@@ -189,7 +189,7 @@ def test_plasma_cross_section(
 
 
 @pytest.mark.parametrize(
-    "r, a, kap, tri, expected_fvol",
+    ("r", "a", "kap", "tri", "expected_fvol"),
     [
         (
             9.2995201822511735,
@@ -223,7 +223,7 @@ def test_fvol(r, a, kap, tri, expected_fvol):
 
 
 @pytest.mark.parametrize(
-    "a, kap, tri, expected_xsect0",
+    ("a", "kap", "tri", "expected_xsect0"),
     [
         (
             2.8677741935483869,
@@ -273,7 +273,7 @@ class SurfaceAreaParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "surfaceareaparam",
-    (
+    [
         SurfaceAreaParam(
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
@@ -284,7 +284,7 @@ class SurfaceAreaParam(NamedTuple):
             expected_xsi=454.0423505329922,
             expected_xso=949.22962703393853,
         ),
-    ),
+    ],
 )
 def test_plasma_surface_area(surfaceareaparam, monkeypatch, plasma):
     """
@@ -329,7 +329,7 @@ class SurfaParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "surfaparam",
-    (
+    [
         SurfaParam(
             a=0.97142857142857153,
             r=1.7000000000000002,
@@ -338,7 +338,7 @@ class SurfaParam(NamedTuple):
             expected_sa=117.06185446474473,
             expected_so=86.489845577107758,
         ),
-    ),
+    ],
 )
 def test_surfa(surfaparam, monkeypatch):
     """

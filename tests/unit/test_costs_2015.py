@@ -25,7 +25,7 @@ def costs2015(process_models):
     :return costs2015: initialised costs2015 object
     :type costs2015: process.costs2015.Costs2015
     """
-    return process_models._costs_2015  # noqa: SLF001
+    return process_models._costs_2015
 
 
 @dataclass
@@ -57,7 +57,7 @@ class CalcBuildingCostsParam:
 
 @pytest.mark.parametrize(
     "calcbuildingcostsparam",
-    (
+    [
         CalcBuildingCostsParam(
             pwpnb=109.38112972595434,
             r_pf_coil_outer_max=17.814040399601147,
@@ -2253,7 +2253,7 @@ class CalcBuildingCostsParam:
                 order="F",
             ).transpose(),
         ),
-    ),
+    ],
 )
 def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     """
@@ -2383,7 +2383,7 @@ class CalcLandCostsParam:
 
 @pytest.mark.parametrize(
     "calclandcostsparam",
-    (
+    [
         CalcLandCostsParam(
             dr_tf_inner_bore=11.753025251709767,
             dh_tf_inner_bore=14.474776497695849,
@@ -4560,7 +4560,7 @@ class CalcLandCostsParam:
                 order="F",
             ).transpose(),
         ),
-    ),
+    ],
 )
 def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     """
@@ -4647,7 +4647,7 @@ class CalcTfCoilCostsParam:
 
 @pytest.mark.parametrize(
     "calctfcoilcostsparam",
-    (
+    [
         CalcTfCoilCostsParam(
             n_tf_coils=18,
             len_tf_coil=46.64605032553105,
@@ -6826,7 +6826,7 @@ class CalcTfCoilCostsParam:
                 order="F",
             ).transpose(),
         ),
-    ),
+    ],
 )
 def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
     """
@@ -6917,7 +6917,7 @@ class CalcRemoteHandlingCostsParam:
 
 @pytest.mark.parametrize(
     "calcremotehandlingcostsparam",
-    (
+    [
         CalcRemoteHandlingCostsParam(
             armour_fw_bl_mass=3075642.4259914826,
             cost_factor_rh=1,
@@ -9090,7 +9090,7 @@ class CalcRemoteHandlingCostsParam:
                 order="F",
             ).transpose(),
         ),
-    ),
+    ],
 )
 def test_calc_remote_handling_costs(
     calcremotehandlingcostsparam, monkeypatch, costs2015
@@ -9173,7 +9173,7 @@ class CalcNPlantAndVvCostsParam:
 
 @pytest.mark.parametrize(
     "calcnplantandvvcostsparam",
-    (
+    [
         CalcNPlantAndVvCostsParam(
             r_shld_outboard_outer=13.471451612903225,
             dr_vv_outboard=0.32000000000000006,
@@ -11348,7 +11348,7 @@ class CalcNPlantAndVvCostsParam:
                 order="F",
             ).transpose(),
         ),
-    ),
+    ],
 )
 def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs2015):
     """
@@ -11432,7 +11432,7 @@ class CalcEnergyConversionSystemParam:
 
 @pytest.mark.parametrize(
     "calcenergyconversionsystemparam",
-    (
+    [
         CalcEnergyConversionSystemParam(
             p_plant_electric_gross_mw=893.59786239725906,
             cost_factor_bop=1,
@@ -13603,7 +13603,7 @@ class CalcEnergyConversionSystemParam:
                 order="F",
             ).transpose(),
         ),
-    ),
+    ],
 )
 def test_calc_energy_conversion_system(
     calcenergyconversionsystemparam, monkeypatch, costs2015
@@ -13695,7 +13695,7 @@ class CalcRemainingSubsystemsParam:
 
 @pytest.mark.parametrize(
     "calcremainingsubsystemsparam",
-    (
+    [
         CalcRemainingSubsystemsParam(
             p_hcd_injected_total_mw=43.745615131519273,
             p_plasma_separatrix_mw=94.203763268233445,
@@ -15888,7 +15888,7 @@ class CalcRemainingSubsystemsParam:
                 order="F",
             ).transpose(),
         ),
-    ),
+    ],
 )
 def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, costs2015):
     """
@@ -16013,7 +16013,7 @@ class ValueFunctionParam:
 
 @pytest.mark.parametrize(
     "valuefunctionparam",
-    (
+    [
         ValueFunctionParam(
             x=0.83463014000000002,
             expected_v=1.083401311692469,
@@ -16022,7 +16022,7 @@ class ValueFunctionParam:
             x=0.055650000000000005,
             expected_v=2.5162783171369218,
         ),
-    ),
+    ],
 )
 def test_value_function(valuefunctionparam, monkeypatch, costs2015):
     """

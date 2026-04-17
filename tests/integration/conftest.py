@@ -31,17 +31,23 @@ def temp_data(tmp_path):
 
 
 @pytest.fixture
-def temp_data_cwd(temp_data):
+def temp_data_cwd(temp_data: Path):
     """Change cwd to temp_data dir, then yield it.
 
     Used when testing command-line args that look for files in the cwd.
-    :param temp_data: temporary path containing data files
-    :type temp_data: Path
-    :yield: temporary path containing data files
-    :rtype: Path
+
+    Parameters
+    ----------
+    temp_data:
+        temporary path containing data files
+
+    Yields
+    ------
+    :
+        temporary path containing data files
     """
     # Setup by changing cwd to temp_data and yielding it
-    old_wd = os.getcwd()
+    old_wd = Path.cwd()
     os.chdir(temp_data)
     yield temp_data
 

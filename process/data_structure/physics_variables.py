@@ -1148,7 +1148,6 @@ f_res_plasma_neo: float = None
 res_plasma: float = None
 """plasma resistance (ohm)"""
 
-
 t_plasma_res_diffusion: float = None
 """plasma current resistive diffusion time (s)"""
 
@@ -1291,8 +1290,14 @@ len_plasma_debye_electron_profile: list[float] = None
 radius_plasma_deuteron_toroidal_larmor_isotropic_profile: list[float] = None
 """Profile of deuteron toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
+radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg: float = None
+"""Volume averaged deuteron toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
+
 radius_plasma_triton_toroidal_larmor_isotropic_profile: list[float] = None
 """Profile of triton toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
+
+radius_plasma_triton_toroidal_larmor_isotropic_vol_avg: float = None
+"""Volume averaged triton toroidal Larmor radius in plasma, assuming equal speeds in all directions (m)"""
 
 len_plasma_debye_electron_vol_avg: float = None
 """Volume averaged electron Debye length in plasma (m)"""
@@ -1300,14 +1305,26 @@ len_plasma_debye_electron_vol_avg: float = None
 vel_plasma_electron_profile: list[float] = None
 """Profile of electron thermal velocity in plasma (m/s)"""
 
+vel_plasma_deuteron_vol_avg: float = None
+"""Volume averaged deuteron thermal velocity in plasma (m/s)"""
+
+vel_plasma_electron_vol_avg: float = None
+"""Volume averaged electron thermal velocity in plasma (m/s)"""
+
 vel_plasma_deuteron_profile: list[float] = None
 """Profile of deuteron thermal velocity in plasma (m/s)"""
 
 vel_plasma_triton_profile: list[float] = None
 """Profile of triton thermal velocity in plasma (m/s)"""
 
+vel_plasma_triton_vol_avg: float = None
+"""Volume averaged triton thermal velocity in plasma (m/s)"""
+
 vel_plasma_alpha_thermal_profile: list[float] = None
 """Profile of thermal alpha particle velocity in plasma (m/s)"""
+
+vel_plasma_alpha_thermal_vol_avg: float = None
+"""Volume averaged thermal alpha particle velocity in plasma (m/s)"""
 
 vel_plasma_alpha_birth: float = None
 """Birth velocity of alpha particles in plasma (m/s)"""
@@ -1315,20 +1332,44 @@ vel_plasma_alpha_birth: float = None
 plasma_coulomb_log_electron_electron_profile: list[float] = None
 """Profile of electron-electron Coulomb logarithm in plasma"""
 
+plasma_coulomb_log_electron_electron_vol_avg: float = None
+"""Volume averaged electron-electron Coulomb logarithm in plasma"""
+
 plasma_coulomb_log_electron_deuteron_profile: list[float] = None
 """Profile of electron-deuteron Coulomb logarithm in plasma"""
+
+plasma_coulomb_log_electron_deuteron_vol_avg: float = None
+"""Volume averaged electron-deuteron Coulomb logarithm in plasma"""
 
 plasma_coulomb_log_electron_triton_profile: list[float] = None
 """Profile of electron-triton Coulomb logarithm in plasma"""
 
+plasma_coulomb_log_electron_triton_vol_avg: float = None
+"""Volume averaged electron-triton Coulomb logarithm in plasma"""
+
 plasma_coulomb_log_deuteron_triton_profile: list[float] = None
 """Profile of deuteron-triton Coulomb logarithm in plasma"""
+
+plasma_coulomb_log_deuteron_triton_vol_avg: float = None
+"""Volume averaged deuteron-triton Coulomb logarithm in plasma"""
 
 plasma_coulomb_log_electron_alpha_thermal_profile: list[float] = None
 """Profile of electron-alpha Coulomb logarithm in plasma"""
 
+plasma_coulomb_log_electron_alpha_thermal_vol_avg: float = None
+"""Volume averaged electron-alpha Coulomb logarithm in plasma"""
+
+t_plasma_electron_alpha_spitzer_slow_profile: list[float] = None
+"""Profile of electron-alpha Spitzer slowing down time in plasma (s)"""
+
+t_plasma_electron_alpha_spitzer_slow_vol_avg: float = None
+"""Volume averaged electron-alpha Spitzer slowing down time in plasma (s)"""
+
 freq_plasma_electron_profile: list[float] = None
 """Electron plasma frequency profile (Hz)"""
+
+freq_plasma_electron_vol_avg: float = None
+"""Volume averaged electron plasma frequency (Hz)"""
 
 freq_plasma_deuteron_profile: list[float] = None
 """Deuteron plasma frequency profile (Hz)"""
@@ -1336,14 +1377,104 @@ freq_plasma_deuteron_profile: list[float] = None
 freq_plasma_larmor_toroidal_electron_profile: list[float] = None
 """Profile of electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
+freq_plasma_larmor_toroidal_electron_vol_avg: float = None
+"""Volume averaged electron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
 freq_plasma_larmor_toroidal_deuteron_profile: list[float] = None
 """Profile of deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
+freq_plasma_larmor_toroidal_deuteron_vol_avg: float = None
+"""Volume averaged deuteron Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
 freq_plasma_larmor_toroidal_triton_profile: list[float] = None
 """Profile of triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
 
+freq_plasma_larmor_toroidal_triton_vol_avg: float = None
+"""Volume averaged triton Larmor frequency in plasma due to toroidal magnetic field (Hz)"""
+
 freq_plasma_upper_hybrid_profile: list[float] = None
 """Profile of upper hybrid frequency in plasma (Hz)"""
+
+freq_plasma_upper_hybrid_vol_avg: float = None
+"""Volume averaged upper hybrid frequency in plasma (Hz)"""
+
+t_plasma_electron_electron_collision_profile: list[float] = None
+"""Profile of electron-electron collision time in plasma (s)"""
+
+t_plasma_electron_electron_collision_vol_avg: float = None
+"""Volume averaged electron-electron collision time in plasma (s)"""
+
+t_plasma_electron_deuteron_collision_profile: list[float] = None
+"""Profile of electron-deuteron collision time in plasma (s)"""
+
+t_plasma_electron_deuteron_collision_vol_avg: float = None
+"""Volume averaged electron-deuteron collision time in plasma (s)"""
+
+t_plasma_electron_triton_collision_profile: list[float] = None
+"""Profile of electron-triton collision time in plasma (s)"""
+
+t_plasma_electron_triton_collision_vol_avg: float = None
+"""Volume averaged electron-triton collision time in plasma (s)"""
+
+t_plasma_electron_alpha_thermal_collision_profile: list[float] = None
+"""Profile of electron-alpha collision time in plasma (s)"""
+
+t_plasma_electron_alpha_thermal_collision_vol_avg: float = None
+"""Volume averaged electron-alpha collision time in plasma (s)"""
+
+freq_plasma_electron_electron_collision_profile: list[float] = None
+"""Profile of electron-electron collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_electron_collision_vol_avg: float = None
+"""Volume averaged electron-electron collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_deuteron_collision_profile: list[float] = None
+"""Profile of electron-deuteron collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_deuteron_collision_vol_avg: float = None
+"""Volume averaged electron-deuteron collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_triton_collision_profile: list[float] = None
+"""Profile of electron-triton collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_triton_collision_vol_avg: float = None
+"""Volume averaged electron-triton collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_alpha_thermal_collision_profile: list[float] = None
+"""Profile of electron-alpha collision frequency in plasma (Hz)"""
+
+freq_plasma_electron_alpha_thermal_collision_vol_avg: float = None
+"""Volume averaged electron-alpha collision frequency in plasma (Hz)"""
+
+len_plasma_electron_electron_mean_free_path_profile: list[float] = None
+"""Profile of electron-electron mean free path in plasma (m)"""
+
+len_plasma_electron_electron_mean_free_path_vol_avg: float = None
+"""Volume averaged electron-electron mean free path in plasma (m)"""
+
+len_plasma_electron_deuteron_mean_free_path_profile: list[float] = None
+"""Profile of electron-deuteron mean free path in plasma (m)"""
+
+len_plasma_electron_deuteron_mean_free_path_vol_avg: float = None
+"""Volume averaged electron-deuteron mean free path in plasma (m)"""
+
+len_plasma_electron_triton_mean_free_path_profile: list[float] = None
+"""Profile of electron-triton mean free path in plasma (m)"""
+
+len_plasma_electron_triton_mean_free_path_vol_avg: float = None
+"""Volume averaged electron-triton mean free path in plasma (m)"""
+
+len_plasma_electron_alpha_thermal_mean_free_path_profile: list[float] = None
+"""Profile of electron-alpha mean free path in plasma (m)"""
+
+len_plasma_electron_alpha_thermal_mean_free_path_vol_avg: float = None
+"""Volume averaged electron-alpha mean free path in plasma (m)"""
+
+res_plasma_fuel_spitzer_profile: list[float] = None
+"""Profile of plasma Spitzer resistivity due to fuel ions (ohm m)"""
+
+res_plasma_fuel_spitzer_vol_avg: float = None
+"""Volume averaged plasma Spitzer resistivity due to fuel ions (ohm m)"""
 
 
 def init_physics_module():
@@ -1639,6 +1770,7 @@ def init_physics_variables():
         f_nd_plasma_oxygen_electron, \
         f_res_plasma_neo, \
         res_plasma, \
+        rho_plasma_spitzer_classical_profile, \
         t_plasma_res_diffusion, \
         a_plasma_surface, \
         a_plasma_surface_outboard, \
@@ -1676,24 +1808,65 @@ def init_physics_variables():
         j_plasma_bootstrap_sauter_profile, \
         len_plasma_debye_electron_profile, \
         radius_plasma_deuteron_toroidal_larmor_isotropic_profile, \
+        radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg, \
         radius_plasma_triton_toroidal_larmor_isotropic_profile, \
+        radius_plasma_triton_toroidal_larmor_isotropic_vol_avg, \
         len_plasma_debye_electron_vol_avg, \
         vel_plasma_electron_profile, \
+        vel_plasma_deuteron_vol_avg, \
+        vel_plasma_electron_vol_avg, \
         vel_plasma_deuteron_profile, \
         vel_plasma_triton_profile, \
+        vel_plasma_triton_vol_avg, \
         vel_plasma_alpha_thermal_profile, \
+        vel_plasma_alpha_thermal_vol_avg, \
         vel_plasma_alpha_birth, \
         plasma_coulomb_log_electron_electron_profile, \
+        plasma_coulomb_log_electron_electron_vol_avg, \
         plasma_coulomb_log_electron_deuteron_profile, \
+        plasma_coulomb_log_electron_deuteron_vol_avg, \
         plasma_coulomb_log_electron_triton_profile, \
+        plasma_coulomb_log_electron_triton_vol_avg, \
         plasma_coulomb_log_deuteron_triton_profile, \
+        plasma_coulomb_log_deuteron_triton_vol_avg, \
         plasma_coulomb_log_electron_alpha_thermal_profile, \
+        plasma_coulomb_log_electron_alpha_thermal_vol_avg, \
+        t_plasma_electron_alpha_spitzer_slow_profile, \
+        t_plasma_electron_alpha_spitzer_slow_vol_avg, \
         freq_plasma_electron_profile, \
+        freq_plasma_electron_vol_avg, \
         freq_plasma_deuteron_profile, \
         freq_plasma_larmor_toroidal_electron_profile, \
         freq_plasma_larmor_toroidal_deuteron_profile, \
         freq_plasma_larmor_toroidal_triton_profile, \
-        freq_plasma_upper_hybrid_profile
+        freq_plasma_upper_hybrid_profile, \
+        freq_plasma_upper_hybrid_vol_avg, \
+        t_plasma_electron_electron_collision_profile, \
+        t_plasma_electron_electron_collision_vol_avg, \
+        t_plasma_electron_deuteron_collision_profile, \
+        t_plasma_electron_deuteron_collision_vol_avg, \
+        t_plasma_electron_triton_collision_profile, \
+        t_plasma_electron_triton_collision_vol_avg, \
+        t_plasma_electron_alpha_thermal_collision_profile, \
+        t_plasma_electron_alpha_thermal_collision_vol_avg, \
+        freq_plasma_electron_electron_collision_profile, \
+        freq_plasma_electron_electron_collision_vol_avg, \
+        freq_plasma_electron_deuteron_collision_profile, \
+        freq_plasma_electron_deuteron_collision_vol_avg, \
+        freq_plasma_electron_triton_collision_profile, \
+        freq_plasma_electron_triton_collision_vol_avg, \
+        freq_plasma_electron_alpha_thermal_collision_profile, \
+        freq_plasma_electron_alpha_thermal_collision_vol_avg, \
+        len_plasma_electron_electron_mean_free_path_profile, \
+        len_plasma_electron_electron_mean_free_path_vol_avg, \
+        len_plasma_electron_deuteron_mean_free_path_profile, \
+        len_plasma_electron_deuteron_mean_free_path_vol_avg, \
+        len_plasma_electron_triton_mean_free_path_profile, \
+        len_plasma_electron_triton_mean_free_path_vol_avg, \
+        len_plasma_electron_alpha_thermal_mean_free_path_profile, \
+        len_plasma_electron_alpha_thermal_mean_free_path_vol_avg, \
+        res_plasma_fuel_spitzer_profile, \
+        res_plasma_fuel_spitzer_vol_avg
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1930,6 +2103,7 @@ def init_physics_variables():
     f_nd_plasma_oxygen_electron = 0.0
     f_res_plasma_neo = 0.0
     res_plasma = 0.0
+    rho_plasma_spitzer_classical_profile = []
     t_plasma_res_diffusion = 0.0
     a_plasma_surface = 0.0
     a_plasma_surface_outboard = 0.0
@@ -1966,21 +2140,62 @@ def init_physics_variables():
     n_charge_plasma_effective_mass_weighted_vol_avg = 0.0
     len_plasma_debye_electron_profile = []
     radius_plasma_deuteron_toroidal_larmor_isotropic_profile = []
+    radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg = 0.0
     radius_plasma_triton_toroidal_larmor_isotropic_profile = []
+    radius_plasma_triton_toroidal_larmor_isotropic_vol_avg = 0.0
     len_plasma_debye_electron_vol_avg = 0.0
     vel_plasma_electron_profile = []
+    vel_plasma_electron_vol_avg = 0.0
     vel_plasma_deuteron_profile = []
+    vel_plasma_deuteron_vol_avg = 0.0
     vel_plasma_triton_profile = []
+    vel_plasma_triton_vol_avg = 0.0
     vel_plasma_alpha_thermal_profile = []
+    vel_plasma_alpha_thermal_vol_avg = 0.0
     vel_plasma_alpha_birth = 0.0
     plasma_coulomb_log_electron_electron_profile = []
+    plasma_coulomb_log_electron_electron_vol_avg = 0.0
     plasma_coulomb_log_electron_deuteron_profile = []
+    plasma_coulomb_log_electron_deuteron_vol_avg = 0.0
     plasma_coulomb_log_electron_triton_profile = []
+    plasma_coulomb_log_electron_triton_vol_avg = 0.0
     plasma_coulomb_log_deuteron_triton_profile = []
+    plasma_coulomb_log_deuteron_triton_vol_avg = 0.0
     plasma_coulomb_log_electron_alpha_thermal_profile = []
+    plasma_coulomb_log_electron_alpha_thermal_vol_avg = 0.0
     freq_plasma_electron_profile = []
+    freq_plasma_electron_vol_avg = 0.0
     freq_plasma_deuteron_profile = []
     freq_plasma_larmor_toroidal_electron_profile = []
     freq_plasma_larmor_toroidal_deuteron_profile = []
     freq_plasma_larmor_toroidal_triton_profile = []
     freq_plasma_upper_hybrid_profile = []
+    freq_plasma_upper_hybrid_vol_avg = 0.0
+    t_plasma_electron_electron_collision_profile = []
+    t_plasma_electron_electron_collision_vol_avg = 0.0
+    t_plasma_electron_deuteron_collision_profile = []
+    t_plasma_electron_deuteron_collision_vol_avg = 0.0
+    t_plasma_electron_triton_collision_profile = []
+    t_plasma_electron_triton_collision_vol_avg = 0.0
+    t_plasma_electron_alpha_thermal_collision_profile = []
+    t_plasma_electron_alpha_thermal_collision_vol_avg = 0.0
+    t_plasma_electron_alpha_spitzer_slow_profile = []
+    t_plasma_electron_alpha_spitzer_slow_vol_avg = 0.0
+    freq_plasma_electron_electron_collision_profile = []
+    freq_plasma_electron_electron_collision_vol_avg = 0.0
+    freq_plasma_electron_deuteron_collision_profile = []
+    freq_plasma_electron_deuteron_collision_vol_avg = 0.0
+    freq_plasma_electron_triton_collision_profile = []
+    freq_plasma_electron_triton_collision_vol_avg = 0.0
+    freq_plasma_electron_alpha_thermal_collision_profile = []
+    freq_plasma_electron_alpha_thermal_collision_vol_avg = 0.0
+    len_plasma_electron_electron_mean_free_path_profile = []
+    len_plasma_electron_electron_mean_free_path_vol_avg = 0.0
+    len_plasma_electron_deuteron_mean_free_path_profile = []
+    len_plasma_electron_deuteron_mean_free_path_vol_avg = 0.0
+    len_plasma_electron_triton_mean_free_path_profile = []
+    len_plasma_electron_triton_mean_free_path_vol_avg = 0.0
+    len_plasma_electron_alpha_thermal_mean_free_path_profile = []
+    len_plasma_electron_alpha_thermal_mean_free_path_vol_avg = 0.0
+    res_plasma_fuel_spitzer_profile = []
+    res_plasma_fuel_spitzer_vol_avg = 0.0

@@ -45,9 +45,9 @@ class OutputFileManager:
 
 def write(file, string: str):
     if file == constants.MFILE:
-        OutputFileManager._mfile.write(f"{string}\n")  # noqa: SLF001
+        OutputFileManager._mfile.write(f"{string}\n")
     elif file == constants.NOUT:
-        OutputFileManager._outfile.write(f"{string}\n")  # noqa: SLF001
+        OutputFileManager._outfile.write(f"{string}\n")
     elif file == constants.IOTTY:
         print(string)
 

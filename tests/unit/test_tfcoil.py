@@ -34,7 +34,7 @@ def tfcoil():
 
 
 @pytest.mark.parametrize(
-    "temperature, expected_density",
+    ("temperature", "expected_density"),
     [(24.6, 130.02434313053487), (30.2, 113.09539723009078), (43.6, 85.26924709595201)],
 )
 def test_he_density(temperature, expected_density, tfcoil):
@@ -55,7 +55,7 @@ def test_he_density(temperature, expected_density, tfcoil):
 
 
 @pytest.mark.parametrize(
-    "temperature, expected_cp",
+    ("temperature", "expected_cp"),
     [(24.6, 5674.909063980127), (30.2, 5798.42049712345), (43.6, 5673.218322000001)],
 )
 def test_he_cp(temperature, expected_cp, tfcoil):
@@ -77,7 +77,7 @@ def test_he_cp(temperature, expected_cp, tfcoil):
 
 
 @pytest.mark.parametrize(
-    "temperature, expected_visco",
+    ("temperature", "expected_visco"),
     [
         (20.6, 6.889108080243641e-06),
         (26.2, 6.859929884441028e-06),
@@ -103,7 +103,7 @@ def test_he_visco(temperature, expected_visco, tfcoil):
 
 # error module needs to be initialised here because the temperature ranges are (in some cases) greater than the error conditions
 @pytest.mark.parametrize(
-    "temperature, expected_th_cond",
+    ("temperature", "expected_th_cond"),
     [
         (20.6, 0.0585183573711527),
         (24.2, 0.05720100686027678),
@@ -133,7 +133,7 @@ def test_he_th_cond(temperature, expected_th_cond, reinitialise_error_module, tf
 
 
 @pytest.mark.parametrize(
-    "temperature, expected_th_cond",
+    ("temperature", "expected_th_cond"),
     [
         (54.4, 844.9049012800042),
         (66.9, 571.151543384937),
@@ -252,7 +252,21 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
 
 
 @pytest.mark.parametrize(
-    "i_tf_case_geom, i_f_dr_tf_plasma_case, f_dr_tf_plasma_case, tfc_sidewall_is_fraction, casths_fraction, n_tf_coils, dr_tf_inboard, dr_tf_nose_case, r_tf_inboard_out, r_tf_inboard_in, r_tf_outboard_mid, dr_tf_outboard, expected",
+    (
+        "i_tf_case_geom",
+        "i_f_dr_tf_plasma_case",
+        "f_dr_tf_plasma_case",
+        "tfc_sidewall_is_fraction",
+        "casths_fraction",
+        "n_tf_coils",
+        "dr_tf_inboard",
+        "dr_tf_nose_case",
+        "r_tf_inboard_out",
+        "r_tf_inboard_in",
+        "r_tf_outboard_mid",
+        "dr_tf_outboard",
+        "expected",
+    ),
     [
         (
             0,  # Circular plasma-facing front case
@@ -341,7 +355,14 @@ def test_tf_global_geometry(
 
 
 @pytest.mark.parametrize(
-    "n_tf_coils, b_plasma_toroidal_on_axis, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total, expected",
+    (
+        "n_tf_coils",
+        "b_plasma_toroidal_on_axis",
+        "rmajor",
+        "r_b_tf_inboard_peak",
+        "a_tf_inboard_total",
+        "expected",
+    ),
     [
         (
             16,  # Number of TF coils
@@ -392,11 +413,11 @@ def test_tf_current(
 
 
 @pytest.mark.parametrize(
-    "a, b, expected_circumference",
-    (
+    ("a", "b", "expected_circumference"),
+    [
         (2.667950e9, 6.782819e8, 11464316399.111176),
         (4.7186039761812131, 3.6192586838709673, 26.308134540723429),
-    ),
+    ],
     ids=["johndcook", "baseline_2018"],
 )
 def test_circumference(a, b, expected_circumference, tfcoil):
@@ -491,7 +512,7 @@ class TfFieldAndForceParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tffieldandforceparam",
-    (
+    [
         TfFieldAndForceParam(
             rminor=0.97142857142857153,
             rmajor=1.7000000000000002,
@@ -562,7 +583,7 @@ class TfFieldAndForceParam(NamedTuple):
             expected_vforce_outboard=8549450.0771621168,
             expected_vforce_inboard_tot=147221629.66130698,
         ),
-    ),
+    ],
 )
 def test_tf_field_and_force(tffieldandforceparam, tfcoil):
     """
@@ -628,7 +649,7 @@ class TfcindParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tfcindparam",
-    (
+    [
         TfcindParam(
             z_tf_arc=np.array((
                 4.5228880258064512,
@@ -697,7 +718,7 @@ class TfcindParam(NamedTuple):
             ind_tf_coil=0.0,
             expected_ind_tf_coil=6.26806810007207e-06,
         ),
-    ),
+    ],
 )
 def test_tf_coil_self_inductance(tfcindparam, monkeypatch, tfcoil):
     """
@@ -759,7 +780,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "tfcoilareaandmassesparam",
-    (
+    [
         TfCoilAreaAndMassesParam(
             r_tf_outboard_mid=16.519405859443332,
             r_tf_inboard_mid=3.5979411851091103,
@@ -772,7 +793,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_tfcryoarea=6381.2092203414386,
             expected_tfocrn=0.59553192892551199,
         ),
-    ),
+    ],
 )
 def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
     """
@@ -1017,7 +1038,7 @@ class StressclParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "stressclparam",
-    (
+    [
         StressclParam(
             dr_tf_inboard=1.208,
             i_tf_inside_cs=0,
@@ -1250,7 +1271,7 @@ class StressclParam(NamedTuple):
             expected_insstrain=-0.006687152422925652,
             expected_str_wp=0.0015619754370069119,
         ),
-    ),
+    ],
 )
 def test_stresscl(stressclparam, monkeypatch, tfcoil):
     """
@@ -1416,7 +1437,7 @@ class PlaneStressExpectedData:
 
 @pytest.mark.parametrize(
     "planestressparam",
-    (
+    [
         PlaneStressParam(
             n_radial_array=100,
             nlayers=3,
@@ -1466,7 +1487,7 @@ class PlaneStressExpectedData:
             j=np.array([0.00000000e00, -2245759961.294637, 0.00000000e00]),
             expected_data_key="test3",
         ),
-    ),
+    ],
 )
 def test_plane_stress(planestressparam, skip_if_incompatible_system, request):
     """
@@ -1563,7 +1584,7 @@ class ExtendedPlaneStressExpectedData:
 
 @pytest.mark.parametrize(
     "extendedplanestrainparam",
-    (
+    [
         ExtendedPlaneStrainParam(
             n_radial_array=100,
             nlayers=2,
@@ -1624,7 +1645,7 @@ class ExtendedPlaneStressExpectedData:
             v_force=4051971733.3410816,
             expected_data_key="test2",
         ),
-    ),
+    ],
 )
 def test_extended_plane_strain(extendedplanestrainparam):
     """
@@ -1709,7 +1730,7 @@ class EyoungParallelParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "eyoungparallelparam",
-    (
+    [
         EyoungParallelParam(
             eyoung_j_1=0,
             eyoung_j_2=0,
@@ -1732,7 +1753,7 @@ class EyoungParallelParam(NamedTuple):
             expected_a_3=0.030661087836601014,
             expected_poisson_j_perp_3=0.30000001192092896,
         ),
-    ),
+    ],
 )
 def test_eyoung_parallel(eyoungparallelparam, monkeypatch):
     """
@@ -1821,7 +1842,7 @@ class EyoungParallelArrayParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "eyoungtnestedsquaresparam",
-    (
+    [
         EyoungTNestedSquaresParam(
             n=4,
             eyoung_j_in=np.array((0, 0, 205000000000, 20000000000, 0)),
@@ -1844,7 +1865,7 @@ class EyoungParallelArrayParam(NamedTuple):
             expected_poisson_j_perp_out=0.30931445806415137,
             expected_eyoung_stiffest=116443733140.5881,
         ),
-    ),
+    ],
 )
 def test_eyoung_t_nested_squares(eyoungtnestedsquaresparam, monkeypatch):
     """
@@ -1888,7 +1909,7 @@ def test_eyoung_t_nested_squares(eyoungtnestedsquaresparam, monkeypatch):
 
 @pytest.mark.parametrize(
     "eyoungseriesparam",
-    (
+    [
         EyoungSeriesParam(
             eyoung_j_1=0,
             eyoung_j_2=117000000000,
@@ -1911,7 +1932,7 @@ def test_eyoung_t_nested_squares(eyoungtnestedsquaresparam, monkeypatch):
             expected_l_3=0.030661087836601014,
             expected_poisson_j_perp_3=0.30000001192092896,
         ),
-    ),
+    ],
 )
 def test_eyoung_series(eyoungseriesparam, monkeypatch):
     """
@@ -1944,7 +1965,7 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch):
 
 @pytest.mark.parametrize(
     "eyoungparallelarrayparam",
-    (
+    [
         EyoungParallelArrayParam(
             n=5,
             eyoung_j_in=np.array((205000000000, 20000000000, 117000000000, 0, 0)),
@@ -1966,7 +1987,7 @@ def test_eyoung_series(eyoungseriesparam, monkeypatch):
             expected_a_out=0.70527618095271016,
             expected_poisson_j_perp_out=0.31608714140682664,
         ),
-    ),
+    ],
 )
 def test_eyoung_parallel_array(eyoungparallelarrayparam, monkeypatch):
     """
@@ -1998,11 +2019,11 @@ def test_eyoung_parallel_array(eyoungparallelarrayparam, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "sx, sy, sz, expected",
-    (
+    ("sx", "sy", "sz", "expected"),
+    [
         (0, -3.2e8, 2.4e8, 486621002.42385757),
         (-2.8e8, 0, 2.4e8, 450777106.7833858),
-    ),
+    ],
 )
 def test_sigvm(sx, sy, sz, expected):
     # could not find an example of a use in PROCESS where
@@ -2013,7 +2034,14 @@ def test_sigvm(sx, sy, sz, expected):
 
 
 @pytest.mark.parametrize(
-    "ind_tf_coil, c_tf_total, n_tf_coils, expected_total, expected_total_gj, expected_single",
+    (
+        "ind_tf_coil",
+        "c_tf_total",
+        "n_tf_coils",
+        "expected_total",
+        "expected_total_gj",
+        "expected_single",
+    ),
     [
         (1.0, 2.0, 3, 2.0, 2.0e-9, 2 / 3),
         (0.5, 4.0, 2, 4.0, 4.0e-9, 2.0),

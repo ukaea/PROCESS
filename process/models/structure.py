@@ -41,7 +41,6 @@ class Structure(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-
         # Total weight of the PF coil conductor and its structure
         total_weight_pf = pfv.m_pf_coil_conductor_total + pfv.m_pf_coil_structure_total
 
@@ -146,17 +145,14 @@ class Structure(Model):
             - coldmass (`float`) total mass of cryogenic temp. stuff (kg)
             - gsm (`float`) gravity support for magnets, and shield/blanket (kg)
         """
-
         #  Outer PF coil fence (1990 ITER fit)
         fncmass = 2.1e-11 * ai * ai * r0 * akappa * a
 
         #  Intercoil support between TF coils to react overturning moment
         #  (scaled to 1990 ITER fit)
         aintmass = 1.4e6 * (ai / 2.2e7) * b0 / 4.85e0 * tf_h_width**2 / 50.0e0
-        try:
-            assert aintmass < np.inf
-        except AssertionError:
-            logger.exception("aintmass is inf. Kludging to 1e10.")
+        if np.isinf(aintmass):
+            logger.error("aintmass is inf. Kludging to 1e10.")
             aintmass = 1e10
 
         #  Total mass of coils plus support plus vacuum vessel + cryostat
@@ -167,7 +163,7 @@ class Structure(Model):
         if i_tf_sup == 1:
             coldmass = coldmass + tfmass + aintmass + dewmass
         if i_pf_conductor != 1:
-            coldmass = coldmass + pfmass
+            coldmass += pfmass
 
         #  Coil gravity support mass
         #  Set density (kg/m3) and allowable stress (Pa)

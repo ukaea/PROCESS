@@ -79,7 +79,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "primarycoolantpropertiesparam",
-    (
+    [
         PrimaryCoolantPropertiesParam(
             i_fw_coolant_type="helium",
             temp_fw_coolant_in=573,
@@ -136,7 +136,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             expected_cv_bl=3123.5687263525392,
             expected_visc_fw_coolant=3.5036293160410249e-05,
         ),
-    ),
+    ],
 )
 def test_primary_coolant_properties(
     primarycoolantpropertiesparam, monkeypatch, blanket_library_fixture
@@ -397,7 +397,7 @@ class ComponentHalfHeightParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "componenthalfheightparam",
-    (
+    [
         ComponentHalfHeightParam(
             z_tf_inside_half=8.8182171641274945,
             dz_xpoint_divertor=2.0018838307941582,
@@ -416,7 +416,7 @@ class ComponentHalfHeightParam(NamedTuple):
             dz_divertor=0.62000000000000011,
             expected_half_height=5.9532752487304119,
         ),
-    ),
+    ],
 )
 def test_calculate_blkt_half_height(componenthalfheightparam, blanket_library_fixture):
     """
@@ -472,7 +472,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "applycoveragefactorsparam",
-    (
+    [
         ApplyCoverageFactorsParam(
             a_blkt_outboard_surface=1101.3666396424403,
             a_blkt_outboard_surface_full_coverage=1101.3666396424403,
@@ -496,7 +496,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             expected_volblkt=1182.5433772195902,
             expected_vol_vv=1016.2876250857248,
         ),
-    ),
+    ],
 )
 def test_apply_coverage_factors(
     applycoveragefactorsparam, monkeypatch, blanket_library_fixture
@@ -599,13 +599,13 @@ class DshapedInboardBlktSegmentParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "dshaped_inboard_param",
-    (
+    [
         DshapedInboardBlktSegmentParam(
             dz_blkt_half=8.25,
             n_blkt_inboard_modules_poloidal=7,
             expected_len_blkt_inboard_segment_poloidal=2.3571428571428572,
         ),
-    ),
+    ],
 )
 def test_calculate_dshaped_inboard_blkt_segment_poloidal(
     dshaped_inboard_param, blanket_library_fixture
@@ -633,7 +633,7 @@ class DshapedOutboardBlktSegmentParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "dshaped_outboard_param",
-    (
+    [
         DshapedOutboardBlktSegmentParam(
             n_blkt_outboard_modules_poloidal=8,
             dr_fw_plasma_gap_inboard=0.10000000000000001,
@@ -644,7 +644,7 @@ class DshapedOutboardBlktSegmentParam(NamedTuple):
             f_ster_div_single=0.115,
             expected_len_blkt_outboard_segment_poloidal=2.0597205347177807,
         ),
-    ),
+    ],
 )
 def test_calculate_dshaped_outboard_blkt_segment_poloidal(
     dshaped_outboard_param, blanket_library_fixture
@@ -678,7 +678,7 @@ class EllipticalInboardBlktSegmentParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "elliptical_inboard_param",
-    (
+    [
         EllipticalInboardBlktSegmentParam(
             rmajor=8,
             rminor=2.6666666666666665,
@@ -690,7 +690,7 @@ class EllipticalInboardBlktSegmentParam(NamedTuple):
             f_ster_div_single=0.115,
             expected_len_blkt_inboard_segment_poloidal=1.6252823720672551,
         ),
-    ),
+    ],
 )
 def test_calculate_elliptical_inboard_blkt_segment_poloidal(
     elliptical_inboard_param, blanket_library_fixture
@@ -725,7 +725,7 @@ class EllipticalOutboardBlktSegmentParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "elliptical_outboard_param",
-    (
+    [
         EllipticalOutboardBlktSegmentParam(
             rmajor=8,
             rminor=2.6666666666666665,
@@ -737,7 +737,7 @@ class EllipticalOutboardBlktSegmentParam(NamedTuple):
             f_ster_div_single=0.115,
             expected_len_blkt_outboard_segment_poloidal=1.7853902013340495,
         ),
-    ),
+    ],
 )
 def test_calculate_elliptical_outboard_blkt_segment_poloidal(
     elliptical_outboard_param, blanket_library_fixture
@@ -791,7 +791,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "liquidbreederpropertiesparam",
-    (
+    [
         LiquidBreederPropertiesParam(
             inlet_temp_liq=570,
             outlet_temp_liq=720,
@@ -868,7 +868,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
                 order="F",
             ).transpose(),
         ),
-    ),
+    ],
 )
 def test_liquid_breeder_properties(
     liquidbreederpropertiesparam, monkeypatch, blanket_library_fixture
@@ -999,7 +999,7 @@ class PressureDropParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "pressuredropparam",
-    (
+    [
         PressureDropParam(
             radius_fw_channel=0.0060000000000000001,
             radius_pipe_90_deg_bend=0.018,
@@ -1019,7 +1019,7 @@ class PressureDropParam(NamedTuple):
             label="Inboard first wall",
             expected_pressure_drop_out=36213.58989742931,
         ),
-    ),
+    ],
 )
 def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
     """
@@ -1080,7 +1080,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "liquidbreederpressuredropmhdparam",
-    (
+    [
         LiquidBreederPressureDropMhdParam(
             i_blkt_liquid_breeder_channel_type=0,
             a_bz_liq=0.22481469639955909,
@@ -1161,7 +1161,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             label="Inboard blanket breeder liquid",
             expected_liquid_breeder_pressure_drop_mhd_out=487177576.30010164,
         ),
-    ),
+    ],
 )
 def test_liquid_breeder_pressure_drop_mhd(
     liquidbreederpressuredropmhdparam, monkeypatch, blanket_library_fixture
@@ -1235,7 +1235,7 @@ class CalculateDshapedBlktAreasParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "calculatedshapedblktareasparam",
-    (
+    [
         CalculateDshapedBlktAreasParam(
             r_shld_inboard_inner=1.5,
             dr_shld_inboard=0.4,
@@ -1250,7 +1250,7 @@ class CalculateDshapedBlktAreasParam(NamedTuple):
             expected_a_blkt_outboard_surface=852.24160940262459,
             expected_a_blkt_total_surface=1049.2194687827046,
         ),
-    ),
+    ],
 )
 def test_calculate_dshaped_blkt_areas(
     calculatedshapedblktareasparam, blanket_library_fixture
@@ -1309,7 +1309,7 @@ class CalculateDshapedBlktVolumesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "calculatedshapedblktvolumesparam",
-    (
+    [
         CalculateDshapedBlktVolumesParam(
             r_shld_inboard_inner=1.5,
             dr_shld_inboard=0.4,
@@ -1326,7 +1326,7 @@ class CalculateDshapedBlktVolumesParam(NamedTuple):
             expected_vol_blkt_outboard=869.2500537130913,
             expected_vol_blkt_total=1020.1972975327737,
         ),
-    ),
+    ],
 )
 def test_calculate_dshaped_blkt_volumes(
     calculatedshapedblktvolumesparam, blanket_library_fixture
@@ -1386,7 +1386,7 @@ class CalculateEllipticalBlktAreasParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "calculateellipticalblktareasparam",
-    (
+    [
         CalculateEllipticalBlktAreasParam(
             rmajor=8,
             rminor=2.6666666666666665,
@@ -1402,7 +1402,7 @@ class CalculateEllipticalBlktAreasParam(NamedTuple):
             expected_a_blkt_outboard_surface=1101.3666396424403,
             expected_a_blkt_total_surface=1766.3354109399943,
         ),
-    ),
+    ],
 )
 def test_calculate_elliptical_blkt_areas(
     calculateellipticalblktareasparam, blanket_library_fixture
@@ -1462,7 +1462,7 @@ class CalculateEllipticalBlktVolumesParam(NamedTuple):
 
 @pytest.mark.parametrize(
     "calculateellipticalblktvolumesparam",
-    (
+    [
         CalculateEllipticalBlktVolumesParam(
             rmajor=8,
             rminor=2.6666666666666665,
@@ -1479,7 +1479,7 @@ class CalculateEllipticalBlktVolumesParam(NamedTuple):
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_vol_blkt_total=1336.207205897842,
         ),
-    ),
+    ],
 )
 def test_calculate_elliptical_blkt_volumes(
     calculateellipticalblktvolumesparam, blanket_library_fixture

@@ -3,7 +3,8 @@
 File for reading IN.DATs
 Version 2 (mainly for use with IN.DAT created from UI)
 
-Notes:
+Notes
+-----
     + 24/11/2021: Global dictionary variables moved within the functions
                 to avoid cyclic dependencies. This is because the dicts
                 generation script imports, and inspects, process.
@@ -28,13 +29,13 @@ ioptimz_des = {
 def fortran_python_scientific(var_value):
     """Convert FORTRAN scientific notation to Python notation
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      var_value:
          variable value
 
-     Returns
-     -------
+    Returns
+    -------
     :
          value with 'd/D' notation swapped for 'e/E' notation
     """
@@ -44,13 +45,13 @@ def fortran_python_scientific(var_value):
 def remove_empty_lines(lines):
     """Function to remove empty lines from list.
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      lines:
          list of lines (type=list)
 
-     Returns
-     -------
+    Returns
+    -------
     :
          list of lines with empty lines removed (type=list)
     """
@@ -60,13 +61,13 @@ def remove_empty_lines(lines):
 def is_title(line):
     """Function to determine if line is title line
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      line:
          line from IN.DAT
 
-     Returns
-     -------
+    Returns
+    -------
     :
          True/False if line is a title or header.
     """
@@ -76,13 +77,13 @@ def is_title(line):
 def is_comment(line):
     """Function to determine if line is a commented line
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      line:
          line from IN.DAT
 
-     Returns
-     -------
+    Returns
+    -------
     :
          True/False if line is a commented line
     """
@@ -92,13 +93,13 @@ def is_comment(line):
 def is_iteration_variable(name):
     """Function to determine if item is an iteration variable
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      name:
          Name of the variable
 
-     Returns
-     -------
+    Returns
+    -------
     :
          True/False if 'ixc' is in name
     """
@@ -108,13 +109,13 @@ def is_iteration_variable(name):
 def is_constraint_equation(name):
     """Function to determine if item is constraint equation
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      name:
          Name of the variable
 
-     Returns
-     -------
+    Returns
+    -------
     :
          True/False if 'icc' is in name
     """
@@ -124,13 +125,13 @@ def is_constraint_equation(name):
 def is_bound(name):
     """Function to determine if item is a bound
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      name:
          Name of the variable
 
-     Returns
-     -------
+    Returns
+    -------
     :
          True/False if 'bound' is in name
     """
@@ -140,13 +141,13 @@ def is_bound(name):
 def is_array(name):
     """Function to determine if item is an array
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      name:
          Name of the variable
 
-     Returns
-     -------
+    Returns
+    -------
     :
          True/False if name is of an array
     """
@@ -165,17 +166,16 @@ def is_array(name):
 def find_line_type(line):
     """Function to find line type
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      line:
          Line to find type of
 
-     Returns
-     -------
+    Returns
+    -------
     :
          Return string describing the line type
     """
-
     # Split variable name from line
     name = line.split("=")[0].strip("")
 
@@ -210,13 +210,13 @@ def find_line_type(line):
 def find_parameter_group(name):
     """Function to find the module which the parameter belongs to.
 
-     Parameters
-     ----------
+    Parameters
+    ----------
      name:
          Parameter name
 
-     Returns
-     -------
+    Returns
+    -------
     :
          Return the module the parameter belongs to
     """
@@ -241,7 +241,6 @@ def write_title(title, out_file):
         Output file for new IN.DAT
 
     """
-
     out_file.write("\n")
     # Insert title name into line of fixed width
     formatted_title = "*" + title.center(50, "-") + "*\n"
@@ -301,7 +300,6 @@ def write_constraint_equations(data, out_file):
         Output file for new IN.DAT
 
     """
-
     # Header
     write_title("Constraint Equations", out_file)
 
@@ -377,7 +375,6 @@ def write_iteration_variables(data, out_file):
     out_file:
         Output file for new IN.DAT
     """
-
     # Header
     write_title("Iteration Variables", out_file)
 
@@ -547,20 +544,19 @@ def write_parameters(data, out_file):
             if any(var_name in parameter for var_name in filter_list):
                 # No justification formatting if parameter is in filter list
                 parameter_line = f"{parameter} = {info}\n"
+            # All other parameters
+            # Left justification set to 8 to allow easier reading
+            # info can currently be either a value or a dict
+            elif (
+                type(info) is dict
+                and "value" in info
+                and (type(info.get("comment")) is str)
+            ):
+                parameter_line = (
+                    f"{parameter.ljust(8)} = {info['value']} * {info['comment']}\n"
+                )
             else:
-                # All other parameters
-                # Left justification set to 8 to allow easier reading
-                # info can currently be either a value or a dict
-                if (
-                    type(info) is dict
-                    and "value" in info
-                    and (type(info.get("comment")) is str)
-                ):
-                    parameter_line = (
-                        f"{parameter.ljust(8)} = {info['value']} * {info['comment']}\n"
-                    )
-                else:
-                    parameter_line = f"{parameter.ljust(8)} = {info}\n"
+                parameter_line = f"{parameter.ljust(8)} = {info}\n"
 
             # Finally write the line
             out_file.write(parameter_line)
@@ -577,7 +573,6 @@ def add_iteration_variable(data, variable_number):
         Iteration variable number to add
 
     """
-
     # Check the variable number is not already in the iteration variable list
     if variable_number not in data["ixc"].value:
         data["ixc"].value.append(variable_number)
@@ -598,7 +593,6 @@ def remove_iteration_variable(data, variable_number):
         Iteration variable number to remove
 
     """
-
     # Check the variable is in the iteration variable list
     if variable_number in data["ixc"].value:
         data["ixc"].value.remove(variable_number)
@@ -618,7 +612,6 @@ def add_constraint_equation(data, equation_number):
         Constraint equation number to add
 
     """
-
     # Check the constraint is not already in the constraint equation list
     if equation_number not in data["icc"].value:
         data["icc"].value.append(equation_number)
@@ -640,7 +633,6 @@ def remove_constraint_equation(data, equation_number):
         Constraint equation number to remove
 
     """
-
     # Check the constraint is in
     if equation_number in data["icc"].value:
         data["icc"].value.remove(equation_number)
@@ -711,7 +703,6 @@ def remove_parameter(data, parameter_name):
         Name of the parameter to remove
 
     """
-
     # Check that the parameter exists in the data dictionary
     if parameter_name in data:
         del data[parameter_name]
@@ -736,7 +727,6 @@ def change_array(data, name, array_id, array_val):
     array_val:
         generic array value
     """
-
     data[name].value[array_id] = array_val
     if isinstance(data[name].value[array_id], str):
         tmp = list(data[name].value.split(","))
@@ -764,7 +754,6 @@ def add_bound(data, bound, bound_type, bound_value):
         New value of the bound
 
     """
-
     # Put bound type into lower cases for consistency
     bound_type = bound_type.lower()
 
@@ -798,7 +787,6 @@ def remove_bound(data, bound, bound_type):
         States whether bound is upper or lower bound
 
     """
-
     # use local variable for cleanliness
     bounds = data["bounds"].value
 
@@ -912,7 +900,6 @@ def variable_constraint_type_check(item_number, var_type):
     :
         Formatted item_number
     """
-
     # Check if item is in string format
     if isinstance(item_number, str):
         # Try evaluate and convert to an integer. Warning if number is rounded
@@ -979,12 +966,11 @@ def variable_bound_check(bound_number, bound_type):
     :
          Formatted bound number and bound type
     """
-
     # put bound type into lower case for consistency
     bound_type = bound_type.lower()
 
     # check if bound is one of the allowed values if not warn user
-    if bound_type not in ["l", "u", "upper", "lower"]:
+    if bound_type not in {"l", "u", "upper", "lower"}:
         print(
             f"Bound type '{bound_type}' not recognised. Must be one of "
             "['u', 'l', 'U', 'L', 'lower', 'upper', 'LOWER', 'UPPER']"
@@ -992,7 +978,7 @@ def variable_bound_check(bound_number, bound_type):
 
     # if bound is given as full word shorten for consistency for dictionary
     # keys
-    elif bound_type in ["upper", "lower"]:
+    elif bound_type in {"upper", "lower"}:
         if bound_type == "upper":
             bound_type = "u"
         elif bound_type == "lower":
@@ -1055,6 +1041,9 @@ class INVariable:
             and self.parameter_group == value.parameter_group
         )
 
+    def __hash__(self):
+        return hash((self.name, self.value, self.v_type, self.parameter_group))
+
     def __repr__(self):
         return (
             f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, v_type={self.v_type!r}, "
@@ -1088,7 +1077,6 @@ class InDat:
         start_line:
             Line to start reading from
         """
-
         self.filename = filename
         self.start_line = start_line
 
@@ -1106,7 +1094,6 @@ class InDat:
         """Function to read in 'self.filename' and put data into dictionary
         'self.data'
         """
-
         # Read in IN.DAT
         with open(self.filename) as indat:
             self.in_dat_lines = indat.readlines()
@@ -1124,7 +1111,7 @@ class InDat:
             line_type = find_line_type(l_line)
 
             # Ignore title, header and commented lines
-            if line_type != "Title" and line_type != "Comment":
+            if line_type not in {"Title", "Comment"}:
                 try:
                     # for non-title lines process line and store data.
                     self.process_line(line_type, l_line)
@@ -1152,7 +1139,6 @@ class InDat:
             Line from IN.DAT to process
 
         """
-
         # Load dicts from dicts JSON file
         dicts = get_dicts()
 
@@ -1290,7 +1276,6 @@ class InDat:
             Line from IN.DAT to process
 
         """
-
         # Remove comment from line to make things easier
         no_comment_line = line.split("*")[0].split("=")
 
@@ -1340,7 +1325,6 @@ class InDat:
             Line from IN.DAT to process
 
         """
-
         # Remove comment from line to make things easier
         no_comment_line = line.split("*")[0].split("=")
 
@@ -1388,7 +1372,6 @@ class InDat:
             Line from IN.DAT to process
 
         """
-
         # Initialise bound type
         bound_type = None
 
@@ -1435,11 +1418,6 @@ class InDat:
             Line from IN.DAT to process
         empty_array:
             Default array for this array name
-
-        Returns
-        -------
-        type
-            nothing
         """
         # TODO This is a mess after the Fortran module variable
         # re-initialisation work. It is hard to see how this can be improved
@@ -1542,7 +1520,6 @@ class InDat:
             Iteration variable number to add
 
         """
-
         # format iteration variable number
         variable_number = variable_constraint_type_check(
             variable_number, "iteration variable"
@@ -1559,7 +1536,6 @@ class InDat:
             Iteration variable number to remove
 
         """
-
         # format iteration variable number
         variable_number = variable_constraint_type_check(
             variable_number, "iteration variable"
@@ -1576,7 +1552,6 @@ class InDat:
             Constraint equation number to add
 
         """
-
         # format constraint equation number
         equation_number = variable_constraint_type_check(
             equation_number, "constraint equation"
@@ -1595,7 +1570,6 @@ class InDat:
             Constraint equation number to remove
 
         """
-
         # format constraint equation number
         equation_number = variable_constraint_type_check(
             equation_number, "constraint equation"
@@ -1615,7 +1589,6 @@ class InDat:
             Value of parameter to add/change
 
         """
-
         # add/change parameter to/in IN.DAT data dictionary
         add_parameter(self.data, parameter_name, parameter_value)
 
@@ -1631,7 +1604,6 @@ class InDat:
         array_value:
             value to change array entry to
         """
-
         # change generic array value in IN.DAT data dictionary
         change_array(self.data, array_name, array_index, array_value)
 
@@ -1644,7 +1616,6 @@ class InDat:
             Name of parameter to remove
 
         """
-
         # remove parameter from IN.DAT data dictionary
         remove_parameter(self.data, parameter_name)
 
@@ -1661,7 +1632,6 @@ class InDat:
             Value of bound to add/change
 
         """
-
         # format bound number and bound type
         bound, bound_type = variable_bound_check(bound, bound_type)
 
@@ -1679,7 +1649,6 @@ class InDat:
             States whether bound is upper or lower bound
 
         """
-
         # format bound number and bound type
         bound, bound_type = variable_bound_check(bound, bound_type)
 
@@ -1694,7 +1663,6 @@ class InDat:
         output_filename:
              (Default value = "new_IN.DAT")
         """
-
         # create and open output file
         with open(output_filename, "w") as output:
             # Write Header
