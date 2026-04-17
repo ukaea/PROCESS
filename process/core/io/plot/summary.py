@@ -14734,23 +14734,23 @@ def main_plot(
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CROSS_CONDUCTOR
         ):
-            ax20 = figs[24].add_subplot(325, aspect="equal")
+            ax20 = figs[25].add_subplot(325, aspect="equal")
             ax20.set_position([0.025, 0.5, 0.4, 0.4])
-            plot_tf_croco_turn(ax20, figs[24], m_file, scan)
+            plot_tf_croco_turn(ax20, figs[25], m_file, scan)
         elif (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
         ):
             # TF coil turn structure
-            ax20 = figs[24].add_subplot(325, aspect="equal")
+            ax20 = figs[25].add_subplot(325, aspect="equal")
             ax20.set_position([0.025, 0.5, 0.4, 0.4])
-            plot_tf_cable_in_conduit_turn(ax20, figs[24], m_file, scan)
+            plot_tf_cable_in_conduit_turn(ax20, figs[25], m_file, scan)
 
         if (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CROSS_CONDUCTOR
         ):
-            plot_205 = figs[24].add_subplot(223, aspect="equal")
+            plot_205 = figs[25].add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_corc_cable_geometry(
                 plot_205,
@@ -14770,9 +14770,9 @@ def main_plot(
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
         ):
-            plot_205 = figs[24].add_subplot(223, aspect="equal")
+            plot_205 = figs[25].add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-            plot_cable_in_conduit_cable(plot_205, figs[24], m_file, scan)
+            plot_cable_in_conduit_cable(plot_205, figs[25], m_file, scan)
     else:
         ax19 = figs[24].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
