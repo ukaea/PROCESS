@@ -64,7 +64,7 @@ class SuperconductingTFWPShapeType(IntEnum):
     @DynamicClassAttribute
     def full_name(self):
         """Return the full name for this WP geometry type."""
-        return self._full_name_
+        return self.name.title().replace("_", " ")
 
 
 @dataclass
@@ -1036,7 +1036,7 @@ class SuperconductingTFCoil(TFCoil):
         dr_tf_wp_no_insulation = dr_tf_wp_with_insulation - 2.0e0 * (
             dx_tf_wp_insulation + dx_tf_wp_insertion_gap
         )
-
+i_tf_wp_geom = SuperconductingTFWPShapeType(i_tf_wp_geom)
         # Rectangular WP
         # --------------
         if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
