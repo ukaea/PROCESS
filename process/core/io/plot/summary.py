@@ -12876,17 +12876,7 @@ def plot_larmor_radius_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
 
 
 def plot_debye_length_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
-    """Plot the Debye length profile on the given axis.
-
-    Parameters
-    ----------
-    axis :
-
-    mfile_data :
-
-    scan :
-
-    """
+    """Plot the Debye length profile on the given axis."""
     len_plasma_debye_electron_profile = [
         mfile_data.data[f"len_plasma_debye_electron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
@@ -12914,18 +12904,8 @@ def plot_debye_length_profile(axis: plt.Axes, mfile_data: MFile, scan: int):
     axis.legend()
 
 
-def plot_velocity_profile(axis, mfile_data, scan):
-    """Plot the electron thermal velocity profile on the given axis.
-
-    Parameters
-    ----------
-    axis :
-
-    mfile_data :
-
-    scan :
-
-    """
+def plot_velocity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+    """Plot the electron thermal velocity profile on the given axis."""
     vel_plasma_electron_profile = [
         mfile_data.data[f"vel_plasma_electron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
@@ -12990,18 +12970,10 @@ def plot_velocity_profile(axis, mfile_data, scan):
     axis.legend()
 
 
-def plot_electron_frequency_profile(axis, mfile_data, scan):
-    """Plot the electron thermal frequency profile on the given axis.
-
-    Parameters
-    ----------
-    axis :
-
-    mfile_data :
-
-    scan :
-
-    """
+def plot_electron_frequency_profile(
+    axis: plt.Axes, mfile_data: MFile, scan: int
+) -> None:
+    """Plot the electron thermal frequency profile on the given axis."""
     freq_plasma_electron_profile = [
         mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
@@ -13094,7 +13066,8 @@ def plot_electron_frequency_profile(axis, mfile_data, scan):
     axis.legend()
 
 
-def plot_ion_frequency_profile(axis, mfile_data, scan):
+def plot_ion_frequency_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+    """Plot the ion thermal frequency profile on the given axis."""
     freq_plasma_larmor_toroidal_deuteron_profile = [
         mfile_data.data[f"freq_plasma_larmor_toroidal_deuteron_profile{i}"].get_scan(
             scan
@@ -13133,18 +13106,8 @@ def plot_ion_frequency_profile(axis, mfile_data, scan):
     axis.legend()
 
 
-def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
-    """Plot the plasma coloumb logarithms on the given axis.
-
-    Parameters
-    ----------
-    axis :
-
-    mfile_data :
-
-    scan :
-
-    """
+def plot_plasma_coloumb_logarithms(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+    """Plot the plasma coloumb logarithms on the given axis."""
     plasma_coulomb_log_electron_electron_profile = [
         mfile_data.data[f"plasma_coulomb_log_electron_electron_profile{i}"].get_scan(
             scan
@@ -13217,6 +13180,263 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
     )
 
     axis.set_ylabel("Coulomb Logarithm")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
+def plot_collision_time_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+    """Plot the plasma collision times on the given axis."""
+    t_plasma_electron_electron_collision_profile = [
+        mfile_data.data[f"t_plasma_electron_electron_collision_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    t_plasma_electron_deuteron_collision_profile = [
+        mfile_data.data[f"t_plasma_electron_deuteron_collision_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    t_plasma_electron_triton_collision_profile = [
+        mfile_data.data[f"t_plasma_electron_triton_collision_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    t_plasma_electron_alpha_thermal_collision_profile = [
+        mfile_data.data[
+            f"t_plasma_electron_alpha_thermal_collision_profile{i}"
+        ].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_electron_collision_profile)),
+        t_plasma_electron_electron_collision_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$\tau_{e-e}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_deuteron_collision_profile)),
+        t_plasma_electron_deuteron_collision_profile,
+        color="pink",
+        linestyle="-",
+        label=r"$\tau_{e-D}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_triton_collision_profile)),
+        t_plasma_electron_triton_collision_profile,
+        color="green",
+        linestyle="-",
+        label=r"$\tau_{e-T}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_alpha_thermal_collision_profile)),
+        t_plasma_electron_alpha_thermal_collision_profile,
+        color="red",
+        linestyle="-",
+        label=r"$\tau_{e-\alpha,thermal}$",
+    )
+
+    axis.set_yscale("log")
+    axis.set_ylabel("Collision Time [s]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
+def plot_collision_frequency_profile(
+    axis: plt.Axes, mfile_data: MFile, scan: int
+) -> None:
+    """Plot the plasma collision frequencies on the given axis."""
+    freq_plasma_electron_electron_collision_profile = [
+        mfile_data.data[f"freq_plasma_electron_electron_collision_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    freq_plasma_electron_deuteron_collision_profile = [
+        mfile_data.data[f"freq_plasma_electron_deuteron_collision_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    freq_plasma_electron_triton_collision_profile = [
+        mfile_data.data[f"freq_plasma_electron_triton_collision_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    freq_plasma_electron_alpha_thermal_collision_profile = [
+        mfile_data.data[
+            f"freq_plasma_electron_alpha_thermal_collision_profile{i}"
+        ].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(freq_plasma_electron_electron_collision_profile)),
+        freq_plasma_electron_electron_collision_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$\nu_{e-e}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(freq_plasma_electron_deuteron_collision_profile)),
+        freq_plasma_electron_deuteron_collision_profile,
+        color="pink",
+        linestyle="-",
+        label=r"$\nu_{e-D}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(freq_plasma_electron_triton_collision_profile)),
+        freq_plasma_electron_triton_collision_profile,
+        color="green",
+        linestyle="-",
+        label=r"$\nu_{e-T}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(freq_plasma_electron_alpha_thermal_collision_profile)),
+        freq_plasma_electron_alpha_thermal_collision_profile,
+        color="red",
+        linestyle="-",
+        label=r"$\nu_{e-\alpha,thermal}$",
+    )
+    axis.set_yscale("log")
+    axis.set_ylabel("Collision Frequency [Hz]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
+def plot_mean_free_path_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+    """Plot the plasma mean free path on the given axis."""
+    len_plasma_electron_electron_mean_free_path_profile = [
+        mfile_data.data[
+            f"len_plasma_electron_electron_mean_free_path_profile{i}"
+        ].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    len_plasma_electron_deuteron_mean_free_path_profile = [
+        mfile_data.data[
+            f"len_plasma_electron_deuteron_mean_free_path_profile{i}"
+        ].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    len_plasma_electron_triton_mean_free_path_profile = [
+        mfile_data.data[
+            f"len_plasma_electron_triton_mean_free_path_profile{i}"
+        ].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    len_plasma_electron_alpha_thermal_mean_free_path_profile = [
+        mfile_data.data[
+            f"len_plasma_electron_alpha_thermal_mean_free_path_profile{i}"
+        ].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(len_plasma_electron_electron_mean_free_path_profile)),
+        len_plasma_electron_electron_mean_free_path_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$\lambda_{mfp,e-e}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(len_plasma_electron_deuteron_mean_free_path_profile)),
+        len_plasma_electron_deuteron_mean_free_path_profile,
+        color="pink",
+        linestyle="-",
+        label=r"$\lambda_{mfp,e-D}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(len_plasma_electron_triton_mean_free_path_profile)),
+        len_plasma_electron_triton_mean_free_path_profile,
+        color="green",
+        linestyle="-",
+        label=r"$\lambda_{mfp,e-T}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(len_plasma_electron_alpha_thermal_mean_free_path_profile)),
+        len_plasma_electron_alpha_thermal_mean_free_path_profile,
+        color="red",
+        linestyle="-",
+        label=r"$\lambda_{mfp,e-\alpha,thermal}$",
+    )
+    axis.set_yscale("log")
+    axis.set_ylabel("Mean Free Path [m]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
+def plot_ion_slowing_down_time_profile(
+    axis: plt.Axes, mfile_data: MFile, scan: int
+) -> None:
+    """Plot the plasma Spitzer slowing down time on the given axis."""
+    t_plasma_electron_alpha_spitzer_slow_profile = [
+        mfile_data.data[f"t_plasma_electron_alpha_spitzer_slow_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(t_plasma_electron_alpha_spitzer_slow_profile)),
+        t_plasma_electron_alpha_spitzer_slow_profile,
+        color="red",
+        linestyle="-",
+        label=r"$\tau_{e-\alpha,Spitzer}$",
+    )
+
+    axis.set_yscale("log")
+    axis.set_ylabel("Spitzer Slowing Down Time [s]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
+def plot_resistivity_profile(axis: plt.Axes, mfile_data: MFile, scan: int) -> None:
+    """Plot the plasma resistivity on the given axis."""
+    res_plasma_fuel_spitzer_profile = [
+        mfile_data.data[f"res_plasma_fuel_spitzer_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(res_plasma_fuel_spitzer_profile)),
+        res_plasma_fuel_spitzer_profile,
+        color="red",
+        linestyle="-",
+        label=r"$\eta_{Spitzer-fuel}$",
+    )
+
+    axis.set_yscale("log")
+    axis.set_ylabel("Resistivity [Ohm m]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.minorticks_on()
@@ -13610,6 +13830,215 @@ def plot_blkt_structure(
     )
 
 
+def plot_detailed_plasma_parameters(axis: plt.Axes, fig, mfile: MFile, scan: int):
+    """Function to plot detailed plasma parameters from physics data.
+
+    Parameters
+    ----------
+    axis : plt.Axes
+        Axis object to plot to
+    fig : plt.Figure
+        Figure object for text placement
+    mfile : MFile
+        MFILE data object
+    scan : int
+        Scan number to use
+    """
+    textstr_debye = (
+        f"$\\mathbf{{Debye \\ Lengths:}}$\n\n"
+        f"$\\langle\\lambda_{{Debye,e}}\\rangle$: {mfile.get('len_plasma_debye_electron_vol_avg', scan=scan):.4e} m"
+    )
+
+    textstr_larmor = (
+        f"$\\mathbf{{Larmor \\ Radii:}}$\n\n"
+        f"$\\langle\\rho_{{Larmor,toroidal,D}}\\rangle$: {mfile.get('radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg', scan=scan):.4e} m\n"
+        f"$\\langle\\rho_{{Larmor,toroidal,T}}\\rangle$: {mfile.get('radius_plasma_triton_toroidal_larmor_isotropic_vol_avg', scan=scan):.4e} m"
+    )
+
+    textstr_velocities = (
+        f"$\\mathbf{{Velocities:}}$\n\n"
+        f"$\\langle v_{{e}}\\rangle$: {mfile.get('vel_plasma_electron_vol_avg', scan=scan):.4e} m/s\n"
+        f"$\\langle v_{{D}}\\rangle$: {mfile.get('vel_plasma_deuteron_vol_avg', scan=scan):.4e} m/s\n"
+        f"$\\langle v_{{T}}\\rangle$: {mfile.get('vel_plasma_triton_vol_avg', scan=scan):.4e} m/s\n"
+        f"$\\langle v_{{\\alpha,thermal}}\\rangle$: {mfile.get('vel_plasma_alpha_thermal_vol_avg', scan=scan):.4e} m/s\n"
+        f"$v_{{\\alpha,birth}}$: {mfile.get('vel_plasma_alpha_birth', scan=scan):.4e} m/s"
+    )
+
+    textstr_frequencies = (
+        f"$\\mathbf{{Frequencies:}}$\n\n"
+        f"$\\langle\\omega_{{p,e}}\\rangle$: {mfile.get('freq_plasma_electron_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle f_{{Larmor,toroidal,e}}\\rangle$: {mfile.get('freq_plasma_larmor_toroidal_electron_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle f_{{Larmor,toroidal,D}}\\rangle$: {mfile.get('freq_plasma_larmor_toroidal_deuteron_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle f_{{Larmor,toroidal,T}}\\rangle$: {mfile.get('freq_plasma_larmor_toroidal_triton_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle\\omega_{{UH,e}}\\rangle$: {mfile.get('freq_plasma_upper_hybrid_vol_avg', scan=scan):.4e} Hz"
+    )
+
+    textstr_coulomb = (
+        f"$\\mathbf{{Coulomb \\ Logarithms:}}$\n\n"
+        f"$\\langle\\ln \\Lambda_{{e-e}}\\rangle$: {mfile.get('plasma_coulomb_log_electron_electron_vol_avg', scan=scan):.4f}\n"
+        f"$\\langle\\ln \\Lambda_{{e-D}}\\rangle$: {mfile.get('plasma_coulomb_log_electron_deuteron_vol_avg', scan=scan):.4f}\n"
+        f"$\\langle\\ln \\Lambda_{{e-T}}\\rangle$: {mfile.get('plasma_coulomb_log_electron_triton_vol_avg', scan=scan):.4f}\n"
+        f"$\\langle\\ln \\Lambda_{{D-T}}\\rangle$: {mfile.get('plasma_coulomb_log_deuteron_triton_vol_avg', scan=scan):.4f}\n"
+        f"$\\langle\\ln \\Lambda_{{e-\\alpha}}\\rangle$: {mfile.get('plasma_coulomb_log_electron_alpha_thermal_vol_avg', scan=scan):.4f}"
+    )
+
+    textstr_collision_times = (
+        f"$\\mathbf{{Collision \\ Times:}}$\n\n"
+        f"$\\langle\\tau_{{e-e}}\\rangle$: {mfile.get('t_plasma_electron_electron_collision_vol_avg', scan=scan):.4e} s\n"
+        f"$\\langle\\tau_{{e-D}}\\rangle$: {mfile.get('t_plasma_electron_deuteron_collision_vol_avg', scan=scan):.4e} s\n"
+        f"$\\langle\\tau_{{e-T}}\\rangle$: {mfile.get('t_plasma_electron_triton_collision_vol_avg', scan=scan):.4e} s\n"
+        f"$\\langle\\tau_{{e-\\alpha}}\\rangle$: {mfile.get('t_plasma_electron_alpha_thermal_collision_vol_avg', scan=scan):.4e} s"
+    )
+
+    textstr_collision_freq = (
+        f"$\\mathbf{{Collision \\ Frequencies:}}$\n\n"
+        f"$\\langle\\nu_{{e-e}}\\rangle$: {mfile.get('freq_plasma_electron_electron_collision_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle\\nu_{{e-D}}\\rangle$: {mfile.get('freq_plasma_electron_deuteron_collision_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle\\nu_{{e-T}}\\rangle$: {mfile.get('freq_plasma_electron_triton_collision_vol_avg', scan=scan):.4e} Hz\n"
+        f"$\\langle\\nu_{{e-\\alpha}}\\rangle$: {mfile.get('freq_plasma_electron_alpha_thermal_collision_vol_avg', scan=scan):.4e} Hz"
+    )
+
+    textstr_mfp = (
+        f"$\\mathbf{{Mean \\ Free \\ Paths:}}$\n\n"
+        f"$\\langle\\lambda_{{mfp,e-e}}\\rangle$: {mfile.get('len_plasma_electron_electron_mean_free_path_vol_avg', scan=scan):.4e} m\n"
+        f"$\\langle\\lambda_{{mfp,e-D}}\\rangle$: {mfile.get('len_plasma_electron_deuteron_mean_free_path_vol_avg', scan=scan):.4e} m\n"
+        f"$\\langle\\lambda_{{mfp,e-T}}\\rangle$: {mfile.get('len_plasma_electron_triton_mean_free_path_vol_avg', scan=scan):.4e} m\n"
+        f"$\\langle\\lambda_{{mfp,e-\\alpha}}\\rangle$: {mfile.get('len_plasma_electron_alpha_thermal_mean_free_path_vol_avg', scan=scan):.4e} m"
+    )
+
+    textstr_spitzer = (
+        f"$\\mathbf{{Spitzer \\ Slowing \\ Down:}}$\n\n"
+        f"$\\langle\\tau_{{e-\\alpha,Spitzer}}\\rangle$: {mfile.get('t_plasma_electron_alpha_spitzer_slow_vol_avg', scan=scan):.4e} s"
+    )
+
+    textstr_resistivity = (
+        f"$\\mathbf{{Resistivities:}}$\n\n"
+        f"$\\langle\\eta_{{Spitzer}}\\rangle$: {mfile.get('res_plasma_fuel_spitzer_vol_avg', scan=scan):.4e} $\\Omega\\mathrm{{m}}$"
+    )
+
+    light_yellow_box = {
+        "boxstyle": "round",
+        "facecolor": "lightyellow",
+        "alpha": 1.0,
+        "linewidth": 2,
+    }
+
+    axis.text(
+        0.05,
+        0.45,
+        textstr_debye,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_yellow_box,
+    )
+
+    axis.text(
+        0.25,
+        0.45,
+        textstr_larmor,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_yellow_box,
+    )
+
+    axis.text(
+        0.45,
+        0.45,
+        textstr_velocities,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_yellow_box,
+    )
+
+    light_cyan_box = {
+        "boxstyle": "round",
+        "facecolor": "lightcyan",
+        "alpha": 1.0,
+        "linewidth": 2,
+    }
+
+    axis.text(
+        0.05,
+        0.31,
+        textstr_frequencies,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_cyan_box,
+    )
+
+    axis.text(
+        0.25,
+        0.31,
+        textstr_coulomb,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_cyan_box,
+    )
+
+    axis.text(
+        0.45,
+        0.31,
+        textstr_collision_times,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_cyan_box,
+    )
+
+    light_green_box = {
+        "boxstyle": "round",
+        "facecolor": "lightgreen",
+        "alpha": 1.0,
+        "linewidth": 2,
+    }
+
+    axis.text(
+        0.05,
+        0.17,
+        textstr_collision_freq,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_green_box,
+    )
+
+    axis.text(
+        0.25,
+        0.17,
+        textstr_mfp,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_green_box,
+    )
+
+    axis.text(
+        0.45,
+        0.17,
+        textstr_spitzer + "\n" + textstr_resistivity,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox=light_green_box,
+    )
+
+    axis.axis("off")
+
+
 def main_plot(
     figs: list[Axes],
     m_file: MFile,
@@ -13797,16 +14226,32 @@ def main_plot(
     plot_debye_length_profile(figs[17].add_subplot(232), m_file, scan)
     plot_velocity_profile(figs[17].add_subplot(233), m_file, scan)
     plot_plasma_coloumb_logarithms(figs[17].add_subplot(231), m_file, scan)
+    plot_collision_time_profile(figs[17].add_subplot(234), m_file, scan)
+    plot_collision_frequency_profile(figs[17].add_subplot(235), m_file, scan)
+    plot_mean_free_path_profile(figs[17].add_subplot(236), m_file, scan)
 
-    plot_electron_frequency_profile(figs[17].add_subplot(212), m_file, scan)
+    plot_ion_slowing_down_time_profile(figs[18].add_subplot(231), m_file, scan)
 
-    plot_ion_frequency_profile(figs[18].add_subplot(311), m_file, scan)
+    plot_resistivity_profile(figs[18].add_subplot(232), m_file, scan)
 
-    plot_larmor_radius_profile(figs[18].add_subplot(313), m_file, scan)
+    plot_detailed_plasma_parameters(
+        figs[18].add_subplot(233), fig=figs[18], mfile=m_file, scan=scan
+    )
+
+    ax_electron_freq = figs[19].add_subplot(211)
+    plot_electron_frequency_profile(ax_electron_freq, m_file, scan)
+
+    ax_ion_freq = figs[19].add_subplot(413, sharex=ax_electron_freq)
+    plot_ion_frequency_profile(ax_ion_freq, m_file, scan)
+
+    ax_larmor = figs[19].add_subplot(414, sharex=ax_electron_freq)
+    plot_larmor_radius_profile(ax_larmor, m_file, scan)
+
+    figs[19].subplots_adjust(hspace=0.5)
 
     # Plot poloidal cross-section
     poloidal_cross_section(
-        figs[19].add_subplot(121, aspect="equal"),
+        figs[20].add_subplot(121, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -13816,7 +14261,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        figs[19].add_subplot(122, aspect="equal"),
+        figs[20].add_subplot(122, aspect="equal"),
         m_file,
         scan,
         demo_ranges,
@@ -13824,27 +14269,27 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = figs[19].add_subplot(222)
+    ax17 = figs[20].add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file, scan, colour_scheme)
 
     plot_full_machine_poloidal_cross_section(
-        figs[20].add_subplot(111, aspect="equal"),
+        figs[21].add_subplot(111, aspect="equal"),
         m_file,
         scan,
         radial_build,
         colour_scheme,
     )
 
-    ax18 = figs[21].add_subplot(211)
+    ax18 = figs[22].add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = figs[22].add_subplot(211)
+    ax185 = figs[23].add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = figs[22].add_subplot(212)
+    ax18b = figs[23].add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
@@ -13852,62 +14297,62 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file.get("i_tf_sup", scan=scan) == 1:
         # TF coil with WP
-        ax19 = figs[23].add_subplot(221, aspect="equal")
+        ax19 = figs[24].add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file, scan, figs[23])
+        plot_superconducting_tf_wp(ax19, m_file, scan, figs[24])
 
         # TF coil turn structure
-        ax20 = figs[24].add_subplot(325, aspect="equal")
+        ax20 = figs[25].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[24], m_file, scan)
-        plot_205 = figs[24].add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, figs[25], m_file, scan)
+        plot_205 = figs[25].add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, figs[24], m_file, scan)
+        plot_cable_in_conduit_cable(plot_205, figs[25], m_file, scan)
     else:
-        ax19 = figs[23].add_subplot(211, aspect="equal")
+        ax19 = figs[24].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file, scan, figs[23])
-        plot_resistive_tf_info(ax19, m_file, scan, figs[23])
+        plot_resistive_tf_wp(ax19, m_file, scan, figs[24])
+        plot_resistive_tf_info(ax19, m_file, scan, figs[24])
     plot_tf_coil_structure(
-        figs[25].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
+        figs[26].add_subplot(111, aspect="equal"), m_file, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(figs[26], m_file, scan)
+    plot_plasma_outboard_toroidal_ripple_map(figs[27], m_file, scan)
 
-    plot_tf_stress(figs[27].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
+    plot_tf_stress(figs[28].subplots(nrows=3, ncols=1, sharex=True).flatten(), m_file)
 
-    plot_current_profiles_over_time(figs[28].add_subplot(111), m_file, scan)
+    plot_current_profiles_over_time(figs[29].add_subplot(111), m_file, scan)
 
     plot_cs_coil_structure(
-        figs[29].add_subplot(121, aspect="equal"), figs[29], m_file, scan
+        figs[30].add_subplot(121, aspect="equal"), figs[30], m_file, scan
     )
     plot_cs_turn_structure(
-        figs[29].add_subplot(224, aspect="equal"), figs[29], m_file, scan
+        figs[30].add_subplot(224, aspect="equal"), figs[30], m_file, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        figs[30].add_subplot(221, aspect="equal"), m_file, scan
+        figs[31].add_subplot(221, aspect="equal"), m_file, scan
     )
-    plot_first_wall_poloidal_cross_section(figs[30].add_subplot(122), m_file, scan)
-    plot_fw_90_deg_pipe_bend(figs[30].add_subplot(337), m_file, scan)
+    plot_first_wall_poloidal_cross_section(figs[31].add_subplot(122), m_file, scan)
+    plot_fw_90_deg_pipe_bend(figs[31].add_subplot(337), m_file, scan)
 
-    plot_blkt_pipe_bends(figs[31], m_file, scan)
-    ax_blanket = figs[31].add_subplot(122, aspect="equal")
-    plot_blkt_structure(ax_blanket, figs[31], m_file, scan, radial_build, colour_scheme)
+    plot_blkt_pipe_bends(figs[32], m_file, scan)
+    ax_blanket = figs[32].add_subplot(122, aspect="equal")
+    plot_blkt_structure(ax_blanket, figs[32], m_file, scan, radial_build, colour_scheme)
 
     plot_main_power_flow(
-        figs[32].add_subplot(111, aspect="equal"), m_file, scan, figs[32]
+        figs[33].add_subplot(111, aspect="equal"), m_file, scan, figs[33]
     )
 
-    ax24 = figs[33].add_subplot(111)
+    ax24 = figs[34].add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[33])
+    plot_system_power_profiles_over_time(ax24, m_file, scan, figs[34])
 
 
 def create_thickness_builds(m_file, scan: int):
@@ -13989,7 +14434,7 @@ def plot_summary(
 ):
     # create main plot
     # Increase range when adding new page
-    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(34)]
+    pages = [plt.figure(figsize=(12, 9), dpi=80) for i in range(35)]
 
     # run main_plot
     main_plot(
