@@ -3560,6 +3560,7 @@ def toroidal_cross_section(
     dx_beam_shield = mfile.get("dx_beam_shield", scan=scan)
     dx_beam_duct = mfile.get("dx_beam_duct", scan=scan)
     radius_beam_tangency = mfile.get("radius_beam_tangency", scan=scan)
+    dr_tf_outboard = mfile.get("dr_tf_outboard", scan=scan)
     arc(axis, rmajor, style="dashed")
 
     # Colour in the main components
@@ -3650,73 +3651,59 @@ def toroidal_cross_section(
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
     if (i_hcd_primary == 5) or (i_hcd_primary == 8):
         # Neutral beam geometry
-        # The beam is represented as a straight line that just grazes (is tangent to)
-        # a circle inside the plasma. This circle is defined by radius_beam_tangency.
-        # The beam has a finite width (dx_beam_duct), so we draw two parallel lines
-        # on either side of the centreline to represent the duct.
+        a = w + dx_beam_shield
+        b = dr_tf_outboard
+        d = r3
+        e = np.sqrt(a**2 + (d + b) ** 2)
 
-        # Half of the duct width (used to offset from the centreline)
+        # Beam edges from centreline
         half_duct = 0.5 * dx_beam_duct
+        r_beam_inner = radius_beam_tangency - half_duct
+        r_beam_outer = radius_beam_tangency + half_duct
 
-        # Approximate starting point of the beam at the outer structure
-        # (based on the TF coil position and shielding thickness)
+        def calc_xy(rt, e=e):
+            arg = np.clip(rt / e, -1.0, 1.0)
+            beta = np.arccos(arg)
+            x = rt * np.cos(beta)
+            y = rt * np.sin(beta)
+            return x, y
+
+        # Tangency points
+        x_beam_inner, y_beam_inner = calc_xy(r_beam_inner)
+        x_beam_outer, y_beam_outer = calc_xy(r_beam_outer)
+
+        # TF-side positions (beam sits inside shield)
         x0 = r4
-        y0 = w + dx_beam_shield
+        y0_beam_inner = w + dx_beam_shield
+        y0_beam_outer = w + dx_beam_shield + dx_beam_duct
 
-        # Tangency radius of the beam centreline
-        rt = radius_beam_tangency
+        # Draw beam duct boundaries
+        axis.plot(
+            [x_beam_inner, x0],
+            [y_beam_inner, y0_beam_inner],
+            linestyle="dotted",
+            color="black",
+        )
+        axis.plot(
+            [x_beam_outer, x0],
+            [y_beam_outer, y0_beam_outer],
+            linestyle="dotted",
+            color="black",
+        )
+        # Centreline tangency point
+        x_beam_centre, y_beam_centre = calc_xy(radius_beam_tangency)
+        x0 = r4
+        y0_beam_inner = w + dx_beam_shield
+        y0_beam_outer = w + dx_beam_shield + dx_beam_duct
+        y0_beam_centre = w + dx_beam_shield + 0.5 * dx_beam_duct
+        axis.plot(
+            [x_beam_centre, x0],
+            [y_beam_centre, y0_beam_centre],
+            linestyle="--",
+            color="black",
+            linewidth=1.5,
+        )
 
-        # Distance from the machine centre to the starting point (squared)
-        p2 = x0**2 + y0**2
-
-        # Only proceed if the starting point lies outside the tangency circle,
-        # otherwise a tangent line cannot be constructed
-        if p2 > rt**2:
-            root = np.sqrt(p2 - rt**2)
-
-            # Calculate the point where the beam centreline just touches the circle
-            xt = (rt**2 * x0 - rt * y0 * root) / p2
-            yt = (rt**2 * y0 + rt * x0 * root) / p2
-
-            # Direction of the beam centreline (from outer structure to tangency point)
-            vx = xt - x0
-            vy = yt - y0
-            vnorm = np.sqrt(vx**2 + vy**2)
-
-            if vnorm > 0.0:
-                # Normalise the direction vector
-                vx /= vnorm
-                vy /= vnorm
-
-                # Perpendicular direction (used to give the beam its width)
-                nx = -vy
-                ny = vx
-
-                # Offset the centreline by half the duct width to get the two edges
-                # at both the starting point and the tangency point
-                xinner0 = x0 - half_duct * nx
-                yinner0 = y0 - half_duct * ny
-                xouter0 = x0 + half_duct * nx
-                youter0 = y0 + half_duct * ny
-
-                xinner1 = xt - half_duct * nx
-                yinner1 = yt - half_duct * ny
-                xouter1 = xt + half_duct * nx
-                youter1 = yt + half_duct * ny
-
-                # Draw the two parallel lines representing the beam duct
-                axis.plot(
-                    [xinner1, xinner0],
-                    [yinner1, yinner0],
-                    linestyle="dotted",
-                    color="black",
-                )
-                axis.plot(
-                    [xouter1, xouter0],
-                    [youter1, youter0],
-                    linestyle="dotted",
-                    color="black",
-                )
     # Draw dividing lines in the blanket (inboard modules, toroidal direction)
     n_blkt_inboard_modules_toroidal = mfile.get(
         "n_blkt_inboard_modules_toroidal", scan=scan
