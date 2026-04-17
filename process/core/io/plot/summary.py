@@ -67,7 +67,12 @@ from process.models.physics.plasma_geometry import (
     PlasmaShapeModelType,
 )
 from process.models.superconductors import SuperconductorModel
-from process.models.tfcoil.base import TFCoilShapeModel, TFPlasmaCaseType
+from process.models.tfcoil.base import (
+    TFCoilShapeModel,
+    TFConductorModel,
+    TFPlasmaCaseType,
+)
+from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
 
 @dataclass
@@ -14324,7 +14329,7 @@ def main_plot(
     plot_lower_vertical_build(ax18b, m_file, colour_scheme)
 
     # Can only plot WP and turn structure if superconducting coil at the moment
-    if m_file.get("i_tf_sup", scan=scan) == 1:
+    if m_file.get("i_tf_sup", scan=scan) == TFConductorModel.SUPERCONDUCTING:
         # TF coil with WP
         ax19 = figs[24].add_subplot(221, aspect="equal")
         ax19.set_position([
@@ -14338,10 +14343,33 @@ def main_plot(
         # TF coil turn structure
         ax20 = figs[25].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[25], m_file, scan)
-        plot_205 = figs[25].add_subplot(223, aspect="equal")
-        plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, figs[25], m_file, scan)
+        plot_tf_cable_in_conduit_turn(ax20, figs[24], m_file, scan)
+
+        if (
+            m_file.get("i_tf_turn_type", scan=scan)
+            == SuperconductingTFTurnType.CROSS_CONDUCTOR
+        ):
+            plot_205 = figs[24].add_subplot(223, aspect="equal")
+            plot_205.set_position([0.075, 0.1, 0.3, 0.3])
+            plot_corc_cable_geometry(
+                plot_205,
+                dia_croco_strand=m_file.get("dia_croco_strand", scan=scan),
+                dx_croco_strand_copper=m_file.get("dx_croco_strand_copper", scan=scan),
+                dr_hts_tape=m_file.get("dr_hts_tape", scan=scan),
+                dx_croco_strand_tape_stack=m_file.get(
+                    "dx_croco_strand_tape_stack", scan=scan
+                ),
+                n_croco_strand_hts_tapes=m_file.get(
+                    "n_croco_strand_hts_tapes", scan=scan
+                ),
+            )
+        elif (
+            m_file.get("i_tf_turn_type", scan=scan)
+            == SuperconductingTFTurnType.CABLE_IN_CONDUIT
+        ):
+            plot_205 = figs[24].add_subplot(223, aspect="equal")
+            plot_205.set_position([0.075, 0.1, 0.3, 0.3])
+            plot_cable_in_conduit_cable(plot_205, figs[24], m_file, scan)
     else:
         ax19 = figs[24].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
