@@ -7502,6 +7502,293 @@ def plot_tf_cable_in_conduit_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
     )
 
 
+def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
+    """Plots inboard TF coil CICC individual turn structure with croco cable layout."""
+    # Import the TF turn variables then multiply into mm
+    i_tf_turns_integer = mfile.get("i_tf_turns_integer", scan=scan)
+    # If integer turns switch is on then the turns can have non square dimensions
+    if i_tf_turns_integer == 1:
+        turn_width = mfile.get("dr_tf_turn", scan=scan)
+        turn_height = mfile.get("dx_tf_turn", scan=scan)
+        cable_space_width_radial = mfile.get("dr_tf_turn_cable_space", scan=scan)
+        cable_space_width_toroidal = mfile.get("dx_tf_turn_cable_space", scan=scan)
+
+    elif i_tf_turns_integer == 0:
+        turn_width = mfile.get("dx_tf_turn_general", scan=scan)
+        cable_space_width = mfile.get("dx_tf_turn_cable_space_average", scan=scan)
+
+    steel_thickness = mfile.get("dx_tf_turn_steel", scan=scan)
+    insulation_thickness = mfile.get("dx_tf_turn_insulation", scan=scan)
+
+    a_tf_turn_cable_space_no_void = mfile.get("a_tf_turn_cable_space_no_void", scan=scan)
+    radius_tf_turn_cable_space_corners = mfile.get(
+        "radius_tf_turn_cable_space_corners", scan=scan
+    )
+
+    a_tf_wp_coolant_channels = mfile.get("a_tf_wp_coolant_channels", scan=scan)
+
+    f_a_tf_turn_cable_space_extra_void = mfile.get(
+        "f_a_tf_turn_cable_space_extra_void", scan=scan
+    )
+    a_tf_turn_steel = mfile.get("a_tf_turn_steel", scan=scan)
+    a_tf_turn_cable_space_effective = mfile.get(
+        "a_tf_turn_cable_space_effective", scan=scan
+    )
+
+    he_pipe_diameter = mfile.get("dia_tf_turn_coolant_channel", scan=scan)
+    dia_croco_strand = mfile.get("dia_croco_strand", scan=scan)
+
+    # Plot the total turn shape
+    if i_tf_turns_integer == 0:
+        axis.add_patch(
+            Rectangle(
+                [0, 0],
+                turn_width,
+                turn_width,
+                facecolor="red",
+                edgecolor="black",
+            ),
+        )
+        # Plot the steel conduit
+        axis.add_patch(
+            Rectangle(
+                [insulation_thickness, insulation_thickness],
+                (turn_width - 2 * insulation_thickness),
+                (turn_width - 2 * insulation_thickness),
+                facecolor="grey",
+                edgecolor="black",
+            ),
+        )
+
+        # Plot the central cable space
+        axis.add_patch(
+            Circle(
+                [(turn_width / 2), (turn_width / 2)],
+                1.5 * dia_croco_strand,
+                facecolor="white",
+                edgecolor="black",
+                linewidth=1.2,
+            ),
+        )
+
+        # PLot the central copper cyclinder
+        axis.add_patch(
+            Circle(
+                [(turn_width / 2), (turn_width / 2)],
+                dia_croco_strand / 2,
+                facecolor="#B87333",
+                edgecolor="#B87333",
+                linewidth=1.2,
+            ),
+        )
+
+        # Plot six surrounding Croco cables in a hexagonal layout.
+        center_x = turn_width / 2
+        center_y = turn_width / 2
+        ring_radius = dia_croco_strand
+        for angle in np.linspace(0, 2 * np.pi, 6, endpoint=False):
+            plot_corc_cable_geometry(
+                axis=axis,
+                r_centre=center_x + ring_radius * np.cos(angle),
+                z_centre=center_y + ring_radius * np.sin(angle),
+                dia_croco_strand=mfile.get("dia_croco_strand", scan=scan),
+                dx_croco_strand_copper=mfile.get("dx_croco_strand_copper", scan=scan),
+                dr_hts_tape=mfile.get("dr_hts_tape", scan=scan),
+                dx_croco_strand_tape_stack=mfile.get(
+                    "dx_croco_strand_tape_stack", scan=scan
+                ),
+                n_croco_strand_hts_tapes=mfile.get(
+                    "n_croco_strand_hts_tapes", scan=scan
+                ),
+                show_legend=False,
+            )
+
+        # Cable strand packing parameters
+        strand_diameter = mfile.get("dia_tf_turn_superconducting_cable", scan=scan)
+        void_fraction = mfile.get("f_a_tf_turn_cable_space_extra_void", scan=scan)
+
+        # Cable space bounds
+        cable_bounds = [
+            insulation_thickness + steel_thickness,
+            insulation_thickness + steel_thickness,
+            turn_width - 2 * (insulation_thickness + steel_thickness),
+            turn_width - 2 * (insulation_thickness + steel_thickness),
+        ]
+
+        axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
+        axis.set_ylim(-turn_width * 0.05, turn_width * 1.05)
+
+    axis.minorticks_on()
+    axis.set_title("WP Turn Structure")
+    axis.set_xlabel("r [m]")
+    axis.set_ylabel("x [m]")
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_insulation = (
+        f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${insulation_thickness:.3e} m"
+    )
+
+    axis.text(
+        0.4,
+        0.9,
+        textstr_turn_insulation,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "red",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_steel = (
+        f"$\\mathbf{{Steel \\ Conduit:}}$\n\n$\\Delta r:${steel_thickness:.3e} m\n"
+        f"$A$: {a_tf_turn_steel:.3e} m$^2$"
+    )
+
+    axis.text(
+        0.65,
+        0.9,
+        textstr_turn_steel,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    if i_tf_turns_integer == 0:
+        # Add info about the steel casing surrounding the WP
+        textstr_turn_cable_space = (
+            f"$\\mathbf{{Cable \\ Space:}}$\n\n"
+            f"$\\Delta r:$ {cable_space_width:.3e} m\n"
+            f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
+            f"Cable area with no cooling \nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
+            f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
+            f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
+        )
+    elif i_tf_turns_integer == 1:
+        textstr_turn_cable_space = (
+            f"$\\mathbf{{Cable \\ Space:}}$\n\n"
+            f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
+            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m \n"
+            f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
+            f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
+            f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
+            f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
+        )
+
+    axis.text(
+        0.40,
+        0.7,
+        textstr_turn_cable_space,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "royalblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    if i_tf_turns_integer == 0:
+        textstr_turn = (
+            f"$\\mathbf{{Turn:}}$\n\n"
+            f"$\\Delta r$: {turn_width:.3e} m\n"
+            f"$\\Delta x$: {turn_width:.3e} m"
+        )
+
+    if i_tf_turns_integer == 1:
+        textstr_turn = (
+            f"$\\mathbf{{Turn:}}$\n\n"
+            f"$\\Delta r$: {turn_width:.3e} m\n"
+            f"$\\Delta x$: {turn_height:.3e} m"
+        )
+
+    axis.text(
+        0.525,
+        0.9,
+        textstr_turn,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_cooling = (
+        f"$\\mathbf{{Cooling:}}$\n\n"
+        f"$\\varnothing$: {he_pipe_diameter:.3e} m\n"
+        f"Total area of all coolant channels: {a_tf_wp_coolant_channels:.4f} m$^2$"
+    )
+
+    axis.text(
+        0.45,
+        0.8,
+        textstr_turn_cooling,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_superconductor = (
+        f"$\\mathbf{{Superconductor:}}$\n \n"
+        f"Superconductor used: {SuperconductorModel(mfile.get('i_tf_sc_mat', scan=scan)).full_name}\n"
+        f"Critical field at zero \ntemperature and strain: {mfile.get('b_tf_superconductor_critical_zero_temp_strain', scan=scan):.4f} T\n"
+        f"Critical temperature at \nzero field and strain: {mfile.get('temp_tf_superconductor_critical_zero_field_strain', scan=scan):.4f} K\n"
+        f"Temperature at conductor: {mfile.get('tftmp', scan=scan):.4f} K\n"
+        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile.get('c_turn_cables_critical', scan=scan):,.2f} A\n"
+        f"$I_{{\\text{{TF,turn}}}}$: {mfile.get('c_tf_turn', scan=scan):,.2f} A\n"
+        f"Critcal current ratio: {mfile.get('f_c_tf_turn_operating_critical', scan=scan):,.4f}\n"
+        f"Superconductor temperature \nmargin: {mfile.get('temp_tf_superconductor_margin', scan=scan):,.4f} K\n"
+        f"\n$\\mathbf{{Quench:}}$\n \n"
+        f"Quench dump time: {mfile.get('t_tf_superconductor_quench', scan=scan):.4e} s\n"
+        f"Quench detection time: {mfile.get('t_tf_quench_detection', scan=scan):.4e} s\n"
+        f"User input max temperature \nduring quench: {mfile.get('temp_tf_conductor_quench_max', scan=scan):.2f} K\n"
+        f"Required maxium WP current \ndensity for heat protection:\n{mfile.get('j_tf_wp_quench_heat_max', scan=scan):.2e} A/m$^2$\n"
+    )
+    axis.text(
+        0.75,
+        0.9,
+        textstr_superconductor,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#6dd3f7",  # light blue for superconductors
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+
 def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: MFile, scan: int):
     """Plots TF coil CICC cable cross-section.
 
@@ -12026,11 +12313,14 @@ def interp1d_profile(profile, mfile: MFile, scan: int):
 
 def plot_corc_cable_geometry(
     axis,
+    r_centre: float,
+    z_centre: float,
     dia_croco_strand: float,
     dx_croco_strand_copper: float,
     dr_hts_tape: float,
     dx_croco_strand_tape_stack: float,
     n_croco_strand_hts_tapes: int,
+    show_legend: bool = True,
 ):
     """Plot the geometry of a CroCo strand cable.
 
@@ -12038,6 +12328,10 @@ def plot_corc_cable_geometry(
     ----------
     axis : matplotlib.axes._axes.Axes
         The matplotlib axis to plot on.
+    r_centre : float
+        Radial position of the strand centre (in meters).
+    z_centre : float
+        Vertical position of the strand centre (in meters).
     dia_croco_strand : float
         Diameter of the CroCo strand (in meters).
     dx_croco_strand_copper : float
@@ -12049,64 +12343,69 @@ def plot_corc_cable_geometry(
     n_croco_strand_hts_tapes : int
         Number of HTS tape layers in the stack.
     """
+    legend_label = None if show_legend else "_nolegend_"
+
     # Plot a circle with the given diameter and copper edges
     circle = Circle(
-        (0, 0),
-        radius=(dia_croco_strand / 2) * 1000,
-        edgecolor="#B87333",
+        (r_centre, z_centre),
+        radius=(dia_croco_strand / 2),
+        edgecolor="black",
         facecolor="#B87333",
-        linewidth=2,
-        label="Copper jacket",
+        linewidth=0.5,
+        label="Copper jacket" if show_legend else legend_label,
     )
     axis.add_patch(circle)
 
     # Plot an inner circle with copper edges
     circle = Circle(
-        (0, 0),
-        radius=((dia_croco_strand / 2) - dx_croco_strand_copper) * 1000,
+        (r_centre, z_centre),
+        radius=((dia_croco_strand / 2) - dx_croco_strand_copper),
         edgecolor="grey",
         facecolor="grey",
         linewidth=2,
-        label="Solder",
+        label="Solder" if show_legend else legend_label,
     )
     axis.add_patch(circle)
 
     # Plot a rectangular tape stack in the middle
     rect = Rectangle(
-        (-dr_hts_tape / 2 * 1000, -(dx_croco_strand_tape_stack / 2) * 1000),
-        width=dr_hts_tape * 1000,
-        height=dx_croco_strand_tape_stack * 1000,
+        (r_centre - dr_hts_tape / 2, z_centre - dx_croco_strand_tape_stack / 2),
+        width=dr_hts_tape,
+        height=dx_croco_strand_tape_stack,
         edgecolor="blue",
         facecolor="blue",
         linewidth=2,
-        label="HTS Tape Stack",
+        label="HTS Tape Stack" if show_legend else legend_label,
     )
     axis.add_patch(rect)
 
     # Slice the tape stack into n_croco_strand_hts_tapes layers
     for i in range(int(n_croco_strand_hts_tapes)):
-        y_start = -(dx_croco_strand_tape_stack / 2) * 1000 + i * (
-            dx_croco_strand_tape_stack / n_croco_strand_hts_tapes * 1000
+        y_start = (
+            z_centre
+            - (dx_croco_strand_tape_stack / 2)
+            + i * (dx_croco_strand_tape_stack / n_croco_strand_hts_tapes)
         )
         rect = Rectangle(
-            (-dr_hts_tape / 2 * 1000, y_start),
-            width=dr_hts_tape * 1000,
-            height=(dx_croco_strand_tape_stack / n_croco_strand_hts_tapes) * 1000,
+            (r_centre - dr_hts_tape / 2, y_start),
+            width=dr_hts_tape,
+            height=(dx_croco_strand_tape_stack / n_croco_strand_hts_tapes),
             edgecolor="black",
             facecolor="blue",
             linewidth=1,
         )
         axis.add_patch(rect)
 
-    axis.set_xlim(-dia_croco_strand * 0.75 * 1000, dia_croco_strand * 0.75 * 1000)
-    axis.set_ylim(-dia_croco_strand * 1000, dia_croco_strand * 1000)
+    axis.set_xlim(-dia_croco_strand * 0.75, dia_croco_strand * 0.75)
+    axis.set_ylim(-dia_croco_strand * 0.75, dia_croco_strand * 0.75)
     axis.set_aspect("equal", adjustable="datalim")
     axis.set_title("CroCo Strand Geometry")
     axis.grid(True)
-    axis.set_xlabel("X-axis (mm)")
-    axis.set_ylabel("Y-axis (mm)")
+    axis.set_xlabel("X-axis (m)")
+    axis.set_ylabel("Y-axis (m)")
     axis.minorticks_on()
-    axis.legend(loc="upper right")
+    if show_legend:
+        axis.legend(loc="upper right")
 
 
 def reaction_plot_grid(
@@ -14340,10 +14639,21 @@ def main_plot(
         ])  # Half height, a bit wider, top left
         plot_superconducting_tf_wp(ax19, m_file, scan, figs[24])
 
-        # TF coil turn structure
-        ax20 = figs[25].add_subplot(325, aspect="equal")
-        ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[24], m_file, scan)
+        if (
+            m_file.get("i_tf_turn_type", scan=scan)
+            == SuperconductingTFTurnType.CROSS_CONDUCTOR
+        ):
+            ax20 = figs[24].add_subplot(325, aspect="equal")
+            ax20.set_position([0.025, 0.5, 0.4, 0.4])
+            plot_tf_croco_turn(ax20, figs[24], m_file, scan)
+        elif (
+            m_file.get("i_tf_turn_type", scan=scan)
+            == SuperconductingTFTurnType.CABLE_IN_CONDUIT
+        ):
+            # TF coil turn structure
+            ax20 = figs[24].add_subplot(325, aspect="equal")
+            ax20.set_position([0.025, 0.5, 0.4, 0.4])
+            plot_tf_cable_in_conduit_turn(ax20, figs[24], m_file, scan)
 
         if (
             m_file.get("i_tf_turn_type", scan=scan)
@@ -14353,6 +14663,8 @@ def main_plot(
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_corc_cable_geometry(
                 plot_205,
+                r_centre=0.0,
+                z_centre=0.0,
                 dia_croco_strand=m_file.get("dia_croco_strand", scan=scan),
                 dx_croco_strand_copper=m_file.get("dx_croco_strand_copper", scan=scan),
                 dr_hts_tape=m_file.get("dr_hts_tape", scan=scan),
