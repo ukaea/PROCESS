@@ -1241,8 +1241,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     dx_tf_turn_cable_space_average: Any = None
 
-    i_tf_sc_mat: Any = None
-
     j_tf_wp: Any = None
 
     dx_tf_turn_steel: Any = None
@@ -1283,7 +1281,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dr_tf_turn=0,
             dx_tf_turn=0,
             dx_tf_turn_cable_space_average=0,
-            i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
             dx_tf_turn_steel=0.0080000000000000019,
             dx_tf_turn_insulation=0.00080000000000000004,
@@ -1309,7 +1306,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dr_tf_turn=0.049532469413859428,
             dx_tf_turn=0.049532469413859428,
             dx_tf_turn_cable_space_average=0.031932469413859424,
-            i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
             dx_tf_turn_steel=0.0080000000000000019,
             dx_tf_turn_insulation=0.00080000000000000004,
@@ -1335,7 +1331,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dr_tf_turn=0.05872,
             dx_tf_turn=0.05872,
             dx_tf_turn_cable_space_average=0.04109,
-            i_tf_sc_mat=1,
             j_tf_wp=2.301e07,
             dx_tf_turn_steel=8.015e-03,
             dx_tf_turn_insulation=8.0e-4,
@@ -1361,7 +1356,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dr_tf_turn=0.05872,
             dx_tf_turn=0.05872,
             dx_tf_turn_cable_space_average=0.04109,
-            i_tf_sc_mat=1,
             j_tf_wp=2.673e07,
             dx_tf_turn_steel=8.148e-03,
             dx_tf_turn_insulation=8.0e-4,
@@ -1399,7 +1393,6 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
         j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
         dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
         dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
-        i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
         dx_tf_turn_general=tfaveragedturngeomparam.dx_tf_turn_general,
         c_tf_turn=tfaveragedturngeomparam.c_tf_turn,
         i_dx_tf_turn_general_input=tfaveragedturngeomparam.i_dx_tf_turn_general_input,

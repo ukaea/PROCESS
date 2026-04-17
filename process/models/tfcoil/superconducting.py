@@ -1607,7 +1607,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 j_tf_wp=tfcoil_variables.j_tf_wp,
                 dx_tf_turn_steel=tfcoil_variables.dx_tf_turn_steel,
                 dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
-                i_tf_sc_mat=tfcoil_variables.i_tf_sc_mat,
                 dx_tf_turn_general=tfcoil_variables.dx_tf_turn_general,
                 c_tf_turn=tfcoil_variables.c_tf_turn,
                 i_dx_tf_turn_general_input=tfcoil_variables.i_dx_tf_turn_general_input,
@@ -2603,7 +2602,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         j_tf_wp: float,
         dx_tf_turn_steel: float,
         dx_tf_turn_insulation: float,
-        i_tf_sc_mat: int,
         dx_tf_turn_general: float,
         c_tf_turn: float,
         i_dx_tf_turn_general_input: bool,
@@ -2631,9 +2629,6 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         dx_tf_turn_insulation : float
             Thickness of the insulation layer in the TF turn (in meters).
-
-        i_tf_sc_mat : int
-            Identifier for the superconducting material type.
 
         dx_tf_turn_general : float
             General dimension of the TF turn (in meters).
@@ -2742,68 +2737,54 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             tfcoil_variables.a_tf_turn_cable_space_no_void
         )
 
-        # ITER like turn structure
-        if i_tf_sc_mat != 6:
-            # Radius of rounded corners of cable space inside conduit [m]
-            radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
+        # Radius of rounded corners of cable space inside conduit [m]
+        radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
 
-            # Dimension of square cable space inside conduit [m]
-            dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
+        # Dimension of square cable space inside conduit [m]
+        dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
 
-            # Cross-sectional area of cable space per turn
-            # taking account of rounded inside corners [m2]
-            a_tf_turn_cable_space_no_void = (
-                dx_tf_turn_cable_space_average**2
-                - (4.0e0 - np.pi) * radius_tf_turn_cable_space_corners**2
-            )
+        # Cross-sectional area of cable space per turn
+        # taking account of rounded inside corners [m2]
+        a_tf_turn_cable_space_no_void = (
+            dx_tf_turn_cable_space_average**2
+            - (4.0e0 - np.pi) * radius_tf_turn_cable_space_corners**2
+        )
 
-            # Calculate the true effective cable space by taking away the cooling
-            # channel and the extra void fraction
+        # Calculate the true effective cable space by taking away the cooling
+        # channel and the extra void fraction
 
-            a_tf_turn_cable_space_effective = (
-                a_tf_turn_cable_space_no_void
-                -
-                # Coolant channel area
-                (
-                    (np.pi / 4.0e0)
-                    * dia_tf_turn_coolant_channel
-                    * dia_tf_turn_coolant_channel
+        a_tf_turn_cable_space_effective = (
+            a_tf_turn_cable_space_no_void
+            -
+            # Coolant channel area
+            ((np.pi / 4.0e0) * dia_tf_turn_coolant_channel * dia_tf_turn_coolant_channel)
+            # Additional void area deduction
+            - (a_tf_turn_cable_space_no_void * f_a_tf_turn_cable_space_extra_void)
+        )
+
+        f_a_tf_turn_cable_space_cooling = 1 - (
+            a_tf_turn_cable_space_effective / a_tf_turn_cable_space_no_void
+        )
+
+        if a_tf_turn_cable_space_no_void <= 0.0e0:
+            if t_conductor < 0.0e0:
+                logger.error(
+                    "Negative cable space dimension. %s %s",
+                    a_tf_turn_cable_space_no_void,
+                    dx_tf_turn_cable_space_average,
                 )
-                # Additional void area deduction
-                - (a_tf_turn_cable_space_no_void * f_a_tf_turn_cable_space_extra_void)
-            )
-
-            f_a_tf_turn_cable_space_cooling = 1 - (
-                a_tf_turn_cable_space_effective / a_tf_turn_cable_space_no_void
-            )
-
-            if a_tf_turn_cable_space_no_void <= 0.0e0:
-                if t_conductor < 0.0e0:
-                    logger.error(
-                        "Negative cable space dimension. %s %s",
-                        a_tf_turn_cable_space_no_void,
-                        dx_tf_turn_cable_space_average,
-                    )
-                else:
-                    logger.error(
-                        "Cable space area problem; artificially set rounded corner "
+            else:
+                logger.error(
+                    "Cable space area problem; artificially set rounded corner "
                         "radius to 0. %s %s",
-                        a_tf_turn_cable_space_no_void,
-                        dx_tf_turn_cable_space_average,
-                    )
-                    radius_tf_turn_cable_space_corners = 0.0e0
-                    a_tf_turn_cable_space_no_void = dx_tf_turn_cable_space_average**2
+                    a_tf_turn_cable_space_no_void,
+                    dx_tf_turn_cable_space_average,
+                )
+                radius_tf_turn_cable_space_corners = 0.0e0
+                a_tf_turn_cable_space_no_void = dx_tf_turn_cable_space_average**2
 
-            # Cross-sectional area of conduit jacket per turn [m2]
-            a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
-
-        # REBCO turn structure
-        elif i_tf_sc_mat == 6:
-            # Diameter of circular cable space inside conduit [m]
-            dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
-
-            # Cross-sectional area of conduit jacket per turn [m2]
-            a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
+        # Cross-sectional area of conduit jacket per turn [m2]
+        a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
 
         return CICCAveragedTurnGeometry(
             a_tf_turn_cable_space_no_void=a_tf_turn_cable_space_no_void,
