@@ -1693,24 +1693,21 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Calculate number of cables in turn if CICC conductor
         # ---------------------------------------------------
-        if (
-            SuperconductorModel(tfcoil_variables.i_tf_sc_mat)
-            != SuperconductorModel.CROCO_REBCO
-        ):
-            superconducting_tf_coil_variables.n_tf_turn_superconducting_cables = self.calculate_cable_in_conduit_strand_count(
-                a_cable_space=superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
-                dia_superconductor_strand=superconducting_tf_coil_variables.dia_tf_turn_superconducting_cable,
-            )
 
-            (
-                superconducting_tf_coil_variables.len_tf_coil_superconductor,
-                superconducting_tf_coil_variables.len_tf_superconductor_total,
-            ) = self.calculate_cable_in_conduit_superconductor_length(
-                n_tf_coils=tfcoil_variables.n_tf_coils,
-                n_tf_coil_turns=tfcoil_variables.n_tf_coil_turns,
-                len_tf_coil=tfcoil_variables.len_tf_coil,
-                n_tf_turn_superconducting_cables=superconducting_tf_coil_variables.n_tf_turn_superconducting_cables,
-            )
+        superconducting_tf_coil_variables.n_tf_turn_superconducting_cables = self.calculate_cable_in_conduit_strand_count(
+            a_cable_space=superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
+            dia_superconductor_strand=superconducting_tf_coil_variables.dia_tf_turn_superconducting_cable,
+        )
+
+        (
+            superconducting_tf_coil_variables.len_tf_coil_superconductor,
+            superconducting_tf_coil_variables.len_tf_superconductor_total,
+        ) = self.calculate_cable_in_conduit_superconductor_length(
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            n_tf_coil_turns=tfcoil_variables.n_tf_coil_turns,
+            len_tf_coil=tfcoil_variables.len_tf_coil,
+            n_tf_turn_superconducting_cables=superconducting_tf_coil_variables.n_tf_turn_superconducting_cables,
+        )
 
         # Areas and fractions
         # -------------------
