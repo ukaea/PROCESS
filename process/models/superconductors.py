@@ -1144,7 +1144,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     conductor_copper_fraction = conductor_copper_area / conductor_area
 
     # Helium area is set by the user.
-    # conductor_helium_area = cable_helium_fraction * conductor_acs
+    # conductor_helium_area = cable_helium_fraction * tfcoil_variables.a_tf_turn_cable_space_no_void
     conductor_helium_area = np.pi / 2.0 * dia_croco_strand**2
     conductor_helium_fraction = conductor_helium_area / conductor_area
 

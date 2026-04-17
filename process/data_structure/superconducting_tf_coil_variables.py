@@ -247,7 +247,6 @@ conductor_jacket_fraction: float = None
 conductor_rebco_area: float = None
 conductor_rebco_fraction: float = None
 conductor_critical_current: float = None
-conductor_acs: float = None
 conductor_area: float = None
 """Area of cable space inside jacket"""
 
