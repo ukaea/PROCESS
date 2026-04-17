@@ -134,7 +134,7 @@ class FirstWall(Model):
             )
         else:
             physics_variables.pflux_fw_rad_mw = (
-                physics_variables.p_plasma_rad_mw / build_variables.a_fw_total
+                physics_variables.p_plasma_rad_mw / self.data.first_wall.a_fw_total
             )
 
         constraint_variables.pflux_fw_rad_max_mw = (
