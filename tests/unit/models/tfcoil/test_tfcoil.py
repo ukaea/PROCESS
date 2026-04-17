@@ -2,7 +2,7 @@
 
 import json
 from collections.abc import Sequence
-from dataclasses import dataclass, fields
+from dataclasses import astuple, dataclass, fields
 from pathlib import Path
 from typing import Any, NamedTuple
 
@@ -287,7 +287,7 @@ def test_tf_global_geometry(
         r_tf_outboard_mid,
         dr_tf_outboard,
     )
-    assert result == expected
+    assert astuple(result) == expected
 
 
 @pytest.mark.parametrize(
