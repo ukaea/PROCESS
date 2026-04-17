@@ -3455,21 +3455,24 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         j_crit_sc: float = 0.0
         #  Find critical current density in superconducting cable, j_crit_cable
         j_crit_sc, _ = superconductors.jcrit_rebco(thelium, b_tf_inboard_peak_symmetric)
-        # tfcoil_variables.a_tf_turn_cable_space_no_void : Cable space - inside area (m2)
-        # Set new rebco_variables.dia_croco_strand
-        # allowing for scaling of rebco_variables.dia_croco_strand
-        rebco_variables.dia_croco_strand = (
+
+        superconducting_tf_coil_variables.dia_tf_turn_croco_cable = (
             tfcoil_variables.t_conductor / 3.0e0
             - tfcoil_variables.dx_tf_turn_steel * (2.0e0 / 3.0e0)
         )
         # Area of the full cable circle in the turn
         tfcoil_variables.a_tf_turn_cable_space_no_void = (
-            9.0e0 / 4.0e0 * np.pi * rebco_variables.dia_croco_strand**2
+            9.0e0
+            / 4.0e0
+            * np.pi
+            * superconducting_tf_coil_variables.dia_tf_turn_croco_cable**2
         )
         # Area of the full cable spac circle minus the central copper strand
         superconducting_tf_coil_variables.a_tf_turn_cable_space_effective = (
             tfcoil_variables.a_tf_turn_cable_space_no_void
-            - 0.25e0 * np.pi * rebco_variables.dia_croco_strand**2
+            - 0.25e0
+            * np.pi
+            * superconducting_tf_coil_variables.dia_tf_turn_croco_cable**2
         )
 
         superconducting_tf_coil_variables.conductor_area = (
@@ -3506,7 +3509,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         ) = superconductors.croco(
             j_crit_sc,
             superconducting_tf_coil_variables.conductor_area,
-            rebco_variables.dia_croco_strand,
+            superconducting_tf_coil_variables.dia_tf_turn_croco_cable,
             rebco_variables.dx_croco_strand_copper,
         )
 
@@ -3702,8 +3705,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         po.ovarre(
             self.outfile,
             "Diameter of a CroCo strand (m) ",
-            "(dia_croco_strand)",
-            rebco_variables.dia_croco_strand,
+            "(dia_tf_turn_croco_cable)",
+            superconducting_tf_coil_variables.dia_tf_turn_croco_cable,
             "OP ",
         )
         po.ovarre(
