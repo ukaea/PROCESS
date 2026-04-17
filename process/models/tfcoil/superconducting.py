@@ -1036,7 +1036,7 @@ class SuperconductingTFCoil(TFCoil):
         dr_tf_wp_no_insulation = dr_tf_wp_with_insulation - 2.0e0 * (
             dx_tf_wp_insulation + dx_tf_wp_insertion_gap
         )
-i_tf_wp_geom = SuperconductingTFWPShapeType(i_tf_wp_geom)
+
         # Rectangular WP
         # --------------
         if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
@@ -1175,6 +1175,11 @@ i_tf_wp_geom = SuperconductingTFWPShapeType(i_tf_wp_geom)
                 )
                 / 2
             ) - a_tf_wp_no_insulation
+
+        else:
+            raise ProcessValueError(
+                f"Invalid winding pack geometry index: {i_tf_wp_geom}"
+            )
 
         # --------------
         # Negative WP area error reporting
