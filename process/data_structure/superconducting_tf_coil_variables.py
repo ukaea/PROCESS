@@ -183,6 +183,9 @@ dr_tf_wp_no_insulation: float = None
 dia_tf_turn_superconducting_cable: float = None
 """Diameter of the superconducting cable in the TF turn [m]"""
 
+dia_tf_turn_croco_cable: float = None
+"""Diameter of the Croco cable in the TF turn [m]"""
+
 n_tf_turn_superconducting_cables: int = None
 """Number of superconducting cables in the TF turn"""
 
@@ -312,6 +315,7 @@ def init_superconducting_tf_coil_variables():
         a_tf_turn_cable_space_effective, \
         dr_tf_wp_no_insulation, \
         dia_tf_turn_superconducting_cable, \
+        dia_tf_turn_croco_cable, \
         n_tf_turn_superconducting_cables, \
         len_tf_coil_superconductor, \
         len_tf_superconductor_total, \
@@ -374,6 +378,7 @@ def init_superconducting_tf_coil_variables():
     a_tf_turn_cable_space_effective = 0.0
     dr_tf_wp_no_insulation = 0.0
     dia_tf_turn_superconducting_cable = 0.00073
+    dia_tf_turn_croco_cable = 0.0
     n_tf_turn_superconducting_cables = 0
     len_tf_coil_superconductor = 0.0
     len_tf_superconductor_total = 0.0
