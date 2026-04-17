@@ -13,7 +13,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import build_variables as bv
 from process.data_structure import constraint_variables as ctv
-from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import (
     pfcoil_variables,
     superconducting_tf_coil_variables,
@@ -959,7 +958,7 @@ class PFCoil(Model):
                     * 2.0e0
                     * np.pi
                     * pfcoil_variables.r_pf_coil_middle[i]
-                    * fwbsv.den_steel
+                    * self.data.fwbs.den_steel
                 )
 
                 # Mass of heaviest PF coil (tonnes)
@@ -3381,7 +3380,7 @@ class CSCoil(Model):
             * 2.0e0
             * np.pi
             * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
-            * fwbsv.den_steel
+            * self.data.fwbs.den_steel
         )
 
         # Non-steel cross-sectional area

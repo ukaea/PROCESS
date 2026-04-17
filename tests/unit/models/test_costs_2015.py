@@ -8,7 +8,6 @@ import pytest
 from process.data_structure import (
     build_variables,
     current_drive_variables,
-    fwbs_variables,
     heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
@@ -2308,11 +2307,13 @@ def test_calc_building_costs(
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "r_cryostat_inboard", calcbuildingcostsparam.r_cryostat_inboard
+        costs2015.data.fwbs,
+        "r_cryostat_inboard",
+        calcbuildingcostsparam.r_cryostat_inboard,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        costs2015.data.fwbs,
         "z_cryostat_half_inside",
         calcbuildingcostsparam.z_cryostat_half_inside,
     )
@@ -4589,7 +4590,7 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015, process_mod
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "r_cryostat_inboard", calclandcostsparam.r_cryostat_inboard
+        costs2015.data.fwbs, "r_cryostat_inboard", calclandcostsparam.r_cryostat_inboard
     )
 
     monkeypatch.setattr(
@@ -9113,7 +9114,7 @@ def test_calc_remote_handling_costs(
     """
 
     monkeypatch.setattr(
-        fwbs_variables,
+        costs2015.data.fwbs,
         "armour_fw_bl_mass",
         calcremotehandlingcostsparam.armour_fw_bl_mass,
     )
@@ -15974,16 +15975,16 @@ def test_calc_remaining_subsystems(
         heat_transport_variables, "helpow", calcremainingsubsystemsparam.helpow
     )
 
-    monkeypatch.setattr(fwbs_variables, "m_vv", calcremainingsubsystemsparam.m_vv)
+    monkeypatch.setattr(costs2015.data.fwbs, "m_vv", calcremainingsubsystemsparam.m_vv)
 
     monkeypatch.setattr(
-        fwbs_variables,
+        costs2015.data.fwbs,
         "r_cryostat_inboard",
         calcremainingsubsystemsparam.r_cryostat_inboard,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        costs2015.data.fwbs,
         "z_cryostat_half_inside",
         calcremainingsubsystemsparam.z_cryostat_half_inside,
     )

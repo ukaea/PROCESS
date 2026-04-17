@@ -9,7 +9,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import divertor_variables as dv
-from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
@@ -110,11 +109,11 @@ class Availability(Model):
             # First wall / blanket lifetime (years)
             # TODO MDK Do this calculation whatever the value of blktmodel (whatever that is)
             # For some reason life_fw_fpy is not always calculated, so ignore it if it is still zero.
-            if fwbsv.life_fw_fpy < 0.0001e0:
+            if self.data.fwbs.life_fw_fpy < 0.0001e0:
                 # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
                 # or DEMO fusion power model (ibkt_life=1)
                 if self.data.costs.ibkt_life == 0:
-                    fwbsv.life_blkt_fpy = (
+                    self.data.fwbs.life_blkt_fpy = (
                         self.data.costs.life_plant
                         if pv.pflux_fw_neutron_mw == 0.0  # noqa: RUF069
                         else min(
@@ -123,18 +122,18 @@ class Availability(Model):
                         )
                     )
                 else:
-                    fwbsv.life_blkt_fpy = min(
+                    self.data.fwbs.life_blkt_fpy = min(
                         self.data.costs.life_dpa / dpa_fpy, self.data.costs.life_plant
                     )  # DEMO
             elif self.data.costs.ibkt_life == 0:
-                fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_fw_fpy,
+                self.data.fwbs.life_blkt_fpy = min(
+                    self.data.fwbs.life_fw_fpy,
                     self.data.costs.abktflnc / pv.pflux_fw_neutron_mw,
                     self.data.costs.life_plant,
                 )
             else:
-                fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_fw_fpy,
+                self.data.fwbs.life_blkt_fpy = min(
+                    self.data.fwbs.life_fw_fpy,
                     self.data.costs.life_dpa / dpa_fpy,
                     self.data.costs.life_plant,
                 )  # DEMO
@@ -154,19 +153,19 @@ class Availability(Model):
 
         # Calculate the number of fusion cycles for a given blanket lifetime
         pulse_fpy = tv.t_plant_pulse_total / YEAR_SECONDS
-        self.data.costs.bktcycles = (fwbsv.life_blkt_fpy / pulse_fpy) + 1
+        self.data.costs.bktcycles = (self.data.fwbs.life_blkt_fpy / pulse_fpy) + 1
 
         # if i_plant_availability = 0 use input value for f_t_plant_available
 
         # Taylor and Ward 1999 model (i_plant_availability=1)
         if self.data.costs.i_plant_availability == 1:
             # Which component has the shorter life?
-            if self.data.costs.life_div_fpy < fwbsv.life_blkt_fpy:
+            if self.data.costs.life_div_fpy < self.data.fwbs.life_blkt_fpy:
                 ld = self.data.costs.life_div_fpy
-                lb = fwbsv.life_blkt_fpy
+                lb = self.data.fwbs.life_blkt_fpy
                 td = self.data.costs.t_div_replace_yrs
             else:
-                ld = fwbsv.life_blkt_fpy
+                ld = self.data.fwbs.life_blkt_fpy
                 lb = self.data.costs.life_div_fpy
                 td = self.data.costs.t_blkt_replace_yrs
 
@@ -204,9 +203,9 @@ class Availability(Model):
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
-            if fwbsv.life_blkt_fpy < self.data.costs.life_plant:
-                fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_blkt_fpy / self.data.costs.f_t_plant_available,
+            if self.data.fwbs.life_blkt_fpy < self.data.costs.life_plant:
+                self.data.fwbs.life_blkt_fpy = min(
+                    self.data.fwbs.life_blkt_fpy / self.data.costs.f_t_plant_available,
                     self.data.costs.life_plant,
                 )
 
@@ -225,12 +224,12 @@ class Availability(Model):
                 )
 
         # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
-        self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
+        self.data.costs.life_hcd_fpy = self.data.fwbs.life_blkt_fpy
 
         # Output section
         if output:
             po.oheadr(self.outfile, "Plant Availability")
-            if fwbsv.blktmodel == 0:
+            if self.data.fwbs.blktmodel == 0:
                 po.ovarre(
                     self.outfile,
                     "Allowable blanket neutron fluence (MW-yr/m2)",
@@ -248,7 +247,7 @@ class Availability(Model):
                 self.outfile,
                 "First wall / blanket lifetime (years)",
                 "(life_blkt_fpy)",
-                fwbsv.life_blkt_fpy,
+                self.data.fwbs.life_blkt_fpy,
                 "OP ",
             )
             po.ovarre(
@@ -283,7 +282,7 @@ class Availability(Model):
             )
 
             if self.data.costs.i_plant_availability == 1:
-                if self.data.costs.life_div_fpy < fwbsv.life_blkt_fpy:
+                if self.data.costs.life_div_fpy < self.data.fwbs.life_blkt_fpy:
                     po.ovarre(
                         self.outfile,
                         "Time needed to replace divertor (years)",
@@ -412,13 +411,13 @@ class Availability(Model):
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
-            if fwbsv.life_blkt_fpy < self.data.costs.life_plant:
-                fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_blkt_fpy / self.data.costs.f_t_plant_available,
+            if self.data.fwbs.life_blkt_fpy < self.data.costs.life_plant:
+                self.data.fwbs.life_blkt_fpy = min(
+                    self.data.fwbs.life_blkt_fpy / self.data.costs.f_t_plant_available,
                     self.data.costs.life_plant,
                 )
                 # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
-                self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
+                self.data.costs.life_hcd_fpy = self.data.fwbs.life_blkt_fpy
 
             # Divertor
             if self.data.costs.life_div_fpy < self.data.costs.life_plant:
@@ -445,7 +444,7 @@ class Availability(Model):
                 self.outfile,
                 "First wall / blanket lifetime (FPY)",
                 "(life_blkt_fpy)",
-                fwbsv.life_blkt_fpy,
+                self.data.fwbs.life_blkt_fpy,
                 "OP ",
             )
             po.ovarre(
@@ -548,12 +547,12 @@ class Availability(Model):
         # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
         # or DEMO fusion power model (ibkt_life=1)
         if self.data.costs.ibkt_life == 0:
-            fwbsv.life_blkt_fpy = min(
+            self.data.fwbs.life_blkt_fpy = min(
                 self.data.costs.abktflnc / pv.pflux_fw_neutron_mw,
                 self.data.costs.life_plant,
             )
         else:
-            fwbsv.life_blkt_fpy = min(
+            self.data.fwbs.life_blkt_fpy = min(
                 self.data.costs.life_dpa / dpa_fpy, self.data.costs.life_plant
             )  # DEMO
 
@@ -565,7 +564,7 @@ class Availability(Model):
             self.data.costs.cplife = self.cp_lifetime()
 
         # Current drive lifetime (assumed equal to first wall and blanket lifetime)
-        self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
+        self.data.costs.life_hcd_fpy = self.data.fwbs.life_blkt_fpy
 
         # Calculate the blanket and divertor replacement times !
 
@@ -584,12 +583,12 @@ class Availability(Model):
         mttr_divertor = 0.7e0 * mttr_blanket
 
         #  Which component has the shorter life?
-        if self.data.costs.life_div_fpy < fwbsv.life_blkt_fpy:
+        if self.data.costs.life_div_fpy < self.data.fwbs.life_blkt_fpy:
             lifetime_shortest = self.data.costs.life_div_fpy
-            lifetime_longest = fwbsv.life_blkt_fpy
+            lifetime_longest = self.data.fwbs.life_blkt_fpy
             mttr_shortest = mttr_divertor
         else:
-            lifetime_shortest = fwbsv.life_blkt_fpy
+            lifetime_shortest = self.data.fwbs.life_blkt_fpy
             lifetime_longest = self.data.costs.life_div_fpy
             mttr_shortest = mttr_blanket
 
@@ -861,7 +860,7 @@ class Availability(Model):
         # Calculate cycle limit in terms of days
 
         # Number of cycles between planned blanket replacements, N
-        n = fwbsv.life_blkt_fpy * YEAR_SECONDS / tv.t_plant_pulse_total
+        n = self.data.fwbs.life_blkt_fpy * YEAR_SECONDS / tv.t_plant_pulse_total
 
         # The probability of failure in one pulse cycle
         # (before the reference cycle life)
@@ -1166,12 +1165,12 @@ class Availability(Model):
         dpa_fpy = f_scale * ref_dpa_fpy
 
         if self.data.costs.ibkt_life == 0:
-            fwbsv.life_blkt_fpy = min(
+            self.data.fwbs.life_blkt_fpy = min(
                 self.data.costs.abktflnc / pv.pflux_fw_neutron_mw,
                 self.data.costs.life_plant,
             )
         else:
-            fwbsv.life_blkt_fpy = min(
+            self.data.fwbs.life_blkt_fpy = min(
                 self.data.costs.life_dpa / dpa_fpy, self.data.costs.life_plant
             )  # DEMO
 
@@ -1182,12 +1181,12 @@ class Availability(Model):
         self.data.costs.cplife = self.cp_lifetime()
 
         # Current drive lifetime (assumed equal to first wall and blanket lifetime)
-        self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
+        self.data.costs.life_hcd_fpy = self.data.fwbs.life_blkt_fpy
 
         # Time for a maintenance cycle (years)
         # Shortest component lifetime + time to replace
         shortest_lifetime = min(
-            fwbsv.life_blkt_fpy,
+            self.data.fwbs.life_blkt_fpy,
             self.data.costs.life_div_fpy,
             self.data.costs.cplife,
             self.data.costs.life_hcd_fpy,
@@ -1259,12 +1258,12 @@ class Availability(Model):
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
-            if fwbsv.life_blkt_fpy < self.data.costs.life_plant:
-                fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_blkt_fpy / self.data.costs.f_t_plant_available,
+            if self.data.fwbs.life_blkt_fpy < self.data.costs.life_plant:
+                self.data.fwbs.life_blkt_fpy = min(
+                    self.data.fwbs.life_blkt_fpy / self.data.costs.f_t_plant_available,
                     self.data.costs.life_plant,
                 )
-                self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
+                self.data.costs.life_hcd_fpy = self.data.fwbs.life_blkt_fpy
 
             # Divertor
             if self.data.costs.life_div_fpy < self.data.costs.life_plant:
@@ -1304,7 +1303,7 @@ class Availability(Model):
                 self.outfile,
                 "First wall / blanket lifetime (FPY)",
                 "(life_blkt_fpy)",
-                fwbsv.life_blkt_fpy,
+                self.data.fwbs.life_blkt_fpy,
                 "OP ",
             )
             po.ovarre(
@@ -1326,7 +1325,7 @@ class Availability(Model):
                     self.outfile,
                     "Centrepost TF fast neutron flux (E > 0.1 MeV) (m^(-2).^(-1))",
                     "(neut_flux_cp)",
-                    fwbsv.neut_flux_cp,
+                    self.data.fwbs.neut_flux_cp,
                     "OP ",
                 )
             else:
@@ -1440,9 +1439,9 @@ class Availability(Model):
         if tfv.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             cplife = (
                 self.data.costs.life_plant
-                if fwbsv.neut_flux_cp <= 0.0
+                if self.data.fwbs.neut_flux_cp <= 0.0
                 else min(
-                    (ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS)),
+                    (ctv.nflutfmax / (self.data.fwbs.neut_flux_cp * YEAR_SECONDS)),
                     self.data.costs.life_plant,
                 )
             )

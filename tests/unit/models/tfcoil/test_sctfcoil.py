@@ -7,7 +7,6 @@ from process.data_structure import (
     build_variables,
     constraint_variables,
     divertor_variables,
-    fwbs_variables,
     global_variables,
     physics_variables,
     superconducting_tf_coil_variables,
@@ -17,40 +16,38 @@ from process.models.tfcoil import superconducting as sctf
 from process.models.tfcoil.superconducting import (
     CICCAveragedTurnGeometry,
     CICCIntegerTurnGeometry,
-    CICCSuperconductingTFCoil,
-    CROCOSuperconductingTFCoil,
     SuperconductingTFCoil,
 )
 
 
 @pytest.fixture
-def sctfcoil():
-    """Provides SuperconductingTFCoil object for testing.
+def sctfcoil(process_models):
+    """Fixture to get the SuperconductingTFCoil instance from process_models.
 
     :returns: initialised SuperconductingTFCoil object
     :rtype: process.sctfcoil.SuperconductingTFCoil
     """
-    return SuperconductingTFCoil()
+    return process_models.sctfcoil
 
 
 @pytest.fixture
-def cicc_sctfcoil():
-    """Provides CICCSuperconductingTFCoil object for testing.
+def cicc_sctfcoil(process_models):
+    """Fixture to get the CICCSuperconductingTFCoil instance from process_models.
 
     :returns: initialised CICCSuperconductingTFCoil object
     :rtype: process.sctfcoil.CICCSuperconductingTFCoil
     """
-    return CICCSuperconductingTFCoil()
+    return process_models.cicc_sctfcoil
 
 
 @pytest.fixture
-def croco_sctfcoil():
+def croco_sctfcoil(process_models):
     """Provides CROCOSuperconductingTFCoil object for testing.
 
     :returns: initialised CROCOSuperconductingTFCoil object
     :rtype: process.sctfcoil.CROCOSuperconductingTFCoil
     """
-    return CROCOSuperconductingTFCoil()
+    return process_models.croco_sctfcoil
 
 
 class ProtectParam(NamedTuple):
@@ -1932,7 +1929,9 @@ def test_superconducting_tf_coil_area_and_masses(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "den_steel", tfcoilareaandmassesparam.den_steel)
+    monkeypatch.setattr(
+        sctfcoil.data.fwbs, "den_steel", tfcoilareaandmassesparam.den_steel
+    )
     monkeypatch.setattr(physics_variables, "itart", tfcoilareaandmassesparam.itart)
 
     for name, val in (

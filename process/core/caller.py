@@ -341,11 +341,11 @@ class Caller:
         4    |  KIT HCLL model
         5    |  DCLL model
         """
-        if data_structure.fwbs_variables.i_blanket_type == 1:
+        if self.data.fwbs.i_blanket_type == 1:
             # CCFE HCPB model
             self.models.ccfe_hcpb.run()
 
-        elif data_structure.fwbs_variables.i_blanket_type == 5:
+        elif self.data.fwbs.i_blanket_type == 5:
             # DCLL model
             self.models.dcll.run()
 

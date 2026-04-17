@@ -10,7 +10,6 @@ from process.data_structure import (
     buildings_variables,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     heat_transport_variables,
     pfcoil_variables,
     physics_variables,
@@ -91,8 +90,8 @@ class Buildings(Model):
                 * (build_variables.z_tf_inside_half - build_variables.dz_shld_vv_gap)
                 - build_variables.dz_vv_upper
                 - build_variables.dz_vv_lower,
-                fwbs_variables.whtshld,
-                fwbs_variables.r_cryostat_inboard,
+                self.data.fwbs.whtshld,
+                self.data.fwbs.r_cryostat_inboard,
                 heat_transport_variables.helpow,
             )
 
@@ -429,7 +428,7 @@ class Buildings(Model):
         #  PF coil max radius, cryostat radius, TF coil outer radius
         width_reactor_piece = max(
             pfcoil_variables.r_pf_coil_outer_max,
-            fwbs_variables.r_cryostat_inboard,
+            self.data.fwbs.r_cryostat_inboard,
             tf_radial_dim,
         )
         # Allow for biological shielding around reactor

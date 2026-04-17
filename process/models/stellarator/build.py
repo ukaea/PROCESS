@@ -2,7 +2,6 @@ from process.core import process_output as po
 from process.core.model import DataStructure
 from process.data_structure import (
     build_variables,
-    fwbs_variables,
     heat_transport_variables,
     physics_variables,
     stellarator_configuration,
@@ -30,7 +29,7 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
         data structure object to provide model data
 
     """
-    if fwbs_variables.blktmodel > 0:
+    if data.fwbs.blktmodel > 0:
         build_variables.dr_blkt_inboard = (
             build_variables.blbuith + build_variables.blbmith + build_variables.blbpith
         )
@@ -49,7 +48,7 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
 
     # First Wall
     build_variables.dr_fw_inboard = (
-        2.0e0 * fwbs_variables.radius_fw_channel + 2.0e0 * fwbs_variables.dr_fw_wall
+        2.0e0 * data.fwbs.radius_fw_channel + 2.0e0 * data.fwbs.dr_fw_wall
     )
     build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
 
@@ -176,14 +175,14 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
 
     if heat_transport_variables.ipowerflow == 0:
         data.first_wall.a_fw_total = (
-            1.0e0 - fwbs_variables.fhole
+            1.0e0 - data.fwbs.fhole
         ) * data.first_wall.a_fw_total
     else:
         data.first_wall.a_fw_total = (
             1.0e0
-            - fwbs_variables.fhole
-            - fwbs_variables.f_ster_div_single
-            - fwbs_variables.f_a_fw_outboard_hcd
+            - data.fwbs.fhole
+            - data.fwbs.f_ster_div_single
+            - data.fwbs.f_a_fw_outboard_hcd
         ) * data.first_wall.a_fw_total
 
     if f_output:

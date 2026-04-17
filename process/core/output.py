@@ -6,7 +6,7 @@ from process.models.tfcoil.superconducting import (
 )
 
 
-def write(models, _outfile):
+def write(models, data, _outfile):
     """Write the results to the main output file (OUT.DAT).
 
     Write the program results to a file, in a tidy format.
@@ -122,11 +122,11 @@ def write(models, _outfile):
     # First wall geometry
     models.fw.output()
 
-    if data_structure.fwbs_variables.i_blanket_type == 1:
+    if data.fwbs.i_blanket_type == 1:
         # CCFE HCPB model
         models.ccfe_hcpb.output()
 
-    elif data_structure.fwbs_variables.i_blanket_type == 5:
+    elif data.fwbs.i_blanket_type == 5:
         # DCLL model
         models.dcll.output()
 

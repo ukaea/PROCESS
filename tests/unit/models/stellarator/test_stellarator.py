@@ -5,7 +5,6 @@ import pytest
 
 from process.data_structure import (
     build_variables,
-    fwbs_variables,
     heat_transport_variables,
     impurity_radiation_module,
     physics_variables,
@@ -578,22 +577,22 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "radius_fw_channel", stbildparam.radius_fw_channel
+        stellarator.data.fwbs, "radius_fw_channel", stbildparam.radius_fw_channel
     )
 
-    monkeypatch.setattr(fwbs_variables, "blktmodel", stbildparam.blktmodel)
+    monkeypatch.setattr(stellarator.data.fwbs, "blktmodel", stbildparam.blktmodel)
 
     monkeypatch.setattr(
-        fwbs_variables, "f_ster_div_single", stbildparam.f_ster_div_single
+        stellarator.data.fwbs, "f_ster_div_single", stbildparam.f_ster_div_single
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "f_a_fw_outboard_hcd", stbildparam.f_a_fw_outboard_hcd
+        stellarator.data.fwbs, "f_a_fw_outboard_hcd", stbildparam.f_a_fw_outboard_hcd
     )
 
-    monkeypatch.setattr(fwbs_variables, "fhole", stbildparam.fhole)
+    monkeypatch.setattr(stellarator.data.fwbs, "fhole", stbildparam.fhole)
 
-    monkeypatch.setattr(fwbs_variables, "dr_fw_wall", stbildparam.dr_fw_wall)
+    monkeypatch.setattr(stellarator.data.fwbs, "dr_fw_wall", stbildparam.dr_fw_wall)
 
     monkeypatch.setattr(heat_transport_variables, "ipowerflow", stbildparam.ipowerflow)
 
@@ -804,9 +803,9 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "dewmkg", ststrcparam.dewmkg)
+    monkeypatch.setattr(stellarator.data.fwbs, "dewmkg", ststrcparam.dewmkg)
 
-    monkeypatch.setattr(fwbs_variables, "den_steel", ststrcparam.den_steel)
+    monkeypatch.setattr(stellarator.data.fwbs, "den_steel", ststrcparam.den_steel)
 
     monkeypatch.setattr(structure_variables, "aintmass", ststrcparam.aintmass)
 

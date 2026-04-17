@@ -17,7 +17,6 @@ from process.data_structure import (
     constraint_variables,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     global_variables,
     heat_transport_variables,
     impurity_radiation_module,
@@ -1186,21 +1185,21 @@ class Scan:
             case 67:
                 self.data.cs_fatigue.t_crack_vertical = swp[iscn - 1]
             case 68:
-                fwbs_variables.inlet_temp_liq = swp[iscn - 1]
+                self.data.fwbs.inlet_temp_liq = swp[iscn - 1]
             case 69:
-                fwbs_variables.outlet_temp_liq = swp[iscn - 1]
+                self.data.fwbs.outlet_temp_liq = swp[iscn - 1]
             case 70:
-                fwbs_variables.blpressure_liq = swp[iscn - 1]
+                self.data.fwbs.blpressure_liq = swp[iscn - 1]
             case 71:
-                fwbs_variables.n_liq_recirc = swp[iscn - 1]
+                self.data.fwbs.n_liq_recirc = swp[iscn - 1]
             case 72:
-                fwbs_variables.bz_channel_conduct_liq = swp[iscn - 1]
+                self.data.fwbs.bz_channel_conduct_liq = swp[iscn - 1]
             case 73:
-                fwbs_variables.pnuc_fw_ratio_dcll = swp[iscn - 1]
+                self.data.fwbs.pnuc_fw_ratio_dcll = swp[iscn - 1]
             case 74:
-                fwbs_variables.f_nuc_pow_bz_struct = swp[iscn - 1]
+                self.data.fwbs.f_nuc_pow_bz_struct = swp[iscn - 1]
             case 75:
-                fwbs_variables.dx_fw_module = swp[iscn - 1]
+                self.data.fwbs.dx_fw_module = swp[iscn - 1]
             case 76:
                 heat_transport_variables.eta_turbine = swp[iscn - 1]
             case 77:
