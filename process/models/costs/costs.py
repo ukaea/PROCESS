@@ -11,7 +11,6 @@ from process.data_structure import (
     buildings_variables,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     heat_transport_variables,
     ife_variables,
     pf_power_variables,
@@ -103,7 +102,7 @@ class Costs(Model):
             self.outfile,
             "First wall / blanket life (years)",
             "(life_blkt)",
-            fwbs_variables.life_blkt,
+            self.data.fwbs.life_blkt,
         )
 
         if ife_variables.ife != 1:
@@ -1257,19 +1256,19 @@ class Costs(Model):
         if ife_variables.ife != 1:
             #  Solid blanket (Li2O + Be)
             self.data.costs.c22121 = (
-                1.0e-6 * fwbs_variables.m_blkt_beryllium * self.data.costs.ucblbe
+                1.0e-6 * self.data.fwbs.m_blkt_beryllium * self.data.costs.ucblbe
             )
 
             # CCFE model
             self.data.costs.c22122 = (
-                1.0e-6 * fwbs_variables.m_blkt_li2o * self.data.costs.ucblli2o
+                1.0e-6 * self.data.fwbs.m_blkt_li2o * self.data.costs.ucblli2o
             )
 
             self.data.costs.c22123 = (
-                1.0e-6 * fwbs_variables.m_blkt_steel_total * self.data.costs.ucblss
+                1.0e-6 * self.data.fwbs.m_blkt_steel_total * self.data.costs.ucblss
             )
             self.data.costs.c22124 = (
-                1.0e-6 * fwbs_variables.m_blkt_vanadium * self.data.costs.ucblvd
+                1.0e-6 * self.data.fwbs.m_blkt_vanadium * self.data.costs.ucblvd
             )
             self.data.costs.c22125 = 0.0e0
             self.data.costs.c22126 = 0.0e0
@@ -1281,10 +1280,10 @@ class Costs(Model):
 
             self.data.costs.c22121 = 0.0e0
             self.data.costs.c22122 = (
-                1.0e-6 * fwbs_variables.m_blkt_li2o * self.data.costs.ucblli2o
+                1.0e-6 * self.data.fwbs.m_blkt_li2o * self.data.costs.ucblli2o
             )
             self.data.costs.c22123 = (
-                1.0e-6 * fwbs_variables.m_blkt_steel_total * self.data.costs.ucblss
+                1.0e-6 * self.data.fwbs.m_blkt_steel_total * self.data.costs.ucblss
             )
             self.data.costs.c22124 = 0.0e0
             self.data.costs.c22125 = (
@@ -1307,7 +1306,7 @@ class Costs(Model):
             )
             self.data.costs.c22127 = 1.0e-6 * ife_variables.ucflib * ife_variables.mflibe
             self.data.costs.c22128 = (
-                1.0e-6 * self.data.costs.ucblli * fwbs_variables.m_blkt_lithium
+                1.0e-6 * self.data.costs.ucblli * self.data.fwbs.m_blkt_lithium
             )
 
         self.data.costs.c22121 = (
@@ -1373,7 +1372,7 @@ class Costs(Model):
         if ife_variables.ife != 1:
             self.data.costs.c22131 = (
                 1.0e-6
-                * fwbs_variables.whtshld
+                * self.data.fwbs.whtshld
                 * self.data.costs.ucshld
                 * cmlsa[self.data.costs.lsa - 1]
             )
@@ -1415,7 +1414,7 @@ class Costs(Model):
         if ife_variables.ife != 1:
             self.data.costs.c22132 = (
                 1.0e-6
-                * fwbs_variables.wpenshld
+                * self.data.fwbs.wpenshld
                 * self.data.costs.ucpens
                 * cmlsa[self.data.costs.lsa - 1]
             )
@@ -1880,7 +1879,7 @@ class Costs(Model):
         """
         cmlsa = [0.6900e0, 0.8450e0, 0.9225e0, 1.0000e0]
 
-        self.data.costs.c2223 = 1.0e-6 * fwbs_variables.m_vv * self.data.costs.uccryo
+        self.data.costs.c2223 = 1.0e-6 * self.data.fwbs.m_vv * self.data.costs.uccryo
         self.data.costs.c2223 = (
             self.data.costs.fkind
             * self.data.costs.c2223
@@ -2261,11 +2260,11 @@ class Costs(Model):
         #  inconsistency exists here...
         self.data.costs.cpp = (
             1.0e-6
-            * self.data.costs.uchts[fwbs_variables.i_blkt_coolant_type - 1]
+            * self.data.costs.uchts[self.data.fwbs.i_blkt_coolant_type - 1]
             * (
                 (1.0e6 * heat_transport_variables.p_fw_div_heat_deposited_mw) ** exphts
-                + (1.0e6 * fwbs_variables.p_blkt_nuclear_heat_total_mw) ** exphts
-                + (1.0e6 * fwbs_variables.p_shld_nuclear_heat_mw) ** exphts
+                + (1.0e6 * self.data.fwbs.p_blkt_nuclear_heat_total_mw) ** exphts
+                + (1.0e6 * self.data.fwbs.p_shld_nuclear_heat_mw) ** exphts
             )
         )
 
@@ -2471,7 +2470,7 @@ class Costs(Model):
         if self.data.costs.ireactor == 1:
             self.data.costs.c23 = (
                 1.0e-6
-                * self.data.costs.ucturb[fwbs_variables.i_blkt_coolant_type - 1]
+                * self.data.costs.ucturb[self.data.fwbs.i_blkt_coolant_type - 1]
                 * (heat_transport_variables.p_plant_electric_gross_mw / 1200.0e0)
                 ** exptpe
             )
@@ -2784,7 +2783,7 @@ class Costs(Model):
 
         #  Compound interest factor
 
-        feffwbl = (1.0e0 + self.data.costs.discount_rate) ** fwbs_variables.life_blkt
+        feffwbl = (1.0e0 + self.data.costs.discount_rate) ** self.data.fwbs.life_blkt
 
         #  Capital recovery factor
 
@@ -2800,7 +2799,7 @@ class Costs(Model):
         )
 
         if self.data.costs.ifueltyp == 2:
-            annfwbl *= 1.0e0 - fwbs_variables.life_blkt_fpy / self.data.costs.life_plant
+            annfwbl *= 1.0e0 - self.data.fwbs.life_blkt_fpy / self.data.costs.life_plant
 
         #  Cost of electricity due to first wall/blanket replacements
 
@@ -3047,14 +3046,14 @@ class Costs(Model):
         Required for replacement component costs.
         """
         # FW/Blanket and HCD
-        if fwbs_variables.life_blkt_fpy < self.data.costs.life_plant:
-            fwbs_variables.life_blkt = (
-                fwbs_variables.life_blkt_fpy * self.data.costs.f_t_plant_available
+        if self.data.fwbs.life_blkt_fpy < self.data.costs.life_plant:
+            self.data.fwbs.life_blkt = (
+                self.data.fwbs.life_blkt_fpy * self.data.costs.f_t_plant_available
             )
             # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
-            self.data.costs.cdrlife_cal = fwbs_variables.life_blkt
+            self.data.costs.cdrlife_cal = self.data.fwbs.life_blkt
         else:
-            fwbs_variables.life_blkt = fwbs_variables.life_blkt_fpy
+            self.data.fwbs.life_blkt = self.data.fwbs.life_blkt_fpy
 
         # Divertor
         if self.data.costs.life_div_fpy < self.data.costs.life_plant:

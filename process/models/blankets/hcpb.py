@@ -14,7 +14,6 @@ from process.data_structure import (
     ccfe_hcpb_module,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     heat_transport_variables,
     physics_variables,
     primary_pumping_variables,
@@ -45,29 +44,33 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
     def run(self, output: bool = False):
         # Coolant type
-        fwbs_variables.i_blkt_coolant_type = 1
+        self.data.fwbs.i_blkt_coolant_type = 1
         # Note that the first wall coolant is now input separately.
 
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
         self.component_volumes()
 
         dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
-        fwbs_variables.radius_blkt_channel = dia_blkt_channel / 2
+        self.data.fwbs.radius_blkt_channel = dia_blkt_channel / 2
         (
-            fwbs_variables.radius_blkt_channel_90_bend,
-            fwbs_variables.radius_blkt_channel_180_bend,
-        ) = self.calculate_pipe_bend_radius(i_ps=1)
+            self.data.fwbs.radius_blkt_channel_90_bend,
+            self.data.fwbs.radius_blkt_channel_180_bend,
+        ) = self.calculate_pipe_bend_radius(
+            i_ps=1,
+            radius_fw_channel=self.data.fwbs.radius_fw_channel,
+            b_bz_liq=self.data.fwbs.b_bz_liq,
+        )
 
         self.set_blanket_module_geometry()
 
-        blanket_library.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
-            n_blkt_inboard_modules_toroidal=fwbs_variables.n_blkt_inboard_modules_toroidal,
+        blanket_vars.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
+            n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
             dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
         )
-        blanket_library.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
-            n_blkt_outboard_modules_toroidal=fwbs_variables.n_blkt_outboard_modules_toroidal,
+        blanket_vars.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
+            n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
             dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
@@ -99,7 +102,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
 
             # TF fast neutron flux (E > 0.1 MeV) [m^{-2}.s^{-1}]
-            fwbs_variables.neut_flux_cp = self.st_tf_centrepost_fast_neut_flux(
+            self.data.fwbs.neut_flux_cp = self.st_tf_centrepost_fast_neut_flux(
                 physics_variables.p_neutron_total_mw,
                 build_variables.dr_shld_inboard,
                 physics_variables.rmajor,
@@ -107,19 +110,19 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
             # TF, shield and total CP nuclear heating [MW]
             (
-                fwbs_variables.pnuc_cp_tf,
-                fwbs_variables.p_cp_shield_nuclear_heat_mw,
-                fwbs_variables.pnuc_cp,
+                self.data.fwbs.pnuc_cp_tf,
+                self.data.fwbs.p_cp_shield_nuclear_heat_mw,
+                self.data.fwbs.pnuc_cp,
             ) = self.st_centrepost_nuclear_heating(
                 physics_variables.p_neutron_total_mw, build_variables.dr_shld_inboard
             )
 
         else:  # No CP
             f_geom_cp = 0
-            fwbs_variables.pnuc_cp_tf = 0
-            fwbs_variables.p_cp_shield_nuclear_heat_mw = 0
-            fwbs_variables.pnuc_cp = 0
-            fwbs_variables.neut_flux_cp = 0
+            self.data.fwbs.pnuc_cp_tf = 0
+            self.data.fwbs.p_cp_shield_nuclear_heat_mw = 0
+            self.data.fwbs.pnuc_cp = 0
+            self.data.fwbs.neut_flux_cp = 0
 
         self.component_masses()
 
@@ -128,20 +131,20 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         #       the divertor and the centrepost (for itart == 1),
         self.nuclear_heating_magnets(output=output)
 
-        fwbs_variables.p_fw_nuclear_heat_total_mw = self.nuclear_heating_fw(
-            m_fw_total=fwbs_variables.m_fw_total,
+        self.data.fwbs.p_fw_nuclear_heat_total_mw = self.nuclear_heating_fw(
+            m_fw_total=self.data.fwbs.m_fw_total,
             fw_armour_u_nuc_heating=ccfe_hcpb_module.fw_armour_u_nuc_heating,
             p_fusion_total_mw=physics_variables.p_fusion_total_mw,
         )
 
-        fwbs_variables.p_blkt_nuclear_heat_total_mw, ccfe_hcpb_module.exp_blanket = (
+        self.data.fwbs.p_blkt_nuclear_heat_total_mw, ccfe_hcpb_module.exp_blanket = (
             self.nuclear_heating_blanket(
-                m_blkt_total=fwbs_variables.m_blkt_total,
+                m_blkt_total=self.data.fwbs.m_blkt_total,
                 p_fusion_total_mw=physics_variables.p_fusion_total_mw,
             )
         )
         (
-            fwbs_variables.p_shld_nuclear_heat_mw,
+            self.data.fwbs.p_shld_nuclear_heat_mw,
             ccfe_hcpb_module.exp_shield1,
             ccfe_hcpb_module.exp_shield2,
             ccfe_hcpb_module.shld_u_nuc_heating,
@@ -150,7 +153,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             dr_shld_outboard=build_variables.dr_shld_outboard,
             dr_shld_inboard=build_variables.dr_shld_inboard,
             shield_density=ccfe_hcpb_module.shield_density,
-            whtshld=fwbs_variables.whtshld,
+            whtshld=self.data.fwbs.whtshld,
             x_blanket=ccfe_hcpb_module.x_blanket,
             p_fusion_total_mw=physics_variables.p_fusion_total_mw,
         )
@@ -166,10 +169,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # fractions as before.
         # Total nuclear power deposited in the blanket sector (MW)
         ccfe_hcpb_module.pnuc_tot_blk_sector = (
-            fwbs_variables.p_fw_nuclear_heat_total_mw
-            + fwbs_variables.p_blkt_nuclear_heat_total_mw
-            + fwbs_variables.p_shld_nuclear_heat_mw
-            + fwbs_variables.p_tf_nuclear_heat_mw
+            self.data.fwbs.p_fw_nuclear_heat_total_mw
+            + self.data.fwbs.p_blkt_nuclear_heat_total_mw
+            + self.data.fwbs.p_shld_nuclear_heat_mw
+            + self.data.fwbs.p_tf_nuclear_heat_mw
         )
 
         # Total nuclear power deposited in the
@@ -182,57 +185,57 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Solid angle fraction taken by the breeding blankets/shields
         f_geom_blanket = (
             1
-            - divertor_variables.n_divertors * fwbs_variables.f_ster_div_single
+            - divertor_variables.n_divertors * self.data.fwbs.f_ster_div_single
             - f_geom_cp
         )
 
         # Power to the first wall (MW)
-        fwbs_variables.p_fw_nuclear_heat_total_mw = (
+        self.data.fwbs.p_fw_nuclear_heat_total_mw = (
             (
-                fwbs_variables.p_fw_nuclear_heat_total_mw
+                self.data.fwbs.p_fw_nuclear_heat_total_mw
                 / ccfe_hcpb_module.pnuc_tot_blk_sector
             )
-            * fwbs_variables.f_p_blkt_multiplication
+            * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
         )
 
         # Power to the blanket (MW)
-        fwbs_variables.p_blkt_nuclear_heat_total_mw = (
+        self.data.fwbs.p_blkt_nuclear_heat_total_mw = (
             (
-                fwbs_variables.p_blkt_nuclear_heat_total_mw
+                self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 / ccfe_hcpb_module.pnuc_tot_blk_sector
             )
-            * fwbs_variables.f_p_blkt_multiplication
+            * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
         )
 
         # Power to the shield(MW)
         # The power deposited in the CP shield is added back in powerflow_calc
-        fwbs_variables.p_shld_nuclear_heat_mw = (
+        self.data.fwbs.p_shld_nuclear_heat_mw = (
             (
-                fwbs_variables.p_shld_nuclear_heat_mw
+                self.data.fwbs.p_shld_nuclear_heat_mw
                 / ccfe_hcpb_module.pnuc_tot_blk_sector
             )
-            * fwbs_variables.f_p_blkt_multiplication
+            * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
         )
 
         # Power to the TF coils (MW)
         # The power deposited in the CP conductor is added back here
-        fwbs_variables.p_tf_nuclear_heat_mw = (
-            (fwbs_variables.p_tf_nuclear_heat_mw / ccfe_hcpb_module.pnuc_tot_blk_sector)
-            * fwbs_variables.f_p_blkt_multiplication
+        self.data.fwbs.p_tf_nuclear_heat_mw = (
+            (self.data.fwbs.p_tf_nuclear_heat_mw / ccfe_hcpb_module.pnuc_tot_blk_sector)
+            * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
-            + fwbs_variables.pnuc_cp_tf
+            + self.data.fwbs.pnuc_cp_tf
         )
 
         # Power deposited in the CP
-        fwbs_variables.p_cp_shield_nuclear_heat_mw = (
-            f_geom_cp * physics_variables.p_neutron_total_mw - fwbs_variables.pnuc_cp_tf
+        self.data.fwbs.p_cp_shield_nuclear_heat_mw = (
+            f_geom_cp * physics_variables.p_neutron_total_mw - self.data.fwbs.pnuc_cp_tf
         )
 
         # Old code kept for backward compatibility
@@ -243,8 +246,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # ---
 
         # New code, a bit simpler
-        fwbs_variables.p_blkt_multiplication_mw = (
-            (fwbs_variables.f_p_blkt_multiplication - 1)
+        self.data.fwbs.p_blkt_multiplication_mw = (
+            (self.data.fwbs.f_p_blkt_multiplication - 1)
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
         )
@@ -277,34 +280,34 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # Blanket coolant volume (m3)
         coolvol += (
-            fwbs_variables.vol_blkt_total * fwbs_variables.f_a_blkt_cooling_channels
+            self.data.fwbs.vol_blkt_total * self.data.fwbs.f_a_blkt_cooling_channels
         )
 
         # Shield coolant volume (m3)
-        coolvol += fwbs_variables.vol_shld_total * fwbs_variables.vfshld
+        coolvol += self.data.fwbs.vol_shld_total * self.data.fwbs.vfshld
 
         # First wall coolant volume (m3)
         coolvol = (
             coolvol
             + self.data.first_wall.a_fw_inboard
             * build_variables.dr_fw_inboard
-            * fwbs_variables.f_a_fw_coolant_inboard
+            * self.data.fwbs.f_a_fw_coolant_inboard
             + self.data.first_wall.a_fw_outboard
             * build_variables.dr_fw_outboard
-            * fwbs_variables.f_a_fw_coolant_outboard
+            * self.data.fwbs.f_a_fw_coolant_outboard
         )
 
         # Mass of He coolant = volume * density at typical coolant temperatures and pressures (kg)
-        fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 1.517
+        self.data.fwbs.m_fw_blkt_div_coolant_total = coolvol * 1.517
 
         # Average first wall coolant fraction, only used by old routines in fispact.f90, safety.f90
-        fwbs_variables.fwclfr = (
+        self.data.fwbs.fwclfr = (
             self.data.first_wall.a_fw_inboard
             * build_variables.dr_fw_inboard
-            * fwbs_variables.f_a_fw_coolant_inboard
+            * self.data.fwbs.f_a_fw_coolant_inboard
             + self.data.first_wall.a_fw_outboard
             * build_variables.dr_fw_outboard
-            * fwbs_variables.f_a_fw_coolant_outboard
+            * self.data.fwbs.f_a_fw_coolant_outboard
         ) / (
             self.data.first_wall.a_fw_total
             * 0.5
@@ -337,97 +340,97 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
 
         # Shield mass (kg)
-        fwbs_variables.whtshld = (
-            fwbs_variables.vol_shld_total
-            * fwbs_variables.den_steel
-            * (1.0 - fwbs_variables.vfshld)
+        self.data.fwbs.whtshld = (
+            self.data.fwbs.vol_shld_total
+            * self.data.fwbs.den_steel
+            * (1.0 - self.data.fwbs.vfshld)
         )
 
         # Penetration shield mass (set = internal shield) (kg)
-        fwbs_variables.wpenshld = fwbs_variables.whtshld
+        self.data.fwbs.wpenshld = self.data.fwbs.whtshld
 
         # First wall volume (m^3)
-        fwbs_variables.vol_fw_total = (
+        self.data.fwbs.vol_fw_total = (
             self.data.first_wall.a_fw_inboard
             * build_variables.dr_fw_inboard
-            * (1.0 - fwbs_variables.f_a_fw_coolant_inboard)
+            * (1.0 - self.data.fwbs.f_a_fw_coolant_inboard)
             + self.data.first_wall.a_fw_outboard
             * build_variables.dr_fw_outboard
-            * (1.0 - fwbs_variables.f_a_fw_coolant_outboard)
+            * (1.0 - self.data.fwbs.f_a_fw_coolant_outboard)
         )
 
         # First wall mass, excluding armour (kg)
-        fwbs_variables.m_fw_total = (
-            fwbs_variables.den_steel * fwbs_variables.vol_fw_total
+        self.data.fwbs.m_fw_total = (
+            self.data.fwbs.den_steel * self.data.fwbs.vol_fw_total
         )
 
         # First wall armour volume (m^3)
-        fwbs_variables.fw_armour_vol = (
-            physics_variables.a_plasma_surface * fwbs_variables.fw_armour_thickness
+        self.data.fwbs.fw_armour_vol = (
+            physics_variables.a_plasma_surface * self.data.fwbs.fw_armour_thickness
         )
 
         # First wall armour mass (kg)
-        fwbs_variables.fw_armour_mass = (
-            fwbs_variables.fw_armour_vol * constants.DEN_TUNGSTEN
+        self.data.fwbs.fw_armour_mass = (
+            self.data.fwbs.fw_armour_vol * constants.DEN_TUNGSTEN
         )
 
-        fwbs_variables.breeder_f = max(fwbs_variables.breeder_f, 1.0e-10)
-        fwbs_variables.breeder_f = min(fwbs_variables.breeder_f, 1.0)
+        self.data.fwbs.breeder_f = max(self.data.fwbs.breeder_f, 1.0e-10)
+        self.data.fwbs.breeder_f = min(self.data.fwbs.breeder_f, 1.0)
 
         # f_vol_blkt_tibe12 = f_vol_blkt_li4sio4 * (1 - breeder_f)/breeder_f
         # New combined variable breeder_multiplier
         # Lithium orthosilicate fraction:
-        fwbs_variables.f_vol_blkt_li4sio4 = (
-            fwbs_variables.breeder_f * fwbs_variables.breeder_multiplier
+        self.data.fwbs.f_vol_blkt_li4sio4 = (
+            self.data.fwbs.breeder_f * self.data.fwbs.breeder_multiplier
         )
 
         # Titanium beryllide fraction, and mass (kg):
-        fwbs_variables.f_vol_blkt_tibe12 = (
-            fwbs_variables.breeder_multiplier - fwbs_variables.f_vol_blkt_li4sio4
+        self.data.fwbs.f_vol_blkt_tibe12 = (
+            self.data.fwbs.breeder_multiplier - self.data.fwbs.f_vol_blkt_li4sio4
         )
-        fwbs_variables.m_blkt_tibe12 = (
-            fwbs_variables.vol_blkt_total * fwbs_variables.f_vol_blkt_tibe12 * 2260.0
+        self.data.fwbs.m_blkt_tibe12 = (
+            self.data.fwbs.vol_blkt_total * self.data.fwbs.f_vol_blkt_tibe12 * 2260.0
         )
 
         # Blanket Lithium orthosilicate mass (kg)
         # Ref: www.rockwoodlithium.com...
-        fwbs_variables.m_blkt_li4sio4 = (
-            fwbs_variables.vol_blkt_total * fwbs_variables.f_vol_blkt_li4sio4 * 2400.0
+        self.data.fwbs.m_blkt_li4sio4 = (
+            self.data.fwbs.vol_blkt_total * self.data.fwbs.f_vol_blkt_li4sio4 * 2400.0
         )
 
         # TODO sort this out so that costs model uses new variables.
         # #327 For backwards compatibility, set the old blanket masses the same:
-        fwbs_variables.m_blkt_beryllium = fwbs_variables.m_blkt_tibe12
-        fwbs_variables.m_blkt_li2o = fwbs_variables.m_blkt_li4sio4
+        self.data.fwbs.m_blkt_beryllium = self.data.fwbs.m_blkt_tibe12
+        self.data.fwbs.m_blkt_li2o = self.data.fwbs.m_blkt_li4sio4
 
         # Steel fraction by volume is the remainder:
-        fwbs_variables.f_vol_blkt_steel = (
+        self.data.fwbs.f_vol_blkt_steel = (
             1.0
-            - fwbs_variables.f_vol_blkt_li4sio4
-            - fwbs_variables.f_vol_blkt_tibe12
-            - fwbs_variables.vfcblkt
-            - fwbs_variables.vfpblkt
+            - self.data.fwbs.f_vol_blkt_li4sio4
+            - self.data.fwbs.f_vol_blkt_tibe12
+            - self.data.fwbs.vfcblkt
+            - self.data.fwbs.vfpblkt
         )
 
         # Steel mass (kg)
-        fwbs_variables.m_blkt_steel_total = (
-            fwbs_variables.vol_blkt_total
-            * fwbs_variables.f_vol_blkt_steel
-            * fwbs_variables.den_steel
+        self.data.fwbs.m_blkt_steel_total = (
+            self.data.fwbs.vol_blkt_total
+            * self.data.fwbs.f_vol_blkt_steel
+            * self.data.fwbs.den_steel
         )
 
         # Total blanket mass (kg)
-        fwbs_variables.m_blkt_total = (
-            fwbs_variables.m_blkt_tibe12
-            + fwbs_variables.m_blkt_li4sio4
-            + fwbs_variables.m_blkt_steel_total
+        self.data.fwbs.m_blkt_total = (
+            self.data.fwbs.m_blkt_tibe12
+            + self.data.fwbs.m_blkt_li4sio4
+            + self.data.fwbs.m_blkt_steel_total
         )
 
         # Total mass of first wall and blanket
-        fwbs_variables.armour_fw_bl_mass = (
-            fwbs_variables.fw_armour_mass
-            + fwbs_variables.m_fw_total
-            + fwbs_variables.m_blkt_total
+        self.data.fwbs.armour_fw_bl_mass = (
+            self.data.fwbs.fw_armour_mass
+            + self.data.fwbs.m_fw_total
+            + self.data.fwbs.m_blkt_total
         )
 
     def nuclear_heating_magnets(self, output: bool):
@@ -450,34 +453,34 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # First wall void fractions
 
         # inboard FW coolant void fraction
-        fwbs_variables.f_a_fw_coolant_inboard = (
+        self.data.fwbs.f_a_fw_coolant_inboard = (
             np.pi
-            * fwbs_variables.radius_fw_channel**2
-            / (fwbs_variables.dx_fw_module * build_variables.dr_fw_inboard)
+            * self.data.fwbs.radius_fw_channel**2
+            / (self.data.fwbs.dx_fw_module * build_variables.dr_fw_inboard)
         )
 
         # outboard FW coolant void fraction
-        fwbs_variables.f_a_fw_coolant_outboard = fwbs_variables.f_a_fw_coolant_inboard
+        self.data.fwbs.f_a_fw_coolant_outboard = self.data.fwbs.f_a_fw_coolant_inboard
 
         # mean FW coolant void fraction
-        vffwm = fwbs_variables.f_a_fw_coolant_inboard
+        vffwm = self.data.fwbs.f_a_fw_coolant_inboard
 
         # Calculate smeared densities of blanket sections
         # gaseous He coolant in armour, FW & blanket: He mass is neglected
         ccfe_hcpb_module.armour_density = constants.DEN_TUNGSTEN * (1.0 - vffwm)
-        ccfe_hcpb_module.fw_density = fwbs_variables.den_steel * (1.0 - vffwm)
+        ccfe_hcpb_module.fw_density = self.data.fwbs.den_steel * (1.0 - vffwm)
         ccfe_hcpb_module.blanket_density = (
-            fwbs_variables.m_blkt_total / fwbs_variables.vol_blkt_total
+            self.data.fwbs.m_blkt_total / self.data.fwbs.vol_blkt_total
         )
         ccfe_hcpb_module.shield_density = (
-            fwbs_variables.whtshld / fwbs_variables.vol_shld_total
+            self.data.fwbs.whtshld / self.data.fwbs.vol_shld_total
         )
         # Picking the largest value for VV thickness
         d_vv_all = build_variables.dr_vv_inboard
         d_vv_all = max(d_vv_all, build_variables.dr_vv_outboard)
 
         if d_vv_all > 1.0e-6:
-            ccfe_hcpb_module.vv_density = fwbs_variables.m_vv / fwbs_variables.vol_vv
+            ccfe_hcpb_module.vv_density = self.data.fwbs.m_vv / self.data.fwbs.vol_vv
         else:
             ccfe_hcpb_module.vv_density = 0.0
 
@@ -503,7 +506,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Exponents (tonne/m2)
         # Blanket exponent (/1000 for kg -> tonnes)
         ccfe_hcpb_module.x_blanket = (
-            ccfe_hcpb_module.armour_density * fwbs_variables.fw_armour_thickness
+            ccfe_hcpb_module.armour_density * self.data.fwbs.fw_armour_thickness
             + ccfe_hcpb_module.fw_density
             * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
             / 2.0
@@ -539,7 +542,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
 
         # Total heating (MW)
-        fwbs_variables.p_tf_nuclear_heat_mw = (
+        self.data.fwbs.p_tf_nuclear_heat_mw = (
             ccfe_hcpb_module.tfc_nuc_heating
             * (physics_variables.p_fusion_total_mw / 1000.0)
             / 1.0e6
@@ -569,7 +572,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 self.outfile,
                 "Total nuclear heating in TF coil (MW)",
                 "(p_tf_nuclear_heat_mw.)",
-                fwbs_variables.p_tf_nuclear_heat_mw,
+                self.data.fwbs.p_tf_nuclear_heat_mw,
             )
             po.ovarre(
                 self.outfile,
@@ -748,43 +751,43 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         """
         # Radiation power incident on HCD apparatus (MW)
-        fwbs_variables.p_fw_hcd_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_outboard_hcd
+        self.data.fwbs.p_fw_hcd_rad_total_mw = (
+            physics_variables.p_plasma_rad_mw * self.data.fwbs.f_a_fw_outboard_hcd
         )
 
         # Radiation power incident on first wall (MW)
-        fwbs_variables.p_fw_rad_total_mw = (
+        self.data.fwbs.p_fw_rad_total_mw = (
             physics_variables.p_plasma_rad_mw
-            - fwbs_variables.p_div_rad_total_mw
-            - fwbs_variables.p_fw_hcd_rad_total_mw
+            - self.data.fwbs.p_div_rad_total_mw
+            - self.data.fwbs.p_fw_hcd_rad_total_mw
         )
 
         # If we have chosen pressurised water as the blanket coolant, set the
         # coolant outlet temperature as 20 deg C below the boiling point
-        if fwbs_variables.i_blkt_coolant_type == 2:
+        if self.data.fwbs.i_blkt_coolant_type == 2:
             outlet_saturated_fluid_properties = FluidProperties.of(
                 "Water",
-                pressure=fwbs_variables.pres_blkt_coolant * 1.0e6,
+                pressure=self.data.fwbs.pres_blkt_coolant * 1.0e6,
                 vapor_quality=0,
             )
-            fwbs_variables.temp_blkt_coolant_out = (
+            self.data.fwbs.temp_blkt_coolant_out = (
                 outlet_saturated_fluid_properties.temperature - 20.0
             )  # in K
 
         # Surface heat flux on first wall (outboard and inboard) (MW)
         # All of the fast particle losses go to the outer wall.
-        fwbs_variables.psurffwo = (
-            fwbs_variables.p_fw_rad_total_mw
+        self.data.fwbs.psurffwo = (
+            self.data.fwbs.p_fw_rad_total_mw
             * self.data.first_wall.a_fw_outboard
             / self.data.first_wall.a_fw_total
             + current_drive_variables.p_beam_orbit_loss_mw
             + physics_variables.p_fw_alpha_mw
         )
-        fwbs_variables.psurffwi = fwbs_variables.p_fw_rad_total_mw * (
+        self.data.fwbs.psurffwi = self.data.fwbs.p_fw_rad_total_mw * (
             1 - self.data.first_wall.a_fw_outboard / self.data.first_wall.a_fw_total
         )
 
-        i_p_coolant_pumping = PumpingPowerModelTypes(fwbs_variables.i_p_coolant_pumping)
+        i_p_coolant_pumping = PumpingPowerModelTypes(self.data.fwbs.i_p_coolant_pumping)
         if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
             # User sets mechanical pumping power directly
             (
@@ -797,15 +800,15 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 f_p_blkt_coolant_pump_total_heat=heat_transport_variables.f_p_blkt_coolant_pump_total_heat,
                 f_p_shld_coolant_pump_total_heat=heat_transport_variables.f_p_shld_coolant_pump_total_heat,
                 f_p_div_coolant_pump_total_heat=heat_transport_variables.f_p_div_coolant_pump_total_heat,
-                p_fw_nuclear_heat_total_mw=fwbs_variables.p_fw_nuclear_heat_total_mw,
-                psurffwi=fwbs_variables.psurffwi,
-                psurffwo=fwbs_variables.psurffwo,
-                p_blkt_nuclear_heat_total_mw=fwbs_variables.p_blkt_nuclear_heat_total_mw,
+                p_fw_nuclear_heat_total_mw=self.data.fwbs.p_fw_nuclear_heat_total_mw,
+                psurffwi=self.data.fwbs.psurffwi,
+                psurffwo=self.data.fwbs.psurffwo,
+                p_blkt_nuclear_heat_total_mw=self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 p_shld_nuclear_heat_mw=heat_transport_variables.p_shld_nuclear_heat_mw,
-                p_cp_shield_nuclear_heat_mw=fwbs_variables.p_cp_shield_nuclear_heat_mw,
+                p_cp_shield_nuclear_heat_mw=self.data.fwbs.p_cp_shield_nuclear_heat_mw,
                 p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
-                p_div_nuclear_heat_total_mw=fwbs_variables.p_div_nuclear_heat_total_mw,
-                p_div_rad_total_mw=fwbs_variables.p_div_rad_total_mw,
+                p_div_nuclear_heat_total_mw=self.data.fwbs.p_div_nuclear_heat_total_mw,
+                p_div_rad_total_mw=self.data.fwbs.p_div_rad_total_mw,
             )
 
         elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
@@ -819,16 +822,16 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.f_p_shld_coolant_pump_total_heat
                 * (
-                    fwbs_variables.p_shld_nuclear_heat_mw
-                    + fwbs_variables.p_cp_shield_nuclear_heat_mw
+                    self.data.fwbs.p_shld_nuclear_heat_mw
+                    + self.data.fwbs.p_cp_shield_nuclear_heat_mw
                 )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
-                    + fwbs_variables.p_div_nuclear_heat_total_mw
-                    + fwbs_variables.p_div_rad_total_mw
+                    + self.data.fwbs.p_div_nuclear_heat_total_mw
+                    + self.data.fwbs.p_div_rad_total_mw
                 )
             )
 
@@ -844,7 +847,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 / primary_pumping_variables.gamma_he
             )
             # N.B. Currenlty i_p_coolant_pumping==3 uses seperate variables found in
-            # primary_pumping_variables rather than fwbs_variables.
+            # primary_pumping_variables rather than self.data.fwbs.
             # The pressure (p_he) is assumed to be the pressure at the
             # blanket inlet/pump oulet.
             # The pressures (found in fwbs_variables) for coolants using
@@ -855,12 +858,12 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             dt_he = (
                 primary_pumping_variables.t_out_bb - primary_pumping_variables.t_in_bb
             )
-            fpump = t_in_compressor / (fwbs_variables.etaiso * dt_he) * (pfactor - 1)
+            fpump = t_in_compressor / (self.data.fwbs.etaiso * dt_he) * (pfactor - 1)
             p_plasma = (
-                fwbs_variables.p_fw_nuclear_heat_total_mw
-                + fwbs_variables.psurffwi
-                + fwbs_variables.psurffwo
-                + fwbs_variables.p_blkt_nuclear_heat_total_mw
+                self.data.fwbs.p_fw_nuclear_heat_total_mw
+                + self.data.fwbs.psurffwi
+                + self.data.fwbs.psurffwo
+                + self.data.fwbs.p_blkt_nuclear_heat_total_mw
             )
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
                 primary_pumping_variables.f_p_fw_blkt_pump
@@ -874,16 +877,16 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             heat_transport_variables.p_shld_coolant_pump_mw = (
                 heat_transport_variables.f_p_shld_coolant_pump_total_heat
                 * (
-                    fwbs_variables.p_shld_nuclear_heat_mw
-                    + fwbs_variables.p_cp_shield_nuclear_heat_mw
+                    self.data.fwbs.p_shld_nuclear_heat_mw
+                    + self.data.fwbs.p_cp_shield_nuclear_heat_mw
                 )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
-                    + fwbs_variables.p_div_nuclear_heat_total_mw
-                    + fwbs_variables.p_div_rad_total_mw
+                    + self.data.fwbs.p_div_nuclear_heat_total_mw
+                    + self.data.fwbs.p_div_rad_total_mw
                 )
             )
             if output:
@@ -959,19 +962,19 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     self.outfile,
                     "Radius of blanket cooling channels (m)",
                     "(radius_blkt_channel)",
-                    fwbs_variables.radius_blkt_channel,
+                    self.data.fwbs.radius_blkt_channel,
                 )
                 po.ovarre(
                     self.outfile,
                     "Radius of 90 degree coolant channel bend (m)",
                     "(radius_blkt_channel_90_bend)",
-                    fwbs_variables.radius_blkt_channel_90_bend,
+                    self.data.fwbs.radius_blkt_channel_90_bend,
                 )
                 po.ovarre(
                     self.outfile,
                     "Radius of 180 degree coolant channel bend (m)",
                     "(radius_blkt_channel_180_bend)",
-                    fwbs_variables.radius_blkt_channel_180_bend,
+                    self.data.fwbs.radius_blkt_channel_180_bend,
                 )
 
     def st_cp_angle_fraction(self, z_cp_top, r_cp_mid, r_cp_top, rmajor):
@@ -1262,26 +1265,26 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "Titanium beryllide fraction",
             "(f_vol_blkt_tibe12)",
-            fwbs_variables.f_vol_blkt_tibe12,
+            self.data.fwbs.f_vol_blkt_tibe12,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Lithium orthosilicate fraction",
             "(f_vol_blkt_li4sio4)",
-            fwbs_variables.f_vol_blkt_li4sio4,
+            self.data.fwbs.f_vol_blkt_li4sio4,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Steel fraction",
             "(f_vol_blkt_steel)",
-            fwbs_variables.f_vol_blkt_steel,
+            self.data.fwbs.f_vol_blkt_steel,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Coolant fraction", "(vfcblkt)", fwbs_variables.vfcblkt)
+        po.ovarrf(self.outfile, "Coolant fraction", "(vfcblkt)", self.data.fwbs.vfcblkt)
         po.ovarrf(
-            self.outfile, "Purge gas fraction", "(vfpblkt)", fwbs_variables.vfpblkt
+            self.outfile, "Purge gas fraction", "(vfpblkt)", self.data.fwbs.vfpblkt
         )
 
         po.osubhd(self.outfile, "Component Volumes :")
@@ -1290,35 +1293,35 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "First Wall Armour Volume (m3)",
             "(fw_armour_vol)",
-            fwbs_variables.fw_armour_vol,
+            self.data.fwbs.fw_armour_vol,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "First Wall Volume (m3)",
             "(vol_fw_total)",
-            fwbs_variables.vol_fw_total,
+            self.data.fwbs.vol_fw_total,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Blanket Volume (m3)",
             "(vol_blkt_total)",
-            fwbs_variables.vol_blkt_total,
+            self.data.fwbs.vol_blkt_total,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Shield Volume (m3)",
             "(vol_shld_total)",
-            fwbs_variables.vol_shld_total,
+            self.data.fwbs.vol_shld_total,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Vacuum vessel volume (m3)",
             "(vol_vv)",
-            fwbs_variables.vol_vv,
+            self.data.fwbs.vol_vv,
             "OP ",
         )
 
@@ -1328,59 +1331,59 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "First Wall Armour Mass (kg)",
             "(fw_armour_mass)",
-            fwbs_variables.fw_armour_mass,
+            self.data.fwbs.fw_armour_mass,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "First Wall Mass, excluding armour (kg)",
             "(m_fw_total)",
-            fwbs_variables.m_fw_total,
+            self.data.fwbs.m_fw_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Blanket Mass - Total(kg)",
             "(m_blkt_total)",
-            fwbs_variables.m_blkt_total,
+            self.data.fwbs.m_blkt_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "    Blanket Mass - TiBe12 (kg)",
             "(m_blkt_tibe12)",
-            fwbs_variables.m_blkt_tibe12,
+            self.data.fwbs.m_blkt_tibe12,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "    Blanket Mass - Li4SiO4 (kg)",
             "(m_blkt_li4sio4)",
-            fwbs_variables.m_blkt_li4sio4,
+            self.data.fwbs.m_blkt_li4sio4,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "    Blanket Mass - Steel (kg)",
             "(m_blkt_steel_total)",
-            fwbs_variables.m_blkt_steel_total,
+            self.data.fwbs.m_blkt_steel_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total mass of armour, first wall and blanket (kg)",
             "(armour_fw_bl_mass)",
-            fwbs_variables.armour_fw_bl_mass,
+            self.data.fwbs.armour_fw_bl_mass,
             "OP ",
         )
         po.ovarre(
-            self.outfile, "Shield Mass (kg)", "(whtshld)", fwbs_variables.whtshld, "OP "
+            self.outfile, "Shield Mass (kg)", "(whtshld)", self.data.fwbs.whtshld, "OP "
         )
         po.ovarre(
             self.outfile,
             "Vacuum vessel mass (kg)",
             "(m_vv)",
-            fwbs_variables.m_vv,
+            self.data.fwbs.m_vv,
             "OP ",
         )
 
@@ -1397,7 +1400,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     self.outfile,
                     "ST centrepost TF fast neutron fllux (E > 0.1 MeV) (m^(-2).s^(-1))",
                     "(neut_flux_cp)",
-                    fwbs_variables.neut_flux_cp,
+                    self.data.fwbs.neut_flux_cp,
                     "OP ",
                 )
             elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
@@ -1407,21 +1410,21 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 self.outfile,
                 "ST centrepost TF heating (MW)",
                 "(pnuc_cp_tf)",
-                fwbs_variables.pnuc_cp_tf,
+                self.data.fwbs.pnuc_cp_tf,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ST centrepost shield heating (MW)",
                 "(p_cp_shield_nuclear_heat_mw)",
-                fwbs_variables.p_cp_shield_nuclear_heat_mw,
+                self.data.fwbs.p_cp_shield_nuclear_heat_mw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ST centrepost total heating (MW)",
                 "(pnuc_cp)",
-                fwbs_variables.pnuc_cp,
+                self.data.fwbs.pnuc_cp,
                 "OP ",
             )
 
@@ -1429,21 +1432,21 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "Total nuclear heating in TF+PF coils (CS is negligible) (MW)",
             "(p_tf_nuclear_heat_mw)",
-            fwbs_variables.p_tf_nuclear_heat_mw,
+            self.data.fwbs.p_tf_nuclear_heat_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total nuclear heating in FW (MW)",
             "(p_fw_nuclear_heat_total_mw)",
-            fwbs_variables.p_fw_nuclear_heat_total_mw,
+            self.data.fwbs.p_fw_nuclear_heat_total_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total nuclear heating in the blanket (including f_p_blkt_multiplication) (MW)",
             "(p_blkt_nuclear_heat_total_mw)",
-            fwbs_variables.p_blkt_nuclear_heat_total_mw,
+            self.data.fwbs.p_blkt_nuclear_heat_total_mw,
             "OP ",
         )
         po.ocmmnt(
@@ -1454,14 +1457,14 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "Total nuclear heating in the shield (MW)",
             "(p_shld_nuclear_heat_mw)",
-            fwbs_variables.p_shld_nuclear_heat_mw,
+            self.data.fwbs.p_shld_nuclear_heat_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Total nuclear heating in the divertor (MW)",
             "(p_div_nuclear_heat_total_mw)",
-            fwbs_variables.p_div_nuclear_heat_total_mw,
+            self.data.fwbs.p_div_nuclear_heat_total_mw,
             "OP ",
         )
         po.osubhd(self.outfile, " Diagostic output for nuclear heating :")
@@ -1490,35 +1493,35 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "Solid angle fraction taken by on divertor",
             "(f_ster_div_single)",
-            fwbs_variables.f_ster_div_single,
+            self.data.fwbs.f_ster_div_single,
         )
         po.ovarre(
             self.outfile,
             "Fraction of outboard first wall area covered by HCD and diagnostics",
             "(f_a_fw_outboard_hcd)",
-            fwbs_variables.f_a_fw_outboard_hcd,
+            self.data.fwbs.f_a_fw_outboard_hcd,
         )
         po.ovarin(
             self.outfile,
             "Switch for plant secondary cycle ",
             "(i_thermal_electric_conversion)",
-            fwbs_variables.i_thermal_electric_conversion,
+            self.data.fwbs.i_thermal_electric_conversion,
         )
         po.ovarre(
             self.outfile,
             "First wall coolant pressure (Pa)",
             "(pres_fw_coolant)",
-            fwbs_variables.pres_fw_coolant,
+            self.data.fwbs.pres_fw_coolant,
         )
         po.ovarre(
             self.outfile,
             "Blanket coolant pressure (Pa)",
             "(pres_blkt_coolant)",
-            fwbs_variables.pres_blkt_coolant,
+            self.data.fwbs.pres_blkt_coolant,
         )
 
         if (
-            fwbs_variables.i_p_coolant_pumping
+            self.data.fwbs.i_p_coolant_pumping
             != PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
         ):
             po.ovarre(
@@ -1573,31 +1576,31 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "No of inboard blanket modules poloidally",
             "(n_blkt_inboard_modules_poloidal)",
-            fwbs_variables.n_blkt_inboard_modules_poloidal,
+            self.data.fwbs.n_blkt_inboard_modules_poloidal,
         )
         po.ovarre(
             self.outfile,
             "No of inboard blanket modules toroidally",
             "(n_blkt_inboard_modules_toroidal)",
-            fwbs_variables.n_blkt_inboard_modules_toroidal,
+            self.data.fwbs.n_blkt_inboard_modules_toroidal,
         )
         po.ovarre(
             self.outfile,
             "No of outboard blanket modules poloidally",
             "(n_blkt_outboard_modules_poloidal)",
-            fwbs_variables.n_blkt_outboard_modules_poloidal,
+            self.data.fwbs.n_blkt_outboard_modules_poloidal,
         )
         po.ovarre(
             self.outfile,
             "No of outboard blanket modules toroidally",
             "(n_blkt_outboard_modules_toroidal)",
-            fwbs_variables.n_blkt_outboard_modules_toroidal,
+            self.data.fwbs.n_blkt_outboard_modules_toroidal,
         )
         po.ovarre(
             self.outfile,
             "Isentropic efficiency of first wall / blanket coolant pumps",
             "(etaiso)",
-            fwbs_variables.etaiso,
+            self.data.fwbs.etaiso,
         )
         po.ovarre(
             self.outfile,

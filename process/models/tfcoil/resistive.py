@@ -6,7 +6,6 @@ import numpy as np
 from process.core import constants
 from process.data_structure import (
     build_variables,
-    fwbs_variables,
     pfcoil_variables,
     physics_variables,
     superconducting_tf_coil_variables,
@@ -745,7 +744,7 @@ class ResistiveTFCoil(TFCoil):
         # Copper magnets casing/conductor weights per coil [kg]
         if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             tfcoil_variables.m_tf_coil_case = (
-                fwbs_variables.den_steel * vol_case / tfcoil_variables.n_tf_coils
+                self.data.fwbs.den_steel * vol_case / tfcoil_variables.n_tf_coils
             )  # Per TF leg, no casing for outer leg
             tfcoil_variables.m_tf_coil_copper = (
                 constants.den_copper * vol_cond / tfcoil_variables.n_tf_coils
@@ -770,7 +769,7 @@ class ResistiveTFCoil(TFCoil):
                         + superconducting_tf_coil_variables.vol_gr_ins_cp
                     )
                     + superconducting_tf_coil_variables.vol_case_cp
-                    * fwbs_variables.den_steel
+                    * self.data.fwbs.den_steel
                 )
 
         # Cryo-aluminium conductor weights
@@ -803,7 +802,7 @@ class ResistiveTFCoil(TFCoil):
                         + superconducting_tf_coil_variables.vol_gr_ins_cp
                     )
                     + superconducting_tf_coil_variables.vol_case_cp
-                    * fwbs_variables.den_steel
+                    * self.data.fwbs.den_steel
                 )
 
         # Turn insulation mass [kg]

@@ -17,7 +17,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
     build_variables,
-    fwbs_variables,
     global_variables,
     numerics,
     physics_variables,
@@ -2311,7 +2310,7 @@ class TFCoil(Model):
         ro = (acpav / (np.pi * tfcoil_variables.n_cp_coolant_channels_total)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
-        ptot = tfcoil_variables.p_cp_resistive + fwbs_variables.pnuc_cp_tf * 1.0e6
+        ptot = tfcoil_variables.p_cp_resistive + self.data.fwbs.pnuc_cp_tf * 1.0e6
 
         # Temperature calculations
         # -------------------------
@@ -2538,7 +2537,7 @@ class TFCoil(Model):
         # Saturation pressure
         # Ref : Keenan, Keyes, Hill, Moore, steam tables, Wiley & Sons, 1969
         # Rem 1 : ONLY VALID FOR WATER !
-        # Rem 2 : Not used anywhere else in the code ...
+        # Rem 2 : Not used anywhere else in the code .
         tclmx = tcoolmx + tmarg
         tclmxs = min(tclmx, 374.0e0)
         fc = 0.65e0 - 0.01e0 * tclmxs
@@ -2613,7 +2612,7 @@ class TFCoil(Model):
                 self.outfile,
                 "Nuclear heating (MW)",
                 "(pnuc_cp_tf)",
-                fwbs_variables.pnuc_cp_tf,
+                self.data.fwbs.pnuc_cp_tf,
             )
             po.ovarre(self.outfile, "Total heating (MW)", "(ptot/1.0e6)", ptot / 1.0e6)
 
@@ -2654,7 +2653,7 @@ class TFCoil(Model):
             po.ovarre(self.outfile, "Coolant pressure drop (Pa)", "(dpres)", dpres)
             if (
                 tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER
-            ):  # Saturation pressure calculated with Water data ...
+            ):  # Saturation pressure calculated with Water data .
                 po.ovarre(
                     self.outfile, "Coolant inlet pressure (Pa)", "(presin)", presin
                 )
@@ -2818,7 +2817,7 @@ class TFCoil(Model):
         )
 
         # Case of a centrepost (physics_variables.itart == 1) with sliding joints (the CP vertical are separated from the leg ones)
-        # Rem SK : casing/insulation thickness not subtracted as part of the CP is genuinely connected to the legs..
+        # Rem SK : casing/insulation thickness not subtracted as part of the CP is genuinely connected to the legs.
         if itart == 1 and i_cp_joints == 1:
             # CP vertical tension [N]
             vforce = (
@@ -4651,7 +4650,7 @@ class TFCoil(Model):
             tfcoil_variables.i_tf_stress_model == 1
             and tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
         ):
-            # Other quantities (displacement strain, etc..)
+            # Other quantities (displacement strain, etc.)
             po.ovarre(
                 self.outfile,
                 "Maximum radial deflection at midplane (m)",
@@ -4708,7 +4707,7 @@ def eyoung_parallel(
     call eyoung_parallel(triplet1, triplet2, tripletOUT)
     call eyoung_parallel(triplet3, tripletOUT, tripletOUT)
     call eyoung_parallel(triplet4, tripletOUT, tripletOUT)
-    ... etc.
+    . etc.
     So that tripletOUT would eventually have the smeared properties
     of the total composite member.
 
@@ -5541,7 +5540,7 @@ def eyoung_parallel_array(n, eyoung_j_in, a_in, poisson_j_perp_in):
     call eyoung_parallel(triplet1, triplet2, tripletOUT)
     call eyoung_parallel(triplet3, tripletOUT, tripletOUT)
     call eyoung_parallel(triplet4, tripletOUT, tripletOUT)
-    ... etc.
+    . etc.
     So that tripletOUT would eventually have the smeared properties
     of the total composite member.
 
@@ -5687,7 +5686,7 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
     call eyoung_series(triplet1, triplet2, tripletOUT)
     call eyoung_series(triplet3, tripletOUT, tripletOUT)
     call eyoung_series(triplet4, tripletOUT, tripletOUT)
-    ... etc.
+    . etc.
     So that tripletOUT would eventually have the smeared properties
     of the total composite member.
 

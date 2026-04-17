@@ -12,7 +12,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
     buildings_variables,
-    fwbs_variables,
     heat_transport_variables,
     ife_variables,
     physics_variables,
@@ -883,14 +882,14 @@ class IFE(Model):
         li_frac = 1.0 - 0.5 * sang
 
         # TBR
-        fwbs_variables.tbr = (
+        self.data.fwbs.tbr = (
             3.7418
             * (1.0 / (1.0 + np.exp(-2.6366 * ife_variables.bldrc)) - 0.5)
             * li_frac
         )
 
         # Energy Multiplication
-        fwbs_variables.f_p_blkt_multiplication = (
+        self.data.fwbs.f_p_blkt_multiplication = (
             2.2414
             * (1.0 / (1.0 + np.exp(-3.0038 * ife_variables.bldrc)) - 0.5)
             * li_frac
@@ -1696,7 +1695,7 @@ class IFE(Model):
 
         matden = [
             0.0,
-            fwbs_variables.den_steel,
+            self.data.fwbs.den_steel,
             2300.0,
             2020.0,
             2010.0,
@@ -1719,26 +1718,26 @@ class IFE(Model):
                 ife_variables.v3matm[j, i] = ife_variables.v3matv[j, i] * den
 
         # Total masses of components (excluding coolant)
-        fwbs_variables.m_fw_total = 0.0
-        fwbs_variables.m_blkt_total = 0.0
-        fwbs_variables.whtshld = 0.0
+        self.data.fwbs.m_fw_total = 0.0
+        self.data.fwbs.m_blkt_total = 0.0
+        self.data.fwbs.whtshld = 0.0
         for i in range(5):
             for j in range(3):
-                fwbs_variables.m_fw_total += ife_variables.fwmatm[j, i]
-                fwbs_variables.m_blkt_total += ife_variables.blmatm[j, i]
-                fwbs_variables.whtshld += ife_variables.shmatm[j, i]
+                self.data.fwbs.m_fw_total += ife_variables.fwmatm[j, i]
+                self.data.fwbs.m_blkt_total += ife_variables.blmatm[j, i]
+                self.data.fwbs.whtshld += ife_variables.shmatm[j, i]
 
         # Other masses
-        fwbs_variables.m_blkt_beryllium = 0.0
-        fwbs_variables.m_blkt_vanadium = 0.0
-        fwbs_variables.m_blkt_steel_total = 0.0
-        fwbs_variables.m_blkt_li2o = 0.0
-        fwbs_variables.m_blkt_lithium = 0.0
+        self.data.fwbs.m_blkt_beryllium = 0.0
+        self.data.fwbs.m_blkt_vanadium = 0.0
+        self.data.fwbs.m_blkt_steel_total = 0.0
+        self.data.fwbs.m_blkt_li2o = 0.0
+        self.data.fwbs.m_blkt_lithium = 0.0
 
         for j in range(3):
-            fwbs_variables.m_blkt_steel_total += ife_variables.blmatm[j, 1]
-            fwbs_variables.m_blkt_li2o += ife_variables.blmatm[j, 4]
-            fwbs_variables.m_blkt_lithium += ife_variables.blmatm[j, 8]
+            self.data.fwbs.m_blkt_steel_total += ife_variables.blmatm[j, 1]
+            self.data.fwbs.m_blkt_li2o += ife_variables.blmatm[j, 4]
+            self.data.fwbs.m_blkt_lithium += ife_variables.blmatm[j, 8]
 
         # Total mass of FLiBe
         ife_variables.mflibe = ife_variables.chmatm[3]
@@ -1761,8 +1760,8 @@ class IFE(Model):
         #  Following assumes that use of FLiBe and Li2O are
         # mutually exclusive
         ife_variables.mflibe /= 1.0 - ife_variables.fbreed
-        fwbs_variables.m_blkt_li2o /= 1.0 - ife_variables.fbreed
-        fwbs_variables.m_blkt_lithium /= 1.0 - ife_variables.fbreed
+        self.data.fwbs.m_blkt_li2o /= 1.0 - ife_variables.fbreed
+        self.data.fwbs.m_blkt_lithium /= 1.0 - ife_variables.fbreed
 
         # Blanket and first wall lifetimes (HYLIFE-II: = plant life)
         if ife_variables.ifetyp in {3, 4}:
@@ -1777,8 +1776,8 @@ class IFE(Model):
                 ),
             )
 
-        fwbs_variables.life_blkt_fpy = life
-        fwbs_variables.life_fw_fpy = life
+        self.data.fwbs.life_blkt_fpy = life
+        self.data.fwbs.life_fw_fpy = life
 
         if not output:
             return
@@ -1794,19 +1793,19 @@ class IFE(Model):
             self.outfile,
             "First wall mass (kg)",
             "(m_fw_total)",
-            fwbs_variables.m_fw_total,
+            self.data.fwbs.m_fw_total,
         )
         process_output.ovarre(
             self.outfile,
             "Blanket mass (kg)",
             "(m_blkt_total)",
-            fwbs_variables.m_blkt_total,
+            self.data.fwbs.m_blkt_total,
         )
         process_output.ovarre(
             self.outfile,
             "Blanket lithium mass (kg)",
             "(m_blkt_lithium)",
-            fwbs_variables.m_blkt_lithium,
+            self.data.fwbs.m_blkt_lithium,
         )
         process_output.ovarre(
             self.outfile,
@@ -1815,7 +1814,7 @@ class IFE(Model):
             ife_variables.mflibe,
         )
         process_output.ovarre(
-            self.outfile, "Shield mass (kg)", "(whtshld)", fwbs_variables.whtshld
+            self.outfile, "Shield mass (kg)", "(whtshld)", self.data.fwbs.whtshld
         )
 
     def ifepw1(self):
@@ -1834,13 +1833,13 @@ class IFE(Model):
         # Total thermal power removed from fusion core
 
         heat_transport_variables.priheat = (
-            fwbs_variables.f_p_blkt_multiplication * physics_variables.p_fusion_total_mw
+            self.data.fwbs.f_p_blkt_multiplication * physics_variables.p_fusion_total_mw
         )
 
         # Useful (high-grade) thermal power (MW)
 
         heat_transport_variables.p_plant_primary_heat_mw = (
-            heat_transport_variables.priheat * (1.0 - fwbs_variables.fhole)
+            heat_transport_variables.priheat * (1.0 - self.data.fwbs.fhole)
         )
 
         # Assume 0.24 of thermal power is intercepted by the first wall
@@ -1853,21 +1852,21 @@ class IFE(Model):
             heat_transport_variables.p_fw_div_heat_deposited_mw = (
                 0.24 * heat_transport_variables.p_plant_primary_heat_mw
             )
-            fwbs_variables.p_blkt_nuclear_heat_total_mw = (
+            self.data.fwbs.p_blkt_nuclear_heat_total_mw = (
                 heat_transport_variables.p_plant_primary_heat_mw
                 - heat_transport_variables.p_fw_div_heat_deposited_mw
             )
         else:
             heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
-            fwbs_variables.p_blkt_nuclear_heat_total_mw = (
+            self.data.fwbs.p_blkt_nuclear_heat_total_mw = (
                 heat_transport_variables.p_plant_primary_heat_mw
             )
 
-        fwbs_variables.p_shld_nuclear_heat_mw = 0.0
+        self.data.fwbs.p_shld_nuclear_heat_mw = 0.0
 
         # Lost fusion power (MW)
 
-        fwbs_variables.pnucloss = (
+        self.data.fwbs.pnucloss = (
             heat_transport_variables.priheat
             - heat_transport_variables.p_plant_primary_heat_mw
         )  # = priheat*fhole
@@ -1925,7 +1924,7 @@ class IFE(Model):
         # Total secondary heat
         heat_transport_variables.p_plant_secondary_heat_mw = (
             heat_transport_variables.p_hcd_electric_loss_mw
-            + fwbs_variables.pnucloss
+            + self.data.fwbs.pnucloss
             + heat_transport_variables.fachtmw
             + heat_transport_variables.vachtmw
             + heat_transport_variables.p_tritium_plant_electric_mw
@@ -1973,17 +1972,17 @@ class IFE(Model):
                 self.outfile,
                 "Fusion power escaping via holes (MW)",
                 "(pnucloss)",
-                fwbs_variables.pnucloss,
+                self.data.fwbs.pnucloss,
             )
             process_output.ovarre(
                 self.outfile,
                 "Power multiplication factor",
                 "(f_p_blkt_multiplication)",
-                fwbs_variables.f_p_blkt_multiplication,
+                self.data.fwbs.f_p_blkt_multiplication,
             )
             if ife_variables.ifetyp == 4:
                 process_output.ovarre(
-                    self.outfile, "Tritium Breeding Ratio", "(tbr)", fwbs_variables.tbr
+                    self.outfile, "Tritium Breeding Ratio", "(tbr)", self.data.fwbs.tbr
                 )
                 process_output.ovarre(
                     self.outfile,
@@ -2008,7 +2007,7 @@ class IFE(Model):
                 self.outfile,
                 "Blanket nuclear heating (MW)",
                 "(p_blkt_nuclear_heat_total_mw)",
-                fwbs_variables.p_blkt_nuclear_heat_total_mw,
+                self.data.fwbs.p_blkt_nuclear_heat_total_mw,
             )
             process_output.ovarre(
                 self.outfile,
@@ -2303,7 +2302,7 @@ class IFE(Model):
         if buildings_variables.wgt2 > 1.0:
             wgts = buildings_variables.wgt2
         else:
-            wgts = fwbs_variables.whtshld
+            wgts = self.data.fwbs.whtshld
 
         cran = 9.41e-6 * wgts + 5.1
         rmbh = (

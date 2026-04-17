@@ -11,7 +11,6 @@ from process.data_structure import (
     buildings_variables,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     numerics,
     pfcoil_variables,
     physics_variables,
@@ -1671,7 +1670,7 @@ class Build(Model):
         output : bool
             Flag indicating whether to output the results
         """
-        if fwbs_variables.blktmodel > 0:
+        if self.data.fwbs.blktmodel > 0:
             build_variables.dr_blkt_inboard = (
                 build_variables.blbuith
                 + build_variables.blbmith

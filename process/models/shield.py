@@ -7,7 +7,6 @@ from process.data_structure import (
     blanket_library,
     build_variables,
     divertor_variables,
-    fwbs_variables,
     physics_variables,
 )
 from process.models.blankets.blanket_library import (
@@ -44,7 +43,7 @@ class Shield(Model):
         # D-shaped blanket and shield
         if (
             physics_variables.itart == 1
-            or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
+            or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
                 build_variables.a_shld_inboard_surface,
@@ -66,7 +65,7 @@ class Shield(Model):
             (
                 blanket_library.vol_shld_inboard,
                 blanket_library.vol_shld_outboard,
-                fwbs_variables.vol_shld_total,
+                self.data.fwbs.vol_shld_total,
             ) = self.calculate_dshaped_shield_volumes(
                 r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
@@ -101,7 +100,7 @@ class Shield(Model):
             (
                 blanket_library.vol_shld_inboard,
                 blanket_library.vol_shld_outboard,
-                fwbs_variables.vol_shld_total,
+                self.data.fwbs.vol_shld_total,
             ) = self.calculate_elliptical_shield_volumes(
                 r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
                 r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
@@ -116,10 +115,10 @@ class Shield(Model):
 
         # Apply shield coverage factors
         build_variables.a_shld_inboard_surface = (
-            fwbs_variables.fvolsi * build_variables.a_shld_inboard_surface
+            self.data.fwbs.fvolsi * build_variables.a_shld_inboard_surface
         )
         build_variables.a_shld_outboard_surface = (
-            fwbs_variables.fvolso * build_variables.a_shld_outboard_surface
+            self.data.fwbs.fvolso * build_variables.a_shld_outboard_surface
         )
         build_variables.a_shld_total_surface = (
             build_variables.a_shld_inboard_surface
@@ -127,12 +126,12 @@ class Shield(Model):
         )
 
         blanket_library.vol_shld_inboard = (
-            fwbs_variables.fvolsi * blanket_library.vol_shld_inboard
+            self.data.fwbs.fvolsi * blanket_library.vol_shld_inboard
         )
         blanket_library.vol_shld_outboard = (
-            fwbs_variables.fvolso * blanket_library.vol_shld_outboard
+            self.data.fwbs.fvolso * blanket_library.vol_shld_outboard
         )
-        fwbs_variables.vol_shld_total = (
+        self.data.fwbs.vol_shld_total = (
             blanket_library.vol_shld_inboard + blanket_library.vol_shld_outboard
         )
 
@@ -474,6 +473,6 @@ class Shield(Model):
             self.outfile,
             "Total volume of shield (m^3)",
             "(vol_shld_total)",
-            fwbs_variables.vol_shld_total,
+            self.data.fwbs.vol_shld_total,
             "OP ",
         )

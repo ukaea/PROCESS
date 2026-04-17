@@ -1,10 +1,13 @@
 """Module for coil mass calculations in stellarators."""
 
 from process.core import constants
-from process.data_structure import fwbs_variables, tfcoil_variables
+from process.core.model import DataStructure
+from process.data_structure import tfcoil_variables
 
 
-def calculate_coils_mass(a_tf_wp_with_insulation: float, a_tf_wp_no_insulation: float):
+def calculate_coils_mass(
+    a_tf_wp_with_insulation: float, a_tf_wp_no_insulation: float, data: DataStructure
+):
     """Calculates the mass of stellarator coils by aggregating the masses of various coil components.
 
     This function computes the masses of conductor constituents (casing, ground insulation, superconductor, copper),
@@ -16,7 +19,8 @@ def calculate_coils_mass(a_tf_wp_with_insulation: float, a_tf_wp_no_insulation: 
         Area of the toroidal field coil winding pack with insulation.
     a_tf_wp_no_insulation:
         Area of the toroidal field coil winding pack without insulation.
-
+    data: DataStructure
+        data structure object to provide model data
     """
     #  Masses of conductor constituents
     casing()
@@ -25,7 +29,7 @@ def calculate_coils_mass(a_tf_wp_with_insulation: float, a_tf_wp_no_insulation: 
     copper()
 
     # conduit masses
-    conduit_steel()
+    conduit_steel(data)
     conduit_insulation()
 
     # Total masses
@@ -91,13 +95,13 @@ def copper():
     ) * constants.den_copper
 
 
-def conduit_steel():
+def conduit_steel(data):
     """[kg] mass of Steel conduit (sheath)"""
     tfcoil_variables.m_tf_wp_steel_conduit = (
         tfcoil_variables.len_tf_coil
         * tfcoil_variables.n_tf_coil_turns
         * tfcoil_variables.a_tf_turn_steel
-        * fwbs_variables.den_steel
+        * data.fwbs.den_steel
     )
     # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_wp_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
 

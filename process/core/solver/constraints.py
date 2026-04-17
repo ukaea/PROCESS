@@ -1016,20 +1016,20 @@ def constraint_equation_37(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(39, "K", "<=")
-def constraint_equation_39(constraint_registration, _data):
+def constraint_equation_39(constraint_registration, data):
     """Equation for first wall temperature upper limit
 
     temp_fw_max: maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
     temp_fw_peak: peak first wall temperature (K)
     """
-    if data_structure.fwbs_variables.temp_fw_peak < 1.0:
+    if data.fwbs.temp_fw_peak < 1.0:
         raise ProcessValueError(
             "temp_fw_peak = 0 implies i_pulsed_plant=0; do not use constraint 39 if i_pulsed_plant=0"
         )
 
     return leq(
-        data_structure.fwbs_variables.temp_fw_peak,
-        data_structure.fwbs_variables.temp_fw_max,
+        data.fwbs.temp_fw_peak,
+        data.fwbs.temp_fw_max,
         constraint_registration,
     )
 
@@ -1220,7 +1220,7 @@ def constraint_equation_51(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(52, "", ">=")
-def constraint_equation_52(constraint_registration, _data):
+def constraint_equation_52(constraint_registration, data):
     """Equation for tritium breeding ratio lower limit
 
     The tritium breeding ratio is only calculated when using the IFE model.
@@ -1234,35 +1234,35 @@ def constraint_equation_52(constraint_registration, _data):
         )
 
     return geq(
-        data_structure.fwbs_variables.tbr,
+        data.fwbs.tbr,
         data_structure.constraint_variables.tbrmin,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(53, "neutron/m²", "<=")
-def constraint_equation_53(constraint_registration, _data):
+def constraint_equation_53(constraint_registration, data):
     """Equation for fast neutron fluence on TF coil upper limit
 
     nflutfmax: max fast neutron fluence on TF coil (n/m²)
     nflutf: peak fast neutron fluence on TF coil superconductor (n/m²)
     """
     return leq(
-        data_structure.fwbs_variables.nflutf,
+        data.fwbs.nflutf,
         data_structure.constraint_variables.nflutfmax,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(54, "MW/m³", "<=")
-def constraint_equation_54(constraint_registration, _data):
+def constraint_equation_54(constraint_registration, data):
     """Equation for peak TF coil nuclear heating upper limit
 
     ptfnucmax: maximum nuclear heating in TF coil (MW/m³)
     ptfnucpm3: nuclear heating in the TF coil (MW/m³) (blktmodel>0)
     """
     return leq(
-        data_structure.fwbs_variables.ptfnucpm3,
+        data.fwbs.ptfnucpm3,
         data_structure.constraint_variables.ptfnucmax,
         constraint_registration,
     )
@@ -1739,7 +1739,7 @@ def constraint_equation_85(constraint_registration, data):
 
     # The CP lifetime is equal to the tritium breeding blankets / FW one
     elif data.costs.i_cp_lifetime == 2:
-        bound = data_structure.fwbs_variables.life_blkt_fpy
+        bound = data.fwbs.life_blkt_fpy
 
     elif data.costs.i_cp_lifetime == 3:
         bound = data.costs.life_plant

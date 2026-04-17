@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+from process.core.model import DataStructure
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -23,7 +24,7 @@ from process.models.stellarator.coils.quench import calculate_quench_protection
 logger = logging.getLogger(__name__)
 
 
-def st_coil(stellarator, output: bool):
+def st_coil(stellarator, output: bool, data: DataStructure):
     """This routine calculates the properties of the coils for
     a stellarator device.
 
@@ -38,6 +39,8 @@ def st_coil(stellarator, output: bool):
 
     output:
 
+    data: DataStructure
+        data structure object to provide model data
 
     """
     r_coil_major = stellarator_variables.r_coil_major
@@ -118,7 +121,7 @@ def st_coil(stellarator, output: bool):
 
     #######################################################################################
     #  Coil_mases calculations
-    calculate_coils_mass(a_tf_wp_with_insulation, a_tf_wp_no_insulation)
+    calculate_coils_mass(a_tf_wp_with_insulation, a_tf_wp_no_insulation, data)
 
     #######################################################################################
     # Quench protection:

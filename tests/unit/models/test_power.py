@@ -9,7 +9,6 @@ from process.data_structure import (
     constraint_variables,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     heat_transport_variables,
     numerics,
     pf_power_variables,
@@ -132,9 +131,9 @@ def test_cryo(cryoparam, monkeypatch, power):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(fwbs_variables, "qnuc", cryoparam.qnuc)
+    monkeypatch.setattr(power.data.fwbs, "qnuc", cryoparam.qnuc)
 
-    monkeypatch.setattr(fwbs_variables, "inuclear", cryoparam.inuclear)
+    monkeypatch.setattr(power.data.fwbs, "inuclear", cryoparam.inuclear)
 
     monkeypatch.setattr(power_variables, "qss", cryoparam.qss)
 
@@ -2519,81 +2518,81 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "p_blkt_multiplication_mw", power2param.p_blkt_multiplication_mw
+        power.data.fwbs, "p_blkt_multiplication_mw", power2param.p_blkt_multiplication_mw
     )
 
-    monkeypatch.setattr(fwbs_variables, "inuclear", power2param.inuclear)
+    monkeypatch.setattr(power.data.fwbs, "inuclear", power2param.inuclear)
 
     monkeypatch.setattr(
-        fwbs_variables,
+        power.data.fwbs,
         "p_blkt_nuclear_heat_total_mw",
         power2param.p_blkt_nuclear_heat_total_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "p_fw_rad_total_mw", power2param.p_fw_rad_total_mw
+        power.data.fwbs, "p_fw_rad_total_mw", power2param.p_fw_rad_total_mw
     )
 
-    monkeypatch.setattr(fwbs_variables, "qnuc", power2param.qnuc)
+    monkeypatch.setattr(power.data.fwbs, "qnuc", power2param.qnuc)
 
     monkeypatch.setattr(
-        fwbs_variables,
+        power.data.fwbs,
         "eta_coolant_pump_electric",
         power2param.eta_coolant_pump_electric,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "f_p_blkt_multiplication", power2param.f_p_blkt_multiplication
+        power.data.fwbs, "f_p_blkt_multiplication", power2param.f_p_blkt_multiplication
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "p_div_rad_total_mw", power2param.p_div_rad_total_mw
+        power.data.fwbs, "p_div_rad_total_mw", power2param.p_div_rad_total_mw
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "f_ster_div_single", power2param.f_ster_div_single
+        power.data.fwbs, "f_ster_div_single", power2param.f_ster_div_single
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "f_a_fw_outboard_hcd", power2param.f_a_fw_outboard_hcd
+        power.data.fwbs, "f_a_fw_outboard_hcd", power2param.f_a_fw_outboard_hcd
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        power.data.fwbs,
         "i_thermal_electric_conversion",
         power2param.i_thermal_electric_conversion,
     )
 
-    monkeypatch.setattr(fwbs_variables, "pnuc_cp", power2param.pnuc_cp)
+    monkeypatch.setattr(power.data.fwbs, "pnuc_cp", power2param.pnuc_cp)
 
     monkeypatch.setattr(
-        fwbs_variables,
+        power.data.fwbs,
         "p_div_nuclear_heat_total_mw",
         power2param.p_div_nuclear_heat_total_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "i_p_coolant_pumping", power2param.i_p_coolant_pumping
+        power.data.fwbs, "i_p_coolant_pumping", power2param.i_p_coolant_pumping
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "p_tf_nuclear_heat_mw", power2param.p_tf_nuclear_heat_mw
+        power.data.fwbs, "p_tf_nuclear_heat_mw", power2param.p_tf_nuclear_heat_mw
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "p_fw_hcd_nuclear_heat_mw", power2param.p_fw_hcd_nuclear_heat_mw
+        power.data.fwbs, "p_fw_hcd_nuclear_heat_mw", power2param.p_fw_hcd_nuclear_heat_mw
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "p_shld_nuclear_heat_mw", power2param.p_shld_nuclear_heat_mw
+        power.data.fwbs, "p_shld_nuclear_heat_mw", power2param.p_shld_nuclear_heat_mw
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "p_fw_hcd_rad_total_mw", power2param.p_fw_hcd_rad_total_mw
+        power.data.fwbs, "p_fw_hcd_rad_total_mw", power2param.p_fw_hcd_rad_total_mw
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        power.data.fwbs,
         "p_fw_nuclear_heat_total_mw",
         power2param.p_fw_nuclear_heat_total_mw,
     )

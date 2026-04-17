@@ -7,7 +7,6 @@ import pytest
 
 from process.data_structure import (
     buildings_variables,
-    fwbs_variables,
     heat_transport_variables,
     ife_variables,
     physics_variables,
@@ -1584,19 +1583,19 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
         "f_t_plant_available",
         ifefbsparam.f_t_plant_available,
     )
-    monkeypatch.setattr(fwbs_variables, "den_steel", ifefbsparam.den_steel)
-    monkeypatch.setattr(fwbs_variables, "m_fw_total", ifefbsparam.m_fw_total)
-    monkeypatch.setattr(fwbs_variables, "m_blkt_total", ifefbsparam.m_blkt_total)
-    monkeypatch.setattr(fwbs_variables, "whtshld", ifefbsparam.whtshld)
-    monkeypatch.setattr(fwbs_variables, "m_blkt_beryllium", ifefbsparam.m_blkt_beryllium)
-    monkeypatch.setattr(fwbs_variables, "m_blkt_vanadium", ifefbsparam.m_blkt_vanadium)
+    monkeypatch.setattr(ife.data.fwbs, "den_steel", ifefbsparam.den_steel)
+    monkeypatch.setattr(ife.data.fwbs, "m_fw_total", ifefbsparam.m_fw_total)
+    monkeypatch.setattr(ife.data.fwbs, "m_blkt_total", ifefbsparam.m_blkt_total)
+    monkeypatch.setattr(ife.data.fwbs, "whtshld", ifefbsparam.whtshld)
+    monkeypatch.setattr(ife.data.fwbs, "m_blkt_beryllium", ifefbsparam.m_blkt_beryllium)
+    monkeypatch.setattr(ife.data.fwbs, "m_blkt_vanadium", ifefbsparam.m_blkt_vanadium)
     monkeypatch.setattr(
-        fwbs_variables, "m_blkt_steel_total", ifefbsparam.m_blkt_steel_total
+        ife.data.fwbs, "m_blkt_steel_total", ifefbsparam.m_blkt_steel_total
     )
-    monkeypatch.setattr(fwbs_variables, "m_blkt_li2o", ifefbsparam.m_blkt_li2o)
-    monkeypatch.setattr(fwbs_variables, "m_blkt_lithium", ifefbsparam.m_blkt_lithium)
-    monkeypatch.setattr(fwbs_variables, "life_blkt_fpy", ifefbsparam.life_blkt_fpy)
-    monkeypatch.setattr(fwbs_variables, "life_fw_fpy", ifefbsparam.life_fw_fpy)
+    monkeypatch.setattr(ife.data.fwbs, "m_blkt_li2o", ifefbsparam.m_blkt_li2o)
+    monkeypatch.setattr(ife.data.fwbs, "m_blkt_lithium", ifefbsparam.m_blkt_lithium)
+    monkeypatch.setattr(ife.data.fwbs, "life_blkt_fpy", ifefbsparam.life_blkt_fpy)
+    monkeypatch.setattr(ife.data.fwbs, "life_fw_fpy", ifefbsparam.life_fw_fpy)
     monkeypatch.setattr(ife_variables, "chmatm", ifefbsparam.chmatm)
     monkeypatch.setattr(ife_variables, "chmatv", ifefbsparam.chmatv)
     monkeypatch.setattr(ife_variables, "fwmatm", ifefbsparam.fwmatm)
@@ -1620,15 +1619,13 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
 
     ife.ifefbs(output=False)
 
-    assert fwbs_variables.m_fw_total == pytest.approx(ifefbsparam.expected_m_fw_total)
-    assert fwbs_variables.m_blkt_total == pytest.approx(
-        ifefbsparam.expected_m_blkt_total
-    )
-    assert fwbs_variables.whtshld == pytest.approx(ifefbsparam.expected_whtshld)
-    assert fwbs_variables.life_blkt_fpy == pytest.approx(
+    assert ife.data.fwbs.m_fw_total == pytest.approx(ifefbsparam.expected_m_fw_total)
+    assert ife.data.fwbs.m_blkt_total == pytest.approx(ifefbsparam.expected_m_blkt_total)
+    assert ife.data.fwbs.whtshld == pytest.approx(ifefbsparam.expected_whtshld)
+    assert ife.data.fwbs.life_blkt_fpy == pytest.approx(
         ifefbsparam.expected_life_blkt_fpy
     )
-    assert fwbs_variables.life_fw_fpy == pytest.approx(ifefbsparam.expected_life_fw_fpy)
+    assert ife.data.fwbs.life_fw_fpy == pytest.approx(ifefbsparam.expected_life_fw_fpy)
     assert ife_variables.fwmatm == pytest.approx(ifefbsparam.expected_fwmatm)
     assert ife_variables.v1matm == pytest.approx(ifefbsparam.expected_v1matm)
     assert ife_variables.blmatm == pytest.approx(ifefbsparam.expected_blmatm)
@@ -2196,18 +2193,18 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        fwbs_variables, "f_p_blkt_multiplication", ifepw1param.f_p_blkt_multiplication
+        ife.data.fwbs, "f_p_blkt_multiplication", ifepw1param.f_p_blkt_multiplication
     )
-    monkeypatch.setattr(fwbs_variables, "fhole", ifepw1param.fhole)
+    monkeypatch.setattr(ife.data.fwbs, "fhole", ifepw1param.fhole)
     monkeypatch.setattr(
-        fwbs_variables,
+        ife.data.fwbs,
         "p_blkt_nuclear_heat_total_mw",
         ifepw1param.p_blkt_nuclear_heat_total_mw,
     )
     monkeypatch.setattr(
-        fwbs_variables, "p_shld_nuclear_heat_mw", ifepw1param.p_shld_nuclear_heat_mw
+        ife.data.fwbs, "p_shld_nuclear_heat_mw", ifepw1param.p_shld_nuclear_heat_mw
     )
-    monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw1param.pnucloss)
+    monkeypatch.setattr(ife.data.fwbs, "pnucloss", ifepw1param.pnucloss)
     monkeypatch.setattr(heat_transport_variables, "priheat", ifepw1param.priheat)
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2250,7 +2247,7 @@ def test_ifepw1(ifepw1param, monkeypatch, ife):
 
     ife.ifepw1()
 
-    assert fwbs_variables.p_blkt_nuclear_heat_total_mw == pytest.approx(
+    assert ife.data.fwbs.p_blkt_nuclear_heat_total_mw == pytest.approx(
         ifepw1param.expected_p_blkt_nuclear_heat_total_mw
     )
     assert heat_transport_variables.priheat == pytest.approx(
@@ -2654,9 +2651,9 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     monkeypatch.setattr(ife.data.first_wall, "a_fw_total", bld2019param.a_fw_total)
     monkeypatch.setattr(buildings_variables, "trcl", bld2019param.trcl)
     monkeypatch.setattr(buildings_variables, "stcl", bld2019param.stcl)
-    monkeypatch.setattr(fwbs_variables, "tbr", bld2019param.tbr)
+    monkeypatch.setattr(ife.data.fwbs, "tbr", bld2019param.tbr)
     monkeypatch.setattr(
-        fwbs_variables, "f_p_blkt_multiplication", bld2019param.f_p_blkt_multiplication
+        ife.data.fwbs, "f_p_blkt_multiplication", bld2019param.f_p_blkt_multiplication
     )
     for name, val in (
         ("ifetyp", bld2019param.ifetyp),
@@ -2717,8 +2714,8 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     assert ife.data.first_wall.a_fw_total == pytest.approx(
         bld2019param.expected_a_fw_total
     )
-    assert fwbs_variables.tbr == pytest.approx(bld2019param.expected_tbr)
-    assert fwbs_variables.f_p_blkt_multiplication == pytest.approx(
+    assert ife.data.fwbs.tbr == pytest.approx(bld2019param.expected_tbr)
+    assert ife.data.fwbs.f_p_blkt_multiplication == pytest.approx(
         bld2019param.expected_emult
     )
     assert ife_variables.r1 == pytest.approx(bld2019param.expected_r1)
@@ -3001,7 +2998,7 @@ def test_ifebdg(ifebdgparam, monkeypatch, ife):
     monkeypatch.setattr(buildings_variables, "volrci", ifebdgparam.volrci)
     monkeypatch.setattr(buildings_variables, "wsvol", ifebdgparam.wsvol)
     monkeypatch.setattr(buildings_variables, "volnucb", ifebdgparam.volnucb)
-    monkeypatch.setattr(fwbs_variables, "whtshld", ifebdgparam.whtshld)
+    monkeypatch.setattr(ife.data.fwbs, "whtshld", ifebdgparam.whtshld)
     monkeypatch.setattr(heat_transport_variables, "helpow", ifebdgparam.helpow)
     monkeypatch.setattr(ife_variables, "zl7", ifebdgparam.zl7)
     monkeypatch.setattr(ife_variables, "zu7", ifebdgparam.zu7)
@@ -3116,13 +3113,13 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(ife.data.costs, "ireactor", ifepw2param.ireactor)
-    monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw2param.pnucloss)
+    monkeypatch.setattr(ife.data.fwbs, "pnucloss", ifepw2param.pnucloss)
     monkeypatch.setattr(
-        fwbs_variables, "f_p_blkt_multiplication", ifepw2param.f_p_blkt_multiplication
+        ife.data.fwbs, "f_p_blkt_multiplication", ifepw2param.f_p_blkt_multiplication
     )
-    monkeypatch.setattr(fwbs_variables, "tbr", ifepw2param.tbr)
+    monkeypatch.setattr(ife.data.fwbs, "tbr", ifepw2param.tbr)
     monkeypatch.setattr(
-        fwbs_variables,
+        ife.data.fwbs,
         "p_blkt_nuclear_heat_total_mw",
         ifepw2param.p_blkt_nuclear_heat_total_mw,
     )

@@ -8,7 +8,6 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as divv
-from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import pfcoil_variables as pfv
 from process.data_structure import physics_variables as pv
 from process.data_structure import structure_variables as stv
@@ -60,14 +59,14 @@ class Structure(Model):
             pfv.i_pf_conductor,
             bv.dr_tf_inner_bore + bv.dr_tf_outboard + bv.dr_tf_inboard,
             bv.z_tf_inside_half,
-            fwbsv.whtshld,
+            self.data.fwbs.whtshld,
             divv.m_div_plate,
             total_weight_pf,
             tfv.m_tf_coils_total,
-            fwbsv.m_fw_total,
-            fwbsv.m_blkt_total,
-            fwbsv.m_fw_blkt_div_coolant_total,
-            fwbsv.dewmkg,
+            self.data.fwbs.m_fw_total,
+            self.data.fwbs.m_blkt_total,
+            self.data.fwbs.m_fw_blkt_div_coolant_total,
+            self.data.fwbs.dewmkg,
             output=output,
         )
 

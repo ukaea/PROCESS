@@ -5,6 +5,7 @@ from process.data_structure.cost_2015_variables import Cost2015Data
 from process.data_structure.cost_variables import CostData
 from process.data_structure.cs_fatigue_variables import CSFatigueData
 from process.data_structure.first_wall_variables import FirstWallData
+from process.data_structure.fwbs_variables import FWBSData
 from process.data_structure.vacuum_variables import VacuumData
 from process.data_structure.water_usage_variables import WaterUseData
 
@@ -19,6 +20,7 @@ class DataStructure:
     vacuum: VacuumData = initialise_later
     costs: CostData = initialise_later
     first_wall: FirstWallData = initialise_later
+    fwbs: FWBSData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

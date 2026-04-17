@@ -11,7 +11,6 @@ from process.data_structure import (
     buildings_variables,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     heat_transport_variables,
     ife_variables,
     pf_power_variables,
@@ -79,15 +78,15 @@ def acc2261_fix(costs, request, monkeypatch):
     monkeypatch.setattr(costs.data.costs, "fkind", 1)
     monkeypatch.setattr(costs.data.costs, "lsa", 1)
     monkeypatch.setattr(heat_transport_variables, "p_fw_div_heat_deposited_mw", 0.0)
-    monkeypatch.setattr(fwbs_variables, "p_blkt_nuclear_heat_total_mw", 1558.0)
-    monkeypatch.setattr(fwbs_variables, "p_shld_nuclear_heat_mw", 1.478)
+    monkeypatch.setattr(costs.data.fwbs, "p_blkt_nuclear_heat_total_mw", 1558.0)
+    monkeypatch.setattr(costs.data.fwbs, "p_shld_nuclear_heat_mw", 1.478)
     monkeypatch.setattr(heat_transport_variables, "p_plant_primary_heat_mw", 2647.0)
     monkeypatch.setattr(heat_transport_variables, "n_primary_heat_exchangers", 3)
     monkeypatch.setattr(costs.data.costs, "c2261", 0)
 
     # Parameterised mocks
     monkeypatch.setattr(
-        fwbs_variables, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
+        costs.data.fwbs, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
     )
 
     # Return the expected result for the given parameter list
@@ -430,7 +429,7 @@ def acc23_fix(request, monkeypatch, costs):
     # Mock variables used by acc23()
     # Some may be parameterised
     monkeypatch.setattr(
-        fwbs_variables, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
+        costs.data.fwbs, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
     )
     monkeypatch.setattr(heat_transport_variables, "p_plant_electric_gross_mw", 1200.0)
     monkeypatch.setattr(costs.data.costs, "c23", 0)
@@ -1345,25 +1344,25 @@ def test_acc2212(acc2212param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc2212param.fkind)
 
-    monkeypatch.setattr(fwbs_variables, "i_blanket_type", acc2212param.i_blanket_type)
+    monkeypatch.setattr(costs.data.fwbs, "i_blanket_type", acc2212param.i_blanket_type)
 
-    monkeypatch.setattr(fwbs_variables, "m_blkt_lithium", acc2212param.m_blkt_lithium)
+    monkeypatch.setattr(costs.data.fwbs, "m_blkt_lithium", acc2212param.m_blkt_lithium)
 
-    monkeypatch.setattr(fwbs_variables, "m_blkt_li2o", acc2212param.m_blkt_li2o)
+    monkeypatch.setattr(costs.data.fwbs, "m_blkt_li2o", acc2212param.m_blkt_li2o)
 
-    monkeypatch.setattr(fwbs_variables, "whtblbreed", acc2212param.whtblbreed)
+    monkeypatch.setattr(costs.data.fwbs, "whtblbreed", acc2212param.whtblbreed)
 
-    monkeypatch.setattr(fwbs_variables, "m_blkt_vanadium", acc2212param.m_blkt_vanadium)
+    monkeypatch.setattr(costs.data.fwbs, "m_blkt_vanadium", acc2212param.m_blkt_vanadium)
 
     monkeypatch.setattr(
-        fwbs_variables, "m_blkt_beryllium", acc2212param.m_blkt_beryllium
+        costs.data.fwbs, "m_blkt_beryllium", acc2212param.m_blkt_beryllium
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "m_blkt_steel_total", acc2212param.m_blkt_steel_total
+        costs.data.fwbs, "m_blkt_steel_total", acc2212param.m_blkt_steel_total
     )
 
-    monkeypatch.setattr(fwbs_variables, "wtbllipb", acc2212param.wtbllipb)
+    monkeypatch.setattr(costs.data.fwbs, "wtbllipb", acc2212param.wtbllipb)
 
     monkeypatch.setattr(ife_variables, "ucflib", acc2212param.ucflib)
 
@@ -1540,9 +1539,9 @@ def test_acc2213(acc2213param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "lsa", acc2213param.lsa)
 
-    monkeypatch.setattr(fwbs_variables, "wpenshld", acc2213param.wpenshld)
+    monkeypatch.setattr(costs.data.fwbs, "wpenshld", acc2213param.wpenshld)
 
-    monkeypatch.setattr(fwbs_variables, "whtshld", acc2213param.whtshld)
+    monkeypatch.setattr(costs.data.fwbs, "whtshld", acc2213param.whtshld)
 
     monkeypatch.setattr(ife_variables, "shmatm", acc2213param.shmatm)
 
@@ -2864,7 +2863,7 @@ def test_acc2223(acc2223param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc2223param.fkind)
 
-    monkeypatch.setattr(fwbs_variables, "m_vv", acc2223param.m_vv)
+    monkeypatch.setattr(costs.data.fwbs, "m_vv", acc2223param.m_vv)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2223param.c22)
 
@@ -3976,15 +3975,15 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "fkind", acc2261param.fkind)
 
     monkeypatch.setattr(
-        fwbs_variables, "i_blkt_coolant_type", acc2261param.i_blkt_coolant_type
+        costs.data.fwbs, "i_blkt_coolant_type", acc2261param.i_blkt_coolant_type
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "p_shld_nuclear_heat_mw", acc2261param.p_shld_nuclear_heat_mw
+        costs.data.fwbs, "p_shld_nuclear_heat_mw", acc2261param.p_shld_nuclear_heat_mw
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        costs.data.fwbs,
         "p_blkt_nuclear_heat_total_mw",
         acc2261param.p_blkt_nuclear_heat_total_mw,
     )
@@ -4808,7 +4807,7 @@ def test_acc23_rut(acc23param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "ireactor", acc23param.ireactor)
 
     monkeypatch.setattr(
-        fwbs_variables, "i_blkt_coolant_type", acc23param.i_blkt_coolant_type
+        costs.data.fwbs, "i_blkt_coolant_type", acc23param.i_blkt_coolant_type
     )
 
     monkeypatch.setattr(
@@ -5912,9 +5911,9 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "cfind", coelcparam.cfind)
 
-    monkeypatch.setattr(fwbs_variables, "life_blkt_fpy", coelcparam.life_blkt_fpy)
+    monkeypatch.setattr(costs.data.fwbs, "life_blkt_fpy", coelcparam.life_blkt_fpy)
 
-    monkeypatch.setattr(fwbs_variables, "life_blkt", coelcparam.life_blkt)
+    monkeypatch.setattr(costs.data.fwbs, "life_blkt", coelcparam.life_blkt)
 
     monkeypatch.setattr(ife_variables, "uctarg", coelcparam.uctarg)
 

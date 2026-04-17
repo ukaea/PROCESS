@@ -8,7 +8,6 @@ from process.core.model import Model
 from process.data_structure import (
     build_variables,
     current_drive_variables,
-    fwbs_variables,
     global_variables,
     heat_transport_variables,
     pf_power_variables,
@@ -198,11 +197,11 @@ class Costs2015(Model):
         self.data.costs_2015.s_label[21] = "Lithium enrichment"
 
         # Zero cost for natural enrichment
-        if fwbs_variables.f_blkt_li6_enrichment <= 7.42e0:
+        if self.data.fwbs.f_blkt_li6_enrichment <= 7.42e0:
             self.data.costs_2015.s_cost[21] = 0.0e0
         else:
             # Percentage of lithium 6 in the product
-            product_li6 = min(fwbs_variables.f_blkt_li6_enrichment, 99.99e0) / 100.0e0
+            product_li6 = min(self.data.fwbs.f_blkt_li6_enrichment, 99.99e0) / 100.0e0
             # SWU will be calculated for a unit mass of product (P=1)
 
             # Feed to product mass ratio
@@ -222,7 +221,7 @@ class Costs2015(Model):
             )
 
             # Mass of lithium (kg).  Lithium orthosilicate is 22% lithium by mass.
-            mass_li = fwbs_variables.m_blkt_li2o * 0.22
+            mass_li = self.data.fwbs.m_blkt_li2o * 0.22
 
             # Total swu for lithium in blanket
             total_swu = swu * mass_li
@@ -243,7 +242,7 @@ class Costs2015(Model):
         # Reference cost of lithium pebble manufacture (2014 $)
         self.data.costs_2015.s_cref[22] = 6.5e4
         # Scale with mass of pebbles (kg)
-        self.data.costs_2015.s_k[22] = fwbs_variables.m_blkt_li2o
+        self.data.costs_2015.s_k[22] = self.data.fwbs.m_blkt_li2o
         self.data.costs_2015.s_kref[22] = 10.0e0
         self.data.costs_2015.s_cost[22] = (
             self.data.costs_2015.s_cost_factor[22]
@@ -256,7 +255,7 @@ class Costs2015(Model):
         #  Reference cost of titanium beryllide pebble manufacture (2014 $)
         self.data.costs_2015.s_cref[23] = 450.0e6
         #  Scale with mass of titanium beryllide pebbles (kg)
-        self.data.costs_2015.s_k[23] = fwbs_variables.m_blkt_beryllium
+        self.data.costs_2015.s_k[23] = self.data.fwbs.m_blkt_beryllium
         self.data.costs_2015.s_kref[23] = 1.0e5
         self.data.costs_2015.s_cost[23] = (
             self.data.costs_2015.s_cost_factor[23]
@@ -271,7 +270,7 @@ class Costs2015(Model):
         #  First wall W coating mass (kg)
         self.data.costs_2015.s_k[24] = (
             self.data.first_wall.a_fw_total
-            * fwbs_variables.fw_armour_thickness
+            * self.data.fwbs.fw_armour_thickness
             * constants.DEN_TUNGSTEN
         )
         self.data.costs_2015.s_kref[24] = 29000.0e0
@@ -291,7 +290,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[25] = 317.0e6
         #  Scale with steel mass in blanket + shield mass
         self.data.costs_2015.s_k[25] = (
-            fwbs_variables.m_blkt_steel_total + fwbs_variables.whtshld
+            self.data.fwbs.m_blkt_steel_total + self.data.fwbs.whtshld
         )
         self.data.costs_2015.s_kref[25] = 4.07e6
         self.data.costs_2015.s_cost[25] = (
@@ -479,9 +478,9 @@ class Costs2015(Model):
         )
         # ITER cryostat volume (m^3)
         self.data.costs_2015.s_k[1] = (
-            (np.pi * fwbs_variables.r_cryostat_inboard**2)
+            (np.pi * self.data.fwbs.r_cryostat_inboard**2)
             * 2.0e0
-            * fwbs_variables.z_cryostat_half_inside
+            * self.data.fwbs.z_cryostat_half_inside
         )
         self.data.costs_2015.s_kref[1] = 18712.0e0
         self.data.costs_2015.s_cost[1] = (
@@ -604,7 +603,7 @@ class Costs2015(Model):
         ITER_buffer_land_area = ITER_total_land_area - ITER_key_buildings_land_area
 
         # Scale with area of cryostat (m)
-        self.data.costs_2015.s_k[9] = np.pi * fwbs_variables.r_cryostat_inboard**2
+        self.data.costs_2015.s_k[9] = np.pi * self.data.fwbs.r_cryostat_inboard**2
         self.data.costs_2015.s_kref[9] = 638.0e0
         # Cost of land per hectare (2014 $ / ha)
         self.data.costs_2015.s_cref[9] = 318000.0e0
@@ -625,7 +624,7 @@ class Costs2015(Model):
         # Cost of clearing ITER land
         self.data.costs_2015.s_cref[10] = 214.0e6
         # Scale with area of cryostat (m)
-        self.data.costs_2015.s_k[10] = np.pi * fwbs_variables.r_cryostat_inboard**2
+        self.data.costs_2015.s_k[10] = np.pi * self.data.fwbs.r_cryostat_inboard**2
         self.data.costs_2015.s_kref[10] = 638.0e0
         self.data.costs_2015.s_cost[10] = (
             self.data.costs_2015.s_cost_factor[10]
@@ -782,7 +781,7 @@ class Costs2015(Model):
         )
         #  Scale with total mass of armour, first wall and blanket (kg)
         self.data.costs_2015.s_kref[27] = 4.35e6
-        self.data.costs_2015.s_k[27] = fwbs_variables.armour_fw_bl_mass
+        self.data.costs_2015.s_k[27] = self.data.fwbs.armour_fw_bl_mass
         self.data.costs_2015.s_cost[27] = (
             self.data.costs_2015.s_cost_factor[27]
             * self.data.costs_2015.s_cref[27]
@@ -798,7 +797,7 @@ class Costs2015(Model):
         )
         #  Scale with total mass of armour, first wall and blanket (kg)
         self.data.costs_2015.s_kref[28] = 4.35e6
-        self.data.costs_2015.s_k[28] = fwbs_variables.armour_fw_bl_mass
+        self.data.costs_2015.s_k[28] = self.data.fwbs.armour_fw_bl_mass
         self.data.costs_2015.s_cost[28] = (
             self.data.costs_2015.s_cost_factor[28]
             * self.data.costs_2015.s_cref[28]
@@ -908,7 +907,7 @@ class Costs2015(Model):
         #  Cost of ITER VV in-wall shielding, ports and in-vessel coils
         self.data.costs_2015.s_cref[36] = 211.0e6
         #  Scale with vacuum vessel mass (kg)
-        self.data.costs_2015.s_k[36] = fwbs_variables.m_vv
+        self.data.costs_2015.s_k[36] = self.data.fwbs.m_vv
         self.data.costs_2015.s_kref[36] = 5.2360e6
         self.data.costs_2015.s_cost[36] = (
             self.data.costs_2015.s_cost_factor[36]
@@ -972,9 +971,9 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[43] = 351.0e6
         #  Scale with cryostat external volume (m3)
         self.data.costs_2015.s_k[43] = (
-            (np.pi * fwbs_variables.r_cryostat_inboard**2.0e0)
+            (np.pi * self.data.fwbs.r_cryostat_inboard**2.0e0)
             * 2.0e0
-            * fwbs_variables.z_cryostat_half_inside
+            * self.data.fwbs.z_cryostat_half_inside
         )
         self.data.costs_2015.s_kref[43] = 18700.0e0
         self.data.costs_2015.s_cost[43] = (
@@ -1007,10 +1006,10 @@ class Costs2015(Model):
         self.data.costs_2015.s_k[45] = (
             2.0e0
             * np.pi
-            * fwbs_variables.r_cryostat_inboard
+            * self.data.fwbs.r_cryostat_inboard
             * 2.0e0
-            * fwbs_variables.z_cryostat_half_inside
-            + 2 * (np.pi * fwbs_variables.r_cryostat_inboard**2)
+            * self.data.fwbs.z_cryostat_half_inside
+            + 2 * (np.pi * self.data.fwbs.r_cryostat_inboard**2)
         )
         self.data.costs_2015.s_kref[45] = 3902.0e0
         self.data.costs_2015.s_cost[45] = (
@@ -1141,7 +1140,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_label[55] = "Access control and security systems"
         #  Cost of ITER access control and security systems
         #  Scale with area of cryostat (m2)
-        self.data.costs_2015.s_k[55] = np.pi * fwbs_variables.r_cryostat_inboard**2
+        self.data.costs_2015.s_k[55] = np.pi * self.data.fwbs.r_cryostat_inboard**2
         self.data.costs_2015.s_kref[55] = 640.0e0
         self.data.costs_2015.s_cref[55] = 42.0e6
         self.data.costs_2015.s_cost[55] = (
@@ -1229,9 +1228,9 @@ class Costs2015(Model):
         #  Scale with cryostat external volume (m)
         self.data.costs_2015.s_k[59] = (
             np.pi
-            * fwbs_variables.r_cryostat_inboard**2
+            * self.data.fwbs.r_cryostat_inboard**2
             * 2.0e0
-            * fwbs_variables.z_cryostat_half_inside
+            * self.data.fwbs.z_cryostat_half_inside
         )
         self.data.costs_2015.s_kref[59] = 18700.0e0
         self.data.costs_2015.s_cost[59] = (

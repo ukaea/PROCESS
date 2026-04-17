@@ -12,25 +12,20 @@ import pytest
 import process.models.tfcoil.base as tfcoil_module
 from process.data_structure import (
     build_variables,
-    fwbs_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.models.build import Build
 from process.models.tfcoil.base import TFCoil
 
 
 @pytest.fixture
-def tfcoil():
-    """Provides TFCoil object for testing.
-
-    :param monkeypatch: pytest mocking fixture
-    :type monkeypatch: MonkeyPatch
+def tfcoil(process_models):
+    """Fixture to get the TFCoil instance from process_models.
 
     :return tfcoil: initialised TFCoil object
     :type tfcoil: process.tfcoil.TFCoil
     """
-    return TFCoil(build=Build())
+    return process_models.tfcoil
 
 
 @pytest.mark.parametrize(
@@ -159,7 +154,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     monkeypatch.setattr(
         tfcoil_variables, "temp_cp_coolant_inlet", cntrpst_asset.temp_cp_coolant_inlet
     )
-    monkeypatch.setattr(fwbs_variables, "pnuc_cp_tf", 1)
+    monkeypatch.setattr(tfcoil.data.fwbs, "pnuc_cp_tf", 1)
     monkeypatch.setattr(build_variables, "z_tf_inside_half", 1)
     monkeypatch.setattr(build_variables, "dr_tf_outboard", 0.5)
 

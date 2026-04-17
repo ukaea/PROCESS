@@ -41,7 +41,7 @@ def finalise(models, data, ifail: int, non_idempotent_msg: str | None = None):
         po.ocmmnt(constants.NOUT, non_idempotent_msg)
 
     # Write output to OUT.DAT and MFILE.DAT
-    op.write(models, constants.NOUT)
+    op.write(models, data, constants.NOUT)
 
 
 def output_evaluation(data):

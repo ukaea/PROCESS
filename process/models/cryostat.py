@@ -7,7 +7,6 @@ from process.data_structure import (
     blanket_library,
     build_variables,
     buildings_variables,
-    fwbs_variables,
     pfcoil_variables,
 )
 
@@ -24,8 +23,7 @@ class Cryostat(Model):
         # Calculate cryostat geometry
         self.external_cryo_geometry()
 
-    @staticmethod
-    def external_cryo_geometry():
+    def external_cryo_geometry(self):
         """Calculate cryostat geometry.
 
         This method calculates the geometry of the cryostat, including the inboard radius,
@@ -35,52 +33,52 @@ class Cryostat(Model):
         """
         # Cryostat radius [m]
         # Take radius of furthest PF coil and add clearance
-        fwbs_variables.r_cryostat_inboard = (
-            np.max(pfcoil_variables.r_pf_coil_outer) + fwbs_variables.dr_pf_cryostat
+        self.data.fwbs.r_cryostat_inboard = (
+            np.max(pfcoil_variables.r_pf_coil_outer) + self.data.fwbs.dr_pf_cryostat
         )
 
         # Clearance between uppermost PF coil and cryostat lid [m].
         # Scaling from ITER by M. Kovari
         blanket_library.dz_pf_cryostat = (
             build_variables.f_z_cryostat
-            * (2.0 * fwbs_variables.r_cryostat_inboard)
+            * (2.0 * self.data.fwbs.r_cryostat_inboard)
             / 28.440
         )
 
         # Half-height of cryostat [m]
         # Take height of furthest PF coil and add clearance
-        fwbs_variables.z_cryostat_half_inside = (
+        self.data.fwbs.z_cryostat_half_inside = (
             np.max(pfcoil_variables.z_pf_coil_upper) + blanket_library.dz_pf_cryostat
         )
 
         # Vertical clearance between TF coil and cryostat (m)
-        buildings_variables.dz_tf_cryostat = fwbs_variables.z_cryostat_half_inside - (
+        buildings_variables.dz_tf_cryostat = self.data.fwbs.z_cryostat_half_inside - (
             build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
         )
 
         # Internal cryostat space volume [m^3]
-        fwbs_variables.vol_cryostat_internal = (
+        self.data.fwbs.vol_cryostat_internal = (
             np.pi
-            * (fwbs_variables.r_cryostat_inboard) ** 2
+            * (self.data.fwbs.r_cryostat_inboard) ** 2
             * 2
-            * fwbs_variables.z_cryostat_half_inside
+            * self.data.fwbs.z_cryostat_half_inside
         )
 
         # Cryostat structure volume [m^3]
         # Calculate by taking the volume of the outer cryostat and subtracting the volume of the inner cryostat
-        fwbs_variables.vol_cryostat = (
+        self.data.fwbs.vol_cryostat = (
             (
                 np.pi
-                * (fwbs_variables.r_cryostat_inboard + build_variables.dr_cryostat) ** 2
+                * (self.data.fwbs.r_cryostat_inboard + build_variables.dr_cryostat) ** 2
             )
             * 2
-            * (build_variables.dr_cryostat + fwbs_variables.z_cryostat_half_inside)
-        ) - (fwbs_variables.vol_cryostat_internal)
+            * (build_variables.dr_cryostat + self.data.fwbs.z_cryostat_half_inside)
+        ) - (self.data.fwbs.vol_cryostat_internal)
 
         # Sum of internal vacuum vessel and cryostat masses (kg)
-        fwbs_variables.dewmkg = (
-            fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
-        ) * fwbs_variables.den_steel
+        self.data.fwbs.dewmkg = (
+            self.data.fwbs.vol_vv + self.data.fwbs.vol_cryostat
+        ) * self.data.fwbs.den_steel
 
     def output(self):
         """Outputs the cryostat geometry details to the output file."""
@@ -97,14 +95,14 @@ class Cryostat(Model):
             self.outfile,
             "Cryostat internal radius (m)",
             "(r_cryostat_inboard)",
-            fwbs_variables.r_cryostat_inboard,
+            self.data.fwbs.r_cryostat_inboard,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Cryostat internal half height (m)",
             "(z_cryostat_half_inside)",
-            fwbs_variables.z_cryostat_half_inside,
+            self.data.fwbs.z_cryostat_half_inside,
             "OP ",
         )
         po.ovarrf(
@@ -118,13 +116,13 @@ class Cryostat(Model):
             self.outfile,
             "Cryostat structure volume (m^3)",
             "(vol_cryostat)",
-            fwbs_variables.vol_cryostat,
+            self.data.fwbs.vol_cryostat,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Cryostat internal volume (m^3)",
             "(vol_cryostat_internal)",
-            fwbs_variables.vol_cryostat_internal,
+            self.data.fwbs.vol_cryostat_internal,
             "OP ",
         )

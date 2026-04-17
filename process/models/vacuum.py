@@ -10,7 +10,6 @@ from process.data_structure import (
     blanket_library,
     build_variables,
     divertor_variables,
-    fwbs_variables,
     physics_variables,
     tfcoil_variables,
     times_variables,
@@ -741,12 +740,12 @@ class VacuumVessel(Model):
         # D-shaped blanket and shield
         if (
             physics_variables.itart == 1
-            or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
+            or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
                 blanket_library.vol_vv_inboard,
                 blanket_library.vol_vv_outboard,
-                fwbs_variables.vol_vv,
+                self.data.fwbs.vol_vv,
             ) = self.calculate_dshaped_vessel_volumes(
                 r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
                 r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
@@ -760,7 +759,7 @@ class VacuumVessel(Model):
             (
                 blanket_library.vol_vv_inboard,
                 blanket_library.vol_vv_outboard,
-                fwbs_variables.vol_vv,
+                self.data.fwbs.vol_vv,
             ) = self.calculate_elliptical_vessel_volumes(
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
@@ -777,10 +776,10 @@ class VacuumVessel(Model):
         # Apply vacuum vessel coverage factor
         # moved from dshaped_* and elliptical_* to keep coverage factor
         # changes in the same location.
-        fwbs_variables.vol_vv = fwbs_variables.fvoldw * fwbs_variables.vol_vv
+        self.data.fwbs.vol_vv = self.data.fwbs.fvoldw * self.data.fwbs.vol_vv
 
         # Vacuum vessel mass (kg)
-        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
+        self.data.fwbs.m_vv = self.data.fwbs.vol_vv * self.data.fwbs.den_steel
 
     @staticmethod
     def calculate_vessel_half_height(
@@ -973,6 +972,6 @@ class VacuumVessel(Model):
             self.outfile,
             "Total volume of vacuum vessel (m^3)",
             "(vol_vv)",
-            fwbs_variables.vol_vv,
+            self.data.fwbs.vol_vv,
             "OP ",
         )
