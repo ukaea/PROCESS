@@ -580,7 +580,7 @@ class NeutralBeam:
 
         Notes
         -----
-        This function calculates the stopping cross-section (m^-2)
+        This function calculates the stopping cross-section (m^2)
         for a hydrogen beam in a fusion plasma.
         Janev, Boley and Post, Nuclear Fusion 29 (1989) 2125
         """
