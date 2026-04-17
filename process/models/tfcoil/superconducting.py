@@ -3052,33 +3052,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 avg_turn_geometry.dx_tf_turn_cable_space_average
             )
 
-        else:
-            # Integer number of turns
-            (
-                superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners,
-                superconducting_tf_coil_variables.dr_tf_turn,
-                superconducting_tf_coil_variables.dx_tf_turn,
-                tfcoil_variables.a_tf_turn_cable_space_no_void,
-                tfcoil_variables.a_tf_turn_steel,
-                tfcoil_variables.a_tf_turn_insulation,
-                tfcoil_variables.c_tf_turn,
-                tfcoil_variables.n_tf_coil_turns,
-                superconducting_tf_coil_variables.t_conductor_radial,
-                superconducting_tf_coil_variables.t_conductor_toroidal,
-                tfcoil_variables.t_conductor,
-                superconducting_tf_coil_variables.dr_tf_turn_cable_space,
-                superconducting_tf_coil_variables.dx_tf_turn_cable_space,
-                superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
-            ) = self.tf_cable_in_conduit_integer_turn_geometry(
-                dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
-                dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
-                dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
-                n_tf_wp_layers=tfcoil_variables.n_tf_wp_layers,
-                dx_tf_wp_toroidal_min=superconducting_tf_coil_variables.dx_tf_wp_toroidal_min,
-                n_tf_wp_pancakes=tfcoil_variables.n_tf_wp_pancakes,
-                c_tf_coil=superconducting_tf_coil_variables.c_tf_coil,
-                dx_tf_turn_steel=tfcoil_variables.dx_tf_turn_steel,
-                dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
+        elif tfcoil_variables.i_tf_turns_integer == 1:
+            raise ProcessValueError(
+                "Integer turn geometry not implemented for CroCo conductor."
             )
 
         # Calculate number of cables in turn if CICC conductor
