@@ -22,9 +22,7 @@ from process.data_structure import pfcoil_variables, superconducting_tf_coil_var
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
-from process.models.cs_fatigue import CsFatigue
 from process.models.pfcoil import (
-    CSCoil,
     PFCoil,
     calculate_b_field_at_point,
     fixb,
@@ -37,23 +35,23 @@ from process.models.pfcoil import (
 
 @pytest.fixture
 def pfcoil(process_models):
-    """Fixture to create a PFCoil object.
+    """Fixture to create PFCoil object.
 
-    :return: an instance of PFCoil
+    :return: a PFCoil instance
     :rtype: process.pfcoil.PFCoil
     """
-
     return process_models.pfcoil
 
 
 @pytest.fixture
-def cs_coil():
-    """Fixture to create a CSCoil object.
+def cs_coil(process_models):
+    """Fixture to get the CSCoil from process_models.
 
-    :return: an instance of CSCoil
+    :return: a CSCoil instance
     :rtype: process.pfcoil.CSCoil
     """
-    return CSCoil(cs_fatigue=CsFatigue())
+
+    return process_models.cs_coil
 
 
 def test_init_pfcoil(pfcoil):
@@ -92,7 +90,7 @@ def test_rsid(pfcoil):
     ssq_exp = 0.0006400910095285954
 
     nptsmx = npts = 32
-    brin, bzin = np.zeros(2, nptsmx)
+    brin, bzin = np.zeros((2, nptsmx))
     nfix = 14
     n_pf_coil_groups = 4
     ccls = np.array([
