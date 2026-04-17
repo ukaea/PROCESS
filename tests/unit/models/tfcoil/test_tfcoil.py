@@ -37,18 +37,8 @@ def tfcoil():
     ("temperature", "expected_density"),
     [(24.6, 130.02434313053487), (30.2, 113.09539723009078), (43.6, 85.26924709595201)],
 )
-def test_he_density(temperature, expected_density, tfcoil):
-    """Tests `he_density` subroutine.
-
-    :param temperature: test asset passed to the routine representing the temperature, in Kelvin.
-    :type temperature: float
-
-    :param expected_density: expected result of the routine.
-    :type expected_density: float
-
-    :param tfcoil: fixture containing an initialised `TFCoil` object
-    :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
-    """
+def test_he_density(temperature: float, expected_density: float, tfcoil):
+    """Tests `he_density` subroutine."""
     density = tfcoil.he_density(temperature)
 
     assert pytest.approx(density) == expected_density
@@ -59,17 +49,7 @@ def test_he_density(temperature, expected_density, tfcoil):
     [(24.6, 5674.909063980127), (30.2, 5798.42049712345), (43.6, 5673.218322000001)],
 )
 def test_he_cp(temperature, expected_cp, tfcoil):
-    """Tests `he_cp` subroutine.
-
-    :param temperature: test asset passed to the routine representing the temperature, in Kelvin.
-    :type temperature: float
-
-    :param expected_cp: expected result of the routine.
-    :type expected_cp: float
-
-    :param tfcoil: fixture containing an initialised `TFCoil` object
-    :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
-    """
+    """Tests `he_cp` subroutine."""
 
     cp = tfcoil.he_cp(temperature)
 
@@ -85,23 +65,14 @@ def test_he_cp(temperature, expected_cp, tfcoil):
     ],
 )
 def test_he_visco(temperature, expected_visco, tfcoil):
-    """Tests `he_visco` subroutine.
-
-    :param temperature: test asset passed to the routine representing the temperature, in Kelvin.
-    :type temperature: float
-
-    :param expected_visco: expected result of the routine.
-    :type expected_visco: float
-
-    :param tfcoil: fixture containing an initialised `TFCoil` object
-    :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
-    """
+    """Tests `he_visco` subroutine."""
     visco = tfcoil.he_visco(temperature)
 
     assert pytest.approx(visco) == expected_visco
 
 
-# error module needs to be initialised here because the temperature ranges are (in some cases) greater than the error conditions
+# error module needs to be initialised here because the temperature ranges are
+# are (in some cases) greater than the error conditions
 @pytest.mark.parametrize(
     ("temperature", "expected_th_cond"),
     [
@@ -113,20 +84,7 @@ def test_he_visco(temperature, expected_visco, tfcoil):
     ],
 )
 def test_he_th_cond(temperature, expected_th_cond, reinitialise_error_module, tfcoil):
-    """Tests `he_th_cond` subroutine.
-
-    :param temperature: test asset passed to the routine representing the temperature, in Kelvin.
-    :type temperature: float
-
-    :param expected_th_cond: expected result of the routine.
-    :type expected_th_cond: float
-
-    :param reinitialise_error_module: teardown any error side-effects
-    :type reinitialise_error_module: None
-
-    :param tfcoil: fixture containing an initialised `TFCoil` object
-    :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
-    """
+    """Tests `he_th_cond` subroutine."""
     th_cond = tfcoil.he_th_cond(temperature)
 
     assert pytest.approx(th_cond) == expected_th_cond
@@ -142,46 +100,32 @@ def test_he_th_cond(temperature, expected_th_cond, reinitialise_error_module, tf
     ],
 )
 def test_al_th_cond(temperature, expected_th_cond, tfcoil):
-    """Tests `he_th_cond` subroutine.
-
-    :param temperature: test asset passed to the routine representing the temperature, in Kelvin.
-    :type temperature: float
-
-    :param al_th_cond: expected result of the routine.
-    :type al_th_cond: float
-
-    :param tfcoil: fixture containing an initialised `TFCoil` object
-    :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
-    """
+    """Tests `he_th_cond` subroutine."""
     th_cond = tfcoil.al_th_cond(temperature)
 
     assert pytest.approx(th_cond) == expected_th_cond
 
 
 class CntrpstTestAsset(NamedTuple):
-    """Test asset for a test case of cntrpst
-
-    :i_tf_sup: value for tfcoil_variables.i_tf_sup to be mocked with (0=Copper, 2=Cryogenic aluminium)
-    :type i_tf_sup: integer
-    :temp_cp_coolant_inlet: value for tfcoil_variables.temp_cp_coolant_inlet to be mocked with (centrepost coolant inlet temperature)
-    :type temp_cp_coolant_inlet: float
-
-    :expected_dtiocool: expected value of tfcoil_variables.dtemp_cp_coolant after tfcoil.cntrpst routine has run
-    :type expected_dtiocool: float
-    :expected_tcpav2: expected value of tfcoil_variables.tcpav2 after tfcoil.cntrpst routine has run
-    :type expected_tcpav2: float
-    :expected_temp_cp_peak: expected value of tfcoil_variables.temp_cp_peak after tfcoil.cntrpst routine has run
-    :type expected_temp_cp_peak: float
-    :expected_ppump: expected value of tfcoil_variables.p_cp_coolant_pump_elec after tfcoil.cntrpst routine has run
-    :type expected_ppump: float
-    """
+    """Test asset for a test case of cntrpst"""
 
     i_tf_sup: int
+    """tfcoil_variables.i_tf_sup value to be mocked (0=Copper, 2=Cryogenic aluminium)"""
     temp_cp_coolant_inlet: float
+    """tfcoil_variables.temp_cp_coolant_inlet value to be mocked
+    (centrepost coolant inlet temperature)"""
     expected_dtiocool: float
+    """expected value of tfcoil_variables.dtemp_cp_coolant
+    after tfcoil.cntrpst routine has run"""
     expected_tcpav2: float
+    """expected value of tfcoil_variables.tcpav2
+    after tfcoil.cntrpst routine has run"""
     expected_temp_cp_peak: float
+    """expected value of tfcoil_variables.temp_cp_peak
+    after tfcoil.cntrpst routine has run"""
     expected_ppump: float
+    """expected value of tfcoil_variables.p_cp_coolant_pump_elec
+    after tfcoil.cntrpst routine has run"""
 
 
 @pytest.mark.parametrize(
@@ -204,18 +148,6 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
         - tcpav2
         - temp_cp_peak
         - p_cp_coolant_pump_elec
-
-    :param cntrpst_asset: test asset containing values to mock and expected results for the represented test case
-    :type cntrpst_asset: CntrpstTestAsset
-
-    :param monkeypatch: Mock fixture
-    :type monkeypatch: object
-
-    :param reinitialise_error_module: teardown any error side-effects
-    :type reinitialise_error_module: None
-
-    :param tfcoil: fixture containing an initialised `TFCoil` object
-    :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
     """
     monkeypatch.setattr(tfcoil_variables, "a_cp_cool", 1)
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 16)
@@ -420,24 +352,24 @@ def test_tf_current(
     ],
     ids=["johndcook", "baseline_2018"],
 )
-def test_circumference(a, b, expected_circumference, tfcoil):
+def test_circumference(a: float, b: float, expected_circumference, tfcoil):
     """Unit test for the sctfcoil circumference routine.
 
     This unit test uses values from an external blog referenced in the
-    routine header (https://www.johndcook.com/blog/2013/05/05/ramanujan-circumference-ellipse/)
+    routine header
+    (https://www.johndcook.com/blog/2013/05/05/ramanujan-circumference-ellipse/)
     as well as results obtained from baseline 2018.
 
-    :param a: the value of a (x/a)^2...  in the formula of an ellipse
-    :type a: float
-
-    :param b: the value of b ...(y/b)^2...  in the formula of an ellipse
-    :type b: float
-
-    :param expected_circumference: the expected result of the routine given inputs a and b
-    :type expected_circumference: float
-
-    :param sctfcoil: initialised SuperconductingTFCoil object
-    :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
+    Parameters
+    ----------
+    a:
+        the value of a (x/a)^2...  in the formula of an ellipse
+    b:
+        the value of b ...(y/b)^2...  in the formula of an ellipse
+    expected_circumference:
+        the expected result of the routine given inputs a and b
+    tfcoil:
+        initialised SuperconductingTFCoil object
     """
     assert tfcoil.circumference(a, b) == pytest.approx(expected_circumference)
 

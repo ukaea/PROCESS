@@ -551,72 +551,76 @@ def test_sombld(sombldparam, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(first_wall_variables, "a_fw_total", sombldparam.a_fw_total)
-    monkeypatch.setattr(ife_variables, "ifetyp", sombldparam.ifetyp)
-    monkeypatch.setattr(ife_variables, "chrad", sombldparam.chrad)
-    monkeypatch.setattr(ife_variables, "r1", sombldparam.r1)
-    monkeypatch.setattr(ife_variables, "fwdr", sombldparam.fwdr)
-    monkeypatch.setattr(ife_variables, "r2", sombldparam.r2)
-    monkeypatch.setattr(ife_variables, "v1dr", sombldparam.v1dr)
-    monkeypatch.setattr(ife_variables, "r3", sombldparam.r3)
-    monkeypatch.setattr(ife_variables, "bldr", sombldparam.bldr)
-    monkeypatch.setattr(ife_variables, "r4", sombldparam.r4)
-    monkeypatch.setattr(ife_variables, "v2dr", sombldparam.v2dr)
-    monkeypatch.setattr(ife_variables, "r5", sombldparam.r5)
-    monkeypatch.setattr(ife_variables, "shdr", sombldparam.shdr)
-    monkeypatch.setattr(ife_variables, "r6", sombldparam.r6)
-    monkeypatch.setattr(ife_variables, "v3dr", sombldparam.v3dr)
-    monkeypatch.setattr(ife_variables, "r7", sombldparam.r7)
-    monkeypatch.setattr(ife_variables, "zl7", sombldparam.zl7)
-    monkeypatch.setattr(ife_variables, "v3dzl", sombldparam.v3dzl)
-    monkeypatch.setattr(ife_variables, "zl6", sombldparam.zl6)
-    monkeypatch.setattr(ife_variables, "shdzl", sombldparam.shdzl)
-    monkeypatch.setattr(ife_variables, "zl5", sombldparam.zl5)
-    monkeypatch.setattr(ife_variables, "v2dzl", sombldparam.v2dzl)
-    monkeypatch.setattr(ife_variables, "zl4", sombldparam.zl4)
-    monkeypatch.setattr(ife_variables, "bldzl", sombldparam.bldzl)
-    monkeypatch.setattr(ife_variables, "zl3", sombldparam.zl3)
-    monkeypatch.setattr(ife_variables, "v1dzl", sombldparam.v1dzl)
-    monkeypatch.setattr(ife_variables, "zl2", sombldparam.zl2)
-    monkeypatch.setattr(ife_variables, "fwdzl", sombldparam.fwdzl)
-    monkeypatch.setattr(ife_variables, "zl1", sombldparam.zl1)
-    monkeypatch.setattr(ife_variables, "chdzl", sombldparam.chdzl)
-    monkeypatch.setattr(ife_variables, "chdzu", sombldparam.chdzu)
-    monkeypatch.setattr(ife_variables, "zu1", sombldparam.zu1)
-    monkeypatch.setattr(ife_variables, "fwdzu", sombldparam.fwdzu)
-    monkeypatch.setattr(ife_variables, "zu2", sombldparam.zu2)
-    monkeypatch.setattr(ife_variables, "v1dzu", sombldparam.v1dzu)
-    monkeypatch.setattr(ife_variables, "zu3", sombldparam.zu3)
-    monkeypatch.setattr(ife_variables, "bldzu", sombldparam.bldzu)
-    monkeypatch.setattr(ife_variables, "zu4", sombldparam.zu4)
-    monkeypatch.setattr(ife_variables, "v2dzu", sombldparam.v2dzu)
-    monkeypatch.setattr(ife_variables, "zu5", sombldparam.zu5)
-    monkeypatch.setattr(ife_variables, "shdzu", sombldparam.shdzu)
-    monkeypatch.setattr(ife_variables, "zu6", sombldparam.zu6)
-    monkeypatch.setattr(ife_variables, "v3dzu", sombldparam.v3dzu)
-    monkeypatch.setattr(ife_variables, "zu7", sombldparam.zu7)
-    monkeypatch.setattr(ife_variables, "fwmatv", sombldparam.fwmatv)
-    monkeypatch.setattr(ife_variables, "v1matv", sombldparam.v1matv)
-    monkeypatch.setattr(ife_variables, "blmatv", sombldparam.blmatv)
-    monkeypatch.setattr(ife_variables, "v2matv", sombldparam.v2matv)
-    monkeypatch.setattr(ife_variables, "shmatv", sombldparam.shmatv)
-    monkeypatch.setattr(ife_variables, "v3matv", sombldparam.v3matv)
-    monkeypatch.setattr(ife_variables, "chmatv", sombldparam.chmatv)
-    monkeypatch.setattr(ife_variables, "chvol", sombldparam.chvol)
-    monkeypatch.setattr(ife_variables, "fwvol", sombldparam.fwvol)
-    monkeypatch.setattr(ife_variables, "v1vol", sombldparam.v1vol)
-    monkeypatch.setattr(ife_variables, "blvol", sombldparam.blvol)
-    monkeypatch.setattr(ife_variables, "v2vol", sombldparam.v2vol)
-    monkeypatch.setattr(ife_variables, "somtdr", sombldparam.somtdr)
-    monkeypatch.setattr(ife_variables, "sombdr", sombldparam.sombdr)
-    monkeypatch.setattr(ife_variables, "shvol", sombldparam.shvol)
-    monkeypatch.setattr(ife_variables, "v3vol", sombldparam.v3vol)
-    monkeypatch.setattr(ife_variables, "chmatf", sombldparam.chmatf)
-    monkeypatch.setattr(ife_variables, "fwmatf", sombldparam.fwmatf)
-    monkeypatch.setattr(ife_variables, "blmatf", sombldparam.blmatf)
-    monkeypatch.setattr(ife_variables, "v1matf", sombldparam.v1matf)
-    monkeypatch.setattr(ife_variables, "v2matf", sombldparam.v2matf)
-    monkeypatch.setattr(ife_variables, "shmatf", sombldparam.shmatf)
-    monkeypatch.setattr(ife_variables, "v3matf", sombldparam.v3matf)
+
+    for name, val in (
+        ("ifetyp", sombldparam.ifetyp),
+        ("chrad", sombldparam.chrad),
+        ("r1", sombldparam.r1),
+        ("fwdr", sombldparam.fwdr),
+        ("r2", sombldparam.r2),
+        ("v1dr", sombldparam.v1dr),
+        ("r3", sombldparam.r3),
+        ("bldr", sombldparam.bldr),
+        ("r4", sombldparam.r4),
+        ("v2dr", sombldparam.v2dr),
+        ("r5", sombldparam.r5),
+        ("shdr", sombldparam.shdr),
+        ("r6", sombldparam.r6),
+        ("v3dr", sombldparam.v3dr),
+        ("r7", sombldparam.r7),
+        ("zl7", sombldparam.zl7),
+        ("v3dzl", sombldparam.v3dzl),
+        ("zl6", sombldparam.zl6),
+        ("shdzl", sombldparam.shdzl),
+        ("zl5", sombldparam.zl5),
+        ("v2dzl", sombldparam.v2dzl),
+        ("zl4", sombldparam.zl4),
+        ("bldzl", sombldparam.bldzl),
+        ("zl3", sombldparam.zl3),
+        ("v1dzl", sombldparam.v1dzl),
+        ("zl2", sombldparam.zl2),
+        ("fwdzl", sombldparam.fwdzl),
+        ("zl1", sombldparam.zl1),
+        ("chdzl", sombldparam.chdzl),
+        ("chdzu", sombldparam.chdzu),
+        ("zu1", sombldparam.zu1),
+        ("fwdzu", sombldparam.fwdzu),
+        ("zu2", sombldparam.zu2),
+        ("v1dzu", sombldparam.v1dzu),
+        ("zu3", sombldparam.zu3),
+        ("bldzu", sombldparam.bldzu),
+        ("zu4", sombldparam.zu4),
+        ("v2dzu", sombldparam.v2dzu),
+        ("zu5", sombldparam.zu5),
+        ("shdzu", sombldparam.shdzu),
+        ("zu6", sombldparam.zu6),
+        ("v3dzu", sombldparam.v3dzu),
+        ("zu7", sombldparam.zu7),
+        ("fwmatv", sombldparam.fwmatv),
+        ("v1matv", sombldparam.v1matv),
+        ("blmatv", sombldparam.blmatv),
+        ("v2matv", sombldparam.v2matv),
+        ("shmatv", sombldparam.shmatv),
+        ("v3matv", sombldparam.v3matv),
+        ("chmatv", sombldparam.chmatv),
+        ("chvol", sombldparam.chvol),
+        ("fwvol", sombldparam.fwvol),
+        ("v1vol", sombldparam.v1vol),
+        ("blvol", sombldparam.blvol),
+        ("v2vol", sombldparam.v2vol),
+        ("somtdr", sombldparam.somtdr),
+        ("sombdr", sombldparam.sombdr),
+        ("shvol", sombldparam.shvol),
+        ("v3vol", sombldparam.v3vol),
+        ("chmatf", sombldparam.chmatf),
+        ("fwmatf", sombldparam.fwmatf),
+        ("blmatf", sombldparam.blmatf),
+        ("v1matf", sombldparam.v1matf),
+        ("v2matf", sombldparam.v2matf),
+        ("shmatf", sombldparam.shmatf),
+        ("v3matf", sombldparam.v3matf),
+    ):
+        monkeypatch.setattr(ife_variables, name, val)
 
     ife.sombld()
 
@@ -1138,56 +1142,59 @@ def test_hylbld(hylbldparam, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(first_wall_variables, "a_fw_total", hylbldparam.a_fw_total)
-    monkeypatch.setattr(ife_variables, "ifetyp", hylbldparam.ifetyp)
-    monkeypatch.setattr(ife_variables, "chrad", hylbldparam.chrad)
-    monkeypatch.setattr(ife_variables, "r1", hylbldparam.r1)
-    monkeypatch.setattr(ife_variables, "fwdr", hylbldparam.fwdr)
-    monkeypatch.setattr(ife_variables, "r2", hylbldparam.r2)
-    monkeypatch.setattr(ife_variables, "v1dr", hylbldparam.v1dr)
-    monkeypatch.setattr(ife_variables, "r3", hylbldparam.r3)
-    monkeypatch.setattr(ife_variables, "bldr", hylbldparam.bldr)
-    monkeypatch.setattr(ife_variables, "r4", hylbldparam.r4)
-    monkeypatch.setattr(ife_variables, "v2dr", hylbldparam.v2dr)
-    monkeypatch.setattr(ife_variables, "r5", hylbldparam.r5)
-    monkeypatch.setattr(ife_variables, "shdr", hylbldparam.shdr)
-    monkeypatch.setattr(ife_variables, "r6", hylbldparam.r6)
-    monkeypatch.setattr(ife_variables, "v3dr", hylbldparam.v3dr)
-    monkeypatch.setattr(ife_variables, "r7", hylbldparam.r7)
-    monkeypatch.setattr(ife_variables, "zl7", hylbldparam.zl7)
-    monkeypatch.setattr(ife_variables, "v3dzl", hylbldparam.v3dzl)
-    monkeypatch.setattr(ife_variables, "zl6", hylbldparam.zl6)
-    monkeypatch.setattr(ife_variables, "shdzl", hylbldparam.shdzl)
-    monkeypatch.setattr(ife_variables, "zl5", hylbldparam.zl5)
-    monkeypatch.setattr(ife_variables, "v2dzl", hylbldparam.v2dzl)
-    monkeypatch.setattr(ife_variables, "zl4", hylbldparam.zl4)
-    monkeypatch.setattr(ife_variables, "bldzl", hylbldparam.bldzl)
-    monkeypatch.setattr(ife_variables, "zl3", hylbldparam.zl3)
-    monkeypatch.setattr(ife_variables, "v1dzl", hylbldparam.v1dzl)
-    monkeypatch.setattr(ife_variables, "zl2", hylbldparam.zl2)
-    monkeypatch.setattr(ife_variables, "fwdzl", hylbldparam.fwdzl)
-    monkeypatch.setattr(ife_variables, "zl1", hylbldparam.zl1)
-    monkeypatch.setattr(ife_variables, "chdzl", hylbldparam.chdzl)
-    monkeypatch.setattr(ife_variables, "chdzu", hylbldparam.chdzu)
-    monkeypatch.setattr(ife_variables, "zu1", hylbldparam.zu1)
-    monkeypatch.setattr(ife_variables, "fwdzu", hylbldparam.fwdzu)
-    monkeypatch.setattr(ife_variables, "zu2", hylbldparam.zu2)
-    monkeypatch.setattr(ife_variables, "v1dzu", hylbldparam.v1dzu)
-    monkeypatch.setattr(ife_variables, "zu3", hylbldparam.zu3)
-    monkeypatch.setattr(ife_variables, "bldzu", hylbldparam.bldzu)
-    monkeypatch.setattr(ife_variables, "zu4", hylbldparam.zu4)
-    monkeypatch.setattr(ife_variables, "v2dzu", hylbldparam.v2dzu)
-    monkeypatch.setattr(ife_variables, "zu5", hylbldparam.zu5)
-    monkeypatch.setattr(ife_variables, "shdzu", hylbldparam.shdzu)
-    monkeypatch.setattr(ife_variables, "zu6", hylbldparam.zu6)
-    monkeypatch.setattr(ife_variables, "v3dzu", hylbldparam.v3dzu)
-    monkeypatch.setattr(ife_variables, "zu7", hylbldparam.zu7)
-    monkeypatch.setattr(ife_variables, "fwmatv", hylbldparam.fwmatv)
-    monkeypatch.setattr(ife_variables, "v1matv", hylbldparam.v1matv)
-    monkeypatch.setattr(ife_variables, "blmatv", hylbldparam.blmatv)
-    monkeypatch.setattr(ife_variables, "v2matv", hylbldparam.v2matv)
-    monkeypatch.setattr(ife_variables, "shmatv", hylbldparam.shmatv)
-    monkeypatch.setattr(ife_variables, "v3matv", hylbldparam.v3matv)
-    monkeypatch.setattr(ife_variables, "chmatv", hylbldparam.chmatv)
+    for name, val in (
+        ("ifetyp", hylbldparam.ifetyp),
+        ("chrad", hylbldparam.chrad),
+        ("r1", hylbldparam.r1),
+        ("fwdr", hylbldparam.fwdr),
+        ("r2", hylbldparam.r2),
+        ("v1dr", hylbldparam.v1dr),
+        ("r3", hylbldparam.r3),
+        ("bldr", hylbldparam.bldr),
+        ("r4", hylbldparam.r4),
+        ("v2dr", hylbldparam.v2dr),
+        ("r5", hylbldparam.r5),
+        ("shdr", hylbldparam.shdr),
+        ("r6", hylbldparam.r6),
+        ("v3dr", hylbldparam.v3dr),
+        ("r7", hylbldparam.r7),
+        ("zl7", hylbldparam.zl7),
+        ("v3dzl", hylbldparam.v3dzl),
+        ("zl6", hylbldparam.zl6),
+        ("shdzl", hylbldparam.shdzl),
+        ("zl5", hylbldparam.zl5),
+        ("v2dzl", hylbldparam.v2dzl),
+        ("zl4", hylbldparam.zl4),
+        ("bldzl", hylbldparam.bldzl),
+        ("zl3", hylbldparam.zl3),
+        ("v1dzl", hylbldparam.v1dzl),
+        ("zl2", hylbldparam.zl2),
+        ("fwdzl", hylbldparam.fwdzl),
+        ("zl1", hylbldparam.zl1),
+        ("chdzl", hylbldparam.chdzl),
+        ("chdzu", hylbldparam.chdzu),
+        ("zu1", hylbldparam.zu1),
+        ("fwdzu", hylbldparam.fwdzu),
+        ("zu2", hylbldparam.zu2),
+        ("v1dzu", hylbldparam.v1dzu),
+        ("zu3", hylbldparam.zu3),
+        ("bldzu", hylbldparam.bldzu),
+        ("zu4", hylbldparam.zu4),
+        ("v2dzu", hylbldparam.v2dzu),
+        ("zu5", hylbldparam.zu5),
+        ("shdzu", hylbldparam.shdzu),
+        ("zu6", hylbldparam.zu6),
+        ("v3dzu", hylbldparam.v3dzu),
+        ("zu7", hylbldparam.zu7),
+        ("fwmatv", hylbldparam.fwmatv),
+        ("v1matv", hylbldparam.v1matv),
+        ("blmatv", hylbldparam.blmatv),
+        ("v2matv", hylbldparam.v2matv),
+        ("shmatv", hylbldparam.shmatv),
+        ("v3matv", hylbldparam.v3matv),
+        ("chmatv", hylbldparam.chmatv),
+    ):
+        monkeypatch.setattr(ife_variables, name, val)
 
     ife.hylbld()
 
@@ -2026,56 +2033,59 @@ def test_genbld(genbldparam, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(first_wall_variables, "a_fw_total", genbldparam.a_fw_total)
-    monkeypatch.setattr(ife_variables, "ifetyp", genbldparam.ifetyp)
-    monkeypatch.setattr(ife_variables, "chrad", genbldparam.chrad)
-    monkeypatch.setattr(ife_variables, "r1", genbldparam.r1)
-    monkeypatch.setattr(ife_variables, "fwdr", genbldparam.fwdr)
-    monkeypatch.setattr(ife_variables, "r2", genbldparam.r2)
-    monkeypatch.setattr(ife_variables, "v1dr", genbldparam.v1dr)
-    monkeypatch.setattr(ife_variables, "r3", genbldparam.r3)
-    monkeypatch.setattr(ife_variables, "bldr", genbldparam.bldr)
-    monkeypatch.setattr(ife_variables, "r4", genbldparam.r4)
-    monkeypatch.setattr(ife_variables, "v2dr", genbldparam.v2dr)
-    monkeypatch.setattr(ife_variables, "r5", genbldparam.r5)
-    monkeypatch.setattr(ife_variables, "shdr", genbldparam.shdr)
-    monkeypatch.setattr(ife_variables, "r6", genbldparam.r6)
-    monkeypatch.setattr(ife_variables, "v3dr", genbldparam.v3dr)
-    monkeypatch.setattr(ife_variables, "r7", genbldparam.r7)
-    monkeypatch.setattr(ife_variables, "zl7", genbldparam.zl7)
-    monkeypatch.setattr(ife_variables, "v3dzl", genbldparam.v3dzl)
-    monkeypatch.setattr(ife_variables, "zl6", genbldparam.zl6)
-    monkeypatch.setattr(ife_variables, "shdzl", genbldparam.shdzl)
-    monkeypatch.setattr(ife_variables, "zl5", genbldparam.zl5)
-    monkeypatch.setattr(ife_variables, "v2dzl", genbldparam.v2dzl)
-    monkeypatch.setattr(ife_variables, "zl4", genbldparam.zl4)
-    monkeypatch.setattr(ife_variables, "bldzl", genbldparam.bldzl)
-    monkeypatch.setattr(ife_variables, "zl3", genbldparam.zl3)
-    monkeypatch.setattr(ife_variables, "v1dzl", genbldparam.v1dzl)
-    monkeypatch.setattr(ife_variables, "zl2", genbldparam.zl2)
-    monkeypatch.setattr(ife_variables, "fwdzl", genbldparam.fwdzl)
-    monkeypatch.setattr(ife_variables, "zl1", genbldparam.zl1)
-    monkeypatch.setattr(ife_variables, "chdzl", genbldparam.chdzl)
-    monkeypatch.setattr(ife_variables, "chdzu", genbldparam.chdzu)
-    monkeypatch.setattr(ife_variables, "zu1", genbldparam.zu1)
-    monkeypatch.setattr(ife_variables, "fwdzu", genbldparam.fwdzu)
-    monkeypatch.setattr(ife_variables, "zu2", genbldparam.zu2)
-    monkeypatch.setattr(ife_variables, "v1dzu", genbldparam.v1dzu)
-    monkeypatch.setattr(ife_variables, "zu3", genbldparam.zu3)
-    monkeypatch.setattr(ife_variables, "bldzu", genbldparam.bldzu)
-    monkeypatch.setattr(ife_variables, "zu4", genbldparam.zu4)
-    monkeypatch.setattr(ife_variables, "v2dzu", genbldparam.v2dzu)
-    monkeypatch.setattr(ife_variables, "zu5", genbldparam.zu5)
-    monkeypatch.setattr(ife_variables, "shdzu", genbldparam.shdzu)
-    monkeypatch.setattr(ife_variables, "zu6", genbldparam.zu6)
-    monkeypatch.setattr(ife_variables, "v3dzu", genbldparam.v3dzu)
-    monkeypatch.setattr(ife_variables, "zu7", genbldparam.zu7)
-    monkeypatch.setattr(ife_variables, "fwmatv", genbldparam.fwmatv)
-    monkeypatch.setattr(ife_variables, "v1matv", genbldparam.v1matv)
-    monkeypatch.setattr(ife_variables, "blmatv", genbldparam.blmatv)
-    monkeypatch.setattr(ife_variables, "v2matv", genbldparam.v2matv)
-    monkeypatch.setattr(ife_variables, "shmatv", genbldparam.shmatv)
-    monkeypatch.setattr(ife_variables, "v3matv", genbldparam.v3matv)
-    monkeypatch.setattr(ife_variables, "chmatv", genbldparam.chmatv)
+    for name, val in (
+        ("ifetyp", genbldparam.ifetyp),
+        ("chrad", genbldparam.chrad),
+        ("r1", genbldparam.r1),
+        ("fwdr", genbldparam.fwdr),
+        ("r2", genbldparam.r2),
+        ("v1dr", genbldparam.v1dr),
+        ("r3", genbldparam.r3),
+        ("bldr", genbldparam.bldr),
+        ("r4", genbldparam.r4),
+        ("v2dr", genbldparam.v2dr),
+        ("r5", genbldparam.r5),
+        ("shdr", genbldparam.shdr),
+        ("r6", genbldparam.r6),
+        ("v3dr", genbldparam.v3dr),
+        ("r7", genbldparam.r7),
+        ("zl7", genbldparam.zl7),
+        ("v3dzl", genbldparam.v3dzl),
+        ("zl6", genbldparam.zl6),
+        ("shdzl", genbldparam.shdzl),
+        ("zl5", genbldparam.zl5),
+        ("v2dzl", genbldparam.v2dzl),
+        ("zl4", genbldparam.zl4),
+        ("bldzl", genbldparam.bldzl),
+        ("zl3", genbldparam.zl3),
+        ("v1dzl", genbldparam.v1dzl),
+        ("zl2", genbldparam.zl2),
+        ("fwdzl", genbldparam.fwdzl),
+        ("zl1", genbldparam.zl1),
+        ("chdzl", genbldparam.chdzl),
+        ("chdzu", genbldparam.chdzu),
+        ("zu1", genbldparam.zu1),
+        ("fwdzu", genbldparam.fwdzu),
+        ("zu2", genbldparam.zu2),
+        ("v1dzu", genbldparam.v1dzu),
+        ("zu3", genbldparam.zu3),
+        ("bldzu", genbldparam.bldzu),
+        ("zu4", genbldparam.zu4),
+        ("v2dzu", genbldparam.v2dzu),
+        ("zu5", genbldparam.zu5),
+        ("shdzu", genbldparam.shdzu),
+        ("zu6", genbldparam.zu6),
+        ("v3dzu", genbldparam.v3dzu),
+        ("zu7", genbldparam.zu7),
+        ("fwmatv", genbldparam.fwmatv),
+        ("v1matv", genbldparam.v1matv),
+        ("blmatv", genbldparam.blmatv),
+        ("v2matv", genbldparam.v2matv),
+        ("shmatv", genbldparam.shmatv),
+        ("v3matv", genbldparam.v3matv),
+        ("chmatv", genbldparam.chmatv),
+    ):
+        monkeypatch.setattr(ife_variables, name, val)
 
     ife.genbld()
 
@@ -2651,56 +2661,59 @@ def test_bld2019(bld2019param, monkeypatch, ife):
     monkeypatch.setattr(
         fwbs_variables, "f_p_blkt_multiplication", bld2019param.f_p_blkt_multiplication
     )
-    monkeypatch.setattr(ife_variables, "ifetyp", bld2019param.ifetyp)
-    monkeypatch.setattr(ife_variables, "chrad", bld2019param.chrad)
-    monkeypatch.setattr(ife_variables, "r1", bld2019param.r1)
-    monkeypatch.setattr(ife_variables, "fwdr", bld2019param.fwdr)
-    monkeypatch.setattr(ife_variables, "r2", bld2019param.r2)
-    monkeypatch.setattr(ife_variables, "v1dr", bld2019param.v1dr)
-    monkeypatch.setattr(ife_variables, "r3", bld2019param.r3)
-    monkeypatch.setattr(ife_variables, "bldr", bld2019param.bldr)
-    monkeypatch.setattr(ife_variables, "r4", bld2019param.r4)
-    monkeypatch.setattr(ife_variables, "v2dr", bld2019param.v2dr)
-    monkeypatch.setattr(ife_variables, "r5", bld2019param.r5)
-    monkeypatch.setattr(ife_variables, "shdr", bld2019param.shdr)
-    monkeypatch.setattr(ife_variables, "r6", bld2019param.r6)
-    monkeypatch.setattr(ife_variables, "v3dr", bld2019param.v3dr)
-    monkeypatch.setattr(ife_variables, "r7", bld2019param.r7)
-    monkeypatch.setattr(ife_variables, "zl7", bld2019param.zl7)
-    monkeypatch.setattr(ife_variables, "v3dzl", bld2019param.v3dzl)
-    monkeypatch.setattr(ife_variables, "zl6", bld2019param.zl6)
-    monkeypatch.setattr(ife_variables, "shdzl", bld2019param.shdzl)
-    monkeypatch.setattr(ife_variables, "zl5", bld2019param.zl5)
-    monkeypatch.setattr(ife_variables, "v2dzl", bld2019param.v2dzl)
-    monkeypatch.setattr(ife_variables, "zl4", bld2019param.zl4)
-    monkeypatch.setattr(ife_variables, "bldzl", bld2019param.bldzl)
-    monkeypatch.setattr(ife_variables, "zl3", bld2019param.zl3)
-    monkeypatch.setattr(ife_variables, "v1dzl", bld2019param.v1dzl)
-    monkeypatch.setattr(ife_variables, "zl2", bld2019param.zl2)
-    monkeypatch.setattr(ife_variables, "fwdzl", bld2019param.fwdzl)
-    monkeypatch.setattr(ife_variables, "zl1", bld2019param.zl1)
-    monkeypatch.setattr(ife_variables, "chdzl", bld2019param.chdzl)
-    monkeypatch.setattr(ife_variables, "chdzu", bld2019param.chdzu)
-    monkeypatch.setattr(ife_variables, "zu1", bld2019param.zu1)
-    monkeypatch.setattr(ife_variables, "fwdzu", bld2019param.fwdzu)
-    monkeypatch.setattr(ife_variables, "zu2", bld2019param.zu2)
-    monkeypatch.setattr(ife_variables, "v1dzu", bld2019param.v1dzu)
-    monkeypatch.setattr(ife_variables, "zu3", bld2019param.zu3)
-    monkeypatch.setattr(ife_variables, "bldzu", bld2019param.bldzu)
-    monkeypatch.setattr(ife_variables, "zu4", bld2019param.zu4)
-    monkeypatch.setattr(ife_variables, "v2dzu", bld2019param.v2dzu)
-    monkeypatch.setattr(ife_variables, "zu5", bld2019param.zu5)
-    monkeypatch.setattr(ife_variables, "shdzu", bld2019param.shdzu)
-    monkeypatch.setattr(ife_variables, "zu6", bld2019param.zu6)
-    monkeypatch.setattr(ife_variables, "v3dzu", bld2019param.v3dzu)
-    monkeypatch.setattr(ife_variables, "zu7", bld2019param.zu7)
-    monkeypatch.setattr(ife_variables, "fwmatv", bld2019param.fwmatv)
-    monkeypatch.setattr(ife_variables, "v1matv", bld2019param.v1matv)
-    monkeypatch.setattr(ife_variables, "blmatv", bld2019param.blmatv)
-    monkeypatch.setattr(ife_variables, "v2matv", bld2019param.v2matv)
-    monkeypatch.setattr(ife_variables, "shmatv", bld2019param.shmatv)
-    monkeypatch.setattr(ife_variables, "v3matv", bld2019param.v3matv)
-    monkeypatch.setattr(ife_variables, "chmatv", bld2019param.chmatv)
+    for name, val in (
+        ("ifetyp", bld2019param.ifetyp),
+        ("chrad", bld2019param.chrad),
+        ("r1", bld2019param.r1),
+        ("fwdr", bld2019param.fwdr),
+        ("r2", bld2019param.r2),
+        ("v1dr", bld2019param.v1dr),
+        ("r3", bld2019param.r3),
+        ("bldr", bld2019param.bldr),
+        ("r4", bld2019param.r4),
+        ("v2dr", bld2019param.v2dr),
+        ("r5", bld2019param.r5),
+        ("shdr", bld2019param.shdr),
+        ("r6", bld2019param.r6),
+        ("v3dr", bld2019param.v3dr),
+        ("r7", bld2019param.r7),
+        ("zl7", bld2019param.zl7),
+        ("v3dzl", bld2019param.v3dzl),
+        ("zl6", bld2019param.zl6),
+        ("shdzl", bld2019param.shdzl),
+        ("zl5", bld2019param.zl5),
+        ("v2dzl", bld2019param.v2dzl),
+        ("zl4", bld2019param.zl4),
+        ("bldzl", bld2019param.bldzl),
+        ("zl3", bld2019param.zl3),
+        ("v1dzl", bld2019param.v1dzl),
+        ("zl2", bld2019param.zl2),
+        ("fwdzl", bld2019param.fwdzl),
+        ("zl1", bld2019param.zl1),
+        ("chdzl", bld2019param.chdzl),
+        ("chdzu", bld2019param.chdzu),
+        ("zu1", bld2019param.zu1),
+        ("fwdzu", bld2019param.fwdzu),
+        ("zu2", bld2019param.zu2),
+        ("v1dzu", bld2019param.v1dzu),
+        ("zu3", bld2019param.zu3),
+        ("bldzu", bld2019param.bldzu),
+        ("zu4", bld2019param.zu4),
+        ("v2dzu", bld2019param.v2dzu),
+        ("zu5", bld2019param.zu5),
+        ("shdzu", bld2019param.shdzu),
+        ("zu6", bld2019param.zu6),
+        ("v3dzu", bld2019param.v3dzu),
+        ("zu7", bld2019param.zu7),
+        ("fwmatv", bld2019param.fwmatv),
+        ("v1matv", bld2019param.v1matv),
+        ("blmatv", bld2019param.blmatv),
+        ("v2matv", bld2019param.v2matv),
+        ("shmatv", bld2019param.shmatv),
+        ("v3matv", bld2019param.v3matv),
+        ("chmatv", bld2019param.chmatv),
+    ):
+        monkeypatch.setattr(ife_variables, name, val)
 
     ife.bld2019()
 

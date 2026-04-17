@@ -98,7 +98,8 @@ def test_copper_specific_heat_capacity():
     """
     Data from NIST:
 
-    J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
+    J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*,
+    "Properties of Copper and Copper Alloys
     at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
     """
     temperature_k = np.array([
