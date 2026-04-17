@@ -7602,6 +7602,9 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
                 ),
                 show_legend=False,
             )
+        print(mfile.get("dr_hts_tape", scan=scan))
+        print(mfile.get("dx_croco_strand_tape_stack", scan=scan))
+        print(mfile.get("n_croco_strand_hts_tapes", scan=scan))
 
         # Cable strand packing parameters
         strand_diameter = mfile.get("dia_tf_turn_superconducting_cable", scan=scan)
@@ -12392,7 +12395,7 @@ def plot_corc_cable_geometry(
             height=(dx_croco_strand_tape_stack / n_croco_strand_hts_tapes),
             edgecolor="black",
             facecolor="blue",
-            linewidth=1,
+            linewidth=1e-3,
         )
         axis.add_patch(rect)
 

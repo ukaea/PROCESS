@@ -1014,6 +1014,7 @@ def calculate_croco_cable_geometry(
     float,  # a_croco_strand_rebco
     float,  # a_croco_strand
     float,  # dr_hts_tape
+    float,  # dx_croco_strand_tape_stack
 ]:
     """Calculate geometry and areas for a CroCo cable strand.
 
@@ -1042,6 +1043,7 @@ def calculate_croco_cable_geometry(
         - a_croco_strand_rebco: Total REBCO area in CroCo strand (m²)
         - a_croco_strand: Total area of CroCo strand (m²)
         - dr_hts_tape: Width of the tape (m)
+        - dx_croco_strand_tape_stack: Height of the tape stack in the CroCo strand (m)
     """
     # Calculate the inner diameter of the CroCo strand tape region
     dia_croco_strand_tape_region = dia_croco_strand - 2.0 * dx_croco_strand_copper
@@ -1091,6 +1093,7 @@ def calculate_croco_cable_geometry(
         a_croco_strand_rebco,
         a_croco_strand,
         dr_hts_tape,
+        dx_croco_strand_tape_stack,
     )
 
 
@@ -1119,6 +1122,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
         a_croco_strand_rebco,
         a_croco_strand,
         rebco_variables.dr_hts_tape,
+        rebco_variables.dx_croco_strand_tape_stack,
     ) = calculate_croco_cable_geometry(
         dia_croco_strand,
         dx_croco_strand_copper,
