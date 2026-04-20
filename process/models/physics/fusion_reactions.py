@@ -934,11 +934,12 @@ def beam_fusion(
 
     Returns
     -------
-    :
-        tuple[float, float, float]: A tuple containing:
-        - Neutral beam beta contribution.
-        - Hot beam ion density (m^-3).
-        - Alpha power from beam-target fusion (MW).
+    beta_beam :
+        Neutral beam beta contribution.
+    n_beam :
+        Hot beam ion density (m^-3).
+    p_alpha_beam :
+        Alpha power from beam-target fusion (MW).
 
     Notes
     -----
@@ -991,14 +992,7 @@ def beam_fusion(
     nd_plasma_deuterium = nd_plasma_fuel_ions_vol_avg * f_deuterium_plasma
     nd_plasma_tritium = nd_plasma_fuel_ions_vol_avg * f_tritium_plasma
 
-    (
-        nd_beam_deuterium,
-        nd_beam_tritium,
-        deuterium_critical_energy_speed,
-        tritium_critical_energy_speed,
-        nd_beam_hot,
-        e_beam_deposited_kev,
-    ) = beam_slowing_down_state(
+    beam_state = beam_slowing_down_state(
         e_beam_kev,
         critical_energy_deuterium,
         critical_energy_tritium,
@@ -1009,15 +1003,19 @@ def beam_fusion(
     )
 
     sigv_beam_deuterium = beam_reaction_rate_coefficient(
-        constants.M_DEUTERON_AMU, deuterium_critical_energy_speed, e_beam_kev
+        constants.M_DEUTERON_AMU,
+        beam_state.deuterium_critical_energy_speed,
+        e_beam_kev,
     )
 
     sigv_beam_tritium = beam_reaction_rate_coefficient(
-        constants.M_TRITON_AMU, tritium_critical_energy_speed, e_beam_kev
+        constants.M_TRITON_AMU,
+        beam_state.tritium_critical_energy_speed,
+        e_beam_kev,
     )
 
     reaction_rate_beam_deuterium_dt = beam_target_reaction_rate(
-        nd_beam_deuterium,
+        beam_state.deuterium_beam_density,
         nd_plasma_tritium,
         sigv_beam_deuterium,
         vol_plasma,
@@ -1027,7 +1025,7 @@ def beam_fusion(
     )
 
     reaction_rate_beam_tritium_dt = beam_target_reaction_rate(
-        nd_beam_tritium,
+        beam_state.tritium_beam_density,
         nd_plasma_deuterium,
         sigv_beam_tritium,
         vol_plasma,
@@ -1046,12 +1044,42 @@ def beam_fusion(
         betbm0
         * 4.03e-22
         * (2 / 3)
-        * nd_beam_hot
-        * e_beam_deposited_kev
+        * beam_state.nd_beam_hot
+        * beam_state.e_beam_deposited_kev
         / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
     )
 
-    return beta_beam, nd_beam_hot, p_beam_alpha_mw
+    return beta_beam, beam_state.nd_beam_hot, p_beam_alpha_mw
+
+
+@dataclass(frozen=True)
+class BeamSlowingDownState:
+    """Beam slowing-down state and hot-ion properties.
+
+    Attributes
+    ----------
+    deuterium_beam_density :
+        Steady-state deuterium beam ion density (m^-3).
+    tritium_beam_density :
+        Steady-state tritium beam ion density (m^-3).
+    deuterium_critical_energy_speed :
+        Critical speed of deuterium beam ions corresponding to the
+        critical energy (m/s).
+    tritium_critical_energy_speed :
+        Critical speed of tritium beam ions corresponding to the
+        critical energy (m/s).
+    nd_beam_hot :
+        Total hot beam ion density (m^-3).
+    e_beam_deposited_kev :
+        Density-weighted average deposited beam ion energy (keV).
+    """
+
+    deuterium_beam_density: float
+    tritium_beam_density: float
+    deuterium_critical_energy_speed: float
+    tritium_critical_energy_speed: float
+    nd_beam_hot: float
+    e_beam_deposited_kev: float
 
 
 def beam_slowing_down_state(
@@ -1062,7 +1090,7 @@ def beam_slowing_down_state(
     f_beam_tritium: float,
     c_beam_total: float,
     vol_plasma: float,
-) -> tuple[float, float, float, float, float, float]:
+) -> BeamSlowingDownState:
     """Calculate beam slowing-down state and hot ion properties.
 
     Estimates the steady-state hot D and T beam-ion densities from beam
@@ -1090,13 +1118,10 @@ def beam_slowing_down_state(
 
     Returns
     -------
-        tuple[float, float, float, float, float, float]: A tuple containing:
-        - Deuterium beam ion density (m^-3).
-        - Tritium beam ion density (m^-3).
-        - Deuterium critical speed (m/s).
-        - Tritium critical speed (m/s).
-        - Total hot beam ion density (m^-3).
-        - Average deposited beam ion energy (keV).
+     :
+        Beam slowing-down state containing deuterium and tritium hot beam-ion
+        densities, deuterium and tritium critical speeds, total hot beam-ion
+        density, and average deposited beam-ion energy.
 
     Notes
     -----
@@ -1223,7 +1248,7 @@ def beam_slowing_down_state(
         else 0.0
     )
 
-    total_deposited_energy = (
+    e_beam_deposited_kev = (
         (
             deuterium_beam_density * deuterium_deposited_energy
             + tritium_beam_density * tritium_deposited_energy
@@ -1233,13 +1258,13 @@ def beam_slowing_down_state(
         else 0.0
     )
 
-    return (
-        deuterium_beam_density,
-        tritium_beam_density,
-        deuterium_critical_energy_speed,
-        tritium_critical_energy_speed,
-        nd_beam_hot,
-        total_deposited_energy,
+    return BeamSlowingDownState(
+        deuterium_beam_density=deuterium_beam_density,
+        tritium_beam_density=tritium_beam_density,
+        deuterium_critical_energy_speed=deuterium_critical_energy_speed,
+        tritium_critical_energy_speed=tritium_critical_energy_speed,
+        nd_beam_hot=nd_beam_hot,
+        e_beam_deposited_kev=e_beam_deposited_kev,
     )
 
 
