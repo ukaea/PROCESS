@@ -86,6 +86,21 @@ class TFPlasmaCaseType(IntEnum):
 
 @dataclass
 class TFGlobalGeometry:
+    """
+    A dataclass containing the calculated global geometry parameters of the TF coil.
+        - rad_tf_coil_inboard_toroidal_half: Angular space of each TF coil in the toroidal direction [rad].
+        - tan_theta_coil: Tangent of the angle of the TF coil.
+        - a_tf_inboard_total: Total mid-plane cross-sectional area of the inboard legs [m²].
+        - r_tf_outboard_in: Inner radius of the outboard leg [m].
+        - r_tf_outboard_out: Outer radius of the outboard leg [m].
+        - dx_tf_inboard_out_toroidal: Toroidal width of the inboard leg at the outer edge [m].
+        - a_tf_leg_outboard: Cross-sectional area of the outboard leg [m²].
+        - dr_tf_full_midplane: Full external coil width at mid-plane [m].
+        - dr_tf_internal_midplane: Full internal coil width at mid-plane [m].
+        - dr_tf_plasma_case: Thickness of the plasma-facing case [m].
+        - dx_tf_side_case_min: Minimum thickness of the sidewall case [m].
+    """
+
     rad_tf_coil_inboard_toroidal_half: float
     tan_theta_coil: float
     a_tf_inboard_total: float
@@ -113,9 +128,7 @@ class TFCoil(Model):
 
     def run_base_tf(self):
         """Run main tfcoil subroutine without outputting."""
-        global_tf_geometry = TFGlobalGeometry
-
-        global_tf_geometry = self.tf_global_geometry(
+        global_tf_geometry: TFGlobalGeometry = self.tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
             i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,
             f_dr_tf_plasma_case=tfcoil_variables.f_dr_tf_plasma_case,
@@ -255,18 +268,7 @@ class TFCoil(Model):
         Returns
         -------
         TFGlobalGeometry
-            A dataclass containing the calculated global geometry parameters of the TF coil.
-            - rad_tf_coil_inboard_toroidal_half: Angular space of each TF coil in the toroidal direction [rad].
-            - tan_theta_coil: Tangent of the angle of the TF coil.
-            - a_tf_inboard_total: Total mid-plane cross-sectional area of the inboard legs [m²].
-            - r_tf_outboard_in: Inner radius of the outboard leg [m].
-            - r_tf_outboard_out: Outer radius of the outboard leg [m].
-            - dx_tf_inboard_out_toroidal: Toroidal width of the inboard leg at the outer edge [m].
-            - a_tf_leg_outboard: Cross-sectional area of the outboard leg [m²].
-            - dr_tf_full_midplane: Full external coil width at mid-plane [m].
-            - dr_tf_internal_midplane: Full internal coil width at mid-plane [m].
-            - dr_tf_plasma_case: Thickness of the plasma-facing case [m].
-            - dx_tf_side_case_min: Minimum thickness of the sidewall case [m].
+                A dataclass containing the calculated global geometry parameters of the TF coil.
 
         """
         # The angular space of each TF coil in the toroidal direction [rad]
