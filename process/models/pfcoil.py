@@ -2707,10 +2707,11 @@ class PFCoil(Model):
                 f"\t{k}\t\t\t{pfcoil_variables.vsdum[k, 0]:.3f}\t\t\t{pfcoil_variables.vsdum[k, 1]:.3f}\t\t{pfcoil_variables.vsdum[k, 2]:.3f}",
             )
 
-        op.write(
-            self.outfile,
-            f"\tCS coil\t\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 0]:.3f}\t\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 1]:.3f}\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 2]:.3f}",
-        )
+        if bv.iohcl != 0:
+            op.write(
+                self.outfile,
+                f"\tCS coil\t\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 0]:.3f}\t\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 1]:.3f}\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 2]:.3f}",
+            )
 
         op.oshead(self.outfile, "Waveforms")
         op.ocmmnt(self.outfile, "Currents (Amps/coil) as a function of time:")
