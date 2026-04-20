@@ -2799,7 +2799,7 @@ class PFCoil(Model):
                 if k == pfcoil_variables.n_pf_cs_plasma_circuits - 1:
                     circuit_name = f"Plasma Time point {jjj} (A)"
                     circuit_var_name = f"(plasmat{jjj})"
-                elif k == pfcoil_variables.n_pf_cs_plasma_circuits - 2:
+                elif bv.iohcl != 0 and k == pfcoil_variables.n_pf_cs_plasma_circuits - 2:
                     circuit_name = f"CS Circuit Time point {jjj} (A)"
                     circuit_var_name = f"(cs t{jjj})"
                 else:
