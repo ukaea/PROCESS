@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from process.core.io.mfile import MFile, get_mfile_initial_ixc_values
+from process.core.model import DataStructure
 
 
 def test_get_mfile_initial_ixc_values(input_file, tmp_path):
@@ -13,7 +14,7 @@ def test_get_mfile_initial_ixc_values(input_file, tmp_path):
     shutil.copy(input_file, tmp_input_file)
 
     iteration_variable_names, iteration_variable_values = get_mfile_initial_ixc_values(
-        Path(tmp_input_file)
+        Path(tmp_input_file), DataStructure()
     )
 
     assert iteration_variable_names[0] == "b_plasma_toroidal_on_axis"

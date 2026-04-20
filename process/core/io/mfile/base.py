@@ -14,6 +14,7 @@ from typing import Any
 import numpy as np
 
 from process import data_structure
+from process.core.model import DataStructure
 from process.core.solver import iteration_variables
 
 logger = logging.getLogger(__name__)
@@ -581,7 +582,7 @@ def get_unit(variable_desc):
     return None
 
 
-def get_mfile_initial_ixc_values(file_path: Path):
+def get_mfile_initial_ixc_values(file_path: Path, data: DataStructure):
     """Initialise the input file and obtain the initial values of the iteration variables
 
     Parameters
@@ -597,7 +598,7 @@ def get_mfile_initial_ixc_values(file_path: Path):
     from process.main import SingleRun  # noqa:PLC0415
 
     SingleRun(file_path.as_posix())
-    iteration_variables.load_iteration_variables()
+    iteration_variables.load_iteration_variables(data)
 
     iteration_variable_names = []
     iteration_variable_values = []

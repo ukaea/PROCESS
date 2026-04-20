@@ -1,19 +1,19 @@
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Any
 from warnings import warn
 
 import numpy as np
 
 from process import data_structure
 from process.core.exceptions import ProcessValueError
+from process.core.model import DataStructure
 
 
 @dataclass
 class IterationVariable:
     name: str
     """The name of the variable"""
-    module: Any
+    module: str
     """The Fortran module that this variable should be set on."""
     lower_bound: float
     """The default lower bound of the iteration variable"""
@@ -131,17 +131,13 @@ ITERATION_VARIABLES = {
     94: IterationVariable(
         "dr_shld_outboard", data_structure.build_variables, 0.001, 10.00
     ),
-    98: IterationVariable(
-        "f_blkt_li6_enrichment", data_structure.fwbs_variables, 10.00, 100.0
-    ),
+    98: IterationVariable("f_blkt_li6_enrichment", "fwbs", 10.00, 100.0),
     104: IterationVariable("fcwr", data_structure.constraint_variables, 0.001, 1.0),
-    108: IterationVariable("breeder_f", data_structure.fwbs_variables, 0.060, 1.0),
+    108: IterationVariable("breeder_f", "fwbs", 0.060, 1.0),
     109: IterationVariable(
         "f_nd_alpha_electron", data_structure.physics_variables, 0.05, 0.15
     ),
-    114: IterationVariable(
-        "len_fw_channel", data_structure.fwbs_variables, 0.001, 1.0e3
-    ),
+    114: IterationVariable("len_fw_channel", "fwbs", 0.001, 1.0e3),
     119: IterationVariable(
         "temp_plasma_separatrix_kev", data_structure.physics_variables, 0.0, 1.0e1
     ),
@@ -319,7 +315,7 @@ def check_iteration_variable(iteration_variable_value, name: str = ""):
         )
 
 
-def load_iteration_variables():
+def load_iteration_variables(data):
     """Loads the physics and engineering variables into the optimisation variable array."""
     for i in range(data_structure.numerics.nvar):
         variable_index = data_structure.numerics.ixc[i]
@@ -331,8 +327,13 @@ def load_iteration_variables():
             iteration_variable.target_name or iteration_variable.name,
             ...,
         )
+        if isinstance(iteration_variable.module, str):
+            iteration_variable_value = getattr(
+                getattr(data, iteration_variable.module),
+                iteration_variable.target_name or iteration_variable.name,
+            )
 
-        if iteration_variable_value is ...:
+        elif iteration_variable_value is ...:
             error_msg = (
                 f"Could not get the value for iteration variable {variable_index} "
                 f"({iteration_variable.name})"
@@ -382,7 +383,7 @@ def load_iteration_variables():
         )
 
 
-def set_scaled_iteration_variable(xc, nn: int):
+def set_scaled_iteration_variable(xc, nn: int, data: DataStructure):
     """Converts scaled iteration variables back to their real values and sets them in the code.
 
     Parameters
@@ -391,7 +392,8 @@ def set_scaled_iteration_variable(xc, nn: int):
         scaled iteration variable values
     nn :
         number of iteration variables
-
+    data: DataStructure
+        data structure
     """
     for i in range(nn):
         # there is less error handling here than in load_iteration_variables
@@ -403,10 +405,29 @@ def set_scaled_iteration_variable(xc, nn: int):
         ratio = xc[i] / data_structure.numerics.scale[i]
 
         if iteration_variable.array_index is None:
-            setattr(
-                iteration_variable.module,
+            if isinstance(iteration_variable.module, str):
+                setattr(
+                    getattr(data, iteration_variable.module),
+                    iteration_variable.target_name or iteration_variable.name,
+                    ratio,
+                )
+            else:
+                setattr(
+                    iteration_variable.module,
+                    iteration_variable.target_name or iteration_variable.name,
+                    ratio,
+                )
+        elif isinstance(iteration_variable.module, str):
+            current_array = getattr(
+                getattr(data, iteration_variable.module),
                 iteration_variable.target_name or iteration_variable.name,
-                ratio,
+            )
+            new_array = deepcopy(current_array)
+            new_array[iteration_variable.array_index] = ratio
+            setattr(
+                getattr(data, iteration_variable.module),
+                iteration_variable.target_name or iteration_variable.name,
+                new_array,
             )
         else:
             current_array = getattr(
