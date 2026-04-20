@@ -3646,8 +3646,8 @@ def toroidal_cross_section(
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
     if i_hcd_primary in {5, 8}:
-        # Neutral beam geometry
-        a = w
+        # Neutral beam geometry. See docs for diagram.
+        a = w + dx_beam_shield
         b = dr_tf_outboard
         d = r3
         e = np.sqrt(a**2 + (d + b) ** 2)
@@ -3675,7 +3675,7 @@ def toroidal_cross_section(
 
         # Centreline tangency point
         x_beam_centre, y_beam_centre = calc_xy(radius_beam_tangency)
-        y0_beam_centre = w + dx_beam_shield + 0.5 * dx_beam_duct
+        y0_beam_centre = y0_beam_inner + 0.5 * dx_beam_duct
 
         # Draw beam duct boundaries
         axis.plot(
