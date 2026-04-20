@@ -1135,7 +1135,8 @@ def test_tf_cable_in_conduit_integer_turn_geometry(
     tfintegerturngeomparam, cicc_sctfcoil
 ):
     """
-    Automatically generated Regression Unit Test for tf_cable_in_conduit_integer_turn_geometry.
+    Automatically generated Regression Unit Test for
+    tf_cable_in_conduit_integer_turn_geometry.
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
@@ -1383,7 +1384,8 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     tfaveragedturngeomparam, monkeypatch, cicc_sctfcoil
 ):
     """
-    Automatically generated Regression Unit Test for tf_cable_in_conduit_averaged_turn_geometry.
+    Automatically generated Regression Unit Test for
+    tf_cable_in_conduit_averaged_turn_geometry.
 
     This test was generated using data from tests/regression/scenarios/i_mode/IN.DAT.
 
@@ -1930,223 +1932,85 @@ def test_superconducting_tf_coil_area_and_masses(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "hr1", tfcoilareaandmassesparam.hr1)
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", tfcoilareaandmassesparam.r_tf_outboard_mid
-    )
-
-    monkeypatch.setattr(
-        build_variables, "dr_tf_inboard", tfcoilareaandmassesparam.dr_tf_inboard
-    )
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_mid", tfcoilareaandmassesparam.r_tf_inboard_mid
-    )
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfcoilareaandmassesparam.r_tf_inboard_in
-    )
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out
-    )
-
-    monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", tfcoilareaandmassesparam.z_tf_inside_half
-    )
-
     monkeypatch.setattr(fwbs_variables, "den_steel", tfcoilareaandmassesparam.den_steel)
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "m_tf_wp_steel_conduit",
-        tfcoilareaandmassesparam.m_tf_wp_steel_conduit,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "m_tf_coils_total", tfcoilareaandmassesparam.m_tf_coils_total
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "m_tf_coil_case", tfcoilareaandmassesparam.m_tf_coil_case
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "m_tf_coil_wp_insulation",
-        tfcoilareaandmassesparam.m_tf_coil_wp_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "m_tf_coil_superconductor",
-        tfcoilareaandmassesparam.m_tf_coil_superconductor,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "m_tf_coil_copper", tfcoilareaandmassesparam.m_tf_coil_copper
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "m_tf_coil_conductor",
-        tfcoilareaandmassesparam.m_tf_coil_conductor,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "m_tf_coil_wp_turn_insulation",
-        tfcoilareaandmassesparam.m_tf_coil_wp_turn_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "f_a_tf_turn_cable_space_extra_void",
-        tfcoilareaandmassesparam.f_a_tf_turn_cable_space_extra_void,
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "dcond", tfcoilareaandmassesparam.dcond)
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "den_tf_wp_turn_insulation",
-        tfcoilareaandmassesparam.den_tf_wp_turn_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "den_tf_coil_case", tfcoilareaandmassesparam.den_tf_coil_case
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "a_tf_turn_steel", tfcoilareaandmassesparam.a_tf_turn_steel
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coil_turns", tfcoilareaandmassesparam.n_tf_coil_turns
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coils", tfcoilareaandmassesparam.n_tf_coils
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_coil_wp_turn_insulation",
-        tfcoilareaandmassesparam.a_tf_coil_wp_turn_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_coil_outboard_case",
-        tfcoilareaandmassesparam.a_tf_coil_outboard_case,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_coil_inboard_case",
-        tfcoilareaandmassesparam.a_tf_coil_inboard_case,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "f_a_tf_turn_cable_copper",
-        tfcoilareaandmassesparam.f_a_tf_turn_cable_copper,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_wp_coolant_channels",
-        tfcoilareaandmassesparam.a_tf_wp_coolant_channels,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_turn_cable_space_no_void",
-        tfcoilareaandmassesparam.a_tf_turn_cable_space_no_void,
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "whttflgs", tfcoilareaandmassesparam.whttflgs)
-
-    monkeypatch.setattr(tfcoil_variables, "whtcp", tfcoilareaandmassesparam.whtcp)
-
-    monkeypatch.setattr(tfcoil_variables, "whtconal", tfcoilareaandmassesparam.whtconal)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "vol_cond_cp", tfcoilareaandmassesparam.vol_cond_cp
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfcoilareaandmassesparam.i_tf_sup)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "i_tf_sc_mat", tfcoilareaandmassesparam.i_tf_sc_mat
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_leg_outboard",
-        tfcoilareaandmassesparam.a_tf_leg_outboard,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_nose_case", tfcoilareaandmassesparam.dr_tf_nose_case
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "voltfleg", tfcoilareaandmassesparam.voltfleg)
-
-    monkeypatch.setattr(tfcoil_variables, "cplen", tfcoilareaandmassesparam.cplen)
-
     monkeypatch.setattr(physics_variables, "itart", tfcoilareaandmassesparam.itart)
 
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "a_tf_wp_with_insulation",
-        tfcoilareaandmassesparam.a_tf_wp_with_insulation,
-    )
+    for name, val in (
+        ("hr1", tfcoilareaandmassesparam.hr1),
+        ("r_tf_outboard_mid", tfcoilareaandmassesparam.r_tf_outboard_mid),
+        ("dr_tf_inboard", tfcoilareaandmassesparam.dr_tf_inboard),
+        ("r_tf_inboard_mid", tfcoilareaandmassesparam.r_tf_inboard_mid),
+        ("r_tf_inboard_in", tfcoilareaandmassesparam.r_tf_inboard_in),
+        ("r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out),
+        ("z_tf_inside_half", tfcoilareaandmassesparam.z_tf_inside_half),
+    ):
+        monkeypatch.setattr(build_variables, name, val)
 
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "a_tf_wp_no_insulation",
-        tfcoilareaandmassesparam.a_tf_wp_no_insulation,
-    )
+    for name, val in (
+        ("m_tf_wp_steel_conduit", tfcoilareaandmassesparam.m_tf_wp_steel_conduit),
+        ("m_tf_coils_total", tfcoilareaandmassesparam.m_tf_coils_total),
+        ("m_tf_coil_case", tfcoilareaandmassesparam.m_tf_coil_case),
+        ("m_tf_coil_wp_insulation", tfcoilareaandmassesparam.m_tf_coil_wp_insulation),
+        ("m_tf_coil_superconductor", tfcoilareaandmassesparam.m_tf_coil_superconductor),
+        ("m_tf_coil_copper", tfcoilareaandmassesparam.m_tf_coil_copper),
+        ("m_tf_coil_conductor", tfcoilareaandmassesparam.m_tf_coil_conductor),
+        (
+            "m_tf_coil_wp_turn_insulation",
+            tfcoilareaandmassesparam.m_tf_coil_wp_turn_insulation,
+        ),
+        ("tfcryoarea", tfcoilareaandmassesparam.tfcryoarea),
+        (
+            "f_a_tf_turn_cable_space_extra_void",
+            tfcoilareaandmassesparam.f_a_tf_turn_cable_space_extra_void,
+        ),
+        ("dcond", tfcoilareaandmassesparam.dcond),
+        (
+            "den_tf_wp_turn_insulation",
+            tfcoilareaandmassesparam.den_tf_wp_turn_insulation,
+        ),
+        ("len_tf_coil", tfcoilareaandmassesparam.len_tf_coil),
+        ("den_tf_coil_case", tfcoilareaandmassesparam.den_tf_coil_case),
+        ("a_tf_turn_steel", tfcoilareaandmassesparam.a_tf_turn_steel),
+        ("n_tf_coil_turns", tfcoilareaandmassesparam.n_tf_coil_turns),
+        ("n_tf_coils", tfcoilareaandmassesparam.n_tf_coils),
+        (
+            "a_tf_coil_wp_turn_insulation",
+            tfcoilareaandmassesparam.a_tf_coil_wp_turn_insulation,
+        ),
+        ("a_tf_coil_outboard_case", tfcoilareaandmassesparam.a_tf_coil_outboard_case),
+        ("a_tf_coil_inboard_case", tfcoilareaandmassesparam.a_tf_coil_inboard_case),
+        ("f_a_tf_turn_cable_copper", tfcoilareaandmassesparam.f_a_tf_turn_cable_copper),
+        ("a_tf_wp_coolant_channels", tfcoilareaandmassesparam.a_tf_wp_coolant_channels),
+        (
+            "a_tf_turn_cable_space_no_void",
+            tfcoilareaandmassesparam.a_tf_turn_cable_space_no_void,
+        ),
+        ("whttflgs", tfcoilareaandmassesparam.whttflgs),
+        ("whtcp", tfcoilareaandmassesparam.whtcp),
+        ("whtconal", tfcoilareaandmassesparam.whtconal),
+        ("vol_cond_cp", tfcoilareaandmassesparam.vol_cond_cp),
+        ("i_tf_sup", tfcoilareaandmassesparam.i_tf_sup),
+        ("i_tf_sc_mat", tfcoilareaandmassesparam.i_tf_sc_mat),
+        ("a_tf_leg_outboard", tfcoilareaandmassesparam.a_tf_leg_outboard),
+        ("dr_tf_nose_case", tfcoilareaandmassesparam.dr_tf_nose_case),
+        ("voltfleg", tfcoilareaandmassesparam.voltfleg),
+        ("cplen", tfcoilareaandmassesparam.cplen),
+    ):
+        monkeypatch.setattr(tfcoil_variables, name, val)
 
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "vol_ins_cp",
-        tfcoilareaandmassesparam.vol_ins_cp,
-    )
-
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "vol_gr_ins_cp",
-        tfcoilareaandmassesparam.vol_gr_ins_cp,
-    )
-
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "vol_case_cp",
-        tfcoilareaandmassesparam.vol_case_cp,
-    )
-
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "rad_tf_coil_inboard_toroidal_half",
-        tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
-    )
-
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "tan_theta_coil",
-        tfcoilareaandmassesparam.tan_theta_coil,
-    )
+    for name, val in (
+        ("a_tf_wp_with_insulation", tfcoilareaandmassesparam.a_tf_wp_with_insulation),
+        ("a_tf_wp_no_insulation", tfcoilareaandmassesparam.a_tf_wp_no_insulation),
+        ("vol_ins_cp", tfcoilareaandmassesparam.vol_ins_cp),
+        ("vol_gr_ins_cp", tfcoilareaandmassesparam.vol_gr_ins_cp),
+        ("vol_case_cp", tfcoilareaandmassesparam.vol_case_cp),
+        (
+            "rad_tf_coil_inboard_toroidal_half",
+            tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
+        ),
+        ("tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil),
+    ):
+        monkeypatch.setattr(superconducting_tf_coil_variables, name, val)
 
     sctfcoil.superconducting_tf_coil_areas_and_masses()
 
@@ -2234,5 +2098,6 @@ def test_calculate_superconductor_temperature_margin(
         c0=c0,
         temp_tf_coolant_peak_field=temp_tf_coolant_peak_field,
     )
-    # The expected_margin values are illustrative; in real tests, use values from reference calculations.
+    # The expected_margin values are illustrative;
+    # in real tests, use values from reference calculations.
     assert margin == pytest.approx(expected_margin)

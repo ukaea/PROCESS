@@ -49,17 +49,20 @@ class PlasmaAnglesArcsParam(NamedTuple):
         ),
     ],
 )
-def test_plasma_angles_arcs(plasmaanglesarcsparam, monkeypatch, plasma):
+def test_plasma_angles_arcs(
+    plasmaanglesarcsparam: PlasmaAnglesArcsParam, monkeypatch, plasma
+):
     """
     Automatically generated Regression Unit Test for plasma_angles_arcs().
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
-    :param plasmaanglesarcsparam: the data used to mock and assert in this test.
-    :type plasmaanglesarcsparam: plasmaanglesarcsparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    Parameters
+    ----------
+    plasmaanglesarcsparam:
+        the data used to mock and assert in this test.
+    monkeypatch:
+        pytest fixture used to mock module/class variables
     """
 
     xi, thetai, xo, thetao = plasma.plasma_angles_arcs(
@@ -88,20 +91,19 @@ def test_plasma_angles_arcs(plasmaanglesarcsparam, monkeypatch, plasma):
         )
     ],
 )
-def test_perim(a, kap, tri, expected_perim):
+def test_perim(a: float, kap: float, tri: float, expected_perim: float):
     """Tests `perim` function.
 
-    :param a: test asset passed to the routine representing the plasma minor radius, in meters.
-    :type a: float
-
-    :param kap: test asset passed to the routine representing the plasma separatrix elongation.
-    :type kap: float
-
-    :param tri: test asset passed to the routine representing the plasma separatrix triangularity.
-    :type tri: float
-
-    :param expected_perim: expected result of the function.
-    :type expected_perim: float
+    Parameters
+    ----------
+    a:
+        the plasma minor radius, in meters.
+    kap:
+        the plasma separatrix elongation.
+    tri:
+        the plasma separatrix triangularity.
+    expected_perim:
+        expected result of the function.
     """
     perim = pg.perim(a, kap, tri)
 
@@ -123,29 +125,33 @@ def test_perim(a, kap, tri, expected_perim):
     ],
 )
 def test_plasma_volume(
-    rmajor, rminor, xi, thetai, xo, thetao, expected_plasma_volume, plasma
+    rmajor: float,
+    rminor: float,
+    xi: float,
+    thetai: float,
+    xo: float,
+    thetao: float,
+    expected_plasma_volume: float,
+    plasma: float,
 ):
     """Tests `plasma_volume()` function.
-    :param rmajor: test asset passed to the routine representing the plasma major radius (m).
-    :type rmajor: float
 
-    :param rminor: test asset passed to the routine representing the plasma minor radius (m).
-    :type rminor: float
-
-    :param xi: test asset passed to the routine representing the radius of arc describing inboard surface (m).
-    :type xi: float
-
-    :param thetai: test asset passed to the routine representing the half-angle of arc describing inboard surface.
-    :type thetai: float
-
-    :param xo: test asset passed to the routine representing the radius of arc describing outboard surface (m).
-    :type xo: float
-
-    :param thetao: test asset passed to the routine representing the half-angle of arc describing outboard surface.
-    :type thetao: float
-
-    :param expected_plasma_volume: expected result of the function.
-    :type expected_plasma_volume: float
+    Parameters
+    ----------
+    rmajor:
+        the plasma major radius (m).
+    rminor:
+        the plasma minor radius (m).
+    xi:
+        the radius of arc describing inboard surface (m).
+    thetai:
+        the half-angle of arc describing inboard surface.
+    xo:
+        the radius of arc describing outboard surface (m).
+    thetao:
+        the half-angle of arc describing outboard surface.
+    expected_plasma_volume:
+        expected result of the function.
     """
     plasma_volume = plasma.plasma_volume(rmajor, rminor, xi, thetai, xo, thetao)
 
@@ -165,23 +171,27 @@ def test_plasma_volume(
     ],
 )
 def test_plasma_cross_section(
-    xi, thetai, xo, thetao, expected_plasma_cross_section, plasma
+    xi: float,
+    thetai: float,
+    xo: float,
+    thetao: float,
+    expected_plasma_cross_section: float,
+    plasma,
 ):
     """Tests `plasma_cross_section()` function.
-    :param xi: test asset passed to the routine representing the radius of arc describing inboard surface (m).
-    :type xi: float
 
-    :param thetai: test asset passed to the routine representing the half-angle of arc describing inboard surface.
-    :type thetai: float
-
-    :param xo: test asset passed to the routine representing the radius of arc describing outboard surface (m).
-    :type xo: float
-
-    :param thetao: test asset passed to the routine representing the half-angle of arc describing outboard surface.
-    :type thetao: float
-
-    :param expected_plasma_cross_section: expected result of the function.
-    :type expected_plasma_cross_section: float
+    Parameters
+    ----------
+    xi:
+        the radius of arc describing inboard surface (m).
+    thetai:
+        the half-angle of arc describing inboard surface.
+    xo:
+        the radius of arc describing outboard surface (m).
+    thetao:
+        the half-angle of arc describing outboard surface.
+    expected_plasma_cross_section:
+        expected result of the function.
     """
     plasma_cross_section = plasma.plasma_cross_section(xi, thetai, xo, thetao)
 
@@ -200,22 +210,21 @@ def test_plasma_cross_section(
         )
     ],
 )
-def test_fvol(r, a, kap, tri, expected_fvol):
+def test_fvol(r: float, a: float, kap: float, tri: float, expected_fvol: float):
     """Tests `fvol` function.
-    :param r: test asset passed to the routine representing the plasma major radius, in meters.
-    :type r: float
 
-    :param a: test asset passed to the routine representing the plasma minor radius, in meters.
-    :type a: float
-
-    :param kap: test asset passed to the routine representing the plasma separatrix elongation.
-    :type kap: float
-
-    :param tri: test asset passed to the routine representing the plasma separatrix triangularity.
-    :type tri: float
-
-    :param expected_fvol: expected result of the function.
-    :type expected_fvol: float
+    Parameters
+    ----------
+    r:
+        the plasma major radius, in meters.
+    a:
+        the plasma minor radius, in meters.
+    kap:
+        the plasma separatrix elongation.
+    tri:
+        test asset passed to the routine
+        representing the plasma separatrix triangularity.
+    expected_fvol: expected result of the function.
     """
     fvol = pg.fvol(r, a, kap, tri)
 
@@ -233,20 +242,20 @@ def test_fvol(r, a, kap, tri, expected_fvol):
         )
     ],
 )
-def test_xsect0(a, kap, tri, expected_xsect0):
+def test_xsect0(a: float, kap: float, tri: float, expected_xsect0: float):
     """Tests `xsect0` function.
 
-    :param a: test asset passed to the routine representing the plasma minor radius, in meters.
-    :type a: float
-
-    :param kap: test asset passed to the routine representing the plasma separatrix elongation.
-    :type kap: float
-
-    :param tri: test asset passed to the routine representing the plasma separatrix triangularity.
-    :type tri: float
-
-    :param expected_xsect0: expected result of the function.
-    :type expected_xsect0: float
+    Parameters
+    ----------
+    a:
+        the plasma minor radius, in meters.
+    kap:
+        the plasma separatrix elongation.
+    tri:
+        test asset passed to the routine
+        representing the plasma separatrix triangularity.
+    expected_xsect0:
+        expected result of the function.
     """
     xsect0 = pg.xsect0(a, kap, tri)
 
@@ -286,17 +295,18 @@ class SurfaceAreaParam(NamedTuple):
         ),
     ],
 )
-def test_plasma_surface_area(surfaceareaparam, monkeypatch, plasma):
+def test_plasma_surface_area(surfaceareaparam: SurfaceAreaParam, monkeypatch, plasma):
     """
     Automatically generated Regression Unit Test for plasma_surface_area().
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
-    :param surfaceareaparam: the data used to mock and assert in this test.
-    :type surfaceareaparam: surfaceareaparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    Parameters
+    ----------
+    surfaceareaparam:
+        the data used to mock and assert in this test.
+    monkeypatch:
+        pytest fixture used to mock module/class variables
     """
 
     xsi, xso = plasma.plasma_surface_area(
@@ -340,17 +350,18 @@ class SurfaParam(NamedTuple):
         ),
     ],
 )
-def test_surfa(surfaparam, monkeypatch):
+def test_surfa(surfaparam: SurfaParam, monkeypatch):
     """
     Automatically generated Regression Unit Test for surfa.
 
     This test was generated using data from tests/regression/scenarios/FNSF/IN.DAT.
 
-    :param surfaparam: the data used to mock and assert in this test.
-    :type surfaparam: surfaparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    Parameters
+    ----------
+    surfaparam:
+        the data used to mock and assert in this test.
+    monkeypatch:
+        pytest fixture used to mock module/class variables
     """
 
     sa, so = pg.surfa(a=surfaparam.a, r=surfaparam.r, k=surfaparam.k, d=surfaparam.d)

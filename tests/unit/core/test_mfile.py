@@ -37,7 +37,7 @@ def read_mfile():
     :return: parsed mfile
     :rtype: mfile2dict.MFILEParser
     """
-    data_path = Path(__file__).parent / "data"
+    data_path = Path(__file__).parent.parent / "data"
 
     return MFile(data_path / "large_tokamak_MFILE.DAT")
 
