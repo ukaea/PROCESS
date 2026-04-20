@@ -3677,6 +3677,13 @@ def toroidal_cross_section(
         y0_beam_inner = w + dx_beam_shield
         y0_beam_outer = y0_beam_inner + dx_beam_duct
 
+        # Centreline tangency point
+        x_beam_centre, y_beam_centre = calc_xy(radius_beam_tangency)
+        x0 = r4
+        y0_beam_inner = w + dx_beam_shield
+        y0_beam_outer = w + dx_beam_shield + dx_beam_duct
+        y0_beam_centre = w + dx_beam_shield + 0.5 * dx_beam_duct
+
         # Draw beam duct boundaries
         axis.plot(
             [x_beam_inner, x0],
@@ -3690,12 +3697,7 @@ def toroidal_cross_section(
             linestyle="dotted",
             color="black",
         )
-        # Centreline tangency point
-        x_beam_centre, y_beam_centre = calc_xy(radius_beam_tangency)
-        x0 = r4
-        y0_beam_inner = w + dx_beam_shield
-        y0_beam_outer = w + dx_beam_shield + dx_beam_duct
-        y0_beam_centre = w + dx_beam_shield + 0.5 * dx_beam_duct
+        # Draw beam centreline
         axis.plot(
             [x_beam_centre, x0],
             [y_beam_centre, y0_beam_centre],
