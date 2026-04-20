@@ -3894,6 +3894,13 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
+            "Area of total CroCo strand (m2)",
+            "(a_croco_strand)",
+            rebco_variables.a_croco_strand,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Area of REBCO in strand (m2)",
             "(a_croco_strand_rebco)",
             rebco_variables.a_croco_strand_rebco,
