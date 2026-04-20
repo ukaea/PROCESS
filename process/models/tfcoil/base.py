@@ -239,35 +239,34 @@ class TFCoil(Model):
 
         Parameters
         ----------
-        i_tf_case_geom : int
+        i_tf_case_geom
             Geometry type of the TF coil case (e.g., circular or straight plasma-facing front case).
-        i_f_dr_tf_plasma_case : bool
+        i_f_dr_tf_plasma_case
             Whether the plasma-facing case thickness is specified as a fraction of the inboard thickness.
-        f_dr_tf_plasma_case : float
+        f_dr_tf_plasma_case
             Fraction of the inboard thickness used for the plasma-facing case thickness.
-        tfc_sidewall_is_fraction : bool
+        tfc_sidewall_is_fraction
             Whether the sidewall case thickness is specified as a fraction of the inboard radius.
-        casths_fraction : float
+        casths_fraction
             Fraction of the inboard radius used for the sidewall case thickness.
-        n_tf_coils : int
+        n_tf_coils
             Number of TF coils.
-        dr_tf_inboard : float
+        dr_tf_inboard
             Radial thickness of the inboard leg of the TF coil [m].
-        dr_tf_nose_case : float
+        dr_tf_nose_case
             Thickness of the inboard leg case at the nose region [m].
-        r_tf_inboard_out : float
+        r_tf_inboard_out
             Outer radius of the inboard leg of the TF coil [m].
-        r_tf_inboard_in : float
+        r_tf_inboard_in
             Inner radius of the inboard leg of the TF coil [m].
-        r_tf_outboard_mid : float
+        r_tf_outboard_mid
             Mid-plane radius of the outboard leg of the TF coil [m].
-        dr_tf_outboard : float
+        dr_tf_outboard
             Radial thickness of the outboard leg of the TF coil [m].
 
         Returns
         -------
-        TFGlobalGeometry
-            A dataclass containing the calculated global geometry parameters of the TF coil.
+        A dataclass containing the calculated global geometry parameters of the TF coil.
 
         """
         # The angular space of each TF coil in the toroidal direction [rad]
