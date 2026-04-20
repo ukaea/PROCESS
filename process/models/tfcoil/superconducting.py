@@ -51,15 +51,9 @@ class SuperconductingTFTurnType(IntEnum):
 class SuperconductingTFWPShapeType(IntEnum):
     """Enum for the type of TF coil WP shape, which determines the geometry of the winding pack and ground insulation."""
 
-    RECTANGULAR = (0, "Rectangular")
-    DOUBLE_RECTANGULAR = (1, "Double Rectangular")
-    TRAPEZOIDAL = (2, "Trapezoidal")
-
-    def __new__(cls, value, full_name):
-        obj = int.__new__(cls, value)
-        obj._value_ = value
-        obj._full_name_ = full_name
-        return obj
+    RECTANGULAR = 0
+    DOUBLE_RECTANGULAR = 1
+    TRAPEZOIDAL = 2
 
     @DynamicClassAttribute
     def full_name(self):
@@ -1036,6 +1030,8 @@ class SuperconductingTFCoil(TFCoil):
         dr_tf_wp_no_insulation = dr_tf_wp_with_insulation - 2.0e0 * (
             dx_tf_wp_insulation + dx_tf_wp_insertion_gap
         )
+
+        i_tf_wp_geom = SuperconductingTFWPShapeType(i_tf_wp_geom)
 
         # Rectangular WP
         # --------------

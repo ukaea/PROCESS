@@ -1579,21 +1579,18 @@ class Build(Model):
             # Minimal inboard WP radius [m]
             r_wp_min = r_tf_wp_inboard_inner
 
+            i_tf_wp_geom = SuperconductingTFWPShapeType(tfcoil_variables.i_tf_wp_geom)
+
             # Rectangular WP
-            if tfcoil_variables.i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
+            if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
                 r_wp_max = r_wp_min
 
             # Double rectangle WP
-            elif (
-                tfcoil_variables.i_tf_wp_geom
-                == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
-            ):
+            elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
                 r_wp_max = r_tf_wp_inboard_centre
 
             # Trapezoidal WP
-            elif (
-                tfcoil_variables.i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL
-            ):
+            elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
                 r_wp_max = r_tf_wp_inboard_outer
 
             # Calculated maximum toroidal WP toroidal thickness [m]
