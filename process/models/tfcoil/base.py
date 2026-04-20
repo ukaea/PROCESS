@@ -239,34 +239,35 @@ class TFCoil(Model):
 
         Parameters
         ----------
-        i_tf_case_geom
+        i_tf_case_geom:
             Geometry type of the TF coil case (e.g., circular or straight plasma-facing front case).
-        i_f_dr_tf_plasma_case
+        i_f_dr_tf_plasma_case:
             Whether the plasma-facing case thickness is specified as a fraction of the inboard thickness.
-        f_dr_tf_plasma_case
+        f_dr_tf_plasma_case:
             Fraction of the inboard thickness used for the plasma-facing case thickness.
-        tfc_sidewall_is_fraction
+        tfc_sidewall_is_fraction:
             Whether the sidewall case thickness is specified as a fraction of the inboard radius.
-        casths_fraction
+        casths_fraction:
             Fraction of the inboard radius used for the sidewall case thickness.
-        n_tf_coils
+        n_tf_coils:
             Number of TF coils.
-        dr_tf_inboard
+        dr_tf_inboard:
             Radial thickness of the inboard leg of the TF coil [m].
-        dr_tf_nose_case
+        dr_tf_nose_case:
             Thickness of the inboard leg case at the nose region [m].
-        r_tf_inboard_out
+        r_tf_inboard_out:
             Outer radius of the inboard leg of the TF coil [m].
-        r_tf_inboard_in
+        r_tf_inboard_in:
             Inner radius of the inboard leg of the TF coil [m].
-        r_tf_outboard_mid
+        r_tf_outboard_mid:
             Mid-plane radius of the outboard leg of the TF coil [m].
-        dr_tf_outboard
+        dr_tf_outboard:
             Radial thickness of the outboard leg of the TF coil [m].
 
         Returns
         -------
-        A dataclass containing the calculated global geometry parameters of the TF coil.
+        :
+            A dataclass containing the calculated global geometry parameters of the TF coil.
 
         """
         # The angular space of each TF coil in the toroidal direction [rad]
