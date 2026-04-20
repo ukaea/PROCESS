@@ -11,7 +11,6 @@ from process.core.model import Model
 from process.data_structure import (
     build_variables,
     buildings_variables,
-    cost_variables,
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
@@ -1603,7 +1602,7 @@ class Power(Model):
         )
 
         #  Calculate powers relevant to a power-producing plant
-        if cost_variables.ireactor == 1:
+        if self.data.costs.ireactor == 1:
             #  Gross electric power
             # p_plant_electric_gross_mw = (heat_transport_variables.p_plant_primary_heat_mw-hthermmw) * heat_transport_variables.eta_turbine
             if (

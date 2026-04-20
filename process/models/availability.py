@@ -8,7 +8,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import constraint_variables as ctv
-from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import ife_variables as ifev
@@ -66,13 +65,13 @@ class Availability(Model):
         output :
             indicate whether output should be written to the output file, or not (default = False)
         """
-        if cv.i_plant_availability == 3:
+        if self.data.costs.i_plant_availability == 3:
             if pv.itart != 1:
                 raise ProcessValueError(
-                    f"{cv.i_plant_availability=} is for a Spherical Tokamak. Please set itart=1 to use this model."
+                    f"{self.data.costs.i_plant_availability=} is for a Spherical Tokamak. Please set itart=1 to use this model."
                 )
             self.avail_st(output)  # ST model (2023)
-        elif cv.i_plant_availability == 2:
+        elif self.data.costs.i_plant_availability == 2:
             self.avail_2(output)  # Morris model (2015)
         else:
             self.avail(output)  # Taylor and Ward model (1999)
@@ -114,28 +113,30 @@ class Availability(Model):
             if fwbsv.life_fw_fpy < 0.0001e0:
                 # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
                 # or DEMO fusion power model (ibkt_life=1)
-                if cv.ibkt_life == 0:
+                if self.data.costs.ibkt_life == 0:
                     fwbsv.life_blkt_fpy = (
-                        cv.life_plant
+                        self.data.costs.life_plant
                         if pv.pflux_fw_neutron_mw == 0.0  # noqa: RUF069
                         else min(
-                            (cv.abktflnc / pv.pflux_fw_neutron_mw),
-                            cv.life_plant,
+                            (self.data.costs.abktflnc / pv.pflux_fw_neutron_mw),
+                            self.data.costs.life_plant,
                         )
                     )
                 else:
                     fwbsv.life_blkt_fpy = min(
-                        cv.life_dpa / dpa_fpy, cv.life_plant
+                        self.data.costs.life_dpa / dpa_fpy, self.data.costs.life_plant
                     )  # DEMO
-            elif cv.ibkt_life == 0:
+            elif self.data.costs.ibkt_life == 0:
                 fwbsv.life_blkt_fpy = min(
                     fwbsv.life_fw_fpy,
-                    cv.abktflnc / pv.pflux_fw_neutron_mw,
-                    cv.life_plant,
+                    self.data.costs.abktflnc / pv.pflux_fw_neutron_mw,
+                    self.data.costs.life_plant,
                 )
             else:
                 fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_fw_fpy, cv.life_dpa / dpa_fpy, cv.life_plant
+                    fwbsv.life_fw_fpy,
+                    self.data.costs.life_dpa / dpa_fpy,
+                    self.data.costs.life_plant,
                 )  # DEMO
 
             # TODO Issue #834
@@ -143,79 +144,88 @@ class Availability(Model):
             dv.pflux_div_heat_load_mw = max(dv.pflux_div_heat_load_mw, 1.0e-10)
 
             # Divertor lifetime (years)
-            cv.life_div_fpy = self.divertor_lifetime()
+            self.data.costs.life_div_fpy = self.divertor_lifetime()
 
             # Centrepost lifetime (years) (ST machines only)
             if pv.itart == 1:
-                cv.cplife = self.cp_lifetime()
+                self.data.costs.cplife = self.cp_lifetime()
 
         # Plant Availability (i_plant_availability=0,1)
 
         # Calculate the number of fusion cycles for a given blanket lifetime
         pulse_fpy = tv.t_plant_pulse_total / YEAR_SECONDS
-        cv.bktcycles = (fwbsv.life_blkt_fpy / pulse_fpy) + 1
+        self.data.costs.bktcycles = (fwbsv.life_blkt_fpy / pulse_fpy) + 1
 
         # if i_plant_availability = 0 use input value for f_t_plant_available
 
         # Taylor and Ward 1999 model (i_plant_availability=1)
-        if cv.i_plant_availability == 1:
+        if self.data.costs.i_plant_availability == 1:
             # Which component has the shorter life?
-            if cv.life_div_fpy < fwbsv.life_blkt_fpy:
-                ld = cv.life_div_fpy
+            if self.data.costs.life_div_fpy < fwbsv.life_blkt_fpy:
+                ld = self.data.costs.life_div_fpy
                 lb = fwbsv.life_blkt_fpy
-                td = cv.t_div_replace_yrs
+                td = self.data.costs.t_div_replace_yrs
             else:
                 ld = fwbsv.life_blkt_fpy
-                lb = cv.life_div_fpy
-                td = cv.t_blkt_replace_yrs
+                lb = self.data.costs.life_div_fpy
+                td = self.data.costs.t_blkt_replace_yrs
 
             # Number of outages between each combined outage
             n = math.ceil(lb / ld) - 1
 
             # Planned unavailability
-            uplanned = (n * td + cv.tcomrepl) / ((n + 1) * ld + (n * td + cv.tcomrepl))
+            uplanned = (n * td + self.data.costs.tcomrepl) / (
+                (n + 1) * ld + (n * td + self.data.costs.tcomrepl)
+            )
 
             # Unplanned unavailability
             # Rather than simply summing the individual terms, the following protects
             # against the total availability becoming zero or negative
 
-            uutot = cv.uubop  # balance of plant
-            uutot += (1.0e0 - uutot) * cv.uucd  # current drive
-            uutot += (1.0e0 - uutot) * cv.uudiv  # divertor
-            uutot += (1.0e0 - uutot) * cv.uufuel  # fuel system
-            uutot += (1.0e0 - uutot) * cv.uufw  # first wall + blanket
-            uutot += (1.0e0 - uutot) * cv.uumag  # magnets
-            uutot += (1.0e0 - uutot) * cv.uuves  # vacuum vessel
+            uutot = self.data.costs.uubop  # balance of plant
+            uutot += (1.0e0 - uutot) * self.data.costs.uucd  # current drive
+            uutot += (1.0e0 - uutot) * self.data.costs.uudiv  # divertor
+            uutot += (1.0e0 - uutot) * self.data.costs.uufuel  # fuel system
+            uutot += (1.0e0 - uutot) * self.data.costs.uufw  # first wall + blanket
+            uutot += (1.0e0 - uutot) * self.data.costs.uumag  # magnets
+            uutot += (1.0e0 - uutot) * self.data.costs.uuves  # vacuum vessel
 
             # Total availability
-            cv.f_t_plant_available = 1.0e0 - (uplanned + uutot - (uplanned * uutot))
+            self.data.costs.f_t_plant_available = 1.0e0 - (
+                uplanned + uutot - (uplanned * uutot)
+            )
 
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle
-        cv.cpfact = cv.f_t_plant_available * (
+        self.data.costs.cpfact = self.data.costs.f_t_plant_available * (
             tv.t_plant_pulse_burn / tv.t_plant_pulse_total
         )
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
-            if fwbsv.life_blkt_fpy < cv.life_plant:
+            if fwbsv.life_blkt_fpy < self.data.costs.life_plant:
                 fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_blkt_fpy / cv.f_t_plant_available, cv.life_plant
+                    fwbsv.life_blkt_fpy / self.data.costs.f_t_plant_available,
+                    self.data.costs.life_plant,
                 )
 
             # Divertor
-            if cv.life_div_fpy < cv.life_plant:
-                cv.life_div_fpy = min(
-                    cv.life_div_fpy / cv.f_t_plant_available, cv.life_plant
+            if self.data.costs.life_div_fpy < self.data.costs.life_plant:
+                self.data.costs.life_div_fpy = min(
+                    self.data.costs.life_div_fpy / self.data.costs.f_t_plant_available,
+                    self.data.costs.life_plant,
                 )
 
             # Centrepost
-            if pv.itart == 1 and cv.cplife < cv.life_plant:
-                cv.cplife = min(cv.cplife / cv.f_t_plant_available, cv.life_plant)
+            if pv.itart == 1 and self.data.costs.cplife < self.data.costs.life_plant:
+                self.data.costs.cplife = min(
+                    self.data.costs.cplife / self.data.costs.f_t_plant_available,
+                    self.data.costs.life_plant,
+                )
 
         # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
-        cv.life_hcd_fpy = fwbsv.life_blkt_fpy
+        self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
 
         # Output section
         if output:
@@ -225,14 +235,14 @@ class Availability(Model):
                     self.outfile,
                     "Allowable blanket neutron fluence (MW-yr/m2)",
                     "(abktflnc)",
-                    cv.abktflnc,
+                    self.data.costs.abktflnc,
                 )
 
             po.ovarre(
                 self.outfile,
                 "Allowable divertor heat fluence (MW-yr/m2)",
                 "(adivflnc)",
-                cv.adivflnc,
+                self.data.costs.adivflnc,
             )
             po.ovarre(
                 self.outfile,
@@ -245,7 +255,7 @@ class Availability(Model):
                 self.outfile,
                 "Divertor lifetime (years)",
                 "(life_div_fpy)",
-                cv.life_div_fpy,
+                self.data.costs.life_div_fpy,
                 "OP ",
             )
 
@@ -254,7 +264,7 @@ class Availability(Model):
                     self.outfile,
                     "Centrepost lifetime (years)",
                     "(cplife)",
-                    cv.cplife,
+                    self.data.costs.cplife,
                     "OP ",
                 )
 
@@ -262,37 +272,37 @@ class Availability(Model):
                 self.outfile,
                 "Heating/CD system lifetime (years)",
                 "(life_hcd_fpy)",
-                cv.life_hcd_fpy,
+                self.data.costs.life_hcd_fpy,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Total plant lifetime (years)",
                 "(life_plant)",
-                cv.life_plant,
+                self.data.costs.life_plant,
             )
 
-            if cv.i_plant_availability == 1:
-                if cv.life_div_fpy < fwbsv.life_blkt_fpy:
+            if self.data.costs.i_plant_availability == 1:
+                if self.data.costs.life_div_fpy < fwbsv.life_blkt_fpy:
                     po.ovarre(
                         self.outfile,
                         "Time needed to replace divertor (years)",
                         "(t_div_replace_yrs)",
-                        cv.t_div_replace_yrs,
+                        self.data.costs.t_div_replace_yrs,
                     )
                 else:
                     po.ovarre(
                         self.outfile,
                         "Time needed to replace blanket (years)",
                         "(t_blkt_replace_yrs)",
-                        cv.t_blkt_replace_yrs,
+                        self.data.costs.t_blkt_replace_yrs,
                     )
 
                 po.ovarre(
                     self.outfile,
                     "Time needed to replace blkt + div (years)",
                     "(tcomrepl)",
-                    cv.tcomrepl,
+                    self.data.costs.tcomrepl,
                 )
                 po.ovarre(
                     self.outfile,
@@ -309,25 +319,25 @@ class Availability(Model):
                     "OP ",
                 )
 
-            if cv.i_plant_availability == 0:
+            if self.data.costs.i_plant_availability == 0:
                 po.ovarre(
                     self.outfile,
                     "Total plant availability fraction",
                     "(f_t_plant_available)",
-                    cv.f_t_plant_available,
+                    self.data.costs.f_t_plant_available,
                 )
                 po.ovarre(
                     self.outfile,
                     "Number of fusion cycles to reach allowable fw/blanket DPA",
                     "(bktcycles)",
-                    cv.bktcycles,
+                    self.data.costs.bktcycles,
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "Total plant availability fraction",
                     "(f_t_plant_available)",
-                    cv.f_t_plant_available,
+                    self.data.costs.f_t_plant_available,
                     "OP ",
                 )
 
@@ -352,7 +362,9 @@ class Availability(Model):
         u_planned = self.calc_u_planned(output)
 
         # Operational time (years)
-        cv.t_plant_operational_total_yrs = cv.life_plant * (1.0e0 - u_planned)
+        self.data.costs.t_plant_operational_total_yrs = self.data.costs.life_plant * (
+            1.0e0 - u_planned
+        )
 
         # Un-planned unavailability
 
@@ -374,8 +386,9 @@ class Availability(Model):
         # Vacuum systems
 
         # Number of redundant pumps
-        cv.redun_vac = math.floor(
-            self.data.vacuum.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0
+        self.data.costs.redun_vac = math.floor(
+            self.data.vacuum.n_vac_pumps_high * self.data.costs.redun_vacp / 100.0
+            + 0.5e0
         )
 
         u_unplanned_vacuum = self.calc_u_unplanned_vacuum(output)
@@ -392,32 +405,37 @@ class Availability(Model):
         )
 
         # Total availability
-        cv.f_t_plant_available = max(
+        self.data.costs.f_t_plant_available = max(
             1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
         )
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
-            if fwbsv.life_blkt_fpy < cv.life_plant:
+            if fwbsv.life_blkt_fpy < self.data.costs.life_plant:
                 fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_blkt_fpy / cv.f_t_plant_available, cv.life_plant
+                    fwbsv.life_blkt_fpy / self.data.costs.f_t_plant_available,
+                    self.data.costs.life_plant,
                 )
                 # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
-                cv.life_hcd_fpy = fwbsv.life_blkt_fpy
+                self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
 
             # Divertor
-            if cv.life_div_fpy < cv.life_plant:
-                cv.life_div_fpy = min(
-                    cv.life_div_fpy / cv.f_t_plant_available, cv.life_plant
+            if self.data.costs.life_div_fpy < self.data.costs.life_plant:
+                self.data.costs.life_div_fpy = min(
+                    self.data.costs.life_div_fpy / self.data.costs.f_t_plant_available,
+                    self.data.costs.life_plant,
                 )
 
             # Centrepost
-            if pv.itart == 1 and cv.cplife < cv.life_plant:
-                cv.cplife = min(cv.cplife / cv.f_t_plant_available, cv.life_plant)
+            if pv.itart == 1 and self.data.costs.cplife < self.data.costs.life_plant:
+                self.data.costs.cplife = min(
+                    self.data.costs.cplife / self.data.costs.f_t_plant_available,
+                    self.data.costs.life_plant,
+                )
 
         # Capacity factor
-        cv.cpfact = cv.f_t_plant_available * (
+        self.data.costs.cpfact = self.data.costs.f_t_plant_available * (
             tv.t_plant_pulse_burn / tv.t_plant_pulse_total
         )
 
@@ -434,7 +452,7 @@ class Availability(Model):
                 self.outfile,
                 "Divertor lifetime (FPY)",
                 "(life_div_fpy)",
-                cv.life_div_fpy,
+                self.data.costs.life_div_fpy,
                 "OP ",
             )
             if pv.itart == 1:
@@ -442,7 +460,7 @@ class Availability(Model):
                     self.outfile,
                     "Centrepost lifetime (FPY)",
                     "(cplife)",
-                    cv.cplife,
+                    self.data.costs.cplife,
                     "OP ",
                 )
             po.oblnkl(self.outfile)
@@ -467,27 +485,27 @@ class Availability(Model):
                 self.outfile,
                 "Total plant availability fraction",
                 "(f_t_plant_available)",
-                cv.f_t_plant_available,
+                self.data.costs.f_t_plant_available,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Total DT operational time (years)",
                 "(t_plant_operational_total_yrs)",
-                cv.t_plant_operational_total_yrs,
+                self.data.costs.t_plant_operational_total_yrs,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Total plant lifetime (years)",
                 "(life_plant)",
-                cv.life_plant,
+                self.data.costs.life_plant,
             )
             po.ovarre(
                 self.outfile,
                 "Capacity factor: total lifetime elec. energy output / output power",
                 "(cpfact)",
-                cv.cpfact,
+                self.data.costs.cpfact,
                 "OP ",
             )
 
@@ -529,22 +547,25 @@ class Availability(Model):
         # First wall / blanket lifetime (years)
         # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
         # or DEMO fusion power model (ibkt_life=1)
-        if cv.ibkt_life == 0:
+        if self.data.costs.ibkt_life == 0:
             fwbsv.life_blkt_fpy = min(
-                cv.abktflnc / pv.pflux_fw_neutron_mw, cv.life_plant
+                self.data.costs.abktflnc / pv.pflux_fw_neutron_mw,
+                self.data.costs.life_plant,
             )
         else:
-            fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.life_plant)  # DEMO
+            fwbsv.life_blkt_fpy = min(
+                self.data.costs.life_dpa / dpa_fpy, self.data.costs.life_plant
+            )  # DEMO
 
         # Divertor lifetime (years)
-        cv.life_div_fpy = self.divertor_lifetime()
+        self.data.costs.life_div_fpy = self.divertor_lifetime()
 
         # Centrepost lifetime (years) (ST only)
         if pv.itart == 1:
-            cv.cplife = self.cp_lifetime()
+            self.data.costs.cplife = self.cp_lifetime()
 
         # Current drive lifetime (assumed equal to first wall and blanket lifetime)
-        cv.life_hcd_fpy = fwbsv.life_blkt_fpy
+        self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
 
         # Calculate the blanket and divertor replacement times !
 
@@ -554,20 +575,22 @@ class Availability(Model):
         # Mean time to repair blanket is same as replacing both blanket and divertor.
         # The +2.0 at the end is for the 1 month cooldown and pump down at either end
         # of the maintenance period
-        mttr_blanket = (21.0e0 * cv.num_rh_systems ** (-0.9e0) + 2.0e0) / 12.0e0
+        mttr_blanket = (
+            21.0e0 * self.data.costs.num_rh_systems ** (-0.9e0) + 2.0e0
+        ) / 12.0e0
 
         # Mean time to repair divertor is 70% of time taken to replace blanket
         # This is taken from Oliver Crofts 2014 paper
         mttr_divertor = 0.7e0 * mttr_blanket
 
         #  Which component has the shorter life?
-        if cv.life_div_fpy < fwbsv.life_blkt_fpy:
-            lifetime_shortest = cv.life_div_fpy
+        if self.data.costs.life_div_fpy < fwbsv.life_blkt_fpy:
+            lifetime_shortest = self.data.costs.life_div_fpy
             lifetime_longest = fwbsv.life_blkt_fpy
             mttr_shortest = mttr_divertor
         else:
             lifetime_shortest = fwbsv.life_blkt_fpy
-            lifetime_longest = cv.life_div_fpy
+            lifetime_longest = self.data.costs.life_div_fpy
             mttr_shortest = mttr_blanket
 
         # Number of outages between each combined outage
@@ -588,19 +611,19 @@ class Availability(Model):
                 self.outfile,
                 "Allowable blanket neutron fluence (MW-yr/m2)",
                 "(abktflnc)",
-                cv.abktflnc,
+                self.data.costs.abktflnc,
             )
             po.ovarre(
                 self.outfile,
                 "Allowable divertor heat fluence (MW-yr/m2)",
                 "(adivflnc)",
-                cv.adivflnc,
+                self.data.costs.adivflnc,
             )
             po.ovarin(
                 self.outfile,
                 "Number of remote handling systems",
                 "(num_rh_systems)",
-                cv.num_rh_systems,
+                self.data.costs.num_rh_systems,
             )
             po.ovarre(
                 self.outfile,
@@ -662,13 +685,13 @@ class Availability(Model):
 
         # Minimum unplanned unavailability
         mag_min_u_unplanned = mag_main_time / (
-            cv.t_plant_operational_total_yrs + mag_main_time
+            self.data.costs.t_plant_operational_total_yrs + mag_main_time
         )
 
         # Point at which risk of unplanned unavailability increases
         # conf_mag is the c factor, which determines the temperature margin at which
         # lifetime starts to decline.
-        start_of_risk = mag_temp_marg_limit / cv.conf_mag
+        start_of_risk = mag_temp_marg_limit / self.data.costs.conf_mag
 
         # Determine if temperature margin is in region with risk of unplanned unavailability
         if tfv.temp_margin >= start_of_risk:
@@ -677,7 +700,10 @@ class Availability(Model):
             # Linear decrease in expected lifetime when approaching the limit
             t_life = max(
                 0.0e0,
-                (cv.t_plant_operational_total_yrs / (start_of_risk - tmargmin))
+                (
+                    self.data.costs.t_plant_operational_total_yrs
+                    / (start_of_risk - tmargmin)
+                )
                 * (tfv.temp_margin - tmargmin),
             )
             u_unplanned_magnets = mag_main_time / (t_life + mag_main_time)
@@ -695,7 +721,7 @@ class Availability(Model):
                 self.outfile,
                 "c parameter, determining the temp margin where lifetime declines",
                 "(conf_mag)",
-                cv.conf_mag,
+                self.data.costs.conf_mag,
             )
             po.ovarre(
                 self.outfile,
@@ -731,15 +757,18 @@ class Availability(Model):
         """
         # Calculate cycle limit in terms of days
         # Number of cycles between planned blanket replacements, N
-        n = cv.life_div_fpy * YEAR_SECONDS / tv.t_plant_pulse_total
+        n = self.data.costs.life_div_fpy * YEAR_SECONDS / tv.t_plant_pulse_total
 
         # The probability of failure in one pulse cycle (before the reference cycle life)
-        pf = (cv.div_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
-        a0 = 1.0e0 - pf * cv.div_umain_time * YEAR_SECONDS / tv.t_plant_pulse_total
+        pf = (self.data.costs.div_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
+        a0 = (
+            1.0e0
+            - pf * self.data.costs.div_umain_time * YEAR_SECONDS / tv.t_plant_pulse_total
+        )
 
         # Integrating the instantaneous availability gives the mean
         # availability over the planned cycle life N
-        if cv.div_nu <= cv.div_nref:
+        if self.data.costs.div_nu <= self.data.costs.div_nref:
             logger.error(
                 """div_nu <= div_nref
             The cycle when the divertor fails with 100% probability <= & Reference value for cycle life of divertor
@@ -753,17 +782,19 @@ class Availability(Model):
         # Check number of cycles
 
         # Less than reference (availability is min availability)
-        if n <= cv.div_nref:
+        if n <= self.data.costs.div_nref:
             div_avail = a0
 
         # Greater than cycle number with 100% failure rate
-        elif n >= cv.div_nu:
+        elif n >= self.data.costs.div_nu:
             div_avail = 0.0e0
 
         # Else number of cycles is inbetween and is given by formula below
         else:
-            div_avail = (a0 / (cv.div_nu - cv.div_nref)) * (
-                cv.div_nu - 0.5e0 * cv.div_nref**2.0e0 / n - 0.5e0 * n
+            div_avail = (a0 / (self.data.costs.div_nu - self.data.costs.div_nref)) * (
+                self.data.costs.div_nu
+                - 0.5e0 * self.data.costs.div_nref**2.0e0 / n
+                - 0.5e0 * n
             )
 
         # Unplanned unavailability for divertor
@@ -777,25 +808,25 @@ class Availability(Model):
                 self.outfile,
                 "Probability of failure per operational day",
                 "(div_prob_fail)",
-                cv.div_prob_fail,
+                self.data.costs.div_prob_fail,
             )
             po.ovarre(
                 self.outfile,
                 "Repair time (years)",
                 "(div_umain_time)",
-                cv.div_umain_time,
+                self.data.costs.div_umain_time,
             )
             po.ovarre(
                 self.outfile,
                 "Reference value for cycle life",
                 "(div_nref)",
-                cv.div_nref,
+                self.data.costs.div_nref,
             )
             po.ovarre(
                 self.outfile,
                 "The cycle when failure is 100% certain",
                 "(div_nu)",
-                cv.div_nu,
+                self.data.costs.div_nu,
             )
             po.ovarre(
                 self.outfile, "Number of cycles between planned replacements", "(n)", n
@@ -834,10 +865,16 @@ class Availability(Model):
 
         # The probability of failure in one pulse cycle
         # (before the reference cycle life)
-        pf = (cv.fwbs_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
-        a0 = 1.0e0 - pf * cv.fwbs_umain_time * YEAR_SECONDS / tv.t_plant_pulse_total
+        pf = (self.data.costs.fwbs_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
+        a0 = (
+            1.0e0
+            - pf
+            * self.data.costs.fwbs_umain_time
+            * YEAR_SECONDS
+            / tv.t_plant_pulse_total
+        )
 
-        if cv.fwbs_nu <= cv.fwbs_nref:
+        if self.data.costs.fwbs_nu <= self.data.costs.fwbs_nref:
             logger.error(
                 """fwbs_nu <= fwbs_nref
             The cycle when the blanket fails with 100% probability <= &Reference value for cycle life of blanket
@@ -850,13 +887,15 @@ class Availability(Model):
 
         # Integrating the instantaneous availability gives the mean
         # availability over the planned cycle life N
-        if n <= cv.fwbs_nref:
+        if n <= self.data.costs.fwbs_nref:
             fwbs_avail = a0
-        elif n >= cv.fwbs_nu:
+        elif n >= self.data.costs.fwbs_nu:
             fwbs_avail = 0.0e0
         else:
-            fwbs_avail = (a0 / (cv.fwbs_nu - cv.fwbs_nref)) * (
-                cv.fwbs_nu - 0.5e0 * cv.fwbs_nref**2.0e0 / n - 0.5e0 * n
+            fwbs_avail = (a0 / (self.data.costs.fwbs_nu - self.data.costs.fwbs_nref)) * (
+                self.data.costs.fwbs_nu
+                - 0.5e0 * self.data.costs.fwbs_nref**2.0e0 / n
+                - 0.5e0 * n
             )
 
         # First wall / blanket unplanned unavailability
@@ -870,25 +909,25 @@ class Availability(Model):
                 self.outfile,
                 "Probability of failure per operational day",
                 "(fwbs_prob_fail)",
-                cv.fwbs_prob_fail,
+                self.data.costs.fwbs_prob_fail,
             )
             po.ovarre(
                 self.outfile,
                 "Repair time (years)",
                 "(fwbs_umain_time)",
-                cv.fwbs_umain_time,
+                self.data.costs.fwbs_umain_time,
             )
             po.ovarre(
                 self.outfile,
                 "Reference value for cycle life",
                 "(fwbs_nref)",
-                cv.fwbs_nref,
+                self.data.costs.fwbs_nref,
             )
             po.ovarre(
                 self.outfile,
                 "The cycle when failure is 100% certain",
                 "(fwbs_nu)",
-                cv.fwbs_nu,
+                self.data.costs.fwbs_nu,
             )
             po.ovarre(
                 self.outfile, "Number of cycles between planned replacements", "(n)", n
@@ -929,7 +968,10 @@ class Availability(Model):
 
         # Number of balance of plant failures in plant operational lifetime
         bop_num_failures = math.ceil(
-            bop_fail_rate * DAYS_IN_YEAR * 24.0e0 * cv.t_plant_operational_total_yrs
+            bop_fail_rate
+            * DAYS_IN_YEAR
+            * 24.0e0
+            * self.data.costs.t_plant_operational_total_yrs
         )
 
         # Balance of plant mean time to repair (years)
@@ -938,7 +980,7 @@ class Availability(Model):
 
         # Unplanned downtime balance of plant
         u_unplanned_bop = (bop_mttr * bop_num_failures) / (
-            cv.t_plant_operational_total_yrs
+            self.data.costs.t_plant_operational_total_yrs
         )
 
         # Output
@@ -1008,18 +1050,18 @@ class Availability(Model):
         """
         # Number of shutdowns
         n_shutdown: int = round(
-            (cv.life_plant - cv.t_plant_operational_total_yrs)
-            / ((21.0e0 * cv.num_rh_systems ** (-0.9e0) + 2.0e0) / 12.0e0)
+            (self.data.costs.life_plant - self.data.costs.t_plant_operational_total_yrs)
+            / ((21.0e0 * self.data.costs.num_rh_systems ** (-0.9e0) + 2.0e0) / 12.0e0)
         )
 
         # Operational time between shutdowns
-        t_op_bt = cv.t_plant_operational_total_yrs / (n_shutdown + 1.0e0)
+        t_op_bt = self.data.costs.t_plant_operational_total_yrs / (n_shutdown + 1.0e0)
 
         # Cryopump maintenance time (y) = 2 months
         cryo_main_time = 1.0e0 / 6.0e0
 
         # Total pumps = pumps + redundant pumps
-        total_pumps = self.data.vacuum.n_vac_pumps_high + cv.redun_vac
+        total_pumps = self.data.vacuum.n_vac_pumps_high + self.data.costs.redun_vac
 
         # Cryopump failure rate per machine operational period
         # From "Selected component failure rate values from fusion
@@ -1033,7 +1075,7 @@ class Availability(Model):
 
         sum_prob = 0.0e0
 
-        for n in range(cv.redun_vac + 1, total_pumps + 1):
+        for n in range(self.data.costs.redun_vac + 1, total_pumps + 1):
             # Probability for n failures in the operational period, n > number of redundant pumps
 
             # calculate sum in formula for downtime
@@ -1041,7 +1083,7 @@ class Availability(Model):
                 combinations(total_pumps, n)
                 * (cryo_nfailure_rate ** (total_pumps - n))
                 * (cryo_failure_rate**n)
-                * (n - cv.redun_vac)
+                * (n - self.data.costs.redun_vac)
             )
 
         # Total down-time in reactor life
@@ -1049,7 +1091,7 @@ class Availability(Model):
 
         # Total vacuum unplanned unavailability
         u_unplanned_vacuum = max(
-            0.005, t_down / (cv.t_plant_operational_total_yrs + t_down)
+            0.005, t_down / (self.data.costs.t_plant_operational_total_yrs + t_down)
         )
 
         # Output
@@ -1067,7 +1109,7 @@ class Availability(Model):
                 self.outfile,
                 "Number of redundant pumps",
                 "(redun_vac)",
-                cv.redun_vac,
+                self.data.costs.redun_vac,
                 "OP ",
             )
             po.ovarre(
@@ -1123,44 +1165,49 @@ class Availability(Model):
         ref_dpa_fpy = 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
         dpa_fpy = f_scale * ref_dpa_fpy
 
-        if cv.ibkt_life == 0:
+        if self.data.costs.ibkt_life == 0:
             fwbsv.life_blkt_fpy = min(
-                cv.abktflnc / pv.pflux_fw_neutron_mw, cv.life_plant
+                self.data.costs.abktflnc / pv.pflux_fw_neutron_mw,
+                self.data.costs.life_plant,
             )
         else:
-            fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.life_plant)  # DEMO
+            fwbsv.life_blkt_fpy = min(
+                self.data.costs.life_dpa / dpa_fpy, self.data.costs.life_plant
+            )  # DEMO
 
         # Divertor lifetime (years)
-        cv.life_div_fpy = self.divertor_lifetime()
+        self.data.costs.life_div_fpy = self.divertor_lifetime()
 
         # CP lifetime (years)
-        cv.cplife = self.cp_lifetime()
+        self.data.costs.cplife = self.cp_lifetime()
 
         # Current drive lifetime (assumed equal to first wall and blanket lifetime)
-        cv.life_hcd_fpy = fwbsv.life_blkt_fpy
+        self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
 
         # Time for a maintenance cycle (years)
         # Shortest component lifetime + time to replace
         shortest_lifetime = min(
             fwbsv.life_blkt_fpy,
-            cv.life_div_fpy,
-            cv.cplife,
-            cv.life_hcd_fpy,
-            cv.life_plant,
+            self.data.costs.life_div_fpy,
+            self.data.costs.cplife,
+            self.data.costs.life_hcd_fpy,
+            self.data.costs.life_plant,
         )
-        maint_cycle = shortest_lifetime + cv.tmain
+        maint_cycle = shortest_lifetime + self.data.costs.tmain
 
         # Number of maintenance cycles over plant lifetime
-        n_cycles_main = cv.life_plant / maint_cycle
+        n_cycles_main = self.data.costs.life_plant / maint_cycle
 
         # Number of centre columns over plant lifetime
         n_centre_cols = math.ceil(n_cycles_main)
 
         # Planned unavailability
-        u_planned = cv.tmain / maint_cycle
+        u_planned = self.data.costs.tmain / maint_cycle
 
         # Operational time (years)
-        cv.t_plant_operational_total_yrs = cv.life_plant * (1.0e0 - u_planned)
+        self.data.costs.t_plant_operational_total_yrs = self.data.costs.life_plant * (
+            1.0e0 - u_planned
+        )
 
         if output:
             po.oheadr(self.outfile, "Plant Availability")
@@ -1185,8 +1232,9 @@ class Availability(Model):
         # Vacuum systems
 
         # Number of redundant pumps
-        cv.redun_vac = math.floor(
-            self.data.vacuum.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0
+        self.data.costs.redun_vac = math.floor(
+            self.data.vacuum.n_vac_pumps_high * self.data.costs.redun_vacp / 100.0
+            + 0.5e0
         )
 
         u_unplanned_vacuum = self.calc_u_unplanned_vacuum(output)
@@ -1200,35 +1248,40 @@ class Availability(Model):
             + u_unplanned_bop
             + u_unplanned_hcd
             + u_unplanned_vacuum
-            + cv.u_unplanned_cp,
+            + self.data.costs.u_unplanned_cp,
         )
 
         # Total availability
-        cv.f_t_plant_available = max(
+        self.data.costs.f_t_plant_available = max(
             1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
         )
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
-            if fwbsv.life_blkt_fpy < cv.life_plant:
+            if fwbsv.life_blkt_fpy < self.data.costs.life_plant:
                 fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_blkt_fpy / cv.f_t_plant_available, cv.life_plant
+                    fwbsv.life_blkt_fpy / self.data.costs.f_t_plant_available,
+                    self.data.costs.life_plant,
                 )
-                cv.life_hcd_fpy = fwbsv.life_blkt_fpy
+                self.data.costs.life_hcd_fpy = fwbsv.life_blkt_fpy
 
             # Divertor
-            if cv.life_div_fpy < cv.life_plant:
-                cv.life_div_fpy = min(
-                    cv.life_div_fpy / cv.f_t_plant_available, cv.life_plant
+            if self.data.costs.life_div_fpy < self.data.costs.life_plant:
+                self.data.costs.life_div_fpy = min(
+                    self.data.costs.life_div_fpy / self.data.costs.f_t_plant_available,
+                    self.data.costs.life_plant,
                 )
 
             # Centrepost
-            if pv.itart == 1 and cv.cplife < cv.life_plant:
-                cv.cplife = min(cv.cplife / cv.f_t_plant_available, cv.life_plant)
+            if pv.itart == 1 and self.data.costs.cplife < self.data.costs.life_plant:
+                self.data.costs.cplife = min(
+                    self.data.costs.cplife / self.data.costs.f_t_plant_available,
+                    self.data.costs.life_plant,
+                )
 
         # Capacity factor
-        cv.cpfact = cv.f_t_plant_available * (
+        self.data.costs.cpfact = self.data.costs.f_t_plant_available * (
             tv.t_plant_pulse_burn / tv.t_plant_pulse_total
         )
 
@@ -1239,13 +1292,13 @@ class Availability(Model):
                 self.outfile,
                 "Allowable blanket neutron fluence (MW-yr/m2)",
                 "(abktflnc)",
-                cv.abktflnc,
+                self.data.costs.abktflnc,
             )
             po.ovarre(
                 self.outfile,
                 "Allowable divertor heat fluence (MW-yr/m2)",
                 "(adivflnc)",
-                cv.adivflnc,
+                self.data.costs.adivflnc,
             )
             po.ovarre(
                 self.outfile,
@@ -1258,7 +1311,7 @@ class Availability(Model):
                 self.outfile,
                 "Divertor lifetime (FPY)",
                 "(life_div_fpy)",
-                cv.life_div_fpy,
+                self.data.costs.life_div_fpy,
                 "OP ",
             )
             if tfv.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
@@ -1281,7 +1334,7 @@ class Availability(Model):
                     self.outfile,
                     "Allowable ST centrepost neutron fluence (MW-yr/m2)",
                     "(cpstflnc)",
-                    cv.cpstflnc,
+                    self.data.costs.cpstflnc,
                     "OP ",
                 )
                 po.ovarre(
@@ -1295,7 +1348,7 @@ class Availability(Model):
                 self.outfile,
                 "Centrepost lifetime (years)",
                 "(cplife)",
-                cv.cplife,
+                self.data.costs.cplife,
                 "OP ",
             )
             po.oblnkl(self.outfile)
@@ -1303,7 +1356,7 @@ class Availability(Model):
                 self.outfile,
                 "Maintenance time for replacing CP (years)",
                 "(tmain)",
-                cv.tmain,
+                self.data.costs.tmain,
                 "OP ",
             )
             po.ovarre(
@@ -1346,33 +1399,32 @@ class Availability(Model):
                 self.outfile,
                 "Total plant availability fraction",
                 "(f_t_plant_available)",
-                cv.f_t_plant_available,
+                self.data.costs.f_t_plant_available,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Capacity factor: total lifetime elec. energy output / output power",
                 "(cpfact)",
-                cv.cpfact,
+                self.data.costs.cpfact,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Total DT operational time (years)",
                 "(t_plant_operational_total_yrs)",
-                cv.t_plant_operational_total_yrs,
+                self.data.costs.t_plant_operational_total_yrs,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Total plant lifetime (years)",
                 "(life_plant)",
-                cv.life_plant,
+                self.data.costs.life_plant,
                 "OP",
             )
 
-    @staticmethod
-    def cp_lifetime():
+    def cp_lifetime(self):
         """Calculate Centrepost Lifetime
 
         This routine calculates the lifetime of the centrepost,
@@ -1387,23 +1439,25 @@ class Availability(Model):
         # Rem : only the TF maximum fluence is considered for now
         if tfv.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             cplife = (
-                cv.life_plant
+                self.data.costs.life_plant
                 if fwbsv.neut_flux_cp <= 0.0
                 else min(
                     (ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS)),
-                    cv.life_plant,
+                    self.data.costs.life_plant,
                 )
             )
 
         # Aluminium/Copper magnets CP lifetime
         # For now, we keep the original def, developed for GLIDCOP magnets ...
         else:
-            cplife = min(cv.cpstflnc / pv.pflux_fw_neutron_mw, cv.life_plant)
+            cplife = min(
+                self.data.costs.cpstflnc / pv.pflux_fw_neutron_mw,
+                self.data.costs.life_plant,
+            )
 
         return cplife
 
-    @staticmethod
-    def divertor_lifetime():
+    def divertor_lifetime(self):
         """Calculate Divertor Lifetime
 
         This routine calculates the lifetime of the divertor based on the allowable divertor heat fluence.
@@ -1415,4 +1469,10 @@ class Availability(Model):
         """
         # Divertor lifetime
         # Either 0.0, calculated from allowable divertor fluence and heat load, or lifetime of the plant
-        return max(0.0, min(cv.adivflnc / dv.pflux_div_heat_load_mw, cv.life_plant))
+        return max(
+            0.0,
+            min(
+                self.data.costs.adivflnc / dv.pflux_div_heat_load_mw,
+                self.data.costs.life_plant,
+            ),
+        )

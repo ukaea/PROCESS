@@ -666,21 +666,20 @@ class Models:
             plasma_profile=self.plasma_profile,
         )
         self.neoclassics = Neoclassics()
-        if data_structure.stellarator_variables.istell != 0:
-            self.stellarator = Stellarator(
-                availability=self.availability,
-                buildings=self.buildings,
-                vacuum=self.vacuum,
-                costs=self.costs,
-                power=self.power,
-                plasma_profile=self.plasma_profile,
-                hcpb=self.ccfe_hcpb,
-                current_drive=self.current_drive,
-                physics=self.physics,
-                neoclassics=self.neoclassics,
-                plasma_beta=self.plasma_beta,
-                plasma_bootstrap=self.plasma_bootstrap_current,
-            )
+        self.stellarator = Stellarator(
+            availability=self.availability,
+            buildings=self.buildings,
+            vacuum=self.vacuum,
+            costs=self.costs,
+            power=self.power,
+            plasma_profile=self.plasma_profile,
+            hcpb=self.ccfe_hcpb,
+            current_drive=self.current_drive,
+            physics=self.physics,
+            neoclassics=self.neoclassics,
+            plasma_beta=self.plasma_beta,
+            plasma_bootstrap=self.plasma_bootstrap_current,
+        )
 
         self.dcll = DCLL(fw=self.fw)
 
@@ -688,11 +687,11 @@ class Models:
 
     @property
     def costs(self) -> CostsProtocol:
-        if data_structure.cost_variables.cost_model == 0:
+        if self.data.costs.cost_model == 0:
             return self._costs_1990
-        if data_structure.cost_variables.cost_model == 1:
+        if self.data.costs.cost_model == 1:
             return self._costs_2015
-        if data_structure.cost_variables.cost_model == 2:
+        if self.data.costs.cost_model == 2:
             if self._costs_custom is not None:
                 return self._costs_custom
             raise ValueError("Custom costs model not initialised")
@@ -718,6 +717,10 @@ class Models:
             self._costs_1990,
             self.availability,
             self.ife,
+            self.buildings,
+            self.power,
+            self.stellarator,
+            self.ccfe_hcpb,
         )
 
     def setup_data_structure(self):
