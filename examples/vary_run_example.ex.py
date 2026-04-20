@@ -113,14 +113,14 @@ os.chdir(cwd)
 
 # Get the initial values from the original input file
 iteration_variable_names, original_iteration_variable_values = (
-    get_mfile_initial_ixc_values(input_file)
+    get_mfile_initial_ixc_values(input_file, vary_run.data)
 )
 
 # Get the initial values from the new input file produced by VaryRun
 # VaryRun always produces a file called IN.DAT in the same directory
 # as the conf file
 _, updated_iteration_variable_values = get_mfile_initial_ixc_values(
-    Path(temp_dir.name) / "IN.DAT"
+    Path(temp_dir.name) / "IN.DAT", vary_run.data
 )
 
 # %% [markdown]

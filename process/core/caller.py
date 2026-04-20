@@ -263,7 +263,7 @@ class Caller:
         data_structure.numerics.ncalls += 1
 
         # Convert variables
-        set_scaled_iteration_variable(xc, nvars)
+        set_scaled_iteration_variable(xc, nvars, self.data)
 
         # Perform the various function calls
         # Stellarator caller
