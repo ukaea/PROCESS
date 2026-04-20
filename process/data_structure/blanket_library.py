@@ -121,14 +121,6 @@ mflow_fw_coolant_total: float = None
 """Total mass flow rate to remove inboard FW power (kg/s)"""
 
 
-n_fw_inboard_channels: float = None
-"""Inboard total number of first wall coolant channels"""
-
-
-n_fw_outboard_channels: float = None
-"""Outboard total number of first wall coolant channels"""
-
-
 mflow_fw_inboard_coolant_channel: float = None
 """Inboard mass flow rate per coolant pipe (kg/s)"""
 

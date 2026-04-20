@@ -8,18 +8,13 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    blanket_library,
     build_variables,
     constraint_variables,
     divertor_variables,
     physics_variables,
 )
-from process.models.blankets.blanket_library import (
-    BlanketLibrary,
-    dshellarea,
-    eshellarea,
-)
 from process.models.build import FwBlktVVShape
+from process.models.ivc_tools import calculate_pipe_bend_radius, dshellarea, eshellarea
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +22,6 @@ logger = logging.getLogger(__name__)
 class FirstWall(Model):
     def __init__(self):
         self.outfile = constants.NOUT
-        self.blanket_library = BlanketLibrary(fw=self)
 
     def output(self):
         # First wall geometry
@@ -95,8 +89,8 @@ class FirstWall(Model):
         )
 
         (
-            blanket_library.n_fw_inboard_channels,
-            blanket_library.n_fw_outboard_channels,
+            self.data.first_wall.n_fw_inboard_channels,
+            self.data.first_wall.n_fw_outboard_channels,
         ) = self.calculate_total_fw_channels(
             self.data.first_wall.a_fw_inboard,
             self.data.first_wall.a_fw_outboard,
@@ -109,7 +103,7 @@ class FirstWall(Model):
         (
             self.data.fwbs.radius_fw_channel_90_bend,
             self.data.fwbs.radius_fw_channel_180_bend,
-        ) = self.blanket_library.calculate_pipe_bend_radius(
+        ) = calculate_pipe_bend_radius(
             i_ps=1,
             radius_fw_channel=self.data.fwbs.radius_fw_channel,
             b_bz_liq=self.data.fwbs.b_bz_liq,
@@ -896,14 +890,14 @@ class FirstWall(Model):
             self.outfile,
             "Number of inboard first wall cooling channels",
             "(n_fw_inboard_channels)",
-            blanket_library.n_fw_inboard_channels,
+            self.data.first_wall.n_fw_inboard_channels,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Number of outboard first wall cooling channels",
             "(n_fw_outboard_channels)",
-            blanket_library.n_fw_outboard_channels,
+            self.data.first_wall.n_fw_outboard_channels,
             "OP ",
         )
 

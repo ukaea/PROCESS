@@ -9,13 +9,13 @@ from process.data_structure import (
     divertor_variables,
     physics_variables,
 )
-from process.models.blankets.blanket_library import (
+from process.models.build import FwBlktVVShape
+from process.models.ivc_tools import (
     dshellarea,
     dshellvol,
     eshellarea,
     eshellvol,
 )
-from process.models.build import FwBlktVVShape
 
 logger = logging.getLogger(__name__)
 
