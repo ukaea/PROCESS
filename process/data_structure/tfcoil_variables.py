@@ -767,6 +767,12 @@ dr_tf_nose_case: float = None
 (calculated for stellarators)
 """
 
+dr_tf_full_midplane: float = None
+"""Full radial thickness of TF coil at midplane (m)"""
+
+dr_tf_internal_midplane: float = None
+"""Internal radial thickness of TF coil at midplane (m)"""
+
 
 dr_tf_wp_with_insulation: float = None
 """radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)"""
@@ -1221,6 +1227,8 @@ def init_tfcoil_variables():
         dx_tf_turn_insulation, \
         layer_ins, \
         dr_tf_nose_case, \
+        dr_tf_full_midplane, \
+        dr_tf_internal_midplane, \
         dr_tf_wp_with_insulation, \
         dx_tf_turn_steel, \
         dx_tf_wp_insulation, \
@@ -1454,6 +1462,8 @@ def init_tfcoil_variables():
     dx_tf_turn_insulation = 8e-4
     layer_ins = 0.0
     dr_tf_nose_case = 0.3
+    dr_tf_full_midplane = 0.0
+    dr_tf_internal_midplane = 0.0
     dr_tf_wp_with_insulation = 0.0
     dx_tf_turn_steel = 8e-3
     dx_tf_wp_insulation = 0.018

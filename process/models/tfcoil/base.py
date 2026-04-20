@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import json
 import logging
+from dataclasses import dataclass
 from enum import IntEnum
 from types import DynamicClassAttribute
 from typing import TYPE_CHECKING
@@ -83,6 +84,35 @@ class TFPlasmaCaseType(IntEnum):
         return self._description_
 
 
+@dataclass
+class TFGlobalGeometry:
+    """
+    A dataclass containing the calculated global geometry parameters of the TF coil."""
+
+    rad_tf_coil_inboard_toroidal_half: float
+    """Angular space of each TF coil in the toroidal direction [rad]"""
+    tan_theta_coil: float
+    """Tangent of the angle of the TF coil."""
+    a_tf_inboard_total: float
+    """Total mid-plane cross-sectional area of the inboard legs [m²]."""
+    r_tf_outboard_in: float
+    """Inner radius of the outboard leg [m]."""
+    r_tf_outboard_out: float
+    """Outer radius of the outboard leg [m]."""
+    dx_tf_inboard_out_toroidal: float
+    """Toroidal width of the inboard leg at the outer edge [m]."""
+    a_tf_leg_outboard: float
+    """Cross-sectional area of the outboard leg [m²]."""
+    dr_tf_full_midplane: float
+    """Full external coil width at mid-plane [m]."""
+    dr_tf_internal_midplane: float
+    """Full internal coil width at mid-plane [m]."""
+    dr_tf_plasma_case: float
+    """Thickness of the plasma-facing case [m]."""
+    dx_tf_side_case_min: float
+    """Minimum thickness of the sidewall case [m]."""
+
+
 class TFCoil(Model):
     """Calculates the parameters of a resistive TF coil system for a fusion power plant"""
 
@@ -97,17 +127,7 @@ class TFCoil(Model):
 
     def run_base_tf(self):
         """Run main tfcoil subroutine without outputting."""
-        (
-            superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half,
-            superconducting_tf_coil_variables.tan_theta_coil,
-            tfcoil_variables.a_tf_inboard_total,
-            superconducting_tf_coil_variables.r_tf_outboard_in,
-            superconducting_tf_coil_variables.r_tf_outboard_out,
-            tfcoil_variables.dx_tf_inboard_out_toroidal,
-            tfcoil_variables.a_tf_leg_outboard,
-            tfcoil_variables.dr_tf_plasma_case,
-            tfcoil_variables.dx_tf_side_case_min,
-        ) = self.tf_global_geometry(
+        global_tf_geometry: TFGlobalGeometry = self.tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
             i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,
             f_dr_tf_plasma_case=tfcoil_variables.f_dr_tf_plasma_case,
@@ -121,6 +141,30 @@ class TFCoil(Model):
             r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
             dr_tf_outboard=build_variables.dr_tf_outboard,
         )
+
+        superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half = (
+            global_tf_geometry.rad_tf_coil_inboard_toroidal_half
+        )
+        superconducting_tf_coil_variables.tan_theta_coil = (
+            global_tf_geometry.tan_theta_coil
+        )
+        tfcoil_variables.a_tf_inboard_total = global_tf_geometry.a_tf_inboard_total
+        superconducting_tf_coil_variables.r_tf_outboard_in = (
+            global_tf_geometry.r_tf_outboard_in
+        )
+        superconducting_tf_coil_variables.r_tf_outboard_out = (
+            global_tf_geometry.r_tf_outboard_out
+        )
+        tfcoil_variables.dx_tf_inboard_out_toroidal = (
+            global_tf_geometry.dx_tf_inboard_out_toroidal
+        )
+        tfcoil_variables.a_tf_leg_outboard = global_tf_geometry.a_tf_leg_outboard
+        tfcoil_variables.dr_tf_full_midplane = global_tf_geometry.dr_tf_full_midplane
+        tfcoil_variables.dr_tf_internal_midplane = (
+            global_tf_geometry.dr_tf_internal_midplane
+        )
+        tfcoil_variables.dr_tf_plasma_case = global_tf_geometry.dr_tf_plasma_case
+        tfcoil_variables.dx_tf_side_case_min = global_tf_geometry.dx_tf_side_case_min
 
         tfcoil_variables.r_b_tf_inboard_peak = (
             build_variables.r_tf_inboard_out
@@ -183,7 +227,7 @@ class TFCoil(Model):
         r_tf_inboard_in: float,
         r_tf_outboard_mid: float,
         dr_tf_outboard: float,
-    ) -> tuple[float, float, float, float, float, float, float, float, float]:
+    ) -> TFGlobalGeometry:
         """Calculate the global geometry of the Toroidal Field (TF) coil.
 
         This method computes the overall geometry of the TF coil, including:
@@ -195,42 +239,36 @@ class TFCoil(Model):
 
         Parameters
         ----------
-        i_tf_case_geom : int
+        i_tf_case_geom:
             Geometry type of the TF coil case (e.g., circular or straight plasma-facing front case).
-        i_f_dr_tf_plasma_case : bool
+        i_f_dr_tf_plasma_case:
             Whether the plasma-facing case thickness is specified as a fraction of the inboard thickness.
-        f_dr_tf_plasma_case : float
+        f_dr_tf_plasma_case:
             Fraction of the inboard thickness used for the plasma-facing case thickness.
-        tfc_sidewall_is_fraction : bool
+        tfc_sidewall_is_fraction:
             Whether the sidewall case thickness is specified as a fraction of the inboard radius.
-        casths_fraction : float
+        casths_fraction:
             Fraction of the inboard radius used for the sidewall case thickness.
-        n_tf_coils : int
+        n_tf_coils:
             Number of TF coils.
-        dr_tf_inboard : float
+        dr_tf_inboard:
             Radial thickness of the inboard leg of the TF coil [m].
-        dr_tf_nose_case : float
+        dr_tf_nose_case:
             Thickness of the inboard leg case at the nose region [m].
-        r_tf_inboard_out : float
+        r_tf_inboard_out:
             Outer radius of the inboard leg of the TF coil [m].
-        r_tf_inboard_in : float
+        r_tf_inboard_in:
             Inner radius of the inboard leg of the TF coil [m].
-        r_tf_outboard_mid : float
+        r_tf_outboard_mid:
             Mid-plane radius of the outboard leg of the TF coil [m].
-        dr_tf_outboard : float
+        dr_tf_outboard:
             Radial thickness of the outboard leg of the TF coil [m].
 
         Returns
         -------
-        tuple
-            A tuple containing:
-            - **rad_tf_coil_inboard_toroidal_half** (*float*): Toroidal angular spacing of each TF coil [radians].
-            - **tan_theta_coil** (*float*): Tangent of the toroidal angular spacing.
-            - **a_tf_inboard_total** (*float*): Cross-sectional area of the inboard leg of the TF coil [m²].
-            - **r_tf_outboard_in** (*float*): Inner radius of the outboard leg of the TF coil [m].
-            - **r_tf_outboard_out** (*float*): Outer radius of the outboard leg of the TF coil [m].
-            - **dx_tf_inboard_out_toroidal** (*float*): Width of the inboard leg at the outer edge in the toroidal direction [m].
-            - **a_tf_leg_outboard** (*float*): Cross-sectional area of the outboard leg of the TF coil [m²].
+        :
+            A dataclass containing the calculated global geometry parameters of the TF coil.
+
         """
         # The angular space of each TF coil in the toroidal direction [rad]
         # The angular space between each coil is the same as that of the coils
@@ -267,7 +305,17 @@ class TFCoil(Model):
         # Area of rectangular cross-section TF outboard leg [m^2]
         a_tf_leg_outboard = dx_tf_inboard_out_toroidal * dr_tf_outboard
 
+        # =====================================================================
+
+        # Full external coil width at mid-plane [m]
+
+        dr_tf_full_midplane = r_tf_outboard_out - r_tf_inboard_in
+
+        # Full internal coil width at mid-plane [m]
+        dr_tf_internal_midplane = r_tf_outboard_in - r_tf_inboard_out
+
         # ======================================================================
+
         # Plasma facing front case thickness [m]
 
         if i_f_dr_tf_plasma_case:
@@ -307,16 +355,18 @@ class TFCoil(Model):
         else:
             dx_tf_side_case_min = tfcoil_variables.dx_tf_side_case_min
 
-        return (
-            rad_tf_coil_inboard_toroidal_half,
-            tan_theta_coil,
-            a_tf_inboard_total,
-            r_tf_outboard_in,
-            r_tf_outboard_out,
-            dx_tf_inboard_out_toroidal,
-            a_tf_leg_outboard,
-            dr_tf_plasma_case,
-            dx_tf_side_case_min,
+        return TFGlobalGeometry(
+            rad_tf_coil_inboard_toroidal_half=rad_tf_coil_inboard_toroidal_half,
+            tan_theta_coil=tan_theta_coil,
+            a_tf_inboard_total=a_tf_inboard_total,
+            r_tf_outboard_in=r_tf_outboard_in,
+            r_tf_outboard_out=r_tf_outboard_out,
+            dx_tf_inboard_out_toroidal=dx_tf_inboard_out_toroidal,
+            a_tf_leg_outboard=a_tf_leg_outboard,
+            dr_tf_full_midplane=dr_tf_full_midplane,
+            dr_tf_internal_midplane=dr_tf_internal_midplane,
+            dr_tf_plasma_case=dr_tf_plasma_case,
+            dx_tf_side_case_min=dx_tf_side_case_min,
         )
 
     def tf_current(
@@ -774,6 +824,20 @@ class TFCoil(Model):
             "Total outboard leg radial thickness (m)",
             "(dr_tf_outboard)",
             build_variables.dr_tf_outboard,
+        )
+        po.ovarre(
+            self.outfile,
+            "Full external coil width at mid-plane (m)",
+            "(dr_tf_full_midplane)",
+            tfcoil_variables.dr_tf_full_midplane,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Full internal coil width at mid-plane (m)",
+            "(dr_tf_internal_midplane)",
+            tfcoil_variables.dr_tf_internal_midplane,
+            "OP ",
         )
         po.ovarre(
             self.outfile,
