@@ -87,31 +87,30 @@ class TFPlasmaCaseType(IntEnum):
 @dataclass
 class TFGlobalGeometry:
     """
-    A dataclass containing the calculated global geometry parameters of the TF coil.
-        - rad_tf_coil_inboard_toroidal_half: Angular space of each TF coil in the toroidal direction [rad].
-        - tan_theta_coil: Tangent of the angle of the TF coil.
-        - a_tf_inboard_total: Total mid-plane cross-sectional area of the inboard legs [m²].
-        - r_tf_outboard_in: Inner radius of the outboard leg [m].
-        - r_tf_outboard_out: Outer radius of the outboard leg [m].
-        - dx_tf_inboard_out_toroidal: Toroidal width of the inboard leg at the outer edge [m].
-        - a_tf_leg_outboard: Cross-sectional area of the outboard leg [m²].
-        - dr_tf_full_midplane: Full external coil width at mid-plane [m].
-        - dr_tf_internal_midplane: Full internal coil width at mid-plane [m].
-        - dr_tf_plasma_case: Thickness of the plasma-facing case [m].
-        - dx_tf_side_case_min: Minimum thickness of the sidewall case [m].
-    """
+    A dataclass containing the calculated global geometry parameters of the TF coil."""
 
     rad_tf_coil_inboard_toroidal_half: float
+    """Angular space of each TF coil in the toroidal direction [rad]"""
     tan_theta_coil: float
+    """Tangent of the angle of the TF coil."""
     a_tf_inboard_total: float
+    """Total mid-plane cross-sectional area of the inboard legs [m²]."""
     r_tf_outboard_in: float
+    """Inner radius of the outboard leg [m]."""
     r_tf_outboard_out: float
+    """Outer radius of the outboard leg [m]."""
     dx_tf_inboard_out_toroidal: float
+    """Toroidal width of the inboard leg at the outer edge [m]."""
     a_tf_leg_outboard: float
+    """Cross-sectional area of the outboard leg [m²]."""
     dr_tf_full_midplane: float
+    """Full external coil width at mid-plane [m]."""
     dr_tf_internal_midplane: float
+    """Full internal coil width at mid-plane [m]."""
     dr_tf_plasma_case: float
+    """Thickness of the plasma-facing case [m]."""
     dx_tf_side_case_min: float
+    """Minimum thickness of the sidewall case [m]."""
 
 
 class TFCoil(Model):
@@ -268,7 +267,7 @@ class TFCoil(Model):
         Returns
         -------
         TFGlobalGeometry
-                A dataclass containing the calculated global geometry parameters of the TF coil.
+            A dataclass containing the calculated global geometry parameters of the TF coil.
 
         """
         # The angular space of each TF coil in the toroidal direction [rad]
