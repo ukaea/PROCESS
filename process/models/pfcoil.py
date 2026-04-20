@@ -52,7 +52,8 @@ class PFCoil(Model):
 
     def output(self):
         """Output results to output file."""
-        self.cs_coil.output_cs_structure()
+        if bv.iohcl != 0:
+            self.cs_coil.output_cs_structure()
         self.outpf()
         self.outvolt()
         self.output_induct()
