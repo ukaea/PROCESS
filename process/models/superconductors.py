@@ -1,6 +1,7 @@
 """Module for superconductor types, materials, and models."""
 
 import logging
+from dataclasses import dataclass
 from enum import IntEnum
 from types import DynamicClassAttribute
 
@@ -1024,6 +1025,19 @@ def bottura_scaling(
         j_scaling = -abs(jc1 * jc2 * jc3)
 
     return j_scaling, b_critical, temp_critical
+
+
+@dataclass
+class CroCoCableGeometry:
+    dia_croco_strand_tape_region: float
+    n_croco_strand_hts_tapes: float
+    a_croco_strand_copper_total: float
+    a_croco_strand_hastelloy: float
+    a_croco_strand_solder: float
+    a_croco_strand_rebco: float
+    a_croco_strand: float
+    dr_hts_tape: float
+    dx_croco_strand_tape_stack: float
 
 
 def calculate_croco_cable_geometry(
