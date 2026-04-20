@@ -254,14 +254,7 @@ def test_beam_fusion():
 
 
 def test_beam_slowing_down_state():
-    (
-        deuterium_beam_density,
-        tritium_beam_density,
-        deuterium_critical_energy_speed,
-        tritium_critical_energy_speed,
-        hot_beam_density,
-        beam_deposited_energy,
-    ) = reactions.beam_slowing_down_state(
+    beam_state = reactions.beam_slowing_down_state(
         1000.0,
         276.7,
         415.0,
@@ -270,12 +263,15 @@ def test_beam_slowing_down_state():
         130,
         1888.0,
     )
-    assert deuterium_beam_density == pytest.approx(4.1968331737565126e17)
-    assert tritium_beam_density == pytest.approx(316553077182.4059, rel=1e-6)
-    assert deuterium_critical_energy_speed == pytest.approx(5.1495e6, rel=1e-4)
-    assert tritium_critical_energy_speed == pytest.approx(5.1534e6, rel=1e-4)
-    assert hot_beam_density == pytest.approx(4.1968331737565126e17)
-    assert beam_deposited_energy == pytest.approx(445.05787301616635)
+
+    assert beam_state.deuterium_beam_density == pytest.approx(4.1968331737565126e17)
+    assert beam_state.tritium_beam_density == pytest.approx(316553077182.4059, rel=1e-6)
+    assert beam_state.deuterium_critical_energy_speed == pytest.approx(
+        5.1495e6, rel=1e-4
+    )
+    assert beam_state.tritium_critical_energy_speed == pytest.approx(5.1534e6, rel=1e-4)
+    assert beam_state.nd_beam_hot == pytest.approx(4.1968331737565126e17)
+    assert beam_state.e_beam_deposited_kev == pytest.approx(445.05787301616635)
 
 
 def test__fast_ion_pressure_integral():
