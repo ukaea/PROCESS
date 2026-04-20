@@ -14,16 +14,12 @@ from process.data_structure import (
     divertor_variables,
     physics_variables,
 )
-from process.models.blankets.blanket_library import (
-    BlanketLibrary,
-    dshellarea,
-    eshellarea,
-)
 from process.models.build import FwBlktVVShape
 from process.models.engineering.materials import eurofer97_thermal_conductivity
 from process.models.engineering.pumping import (
     gnielinski_heat_transfer_coefficient,
 )
+from process.models.ivc_tools import calculate_pipe_bend_radius, dshellarea, eshellarea
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +27,6 @@ logger = logging.getLogger(__name__)
 class FirstWall(Model):
     def __init__(self):
         self.outfile = constants.NOUT
-        self.blanket_library = BlanketLibrary(fw=self)
 
     def output(self):
         # First wall geometry
@@ -113,7 +108,7 @@ class FirstWall(Model):
         (
             self.data.fwbs.radius_fw_channel_90_bend,
             self.data.fwbs.radius_fw_channel_180_bend,
-        ) = self.blanket_library.calculate_pipe_bend_radius(
+        ) = calculate_pipe_bend_radius(
             i_ps=1,
             radius_fw_channel=self.data.fwbs.radius_fw_channel,
             b_bz_liq=self.data.fwbs.b_bz_liq,

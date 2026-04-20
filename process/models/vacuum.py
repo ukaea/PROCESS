@@ -14,8 +14,8 @@ from process.data_structure import (
     tfcoil_variables,
     times_variables,
 )
-from process.models.blankets.blanket_library import dshellvol, eshellvol
 from process.models.build import FwBlktVVShape
+from process.models.ivc_tools import dshellvol, eshellvol
 
 logger = logging.getLogger(__name__)
 

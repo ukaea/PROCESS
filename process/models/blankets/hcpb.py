@@ -19,8 +19,11 @@ from process.data_structure import (
     primary_pumping_variables,
     tfcoil_variables,
 )
-from process.models.blankets import blanket_library
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
+from process.models.ivc_tools import (
+    calculate_pipe_bend_radius,
+    set_pumping_powers_as_fractions,
+)
 from process.models.power import PumpingPowerModelTypes
 from process.models.tfcoil.base import TFConductorModel
 
@@ -55,7 +58,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         (
             self.data.fwbs.radius_blkt_channel_90_bend,
             self.data.fwbs.radius_blkt_channel_180_bend,
-        ) = self.calculate_pipe_bend_radius(
+        ) = calculate_pipe_bend_radius(
             i_ps=1,
             radius_fw_channel=self.data.fwbs.radius_fw_channel,
             b_bz_liq=self.data.fwbs.b_bz_liq,
@@ -788,7 +791,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 heat_transport_variables.p_blkt_coolant_pump_mw,
                 heat_transport_variables.p_shld_coolant_pump_mw,
                 heat_transport_variables.p_div_coolant_pump_mw,
-            ) = blanket_library.set_pumping_powers_as_fractions(
+            ) = set_pumping_powers_as_fractions(
                 f_p_fw_coolant_pump_total_heat=heat_transport_variables.f_p_fw_coolant_pump_total_heat,
                 f_p_blkt_coolant_pump_total_heat=heat_transport_variables.f_p_blkt_coolant_pump_total_heat,
                 f_p_shld_coolant_pump_total_heat=heat_transport_variables.f_p_shld_coolant_pump_total_heat,
