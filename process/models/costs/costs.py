@@ -5,6 +5,7 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -22,14 +23,13 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
     times_variables,
-    vacuum_variables,
 )
 from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
 
 
-class Costs:
+class Costs(Model):
     def __init__(self):
         self.outfile = constants.NOUT
 
@@ -1629,9 +1629,8 @@ class Costs:
 
         pfwndl = 0.0e0
         for i in range(pfcoil_variables.n_cs_pf_coils):
-            pfwndl = (
-                pfwndl
-                + 2.0
+            pfwndl += (
+                2.0
                 * np.pi
                 * pfcoil_variables.r_pf_coil_middle[i]
                 * pfcoil_variables.n_pf_coil_turns[i]
@@ -1676,19 +1675,18 @@ class Costs:
                     )
                 else:
                     costpfsc = 0.0e0
+            elif pfcoil_variables.i_pf_conductor == 0:
+                costpfsc = (
+                    cost_variables.sc_mat_cost_0[
+                        pfcoil_variables.i_pf_superconductor - 1
+                    ]
+                    * tfcoil_variables.j_crit_str_0[
+                        pfcoil_variables.i_pf_superconductor - 1
+                    ]
+                    / pfcoil_variables.j_crit_str_pf
+                )
             else:
-                if pfcoil_variables.i_pf_conductor == 0:
-                    costpfsc = (
-                        cost_variables.sc_mat_cost_0[
-                            pfcoil_variables.i_pf_superconductor - 1
-                        ]
-                        * tfcoil_variables.j_crit_str_0[
-                            pfcoil_variables.i_pf_superconductor - 1
-                        ]
-                        / pfcoil_variables.j_crit_str_pf
-                    )
-                else:
-                    costpfsc = 0.0
+                costpfsc = 0.0
 
             #  Copper ($/m)
             if pfcoil_variables.i_pf_conductor == 0:
@@ -1727,7 +1725,7 @@ class Costs:
 
             #  Total account 222.2.1 (PF coils excluding Central Solenoid)
 
-            cost_variables.c22221 = cost_variables.c22221 + (
+            cost_variables.c22221 += (
                 1.0e-6
                 * 2.0
                 * np.pi
@@ -1757,19 +1755,18 @@ class Costs:
                     )
                 else:
                     costpfsc = 0.0e0
+            elif pfcoil_variables.i_pf_conductor == 0:
+                costpfsc = (
+                    cost_variables.sc_mat_cost_0[
+                        pfcoil_variables.i_cs_superconductor - 1
+                    ]
+                    * tfcoil_variables.j_crit_str_0[
+                        pfcoil_variables.i_cs_superconductor - 1
+                    ]
+                    / pfcoil_variables.j_crit_str_cs
+                )
             else:
-                if pfcoil_variables.i_pf_conductor == 0:
-                    costpfsc = (
-                        cost_variables.sc_mat_cost_0[
-                            pfcoil_variables.i_cs_superconductor - 1
-                        ]
-                        * tfcoil_variables.j_crit_str_0[
-                            pfcoil_variables.i_cs_superconductor - 1
-                        ]
-                        / pfcoil_variables.j_crit_str_cs
-                    )
-                else:
-                    costpfsc = 0.0e0
+                costpfsc = 0.0e0
 
             #  Copper ($/m)
 
@@ -1806,7 +1803,7 @@ class Costs:
 
             #  Total account 222.2.1 (PF+Central Solenoid coils)
 
-            cost_variables.c22221 = cost_variables.c22221 + (
+            cost_variables.c22221 += (
                 1.0e-6
                 * 2.0
                 * np.pi
@@ -1876,7 +1873,6 @@ class Costs:
         fraction (fcdfuel) is considered a recurring fuel cost due
         to the system's short life.
         """
-
         exprf = 1.0e0
         if ife_variables.ife != 1:
             #  Account 223.1 : ECH
@@ -1994,13 +1990,13 @@ class Costs:
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
         """
-        if vacuum_variables.i_vacuum_pump_type == 1:
+        if self.data.vacuum.i_vacuum_pump_type == 1:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.UCCPMP
+                1.0e-6 * self.data.vacuum.n_vac_pumps_high * cost_variables.UCCPMP
             )
         else:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.uctpmp
+                1.0e-6 * self.data.vacuum.n_vac_pumps_high * cost_variables.UCTPMP
             )
 
         cost_variables.c2241 = cost_variables.fkind * cost_variables.c2241
@@ -2008,7 +2004,7 @@ class Costs:
         #  Account 224.2 : Backing pumps
 
         cost_variables.c2242 = (
-            1.0e-6 * vacuum_variables.n_vv_vacuum_ducts * cost_variables.UCBPMP
+            1.0e-6 * self.data.vacuum.n_vv_vacuum_ducts * cost_variables.UCBPMP
         )
         cost_variables.c2242 = cost_variables.fkind * cost_variables.c2242
 
@@ -2016,8 +2012,8 @@ class Costs:
 
         cost_variables.c2243 = (
             1.0e-6
-            * vacuum_variables.n_vv_vacuum_ducts
-            * vacuum_variables.dlscal
+            * self.data.vacuum.n_vv_vacuum_ducts
+            * self.data.vacuum.dlscal
             * cost_variables.UCDUCT
         )
         cost_variables.c2243 = cost_variables.fkind * cost_variables.c2243
@@ -2027,8 +2023,8 @@ class Costs:
         cost_variables.c2244 = (
             1.0e-6
             * 2.0e0
-            * vacuum_variables.n_vv_vacuum_ducts
-            * (vacuum_variables.dia_vv_vacuum_ducts * 1.2e0) ** 1.4e0
+            * self.data.vacuum.n_vv_vacuum_ducts
+            * (self.data.vacuum.dia_vv_vacuum_ducts * 1.2e0) ** 1.4e0
             * cost_variables.UCVALV
         )
         cost_variables.c2244 = cost_variables.fkind * cost_variables.c2244
@@ -2037,8 +2033,8 @@ class Costs:
 
         cost_variables.c2245 = (
             1.0e-6
-            * vacuum_variables.n_vv_vacuum_ducts
-            * vacuum_variables.m_vv_vacuum_duct_shield
+            * self.data.vacuum.n_vv_vacuum_ducts
+            * self.data.vacuum.m_vv_vacuum_duct_shield
             * cost_variables.UCVDSH
         )
         cost_variables.c2245 = cost_variables.fkind * cost_variables.c2245
@@ -2067,7 +2063,6 @@ class Costs:
         of the tfcpwr module.  A multiplier is used to account for bulk
         materials and installation.
         """
-
         expel = 0.7e0
         cost_variables.c22511 = (
             1.0e-6
@@ -2292,9 +2287,8 @@ class Costs:
         )
 
         if ife_variables.ife == 1:
-            cost_variables.cppa = (
-                cost_variables.cppa
-                + 1.0e-6
+            cost_variables.cppa += (
+                1.0e-6
                 * cost_variables.UCAHTS
                 * (
                     (1.0e6 * ife_variables.tdspmw) ** exphts
@@ -2445,7 +2439,6 @@ class Costs:
 
         This routine evaluates the Account 23 (turbine plant equipment) costs.
         """
-
         exptpe = 0.83e0
         if cost_variables.ireactor == 1:
             cost_variables.c23 = (
@@ -2494,7 +2487,7 @@ class Costs:
         )
 
         #  Apply safety assurance factor
-        cost_variables.c242 = cost_variables.c242 * cmlsa[cost_variables.lsa - 1]
+        cost_variables.c242 *= cmlsa[cost_variables.lsa - 1]
 
     def acc243(self):
         """Account 243 : Electric plant equipment - Low voltage
@@ -2622,19 +2615,19 @@ class Costs:
                 cost_variables.c2253 = 0.1e0
 
                 #  Additional electrically-driven feedpump (50 per cent duty)
-                cost_variables.c2253 = cost_variables.c2253 + 0.8e0
+                cost_variables.c2253 += 0.8e0
 
                 #  Increased turbine-generator duty (5 per cent duty)
-                cost_variables.c2253 = cost_variables.c2253 + 4.0e0
+                cost_variables.c2253 += 4.0e0
 
                 #  Additional auxiliary transformer capacity and ancillaries
-                cost_variables.c2253 = cost_variables.c2253 + 0.5e0
+                cost_variables.c2253 += 0.5e0
 
                 #  Increased drum capacity
-                cost_variables.c2253 = cost_variables.c2253 + 2.8e0
+                cost_variables.c2253 += 2.8e0
 
                 #  Externally fired superheater
-                cost_variables.c2253 = cost_variables.c2253 + 29.0e0
+                cost_variables.c2253 += 29.0e0
 
             elif pulse_variables.istore == 2:
                 #  Option 2 from ELECTROWATT report
@@ -2644,26 +2637,26 @@ class Costs:
                 cost_variables.c2253 = 0.1e0
 
                 #  Additional electrically-driven feedpump (50 per cent duty)
-                cost_variables.c2253 = cost_variables.c2253 + 0.8e0
+                cost_variables.c2253 += 0.8e0
 
                 #  Increased drum capacity
-                cost_variables.c2253 = cost_variables.c2253 + 2.8e0
+                cost_variables.c2253 += 2.8e0
 
                 #  Increased turbine-generator duty (5 per cent duty)
-                cost_variables.c2253 = cost_variables.c2253 + 4.0e0
+                cost_variables.c2253 += 4.0e0
 
                 #  Additional fired boiler (1 x 100 per cent duty)
-                cost_variables.c2253 = cost_variables.c2253 + 330.0e0
+                cost_variables.c2253 += 330.0e0
 
                 #  HP/LP steam bypass system for auxiliary boiler
                 #  (30 per cent boiler capacity)
-                cost_variables.c2253 = cost_variables.c2253 + 1.0e0
+                cost_variables.c2253 += 1.0e0
 
                 #  Dump condenser
-                cost_variables.c2253 = cost_variables.c2253 + 2.0e0
+                cost_variables.c2253 += 2.0e0
 
                 #  Increased cooling water system capacity
-                cost_variables.c2253 = cost_variables.c2253 + 18.0e0
+                cost_variables.c2253 += 18.0e0
 
             elif pulse_variables.istore == 3:
                 #  Simplistic approach that assumes that a large stainless steel
@@ -2700,7 +2693,7 @@ class Costs:
             #  Reasonable guess for the exchange rate + inflation factor
             #  inflation = 5% per annum; exchange rate = 1.5 dollars per pound
 
-            cost_variables.c2253 = cost_variables.c2253 * 1.36e0
+            cost_variables.c2253 *= 1.36e0
 
         cost_variables.c2253 = cost_variables.fkind * cost_variables.c2253
 
@@ -2777,9 +2770,7 @@ class Costs:
         )
 
         if cost_variables.ifueltyp == 2:
-            annfwbl = annfwbl * (
-                1.0e0 - fwbs_variables.life_blkt_fpy / cost_variables.life_plant
-            )
+            annfwbl *= 1.0e0 - fwbs_variables.life_blkt_fpy / cost_variables.life_plant
 
         #  Cost of electricity due to first wall/blanket replacements
 
@@ -2812,9 +2803,7 @@ class Costs:
             #  Cost of electricity due to divertor replacements
 
             if cost_variables.ifueltyp == 2:
-                anndiv = anndiv * (
-                    1.0e0 - cost_variables.life_div_fpy / cost_variables.life_plant
-                )
+                anndiv *= 1.0e0 - cost_variables.life_div_fpy / cost_variables.life_plant
 
             coediv = 1.0e9 * anndiv / kwhpy
 
@@ -2841,9 +2830,7 @@ class Costs:
 
             #  Cost of electricity due to centrepost replacements
             if cost_variables.ifueltyp == 2:
-                anncp = anncp * (
-                    1.0e0 - cost_variables.cplife / cost_variables.life_plant
-                )
+                anncp *= 1.0e0 - cost_variables.cplife / cost_variables.life_plant
 
             coecp = 1.0e9 * anncp / kwhpy
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 import datetime
 import getpass
 import socket
-import subprocess
+import subprocess  # noqa: S404
 from pathlib import Path
 from typing import TYPE_CHECKING
 from warnings import warn
@@ -58,7 +58,6 @@ from process.data_structure.superconducting_tf_coil_variables import (
 )
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
-from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -71,7 +70,7 @@ if TYPE_CHECKING:
     from process.core.model import DataStructure
 
 
-def init_process(data_structure: DataStructure):
+def init_process(data: DataStructure):
     """Routine that calls the initialisation routines
 
     This routine calls the main initialisation routines that set
@@ -85,7 +84,7 @@ def init_process(data_structure: DataStructure):
     process_output.OutputFileManager.open_files()
 
     # Input any desired new initial values
-    inputs = parse_input_file(data_structure)
+    inputs = parse_input_file(data)
 
     # Set active constraints
     set_active_constraints()
@@ -97,19 +96,18 @@ def init_process(data_structure: DataStructure):
     st_init()
 
     # Check input data for errors/ambiguities
-    check_process(inputs)
+    check_process(inputs, data)
 
     run_summary()
 
 
 def get_git_summary() -> tuple[str, str]:
+    directory = Path(process.__file__).parent
     try:
-        directory = Path(process.__file__).parent
-
         git_branch = (
-            subprocess
+            subprocess  # noqa: S602
             .run(
-                "git rev-parse --abbrev-ref HEAD",
+                "git rev-parse --abbrev-ref HEAD",  # noqa: S607
                 shell=True,
                 capture_output=True,
                 cwd=directory,
@@ -120,9 +118,9 @@ def get_git_summary() -> tuple[str, str]:
         )
 
         git_tag = (
-            subprocess
+            subprocess  # noqa: S602
             .run(
-                "git describe --tags",
+                "git describe --tags",  # noqa: S607
                 shell=True,
                 capture_output=True,
                 cwd=directory,
@@ -132,9 +130,10 @@ def get_git_summary() -> tuple[str, str]:
             .strip()
         )
 
-        return git_branch, git_tag
     except (subprocess.CalledProcessError, AttributeError):
         return "", ""
+    else:
+        return git_branch, git_tag
 
 
 def run_summary():
@@ -291,7 +290,6 @@ def init_all_module_vars():
     init_primary_pumping_variables()
     init_pfcoil_variables()
     init_structure_variables()
-    init_vacuum_variables()
     init_pf_power_variables()
     init_build_variables()
     init_constraint_variables()
@@ -304,14 +302,13 @@ def init_all_module_vars():
     init_neoclassics_variables()
 
 
-def check_process(inputs):  # noqa: ARG001
+def check_process(inputs, data):  # noqa: ARG001
     """Routine to reset specific variables if certain options are
     being used
 
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.
     """
-
     # Check that there are sufficient iteration variables
     if data_structure.numerics.nvar < data_structure.numerics.neqns:
         raise ProcessValidationError(
@@ -381,7 +378,7 @@ def check_process(inputs):  # noqa: ARG001
             : data_structure.numerics.neqns + data_structure.numerics.nineqns
         ]
         == 63
-    ).any() and data_structure.vacuum_variables.i_vacuum_pumping != "simple":
+    ).any() and data.vacuum.i_vacuum_pumping != "simple":
         raise ProcessValidationError(
             "Constraint 63 is requested without the correct vacuum model (simple)"
         )
@@ -646,10 +643,7 @@ def check_process(inputs):  # noqa: ARG001
         # Check if the choice of plasma current is addapted for ST
         # 2 : Peng Ip scaling (See STAR code documentation)
         # 9 : Fiesta Ip scaling
-        if (
-            data_structure.physics_variables.i_plasma_current != 2
-            and data_structure.physics_variables.i_plasma_current != 9
-        ):
+        if data_structure.physics_variables.i_plasma_current not in {2, 9}:
             warn(
                 "Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used",
                 stacklevel=2,
@@ -741,13 +735,10 @@ def check_process(inputs):  # noqa: ARG001
             )
 
         # Check if a single null divertor is used in double null machine
-        # ruff: disable[RUF069]
         if data_structure.physics_variables.i_single_null == 0 and (
-            data_structure.physics_variables.f_p_div_lower == 1.0
-            or data_structure.physics_variables.f_p_div_lower == 0.0
+            data_structure.physics_variables.f_p_div_lower in {1.0, 0.0}
         ):
             warn("Operating with a single null in a double null machine", stacklevel=2)
-        # ruff: enable[RUF069]
 
         # Set the TF coil shape to picture frame (if default value)
         if data_structure.tfcoil_variables.i_tf_shape == TFCoilShapeModel.DEFAULT:
@@ -793,10 +784,7 @@ def check_process(inputs):  # noqa: ARG001
 
     # Conventionnal aspect ratios specific
     else:
-        if (
-            data_structure.physics_variables.i_plasma_current == 2
-            or data_structure.physics_variables.i_plasma_current == 9
-        ):
+        if data_structure.physics_variables.i_plasma_current in {2, 9}:
             raise ProcessValidationError(
                 "i_plasma_current=2,9 is not a valid option for a non-TART device"
             )
@@ -818,8 +806,8 @@ def check_process(inputs):  # noqa: ARG001
                 )
 
             if data_structure.pfcoil_variables.i_pf_location[i] == 2:
-                j = j + 1
-                k = k + data_structure.pfcoil_variables.n_pf_coils_in_group[i]
+                j += 1
+                k += data_structure.pfcoil_variables.n_pf_coils_in_group[i]
 
         if k == 1:
             raise ProcessValidationError(
@@ -995,12 +983,10 @@ def check_process(inputs):  # noqa: ARG001
     if data_structure.tfcoil_variables.eyoung_ins <= 1.0e8:
         # Copper magnets, no insulation material defined
         # But use the ITER design by default
-        if (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-            or data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.SUPERCONDUCTING
-        ):
+        if data_structure.tfcoil_variables.i_tf_sup in {
+            TFConductorModel.WATER_COOLED_COPPER,
+            TFConductorModel.SUPERCONDUCTING,
+        }:
             # SC magnets
             # Value from DDD11-2 v2 2 (2009)
             data_structure.tfcoil_variables.eyoung_ins = 20.0e9
@@ -1077,19 +1063,15 @@ def check_process(inputs):  # noqa: ARG001
 
             # Steel conduit thickness (can be an iteration variable)
             if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58).any():
-                dr_tf_wp_min = dr_tf_wp_min + 2.0 * data_structure.numerics.boundl[57]
+                dr_tf_wp_min += 2.0 * data_structure.numerics.boundl[57]
             else:
-                dr_tf_wp_min = (
-                    dr_tf_wp_min + 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
-                )
+                dr_tf_wp_min += 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
 
         # Minimal conductor layer thickness
-        elif (
-            data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.WATER_COOLED_COPPER
-            or data_structure.tfcoil_variables.i_tf_sup
-            == TFConductorModel.HELIUM_COOLED_ALUMINIUM
-        ):
+        elif data_structure.tfcoil_variables.i_tf_sup in {
+            TFConductorModel.WATER_COOLED_COPPER,
+            TFConductorModel.HELIUM_COOLED_ALUMINIUM,
+        }:
             dr_tf_wp_min = (
                 2.0
                 * (
@@ -1174,10 +1156,7 @@ def check_process(inputs):  # noqa: ARG001
 
     # If there is no NBI, then hot beam density should be zero
     if data_structure.current_drive_variables.i_hcd_calculations == 1:
-        if (
-            data_structure.current_drive_variables.i_hcd_primary != 5
-            and data_structure.current_drive_variables.i_hcd_primary != 8
-        ):
+        if data_structure.current_drive_variables.i_hcd_primary not in {5, 8}:
             data_structure.physics_variables.f_nd_beam_electron = 0.0
     else:
         data_structure.physics_variables.f_nd_beam_electron = 0.0

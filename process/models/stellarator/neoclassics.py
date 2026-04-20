@@ -484,12 +484,12 @@ class Neoclassics:
                     v = np.sqrt(
                         2.0 * x * neoclassics_variables.temperatures[j] / mass[j]
                     )
-                    neoclassics_calc_nu[j, i] = neoclassics_calc_nu[
-                        j, i
-                    ] + neoclassics_variables.densities[k] * (
-                        z[j] * z[k]
-                    ) ** 2 * lnlambda * phixmgx / (
-                        4.0 * np.pi * constants.EPSILON0**2 * mass[j] ** 2 * v**3
+                    neoclassics_calc_nu[j, i] += (
+                        neoclassics_variables.densities[k]
+                        * (z[j] * z[k]) ** 2
+                        * lnlambda
+                        * phixmgx
+                        / (4.0 * np.pi * constants.EPSILON0**2 * mass[j] ** 2 * v**3)
                     )
 
         return neoclassics_calc_nu
@@ -595,9 +595,8 @@ class Neoclassics:
                     * expxk
                 )
                 phixmgx = (1.0 - 0.5 / xk) * erfn + expxk / np.sqrt(np.pi * xk)
-                neoclassics_calc_nu_star_fromT[j] = (
-                    neoclassics_calc_nu_star_fromT[j]
-                    + density[k]
+                neoclassics_calc_nu_star_fromT[j] += (
+                    density[k]
                     * (z[j] * z[k]) ** 2
                     * lnlambda
                     * phixmgx
@@ -747,7 +746,6 @@ class Neoclassics:
         dr_temperatures :
 
         """
-
         z = np.array([-1.0, 1.0, 1.0, 2.0])
 
         return (
@@ -763,7 +761,6 @@ class Neoclassics:
 
     def neoclassics_calc_q_flux(self):
         """Calculates the Energy flux by neoclassicsal energy transport"""
-
         z = np.array([-1.0, 1.0, 1.0, 2.0])
 
         return (

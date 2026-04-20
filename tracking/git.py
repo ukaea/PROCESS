@@ -1,6 +1,6 @@
 """Simple submodule to provide access to some git attributes about the current repository"""
 
-import subprocess
+import subprocess  # noqa: S404
 from pathlib import Path
 
 
@@ -18,8 +18,8 @@ def git_commit_message(directory=None) -> str:
     if directory is None:
         directory = Path.cwd()
 
-    commit_message = subprocess.run(
-        "git log -1 --pretty=%B",
+    commit_message = subprocess.run(  # noqa: S602
+        "git log -1 --pretty=%B",  # noqa: S607
         shell=True,
         capture_output=True,
         cwd=directory,
@@ -43,8 +43,8 @@ def git_commit_hash(directory=None) -> str:
     if directory is None:
         directory = Path.cwd()
 
-    commit_hash = subprocess.run(
-        'git log --format="%H" -n 1',
+    commit_hash = subprocess.run(  # noqa: S602
+        'git log --format="%H" -n 1',  # noqa: S607
         shell=True,
         capture_output=True,
         cwd=directory,

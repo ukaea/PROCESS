@@ -133,7 +133,6 @@ def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
         Perpendicular distance from X-point to plate (m).
 
     """
-
     po.oheadr(stellarator.outfile, "Divertor")
 
     po.ovarre(

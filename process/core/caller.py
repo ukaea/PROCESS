@@ -16,6 +16,7 @@ from process.core.solver import constraints
 from process.core.solver.iteration_variables import set_scaled_iteration_variable
 from process.core.solver.objectives import objective_function
 from process.models.tfcoil.base import TFConductorModel
+from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
 if TYPE_CHECKING:
     from process.core.model import DataStructure
@@ -228,19 +229,19 @@ class Caller:
 
             # Close idempotence files, write final output file and mfile
             OutputFileManager.close_idempotence_files()
-            finalise(
-                self.models,
-                self.data,
-                ifail,
-                non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
-            )
-            return
 
         except Exception:
             # If exception in model evaluations delete intermediate idempotence
             # files to clean up
             OutputFileManager.close_idempotence_files()
             raise
+        else:
+            finalise(
+                self.models,
+                self.data,
+                ifail,
+                non_idempotent_msg=non_idempotent_warning + "\n" + non_idempotent_table,
+            )
 
     def _call_models_once(self, xc: np.ndarray):
         """Call the physics and engineering models.
@@ -258,7 +259,7 @@ class Caller:
         nvars = len(xc)
 
         # Increment the call counter
-        data_structure.numerics.ncalls = data_structure.numerics.ncalls + 1
+        data_structure.numerics.ncalls += 1
 
         # Convert variables
         set_scaled_iteration_variable(xc, nvars)
@@ -296,7 +297,20 @@ class Caller:
 
         # Toroidal field coil superconductor model
         if data_structure.tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
-            self.models.sctfcoil.run()
+            if (
+                SuperconductingTFTurnType(
+                    data_structure.superconducting_tf_coil_variables.i_tf_turn_type
+                )
+                == SuperconductingTFTurnType.CABLE_IN_CONDUIT
+            ):
+                self.models.cicc_sctfcoil.run()
+            elif (
+                SuperconductingTFTurnType(
+                    data_structure.superconducting_tf_coil_variables.i_tf_turn_type
+                )
+                == SuperconductingTFTurnType.CROSS_CONDUCTOR
+            ):
+                self.models.croco_sctfcoil.run()
 
         if (
             data_structure.tfcoil_variables.i_tf_sup

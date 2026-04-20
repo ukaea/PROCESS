@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import copy
 import re
-from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -16,6 +15,8 @@ from process.core.exceptions import ProcessValidationError, ProcessValueError
 from process.core.solver.constraints import ConstraintManager
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from process.core.model import DataStructure
 
 NumberType = int | float
@@ -84,7 +85,7 @@ class InputVariable:
             )
             raise ProcessValueError(error_msg)
 
-        if self.type not in (int, float) and self.range is not None:
+        if self.type not in {int, float} and self.range is not None:
             error_msg = "Can only apply a range to integer or float variables"
             raise ProcessValueError(error_msg)
 
@@ -957,7 +958,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, float, range=(0.0, 10.0)
     ),
     "pres_vv_chamber_dwell_start": InputVariable(
-        data_structure.vacuum_variables, float, range=(1e-06, 10000.0)
+        "vacuum", float, range=(1e-06, 10000.0)
     ),
     "temp_blkt_coolant_in": InputVariable(
         data_structure.fwbs_variables, float, range=(200.0, 600.0)
@@ -1089,12 +1090,8 @@ INPUT_VARIABLES = {
     "f_z_cs_tf_internal": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 2.0)
     ),
-    "outgasfactor": InputVariable(
-        data_structure.vacuum_variables, float, range=(1e-06, 1000.0)
-    ),
-    "outgasindex": InputVariable(
-        data_structure.vacuum_variables, float, range=(1e-06, 1000.0)
-    ),
+    "outgasfactor": InputVariable("vacuum", float, range=(1e-06, 1000.0)),
+    "outgasindex": InputVariable("vacuum", float, range=(1e-06, 1000.0)),
     "temp_blkt_coolant_out": InputVariable(
         data_structure.fwbs_variables, float, range=(450.0, 900.0)
     ),
@@ -1106,9 +1103,7 @@ INPUT_VARIABLES = {
     ),
     "paris_coefficient": InputVariable("cs_fatigue", float, range=(1e-20, 10.0)),
     "paris_power_law": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
-    "pres_vv_chamber_base": InputVariable(
-        data_structure.vacuum_variables, float, range=(1e-08, 0.001)
-    ),
+    "pres_vv_chamber_base": InputVariable("vacuum", float, range=(1e-08, 0.001)),
     "p_plasma_separatrix_min_mw": InputVariable(
         data_structure.constraint_variables, float, range=(0.1, 1000.0)
     ),
@@ -1166,9 +1161,7 @@ INPUT_VARIABLES = {
     "p_fusion_total_max_mw": InputVariable(
         data_structure.constraint_variables, float, range=(1.0, 10000.0)
     ),
-    "pres_div_chamber_burn": InputVariable(
-        data_structure.vacuum_variables, float, range=(0.0, 10.0)
-    ),
+    "pres_div_chamber_burn": InputVariable("vacuum", float, range=(0.0, 10.0)),
     "pres_fw_coolant": InputVariable(
         data_structure.fwbs_variables, float, range=(100000.0, 100000000.0)
     ),
@@ -1190,17 +1183,11 @@ INPUT_VARIABLES = {
         data_structure.times_variables, float, range=(0.0, 1.0)
     ),
     "f_a_vac_pump_port_plasma_surface": InputVariable(
-        data_structure.vacuum_variables, float, range=(1e-06, 1.0)
+        "vacuum", float, range=(1e-06, 1.0)
     ),
-    "f_volflow_vac_pumps_impedance": InputVariable(
-        data_structure.vacuum_variables, float, range=(1e-06, 1.0)
-    ),
-    "volflow_vac_pumps_max": InputVariable(
-        data_structure.vacuum_variables, float, range=(1e-06, 1000.0)
-    ),
-    "molflow_vac_pumps": InputVariable(
-        data_structure.vacuum_variables, float, range=(0.0, 1e30)
-    ),
+    "f_volflow_vac_pumps_impedance": InputVariable("vacuum", float, range=(1e-06, 1.0)),
+    "volflow_vac_pumps_max": InputVariable("vacuum", float, range=(1e-06, 1000.0)),
+    "molflow_vac_pumps": InputVariable("vacuum", float, range=(0.0, 1e30)),
     "pflux_plant_floor_electric": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
@@ -1222,9 +1209,7 @@ INPUT_VARIABLES = {
     "radius_fw_channel": InputVariable(
         data_structure.fwbs_variables, float, range=(0.001, 0.5)
     ),
-    "outgrat_fw": InputVariable(
-        data_structure.vacuum_variables, float, range=(1e-10, 1e-06)
-    ),
+    "outgrat_fw": InputVariable("vacuum", float, range=(1e-10, 1e-06)),
     "rbrt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "rbvfac": InputVariable(data_structure.buildings_variables, float, range=(0.9, 3.0)),
     "rbwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
@@ -1551,9 +1536,7 @@ INPUT_VARIABLES = {
     "temp_tf_cryo": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.01, 293.0)
     ),
-    "temp_vv_chamber_gas_burn_end": InputVariable(
-        data_structure.vacuum_variables, float, range=(1.0, 1000.0)
-    ),
+    "temp_vv_chamber_gas_burn_end": InputVariable("vacuum", float, range=(1.0, 1000.0)),
     "i_t_current_ramp_up": InputVariable(
         data_structure.times_variables, int, choices=[0, 1]
     ),
@@ -1785,9 +1768,7 @@ INPUT_VARIABLES = {
         data_structure.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
-    "i_vac_pump_dwell": InputVariable(
-        data_structure.vacuum_variables, int, choices=[0, 1, 2]
-    ),
+    "i_vac_pump_dwell": InputVariable("vacuum", int, choices=[0, 1, 2]),
     "i_fw_blkt_vv_shape": InputVariable(
         data_structure.fwbs_variables, int, range=(1, 2)
     ),
@@ -1962,6 +1943,9 @@ INPUT_VARIABLES = {
     "n_tf_wp_layers": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 100)
     ),
+    "i_tf_turn_type": InputVariable(
+        data_structure.superconducting_tf_coil_variables, int, choices=[1, 2]
+    ),
     "n_liq_recirc": InputVariable(data_structure.fwbs_variables, int, range=(1, 50)),
     "n_tf_wp_pancakes": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 100)
@@ -1992,9 +1976,7 @@ INPUT_VARIABLES = {
     "npdiv": InputVariable(data_structure.fwbs_variables, int, range=(0, 4)),
     "nphcdin": InputVariable(data_structure.fwbs_variables, int, range=(0, 4)),
     "nphcdout": InputVariable(data_structure.fwbs_variables, int, range=(0, 4)),
-    "i_vacuum_pump_type": InputVariable(
-        data_structure.vacuum_variables, int, choices=[0, 1]
-    ),
+    "i_vacuum_pump_type": InputVariable("vacuum", int, choices=[0, 1]),
     "num_rh_systems": InputVariable(data_structure.cost_variables, int, range=(1, 10)),
     "output_costs": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
     "i_p_coolant_pumping": InputVariable(
@@ -2026,9 +2008,7 @@ INPUT_VARIABLES = {
     "i_fw_coolant_type": InputVariable(
         data_structure.fwbs_variables, str, choices=["helium", "water"]
     ),
-    "i_vacuum_pumping": InputVariable(
-        data_structure.vacuum_variables, str, choices=["old", "simple"]
-    ),
+    "i_vacuum_pumping": InputVariable("vacuum", str, choices=["old", "simple"]),
     "dcond": InputVariable(data_structure.tfcoil_variables, float, array=True),
     "c_pf_coil_turn_peak_input": InputVariable(
         data_structure.pfcoil_variables, float, array=True
@@ -2155,7 +2135,7 @@ def parse_input_file(data_structure_obj: DataStructure):
         variable_name, array_index, variable_value = line_match.groups()
         variable_name = variable_name.lower()
 
-        variable_config = INPUT_VARIABLES.get(variable_name)
+        variable_config = copy.copy(INPUT_VARIABLES.get(variable_name))
 
         # string indicates it should be set on the new object data structure
         if isinstance(variable_config.module, str):
@@ -2281,7 +2261,7 @@ def validate_variable(
         error_msg = f"Not expecting '{name}' at line {line_number} to be an array."
         raise ProcessValidationError(error_msg)
 
-    if config.type in [float, int]:
+    if config.type in {float, int}:
         value = value.lower().replace("d", "e")
 
     try:

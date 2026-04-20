@@ -250,7 +250,6 @@ class PlasmaDensityLimit:
         ----------
         T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
         """
-
         denom = (zeff - 1.0) * (1.0 - 4.0 / (3.0 * qcyl))
         if denom <= 0.0:
             return 0.0
@@ -318,7 +317,6 @@ class PlasmaDensityLimit:
         ----------
         N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
         """
-
         return 3.0e20 * b_plasma_toroidal_on_axis / (rmajor * qcyl)
 
     @staticmethod
@@ -352,7 +350,6 @@ class PlasmaDensityLimit:
         Plasma Physics and Controlled Fusion, vol. 44, no. 8, pp. R27-R53, Jul. 2002,
         doi: https://doi.org/10.1088/0741-3335/44/8/201.
         """
-
         return 1.0e14 * c_plasma / (np.pi * rminor**2)
 
     @staticmethod
@@ -469,7 +466,6 @@ class PlasmaDensityLimit:
         M. Bernert et al., "The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,"
         vol. 57, no. 1, pp. 014038-014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038.
         """
-
         if i_density_limit < 1 or i_density_limit > 7:
             raise ProcessValueError(
                 "Illegal value for i_density_limit", i_density_limit=i_density_limit
@@ -574,7 +570,6 @@ class PlasmaDensityLimit:
 
     def output_density_limit_information(self):
         """Output density limit information to file."""
-
         po.osubhd(self.outfile, "Density Limit using different models :")
         po.ovarre(
             self.outfile,

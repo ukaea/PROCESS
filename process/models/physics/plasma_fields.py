@@ -113,7 +113,6 @@ class PlasmaFields(Model):
         :
             toroidal field at the plasma inboard midplane (T)
         """
-
         return rmajor * b_plasma_toroidal_on_axis / (rmajor - rminor)
 
     @staticmethod
@@ -139,7 +138,6 @@ class PlasmaFields(Model):
         :
             toroidal field at the plasma outboard midplane (T)
         """
-
         return rmajor * b_plasma_toroidal_on_axis / (rmajor + rminor)
 
     @staticmethod
@@ -163,7 +161,6 @@ class PlasmaFields(Model):
         n_plasma_profile_elements :
             Number of elements to use in the plasma profile calculation
         """
-
         # Calculate the toroidal field across the plasma
         # Calculate the toroidal field profile across the plasma (1/R dependence)
         # Double element size to include both sides of the plasma

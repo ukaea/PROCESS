@@ -303,7 +303,6 @@ class PlasmaBootstrapCurrent(Model):
         ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
-
         # Calculate the bootstrap current coefficient
         c_bs = 1.32 - 0.235 * (q95 / q0) + 0.0185 * (q95 / q0) ** 2
 
@@ -371,7 +370,6 @@ class PlasmaBootstrapCurrent(Model):
 
         H. R. Wilson, Nuclear Fusion 32 (1992) 257
         """
-
         term1 = np.log(0.5)
         term2 = np.log(q0 / q95)
 
@@ -505,7 +503,6 @@ class PlasmaBootstrapCurrent(Model):
         Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
         ITER-TN-PH-8-4, June 1988.
         """
-
         # Compute average electron beta
         betae = (
             nd_plasma_electrons_vol_avg
@@ -813,7 +810,6 @@ class PlasmaBootstrapCurrent(Model):
         Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
         doi: https://doi.org/10.1088/0741-3335/50/6/065001.
         """
-
         # Using the standard variable naming from the Andrade et.al. paper
         c_p = core_pressure / average_pressure
 
@@ -862,7 +858,6 @@ class PlasmaBootstrapCurrent(Model):
         G. T. Hoang and R. V. Budny, "The bootstrap fraction in TFTR," AIP conference proceedings,
         Jan. 1997, doi: https://doi.org/10.1063/1.53414.
         """
-
         # Using the standard variable naming from the Hoang et.al. paper
         # Hoang et.al uses a different definition for the profile indexes such that
         # alpha_p is defined as the ratio of the central and the volume-averaged values, and the peakedness of the density of the total plasma current
@@ -984,7 +979,6 @@ class PlasmaBootstrapCurrent(Model):
         Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
         doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
         """
-
         # Using the standard variable naming from the Gi et.al. paper
 
         c_bs = (
@@ -1045,7 +1039,6 @@ class PlasmaBootstrapCurrent(Model):
         Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
         doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
         """
-
         # Using the standard variable naming from the Gi et.al. paper
 
         c_bs = (
@@ -1106,7 +1099,6 @@ class PlasmaBootstrapCurrent(Model):
         Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
         https://doi.org/10.1016/j.fusengdes.2025.115022.
         """
-
         return (
             0.740
             * eps**0.418
@@ -1181,7 +1173,6 @@ class PlasmaBootstrapCurrent(Model):
         Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
         https://doi.org/10.1016/j.fusengdes.2025.115022.
         """
-
         return (
             0.789
             * eps**0.606
@@ -1198,7 +1189,6 @@ class PlasmaBootstrapCurrent(Model):
 
     def output(self):
         """Output the calculated bootstrap current information to the output file."""
-
         po.ovarrf(
             self.outfile,
             "Bootstrap current fraction multiplier",
@@ -1462,7 +1452,6 @@ class SauterBootstrapCurrent:
 
         Note: The code was supplied by Emiliano Fable, IPP Garching (private communication).
         """
-
         # Radial points from 0 to 1 seperated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
 
@@ -1960,7 +1949,6 @@ class SauterBootstrapCurrent:
         and arbitrary collisionality regime [Phys. Plasmas 6, 2834 (1999)].
         Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
         """
-
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
 

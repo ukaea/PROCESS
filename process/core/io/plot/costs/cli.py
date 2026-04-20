@@ -22,8 +22,8 @@ def costs():
 @save
 def pie_plot(mfiles, save):
     """Displays the cost breakdown as a pie chart."""
-    for m_file in mfiles:
-        m_file = MFile(m_file)
+    for m_file_ in mfiles:
+        m_file = MFile(m_file_)
 
         # Check which cost model is being used
         if "c21" in m_file.data:

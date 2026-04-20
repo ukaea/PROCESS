@@ -41,8 +41,8 @@ IN.DAT info for DCLL:
          (inlet_temp_liq)
          (outlet_temp_liq)
 
-References:
-
+References
+----------
      [Nat1995]   Natesan et al. (1995), Assessment of alkali metal coolants for
                  for the ITER blanket, Fusion Engineering and Design 27, 457-466
 

@@ -376,9 +376,7 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.dx_tf_wp_insulation
             + tfcoil_variables.dx_tf_turn_insulation * tfcoil_variables.n_tf_coil_turns
         )
-        tfcoil_variables.a_res_tf_coil_conductor = (
-            tfcoil_variables.a_res_tf_coil_conductor * (1.0e0 - tfcoil_variables.fcoolcp)
-        )
+        tfcoil_variables.a_res_tf_coil_conductor *= 1.0e0 - tfcoil_variables.fcoolcp
 
         # Inter turn insulation area per coil [m2]
         tfcoil_variables.a_tf_coil_wp_turn_insulation = (
@@ -454,16 +452,17 @@ class ResistiveTFCoil(TFCoil):
         - Clamped joints in superconductors might have resistive power losses on the joints.
         - Sliding joints might have a region of high resistivity.
 
-        Notes:
+        Notes
+        -----
         - The copper resistivity is set to be that for GLIDCOP AL-15 at 20°C for copper (i_tf_sup = 0).
         - The coefficient of resistivity is set to be that of pure copper
 
-        References:
+        References
+        ----------
             - https://www.spotweldingconsultants.com/GlidCop_AL_15.pdf
 
             - https://cirris.com/temperature-coefficient-of-copper/
         """
-
         # Resistivity of the Glidcop copper centerpost
         if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             tfcoil_variables.rho_cp = (
@@ -655,7 +654,6 @@ class ResistiveTFCoil(TFCoil):
 
     def resistive_tf_coil_areas_and_masses(self):
         """Calculate the areas and masses of the resistive TF coil"""
-
         vol_case = 0.0e0  # Total TF case volume [m3]
         vol_ins = 0.0e0  # Total leg turn insulation volume [m3]
         vol_gr_ins = 0.0e0  # Total leg turn insulation volume [m3]
@@ -1041,11 +1039,11 @@ class ResistiveTFCoil(TFCoil):
         sum4 = 0.0e0
         sum5 = 0.0e0
         for ii in range(1, 100):
-            sum1 = sum1 + yy_cond[ii]
-            sum2 = sum2 + 1.0e0 / yy_cond[ii]
-            sum3 = sum3 + yy_ins[ii]
-            sum4 = sum4 + yy_casout[ii]
-            sum5 = sum5 + yy_gr_ins[ii]
+            sum1 += yy_cond[ii]
+            sum2 += 1.0e0 / yy_cond[ii]
+            sum3 += yy_ins[ii]
+            sum4 += yy_casout[ii]
+            sum5 += yy_gr_ins[ii]
 
         sum1 = 0.5e0 * dz * (yy_cond[0] + yy_cond[100] + 2.0e0 * sum1)
         sum2 = 0.5e0 * dz * (1.0e0 / yy_cond[0] + 1.0e0 / yy_cond[100] + 2.0e0 * sum2)

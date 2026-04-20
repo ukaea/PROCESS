@@ -15,7 +15,6 @@ def calculate_max_force_density(a_tf_wp_no_insulation):
     a_tf_wp_no_insulation :
 
     """
-
     tfcoil_variables.max_force_density = (
         stellarator_configuration.stella_config_max_force_density
         * stellarator_variables.f_st_i_total

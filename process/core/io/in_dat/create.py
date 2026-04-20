@@ -95,7 +95,6 @@ def replace_iteration_variables(iteration_vars, in_data):
     in_data:
         IN.DAT data object.
     """
-
     for variable_name, variable_value in iteration_vars.items():
         if (match := re.search(r"([a-zA-Z0-9_]+)\(([0-9]+)\)", variable_name)) is None:
             in_data.add_parameter(variable_name.lower(), variable_value)
