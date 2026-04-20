@@ -1118,7 +1118,7 @@ def beam_slowing_down_state(
 
     Returns
     -------
-     :
+    :
         Beam slowing-down state containing deuterium and tritium hot beam-ion
         densities, deuterium and tritium critical speeds, total hot beam-ion
         density, and average deposited beam-ion energy.
@@ -1284,7 +1284,7 @@ def fast_ion_pressure_integral(e_beam_kev: float, critical_energy: float) -> flo
 
     Returns
     -------
-    float
+    :
         Dimensionless pressure integral factor.
 
     Notes
@@ -1345,7 +1345,8 @@ def beam_target_reaction_rate(
 
     Returns
     -------
-        float: Total beam-target fusion reaction rate (s^-1).
+    :
+        Total beam-target fusion reaction rate (s^-1).
 
     Notes
     -----
@@ -1378,7 +1379,8 @@ def alpha_power_beam(
 
     Returns
     -------
-        float: Alpha power from beam-target fusion (MW).
+    :
+        Alpha power from beam-target fusion (MW).
     """
     return beam_target_reaction_rate * constants.DT_ALPHA_ENERGY / 1.0e6
 
@@ -1407,7 +1409,7 @@ def beam_reaction_rate_coefficient(
     Returns
     -------
     :
-        float: Hot beam fusion rate coefficient [m^3/s].
+        Hot beam fusion rate coefficient [m^3/s].
 
     Notes
     -----
@@ -1469,7 +1471,8 @@ def _hot_beam_fusion_reaction_rate_integrand(
 
     Returns
     -------
-        float: Value of the integrand for the hot beam fusion reaction rate.
+    :
+        Value of the integrand for the hot beam fusion reaction rate.
 
     Notes
     -----
@@ -1517,6 +1520,7 @@ def _beam_fusion_cross_section(vrelsq: float) -> float:
 
     Returns
     -------
+    :
         Fusion reaction cross-section (cm^2).
 
     Notes
