@@ -51,7 +51,7 @@ class SuperconductingTFTurnType(IntEnum):
 class SuperconductingTFWPShapeType(IntEnum):
     """Enum for the type of TF coil WP shape, which determines the geometry of the winding pack and ground insulation."""
 
-    DEFAULT = -1
+    UNSET = -1
     RECTANGULAR = 0
     DOUBLE_RECTANGULAR = 1
     TRAPEZOIDAL = 2
