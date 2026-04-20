@@ -1000,8 +1000,10 @@ def check_process(inputs, data):  # noqa: ARG001
             data_structure.tfcoil_variables.eyoung_ins = 2.5e9
 
     # Setting the default WP geometry
-
-    if data_structure.tfcoil_variables.i_tf_wp_geom == -1:
+    i_tf_wp_geom = SuperconductingTFWPShapeType(
+        data_structure.tfcoil_variables.i_tf_wp_geom
+    )
+    if i_tf_wp_geom == SuperconductingTFWPShapeType.UNSET:
         if data_structure.tfcoil_variables.i_tf_turns_integer == 0:
             data_structure.tfcoil_variables.i_tf_wp_geom = (
                 SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR
