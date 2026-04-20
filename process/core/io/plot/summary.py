@@ -7607,11 +7607,11 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
                 n_croco_strand_hts_tapes=mfile.get(
                     "n_croco_strand_hts_tapes", scan=scan
                 ),
+                dx_hts_tape_rebco=mfile.get("dx_hts_tape_rebco", scan=scan),
+                dx_hts_tape_copper=mfile.get("dx_hts_tape_copper", scan=scan),
+                dx_hts_tape_hastelloy=mfile.get("dx_hts_tape_hastelloy", scan=scan),
                 show_legend=False,
             )
-        print(mfile.get("dr_hts_tape", scan=scan))
-        print(mfile.get("dx_croco_strand_tape_stack", scan=scan))
-        print(mfile.get("n_croco_strand_hts_tapes", scan=scan))
 
         # Cable strand packing parameters
         strand_diameter = mfile.get("dia_tf_turn_superconducting_cable", scan=scan)
@@ -12413,6 +12413,9 @@ def plot_corc_cable_geometry(
     dr_hts_tape: float,
     dx_croco_strand_tape_stack: float,
     n_croco_strand_hts_tapes: int,
+    dx_hts_tape_rebco: float,
+    dx_hts_tape_copper: float,
+    dx_hts_tape_hastelloy: float,
     show_legend: bool = True,
 ):
     """Plot the geometry of a CroCo strand cable.
@@ -12465,9 +12468,11 @@ def plot_corc_cable_geometry(
         (r_centre - dr_hts_tape / 2, z_centre - dx_croco_strand_tape_stack / 2),
         width=dr_hts_tape,
         height=dx_croco_strand_tape_stack,
-        edgecolor="blue",
-        facecolor="blue",
-        linewidth=2,
+        edgecolor="black",
+        facecolor=None,
+        linewidth=0.1,
+        alpha=0.5,
+        linestyle="--",
         label="HTS Tape Stack" if show_legend else legend_label,
     )
     axis.add_patch(rect)
@@ -12479,15 +12484,16 @@ def plot_corc_cable_geometry(
             - (dx_croco_strand_tape_stack / 2)
             + i * (dx_croco_strand_tape_stack / n_croco_strand_hts_tapes)
         )
-        rect = Rectangle(
-            (r_centre - dr_hts_tape / 2, y_start),
-            width=dr_hts_tape,
-            height=(dx_croco_strand_tape_stack / n_croco_strand_hts_tapes),
-            edgecolor="black",
-            facecolor="blue",
-            linewidth=1e-3,
+        plot_hts_tape_geometry(
+            axis=axis,
+            r_left=r_centre - (dr_hts_tape / 2),
+            z_bottom=y_start,
+            dr_hts_tape=dr_hts_tape,
+            dx_hts_tape_rebco=dx_hts_tape_rebco,
+            dx_hts_tape_copper=dx_hts_tape_copper,
+            dx_hts_tape_hastelloy=dx_hts_tape_hastelloy,
+            show_legend=False,
         )
-        axis.add_patch(rect)
 
     axis.set_xlim(-dia_croco_strand * 0.75, dia_croco_strand * 0.75)
     axis.set_ylim(-dia_croco_strand * 0.75, dia_croco_strand * 0.75)
@@ -12496,6 +12502,97 @@ def plot_corc_cable_geometry(
     axis.grid(True)
     axis.set_xlabel("X-axis (m)")
     axis.set_ylabel("Y-axis (m)")
+    axis.minorticks_on()
+    if show_legend:
+        axis.legend(loc="upper right")
+
+
+def plot_hts_tape_geometry(
+    axis,
+    r_left: float,
+    z_bottom: float,
+    dr_hts_tape: float,
+    dx_hts_tape_rebco: float,
+    dx_hts_tape_copper: float,
+    dx_hts_tape_hastelloy: float,
+    show_legend: bool = True,
+):
+
+    legend_label = None if show_legend else "_nolegend_"
+    # Plot a rectangular tape stack in the middle
+    rect = Rectangle(
+        (r_left, z_bottom),
+        width=dr_hts_tape,
+        height=dx_hts_tape_copper / 2,
+        edgecolor=None,
+        facecolor="#B87333",
+        linewidth=2,
+        label="Copper" if show_legend else legend_label,
+    )
+    axis.add_patch(rect)
+    rect = Rectangle(
+        (r_left, z_bottom + dx_hts_tape_copper / 2),
+        width=dr_hts_tape,
+        height=dx_hts_tape_hastelloy / 2,
+        edgecolor=None,
+        facecolor="grey",
+        linewidth=2,
+        label="Hastelloy" if show_legend else legend_label,
+    )
+    axis.add_patch(rect)
+    rect = Rectangle(
+        (r_left, z_bottom + dx_hts_tape_copper / 2 + dx_hts_tape_hastelloy / 2),
+        width=dr_hts_tape,
+        height=dx_hts_tape_rebco,
+        edgecolor=None,
+        facecolor="blue",
+        linewidth=2,
+        label="REBCO" if show_legend else legend_label,
+    )
+    axis.add_patch(rect)
+    rect = Rectangle(
+        (
+            r_left,
+            z_bottom
+            + dx_hts_tape_copper / 2
+            + dx_hts_tape_hastelloy / 2
+            + dx_hts_tape_rebco,
+        ),
+        width=dr_hts_tape,
+        height=dx_hts_tape_hastelloy / 2,
+        edgecolor=None,
+        facecolor="grey",
+        linewidth=2,
+        label="Hastelloy" if show_legend else legend_label,
+    )
+    axis.add_patch(rect)
+    rect = Rectangle(
+        (
+            r_left,
+            z_bottom
+            + dx_hts_tape_copper / 2
+            + dx_hts_tape_hastelloy / 2
+            + dx_hts_tape_rebco
+            + dx_hts_tape_hastelloy / 2,
+        ),
+        width=dr_hts_tape,
+        height=dx_hts_tape_copper / 2,
+        edgecolor=None,
+        facecolor="#B87333",
+        linewidth=2,
+        label="Copper" if show_legend else legend_label,
+    )
+    axis.add_patch(rect)
+
+    axis.set_title("HTS Tape Geometry")
+    axis.grid(True)
+    axis.set_xlabel("X-axis (m)")
+    axis.set_ylabel("Y-axis (m)")
+    axis.set_xlim(r_left * 0.9, dr_hts_tape * 1.1)
+    axis.set_ylim(
+        z_bottom * 0.9,
+        (dx_hts_tape_copper + dx_hts_tape_hastelloy + dx_hts_tape_rebco) * 1.1,
+    )
     axis.minorticks_on()
     if show_legend:
         axis.legend(loc="upper right")
@@ -14802,8 +14899,22 @@ def main_plot(
                 n_croco_strand_hts_tapes=m_file.get(
                     "n_croco_strand_hts_tapes", scan=scan
                 ),
+                dx_hts_tape_rebco=m_file.get("dx_hts_tape_rebco", scan=scan),
+                dx_hts_tape_copper=m_file.get("dx_hts_tape_copper", scan=scan),
+                dx_hts_tape_hastelloy=m_file.get("dx_hts_tape_hastelloy", scan=scan),
+                show_legend=True,
             )
             plot_tf_corc_cable_summary_box(plot_205, figs[25], m_file, scan)
+            plot_hts_tape_geometry(
+                axis=figs[25].add_subplot(339),
+                r_left=0.0,
+                z_bottom=0.0,
+                dr_hts_tape=m_file.get("dr_hts_tape", scan=scan),
+                dx_hts_tape_rebco=m_file.get("dx_hts_tape_rebco", scan=scan),
+                dx_hts_tape_copper=m_file.get("dx_hts_tape_copper", scan=scan),
+                dx_hts_tape_hastelloy=m_file.get("dx_hts_tape_hastelloy", scan=scan),
+                show_legend=True,
+            )
         elif (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
