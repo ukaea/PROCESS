@@ -3650,7 +3650,7 @@ def toroidal_cross_section(
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
     if (i_hcd_primary == 5) or (i_hcd_primary == 8):
-        # Neutral beam geometry
+        # Neutral beam geometry. See docs for diagram.
         a = w + dx_beam_shield
         b = dr_tf_outboard
         d = r3
@@ -3675,7 +3675,7 @@ def toroidal_cross_section(
         # TF-side positions (beam sits inside shield)
         x0 = r4
         y0_beam_inner = w + dx_beam_shield
-        y0_beam_outer = w + dx_beam_shield + dx_beam_duct
+        y0_beam_outer = y0_beam_inner + dx_beam_duct
 
         # Draw beam duct boundaries
         axis.plot(
