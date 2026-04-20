@@ -7577,7 +7577,7 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
                 [(turn_width / 2), (turn_width / 2)],
                 dia_tf_turn_croco_cable / 2,
                 facecolor="#B87333",
-                edgecolor="#B87333",
+                edgecolor="black",
                 linewidth=1.2,
             ),
         )
@@ -12411,6 +12411,40 @@ def plot_corc_cable_geometry(
         axis.legend(loc="upper right")
 
 
+def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
+
+    textstr_cable = (
+        f"$\\mathbf{{CroCo \\ Cable:}}$\n \n"
+        f"Cable diameter: {mfile.get('dia_tf_turn_croco_cable', scan=scan) * 1e3:,.4f} mm\n"
+        f"Copper width: {mfile.get('dx_croco_strand_copper', scan=scan) * 1e3:,.4f} mm\n"
+        f"Diameter of solder tape region: {mfile.get('dia_croco_strand_tape_region', scan=scan) * 1e3:,.4f} mm\n"
+        f"Height of tape stack: {mfile.get('dx_croco_strand_tape_stack', scan=scan) * 1e3:,.4f} mm\n"
+        f"Width of HTS tape / tape stack: {mfile.get('dr_hts_tape', scan=scan) * 1e3:,.4f} mm\n"
+        f"Number of HTS tape layers: {int(mfile.get('n_croco_strand_hts_tapes', scan=scan))}\n \n"
+        f"Total copper area: {mfile.get('a_croco_strand_copper_total', scan=scan) * 1e6:,.4f} mm²\n"
+        f"Total hastelloy area: {mfile.get('a_croco_strand_hastelloy', scan=scan) * 1e6:,.4f} mm²\n"
+        f"Total solder area: {mfile.get('a_croco_strand_solder', scan=scan) * 1e6:,.4f} mm²\n"
+        f"Total superconductor area: {mfile.get('a_croco_strand_rebco', scan=scan) * 1e6:,.4f} mm²\n"
+        f"Total strand area: {mfile.get('a_croco_strand', scan=scan) * 1e6:,.4f} mm²\n"
+    )
+
+    axis.text(
+        0.4,
+        0.4,
+        textstr_cable,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#cccccc",  # grayish color
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+
 def reaction_plot_grid(
     rminor,
     rmajor,
@@ -14678,6 +14712,7 @@ def main_plot(
                     "n_croco_strand_hts_tapes", scan=scan
                 ),
             )
+            plot_tf_corc_cable_summary_box(plot_205, figs[25], m_file, scan)
         elif (
             m_file.get("i_tf_turn_type", scan=scan)
             == SuperconductingTFTurnType.CABLE_IN_CONDUIT
