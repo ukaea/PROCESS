@@ -3679,7 +3679,6 @@ def toroidal_cross_section(
 
         # Centreline tangency point
         x_beam_centre, y_beam_centre = calc_xy(radius_beam_tangency)
-        x0 = r4
         y0_beam_centre = w + dx_beam_shield + 0.5 * dx_beam_duct
 
         # Draw beam duct boundaries
