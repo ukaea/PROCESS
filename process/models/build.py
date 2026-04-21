@@ -1745,14 +1745,7 @@ class Build(Model):
                 + tfcoil_variables.dr_tf_plasma_case
                 + tfcoil_variables.dr_tf_nose_case
             )
-        print("=== TF Inboard Inner Radius Debug ===")
-        print(f"  i_tf_inside_cs     = {build_variables.i_tf_inside_cs}")
-        print(f"  iohcl              = {build_variables.iohcl}")
-        print(f"  dr_bore            = {build_variables.dr_bore}")
-        print(f"  dr_cs              = {build_variables.dr_cs}")
-        print(f"  dr_cs_precomp      = {build_variables.dr_cs_precomp}")
-        print(f"  dr_cs_tf_gap       = {build_variables.dr_cs_tf_gap}")
-        print(f"  r_tf_inboard_in (before) = {build_variables.r_tf_inboard_in}")
+
         if build_variables.i_tf_inside_cs == 1:
             build_variables.r_tf_inboard_in = (
                 build_variables.dr_bore
@@ -1770,8 +1763,6 @@ class Build(Model):
                     + build_variables.dr_cs_precomp
                     + build_variables.dr_cs_tf_gap
                 )
-        print(f"  r_tf_inboard_in (after)  = {build_variables.r_tf_inboard_in}")
-        print("=====================================")
 
         # Radial build to tfcoil middle [m]
         build_variables.r_tf_inboard_mid = (
