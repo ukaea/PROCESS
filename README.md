@@ -39,5 +39,5 @@ A list of publications using PROCESS is given [here](https://ukaea.github.io/PRO
 ## Citing PROCESS
 If you use PROCESS in your work, please cite it using the "Cite this repository" link in the "About" section of the repository. This will cite the latest version of PROCESS, if you are using a different release, please find the appropriate DOI on [PROCESS' Zenodo page](https://doi.org/10.5281/zenodo.8335291). To ensure reproducible research, we recommend you run an [official release of PROCESS](https://github.com/ukaea/PROCESS/releases) by checking out the appropriate git tag.
 
-## Contact
-A contact form can be found on the [PROCESS webpage](https://www.ukaea.org/service/process/) to make contact with the UKAEA maintainers of PROCESS. Alternatively, you can make an issue or discussion in line with our [contribution guide](CONTRIBUTING.md).
+## Contact and Collaboration
+If you would like to get in touch with the PROCESS group for a more detailed discussion, please use the contact form on the [PROCESS webpage](https://www.ukaea.org/service/process/) to make contact with the UKAEA maintainers of PROCESS. If you would like some assistance with your problem or to potentially collaborate with us, we can sometimes provide some free modeller time without a formal collaboration agreement to start getting a problem to converge; please contact us. Alternatively, you can make an issue or discussion in line with our [contribution guide](CONTRIBUTING.md).
