@@ -3552,11 +3552,11 @@ def toroidal_cross_section(
     rminor = mfile.get("rminor", scan=scan)
     r_cryostat_inboard = mfile.get("r_cryostat_inboard", scan=scan)
     dr_cryostat = mfile.get("dr_cryostat", scan=scan)
-    dr_tf_outboard = mfile.get("dr_tf_outboard", scan=scan)
     n_tf_coils = mfile.get("n_tf_coils", scan=scan)
     dx_beam_shield = mfile.get("dx_beam_shield", scan=scan)
     dx_beam_duct = mfile.get("dx_beam_duct", scan=scan)
     radius_beam_tangency = mfile.get("radius_beam_tangency", scan=scan)
+    dr_tf_outboard = mfile.get("dr_tf_outboard", scan=scan)
     arc(axis, rmajor, style="dashed")
 
     # Colour in the main components
@@ -3646,29 +3646,58 @@ def toroidal_cross_section(
 
     i_hcd_primary = mfile.get("i_hcd_primary", scan=scan)
     if i_hcd_primary in {5, 8}:
-        # Neutral beam geometry
-        a = w
+        # Neutral beam geometry. See docs for diagram.
+        a = w + dx_beam_shield
         b = dr_tf_outboard
-        c = dx_beam_duct + 2 * dx_beam_shield
         d = r3
         e = np.sqrt(a**2 + (d + b) ** 2)
-        # Coordinates of the inner and outer edges of the beam at its tangency point
-        rinner = radius_beam_tangency - dx_beam_duct
-        router = radius_beam_tangency + dx_beam_duct
-        beta = np.arccos(rinner / e)
-        xinner = rinner * np.cos(beta)
-        yinner = rinner * np.sin(beta)
-        xouter = router * np.cos(beta)
-        youter = router * np.sin(beta)
-        # Corner of TF coils
-        xcorner = r4
-        ycorner = w + dx_beam_shield
+
+        # Beam edges from centreline
+        half_duct = 0.5 * dx_beam_duct
+        r_beam_inner = radius_beam_tangency - half_duct
+        r_beam_outer = radius_beam_tangency + half_duct
+
+        def calc_xy(rt, e=e):
+            arg = np.clip(rt / e, -1.0, 1.0)
+            beta = np.arccos(arg)
+            x = rt * np.cos(beta)
+            y = rt * np.sin(beta)
+            return x, y
+
+        # Tangency points
+        x_beam_inner, y_beam_inner = calc_xy(r_beam_inner)
+        x_beam_outer, y_beam_outer = calc_xy(r_beam_outer)
+
+        # TF-side positions (beam sits inside shield)
+        x0 = r4
+        y0_beam_inner = w + dx_beam_shield
+        y0_beam_outer = y0_beam_inner + dx_beam_duct
+
+        # Centreline tangency point
+        x_beam_centre, y_beam_centre = calc_xy(radius_beam_tangency)
+        y0_beam_centre = y0_beam_inner + 0.5 * dx_beam_duct
+
+        # Draw beam duct boundaries
         axis.plot(
-            [xinner, xcorner], [yinner, ycorner], linestyle="dotted", color="black"
+            [x_beam_inner, x0],
+            [y_beam_inner, y0_beam_inner],
+            linestyle="dotted",
+            color="black",
         )
-        x = xcorner + c * np.cos(beta) - dx_beam_shield * np.cos(beta)
-        y = ycorner + c * np.sin(beta) - dx_beam_shield * np.sin(beta)
-        axis.plot([xouter, x], [youter, y], linestyle="dotted", color="black")
+        axis.plot(
+            [x_beam_outer, x0],
+            [y_beam_outer, y0_beam_outer],
+            linestyle="dotted",
+            color="black",
+        )
+        # Draw beam centreline
+        axis.plot(
+            [x_beam_centre, x0],
+            [y_beam_centre, y0_beam_centre],
+            linestyle="--",
+            color="black",
+            linewidth=1.5,
+        )
 
     # Draw dividing lines in the blanket (inboard modules, toroidal direction)
     n_blkt_inboard_modules_toroidal = mfile.get(
@@ -10072,7 +10101,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     axis.text(
         (r_tf_inboard_out + r_tf_outboard_in) / 1.5,
         -z_tf_inside_half / 12,
-        f"{r_tf_outboard_in - r_tf_inboard_in:.3f} m",
+        f"{mfile.get('dr_tf_internal_midplane', scan=scan):.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",
@@ -10096,7 +10125,7 @@ def plot_tf_coil_structure(axis: plt.Axes, mfile: MFile, scan: int, colour_schem
     axis.text(
         (r_tf_inboard_out + r_tf_outboard_in) / 1.5,
         0.0,
-        f"{(r_tf_outboard_in + dr_tf_outboard) - r_tf_inboard_in:.3f} m",
+        f"{mfile.get('dr_tf_full_midplane', scan=scan):.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",

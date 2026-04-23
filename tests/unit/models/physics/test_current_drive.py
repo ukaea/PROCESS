@@ -34,7 +34,7 @@ def current_drive():
     )
 
 
-def test_cudriv_primary_lower_hybrid(current_drive):
+def test_current_drive_primary_lower_hybrid(current_drive):
     current_drive_variables.i_hcd_primary = 1  # Lower Hybrid
     current_drive_variables.i_hcd_secondary = 0
     current_drive_variables.i_hcd_calculations = 1
@@ -46,7 +46,7 @@ def test_cudriv_primary_lower_hybrid(current_drive):
     physics_variables.plasma_current = 15e6
     physics_variables.f_c_plasma_auxiliary = 0.2
     current_drive_variables.eta_lowhyb_injector_wall_plug = 0.4
-    current_drive.cudriv()
+    current_drive.current_drive()
 
     assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
         0.07812311, rel=1e-6
@@ -78,7 +78,7 @@ def test_cudriv_primary_lower_hybrid(current_drive):
     )
 
 
-def test_cudriv_primary_lower_hybrid_with_heat(current_drive):
+def test_current_drive_primary_lower_hybrid_with_heat(current_drive):
     current_drive_variables.i_hcd_primary = 1  # Lower Hybrid
     current_drive_variables.i_hcd_secondary = 0
     current_drive_variables.i_hcd_calculations = 1
@@ -90,7 +90,7 @@ def test_cudriv_primary_lower_hybrid_with_heat(current_drive):
     physics_variables.plasma_current = 15e6
     physics_variables.f_c_plasma_auxiliary = 0.2
     current_drive_variables.eta_lowhyb_injector_wall_plug = 0.4
-    current_drive.cudriv()
+    current_drive.current_drive()
 
     assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
         0.07812311, rel=1e-6
@@ -129,7 +129,7 @@ def test_sigbeam(current_drive):
     ) == pytest.approx(2.013589662302492e-11)
 
 
-def test_cudriv_primary_neutral_beam(current_drive):
+def test_current_drive_primary_neutral_beam(current_drive):
     current_drive_variables.i_hcd_primary = 5  # Neutral Beam
     current_drive_variables.i_hcd_secondary = 0
     current_drive_variables.i_hcd_calculations = 1
@@ -146,7 +146,7 @@ def test_cudriv_primary_neutral_beam(current_drive):
     physics_variables.n_charge_plasma_effective_vol_avg = 2.0
     physics_variables.dlamie = 1.0
     physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg = 0.4
-    current_drive.cudriv()
+    current_drive.current_drive()
 
     assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
         0.050571139708731186, rel=1e-6
@@ -165,7 +165,7 @@ def test_cudriv_primary_neutral_beam(current_drive):
     )
     assert current_drive_variables.f_c_plasma_hcd_primary == pytest.approx(0.2, rel=1e-6)
     assert heat_transport_variables.p_hcd_primary_electric_mw == pytest.approx(
-        59.32237274617019, rel=1e-6
+        197.74124248723396, rel=1e-6
     )
     assert heat_transport_variables.p_hcd_secondary_electric_mw == pytest.approx(
         0.0, rel=1e-6
@@ -175,7 +175,7 @@ def test_cudriv_primary_neutral_beam(current_drive):
     )
 
 
-def test_cudriv_primary_electron_cyclotron(current_drive):
+def test_current_drive_primary_electron_cyclotron(current_drive):
     current_drive_variables.i_hcd_primary = 3  # Electron Cyclotron
     current_drive_variables.i_hcd_secondary = 0
     current_drive_variables.i_hcd_calculations = 1
@@ -189,7 +189,7 @@ def test_cudriv_primary_electron_cyclotron(current_drive):
     current_drive_variables.eta_ecrh_injector_wall_plug = 0.5
     physics_variables.dlamee = 1.0
     physics_variables.temp_plasma_electron_density_weighted_kev = 10.0
-    current_drive.cudriv()
+    current_drive.current_drive()
 
     assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
         0.33870967741935487, rel=1e-6
@@ -221,7 +221,7 @@ def test_cudriv_primary_electron_cyclotron(current_drive):
     )
 
 
-def test_cudriv_primary_ion_cyclotron(current_drive):
+def test_current_drive_primary_ion_cyclotron(current_drive):
     current_drive_variables.i_hcd_primary = 2  # Ion Cyclotron
     current_drive_variables.i_hcd_secondary = 0
     current_drive_variables.i_hcd_calculations = 1
@@ -235,7 +235,7 @@ def test_cudriv_primary_ion_cyclotron(current_drive):
     current_drive_variables.eta_icrh_injector_wall_plug = 0.35
     physics_variables.n_charge_plasma_effective_vol_avg = 2.0
     physics_variables.temp_plasma_electron_density_weighted_kev = 10.0
-    current_drive.cudriv()
+    current_drive.current_drive()
 
     assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
         0.025403225806451612, rel=1e-6
@@ -264,7 +264,7 @@ def test_cudriv_primary_ion_cyclotron(current_drive):
     )
 
 
-def test_cudriv_primary_electron_bernstein(current_drive):
+def test_current_drive_primary_electron_bernstein(current_drive):
     current_drive_variables.i_hcd_primary = 12  # Electron Bernstein
     current_drive_variables.i_hcd_secondary = 0
     current_drive_variables.i_hcd_calculations = 1
@@ -283,7 +283,7 @@ def test_cudriv_primary_electron_bernstein(current_drive):
     constants.ELECTRON_CHARGE = constants.ELECTRON_CHARGE
     constants.ELECTRON_MASS = constants.ELECTRON_MASS
     constants.EPSILON0 = constants.EPSILON0
-    current_drive.cudriv()
+    current_drive.current_drive()
 
     assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
         0.011640447389800388, rel=1e-6

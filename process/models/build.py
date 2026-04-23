@@ -23,6 +23,7 @@ from process.models.physics.current_drive import (
     CurrentDriveModel,
 )
 from process.models.tfcoil.base import TFCoilShapeModel
+from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 
 logger = logging.getLogger(__name__)
 
@@ -1578,16 +1579,18 @@ class Build(Model):
             # Minimal inboard WP radius [m]
             r_wp_min = r_tf_wp_inboard_inner
 
+            i_tf_wp_geom = SuperconductingTFWPShapeType(tfcoil_variables.i_tf_wp_geom)
+
             # Rectangular WP
-            if tfcoil_variables.i_tf_wp_geom == 0:
+            if i_tf_wp_geom == SuperconductingTFWPShapeType.RECTANGULAR:
                 r_wp_max = r_wp_min
 
             # Double rectangle WP
-            elif tfcoil_variables.i_tf_wp_geom == 1:
+            elif i_tf_wp_geom == SuperconductingTFWPShapeType.DOUBLE_RECTANGULAR:
                 r_wp_max = r_tf_wp_inboard_centre
 
             # Trapezoidal WP
-            elif tfcoil_variables.i_tf_wp_geom == 2:
+            elif i_tf_wp_geom == SuperconductingTFWPShapeType.TRAPEZOIDAL:
                 r_wp_max = r_tf_wp_inboard_outer
 
             # Calculated maximum toroidal WP toroidal thickness [m]
@@ -1699,34 +1702,40 @@ class Build(Model):
                 build_variables.dz_fw_plasma_gap,
             )
 
-        # Calculate pre-compression structure thickness is build_variables.i_cs_precomp=1
-        if build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 0:
-            build_variables.dr_cs_precomp = build_variables.fseppc / (
-                2.0e0
-                * np.pi
-                * build_variables.fcspc
-                * build_variables.sigallpc
-                * (
-                    build_variables.dr_bore
-                    + build_variables.dr_bore
-                    + build_variables.dr_cs
+            # Calculate pre-compression structure thickness is build_variables.i_cs_precomp=1
+            if build_variables.iohcl == 0:
+                build_variables.dr_cs_precomp = 0.0e0
+            elif (
+                build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 0
+            ):
+                build_variables.dr_cs_precomp = build_variables.fseppc / (
+                    2.0e0
+                    * np.pi
+                    * build_variables.fcspc
+                    * build_variables.sigallpc
+                    * (
+                        build_variables.dr_bore
+                        + build_variables.dr_bore
+                        + build_variables.dr_cs
+                    )
                 )
-            )
-        elif build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 1:
-            build_variables.dr_cs_precomp = build_variables.fseppc / (
-                2.0e0
-                * np.pi
-                * build_variables.fcspc
-                * build_variables.sigallpc
-                * (
-                    2.0 * build_variables.dr_bore
-                    + 2.0 * build_variables.dr_tf_inboard
-                    + 2.0 * build_variables.dr_cs_tf_gap
-                    + build_variables.dr_cs
+            elif (
+                build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 1
+            ):
+                build_variables.dr_cs_precomp = build_variables.fseppc / (
+                    2.0e0
+                    * np.pi
+                    * build_variables.fcspc
+                    * build_variables.sigallpc
+                    * (
+                        2.0 * build_variables.dr_bore
+                        + 2.0 * build_variables.dr_tf_inboard
+                        + 2.0 * build_variables.dr_cs_tf_gap
+                        + build_variables.dr_cs
+                    )
                 )
-            )
-        else:
-            build_variables.dr_cs_precomp = 0.0e0
+            else:
+                build_variables.dr_cs_precomp = 0.0e0
 
         # Issue #514 Radial dimensions of inboard leg
         # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
@@ -1736,7 +1745,14 @@ class Build(Model):
                 + tfcoil_variables.dr_tf_plasma_case
                 + tfcoil_variables.dr_tf_nose_case
             )
-
+        print("=== TF Inboard Inner Radius Debug ===")
+        print(f"  i_tf_inside_cs     = {build_variables.i_tf_inside_cs}")
+        print(f"  iohcl              = {build_variables.iohcl}")
+        print(f"  dr_bore            = {build_variables.dr_bore}")
+        print(f"  dr_cs              = {build_variables.dr_cs}")
+        print(f"  dr_cs_precomp      = {build_variables.dr_cs_precomp}")
+        print(f"  dr_cs_tf_gap       = {build_variables.dr_cs_tf_gap}")
+        print(f"  r_tf_inboard_in (before) = {build_variables.r_tf_inboard_in}")
         if build_variables.i_tf_inside_cs == 1:
             build_variables.r_tf_inboard_in = (
                 build_variables.dr_bore
@@ -1746,12 +1762,16 @@ class Build(Model):
             )
         else:
             # Inboard side inner radius [m]
-            build_variables.r_tf_inboard_in = (
-                build_variables.dr_bore
-                + build_variables.dr_cs
-                + build_variables.dr_cs_precomp
-                + build_variables.dr_cs_tf_gap
-            )
+            build_variables.r_tf_inboard_in = build_variables.dr_bore
+
+            if build_variables.iohcl != 0:
+                build_variables.r_tf_inboard_in += (
+                    build_variables.dr_cs
+                    + build_variables.dr_cs_precomp
+                    + build_variables.dr_cs_tf_gap
+                )
+        print(f"  r_tf_inboard_in (after)  = {build_variables.r_tf_inboard_in}")
+        print("=====================================")
 
         # Radial build to tfcoil middle [m]
         build_variables.r_tf_inboard_mid = (
@@ -2122,29 +2142,30 @@ class Build(Model):
                     radius,
                 ])
 
-            radius += build_variables.dr_cs
-            radial_build_data.append([
-                "Central solenoid",
-                "dr_cs",
-                build_variables.dr_cs,
-                radius,
-            ])
+                if build_variables.iohcl != 0:
+                    radius += build_variables.dr_cs
+                    radial_build_data.append([
+                        "Central solenoid",
+                        "dr_cs",
+                        build_variables.dr_cs,
+                        radius,
+                    ])
 
-            radius += build_variables.dr_cs_precomp
-            radial_build_data.append([
-                "CS precompression",
-                "dr_cs_precomp",
-                build_variables.dr_cs_precomp,
-                radius,
-            ])
-            if build_variables.i_tf_inside_cs == 0:
-                radius += build_variables.dr_cs_tf_gap
-                radial_build_data.append([
-                    "CS precompresion to TF coil radial gap",
-                    "dr_cs_tf_gap",
-                    build_variables.dr_cs_tf_gap,
-                    radius,
-                ])
+                    radius += build_variables.dr_cs_precomp
+                    radial_build_data.append([
+                        "CS precompression",
+                        "dr_cs_precomp",
+                        build_variables.dr_cs_precomp,
+                        radius,
+                    ])
+                    if build_variables.i_tf_inside_cs == 0:
+                        radius += build_variables.dr_cs_tf_gap
+                        radial_build_data.append([
+                            "CS precompresion to TF coil radial gap",
+                            "dr_cs_tf_gap",
+                            build_variables.dr_cs_tf_gap,
+                            radius,
+                        ])
 
                 radius += build_variables.dr_tf_inboard
                 radial_build_data.append([
