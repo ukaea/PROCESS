@@ -73,8 +73,9 @@ where:
 - $A_{\text{T}}$ is the triton mass in amu,
 - $f_{\text{beam,T}}$ is the tritium fraction in the injected beam,
 - $\langle T_{\text{e}}\rangle$ is the density-weighted electron temperature in keV,
-- $\langle n_{\text{e}}\rangle$ is the volume-averaged electron density in m$^{-3}$,
+- $\langle n_{\text{e}}\rangle$ is the volume-averaged electron density in $\text{m}^{-3}$
 - $\ln\Lambda_{\text{ie}}$ is the ion-electron Coulomb logarithm.
+- The numerical prefactor $1.99\times10^{19}$ arises from rewriting the classical slowing-down time expression in practical units.
 
 ---
 
