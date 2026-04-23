@@ -2,7 +2,7 @@
 
 This page describes the neutral beam fusion model currently implemented in `beam_fusion()`.
 
-The model is a reduced beam-target treatment for neutral beam ions that have been injected into the plasma. PROCESS builds a steady population of fast ions from a beam source, then calculates how many of those ions fuse with the background plasma. It does not model neutral beam attenuation, shine-through, or orbit effects explicitly. Instead, it starts from the total beam current available to the beam-fusion model and then:
+The model is a reduced beam–target treatment for neutral beam ions injected into the plasma. PROCESS first determines an effective beam current that already accounts for beam transport effects such as shine-through losses. The beam-fusion model then uses this net beam current to build a steady population of fast ions and estimates how many of those ions fuse with the background plasma. `beam_fusion()` does not explicitly model beam attenuation, orbit effects, or spatial beam evolution, and instead treats the fast-ion population in a volume-averaged (0D) sense.
 
 1. computes a beam slowing-down time and a critical energy for deuterium and tritium beam ions,
 2. estimates the steady-state hot beam ion densities from the beam source rate and slowing-down residence time,
