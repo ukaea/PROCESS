@@ -53,7 +53,7 @@ This section explains the stages of calculation in the function `beam_fusion()`
 
 ### Calculate the beam ion slowing down time
 
-The beam slowing down time used in the model is implemented as:
+The beam slowing down time used in the model is implemented as [2]:
 
 ```math
 \tau_{\text{slow}} =
