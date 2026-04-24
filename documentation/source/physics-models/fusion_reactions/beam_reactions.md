@@ -2,7 +2,7 @@
 
 This page describes the neutral beam fusion model currently implemented in `beam_fusion()`.
 
-The model is a reduced beam–target treatment for neutral beam ions injected into the plasma. PROCESS first determines an effective beam current that already accounts for beam transport effects such as shine-through losses. The beam-fusion model then uses this net beam current to build a steady population of fast ions and estimates how many of those ions fuse with the background plasma. `beam_fusion()` does not explicitly model beam attenuation, orbit effects, or spatial beam evolution, and instead treats the fast-ion population in a volume-averaged (0D) sense.
+The model is a reduced beam-target treatment for neutral beam ions injected into the plasma. PROCESS first determines an effective beam current that already accounts for beam transport effects such as shine-through losses. The beam-fusion model then uses this net beam current to build a steady population of fast ions and estimates how many of those ions fuse with the background plasma. `beam_fusion()` does not explicitly model beam attenuation, orbit effects, or spatial beam evolution, and instead treats the fast-ion population in a volume-averaged (0D) sense.
 
 1. computes a beam slowing-down time and a critical energy for deuterium and tritium beam ions,
 2. estimates the steady-state hot beam ion densities from the beam source rate and slowing-down residence time,
@@ -53,19 +53,19 @@ This section explains the stages of calculation in the function `beam_fusion()`
 
 ### Calculate the beam ion slowing down time
 
-The beam slowing down time used in the model is implemented as [2]:
+The beam slowing down time used in the model is implemented as[^deng1987]:
 
-```math
+$$
 \tau_{\text{slow}} =
 1.99\times10^{19}
 \left[
-A_{\text{D}}\left(1-f_{\text{beam,T}}\right)
+\text{A}_{\text{D}}\left(1-\text{f}_{\text{beam,T}}\right)
 +
-A_{\text{T}}f_{\text{beam,T}}
+\text{A}_{\text{T}}\text{f}_{\text{beam,T}}
 \right]
-\frac{\langle T_{\text{e}}\rangle^{3/2}}
-{\langle n_{\text{e}}\rangle \ln \Lambda_{\text{ie}}}
-```
+\frac{\langle \text{T}_{\text{e}}\rangle^{3/2}}
+{\langle \text{n}_{\text{e}}\rangle \ln \Lambda_{\text{ie}}}
+$$
 
 where:
 
@@ -83,145 +83,145 @@ where:
 
 For an energetic ion slowing down in a plasma, there is a critical energy $E_{\text{crit}}$ at which the rate of energy loss to ions equals the rate of energy loss to electrons. Above this energy electron drag dominates, while below it ion drag dominates.
 
-In the current implementation, the deuterium critical energy [^1] is
+In the current implementation, the deuterium critical energy [^sheffield1994] is
 
-```math
-E_{\text{crit,D}} =
+$$
+\text{E}_{\text{crit,D}} =
 14.8
-A_{\text{D}}
-T_{\text{e}}
-Z_{\text{eff,mw}}^{2/3}
+\text{A}_{\text{D}}
+\text{T}_{\text{e}}
+\text{Z}_{\text{eff,mw}}^{2/3}
 \frac{\ln\Lambda_{\text{ie}}+4.0}{\ln\Lambda_{\text{ie}}}
 \qquad [\text{keV}]
-```
+$$
 
 where $Z_{\text{eff,mw}}$ is the mass-weighted effective plasma charge.
 
 The tritium critical energy is then scaled by the beam ion mass ratio:
 
-```math
-E_{\text{crit,T}} =
-E_{\text{crit,D}}
-\left(\frac{A_{\text{T}}}{A_{\text{D}}}\right)
-```
+$$
+\text{E}_{\text{crit,T}} =
+\text{E}_{\text{crit,D}}
+\left(\frac{\text{A}_{\text{T}}}{\text{A}_{\text{D}}}\right)
+$$
 
 #### Derivation of beam slowing down rate and critical energy
 
-The rate of slowing down of a test particle of mass $M$, charge $Ze$ and energy $E$, due to Coulomb collisions with a background species of mass $m_j$, charge $Z_j e$, density $n_j$ and temperature $T_j$, is given by[^2]
+The rate of slowing down of a test particle of mass $M$, charge $Ze$ and energy $E$, due to Coulomb collisions with a background species of mass $m_j$, charge $Z_j e$, density $n_j$ and temperature $T_j$, is given by[^deng1987]
 
-```math
-\frac{dE}{dt}
+$$
+\frac{\text{dE}}{\text{dt}}
 =
 \left[
--\Phi(x_j)
+-\Phi(\text{x}_{\text{j}})
 +
-x_j\left(1+\frac{m_j}{M}\,\Phi^{\prime}(x_j)\right)
+\text{x}_{\text{j}}\left(1+\frac{\text{m}_{\text{j}}}{\text{M}}\,\Phi^{\prime}(\text{x}_{\text{j}})\right)
 \right]
-\frac{4\pi n_j}{m_j V}
-\left(\frac{Z Z_j e^2}{4\pi\varepsilon_0}\right)^2
-\ln \Lambda_j
-```
+\frac{4\pi \text{n}_{\text{j}}}{\text{m}_{\text{j}} \text{V}}
+\left(\frac{\text{Z} \text{Z}_{\text{j}} \text{e}^2}{4\pi\varepsilon_0}\right)^2
+\ln \Lambda_{\text{j}}
+$$
 
 where
 
-```math
-\Phi^{\prime}(x) = \frac{d\Phi}{dx}
-```
+$$
+\Phi^{\prime}(\text{x}) = \frac{\text{d}\Phi}{\text{dx}}
+$$
 
-```math
-V = \sqrt{\frac{2E}{M}}, \qquad
-V_j = \sqrt{\frac{2kT_j}{m_j}}, \qquad
-x_j = \frac{V}{V_j}
-```
+$$
+\text{V} = \sqrt{\frac{2\text{E}}{\text{M}}}, \qquad
+\text{V}_{\text{j}} = \sqrt{\frac{2\text{kT}_{\text{j}}}{\text{m}_{\text{j}}}}, \qquad
+\text{x}_{\text{j}} = \frac{\text{V}}{\text{V}_{\text{j}}}
+$$
 
-For fast ions in fusion plasmas, the ion contribution and electron contribution may be approximated separately, leading to the standard slowing-down form[^3]:
+For fast ions in fusion plasmas, the ion contribution and electron contribution may be approximated separately, leading to the standard slowing-down form[^wesson2011]:
 
-```math
-\frac{\mathrm{d}E}{\mathrm{d}t}
+$$
+\frac{\mathrm{d}\text{E}}{\mathrm{d}\text{t}}
 =
--\frac{A Z^2 \sqrt{M}}{\sqrt{E}}
+-\frac{\text{A} \text{Z}^2 \sqrt{\text{M}}}{\sqrt{\text{E}}}
 -
-\frac{B Z^2 E}{M}
-```
+\frac{\text{B} \text{Z}^2 \text{E}}{\text{M}}
+$$
 
 with coefficients
 
-```math
+$$
 \begin{aligned}
-A &=
+\text{A} &=
 \frac{4\pi}{\sqrt{2}}
-\left(\frac{e^2}{4\pi\varepsilon_0}\right)^2
-\sum_j
+\left(\frac{\text{e}^2}{4\pi\varepsilon_0}\right)^2
+\sum_{\text{j}}
 \left(
-\frac{n_j Z_j^2}{m_j}\ln\Lambda_j
+\frac{\text{n}_{\text{j}} \text{Z}_{\text{j}}^2}{\text{m}_{\text{j}}}\ln\Lambda_{\text{j}}
 \right) \\
-B &=
-\frac{16\sqrt{\pi}}{3kT_e}
-\sqrt{\frac{m_e}{2kT_e}}
-\left(\frac{e^2}{4\pi\varepsilon_0}\right)^2
-n_e \ln\Lambda_e
+\text{B} &=
+\frac{16\sqrt{\pi}}{3\text{kT}_{\text{e}}}
+\sqrt{\frac{\text{m}_{\text{e}}}{2\text{kT}_{\text{e}}}}
+\left(\frac{\text{e}^2}{4\pi\varepsilon_0}\right)^2
+\text{n}_{\text{e}} \ln\Lambda_{\text{e}}
 \end{aligned}
-```
+$$
 
 This can be rewritten in the form
 
-```math
-\frac{\mathrm{d}E}{\mathrm{d}t}
+$$
+\frac{\mathrm{d}\text{E}}{\mathrm{d}\text{t}}
 =
--\frac{2E}{\tau_{\text{slow}}}
+-\frac{2\text{E}}{\tau_{\text{slow}}}
 \left[
-1+\left(\frac{E_c}{E}\right)^{3/2}
+1+\left(\frac{\text{E}_{\text{c}}}{\text{E}}\right)^{3/2}
 \right]
-```
+$$
 
 where
 
-```math
-E_c
+$$
+\text{E}_{\text{c}}
 =
 \left[
 \frac{3\sqrt{\pi}}{4}
-\frac{M^{3/2}}{n_e\sqrt{m_e}}
-\sum_j
+\frac{\text{M}^{3/2}}{\text{n}_{\text{e}}\sqrt{\text{m}_{\text{e}}}}
+\sum_{\text{j}}
 \left(
-\frac{n_j Z_j^2}{m_j}\ln\Lambda_j
+\frac{\text{n}_{\text{j}} \text{Z}_{\text{j}}^2}{\text{m}_{\text{j}}}\ln\Lambda_{\text{j}}
 \right)
-\frac{1}{\ln\Lambda_e}
+\frac{1}{\ln\Lambda_{\text{e}}}
 \right]^{2/3}
-kT_e
-```
+\text{kT}_{\text{e}}
+$$
 
 and
 
-```math
+$$
 \tau_{\text{slow}}
 =
-\frac{3(kT_e)^{3/2}}{4\sqrt{2\pi m_e} Z^2}
-\left(\frac{4\pi\varepsilon_0}{e^2}\right)^2
-\frac{M}{n_e \ln\Lambda_e}
-```
+\frac{3(\text{kT}_{\text{e}})^{3/2}}{4\sqrt{2\pi \text{m}_{\text{e}}} \text{Z}^2}
+\left(\frac{4\pi\varepsilon_0}{\text{e}^2}\right)^2
+\frac{\text{M}}{\text{n}_{\text{e}} \ln\Lambda_{\text{e}}}
+$$
 
 In this regime, $\tau_{\text{slow}}$ is the characteristic electron-drag slowing-down timescale.
 
 $\blacksquare$
 
-#### **Set the plasma deuterium and tritium ion densities**
+#### Set the plasma deuterium and tritium ion densities
 
 The bulk target ion densities used in the beam-target reactions are
 
-```math
-n_{\text{D,plasma}}
+$$
+\text{n}_{\text{D,plasma}}
 =
-n_{\text{fuel}}
-f_{\text{D,plasma}}
-```
+\text{n}_{\text{fuel}}
+\text{f}_{\text{D,plasma}}
+$$
 
-```math
-n_{\text{T,plasma}}
+$$
+\text{n}_{\text{T,plasma}}
 =
-n_{\text{fuel}}
-f_{\text{T,plasma}}
-```
+\text{n}_{\text{fuel}}
+\text{f}_{\text{T,plasma}}
+$$
 
 where $n_{\text{fuel}}$ is the volume-averaged total fuel ion density.
 
@@ -239,22 +239,22 @@ where $n_{\text{fuel}}$ is the volume-averaged total fuel ion density.
 
 The total neutral beam alpha power is
 
-```math
-P_{\alpha,\text{beam}}
+$$
+\text{P}_{\alpha,\text{beam}}
 =
 \mathtt{beamfus0}
 \left(
-P_{\alpha,\text{D-beam}}
+\text{P}_{\alpha,\text{D-beam}}
 +
-P_{\alpha,\text{T-beam}}
+\text{P}_{\alpha,\text{T-beam}}
 \right)
-```
+$$
 
 ### Calculate the neutral beam beta
 
 The neutral beam beta is computed from the hot beam density and the deposited beam energy:
 
-```math
+$$
 \beta_{\text{beam}}
 =
 \mathtt{betbm0}
@@ -262,9 +262,9 @@ The neutral beam beta is computed from the hot beam density and the deposited be
 4.03\times10^{-22}
 \times
 \frac{2}{3}
-\frac{n_{\text{beam,hot}} E_{\text{beam,deposited}}}
-{B_{\phi}^2 + B_{\theta}^2}
-```
+\frac{\text{n}_{\text{beam,hot}} \text{E}_{\text{beam,deposited}}}
+{\text{B}_{\phi}^2 + \text{B}_{\theta}^2}
+$$
 
 where:
 
@@ -275,188 +275,190 @@ where:
 
 The value of $E_{\text{beam,deposited}}$ is the pressure-equivalent deposited energy of the hot beam ions, **not** the initial beam injection energy.
 
+---
+
 ## Neutral beam alpha power, beam densities and deposited energy | `beam_slowing_down_state()`
 
-1. **Calculate the beam current fractions**
+### Calculate the beam current fractions
 
 The beam current is split into deuterium and tritium components:
 
-```math
-I_{\text{beam,D}}
+$$
+\text{I}_{\text{beam,D}}
 =
-I_{\text{beam}}
-\left(1-f_{\text{beam,T}}\right)
-```
+\text{I}_{\text{beam}}
+\left(1-\text{f}_{\text{beam,T}}\right)
+$$
 
-```math
-I_{\text{beam,T}}
+$$
+\text{I}_{\text{beam,T}}
 =
-I_{\text{beam}}
-f_{\text{beam,T}}
-```
+\text{I}_{\text{beam}}
+\text{f}_{\text{beam,T}}
+$$
 
-1. **Calculate the characteristic slowing-down time to the thermal range**
+### Calculate the characteristic slowing-down time to the thermal range
 
 Using the classical slowing-down model, the characteristic time for the beam ion energy to slow from the birth energy to the thermal range is implemented as:
 
-```math
+$$
 \tau_{\text{slow,D}}^{*}
 =
 \frac{\tau_{\text{slow}}}{3}
 \ln\left[
 1+
 \left(
-\frac{E_{\text{beam}}}{E_{\text{crit,D}}}
+\frac{\text{E}_{\text{beam}}}{\text{E}_{\text{crit,D}}}
 \right)^{3/2}
 \right]
-```
+$$
 
-```math
+$$
 \tau_{\text{slow,T}}^{*}
 =
 \frac{\tau_{\text{slow}}}{3}
 \ln\left[
 1+
 \left(
-\frac{E_{\text{beam}}}{E_{\text{crit,T}}}
+\frac{\text{E}_{\text{beam}}}{\text{E}_{\text{crit,T}}}
 \right)^{3/2}
 \right]
-```
+$$
 
-1. **Set the fast beam ion densities**
+### Set the fast beam ion densities
 
 The steady-state hot beam ion densities are set from source rate times residence time:
 
-```math
-\langle n_{\text{beam}} \rangle_{\text{D}}
+$$
+\langle \text{n}_{\text{beam}} \rangle_{\text{D}}
 =
-\frac{I_{\text{beam,D}}\tau_{\text{slow,D}}^{*}}
-{e V_{\text{plasma}}}
-```
+\frac{\text{I}_{\text{beam,D}}\tau_{\text{slow,D}}^{*}}
+{\text{e} \text{V}_{\text{plasma}}}
+$$
 
-```math
-\langle n_{\text{beam}} \rangle_{\text{T}}
+$$
+\langle \text{n}_{\text{beam}} \rangle_{\text{T}}
 =
-\frac{I_{\text{beam,T}}\tau_{\text{slow,T}}^{*}}
-{e V_{\text{plasma}}}
-```
+\frac{\text{I}_{\text{beam,T}}\tau_{\text{slow,T}}^{*}}
+{\text{e} \text{V}_{\text{plasma}}}
+$$
 
 The total hot beam ion density is then
 
-```math
-\langle n_{\text{beam}} \rangle_{\text{hot}}
+$$
+\langle \text{n}_{\text{beam}} \rangle_{\text{hot}}
 =
-\langle n_{\text{beam}} \rangle_{\text{D}}
+\langle \text{n}_{\text{beam}} \rangle_{\text{D}}
 +
-\langle n_{\text{beam}} \rangle_{\text{T}}
-```
+\langle \text{n}_{\text{beam}} \rangle_{\text{T}}
+$$
 
-1. **Calculate the speeds of ions at the critical energy**
+### Calculate the speeds of ions at the critical energy
 
 Assuming non-relativistic energies, the beam ion speeds at the critical energy are
 
-```math
-v_{\text{crit,D}}
+$$
+\text{v}_{\text{crit,D}}
 =
 \sqrt{
-\frac{2 e_{\text{keV}} E_{\text{crit,D}}}
-{m_u A_{\text{D}}}
+\frac{2 \text{e}_{\text{keV}} \text{E}_{\text{crit,D}}}
+{\text{m}_{\text{u}} \text{A}_{\text{D}}}
 }
-```
+$$
 
-```math
-v_{\text{crit,T}}
+$$
+\text{v}_{\text{crit,T}}
 =
 \sqrt{
-\frac{2 e_{\text{keV}} E_{\text{crit,T}}}
-{m_u A_{\text{T}}}
+\frac{2 \text{e}_{\text{keV}} \text{E}_{\text{crit,T}}}
+{\text{m}_{\text{u}} \text{A}_{\text{T}}}
 }
-```
+$$
 
 where:
 
 - $e_{\text{keV}}$ is the conversion from keV to joules,
 - $m_u$ is the atomic mass unit.
 
-1. **Calculate the fast ion pressures**
+### Calculate the fast ion pressures
 
 First define the source rates per unit volume:
 
-```math
-S_{\text{D}}
+$$
+\text{S}_{\text{D}}
 =
-\frac{I_{\text{beam,D}}}{e V_{\text{plasma}}}
-```
+\frac{\text{I}_{\text{beam,D}}}{\text{e} \text{V}_{\text{plasma}}}
+$$
 
-```math
-S_{\text{T}}
+$$
+\text{S}_{\text{T}}
 =
-\frac{I_{\text{beam,T}}}{e V_{\text{plasma}}}
-```
+\frac{\text{I}_{\text{beam,T}}}{\text{e} \text{V}_{\text{plasma}}}
+$$
 
 The implemented pressure coefficients are then
 
-```math
-C_{p,\text{D}}
+$$
+\text{C}_{\text{p},\text{D}}
 =
 \frac{
-A_{\text{D}} m_u \tau_{\text{slow}} v_{\text{crit,D}}^2 S_{\text{D}}
+\text{A}_{\text{D}} \text{m}_{\text{u}} \tau_{\text{slow}} \text{v}_{\text{crit,D}}^2 \text{S}_{\text{D}}
 }
-{3 e_{\text{keV}}}
-```
+{3 \text{e}_{\text{keV}}}
+$$
 
-```math
-C_{p,\text{T}}
+$$
+\text{C}_{\text{p},\text{T}}
 =
 \frac{
-A_{\text{T}} m_u \tau_{\text{slow}} v_{\text{crit,T}}^2 S_{\text{T}}
+\text{A}_{\text{T}} \text{m}_{\text{u}} \tau_{\text{slow}} \text{v}_{\text{crit,T}}^2 \text{S}_{\text{T}}
 }
-{3 e_{\text{keV}}}
-```
+{3 \text{e}_{\text{keV}}}
+$$
 
 The fast ion pressures are
 
-```math
-p_{\text{D}}
+$$
+\text{p}_{\text{D}}
 =
-C_{p,\text{D}}
+\text{C}_{\text{p},\text{D}}
 \times
 \underbrace{
 \left[
-\frac{x_c^2}{2}
+\frac{\text{x}_{\text{c}}^2}{2}
 +
-\frac{1}{6}\ln\left(\frac{x_c^2+2x_c+1}{x_c^2-x_c+1}\right)
+\frac{1}{6}\ln\left(\frac{\text{x}_{\text{c}}^2+2\text{x}_{\text{c}}+1}{\text{x}_{\text{c}}^2-\text{x}_{\text{c}}+1}\right)
 -
-\frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{2x_c-1}{\sqrt{3}}\right)
+\frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{2\text{x}_{\text{c}}-1}{\sqrt{3}}\right)
 -
 \frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{1}{\sqrt{3}}\right)
 \right]
-}_{\mathtt{fast\_ion\_pressure\_integral}(E_{\text{beam}},E_{\text{crit,D}})}
-```
+}_{\mathtt{fast\_ion\_pressure\_integral}(\text{E}_{\text{beam}},\text{E}_{\text{crit,D}})}
+$$
 
-```math
-p_{\text{T}}
+$$
+\text{p}_{\text{T}}
 =
-C_{p,\text{T}}
+\text{C}_{\text{p},\text{T}}
 \times
 \underbrace{
 \left[
-\frac{x_c^2}{2}
+\frac{\text{x}_{\text{c}}^2}{2}
 +
-\frac{1}{6}\ln\left(\frac{x_c^2+2x_c+1}{x_c^2-x_c+1}\right)
+\frac{1}{6}\ln\left(\frac{\text{x}_{\text{c}}^2+2\text{x}_{\text{c}}+1}{\text{x}_{\text{c}}^2-\text{x}_{\text{c}}+1}\right)
 -
-\frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{2x_c-1}{\sqrt{3}}\right)
+\frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{2\text{x}_{\text{c}}-1}{\sqrt{3}}\right)
 -
 \frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{1}{\sqrt{3}}\right)
 \right]
-}_{\mathtt{fast\_ion\_pressure\_integral}(E_{\text{beam}},E_{\text{crit,T}})}
-```
+}_{\mathtt{fast\_ion\_pressure\_integral}(\text{E}_{\text{beam}},\text{E}_{\text{crit,T}})}
+$$
 
 with
 
-```math
-x_c = \sqrt{\frac{E_{\text{beam}}}{E_{\text{crit}}}}
-```
+$$
+\text{x}_{\text{c}} = \sqrt{\frac{\text{E}_{\text{beam}}}{\text{E}_{\text{crit}}}}
+$$
 
 ### Beam fast ion pressure integral | `fast_ion_pressure_integral()`
 
@@ -468,121 +470,120 @@ The fast ions, because of their finite slowing down time, develop a finite press
 
 To calculate this pressure, introduce the distribution function $g(E)$ of fast ions, where $g(E)$ is the number of ions per unit energy per unit volume, satisfying the steady-state kinetic equation
 
-```math
-\frac{\partial}{\partial E}
+$$
+\frac{\partial}{\partial \text{E}}
 \left(
-g \frac{\mathrm{d}E}{\mathrm{d}t}
+\text{g} \frac{\mathrm{d}\text{E}}{\mathrm{d}\text{t}}
 \right)
 =
-S(E)
-```
+\text{S}(\text{E})
+$$
 
 with slowing-down law
 
-```math
-\frac{\mathrm{d}E}{\mathrm{d}t}
+$$
+\frac{\mathrm{d}\text{E}}{\mathrm{d}\text{t}}
 =
--\frac{2E}{\tau_s}
+-\frac{2\text{E}}{\tau_{\text{s}}}
 \left[
-1+\left(\frac{E_c}{E}\right)^{3/2}
+1+\left(\frac{\text{E}_{\text{c}}}{\text{E}}\right)^{3/2}
 \right]
-```
+$$
 
 If the ions are born monoenergetically,
 
-```math
-S(E)=S_0\delta(E-E_0)
-```
+$$
+\text{S}(\text{E})=\text{S}_0\delta(\text{E}-\text{E}_0)
+$$
 
 and with the boundary condition $g(E)=0$ for $E>E_0$, the steady-state distribution becomes
 
-```math
-g(E)=
+$$
+\text{g}(\text{E})=
 \begin{cases}
-\dfrac{S_0\tau_s}{2E\left[1+\left(E_c/E\right)^{3/2}\right]}, & E<E_0 \\
-0, & E>E_0
+\dfrac{\text{S}_0\tau_{\text{s}}}{2\text{E}\left[1+\left(\text{E}_{\text{c}}/\text{E}\right)^{3/2}\right]}, & \text{E}<\text{E}_0 \\
+0, & \text{E}>\text{E}_0
 \end{cases}
-```
+$$
 
 The fast ion pressure is then
 
-```math
-p
+$$
+\text{p}
 =
 \frac{2}{3}
-\int_0^{E_0} g(E) E \, \mathrm{d}E
-```
+\int_0^{\text{E}_0} \text{g}(\text{E}) \text{E} \, \mathrm{d}\text{E}
+$$
 
 which can be written as
 
-```math
-p
+$$
+\text{p}
 =
-\frac{M S_0 \tau_s V_c^2}{3}
-\int_0^{x_c}
-\frac{x^4}{1+x^3}\,\mathrm{d}x
-```
+\frac{\text{M} \text{S}_0 \tau_{\text{s}} \text{V}_{\text{c}}^2}{3}
+\int_0^{\text{x}_{\text{c}}}
+\frac{\text{x}^4}{1+\text{x}^3}\,\mathrm{d}\text{x}
+$$
 
 and evaluated analytically as
 
-```math
-p
+$$
+\text{p}
 =
-\frac{M S_0 \tau_s V_c^2}{3}
+\frac{\text{M} \text{S}_0 \tau_{\text{s}} \text{V}_{\text{c}}^2}{3}
 \left[
-\frac{x_c^2}{2}
+\frac{\text{x}_{\text{c}}^2}{2}
 +
-\frac{1}{6}\ln\left(\frac{x_c^2+2x_c+1}{x_c^2-x_c+1}\right)
+\frac{1}{6}\ln\left(\frac{\text{x}_{\text{c}}^2+2\text{x}_{\text{c}}+1}{\text{x}_{\text{c}}^2-\text{x}_{\text{c}}+1}\right)
 -
-\frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{2x_c-1}{\sqrt{3}}\right)
+\frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{2\text{x}_{\text{c}}-1}{\sqrt{3}}\right)
 -
 \frac{1}{\sqrt{3}}\tan^{-1}\left(\frac{1}{\sqrt{3}}\right)
 \right]
-```
+$$
 
 `fast_ion_pressure_integral()` returns the bracketed dimensionless factor only.
 
 $\blacksquare$
 
---
-6. **Calculate the deposited fast ion energy from the pressure**
+### Calculate the deposited fast ion energy from the pressure
 
 The deposited beam ion energy is inferred from the pressure relation
 
-```math
-p = \frac{1}{3}nmv_{\text{rms}}^2 = \frac{2}{3}n\langle E\rangle
-```
+$$
+\text{p} = \frac{1}{3}\text{nmv}_{\text{rms}}^2 = \frac{2}{3}\text{n}\langle \text{E}\rangle
+$$
 
 so that the pressure-equivalent deposited energies are
 
-```math
-E_{\text{hot,D}}
+$$
+\text{E}_{\text{hot,D}}
 =
 \frac{3}{2}
-\frac{p_{\text{D}}}{\langle n_{\text{beam}} \rangle_{\text{D}}}
-```
+\frac{\text{p}_{\text{D}}}{\langle \text{n}_{\text{beam}} \rangle_{\text{D}}}
+$$
 
-```math
-E_{\text{hot,T}}
+$$
+\text{E}_{\text{hot,T}}
 =
 \frac{3}{2}
-\frac{p_{\text{T}}}{\langle n_{\text{beam}} \rangle_{\text{T}}}
-```
+\frac{\text{p}_{\text{T}}}{\langle \text{n}_{\text{beam}} \rangle_{\text{T}}}
+$$
 
 with the convention that the deposited energy is set to zero if the corresponding hot beam density is zero.
 
 The total deposited beam ion energy returned to `beam_fusion()` is the density-weighted average:
 
-```math
-E_{\text{hot,total}}
+$$
+\text{E}_{\text{hot,total}}
 =
 \frac{
-E_{\text{hot,D}} \langle n_{\text{beam}} \rangle_{\text{D}}
+\text{E}_{\text{hot,D}} \langle \text{n}_{\text{beam}} \rangle_{\text{D}}
 +
-E_{\text{hot,T}} \langle n_{\text{beam}} \rangle_{\text{T}}
+\text{E}_{\text{hot,T}} \langle \text{n}_{\text{beam}} \rangle_{\text{T}}
 }
-{\langle n_{\text{beam}} \rangle_{\text{hot}}}
-```
+{\langle \text{n}_{\text{beam}} \rangle_{\text{hot}}}
+$$
 
 with the convention that this is set to zero if $\langle n_{\text{beam}} \rangle_{\text{hot}}=0$.
 
@@ -597,40 +598,42 @@ with the convention that this is set to zero if $\langle n_{\text{beam}} \rangle
 - total hot beam ion density,
 - density-weighted deposited beam energy.
 
+---
+
 ## Beam fusion reaction rate coefficient | `beam_reaction_rate_coefficient()`
 
-1. **Calculate the beam velocity**
+### Calculate the beam velocity
 
 The beam velocity is calculated from the input beam energy and beam ion mass:
 
-```math
-v_{\text{beam}}
+$$
+\text{v}_{\text{beam}}
 =
 \sqrt{
-\frac{2 e_{\text{keV}} E_{\text{beam}}}
-{m_u A}
+\frac{2 \text{e}_{\text{keV}} \text{E}_{\text{beam}}}
+{\text{m}_{\text{u}} \text{A}}
 }
-```
+$$
 
-1. **Define the integral coefficient**
+### Define the integral coefficient
 
 The implemented coefficient is
 
-```math
-\frac{3v_{\text{crit}}}
-{\ln\left(1+\left(\frac{v_{\text{beam}}}{v_{\text{crit}}}\right)^3\right)}
-```
+$$
+\frac{3\text{v}_{\text{crit}}}
+{\ln\left(1+\left(\frac{\text{v}_{\text{beam}}}{\text{v}_{\text{crit}}}\right)^3\right)}
+$$
 
-1. **Perform the fusion rate integral**
+### Perform the fusion rate integral
 
 The slowing-down-weighted integral is evaluated as
 
-```math
-\int_0^{v_{\text{beam}}/v_{\text{crit}}}
-\frac{u^3}{1+u^3}
-\sigma_{\text{bmfus}}(E_{\text{amu}}(u))
-\,\mathrm{d}u
-```
+$$
+\int_0^{\text{v}_{\text{beam}}/\text{v}_{\text{crit}}}
+\frac{\text{u}^3}{1+\text{u}^3}
+\sigma_{\text{bmfus}}(\text{E}_{\text{amu}}(\text{u}))
+\,\mathrm{d}\text{u}
+$$
 
 where $u = v/v_{\text{crit}}$.
 
@@ -642,9 +645,9 @@ This internal function evaluates the integrand used in the beam-target fusion ra
 
 The implemented integrand is
 
-```math
-\frac{u^3}{1+u^3}\sigma_{\text{bmfus}}(E_{\text{amu}}(u))
-```
+$$
+\frac{\text{u}^3}{1+\text{u}^3}\sigma_{\text{bmfus}}(\text{E}_{\text{amu}}(\text{u}))
+$$
 
 where:
 
@@ -654,11 +657,11 @@ where:
 
 The beam kinetic energy per amu used in the code is constructed from
 
-```math
-E_{\text{amu}}
+$$
+\text{E}_{\text{amu}}
 =
-\frac{(u v_{\text{crit}})^2 m_u}{e_{\text{keV}}}
-```
+\frac{(\text{u} \text{v}_{\text{crit}})^2 \text{m}_{\text{u}}}{\text{e}_{\text{keV}}}
+$$
 
 #### Beam fusion cross section | `_beam_fusion_cross_section()`
 
@@ -668,30 +671,30 @@ The plasma ions are assumed to be stationary.
 
 The implementation is
 
-```math
-\sigma_{\text{bm}}(E) =
+$$
+\sigma_{\text{bm}}(\text{E}) =
 \begin{cases}
-1.0\times10^{-27}\ \text{cm}^2, & E < 10.0\ \text{keV} \\
-8.0\times10^{-26}\ \text{cm}^2, & E > 10^4\ \text{keV} \\
+1.0\times10^{-27}\ \text{cm}^2, & \text{E} < 10.0\ \text{keV} \\
+8.0\times10^{-26}\ \text{cm}^2, & \text{E} > 10^4\ \text{keV} \\
 \dfrac{
 1.0\times10^{-24}
 \left[
-\dfrac{a_2}{1.0+(a_3 E-a_4)^2}+a_5
+\dfrac{\text{a}_2}{1.0+(\text{a}_3 \text{E}-\text{a}_4)^2}+\text{a}_5
 \right]
 }{
-E\left[\exp\left(\dfrac{a_1}{\sqrt{E}}\right)-1.0\right]
+\text{E}\left[\exp\left(\dfrac{\text{a}_1}{\sqrt{\text{E}}}\right)-1.0\right]
 }
 \ \text{cm}^2, & \text{otherwise}
 \end{cases}
-```
+$$
 
 where the beam energy used inside the fit is
 
-```math
-E
+$$
+\text{E}
 =
-\frac{1}{2} A_{\text{D}} E_{\text{amu}}
-```
+\frac{1}{2} \text{A}_{\text{D}} \text{E}_{\text{amu}}
+$$
 
 and the constants are
 
@@ -703,33 +706,35 @@ and the constants are
 
 The exact provenance of this particular fit and its coefficients has not yet been fully traced in the present documentation. It is retained here to document the current implementation.
 
-1. **Multiply by the coefficient to get the full rate coefficient**
+### Multiply by the coefficient to get the full rate coefficient
 
 The final effective beam-target fusion rate coefficient is
 
-```math
-\langle \sigma v \rangle_{\text{beam}}
+$$
+\langle \sigma \text{v} \rangle_{\text{beam}}
 =
-\frac{3v_{\text{crit}}}
-{\ln\left(1+\left(\frac{v_{\text{beam}}}{v_{\text{crit}}}\right)^3\right)}
-\int_0^{v_{\text{beam}}/v_{\text{crit}}}
-\frac{u^3}{1+u^3}
-\sigma_{\text{bmfus}}(E_{\text{amu}}(u))
-\,\mathrm{d}u
-```
+\frac{3\text{v}_{\text{crit}}}
+{\ln\left(1+\left(\frac{\text{v}_{\text{beam}}}{\text{v}_{\text{crit}}}\right)^3\right)}
+\int_0^{\text{v}_{\text{beam}}/\text{v}_{\text{crit}}}
+\frac{\text{u}^3}{1+\text{u}^3}
+\sigma_{\text{bmfus}}(\text{E}_{\text{amu}}(\text{u}))
+\,\mathrm{d}\text{u}
+$$
+
+---
 
 ## Beam-target fusion reaction rate | `beam_target_reaction_rate()`
 
-The present implementation evaluates an effective beam-target fusion rate coefficient for a slowing-down fast-ion population. This is consistent with simple beam-plasma reaction-rate models in which fast ions interact with a Maxwellian background plasma during the slowing-down process[^4]. The total beam-target fusion reaction rate is calculated as
+The present implementation evaluates an effective beam-target fusion rate coefficient for a slowing-down fast-ion population. This is consistent with simple beam-plasma reaction-rate models in which fast ions interact with a Maxwellian background plasma during the slowing-down process[^niikura1990]. The total beam-target fusion reaction rate is calculated as
 
-```math
-R_{\text{beam-target}}
+$$
+\text{R}_{\text{beam-target}}
 =
-n_{\text{beam}}
-n_{\text{target}}
-\langle \sigma v \rangle_{\text{beam}}
-V_{\text{plasma}}
-```
+\text{n}_{\text{beam}}
+\text{n}_{\text{target}}
+\langle \sigma \text{v} \rangle_{\text{beam}}
+\text{V}_{\text{plasma}}
+$$
 
 where:
 
@@ -740,68 +745,74 @@ where:
 
 This returns the total reaction rate in s$^{-1}$.
 
+---
+
 ## Beam fusion alpha power | `alpha_power_beam()`
 
 The beam-target alpha power is obtained from the total beam-target reaction rate by
 
-```math
-P_{\alpha,\text{beam}}
+$$
+\text{P}_{\alpha,\text{beam}}
 =
-R_{\text{beam-target}} E_{\alpha}
-```
+\text{R}_{\text{beam-target}} \text{E}_{\alpha}
+$$
 
 and is converted from W to MW in the implementation.
 
 This returns the alpha power in MW.
 
+---
+
 ## Full beam-target alpha power calculation in `beam_fusion()`
 
 For the deuterium beam component reacting with thermal tritium:
 
-```math
-R_{\text{D-beam,DT}}
+$$
+\text{R}_{\text{D-beam,DT}}
 =
-\langle n_{\text{beam}} \rangle_{\text{D}}
-n_{\text{T,plasma}}
-\langle \sigma v \rangle_{\text{beam,D}}
-V_{\text{plasma}}
-```
+\langle \text{n}_{\text{beam}} \rangle_{\text{D}}
+\text{n}_{\text{T,plasma}}
+\langle \sigma \text{v} \rangle_{\text{beam,D}}
+\text{V}_{\text{plasma}}
+$$
 
-```math
-P_{\alpha,\text{D-beam}}
+$$
+\text{P}_{\alpha,\text{D-beam}}
 =
-R_{\text{D-beam,DT}} E_{\alpha}
-```
+\text{R}_{\text{D-beam,DT}} \text{E}_{\alpha}
+$$
 
 For the tritium beam component reacting with thermal deuterium:
 
-```math
-R_{\text{T-beam,DT}}
+$$
+\text{R}_{\text{T-beam,DT}}
 =
-\langle n_{\text{beam}} \rangle_{\text{T}}
-n_{\text{D,plasma}}
-\langle \sigma v \rangle_{\text{beam,T}}
-V_{\text{plasma}}
-```
+\langle \text{n}_{\text{beam}} \rangle_{\text{T}}
+\text{n}_{\text{D,plasma}}
+\langle \sigma \text{v} \rangle_{\text{beam,T}}
+\text{V}_{\text{plasma}}
+$$
 
-```math
-P_{\alpha,\text{T-beam}}
+$$
+\text{P}_{\alpha,\text{T-beam}}
 =
-R_{\text{T-beam,DT}} E_{\alpha}
-```
+\text{R}_{\text{T-beam,DT}} \text{E}_{\alpha}
+$$
 
 The returned beam alpha power is then
 
-```math
-P_{\alpha,\text{beam}}
+$$
+\text{P}_{\alpha,\text{beam}}
 =
 \mathtt{beamfus0}
 \left(
-P_{\alpha,\text{D-beam}}
+\text{P}_{\alpha,\text{D-beam}}
 +
-P_{\alpha,\text{T-beam}}
+\text{P}_{\alpha,\text{T-beam}}
 \right)
-```
+$$
+
+---
 
 ## Key Constraints
 
@@ -813,10 +824,10 @@ The desired value of the hot ion beam density calculated from the code (`nd_beam
 
 ## References
 
-1. J. W. Sheffield, “The physics of magnetic fusion reactors,” *Rev. Mod. Phys.*, vol. 66, no. 3, pp. 1015–1103, Jul. 1994. <https://doi.org/10.1103/RevModPhys.66.1015>
+[^sheffield1994]: J. W. Sheffield, “The physics of magnetic fusion reactors,” *Rev. Mod. Phys.*, vol. 66, no. 3, pp. 1015–1103, Jul. 1994. <https://doi.org/10.1103/RevModPhys.66.1015>
 
-2. B. Deng and G. A. Emmert, “Fast ion pressure in fusion plasma,” *Nuclear Fusion and Plasma Physics*, vol. 9, no. 3, pp. 136–141, 1987. Available: <https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf>
+[^deng1987]: B. Deng and G. A. Emmert, “Fast ion pressure in fusion plasma,” *Nuclear Fusion and Plasma Physics*, vol. 9, no. 3, pp. 136–141, 1987. Available: <https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf>
 
-3. J. Wesson, *Tokamaks*, 4th ed., Oxford Science Publications, 2011.
+[^wesson2011]: J. Wesson, *Tokamaks*, 4th ed., Oxford Science Publications, 2011.
 
-4. S. Niikura and M. Nagami, “Improvement of fusion reactivity and fusion power multiplication factor in the presence of fast ions,” *Fusion Engineering and Design*, vol. 12, pp. 467–480, 1990.
+[^niikura1990]: S. Niikura and M. Nagami, “Improvement of fusion reactivity and fusion power multiplication factor in the presence of fast ions,” *Fusion Engineering and Design*, vol. 12, pp. 467–480, 1990.
