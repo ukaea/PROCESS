@@ -431,7 +431,7 @@ def _zav_of_te_compiled(
     return zav_of_te
 
 
-def pimpden(
+def calculate_impurity_radiation_power_density(
     imp_element_index: int,
     nd_electron_profile: np.array | float,
     temp_electron_profile_kev: np.array | float,
@@ -588,7 +588,7 @@ class ImpurityRadiation:
             Sertoli, private communication
             Kallenbach et al., Plasma Phys. Control. Fus. 55(2013) 124041
         """
-        pimp = pimpden(
+        pimp = calculate_impurity_radiation_power_density(
             imp_element_index,
             self.plasma_profile.neprofile.profile_y,
             self.plasma_profile.teprofile.profile_y,

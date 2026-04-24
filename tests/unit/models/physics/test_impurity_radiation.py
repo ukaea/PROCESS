@@ -77,7 +77,7 @@ def test_pimpden():
         ]),
     )
 
-    pimpden = impurity_radiation.pimpden(
+    pimpden = impurity_radiation.calculate_impurity_radiation_power_density(
         pimden_parameters.imp_element_index, pimden_parameters.ne, pimden_parameters.te
     )
     assert pytest.approx(pimpden) == pimden_parameters.expected_pimpden
