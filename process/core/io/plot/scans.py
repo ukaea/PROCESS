@@ -85,7 +85,7 @@ def plot_scan(
         5: "oacdcp",
         6: "pflux_fw_neutron_max_mw",
         7: "beamfus0",
-        8: "Obsolete",# OBSOLETE
+        8: "Obsolete",  # OBSOLETE
         9: "temp_plasma_electron_vol_avg_kev",
         10: "boundu(15)",
         11: "beta_norm_max",
@@ -119,7 +119,7 @@ def plot_scan(
         40: "boundu(135)",
         41: "dr_blkt_outboard",
         42: "f_nd_impurity_electrons(9)",
-        43: "Obsolete",  # Removed
+        43: "Obsolete",  # OBSOLETE
         44: "alstrtf",
         45: "temp_tf_superconductor_margin_min",
         46: "boundu(152)",
@@ -129,7 +129,7 @@ def plot_scan(
         50: "f_nd_impurity_electrons(13)",
         51: "f_p_div_lower",
         52: "rad_fraction_sol",
-        53: "obsolete", # Removed
+        53: "Obsolete",  # OBSOLETE
         54: "b_crit_upper_nbti",
         55: "dr_shld_inboard",
         56: "p_cryo_plant_electric_max_mw",
@@ -158,7 +158,7 @@ def plot_scan(
         79: "eta_ecrh_injector_wall_plug",
         80: "fcoolcp",
         81: "n_tf_coil_turns",
-        82: "f_p_plasma_separatrix_rad", # really fradpwr
+        82: "f_p_plasma_separatrix_rad",
     }
     # -------------------
 
