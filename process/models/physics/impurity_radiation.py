@@ -479,6 +479,7 @@ def calculate_impurity_radiation_power_density(
     )
 
     # W/m³ = nᵢ * nₑ * L(Z, Tₑ)
+    # nᵢ = f_nd_species_electron * nₑ
     pden_impurity_profile = (
         impurity_radiation_module.f_nd_impurity_electron_array[imp_element_index]
         * nd_electron_profile
@@ -572,29 +573,22 @@ class ImpurityRadiation:
         """Map imprad_profile() over each impurity element index."""
         list(map(self.imprad_profile, self.imp))
 
-    def imprad_profile(self, imp_element_index):
+    def imprad_profile(self, imp_element_index: int) -> None:
         """This routine calculates the impurity radiation losses for given temperature and density profiles.
 
         Parameters
         ----------
-        imp_element_index : Int
+        imp_element_index
             Index used to access different impurity radiation elements
 
-        References
-        ----------
-            Bremsstrahlung equation from Johner, L(z) data (coronal equilibrium)
-            from Marco Sertoli, Asdex-U, ref. Kallenbach et al.
-            Johner, Fusion Science and Technology 59 (2011), pp 308-349
-            Sertoli, private communication
-            Kallenbach et al., Plasma Phys. Control. Fus. 55(2013) 124041
         """
-        pimp = calculate_impurity_radiation_power_density(
-            imp_element_index,
-            self.plasma_profile.neprofile.profile_y,
-            self.plasma_profile.teprofile.profile_y,
+        pden_impurity_radiation_profile = calculate_impurity_radiation_power_density(
+            imp_element_index=imp_element_index,
+            nd_electron_profile=self.plasma_profile.neprofile.profile_y,
+            temp_electron_profile_kev=self.plasma_profile.teprofile.profile_y,
         )
 
-        self.pimp_profile = np.add(self.pimp_profile, pimp)
+        self.pimp_profile = np.add(self.pimp_profile, pden_impurity_radiation_profile)
 
     def calculate_radiation_loss_profiles(self):
         """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity radiation
