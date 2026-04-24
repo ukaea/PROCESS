@@ -75,7 +75,7 @@ def test_pimpden(process_models):
         ]),
     )
 
-    pimpden = impurity_radiation.pimpden(
+    pimpden = impurity_radiation.calculate_impurity_radiation_power_density(
         pimpden_parameters.imp_element_index,
         pimpden_parameters.ne,
         pimpden_parameters.te,
