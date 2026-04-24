@@ -431,33 +431,42 @@ def _zav_of_te_compiled(
     return zav_of_te
 
 
-def pimpden(imp_element_index, neprofile, teprofile):
-    """Calculates the impurity radiation density (W/m3)
+def pimpden(
+    imp_element_index: int,
+    nd_electron_profile: np.array | float,
+    temp_electron_profile_kev: np.array | float,
+) -> np.array | float:
+    """
+    Calculates the impurity radiation density (W/m³) based on the electron density and temperature profiles.
 
     Parameters
     ----------
-    imp_element_index : int
+    imp_element_index
         Impurity element index
-    neprofile : numpy.array
-        electron density profile
-    teprofile : numpy.array
-        electron temperature profile
+    nd_electron_profile
+        electron density profile [m⁻³]
+    temp_electron_profile_kev
+        electron temperature profile [keV]
 
     Returns
     -------
-    numpy.array
-        pimpden - total impurity radiation density (W/m3)
+    pden_impurity_profile - total impurity radiation density (W/m³)
+
+    Notes
+    -----
+     -Temperatures outside the range of the L(Z,Tₑ) table are handled by using the L(Z,Tₑ)
+      value at the closest temperature in the table,
     """
-    # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
     bins = impurity_radiation_module.temp_impurity_keV_array[imp_element_index]
-    indices = np.digitize(teprofile, bins)
+    indices = np.digitize(temp_electron_profile_kev, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
 
-    # Use numpy.interp for linear interpolation in log-log space
-    pimpden = np.exp(
+    # Use numpy.interp for linear interpolation in log-log space to find the
+    # loss function values for the given temperature profile L(Z, Tₑ).
+    power_loss_function = np.exp(
         np.interp(
-            np.log(teprofile),
+            np.log(temp_electron_profile_kev),
             np.log(
                 impurity_radiation_module.temp_impurity_keV_array[imp_element_index, :]
             ),
@@ -469,37 +478,44 @@ def pimpden(imp_element_index, neprofile, teprofile):
         )
     )
 
-    pimpden = (
+    # W/m³ = nᵢ * nₑ * L(Z, Tₑ)
+    pden_impurity_profile = (
         impurity_radiation_module.f_nd_impurity_electron_array[imp_element_index]
-        * neprofile
-        * neprofile
-        * pimpden
+        * nd_electron_profile
+        * nd_electron_profile
+        * power_loss_function
     )
 
+    # less_than_imp_temp_mask = temp_electron_profile_kev values less than impurity temperature.
+
     less_than_imp_temp_mask = (
-        teprofile
+        temp_electron_profile_kev
         <= impurity_radiation_module.temp_impurity_keV_array[imp_element_index, 0]
     )
-    pimpden[less_than_imp_temp_mask] = (
+    # This is okay because line radiation will dominate at lower temp, and the L(Z,Tₑ)
+    # value at the lowest temperature in the table is likely to be an overestimate of the
+    # radiation loss at lower temperatures, so this is a conservative approach.
+    pden_impurity_profile[less_than_imp_temp_mask] = (
         impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, 0]
     )
 
+    # greater_than_imp_temp_mask = temp_electron_profile_kev values higher than impurity temperature.
     greater_than_imp_temp_mask = (
-        teprofile
+        temp_electron_profile_kev
         >= impurity_radiation_module.temp_impurity_keV_array[
             imp_element_index,
             impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
         ]
     )
     #  This is okay because Bremsstrahlung will dominate at higher temp.
-    pimpden[greater_than_imp_temp_mask] = (
+    pden_impurity_profile[greater_than_imp_temp_mask] = (
         impurity_radiation_module.pden_impurity_lz_nd_temp_array[
             imp_element_index,
             impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
         ]
     )
 
-    return pimpden
+    return pden_impurity_profile
 
 
 def element2index(element: str):
