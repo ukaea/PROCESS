@@ -351,7 +351,7 @@ def z2index(zimp):
     )
 
 
-def fradcore(
+def create_f_rad_core_profile(
     rho: np.array, radius_plasma_core_norm: float, f_p_plasma_core_rad_reduction: float
 ) -> np.array:
     """
@@ -640,7 +640,7 @@ class ImpurityRadiation:
         pden_impurity_rad_total = self.pimp_profile * self.rho
         pden_impurity_core_rad_total = self.pimp_profile * (
             self.rho
-            * fradcore(
+            * create_f_rad_core_profile(
                 rho=self.rho,
                 radius_plasma_core_norm=impurity_radiation_module.radius_plasma_core_norm,
                 f_p_plasma_core_rad_reduction=impurity_radiation_module.f_p_plasma_core_rad_reduction,
