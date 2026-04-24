@@ -52,7 +52,8 @@ class PFCoil(Model):
 
     def output(self):
         """Output results to output file."""
-        self.cs_coil.output_cs_structure()
+        if bv.iohcl != 0:
+            self.cs_coil.output_cs_structure()
         self.outpf()
         self.outvolt()
         self.output_induct()
@@ -2666,10 +2667,11 @@ class PFCoil(Model):
             self.outfile,
             f"PF coils:\t\t{pfcoil_variables.vs_pf_coils_total_ramp:.2f}\t\t\t\t{pfcoil_variables.vs_pf_coils_total_burn:.2f}\t\t\t{pfcoil_variables.vs_pf_coils_total_pulse:.2f}",
         )
-        op.write(
-            self.outfile,
-            f"CS coil:\t\t{pfcoil_variables.vs_cs_ramp:.2f}\t\t\t\t{pfcoil_variables.vs_cs_burn:.2f}\t\t\t{pfcoil_variables.vs_cs_total_pulse:.2f}",
-        )
+        if bv.iohcl != 0:
+            op.write(
+                self.outfile,
+                f"CS coil:\t\t{pfcoil_variables.vs_cs_ramp:.2f}\t\t\t\t{pfcoil_variables.vs_cs_burn:.2f}\t\t\t{pfcoil_variables.vs_cs_total_pulse:.2f}",
+            )
         op.write(
             self.outfile, "\t" * 3 + "-" * 7 + "\t" * 4 + "-" * 7 + "\t" * 3 + "-" * 7
         )
@@ -2705,10 +2707,11 @@ class PFCoil(Model):
                 f"\t{k}\t\t\t{pfcoil_variables.vsdum[k, 0]:.3f}\t\t\t{pfcoil_variables.vsdum[k, 1]:.3f}\t\t{pfcoil_variables.vsdum[k, 2]:.3f}",
             )
 
-        op.write(
-            self.outfile,
-            f"\tCS coil\t\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 0]:.3f}\t\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 1]:.3f}\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 2]:.3f}",
-        )
+        if bv.iohcl != 0:
+            op.write(
+                self.outfile,
+                f"\tCS coil\t\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 0]:.3f}\t\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 1]:.3f}\t\t{pfcoil_variables.vsdum[pfcoil_variables.n_cs_pf_coils - 1, 2]:.3f}",
+            )
 
         op.oshead(self.outfile, "Waveforms")
         op.ocmmnt(self.outfile, "Currents (Amps/coil) as a function of time:")
@@ -2740,49 +2743,50 @@ class PFCoil(Model):
 
         op.write(self.outfile, line)
 
-        op.oblnkl(self.outfile)
-        op.ocmmnt(self.outfile, "This consists of: CS coil field balancing:")
-        for k in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
-            op.write(
-                self.outfile,
-                (
-                    f"{k}\t\t\t{pfcoil_variables.c_pf_coil_turn[k, 0] * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
-                    f"{pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
-                    f"{-pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.n_pf_coil_turns[k] * (pfcoil_variables.f_j_cs_start_end_flat_top / pfcoil_variables.f_j_cs_start_pulse_end_flat_top):.3e}\t"
-                    f"{-pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.n_pf_coil_turns[k] * (pfcoil_variables.f_j_cs_start_end_flat_top / pfcoil_variables.f_j_cs_start_pulse_end_flat_top):.3e}\t"
-                    f"{-pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.n_pf_coil_turns[k] * (1.0e0 / pfcoil_variables.f_j_cs_start_pulse_end_flat_top):.3e}\t"
-                    f"{pfcoil_variables.c_pf_coil_turn[k, 5] * pfcoil_variables.n_pf_coil_turns[k]:.3e}"
-                ),
-            )
+        if bv.iohcl != 0:
+            op.oblnkl(self.outfile)
+            op.ocmmnt(self.outfile, "This consists of: CS coil field balancing:")
+            for k in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
+                op.write(
+                    self.outfile,
+                    (
+                        f"{k}\t\t\t{pfcoil_variables.c_pf_coil_turn[k, 0] * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
+                        f"{pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
+                        f"{-pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.n_pf_coil_turns[k] * (pfcoil_variables.f_j_cs_start_end_flat_top / pfcoil_variables.f_j_cs_start_pulse_end_flat_top):.3e}\t"
+                        f"{-pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.n_pf_coil_turns[k] * (pfcoil_variables.f_j_cs_start_end_flat_top / pfcoil_variables.f_j_cs_start_pulse_end_flat_top):.3e}\t"
+                        f"{-pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.n_pf_coil_turns[k] * (1.0e0 / pfcoil_variables.f_j_cs_start_pulse_end_flat_top):.3e}\t"
+                        f"{pfcoil_variables.c_pf_coil_turn[k, 5] * pfcoil_variables.n_pf_coil_turns[k]:.3e}"
+                    ),
+                )
 
-        op.oblnkl(self.outfile)
-        op.ocmmnt(self.outfile, "And: equilibrium field:")
-        for k in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
-            op.write(
-                self.outfile,
-                (
-                    f"{k}\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
-                    f"{(pfcoil_variables.c_pf_coil_turn[k, 2] + pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.f_j_cs_start_end_flat_top / pfcoil_variables.f_j_cs_start_pulse_end_flat_top) * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
-                    f"{(pfcoil_variables.c_pf_coil_turn[k, 3] + pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.f_j_cs_start_end_flat_top / pfcoil_variables.f_j_cs_start_pulse_end_flat_top) * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
-                    f"{(pfcoil_variables.c_pf_coil_turn[k, 4] + pfcoil_variables.c_pf_coil_turn[k, 1] * 1.0e0 / pfcoil_variables.f_j_cs_start_pulse_end_flat_top) * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
-                    "0.0e0"
-                ),
-            )
+            op.oblnkl(self.outfile)
+            op.ocmmnt(self.outfile, "And: equilibrium field:")
+            for k in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
+                op.write(
+                    self.outfile,
+                    (
+                        f"{k}\t\t\t{0.0:.3e}\t{0.0:.3e}\t"
+                        f"{(pfcoil_variables.c_pf_coil_turn[k, 2] + pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.f_j_cs_start_end_flat_top / pfcoil_variables.f_j_cs_start_pulse_end_flat_top) * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
+                        f"{(pfcoil_variables.c_pf_coil_turn[k, 3] + pfcoil_variables.c_pf_coil_turn[k, 1] * pfcoil_variables.f_j_cs_start_end_flat_top / pfcoil_variables.f_j_cs_start_pulse_end_flat_top) * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
+                        f"{(pfcoil_variables.c_pf_coil_turn[k, 4] + pfcoil_variables.c_pf_coil_turn[k, 1] * 1.0e0 / pfcoil_variables.f_j_cs_start_pulse_end_flat_top) * pfcoil_variables.n_pf_coil_turns[k]:.3e}\t"
+                        "0.0e0"
+                    ),
+                )
 
-        op.oblnkl(self.outfile)
-        op.ovarre(
-            self.outfile,
-            "Ratio of central solenoid current at beginning of Pulse / end of flat-top",
-            "(f_j_cs_start_pulse_end_flat_top)",
-            pfcoil_variables.f_j_cs_start_pulse_end_flat_top,
-        )
-        op.ovarre(
-            self.outfile,
-            "Ratio of central solenoid current at beginning of Flat-top / end of flat-top",
-            "(f_j_cs_start_end_flat_top)",
-            pfcoil_variables.f_j_cs_start_end_flat_top,
-            "OP ",
-        )
+            op.oblnkl(self.outfile)
+            op.ovarre(
+                self.outfile,
+                "Ratio of central solenoid current at beginning of Pulse / end of flat-top",
+                "(f_j_cs_start_pulse_end_flat_top)",
+                pfcoil_variables.f_j_cs_start_pulse_end_flat_top,
+            )
+            op.ovarre(
+                self.outfile,
+                "Ratio of central solenoid current at beginning of Flat-top / end of flat-top",
+                "(f_j_cs_start_end_flat_top)",
+                pfcoil_variables.f_j_cs_start_end_flat_top,
+                "OP ",
+            )
 
         op.oshead(self.outfile, "PF Circuit Waveform Data")
         op.ovarin(
@@ -2796,7 +2800,7 @@ class PFCoil(Model):
                 if k == pfcoil_variables.n_pf_cs_plasma_circuits - 1:
                     circuit_name = f"Plasma Time point {jjj} (A)"
                     circuit_var_name = f"(plasmat{jjj})"
-                elif k == pfcoil_variables.n_pf_cs_plasma_circuits - 2:
+                elif bv.iohcl != 0 and k == pfcoil_variables.n_pf_cs_plasma_circuits - 2:
                     circuit_name = f"CS Circuit Time point {jjj} (A)"
                     circuit_var_name = f"(cs t{jjj})"
                 else:
