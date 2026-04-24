@@ -252,6 +252,21 @@ $$
   $$
 
 ---------------------------------------------------------------------
+- `i_plasma_geometry = 12` -- The elongation is calculated directly from the aspect ratio based on a scaling for the maximum contrallable elongation in a spherical tokamak[^5] and asssuming a constant $li(3)$. 
+    $$
+    \kappa = 2.93 \left(\frac{1.8}{A}\right)^{1.4}
+    $$
+
+  The elongation and triangularity of the 95% flux surface are calculated as follows, based on the 1989 ITER guidelines [^1]:
+
+  $$
+  \kappa_{95} = \kappa / 1.12
+  $$
+  $$
+  \delta_{95} = \delta / 1.5 
+  $$
+
+---------------------------------------------------------------------
 
 
 ### Plasma-Wall Gap
@@ -785,6 +800,7 @@ Unpublished internal Oak Ridge document.
 [^3]: H. Zohm et al, *'On the Physics Guidelines for a Tokamak DEMO'*,
 FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
 [^4]: Menard, J.E. & Brown, T. & El-Guebaly, L. & Boyer, M. & Canik, J. & Colling, Bethany & Raman, Roger & Wang, Z. & Zhai, Yunbo & Buxton, Peter & Covele, B. & D’Angelo, C. & Davis, Andrew & Gerhardt, S. & Gryaznevich, M. & Harb, Moataz & Hender, T.C. & Kaye, S. & Kingham, David & Woolley, R.. (2016). *Fusion nuclear science facilities and pilot plants based on the spherical tokamak.* Nuclear Fusion. 56. 106023. 10.1088/0029-5515/56/10/106023. 
+[^5] J.E. Menard, S.C. Jardin, S.M. Kaye, C.E. Kessel and J. Manickam (1997) *Ideal MHD stability limits of low aspect ratio tokamak plasmas.* Nuclear Fusion. 37. 595. 10.1088/0029-5515/37/5/I03
 [^6]: J D Galambos, *STAR Code : Spherical Tokamak Analysis and Reactor Code*,
 unpublished internal Oak Ridge document
 [^7]: O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,” Fusion Engineering and Design, vol. 112, pp. 633–645, Nov. 2016, doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.

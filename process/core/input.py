@@ -1817,7 +1817,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, int, range=(1, 9)
     ),
     "i_plasma_geometry": InputVariable(
-        data_structure.physics_variables, int, range=(0, 11)
+        data_structure.physics_variables, int, range=(0, 12)
     ),
     "i_plasma_shape": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1]
