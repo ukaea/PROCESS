@@ -369,67 +369,98 @@ def fradcore(rho, radius_plasma_core_norm, f_p_plasma_core_rad_reduction):
     return fradcore
 
 
-def calculate_average_charge_at_temp(imp_element_index, teprofile):
-    """Calculates electron temperature dependent average atomic number
+def calculate_average_charge_at_temp(
+    imp_element_index: int, temp_electron_kev: np.array | float
+) -> np.array | float:
+    """Calculates electron temperature dependent average atomic charge (Z) for a given impurity element.
 
     Parameters
     ----------
-    imp_element_index : int
+    imp_element_index
         Impurity element index
-    teprofile : numpy.array
-        temperature profile
+    temp_electron_kev
+        electron temperature in keV
 
     Returns
     -------
     numpy.array
-        zav_of_te - electron temperature dependent average atomic number
+        zav_of_te - electron temperature dependent average atomic charge
     """
-    # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
     return calculate_average_charge_at_temp_compiled(
-        imp_element_index,
-        teprofile,
-        impurity_radiation_module.temp_impurity_keV_array,
-        impurity_radiation_module.impurity_arr_zav,
-        impurity_radiation_module.impurity_arr_len_tab,
+        imp_element_index=imp_element_index,
+        temp_electron_kev=temp_electron_kev,
+        temp_impurity_keV_array=impurity_radiation_module.temp_impurity_keV_array,
+        impurity_arr_zav=impurity_radiation_module.impurity_arr_zav,
+        impurity_arr_len_tab=impurity_radiation_module.impurity_arr_len_tab,
     )
 
 
 @njit(cache=True)
 def calculate_average_charge_at_temp_compiled(
     imp_element_index: int,
-    teprofile: np.array,
+    temp_electron_kev: np.array | float,
     temp_impurity_keV_array: np.array,
     impurity_arr_zav: np.array,
     impurity_arr_len_tab: np.array,
-):
+) -> np.array | float:
+    """Calculates electron temperature dependent average atomic charge (Z) for a given impurity element.
 
+    Parameters
+    ----------
+    imp_element_index
+        Impurity element index
+    temp_electron_kev
+        electron temperature in keV
+    temp_impurity_keV_array
+        2D array of impurity temperatures in keV for each impurity element
+    impurity_arr_zav
+        2D array of average charge values for each impurity element at the corresponding temperatures in temp_impurity_keV_array
+    impurity_arr_len_tab
+        1D array of the length of the temperature and average charge tables for each impurity element
+
+    Returns
+    -------
+    n_charge_impurity_average
+        electron temperature dependent average atomic charge of impurity element at the given temperature(s)
+
+    """
     bins = temp_impurity_keV_array[imp_element_index]
-    indices = np.digitize(teprofile, bins)
+    indices = np.digitize(temp_electron_kev, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
     # Use numpy.interp for linear interpolation in log space
-    zav_of_te = np.interp(
-        np.log(teprofile),
+    n_charge_impurity_average = np.interp(
+        np.log(temp_electron_kev),
         np.log(temp_impurity_keV_array[imp_element_index, :]),
         impurity_arr_zav[imp_element_index, :],
     )
 
-    less_than_imp_temp_mask = teprofile <= temp_impurity_keV_array[imp_element_index, 0]
+    # less_than_imp_temp_mask = temp_electron_profile_kev values less than impurity temperature
+    less_than_imp_temp_mask = (
+        temp_electron_kev <= temp_impurity_keV_array[imp_element_index, 0]
+    )
 
-    zav_of_te[less_than_imp_temp_mask] = impurity_arr_zav[imp_element_index, 0]
+    # Sets n_charge_impurity_average to the value at the lowest temperature in the table for temperatures below the lowest temperature in the table.
+    n_charge_impurity_average[less_than_imp_temp_mask] = impurity_arr_zav[
+        imp_element_index, 0
+    ]
+
+    # greater_than_imp_temp_mask = temp_electron_profile_kev values higher than impurity temperature.
     greater_than_imp_temp_mask = (
-        teprofile
+        temp_electron_kev
         >= temp_impurity_keV_array[
             imp_element_index,
             (impurity_arr_len_tab[imp_element_index]) - 1,
         ]
     )
-    zav_of_te[greater_than_imp_temp_mask] = impurity_arr_zav[
+
+    # Sets n_charge_impurity_average to the value at the highest temperature in the table for temperatures above the highest temperature in the table.
+    n_charge_impurity_average[greater_than_imp_temp_mask] = impurity_arr_zav[
         imp_element_index,
         impurity_arr_len_tab[imp_element_index] - 1,
     ]
 
-    return zav_of_te
+    return n_charge_impurity_average
 
 
 def calculate_impurity_radiation_power_density(
