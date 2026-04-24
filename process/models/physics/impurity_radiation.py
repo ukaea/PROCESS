@@ -546,9 +546,11 @@ class ImpurityRadiation:
         self.pimp_profile = np.zeros(self.plasma_profile.profile_size)
         self.pden_impurity_rad_profile = np.zeros(self.plasma_profile.profile_size)
         self.pden_impurity_core_rad_profile = np.zeros(self.plasma_profile.profile_size)
+        self.pden_impurity_rad_edge_profile = np.zeros(self.plasma_profile.profile_size)
 
         self.pden_impurity_rad_total_mw = 0.0
         self.pden_impurity_core_rad_total_mw = 0.0
+        self.pden_impurity_rad_edge_total_mw = 0.0
 
     def map_imprad_profile(self):
         """Map imprad_profile() over each impurity element index."""
