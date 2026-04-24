@@ -351,28 +351,32 @@ def z2index(zimp):
     )
 
 
-def fradcore(rho, radius_plasma_core_norm, f_p_plasma_core_rad_reduction):
-    """Finds the fraction of radiation from the core that is subtracted in impurity radiation model.
+def fradcore(
+    rho: np.array, radius_plasma_core_norm: float, f_p_plasma_core_rad_reduction: float
+) -> np.array:
+    """
+    Creates an array of the same length as `rho` filled with the value of `f_p_plasma_core_rad_reduction`
+    for values of `rho` less than `radius_plasma_core_norm` and 0 for values of `rho`
+    greater than or equal to `radius_plasma_core_norm`.
 
     Parameters
     ----------
-    rho : numpy.array
+    rho
         normalised minor radius
-    radius_plasma_core_norm : float
+    radius_plasma_core_norm
         normalised radius defining the 'core' region
-    f_p_plasma_core_rad_reduction : float
+    f_p_plasma_core_rad_reduction
         fraction of radiation from the core region
 
     Returns
     -------
-    numpy.array
-        fradcore - array filled with the f_p_plasma_core_rad_reduction
+        f_rad_core_profile - array filled with the f_p_plasma_core_rad_reduction
     """
-    fradcore = np.zeros(len(rho))
+    f_rad_core_profile = np.zeros(len(rho))
     rho_mask = rho < radius_plasma_core_norm
-    fradcore[rho_mask] = f_p_plasma_core_rad_reduction
+    f_rad_core_profile[rho_mask] = f_p_plasma_core_rad_reduction
 
-    return fradcore
+    return f_rad_core_profile
 
 
 def calculate_average_charge_at_temp(
@@ -637,9 +641,9 @@ class ImpurityRadiation:
         pden_impurity_core_rad_total = self.pimp_profile * (
             self.rho
             * fradcore(
-                self.rho,
-                impurity_radiation_module.radius_plasma_core_norm,
-                impurity_radiation_module.f_p_plasma_core_rad_reduction,
+                rho=self.rho,
+                radius_plasma_core_norm=impurity_radiation_module.radius_plasma_core_norm,
+                f_p_plasma_core_rad_reduction=impurity_radiation_module.f_p_plasma_core_rad_reduction,
             )
         )
 
