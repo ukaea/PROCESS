@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import dataclasses
 import logging
 import re
 from importlib import resources
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 from numba import njit
@@ -11,7 +13,11 @@ from scipy import integrate
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure import impurity_radiation_module
-from process.models.physics.plasma_profiles import PlasmaProfile
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
