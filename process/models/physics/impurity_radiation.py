@@ -369,7 +369,7 @@ def fradcore(rho, radius_plasma_core_norm, f_p_plasma_core_rad_reduction):
     return fradcore
 
 
-def zav_of_te(imp_element_index, teprofile):
+def calculate_average_charge_at_temp(imp_element_index, teprofile):
     """Calculates electron temperature dependent average atomic number
 
     Parameters
@@ -402,6 +402,7 @@ def _zav_of_te_compiled(
     impurity_arr_zav: np.array,
     impurity_arr_len_tab: np.array,
 ):
+
     bins = temp_impurity_keV_array[imp_element_index]
     indices = np.digitize(teprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1

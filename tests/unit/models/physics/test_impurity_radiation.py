@@ -173,7 +173,7 @@ def test_zav_of_te():
             1.00000000000001,
         ]),
     )
-    zav_of_te = impurity_radiation.zav_of_te(
+    zav_of_te = impurity_radiation.calculate_average_charge_at_temp(
         zavofteparam.imp_element_index, zavofteparam.te
     )
 
