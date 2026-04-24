@@ -1159,7 +1159,7 @@ class Physics(Model):
         znimp = 0.0
         for imp in range(N_IMPURITIES):
             if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
-                znimp += impurity_radiation.zav_of_te(
+                znimp += impurity_radiation.calculate_average_charge_at_temp(
                     imp,
                     np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
                     self.data,
@@ -1270,7 +1270,7 @@ class Physics(Model):
         for imp in range(N_IMPURITIES):
             self.data.physics.n_charge_plasma_effective_vol_avg += (
                 self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
-                * impurity_radiation.zav_of_te(
+                * impurity_radiation.calculate_average_charge_at_temp(
                     imp,
                     np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
                     self.data,
@@ -1382,7 +1382,7 @@ class Physics(Model):
             if self.data.impurity_radiation.impurity_arr_z[imp] > 2:
                 self.data.physics.n_charge_plasma_effective_mass_weighted_vol_avg += (
                     self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
-                    * impurity_radiation.zav_of_te(
+                    * impurity_radiation.calculate_average_charge_at_temp(
                         imp,
                         np.array([self.data.physics.temp_plasma_electron_vol_avg_kev]),
                         self.data,
@@ -1659,7 +1659,7 @@ class Physics(Model):
             for imp in range(N_IMPURITIES):
                 zeff_profile[i] += (
                     self.data.impurity_radiation.f_nd_impurity_electron_array[imp]
-                    * impurity_radiation.zav_of_te(
+                    * impurity_radiation.calculate_average_charge_at_temp(
                         imp,
                         np.array([self.plasma_profile.teprofile.profile_y[i]]),
                         self.data,
@@ -1676,9 +1676,11 @@ class Physics(Model):
         charge_profiles = np.zeros((n_impurities, n_points))
         for imp in range(n_impurities):
             for i in range(n_points):
-                charge_profiles[imp, i] = impurity_radiation.zav_of_te(
-                    imp, np.array([te_profile[i]]), self.data
-                ).squeeze()
+                charge_profiles[imp, i] = (
+                    impurity_radiation.calculate_average_charge_at_temp(
+                        imp, np.array([te_profile[i]]), self.data
+                    ).squeeze()
+                )
         self.data.impurity_radiation.n_charge_impurity_profile = charge_profiles
 
     def outplas(self):
