@@ -14,6 +14,7 @@ from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import DataStructure
 from process.models.physics.plasma_profiles import PlasmaProfile
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -561,7 +562,7 @@ class ImpurityRadiation:
     """Calculates the impurity radiation losses for given temperature and
     density profiles. The considers the  total impurity radiation from the core
     (pden_impurity_core_rad_total_mw) and total impurity radiation
-    (pden_impurity_rad_total_mw) [MW/(m^3)]. The class is used to sum the impurity
+    (pden_impurity_rad_total_mw) [MW/(m³)]. The class is used to sum the impurity
     radiation loss from each impurity element to find the total impurity radiation loss.
     """
 
@@ -655,7 +656,7 @@ class ImpurityRadiation:
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss.
         """
-        # 2.0e-6 converts from W/m^3 to MW/m^3 and also accounts for both sides of the
+        # 2.0e-6 converts from W/m³ to MW/m³ and also accounts for both sides of the
         # plasma
         self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
             self.pden_impurity_rad_profile,
