@@ -1247,8 +1247,8 @@ class Physics(Model):
         # ======================================================================
 
         # Effective charge
-        # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
-        # but ne = sum(ni.Zi) through quasineutrality
+        # Calculation should be Σ(nᵢZᵢ²) / Σ(nᵢZᵢ),
+        # but ne = Σ(nᵢZᵢ) through quasineutrality
         physics_variables.n_charge_plasma_effective_vol_avg = 0.0
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             physics_variables.n_charge_plasma_effective_vol_avg += (
@@ -1328,7 +1328,7 @@ class Physics(Model):
         # ======================================================================
 
         # Mass weighted plasma effective charge
-        # Sum of (Zi^2*n_i) / m_i
+        # Σ(Z²ᵢnᵢ) / mᵢ
         physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg = (
             (
                 physics_variables.f_plasma_fuel_deuterium
