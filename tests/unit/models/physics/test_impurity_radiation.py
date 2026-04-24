@@ -91,7 +91,7 @@ class FradcoreParam(NamedTuple):
     expected_fradcore: np.array = np.array
 
 
-def test_fradcore():
+def test_create_f_rad_core_profile():
     """Tests `fradcore` function.
 
     :param rho: normalised minor radius
@@ -121,7 +121,7 @@ def test_fradcore():
             0.0,
         ]),
     )
-    fradcore = impurity_radiation.fradcore(
+    fradcore = impurity_radiation.create_f_rad_core_profile(
         fradcoreparam.rho,
         fradcoreparam.radius_plasma_core_norm,
         fradcoreparam.f_p_plasma_core_rad_reduction,
