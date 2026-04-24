@@ -385,7 +385,7 @@ def calculate_average_charge_at_temp(imp_element_index, teprofile):
         zav_of_te - electron temperature dependent average atomic number
     """
     # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
-    return _zav_of_te_compiled(
+    return calculate_average_charge_at_temp_compiled(
         imp_element_index,
         teprofile,
         impurity_radiation_module.temp_impurity_keV_array,
@@ -395,7 +395,7 @@ def calculate_average_charge_at_temp(imp_element_index, teprofile):
 
 
 @njit(cache=True)
-def _zav_of_te_compiled(
+def calculate_average_charge_at_temp_compiled(
     imp_element_index: int,
     teprofile: np.array,
     temp_impurity_keV_array: np.array,
