@@ -587,9 +587,17 @@ class ImpurityRadiation:
         self.pden_impurity_core_rad_profile = np.zeros(
             self.data.physics.n_plasma_profile_elements
         )
+        self.pden_impurity_rad_edge_profile = np.zeros(self.plasma_profile.profile_size)
 
         self.pden_impurity_rad_total_mw = 0.0
         self.pden_impurity_core_rad_total_mw = 0.0
+        self.pden_impurity_rad_edge_total_mw = 0.0
+
+    def run(self):
+        """This model isn't run"""
+
+    def output(self):
+        """This model has no output"""
 
     def run(self):
         """This model isn't run"""
