@@ -210,6 +210,8 @@ In this regime, $\tau_{\text{slow}}$ is the characteristic electron-drag slowing
 
 $\blacksquare$
 
+---
+
 #### Set the plasma deuterium and tritium ion densities
 
 The bulk target ion densities used in the beam-target reactions are
@@ -551,6 +553,8 @@ $$
 
 $\blacksquare$
 
+---
+
 ### Calculate the deposited fast ion energy from the pressure
 
 The deposited beam ion energy is inferred from the pressure relation
@@ -644,6 +648,8 @@ where $u = v/v_{\text{crit}}$.
 
 The quantity returned by `_beam_fusion_cross_section()` is in cm$^2$, so the integrated area is converted to m$^2$ before forming the final rate coefficient.
 
+---
+
 ### Hot beam fusion reaction rate integrand | `_hot_beam_fusion_reaction_rate_integrand()`
 
 This internal function evaluates the integrand used in the beam-target fusion rate coefficient.
@@ -710,6 +716,8 @@ and the constants are
 - $a_5 = 4.09 \times 10^2$
 
 The exact provenance of this particular fit and its coefficients has not yet been fully traced in the present documentation. It is retained here to document the current implementation.
+
+---
 
 ### Multiply by the coefficient to get the full rate coefficient
 
@@ -826,6 +834,8 @@ $$
 This constraint can be activated by stating `icc = 7` in the input file.
 
 The desired value of the hot ion beam density calculated from the code (`nd_beam_ions_out`) can be constrained using the input variable `f_nd_beam_electron`, which is the ratio of the beam density to the plasma electron density. It can be set as an iteration variable by setting `ixc = 7`.
+
+---
 
 ## References
 
