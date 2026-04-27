@@ -579,20 +579,20 @@ $$
 
 with the convention that the deposited energy is set to zero if the corresponding hot beam density is zero.
 
-The total deposited beam ion energy returned to `beam_fusion()` is the density-weighted average:
+The total deposited beam ion energy returned to `beam_fusion()` is the density-weighted average beam ion energy:
 
 $$
 \text{E}_{\text{hot,total}}
 =
 \frac{
-\text{E}_{\text{hot,D}} \text{n}_{\text{beam,D}}
+\text{E}_{\text{hot,D}} \, \text{n}_{\text{beam,D}}
 +
-\text{E}_{\text{hot,T}} \text{n}_{\text{beam,T}}
+\text{E}_{\text{hot,T}} \, \text{n}_{\text{beam,T}}
 }
 {\text{n}_{\text{beam,hot}}}
 $$
 
-with the convention that this is set to zero if $\langle n_{\text{beam}} \rangle_{\text{hot}}=0$.
+with the convention that this is set to zero if $\text{n}_{\text{beam,hot}} = 0$. This represents a density-weighted average over the deuterium and tritium fast-ion populations.
 
 ### Return the slowing-down state
 
