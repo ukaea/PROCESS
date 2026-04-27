@@ -738,7 +738,7 @@ $$
 
 ## Beam-target fusion reaction rate | `beam_target_reaction_rate()` {#beam-target-reaction-rate}
 
-The present implementation evaluates an effective beam-target fusion rate coefficient for a slowing-down fast-ion population. This is consistent with simple beam-plasma reaction-rate models in which fast ions interact with a Maxwellian background plasma during the slowing-down process[^niikura1990]. The total beam-target fusion reaction rate is calculated as
+`beam_target_reaction_rate()` calculates the total beam-target fusion reaction rate from the hot beam ion density, thermal target ion density, effective beam-target rate coefficient, and plasma volume:
 
 $$
 \text{R}_{\text{beam-target}}
@@ -751,12 +751,12 @@ $$
 
 where:
 
-- $n_{\text{beam}}$ is the hot beam ion density,
-- $n_{\text{target}}$ is the thermal target ion density,
+- $\text{n}_{\text{beam}}$ is the hot beam ion density,
+- $\text{n}_{\text{target}}$ is the thermal target ion density,
 - $\langle \sigma v \rangle_{\text{beam}}$ is the effective beam-target rate coefficient,
-- $V_{\text{plasma}}$ is the plasma volume.
+- $\text{V}_{\text{plasma}}$ is the plasma volume.
 
-This returns the total reaction rate in s$^{-1}$.
+This returns the total reaction rate in $\text{s}^{-1}$.
 
 ---
 
@@ -844,5 +844,3 @@ The desired value of the hot ion beam density calculated from the code (`nd_beam
 [^deng1987]: B. Deng and G. A. Emmert, “Fast ion pressure in fusion plasma,” *Nuclear Fusion and Plasma Physics*, vol. 9, no. 3, pp. 136–141, 1987. Available: <https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf>
 
 [^wesson2011]: J. Wesson, *Tokamaks*, 4th ed., Oxford Science Publications, 2011.
-
-[^niikura1990]: S. Niikura and M. Nagami, “Improvement of fusion reactivity and fusion power multiplication factor in the presence of fast ions,” *Fusion Engineering and Design*, vol. 12, pp. 467–480, 1990.
