@@ -54,7 +54,7 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 
 ## Beam slowing down properties | `beam_fusion()`
 
-This section explains the stages of calculation in the function `beam_fusion()`
+This section explains the stages of calculation in the function `beam_fusion()`.
 
 ### Calculate the beam ion slowing down time
 
@@ -234,11 +234,11 @@ where $n_{\text{fuel}}$ is the volume-averaged total fuel ion density.
 
 ### Calculate the beam alpha powers, beam densities and deposited energy
 
-[`beam_slowing_down_state()`](#neutral-beam-alpha-power-beam-densities-and-deposited-energy--beam_slowing_down_state) is run to calculate the hot beam densities, critical speeds, and deposited beam energy.
+[`beam_slowing_down_state()`](#beam-slowing-down-state) is run to calculate the hot beam densities, critical speeds, and deposited beam energy.
 
-[`beam_reaction_rate_coefficient()`](#beam-fusion-reaction-rate-coefficient--beam_reaction_rate_coefficient) is then run for the deuterium and tritium beam components to obtain effective beam-target rate coefficients.
+[`beam_reaction_rate_coefficient()`](#beam-reaction-rate-coefficient) is then run for the deuterium and tritium beam components to obtain effective beam-target rate coefficients.
 
-[`beam_target_reaction_rate()`](#beam-target-fusion-reaction-rate--beam_target_reaction_rate) and [`alpha_power_beam()`](#beam-fusion-alpha-power--alpha_power_beam) are used to convert these into alpha power.
+[`beam_target_reaction_rate()`](#beam-target-reaction-rate) and [`alpha_power_beam()`](#alpha-power-beam) are used to convert these into alpha power.
 
 ### Set the returned alpha power
 
@@ -282,7 +282,7 @@ The value of $E_{\text{beam,deposited}}$ is the pressure-equivalent deposited en
 
 ---
 
-## Neutral beam alpha power, beam densities and deposited energy | `beam_slowing_down_state()`
+## Neutral beam alpha power, beam densities and deposited energy | `beam_slowing_down_state()` {#beam-slowing-down-state}
 
 ### Calculate the beam current fractions
 
@@ -592,9 +592,9 @@ $$
 
 with the convention that this is set to zero if $\langle n_{\text{beam}} \rangle_{\text{hot}}=0$.
 
-1. **Return the slowing-down state**
+### Return the slowing-down state {#beam-slowing-down-state}
 
-`beam_slowing_down_state()` returns:
+`beam_slowing_down_state()` returns the key quantities describing the steady-state fast-ion population:
 
 - deuterium beam ion density,
 - tritium beam ion density,
@@ -605,7 +605,7 @@ with the convention that this is set to zero if $\langle n_{\text{beam}} \rangle
 
 ---
 
-## Beam fusion reaction rate coefficient | `beam_reaction_rate_coefficient()`
+## Beam fusion reaction rate coefficient | `beam_reaction_rate_coefficient()` {#beam-reaction-rate-coefficient}
 
 ### Calculate the beam velocity
 
@@ -658,7 +658,7 @@ where:
 
 - $u$ is the ratio of the instantaneous beam speed to the critical speed,
 - $E_{\text{amu}}(u)$ is the instantaneous beam kinetic energy per amu,
-- $\sigma_{\text{bmfus}}$ is returned by [`_beam_fusion_cross_section()`](#beam-fusion-cross-section--_beam_fusion_cross_section).
+- $\sigma_{\text{bmfus}}$ is returned by [`_beam_fusion_cross_section()`](#beam-fusion-cross-section).
 
 The beam kinetic energy per amu used in the code is constructed from
 
@@ -668,7 +668,7 @@ $$
 \frac{(\text{u} \text{v}_{\text{crit}})^2 \text{m}_{\text{u}}}{\text{e}_{\text{keV}}}
 $$
 
-#### Beam fusion cross section | `_beam_fusion_cross_section()`
+#### Beam fusion cross section | `_beam_fusion_cross_section()` {#beam-fusion-cross-section}
 
 This internal function returns the beam fusion cross-section fit used by the beam-target rate coefficient calculation. Note: the provenance of this fit is currently unverified in the documentation.
 
@@ -728,7 +728,7 @@ $$
 
 ---
 
-## Beam-target fusion reaction rate | `beam_target_reaction_rate()`
+## Beam-target fusion reaction rate | `beam_target_reaction_rate()` {#beam-target-reaction-rate}
 
 The present implementation evaluates an effective beam-target fusion rate coefficient for a slowing-down fast-ion population. This is consistent with simple beam-plasma reaction-rate models in which fast ions interact with a Maxwellian background plasma during the slowing-down process[^niikura1990]. The total beam-target fusion reaction rate is calculated as
 
@@ -752,7 +752,7 @@ This returns the total reaction rate in s$^{-1}$.
 
 ---
 
-## Beam fusion alpha power | `alpha_power_beam()`
+## Beam fusion alpha power | `alpha_power_beam()` {#alpha-power-beam}
 
 The beam-target alpha power is obtained from the total beam-target reaction rate by
 
