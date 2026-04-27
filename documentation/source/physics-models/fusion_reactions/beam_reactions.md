@@ -567,14 +567,14 @@ $$
 \text{E}_{\text{hot,D}}
 =
 \frac{3}{2}
-\frac{\text{p}_{\text{D}}}{\langle \text{n}_{\text{beam}} \rangle_{\text{D}}}
+\frac{\text{p}_{\text{D}}}{\text{n}_{\text{beam,D}}}
 $$
 
 $$
 \text{E}_{\text{hot,T}}
 =
 \frac{3}{2}
-\frac{\text{p}_{\text{T}}}{\langle \text{n}_{\text{beam}} \rangle_{\text{T}}}
+\frac{\text{p}_{\text{T}}}{\text{n}_{\text{beam,T}}}
 $$
 
 with the convention that the deposited energy is set to zero if the corresponding hot beam density is zero.
@@ -585,16 +585,16 @@ $$
 \text{E}_{\text{hot,total}}
 =
 \frac{
-\text{E}_{\text{hot,D}} \langle \text{n}_{\text{beam}} \rangle_{\text{D}}
+\text{E}_{\text{hot,D}} \text{n}_{\text{beam,D}}
 +
-\text{E}_{\text{hot,T}} \langle \text{n}_{\text{beam}} \rangle_{\text{T}}
+\text{E}_{\text{hot,T}} \text{n}_{\text{beam,T}}
 }
-{\langle \text{n}_{\text{beam}} \rangle_{\text{hot}}}
+{\text{n}_{\text{beam,hot}}}
 $$
 
 with the convention that this is set to zero if $\langle n_{\text{beam}} \rangle_{\text{hot}}=0$.
 
-### Return the slowing-down state {#beam-slowing-down-state}
+### Return the slowing-down state
 
 `beam_slowing_down_state()` returns the key quantities describing the steady-state fast-ion population:
 
@@ -736,7 +736,7 @@ $$
 
 ## Beam-target fusion reaction rate | `beam_target_reaction_rate()` {#beam-target-reaction-rate}
 
-`beam_target_reaction_rate()` calculates the total beam-target fusion reaction rate from the hot beam ion density, thermal target ion density, effective beam-target rate coefficient, and plasma volume:
+`beam_target_reaction_rate()` calculates the total beam-target fusion reaction rate from the hot beam ion density, thermal target ion density, effective beam-target rate coefficient, and plasma volume. This is consistent with simple beam-plasma reaction-rate models in which fast ions interact with a Maxwellian background plasma during the slowing-down process[^niikura1990].
 
 $$
 \text{R}_{\text{beam-target}}
@@ -781,7 +781,7 @@ For the deuterium beam component reacting with thermal tritium:
 $$
 \text{R}_{\text{D-beam,DT}}
 =
-\langle \text{n}_{\text{beam}} \rangle_{\text{D}}
+\text{n}_{\text{beam,D}}
 \text{n}_{\text{T,plasma}}
 \langle \sigma \text{v} \rangle_{\text{beam,D}}
 \text{V}_{\text{plasma}}
@@ -798,7 +798,7 @@ For the tritium beam component reacting with thermal deuterium:
 $$
 \text{R}_{\text{T-beam,DT}}
 =
-\langle \text{n}_{\text{beam}} \rangle_{\text{T}}
+\text{n}_{\text{beam,T}}
 \text{n}_{\text{D,plasma}}
 \langle \sigma \text{v} \rangle_{\text{beam,T}}
 \text{V}_{\text{plasma}}
@@ -842,3 +842,5 @@ The desired value of the hot ion beam density calculated from the code (`nd_beam
 [^deng1987]: B. Deng and G. A. Emmert, “Fast ion pressure in fusion plasma,” *Nuclear Fusion and Plasma Physics*, vol. 9, no. 3, pp. 136–141, 1987. Available: <https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf>
 
 [^wesson2011]: J. Wesson, *Tokamaks*, 4th ed., Oxford Science Publications, 2011.
+
+[^niikura1990]: S. Niikura and M. Nagami, “Improvement of fusion reactivity and fusion power multiplication factor in the presence of fast ions,” *Fusion Engineering and Design*, vol. 12, pp. 467–480, 1990.
