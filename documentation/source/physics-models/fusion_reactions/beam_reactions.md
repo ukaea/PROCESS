@@ -37,7 +37,12 @@ Converts beam density, target density, and beam-target reactivity into a total r
 - `alpha_power_beam()`  
 Converts the total beam-target reaction rate into alpha power.
 
-Due to the small contribution of fusion power from the neutral beams, only D-T beam-target reactions are included. D-D beam contributions are neglected in this model.
+!!! info "Model assumption: beam fusion channels"
+
+    Due to the relatively small contribution of fusion power from neutral beams,  
+    only D–T beam–target reactions are included in this model.  
+
+    Beam-driven D–D reactions are neglected.
 
 The beam fusion calculations will only run if the calculated beam current is greater than 0, i.e. when an NBI heating and current drive configuration is active. Currently, the model only runs when the plasma is not ignited `i_plasma_ignited = 0`.
 
