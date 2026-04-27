@@ -465,6 +465,8 @@ $$
 \text{x}_{\text{c}} = \sqrt{\frac{\text{E}_{\text{beam}}}{\text{E}_{\text{crit}}}}
 $$
 
+---
+
 ### Beam fast ion pressure integral | `fast_ion_pressure_integral()`
 
 This internal function returns the dimensionless pressure integral factor used in the fast-ion pressure expression. It takes the beam birth energy $E_{\text{beam}}$ and the critical energy $E_{\text{crit}}$ for the required beam ion species.
