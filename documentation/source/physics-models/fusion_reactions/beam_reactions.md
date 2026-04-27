@@ -334,17 +334,17 @@ $$
 
 ### Set the fast beam ion densities
 
-The steady-state hot beam ion densities are set from source rate times residence time:
+The steady-state hot beam ion densities are obtained from the balance between the beam particle source rate and the slowing-down residence time:
 
 $$
-\langle \text{n}_{\text{beam}} \rangle_{\text{D}}
+\text{n}_{\text{beam,D}}
 =
 \frac{\text{I}_{\text{beam,D}}\tau_{\text{slow,D}}^{*}}
 {\text{e} \text{V}_{\text{plasma}}}
 $$
 
 $$
-\langle \text{n}_{\text{beam}} \rangle_{\text{T}}
+\text{n}_{\text{beam,T}}
 =
 \frac{\text{I}_{\text{beam,T}}\tau_{\text{slow,T}}^{*}}
 {\text{e} \text{V}_{\text{plasma}}}
@@ -353,11 +353,9 @@ $$
 The total hot beam ion density is then
 
 $$
-\langle \text{n}_{\text{beam}} \rangle_{\text{hot}}
+\text{n}_{\text{beam,hot}}
 =
-\langle \text{n}_{\text{beam}} \rangle_{\text{D}}
-+
-\langle \text{n}_{\text{beam}} \rangle_{\text{T}}
+\text{n}_{\text{beam,D}} + \text{n}_{\text{beam,T}}
 $$
 
 ### Calculate the speeds of ions at the critical energy
