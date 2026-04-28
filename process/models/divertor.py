@@ -96,16 +96,10 @@ class Divertor(Model):
     def single_divertor_angle(self):
         """
         Calculate the angle subtended by a single divertor.
-        Angle is calculated as 360 degrees minus the sum of the inboard
-        and outboard blanket poloidal angles, divided by 2 (for two divertors).
+        Angle is calculated as 180 degrees minus the inboard
+        blanket poloidal angle, divided by 2 (for two divertors).
         """
-        return (
-            360.0
-            - (
-                blanket_library.deg_blkt_inboard_poloidal_plasma
-                + blanket_library.deg_blkt_outboard_poloidal_plasma
-            )
-        ) / 2.0
+        return (180.0 - blanket_library.deg_blkt_inboard_poloidal_plasma) / 2.0
 
     def divtart(
         self,
