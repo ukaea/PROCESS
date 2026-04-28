@@ -13927,7 +13927,7 @@ def plot_blkt_structure(
         label_x,
         label_y,
         f"{deg_blkt_outboard_poloidal_plasma:.1f}°\n({f_deg_blkt_outboard_poloidal_plasma * 100:.1f}%)",
-        fontsize=8,
+        fontsize=7,
         color="purple",
         ha="center",
         va="center",
@@ -13978,7 +13978,7 @@ def plot_blkt_structure(
         label_x,
         label_y,
         f"{deg_blkt_inboard_poloidal_plasma:.1f}°\n({f_deg_blkt_inboard_poloidal_plasma * 100:.1f}%)",
-        fontsize=8,
+        fontsize=7,
         color="green",
         ha="center",
         va="center",
@@ -13990,6 +13990,7 @@ def plot_blkt_structure(
             "edgecolor": "green",
             "linewidth": 1.5,
         },
+        zorder=5,
     )
 
     # Plot arc showing the angle between the two arrows (divertor angle)
@@ -14013,7 +14014,7 @@ def plot_blkt_structure(
         label_x,
         label_y,
         f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
-        fontsize=8,
+        fontsize=7,
         color="black",
         ha="center",
         va="center",
@@ -14025,6 +14026,7 @@ def plot_blkt_structure(
             "edgecolor": "black",
             "linewidth": 1.5,
         },
+        zorder=5,
     )
 
     # Plot vertical lines at the inner and outer radial boundaries of the blanket
