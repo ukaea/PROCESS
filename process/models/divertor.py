@@ -40,6 +40,7 @@ class Divertor(Model):
             indicate whether output should be written to the output file, or not
         """
         dv.deg_div_poloidal_plasma = self.single_divertor_angle
+        fwbs.f_ster_div_single = dv.deg_div_poloidal_plasma / 360.0
 
         fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
