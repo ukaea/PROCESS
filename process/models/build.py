@@ -1140,13 +1140,6 @@ class Build(Model):
                     divht,
                     "OP ",
                 )
-                po.ovarrf(
-                    self.outfile,
-                    "Divertor poloidal angle subtended by plasma (degrees)",
-                    "(deg_div_poloidal_plasma)",
-                    divertor_variables.deg_div_poloidal_plasma,
-                    "OP ",
-                )
 
             elif self.data.divertor.n_divertors == 2:
                 po.oheadr(self.outfile, "Divertor build and plasma position")
@@ -1455,13 +1448,6 @@ class Build(Model):
                     "Calculated maximum divertor height (m)",
                     "(divht)",
                     divht,
-                    "OP ",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Divertor poloidal angle subtended by plasma (degrees)",
-                    "(deg_div_poloidal_plasma)",
-                    divertor_variables.deg_div_poloidal_plasma,
                     "OP ",
                 )
             else:
