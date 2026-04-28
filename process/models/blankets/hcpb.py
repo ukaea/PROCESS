@@ -52,6 +52,16 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
         self.component_volumes()
 
+        blanket_vars.deg_blkt_outboard_poloidal_plasma = (
+            self.calculate_blkt_outboard_poloidal_plasma_angle(
+                rminor=physics_variables.rminor,
+                dr_blkt_outboard=build_variables.dr_blkt_outboard,
+                dz_blkt_half=blanket_vars.dz_blkt_half,
+                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                dr_fw_outboard=build_variables.dr_fw_outboard,
+            )
+        )
+
         dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
         self.data.fwbs.radius_blkt_channel = dia_blkt_channel / 2
         (
