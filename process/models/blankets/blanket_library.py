@@ -643,6 +643,13 @@ class BlanketLibrary(Model):
             "(a_blkt_total_surface_full_coverage)",
             build_variables.a_blkt_total_surface_full_coverage,
         )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Outboard blanket poloidal angle subtended by plasma (degrees)",
+            "(deg_blkt_outboard_poloidal_plasma)",
+            blanket_library.deg_blkt_outboard_poloidal_plasma,
+        )
 
     def primary_coolant_properties(self, output: bool):
         """Calculates the fluid properties of the Primary Coolant in the FW and BZ.
@@ -3676,6 +3683,47 @@ class OutboardBlanket(BlanketLibrary):
             fwbs_variables.radius_blkt_channel_90_bend,
             fwbs_variables.radius_blkt_channel_180_bend,
         ) = self.calculate_pipe_bend_radius(i_ps=1)
+
+    @staticmethod
+    def calculate_blkt_outboard_poloidal_plasma_angle(
+        rminor: float,
+        dr_blkt_outboard: float,
+        dz_blkt_half: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_outboard: float,
+    ) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane.
+
+        Parameters
+        ----------
+        rminor :
+            Plasma minor radius (m).
+        dr_blkt_outboard :
+            Radial thickness of outboard blanket (m).
+        dz_blkt_half :
+            Vertical half-height of outboard blanket (m).
+        dr_fw_plasma_gap_outboard :
+            Outboard first wall to plasma gap (m).
+        dr_fw_outboard :
+            Radial thickness of outboard first wall (m).
+
+        Returns
+        -------
+        deg_blkt_outboard_poloidal_plasma :
+            Poloidal angle subtended by outboard blanket at plasma mid-plane (degrees).
+        """
+        return np.degrees(
+            2.0
+            * np.arctan(
+                dz_blkt_half
+                / (
+                    rminor
+                    + dr_blkt_outboard
+                    + dr_fw_plasma_gap_outboard
+                    + dr_fw_outboard
+                )
+            )
+        )
 
     def calculate_blanket_outboard_module_geometry(
         self,
