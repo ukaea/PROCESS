@@ -366,7 +366,7 @@ where $f$ is the fraction of heat to the divertor.
 
 ##### User input
 
-This model is set with `i_thermal_electric_conversion = 3`.
+This model is set with `i_thermal_electric_conversion = 2`.
 
 The efficiency of the power generation cycle is input by the user via `eta_turbine`.
   

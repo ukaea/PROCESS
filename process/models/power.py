@@ -1,5 +1,6 @@
 import logging
 import math
+from enum import IntEnum
 
 import numpy as np
 import scipy as sp
@@ -27,6 +28,16 @@ from process.data_structure import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class ElectricConversionModelTypes(IntEnum):
+    """Enum for thermal to electric power conversion model types."""
+
+    CCFE_HCPB_VALUE = 0
+    CCFE_HCPB_VALUE_WITH_DIVERTOR = 1
+    USER_INPUT = 2
+    STEAM_RANKINE_CYCLE = 3
+    SUPERCRITICAL_CO2_BRAYTON_CYCLE = 4
 
 
 class Power(Model):
@@ -904,7 +915,10 @@ class Power(Model):
 
         #  Primary (high-grade) thermal power, available for electricity generation.  Switch heat_transport_variables.i_shld_primary_heat
         #  is 1 or 0, is user choice on whether the shield thermal power goes to primary or secondary heat
-        if fwbs_variables.i_thermal_electric_conversion == 0:
+        i_thermal_electric_conversion = ElectricConversionModelTypes(
+            fwbs_variables.i_thermal_electric_conversion
+        )
+        if i_thermal_electric_conversion == ElectricConversionModelTypes.CCFE_HCPB_VALUE:
             #  Primary thermal power (MW)
             heat_transport_variables.p_plant_primary_heat_mw = (
                 power_variables.p_fw_blkt_heat_deposited_mw
@@ -1865,7 +1879,10 @@ class Power(Model):
         eta_turbine :
 
         """
-        if fwbs_variables.i_thermal_electric_conversion == 0:
+        i_thermal_electric_conversion = ElectricConversionModelTypes(
+            fwbs_variables.i_thermal_electric_conversion
+        )
+        if i_thermal_electric_conversion == ElectricConversionModelTypes.CCFE_HCPB_VALUE:
             #  CCFE HCPB Model
             if fwbs_variables.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
@@ -1877,7 +1894,10 @@ class Power(Model):
                 logger.log(f"{'i_blanket_type is not equal to 1'}")
 
             #  Etath from reference. Div power to primary
-        elif fwbs_variables.i_thermal_electric_conversion == 1:
+        elif (
+            i_thermal_electric_conversion
+            == ElectricConversionModelTypes.CCFE_HCPB_VALUE_WITH_DIVERTOR
+        ):
             #  CCFE HCPB Model
             if fwbs_variables.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
@@ -1889,12 +1909,15 @@ class Power(Model):
                 logger.log(f"{'i_blanket_type is not equal to 1.'}")
 
             #  User input used, eta_turbine not changed
-        elif fwbs_variables.i_thermal_electric_conversion == 2:
+        elif i_thermal_electric_conversion == ElectricConversionModelTypes.USER_INPUT:
             return eta_turbine
             # Do nothing
 
             #  Steam Rankine cycle to be used
-        elif fwbs_variables.i_thermal_electric_conversion == 3:
+        elif (
+            i_thermal_electric_conversion
+            == ElectricConversionModelTypes.STEAM_RANKINE_CYCLE
+        ):
             #  CCFE HCPB Model
             if fwbs_variables.i_blanket_type == 1:
                 #  If coolant is helium, the steam cycle is assumed to be superheated
@@ -1928,7 +1951,10 @@ class Power(Model):
                 logger.log(f"{'i_blanket_type is not equal to 1.'}")
 
             #  Supercritical CO2 cycle to be used
-        elif fwbs_variables.i_thermal_electric_conversion == 4:
+        elif (
+            i_thermal_electric_conversion
+            == ElectricConversionModelTypes.SUPERCRITICAL_CO2_CYCLE
+        ):
             #  The same temperature/efficiency correlation is used regardless of
             #  primary coolant choice.  The turbine inlet temperature is assumed to
             #  be 20 degrees below the primary coolant outlet temperature.
