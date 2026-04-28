@@ -52,14 +52,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
         self.component_volumes()
 
+        # If Shfranov shift is added, the angle formula can be used where the shift is added to the minor radius. For now, the shift is neglected and the angle is calculated using the minor radius only.
         blanket_vars.deg_blkt_outboard_poloidal_plasma = (
-            self.calculate_blkt_outboard_poloidal_plasma_angle(
-                rminor=physics_variables.rminor,
-                dr_blkt_outboard=build_variables.dr_blkt_outboard,
-                dz_blkt_half=blanket_vars.dz_blkt_half,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
-                dr_fw_outboard=build_variables.dr_fw_outboard,
-            )
+            self.blkt_outboard_poloidal_plasma_angle
         )
 
         blanket_vars.deg_blkt_inboard_poloidal_plasma = (

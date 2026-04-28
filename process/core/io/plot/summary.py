@@ -13803,15 +13803,17 @@ def plot_blkt_structure(
     ax.annotate(
         "",
         xy=(rmajor, 0),
-        xytext=(r_blkt_outboard_out, dz_blkt_half),
+        xytext=(rmajor, dz_blkt_half),
         arrowprops={"arrowstyle": "<-", "color": "purple"},
+        zorder=5,
     )
 
     ax.annotate(
         "",
         xy=(rmajor, 0),
-        xytext=(r_blkt_outboard_out, -dz_blkt_half),
+        xytext=(rmajor, -dz_blkt_half),
         arrowprops={"arrowstyle": "<-", "color": "purple"},
+        zorder=5,
     )
 
     # Plot arc showing the angle between the two arrows
@@ -13853,14 +13855,16 @@ def plot_blkt_structure(
         "",
         xy=(rmajor, 0),
         xytext=(r_fw_inboard_out, dz_blkt_half),
-        arrowprops={"arrowstyle": "<-", "color": "purple"},
+        arrowprops={"arrowstyle": "<-", "color": "green"},
+        zorder=5,
     )
 
     ax.annotate(
         "",
         xy=(rmajor, 0),
         xytext=(r_fw_inboard_out, -dz_blkt_half),
-        arrowprops={"arrowstyle": "<-", "color": "purple"},
+        arrowprops={"arrowstyle": "<-", "color": "green"},
+        zorder=5,
     )
 
     # Plot arc showing the angle between the two arrows
@@ -13872,7 +13876,7 @@ def plot_blkt_structure(
     arc_x = rmajor - arc_radius * np.cos(theta)
     arc_y = arc_radius * np.sin(theta)
 
-    ax.plot(arc_x, arc_y, color="purple", linewidth=2)
+    ax.plot(arc_x, arc_y, color="green", linewidth=2)
 
     # Add angle label at the arc
     mid_angle = np.deg2rad((angle_start + angle_end) / 2)
@@ -13885,7 +13889,7 @@ def plot_blkt_structure(
         label_y,
         f"{deg_blkt_inboard_poloidal_plasma:.1f}°",
         fontsize=8,
-        color="purple",
+        color="green",
         ha="center",
         va="center",
         weight="bold",
@@ -13893,7 +13897,7 @@ def plot_blkt_structure(
             "boxstyle": "round",
             "facecolor": "white",
             "alpha": 0.8,
-            "edgecolor": "purple",
+            "edgecolor": "green",
             "linewidth": 1.5,
         },
     )
