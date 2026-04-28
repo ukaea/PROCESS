@@ -652,9 +652,21 @@ class BlanketLibrary(Model):
         )
         po.ovarre(
             self.outfile,
+            "Angle fraction of outboard blanket poloidal angle subtended by plasma",
+            "(f_deg_blkt_outboard_poloidal_plasma)",
+            blanket_library.f_deg_blkt_outboard_poloidal_plasma,
+        )
+        po.ovarre(
+            self.outfile,
             "Inboard blanket poloidal angle subtended by plasma (degrees)",
             "(deg_blkt_inboard_poloidal_plasma)",
             blanket_library.deg_blkt_inboard_poloidal_plasma,
+        )
+        po.ovarre(
+            self.outfile,
+            "Angle fraction of inboard blanket poloidal angle subtended by plasma",
+            "(f_deg_blkt_inboard_poloidal_plasma)",
+            blanket_library.f_deg_blkt_inboard_poloidal_plasma,
         )
 
     def primary_coolant_properties(self, output: bool):
@@ -3694,6 +3706,11 @@ class OutboardBlanket(BlanketLibrary):
     def blkt_outboard_poloidal_plasma_angle(self) -> float:
         """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane."""
         return 180.0
+
+    @property
+    def f_deg_blkt_outboard_poloidal_plasma(self) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane."""
+        return self.blkt_outboard_poloidal_plasma_angle / 360.0
 
     @staticmethod
     def calculate_blkt_outboard_poloidal_plasma_angle(

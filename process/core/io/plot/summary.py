@@ -13757,7 +13757,14 @@ def plot_blkt_structure(
     deg_blkt_inboard_poloidal_plasma = m_file.get(
         "deg_blkt_inboard_poloidal_plasma", scan=scan
     )
+    f_deg_blkt_outboard_poloidal_plasma = m_file.get(
+        "f_deg_blkt_outboard_poloidal_plasma", scan=scan
+    )
+    f_deg_blkt_inboard_poloidal_plasma = m_file.get(
+        "f_deg_blkt_inboard_poloidal_plasma", scan=scan
+    )
     deg_div_poloidal_plasma = m_file.get("deg_div_poloidal_plasma", scan=scan)
+    f_ster_div_single = m_file.get("f_ster_div_single", scan=scan)
 
     plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
     plot_plasma(ax, m_file, scan, colour_scheme)
@@ -13829,7 +13836,7 @@ def plot_blkt_structure(
     ax.text(
         label_x,
         label_y,
-        f"{deg_blkt_outboard_poloidal_plasma:.1f}°",
+        f"{deg_blkt_outboard_poloidal_plasma:.1f}°\n({f_deg_blkt_outboard_poloidal_plasma * 100:.1f}%)",
         fontsize=8,
         color="purple",
         ha="center",
@@ -13880,7 +13887,7 @@ def plot_blkt_structure(
     ax.text(
         label_x,
         label_y,
-        f"{deg_blkt_inboard_poloidal_plasma:.1f}°",
+        f"{deg_blkt_inboard_poloidal_plasma:.1f}°\n({f_deg_blkt_inboard_poloidal_plasma * 100:.1f}%)",
         fontsize=8,
         color="green",
         ha="center",
@@ -13915,7 +13922,7 @@ def plot_blkt_structure(
     ax.text(
         label_x,
         label_y,
-        f"{deg_div_poloidal_plasma:.1f}°",
+        f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
         fontsize=8,
         color="black",
         ha="center",
