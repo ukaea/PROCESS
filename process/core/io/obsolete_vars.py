@@ -448,6 +448,7 @@ OBS_VARS = {
     "vcool": "vel_cp_coolant_midplane",
     "rcool": "radius_cp_coolant_channel",
     "fl_h_threshold": None,
+    "f_ster_div_single": None,
 }
 
 OBS_VARS_HELP = {
