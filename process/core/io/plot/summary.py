@@ -13741,7 +13741,8 @@ def plot_blkt_structure(
     radial_build: dict[str, float],
     colour_scheme: Literal[1, 2],
 ):
-    """Plot the BLKT structure on the given axis."""
+    """Plot the blkt structure and relevant angles"""
+    # MFILE variables needed to plot the blkt structure and angles
     rmajor = m_file.get("rmajor", scan=scan)
     rminor = m_file.get("rminor", scan=scan)
     dr_fw_plasma_gap_outboard = m_file.get("dr_fw_plasma_gap_outboard", scan=scan)
@@ -13765,10 +13766,14 @@ def plot_blkt_structure(
     )
     deg_div_poloidal_plasma = m_file.get("deg_div_poloidal_plasma", scan=scan)
     f_ster_div_single = m_file.get("f_ster_div_single", scan=scan)
+    i_single_null = m_file.get("i_single_null", scan=scan)
+
+    # ======================
 
     plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
     plot_plasma(ax, m_file, scan, colour_scheme)
     plot_firstwall(ax, m_file, scan, radial_build, colour_scheme)
+
     ax.set_xlabel("Radial position [m]")
     ax.set_ylabel("Vertical position [m]")
     ax.set_title("Blanket and First Wall Poloidal Cross-Section")
@@ -13800,6 +13805,7 @@ def plot_blkt_structure(
         label="Blanket Half Height",
     )
 
+    # Plot arrows for the outboard blanket angles
     ax.annotate(
         "",
         xy=(rmajor, 0),
@@ -13816,7 +13822,7 @@ def plot_blkt_structure(
         zorder=5,
     )
 
-    # Plot arc showing the angle between the two arrows
+    # Plot arc showing the angle between the two outboard blanket arrows
     arc_radius = 1.0
     angle_start = -deg_blkt_outboard_poloidal_plasma / 2
     angle_end = deg_blkt_outboard_poloidal_plasma / 2
@@ -13833,6 +13839,7 @@ def plot_blkt_structure(
     label_x = rmajor + label_radius * np.cos(mid_angle)
     label_y = label_radius * np.sin(mid_angle)
 
+    # Plot the info box for the outboard blanket
     ax.text(
         label_x,
         label_y,
@@ -13851,6 +13858,7 @@ def plot_blkt_structure(
         },
     )
 
+    # Plot arrows for the inboard blanket angles
     ax.annotate(
         "",
         xy=(rmajor, 0),
@@ -13867,7 +13875,7 @@ def plot_blkt_structure(
         zorder=5,
     )
 
-    # Plot arc showing the angle between the two arrows
+    # Plot arc showing the angle between the two inboard blanket arrows
     arc_radius = 1.0
     angle_start = -deg_blkt_inboard_poloidal_plasma / 2
     angle_end = deg_blkt_inboard_poloidal_plasma / 2
@@ -13884,6 +13892,7 @@ def plot_blkt_structure(
     label_x = rmajor - label_radius * np.cos(mid_angle)
     label_y = label_radius * np.sin(mid_angle)
 
+    # Plot the info box for the inboard blanket
     ax.text(
         label_x,
         label_y,
@@ -13903,7 +13912,46 @@ def plot_blkt_structure(
         zorder=5,
     )
 
-    # Plot arc showing the angle between the two arrows (divertor angle)
+    # Plot arrows for the divertor angles
+    # If double null then plot the upper also
+    if i_single_null == 0:
+        # Plot arc showing the angle between the two arrows (divertor angle)
+        arc_radius = 1.5
+        angle_start = deg_blkt_outboard_poloidal_plasma / 2 + deg_div_poloidal_plasma
+        angle_end = deg_blkt_inboard_poloidal_plasma / 2 + deg_div_poloidal_plasma
+
+        theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+        arc_x = rmajor + arc_radius * np.cos(theta)
+        arc_y = arc_radius * np.sin(theta)
+
+        ax.plot(arc_x, arc_y, color="black", linewidth=2)
+
+        # Add angle label at the arc
+        mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+        label_radius = arc_radius * 1.8
+        label_x = rmajor + label_radius * np.cos(mid_angle)
+        label_y = label_radius * np.sin(mid_angle)
+
+        ax.text(
+            label_x,
+            label_y,
+            f"{deg_div_poloidal_plasma:.1f}°\n({f_ster_div_single * 100:.1f}%)",
+            fontsize=7,
+            color="black",
+            ha="center",
+            va="center",
+            weight="bold",
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "white",
+                "alpha": 0.8,
+                "edgecolor": "black",
+                "linewidth": 1.5,
+            },
+            zorder=5,
+        )
+
+    # Plot arc showing the angle between the two arrows for the lower divertor (divertor angle)
     arc_radius = 1.5
     angle_start = -deg_blkt_outboard_poloidal_plasma / 2 - deg_div_poloidal_plasma
     angle_end = -deg_blkt_inboard_poloidal_plasma / 2 - deg_div_poloidal_plasma
@@ -13920,6 +13968,7 @@ def plot_blkt_structure(
     label_x = rmajor + label_radius * np.cos(mid_angle)
     label_y = label_radius * np.sin(mid_angle)
 
+    # Plot the info box for the lower divertor angle
     ax.text(
         label_x,
         label_y,
