@@ -13867,14 +13867,6 @@ def plot_blkt_structure(
     r_fw_outboard_in = r_blkt_outboard_out - dr_blkt_outboard - dr_fw_outboard
     r_fw_inboard_out = r_blkt_inboard_in + dr_blkt_inboard + dr_fw_inboard
 
-    # Plot major radius line (vertical dashed line at rmajor)
-    ax.axvline(
-        m_file.get("rminor", scan=scan),
-        color="black",
-        linestyle="--",
-        linewidth=1.5,
-        label="Major Radius $R_0$",
-    )
     # Plot a horizontal line at dz_blkt_half (blanket half height)
     ax.axhline(
         dz_blkt_half,
