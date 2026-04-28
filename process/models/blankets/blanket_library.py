@@ -3483,6 +3483,11 @@ class OutboardBlanket(BlanketLibrary):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
+    @property
+    def blkt_outboard_poloidal_plasma_angle(self) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane."""
+        return 180.0
+
     @staticmethod
     def calculate_blkt_outboard_poloidal_plasma_angle(
         rminor: float,
