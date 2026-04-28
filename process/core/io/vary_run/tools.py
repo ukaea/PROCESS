@@ -15,13 +15,13 @@ from process.data_structure import numerics
 logger = logging.getLogger(__name__)
 
 
-def get_neqns_itervars(wdir="."):
+def get_neqns_itervars(in_dat, wdir="."):
     """Returns the number of equations and a list of variable
     names of all iteration variables
     """
     # Load dicts from dicts JSON file
     dicts = get_dicts()
-    in_dat = InDat(Path(wdir, "IN.DAT"))
+    in_dat = InDat(Path(wdir, in_dat))
 
     ixc_list = in_dat.data["ixc"].get_value
 
@@ -36,7 +36,7 @@ def get_neqns_itervars(wdir="."):
     return in_dat.number_of_constraints, itervars
 
 
-def update_ixc_bounds(wdir=".", indat="IN.DAT"):
+def update_ixc_bounds(indat, wdir="."):
     """Updates the lower and upper bounds in DICT_IXC_BOUNDS
     from IN.DAT
     """
@@ -55,7 +55,7 @@ def update_ixc_bounds(wdir=".", indat="IN.DAT"):
             dicts["DICT_IXC_BOUNDS"][name]["ub"] = float(value["u"])
 
 
-def get_variable_range(itervars, factor, wdir=".", indat="IN.DAT"):
+def get_variable_range(itervars, factor, indat, wdir="."):
     """Returns the lower and upper bounds of the variable range
     for each iteration variable.
 
@@ -129,7 +129,7 @@ def get_variable_range(itervars, factor, wdir=".", indat="IN.DAT"):
     return lbs, ubs
 
 
-def check_in_dat(filename="IN.DAT"):
+def check_in_dat(filename):
     """Tests IN.DAT during setup:
     1)Are ixc bounds outside of allowed input ranges?
     """
@@ -194,10 +194,10 @@ def check_in_dat(filename="IN.DAT"):
             )
             sleep(1)
 
-    in_dat.write_in_dat(output_filename="IN.DAT")
+    in_dat.write_in_dat(output_filename=filename)
 
 
-def check_input_error(wdir=".", mfile="MFILE.DAT"):
+def check_input_error(mfile, wdir="."):
     """Checks, if an input error has occurred.
     Stops as a consequence.
     Will also fail if the MFILE.DAT isn't found.
@@ -265,7 +265,7 @@ def no_unfeasible_mfile(wdir=".", mfile="MFILE.DAT"):
 
 
 def vary_iteration_variables(itervars, lbs, ubs, config):
-    """Routine to change the iteration variables in IN.DAT
+    """Routine to change the iteration variables in the initial IN.DAT
     within given bounds.
 
     Parameters
@@ -279,7 +279,7 @@ def vary_iteration_variables(itervars, lbs, ubs, config):
     generator :
         Generator numpy generator to create random numbers
     """
-    in_dat = InDat()
+    in_dat = InDat(config.initial_infile)
 
     new_values = []
 

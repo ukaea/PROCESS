@@ -11,7 +11,10 @@ from warnings import warn
 
 import process
 from process import data_structure
-from process.core.exceptions import ProcessValidationError, ProcessValueError
+from process.core.exceptions import (
+    ProcessValidationError,
+    ProcessValueError,
+)
 from process.core.solver.constraints import ConstraintManager
 
 if TYPE_CHECKING:

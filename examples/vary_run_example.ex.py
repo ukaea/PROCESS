@@ -34,8 +34,8 @@
 # `VaryRun` requires a `.conf` file which specifies certain parameters needed for `VaryRun`.
 # In this file, you specify the original input file, the maximum number of iterations to be performed, and a factor within which the iteration variables are changed.
 #
-# If `VaryRun` is able to find a new initial point within the maximum number of iterations, it produces a new input file, called `IN.DAT`, in the same directory as your initial input file. This new file will now converge when you run `PROCESS`.
-#
+# If `VaryRun` is able to find a new initial point within the maximum number of iterations, you can find this file in the same directory as your initial input file. This new file will now converge when you run `PROCESS`.
+# `VaryRun` will produce new, numbered sets of files for each iteration it performs.
 # %% [markdown]
 # # VaryRun setup
 #
@@ -55,7 +55,7 @@
 # * Path to working directory in which PROCESS is run.
 # WDIR = .
 #
-# * original IN.DAT name (should not be called IN.DAT!)
+# * original IN.DAT name
 # ORIGINAL_IN_DAT = ORIGINAL_IN.DAT
 #
 # * Max no. iterations
@@ -71,7 +71,7 @@
 # %% [markdown]
 # ## Run `VaryRun`
 #
-# Run `PROCESS` on an input file using the `VaryRun` class. The initial input file, `large_tokamak_varyrun_IN.DAT` does not converge. `VaryRun` will vary the initial values of the iteration variables to find an initial point that converges, and will create a new input file, `IN.DAT`, with these new values.
+# Run `PROCESS` on an input file using the `VaryRun` class. The initial input file, `large_tokamak_varyrun_IN.DAT` does not converge. `VaryRun` will vary the initial values of the iteration variables to find an initial point that converges, and will create a new input file with these new values.
 
 # %%
 # %load_ext autoreload
@@ -92,7 +92,7 @@ conf_file = data_dir / "run_process.conf"
 input_file = data_dir / "large_tokamak_varyrun_IN.DAT"
 
 temp_dir = tempfile.TemporaryDirectory()
-input_path = Path(temp_dir.name) / "large_tokamak_IN.DAT"
+input_path = Path(temp_dir.name) / "large_tokamak_varyrun_IN.DAT"
 conf_path = Path(temp_dir.name) / "run_process.conf"
 shutil.copy(input_file, input_path)
 shutil.copy(conf_file, conf_path)
@@ -110,7 +110,7 @@ vary_run = VaryRun(conf_path.as_posix())
 vary_run.run()
 os.chdir(cwd)
 
-
+# %%
 # Get the initial values from the original input file
 iteration_variable_names, original_iteration_variable_values = (
     get_mfile_initial_ixc_values(input_file, vary_run.data)
@@ -120,7 +120,7 @@ iteration_variable_names, original_iteration_variable_values = (
 # VaryRun always produces a file called IN.DAT in the same directory
 # as the conf file
 _, updated_iteration_variable_values = get_mfile_initial_ixc_values(
-    Path(temp_dir.name) / "IN.DAT", vary_run.data
+    Path(temp_dir.name) / "2_IN.DAT", vary_run.data
 )
 
 # %% [markdown]
