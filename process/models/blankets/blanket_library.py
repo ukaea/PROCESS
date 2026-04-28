@@ -667,6 +667,12 @@ class BlanketLibrary(Model):
             "(deg_blkt_outboard_poloidal_plasma)",
             blanket_library.deg_blkt_outboard_poloidal_plasma,
         )
+        po.ovarre(
+            self.outfile,
+            "Inboard blanket poloidal angle subtended by plasma (degrees)",
+            "(deg_blkt_inboard_poloidal_plasma)",
+            blanket_library.deg_blkt_inboard_poloidal_plasma,
+        )
 
     def primary_coolant_properties(self, output: bool):
         """Calculates the fluid properties of the Primary Coolant in the FW and BZ.
@@ -3564,6 +3570,34 @@ class InboardBlanket(BlanketLibrary):
         )
 
         self.set_blanket_module_geometry()
+
+    @staticmethod
+    def calculate_blkt_inboard_poloidal_plasma_angle(
+        rminor: float,
+        dz_blkt_half: float,
+        dr_fw_plasma_gap_inboard: float,
+    ) -> float:
+        """Calculate the poloidal angle subtended by the inboard blanket at the plasma mid-plane.
+
+        Angle is taken from the FW surface
+
+        Parameters
+        ----------
+        rminor :
+            Plasma minor radius (m).
+        dz_blkt_half :
+            Vertical half-height of inboard blanket (m).
+        dr_fw_plasma_gap_inboard :
+            Inboard first wall to plasma gap (m).
+
+        Returns
+        -------
+        deg_blkt_inboard_poloidal_plasma :
+            Poloidal angle subtended by inboard blanket at plasma mid-plane (degrees).
+        """
+        return np.degrees(
+            2.0 * np.arctan(dz_blkt_half / (rminor + dr_fw_plasma_gap_inboard))
+        )
 
     def calculate_blanket_inboard_module_geometry(
         self,

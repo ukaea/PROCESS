@@ -62,6 +62,14 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             )
         )
 
+        blanket_vars.deg_blkt_inboard_poloidal_plasma = (
+            self.calculate_blkt_inboard_poloidal_plasma_angle(
+                rminor=physics_variables.rminor,
+                dz_blkt_half=blanket_vars.dz_blkt_half,
+                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+            )
+        )
+
         dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
         self.data.fwbs.radius_blkt_channel = dia_blkt_channel / 2
         (
