@@ -239,8 +239,14 @@ icomponent: int = None
 deg_blkt_outboard_poloidal_plasma: float = None
 """Outboard blanket poloidal angle subtended by plasma (degrees)"""
 
+f_deg_blkt_outboard_poloidal_plasma: float = None
+"""Fraction of outboard blanket poloidal angle subtended by plasma (degrees)"""
+
 deg_blkt_inboard_poloidal_plasma: float = None
 """Inboard blanket poloidal angle subtended by plasma (degrees)"""
+
+f_deg_blkt_inboard_poloidal_plasma: float = None
+"""Fraction of inboard blanket poloidal angle subtended by plasma (degrees)"""
 
 
 def init_blanket_library():
@@ -296,7 +302,9 @@ def init_blanket_library():
         vfblkti, \
         vfblkto, \
         deg_blkt_outboard_poloidal_plasma, \
-        deg_blkt_inboard_poloidal_plasma
+        deg_blkt_inboard_poloidal_plasma, \
+        f_deg_blkt_outboard_poloidal_plasma, \
+        f_deg_blkt_inboard_poloidal_plasma
 
     dz_blkt_half = 0.0
     dz_shld_half = 0.0
@@ -350,3 +358,5 @@ def init_blanket_library():
     vfblkto = 0.0
     deg_blkt_outboard_poloidal_plasma = 0.0
     deg_blkt_inboard_poloidal_plasma = 0.0
+    f_deg_blkt_outboard_poloidal_plasma = 0.0
+    f_deg_blkt_inboard_poloidal_plasma = 0.0
