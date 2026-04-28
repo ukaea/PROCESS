@@ -13757,6 +13757,7 @@ def plot_blkt_structure(
     deg_blkt_inboard_poloidal_plasma = m_file.get(
         "deg_blkt_inboard_poloidal_plasma", scan=scan
     )
+    deg_div_poloidal_plasma = m_file.get("deg_div_poloidal_plasma", scan=scan)
 
     plot_blanket(ax, m_file, scan, radial_build, colour_scheme)
     plot_plasma(ax, m_file, scan, colour_scheme)
@@ -13898,6 +13899,41 @@ def plot_blkt_structure(
             "facecolor": "white",
             "alpha": 0.8,
             "edgecolor": "green",
+            "linewidth": 1.5,
+        },
+    )
+
+    # Plot arc showing the angle between the two arrows (divertor angle)
+    arc_radius = 1.5
+    angle_start = -deg_blkt_outboard_poloidal_plasma / 2 - deg_div_poloidal_plasma
+    angle_end = -deg_blkt_inboard_poloidal_plasma / 2 - deg_div_poloidal_plasma
+
+    theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
+    arc_x = rmajor + arc_radius * np.cos(theta)
+    arc_y = arc_radius * np.sin(theta)
+
+    ax.plot(arc_x, arc_y, color="black", linewidth=2)
+
+    # Add angle label at the arc
+    mid_angle = np.deg2rad((angle_start + angle_end) / 2)
+    label_radius = arc_radius * 1.8
+    label_x = rmajor + label_radius * np.cos(mid_angle)
+    label_y = label_radius * np.sin(mid_angle)
+
+    ax.text(
+        label_x,
+        label_y,
+        f"{deg_div_poloidal_plasma:.1f}°",
+        fontsize=8,
+        color="black",
+        ha="center",
+        va="center",
+        weight="bold",
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 0.8,
+            "edgecolor": "black",
             "linewidth": 1.5,
         },
     )
