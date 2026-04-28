@@ -430,7 +430,6 @@ INPUT_VARIABLES = {
     "fiooic": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc0": InputVariable("constraints", float, range=(0.001, 1.0)),
-    "f_ster_div_single": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "fdiva": InputVariable("divertor", float, range=(0.1, 2.0)),
     "fdivwet": InputVariable("stellarator", float, range=(0.01, 1.0)),
     "feffcd": InputVariable("current_drive", float, range=(0.0, 20.0)),
