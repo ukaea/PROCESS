@@ -1895,6 +1895,7 @@ class Power(Model):
         i_thermal_electric_conversion = ElectricConversionModelTypes(
             self.data.fwbs.i_thermal_electric_conversion
         )
+        i_blanket_type = BlktModelTypes(fwbs_variables.i_blanket_type)
         if i_thermal_electric_conversion == ElectricConversionModelTypes.CCFE_HCPB_VALUE:
             #  CCFE HCPB Model
             if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
