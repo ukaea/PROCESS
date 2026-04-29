@@ -1,6 +1,7 @@
 import pytest
 
 from process.models.engineering.pumping import (
+    calculate_reynolds_number,
     darcy_friction_haaland,
     gnielinski_heat_transfer_coefficient,
 )
@@ -22,3 +23,13 @@ def test_gnielinski_heat_transfer_coefficient():
         thermcond_coolant=0.3211653052986152,
         roughness_fw_channel=6e-8,
     ) == pytest.approx(1929.2042015869506)
+
+
+def test_calculate_reynolds_number():
+
+    assert calculate_reynolds_number(
+        mflux_coolant=112.19853108876258,
+        den_coolant=8.8673250601290707,
+        radius_channel=0.0060000000000000001,
+        visc_coolant=4.0416219836935569e-05,
+    ) == pytest.approx(33312.92185407996)
