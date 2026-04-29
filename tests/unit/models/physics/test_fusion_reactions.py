@@ -233,8 +233,7 @@ def test_beam_fusion():
     beta_beam, nd_beam_ions_out, p_beam_alpha_mw = reactions.beam_fusion(
         1.0,
         1.5,
-        0.85,
-        5.3,
+        5.367727,
         130,
         7.8e19,
         6.6e19,
