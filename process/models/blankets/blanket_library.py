@@ -22,7 +22,6 @@ from process.data_structure import (
 )
 from process.models.build import FwBlktVVShape
 from process.models.power import PumpingPowerModelTypes
-from enum import IntEnum
 
 logger = logging.getLogger(__name__)
 
@@ -892,7 +891,8 @@ class BlanketLibrary(Model):
         Error
             If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
         """
-        if fwbs_variables.i_blanket_type == BlktModelTypes.DCLL:
+        i_blanket_type = BlktModelTypes(fwbs_variables.i_blanket_type)
+        if i_blanket_type == BlktModelTypes.DCLL:
             # Unless DCLL then we will use BZ
             blanket_library.len_blkt_inboard_coolant_channel_radial = (
                 build_variables.blbuith
