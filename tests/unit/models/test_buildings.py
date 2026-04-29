@@ -5,7 +5,6 @@ import pytest
 from process.data_structure import (
     build_variables,
     buildings_variables,
-    cost_variables,
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
@@ -13,17 +12,16 @@ from process.data_structure import (
     physics_variables,
     tfcoil_variables,
 )
-from process.models.buildings import Buildings
 
 
 @pytest.fixture
-def buildings():
-    """Provides Buildings object for testing.
+def buildings(process_models):
+    """Fixture to get the Buildings instance from process_models.
 
     :returns buildings: initialised Buildings object
     :rtype: process.buildings.Buildings
     """
-    return Buildings()
+    return process_models.buildings
 
 
 class BldgsSizesParam(NamedTuple):
@@ -683,9 +681,11 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(
         pfcoil_variables, "r_pf_coil_outer_max", bldgssizesparam.r_pf_coil_outer_max
     )
-    monkeypatch.setattr(cost_variables, "life_plant", bldgssizesparam.life_plant)
-    monkeypatch.setattr(cost_variables, "cplife", bldgssizesparam.cplife)
-    monkeypatch.setattr(cost_variables, "life_div_fpy", bldgssizesparam.life_div_fpy)
+    monkeypatch.setattr(buildings.data.costs, "life_plant", bldgssizesparam.life_plant)
+    monkeypatch.setattr(buildings.data.costs, "cplife", bldgssizesparam.cplife)
+    monkeypatch.setattr(
+        buildings.data.costs, "life_div_fpy", bldgssizesparam.life_div_fpy
+    )
     monkeypatch.setattr(
         fwbs_variables, "r_cryostat_inboard", bldgssizesparam.r_cryostat_inboard
     )
