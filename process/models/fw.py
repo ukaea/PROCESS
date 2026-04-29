@@ -23,6 +23,7 @@ from process.models.blankets.blanket_library import (
 )
 from process.models.build import FwBlktVVShape
 from process.models.engineering.materials import eurofer97_thermal_conductivity
+from process.models.engineering.pumping import darcy_friction_haaland
 
 logger = logging.getLogger(__name__)
 
@@ -704,10 +705,10 @@ class FirstWall(Model):
         pr = heatcap_coolant * visc_coolant / thermcond_coolant
 
         # Calculate Darcy friction factor, using Haaland equation
-        f = self.darcy_friction_haaland(
-            reynolds,
-            roughness_fw_channel,
-            radius_channel,
+        f = darcy_friction_haaland(
+            reynolds=reynolds,
+            roughness_channel=roughness_fw_channel,
+            radius_channel=radius_channel,
         )
 
         # Calculate the Nusselt number
@@ -734,42 +735,6 @@ class FirstWall(Model):
             logger.error("Negative Darcy friction factor (f). %s", f)
 
         return heat_transfer_coefficient
-
-    def darcy_friction_haaland(
-        self, reynolds: float, roughness_fw_channel: float, radius_fw_channel: float
-    ) -> float:
-        """Calculate Darcy friction factor using the Haaland equation.
-
-        Parameters
-        ----------
-        reynolds
-            Reynolds number.
-        roughness_fw_channel
-            Roughness of the first wall coolant channel (m).
-        radius_fw_channel
-            Radius of the first wall coolant channel (m).
-
-        Returns
-        -------
-        :
-            Darcy friction factor.
-
-        Notes
-        -----
-            The Haaland equation is an approximation to the implicit Colebrook-White equation.
-            It is used to calculate the Darcy friction factor for turbulent flow in pipes.
-
-        References
-        ----------
-            - https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
-        """
-        # Bracketed term in Haaland equation
-        bracket = (
-            roughness_fw_channel / radius_fw_channel / 3.7
-        ) ** 1.11 + 6.9 / reynolds
-
-        # Calculate Darcy friction factor
-        return (1.8 * np.log10(bracket)) ** (-2)
 
     @staticmethod
     def calculate_total_fw_channels(
