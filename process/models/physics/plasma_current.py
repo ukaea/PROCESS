@@ -569,17 +569,23 @@ class PlasmaCurrent:
         """
         Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
 
-        :param eps: Plasma inverse aspect ratio.
-        :type eps: float
-        :param len_plasma_poloidal: Plasma poloidal perimeter length [m].
-        :type len_plasma_poloidal: float
-        :param rminor: Plasma minor radius [m].
-        :type rminor: float
+        Parameters
+        ----------
+        eps:
+            Plasma inverse aspect ratio.
+        len_plasma_poloidal:
+            Plasma poloidal perimeter length (m).
+        rminor:
+            Plasma minor radius (m).
 
-        :return: The plasma current scaling coefficient.
-        :rtype: float
+        Returns
+        -------
+        :
+            The plasma current scaling coefficient.
 
-        :references: None
+        References
+        ----------
+            None
         """
         return (
             (1.22 - 0.68 * eps)

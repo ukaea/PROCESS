@@ -11,6 +11,7 @@ from scipy import integrate
 from process.core import constants
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.data_structure import impurity_radiation_module
+from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -530,10 +531,13 @@ class ImpurityRadiation:
     element to find the total impurity radiation loss.
     """
 
-    def __init__(self, plasma_profile):
-        """
-        :param plasma_profile: Plasma profile class, parameterises the density and temperature profiles.
-        :type plasma_profile: Plasma profile class
+    def __init__(self, plasma_profile: PlasmaProfile):
+        """Initialize the ImpurityRadiation class.
+
+        Parameters
+        ----------
+        plasma_profile :
+            Parameterises the density and temperature profiles.
         """
         self.plasma_profile = plasma_profile
         self.rho = plasma_profile.neprofile.profile_x

@@ -1461,16 +1461,19 @@ class BlanketLibrary(Model):
     def calculate_dshaped_inboard_blkt_segment_poloidal(
         dz_blkt_half: float, n_blkt_inboard_modules_poloidal: int
     ) -> float:
-        """Calculations for D-shaped inboard blanket module poloidal segment length
+        """Calculate D-shaped inboard blanket module poloidal segment length.
 
-        :param dz_blkt_half: Half-height of the blanket module (m)
-        :type dz_blkt_half: float
-        :param n_blkt_inboard_modules_poloidal: Number of inboard blanket modules in poloidal direction
-        :type n_blkt_inboard_modules_poloidal: int
+        Parameters
+        ----------
+        dz_blkt_half :
+            Half-height of the blanket module (m)
+        n_blkt_inboard_modules_poloidal :
+            Number of inboard blanket modules in poloidal direction
 
-        :return: Segment length of inboard blanket module in poloidal direction (m)
-        :rtype: float
-
+        Returns
+        -------
+        :
+            Segment length of inboard blanket module in poloidal direction (m)
         """
         # D-shaped machine
         # Segment vertical inboard surface (m)
@@ -1486,28 +1489,29 @@ class BlanketLibrary(Model):
         n_divertors: int,
         f_ster_div_single: float,
     ) -> float:
-        """
-        Calculations for D-shaped outboard blanket module poloidal segment length
+        """Calculate D-shaped outboard blanket module poloidal segment length.
 
-        :param n_blkt_outboard_modules_poloidal: Number of outboard blanket modules in poloidal direction
-        :type n_blkt_outboard_modules_poloidal: int
-        :param dr_fw_plasma_gap_inboard: Radial gap between inboard first wall and plasma (m)
-        :type dr_fw_plasma_gap_inboard: float
-        :param rminor: Minor radius of the plasma (m)
-        :type rminor: float
-        :param dr_fw_plasma_gap_outboard: Radial gap between outboard first wall and plasma (m)
-        :type dr_fw_plasma_gap_outboard: float
-        :param dz_blkt_half: Half-height of the blanket module (m)
-        :type dz_blkt_half: float
-        :param n_divertors: Number of divertors (1 for single null, 2 for double null)
-        :type n_divertors: int
-        :param f_ster_div_single: Fractional poloidal length of the divertor in single null configuration
-        :type f_ster_div_single: float
+        Parameters
+        ----------
+        n_blkt_outboard_modules_poloidal :
+            Number of outboard blanket modules in poloidal direction
+        dr_fw_plasma_gap_inboard :
+            Radial gap between inboard first wall and plasma (m)
+        rminor :
+            Minor radius of the plasma (m)
+        dr_fw_plasma_gap_outboard :
+            Radial gap between outboard first wall and plasma (m)
+        dz_blkt_half :
+            Half-height of the blanket module (m)
+        n_divertors :
+            Number of divertors (1 for single null, 2 for double null)
+        f_ster_div_single :
+            Fractional poloidal length of the divertor in single null configuration
 
-        :return: Segment length of outboard blanket module in poloidal direction (m)
-        :rtype: float
-
-
+        Returns
+        -------
+        :
+            Segment length of outboard blanket module in poloidal direction (m)
         """
         # Calculate perimeter of ellipse that defines the internal
         # surface of the outboard first wall / blanket
@@ -1550,29 +1554,31 @@ class BlanketLibrary(Model):
         n_divertors: int,
         f_ster_div_single: float,
     ) -> float:
-        """
-        Calculations for elliptical inboard blanket module poloidal segment length
+        """Calculate elliptical inboard blanket module poloidal segment length.
 
-        :param rmajor: Major radius of the plasma (m)
-        :type rmajor: float
-        :param rminor: Minor radius of the plasma (m)
-        :type rminor: float
-        :param triang: Triangularity of the plasma
-        :type triang: float
-        :param dr_fw_plasma_gap_inboard: Radial gap between inboard first wall and plasma (m)
-        :type dr_fw_plasma_gap_inboard: float
-        :param dz_blkt_half: Half-height of the blanket module (m)
-        :type dz_blkt_half: float
-        :param n_blkt_inboard_modules_poloidal: Number of inboard blanket modules in poloidal direction
-        :type n_blkt_inboard_modules_poloidal: int
-        :param n_divertors: Number of divertors (1 for single null, 2 for double null)
-        :type n_divertors: int
-        :param f_ster_div_single: Fractional poloidal length of the divertor in single null configuration
-        :type f_ster_div_single: float
+        Parameters
+        ----------
+        rmajor :
+            Major radius of the plasma (m)
+        rminor :
+            Minor radius of the plasma (m)
+        triang :
+            Triangularity of the plasma
+        dr_fw_plasma_gap_inboard :
+            Radial gap between inboard first wall and plasma (m)
+        dz_blkt_half :
+            Half-height of the blanket module (m)
+        n_blkt_inboard_modules_poloidal :
+            Number of inboard blanket modules in poloidal direction
+        n_divertors :
+            Number of divertors (1 for single null, 2 for double null)
+        f_ster_div_single :
+            Fractional poloidal length of the divertor in single null configuration
 
-        :return: Segment length of inboard blanket module in poloidal direction (m)
-        :rtype: float
-
+        Returns
+        -------
+        :
+            Segment length of inboard blanket module in poloidal direction (m)
         """
         # Major radius where half-ellipses 'meet' (m)
         r1 = rmajor - rminor * triang
@@ -1617,30 +1623,31 @@ class BlanketLibrary(Model):
         n_divertors: int,
         f_ster_div_single: float,
     ) -> float:
-        """
-        Calculations for elliptical outboard blanket module poloidal segment length
+        """Calculate elliptical outboard blanket module poloidal segment length.
 
-        :param rmajor: Major radius of the plasma (m)
-        :type rmajor: float
-        :param rminor: Minor radius of the plasma (m)
-        :type rminor: float
-        :param triang: Triangularity of the plasma
-        :type triang: float
-        :param dz_blkt_half: Half-height of the blanket module (m)
-        :type dz_blkt_half: float
-        :param dr_fw_plasma_gap_outboard: Radial gap between outboard first wall and plasma (m)
-        :type dr_fw_plasma_gap_outboard: float
-        :param n_blkt_outboard_modules_poloidal: Number of outboard blanket modules in poloidal direction
-        :type n_blkt_outboard_modules_poloidal: int
-        :param n_divertors: Number of divertors (1 for single null, 2 for double null)
-        :type n_divertors: int
-        :param f_ster_div_single: Fractional poloidal length of the divertor in single null configuration
-        :type f_ster_div_single: float
+        Parameters
+        ----------
+        rmajor :
+            Major radius of the plasma (m)
+        rminor :
+            Minor radius of the plasma (m)
+        triang :
+            Triangularity of the plasma
+        dz_blkt_half :
+            Half-height of the blanket module (m)
+        dr_fw_plasma_gap_outboard :
+            Radial gap between outboard first wall and plasma (m)
+        n_blkt_outboard_modules_poloidal :
+            Number of outboard blanket modules in poloidal direction
+        n_divertors :
+            Number of divertors (1 for single null, 2 for double null)
+        f_ster_div_single :
+            Fractional poloidal length of the divertor in single null configuration
 
-        :return: Segment length of outboard blanket module in poloidal direction (m)
-        :rtype: float
-
-
+        Returns
+        -------
+        :
+            Segment length of outboard blanket module in poloidal direction (m)
         """
         # Major radius where half-ellipses 'meet' (m)
         r1 = rmajor - rminor * triang

@@ -10,6 +10,7 @@ from process.core import constants, process_output
 from process.core.caller import write_output_files
 from process.core.exceptions import ProcessValueError
 from process.core.log import logging_model_handler, show_errors
+from process.core.model import DataStructure
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
@@ -194,15 +195,17 @@ class ScanVariables(Enum):
 class Scan:
     """Perform a parameter scan using the Fortran scan module."""
 
-    def __init__(self, models, solver, data):
+    def __init__(self, models, solver: str, data: DataStructure):
         """Immediately run the run_scan() method.
 
-        :param models: physics and engineering model objects
-        :type models: process.main.Models
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str
-        :param data: data structure object
-        :type data: DataStructure
+        Parameters
+        ----------
+        models :
+            Physics and engineering model objects
+        solver :
+            Which solver to use, as specified in solver.py
+        data :
+            Data structure object
         """
         self.models = models
         self.solver = solver
