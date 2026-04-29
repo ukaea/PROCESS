@@ -118,6 +118,9 @@ nav:
           - Plant Availability: eng-models/plant-availability.md
           - Power Requirements: eng-models/power-requirements.md
           - Vacuum Vessel: eng-models/vacuum-vessel.md
+          - Generic Engineering Methods:
+            - Pumping: eng-models/pumping.md
+            - Materials: eng-models/materials.md
       - Unique Models:
           - Water Use: unique-models/water_use.md
           - Power Plant Building Sizes: unique-models/buildings_sizes.md
