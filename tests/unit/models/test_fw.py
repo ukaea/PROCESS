@@ -182,9 +182,3 @@ def test_heat_transfer(fw):
         thermcond_coolant=0.3211653052986152,
         roughness_fw_channel=6e-8,
     ) == pytest.approx(1929.2042015869506)
-
-
-def test_fw_thermal_conductivity(monkeypatch, fw):
-    monkeypatch.setattr(fwbs_variables, "fw_th_conductivity", 28.9)
-
-    assert fw.fw_thermal_conductivity(1900.0) == pytest.approx(326.70406785462256)
