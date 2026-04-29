@@ -43,10 +43,9 @@ logger = logging.getLogger(__name__)
 
 class BlktModelTypes(IntEnum):
     """Enum for blanket model types. `i_blanket_type`"""
-    
+
     CCFE_HCPB = 1
     DCLL = 5
-
 
 
 class FWBlktCoolantLoopTypes(IntEnum):
@@ -893,7 +892,7 @@ class BlanketLibrary(Model):
         Error
             If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
         """
-        if fwbs_variables.i_blanket_type == 5:
+        if fwbs_variables.i_blanket_type == BlktModelTypes.DCLL:
             # Unless DCLL then we will use BZ
             blanket_library.len_blkt_inboard_coolant_channel_radial = (
                 build_variables.blbuith
