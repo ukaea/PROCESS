@@ -166,12 +166,6 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     assert massrate == pytest.approx(fwtempparam.expected_massrate, rel=1e-4)
 
 
-def test_darcy_friction_haaland(fw):
-    assert fw.darcy_friction_haaland(5500, 1e-6, 0.1) == pytest.approx(
-        0.0366668931278784
-    )
-
-
 def test_heat_transfer(fw):
     assert fw.heat_transfer(
         mflux_coolant=112.19853108876258,

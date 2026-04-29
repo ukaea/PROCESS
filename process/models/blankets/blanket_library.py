@@ -20,6 +20,7 @@ from process.data_structure import (
     primary_pumping_variables,
 )
 from process.models.build import FwBlktVVShape
+from process.models.engineering.pumping import darcy_friction_haaland
 
 logger = logging.getLogger(__name__)
 
@@ -3016,10 +3017,10 @@ class BlanketLibrary(Model):
         # Use dh which allows us to do fluid calculations for non-cicular tubes
         # (dh is estimate appropriate for fully developed flow).
 
-        darcy_friction_factor = self.fw.darcy_friction_haaland(
-            reynolds_number,
-            fwbs_variables.roughness_fw_channel,
-            fwbs_variables.radius_fw_channel,
+        darcy_friction_factor = darcy_friction_haaland(
+            reynolds=reynolds_number,
+            roughness_channel=fwbs_variables.roughness_fw_channel,
+            radius_channel=fwbs_variables.radius_fw_channel,
         )
 
         # Pressure drop coefficient
