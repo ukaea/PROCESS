@@ -22,7 +22,10 @@ from process.data_structure import (
 )
 from process.models.build import FwBlktVVShape
 from process.models.power import PumpingPowerModelTypes
-from process.models.engineering.pumping import darcy_friction_haaland
+from process.models.engineering.pumping import (
+    calculate_reynolds_number,
+    darcy_friction_haaland,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -3074,7 +3077,12 @@ class BlanketLibrary(Model):
         dia_pipe = self.pipe_hydraulic_diameter(i_ps)
 
         # Reynolds number
-        reynolds_number = den_coolant * vel_coolant * dia_pipe / visc_coolant
+        reynolds_number = calculate_reynolds_number(
+            den_coolant=den_coolant,
+            vel_coolant=vel_coolant,
+            radius_channel=dia_pipe / 2,
+            visc_coolant=visc_coolant,
+        )
 
         # Calculate Darcy friction factor
         # N.B. friction function Uses Haaland approx. which assumes a filled circular pipe.

@@ -10,6 +10,16 @@ $$
 
 -------------------
 
+## Reynolds number | `calculate_reynolds_number()`
+
+$$
+\mathrm{Re} = \frac{\rho v \left(2r_{\text{channel}}\right)}{\mu}
+$$
+
+where $\rho$ is the coolant density and $\mu$ is the coolant viscosity.
+
+-------------------
+
 ## Gnielinski heat transfer | `gnielinski_heat_transfer_coefficient()`
 
 1. **Calculate the Reynolds number:**

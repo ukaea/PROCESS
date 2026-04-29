@@ -86,11 +86,13 @@ def gnielinski_heat_transfer_coefficient(
     # Calculate pipe diameter (m)
     diameter = 2 * radius_channel
 
-    # Calculate flow velocity (m/s)
-    velocity = mflux_coolant / den_coolant
-
     # Calculate Reynolds number
-    reynolds = den_coolant * velocity * diameter / visc_coolant
+    reynolds = calculate_reynolds_number(
+        mflux_coolant=mflux_coolant,
+        den_coolant=den_coolant,
+        radius_channel=diameter / 2,
+        visc_coolant=visc_coolant,
+    )
 
     # Calculate Prandtl number
     pr = heatcap_coolant * visc_coolant / thermcond_coolant
@@ -126,3 +128,35 @@ def gnielinski_heat_transfer_coefficient(
         logger.error("Negative Darcy friction factor (f). %s", f)
 
     return heat_transfer_coefficient
+
+
+def calculate_reynolds_number(
+    mflux_coolant: float, den_coolant: float, radius_channel: float, visc_coolant: float
+) -> float:
+    """Calculate Reynolds number for flow in a pipe.
+
+    Parameters
+    ----------
+    mflux_coolant:
+        Coolant mass flux in a single channel (kg/m²/s).
+    den_coolant:
+        Coolant density (average of inlet and outlet) (kg/m³).
+    radius_channel:
+        Coolant pipe radius (m).
+    visc_coolant:
+        Coolant viscosity (average of inlet and outlet) (Pa.s).
+
+    Returns
+    -------
+    :
+        Reynolds number.
+
+    """
+    # Calculate pipe diameter (m)
+    diameter = 2 * radius_channel
+
+    # Calculate flow velocity (m/s)
+    velocity = mflux_coolant / den_coolant
+
+    # Calculate Reynolds number
+    return den_coolant * velocity * diameter / visc_coolant
