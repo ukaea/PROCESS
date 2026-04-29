@@ -880,8 +880,7 @@ def set_fusion_powers(
 def beam_fusion(
     beamfus0: float,
     betbm0: float,
-    b_plasma_poloidal_average: float,
-    b_plasma_toroidal_on_axis: float,
+    b_plasma_total: float,
     c_beam_total: float,
     nd_plasma_electrons_vol_avg: float,
     nd_plasma_fuel_ions_vol_avg: float,
@@ -1046,7 +1045,7 @@ def beam_fusion(
         * (2 / 3)
         * beam_state.nd_beam_hot
         * beam_state.e_beam_deposited_kev
-        / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
+        / (b_plasma_total**2)
     )
 
     return beta_beam, beam_state.nd_beam_hot, p_beam_alpha_mw
