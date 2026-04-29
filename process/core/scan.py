@@ -30,7 +30,6 @@ from process.data_structure import (
     scan_variables,
     tfcoil_variables,
 )
-from process.main import Models
 
 logger = logging.getLogger(__name__)
 
@@ -196,7 +195,7 @@ class ScanVariables(Enum):
 class Scan:
     """Perform a parameter scan using the Fortran scan module."""
 
-    def __init__(self, models: Models, solver: str, data: DataStructure):
+    def __init__(self, models, solver: str, data: DataStructure):
         """Immediately run the run_scan() method.
 
         Parameters

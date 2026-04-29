@@ -4,6 +4,7 @@ import math
 import numpy as np
 
 from process.core.caller import Caller
+from process.core.model import DataStructure
 from process.data_structure import cost_variables as cv
 from process.data_structure import global_variables as gv
 from process.data_structure import numerics
@@ -16,16 +17,17 @@ logger = logging.getLogger(__name__)
 class Evaluators:
     """Calls models to evaluate function and gradient functions."""
 
-    def __init__(self, models, data, _x):
+    def __init__(self, models, data: DataStructure, _x: np.ndarray):
         """Instantiate Caller with model objects.
 
-        :param models: physics and engineering model objects
-        :type models: process.main.Models
-        :param data: data structure object for providing constraint
-            data to the Caller
-        :type data: DataStructure
-        :param x: optimisation parameters
-        :type x: np.ndarray
+        Parameters
+        ----------
+        models :
+            Physics and engineering model objects
+        data :
+            Data structure object for providing constraint data to the Caller
+        _x :
+            Optimisation parameters
         """
         self.caller = Caller(models, data)
 
