@@ -921,6 +921,12 @@ class PlasmaDiamagneticCurrent(Model):
 
     def output(self):
         po.oblnkl(self.outfile)
+        po.ovarin(
+            self.outfile,
+            "Plasma diamagnetic current fraction scaling law used",
+            "(i_diamagnetic_current)",
+            physics_variables.i_diamagnetic_current,
+        )
         po.ovarrf(
             self.outfile,
             "Diamagnetic fraction (Hender)",
