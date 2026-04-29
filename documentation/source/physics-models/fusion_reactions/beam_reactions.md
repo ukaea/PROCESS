@@ -620,11 +620,19 @@ with the convention that this is set to zero if $\text{n}_{\text{beam,hot}} = 0$
 The beam velocity is calculated from the input beam energy and beam ion mass:
 
 $$
-\text{v}_{\text{beam}}
-=
+\text{E}_{\text{beam}}[\mathrm{J}] =
+\text{E}_{\text{beam}}[\mathrm{keV}]
+\left(1.602176634\times10^{-16}\,\mathrm{J\,keV^{-1}}\right)
+$$
+
+$$
+\text{v}_{\text{beam}} =
 \sqrt{
-\frac{2 \text{e}_{\text{keV}} \text{E}_{\text{beam}}}
-{\text{m}_{\text{u}} \text{A}}
+\frac{
+2\,\text{E}_{\text{beam}}[\mathrm{J}]
+}{
+\text{A}\,\text{m}_{\text{u}}
+}
 }
 $$
 
