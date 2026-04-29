@@ -1,5 +1,6 @@
 from process import data_structure
 from process.core.log import logging_model_handler
+from process.models.blankets.blanket_library import BlktModelTypes
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import (
     SuperconductingTFTurnType,
@@ -122,11 +123,11 @@ def write(models, data, _outfile):
     # First wall geometry
     models.fw.output()
 
-    if data.fwbs.i_blanket_type == 1:
+    if data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
         # CCFE HCPB model
         models.ccfe_hcpb.output()
 
-    elif data.fwbs.i_blanket_type == 5:
+    elif data.fwbs.i_blanket_type == BlktModelTypes.DCLL:
         # DCLL model
         models.dcll.output()
 
