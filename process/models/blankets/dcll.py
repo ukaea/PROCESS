@@ -15,6 +15,7 @@ from process.data_structure import (
 )
 from process.models.blankets import blanket_library
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
+from process.models.power import PumpingPowerModelTypes
 
 
 class DCLL(InboardBlanket, OutboardBlanket):
@@ -303,8 +304,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
         # For i_p_coolant_pumping == 0:
         # User sets mechanical pumping power directly (primary_pumping_power)
         # Values of p_blkt_coolant_pump_mw, p_div_coolant_pump_mw, p_fw_coolant_pump_mw, p_shld_coolant_pump_mw set in input file
-
-        if fwbs_variables.i_p_coolant_pumping == 1:
+        i_p_coolant_pumping = PumpingPowerModelTypes(fwbs_variables.i_p_coolant_pumping)
+        if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
             # User sets mechanical pumping power directly
             (
                 heat_transport_variables.p_fw_coolant_pump_mw,
@@ -327,7 +328,10 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 p_div_rad_total_mw=fwbs_variables.p_div_rad_total_mw,
             )
 
-        elif fwbs_variables.i_p_coolant_pumping in {2, 3}:
+        elif i_p_coolant_pumping in {
+            PumpingPowerModelTypes.MECHANICAL,
+            PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP,
+        }:
             # Mechanical pumping power is calculated for first wall and blanket
             self.thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
@@ -348,7 +352,10 @@ class DCLL(InboardBlanket, OutboardBlanket):
         if output:
             po.osubhd(self.outfile, "DCLL model: Thermal-hydraulics Component Totals")
 
-            if fwbs_variables.i_p_coolant_pumping not in {2, 3}:
+            if fwbs_variables.i_p_coolant_pumping not in {
+                PumpingPowerModelTypes.MECHANICAL,
+                PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP,
+            }:
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for first wall (MW)",

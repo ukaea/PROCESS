@@ -24,6 +24,7 @@ from process.data_structure import (
 )
 from process.models.blankets import blanket_library
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
+from process.models.power import PumpingPowerModelTypes
 from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
@@ -785,7 +786,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             1 - first_wall_variables.a_fw_outboard / first_wall_variables.a_fw_total
         )
 
-        if fwbs_variables.i_p_coolant_pumping == 1:
+        i_p_coolant_pumping = PumpingPowerModelTypes(fwbs_variables.i_p_coolant_pumping)
+        if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
             # User sets mechanical pumping power directly
             (
                 heat_transport_variables.p_fw_coolant_pump_mw,
@@ -808,7 +810,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 p_div_rad_total_mw=fwbs_variables.p_div_rad_total_mw,
             )
 
-        elif fwbs_variables.i_p_coolant_pumping == 2:
+        elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
             # Calculate the required material properties of the FW and BB coolant.
             self.primary_coolant_properties(output=output)
             # Mechanical pumping power is calculated for first wall and blanket
@@ -832,7 +834,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 )
             )
 
-        elif fwbs_variables.i_p_coolant_pumping == 3:
+        elif i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP:
             # Issue #503
             # Mechanical pumping power is calculated using specified pressure drop for
             # first wall and blanket circuit, including heat exchanger and pipes
@@ -1517,7 +1519,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             fwbs_variables.pres_blkt_coolant,
         )
 
-        if fwbs_variables.i_p_coolant_pumping != 3:
+        if (
+            fwbs_variables.i_p_coolant_pumping
+            != PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
+        ):
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for first wall (MW)",

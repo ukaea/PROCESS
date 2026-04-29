@@ -31,6 +31,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.models.physics.physics import Physics, rether
+from process.models.power import PumpingPowerModelTypes
 from process.models.stellarator.build import st_build
 from process.models.stellarator.coils.calculate import st_coil
 from process.models.stellarator.denisty_limits import (
@@ -889,11 +890,13 @@ class Stellarator(Model):
                 #  deposited in the coolant
 
                 #  First wall and Blanket pumping power (MW)
-
-                if fwbs_variables.i_p_coolant_pumping == 0:
+                i_p_coolant_pumping = PumpingPowerModelTypes(
+                    fwbs_variables.i_p_coolant_pumping
+                )
+                if i_p_coolant_pumping == PumpingPowerModelTypes.USER_INPUT:
                     #    Use input
                     pass
-                elif fwbs_variables.i_p_coolant_pumping == 1:
+                elif i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
                     heat_transport_variables.p_fw_coolant_pump_mw = (
                         heat_transport_variables.f_p_fw_coolant_pump_total_heat
                         * (
@@ -984,7 +987,7 @@ class Stellarator(Model):
                 #     htpmw_i = fpump_i*C
                 #  where C is the non-pumping thermal power deposited in the coolant
 
-                if fwbs_variables.i_p_coolant_pumping == 1:
+                if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
                     #  Shield pumping power (MW)
                     heat_transport_variables.p_shld_coolant_pump_mw = (
                         heat_transport_variables.f_p_shld_coolant_pump_total_heat

@@ -20,6 +20,7 @@ from process.data_structure import (
     primary_pumping_variables,
 )
 from process.models.build import FwBlktVVShape
+from process.models.power import PumpingPowerModelTypes
 
 logger = logging.getLogger(__name__)
 
@@ -2295,7 +2296,8 @@ class BlanketLibrary(Model):
         ########################################################
 
         # load in pressures if primary pumping == 2
-        if fwbs_variables.i_p_coolant_pumping == 2:
+        i_p_coolant_pumping = PumpingPowerModelTypes(fwbs_variables.i_p_coolant_pumping)
+        if i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
             deltap = self.thermo_hydraulic_model_pressure_drop_calculations(
                 output=output
             )
@@ -2316,12 +2318,15 @@ class BlanketLibrary(Model):
         # If FW and BB have the same coolant...
         if fwbs_variables.i_fw_blkt_shared_coolant == 0:
             # Total pressure drop in the first wall/blanket  (Pa)
-            if fwbs_variables.i_p_coolant_pumping == 2:
+            if i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
                 if fwbs_variables.i_blkt_inboard == 1:
                     deltap_fw_blkt = deltap_fwi + deltap_bli + deltap_fwo + deltap_blo
                 if fwbs_variables.i_blkt_inboard == 0:
                     deltap_fw_blkt = deltap_fwi + deltap_fwo + deltap_blo
-            elif fwbs_variables.i_p_coolant_pumping == 3:
+            elif (
+                i_p_coolant_pumping
+                == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
+            ):
                 deltap_fw_blkt = primary_pumping_variables.dp_fw_blkt
             # Total coolant mass flow rate in the first wall/blanket (kg/s)
             blanket_library.mftotal = (
@@ -2347,7 +2352,7 @@ class BlanketLibrary(Model):
 
         # If FW and BB have different coolants...
         elif fwbs_variables.i_fw_blkt_shared_coolant == 1:
-            if fwbs_variables.i_p_coolant_pumping == 2:
+            if i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
                 # Total pressure drop in the first wall (Pa)
                 deltap_fw = deltap_fwi + deltap_fwo
 
@@ -2356,7 +2361,10 @@ class BlanketLibrary(Model):
                     deltap_blkt = deltap_bli + deltap_blo
                 if fwbs_variables.i_blkt_inboard == 0:
                     deltap_blkt = deltap_blo
-            elif fwbs_variables.i_p_coolant_pumping == 3:
+            elif (
+                i_p_coolant_pumping
+                == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
+            ):
                 deltap_fw = primary_pumping_variables.dp_fw
                 deltap_blkt = primary_pumping_variables.dp_blkt
 
@@ -2410,12 +2418,15 @@ class BlanketLibrary(Model):
         # If the blanket has a liquid metal breeder...
         if fwbs_variables.i_blkt_dual_coolant > 0:
             # Total pressure drop in the blanket (Pa)
-            if fwbs_variables.i_p_coolant_pumping == 2:
+            if i_p_coolant_pumping == PumpingPowerModelTypes.MECHANICAL:
                 if fwbs_variables.i_blkt_inboard == 1:
                     deltap_bl_liq = deltap_bli_liq + deltap_blo_liq
                 if fwbs_variables.i_blkt_inboard == 0:
                     deltap_bl_liq = deltap_blo_liq
-            elif fwbs_variables.i_p_coolant_pumping == 3:
+            elif (
+                i_p_coolant_pumping
+                == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
+            ):
                 deltap_bl_liq = primary_pumping_variables.dp_liq
             # Total liquid metal breeder/coolant mass flow rate in the blanket (kg/s)
             blanket_library.mfblkt_liq = (
