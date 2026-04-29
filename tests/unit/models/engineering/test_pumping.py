@@ -28,8 +28,8 @@ def test_gnielinski_heat_transfer_coefficient():
 def test_calculate_reynolds_number():
 
     assert calculate_reynolds_number(
-        mflux_coolant=112.19853108876258,
         den_coolant=8.8673250601290707,
+        vel_coolant=12.649110769896881,
         radius_channel=0.0060000000000000001,
         visc_coolant=4.0416219836935569e-05,
-    ) == pytest.approx(33312.92185407996)
+    ) == pytest.approx(33302.602975971815)

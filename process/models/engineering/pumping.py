@@ -86,10 +86,13 @@ def gnielinski_heat_transfer_coefficient(
     # Calculate pipe diameter (m)
     diameter = 2 * radius_channel
 
+    # Calculate flow velocity (m/s)
+    vel_coolant = mflux_coolant / den_coolant
+
     # Calculate Reynolds number
     reynolds = calculate_reynolds_number(
-        mflux_coolant=mflux_coolant,
         den_coolant=den_coolant,
+        vel_coolant=vel_coolant,
         radius_channel=diameter / 2,
         visc_coolant=visc_coolant,
     )
@@ -131,16 +134,16 @@ def gnielinski_heat_transfer_coefficient(
 
 
 def calculate_reynolds_number(
-    mflux_coolant: float, den_coolant: float, radius_channel: float, visc_coolant: float
+    den_coolant: float, vel_coolant: float, radius_channel: float, visc_coolant: float
 ) -> float:
     """Calculate Reynolds number for flow in a pipe.
 
     Parameters
     ----------
-    mflux_coolant:
-        Coolant mass flux in a single channel (kg/m²/s).
     den_coolant:
         Coolant density (average of inlet and outlet) (kg/m³).
+    vel_coolant:
+        Coolant velocity in a single channel (m/s).
     radius_channel:
         Coolant pipe radius (m).
     visc_coolant:
@@ -155,8 +158,5 @@ def calculate_reynolds_number(
     # Calculate pipe diameter (m)
     diameter = 2 * radius_channel
 
-    # Calculate flow velocity (m/s)
-    velocity = mflux_coolant / den_coolant
-
     # Calculate Reynolds number
-    return den_coolant * velocity * diameter / visc_coolant
+    return den_coolant * vel_coolant * diameter / visc_coolant
