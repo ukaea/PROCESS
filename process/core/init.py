@@ -58,6 +58,7 @@ from process.data_structure.superconducting_tf_coil_variables import (
 )
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
+from process.models.blankets.blanket_library import BlktModelTypes
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -1178,7 +1179,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # CCFE HCPB Model
 
     if data_structure.stellarator_variables.istell == 0 and (
-        data_structure.fwbs_variables.i_blanket_type == 1
+        data_structure.fwbs_variables.i_blanket_type == BlktModelTypes.CCFE_HCPB
     ):
         fsum = (
             data_structure.fwbs_variables.breeder_multiplier

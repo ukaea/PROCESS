@@ -15,6 +15,7 @@ from process.core.process_output import OutputFileManager, ovarre
 from process.core.solver import constraints
 from process.core.solver.iteration_variables import set_scaled_iteration_variable
 from process.core.solver.objectives import objective_function
+from process.models.blankets.blanket_library import BlktModelTypes
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
@@ -341,11 +342,11 @@ class Caller:
         4    |  KIT HCLL model
         5    |  DCLL model
         """
-        if data_structure.fwbs_variables.i_blanket_type == 1:
+        if data_structure.fwbs_variables.i_blanket_type == BlktModelTypes.CCFE_HCPB:
             # CCFE HCPB model
             self.models.ccfe_hcpb.run()
 
-        elif data_structure.fwbs_variables.i_blanket_type == 5:
+        elif data_structure.fwbs_variables.i_blanket_type == BlktModelTypes.DCLL:
             # DCLL model
             self.models.dcll.run()
 

@@ -40,6 +40,13 @@ logger = logging.getLogger(__name__)
 # FCI         Flow Channel Insert
 
 
+class BlktModelTypes(IntEnum):
+    """Enum for blanket model types. `i_blanket_type`"""
+
+    CCFE_HCPB = 1
+    DCLL = 5
+
+
 class FWBlktCoolantLoopTypes(IntEnum):
     """Enumeration for first wall and blanket coolant loop types. `i_fw_blkt_shared_coolant`."""
 
@@ -884,7 +891,8 @@ class BlanketLibrary(Model):
         Error
             If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
         """
-        if fwbs_variables.i_blanket_type == 5:
+        i_blanket_type = BlktModelTypes(fwbs_variables.i_blanket_type)
+        if i_blanket_type == BlktModelTypes.DCLL:
             # Unless DCLL then we will use BZ
             blanket_library.len_blkt_inboard_coolant_channel_radial = (
                 build_variables.blbuith
