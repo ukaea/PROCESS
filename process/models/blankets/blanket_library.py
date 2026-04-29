@@ -23,6 +23,7 @@ from process.models.engineering.pumping import (
     darcy_friction_haaland,
 )
 from process.models.power import PumpingPowerModelTypes
+from enum import IntEnum
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +40,14 @@ logger = logging.getLogger(__name__)
 # OB          Outboard
 # HCD         Heating & Current Drive
 # FCI         Flow Channel Insert
+
+
+class BlktModelTypes(IntEnum):
+    """Enum for blanket model types. `i_blanket_type`"""
+    
+    CCFE_HCPB = 1
+    DCLL = 5
+
 
 
 class FWBlktCoolantLoopTypes(IntEnum):
