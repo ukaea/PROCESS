@@ -8582,7 +8582,7 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
         fontsize=9,
     )
 
-    axis.set_title("Bootstrap Current Fraction Comparison")
+    axis.set_title("Bootstrap Current Fraction ($f_\\text{BS}$) Comparison")
     axis.set_ylabel("Bootstrap Current Fraction")
     axis.set_xlim([0.5, 1.5])
     axis.set_xticks([])
@@ -8714,7 +8714,7 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
         fontsize=9,
     )
 
-    axis.set_title("L-H Threshold Comparison")
+    axis.set_title("L-H Threshold ($P_\\text{LH}$) Comparison")
     axis.set_ylabel("L-H threshold power [MW]")
     axis.set_xlim([0.5, 1.5])
     axis.set_xticks([])
@@ -11825,9 +11825,89 @@ def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
         fontsize=9,
     )
 
-    axis.set_title("Plasma Current Comparison")
+    axis.set_title("Plasma Current ($I_p$) Comparison")
     axis.set_ylabel(r"Plasma Current [MA]")
     axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-6:.1f}"))
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_facecolor("#f0f0f0")
+
+
+def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+    """Function to plot a scatter box plot of different max normalised beta comparisons.
+
+    Parameters
+    ----------
+    axis :
+        Axis object to plot to.
+    mfile :
+        MFILE data object.
+    scan :
+        Scan number to use.
+    """
+    beta_norm_max_wesson = mfile.get("beta_norm_max_wesson", scan=scan)
+    beta_norm_max_original_scaling = mfile.get(
+        "beta_norm_max_original_scaling", scan=scan
+    )
+    beta_norm_max_menard = mfile.get("beta_norm_max_menard", scan=scan)
+    beta_norm_max_thloreus = mfile.get("beta_norm_max_thloreus", scan=scan)
+    beta_norm_max_stambaugh = mfile.get("beta_norm_max_stambaugh", scan=scan)
+
+    # Data for the box plot
+    data = {
+        f"{BetaNormMaxModel.WESSON.full_name}": beta_norm_max_wesson,
+        f"{BetaNormMaxModel.ORIGINAL_SCALING.full_name}": beta_norm_max_original_scaling,
+        f"{BetaNormMaxModel.MENARD.full_name}": beta_norm_max_menard,
+        f"{BetaNormMaxModel.THLOREUS.full_name}": beta_norm_max_thloreus,
+        f"{BetaNormMaxModel.STAMBAUGH.full_name}": beta_norm_max_stambaugh,
+    }
+
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1.1, 1))
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_density_limit = np.mean(data_values)
+    std_density_limit = np.std(data_values)
+    median_density_limit = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        1.1,
+        0.15,
+        rf"Average: {avg_density_limit:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.1,
+        0.1,
+        rf"Standard Dev: {std_density_limit:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.1,
+        0.05,
+        rf"Median: {median_density_limit:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("Max Normalised Beta ($\\beta_N$) Comparison")
+    axis.set_ylabel("Max Normalised Beta $\\beta_N$ [unitless]")
     axis.set_xlim([0.5, 1.5])
     axis.set_xticks([])
     axis.set_xticklabels([])
@@ -14255,6 +14335,7 @@ def main_plot(
     plot_plasma_current_comparison(figs[14].add_subplot(224), m_file, scan)
     plot_h_threshold_comparison(figs[15].add_subplot(224), m_file, scan)
     plot_density_limit_comparison(figs[15].add_subplot(221), m_file, scan)
+    plot_max_normalised_beta_comparison(figs[16].add_subplot(221), m_file, scan)
     plot_confinement_time_comparison(figs[16].add_subplot(224), m_file, scan)
 
     plot_debye_length_profile(figs[17].add_subplot(232), m_file, scan)
