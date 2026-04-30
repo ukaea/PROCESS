@@ -56,6 +56,7 @@ from process.models.physics.current_drive import (
     ElectronBernstein,
     ElectronCyclotron,
 )
+from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
 from process.models.physics.physics import (
@@ -3158,13 +3159,15 @@ def plot_main_plasma_information(
 
     # Add density limit information
     textstr_density_limit = (
-        f"$\\mathbf{{Density \\ limit:}}$\n\n"
-        f"$n_{{\\text{{e,limit}}}}: {mfile.get('nd_plasma_electrons_max', scan=scan):.3e} \\ m^{{-3}}$"
+        f"$\\mathbf{{Density \\ limit:}}$\n"
+        f"({DensityLimitModel(int(mfile.get('i_density_limit', scan=scan))).full_name})\n"
+        f"$n_{{\\text{{e,limit}}}}: {mfile.get('nd_plasma_electrons_max', scan=scan):.3e} \\ m^{{-3}}$\n"
+        f"$f_{{\\text{{GW}}}}$: {mfile.get('dnla_gw', scan=scan):.4f}"
     )
 
     axis.text(
         0.22,
-        0.3,
+        0.31,
         textstr_density_limit,
         fontsize=9,
         verticalalignment="top",
