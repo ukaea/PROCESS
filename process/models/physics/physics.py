@@ -28,7 +28,7 @@ from process.data_structure import (
     times_variables,
 )
 from process.models.physics import impurity_radiation
-from process.models.physics.plasma_geometry import PlasmaGeom, PlasmaGeometryModelType
+from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.profiles import PlasmaProfileShapeType
 
 if TYPE_CHECKING:
@@ -1693,119 +1693,8 @@ class Physics(Model):
         self.geometry.output()
 
         if stellarator_variables.istell == 0:
-            po.osubhd(self.outfile, "Current and Field :")
-
-            if stellarator_variables.istell == 0:
-                po.oblnkl(self.outfile)
-                po.ovarin(
-                    self.outfile,
-                    "Plasma current scaling law used",
-                    "(i_plasma_current)",
-                    physics_variables.i_plasma_current,
-                )
-
-                po.ovarrf(
-                    self.outfile,
-                    "Plasma current (MA)",
-                    "(plasma_current_MA)",
-                    physics_variables.plasma_current / 1.0e6,
-                    "OP ",
-                )
-
-                self.current.output_plasma_current_models()
-                po.oblnkl(self.outfile)
-
-                if physics_variables.i_alphaj == 1:
-                    po.ovarrf(
-                        self.outfile,
-                        "Current density profile factor",
-                        "(alphaj)",
-                        physics_variables.alphaj,
-                        "OP ",
-                    )
-                else:
-                    po.ovarrf(
-                        self.outfile,
-                        "Current density profile factor",
-                        "(alphaj)",
-                        physics_variables.alphaj,
-                    )
-                po.ocmmnt(self.outfile, "Current profile index scalings:")
-                po.oblnkl(self.outfile)
-
-                po.ovarrf(
-                    self.outfile,
-                    "J. Wesson plasma current profile index",
-                    "(alphaj_wesson)",
-                    physics_variables.alphaj_wesson,
-                    "OP ",
-                )
-                po.oblnkl(self.outfile)
-                po.ovarrf(
-                    self.outfile,
-                    "On-axis plasma current density (A/m2)",
-                    "(j_plasma_on_axis)",
-                    physics_variables.j_plasma_on_axis,
-                    "OP ",
-                )
-
-        if stellarator_variables.istell == 0:
-            po.ovarrf(
-                self.outfile, "Safety factor on axis", "(q0)", physics_variables.q0
-            )
-
-            if physics_variables.i_plasma_current == 2:
-                po.ovarrf(
-                    self.outfile,
-                    "Mean edge safety factor",
-                    "(q95)",
-                    physics_variables.q95,
-                )
-
-            po.ovarrf(
-                self.outfile,
-                "Safety factor at 95% flux surface",
-                "(q95)",
-                physics_variables.q95,
-            )
-
-            po.ovarrf(
-                self.outfile,
-                "Cylindrical safety factor (qcyl)",
-                "(qstar)",
-                physics_variables.qstar,
-                "OP ",
-            )
-
-            if (
-                physics_variables.i_plasma_geometry
-                == PlasmaGeometryModelType.STAR_FIESTA
-            ):
-                po.ovarrf(
-                    self.outfile,
-                    "Lower limit for edge safety factor q95",
-                    "(q95_min)",
-                    physics_variables.q95_min,
-                    "OP ",
-                )
-            po.ovarrf(
-                self.outfile,
-                "Plasma normalised internal inductance",
-                "(ind_plasma_internal_norm)",
-                physics_variables.ind_plasma_internal_norm,
-                "OP ",
-            )
-
-            po.oblnkl(self.outfile)
+            self.current.output()
             self.fields.output()
-
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Rotational transform",
-                "(iotabar)",
-                stellarator_variables.iotabar,
-            )
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
