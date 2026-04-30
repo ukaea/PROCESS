@@ -516,18 +516,20 @@ class PlasmaGeom:
             f"{PlasmaShapeModelType(physics_variables.i_plasma_shape).full_name} plasma shape model is used :",
         )
 
-        po.ovarrf(self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor)
+        po.ovarrf(
+            self.outfile, "Major radius (R₀) (m)", "(rmajor)", physics_variables.rmajor
+        )
         po.ovarrf(
             self.outfile,
-            "Minor radius (m)",
+            "Minor radius (a) (m)",
             "(rminor)",
             physics_variables.rminor,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Aspect ratio", "(aspect)", physics_variables.aspect)
+        po.ovarrf(self.outfile, "Aspect ratio (A)", "(aspect)", physics_variables.aspect)
         po.ovarrf(
             self.outfile,
-            "Plasma squareness",
+            "Plasma squareness (ζ)",
             "(plasma_square)",
             physics_variables.plasma_square,
             "IP",
