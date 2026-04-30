@@ -200,7 +200,7 @@ class PlasmaFields(Model):
 
         po.ovarrf(
             self.outfile,
-            "Vertical field at plasma (T)",
+            "Vertical field at plasma (Bᵥ) (T)",
             "(b_plasma_vertical_required)",
             physics_variables.b_plasma_vertical_required,
             "OP ",
@@ -208,19 +208,19 @@ class PlasmaFields(Model):
 
         po.ovarrf(
             self.outfile,
-            "Vacuum toroidal field at R (T)",
+            "Vacuum toroidal field at R₀ (Bᴛ(R₀)) (T)",
             "(b_plasma_toroidal_on_axis)",
             physics_variables.b_plasma_toroidal_on_axis,
         )
         po.ovarrf(
             self.outfile,
-            "Toroidal field at plasma inboard (T)",
+            "Toroidal field at plasma inboard (Bᴛ(R₀-a)) (T)",
             "(b_plasma_inboard_toroidal)",
             physics_variables.b_plasma_inboard_toroidal,
         )
         po.ovarrf(
             self.outfile,
-            "Toroidal field at plasma outboard (T)",
+            "Toroidal field at plasma outboard (Bᴛ(R₀+a)) (T)",
             "(b_plasma_outboard_toroidal)",
             physics_variables.b_plasma_outboard_toroidal,
         )
@@ -234,7 +234,7 @@ class PlasmaFields(Model):
             )
         po.ovarrf(
             self.outfile,
-            "Plasma surface averaged poloidal field (T)",
+            "Plasma surface averaged poloidal field (⟨Bₚₒₗ(a)⟩) (T)",
             "(b_plasma_surface_poloidal_average)",
             physics_variables.b_plasma_surface_poloidal_average,
             "OP ",
@@ -242,7 +242,7 @@ class PlasmaFields(Model):
 
         po.ovarrf(
             self.outfile,
-            "Total field (sqrt(b_plasma_surface_poloidal_average^2 + b_plasma_toroidal_on_axis^2)) (T)",
+            "Total field (Bₜₒₜ) (T)",
             "(b_plasma_total)",
             physics_variables.b_plasma_total,
             "OP ",
