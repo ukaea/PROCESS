@@ -1338,24 +1338,6 @@ class PlasmaBootstrapCurrent(Model):
                 "Predicted plasma driven current is more than upper limit on non-inductive fraction"
             )
 
-        if physics_variables.i_diamagnetic_current == 0:
-            po.ocmmnt(self.outfile, "  (Diamagnetic current fraction not calculated)")
-            # Error to show if diamagnetic current is above 1% but not used
-            if current_drive_variables.f_c_plasma_diamagnetic_scene > 0.01e0:
-                logger.error(
-                    "Diamagnetic fraction is more than 1%, but not calculated. "
-                    "Consider using i_diamagnetic_current=2 and i_pfirsch_schluter_current=1"
-                )
-
-        elif physics_variables.i_diamagnetic_current == 1:
-            po.ocmmnt(
-                self.outfile, "  (Hender diamagnetic current fraction scaling used)"
-            )
-        elif physics_variables.i_diamagnetic_current == 2:
-            po.ocmmnt(
-                self.outfile, "  (SCENE diamagnetic current fraction scaling used)"
-            )
-
         if physics_variables.i_pfirsch_schluter_current == 0:
             po.ocmmnt(self.outfile, "  Pfirsch-Schluter current fraction not calculated")
         elif physics_variables.i_pfirsch_schluter_current == 1:

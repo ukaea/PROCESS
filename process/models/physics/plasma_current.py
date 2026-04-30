@@ -927,6 +927,11 @@ class PlasmaDiamagneticCurrent(Model):
             "(i_diamagnetic_current)",
             physics_variables.i_diamagnetic_current,
         )
+        po.ocmmnt(
+            self.outfile,
+            f"Diamagnetic current fraction model selected: {PlasmaDiamagneticCurrentModel(physics_variables.i_diamagnetic_current).full_name} ",
+        )
+        po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
             "Diamagnetic fraction (Hender)",
@@ -942,6 +947,15 @@ class PlasmaDiamagneticCurrent(Model):
             "OP ",
         )
         po.oblnkl(self.outfile)
+        if (
+            physics_variables.i_diamagnetic_current == PlasmaDiamagneticCurrentModel.NONE
+            and current_drive_variables.f_c_plasma_diamagnetic_scene > 0.01e0
+        ):
+            # Error to show if diamagnetic current is above 1% but not used
+            logger.error(
+                "Diamagnetic fraction is more than 1%, but not calculated. "
+                "Consider using i_diamagnetic_current=2 and i_pfirsch_schluter_current=1"
+            )
 
     @staticmethod
     @nb.njit(cache=True)
