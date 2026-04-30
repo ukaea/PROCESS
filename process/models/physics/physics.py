@@ -2324,13 +2324,6 @@ class Physics(Model):
                 physics_variables.nu_star,
                 "OP ",
             )
-            po.ovarre(
-                self.outfile,
-                "ITER Physics Basis definition of elongation",
-                "(kappa_ipb)",
-                physics_variables.kappa_ipb,
-                "OP ",
-            )
 
             po.oblnkl(self.outfile)
             po.ostars(self.outfile, 110)

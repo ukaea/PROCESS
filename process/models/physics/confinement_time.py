@@ -13,6 +13,7 @@ from process.data_structure import (
     physics_variables,
     stellarator_variables,
 )
+from process.models.physics.plasma_geometry import PlasmaGeom
 
 logger = logging.getLogger(__name__)
 
@@ -248,8 +249,8 @@ class PlasmaConfinementTime:
         # vol. 48, no. 9, pp. 099801099801, Aug. 2008,
         # doi: https://doi.org/10.1088/0029-5515/48/9/099801.
 
-        physics_variables.kappa_ipb = (vol_plasma / (2.0 * np.pi * rmajor)) / (
-            np.pi * rminor**2
+        physics_variables.kappa_ipb = PlasmaGeom.calculate_iter_physics_basis_elongation(
+            vol_plasma=vol_plasma, rmajor=rmajor, rminor=rminor
         )
 
         # Electron energy confinement times
