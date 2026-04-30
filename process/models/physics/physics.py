@@ -2329,14 +2329,14 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Fusion rate density: total (reactions/m3/sec)",
+            "Fusion rate density: total (reactions/m³/sec)",
             "(fusden_total)",
             physics_variables.fusden_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fusion rate density: plasma (reactions/m3/sec)",
+            "Fusion rate density: plasma (reactions/m³/sec)",
             "(fusden_plasma)",
             physics_variables.fusden_plasma,
             "OP ",
@@ -2434,14 +2434,14 @@ class Physics(Model):
         po.osubhd(self.outfile, "Alpha Powers :")
         po.ovarre(
             self.outfile,
-            "Alpha rate density: total (particles/m3/sec)",
+            "Alpha rate density: total (particles/m³/sec)",
             "(fusden_alpha_total)",
             physics_variables.fusden_alpha_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha rate density: plasma (particles/m3/sec)",
+            "Alpha rate density: plasma (particles/m³/sec)",
             "(fusden_plasma_alpha)",
             physics_variables.fusden_plasma_alpha,
             "OP ",
@@ -2455,7 +2455,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Alpha power density: total (MW/m^3)",
+            "Alpha power density: total (MW/m³)",
             "(pden_alpha_total_mw)",
             physics_variables.pden_alpha_total_mw,
             "OP ",
@@ -2469,7 +2469,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Alpha power density: plasma (MW/m^3)",
+            "Alpha power density: plasma (MW/m³)",
             "(pden_plasma_alpha_mw)",
             physics_variables.pden_plasma_alpha_mw,
             "OP ",
@@ -2483,14 +2483,14 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Alpha power per unit volume transferred to electrons (MW/m3)",
+            "Alpha power per unit volume transferred to electrons (MW/m³)",
             "(f_pden_alpha_electron_mw)",
             physics_variables.f_pden_alpha_electron_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha power per unit volume transferred to ions (MW/m3)",
+            "Alpha power per unit volume transferred to ions (MW/m³)",
             "(f_pden_alpha_ions_mw)",
             physics_variables.f_pden_alpha_ions_mw,
             "OP ",
@@ -2508,7 +2508,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Neutron power density: total (MW/m^3)",
+            "Neutron power density: total (MW/m³)",
             "(pden_neutron_total_mw)",
             physics_variables.pden_neutron_total_mw,
             "OP ",
@@ -2522,7 +2522,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Neutron power density: plasma (MW/m^3)",
+            "Neutron power density: plasma (MW/m³)",
             "(pden_plasma_neutron_mw)",
             physics_variables.pden_plasma_neutron_mw,
             "OP ",
@@ -2575,7 +2575,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Plasma total synchrotron radiation power density (MW/m^3)",
+            "Plasma total synchrotron radiation power density (MW/m³)",
             "(pden_plasma_sync_mw)",
             physics_variables.pden_plasma_sync_mw,
             "OP ",
@@ -2640,7 +2640,7 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Average neutron flux at plasma surface (MW/m^2)",
+            "Average neutron flux at plasma surface (MW/m²)",
             "(pflux_plasma_surface_neutron_avg_mw)",
             physics_variables.pflux_plasma_surface_neutron_avg_mw,
             "OP ",
