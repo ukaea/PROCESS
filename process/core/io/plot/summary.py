@@ -58,7 +58,11 @@ from process.models.physics.current_drive import (
 )
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
-from process.models.physics.physics import BetaComponentLimits, BetaNormMaxModel
+from process.models.physics.physics import (
+    BetaComponentLimits,
+    BetaNormMaxModel,
+    IndInternalNormModel,
+)
 from process.models.physics.plasma_current import (
     PlasmaCurrentModel,
     PlasmaDiamagneticCurrentModel,
@@ -2728,7 +2732,7 @@ def plot_main_plasma_information(
         f"Plasma resistive diffusion time: {mfile.get('t_plasma_res_diffusion', scan=scan):,.4f} s\n"
         f"Plasma inductance: {mfile.get('ind_plasma', scan=scan):.4e} H | ITER $l_i(3)$: {mfile.get('ind_plasma_internal_norm_iter_3', scan=scan):.4f}\n"
         f"Plasma stored magnetic energy: {mfile.get('e_plasma_magnetic_stored', scan=scan) / 1e9:.4f} GJ\n"
-        f"Plasma normalised internal inductance: {mfile.get('ind_plasma_internal_norm', scan=scan):.4f}"
+        f"Plasma normalised internal inductance, $l_i$ ({IndInternalNormModel(int(mfile.get('i_ind_plasma_internal_norm', scan=scan))).full_name}) :{mfile.get('ind_plasma_internal_norm', scan=scan):.3f}"
     )
 
     axis.text(

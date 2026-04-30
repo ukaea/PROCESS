@@ -4091,11 +4091,21 @@ class PlasmaBeta:
 
 
 class IndInternalNormModel(IntEnum):
-    """Normalised internal inductance (l_i) model types"""
+    """Normalised internal inductance (lᵢ) model types"""
 
-    USER_INPUT = 0
-    WESSON = 1
-    MENARD = 2
+    USER_INPUT = (0, "User Input")
+    WESSON = (1, "Wesson scaling")
+    MENARD = (2, "Menard scaling")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class PlasmaInductance:
@@ -4485,9 +4495,21 @@ class PlasmaInductance:
             physics_variables.e_plasma_magnetic_stored,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+
+        po.ovarin(
+            self.outfile,
+            "Normalised internal inductance model used",
+            "(i_ind_plasma_internal_norm)",
+            physics_variables.i_ind_plasma_internal_norm,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"Normalised internal inductance model selected: {IndInternalNormModel(physics_variables.i_ind_plasma_internal_norm).full_name} ",
+        )
         po.ovarrf(
             self.outfile,
-            "Plasma normalised internal inductance",
+            "Plasma normalised internal inductance (lᵢ)",
             "(ind_plasma_internal_norm)",
             physics_variables.ind_plasma_internal_norm,
             "OP ",
