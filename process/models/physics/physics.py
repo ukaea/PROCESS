@@ -1702,19 +1702,42 @@ class Physics(Model):
         # Output beta information
         self.beta.output_beta_information()
 
-        po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
+        po.oheadr(self.outfile, "Plasma Density and Temperature Profiles")
         po.ovarrf(
             self.outfile,
             "Number of radial points in plasma profiles",
             "(n_plasma_profile_elements)",
             physics_variables.n_plasma_profile_elements,
         )
+        po.osubhd(self.outfile, "Temperature:")
         po.ovarrf(
             self.outfile,
-            "Volume averaged electron temperature (keV)",
+            "Volume averaged electron temperature (⟨Tₑ⟩) (keV)",
             "(temp_plasma_electron_vol_avg_kev)",
             physics_variables.temp_plasma_electron_vol_avg_kev,
         )
+        po.ovarrf(
+            self.outfile,
+            "Electron temperature on axis (Tₑ₀) (keV)",
+            "(temp_plasma_electron_on_axis_kev)",
+            physics_variables.temp_plasma_electron_on_axis_kev,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged density weighted electron temperature (⟨Tₑ⟩ₙ) (keV)",
+            "(temp_plasma_electron_density_weighted_kev)",
+            physics_variables.temp_plasma_electron_density_weighted_kev,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ratio of electron density weighted to volume averaged temperature",
+            "(f_temp_plasma_electron_density_vol_avg)",
+            physics_variables.f_temp_plasma_electron_density_vol_avg,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
             "Ratio of ion to electron volume-averaged temperature",
@@ -1722,70 +1745,133 @@ class Physics(Model):
             physics_variables.f_temp_plasma_ion_electron,
             "IP ",
         )
+        po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
-            "Electron temperature on axis (keV)",
-            "(temp_plasma_electron_on_axis_kev)",
-            physics_variables.temp_plasma_electron_on_axis_kev,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Ion temperature (keV)",
+            "Volume averaged ion temperature (⟨Tᵢ⟩) (keV)",
             "(temp_plasma_ion_vol_avg_kev)",
             physics_variables.temp_plasma_ion_vol_avg_kev,
         )
         po.ovarrf(
             self.outfile,
-            "Ion temperature on axis (keV)",
+            "Ion temperature on axis (Tᵢ₀) (keV)",
             "(temp_plasma_ion_on_axis_kev)",
             physics_variables.temp_plasma_ion_on_axis_kev,
             "OP ",
         )
-        po.ovarrf(
-            self.outfile,
-            "Electron temp., density weighted (keV)",
-            "(temp_plasma_electron_density_weighted_kev)",
-            physics_variables.temp_plasma_electron_density_weighted_kev,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Ratio of electron density weighted temp. to volume averaged temp.",
-            "(f_temp_plasma_electron_density_vol_avg)",
-            physics_variables.f_temp_plasma_electron_density_vol_avg,
-            "OP ",
-        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Density:")
+
         po.ovarre(
             self.outfile,
-            "Volume averaged electron number density (/m3)",
+            "Volume averaged electron number density (⟨nₑ⟩) (/m³)",
             "(nd_plasma_electrons_vol_avg)",
             physics_variables.nd_plasma_electrons_vol_avg,
         )
         po.ovarre(
             self.outfile,
-            "Electron number density on axis (/m3)",
+            "Electron number density on axis (nₑ₀) (/m³)",
             "(nd_plasma_electron_on_axis)",
             physics_variables.nd_plasma_electron_on_axis,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Line-averaged electron number density (/m3)",
+            "Line-averaged electron number density (ñₑ) (/m³)",
             "(nd_plasma_electron_line)",
             physics_variables.nd_plasma_electron_line,
             "OP ",
         )
+        if stellarator_variables.istell == 0:
+            po.ovarre(
+                self.outfile,
+                "Greenwald fraction (f_GW)",
+                "(dnla_gw)",
+                physics_variables.nd_plasma_electron_line
+                / physics_variables.nd_plasma_electron_max_array[6],
+                "OP ",
+            )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma pressure on axis (Pa)",
+            "Total ion volume averaged number density (⟨nᵢ⟩) (/m³)",
+            "(nd_plasma_ions_total_vol_avg)",
+            physics_variables.nd_plasma_ions_total_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuel ion volume averaged number density (⟨n_fuel⟩) (/m³)",
+            "(nd_plasma_fuel_ions_vol_avg)",
+            physics_variables.nd_plasma_fuel_ions_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total impurity volume averaged number density with Z > 2 (⟨nᵢₘₚ⟩) (/m³)",
+            "(nd_plasma_impurities_vol_avg)",
+            physics_variables.nd_plasma_impurities_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermalised alpha volume averaged number density (⟨n_alpha⟩) (/m³)",
+            "(nd_plasma_alphas_vol_avg)",
+            physics_variables.nd_plasma_alphas_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermalised alpha to electron number density ratio (⟨n_alpha⟩/⟨nₑ⟩)",
+            "(f_nd_alpha_electron)",
+            physics_variables.f_nd_alpha_electron,
+        )
+        po.ovarre(
+            self.outfile,
+            "Proton volume averaged number density (⟨nₚ⟩) (/m³)",
+            "(nd_plasma_protons_vol_avg)",
+            physics_variables.nd_plasma_protons_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Proton to electron volume averaged number density ratio (⟨nₚ⟩/⟨nₑ⟩)",
+            "(f_nd_protium_electrons)",
+            physics_variables.f_nd_protium_electrons,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Hot beam ion volume averaged number density (⟨n_beam⟩) (/m³)",
+            "(nd_beam_ions)",
+            physics_variables.nd_beam_ions,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Hot beam ion to electron number density ratio (⟨n_beam⟩/⟨nₑ⟩)",
+            "(f_nd_beam_electron)",
+            physics_variables.f_nd_beam_electron,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Pressure:")
+
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal pressure on axis (p₀) (Pa)",
             "(pres_plasma_thermal_on_axis)",
             physics_variables.pres_plasma_thermal_on_axis,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Volume averaged plasma pressure (Pa)",
+            "Volume averaged plasma thermal pressure (⟨p⟩) (Pa)",
             "(pres_plasma_thermal_vol_avg)",
             physics_variables.pres_plasma_thermal_vol_avg,
             "OP ",
@@ -1821,81 +1907,6 @@ class Physics(Model):
                 physics_variables.pres_plasma_fuel_profile[i],
             )
 
-        if stellarator_variables.istell == 0:
-            po.ovarre(
-                self.outfile,
-                "Line-averaged electron density / Greenwald density",
-                "(dnla_gw)",
-                physics_variables.nd_plasma_electron_line
-                / physics_variables.nd_plasma_electron_max_array[6],
-                "OP ",
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Total Ion number density (/m3)",
-            "(nd_plasma_ions_total_vol_avg)",
-            physics_variables.nd_plasma_ions_total_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Fuel ion number density (/m3)",
-            "(nd_plasma_fuel_ions_vol_avg)",
-            physics_variables.nd_plasma_fuel_ions_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total impurity number density with Z > 2 (no He) (/m3)",
-            "(nd_plasma_impurities_vol_avg)",
-            physics_variables.nd_plasma_impurities_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Helium ion number density (thermalised ions only) (/m3)",
-            "(nd_plasma_alphas_vol_avg)",
-            physics_variables.nd_plasma_alphas_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Helium ion density (thermalised ions only) / electron number density",
-            "(f_nd_alpha_electron)",
-            physics_variables.f_nd_alpha_electron,
-        )
-        po.ovarre(
-            self.outfile,
-            "Plasma volume averaged proton number density (/m3)",
-            "(nd_plasma_protons_vol_avg)",
-            physics_variables.nd_plasma_protons_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Proton number density / electron number density",
-            "(f_nd_protium_electrons)",
-            physics_variables.f_nd_protium_electrons,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Hot beam ion number density (/m3)",
-            "(nd_beam_ions)",
-            physics_variables.nd_beam_ions,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Hot beam ion number density / electron density",
-            "(f_nd_beam_electron)",
-            physics_variables.f_nd_beam_electron,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
