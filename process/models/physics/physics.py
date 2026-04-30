@@ -1798,32 +1798,6 @@ class Physics(Model):
 
             po.oblnkl(self.outfile)
             self.fields.output()
-            po.oblnkl(self.outfile)
-            po.ostars(self.outfile, 110)
-            po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, "Plasma normalised internal inductance scalings:")
-            po.oblnkl(self.outfile)
-            po.ovarrf(
-                self.outfile,
-                "J. Wesson plasma normalised internal inductance",
-                "(ind_plasma_internal_norm_wesson)",
-                physics_variables.ind_plasma_internal_norm_wesson,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "J. Menard plasma normalised internal inductance",
-                "(ind_plasma_internal_norm_menard)",
-                physics_variables.ind_plasma_internal_norm_menard,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "ITER li(3) plasma normalised internal inductance",
-                "(ind_plasma_internal_norm_iter_3)",
-                physics_variables.ind_plasma_internal_norm_iter_3,
-                "OP ",
-            )
 
         else:
             po.ovarrf(
@@ -4303,7 +4277,7 @@ class PlasmaInductance:
         vol_plasma: float,
         rmajor: float,
     ) -> float:
-        """Calculate the normalised internal inductance using ITER-3 scaling li(3).
+        """Calculate the normalised internal inductance using ITER-3 scaling lᵢ(3).
 
         Parameters
         ----------
@@ -4319,7 +4293,7 @@ class PlasmaInductance:
         Returns
         -------
         float
-            The li(3) normalised internal inductance.
+            The lᵢ(3) normalised internal inductance.
 
         References
         ----------
@@ -4512,6 +4486,30 @@ class PlasmaInductance:
             "Plasma normalised internal inductance (lᵢ)",
             "(ind_plasma_internal_norm)",
             physics_variables.ind_plasma_internal_norm,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Plasma normalised internal inductance scalings:")
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "J. Wesson plasma normalised internal inductance",
+            "(ind_plasma_internal_norm_wesson)",
+            physics_variables.ind_plasma_internal_norm_wesson,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "J. Menard plasma normalised internal inductance",
+            "(ind_plasma_internal_norm_menard)",
+            physics_variables.ind_plasma_internal_norm_menard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "ITER lᵢ(3) plasma normalised internal inductance",
+            "(ind_plasma_internal_norm_iter_3)",
+            physics_variables.ind_plasma_internal_norm_iter_3,
             "OP ",
         )
 

@@ -3124,7 +3124,7 @@ def plot_main_plasma_information(
     # Add L-H threshold information
     textstr_lh = (
         f"$\\mathbf{{L-H \\ threshold:}}$\n"
-        f"{PlasmaConfinementTransitionModel(int(mfile.get('i_l_h_threshold', scan=scan))).full_name}\n\n"
+        f"({PlasmaConfinementTransitionModel(int(mfile.get('i_l_h_threshold', scan=scan))).full_name})\n\n"
         f"$P_{{\\text{{L-H}}}}:$ {mfile.get('p_l_h_threshold_mw', scan=scan):.4f} MW\n"
     )
 
