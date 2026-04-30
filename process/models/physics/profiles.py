@@ -1,6 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
 from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 import scipy as sp
@@ -13,8 +14,18 @@ logger = logging.getLogger(__name__)
 class PlasmaProfileShapeType(IntEnum):
     """Enum for i_plasma_pedestal method types"""
 
-    PARABOLIC_PROFILE = 0
-    PEDESTAL_PROFILE = 1
+    PARABOLIC_PROFILE = (0, "Parabolic Profile (L-mode)")
+    PEDESTAL_PROFILE = (1, "Pedestal Profile (H-mode)")
+
+    def __new__(cls, value, description):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._description_ = description
+        return obj
+
+    @DynamicClassAttribute
+    def description(self):
+        return self._description_
 
 
 class Profile(ABC):
