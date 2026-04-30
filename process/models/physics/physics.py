@@ -4400,7 +4400,7 @@ class PlasmaInductance:
 
     def output_volt_second_information(self):
         """Output volt-second information to file."""
-        po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
+        po.oheadr(self.outfile, "Plasma Volt-Second Requirements:")
         po.ovarre(
             self.outfile,
             "Total plasma volt-seconds required for pulse (Wb)",
@@ -4454,7 +4454,7 @@ class PlasmaInductance:
 
         po.ovarre(
             self.outfile,
-            "Plasma loop voltage during burn (V)",
+            "Plasma loop voltage during burn (Vₗₒₒₚ) (V)",
             "(v_plasma_loop_burn)",
             physics_variables.v_plasma_loop_burn,
             "OP ",
@@ -4468,7 +4468,7 @@ class PlasmaInductance:
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma resistance (ohm)",
+            "Plasma resistance (Ω) (ohm)",
             "(res_plasma)",
             physics_variables.res_plasma,
             "OP ",
@@ -4476,7 +4476,7 @@ class PlasmaInductance:
 
         po.ovarre(
             self.outfile,
-            "Plasma resistive diffusion time (s)",
+            "Plasma resistive diffusion time (τᵣₑₛ) (s)",
             "(t_plasma_res_diffusion)",
             physics_variables.t_plasma_res_diffusion,
             "OP ",
