@@ -5,6 +5,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.core import constants
 from process.data_structure import physics_variables as pv
 from process.models.physics import fusion_reactions as reactions
 
@@ -232,8 +233,7 @@ def test_beam_fusion():
     beta_beam, nd_beam_ions_out, p_beam_alpha_mw = reactions.beam_fusion(
         1.0,
         1.5,
-        0.85,
-        5.3,
+        5.367727,
         130,
         7.8e19,
         6.6e19,
@@ -242,8 +242,6 @@ def test_beam_fusion():
         0.5,
         0.5,
         1e-06,
-        2.8e-22,
-        13.5,
         13.5,
         1888.0,
         0.425,
@@ -251,33 +249,28 @@ def test_beam_fusion():
 
     assert beta_beam == pytest.approx(0.0026264022466211366)
     assert nd_beam_ions_out == pytest.approx(4.2133504058678246e17)
-    assert p_beam_alpha_mw == pytest.approx(11.593221085189192)
+    assert p_beam_alpha_mw == pytest.approx(9.271206216041564)
 
 
-def test_beamcalc():
-    (
-        deuterium_beam_alpha_power,
-        tritium_beam_alpha_power,
-        hot_beam_density,
-        beam_deposited_energy,
-    ) = reactions.beamcalc(
-        3.3e19,
-        3.3e19,
+def test_beam_slowing_down_state():
+    beam_state = reactions.beam_slowing_down_state(
         1000.0,
         276.7,
         415.0,
         1.42,
         1e-06,
         130,
-        13.5,
         1888.0,
-        2.8e-22,
     )
 
-    assert deuterium_beam_alpha_power == pytest.approx(11.561197668655383)
-    assert tritium_beam_alpha_power == pytest.approx(1.0434445041616093e-05)
-    assert hot_beam_density == pytest.approx(4.1968331737565126e17)
-    assert beam_deposited_energy == pytest.approx(445.05787301616635)
+    assert beam_state.deuterium_beam_density == pytest.approx(4.1968331737565126e17)
+    assert beam_state.tritium_beam_density == pytest.approx(316553077182.4059, rel=1e-6)
+    assert beam_state.deuterium_critical_energy_speed == pytest.approx(
+        5.1495e6, rel=1e-4
+    )
+    assert beam_state.tritium_critical_energy_speed == pytest.approx(5.1534e6, rel=1e-4)
+    assert beam_state.nd_beam_hot == pytest.approx(4.1968331737565126e17)
+    assert beam_state.e_beam_deposited_kev == pytest.approx(445.05787301616635)
 
 
 def test__fast_ion_pressure_integral():
@@ -286,15 +279,28 @@ def test__fast_ion_pressure_integral():
     assert pressure_integral == pytest.approx(1.1061397270783706)
 
 
-def test_alpha_power_beam():
-    alpha_power_beam = reactions.alpha_power_beam(
-        316000000000, 3.3e19, 7.5e-22, 1888.0, 13.5, 2.8e-22
+def test_beam_target_reaction_rate():
+    reaction_rate = reactions.beam_target_reaction_rate(
+        nd_beam_ion=3.16e11,
+        nd_target_ion=3.3e19,
+        sigv_beam=7.5e-22,
+        vol_plasma=1888.0,
     )
 
-    assert alpha_power_beam == pytest.approx(1.047572705194316e-05)
+    assert reaction_rate == pytest.approx(1.4766048e13)
 
 
-def test_beam_reaction_rate():
-    beam_reaction_rate = reactions.beam_reaction_rate(3.01550071597, 5140000.0, 1000.0)
+def test_alpha_power_beam():
+    beam_target_rate = 1.0e13  # s^-1
+    result = reactions.alpha_power_beam(beam_target_rate)
+    expected = beam_target_rate * constants.DT_ALPHA_ENERGY / 1.0e6
 
-    assert beam_reaction_rate == pytest.approx(7.465047902975452e-18)
+    assert result == pytest.approx(expected)
+
+
+def test_beam_reaction_rate_coefficient():
+    beam_reaction_rate = reactions.beam_reaction_rate_coefficient(
+        3.01550071597, 5140000.0, 1000.0
+    )
+
+    assert beam_reaction_rate == pytest.approx(7.465047902975452e-22)

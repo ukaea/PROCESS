@@ -2043,8 +2043,7 @@ class Stellarator(Model):
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
-                physics_variables.b_plasma_surface_poloidal_average,
-                physics_variables.b_plasma_toroidal_on_axis,
+                physics_variables.b_plasma_total,
                 current_drive_variables.c_beam_total,
                 physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_plasma_fuel_ions_vol_avg,
@@ -2053,9 +2052,7 @@ class Stellarator(Model):
                 physics_variables.f_plasma_fuel_deuterium,
                 physics_variables.f_plasma_fuel_tritium,
                 current_drive_variables.f_beam_tritium,
-                physics_variables.sigmav_dt_average,
                 physics_variables.temp_plasma_electron_density_weighted_kev,
-                physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
                 physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
