@@ -46,6 +46,7 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
+from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.confinement_time import (
     ConfinementTimeModel,
     PlasmaConfinementTime,
@@ -55,9 +56,14 @@ from process.models.physics.current_drive import (
     ElectronBernstein,
     ElectronCyclotron,
 )
+from process.models.physics.density_limit import DensityLimitModel
 from process.models.physics.impurity_radiation import read_impurity_file
 from process.models.physics.l_h_transition import PlasmaConfinementTransitionModel
-from process.models.physics.physics import BetaComponentLimits, BetaNormMaxModel
+from process.models.physics.physics import (
+    BetaComponentLimits,
+    BetaNormMaxModel,
+    IndInternalNormModel,
+)
 from process.models.physics.plasma_current import (
     PlasmaCurrentModel,
     PlasmaDiamagneticCurrentModel,
@@ -2727,7 +2733,7 @@ def plot_main_plasma_information(
         f"Plasma resistive diffusion time: {mfile.get('t_plasma_res_diffusion', scan=scan):,.4f} s\n"
         f"Plasma inductance: {mfile.get('ind_plasma', scan=scan):.4e} H | ITER $l_i(3)$: {mfile.get('ind_plasma_internal_norm_iter_3', scan=scan):.4f}\n"
         f"Plasma stored magnetic energy: {mfile.get('e_plasma_magnetic_stored', scan=scan) / 1e9:.4f} GJ\n"
-        f"Plasma normalised internal inductance: {mfile.get('ind_plasma_internal_norm', scan=scan):.4f}"
+        f"Plasma normalised internal inductance, $l_i$ ({IndInternalNormModel(int(mfile.get('i_ind_plasma_internal_norm', scan=scan))).full_name}) :{mfile.get('ind_plasma_internal_norm', scan=scan):.3f}"
     )
 
     axis.text(
@@ -2761,7 +2767,7 @@ def plot_main_plasma_information(
     textstr_div = (
         f"\n$P_{{\\text{{sep}}}}$: {mfile.get('p_plasma_separatrix_mw', scan=scan):.2f} MW           \n"
         f"$\\frac{{P_{{\\text{{sep}}}}}}{{R}}$: {mfile.get('p_plasma_separatrix_rmajor_mw', scan=scan):.2f} MW/m               \n"
-        f"$\\frac{{P_{{\\text{{sep}}}}}}{{B_T  q_a  R}}$: {mfile.get('p_div_bt_q_aspect_rmajor_mw', scan=scan):.2f} MW T/m               "
+        f"$\\frac{{P_{{\\text{{sep}}}}B_T}}{{q_{{95}} A  R}}$: {mfile.get('p_div_bt_q_aspect_rmajor_mw', scan=scan):.2f} MW T/m               "
     )
 
     axis.text(
@@ -2801,7 +2807,7 @@ def plot_main_plasma_information(
         f"Lawson Triple product: {mfile.get('nttau', scan=scan):.4e} keV·s/m³\n"
         f"Transport loss power assumed in scaling law: {mfile.get('p_plasma_loss_mw', scan=scan):.4f} MW\n"
         f"Plasma thermal energy (inc. $\\alpha$), $W$: {mfile.get('e_plasma_beta', scan=scan) / 1e9:.4f} GJ\n"
-        f"Alpha particle confinement time: {mfile.get('t_alpha_confinement', scan=scan):.4f} s"
+        f"Alpha particle confinement time: {mfile.get('t_alpha_confinement', scan=scan):.4f} s | $\\tau_{{\\alpha}}/\\tau_{{e}}$: {mfile.get('f_alpha_energy_confinement', scan=scan):.4f}"
     )
 
     axis.text(
@@ -3011,7 +3017,7 @@ def plot_main_plasma_information(
     textstr_currents = (
         f"$\\mathbf{{Plasma\\ currents:}}$\n\n"
         f"Plasma current ({PlasmaCurrentModel(int(mfile.get('i_plasma_current', scan=scan))).full_name}): {mfile.get('plasma_current_ma', scan=scan):.4f} MA    \n"
-        f"  - Bootstrap fraction {mfile.get('f_c_plasma_bootstrap', scan=scan):.4f}\n"
+        f"  - Bootstrap fraction ({BootstrapCurrentFractionModel(int(mfile.get('i_bootstrap_current', scan=scan))).full_name}): {mfile.get('f_c_plasma_bootstrap', scan=scan):.4f}\n"
         f"  - Diamagnetic fraction ({PlasmaDiamagneticCurrentModel(int(mfile.get('i_diamagnetic_current', scan=scan))).full_name}): {mfile.get('f_c_plasma_diamagnetic', scan=scan):.4f}\n"
         f"  - Pfirsch-Schlüter fraction {mfile.get('f_c_plasma_pfirsch_schluter', scan=scan):.4f}\n"
         f"  - Auxiliary fraction {mfile.get('f_c_plasma_auxiliary', scan=scan):.4f}\n"
@@ -3119,7 +3125,7 @@ def plot_main_plasma_information(
     # Add L-H threshold information
     textstr_lh = (
         f"$\\mathbf{{L-H \\ threshold:}}$\n"
-        f"{PlasmaConfinementTransitionModel(int(mfile.get('i_l_h_threshold', scan=scan))).full_name}\n\n"
+        f"({PlasmaConfinementTransitionModel(int(mfile.get('i_l_h_threshold', scan=scan))).full_name})\n\n"
         f"$P_{{\\text{{L-H}}}}:$ {mfile.get('p_l_h_threshold_mw', scan=scan):.4f} MW\n"
     )
 
@@ -3153,13 +3159,15 @@ def plot_main_plasma_information(
 
     # Add density limit information
     textstr_density_limit = (
-        f"$\\mathbf{{Density \\ limit:}}$\n\n"
-        f"$n_{{\\text{{e,limit}}}}: {mfile.get('nd_plasma_electrons_max', scan=scan):.3e} \\ m^{{-3}}$"
+        f"$\\mathbf{{Density \\ limit:}}$\n"
+        f"({DensityLimitModel(int(mfile.get('i_density_limit', scan=scan))).full_name})\n"
+        f"$n_{{\\text{{e,limit}}}}: {mfile.get('nd_plasma_electrons_max', scan=scan):.3e} \\ m^{{-3}}$\n"
+        f"$f_{{\\text{{GW}}}}$: {mfile.get('dnla_gw', scan=scan):.4f}"
     )
 
     axis.text(
         0.22,
-        0.3,
+        0.31,
         textstr_density_limit,
         fontsize=9,
         verticalalignment="top",
@@ -8577,7 +8585,7 @@ def plot_bootstrap_comparison(axis: plt.Axes, mfile: MFile, scan: int):
         fontsize=9,
     )
 
-    axis.set_title("Bootstrap Current Fraction Comparison")
+    axis.set_title("Bootstrap Current Fraction ($f_\\text{BS}$) Comparison")
     axis.set_ylabel("Bootstrap Current Fraction")
     axis.set_xlim([0.5, 1.5])
     axis.set_xticks([])
@@ -8709,7 +8717,7 @@ def plot_h_threshold_comparison(axis: plt.Axes, mfile: MFile, scan: int, u_seed=
         fontsize=9,
     )
 
-    axis.set_title("L-H Threshold Comparison")
+    axis.set_title("L-H Threshold ($P_\\text{LH}$) Comparison")
     axis.set_ylabel("L-H threshold power [MW]")
     axis.set_xlim([0.5, 1.5])
     axis.set_xticks([])
@@ -11820,9 +11828,89 @@ def plot_plasma_current_comparison(axis: plt.Axes, mfile: MFile, scan: int):
         fontsize=9,
     )
 
-    axis.set_title("Plasma Current Comparison")
+    axis.set_title("Plasma Current ($I_p$) Comparison")
     axis.set_ylabel(r"Plasma Current [MA]")
     axis.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x * 1e-6:.1f}"))
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_facecolor("#f0f0f0")
+
+
+def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int):
+    """Function to plot a scatter box plot of different max normalised beta comparisons.
+
+    Parameters
+    ----------
+    axis :
+        Axis object to plot to.
+    mfile :
+        MFILE data object.
+    scan :
+        Scan number to use.
+    """
+    beta_norm_max_wesson = mfile.get("beta_norm_max_wesson", scan=scan)
+    beta_norm_max_original_scaling = mfile.get(
+        "beta_norm_max_original_scaling", scan=scan
+    )
+    beta_norm_max_menard = mfile.get("beta_norm_max_menard", scan=scan)
+    beta_norm_max_thloreus = mfile.get("beta_norm_max_thloreus", scan=scan)
+    beta_norm_max_stambaugh = mfile.get("beta_norm_max_stambaugh", scan=scan)
+
+    # Data for the box plot
+    data = {
+        f"{BetaNormMaxModel.WESSON.full_name}": beta_norm_max_wesson,
+        f"{BetaNormMaxModel.ORIGINAL_SCALING.full_name}": beta_norm_max_original_scaling,
+        f"{BetaNormMaxModel.MENARD.full_name}": beta_norm_max_menard,
+        f"{BetaNormMaxModel.THLOREUS.full_name}": beta_norm_max_thloreus,
+        f"{BetaNormMaxModel.STAMBAUGH.full_name}": beta_norm_max_stambaugh,
+    }
+
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    colors = plt.cm.plasma(np.linspace(0, 1, len(data.values())))
+    for index, (key, value) in enumerate(data.items()):
+        axis.scatter(1, value, color=colors[index], label=key, alpha=1.0)
+    axis.legend(loc="upper left", bbox_to_anchor=(1.1, 1))
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_density_limit = np.mean(data_values)
+    std_density_limit = np.std(data_values)
+    median_density_limit = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        1.1,
+        0.15,
+        rf"Average: {avg_density_limit:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.1,
+        0.1,
+        rf"Standard Dev: {std_density_limit:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        1.1,
+        0.05,
+        rf"Median: {median_density_limit:.4f}",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("Max Normalised Beta ($\\beta_N$) Comparison")
+    axis.set_ylabel("Max Normalised Beta $\\beta_N$ [unitless]")
     axis.set_xlim([0.5, 1.5])
     axis.set_xticks([])
     axis.set_xticklabels([])
@@ -14250,6 +14338,7 @@ def main_plot(
     plot_plasma_current_comparison(figs[14].add_subplot(224), m_file, scan)
     plot_h_threshold_comparison(figs[15].add_subplot(224), m_file, scan)
     plot_density_limit_comparison(figs[15].add_subplot(221), m_file, scan)
+    plot_max_normalised_beta_comparison(figs[16].add_subplot(221), m_file, scan)
     plot_confinement_time_comparison(figs[16].add_subplot(224), m_file, scan)
 
     plot_debye_length_profile(figs[17].add_subplot(232), m_file, scan)
