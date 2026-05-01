@@ -250,9 +250,10 @@ class VaryRun:
     An IN.DAT file as specified in the config file
 
     Output files:
-    All of them in the work directory specified in the config file
-    OUT.DAT     -  PROCESS output
-    MFILE.DAT   -  PROCESS output
+    All of them in the working directory specified in the config file
+    X_IN.DAT      -  PROCESS input
+    X_OUT.DAT     -  PROCESS output
+    X_MFILE.DAT   -  PROCESS output
     process.log - logfile of PROCESS output to stdout
     README.txt  - contains comments from config file
     """
@@ -284,11 +285,11 @@ class VaryRun:
         FileNotFoundError
             if input file doesn't exist
         """
+        init.init_all_module_vars()
         self.config.setup()
 
         setup_loggers(Path(self.config.wdir) / "process.log")
 
-        init.init_all_module_vars()
         init.init_process(self.data)
 
         # TODO add diff ixc summary part

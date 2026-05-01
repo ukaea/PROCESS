@@ -12,7 +12,7 @@ maxcal: int = None
 """Maximum number of solver iterations"""
 
 fileprefix: str = None
-"""Input file path prefix"""
+"""Path to input file"""
 
 output_prefix: str = None
 """Output file path prefix"""
