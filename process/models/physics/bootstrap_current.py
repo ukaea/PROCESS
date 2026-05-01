@@ -1470,6 +1470,10 @@ class SauterBootstrapCurrent:
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
+        # Check for any negative temperature in profile: always fatal eventually,
+        # report explicitly at source
+        if (tempe < 0).any():
+            raise ValueError("Negative temperature in plasma profile")
         tempi = (
             physics_variables.temp_plasma_ion_vol_avg_kev
             / physics_variables.temp_plasma_electron_vol_avg_kev
