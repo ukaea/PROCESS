@@ -1692,8 +1692,8 @@ class Physics(Model):
 
         self.geometry.output()
 
+        self.current.output()
         if stellarator_variables.istell == 0:
-            self.current.output()
             self.fields.output()
         po.oblnkl(self.outfile)
         po.ostars(self.outfile, 110)
