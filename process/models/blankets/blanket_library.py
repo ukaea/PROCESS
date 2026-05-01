@@ -652,6 +652,31 @@ class BlanketLibrary(Model):
             "(a_blkt_total_surface_full_coverage)",
             build_variables.a_blkt_total_surface_full_coverage,
         )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Outboard blanket poloidal angle subtended by plasma (degrees)",
+            "(deg_blkt_outboard_poloidal_plasma)",
+            blanket_library.deg_blkt_outboard_poloidal_plasma,
+        )
+        po.ovarre(
+            self.outfile,
+            "Angle fraction of outboard blanket poloidal angle subtended by plasma",
+            "(f_deg_blkt_outboard_poloidal_plasma)",
+            blanket_library.f_deg_blkt_outboard_poloidal_plasma,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard blanket poloidal angle subtended by plasma (degrees)",
+            "(deg_blkt_inboard_poloidal_plasma)",
+            blanket_library.deg_blkt_inboard_poloidal_plasma,
+        )
+        po.ovarre(
+            self.outfile,
+            "Angle fraction of inboard blanket poloidal angle subtended by plasma",
+            "(f_deg_blkt_inboard_poloidal_plasma)",
+            blanket_library.f_deg_blkt_inboard_poloidal_plasma,
+        )
 
     def primary_coolant_properties(self, output: bool):
         """Calculates the fluid properties of the Primary Coolant in the FW and BZ.
@@ -3734,6 +3759,57 @@ class OutboardBlanket(BlanketLibrary):
             fwbs_variables.radius_blkt_channel_180_bend,
         ) = self.calculate_pipe_bend_radius(i_ps=1)
 
+    @property
+    def blkt_outboard_poloidal_plasma_angle(self) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane."""
+        return 180.0
+
+    @property
+    def f_deg_blkt_outboard_poloidal_plasma(self) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane."""
+        return self.blkt_outboard_poloidal_plasma_angle / 360.0
+
+    @staticmethod
+    def calculate_blkt_outboard_poloidal_plasma_angle(
+        rminor: float,
+        dr_blkt_outboard: float,
+        dz_blkt_half: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_outboard: float,
+    ) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane.
+
+        Parameters
+        ----------
+        rminor :
+            Plasma minor radius (m).
+        dr_blkt_outboard :
+            Radial thickness of outboard blanket (m).
+        dz_blkt_half :
+            Vertical half-height of outboard blanket (m).
+        dr_fw_plasma_gap_outboard :
+            Outboard first wall to plasma gap (m).
+        dr_fw_outboard :
+            Radial thickness of outboard first wall (m).
+
+        Returns
+        -------
+        deg_blkt_outboard_poloidal_plasma :
+            Poloidal angle subtended by outboard blanket at plasma mid-plane (degrees).
+        """
+        return np.degrees(
+            2.0
+            * np.arctan(
+                dz_blkt_half
+                / (
+                    rminor
+                    + dr_blkt_outboard
+                    + dr_fw_plasma_gap_outboard
+                    + dr_fw_outboard
+                )
+            )
+        )
+
     def calculate_blanket_outboard_module_geometry(
         self,
         n_blkt_outboard_modules_toroidal: int,
@@ -3776,6 +3852,34 @@ class InboardBlanket(BlanketLibrary):
         ) = self.calculate_pipe_bend_radius(i_ps=1)
 
         self.set_blanket_module_geometry()
+
+    @staticmethod
+    def calculate_blkt_inboard_poloidal_plasma_angle(
+        rminor: float,
+        dz_blkt_half: float,
+        dr_fw_plasma_gap_inboard: float,
+    ) -> float:
+        """Calculate the poloidal angle subtended by the inboard blanket at the plasma mid-plane.
+
+        Angle is taken from the FW surface
+
+        Parameters
+        ----------
+        rminor :
+            Plasma minor radius (m).
+        dz_blkt_half :
+            Vertical half-height of inboard blanket (m).
+        dr_fw_plasma_gap_inboard :
+            Inboard first wall to plasma gap (m).
+
+        Returns
+        -------
+        deg_blkt_inboard_poloidal_plasma :
+            Poloidal angle subtended by inboard blanket at plasma mid-plane (degrees).
+        """
+        return np.degrees(
+            2.0 * np.arctan(dz_blkt_half / (rminor + dr_fw_plasma_gap_inboard))
+        )
 
     def calculate_blanket_inboard_module_geometry(
         self,

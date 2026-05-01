@@ -236,6 +236,18 @@ dz_vv_half: float = None
 icomponent: int = None
 """Switch used to specify selected component: blanket=0, shield=1, vacuum vessel=2"""
 
+deg_blkt_outboard_poloidal_plasma: float = None
+"""Outboard blanket poloidal angle subtended by plasma (degrees)"""
+
+f_deg_blkt_outboard_poloidal_plasma: float = None
+"""Fraction of outboard blanket poloidal angle subtended by plasma (degrees)"""
+
+deg_blkt_inboard_poloidal_plasma: float = None
+"""Inboard blanket poloidal angle subtended by plasma (degrees)"""
+
+f_deg_blkt_inboard_poloidal_plasma: float = None
+"""Fraction of inboard blanket poloidal angle subtended by plasma (degrees)"""
+
 
 def init_blanket_library():
     global \
@@ -288,7 +300,11 @@ def init_blanket_library():
         htpmw_blkti, \
         htpmw_blkto, \
         vfblkti, \
-        vfblkto
+        vfblkto, \
+        deg_blkt_outboard_poloidal_plasma, \
+        deg_blkt_inboard_poloidal_plasma, \
+        f_deg_blkt_outboard_poloidal_plasma, \
+        f_deg_blkt_inboard_poloidal_plasma
 
     dz_blkt_half = 0.0
     dz_shld_half = 0.0
@@ -340,3 +356,7 @@ def init_blanket_library():
     htpmw_blkto = 0.0
     vfblkti = 0.0
     vfblkto = 0.0
+    deg_blkt_outboard_poloidal_plasma = 0.0
+    deg_blkt_inboard_poloidal_plasma = 0.0
+    f_deg_blkt_outboard_poloidal_plasma = 0.0
+    f_deg_blkt_inboard_poloidal_plasma = 0.0

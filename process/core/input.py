@@ -764,9 +764,6 @@ INPUT_VARIABLES = {
     "fjohc0": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
-    "f_ster_div_single": InputVariable(
-        data_structure.fwbs_variables, float, range=(0.0, 1.0)
-    ),
     "fdiva": InputVariable(data_structure.divertor_variables, float, range=(0.1, 2.0)),
     "fdivwet": InputVariable(
         data_structure.stellarator_variables, float, range=(0.01, 1.0)
