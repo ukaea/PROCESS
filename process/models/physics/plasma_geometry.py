@@ -392,6 +392,21 @@ class PlasmaGeom:
 
         # ======================================================================
 
+        if physics_variables.i_plasma_geometry == 12:
+            # physics_variables.triang is an input
+            # physics_variables.kappa found from physics_variables.aspect ratio scaling from
+            # J.E. Menard et al 1997 Nucl. Fusion 37 595 and assume max controllable kappa
+            # and assume li(3) is held constant
+
+            physics_variables.kappa = (
+                2.93e0 * (1.8e0 / physics_variables.aspect) ** 0.4e0
+            )
+
+            physics_variables.kappa95 = physics_variables.kappa / 1.12e0
+            physics_variables.triang95 = physics_variables.triang / 1.50e0
+
+        # ======================================================================
+
         #  Scrape-off layer thicknesses
         if physics_variables.i_plasma_wall_gap == 0:
             build_variables.dr_fw_plasma_gap_outboard = 0.1e0 * physics_variables.rminor
