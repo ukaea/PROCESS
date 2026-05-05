@@ -974,7 +974,7 @@ class PlasmaGeom:
 
         References
         ----------
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy,
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
               “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
               vol. 48, no. 9, pp. 099801099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """

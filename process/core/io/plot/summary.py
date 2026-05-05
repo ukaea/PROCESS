@@ -11904,7 +11904,7 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
     axis.text(
         1.1,
         0.05,
-        rf"Median: {median_density_limit:.4f}",
+        rf"Median: {median_beta_norm_max:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )

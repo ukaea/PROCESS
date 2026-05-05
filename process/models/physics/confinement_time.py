@@ -244,7 +244,7 @@ class PlasmaConfinementTime:
         # Separatrix kappa defined with plasma volume for IPB scalings
         # Updated version of kappa used by the IPB98 scalings correction in:
 
-        # None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy,
+        # Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
         # “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
         # vol. 48, no. 9, pp. 099801099801, Aug. 2008,
         # doi: https://doi.org/10.1088/0029-5515/48/9/099801.
@@ -2967,7 +2967,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3028,7 +3028,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3089,7 +3089,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3150,7 +3150,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3211,7 +3211,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3413,7 +3413,7 @@ class PlasmaConfinementTime:
             - A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio, “A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks,”
             Nuclear Fusion, vol. 55, no. 7, pp. 073009-073009, Jun. 2015, doi: https://doi.org/10.1088/0029-5515/55/7/073009.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3471,7 +3471,7 @@ class PlasmaConfinementTime:
             - C. C. Petty, “Sizing up plasmas using dimensionless parameters,”
             Physics of Plasmas, vol. 15, no. 8, Aug. 2008, doi: https://doi.org/10.1063/1.2961043.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
