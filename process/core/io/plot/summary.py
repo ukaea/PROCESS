@@ -11882,22 +11882,22 @@ def plot_max_normalised_beta_comparison(axis: plt.Axes, mfile: MFile, scan: int)
 
     # Calculate average, standard deviation, and median
     data_values = list(data.values())
-    avg_density_limit = np.mean(data_values)
-    std_density_limit = np.std(data_values)
-    median_density_limit = np.median(data_values)
+    avg_beta_norm_max = np.mean(data_values)
+    std_beta_norm_max = np.std(data_values)
+    median_beta_norm_max = np.median(data_values)
 
     # Plot average, standard deviation, and median as text
     axis.text(
         1.1,
         0.15,
-        rf"Average: {avg_density_limit:.4f}",
+        rf"Average: {avg_beta_norm_max:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
     axis.text(
         1.1,
         0.1,
-        rf"Standard Dev: {std_density_limit:.4f}",
+        rf"Standard Dev: {std_beta_norm_max:.4f}",
         transform=axis.transAxes,
         fontsize=9,
     )
