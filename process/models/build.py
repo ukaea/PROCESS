@@ -28,6 +28,13 @@ from process.models.tfcoil.superconducting import SuperconductingTFWPShapeType
 logger = logging.getLogger(__name__)
 
 
+class DivertorNumberModels(IntEnum):
+    """Enum for divertor number models. `i_single_null` is the index for this enum."""
+
+    DOUBLE_NULL = 0
+    SINGLE_NULL = 1
+
+
 class FwBlktVVShape(IntEnum):
     """Enum for first wall, blanket, and vacuum vessel shape options."""
 
@@ -178,7 +185,8 @@ class Build(Model):
                 physics_variables.i_single_null,
             )
 
-            if physics_variables.i_single_null == 0:
+            i_single_null = DivertorNumberModels(physics_variables.i_single_null)
+            if i_single_null == DivertorNumberModels.DOUBLE_NULL:
                 po.ocmmnt(self.outfile, "Double null case")
 
                 # Start at the top and work down.
@@ -810,7 +818,7 @@ class Build(Model):
         )
 
         #  Vertical locations of divertor coils
-        if physics_variables.i_single_null == 0:
+        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
             build_variables.z_tf_top = (
                 build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
             )
@@ -1691,7 +1699,8 @@ class Build(Model):
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
 
-        if physics_variables.i_single_null == 1:
+        i_single_null = DivertorNumberModels(physics_variables.i_single_null)
+        if i_single_null == DivertorNumberModels.SINGLE_NULL:
             #  Check if build_variables.dz_fw_plasma_gap has been set too small
             build_variables.dz_fw_plasma_gap = max(
                 0.5e0

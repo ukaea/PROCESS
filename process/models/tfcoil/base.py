@@ -26,6 +26,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.data_structure import build_variables as bv
+from process.models.build import DivertorNumberModels
 from process.models.superconductors import SuperconductorModel
 
 if TYPE_CHECKING:
@@ -498,7 +499,7 @@ class TFCoil(Model):
             r_tf_arc[3] = r_tf_arc[1]
             r_tf_arc[4] = r_tf_arc[0]
 
-            if i_single_null == 0:
+            if i_single_null == DivertorNumberModels.DOUBLE_NULL:
                 z_tf_arc[0] = FSTRAIGHT * z_tf_inside_half
                 z_tf_arc[1] = z_tf_inside_half
                 z_tf_arc[2] = 0

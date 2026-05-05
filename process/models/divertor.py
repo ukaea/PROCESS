@@ -11,6 +11,7 @@ from process.data_structure import divertor_variables as dv
 from process.data_structure import fwbs_variables as fwbs
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
+from process.models.build import DivertorNumberModels
 
 
 class Divertor(Model):
@@ -181,10 +182,10 @@ class Divertor(Model):
         #  Total divertor area
 
         # Single null case
-        if i_single_null == 1:
+        if i_single_null == DivertorNumberModels.SINGLE_NULL:
             areadv = a1 + a2 + a3
         # Double null case
-        elif i_single_null == 0:
+        elif i_single_null == DivertorNumberModels.DOUBLE_NULL:
             areadv = 2.0 * (a1 + a2 + a3)
 
         if dv.i_div_heat_load == 1:
