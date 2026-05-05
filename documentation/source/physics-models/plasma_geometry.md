@@ -801,4 +801,4 @@ FTP/3-3, Proc. IAEA Fusion Energy Conference, October 2012, San Diego
 unpublished internal Oak Ridge document
 [^7]: O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,” Fusion Engineering and Design, vol. 112, pp. 633–645, Nov. 2016, doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
 [^8]: Y. Sakamoto, 'Recent progress in vertical stability analysis in JA', Task meeting EU-JA #16, Fusion for Energy, Garching, 24--25 June 2014
-[^9]: None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9, pp. 099801099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+[^9]: Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion, vol. 48, no. 9, pp. 099801099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
