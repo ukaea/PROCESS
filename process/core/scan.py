@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 import logging
 import time
 from dataclasses import astuple, dataclass
 from enum import Enum
+from typing import TYPE_CHECKING
 
 import numpy as np
 from tabulate import tabulate
@@ -10,7 +13,6 @@ from process.core import constants, process_output
 from process.core.caller import write_output_files
 from process.core.exceptions import ProcessValueError
 from process.core.log import logging_model_handler, show_errors
-from process.core.model import DataStructure
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
@@ -30,6 +32,9 @@ from process.data_structure import (
     scan_variables,
     tfcoil_variables,
 )
+
+if TYPE_CHECKING:
+    from process.core.model import DataStructure, Model
 
 logger = logging.getLogger(__name__)
 
@@ -195,7 +200,7 @@ class ScanVariables(Enum):
 class Scan:
     """Perform a parameter scan using the Fortran scan module."""
 
-    def __init__(self, models, solver: str, data: DataStructure):
+    def __init__(self, models: Model, solver: str, data: DataStructure):
         """Immediately run the run_scan() method.
 
         Parameters
