@@ -1142,7 +1142,7 @@ class Physics(Model):
         znimp = 0.0
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                znimp += impurity_radiation.zav_of_te(
+                znimp += impurity_radiation.calculate_average_charge_at_temp(
                     imp, np.array([physics_variables.temp_plasma_electron_vol_avg_kev])
                 ).squeeze() * (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
@@ -1243,13 +1243,13 @@ class Physics(Model):
         # ======================================================================
 
         # Effective charge
-        # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
-        # but ne = sum(ni.Zi) through quasineutrality
+        # Calculation should be Σ(nᵢZᵢ²) / Σ(nᵢZᵢ),
+        # but ne = Σ(nᵢZᵢ) through quasineutrality
         physics_variables.n_charge_plasma_effective_vol_avg = 0.0
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             physics_variables.n_charge_plasma_effective_vol_avg += (
                 impurity_radiation_module.f_nd_impurity_electron_array[imp]
-                * impurity_radiation.zav_of_te(
+                * impurity_radiation.calculate_average_charge_at_temp(
                     imp, np.array([physics_variables.temp_plasma_electron_vol_avg_kev])
                 ).squeeze()
                 ** 2
@@ -1324,7 +1324,7 @@ class Physics(Model):
         # ======================================================================
 
         # Mass weighted plasma effective charge
-        # Sum of (Zi^2*n_i) / m_i
+        # Σ(Z²ᵢnᵢ) / mᵢ
         physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg = (
             (
                 physics_variables.f_plasma_fuel_deuterium
@@ -1359,7 +1359,7 @@ class Physics(Model):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
-                    * impurity_radiation.zav_of_te(
+                    * impurity_radiation.calculate_average_charge_at_temp(
                         imp,
                         np.array([physics_variables.temp_plasma_electron_vol_avg_kev]),
                     ).squeeze()
@@ -1617,7 +1617,7 @@ class Physics(Model):
             for imp in range(impurity_radiation_module.N_IMPURITIES):
                 zeff_profile[i] += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
-                    * impurity_radiation.zav_of_te(
+                    * impurity_radiation.calculate_average_charge_at_temp(
                         imp, np.array([self.plasma_profile.teprofile.profile_y[i]])
                     ).squeeze()
                     ** 2
@@ -1632,9 +1632,11 @@ class Physics(Model):
         charge_profiles = np.zeros((n_impurities, n_points))
         for imp in range(n_impurities):
             for i in range(n_points):
-                charge_profiles[imp, i] = impurity_radiation.zav_of_te(
-                    imp, np.array([te_profile[i]])
-                ).squeeze()
+                charge_profiles[imp, i] = (
+                    impurity_radiation.calculate_average_charge_at_temp(
+                        imp, np.array([te_profile[i]])
+                    ).squeeze()
+                )
         impurity_radiation_module.n_charge_impurity_profile = charge_profiles
 
     def outplas(self):

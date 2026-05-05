@@ -77,7 +77,7 @@ def test_pimpden():
         ]),
     )
 
-    pimpden = impurity_radiation.pimpden(
+    pimpden = impurity_radiation.calculate_impurity_radiation_power_density(
         pimden_parameters.imp_element_index, pimden_parameters.ne, pimden_parameters.te
     )
     assert pytest.approx(pimpden) == pimden_parameters.expected_pimpden
@@ -90,7 +90,7 @@ class FradcoreParam(NamedTuple):
     expected_fradcore: np.array = np.array
 
 
-def test_fradcore():
+def test_create_f_rad_core_profile():
     """Tests `fradcore` function.
 
     :param rho: normalised minor radius
@@ -120,7 +120,7 @@ def test_fradcore():
             0.0,
         ]),
     )
-    fradcore = impurity_radiation.fradcore(
+    fradcore = impurity_radiation.create_f_rad_core_profile(
         fradcoreparam.rho,
         fradcoreparam.radius_plasma_core_norm,
         fradcoreparam.f_p_plasma_core_rad_reduction,
@@ -173,7 +173,7 @@ def test_zav_of_te():
             1.00000000000001,
         ]),
     )
-    zav_of_te = impurity_radiation.zav_of_te(
+    zav_of_te = impurity_radiation.calculate_average_charge_at_temp(
         zavofteparam.imp_element_index, zavofteparam.te
     )
 
