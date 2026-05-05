@@ -2294,12 +2294,18 @@ class CurrentDrive(Model):
         """
         po.oheadr(self.outfile, "Heating & Current Drive System")
 
+        po.ovarin(
+            self.outfile,
+            "Ignited plasma switch (0=not ignited, 1=ignited)",
+            "(i_plasma_ignited)",
+            physics_variables.i_plasma_ignited,
+        )
         if physics_variables.i_plasma_ignited == 1:
             po.ocmmnt(
                 self.outfile,
                 "Ignited plasma; injected power only used for start-up phase",
             )
-
+        po.oblnkl(self.outfile)
         if abs(physics_variables.f_c_plasma_inductive) > 1.0e-8:
             po.ocmmnt(
                 self.outfile,
@@ -2309,7 +2315,7 @@ class CurrentDrive(Model):
 
         po.ovarre(
             self.outfile,
-            "Fusion gain factor Q",
+            "Fusion gain factor (Qₚₗₐₛₘₐ)",
             "(big_q_plasma)",
             current_drive_variables.big_q_plasma,
             "OP ",
@@ -2337,21 +2343,21 @@ class CurrentDrive(Model):
 
         po.ovarre(
             self.outfile,
-            "Absolute current drive efficiency of primary system [A/W]",
+            "Absolute current drive efficiency of primary system (η) [A/W]",
             "(eta_cd_hcd_primary)",
             current_drive_variables.eta_cd_hcd_primary,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Normalised current drive efficiency of primary system [10^20 A / Wm²]",
+            "Normalised current drive efficiency of primary system (γ) [10²⁰ A / Wm²]",  # noqa: RUF001
             "(eta_cd_norm_hcd_primary)",
             current_drive_variables.eta_cd_norm_hcd_primary,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Dimensionless current drive efficiency of primary system, ζ",
+            "Dimensionless current drive efficiency of primary system (ζ)",
             "(eta_cd_dimensionless_hcd_primary)",
             current_drive_variables.eta_cd_dimensionless_hcd_primary,
             "OP ",
@@ -2566,21 +2572,21 @@ class CurrentDrive(Model):
 
         po.ovarre(
             self.outfile,
-            "Absolute current drive efficiency of secondary system [A/W]",
+            "Absolute current drive efficiency of secondary system (η) [A/W]",
             "(eta_cd_hcd_secondary)",
             current_drive_variables.eta_cd_hcd_secondary,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Normalised current drive efficiency of secondary system [10^20 A / Wm^2]",
+            "Normalised current drive efficiency of secondary system (γ) [10²⁰ A / Wm²]",  # noqa: RUF001
             "(eta_cd_norm_hcd_secondary)",
             current_drive_variables.eta_cd_norm_hcd_secondary,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Dimensionless current drive efficiency of secondary system, ζ",
+            "Dimensionless current drive efficiency of secondary system (ζ)",
             "(eta_cd_dimensionless_hcd_secondary)",
             current_drive_variables.eta_cd_dimensionless_hcd_secondary,
             "OP ",

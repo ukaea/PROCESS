@@ -2641,14 +2641,14 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Primary \\ system: {CurrentDriveModel(i_hcd_primary).abbreviation}}}$ \n"
         f"Current driving power {mfile.get('p_hcd_primary_injected_mw', scan=scan):.4f} MW\n"
         f"Extra heat power: {mfile.get('p_hcd_primary_extra_heat_mw', scan=scan):.4f} MW\n"
-        f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_hcd_primary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,prim}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_primary', scan=scan):.4f}  \n"
-        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_norm_hcd_primary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
+        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_hcd_primary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,prim}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_primary', scan=scan):.4f}  \n"
+        f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile.get('eta_cd_norm_hcd_primary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by primary: {mfile.get('c_hcd_primary_driven', scan=scan) / 1e6:.3f} MA\n\n"
         f"$\\mathbf{{Secondary \\ system: {CurrentDriveModel(i_hcd_secondary).abbreviation}}}$ \n"
         f"Current driving power {mfile.get('p_hcd_secondary_injected_mw', scan=scan):.4f} MW\n"
         f"Extra heat power: {mfile.get('p_hcd_secondary_extra_heat_mw', scan=scan):.4f} MW\n"
-        f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_hcd_secondary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,sec}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_secondary', scan=scan):.4f}  \n"
-        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_norm_hcd_secondary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
+        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_hcd_secondary', scan=scan):.4f} A/W  |   $\\langle\\zeta_{{\\text{{CD,sec}}}}\\rangle$: {mfile.get('eta_cd_dimensionless_hcd_secondary', scan=scan):.4f}  \n"
+        f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile.get('eta_cd_norm_hcd_secondary', scan=scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by secondary: {mfile.get('c_hcd_secondary_driven', scan=scan) / 1e6:.3f} MA\n"
     )
 

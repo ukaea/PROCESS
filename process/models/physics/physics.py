@@ -2211,13 +2211,6 @@ class Physics(Model):
         if physics_variables.i_plasma_ignited == 1:
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
-        po.ovarin(
-            self.outfile,
-            "Ignited plasma switch (0=not ignited, 1=ignited)",
-            "(i_plasma_ignited)",
-            physics_variables.i_plasma_ignited,
-        )
-
         self.exhaust.output()
 
         if stellarator_variables.istell == 0:
