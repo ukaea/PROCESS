@@ -1185,7 +1185,7 @@ class PlasmaConfinementTime:
         return root_scalar(fhz, bracket=(0.01, 150), xtol=0.001).root
 
     def output_confinement_time_info(self):
-        po.oheadr(self.outfile, "Energy Confinement")
+        po.oheadr(self.outfile, "Plasma Energy Confinement")
 
         if physics_variables.i_plasma_ignited == 1:
             po.ocmmnt(
@@ -1213,14 +1213,14 @@ class PlasmaConfinementTime:
         )
         po.ovarrf(
             self.outfile,
-            "Global thermal energy confinement time, from scaling (s)",
+            "Global thermal energy confinement time, from scaling (τₑ) (s)",
             "(t_energy_confinement)",
             physics_variables.t_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Directly calculated total energy confinement time (s)",
+            "Directly calculated total energy confinement time (τₑᵦ) (s)",
             "(t_energy_confinement_beta)",
             physics_variables.t_energy_confinement_beta,
             "OP ",
@@ -1229,6 +1229,10 @@ class PlasmaConfinementTime:
             self.outfile,
             "(Total thermal energy derived from total plasma beta / loss power)",
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
         po.ovarrf(
             self.outfile,
             "Ion energy confinement time, from scaling (s)",
@@ -1243,20 +1247,26 @@ class PlasmaConfinementTime:
             physics_variables.t_electron_energy_confinement,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Fusion double product (s/m3)",
+            "Fusion double product (nτ) (s/m³)",
             "(ntau)",
             physics_variables.ntau,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Lawson Triple product (keV s/m3)",
+            "Lawson Triple product (nTτ) (keV s/m³)",
             "(nTtau)",
             physics_variables.nTtau,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Transport loss power assumed in scaling law (MW)",
@@ -1305,9 +1315,13 @@ class PlasmaConfinementTime:
             "OP",
         )
         po.ocmmnt(self.outfile, "  (H* assumes IPB98(y,2), ELMy H-mode scaling)")
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
-            "Alpha particle confinement time (s)",
+            "Alpha particle confinement time (τ_α) (s)",  # noqa: RUF001
             "(t_alpha_confinement)",
             physics_variables.t_alpha_confinement,
             "OP ",
@@ -1315,17 +1329,18 @@ class PlasmaConfinementTime:
         # Note alpha confinement time is no longer equal to fuel particle confinement time.
         po.ovarrf(
             self.outfile,
-            "Alpha particle/energy confinement time ratio",
+            "Alpha particle to energy confinement time ratio (τ_α/τₑ)",  # noqa: RUF001
             "(f_alpha_energy_confinement)",
             physics_variables.f_alpha_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Lower limit on f_alpha_energy_confinement",
+            "Lower limit on f_alpha_energy_confinement ((τ_α/τₑ)>)",  # noqa: RUF001
             "(f_alpha_energy_confinement_min)",
             constraint_variables.f_alpha_energy_confinement_min,
         )
+        po.oblnkl(self.outfile)
 
         # Plot table of al the H-factor scalings and coparison values
         self.output_confinement_comparison(istell=stellarator_variables.istell)

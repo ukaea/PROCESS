@@ -1695,9 +1695,6 @@ class Physics(Model):
         self.current.output()
         if stellarator_variables.istell == 0:
             self.fields.output()
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
 
         # Output beta information
         self.beta.output_beta_information()
@@ -1843,7 +1840,7 @@ class Physics(Model):
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
-        po.osubhd(self.outfile, "Alpha Powers :")
+        po.osubhd(self.outfile, "Alpha Powers (α) :")  # noqa: RUF001
         po.ovarre(
             self.outfile,
             "Alpha rate density: total (particles/m³/sec)",
@@ -1910,7 +1907,7 @@ class Physics(Model):
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
-        po.osubhd(self.outfile, "Neutron Powers :")
+        po.osubhd(self.outfile, "Neutron Powers (n) :")
         po.ovarre(
             self.outfile,
             "Neutron power: total (MW)",
@@ -1947,6 +1944,14 @@ class Physics(Model):
             "OP ",
         )
         po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Average neutron flux at plasma surface (MW/m²)",
+            "(pflux_plasma_surface_neutron_avg_mw)",
+            physics_variables.pflux_plasma_surface_neutron_avg_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
 
         po.osubhd(self.outfile, "Charged Particle Powers :")
@@ -1972,15 +1977,12 @@ class Physics(Model):
             physics_variables.p_charged_particle_mw,
             "OP ",
         )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
 
-        po.osubhd(self.outfile, "Plasma radiation powers (excluding SOL):")
+        po.oheadr(self.outfile, "Plasma Radiation (excluding SOL):")
         po.ovarre(
             self.outfile,
-            "Plasma total synchrotron radiation power (MW)",
+            "Plasma total synchrotron radiation power (Pₛₙ) (MW)",
             "(p_plasma_sync_mw)",
             physics_variables.p_plasma_sync_mw,
             "OP ",
@@ -2001,7 +2003,7 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma normalised minor radius defining 'core' region",
+            "Plasma normalised minor radius defining 'core' region (ρᵢₙₙₑᵣ)",
             "(radius_plasma_core_norm)",
             impurity_radiation_module.radius_plasma_core_norm,
         )
@@ -2013,14 +2015,14 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from core region (MW)",
+            "Plasma total radiation power from core region (MW) (Pᵧ,ᵢₙₙₑᵣ)",
             "(p_plasma_inner_rad_mw)",
             physics_variables.p_plasma_inner_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from edge region (MW)",
+            "Plasma total radiation power from edge region (MW) (Pᵧ,ₒᵤₜₑᵣ)",
             "(p_plasma_outer_rad_mw)",
             physics_variables.p_plasma_outer_rad_mw,
             "OP ",
@@ -2037,24 +2039,16 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from inside last closed flux surface (MW)",
+            "Plasma total radiation power from inside last closed flux surface (Pᵧ) (MW)",
             "(p_plasma_rad_mw)",
             physics_variables.p_plasma_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Separatrix radiation fraction (MW)",
+            "Separatrix radiation fraction (fᵧ)",
             "(f_p_plasma_separatrix_rad)",
             physics_variables.f_p_plasma_separatrix_rad,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Average neutron flux at plasma surface (MW/m²)",
-            "(pflux_plasma_surface_neutron_avg_mw)",
-            physics_variables.pflux_plasma_surface_neutron_avg_mw,
             "OP ",
         )
 
@@ -2283,8 +2277,6 @@ class Physics(Model):
             )
 
         po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
 
         if stellarator_variables.istell == 0:
             self.plasma_transition.output_l_h_threshold_powers()
@@ -2326,15 +2318,13 @@ class Physics(Model):
             )
 
             po.oblnkl(self.outfile)
-            po.ostars(self.outfile, 110)
-            po.oblnkl(self.outfile)
 
             self.inductance.output_volt_second_information()
         if stellarator_variables.istell == 0:
             self.plasma_bootstrap_current.output()
             self.dia_current.output()
 
-        po.osubhd(self.outfile, "Fuelling :")
+        po.oheadr(self.outfile, "Plasma Fuelling")
         po.ovarre(
             self.outfile,
             "Ratio of He and pellet particle confinement times",
@@ -2895,9 +2885,6 @@ class Physics(Model):
                 "(nd_plasma_separatrix_electron_eich_max)",
                 physics_variables.nd_plasma_separatrix_electron_eich_max,
             )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
 
     @staticmethod
     @nb.njit(cache=True)
@@ -3989,8 +3976,6 @@ class PlasmaBeta:
         )
 
         po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
 
 
 class IndInternalNormModel(IntEnum):
@@ -4335,7 +4320,7 @@ class PlasmaInductance:
         )
         po.ovarrf(
             self.outfile,
-            "Ejima coefficient",
+            "Ejima coefficient (Cₑⱼᵢₘₐ)",
             "(ejima_coeff)",
             physics_variables.ejima_coeff,
         )
@@ -4442,8 +4427,6 @@ class PlasmaInductance:
             "OP ",
         )
 
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
 
 
@@ -5668,7 +5651,7 @@ class DetailedPhysics(Model):
 
         po.ovarrf(
             self.outfile,
-            "Plasma volume averaged electron Debye length (m)",
+            "Plasma volume averaged electron Debye length (⟨λ_D⟩) (m)",
             "(len_plasma_debye_electron_vol_avg)",
             physics_variables.len_plasma_debye_electron_vol_avg,
             "OP ",

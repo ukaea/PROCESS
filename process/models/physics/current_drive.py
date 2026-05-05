@@ -2344,7 +2344,7 @@ class CurrentDrive(Model):
         )
         po.ovarre(
             self.outfile,
-            "Normalised current drive efficiency of primary system [10^20 A / Wm^2]",
+            "Normalised current drive efficiency of primary system [10^20 A / Wm²]",
             "(eta_cd_norm_hcd_primary)",
             current_drive_variables.eta_cd_norm_hcd_primary,
             "OP ",

@@ -1200,6 +1200,7 @@ class PlasmaBootstrapCurrent(Model):
 
     def output(self):
         """Output the calculated bootstrap current information to the output file."""
+        po.oheadr(self.outfile, "Plasma Bootstrap Current Fraction")
         po.ovarin(
             self.outfile,
             "Plasma bootstrap current fraction scaling used",

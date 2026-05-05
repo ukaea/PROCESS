@@ -657,7 +657,6 @@ class PlasmaGeom:
             )
 
         po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
 
     @staticmethod
     def plasma_angles_arcs(

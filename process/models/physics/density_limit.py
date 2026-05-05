@@ -581,7 +581,7 @@ class PlasmaDensityLimit:
 
     def output_density_limit_information(self):
         """Output density limit information to file."""
-        po.osubhd(self.outfile, "Density Limit using different models :")
+        po.oheadr(self.outfile, "Plasma density limits")
         po.ovarin(
             self.outfile,
             "Plasma density limit model used",
@@ -656,7 +656,4 @@ class PlasmaDensityLimit:
             physics_variables.nd_plasma_electron_max_array[7],
             "OP ",
         )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
