@@ -19,11 +19,13 @@ class ProcessLogHandler(Handler):
     the handler or using the methods start_capturing/stop_capturing.
     """
 
-    def __init__(self, capturing=True):
-        """Instantiates a ProcessLogHandler.
+    def __init__(self, capturing: bool = True):
+        """Instantiate a ProcessLogHandler.
 
-        :param capturing: capture and store emitted logs?
-        :type capturning: bool
+        Parameters
+        ----------
+        capturing :
+            Whether to capture and store emitted logs, by default True
         """
         super().__init__()
         self._logs = []

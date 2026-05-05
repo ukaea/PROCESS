@@ -45,10 +45,14 @@ class IFE(Model):
     def __init__(self, availability, costs):
         """Initialises the IFE module's variables
 
-        :param availability: a pointer to the availability model, allowing use of availability's variables/methods
-        :type availability: process.availability.Availability
-        :param costs: a pointer to the costs model, allowing the use of costs' variables/methods
-        :type costs: process.costs.Costs
+        Parameters
+        ----------
+        availability :
+            A pointer to the availability model, allowing use of availability's
+            variables/methods
+        costs :
+            A pointer to the costs model, allowing the use of costs'
+            variables/methods
         """
         self.outfile: int = constants.NOUT
         self.availability = availability

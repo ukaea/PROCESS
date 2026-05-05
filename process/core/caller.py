@@ -35,11 +35,12 @@ class Caller:
         variables are fully initialised with consistent values, the models are
         called with the initial optimisation parameters, x.
 
-        :param models: physics and engineering model objects
-        :type models: Models
-        :param data: data structure object to be passed on to the constraint
-            evaluators
-        :type data: DataStructure
+        Parameters
+        ----------
+        models :
+            physics and engineering model objects
+        data :
+            data structure object to be passed on to the constraint evaluators
         """
         self.models = models
         self.data = data

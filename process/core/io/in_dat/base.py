@@ -1708,14 +1708,16 @@ class StructuredInputData:
     self.data["parameters"]["physics_variables"]["i_plasma_geometry"]["value"] = 0
     """
 
-    def __init__(self, filename="IN.DAT"):
+    def __init__(self, filename: str = "IN.DAT"):
         """Use InDat to create the data dict.
 
         Use InDat to read in an input file and store the data, then construct a
         structured input data dict from it.
 
-        :param filename: input data filename, defaults to "IN.DAT"
-        :type filename: str, optional
+        Parameters
+        ----------
+        filename :
+            Input data filename, defaults to "IN.DAT"
         """
         self.data = {}
         # Structured input data dict
