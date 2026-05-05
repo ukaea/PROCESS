@@ -8,6 +8,7 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
+from process.models.build import DivertorNumberModels
 
 
 class Divertor(Model):
@@ -178,10 +179,10 @@ class Divertor(Model):
         #  Total divertor area
 
         # Single null case
-        if i_single_null == 1:
+        if i_single_null == DivertorNumberModels.SINGLE_NULL:
             areadv = a1 + a2 + a3
         # Double null case
-        elif i_single_null == 0:
+        elif i_single_null == DivertorNumberModels.DOUBLE_NULL:
             areadv = 2.0 * (a1 + a2 + a3)
 
         if self.data.divertor.i_div_heat_load == 1:

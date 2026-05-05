@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from process.models.build import DivertorNumberModels
 from process.models.physics.plasma_geometry import PlasmaShapeModelType
 
 
@@ -77,7 +78,7 @@ def plasma_geometry(
         theta2 = np.arcsin((kappa * rminor) / r2)
         inang = 1.0 / r1
         outang = 1.5 / r2
-        if i_single_null == 0:
+        if i_single_null == DivertorNumberModels.DOUBLE_NULL:
             angs1 = np.linspace(
                 -(inang + theta1) + np.pi, (inang + theta1) + np.pi, 500, endpoint=True
             )

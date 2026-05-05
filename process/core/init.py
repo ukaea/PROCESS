@@ -32,6 +32,7 @@ from process.data_structure.superconducting_tf_coil_variables import (
     init_superconducting_tf_coil_variables,
 )
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
+from process.models.build import DivertorNumberModels
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -569,14 +570,14 @@ def check_process(inputs, data):  # noqa: ARG001
                 "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommended for the Reinke model",
                 stacklevel=2,
             )
-
-    if data_structure.physics_variables.i_single_null == 0:
+    i_single_null = DivertorNumberModels(data_structure.physics_variables.i_single_null)
+    if i_single_null == DivertorNumberModels.DOUBLE_NULL:
         data.divertor.n_divertors = 2
         data.build.dz_fw_plasma_gap = data.build.dz_xpoint_divertor
         data.build.dz_shld_upper = data.build.dz_shld_lower
         data.build.dz_vv_upper = data.build.dz_vv_lower
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
-    else:  # i_single_null == 1
+    else:  # i_single_null == DivertorNumberModels.SINGLE_NULL
         data.divertor.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
@@ -681,7 +682,7 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
         # Check if a single null divertor is used in double null machine
-        if data_structure.physics_variables.i_single_null == 0 and (
+        if i_single_null == DivertorNumberModels.DOUBLE_NULL and (
             data_structure.physics_variables.f_p_div_lower in {1.0, 0.0}
         ):
             warn("Operating with a single null in a double null machine", stacklevel=2)
@@ -763,7 +764,7 @@ def check_process(inputs, data):  # noqa: ARG001
             raise ProcessValidationError(
                 "More than 2 divertor coils (i_pf_location = 2) is not a valid configuration"
             )
-        if data_structure.physics_variables.i_single_null == 1 and j < 2:
+        if i_single_null == DivertorNumberModels.SINGLE_NULL and j < 2:
             raise ProcessValidationError(
                 "If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
             )
