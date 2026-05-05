@@ -85,7 +85,7 @@ class PlasmaCurrent:
             if physics_variables.i_alphaj == 1:
                 po.ovarrf(
                     self.outfile,
-                    "Current density profile factor",
+                    "Current density profile factor (αⱼ)",
                     "(alphaj)",
                     physics_variables.alphaj,
                     "OP ",
@@ -93,7 +93,7 @@ class PlasmaCurrent:
             else:
                 po.ovarrf(
                     self.outfile,
-                    "Current density profile factor",
+                    "Current density profile factor (αⱼ)",
                     "(alphaj)",
                     physics_variables.alphaj,
                 )

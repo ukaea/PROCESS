@@ -2418,13 +2418,13 @@ class Physics(Model):
         po.osubhd(self.outfile, "Temperature:")
         po.ovarrf(
             self.outfile,
-            "Temperature profile index",
+            "Temperature profile index (αₜ)",
             "(alphat)",
             physics_variables.alphat,
         )
         po.ovarrf(
             self.outfile,
-            "Temperature profile index beta",
+            "Temperature profile index beta (βₜ)",
             "(tbeta)",
             physics_variables.tbeta,
         )
@@ -2436,7 +2436,7 @@ class Physics(Model):
         ):
             po.ovarrf(
                 self.outfile,
-                "Temperature pedestal r/a location",
+                "Temperature pedestal r/a location (ρₜ,pedestal)",
                 "(radius_plasma_pedestal_temp_norm)",
                 physics_variables.radius_plasma_pedestal_temp_norm,
             )
@@ -2518,7 +2518,10 @@ class Physics(Model):
 
         po.osubhd(self.outfile, "Density:")
         po.ovarrf(
-            self.outfile, "Density profile factor", "(alphan)", physics_variables.alphan
+            self.outfile,
+            "Density profile factor (αₙ)",
+            "(alphan)",
+            physics_variables.alphan,
         )
         po.oblnkl(self.outfile)
         if (
@@ -2527,7 +2530,7 @@ class Physics(Model):
         ):
             po.ovarrf(
                 self.outfile,
-                "Density pedestal r/a location",
+                "Density pedestal r/a location (ρₙ,pedestal)",
                 "(radius_plasma_pedestal_density_norm)",
                 physics_variables.radius_plasma_pedestal_density_norm,
             )
@@ -2686,7 +2689,7 @@ class Physics(Model):
 
         po.ovarrf(
             self.outfile,
-            "Pressure profile index",
+            "Pressure profile index (αₚ)",
             "(alphap)",
             physics_variables.alphap,
         )
@@ -3721,7 +3724,7 @@ class PlasmaBeta:
         if physics_variables.i_beta_component == BetaComponentLimits.TOTAL:
             po.ovarrf(
                 self.outfile,
-                "Upper limit on total beta (β<)",
+                "Upper limit on volume averaged total beta (⟨β⟩<)",
                 "(beta_vol_avg_max)",
                 physics_variables.beta_vol_avg_max,
                 "OP ",
@@ -3729,7 +3732,7 @@ class PlasmaBeta:
         elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL:
             po.ovarrf(
                 self.outfile,
-                "Upper limit on thermal beta (β<)",
+                "Upper limit on volume averaged thermal beta (⟨βₜₕ⟩<)",
                 "(beta_vol_avg_max)",
                 physics_variables.beta_vol_avg_max,
                 "OP ",
@@ -3737,7 +3740,7 @@ class PlasmaBeta:
         elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL_AND_BEAM:
             po.ovarrf(
                 self.outfile,
-                "Upper limit on thermal + NB beta (β<)",
+                "Upper limit on volume averaged thermal + NB beta (⟨βₜₕ+βₙᵦ⟩<)",
                 "(beta_vol_avg_max)",
                 physics_variables.beta_vol_avg_max,
                 "OP ",
@@ -3745,7 +3748,7 @@ class PlasmaBeta:
         elif physics_variables.i_beta_component == BetaComponentLimits.TOROIDAL:
             po.ovarrf(
                 self.outfile,
-                "Upper limit on toroidal beta (β<)",
+                "Upper limit on volume averaged toroidal beta (⟨βₜ⟩<)",
                 "(beta_vol_avg_max)",
                 physics_variables.beta_vol_avg_max,
                 "OP ",
@@ -3753,14 +3756,14 @@ class PlasmaBeta:
 
         po.ovarre(
             self.outfile,
-            "Total plasma beta (⟨β⟩)",
+            "Volume averaged total plasma beta (⟨β⟩)",
             "(beta_total_vol_avg)",
             physics_variables.beta_total_vol_avg,
         )
         if physics_variables.i_beta_component == BetaComponentLimits.TOTAL:
             po.ovarrf(
                 self.outfile,
-                "Lower limit on total beta (β>)",
+                "Lower limit on volume averaged total beta (⟨β⟩>)",
                 "(beta_vol_avg_min)",
                 physics_variables.beta_vol_avg_min,
                 "IP",
@@ -3768,7 +3771,7 @@ class PlasmaBeta:
         elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL:
             po.ovarrf(
                 self.outfile,
-                "Lower limit on thermal beta (β>)",
+                "Lower limit on volume averaged thermal beta (⟨βₜₕ⟩>)",
                 "(beta_vol_avg_min)",
                 physics_variables.beta_vol_avg_min,
                 "IP",
@@ -3776,21 +3779,21 @@ class PlasmaBeta:
         else:
             po.ovarrf(
                 self.outfile,
-                "Lower limit on thermal + NB beta (β>)",
+                "Lower limit on volume averaged thermal + NB beta (⟨βₜₕ+βₙᵦ⟩>)",
                 "(beta_vol_avg_min)",
                 physics_variables.beta_vol_avg_min,
                 "IP",
             )
         po.ovarre(
             self.outfile,
-            "Upper limit on poloidal beta (βₚ<)",
+            "Upper limit on volume averaged poloidal beta (⟨βₚ⟩<)",
             "(beta_poloidal_max)",
             constraint_variables.beta_poloidal_max,
             "IP",
         )
         po.ovarre(
             self.outfile,
-            "Total poloidal beta (⟨βₚ⟩)",
+            "Volume averaged poloidal beta (⟨βₚ⟩)",
             "(beta_poloidal_vol_avg)",
             physics_variables.beta_poloidal_vol_avg,
             "OP ",
