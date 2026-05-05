@@ -542,6 +542,7 @@ fvalues_list = [
     "fniterpump",
     "fpoloidalpower",
     "ftemp_croco_quench_max",
+    "fne0",
 ]
 
 OBS_VARS.update(dict.fromkeys(fvalues_list, None))
