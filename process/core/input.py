@@ -2137,6 +2137,12 @@ def parse_input_file(data_structure_obj: DataStructure):
 
         variable_config = copy.copy(INPUT_VARIABLES.get(variable_name))
 
+        if variable_config is None:
+            error_msg = (
+                f"Unrecognised input '{variable_name}' at line {line_no} of input file."
+            )
+            raise ProcessValidationError(error_msg)
+
         # string indicates it should be set on the new object data structure
         if isinstance(variable_config.module, str):
             module = data_structure_obj
@@ -2144,12 +2150,6 @@ def parse_input_file(data_structure_obj: DataStructure):
                 module = getattr(module, name)
 
             variable_config.module = module
-
-        if variable_config is None:
-            error_msg = (
-                f"Unrecognised input '{variable_name}' at line {line_no} of input file."
-            )
-            raise ProcessValidationError(error_msg)
 
         # Validate the variable and also clean it (cast to correct type)
         # If the variable value (after the = sign) contains a ',' then it
