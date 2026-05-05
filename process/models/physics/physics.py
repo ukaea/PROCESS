@@ -2218,65 +2218,7 @@ class Physics(Model):
             physics_variables.i_plasma_ignited,
         )
 
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Plasma separatrix power (MW)",
-            "(p_plasma_separatrix_mw)",
-            physics_variables.p_plasma_separatrix_mw,
-            "OP ",
-        )
-
-        if physics_variables.p_plasma_separatrix_mw <= 0.001e0:
-            logger.error(
-                "Possible problem with high radiation power, forcing p_plasma_separatrix_mw to odd values. "
-                f"{physics_variables.p_plasma_separatrix_mw=}"
-            )
-            po.oblnkl(self.outfile)
-            po.ocmmnt(
-                self.outfile, "  BEWARE: possible problem with high radiation power"
-            )
-            po.ocmmnt(self.outfile, "          Power into divertor zone is unrealistic;")
-            po.ocmmnt(self.outfile, "          divertor calculations will be nonsense#")
-            po.ocmmnt(
-                self.outfile, "  Set constraint 17 (Radiation fraction upper limit)."
-            )
-            po.oblnkl(self.outfile)
-
-        if divertor_variables.n_divertors == 2:
-            # Double null divertor configuration
-            po.ovarre(
-                self.outfile,
-                "Pdivt / R ratio (MW/m) (On peak divertor)",
-                "(p_plasma_separatrix_rmajor_mw)",
-                physics_variables.p_plasma_separatrix_rmajor_mw,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Pdivt Bt / qAR ratio (MWT/m) (On peak divertor)",
-                "(p_div_bt_q_aspect_rmajor_mw)",
-                physics_variables.p_div_bt_q_aspect_rmajor_mw,
-                "OP ",
-            )
-        else:
-            # Single null divertor configuration
-            po.ovarre(
-                self.outfile,
-                "Psep / R ratio (MW/m)",
-                "(p_plasma_separatrix_rmajor_mw)",
-                physics_variables.p_plasma_separatrix_rmajor_mw,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Psep Bt / qAR ratio (MWT/m)",
-                "(p_div_bt_q_aspect_rmajor_mw)",
-                physics_variables.p_div_bt_q_aspect_rmajor_mw,
-                "OP ",
-            )
-
-        po.oblnkl(self.outfile)
+        self.exhaust.output()
 
         if stellarator_variables.istell == 0:
             self.plasma_transition.output_l_h_threshold_powers()

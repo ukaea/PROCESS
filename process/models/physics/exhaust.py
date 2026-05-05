@@ -1,6 +1,11 @@
 import logging
 
 from process.core import constants
+from process.core import process_output as po
+from process.data_structure import (
+    divertor_variables,
+    physics_variables,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +16,68 @@ class PlasmaExhaust:
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def output(self):
+        """Output plasma exhaust results to the output file."""
+        po.oheadr(self.outfile, "Plasma Exhaust")
+        po.ovarre(
+            self.outfile,
+            "Plasma separatrix power (Pₛₑₚ) (MW)",
+            "(p_plasma_separatrix_mw)",
+            physics_variables.p_plasma_separatrix_mw,
+            "OP ",
+        )
+
+        if physics_variables.p_plasma_separatrix_mw <= 0.001e0:
+            logger.error(
+                "Possible problem with high radiation power, forcing p_plasma_separatrix_mw to odd values. "
+                f"{physics_variables.p_plasma_separatrix_mw=}"
+            )
+            po.oblnkl(self.outfile)
+            po.ocmmnt(
+                self.outfile, "  BEWARE: possible problem with high radiation power"
+            )
+            po.ocmmnt(self.outfile, "          Power into divertor zone is unrealistic;")
+            po.ocmmnt(self.outfile, "          divertor calculations will be nonsense#")
+            po.ocmmnt(
+                self.outfile, "  Set constraint 17 (Radiation fraction upper limit)."
+            )
+            po.oblnkl(self.outfile)
+
+        if divertor_variables.n_divertors == 2:
+            # Double null divertor configuration
+            po.ovarre(
+                self.outfile,
+                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m) (On peak divertor)",
+                "(p_plasma_separatrix_rmajor_mw)",
+                physics_variables.p_plasma_separatrix_rmajor_mw,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) (MWT/m) (On peak divertor)",
+                "(p_div_bt_q_aspect_rmajor_mw)",
+                physics_variables.p_div_bt_q_aspect_rmajor_mw,
+                "OP ",
+            )
+        else:
+            # Single null divertor configuration
+            po.ovarre(
+                self.outfile,
+                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m)",
+                "(p_plasma_separatrix_rmajor_mw)",
+                physics_variables.p_plasma_separatrix_rmajor_mw,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) (MWT/m)",
+                "(p_div_bt_q_aspect_rmajor_mw)",
+                physics_variables.p_div_bt_q_aspect_rmajor_mw,
+                "OP ",
+            )
+
+        po.oblnkl(self.outfile)
 
     @staticmethod
     def calculate_separatrix_power(
