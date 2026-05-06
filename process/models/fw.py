@@ -471,7 +471,7 @@ class FirstWall(Model):
             heatcap_coolant=outlet_coolant_properties.specific_heat_const_p,
             visc_coolant=outlet_coolant_properties.viscosity,
             thermcond_coolant=outlet_coolant_properties.thermal_conductivity,
-            roughness_fw_channel=fwbs_variables.roughness_fw_channel,
+            roughness_channel=fwbs_variables.roughness_fw_channel,
         )
 
         # Temperature drops between first-wall surface and bulk coolant !

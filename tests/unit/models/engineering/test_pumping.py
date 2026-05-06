@@ -21,7 +21,7 @@ def test_gnielinski_heat_transfer_coefficient():
         heatcap_coolant=5184.9330299967578,
         visc_coolant=4.0416219836935569e-05,
         thermcond_coolant=0.3211653052986152,
-        roughness_fw_channel=6e-8,
+        roughness_channel=6e-8,
     ) == pytest.approx(1929.2042015869506)
 
 
