@@ -1,3 +1,5 @@
+"""Engineering models for pumping system analysis."""
+
 import logging
 
 import numpy as np
@@ -26,8 +28,8 @@ def darcy_friction_haaland(
 
     Notes
     -----
-        The Haaland equation is an approximation to the implicit Colebrook-White equation.
-        It is used to calculate the Darcy friction factor for turbulent flow in pipes.
+       The Haaland equation is an approximation to the implicit Colebrook-White equation.
+       It is used to calculate the Darcy friction factor for turbulent flow in pipes.
 
     References
     ----------
@@ -126,7 +128,8 @@ def gnielinski_heat_transfer_coefficient(
     if (pr < 0.5) or (pr > 2000.0):
         logger.error("Prandtl number out of range : [0.5-2000]. %s", pr)
 
-    # Check that the Darcy friction factor is in valid range for the Gnielinski correlation
+    # Check that the Darcy friction factor is in valid range for the Gnielinski
+    # correlation
     if f <= 0.0:
         logger.error("Negative Darcy friction factor (f). %s", f)
 
