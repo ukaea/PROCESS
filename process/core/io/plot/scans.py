@@ -652,7 +652,6 @@ def plot_scan(
                         loc="lower center",
                         fontsize=legend_size,
                         bbox_to_anchor=(0.5, -0.5 - (0.1 * len(output_names))),
-                        # bbox_to_anchor=(0.5, -1.4),
                         fancybox=True,
                         shadow=False,
                         ncol=len(input_files),

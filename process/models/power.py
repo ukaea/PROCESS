@@ -2442,8 +2442,6 @@ class Power(Model):
                 "OP ",
             )
             # MDK Remove this as it leads to confusion between (a) total inductance/n_tf_coils, or (b)
-            #     self-inductance of one single coil
-            # po.ovarre(outfile,'Inductance per TF coil (H)','(lptfcs)',lptfcs, 'OP ')
             po.ovarre(self.outfile, "TF coil charging voltage (V)", "(tfcv)", tfcv)
             po.ovarre(self.outfile, "Number of DC circuit breakers", "(ntfbkr)", ntfbkr)
             po.ovarre(self.outfile, "Number of dump resistors", "(ndumpr)", ndumpr)

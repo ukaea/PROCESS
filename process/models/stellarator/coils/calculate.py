@@ -542,7 +542,6 @@ def calculate_casing():
     """
     # [m] coil case thickness outboard distance (radial)
     tfcoil_variables.dr_tf_plasma_case = tfcoil_variables.dr_tf_nose_case
-    # dr_tf_nose_case = case_thickness_constant/2.0e0 # [m] coil case thickness inboard distance  (radial).
 
     # [m] coil case thickness toroidal distance (toroidal)
     tfcoil_variables.dx_tf_side_case_min = tfcoil_variables.dr_tf_nose_case

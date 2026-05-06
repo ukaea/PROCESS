@@ -3378,7 +3378,6 @@ def plot_system_power_profiles_over_time(axis: plt.Axes, mfile: MFile, scan: int
     axis.legend()
 
     axis.set_yscale("symlog")
-    # axis.set_xscale()
     axis.minorticks_on()
     axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
@@ -10663,7 +10662,10 @@ def plot_tf_stress(axis: plt.Axes, mfile: MFile):
         tresca_smeared_stress.append([])
 
         bound_tresca_smeared_stress.extend([
-            max(abs(radial_smeared_stress[ii][0]), abs(toroidal_smeared_stress[ii][0]))
+            max(
+                abs(radial_smeared_stress[ii][0]),
+                abs(toroidal_smeared_stress[ii][0]),
+            )
             + vertical_smeared_stress[ii][0],
             max(
                 abs(radial_smeared_stress[ii][n_radial_array_layer - 1]),

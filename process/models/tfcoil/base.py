@@ -648,7 +648,8 @@ class TFCoil(Model):
 
         if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
             po.ocmmnt(
-                self.outfile, "  -> resistive coil : Water cooled copper (GLIDCOP AL-15)"
+                self.outfile,
+                "  -> resistive coil : Water cooled copper (GLIDCOP AL-15)",
             )
         elif tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
             po.ocmmnt(self.outfile, "  -> Superconducting coil (SC)")
@@ -1400,12 +1401,6 @@ class TFCoil(Model):
                     "(1-f_a_tf_turn_cable_copper)",
                     1 - tfcoil_variables.f_a_tf_turn_cable_copper,
                 )
-                # TODO
-                # po.ovarre(self.outfile,'Conductor fraction of winding pack','(tfcoil_variables.a_tf_wp_conductor/ap)',a_tf_wp_conductor/ap, 'OP ')
-                # po.ovarre(self.outfile,'Conduit fraction of winding pack','(tfcoil_variables.n_tf_coil_turns*tfcoil_variables.a_tf_turn_steel/ap)',n_tf_coil_turns*tfcoil_variables.a_tf_turn_steel/ap, 'OP ')
-                # po.ovarre(self.outfile,'Insulator fraction of winding pack','(tfcoil_variables.a_tf_coil_wp_turn_insulation/ap)',a_tf_coil_wp_turn_insulation/ap, 'OP ')
-                # po.ovarre(self.outfile,'Helium area fraction of winding pack excluding central channel','(tfcoil_variables.a_tf_wp_extra_void/ap)',a_tf_wp_extra_void/ap, 'OP ')
-                # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.a_tf_wp_coolant_channels/ap)',a_tf_wp_coolant_channels/ap, 'OP ')
                 ap = (
                     tfcoil_variables.a_tf_wp_conductor
                     + tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
@@ -1950,8 +1945,6 @@ class TFCoil(Model):
 
         # TF coil radial build
         po.osubhd(self.outfile, "Radial build of TF coil centre-line :")
-        # po.write(self.outfile,5)
-        # 5   format(t43,'Thickness (m)',t60,'Outer radius (m)')
 
         radius = build_variables.r_tf_inboard_in
         po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
@@ -3564,12 +3557,6 @@ class TFCoil(Model):
             and i_tf_stress_model != 2
         ):
             raise ProcessValueError("r_tf_inboard_in is ~= 0", 245)
-
-        # TODO: following is no longer used/needed?
-        # if tfcoil_variables.a_tf_turn_cable_space_no_void >= 0.0e0:
-        #     tcbs = numpy.sqrt(tfcoil_variables.a_tf_turn_cable_space_no_void)
-        # else:
-        #     tcbs = 0.0e0
 
         # LAYER ELASTIC PROPERTIES
         # ------------------------

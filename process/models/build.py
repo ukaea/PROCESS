@@ -861,36 +861,6 @@ class Build(Model):
         triu = physics_variables.triang
         tril = physics_variables.triang
 
-        # Old method: assumes that divertor arms are continuations of arcs
-        #
-        # Outboard side
-        # build_variables.plsepo = poloidal length along the separatrix from null to
-        # strike point on outboard [default 1.5 m]
-        # thetao = arc angle between the strike point and the null point
-        #
-        # xpointo = physics_variables.rmajor + 0.5e0*physics_variables.rminor*(kap**2 + tri**2 - 1.0e0) /     #     (1.0e0 - tri)
-        # rprimeo = (xpointo - physics_variables.rmajor + physics_variables.rminor)
-        # phio = asin(kap*physics_variables.rminor/rprimeo)
-        # thetao = build_variables.plsepo/rprimeo
-        #
-        # Initial strike point
-        #
-        # yspointo = rprimeo * sin(thetao + phio)
-        # xspointo = xpointo - rprimeo * cos(thetao + phio)
-        #
-        # Outboard strike point radius - normalized to ITER
-        #
-        # rstrko = xspointo + 0.14e0
-        #
-        # Uppermost divertor strike point (end of power decay)
-        # anginc = angle of incidence of scrape-off field lines on the
-        # divertor (rad)
-        #
-        # +**PJK 25/07/11 Changed sign of anginc contribution
-        # yprimeb = soleno * cos(thetao + phio - anginc)
-        #
-        # divht = yprimeb + yspointo - kap*physics_variables.rminor
-
         # New method, assuming straight legs -- superceded by new method 26/5/2016
         # Assumed 90 degrees at X-pt -- wrong#
         #
@@ -932,16 +902,10 @@ class Build(Model):
         zspi = zxpt - build_variables.plsepi * np.sin(thetai)
 
         # Position of outer strike point
-        # build_variables.rspo = rxpt + build_variables.plsepo*cos((pi/2.0e0)-alphad)
-        # zspo = zxpt - build_variables.plsepo*sin((pi/2.0e0)-alphad)
         build_variables.rspo = rxpt + build_variables.plsepo * np.cos(thetao)
         zspo = zxpt - build_variables.plsepo * np.sin(thetao)
 
         # Position of inner plate ends
-        # rplti = rspi - (build_variables.plleni/2.0e0)*sin(divertor_variables.betai + alphad - pi/2.0e0)
-        # zplti = zspi + (build_variables.plleni/2.0e0)*cos(divertor_variables.betai + alphad - pi/2.0e0)
-        # rplbi = rspi + (build_variables.plleni/2.0e0)*sin(divertor_variables.betai + alphad - pi/2.0e0)
-        # zplbi = zspi - (build_variables.plleni/2.0e0)*cos(divertor_variables.betai + alphad - pi/2.0e0)
         rplti = rspi + (build_variables.plleni / 2.0e0) * np.cos(
             thetai + divertor_variables.betai
         )
@@ -956,10 +920,6 @@ class Build(Model):
         )
 
         # Position of outer plate ends
-        # rplto = build_variables.rspo + (build_variables.plleno/2.0e0)*sin(divertor_variables.betao - alphad)
-        # zplto = zspo + (build_variables.plleno/2.0e0)*cos(divertor_variables.betao - alphad)
-        # rplbo = build_variables.rspo - (build_variables.plleno/2.0e0)*sin(divertor_variables.betao - alphad)
-        # zplbo = zspo - (build_variables.plleno/2.0e0)*cos(divertor_variables.betao - alphad)
         rplto = build_variables.rspo - (build_variables.plleno / 2.0e0) * np.cos(
             thetao + divertor_variables.betao
         )
