@@ -1,7 +1,7 @@
 from process.core import process_output as po
+from process.core.model import DataStructure
 from process.data_structure import (
     build_variables,
-    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
@@ -12,7 +12,7 @@ from process.data_structure import (
 )
 
 
-def st_build(stellarator, f_output: bool):
+def st_build(stellarator, f_output: bool, data: DataStructure):
     """Routine to determine the build of a stellarator machine
 
     This routine determines the build of the stellarator machine.
@@ -26,6 +26,8 @@ def st_build(stellarator, f_output: bool):
 
     f_output:
 
+    data: DataStructure
+        data structure object to provide model data
 
     """
     if fwbs_variables.blktmodel > 0:
@@ -168,21 +170,21 @@ def st_build(stellarator, f_output: bool):
         build_variables.dr_fw_plasma_gap_inboard
         + build_variables.dr_fw_plasma_gap_outboard
     )
-    first_wall_variables.a_fw_total = (
+    data.first_wall.a_fw_total = (
         physics_variables.a_plasma_surface * awall / physics_variables.rminor
     )
 
     if heat_transport_variables.ipowerflow == 0:
-        first_wall_variables.a_fw_total = (
+        data.first_wall.a_fw_total = (
             1.0e0 - fwbs_variables.fhole
-        ) * first_wall_variables.a_fw_total
+        ) * data.first_wall.a_fw_total
     else:
-        first_wall_variables.a_fw_total = (
+        data.first_wall.a_fw_total = (
             1.0e0
             - fwbs_variables.fhole
             - fwbs_variables.f_ster_div_single
             - fwbs_variables.f_a_fw_outboard_hcd
-        ) * first_wall_variables.a_fw_total
+        ) * data.first_wall.a_fw_total
 
     if f_output:
         #  Print out device build

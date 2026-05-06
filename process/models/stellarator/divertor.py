@@ -2,16 +2,16 @@ import numpy as np
 
 from process.core import constants
 from process.core import process_output as po
+from process.core.model import DataStructure
 from process.data_structure import (
     divertor_variables,
-    first_wall_variables,
     fwbs_variables,
     physics_variables,
     stellarator_variables,
 )
 
 
-def st_div(stellarator, f_output: bool):
+def st_div(stellarator, f_output: bool, data: DataStructure):
     """Routine to call the stellarator divertor model
 
     This routine calls the divertor model for a stellarator
@@ -21,6 +21,9 @@ def st_div(stellarator, f_output: bool):
     stellarator :
         An object containing stellarator configuration and output handle
     f_output:
+
+    data: DataStructure
+        data structure object to provide model data
 
     References
     ----------
@@ -99,7 +102,7 @@ def st_div(stellarator, f_output: bool):
     divertor_variables.pflux_div_heat_load_mw = q_div
     divertor_variables.a_div_surface_total = darea
 
-    fwbs_variables.f_ster_div_single = darea / first_wall_variables.a_fw_total
+    fwbs_variables.f_ster_div_single = darea / data.first_wall.a_fw_total
 
     if f_output:
         output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta)

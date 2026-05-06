@@ -5,7 +5,6 @@ import pytest
 
 from process.data_structure import (
     build_variables,
-    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     impurity_radiation_module,
@@ -504,7 +503,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "dr_vv_outboard", stbildparam.dr_vv_outboard)
 
-    monkeypatch.setattr(first_wall_variables, "a_fw_total", stbildparam.a_fw_total)
+    monkeypatch.setattr(
+        stellarator.data.first_wall, "a_fw_total", stbildparam.a_fw_total
+    )
 
     monkeypatch.setattr(build_variables, "dr_fw_inboard", stbildparam.dr_fw_inboard)
 
@@ -640,7 +641,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(stellarator_variables, "f_coil_shape", 1.0)
 
-    st_build(stellarator, False)
+    st_build(stellarator, False, stellarator.data)
 
     assert build_variables.dz_blkt_upper == pytest.approx(
         stbildparam.expected_dz_blkt_upper
@@ -648,7 +649,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     assert build_variables.dr_bore == pytest.approx(stbildparam.expected_bore)
 
-    assert first_wall_variables.a_fw_total == pytest.approx(
+    assert stellarator.data.first_wall.a_fw_total == pytest.approx(
         stbildparam.expected_a_fw_total
     )
 

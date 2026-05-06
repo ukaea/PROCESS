@@ -12,7 +12,6 @@ from process.data_structure import (
     build_variables,
     constraint_variables,
     divertor_variables,
-    first_wall_variables,
     fwbs_variables,
     physics_variables,
 )
@@ -63,9 +62,9 @@ class FirstWall(Model):
             or fwbs_variables.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
-                first_wall_variables.a_fw_inboard_full_coverage,
-                first_wall_variables.a_fw_outboard_full_coverage,
-                first_wall_variables.a_fw_total_full_coverage,
+                self.data.first_wall.a_fw_inboard_full_coverage,
+                self.data.first_wall.a_fw_outboard_full_coverage,
+                self.data.first_wall.a_fw_total_full_coverage,
             ) = self.calculate_dshaped_first_wall_areas(
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
@@ -76,9 +75,9 @@ class FirstWall(Model):
 
         else:
             (
-                first_wall_variables.a_fw_inboard_full_coverage,
-                first_wall_variables.a_fw_outboard_full_coverage,
-                first_wall_variables.a_fw_total_full_coverage,
+                self.data.first_wall.a_fw_inboard_full_coverage,
+                self.data.first_wall.a_fw_outboard_full_coverage,
+                self.data.first_wall.a_fw_total_full_coverage,
             ) = self.calculate_elliptical_first_wall_areas(
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
@@ -89,23 +88,23 @@ class FirstWall(Model):
             )
 
         (
-            first_wall_variables.a_fw_inboard,
-            first_wall_variables.a_fw_outboard,
-            first_wall_variables.a_fw_total,
+            self.data.first_wall.a_fw_inboard,
+            self.data.first_wall.a_fw_outboard,
+            self.data.first_wall.a_fw_total,
         ) = self.apply_first_wall_coverage_factors(
             n_divertors=divertor_variables.n_divertors,
             f_ster_div_single=fwbs_variables.f_ster_div_single,
             f_a_fw_outboard_hcd=fwbs_variables.f_a_fw_outboard_hcd,
-            a_fw_inboard_full_coverage=first_wall_variables.a_fw_inboard_full_coverage,
-            a_fw_outboard_full_coverage=first_wall_variables.a_fw_outboard_full_coverage,
+            a_fw_inboard_full_coverage=self.data.first_wall.a_fw_inboard_full_coverage,
+            a_fw_outboard_full_coverage=self.data.first_wall.a_fw_outboard_full_coverage,
         )
 
         (
             blanket_library.n_fw_inboard_channels,
             blanket_library.n_fw_outboard_channels,
         ) = self.calculate_total_fw_channels(
-            first_wall_variables.a_fw_inboard,
-            first_wall_variables.a_fw_outboard,
+            self.data.first_wall.a_fw_inboard,
+            self.data.first_wall.a_fw_outboard,
             fwbs_variables.len_fw_channel,
             fwbs_variables.dx_fw_module,
         )
@@ -124,7 +123,7 @@ class FirstWall(Model):
             )
         else:
             physics_variables.pflux_fw_neutron_mw = (
-                physics_variables.p_neutron_total_mw / first_wall_variables.a_fw_total
+                physics_variables.p_neutron_total_mw / self.data.first_wall.a_fw_total
             )
 
         if physics_variables.i_pflux_fw_neutron == 1:
@@ -135,7 +134,7 @@ class FirstWall(Model):
             )
         else:
             physics_variables.pflux_fw_rad_mw = (
-                physics_variables.p_plasma_rad_mw / build_variables.a_fw_total
+                physics_variables.p_plasma_rad_mw / self.data.first_wall.a_fw_total
             )
 
         constraint_variables.pflux_fw_rad_max_mw = (

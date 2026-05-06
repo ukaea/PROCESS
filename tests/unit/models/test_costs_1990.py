@@ -11,7 +11,6 @@ from process.data_structure import (
     buildings_variables,
     current_drive_variables,
     divertor_variables,
-    first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
@@ -1087,7 +1086,7 @@ def test_acc2211(acc2211param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(first_wall_variables, "a_fw_total", acc2211param.a_fw_total)
+    monkeypatch.setattr(costs.data.first_wall, "a_fw_total", acc2211param.a_fw_total)
 
     monkeypatch.setattr(costs.data.costs, "ucblss", acc2211param.ucblss)
 
