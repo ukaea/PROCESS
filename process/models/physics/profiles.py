@@ -1,3 +1,9 @@
+"""Module for plasma profile definitions and utilities.
+
+This module provides abstract base classes and implementations for creating
+and managing plasma profiles such as temperature and density distributions.
+"""
+
 import logging
 from abc import ABC, abstractmethod
 from enum import IntEnum
@@ -73,8 +79,9 @@ class Profile(ABC):
     def calculate_profile_dx(self):
         """Calculates the differential between points in the profile.
 
-        This method calculates the differential between points in the profile by dividing the maximum x value in the profile
-        by the difference in size between the points. The result is stored in the `profile_dx` attribute.
+        This method calculates the differential between points in the profile by
+        dividing the maximum x value in the profile by the difference in size between
+        the points. The result is stored in the `profile_dx` attribute.
         """
         self.profile_dx = max(self.profile_x) / (self.profile_size - 1)
 
@@ -87,9 +94,9 @@ class Profile(ABC):
     def integrate_profile_y(self):
         """Integrate profile_y values using scipy.integrate.simpson() function.
 
-        This method calculates the integral of the profile_y values using the Simpson's rule
-        provided by the scipy.integrate.simpson() function. The integral is stored in the
-        self.profile_integ attribute.
+        This method calculates the integral of the profile_y values using the Simpson's
+        rule provided by the scipy.integrate.simpson() function. The integral is stored
+        in the `profile_integ` attribute.
         """
         self.profile_integ = sp.integrate.simpson(
             self.profile_y, x=self.profile_x, dx=self.profile_dx
@@ -97,8 +104,8 @@ class Profile(ABC):
 
 
 class NeProfile(Profile):
-    """Electron density profile class. Contains a function to calculate the electron density profile and
-    store the data.
+    """Electron density profile class. Contains a function to calculate the electron
+    density profile and store the data.
     """
 
     def run(self):
@@ -125,7 +132,7 @@ class NeProfile(Profile):
         nsep: float,
         alphan: float,
     ):
-        """This routine calculates the density at each normalised minor radius position
+        """Calculates the density at each normalised minor radius position
         rho for a HELIOS-type density pedestal profile (neprofile).
 
         Parameters
@@ -176,12 +183,15 @@ class NeProfile(Profile):
         nav: float,
         alphan: float,
     ) -> float:
-        """This routine calculates the core density of a pedestalised profile.
-        The solution comes from integrating and summing the two separate density profiles for the core
-        and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
-        to an added rho term in each part of the profile. When dividing by the volume of integration to get the average density
-        the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
-        This function for the average density can then be re-arranged to calculate the central plasma density n_0 / ncore.
+        """Calculates the core density of a pedestalised profile.
+        The solution comes from integrating and summing the two separate density profiles
+        for the core and pedestal region within their bounds. This has to be multiplied
+        by the torus volume element before integration which leads to an added rho term
+        in each part of the profile. When dividing by the volume of integration to get
+        the average density the simplification leads to a factor of 2 having to be
+        multiplied on to each of the integration results. This function for the average
+        density can then be re-arranged to calculate the central plasma density
+        n_0 / ncore.
 
         Parameters
         ----------
@@ -203,7 +213,9 @@ class NeProfile(Profile):
 
         References
         ----------
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
+            Studies. Fusion Science and Technology, 59(2), 308-349.
+            https://doi.org/10.13182/FST11-A11650
         """
         ncore = (
             1
@@ -227,9 +239,11 @@ class NeProfile(Profile):
 
         if ncore < 0.0:
             # Allows solver to continue and
-            # warns the user to raise the lower bound on nd_plasma_electrons_vol_avg if the run did not converge
+            # warns the user to raise the lower bound on nd_plasma_electrons_vol_avg
+            # if the run did not converge
             logger.error(
-                "ncore is going negative when solving. Please raise the value of nd_plasma_electrons_vol_avg and or its lower limit."
+                "ncore is going negative when solving. Please raise the value of "
+                "nd_plasma_electrons_vol_avg and or its lower limit."
             )
             ncore = 1.0e-6
         return ncore
@@ -263,7 +277,9 @@ class NeProfile(Profile):
 
 
 class TeProfile(Profile):
-    """Electron temperature profile class. Contains a function to calculate the temperature profile and store the data."""
+    """Electron temperature profile class. Contains a function to calculate the
+    temperature profile and store the data.
+    """
 
     def run(self):
         """Subroutine to initialise neprofile and execute calculations."""
@@ -291,7 +307,8 @@ class TeProfile(Profile):
         alphat: float,
         tbeta: float,
     ):
-        """Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (teprofile).
+        """Calculates the temperature at a normalised minor radius position rho for a
+        pedestalised profile (teprofile).
         If i_plasma_pedestal = 0 the original parabolic profile form is used instead.
 
         Parameters
@@ -313,13 +330,16 @@ class TeProfile(Profile):
 
         References
         ----------
-            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
+            Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
+            Studies. Fusion Science and Technology, 59(2), 308-349.
+            https://doi.org/10.13182/FST11-A11650
         """
         if (
             PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
             == PlasmaProfileShapeType.PARABOLIC_PROFILE
         ):
-            # profile values of 0 cause divide by 0 errors so ensure the profile value is at least 1e-8
+            # profile values of 0 cause divide by 0 errors so ensure the profile value
+            # is at least 1e-8
             # which is small enough that it won't make a difference to any calculations
             self.profile_y = np.maximum(t0 * (1 - rho**2) ** alphat, 1e-8)
             return
@@ -351,12 +371,15 @@ class TeProfile(Profile):
         alphat: float,
         tbeta: float,
     ) -> float:
-        """This routine calculates the core temperature (keV)
-        of a pedestalised profile. The solution comes from integrating and summing the two seprate temperature profiles for the core
-        and pedestal region within their bounds. This has to be multiplied by the torus volume element before integration which leads
-        to an added rho term in each part of the profile. When dividing by the volume of integration to get the average temperature
-        the simplification leads to a factor of 2 having to be multiplied on to each of the integration results.
-        This function for the average temperature can then be re-arranged to calculate the central plasma temeprature T_0 / tcore.
+        """Calculates the core temperature (keV)
+        of a pedestalised profile. The solution comes from integrating and summing the
+        two separate temperature profiles for the core and pedestal region within their
+        bounds. This has to be multiplied by the torus volume element before integration
+        which leads to an added rho term in each part of the profile. When dividing by
+        the volume of integration to get the average temperature the simplification
+        leads to a factor of 2 having to be multiplied on to each of the integration
+        results. This function for the average temperature can then be re-arranged to
+        calculate the central plasma temperature T_0 / tcore.
 
         Parameters
         ----------
@@ -380,7 +403,9 @@ class TeProfile(Profile):
 
         References
         ----------
-        Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
+        Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor
+        Studies. Fusion Science and Technology, 59(2), 308-349.
+        https://doi.org/10.13182/FST11-A11650
         """
         #  Calculate core temperature
 
