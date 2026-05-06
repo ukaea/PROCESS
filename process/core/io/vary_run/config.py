@@ -234,10 +234,14 @@ iteration variables should get varied"""
         """Appends PROCESS outcome to README.txt if reached maximum iterations"""
         m_file = MFile(filename=self.wdir / mfile)
 
-        error_status = (
-            f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
-            f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
-        )
+        try:
+            error_status = (
+                f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
+                f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
+            )
+        except:  # noqa: E722
+            error_status = ""
+
         ifail = m_file.data["ifail"].get_scan(-1)
         if ifail != 1:
             ifail_msg = f"PROCESS has been unable to find a converging input file within the chosen maximum number of iterations.\nYou could try increasing the maximum number of iterations (which is currently set to {self.niter}),\nchanging the factor within which the iteration variables are changed,\nor by changing the initial values of the iteration variables."
