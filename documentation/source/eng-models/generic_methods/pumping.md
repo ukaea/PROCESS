@@ -38,7 +38,7 @@ where $\rho$ is the coolant density and $\mu$ is the coolant viscosity.
 
     were $c_{\text{p}}$ is the coolant heat capacity and $k$ is the coolant thermal conductivity.
 
-3. **Calculate the Darcy friction factor using the [`darcy_friction_haaland()`](../eng-models/generic_methods/pumping.md#pumping-coolant-friction--darcy_friction_haaland) method:**
+3. **Calculate the Darcy friction factor using the [`darcy_friction_haaland()`](#pumping-coolant-friction--darcy_friction_haaland) method:**
 
     $$
     f = \texttt{darcy_friction_haaland()}
