@@ -41,7 +41,6 @@ Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 
 import logging
 from pathlib import Path
-from typing import Protocol
 
 import click
 
@@ -572,16 +571,6 @@ class SingleRun:
             raise ValueError("User-created model not injected correctly") from err
 
 
-class CostsProtocol(Protocol):
-    """Protocol layout for costs models"""
-
-    def run(self):
-        """Run the model"""
-
-    def output(self):
-        """Write model output"""
-
-
 class Models:
     """Creates instances of physics and engineering model classes.
 
@@ -666,41 +655,41 @@ class Models:
             plasma_profile=self.plasma_profile,
         )
         self.neoclassics = Neoclassics()
-        if data_structure.stellarator_variables.istell != 0:
-            self.stellarator = Stellarator(
-                availability=self.availability,
-                buildings=self.buildings,
-                vacuum=self.vacuum,
-                costs=self.costs,
-                power=self.power,
-                plasma_profile=self.plasma_profile,
-                hcpb=self.ccfe_hcpb,
-                current_drive=self.current_drive,
-                physics=self.physics,
-                neoclassics=self.neoclassics,
-                plasma_beta=self.plasma_beta,
-                plasma_bootstrap=self.plasma_bootstrap_current,
-            )
+        self.stellarator = Stellarator(
+            availability=self.availability,
+            buildings=self.buildings,
+            vacuum=self.vacuum,
+            costs=self.costs,
+            power=self.power,
+            plasma_profile=self.plasma_profile,
+            hcpb=self.ccfe_hcpb,
+            current_drive=self.current_drive,
+            physics=self.physics,
+            neoclassics=self.neoclassics,
+            plasma_beta=self.plasma_beta,
+            plasma_bootstrap=self.plasma_bootstrap_current,
+        )
 
         self.dcll = DCLL(fw=self.fw)
 
         self.setup_data_structure()
 
     @property
-    def costs(self) -> CostsProtocol:
-        if data_structure.cost_variables.cost_model == 0:
+    def costs(self) -> Model:
+        if self.data.costs.cost_model == 0:
             return self._costs_1990
-        if data_structure.cost_variables.cost_model == 1:
+        if self.data.costs.cost_model == 1:
             return self._costs_2015
-        if data_structure.cost_variables.cost_model == 2:
+        if self.data.costs.cost_model == 2:
             if self._costs_custom is not None:
+                self._costs_custom.data = self.data
                 return self._costs_custom
             raise ValueError("Custom costs model not initialised")
         # Probably overkill but makes typing happy
         raise ValueError("Unknown costs model")
 
     @costs.setter
-    def costs(self, value: CostsProtocol):
+    def costs(self, value: Model):
         self._costs_custom = value
 
     @property
@@ -718,6 +707,10 @@ class Models:
             self._costs_1990,
             self.availability,
             self.ife,
+            self.buildings,
+            self.power,
+            self.stellarator,
+            self.ccfe_hcpb,
         )
 
     def setup_data_structure(self):

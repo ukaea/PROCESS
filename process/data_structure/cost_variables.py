@@ -1,1582 +1,818 @@
-c228: float = None
-"""c228 account cost"""
+from dataclasses import dataclass, field
 
-c229: float = None
-"""c229 account cost"""
 
-c23: float = None
-"""c23 account cost"""
+@dataclass
+class CostData:
+    c228: float = 0.0
+    """c228 account cost"""
 
-c25: float = None
-"""c25 account cost"""
+    c229: float = 0.0
+    """c229 account cost"""
 
-c26: float = None
-"""c26 account cost"""
+    c23: float = 0.0
+    """c23 account cost"""
 
-cindrt: float = None
-"""cindrt account cost"""
+    c25: float = 0.0
+    """c25 account cost"""
 
-ccont: float = None
-"""ccont account cost"""
+    c26: float = 0.0
+    """c26 account cost"""
 
-c226: float = None
+    cindrt: float = 0.0
+    """cindrt account cost"""
 
-c2261: float = None
+    ccont: float = 0.0
+    """ccont account cost"""
 
-c2262: float = None
+    c226: float = 0.0
 
-c2263: float = None
+    c2261: float = 0.0
 
-c227: float = None
+    c2262: float = 0.0
 
-c2271: float = None
+    c2263: float = 0.0
 
-c2272: float = None
+    c227: float = 0.0
 
-c2273: float = None
+    c2271: float = 0.0
 
-c2274: float = None
+    c2272: float = 0.0
 
-c24: float = None
+    c2273: float = 0.0
 
-c241: float = None
+    c2274: float = 0.0
 
-c242: float = None
+    c24: float = 0.0
 
-c243: float = None
+    c241: float = 0.0
 
-c244: float = None
+    c242: float = 0.0
 
-c245: float = None
+    c243: float = 0.0
 
-c21: float = None
+    c244: float = 0.0
 
-c211: float = None
+    c245: float = 0.0
 
-c212: float = None
+    c21: float = 0.0
 
-c213: float = None
+    c211: float = 0.0
 
-c214: float = None
+    c212: float = 0.0
 
-c2141: float = None
+    c213: float = 0.0
 
-c2142: float = None
+    c214: float = 0.0
 
-c215: float = None
+    c2141: float = 0.0
 
-c216: float = None
+    c2142: float = 0.0
 
-c217: float = None
+    c215: float = 0.0
 
-c2171: float = None
+    c216: float = 0.0
 
-c2172: float = None
+    c217: float = 0.0
 
-c2173: float = None
+    c2171: float = 0.0
 
-c2174: float = None
+    c2172: float = 0.0
 
-c22: float = None
+    c2173: float = 0.0
 
-c2211: float = None
+    c2174: float = 0.0
 
-c2212: float = None
+    c22: float = 0.0
 
-c22121: float = None
+    c2211: float = 0.0
 
-c22122: float = None
+    c2212: float = 0.0
 
-c22123: float = None
+    c22121: float = 0.0
 
-c22124: float = None
+    c22122: float = 0.0
 
-c22125: float = None
+    c22123: float = 0.0
 
-c22126: float = None
+    c22124: float = 0.0
 
-c22127: float = None
+    c22125: float = 0.0
 
-c2213: float = None
+    c22126: float = 0.0
 
-c22131: float = None
+    c22127: float = 0.0
 
-c22132: float = None
+    c2213: float = 0.0
 
-c2214: float = None
+    c22131: float = 0.0
 
-c2215: float = None
+    c22132: float = 0.0
 
-c2221: float = None
+    c2214: float = 0.0
 
-c22211: float = None
+    c2215: float = 0.0
 
-c22212: float = None
+    c2221: float = 0.0
 
-c22213: float = None
+    c22211: float = 0.0
 
-c22214: float = None
+    c22212: float = 0.0
 
-c22215: float = None
+    c22213: float = 0.0
 
-c2222: float = None
+    c22214: float = 0.0
 
-c22221: float = None
+    c22215: float = 0.0
 
-c22222: float = None
+    c2222: float = 0.0
 
-c22223: float = None
+    c22221: float = 0.0
 
-c22224: float = None
+    c22222: float = 0.0
 
-c2223: float = None
+    c22223: float = 0.0
 
-c223: float = None
+    c22224: float = 0.0
 
-c2231: float = None
+    c2223: float = 0.0
 
-c2232: float = None
+    c223: float = 0.0
 
-c2233: float = None
+    c2231: float = 0.0
 
-c2234: float = None
+    c2232: float = 0.0
 
-c224: float = None
+    c2233: float = 0.0
 
-c2241: float = None
+    c2234: float = 0.0
 
-c2242: float = None
+    c224: float = 0.0
 
-c2243: float = None
+    c2241: float = 0.0
 
-c2244: float = None
+    c2242: float = 0.0
 
-c2245: float = None
+    c2243: float = 0.0
 
-c2246: float = None
+    c2244: float = 0.0
 
-c225: float = None
+    c2245: float = 0.0
 
-c2251: float = None
+    c2246: float = 0.0
 
-c22511: float = None
+    c225: float = 0.0
 
-c22512: float = None
+    c2251: float = 0.0
 
-c22513: float = None
+    c22511: float = 0.0
 
-c22514: float = None
+    c22512: float = 0.0
 
-c22515: float = None
+    c22513: float = 0.0
 
-c2252: float = None
+    c22514: float = 0.0
 
-c22521: float = None
+    c22515: float = 0.0
 
-c22522: float = None
+    c2252: float = 0.0
 
-c22523: float = None
+    c22521: float = 0.0
 
-c22524: float = None
+    c22522: float = 0.0
 
-c22525: float = None
+    c22523: float = 0.0
 
-c22526: float = None
+    c22524: float = 0.0
 
-c22527: float = None
+    c22525: float = 0.0
 
-c2253: float = None
+    c22526: float = 0.0
 
-chx: float = None
+    c22527: float = 0.0
 
-cpp: float = None
+    c2253: float = 0.0
 
-cppa: float = None
+    chx: float = 0.0
 
-c22128: float = None
+    cpp: float = 0.0
 
-abktflnc: float = None
-"""allowable first wall/blanket neutron fluence (MW-yr/m2) (`blktmodel=0`)"""
+    cppa: float = 0.0
 
+    c22128: float = 0.0
 
-adivflnc: float = None
-"""allowable divertor heat fluence (MW-yr/m2)"""
+    abktflnc: float = 5.0
+    """allowable first wall/blanket neutron fluence (MW-yr/m2) (`blktmodel=0`)"""
 
+    adivflnc: float = 7.0
+    """allowable divertor heat fluence (MW-yr/m2)"""
 
-blkcst: float = None
-"""blanket direct cost (M$)"""
+    blkcst: float = 0.0
+    """blanket direct cost (M$)"""
 
+    c221: float = 0.0
+    """total account 221 cost (M$) - first wall, blanket, shield, support structure and div plates"""
 
-c221: float = None
-"""total account 221 cost (M$) - first wall, blanket, shield, support structure and div plates"""
+    c222: float = 0.0
+    """total account 222 cost (M$) - TF coils + PF coils"""
 
+    capcost: float = 0.0
+    """total capital cost including interest (M$)"""
 
-c222: float = None
-"""total account 222 cost (M$) - TF coils + PF coils"""
+    cconfix: float = 80.0
+    """fixed cost of superconducting cable ($/m)"""
 
+    cconshpf: float = 70.0
+    """cost of PF coil steel conduit/sheath ($/m)"""
 
-capcost: float = None
-"""total capital cost including interest (M$)"""
+    cconshtf: float = 75.0
+    """cost of TF coil steel conduit/sheath ($/m)"""
 
+    cdcost: float = 0.0
+    """current drive direct costs (M$)"""
 
-cconfix: float = None
-"""fixed cost of superconducting cable ($/m)"""
+    cdirt: float = 0.0
+    """total plant direct cost (M$)"""
 
+    life_hcd_fpy: float = 0.0
+    """Full power year lifetime of heating/current drive system (y)"""
 
-cconshpf: float = None
-"""cost of PF coil steel conduit/sheath ($/m)"""
+    cdrlife_cal: float = 0.0
+    """Calendar year lifetime of heating/current drive system (y)"""
 
+    f_t_plant_available: float = 0.75
+    """Total plant availability fraction; input if `i_plant_availability=0`"""
 
-cconshtf: float = None
-"""cost of TF coil steel conduit/sheath ($/m)"""
+    cpfact: float = 0.0
+    """Total plant capacity factor"""
 
+    cfind: list[float] = field(default_factory=lambda: [0.244, 0.244, 0.244, 0.29])
+    """indirect cost factor (func of lsa) (cost model = 0)"""
 
-cdcost: float = None
-"""current drive direct costs (M$)"""
+    cland: float = 19.2
+    """cost of land (M$)"""
 
+    coe: float = 0.0
+    """cost of electricity ($/MW-hr)"""
 
-cdirt: float = None
-"""total plant direct cost (M$)"""
+    coecap: float = 0.0
+    """capital cost of electricity (m$/kW-hr)"""
 
+    coefuelt: float = 0.0
+    """'fuel' (including replaceable components) contribution to cost of electricity (m$/kW-hr)"""
 
-life_hcd_fpy: float = None
-"""Full power year lifetime of heating/current drive system (y)"""
+    coeoam: float = 0.0
+    """operation and maintenance contribution to cost of electricity (m$/kW-hr)"""
 
+    concost: float = 0.0
+    """plant construction cost (M$)"""
 
-cdrlife_cal: float = None
-"""Calendar year lifetime of heating/current drive system (y)"""
+    costexp: float = 0.8
+    """cost exponent for scaling in 2015 costs model"""
 
+    costexp_pebbles: float = 0.6
+    """cost exponent for pebbles in 2015 costs model"""
 
-f_t_plant_available: float = None
-"""Total plant availability fraction; input if `i_plant_availability=0`"""
+    cost_factor_buildings: float = 1.0
+    """cost scaling factor for buildings"""
 
+    cost_factor_land: float = 1.0
+    """cost scaling factor for land"""
 
-cpfact: float = None
-"""Total plant capacity factor"""
+    cost_factor_tf_coils: float = 1.0
+    """cost scaling factor for TF coils"""
 
+    cost_factor_fwbs: float = 1.0
+    """cost scaling factor for fwbs"""
 
-cfind: list[float] = None
-"""indirect cost factor (func of lsa) (cost model = 0)"""
+    cost_factor_rh: float = 1.0
+    """cost scaling factor for remote handling"""
 
+    cost_factor_vv: float = 1.0
+    """cost scaling factor for vacuum vessel"""
 
-cland: float = None
-"""cost of land (M$)"""
+    cost_factor_bop: float = 1.0
+    """cost scaling factor for energy conversion system"""
 
+    cost_factor_misc: float = 1.0
+    """cost scaling factor for remaining subsystems"""
 
-coe: float = None
-"""cost of electricity ($/MW-hr)"""
+    maintenance_fwbs: float = 0.2
+    """Maintenance cost factor: first wall, blanket, shield, divertor"""
 
+    maintenance_gen: float = 0.05
+    """Maintenance cost factor: All other components except coils, vacuum vessel,
+    thermal shield, cryostat, land"""
 
-coecap: float = None
-"""capital cost of electricity (m$/kW-hr)"""
+    amortization: float = 13.6
+    """amortization factor (fixed charge factor) "A" (years)"""
 
+    cost_model: int = 1
+    """Switch for cost model:
+    - =0 use $ 1990 PROCESS model
+    - =1 use $ 2014 Kovari model
+    - =2 use user-provided model
+    """
 
-coefuelt: float = None
-"""'fuel' (including replaceable components) contribution to cost of electricity (m$/kW-hr)"""
+    i_cp_lifetime: int = 0
+    """Switch for the centrepost lifetime constraint
+    0 : The CP full power year lifetime is set by the user via cplife_input
+    1 : The CP lifetime is equal to the divertor lifetime
+    2 : The CP lifetime is equal to the breeding blankets lifetime
+    3 : The CP lifetime is equal to the plant lifetime
+    """
 
+    cowner: float = 0.15
+    """owner cost factor"""
 
-coeoam: float = None
-"""operation and maintenance contribution to cost of electricity (m$/kW-hr)"""
+    cplife_input: float = 2.0
+    """User input full power year lifetime of the centrepost (years) (i_cp_lifetime = 0)"""
 
+    cplife: float = 0.0
+    """Calculated full power year lifetime of centrepost (years)"""
 
-concost: float = None
-"""plant construction cost (M$)"""
+    cplife_cal: float = 0.0
+    """Calculated calendar year lifetime of centrepost (years)"""
 
+    cpstcst: float = 0.0
+    """ST centrepost direct cost (M$)"""
 
-costexp: float = None
-"""cost exponent for scaling in 2015 costs model"""
+    cpstflnc: float = 10.0
+    """allowable ST centrepost neutron fluence (MW-yr/m2)"""
 
+    crctcore: float = 0.0
+    """reactor core costs (categories 221, 222 and 223)"""
 
-costexp_pebbles: float = None
-"""cost exponent for pebbles in 2015 costs model"""
+    csi: float = 16.0
+    """allowance for site costs (M$)"""
 
+    cturbb: float = 38.0
+    """cost of turbine building (M$)"""
 
-cost_factor_buildings: float = None
-"""cost scaling factor for buildings"""
+    decomf: float = 0.1
+    """proportion of constructed cost required for decommissioning fund"""
 
+    dintrt: float = 0.0
+    """diff between borrowing and saving interest rates"""
 
-cost_factor_land: float = None
-"""cost scaling factor for land"""
+    divcst: float = 0.0
+    """divertor direct cost (M$)"""
 
+    life_div_fpy: float = 0.0
+    """Full power year lifetime of divertor (fpy)"""
 
-cost_factor_tf_coils: float = None
-"""cost scaling factor for TF coils"""
+    life_div: float = 0.0
+    """Calendar year lifetime of divertor (y)"""
 
+    dtlife: float = 0.0
+    """period prior to the end of the plant life that the decommissioning fund is used (years)"""
 
-cost_factor_fwbs: float = None
-"""cost scaling factor for fwbs"""
+    fcap0: float = 1.165
+    """average cost of money for construction of plant assuming design/construction time of six years"""
 
+    fcap0cp: float = 1.08
+    """average cost of money for replaceable components assuming lead time for these of two years"""
 
-cost_factor_rh: float = None
-"""cost scaling factor for remote handling"""
+    fcdfuel: float = 0.1
+    """fraction of current drive cost treated as fuel (if `ifueltyp = 1`)"""
 
+    fcontng: float = 0.195
+    """project contingency factor"""
 
-cost_factor_vv: float = None
-"""cost scaling factor for vacuum vessel"""
+    fcr0: float = 0.0966
+    """fixed charge rate during construction"""
 
+    fkind: float = 1.0
+    """multiplier for Nth of a kind costs"""
 
-cost_factor_bop: float = None
-"""cost scaling factor for energy conversion system"""
+    fwallcst: float = 0.0
+    """first wall cost (M$)"""
 
+    i_plant_availability: int = 2
+    """Switch for plant availability model:
+    - =0 use input value for f_t_plant_available
+    - =1 calculate f_t_plant_available using Taylor and Ward 1999 model
+    - =2 calculate f_t_plant_available using new (2015) model
+    - =3 calculate f_t_plant_available using ST model
+    """
 
-cost_factor_misc: float = None
-"""cost scaling factor for remaining subsystems"""
+    ibkt_life: int = 0
+    """Switch for fw/blanket lifetime calculation in availability module:
+    - =0 use neutron fluence model
+    - =1 use fusion power model (DEMO only)"""
 
+    life_dpa: float = 50
+    """Allowable DPA from DEMO fw/blanket lifetime calculation in availability module"""
 
-maintenance_fwbs: float = None
-"""Maintenance cost factor: first wall, blanket, shield, divertor"""
+    bktcycles: float = 1.0e3
+    """Number of fusion cycles to reach allowable DPA from DEMO fw/blanket lifetime calculation"""
 
+    avail_min: float = 0.75
+    """Minimum availability (`constraint equation 61`)"""
 
-maintenance_gen: float = None
-"""Maintenance cost factor: All other components except coils, vacuum vessel,
-thermal shield, cryostat, land"""
+    tok_build_cost_per_vol: float = 1283.0
+    """Unit cost for tokamak complex buildings, including building and site services ($/m3)"""
 
+    light_build_cost_per_vol: float = 270.0
+    """Unit cost for unshielded non-active buildings ($/m3)"""
 
-amortization: float = None
-"""amortization factor (fixed charge factor) "A" (years)"""
+    num_rh_systems: int = 4
+    """Number of remote handling systems (1-10)"""
 
+    conf_mag: float = 0.99
+    """c parameter, which determines the temperature margin at which magnet lifetime starts to decline"""
 
-cost_model: int = None
-"""Switch for cost model:
-- =0 use $ 1990 PROCESS model
-- =1 use $ 2014 Kovari model
-- =2 use user-provided model
-"""
+    div_prob_fail: float = 0.0002
+    """Divertor probability of failure (per op day)"""
 
+    div_umain_time: float = 0.25
+    """Divertor unplanned maintenance time (years)"""
 
-i_cp_lifetime: int = None
-"""Switch for the centrepost lifetime constraint
-0 : The CP full power year lifetime is set by the user via cplife_input
-1 : The CP lifetime is equal to the divertor lifetime
-2 : The CP lifetime is equal to the breeding blankets lifetime
-3 : The CP lifetime is equal to the plant lifetime
-"""
+    div_nref: float = 7000.0
+    """Reference value for cycle cycle life of divertor"""
 
+    div_nu: float = 14000.0
+    """The cycle when the divertor fails with 100% probability"""
 
-cowner: float = None
-"""owner cost factor"""
+    fwbs_nref: float = 20000.0
+    """Reference value for cycle life of blanket"""
 
+    fwbs_nu: float = 40000.0
+    """The cycle when the blanket fails with 100% probability"""
 
-cplife_input: float = None
-"""User input full power year lifetime of the centrepost (years) (i_cp_lifetime = 0)"""
+    fwbs_prob_fail: float = 0.0002
+    """Fwbs probability of failure (per op day)"""
 
+    fwbs_umain_time: float = 0.25
+    """Fwbs unplanned maintenance time (years)"""
 
-cplife: float = None
-"""Calculated full power year lifetime of centrepost (years)"""
+    redun_vacp: float = 25.0
+    """Vacuum system pump redundancy level (%)"""
 
+    redun_vac: int = 0
+    """Number of redundant vacuum pumps"""
 
-cplife_cal: float = None
-"""Calculated calendar year lifetime of centrepost (years)"""
+    t_plant_operational_total_yrs: float = 0.0
+    """Operational time (yrs)"""
 
+    t_blkt_replace_yrs: float = 0.5
+    """time taken to replace blanket (y) (`i_plant_availability=1`)"""
 
-cpstcst: float = None
-"""ST centrepost direct cost (M$)"""
+    tcomrepl: float = 0.5
+    """time taken to replace both blanket and divertor (y) (`i_plant_availability=1`)"""
 
+    t_div_replace_yrs: float = 0.25
+    """Time taken to replace divertor (y) (`i_plant_availability=1`)"""
 
-cpstflnc: float = None
-"""allowable ST centrepost neutron fluence (MW-yr/m2)"""
+    uubop: float = 0.02
+    """unplanned unavailability factor for balance of plant (`i_plant_availability=1`)"""
 
+    uucd: float = 0.02
+    """unplanned unavailability factor for current drive (`i_plant_availability=1`)"""
 
-crctcore: float = None
-"""reactor core costs (categories 221, 222 and 223)"""
+    uudiv: float = 0.04
+    """unplanned unavailability factor for divertor (`i_plant_availability=1`)"""
 
+    uufuel: float = 0.02
+    """unplanned unavailability factor for fuel system (`i_plant_availability=1`)"""
 
-csi: float = None
-"""allowance for site costs (M$)"""
+    uufw: float = 0.04
+    """unplanned unavailability factor for first wall (`i_plant_availability=1`)"""
 
+    uumag: float = 0.02
+    """unplanned unavailability factor for magnets (`i_plant_availability=1`)"""
 
-cturbb: float = None
-"""cost of turbine building (M$)"""
+    uuves: float = 0.04
+    """unplanned unavailability factor for vessel (`i_plant_availability=1`)"""
 
+    ifueltyp: int = 0
+    """Switch for fuel type:
+    - =2 treat initial blanket, divertor, first wall
+    as capital costs. Treat all later items and
+    fraction fcdfuel of CD equipment as fuel costs
+    - =1 treat blanket divertor, first wall and
+    fraction fcdfuel of CD equipment as fuel cost
+    - =0 treat these as capital cost
+    """
 
-decomf: float = None
-"""proportion of constructed cost required for decommissioning fund"""
+    ipnet: int = 0
+    """Switch for net electric power calculation:
+    - =0 scale so that always > 0
+    - =1 let go < 0 (no c-o-e)
+    """
 
+    ireactor: int = 1
+    """Switch for net electric power and cost of electricity calculations:
+    - =0 do not calculate MW(electric) or c-o-e
+    - =1 calculate MW(electric) and c-o-e
+    """
 
-dintrt: float = None
-"""diff between borrowing and saving interest rates"""
+    lsa: int = 4
+    """Level of safety assurance switch (generally, use 3 or 4):
+    - =1 truly passively safe plant
+    - =2,3 in-between
+    - =4 like current fission plant
+    """
 
+    moneyint: float = 0.0
+    """interest portion of capital cost (M$)"""
 
-divcst: float = None
-"""divertor direct cost (M$)"""
+    output_costs: int = 1
+    """Switch for costs output:
+    - =0 do not write cost-related outputs to file
+    - =1 write cost-related outputs to file
+    """
 
+    discount_rate: float = 0.0435
+    """effective cost of money in constant dollars"""
 
-life_div_fpy: float = None
-"""Full power year lifetime of divertor (fpy)"""
+    startupratio: float = 1.0
+    """ratio of additional HCD power for start-up to flat-top operational requirements"""
 
+    startuppwr: float = 0.0
+    """cost associated with additional HCD system power required on start-up ($)"""
 
-life_div: float = None
-"""Calendar year lifetime of divertor (y)"""
+    supercond_cost_model: int = 0
+    """Switch for superconductor cost model:
+    - =0 use $/kg
+    - =1 use $/kAm"""
 
+    life_plant: float = 30.0
+    """Full power year plant lifetime (years)"""
 
-dtlife: float = None
-"""period prior to the end of the plant life that the decommissioning fund is used (years)"""
+    tmain: float = None
+    """Maintenance time for replacing CP (years) (i_plant_availability = 3)"""
 
+    u_unplanned_cp: float = 0.0
+    """User-input CP unplanned unavailability (i_plant_availability = 3)"""
 
-fcap0: float = None
-"""average cost of money for construction of plant assuming design/construction time of six years"""
+    UCAD: float = 180.0
+    """unit cost for administration buildings (M$/m3)"""
 
+    UCAF: float = 1.5e6
+    """unit cost for aux facility power equipment ($)"""
 
-fcap0cp: float = None
-"""average cost of money for replaceable components assuming lead time for these of two years"""
+    UCAHTS: float = 31.0
+    """unit cost for aux heat transport equipment ($/W**exphts)"""
 
+    UCAP: float = 17.0
+    """unit cost of auxiliary transformer ($/kVA)"""
 
-fcdfuel: float = None
-"""fraction of current drive cost treated as fuel (if `ifueltyp = 1`)"""
+    ucblbe: float = 260.0
+    """unit cost for blanket beryllium ($/kg)"""
 
+    ucblbreed: float = 875.0
+    """unit cost for breeder material ($/kg) (`blktmodel>0`)"""
 
-fcontng: float = None
-"""project contingency factor"""
+    ucblli: float = 875.0
+    """unit cost for blanket lithium ($/kg) (30% Li6)"""
 
+    ucblli2o: float = 600.0
+    """unit cost for blanket Li_2O ($/kg)"""
 
-fcr0: float = None
-"""fixed charge rate during construction"""
+    ucbllipb: float = 10.3
+    """unit cost for blanket Li-Pb ($/kg) (30% Li6)"""
 
+    ucblss: float = 90.0
+    """unit cost for blanket stainless steel ($/kg)"""
 
-fkind: float = None
-"""multiplier for Nth of a kind costs"""
+    ucblvd: float = 200.0
+    """unit cost for blanket vanadium ($/kg)"""
 
+    UCBPMP: float = 2.925e5
+    """vacuum system backing pump cost ($)"""
 
-fwallcst: float = None
-"""first wall cost (M$)"""
+    ucbus: float = 0.123
+    """cost of aluminium bus for TF coil ($/A-m)"""
 
+    uccase: float = 50.0
+    """cost of superconductor case ($/kg)"""
 
-i_plant_availability: int = None
-"""Switch for plant availability model:
-- =0 use input value for f_t_plant_available
-- =1 calculate f_t_plant_available using Taylor and Ward 1999 model
-- =2 calculate f_t_plant_available using new (2015) model
-- =3 calculate f_t_plant_available using ST model
-"""
+    UCCO: float = 350.0
+    """unit cost for control buildings (M$/m3)"""
 
+    uccpcl1: float = 250.0
+    """cost of high strength tapered copper ($/kg)"""
 
-ibkt_life: int = None
-"""Switch for fw/blanket lifetime calculation in availability module:
-- =0 use neutron fluence model
-- =1 use fusion power model (DEMO only)"""
+    uccpclb: float = 150.0
+    """cost of TF outboard leg plate coils ($/kg)"""
 
+    UCCPMP: float = 3.9e5
+    """vacuum system cryopump cost ($)"""
 
-life_dpa: float = None
-"""Allowable DPA from DEMO fw/blanket lifetime calculation in availability module"""
+    UCCR: float = 460.0
+    """unit cost for cryogenic building (M$/vol)"""
 
+    uccry: float = 9.3e4
+    """heat transport system cryoplant costs ($/W**expcry)"""
 
-bktcycles: float = None
-"""Number of fusion cycles to reach allowable DPA from DEMO fw/blanket lifetime calculation"""
+    uccryo: float = 32.0
+    """unit cost for vacuum vessel ($/kg)"""
 
+    uccu: float = 75.0
+    """unit cost for copper in superconducting cable ($/kg)"""
 
-avail_min: float = None
-"""Minimum availability (`constraint equation 61`)"""
+    UCDGEN: float = 1.7e6
+    """cost per 8 MW diesel generator ($)"""
 
+    ucdiv: float = 2.8e5
+    """cost of divertor blade ($)"""
 
-tok_build_cost_per_vol: float = None
-"""Unit cost for tokamak complex buildings, including building and site services ($/m3)"""
+    UCDTC: float = 13.0
+    """detritiation, air cleanup cost ($/10000m3/hr)"""
 
+    UCDUCT: float = 4.225e4
+    """vacuum system duct cost ($/m)"""
 
-light_build_cost_per_vol: float = None
-"""Unit cost for unshielded non-active buildings ($/m3)"""
+    ucech: float = 3.0
+    """ECH system cost ($/W)"""
 
+    UCEL: float = 380.0
+    """unit cost for electrical equipment building (M$/m3)"""
 
-num_rh_systems: int = None
-"""Number of remote handling systems (1-10)"""
+    UCES1: float = 3.2e4
+    """MGF (motor-generator flywheel) cost factor ($/MVA**0.8)"""
 
+    UCES2: float = 8.8e3
+    """MGF (motor-generator flywheel) cost factor ($/MJ**0.8)"""
 
-conf_mag: float = None
-"""c parameter, which determines the temperature margin at which magnet lifetime starts to decline"""
+    ucf1: float = 2.23e7
+    """cost of fuelling system ($)"""
 
+    ucfnc: float = 35.0
+    """outer PF coil fence support cost ($/kg)"""
 
-div_prob_fail: float = None
-"""Divertor probability of failure (per op day)"""
+    UCFPR: float = 4.4e7
+    """cost of 60g/day tritium processing unit ($)"""
 
+    ucfuel: float = 3.45
+    """unit cost of D-T fuel (M$/year/1200MW)"""
 
-div_umain_time: float = None
-"""Divertor unplanned maintenance time (years)"""
+    UCFWA: float = 6.0e4
+    """first wall armour cost ($/m2)"""
 
+    UCFWPS: float = 1.0e7
+    """first wall passive stabiliser cost ($)"""
 
-div_nref: float = None
-"""Reference value for cycle cycle life of divertor"""
+    UCFWS: float = 5.3e4
+    """first wall structure cost ($/m2)"""
 
+    UCGSS: float = 35.0
+    """cost of reactor structure ($/kg)"""
 
-div_nu: float = None
-"""The cycle when the divertor fails with 100% probability"""
+    uche3: float = 1.0e6
+    """cost of helium-3 ($/kg)"""
 
+    uchrs: float = 87.9e6
+    """cost of heat rejection system ($)"""
 
-fwbs_nref: float = None
-"""Reference value for cycle life of blanket"""
+    uchts: list[float] = field(default_factory=lambda: [15.3, 19.1])
+    """cost of heat transport system equipment per loop ($/W); dependent on coolant type (i_blkt_coolant_type)"""
 
+    uciac: float = 1.5e8
+    """cost of instrumentation, control & diagnostics ($)"""
 
-fwbs_nu: float = None
-"""The cycle when the blanket fails with 100% probability"""
+    ucich: float = 3.0
+    """ICH system cost ($/W)"""
 
+    UCINT: float = 35.0
+    """superconductor intercoil structure cost ($/kg)"""
 
-fwbs_prob_fail: float = None
-"""Fwbs probability of failure (per op day)"""
+    uclh: float = 3.3
+    """lower hybrid system cost ($/W)"""
 
+    UCLV: float = 16.0
+    """low voltage system cost ($/kVA)"""
 
-fwbs_umain_time: float = None
-"""Fwbs unplanned maintenance time (years)"""
+    UCMB: float = 260.0
+    """unit cost for reactor maintenance building (M$/m3)"""
 
+    ucme: float = 1.25e8
+    """cost of maintenance equipment ($)"""
 
-redun_vacp: float = None
-"""Vacuum system pump redundancy level (%)"""
+    ucmisc: float = 2.5e7
+    """miscellaneous plant allowance ($)"""
 
+    ucnbi: float = 3.3
+    """NBI system cost ($/W)"""
 
-redun_vac: int = None
-"""Number of redundant vacuum pumps"""
+    UCNBV: float = 1000.0
+    """cost of nuclear building ventilation ($/m3)"""
 
+    ucoam: list[float] = field(default_factory=lambda: [68.8, 68.8, 68.8, 74.4])
+    """annual cost of operation and maintenance (M$/year/1200MW**0.5)"""
 
-t_plant_operational_total_yrs: float = None
-"""Operational time (yrs)"""
+    ucpens: float = 32.0
+    """penetration shield cost ($/kg)"""
 
+    ucpfb: float = 210.0
+    """cost of PF coil buses ($/kA-m)"""
 
-t_blkt_replace_yrs: float = None
-"""time taken to replace blanket (y) (`i_plant_availability=1`)"""
+    ucpfbk: float = 1.66e4
+    """cost of PF coil DC breakers ($/MVA**0.7)"""
 
+    ucpfbs: float = 4.9e3
+    """cost of PF burn power supplies ($/kW**0.7)"""
 
-tcomrepl: float = None
-"""time taken to replace both blanket and divertor (y) (`i_plant_availability=1`)"""
+    ucpfcb: float = 7.5e4
+    """cost of PF coil AC breakers ($/circuit)"""
 
+    ucpfdr1: float = 150.0
+    """cost factor for dump resistors ($/MJ)"""
 
-t_div_replace_yrs: float = None
-"""Time taken to replace divertor (y) (`i_plant_availability=1`)"""
+    ucpfic: float = 1.0e4
+    """cost of PF instrumentation and control ($/channel)"""
 
+    ucpfps: float = 3.5e4
+    """cost of PF coil pulsed power supplies ($/MVA)"""
 
-uubop: float = None
-"""unplanned unavailability factor for balance of plant (`i_plant_availability=1`)"""
+    UCPHX: float = 15.0
+    """primary heat transport cost ($/W**exphts)"""
 
+    UCPP: float = 48.0
+    """cost of primary power transformers ($/kVA**0.9)"""
 
-uucd: float = None
-"""unplanned unavailability factor for current drive (`i_plant_availability=1`)"""
+    ucrb: float = 400.0
+    """cost of reactor building (M$/m3)"""
 
+    ucsc: list[float] = field(
+        default_factory=lambda: [
+            600.0,
+            600.0,
+            300.0,
+            600.0,
+            600.0,
+            600.0,
+            300.0,
+            1200.0,
+            1200.0,
+        ]
+    )
+    """cost of superconductor ($/kg)"""
 
-uudiv: float = None
-"""unplanned unavailability factor for divertor (`i_plant_availability=1`)"""
+    sc_mat_cost_0: list[float] = field(
+        default_factory=lambda: [4.8, 2.0, 1.0, 4.8, 4.8, 47.4, 1.0, 47.4, 47.4]
+    )
+    """cost of superconductor ($/kA m) at 6.4 T, 4.2 K"""
 
+    UCSH: float = 115.0
+    """cost of shops and warehouses (M$/m3)"""
 
-uufuel: float = None
-"""unplanned unavailability factor for fuel system (`i_plant_availability=1`)"""
+    ucshld: float = 32.0
+    """cost of shield structural steel ($/kg)"""
 
+    UCSWYD: float = 1.84e7
+    """switchyard equipment costs ($)"""
 
-uufw: float = None
-"""unplanned unavailability factor for first wall (`i_plant_availability=1`)"""
+    uctfbr: float = 1.22
+    """cost of TF coil breakers ($/W**0.7)"""
 
+    uctfbus: float = 100.0
+    """cost of TF coil bus ($/kg)"""
 
-uumag: float = None
-"""unplanned unavailability factor for magnets (`i_plant_availability=1`)"""
+    UCTFDR: float = 1.75e-4
+    """cost of TF coil dump resistors ($/J)"""
 
+    UCTFGR: float = 5000.0
+    """additional cost of TF coil dump resistors ($/coil)"""
 
-uuves: float = None
-"""unplanned unavailability factor for vessel (`i_plant_availability=1`)"""
+    UCTFIC: float = 1.0e4
+    """cost of TF coil instrumentation and control ($/coil/30)"""
 
+    uctfps: float = 24.0
+    """cost of TF coil power supplies ($/W**0.7)"""
 
-ifueltyp: int = None
-"""Switch for fuel type:
-- =2 treat initial blanket, divertor, first wall
-as capital costs. Treat all later items and
-fraction fcdfuel of CD equipment as fuel costs
-- =1 treat blanket divertor, first wall and
-fraction fcdfuel of CD equipment as fuel cost
-- =0 treat these as capital cost
-"""
+    uctfsw: float = 1.0
+    """cost of TF coil slow dump switches ($/A)"""
 
+    UCTPMP: float = 1.105e5
+    """cost of turbomolecular pump ($)"""
 
-ipnet: int = None
-"""Switch for net electric power calculation:
-- =0 scale so that always > 0
-- =1 let go < 0 (no c-o-e)
-"""
+    UCTR: float = 370.0
+    """cost of tritium building ($/m3)"""
 
+    ucturb: list[float] = field(default_factory=lambda: [230.0e6, 245.0e6])
+    """cost of turbine plant equipment ($) (dependent on coolant type i_blkt_coolant_type)"""
 
-ireactor: int = None
-"""Switch for net electric power and cost of electricity calculations:
-- =0 do not calculate MW(electric) or c-o-e
-- =1 calculate MW(electric) and c-o-e
-"""
+    UCVALV: float = 3.9e5
+    """vacuum system valve cost ($)"""
 
+    UCVDSH: float = 26.0
+    """vacuum duct shield cost ($/kg)"""
 
-lsa: int = None
-"""Level of safety assurance switch (generally, use 3 or 4):
-- =1 truly passively safe plant
-- =2,3 in-between
-- =4 like current fission plant
-"""
+    UCVIAC: float = 1.3e6
+    """vacuum system instrumentation and control cost ($)"""
 
+    ucwindpf: float = 465.0
+    """cost of PF coil superconductor windings ($/m)"""
 
-moneyint: float = None
-"""interest portion of capital cost (M$)"""
+    ucwindtf: float = 480.0
+    """cost of TF coil superconductor windings ($/m)"""
 
+    UCWS: float = 460.0
+    """cost of active assembly shop ($/m3)"""
 
-output_costs: int = None
-"""Switch for costs output:
-- =0 do not write cost-related outputs to file
-- =1 write cost-related outputs to file
-"""
+    ucwst: list[float] = field(default_factory=lambda: [0.0, 3.94, 5.91, 7.88])
+    """cost of waste disposal (M$/y/1200MW)"""
 
 
-discount_rate: float = None
-"""effective cost of money in constant dollars"""
-
-
-startupratio: float = None
-"""ratio of additional HCD power for start-up to flat-top operational requirements"""
-
-
-startuppwr: float = None
-"""cost associated with additional HCD system power required on start-up ($)"""
-
-
-supercond_cost_model: int = None
-"""Switch for superconductor cost model:
-- =0 use $/kg
-- =1 use $/kAm"""
-
-
-life_plant: float = None
-"""Full power year plant lifetime (years)"""
-
-
-tmain: float = None
-"""Maintenance time for replacing CP (years) (i_plant_availability = 3)"""
-
-
-u_unplanned_cp: float = None
-"""User-input CP unplanned unavailability (i_plant_availability = 3)"""
-
-
-UCAD: float = 180.0
-"""unit cost for administration buildings (M$/m3)"""
-
-
-UCAF: float = 1.5e6
-"""unit cost for aux facility power equipment ($)"""
-
-
-UCAHTS: float = 31.0
-"""unit cost for aux heat transport equipment ($/W**exphts)"""
-
-
-UCAP: float = 17.0
-"""unit cost of auxiliary transformer ($/kVA)"""
-
-
-ucblbe: float = None
-"""unit cost for blanket beryllium ($/kg)"""
-
-
-ucblbreed: float = None
-"""unit cost for breeder material ($/kg) (`blktmodel>0`)"""
-
-
-ucblli: float = None
-"""unit cost for blanket lithium ($/kg) (30% Li6)"""
-
-
-ucblli2o: float = None
-"""unit cost for blanket Li_2O ($/kg)"""
-
-
-ucbllipb: float = None
-"""unit cost for blanket Li-Pb ($/kg) (30% Li6)"""
-
-
-ucblss: float = None
-"""unit cost for blanket stainless steel ($/kg)"""
-
-
-ucblvd: float = None
-"""unit cost for blanket vanadium ($/kg)"""
-
-
-UCBPMP: float = 2.925e5
-"""vacuum system backing pump cost ($)"""
-
-
-ucbus: float = None
-"""cost of aluminium bus for TF coil ($/A-m)"""
-
-
-uccase: float = None
-"""cost of superconductor case ($/kg)"""
-
-
-UCCO: float = 350.0
-"""unit cost for control buildings (M$/m3)"""
-
-
-uccpcl1: float = None
-"""cost of high strength tapered copper ($/kg)"""
-
-
-uccpclb: float = None
-"""cost of TF outboard leg plate coils ($/kg)"""
-
-
-UCCPMP: float = 3.9e5
-"""vacuum system cryopump cost ($)"""
-
-
-UCCR: float = 460.0
-"""unit cost for cryogenic building (M$/vol)"""
-
-
-uccry: float = None
-"""heat transport system cryoplant costs ($/W**expcry)"""
-
-
-uccryo: float = None
-"""unit cost for vacuum vessel ($/kg)"""
-
-
-uccu: float = None
-"""unit cost for copper in superconducting cable ($/kg)"""
-
-
-UCDGEN: float = 1.7e6
-"""cost per 8 MW diesel generator ($)"""
-
-
-ucdiv: float = None
-"""cost of divertor blade ($)"""
-
-
-UCDTC: float = 13.0
-"""detritiation, air cleanup cost ($/10000m3/hr)"""
-
-
-UCDUCT: float = 4.225e4
-"""vacuum system duct cost ($/m)"""
-
-
-ucech: float = None
-"""ECH system cost ($/W)"""
-
-
-UCEL: float = 380.0
-"""unit cost for electrical equipment building (M$/m3)"""
-
-
-UCES1: float = 3.2e4
-"""MGF (motor-generator flywheel) cost factor ($/MVA**0.8)"""
-
-
-UCES2: float = 8.8e3
-"""MGF (motor-generator flywheel) cost factor ($/MJ**0.8)"""
-
-
-ucf1: float = None
-"""cost of fuelling system ($)"""
-
-
-ucfnc: float = None
-"""outer PF coil fence support cost ($/kg)"""
-
-
-UCFPR: float = 4.4e7
-"""cost of 60g/day tritium processing unit ($)"""
-
-
-ucfuel: float = None
-"""unit cost of D-T fuel (M$/year/1200MW)"""
-
-
-UCFWA: float = 6.0e4
-"""first wall armour cost ($/m2)"""
-
-
-UCFWPS: float = 1.0e7
-"""first wall passive stabiliser cost ($)"""
-
-
-UCFWS: float = 5.3e4
-"""first wall structure cost ($/m2)"""
-
-
-UCGSS: float = 35.0
-"""cost of reactor structure ($/kg)"""
-
-
-uche3: float = None
-"""cost of helium-3 ($/kg)"""
-
-
-uchrs: float = None
-"""cost of heat rejection system ($)"""
-
-
-uchts: list[float] = None
-"""cost of heat transport system equipment per loop ($/W); dependent on coolant type (i_blkt_coolant_type)"""
-
-
-uciac: float = None
-"""cost of instrumentation, control & diagnostics ($)"""
-
-
-ucich: float = None
-"""ICH system cost ($/W)"""
-
-
-UCINT: float = 35.0
-"""superconductor intercoil structure cost ($/kg)"""
-
-
-uclh: float = None
-"""lower hybrid system cost ($/W)"""
-
-
-UCLV: float = 16.0
-"""low voltage system cost ($/kVA)"""
-
-
-UCMB: float = 260.0
-"""unit cost for reactor maintenance building (M$/m3)"""
-
-
-ucme: float = None
-"""cost of maintenance equipment ($)"""
-
-
-ucmisc: float = None
-"""miscellaneous plant allowance ($)"""
-
-
-ucnbi: float = None
-"""NBI system cost ($/W)"""
-
-
-UCNBV: float = 1000.0
-"""cost of nuclear building ventilation ($/m3)"""
-
-
-ucoam: list[float] = None
-"""annual cost of operation and maintenance (M$/year/1200MW**0.5)"""
-
-
-ucpens: float = None
-"""penetration shield cost ($/kg)"""
-
-
-ucpfb: float = None
-"""cost of PF coil buses ($/kA-m)"""
-
-
-ucpfbk: float = None
-"""cost of PF coil DC breakers ($/MVA**0.7)"""
-
-
-ucpfbs: float = None
-"""cost of PF burn power supplies ($/kW**0.7)"""
-
-
-ucpfcb: float = None
-"""cost of PF coil AC breakers ($/circuit)"""
-
-
-ucpfdr1: float = None
-"""cost factor for dump resistors ($/MJ)"""
-
-
-ucpfic: float = None
-"""cost of PF instrumentation and control ($/channel)"""
-
-
-ucpfps: float = None
-"""cost of PF coil pulsed power supplies ($/MVA)"""
-
-
-UCPHX: float = 15.0
-"""primary heat transport cost ($/W**exphts)"""
-
-
-UCPP: float = 48.0
-"""cost of primary power transformers ($/kVA**0.9)"""
-
-
-ucrb: float = None
-"""cost of reactor building (M$/m3)"""
-
-
-ucsc: list[float] = None
-"""cost of superconductor ($/kg)"""
-
-
-sc_mat_cost_0: list[float] = None
-"""cost of superconductor ($/kA m) at 6.4 T, 4.2 K"""
-
-
-UCSH: float = 115.0
-"""cost of shops and warehouses (M$/m3)"""
-
-
-ucshld: float = None
-"""cost of shield structural steel ($/kg)"""
-
-
-UCSWYD: float = 1.84e7
-"""switchyard equipment costs ($)"""
-
-
-uctfbr: float = None
-"""cost of TF coil breakers ($/W**0.7)"""
-
-
-uctfbus: float = None
-"""cost of TF coil bus ($/kg)"""
-
-
-UCTFDR: float = 1.75e-4
-"""cost of TF coil dump resistors ($/J)"""
-
-
-UCTFGR: float = 5000.0
-"""additional cost of TF coil dump resistors ($/coil)"""
-
-
-UCTFIC: float = 1.0e4
-"""cost of TF coil instrumentation and control ($/coil/30)"""
-
-
-uctfps: float = None
-"""cost of TF coil power supplies ($/W**0.7)"""
-
-
-uctfsw: float = None
-"""cost of TF coil slow dump switches ($/A)"""
-
-
-UCTPMP: float = 1.105e5
-"""cost of turbomolecular pump ($)"""
-
-
-UCTR: float = 370.0
-"""cost of tritium building ($/m3)"""
-
-
-ucturb: list[float] = None
-"""cost of turbine plant equipment ($) (dependent on coolant type i_blkt_coolant_type)"""
-
-
-UCVALV: float = 3.9e5
-"""vacuum system valve cost ($)"""
-
-
-UCVDSH: float = 26.0
-"""vacuum duct shield cost ($/kg)"""
-
-
-UCVIAC: float = 1.3e6
-"""vacuum system instrumentation and control cost ($)"""
-
-
-ucwindpf: float = None
-"""cost of PF coil superconductor windings ($/m)"""
-
-
-ucwindtf: float = None
-"""cost of TF coil superconductor windings ($/m)"""
-
-
-UCWS: float = 460.0
-"""cost of active assembly shop ($/m3)"""
-
-
-ucwst: list[float] = None
-"""cost of waste disposal (M$/y/1200MW)"""
-
-
-def init_cost_variables():
-    global c228
-    c228 = 0.0
-
-    global c229
-    c229 = 0.0
-
-    global c23
-    c23 = 0.0
-
-    global c25
-    c25 = 0.0
-
-    global c26
-    c26 = 0.0
-
-    global cindrt
-    cindrt = 0.0
-
-    global ccont
-    ccont = 0.0
-
-    global c226
-    c226 = 0.0
-
-    global c2261
-    c2261 = 0.0
-
-    global c2262
-    c2262 = 0.0
-
-    global c2263
-    c2263 = 0.0
-
-    global c227
-    c227 = 0.0
-
-    global c2271
-    c2271 = 0.0
-
-    global c2272
-    c2272 = 0.0
-
-    global c2273
-    c2273 = 0.0
-
-    global c2274
-    c2274 = 0.0
-
-    global c24
-    c24 = 0.0
-
-    global c241
-    c241 = 0.0
-
-    global c242
-    c242 = 0.0
-
-    global c243
-    c243 = 0.0
-
-    global c244
-    c244 = 0.0
-
-    global c245
-    c245 = 0.0
-
-    global c21
-    c21 = 0.0
-
-    global c211
-    c211 = 0.0
-
-    global c212
-    c212 = 0.0
-
-    global c213
-    c213 = 0.0
-
-    global c214
-    c214 = 0.0
-
-    global c2141
-    c2141 = 0.0
-
-    global c2142
-    c2142 = 0.0
-
-    global c215
-    c215 = 0.0
-
-    global c216
-    c216 = 0.0
-
-    global c217
-    c217 = 0.0
-
-    global c2171
-    c2171 = 0.0
-
-    global c2172
-    c2172 = 0.0
-
-    global c2173
-    c2173 = 0.0
-
-    global c2174
-    c2174 = 0.0
-
-    global c22
-    c22 = 0.0
-
-    global c2211
-    c2211 = 0.0
-
-    global c2212
-    c2212 = 0.0
-
-    global c22121
-    c22121 = 0.0
-
-    global c22122
-    c22122 = 0.0
-
-    global c22123
-    c22123 = 0.0
-
-    global c22124
-    c22124 = 0.0
-
-    global c22125
-    c22125 = 0.0
-
-    global c22126
-    c22126 = 0.0
-
-    global c22127
-    c22127 = 0.0
-
-    global c2213
-    c2213 = 0.0
-
-    global c22131
-    c22131 = 0.0
-
-    global c22132
-    c22132 = 0.0
-
-    global c2214
-    c2214 = 0.0
-
-    global c2215
-    c2215 = 0.0
-
-    global c2221
-    c2221 = 0.0
-
-    global c22211
-    c22211 = 0.0
-
-    global c22212
-    c22212 = 0.0
-
-    global c22213
-    c22213 = 0.0
-
-    global c22214
-    c22214 = 0.0
-
-    global c22215
-    c22215 = 0.0
-
-    global c2222
-    c2222 = 0.0
-
-    global c22221
-    c22221 = 0.0
-
-    global c22222
-    c22222 = 0.0
-
-    global c22223
-    c22223 = 0.0
-
-    global c22224
-    c22224 = 0.0
-
-    global c2223
-    c2223 = 0.0
-
-    global c223
-    c223 = 0.0
-
-    global c2231
-    c2231 = 0.0
-
-    global c2232
-    c2232 = 0.0
-
-    global c2233
-    c2233 = 0.0
-
-    global c2234
-    c2234 = 0.0
-
-    global c224
-    c224 = 0.0
-
-    global c2241
-    c2241 = 0.0
-
-    global c2242
-    c2242 = 0.0
-
-    global c2243
-    c2243 = 0.0
-
-    global c2244
-    c2244 = 0.0
-
-    global c2245
-    c2245 = 0.0
-
-    global c2246
-    c2246 = 0.0
-
-    global c225
-    c225 = 0.0
-
-    global c2251
-    c2251 = 0.0
-
-    global c22511
-    c22511 = 0.0
-
-    global c22512
-    c22512 = 0.0
-
-    global c22513
-    c22513 = 0.0
-
-    global c22514
-    c22514 = 0.0
-
-    global c22515
-    c22515 = 0.0
-
-    global c2252
-    c2252 = 0.0
-
-    global c22521
-    c22521 = 0.0
-
-    global c22522
-    c22522 = 0.0
-
-    global c22523
-    c22523 = 0.0
-
-    global c22524
-    c22524 = 0.0
-
-    global c22525
-    c22525 = 0.0
-
-    global c22526
-    c22526 = 0.0
-
-    global c22527
-    c22527 = 0.0
-
-    global c2253
-    c2253 = 0.0
-
-    global chx
-    chx = 0.0
-
-    global cpp
-    cpp = 0.0
-
-    global cppa
-    cppa = 0.0
-
-    global c22128
-    c22128 = 0.0
-
-    global \
-        abktflnc, \
-        adivflnc, \
-        blkcst, \
-        c221, \
-        c222, \
-        capcost, \
-        cconfix, \
-        cconshpf, \
-        cconshtf, \
-        cdcost, \
-        cdirt, \
-        cdrlife_cal, \
-        cpfact, \
-        cfind, \
-        cland, \
-        coe, \
-        coecap, \
-        coefuelt, \
-        coeoam, \
-        concost, \
-        costexp, \
-        costexp_pebbles, \
-        cost_factor_buildings, \
-        cost_factor_land, \
-        cost_factor_tf_coils, \
-        cost_factor_fwbs, \
-        cost_factor_rh, \
-        cost_factor_vv, \
-        cost_factor_bop, \
-        cost_factor_misc, \
-        maintenance_fwbs, \
-        maintenance_gen, \
-        amortization, \
-        cost_model, \
-        i_cp_lifetime, \
-        cowner, \
-        cplife_input, \
-        cplife, \
-        cplife_cal, \
-        cpstcst, \
-        cpstflnc, \
-        crctcore, \
-        csi, \
-        cturbb, \
-        decomf, \
-        dintrt, \
-        divcst, \
-        dtlife, \
-        fcap0, \
-        fcap0cp, \
-        fcdfuel, \
-        fcontng, \
-        fcr0, \
-        fkind, \
-        fwallcst, \
-        ibkt_life, \
-        life_dpa, \
-        bktcycles, \
-        avail_min, \
-        tok_build_cost_per_vol, \
-        light_build_cost_per_vol, \
-        num_rh_systems, \
-        conf_mag, \
-        div_prob_fail, \
-        div_umain_time, \
-        div_nref, \
-        div_nu, \
-        fwbs_nref, \
-        fwbs_nu, \
-        fwbs_prob_fail, \
-        fwbs_umain_time, \
-        redun_vacp, \
-        redun_vac, \
-        tcomrepl, \
-        uubop, \
-        uucd, \
-        uudiv, \
-        uufuel, \
-        uufw, \
-        uumag, \
-        uuves, \
-        ifueltyp, \
-        ipnet, \
-        ireactor, \
-        lsa, \
-        moneyint, \
-        output_costs, \
-        discount_rate, \
-        startupratio, \
-        startuppwr, \
-        supercond_cost_model, \
-        u_unplanned_cp, \
-        ucblbe, \
-        ucblbreed, \
-        ucblli, \
-        ucblli2o, \
-        ucbllipb, \
-        ucblss, \
-        ucblvd, \
-        ucbus, \
-        uccase, \
-        uccpcl1, \
-        uccpclb, \
-        uccry, \
-        uccryo, \
-        uccu, \
-        ucdiv, \
-        ucech, \
-        ucf1, \
-        ucfnc, \
-        ucfuel, \
-        uche3, \
-        uchrs, \
-        uchts, \
-        uciac, \
-        ucich, \
-        uclh, \
-        ucme, \
-        ucmisc, \
-        ucnbi, \
-        ucoam, \
-        ucpens, \
-        ucpfb, \
-        ucpfbk, \
-        ucpfbs, \
-        ucpfcb, \
-        ucpfdr1, \
-        ucpfps, \
-        ucrb, \
-        ucsc, \
-        sc_mat_cost_0, \
-        ucshld, \
-        uctfbr, \
-        uctfbus, \
-        uctfps, \
-        uctfsw, \
-        ucturb, \
-        ucwindpf, \
-        ucwindtf, \
-        ucwst, \
-        ucpfic, \
-        life_hcd_fpy, \
-        f_t_plant_available, \
-        life_div_fpy, \
-        life_div, \
-        i_plant_availability, \
-        t_plant_operational_total_yrs, \
-        t_blkt_replace_yrs, \
-        t_div_replace_yrs, \
-        life_plant
-
-    abktflnc = 5.0
-    adivflnc = 7.0
-    blkcst = 0.0
-    c221 = 0.0
-    c222 = 0.0
-    capcost = 0.0
-    cconfix = 80.0
-    cconshpf = 70.0
-    cconshtf = 75.0
-    cdcost = 0.0
-    cdirt = 0.0
-    life_hcd_fpy = 0.0
-    cdrlife_cal = 0.0
-    f_t_plant_available = 0.75
-    cpfact = 0.0
-    cfind = [0.244, 0.244, 0.244, 0.29]
-    cland = 19.2
-    coe = 0.0
-    coecap = 0.0
-    coefuelt = 0.0
-    coeoam = 0.0
-    concost = 0.0
-    costexp = 0.8
-    costexp_pebbles = 0.6
-    cost_factor_buildings = 1.0
-    cost_factor_land = 1.0
-    cost_factor_tf_coils = 1.0
-    cost_factor_fwbs = 1.0
-    cost_factor_rh = 1.0
-    cost_factor_vv = 1.0
-    cost_factor_bop = 1.0
-    cost_factor_misc = 1.0
-    maintenance_fwbs = 0.2
-    maintenance_gen = 0.05
-    amortization = 13.6
-    cost_model = 1
-    cowner = 0.15
-    cplife = 0.0
-    cplife_cal = 0.0
-    cpstcst = 0.0
-    cpstflnc = 10.0
-    crctcore = 0.0
-    csi = 16.0
-    cturbb = 38.0
-    decomf = 0.1
-    dintrt = 0.0
-    divcst = 0.0
-    life_div_fpy = 0.0
-    life_div = 0.0
-    dtlife = 0.0
-    fcap0 = 1.165
-    fcap0cp = 1.08
-    fcdfuel = 0.1
-    fcontng = 0.195
-    fcr0 = 0.0966
-    fkind = 1.0
-    fwallcst = 0.0
-    i_plant_availability = 2
-    ibkt_life = 0
-    life_dpa = 50
-    bktcycles = 1.0e3
-    avail_min = 0.75
-    tok_build_cost_per_vol = 1283.0
-    light_build_cost_per_vol = 270.0
-    num_rh_systems = 4
-    conf_mag = 0.99
-    div_prob_fail = 0.0002
-    div_umain_time = 0.25
-    div_nref = 7000.0
-    div_nu = 14000.0
-    fwbs_nref = 20000.0
-    fwbs_nu = 40000.0
-    fwbs_prob_fail = 0.0002
-    fwbs_umain_time = 0.25
-    redun_vacp = 25.0
-    redun_vac = 0
-    t_plant_operational_total_yrs = 0.0
-    t_blkt_replace_yrs = 0.5
-    tcomrepl = 0.5
-    t_div_replace_yrs = 0.25
-    uubop = 0.02
-    uucd = 0.02
-    uudiv = 0.04
-    uufuel = 0.02
-    uufw = 0.04
-    uumag = 0.02
-    uuves = 0.04
-    ifueltyp = 0
-    ipnet = 0
-    ireactor = 1
-    lsa = 4
-    moneyint = 0.0
-    output_costs = 1
-    discount_rate = 0.0435
-    startupratio = 1.0
-    startuppwr = 0.0
-    life_plant = 30.0
-    ucblbe = 260.0
-    ucblbreed = 875.0
-    ucblli = 875.0
-    ucblli2o = 600.0
-    ucbllipb = 10.3
-    ucblss = 90.0
-    ucblvd = 200.0
-    ucbus = 0.123
-    uccase = 50.0
-    uccpcl1 = 250.0
-    uccpclb = 150.0
-    uccry = 9.3e4
-    uccryo = 32.0
-    uccu = 75.0
-    ucdiv = 2.8e5
-    ucech = 3.0
-    ucf1 = 2.23e7
-    ucfnc = 35.0
-    ucfuel = 3.45
-    uche3 = 1.0e6
-    uchrs = 87.9e6
-    uchts = [15.3, 19.1]
-    uciac = 1.5e8
-    ucich = 3.0
-    uclh = 3.3
-    ucme = 1.25e8
-    ucmisc = 2.5e7
-    ucnbi = 3.3
-    ucoam = [68.8, 68.8, 68.8, 74.4]
-    ucpens = 32.0
-    ucpfb = 210.0
-    ucpfbk = 1.66e4
-    ucpfbs = 4.9e3
-    ucpfcb = 7.5e4
-    ucpfdr1 = 150.0
-    ucpfic = 1.0e4
-    ucpfps = 3.5e4
-    ucrb = 400.0
-    ucsc = [
-        600.0,
-        600.0,
-        300.0,
-        600.0,
-        600.0,
-        600.0,
-        300.0,
-        1200.0,
-        1200.0,
-    ]
-    sc_mat_cost_0 = [4.8, 2.0, 1.0, 4.8, 4.8, 47.4, 1.0, 47.4, 47.4]
-    supercond_cost_model = 0
-    ucshld = 32.0
-    uctfbr = 1.22
-    uctfbus = 100.0
-    uctfps = 24.0
-    uctfsw = 1.0
-    ucturb = [230.0e6, 245.0e6]
-    ucwindpf = 465.0
-    ucwindtf = 480.0
-    ucwst = [0.0, 3.94, 5.91, 7.88]
-    u_unplanned_cp = 0.0
-    i_cp_lifetime = 0
-    cplife_input = 2.0
+CREATE_DICTS_FROM_DATACLASS = CostData

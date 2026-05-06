@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
     build_variables,
-    cost_variables,
     current_drive_variables,
     first_wall_variables,
     fwbs_variables,
@@ -71,11 +70,11 @@ class Costs2015(Model):
         )
 
         # Save as concost, the variable used as a Figure of Merit (M$)
-        cost_variables.concost = self.data.costs_2015.total_costs / 1.0e6
+        self.data.costs.concost = self.data.costs_2015.total_costs / 1.0e6
 
         # Electrical output (given availability) for a whole year
         self.data.costs_2015.mean_electric_output = (
-            heat_transport_variables.p_plant_electric_net_mw * cost_variables.cpfact
+            heat_transport_variables.p_plant_electric_net_mw * self.data.costs.cpfact
         )
         self.data.costs_2015.annual_electric_output = (
             self.data.costs_2015.mean_electric_output * 24.0e0 * 365.25e0
@@ -84,7 +83,7 @@ class Costs2015(Model):
         # Annual maintenance cost.
         self.data.costs_2015.maintenance = (
             self.data.costs_2015.s_cost[26] + self.data.costs_2015.s_cost[37]
-        ) * cost_variables.maintenance_fwbs + (
+        ) * self.data.costs.maintenance_fwbs + (
             self.data.costs_2015.s_cost[8]
             + self.data.costs_2015.s_cost[30]
             + self.data.costs_2015.s_cost[33]
@@ -101,20 +100,20 @@ class Costs2015(Model):
             + self.data.costs_2015.s_cost[52]
             + self.data.costs_2015.s_cost[53]
             + self.data.costs_2015.s_cost[57]
-        ) * cost_variables.maintenance_gen
+        ) * self.data.costs.maintenance_gen
 
         # Levelized cost of electricity (LCOE) ($/MWh)
         if self.data.costs_2015.annual_electric_output > 0.00001:
-            cost_variables.coe = (
+            self.data.costs.coe = (
                 1.0e0 / self.data.costs_2015.annual_electric_output
             ) * (
-                self.data.costs_2015.total_costs / cost_variables.amortization
+                self.data.costs_2015.total_costs / self.data.costs.amortization
                 + self.data.costs_2015.maintenance
             )
 
         # Switch on output if there is a NaN error
-        if (abs(cost_variables.concost) > 9.99e99) or (
-            cost_variables.concost != cost_variables.concost
+        if (abs(self.data.costs.concost) > 9.99e99) or (
+            self.data.costs.concost != self.data.costs.concost
         ):
             self.output()
 
@@ -142,7 +141,7 @@ class Costs2015(Model):
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         for i in range(21, 27):
-            self.data.costs_2015.s_cost_factor[i] = cost_variables.cost_factor_fwbs
+            self.data.costs_2015.s_cost_factor[i] = self.data.costs.cost_factor_fwbs
 
         # Enrichment
         # Costs based on the number of separative work units (SWU) required
@@ -189,7 +188,7 @@ class Costs2015(Model):
                 self.data.costs_2015.s_cost_factor[21]
                 * self.data.costs_2015.s_cref[21]
                 * (self.data.costs_2015.s_k[21] / self.data.costs_2015.s_kref[21])
-                ** cost_variables.costexp
+                ** self.data.costs.costexp
             )
             if abs(self.data.costs_2015.s_cost[21] - 0.1e6) / 0.1e6 < 1.0e-3:
                 po.ocmmnt(self.outfile, "Reference cost for enrichment CORRECT")
@@ -238,7 +237,7 @@ class Costs2015(Model):
                 self.data.costs_2015.s_cost_factor[21]
                 * self.data.costs_2015.s_cref[21]
                 * (self.data.costs_2015.s_k[21] / self.data.costs_2015.s_kref[21])
-                ** cost_variables.costexp
+                ** self.data.costs.costexp
             )
 
         self.data.costs_2015.s_label[22] = "Lithium orthosilicate pebble manufacturing"
@@ -251,7 +250,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[22]
             * self.data.costs_2015.s_cref[22]
             * (self.data.costs_2015.s_k[22] / self.data.costs_2015.s_kref[22])
-            ** cost_variables.costexp_pebbles
+            ** self.data.costs.costexp_pebbles
         )
 
         self.data.costs_2015.s_label[23] = "Titanium beryllide pebble manufacturing"
@@ -264,7 +263,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[23]
             * self.data.costs_2015.s_cref[23]
             * (self.data.costs_2015.s_k[23] / self.data.costs_2015.s_kref[23])
-            ** cost_variables.costexp_pebbles
+            ** self.data.costs.costexp_pebbles
         )
 
         self.data.costs_2015.s_label[24] = "First wall W coating manufacturing"
@@ -281,7 +280,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[24]
             * self.data.costs_2015.s_cref[24]
             * (self.data.costs_2015.s_k[24] / self.data.costs_2015.s_kref[24])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[25] = (
@@ -300,7 +299,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[25]
             * self.data.costs_2015.s_cref[25]
             * (self.data.costs_2015.s_k[25] / self.data.costs_2015.s_kref[25])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[26] = "Total first wall and blanket cost"
@@ -424,7 +423,7 @@ class Costs2015(Model):
             "OP ",
         )
         po.ovarrf(
-            self.outfile, "Capacity factor", "(cpfact)", cost_variables.cpfact, "OP "
+            self.outfile, "Capacity factor", "(cpfact)", self.data.costs.cpfact, "OP "
         )
         po.ovarrf(
             self.outfile,
@@ -446,7 +445,7 @@ class Costs2015(Model):
             self.outfile,
             "Levelized cost of electricity ($/MWh)",
             "(coe)",
-            cost_variables.coe,
+            self.data.costs.coe,
             "OP ",
         )
 
@@ -463,12 +462,12 @@ class Costs2015(Model):
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         for i in range(9):
-            self.data.costs_2015.s_cost_factor[i] = cost_variables.cost_factor_buildings
+            self.data.costs_2015.s_cost_factor[i] = self.data.costs.cost_factor_buildings
 
         # Power plant admin buildings cost ($)
         self.data.costs_2015.s_label[0] = "Admin Buildings"
         self.data.costs_2015.s_cref[0] = (
-            129000.0e0 * cost_variables.light_build_cost_per_vol
+            129000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         self.data.costs_2015.s_cost[0] = (
             self.data.costs_2015.s_cost_factor[0] * self.data.costs_2015.s_cref[0]
@@ -477,7 +476,7 @@ class Costs2015(Model):
         # Tokamak complex excluding hot cell cost ($)
         self.data.costs_2015.s_label[1] = "Tokamak Complex (excluding hot cell)"
         self.data.costs_2015.s_cref[1] = (
-            1100000.0e0 * cost_variables.tok_build_cost_per_vol
+            1100000.0e0 * self.data.costs.tok_build_cost_per_vol
         )
         # ITER cryostat volume (m^3)
         self.data.costs_2015.s_k[1] = (
@@ -495,7 +494,7 @@ class Costs2015(Model):
         # Neutral beam buildings cost ($)
         self.data.costs_2015.s_label[2] = "Neutral beam buildings"
         self.data.costs_2015.s_cref[2] = (
-            28000.0e0 * cost_variables.light_build_cost_per_vol
+            28000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with neutral beam wall plug power (MW)
         self.data.costs_2015.s_k[2] = current_drive_variables.pwpnb
@@ -509,7 +508,7 @@ class Costs2015(Model):
         # Cryoplant buildings cost ($)
         self.data.costs_2015.s_label[3] = "Cryoplant buildings"
         self.data.costs_2015.s_cref[3] = (
-            130000.0e0 * cost_variables.light_build_cost_per_vol
+            130000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with the total heat load on the cryoplant at ~4.5K (kW)
         self.data.costs_2015.s_k[3] = heat_transport_variables.helpow / 1.0e3
@@ -523,7 +522,7 @@ class Costs2015(Model):
         # PF Coil winding building cost ($)
         self.data.costs_2015.s_label[4] = "PF Coil winding building"
         self.data.costs_2015.s_cref[4] = (
-            190000.0e0 * cost_variables.light_build_cost_per_vol
+            190000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with the radius of the largest PF coil squared (m^2)
         self.data.costs_2015.s_k[4] = pfcoil_variables.r_pf_coil_outer_max**2
@@ -537,7 +536,7 @@ class Costs2015(Model):
         # Magnet power supplies and related buildings cost ($)
         self.data.costs_2015.s_label[5] = "Magnet power supplies and related buildings"
         self.data.costs_2015.s_cref[5] = (
-            110000.0e0 * cost_variables.light_build_cost_per_vol
+            110000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with TF current per coil (MA)
         self.data.costs_2015.s_k[5] = (
@@ -553,7 +552,7 @@ class Costs2015(Model):
         # Magnet discharge buildings cost ($)
         self.data.costs_2015.s_label[6] = "Magnet discharge buildings"
         self.data.costs_2015.s_cref[6] = (
-            35000.0e0 * cost_variables.light_build_cost_per_vol
+            35000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with total stored energy in TF coils (GJ)
         self.data.costs_2015.s_k[6] = tfcoil_variables.e_tf_magnetic_stored_total_gj
@@ -568,7 +567,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_label[7] = "Heat removal system buildings"
         # ITER volume of cooling water buildings (m^3)
         self.data.costs_2015.s_cref[7] = (
-            51000.0e0 * cost_variables.light_build_cost_per_vol
+            51000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with total thermal power removed from the core (MW)
         self.data.costs_2015.s_k[7] = (
@@ -594,7 +593,7 @@ class Costs2015(Model):
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         for i in range(9, 13):
-            self.data.costs_2015.s_cost_factor[i] = cost_variables.cost_factor_land
+            self.data.costs_2015.s_cost_factor[i] = self.data.costs.cost_factor_land
 
         # Land purchasing cost ($)
         self.data.costs_2015.s_label[9] = "Land purchasing"
@@ -617,7 +616,7 @@ class Costs2015(Model):
             * (
                 ITER_key_buildings_land_area
                 * (self.data.costs_2015.s_k[9] / self.data.costs_2015.s_kref[9])
-                ** cost_variables.costexp
+                ** self.data.costs.costexp
                 + ITER_buffer_land_area
             )
         )
@@ -632,7 +631,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_cost[10] = (
             self.data.costs_2015.s_cost_factor[10]
             * (self.data.costs_2015.s_k[10] / self.data.costs_2015.s_kref[10])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
             * self.data.costs_2015.s_cref[10]
         )
 
@@ -650,7 +649,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[11]
             * self.data.costs_2015.s_cref[11]
             * (self.data.costs_2015.s_k[11] / self.data.costs_2015.s_kref[11])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         # Total land costs ($)
@@ -666,7 +665,7 @@ class Costs2015(Model):
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         for i in range(13, 20):
-            self.data.costs_2015.s_cost_factor[i] = cost_variables.cost_factor_tf_coils
+            self.data.costs_2015.s_cost_factor[i] = self.data.costs.cost_factor_tf_coils
 
         # TF coil insertion and welding costs ($)
         self.data.costs_2015.s_label[13] = "TF Coil insertion and welding"
@@ -681,7 +680,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[13]
             * self.data.costs_2015.s_cref[13]
             * (self.data.costs_2015.s_k[13] / self.data.costs_2015.s_kref[13])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         # TF coil winding costs ($)
@@ -699,7 +698,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[15]
             * self.data.costs_2015.s_cref[15]
             * (self.data.costs_2015.s_k[15] / self.data.costs_2015.s_kref[15])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         # Copper stand cost for TF coil ($)
@@ -715,7 +714,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[16]
             * self.data.costs_2015.s_cref[16]
             * (self.data.costs_2015.s_k[16] / self.data.costs_2015.s_kref[16])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         # superconductor strand cost ($)
@@ -733,7 +732,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[17]
             * self.data.costs_2015.s_cref[17]
             * (self.data.costs_2015.s_k[17] / self.data.costs_2015.s_kref[17])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         # Superconductor testing cost ($)
@@ -759,7 +758,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[19]
             * self.data.costs_2015.s_cref[19]
             * (self.data.costs_2015.s_k[19] / self.data.costs_2015.s_kref[19])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         # Total TF coil costs ($)
@@ -773,14 +772,14 @@ class Costs2015(Model):
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         for i in range(27, 31):
-            self.data.costs_2015.s_cost_factor[i] = cost_variables.cost_factor_rh
+            self.data.costs_2015.s_cost_factor[i] = self.data.costs.cost_factor_rh
 
         # K:\Power Plant Physics and Technology\Costs\Remote handling
         # From Sam Ha.
 
         self.data.costs_2015.s_label[27] = "Moveable equipment"
         self.data.costs_2015.s_cref[27] = 1.0e6 * (
-            139.0e0 * cost_variables.num_rh_systems + 410.0e0
+            139.0e0 * self.data.costs.num_rh_systems + 410.0e0
         )
         #  Scale with total mass of armour, first wall and blanket (kg)
         self.data.costs_2015.s_kref[27] = 4.35e6
@@ -789,14 +788,14 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[27]
             * self.data.costs_2015.s_cref[27]
             * (self.data.costs_2015.s_k[27] / self.data.costs_2015.s_kref[27])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[28] = (
             "Active maintenance facility with fixed equipment"
         )
         self.data.costs_2015.s_cref[28] = 1.0e6 * (
-            95.0e0 * cost_variables.num_rh_systems + 2562.0e0
+            95.0e0 * self.data.costs.num_rh_systems + 2562.0e0
         )
         #  Scale with total mass of armour, first wall and blanket (kg)
         self.data.costs_2015.s_kref[28] = 4.35e6
@@ -805,7 +804,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[28]
             * self.data.costs_2015.s_cref[28]
             * (self.data.costs_2015.s_k[28] / self.data.costs_2015.s_kref[28])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         # s(30) is not in use
@@ -822,7 +821,7 @@ class Costs2015(Model):
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         for i in range(31, 34):
-            self.data.costs_2015.s_cost_factor[i] = cost_variables.cost_factor_vv
+            self.data.costs_2015.s_cost_factor[i] = self.data.costs.cost_factor_vv
 
         #  Vacuum vessel
         self.data.costs_2015.s_label[31] = "Vacuum vessel"
@@ -837,7 +836,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[31]
             * self.data.costs_2015.s_cref[31]
             * (self.data.costs_2015.s_k[31] / self.data.costs_2015.s_kref[31])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         #  Nitrogen plant
@@ -851,7 +850,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[32]
             * self.data.costs_2015.s_cref[32]
             * (self.data.costs_2015.s_k[32] / self.data.costs_2015.s_kref[32])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[33] = (
@@ -869,7 +868,7 @@ class Costs2015(Model):
         """
         self.data.costs_2015.s_label[34] = "Energy conversion system"
         #  Set cost factor for energy conversion system
-        self.data.costs_2015.s_cost_factor[34] = cost_variables.cost_factor_bop
+        self.data.costs_2015.s_cost_factor[34] = self.data.costs.cost_factor_bop
         #  Cost of reference energy conversion system (Rolls Royce)
         self.data.costs_2015.s_cref[34] = 511.0e6
         #  Scale with gross electric power (MWe)
@@ -879,7 +878,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[34]
             * self.data.costs_2015.s_cref[34]
             * (self.data.costs_2015.s_k[34] / self.data.costs_2015.s_kref[34])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
     def calc_remaining_subsystems(self):
@@ -889,7 +888,7 @@ class Costs2015(Model):
         PROCESS Costs Paper (M. Kovari, J. Morris)
         """
         for i in range(35, 60):
-            self.data.costs_2015.s_cost_factor[i] = cost_variables.cost_factor_misc
+            self.data.costs_2015.s_cost_factor[i] = self.data.costs.cost_factor_misc
 
         self.data.costs_2015.s_label[35] = "CS and PF coils"
         # #  Cost of ITER CS and PF magnets
@@ -901,7 +900,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[35]
             * self.data.costs_2015.s_cref[35]
             * (self.data.costs_2015.s_k[35] / self.data.costs_2015.s_kref[35])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[36] = (
@@ -916,7 +915,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[36]
             * self.data.costs_2015.s_cref[36]
             * (self.data.costs_2015.s_k[36] / self.data.costs_2015.s_kref[36])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[37] = "Divertor"
@@ -929,7 +928,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[37]
             * self.data.costs_2015.s_cref[37]
             * (self.data.costs_2015.s_k[37] / self.data.costs_2015.s_kref[37])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[38] = "not used"
@@ -948,7 +947,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[40]
             * self.data.costs_2015.s_cref[40]
             * (self.data.costs_2015.s_k[40] / self.data.costs_2015.s_kref[40])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[41] = "not used"
@@ -966,7 +965,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[42]
             * self.data.costs_2015.s_cref[42]
             * (self.data.costs_2015.s_k[42] / self.data.costs_2015.s_kref[42])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[43] = "Cryostat"
@@ -983,7 +982,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[43]
             * self.data.costs_2015.s_cref[43]
             * (self.data.costs_2015.s_k[43] / self.data.costs_2015.s_kref[43])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[44] = "Heat removal system"
@@ -999,7 +998,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[44]
             * self.data.costs_2015.s_cref[44]
             * (self.data.costs_2015.s_k[44] / self.data.costs_2015.s_kref[44])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[45] = "Thermal shields"
@@ -1019,7 +1018,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[45]
             * self.data.costs_2015.s_cref[45]
             * (self.data.costs_2015.s_k[45] / self.data.costs_2015.s_kref[45])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[46] = "Pellet injection system"
@@ -1032,7 +1031,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[46]
             * self.data.costs_2015.s_cref[46]
             * (self.data.costs_2015.s_k[46] / self.data.costs_2015.s_kref[46])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[47] = "Gas injection and wall conditioning system"
@@ -1045,7 +1044,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[47]
             * self.data.costs_2015.s_cref[47]
             * (self.data.costs_2015.s_k[47] / self.data.costs_2015.s_kref[47])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[48] = "Vacuum pumping"
@@ -1058,7 +1057,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[48]
             * self.data.costs_2015.s_cref[48]
             * (self.data.costs_2015.s_k[48] / self.data.costs_2015.s_kref[48])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[49] = "Tritium plant"
@@ -1071,7 +1070,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[49]
             * self.data.costs_2015.s_cref[49]
             * (self.data.costs_2015.s_k[49] / self.data.costs_2015.s_kref[49])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[50] = "Cryoplant and distribution"
@@ -1084,7 +1083,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[50]
             * self.data.costs_2015.s_cref[50]
             * (self.data.costs_2015.s_k[50] / self.data.costs_2015.s_kref[50])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[51] = "Electrical power supply and distribution"
@@ -1101,7 +1100,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[51]
             * self.data.costs_2015.s_cref[51]
             * (self.data.costs_2015.s_k[51] / self.data.costs_2015.s_kref[51])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[52] = (
@@ -1116,7 +1115,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[52]
             * self.data.costs_2015.s_cref[52]
             * (self.data.costs_2015.s_k[52] / self.data.costs_2015.s_kref[52])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[53] = "Diagnostics systems"
@@ -1137,7 +1136,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[54]
             * self.data.costs_2015.s_cref[54]
             * (self.data.costs_2015.s_k[54] / self.data.costs_2015.s_kref[54])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[55] = "Access control and security systems"
@@ -1150,7 +1149,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[55]
             * self.data.costs_2015.s_cref[55]
             * (self.data.costs_2015.s_k[55] / self.data.costs_2015.s_kref[55])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[56] = "Assembly"
@@ -1215,7 +1214,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[57]
             * self.data.costs_2015.s_cref[57]
             * (self.data.costs_2015.s_k[57] / self.data.costs_2015.s_kref[57])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[58] = "Additional project expenditure"
@@ -1240,7 +1239,7 @@ class Costs2015(Model):
             self.data.costs_2015.s_cost_factor[59]
             * self.data.costs_2015.s_cref[59]
             * (self.data.costs_2015.s_k[59] / self.data.costs_2015.s_kref[59])
-            ** cost_variables.costexp
+            ** self.data.costs.costexp
         )
 
         self.data.costs_2015.s_label[60] = "Total remaining subsystem costs"

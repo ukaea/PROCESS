@@ -7,7 +7,6 @@ import pytest
 
 from process.data_structure import (
     build_variables,
-    cost_variables,
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
@@ -20,7 +19,7 @@ from process.data_structure import (
 
 @pytest.fixture
 def costs2015(process_models):
-    """Provides Costs2015 object for testing.
+    """Fixture to get the Costs2015 instance from process_models.
 
     :return costs2015: initialised costs2015 object
     :type costs2015: process.costs2015.Costs2015
@@ -2317,19 +2316,19 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     )
 
     monkeypatch.setattr(
-        cost_variables,
+        costs2015.data.costs,
         "cost_factor_buildings",
         calcbuildingcostsparam.cost_factor_buildings,
     )
 
     monkeypatch.setattr(
-        cost_variables,
+        costs2015.data.costs,
         "light_build_cost_per_vol",
         calcbuildingcostsparam.light_build_cost_per_vol,
     )
 
     monkeypatch.setattr(
-        cost_variables,
+        costs2015.data.costs,
         "tok_build_cost_per_vol",
         calcbuildingcostsparam.tok_build_cost_per_vol,
     )
@@ -4592,10 +4591,12 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     )
 
     monkeypatch.setattr(
-        cost_variables, "cost_factor_land", calclandcostsparam.cost_factor_land
+        costs2015.data.costs,
+        "cost_factor_land",
+        calclandcostsparam.cost_factor_land,
     )
 
-    monkeypatch.setattr(cost_variables, "costexp", calclandcostsparam.costexp)
+    monkeypatch.setattr(costs2015.data.costs, "costexp", calclandcostsparam.costexp)
     for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
         monkeypatch.setattr(
             costs2015.data.costs_2015, field, getattr(calclandcostsparam, field)
@@ -6862,12 +6863,12 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
     )
 
     monkeypatch.setattr(
-        cost_variables,
+        costs2015.data.costs,
         "cost_factor_tf_coils",
         calctfcoilcostsparam.cost_factor_tf_coils,
     )
 
-    monkeypatch.setattr(cost_variables, "costexp", calctfcoilcostsparam.costexp)
+    monkeypatch.setattr(costs2015.data.costs, "costexp", calctfcoilcostsparam.costexp)
 
     for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
         monkeypatch.setattr(
@@ -9114,13 +9115,19 @@ def test_calc_remote_handling_costs(
     )
 
     monkeypatch.setattr(
-        cost_variables, "cost_factor_rh", calcremotehandlingcostsparam.cost_factor_rh
+        costs2015.data.costs,
+        "cost_factor_rh",
+        calcremotehandlingcostsparam.cost_factor_rh,
     )
 
-    monkeypatch.setattr(cost_variables, "costexp", calcremotehandlingcostsparam.costexp)
+    monkeypatch.setattr(
+        costs2015.data.costs, "costexp", calcremotehandlingcostsparam.costexp
+    )
 
     monkeypatch.setattr(
-        cost_variables, "num_rh_systems", calcremotehandlingcostsparam.num_rh_systems
+        costs2015.data.costs,
+        "num_rh_systems",
+        calcremotehandlingcostsparam.num_rh_systems,
     )
     for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
         monkeypatch.setattr(
@@ -11378,10 +11385,14 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
     )
 
     monkeypatch.setattr(
-        cost_variables, "cost_factor_vv", calcnplantandvvcostsparam.cost_factor_vv
+        costs2015.data.costs,
+        "cost_factor_vv",
+        calcnplantandvvcostsparam.cost_factor_vv,
     )
 
-    monkeypatch.setattr(cost_variables, "costexp", calcnplantandvvcostsparam.costexp)
+    monkeypatch.setattr(
+        costs2015.data.costs, "costexp", calcnplantandvvcostsparam.costexp
+    )
 
     for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
         monkeypatch.setattr(
@@ -13627,13 +13638,15 @@ def test_calc_energy_conversion_system(
     )
 
     monkeypatch.setattr(
-        cost_variables,
+        costs2015.data.costs,
         "cost_factor_bop",
         calcenergyconversionsystemparam.cost_factor_bop,
     )
 
     monkeypatch.setattr(
-        cost_variables, "costexp", calcenergyconversionsystemparam.costexp
+        costs2015.data.costs,
+        "costexp",
+        calcenergyconversionsystemparam.costexp,
     )
     for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
         monkeypatch.setattr(
@@ -15968,12 +15981,14 @@ def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, co
     )
 
     monkeypatch.setattr(
-        cost_variables,
+        costs2015.data.costs,
         "cost_factor_misc",
         calcremainingsubsystemsparam.cost_factor_misc,
     )
 
-    monkeypatch.setattr(cost_variables, "costexp", calcremainingsubsystemsparam.costexp)
+    monkeypatch.setattr(
+        costs2015.data.costs, "costexp", calcremainingsubsystemsparam.costexp
+    )
 
     for field in ["s_kref", "s_k", "s_cref", "s_cost", "s_cost_factor"]:
         monkeypatch.setattr(

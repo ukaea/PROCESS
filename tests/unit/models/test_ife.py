@@ -7,26 +7,22 @@ import pytest
 
 from process.data_structure import (
     buildings_variables,
-    cost_variables,
     first_wall_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
     physics_variables,
 )
-from process.models.availability import Availability
-from process.models.costs.costs import Costs
-from process.models.ife import IFE
 
 
 @pytest.fixture
-def ife():
-    """Provides IFE object for testing.
+def ife(process_models):
+    """Fixture to get the IFE instance from process_models.
 
     :returns: initialised IFE object
     :rtype: process.ife.IFE
     """
-    return IFE(Availability(), Costs())
+    return process_models.ife
 
 
 def test_ifetgt(monkeypatch, ife):
@@ -1582,10 +1578,12 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(first_wall_variables, "a_fw_total", ifefbsparam.a_fw_total)
-    monkeypatch.setattr(cost_variables, "life_plant", ifefbsparam.life_plant)
-    monkeypatch.setattr(cost_variables, "abktflnc", ifefbsparam.abktflnc)
+    monkeypatch.setattr(ife.data.costs, "life_plant", ifefbsparam.life_plant)
+    monkeypatch.setattr(ife.data.costs, "abktflnc", ifefbsparam.abktflnc)
     monkeypatch.setattr(
-        cost_variables, "f_t_plant_available", ifefbsparam.f_t_plant_available
+        ife.data.costs,
+        "f_t_plant_available",
+        ifefbsparam.f_t_plant_available,
     )
     monkeypatch.setattr(fwbs_variables, "den_steel", ifefbsparam.den_steel)
     monkeypatch.setattr(fwbs_variables, "m_fw_total", ifefbsparam.m_fw_total)
@@ -3118,7 +3116,7 @@ def test_ifepw2(ifepw2param, monkeypatch, ife):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(cost_variables, "ireactor", ifepw2param.ireactor)
+    monkeypatch.setattr(ife.data.costs, "ireactor", ifepw2param.ireactor)
     monkeypatch.setattr(fwbs_variables, "pnucloss", ifepw2param.pnucloss)
     monkeypatch.setattr(
         fwbs_variables, "f_p_blkt_multiplication", ifepw2param.f_p_blkt_multiplication
