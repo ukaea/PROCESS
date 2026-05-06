@@ -1,3 +1,10 @@
+"""Plasma current scaling models and calculations.
+
+This module provides various plasma current scaling models used in fusion
+physics calculations, including empirical and analytical fits based on
+different tokamak designs and experimental data.
+"""
+
 import logging
 from enum import IntEnum
 from types import DynamicClassAttribute
@@ -20,6 +27,12 @@ logger = logging.getLogger(__name__)
 
 
 class PlasmaCurrentModel(IntEnum):
+    """Enumeration of plasma current scaling models available for calculations.
+
+    Each model represents a different scaling law used to calculate plasma
+    current based on various plasma and machine parameters.
+    """
+
     PENG_ANALYTIC_FIT = (1, "Peng analytic fit")
     PENG_DIVERTOR_SCALING = (2, "Peng divertor scaling")
     ITER_SCALING = (3, "Simple ITER scaling (cylindrical case)")
@@ -30,7 +43,21 @@ class PlasmaCurrentModel(IntEnum):
     SAUTER_SCALING = (8, "Sauter scaling")
     FIESTA_ST_SCALING = (9, "FIESTA ST scaling")
 
-    def __new__(cls, value, full_name):
+    def __new__(cls, value: int, full_name: str):
+        """Create a new PlasmaCurrentModel enum member with value and full_name.
+
+        Parameters
+        ----------
+        value : int
+            The numeric value of the enum member.
+        full_name : str
+            The full name description of the plasma current model.
+
+        Returns
+        -------
+        PlasmaCurrentModel
+            A new enum member with the specified value and full_name.
+        """
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._full_name_ = full_name
@@ -38,6 +65,7 @@ class PlasmaCurrentModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
+        """Return the full name of the plasma current model."""
         return self._full_name_
 
 
@@ -45,10 +73,12 @@ class PlasmaCurrent:
     """Class to hold plasma current calculations for plasma processing."""
 
     def __init__(self):
+        """Initialize PlasmaCurrent with output file constants."""
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
     def output(self) -> None:
+        """Output plasma current and safety factor information."""
         po.oheadr(self.outfile, "Plasma Current and Safety Factor")
 
         if stellarator_variables.istell == 0:
@@ -59,9 +89,12 @@ class PlasmaCurrent:
                 "(i_plasma_current)",
                 physics_variables.i_plasma_current,
             )
+            full_model_name = PlasmaCurrentModel(
+                physics_variables.i_plasma_current
+            ).full_name
             po.ocmmnt(
                 self.outfile,
-                f"Plasma current model selected: {PlasmaCurrentModel(physics_variables.i_plasma_current).full_name} ",
+                f"Plasma current model selected: {full_model_name} ",
             )
 
             po.ovarrf(
@@ -184,63 +217,97 @@ class PlasmaCurrent:
     ) -> tuple[float, float, float, float, float]:
         """Calculate the plasma current.
 
-        Args:
-            alphaj (float): Current profile index.
-            alphap (float): Pressure profile index.
-            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
-            eps (float): Inverse aspect ratio.
-            i_plasma_current (int): Current scaling model to use.
-                1 = Peng analytic fit
-                2 = Peng divertor scaling (TART,STAR)
-                3 = Simple ITER scaling
-                4 = IPDG89 scaling
-                5 = Todd empirical scaling I
-                6 = Todd empirical scaling II
-                7 = Connor-Hastie model
-                8 = Sauter scaling (allowing negative triangularity)
-                9 = FIESTA ST scaling
-            kappa (float): Plasma elongation.
-            kappa95 (float): Plasma elongation at 95% surface.
-            pres_plasma_on_axis (float): Central plasma pressure (Pa).
-            len_plasma_poloidal (float): Plasma perimeter length (m).
-            q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
-            rmajor (float): Major radius (m).
-            rminor (float): Minor radius (m).
-            triang (float): Plasma triangularity.
-            triang95 (float): Plasma triangularity at 95% surface.
+        Parameters
+        ----------
+        alphaj : float
+            Current profile index.
+        alphap : float
+            Pressure profile index.
+        b_plasma_toroidal_on_axis : float
+            Toroidal field on axis (T).
+        eps : float
+            Inverse aspect ratio.
+        i_plasma_current : int
+            Current scaling model to use.
+            1 = Peng analytic fit
+            2 = Peng divertor scaling (TART,STAR)
+            3 = Simple ITER scaling
+            4 = IPDG89 scaling
+            5 = Todd empirical scaling I
+            6 = Todd empirical scaling II
+            7 = Connor-Hastie model
+            8 = Sauter scaling (allowing negative triangularity)
+            9 = FIESTA ST scaling
+        kappa : float
+            Plasma elongation.
+        kappa95 : float
+            Plasma elongation at 95% surface.
+        pres_plasma_on_axis : float
+            Central plasma pressure (Pa).
+        len_plasma_poloidal : float
+            Plasma perimeter length (m).
+        q95 : float
+            Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
+        rmajor : float
+            Major radius (m).
+        rminor : float
+            Minor radius (m).
+        triang : float
+            Plasma triangularity.
+        triang95 : float
+            Plasma triangularity at 95% surface.
 
         Returns
         -------
-            Tuple[float, float, float,]: Tuple containing b_plasma_poloidal_average, qstar, plasma_current,
+        tuple[float, float, float, float, float]
+            Tuple containing (b_plasma_poloidal_average, qstar, plasma_current,
+            betap, li).
 
         Raises
         ------
-            ValueError: If invalid value for i_plasma_current is provided.
+        ValueError
+            If invalid value for `i_plasma_current` is provided.
+        ProcessValueError
+            If triangularity is negative without `i_plasma_current = 8` selected.
 
         Notes
         -----
-            This routine calculates the plasma current based on the edge safety factor q95.
-            It will also make the current profile parameters consistent with the q-profile if required.
+        This routine calculates the plasma current based on the edge safety factor
+        q95. It will also make the current profile parameters consistent with the
+        q-profile if required.
 
         References
         ----------
-            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code, unpublished internal Oak Ridge document
+            - J D Galambos, STAR Code : Spherical Tokamak Analysis and Reactor Code,
+              unpublished internal Oak Ridge document
+
             - Peng, Y. K. M., Galambos, J. D., & Shipe, P. C. (1992).
-              'Small Tokamaks for Fusion Technology Testing'. Fusion Technology, 21(3P2A),
-              1729-1738. https://doi.org/10.13182/FST92-A29971
-            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al, ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
-            - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
+              'Small Tokamaks for Fusion Technology Testing'. Fusion Technology,
+              21(3P2A), 1729-1738. https://doi.org/10.13182/FST92-A29971
+
+            - ITER Physics Design Guidelines: 1989 [IPDG89], N. A. Uckan et al,
+              ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
+
+            - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants
+              - Part 1: Physics
+
             - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
-            - T. Hartmann, 2013, Development of a modular systems code to analyse the implications of physics assumptions on the design of a demonstration fusion power plant
+
+            - T. Hartmann, 2013, Development of a modular systems code to analyse the
+              implications of physics assumptions on the design of a demonstration
+              fusion power plant
+
             - Sauter, Geometric formulas for systems codes..., FED 2016
         """
         # Aspect ratio
         aspect_ratio = 1.0 / eps
 
-        # Only the Sauter scaling (i_plasma_current=8) is suitable for negative triangularity:
+        # Only the Sauter scaling (i_plasma_current=8) is suitable for negative
+        # triangularity:
         if i_plasma_current != 8 and triang < 0.0:
             raise ProcessValueError(
-                f"Triangularity is negative without i_plasma_current = 8 selected: {triang=}, {i_plasma_current=}"
+                f"Triangularity is negative without i_plasma_current = 8 selected:"
+                f" {triang=}, {i_plasma_current=}"
             )
         try:
             model = PlasmaCurrentModel(int(i_plasma_current))
@@ -350,7 +417,8 @@ class PlasmaCurrent:
     ) -> dict[PlasmaCurrentModel, float]:
         """Calculate the plasma current for all models.
 
-        This function calculates the plasma current for all models and returns a dictionary of the results.
+        This function calculates the plasma current for all models and returns a
+        dictionary of the results.
 
         Parameters
         ----------
@@ -686,7 +754,8 @@ class PlasmaCurrent:
         eps: float, len_plasma_poloidal: float, rminor: float
     ) -> float:
         """
-        Calculate the plasma current scaling coefficient for the Peng scaling from the STAR code.
+        Calculate the plasma current scaling coefficient for the Peng scaling from
+        the STAR code.
 
         Parameters
         ----------
@@ -776,7 +845,8 @@ class PlasmaCurrent:
         eps: float, kappa95: float, triang95: float
     ) -> float:
         """
-        Calculate the fq coefficient from the IPDG89 guidlines used in the plasma current scaling.
+        Calculate the fq coefficient from the IPDG89 guidlines used in the plasma
+        current scaling.
 
         Parameters
         ----------
@@ -788,13 +858,14 @@ class PlasmaCurrent:
         -------
         - float, the fq plasma current coefficient
 
-        This function calculates the fq coefficient used in the IPDG89 plasma current scaling,
-        based on the given plasma parameters.
+        This function calculates the fq coefficient used in the IPDG89 plasma current
+        scaling, based on the given plasma parameters.
 
         References
         ----------
         - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+          AEA FUS 172, 1992
         """
         return (
             0.5
@@ -820,12 +891,19 @@ class PlasmaCurrent:
         -------
         - float, the fq plasma current coefficient
 
-        This function calculates the fq coefficient based on the given plasma parameters for the two Todd scalings.
+        Raises
+        ------
+        ProcessValueError
+            If model is not 1 or 2
+
+        This function calculates the fq coefficient based on the given plasma parameters
+        for the two Todd scalings.
 
         References
         ----------
         - D.C.Robinson and T.N.Todd, Plasma and Contr Fusion 28 (1986) 1181
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+          AEA FUS 172, 1992
         """
         # Calculate the Todd scaling based on the model
         base_scaling = (
@@ -856,7 +934,8 @@ class PlasmaCurrent:
         rmu0: float,
     ) -> float:
         """
-        Routine to calculate the f_q coefficient for the Connor-Hastie model used for scaling the plasma current.
+        Routine to calculate the f_q coefficient for the Connor-Hastie model used for
+        scaling the plasma current.
 
         Parameters
         ----------
@@ -878,8 +957,9 @@ class PlasmaCurrent:
 
         Reference:
         - J.W.Connor and R.J.Hastie, Culham Lab Report CLM-M106 (1985).
-        https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
-        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+          https://scientific-publications.ukaea.uk/wp-content/uploads/CLM-M106-1.pdf
+        - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+          AEA FUS 172, 1992
         """
         # Exponent in Connor-Hastie current profile
         lamda = alphaj
@@ -934,7 +1014,8 @@ class PlasmaCurrent:
         triang: float,
     ) -> float:
         """
-        Routine to calculate the f_q coefficient for the Sauter model used for scaling the plasma current.
+        Routine to calculate the f_q coefficient for the Sauter model used for scaling
+        the plasma current.
 
         Parameters
         ----------
@@ -947,9 +1028,9 @@ class PlasmaCurrent:
         - float, the fq coefficient
 
         Reference:
-        - O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
-        Fusion Engineering and Design, Volume 112, 2016, Pages 633-645,
-        ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
+        - O. Sauter, Geometric formulas for system codes including the effect of
+        negative triangularity, Fusion Engineering and Design, Volume 112, 2016,
+        Pages 633-645, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
         """
         w07 = 1.0  # zero squareness - can be modified later if required
 
@@ -979,12 +1060,14 @@ class PlasmaCurrent:
         -------
         - float, the fq plasma current coefficient
 
-        This function calculates the fq coefficient based on the given plasma parameters for the FIESTA scaling.
+        This function calculates the fq coefficient based on the given plasma parameters
+        for the FIESTA scaling.
 
         References
         ----------
-        - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design,
-        Volume 154, 2020, 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
+        - S.Muldrew et.al,“PROCESS”: Systems studies of spherical tokamaks,
+          Fusion Engineering and Design, Volume 154, 2020, 111530, ISSN 0920-3796,
+          https://doi.org/10.1016/j.fusengdes.2020.111530.
         """
         return 0.538 * (1.0 + 2.440 * eps**2.736) * kappa**2.154 * triang**0.060
 
@@ -996,7 +1079,21 @@ class PlasmaDiamagneticCurrentModel(IntEnum):
     HENDER_ST_FIT = (1, "Hender ST fit")
     SCENE_FIT = (2, "SCENE fit")
 
-    def __new__(cls, value, full_name):
+    def __new__(cls, value: int, full_name: str):
+        """Create a new enum member with value and full name.
+
+        Parameters
+        ----------
+        value :
+            The enum value
+        full_name :
+            The full name description of the enum member
+
+        Returns
+        -------
+        PlasmaDiamagneticCurrentModel
+            The new enum member
+        """
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._full_name_ = full_name
@@ -1004,6 +1101,13 @@ class PlasmaDiamagneticCurrentModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
+        """Get the full name of the enum member.
+
+        Returns
+        -------
+        str
+            The full name description
+        """
         return self._full_name_
 
 
@@ -1015,6 +1119,7 @@ class PlasmaDiamagneticCurrent(Model):
         self.mfile = constants.MFILE
 
     def run(self):
+        """Calculate plasma diamagnetic current fractions using scalings."""
         # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
         current_drive_variables.f_c_plasma_diamagnetic_hender = (
             self.diamagnetic_fraction_hender(physics_variables.beta_total_vol_avg)
@@ -1045,6 +1150,7 @@ class PlasmaDiamagneticCurrent(Model):
             )
 
     def output(self):
+        """Output the plasma diamagnetic current model results."""
         po.oblnkl(self.outfile)
         po.ovarin(
             self.outfile,
@@ -1052,9 +1158,12 @@ class PlasmaDiamagneticCurrent(Model):
             "(i_diamagnetic_current)",
             physics_variables.i_diamagnetic_current,
         )
+        full_model_name = PlasmaDiamagneticCurrentModel(
+            physics_variables.i_diamagnetic_current
+        ).full_name
         po.ocmmnt(
             self.outfile,
-            f"Diamagnetic current fraction model selected: {PlasmaDiamagneticCurrentModel(physics_variables.i_diamagnetic_current).full_name} ",
+            f"Diamagnetic current fraction model selected: {full_model_name} ",
         )
         po.oblnkl(self.outfile)
         po.ovarrf(
