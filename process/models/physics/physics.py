@@ -28,7 +28,7 @@ from process.data_structure import (
     times_variables,
 )
 from process.models.physics import impurity_radiation
-from process.models.physics.plasma_geometry import PlasmaGeom, PlasmaGeometryModelType
+from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.profiles import PlasmaProfileShapeType
 
 if TYPE_CHECKING:
@@ -1688,631 +1688,14 @@ class Physics(Model):
 
         self.geometry.output()
 
+        self.current.output()
         if stellarator_variables.istell == 0:
-            po.osubhd(self.outfile, "Current and Field :")
-
-            if stellarator_variables.istell == 0:
-                po.oblnkl(self.outfile)
-                po.ovarin(
-                    self.outfile,
-                    "Plasma current scaling law used",
-                    "(i_plasma_current)",
-                    physics_variables.i_plasma_current,
-                )
-
-                po.ovarrf(
-                    self.outfile,
-                    "Plasma current (MA)",
-                    "(plasma_current_MA)",
-                    physics_variables.plasma_current / 1.0e6,
-                    "OP ",
-                )
-
-                self.current.output_plasma_current_models()
-                po.oblnkl(self.outfile)
-
-                if physics_variables.i_alphaj == 1:
-                    po.ovarrf(
-                        self.outfile,
-                        "Current density profile factor",
-                        "(alphaj)",
-                        physics_variables.alphaj,
-                        "OP ",
-                    )
-                else:
-                    po.ovarrf(
-                        self.outfile,
-                        "Current density profile factor",
-                        "(alphaj)",
-                        physics_variables.alphaj,
-                    )
-                po.ocmmnt(self.outfile, "Current profile index scalings:")
-                po.oblnkl(self.outfile)
-
-                po.ovarrf(
-                    self.outfile,
-                    "J. Wesson plasma current profile index",
-                    "(alphaj_wesson)",
-                    physics_variables.alphaj_wesson,
-                    "OP ",
-                )
-                po.oblnkl(self.outfile)
-                po.ovarrf(
-                    self.outfile,
-                    "On-axis plasma current density (A/m2)",
-                    "(j_plasma_on_axis)",
-                    physics_variables.j_plasma_on_axis,
-                    "OP ",
-                )
-
-        if stellarator_variables.istell == 0:
-            po.ovarrf(
-                self.outfile, "Safety factor on axis", "(q0)", physics_variables.q0
-            )
-
-            if physics_variables.i_plasma_current == 2:
-                po.ovarrf(
-                    self.outfile,
-                    "Mean edge safety factor",
-                    "(q95)",
-                    physics_variables.q95,
-                )
-
-            po.ovarrf(
-                self.outfile,
-                "Safety factor at 95% flux surface",
-                "(q95)",
-                physics_variables.q95,
-            )
-
-            po.ovarrf(
-                self.outfile,
-                "Cylindrical safety factor (qcyl)",
-                "(qstar)",
-                physics_variables.qstar,
-                "OP ",
-            )
-
-            if (
-                physics_variables.i_plasma_geometry
-                == PlasmaGeometryModelType.STAR_FIESTA
-            ):
-                po.ovarrf(
-                    self.outfile,
-                    "Lower limit for edge safety factor q95",
-                    "(q95_min)",
-                    physics_variables.q95_min,
-                    "OP ",
-                )
-            po.ovarrf(
-                self.outfile,
-                "Plasma normalised internal inductance",
-                "(ind_plasma_internal_norm)",
-                physics_variables.ind_plasma_internal_norm,
-                "OP ",
-            )
-
-            po.oblnkl(self.outfile)
             self.fields.output()
-            po.oblnkl(self.outfile)
-            po.ostars(self.outfile, 110)
-            po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, "Plasma normalised internal inductance scalings:")
-            po.oblnkl(self.outfile)
-            po.ovarrf(
-                self.outfile,
-                "J. Wesson plasma normalised internal inductance",
-                "(ind_plasma_internal_norm_wesson)",
-                physics_variables.ind_plasma_internal_norm_wesson,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "J. Menard plasma normalised internal inductance",
-                "(ind_plasma_internal_norm_menard)",
-                physics_variables.ind_plasma_internal_norm_menard,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "ITER li(3) plasma normalised internal inductance",
-                "(ind_plasma_internal_norm_iter_3)",
-                physics_variables.ind_plasma_internal_norm_iter_3,
-                "OP ",
-            )
-
-        else:
-            po.ovarrf(
-                self.outfile,
-                "Rotational transform",
-                "(iotabar)",
-                stellarator_variables.iotabar,
-            )
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
 
         # Output beta information
         self.beta.output_beta_information()
 
-        po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
-        po.ovarrf(
-            self.outfile,
-            "Number of radial points in plasma profiles",
-            "(n_plasma_profile_elements)",
-            physics_variables.n_plasma_profile_elements,
-        )
-        po.ovarrf(
-            self.outfile,
-            "Volume averaged electron temperature (keV)",
-            "(temp_plasma_electron_vol_avg_kev)",
-            physics_variables.temp_plasma_electron_vol_avg_kev,
-        )
-        po.ovarrf(
-            self.outfile,
-            "Ratio of ion to electron volume-averaged temperature",
-            "(f_temp_plasma_ion_electron)",
-            physics_variables.f_temp_plasma_ion_electron,
-            "IP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Electron temperature on axis (keV)",
-            "(temp_plasma_electron_on_axis_kev)",
-            physics_variables.temp_plasma_electron_on_axis_kev,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Ion temperature (keV)",
-            "(temp_plasma_ion_vol_avg_kev)",
-            physics_variables.temp_plasma_ion_vol_avg_kev,
-        )
-        po.ovarrf(
-            self.outfile,
-            "Ion temperature on axis (keV)",
-            "(temp_plasma_ion_on_axis_kev)",
-            physics_variables.temp_plasma_ion_on_axis_kev,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Electron temp., density weighted (keV)",
-            "(temp_plasma_electron_density_weighted_kev)",
-            physics_variables.temp_plasma_electron_density_weighted_kev,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Ratio of electron density weighted temp. to volume averaged temp.",
-            "(f_temp_plasma_electron_density_vol_avg)",
-            physics_variables.f_temp_plasma_electron_density_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Volume averaged electron number density (/m3)",
-            "(nd_plasma_electrons_vol_avg)",
-            physics_variables.nd_plasma_electrons_vol_avg,
-        )
-        po.ovarre(
-            self.outfile,
-            "Electron number density on axis (/m3)",
-            "(nd_plasma_electron_on_axis)",
-            physics_variables.nd_plasma_electron_on_axis,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Line-averaged electron number density (/m3)",
-            "(nd_plasma_electron_line)",
-            physics_variables.nd_plasma_electron_line,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Plasma pressure on axis (Pa)",
-            "(pres_plasma_thermal_on_axis)",
-            physics_variables.pres_plasma_thermal_on_axis,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Volume averaged plasma pressure (Pa)",
-            "(pres_plasma_thermal_vol_avg)",
-            physics_variables.pres_plasma_thermal_vol_avg,
-            "OP ",
-        )
-        # As array output is not currently supported, each element is output as a float instance
-        # Output plasma pressure profiles to mfile
-        for i in range(len(physics_variables.pres_plasma_thermal_total_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Total plasma pressure at point {i}",
-                f"(pres_plasma_thermal_total_profile{i})",
-                physics_variables.pres_plasma_thermal_total_profile[i],
-            )
-        for i in range(len(physics_variables.pres_plasma_electron_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Total plasma electron pressure at point {i}",
-                f"(pres_plasma_electron_profile{i})",
-                physics_variables.pres_plasma_electron_profile[i],
-            )
-        for i in range(len(physics_variables.pres_plasma_ion_total_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Total plasma ion pressure at point {i}",
-                f"(pres_plasma_ion_total_profile{i})",
-                physics_variables.pres_plasma_ion_total_profile[i],
-            )
-        for i in range(len(physics_variables.pres_plasma_fuel_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Total plasma fuel pressure at point {i}",
-                f"(pres_plasma_fuel_profile{i})",
-                physics_variables.pres_plasma_fuel_profile[i],
-            )
-
-        if stellarator_variables.istell == 0:
-            po.ovarre(
-                self.outfile,
-                "Line-averaged electron density / Greenwald density",
-                "(dnla_gw)",
-                physics_variables.nd_plasma_electron_line
-                / physics_variables.nd_plasma_electron_max_array[6],
-                "OP ",
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Total Ion number density (/m3)",
-            "(nd_plasma_ions_total_vol_avg)",
-            physics_variables.nd_plasma_ions_total_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Fuel ion number density (/m3)",
-            "(nd_plasma_fuel_ions_vol_avg)",
-            physics_variables.nd_plasma_fuel_ions_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total impurity number density with Z > 2 (no He) (/m3)",
-            "(nd_plasma_impurities_vol_avg)",
-            physics_variables.nd_plasma_impurities_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Helium ion number density (thermalised ions only) (/m3)",
-            "(nd_plasma_alphas_vol_avg)",
-            physics_variables.nd_plasma_alphas_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Helium ion density (thermalised ions only) / electron number density",
-            "(f_nd_alpha_electron)",
-            physics_variables.f_nd_alpha_electron,
-        )
-        po.ovarre(
-            self.outfile,
-            "Plasma volume averaged proton number density (/m3)",
-            "(nd_plasma_protons_vol_avg)",
-            physics_variables.nd_plasma_protons_vol_avg,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Proton number density / electron number density",
-            "(f_nd_protium_electrons)",
-            physics_variables.f_nd_protium_electrons,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Hot beam ion number density (/m3)",
-            "(nd_beam_ions)",
-            physics_variables.nd_beam_ions,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Hot beam ion number density / electron density",
-            "(f_nd_beam_electron)",
-            physics_variables.f_nd_beam_electron,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
-
-        po.ocmmnt(self.outfile, "Impurities:")
-        po.oblnkl(self.outfile)
-        po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
-
-        for imp in range(impurity_radiation_module.N_IMPURITIES):
-            # MDK Update f_nd_impurity_electrons, as this will make the ITV output work correctly.
-            impurity_radiation_module.f_nd_impurity_electrons[imp] = (
-                impurity_radiation_module.f_nd_impurity_electron_array[imp]
-            )
-            str1 = (
-                impurity_radiation_module.impurity_arr_label[imp].item()
-                + " concentration"
-            )
-            str2 = f"(f_nd_impurity_electrons({imp + 1:02}))"
-            # MDK Add output flag for H which is calculated.
-            if imp == 0:
-                po.ovarre(
-                    self.outfile,
-                    str1,
-                    str2,
-                    impurity_radiation_module.f_nd_impurity_electrons[imp],
-                    "OP ",
-                )
-            else:
-                po.ovarre(
-                    self.outfile,
-                    str1,
-                    str2,
-                    impurity_radiation_module.f_nd_impurity_electrons[imp],
-                )
-                if impurity_radiation_module.f_nd_impurity_electrons[imp] != 0.0:  # noqa: RUF069
-                    for i in range(physics_variables.n_plasma_profile_elements):
-                        po.ovarre(
-                            self.mfile,
-                            str1 + f" at point {i}",
-                            f"(f_nd_impurity_electrons{imp}_{i})",
-                            impurity_radiation_module.f_nd_impurity_electrons[imp]
-                            * self.plasma_profile.neprofile.profile_y[i],
-                            "OP ",
-                        )
-
-        po.ovarre(
-            self.outfile,
-            "Average mass of all ions (amu)",
-            "(m_ions_total_amu)",
-            physics_variables.m_ions_total_amu,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total mass of all ions in plasma (kg)",
-            "(m_plasma_ions_total)",
-            physics_variables.m_plasma_ions_total,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Average mass of all fuel ions (amu)",
-            "(m_fuel_amu)",
-            physics_variables.m_fuel_amu,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total mass of all fuel ions in plasma (kg)",
-            "(m_plasma_fuel_ions)",
-            physics_variables.m_plasma_fuel_ions,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Average mass of all beam ions (amu)",
-            "(m_beam_amu)",
-            physics_variables.m_beam_amu,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total mass of all alpha particles in plasma (kg)",
-            "(m_plasma_alpha)",
-            physics_variables.m_plasma_alpha,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total mass of all electrons in plasma (kg)",
-            "(m_plasma_electron)",
-            physics_variables.m_plasma_electron,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total mass of the plasma (kg)",
-            "(m_plasma)",
-            physics_variables.m_plasma,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ovarrf(
-            self.outfile,
-            "Volume averaged plasma effective charge",
-            "(n_charge_plasma_effective_vol_avg)",
-            physics_variables.n_charge_plasma_effective_vol_avg,
-            "OP ",
-        )
-        for i in range(len(physics_variables.n_charge_plasma_effective_profile)):
-            po.ovarre(
-                self.mfile,
-                "Effective charge at point",
-                f"(n_charge_plasma_effective_profile{i})",
-                physics_variables.n_charge_plasma_effective_profile[i],
-                "OP ",
-            )
-
-        for imp in range(impurity_radiation_module.N_IMPURITIES):
-            for i in range(physics_variables.n_plasma_profile_elements):
-                po.ovarre(
-                    self.mfile,
-                    "Impurity charge at point",
-                    f"(n_charge_plasma_profile{imp}_{i})",
-                    impurity_radiation_module.n_charge_impurity_profile[imp][i],
-                    "OP ",
-                )
-
-        po.ovarrf(
-            self.outfile,
-            "Mass-weighted Effective charge",
-            "(n_charge_plasma_effective_mass_weighted_vol_avg)",
-            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
-            "OP ",
-        )
-
-        po.ovarrf(
-            self.outfile, "Density profile factor", "(alphan)", physics_variables.alphan
-        )
-        po.ovarin(
-            self.outfile,
-            "Plasma profile model",
-            "(i_plasma_pedestal)",
-            physics_variables.i_plasma_pedestal,
-        )
-
-        if (
-            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
-            == PlasmaProfileShapeType.PEDESTAL_PROFILE
-        ):
-            if (
-                physics_variables.nd_plasma_electron_on_axis
-                < physics_variables.nd_plasma_pedestal_electron
-            ):
-                logger.error("Central density is less than pedestal density")
-
-            po.ocmmnt(self.outfile, "Pedestal profiles are used.")
-            po.ovarrf(
-                self.outfile,
-                "Density pedestal r/a location",
-                "(radius_plasma_pedestal_density_norm)",
-                physics_variables.radius_plasma_pedestal_density_norm,
-            )
-            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
-                po.ovarre(
-                    self.outfile,
-                    "Electron density pedestal height (/m3)",
-                    "(nd_plasma_pedestal_electron)",
-                    physics_variables.nd_plasma_pedestal_electron,
-                    "OP ",
-                )
-            else:
-                po.ovarre(
-                    self.outfile,
-                    "Electron density pedestal height (/m3)",
-                    "(nd_plasma_pedestal_electron)",
-                    physics_variables.nd_plasma_pedestal_electron,
-                )
-
-            # must be assigned to their exisiting values#
-            fgwped_out = (
-                physics_variables.nd_plasma_pedestal_electron
-                / physics_variables.nd_plasma_electron_max_array[6]
-            )
-            fgwsep_out = (
-                physics_variables.nd_plasma_separatrix_electron
-                / physics_variables.nd_plasma_electron_max_array[6]
-            )
-            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
-                physics_variables.f_nd_plasma_pedestal_greenwald = (
-                    physics_variables.nd_plasma_pedestal_electron
-                    / physics_variables.nd_plasma_electron_max_array[6]
-                )
-            if physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0:
-                physics_variables.f_nd_plasma_separatrix_greenwald = (
-                    physics_variables.nd_plasma_separatrix_electron
-                    / physics_variables.nd_plasma_electron_max_array[6]
-                )
-
-            po.ovarre(
-                self.outfile,
-                "Electron density at pedestal / nGW",
-                "(fgwped_out)",
-                fgwped_out,
-            )
-            po.ovarrf(
-                self.outfile,
-                "Temperature pedestal r/a location",
-                "(radius_plasma_pedestal_temp_norm)",
-                physics_variables.radius_plasma_pedestal_temp_norm,
-            )
-
-            po.ovarrf(
-                self.outfile,
-                "Electron temp. pedestal height (keV)",
-                "(temp_plasma_pedestal_kev)",
-                physics_variables.temp_plasma_pedestal_kev,
-            )
-            if 78 in numerics.icc:
-                po.ovarrf(
-                    self.outfile,
-                    "Electron temp. at separatrix (keV)",
-                    "(temp_plasma_separatrix_kev)",
-                    physics_variables.temp_plasma_separatrix_kev,
-                    "OP ",
-                )
-            else:
-                po.ovarrf(
-                    self.outfile,
-                    "Electron temp. at separatrix (keV)",
-                    "(temp_plasma_separatrix_kev)",
-                    physics_variables.temp_plasma_separatrix_kev,
-                )
-
-            po.ovarre(
-                self.outfile,
-                "Electron density at separatrix (/m3)",
-                "(nd_plasma_separatrix_electron)",
-                physics_variables.nd_plasma_separatrix_electron,
-            )
-            po.ovarre(
-                self.outfile,
-                "Electron density at separatrix / nGW",
-                "(fgwsep_out)",
-                fgwsep_out,
-            )
-
-        # Issue 558 - addition of constraint 76 to limit the value of nd_plasma_separatrix_electron, in proportion with the ballooning parameter and Greenwald density
-        if 76 in numerics.icc:
-            po.ovarre(
-                self.outfile,
-                "Critical ballooning parameter value",
-                "(alpha_crit)",
-                physics_variables.alpha_crit,
-            )
-            po.ovarre(
-                self.outfile,
-                "Critical electron density at separatrix (/m3)",
-                "(nd_plasma_separatrix_electron_eich_max)",
-                physics_variables.nd_plasma_separatrix_electron_eich_max,
-            )
-
-        po.ovarrf(
-            self.outfile,
-            "Temperature profile index",
-            "(alphat)",
-            physics_variables.alphat,
-        )
-        po.ovarrf(
-            self.outfile,
-            "Temperature profile index beta",
-            "(tbeta)",
-            physics_variables.tbeta,
-        )
-        po.ovarrf(
-            self.outfile,
-            "Pressure profile index",
-            "(alphap)",
-            physics_variables.alphap,
-        )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
+        self.output_temperature_density_profile_info()
         po.oblnkl(self.outfile)
 
         if stellarator_variables.istell == 0:
@@ -2351,14 +1734,14 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Fusion rate density: total (reactions/m3/sec)",
+            "Fusion rate density: total (reactions/m³/sec)",
             "(fusden_total)",
             physics_variables.fusden_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Fusion rate density: plasma (reactions/m3/sec)",
+            "Fusion rate density: plasma (reactions/m³/sec)",
             "(fusden_plasma)",
             physics_variables.fusden_plasma,
             "OP ",
@@ -2453,17 +1836,17 @@ class Physics(Model):
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
-        po.osubhd(self.outfile, "Alpha Powers :")
+        po.osubhd(self.outfile, "Alpha Powers (α) :")  # noqa: RUF001
         po.ovarre(
             self.outfile,
-            "Alpha rate density: total (particles/m3/sec)",
+            "Alpha rate density: total (particles/m³/sec)",
             "(fusden_alpha_total)",
             physics_variables.fusden_alpha_total,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha rate density: plasma (particles/m3/sec)",
+            "Alpha rate density: plasma (particles/m³/sec)",
             "(fusden_plasma_alpha)",
             physics_variables.fusden_plasma_alpha,
             "OP ",
@@ -2477,7 +1860,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Alpha power density: total (MW/m^3)",
+            "Alpha power density: total (MW/m³)",
             "(pden_alpha_total_mw)",
             physics_variables.pden_alpha_total_mw,
             "OP ",
@@ -2491,7 +1874,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Alpha power density: plasma (MW/m^3)",
+            "Alpha power density: plasma (MW/m³)",
             "(pden_plasma_alpha_mw)",
             physics_variables.pden_plasma_alpha_mw,
             "OP ",
@@ -2505,14 +1888,14 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Alpha power per unit volume transferred to electrons (MW/m3)",
+            "Alpha power per unit volume transferred to electrons (MW/m³)",
             "(f_pden_alpha_electron_mw)",
             physics_variables.f_pden_alpha_electron_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Alpha power per unit volume transferred to ions (MW/m3)",
+            "Alpha power per unit volume transferred to ions (MW/m³)",
             "(f_pden_alpha_ions_mw)",
             physics_variables.f_pden_alpha_ions_mw,
             "OP ",
@@ -2520,7 +1903,7 @@ class Physics(Model):
 
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
-        po.osubhd(self.outfile, "Neutron Powers :")
+        po.osubhd(self.outfile, "Neutron Powers (n) :")
         po.ovarre(
             self.outfile,
             "Neutron power: total (MW)",
@@ -2530,7 +1913,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Neutron power density: total (MW/m^3)",
+            "Neutron power density: total (MW/m³)",
             "(pden_neutron_total_mw)",
             physics_variables.pden_neutron_total_mw,
             "OP ",
@@ -2544,7 +1927,7 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Neutron power density: plasma (MW/m^3)",
+            "Neutron power density: plasma (MW/m³)",
             "(pden_plasma_neutron_mw)",
             physics_variables.pden_plasma_neutron_mw,
             "OP ",
@@ -2554,6 +1937,14 @@ class Physics(Model):
             "Neutron power: beam-plasma (MW)",
             "(p_beam_neutron_mw)",
             physics_variables.p_beam_neutron_mw,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Average neutron flux at plasma surface (MW/m²)",
+            "(pflux_plasma_surface_neutron_avg_mw)",
+            physics_variables.pflux_plasma_surface_neutron_avg_mw,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -2582,22 +1973,19 @@ class Physics(Model):
             physics_variables.p_charged_particle_mw,
             "OP ",
         )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)
 
-        po.osubhd(self.outfile, "Plasma radiation powers (excluding SOL):")
+        po.oheadr(self.outfile, "Plasma Radiation (excluding SOL):")
         po.ovarre(
             self.outfile,
-            "Plasma total synchrotron radiation power (MW)",
+            "Plasma total synchrotron radiation power (Pₛₙ) (MW)",
             "(p_plasma_sync_mw)",
             physics_variables.p_plasma_sync_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma total synchrotron radiation power density (MW/m^3)",
+            "Plasma total synchrotron radiation power density (MW/m³)",
             "(pden_plasma_sync_mw)",
             physics_variables.pden_plasma_sync_mw,
             "OP ",
@@ -2611,7 +1999,7 @@ class Physics(Model):
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma normalised minor radius defining 'core' region",
+            "Plasma normalised minor radius defining 'core' region (ρᵢₙₙₑᵣ)",
             "(radius_plasma_core_norm)",
             impurity_radiation_module.radius_plasma_core_norm,
         )
@@ -2623,14 +2011,14 @@ class Physics(Model):
         )
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from core region (MW)",
+            "Plasma total radiation power from core region (MW) (Pᵧ,ᵢₙₙₑᵣ)",
             "(p_plasma_inner_rad_mw)",
             physics_variables.p_plasma_inner_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from edge region (MW)",
+            "Plasma total radiation power from edge region (MW) (Pᵧ,ₒᵤₜₑᵣ)",
             "(p_plasma_outer_rad_mw)",
             physics_variables.p_plasma_outer_rad_mw,
             "OP ",
@@ -2647,24 +2035,16 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from inside last closed flux surface (MW)",
+            "Plasma total radiation power from inside last closed flux surface (Pᵧ) (MW)",
             "(p_plasma_rad_mw)",
             physics_variables.p_plasma_rad_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Separatrix radiation fraction (MW)",
+            "Separatrix radiation fraction (fᵧ)",
             "(f_p_plasma_separatrix_rad)",
             physics_variables.f_p_plasma_separatrix_rad,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Average neutron flux at plasma surface (MW/m^2)",
-            "(pflux_plasma_surface_neutron_avg_mw)",
-            physics_variables.pflux_plasma_surface_neutron_avg_mw,
             "OP ",
         )
 
@@ -2827,74 +2207,7 @@ class Physics(Model):
         if physics_variables.i_plasma_ignited == 1:
             po.ocmmnt(self.outfile, "  (Injected power only used for start-up phase)")
 
-        po.ovarin(
-            self.outfile,
-            "Ignited plasma switch (0=not ignited, 1=ignited)",
-            "(i_plasma_ignited)",
-            physics_variables.i_plasma_ignited,
-        )
-
-        po.oblnkl(self.outfile)
-        po.ovarre(
-            self.outfile,
-            "Plasma separatrix power (MW)",
-            "(p_plasma_separatrix_mw)",
-            physics_variables.p_plasma_separatrix_mw,
-            "OP ",
-        )
-
-        if physics_variables.p_plasma_separatrix_mw <= 0.001e0:
-            logger.error(
-                "Possible problem with high radiation power, forcing p_plasma_separatrix_mw to odd values. "
-                f"{physics_variables.p_plasma_separatrix_mw=}"
-            )
-            po.oblnkl(self.outfile)
-            po.ocmmnt(
-                self.outfile, "  BEWARE: possible problem with high radiation power"
-            )
-            po.ocmmnt(self.outfile, "          Power into divertor zone is unrealistic;")
-            po.ocmmnt(self.outfile, "          divertor calculations will be nonsense#")
-            po.ocmmnt(
-                self.outfile, "  Set constraint 17 (Radiation fraction upper limit)."
-            )
-            po.oblnkl(self.outfile)
-
-        if divertor_variables.n_divertors == 2:
-            # Double null divertor configuration
-            po.ovarre(
-                self.outfile,
-                "Pdivt / R ratio (MW/m) (On peak divertor)",
-                "(p_plasma_separatrix_rmajor_mw)",
-                physics_variables.p_plasma_separatrix_rmajor_mw,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Pdivt Bt / qAR ratio (MWT/m) (On peak divertor)",
-                "(p_div_bt_q_aspect_rmajor_mw)",
-                physics_variables.p_div_bt_q_aspect_rmajor_mw,
-                "OP ",
-            )
-        else:
-            # Single null divertor configuration
-            po.ovarre(
-                self.outfile,
-                "Psep / R ratio (MW/m)",
-                "(p_plasma_separatrix_rmajor_mw)",
-                physics_variables.p_plasma_separatrix_rmajor_mw,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Psep Bt / qAR ratio (MWT/m)",
-                "(p_div_bt_q_aspect_rmajor_mw)",
-                physics_variables.p_div_bt_q_aspect_rmajor_mw,
-                "OP ",
-            )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
+        self.exhaust.output()
 
         if stellarator_variables.istell == 0:
             self.plasma_transition.output_l_h_threshold_powers()
@@ -2934,16 +2247,7 @@ class Physics(Model):
                 physics_variables.nu_star,
                 "OP ",
             )
-            po.ovarre(
-                self.outfile,
-                "ITER Physics Basis definition of elongation",
-                "(kappa_ipb)",
-                physics_variables.kappa_ipb,
-                "OP ",
-            )
 
-            po.oblnkl(self.outfile)
-            po.ostars(self.outfile, 110)
             po.oblnkl(self.outfile)
 
             self.inductance.output_volt_second_information()
@@ -2951,7 +2255,7 @@ class Physics(Model):
             self.plasma_bootstrap_current.output()
             self.dia_current.output()
 
-        po.osubhd(self.outfile, "Fuelling :")
+        po.oheadr(self.outfile, "Plasma Fuelling")
         po.ovarre(
             self.outfile,
             "Ratio of He and pellet particle confinement times",
@@ -3000,6 +2304,517 @@ class Physics(Model):
                 "Actual Impurity fraction",
                 "(fzactual)",
                 reinke_variables.fzactual,
+            )
+
+    def output_temperature_density_profile_info(self):
+
+        po.oheadr(self.outfile, "Plasma Density and Temperature Profiles")
+        po.ovarrf(
+            self.outfile,
+            "Number of radial points in plasma profiles",
+            "(n_plasma_profile_elements)",
+            physics_variables.n_plasma_profile_elements,
+        )
+        po.ovarin(
+            self.outfile,
+            "Plasma profile model selected",
+            "(i_plasma_pedestal)",
+            physics_variables.i_plasma_pedestal,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"Plasma profile model selected: {PlasmaProfileShapeType(physics_variables.i_plasma_pedestal).description} ",
+        )
+
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ) and (
+            physics_variables.nd_plasma_electron_on_axis
+            < physics_variables.nd_plasma_pedestal_electron
+        ):
+            logger.error("Central density is less than pedestal density")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.osubhd(self.outfile, "Temperature:")
+        po.ovarrf(
+            self.outfile,
+            "Temperature profile index (αₜ)",
+            "(alphat)",
+            physics_variables.alphat,
+        )
+        po.ovarrf(
+            self.outfile,
+            "Temperature profile index beta (βₜ)",
+            "(tbeta)",
+            physics_variables.tbeta,
+        )
+        po.oblnkl(self.outfile)
+
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            po.ovarrf(
+                self.outfile,
+                "Temperature pedestal r/a location (ρₜ,pedestal)",
+                "(radius_plasma_pedestal_temp_norm)",
+                physics_variables.radius_plasma_pedestal_temp_norm,
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Electron temperature pedestal height (Tₑ,pedestal) (keV)",
+                "(temp_plasma_pedestal_kev)",
+                physics_variables.temp_plasma_pedestal_kev,
+            )
+            if 78 in numerics.icc:
+                po.ovarrf(
+                    self.outfile,
+                    "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
+                    "(temp_plasma_separatrix_kev)",
+                    physics_variables.temp_plasma_separatrix_kev,
+                    "OP ",
+                )
+            else:
+                po.ovarrf(
+                    self.outfile,
+                    "Electron temperature at separatrix (Tₑ,ₛₑₚ) (keV)",
+                    "(temp_plasma_separatrix_kev)",
+                    physics_variables.temp_plasma_separatrix_kev,
+                )
+            po.oblnkl(self.outfile)
+
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged electron temperature (⟨Tₑ⟩) (keV)",
+            "(temp_plasma_electron_vol_avg_kev)",
+            physics_variables.temp_plasma_electron_vol_avg_kev,
+        )
+        po.ovarrf(
+            self.outfile,
+            "Electron temperature on axis (Tₑ₀) (keV)",
+            "(temp_plasma_electron_on_axis_kev)",
+            physics_variables.temp_plasma_electron_on_axis_kev,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged density weighted electron temperature (⟨Tₑ⟩ₙ) (keV)",
+            "(temp_plasma_electron_density_weighted_kev)",
+            physics_variables.temp_plasma_electron_density_weighted_kev,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ratio of electron density weighted to volume averaged temperature",
+            "(f_temp_plasma_electron_density_vol_avg)",
+            physics_variables.f_temp_plasma_electron_density_vol_avg,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "Ratio of ion to electron volume-averaged temperature",
+            "(f_temp_plasma_ion_electron)",
+            physics_variables.f_temp_plasma_ion_electron,
+            "IP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged ion temperature (⟨Tᵢ⟩) (keV)",
+            "(temp_plasma_ion_vol_avg_kev)",
+            physics_variables.temp_plasma_ion_vol_avg_kev,
+        )
+        po.ovarrf(
+            self.outfile,
+            "Ion temperature on axis (Tᵢ₀) (keV)",
+            "(temp_plasma_ion_on_axis_kev)",
+            physics_variables.temp_plasma_ion_on_axis_kev,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Density:")
+        po.ovarrf(
+            self.outfile,
+            "Density profile factor (αₙ)",
+            "(alphan)",
+            physics_variables.alphan,
+        )
+        po.oblnkl(self.outfile)
+        if (
+            PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
+            == PlasmaProfileShapeType.PEDESTAL_PROFILE
+        ):
+            po.ovarrf(
+                self.outfile,
+                "Density pedestal r/a location (ρₙ,pedestal)",
+                "(radius_plasma_pedestal_density_norm)",
+                physics_variables.radius_plasma_pedestal_density_norm,
+            )
+            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
+                po.ovarre(
+                    self.outfile,
+                    "Electron density pedestal height (nₑ_pedestal) (/m³)",
+                    "(nd_plasma_pedestal_electron)",
+                    physics_variables.nd_plasma_pedestal_electron,
+                    "OP ",
+                )
+            else:
+                po.ovarre(
+                    self.outfile,
+                    "Electron density pedestal height (nₑ_pedestal) (/m³)",
+                    "(nd_plasma_pedestal_electron)",
+                    physics_variables.nd_plasma_pedestal_electron,
+                )
+            # must be assigned to their exisiting values#
+            fgwped_out = (
+                physics_variables.nd_plasma_pedestal_electron
+                / physics_variables.nd_plasma_electron_max_array[6]
+            )
+            fgwsep_out = (
+                physics_variables.nd_plasma_separatrix_electron
+                / physics_variables.nd_plasma_electron_max_array[6]
+            )
+            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
+                physics_variables.f_nd_plasma_pedestal_greenwald = (
+                    physics_variables.nd_plasma_pedestal_electron
+                    / physics_variables.nd_plasma_electron_max_array[6]
+                )
+            if physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0:
+                physics_variables.f_nd_plasma_separatrix_greenwald = (
+                    physics_variables.nd_plasma_separatrix_electron
+                    / physics_variables.nd_plasma_electron_max_array[6]
+                )
+
+            po.ovarre(
+                self.outfile,
+                "Pedestal Greenwald fraction",
+                "(fgwped_out)",
+                fgwped_out,
+            )
+            po.ovarre(
+                self.outfile,
+                "Electron density at separatrix (nₑ,ₛₑₚ) (/m³)",
+                "(nd_plasma_separatrix_electron)",
+                physics_variables.nd_plasma_separatrix_electron,
+            )
+            po.ovarre(
+                self.outfile,
+                "Separatrix Greenwald fraction",
+                "(fgwsep_out)",
+                fgwsep_out,
+            )
+            po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Volume averaged electron number density (⟨nₑ⟩) (/m³)",
+            "(nd_plasma_electrons_vol_avg)",
+            physics_variables.nd_plasma_electrons_vol_avg,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electron number density on axis (nₑ₀) (/m³)",
+            "(nd_plasma_electron_on_axis)",
+            physics_variables.nd_plasma_electron_on_axis,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Line-averaged electron number density (ñₑ) (/m³)",
+            "(nd_plasma_electron_line)",
+            physics_variables.nd_plasma_electron_line,
+            "OP ",
+        )
+        if stellarator_variables.istell == 0:
+            po.ovarre(
+                self.outfile,
+                "Greenwald fraction (f_GW)",
+                "(dnla_gw)",
+                physics_variables.nd_plasma_electron_line
+                / physics_variables.nd_plasma_electron_max_array[6],
+                "OP ",
+            )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total ion volume averaged number density (⟨nᵢ⟩) (/m³)",
+            "(nd_plasma_ions_total_vol_avg)",
+            physics_variables.nd_plasma_ions_total_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Fuel ion volume averaged number density (⟨n_fuel⟩) (/m³)",
+            "(nd_plasma_fuel_ions_vol_avg)",
+            physics_variables.nd_plasma_fuel_ions_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total impurity volume averaged number density with Z > 2 (⟨nᵢₘₚ⟩) (/m³)",
+            "(nd_plasma_impurities_vol_avg)",
+            physics_variables.nd_plasma_impurities_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermalised alpha volume averaged number density (⟨n_alpha⟩) (/m³)",
+            "(nd_plasma_alphas_vol_avg)",
+            physics_variables.nd_plasma_alphas_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Thermalised alpha to electron number density ratio (⟨n_alpha⟩/⟨nₑ⟩)",
+            "(f_nd_alpha_electron)",
+            physics_variables.f_nd_alpha_electron,
+        )
+        po.ovarre(
+            self.outfile,
+            "Proton volume averaged number density (⟨nₚ⟩) (/m³)",
+            "(nd_plasma_protons_vol_avg)",
+            physics_variables.nd_plasma_protons_vol_avg,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Proton to electron volume averaged number density ratio (⟨nₚ⟩/⟨nₑ⟩)",
+            "(f_nd_protium_electrons)",
+            physics_variables.f_nd_protium_electrons,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Hot beam ion volume averaged number density (⟨n_beam⟩) (/m³)",
+            "(nd_beam_ions)",
+            physics_variables.nd_beam_ions,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Hot beam ion to electron number density ratio (⟨n_beam⟩/⟨nₑ⟩)",
+            "(f_nd_beam_electron)",
+            physics_variables.f_nd_beam_electron,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+
+        po.osubhd(self.outfile, "Pressure:")
+
+        po.ovarrf(
+            self.outfile,
+            "Pressure profile index (αₚ)",
+            "(alphap)",
+            physics_variables.alphap,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Plasma thermal pressure on axis (p₀) (Pa)",
+            "(pres_plasma_thermal_on_axis)",
+            physics_variables.pres_plasma_thermal_on_axis,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Volume averaged plasma thermal pressure (⟨p⟩) (Pa)",
+            "(pres_plasma_thermal_vol_avg)",
+            physics_variables.pres_plasma_thermal_vol_avg,
+            "OP ",
+        )
+        # As array output is not currently supported, each element is output as a float instance
+        # Output plasma pressure profiles to mfile
+        for i in range(len(physics_variables.pres_plasma_thermal_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma pressure at point {i}",
+                f"(pres_plasma_thermal_total_profile{i})",
+                physics_variables.pres_plasma_thermal_total_profile[i],
+            )
+        for i in range(len(physics_variables.pres_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma electron pressure at point {i}",
+                f"(pres_plasma_electron_profile{i})",
+                physics_variables.pres_plasma_electron_profile[i],
+            )
+        for i in range(len(physics_variables.pres_plasma_ion_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma ion pressure at point {i}",
+                f"(pres_plasma_ion_total_profile{i})",
+                physics_variables.pres_plasma_ion_total_profile[i],
+            )
+        for i in range(len(physics_variables.pres_plasma_fuel_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma fuel pressure at point {i}",
+                f"(pres_plasma_fuel_profile{i})",
+                physics_variables.pres_plasma_fuel_profile[i],
+            )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
+        po.ocmmnt(self.outfile, "Impurities:")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
+        po.oblnkl(self.outfile)
+
+        for imp in range(impurity_radiation_module.N_IMPURITIES):
+            # MDK Update f_nd_impurity_electrons, as this will make the ITV output work correctly.
+            impurity_radiation_module.f_nd_impurity_electrons[imp] = (
+                impurity_radiation_module.f_nd_impurity_electron_array[imp]
+            )
+            str1 = (
+                impurity_radiation_module.impurity_arr_label[imp].item().replace("_", "")
+                + " concentration"
+            )
+            str2 = f"(f_nd_impurity_electrons({imp + 1:02}))"
+            # MDK Add output flag for H which is calculated.
+            if imp == 0:
+                po.ovarre(
+                    self.outfile,
+                    str1,
+                    str2,
+                    impurity_radiation_module.f_nd_impurity_electrons[imp],
+                    "OP ",
+                )
+            else:
+                po.ovarre(
+                    self.outfile,
+                    str1,
+                    str2,
+                    impurity_radiation_module.f_nd_impurity_electrons[imp],
+                )
+                if impurity_radiation_module.f_nd_impurity_electrons[imp] != 0.0:  # noqa: RUF069
+                    for i in range(physics_variables.n_plasma_profile_elements):
+                        po.ovarre(
+                            self.mfile,
+                            str1 + f" at point {i}",
+                            f"(f_nd_impurity_electrons{imp}_{i})",
+                            impurity_radiation_module.f_nd_impurity_electrons[imp]
+                            * self.plasma_profile.neprofile.profile_y[i],
+                            "OP ",
+                        )
+
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged plasma effective charge (⟨Zₑ⟩)",
+            "(n_charge_plasma_effective_vol_avg)",
+            physics_variables.n_charge_plasma_effective_vol_avg,
+            "OP ",
+        )
+        for i in range(len(physics_variables.n_charge_plasma_effective_profile)):
+            po.ovarre(
+                self.mfile,
+                "Effective charge at point",
+                f"(n_charge_plasma_effective_profile{i})",
+                physics_variables.n_charge_plasma_effective_profile[i],
+                "OP ",
+            )
+
+        for imp in range(impurity_radiation_module.N_IMPURITIES):
+            for i in range(physics_variables.n_plasma_profile_elements):
+                po.ovarre(
+                    self.mfile,
+                    "Impurity charge at point",
+                    f"(n_charge_plasma_profile{imp}_{i})",
+                    impurity_radiation_module.n_charge_impurity_profile[imp][i],
+                    "OP ",
+                )
+
+        po.ovarrf(
+            self.outfile,
+            "Volume averaged mass-weighted plasma effective charge (⟨Zₑ⟩ₘ)",
+            "(n_charge_plasma_effective_mass_weighted_vol_avg)",
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "Masses:")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Average mass of all ions (amu)",
+            "(m_ions_total_amu)",
+            physics_variables.m_ions_total_amu,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all ions in plasma (kg)",
+            "(m_plasma_ions_total)",
+            physics_variables.m_plasma_ions_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Average mass of all fuel ions (amu)",
+            "(m_fuel_amu)",
+            physics_variables.m_fuel_amu,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all fuel ions in plasma (kg)",
+            "(m_plasma_fuel_ions)",
+            physics_variables.m_plasma_fuel_ions,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Average mass of all beam ions (amu)",
+            "(m_beam_amu)",
+            physics_variables.m_beam_amu,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all alpha particles in plasma (kg)",
+            "(m_plasma_alpha)",
+            physics_variables.m_plasma_alpha,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of all electrons in plasma (kg)",
+            "(m_plasma_electron)",
+            physics_variables.m_plasma_electron,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Total mass of the plasma (kg)",
+            "(m_plasma)",
+            physics_variables.m_plasma,
+            "OP ",
+        )
+
+        # Issue 558 - addition of constraint 76 to limit the value of nd_plasma_separatrix_electron, in proportion with the ballooning parameter and Greenwald density
+        if 76 in numerics.icc:
+            po.ovarre(
+                self.outfile,
+                "Critical ballooning parameter value",
+                "(alpha_crit)",
+                physics_variables.alpha_crit,
+            )
+            po.ovarre(
+                self.outfile,
+                "Critical electron density at separatrix (/m3)",
+                "(nd_plasma_separatrix_electron_eich_max)",
+                physics_variables.nd_plasma_separatrix_electron_eich_max,
             )
 
     @staticmethod
@@ -3818,11 +3633,16 @@ class PlasmaBeta:
             "(i_beta_component)",
             physics_variables.i_beta_component,
         )
+        po.ocmmnt(
+            self.outfile,
+            f"Beta component model selected for limit: {BetaComponentLimits(physics_variables.i_beta_component).full_name} ",
+        )
+        po.oblnkl(self.outfile)
 
         if physics_variables.i_beta_component == BetaComponentLimits.TOTAL:
             po.ovarrf(
                 self.outfile,
-                "Upper limit on total beta",
+                "Upper limit on volume averaged total beta (⟨β⟩<)",
                 "(beta_vol_avg_max)",
                 physics_variables.beta_vol_avg_max,
                 "OP ",
@@ -3830,7 +3650,7 @@ class PlasmaBeta:
         elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL:
             po.ovarrf(
                 self.outfile,
-                "Upper limit on thermal beta",
+                "Upper limit on volume averaged thermal beta (⟨βₜₕ⟩<)",
                 "(beta_vol_avg_max)",
                 physics_variables.beta_vol_avg_max,
                 "OP ",
@@ -3838,7 +3658,7 @@ class PlasmaBeta:
         elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL_AND_BEAM:
             po.ovarrf(
                 self.outfile,
-                "Upper limit on thermal + NB beta",
+                "Upper limit on volume averaged thermal + NB beta (⟨βₜₕ+βₙᵦ⟩<)",
                 "(beta_vol_avg_max)",
                 physics_variables.beta_vol_avg_max,
                 "OP ",
@@ -3846,7 +3666,7 @@ class PlasmaBeta:
         elif physics_variables.i_beta_component == BetaComponentLimits.TOROIDAL:
             po.ovarrf(
                 self.outfile,
-                "Upper limit on toroidal beta",
+                "Upper limit on volume averaged toroidal beta (⟨βₜ⟩<)",
                 "(beta_vol_avg_max)",
                 physics_variables.beta_vol_avg_max,
                 "OP ",
@@ -3854,14 +3674,14 @@ class PlasmaBeta:
 
         po.ovarre(
             self.outfile,
-            "Total plasma beta",
+            "Volume averaged total plasma beta (⟨β⟩)",
             "(beta_total_vol_avg)",
             physics_variables.beta_total_vol_avg,
         )
         if physics_variables.i_beta_component == BetaComponentLimits.TOTAL:
             po.ovarrf(
                 self.outfile,
-                "Lower limit on total beta",
+                "Lower limit on volume averaged total beta (⟨β⟩>)",
                 "(beta_vol_avg_min)",
                 physics_variables.beta_vol_avg_min,
                 "IP",
@@ -3869,7 +3689,7 @@ class PlasmaBeta:
         elif physics_variables.i_beta_component == BetaComponentLimits.THERMAL:
             po.ovarrf(
                 self.outfile,
-                "Lower limit on thermal beta",
+                "Lower limit on volume averaged thermal beta (⟨βₜₕ⟩>)",
                 "(beta_vol_avg_min)",
                 physics_variables.beta_vol_avg_min,
                 "IP",
@@ -3877,28 +3697,28 @@ class PlasmaBeta:
         else:
             po.ovarrf(
                 self.outfile,
-                "Lower limit on thermal + NB beta",
+                "Lower limit on volume averaged thermal + NB beta (⟨βₜₕ+βₙᵦ⟩>)",
                 "(beta_vol_avg_min)",
                 physics_variables.beta_vol_avg_min,
                 "IP",
             )
         po.ovarre(
             self.outfile,
-            "Upper limit on poloidal beta",
+            "Upper limit on volume averaged poloidal beta (⟨βₚ⟩<)",
             "(beta_poloidal_max)",
             constraint_variables.beta_poloidal_max,
             "IP",
         )
         po.ovarre(
             self.outfile,
-            "Total poloidal beta",
+            "Volume averaged poloidal beta (⟨βₚ⟩)",
             "(beta_poloidal_vol_avg)",
             physics_variables.beta_poloidal_vol_avg,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Volume averaged toroidal beta",
+            "Volume averaged toroidal beta (⟨βₜ⟩)",
             "(beta_toroidal_vol_avg)",
             physics_variables.beta_toroidal_vol_avg,
             "OP ",
@@ -3913,14 +3733,14 @@ class PlasmaBeta:
 
         po.ovarre(
             self.outfile,
-            "Fast alpha beta",
+            "Fast alpha beta (β_alpha)",
             "(beta_fast_alpha)",
             physics_variables.beta_fast_alpha,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Neutral Beam ion beta",
+            "Neutral Beam ion beta (β_beam)",
             "(beta_beam)",
             physics_variables.beta_beam,
             "OP ",
@@ -3935,21 +3755,21 @@ class PlasmaBeta:
 
         po.ovarre(
             self.outfile,
-            "Volume averaged thermal beta",
+            "Volume averaged thermal beta (⟨βₜₕ⟩)",
             "(beta_thermal_vol_avg)",
             physics_variables.beta_thermal_vol_avg,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Thermal poloidal beta",
+            "Thermal poloidal beta (⟨βₚₜₕ⟩)",
             "(beta_thermal_poloidal_vol_avg)",
             physics_variables.beta_thermal_poloidal_vol_avg,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Thermal toroidal beta",
+            "Thermal toroidal beta (⟨βₜₕ⟩)",
             "(beta_thermal_toroidal_vol_avg)",
             physics_variables.beta_thermal_toroidal_vol_avg,
             "OP ",
@@ -3957,18 +3777,18 @@ class PlasmaBeta:
 
         po.ovarrf(
             self.outfile,
-            "Poloidal beta and inverse aspect ratio",
+            "Poloidal beta and inverse aspect ratio (βₚε)",
             "(beta_poloidal_eps)",
             physics_variables.beta_poloidal_eps,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Poloidal beta and inverse aspect ratio upper limit",
+            "Poloidal beta and inverse aspect ratio upper limit (βₚε_max)",
             "(beta_poloidal_eps_max)",
             physics_variables.beta_poloidal_eps_max,
         )
-        po.osubhd(self.outfile, "Normalised Beta Information :")
+        po.osubhd(self.outfile, "Normalised Beta (βₙ) Information :")
 
         po.ovarin(
             self.outfile,
@@ -3976,6 +3796,11 @@ class PlasmaBeta:
             "(i_beta_norm_max)",
             physics_variables.i_beta_norm_max,
         )
+        po.ocmmnt(
+            self.outfile,
+            f"Maximum normalised beta model selected: {BetaNormMaxModel(physics_variables.i_beta_norm_max).full_name} ",
+        )
+        po.oblnkl(self.outfile)
 
         if stellarator_variables.istell == 0:
             if (
@@ -3984,7 +3809,7 @@ class PlasmaBeta:
             ):
                 po.ovarrf(
                     self.outfile,
-                    "Beta g coefficient",
+                    "Beta g coefficient (βₙ<)",
                     "(beta_norm_max)",
                     physics_variables.beta_norm_max,
                     "OP ",
@@ -3992,20 +3817,20 @@ class PlasmaBeta:
             else:
                 po.ovarrf(
                     self.outfile,
-                    "Beta g coefficient",
+                    "Beta g coefficient (βₙ<)",
                     "(beta_norm_max)",
                     physics_variables.beta_norm_max,
                 )
             po.ovarrf(
                 self.outfile,
-                "Normalised total beta",
+                "Normalised total beta (βₙ)",
                 "(beta_norm_total)",
                 physics_variables.beta_norm_total,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
-                "Normalised thermal beta",
+                "Normalised thermal beta (βₙₜₕ)",
                 "(beta_norm_thermal) ",
                 physics_variables.beta_norm_thermal,
                 "OP ",
@@ -4013,7 +3838,7 @@ class PlasmaBeta:
 
             po.ovarrf(
                 self.outfile,
-                "Normalised toroidal beta",
+                "Normalised toroidal beta (βₙₜ)",
                 "(beta_norm_toroidal) ",
                 physics_variables.beta_norm_toroidal,
                 "OP ",
@@ -4021,7 +3846,7 @@ class PlasmaBeta:
 
             po.ovarrf(
                 self.outfile,
-                "Normalised poloidal beta",
+                "Normalised poloidal beta (βₙₚ)",
                 "(beta_norm_poloidal) ",
                 physics_variables.beta_norm_poloidal,
                 "OP ",
@@ -4030,35 +3855,35 @@ class PlasmaBeta:
             po.osubhd(self.outfile, "Maximum normalised beta scalings :")
             po.ovarrf(
                 self.outfile,
-                "J. Wesson normalised beta upper limit",
+                "J. Wesson normalised beta upper limit (βₙ<)",
                 "(beta_norm_max_wesson) ",
                 physics_variables.beta_norm_max_wesson,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
-                "Original normalsied beta upper limit",
+                "Original normalised beta upper limit (βₙ<)",
                 "(beta_norm_max_original_scaling) ",
                 physics_variables.beta_norm_max_original_scaling,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
-                "J. Menard normalised beta upper limit",
+                "J. Menard normalised beta upper limit (βₙ<)",
                 "(beta_norm_max_menard) ",
                 physics_variables.beta_norm_max_menard,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
-                "E. Thloreus normalised beta upper limit",
+                "E. Thloreus normalised beta upper limit (βₙ<)",
                 "(beta_norm_max_thloreus) ",
                 physics_variables.beta_norm_max_thloreus,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
-                "R. Stambaugh normalised beta upper limit",
+                "R. Stambaugh normalised beta upper limit (βₙ<)",
                 "(beta_norm_max_stambaugh) ",
                 physics_variables.beta_norm_max_stambaugh,
                 "OP ",
@@ -4082,16 +3907,24 @@ class PlasmaBeta:
         )
 
         po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
-        po.oblnkl(self.outfile)
 
 
 class IndInternalNormModel(IntEnum):
-    """Normalised internal inductance (l_i) model types"""
+    """Normalised internal inductance (lᵢ) model types"""
 
-    USER_INPUT = 0
-    WESSON = 1
-    MENARD = 2
+    USER_INPUT = (0, "User Input")
+    WESSON = (1, "Wesson scaling")
+    MENARD = (2, "Menard scaling")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class PlasmaInductance:
@@ -4289,7 +4122,7 @@ class PlasmaInductance:
         vol_plasma: float,
         rmajor: float,
     ) -> float:
-        """Calculate the normalised internal inductance using ITER-3 scaling li(3).
+        """Calculate the normalised internal inductance using ITER-3 scaling lᵢ(3).
 
         Parameters
         ----------
@@ -4305,7 +4138,7 @@ class PlasmaInductance:
         Returns
         -------
         float
-            The li(3) normalised internal inductance.
+            The lᵢ(3) normalised internal inductance.
 
         References
         ----------
@@ -4386,7 +4219,7 @@ class PlasmaInductance:
 
     def output_volt_second_information(self):
         """Output volt-second information to file."""
-        po.osubhd(self.outfile, "Plasma Volt-second Requirements :")
+        po.oheadr(self.outfile, "Plasma Volt-Second Requirements:")
         po.ovarre(
             self.outfile,
             "Total plasma volt-seconds required for pulse (Wb)",
@@ -4418,7 +4251,7 @@ class PlasmaInductance:
         )
         po.ovarrf(
             self.outfile,
-            "Ejima coefficient",
+            "Ejima coefficient (Cₑⱼᵢₘₐ)",
             "(ejima_coeff)",
             physics_variables.ejima_coeff,
         )
@@ -4440,7 +4273,7 @@ class PlasmaInductance:
 
         po.ovarre(
             self.outfile,
-            "Plasma loop voltage during burn (V)",
+            "Plasma loop voltage during burn (Vₗₒₒₚ) (V)",
             "(v_plasma_loop_burn)",
             physics_variables.v_plasma_loop_burn,
             "OP ",
@@ -4454,7 +4287,7 @@ class PlasmaInductance:
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma resistance (ohm)",
+            "Plasma resistance (Ω) (ohm)",
             "(res_plasma)",
             physics_variables.res_plasma,
             "OP ",
@@ -4462,7 +4295,7 @@ class PlasmaInductance:
 
         po.ovarre(
             self.outfile,
-            "Plasma resistive diffusion time (s)",
+            "Plasma resistive diffusion time (τᵣₑₛ) (s)",
             "(t_plasma_res_diffusion)",
             physics_variables.t_plasma_res_diffusion,
             "OP ",
@@ -4481,16 +4314,50 @@ class PlasmaInductance:
             physics_variables.e_plasma_magnetic_stored,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+
+        po.ovarin(
+            self.outfile,
+            "Normalised internal inductance model used",
+            "(i_ind_plasma_internal_norm)",
+            physics_variables.i_ind_plasma_internal_norm,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"Normalised internal inductance model selected: {IndInternalNormModel(physics_variables.i_ind_plasma_internal_norm).full_name} ",
+        )
         po.ovarrf(
             self.outfile,
-            "Plasma normalised internal inductance",
+            "Plasma normalised internal inductance (lᵢ)",
             "(ind_plasma_internal_norm)",
             physics_variables.ind_plasma_internal_norm,
             "OP ",
         )
-
         po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
+        po.ocmmnt(self.outfile, "Plasma normalised internal inductance scalings:")
+        po.oblnkl(self.outfile)
+        po.ovarrf(
+            self.outfile,
+            "J. Wesson plasma normalised internal inductance",
+            "(ind_plasma_internal_norm_wesson)",
+            physics_variables.ind_plasma_internal_norm_wesson,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "J. Menard plasma normalised internal inductance",
+            "(ind_plasma_internal_norm_menard)",
+            physics_variables.ind_plasma_internal_norm_menard,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            "ITER lᵢ(3) plasma normalised internal inductance",
+            "(ind_plasma_internal_norm_iter_3)",
+            physics_variables.ind_plasma_internal_norm_iter_3,
+            "OP ",
+        )
+
         po.oblnkl(self.outfile)
 
 
@@ -5715,7 +5582,7 @@ class DetailedPhysics(Model):
 
         po.ovarrf(
             self.outfile,
-            "Plasma volume averaged electron Debye length (m)",
+            "Plasma volume averaged electron Debye length (⟨λ_D⟩) (m)",
             "(len_plasma_debye_electron_vol_avg)",
             physics_variables.len_plasma_debye_electron_vol_avg,
             "OP ",

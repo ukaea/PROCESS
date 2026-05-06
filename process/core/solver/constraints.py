@@ -225,7 +225,7 @@ def constraint_equation_1(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(2, "MW/m3", "=")
+@ConstraintManager.register_constraint(2, "MW/m³", "=")
 def constraint_equation_2(constraint_registration, _data):
     """
 
@@ -286,7 +286,7 @@ def constraint_equation_2(constraint_registration, _data):
     return eq(pnumerator, pdenom, constraint_registration)
 
 
-@ConstraintManager.register_constraint(3, "MW/m3", "=")
+@ConstraintManager.register_constraint(3, "MW/m³", "=")
 def constraint_equation_3(constraint_registration, _data):
     """Global power balance equation for ions
     i_plasma_ignited: switch for ignition assumption
@@ -330,7 +330,7 @@ def constraint_equation_3(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(4, "MW/m3", "=")
+@ConstraintManager.register_constraint(4, "MW/m³", "=")
 def constraint_equation_4(constraint_registration, _data):
     """Global power balance equation for electrons
 
@@ -384,14 +384,14 @@ def constraint_equation_4(constraint_registration, _data):
     return eq(pnumerator, pdenom, constraint_registration)
 
 
-@ConstraintManager.register_constraint(5, "/m3", "<=")
+@ConstraintManager.register_constraint(5, "/m³", "<=")
 def constraint_equation_5(constraint_registration, _data):
     """Equation for density upper limit
 
     fdene: density limit scale
-    nd_plasma_electrons_vol_avg: electron density (/m3)
-    nd_plasma_electrons_max: density limit (/m3)
-    nd_plasma_electron_line: line averaged electron density (m-3)
+    nd_plasma_electrons_vol_avg: electron density (/m³)
+    nd_plasma_electrons_max: density limit (/m³)
+    nd_plasma_electron_line: line averaged electron density (/m³)
 
     i_density_limit:
     - 1 old ASDEX;
@@ -445,7 +445,7 @@ def constraint_equation_6(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(7, "/m3", "=")
+@ConstraintManager.register_constraint(7, "/m³", "=")
 def constraint_equation_7(constraint_registration, _data):
     """Equation for hot beam ion density
 
@@ -456,8 +456,8 @@ def constraint_equation_7(constraint_registration, _data):
     If i_plasma_ignited=1, any auxiliary power is assumed to be used only
     during plasma start-up, and is excluded from all steady-state
     power balance calculations.
-    nd_beam_ions_out: hot beam ion density from calculation (/m3)
-    nd_beam_ions: hot beam ion density, variable (/m3)
+    nd_beam_ions_out: hot beam ion density from calculation (/m³)
+    nd_beam_ions: hot beam ion density, variable (/m³)
     """
     if data_structure.physics_variables.i_plasma_ignited == 1:
         raise ProcessValueError("Do not use constraint equation 7 if i_plasma_ignited=1")
@@ -469,12 +469,12 @@ def constraint_equation_7(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(8, "MW/m2", "<=")
+@ConstraintManager.register_constraint(8, "MW/m²", "<=")
 def constraint_equation_8(constraint_registration, _data):
     """Equation for neutron wall load upper limit
 
-    pflux_fw_neutron_max_mw: allowable wall-load (MW/m2)
-    pflux_fw_neutron_mw: average neutron wall load (MW/m2)
+    pflux_fw_neutron_max_mw: allowable wall-load (MW/m²)
+    pflux_fw_neutron_mw: average neutron wall load (MW/m²)
     """
     return leq(
         data_structure.physics_variables.pflux_fw_neutron_mw,
@@ -593,17 +593,17 @@ def constraint_equation_16(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(17, "MW/m3", "<=")
+@ConstraintManager.register_constraint(17, "MW/m³", "<=")
 def constraint_equation_17(constraint_registration, _data):
     """Equation for radiation power upper limit
 
     f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
-    vol_plasma: plasma volume (m3)
-    pden_alpha_total_mw: alpha power per volume (MW/m3)
-    pden_non_alpha_charged_mw: non-alpha charged particle fusion power per volume (MW/m3)
-    pden_plasma_ohmic_mw: ohmic heating power per volume (MW/m3)
-    pden_plasma_rad_mw: total radiation power per volume (MW/m3)
+    vol_plasma: plasma volume (m³)
+    pden_alpha_total_mw: alpha power per volume (MW/m³)
+    pden_non_alpha_charged_mw: non-alpha charged particle fusion power per volume (MW/m³)
+    pden_plasma_ohmic_mw: ohmic heating power per volume (MW/m³)
+    pden_plasma_rad_mw: total radiation power per volume (MW/m³)
     fradpwr: core radiation power limit scale
 
     fradpwr adds a margin to the constraint constraint such that
@@ -627,12 +627,12 @@ def constraint_equation_17(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(18, "MW/m2", "<=")
+@ConstraintManager.register_constraint(18, "MW/m²", "<=")
 def constraint_equation_18(constraint_registration, _data):
     """Equation for divertor heat load upper limit
 
-    pflux_div_heat_load_max_mw: heat load limit (MW/m2)
-    pflux_div_heat_load_mw: divertor heat load (MW/m2)
+    pflux_div_heat_load_max_mw: heat load limit (MW/m²)
+    pflux_div_heat_load_mw: divertor heat load (MW/m²)
     """
     return leq(
         data_structure.divertor_variables.pflux_div_heat_load_mw,
@@ -815,13 +815,13 @@ def constraint_equation_25(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(26, "A/m2", "<=")
+@ConstraintManager.register_constraint(26, "A/m²", "<=")
 def constraint_equation_26(constraint_registration, _data):
     """Equation for Central Solenoid current density upper limit at EOF
 
     fjohc: margin for central solenoid current at end-of-flattop
-    j_cs_critical_flat_top_end: allowable central solenoid current density at end of flat-top (A/m2)
-    j_cs_flat_top_end: central solenoid overall current density at end of flat-top (A/m2)
+    j_cs_critical_flat_top_end: allowable central solenoid current density at end of flat-top (A/m²)
+    j_cs_flat_top_end: central solenoid overall current density at end of flat-top (A/m²)
     """
     return leq(
         (
@@ -833,13 +833,13 @@ def constraint_equation_26(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(27, "A/m2", "<=")
+@ConstraintManager.register_constraint(27, "A/m²", "<=")
 def constraint_equation_27(constraint_registration, _data):
     """Equation for Central Solenoid current density upper limit at BOP
 
     fjohc0: margin for central solenoid current at beginning of pulse
-    j_cs_critical_pulse_start: allowable central solenoid current density at beginning of pulse (A/m2)
-    j_cs_pulse_start: central solenoid overall current density at beginning of pulse (A/m2)
+    j_cs_critical_pulse_start: allowable central solenoid current density at beginning of pulse (A/m²)
+    j_cs_pulse_start: central solenoid overall current density at beginning of pulse (A/m²)
     """
     return leq(
         (
@@ -935,15 +935,15 @@ def constraint_equation_32(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(33, "A/m2", "<=")
+@ConstraintManager.register_constraint(33, "A/m²", "<=")
 def constraint_equation_33(constraint_registration, _data):
     """Equation for TF coil operating/critical J upper limit (SCTF)
 
     args : output structure : residual error; constraint value;
 
     fiooic: margin for TF coil operating current / critical
-    j_tf_wp_critical: critical current density for winding pack (A/m2)
-    j_tf_wp: winding pack current density (A/m2)
+    j_tf_wp_critical: critical current density for winding pack (A/m²)
+    j_tf_wp: winding pack current density (A/m²)
 
     fiooic scales the constraint such that:
     j_tf_wp / j_tf_wp_critical <= fiooic.
@@ -972,13 +972,13 @@ def constraint_equation_34(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(35, "A/m2", "<=")
+@ConstraintManager.register_constraint(35, "A/m²", "<=")
 def constraint_equation_35(constraint_registration, _data):
     """Equation for TF coil J_wp/J_prot upper limit (SCTF)
 
     j_tf_wp_quench_heat_max: allowable TF coil winding pack current density, for dump temperature
-    rise protection (A/m2)
-    j_tf_wp: winding pack current density (A/m2)
+    rise protection (A/m²)
+    j_tf_wp: winding pack current density (A/m²)
     """
     return leq(
         data_structure.tfcoil_variables.j_tf_wp,
@@ -1001,12 +1001,12 @@ def constraint_equation_36(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(37, "1E20 A/Wm2", "<=")
+@ConstraintManager.register_constraint(37, "1E20 A/Wm²", "<=")
 def constraint_equation_37(constraint_registration, _data):
     """Equation for current drive gamma upper limit
 
     eta_cd_norm_hcd_primary_max: maximum current drive gamma
-    eta_cd_norm_hcd_primary: normalised current drive efficiency (1.0e20 A/W-m2)
+    eta_cd_norm_hcd_primary: normalised current drive efficiency (1.0e20 A/W-m²)
     """
     return leq(
         data_structure.current_drive_variables.eta_cd_norm_hcd_primary,
@@ -1240,12 +1240,12 @@ def constraint_equation_52(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(53, "neutron/m2", "<=")
+@ConstraintManager.register_constraint(53, "neutron/m²", "<=")
 def constraint_equation_53(constraint_registration, _data):
     """Equation for fast neutron fluence on TF coil upper limit
 
-    nflutfmax: max fast neutron fluence on TF coil (n/m2)
-    nflutf: peak fast neutron fluence on TF coil superconductor (n/m2)
+    nflutfmax: max fast neutron fluence on TF coil (n/m²)
+    nflutf: peak fast neutron fluence on TF coil superconductor (n/m²)
     """
     return leq(
         data_structure.fwbs_variables.nflutf,
@@ -1254,12 +1254,12 @@ def constraint_equation_53(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(54, "MW/m3", "<=")
+@ConstraintManager.register_constraint(54, "MW/m³", "<=")
 def constraint_equation_54(constraint_registration, _data):
     """Equation for peak TF coil nuclear heating upper limit
 
-    ptfnucmax: maximum nuclear heating in TF coil (MW/m3)
-    ptfnucpm3: nuclear heating in the TF coil (MW/m3) (blktmodel>0)
+    ptfnucmax: maximum nuclear heating in TF coil (MW/m³)
+    ptfnucpm3: nuclear heating in the TF coil (MW/m³) (blktmodel>0)
     """
     return leq(
         data_structure.fwbs_variables.ptfnucpm3,
@@ -1400,12 +1400,12 @@ def constrain_equation_66(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(67, "MW/m2", "<=")
+@ConstraintManager.register_constraint(67, "MW/m²", "<=")
 def constraint_equation_67(constraint_registration, _data):
     """Simple upper limit on radiation wall load
 
-    pflux_fw_rad_max: Maximum permitted radiation wall load (MW/m^2)
-    pflux_fw_rad_max_mw: Peak radiation wall load (MW/m^2)
+    pflux_fw_rad_max: Maximum permitted radiation wall load (MW/m²)
+    pflux_fw_rad_max_mw: Peak radiation wall load (MW/m²)
     """
     return leq(
         data_structure.constraint_variables.pflux_fw_rad_max_mw,
@@ -1536,13 +1536,13 @@ def constraint_equation_74(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(75, "A/m2", "<=")
+@ConstraintManager.register_constraint(75, "A/m²", "<=")
 def constraint_equation_75(constraint_registration, _data):
     """Upper limit to ensure that TF coil current / copper area < Maximum value
     ONLY used for croco HTS coil
 
-    copperA_m2: TF coil current / copper area (A/m2)
-    copperA_m2_max: Maximum TF coil current / copper area (A/m2)
+    copperA_m2: TF coil current / copper area (A/m²)
+    copperA_m2_max: Maximum TF coil current / copper area (A/m²)
     """
     return leq(
         data_structure.rebco_variables.coppera_m2,
@@ -1551,7 +1551,7 @@ def constraint_equation_75(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(76, "m-3", "<=")
+@ConstraintManager.register_constraint(76, "/m³", "<=")
 def constraint_equation_76(constraint_registration, _data):
     """Upper limit for Eich critical separatrix density model: Added for issue 558
 
@@ -1559,12 +1559,12 @@ def constraint_equation_76(constraint_registration, _data):
     Added for issue 558 with ref to http://iopscience.iop.org/article/10.1088/1741-4326/aaa340/pdf
 
     alpha_crit: critical ballooning parameter value
-    nd_plasma_separatrix_electron_eich_max: critical electron density at separatrix [m-3]
+    nd_plasma_separatrix_electron_eich_max: critical electron density at separatrix [/m³]
     kappa: plasma separatrix elongation (calculated if i_plasma_geometry = 1-5, 7 or 9)
     triang: plasma separatrix triangularity (calculated if i_plasma_geometry = 1, 3-5 or 7)
     aspect: aspect ratio (iteration variable 1)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
-    nd_plasma_electron_max_array(7)array : density limit (/m3) as calculated using various models
+    nd_plasma_electron_max_array(7)array : density limit [/m³] as calculated using various models
     """
     # TODO: why on earth are these variables being set here!? Should they be local?
     data_structure.physics_variables.alpha_crit = (
@@ -1654,7 +1654,7 @@ def constraint_equation_80(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(81, "m-3", ">=")
+@ConstraintManager.register_constraint(81, "/m³", ">=")
 def constraint_equation_81(constraint_registration, _data):
     """Lower limit to ensure central density is larger that the pedestal one
 
@@ -1662,8 +1662,8 @@ def constraint_equation_81(constraint_registration, _data):
     residual error in physical units; output string; units string
     Lower limit nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
 
-    nd_plasma_electron_on_axis   : input : Central electron density [m-3]
-    nd_plasma_pedestal_electron : input : Electron density at pedestal [m-3]
+    nd_plasma_electron_on_axis   : input : Central electron density [/m³]
+    nd_plasma_pedestal_electron : input : Electron density at pedestal [/m³]
     """
     return geq(
         data_structure.physics_variables.nd_plasma_electron_on_axis,
@@ -1789,12 +1789,12 @@ def constraint_equation_88(constraint_registration, _data):
     )
 
 
-@ConstraintManager.register_constraint(89, "A/m2", "<=")
+@ConstraintManager.register_constraint(89, "A/m²", "<=")
 def constraint_equation_89(constraint_registration, _data):
     """Upper limit to ensure that the Central Solenoid [OH] coil current / copper area < Maximum value
 
-    copperaoh_m2: CS coil current at EOF / copper area [A/m2]
-    copperaoh_m2_max: maximum coil current / copper area [A/m2]
+    copperaoh_m2: CS coil current at EOF / copper area [A/m²]
+    copperaoh_m2_max: maximum coil current / copper area [A/m²]
     """
     return leq(
         data_structure.rebco_variables.copperaoh_m2,

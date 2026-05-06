@@ -13,6 +13,7 @@ from process.data_structure import (
     physics_variables,
     stellarator_variables,
 )
+from process.models.physics.plasma_geometry import PlasmaGeom
 
 logger = logging.getLogger(__name__)
 
@@ -243,13 +244,13 @@ class PlasmaConfinementTime:
         # Separatrix kappa defined with plasma volume for IPB scalings
         # Updated version of kappa used by the IPB98 scalings correction in:
 
-        # None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy,
+        # Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
         # “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
         # vol. 48, no. 9, pp. 099801099801, Aug. 2008,
         # doi: https://doi.org/10.1088/0029-5515/48/9/099801.
 
-        physics_variables.kappa_ipb = (vol_plasma / (2.0 * np.pi * rmajor)) / (
-            np.pi * rminor**2
+        physics_variables.kappa_ipb = PlasmaGeom.calculate_iter_physics_basis_elongation(
+            vol_plasma=vol_plasma, rmajor=rmajor, rminor=rminor
         )
 
         # Electron energy confinement times
@@ -1184,7 +1185,7 @@ class PlasmaConfinementTime:
         return root_scalar(fhz, bracket=(0.01, 150), xtol=0.001).root
 
     def output_confinement_time_info(self):
-        po.oheadr(self.outfile, "Energy Confinement")
+        po.oheadr(self.outfile, "Plasma Energy Confinement")
 
         if physics_variables.i_plasma_ignited == 1:
             po.ocmmnt(
@@ -1212,14 +1213,14 @@ class PlasmaConfinementTime:
         )
         po.ovarrf(
             self.outfile,
-            "Global thermal energy confinement time, from scaling (s)",
+            "Global thermal energy confinement time, from scaling (τₑ) (s)",
             "(t_energy_confinement)",
             physics_variables.t_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Directly calculated total energy confinement time (s)",
+            "Directly calculated total energy confinement time (τₑᵦ) (s)",
             "(t_energy_confinement_beta)",
             physics_variables.t_energy_confinement_beta,
             "OP ",
@@ -1228,6 +1229,10 @@ class PlasmaConfinementTime:
             self.outfile,
             "(Total thermal energy derived from total plasma beta / loss power)",
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
         po.ovarrf(
             self.outfile,
             "Ion energy confinement time, from scaling (s)",
@@ -1242,20 +1247,26 @@ class PlasmaConfinementTime:
             physics_variables.t_electron_energy_confinement,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Fusion double product (s/m3)",
+            "Fusion double product (nτ) (s/m³)",
             "(ntau)",
             physics_variables.ntau,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Lawson Triple product (keV s/m3)",
+            "Lawson Triple product (nTτ) (keV s/m³)",
             "(nTtau)",
             physics_variables.nTtau,
             "OP ",
         )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Transport loss power assumed in scaling law (MW)",
@@ -1304,9 +1315,13 @@ class PlasmaConfinementTime:
             "OP",
         )
         po.ocmmnt(self.outfile, "  (H* assumes IPB98(y,2), ELMy H-mode scaling)")
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
-            "Alpha particle confinement time (s)",
+            "Alpha particle confinement time (τ_α) (s)",  # noqa: RUF001
             "(t_alpha_confinement)",
             physics_variables.t_alpha_confinement,
             "OP ",
@@ -1314,17 +1329,18 @@ class PlasmaConfinementTime:
         # Note alpha confinement time is no longer equal to fuel particle confinement time.
         po.ovarrf(
             self.outfile,
-            "Alpha particle/energy confinement time ratio",
+            "Alpha particle to energy confinement time ratio (τ_α/τₑ)",  # noqa: RUF001
             "(f_alpha_energy_confinement)",
             physics_variables.f_alpha_energy_confinement,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Lower limit on f_alpha_energy_confinement",
+            "Lower limit on f_alpha_energy_confinement ((τ_α/τₑ)>)",  # noqa: RUF001
             "(f_alpha_energy_confinement_min)",
             constraint_variables.f_alpha_energy_confinement_min,
         )
+        po.oblnkl(self.outfile)
 
         # Plot table of al the H-factor scalings and coparison values
         self.output_confinement_comparison(istell=stellarator_variables.istell)
@@ -2966,7 +2982,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3027,7 +3043,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3088,7 +3104,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3149,7 +3165,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3210,7 +3226,7 @@ class PlasmaConfinementTime:
             - I. P. E. G. on C. Transport, I. P. E. G. on C. Database, and I. P. B. Editors, “Chapter 2: Plasma confinement and transport,”
             Nuclear Fusion, vol. 39, no. 12, pp. 2175-2249, Dec. 1999, doi: https://doi.org/10.1088/0029-5515/39/12/302.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3412,7 +3428,7 @@ class PlasmaConfinementTime:
             - A. Murari, E. Peluso, Michela Gelfusa, I. Lupelli, and P. Gaudio, “A new approach to the formulation and validation of scaling expressions for plasma confinement in tokamaks,”
             Nuclear Fusion, vol. 55, no. 7, pp. 073009-073009, Jun. 2015, doi: https://doi.org/10.1088/0029-5515/55/7/073009.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (
@@ -3470,7 +3486,7 @@ class PlasmaConfinementTime:
             - C. C. Petty, “Sizing up plasmas using dimensionless parameters,”
             Physics of Plasmas, vol. 15, no. 8, Aug. 2008, doi: https://doi.org/10.1063/1.2961043.
 
-            - None Otto Kardaun, N. K. Thomsen, and None Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy, “Corrections to a sequence of papers in Nuclear Fusion,”
             Nuclear Fusion, vol. 48, no. 9, pp. 099801-099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
         """
         return (

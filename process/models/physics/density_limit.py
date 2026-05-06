@@ -1,5 +1,6 @@
 import logging
 from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numpy as np
 
@@ -18,14 +19,24 @@ logger = logging.getLogger(__name__)
 class DensityLimitModel(IntEnum):
     """Electron density model types"""
 
-    ASDEX = 1
-    BORRASS_ITER_I = 2
-    BORRASS_ITER_II = 3
-    JET_EDGE_RADIATION = 4
-    JET_SIMPLE = 5
-    HUGILL_MURAKAMI = 6
-    GREENWALD = 7
-    ASDEX_NEW = 8
+    ASDEX = (1, "ASDEX limit")
+    BORRASS_ITER_I = (2, "Borrass ITER I limit")
+    BORRASS_ITER_II = (3, "Borrass ITER II limit")
+    JET_EDGE_RADIATION = (4, "JET Edge Radiation limit")
+    JET_SIMPLE = (5, "JET Simple limit")
+    HUGILL_MURAKAMI = (6, "Hugill Murakami limit")
+    GREENWALD = (7, "Greenwald limit")
+    ASDEX_NEW = (8, "ASDEX New limit")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class PlasmaDensityLimit:
@@ -570,7 +581,25 @@ class PlasmaDensityLimit:
 
     def output_density_limit_information(self):
         """Output density limit information to file."""
-        po.osubhd(self.outfile, "Density Limit using different models :")
+        po.oheadr(self.outfile, "Plasma density limits")
+        po.ovarin(
+            self.outfile,
+            "Plasma density limit model used",
+            "(i_density_limit)",
+            physics_variables.i_density_limit,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"Density limit model selected: {DensityLimitModel(physics_variables.i_density_limit).full_name} ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Density limit from scaling (nₑ<)(/m³)",
+            "(nd_plasma_electrons_max)",
+            physics_variables.nd_plasma_electrons_max,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Old ASDEX model",
@@ -627,14 +656,4 @@ class PlasmaDensityLimit:
             physics_variables.nd_plasma_electron_max_array[7],
             "OP ",
         )
-        po.ovarre(
-            self.outfile,
-            "Density limit from scaling (/m3)",
-            "(nd_plasma_electrons_max)",
-            physics_variables.nd_plasma_electrons_max,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
         po.oblnkl(self.outfile)

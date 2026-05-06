@@ -516,18 +516,20 @@ class PlasmaGeom:
             f"{PlasmaShapeModelType(physics_variables.i_plasma_shape).full_name} plasma shape model is used :",
         )
 
-        po.ovarrf(self.outfile, "Major radius (m)", "(rmajor)", physics_variables.rmajor)
+        po.ovarrf(
+            self.outfile, "Major radius (R₀) (m)", "(rmajor)", physics_variables.rmajor
+        )
         po.ovarrf(
             self.outfile,
-            "Minor radius (m)",
+            "Minor radius (a) (m)",
             "(rminor)",
             physics_variables.rminor,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Aspect ratio", "(aspect)", physics_variables.aspect)
+        po.ovarrf(self.outfile, "Aspect ratio (A)", "(aspect)", physics_variables.aspect)
         po.ovarrf(
             self.outfile,
-            "Plasma squareness",
+            "Plasma squareness (ζ)",
             "(plasma_square)",
             physics_variables.plasma_square,
             "IP",
@@ -541,7 +543,14 @@ class PlasmaGeom:
             physics_variables.i_plasma_geometry,
         )
         po.oblnkl(self.outfile)
-
+        po.ovarre(
+            self.outfile,
+            "ITER Physics Basis definition of elongation (κₐ)",
+            "(kappa_ipb)",
+            physics_variables.kappa_ipb,
+            "OP ",
+        )
+        po.oblnkl(self.outfile)
         geom_type = PlasmaGeometryModelType(physics_variables.i_plasma_geometry)
 
         if stellarator_variables.istell == 0:
@@ -552,7 +561,7 @@ class PlasmaGeom:
 
             po.ovarrf(
                 self.outfile,
-                "Elongation, X-point (κ)",
+                "Elongation, X-point (κₐ)",
                 "(kappa)",
                 physics_variables.kappa,
                 "IP"
@@ -648,7 +657,6 @@ class PlasmaGeom:
             )
 
         po.oblnkl(self.outfile)
-        po.ostars(self.outfile, 110)
 
     @staticmethod
     def plasma_angles_arcs(
@@ -940,6 +948,36 @@ class PlasmaGeom:
             a_plasma_poloidal,
             vol_plasma,
         )
+
+    @staticmethod
+    def calculate_iter_physics_basis_elongation(
+        vol_plasma: float, rmajor: float, rminor: float
+    ) -> float:
+        """Calculate the ITER physics basis elongation.
+
+        This method calculates the ITER physics basis elongation (κₐ) based on the aspect ratio and a scaling factor.
+
+        Parameters
+        ----------
+        vol_plasma :
+            Plasma volume (m³)
+        rmajor :
+            Plasma major radius (m)
+        rminor :
+            Plasma minor radius (m)
+
+        Returns
+        -------
+        kappa_ipb:
+            The calculated ITER physics basis elongation.
+
+        References
+        ----------
+            - Otto Kardaun, N. K. Thomsen, and Alexander Chudnovskiy,
+              “Corrections to a sequence of papers in Nuclear Fusion,” Nuclear Fusion,
+              vol. 48, no. 9, pp. 099801099801, Aug. 2008, doi: https://doi.org/10.1088/0029-5515/48/9/099801.
+        """
+        return (vol_plasma / (2.0 * np.pi * rmajor)) / (np.pi * rminor**2)
 
 
 # --------------------------------

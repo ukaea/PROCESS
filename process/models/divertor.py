@@ -53,7 +53,7 @@ class Divertor(Model):
         if dv.i_div_heat_load == 0 and output:
             po.ovarre(
                 self.outfile,
-                "Divertor heat load (MW/m2)",
+                "Divertor heat load (MW/m²)",
                 "(pflux_div_heat_load_mw)",
                 dv.pflux_div_heat_load_mw,
             )
@@ -200,10 +200,10 @@ class Divertor(Model):
                 "(p_plasma_separatrix_mw.)",
                 p_plasma_separatrix_mw,
             )
-            po.ovarre(self.outfile, "Divertor surface area (m2)", "(areadv)", areadv)
+            po.ovarre(self.outfile, "Divertor surface area (m²)", "(areadv)", areadv)
             po.ovarre(
                 self.outfile,
-                "Divertor heat load (MW/m2)",
+                "Divertor heat load (MW/m²)",
                 "(pflux_div_heat_load_mw)",
                 dv.pflux_div_heat_load_mw,
             )
@@ -218,7 +218,7 @@ class Divertor(Model):
             )
             po.ovarre(
                 self.outfile,
-                "Divertor heat load (MW/m2)",
+                "Divertor heat load (MW/m²)",
                 "(pflux_div_heat_load_mw)",
                 dv.pflux_div_heat_load_mw,
             )
@@ -351,7 +351,7 @@ class Divertor(Model):
             )
             po.ovarre(
                 self.outfile,
-                "Divertor heat load (MW/m2)",
+                "Divertor heat load (MW/m²)",
                 "(pflux_div_heat_load_mw)",
                 dv.pflux_div_heat_load_mw,
             )

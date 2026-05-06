@@ -1,5 +1,6 @@
 import logging
 from enum import IntEnum
+from types import DynamicClassAttribute
 
 import numba as nb
 import numpy as np
@@ -22,20 +23,30 @@ logger = logging.getLogger(__name__)
 class BootstrapCurrentFractionModel(IntEnum):
     """Bootstrap plasma current fraction (f_BS) model types"""
 
-    USER_INPUT = 0
-    ITER_89 = 1
-    NEVINS = 2
-    WILSON = 3
-    SAUTER = 4
-    SAKAI = 5
-    ARIES = 6
-    ANDRADE = 7
-    HOANG = 8
-    WONG = 9
-    GI_1 = 10
-    GI_2 = 11
-    SUGIYAMA_L_MODE = 12
-    SUGIYAMA_H_MODE = 13
+    USER_INPUT = (0, "User Input")
+    ITER_89 = (1, "ITER IPDG89 scaling")
+    NEVINS = (2, "Nevins scaling")
+    WILSON = (3, "Wilson scaling")
+    SAUTER = (4, "Sauter scaling")
+    SAKAI = (5, "Sakai scaling")
+    ARIES = (6, "Aries scaling")
+    ANDRADE = (7, "Andrade scaling")
+    HOANG = (8, "Hoang scaling")
+    WONG = (9, "Wong scaling")
+    GI_1 = (10, "GI 1 scaling")
+    GI_2 = (11, "GI 2 scaling")
+    SUGIYAMA_L_MODE = (12, "Sugiyama L Mode scaling")
+    SUGIYAMA_H_MODE = (13, "Sugiyama H Mode scaling")
+
+    def __new__(cls, value, full_name):
+        obj = int.__new__(cls, value)
+        obj._value_ = value
+        obj._full_name_ = full_name
+        return obj
+
+    @DynamicClassAttribute
+    def full_name(self):
+        return self._full_name_
 
 
 class PlasmaBootstrapCurrent(Model):
@@ -1189,6 +1200,19 @@ class PlasmaBootstrapCurrent(Model):
 
     def output(self):
         """Output the calculated bootstrap current information to the output file."""
+        po.oheadr(self.outfile, "Plasma Bootstrap Current Fraction")
+        po.ovarin(
+            self.outfile,
+            "Plasma bootstrap current fraction scaling used",
+            "(i_bootstrap_current)",
+            physics_variables.i_bootstrap_current,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"Bootstrap current fraction model selected: {BootstrapCurrentFractionModel(physics_variables.i_bootstrap_current).full_name} ",
+        )
+        po.oblnkl(self.outfile)
+
         po.ovarrf(
             self.outfile,
             "Bootstrap current fraction multiplier",
@@ -1197,15 +1221,29 @@ class PlasmaBootstrapCurrent(Model):
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (ITER 1989)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.ITER_89.full_name})",
             "(f_c_plasma_bootstrap_iter89)",
             current_drive_variables.f_c_plasma_bootstrap_iter89,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.NEVINS.full_name})",
+            "(f_c_plasma_bootstrap_nevins)",
+            current_drive_variables.f_c_plasma_bootstrap_nevins,
+            "OP ",
+        )
+        po.ovarrf(
+            self.outfile,
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.WILSON.full_name})",
+            "(f_c_plasma_bootstrap_wilson)",
+            current_drive_variables.f_c_plasma_bootstrap_wilson,
             "OP ",
         )
 
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Sauter et al)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.SAUTER.full_name})",
             "(f_c_plasma_bootstrap_sauter)",
             current_drive_variables.f_c_plasma_bootstrap_sauter,
             "OP ",
@@ -1221,82 +1259,69 @@ class PlasmaBootstrapCurrent(Model):
 
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Nevins et al)",
-            "(f_c_plasma_bootstrap_nevins)",
-            current_drive_variables.f_c_plasma_bootstrap_nevins,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Bootstrap fraction (Wilson)",
-            "(f_c_plasma_bootstrap_wilson)",
-            current_drive_variables.f_c_plasma_bootstrap_wilson,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Bootstrap fraction (Sakai)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.SAKAI.full_name})",
             "(f_c_plasma_bootstrap_sakai)",
             current_drive_variables.f_c_plasma_bootstrap_sakai,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (ARIES)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.ARIES.full_name})",
             "(f_c_plasma_bootstrap_aries)",
             current_drive_variables.f_c_plasma_bootstrap_aries,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Andrade)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.ANDRADE.full_name})",
             "(f_c_plasma_bootstrap_andrade)",
             current_drive_variables.f_c_plasma_bootstrap_andrade,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Hoang)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.HOANG.full_name})",
             "(f_c_plasma_bootstrap_hoang)",
             current_drive_variables.f_c_plasma_bootstrap_hoang,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Wong)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.WONG.full_name})",
             "(f_c_plasma_bootstrap_wong)",
             current_drive_variables.f_c_plasma_bootstrap_wong,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Gi I)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.GI_1.full_name})",
             "(bscf_gi_i)",
             current_drive_variables.bscf_gi_i,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Gi II)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.GI_2.full_name})",
             "(bscf_gi_ii)",
             current_drive_variables.bscf_gi_ii,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Sugiyama L-mode)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.SUGIYAMA_L_MODE.full_name})",
             "(f_c_plasma_bootstrap_sugiyama_l)",
             current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Bootstrap fraction (Sugiyama H-mode)",
+            f"Bootstrap fraction ({BootstrapCurrentFractionModel.SUGIYAMA_H_MODE.full_name})",
             "(f_c_plasma_bootstrap_sugiyama_h)",
             current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
             "OP ",
         )
 
+        po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
             "Pfirsch-Schlueter fraction (SCENE)",
@@ -1312,78 +1337,6 @@ class PlasmaBootstrapCurrent(Model):
         if physics_variables.err243 == 1:
             logger.error(
                 "Predicted plasma driven current is more than upper limit on non-inductive fraction"
-            )
-
-        if physics_variables.i_bootstrap_current == 0:
-            po.ocmmnt(self.outfile, "  (User-specified bootstrap current fraction used)")
-        elif physics_variables.i_bootstrap_current == 1:
-            po.ocmmnt(
-                self.outfile, "  (ITER 1989 bootstrap current fraction model used)"
-            )
-        elif physics_variables.i_bootstrap_current == 2:
-            po.ocmmnt(
-                self.outfile,
-                "  (Nevins et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 3:
-            po.ocmmnt(self.outfile, "  (Wilson bootstrap current fraction model used)")
-        elif physics_variables.i_bootstrap_current == 4:
-            po.ocmmnt(
-                self.outfile,
-                "  (Sauter et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 5:
-            po.ocmmnt(
-                self.outfile,
-                "  (Sakai et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 6:
-            po.ocmmnt(
-                self.outfile,
-                "  (ARIES bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 7:
-            po.ocmmnt(
-                self.outfile,
-                "  (Andrade et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 8:
-            po.ocmmnt(
-                self.outfile,
-                "  (Hoang et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 9:
-            po.ocmmnt(
-                self.outfile,
-                "  (Wong et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 10:
-            po.ocmmnt(
-                self.outfile,
-                "  (Gi-I et al bootstrap current fraction model used)",
-            )
-        elif physics_variables.i_bootstrap_current == 11:
-            po.ocmmnt(
-                self.outfile,
-                "  (Gi-II et al bootstrap current fraction model used)",
-            )
-
-        if physics_variables.i_diamagnetic_current == 0:
-            po.ocmmnt(self.outfile, "  (Diamagnetic current fraction not calculated)")
-            # Error to show if diamagnetic current is above 1% but not used
-            if current_drive_variables.f_c_plasma_diamagnetic_scene > 0.01e0:
-                logger.error(
-                    "Diamagnetic fraction is more than 1%, but not calculated. "
-                    "Consider using i_diamagnetic_current=2 and i_pfirsch_schluter_current=1"
-                )
-
-        elif physics_variables.i_diamagnetic_current == 1:
-            po.ocmmnt(
-                self.outfile, "  (Hender diamagnetic current fraction scaling used)"
-            )
-        elif physics_variables.i_diamagnetic_current == 2:
-            po.ocmmnt(
-                self.outfile, "  (SCENE diamagnetic current fraction scaling used)"
             )
 
         if physics_variables.i_pfirsch_schluter_current == 0:

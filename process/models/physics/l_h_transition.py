@@ -279,6 +279,34 @@ class PlasmaConfinementTransition:
         """Output L-H transition power thresholds to file."""
         po.oheadr(self.outfile, "H-mode Power Threshold Scalings :")
 
+        po.ovarin(
+            self.outfile,
+            "L-H threshold scaling switch",
+            "(i_l_h_threshold)",
+            physics_variables.i_l_h_threshold,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"{PlasmaConfinementTransitionModel(physics_variables.i_l_h_threshold).full_name}",
+        )
+        if (numerics.ioptimz > 0) and (numerics.active_constraints[14]):
+            po.ovarre(
+                self.outfile,
+                "L-H threshold power (MW)",
+                "(p_l_h_threshold_mw)",
+                physics_variables.p_l_h_threshold_mw,
+                "OP ",
+            )
+        else:
+            po.ovarre(
+                self.outfile,
+                "L-H threshold power (NOT enforced) (MW)",
+                "(p_l_h_threshold_mw)",
+                physics_variables.p_l_h_threshold_mw,
+                "OP ",
+            )
+        po.oblnkl(self.outfile)
+
         po.ovarre(
             self.outfile,
             "ITER 1996 scaling: nominal (MW)",
@@ -478,8 +506,6 @@ class PlasmaConfinementTransition:
                 po.ocmmnt(self.outfile, "(triang outside Snipes 2000 fitted range)")
                 logger.warning("triang outside Snipes 2000 fitted range")
 
-        po.oblnkl(self.outfile)
-
         if physics_variables.i_l_h_threshold in {12, 13, 14}:
             po.ocmmnt(
                 self.outfile,
@@ -487,32 +513,7 @@ class PlasmaConfinementTransition:
             )
             po.oblnkl(self.outfile)
             logger.warning("Closed divertor only. Limited data used in Snipes fit")
-        po.ovarin(
-            self.outfile,
-            "L-H threshold scaling switch",
-            "(i_l_h_threshold)",
-            physics_variables.i_l_h_threshold,
-        )
-        po.ocmmnt(
-            self.outfile,
-            f"{PlasmaConfinementTransitionModel(physics_variables.i_l_h_threshold).full_name}",
-        )
-        if (numerics.ioptimz > 0) and (numerics.active_constraints[14]):
-            po.ovarre(
-                self.outfile,
-                "L-H threshold power (MW)",
-                "(p_l_h_threshold_mw)",
-                physics_variables.p_l_h_threshold_mw,
-                "OP ",
-            )
-        else:
-            po.ovarre(
-                self.outfile,
-                "L-H threshold power (NOT enforced) (MW)",
-                "(p_l_h_threshold_mw)",
-                physics_variables.p_l_h_threshold_mw,
-                "OP ",
-            )
+        po.oblnkl(self.outfile)
 
     @staticmethod
     def calculate_iter1996_nominal(

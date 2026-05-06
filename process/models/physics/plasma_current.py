@@ -12,7 +12,9 @@ from process.core.model import Model
 from process.data_structure import (
     current_drive_variables,
     physics_variables,
+    stellarator_variables,
 )
+from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +47,123 @@ class PlasmaCurrent:
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def output(self) -> None:
+        po.oheadr(self.outfile, "Plasma Current and Safety Factor")
+
+        if stellarator_variables.istell == 0:
+            po.oblnkl(self.outfile)
+            po.ovarin(
+                self.outfile,
+                "Plasma current scaling law used",
+                "(i_plasma_current)",
+                physics_variables.i_plasma_current,
+            )
+            po.ocmmnt(
+                self.outfile,
+                f"Plasma current model selected: {PlasmaCurrentModel(physics_variables.i_plasma_current).full_name} ",
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Plasma current (Iₚ) (MA)",
+                "(plasma_current_MA)",
+                physics_variables.plasma_current / 1.0e6,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Plasma current (Iₚ) (A)",
+                "(plasma_current)",
+                physics_variables.plasma_current,
+                "OP ",
+            )
+
+            self.output_plasma_current_models()
+            po.oblnkl(self.outfile)
+
+            if physics_variables.i_alphaj == 1:
+                po.ovarrf(
+                    self.outfile,
+                    "Current density profile factor (αⱼ)",
+                    "(alphaj)",
+                    physics_variables.alphaj,
+                    "OP ",
+                )
+            else:
+                po.ovarrf(
+                    self.outfile,
+                    "Current density profile factor (αⱼ)",
+                    "(alphaj)",
+                    physics_variables.alphaj,
+                )
+            po.ocmmnt(self.outfile, "Current profile index scalings:")
+            po.oblnkl(self.outfile)
+
+            po.ovarrf(
+                self.outfile,
+                "J. Wesson plasma current profile index",
+                "(alphaj_wesson)",
+                physics_variables.alphaj_wesson,
+                "OP ",
+            )
+            po.oblnkl(self.outfile)
+            po.ovarrf(
+                self.outfile,
+                "On-axis plasma current density (j₀) (A/m²)",
+                "(j_plasma_on_axis)",
+                physics_variables.j_plasma_on_axis,
+                "OP ",
+            )
+
+        if stellarator_variables.istell == 0:
+            po.ovarrf(
+                self.outfile, "Safety factor on axis (q₀)", "(q0)", physics_variables.q0
+            )
+
+            if physics_variables.i_plasma_current == 2:
+                po.ovarrf(
+                    self.outfile,
+                    "Mean edge safety factor (q₉₅)",
+                    "(q95)",
+                    physics_variables.q95,
+                )
+
+            po.ovarrf(
+                self.outfile,
+                "Safety factor at 95% flux surface (q₉₅)",
+                "(q95)",
+                physics_variables.q95,
+            )
+
+            po.ovarrf(
+                self.outfile,
+                "Cylindrical safety factor (qcyl)",
+                "(qstar)",
+                physics_variables.qstar,
+                "OP ",
+            )
+
+            if (
+                physics_variables.i_plasma_geometry
+                == PlasmaGeometryModelType.STAR_FIESTA
+            ):
+                po.ovarrf(
+                    self.outfile,
+                    "Lower limit for edge safety factor q95",
+                    "(q95_min)",
+                    physics_variables.q95_min,
+                    "OP ",
+                )
+            po.oblnkl(self.outfile)
+
+        else:
+            po.ovarrf(
+                self.outfile,
+                "Rotational transform",
+                "(iotabar)",
+                stellarator_variables.iotabar,
+            )
 
     def calculate_plasma_current(
         self,
@@ -927,6 +1046,17 @@ class PlasmaDiamagneticCurrent(Model):
 
     def output(self):
         po.oblnkl(self.outfile)
+        po.ovarin(
+            self.outfile,
+            "Plasma diamagnetic current fraction scaling law used",
+            "(i_diamagnetic_current)",
+            physics_variables.i_diamagnetic_current,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"Diamagnetic current fraction model selected: {PlasmaDiamagneticCurrentModel(physics_variables.i_diamagnetic_current).full_name} ",
+        )
+        po.oblnkl(self.outfile)
         po.ovarrf(
             self.outfile,
             "Diamagnetic fraction (Hender)",
@@ -942,6 +1072,15 @@ class PlasmaDiamagneticCurrent(Model):
             "OP ",
         )
         po.oblnkl(self.outfile)
+        if (
+            physics_variables.i_diamagnetic_current == PlasmaDiamagneticCurrentModel.NONE
+            and current_drive_variables.f_c_plasma_diamagnetic_scene > 0.01e0
+        ):
+            # Error to show if diamagnetic current is above 1% but not used
+            logger.error(
+                "Diamagnetic fraction is more than 1%, but not calculated. "
+                "Consider using i_diamagnetic_current=2 and i_pfirsch_schluter_current=1"
+            )
 
     @staticmethod
     @nb.njit(cache=True)
