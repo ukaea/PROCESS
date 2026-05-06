@@ -2254,9 +2254,7 @@ class CalcBuildingCostsParam:
         ),
     ],
 )
-def test_calc_building_costs(
-    calcbuildingcostsparam, monkeypatch, costs2015, process_models
-):
+def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     """
     Automatically generated Regression Unit Test for calc_building_costs.
 
@@ -4563,7 +4561,7 @@ class CalcLandCostsParam:
         ),
     ],
 )
-def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015, process_models):
+def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     """
     Automatically generated Regression Unit Test for calc_land_costs.
 
@@ -6831,9 +6829,7 @@ class CalcTfCoilCostsParam:
         ),
     ],
 )
-def test_calc_tf_coil_costs(
-    calctfcoilcostsparam, monkeypatch, costs2015, process_models
-):
+def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
     """
     Automatically generated Regression Unit Test for calc_tf_coil_costs.
 
@@ -9098,7 +9094,7 @@ class CalcRemoteHandlingCostsParam:
     ],
 )
 def test_calc_remote_handling_costs(
-    calcremotehandlingcostsparam, monkeypatch, costs2015, process_models
+    calcremotehandlingcostsparam, monkeypatch, costs2015
 ):
     """
     Automatically generated Regression Unit Test for calc_remote_handling_costs.
@@ -11361,9 +11357,7 @@ class CalcNPlantAndVvCostsParam:
         ),
     ],
 )
-def test_calc_n_plant_and_vv_costs(
-    calcnplantandvvcostsparam, monkeypatch, costs2015, process_models
-):
+def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs2015):
     """
     Automatically generated Regression Unit Test for calc_n_plant_and_vv_costs.
 
@@ -13623,7 +13617,7 @@ class CalcEnergyConversionSystemParam:
     ],
 )
 def test_calc_energy_conversion_system(
-    calcenergyconversionsystemparam, monkeypatch, costs2015, process_models
+    calcenergyconversionsystemparam, monkeypatch, costs2015
 ):
     """
     Automatically generated Regression Unit Test for calc_energy_conversion_system.
@@ -15909,9 +15903,7 @@ class CalcRemainingSubsystemsParam:
         ),
     ],
 )
-def test_calc_remaining_subsystems(
-    calcremainingsubsystemsparam, monkeypatch, costs2015, process_models
-):
+def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, costs2015):
     """
     Automatically generated Regression Unit Test for calc_remaining_subsystems.
 

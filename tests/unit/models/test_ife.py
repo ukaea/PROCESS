@@ -1565,7 +1565,7 @@ class IfefbsParam(NamedTuple):
         ),
     ],
 )
-def test_ifefbs(ifefbsparam, monkeypatch, ife, process_models):
+def test_ifefbs(ifefbsparam, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for ifefbs.
 
@@ -3104,7 +3104,7 @@ class Ifepw2Param(NamedTuple):
         ),
     ],
 )
-def test_ifepw2(ifepw2param, monkeypatch, ife, process_models):
+def test_ifepw2(ifepw2param, monkeypatch, ife):
     """
     Automatically generated Regression Unit Test for ifepw2.
 

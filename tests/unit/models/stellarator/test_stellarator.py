@@ -2141,7 +2141,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     ],
 )
 def test_sctfcoil_nuclear_heating_iter90(
-    sctfcoilnuclearheatingiter90param, monkeypatch, stellarator, process_models
+    sctfcoilnuclearheatingiter90param, monkeypatch, stellarator
 ):
     """
     Automatically generated Regression Unit Test for sctfcoil_nuclear_heating_iter90.

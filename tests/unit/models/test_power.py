@@ -2489,7 +2489,7 @@ class Power2Param(NamedTuple):
         ),
     ],
 )
-def test_power2(power2param, monkeypatch, power, process_models):
+def test_power2(power2param, monkeypatch, power):
     """
     Automatically generated Regression Unit Test for power2.
 
