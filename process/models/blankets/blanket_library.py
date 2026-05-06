@@ -21,6 +21,10 @@ from process.data_structure import (
     primary_pumping_variables,
 )
 from process.models.build import FwBlktVVShape
+from process.models.engineering.pumping import (
+    calculate_reynolds_number,
+    darcy_friction_haaland,
+)
 from process.models.power import PumpingPowerModelTypes
 
 logger = logging.getLogger(__name__)
@@ -3073,17 +3077,22 @@ class BlanketLibrary(Model):
         dia_pipe = self.pipe_hydraulic_diameter(i_ps)
 
         # Reynolds number
-        reynolds_number = den_coolant * vel_coolant * dia_pipe / visc_coolant
+        reynolds_number = calculate_reynolds_number(
+            den_coolant=den_coolant,
+            vel_coolant=vel_coolant,
+            radius_channel=dia_pipe / 2,
+            visc_coolant=visc_coolant,
+        )
 
         # Calculate Darcy friction factor
         # N.B. friction function Uses Haaland approx. which assumes a filled circular pipe.
         # Use dh which allows us to do fluid calculations for non-cicular tubes
         # (dh is estimate appropriate for fully developed flow).
 
-        darcy_friction_factor = self.fw.darcy_friction_haaland(
-            reynolds_number,
-            fwbs_variables.roughness_fw_channel,
-            fwbs_variables.radius_fw_channel,
+        darcy_friction_factor = darcy_friction_haaland(
+            reynolds=reynolds_number,
+            roughness_channel=fwbs_variables.roughness_fw_channel,
+            radius_channel=fwbs_variables.radius_fw_channel,
         )
 
         # Pressure drop coefficient

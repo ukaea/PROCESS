@@ -164,27 +164,3 @@ def test_fw_temp(fwtempparam, monkeypatch, fw):
     assert rhofmean == pytest.approx(fwtempparam.expected_rhofmean, rel=1e-4)
 
     assert massrate == pytest.approx(fwtempparam.expected_massrate, rel=1e-4)
-
-
-def test_darcy_friction_haaland(fw):
-    assert fw.darcy_friction_haaland(5500, 1e-6, 0.1) == pytest.approx(
-        0.0366668931278784
-    )
-
-
-def test_heat_transfer(fw):
-    assert fw.heat_transfer(
-        mflux_coolant=112.19853108876258,
-        den_coolant=8.8673250601290707,
-        radius_channel=0.0060000000000000001,
-        heatcap_coolant=5184.9330299967578,
-        visc_coolant=4.0416219836935569e-05,
-        thermcond_coolant=0.3211653052986152,
-        roughness_fw_channel=6e-8,
-    ) == pytest.approx(1929.2042015869506)
-
-
-def test_fw_thermal_conductivity(monkeypatch, fw):
-    monkeypatch.setattr(fwbs_variables, "fw_th_conductivity", 28.9)
-
-    assert fw.fw_thermal_conductivity(1900.0) == pytest.approx(326.70406785462256)

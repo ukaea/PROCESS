@@ -22,6 +22,10 @@ from process.models.blankets.blanket_library import (
     eshellarea,
 )
 from process.models.build import FwBlktVVShape
+from process.models.engineering.materials import eurofer97_thermal_conductivity
+from process.models.engineering.pumping import (
+    gnielinski_heat_transfer_coefficient,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -457,17 +461,17 @@ class FirstWall(Model):
             )
 
         # Thermal conductivity of first wall material (W/m.K)
-        tkfw = self.fw_thermal_conductivity(temp_k)
+        tkfw = eurofer97_thermal_conductivity(temp=temp_k)
 
         # Heat transfer coefficient (W m^-2 K^-1)
-        hcoeff = self.heat_transfer(
-            mflux_fw_coolant,
-            outlet_coolant_properties.density,
-            radius_fw_channel,
-            outlet_coolant_properties.specific_heat_const_p,
-            outlet_coolant_properties.viscosity,
-            outlet_coolant_properties.thermal_conductivity,
-            fwbs_variables.roughness_fw_channel,
+        hcoeff = gnielinski_heat_transfer_coefficient(
+            mflux_coolant=mflux_fw_coolant,
+            den_coolant=outlet_coolant_properties.density,
+            radius_channel=radius_fw_channel,
+            heatcap_coolant=outlet_coolant_properties.specific_heat_const_p,
+            visc_coolant=outlet_coolant_properties.viscosity,
+            thermcond_coolant=outlet_coolant_properties.thermal_conductivity,
+            roughness_channel=fwbs_variables.roughness_fw_channel,
         )
 
         # Temperature drops between first-wall surface and bulk coolant !
@@ -645,163 +649,6 @@ class FirstWall(Model):
             den_fw_coolant_average,
             mflow_fw_coolant,
         )
-
-    def fw_thermal_conductivity(self, temp: float) -> float:
-        """Calculates the thermal conductivity of the first wall material (Eurofer97).
-
-        Parameters
-        ----------
-        temp:
-            Property temperature in Kelvin (K).
-
-        Returns
-        -------
-        :
-            Thermal conductivity of Eurofer97 in W/m/K.
-
-        Notes
-        -----
-        Valid up to about 800 K
-
-        References
-        ----------
-            - A. A. Tavassoli et al., “Materials design data for reduced activation martensitic steel type EUROFER,”
-            Journal of Nuclear Materials, vol. 329-333, pp. 257-262, Aug. 2004,
-            doi: https://doi.org/10.1016/j.jnucmat.2004.04.020.
-
-            - Tavassoli, F. "Fusion Demo Interim Structural Design Criteria (DISDC)/Appendix A Material Design Limit Data/A3. S18E Eurofer Steel."
-              CEA, EFDA_TASK_TW4-TTMS-005-D01 (2004)
-        """
-        # temp in Kelvin
-        return (
-            (5.4308 + 0.13565 * temp - 0.00023862 * temp**2 + 1.3393e-7 * temp**3)
-            * fwbs_variables.fw_th_conductivity
-            / 28.34
-        )
-
-    def heat_transfer(
-        self,
-        mflux_coolant: float,
-        den_coolant: float,
-        radius_channel: float,
-        heatcap_coolant: float,
-        visc_coolant: float,
-        thermcond_coolant: float,
-        roughness_fw_channel: float,
-    ) -> float:
-        """Calculate heat transfer coefficient using Gnielinski correlation.
-
-        Parameters
-        ----------
-        mflux_coolant:
-            Coolant mass flux in a single channel (kg/m^2/s).
-        den_coolant:
-            Coolant density (average of inlet and outlet) (kg/m^3).
-        radius_channel:
-            Coolant pipe radius (m).
-        heatcap_coolant:
-            Coolant specific heat capacity (average of inlet and outlet) (J/kg/K).
-        visc_coolant:
-            Coolant viscosity (average of inlet and outlet) (Pa.s).
-        thermcond_coolant:
-            Thermal conductivity of coolant (average of inlet and outlet) (W/m.K).
-        roughness_fw_channel:
-            Roughness of the first wall coolant channel (m).
-
-        Returns
-        -------
-        :
-            Heat transfer coefficient (W/m^2K).
-
-        Notes
-        -----
-        Gnielinski correlation. Ignore the distinction between wall and
-        bulk temperatures. Valid for: 3000 < Re < 5e6, 0.5 < Pr < 2000
-
-        References
-        ----------
-            - https://en.wikipedia.org/wiki/Nusselt_number#Gnielinski_correlation
-
-        """
-        # Calculate pipe diameter (m)
-        diameter = 2 * radius_channel
-
-        # Calculate flow velocity (m/s)
-        velocity = mflux_coolant / den_coolant
-
-        # Calculate Reynolds number
-        reynolds = den_coolant * velocity * diameter / visc_coolant
-
-        # Calculate Prandtl number
-        pr = heatcap_coolant * visc_coolant / thermcond_coolant
-
-        # Calculate Darcy friction factor, using Haaland equation
-        f = self.darcy_friction_haaland(
-            reynolds,
-            roughness_fw_channel,
-            radius_channel,
-        )
-
-        # Calculate the Nusselt number
-        nusselt = (
-            (f / 8.0)
-            * (reynolds - 1000.0)
-            * pr
-            / (1 + 12.7 * np.sqrt(f / 8.0) * (pr ** (2 / 3) - 1.0))
-        )
-
-        # Calculate the heat transfer coefficient (W/m^2K)
-        heat_transfer_coefficient = nusselt * thermcond_coolant / (2.0 * radius_channel)
-
-        # Check that Reynolds number is in valid range for the Gnielinski correlation
-        if (reynolds <= 3000.0) or (reynolds > 5.0e6):
-            logger.error("Reynolds number out of range : [3e3-5000e3]. %s", reynolds)
-
-        # Check that Prandtl number is in valid range for the Gnielinski correlation
-        if (pr < 0.5) or (pr > 2000.0):
-            logger.error("Prandtl number out of range : [0.5-2000]. %s", pr)
-
-        # Check that the Darcy friction factor is in valid range for the Gnielinski correlation
-        if f <= 0.0:
-            logger.error("Negative Darcy friction factor (f). %s", f)
-
-        return heat_transfer_coefficient
-
-    def darcy_friction_haaland(
-        self, reynolds: float, roughness_fw_channel: float, radius_fw_channel: float
-    ) -> float:
-        """Calculate Darcy friction factor using the Haaland equation.
-
-        Parameters
-        ----------
-        reynolds
-            Reynolds number.
-        roughness_fw_channel
-            Roughness of the first wall coolant channel (m).
-        radius_fw_channel
-            Radius of the first wall coolant channel (m).
-
-        Returns
-        -------
-        :
-            Darcy friction factor.
-
-        Notes
-        -----
-            The Haaland equation is an approximation to the implicit Colebrook-White equation.
-            It is used to calculate the Darcy friction factor for turbulent flow in pipes.
-
-        References
-        ----------
-            - https://en.wikipedia.org/wiki/Darcy_friction_factor_formulae#Haaland_equation
-        """
-        # Bracketed term in Haaland equation
-        bracket = (
-            roughness_fw_channel / radius_fw_channel / 3.7
-        ) ** 1.11 + 6.9 / reynolds
-
-        # Calculate Darcy friction factor
-        return (1.8 * np.log10(bracket)) ** (-2)
 
     @staticmethod
     def calculate_total_fw_channels(

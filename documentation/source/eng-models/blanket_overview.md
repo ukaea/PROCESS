@@ -44,7 +44,7 @@ $$
 
 here $L$ is the characteristic length which we set to be the pipe diameter and $\mu$ is the coolant dynamic viscosity.
 
-Using the Reynolds number we calculate the Darcy friction factor using the Haaland approximation calculated by `darcy_friction_haaland()`.
+Using the Reynolds number we calculate the Darcy friction factor using the Haaland approximation calculated by [`darcy_friction_haaland()`](../eng-models/generic_methods/pumping.md#pumping-coolant-friction--darcy_friction_haaland).
 
 For the radius of the pipe bend we assume it to be 3 times the radius of the coolant channel.
 
