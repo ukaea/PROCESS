@@ -43,7 +43,6 @@ from process.models.stellarator.preset_config import load_stellarator_config
 from process.models.tfcoil.base import TFConductorModel
 
 if TYPE_CHECKING:
-    from process.main import CostsProtocol
     from process.models.availability import Availability
     from process.models.blankets.hcpb import CCFE_HCPB
     from process.models.buildings import Buildings
@@ -94,7 +93,7 @@ class Stellarator(Model):
         availability: Availability,
         vacuum: Vacuum,
         buildings: Buildings,
-        costs: CostsProtocol,
+        costs: Model,
         power,
         plasma_profile: PlasmaProfile,
         hcpb: CCFE_HCPB,

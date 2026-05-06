@@ -41,7 +41,6 @@ Box file T&amp;M/PKNIGHT/PROCESS (from 24/01/12)
 
 import logging
 from pathlib import Path
-from typing import Protocol
 
 import click
 
@@ -572,16 +571,6 @@ class SingleRun:
             raise ValueError("User-created model not injected correctly") from err
 
 
-class CostsProtocol(Protocol):
-    """Protocol layout for costs models"""
-
-    def run(self):
-        """Run the model"""
-
-    def output(self):
-        """Write model output"""
-
-
 class Models:
     """Creates instances of physics and engineering model classes.
 
@@ -686,20 +675,21 @@ class Models:
         self.setup_data_structure()
 
     @property
-    def costs(self) -> CostsProtocol:
+    def costs(self) -> Model:
         if self.data.costs.cost_model == 0:
             return self._costs_1990
         if self.data.costs.cost_model == 1:
             return self._costs_2015
         if self.data.costs.cost_model == 2:
             if self._costs_custom is not None:
+                self._costs_custom.data = self.data
                 return self._costs_custom
             raise ValueError("Custom costs model not initialised")
         # Probably overkill but makes typing happy
         raise ValueError("Unknown costs model")
 
     @costs.setter
-    def costs(self, value: CostsProtocol):
+    def costs(self, value: Model):
         self._costs_custom = value
 
     @property
