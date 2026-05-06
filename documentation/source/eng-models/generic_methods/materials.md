@@ -5,7 +5,7 @@
 The thermal conductivity of the first wall is assumed to be that of Eurofer97 using the relation below[^1] [^2]:
  
 $$
-K_{\text{Eurofer97}} = 5.4308 + 0.13565T - 0.00023862T^2 + 1.3393 \times 10^{-7} T^3
+K_{\text{Eurofer97}} = \frac{\texttt{fwbs\_variables.fw\_th\_conductivity}}{28.34}\left(5.4308 + 0.13565T - 0.00023862T^2 + 1.3393 \times 10^{-7} T^3\right)
 $$
 
 !!! warning Thermal conductivity validity bounds
