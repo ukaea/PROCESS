@@ -47,7 +47,7 @@ def gnielinski_heat_transfer_coefficient(
     heatcap_coolant: float,
     visc_coolant: float,
     thermcond_coolant: float,
-    roughness_fw_channel: float,
+    roughness_channel: float,
 ) -> float:
     """Calculate heat transfer coefficient using Gnielinski correlation.
 
@@ -65,8 +65,8 @@ def gnielinski_heat_transfer_coefficient(
         Coolant viscosity (average of inlet and outlet) (Pa.s).
     thermcond_coolant:
         Thermal conductivity of coolant (average of inlet and outlet) (W/m.K).
-    roughness_fw_channel:
-        Roughness of the first wall coolant channel (m).
+    roughness_channel:
+        Roughness of the coolant channel (m).
 
     Returns
     -------
@@ -103,7 +103,7 @@ def gnielinski_heat_transfer_coefficient(
     # Calculate Darcy friction factor, using Haaland equation
     f = darcy_friction_haaland(
         reynolds=reynolds,
-        roughness_channel=roughness_fw_channel,
+        roughness_channel=roughness_channel,
         radius_channel=radius_channel,
     )
 

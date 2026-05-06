@@ -21,11 +21,11 @@ from process.data_structure import (
     primary_pumping_variables,
 )
 from process.models.build import FwBlktVVShape
-from process.models.power import PumpingPowerModelTypes
 from process.models.engineering.pumping import (
     calculate_reynolds_number,
     darcy_friction_haaland,
 )
+from process.models.power import PumpingPowerModelTypes
 
 logger = logging.getLogger(__name__)
 
