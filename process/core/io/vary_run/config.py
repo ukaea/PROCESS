@@ -184,10 +184,6 @@ iteration variables should get varied"""
         return self._base_output.format(self._current_iteration - 1)
 
     @property
-    def prev_infile(self):
-        return
-
-    @property
     def initial_infile(self):
         return self._base_input.format(0)
 
