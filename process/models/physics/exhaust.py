@@ -1,3 +1,5 @@
+"""Module for plasma exhaust calculations and analysis."""
+
 import logging
 
 from process.core import constants
@@ -30,7 +32,8 @@ class PlasmaExhaust:
 
         if physics_variables.p_plasma_separatrix_mw <= 0.001e0:
             logger.error(
-                "Possible problem with high radiation power, forcing p_plasma_separatrix_mw to odd values. "
+                "Possible problem with high radiation power, forcing "
+                "p_plasma_separatrix_mw to odd values. "
                 f"{physics_variables.p_plasma_separatrix_mw=}"
             )
             po.oblnkl(self.outfile)
@@ -48,14 +51,16 @@ class PlasmaExhaust:
             # Double null divertor configuration
             po.ovarre(
                 self.outfile,
-                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m) (On peak divertor)",
+                "Plasma separatrix power over major radius (Pₛₑₚ / R₀) (MW/m) "
+                "(On peak divertor)",
                 "(p_plasma_separatrix_rmajor_mw)",
                 physics_variables.p_plasma_separatrix_rmajor_mw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) (MWT/m) (On peak divertor)",
+                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
+                "(MWT/m) (On peak divertor)",
                 "(p_div_bt_q_aspect_rmajor_mw)",
                 physics_variables.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
@@ -71,7 +76,8 @@ class PlasmaExhaust:
             )
             po.ovarre(
                 self.outfile,
-                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) (MWT/m)",
+                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀)"
+                "(MWT/m)",
                 "(p_div_bt_q_aspect_rmajor_mw)",
                 physics_variables.p_div_bt_q_aspect_rmajor_mw,
                 "OP ",
@@ -148,7 +154,8 @@ class PlasmaExhaust:
         aspect: float,
         rmajor: float,
     ) -> float:
-        """Calculate the EU DEMO divertor protection re-attachment metric for plasma exhaust.
+        """Calculate the EU DEMO divertor protection re-attachment metric for plasma
+        exhaust.
 
         Parameters
         ----------
@@ -171,9 +178,9 @@ class PlasmaExhaust:
         References
         ----------
         - M. Siccinio, G. Federici, R. Kembleton, H. Lux, F. Maviglia, and J. Morris,
-          "Figure of merit for divertor protection in the preliminary design of the EU-DEMO reactor,"
-          Nuclear Fusion, vol. 59, no. 10, pp. 106026-106026, Jul. 2019,
-          doi: https://doi.org/10.1088/1741-4326/ab3153.
+          "Figure of merit for divertor protection in the preliminary design of the
+          EU-DEMO reactor," Nuclear Fusion, vol. 59, no. 10, pp. 106026-106026,
+          Jul. 2019, doi: https://doi.org/10.1088/1741-4326/ab3153.
 
         - H. Zohm et al.,
           "A stepladder approach to a tokamak fusion power plant,"
