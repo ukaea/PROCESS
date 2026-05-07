@@ -463,7 +463,7 @@ class FirstWall(Model):
             )
 
         # Thermal conductivity of first wall material (W/m.K)
-        tkfw = eurofer97_thermal_conductivity(temp=temp_k)
+        tkfw = eurofer97_thermal_conductivity(temp=temp_k, data=self.data)
 
         # Heat transfer coefficient (W m^-2 K^-1)
         hcoeff = gnielinski_heat_transfer_coefficient(
