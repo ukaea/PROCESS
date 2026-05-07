@@ -1617,8 +1617,6 @@ class Power(Model):
 
         #  Total secondary heat
         #  (total low-grade heat rejected - does not contribute to power conversion cycle)
-        #  Included self.data.fwbs.p_tf_nuclear_heat_mw
-        # p_plant_secondary_heat_mw = power_variables.p_plant_core_systems_elec_mw + heat_transport_variables.p_hcd_electric_loss_mw + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw + heat_transport_variables.p_div_secondary_heat_mw + heat_transport_variables.p_shld_secondary_heat_mw + heat_transport_variables.p_hcd_secondary_heat_mw + self.data.fwbs.p_tf_nuclear_heat_mw
         heat_transport_variables.p_plant_secondary_heat_mw = (
             power_variables.p_plant_core_systems_elec_mw
             + heat_transport_variables.p_hcd_electric_loss_mw
@@ -1632,7 +1630,6 @@ class Power(Model):
         #  Calculate powers relevant to a power-producing plant
         if self.data.costs.ireactor == 1:
             #  Gross electric power
-            # p_plant_electric_gross_mw = (heat_transport_variables.p_plant_primary_heat_mw-hthermmw) * heat_transport_variables.eta_turbine
             i_p_coolant_pumping = PumpingPowerModelTypes(
                 self.data.fwbs.i_p_coolant_pumping
             )

@@ -2,18 +2,18 @@
 
 import logging
 
-from process.core.model import DataStructure
-
 logger = logging.getLogger(__name__)
 
 
-def eurofer97_thermal_conductivity(temp: float, data: DataStructure) -> float:
+def eurofer97_thermal_conductivity(temp: float, fw_th_conductivity: float) -> float:
     """Calculates the thermal conductivity of the first wall material (Eurofer97).
 
     Parameters
     ----------
     temp:
         Property temperature in Kelvin (K).
+    fw_th_conductivity:
+        thermal conductivity of first wall material at 293 K (W/m/K)
 
     Returns
     -------
@@ -38,6 +38,6 @@ def eurofer97_thermal_conductivity(temp: float, data: DataStructure) -> float:
     # temp in Kelvin
     return (
         (5.4308 + 0.13565 * temp - 0.00023862 * temp**2 + 1.3393e-7 * temp**3)
-        * data.fwbs.fw_th_conductivity
+        * fw_th_conductivity
         / 28.34
     )

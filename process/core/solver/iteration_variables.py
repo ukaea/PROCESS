@@ -1,5 +1,6 @@
 from copy import deepcopy
 from dataclasses import dataclass
+from typing import Any
 from warnings import warn
 
 import numpy as np
@@ -13,7 +14,7 @@ from process.core.model import DataStructure
 class IterationVariable:
     name: str
     """The name of the variable"""
-    module: str
+    module: str | Any
     """The Fortran module that this variable should be set on."""
     lower_bound: float
     """The default lower bound of the iteration variable"""
@@ -322,18 +323,21 @@ def load_iteration_variables(data):
         iteration_variable = ITERATION_VARIABLES[variable_index]
 
         # use ... as the default return value because None might be a valid return from Fortran?
+
+        module = (
+            getattr(data, iteration_variable.module)
+            if isinstance(iteration_variable.module, str)
+            else iteration_variable.module
+        )
+
         iteration_variable_value = getattr(
-            iteration_variable.module,
+            module,
             iteration_variable.target_name or iteration_variable.name,
             ...,
         )
-        if isinstance(iteration_variable.module, str):
-            iteration_variable_value = getattr(
-                getattr(data, iteration_variable.module),
-                iteration_variable.target_name or iteration_variable.name,
-            )
 
-        elif iteration_variable_value is ...:
+        # If iteration variable is missing
+        if iteration_variable_value is ...:
             error_msg = (
                 f"Could not get the value for iteration variable {variable_index} "
                 f"({iteration_variable.name})"
@@ -404,40 +408,28 @@ def set_scaled_iteration_variable(xc, nn: int, data: DataStructure):
 
         ratio = xc[i] / data_structure.numerics.scale[i]
 
+        module = (
+            getattr(data, iteration_variable.module)
+            if isinstance(iteration_variable.module, str)
+            else iteration_variable.module
+        )
+
         if iteration_variable.array_index is None:
-            if isinstance(iteration_variable.module, str):
-                setattr(
-                    getattr(data, iteration_variable.module),
-                    iteration_variable.target_name or iteration_variable.name,
-                    ratio,
-                )
-            else:
-                setattr(
-                    iteration_variable.module,
-                    iteration_variable.target_name or iteration_variable.name,
-                    ratio,
-                )
-        elif isinstance(iteration_variable.module, str):
-            current_array = getattr(
-                getattr(data, iteration_variable.module),
-                iteration_variable.target_name or iteration_variable.name,
-            )
-            new_array = deepcopy(current_array)
-            new_array[iteration_variable.array_index] = ratio
             setattr(
-                getattr(data, iteration_variable.module),
+                module,
                 iteration_variable.target_name or iteration_variable.name,
-                new_array,
+                ratio,
             )
+
         else:
             current_array = getattr(
-                iteration_variable.module,
+                module,
                 iteration_variable.target_name or iteration_variable.name,
             )
             new_array = deepcopy(current_array)
             new_array[iteration_variable.array_index] = ratio
             setattr(
-                iteration_variable.module,
+                module,
                 iteration_variable.target_name or iteration_variable.name,
                 new_array,
             )
