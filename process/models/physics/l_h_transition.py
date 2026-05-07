@@ -1,3 +1,5 @@
+"""Module for plasma L-H and L-I transition power threshold calculations."""
+
 import logging
 from enum import IntEnum
 
@@ -36,7 +38,17 @@ class PlasmaConfinementTransitionModel(IntEnum):
     MARTIN08_ASPECT_UPPER = (20, "Martin 2008 Aspect Corrected Upper")
     MARTIN08_ASPECT_LOWER = (21, "Martin 2008 Aspect Corrected Lower")
 
-    def __new__(cls, value, full_name):
+    def __new__(cls, value: int, full_name: str):
+        """Create a new PlasmaConfinementTransitionModel instance.
+
+        Args:
+            value: The integer value of the enum member.
+            full_name: The full descriptive name of the enum member.
+
+        Returns
+        -------
+            A new instance of PlasmaConfinementTransitionModel.
+        """
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj.full_name = full_name
@@ -51,6 +63,11 @@ class PlasmaConfinementTransition:
         self.mfile = constants.MFILE
 
     def run(self) -> None:
+        """Calculate L- to H-mode and L- to I-mode power thresholds.
+
+        Calculates the plasma L- to H-mode power threshold for different scalings
+        and sets the enforced L-H power threshold value based on the selected scaling.
+        """
         # Calculate L- to H-mode power threshold for different scalings
         physics_variables.l_h_threshold_powers = self.l_h_threshold_power(
             physics_variables.nd_plasma_electron_line,
@@ -487,7 +504,8 @@ class PlasmaConfinementTransition:
             ):
                 po.ocmmnt(
                     self.outfile,
-                    "(physics_variables.nd_plasma_electron_line outside Snipes 2000 fitted range)",
+                    "(physics_variables.nd_plasma_electron_line outside Snipes 2000 "
+                    "fitted range)",
                 )
                 logger.warning(
                     "nd_plasma_electron_line outside Snipes 2000 fitted range"
@@ -509,7 +527,8 @@ class PlasmaConfinementTransition:
         if physics_variables.i_l_h_threshold in {12, 13, 14}:
             po.ocmmnt(
                 self.outfile,
-                "(L-H threshold for closed divertor only. Limited data used in Snipes fit)",
+                "(L-H threshold for closed divertor only. Limited data used in Snipes "
+                "fit)",
             )
             po.oblnkl(self.outfile)
             logger.warning("Closed divertor only. Limited data used in Snipes fit")
@@ -540,7 +559,8 @@ class PlasmaConfinementTransition:
             - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
             "Threshold power and energy confinement for ITER". 1996.
 
-            - J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics issues, capabilities and physics program plans,”
+            - J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics
+            issues, capabilities and physics program plans,”
             Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
             doi: https://doi.org/10.1063/1.872406.
         """
@@ -571,7 +591,8 @@ class PlasmaConfinementTransition:
             - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
             "Threshold power and energy confinement for ITER". 1996.
 
-            - J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics issues, capabilities and physics program plans,”
+            - J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics
+            issues, capabilities and physics program plans,”
             Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
             doi: https://doi.org/10.1063/1.872406.
         """
@@ -602,7 +623,8 @@ class PlasmaConfinementTransition:
             - T. Takizuka and International Atomic Energy Agency, Vienna (Austria),
             "Threshold power and energy confinement for ITER". 1996.
 
-            - J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics issues, capabilities and physics program plans,”
+            - J. C. Wesley, “International Thermonuclear Experimental Reactor: Physics
+            issues, capabilities and physics program plans,”
             Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
             doi: https://doi.org/10.1063/1.872406.
         """
@@ -630,7 +652,8 @@ class PlasmaConfinementTransition:
 
         References
         ----------
-            - J. A. Snipes and the ITER H-mode Threshold Database Working Group, "An Analysis of the H-mode Threshold in ITER,"
+            - J. A. Snipes and the ITER H-mode Threshold Database Working Group,
+            "An Analysis of the H-mode Threshold in ITER,"
             Controlled Fusion and Plasma Physics, 24th EPS Conference,
             Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
             url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
@@ -642,7 +665,8 @@ class PlasmaConfinementTransition:
     def calculate_snipes1997_kappa(
         dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float, kappa: float
     ) -> float:
-        """Calculate the Snipes 1997 ITER L-H transition power threshold with kappa factor.
+        """Calculate the Snipes 1997 ITER L-H transition power threshold with kappa
+        factor.
 
         Parameters
         ----------
@@ -662,7 +686,8 @@ class PlasmaConfinementTransition:
 
         References
         ----------
-            - J. A. Snipes and the ITER H-mode Threshold Database Working Group, "An Analysis of the H-mode Threshold in ITER,"
+            - J. A. Snipes and the ITER H-mode Threshold Database Working Group,
+            "An Analysis of the H-mode Threshold in ITER,"
             Controlled Fusion and Plasma Physics, 24th EPS Conference,
             Berchtesgaden, June 9th-13th 1997, vol.21A, part III, p.961.
             url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
@@ -703,14 +728,18 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Martin 08 shows
+            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+            applied to the deuterium-tritium discharges for ITER, the above predicted
+            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition so
+            that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+            20% lower.
 
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group,
+            “Power requirement for accessing the H-mode in ITER,”
             Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
             doi: https://doi.org/10.1088/1742-6596/123/1/012033.
         """
@@ -749,13 +778,17 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Martin 08 shows
+            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+            applied to the deuterium-tritium discharges for ITER, the above predicted
+            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+            20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
+            requirement for accessing the H-mode in ITER,”
             Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
             doi: https://doi.org/10.1088/1742-6596/123/1/012033.
         """
@@ -794,13 +827,17 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Martin 08 shows
+            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+            applied to the deuterium-tritium discharges for ITER, the above predicted
+            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+            20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group,
+            “Power requirement for accessing the H-mode in ITER,”
             Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
             doi: https://doi.org/10.1088/1742-6596/123/1/012033.
         """
@@ -842,15 +879,18 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Snipes cites
+            that P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction
+            in the threshold power for a 50/50 D-T mixture compared with the pure
+            deuterium results above". We thus apply a (2/m_i) addition so that for a
+            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+            threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
         """
         return (
             1.42
@@ -891,15 +931,18 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Snipes cites
+            that P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction
+            in the threshold power for a 50/50 D-T mixture compared with the pure
+            deuterium results above". We thus apply a (2/m_i) addition so that for a
+            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+            threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -941,15 +984,18 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Snipes cites
+            that P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction
+            in the threshold power for a 50/50 D-T mixture compared with the pure
+            deuterium results above". We thus apply a (2/m_i) addition so that for a
+            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+            threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -968,7 +1014,8 @@ class PlasmaConfinementTransition:
         rmajor: float,
         m_ions_total_amu: float,
     ) -> float:
-        """Calculate the nominal Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
+        """Calculate the nominal Snipes 2000 Closed Divertor L-H transition power
+        threshold with CD factor.
 
         Parameters
         ----------
@@ -988,15 +1035,18 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Snipes cites
+            that P_LH scales with 1/m_i. It is stated;m"This results in a 20% reduction
+            in the threshold power for a 50/50 D-T mixture compared with the pure
+            deuterium results above". We thus apply a (2/m_i) addition so that for a
+            50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+            threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -1014,7 +1064,8 @@ class PlasmaConfinementTransition:
         rmajor: float,
         m_ions_total_amu: float,
     ) -> float:
-        """Calculate the upper Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
+        """Calculate the upper Snipes 2000 Closed Divertor L-H transition power
+        threshold with CD factor.
 
         Parameters
         ----------
@@ -1034,15 +1085,18 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Snipes cites that
+            P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction in
+            the threshold power for a 50/50 D-T mixture compared with the pure deuterium
+            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T
+            mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+            threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -1060,7 +1114,8 @@ class PlasmaConfinementTransition:
         rmajor: float,
         m_ions_total_amu: float,
     ) -> float:
-        """Calculate the lower Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
+        """Calculate the lower Snipes 2000 Closed Divertor L-H transition power
+        threshold with CD factor.
 
         Parameters
         ----------
@@ -1080,15 +1135,18 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - A scaling with the total ion mass is used in this model. Snipes cites that P_LH scales with 1/m_i. It is stated;
-            "This results in a 20% reduction in the threshold power for a 50/50 D-T mixture compared with the pure deuterium
-            results above". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Snipes cites that
+              P_LH scales with 1/m_i. It is stated; "This results in a 20% reduction in
+              the threshold power for a 50/50 D-T mixture compared with the pure
+              deuterium results above". We thus apply a (2/m_i) addition so that for a
+              50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
 
         References
         ----------
-            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode threshold using the international H-mode threshold database,”
-            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308, May 2000,
-            doi: https://doi.org/10.1088/0741-3335/42/5a/336.
+            - J. A. Snipes and the I. H-mode. T. Group, “Latest results on the H-mode
+            threshold using the international H-mode threshold database,”
+            Plasma Physics and Controlled Fusion, vol. 42, no. 5A, pp. A299-A308,
+            May 2000, doi: https://doi.org/10.1088/0741-3335/42/5a/336.
 
         """
         return (
@@ -1117,7 +1175,8 @@ class PlasmaConfinementTransition:
 
         References
         ----------
-        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and
+          H-mode with unfavourable ion grad B drift direction,”
           Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
           doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
@@ -1142,7 +1201,8 @@ class PlasmaConfinementTransition:
 
         References
         ----------
-        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and
+          H-mode with unfavourable ion grad B drift direction,”
           Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
           doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
@@ -1167,7 +1227,8 @@ class PlasmaConfinementTransition:
 
         References
         ----------
-        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and H-mode with unfavourable ion grad B drift direction,”
+        - A. E. Hubbard et al., “Threshold conditions for transitions to I-mode and
+          H-mode with unfavourable ion grad B drift direction,”
           Nuclear Fusion, vol. 52, no. 11, pp. 114009-114009, Oct. 2012,
           doi: https://doi.org/10.1088/0029-5515/52/11/114009.
 
@@ -1200,9 +1261,9 @@ class PlasmaConfinementTransition:
 
         References
         ----------
-        - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an expanded operating space on Alcator C-Mod,”
-          Nuclear Fusion, vol. 57, no. 12, p. 126039, Oct. 2017,
-          doi: https://doi.org/10.1088/1741-4326/aa8570.
+        - A. E. Hubbard et al., “Physics and performance of the I-mode regime over an
+          expanded operating space on Alcator C-Mod,” Nuclear Fusion, vol. 57, no. 12,
+          p. 126039, Oct. 2017, doi: https://doi.org/10.1088/1741-4326/aa8570.
 
         """
         return 0.162 * dnla20 * a_plasma_surface * b_plasma_toroidal_on_axis**0.26
@@ -1215,7 +1276,8 @@ class PlasmaConfinementTransition:
         m_ions_total_amu: float,
         aspect: float,
     ) -> float:
-        """Calculate the nominal Martin L-H transition power threshold with aspect ratio correction from T Takizuka.
+        """Calculate the nominal Martin L-H transition power threshold with aspect ratio
+        correction from T Takizuka.
 
         Parameters
         ----------
@@ -1237,22 +1299,27 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
-            if not the usual Martin 2008 scaling will be returned.
+            - Thus will return an aspect ratio correction of the aspect ratio is less
+            than or equal to 2.7. If not the usual Martin 2008 scaling will be returned.
 
-            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Martin 08 shows
+            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+            applied to the deuterium-tritium discharges for ITER, the above predicted
+            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+            20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
+            requirement for accessing the H-mode in ITER,”
             Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
             doi: https://doi.org/10.1088/1742-6596/123/1/012033.
 
-            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,”
-            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004,
-            doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+            the H-mode power threshold in tokamaks of the ITPA database,”
+            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
         if aspect <= 2.7:
@@ -1277,7 +1344,8 @@ class PlasmaConfinementTransition:
         m_ions_total_amu: float,
         aspect: float,
     ) -> float:
-        """Calculate the upper Martin L-H transition power threshold with aspect ratio correction from T Takizuka.
+        """Calculate the upper Martin L-H transition power threshold with aspect ratio
+        correction from T Takizuka.
 
         Parameters
         ----------
@@ -1299,22 +1367,27 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
-            if not the usual Martin 2008 scaling will be returned.
+            - Thus will return an aspect ratio correction of the aspect ratio is less
+            than or equal to 2.7. If not the usual Martin 2008 scaling will be returned.
 
-            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Martin 08 shows
+            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+            applied to the deuterium-tritium discharges for ITER, the above predicted
+            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+            20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
+            requirement for accessing the H-mode in ITER,”
             Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
             doi: https://doi.org/10.1088/1742-6596/123/1/012033.
 
-            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,”
-            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004,
-            doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+            the H-mode power threshold in tokamaks of the ITPA database,”
+            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
         if aspect <= 2.7:
@@ -1339,7 +1412,8 @@ class PlasmaConfinementTransition:
         m_ions_total_amu: float,
         aspect: float,
     ) -> float:
-        """Calculate the lower Martin L-H transition power threshold with aspect ratio correction from T Takizuka.
+        """Calculate the lower Martin L-H transition power threshold with aspect ratio
+        correction from T Takizuka.
 
         Parameters
         ----------
@@ -1361,22 +1435,27 @@ class PlasmaConfinementTransition:
 
         Notes
         -----
-            - Thus will return an aspect ratio correction of the aspect ratio is less than or equal to 2.7.
-            if not the usual Martin 2008 scaling will be returned.
+            - Thus will return an aspect ratio correction of the aspect ratio is less
+            than or equal to 2.7. if not the usual Martin 2008 scaling will be returned.
 
-            - A scaling with the total ion mass is used in this model. Martin 08 shows that P_LH scales with 1/m_i. It is stated;
-            "When this mass dependence is applied to the deuterium-tritium discharges for ITER, the above predicted values of P_LH can be
-            reduced by ~ 20%". We thus apply a (2/m_i) addition so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is 20% lower.
+            - A scaling with the total ion mass is used in this model. Martin 08 shows
+            that P_LH scales with 1/m_i. It is stated; "When this mass dependence is
+            applied to the deuterium-tritium discharges for ITER, the above predicted
+            values of P_LH can be reduced by ~ 20%". We thus apply a (2/m_i) addition
+            so that for a 50/50 D-T mixture (M_i = 2.5 amu), the predicted values is
+            20% lower.
 
         References
         ----------
-            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power requirement for accessing the H-mode in ITER,”
+            - Y. R. Martin, T. Takizuka, and the I. C. H-mode. T. D. Group, “Power
+            requirement for accessing the H-mode in ITER,”
             Journal of Physics: Conference Series, vol. 123, p. 012033, Jul. 2008,
             doi: https://doi.org/10.1088/1742-6596/123/1/012033.
 
-            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of the H-mode power threshold in tokamaks of the ITPA database,”
-            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233, Apr. 2004,
-            doi: https://doi.org/10.1088/0741-3335/46/5a/024.
+            - T. Takizuka et.al, “Roles of aspect ratio, absolute B and effective Z of
+            the H-mode power threshold in tokamaks of the ITPA database,”
+            Plasma Physics and Controlled Fusion, vol. 46, no. 5A, pp. A227-A233,
+            Apr. 2004, doi: https://doi.org/10.1088/0741-3335/46/5a/024.
 
         """
         if aspect <= 2.7:
