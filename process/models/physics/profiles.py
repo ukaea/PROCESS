@@ -23,7 +23,8 @@ class PlasmaProfileShapeType(IntEnum):
     PARABOLIC_PROFILE = (0, "Parabolic Profile (L-mode)")
     PEDESTAL_PROFILE = (1, "Pedestal Profile (H-mode)")
 
-    def __new__(cls, value, description):
+    def __new__(cls, value: int, description: str):
+        """Create a new PlasmaProfileShapeType instance."""
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._description_ = description
@@ -31,6 +32,7 @@ class PlasmaProfileShapeType(IntEnum):
 
     @DynamicClassAttribute
     def description(self):
+        """Get the description of the plasma profile shape."""
         return self._description_
 
 
