@@ -41,12 +41,16 @@ class PlasmaConfinementTransitionModel(IntEnum):
     def __new__(cls, value: int, full_name: str):
         """Create a new PlasmaConfinementTransitionModel instance.
 
-        Args:
-            value: The integer value of the enum member.
-            full_name: The full descriptive name of the enum member.
+        Parameters
+        ----------
+        value : int
+            The integer value of the enum member.
+        full_name : str
+            The full descriptive name of the enum member.
 
         Returns
         -------
+        PlasmaConfinementTransitionModel
             A new instance of PlasmaConfinementTransitionModel.
         """
         obj = int.__new__(cls, value)
