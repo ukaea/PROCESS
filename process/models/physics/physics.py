@@ -1585,7 +1585,7 @@ class Physics(Model):
         # (possible if aspect ratio is too high)
         if res_plasma <= 0.0:
             logger.error(
-                f"Negative plasma resistance res_plasma."
+                f"Negative plasma resistance res_plasma. "
                 f"{res_plasma=} {physics_variables.aspect=}"
             )
 
