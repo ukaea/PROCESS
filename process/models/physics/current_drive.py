@@ -206,25 +206,14 @@ class NeutralBeam:
         )
         fshine = max(fshine, 1e-20)
 
-        # Deuterium and tritium beam densities
-        dend = physics_variables.nd_plasma_fuel_ions_vol_avg * (
-            1.0 - current_drive_variables.f_beam_tritium
-        )
-        dent = (
-            physics_variables.nd_plasma_fuel_ions_vol_avg
-            * current_drive_variables.f_beam_tritium
-        )
-
         # Power split to ions / electrons
         f_p_beam_injected_ions = self.cfnbi(
-            physics_variables.m_beam_amu,
-            current_drive_variables.e_beam_kev,
-            physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            dend,
-            dent,
-            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
-            physics_variables.dlamie,
+            afast=physics_variables.m_beam_amu,
+            efast=current_drive_variables.e_beam_kev,
+            te=physics_variables.temp_plasma_electron_density_weighted_kev,
+            ne=physics_variables.nd_plasma_electrons_vol_avg,
+            n_charge_plasma_effective_mass_weighted_vol_avg=physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
+            xlmbda=physics_variables.dlamie,
         )
 
         # Current drive efficiency
@@ -311,27 +300,15 @@ class NeutralBeam:
         )
         fshine = max(fshine, 1.0e-20)
 
-        #  Deuterium and tritium beam densities
-
-        dend = physics_variables.nd_plasma_fuel_ions_vol_avg * (
-            1.0e0 - current_drive_variables.f_beam_tritium
-        )
-        dent = (
-            physics_variables.nd_plasma_fuel_ions_vol_avg
-            * current_drive_variables.f_beam_tritium
-        )
-
         #  Power split to ions / electrons
 
         f_p_beam_injected_ions = self.cfnbi(
-            physics_variables.m_beam_amu,
-            current_drive_variables.e_beam_kev,
-            physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.nd_plasma_electrons_vol_avg,
-            dend,
-            dent,
-            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
-            physics_variables.dlamie,
+            afast=physics_variables.m_beam_amu,
+            efast=current_drive_variables.e_beam_kev,
+            te=physics_variables.temp_plasma_electron_density_weighted_kev,
+            ne=physics_variables.nd_plasma_electrons_vol_avg,
+            n_charge_plasma_effective_mass_weighted_vol_avg=physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
+            xlmbda=physics_variables.dlamie,
         )
 
         #  Current drive efficiency
@@ -705,13 +682,13 @@ class NeutralBeam:
 
     def cfnbi(
         self,
-        afast,
-        efast,
-        te,
-        ne,
-        n_charge_plasma_effective_mass_weighted_vol_avg,
-        xlmbda,
-    ):
+        afast: float,
+        efast: float,
+        te: float,
+        ne: float,
+        n_charge_plasma_effective_mass_weighted_vol_avg: float,
+        xlmbda: float,
+    ) -> float:
         """Routine to calculate the fraction of the fast particle energy
          coupled to the ions
 
