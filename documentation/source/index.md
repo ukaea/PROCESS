@@ -5,6 +5,7 @@
     src="images/ukaea-logo.png"
     alt="ukaea-logo.png"
     class="logo"
+    width="200"
     >
 
 PROCESS is a systems code at [UKAEA](https://ccfe.ukaea.uk/) that calculates in a
