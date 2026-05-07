@@ -478,6 +478,26 @@ def get_dicts():
         ):
             var_names_and_descriptions[lastvar.target.id] = ""
 
+        # Need to handle new dataclasses slightly differently as variable descriptions
+        # now are found under the ast.ClassDef node:
+        for node in module_tree.body:
+            if isinstance(node, ast.ClassDef):
+                for node1, node2 in pairwise(node.body):
+                    if isinstance(node1, ast.AnnAssign) and isinstance(node2, ast.Expr):
+                        # if docstring immediately follows the variable declaration, add docstring to descriptions dict
+                        var_names_and_descriptions[node1.target.id] = node2.value.value
+                    if isinstance(node1, ast.AnnAssign) and not isinstance(
+                        node2, ast.Expr
+                    ):
+                        # if no docstring for variable, have a blank description
+                        var_names_and_descriptions[node1.target.id] = ""
+                last_var = node.body[-1]
+                if (
+                    isinstance(last_var, ast.AnnAssign)
+                    and last_var not in var_names_and_descriptions
+                ):
+                    var_names_and_descriptions[last_var.target.id] = ""
+
         dict_module_entry[module_name] = variable_names
 
         output_dict["DICT_MODULE"].update(dict_module_entry)
