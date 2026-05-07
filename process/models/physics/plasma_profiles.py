@@ -325,7 +325,8 @@ class PlasmaProfile:
 
         Raises
         ------
-            ProcessValueError: If alphat or alphan is negative.
+        ProcessValueError 
+            If alphat or alphan is negative.
         """
         if (
             PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
