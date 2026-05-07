@@ -631,8 +631,8 @@ class PlasmaDensityLimit:
         )
         po.ocmmnt(
             self.outfile,
-            "Density limit model selected:"
-            f"{DensityLimitModel(physics_variables.i_density_limit).full_name} ",
+            "Density limit model selected: "
+            f"{DensityLimitModel(physics_variables.i_density_limit).full_name}",
         )
         po.ovarre(
             self.outfile,
