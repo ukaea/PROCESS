@@ -239,8 +239,8 @@ iteration variables should get varied"""
                 f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
                 f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
             )
-        except:  # noqa: E722
-            error_status = ""
+        except KeyError:
+            error_status = "The MFILE is empty. PROCESS probably exited prematurely.\n"
 
         ifail = m_file.data["ifail"].get_scan(-1)
         if ifail != 1:
@@ -530,7 +530,6 @@ class RunProcessConfig(ProcessConfig):
             )
             sys.exit()
 
-        # Fine here
         in_dat = InDat(filename=self.wdir / self.initial_infile)
 
         for iter_var in self.add_ixc:
