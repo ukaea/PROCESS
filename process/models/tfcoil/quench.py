@@ -101,8 +101,8 @@ def _copper_rrr_resistivity(temperature: float, rrr: float) -> float:
 def _copper_irradiation_resistivity(fluence: float) -> float:
     """Calculates the radiation-induced electrical resistivity of copper.
 
-    Estimates the increase in copper's electrical resistivity [Ω·m] due to neutron irradiation,
-    as a function of total neutron fluence.
+    Estimates the increase in copper's electrical resistivity [Ω·m] due to neutron
+    irradiation, as a function of total neutron fluence.
 
 
     Parameters
@@ -119,16 +119,17 @@ def _copper_irradiation_resistivity(fluence: float) -> float:
     -----
     - Fit to data at low-temperature conditions (around 4.6 K).
     - Fit to data in fast neutron spectrum (E > 0.1 MeV).
-    - Damage and transmutation effects therefore both included, but transmutation effects
-    may be underestimated.
+    - Damage and transmutation effects therefore both included, but transmutation
+      effects may be underestimated.
     - This is an additive contribution to the base residual resistivity of copper.
 
     References
     ----------
-        - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
-        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977).
-        https://doi.org/10.1103/PhysRevB.16.5285
-        Figure 6
+        - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program,
+          WP12, PEX, Super-X Divertor for DEMO.
+        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at
+          4.6 K", *Phys. Rev. B*, 16, 5285 (1977).
+          https://doi.org/10.1103/PhysRevB.16.5285 Figure 6
     """
     c1: Final[float] = 0.00283
     c2: Final[float] = -0.0711
@@ -142,7 +143,8 @@ def _copper_irradiation_resistivity(fluence: float) -> float:
 
 
 def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
-    """Calculates the electrical resistivity of cryogenic copper due to magnetoresistive effects [Ω·m].
+    """Calculates the electrical resistivity of cryogenic copper due to magnetoresistive
+    effects [Ω·m].
 
     Parameters
     ----------
@@ -162,14 +164,16 @@ def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
 
     References
     ----------
-        - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
-        at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
-        https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
-        Equation 8-7
+        - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of
+          Copper and Copper Alloys at Cryogenic Temperatures",
+          U.S. Government Printing Office, February 1992.
+          https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
+          Equation 8-7
     """
     p9: Final[float] = 1.553e-8
 
-    # TODO: This feels strange, but cut-off necessary, and B < 1.0 is "possible" and well-behaved at low T
+    # TODO: This feels strange, but cut-off necessary, and B < 1.0 is "possible" and
+    # well-behaved at low T
     if field > 1e-2:
         poly_coeffs: Final[list[float]] = [-2.662, 0.3168, 0.6229, -0.1839, 0.01827]
 
@@ -183,8 +187,8 @@ def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
 def _copper_electrical_resistivity(
     temperature: float, field: float, rrr: float, fluence: float
 ) -> float:
-    """Calculates the electrical resistivity of cryogenic copper with temperature, RRR, magnetic
-    field, and fluence dependence  [Ω·m].
+    """Calculates the electrical resistivity of cryogenic copper with temperature, RRR,
+     magnetic field, and fluence dependence  [Ω·m].
 
 
     Parameters
