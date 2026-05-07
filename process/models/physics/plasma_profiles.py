@@ -325,7 +325,7 @@ class PlasmaProfile:
 
         Raises
         ------
-        ProcessValueError 
+        ProcessValueError
             If alphat or alphan is negative.
         """
         if (

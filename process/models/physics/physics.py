@@ -1,3 +1,5 @@
+"""Physics models and calculations for the PROCESS fusion reactor design code."""
+
 from __future__ import annotations
 
 import logging
@@ -45,6 +47,7 @@ if TYPE_CHECKING:
     )
     from process.models.physics.plasma_fields import PlasmaFields
     from process.models.physics.plasma_geometry import PlasmaGeom
+    from process.models.physics.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
 
@@ -157,7 +160,8 @@ def rether(
 
 @nb.jit(nopython=True, cache=True)
 def ps_fraction_scene(beta: float) -> float:
-    """Calculate the Pfirsch-Schlüter fraction based on the SCENE fit by Tim Hender 2019.
+    """Calculate the Pfirsch-Schlüter fraction based on the SCENE fit by Tim Hender
+    2019.
 
     Parameters
     ----------
@@ -175,9 +179,13 @@ def ps_fraction_scene(beta: float) -> float:
 
 
 class Physics(Model):
+    """Class to calculate plasma physics information for a tokamak fusion reactor
+    design.
+    """
+
     def __init__(
         self,
-        plasma_profile,
+        plasma_profile: PlasmaProfile,
         current_drive,
         plasma_beta,
         plasma_inductance,
@@ -207,23 +215,38 @@ class Physics(Model):
         self.dia_current = plasma_dia_current
         self.geometry = plasma_geometry
 
-    def output(self):
+    def output(self) -> None:
+        """Output plasma physics information."""
         self.calculate_effective_charge_ionisation_profiles()
         self.outplas()
         self.outtim()
 
     def run(self):
         """Routine to calculate tokamak plasma physics information
-        This routine calculates all the primary plasma physics parameters for a tokamak fusion reactor.
+        This routine calculates all the primary plasma physics parameters for a tokamak
+        fusion reactor.
+
+
+        Raises
+        ------
+        ProcessValueError
+            If an illegal value of i_alphaj is provided.
 
         References
         ----------
-        - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants - Part 1: Physics
+        - M. Kovari et al, 2014, "PROCESS": A systems code for fusion power plants
+          - Part 1: Physics
           https://www.sciencedirect.com/science/article/pii/S0920379614005961
+
         - H. Zohm et al, 2013, On the Physics Guidelines for a Tokamak DEMO
           https://iopscience.iop.org/article/10.1088/0029-5515/53/7/073019
-        - T. Hartmann, 2013, Development of a modular systems code to analyse the implications of physics assumptions on the design of a demonstration fusion power plant
+
+        - T. Hartmann, 2013, Development of a modular systems code to analyse the
+          implications of physics assumptions on the design of a demonstration fusion
+          power plant
           https://inis.iaea.org/search/search.aspx?orig_q=RN:45031642
+
+
         """
         # Calculate plasma composition
         # Issue #261 Remove old radiation model (imprad_model=0)
@@ -431,18 +454,22 @@ class Physics(Model):
             )
 
         else:
-            # times_variables.t_plant_pulse_plasma_current_ramp_up is set either in INITIAL or INPUT, or by being
+            # times_variables.t_plant_pulse_plasma_current_ramp_up is set either in
+            # INITIAL or INPUT, or by being
             # iterated using limit equation 41.
             times_variables.t_plant_pulse_coil_precharge = max(
                 times_variables.t_plant_pulse_coil_precharge,
                 times_variables.t_plant_pulse_plasma_current_ramp_up,
             )
-            # t_plant_pulse_plasma_current_ramp_down = max(t_plant_pulse_plasma_current_ramp_down,t_plant_pulse_plasma_current_ramp_up)
+            # t_plant_pulse_plasma_current_ramp_down =
+            # max(t_plant_pulse_plasma_current_ramp_down,
+            # t_plant_pulse_plasma_current_ramp_up)
             times_variables.t_plant_pulse_plasma_current_ramp_down = (
                 times_variables.t_plant_pulse_plasma_current_ramp_up
             )
 
-        # Reset second times_variables.t_plant_pulse_burn value (times_variables.t_burn_0).
+        # Reset second times_variables.t_plant_pulse_burn value
+        # (times_variables.t_burn_0).
         # This is used to ensure that the burn time is used consistently;
         # see convergence loop in fcnvmc1, evaluators.f90
         times_variables.t_burn_0 = times_variables.t_plant_pulse_burn
@@ -618,7 +645,8 @@ class Physics(Model):
                 1 / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
             )
         else:
-            # If no beams present then the total alpha rates and power are the same as the plasma values
+            # If no beams present then the total alpha rates and power are the same as
+            # the plasma values
             physics_variables.fusden_total = physics_variables.fusden_plasma
             physics_variables.fusden_alpha_total = physics_variables.fusden_plasma_alpha
             physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
@@ -925,7 +953,8 @@ class Physics(Model):
         # D. Brunner et al
         physics_variables.lambdaio = 1.57e-3
 
-        # Issue #1559 Infinities in physics_module.drsep when running single null in a double null machine
+        # Issue #1559 Infinities in physics_module.drsep when running single null in a
+        # double null machine
         # C W Ashe
         if physics_variables.f_p_div_lower < 4.5e-5:
             physics_variables.drsep = 1.5e-2
@@ -1031,7 +1060,8 @@ class Physics(Model):
 
             if reinke_variables.fzmin >= 1.0e0:
                 logger.error(
-                    "REINKE IMPURITY MODEL: fzmin is greater than or equal to 1.0, this is at least notable"
+                    "REINKE IMPURITY MODEL: fzmin is greater than or equal to 1.0, this"
+                    " is at least notable"
                 )
 
             po.write(
@@ -1061,8 +1091,8 @@ class Physics(Model):
 
         Notes
         -----
-            - It is recommended to use this method with the other Wesson relations for normalised beta and
-              normalised internal inductance.
+            - It is recommended to use this method with the other Wesson relations for
+              normalised beta and normalised internal inductance.
             - This relation is only true for the cyclindrical plasma approximation.
 
         References
@@ -1078,8 +1108,8 @@ class Physics(Model):
         """Calculates various plasma component fractional makeups.
 
         This subroutine determines the various plasma component fractional makeups.
-        It is the replacement for the original routine betcom(), and is used in conjunction
-        with the new impurity radiation model.
+        It is the replacement for the original routine betcom(), and is used in
+        conjunction with the new impurity radiation model.
 
         This function performs the following calculations:
         - Determines the alpha ash portion.
@@ -1090,10 +1120,13 @@ class Physics(Model):
         - Calculates the total ion density.
         - Sets the relative impurity densities for radiation calculations.
         - Calculates the effective charge.
-        - Defines the Coulomb logarithm for ion-electron and electron-electron collisions.
+        - Defines the Coulomb logarithm for ion-electron and electron-electron
+          collisions.
         - Calculates the fraction of alpha energy to ions and electrons.
-        - Calculates the average atomic masses of injected fuel species and neutral beams.
-        - Calculates the density weighted mass and mass weighted plasma effective charge.
+        - Calculates the average atomic masses of injected fuel species and neutral
+          beams.
+        - Calculates the density weighted mass and mass weighted plasma effective
+          charge.
         """
         # Alpha ash portion
         physics_variables.nd_plasma_alphas_vol_avg = (
@@ -1106,7 +1139,8 @@ class Physics(Model):
         # Protons
         # This calculation will be wrong on the first call as the particle
         # production rates are evaluated later in the calling sequence
-        # Issue #557 Allow f_nd_protium_electrons impurity to be specified: 'f_nd_protium_electrons'
+        # Issue #557 Allow f_nd_protium_electrons impurity to be specified:
+        # 'f_nd_protium_electrons'
         # This will override the calculated value which is a minimum.
         if physics_variables.fusden_alpha_total < 1.0e-6:  # not calculated yet...
             physics_variables.nd_plasma_protons_vol_avg = max(
@@ -1164,8 +1198,10 @@ class Physics(Model):
         # ======================================================================
 
         # Fuel ion density, nd_plasma_fuel_ions_vol_avg
-        # For D-T-He3 mix, nd_plasma_fuel_ions_vol_avg = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
-        # So nd_plasma_fuel_ions_vol_avg = znfuel - nHe3 = znfuel - f_plasma_fuel_helium3*nd_plasma_fuel_ions_vol_avg
+        # For D-T-He3 mix, nd_plasma_fuel_ions_vol_avg = nD + nT + nHe3, while znfuel
+        # = nD + nT + 2*nHe3
+        # So nd_plasma_fuel_ions_vol_avg = znfuel - nHe3 = znfuel
+        # - f_plasma_fuel_helium3*nd_plasma_fuel_ions_vol_avg
         physics_variables.nd_plasma_fuel_ions_vol_avg = znfuel / (
             1.0 + physics_variables.f_plasma_fuel_helium3
         )
@@ -1262,9 +1298,9 @@ class Physics(Model):
         # (used with electron and ion power balance equations only)
         # No consideration of pden_non_alpha_charged_mw here...
 
-        # f_temp_plasma_electron_density_vol_avg now calculated in plasma_profiles, after the very first
-        # call of plasma_composition; use old parabolic profile estimate
-        # in this case
+        # f_temp_plasma_electron_density_vol_avg now calculated in plasma_profiles,
+        # after the very first call of plasma_composition; use old parabolic profile
+        # estimate in this case.
         if physics_variables.first_call == 1:
             pc = (
                 (1.0 + physics_variables.alphan)
@@ -1412,11 +1448,13 @@ class Physics(Model):
             - burnup (float): Fractional plasma burnup.
             - figmer (float): Physics figure of merit.
             - fusrat (float): Number of fusion reactions per second.
-            - molflow_plasma_fuelling_required (float): Fuelling rate for D-T (nucleus-pairs/sec).
+            - molflow_plasma_fuelling_required (float): Fuelling rate for D-T
+              (nucleus-pairs/sec).
             - rndfuel (float): Fuel burnup rate (reactions/s).
             - t_alpha_confinement (float): Alpha particle confinement time (s).
             - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
-            This subroutine calculates extra physics related items needed by other parts of the code.
+            This subroutine calculates extra physics related items needed by other
+            parts of the code.
 
         """
         figmer = 1e-6 * plasma_current * aspect**sbar
@@ -1440,8 +1478,10 @@ class Physics(Model):
         # tauratio
         # Possible logic...
         # burnup = fuel ion-pairs burned/m3 / initial fuel ion-pairs/m3;
-        # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and D-He3 reactions)
-        # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion pairs/m3
+        # fuel ion-pairs burned/m3 = alpha particles/m3 (for both D-T and
+        # D-He3 reactions)
+        # initial fuel ion-pairs/m3 = burnt fuel ion-pairs/m3 + unburnt fuel-ion
+        # pairs/m3
         # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
         if physics_variables.burnup_in <= 1.0e-9:
             burnup = (
@@ -1506,7 +1546,8 @@ class Physics(Model):
         -------
         Tuple[float, float, float, float]
             Tuple containing:
-            - pden_plasma_ohmic_mw (float): Ohmic heating power per unit volume (MW/m^3).
+            - pden_plasma_ohmic_mw (float): Ohmic heating power per unit
+              volume (MW/m^3).
             - p_plasma_ohmic_mw (float): Total ohmic heating power (MW).
             - f_res_plasma_neo (float): Neo-classical resistivity enhancement factor.
             - res_plasma (float): Plasma resistance (ohm).
@@ -1520,7 +1561,8 @@ class Physics(Model):
         # Density weighted electron temperature in 10 keV units
         t10 = temp_plasma_electron_density_weighted_kev / 10.0
 
-        # Plasma resistance, from loop voltage calculation in ITER Physics Design Guidelines: 1989
+        # Plasma resistance, from loop voltage calculation in ITER Physics Design
+        # Guidelines: 1989
         res_plasma = (
             physics_variables.plasma_res_factor
             * 2.15e-9
@@ -1543,11 +1585,11 @@ class Physics(Model):
         # (possible if aspect ratio is too high)
         if res_plasma <= 0.0:
             logger.error(
-                f"Negative plasma resistance res_plasma. {res_plasma=} {physics_variables.aspect=}"
+                f"Negative plasma resistance res_plasma."
+                f"{res_plasma=} {physics_variables.aspect=}"
             )
 
         # Ohmic heating power per unit volume
-        # Corrected from: pden_plasma_ohmic_mw = (f_c_plasma_inductive*plasma_current)**2 * ...
 
         pden_plasma_ohmic_mw = (
             f_c_plasma_inductive * plasma_current**2 * res_plasma * 1.0e-6 / vol_plasma
@@ -1558,7 +1600,8 @@ class Physics(Model):
 
         return pden_plasma_ohmic_mw, p_plasma_ohmic_mw, f_res_plasma_neo, res_plasma
 
-    def outtim(self):
+    def outtim(self) -> None:
+        """Output timing information."""
         po.oheadr(self.outfile, "Times")
 
         po.ovarrf(
@@ -1752,7 +1795,8 @@ class Physics(Model):
         po.osubhd(self.outfile, "Fusion Powers :")
         po.ocmmnt(
             self.outfile,
-            "Fusion power totals from the main plasma and beam-plasma interactions (if present)\n",
+            "Fusion power totals from the main plasma and beam-plasma interactions "
+            "(if present)\n",
         )
 
         po.ovarre(
@@ -2035,7 +2079,8 @@ class Physics(Model):
 
         po.ovarre(
             self.outfile,
-            "Plasma total radiation power from inside last closed flux surface (Pᵧ) (MW)",
+            "Plasma total radiation power from inside last closed flux surface "
+            "(Pᵧ) (MW)",
             "(p_plasma_rad_mw)",
             physics_variables.p_plasma_rad_mw,
             "OP ",
@@ -2220,11 +2265,13 @@ class Physics(Model):
             po.ocmmnt(self.outfile, "For definitions see")
             po.ocmmnt(
                 self.outfile,
-                "Recent progress on the development and analysis of the ITPA global H-mode confinement database",
+                "Recent progress on the development and analysis of the ITPA global "
+                "H-mode confinement database",
             )
             po.ocmmnt(
                 self.outfile,
-                "D.C. McDonald et al, 2007 Nuclear Fusion v47, 147. (nu_star missing 1/mu0)",
+                "D.C. McDonald et al, 2007 Nuclear Fusion v47, 147."
+                "(nu_star missing 1/mu0)",
             )
             po.ovarre(
                 self.outfile,
@@ -2306,8 +2353,8 @@ class Physics(Model):
                 reinke_variables.fzactual,
             )
 
-    def output_temperature_density_profile_info(self):
-
+    def output_temperature_density_profile_info(self) -> None:
+        """Output information about plasma temperature and density profiles."""
         po.oheadr(self.outfile, "Plasma Density and Temperature Profiles")
         po.ovarrf(
             self.outfile,
@@ -2323,7 +2370,8 @@ class Physics(Model):
         )
         po.ocmmnt(
             self.outfile,
-            f"Plasma profile model selected: {PlasmaProfileShapeType(physics_variables.i_plasma_pedestal).description} ",
+            f"Plasma profile model selected: "
+            f"{PlasmaProfileShapeType(physics_variables.i_plasma_pedestal).description}",
         )
 
         if (
@@ -2629,7 +2677,8 @@ class Physics(Model):
             physics_variables.pres_plasma_thermal_vol_avg,
             "OP ",
         )
-        # As array output is not currently supported, each element is output as a float instance
+        # As array output is not currently supported, each element is output as a float
+        # instance
         # Output plasma pressure profiles to mfile
         for i in range(len(physics_variables.pres_plasma_thermal_total_profile)):
             po.ovarre(
@@ -2669,7 +2718,8 @@ class Physics(Model):
         po.oblnkl(self.outfile)
 
         for imp in range(impurity_radiation_module.N_IMPURITIES):
-            # MDK Update f_nd_impurity_electrons, as this will make the ITV output work correctly.
+            # MDK Update f_nd_impurity_electrons, as this will make the ITV output
+            # work correctly.
             impurity_radiation_module.f_nd_impurity_electrons[imp] = (
                 impurity_radiation_module.f_nd_impurity_electron_array[imp]
             )
@@ -2802,7 +2852,9 @@ class Physics(Model):
             "OP ",
         )
 
-        # Issue 558 - addition of constraint 76 to limit the value of nd_plasma_separatrix_electron, in proportion with the ballooning parameter and Greenwald density
+        # Issue 558 - addition of constraint 76 to limit the value of
+        # nd_plasma_separatrix_electron, in proportion with the ballooning parameter
+        # and Greenwald density
         if 76 in numerics.icc:
             po.ovarre(
                 self.outfile,
@@ -2947,7 +2999,8 @@ class BetaNormMaxModel(IntEnum):
     THLOREUS = (4, "Thloreus Scaling")
     STAMBAUGH = (5, "Stambaugh Scaling")
 
-    def __new__(cls, value, full_name):
+    def __new__(cls, value: int, full_name: str):
+        """Create a new instance of BetaNormMaxModel."""
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._full_name_ = full_name
@@ -2955,6 +3008,7 @@ class BetaNormMaxModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
+        """Get the full name of the beta norm max model."""
         return self._full_name_
 
 
@@ -2966,7 +3020,8 @@ class BetaComponentLimits(IntEnum):
     THERMAL_AND_BEAM = (2, "Thermal and Beam Beta")
     TOROIDAL = (3, "Toroidal Beta")
 
-    def __new__(cls, value, full_name):
+    def __new__(cls, value: int, full_name: str):
+        """Create a new instance of BetaComponentLimits."""
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._full_name_ = full_name
@@ -2974,6 +3029,7 @@ class BetaComponentLimits(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
+        """Get the full name of the beta component limit."""
         return self._full_name_
 
 
@@ -2984,7 +3040,8 @@ class PlasmaBeta:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
-    def get_beta_norm_max_value(self, model: BetaNormMaxModel) -> float:
+    @staticmethod
+    def get_beta_norm_max_value(model: BetaNormMaxModel) -> float:
         """Get the beta norm max value (β_N_max) for the specified model.
 
         Parameters
@@ -3002,7 +3059,14 @@ class PlasmaBeta:
         return model_map[model]
 
     def run(self):
-        """Calculate plasma beta values."""
+        """Calculate plasma beta values.
+
+        Raises
+        ------
+        ProcessValueError
+             If an illegal value of i_beta_norm_max is provided.
+
+        """
         # -----------------------------------------------------
         # Normalised Beta Limit
         # -----------------------------------------------------
@@ -3206,17 +3270,18 @@ class PlasmaBeta:
 
         Notes
         -----
-             - It is recommended to use this method with the other Wesson relations for normalsied internal
-             inductance and current profile index.
+             - It is recommended to use this method with the other Wesson relations
+               for normalsied internal inductance and current profile index.
              - This fit is derived from the DIII-D database for β_N >= 2.5
 
         References
         ----------
-             - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science Publications,
-             International Series of Monographs on Physics, Volume 149.
+             - Wesson, J. (2011) Tokamaks. 4th Edition, 2011 Oxford Science
+               Publications, International Series of Monographs on Physics, Volume 149.
 
-             - T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,”
-             Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+             - T. T. S et al., “Profile Optimization and High Beta Discharges and
+               Stability of High Elongation Plasmas in the DIII-D Tokamak,” Osti.gov,
+               Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
 
         """
         return 4 * ind_plasma_internal_norm
@@ -3265,9 +3330,9 @@ class PlasmaBeta:
 
         References
         ----------
-            - # J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants
+              based on the spherical tokamak,” Nuclear Fusion, vol. 56, no. 10,
+              p. 106023, Aug. 2016, doi: https://doi.org/10.1088/0029-5515/56/10/106023.
 
         """
         return 3.12 + 3.5 * eps**1.7
@@ -3301,14 +3366,17 @@ class PlasmaBeta:
 
         Notes
         -----
-            - This method calculates the normalized beta upper limit based on the pressure peaking factor (Fp),
-              which is defined as the ratio of the peak pressure to the average pressure.
-            - The formula is derived from operational space studies of flat-top plasma in the STEP power plant.
+            - This method calculates the normalized beta upper limit based on the
+              pressure peaking factor (Fp), which is defined as the ratio of the peak
+              pressure to the average pressure.
+            - The formula is derived from operational space studies of flat-top plasma
+              in the STEP power plant.
 
         References
         ----------
-            - E. Tholerus et al., “Flat-top plasma operational space of the STEP power plant,”
-              Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
+            - E. Tholerus et al., “Flat-top plasma operational space of the STEP
+              power plant,” Nuclear Fusion, Aug. 2024,
+              doi: https://doi.org/10.1088/1741-4326/ad6ea2.
 
         """
         return 3.7 + (
@@ -3342,8 +3410,10 @@ class PlasmaBeta:
 
         Notes
         -----
-            - This method calculates the normalized beta upper limit based on the Stambaugh scaling.
-            - The formula is derived from empirical fits to high-performance, steady-state tokamak equilibria.
+            - This method calculates the normalized beta upper limit based on the
+              Stambaugh scaling.
+            - The formula is derived from empirical fits to high-performance,
+              steady-state tokamak equilibria.
 
         References
         ----------
@@ -3351,9 +3421,9 @@ class PlasmaBeta:
               Fusion Science and Technology, vol. 59, no. 2, pp. 279-307, Feb. 2011,
               doi: https://doi.org/10.13182/fst59-279.
 
-            - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,”
-              Nuclear Fusion, vol. 44, no. 4, pp. 548-554, Mar. 2004,
-              doi: https://doi.org/10.1088/0029-5515/44/4/009.
+            - Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high
+              performance, steady state tokamaks,” Nuclear Fusion, vol. 44, no. 4,
+              pp. 548-554, Mar. 2004, doi: https://doi.org/10.1088/0029-5515/44/4/009.
 
         """
         return (
@@ -3388,8 +3458,8 @@ class PlasmaBeta:
 
         Notes
         -----
-        - 1.0e8 is a conversion factor to get beta_N in standard units, as plasma current is normally in MA and
-        beta is in percentage instead of fraction.
+        - 1.0e8 is a conversion factor to get beta_N in standard units, as plasma
+          current is normally in MA and beta is in percentage instead of fraction.
 
         """
         return 1.0e8 * (beta * rminor * b_field) / c_plasma
@@ -3429,7 +3499,8 @@ class PlasmaBeta:
     ) -> float:
         """Calculate the maximum allowed beta (β) from a given normalised (β_N).
 
-        This subroutine calculates the beta limit using the algorithm documented in AEA FUS 172.
+        This subroutine calculates the beta limit using the algorithm documented in
+        AEA FUS 172.
         The limit applies to beta defined with respect to the total B-field.
         Switch i_beta_component determines which components of beta to include.
 
@@ -3452,19 +3523,22 @@ class PlasmaBeta:
         Notes
         -----
             - If i_beta_component = 0, then the limit is applied to the total beta.
-            - If i_beta_component = 1, then the limit is applied to the thermal beta only.
-            - If i_beta_component = 2, then the limit is applied to the thermal + neutral beam beta components.
+            - If i_beta_component = 1, then the limit is applied to the thermal
+              beta only.
+            - If i_beta_component = 2, then the limit is applied to the thermal
+              + neutral beam beta components.
             - If i_beta_component = 3, then the limit is applied to the toroidal beta.
 
             - The default value for the g coefficient is beta_norm_max = 3.5.
 
         References
         ----------
-            - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,”
-            Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597-1609, Oct. 1988,
-            doi: https://doi.org/10.1088/0741-3335/30/11/019.
+            - F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational
+              status,” Plasma Physics and Controlled Fusion, vol. 30, no. 11,
+              pp. 1597-1609, Oct. 1988,doi: https://doi.org/10.1088/0741-3335/30/11/019.
 
-            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+            - T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+              AEA FUS 172, 1992
         """
         # Multiplied by 0.01 to convert from % to fraction
         return (
@@ -3486,7 +3560,8 @@ class PlasmaBeta:
         b_plasma_poloidal_average : float
             The average poloidal magnetic field of the plasma (in Tesla).
         beta : float
-            The plasma beta, a dimensionless parameter representing the ratio of plasma pressure to magnetic pressure.
+            The plasma beta, a dimensionless parameter representing the ratio of plasma
+            pressure to magnetic pressure.
 
         Returns
         -------
@@ -3495,8 +3570,8 @@ class PlasmaBeta:
 
         References
         ----------
-        - J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
-        Page 270 ISBN 0521851076
+        - J.P. Freidberg, "Plasma physics and fusion energy",
+         Cambridge University Press (2007) Page 270 ISBN 0521851076
 
         """
         return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
@@ -3517,7 +3592,8 @@ class PlasmaBeta:
     ) -> float:
         """Calculate the fast alpha beta (β_fast_alpha) component.
 
-        This function computes the fast alpha beta contribution based on the provided plasma parameters.
+        This function computes the fast alpha beta contribution based on the provided
+        plasma parameters.
 
         Parameters
         ----------
@@ -3549,17 +3625,19 @@ class PlasmaBeta:
 
         Notes
         -----
-            - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1, 〈T〉 = 5-20 keV
+            - For IPDG89 scaling applicability is Z_eff = 1.5, T_i/T_e = 1,
+            〈T〉 = 5-20 keV
 
 
         References
         ----------
-            - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
-            https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
+        - N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',
+        https://inis.iaea.org/collection/NCLCollectionStore/_Public/21/068/21068960.pdf
 
-            - Uckan, N. A., Tolliver, J. S., Houlberg, W. A., and Attenberger, S. E.
-            Influence of fast alpha diffusion and thermal alpha buildup on tokamak reactor performance.
-            United States: N. p., 1987. Web.https://www.osti.gov/servlets/purl/5611706
+        - Uckan, N. A., Tolliver, J. S., Houlberg, W. A., and Attenberger, S. E.
+        Influence of fast alpha diffusion and thermal alpha buildup on tokamak
+        reactor performance. United States: N. p., 1987.
+        Web.https://www.osti.gov/servlets/purl/5611706
 
         """
         # Determine average fast alpha density
@@ -3576,7 +3654,8 @@ class PlasmaBeta:
                 / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
             )
 
-            # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
+            # jlion: This "fact" model is heavily flawed for smaller temperatures!
+            # It is unphysical for a stellarator (high n low T)
             # IPDG89 fast alpha scaling
             if i_beta_fast_alpha == 0:
                 fact = min(
@@ -3635,7 +3714,8 @@ class PlasmaBeta:
         )
         po.ocmmnt(
             self.outfile,
-            f"Beta component model selected for limit: {BetaComponentLimits(physics_variables.i_beta_component).full_name} ",
+            f"Beta component model selected for limit: "
+            f"{BetaComponentLimits(physics_variables.i_beta_component).full_name} ",
         )
         po.oblnkl(self.outfile)
 
@@ -3798,7 +3878,8 @@ class PlasmaBeta:
         )
         po.ocmmnt(
             self.outfile,
-            f"Maximum normalised beta model selected: {BetaNormMaxModel(physics_variables.i_beta_norm_max).full_name} ",
+            f"Maximum normalised beta model selected: "
+            f"{BetaNormMaxModel(physics_variables.i_beta_norm_max).full_name} ",
         )
         po.oblnkl(self.outfile)
 
@@ -3916,7 +3997,8 @@ class IndInternalNormModel(IntEnum):
     WESSON = (1, "Wesson scaling")
     MENARD = (2, "Menard scaling")
 
-    def __new__(cls, value, full_name):
+    def __new__(cls, value: int, full_name: str):
+        """Create a new instance of the IndInternalNormModel enum."""
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._full_name_ = full_name
@@ -3924,6 +4006,7 @@ class IndInternalNormModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
+        """Get the full name of the normalised internal inductance model."""
         return self._full_name_
 
 
@@ -3935,6 +4018,14 @@ class PlasmaInductance:
         self.mfile = constants.MFILE
 
     def run(self):
+        """Calculate plasma inductance parameters.
+
+        Raises
+        ------
+        ProcessValueError
+            If an illegal value of i_ind_plasma_internal_norm is provided.
+
+        """
         physics_variables.ind_plasma_internal_norm_wesson = (
             self.calculate_internal_inductance_wesson(alphaj=physics_variables.alphaj)
         )
@@ -3966,7 +4057,8 @@ class PlasmaInductance:
                 i_ind_plasma_internal_norm=physics_variables.i_ind_plasma_internal_norm,
             ) from None
 
-    def get_ind_internal_norm_value(self, model: IndInternalNormModel) -> float:
+    @staticmethod
+    def get_ind_internal_norm_value(model: IndInternalNormModel) -> float:
         """Get the normalised internal inductance (l_i) for the specified model.
 
         Parameters
@@ -3995,7 +4087,8 @@ class PlasmaInductance:
         t_plant_pulse_burn: float,
         ind_plasma_internal_norm: float,
     ) -> tuple[float, float, float, float, float, float]:
-        """Calculate the volt-second requirements and related parameters for plasma physics.
+        """Calculate the volt-second requirements and related parameters for plasma
+        physics.
 
         Parameters
         ----------
@@ -4029,7 +4122,8 @@ class PlasmaInductance:
             A tuple containing:
             - vs_plasma_internal: Internal plasma volt-seconds (Wb)
             - ind_plasma_internal: Plasma inductance (H)
-            - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
+            - vs_plasma_burn_required: Volt-seconds needed during flat-top
+              (heat+burn) (Wb)
             - vs_plasma_ramp_required: Volt-seconds needed during ramp-up (Wb)
             - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
             - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
@@ -4037,19 +4131,19 @@ class PlasmaInductance:
 
         References
         ----------
-            - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
-            “Volt-second analysis and consumption in Doublet III plasmas,”
-            Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
-            https://doi.org/10.1088/0029-5515/22/10/006.
+            - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and
+              J. C. Wesley, “Volt-second analysis and consumption in Doublet III
+              plasmas,” Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982,
+              doi:https://doi.org/10.1088/0029-5515/22/10/006.
 
             - S. C. Jardin, C. E. Kessel, and N Pomphrey,
-            “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
-            Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
-            doi: https://doi.org/10.1088/0029-5515/34/8/i07.
+            “Poloidal flux linkage requirements for the International Thermonuclear
+            Experimental Reactor,” Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160,
+            Aug. 1994, doi: https://doi.org/10.1088/0029-5515/34/8/i07.
 
-            - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
-            The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
-            doi: https://doi.org/10.1063/1.865934.
+            - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric
+              plasma,” The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
+              doi: https://doi.org/10.1063/1.865934.
 
         """
         # Plasma internal inductance
@@ -4176,14 +4270,15 @@ class PlasmaInductance:
 
         Notes
         -----
-            - This relation is based off of data from NSTX for l_i in the range of 0.4-0.85
-            - This model is only recommended to be used for ST's with kappa > 2.5
+            - This relation is based off of data from NSTX for l_i in the range of
+              0.4-0.85. This model is only recommended to be used for ST's with
+              kappa > 2.5
 
         References
         ----------
-            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants based on the spherical tokamak,”
-            Nuclear Fusion, vol. 56, no. 10, p. 106023, Aug. 2016,
-            doi: https://doi.org/10.1088/0029-5515/56/10/106023.
+            - J. E. Menard et al., “Fusion nuclear science facilities and pilot plants
+              based on the spherical tokamak,” Nuclear Fusion, vol. 56, no. 10,
+              p. 106023, Aug. 2016, doi: https://doi.org/10.1088/0029-5515/56/10/106023.
 
         """
         return 3.4 - kappa
@@ -4205,9 +4300,10 @@ class PlasmaInductance:
 
         Notes
         -----
-            - It is recommended to use this method with the other Wesson relations for normalised beta and
-              current profile index.
-            - This relation is only true for the cyclindrical plasma approximation with parabolic profiles.
+            - It is recommended to use this method with the other Wesson relations for
+              normalised beta and current profile index.
+            - This relation is only true for the cyclindrical plasma approximation with
+              parabolic profiles.
 
         References
         ----------
@@ -4324,7 +4420,8 @@ class PlasmaInductance:
         )
         po.ocmmnt(
             self.outfile,
-            f"Normalised internal inductance model selected: {IndInternalNormModel(physics_variables.i_ind_plasma_internal_norm).full_name} ",
+            f"Normalised internal inductance model selected: "
+            f"{IndInternalNormModel(physics_variables.i_ind_plasma_internal_norm).full_name} ",
         )
         po.ovarrf(
             self.outfile,
@@ -4364,16 +4461,18 @@ class PlasmaInductance:
 class DetailedPhysics(Model):
     """Class to hold detailed physics models for plasma processing."""
 
-    def __init__(self, plasma_profile):
+    def __init__(self, plasma_profile: PlasmaProfile):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
 
     def output(self):
+        """Run and output detailed physics calculations."""
         self.run()
         self.output_detailed_physics()
 
     def run(self):
+        """Run detailed physics calculations."""
         # ---------------------------
         #  Debye length calculation
         # ---------------------------
@@ -4561,7 +4660,8 @@ class DetailedPhysics(Model):
         # ============================
 
         # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
-        # we can use the total velocity to calculate the Larmor radius for an isotropic profile
+        # we can use the total velocity to calculate the Larmor radius for an isotropic
+        # profile
         physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_vol_avg = self.calculate_larmor_radius(
             vel_perp=np.sqrt(2 * physics_variables.vel_plasma_deuteron_vol_avg**2),
             freq_larmor=physics_variables.freq_plasma_larmor_toroidal_deuteron_vol_avg
@@ -4569,7 +4669,8 @@ class DetailedPhysics(Model):
         )
 
         # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
-        # we can use the total velocity to calculate the Larmor radius for an isotropic profile
+        # we can use the total velocity to calculate the Larmor radius for an isotropic
+        # profile
         physics_variables.radius_plasma_deuteron_toroidal_larmor_isotropic_profile = self.calculate_larmor_radius(
             vel_perp=np.sqrt(
                 2
@@ -4584,7 +4685,8 @@ class DetailedPhysics(Model):
         )
 
         # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
-        # we can use the total velocity to calculate the Larmor radius for an isotropic profile
+        # we can use the total velocity to calculate the Larmor radius for an isotropic
+        # profile
         physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_vol_avg = (
             self.calculate_larmor_radius(
                 vel_perp=np.sqrt(2 * physics_variables.vel_plasma_triton_vol_avg**2),
@@ -4594,7 +4696,8 @@ class DetailedPhysics(Model):
         )
 
         # Since isotropic (v⟂)² = 2(v)² for a Maxwellian distribution,
-        # we can use the total velocity to calculate the Larmor radius for an isotropic profile
+        # we can use the total velocity to calculate the Larmor radius for an isotropic
+        # profile
         physics_variables.radius_plasma_triton_toroidal_larmor_isotropic_profile = (
             self.calculate_larmor_radius(
                 vel_perp=np.sqrt(
@@ -5184,7 +5287,8 @@ class DetailedPhysics(Model):
     def calculate_relativistic_particle_speed(
         e_kinetic: float | np.ndarray, mass: float
     ) -> float | np.ndarray:
-        """Calculate the speed of a particle given its kinetic energy and mass using relativistic mechanics.
+        """Calculate the speed of a particle given its kinetic energy and mass using
+        relativistic mechanics.
 
         Parameters
         ----------
@@ -5235,7 +5339,8 @@ class DetailedPhysics(Model):
         m_reduced: float,
         vel_relative: float | np.ndarray,
     ) -> float | np.ndarray:
-        """Calculate the classical distance of closest approach for two charged particles.
+        """Calculate the classical distance of closest approach for two charged
+        particles.
 
         Parameters
         ----------
@@ -5279,7 +5384,8 @@ class DetailedPhysics(Model):
 
         Note
         ----
-        - Reduced Planck constant (h-bar) is used in the calculation as this is for scattering.
+        - Reduced Planck constant (h-bar) is used in the calculation as this is for
+          scattering.
 
         """
         return (constants.PLANCK_CONSTANT / (2 * np.pi)) / (mass * velocity)
@@ -5297,7 +5403,7 @@ class DetailedPhysics(Model):
             Number density of the particle species (/m^3).
         m_particle : float
             Mass of the particle species (kg).
-        Z_particle : float
+        z_particle : float
             Charge state of the particle species (dimensionless).
 
         Returns
@@ -5324,7 +5430,7 @@ class DetailedPhysics(Model):
             Magnetic field strength (T).
         m_particle : float
             Mass of the particle species (kg).
-        Z_particle : float
+        z_particle : float
             Charge state of the particle species (dimensionless).
 
         Returns
