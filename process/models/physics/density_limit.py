@@ -1,3 +1,10 @@
+"""Plasma density limit models and calculations.
+
+This module provides various electron density limit models used in plasma
+physics calculations, including ASDEX, Borrass, JET, Hugill Murakami, and
+Greenwald limits.
+"""
+
 import logging
 from enum import IntEnum
 from types import DynamicClassAttribute
@@ -28,7 +35,21 @@ class DensityLimitModel(IntEnum):
     GREENWALD = (7, "Greenwald limit")
     ASDEX_NEW = (8, "ASDEX New limit")
 
-    def __new__(cls, value, full_name):
+    def __new__(cls, value: int, full_name: str):
+        """Create a new DensityLimitModel instance.
+
+        Parameters
+        ----------
+        value : int
+            The integer value for the enum member.
+        full_name : str
+            The full descriptive name of the density limit model.
+
+        Returns
+        -------
+        obj
+            A new instance of DensityLimitModel.
+        """
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._full_name_ = full_name
@@ -36,6 +57,7 @@ class DensityLimitModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
+        """Return the full name of the density limit model."""
         return self._full_name_
 
 
@@ -47,6 +69,13 @@ class PlasmaDensityLimit:
         self.mfile = constants.MFILE
 
     def run(self):
+        """Calculate plasma density limits and update physics variables.
+
+        Raises
+        ------
+        ProcessValueError
+            If i_density_limit has an illegal value.
+        """
         physics_variables.nd_plasma_electron_max_array, _ = self.calculate_density_limit(
             b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
             i_density_limit=physics_variables.i_density_limit,
@@ -74,7 +103,8 @@ class PlasmaDensityLimit:
                 i_density_limit=physics_variables.i_density_limit,
             ) from None
 
-    def get_density_limit_value(self, model: DensityLimitModel) -> float:
+    @staticmethod
+    def get_density_limit_value(model: DensityLimitModel) -> float:
         """
         Get the density limit value (n_e_max) for the specified model.
 
@@ -145,7 +175,8 @@ class PlasmaDensityLimit:
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        AEA FUS 172, 1992
         """
         return (
             1.54e20
@@ -185,7 +216,8 @@ class PlasmaDensityLimit:
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        AEA FUS 172, 1992
         """
         return (
             1.8e20
@@ -225,7 +257,8 @@ class PlasmaDensityLimit:
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        AEA FUS 172, 1992
         """
         return (
             0.5e20
@@ -259,7 +292,8 @@ class PlasmaDensityLimit:
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        AEA FUS 172, 1992
         """
         denom = (zeff - 1.0) * (1.0 - 4.0 / (3.0 * qcyl))
         if denom <= 0.0:
@@ -294,7 +328,8 @@ class PlasmaDensityLimit:
 
         References
         ----------
-        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study', AEA FUS 172, 1992
+        T.C.Hender et.al., 'Physics Assesment of the European Reactor Study',
+        AEA FUS 172, 1992
         """
         return (
             0.237e20
@@ -388,15 +423,17 @@ class PlasmaDensityLimit:
 
         Notes
         -----
-        This limit is for the separatrix density so we scale by `prn1` to get it as a volume average.
+        This limit is for the separatrix density so we scale by `prn1` to get it as a
+        volume average.
 
         References
         ----------
-        J. W. Berkery et al., "Density limits as disruption forecasters for spherical tokamaks,"
-        Plasma Physics and Controlled Fusion, vol. 65, no. 9, pp. 095003-095003, Jul. 2023,
-        doi: https://doi.org/10.1088/1361-6587/ace476.
+        J. W. Berkery et al., "Density limits as disruption forecasters for spherical
+        tokamaks," Plasma Physics and Controlled Fusion, vol. 65, no. 9,
+        pp. 095003-095003, Jul. 2023, doi: https://doi.org/10.1088/1361-6587/ace476.
 
-        M. Bernert et al., "The H-mode density limit in the full tungsten ASDEX Upgrade tokamak," vol. 57, no. 1, pp. 014038-014038, Nov. 2014,
+        M. Bernert et al., "The H-mode density limit in the full tungsten ASDEX
+        Upgrade tokamak," vol. 57, no. 1, pp. 014038-014038, Nov. 2014,
         doi: https://doi.org/10.1088/0741-3335/57/1/014038.
         """
         return (
@@ -455,18 +492,21 @@ class PlasmaDensityLimit:
         -------
         tuple[np.ndarray, float]
             A tuple containing:
-            - nd_plasma_electron_max_array : Average plasma density limit using eight different models (m⁻³).
+            - nd_plasma_electron_max_array : Average plasma density limit using eight
+              different models (m⁻³).
             - nd_plasma_electrons_max : Enforced average plasma density limit (m⁻³).
 
         Raises
         ------
-        ValueError
+        ProcessValueError
             If i_density_limit is not between 1 and 7.
 
         Notes
         -----
-        This routine calculates several different formulae for the density limit and enforces the one chosen by the user.
-        For i_density_limit = 1-5, 8, we scale the separatrix density limit output by the ratio of the separatrix to volume averaged density.
+        This routine calculates several different formulae for the density limit and
+        enforces the one chosen by the user. For i_density_limit = 1-5, 8, we scale the
+        separatrix density limit output by the ratio of the separatrix to volume
+        averaged density.
 
         References
         ----------
@@ -474,8 +514,9 @@ class PlasmaDensityLimit:
 
         N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989'
 
-        M. Bernert et al., "The H-mode density limit in the full tungsten ASDEX Upgrade tokamak,"
-        vol. 57, no. 1, pp. 014038-014038, Nov. 2014, doi: https://doi.org/10.1088/0741-3335/57/1/014038.
+        M. Bernert et al., "The H-mode density limit in the full tungsten ASDEX Upgrade
+        tokamak," vol. 57, no. 1, pp. 014038-014038, Nov. 2014,
+        doi: https://doi.org/10.1088/0741-3335/57/1/014038.
         """
         if i_density_limit < 1 or i_density_limit > 7:
             raise ProcessValueError(
@@ -590,7 +631,8 @@ class PlasmaDensityLimit:
         )
         po.ocmmnt(
             self.outfile,
-            f"Density limit model selected: {DensityLimitModel(physics_variables.i_density_limit).full_name} ",
+            "Density limit model selected:"
+            f"{DensityLimitModel(physics_variables.i_density_limit).full_name} ",
         )
         po.ovarre(
             self.outfile,
