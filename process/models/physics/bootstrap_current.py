@@ -422,8 +422,9 @@ class PlasmaBootstrapCurrent(Model):
         termt = 1.0 - 0.5 ** (1.0 / alphat)
         termj = 1.0 - 0.5 ** (1.0 / alphaj)
 
-        # Assuming a parabolic safety factor profile of the form q = q0 + (q95 - q0)
-        # * (r/a)^2 Substitute (r/a)^2 term from temperature,pressure and current
+        # Assuming a parabolic safety factor profile of the form 
+        # q = q0 + (q95 - q0) * (r/a)^2
+        # Substitute (r/a)^2 term from temperature,pressure and current
         # profiles into q profile when values is 50% of core value. Take natural log of
         # q profile over q95 and q0 to get the profile index
 
