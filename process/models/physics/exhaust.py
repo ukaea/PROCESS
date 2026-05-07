@@ -76,7 +76,7 @@ class PlasmaExhaust:
             )
             po.ovarre(
                 self.outfile,
-                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀)"
+                "EU-DEMO divertor protection re-attachment metric (PₛₑₚBₜ / q₉₅AR₀) "
                 "(MWT/m)",
                 "(p_div_bt_q_aspect_rmajor_mw)",
                 physics_variables.p_div_bt_q_aspect_rmajor_mw,
