@@ -1,3 +1,5 @@
+"""TF coil models and utilities for PROCESS."""
+
 from __future__ import annotations
 
 import copy
@@ -69,7 +71,8 @@ class TFPlasmaCaseType(IntEnum):
     CIRCULAR = (0, "Circular edge plasma-facing front case")
     STRAIGHT = (1, "Straight edge plasma-facing front case")
 
-    def __new__(cls, value, description):
+    def __new__(cls, value: int, description: str):
+        """Create a new instance of TFPlasmaCaseType with a description."""
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._description_ = description
@@ -111,7 +114,9 @@ class TFGlobalGeometry:
 
 
 class TFCoil(Model):
-    """Calculates the parameters of a resistive TF coil system for a fusion power plant"""
+    """Calculates the parameters of a resistive TF coil system for a fusion
+    power plant
+    """
 
     def __init__(self, build: Build):
         """Initialise Fortran module variables."""
@@ -120,6 +125,7 @@ class TFCoil(Model):
         self.a_tf_inboard_total = tfcoil_variables.a_tf_inboard_total
 
     def run(self):
+        """Run main tfcoil subroutine."""
         self.cntrpst()
 
     def run_base_tf(self):
@@ -210,8 +216,8 @@ class TFCoil(Model):
         """Run main tfcoil subroutine and write output."""
         self.cntrpst(output=True)
 
+    @staticmethod
     def tf_global_geometry(
-        self,
         i_tf_case_geom: int,
         i_f_dr_tf_plasma_case: bool,
         f_dr_tf_plasma_case: float,
@@ -237,13 +243,16 @@ class TFCoil(Model):
         Parameters
         ----------
         i_tf_case_geom:
-            Geometry type of the TF coil case (e.g., circular or straight plasma-facing front case).
+            Geometry type of the TF coil case (e.g., circular or straight plasma-facing
+            front case).
         i_f_dr_tf_plasma_case:
-            Whether the plasma-facing case thickness is specified as a fraction of the inboard thickness.
+            Whether the plasma-facing case thickness is specified as a fraction of the
+            inboard thickness.
         f_dr_tf_plasma_case:
             Fraction of the inboard thickness used for the plasma-facing case thickness.
         tfc_sidewall_is_fraction:
-            Whether the sidewall case thickness is specified as a fraction of the inboard radius.
+            Whether the sidewall case thickness is specified as a fraction of the
+            inboard radius.
         casths_fraction:
             Fraction of the inboard radius used for the sidewall case thickness.
         n_tf_coils:
@@ -264,7 +273,8 @@ class TFCoil(Model):
         Returns
         -------
         :
-            A dataclass containing the calculated global geometry parameters of the TF coil.
+            A dataclass containing the calculated global geometry parameters of the
+            TF coil.
 
         """
         # The angular space of each TF coil in the toroidal direction [rad]
@@ -366,8 +376,8 @@ class TFCoil(Model):
             dx_tf_side_case_min=dx_tf_side_case_min,
         )
 
+    @staticmethod
     def tf_current(
-        self,
         n_tf_coils: int,
         b_plasma_toroidal_on_axis: float,
         rmajor: float,
@@ -393,10 +403,12 @@ class TFCoil(Model):
         -------
         tuple[float, float, float, float]
             A tuple containing:
-            - **b_tf_inboard_peak_symmetric** (*float*): Maximum B field on the magnet [T].
+            - **b_tf_inboard_peak_symmetric** (*float*): Maximum B field on the
+              magnet [T].
             - **c_tf_total** (*float*): Total current in TF coils [A].
             - **c_tf_coil** (*float*): Current per TF coil [A].
-            - **oacdcp** (*float*): Global inboard leg average current density in TF coils [A/m²].
+            - **oacdcp** (*float*): Global inboard leg average current density in TF
+              coils [A/m²].
         """
         # Calculation of the maximum B field on the magnet [T]
         b_tf_inboard_peak_symmetric = (
@@ -437,8 +449,9 @@ class TFCoil(Model):
     ) -> tuple[float, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Calculate the shape of the inside of the TF coil.
 
-        This method approximates the TF coil by a straight inboard section and four elliptical arcs.
-        The model is ad hoc and does not have a physics or engineering basis.
+        This method approximates the TF coil by a straight inboard section and four
+        elliptical arcs. The model is ad hoc and does not have a physics or engineering
+        basis.
 
         Parameters
         ----------
@@ -571,8 +584,8 @@ class TFCoil(Model):
 
         return len_tf_coil, tfa, tfb, r_tf_arc, z_tf_arc
 
+    @staticmethod
     def tf_stored_magnetic_energy(
-        self,
         ind_tf_coil: float,
         c_tf_total: float,
         n_tf_coils: int,
@@ -592,22 +605,26 @@ class TFCoil(Model):
         -------
         tuple[float, float, float]
             Tuple containing:
-            - e_tf_magnetic_stored_total (float): Total stored magnetic energy in all TF coils [J].
-            - e_tf_magnetic_stored_total_gj (float): Total stored magnetic energy in all TF coils [GJ].
-            - e_tf_coil_magnetic_stored (float): Stored magnetic energy in a single TF coil [J].
+            - e_tf_magnetic_stored_total (float): Total stored magnetic energy in all
+              TF coils [J].
+            - e_tf_magnetic_stored_total_gj (float): Total stored magnetic energy in
+              all TF coils [GJ].
+            - e_tf_coil_magnetic_stored (float): Stored magnetic energy in a single
+              TF coil [J].
 
         Notes
         -----
             - The stored magnetic energy in an inductor is given by:
                 E = (1/2) * L * I^2
-                where E is the energy [J], L is the inductance [H], and I is the current [A].
+                where E is the energy [J], L is the inductance [H], and I is the
+                current [A].
             - Total energy is for all coils; per-coil energy is divided by n_tf_coils.
 
         References
         ----------
-            - http://hyperphysics.phy-astr.gsu.edu/hbase/electric/indeng.html
+        - http://hyperphysics.phy-astr.gsu.edu/hbase/electric/indeng.html
 
-            - https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy
+        - https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy
         """
         e_tf_magnetic_stored_total = 0.5 * ind_tf_coil * c_tf_total**2
 
@@ -709,7 +726,8 @@ class TFCoil(Model):
         ):
             po.ocmmnt(
                 self.outfile,
-                "  -> TF in contact with dr_bore filler support (bucked and weged design)",
+                "  -> TF in contact with dr_bore filler support "
+                "(bucked and weged design)",
             )
 
         elif (
@@ -901,7 +919,8 @@ class TFCoil(Model):
             po.ocmmnt(self.outfile, "D-shape coil, inner surface shape approximated by")
             po.ocmmnt(
                 self.outfile,
-                "by a straight segment and elliptical arcs between the following points:",
+                "by a straight segment and elliptical arcs between the following "
+                "points:",
             )
             po.oblnkl(self.outfile)
         elif tfcoil_variables.i_tf_shape == TFCoilShapeModel.PICTURE_FRAME:
@@ -916,7 +935,8 @@ class TFCoil(Model):
         for ii in range(5):
             po.write(
                 self.outfile,
-                f"  {ii}              {tfcoil_variables.r_tf_arc[ii]}              {tfcoil_variables.z_tf_arc[ii]}",
+                f"  {ii}              {tfcoil_variables.r_tf_arc[ii]}"
+                f"              {tfcoil_variables.z_tf_arc[ii]}",
             )
             po.ovarre(
                 constants.MFILE,
@@ -1158,7 +1178,8 @@ class TFCoil(Model):
             po.ovarre(
                 self.outfile,
                 "Cable WP fraction",
-                "((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)",
+                "((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)"
+                "/a_tf_wp_with_insulation)",
                 (
                     superconducting_tf_coil_variables.a_tf_wp_with_insulation
                     - tfcoil_variables.a_tf_wp_steel
@@ -1774,7 +1795,8 @@ class TFCoil(Model):
             if tfcoil_variables.i_tf_sup == TFConductorModel.WATER_COOLED_COPPER:
                 po.ocmmnt(
                     self.outfile,
-                    "Resistive Material : GLIDCOP AL-15 - Dispersion Strengthened Copper",
+                    "Resistive Material : GLIDCOP AL-15 - Dispersion "
+                    "Strengthened Copper",
                 )
             elif tfcoil_variables.i_tf_sup == TFConductorModel.HELIUM_COOLED_ALUMINIUM:
                 po.ocmmnt(
@@ -1856,7 +1878,8 @@ class TFCoil(Model):
         if tfcoil_variables.i_tf_shape == TFCoilShapeModel.D_SHAPE:
             po.ovarre(
                 self.outfile,
-                "Max allowed tfcoil_variables.ripple amplitude at plasma outboard midplane (%)",
+                "Max allowed tfcoil_variables.ripple amplitude at plasma outboard "
+                "midplane (%)",
                 "(ripple_b_tf_plasma_edge_max)",
                 tfcoil_variables.ripple_b_tf_plasma_edge_max,
             )
@@ -1988,7 +2011,8 @@ class TFCoil(Model):
                 - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.dx_tf_wp_insertion_gap,
                 radius,
-                "(dr_tf_wp_with_insulation/2-dx_tf_wp_insulation-dx_tf_wp_insertion_gap)",
+                "(dr_tf_wp_with_insulation/2-dx_tf_wp_insulation"
+                "-dx_tf_wp_insertion_gap)",
             )
 
             radius = (
@@ -2004,7 +2028,8 @@ class TFCoil(Model):
                 - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.dx_tf_wp_insertion_gap,
                 radius,
-                "(dr_tf_wp_with_insulation/2-dx_tf_wp_insulation-dx_tf_wp_insertion_gap)",
+                "(dr_tf_wp_with_insulation/2-dx_tf_wp_insulation"
+                "-dx_tf_wp_insertion_gap)",
             )
 
             radius += tfcoil_variables.dx_tf_wp_insulation
@@ -2073,7 +2098,8 @@ class TFCoil(Model):
                 tfcoil_variables.dr_tf_wp_with_insulation / 2e0
                 - tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tfcoil_variables.dr_tf_wp_with_insulation/2-tfcoil_variables.dx_tf_wp_insulation)",
+                "(tfcoil_variables.dr_tf_wp_with_insulation/2"
+                "-tfcoil_variables.dx_tf_wp_insulation)",
             )
 
             radius = (
@@ -2087,7 +2113,8 @@ class TFCoil(Model):
                 tfcoil_variables.dr_tf_wp_with_insulation / 2e0
                 - tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tfcoil_variables.dr_tf_wp_with_insulation/2-tfcoil_variables.dx_tf_wp_insulation)",
+                "(tfcoil_variables.dr_tf_wp_with_insulation/2"
+                "-tfcoil_variables.dx_tf_wp_insulation)",
             )
 
             radius += tfcoil_variables.dx_tf_wp_insulation
@@ -2114,7 +2141,8 @@ class TFCoil(Model):
             < 10.0e0 * np.finfo(float(radius)).eps
         ):
             logger.error(
-                "TF coil dimensions are not consistent. Radius of plasma-facing side of inner leg should be "
+                "TF coil dimensions are not consistent. Radius of plasma-facing side "
+                "of inner leg should be "
                 f"{self.data.build.r_tf_inboard_in + self.data.build.dr_tf_inboard}m"
             )
 
@@ -2397,7 +2425,8 @@ class TFCoil(Model):
 
         # Film temperature difference calculations
         # Originally prandtl was prndtl**0.3e0 but this is incorrect as from
-        # Dittus-Boelter correlation where the fluid is being heated it should be as below
+        # Dittus-Boelter correlation where the fluid is being heated it should be
+        # as below
         nuselt = 0.023e0 * reyn**0.8e0 * prndtl**0.4e0
         h = nuselt * coolant_th_cond / dcool
         dtfilmav = ptot / (
@@ -2426,7 +2455,8 @@ class TFCoil(Model):
             conductor_th_cond = self.al_th_cond(tcool_film)
         # ******
 
-        # Average temperature rise : To be changed with Garry Voss' better documented formula ?
+        # Average temperature rise : To be changed with Garry Voss' better documented
+        # formula ?
         dtcncpav = (
             (ptot / tfcoil_variables.vol_cond_cp)
             / (
@@ -2442,7 +2472,8 @@ class TFCoil(Model):
             )
         )
 
-        # Peak temperature rise : To be changed with Garry Voss' better documented formula ?
+        # Peak temperature rise : To be changed with Garry Voss' better
+        # documented formula ?
         dtconcpmx = (
             (ptot / tfcoil_variables.vol_cond_cp)
             / (2.0e0 * conductor_th_cond)
@@ -2658,8 +2689,8 @@ class TFCoil(Model):
                 tfcoil_variables.p_cp_coolant_pump_elec,
             )
 
+    @staticmethod
     def tf_field_and_force(
-        self,
         i_tf_sup: int,
         r_tf_wp_inboard_outer: float,
         r_tf_wp_inboard_inner: float,
@@ -2677,13 +2708,14 @@ class TFCoil(Model):
         i_cp_joints: int,
         f_vforce_inboard: float,
     ) -> tuple[float, float, float, float, float]:
-        """Calculates the Toroidal Field (TF) coil field, forces, vacuum vessel (VV) quench considerations,
-        and resistive magnet resistance/volume.
+        """Calculates the Toroidal Field (TF) coil field, forces, vacuum vessel
+        (VV) quench considerations, and resistive magnet resistance/volume.
 
         Parameters
         ----------
         i_tf_sup : int
-            TF coil support type (1 = superconducting, 0 = resistive copper, 2 = resistive aluminium)
+            TF coil support type (1 = superconducting, 0 = resistive copper,
+            2 = resistive aluminium)
         r_tf_wp_inboard_outer : float
             Outer radius of the inboard winding pack [m]
         r_tf_wp_inboard_inner : float
@@ -2725,7 +2757,8 @@ class TFCoil(Model):
             - vforce_inboard_tot (float): Total inboard vertical force [N]
             - f_vforce_inboard (float): Inboard vertical tension fraction
         """
-        # Outer/inner WP radius removing the ground insulation layer and the insertion gap [m]
+        # Outer/inner WP radius removing the ground insulation layer and the
+        # insertion gap [m]
         if i_tf_sup == 1:
             r_tf_wp_inboard_outer_conductor = (
                 r_tf_wp_inboard_outer - dx_tf_wp_insulation - dx_tf_wp_insertion_gap
@@ -2809,8 +2842,10 @@ class TFCoil(Model):
             )
         )
 
-        # Case of a centrepost (physics_variables.itart == 1) with sliding joints (the CP vertical are separated from the leg ones)
-        # Rem SK : casing/insulation thickness not subtracted as part of the CP is genuinely connected to the legs.
+        # Case of a centrepost (physics_variables.itart == 1) with sliding joints
+        # (the CP vertical are separated from the leg ones)
+        # Rem SK : casing/insulation thickness not subtracted as part of the CP is
+        # genuinely connected to the legs..
         if itart == 1 and i_cp_joints == 1:
             # CP vertical tension [N]
             vforce = (
@@ -3067,7 +3102,8 @@ class TFCoil(Model):
         # Fiting range verification
         if temp < 15.0e0 or temp > 150.0e0:
             logger.error(
-                "Aluminium temperature out of the th conductivity fit range [15-60] K. %s",
+                "Aluminium temperature out of the th conductivity fit range "
+                "[15-60] K. %s",
                 temp,
             )
 
@@ -3088,7 +3124,8 @@ class TFCoil(Model):
         elif temp < 150.0e0:
             th_cond = 1782.77406e0 - 24.7778504e0 * temp + 9.70842050e-2 * temp**2
 
-        # constant value after that set with the fit upper limit to avoid discontinuities
+        # constant value after that set with the fit upper limit to avoid
+        # discontinuities
         else:
             th_cond = 250.4911087866094e0
 
@@ -3142,10 +3179,10 @@ class TFCoil(Model):
         Notes
         -----
         For the D-shaped coil (i_tf_shape == 1) in a standard (non-TART) configuration
-        (itart == 0), the integration is performed over the coil cross-section, including both
-        the inboard and outboard arcs. The field is computed for unit current,
-        and the contribution from the coil's own cross-sectional area is included
-        by taking the field as B(r)/2. Top/bottom symmetry is assumed.
+        (itart == 0), the integration is performed over the coil cross-section,
+        including both the inboard and outboard arcs. The field is computed for
+        unit current, and the contribution from the coil's own cross-sectional area
+        is included by taking the field as B(r)/2. Top/bottom symmetry is assumed.
 
         """
         NINTERVALS = 100
@@ -3223,7 +3260,8 @@ class TFCoil(Model):
 
         return ind_tf_coil
 
-    def generic_tf_coil_area_and_masses(self):
+    @staticmethod
+    def generic_tf_coil_area_and_masses():
         """Subroutine to calculate the TF coil areas and masses"""
         # Surface areas (for cryo system) [m²]
         wbtf = (
@@ -3463,6 +3501,11 @@ class TFCoil(Model):
 
         a_tf_turn_steel :
 
+        Raises
+        ------
+        ProcessValueError
+            If r_tf_inboard_in is approximately zero and i_tf_stress_model is not 2
+
         """
         jeff = np.zeros((n_tf_layer,))
         # Effective current density [A/m2]
@@ -3492,8 +3535,8 @@ class TFCoil(Model):
         # properti
 
         l_member_array = np.zeros((n_tf_wp_stress_layers,))
-        # Array to store the linear dimension (thickness) of the members to composite into smeared
-        # properties [m]
+        # Array to store the linear dimension (thickness) of the members to composite
+        # into smeared properties [m]
 
         eyoung_axial = np.zeros((n_tf_layer,))
         # Young's moduli (one per layer) of the TF coil in the vertical
@@ -3615,7 +3658,8 @@ class TFCoil(Model):
                 ) ** 0.5  # width of cs turn conduit
                 dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn  # length of cs turn conduit
                 # Radius of turn space = radius_cs_turn_cable_space
-                # Radius of curved outer corrner radius_cs_turn_corners = 3mm from literature
+                # Radius of curved outer corrner radius_cs_turn_corners = 3mm
+                # from literature
                 # f_dr_dz_cs_turn = 70 / 22 from literature
                 p1 = ((dr_cs_turn - dz_cs_turn) / np.pi) ** 2
                 p2 = (
@@ -3741,7 +3785,8 @@ class TFCoil(Model):
         # ---
         # SC coil
         if i_tf_sup == 1:
-            # Inner/outer radii of the layer representing the WP in stress calculations [m]
+            # Inner/outer radii of the layer representing the WP in stress
+            # calculations [m]
             # These radii are chosen to preserve the true WP area; see Issue #1048
             r_wp_inner_eff = r_tf_wp_inboard_inner * np.sqrt(
                 tan_theta_coil / rad_tf_coil_inboard_toroidal_half
@@ -3750,18 +3795,21 @@ class TFCoil(Model):
                 tan_theta_coil / rad_tf_coil_inboard_toroidal_half
             )
 
-            # Area of the cylinder representing the WP in stress calculations [m2]
+            # Area of the cylinder representing the WP in stress
+            # calculations [m2]
             a_wp_eff = (
                 r_wp_outer_eff**2 - r_wp_inner_eff**2
             ) * rad_tf_coil_inboard_toroidal_half
 
-            # Steel cross-section under the area representing the WP in stress calculations [m2]
+            # Steel cross-section under the area representing the WP in stress
+            # calculations [m2]
             a_wp_steel_eff = (
                 a_tf_coil_inboard_steel - a_tf_plasma_case - a_tf_coil_nose_case
             )
 
             # WP effective insulation thickness (SC only) [m]
-            # include groundwall insulation + insertion gap in tfcoil_variables.dx_tf_turn_insulation
+            # include groundwall insulation + insertion gap in
+            # tfcoil_variables.dx_tf_turn_insulation
             # insertion gap is tfcoil_variables.dx_tf_wp_insertion_gap on 4 sides
             t_ins_eff = (
                 dx_tf_turn_insulation
@@ -3872,8 +3920,10 @@ class TFCoil(Model):
                 poisson_member_array,
             )
 
-            # Average WP Young's modulus in the vertical direction, now including the lateral case
-            # Parallel-composite the steel and insulation, now including the lateral case (sidewalls)
+            # Average WP Young's modulus in the vertical direction, now including the
+            # lateral case
+            # Parallel-composite the steel and insulation, now including the lateral
+            # case (sidewalls)
             (eyoung_wp_axial_eff, a_working, poisson_wp_axial_eff) = eyoung_parallel(
                 eyoung_steel,
                 a_wp_steel_eff - a_tf_wp_steel,
@@ -4038,7 +4088,8 @@ class TFCoil(Model):
             # Extended plane strain calculation [Pa]
             # Issues #1414 and #998
             # Permits self.data.build.dr_bore >= 0, O(n) in layers
-            # If self.data.build.dr_bore > 0, same result as generalized plane strain calculation
+            # If self.data.build.dr_bore > 0, same result as generalized plane
+            # strain calculation
 
             (
                 radial_array,
@@ -4134,7 +4185,8 @@ class TFCoil(Model):
 
         # Application of the unsmearing to the WP layers
         # For each point within the winding pack / conductor, unsmear the
-        # stress. This is n_radial_array test points within tfcoil_variables.n_tf_graded_layers
+        # stress. This is n_radial_array test points within
+        # tfcoil_variables.n_tf_graded_layers
         # layers starting at n_tf_bucking + 1
         # GRADED MODIF : add another do loop to allow the graded properties
         #                to be taken into account
@@ -4196,7 +4248,8 @@ class TFCoil(Model):
                 svmyz = sigvm(sig_tf_r[ii], 0.0e0, sig_tf_z[ii], 0.0e0, 0.0e0, 0.0e0)
                 sig_tf_vmises[ii] = max(svmxz, svmyz)
 
-                # Maximum shear stress for the Tresca yield criterion using CEA calculation [Pa]
+                # Maximum shear stress for the Tresca yield criterion using CEA
+                # calculation [Pa]
                 s_shear_cea_tf_cond[ii] = (
                     1.02e0 * abs(sig_tf_r[ii]) + 1.6e0 * sig_tf_z[ii]
                 )
@@ -4204,7 +4257,8 @@ class TFCoil(Model):
         # ---
         # -----------------------------
 
-        # Output formating : Maximum shear stress of each layer for the Tresca yield criterion
+        # Output formating : Maximum shear stress of each layer for the
+        # Tresca yield criterion
         # ----------------
         for ii in range(n_tf_layer):
             sig_max = 0.0e0
@@ -4229,7 +4283,8 @@ class TFCoil(Model):
             sig_tf_z_max[ii] = sig_tf_z[ii_max]
             sig_tf_vmises_max[ii] = sig_tf_vmises[ii_max]
 
-            # Maximum shear stress for the Tresca yield criterion (or CEA OOP correction)
+            # Maximum shear stress for the Tresca yield criterion
+            # (or CEA OOP correction)
 
             if i_tf_tresca == 1 and i_tf_sup == 1 and ii >= i_tf_bucking + 1:
                 s_shear_tf_peak[ii] = s_shear_cea_tf_cond[ii_max]
@@ -4410,7 +4465,8 @@ class TFCoil(Model):
         ):
             po.ocmmnt(
                 self.outfile,
-                "WP conduit Tresca criterion corrected using CEA formula (i_tf_tresca = 1)",
+                "WP conduit Tresca criterion corrected using CEA formula "
+                "(i_tf_tresca = 1)",
             )
 
         if tfcoil_variables.i_tf_bucking >= 3:
@@ -4424,7 +4480,8 @@ class TFCoil(Model):
         # OUT.DAT data on maximum shear stress values for the Tresca criterion
         po.ocmmnt(
             self.outfile,
-            "Materal stress of the point of maximum shear stress (Tresca criterion) for each layer",
+            "Materal stress of the point of maximum shear stress (Tresca criterion) "
+            "for each layer",
         )
         po.ocmmnt(
             self.outfile,
@@ -4464,29 +4521,35 @@ class TFCoil(Model):
             if tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING:
                 po.write(
                     self.outfile,
-                    "  Layers \t\t\t\t CS \t\t interface \t\t Steel case \t\t WP \t\t Outer case",
+                    "  Layers \t\t\t\t CS \t\t interface \t\t Steel case \t\t WP"
+                    "\t\t Outer case",
                 )
             else:
                 po.write(
                     self.outfile,
-                    "  Layers \t\t\t\t CS \t\t interface \t\t bucking \t\t conductor \t\t Outer case",
+                    "  Layers \t\t\t\t CS \t\t interface \t\t bucking \t\t conductor"
+                    "\t\t Outer case",
                 )
 
         po.write(
             self.outfile,
-            f"  Radial stress \t\t\t (MPa) \t\t {table_format_arrays(sig_tf_r_max, 1e-6)}",
+            f"  Radial stress \t\t\t (MPa) \t\t"
+            f"{table_format_arrays(sig_tf_r_max, 1e-6)}",
         )
         po.write(
             self.outfile,
-            f"  Toroidal stress \t\t\t (MPa) \t\t {table_format_arrays(sig_tf_t_max, 1e-6)}",
+            f"  Toroidal stress \t\t\t (MPa) \t\t"
+            f"{table_format_arrays(sig_tf_t_max, 1e-6)}",
         )
         po.write(
             self.outfile,
-            f"  Vertical stress \t\t\t (MPa) \t\t {table_format_arrays(sig_tf_z_max, 1e-6)}",
+            f"  Vertical stress \t\t\t (MPa) \t\t"
+            f"{table_format_arrays(sig_tf_z_max, 1e-6)}",
         )
         po.write(
             self.outfile,
-            f"  Von-Mises stress \t\t\t (MPa) \t\t {table_format_arrays(sig_tf_vmises_max, 1e-6)}",
+            f"  Von-Mises stress \t\t\t (MPa) \t\t"
+            f"{table_format_arrays(sig_tf_vmises_max, 1e-6)}",
         )
 
         if (
@@ -4495,22 +4558,26 @@ class TFCoil(Model):
         ):
             po.write(
                 self.outfile,
-                f"  Shear (CEA Tresca) \t\t\t (MPa) \t\t {table_format_arrays(s_shear_tf_peak, 1e-6)}",
+                f"  Shear (CEA Tresca) \t\t\t (MPa) \t\t"
+                f"{table_format_arrays(s_shear_tf_peak, 1e-6)}",
             )
         else:
             po.write(
                 self.outfile,
-                f"  Shear (Tresca) \t\t\t (MPa) \t\t {table_format_arrays(s_shear_tf_peak, 1e-6)}",
+                f"  Shear (Tresca) \t\t\t (MPa) \t\t"
+                f"{table_format_arrays(s_shear_tf_peak, 1e-6)}",
             )
 
         po.write(self.outfile, "")
         po.write(
             self.outfile,
-            f"  Toroidal modulus \t\t\t (GPa) \t\t {table_format_arrays(eyoung_trans, 1e-9)}",
+            f"  Toroidal modulus \t\t\t (GPa) \t\t"
+            f"{table_format_arrays(eyoung_trans, 1e-9)}",
         )
         po.write(
             self.outfile,
-            f"  Vertical modulus \t\t\t (GPa) \t\t {table_format_arrays(eyoung_axial, 1e-9)}",
+            f"  Vertical modulus \t\t\t (GPa) \t\t"
+            f"{table_format_arrays(eyoung_axial, 1e-9)}",
         )
         po.write(self.outfile, "")
         po.ovarre(
@@ -4626,11 +4693,6 @@ class TFCoil(Model):
         sig_filename = global_variables.output_prefix + "SIG_TF.json"
         with open(sig_filename, "w") as f:
             json.dump(sig_file_data, f)
-
-        # TODO sig_tf_wp_av_z is always undefined here. This needs correcting or removing
-        # if ( tfcoil_variables.i_tf_sup == 1 ) :
-        # write(constants.sig_file,'(t2, "WP"    ," smeared stress", t20, "(MPa)",t26, *(F11.3,3x))') sig_tf_wp_av_z*1.0e-6
-        #
 
         # Quantities from the plane stress stress formulation (no resitive coil output)
         if (
@@ -5433,21 +5495,24 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     # back in. This means that the linear algebra solve is not compiled and runs
     # as if it were written in normal Python.
     # This is done because numba compiles against the SciPy algebra library,
-    # not the Numpy one. We have observed some odd behaviour when using the SciPy library
-    # for this specific problem and so opt for using the numpy library instead.
+    # not the Numpy one. We have observed some odd behaviour when using the
+    # SciPy library for this specific problem and so opt for using the numpy library
+    # instead.
     # https://github.com/ukaea/PROCESS/issues/3027
     # https://github.com/scipy/scipy/issues/23639
     with numba.objmode(cc="float64[:]"):
-        # These matrices can often end up being very ill-conditioned which can lead to numerical
-        # instability when solving below.
-        # Scaling the matrix can help reduce numerical instability by reducing the condition of matrix.
-        # Here, we scale aa such that the largest element on a given row is 1.0. This does not
-        # change the solution provided each element of a given row is scaled by the same scalar
-        # and the corresponding entry in bb is also scaled the same amount.
-        # NOTE: this does not entirely solve the numerical instability and you can get above-floating point
-        # differences in the result of this function depending on system.
+        # These matrices can often end up being very ill-conditioned which can lead
+        # to numerical instability when solving below.
+        # Scaling the matrix can help reduce numerical instability by reducing the
+        # condition of matrix. Here, we scale aa such that the largest element on a
+        # given row is 1.0. This does not change the solution provided each element of
+        # a given row is scaled by the same scalar and the corresponding entry in bb is
+        # also scaled the same amount. NOTE: this does not entirely solve the numerical
+        # instability and you can get above-floating point differences in the result
+        # of this function depending on system.
         row_scale = np.max(np.abs(aa), axis=1)
-        # The transpose below ensures the scale is repeated along the row, not the column
+        # The transpose below ensures the scale is repeated along the row, not the
+        # column
         aa /= np.broadcast_to(row_scale, aa.shape).T
         bb /= row_scale
 
@@ -5563,7 +5628,7 @@ def eyoung_parallel_array(n, eyoung_j_in, a_in, poisson_j_perp_in):
 @numba.njit(cache=True)
 def eyoung_t_nested_squares(n, eyoung_j_in, l_in, poisson_j_perp_in):
     """
-    This subroutine gives the smeared transverse elastic
+    Gives the smeared transverse elastic
     properties of n members whose cross sectional areas are
     nested squares. It uses the subroutines eyoung_series and
     eyoung_parallel, above, so please be aware of the assumptions
