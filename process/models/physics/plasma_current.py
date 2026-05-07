@@ -265,7 +265,7 @@ class PlasmaCurrent:
 
         Raises
         ------
-        ValueError
+        ProcessValueError
             If invalid value for `i_plasma_current` is provided.
         ProcessValueError
             If triangularity is negative without `i_plasma_current = 8` selected.
