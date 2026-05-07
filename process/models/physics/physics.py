@@ -2270,7 +2270,7 @@ class Physics(Model):
             )
             po.ocmmnt(
                 self.outfile,
-                "D.C. McDonald et al, 2007 Nuclear Fusion v47, 147."
+                "D.C. McDonald et al, 2007 Nuclear Fusion v47, 147. "
                 "(nu_star missing 1/mu0)",
             )
             po.ovarre(
