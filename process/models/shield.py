@@ -10,7 +10,7 @@ from process.data_structure import (
     physics_variables,
 )
 from process.models.build import FwBlktVVShape
-from process.models.ivc_tools import (
+from process.models.engineering.ivc_functions import (
     dshellarea,
     dshellvol,
     eshellarea,

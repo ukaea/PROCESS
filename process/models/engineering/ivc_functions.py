@@ -24,7 +24,7 @@ def calculate_pipe_bend_radius(i_ps: int, radius_fw_channel: float, b_bz_liq: fl
     return radius_pipe_90_deg_bend, radius_pipe_180_deg_bend
 
 
-def set_pumping_powers_as_fractions(
+def pumping_powers_as_fractions(
     f_p_fw_coolant_pump_total_heat: float,
     f_p_blkt_coolant_pump_total_heat: float,
     f_p_shld_coolant_pump_total_heat: float,
@@ -99,28 +99,24 @@ def eshellarea(rshell, rmini, rmino, zminor):
     """Routine to calculate the inboard, outboard and total surface areas
     of a toroidal shell comprising two elliptical sections
 
-    rshell : input real : major radius of centre of both ellipses (m)
-    rmini  : input real : horizontal distance from rshell to
-    inboard elliptical shell (m)
-    rmino  : input real : horizontal distance from rshell to
-    outboard elliptical shell (m)
-    zminor : input real : vertical internal half-height of shell (m)
-    ain    : output real : surface area of inboard section (m3)
-    aout   : output real : surface area of outboard section (m3)
-    atot   : output real : total surface area of shell (m3)
-    This routine calculates the surface area of the inboard and outboard
-    sections of a toroidal shell defined by two co-centred semi-ellipses.
-
     Parameters
     ----------
-    rshell :
+    rshell : float
+        major radius of centre of both ellipses [m]
+    rmini : float
+        horizontal distance from rshell to inboard elliptical shell [m]
+    rmino : float
+        horizontal distance from rshell to outboard elliptical shell [m]
+    zminor : float
+        vertical internal half-height of shell [m]
 
-    rmini :
-
-    rmino :
-
-    zminor :
-
+    Returns
+    -------
+    tuple[float, float, float]
+        Tuple containing:
+        - ain: Surface area of inboard straight section (m²)
+        - aout: Surface area of outboard curved section (m²)
+        - atot: Total surface area of shell (m²)
     """
     # Inboard section
     elong = zminor / rmini

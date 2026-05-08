@@ -15,11 +15,15 @@ from process.data_structure import (
     physics_variables,
 )
 from process.models.build import FwBlktVVShape
+from process.models.engineering.ivc_functions import (
+    calculate_pipe_bend_radius,
+    dshellarea,
+    eshellarea,
+)
 from process.models.engineering.materials import eurofer97_thermal_conductivity
 from process.models.engineering.pumping import (
     gnielinski_heat_transfer_coefficient,
 )
-from process.models.ivc_tools import calculate_pipe_bend_radius, dshellarea, eshellarea
 
 logger = logging.getLogger(__name__)
 

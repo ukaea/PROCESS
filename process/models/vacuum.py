@@ -15,7 +15,7 @@ from process.data_structure import (
     times_variables,
 )
 from process.models.build import FwBlktVVShape
-from process.models.ivc_tools import dshellvol, eshellvol
+from process.models.engineering.ivc_functions import dshellvol, eshellvol
 
 logger = logging.getLogger(__name__)
 

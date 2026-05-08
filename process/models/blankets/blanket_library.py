@@ -19,16 +19,16 @@ from process.data_structure import (
     primary_pumping_variables,
 )
 from process.models.build import FwBlktVVShape
-from process.models.engineering.pumping import (
-    calculate_reynolds_number,
-    darcy_friction_haaland,
-)
-from process.models.ivc_tools import (
+from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
     dshellarea,
     dshellvol,
     eshellarea,
     eshellvol,
+)
+from process.models.engineering.pumping import (
+    calculate_reynolds_number,
+    darcy_friction_haaland,
 )
 from process.models.power import PumpingPowerModelTypes
 
