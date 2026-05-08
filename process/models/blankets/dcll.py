@@ -2,6 +2,7 @@ from process.core import constants
 from process.core import (
     process_output as po,
 )
+from process.data_structure import blanket_library as blanket_variables
 from process.data_structure import (
     build_variables,
     current_drive_variables,
@@ -11,8 +12,11 @@ from process.data_structure import (
     physics_variables,
     primary_pumping_variables,
 )
-from process.models.blankets import blanket_library
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
+from process.models.engineering.ivc_functions import (
+    calculate_pipe_bend_radius,
+    pumping_powers_as_fractions,
+)
 from process.models.power import PumpingPowerModelTypes
 
 
@@ -98,7 +102,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
         (
             self.data.fwbs.radius_blkt_channel_90_bend,
             self.data.fwbs.radius_blkt_channel_180_bend,
-        ) = self.calculate_pipe_bend_radius(
+        ) = calculate_pipe_bend_radius(
             i_ps=1,
             radius_fw_channel=self.data.fwbs.radius_fw_channel,
             b_bz_liq=self.data.fwbs.b_bz_liq,
@@ -106,13 +110,13 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         self.set_blanket_module_geometry()
 
-        blanket_library.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
+        blanket_variables.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
             n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
             dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
         )
-        blanket_library.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
+        blanket_variables.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
@@ -314,7 +318,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 heat_transport_variables.p_blkt_coolant_pump_mw,
                 heat_transport_variables.p_shld_coolant_pump_mw,
                 heat_transport_variables.p_div_coolant_pump_mw,
-            ) = blanket_library.set_pumping_powers_as_fractions(
+            ) = pumping_powers_as_fractions(
                 f_p_fw_coolant_pump_total_heat=heat_transport_variables.f_p_fw_coolant_pump_total_heat,
                 f_p_blkt_coolant_pump_total_heat=heat_transport_variables.f_p_blkt_coolant_pump_total_heat,
                 f_p_shld_coolant_pump_total_heat=heat_transport_variables.f_p_shld_coolant_pump_total_heat,
