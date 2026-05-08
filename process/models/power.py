@@ -20,7 +20,6 @@ from process.data_structure import (
     physics_variables,
     power_variables,
     primary_pumping_variables,
-    structure_variables,
     tfcoil_variables,
     times_variables,
 )
@@ -1011,7 +1010,7 @@ class Power(Model):
             heat_transport_variables.helpow = self.cryo(
                 tfcoil_variables.i_tf_sup,
                 tfcoil_variables.tfcryoarea,
-                structure_variables.coldmass,
+                self.data.structure.coldmass,
                 self.data.fwbs.p_tf_nuclear_heat_mw,
                 pf_power_variables.ensxpfm,
                 times_variables.t_plant_pulse_plasma_present,

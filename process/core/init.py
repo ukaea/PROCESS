@@ -49,7 +49,6 @@ from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.reinke_variables import init_reinke_variables
 from process.data_structure.scan_variables import init_scan_variables
 from process.data_structure.stellarator_variables import init_stellarator_variables
-from process.data_structure.structure_variables import init_structure_variables
 from process.data_structure.superconducting_tf_coil_variables import (
     init_superconducting_tf_coil_variables,
 )
@@ -285,7 +284,6 @@ def init_all_module_vars():
     init_current_drive_variables()
     init_primary_pumping_variables()
     init_pfcoil_variables()
-    init_structure_variables()
     init_pf_power_variables()
     init_build_variables()
     init_constraint_variables()

@@ -10,7 +10,6 @@ from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as divv
 from process.data_structure import pfcoil_variables as pfv
 from process.data_structure import physics_variables as pv
-from process.data_structure import structure_variables as stv
 from process.data_structure import tfcoil_variables as tfv
 
 logger = logging.getLogger(__name__)
@@ -44,11 +43,11 @@ class Structure(Model):
         total_weight_pf = pfv.m_pf_coil_conductor_total + pfv.m_pf_coil_structure_total
 
         (
-            stv.fncmass,
-            stv.aintmass,
-            stv.clgsmass,
-            stv.coldmass,
-            stv.gsmass,
+            self.data.structure.fncmass,
+            self.data.structure.aintmass,
+            self.data.structure.clgsmass,
+            self.data.structure.coldmass,
+            self.data.structure.gsmass,
         ) = self.structure(
             pv.plasma_current,
             pv.rmajor,

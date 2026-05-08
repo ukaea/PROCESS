@@ -15,7 +15,6 @@ from process.data_structure import (
     heat_transport_variables,
     ife_variables,
     physics_variables,
-    structure_variables,
 )
 
 MATERIALS = [
@@ -1647,11 +1646,11 @@ class IFE(Model):
 
         The outputs are all, trivially, 0 as they are magnetic fusion specific.
         """
-        structure_variables.aintmass = 0.0
-        structure_variables.clgsmass = 0.0
-        structure_variables.coldmass = 0.0
-        structure_variables.fncmass = 0.0
-        structure_variables.gsmass = 0.0
+        self.data.structure.aintmass = 0.0
+        self.data.structure.clgsmass = 0.0
+        self.data.structure.coldmass = 0.0
+        self.data.structure.fncmass = 0.0
+        self.data.structure.gsmass = 0.0
 
     def ifetgt(self):
         """Routine to calculate the power requirements of the target

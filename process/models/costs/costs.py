@@ -17,7 +17,6 @@ from process.data_structure import (
     pfcoil_variables,
     physics_variables,
     pulse_variables,
-    structure_variables,
     tfcoil_variables,
     times_variables,
 )
@@ -1403,7 +1402,7 @@ class Costs(Model):
 
         self.data.costs.c2214 = (
             1.0e-6
-            * structure_variables.gsmass
+            * self.data.structure.gsmass
             * self.data.costs.UCGSS
             * cmlsa[self.data.costs.lsa - 1]
         )
@@ -1566,7 +1565,7 @@ class Costs(Model):
             #  Account 222.1.4 : Intercoil structure
 
             self.data.costs.c22214 = (
-                1.0e-6 * structure_variables.aintmass * self.data.costs.UCINT
+                1.0e-6 * self.data.structure.aintmass * self.data.costs.UCINT
             )
             self.data.costs.c22214 = (
                 self.data.costs.fkind
@@ -1577,7 +1576,7 @@ class Costs(Model):
             #  Account 222.1.5 : Gravity support structure
 
             self.data.costs.c22215 = (
-                1.0e-6 * structure_variables.clgsmass * self.data.costs.UCGSS
+                1.0e-6 * self.data.structure.clgsmass * self.data.costs.UCGSS
             )
             self.data.costs.c22215 = (
                 self.data.costs.fkind
@@ -1825,7 +1824,7 @@ class Costs(Model):
         #  Account 222.2.4 : Support structure
 
         self.data.costs.c22224 = (
-            1.0e-6 * self.data.costs.ucfnc * structure_variables.fncmass
+            1.0e-6 * self.data.costs.ucfnc * self.data.structure.fncmass
         )
         self.data.costs.c22224 = (
             self.data.costs.fkind
