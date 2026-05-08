@@ -17,7 +17,6 @@ import numpy as np
 
 from process.core.init import init_all_module_vars
 from process.core.input import INPUT_VARIABLES
-from process.core.scan import ScanVariables
 from process.core.solver.iteration_variables import ITERATION_VARIABLES
 
 INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}
@@ -28,6 +27,7 @@ NON_F_VALUES = [
     "feffcd",
     "f_a_tf_turn_cable_copper",
 ]
+
 logger = logging.getLogger(__name__)
 
 output_dict = {}
@@ -219,37 +219,6 @@ def remove_comments(line):
     return line
 
 
-def dict_ixc2nsweep():
-    """Returns a dict mapping ixc_no to nsweep_no, if both exist for a
-    particular variable.
-
-    Example dictionary entry:
-        DICT_IXC2NSWEEP['1'] = '1'
-    """
-    name_to_nsweep = {
-        sv.value.variable_name: sv.value.variable_num for sv in ScanVariables
-    }
-
-    # create a dictionary that maps iteration variable names to ixc_no
-    ixc_full = dict_ixc_full()
-    name_to_ixc = {
-        name: ixc
-        for ixc, data in ixc_full.items()
-        if (name := data["name"]) in name_to_nsweep
-    }
-
-    return {ixc: name_to_nsweep[name] for name, ixc in name_to_ixc.items()}
-
-
-def dict_nsweep2ixc():
-    """Returns a dict mapping nsweep_no to ixc_no; the inverse of
-    dict_ixc2nsweep
-    """
-    # Use dict_ixc2nsweep from output_dict to produce dict_nsweep2ixc
-    ixc2nsweep = output_dict["DICT_IXC2NSWEEP"]
-    return {b: a for a, b in ixc2nsweep.items()}
-
-
 def dict_var_type():
     """Function to return a dictionary mapping variable name to variable type
     eg. 'real_variable' or 'int_array'. Looks in input.f90 at the process
@@ -302,10 +271,6 @@ def dict_input_bounds():
     return di
 
 
-def dict_nsweep2varname():
-    return {sv.value.variable_num: sv.value.variable_name for sv in ScanVariables}
-
-
 def dict_ixc_full():
     """Function to return a dictionary matching str(ixc_no) to a dictionary
     containing the name, lower and upper bounds of that variable.
@@ -342,12 +307,6 @@ def dict_ixc_simple():
     return ixc_simple
 
 
-def dict_ixc_simple_rev():
-    # Returns dictionary mapping iteration variable name to ixc no
-    ixc_simple = output_dict["DICT_IXC_SIMPLE"]
-    return {b: a for a, b in ixc_simple.items()}
-
-
 # cache the output of get_dicts so that it is never re-calculated in a given
 # process run.
 @cache
@@ -369,14 +328,10 @@ def get_dicts():
         HardcodedDictionary("DICT_MODULE", {}),
         HardcodedDictionary("DICT_DESCRIPTIONS", {}),
         SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
-        SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),
         SourceDictionary("DICT_VAR_TYPE", dict_var_type),
-        SourceDictionary("DICT_IXC2NSWEEP", dict_ixc2nsweep),
-        SourceDictionary("DICT_NSWEEP2IXC", dict_nsweep2ixc),
         SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
         SourceDictionary("DICT_IXC_BOUNDS", dict_ixc_bounds),
         SourceDictionary("DICT_IXC_SIMPLE", dict_ixc_simple),
-        SourceDictionary("DICT_IXC_SIMPLE_REV", dict_ixc_simple_rev),
     ])
 
     # Make individual dicts within dict objects, process, then add to output_dict
