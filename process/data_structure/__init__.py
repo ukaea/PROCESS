@@ -1,5 +1,5 @@
 from process.data_structure import (
-    blanket_library,
+    blanket_variables,
     build_variables,
     buildings_variables,
     ccfe_hcpb_module,
@@ -37,7 +37,7 @@ from process.data_structure import (
 )
 
 __all__ = [
-    "blanket_library",
+    "blanket_variables",
     "build_variables",
     "buildings_variables",
     "ccfe_hcpb_module",

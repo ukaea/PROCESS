@@ -2,7 +2,6 @@ import logging
 
 import numpy as np
 
-import process.data_structure.blanket_library as blanket_vars
 from process.core import constants
 from process.core import (
     process_output as po,
@@ -66,13 +65,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         self.set_blanket_module_geometry()
 
-        blanket_vars.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
+        self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
             n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
             dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
         )
-        blanket_vars.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
+        self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
@@ -1566,7 +1565,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "Blanket half height (m)",
             "(dz_blkt_half)",
-            blanket_vars.dz_blkt_half,
+            self.data.blanket.dz_blkt_half,
         )
         po.ovarre(
             self.outfile,
