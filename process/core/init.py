@@ -24,7 +24,6 @@ from process.data_structure.constraint_variables import init_constraint_variable
 from process.data_structure.current_drive_variables import init_current_drive_variables
 from process.data_structure.dcll_variables import init_dcll_module
 from process.data_structure.divertor_variables import init_divertor_variables
-from process.data_structure.fwbs_variables import init_fwbs_variables
 from process.data_structure.heat_transport_variables import (
     init_heat_transport_variables,
 )
@@ -270,7 +269,6 @@ def init_all_module_vars():
     data_structure.numerics.init_numerics()
     init_buildings_variables()
     init_divertor_variables()
-    init_fwbs_variables()
     data_structure.global_variables.init_global_variables()
     init_ccfe_hcpb_module()
     init_heat_transport_variables()
@@ -1169,27 +1167,23 @@ def check_process(inputs, data):  # noqa: ARG001
 
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
-    if data_structure.fwbs_variables.i_blkt_inboard == 0:
+    if data.fwbs.i_blkt_inboard == 0:
         data_structure.build_variables.dr_blkt_inboard = 0.0
 
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model
 
     if data_structure.stellarator_variables.istell == 0 and (
-        data_structure.fwbs_variables.i_blanket_type == 1
+        data.fwbs.i_blanket_type == 1
     ):
-        fsum = (
-            data_structure.fwbs_variables.breeder_multiplier
-            + data_structure.fwbs_variables.vfcblkt
-            + data_structure.fwbs_variables.vfpblkt
-        )
+        fsum = data.fwbs.breeder_multiplier + data.fwbs.vfcblkt + data.fwbs.vfpblkt
         if fsum >= 1.0:
             raise ProcessValidationError(
                 "Blanket material fractions do not sum to 1.0",
-                i_blanket_type=data_structure.fwbs_variables.i_blanket_type,
-                breeder_multiplier=data_structure.fwbs_variables.breeder_multiplier,
-                vfcblkt=data_structure.fwbs_variables.vfcblkt,
-                vfpblkt=data_structure.fwbs_variables.vfpblkt,
+                i_blanket_type=data.fwbs.i_blanket_type,
+                breeder_multiplier=data.fwbs.breeder_multiplier,
+                vfcblkt=data.fwbs.vfcblkt,
+                vfpblkt=data.fwbs.vfpblkt,
                 fsum=fsum,
             )
 

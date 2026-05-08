@@ -7,7 +7,6 @@ from process.data_structure import (
     current_drive_variables,
     dcll_variables,
     divertor_variables,
-    fwbs_variables,
     physics_variables,
 )
 
@@ -173,95 +172,95 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "f_ster_div_single",
         dcllneutronicsandpowerparam.f_ster_div_single,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_div_rad_total_mw",
         dcllneutronicsandpowerparam.p_div_rad_total_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_div_nuclear_heat_total_mw",
         dcllneutronicsandpowerparam.p_div_nuclear_heat_total_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "f_a_fw_outboard_hcd",
         dcllneutronicsandpowerparam.f_a_fw_outboard_hcd,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_fw_hcd_rad_total_mw",
         dcllneutronicsandpowerparam.p_fw_hcd_rad_total_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_fw_hcd_nuclear_heat_mw",
         dcllneutronicsandpowerparam.p_fw_hcd_nuclear_heat_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_shld_nuclear_heat_mw",
         dcllneutronicsandpowerparam.p_shld_nuclear_heat_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_fw_rad_total_mw",
         dcllneutronicsandpowerparam.p_fw_rad_total_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_fw_nuclear_heat_total_mw",
         dcllneutronicsandpowerparam.p_fw_nuclear_heat_total_mw,
     )
 
-    monkeypatch.setattr(fwbs_variables, "psurffwi", dcllneutronicsandpowerparam.psurffwi)
+    monkeypatch.setattr(dcll.data.fwbs, "psurffwi", dcllneutronicsandpowerparam.psurffwi)
 
-    monkeypatch.setattr(fwbs_variables, "psurffwo", dcllneutronicsandpowerparam.psurffwo)
+    monkeypatch.setattr(dcll.data.fwbs, "psurffwo", dcllneutronicsandpowerparam.psurffwo)
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_blkt_nuclear_heat_total_mw",
         dcllneutronicsandpowerparam.p_blkt_nuclear_heat_total_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "pnuc_fw_ratio_dcll",
         dcllneutronicsandpowerparam.pnuc_fw_ratio_dcll,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "pnuc_blkt_ratio_dcll",
         dcllneutronicsandpowerparam.pnuc_blkt_ratio_dcll,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "f_p_blkt_multiplication",
         dcllneutronicsandpowerparam.f_p_blkt_multiplication,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_blkt_multiplication_mw",
         dcllneutronicsandpowerparam.p_blkt_multiplication_mw,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "p_tf_nuclear_heat_mw",
         dcllneutronicsandpowerparam.p_tf_nuclear_heat_mw,
     )
@@ -288,19 +287,19 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
 
     dcll.dcll_neutronics_and_power(False)
 
-    assert fwbs_variables.p_fw_rad_total_mw == pytest.approx(
+    assert dcll.data.fwbs.p_fw_rad_total_mw == pytest.approx(
         dcllneutronicsandpowerparam.expected_p_fw_rad_total_mw
     )
 
-    assert fwbs_variables.p_fw_nuclear_heat_total_mw == pytest.approx(
+    assert dcll.data.fwbs.p_fw_nuclear_heat_total_mw == pytest.approx(
         dcllneutronicsandpowerparam.expected_p_fw_nuclear_heat_total_mw
     )
 
-    assert fwbs_variables.p_blkt_nuclear_heat_total_mw == pytest.approx(
+    assert dcll.data.fwbs.p_blkt_nuclear_heat_total_mw == pytest.approx(
         dcllneutronicsandpowerparam.expected_p_blkt_nuclear_heat_total_mw
     )
 
-    assert fwbs_variables.p_blkt_multiplication_mw == pytest.approx(
+    assert dcll.data.fwbs.p_blkt_multiplication_mw == pytest.approx(
         dcllneutronicsandpowerparam.expected_p_blkt_multiplication_mw
     )
 
@@ -837,86 +836,86 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcllmassesparam.a_plasma_surface_outboard,
     )
 
-    monkeypatch.setattr(fwbs_variables, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard)
+    monkeypatch.setattr(dcll.data.fwbs, "i_blkt_inboard", dcllmassesparam.i_blkt_inboard)
 
-    monkeypatch.setattr(fwbs_variables, "vol_blkt_total", dcllmassesparam.vol_blkt_total)
+    monkeypatch.setattr(dcll.data.fwbs, "vol_blkt_total", dcllmassesparam.vol_blkt_total)
 
     monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_inboard", dcllmassesparam.vol_blkt_inboard
+        dcll.data.fwbs, "vol_blkt_inboard", dcllmassesparam.vol_blkt_inboard
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "vol_blkt_outboard", dcllmassesparam.vol_blkt_outboard
+        dcll.data.fwbs, "vol_blkt_outboard", dcllmassesparam.vol_blkt_outboard
     )
 
-    monkeypatch.setattr(fwbs_variables, "m_blkt_total", dcllmassesparam.m_blkt_total)
+    monkeypatch.setattr(dcll.data.fwbs, "m_blkt_total", dcllmassesparam.m_blkt_total)
 
-    monkeypatch.setattr(fwbs_variables, "m_fw_total", dcllmassesparam.m_fw_total)
+    monkeypatch.setattr(dcll.data.fwbs, "m_fw_total", dcllmassesparam.m_fw_total)
 
-    monkeypatch.setattr(fwbs_variables, "fw_armour_vol", dcllmassesparam.fw_armour_vol)
+    monkeypatch.setattr(dcll.data.fwbs, "fw_armour_vol", dcllmassesparam.fw_armour_vol)
 
     monkeypatch.setattr(
-        fwbs_variables, "fw_armour_thickness", dcllmassesparam.fw_armour_thickness
+        dcll.data.fwbs, "fw_armour_thickness", dcllmassesparam.fw_armour_thickness
     )
 
-    monkeypatch.setattr(fwbs_variables, "fw_armour_mass", dcllmassesparam.fw_armour_mass)
+    monkeypatch.setattr(dcll.data.fwbs, "fw_armour_mass", dcllmassesparam.fw_armour_mass)
 
-    monkeypatch.setattr(fwbs_variables, "vol_fw_total", dcllmassesparam.vol_fw_total)
+    monkeypatch.setattr(dcll.data.fwbs, "vol_fw_total", dcllmassesparam.vol_fw_total)
 
     monkeypatch.setattr(
-        fwbs_variables, "armour_fw_bl_mass", dcllmassesparam.armour_fw_bl_mass
+        dcll.data.fwbs, "armour_fw_bl_mass", dcllmassesparam.armour_fw_bl_mass
     )
 
-    monkeypatch.setattr(fwbs_variables, "den_steel", dcllmassesparam.den_steel)
+    monkeypatch.setattr(dcll.data.fwbs, "den_steel", dcllmassesparam.den_steel)
 
-    monkeypatch.setattr(fwbs_variables, "den_liq", dcllmassesparam.den_liq)
+    monkeypatch.setattr(dcll.data.fwbs, "den_liq", dcllmassesparam.den_liq)
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "i_blkt_liquid_breeder_channel_type",
         dcllmassesparam.i_blkt_liquid_breeder_channel_type,
     )
 
-    monkeypatch.setattr(fwbs_variables, "den_ceramic", dcllmassesparam.den_ceramic)
+    monkeypatch.setattr(dcll.data.fwbs, "den_ceramic", dcllmassesparam.den_ceramic)
 
     monkeypatch.setattr(
-        fwbs_variables, "th_wall_secondary", dcllmassesparam.th_wall_secondary
+        dcll.data.fwbs, "th_wall_secondary", dcllmassesparam.th_wall_secondary
     )
 
-    monkeypatch.setattr(fwbs_variables, "nopol", dcllmassesparam.nopol)
+    monkeypatch.setattr(dcll.data.fwbs, "nopol", dcllmassesparam.nopol)
 
-    monkeypatch.setattr(fwbs_variables, "r_f_liq_ib", dcllmassesparam.r_f_liq_ib)
+    monkeypatch.setattr(dcll.data.fwbs, "r_f_liq_ib", dcllmassesparam.r_f_liq_ib)
 
-    monkeypatch.setattr(fwbs_variables, "r_f_liq_ob", dcllmassesparam.r_f_liq_ob)
+    monkeypatch.setattr(dcll.data.fwbs, "r_f_liq_ob", dcllmassesparam.r_f_liq_ob)
 
-    monkeypatch.setattr(fwbs_variables, "w_f_liq_ib", dcllmassesparam.w_f_liq_ib)
+    monkeypatch.setattr(dcll.data.fwbs, "w_f_liq_ib", dcllmassesparam.w_f_liq_ib)
 
-    monkeypatch.setattr(fwbs_variables, "w_f_liq_ob", dcllmassesparam.w_f_liq_ob)
+    monkeypatch.setattr(dcll.data.fwbs, "w_f_liq_ob", dcllmassesparam.w_f_liq_ob)
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "f_a_blkt_cooling_channels",
         dcllmassesparam.f_a_blkt_cooling_channels,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "i_blkt_dual_coolant", dcllmassesparam.i_blkt_dual_coolant
+        dcll.data.fwbs, "i_blkt_dual_coolant", dcllmassesparam.i_blkt_dual_coolant
     )
 
-    monkeypatch.setattr(fwbs_variables, "den_fw_coolant", dcllmassesparam.den_fw_coolant)
+    monkeypatch.setattr(dcll.data.fwbs, "den_fw_coolant", dcllmassesparam.den_fw_coolant)
 
     monkeypatch.setattr(
-        fwbs_variables, "den_blkt_coolant", dcllmassesparam.den_blkt_coolant
+        dcll.data.fwbs, "den_blkt_coolant", dcllmassesparam.den_blkt_coolant
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "n_blkt_inboard_modules_toroidal",
         dcllmassesparam.n_blkt_inboard_modules_toroidal,
     )
 
     monkeypatch.setattr(
-        fwbs_variables,
+        dcll.data.fwbs,
         "n_blkt_outboard_modules_toroidal",
         dcllmassesparam.n_blkt_outboard_modules_toroidal,
     )
@@ -1011,43 +1010,43 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     assert build_variables.blbmoth == pytest.approx(dcllmassesparam.expected_blbmoth)
 
-    assert fwbs_variables.m_blkt_total == pytest.approx(
+    assert dcll.data.fwbs.m_blkt_total == pytest.approx(
         dcllmassesparam.expected_m_blkt_total
     )
 
-    assert fwbs_variables.m_fw_total == pytest.approx(
+    assert dcll.data.fwbs.m_fw_total == pytest.approx(
         dcllmassesparam.expected_m_fw_total
     )
 
-    assert fwbs_variables.fw_armour_vol == pytest.approx(
+    assert dcll.data.fwbs.fw_armour_vol == pytest.approx(
         dcllmassesparam.expected_fw_armour_vol
     )
 
-    assert fwbs_variables.fw_armour_mass == pytest.approx(
+    assert dcll.data.fwbs.fw_armour_mass == pytest.approx(
         dcllmassesparam.expected_fw_armour_mass
     )
 
-    assert fwbs_variables.vol_fw_total == pytest.approx(
+    assert dcll.data.fwbs.vol_fw_total == pytest.approx(
         dcllmassesparam.expected_vol_fw_total
     )
 
-    assert fwbs_variables.armour_fw_bl_mass == pytest.approx(
+    assert dcll.data.fwbs.armour_fw_bl_mass == pytest.approx(
         dcllmassesparam.expected_armour_fw_bl_mass
     )
 
-    assert fwbs_variables.r_f_liq_ib == pytest.approx(
+    assert dcll.data.fwbs.r_f_liq_ib == pytest.approx(
         dcllmassesparam.expected_r_f_liq_ib
     )
 
-    assert fwbs_variables.w_f_liq_ib == pytest.approx(
+    assert dcll.data.fwbs.w_f_liq_ib == pytest.approx(
         dcllmassesparam.expected_w_f_liq_ib
     )
 
-    assert fwbs_variables.w_f_liq_ob == pytest.approx(
+    assert dcll.data.fwbs.w_f_liq_ob == pytest.approx(
         dcllmassesparam.expected_w_f_liq_ob
     )
 
-    assert fwbs_variables.f_a_blkt_cooling_channels == pytest.approx(
+    assert dcll.data.fwbs.f_a_blkt_cooling_channels == pytest.approx(
         dcllmassesparam.expected_f_a_blkt_cooling_channels
     )
 

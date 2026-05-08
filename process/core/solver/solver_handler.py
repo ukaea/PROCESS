@@ -31,7 +31,7 @@ class SolverHandler:
     def run(self):
         """Run solver and retry if it fails in certain ways."""
         # Initialise iteration variables and bounds in Fortran
-        load_iteration_variables()
+        load_iteration_variables(self.data)
         load_scaled_bounds()
 
         # Initialise iteration variables and bounds in Python: relies on Fortran

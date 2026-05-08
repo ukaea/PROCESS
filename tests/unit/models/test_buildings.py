@@ -7,7 +7,6 @@ from process.data_structure import (
     buildings_variables,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
@@ -687,9 +686,11 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         buildings.data.costs, "life_div_fpy", bldgssizesparam.life_div_fpy
     )
     monkeypatch.setattr(
-        fwbs_variables, "r_cryostat_inboard", bldgssizesparam.r_cryostat_inboard
+        buildings.data.fwbs, "r_cryostat_inboard", bldgssizesparam.r_cryostat_inboard
     )
-    monkeypatch.setattr(fwbs_variables, "life_blkt_fpy", bldgssizesparam.life_blkt_fpy)
+    monkeypatch.setattr(
+        buildings.data.fwbs, "life_blkt_fpy", bldgssizesparam.life_blkt_fpy
+    )
     monkeypatch.setattr(
         build_variables, "z_tf_inside_half", bldgssizesparam.z_tf_inside_half
     )

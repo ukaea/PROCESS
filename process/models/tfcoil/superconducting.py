@@ -14,7 +14,6 @@ from process.data_structure import (
     build_variables,
     constraint_variables,
     divertor_variables,
-    fwbs_variables,
     global_variables,
     pfcoil_variables,
     physics_variables,
@@ -1443,7 +1442,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_steel
-            * fwbs_variables.den_steel
+            * self.data.fwbs.den_steel
         )
 
         # Conduit insulation mass [kg]

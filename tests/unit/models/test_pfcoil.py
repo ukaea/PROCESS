@@ -17,7 +17,6 @@ from numpy.testing import assert_array_almost_equal
 
 from process.core import constants
 from process.data_structure import build_variables as bv
-from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import pfcoil_variables, superconducting_tf_coil_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
@@ -2454,7 +2453,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(bv, "dr_tf_inboard", 1.4)
     monkeypatch.setattr(bv, "r_tf_outboard_mid", 1.66e1)
     monkeypatch.setattr(bv, "dr_bore", 2.15)
-    monkeypatch.setattr(fwbsv, "den_steel", 7.8e3)
+    monkeypatch.setattr(pfcoil.data.fwbs, "den_steel", 7.8e3)
     monkeypatch.setattr(pfcoil_variables, "dr_pf_cs_middle_offset", 0.0)
     monkeypatch.setattr(pfcoil_variables, "m_pf_coil_structure_total", 0.0)
     monkeypatch.setattr(pfcoil_variables, "c_pf_cs_coil_flat_top_ma", np.full(22, 0.0))
@@ -2586,7 +2585,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     # Mocks for ohcalc()
     monkeypatch.setattr(bv, "z_tf_inside_half", 8.864)
     monkeypatch.setattr(bv, "dr_cs", 6.510e-1)
-    monkeypatch.setattr(fwbsv, "den_steel", 7.8e3)
+    monkeypatch.setattr(cs_coil.data.fwbs, "den_steel", 7.8e3)
     monkeypatch.setattr(bv, "dr_bore", 2.6745)
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", 5)
     monkeypatch.setattr(pfcoil_variables, "b_cs_peak_flat_top_end", 1.4e1)

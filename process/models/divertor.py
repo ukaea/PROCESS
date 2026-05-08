@@ -8,7 +8,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as dv
-from process.data_structure import fwbs_variables as fwbs
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 
@@ -38,15 +37,15 @@ class Divertor(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-        fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
+        self.data.fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=dv.n_divertors,
         )
 
-        fwbs.p_div_rad_total_mw = self.incident_radiation_power(
+        self.data.fwbs.p_div_rad_total_mw = self.incident_radiation_power(
             p_plasma_rad_mw=pv.p_plasma_rad_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=dv.n_divertors,
         )
 
@@ -414,13 +413,13 @@ class LowerDivertor(Divertor):
 
         dv.p_div_lower_nuclear_heat_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )
 
         dv.p_div_lower_rad_mw = self.incident_radiation_power(
             p_plasma_rad_mw=pv.p_plasma_rad_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )
 
@@ -433,12 +432,12 @@ class UpperDivertor(Divertor):
 
         dv.p_div_upper_nuclear_heat_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )
 
         dv.p_div_upper_rad_mw = self.incident_radiation_power(
             p_plasma_rad_mw=pv.p_plasma_rad_mw,
-            f_ster_div_single=fwbs.f_ster_div_single,
+            f_ster_div_single=self.data.fwbs.f_ster_div_single,
             n_divertors=1,
         )

@@ -18,7 +18,6 @@ from process.data_structure import (
     constraint_variables,
     current_drive_variables,
     divertor_variables,
-    fwbs_variables,
     global_variables,
     heat_transport_variables,
     numerics,
@@ -151,7 +150,7 @@ class Stellarator(Model):
 
             st_div(self, True, self.data)
             st_build(self, True, self.data)
-            st_coil(self, True)
+            st_coil(self, True, self.data)
             self.st_strc(True)
             self.st_fwbs(True)
 
@@ -167,7 +166,7 @@ class Stellarator(Model):
         self.st_geom()
         self.st_phys(False)
         st_denisty_limits(self, False)
-        st_coil(self, False)
+        st_coil(self, False, self.data)
         st_build(self, False, self.data)
         self.st_strc(False)
         self.st_fwbs(False)
@@ -372,7 +371,7 @@ class Stellarator(Model):
             0.18e0
             * (physics_variables.b_plasma_toroidal_on_axis / 5.6) ** 2
             * intercoil_surface
-            * fwbs_variables.den_steel
+            * self.data.fwbs.den_steel
         )
 
         structure_variables.clgsmass = (
@@ -384,7 +383,7 @@ class Stellarator(Model):
         structure_variables.coldmass = (
             tfcoil_variables.m_tf_coils_total
             + structure_variables.aintmass
-            + fwbs_variables.dewmkg
+            + self.data.fwbs.dewmkg
         )
 
         #  Output section
@@ -419,20 +418,20 @@ class Stellarator(Model):
     def blanket_neutronics(self):
         """Routine to calculate neutronic properties for a stellarator"""
         # heating of the blanket
-        if fwbs_variables.breedmat == 1:
-            fwbs_variables.breeder = "Orthosilicate"
-            fwbs_variables.densbreed = 1.50e3
-        elif fwbs_variables.breedmat == 2:
-            fwbs_variables.breeder = "Metatitanate"
-            fwbs_variables.densbreed = 1.78e3
+        if self.data.fwbs.breedmat == 1:
+            self.data.fwbs.breeder = "Orthosilicate"
+            self.data.fwbs.densbreed = 1.50e3
+        elif self.data.fwbs.breedmat == 2:
+            self.data.fwbs.breeder = "Metatitanate"
+            self.data.fwbs.densbreed = 1.78e3
         else:
-            fwbs_variables.breeder = (
+            self.data.fwbs.breeder = (
                 "Zirconate"  # (In reality, rarely used - activation problems)
             )
-            fwbs_variables.densbreed = 2.12e3
+            self.data.fwbs.densbreed = 2.12e3
 
-        fwbs_variables.m_blkt_total = (
-            fwbs_variables.vol_blkt_total * fwbs_variables.densbreed
+        self.data.fwbs.m_blkt_total = (
+            self.data.fwbs.vol_blkt_total * self.data.fwbs.densbreed
         )
         self.hcpb.nuclear_heating_blanket()
 
@@ -449,13 +448,13 @@ class Stellarator(Model):
             * tfcoil_variables.n_tf_coils
         )
 
-        fwbs_variables.ptfnucpm3 = fwbs_variables.p_tf_nuclear_heat_mw / tf_volume
+        self.data.fwbs.ptfnucpm3 = self.data.fwbs.p_tf_nuclear_heat_mw / tf_volume
 
         # heating of the shield
         self.hcpb.nuclear_heating_shield()
 
         # Energy multiplication factor
-        fwbs_variables.f_p_blkt_multiplication = 1.269
+        self.data.fwbs.f_p_blkt_multiplication = 1.269
 
         # Use older model to calculate neutron fluence since it
         # is not calculated in the CCFE blanket model
@@ -463,7 +462,7 @@ class Stellarator(Model):
             _,
             _,
             _,
-            fwbs_variables.nflutf,
+            self.data.fwbs.nflutf,
             _,
             _,
             _,
@@ -503,7 +502,7 @@ class Stellarator(Model):
 
 
         """
-        fwbs_variables.life_fw_fpy = min(
+        self.data.fwbs.life_fw_fpy = min(
             self.data.costs.abktflnc / physics_variables.pflux_fw_neutron_mw,
             self.data.costs.life_plant,
         )
@@ -514,7 +513,7 @@ class Stellarator(Model):
 
         #  Blanket volume; assume that its surface area is scaled directly from the
         #  plasma surface area.
-        #  Uses fwbs_variables.fhole etc. to take account of gaps due to ports etc.
+        #  Uses self.data.fwbs.fhole etc. to take account of gaps due to ports etc.
 
         r1 = physics_variables.rminor + 0.5e0 * (
             build_variables.dr_fw_plasma_gap_inboard
@@ -527,7 +526,7 @@ class Stellarator(Model):
                 physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
-                * (1.0e0 - fwbs_variables.fhole)
+                * (1.0e0 - self.data.fwbs.fhole)
             )
         else:
             build_variables.a_blkt_total_surface = (
@@ -536,9 +535,9 @@ class Stellarator(Model):
                 / physics_variables.rminor
                 * (
                     1.0e0
-                    - fwbs_variables.fhole
-                    - fwbs_variables.f_ster_div_single
-                    - fwbs_variables.f_a_fw_outboard_hcd
+                    - self.data.fwbs.fhole
+                    - self.data.fwbs.f_ster_div_single
+                    - self.data.fwbs.f_a_fw_outboard_hcd
                 )
             )
 
@@ -549,18 +548,18 @@ class Stellarator(Model):
             0.5e0 * build_variables.a_blkt_total_surface
         )
 
-        fwbs_variables.vol_blkt_inboard = (
+        self.data.fwbs.vol_blkt_inboard = (
             build_variables.a_blkt_inboard_surface * build_variables.dr_blkt_inboard
         )
-        fwbs_variables.vol_blkt_outboard = (
+        self.data.fwbs.vol_blkt_outboard = (
             build_variables.a_blkt_outboard_surface * build_variables.dr_blkt_outboard
         )
-        fwbs_variables.vol_blkt_total = (
-            fwbs_variables.vol_blkt_inboard + fwbs_variables.vol_blkt_outboard
+        self.data.fwbs.vol_blkt_total = (
+            self.data.fwbs.vol_blkt_inboard + self.data.fwbs.vol_blkt_outboard
         )
 
         #  Shield volume
-        #  Uses fvolsi, fwbs_variables.fvolso as area coverage factors
+        #  Uses fvolsi, self.data.fwbs.fvolso as area coverage factors
 
         r1 += 0.5e0 * (
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
@@ -569,10 +568,10 @@ class Stellarator(Model):
             physics_variables.a_plasma_surface * r1 / physics_variables.rminor
         )
         build_variables.a_shld_inboard_surface = (
-            0.5e0 * build_variables.a_shld_total_surface * fwbs_variables.fvolsi
+            0.5e0 * build_variables.a_shld_total_surface * self.data.fwbs.fvolsi
         )
         build_variables.a_shld_outboard_surface = (
-            0.5e0 * build_variables.a_shld_total_surface * fwbs_variables.fvolso
+            0.5e0 * build_variables.a_shld_total_surface * self.data.fwbs.fvolso
         )
 
         vol_shld_inboard = (
@@ -581,127 +580,127 @@ class Stellarator(Model):
         vol_shld_outboard = (
             build_variables.a_shld_outboard_surface * build_variables.dr_shld_outboard
         )
-        fwbs_variables.vol_shld_total = vol_shld_inboard + vol_shld_outboard
+        self.data.fwbs.vol_shld_total = vol_shld_inboard + vol_shld_outboard
 
         #  Neutron power lost through holes in first wall (eventually absorbed by
         #  shield)
 
-        fwbs_variables.pnucloss = (
-            physics_variables.p_neutron_total_mw * fwbs_variables.fhole
+        self.data.fwbs.pnucloss = (
+            physics_variables.p_neutron_total_mw * self.data.fwbs.fhole
         )
 
         # The peaking factor, obtained as precalculated parameter
-        fwbs_variables.wallpf = (
+        self.data.fwbs.wallpf = (
             stellarator_configuration.stella_config_neutron_peakfactor
         )
 
         #  Blanket neutronics calculations
-        if fwbs_variables.blktmodel == 1:
+        if self.data.fwbs.blktmodel == 1:
             self.blanket_neutronics()
 
             if heat_transport_variables.ipowerflow == 1:
-                fwbs_variables.p_div_nuclear_heat_total_mw = (
+                self.data.fwbs.p_div_nuclear_heat_total_mw = (
                     physics_variables.p_neutron_total_mw
-                    * fwbs_variables.f_ster_div_single
+                    * self.data.fwbs.f_ster_div_single
                 )
-                fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
+                self.data.fwbs.p_fw_hcd_nuclear_heat_mw = (
                     physics_variables.p_neutron_total_mw
-                    * fwbs_variables.f_a_fw_outboard_hcd
+                    * self.data.fwbs.f_a_fw_outboard_hcd
                 )
-                fwbs_variables.p_fw_nuclear_heat_total_mw = (
+                self.data.fwbs.p_fw_nuclear_heat_total_mw = (
                     physics_variables.p_neutron_total_mw
-                    - fwbs_variables.p_div_nuclear_heat_total_mw
-                    - fwbs_variables.pnucloss
-                    - fwbs_variables.p_fw_hcd_nuclear_heat_mw
+                    - self.data.fwbs.p_div_nuclear_heat_total_mw
+                    - self.data.fwbs.pnucloss
+                    - self.data.fwbs.p_fw_hcd_nuclear_heat_mw
                 )
 
-                fwbs_variables.pradloss = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhole
+                self.data.fwbs.pradloss = (
+                    physics_variables.p_plasma_rad_mw * self.data.fwbs.fhole
                 )
-                fwbs_variables.p_div_rad_total_mw = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
+                self.data.fwbs.p_div_rad_total_mw = (
+                    physics_variables.p_plasma_rad_mw * self.data.fwbs.f_ster_div_single
                 )
-                fwbs_variables.p_fw_hcd_rad_total_mw = (
+                self.data.fwbs.p_fw_hcd_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
-                    * fwbs_variables.f_a_fw_outboard_hcd
+                    * self.data.fwbs.f_a_fw_outboard_hcd
                 )
-                fwbs_variables.p_fw_rad_total_mw = (
+                self.data.fwbs.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
-                    - fwbs_variables.p_div_rad_total_mw
-                    - fwbs_variables.pradloss
-                    - fwbs_variables.p_fw_hcd_rad_total_mw
+                    - self.data.fwbs.p_div_rad_total_mw
+                    - self.data.fwbs.pradloss
+                    - self.data.fwbs.p_fw_hcd_rad_total_mw
                 )
 
                 heat_transport_variables.p_fw_coolant_pump_mw = (
                     heat_transport_variables.f_p_fw_coolant_pump_total_heat
                     * (
-                        fwbs_variables.p_fw_nuclear_heat_total_mw
-                        + fwbs_variables.p_fw_rad_total_mw
+                        self.data.fwbs.p_fw_nuclear_heat_total_mw
+                        + self.data.fwbs.p_fw_rad_total_mw
                         + current_drive_variables.p_beam_orbit_loss_mw
                     )
                 )
                 heat_transport_variables.p_blkt_coolant_pump_mw = (
                     heat_transport_variables.f_p_blkt_coolant_pump_total_heat
-                    * fwbs_variables.p_blkt_nuclear_heat_total_mw
+                    * self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 )
                 heat_transport_variables.p_shld_coolant_pump_mw = (
                     heat_transport_variables.f_p_shld_coolant_pump_total_heat
-                    * fwbs_variables.p_shld_nuclear_heat_mw
+                    * self.data.fwbs.p_shld_nuclear_heat_mw
                 )
                 heat_transport_variables.p_div_coolant_pump_mw = (
                     heat_transport_variables.f_p_div_coolant_pump_total_heat
                     * (
                         physics_variables.p_plasma_separatrix_mw
-                        + fwbs_variables.p_div_nuclear_heat_total_mw
-                        + fwbs_variables.p_div_rad_total_mw
+                        + self.data.fwbs.p_div_nuclear_heat_total_mw
+                        + self.data.fwbs.p_div_rad_total_mw
                     )
                 )
 
                 #  Void fraction in first wall / breeding zone,
-                #  for use in fwbs_variables.m_fw_total and coolvol calculation below
+                #  for use in self.data.fwbs.m_fw_total and coolvol calculation below
 
                 f_a_fw_coolant_inboard = (
                     1.0e0
-                    - fwbs_variables.fblbe
-                    - fwbs_variables.fblbreed
-                    - fwbs_variables.fblss
+                    - self.data.fwbs.fblbe
+                    - self.data.fwbs.fblbreed
+                    - self.data.fwbs.fblss
                 )
                 f_a_fw_coolant_outboard = f_a_fw_coolant_inboard
 
         else:
-            fwbs_variables.pnuc_cp = 0.0e0
+            self.data.fwbs.pnuc_cp = 0.0e0
 
             if heat_transport_variables.ipowerflow == 0:
                 #  Energy-multiplied neutron power
 
                 pneut2 = (
                     physics_variables.p_neutron_total_mw
-                    - fwbs_variables.pnucloss
-                    - fwbs_variables.pnuc_cp
-                ) * fwbs_variables.f_p_blkt_multiplication
+                    - self.data.fwbs.pnucloss
+                    - self.data.fwbs.pnuc_cp
+                ) * self.data.fwbs.f_p_blkt_multiplication
 
-                fwbs_variables.p_blkt_multiplication_mw = pneut2 - (
+                self.data.fwbs.p_blkt_multiplication_mw = pneut2 - (
                     physics_variables.p_neutron_total_mw
-                    - fwbs_variables.pnucloss
-                    - fwbs_variables.pnuc_cp
+                    - self.data.fwbs.pnucloss
+                    - self.data.fwbs.pnuc_cp
                 )
 
                 #  Nuclear heating in the blanket
 
                 decaybl = 0.075e0 / (
                     1.0e0
-                    - fwbs_variables.f_a_blkt_cooling_channels
-                    - fwbs_variables.fblli2o
-                    - fwbs_variables.fblbe
+                    - self.data.fwbs.f_a_blkt_cooling_channels
+                    - self.data.fwbs.fblli2o
+                    - self.data.fwbs.fblbe
                 )
 
-                fwbs_variables.p_blkt_nuclear_heat_total_mw = pneut2 * (
+                self.data.fwbs.p_blkt_nuclear_heat_total_mw = pneut2 * (
                     1.0e0 - np.exp(-build_variables.dr_blkt_outboard / decaybl)
                 )
 
                 #  Nuclear heating in the shield
-                fwbs_variables.p_shld_nuclear_heat_mw = (
-                    pneut2 - fwbs_variables.p_blkt_nuclear_heat_total_mw
+                self.data.fwbs.p_shld_nuclear_heat_mw = (
+                    pneut2 - self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 )
 
                 #  Superconducting coil shielding calculations
@@ -709,38 +708,38 @@ class Stellarator(Model):
                     coilhtmx,
                     dpacop,
                     htheci,
-                    fwbs_variables.nflutf,
+                    self.data.fwbs.nflutf,
                     pheci,
                     pheco,
                     ptfiwp,
                     ptfowp,
                     raddose,
-                    fwbs_variables.p_tf_nuclear_heat_mw,
+                    self.data.fwbs.p_tf_nuclear_heat_mw,
                 ) = self.sc_tf_coil_nuclear_heating_iter90()
 
             else:  # heat_transport_variables.ipowerflow == 1
                 #  Neutron power incident on divertor (MW)
 
-                fwbs_variables.p_div_nuclear_heat_total_mw = (
+                self.data.fwbs.p_div_nuclear_heat_total_mw = (
                     physics_variables.p_neutron_total_mw
-                    * fwbs_variables.f_ster_div_single
+                    * self.data.fwbs.f_ster_div_single
                 )
 
                 #  Neutron power incident on HCD apparatus (MW)
 
-                fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
+                self.data.fwbs.p_fw_hcd_nuclear_heat_mw = (
                     physics_variables.p_neutron_total_mw
-                    * fwbs_variables.f_a_fw_outboard_hcd
+                    * self.data.fwbs.f_a_fw_outboard_hcd
                 )
 
                 #  Neutron power deposited in first wall, blanket and shield (MW)
 
                 pnucfwbs = (
                     physics_variables.p_neutron_total_mw
-                    - fwbs_variables.p_div_nuclear_heat_total_mw
-                    - fwbs_variables.pnucloss
-                    - fwbs_variables.pnuc_cp
-                    - fwbs_variables.p_fw_hcd_nuclear_heat_mw
+                    - self.data.fwbs.p_div_nuclear_heat_total_mw
+                    - self.data.fwbs.pnucloss
+                    - self.data.fwbs.pnuc_cp
+                    - self.data.fwbs.p_fw_hcd_nuclear_heat_mw
                 )
 
                 #  Split between inboard and outboard by first wall area fractions
@@ -758,31 +757,31 @@ class Stellarator(Model):
 
                 #  Radiation power incident on divertor (MW)
 
-                fwbs_variables.p_fw_hcd_rad_total_mw = (
+                self.data.fwbs.p_fw_hcd_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
-                    * fwbs_variables.f_a_fw_outboard_hcd
+                    * self.data.fwbs.f_a_fw_outboard_hcd
                 )
 
                 #  Radiation power incident on HCD apparatus (MW)
 
-                fwbs_variables.p_fw_hcd_rad_total_mw = (
+                self.data.fwbs.p_fw_hcd_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
-                    * fwbs_variables.f_a_fw_outboard_hcd
+                    * self.data.fwbs.f_a_fw_outboard_hcd
                 )
 
                 #  Radiation power lost through holes (eventually hits shield) (MW)
 
-                fwbs_variables.pradloss = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhole
+                self.data.fwbs.pradloss = (
+                    physics_variables.p_plasma_rad_mw * self.data.fwbs.fhole
                 )
 
                 #  Radiation power incident on first wall (MW)
 
-                fwbs_variables.p_fw_rad_total_mw = (
+                self.data.fwbs.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
-                    - fwbs_variables.p_div_rad_total_mw
-                    - fwbs_variables.pradloss
-                    - fwbs_variables.p_fw_hcd_rad_total_mw
+                    - self.data.fwbs.p_div_rad_total_mw
+                    - self.data.fwbs.pradloss
+                    - self.data.fwbs.p_fw_hcd_rad_total_mw
                 )
 
                 #  Calculate the power deposited in the first wall, blanket and shield,
@@ -791,61 +790,61 @@ class Stellarator(Model):
                 #  If we have chosen pressurised water as the coolant, set the
                 #  coolant outlet temperature as 20 deg C below the boiling point
 
-                if fwbs_variables.i_blkt_coolant_type == 2:
-                    if fwbs_variables.irefprop:
-                        fwbs_variables.temp_blkt_coolant_out = (
+                if self.data.fwbs.i_blkt_coolant_type == 2:
+                    if self.data.fwbs.irefprop:
+                        self.data.fwbs.temp_blkt_coolant_out = (
                             FluidProperties.of(
                                 "Water",
-                                pressure=fwbs_variables.coolp,
+                                pressure=self.data.fwbs.coolp,
                                 vapor_quality=0,
                             )
                             - 20
                         )
                     else:
-                        fwbs_variables.temp_blkt_coolant_out = (
+                        self.data.fwbs.temp_blkt_coolant_out = (
                             273.15
                             + 168.396
-                            + 0.314653 / fwbs_variables.coolp
-                            + -0.000728 / fwbs_variables.coolp**2
-                            + 31.588979 * np.log(fwbs_variables.coolp)
-                            + 11.473141 * fwbs_variables.coolp
-                            + -0.575335 * fwbs_variables.coolp**2
-                            + 0.013165 * fwbs_variables.coolp**3
+                            + 0.314653 / self.data.fwbs.coolp
+                            + -0.000728 / self.data.fwbs.coolp**2
+                            + 31.588979 * np.log(self.data.fwbs.coolp)
+                            + 11.473141 * self.data.fwbs.coolp
+                            + -0.575335 * self.data.fwbs.coolp**2
+                            + 0.013165 * self.data.fwbs.coolp**3
                         ) - 20
 
                 bfwi = 0.5e0 * build_variables.dr_fw_inboard
                 bfwo = 0.5e0 * build_variables.dr_fw_outboard
 
                 f_a_fw_coolant_inboard = (
-                    fwbs_variables.radius_fw_channel
-                    * fwbs_variables.radius_fw_channel
+                    self.data.fwbs.radius_fw_channel
+                    * self.data.fwbs.radius_fw_channel
                     / (bfwi * bfwi)
                 )  # inboard FW coolant void fraction
                 f_a_fw_coolant_outboard = (
-                    fwbs_variables.radius_fw_channel
-                    * fwbs_variables.radius_fw_channel
+                    self.data.fwbs.radius_fw_channel
+                    * self.data.fwbs.radius_fw_channel
                     / (bfwo * bfwo)
                 )  # outboard FW coolant void fraction
 
                 #  First wall decay length (m) - improved calculation required
 
-                decayfwi = fwbs_variables.declfw
-                decayfwo = fwbs_variables.declfw
+                decayfwi = self.data.fwbs.declfw
+                decayfwo = self.data.fwbs.declfw
 
-                #  Surface heat flux on first wall (MW) (sum = fwbs_variables.p_fw_rad_total_mw)
+                #  Surface heat flux on first wall (MW) (sum = self.data.fwbs.p_fw_rad_total_mw)
 
                 psurffwi = (
-                    fwbs_variables.p_fw_rad_total_mw
+                    self.data.fwbs.p_fw_rad_total_mw
                     * self.data.first_wall.a_fw_inboard
                     / self.data.first_wall.a_fw_total
                 )
                 psurffwo = (
-                    fwbs_variables.p_fw_rad_total_mw
+                    self.data.fwbs.p_fw_rad_total_mw
                     * self.data.first_wall.a_fw_outboard
                     / self.data.first_wall.a_fw_total
                 )
 
-                #  Simple blanket model (fwbs_variables.i_p_coolant_pumping = 0 or 1) is assumed for stellarators
+                #  Simple blanket model (self.data.fwbs.i_p_coolant_pumping = 0 or 1) is assumed for stellarators
 
                 #  The power deposited in the first wall, breeder zone and shield is
                 #  calculated according to their dimensions and materials assuming
@@ -868,8 +867,8 @@ class Stellarator(Model):
 
                 #  Blanket decay length (m) - improved calculation required
 
-                decaybzi = fwbs_variables.declblkt
-                decaybzo = fwbs_variables.declblkt
+                decaybzi = self.data.fwbs.declblkt
+                decaybzo = self.data.fwbs.declblkt
 
                 #  Neutron power deposited in breeder zone (MW)
 
@@ -888,7 +887,7 @@ class Stellarator(Model):
 
                 #  First wall and Blanket pumping power (MW)
                 i_p_coolant_pumping = PumpingPowerModelTypes(
-                    fwbs_variables.i_p_coolant_pumping
+                    self.data.fwbs.i_p_coolant_pumping
                 )
                 if i_p_coolant_pumping == PumpingPowerModelTypes.USER_INPUT:
                     #    Use input
@@ -907,8 +906,8 @@ class Stellarator(Model):
                     heat_transport_variables.p_blkt_coolant_pump_mw = (
                         heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                         * (
-                            pnucbzi * fwbs_variables.f_p_blkt_multiplication
-                            + pnucbzo * fwbs_variables.f_p_blkt_multiplication
+                            pnucbzi * self.data.fwbs.f_p_blkt_multiplication
+                            + pnucbzo * self.data.fwbs.f_p_blkt_multiplication
                         )
                     )
                 else:
@@ -916,56 +915,56 @@ class Stellarator(Model):
                         "i_p_coolant_pumping = 0 or 1 only for stellarator"
                     )
 
-                fwbs_variables.p_blkt_multiplication_mw = (
+                self.data.fwbs.p_blkt_multiplication_mw = (
                     heat_transport_variables.f_p_blkt_coolant_pump_total_heat
-                    * (pnucbzi * fwbs_variables.f_p_blkt_multiplication + pnucbzo)
-                    * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
+                    * (pnucbzi * self.data.fwbs.f_p_blkt_multiplication + pnucbzo)
+                    * (self.data.fwbs.f_p_blkt_multiplication - 1.0e0)
                 )
 
                 #  Total nuclear heating of first wall (MW)
 
-                fwbs_variables.p_fw_nuclear_heat_total_mw = (
+                self.data.fwbs.p_fw_nuclear_heat_total_mw = (
                     p_fw_inboard_nuclear_heat_mw + p_fw_outboard_nuclear_heat_mw
                 )
 
                 #  Total nuclear heating of blanket (MW)
 
-                fwbs_variables.p_blkt_nuclear_heat_total_mw = (
+                self.data.fwbs.p_blkt_nuclear_heat_total_mw = (
                     pnucbzi + pnucbzo
-                ) * fwbs_variables.f_p_blkt_multiplication
+                ) * self.data.fwbs.f_p_blkt_multiplication
 
-                fwbs_variables.p_blkt_multiplication_mw += (pnucbzi + pnucbzo) * (
-                    fwbs_variables.f_p_blkt_multiplication - 1.0e0
+                self.data.fwbs.p_blkt_multiplication_mw += (pnucbzi + pnucbzo) * (
+                    self.data.fwbs.f_p_blkt_multiplication - 1.0e0
                 )
 
                 #  Calculation of shield and divertor powers
                 #  Shield and divertor powers and pumping powers are calculated using the same
-                #  simplified method as the first wall and breeder zone when fwbs_variables.i_p_coolant_pumping = 1.
+                #  simplified method as the first wall and breeder zone when self.data.fwbs.i_p_coolant_pumping = 1.
                 #  i.e. the pumping power is a fraction of the total thermal power deposited in the
                 #  coolant.
 
                 #  Neutron power reaching the shield (MW)
-                #  The power lost from the fwbs_variables.fhole area fraction is assumed to be incident upon the shield
+                #  The power lost from the self.data.fwbs.fhole area fraction is assumed to be incident upon the shield
 
                 pnucsi = (
                     pnucbsi
                     - pnucbzi
-                    + (fwbs_variables.pnucloss + fwbs_variables.pradloss)
+                    + (self.data.fwbs.pnucloss + self.data.fwbs.pradloss)
                     * self.data.first_wall.a_fw_inboard
                     / self.data.first_wall.a_fw_total
                 )
                 pnucso = (
                     pnucbso
                     - pnucbzo
-                    + (fwbs_variables.pnucloss + fwbs_variables.pradloss)
+                    + (self.data.fwbs.pnucloss + self.data.fwbs.pradloss)
                     * self.data.first_wall.a_fw_outboard
                     / self.data.first_wall.a_fw_total
                 )
 
                 #  Improved calculation of shield power decay lengths required
 
-                decayshldi = fwbs_variables.declshld
-                decayshldo = fwbs_variables.declshld
+                decayshldi = self.data.fwbs.declshld
+                decayshldo = self.data.fwbs.declshld
 
                 #  Neutron power deposited in the shield (MW)
 
@@ -976,7 +975,7 @@ class Stellarator(Model):
                     1.0e0 - np.exp(-build_variables.dr_shld_outboard / decayshldo)
                 )
 
-                fwbs_variables.p_shld_nuclear_heat_mw = pnucshldi + pnucshldo
+                self.data.fwbs.p_shld_nuclear_heat_mw = pnucshldi + pnucshldo
 
                 #  Calculate coolant pumping powers from input fraction.
                 #  The pumping power is assumed to be a fraction, fpump, of the incident
@@ -996,8 +995,8 @@ class Stellarator(Model):
                         heat_transport_variables.f_p_div_coolant_pump_total_heat
                         * (
                             physics_variables.p_plasma_separatrix_mw
-                            + fwbs_variables.p_div_nuclear_heat_total_mw
-                            + fwbs_variables.p_div_rad_total_mw
+                            + self.data.fwbs.p_div_nuclear_heat_total_mw
+                            + self.data.fwbs.p_div_rad_total_mw
                         )
                     )
 
@@ -1008,11 +1007,11 @@ class Stellarator(Model):
                 if (
                     tfcoil_variables.i_tf_sup == TFConductorModel.SUPERCONDUCTING
                 ):  # superconducting coils
-                    fwbs_variables.p_tf_nuclear_heat_mw = (
+                    self.data.fwbs.p_tf_nuclear_heat_mw = (
                         pnucsi + pnucso - pnucshldi - pnucshldo
                     )
                 else:  # resistive coils
-                    fwbs_variables.p_tf_nuclear_heat_mw = 0.0e0
+                    self.data.fwbs.p_tf_nuclear_heat_mw = 0.0e0
 
         #  Divertor mass
         #  N.B. divertor_variables.a_div_surface_total is calculated in stdiv after this point, so will
@@ -1040,167 +1039,167 @@ class Stellarator(Model):
 
         #  Blanket mass, excluding coolant
 
-        if fwbs_variables.blktmodel == 0:
-            if fwbs_variables.blkttype in {1, 2}:  # liquid breeder (WCLL or HCLL)
-                fwbs_variables.wtbllipb = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fbllipb * 9400.0e0
+        if self.data.fwbs.blktmodel == 0:
+            if self.data.fwbs.blkttype in {1, 2}:  # liquid breeder (WCLL or HCLL)
+                self.data.fwbs.wtbllipb = (
+                    self.data.fwbs.vol_blkt_total * self.data.fwbs.fbllipb * 9400.0e0
                 )
-                fwbs_variables.m_blkt_lithium = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli * 534.0e0
+                self.data.fwbs.m_blkt_lithium = (
+                    self.data.fwbs.vol_blkt_total * self.data.fwbs.fblli * 534.0e0
                 )
-                fwbs_variables.m_blkt_total = (
-                    fwbs_variables.wtbllipb + fwbs_variables.m_blkt_lithium
+                self.data.fwbs.m_blkt_total = (
+                    self.data.fwbs.wtbllipb + self.data.fwbs.m_blkt_lithium
                 )
             else:  # solid breeder (HCPB); always for ipowerflow=0
-                fwbs_variables.m_blkt_li2o = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli2o * 2010.0e0
+                self.data.fwbs.m_blkt_li2o = (
+                    self.data.fwbs.vol_blkt_total * self.data.fwbs.fblli2o * 2010.0e0
                 )
-                fwbs_variables.m_blkt_beryllium = (
-                    fwbs_variables.vol_blkt_total * fwbs_variables.fblbe * 1850.0e0
+                self.data.fwbs.m_blkt_beryllium = (
+                    self.data.fwbs.vol_blkt_total * self.data.fwbs.fblbe * 1850.0e0
                 )
-                fwbs_variables.m_blkt_total = (
-                    fwbs_variables.m_blkt_li2o + fwbs_variables.m_blkt_beryllium
+                self.data.fwbs.m_blkt_total = (
+                    self.data.fwbs.m_blkt_li2o + self.data.fwbs.m_blkt_beryllium
                 )
 
-            fwbs_variables.m_blkt_steel_total = (
-                fwbs_variables.vol_blkt_total
-                * fwbs_variables.den_steel
-                * fwbs_variables.fblss
+            self.data.fwbs.m_blkt_steel_total = (
+                self.data.fwbs.vol_blkt_total
+                * self.data.fwbs.den_steel
+                * self.data.fwbs.fblss
             )
-            fwbs_variables.m_blkt_vanadium = (
-                fwbs_variables.vol_blkt_total * 5870.0e0 * fwbs_variables.fblvd
+            self.data.fwbs.m_blkt_vanadium = (
+                self.data.fwbs.vol_blkt_total * 5870.0e0 * self.data.fwbs.fblvd
             )
 
-            fwbs_variables.m_blkt_total = (
-                fwbs_variables.m_blkt_total
-                + fwbs_variables.m_blkt_steel_total
-                + fwbs_variables.m_blkt_vanadium
+            self.data.fwbs.m_blkt_total = (
+                self.data.fwbs.m_blkt_total
+                + self.data.fwbs.m_blkt_steel_total
+                + self.data.fwbs.m_blkt_vanadium
             )
 
         else:  # volume fractions proportional to sub-assembly thicknesses
-            fwbs_variables.m_blkt_steel_total = fwbs_variables.den_steel * (
-                fwbs_variables.vol_blkt_inboard
+            self.data.fwbs.m_blkt_steel_total = self.data.fwbs.den_steel * (
+                self.data.fwbs.vol_blkt_inboard
                 / build_variables.dr_blkt_inboard
                 * (
-                    build_variables.blbuith * fwbs_variables.fblss
-                    + build_variables.blbmith * (1.0e0 - fwbs_variables.fblhebmi)
-                    + build_variables.blbpith * (1.0e0 - fwbs_variables.fblhebpi)
+                    build_variables.blbuith * self.data.fwbs.fblss
+                    + build_variables.blbmith * (1.0e0 - self.data.fwbs.fblhebmi)
+                    + build_variables.blbpith * (1.0e0 - self.data.fwbs.fblhebpi)
                 )
-                + fwbs_variables.vol_blkt_outboard
+                + self.data.fwbs.vol_blkt_outboard
                 / build_variables.dr_blkt_outboard
                 * (
-                    build_variables.blbuoth * fwbs_variables.fblss
-                    + build_variables.blbmoth * (1.0e0 - fwbs_variables.fblhebmo)
-                    + build_variables.blbpoth * (1.0e0 - fwbs_variables.fblhebpo)
+                    build_variables.blbuoth * self.data.fwbs.fblss
+                    + build_variables.blbmoth * (1.0e0 - self.data.fwbs.fblhebmo)
+                    + build_variables.blbpoth * (1.0e0 - self.data.fwbs.fblhebpo)
                 )
             )
-            fwbs_variables.m_blkt_beryllium = (
+            self.data.fwbs.m_blkt_beryllium = (
                 1850.0e0
-                * fwbs_variables.fblbe
+                * self.data.fwbs.fblbe
                 * (
                     (
-                        fwbs_variables.vol_blkt_inboard
+                        self.data.fwbs.vol_blkt_inboard
                         * build_variables.blbuith
                         / build_variables.dr_blkt_inboard
                     )
                     + (
-                        fwbs_variables.vol_blkt_outboard
+                        self.data.fwbs.vol_blkt_outboard
                         * build_variables.blbuoth
                         / build_variables.dr_blkt_outboard
                     )
                 )
             )
-            fwbs_variables.whtblbreed = (
-                fwbs_variables.densbreed
-                * fwbs_variables.fblbreed
+            self.data.fwbs.whtblbreed = (
+                self.data.fwbs.densbreed
+                * self.data.fwbs.fblbreed
                 * (
                     (
-                        fwbs_variables.vol_blkt_inboard
+                        self.data.fwbs.vol_blkt_inboard
                         * build_variables.blbuith
                         / build_variables.dr_blkt_inboard
                     )
                     + (
-                        fwbs_variables.vol_blkt_outboard
+                        self.data.fwbs.vol_blkt_outboard
                         * build_variables.blbuoth
                         / build_variables.dr_blkt_outboard
                     )
                 )
             )
-            fwbs_variables.m_blkt_total = (
-                fwbs_variables.m_blkt_steel_total
-                + fwbs_variables.m_blkt_beryllium
-                + fwbs_variables.whtblbreed
+            self.data.fwbs.m_blkt_total = (
+                self.data.fwbs.m_blkt_steel_total
+                + self.data.fwbs.m_blkt_beryllium
+                + self.data.fwbs.whtblbreed
             )
 
-            fwbs_variables.f_a_blkt_cooling_channels = (
-                fwbs_variables.vol_blkt_inboard
-                / fwbs_variables.vol_blkt_total
+            self.data.fwbs.f_a_blkt_cooling_channels = (
+                self.data.fwbs.vol_blkt_inboard
+                / self.data.fwbs.vol_blkt_total
                 * (  # inboard portion
                     (build_variables.blbuith / build_variables.dr_blkt_inboard)
                     * (
                         1.0e0
-                        - fwbs_variables.fblbe
-                        - fwbs_variables.fblbreed
-                        - fwbs_variables.fblss
+                        - self.data.fwbs.fblbe
+                        - self.data.fwbs.fblbreed
+                        - self.data.fwbs.fblss
                     )
                     + (build_variables.blbmith / build_variables.dr_blkt_inboard)
-                    * fwbs_variables.fblhebmi
+                    * self.data.fwbs.fblhebmi
                     + (build_variables.blbpith / build_variables.dr_blkt_inboard)
-                    * fwbs_variables.fblhebpi
+                    * self.data.fwbs.fblhebpi
                 )
             )
-            fwbs_variables.f_a_blkt_cooling_channels += (
-                fwbs_variables.vol_blkt_outboard
-                / fwbs_variables.vol_blkt_total
+            self.data.fwbs.f_a_blkt_cooling_channels += (
+                self.data.fwbs.vol_blkt_outboard
+                / self.data.fwbs.vol_blkt_total
                 * (  # outboard portion
                     (build_variables.blbuoth / build_variables.dr_blkt_outboard)
                     * (
                         1.0e0
-                        - fwbs_variables.fblbe
-                        - fwbs_variables.fblbreed
-                        - fwbs_variables.fblss
+                        - self.data.fwbs.fblbe
+                        - self.data.fwbs.fblbreed
+                        - self.data.fwbs.fblss
                     )
                     + (build_variables.blbmoth / build_variables.dr_blkt_outboard)
-                    * fwbs_variables.fblhebmo
+                    * self.data.fwbs.fblhebmo
                     + (build_variables.blbpoth / build_variables.dr_blkt_outboard)
-                    * fwbs_variables.fblhebpo
+                    * self.data.fwbs.fblhebpo
                 )
             )
 
-        #  When fwbs_variables.blktmodel > 0, although the blanket is by definition helium-cooled
+        #  When self.data.fwbs.blktmodel > 0, although the blanket is by definition helium-cooled
         #  in this case, the shield etc. are assumed to be water-cooled, and since
-        #  water is heavier the calculation for fwbs_variables.m_fw_blkt_div_coolant_total is better done with
-        #  i_blkt_coolant_type=2 if fwbs_variables.blktmodel > 0; thus we can ignore the helium coolant mass
+        #  water is heavier the calculation for self.data.fwbs.m_fw_blkt_div_coolant_total is better done with
+        #  i_blkt_coolant_type=2 if self.data.fwbs.blktmodel > 0; thus we can ignore the helium coolant mass
         #  in the blanket.
 
-        if fwbs_variables.blktmodel == 0:
+        if self.data.fwbs.blktmodel == 0:
             coolvol += (
-                fwbs_variables.vol_blkt_total * fwbs_variables.f_a_blkt_cooling_channels
+                self.data.fwbs.vol_blkt_total * self.data.fwbs.f_a_blkt_cooling_channels
             )
 
         # Shield mass
-        fwbs_variables.whtshld = (
-            fwbs_variables.vol_shld_total
-            * fwbs_variables.den_steel
-            * (1.0e0 - fwbs_variables.vfshld)
+        self.data.fwbs.whtshld = (
+            self.data.fwbs.vol_shld_total
+            * self.data.fwbs.den_steel
+            * (1.0e0 - self.data.fwbs.vfshld)
         )
 
-        coolvol += fwbs_variables.vol_shld_total * fwbs_variables.vfshld
+        coolvol += self.data.fwbs.vol_shld_total * self.data.fwbs.vfshld
 
         #  Penetration shield (set = internal shield)
 
-        fwbs_variables.wpenshld = fwbs_variables.whtshld
+        self.data.fwbs.wpenshld = self.data.fwbs.whtshld
 
         if heat_transport_variables.ipowerflow == 0:
             #  First wall mass
             #  (first wall area is calculated else:where)
 
-            fwbs_variables.m_fw_total = (
+            self.data.fwbs.m_fw_total = (
                 self.data.first_wall.a_fw_total
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 / 2.0e0
-                * fwbs_variables.den_steel
-                * (1.0e0 - fwbs_variables.fwclfr)
+                * self.data.fwbs.den_steel
+                * (1.0e0 - self.data.fwbs.fwclfr)
             )
 
             #  Surface areas adjacent to plasma
@@ -1209,11 +1208,11 @@ class Stellarator(Model):
                 self.data.first_wall.a_fw_total
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 / 2.0e0
-                * fwbs_variables.fwclfr
+                * self.data.fwbs.fwclfr
             )
 
         else:
-            fwbs_variables.m_fw_total = fwbs_variables.den_steel * (
+            self.data.fwbs.m_fw_total = self.data.fwbs.den_steel * (
                 self.data.first_wall.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * (1.0e0 - f_a_fw_coolant_inboard)
@@ -1234,7 +1233,7 @@ class Stellarator(Model):
             #  Average first wall coolant fraction, only used by old routines
             #  in fispact.f90, safety.f90
 
-            fwbs_variables.fwclfr = (
+            self.data.fwbs.fwclfr = (
                 self.data.first_wall.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * f_a_fw_coolant_inboard
@@ -1249,15 +1248,15 @@ class Stellarator(Model):
 
         #  Mass of coolant = volume * density at typical coolant
         #  temperatures and pressures
-        #  N.B. for fwbs_variables.blktmodel > 0, mass of *water* coolant in the non-blanket
+        #  N.B. for self.data.fwbs.blktmodel > 0, mass of *water* coolant in the non-blanket
         #  structures is used (see comment above)
 
-        if (fwbs_variables.blktmodel > 0) or (
-            fwbs_variables.i_blkt_coolant_type == 2
+        if (self.data.fwbs.blktmodel > 0) or (
+            self.data.fwbs.i_blkt_coolant_type == 2
         ):  # pressurised water coolant
-            fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 806.719e0
+            self.data.fwbs.m_fw_blkt_div_coolant_total = coolvol * 806.719e0
         else:  # gaseous helium coolant
-            fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 1.517e0
+            self.data.fwbs.m_fw_blkt_div_coolant_total = coolvol * 1.517e0
 
         #  Assume external cryostat is a torus with circular cross-section,
         #  centred on plasma major radius.
@@ -1265,16 +1264,16 @@ class Stellarator(Model):
 
         #  External cryostat outboard major radius (m)
 
-        fwbs_variables.r_cryostat_inboard = (
+        self.data.fwbs.r_cryostat_inboard = (
             build_variables.r_tf_outboard_mid
             + 0.5e0 * build_variables.dr_tf_outboard
-            + fwbs_variables.dr_pf_cryostat
+            + self.data.fwbs.dr_pf_cryostat
         )
-        adewex = fwbs_variables.r_cryostat_inboard - physics_variables.rmajor
+        adewex = self.data.fwbs.r_cryostat_inboard - physics_variables.rmajor
 
         #  External cryostat volume
 
-        fwbs_variables.vol_cryostat = (
+        self.data.fwbs.vol_cryostat = (
             4.0e0
             * (np.pi**2)
             * physics_variables.rmajor
@@ -1283,7 +1282,7 @@ class Stellarator(Model):
         )
 
         #  Internal vacuum vessel volume
-        #  fwbs_variables.fvoldw accounts for ports, support, etc. additions
+        #  self.data.fwbs.fvoldw accounts for ports, support, etc. additions
 
         r1 = physics_variables.rminor + 0.5e0 * (
             build_variables.dr_fw_plasma_gap_inboard
@@ -1295,24 +1294,24 @@ class Stellarator(Model):
             + build_variables.dr_blkt_outboard
             + build_variables.dr_shld_outboard
         )
-        fwbs_variables.vol_vv = (
+        self.data.fwbs.vol_vv = (
             (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
             / 2.0e0
             * physics_variables.a_plasma_surface
             * r1
             / physics_variables.rminor
-            * fwbs_variables.fvoldw
+            * self.data.fwbs.fvoldw
         )
 
         #  Vacuum vessel mass
 
-        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
+        self.data.fwbs.m_vv = self.data.fwbs.vol_vv * self.data.fwbs.den_steel
 
         #  Sum of internal vacuum vessel and external cryostat masses
 
-        fwbs_variables.dewmkg = (
-            fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
-        ) * fwbs_variables.den_steel
+        self.data.fwbs.dewmkg = (
+            self.data.fwbs.vol_vv + self.data.fwbs.vol_cryostat
+        ) * self.data.fwbs.den_steel
 
         if output:
             #  Output section
@@ -1324,19 +1323,19 @@ class Stellarator(Model):
                 "(pflux_fw_neutron_mw)",
                 physics_variables.pflux_fw_neutron_mw,
             )
-            if fwbs_variables.blktmodel > 0:
+            if self.data.fwbs.blktmodel > 0:
                 po.ovarre(
                     self.outfile,
                     "Neutron wall load peaking factor",
                     "(wallpf)",
-                    fwbs_variables.wallpf,
+                    self.data.fwbs.wallpf,
                 )
 
             po.ovarre(
                 self.outfile,
                 "First wall full-power lifetime (years)",
                 "(life_fw_fpy)",
-                fwbs_variables.life_fw_fpy,
+                self.data.fwbs.life_fw_fpy,
             )
 
             po.ovarre(
@@ -1358,7 +1357,7 @@ class Stellarator(Model):
                 build_variables.dz_shld_upper,
             )
 
-            if fwbs_variables.blktmodel > 0:
+            if self.data.fwbs.blktmodel > 0:
                 po.ovarre(
                     self.outfile,
                     "Inboard breeding zone thickness (m)",
@@ -1384,7 +1383,7 @@ class Stellarator(Model):
                 "(dr_blkt_inboard)",
                 build_variables.dr_blkt_inboard,
             )
-            if fwbs_variables.blktmodel > 0:
+            if self.data.fwbs.blktmodel > 0:
                 po.ovarre(
                     self.outfile,
                     "Outboard breeding zone thickness (m)",
@@ -1418,7 +1417,7 @@ class Stellarator(Model):
             )
 
             if (heat_transport_variables.ipowerflow == 0) and (
-                fwbs_variables.blktmodel == 0
+                self.data.fwbs.blktmodel == 0
             ):
                 po.osubhd(self.outfile, "Coil nuclear parameters :")
                 po.ovarre(
@@ -1450,7 +1449,7 @@ class Stellarator(Model):
                     self.outfile,
                     "Maximum neutron fluence (n/m2)",
                     "(nflutf)",
-                    fwbs_variables.nflutf,
+                    self.data.fwbs.nflutf,
                 )
                 po.ovarre(
                     self.outfile,
@@ -1459,25 +1458,25 @@ class Stellarator(Model):
                     dpacop,
                 )
 
-            if fwbs_variables.blktmodel == 0:
+            if self.data.fwbs.blktmodel == 0:
                 po.osubhd(self.outfile, "Nuclear heating :")
                 po.ovarre(
                     self.outfile,
                     "Blanket heating (including energy multiplication) (MW)",
                     "(p_blkt_nuclear_heat_total_mw)",
-                    fwbs_variables.p_blkt_nuclear_heat_total_mw,
+                    self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Shield nuclear heating (MW)",
                     "(p_shld_nuclear_heat_mw)",
-                    fwbs_variables.p_shld_nuclear_heat_mw,
+                    self.data.fwbs.p_shld_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Coil nuclear heating (MW)",
                     "(p_tf_nuclear_heat_mw)",
-                    fwbs_variables.p_tf_nuclear_heat_mw,
+                    self.data.fwbs.p_tf_nuclear_heat_mw,
                 )
             else:
                 po.osubhd(self.outfile, "Blanket neutronics :")
@@ -1485,39 +1484,39 @@ class Stellarator(Model):
                     self.outfile,
                     "Blanket heating (including energy multiplication) (MW)",
                     "(p_blkt_nuclear_heat_total_mw)",
-                    fwbs_variables.p_blkt_nuclear_heat_total_mw,
+                    self.data.fwbs.p_blkt_nuclear_heat_total_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Shield heating (MW)",
                     "(p_shld_nuclear_heat_mw)",
-                    fwbs_variables.p_shld_nuclear_heat_mw,
+                    self.data.fwbs.p_shld_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Energy multiplication in blanket",
                     "(f_p_blkt_multiplication)",
-                    fwbs_variables.f_p_blkt_multiplication,
+                    self.data.fwbs.f_p_blkt_multiplication,
                 )
                 po.ovarin(
                     self.outfile,
                     "Number of divertor ports assumed",
                     "(npdiv)",
-                    fwbs_variables.npdiv,
+                    self.data.fwbs.npdiv,
                 )
                 po.ovarin(
                     self.outfile,
                     "Number of inboard H/CD ports assumed",
                     "(nphcdin)",
-                    fwbs_variables.nphcdin,
+                    self.data.fwbs.nphcdin,
                 )
                 po.ovarin(
                     self.outfile,
                     "Number of outboard H/CD ports assumed",
                     "(nphcdout)",
-                    fwbs_variables.nphcdout,
+                    self.data.fwbs.nphcdout,
                 )
-                if fwbs_variables.hcdportsize == 1:
+                if self.data.fwbs.hcdportsize == 1:
                     po.ocmmnt(
                         self.outfile, "     (small heating/current drive ports assumed)"
                     )
@@ -1526,17 +1525,17 @@ class Stellarator(Model):
                         self.outfile, "     (large heating/current drive ports assumed)"
                     )
 
-                if fwbs_variables.breedmat == 1:
+                if self.data.fwbs.breedmat == 1:
                     po.ocmmnt(
                         self.outfile,
                         "Breeder material: Lithium orthosilicate (Li4Si04)",
                     )
-                elif fwbs_variables.breedmat == 2:
+                elif self.data.fwbs.breedmat == 2:
                     po.ocmmnt(
                         self.outfile,
                         "Breeder material: Lithium methatitanate (Li2TiO3)",
                     )
-                elif fwbs_variables.breedmat == 3:
+                elif self.data.fwbs.breedmat == 3:
                     po.ocmmnt(
                         self.outfile, "Breeder material: Lithium zirconate (Li2ZrO3)"
                     )
@@ -1547,92 +1546,92 @@ class Stellarator(Model):
                     self.outfile,
                     "Lithium-6 enrichment (%)",
                     "(f_blkt_li6_enrichment)",
-                    fwbs_variables.f_blkt_li6_enrichment,
+                    self.data.fwbs.f_blkt_li6_enrichment,
                 )
                 po.ovarre(
                     self.outfile,
                     "Tritium production rate (g/day)",
                     "(tritprate)",
-                    fwbs_variables.tritprate,
+                    self.data.fwbs.tritprate,
                 )
                 po.ovarre(
                     self.outfile,
                     "Nuclear heating on i/b coil (MW/m3)",
                     "(pnuctfi)",
-                    fwbs_variables.pnuctfi,
+                    self.data.fwbs.pnuctfi,
                 )
                 po.ovarre(
                     self.outfile,
                     "Nuclear heating on o/b coil (MW/m3)",
                     "(pnuctfo)",
-                    fwbs_variables.pnuctfo,
+                    self.data.fwbs.pnuctfo,
                 )
                 po.ovarre(
                     self.outfile,
                     "Total nuclear heating on coil (MW)",
                     "(p_tf_nuclear_heat_mw)",
-                    fwbs_variables.p_tf_nuclear_heat_mw,
+                    self.data.fwbs.p_tf_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Fast neut. fluence on i/b coil (n/m2)",
                     "(nflutfi)",
-                    fwbs_variables.nflutfi * 1.0e4,
+                    self.data.fwbs.nflutfi * 1.0e4,
                 )
                 po.ovarre(
                     self.outfile,
                     "Fast neut. fluence on o/b coil (n/m2)",
                     "(nflutfo)",
-                    fwbs_variables.nflutfo * 1.0e4,
+                    self.data.fwbs.nflutfo * 1.0e4,
                 )
                 po.ovarre(
                     self.outfile,
                     "Minimum final He conc. in IB VV (appm)",
                     "(vvhemini)",
-                    fwbs_variables.vvhemini,
+                    self.data.fwbs.vvhemini,
                 )
                 po.ovarre(
                     self.outfile,
                     "Minimum final He conc. in OB VV (appm)",
                     "(vvhemino)",
-                    fwbs_variables.vvhemino,
+                    self.data.fwbs.vvhemino,
                 )
                 po.ovarre(
                     self.outfile,
                     "Maximum final He conc. in IB VV (appm)",
                     "(vvhemaxi)",
-                    fwbs_variables.vvhemaxi,
+                    self.data.fwbs.vvhemaxi,
                 )
                 po.ovarre(
                     self.outfile,
                     "Maximum final He conc. in OB VV (appm)",
                     "(vvhemaxo)",
-                    fwbs_variables.vvhemaxo,
+                    self.data.fwbs.vvhemaxo,
                 )
                 po.ovarre(
                     self.outfile,
                     "Blanket lifetime (full power years)",
                     "(life_blkt_fpy)",
-                    fwbs_variables.life_blkt_fpy,
+                    self.data.fwbs.life_blkt_fpy,
                 )
                 po.ovarre(
                     self.outfile,
                     "Blanket lifetime (calendar years)",
                     "(t_bl_y)",
-                    fwbs_variables.t_bl_y,
+                    self.data.fwbs.t_bl_y,
                 )
 
             if (heat_transport_variables.ipowerflow == 1) and (
-                fwbs_variables.blktmodel == 0
+                self.data.fwbs.blktmodel == 0
             ):
                 po.oblnkl(self.outfile)
                 po.ovarin(
                     self.outfile,
                     "First wall / blanket thermodynamic model",
                     "(i_thermal_electric_conversion)",
-                    fwbs_variables.i_thermal_electric_conversion,
+                    self.data.fwbs.i_thermal_electric_conversion,
                 )
-                if fwbs_variables.i_thermal_electric_conversion == 0:
+                if self.data.fwbs.i_thermal_electric_conversion == 0:
                     po.ocmmnt(self.outfile, "   (Simple calculation)")
 
             po.osubhd(self.outfile, "Blanket / shield volumes and weights :")
@@ -1648,19 +1647,19 @@ class Stellarator(Model):
                 self.outfile,
                 "First wall mass (kg)",
                 "(m_fw_total)",
-                fwbs_variables.m_fw_total,
+                self.data.fwbs.m_fw_total,
             )
             po.ovarre(
                 self.outfile,
                 "External cryostat inner radius (m)",
                 "",
-                fwbs_variables.r_cryostat_inboard - 2.0e0 * adewex,
+                self.data.fwbs.r_cryostat_inboard - 2.0e0 * adewex,
             )
             po.ovarre(
                 self.outfile,
                 "External cryostat outer radius (m)",
                 "(r_cryostat_inboard)",
-                fwbs_variables.r_cryostat_inboard,
+                self.data.fwbs.r_cryostat_inboard,
             )
             po.ovarre(
                 self.outfile, "External cryostat minor radius (m)", "(adewex)", adewex
@@ -1669,37 +1668,37 @@ class Stellarator(Model):
                 self.outfile,
                 "External cryostat shell volume (m^3)",
                 "(vol_cryostat)",
-                fwbs_variables.vol_cryostat,
+                self.data.fwbs.vol_cryostat,
             )
             po.ovarre(
                 self.outfile,
                 "Internal volume of the cryostat structure (m^3)",
                 "(vol_cryostat_internal)",
-                fwbs_variables.vol_cryostat_internal,
+                self.data.fwbs.vol_cryostat_internal,
             )
             po.ovarre(
                 self.outfile,
                 "External cryostat mass (kg)",
                 "",
-                fwbs_variables.dewmkg - fwbs_variables.m_vv,
+                self.data.fwbs.dewmkg - self.data.fwbs.m_vv,
             )
             po.ovarre(
                 self.outfile,
                 "Internal vacuum vessel shell volume (m3)",
                 "(vol_vv)",
-                fwbs_variables.vol_vv,
+                self.data.fwbs.vol_vv,
             )
             po.ovarre(
                 self.outfile,
                 "Vacuum vessel mass (kg)",
                 "(m_vv)",
-                fwbs_variables.m_vv,
+                self.data.fwbs.m_vv,
             )
             po.ovarre(
                 self.outfile,
                 "Total cryostat + vacuum vessel mass (kg)",
                 "(dewmkg)",
-                fwbs_variables.dewmkg,
+                self.data.fwbs.dewmkg,
             )
             po.ovarre(
                 self.outfile,
@@ -2123,7 +2122,7 @@ class Stellarator(Model):
             )
         elif heat_transport_variables.ipowerflow == 0:
             physics_variables.pflux_fw_neutron_mw = (
-                (1.0e0 - fwbs_variables.fhole)
+                (1.0e0 - self.data.fwbs.fhole)
                 * physics_variables.p_neutron_total_mw
                 / self.data.first_wall.a_fw_total
             )
@@ -2131,9 +2130,9 @@ class Stellarator(Model):
             physics_variables.pflux_fw_neutron_mw = (
                 (
                     1.0e0
-                    - fwbs_variables.fhole
-                    - fwbs_variables.f_a_fw_outboard_hcd
-                    - fwbs_variables.f_ster_div_single
+                    - self.data.fwbs.fhole
+                    - self.data.fwbs.f_a_fw_outboard_hcd
+                    - self.data.fwbs.f_ster_div_single
                 )
                 * physics_variables.p_neutron_total_mw
                 / self.data.first_wall.a_fw_total
@@ -2244,7 +2243,7 @@ class Stellarator(Model):
             )
         elif heat_transport_variables.ipowerflow == 0:
             physics_variables.pflux_fw_rad_mw = (
-                (1.0e0 - fwbs_variables.fhole)
+                (1.0e0 - self.data.fwbs.fhole)
                 * physics_variables.p_plasma_rad_mw
                 / self.data.first_wall.a_fw_total
             )
@@ -2252,9 +2251,9 @@ class Stellarator(Model):
             physics_variables.pflux_fw_rad_mw = (
                 (
                     1.0e0
-                    - fwbs_variables.fhole
-                    - fwbs_variables.f_a_fw_outboard_hcd
-                    - fwbs_variables.f_ster_div_single
+                    - self.data.fwbs.fhole
+                    - self.data.fwbs.f_a_fw_outboard_hcd
+                    - self.data.fwbs.f_ster_div_single
                 )
                 * physics_variables.p_plasma_rad_mw
                 / self.data.first_wall.a_fw_total

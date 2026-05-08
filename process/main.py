@@ -713,6 +713,18 @@ class Models:
             self.ccfe_hcpb,
             self.fw,
             self.dcll,
+            self.blanket_library,
+            self.pfcoil,
+            self.cryostat,
+            self.fw,
+            self.sctfcoil,
+            self.cicc_sctfcoil,
+            self.croco_sctfcoil,
+            self.tfcoil,
+            self.build,
+            self.shield,
+            self.divertor,
+            self.structure,
         )
 
     def setup_data_structure(self):

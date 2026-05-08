@@ -5,7 +5,6 @@ from process.core import process_output as po
 from process.core.model import DataStructure
 from process.data_structure import (
     divertor_variables,
-    fwbs_variables,
     physics_variables,
     stellarator_variables,
 )
@@ -102,7 +101,7 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
     divertor_variables.pflux_div_heat_load_mw = q_div
     divertor_variables.a_div_surface_total = darea
 
-    fwbs_variables.f_ster_div_single = darea / data.first_wall.a_fw_total
+    data.fwbs.f_ster_div_single = darea / data.first_wall.a_fw_total
 
     if f_output:
         output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta)
