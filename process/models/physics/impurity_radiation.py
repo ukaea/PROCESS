@@ -1,3 +1,5 @@
+"""Module for impurity radiation calculations and data handling."""
+
 import dataclasses
 import logging
 import re
@@ -145,7 +147,8 @@ def initialise_imprad():
         n_species_index=11,
         name_label=impurity_radiation_module.imp_label[10],
         z=28,
-        m_species_amu=constants.M_NICKEL_AMU,  # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
+        # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
+        m_species_amu=constants.M_NICKEL_AMU,
         f_nd_species_electron=f_nd_species_electron,
         len_tab=table_length,
         error=errorflag,
@@ -156,7 +159,8 @@ def initialise_imprad():
         n_species_index=12,
         name_label=impurity_radiation_module.imp_label[11],
         z=36,
-        m_species_amu=constants.M_KRYPTON_AMU,  # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
+        # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
+        m_species_amu=constants.M_KRYPTON_AMU,
         f_nd_species_electron=f_nd_species_electron,
         len_tab=table_length,
         error=errorflag,
@@ -167,7 +171,8 @@ def initialise_imprad():
         n_species_index=13,
         name_label=impurity_radiation_module.imp_label[12],
         z=54,
-        m_species_amu=constants.M_XENON_AMU,  # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
+        # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
+        m_species_amu=constants.M_XENON_AMU,
         f_nd_species_electron=f_nd_species_electron,
         len_tab=table_length,
         error=errorflag,
@@ -178,7 +183,8 @@ def initialise_imprad():
         n_species_index=14,
         name_label=impurity_radiation_module.imp_label[13],
         z=74,
-        m_species_amu=constants.M_TUNGSTEN_AMU,  # 183.84 (184W,186W,182W,183W,180W) Average mass
+        # 183.84 (184W,186W,182W,183W,180W) Average mass
+        m_species_amu=constants.M_TUNGSTEN_AMU,
         f_nd_species_electron=f_nd_species_electron,
         len_tab=table_length,
         error=errorflag,
@@ -200,6 +206,20 @@ class ImpurityDataHeader:
 
 
 def read_impurity_file(impurity_file: Path):
+    """Reads an impurity data file and returns a list of ImpurityDataHeader
+    objects representing the headers and associated data in the file.
+
+    Parameters
+    ----------
+    impurity_file : Path
+        Path to the impurity data file to read.
+
+    Returns
+    -------
+    list[ImpurityDataHeader]
+        A list of ImpurityDataHeader objects representing the headers and
+        associated data in the impurity data file.
+    """
     with open(impurity_file) as f:
         data = f.readlines()
 
@@ -286,7 +306,8 @@ def init_imp_element(
 
     if len_tab > 200:
         print(
-            f"ERROR: len_tab is {len_tab} but has a maximum value of {impurity_radiation_module.all_array_hotfix_len}"
+            f"ERROR: len_tab is {len_tab} but has a maximum value of "
+            f"{impurity_radiation_module.all_array_hotfix_len}"
         )
 
     impurity_dir = resources.files("process") / "data/lz_non_corona_14_elements/"
@@ -335,6 +356,23 @@ def init_imp_element(
 
 
 def z2index(zimp):
+    """Finds the index of the impurity element with the given charge number.
+
+    Parameters
+    ----------
+    zimp : int
+        Charge number of the impurity element
+
+    Returns
+    -------
+    int
+        Index of the impurity element in the impurity array
+
+    Raises
+    ------
+    ProcessValueError
+        If the element with the given charge is not found in the impurity array
+    """
     for i in range(len(impurity_radiation_module.impurity_arr_label)):
         if zimp == impurity_radiation_module.impurity_arr_z[i]:
             return i
@@ -346,7 +384,8 @@ def z2index(zimp):
 
 
 def fradcore(rho, radius_plasma_core_norm, f_p_plasma_core_rad_reduction):
-    """Finds the fraction of radiation from the core that is subtracted in impurity radiation model.
+    """Finds the fraction of radiation from the core that is subtracted in impurity
+    radiation model.
 
     Parameters
     ----------
@@ -384,7 +423,8 @@ def zav_of_te(imp_element_index, teprofile):
     numpy.array
         zav_of_te - electron temperature dependent average atomic number
     """
-    # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
+    # less_than_imp_temp_mask = teprofile values less than impurity temperature.
+    # greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
     return _zav_of_te_compiled(
         imp_element_index,
         teprofile,
@@ -448,7 +488,8 @@ def pimpden(imp_element_index, neprofile, teprofile):
     numpy.array
         pimpden - total impurity radiation density (W/m3)
     """
-    # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
+    # less_than_imp_temp_mask = teprofile values less than impurity temperature.
+    # greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
     bins = impurity_radiation_module.temp_impurity_keV_array[imp_element_index]
     indices = np.digitize(teprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
@@ -510,6 +551,11 @@ def element2index(element: str):
     ----------
     element: str :
 
+    Raises
+    ------
+    ProcessValueError
+        If the element is not found in impurity_arr_label
+
     """
     try:
         return (
@@ -525,10 +571,11 @@ def element2index(element: str):
 
 
 class ImpurityRadiation:
-    """This class calculates the impurity radiation losses for given temperature and density profiles.
-    The considers the  total impurity radiation from the core (pden_impurity_core_rad_total_mw) and total impurity radiation
-    (pden_impurity_rad_total_mw) [MW/(m^3)]. The class is used to sum the impurity radiation loss from each impurity
-    element to find the total impurity radiation loss.
+    """Calculates the impurity radiation losses for given temperature and
+    density profiles. The considers the  total impurity radiation from the core
+    (pden_impurity_core_rad_total_mw) and total impurity radiation
+    (pden_impurity_rad_total_mw) [MW/(m^3)]. The class is used to sum the impurity
+    radiation loss from each impurity element to find the total impurity radiation loss.
     """
 
     def __init__(self, plasma_profile: PlasmaProfile):
@@ -558,7 +605,8 @@ class ImpurityRadiation:
         list(map(self.imprad_profile, self.imp))
 
     def imprad_profile(self, imp_element_index):
-        """This routine calculates the impurity radiation losses for given temperature and density profiles.
+        """Calculates the impurity radiation losses for given temperature
+        and density profiles.
 
         Parameters
         ----------
@@ -582,9 +630,10 @@ class ImpurityRadiation:
         self.pimp_profile = np.add(self.pimp_profile, pimp)
 
     def calculate_radiation_loss_profiles(self):
-        """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity radiation
-        from the core (pden_impurity_core_rad_total_mw) and total impurity radiation (pden_impurity_rad_total_mw). Update the stored arrays with
-        the values.
+        """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity
+        radiation from the core (pden_impurity_core_rad_total_mw) and total impurity
+        radiation  (pden_impurity_rad_total_mw). Update the stored arrays with the
+        values.
         """
         pden_impurity_rad_total = self.pimp_profile * self.rho
         pden_impurity_core_rad_total = self.pimp_profile * (
@@ -607,7 +656,8 @@ class ImpurityRadiation:
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss.
         """
-        # 2.0e-6 converts from W/m^3 to MW/m^3 and also accounts for both sides of the plasma
+        # 2.0e-6 converts from W/m^3 to MW/m^3 and also accounts for both sides of the
+        # plasma
         self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
             self.pden_impurity_rad_profile, x=self.rho, dx=self.rhodx
         )

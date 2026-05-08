@@ -1,3 +1,5 @@
+"""Plasma geometry models and shape definitions for PROCESS."""
+
 import logging
 from enum import IntEnum
 from types import DynamicClassAttribute
@@ -23,7 +25,8 @@ class PlasmaShapeModelType(IntEnum):
     PROCESS_ORIGINAL = (0, "PROCESS Original Double Arc")
     SAUTER = (1, "Sauter")
 
-    def __new__(cls, value, full_name):
+    def __new__(cls, value: int, full_name: str):
+        """Create a new PlasmaShapeModelType instance."""
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._full_name_ = full_name
@@ -31,6 +34,7 @@ class PlasmaShapeModelType(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
+        """Get the full name of the plasma shape model."""
         return self._full_name_
 
 
@@ -47,7 +51,8 @@ class PlasmaGeometryModels(IntEnum):
     MENARD_2016 = (7, "Menard 2016 ST Scaling")
     UNKNOWN = (8, "Unknown")
 
-    def __new__(cls, value, description):
+    def __new__(cls, value: int, description: str):
+        """Create a new PlasmaGeometryModels instance."""
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._description_ = description
@@ -55,6 +60,7 @@ class PlasmaGeometryModels(IntEnum):
 
     @DynamicClassAttribute
     def description(self):
+        """Get the description of the plasma geometry model."""
         return self._description_
 
 
@@ -146,7 +152,15 @@ class PlasmaGeometryModelType(IntEnum):
         PlasmaGeometryModels.IPDG89,
     )
 
-    def __new__(cls, value, kappa_model, triang_model, kappa95_model, triang95_model):
+    def __new__(
+        cls,
+        value: int,
+        kappa_model: PlasmaGeometryModels,
+        triang_model: PlasmaGeometryModels,
+        kappa95_model: PlasmaGeometryModels,
+        triang95_model: PlasmaGeometryModels,
+    ):
+        """Create a new PlasmaGeometryModelType instance."""
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._kappa_model_ = kappa_model
@@ -157,30 +171,37 @@ class PlasmaGeometryModelType(IntEnum):
 
     @DynamicClassAttribute
     def kappa_model(self):
+        """Get the kappa model."""
         return self._kappa_model_
 
     @DynamicClassAttribute
     def triang_model(self):
+        """Get the triangularity model."""
         return self._triang_model_
 
     @DynamicClassAttribute
     def kappa95_model(self):
+        """Get the kappa95 model."""
         return self._kappa95_model_
 
     @DynamicClassAttribute
     def triang95_model(self):
+        """Get the triangularity95 model."""
         return self._triang95_model_
 
 
 class PlasmaGeom:
+    """Class for calculating plasma geometry parameters."""
+
     def __init__(self):
         self.outfile = constants.NOUT
 
     def run(self):
         """Plasma geometry parameters
 
-        This method calculates the plasma geometry parameters based on various shaping terms and input values.
-        It updates the `physics_variables` with calculated values for kappa, triangularity, surface area, volume, etc.
+        This method calculates the plasma geometry parameters based on various shaping
+        terms and input values. It updates the `physics_variables` with calculated
+        values for kappa, triangularity, surface area, volume, etc.
 
         References
         ----------
@@ -324,7 +345,8 @@ class PlasmaGeom:
             physics_variables.i_plasma_geometry
             == PlasmaGeometryModelType.INDUCTANCE_SCALING_X_POINT
         ):  # Use input triang, physics_variables.ind_plasma_internal_norm values
-            # physics_variables.kappa found from physics_variables.aspect ratio and plasma internal inductance li(3)
+            # physics_variables.kappa found from physics_variables.aspect ratio and
+            # plasma internal inductance li(3)
             physics_variables.kappa = (
                 1.09e0 + 0.26e0 / physics_variables.ind_plasma_internal_norm
             ) * (1.5e0 / physics_variables.aspect) ** 0.4e0
@@ -338,8 +360,8 @@ class PlasmaGeom:
             physics_variables.i_plasma_geometry
             == PlasmaGeometryModelType.CREATE_DATA_EU_DEMO_X_POINT
         ):
-            # physics_variables.kappa95 found from physics_variables.aspect ratio and stabilty margin
-            # Based on fit to CREATE data. ref Issue #1399
+            # physics_variables.kappa95 found from physics_variables.aspect ratio and
+            # stability margin Based on fit to CREATE data. ref Issue #1399
             # valid for EU-DEMO like machine - physics_variables.aspect ratio 2.6 - 3.6
             # Model updated see Issue #1648
             a = 3.68436807e0
@@ -379,10 +401,9 @@ class PlasmaGeom:
         ):
             # See Issue #1439
             # physics_variables.triang is an input
-            # physics_variables.kappa found from physics_variables.aspect ratio scaling on p32 of Menard:
-            # Menard, et al. "Fusion Nuclear Science Facilities
-            # and Pilot Plants Based on the Spherical Tokamak."
-            # Nucl. Fusion, 2016, 44.
+            # physics_variables.kappa found from physics_variables.aspect ratio scaling
+            # on p32 of Menard: Menard, et al. "Fusion Nuclear Science Facilities
+            # and Pilot Plants Based on the Spherical Tokamak." Nucl. Fusion, 2016, 44.
 
             physics_variables.kappa = 0.95e0 * (
                 1.9e0 + 1.9e0 / physics_variables.aspect**1.4e0
@@ -420,7 +441,8 @@ class PlasmaGeom:
 
         # ======================================================================
 
-        # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma current.
+        # i_plasma_current = 8 specifies use of the Sauter geometry as well as plasma
+        # current.
         if (
             physics_variables.i_plasma_current == 8
             or physics_variables.i_plasma_shape == PlasmaShapeModelType.SAUTER
@@ -468,7 +490,13 @@ class PlasmaGeom:
         # ======================================================================
 
     def output(self):
-        """Output plasma geometry parameters to file."""
+        """Output plasma geometry parameters to file.
+
+        Raises
+        ------
+        ProcessValueError
+            If `n_divertors` has an illegal value.
+        """
         po.oheadr(self.outfile, "Plasma Geometry")
 
         if stellarator_variables.istell == 0:
@@ -513,7 +541,8 @@ class PlasmaGeom:
 
         po.osubhd(
             self.outfile,
-            f"{PlasmaShapeModelType(physics_variables.i_plasma_shape).full_name} plasma shape model is used :",
+            f"{PlasmaShapeModelType(physics_variables.i_plasma_shape).full_name} "
+            "plasma shape model is used :",
         )
 
         po.ovarrf(
@@ -676,7 +705,7 @@ class PlasmaGeom:
             Plasma minor radius (m)
         kappa : float
             Plasma separatrix elongation
-        tri : float
+        triang : float
             Plasma separatrix triangularity
 
         Returns
@@ -911,9 +940,10 @@ class PlasmaGeom:
 
         References
         ----------
-            - O. Sauter, “Geometric formulas for system codes including the effect of negative triangularity,”
-            Fusion Engineering and Design, vol. 112, pp. 633-645, Nov. 2016,
-            doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
+            - O. Sauter, “Geometric formulas for system codes including the effect of
+              negative triangularity,” Fusion Engineering and Design, vol. 112,
+              pp. 633-645, Nov. 2016,
+              doi: https://doi.org/10.1016/j.fusengdes.2016.04.033.
         """
         # Calculate w07 parameter from paper from squareness assuming top-down symmetry
         w07 = square + 1
@@ -955,7 +985,8 @@ class PlasmaGeom:
     ) -> float:
         """Calculate the ITER physics basis elongation.
 
-        This method calculates the ITER physics basis elongation (κₐ) based on the aspect ratio and a scaling factor.
+        This method calculates the ITER physics basis elongation (κₐ) based on the
+        aspect ratio and a scaling factor.
 
         Parameters
         ----------

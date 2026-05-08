@@ -1,3 +1,5 @@
+"""Module for calculating plasma magnetic fields."""
+
 import logging
 
 import numba as nb
@@ -15,6 +17,8 @@ logger = logging.getLogger(__name__)
 
 
 class PlasmaFields(Model):
+    """Model for calculating plasma magnetic fields."""
+
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
@@ -35,10 +39,11 @@ class PlasmaFields(Model):
         delta: float,
         perim: float,
     ) -> float:
-        """Function to calculate surface-averaged poloidal field (⟨Bₚ(a)⟩) from the plasma current
+        """Function to calculate surface-averaged poloidal field (⟨Bₚ(a)⟩) from the
+        plasma current
 
-        This function calculates the surface-averaged poloidal field from the plasma current in Tesla,
-        using a simple calculation using Ampere's law for conventional
+        This function calculates the surface-averaged poloidal field from the plasma
+        current in Tesla, using a simple calculation using Ampere's law for conventional
         tokamaks, or for TARTs, a scaling from Peng, Galambos and
         Shipe (1992).
 
@@ -196,6 +201,7 @@ class PlasmaFields(Model):
         return np.sqrt(b_plasma_toroidal**2 + b_plasma_poloidal**2)
 
     def output(self):
+        """Output plasma magnetic fields data."""
         po.oheadr(self.outfile, "Plasma magnetic fields")
 
         po.ovarrf(

@@ -1,3 +1,9 @@
+"""Plasma profiles module.
+
+This module provides classes and functions for managing plasma profiles,
+including electron density and temperature profiles.
+"""
+
 import logging
 
 import numpy as np
@@ -12,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 
 class PlasmaProfile:
-    """Plasma profile class. Initiates the electron density and electron temperature profiles and
-    handles the required physics variables.
+    """Plasma profile class. Initiates the electron density and electron temperature
+    profiles and handles the required physics variables.
     """
 
     def __init__(self):
@@ -36,12 +42,13 @@ class PlasmaProfile:
     def run(self):
         """Subroutine to execute PlasmaProfile functions.
 
-        This method calls the parameterise_plasma() method to initialize the plasma profiles.
+        This method calls the parameterise_plasma() method to initialize the plasma
+        profiles.
         """
         self.parameterise_plasma()
 
     def parameterise_plasma(self):
-        """This routine initializes the density and temperature
+        """Initializes the density and temperature
         profile averages and peak values, given the main
         parameters describing these profiles.
 
@@ -74,7 +81,8 @@ class PlasmaProfile:
     def parabolic_paramterisation(self):
         """Parameterise plasma profiles in the case where i_plasma_pedestal == 0.
 
-        This routine calculates the parameterization of plasma profiles in the case where i_plasma_pedestal=0.
+        This routine calculates the parameterization of plasma profiles in the case
+        where i_plasma_pedestal=0.
         It sets the necessary physics variables for the parabolic profile case.
         """
         # Reset pedestal values to agree with original parabolic profiles
@@ -91,7 +99,10 @@ class PlasmaProfile:
             logger.error(
                 "Parabolic plasma profiles is used for an L-Mode plasma, "
                 "but the physics variables do not describe an L-Mode plasma. "
-                "'radius_plasma_pedestal_temp_norm', 'radius_plasma_pedestal_density_norm', 'temp_plasma_pedestal_kev', 'temp_plasma_separatrix_kev', 'nd_plasma_pedestal_electron', 'nd_plasma_separatrix_electron', "
+                "'radius_plasma_pedestal_temp_norm', "
+                "'radius_plasma_pedestal_density_norm', 'temp_plasma_pedestal_kev', "
+                "'temp_plasma_separatrix_kev', 'nd_plasma_pedestal_electron', "
+                "'nd_plasma_separatrix_electron', "
                 "and 'tbeta' have all been reset to L-Mode appropriate values"
             )
 
@@ -117,7 +128,8 @@ class PlasmaProfile:
         )
 
         # Line averaged electron density (IPDG89)
-        # Taken by integrating the parabolic profile over rho in the bounds of 0 and 1 and dividng by the width of the integration bounds
+        # Taken by integrating the parabolic profile over rho in the bounds of 0 and
+        # 1 and dividng by the width of the integration bounds
 
         physics_variables.nd_plasma_electron_line = (
             physics_variables.nd_plasma_electrons_vol_avg
@@ -159,9 +171,14 @@ class PlasmaProfile:
         )
 
     def pedestal_parameterisation(self):
-        """Instance temperature and density profiles then integrate them, setting physics variables temp_plasma_electron_density_weighted_kev and temp_plasma_ion_density_weighted_kev.
+        """Instance temperature and density profiles then integrate them, setting
+        physics variables temp_plasma_electron_density_weighted_kev and
+        `temp_plasma_ion_density_weighted_kev`.
 
-        This routine instances temperature and density profiles and integrates them to calculate the values of the physics variables `temp_plasma_electron_density_weighted_kev` and `temp_plasma_ion_density_weighted_kev`.
+        This routine instances temperature and density profiles and integrates them to
+        calculate the values of the physics variables
+        `temp_plasma_electron_density_weighted_kev` and
+        `temp_plasma_ion_density_weighted_kev`.
         """
         #  Run TeProfile and NeProfile class methods:
         #  Re-caluclate core and profile values
@@ -218,9 +235,11 @@ class PlasmaProfile:
         )  # Preventing division by zero later
 
     def calculate_profile_factors(self):
-        """Calculate and set the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
+        """Calculate and set the central pressure (pres_plasma_thermal_on_axis) using
+        the ideal gas law and the pressure profile index (alphap).
 
-        This method calculates the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
+        This method calculates the central pressure (pres_plasma_thermal_on_axis) using
+        the ideal gas law and the pressure profile index (alphap).
         It sets the value of the physics variable `pres_plasma_thermal_on_axis`.
         """
         #  Central pressure (Pa), from ideal gas law : p = nkT
@@ -264,13 +283,15 @@ class PlasmaProfile:
         )
 
         #  Pressure profile index (only true for a parabolic profile)
-        #  N.B. pres_plasma_thermal_on_axis is NOT equal to <p> * (1 + alphap), but p(rho) = n(rho)*T(rho)
+        #  N.B. pres_plasma_thermal_on_axis is NOT equal to <p> * (1 + alphap),
+        #  but p(rho) = n(rho)*T(rho)
         #  and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
         #  density-weighted temperature
 
         physics_variables.alphap = physics_variables.alphan + physics_variables.alphat
 
-        # Calculate the volume averaged plasma thermal pressure from the density-weighted temperatures
+        # Calculate the volume averaged plasma thermal pressure from the
+        # density-weighted temperatures
         # Density-weighted temperatures are used as <nT> != <n>*<T>
         physics_variables.pres_plasma_thermal_vol_avg = (
             physics_variables.nd_plasma_electrons_vol_avg
@@ -294,11 +315,18 @@ class PlasmaProfile:
     def calculate_parabolic_profile_factors():
         """Calculate the gradient information for i_plasma_pedestal = 0.
 
-        This function calculates the gradient information for the plasma profiles at the pedestal region
+        This function calculates the gradient information for the plasma profiles at
+        the pedestal region
         when the value of i_plasma_pedestal is 0. It is used by the stellarator routines.
 
-        The function uses analytical parametric formulas to calculate the gradient information.
-        The maximum normalized radius (rho_max) is obtained by equating the second derivative to zero.
+        The function uses analytical parametric formulas to calculate the gradient
+        information. The maximum normalized radius (rho_max) is obtained by equating the
+        second derivative to zero.
+
+        Raises
+        ------
+        ProcessValueError
+            If alphat or alphan is negative.
         """
         if (
             PlasmaProfileShapeType(physics_variables.i_plasma_pedestal)
@@ -323,8 +351,8 @@ class PlasmaProfile:
 
             elif physics_variables.alphat <= 1.0 and physics_variables.alphat > 0.0:
                 # This makes the profiles very 'boxy'
-                # The gradient diverges here at the edge so define some 'wrong' value of 0.9
-                # to approximate the gradient
+                # The gradient diverges here at the edge so define some 'wrong' value of
+                # 0.9 to approximate the gradient
                 rho_te_max = 0.9
                 dtdrho_max = (
                     -2.0
@@ -360,7 +388,8 @@ class PlasmaProfile:
                 )
             elif physics_variables.alphan <= 1.0 and physics_variables.alphan > 0.0:
                 # This makes the profiles very 'boxy'
-                # The gradient diverges here at the edge so define some 'wrong' value of 0.9
+                # The gradient diverges here at the edge so define some 'wrong' value of
+                # 0.9
                 # to approximate the gradient
                 rho_ne_max = 0.9
                 dndrho_max = (

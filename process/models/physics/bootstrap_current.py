@@ -1,3 +1,5 @@
+"""Bootstrap current models and calculations for plasma physics simulations."""
+
 import logging
 from enum import IntEnum
 from types import DynamicClassAttribute
@@ -38,7 +40,21 @@ class BootstrapCurrentFractionModel(IntEnum):
     SUGIYAMA_L_MODE = (12, "Sugiyama L Mode scaling")
     SUGIYAMA_H_MODE = (13, "Sugiyama H Mode scaling")
 
-    def __new__(cls, value, full_name):
+    def __new__(cls, value: int, full_name: str):
+        """Create a new BootstrapCurrentFractionModel enum instance.
+
+        Parameters
+        ----------
+        value : int
+            The integer value of the enum member.
+        full_name : str
+            The full name/description of the bootstrap current model.
+
+        Returns
+        -------
+        BootstrapCurrentFractionModel
+            A new enum instance with the specified value and full_name.
+        """
         obj = int.__new__(cls, value)
         obj._value_ = value
         obj._full_name_ = full_name
@@ -46,6 +62,7 @@ class BootstrapCurrentFractionModel(IntEnum):
 
     @DynamicClassAttribute
     def full_name(self):
+        """Return the full name of the bootstrap current model."""
         return self._full_name_
 
 
@@ -59,6 +76,13 @@ class PlasmaBootstrapCurrent(Model):
         self.sauter_bootstrap = SauterBootstrapCurrent()
 
     def run(self) -> None:
+        """Calculate bootstrap current fraction using various models.
+
+        Raises
+        ------
+        ProcessValueError
+            If an illegal value of i_bootstrap_current is provided.
+        """
         # Calculate bootstrap current fraction using various models
         current_drive_variables.f_c_plasma_bootstrap_iter89 = (
             current_drive_variables.cboot
@@ -234,8 +258,9 @@ class PlasmaBootstrapCurrent(Model):
                 i_bootstrap_current=physics_variables.i_bootstrap_current,
             ) from None
 
+    @staticmethod
     def get_bootstrap_current_fraction_value(
-        self, model: BootstrapCurrentFractionModel
+        model: BootstrapCurrentFractionModel,
     ) -> float:
         """Get the plasma current bootstrap fraction (f_BS) for the specified model.
 
@@ -307,7 +332,8 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        This function performs the original ITER calculation of the plasma current bootstrap fraction.
+        This function performs the original ITER calculation of the plasma current
+        bootstrap fraction.
 
         References
         ----------
@@ -370,10 +396,15 @@ class PlasmaBootstrapCurrent(Model):
         float
             The bootstrap current fraction.
 
+        Raises
+        ------
+        ProcessValueError
+            If illegal profile values are found (NaN errors or aj < 0).
+
         Notes
         -----
-        This function calculates the bootstrap current fraction using the numerically fitted algorithm
-        written by Howard Wilson.
+        This function calculates the bootstrap current fraction using the numerically
+        fitted algorithm written by Howard Wilson.
 
         References
         ----------
@@ -384,15 +415,18 @@ class PlasmaBootstrapCurrent(Model):
         term1 = np.log(0.5)
         term2 = np.log(q0 / q95)
 
-        # Re-arranging of parabolic profile to be equal to (r/a)^2 where the profile value is half of the core value
+        # Re-arranging of parabolic profile to be equal to (r/a)^2 where the profile
+        # value is half of the core value
 
         termp = 1.0 - 0.5 ** (1.0 / alphap)
         termt = 1.0 - 0.5 ** (1.0 / alphat)
         termj = 1.0 - 0.5 ** (1.0 / alphaj)
 
-        # Assuming a parabolic safety factor profile of the form q = q0 + (q95 - q0) * (r/a)^2
-        # Substitute (r/a)^2 term from temperature,pressure and current profiles into q profile when values is 50% of core value
-        # Take natural log of q profile over q95 and q0 to get the profile index
+        # Assuming a parabolic safety factor profile of the form
+        # q = q0 + (q95 - q0) * (r/a)^2
+        # Substitute (r/a)^2 term from temperature,pressure and current
+        # profiles into q profile when values is 50% of core value. Take natural log of
+        # q profile over q95 and q0 to get the profile index
 
         alfpnw = term1 / np.log(np.log((q0 + (q95 - q0) * termp) / q95) / term2)
         alftnw = term1 / np.log(np.log((q0 + (q95 - q0) * termt) / q95) / term2)
@@ -511,8 +545,8 @@ class PlasmaBootstrapCurrent(Model):
         Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715,
         ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2014.07.009.
 
-        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
-        ITER-TN-PH-8-4, June 1988.
+        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current
+        drive." ITER-TN-PH-8-4, June 1988.
         """
         # Compute average electron beta
         betae = (
@@ -553,13 +587,14 @@ class PlasmaBootstrapCurrent(Model):
         Parameters
         ----------
         plasma_profile : PlasmaProfile
-            The plasma profile object containing the necessary plasma parameters for the Sauter
-            bootstrap calculation.
+            The plasma profile object containing the necessary plasma parameters for the
+            Sauter bootstrap calculation.
 
         Returns
         -------
         tuple[float, np.ndarray]
-            A tuple containing the bootstrap current fraction and the bootstrap current density profile.
+            A tuple containing the bootstrap current fraction and the bootstrap current
+            density profile.
         """
         return self.sauter_bootstrap.bootstrap_fraction_sauter(plasma_profile)
 
@@ -614,21 +649,24 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        This function calculates the bootstrap current fraction using the Nevins et al method.
+        This function calculates the bootstrap current fraction using the Nevins et al
+        method.
 
         References
         ----------
-        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction scaling for a tokamak reactor design study,"
-        Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction
+        scaling for a tokamak reactor design study," Fusion Engineering and Design,
+        vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
         doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
 
-        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current drive."
-        ITER-TN-PH-8-4, June 1988.
+        Nevins, W. M. "Summary report: ITER specialists' meeting on heating and current
+        drive." ITER-TN-PH-8-4, June 1988.
         """
-        # Calculate peak electron beta at plasma centre, this is not the form used in the paper
-        # The paper assumes parabolic profiles for calculating core values with the profile indexes.
-        # We instead use the directly calculated electron density and temperature values at the core.
-        # So that it is compatible with all profiles
+        # Calculate peak electron beta at plasma centre, this is not the form used in
+        # the paper. The paper assumes parabolic profiles for calculating core values
+        # with the profile indexes. We instead use the directly calculated electron
+        # density and temperature values at the core. So that it is compatible with all
+        # profiles.
 
         betae0 = (
             physics_variables.nd_plasma_electron_on_axis
@@ -701,23 +739,27 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        - The profile assumed for the alphan and alphat indexes is only a parabolic profile without a
-          pedestal (L-mode).
-        - The Root Mean Squared Error for the fitting database of this formula was 0.025.
-        - Concentrating on the positive shear plasmas using the ACCOME code equilibria with the fully
-          non-inductively driven conditions with neutral beam (NB) injection only are calculated.
+        - The profile assumed for the alphan and alphat indexes is only a parabolic
+          profile without a pedestal (L-mode).
+        - The Root Mean Squared Error for the fitting database of this formula was
+          0.025.
+        - Concentrating on the positive shear plasmas using the ACCOME code equilibria
+          with the fully non-inductively driven conditions with neutral beam (NB)
+          injection only are calculated.
         - The electron temperature and the ion temperature were assumed to be equal.
         - This can be used for all aspect ratios.
         - The diamagnetic fraction is included in this formula.
 
         References
         ----------
-        R. Sakai, T. Fujita, and A. Okamoto, "Derivation of bootstrap current fraction scaling formula for
-        0-D system code analysis," Fusion Engineering and Design, vol. 149, p. 111322, Dec. 2019,
+        R. Sakai, T. Fujita, and A. Okamoto, "Derivation of bootstrap current fraction
+        scaling formula for 0-D system code analysis," Fusion Engineering and Design,
+        vol. 149, p. 111322, Dec. 2019,
         doi: https://doi.org/10.1016/j.fusengdes.2019.111322.
         """
-        # Sakai states that the ACCOME dataset used has the toridal diamagnetic current included in the bootstrap current
-        # So the diamganetic current should not be calculated with this. i_diamagnetic_current = 0
+        # Sakai states that the ACCOME dataset used has the toridal diamagnetic current
+        # included in the bootstrap current. So the diamganetic current should not be
+        # calculated with this. i_diamagnetic_current = 0
         return (
             10 ** (0.951 * eps - 0.948)
             * beta_poloidal ** (1.226 * eps + 1.584)
@@ -758,13 +800,14 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        The source reference does not provide any info about the derivation of the formula.
-        It is only stated.
+        The source reference does not provide any info about the derivation of the
+        formula. It is only stated.
 
         References
         ----------
-        Zoran Dragojlovic et al., "An advanced computational algorithm for systems analysis of tokamak power plants,"
-        Fusion Engineering and Design, vol. 85, no. 2, pp. 243-265, Apr. 2010,
+        Zoran Dragojlovic et al., "An advanced computational algorithm for systems
+        analysis of tokamak power plants," Fusion Engineering and Design, vol. 85,
+        no. 2, pp. 243-265, Apr. 2010,
         doi: https://doi.org/10.1016/j.fusengdes.2010.02.015.
         """
         # Using the standard variable naming from the ARIES paper
@@ -809,16 +852,18 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        - Based off 350 plasma profiles from Experimento Tokamak Esferico (ETE) spherical tokamak
-          with A = 1.5, R_0 = 0.3m, I_p = 200kA, B_0=0.4T, beta = 4-10%.
+        - Based off 350 plasma profiles from Experimento Tokamak Esferico (ETE)
+          spherical tokamak with A = 1.5, R_0 = 0.3m, I_p = 200kA, B_0=0.4T,
+          beta = 4-10%.
         - Profiles taken as Gaussian shaped functions.
-        - Errors mostly up to the order of 10% are obtained when both expressions are compared with
-          the equilibrium estimates for the bootstrap current in ETE.
+        - Errors mostly up to the order of 10% are obtained when both expressions are
+          compared with the equilibrium estimates for the bootstrap current in ETE.
 
         References
         ----------
-        M. C. R. Andrade and G. O. Ludwig, "Scaling of bootstrap current on equilibrium and plasma profile parameters in tokamak plasmas,"
-        Plasma Physics and Controlled Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
+        M. C. R. Andrade and G. O. Ludwig, "Scaling of bootstrap current on equilibrium
+        and plasma profile parameters in tokamak plasmas," Plasma Physics and Controlled
+        Fusion, vol. 50, no. 6, pp. 065001-065001, Apr. 2008,
         doi: https://doi.org/10.1088/0741-3335/50/6/065001.
         """
         # Using the standard variable naming from the Andrade et.al. paper
@@ -858,26 +903,30 @@ class PlasmaBootstrapCurrent(Model):
         Notes
         -----
         - Based off of TFTR data calculated using the TRANSP plasma analysis code.
-        - 170 discharges which was assembled to study the tritium influx and transport in discharges
-          with D-only neutral beam injection (NBI).
-        - Contains L-mode, supershots, reversed shear, enhanced reversed shear and increased li discharges.
+        - 170 discharges which was assembled to study the tritium influx and transport
+          in discharges with D-only neutral beam injection (NBI).
+        - Contains L-mode, supershots, reversed shear, enhanced reversed shear and
+          increased li discharges.
         - Discharges with monotonic flux profiles with reversed shear are also included.
         - Is applied to circular cross-section plasmas.
 
         References
         ----------
-        G. T. Hoang and R. V. Budny, "The bootstrap fraction in TFTR," AIP conference proceedings,
-        Jan. 1997, doi: https://doi.org/10.1063/1.53414.
+        G. T. Hoang and R. V. Budny, "The bootstrap fraction in TFTR," AIP conference
+        proceedings, Jan. 1997, doi: https://doi.org/10.1063/1.53414.
         """
         # Using the standard variable naming from the Hoang et.al. paper
         # Hoang et.al uses a different definition for the profile indexes such that
-        # alpha_p is defined as the ratio of the central and the volume-averaged values, and the peakedness of the density of the total plasma current
+        # alpha_p is defined as the ratio of the central and the volume-averaged values,
+        # and the peakedness of the density of the total plasma current
         # (defined as ratio of the central value and I_p), alpha_j$
 
-        # We assume the pressure and current profile is parabolic and use the (profile_index +1) term in lieu
-        # The term represents the ratio of the the core to volume averaged value
+        # We assume the pressure and current profile is parabolic and use the
+        # (profile_index +1) term in lieu. The term represents the ratio of the the
+        # core to volume averaged value
 
-        # This could lead to large changes in the value depending on interpretation of the profile index
+        # This could lead to large changes in the value depending on interpretation of
+        # the profile index
 
         c_bs = np.sqrt((pressure_index + 1) / (current_index + 1))
 
@@ -914,21 +963,24 @@ class PlasmaBootstrapCurrent(Model):
         Notes
         -----
         - Data is based off of equilibria from Miller et al.
-        - A: 1.2 - 3.0 and stable to n ballooning and low n kink modes at a bootstrap fraction of 99%
-          for kappa = 2, 2.5 and 3.
+        - A: 1.2 - 3.0 and stable to n ballooning and low n kink modes at a bootstrap
+          fraction of 99% for kappa = 2, 2.5 and 3.
         - The results were parameterized as a function of aspect ratio and elongation.
-        - The parametric dependency of beta_p and beta_T are based on fitting of the DIII-D high
-          equivalent DT yield results.
-        - Parabolic profiles should be used for best results as the pressure peaking value is calculated
-          as the product of a parabolic temperature and density profile.
+        - The parametric dependency of beta_p and beta_T are based on fitting of the
+          DIII-D high equivalent DT yield results.
+        - Parabolic profiles should be used for best results as the pressure peaking
+          value is calculated as the product of a parabolic temperature and density
+          profile.
 
         References
         ----------
-        C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, "Toroidal reactor designs as a function of aspect ratio and elongation,"
-        vol. 42, no. 5, pp. 547-556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
+        C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, "Toroidal reactor
+        designs as a function of aspect ratio and elongation," vol. 42, no. 5,
+        pp. 547-556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
 
-        Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks".
-        Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
+        Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio
+        tokamaks". Switzerland: N. p., 1996.
+        Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
         """
         # Using the standard variable naming from the Wong et.al. paper
         f_peak = 2.0 / scipy.special.beta(0.5, density_index + temperature_index + 1)
@@ -948,7 +1000,8 @@ class PlasmaBootstrapCurrent(Model):
         q95: float,
         q0: float,
     ) -> float:
-        """Calculate the bootstrap fraction using the first scaling from the Gi et al formula.
+        """Calculate the bootstrap fraction using the first scaling from the Gi et al
+        formula.
 
         Parameters
         ----------
@@ -974,20 +1027,24 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        - Scaling found by solving the Hirshman-Sigmar bootstrap model using the matrix inversion method.
-        - Method was done to put the scaling into parameters compatible with the TPC systems code.
-        - Uses the ACCOME code to create bootstrap current fractions without using the iterative
-          calculations of the current drive and equilibrium models in the scan.
-        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, triang = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0,
-          Z_eff = 1.2 - 3.0.
+        - Scaling found by solving the Hirshman-Sigmar bootstrap model using the matrix
+          inversion method.
+        - Method was done to put the scaling into parameters compatible with the TPC
+          systems code.
+        - Uses the ACCOME code to create bootstrap current fractions without using the
+          iterative calculations of the current drive and equilibrium models in the
+          scan.
+        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, triang = 0.3, alpha_n = 0.1 - 0.8,
+          alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0.
         - Uses parabolic plasma profiles only.
-        - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1 overestimated the f_BS value
-          for reversed shear equilibrium.
+        - Scaling 1 has better accuracy than Scaling 2. However, Scaling 1
+          overestimated the f_BS value for reversed shear equilibrium.
 
         References
         ----------
-        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction scaling for a tokamak reactor design study,"
-        Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction
+        scaling for a tokamak reactor design study," Fusion Engineering and Design,
+        vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
         doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
         """
         # Using the standard variable naming from the Gi et.al. paper
@@ -1012,7 +1069,8 @@ class PlasmaBootstrapCurrent(Model):
         inverse_aspect: float,
         effective_charge: float,
     ) -> float:
-        """Calculate the bootstrap fraction using the second scaling from the Gi et al formula.
+        """Calculate the bootstrap fraction using the second scaling from the Gi et al
+        formula.
 
         Parameters
         ----------
@@ -1034,20 +1092,25 @@ class PlasmaBootstrapCurrent(Model):
 
         Notes
         -----
-        - Scaling found by solving the Hirshman-Sigmar bootstrap model using the matrix inversion method.
-        - Method was done to put the scaling into parameters compatible with the TPC systems code.
-        - Uses the ACCOME code to create bootstrap current fractions without using the iterative
-          calculations of the current drive and equilibrium models in the scan.
-        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, triang = 0.3, alpha_n = 0.1 - 0.8, alpha_t = 1.0 - 3.0,
-          Z_eff = 1.2 - 3.0.
+        - Scaling found by solving the Hirshman-Sigmar bootstrap model using the matrix
+          inversion method.
+        - Method was done to put the scaling into parameters compatible with the TPC
+          systems code.
+        - Uses the ACCOME code to create bootstrap current fractions without using the
+          iterative calculations of the current drive and equilibrium models in the
+          scan.
+        - R = 5.0 m, A = 1.3 - 5.0, kappa = 2, triang = 0.3, alpha_n = 0.1 - 0.8,
+          alpha_t = 1.0 - 3.0, Z_eff = 1.2 - 3.0.
         - Uses parabolic plasma profiles only.
-        - This scaling has the q profile dependence removed to obtain a scaling formula with much more
-          flexible variables than that by a single profile factor for internal current profile.
+        - This scaling has the q profile dependence removed to obtain a scaling formula
+          with much more flexible variables than that by a single profile factor for
+          internal current profile.
 
         References
         ----------
-        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction scaling for a tokamak reactor design study,"
-        Fusion Engineering and Design, vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
+        K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, "Bootstrap current fraction
+        scaling for a tokamak reactor design study," Fusion Engineering and Design,
+        vol. 89, no. 11, pp. 2709-2715, Aug. 2014,
         doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
         """
         # Using the standard variable naming from the Gi et.al. paper
@@ -1073,7 +1136,8 @@ class PlasmaBootstrapCurrent(Model):
         q95: float,
         q0: float,
     ) -> float:
-        """Calculate the bootstrap fraction using the L-mode scaling from the Sugiyama et al formula.
+        """Calculate the bootstrap fraction using the L-mode scaling from the Sugiyama
+        et al formula.
 
         Parameters
         ----------
@@ -1105,10 +1169,10 @@ class PlasmaBootstrapCurrent(Model):
 
         References
         ----------
-        S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, "Improvement of core plasma power and
-        current balance models for tokamak systems code considering H-mode plasma profiles,"
-        Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
-        https://doi.org/10.1016/j.fusengdes.2025.115022.
+        S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, "Improvement of core plasma
+        power and current balance models for tokamak systems code considering H-mode
+        plasma profiles," Fusion Engineering and Design, vol. 216, p. 115022,
+        Jul. 2025, doi:https://doi.org/10.1016/j.fusengdes.2025.115022.
         """
         return (
             0.740
@@ -1135,7 +1199,8 @@ class PlasmaBootstrapCurrent(Model):
         n_greenwald: float,
         temp_plasma_pedestal_kev: float,
     ) -> float:
-        """Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama et al formula.
+        """Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama
+        et al formula.
 
         Parameters
         ----------
@@ -1179,10 +1244,10 @@ class PlasmaBootstrapCurrent(Model):
 
         References
         ----------
-        S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, "Improvement of core plasma power and
-        current balance models for tokamak systems code considering H-mode plasma profiles,"
-        Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi:
-        https://doi.org/10.1016/j.fusengdes.2025.115022.
+        S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, "Improvement of core plasma
+        power and current balance models for tokamak systems code considering H-mode
+        plasma profiles," Fusion Engineering and Design, vol. 216, p. 115022,
+        Jul. 2025, doi: https://doi.org/10.1016/j.fusengdes.2025.115022.
         """
         return (
             0.789
@@ -1308,14 +1373,16 @@ class PlasmaBootstrapCurrent(Model):
         )
         po.ovarrf(
             self.outfile,
-            f"Bootstrap fraction ({BootstrapCurrentFractionModel.SUGIYAMA_L_MODE.full_name})",
+            f"Bootstrap fraction"
+            f" ({BootstrapCurrentFractionModel.SUGIYAMA_L_MODE.full_name})",
             "(f_c_plasma_bootstrap_sugiyama_l)",
             current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            f"Bootstrap fraction ({BootstrapCurrentFractionModel.SUGIYAMA_H_MODE.full_name})",
+            f"Bootstrap fraction"
+            f" ({BootstrapCurrentFractionModel.SUGIYAMA_H_MODE.full_name})",
             "(f_c_plasma_bootstrap_sugiyama_h)",
             current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
             "OP ",
@@ -1336,7 +1403,8 @@ class PlasmaBootstrapCurrent(Model):
         # Error to catch if self-driven current fraction limit has been enforced
         if physics_variables.err243 == 1:
             logger.error(
-                "Predicted plasma driven current is more than upper limit on non-inductive fraction"
+                "Predicted plasma driven current is more than upper limit on "
+                "non-inductive fraction"
             )
 
         if physics_variables.i_pfirsch_schluter_current == 0:
@@ -1388,22 +1456,24 @@ class SauterBootstrapCurrent:
 
         Notes
         -----
-        This function calculates the bootstrap current fraction using the Sauter, Angioni, and
-        Lin-Liu scaling.
+        This function calculates the bootstrap current fraction using the Sauter,
+        Angioni, and Lin-Liu scaling.
 
         References
         ----------
         O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
-        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
+        1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
         O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime [Phys. Plasmas 6, 2834 (1999)].
-        Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12):
+        5140. https://doi.org/10.1063/1.1517052
 
-        Note: The code was supplied by Emiliano Fable, IPP Garching (private communication).
+        Note: The code was supplied by Emiliano Fable, IPP Garching
+        (private communication).
         """
         # Radial points from 0 to 1 seperated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
@@ -1445,7 +1515,8 @@ class SauterBootstrapCurrent:
         zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_plasma_fuel_helium3)
 
         # Calculate total bootstrap current (MA) by summing along profiles
-        # Looping from 2 because _calculate_l31_coefficient() etc should return 0 @ j == 1
+        # Looping from 2 because _calculate_l31_coefficient() etc should return 0
+        # @ j == 1
         radial_elements = np.arange(2, plasma_profile.profile_size)
 
         # Change in localised minor radius to be used as delta term in derivative
@@ -1529,10 +1600,12 @@ class SauterBootstrapCurrent:
     def _coulomb_logarithm_sauter(
         radial_elements: int, tempe: np.ndarray, ne: np.ndarray
     ) -> np.ndarray:
-        """Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap current scaling.
+        """Calculate the Coulomb logarithm used in the arrays for the Sauter bootstrap
+        current scaling.
 
-        This function calculates the Coulomb logarithm, which is valid for e-e collisions (T_e > 0.01 keV)
-        and for e-i collisions (T_e > 0.01*Zeff^2) (Alexander, 9/5/1994).
+        This function calculates the Coulomb logarithm, which is valid for e-e
+        collisions (T_e > 0.01 keV) and for e-i collisions (T_e > 0.01*Zeff^2)
+        (Alexander, 9/5/1994).
 
         Parameters
         ----------
@@ -1551,11 +1624,13 @@ class SauterBootstrapCurrent:
         References
         ----------
         C. A. Ordonez, M. I. Molina;
-        Evaluation of the Coulomb logarithm using cutoff and screened Coulomb interaction potentials.
-        Phys. Plasmas 1 August 1994; 1 (8): 2515-2518. https://doi.org/10.1063/1.870578
+        Evaluation of the Coulomb logarithm using cutoff and screened Coulomb
+        interaction potentials. Phys. Plasmas 1 August 1994; 1 (8): 2515-2518.
+        https://doi.org/10.1063/1.870578
 
-        Y. R. Shen, "Recent advances in nonlinear optics," Reviews of Modern Physics, vol. 48, no. 1,
-        pp. 1-32, Jan. 1976, doi: https://doi.org/10.1103/revmodphys.48.1.
+        Y. R. Shen, "Recent advances in nonlinear optics," Reviews of Modern Physics,
+        vol. 48, no. 1,pp. 1-32, Jan. 1976,
+        doi: https://doi.org/10.1103/revmodphys.48.1.
         """
         return (
             15.9
@@ -1566,7 +1641,8 @@ class SauterBootstrapCurrent:
     def _electron_collisions_sauter(
         self, radial_elements: np.ndarray, tempe: np.ndarray, ne: np.ndarray
     ) -> np.ndarray:
-        """Calculate the frequency of electron-electron collisions used in the arrays for the Sauter bootstrap current scaling.
+        """Calculate the frequency of electron-electron collisions used in the arrays
+        for the Sauter bootstrap current scaling.
 
         Parameters
         ----------
@@ -1603,7 +1679,8 @@ class SauterBootstrapCurrent:
         tempe: np.ndarray,
         ne: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the electron collisionality used in the arrays for the Sauter bootstrap current scaling.
+        """Calculate the electron collisionality used in the arrays for the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -1653,9 +1730,11 @@ class SauterBootstrapCurrent:
         tempi: np.ndarray,
         amain: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the full frequency of ion collisions used in the arrays for the Sauter bootstrap current scaling.
+        """Calculate the full frequency of ion collisions used in the arrays for the
+         Sauter bootstrap current scaling.
 
-        This function calculates the full frequency of ion collisions using the Coulomb logarithm of 15.
+        This function calculates the full frequency of ion collisions using the Coulomb
+        logarithm of 15.
 
         Parameters
         ----------
@@ -1696,7 +1775,8 @@ class SauterBootstrapCurrent:
         zeff: np.ndarray,
         ni: np.ndarray,
     ) -> float:
-        """Calculate the ion collisionality to be used in the Sauter bootstrap current scaling.
+        """Calculate the ion collisionality to be used in the Sauter bootstrap current
+          scaling.
 
         Parameters
         ----------
@@ -1783,19 +1863,21 @@ class SauterBootstrapCurrent:
         Returns
         -------
         float
-            The coefficient scaling grad(ln(ne)) in the Sauter bootstrap current scaling.
+            The coefficient scaling grad(ln(ne)) in the Sauter bootstrap current
+            scaling.
 
         References
         ----------
         O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
         Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
         O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime [Phys. Plasmas 6, 2834 (1999)].
-        Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
+        https://doi.org/10.1063/1.1517052
         """
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
@@ -1852,9 +1934,11 @@ class SauterBootstrapCurrent:
         zeff: np.ndarray,
         sqeps: np.ndarray,
     ) -> float:
-        """L31 & L32 coefficient before Grad(ln(Te)) in the Sauter bootstrap scaling.
+        """L31 & L32 coefficient before Grad(ln(Te)) in the Sauter bootstrap current
+        scaling.
 
-        This function calculates the coefficient scaling grad(ln(Te)) in the Sauter bootstrap current scaling.
+        This function calculates the coefficient scaling grad(ln(Te)) in the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -1888,19 +1972,21 @@ class SauterBootstrapCurrent:
         Returns
         -------
         float
-            The L31 & L32 coefficient scaling grad(ln(Te)) in the Sauter bootstrap current scaling.
+            The L31 & L32 coefficient scaling grad(ln(Te)) in the Sauter bootstrap
+            current scaling.
 
         References
         ----------
         O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime.
         Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
         O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime [Phys. Plasmas 6, 2834 (1999)].
-        Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
+        https://doi.org/10.1063/1.1517052
         """
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
@@ -2039,9 +2125,11 @@ class SauterBootstrapCurrent:
         rho: np.ndarray,
         zeff: np.ndarray,
     ) -> float:
-        """L34, alpha and L31 coefficient before Grad(ln(Ti)) in the Sauter bootstrap scaling.
+        """L34, alpha and L31 coefficient before Grad(ln(Ti)) in the Sauter bootstrap
+        current scaling.
 
-        This function calculates the coefficient scaling grad(ln(Ti)) in the Sauter bootstrap current scaling.
+        This function calculates the coefficient scaling grad(ln(Ti)) in the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -2079,19 +2167,21 @@ class SauterBootstrapCurrent:
         Returns
         -------
         float
-            The L34, alpha and L31 coefficient scaling grad(ln(Ti)) in the Sauter bootstrap current scaling.
+            The L34, alpha and L31 coefficient scaling grad(ln(Ti)) in the Sauter
+            bootstrap current scaling.
 
         References
         ----------
         O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
-        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
+        1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
         O. Sauter, C. Angioni, Y. R. Lin-Liu; Erratum:
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime [Phys. Plasmas 6, 2834 (1999)].
-        Phys. Plasmas 1 December 2002; 9 (12): 5140. https://doi.org/10.1063/1.1517052
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime
+        [Phys. Plasmas 6, 2834 (1999)]. Phys. Plasmas 1 December 2002; 9 (12): 5140.
+        https://doi.org/10.1063/1.1517052
         """
         # Prevents first element being 0
         charge_profile = zeff[radial_elements - 1]
@@ -2214,7 +2304,8 @@ class SauterBootstrapCurrent:
         inverse_q: np.ndarray,
         rho: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the local beta poloidal using only electron profiles for the Sauter bootstrap current scaling.
+        """Calculate the local beta poloidal using only electron profiles for the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -2274,7 +2365,8 @@ class SauterBootstrapCurrent:
         inverse_q: np.ndarray,
         rho: np.ndarray,
     ) -> np.ndarray:
-        """Calculate the local beta poloidal including ion pressure for the Sauter bootstrap current scaling.
+        """Calculate the local beta poloidal including ion pressure for the Sauter
+        bootstrap current scaling.
 
         Parameters
         ----------
@@ -2342,7 +2434,8 @@ class SauterBootstrapCurrent:
     def _trapped_particle_fraction_sauter(
         radial_elements: np.ndarray, triang: float, sqeps: np.ndarray, fit: int = 0
     ) -> np.ndarray:
-        """Calculates the trapped particle fraction to be used in the Sauter bootstrap current scaling.
+        """Calculates the trapped particle fraction to be used in the Sauter bootstrap
+        current scaling.
 
         Parameters
         ----------
@@ -2361,6 +2454,11 @@ class SauterBootstrapCurrent:
         np.ndarray
             Trapped particle fraction.
 
+        Raises
+        ------
+        ProcessValueError
+            If fit is not 0, 1, or 2.
+
         Notes
         -----
         This function calculates the trapped particle fraction at a given radius.
@@ -2368,19 +2466,21 @@ class SauterBootstrapCurrent:
         References
         ----------
         Used in this paper:
-        O. Sauter, C. Angioni, Y. R. Lin-Liu;
-        Neoclassical conductivity and bootstrap current formulas for general axisymmetric equilibria
-        and arbitrary collisionality regime.
-        Phys. Plasmas 1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
 
-        O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and contributors to the E.-J. Workprogramme,
-        "Marginal-limit for neoclassical tearing modes in JET H-mode discharges,"
-        Plasma Physics and Controlled Fusion, vol. 44, no. 9, pp. 1999-2019, Aug. 2002,
+        O. Sauter, C. Angioni, Y. R. Lin-Liu;
+        Neoclassical conductivity and bootstrap current formulas for general
+        axisymmetric equilibria and arbitrary collisionality regime. Phys. Plasmas
+        1 July 1999; 6 (7): 2834-2839. https://doi.org/10.1063/1.873240
+
+        O. Sauter, R. J. Buttery, R. Felton, T. C. Hender, D. F. Howell, and
+        contributors to the E.-J. Workprogramme, "Marginal-limit for neoclassical
+        tearing modes in JET H-mode discharges," Plasma Physics and Controlled Fusion,
+        vol. 44, no. 9, pp. 1999-2019, Aug. 2002,
         doi: https://doi.org/10.1088/0741-3335/44/9/315.
 
-        O. Sauter, Geometric formulas for system codes including the effect of negative triangularity,
-        Fusion Engineering and Design, Volume 112, 2016, Pages 633-645, ISSN 0920-3796,
-        https://doi.org/10.1016/j.fusengdes.2016.04.033.
+        O. Sauter, Geometric formulas for system codes including the effect of negative
+        triangularity, Fusion Engineering and Design, Volume 112, 2016, Pages 633-645,
+        ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2016.04.033.
         """
         # Prevent first element from being zero
         sqeps_reduced = sqeps[radial_elements - 1]
