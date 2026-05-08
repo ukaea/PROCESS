@@ -878,7 +878,7 @@ def plot_sankey(
 
     # --------------------------------------- Label Positioning ---------------------------------------
 
-    # Munipulating the positioning of the branch labels
+    # Manipulating the positioning of the branch labels
     # -ve to left and down; +ve to right and up
     for d in diagrams:
         for y, t in enumerate(d.texts):

@@ -2441,7 +2441,6 @@ class Power(Model):
                 rcoils,
                 "OP ",
             )
-            # MDK Remove this as it leads to confusion between (a) total inductance/n_tf_coils, or (b)
             po.ovarre(self.outfile, "TF coil charging voltage (V)", "(tfcv)", tfcv)
             po.ovarre(self.outfile, "Number of DC circuit breakers", "(ntfbkr)", ntfbkr)
             po.ovarre(self.outfile, "Number of dump resistors", "(ndumpr)", ndumpr)
