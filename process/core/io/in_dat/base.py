@@ -159,7 +159,6 @@ def is_array(name):
     try:
         return "array" in dicts["DICT_VAR_TYPE"][name]
     except KeyError:
-        # print("Warning:", name, "is not in DICT_VAR_TYPE")
         return False
 
 
@@ -684,12 +683,6 @@ def add_parameter(data, parameter_name, parameter_value):
     # If it is already in there change the value to the new value
     else:
         data[parameter_name].value = parameter_value
-
-    # def __delitem__(self, key):
-    #    del self.__dict__[key]
-
-    # def keys(self):
-    #    return self.__dict__.keys()
 
 
 def remove_parameter(data, parameter_name):

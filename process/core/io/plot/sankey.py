@@ -878,9 +878,8 @@ def plot_sankey(
 
     # --------------------------------------- Label Positioning ---------------------------------------
 
-    # Munipulating the positioning of the branch labels
+    # Manipulating the positioning of the branch labels
     # -ve to left and down; +ve to right and up
-    # pos[0] = x-axis; pos[1] = y-axis
     for d in diagrams:
         for y, t in enumerate(d.texts):
             pos = tuple(np.ndarray.tolist(d.tips[y]))

@@ -126,17 +126,6 @@ class Costs(Model):
         )
 
         po.osubhd(self.outfile, "Power Generation Costs :")
-        # TODO: Convert fortran format to Python
-        # if ((annfwbl != annfwbl) or (annfwbl > 1.0e10) or (annfwbl < 0.0e0)) :
-        #     write(outfile,*)'Problem with annfwbl'
-        #     write(outfile,*)'fwallcst=', fwallcst, '  blkcst=', self.data.costs.blkcst
-        #     write(outfile,*)'crffwbl=', crffwbl,   '  fcap0cp=', self.data.costs.fcap0cp
-        #     write(outfile,*)'feffwbl=', feffwbl,   '  fwbllife=', fwbllife
-
-        #       write(outfile,200) #          anncap,coecap, #          annoam,coeoam, #          anndecom,coedecom, #          annfwbl,coefwbl, #          anndiv,coediv, #          anncp,coecp, #          anncdr,coecdr, #          annfuel,coefuel, #          annwst,coewst, #          annfuelt,coefuelt, #          anntot,coe
-
-        # 200   format( #          t76,'Annual Costs, M$       COE, m$/kWh'// #          1x,'Capital Investment',t80,f10.2,10x,f10.2/ #          1x,'Operation & Maintenance',t80,f10.2,10x,f10.2/ #          1x,'Decommissioning Fund',t80,f10.2,10x,f10.2/ #          1x,'Fuel Charge Breakdown'// #          5x,'Blanket & first wall',t72,f10.2,10x,f10.2/ #          5x,'Divertors',t72,f10.2,10x,f10.2/ #          5x,'Centrepost (TART only)',t72,f10.2,10x,f10.2/ #          5x,'Auxiliary Heating',t72,f10.2,10x,f10.2/ #          5x,'Actual Fuel',t72,f10.2,10x,f10.2/ #          5x,'Waste Disposal',t72,f10.2,10x,f10.2/ #          1x,'Total Fuel Cost',t80,f10.2,10x,f10.2// #          1x,'Total Cost',t80,f10.2,10x,f10.2 )
-
         if self.data.costs.ifueltyp == 1:
             po.oshead(self.outfile, "Replaceable Components Direct Capital Cost")
             po.ovarrf(
@@ -386,16 +375,6 @@ class Costs(Model):
             self.data.costs.c2214,
         )
         po.ocosts(self.outfile, "(c2215)", "Divertor cost (M$)", self.data.costs.c2215)
-        # TODO: Convert fortran format to Python
-        #     if (self.data.costs.ifueltyp == 1) :
-        #         po.oblnkl(self.outfile)
-        #         write(self.outfile,20)
-        #     20     format(t2,             'First wall, total blanket and divertor direct costs',/,             t2,'are zero as they are assumed to be fuel costs.')
-        #     elif  (self.data.costs.ifueltyp == 2) :
-        #         po.oblnkl(self.outfile)
-        #         write(self.outfile,31)
-        # 21     format(t2,             'Initial First wall, total blanket and divertor direct costs',/,             t2,'are in capital and replacemnet are in cost of electricity')
-
         po.oblnkl(self.outfile)
         po.ocosts(
             self.outfile,
@@ -511,16 +490,6 @@ class Costs(Model):
                 "Vacuum vessel assembly cost (M$)",
                 self.data.costs.c2223,
             )
-            # TODO: Convert fortran format to Python
-            #     if ((physics_variables.itart == 1)and(self.data.costs.ifueltyp == 1)) :
-            #         po.oblnkl(self.outfile)
-            #         write(self.outfile,30)
-            # 30        format(t2,                'Centrepost direct cost is zero, as it ',                'is assumed to be a fuel cost.')
-            #     elif  ((physics_variables.itart == 1)and(self.data.costs.ifueltyp == 2)) :
-            #         po.oblnkl(self.outfile)
-            #         write(self.outfile,31)
-            # 31        format(t2,                'Initial centrepost direct cost in included in capital ',                'cost and replacements are assumed to be a fuel cost.')
-
             po.oblnkl(self.outfile)
             po.ocosts(
                 self.outfile,
@@ -2917,32 +2886,6 @@ class Costs(Model):
             self.data.costs.ucoam[self.data.costs.lsa - 1]
             * sqrt_p_plant_electric_net_mw_1200
         )
-
-        #  Additional cost due to pulsed reactor thermal storage
-        #  See F/MPE/MOD/CAG/PROCESS/PULSE/0008
-        #
-        #      if (i_pulsed_plant.eq.1) :
-        #         if (istore.eq.1) :
-        #            annoam1 = 51.0e0
-        #         elif  (istore.eq.2) :
-        #            annoam1 = 22.2e0
-        #         else:
-        #            continue
-        #
-        #
-        #  Scale with net electric power
-        #
-        #         annoam1 = annoam1 * heat_transport_variables.p_plant_electric_net_mw/1200.0e0
-        #
-        #  It is necessary to convert from 1992 pounds to 1990 dollars
-        #  Reasonable guess for the exchange rate + inflation factor
-        #  inflation = 5% per annum; exchange rate = 1.5 dollars per pound
-        #
-        #         annoam1 = annoam1 * 1.36e0
-        #
-        #         annoam = annoam + annoam1
-        #
-        #
 
         #  Cost of electricity due to operation and maintenance
 
