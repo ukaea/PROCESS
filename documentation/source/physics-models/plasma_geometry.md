@@ -252,7 +252,8 @@ $$
   $$
 
 ---------------------------------------------------------------------
-- `i_plasma_geometry = 12` -- The elongation is calculated directly from the aspect ratio based on a scaling for the maximum contrallable elongation in a spherical tokamak [^5] and asssuming a constant $l_i(3) and a fixed $\langle \beta_{\mathrm{p}} \rangle = 0.5$. The triangularity is a user input.
+
+- `i_plasma_geometry = 12` -- The elongation is calculated directly from the aspect ratio based on a scaling for the maximum contrallable elongation in a spherical tokamak [^5] and asssuming a constant $l_i(3)$ and a fixed $\langle \beta_{\mathrm{p}} \rangle = 0.5$. The triangularity is a user input.
     $$
     \kappa = 2.93 \left(\frac{1.8}{A}\right)^{1.4}
     $$
