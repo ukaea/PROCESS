@@ -4,7 +4,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    blanket_library,
     build_variables,
     divertor_variables,
     physics_variables,
@@ -28,7 +27,7 @@ class Shield(Model):
         self.output_shld_areas_and_volumes()
 
     def run(self):
-        blanket_library.dz_shld_half = self.calculate_shield_half_height(
+        self.data.blanket.dz_shld_half = self.calculate_shield_half_height(
             z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
             dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
             dz_divertor=divertor_variables.dz_divertor,
@@ -59,12 +58,12 @@ class Shield(Model):
                 dr_fw_outboard=build_variables.dr_fw_outboard,
                 dr_blkt_inboard=build_variables.dr_blkt_inboard,
                 dr_blkt_outboard=build_variables.dr_blkt_outboard,
-                dz_shld_half=blanket_library.dz_shld_half,
+                dz_shld_half=self.data.blanket.dz_shld_half,
             )
 
             (
-                blanket_library.vol_shld_inboard,
-                blanket_library.vol_shld_outboard,
+                self.data.blanket.vol_shld_inboard,
+                self.data.blanket.vol_shld_outboard,
                 self.data.fwbs.vol_shld_total,
             ) = self.calculate_dshaped_shield_volumes(
                 r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
@@ -76,7 +75,7 @@ class Shield(Model):
                 dr_fw_outboard=build_variables.dr_fw_outboard,
                 dr_blkt_inboard=build_variables.dr_blkt_inboard,
                 dr_blkt_outboard=build_variables.dr_blkt_outboard,
-                dz_shld_half=blanket_library.dz_shld_half,
+                dz_shld_half=self.data.blanket.dz_shld_half,
                 dr_shld_outboard=build_variables.dr_shld_outboard,
                 dz_shld_upper=build_variables.dz_shld_upper,
             )
@@ -93,13 +92,13 @@ class Shield(Model):
                 triang=physics_variables.triang,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
                 rminor=physics_variables.rminor,
-                dz_shld_half=blanket_library.dz_shld_half,
+                dz_shld_half=self.data.blanket.dz_shld_half,
                 dr_shld_outboard=build_variables.dr_shld_outboard,
             )
 
             (
-                blanket_library.vol_shld_inboard,
-                blanket_library.vol_shld_outboard,
+                self.data.blanket.vol_shld_inboard,
+                self.data.blanket.vol_shld_outboard,
                 self.data.fwbs.vol_shld_total,
             ) = self.calculate_elliptical_shield_volumes(
                 r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
@@ -108,7 +107,7 @@ class Shield(Model):
                 triang=physics_variables.triang,
                 dr_shld_inboard=build_variables.dr_shld_inboard,
                 rminor=physics_variables.rminor,
-                dz_shld_half=blanket_library.dz_shld_half,
+                dz_shld_half=self.data.blanket.dz_shld_half,
                 dr_shld_outboard=build_variables.dr_shld_outboard,
                 dz_shld_upper=build_variables.dz_shld_upper,
             )
@@ -125,14 +124,14 @@ class Shield(Model):
             + build_variables.a_shld_outboard_surface
         )
 
-        blanket_library.vol_shld_inboard = (
-            self.data.fwbs.fvolsi * blanket_library.vol_shld_inboard
+        self.data.blanket.vol_shld_inboard = (
+            self.data.fwbs.fvolsi * self.data.blanket.vol_shld_inboard
         )
-        blanket_library.vol_shld_outboard = (
-            self.data.fwbs.fvolso * blanket_library.vol_shld_outboard
+        self.data.blanket.vol_shld_outboard = (
+            self.data.fwbs.fvolso * self.data.blanket.vol_shld_outboard
         )
         self.data.fwbs.vol_shld_total = (
-            blanket_library.vol_shld_inboard + blanket_library.vol_shld_outboard
+            self.data.blanket.vol_shld_inboard + self.data.blanket.vol_shld_outboard
         )
 
     @staticmethod
@@ -459,14 +458,14 @@ class Shield(Model):
             self.outfile,
             "Volume of inboard shield (m^3)",
             "(vol_shld_inboard)",
-            blanket_library.vol_shld_inboard,
+            self.data.blanket.vol_shld_inboard,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Volume of outboard shield (m^3)",
             "(vol_shld_outboard)",
-            blanket_library.vol_shld_outboard,
+            self.data.blanket.vol_shld_outboard,
             "OP ",
         )
         po.ovarrf(

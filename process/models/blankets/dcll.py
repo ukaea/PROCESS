@@ -2,7 +2,6 @@ from process.core import constants
 from process.core import (
     process_output as po,
 )
-from process.data_structure import blanket_library as blanket_variables
 from process.data_structure import (
     build_variables,
     current_drive_variables,
@@ -110,13 +109,13 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         self.set_blanket_module_geometry()
 
-        blanket_variables.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
+        self.data.blanket.len_blkt_inboard_segment_toroidal = self.calculate_blanket_inboard_module_geometry(
             n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
             dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
         )
-        blanket_variables.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
+        self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,

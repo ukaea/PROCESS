@@ -8,7 +8,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    blanket_library,
     build_variables,
     constraint_variables,
     divertor_variables,
@@ -98,8 +97,8 @@ class FirstWall(Model):
         )
 
         (
-            blanket_library.n_fw_inboard_channels,
-            blanket_library.n_fw_outboard_channels,
+            self.data.blanket.n_fw_inboard_channels,
+            self.data.blanket.n_fw_outboard_channels,
         ) = self.calculate_total_fw_channels(
             self.data.first_wall.a_fw_inboard,
             self.data.first_wall.a_fw_outboard,
@@ -744,14 +743,14 @@ class FirstWall(Model):
             self.outfile,
             "Number of inboard first wall cooling channels",
             "(n_fw_inboard_channels)",
-            blanket_library.n_fw_inboard_channels,
+            self.data.blanket.n_fw_inboard_channels,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Number of outboard first wall cooling channels",
             "(n_fw_outboard_channels)",
-            blanket_library.n_fw_outboard_channels,
+            self.data.blanket.n_fw_outboard_channels,
             "OP ",
         )
 

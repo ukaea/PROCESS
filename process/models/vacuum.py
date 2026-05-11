@@ -7,7 +7,6 @@ from process.core import constants, process_output
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    blanket_library,
     build_variables,
     divertor_variables,
     physics_variables,
@@ -724,7 +723,7 @@ class VacuumVessel(Model):
         self.outfile = constants.NOUT
 
     def run(self):
-        blanket_library.dz_vv_half = self.calculate_vessel_half_height(
+        self.data.blanket.dz_vv_half = self.calculate_vessel_half_height(
             z_tf_inside_half=build_variables.z_tf_inside_half,
             dz_shld_vv_gap=build_variables.dz_shld_vv_gap,
             dz_vv_lower=build_variables.dz_vv_lower,
@@ -743,13 +742,13 @@ class VacuumVessel(Model):
             or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
-                blanket_library.vol_vv_inboard,
-                blanket_library.vol_vv_outboard,
+                self.data.blanket.vol_vv_inboard,
+                self.data.blanket.vol_vv_outboard,
                 self.data.fwbs.vol_vv,
             ) = self.calculate_dshaped_vessel_volumes(
                 r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
                 r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
-                dz_vv_half=blanket_library.dz_vv_half,
+                dz_vv_half=self.data.blanket.dz_vv_half,
                 dr_vv_inboard=build_variables.dr_vv_inboard,
                 dr_vv_outboard=build_variables.dr_vv_outboard,
                 dz_vv_upper=build_variables.dz_vv_upper,
@@ -757,8 +756,8 @@ class VacuumVessel(Model):
             )
         else:
             (
-                blanket_library.vol_vv_inboard,
-                blanket_library.vol_vv_outboard,
+                self.data.blanket.vol_vv_inboard,
+                self.data.blanket.vol_vv_outboard,
                 self.data.fwbs.vol_vv,
             ) = self.calculate_elliptical_vessel_volumes(
                 rmajor=physics_variables.rmajor,
@@ -766,7 +765,7 @@ class VacuumVessel(Model):
                 triang=physics_variables.triang,
                 r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
                 r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
-                dz_vv_half=blanket_library.dz_vv_half,
+                dz_vv_half=self.data.blanket.dz_vv_half,
                 dr_vv_inboard=build_variables.dr_vv_inboard,
                 dr_vv_outboard=build_variables.dr_vv_outboard,
                 dz_vv_upper=build_variables.dz_vv_upper,
@@ -958,14 +957,14 @@ class VacuumVessel(Model):
             self.outfile,
             "Volume of inboard vacuum vessel (m^3)",
             "(vol_vv_inboard)",
-            blanket_library.vol_vv_inboard,
+            self.data.blanket.vol_vv_inboard,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Volume of outboard vacuum vessel (m^3)",
             "(vol_vv_outboard)",
-            blanket_library.vol_vv_outboard,
+            self.data.blanket.vol_vv_outboard,
             "OP ",
         )
         po.ovarrf(

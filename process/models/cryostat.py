@@ -4,7 +4,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    blanket_library,
     build_variables,
     buildings_variables,
     pfcoil_variables,
@@ -39,7 +38,7 @@ class Cryostat(Model):
 
         # Clearance between uppermost PF coil and cryostat lid [m].
         # Scaling from ITER by M. Kovari
-        blanket_library.dz_pf_cryostat = (
+        self.data.blanket.dz_pf_cryostat = (
             build_variables.f_z_cryostat
             * (2.0 * self.data.fwbs.r_cryostat_inboard)
             / 28.440
@@ -48,7 +47,7 @@ class Cryostat(Model):
         # Half-height of cryostat [m]
         # Take height of furthest PF coil and add clearance
         self.data.fwbs.z_cryostat_half_inside = (
-            np.max(pfcoil_variables.z_pf_coil_upper) + blanket_library.dz_pf_cryostat
+            np.max(pfcoil_variables.z_pf_coil_upper) + self.data.blanket.dz_pf_cryostat
         )
 
         # Vertical clearance between TF coil and cryostat (m)
@@ -109,7 +108,7 @@ class Cryostat(Model):
             self.outfile,
             "Vertical clearance from highest PF coil to cryostat (m)",
             "(dz_pf_cryostat)",
-            blanket_library.dz_pf_cryostat,
+            self.data.blanket.dz_pf_cryostat,
             "OP ",
         )
         po.ovarrf(

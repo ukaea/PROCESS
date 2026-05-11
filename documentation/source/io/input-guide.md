@@ -9,7 +9,7 @@ with an error message. The last line of the output file `OUT.DAT` may give an
 indication of where in the input file the problem lies.
 
 !!! Info "Variable Descriptions"
-    A full list of inputs variables is given in the PROCESS data structure API documentation [here](../../source/reference/process/data_structure/blanket_library).
+    A full list of inputs variables is given in the PROCESS data structure API documentation [here](../../source/reference/process/data_structure/blanket_variables).
 
 ## File Naming Convention
 
@@ -152,7 +152,7 @@ one can add a `*` to the beginning of the line, as below:
 ```
 
 !!! Info "Variable Descriptions"  
-    A full list of inputs variables is given in the PROCESS data structure API documentation [here](../../source/reference/process/data_structure/blanket_library).
+    A full list of inputs variables is given in the PROCESS data structure API documentation [here](../../source/reference/process/data_structure/blanket_variables).
 
 ## Scan
 

@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    blanket_library,
     build_variables,
     buildings_variables,
     pfcoil_variables,
@@ -201,7 +200,9 @@ def test_external_cryo_geometry(
         buildings_variables, "dz_tf_cryostat", externalcryogeometryparam.dz_tf_cryostat
     )
     monkeypatch.setattr(
-        blanket_library, "dz_pf_cryostat", externalcryogeometryparam.dz_pf_cryostat
+        cryostat_fixture.data.blanket,
+        "dz_pf_cryostat",
+        externalcryogeometryparam.dz_pf_cryostat,
     )
 
     cryostat_fixture.external_cryo_geometry()
@@ -221,6 +222,6 @@ def test_external_cryo_geometry(
     assert buildings_variables.dz_tf_cryostat == pytest.approx(
         externalcryogeometryparam.expected_dz_tf_cryostat
     )
-    assert blanket_library.dz_pf_cryostat == pytest.approx(
+    assert cryostat_fixture.data.blanket.dz_pf_cryostat == pytest.approx(
         externalcryogeometryparam.expected_dz_pf_cryostat
     )
