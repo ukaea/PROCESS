@@ -53,7 +53,6 @@ from process.data_structure.superconducting_tf_coil_variables import (
     init_superconducting_tf_coil_variables,
 )
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
-from process.data_structure.times_variables import init_times_variables
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
@@ -90,7 +89,7 @@ def init_process(data: DataStructure):
     set_device_type()
 
     # Initialise the Stellarator
-    st_init()
+    st_init(data)
 
     # Check input data for errors/ambiguities
     check_process(inputs, data)
@@ -279,7 +278,6 @@ def init_all_module_vars():
     init_superconducting_tf_coil_variables()
     init_stellarator_variables()
     init_tfcoil_variables()
-    init_times_variables()
     constants.init_constants()
     init_current_drive_variables()
     init_primary_pumping_variables()

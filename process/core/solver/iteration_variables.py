@@ -60,9 +60,7 @@ ITERATION_VARIABLES = {
     12: IterationVariable("oacdcp", data_structure.tfcoil_variables, 1.0e5, 1.50e8),
     13: IterationVariable("dr_tf_inboard", data_structure.build_variables, 0.1, 5.0),
     16: IterationVariable("dr_cs", data_structure.build_variables, 0.01, 10.00),
-    17: IterationVariable(
-        "t_plant_pulse_dwell", data_structure.times_variables, 0.1, 1.0e8
-    ),
+    17: IterationVariable("t_plant_pulse_dwell", "times", 0.1, 1.0e8),
     18: IterationVariable("q95", data_structure.physics_variables, 2.0, 50.00),
     19: IterationVariable(
         "e_beam_kev", data_structure.current_drive_variables, 1.0, 1.0e6
@@ -100,7 +98,7 @@ ITERATION_VARIABLES = {
     ),
     65: IterationVariable(
         "t_plant_pulse_plasma_current_ramp_up",
-        data_structure.times_variables,
+        "times",
         0.1,
         1.0e3,
     ),

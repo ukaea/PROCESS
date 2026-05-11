@@ -1,3 +1,4 @@
+from process.core.model import DataStructure
 from process.data_structure import (
     build_variables,
     current_drive_variables,
@@ -5,11 +6,10 @@ from process.data_structure import (
     pfcoil_variables,
     physics_variables,
     stellarator_variables,
-    times_variables,
 )
 
 
-def st_init():
+def st_init(data: DataStructure):
     """Routine to initialise the variables relevant to stellarators
 
     This routine initialises the variables relevant to stellarators.
@@ -46,28 +46,28 @@ def st_init():
 
     #  Times for different phases
 
-    times_variables.t_plant_pulse_coil_precharge = 0.0
-    times_variables.t_plant_pulse_plasma_current_ramp_up = 0.0
-    times_variables.t_plant_pulse_burn = 3.15576e7  # one year
-    times_variables.t_plant_pulse_plasma_current_ramp_down = 0.0
-    times_variables.t_plant_pulse_plasma_present = (
-        times_variables.t_plant_pulse_plasma_current_ramp_up
-        + times_variables.t_plant_pulse_fusion_ramp
-        + times_variables.t_plant_pulse_burn
-        + times_variables.t_plant_pulse_plasma_current_ramp_down
+    data.times.t_plant_pulse_coil_precharge = 0.0
+    data.times.t_plant_pulse_plasma_current_ramp_up = 0.0
+    data.times.t_plant_pulse_burn = 3.15576e7  # one year
+    data.times.t_plant_pulse_plasma_current_ramp_down = 0.0
+    data.times.t_plant_pulse_plasma_present = (
+        data.times.t_plant_pulse_plasma_current_ramp_up
+        + data.times.t_plant_pulse_fusion_ramp
+        + data.times.t_plant_pulse_burn
+        + data.times.t_plant_pulse_plasma_current_ramp_down
     )
-    times_variables.t_plant_pulse_no_burn = (
-        times_variables.t_plant_pulse_coil_precharge
-        + times_variables.t_plant_pulse_plasma_current_ramp_up
-        + times_variables.t_plant_pulse_plasma_current_ramp_down
-        + times_variables.t_plant_pulse_dwell
-        + times_variables.t_plant_pulse_fusion_ramp
+    data.times.t_plant_pulse_no_burn = (
+        data.times.t_plant_pulse_coil_precharge
+        + data.times.t_plant_pulse_plasma_current_ramp_up
+        + data.times.t_plant_pulse_plasma_current_ramp_down
+        + data.times.t_plant_pulse_dwell
+        + data.times.t_plant_pulse_fusion_ramp
     )
-    times_variables.t_plant_pulse_total = (
-        times_variables.t_plant_pulse_coil_precharge
-        + times_variables.t_plant_pulse_plasma_current_ramp_up
-        + times_variables.t_plant_pulse_fusion_ramp
-        + times_variables.t_plant_pulse_burn
-        + times_variables.t_plant_pulse_plasma_current_ramp_down
-        + times_variables.t_plant_pulse_dwell
+    data.times.t_plant_pulse_total = (
+        data.times.t_plant_pulse_coil_precharge
+        + data.times.t_plant_pulse_plasma_current_ramp_up
+        + data.times.t_plant_pulse_fusion_ramp
+        + data.times.t_plant_pulse_burn
+        + data.times.t_plant_pulse_plasma_current_ramp_down
+        + data.times.t_plant_pulse_dwell
     )

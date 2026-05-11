@@ -16,7 +16,6 @@ from process.data_structure import (
     physics_variables,
     power_variables,
     tfcoil_variables,
-    times_variables,
 )
 from process.data_structure import primary_pumping_variables as ppv
 
@@ -1864,11 +1863,11 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     monkeypatch.setattr(numerics, "ioptimz", pfpwrparam.ioptimz)
 
     monkeypatch.setattr(
-        times_variables, "t_pulse_cumulative", pfpwrparam.t_pulse_cumulative
+        power.data.times, "t_pulse_cumulative", pfpwrparam.t_pulse_cumulative
     )
 
     monkeypatch.setattr(
-        times_variables,
+        power.data.times,
         "t_plant_pulse_plasma_current_ramp_up",
         pfpwrparam.t_plant_pulse_plasma_current_ramp_up,
     )

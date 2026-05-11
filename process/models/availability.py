@@ -12,7 +12,6 @@ from process.data_structure import divertor_variables as dv
 from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
-from process.data_structure import times_variables as tv
 from process.models.tfcoil.base import TFConductorModel
 
 logger = logging.getLogger(__name__)
@@ -152,7 +151,7 @@ class Availability(Model):
         # Plant Availability (i_plant_availability=0,1)
 
         # Calculate the number of fusion cycles for a given blanket lifetime
-        pulse_fpy = tv.t_plant_pulse_total / YEAR_SECONDS
+        pulse_fpy = self.data.times.t_plant_pulse_total / YEAR_SECONDS
         self.data.costs.bktcycles = (self.data.fwbs.life_blkt_fpy / pulse_fpy) + 1
 
         # if i_plant_availability = 0 use input value for f_t_plant_available
@@ -197,7 +196,7 @@ class Availability(Model):
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle
         self.data.costs.cpfact = self.data.costs.f_t_plant_available * (
-            tv.t_plant_pulse_burn / tv.t_plant_pulse_total
+            self.data.times.t_plant_pulse_burn / self.data.times.t_plant_pulse_total
         )
 
         # Modify lifetimes to take account of the availability
@@ -435,7 +434,7 @@ class Availability(Model):
 
         # Capacity factor
         self.data.costs.cpfact = self.data.costs.f_t_plant_available * (
-            tv.t_plant_pulse_burn / tv.t_plant_pulse_total
+            self.data.times.t_plant_pulse_burn / self.data.times.t_plant_pulse_total
         )
 
         # Output
@@ -756,13 +755,22 @@ class Availability(Model):
         """
         # Calculate cycle limit in terms of days
         # Number of cycles between planned blanket replacements, N
-        n = self.data.costs.life_div_fpy * YEAR_SECONDS / tv.t_plant_pulse_total
+        n = (
+            self.data.costs.life_div_fpy
+            * YEAR_SECONDS
+            / self.data.times.t_plant_pulse_total
+        )
 
         # The probability of failure in one pulse cycle (before the reference cycle life)
-        pf = (self.data.costs.div_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
+        pf = (
+            self.data.costs.div_prob_fail / DAY_SECONDS
+        ) * self.data.times.t_plant_pulse_total
         a0 = (
             1.0e0
-            - pf * self.data.costs.div_umain_time * YEAR_SECONDS / tv.t_plant_pulse_total
+            - pf
+            * self.data.costs.div_umain_time
+            * YEAR_SECONDS
+            / self.data.times.t_plant_pulse_total
         )
 
         # Integrating the instantaneous availability gives the mean
@@ -860,17 +868,23 @@ class Availability(Model):
         # Calculate cycle limit in terms of days
 
         # Number of cycles between planned blanket replacements, N
-        n = self.data.fwbs.life_blkt_fpy * YEAR_SECONDS / tv.t_plant_pulse_total
+        n = (
+            self.data.fwbs.life_blkt_fpy
+            * YEAR_SECONDS
+            / self.data.times.t_plant_pulse_total
+        )
 
         # The probability of failure in one pulse cycle
         # (before the reference cycle life)
-        pf = (self.data.costs.fwbs_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
+        pf = (
+            self.data.costs.fwbs_prob_fail / DAY_SECONDS
+        ) * self.data.times.t_plant_pulse_total
         a0 = (
             1.0e0
             - pf
             * self.data.costs.fwbs_umain_time
             * YEAR_SECONDS
-            / tv.t_plant_pulse_total
+            / self.data.times.t_plant_pulse_total
         )
 
         if self.data.costs.fwbs_nu <= self.data.costs.fwbs_nref:
@@ -1281,7 +1295,7 @@ class Availability(Model):
 
         # Capacity factor
         self.data.costs.cpfact = self.data.costs.f_t_plant_available * (
-            tv.t_plant_pulse_burn / tv.t_plant_pulse_total
+            self.data.times.t_plant_pulse_burn / self.data.times.t_plant_pulse_total
         )
 
         if output:

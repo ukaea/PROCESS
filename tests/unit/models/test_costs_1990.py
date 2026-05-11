@@ -18,7 +18,6 @@ from process.data_structure import (
     physics_variables,
     pulse_variables,
     tfcoil_variables,
-    times_variables,
 )
 
 
@@ -3792,7 +3791,7 @@ def test_acc2253(acc2253param, monkeypatch, costs):
     monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
 
     monkeypatch.setattr(
-        times_variables, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
+        costs.data.times, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
     )
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2253param.c22)
@@ -5526,7 +5525,7 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs):
     monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
 
     monkeypatch.setattr(
-        times_variables, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
+        costs.data.times, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
     )
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2253param.c22)
@@ -5935,11 +5934,11 @@ def test_coelc(coelcparam, monkeypatch, costs):
     )
 
     monkeypatch.setattr(
-        times_variables, "t_plant_pulse_total", coelcparam.t_plant_pulse_total
+        costs.data.times, "t_plant_pulse_total", coelcparam.t_plant_pulse_total
     )
 
     monkeypatch.setattr(
-        times_variables, "t_plant_pulse_burn", coelcparam.t_plant_pulse_burn
+        costs.data.times, "t_plant_pulse_burn", coelcparam.t_plant_pulse_burn
     )
 
     costs.coelc()

@@ -18,7 +18,6 @@ from process.data_structure import (
     physics_variables,
     pulse_variables,
     tfcoil_variables,
-    times_variables,
 )
 from process.models.tfcoil.base import TFConductorModel
 
@@ -2666,7 +2665,7 @@ class Costs(Model):
                 self.data.costs.c2253 = (
                     self.data.costs.ucblss
                     * (heat_transport_variables.p_plant_primary_heat_mw * 1.0e6)
-                    * times_variables.t_plant_pulse_no_burn
+                    * self.data.times.t_plant_pulse_no_burn
                     / (shcss * pulse_variables.dtstor)
                 )
 
@@ -2716,8 +2715,8 @@ class Costs(Model):
                 * heat_transport_variables.p_plant_electric_net_mw
                 * (24.0e0 * constants.N_DAY_YEAR)
                 * self.data.costs.f_t_plant_available
-                * times_variables.t_plant_pulse_burn
-                / times_variables.t_plant_pulse_total
+                * self.data.times.t_plant_pulse_burn
+                / self.data.times.t_plant_pulse_total
             )
 
         #  Costs due to reactor plant

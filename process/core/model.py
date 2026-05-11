@@ -7,7 +7,8 @@ from process.data_structure.cost_variables import CostData
 from process.data_structure.cs_fatigue_variables import CSFatigueData
 from process.data_structure.first_wall_variables import FirstWallData
 from process.data_structure.fwbs_variables import FWBSData
-from process.data_structure.structure_variables import StructureVariables
+from process.data_structure.structure_variables import StructureData
+from process.data_structure.times_variables import TimesData
 from process.data_structure.vacuum_variables import VacuumData
 from process.data_structure.water_usage_variables import WaterUseData
 
@@ -24,7 +25,8 @@ class DataStructure:
     first_wall: FirstWallData = initialise_later
     fwbs: FWBSData = initialise_later
     blanket: BlanketData = initialise_later
-    structure: StructureVariables = initialise_later
+    structure: StructureData = initialise_later
+    times: TimesData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

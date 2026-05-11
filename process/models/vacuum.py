@@ -11,7 +11,6 @@ from process.data_structure import (
     divertor_variables,
     physics_variables,
     tfcoil_variables,
-    times_variables,
 )
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import dshellvol, eshellvol
@@ -86,7 +85,7 @@ class Vacuum(Model):
                 - build_variables.dr_shld_vv_gap_inboard
                 - build_variables.dr_vv_inboard,
                 tfcoil_variables.n_tf_coils,
-                times_variables.t_plant_pulse_dwell,
+                self.data.times.t_plant_pulse_dwell,
                 physics_variables.nd_plasma_electrons_vol_avg,
                 divertor_variables.n_divertors,
                 qtorus,
@@ -140,7 +139,7 @@ class Vacuum(Model):
             self.data.vacuum.outgasfactor
             * wallarea
             / self.data.vacuum.pres_vv_chamber_base
-        ) * times_variables.t_plant_pulse_dwell ** (-self.data.vacuum.outgasindex)
+        ) * self.data.times.t_plant_pulse_dwell ** (-self.data.vacuum.outgasindex)
         # Number of pumps required for pump-down
         npumpdown = pumpdownspeed / pumpspeed
 
@@ -187,7 +186,7 @@ class Vacuum(Model):
                 self.outfile,
                 "Dwell time",
                 "(t_plant_pulse_dwell)",
-                times_variables.t_plant_pulse_dwell,
+                self.data.times.t_plant_pulse_dwell,
             )
             process_output.ovarre(
                 self.outfile,
@@ -354,9 +353,9 @@ class Vacuum(Model):
 
         #  dwell pumping options
         if (self.data.vacuum.i_vac_pump_dwell == 1) or (t_plant_pulse_dwell == 0):
-            tpump = times_variables.t_plant_pulse_coil_precharge
+            tpump = self.data.times.t_plant_pulse_coil_precharge
         elif self.data.vacuum.i_vac_pump_dwell == 2:
-            tpump = t_plant_pulse_dwell + times_variables.t_plant_pulse_coil_precharge
+            tpump = t_plant_pulse_dwell + self.data.times.t_plant_pulse_coil_precharge
         else:
             tpump = t_plant_pulse_dwell
 
@@ -586,7 +585,7 @@ class Vacuum(Model):
                 self.outfile,
                 "CS ramp-up time burns (s)",
                 "(t_plant_pulse_coil_precharge.)",
-                times_variables.t_plant_pulse_coil_precharge,
+                self.data.times.t_plant_pulse_coil_precharge,
             )
             process_output.ovarre(
                 self.outfile,

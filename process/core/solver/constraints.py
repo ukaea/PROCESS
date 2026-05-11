@@ -528,14 +528,14 @@ def constraint_equation_12(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(13, "sec", ">=")
-def constraint_equation_13(constraint_registration, _data):
+def constraint_equation_13(constraint_registration, data):
     """Equation for burn time lower limit
 
     t_plant_pulse_burn: burn time (s) (calculated if i_pulsed_plant=1)
     t_burn_min: minimum burn time (s)
     """
     return geq(
-        data_structure.times_variables.t_plant_pulse_burn,
+        data.times.t_plant_pulse_burn,
         data_structure.constraint_variables.t_burn_min,
         constraint_registration,
     )
@@ -1049,21 +1049,21 @@ def constraint_equation_40(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(41, "sec", ">=")
-def constraint_equation_41(constraint_registration, _data):
+def constraint_equation_41(constraint_registration, data):
     """Equation for plasma current ramp-up time lower limit
 
     t_plant_pulse_plasma_current_ramp_up: plasma current ramp-up time for current initiation (s)
     t_current_ramp_up_min: minimum plasma current ramp-up time (s)
     """
     return geq(
-        data_structure.times_variables.t_plant_pulse_plasma_current_ramp_up,
+        data.times.t_plant_pulse_plasma_current_ramp_up,
         data_structure.constraint_variables.t_current_ramp_up_min,
         constraint_registration,
     )
 
 
 @ConstraintManager.register_constraint(42, "sec", ">=")
-def constraint_equation_42(constraint_registration, _data):
+def constraint_equation_42(constraint_registration, data):
     """Equation for cycle time lower limit
 
     t_plant_pulse_total: full cycle time (s)
@@ -1075,7 +1075,7 @@ def constraint_equation_42(constraint_registration, _data):
         )
 
     return geq(
-        data_structure.times_variables.t_plant_pulse_total,
+        data.times.t_plant_pulse_total,
         data_structure.constraint_variables.t_cycle_min,
         constraint_registration,
     )

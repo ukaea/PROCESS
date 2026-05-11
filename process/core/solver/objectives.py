@@ -9,7 +9,6 @@ from process.data_structure import (
     pf_power_variables,
     physics_variables,
     tfcoil_variables,
-    times_variables,
 )
 
 OBJECTIVE_NAMES = {
@@ -99,14 +98,14 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         case 11:
             objective_metric = current_drive_variables.p_hcd_injected_total_mw
         case 14:
-            objective_metric = times_variables.t_plant_pulse_burn / 2.0e4
+            objective_metric = data.times.t_plant_pulse_burn / 2.0e4
         case 15:
             if data.costs.i_plant_availability != 1:
                 raise ProcessValueError("minmax=15 requires i_plant_availability=1")
             objective_metric = data.costs.f_t_plant_available
         case 16:
             objective_metric = 0.95 * (physics_variables.rmajor / 9.0) - 0.05 * (
-                times_variables.t_plant_pulse_burn / 7200.0
+                data.times.t_plant_pulse_burn / 7200.0
             )
         case 17:
             objective_metric = heat_transport_variables.p_plant_electric_net_mw / 500.0
@@ -115,6 +114,6 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         case 19:
             objective_metric = -0.5 * (
                 current_drive_variables.big_q_plasma / 20.0
-            ) - 0.5 * (times_variables.t_plant_pulse_burn / 7200.0)
+            ) - 0.5 * (data.times.t_plant_pulse_burn / 7200.0)
 
     return objective_sign * objective_metric
