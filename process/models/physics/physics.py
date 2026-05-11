@@ -25,7 +25,6 @@ from process.data_structure import (
     numerics,
     physics_variables,
     pulse_variables,
-    reinke_variables,
     stellarator_variables,
 )
 from process.models.physics import impurity_radiation
@@ -1037,7 +1036,7 @@ class Physics(Model):
             po.write(
                 self.outfile,
                 (
-                    f"reinke t and fz, physics = {physics_variables.temp_plasma_separatrix_kev} , {reinke_variables.fzmin}"
+                    f"reinke t and fz, physics = {physics_variables.temp_plasma_separatrix_kev} , {self.data.reinke.fzmin}"
                 ),
             )
             fgw = (
@@ -1054,10 +1053,10 @@ class Physics(Model):
                 physics_variables.eps,
                 fgw,
                 physics_variables.kappa,
-                reinke_variables.lhat,
+                self.data.reinke.lhat,
             )
 
-            if reinke_variables.fzmin >= 1.0e0:
+            if self.data.reinke.fzmin >= 1.0e0:
                 logger.error(
                     "REINKE IMPURITY MODEL: fzmin is greater than or equal to 1.0, this"
                     " is at least notable"
@@ -1066,9 +1065,9 @@ class Physics(Model):
             po.write(
                 self.outfile,
                 (
-                    f" 'fzactual, frac, reinke_variables.impvardiv = {reinke_variables.fzactual},"
-                    f" {impurity_radiation_module.f_nd_impurity_electron_array(reinke_variables.impvardiv)},"
-                    f" {reinke_variables.impvardiv}"
+                    f" 'fzactual, frac, impvardiv = {self.data.reinke.fzactual},"
+                    f" {impurity_radiation_module.f_nd_impurity_electron_array(self.data.reinke.impvardiv)},"
+                    f" {self.data.reinke.impvardiv}"
                 ),
             )
 
@@ -2336,20 +2335,20 @@ class Physics(Model):
                 self.outfile,
                 "index of impurity to be iterated for divertor detachment",
                 "(impvardiv)",
-                reinke_variables.impvardiv,
+                self.data.reinke.impvardiv,
             )
             po.ovarre(
                 self.outfile,
                 "Minimum Impurity fraction from Reinke",
                 "(fzmin)",
-                reinke_variables.fzmin,
+                self.data.reinke.fzmin,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Actual Impurity fraction",
                 "(fzactual)",
-                reinke_variables.fzactual,
+                self.data.reinke.fzactual,
             )
 
     def output_temperature_density_profile_info(self) -> None:

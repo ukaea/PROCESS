@@ -782,7 +782,7 @@ INPUT_VARIABLES = {
     "fwdr": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "fwdzl": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "fwdzu": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
-    "fzactual": InputVariable(data_structure.reinke_variables, float, range=(0.0, 1.0)),
+    "fzactual": InputVariable("reinke", float, range=(0.0, 1.0)),
     "eta_cd_norm_ecrh": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
@@ -908,7 +908,7 @@ INPUT_VARIABLES = {
     "len_tf_bus": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.01, 1000.0)
     ),
-    "lhat": InputVariable(data_structure.reinke_variables, float, range=(1.0, 15.0)),
+    "lhat": InputVariable("reinke", float, range=(1.0, 15.0)),
     "f_blkt_li6_enrichment": InputVariable("fwbs", float, range=(7.4, 100.0)),
     "life_dpa": InputVariable("costs", float, range=(10.0, 100.0)),
     "llw_storage_h": InputVariable(
@@ -1794,7 +1794,7 @@ INPUT_VARIABLES = {
     "num_rh_systems": InputVariable("costs", int, range=(1, 10)),
     "output_costs": InputVariable("costs", int, choices=[0, 1]),
     "i_p_coolant_pumping": InputVariable("fwbs", int, range=(0, 3)),
-    "reinke_mode": InputVariable(data_structure.reinke_variables, int, choices=[0, 1]),
+    "reinke_mode": InputVariable("reinke", int, choices=[0, 1]),
     "scan_dim": InputVariable(data_structure.scan_variables, int, range=(1, 2)),
     "i_thermal_electric_conversion": InputVariable("fwbs", int, range=(0, 4)),
     "secondary_cycle_liq": InputVariable("fwbs", int, range=(2, 4)),
@@ -1871,7 +1871,7 @@ INPUT_VARIABLES = {
     "sweep": InputVariable(data_structure.scan_variables, float, array=True),
     "sweep_2": InputVariable(data_structure.scan_variables, float, array=True),
     "impvardiv": InputVariable(
-        data_structure.reinke_variables,
+        "reinke",
         int,
         choices=range(3, data_structure.impurity_radiation_module.N_IMPURITIES + 1),
     ),

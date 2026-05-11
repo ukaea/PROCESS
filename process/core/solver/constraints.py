@@ -1604,15 +1604,15 @@ def constraint_equation_77(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(78, "", ">=")
-def constraint_equation_78(constraint_registration, _data):
+def constraint_equation_78(constraint_registration, data):
     """Equation for Reinke criterion, divertor impurity fraction lower limit
 
     fzmin : input : minimum impurity fraction from Reinke model
     fzactual : input : actual impurity fraction
     """
     return geq(
-        data_structure.reinke_variables.fzactual,
-        data_structure.reinke_variables.fzmin,
+        data.reinke.fzactual,
+        data.reinke.fzmin,
         constraint_registration,
     )
 
