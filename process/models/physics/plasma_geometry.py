@@ -50,6 +50,7 @@ class PlasmaGeometryModels(IntEnum):
     CREATE_DATA_EU_DEMO = (6, "CREATE Data EU DEMO")
     MENARD_2016 = (7, "Menard 2016 ST Scaling")
     UNKNOWN = (8, "Unknown")
+    MENARD_1997 = (9, "Menard 1997 ST Scaling")
 
     def __new__(cls, value: int, description: str):
         """Create a new PlasmaGeometryModels instance."""
@@ -147,6 +148,13 @@ class PlasmaGeometryModelType(IntEnum):
     MENARD_2016_X_POINT = (
         11,
         PlasmaGeometryModels.MENARD_2016,
+        PlasmaGeometryModels.USER_INPUT,
+        PlasmaGeometryModels.IPDG89,
+        PlasmaGeometryModels.IPDG89,
+    )
+    MENARD_1997_X_POINT = (
+        12,
+        PlasmaGeometryModels.MENARD_1997,
         PlasmaGeometryModels.USER_INPUT,
         PlasmaGeometryModels.IPDG89,
         PlasmaGeometryModels.IPDG89,
@@ -408,6 +416,24 @@ class PlasmaGeom:
             physics_variables.kappa = 0.95e0 * (
                 1.9e0 + 1.9e0 / physics_variables.aspect**1.4e0
             )
+            physics_variables.kappa95 = physics_variables.kappa / 1.12e0
+            physics_variables.triang95 = physics_variables.triang / 1.50e0
+
+        # ======================================================================
+
+        if (
+            physics_variables.i_plasma_geometry
+            == PlasmaGeometryModelType.MENARD_1997_X_POINT
+        ):
+            # physics_variables.triang is an input
+            # physics_variables.kappa found from physics_variables.aspect ratio scaling from
+            # J.E. Menard et al 1997 Nucl. Fusion 37 595 and assume max controllable kappa
+            # and assume lᵢ(3) is held constant
+
+            physics_variables.kappa = (
+                2.93e0 * (1.8e0 / physics_variables.aspect) ** 0.4e0
+            )
+
             physics_variables.kappa95 = physics_variables.kappa / 1.12e0
             physics_variables.triang95 = physics_variables.triang / 1.50e0
 
