@@ -10,7 +10,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
     build_variables,
-    ccfe_hcpb_module,
     current_drive_variables,
     divertor_variables,
     heat_transport_variables,
@@ -135,11 +134,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         self.data.fwbs.p_fw_nuclear_heat_total_mw = self.nuclear_heating_fw(
             m_fw_total=self.data.fwbs.m_fw_total,
-            fw_armour_u_nuc_heating=ccfe_hcpb_module.fw_armour_u_nuc_heating,
+            fw_armour_u_nuc_heating=self.data.ccfe_hcpb.fw_armour_u_nuc_heating,
             p_fusion_total_mw=physics_variables.p_fusion_total_mw,
         )
 
-        self.data.fwbs.p_blkt_nuclear_heat_total_mw, ccfe_hcpb_module.exp_blanket = (
+        self.data.fwbs.p_blkt_nuclear_heat_total_mw, self.data.ccfe_hcpb.exp_blanket = (
             self.nuclear_heating_blanket(
                 m_blkt_total=self.data.fwbs.m_blkt_total,
                 p_fusion_total_mw=physics_variables.p_fusion_total_mw,
@@ -147,16 +146,16 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         )
         (
             self.data.fwbs.p_shld_nuclear_heat_mw,
-            ccfe_hcpb_module.exp_shield1,
-            ccfe_hcpb_module.exp_shield2,
-            ccfe_hcpb_module.shld_u_nuc_heating,
+            self.data.ccfe_hcpb.exp_shield1,
+            self.data.ccfe_hcpb.exp_shield2,
+            self.data.ccfe_hcpb.shld_u_nuc_heating,
         ) = self.nuclear_heating_shield(
             itart=physics_variables.itart,
             dr_shld_outboard=build_variables.dr_shld_outboard,
             dr_shld_inboard=build_variables.dr_shld_inboard,
-            shield_density=ccfe_hcpb_module.shield_density,
+            shield_density=self.data.ccfe_hcpb.shield_density,
             whtshld=self.data.fwbs.whtshld,
-            x_blanket=ccfe_hcpb_module.x_blanket,
+            x_blanket=self.data.ccfe_hcpb.x_blanket,
             p_fusion_total_mw=physics_variables.p_fusion_total_mw,
         )
 
@@ -170,7 +169,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Split neutron power to main wall between fw, bkt, shld and TF with same
         # fractions as before.
         # Total nuclear power deposited in the blanket sector (MW)
-        ccfe_hcpb_module.pnuc_tot_blk_sector = (
+        self.data.ccfe_hcpb.pnuc_tot_blk_sector = (
             self.data.fwbs.p_fw_nuclear_heat_total_mw
             + self.data.fwbs.p_blkt_nuclear_heat_total_mw
             + self.data.fwbs.p_shld_nuclear_heat_mw
@@ -195,7 +194,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         self.data.fwbs.p_fw_nuclear_heat_total_mw = (
             (
                 self.data.fwbs.p_fw_nuclear_heat_total_mw
-                / ccfe_hcpb_module.pnuc_tot_blk_sector
+                / self.data.ccfe_hcpb.pnuc_tot_blk_sector
             )
             * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
@@ -206,7 +205,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         self.data.fwbs.p_blkt_nuclear_heat_total_mw = (
             (
                 self.data.fwbs.p_blkt_nuclear_heat_total_mw
-                / ccfe_hcpb_module.pnuc_tot_blk_sector
+                / self.data.ccfe_hcpb.pnuc_tot_blk_sector
             )
             * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
@@ -218,7 +217,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         self.data.fwbs.p_shld_nuclear_heat_mw = (
             (
                 self.data.fwbs.p_shld_nuclear_heat_mw
-                / ccfe_hcpb_module.pnuc_tot_blk_sector
+                / self.data.ccfe_hcpb.pnuc_tot_blk_sector
             )
             * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
@@ -228,7 +227,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Power to the TF coils (MW)
         # The power deposited in the CP conductor is added back here
         self.data.fwbs.p_tf_nuclear_heat_mw = (
-            (self.data.fwbs.p_tf_nuclear_heat_mw / ccfe_hcpb_module.pnuc_tot_blk_sector)
+            (
+                self.data.fwbs.p_tf_nuclear_heat_mw
+                / self.data.ccfe_hcpb.pnuc_tot_blk_sector
+            )
             * self.data.fwbs.f_p_blkt_multiplication
             * f_geom_blanket
             * physics_variables.p_neutron_total_mw
@@ -462,12 +464,12 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # Calculate smeared densities of blanket sections
         # gaseous He coolant in armour, FW & blanket: He mass is neglected
-        ccfe_hcpb_module.armour_density = constants.DEN_TUNGSTEN * (1.0 - vffwm)
-        ccfe_hcpb_module.fw_density = self.data.fwbs.den_steel * (1.0 - vffwm)
-        ccfe_hcpb_module.blanket_density = (
+        self.data.ccfe_hcpb.armour_density = constants.DEN_TUNGSTEN * (1.0 - vffwm)
+        self.data.ccfe_hcpb.fw_density = self.data.fwbs.den_steel * (1.0 - vffwm)
+        self.data.ccfe_hcpb.blanket_density = (
             self.data.fwbs.m_blkt_total / self.data.fwbs.vol_blkt_total
         )
-        ccfe_hcpb_module.shield_density = (
+        self.data.ccfe_hcpb.shield_density = (
             self.data.fwbs.whtshld / self.data.fwbs.vol_shld_total
         )
         # Picking the largest value for VV thickness
@@ -475,9 +477,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         d_vv_all = max(d_vv_all, build_variables.dr_vv_outboard)
 
         if d_vv_all > 1.0e-6:
-            ccfe_hcpb_module.vv_density = self.data.fwbs.m_vv / self.data.fwbs.vol_vv
+            self.data.ccfe_hcpb.vv_density = self.data.fwbs.m_vv / self.data.fwbs.vol_vv
         else:
-            ccfe_hcpb_module.vv_density = 0.0
+            self.data.ccfe_hcpb.vv_density = 0.0
 
         # Calculation of average blanket/shield thickness [m]
         if physics_variables.itart == 1:
@@ -500,18 +502,18 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # Exponents (tonne/m2)
         # Blanket exponent (/1000 for kg -> tonnes)
-        ccfe_hcpb_module.x_blanket = (
-            ccfe_hcpb_module.armour_density * self.data.fwbs.fw_armour_thickness
-            + ccfe_hcpb_module.fw_density
+        self.data.ccfe_hcpb.x_blanket = (
+            self.data.ccfe_hcpb.armour_density * self.data.fwbs.fw_armour_thickness
+            + self.data.ccfe_hcpb.fw_density
             * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
             / 2.0
-            + ccfe_hcpb_module.blanket_density * th_blanket_av
+            + self.data.ccfe_hcpb.blanket_density * th_blanket_av
         ) / 1000.0
 
         # Shield exponent(/1000 for kg -> tonnes)
-        ccfe_hcpb_module.x_shield = (
-            ccfe_hcpb_module.shield_density * th_shield_av
-            + ccfe_hcpb_module.vv_density
+        self.data.ccfe_hcpb.x_shield = (
+            self.data.ccfe_hcpb.shield_density * th_shield_av
+            + self.data.ccfe_hcpb.vv_density
             * (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
             / 2.0
         ) / 1000.0
@@ -520,25 +522,25 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         if physics_variables.itart == 1:
             # Nuclear heating in outobard TF coil legs (whttflgs)
             # Unit heating (W/kg/GW of fusion power) x legs mass only (kg)
-            ccfe_hcpb_module.tfc_nuc_heating = (
+            self.data.ccfe_hcpb.tfc_nuc_heating = (
                 e
-                * np.exp(-a * ccfe_hcpb_module.x_blanket)
-                * np.exp(-b * ccfe_hcpb_module.x_shield)
+                * np.exp(-a * self.data.ccfe_hcpb.x_blanket)
+                * np.exp(-b * self.data.ccfe_hcpb.x_shield)
                 * tfcoil_variables.whttflgs
             )
         else:
             # Nuclear heating in TF coil
             # Unit heating (W/kg/GW of fusion power) x total mass (kg)
-            ccfe_hcpb_module.tfc_nuc_heating = (
+            self.data.ccfe_hcpb.tfc_nuc_heating = (
                 e
-                * np.exp(-a * ccfe_hcpb_module.x_blanket)
-                * np.exp(-b * ccfe_hcpb_module.x_shield)
+                * np.exp(-a * self.data.ccfe_hcpb.x_blanket)
+                * np.exp(-b * self.data.ccfe_hcpb.x_shield)
                 * tfcoil_variables.m_tf_coils_total
             )
 
         # Total heating (MW)
         self.data.fwbs.p_tf_nuclear_heat_mw = (
-            ccfe_hcpb_module.tfc_nuc_heating
+            self.data.ccfe_hcpb.tfc_nuc_heating
             * (physics_variables.p_fusion_total_mw / 1000.0)
             / 1.0e6
         )
@@ -549,19 +551,19 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 self.outfile,
                 "Shield line density (tonne/m2)",
                 "(x_shield)",
-                ccfe_hcpb_module.x_shield,
+                self.data.ccfe_hcpb.x_shield,
             )
             po.ovarre(
                 self.outfile,
                 "Blanket line density (tonne/m2)",
                 "(x_blanket)",
-                ccfe_hcpb_module.x_blanket,
+                self.data.ccfe_hcpb.x_blanket,
             )
             po.ovarre(
                 self.outfile,
                 "Unit nuclear heating in TF coil (W/GW)",
                 "(tfc_nuc_heating)",
-                ccfe_hcpb_module.tfc_nuc_heating,
+                self.data.ccfe_hcpb.tfc_nuc_heating,
             )
             po.ovarre(
                 self.outfile,
@@ -1467,21 +1469,21 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "Blanket exponential factor",
             "(exp_blanket)",
-            ccfe_hcpb_module.exp_blanket,
+            self.data.ccfe_hcpb.exp_blanket,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Shield: first exponential",
             "(exp_shield1)",
-            ccfe_hcpb_module.exp_shield1,
+            self.data.ccfe_hcpb.exp_shield1,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Shield: second exponential",
             "(exp_shield2)",
-            ccfe_hcpb_module.exp_shield2,
+            self.data.ccfe_hcpb.exp_shield2,
             "OP ",
         )
         po.ovarre(
@@ -1621,19 +1623,3 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             "(m_div_plate)",
             divertor_variables.m_div_plate,
         )
-
-
-def init_ccfe_hcpb_module():
-    ccfe_hcpb_module.armour_density = 0.0
-    ccfe_hcpb_module.fw_density = 0.0
-    ccfe_hcpb_module.blanket_density = 0.0
-    ccfe_hcpb_module.shield_density = 0.0
-    ccfe_hcpb_module.vv_density = 0.0
-    ccfe_hcpb_module.x_blanket = 0.0
-    ccfe_hcpb_module.x_shield = 0.0
-    ccfe_hcpb_module.tfc_nuc_heating = 0.0
-    ccfe_hcpb_module.fw_armour_u_nuc_heating = 6.25e-7
-    ccfe_hcpb_module.shld_u_nuc_heating = 0.0
-    ccfe_hcpb_module.exp_blanket = 0.0
-    ccfe_hcpb_module.exp_shield1 = 0.0
-    ccfe_hcpb_module.exp_shield2 = 0.0

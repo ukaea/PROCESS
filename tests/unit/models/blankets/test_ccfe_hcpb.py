@@ -4,7 +4,6 @@ import pytest
 
 from process.data_structure import (
     build_variables,
-    ccfe_hcpb_module,
     current_drive_variables,
     divertor_variables,
     global_variables,
@@ -340,35 +339,43 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     monkeypatch.setattr(global_variables, "verbose", nuclearheatingmagnetsparam.verbose)
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "armour_density", nuclearheatingmagnetsparam.armour_density
+        ccfe_hcpb.data.ccfe_hcpb,
+        "armour_density",
+        nuclearheatingmagnetsparam.armour_density,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "fw_density", nuclearheatingmagnetsparam.fw_density
+        ccfe_hcpb.data.ccfe_hcpb, "fw_density", nuclearheatingmagnetsparam.fw_density
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "blanket_density", nuclearheatingmagnetsparam.blanket_density
+        ccfe_hcpb.data.ccfe_hcpb,
+        "blanket_density",
+        nuclearheatingmagnetsparam.blanket_density,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "shield_density", nuclearheatingmagnetsparam.shield_density
+        ccfe_hcpb.data.ccfe_hcpb,
+        "shield_density",
+        nuclearheatingmagnetsparam.shield_density,
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "vv_density", nuclearheatingmagnetsparam.vv_density
+        ccfe_hcpb.data.ccfe_hcpb, "vv_density", nuclearheatingmagnetsparam.vv_density
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "x_blanket", nuclearheatingmagnetsparam.x_blanket
+        ccfe_hcpb.data.ccfe_hcpb, "x_blanket", nuclearheatingmagnetsparam.x_blanket
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "x_shield", nuclearheatingmagnetsparam.x_shield
+        ccfe_hcpb.data.ccfe_hcpb, "x_shield", nuclearheatingmagnetsparam.x_shield
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module, "tfc_nuc_heating", nuclearheatingmagnetsparam.tfc_nuc_heating
+        ccfe_hcpb.data.ccfe_hcpb,
+        "tfc_nuc_heating",
+        nuclearheatingmagnetsparam.tfc_nuc_heating,
     )
 
     ccfe_hcpb.nuclear_heating_magnets(False)
@@ -385,35 +392,35 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         nuclearheatingmagnetsparam.expected_f_a_fw_coolant_outboard
     )
 
-    assert ccfe_hcpb_module.armour_density == pytest.approx(
+    assert ccfe_hcpb.data.ccfe_hcpb.armour_density == pytest.approx(
         nuclearheatingmagnetsparam.expected_armour_density
     )
 
-    assert ccfe_hcpb_module.fw_density == pytest.approx(
+    assert ccfe_hcpb.data.ccfe_hcpb.fw_density == pytest.approx(
         nuclearheatingmagnetsparam.expected_fw_density
     )
 
-    assert ccfe_hcpb_module.blanket_density == pytest.approx(
+    assert ccfe_hcpb.data.ccfe_hcpb.blanket_density == pytest.approx(
         nuclearheatingmagnetsparam.expected_blanket_density
     )
 
-    assert ccfe_hcpb_module.shield_density == pytest.approx(
+    assert ccfe_hcpb.data.ccfe_hcpb.shield_density == pytest.approx(
         nuclearheatingmagnetsparam.expected_shield_density
     )
 
-    assert ccfe_hcpb_module.vv_density == pytest.approx(
+    assert ccfe_hcpb.data.ccfe_hcpb.vv_density == pytest.approx(
         nuclearheatingmagnetsparam.expected_vv_density
     )
 
-    assert ccfe_hcpb_module.x_blanket == pytest.approx(
+    assert ccfe_hcpb.data.ccfe_hcpb.x_blanket == pytest.approx(
         nuclearheatingmagnetsparam.expected_x_blanket
     )
 
-    assert ccfe_hcpb_module.x_shield == pytest.approx(
+    assert ccfe_hcpb.data.ccfe_hcpb.x_shield == pytest.approx(
         nuclearheatingmagnetsparam.expected_x_shield
     )
 
-    assert ccfe_hcpb_module.tfc_nuc_heating == pytest.approx(
+    assert ccfe_hcpb.data.ccfe_hcpb.tfc_nuc_heating == pytest.approx(
         nuclearheatingmagnetsparam.expected_tfc_nuc_heating
     )
 
@@ -479,7 +486,7 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        ccfe_hcpb_module,
+        ccfe_hcpb.data.ccfe_hcpb,
         "fw_armour_u_nuc_heating",
         nuclearheatingfwparam.fw_armour_u_nuc_heating,
     )

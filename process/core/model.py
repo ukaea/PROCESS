@@ -2,6 +2,7 @@ import abc
 from dataclasses import dataclass, fields
 
 from process.data_structure.blanket_variables import BlanketData
+from process.data_structure.ccfe_hcpb_variables import CCFEHCPBData
 from process.data_structure.cost_2015_variables import Cost2015Data
 from process.data_structure.cost_variables import CostData
 from process.data_structure.cs_fatigue_variables import CSFatigueData
@@ -29,6 +30,7 @@ class DataStructure:
     structure: StructureData = initialise_later
     times: TimesData = initialise_later
     reinke: ReinkeData = initialise_later
+    ccfe_hcpb: CCFEHCPBData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

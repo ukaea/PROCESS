@@ -18,7 +18,6 @@ from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables
-from process.data_structure.ccfe_hcpb_module import init_ccfe_hcpb_module
 from process.data_structure.constraint_variables import init_constraint_variables
 from process.data_structure.current_drive_variables import init_current_drive_variables
 from process.data_structure.dcll_variables import init_dcll_module
@@ -266,7 +265,6 @@ def init_all_module_vars():
     init_buildings_variables()
     init_divertor_variables()
     data_structure.global_variables.init_global_variables()
-    init_ccfe_hcpb_module()
     init_heat_transport_variables()
     init_ife_variables()
     init_impurity_radiation_module()
