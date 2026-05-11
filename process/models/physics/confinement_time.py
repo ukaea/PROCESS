@@ -4073,16 +4073,16 @@ class PlasmaConfinementTime:
               doi: https://doi.org/10.1088/1741-4326/abdb91.
         """
         return (
-            0.053
-            * pcur**0.98
-            * b_plasma_toroidal_on_axis**0.22
-            * dnla19**0.24
-            * p_plasma_loss_mw ** (-0.669)
-            * rmajor**1.71
-            * (1 + triang) ** 0.36
-            * kappa_ipb**0.8
-            * eps**0.35
-            * aion**0.2
+            0.0534
+            * pcur**0.976
+            * b_plasma_toroidal_on_axis**0.218
+            * dnla19**0.2442
+            * p_plasma_loss_mw ** (-0.6687)
+            * rmajor**1.710
+            * (1 + triang) ** 0.362
+            * kappa_ipb**0.799
+            * eps**0.354
+            * aion**0.195
         )
 
     @staticmethod
@@ -4136,13 +4136,13 @@ class PlasmaConfinementTime:
               Nov. 2021, doi: https://doi.org/10.1088/1741-4326/ac3293.
         """
         return (
-            0.067
-            * pcur**1.29
-            * b_plasma_toroidal_on_axis**-0.13
-            * p_plasma_loss_mw ** (-0.644)
-            * dnla19**0.15
-            * aion**0.3
-            * rmajor**1.19
-            * (1 + triang) ** 0.56
-            * kappa_ipb**0.67
+            0.0670
+            * pcur**1.291
+            * b_plasma_toroidal_on_axis**-0.134
+            * dnla19**0.1473
+            * p_plasma_loss_mw ** (-0.6442)
+            * rmajor**1.194
+            * (1 + triang) ** 0.560
+            * kappa_ipb**0.673
+            * aion**0.302
         )
