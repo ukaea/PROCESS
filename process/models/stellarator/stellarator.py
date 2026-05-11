@@ -24,7 +24,6 @@ from process.data_structure import (
     physics_variables,
     stellarator_configuration,
     stellarator_variables,
-    structure_variables,
     tfcoil_variables,
 )
 from process.models.physics.physics import Physics, rether
@@ -330,10 +329,10 @@ class Stellarator(Model):
         output :
 
         """
-        structure_variables.fncmass = 0.0e0
+        self.data.structure.fncmass = 0.0e0
 
         #  Reactor core gravity support mass
-        structure_variables.gsmass = 0.0e0  # ? Not sure about this.
+        self.data.structure.gsmass = 0.0e0  # ? Not sure about this.
 
         # This is the previous scaling law for intercoil structure
         # We keep is here as a reference to the new model, which
@@ -367,22 +366,22 @@ class Stellarator(Model):
 
         # This 0.18 m is an effective thickness which is scaled with empirial 1.5 law. 5.6 T is reference point of Helias
         # The thickness 0.18m was obtained as a measured value from Schauer, F. and Bykov, V. design of Helias 5-B. (Nucl Fus. 2013)
-        structure_variables.aintmass = (
+        self.data.structure.aintmass = (
             0.18e0
             * (physics_variables.b_plasma_toroidal_on_axis / 5.6) ** 2
             * intercoil_surface
             * self.data.fwbs.den_steel
         )
 
-        structure_variables.clgsmass = (
-            0.2e0 * structure_variables.aintmass
+        self.data.structure.clgsmass = (
+            0.2e0 * self.data.structure.aintmass
         )  # Very simple approximation for the gravity support.
         # This fits for the Helias 5b reactor design point ( F. and Bykov, V. design of Helias 5-B. (nucl Fus. 2013)).
 
         #  Total mass of cooled components
-        structure_variables.coldmass = (
+        self.data.structure.coldmass = (
             tfcoil_variables.m_tf_coils_total
-            + structure_variables.aintmass
+            + self.data.structure.aintmass
             + self.data.fwbs.dewmkg
         )
 
@@ -394,7 +393,7 @@ class Stellarator(Model):
                 self.outfile,
                 "Intercoil support structure mass (from intercoil calculation) (kg)",
                 "(aintmass)",
-                structure_variables.aintmass,
+                self.data.structure.aintmass,
             )
             po.ovarre(
                 self.outfile,
@@ -406,13 +405,13 @@ class Stellarator(Model):
                 self.outfile,
                 "Gravity support structure mass (kg)",
                 "(clgsmass)",
-                structure_variables.clgsmass,
+                self.data.structure.clgsmass,
             )
             po.ovarre(
                 self.outfile,
                 "Mass of cooled components (kg)",
                 "(coldmass)",
-                structure_variables.coldmass,
+                self.data.structure.coldmass,
             )
 
     def blanket_neutronics(self):

@@ -10,7 +10,6 @@ from process.data_structure import (
     physics_variables,
     stellarator_configuration,
     stellarator_variables,
-    structure_variables,
     tfcoil_variables,
 )
 from process.models.stellarator.build import st_build
@@ -807,15 +806,15 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(stellarator.data.fwbs, "den_steel", ststrcparam.den_steel)
 
-    monkeypatch.setattr(structure_variables, "aintmass", ststrcparam.aintmass)
+    monkeypatch.setattr(stellarator.data.structure, "aintmass", ststrcparam.aintmass)
 
-    monkeypatch.setattr(structure_variables, "clgsmass", ststrcparam.clgsmass)
+    monkeypatch.setattr(stellarator.data.structure, "clgsmass", ststrcparam.clgsmass)
 
-    monkeypatch.setattr(structure_variables, "coldmass", ststrcparam.coldmass)
+    monkeypatch.setattr(stellarator.data.structure, "coldmass", ststrcparam.coldmass)
 
-    monkeypatch.setattr(structure_variables, "fncmass", ststrcparam.fncmass)
+    monkeypatch.setattr(stellarator.data.structure, "fncmass", ststrcparam.fncmass)
 
-    monkeypatch.setattr(structure_variables, "gsmass", ststrcparam.gsmass)
+    monkeypatch.setattr(stellarator.data.structure, "gsmass", ststrcparam.gsmass)
 
     monkeypatch.setattr(
         tfcoil_variables, "m_tf_coils_total", ststrcparam.m_tf_coils_total
@@ -885,11 +884,17 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     stellarator.st_strc(False)
 
-    assert structure_variables.aintmass == pytest.approx(ststrcparam.expected_aintmass)
+    assert stellarator.data.structure.aintmass == pytest.approx(
+        ststrcparam.expected_aintmass
+    )
 
-    assert structure_variables.clgsmass == pytest.approx(ststrcparam.expected_clgsmass)
+    assert stellarator.data.structure.clgsmass == pytest.approx(
+        ststrcparam.expected_clgsmass
+    )
 
-    assert structure_variables.coldmass == pytest.approx(ststrcparam.expected_coldmass)
+    assert stellarator.data.structure.coldmass == pytest.approx(
+        ststrcparam.expected_coldmass
+    )
 
 
 def test_u_max_protect_v():

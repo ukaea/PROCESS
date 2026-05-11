@@ -17,7 +17,6 @@ from process.data_structure import (
     pfcoil_variables,
     physics_variables,
     pulse_variables,
-    structure_variables,
     tfcoil_variables,
     times_variables,
 )
@@ -1620,7 +1619,7 @@ def test_acc2214(acc2214param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "lsa", acc2214param.lsa)
 
-    monkeypatch.setattr(structure_variables, "gsmass", acc2214param.gsmass)
+    monkeypatch.setattr(costs.data.structure, "gsmass", acc2214param.gsmass)
 
     monkeypatch.setattr(costs.data.costs, "c22", acc2214param.c22)
 
@@ -1955,9 +1954,9 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "itart", acc2221param.itart)
 
-    monkeypatch.setattr(structure_variables, "clgsmass", acc2221param.clgsmass)
+    monkeypatch.setattr(costs.data.structure, "clgsmass", acc2221param.clgsmass)
 
-    monkeypatch.setattr(structure_variables, "aintmass", acc2221param.aintmass)
+    monkeypatch.setattr(costs.data.structure, "aintmass", acc2221param.aintmass)
 
     monkeypatch.setattr(
         tfcoil_variables, "m_tf_coil_copper", acc2221param.m_tf_coil_copper
@@ -2776,7 +2775,7 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(pfcoil_variables, "awpoh", acc2222param.awpoh)
 
-    monkeypatch.setattr(structure_variables, "fncmass", acc2222param.fncmass)
+    monkeypatch.setattr(costs.data.structure, "fncmass", acc2222param.fncmass)
 
     monkeypatch.setattr(tfcoil_variables, "dcond", acc2222param.dcond)
 
