@@ -1,3 +1,5 @@
+"""Module containing vacuum system routines"""
+
 import logging
 import math
 
@@ -29,6 +31,7 @@ class Vacuum(Model):
         self.outfile: int = constants.NOUT
 
     def output(self):
+        """Routine to call the vacuum module and write output to file"""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -256,7 +259,8 @@ class Vacuum(Model):
         nplasma :
             Plasma density (m**-3)
         ndiv :
-            Number of divertors with pumping (single null = 1, double null = 2 if pumping provided at both locations)
+            Number of divertors with pumping (single null = 1, double null = 2 if
+            pumping provided at both locations)
         qtorus :
             Gas load  from NBI (deuterons/second)
         gasld :
@@ -325,10 +329,12 @@ class Vacuum(Model):
         #  Initial pumpdown based on outgassing
         #  s(1) = net pump speed (N2) required for pumpdown to base pressure (m^3/s)
         #  area = vacuum chamber/fw area (m^2)  ;  outgassing area = 10 x area
-        #  outgrat_fw = outgassing rate (effective for N2) of plasma chamber surface (Pa-m/s)
+        #  outgrat_fw = outgassing rate (effective for N2) of plasma chamber surface
+        #  (Pa-m/s)
         #  pres_vv_chamber_base = base pressure (Pa)
 
-        #  Old method: area = 4.0e0 * pi*pi * r0 * aw * sqrt(0.5e0*(1.0e0 + kappa*kappa))
+        #  Old method: area = 4.0e0 * pi*pi * r0 * aw
+        #  * sqrt(0.5e0*(1.0e0 + kappa*kappa))
 
         area = plasma_sarea * (aw + dsol) / aw
 
@@ -466,7 +472,9 @@ class Vacuum(Model):
 
                 else:
                     logger.error(
-                        f"Newton's method not converging; check fusion power, te {physics_variables.p_fusion_total_mw=} {physics_variables.temp_plasma_electron_vol_avg_kev=}"
+                        f"Newton's method not converging; check fusion power, te "
+                        f"{physics_variables.p_fusion_total_mw} = "
+                        f"{physics_variables.temp_plasma_electron_vol_avg_kev=}"
                     )
 
                 theta = math.pi / ntf
@@ -722,6 +730,7 @@ class VacuumVessel(Model):
         self.outfile = constants.NOUT
 
     def run(self):
+        """Routine to calculate the parameters of the vacuum vessel"""
         self.data.blanket.dz_vv_half = self.calculate_vessel_half_height(
             z_tf_inside_half=build_variables.z_tf_inside_half,
             dz_shld_vv_gap=build_variables.dz_shld_vv_gap,
