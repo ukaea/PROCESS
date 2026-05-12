@@ -54,7 +54,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
 
         # If Shfranov shift is added, the angle formula can be used where the shift is added to the minor radius. For now, the shift is neglected and the angle is calculated using the minor radius only.
         self.data.blanket.deg_blkt_outboard_poloidal_plasma = (
-            self.blkt_outboard_poloidal_plasma_angle
+            self.blkt_outboard_poloidal_plasma_angle(
+                n_divertors=divertor_variables.n_divertors,
+                deg_div_poloidal_plasma=divertor_variables.deg_div_poloidal_plasma,
+            )
         )
         self.data.blanket.f_deg_blkt_outboard_poloidal_plasma = (
             self.f_deg_blkt_outboard_poloidal_plasma

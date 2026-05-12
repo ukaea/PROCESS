@@ -13895,15 +13895,16 @@ def plot_blkt_structure(
         label="Blanket Half Height",
     )
 
-    # Plot arrows for the outboard blanket angles
-    ax.annotate(
-        "",
-        xy=(rmajor, 0),
-        xytext=(rmajor, dz_blkt_half),
-        arrowprops={"arrowstyle": "<-", "color": "purple"},
-        zorder=5,
-    )
-
+    if i_single_null == 0:
+        # Plot arrows for the outboard blanket angles
+        ax.annotate(
+            "",
+            xy=(rmajor, 0),
+            xytext=(rmajor, dz_blkt_half),
+            arrowprops={"arrowstyle": "<-", "color": "purple"},
+            zorder=5,
+        )
+    # If single null then only plot the lower arrow for the outboard blanket angle
     ax.annotate(
         "",
         xy=(rmajor, 0),
@@ -13914,8 +13915,14 @@ def plot_blkt_structure(
 
     # Plot arc showing the angle between the two outboard blanket arrows
     arc_radius = 1.0
-    angle_start = -deg_blkt_outboard_poloidal_plasma / 2
-    angle_end = deg_blkt_outboard_poloidal_plasma / 2
+
+    # 3 to 6 o'clock position is -90 degrees,
+    angle_start = -90.0
+    if i_single_null == 1:
+        angle_end = 90.0 + deg_div_poloidal_plasma
+    elif i_single_null == 0:
+        # 3 to 12 o'clock position is +90 degrees
+        angle_end = 90.0
 
     theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
     arc_x = rmajor + arc_radius * np.cos(theta)
@@ -14007,8 +14014,9 @@ def plot_blkt_structure(
     if i_single_null == 0:
         # Plot arc showing the angle between the two arrows (divertor angle)
         arc_radius = 1.5
-        angle_start = deg_blkt_outboard_poloidal_plasma / 2 + deg_div_poloidal_plasma
-        angle_end = deg_blkt_inboard_poloidal_plasma / 2 + deg_div_poloidal_plasma
+        # 3 to 12 o'clock position is +90 degrees,
+        angle_start = 90.0
+        angle_end = 90.0 + deg_div_poloidal_plasma
 
         theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
         arc_x = rmajor + arc_radius * np.cos(theta)
@@ -14043,8 +14051,9 @@ def plot_blkt_structure(
 
     # Plot arc showing the angle between the two arrows for the lower divertor (divertor angle)
     arc_radius = 1.5
-    angle_start = -deg_blkt_outboard_poloidal_plasma / 2 - deg_div_poloidal_plasma
-    angle_end = -deg_blkt_inboard_poloidal_plasma / 2 - deg_div_poloidal_plasma
+    # 3 to 6 o'clock is -90 degrees
+    angle_start = -90.0
+    angle_end = -90.0 - deg_div_poloidal_plasma
 
     theta = np.linspace(np.deg2rad(angle_start), np.deg2rad(angle_end), 50)
     arc_x = rmajor + arc_radius * np.cos(theta)

@@ -3495,15 +3495,44 @@ class OutboardBlanket(BlanketLibrary):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
-    @property
-    def blkt_outboard_poloidal_plasma_angle(self) -> float:
-        """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane."""
-        return 180.0
+    def blkt_outboard_poloidal_plasma_angle(
+        self, n_divertors: int, deg_div_poloidal_plasma: float
+    ) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the
+        plasma mid-plane.
+
+        Parameters
+        ----------
+        n_divertors : int
+            Number of divertors in the design (1 or 2).
+        deg_div_poloidal_plasma : float
+            Poloidal angle subtended by the divertor at the plasma mid-plane (degrees).
+
+        Returns
+        -------
+        float
+            Poloidal angle subtended by outboard blanket at plasma mid-plane (degrees).
+
+        Raises
+        ------
+        ProcessValueError
+            If n_divertors is not 1 or 2.
+        """
+        if n_divertors == 1:
+            return 180.0 + deg_div_poloidal_plasma
+        if n_divertors == 2:
+            return 180.0
+        raise ProcessValueError(
+            f"n_divertors = {n_divertors} is an invalid option. Only 1 or 2 divertors "
+            f"are supported."
+        )
 
     @property
     def f_deg_blkt_outboard_poloidal_plasma(self) -> float:
-        """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane."""
-        return self.blkt_outboard_poloidal_plasma_angle / 360.0
+        """Calculate the poloidal angle subtended by the outboard blanket at the
+        plasma mid-plane.
+        """
+        return self.data.blanket.deg_blkt_outboard_poloidal_plasma / 360.0
 
     @staticmethod
     def calculate_blkt_outboard_poloidal_plasma_angle(
@@ -3513,7 +3542,8 @@ class OutboardBlanket(BlanketLibrary):
         dr_fw_plasma_gap_outboard: float,
         dr_fw_outboard: float,
     ) -> float:
-        """Calculate the poloidal angle subtended by the outboard blanket at the plasma mid-plane.
+        """Calculate the poloidal angle subtended by the outboard blanket at the
+        plasma mid-plane.
 
         Parameters
         ----------
@@ -3553,7 +3583,8 @@ class OutboardBlanket(BlanketLibrary):
         rminor: float,
         dr_fw_plasma_gap_outboard: float,
     ) -> float:
-        """Calculate the mid-plane toroidal circumference and segment length of the outboard blanket.
+        """Calculate the mid-plane toroidal circumference and segment length of the
+        outboard blanket.
 
         Parameters
         ----------
