@@ -1043,9 +1043,8 @@ class SuperconductingTFCoil(TFCoil):
         ------
         ValueError
             If calculated winding pack area (with or without insulation) is
-            non-positive.
-        ProcessValueError
-            If i_tf_wp_geom is not a valid SuperconductingTFWPShapeType.
+            non-positive, or if i_tf_wp_geom is not a valid
+            SuperconductingTFWPShapeType.
         """
         r_tf_wp_inboard_inner = r_tf_inboard_in + dr_tf_nose_case
 
