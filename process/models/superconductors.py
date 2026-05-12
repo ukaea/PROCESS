@@ -506,7 +506,7 @@ def gl_nbti(
     D. P. Hampshire, “The magnetic field, temperature, strain and angular dependence
     of the critical current density for Nb-Ti,” Journal of Physics Conference Series,
     vol. 1559, no. 1, pp. 012063-012063, Jun. 2020,
-    doi:https://doi.org/10.1088/1742-6596/1559/1/012063.
+    doi: https://doi.org/10.1088/1742-6596/1559/1/012063.
     """
     a_0 = 1102e6
     p = 0.49
@@ -603,7 +603,7 @@ def gl_rebco(
     D. P. Hampshire, “The magnetic field, temperature, strain and angular dependence
     of the critical current density for Nb-Ti,” Journal of Physics Conference Series,
     vol. 1559, no. 1, pp. 012063-012063, Jun. 2020,
-    doi:https://doi.org/10.1088/1742-6596/1559/1/012063.
+    doi: https://doi.org/10.1088/1742-6596/1559/1/012063.
 
     [2] Fit to state-of-the-art measurements at 4.2 K:P. Branch, K. Osamura, and
     D. Hampshire, “Weak emergence in the angular dependence of the critical current
@@ -1215,7 +1215,7 @@ def superconductor_current_density_margin(
 ) -> float:
     """Calculate the current density margin for a superconductor.
     The current density margin is the difference between the operating current density
-    andthe critical current density of a superconductor at a given temperature and
+    and the critical current density of a superconductor at a given temperature and
     field.
 
     It is zero at the current-sharing temperature.
