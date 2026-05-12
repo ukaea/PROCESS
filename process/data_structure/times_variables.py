@@ -11,7 +11,7 @@ class TimesData:
       - =0, t_plant_pulse_plasma_current_ramp_up = Ip(MA)/0.1 t_plant_pulse_coil_precharge, t_plant_pulse_plasma_current_ramp_down = input
       - =1, t_plant_pulse_plasma_current_ramp_up = iteration var or input. t_plant_pulse_coil_precharge/t_plant_pulse_plasma_current_ramp_down max of input or t_plant_pulse_plasma_current_ramp_up"""
 
-    t_plant_pulse_burn: list[float] = field(
+    t_plant_pulse_burn: float = field(
         default_factory=lambda: np.array(1000.0, dtype=np.float64)
     )
     """flat-top duration (s) (calculated if `i_pulsed_plant=1`)"""
