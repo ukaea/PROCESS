@@ -10,6 +10,7 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -39,13 +40,6 @@ logger = logging.getLogger(__name__)
 # OB          Outboard
 # HCD         Heating & Current Drive
 # FCI         Flow Channel Insert
-
-
-class BlktModelTypes(IntEnum):
-    """Enum for blanket model types. `i_blanket_type`"""
-
-    CCFE_HCPB = 1
-    DCLL = 5
 
 
 class FWBlktCoolantLoopTypes(IntEnum):

@@ -1,6 +1,6 @@
 from process import data_structure
 from process.core.log import logging_model_handler
-from process.models.blankets.blanket_library import BlktModelTypes
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import (
     SuperconductingTFTurnType,

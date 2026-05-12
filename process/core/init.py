@@ -16,6 +16,7 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.impurity_radiation_variables import N_IMPURITIES
 from process.data_structure.physics_variables import DivertorNumberModels
 from process.data_structure.rebco_variables import init_rebco_variables
@@ -24,7 +25,6 @@ from process.data_structure.superconducting_tf_coil_variables import (
     init_superconducting_tf_coil_variables,
 )
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
-from process.models.blankets.blanket_library import BlktModelTypes
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,
