@@ -2134,10 +2134,10 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         Raises
         ------
-        ValueError
-            If an invalid superconductor type is selected.
         ProcessValueError
-            If i_tf_superconductor is not a valid SuperconductorModel enum value.
+            If an invalid superconductor type is selected, including when
+            ``i_tf_superconductor`` is not a valid ``SuperconductorModel``
+            enum value.
 
 
         Notes
