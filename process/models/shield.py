@@ -1,4 +1,5 @@
-""" Module for neutron shield calculations """
+"""Module for neutron shield calculations"""
+
 import logging
 
 from process.core import constants
