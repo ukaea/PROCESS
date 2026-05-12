@@ -23,7 +23,7 @@ from process.data_structure import (
     tfcoil_variables,
     times_variables,
 )
-from process.models.blankets.blanket_library import BlktModelTypes
+from process.data_structure.blanket_variables import BlktModelTypes
 
 
 class PumpingPowerModelTypes(IntEnum):
@@ -1895,10 +1895,10 @@ class Power(Model):
         i_thermal_electric_conversion = ElectricConversionModelTypes(
             self.data.fwbs.i_thermal_electric_conversion
         )
-        i_blanket_type = BlktModelTypes(fwbs_variables.i_blanket_type)
+        i_blanket_type = BlktModelTypes(self.data.fwbs.i_blanket_type)
         if i_thermal_electric_conversion == ElectricConversionModelTypes.CCFE_HCPB_VALUE:
             #  CCFE HCPB Model
-            if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
+            if i_blanket_type == BlktModelTypes.CCFE_HCPB:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072

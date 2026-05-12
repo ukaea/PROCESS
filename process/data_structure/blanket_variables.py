@@ -26,6 +26,14 @@ Any changes within a subroutine or function code will have a comment explaining 
 """
 
 from dataclasses import dataclass
+from enum import IntEnum
+
+
+class BlktModelTypes(IntEnum):
+    """Enum for blanket model types. `i_blanket_type`"""
+
+    CCFE_HCPB = 1
+    DCLL = 5
 
 
 @dataclass

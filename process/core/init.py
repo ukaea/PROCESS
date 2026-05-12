@@ -16,6 +16,7 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.ccfe_hcpb_module import init_ccfe_hcpb_module
@@ -54,7 +55,6 @@ from process.data_structure.superconducting_tf_coil_variables import (
 )
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
-from process.models.blankets.blanket_library import BlktModelTypes
 from process.models.stellarator.initialization import st_init
 from process.models.superconductors import (
     SuperconductorMaterial,

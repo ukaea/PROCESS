@@ -15,7 +15,7 @@ from process.core.process_output import OutputFileManager, ovarre
 from process.core.solver import constraints
 from process.core.solver.iteration_variables import set_scaled_iteration_variable
 from process.core.solver.objectives import objective_function
-from process.models.blankets.blanket_library import BlktModelTypes
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.models.tfcoil.base import TFConductorModel
 from process.models.tfcoil.superconducting import SuperconductingTFTurnType
 
