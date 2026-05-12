@@ -186,5 +186,17 @@ class BlanketData:
     dz_vv_half: float = 0.0
     """Vacuum vessel internal half-height (m)"""
 
+    deg_blkt_outboard_poloidal_plasma: float = 0.0
+    """Outboard blanket poloidal angle subtended by plasma (degrees)"""
+
+    f_deg_blkt_outboard_poloidal_plasma: float = 0.0
+    """Fraction of outboard blanket poloidal angle subtended by plasma (degrees)"""
+
+    deg_blkt_inboard_poloidal_plasma: float = 0.0
+    """Inboard blanket poloidal angle subtended by plasma (degrees)"""
+
+    f_deg_blkt_inboard_poloidal_plasma: float = 0.0
+    """Fraction of inboard blanket poloidal angle subtended by plasma (degrees)"""
+
 
 CREATE_DICTS_FROM_DATACLASS = BlanketData

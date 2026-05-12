@@ -8,11 +8,7 @@ from process.data_structure import (
     divertor_variables,
     physics_variables,
 )
-from process.data_structure import build_variables as bv
-from process.data_structure import fwbs_variables as fwbs
-from process.data_structure import physics_variables as pv
-from process.models.blankets.blanket_library import BlanketLibrary, InboardBlanket
-from process.models.fw import FirstWall
+from process.models.blankets.blanket_library import InboardBlanket
 
 
 @pytest.fixture
