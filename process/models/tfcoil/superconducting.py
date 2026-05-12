@@ -913,14 +913,15 @@ class SuperconductingTFCoil(TFCoil):
 
         Returns
         -------
-        tuple[float]
-            Tuple containing:
-            - b_tf_inboard_peak_with_ripple (float): Peak toroidal field including
-              ripple (T).
+        float:
+            Peak toroidal field at the outboard edge of the inboard TF coil winding
+            pack, including ripple (T).
+
+
 
         Notes
         -----
-        - M. Kovari, Toroidal Field Coils - Maximum Field and Ripple - Parametric
+        M. Kovari, Toroidal Field Coils - Maximum Field and Ripple - Parametric
           Calculation, July 2014.
         """
         a = np.zeros((4,))
@@ -1318,7 +1319,8 @@ class SuperconductingTFCoil(TFCoil):
         Raises
         ------
         ValueError
-            If calculated case areas are non-positive.
+            If i_tf_wp_geom or i_tf_case_geom are not valid SuperconductingTFWPShapeType
+            or TFPlasmaCaseType, respectively.
         ProcessValueError
             If i_tf_wp_geom or i_tf_case_geom are not valid SuperconductingTFWPShapeType
             or TFPlasmaCaseType, respectively.
@@ -4149,10 +4151,11 @@ def vv_stress_on_quench(
 
     References
     ----------
-    1. ITOH, Yasuyuki & Utoh, Hiroyasu & SAKAMOTO, Yoshiteru & Hiwatari, Ryoji. (2020).
-    Empirical Formulas for Estimating Self and Mutual Inductances of Toroidal Field
-    Coils and Structures. Plasma and Fusion Research. 15. 1405078-1405078.
-    10.1585/pfr.15.1405078.
+    [1] Y. ITOH, Hiroyasu UTOH, Y. SAKAMOTO, Ryoji HIWATARI, and Joint,
+    “Empirical Formulas for Estimating Self and Mutual Inductances of Toroidal Field
+    Coils and Structures,” Plasma and Fusion Research, vol. 15, no. 0,
+    pp. 1405078-1405078, Oct. 2020, doi: https://doi.org/10.1585/pfr.15.1405078.
+    ‌
     """
     # Convert angles into radians
     theta1_vv_rad = np.pi * (theta1_vv / 180.0)

@@ -614,17 +614,17 @@ class TFCoil(Model):
 
         Notes
         -----
-            - The stored magnetic energy in an inductor is given by:
-                E = (1/2) * L * I^2
-                where E is the energy [J], L is the inductance [H], and I is the
-                current [A].
-            - Total energy is for all coils; per-coil energy is divided by n_tf_coils.
+        - The stored magnetic energy in an inductor is given by:
+          E = (1/2) * L * I² where E is the energy [J], L is the inductance [H],
+          and I is the current [A].
+
+        - Total energy is for all coils; per-coil energy is divided by n_tf_coils.
 
         References
         ----------
-        - http://hyperphysics.phy-astr.gsu.edu/hbase/electric/indeng.html
+        [1] http://hyperphysics.phy-astr.gsu.edu/hbase/electric/indeng.html
 
-        - https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy
+        [2] https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy
         """
         e_tf_magnetic_stored_total = 0.5 * ind_tf_coil * c_tf_total**2
 
