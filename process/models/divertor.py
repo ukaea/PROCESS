@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import blanket_library
 from process.data_structure.physics_variables import DivertorNumberModels
 
 
@@ -36,7 +35,7 @@ class Divertor(Model):
             indicate whether output should be written to the output file, or not
         """
         dv.deg_div_poloidal_plasma = self.single_divertor_angle
-        fwbs.f_ster_div_single = dv.deg_div_poloidal_plasma / 360.0
+        self.data.fwbs.f_ster_div_single = dv.deg_div_poloidal_plasma / 360.0
 
         self.data.fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=self.data.physics.p_plasma_neutron_mw,
@@ -95,7 +94,7 @@ class Divertor(Model):
         Angle is calculated as 180 degrees minus the inboard
         blanket poloidal angle, divided by 2 (for two divertors).
         """
-        return (180.0 - blanket_library.deg_blkt_inboard_poloidal_plasma) / 2.0
+        return (180.0 - self.data.blanket.deg_blkt_inboard_poloidal_plasma) / 2.0
 
     def divtart(
         self,
