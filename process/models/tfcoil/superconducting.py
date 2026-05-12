@@ -1417,8 +1417,7 @@ class SuperconductingTFCoil(TFCoil):
             ),
         )
 
-    @staticmethod
-    def superconducting_tf_coil_areas_and_masses():
+    def superconducting_tf_coil_areas_and_masses(self):
         """Calculate areas and masses of superconducting TF coil components."""
         # Mass of case [kg]
         # ***

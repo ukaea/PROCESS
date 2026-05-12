@@ -664,8 +664,7 @@ class ResistiveTFCoil(TFCoil):
             # No joints if physics_variables.itart = 0
             tfcoil_variables.p_tf_joints_resistive = 0.0e0
 
-    @staticmethod
-    def resistive_tf_coil_areas_and_masses():
+    def resistive_tf_coil_areas_and_masses(self):
         """Calculate the areas and masses of the resistive TF coil"""
         vol_case = 0.0e0  # Total TF case volume [m3]
         vol_ins = 0.0e0  # Total leg turn insulation volume [m3]
