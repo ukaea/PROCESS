@@ -1,3 +1,4 @@
+""" Module for neutron shield calculations """
 import logging
 
 from process.core import constants
@@ -20,13 +21,21 @@ logger = logging.getLogger(__name__)
 
 
 class Shield(Model):
+    """Class containing shield calculations
+
+    This class contains routines for calculating the
+    parameters of the shield for a fusion power plant.
+    """
+
     def __init__(self):
         self.outfile = constants.NOUT
 
     def output(self):
+        """Write the results to the main output file (OUT.DAT)."""
         self.output_shld_areas_and_volumes()
 
     def run(self):
+        """Run shield calculations."""
         self.data.blanket.dz_shld_half = self.calculate_shield_half_height(
             z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
             dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
