@@ -21,7 +21,6 @@ from process.data_structure import (
     power_variables,
     primary_pumping_variables,
     tfcoil_variables,
-    times_variables,
 )
 
 
@@ -293,7 +292,7 @@ class Power(Model):
 
         """
         # Local aliases for readability (no functional change)
-        t_pulse_cumulative = times_variables.t_pulse_cumulative  # [s]
+        t_pulse_cumulative = self.data.times.t_pulse_cumulative  # [s]
         c_pf_coil_turn = pfcoil_variables.c_pf_coil_turn  # [A]
         ind_pf_cs_plasma_mutual = pfcoil_variables.ind_pf_cs_plasma_mutual  # [H]
         f_p_pf_energy_store_loss = (
@@ -317,7 +316,7 @@ class Power(Model):
         #  Bus length
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
 
-        #  Find power requirements for PF coils at times_variables.t_pulse_cumulative(ktim)
+        #  Find power requirements for PF coils at self.data.times.t_pulse_cumulative(ktim)
 
         #  PF coil resistive power requirements
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
@@ -391,7 +390,7 @@ class Power(Model):
             )
 
         #  Inductive MVA requirements, and stored energy
-        delktim = times_variables.t_plant_pulse_plasma_current_ramp_up
+        delktim = self.data.times.t_plant_pulse_plasma_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
         #  pfcoil_variables.c_pf_coil_turn(i,j) : current per turn of coil i at (end) time period j (A)
@@ -425,10 +424,10 @@ class Power(Model):
                         / delktim
                     )
 
-                    #  Voltage in circuit idx_pf_coil at time, times_variables.t_pulse_cumulative(3), due to changes in coil currents
+                    #  Voltage in circuit idx_pf_coil at time, self.data.times.t_pulse_cumulative(3), due to changes in coil currents
                     vpfi[idx_pf_coil] += vpfij
 
-                    #  MVA in circuit idx_pf_coil at time, times_variables.t_pulse_cumulative(3) due to changes in current
+                    #  MVA in circuit idx_pf_coil at time, self.data.times.t_pulse_cumulative(3) due to changes in current
                     powpfii[idx_pf_coil] += (
                         vpfij * c_pf_coil_turn[idx_pf_coil, 2] / 1.0e6
                     )
@@ -449,7 +448,7 @@ class Power(Model):
                         * c_pf_coil_turn[idx_pf_coil, idx_time]
                     )
 
-                # Resistive power in circuits at times times_variables.t_pulse_cumulative(3) and times_variables.t_pulse_cumulative(5) respectively (MW)
+                # Resistive power in circuits at times self.data.times.t_pulse_cumulative(3) and self.data.times.t_pulse_cumulative(5) respectively (MW)
                 powpfr += (
                     pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
                     * c_pf_coil_turn[idx_pf_coil, 2]
@@ -648,7 +647,7 @@ class Power(Model):
         po.ocmmnt(self.outfile, "Energy stored in poloidal magnetic field :")
         po.oblnkl(self.outfile)
 
-        # write(self.outfile,50)(times_variables.t_pulse_cumulative(time),time=1,6)
+        # write(self.outfile,50)(self.data.times.t_pulse_cumulative(time),time=1,6)
 
     def acpow(self, output: bool):
         """AC power requirements
@@ -1013,7 +1012,7 @@ class Power(Model):
                 self.data.structure.coldmass,
                 self.data.fwbs.p_tf_nuclear_heat_mw,
                 pf_power_variables.ensxpfm,
-                times_variables.t_plant_pulse_plasma_present,
+                self.data.times.t_plant_pulse_plasma_present,
                 tfcoil_variables.c_tf_turn,
                 tfcoil_variables.n_tf_coils,
             )
@@ -1691,12 +1690,12 @@ class Power(Model):
             power_variables.p_cryo_plant_electric_profile_mw,
             power_variables.p_fusion_total_profile_mw,
         ) = self.power_profiles_over_time(
-            t_precharge=times_variables.t_plant_pulse_coil_precharge,
-            t_current_ramp_up=times_variables.t_plant_pulse_plasma_current_ramp_up,
-            t_fusion_ramp=times_variables.t_plant_pulse_fusion_ramp,
-            t_burn=times_variables.t_plant_pulse_burn,
-            t_ramp_down=times_variables.t_plant_pulse_plasma_current_ramp_down,
-            t_between_pulse=times_variables.t_plant_pulse_dwell,
+            t_precharge=self.data.times.t_plant_pulse_coil_precharge,
+            t_current_ramp_up=self.data.times.t_plant_pulse_plasma_current_ramp_up,
+            t_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
+            t_burn=self.data.times.t_plant_pulse_burn,
+            t_ramp_down=self.data.times.t_plant_pulse_plasma_current_ramp_down,
+            t_between_pulse=self.data.times.t_plant_pulse_dwell,
             p_plant_electric_base_total_mw=heat_transport_variables.p_plant_electric_base_total_mw,
             p_cryo_plant_electric_mw=heat_transport_variables.p_cryo_plant_electric_mw,
             p_tritium_plant_electric_mw=heat_transport_variables.p_tritium_plant_electric_mw,

@@ -10,7 +10,6 @@ from process.data_structure import (
     pfcoil_variables,
     physics_variables,
     pulse_variables,
-    times_variables,
 )
 
 logger = logging.getLogger(__name__)
@@ -39,10 +38,10 @@ class Pulse(Model):
 
             #  Burn time calculation
 
-            times_variables.t_plant_pulse_burn = self.calculate_burn_time(
+            self.data.times.t_plant_pulse_burn = self.calculate_burn_time(
                 vs_cs_pf_total_burn=pfcoil_variables.vs_cs_pf_total_burn,
                 v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
-                t_plant_pulse_fusion_ramp=times_variables.t_plant_pulse_fusion_ramp,
+                t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
             )
 
     def tohswg(self, output: bool):

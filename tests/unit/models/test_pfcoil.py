@@ -20,7 +20,6 @@ from process.data_structure import build_variables as bv
 from process.data_structure import pfcoil_variables, superconducting_tf_coil_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
-from process.data_structure import times_variables as tv
 from process.models.pfcoil import (
     PFCoil,
     calculate_b_field_at_point,
@@ -2551,12 +2550,16 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(tfv, "bcritsc", 2.4e1)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
     monkeypatch.setattr(tfv, "t_crit_nbti", 9.04)
-    monkeypatch.setattr(tv, "t_pulse_cumulative", np.full(6, 0.0))
-    monkeypatch.setattr(tv, "t_plant_pulse_coil_precharge", 5.0e2)
-    monkeypatch.setattr(tv, "t_plant_pulse_burn", 7.1263e-1)
-    monkeypatch.setattr(tv, "t_plant_pulse_plasma_current_ramp_up", 1.82538e2)
-    monkeypatch.setattr(tv, "t_plant_pulse_plasma_current_ramp_down", 1.82538e2)
-    monkeypatch.setattr(tv, "t_plant_pulse_fusion_ramp", 1.0e1)
+    monkeypatch.setattr(pfcoil.data.times, "t_pulse_cumulative", np.full(6, 0.0))
+    monkeypatch.setattr(pfcoil.data.times, "t_plant_pulse_coil_precharge", 5.0e2)
+    monkeypatch.setattr(pfcoil.data.times, "t_plant_pulse_burn", 7.1263e-1)
+    monkeypatch.setattr(
+        pfcoil.data.times, "t_plant_pulse_plasma_current_ramp_up", 1.82538e2
+    )
+    monkeypatch.setattr(
+        pfcoil.data.times, "t_plant_pulse_plasma_current_ramp_down", 1.82538e2
+    )
+    monkeypatch.setattr(pfcoil.data.times, "t_plant_pulse_fusion_ramp", 1.0e1)
     monkeypatch.setattr(constants, "den_copper", 8.9e3)
     monkeypatch.setattr(pfcoil_variables, "first_call", True)
 

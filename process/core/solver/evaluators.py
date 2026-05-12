@@ -8,7 +8,6 @@ from process.core.model import DataStructure
 from process.data_structure import global_variables as gv
 from process.data_structure import numerics
 from process.data_structure import physics_variables as pv
-from process.data_structure import times_variables as tv
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +80,7 @@ class Evaluators:
             logger.debug(f"{pv.rmajor = }")
             logger.debug(f"{pv.p_fusion_total_mw = }")
             logger.debug(f"{pv.b_plasma_toroidal_on_axis = }")
-            logger.debug(f"{tv.t_plant_pulse_burn = }")
+            logger.debug(f"{self.data.times.t_plant_pulse_burn = }")
             logger.debug("%s", sqsumconfsq)
             logger.debug("%s", xv)
 

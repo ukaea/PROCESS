@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class StructureVariables:
+class StructureData:
     """Data describing the structure."""
 
     aintmass: float = 0.0
@@ -21,4 +21,4 @@ class StructureVariables:
     """reactor core gravity support mass (kg)"""
 
 
-CREATE_DICTS_FROM_DATACLASS = StructureVariables
+CREATE_DICTS_FROM_DATACLASS = StructureData

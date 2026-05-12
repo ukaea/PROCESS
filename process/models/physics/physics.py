@@ -27,7 +27,6 @@ from process.data_structure import (
     pulse_variables,
     reinke_variables,
     stellarator_variables,
-    times_variables,
 )
 from process.models.physics import impurity_radiation
 from process.models.physics.plasma_geometry import PlasmaGeom
@@ -433,70 +432,70 @@ class Physics(Model):
 
         # Set PF coil ramp times
         if pulse_variables.i_pulsed_plant != 1:
-            if times_variables.i_t_current_ramp_up == 0:
-                times_variables.t_plant_pulse_plasma_current_ramp_up = (
+            if self.data.times.i_t_current_ramp_up == 0:
+                self.data.times.t_plant_pulse_plasma_current_ramp_up = (
                     physics_variables.plasma_current / 5.0e5
                 )
-                times_variables.t_plant_pulse_coil_precharge = (
-                    times_variables.t_plant_pulse_plasma_current_ramp_up
+                self.data.times.t_plant_pulse_coil_precharge = (
+                    self.data.times.t_plant_pulse_plasma_current_ramp_up
                 )
-                times_variables.t_plant_pulse_plasma_current_ramp_down = (
-                    times_variables.t_plant_pulse_plasma_current_ramp_up
+                self.data.times.t_plant_pulse_plasma_current_ramp_down = (
+                    self.data.times.t_plant_pulse_plasma_current_ramp_up
                 )
 
-        elif times_variables.pulsetimings == 0.0e0:  # noqa: RUF069
-            # times_variables.t_plant_pulse_coil_precharge is input
-            times_variables.t_plant_pulse_plasma_current_ramp_up = (
+        elif self.data.times.pulsetimings == 0:
+            # self.data.times.t_plant_pulse_coil_precharge is input
+            self.data.times.t_plant_pulse_plasma_current_ramp_up = (
                 physics_variables.plasma_current / 1.0e5
             )
-            times_variables.t_plant_pulse_plasma_current_ramp_down = (
-                times_variables.t_plant_pulse_plasma_current_ramp_up
+            self.data.times.t_plant_pulse_plasma_current_ramp_down = (
+                self.data.times.t_plant_pulse_plasma_current_ramp_up
             )
 
         else:
-            # times_variables.t_plant_pulse_plasma_current_ramp_up is set either in
+            # self.data.times.t_plant_pulse_plasma_current_ramp_up is set either in
             # INITIAL or INPUT, or by being
             # iterated using limit equation 41.
-            times_variables.t_plant_pulse_coil_precharge = max(
-                times_variables.t_plant_pulse_coil_precharge,
-                times_variables.t_plant_pulse_plasma_current_ramp_up,
+            self.data.times.t_plant_pulse_coil_precharge = max(
+                self.data.times.t_plant_pulse_coil_precharge,
+                self.data.times.t_plant_pulse_plasma_current_ramp_up,
             )
             # t_plant_pulse_plasma_current_ramp_down =
             # max(t_plant_pulse_plasma_current_ramp_down,
             # t_plant_pulse_plasma_current_ramp_up)
-            times_variables.t_plant_pulse_plasma_current_ramp_down = (
-                times_variables.t_plant_pulse_plasma_current_ramp_up
+            self.data.times.t_plant_pulse_plasma_current_ramp_down = (
+                self.data.times.t_plant_pulse_plasma_current_ramp_up
             )
 
-        # Reset second times_variables.t_plant_pulse_burn value
-        # (times_variables.t_burn_0).
+        # Reset second self.data.times.t_plant_pulse_burn value
+        # (self.data.times.t_burn_0).
         # This is used to ensure that the burn time is used consistently;
         # see convergence loop in fcnvmc1, evaluators.f90
-        times_variables.t_burn_0 = times_variables.t_plant_pulse_burn
+        self.data.times.t_burn_0 = self.data.times.t_plant_pulse_burn
 
         # Time during the pulse in which a plasma is present
-        times_variables.t_plant_pulse_plasma_present = (
-            times_variables.t_plant_pulse_plasma_current_ramp_up
-            + times_variables.t_plant_pulse_fusion_ramp
-            + times_variables.t_plant_pulse_burn
-            + times_variables.t_plant_pulse_plasma_current_ramp_down
+        self.data.times.t_plant_pulse_plasma_present = (
+            self.data.times.t_plant_pulse_plasma_current_ramp_up
+            + self.data.times.t_plant_pulse_fusion_ramp
+            + self.data.times.t_plant_pulse_burn
+            + self.data.times.t_plant_pulse_plasma_current_ramp_down
         )
-        times_variables.t_plant_pulse_no_burn = (
-            times_variables.t_plant_pulse_coil_precharge
-            + times_variables.t_plant_pulse_plasma_current_ramp_up
-            + times_variables.t_plant_pulse_plasma_current_ramp_down
-            + times_variables.t_plant_pulse_dwell
-            + times_variables.t_plant_pulse_fusion_ramp
+        self.data.times.t_plant_pulse_no_burn = (
+            self.data.times.t_plant_pulse_coil_precharge
+            + self.data.times.t_plant_pulse_plasma_current_ramp_up
+            + self.data.times.t_plant_pulse_plasma_current_ramp_down
+            + self.data.times.t_plant_pulse_dwell
+            + self.data.times.t_plant_pulse_fusion_ramp
         )
 
         # Total cycle time
-        times_variables.t_plant_pulse_total = (
-            times_variables.t_plant_pulse_coil_precharge
-            + times_variables.t_plant_pulse_plasma_current_ramp_up
-            + times_variables.t_plant_pulse_fusion_ramp
-            + times_variables.t_plant_pulse_burn
-            + times_variables.t_plant_pulse_plasma_current_ramp_down
-            + times_variables.t_plant_pulse_dwell
+        self.data.times.t_plant_pulse_total = (
+            self.data.times.t_plant_pulse_coil_precharge
+            + self.data.times.t_plant_pulse_plasma_current_ramp_up
+            + self.data.times.t_plant_pulse_fusion_ramp
+            + self.data.times.t_plant_pulse_burn
+            + self.data.times.t_plant_pulse_plasma_current_ramp_down
+            + self.data.times.t_plant_pulse_dwell
         )
 
         # ***************************** #
@@ -896,8 +895,8 @@ class Physics(Model):
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.plasma_current,
-            times_variables.t_plant_pulse_fusion_ramp,
-            times_variables.t_plant_pulse_burn,
+            self.data.times.t_plant_pulse_fusion_ramp,
+            self.data.times.t_plant_pulse_burn,
             physics_variables.ind_plasma_internal_norm,
         )
 
@@ -1608,45 +1607,45 @@ class Physics(Model):
             self.outfile,
             "Initial charge time for CS from zero current (s)",
             "(t_plant_pulse_coil_precharge)",
-            times_variables.t_plant_pulse_coil_precharge,
+            self.data.times.t_plant_pulse_coil_precharge,
         )
         po.ovarrf(
             self.outfile,
             "Plasma current ramp-up time (s)",
             "(t_plant_pulse_plasma_current_ramp_up)",
-            times_variables.t_plant_pulse_plasma_current_ramp_up,
+            self.data.times.t_plant_pulse_plasma_current_ramp_up,
         )
         po.ovarrf(
             self.outfile,
             "Heating time (s)",
             "(t_plant_pulse_fusion_ramp)",
-            times_variables.t_plant_pulse_fusion_ramp,
+            self.data.times.t_plant_pulse_fusion_ramp,
         )
         po.ovarre(
             self.outfile,
             "Burn time (s)",
             "(t_plant_pulse_burn)",
-            times_variables.t_plant_pulse_burn,
+            self.data.times.t_plant_pulse_burn,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Reset time to zero current for CS (s)",
             "(t_plant_pulse_plasma_current_ramp_down)",
-            times_variables.t_plant_pulse_plasma_current_ramp_down,
+            self.data.times.t_plant_pulse_plasma_current_ramp_down,
         )
         po.ovarrf(
             self.outfile,
             "Time between pulses (s)",
             "(t_plant_pulse_dwell)",
-            times_variables.t_plant_pulse_dwell,
+            self.data.times.t_plant_pulse_dwell,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total plant cycle time (s)",
             "(t_plant_pulse_total)",
-            times_variables.t_plant_pulse_total,
+            self.data.times.t_plant_pulse_total,
             "OP ",
         )
 

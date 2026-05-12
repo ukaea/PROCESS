@@ -20,7 +20,6 @@ from process.data_structure import (
 from process.data_structure import physics_variables as pv
 from process.data_structure import rebco_variables as rcv
 from process.data_structure import tfcoil_variables as tfv
-from process.data_structure import times_variables as tv
 from process.models import superconductors
 from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
 from process.models.tfcoil.base import TFCoilShapeModel
@@ -132,17 +131,24 @@ class PFCoil(Model):
         )
 
         # Set up array of times
-        tv.t_pulse_cumulative[0] = 0.0e0
-        tv.t_pulse_cumulative[1] = tv.t_plant_pulse_coil_precharge
-        tv.t_pulse_cumulative[2] = (
-            tv.t_pulse_cumulative[1] + tv.t_plant_pulse_plasma_current_ramp_up
+        self.data.times.t_pulse_cumulative[0] = 0.0e0
+        self.data.times.t_pulse_cumulative[1] = (
+            self.data.times.t_plant_pulse_coil_precharge
         )
-        tv.t_pulse_cumulative[3] = (
-            tv.t_pulse_cumulative[2] + tv.t_plant_pulse_fusion_ramp
+        self.data.times.t_pulse_cumulative[2] = (
+            self.data.times.t_pulse_cumulative[1]
+            + self.data.times.t_plant_pulse_plasma_current_ramp_up
         )
-        tv.t_pulse_cumulative[4] = tv.t_pulse_cumulative[3] + tv.t_plant_pulse_burn
-        tv.t_pulse_cumulative[5] = (
-            tv.t_pulse_cumulative[4] + tv.t_plant_pulse_plasma_current_ramp_down
+        self.data.times.t_pulse_cumulative[3] = (
+            self.data.times.t_pulse_cumulative[2]
+            + self.data.times.t_plant_pulse_fusion_ramp
+        )
+        self.data.times.t_pulse_cumulative[4] = (
+            self.data.times.t_pulse_cumulative[3] + self.data.times.t_plant_pulse_burn
+        )
+        self.data.times.t_pulse_cumulative[5] = (
+            self.data.times.t_pulse_cumulative[4]
+            + self.data.times.t_plant_pulse_plasma_current_ramp_down
         )
 
         # Set up call to MHD scaling routine for coil currents.
@@ -650,12 +656,12 @@ class PFCoil(Model):
                     pfcoil_variables.ccl0[nng] = 1.0e6 * pfcoil_variables.ccl0_ma[nng]
                     pfcoil_variables.ccls[nng] = 1.0e6 * pfcoil_variables.ccls_ma[nng]
 
-                # Beginning of pulse: t = tv.t_plant_pulse_coil_precharge
+                # Beginning of pulse: t = self.data.times.t_plant_pulse_coil_precharge
                 pfcoil_variables.c_pf_cs_coil_pulse_start_ma[ncl] = (
                     1.0e-6 * pfcoil_variables.ccl0[nng]
                 )
 
-                # Beginning of flat-top: t = tv.t_plant_pulse_coil_precharge+tv.t_plant_pulse_plasma_current_ramp_up
+                # Beginning of flat-top: t = self.data.times.t_plant_pulse_coil_precharge+self.data.times.t_plant_pulse_plasma_current_ramp_up
                 pfcoil_variables.c_pf_cs_coil_flat_top_ma[ncl] = 1.0e-6 * (
                     pfcoil_variables.ccls[nng]
                     - (
@@ -665,7 +671,7 @@ class PFCoil(Model):
                     )
                 )
 
-                # End of flat-top: t = tv.t_plant_pulse_coil_precharge+tv.t_plant_pulse_plasma_current_ramp_up+tv.t_plant_pulse_fusion_ramp+tv.t_plant_pulse_burn
+                # End of flat-top: t = self.data.times.t_plant_pulse_coil_precharge+self.data.times.t_plant_pulse_plasma_current_ramp_up+self.data.times.t_plant_pulse_fusion_ramp+self.data.times.t_plant_pulse_burn
                 pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * (
                     pfcoil_variables.ccls[nng]
                     - (
@@ -2716,12 +2722,12 @@ class PFCoil(Model):
         op.write(self.outfile, "\t" * 8 + "time (sec)")
         line = "\t\t"
         for k in range(6):
-            line += f"\t\t{tv.t_pulse_cumulative[k]:.2f}"
+            line += f"\t\t{self.data.times.t_pulse_cumulative[k]:.2f}"
         op.write(self.outfile, line)
 
         line = "\t\t"
         for k in range(6):
-            label = tv.timelabel[k]
+            label = self.data.times.timelabel[k]
             line += f"\t\t{label}"
         op.write(self.outfile, line)
 

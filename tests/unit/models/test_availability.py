@@ -8,7 +8,6 @@ from process.data_structure import divertor_variables as dv
 from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
-from process.data_structure import times_variables as tv
 
 
 @pytest.fixture
@@ -45,10 +44,10 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(availability.data.costs, "life_dpa", 40.0)
     monkeypatch.setattr(availability.data.costs, "adivflnc", 8.0)
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
-    monkeypatch.setattr(tv, "t_plant_pulse_total", 5.0)
+    monkeypatch.setattr(availability.data.times, "t_plant_pulse_total", 5.0)
     monkeypatch.setattr(availability.data.costs, "i_plant_availability", 0)
     monkeypatch.setattr(availability.data.costs, "f_t_plant_available", 0.8)
-    monkeypatch.setattr(tv, "t_plant_pulse_burn", 500.0)
+    monkeypatch.setattr(availability.data.times, "t_plant_pulse_burn", 500.0)
     monkeypatch.setattr(pv, "itart", 1)
 
     availability.avail(output=False)
@@ -94,7 +93,7 @@ def test_avail_1(monkeypatch, availability):
     monkeypatch.setattr(availability.data.costs, "uufw", 0.8)
     monkeypatch.setattr(availability.data.costs, "uumag", 0.9)
     monkeypatch.setattr(availability.data.costs, "uuves", 0.11)
-    monkeypatch.setattr(tv, "t_plant_pulse_total", 1e4)
+    monkeypatch.setattr(availability.data.times, "t_plant_pulse_total", 1e4)
 
     availability.avail(output=False)
     cfactr_obs = availability.data.costs.f_t_plant_available
@@ -399,7 +398,9 @@ def calc_u_unplanned_divertor_fix(availability, request, monkeypatch):
 
     # Mock variables used by calc_u_unplanned_divertor()
     # Some may be parameterised
-    monkeypatch.setattr(tv, "t_plant_pulse_total", param["t_plant_pulse_total"])
+    monkeypatch.setattr(
+        availability.data.times, "t_plant_pulse_total", param["t_plant_pulse_total"]
+    )
     monkeypatch.setattr(availability.data.costs, "life_div_fpy", param["life_div_fpy"])
 
     # Return the expected result for the given parameter list
@@ -476,7 +477,9 @@ def calc_u_unplanned_fwbs_fix(request, monkeypatch, availability):
 
     # Mock variables used by calc_u_unplanned_fwbs()
     # Some may be parameterised
-    monkeypatch.setattr(tv, "t_plant_pulse_total", param["t_plant_pulse_total"])
+    monkeypatch.setattr(
+        availability.data.times, "t_plant_pulse_total", param["t_plant_pulse_total"]
+    )
     monkeypatch.setattr(availability.data.fwbs, "life_blkt_fpy", param["life_blkt_fpy"])
 
     # Return the expected result for the given parameter list
@@ -549,8 +552,8 @@ def test_avail_2(monkeypatch, availability):
     )
 
     # Mock module variables
-    monkeypatch.setattr(tv, "t_plant_pulse_burn", 5.0)
-    monkeypatch.setattr(tv, "t_plant_pulse_total", 50.0)
+    monkeypatch.setattr(availability.data.times, "t_plant_pulse_burn", 5.0)
+    monkeypatch.setattr(availability.data.times, "t_plant_pulse_total", 50.0)
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "itart", 1)
     monkeypatch.setattr(availability.data.fwbs, "life_blkt_fpy", 5.0)
@@ -594,8 +597,8 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(availability.data.costs, "tmain", 1.0)
     monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
     monkeypatch.setattr(availability.data.costs, "u_unplanned_cp", 0.05)
-    monkeypatch.setattr(tv, "t_plant_pulse_burn", 5.0)
-    monkeypatch.setattr(tv, "t_plant_pulse_total", 9000.0)
+    monkeypatch.setattr(availability.data.times, "t_plant_pulse_burn", 5.0)
+    monkeypatch.setattr(availability.data.times, "t_plant_pulse_total", 9000.0)
     monkeypatch.setattr(availability.data.costs, "adivflnc", 10.0)
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(availability.data.costs, "ibkt_life", 0)

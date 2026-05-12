@@ -725,6 +725,8 @@ class Models:
             self.shield,
             self.divertor,
             self.structure,
+            self.physics,
+            self.pulse,
         )
 
     def setup_data_structure(self):

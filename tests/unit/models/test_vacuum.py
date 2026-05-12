@@ -4,7 +4,6 @@ import pytest
 
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
-from process.data_structure import times_variables as tv
 
 
 @pytest.fixture
@@ -44,7 +43,7 @@ class TestVacuum:
         )
         monkeypatch.setattr(pv, "a_plasma_surface", 1500.3146527709359)
         monkeypatch.setattr(tfv, "n_tf_coils", 18)
-        monkeypatch.setattr(tv, "t_plant_pulse_dwell", 500)
+        monkeypatch.setattr(vacuum.data.times, "t_plant_pulse_dwell", 500)
         monkeypatch.setattr(vacuum.data.vacuum, "outgasfactor", 0.0235)
         monkeypatch.setattr(vacuum.data.vacuum, "outgasindex", 1)
         monkeypatch.setattr(vacuum.data.vacuum, "pres_vv_chamber_base", 0.0005)
@@ -66,7 +65,7 @@ class TestVacuum:
         """
         monkeypatch.setattr(pv, "p_fusion_total_mw", 2115.3899563651776)
         monkeypatch.setattr(pv, "temp_plasma_electron_vol_avg_kev", 15.872999999999999)
-        monkeypatch.setattr(tv, "t_plant_pulse_coil_precharge", 30)
+        monkeypatch.setattr(vacuum.data.times, "t_plant_pulse_coil_precharge", 30)
         monkeypatch.setattr(vacuum.data.vacuum, "i_vac_pump_dwell", 0)
         monkeypatch.setattr(vacuum.data.vacuum, "i_vacuum_pump_type", 1)
         monkeypatch.setattr(
