@@ -642,6 +642,12 @@ class SuperconductingTFCoil(TFCoil):
         -------
         type
             temp_tf_superconductor_margin.
+
+
+        Raises
+        ------
+        ProcessValueError
+            If an unknown superconductor type is specified.
         """
         # =================================================================
         # Calculate temperature margin of superconductor
@@ -649,7 +655,10 @@ class SuperconductingTFCoil(TFCoil):
         #  Temperature margin (already calculated in superconductors.bi2212 for
         # i_tf_superconductor=2)
 
-        if i_tf_superconductor in {
+        if i_tf_superconductor == 2:
+            # Bi-2212: temperature margin already calculated elsewhere
+            temp_tf_superconductor_margin = 0.0
+        elif i_tf_superconductor in {
             1,
             3,
             4,
@@ -681,7 +690,7 @@ class SuperconductingTFCoil(TFCoil):
             another_estimate = 2 * temp_tf_coolant_peak_field
             (
                 t_zero_margin,
-                _root_result,
+                _,
             ) = optimize.newton(
                 superconductors.superconductor_current_density_margin,
                 temp_tf_coolant_peak_field,
@@ -706,6 +715,10 @@ class SuperconductingTFCoil(TFCoil):
                 j_superconductor: {j_superconductor}
                 """
                 )
+        else:
+            raise ProcessValueError(
+                f"Unknown superconductor type: i_tf_superconductor={i_tf_superconductor}"
+            )
 
         return temp_tf_superconductor_margin
 
@@ -876,7 +889,7 @@ class SuperconductingTFCoil(TFCoil):
         dr_tf_wp_no_insulation: float,
         r_tf_wp_inboard_centre: float,
         b_tf_inboard_peak_symmetric: float,
-    ) -> tuple[float, int]:
+    ) -> float:
         """Calculates the peak toroidal field at the outboard edge of the inboard TF
         coil winding pack, including the effects of ripple.
 
@@ -1021,8 +1034,8 @@ class SuperconductingTFCoil(TFCoil):
 
         Returns
         -------
-        tuple[float, float, float, float, float, float, float, float, float, float]
-            Tuple containing:
+        TFWPGeometry
+            A TFWPGeometry dataclass containing the following attributes:
             - r_tf_wp_inboard_inner (float): WP inboard inner radius [m]
             - r_tf_wp_inboard_outer (float): WP inboard outer radius [m]
             - r_tf_wp_inboard_centre (float): WP inboard centre radius [m]
