@@ -19,7 +19,7 @@ class TimesData:
     t_burn_0: float = 0.0
     """burn time (s) - used for internal consistency"""
 
-    t_plant_pulse_total: list[float] = field(
+    t_plant_pulse_total: float = field(
         default_factory=lambda: np.array(0.0, dtype=np.float64)
     )
     """Total plant pulse cycle time (s)"""
