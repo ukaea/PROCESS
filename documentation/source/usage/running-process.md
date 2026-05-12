@@ -14,12 +14,9 @@ A SCAN is available in any of these modes.  One input variable can be scanned (`
 
 ## To run PROCESS
 
-The default PROCESS input file name is IN.DAT. If no input file name is given as an argument in the command line, it assumes an IN.DAT file is present in the current directory:
-```bash
-# Use an IN.DAT file in the current directory
-process
-```
-In this case the output files will be `OUT.DAT` and `MFILE.DAT`.
+PROCESS input file names end in IN.DAT. If no input file name is given as an argument in the command line, PROCESS will run `process --help`. 
+
+The `examples/data` folder in the repository has the commonly used `large_tokamak_IN.DAT` input file, which can be a useful starting point for new users.
 
 The user can provide a named input file, provided the last 6 characters of the input file name are IN.DAT.
 ```bash
