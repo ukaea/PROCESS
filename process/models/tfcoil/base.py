@@ -272,7 +272,7 @@ class TFCoil(Model):
 
         Returns
         -------
-        :
+        TFGlobalGeometry
             A dataclass containing the calculated global geometry parameters of the
             TF coil.
 
