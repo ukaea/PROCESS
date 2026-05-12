@@ -1651,17 +1651,9 @@ class Power(Model):
             + pfcoil_variables.p_pf_electric_supplies_mw
         )
 
-        #  Total secondary heat
-        #  (total low-grade heat rejected
-        # - does not contribute to power conversion cycle)
-        #  Included fwbs_variables.p_tf_nuclear_heat_mw
-        # p_plant_secondary_heat_mw = power_variables.p_plant_core_systems_elec_mw
-        # + heat_transport_variables.p_hcd_electric_loss_mw
-        # + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw
-        # + heat_transport_variables.p_div_secondary_heat_mw
-        # + heat_transport_variables.p_shld_secondary_heat_mw
-        # + heat_transport_variables.p_hcd_secondary_heat_mw
-        # + fwbs_variables.p_tf_nuclear_heat_mw
+        # Total secondary heat not used for electricity production, but which
+        # contributes to the plant heat load and must be removed
+        # by the cooling system (MW)
         heat_transport_variables.p_plant_secondary_heat_mw = (
             power_variables.p_plant_core_systems_elec_mw
             + heat_transport_variables.p_hcd_electric_loss_mw
@@ -1756,8 +1748,8 @@ class Power(Model):
             p_plant_electric_net_mw=heat_transport_variables.p_plant_electric_net_mw,
         )
 
-    @staticmethod
     def cryo(
+        self,
         i_tf_sup: int,
         tfcryoarea: float,
         coldmass: float,
@@ -1918,8 +1910,7 @@ class Power(Model):
             "OP ",
         )
 
-    @staticmethod
-    def plant_thermal_efficiency(eta_turbine: float) -> float:
+    def plant_thermal_efficiency(self, eta_turbine: float) -> float:
         """Calculates the thermal efficiency of the power conversion cycle
 
 
@@ -2055,7 +2046,6 @@ class Power(Model):
                 "within its range (0-4)"
             )
         return eta_turbine
-
 
     def plant_thermal_efficiency_2(self, etath_liq: float) -> float:
         """Calculates the thermal efficiency of the power conversion cycle
