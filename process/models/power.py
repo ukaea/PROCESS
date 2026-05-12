@@ -1,3 +1,5 @@
+"""Module containing the Power class for fusion reactor power calculations."""
+
 import logging
 import math
 from enum import IntEnum
@@ -47,11 +49,14 @@ class ElectricConversionModelTypes(IntEnum):
 
 
 class Power(Model):
+    """Power model for the fusion reactor."""
+
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
     def output(self):
+        """Write the results to the main output file (OUT.DAT)."""
         # Toroidal field coil power model
         self.tfpwr(output=True)
 
@@ -68,6 +73,7 @@ class Power(Model):
         self.output_power_profiles_over_time()
 
     def run(self):
+        """Caller for the power model"""
         # Toroidal field coil power model
         self.tfpwr(output=False)
 
@@ -80,8 +86,9 @@ class Power(Model):
         # Cryoplant loads
         self.calculate_cryo_loads()
 
+    @staticmethod
     def _pf_loss_storage_j(
-        self, e_pf_delta_j: float, f_p_pf_energy_store_loss: float
+        e_pf_delta_j: float, f_p_pf_energy_store_loss: float
     ) -> float:
         """
         Energy storage loss over an interval [J]
@@ -102,16 +109,18 @@ class Power(Model):
         """
         return f_p_pf_energy_store_loss * abs(e_pf_delta_j)
 
+    @staticmethod
     def _pf_loss_power_supply_j(
-        self,
         idx_time_interval: int,
         n_pf_cs_plasma_circuits: int,
         c_pf_coil_turn: np.ndarray,
         ind_pf_cs_plasma_mutual: np.ndarray,
     ) -> float:
         """
-        Power supply conversion loss over interval idx_time_interval -> idx_time_interval+1 [J]
-        Implements: sum_i (k_ps/2) * | (I_i[n+1] + I_i[n]) * sum_j M_ij (I_j[n+1] - I_j[n]) |
+        Power supply conversion loss over interval idx_time_interval
+        -> idx_time_interval+1 [J]
+        Implements: sum_i (k_ps/2) * | (I_i[n+1] + I_i[n])
+        * sum_j M_ij (I_j[n+1] - I_j[n]) |
         Ref: M. Kovari, "PF power supplies accounting 2, Issue #972"
 
         Parameters
@@ -155,8 +164,8 @@ class Power(Model):
 
         return e_loss_pf_psu_j
 
+    @staticmethod
     def _pf_loss_busbar_j(
-        self,
         idx_time_interval: int,
         dt_pulse_phase_s: float,
         n_pf_coil_groups: int,
@@ -217,7 +226,8 @@ class Power(Model):
         res_pf_bus: np.ndarray,
     ) -> float:
         """
-        Total PF electrical energy dissipated over interval idx_time_interval -> idx_time_interval+1 [J]
+        Total PF electrical energy dissipated over interval idx_time_interval ->
+        idx_time_interval+1 [J]
         = storage + power supply + busbar
         Ref: M. Kovari, "PF power supplies accounting 2, Issue #972".
 
@@ -316,7 +326,8 @@ class Power(Model):
         #  Bus length
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
 
-        #  Find power requirements for PF coils at self.data.times.t_pulse_cumulative(ktim)
+        #  Find power requirements for PF coils at
+        # self.data.times.t_pulse_cumulative(ktim)
 
         #  PF coil resistive power requirements
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
@@ -336,7 +347,8 @@ class Power(Model):
             pf_group_circuit_index[a_pf_bus_cm] = ic
 
             #  Section area of aluminium bussing for circuit (cm**2)
-            #  pfcoil_variables.c_pf_coil_turn_peak_input : max current per turn of coil (A)
+            #  pfcoil_variables.c_pf_coil_turn_peak_input : max current per turn of
+            # coil (A)
             albusa[a_pf_bus_cm] = (
                 abs(pfcoil_variables.c_pf_coil_turn_peak_input[ic]) / 100.0e0
             )
@@ -344,7 +356,8 @@ class Power(Model):
             #  Resistance of bussing for circuit (ohm)
             #  pfbusl : bus length for each PF circuit (m)
             #  res_pf_bus[a_pf_bus_cm] = 1.5e0 * 2.62e-4 * pfbusl / albusa[a_pf_bus_cm]
-            #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
+            #  I have removed the fudge factor of 1.5 but included it in the value
+            # of rhopfbus
             res_pf_bus[a_pf_bus_cm] = (
                 pfcoil_variables.rhopfbus * pfbusl / (albusa[a_pf_bus_cm] / 10000)
             )
@@ -393,14 +406,17 @@ class Power(Model):
         delktim = self.data.times.t_plant_pulse_plasma_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
-        #  pfcoil_variables.c_pf_coil_turn(i,j) : current per turn of coil i at (end) time period j (A)
+        #  pfcoil_variables.c_pf_coil_turn(i,j) : current per turn of coil i at (end)
+        # time period j (A)
         powpfi = 0.0e0
         powpfr = 0.0e0
         powpfr2 = 0.0e0
 
-        #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils (including Central Solenoid and plasma)
-        #  plasma is #n_pf_cs_plasma_circuits, and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
-        #  pfcoil_variables.ind_pf_cs_plasma_mutual(i,j) : mutual inductance between coil i and j
+        #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils
+        # (including Central Solenoid and plasma) plasma is #n_pf_cs_plasma_circuits,
+        # and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
+        # pfcoil_variables.ind_pf_cs_plasma_mutual(i,j)
+        # : mutual inductance between coil i and j
         for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits):
             powpfii[idx_circuit] = 0.0e0
             vpfi[idx_circuit] = 0.0e0
@@ -414,7 +430,8 @@ class Power(Model):
                 idx_pf_coil += 1
                 inductxcurrent[:] = 0.0e0
                 for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits):
-                    #  Voltage in circuit idx_pf_coil due to change in current from circuit idx_circuit
+                    #  Voltage in circuit idx_pf_coil due to change in current from
+                    # circuit idx_circuit
                     vpfij = (
                         ind_pf_cs_plasma_mutual[idx_pf_coil, idx_circuit]
                         * (
@@ -424,10 +441,13 @@ class Power(Model):
                         / delktim
                     )
 
-                    #  Voltage in circuit idx_pf_coil at time, self.data.times.t_pulse_cumulative(3), due to changes in coil currents
+                    #  Voltage in circuit idx_pf_coil at time,
+                    # self.data.times.t_pulse_cumulative(3),
+                    # due to changes in coil currents
                     vpfi[idx_pf_coil] += vpfij
 
-                    #  MVA in circuit idx_pf_coil at time, self.data.times.t_pulse_cumulative(3) due to changes in current
+                    #  MVA in circuit idx_pf_coil at time,
+                    # self.data.times.t_pulse_cumulative(3) due to changes in current
                     powpfii[idx_pf_coil] += (
                         vpfij * c_pf_coil_turn[idx_pf_coil, 2] / 1.0e6
                     )
@@ -448,7 +468,9 @@ class Power(Model):
                         * c_pf_coil_turn[idx_pf_coil, idx_time]
                     )
 
-                # Resistive power in circuits at times self.data.times.t_pulse_cumulative(3) and self.data.times.t_pulse_cumulative(5) respectively (MW)
+                # Resistive power in circuits at times
+                # self.data.times.t_pulse_cumulative(3) and
+                # self.data.times.t_pulse_cumulative(5) respectively (MW)
                 powpfr += (
                     pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
                     * c_pf_coil_turn[idx_pf_coil, 2]
@@ -490,7 +512,8 @@ class Power(Model):
                 - t_pulse_cumulative[idx_time_interval]
             )
 
-            # Electrical energy dissipated in PFC power supplies as they increase or decrease the poloidal field energy
+            # Electrical energy dissipated in PFC power supplies as they increase or
+            # decrease the poloidal field energy
             pfdissipation[idx_time_interval] = self._pf_loss_interval_total_j(
                 idx_time_interval=idx_time_interval,
                 f_p_pf_energy_store_loss=f_p_pf_energy_store_loss,
@@ -504,7 +527,8 @@ class Power(Model):
                 res_pf_bus=res_pf_bus,
             )
         # Mean power dissipated
-        # The flat top duration (time 4 to 5) is the denominator, as this is the time when electricity is generated.
+        # The flat top duration (time 4 to 5) is the denominator, as this is the time
+        # when electricity is generated.
         if t_pulse_cumulative[4] - t_pulse_cumulative[3] > 1.0e0:
             pfpower = sum(pfdissipation[:]) / (
                 t_pulse_cumulative[4] - t_pulse_cumulative[3]
@@ -554,11 +578,12 @@ class Power(Model):
 
         #  PF wall plug power dissipated in power supply for ohmic heating (MW)
         #  This is additional to that required for moving stored energy around
-        # p_pf_electric_supplies_mw = physics_variables.p_plasma_ohmic_mw / pfcoil_variables.etapsu
+        # p_pf_electric_supplies_mw = physics_variables.p_plasma_ohmic_mw
+        # / pfcoil_variables.etapsu
         wall_plug_ohmicmw = physics_variables.p_plasma_ohmic_mw * (
             1.0e0 / pfcoil_variables.etapsu - 1.0e0
         )
-        # Total mean wall plug power dissipated in PFC and CS power supplies.  Issue #713
+        # Total mean wall plug power dissipated in PFC and CS power supplies. Issue #713
         pfcoil_variables.p_pf_electric_supplies_mw = wall_plug_ohmicmw + pfpowermw
 
         #  Output Section
@@ -614,7 +639,8 @@ class Power(Model):
         )
         po.ocmmnt(
             self.outfile,
-            "(Energy is dissipated in PFC power supplies only when total PF energy increases or decreases.)",
+            "(Energy is dissipated in PFC power supplies only when total PF energy "
+            "increases or decreases.)",
         )
 
         po.ovarre(
@@ -635,7 +661,8 @@ class Power(Model):
         if (numerics.ioptimz > 0) and (numerics.active_constraints[65]):
             po.ovarre(
                 self.outfile,
-                "Max permitted abs rate of change of stored energy in poloidal field (MW)",
+                "Max permitted abs rate of change of stored energy in poloidal "
+                "field (MW)",
                 "maxpoloidalpower",
                 pf_power_variables.maxpoloidalpower,
             )
@@ -716,9 +743,7 @@ class Power(Model):
         po.oheadr(self.outfile, "Electric Power Requirements")
         po.ovarre(self.outfile, "Divertor coil power supplies (MW)", "(bdvmw)", bdvmw)
         po.ovarre(self.outfile, "Cryoplant electric power (MW)", "(crymw)", crymw, "OP ")
-        # po.ovarre(self.outfile,'Heat removed from cryogenic coils (MWth)','(helpow/1.0e6)',helpow/1.0e6)
-        # po.ovarre(self.outfile,'MGF (motor-generator flywheel) units (MW)', '(fmgdmw)',fmgdmw)
-        # po.ovarin(self.outfile,'Primary coolant pumps (MW)', '(i_blkt_coolant_type)',i_blkt_coolant_type)
+
         po.ovarre(
             self.outfile,
             "Primary coolant pumps (MW)",
@@ -786,9 +811,10 @@ class Power(Model):
                 + heat_transport_variables.p_blkt_coolant_pump_mw
             )
 
-        #  Account for pump electrical inefficiencies. The coolant pumps are not assumed to be
-        #  100% efficient so the electric power to run them is greater than the power deposited
-        #  in the coolant.  The difference should be lost as secondary heat.
+        #  Account for pump electrical inefficiencies. The coolant pumps are not
+        # assumed to be 100% efficient so the electric power to run them is greater
+        # than the power deposited in the coolant.
+        # The difference should be lost as secondary heat.
 
         power_variables.p_fw_blkt_coolant_pump_elec_mw = (
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw
@@ -838,7 +864,8 @@ class Power(Model):
         )
 
         # Liquid metal breeder/coolant
-        # Calculate fraction of blanket nuclear power deposited in liquid breeder / coolant
+        # Calculate fraction of blanket nuclear power deposited in
+        # liquid breeder / coolant
         if self.data.fwbs.i_blkt_dual_coolant == 2:
             power_variables.p_blkt_liquid_breeder_heat_deposited_mw = (
                 self.data.fwbs.p_blkt_nuclear_heat_total_mw
@@ -924,8 +951,9 @@ class Power(Model):
             heat_transport_variables.etath_liq
         )
 
-        #  Primary (high-grade) thermal power, available for electricity generation.  Switch heat_transport_variables.i_shld_primary_heat
-        #  is 1 or 0, is user choice on whether the shield thermal power goes to primary or secondary heat
+        #  Primary (high-grade) thermal power, available for electricity generation.
+        # Switch heat_transport_variables.i_shld_primary_heat is 1 or 0, is user choice
+        # on whether the shield thermal power goes to primary or secondary heat
         i_thermal_electric_conversion = ElectricConversionModelTypes(
             self.data.fwbs.i_thermal_electric_conversion
         )
@@ -940,7 +968,8 @@ class Power(Model):
             heat_transport_variables.p_div_secondary_heat_mw = (
                 power_variables.p_div_heat_deposited_mw
             )
-            # Divertor primary/secondary power switch: does NOT contribute to energy generation cycle
+            # Divertor primary/secondary power switch: does NOT contribute to
+            # energy generation cycle
             power_variables.i_div_primary_heat = 0
         else:
             #  Primary thermal power used to generate electricity (MW)
@@ -952,7 +981,8 @@ class Power(Model):
             )
             #  Secondary thermal power deposited in divertor (MW)
             heat_transport_variables.p_div_secondary_heat_mw = 0.0e0
-            # Divertor primary/secondary power switch: contributes to energy generation cycle
+            # Divertor primary/secondary power switch: contributes to energy
+            # generation cycle
             power_variables.i_div_primary_heat = 1
 
         if abs(heat_transport_variables.p_plant_primary_heat_mw) < 1.0e-4:
@@ -990,9 +1020,10 @@ class Power(Model):
     def calculate_cryo_loads(self):
         """Calculates and updates the cryogenic heat loads for the system.
 
-        This method computes the various cryogenic heat loads, including conduction/radiation,
-        nuclear heating, AC losses, and resistive losses in current leads. It also updates
-        the miscellaneous allowance and total heat removal at cryogenic temperatures.
+        This method computes the various cryogenic heat loads, including
+        conduction/radiation, nuclear heating, AC losses, and resistive losses in
+        current leads. It also updates the miscellaneous allowance and total heat
+        removal at cryogenic temperatures.
         The results are stored in the corresponding instance variables.
         """
         #  Cryogenic power
@@ -1020,7 +1051,8 @@ class Power(Model):
             # Use 13% of ideal Carnot efficiency to fit J. Miller estimate
             # Rem SK : This ITER efficiency is very low compare to the Strowbridge curve
             #          any reasons why?
-            # Calculate electric power requirement for cryogenic plant at tfcoil_variables.temp_tf_cryo (MW)
+            # Calculate electric power requirement for cryogenic plant at
+            # tfcoil_variables.temp_tf_cryo (MW)
             heat_transport_variables.p_cryo_plant_electric_mw = (
                 1.0e-6
                 * (constants.TEMP_ROOM - tfcoil_variables.temp_tf_cryo)
@@ -1029,12 +1061,13 @@ class Power(Model):
             )
 
         # Cryogenic alumimium
-        # Rem : The carnot efficiency is assumed at 40% as this is a conservative assumption since a 50%
-        #       has been deduced from detailed studies
+        # Rem : The carnot efficiency is assumed at 40% as this is a conservative
+        # assumption since a 50% has been deduced from detailed studies
         # Rem : Nuclear heating on the outer legs assumed to be negligible
         # Rem : To be updated with 2 cooling loops for TART designs
         if tfcoil_variables.i_tf_sup == 2:
-            # Heat removal power at cryogenic temperature tfcoil_variables.temp_cp_coolant_inlet (W)
+            # Heat removal power at cryogenic temperature
+            # tfcoil_variables.temp_cp_coolant_inlet (W)
             heat_transport_variables.helpow_cryal = (
                 tfcoil_variables.p_cp_resistive
                 + tfcoil_variables.p_tf_leg_resistive
@@ -1042,7 +1075,8 @@ class Power(Model):
                 + self.data.fwbs.pnuc_cp_tf * 1.0e6
             )
 
-            # Calculate electric power requirement for cryogenic plant at tfcoil_variables.temp_cp_coolant_inlet (MW)
+            # Calculate electric power requirement for cryogenic plant at
+            # tfcoil_variables.temp_cp_coolant_inlet (MW)
             p_tf_cryoal_cryo = (
                 1.0e-6
                 * (constants.TEMP_ROOM - tfcoil_variables.temp_cp_coolant_inlet)
@@ -1064,6 +1098,7 @@ class Power(Model):
         ) / 1.0e3
 
     def output_plant_thermal_powers(self):
+        """Outputs the plant electricity production and requirements."""
         po.oheadr(self.outfile, "Plant Heat Transport Balance")
 
         po.ocmmnt(self.outfile, "First Wall : ")
@@ -1373,6 +1408,7 @@ class Power(Model):
         )
 
     def output_plant_electric_powers(self):
+        """Outputs the plant electricity production and requirements."""
         po.oheadr(self.outfile, "Plant Electricity Production")
 
         po.ocmmnt(self.outfile, "Turbine conversion : ")
@@ -1573,12 +1609,13 @@ class Power(Model):
         )
 
     def plant_electric_production(self):
-        """This method completes the calculation of the plant's electrical and thermal power flows,
-        including secondary heat, recirculating power, net and gross electric power, and various
-        efficiency measures.
+        """Completes the calculation of the plant's electrical and
+        thermal power flows, including secondary heat, recirculating power, net and
+        gross electric power, and various efficiency measures.
 
-        If `output` is True, the method writes a comprehensive summary of the plant's power and
-        heat transport balance, assumptions, and efficiency metrics to the specified output file.
+        If `output` is True, the method writes a comprehensive summary of the plant's
+        power and heat transport balance, assumptions, and efficiency metrics to the
+        specified output file.
         """
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup == 0:
             power_variables.p_cp_coolant_pump_elec_mw = (
@@ -1595,7 +1632,8 @@ class Power(Model):
             / 1000.0e0
         )
 
-        #  Facility heat removal (heat_transport_variables.p_plant_electric_base_total_mw calculated in ACPOW)
+        #  Facility heat removal
+        # (heat_transport_variables.p_plant_electric_base_total_mw calculated in ACPOW)
         heat_transport_variables.fachtmw = (
             heat_transport_variables.p_plant_electric_base_total_mw
         )
@@ -1614,7 +1652,16 @@ class Power(Model):
         )
 
         #  Total secondary heat
-        #  (total low-grade heat rejected - does not contribute to power conversion cycle)
+        #  (total low-grade heat rejected
+        # - does not contribute to power conversion cycle)
+        #  Included fwbs_variables.p_tf_nuclear_heat_mw
+        # p_plant_secondary_heat_mw = power_variables.p_plant_core_systems_elec_mw
+        # + heat_transport_variables.p_hcd_electric_loss_mw
+        # + heat_transport_variables.p_coolant_pump_loss_total_mw + hthermmw
+        # + heat_transport_variables.p_div_secondary_heat_mw
+        # + heat_transport_variables.p_shld_secondary_heat_mw
+        # + heat_transport_variables.p_hcd_secondary_heat_mw
+        # + fwbs_variables.p_tf_nuclear_heat_mw
         heat_transport_variables.p_plant_secondary_heat_mw = (
             power_variables.p_plant_core_systems_elec_mw
             + heat_transport_variables.p_hcd_electric_loss_mw
@@ -1709,17 +1756,17 @@ class Power(Model):
             p_plant_electric_net_mw=heat_transport_variables.p_plant_electric_net_mw,
         )
 
+    @staticmethod
     def cryo(
-        self,
-        i_tf_sup,
-        tfcryoarea,
-        coldmass,
-        p_tf_nuclear_heat_mw,
-        ensxpfm,
-        t_plant_pulse_plasma_present,
-        c_tf_turn,
-        n_tf_coils,
-    ):
+        i_tf_sup: int,
+        tfcryoarea: float,
+        coldmass: float,
+        p_tf_nuclear_heat_mw: float,
+        ensxpfm: float,
+        t_plant_pulse_plasma_present: float,
+        c_tf_turn: float,
+        n_tf_coils: int,
+    ) -> float:
         """Calculates cryogenic loads
 
         itfsup : input integer : Switch denoting whether TF coils are
@@ -1791,13 +1838,15 @@ class Power(Model):
         )
 
     def output_cryogenics(self):
-        """Outputs cryogenic system heat loads and related parameters to the output file.
+        """Outputs cryogenic system heat loads and related parameters to the
+        output file.
 
-        This method prints the breakdown of cryogenic heat loads, including conduction/radiation,
-        nuclear heating, AC losses, resistive losses in current leads, miscellaneous allowances,
-        and total heat removal at cryogenic temperatures. It also outputs the temperatures and
-        efficiencies of the cryogenic systems, as well as the electric power required for the
-        cryogenic plant.
+        This method prints the breakdown of cryogenic heat loads, including
+        conduction/radiation, nuclear heating, AC losses, resistive losses in current
+        leads, miscellaneous allowances, and total heat removal at cryogenic
+        temperatures. It also outputs the temperatures and efficiencies of the
+        cryogenic systems, as well as the electric power required for the cryogenic
+        plant.
         """
         po.oheadr(self.outfile, "Cryogenics")
         po.ovarre(
@@ -1842,7 +1891,8 @@ class Power(Model):
 
         po.ovarre(
             self.outfile,
-            "Sum = Total heat removal at cryogenic temperatures (temp_tf_cryo & temp_cp_coolant_inlet) (MW)",
+            "Sum = Total heat removal at cryogenic temperatures "
+            "(temp_tf_cryo & temp_cp_coolant_inlet) (MW)",
             "(helpow + helpow_cryal/1.0d6)",
             (heat_transport_variables.helpow + heat_transport_variables.helpow_cryal)
             * 1.0e-6,
@@ -1868,7 +1918,8 @@ class Power(Model):
             "OP ",
         )
 
-    def plant_thermal_efficiency(self, eta_turbine):
+    @staticmethod
+    def plant_thermal_efficiency(eta_turbine: float) -> float:
         """Calculates the thermal efficiency of the power conversion cycle
 
 
@@ -1877,13 +1928,15 @@ class Power(Model):
         This gives the gross power of the plant, i.e. the primary coolant pumping
         power is not subtracted at this point; however, the pumping of the
         secondary coolant is accounted for.
-        <P>If i_thermal_electric_conversion = 0, 1, a set efficiency for the chosen blanket design is used,
+        <P>If i_thermal_electric_conversion = 0, 1,
+        a set efficiency for the chosen blanket design is used,
         taken from cycle modelling studies.
-        <P>If i_thermal_electric_conversion > 1, the outlet temperature from the first wall
-        and breeder zone is used to calculate an efficiency, using a simple relationship
-        between eta_turbine and temp_blkt_coolant_out again obtained from previous studies.
-        C. Harrington, K:Power Plant Physics and Technology  PROCESS  blanket_model
-         New Power Module Harrington  Cycle correlations  Cycle correlations.xls
+        <P>If i_thermal_electric_conversion > 1, the outlet temperature from
+        the first wall and breeder zone is used to calculate an efficiency,
+        using a simple relationship between eta_turbine and temp_blkt_coolant_out again
+        obtained from previous studies. C. Harrington,
+        K:Power Plant Physics and Technology  PROCESS  blanket_model
+        New Power Module Harrington  Cycle correlations  Cycle correlations.xls
 
         Parameters
         ----------
@@ -1897,7 +1950,8 @@ class Power(Model):
             #  CCFE HCPB Model
             if self.data.fwbs.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
-                # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
+                # "PROCESS": A systems code for fusion power plants -
+                # Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
                 # Feedheat & reheat cycle assumed
                 eta_turbine = 0.411e0
@@ -1912,7 +1966,8 @@ class Power(Model):
             #  CCFE HCPB Model
             if self.data.fwbs.i_blanket_type == 1:
                 #  HCPB, efficiency taken from M. Kovari 2016
-                # "PROCESS": A systems code for fusion power plants - Part 2: Engineering
+                # "PROCESS": A systems code for fusion power plants -
+                # Part 2: Engineering
                 # https://www.sciencedirect.com/science/article/pii/S0920379616300072
                 # Feedheat & reheat cycle assumed
                 eta_turbine = 0.411e0 - power_variables.delta_eta
@@ -1940,7 +1995,8 @@ class Power(Model):
                 #  https://www.sciencedirect.com/science/article/pii/S0920379616300072
 
                 #  Superheated steam Rankine cycle correlation (C. Harrington)
-                #  Range of validity: 657 K < heat_transport_variables.temp_turbine_coolant_in < 915 K
+                #  Range of validity: 657 K
+                # < heat_transport_variables.temp_turbine_coolant_in < 915 K
                 heat_transport_variables.temp_turbine_coolant_in = (
                     self.data.fwbs.temp_blkt_coolant_out - 20.0e0
                 )
@@ -1948,7 +2004,8 @@ class Power(Model):
                     heat_transport_variables.temp_turbine_coolant_in > 915.0e0
                 ):
                     logger.warning(
-                        "Turbine temperature temp_turbine_coolant_in out of range of validity"
+                        "Turbine temperature temp_turbine_coolant_in out of range "
+                        f"of validity: "
                         f"{heat_transport_variables.temp_turbine_coolant_in=}"
                     )
 
@@ -1974,7 +2031,8 @@ class Power(Model):
             #  very low and the correlation will reflect this.
 
             #  Supercritical CO2 cycle correlation (C. Harrington)
-            #  Range of validity: 408 K < heat_transport_variables.temp_turbine_coolant_in < 1023 K
+            #  Range of validity: 408 K
+            # < heat_transport_variables.temp_turbine_coolant_in < 1023 K
             heat_transport_variables.temp_turbine_coolant_in = (
                 self.data.fwbs.temp_blkt_coolant_out - 20.0e0
             )
@@ -1982,8 +2040,8 @@ class Power(Model):
                 heat_transport_variables.temp_turbine_coolant_in > 1023.0e0
             ):
                 logger.warning(
-                    "Turbine temperature temp_turbine_coolant_in out of range of validity"
-                    f"{heat_transport_variables.temp_turbine_coolant_in=}"
+                    "Turbine temperature temp_turbine_coolant_in out of range "
+                    f"of validity: {heat_transport_variables.temp_turbine_coolant_in=}"
                 )
 
             eta_turbine = (
@@ -1993,17 +2051,24 @@ class Power(Model):
 
         else:
             logger.log(
-                f"{'i_thermal_electric_conversion does not appear to have a value within its range (0-4)'}"
+                "i_thermal_electric_conversion does not appear to have a value"
+                "within its range (0-4)"
             )
         return eta_turbine
 
-    def plant_thermal_efficiency_2(self, etath_liq):
+
+    def plant_thermal_efficiency_2(self, etath_liq: float) -> float:
         """Calculates the thermal efficiency of the power conversion cycle
         for the liquid metal breeder
 
         Parameters
         ----------
-        etath_liq :
+        etath_liq : float
+
+        Raises
+        ------
+        ProcessValueError
+             If self.data.fwbs.secondary_cycle_liq is not 2 or 4.
 
         """
         if self.data.fwbs.secondary_cycle_liq == 2:
@@ -2013,7 +2078,8 @@ class Power(Model):
         if self.data.fwbs.secondary_cycle_liq == 4:
             #  Supercritical CO2 cycle to be used
             #  Supercritical CO2 cycle correlation (C. Harrington)
-            #  Range of validity: 408 K < heat_transport_variables.temp_turbine_coolant_in < 1023 K
+            #  Range of validity: 408 K
+            # < heat_transport_variables.temp_turbine_coolant_in < 1023 K
             heat_transport_variables.temp_turbine_coolant_in = (
                 self.data.fwbs.outlet_temp_liq - 20.0e0
             )
@@ -2021,8 +2087,8 @@ class Power(Model):
                 heat_transport_variables.temp_turbine_coolant_in > 1023.0e0
             ):
                 logger.warning(
-                    "Turbine temperature temp_turbine_coolant_in out of range of validity"
-                    f"{heat_transport_variables.temp_turbine_coolant_in=}"
+                    "Turbine temperature temp_turbine_coolant_in out of range of "
+                    f"validity: {heat_transport_variables.temp_turbine_coolant_in=}"
                 )
 
             return (
@@ -2031,7 +2097,8 @@ class Power(Model):
             )
 
         raise ProcessValueError(
-            f"secondary_cycle_liq ={self.data.fwbs.secondary_cycle_liq} is an invalid option."
+            f"secondary_cycle_liq ={self.data.fwbs.secondary_cycle_liq} "
+            f"is an invalid option."
         )
 
     def tfpwr(self, output: bool):
@@ -2074,7 +2141,8 @@ class Power(Model):
                 + tfbusres
             )
 
-            #  No reactive portion of the voltage is included here - assume long ramp times
+            #  No reactive portion of the voltage is included here - assume long
+            #  ramp times
             #  MDK This is steady state voltage, not "peak" voltage
             tfcoil_variables.vtfkv = (
                 1.0e-3
@@ -2097,12 +2165,14 @@ class Power(Model):
                 1.0e-6 * tfcoil_variables.c_tf_turn**2 * tfbusres
             )  # TF coil bus => Dodgy #
 
-            #  TF coil reactive power
-            #  Set reactive power to 0, since ramp up can be long
-            #  The TF coil can be ramped up as slowly as you like
-            #  (although this will affect the time to recover from a magnet quench).
-            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_plant_pulse_plasma_current_ramp_up + t_plant_pulse_coil_precharge)
-            #                                 estotf(=e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils) has been removed (#199 #847)
+            # TF coil reactive power
+            # Set reactive power to 0, since ramp up can be long
+            # The TF coil can be ramped up as slowly as you like
+            # (although this will affect the time to recover from a magnet quench).
+            # tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_plant_pulse_plasma_current_ramp_up
+            # + t_plant_pulse_coil_precharge)
+            # estotf(=e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils)
+            # has been removed (#199 #847)
             tfreacmw = 0.0e0
 
             # Total power consumption (MW)
@@ -2545,8 +2615,8 @@ class Power(Model):
 
         return (tfckw, len_tf_bus, drarea, tfcbv, p_tf_electric_supplies_mw)
 
+    @staticmethod
     def power_profiles_over_time(
-        self,
         t_precharge: float,
         t_current_ramp_up: float,
         t_fusion_ramp: float,
@@ -2660,27 +2730,32 @@ class Power(Model):
         # TF coil supplies: assume coil is always charged, so constant negative load
         p_tf_electric_supplies_profile_mw[:] = -p_tf_electric_supplies_mw
 
-        # PF coil supplies: zero for first step, then negative during ramp-up and burn, then zero
+        # PF coil supplies: zero for first step, then negative during ramp-up and
+        # burn, then zero
         p_pf_electric_supplies_profile_mw[0] = 0
         p_pf_electric_supplies_profile_mw[1:5] = -p_pf_electric_supplies_mw
         p_pf_electric_supplies_profile_mw[5:] = 0
 
-        # Coolant pump elec total: zero for first two steps, then negative during ramp-up and burn, then zero
+        # Coolant pump elec total: zero for first two steps, then negative during
+        # ramp-up and burn, then zero
         p_coolant_pump_elec_total_profile_mw[:2] = 0
         p_coolant_pump_elec_total_profile_mw[2:5] = -p_coolant_pump_elec_total_mw
         p_coolant_pump_elec_total_profile_mw[5:] = 0
 
-        # HCD electric total: zero for first two steps, then negative during ramp-up and burn, then zero
+        # HCD electric total: zero for first two steps, then negative during ramp-up
+        # and burn, then zero
         p_hcd_electric_total_profile_mw[:2] = 0
         p_hcd_electric_total_profile_mw[2:5] = -p_hcd_electric_total_mw
         p_hcd_electric_total_profile_mw[5:] = 0
 
-        # Gross electric power: zero for first two steps, then positive during burn, then zero
+        # Gross electric power: zero for first two steps, then positive during burn,
+        # then zero
         p_plant_electric_gross_profile_mw[:2] = 0
         p_plant_electric_gross_profile_mw[2:5] = p_plant_electric_gross_mw
         p_plant_electric_gross_profile_mw[5:] = 0
 
-        # Net electric power: calculated by subtracting all loads from gross electric power
+        # Net electric power: calculated by subtracting all loads from gross
+        # electric power
         p_plant_electric_net_profile_mw = (
             p_plant_electric_gross_profile_mw
             + p_plant_electric_base_total_profile_mw
@@ -2696,7 +2771,8 @@ class Power(Model):
         if not np.isclose(p_plant_electric_net_profile_mw[3], p_plant_electric_net_mw):
             logger.error(
                 "Calculated net electric power during burn does not match input value."
-                f"Calculated: {p_plant_electric_net_profile_mw[3]}, Input: {p_plant_electric_net_mw}"
+                f"Calculated: {p_plant_electric_net_profile_mw[3]}, "
+                f"Input: {p_plant_electric_net_mw}"
             )
 
         # Integrate net electric power over the pulse to get total energy produced (MJ)
@@ -2723,6 +2799,7 @@ class Power(Model):
     def output_power_profiles_over_time(
         self,
     ):
+        """Outputs the time-dependent power profiles to the output file"""
         for i, val in enumerate(power_variables.p_plant_electric_base_total_profile_mw):
             po.ovarre(
                 self.mfile,
