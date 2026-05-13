@@ -71,6 +71,9 @@ p_div_lower_rad_mw: float = None
 n_divertors: int = None
 """Number of divertors (calculated from `i_single_null`)"""
 
+deg_div_poloidal_plasma: float = None
+"""Divertor poloidal angle subtended by plasma (degrees)"""
+
 
 def init_divertor_variables():
     global \
@@ -96,7 +99,8 @@ def init_divertor_variables():
         p_div_upper_nuclear_heat_mw, \
         p_div_upper_rad_mw, \
         p_div_lower_rad_mw, \
-        n_divertors
+        n_divertors, \
+        deg_div_poloidal_plasma
 
     anginc = 0.262
     deg_div_field_plate = 1.0
@@ -121,3 +125,4 @@ def init_divertor_variables():
     p_div_upper_rad_mw = 0.0
     p_div_lower_rad_mw = 0.0
     n_divertors = 2
+    deg_div_poloidal_plasma = 0.0

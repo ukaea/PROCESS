@@ -37,6 +37,9 @@ class Divertor(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
+        dv.deg_div_poloidal_plasma = self.single_divertor_angle
+        self.data.fwbs.f_ster_div_single = dv.deg_div_poloidal_plasma / 360.0
+
         self.data.fwbs.p_div_nuclear_heat_total_mw = self.incident_neutron_power(
             p_plasma_neutron_mw=pv.p_plasma_neutron_mw,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
@@ -86,6 +89,15 @@ class Divertor(Model):
                 output=output,
             )
             return
+
+    @property
+    def single_divertor_angle(self):
+        """
+        Calculate the angle subtended by a single divertor.
+        Angle is calculated as 180 degrees minus the inboard
+        blanket poloidal angle, divided by 2 (for two divertors).
+        """
+        return (180.0 - self.data.blanket.deg_blkt_inboard_poloidal_plasma) / 2.0
 
     def divtart(
         self,

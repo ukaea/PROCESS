@@ -660,6 +660,31 @@ class BlanketLibrary(Model):
             "(a_blkt_total_surface_full_coverage)",
             build_variables.a_blkt_total_surface_full_coverage,
         )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Outboard blanket poloidal angle subtended by plasma (degrees)",
+            "(deg_blkt_outboard_poloidal_plasma)",
+            self.data.blanket.deg_blkt_outboard_poloidal_plasma,
+        )
+        po.ovarre(
+            self.outfile,
+            "Angle fraction of outboard blanket poloidal angle subtended by plasma",
+            "(f_deg_blkt_outboard_poloidal_plasma)",
+            self.data.blanket.f_deg_blkt_outboard_poloidal_plasma,
+        )
+        po.ovarre(
+            self.outfile,
+            "Inboard blanket poloidal angle subtended by plasma (degrees)",
+            "(deg_blkt_inboard_poloidal_plasma)",
+            self.data.blanket.deg_blkt_inboard_poloidal_plasma,
+        )
+        po.ovarre(
+            self.outfile,
+            "Angle fraction of inboard blanket poloidal angle subtended by plasma",
+            "(f_deg_blkt_inboard_poloidal_plasma)",
+            self.data.blanket.f_deg_blkt_inboard_poloidal_plasma,
+        )
 
     def primary_coolant_properties(self, output: bool):
         """Calculates the fluid properties of the Primary Coolant in the FW and BZ.
@@ -3470,6 +3495,87 @@ class OutboardBlanket(BlanketLibrary):
             b_bz_liq=self.data.fwbs.b_bz_liq,
         )
 
+    def blkt_outboard_poloidal_plasma_angle(
+        self, n_divertors: int, deg_div_poloidal_plasma: float
+    ) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the
+        plasma mid-plane.
+
+        Parameters
+        ----------
+        n_divertors : int
+            Number of divertors in the design (1 or 2).
+        deg_div_poloidal_plasma : float
+            Poloidal angle subtended by the divertor at the plasma mid-plane (degrees).
+
+        Returns
+        -------
+        float
+            Poloidal angle subtended by outboard blanket at plasma mid-plane (degrees).
+
+        Raises
+        ------
+        ProcessValueError
+            If n_divertors is not 1 or 2.
+        """
+        if n_divertors == 1:
+            return 180.0 + deg_div_poloidal_plasma
+        if n_divertors == 2:
+            return 180.0
+        raise ProcessValueError(
+            f"n_divertors = {n_divertors} is an invalid option. Only 1 or 2 divertors "
+            f"are supported."
+        )
+
+    @property
+    def f_deg_blkt_outboard_poloidal_plasma(self) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the
+        plasma mid-plane.
+        """
+        return self.data.blanket.deg_blkt_outboard_poloidal_plasma / 360.0
+
+    @staticmethod
+    def calculate_blkt_outboard_poloidal_plasma_angle(
+        rminor: float,
+        dr_blkt_outboard: float,
+        dz_blkt_half: float,
+        dr_fw_plasma_gap_outboard: float,
+        dr_fw_outboard: float,
+    ) -> float:
+        """Calculate the poloidal angle subtended by the outboard blanket at the
+        plasma mid-plane.
+
+        Parameters
+        ----------
+        rminor :
+            Plasma minor radius (m).
+        dr_blkt_outboard :
+            Radial thickness of outboard blanket (m).
+        dz_blkt_half :
+            Vertical half-height of outboard blanket (m).
+        dr_fw_plasma_gap_outboard :
+            Outboard first wall to plasma gap (m).
+        dr_fw_outboard :
+            Radial thickness of outboard first wall (m).
+
+        Returns
+        -------
+        deg_blkt_outboard_poloidal_plasma :
+            Poloidal angle subtended by outboard blanket at plasma mid-plane (degrees).
+        """
+        return np.degrees(
+            2.0
+            * np.arctan(
+                dz_blkt_half
+                / (
+                    rminor
+                    + dr_blkt_outboard
+                    + dr_fw_plasma_gap_outboard
+                    + dr_fw_outboard
+                )
+            )
+        )
+
     def calculate_blanket_outboard_module_geometry(
         self,
         n_blkt_outboard_modules_toroidal: int,
@@ -3477,7 +3583,8 @@ class OutboardBlanket(BlanketLibrary):
         rminor: float,
         dr_fw_plasma_gap_outboard: float,
     ) -> float:
-        """Calculate the mid-plane toroidal circumference and segment length of the outboard blanket.
+        """Calculate the mid-plane toroidal circumference and segment length of the
+        outboard blanket.
 
         Parameters
         ----------
@@ -3516,6 +3623,34 @@ class InboardBlanket(BlanketLibrary):
         )
 
         self.set_blanket_module_geometry()
+
+    @staticmethod
+    def calculate_blkt_inboard_poloidal_plasma_angle(
+        rminor: float,
+        dz_blkt_half: float,
+        dr_fw_plasma_gap_inboard: float,
+    ) -> float:
+        """Calculate the poloidal angle subtended by the inboard blanket at the plasma mid-plane.
+
+        Angle is taken from the FW surface
+
+        Parameters
+        ----------
+        rminor :
+            Plasma minor radius (m).
+        dz_blkt_half :
+            Vertical half-height of inboard blanket (m).
+        dr_fw_plasma_gap_inboard :
+            Inboard first wall to plasma gap (m).
+
+        Returns
+        -------
+        deg_blkt_inboard_poloidal_plasma :
+            Poloidal angle subtended by inboard blanket at plasma mid-plane (degrees).
+        """
+        return np.degrees(
+            2.0 * np.arctan(dz_blkt_half / (rminor + dr_fw_plasma_gap_inboard))
+        )
 
     def calculate_blanket_inboard_module_geometry(
         self,

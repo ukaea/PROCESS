@@ -8,6 +8,7 @@ from process.data_structure import (
     divertor_variables,
     physics_variables,
 )
+from process.models.blankets.blanket_library import InboardBlanket
 
 
 @pytest.fixture
@@ -1795,3 +1796,48 @@ def test_liquid_breeder_properties_part_3(monkeypatch, blanket_library_fixture):
 
     blanket_library_fixture.liquid_breeder_properties()
     assert pytest.approx(blanket_library_fixture.data.fwbs.den_liq, rel=1e-3) == 504.0
+
+
+class CalculateBlktInboardPoloidalPlasmaAngleParam(NamedTuple):
+    rminor: Any = None
+    dz_blkt_half: Any = None
+    dr_fw_plasma_gap_inboard: Any = None
+    expected_angle: Any = None
+
+
+@pytest.mark.parametrize(
+    "calculate_blkt_inboard_poloidal_plasma_angle_param",
+    [
+        CalculateBlktInboardPoloidalPlasmaAngleParam(
+            rminor=2.0,
+            dz_blkt_half=0.0,
+            dr_fw_plasma_gap_inboard=0.25,
+            expected_angle=0.0,
+        ),
+        CalculateBlktInboardPoloidalPlasmaAngleParam(
+            rminor=2.0,
+            dz_blkt_half=2.25,  # dz = rminor + gap -> 2 * atan(1) = 90 deg
+            dr_fw_plasma_gap_inboard=0.25,
+            expected_angle=90.0,
+        ),
+        CalculateBlktInboardPoloidalPlasmaAngleParam(
+            rminor=2.0,
+            dz_blkt_half=np.sqrt(3.0) * 2.25,  # dz = sqrt(3) * (rminor + gap) -> 120 deg
+            dr_fw_plasma_gap_inboard=0.25,
+            expected_angle=120.0,
+        ),
+    ],
+)
+def test_calculate_blkt_inboard_poloidal_plasma_angle(
+    calculate_blkt_inboard_poloidal_plasma_angle_param,
+):
+    """Test for calculate_blkt_inboard_poloidal_plasma_angle."""
+    result = InboardBlanket.calculate_blkt_inboard_poloidal_plasma_angle(
+        rminor=calculate_blkt_inboard_poloidal_plasma_angle_param.rminor,
+        dz_blkt_half=calculate_blkt_inboard_poloidal_plasma_angle_param.dz_blkt_half,
+        dr_fw_plasma_gap_inboard=calculate_blkt_inboard_poloidal_plasma_angle_param.dr_fw_plasma_gap_inboard,
+    )
+
+    assert result == pytest.approx(
+        calculate_blkt_inboard_poloidal_plasma_angle_param.expected_angle
+    )
