@@ -24,8 +24,10 @@ from process.data_structure import (
 from process.models import superconductors
 from process.models.superconductors import (
     N_CROCO_STRANDS_TURN,
+    CroCoCableGeometry,
     SuperconductorMaterial,
     SuperconductorModel,
+    calculate_croco_cable_geometry,
 )
 from process.models.tfcoil import quench
 from process.models.tfcoil.base import TFCoil, TFPlasmaCaseType
@@ -3157,6 +3159,36 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             superconducting_tf_coil_variables.conductor_jacket_area
             / superconducting_tf_coil_variables.conductor_area
         )
+
+        croco_cable_geometry: CroCoCableGeometry = calculate_croco_cable_geometry(
+            dia_croco_strand=superconducting_tf_coil_variables.dia_tf_turn_croco_cable,
+            dx_croco_strand_copper=rebco_variables.dx_croco_strand_copper,
+            dx_hts_tape_rebco=rebco_variables.dx_hts_tape_rebco,
+            dx_hts_tape_copper=rebco_variables.dx_hts_tape_copper,
+            dx_hts_tape_hastelloy=rebco_variables.dx_hts_tape_hastelloy,
+        )
+
+        rebco_variables.dia_croco_strand_tape_region = (
+            croco_cable_geometry.dia_croco_strand_tape_region
+        )
+        rebco_variables.n_croco_strand_hts_tapes = (
+            croco_cable_geometry.n_croco_strand_hts_tapes
+        )
+        a_croco_strand_copper_total = croco_cable_geometry.a_croco_strand_copper_total
+        a_croco_strand_hastelloy = croco_cable_geometry.a_croco_strand_hastelloy
+        a_croco_strand_solder = croco_cable_geometry.a_croco_strand_solder
+        a_croco_strand_rebco = croco_cable_geometry.a_croco_strand_rebco
+        a_croco_strand = croco_cable_geometry.a_croco_strand
+        rebco_variables.dr_hts_tape = croco_cable_geometry.dr_hts_tape
+        rebco_variables.dx_croco_strand_tape_stack = (
+            croco_cable_geometry.dx_croco_strand_tape_stack
+        )
+
+        rebco_variables.a_croco_strand_copper_total = a_croco_strand_copper_total
+        rebco_variables.a_croco_strand_hastelloy = a_croco_strand_hastelloy
+        rebco_variables.a_croco_strand_solder = a_croco_strand_solder
+        rebco_variables.a_croco_strand_rebco = a_croco_strand_rebco
+        rebco_variables.a_croco_strand = a_croco_strand
 
         # Negative areas or fractions error reporting
         if (
