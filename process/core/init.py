@@ -39,9 +39,6 @@ from process.data_structure.physics_variables import (
     init_physics_variables,
 )
 from process.data_structure.power_variables import init_power_variables
-from process.data_structure.primary_pumping_variables import (
-    init_primary_pumping_variables,
-)
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.scan_variables import init_scan_variables
 from process.data_structure.stellarator_variables import init_stellarator_variables
@@ -275,7 +272,6 @@ def init_all_module_vars():
     init_tfcoil_variables()
     constants.init_constants()
     init_current_drive_variables()
-    init_primary_pumping_variables()
     init_pfcoil_variables()
     init_pf_power_variables()
     init_constraint_variables()

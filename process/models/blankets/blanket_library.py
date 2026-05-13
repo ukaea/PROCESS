@@ -14,7 +14,6 @@ from process.data_structure import (
     divertor_variables,
     heat_transport_variables,
     physics_variables,
-    primary_pumping_variables,
 )
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
@@ -2385,7 +2384,7 @@ class BlanketLibrary(Model):
                 i_p_coolant_pumping
                 == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
             ):
-                deltap_fw_blkt = primary_pumping_variables.dp_fw_blkt
+                deltap_fw_blkt = self.data.primary_pumping.dp_fw_blkt
             # Total coolant mass flow rate in the first wall/blanket (kg/s)
             self.data.blanket.mftotal = (
                 self.data.blanket.mflow_fw_inboard_coolant_total
@@ -2393,7 +2392,7 @@ class BlanketLibrary(Model):
             )
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
+            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
                 self.coolant_pumping_power(
                     output=output,
                     i_liquid_breeder=1,
@@ -2426,8 +2425,8 @@ class BlanketLibrary(Model):
                 i_p_coolant_pumping
                 == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
             ):
-                deltap_fw = primary_pumping_variables.dp_fw
-                deltap_blkt = primary_pumping_variables.dp_blkt
+                deltap_fw = self.data.primary_pumping.dp_fw
+                deltap_blkt = self.data.primary_pumping.dp_blkt
 
             # Total coolant mass flow rate in the first wall (kg/s)
             self.data.blanket.mflow_fw_coolant_total = (
@@ -2471,7 +2470,7 @@ class BlanketLibrary(Model):
             )
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
+            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
                 heat_transport_variables.p_fw_coolant_pump_mw
                 + heat_transport_variables.p_blkt_coolant_pump_mw
             )
@@ -2488,7 +2487,7 @@ class BlanketLibrary(Model):
                 i_p_coolant_pumping
                 == PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP
             ):
-                deltap_bl_liq = primary_pumping_variables.dp_liq
+                deltap_bl_liq = self.data.primary_pumping.dp_liq
             # Total liquid metal breeder/coolant mass flow rate in the blanket (kg/s)
             self.data.blanket.mfblkt_liq = (
                 self.data.blanket.mfblkti_liq + self.data.blanket.mfblkto_liq
@@ -2511,7 +2510,7 @@ class BlanketLibrary(Model):
             )
 
             heat_transport_variables.htpmw_blkt_tot = (
-                primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+                self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
                 + heat_transport_variables.p_blkt_breeder_pump_mw
             )
 
@@ -2728,7 +2727,7 @@ class BlanketLibrary(Model):
                 self.outfile,
                 "Total mechanical pumping power for FW and blanket (MW)",
                 "(p_fw_blkt_coolant_pump_mw)",
-                primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
+                self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
                 "OP ",
             )
             if self.data.fwbs.i_blkt_dual_coolant > 0:
