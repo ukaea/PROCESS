@@ -7627,6 +7627,9 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
 
     axis.minorticks_on()
     axis.set_title("WP Turn Structure")
+    axis.set_xlim(-turn_width * 0.025, turn_width * 1.025)
+    axis.set_ylim(-turn_width * 0.025, turn_width * 1.025)
+    axis.set_aspect("equal", adjustable="box")
     axis.set_xlabel("r [m]")
     axis.set_ylabel("x [m]")
 

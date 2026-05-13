@@ -1048,17 +1048,7 @@ def calculate_croco_cable_geometry(
     dx_hts_tape_rebco: float,
     dx_hts_tape_copper: float,
     dx_hts_tape_hastelloy: float,
-) -> tuple[
-    float,  # dia_croco_strand_tape_region
-    float,  # n_croco_strand_hts_tapes
-    float,  # a_croco_strand_copper_total
-    float,  # a_croco_strand_hastelloy
-    float,  # a_croco_strand_solder
-    float,  # a_croco_strand_rebco
-    float,  # a_croco_strand
-    float,  # dr_hts_tape
-    float,  # dx_croco_strand_tape_stack
-]:
+) -> CroCoCableGeometry:
     """Calculate geometry and areas for a CroCo cable strand.
 
     Parameters
@@ -1076,17 +1066,16 @@ def calculate_croco_cable_geometry(
 
     Returns
     -------
-    tuple[float, float, float, float, float, float, float, float]
-        Tuple containing:
-        - dia_croco_strand_tape_region: Inner diameter of CroCo strand tape region (m)
-        - n_croco_strand_hts_tapes: Number of HTS tapes in CroCo strand
-        - a_croco_strand_copper_total: Total copper area in CroCo strand (m²)
-        - a_croco_strand_hastelloy: Total Hastelloy area in CroCo strand (m²)
-        - a_croco_strand_solder: Total solder area in CroCo strand (m²)
-        - a_croco_strand_rebco: Total REBCO area in CroCo strand (m²)
-        - a_croco_strand: Total area of CroCo strand (m²)
-        - dr_hts_tape: Width of the tape (m)
-        - dx_croco_strand_tape_stack: Height of the tape stack in the CroCo strand (m)
+    CroCoCableGeometry
+    - dia_croco_strand_tape_region: Inner diameter of CroCo strand tape region (m)
+    - n_croco_strand_hts_tapes: Number of HTS tapes in CroCo strand
+    - a_croco_strand_copper_total: Total copper area in CroCo strand (m²)
+    - a_croco_strand_hastelloy: Total Hastelloy area in CroCo strand (m²)
+    - a_croco_strand_solder: Total solder area in CroCo strand (m²)
+    - a_croco_strand_rebco: Total REBCO area in CroCo strand (m²)
+    - a_croco_strand: Total area of CroCo strand (m²)
+    - dr_hts_tape: Width of the tape (m)
+    - dx_croco_strand_tape_stack: Height of the tape stack in the CroCo strand (m)
     """
     # Calculate the inner diameter of the CroCo strand tape region
     dia_croco_strand_tape_region = dia_croco_strand - 2.0 * dx_croco_strand_copper
@@ -1127,16 +1116,16 @@ def calculate_croco_cable_geometry(
     # Total area of the CroCo strand
     a_croco_strand = np.pi / 4.0 * dia_croco_strand**2
 
-    return (
-        dia_croco_strand_tape_region,
-        n_croco_strand_hts_tapes,
-        a_croco_strand_copper_total,
-        a_croco_strand_hastelloy,
-        a_croco_strand_solder,
-        a_croco_strand_rebco,
-        a_croco_strand,
-        dr_hts_tape,
-        dx_croco_strand_tape_stack,
+    return CroCoCableGeometry(
+        dia_croco_strand_tape_region=dia_croco_strand_tape_region,
+        n_croco_strand_hts_tapes=n_croco_strand_hts_tapes,
+        a_croco_strand_copper_total=a_croco_strand_copper_total,
+        a_croco_strand_hastelloy=a_croco_strand_hastelloy,
+        a_croco_strand_solder=a_croco_strand_solder,
+        a_croco_strand_rebco=a_croco_strand_rebco,
+        a_croco_strand=a_croco_strand,
+        dr_hts_tape=dr_hts_tape,
+        dx_croco_strand_tape_stack=dx_croco_strand_tape_stack,
     )
 
 
@@ -1156,22 +1145,28 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     dx_croco_strand_copper :
 
     """
-    (
-        rebco_variables.dia_croco_strand_tape_region,
-        rebco_variables.n_croco_strand_hts_tapes,
-        a_croco_strand_copper_total,
-        a_croco_strand_hastelloy,
-        a_croco_strand_solder,
-        a_croco_strand_rebco,
-        a_croco_strand,
-        rebco_variables.dr_hts_tape,
-        rebco_variables.dx_croco_strand_tape_stack,
-    ) = calculate_croco_cable_geometry(
-        dia_croco_strand,
-        dx_croco_strand_copper,
-        rebco_variables.dx_hts_tape_rebco,
-        rebco_variables.dx_hts_tape_copper,
-        rebco_variables.dx_hts_tape_hastelloy,
+    croco_cable_geometry: CroCoCableGeometry = calculate_croco_cable_geometry(
+        dia_croco_strand=dia_croco_strand,
+        dx_croco_strand_copper=dx_croco_strand_copper,
+        dx_hts_tape_rebco=rebco_variables.dx_hts_tape_rebco,
+        dx_hts_tape_copper=rebco_variables.dx_hts_tape_copper,
+        dx_hts_tape_hastelloy=rebco_variables.dx_hts_tape_hastelloy,
+    )
+
+    rebco_variables.dia_croco_strand_tape_region = (
+        croco_cable_geometry.dia_croco_strand_tape_region
+    )
+    rebco_variables.n_croco_strand_hts_tapes = (
+        croco_cable_geometry.n_croco_strand_hts_tapes
+    )
+    a_croco_strand_copper_total = croco_cable_geometry.a_croco_strand_copper_total
+    a_croco_strand_hastelloy = croco_cable_geometry.a_croco_strand_hastelloy
+    a_croco_strand_solder = croco_cable_geometry.a_croco_strand_solder
+    a_croco_strand_rebco = croco_cable_geometry.a_croco_strand_rebco
+    a_croco_strand = croco_cable_geometry.a_croco_strand
+    rebco_variables.dr_hts_tape = croco_cable_geometry.dr_hts_tape
+    rebco_variables.dx_croco_strand_tape_stack = (
+        croco_cable_geometry.dx_croco_strand_tape_stack
     )
 
     rebco_variables.a_croco_strand_copper_total = a_croco_strand_copper_total
