@@ -251,7 +251,7 @@ INPUT_VARIABLES = {
     "copper_rrr": InputVariable(
         data_structure.rebco_variables, float, range=(1.0, 10000.0)
     ),
-    "dx_hts_tape_copper": InputVariable(
+    "dx_tf_hts_tape_copper": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.001)
     ),
     "copperaoh_m2": InputVariable(
@@ -282,7 +282,7 @@ INPUT_VARIABLES = {
     "crane_arm_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "crane_clrnc_h": InputVariable("buildings", float, range=(0.0, 10.0)),
     "crane_clrnc_v": InputVariable("buildings", float, range=(0.0, 10.0)),
-    "dx_croco_strand_copper": InputVariable(
+    "dx_tf_croco_strand_copper": InputVariable(
         data_structure.rebco_variables, float, range=(0.001, 0.1)
     ),
     "cryomag_h": InputVariable("buildings", float, range=(1.0, 100.0)),
@@ -540,7 +540,7 @@ INPUT_VARIABLES = {
     "gas_buildings_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "ground_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
     "n_ecrh_harmonic": InputVariable("current_drive", float, range=(1.0, 10.0)),
-    "dx_hts_tape_hastelloy": InputVariable(
+    "dx_tf_hts_tape_hastelloy": InputVariable(
         data_structure.rebco_variables, float, range=(1e-08, 0.001)
     ),
     "hccl": InputVariable("buildings", float, range=(0.0, 10.0)),
@@ -733,7 +733,7 @@ INPUT_VARIABLES = {
     "reactor_hall_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "reactor_roof_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
     "reactor_wall_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
-    "dx_hts_tape_rebco": InputVariable(
+    "dx_tf_hts_tape_rebco": InputVariable(
         data_structure.rebco_variables,
         float,
         range=(1e-08, 0.0001),
@@ -858,10 +858,10 @@ INPUT_VARIABLES = {
     "t_turn_tf_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "dx_hts_tape_total": InputVariable(
+    "dx_tf_hts_tape_total": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.1)
     ),
-    "dr_hts_tape": InputVariable(
+    "dr_tf_hts_tape": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.1)
     ),
     "tauee_in": InputVariable("physics", float, range=(0.0, 100.0)),
@@ -1072,7 +1072,7 @@ INPUT_VARIABLES = {
     "ccls_ma": InputVariable("pf_coil", float, array=True),
     "cfind": InputVariable("costs", float, array=True),
     "i_blkt_coolant_type": InputVariable("fwbs", int, choices=[1, 2]),
-    "coppera_m2_max": InputVariable(
+    "tf_coppera_m2_max": InputVariable(
         data_structure.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable("costs", int, choices=[0, 1, 2]),

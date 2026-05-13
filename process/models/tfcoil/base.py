@@ -1953,14 +1953,14 @@ class TFCoil(Model):
                         self.outfile,
                         "Maximum permitted TF coil current / copper area (A/m2)",
                         "(copperA_m2_max)",
-                        rebco_variables.coppera_m2_max,
+                        rebco_variables.tf_coppera_m2_max,
                     )
 
                 po.ovarre(
                     self.outfile,
                     "Actual TF coil current / copper area (A/m2)",
                     "(copperA_m2)",
-                    rebco_variables.coppera_m2,
+                    rebco_variables.tf_coppera_m2,
                 )
 
         # TF coil radial build
