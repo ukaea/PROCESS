@@ -11,7 +11,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     divertor_variables,
     heat_transport_variables,
     physics_variables,
@@ -75,15 +74,15 @@ class BlanketLibrary(Model):
         # Calculate half-height
         # Blanket
         self.data.blanket.dz_blkt_half = self.calculate_blkt_half_height(
-            z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
-            dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
+            z_plasma_xpoint_lower=self.data.build.z_plasma_xpoint_lower,
+            dz_xpoint_divertor=self.data.build.dz_xpoint_divertor,
             dz_divertor=divertor_variables.dz_divertor,
-            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
-            dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
-            dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
-            dr_fw_inboard=build_variables.dr_fw_inboard,
-            dr_fw_outboard=build_variables.dr_fw_outboard,
-            dz_blkt_upper=build_variables.dz_blkt_upper,
+            z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,
+            dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
+            dr_fw_inboard=self.data.build.dr_fw_inboard,
+            dr_fw_outboard=self.data.build.dr_fw_outboard,
+            dz_blkt_upper=self.data.build.dz_blkt_upper,
             n_divertors=divertor_variables.n_divertors,
         )
 
@@ -93,18 +92,18 @@ class BlanketLibrary(Model):
             or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
-                build_variables.a_blkt_inboard_surface_full_coverage,
-                build_variables.a_blkt_outboard_surface_full_coverage,
-                build_variables.a_blkt_total_surface_full_coverage,
+                self.data.build.a_blkt_inboard_surface_full_coverage,
+                self.data.build.a_blkt_outboard_surface_full_coverage,
+                self.data.build.a_blkt_total_surface_full_coverage,
             ) = self.calculate_dshaped_blkt_areas(
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                dr_shld_inboard=build_variables.dr_shld_inboard,
-                dr_blkt_inboard=build_variables.dr_blkt_inboard,
-                dr_fw_inboard=build_variables.dr_fw_inboard,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                dr_shld_inboard=self.data.build.dr_shld_inboard,
+                dr_blkt_inboard=self.data.build.dr_blkt_inboard,
+                dr_fw_inboard=self.data.build.dr_fw_inboard,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 rminor=physics_variables.rminor,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
-                dr_fw_outboard=build_variables.dr_fw_outboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
+                dr_fw_outboard=self.data.build.dr_fw_outboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
             )
 
@@ -113,35 +112,35 @@ class BlanketLibrary(Model):
                 self.data.fwbs.vol_blkt_outboard_full_coverage,
                 self.data.fwbs.vol_blkt_total_full_coverage,
             ) = self.calculate_dshaped_blkt_volumes(
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                dr_shld_inboard=build_variables.dr_shld_inboard,
-                dr_blkt_inboard=build_variables.dr_blkt_inboard,
-                dr_fw_inboard=build_variables.dr_fw_inboard,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                dr_shld_inboard=self.data.build.dr_shld_inboard,
+                dr_blkt_inboard=self.data.build.dr_blkt_inboard,
+                dr_fw_inboard=self.data.build.dr_fw_inboard,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 rminor=physics_variables.rminor,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
-                dr_fw_outboard=build_variables.dr_fw_outboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
+                dr_fw_outboard=self.data.build.dr_fw_outboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
-                dr_blkt_outboard=build_variables.dr_blkt_outboard,
-                dz_blkt_upper=build_variables.dz_blkt_upper,
+                dr_blkt_outboard=self.data.build.dr_blkt_outboard,
+                dz_blkt_upper=self.data.build.dz_blkt_upper,
             )
 
         # Elliptical blanket and shield
         else:
             (
-                build_variables.a_blkt_inboard_surface_full_coverage,
-                build_variables.a_blkt_outboard_surface_full_coverage,
-                build_variables.a_blkt_total_surface_full_coverage,
+                self.data.build.a_blkt_inboard_surface_full_coverage,
+                self.data.build.a_blkt_outboard_surface_full_coverage,
+                self.data.build.a_blkt_total_surface_full_coverage,
             ) = self.calculate_elliptical_blkt_areas(
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
                 triang=physics_variables.triang,
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                dr_shld_inboard=build_variables.dr_shld_inboard,
-                dr_blkt_inboard=build_variables.dr_blkt_inboard,
-                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
-                dr_shld_outboard=build_variables.dr_shld_outboard,
-                dr_blkt_outboard=build_variables.dr_blkt_outboard,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                dr_shld_inboard=self.data.build.dr_shld_inboard,
+                dr_blkt_inboard=self.data.build.dr_blkt_inboard,
+                r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
+                dr_shld_outboard=self.data.build.dr_shld_outboard,
+                dr_blkt_outboard=self.data.build.dr_blkt_outboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
             )
 
@@ -153,14 +152,14 @@ class BlanketLibrary(Model):
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
                 triang=physics_variables.triang,
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                dr_shld_inboard=build_variables.dr_shld_inboard,
-                dr_blkt_inboard=build_variables.dr_blkt_inboard,
-                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
-                dr_shld_outboard=build_variables.dr_shld_outboard,
-                dr_blkt_outboard=build_variables.dr_blkt_outboard,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                dr_shld_inboard=self.data.build.dr_shld_inboard,
+                dr_blkt_inboard=self.data.build.dr_blkt_inboard,
+                r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
+                dr_shld_outboard=self.data.build.dr_shld_outboard,
+                dr_blkt_outboard=self.data.build.dr_blkt_outboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
-                dz_blkt_upper=build_variables.dz_blkt_upper,
+                dz_blkt_upper=self.data.build.dz_blkt_upper,
             )
 
         # Apply coverage factors to volumes and surface areas
@@ -535,30 +534,30 @@ class BlanketLibrary(Model):
         # Apply blanket coverage factors
         if divertor_variables.n_divertors == 2:
             # double null configuration
-            build_variables.a_blkt_outboard_surface = (
-                build_variables.a_blkt_total_surface_full_coverage
+            self.data.build.a_blkt_outboard_surface = (
+                self.data.build.a_blkt_total_surface_full_coverage
                 * (
                     1.0
                     - 2.0 * self.data.fwbs.f_ster_div_single
                     - self.data.fwbs.f_a_fw_outboard_hcd
                 )
-                - build_variables.a_blkt_inboard_surface_full_coverage
+                - self.data.build.a_blkt_inboard_surface_full_coverage
             )
         else:
             # single null configuration
-            build_variables.a_blkt_outboard_surface = (
-                build_variables.a_blkt_total_surface_full_coverage
+            self.data.build.a_blkt_outboard_surface = (
+                self.data.build.a_blkt_total_surface_full_coverage
                 * (
                     1.0
                     - self.data.fwbs.f_ster_div_single
                     - self.data.fwbs.f_a_fw_outboard_hcd
                 )
-                - build_variables.a_blkt_inboard_surface_full_coverage
+                - self.data.build.a_blkt_inboard_surface_full_coverage
             )
 
-        build_variables.a_blkt_total_surface = (
-            build_variables.a_blkt_inboard_surface_full_coverage
-            + build_variables.a_blkt_outboard_surface
+        self.data.build.a_blkt_total_surface = (
+            self.data.build.a_blkt_inboard_surface_full_coverage
+            + self.data.build.a_blkt_outboard_surface
         )
 
         self.data.fwbs.vol_blkt_outboard = (
@@ -572,8 +571,8 @@ class BlanketLibrary(Model):
         )
         self.data.fwbs.vol_blkt_inboard = self.data.fwbs.vol_blkt_inboard_full_coverage
 
-        build_variables.a_blkt_inboard_surface = (
-            build_variables.a_blkt_inboard_surface_full_coverage
+        self.data.build.a_blkt_inboard_surface = (
+            self.data.build.a_blkt_inboard_surface_full_coverage
         )
 
         self.data.fwbs.vol_blkt_total = (
@@ -627,38 +626,38 @@ class BlanketLibrary(Model):
             self.outfile,
             "Inboard Blanket Surface Area with gaps and holes (m2)",
             "(a_blkt_inboard_surface)",
-            build_variables.a_blkt_inboard_surface,
+            self.data.build.a_blkt_inboard_surface,
         )
         po.ovarst(
             self.outfile,
             "Outboard Blanket Surface Area with gaps and holes (m2)",
             "(a_blkt_outboard_surface)",
-            build_variables.a_blkt_outboard_surface,
+            self.data.build.a_blkt_outboard_surface,
         )
         po.ovarst(
             self.outfile,
             "Total Blanket Surface Area with gaps and holes (m2)",
             "(a_blkt_total_surface)",
-            build_variables.a_blkt_total_surface,
+            self.data.build.a_blkt_total_surface,
         )
 
         po.ovarst(
             self.outfile,
             "Inboard blanket surface area if toridally continuous (m2)",
             "(a_blkt_inboard_surface_full_coverage)",
-            build_variables.a_blkt_inboard_surface_full_coverage,
+            self.data.build.a_blkt_inboard_surface_full_coverage,
         )
         po.ovarst(
             self.outfile,
             "Outboard blanket surface area if toridally continuous (m2)",
             "(a_blkt_outboard_surface_full_coverage)",
-            build_variables.a_blkt_outboard_surface_full_coverage,
+            self.data.build.a_blkt_outboard_surface_full_coverage,
         )
         po.ovarst(
             self.outfile,
             "Total blanket surface area if toridally continuous (m2)",
             "(a_blkt_total_surface_full_coverage)",
-            build_variables.a_blkt_total_surface_full_coverage,
+            self.data.build.a_blkt_total_surface_full_coverage,
         )
 
     def primary_coolant_properties(self, output: bool):
@@ -895,17 +894,17 @@ class BlanketLibrary(Model):
         if self.data.fwbs.i_blanket_type == 5:
             # Unless DCLL then we will use BZ
             self.data.blanket.len_blkt_inboard_coolant_channel_radial = (
-                build_variables.blbuith
+                self.data.build.blbuith
             )
             self.data.blanket.len_blkt_outboard_coolant_channel_radial = (
-                build_variables.blbuoth
+                self.data.build.blbuoth
             )
         else:
             self.data.blanket.len_blkt_inboard_coolant_channel_radial = (
-                0.8e0 * build_variables.dr_blkt_inboard
+                0.8e0 * self.data.build.dr_blkt_inboard
             )
             self.data.blanket.len_blkt_outboard_coolant_channel_radial = (
-                0.8e0 * build_variables.dr_blkt_outboard
+                0.8e0 * self.data.build.dr_blkt_outboard
             )
 
         # Using the total perimeter of the machine, segment the outboard
@@ -928,9 +927,9 @@ class BlanketLibrary(Model):
 
             self.data.blanket.len_blkt_outboard_segment_poloidal = self.calculate_dshaped_outboard_blkt_segment_poloidal(
                 n_blkt_outboard_modules_poloidal=self.data.fwbs.n_blkt_outboard_modules_poloidal,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 rminor=physics_variables.rminor,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
                 n_divertors=divertor_variables.n_divertors,
                 f_ster_div_single=self.data.fwbs.f_ster_div_single,
@@ -940,7 +939,7 @@ class BlanketLibrary(Model):
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
                 triang=physics_variables.triang,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
                 n_blkt_inboard_modules_poloidal=self.data.fwbs.n_blkt_inboard_modules_poloidal,
                 n_divertors=divertor_variables.n_divertors,
@@ -952,7 +951,7 @@ class BlanketLibrary(Model):
                 rminor=physics_variables.rminor,
                 triang=physics_variables.triang,
                 dz_blkt_half=self.data.blanket.dz_blkt_half,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
                 n_blkt_outboard_modules_poloidal=self.data.fwbs.n_blkt_outboard_modules_poloidal,
                 n_divertors=divertor_variables.n_divertors,
                 f_ster_div_single=self.data.fwbs.f_ster_div_single,
@@ -1838,7 +1837,7 @@ class BlanketLibrary(Model):
                 / (
                     physics_variables.rmajor
                     - (physics_variables.rmajor / physics_variables.aspect)
-                    - (build_variables.dr_blkt_inboard / 2)
+                    - (self.data.build.dr_blkt_inboard / 2)
                 )
             )
         # We do not use this if there is no IB blanket, but will use edge as fill value
@@ -1858,7 +1857,7 @@ class BlanketLibrary(Model):
             / (
                 physics_variables.rmajor
                 + (physics_variables.rmajor / physics_variables.aspect)
-                + (build_variables.dr_blkt_outboard / 2)
+                + (self.data.build.dr_blkt_outboard / 2)
             )
         )
 
@@ -2208,7 +2207,7 @@ class BlanketLibrary(Model):
         ) = self.fw.fw_temp(
             output,
             self.data.fwbs.radius_fw_channel,
-            build_variables.dr_fw_inboard,
+            self.data.build.dr_fw_inboard,
             self.data.first_wall.a_fw_inboard,
             self.data.fwbs.psurffwi,
             self.data.blanket.p_fw_inboard_nuclear_heat_mw,
@@ -2222,7 +2221,7 @@ class BlanketLibrary(Model):
         ) = self.fw.fw_temp(
             output,
             self.data.fwbs.radius_fw_channel,
-            build_variables.dr_fw_outboard,
+            self.data.build.dr_fw_outboard,
             self.data.first_wall.a_fw_outboard,
             self.data.fwbs.psurffwo,
             self.data.blanket.p_fw_outboard_nuclear_heat_mw,

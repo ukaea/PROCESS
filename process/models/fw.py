@@ -8,7 +8,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     constraint_variables,
     divertor_variables,
     physics_variables,
@@ -43,15 +42,15 @@ class FirstWall(Model):
 
     def run(self):
         self.data.fwbs.dz_fw_half = self.calculate_first_wall_half_height(
-            z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
-            dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
+            z_plasma_xpoint_lower=self.data.build.z_plasma_xpoint_lower,
+            dz_xpoint_divertor=self.data.build.dz_xpoint_divertor,
             dz_divertor=divertor_variables.dz_divertor,
-            dz_blkt_upper=build_variables.dz_blkt_upper,
-            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
-            dz_fw_plasma_gap=build_variables.dz_fw_plasma_gap,
+            dz_blkt_upper=self.data.build.dz_blkt_upper,
+            z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,
+            dz_fw_plasma_gap=self.data.build.dz_fw_plasma_gap,
             n_divertors=divertor_variables.n_divertors,
-            dr_fw_inboard=build_variables.dr_fw_inboard,
-            dr_fw_outboard=build_variables.dr_fw_outboard,
+            dr_fw_inboard=self.data.build.dr_fw_inboard,
+            dr_fw_outboard=self.data.build.dr_fw_outboard,
         )
 
         if (
@@ -66,8 +65,8 @@ class FirstWall(Model):
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
                 dz_fw_half=self.data.fwbs.dz_fw_half,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
             )
 
         else:
@@ -80,8 +79,8 @@ class FirstWall(Model):
                 rminor=physics_variables.rminor,
                 triang=physics_variables.triang,
                 dz_fw_half=self.data.fwbs.dz_fw_half,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
             )
 
         (
@@ -336,10 +335,10 @@ class FirstWall(Model):
         return a_fw_inboard, a_fw_outboard, a_fw_total
 
     def set_fw_geometry(self):
-        build_variables.dr_fw_inboard = (
+        self.data.build.dr_fw_inboard = (
             2 * self.data.fwbs.radius_fw_channel + 2 * self.data.fwbs.dr_fw_wall
         )
-        build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
+        self.data.build.dr_fw_outboard = self.data.build.dr_fw_inboard
 
     def fw_temp(
         self,
@@ -729,14 +728,14 @@ class FirstWall(Model):
             self.outfile,
             "Radial thickness off inboard first wall (m)",
             "(dr_fw_inboard)",
-            build_variables.dr_fw_inboard,
+            self.data.build.dr_fw_inboard,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Radial thickness off outboard first wall (m)",
             "(dr_fw_outboard)",
-            build_variables.dr_fw_outboard,
+            self.data.build.dr_fw_outboard,
             "OP ",
         )
         po.ovarrf(

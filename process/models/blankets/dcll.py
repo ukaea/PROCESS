@@ -3,7 +3,6 @@ from process.core import (
     process_output as po,
 )
 from process.data_structure import (
-    build_variables,
     current_drive_variables,
     dcll_variables,
     divertor_variables,
@@ -113,13 +112,13 @@ class DCLL(InboardBlanket, OutboardBlanket):
             n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
-            dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
         )
         self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
-            dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+            dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
         )
 
         self.primary_coolant_properties(output=output)
@@ -499,21 +498,21 @@ class DCLL(InboardBlanket, OutboardBlanket):
             dcll_variables.r_fci = 0.0
 
         # Back wall set 0.02m thickness but will vary BZ (structure and breeder) thickness
-        dcll_variables.bz_r_ib = build_variables.blbuith - dcll_variables.r_fci
-        dcll_variables.bz_r_ob = build_variables.blbuoth - dcll_variables.r_fci
+        dcll_variables.bz_r_ib = self.data.build.blbuith - dcll_variables.r_fci
+        dcll_variables.bz_r_ob = self.data.build.blbuoth - dcll_variables.r_fci
         # Back wall thickness (m)
         dcll_variables.r_backwall = 2.0e-2
 
         # Manifold/BSS (m) also vars from elsewhere in process but set here
-        build_variables.blbmith = (
-            build_variables.dr_blkt_inboard
+        self.data.build.blbmith = (
+            self.data.build.dr_blkt_inboard
             - dcll_variables.r_backwall
-            - build_variables.blbuith
+            - self.data.build.blbuith
         )
-        build_variables.blbmoth = (
-            build_variables.dr_blkt_outboard
+        self.data.build.blbmoth = (
+            self.data.build.dr_blkt_outboard
             - dcll_variables.r_backwall
-            - build_variables.blbuoth
+            - self.data.build.blbuoth
         )
 
         # Fraction of EUROfer (volume composition for EURO + He structures)
@@ -542,11 +541,11 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 self.data.fwbs.vol_blkt_inboard
                 * dcll_variables.bz_r_ib
                 * (1 - self.data.fwbs.r_f_liq_ib)
-                / build_variables.dr_blkt_inboard
+                / self.data.build.dr_blkt_inboard
             ) + (
                 self.data.fwbs.vol_blkt_outboard
                 * (dcll_variables.bz_r_ob * (1 - self.data.fwbs.r_f_liq_ob))
-                / build_variables.dr_blkt_outboard
+                / self.data.build.dr_blkt_outboard
             )
             if self.data.fwbs.i_blkt_dual_coolant > 0:
                 self.data.fwbs.f_a_blkt_cooling_channels = (
@@ -558,57 +557,57 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 self.data.fwbs.vol_blkt_inboard
                 * dcll_variables.bz_r_ib
                 * self.data.fwbs.r_f_liq_ib
-                / build_variables.dr_blkt_inboard
+                / self.data.build.dr_blkt_inboard
             ) + (
                 self.data.fwbs.vol_blkt_outboard
                 * dcll_variables.bz_r_ob
                 * self.data.fwbs.r_f_liq_ob
-                / build_variables.dr_blkt_outboard
+                / self.data.build.dr_blkt_outboard
             )
             dcll_variables.vol_bz_liq_ib = (
                 self.data.fwbs.vol_blkt_inboard
                 * dcll_variables.bz_r_ib
                 * self.data.fwbs.r_f_liq_ib
-                / build_variables.dr_blkt_inboard
+                / self.data.build.dr_blkt_inboard
             )
             dcll_variables.vol_bz_liq_ob = (
                 self.data.fwbs.vol_blkt_outboard
                 * dcll_variables.bz_r_ob
                 * self.data.fwbs.r_f_liq_ob
-                / build_variables.dr_blkt_outboard
+                / self.data.build.dr_blkt_outboard
             )
 
             if self.data.fwbs.i_blkt_liquid_breeder_channel_type > 0:
                 dcll_variables.vol_fci = (
                     self.data.fwbs.vol_blkt_inboard
                     * dcll_variables.r_fci
-                    / build_variables.dr_blkt_inboard
+                    / self.data.build.dr_blkt_inboard
                 ) + (
                     self.data.fwbs.vol_blkt_outboard
                     * dcll_variables.r_fci
-                    / build_variables.dr_blkt_outboard
+                    / self.data.build.dr_blkt_outboard
                 )
 
             # Back Wall
             dcll_variables.vol_bw = (
                 self.data.fwbs.vol_blkt_inboard
                 * dcll_variables.r_backwall
-                / build_variables.dr_blkt_inboard
+                / self.data.build.dr_blkt_inboard
             ) + (
                 self.data.fwbs.vol_blkt_outboard
                 * dcll_variables.r_backwall
-                / build_variables.dr_blkt_outboard
+                / self.data.build.dr_blkt_outboard
             )
 
             # Manifold/BSS
             dcll_variables.vol_bss = (
                 self.data.fwbs.vol_blkt_inboard
-                * build_variables.blbmith
-                / build_variables.dr_blkt_inboard
+                * self.data.build.blbmith
+                / self.data.build.dr_blkt_inboard
             ) + (
                 self.data.fwbs.vol_blkt_outboard
-                * build_variables.blbmoth
-                / build_variables.dr_blkt_outboard
+                * self.data.build.blbmoth
+                / self.data.build.dr_blkt_outboard
             )
 
         else:
@@ -619,7 +618,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 self.data.fwbs.vol_blkt_outboard
                 * dcll_variables.bz_r_ob
                 * (1 - self.data.fwbs.r_f_liq_ob)
-                / build_variables.dr_blkt_outboard
+                / self.data.build.dr_blkt_outboard
             )
             if self.data.fwbs.i_blkt_dual_coolant > 0:
                 self.data.fwbs.f_a_blkt_cooling_channels = (
@@ -631,33 +630,33 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 self.data.fwbs.vol_blkt_outboard
                 * dcll_variables.bz_r_ob
                 * self.data.fwbs.r_f_liq_ob
-                / build_variables.dr_blkt_outboard
+                / self.data.build.dr_blkt_outboard
             )
             dcll_variables.vol_bz_liq_ob = (
                 self.data.fwbs.vol_blkt_outboard
                 * dcll_variables.bz_r_ob
                 * self.data.fwbs.r_f_liq_ob
-                / build_variables.dr_blkt_outboard
+                / self.data.build.dr_blkt_outboard
             )
             if self.data.fwbs.i_blkt_liquid_breeder_channel_type > 0:
                 dcll_variables.vol_fci = (
                     self.data.fwbs.vol_blkt_outboard
                     * dcll_variables.r_fci
-                    / build_variables.dr_blkt_outboard
+                    / self.data.build.dr_blkt_outboard
                 )
 
             # Back Wall
             dcll_variables.vol_bw = (
                 self.data.fwbs.vol_blkt_outboard
                 * dcll_variables.r_backwall
-                / build_variables.dr_blkt_outboard
+                / self.data.build.dr_blkt_outboard
             )
 
             # Manifold/BSS
             dcll_variables.vol_bss = (
                 self.data.fwbs.vol_blkt_outboard
-                * build_variables.blbmoth
-                / build_variables.dr_blkt_outboard
+                * self.data.build.blbmoth
+                / self.data.build.dr_blkt_outboard
             )
 
         # Calculate masses
@@ -708,8 +707,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
         # FW
         # First wall volume (m^3)
         self.data.fwbs.vol_fw_total = (
-            self.data.first_wall.a_fw_inboard * build_variables.dr_fw_inboard
-            + self.data.first_wall.a_fw_outboard * build_variables.dr_fw_outboard
+            self.data.first_wall.a_fw_inboard * self.data.build.dr_fw_inboard
+            + self.data.first_wall.a_fw_outboard * self.data.build.dr_fw_outboard
         )
         # First wall mass, excluding armour (kg)
         dcll_variables.fwmass_stl = (
@@ -762,7 +761,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 + self.data.fwbs.m_fw_total
                 * (
                     self.data.first_wall.a_fw_inboard
-                    * build_variables.dr_fw_inboard
+                    * self.data.build.dr_fw_inboard
                     / self.data.fwbs.vol_fw_total
                 )
                 + self.data.fwbs.fw_armour_mass
@@ -782,7 +781,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
             + self.data.fwbs.m_fw_total
             * (
                 self.data.first_wall.a_fw_outboard
-                * build_variables.dr_fw_outboard
+                * self.data.build.dr_fw_outboard
                 / self.data.fwbs.vol_fw_total
             )
             + self.data.fwbs.fw_armour_mass
@@ -910,25 +909,25 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 self.outfile,
                 "Inboard radial first wall thickness (m)",
                 "(dr_fw_inboard)",
-                build_variables.dr_fw_inboard,
+                self.data.build.dr_fw_inboard,
             )
             po.ovarrf(
                 self.outfile,
                 "Outboard radial first wall thickness (m)",
                 "(dr_fw_outboard)",
-                build_variables.dr_fw_outboard,
+                self.data.build.dr_fw_outboard,
             )
             po.ovarrf(
                 self.outfile,
                 "Inboard radial breeder zone thickness (m)",
                 "(blbuith)",
-                build_variables.blbuith,
+                self.data.build.blbuith,
             )
             po.ovarrf(
                 self.outfile,
                 "Outboard radial breeder zone thickness (m)",
                 "(blbuoth)",
-                build_variables.blbuoth,
+                self.data.build.blbuoth,
             )
 
     def write_output(self):

@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    build_variables,
     constraint_variables,
     divertor_variables,
     global_variables,
@@ -1559,21 +1558,21 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     values they use to test the model for JA DEMO concept. Includes the assumptions
     and approximations in the models integration with PROCESS.
     """
-    monkeypatch.setattr(build_variables, "dr_tf_inboard", 1.4)  # Baseline 2018 value
-    monkeypatch.setattr(build_variables, "z_tf_inside_half", 8.8)  # Table 2
-    monkeypatch.setattr(build_variables, "r_tf_inboard_mid", 3.55)  # Table 2
-    monkeypatch.setattr(build_variables, "r_tf_outboard_mid", 15.62)  # Table 2
+    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_inboard", 1.4)  # Baseline 2018 value
+    monkeypatch.setattr(sctfcoil.data.build, "z_tf_inside_half", 8.8)  # Table 2
+    monkeypatch.setattr(sctfcoil.data.build, "r_tf_inboard_mid", 3.55)  # Table 2
+    monkeypatch.setattr(sctfcoil.data.build, "r_tf_outboard_mid", 15.62)  # Table 2
     monkeypatch.setattr(tfcoil_variables, "theta1_coil", 48)  # Table 2
     monkeypatch.setattr(tfcoil_variables, "theta1_vv", 1)  # Table 2
     monkeypatch.setattr(
-        build_variables,
+        sctfcoil.data.build,
         "r_tf_inboard_out",
-        build_variables.r_tf_inboard_mid + (build_variables.dr_tf_inboard / 2),
+        sctfcoil.data.build.r_tf_inboard_mid + (sctfcoil.data.build.dr_tf_inboard / 2),
     )
-    monkeypatch.setattr(build_variables, "dr_tf_outboard", 0)  # simplifies
+    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_outboard", 0)  # simplifies
 
     monkeypatch.setattr(
-        build_variables, "z_plasma_xpoint_upper", 5.47008
+        sctfcoil.data.build, "z_plasma_xpoint_upper", 5.47008
     )  # Baseline 2018
 
     monkeypatch.setattr(
@@ -1587,24 +1586,24 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         superconducting_tf_coil_variables, "dx_tf_side_case_average", 0.05
     )
 
-    monkeypatch.setattr(build_variables, "dz_xpoint_divertor", 0.05)  # Baseline 2018
-    monkeypatch.setattr(build_variables, "dz_shld_upper", 0.3)  # Baseline 2018
+    monkeypatch.setattr(sctfcoil.data.build, "dz_xpoint_divertor", 0.05)  # Baseline 2018
+    monkeypatch.setattr(sctfcoil.data.build, "dz_shld_upper", 0.3)  # Baseline 2018
     monkeypatch.setattr(
         divertor_variables, "dz_divertor", 2.05
     )  # chosen to achieve H_vv in Table 2
 
-    monkeypatch.setattr(build_variables, "dr_tf_shld_gap", 0.05)  # Baseline 2018
+    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_shld_gap", 0.05)  # Baseline 2018
     monkeypatch.setattr(
-        build_variables, "dr_shld_thermal_outboard", 0.05
+        sctfcoil.data.build, "dr_shld_thermal_outboard", 0.05
     )  # Baseline 2018
-    monkeypatch.setattr(build_variables, "dr_tf_outboard", 1.4)  # Baseline 2018
+    monkeypatch.setattr(sctfcoil.data.build, "dr_tf_outboard", 1.4)  # Baseline 2018
     monkeypatch.setattr(
-        build_variables, "dr_shld_vv_gap_outboard", 1.7
+        sctfcoil.data.build, "dr_shld_vv_gap_outboard", 1.7
     )  # chosen to achieve Ro_vv in Table 2
 
-    monkeypatch.setattr(build_variables, "dr_vv_outboard", 0.06)  # Section 3
-    monkeypatch.setattr(build_variables, "dr_vv_inboard", 0.06)  # Section 3
-    monkeypatch.setattr(build_variables, "dz_vv_upper", 0.06)  # Section 3
+    monkeypatch.setattr(sctfcoil.data.build, "dr_vv_outboard", 0.06)  # Section 3
+    monkeypatch.setattr(sctfcoil.data.build, "dr_vv_inboard", 0.06)  # Section 3
+    monkeypatch.setattr(sctfcoil.data.build, "dz_vv_upper", 0.06)  # Section 3
 
     monkeypatch.setattr(tfcoil_variables, "len_tf_coil", 51.1)  # Table 2
     monkeypatch.setattr(
@@ -1618,7 +1617,9 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     )  # Section 3
 
     monkeypatch.setattr(
-        build_variables, "r_vv_inboard_out", 4.45 + (build_variables.dr_vv_inboard / 2)
+        sctfcoil.data.build,
+        "r_vv_inboard_out",
+        4.45 + (sctfcoil.data.build.dr_vv_inboard / 2),
     )  # Table 2
 
     sctfcoil.vv_stress_on_quench()
@@ -1943,7 +1944,7 @@ def test_superconducting_tf_coil_area_and_masses(
         ("r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out),
         ("z_tf_inside_half", tfcoilareaandmassesparam.z_tf_inside_half),
     ):
-        monkeypatch.setattr(build_variables, name, val)
+        monkeypatch.setattr(sctfcoil.data.build, name, val)
 
     for name, val in (
         ("m_tf_wp_steel_conduit", tfcoilareaandmassesparam.m_tf_wp_steel_conduit),

@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    build_variables,
     heat_transport_variables,
     impurity_radiation_module,
     physics_variables,
@@ -475,104 +474,134 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "blbmith", stbildparam.blbmith)
+    monkeypatch.setattr(stellarator.data.build, "blbmith", stbildparam.blbmith)
 
-    monkeypatch.setattr(build_variables, "blbmoth", stbildparam.blbmoth)
+    monkeypatch.setattr(stellarator.data.build, "blbmoth", stbildparam.blbmoth)
 
-    monkeypatch.setattr(build_variables, "blbpith", stbildparam.blbpith)
+    monkeypatch.setattr(stellarator.data.build, "blbpith", stbildparam.blbpith)
 
-    monkeypatch.setattr(build_variables, "blbpoth", stbildparam.blbpoth)
+    monkeypatch.setattr(stellarator.data.build, "blbpoth", stbildparam.blbpoth)
 
-    monkeypatch.setattr(build_variables, "blbuith", stbildparam.blbuith)
+    monkeypatch.setattr(stellarator.data.build, "blbuith", stbildparam.blbuith)
 
-    monkeypatch.setattr(build_variables, "blbuoth", stbildparam.blbuoth)
-
-    monkeypatch.setattr(build_variables, "dr_blkt_inboard", stbildparam.dr_blkt_inboard)
+    monkeypatch.setattr(stellarator.data.build, "blbuoth", stbildparam.blbuoth)
 
     monkeypatch.setattr(
-        build_variables, "dr_blkt_outboard", stbildparam.dr_blkt_outboard
+        stellarator.data.build, "dr_blkt_inboard", stbildparam.dr_blkt_inboard
     )
 
-    monkeypatch.setattr(build_variables, "dz_blkt_upper", stbildparam.dz_blkt_upper)
+    monkeypatch.setattr(
+        stellarator.data.build, "dr_blkt_outboard", stbildparam.dr_blkt_outboard
+    )
 
-    monkeypatch.setattr(build_variables, "dr_bore", stbildparam.dr_bore)
+    monkeypatch.setattr(
+        stellarator.data.build, "dz_blkt_upper", stbildparam.dz_blkt_upper
+    )
 
-    monkeypatch.setattr(build_variables, "dr_vv_inboard", stbildparam.dr_vv_inboard)
+    monkeypatch.setattr(stellarator.data.build, "dr_bore", stbildparam.dr_bore)
 
-    monkeypatch.setattr(build_variables, "dr_vv_outboard", stbildparam.dr_vv_outboard)
+    monkeypatch.setattr(
+        stellarator.data.build, "dr_vv_inboard", stbildparam.dr_vv_inboard
+    )
+
+    monkeypatch.setattr(
+        stellarator.data.build, "dr_vv_outboard", stbildparam.dr_vv_outboard
+    )
 
     monkeypatch.setattr(
         stellarator.data.first_wall, "a_fw_total", stbildparam.a_fw_total
     )
 
-    monkeypatch.setattr(build_variables, "dr_fw_inboard", stbildparam.dr_fw_inboard)
-
-    monkeypatch.setattr(build_variables, "dr_fw_outboard", stbildparam.dr_fw_outboard)
-
     monkeypatch.setattr(
-        build_variables, "dr_shld_vv_gap_inboard", stbildparam.dr_shld_vv_gap_inboard
-    )
-
-    monkeypatch.setattr(build_variables, "dr_cs_tf_gap", stbildparam.dr_cs_tf_gap)
-
-    monkeypatch.setattr(build_variables, "gapomin", stbildparam.gapomin)
-
-    monkeypatch.setattr(
-        build_variables, "dr_shld_vv_gap_outboard", stbildparam.dr_shld_vv_gap_outboard
+        stellarator.data.build, "dr_fw_inboard", stbildparam.dr_fw_inboard
     )
 
     monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", stbildparam.z_tf_inside_half
-    )
-
-    monkeypatch.setattr(build_variables, "dr_cs", stbildparam.dr_cs)
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", stbildparam.r_tf_outboard_mid
-    )
-
-    monkeypatch.setattr(build_variables, "rbld", stbildparam.rbld)
-
-    monkeypatch.setattr(
-        build_variables, "r_shld_inboard_inner", stbildparam.r_shld_inboard_inner
+        stellarator.data.build, "dr_fw_outboard", stbildparam.dr_fw_outboard
     )
 
     monkeypatch.setattr(
-        build_variables, "r_shld_outboard_outer", stbildparam.r_shld_outboard_outer
+        stellarator.data.build,
+        "dr_shld_vv_gap_inboard",
+        stbildparam.dr_shld_vv_gap_inboard,
     )
 
-    monkeypatch.setattr(build_variables, "rspo", stbildparam.rspo)
+    monkeypatch.setattr(stellarator.data.build, "dr_cs_tf_gap", stbildparam.dr_cs_tf_gap)
+
+    monkeypatch.setattr(stellarator.data.build, "gapomin", stbildparam.gapomin)
 
     monkeypatch.setattr(
-        build_variables,
+        stellarator.data.build,
+        "dr_shld_vv_gap_outboard",
+        stbildparam.dr_shld_vv_gap_outboard,
+    )
+
+    monkeypatch.setattr(
+        stellarator.data.build, "z_tf_inside_half", stbildparam.z_tf_inside_half
+    )
+
+    monkeypatch.setattr(stellarator.data.build, "dr_cs", stbildparam.dr_cs)
+
+    monkeypatch.setattr(
+        stellarator.data.build, "r_tf_outboard_mid", stbildparam.r_tf_outboard_mid
+    )
+
+    monkeypatch.setattr(stellarator.data.build, "rbld", stbildparam.rbld)
+
+    monkeypatch.setattr(
+        stellarator.data.build, "r_shld_inboard_inner", stbildparam.r_shld_inboard_inner
+    )
+
+    monkeypatch.setattr(
+        stellarator.data.build,
+        "r_shld_outboard_outer",
+        stbildparam.r_shld_outboard_outer,
+    )
+
+    monkeypatch.setattr(stellarator.data.build, "rspo", stbildparam.rspo)
+
+    monkeypatch.setattr(
+        stellarator.data.build,
         "dr_fw_plasma_gap_inboard",
         stbildparam.dr_fw_plasma_gap_inboard,
     )
 
     monkeypatch.setattr(
-        build_variables,
+        stellarator.data.build,
         "dr_fw_plasma_gap_outboard",
         stbildparam.dr_fw_plasma_gap_outboard,
     )
 
-    monkeypatch.setattr(build_variables, "dr_shld_inboard", stbildparam.dr_shld_inboard)
-
     monkeypatch.setattr(
-        build_variables, "dr_shld_outboard", stbildparam.dr_shld_outboard
-    )
-
-    monkeypatch.setattr(build_variables, "dz_shld_upper", stbildparam.dz_shld_upper)
-
-    monkeypatch.setattr(build_variables, "dr_tf_inboard", stbildparam.dr_tf_inboard)
-
-    monkeypatch.setattr(build_variables, "dr_tf_outboard", stbildparam.dr_tf_outboard)
-
-    monkeypatch.setattr(
-        build_variables, "available_radial_space", stbildparam.available_radial_space
+        stellarator.data.build, "dr_shld_inboard", stbildparam.dr_shld_inboard
     )
 
     monkeypatch.setattr(
-        build_variables, "required_radial_space", stbildparam.required_radial_space
+        stellarator.data.build, "dr_shld_outboard", stbildparam.dr_shld_outboard
+    )
+
+    monkeypatch.setattr(
+        stellarator.data.build, "dz_shld_upper", stbildparam.dz_shld_upper
+    )
+
+    monkeypatch.setattr(
+        stellarator.data.build, "dr_tf_inboard", stbildparam.dr_tf_inboard
+    )
+
+    monkeypatch.setattr(
+        stellarator.data.build, "dr_tf_outboard", stbildparam.dr_tf_outboard
+    )
+
+    monkeypatch.setattr(
+        stellarator.data.build,
+        "available_radial_space",
+        stbildparam.available_radial_space,
+    )
+
+    monkeypatch.setattr(
+        stellarator.data.build,
+        "required_radial_space",
+        stbildparam.required_radial_space,
     )
 
     monkeypatch.setattr(
@@ -641,51 +670,53 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     st_build(stellarator, False, stellarator.data)
 
-    assert build_variables.dz_blkt_upper == pytest.approx(
+    assert stellarator.data.build.dz_blkt_upper == pytest.approx(
         stbildparam.expected_dz_blkt_upper
     )
 
-    assert build_variables.dr_bore == pytest.approx(stbildparam.expected_bore)
+    assert stellarator.data.build.dr_bore == pytest.approx(stbildparam.expected_bore)
 
     assert stellarator.data.first_wall.a_fw_total == pytest.approx(
         stbildparam.expected_a_fw_total
     )
 
-    assert build_variables.dr_fw_inboard == pytest.approx(
+    assert stellarator.data.build.dr_fw_inboard == pytest.approx(
         stbildparam.expected_dr_fw_inboard
     )
 
-    assert build_variables.dr_fw_outboard == pytest.approx(
+    assert stellarator.data.build.dr_fw_outboard == pytest.approx(
         stbildparam.expected_dr_fw_outboard
     )
 
-    assert build_variables.dr_shld_vv_gap_outboard == pytest.approx(
+    assert stellarator.data.build.dr_shld_vv_gap_outboard == pytest.approx(
         stbildparam.expected_dr_shld_vv_gap_outboard
     )
 
-    assert build_variables.z_tf_inside_half == pytest.approx(stbildparam.expected_hmax)
+    assert stellarator.data.build.z_tf_inside_half == pytest.approx(
+        stbildparam.expected_hmax
+    )
 
-    assert build_variables.r_tf_outboard_mid == pytest.approx(
+    assert stellarator.data.build.r_tf_outboard_mid == pytest.approx(
         stbildparam.expected_r_tf_outboard_mid
     )
 
-    assert build_variables.rbld == pytest.approx(stbildparam.expected_rbld)
+    assert stellarator.data.build.rbld == pytest.approx(stbildparam.expected_rbld)
 
-    assert build_variables.r_shld_inboard_inner == pytest.approx(
+    assert stellarator.data.build.r_shld_inboard_inner == pytest.approx(
         stbildparam.expected_rsldi
     )
 
-    assert build_variables.r_shld_outboard_outer == pytest.approx(
+    assert stellarator.data.build.r_shld_outboard_outer == pytest.approx(
         stbildparam.expected_rsldo
     )
 
-    assert build_variables.rspo == pytest.approx(stbildparam.expected_rspo)
+    assert stellarator.data.build.rspo == pytest.approx(stbildparam.expected_rspo)
 
-    assert build_variables.available_radial_space == pytest.approx(
+    assert stellarator.data.build.available_radial_space == pytest.approx(
         stbildparam.expected_available_radial_space
     )
 
-    assert build_variables.required_radial_space == pytest.approx(
+    assert stellarator.data.build.required_radial_space == pytest.approx(
         stbildparam.expected_required_radial_space
     )
 
@@ -2160,32 +2191,32 @@ def test_sctfcoil_nuclear_heating_iter90(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        build_variables,
+        stellarator.data.build,
         "dr_blkt_inboard",
         sctfcoilnuclearheatingiter90param.dr_blkt_inboard,
     )
     monkeypatch.setattr(
-        build_variables,
+        stellarator.data.build,
         "dr_blkt_outboard",
         sctfcoilnuclearheatingiter90param.dr_blkt_outboard,
     )
     monkeypatch.setattr(
-        build_variables,
+        stellarator.data.build,
         "dr_fw_inboard",
         sctfcoilnuclearheatingiter90param.dr_fw_inboard,
     )
     monkeypatch.setattr(
-        build_variables,
+        stellarator.data.build,
         "dr_fw_outboard",
         sctfcoilnuclearheatingiter90param.dr_fw_outboard,
     )
     monkeypatch.setattr(
-        build_variables,
+        stellarator.data.build,
         "dr_shld_inboard",
         sctfcoilnuclearheatingiter90param.dr_shld_inboard,
     )
     monkeypatch.setattr(
-        build_variables,
+        stellarator.data.build,
         "dr_shld_outboard",
         sctfcoilnuclearheatingiter90param.dr_shld_outboard,
     )

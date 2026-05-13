@@ -4,7 +4,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     pfcoil_variables,
 )
@@ -39,7 +38,7 @@ class Cryostat(Model):
         # Clearance between uppermost PF coil and cryostat lid [m].
         # Scaling from ITER by M. Kovari
         self.data.blanket.dz_pf_cryostat = (
-            build_variables.f_z_cryostat
+            self.data.build.f_z_cryostat
             * (2.0 * self.data.fwbs.r_cryostat_inboard)
             / 28.440
         )
@@ -52,7 +51,7 @@ class Cryostat(Model):
 
         # Vertical clearance between TF coil and cryostat (m)
         buildings_variables.dz_tf_cryostat = self.data.fwbs.z_cryostat_half_inside - (
-            build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
+            self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
         )
 
         # Internal cryostat space volume [m^3]
@@ -68,10 +67,10 @@ class Cryostat(Model):
         self.data.fwbs.vol_cryostat = (
             (
                 np.pi
-                * (self.data.fwbs.r_cryostat_inboard + build_variables.dr_cryostat) ** 2
+                * (self.data.fwbs.r_cryostat_inboard + self.data.build.dr_cryostat) ** 2
             )
             * 2
-            * (build_variables.dr_cryostat + self.data.fwbs.z_cryostat_half_inside)
+            * (self.data.build.dr_cryostat + self.data.fwbs.z_cryostat_half_inside)
         ) - (self.data.fwbs.vol_cryostat_internal)
 
         # Sum of internal vacuum vessel and cryostat masses (kg)
@@ -87,7 +86,7 @@ class Cryostat(Model):
             self.outfile,
             "Cryostat thickness (m)",
             "(dr_cryostat)",
-            build_variables.dr_cryostat,
+            self.data.build.dr_cryostat,
             "OP ",
         )
         po.ovarrf(

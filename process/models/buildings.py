@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     current_drive_variables,
     divertor_variables,
@@ -42,11 +41,11 @@ class Buildings(Model):
     def run(self, output: bool = False):
         # Find TF coil radial positions
         # outboard edge: outboard mid-leg radial position + half-thickness of outboard leg
-        tfro = build_variables.r_tf_outboard_mid + (
-            build_variables.dr_tf_outboard * 0.5e0
+        tfro = self.data.build.r_tf_outboard_mid + (
+            self.data.build.dr_tf_outboard * 0.5e0
         )
         # inboard edge: inboard mid-leg radial position - half-thickness of inboard leg
-        tfri = build_variables.r_tf_inboard_mid - (build_variables.dr_tf_inboard * 0.5e0)
+        tfri = self.data.build.r_tf_inboard_mid - (self.data.build.dr_tf_inboard * 0.5e0)
 
         # Find width, in radial dimension, of TF coil (m)
         tf_radial_dim = tfro - tfri
@@ -54,7 +53,7 @@ class Buildings(Model):
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
         tf_vertical_dim = 2.0e0 * (
-            build_variables.z_tf_inside_half + build_variables.dr_tf_outboard
+            self.data.build.z_tf_inside_half + self.data.build.dr_tf_outboard
         )
 
         # Find mass of each TF coil, in tonnes
@@ -84,12 +83,12 @@ class Buildings(Model):
                 tf_vertical_dim,
                 tfmtn,
                 tfcoil_variables.n_tf_coils,
-                build_variables.r_shld_outboard_outer,
-                build_variables.r_shld_inboard_inner,
+                self.data.build.r_shld_outboard_outer,
+                self.data.build.r_shld_inboard_inner,
                 2.0e0
-                * (build_variables.z_tf_inside_half - build_variables.dz_shld_vv_gap)
-                - build_variables.dz_vv_upper
-                - build_variables.dz_vv_lower,
+                * (self.data.build.z_tf_inside_half - self.data.build.dz_shld_vv_gap)
+                - self.data.build.dz_vv_upper
+                - self.data.build.dz_vv_lower,
                 self.data.fwbs.whtshld,
                 self.data.fwbs.r_cryostat_inboard,
                 heat_transport_variables.helpow,
@@ -568,18 +567,18 @@ class Buildings(Model):
         # find height, maximum radial dimension, maximum toroidal dimension
         if self.data.costs.life_plant != 0.0e0:  # noqa: RUF069
             hcomp_height = 2 * (
-                build_variables.z_tf_inside_half
+                self.data.build.z_tf_inside_half
                 - (
-                    build_variables.dr_tf_inboard
-                    + build_variables.dr_tf_shld_gap
-                    + build_variables.dz_shld_thermal
-                    + build_variables.dz_shld_vv_gap
+                    self.data.build.dr_tf_inboard
+                    + self.data.build.dr_tf_shld_gap
+                    + self.data.build.dz_shld_thermal
+                    + self.data.build.dz_shld_vv_gap
                 )
             )
             hcomp_rad_thk = (
-                build_variables.dr_shld_inboard
-                + build_variables.dr_blkt_inboard
-                + build_variables.dr_fw_inboard
+                self.data.build.dr_shld_inboard
+                + self.data.build.dr_blkt_inboard
+                + self.data.build.dr_fw_inboard
             )
             hcomp_tor_thk = (
                 2
@@ -588,10 +587,10 @@ class Buildings(Model):
                     physics_variables.rmajor
                     - (
                         physics_variables.rminor
-                        + build_variables.dr_fw_plasma_gap_inboard
-                        + build_variables.dr_fw_inboard
-                        + build_variables.dr_blkt_inboard
-                        + build_variables.dr_shld_inboard
+                        + self.data.build.dr_fw_plasma_gap_inboard
+                        + self.data.build.dr_fw_inboard
+                        + self.data.build.dr_blkt_inboard
+                        + self.data.build.dr_shld_inboard
                     )
                 )
             ) / tfcoil_variables.n_tf_coils
@@ -613,18 +612,18 @@ class Buildings(Model):
 
             # Outboard 'component': first wall, blanket, shield
             hcomp_height = 2 * (
-                build_variables.z_tf_inside_half
+                self.data.build.z_tf_inside_half
                 - (
-                    build_variables.dr_tf_inboard
-                    + build_variables.dr_tf_shld_gap
-                    + build_variables.dz_shld_thermal
-                    + build_variables.dz_shld_vv_gap
+                    self.data.build.dr_tf_inboard
+                    + self.data.build.dr_tf_shld_gap
+                    + self.data.build.dz_shld_thermal
+                    + self.data.build.dz_shld_vv_gap
                 )
             )
             hcomp_rad_thk = (
-                build_variables.dr_fw_outboard
-                + build_variables.dr_blkt_outboard
-                + build_variables.dr_shld_outboard
+                self.data.build.dr_fw_outboard
+                + self.data.build.dr_blkt_outboard
+                + self.data.build.dr_shld_outboard
             )
             hcomp_tor_thk = (
                 2
@@ -632,10 +631,10 @@ class Buildings(Model):
                 * (
                     physics_variables.rmajor
                     + physics_variables.rminor
-                    + build_variables.dr_fw_plasma_gap_outboard
-                    + build_variables.dr_fw_outboard
-                    + build_variables.dr_blkt_outboard
-                    + build_variables.dr_shld_outboard
+                    + self.data.build.dr_fw_plasma_gap_outboard
+                    + self.data.build.dr_fw_outboard
+                    + self.data.build.dr_blkt_outboard
+                    + self.data.build.dr_shld_outboard
                 )
             ) / tfcoil_variables.n_tf_coils
             hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
@@ -677,11 +676,11 @@ class Buildings(Model):
 
         # Centre post
         if self.data.costs.cplife != 0.0e0:  # noqa: RUF069
-            hcomp_height = 2 * build_variables.z_tf_inside_half
+            hcomp_height = 2 * self.data.build.z_tf_inside_half
             if tfcoil_variables.i_tf_sup != 1:
-                hcomp_rad_thk = build_variables.r_cp_top
+                hcomp_rad_thk = self.data.build.r_cp_top
             else:
-                hcomp_rad_thk = build_variables.dr_tf_inboard
+                hcomp_rad_thk = self.data.build.dr_tf_inboard
 
             hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
                 hcomp_rad_thk + buildings_variables.hot_sepdist

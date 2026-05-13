@@ -11,7 +11,6 @@ import pytest
 
 import process.models.tfcoil.base as tfcoil_module
 from process.data_structure import (
-    build_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
@@ -155,8 +154,8 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
         tfcoil_variables, "temp_cp_coolant_inlet", cntrpst_asset.temp_cp_coolant_inlet
     )
     monkeypatch.setattr(tfcoil.data.fwbs, "pnuc_cp_tf", 1)
-    monkeypatch.setattr(build_variables, "z_tf_inside_half", 1)
-    monkeypatch.setattr(build_variables, "dr_tf_outboard", 0.5)
+    monkeypatch.setattr(tfcoil.data.build, "z_tf_inside_half", 1)
+    monkeypatch.setattr(tfcoil.data.build, "dr_tf_outboard", 0.5)
 
     tfcoil.cntrpst()
 
@@ -740,7 +739,9 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
     """
 
     monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", tfcoilareaandmassesparam.r_tf_outboard_mid
+        tfcoil.data.build,
+        "r_tf_outboard_mid",
+        tfcoilareaandmassesparam.r_tf_outboard_mid,
     )
 
     monkeypatch.setattr(
@@ -748,15 +749,15 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_mid", tfcoilareaandmassesparam.r_tf_inboard_mid
+        tfcoil.data.build, "r_tf_inboard_mid", tfcoilareaandmassesparam.r_tf_inboard_mid
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfcoilareaandmassesparam.r_tf_inboard_in
+        tfcoil.data.build, "r_tf_inboard_in", tfcoilareaandmassesparam.r_tf_inboard_in
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out
+        tfcoil.data.build, "r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out
     )
 
     monkeypatch.setattr(

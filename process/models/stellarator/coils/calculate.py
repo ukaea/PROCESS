@@ -4,7 +4,6 @@ import numpy as np
 
 from process.core.model import DataStructure
 from process.data_structure import (
-    build_variables,
     constraint_variables,
     rebco_variables,
     stellarator_configuration,
@@ -69,9 +68,9 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     #  General Coil Geometry values
     #
     calculate_coil_toroidal_thickness()
-    calculate_coil_radial_thickness()
+    calculate_coil_radial_thickness(data)
 
-    calculate_coil_cross_sectional_area(a_tf_wp_with_insulation)
+    calculate_coil_cross_sectional_area(a_tf_wp_with_insulation, data)
 
     calculate_coil_half_widths()
 
@@ -85,7 +84,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     calculate_stored_magnetic_energy(r_coil_minor)
 
     #  Coil dimensions
-    build_variables.z_tf_inside_half = (
+    data.build.z_tf_inside_half = (
         0.5e0
         * stellarator_configuration.stella_config_maximal_coil_height
         * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
@@ -125,7 +124,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
 
     #######################################################################################
     # Quench protection:
-    f_vv_actual = calculate_quench_protection(coilcurrent)
+    f_vv_actual = calculate_quench_protection(coilcurrent, data)
 
     #
     #######################################################################################
@@ -176,6 +175,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
             toroidalgap=tfcoil_variables.toroidalgap,
             allowed_quench_voltage=tfcoil_variables.v_tf_coil_dump_quench_max_kv,
             quench_voltage=tfcoil_variables.v_tf_coil_dump_quench_kv,
+            data=data,
         )
 
 
@@ -187,28 +187,28 @@ def calculate_coil_toroidal_thickness():
     )  # [m] Thickness of inboard leg in toroidal direction
 
 
-def calculate_coil_radial_thickness():
+def calculate_coil_radial_thickness(data):
     """Thickness of inboard and outboard leg in radial direction"""
     # [m] Thickness of inboard leg in radial direction
-    build_variables.dr_tf_inboard = (
+    data.build.dr_tf_inboard = (
         tfcoil_variables.dr_tf_nose_case
         + tfcoil_variables.dr_tf_wp_with_insulation
         + tfcoil_variables.dr_tf_plasma_case
         + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
     )
     # [m] Thickness of outboard leg in radial direction (same as inboard)
-    build_variables.dr_tf_outboard = build_variables.dr_tf_inboard
+    data.build.dr_tf_outboard = data.build.dr_tf_inboard
 
 
-def calculate_coil_cross_sectional_area(a_tf_wp_with_insulation):
+def calculate_coil_cross_sectional_area(a_tf_wp_with_insulation, data):
     # [m^2] overall coil cross-sectional area
     # (assuming inboard and outboard leg are the same)
     tfcoil_variables.a_tf_leg_outboard = (
-        build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
+        data.build.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
     )
     # [m^2] Cross-sectional area of surrounding case
     tfcoil_variables.a_tf_coil_inboard_case = (
-        build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
+        data.build.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
     ) - a_tf_wp_with_insulation
 
 

@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
@@ -62,8 +61,8 @@ class Divertor(Model):
                 pv.rmajor,
                 pv.rminor,
                 pv.triang,
-                bv.dr_fw_plasma_gap_inboard,
-                bv.dz_xpoint_divertor,
+                self.data.build.dr_fw_plasma_gap_inboard,
+                self.data.build.dz_xpoint_divertor,
                 pv.p_plasma_separatrix_mw,
                 output=output,
                 i_single_null=pv.i_single_null,

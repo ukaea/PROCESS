@@ -16,7 +16,6 @@ import pytest
 from numpy.testing import assert_array_almost_equal
 
 from process.core import constants
-from process.data_structure import build_variables as bv
 from process.data_structure import pfcoil_variables, superconducting_tf_coil_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
@@ -1223,7 +1222,7 @@ def test_vsec(pfcoil, monkeypatch):
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
-    monkeypatch.setattr(bv, "iohcl", 1)
+    monkeypatch.setattr(pfcoil.data.build, "iohcl", 1)
     monkeypatch.setattr(pfcoil_variables, "vs_pf_coils_total_ramp", 0.0)
     monkeypatch.setattr(pfcoil_variables, "vs_cs_pf_total_burn", 0.0)
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", 7)
@@ -2443,15 +2442,15 @@ def test_pfcoil(monkeypatch, pfcoil):
     :type pfcoil: process.pfcoil.PFCoil
     """
 
-    monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(bv, "dz_tf_upper_lower_midplane", 0.0)
-    monkeypatch.setattr(bv, "z_tf_top", 4.0)  # guess
-    monkeypatch.setattr(bv, "z_tf_inside_half", 8.8)
-    monkeypatch.setattr(bv, "dr_cs", 0.65)
-    monkeypatch.setattr(bv, "dr_tf_outboard", 1.4)
-    monkeypatch.setattr(bv, "dr_tf_inboard", 1.4)
-    monkeypatch.setattr(bv, "r_tf_outboard_mid", 1.66e1)
-    monkeypatch.setattr(bv, "dr_bore", 2.15)
+    monkeypatch.setattr(pfcoil.data.build, "iohcl", 1)
+    monkeypatch.setattr(pfcoil.data.build, "dz_tf_upper_lower_midplane", 0.0)
+    monkeypatch.setattr(pfcoil.data.build, "z_tf_top", 4.0)  # guess
+    monkeypatch.setattr(pfcoil.data.build, "z_tf_inside_half", 8.8)
+    monkeypatch.setattr(pfcoil.data.build, "dr_cs", 0.65)
+    monkeypatch.setattr(pfcoil.data.build, "dr_tf_outboard", 1.4)
+    monkeypatch.setattr(pfcoil.data.build, "dr_tf_inboard", 1.4)
+    monkeypatch.setattr(pfcoil.data.build, "r_tf_outboard_mid", 1.66e1)
+    monkeypatch.setattr(pfcoil.data.build, "dr_bore", 2.15)
     monkeypatch.setattr(pfcoil.data.fwbs, "den_steel", 7.8e3)
     monkeypatch.setattr(pfcoil_variables, "dr_pf_cs_middle_offset", 0.0)
     monkeypatch.setattr(pfcoil_variables, "m_pf_coil_structure_total", 0.0)
@@ -2586,10 +2585,10 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     :type cs_coil: process.pfcoil.CSCoil
     """
     # Mocks for ohcalc()
-    monkeypatch.setattr(bv, "z_tf_inside_half", 8.864)
-    monkeypatch.setattr(bv, "dr_cs", 6.510e-1)
+    monkeypatch.setattr(cs_coil.data.build, "z_tf_inside_half", 8.864)
+    monkeypatch.setattr(cs_coil.data.build, "dr_cs", 6.510e-1)
     monkeypatch.setattr(cs_coil.data.fwbs, "den_steel", 7.8e3)
-    monkeypatch.setattr(bv, "dr_bore", 2.6745)
+    monkeypatch.setattr(cs_coil.data.build, "dr_bore", 2.6745)
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", 5)
     monkeypatch.setattr(pfcoil_variables, "b_cs_peak_flat_top_end", 1.4e1)
     monkeypatch.setattr(pfcoil_variables, "i_cs_stress", 0)
@@ -2646,7 +2645,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(constants, "den_copper", 8.9e3)
 
     # Mocks for peak_b_field_at_pf_coil()
-    monkeypatch.setattr(bv, "iohcl", 1)
+    monkeypatch.setattr(cs_coil.data.build, "iohcl", 1)
     monkeypatch.setattr(
         pfcoil_variables, "f_c_pf_cs_peak_time_array", np.full([22, 6], 0.0)
     )
@@ -3357,9 +3356,9 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     monkeypatch.setattr(pfcoil_variables, "xind", np.zeros(64))
     monkeypatch.setattr(pfcoil_variables, "bpf2", np.zeros(22))
 
-    monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(bv, "z_tf_inside_half", 9.0730900215620327)
-    monkeypatch.setattr(bv, "dr_cs", 0.55242000000000002)
+    monkeypatch.setattr(pfcoil.data.build, "iohcl", 1)
+    monkeypatch.setattr(pfcoil.data.build, "z_tf_inside_half", 9.0730900215620327)
+    monkeypatch.setattr(pfcoil.data.build, "dr_cs", 0.55242000000000002)
     monkeypatch.setattr(
         pfcoil_variables,
         "r_pf_coil_inner",
@@ -3550,7 +3549,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     bzi_exp = 1.049564e1
     bzo_exp = -6.438987
 
-    bri, bro, bzi, bzo = peak_b_field_at_pf_coil(i, ii, it)
+    bri, bro, bzi, bzo = peak_b_field_at_pf_coil(i, ii, it, pfcoil.data)
 
     assert pytest.approx(bri) == bri_exp
     assert pytest.approx(bro) == bro_exp
@@ -3614,8 +3613,8 @@ def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
-    monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(bv, "dr_cs", 0.55242000000000002)
+    monkeypatch.setattr(pfcoil.data.build, "iohcl", 1)
+    monkeypatch.setattr(pfcoil.data.build, "dr_cs", 0.55242000000000002)
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfcoil_variables,

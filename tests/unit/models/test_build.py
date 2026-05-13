@@ -3,21 +3,19 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    build_variables,
     divertor_variables,
     physics_variables,
 )
-from process.models.build import Build
 
 
 @pytest.fixture
-def build():
+def build(process_models):
     """Provides Build object for testing.
 
     :returns build: initialised Build object
     :rtype: process.build.Build
     """
-    return Build()
+    return process_models.build
 
 
 class DivgeomParam(NamedTuple):
@@ -96,21 +94,21 @@ def test_divgeom(divgeomparam, monkeypatch, build):
     :type build: tests.unit.test_build.build (functional fixture)
     """
 
-    monkeypatch.setattr(build_variables, "rspo", divgeomparam.rspo)
+    monkeypatch.setattr(build.data.build, "rspo", divgeomparam.rspo)
 
-    monkeypatch.setattr(build_variables, "plleno", divgeomparam.plleno)
+    monkeypatch.setattr(build.data.build, "plleno", divgeomparam.plleno)
 
     monkeypatch.setattr(
-        build_variables,
+        build.data.build,
         "dz_tf_plasma_centre_offset",
         divgeomparam.dz_tf_plasma_centre_offset,
     )
 
-    monkeypatch.setattr(build_variables, "plsepi", divgeomparam.plsepi)
+    monkeypatch.setattr(build.data.build, "plsepi", divgeomparam.plsepi)
 
-    monkeypatch.setattr(build_variables, "plleni", divgeomparam.plleni)
+    monkeypatch.setattr(build.data.build, "plleni", divgeomparam.plleni)
 
-    monkeypatch.setattr(build_variables, "plsepo", divgeomparam.plsepo)
+    monkeypatch.setattr(build.data.build, "plsepo", divgeomparam.plsepo)
 
     monkeypatch.setattr(divertor_variables, "betao", divgeomparam.betao)
 

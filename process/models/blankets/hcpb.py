@@ -9,7 +9,6 @@ from process.core import (
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
-    build_variables,
     current_drive_variables,
     divertor_variables,
     heat_transport_variables,
@@ -68,13 +67,13 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             n_blkt_inboard_modules_toroidal=self.data.fwbs.n_blkt_inboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
-            dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
         )
         self.data.blanket.len_blkt_outboard_segment_toroidal = self.calculate_blanket_outboard_module_geometry(
             n_blkt_outboard_modules_toroidal=self.data.fwbs.n_blkt_outboard_modules_toroidal,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
-            dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
+            dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
         )
 
         # Centrepost neutronics
@@ -84,11 +83,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             r_sh_inboard_out_top = (
                 physics_variables.rmajor
                 - physics_variables.rminor * physics_variables.triang
-                - 3 * build_variables.dr_fw_plasma_gap_inboard
+                - 3 * self.data.build.dr_fw_plasma_gap_inboard
             )
 
             # Half height of the CP at the largest shield radius [m]
-            h_sh_max_r = build_variables.z_plasma_xpoint_upper
+            h_sh_max_r = self.data.build.z_plasma_xpoint_upper
 
             # Solid angle fraction of neutrons that hit the centrepost shield [-]
             # Calculating the CP solid angle coverage fraction
@@ -97,7 +96,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             #       cylinder
             f_geom_cp = self.st_cp_angle_fraction(
                 h_sh_max_r,
-                build_variables.r_sh_inboard_out,
+                self.data.build.r_sh_inboard_out,
                 r_sh_inboard_out_top,
                 physics_variables.rmajor,
             )
@@ -105,7 +104,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             # TF fast neutron flux (E > 0.1 MeV) [m^{-2}.s^{-1}]
             self.data.fwbs.neut_flux_cp = self.st_tf_centrepost_fast_neut_flux(
                 physics_variables.p_neutron_total_mw,
-                build_variables.dr_shld_inboard,
+                self.data.build.dr_shld_inboard,
                 physics_variables.rmajor,
             )
 
@@ -115,7 +114,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 self.data.fwbs.p_cp_shield_nuclear_heat_mw,
                 self.data.fwbs.pnuc_cp,
             ) = self.st_centrepost_nuclear_heating(
-                physics_variables.p_neutron_total_mw, build_variables.dr_shld_inboard
+                physics_variables.p_neutron_total_mw, self.data.build.dr_shld_inboard
             )
 
         else:  # No CP
@@ -151,8 +150,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.ccfe_hcpb.shld_u_nuc_heating,
         ) = self.nuclear_heating_shield(
             itart=physics_variables.itart,
-            dr_shld_outboard=build_variables.dr_shld_outboard,
-            dr_shld_inboard=build_variables.dr_shld_inboard,
+            dr_shld_outboard=self.data.build.dr_shld_outboard,
+            dr_shld_inboard=self.data.build.dr_shld_inboard,
             shield_density=self.data.ccfe_hcpb.shield_density,
             whtshld=self.data.fwbs.whtshld,
             x_blanket=self.data.ccfe_hcpb.x_blanket,
@@ -287,10 +286,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         coolvol = (
             coolvol
             + self.data.first_wall.a_fw_inboard
-            * build_variables.dr_fw_inboard
+            * self.data.build.dr_fw_inboard
             * self.data.fwbs.f_a_fw_coolant_inboard
             + self.data.first_wall.a_fw_outboard
-            * build_variables.dr_fw_outboard
+            * self.data.build.dr_fw_outboard
             * self.data.fwbs.f_a_fw_coolant_outboard
         )
 
@@ -300,15 +299,15 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Average first wall coolant fraction, only used by old routines in fispact.f90, safety.f90
         self.data.fwbs.fwclfr = (
             self.data.first_wall.a_fw_inboard
-            * build_variables.dr_fw_inboard
+            * self.data.build.dr_fw_inboard
             * self.data.fwbs.f_a_fw_coolant_inboard
             + self.data.first_wall.a_fw_outboard
-            * build_variables.dr_fw_outboard
+            * self.data.build.dr_fw_outboard
             * self.data.fwbs.f_a_fw_coolant_outboard
         ) / (
             self.data.first_wall.a_fw_total
             * 0.5
-            * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
+            * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
         )
 
         # CCFE HCPB calculates the mass of the divertor, blanket (including seprate masses for each material),
@@ -349,10 +348,10 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # First wall volume (m^3)
         self.data.fwbs.vol_fw_total = (
             self.data.first_wall.a_fw_inboard
-            * build_variables.dr_fw_inboard
+            * self.data.build.dr_fw_inboard
             * (1.0 - self.data.fwbs.f_a_fw_coolant_inboard)
             + self.data.first_wall.a_fw_outboard
-            * build_variables.dr_fw_outboard
+            * self.data.build.dr_fw_outboard
             * (1.0 - self.data.fwbs.f_a_fw_coolant_outboard)
         )
 
@@ -453,7 +452,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         self.data.fwbs.f_a_fw_coolant_inboard = (
             np.pi
             * self.data.fwbs.radius_fw_channel**2
-            / (self.data.fwbs.dx_fw_module * build_variables.dr_fw_inboard)
+            / (self.data.fwbs.dx_fw_module * self.data.build.dr_fw_inboard)
         )
 
         # outboard FW coolant void fraction
@@ -473,8 +472,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.fwbs.whtshld / self.data.fwbs.vol_shld_total
         )
         # Picking the largest value for VV thickness
-        d_vv_all = build_variables.dr_vv_inboard
-        d_vv_all = max(d_vv_all, build_variables.dr_vv_outboard)
+        d_vv_all = self.data.build.dr_vv_inboard
+        d_vv_all = max(d_vv_all, self.data.build.dr_vv_outboard)
 
         if d_vv_all > 1.0e-6:
             self.data.ccfe_hcpb.vv_density = self.data.fwbs.m_vv / self.data.fwbs.vol_vv
@@ -484,20 +483,20 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Calculation of average blanket/shield thickness [m]
         if physics_variables.itart == 1:
             # There is no inner blanket for TART design [m]
-            th_blanket_av = build_variables.dr_blkt_outboard
+            th_blanket_av = self.data.build.dr_blkt_outboard
 
             # The CP shield in considered in a separate calcualtion [m]
-            th_shield_av = build_variables.dr_shld_outboard
+            th_shield_av = self.data.build.dr_shld_outboard
 
         else:
             # Average breeding blanket thickness [m]
             th_blanket_av = 0.5 * (
-                build_variables.dr_blkt_outboard + build_variables.dr_blkt_inboard
+                self.data.build.dr_blkt_outboard + self.data.build.dr_blkt_inboard
             )
 
             # Average neutronic shield thickness [m]
             th_shield_av = 0.5 * (
-                build_variables.dr_shld_outboard + build_variables.dr_shld_inboard
+                self.data.build.dr_shld_outboard + self.data.build.dr_shld_inboard
             )
 
         # Exponents (tonne/m2)
@@ -505,7 +504,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         self.data.ccfe_hcpb.x_blanket = (
             self.data.ccfe_hcpb.armour_density * self.data.fwbs.fw_armour_thickness
             + self.data.ccfe_hcpb.fw_density
-            * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
+            * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
             / 2.0
             + self.data.ccfe_hcpb.blanket_density * th_blanket_av
         ) / 1000.0
@@ -514,7 +513,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         self.data.ccfe_hcpb.x_shield = (
             self.data.ccfe_hcpb.shield_density * th_shield_av
             + self.data.ccfe_hcpb.vv_density
-            * (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
+            * (self.data.build.dr_vv_inboard + self.data.build.dr_vv_outboard)
             / 2.0
         ) / 1000.0
 

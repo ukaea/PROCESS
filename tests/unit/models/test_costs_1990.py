@@ -7,7 +7,6 @@ import pytest
 
 from process import data_structure
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     current_drive_variables,
     divertor_variables,
@@ -2699,7 +2698,7 @@ def test_acc2222(acc2222param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "iohcl", acc2222param.iohcl)
+    monkeypatch.setattr(costs.data.build, "iohcl", acc2222param.iohcl)
 
     monkeypatch.setattr(costs.data.costs, "uccase", acc2222param.uccase)
 

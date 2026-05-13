@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     current_drive_variables,
     global_variables,
     heat_transport_variables,
@@ -639,8 +638,8 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[11] = 150.0e6
         # Scale with TF coil longest dimension
         self.data.costs_2015.s_k[11] = (
-            max(build_variables.dh_tf_inner_bore, build_variables.dr_tf_inner_bore)
-            + 2.0e0 * build_variables.dr_tf_inboard
+            max(self.data.build.dh_tf_inner_bore, self.data.build.dr_tf_inner_bore)
+            + 2.0e0 * self.data.build.dr_tf_inboard
         )
         self.data.costs_2015.s_kref[11] = 14.0e0
         self.data.costs_2015.s_cost[11] = (
@@ -827,7 +826,7 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[31] = 537.0e6
         #  Scale with outermost midplane radius of vacuum vessel squared (m2)
         self.data.costs_2015.s_k[31] = (
-            build_variables.r_shld_outboard_outer + build_variables.dr_vv_outboard
+            self.data.build.r_shld_outboard_outer + self.data.build.dr_vv_outboard
         ) ** 2
         self.data.costs_2015.s_kref[31] = 94.09e0
         self.data.costs_2015.s_cost[31] = (

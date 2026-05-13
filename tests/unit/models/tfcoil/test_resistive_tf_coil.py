@@ -3,22 +3,20 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    build_variables,
     physics_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.models.tfcoil.resistive import ResistiveTFCoil
 
 
 @pytest.fixture
-def resistive_tf_coil():
+def resistive_tf_coil(process_models):
     """Provides SuperconductingTFCoil object for testing.
 
     :returns: initialised SuperconductingTFCoil object
     :rtype: process.sctfcoil.SuperconductingTFCoil
     """
-    return ResistiveTFCoil()
+    return process_models.resistive_tf_coil
 
 
 class ResTfInternalGeomParam(NamedTuple):
@@ -217,18 +215,26 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_outboard", restfinternalgeomparam.dr_tf_outboard
+        resistive_tf_coil.data.build,
+        "dr_tf_outboard",
+        restfinternalgeomparam.dr_tf_outboard,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", restfinternalgeomparam.r_tf_inboard_in
+        resistive_tf_coil.data.build,
+        "r_tf_inboard_in",
+        restfinternalgeomparam.r_tf_inboard_in,
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", restfinternalgeomparam.r_tf_inboard_out
+        resistive_tf_coil.data.build,
+        "r_tf_inboard_out",
+        restfinternalgeomparam.r_tf_inboard_out,
     )
 
-    monkeypatch.setattr(build_variables, "r_cp_top", restfinternalgeomparam.r_cp_top)
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build, "r_cp_top", restfinternalgeomparam.r_cp_top
+    )
 
     monkeypatch.setattr(physics_variables, "itart", restfinternalgeomparam.itart)
 
@@ -545,25 +551,33 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_outboard", tfresheatingparam.dr_tf_outboard
+        resistive_tf_coil.data.build, "dr_tf_outboard", tfresheatingparam.dr_tf_outboard
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_inboard", tfresheatingparam.dr_tf_inboard
-    )
-
-    monkeypatch.setattr(build_variables, "r_cp_top", tfresheatingparam.r_cp_top)
-
-    monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", tfresheatingparam.z_tf_inside_half
+        resistive_tf_coil.data.build, "dr_tf_inboard", tfresheatingparam.dr_tf_inboard
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfresheatingparam.r_tf_inboard_in
+        resistive_tf_coil.data.build, "r_cp_top", tfresheatingparam.r_cp_top
     )
 
     monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfresheatingparam.r_tf_inboard_out
+        resistive_tf_coil.data.build,
+        "z_tf_inside_half",
+        tfresheatingparam.z_tf_inside_half,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build,
+        "r_tf_inboard_in",
+        tfresheatingparam.r_tf_inboard_in,
+    )
+
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build,
+        "r_tf_inboard_out",
+        tfresheatingparam.r_tf_inboard_out,
     )
 
     monkeypatch.setattr(physics_variables, "itart", tfresheatingparam.itart)
@@ -723,7 +737,9 @@ def test_cpost(cpostparam, monkeypatch, resistive_tf_coil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "z_tf_inside_half", cpostparam.z_tf_inside_half)
+    monkeypatch.setattr(
+        resistive_tf_coil.data.build, "z_tf_inside_half", cpostparam.z_tf_inside_half
+    )
 
     (
         a_cp_cool,

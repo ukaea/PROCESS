@@ -498,14 +498,14 @@ def constraint_equation_9(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(11, "m", "=")
-def constraint_equation_11(constraint_registration, _data):
+def constraint_equation_11(constraint_registration, data):
     """Equation for radial build
 
     rbld: sum of thicknesses to the major radius (m)
     rmajor: plasma major radius (m)
     """
     return eq(
-        data_structure.build_variables.rbld,
+        data.build.rbld,
         data_structure.physics_variables.rmajor,
         constraint_registration,
     )
@@ -674,7 +674,7 @@ def constraint_equation_20(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(21, "", ">=")
-def constraint_equation_21(constraint_registration, _data):
+def constraint_equation_21(constraint_registration, data):
     """Equation for minor radius lower limit
 
     rminor: plasma minor radius (m)
@@ -682,7 +682,7 @@ def constraint_equation_21(constraint_registration, _data):
     """
     return geq(
         data_structure.physics_variables.rminor,
-        data_structure.build_variables.aplasmin,
+        data.build.aplasmin,
         constraint_registration,
     )
 
@@ -712,7 +712,7 @@ def constraint_equation_22(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(23, "m", "<=")
-def constraint_equation_23(constraint_registration, _data):
+def constraint_equation_23(constraint_registration, data):
     """Equation for conducting shell radius / rminor upper limit
 
     rminor: plasma minor radius (m)
@@ -724,9 +724,9 @@ def constraint_equation_23(constraint_registration, _data):
     # conducting shell radius (m)
     rcw = (
         data_structure.physics_variables.rminor
-        + data_structure.build_variables.dr_fw_plasma_gap_outboard
-        + data_structure.build_variables.dr_fw_outboard
-        + data_structure.build_variables.dr_blkt_outboard
+        + data.build.dr_fw_plasma_gap_outboard
+        + data.build.dr_fw_outboard
+        + data.build.dr_blkt_outboard
     )
     return leq(
         rcw,
@@ -876,7 +876,7 @@ def constraint_equation_28(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(29, "m", "=")
-def constraint_equation_29(constraint_registration, _data):
+def constraint_equation_29(constraint_registration, data):
     """Equation for inboard major radius: This is a consistency equation
 
     rmajor: plasma major radius (m) (iteration variable 3)
@@ -888,7 +888,7 @@ def constraint_equation_29(constraint_registration, _data):
             data_structure.physics_variables.rmajor
             - data_structure.physics_variables.rminor
         ),
-        data_structure.build_variables.rinboard,
+        data.build.rinboard,
         constraint_registration,
     )
 
@@ -1462,7 +1462,7 @@ def constraint_equation_68(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(72, "Pa", "<=")
-def constraint_equation_72(constraint_registration, _data):
+def constraint_equation_72(constraint_registration, data):
     """Upper limit on central Solenoid Tresca yield stress
 
     In the case if the bucked and wedged option ( i_tf_bucking >= 2 ) the constrained
@@ -1484,7 +1484,7 @@ def constraint_equation_72(constraint_registration, _data):
     # bucked and wedged desing
     if (
         data_structure.tfcoil_variables.i_tf_bucking >= 2
-        and data_structure.build_variables.i_tf_inside_cs == 0
+        and data.build.i_tf_inside_cs == 0
     ):
         return leq(
             max(
@@ -1687,15 +1687,15 @@ def constraint_equation_82(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(83, "m", ">=")
-def constraint_equation_83(constraint_registration, _data):
+def constraint_equation_83(constraint_registration, data):
     """Equation for radial consistency of stellarator build
 
     available_radial_space: avaible space in radial direction as given by each s.-configuration
     required_radial_space: required space in radial direction
     """
     return geq(
-        data_structure.build_variables.available_radial_space,
-        data_structure.build_variables.required_radial_space,
+        data.build.available_radial_space,
+        data.build.required_radial_space,
         constraint_registration,
     )
 

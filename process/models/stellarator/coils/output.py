@@ -1,6 +1,5 @@
 from process.core import process_output as po
 from process.data_structure import (
-    build_variables,
     stellarator_variables,
     tfcoil_variables,
 )
@@ -32,6 +31,7 @@ def write(
     toroidalgap,
     allowed_quench_voltage,
     quench_voltage,
+    data,
 ):
     """Writes stellarator modular coil output to file
 
@@ -90,6 +90,8 @@ def write(
 
     quench_voltage :
 
+    data: DataStructure
+        data structure object
 
     """
     po.oheadr(stellarator.outfile, "Modular Coils")
@@ -121,13 +123,13 @@ def write(
         stellarator.outfile,
         "Total inboard leg radial thickness (m)",
         "(dr_tf_inboard)",
-        build_variables.dr_tf_inboard,
+        data.build.dr_tf_inboard,
     )
     po.ovarre(
         stellarator.outfile,
         "Total outboard leg radial thickness (m)",
         "(dr_tf_outboard)",
-        build_variables.dr_tf_outboard,
+        data.build.dr_tf_outboard,
     )
     po.ovarre(
         stellarator.outfile,
@@ -226,13 +228,13 @@ def write(
         stellarator.outfile,
         "Outboard leg centre radius (m)",
         "(r_tf_outboard_mid)",
-        build_variables.r_tf_outboard_mid,
+        data.build.r_tf_outboard_mid,
     )
     po.ovarre(
         stellarator.outfile,
         "Maximum inboard edge height (m)",
         "(z_tf_inside_half)",
-        build_variables.z_tf_inside_half,
+        data.build.z_tf_inside_half,
     )
 
     po.osubhd(stellarator.outfile, "Conductor Information :")

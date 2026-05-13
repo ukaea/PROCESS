@@ -8,7 +8,6 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as divv
 from process.data_structure import pfcoil_variables as pfv
 from process.data_structure import physics_variables as pv
@@ -59,8 +58,10 @@ class Structure(Model):
             pv.b_plasma_toroidal_on_axis,
             tfv.i_tf_sup,
             pfv.i_pf_conductor,
-            bv.dr_tf_inner_bore + bv.dr_tf_outboard + bv.dr_tf_inboard,
-            bv.z_tf_inside_half,
+            self.data.build.dr_tf_inner_bore
+            + self.data.build.dr_tf_outboard
+            + self.data.build.dr_tf_inboard,
+            self.data.build.z_tf_inside_half,
             self.data.fwbs.whtshld,
             divv.m_div_plate,
             total_weight_pf,

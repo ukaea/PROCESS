@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     current_drive_variables,
     divertor_variables,
@@ -692,52 +691,56 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         buildings.data.fwbs, "life_blkt_fpy", bldgssizesparam.life_blkt_fpy
     )
     monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", bldgssizesparam.z_tf_inside_half
-    )
-    monkeypatch.setattr(build_variables, "dr_tf_inboard", bldgssizesparam.dr_tf_inboard)
-    monkeypatch.setattr(
-        build_variables, "dr_tf_shld_gap", bldgssizesparam.dr_tf_shld_gap
+        buildings.data.build, "z_tf_inside_half", bldgssizesparam.z_tf_inside_half
     )
     monkeypatch.setattr(
-        build_variables,
+        buildings.data.build, "dr_tf_inboard", bldgssizesparam.dr_tf_inboard
+    )
+    monkeypatch.setattr(
+        buildings.data.build, "dr_tf_shld_gap", bldgssizesparam.dr_tf_shld_gap
+    )
+    monkeypatch.setattr(
+        buildings.data.build,
         "dr_shld_thermal_inboard",
         bldgssizesparam.dr_shld_thermal_inboard,
     )
     monkeypatch.setattr(
-        build_variables,
+        buildings.data.build,
         "dr_shld_thermal_outboard",
         bldgssizesparam.dr_shld_thermal_outboard,
     )
     monkeypatch.setattr(
-        build_variables, "dz_shld_thermal", bldgssizesparam.dz_shld_thermal
+        buildings.data.build, "dz_shld_thermal", bldgssizesparam.dz_shld_thermal
     )
     monkeypatch.setattr(
-        build_variables, "dr_shld_inboard", bldgssizesparam.dr_shld_inboard
+        buildings.data.build, "dr_shld_inboard", bldgssizesparam.dr_shld_inboard
     )
     monkeypatch.setattr(
-        build_variables, "dr_shld_outboard", bldgssizesparam.dr_shld_outboard
+        buildings.data.build, "dr_shld_outboard", bldgssizesparam.dr_shld_outboard
     )
     monkeypatch.setattr(
-        build_variables,
+        buildings.data.build,
         "dr_fw_plasma_gap_inboard",
         bldgssizesparam.dr_fw_plasma_gap_inboard,
     )
     monkeypatch.setattr(
-        build_variables,
+        buildings.data.build,
         "dr_fw_plasma_gap_outboard",
         bldgssizesparam.dr_fw_plasma_gap_outboard,
     )
-    monkeypatch.setattr(build_variables, "dr_fw_inboard", bldgssizesparam.dr_fw_inboard)
     monkeypatch.setattr(
-        build_variables, "dr_fw_outboard", bldgssizesparam.dr_fw_outboard
+        buildings.data.build, "dr_fw_inboard", bldgssizesparam.dr_fw_inboard
     )
     monkeypatch.setattr(
-        build_variables, "dr_blkt_inboard", bldgssizesparam.dr_blkt_inboard
+        buildings.data.build, "dr_fw_outboard", bldgssizesparam.dr_fw_outboard
     )
     monkeypatch.setattr(
-        build_variables, "dr_blkt_outboard", bldgssizesparam.dr_blkt_outboard
+        buildings.data.build, "dr_blkt_inboard", bldgssizesparam.dr_blkt_inboard
     )
-    monkeypatch.setattr(build_variables, "r_cp_top", bldgssizesparam.r_cp_top)
+    monkeypatch.setattr(
+        buildings.data.build, "dr_blkt_outboard", bldgssizesparam.dr_blkt_outboard
+    )
+    monkeypatch.setattr(buildings.data.build, "r_cp_top", bldgssizesparam.r_cp_top)
     monkeypatch.setattr(divertor_variables, "dz_divertor", bldgssizesparam.dz_divertor)
     monkeypatch.setattr(physics_variables, "rmajor", bldgssizesparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", bldgssizesparam.rminor)

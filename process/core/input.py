@@ -199,7 +199,7 @@ INPUT_VARIABLES = {
     "anginc": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
     ),
-    "aplasmin": InputVariable(data_structure.build_variables, float, range=(0.01, 10.0)),
+    "aplasmin": InputVariable("build", float, range=(0.01, 10.0)),
     "aux_build_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -255,12 +255,12 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
     "bkt_life_csf": InputVariable("cs_fatigue", float, range=(0.0, 1.0)),
-    "blbmith": InputVariable(data_structure.build_variables, float, range=(0.0, 2.0)),
-    "blbmoth": InputVariable(data_structure.build_variables, float, range=(0.0, 2.0)),
-    "blbpith": InputVariable(data_structure.build_variables, float, range=(0.0, 2.0)),
-    "blbpoth": InputVariable(data_structure.build_variables, float, range=(0.0, 2.0)),
-    "blbuith": InputVariable(data_structure.build_variables, float, range=(0.0, 2.0)),
-    "blbuoth": InputVariable(data_structure.build_variables, float, range=(0.0, 2.0)),
+    "blbmith": InputVariable("build", float, range=(0.0, 2.0)),
+    "blbmoth": InputVariable("build", float, range=(0.0, 2.0)),
+    "blbpith": InputVariable("build", float, range=(0.0, 2.0)),
+    "blbpoth": InputVariable("build", float, range=(0.0, 2.0)),
+    "blbuith": InputVariable("build", float, range=(0.0, 2.0)),
+    "blbuoth": InputVariable("build", float, range=(0.0, 2.0)),
     "bldr": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "bldrc": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "bldzl": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
@@ -407,12 +407,8 @@ INPUT_VARIABLES = {
     ),
     "csi": InputVariable("costs", float, range=(1.0, 100.0)),
     "cturbb": InputVariable("costs", float, range=(100.0, 1000.0)),
-    "dz_vv_lower": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dz_vv_upper": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
+    "dz_vv_lower": InputVariable("build", float, range=(0.0, 10.0)),
+    "dz_vv_upper": InputVariable("build", float, range=(0.0, 10.0)),
     "den_aluminium": InputVariable(
         process.core.constants, float, range=(2500.0, 30000.0)
     ),
@@ -470,61 +466,29 @@ INPUT_VARIABLES = {
     "f_p_fw_blkt_pump": InputVariable(
         data_structure.primary_pumping_variables, float, range=(0.0, 10.0)
     ),
-    "dr_blkt_inboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_blkt_outboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_bore": InputVariable(data_structure.build_variables, float, range=(0.0, 50.0)),
-    "dr_cryostat": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_cs": InputVariable(data_structure.build_variables, float, range=(0.0, 10.0)),
-    "dr_cs_tf_gap": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_fw_plasma_gap_inboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_fw_plasma_gap_outboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
+    "dr_blkt_inboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_blkt_outboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_bore": InputVariable("build", float, range=(0.0, 50.0)),
+    "dr_cryostat": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_cs": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_cs_tf_gap": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_fw_plasma_gap_inboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_fw_plasma_gap_outboard": InputVariable("build", float, range=(0.0, 10.0)),
     "dr_fw_wall": InputVariable("fwbs", float, range=(0.0005, 0.1)),
     "dr_pf_cryostat": InputVariable("fwbs", float, range=(0.1, 5.0)),
-    "dr_shld_blkt_gap": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 5.0)
-    ),
-    "dr_shld_inboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_shld_outboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_shld_thermal_inboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_shld_thermal_outboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_shld_vv_gap_inboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_tf_inboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_tf_shld_gap": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 5.0)
-    ),
+    "dr_shld_blkt_gap": InputVariable("build", float, range=(0.0, 5.0)),
+    "dr_shld_inboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_shld_outboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_shld_thermal_inboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_shld_thermal_outboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_shld_vv_gap_inboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_tf_inboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_tf_shld_gap": InputVariable("build", float, range=(0.0, 5.0)),
     "dr_tf_wp_with_insulation": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 10.0)
     ),
-    "dr_vv_inboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dr_vv_outboard": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
+    "dr_vv_inboard": InputVariable("build", float, range=(0.0, 10.0)),
+    "dr_vv_outboard": InputVariable("build", float, range=(0.0, 10.0)),
     "drtop": InputVariable(data_structure.tfcoil_variables, float, range=(-1.5, 1.5)),
     "drveff": InputVariable(data_structure.ife_variables, float, range=(0.01, 1.0)),
     "dtlife": InputVariable("costs", float, range=(0.0, 15.0)),
@@ -640,7 +604,7 @@ INPUT_VARIABLES = {
     ),
     "f_neut_shield": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "f_nuc_pow_bz_struct": InputVariable("fwbs", float, range=(0.0, 1.0)),
-    "f_r_cp": InputVariable(data_structure.build_variables, float, range=(1.0, 100.0)),
+    "f_r_cp": InputVariable("build", float, range=(1.0, 100.0)),
     "f_rad": InputVariable(
         data_structure.stellarator_variables, float, range=(0.0, 1.0)
     ),
@@ -660,9 +624,7 @@ INPUT_VARIABLES = {
     "f_st_coil_aspect": InputVariable(
         data_structure.stellarator_variables, float, range=(0.1, 10.0)
     ),
-    "f_z_cryostat": InputVariable(
-        data_structure.build_variables, float, range=(2.0, 10.0)
-    ),
+    "f_z_cryostat": InputVariable("build", float, range=(2.0, 10.0)),
     "fauxbop": InputVariable(data_structure.ife_variables, float, range=(0.0, 1.0)),
     "fblbe": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "fblbreed": InputVariable("fwbs", float, range=(0.0, 1.0)),
@@ -692,7 +654,7 @@ INPUT_VARIABLES = {
     "fcontng": InputVariable("costs", float, range=(0.0, 1.0)),
     "fcoolcp": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
     "fcr0": InputVariable("costs", float, range=(0.0, 1.0)),
-    "fcspc": InputVariable(data_structure.build_variables, float, range=(0.0, 1.0)),
+    "fcspc": InputVariable("build", float, range=(0.0, 1.0)),
     "fcuohsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
     "fcupfsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
     "f_a_tf_turn_cable_copper": InputVariable(
@@ -763,9 +725,7 @@ INPUT_VARIABLES = {
     ),
     "frhocp": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 5.0)),
     "frholeg": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 5.0)),
-    "fseppc": InputVariable(
-        data_structure.build_variables, float, range=(1000000.0, 1000000000.0)
-    ),
+    "fseppc": InputVariable("build", float, range=(1000000.0, 1000000000.0)),
     "fvoldw": InputVariable("fwbs", float, range=(0.0, 10.0)),
     "fvolsi": InputVariable("fwbs", float, range=(0.0, 10.0)),
     "fvolso": InputVariable("fwbs", float, range=(0.0, 10.0)),
@@ -792,7 +752,7 @@ INPUT_VARIABLES = {
     "eta_cd_norm_hcd_primary_max": InputVariable(
         data_structure.constraint_variables, float, range=(0.01, 10.0)
     ),
-    "gapomin": InputVariable(data_structure.build_variables, float, range=(0.0, 10.0)),
+    "gapomin": InputVariable("build", float, range=(0.0, 10.0)),
     "gas_buildings_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -1053,10 +1013,10 @@ INPUT_VARIABLES = {
     "plasma_square": InputVariable(
         data_structure.physics_variables, float, range=(-5.0, 5.0)
     ),
-    "plleni": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
-    "plleno": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
-    "plsepi": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
-    "plsepo": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
+    "plleni": InputVariable("build", float, range=(0.1, 10.0)),
+    "plleno": InputVariable("build", float, range=(0.1, 10.0)),
+    "plsepi": InputVariable("build", float, range=(0.1, 10.0)),
+    "plsepo": InputVariable("build", float, range=(0.1, 10.0)),
     "p_plant_electric_net_required_mw": InputVariable(
         data_structure.constraint_variables, float, range=(1.0, 10000.0)
     ),
@@ -1108,9 +1068,7 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
     "qnuc": InputVariable("fwbs", float, range=(0.0, 1000000.0)),
-    "r_cp_top": InputVariable(
-        data_structure.build_variables, float, range=(0.001, 10.0)
-    ),
+    "r_cp_top": InputVariable("build", float, range=(0.001, 10.0)),
     "rad_fraction_sol": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
@@ -1176,7 +1134,7 @@ INPUT_VARIABLES = {
     "rhopfbus": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 1e-05)
     ),
-    "rinboard": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
+    "rinboard": InputVariable("build", float, range=(0.1, 10.0)),
     "ripple_b_tf_plasma_edge_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.1, 100.0)
     ),
@@ -1223,12 +1181,8 @@ INPUT_VARIABLES = {
     "shear": InputVariable(
         data_structure.stellarator_variables, float, range=(0.1, 10.0)
     ),
-    "dz_shld_lower": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dz_shld_upper": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
+    "dz_shld_lower": InputVariable("build", float, range=(0.0, 10.0)),
+    "dz_shld_upper": InputVariable("build", float, range=(0.0, 10.0)),
     "shmf": InputVariable(data_structure.buildings_variables, float, range=(0.0, 1.0)),
     "shov": InputVariable(
         data_structure.buildings_variables, float, range=(1000.0, 1000000.0)
@@ -1239,9 +1193,7 @@ INPUT_VARIABLES = {
     "sig_tf_wp_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
     ),
-    "sigallpc": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 1000000000.0)
-    ),
+    "sigallpc": InputVariable("build", float, range=(0.0, 1000000000.0)),
     "sigpfcalw": InputVariable(
         data_structure.pfcoil_variables, float, range=(1.0, 1000.0)
     ),
@@ -1366,9 +1318,7 @@ INPUT_VARIABLES = {
     "dx_tf_wp_insertion_gap": InputVariable(
         data_structure.tfcoil_variables, float, range=(1e-10, 0.1)
     ),
-    "f_dr_tf_outboard_inboard": InputVariable(
-        data_structure.build_variables, float, range=(0.2, 5.0)
-    ),
+    "f_dr_tf_outboard_inboard": InputVariable("build", float, range=(0.2, 5.0)),
     "tftmp": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 293.0)),
     "tgain": InputVariable(data_structure.ife_variables, float, range=(1.0, 500.0)),
     "th_joint_contact": InputVariable(
@@ -1386,9 +1336,7 @@ INPUT_VARIABLES = {
     "dr_tf_nose_case": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "dz_shld_thermal": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
+    "dz_shld_thermal": InputVariable("build", float, range=(0.0, 10.0)),
     "dx_tf_turn_steel": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
@@ -1534,15 +1482,9 @@ INPUT_VARIABLES = {
     "f_a_tf_turn_cable_space_extra_void": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "dz_shld_vv_gap": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dz_xpoint_divertor": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
-    "dz_fw_plasma_gap": InputVariable(
-        data_structure.build_variables, float, range=(0.0, 10.0)
-    ),
+    "dz_shld_vv_gap": InputVariable("build", float, range=(0.0, 10.0)),
+    "dz_xpoint_divertor": InputVariable("build", float, range=(0.0, 10.0)),
+    "dz_fw_plasma_gap": InputVariable("build", float, range=(0.0, 10.0)),
     "pflux_fw_neutron_max_mw": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 50.0)
     ),
@@ -1625,7 +1567,7 @@ INPUT_VARIABLES = {
     ),
     "i_cp_joints": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
     "i_cp_lifetime": InputVariable("costs", int, range=(0, 3)),
-    "i_cs_precomp": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
+    "i_cs_precomp": InputVariable("build", int, choices=[0, 1]),
     "i_cs_stress": InputVariable(data_structure.pfcoil_variables, int, choices=[0, 1]),
     "i_density_limit": InputVariable(
         data_structure.physics_variables, int, range=(1, 8)
@@ -1661,7 +1603,7 @@ INPUT_VARIABLES = {
     "i_q95_fixed": InputVariable(
         data_structure.constraint_variables, int, choices=[0, 1]
     ),
-    "i_r_cp_top": InputVariable(data_structure.build_variables, int, choices=[0, 1, 2]),
+    "i_r_cp_top": InputVariable("build", int, choices=[0, 1, 2]),
     "i_rad_loss": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1, 2]
     ),
@@ -1715,7 +1657,7 @@ INPUT_VARIABLES = {
     ),
     "i_blkt_module_segmentation": InputVariable("fwbs", int, choices=[0, 1]),
     "inuclear": InputVariable("fwbs", int, choices=[0, 1]),
-    "iohcl": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
+    "iohcl": InputVariable("build", int, choices=[0, 1]),
     "i_plasma_pedestal": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1]
     ),
@@ -1799,7 +1741,7 @@ INPUT_VARIABLES = {
     "i_thermal_electric_conversion": InputVariable("fwbs", int, range=(0, 4)),
     "secondary_cycle_liq": InputVariable("fwbs", int, range=(2, 4)),
     "supercond_cost_model": InputVariable("costs", int, choices=[0, 1]),
-    "i_tf_inside_cs": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
+    "i_tf_inside_cs": InputVariable("build", int, choices=[0, 1]),
     "i_ecrh_wave_mode": InputVariable(
         data_structure.current_drive_variables, int, choices=[0, 1]
     ),

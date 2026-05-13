@@ -5,7 +5,6 @@ import numpy as np
 
 from process.core import constants
 from process.data_structure import (
-    build_variables,
     pfcoil_variables,
     physics_variables,
     superconducting_tf_coil_variables,
@@ -40,15 +39,15 @@ class ResistiveTFCoil(TFCoil):
         self.tf_res_heating()
 
         tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
-            dr_tf_inboard=build_variables.dr_tf_inboard,
+            dr_tf_inboard=self.data.build.dr_tf_inboard,
             r_tf_arc=tfcoil_variables.r_tf_arc,
             z_tf_arc=tfcoil_variables.z_tf_arc,
             itart=physics_variables.itart,
             i_tf_shape=tfcoil_variables.i_tf_shape,
-            z_tf_inside_half=build_variables.z_tf_inside_half,
-            dr_tf_outboard=build_variables.dr_tf_outboard,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
-            r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
+            z_tf_inside_half=self.data.build.z_tf_inside_half,
+            dr_tf_outboard=self.data.build.dr_tf_outboard,
+            r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
+            r_tf_inboard_mid=self.data.build.r_tf_inboard_mid,
         )
 
         (
@@ -80,7 +79,7 @@ class ResistiveTFCoil(TFCoil):
             dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,
             rmajor=physics_variables.rmajor,
             b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-            r_cp_top=build_variables.r_cp_top,
+            r_cp_top=self.data.build.r_cp_top,
             itart=physics_variables.itart,
             i_cp_joints=tfcoil_variables.i_cp_joints,
             f_vforce_inboard=tfcoil_variables.f_vforce_inboard,
@@ -135,14 +134,14 @@ class ResistiveTFCoil(TFCoil):
                 int(tfcoil_variables.n_rad_per_layer),
                 int(tfcoil_variables.n_tf_wp_stress_layers),
                 int(tfcoil_variables.i_tf_bucking),
-                float(build_variables.r_tf_inboard_in),
-                build_variables.dr_bore,
-                build_variables.z_tf_inside_half,
+                float(self.data.build.r_tf_inboard_in),
+                self.data.build.dr_bore,
+                self.data.build.z_tf_inside_half,
                 pfcoil_variables.f_z_cs_tf_internal,
-                build_variables.dr_cs,
-                build_variables.i_tf_inside_cs,
-                build_variables.dr_tf_inboard,
-                build_variables.dr_cs_tf_gap,
+                self.data.build.dr_cs,
+                self.data.build.i_tf_inside_cs,
+                self.data.build.dr_tf_inboard,
+                self.data.build.dr_cs_tf_gap,
                 pfcoil_variables.i_pf_conductor,
                 pfcoil_variables.j_cs_flat_top_end,
                 pfcoil_variables.j_cs_pulse_start,
@@ -272,19 +271,19 @@ class ResistiveTFCoil(TFCoil):
         Resistive TF turn geometry, equivalent to winding_pack subroutines
         """
         superconducting_tf_coil_variables.r_tf_wp_inboard_inner = (
-            build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
+            self.data.build.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
         )
         superconducting_tf_coil_variables.r_tf_wp_inboard_outer = (
-            build_variables.r_tf_inboard_out - tfcoil_variables.dr_tf_plasma_case
+            self.data.build.r_tf_inboard_out - tfcoil_variables.dr_tf_plasma_case
         )
 
         # Conductor layer radial thickness at centercollumn top [m]
         if physics_variables.itart == 1:
             superconducting_tf_coil_variables.dr_tf_wp_top = (
-                build_variables.r_cp_top
+                self.data.build.r_cp_top
                 - tfcoil_variables.dr_tf_plasma_case
                 - tfcoil_variables.dr_tf_nose_case
-                - build_variables.r_tf_inboard_in
+                - self.data.build.r_tf_inboard_in
             )
 
         # Number of turns
@@ -422,7 +421,7 @@ class ResistiveTFCoil(TFCoil):
                 )
             )
             * (
-                build_variables.dr_tf_outboard
+                self.data.build.dr_tf_outboard
                 - 2.0e0
                 * (
                     tfcoil_variables.dx_tf_turn_insulation
@@ -521,11 +520,11 @@ class ResistiveTFCoil(TFCoil):
                 superconducting_tf_coil_variables.vol_case_cp,
                 superconducting_tf_coil_variables.vol_gr_ins_cp,
             ) = self.cpost(
-                build_variables.r_tf_inboard_in,
-                build_variables.r_tf_inboard_out,
-                build_variables.r_cp_top,
+                self.data.build.r_tf_inboard_in,
+                self.data.build.r_tf_inboard_out,
+                self.data.build.r_cp_top,
                 superconducting_tf_coil_variables.z_cp_top,
-                build_variables.z_tf_inside_half + build_variables.dr_tf_outboard,
+                self.data.build.z_tf_inside_half + self.data.build.dr_tf_outboard,
                 tfcoil_variables.dr_tf_nose_case,
                 tfcoil_variables.dr_tf_plasma_case,
                 tfcoil_variables.dx_tf_wp_insulation,
@@ -548,7 +547,7 @@ class ResistiveTFCoil(TFCoil):
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
             )
             * (
-                build_variables.dr_tf_outboard
+                self.data.build.dr_tf_outboard
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
             )
         )
@@ -565,7 +564,7 @@ class ResistiveTFCoil(TFCoil):
             * tfcoil_variables.dx_tf_turn_insulation
             * tfcoil_variables.n_tf_coil_turns
             * (
-                build_variables.dr_tf_outboard
+                self.data.build.dr_tf_outboard
                 - 2.0e0
                 * (
                     tfcoil_variables.dx_tf_turn_insulation
@@ -613,7 +612,7 @@ class ResistiveTFCoil(TFCoil):
 
                 # Area of joint contact (all legs)
                 a_joints = (
-                    build_variables.dr_tf_outboard
+                    self.data.build.dr_tf_outboard
                     * tfcoil_variables.th_joint_contact
                     * n_contact_tot
                 )

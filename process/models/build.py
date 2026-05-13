@@ -7,7 +7,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     current_drive_variables,
     divertor_variables,
@@ -58,8 +57,8 @@ class Build(Model):
             rmajor=physics_variables.rmajor,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             dx_tf_inboard_out_toroidal=tfcoil_variables.dx_tf_inboard_out_toroidal,
-            dr_tf_outboard=build_variables.dr_tf_outboard,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            dr_tf_outboard=self.data.build.dr_tf_outboard,
+            r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
             dx_beam_duct=current_drive_variables.dx_beam_duct,
             dx_beam_shield=current_drive_variables.dx_beam_shield,
         )
@@ -160,10 +159,10 @@ class Build(Model):
         """
         # Set the X-point heights for the top and bottom of the plasma
         # Assumes top-down plasma symmetry
-        build_variables.z_plasma_xpoint_upper = (
+        self.data.build.z_plasma_xpoint_upper = (
             physics_variables.rminor * physics_variables.kappa
         )
-        build_variables.z_plasma_xpoint_lower = (
+        self.data.build.z_plasma_xpoint_lower = (
             physics_variables.rminor * physics_variables.kappa
         )
 
@@ -184,15 +183,15 @@ class Build(Model):
 
                 vertical_build_upper = (
                     buildings_variables.dz_tf_cryostat
-                    + build_variables.dr_tf_inboard
-                    + build_variables.dr_tf_shld_gap
-                    + build_variables.dz_shld_thermal
-                    + build_variables.dz_shld_vv_gap
-                    + build_variables.dz_vv_upper
-                    + build_variables.dz_shld_upper
+                    + self.data.build.dr_tf_inboard
+                    + self.data.build.dr_tf_shld_gap
+                    + self.data.build.dz_shld_thermal
+                    + self.data.build.dz_shld_vv_gap
+                    + self.data.build.dz_vv_upper
+                    + self.data.build.dz_shld_upper
                     + divertor_variables.dz_divertor
-                    + build_variables.dz_xpoint_divertor
-                    + build_variables.z_plasma_xpoint_upper
+                    + self.data.build.dz_xpoint_divertor
+                    + self.data.build.z_plasma_xpoint_upper
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
@@ -219,25 +218,25 @@ class Build(Model):
                 po.obuild(
                     self.outfile,
                     "TF coil",
-                    build_variables.dr_tf_inboard,
+                    self.data.build.dr_tf_inboard,
                     vertical_build_upper,
                     "(dr_tf_inboard)",
                 )
-                vertical_build_upper -= build_variables.dr_tf_inboard
+                vertical_build_upper -= self.data.build.dr_tf_inboard
 
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.dr_tf_shld_gap,
+                    self.data.build.dr_tf_shld_gap,
                     vertical_build_upper,
                     "(dr_tf_shld_gap)",
                 )
-                vertical_build_upper -= build_variables.dr_tf_shld_gap
+                vertical_build_upper -= self.data.build.dr_tf_shld_gap
 
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.dz_shld_thermal,
+                    self.data.build.dz_shld_thermal,
                     vertical_build_upper,
                     "(dz_shld_thermal)",
                 )
@@ -246,14 +245,14 @@ class Build(Model):
                     self.mfile,
                     "Thermal shield, vertical (m)",
                     "(dz_shld_thermal)",
-                    build_variables.dz_shld_thermal,
+                    self.data.build.dz_shld_thermal,
                 )
-                vertical_build_upper -= build_variables.dz_shld_thermal
+                vertical_build_upper -= self.data.build.dz_shld_thermal
 
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.dz_shld_vv_gap,
+                    self.data.build.dz_shld_vv_gap,
                     vertical_build_upper,
                     "(dz_shld_vv_gap)",
                 )
@@ -261,33 +260,33 @@ class Build(Model):
                     self.mfile,
                     "Vessel - TF coil vertical gap (m)",
                     "(dz_shld_vv_gap)",
-                    build_variables.dz_shld_vv_gap,
+                    self.data.build.dz_shld_vv_gap,
                 )
-                vertical_build_upper -= build_variables.dz_shld_vv_gap
+                vertical_build_upper -= self.data.build.dz_shld_vv_gap
 
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
-                    build_variables.dz_vv_upper + build_variables.dz_shld_upper,
+                    self.data.build.dz_vv_upper + self.data.build.dz_shld_upper,
                     vertical_build_upper,
                     "(dz_vv_upper+dz_shld_upper)",
                 )
                 vertical_build_upper = (
                     vertical_build_upper
-                    - build_variables.dz_vv_upper
-                    - build_variables.dz_shld_upper
+                    - self.data.build.dz_vv_upper
+                    - self.data.build.dz_shld_upper
                 )
                 po.ovarre(
                     self.mfile,
                     "Topside vacuum vessel radial thickness (m)",
                     "(dz_vv_upper)",
-                    build_variables.dz_vv_upper,
+                    self.data.build.dz_vv_upper,
                 )
                 po.ovarre(
                     self.mfile,
                     "Top radiation shield thickness (m)",
                     "(dz_shld_upper)",
-                    build_variables.dz_shld_upper,
+                    self.data.build.dz_shld_upper,
                 )
 
                 po.obuild(
@@ -308,7 +307,7 @@ class Build(Model):
                 po.obuild(
                     self.outfile,
                     "Top scrape-off",
-                    build_variables.dz_xpoint_divertor,
+                    self.data.build.dz_xpoint_divertor,
                     vertical_build_upper,
                     "(dz_xpoint_divertor)",
                 )
@@ -316,14 +315,14 @@ class Build(Model):
                     self.mfile,
                     "Top scrape-off vertical thickness (m)",
                     "(dz_xpoint_divertor)",
-                    build_variables.dz_xpoint_divertor,
+                    self.data.build.dz_xpoint_divertor,
                 )
-                vertical_build_upper -= build_variables.dz_xpoint_divertor
+                vertical_build_upper -= self.data.build.dz_xpoint_divertor
 
                 po.obuild(
                     self.outfile,
                     "Plasma upper X-point height (m)",
-                    build_variables.z_plasma_xpoint_upper,
+                    self.data.build.z_plasma_xpoint_upper,
                     vertical_build_upper,
                     "(z_plasma_xpoint_upper)",
                 )
@@ -331,17 +330,17 @@ class Build(Model):
                     self.mfile,
                     "Plasma upper X-point height (m)",
                     "(z_plasma_xpoint_upper)",
-                    build_variables.z_plasma_xpoint_upper,
+                    self.data.build.z_plasma_xpoint_upper,
                 )
-                vertical_build_upper -= build_variables.z_plasma_xpoint_upper
+                vertical_build_upper -= self.data.build.z_plasma_xpoint_upper
 
                 po.obuild(self.outfile, "Midplane", 0.0e0, vertical_build_upper)
 
-                vertical_build_upper -= build_variables.z_plasma_xpoint_lower
+                vertical_build_upper -= self.data.build.z_plasma_xpoint_lower
                 po.obuild(
                     self.outfile,
                     "Plasma lower X-point height (m)",
-                    build_variables.z_plasma_xpoint_lower,
+                    self.data.build.z_plasma_xpoint_lower,
                     vertical_build_upper,
                     "(z_plasma_xpoint_lower)",
                 )
@@ -349,14 +348,14 @@ class Build(Model):
                     self.mfile,
                     "Plasma lower X-point height (m)",
                     "(z_plasma_xpoint_lower)",
-                    build_variables.z_plasma_xpoint_lower,
+                    self.data.build.z_plasma_xpoint_lower,
                 )
 
-                vertical_build_upper -= build_variables.dz_xpoint_divertor
+                vertical_build_upper -= self.data.build.dz_xpoint_divertor
                 po.obuild(
                     self.outfile,
                     "Lower scrape-off",
-                    build_variables.dz_xpoint_divertor,
+                    self.data.build.dz_xpoint_divertor,
                     vertical_build_upper,
                     "(dz_xpoint_divertor)",
                 )
@@ -364,7 +363,7 @@ class Build(Model):
                     self.mfile,
                     "Bottom scrape-off vertical thickness (m)",
                     "(dz_xpoint_divertor)",
-                    build_variables.dz_xpoint_divertor,
+                    self.data.build.dz_xpoint_divertor,
                 )
 
                 vertical_build_upper -= divertor_variables.dz_divertor
@@ -382,13 +381,13 @@ class Build(Model):
                     divertor_variables.dz_divertor,
                 )
 
-                vertical_build_upper -= build_variables.dz_shld_lower
+                vertical_build_upper -= self.data.build.dz_shld_lower
 
-                vertical_build_upper -= build_variables.dz_vv_lower
+                vertical_build_upper -= self.data.build.dz_vv_lower
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
-                    build_variables.dz_vv_lower + build_variables.dz_shld_lower,
+                    self.data.build.dz_vv_lower + self.data.build.dz_shld_lower,
                     vertical_build_upper,
                     "(dz_vv_lower+dz_shld_lower)",
                 )
@@ -396,47 +395,47 @@ class Build(Model):
                     self.mfile,
                     "Bottom radiation shield thickness (m)",
                     "(dz_shld_lower)",
-                    build_variables.dz_shld_lower,
+                    self.data.build.dz_shld_lower,
                 )
                 po.ovarre(
                     self.mfile,
                     "Underside vacuum vessel radial thickness (m)",
                     "(dz_vv_lower)",
-                    build_variables.dz_vv_lower,
+                    self.data.build.dz_vv_lower,
                 )
 
-                vertical_build_upper -= build_variables.dz_shld_vv_gap
+                vertical_build_upper -= self.data.build.dz_shld_vv_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.dz_shld_vv_gap,
+                    self.data.build.dz_shld_vv_gap,
                     vertical_build_upper,
                     "(dz_shld_vv_gap)",
                 )
 
-                vertical_build_upper -= build_variables.dz_shld_thermal
+                vertical_build_upper -= self.data.build.dz_shld_thermal
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.dz_shld_thermal,
+                    self.data.build.dz_shld_thermal,
                     vertical_build_upper,
                     "(dz_shld_thermal)",
                 )
 
-                vertical_build_upper -= build_variables.dr_tf_shld_gap
+                vertical_build_upper -= self.data.build.dr_tf_shld_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.dr_tf_shld_gap,
+                    self.data.build.dr_tf_shld_gap,
                     vertical_build_upper,
                     "(dr_tf_shld_gap)",
                 )
 
-                vertical_build_upper -= build_variables.dr_tf_inboard
+                vertical_build_upper -= self.data.build.dr_tf_inboard
                 po.obuild(
                     self.outfile,
                     "TF coil",
-                    build_variables.dr_tf_inboard,
+                    self.data.build.dr_tf_inboard,
                     vertical_build_upper,
                     "(dr_tf_inboard)",
                 )
@@ -444,8 +443,8 @@ class Build(Model):
                 # Total height of TF coil
                 tf_height = tf_top - vertical_build_upper
                 # Inner vertical dimension of TF coil
-                build_variables.dh_tf_inner_bore = (
-                    tf_height - 2 * build_variables.dr_tf_inboard
+                self.data.build.dh_tf_inner_bore = (
+                    tf_height - 2 * self.data.build.dr_tf_inboard
                 )
 
                 vertical_build_upper -= buildings_variables.dz_tf_cryostat
@@ -458,34 +457,34 @@ class Build(Model):
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
-                build_variables.dz_tf_plasma_centre_offset = (
+                self.data.build.dz_tf_plasma_centre_offset = (
                     vbuile1 + vertical_build_upper
                 ) / 2.0e0
 
                 # End of Double null case
             else:
                 po.ocmmnt(self.outfile, "Single null case")
-                build_variables.dz_vv_upper = 0.5 * (
-                    build_variables.dz_vv_upper + build_variables.dz_vv_lower
+                self.data.build.dz_vv_upper = 0.5 * (
+                    self.data.build.dz_vv_upper + self.data.build.dz_vv_lower
                 )
 
-                build_variables.dz_fw_upper = 0.5 * (
-                    build_variables.dr_fw_inboard + build_variables.dr_fw_outboard
+                self.data.build.dz_fw_upper = 0.5 * (
+                    self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard
                 )
 
                 vbuild = (
                     buildings_variables.dz_tf_cryostat
-                    + build_variables.dr_tf_inboard
-                    + build_variables.dr_tf_shld_gap
-                    + build_variables.dz_shld_thermal
-                    + build_variables.dz_shld_vv_gap
-                    + build_variables.dz_vv_upper
-                    + build_variables.dr_shld_blkt_gap
-                    + build_variables.dz_shld_upper
-                    + build_variables.dz_blkt_upper
-                    + build_variables.dz_fw_upper
-                    + build_variables.dz_fw_plasma_gap
-                    + build_variables.z_plasma_xpoint_upper
+                    + self.data.build.dr_tf_inboard
+                    + self.data.build.dr_tf_shld_gap
+                    + self.data.build.dz_shld_thermal
+                    + self.data.build.dz_shld_vv_gap
+                    + self.data.build.dz_vv_upper
+                    + self.data.build.dr_shld_blkt_gap
+                    + self.data.build.dz_shld_upper
+                    + self.data.build.dz_blkt_upper
+                    + self.data.build.dz_fw_upper
+                    + self.data.build.dz_fw_plasma_gap
+                    + self.data.build.z_plasma_xpoint_upper
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
@@ -512,25 +511,25 @@ class Build(Model):
                 po.obuild(
                     self.outfile,
                     "TF coil",
-                    build_variables.dr_tf_inboard,
+                    self.data.build.dr_tf_inboard,
                     vbuild,
                     "(dr_tf_inboard)",
                 )
-                vbuild -= build_variables.dr_tf_inboard
+                vbuild -= self.data.build.dr_tf_inboard
 
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.dr_tf_shld_gap,
+                    self.data.build.dr_tf_shld_gap,
                     vbuild,
                     "(dr_tf_shld_gap)",
                 )
-                vbuild -= build_variables.dr_tf_shld_gap
+                vbuild -= self.data.build.dr_tf_shld_gap
 
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.dz_shld_thermal,
+                    self.data.build.dz_shld_thermal,
                     vbuild,
                     "(dz_shld_thermal)",
                 )
@@ -538,14 +537,14 @@ class Build(Model):
                     self.mfile,
                     "Thermal shield, vertical (m)",
                     "(dz_shld_thermal)",
-                    build_variables.dz_shld_thermal,
+                    self.data.build.dz_shld_thermal,
                 )
-                vbuild -= build_variables.dz_shld_thermal
+                vbuild -= self.data.build.dz_shld_thermal
 
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.dz_shld_vv_gap,
+                    self.data.build.dz_shld_vv_gap,
                     vbuild,
                     "(dz_shld_vv_gap)",
                 )
@@ -553,46 +552,46 @@ class Build(Model):
                     self.mfile,
                     "Vessel - TF coil vertical gap (m)",
                     "(dz_shld_vv_gap)",
-                    build_variables.dz_shld_vv_gap,
+                    self.data.build.dz_shld_vv_gap,
                 )
-                vbuild -= build_variables.dz_shld_vv_gap
+                vbuild -= self.data.build.dz_shld_vv_gap
 
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
-                    build_variables.dz_vv_upper + build_variables.dz_shld_upper,
+                    self.data.build.dz_vv_upper + self.data.build.dz_shld_upper,
                     vbuild,
                     "(dz_vv_upper+dz_shld_upper)",
                 )
                 vbuild = (
-                    vbuild - build_variables.dz_vv_upper - build_variables.dz_shld_upper
+                    vbuild - self.data.build.dz_vv_upper - self.data.build.dz_shld_upper
                 )
                 po.ovarre(
                     self.mfile,
                     "Topside vacuum vessel radial thickness (m)",
                     "(dz_vv_upper)",
-                    build_variables.dz_vv_upper,
+                    self.data.build.dz_vv_upper,
                 )
                 po.ovarre(
                     self.mfile,
                     "Top radiation shield thickness (m)",
                     "(dz_shld_upper)",
-                    build_variables.dz_shld_upper,
+                    self.data.build.dz_shld_upper,
                 )
 
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.dr_shld_blkt_gap,
+                    self.data.build.dr_shld_blkt_gap,
                     vbuild,
                     "(dr_shld_blkt_gap)",
                 )
-                vbuild -= build_variables.dr_shld_blkt_gap
+                vbuild -= self.data.build.dr_shld_blkt_gap
 
                 po.obuild(
                     self.outfile,
                     "Top blanket",
-                    build_variables.dz_blkt_upper,
+                    self.data.build.dz_blkt_upper,
                     vbuild,
                     "(dz_blkt_upper)",
                 )
@@ -600,12 +599,12 @@ class Build(Model):
                     self.mfile,
                     "Top blanket vertical thickness (m)",
                     "(dz_blkt_upper)",
-                    build_variables.dz_blkt_upper,
+                    self.data.build.dz_blkt_upper,
                 )
-                vbuild -= build_variables.dz_blkt_upper
+                vbuild -= self.data.build.dz_blkt_upper
 
                 dz_fw_upper = 0.5e0 * (
-                    build_variables.dr_fw_inboard + build_variables.dr_fw_outboard
+                    self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard
                 )
                 po.obuild(
                     self.outfile, "Top first wall", dz_fw_upper, vbuild, "(dz_fw_upper)"
@@ -621,7 +620,7 @@ class Build(Model):
                 po.obuild(
                     self.outfile,
                     "Top scrape-off",
-                    build_variables.dz_fw_plasma_gap,
+                    self.data.build.dz_fw_plasma_gap,
                     vbuild,
                     "(dz_fw_plasma_gap)",
                 )
@@ -629,14 +628,14 @@ class Build(Model):
                     self.mfile,
                     "Top scrape-off vertical thickness (m)",
                     "(dz_fw_plasma_gap)",
-                    build_variables.dz_fw_plasma_gap,
+                    self.data.build.dz_fw_plasma_gap,
                 )
-                vbuild -= build_variables.dz_fw_plasma_gap
+                vbuild -= self.data.build.dz_fw_plasma_gap
 
                 po.obuild(
                     self.outfile,
                     "Plasma upper X-point height (m)",
-                    build_variables.z_plasma_xpoint_upper,
+                    self.data.build.z_plasma_xpoint_upper,
                     vbuild,
                     "(z_plasma_xpoint_upper)",
                 )
@@ -644,17 +643,17 @@ class Build(Model):
                     self.mfile,
                     "Plasma upper X-point height (m)",
                     "(z_plasma_xpoint_upper)",
-                    build_variables.z_plasma_xpoint_upper,
+                    self.data.build.z_plasma_xpoint_upper,
                 )
-                vbuild -= build_variables.z_plasma_xpoint_upper
+                vbuild -= self.data.build.z_plasma_xpoint_upper
 
                 po.obuild(self.outfile, "Midplane", 0.0e0, vbuild)
 
-                vbuild -= build_variables.z_plasma_xpoint_lower
+                vbuild -= self.data.build.z_plasma_xpoint_lower
                 po.obuild(
                     self.outfile,
                     "Plasma lower X-point height (m)",
-                    build_variables.z_plasma_xpoint_lower,
+                    self.data.build.z_plasma_xpoint_lower,
                     vbuild,
                     "(z_plasma_xpoint_lower)",
                 )
@@ -662,14 +661,14 @@ class Build(Model):
                     self.mfile,
                     "Plasma lower X-point height (m)",
                     "(z_plasma_xpoint_lower)",
-                    build_variables.z_plasma_xpoint_lower,
+                    self.data.build.z_plasma_xpoint_lower,
                 )
 
-                vbuild -= build_variables.dz_xpoint_divertor
+                vbuild -= self.data.build.dz_xpoint_divertor
                 po.obuild(
                     self.outfile,
                     "Lower scrape-off",
-                    build_variables.dz_xpoint_divertor,
+                    self.data.build.dz_xpoint_divertor,
                     vbuild,
                     "(dz_xpoint_divertor)",
                 )
@@ -677,7 +676,7 @@ class Build(Model):
                     self.mfile,
                     "Bottom scrape-off vertical thickness (m)",
                     "(dz_xpoint_divertor)",
-                    build_variables.dz_xpoint_divertor,
+                    self.data.build.dz_xpoint_divertor,
                 )
 
                 vbuild -= divertor_variables.dz_divertor
@@ -695,13 +694,13 @@ class Build(Model):
                     divertor_variables.dz_divertor,
                 )
 
-                vbuild -= build_variables.dz_shld_lower
+                vbuild -= self.data.build.dz_shld_lower
 
-                vbuild -= build_variables.dz_vv_lower
+                vbuild -= self.data.build.dz_vv_lower
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
-                    build_variables.dz_vv_lower + build_variables.dz_shld_lower,
+                    self.data.build.dz_vv_lower + self.data.build.dz_shld_lower,
                     vbuild,
                     "(dz_vv_lower+dz_shld_lower)",
                 )
@@ -709,47 +708,47 @@ class Build(Model):
                     self.mfile,
                     "Bottom radiation shield thickness (m)",
                     "(dz_shld_lower)",
-                    build_variables.dz_shld_lower,
+                    self.data.build.dz_shld_lower,
                 )
                 po.ovarre(
                     self.mfile,
                     "Underside vacuum vessel radial thickness (m)",
                     "(dz_vv_lower)",
-                    build_variables.dz_vv_lower,
+                    self.data.build.dz_vv_lower,
                 )
 
-                vbuild -= build_variables.dz_shld_vv_gap
+                vbuild -= self.data.build.dz_shld_vv_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.dz_shld_vv_gap,
+                    self.data.build.dz_shld_vv_gap,
                     vbuild,
                     "(dz_shld_vv_gap)",
                 )
 
-                vbuild -= build_variables.dz_shld_thermal
+                vbuild -= self.data.build.dz_shld_thermal
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
-                    build_variables.dz_shld_thermal,
+                    self.data.build.dz_shld_thermal,
                     vbuild,
                     "(dz_shld_thermal)",
                 )
 
-                vbuild -= build_variables.dr_tf_shld_gap
+                vbuild -= self.data.build.dr_tf_shld_gap
                 po.obuild(
                     self.outfile,
                     "Gap",
-                    build_variables.dr_tf_shld_gap,
+                    self.data.build.dr_tf_shld_gap,
                     vbuild,
                     "(dr_tf_shld_gap)",
                 )
 
-                vbuild -= build_variables.dr_tf_inboard
+                vbuild -= self.data.build.dr_tf_inboard
                 po.obuild(
                     self.outfile,
                     "TF coil",
-                    build_variables.dr_tf_inboard,
+                    self.data.build.dr_tf_inboard,
                     vbuild,
                     "(dr_tf_inboard)",
                 )
@@ -757,8 +756,8 @@ class Build(Model):
                 # Total height of TF coil
                 tf_height = tf_top - vbuild
                 # Inner vertical dimension of TF coil
-                build_variables.dh_tf_inner_bore = (
-                    tf_height - 2 * build_variables.dr_tf_inboard
+                self.data.build.dh_tf_inner_bore = (
+                    tf_height - 2 * self.data.build.dr_tf_inboard
                 )
 
                 vbuild -= buildings_variables.dz_tf_cryostat
@@ -772,7 +771,7 @@ class Build(Model):
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
-                build_variables.dz_tf_plasma_centre_offset = (vbuile1 + vbuild) / 2.0e0
+                self.data.build.dz_tf_plasma_centre_offset = (vbuile1 + vbuild) / 2.0e0
 
                 # end of Single null case
 
@@ -789,48 +788,48 @@ class Build(Model):
 
         # Output the cdivertor geometry
         divht = self.divgeom(output)
-        # Issue #481 Remove build_variables.vgaptf
-        if build_variables.dz_xpoint_divertor < 0.00001e0:
-            build_variables.dz_xpoint_divertor = divht
+        # Issue #481 Remove self.data.build.vgaptf
+        if self.data.build.dz_xpoint_divertor < 0.00001e0:
+            self.data.build.dz_xpoint_divertor = divht
 
-        # If build_variables.dz_xpoint_divertor /= 0 use the value set by the user.
+        # If self.data.build.dz_xpoint_divertor /= 0 use the value set by the user.
 
         # Height to inside edge of TF coil. TF coils are assumed to be symmetrical.
         # Therefore this applies to single and double null cases.
-        build_variables.z_tf_inside_half = (
-            build_variables.z_plasma_xpoint_upper
-            + build_variables.dz_xpoint_divertor
+        self.data.build.z_tf_inside_half = (
+            self.data.build.z_plasma_xpoint_upper
+            + self.data.build.dz_xpoint_divertor
             + divertor_variables.dz_divertor
-            + build_variables.dz_shld_lower
-            + build_variables.dz_vv_lower
-            + build_variables.dz_shld_vv_gap
-            + build_variables.dz_shld_thermal
-            + build_variables.dr_tf_shld_gap
+            + self.data.build.dz_shld_lower
+            + self.data.build.dz_vv_lower
+            + self.data.build.dz_shld_vv_gap
+            + self.data.build.dz_shld_thermal
+            + self.data.build.dr_tf_shld_gap
         )
 
         #  Vertical locations of divertor coils
         if physics_variables.i_single_null == 0:
-            build_variables.z_tf_top = (
-                build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
+            self.data.build.z_tf_top = (
+                self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
             )
-            build_variables.dz_tf_upper_lower_midplane = 0.0e0
+            self.data.build.dz_tf_upper_lower_midplane = 0.0e0
         else:
-            build_variables.z_tf_top = (
-                build_variables.dr_tf_inboard
-                + build_variables.dr_tf_shld_gap
-                + build_variables.dz_shld_thermal
-                + build_variables.dz_shld_vv_gap
-                + build_variables.dz_vv_upper
-                + build_variables.dz_shld_upper
-                + build_variables.dr_shld_blkt_gap
-                + build_variables.dz_blkt_upper
+            self.data.build.z_tf_top = (
+                self.data.build.dr_tf_inboard
+                + self.data.build.dr_tf_shld_gap
+                + self.data.build.dz_shld_thermal
+                + self.data.build.dz_shld_vv_gap
+                + self.data.build.dz_vv_upper
+                + self.data.build.dz_shld_upper
+                + self.data.build.dr_shld_blkt_gap
+                + self.data.build.dz_blkt_upper
                 + 0.5e0
-                * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
-                + build_variables.dz_fw_plasma_gap
-                + build_variables.z_plasma_xpoint_upper
+                * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
+                + self.data.build.dz_fw_plasma_gap
+                + self.data.build.z_plasma_xpoint_upper
             )
-            build_variables.dz_tf_upper_lower_midplane = build_variables.z_tf_top - (
-                build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
+            self.data.build.dz_tf_upper_lower_midplane = self.data.build.z_tf_top - (
+                self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
             )
 
     def divgeom(self, output: bool):
@@ -895,40 +894,40 @@ class Build(Model):
         zxpt = -1.0e0 * kap * physics_variables.rminor
 
         # Position of inner strike point
-        # rspi = rxpt - build_variables.plsepi*cos(alphad)
-        # zspi = zxpt - build_variables.plsepi*sin(alphad)
-        rspi = rxpt - build_variables.plsepi * np.cos(thetai)
-        zspi = zxpt - build_variables.plsepi * np.sin(thetai)
+        # rspi = rxpt - self.data.build.plsepi*cos(alphad)
+        # zspi = zxpt - self.data.build.plsepi*sin(alphad)
+        rspi = rxpt - self.data.build.plsepi * np.cos(thetai)
+        zspi = zxpt - self.data.build.plsepi * np.sin(thetai)
 
         # Position of outer strike point
-        build_variables.rspo = rxpt + build_variables.plsepo * np.cos(thetao)
-        zspo = zxpt - build_variables.plsepo * np.sin(thetao)
+        self.data.build.rspo = rxpt + self.data.build.plsepo * np.cos(thetao)
+        zspo = zxpt - self.data.build.plsepo * np.sin(thetao)
 
         # Position of inner plate ends
-        rplti = rspi + (build_variables.plleni / 2.0e0) * np.cos(
+        rplti = rspi + (self.data.build.plleni / 2.0e0) * np.cos(
             thetai + divertor_variables.betai
         )
-        zplti = zspi + (build_variables.plleni / 2.0e0) * np.sin(
+        zplti = zspi + (self.data.build.plleni / 2.0e0) * np.sin(
             thetai + divertor_variables.betai
         )
-        rplbi = rspi - (build_variables.plleni / 2.0e0) * np.cos(
+        rplbi = rspi - (self.data.build.plleni / 2.0e0) * np.cos(
             thetai + divertor_variables.betai
         )
-        zplbi = zspi - (build_variables.plleni / 2.0e0) * np.sin(
+        zplbi = zspi - (self.data.build.plleni / 2.0e0) * np.sin(
             thetai + divertor_variables.betai
         )
 
         # Position of outer plate ends
-        rplto = build_variables.rspo - (build_variables.plleno / 2.0e0) * np.cos(
+        rplto = self.data.build.rspo - (self.data.build.plleno / 2.0e0) * np.cos(
             thetao + divertor_variables.betao
         )
-        zplto = zspo + (build_variables.plleno / 2.0e0) * np.sin(
+        zplto = zspo + (self.data.build.plleno / 2.0e0) * np.sin(
             thetao + divertor_variables.betao
         )
-        rplbo = build_variables.rspo + (build_variables.plleno / 2.0e0) * np.cos(
+        rplbo = self.data.build.rspo + (self.data.build.plleno / 2.0e0) * np.cos(
             thetao + divertor_variables.betao
         )
-        zplbo = zspo - (build_variables.plleno / 2.0e0) * np.sin(
+        zplbo = zspo - (self.data.build.plleno / 2.0e0) * np.sin(
             thetao + divertor_variables.betao
         )
 
@@ -987,7 +986,7 @@ class Build(Model):
                     self.outfile,
                     "TF coil vertical offset (m)",
                     "(dz_tf_plasma_centre_offset)",
-                    build_variables.dz_tf_plasma_centre_offset,
+                    self.data.build.dz_tf_plasma_centre_offset,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1044,25 +1043,25 @@ class Build(Model):
                     self.outfile,
                     "Inner divertor leg poloidal length (m)",
                     "(plsepi)",
-                    build_variables.plsepi,
+                    self.data.build.plsepi,
                 )
                 po.ovarrf(
                     self.outfile,
                     "Outer divertor leg poloidal length (m)",
                     "(plsepo)",
-                    build_variables.plsepo,
+                    self.data.build.plsepo,
                 )
                 po.ovarrf(
                     self.outfile,
                     "Inner divertor plate length (m)",
                     "(plleni)",
-                    build_variables.plleni,
+                    self.data.build.plleni,
                 )
                 po.ovarrf(
                     self.outfile,
                     "Outer divertor plate length (m)",
                     "(plleno)",
-                    build_variables.plleno,
+                    self.data.build.plleno,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1106,7 +1105,7 @@ class Build(Model):
                     self.outfile,
                     "Outer strike point, radial (m)",
                     "(rspo)",
-                    build_variables.rspo,
+                    self.data.build.rspo,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1195,7 +1194,7 @@ class Build(Model):
                     self.outfile,
                     "TF coil vertical offset (m)",
                     "(dz_tf_plasma_centre_offset)",
-                    build_variables.dz_tf_plasma_centre_offset,
+                    self.data.build.dz_tf_plasma_centre_offset,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1262,25 +1261,25 @@ class Build(Model):
                     self.outfile,
                     "Inner divertor leg poloidal length (m)",
                     "(plsepi)",
-                    build_variables.plsepi,
+                    self.data.build.plsepi,
                 )
                 po.ovarrf(
                     self.outfile,
                     "Outer divertor leg poloidal length (m)",
                     "(plsepo)",
-                    build_variables.plsepo,
+                    self.data.build.plsepo,
                 )
                 po.ovarrf(
                     self.outfile,
                     "Inner divertor plate length (m)",
                     "(lleni)",
-                    build_variables.plleni,
+                    self.data.build.plleni,
                 )
                 po.ovarrf(
                     self.outfile,
                     "Outer divertor plate length (m)",
                     "(plleno)",
-                    build_variables.plleno,
+                    self.data.build.plleno,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1328,7 +1327,7 @@ class Build(Model):
                     self.outfile,
                     "Upper outer strike point, radial (m)",
                     "(rspo)",
-                    build_variables.rspo,
+                    self.data.build.rspo,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1412,7 +1411,7 @@ class Build(Model):
                     self.outfile,
                     "Lower outer strike point, radial (m)",
                     "(rspo)",
-                    build_variables.rspo,
+                    self.data.build.rspo,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1631,276 +1630,276 @@ class Build(Model):
             Flag indicating whether to output the results
         """
         if self.data.fwbs.blktmodel > 0:
-            build_variables.dr_blkt_inboard = (
-                build_variables.blbuith
-                + build_variables.blbmith
-                + build_variables.blbpith
+            self.data.build.dr_blkt_inboard = (
+                self.data.build.blbuith
+                + self.data.build.blbmith
+                + self.data.build.blbpith
             )
-            build_variables.dr_blkt_outboard = (
-                build_variables.blbuoth
-                + build_variables.blbmoth
-                + build_variables.blbpoth
+            self.data.build.dr_blkt_outboard = (
+                self.data.build.blbuoth
+                + self.data.build.blbmoth
+                + self.data.build.blbpoth
             )
-            build_variables.dz_shld_upper = 0.5e0 * (
-                build_variables.dr_shld_inboard + build_variables.dr_shld_outboard
+            self.data.build.dz_shld_upper = 0.5e0 * (
+                self.data.build.dr_shld_inboard + self.data.build.dr_shld_outboard
             )
 
         #  Top/bottom blanket thickness
-        build_variables.dz_blkt_upper = 0.5e0 * (
-            build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
+        self.data.build.dz_blkt_upper = 0.5e0 * (
+            self.data.build.dr_blkt_inboard + self.data.build.dr_blkt_outboard
         )
 
         if physics_variables.i_single_null == 1:
-            #  Check if build_variables.dz_fw_plasma_gap has been set too small
-            build_variables.dz_fw_plasma_gap = max(
+            #  Check if self.data.build.dz_fw_plasma_gap has been set too small
+            self.data.build.dz_fw_plasma_gap = max(
                 0.5e0
                 * (
-                    build_variables.dr_fw_plasma_gap_inboard
-                    + build_variables.dr_fw_plasma_gap_outboard
+                    self.data.build.dr_fw_plasma_gap_inboard
+                    + self.data.build.dr_fw_plasma_gap_outboard
                 ),
-                build_variables.dz_fw_plasma_gap,
+                self.data.build.dz_fw_plasma_gap,
             )
 
-        # Calculate pre-compression structure thickness is build_variables.i_cs_precomp=1
-        if build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 0:
-            build_variables.dr_cs_precomp = build_variables.fseppc / (
+        # Calculate pre-compression structure thickness is self.data.build.i_cs_precomp=1
+        if self.data.build.i_cs_precomp == 1 and self.data.build.i_tf_inside_cs == 0:
+            self.data.build.dr_cs_precomp = self.data.build.fseppc / (
                 2.0e0
                 * np.pi
-                * build_variables.fcspc
-                * build_variables.sigallpc
+                * self.data.build.fcspc
+                * self.data.build.sigallpc
                 * (
-                    build_variables.dr_bore
-                    + build_variables.dr_bore
-                    + build_variables.dr_cs
+                    self.data.build.dr_bore
+                    + self.data.build.dr_bore
+                    + self.data.build.dr_cs
                 )
             )
-        elif build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 1:
-            build_variables.dr_cs_precomp = build_variables.fseppc / (
+        elif self.data.build.i_cs_precomp == 1 and self.data.build.i_tf_inside_cs == 1:
+            self.data.build.dr_cs_precomp = self.data.build.fseppc / (
                 2.0e0
                 * np.pi
-                * build_variables.fcspc
-                * build_variables.sigallpc
+                * self.data.build.fcspc
+                * self.data.build.sigallpc
                 * (
-                    2.0 * build_variables.dr_bore
-                    + 2.0 * build_variables.dr_tf_inboard
-                    + 2.0 * build_variables.dr_cs_tf_gap
-                    + build_variables.dr_cs
+                    2.0 * self.data.build.dr_bore
+                    + 2.0 * self.data.build.dr_tf_inboard
+                    + 2.0 * self.data.build.dr_cs_tf_gap
+                    + self.data.build.dr_cs
                 )
             )
         else:
-            build_variables.dr_cs_precomp = 0.0e0
+            self.data.build.dr_cs_precomp = 0.0e0
 
         # Issue #514 Radial dimensions of inboard leg
-        # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
+        # Calculate self.data.build.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
         if 140 in numerics.ixc[0 : numerics.nvar]:
-            build_variables.dr_tf_inboard = (
+            self.data.build.dr_tf_inboard = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 + tfcoil_variables.dr_tf_plasma_case
                 + tfcoil_variables.dr_tf_nose_case
             )
 
-        if build_variables.i_tf_inside_cs == 1:
-            build_variables.r_tf_inboard_in = (
-                build_variables.dr_bore
+        if self.data.build.i_tf_inside_cs == 1:
+            self.data.build.r_tf_inboard_in = (
+                self.data.build.dr_bore
                 # NOTE: dr_bore is just the hollow space, the
                 # true dr_bore size used for flux calculations
                 # is dr_bore + dr_tf_inboard + dr_cs_tf_gap
             )
         else:
             # Inboard side inner radius [m]
-            build_variables.r_tf_inboard_in = (
-                build_variables.dr_bore
-                + build_variables.dr_cs
-                + build_variables.dr_cs_precomp
-                + build_variables.dr_cs_tf_gap
+            self.data.build.r_tf_inboard_in = (
+                self.data.build.dr_bore
+                + self.data.build.dr_cs
+                + self.data.build.dr_cs_precomp
+                + self.data.build.dr_cs_tf_gap
             )
 
         # Radial build to tfcoil middle [m]
-        build_variables.r_tf_inboard_mid = (
-            build_variables.r_tf_inboard_in + 0.5e0 * build_variables.dr_tf_inboard
+        self.data.build.r_tf_inboard_mid = (
+            self.data.build.r_tf_inboard_in + 0.5e0 * self.data.build.dr_tf_inboard
         )
 
         # Radial build to tfcoil plasma facing side [m]
-        build_variables.r_tf_inboard_out = (
-            build_variables.r_tf_inboard_in + build_variables.dr_tf_inboard
+        self.data.build.r_tf_inboard_out = (
+            self.data.build.r_tf_inboard_in + self.data.build.dr_tf_inboard
         )
 
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
         if 140 not in numerics.ixc[0 : numerics.nvar]:
             tfcoil_variables.dr_tf_wp_with_insulation = (
-                build_variables.dr_tf_inboard
+                self.data.build.dr_tf_inboard
                 - tfcoil_variables.dr_tf_plasma_case
                 - tfcoil_variables.dr_tf_nose_case
             )
 
         # Radius of the centrepost at the top of the machine
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:
-            # build_variables.r_cp_top is set using the plasma shape
-            if build_variables.i_r_cp_top == 0:
-                build_variables.r_cp_top = (
+            # self.data.build.r_cp_top is set using the plasma shape
+            if self.data.build.i_r_cp_top == 0:
+                self.data.build.r_cp_top = (
                     physics_variables.rmajor
                     - physics_variables.rminor * physics_variables.triang
                     - (
-                        build_variables.dr_tf_shld_gap
-                        + build_variables.dr_shld_thermal_inboard
-                        + build_variables.dr_shld_inboard
-                        + build_variables.dr_shld_blkt_gap
-                        + build_variables.dr_blkt_inboard
-                        + build_variables.dr_fw_inboard
-                        + 3.0e0 * build_variables.dr_fw_plasma_gap_inboard
+                        self.data.build.dr_tf_shld_gap
+                        + self.data.build.dr_shld_thermal_inboard
+                        + self.data.build.dr_shld_inboard
+                        + self.data.build.dr_shld_blkt_gap
+                        + self.data.build.dr_blkt_inboard
+                        + self.data.build.dr_fw_inboard
+                        + 3.0e0 * self.data.build.dr_fw_plasma_gap_inboard
                     )
                     + tfcoil_variables.drtop
                 )
 
-                # Notify user that build_variables.r_cp_top has been set to 1.01*build_variables.r_tf_inboard_out (lvl 2 error)
-                if build_variables.r_cp_top < 1.01e0 * build_variables.r_tf_inboard_out:
+                # Notify user that self.data.build.r_cp_top has been set to 1.01*self.data.build.r_tf_inboard_out (lvl 2 error)
+                if self.data.build.r_cp_top < 1.01e0 * self.data.build.r_tf_inboard_out:
                     logger.error(
                         "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue"
-                        f"{build_variables.r_cp_top=} {build_variables.r_tf_inboard_out=}"
+                        f"{self.data.build.r_cp_top=} {self.data.build.r_tf_inboard_out=}"
                     )
 
-                    # build_variables.r_cp_top correction
-                    build_variables.r_cp_top = build_variables.r_tf_inboard_out * 1.01e0
+                    # self.data.build.r_cp_top correction
+                    self.data.build.r_cp_top = self.data.build.r_tf_inboard_out * 1.01e0
 
                 # Top and mid-plane TF coil CP radius ratio
-                build_variables.f_r_cp = (
-                    build_variables.r_cp_top / build_variables.r_tf_inboard_out
+                self.data.build.f_r_cp = (
+                    self.data.build.r_cp_top / self.data.build.r_tf_inboard_out
                 )
 
-            # User defined build_variables.r_cp_top
-            elif build_variables.i_r_cp_top == 1:
-                # Notify user that build_variables.r_cp_top has been set to 1.01*build_variables.r_tf_inboard_out (lvl 2 error)
-                if build_variables.r_cp_top < 1.01e0 * build_variables.r_tf_inboard_out:
+            # User defined self.data.build.r_cp_top
+            elif self.data.build.i_r_cp_top == 1:
+                # Notify user that self.data.build.r_cp_top has been set to 1.01*self.data.build.r_tf_inboard_out (lvl 2 error)
+                if self.data.build.r_cp_top < 1.01e0 * self.data.build.r_tf_inboard_out:
                     logger.error(
                         "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue"
-                        f"{build_variables.r_cp_top=} {build_variables.r_tf_inboard_out=}"
+                        f"{self.data.build.r_cp_top=} {self.data.build.r_tf_inboard_out=}"
                     )
 
-                    # build_variables.r_cp_top correction
-                    build_variables.r_cp_top = build_variables.r_tf_inboard_out * 1.01e0
+                    # self.data.build.r_cp_top correction
+                    self.data.build.r_cp_top = self.data.build.r_tf_inboard_out * 1.01e0
 
                 # Top / mid-plane TF CP radius ratio
-                build_variables.f_r_cp = (
-                    build_variables.r_cp_top / build_variables.r_tf_inboard_out
+                self.data.build.f_r_cp = (
+                    self.data.build.r_cp_top / self.data.build.r_tf_inboard_out
                 )
 
-            # build_variables.r_cp_top set as a fraction of the outer TF midplane radius
-            elif build_variables.i_r_cp_top == 2:
-                build_variables.r_cp_top = (
-                    build_variables.f_r_cp * build_variables.r_tf_inboard_out
+            # self.data.build.r_cp_top set as a fraction of the outer TF midplane radius
+            elif self.data.build.i_r_cp_top == 2:
+                self.data.build.r_cp_top = (
+                    self.data.build.f_r_cp * self.data.build.r_tf_inboard_out
                 )
 
         else:  # End of physics_variables.itart == 1 .and. tfcoil_variables.i_tf_sup /= 1
-            build_variables.r_cp_top = build_variables.r_tf_inboard_out
+            self.data.build.r_cp_top = self.data.build.r_tf_inboard_out
 
-        if build_variables.i_r_cp_top != 0 and (
-            build_variables.r_cp_top
+        if self.data.build.i_r_cp_top != 0 and (
+            self.data.build.r_cp_top
             > physics_variables.rmajor
             - physics_variables.rminor * physics_variables.triang
             - (
-                build_variables.dr_tf_shld_gap
-                + build_variables.dr_shld_thermal_inboard
-                + build_variables.dr_shld_inboard
-                + build_variables.dr_shld_blkt_gap
-                + build_variables.dr_blkt_inboard
-                + build_variables.dr_fw_inboard
-                + 3.0e0 * build_variables.dr_fw_plasma_gap_inboard
+                self.data.build.dr_tf_shld_gap
+                + self.data.build.dr_shld_thermal_inboard
+                + self.data.build.dr_shld_inboard
+                + self.data.build.dr_shld_blkt_gap
+                + self.data.build.dr_blkt_inboard
+                + self.data.build.dr_fw_inboard
+                + 3.0e0 * self.data.build.dr_fw_plasma_gap_inboard
             )
             + tfcoil_variables.drtop
         ):
             logger.error(
-                f"Top CP radius larger that its value determined with plasma shape {build_variables.r_cp_top=}"
+                f"Top CP radius larger that its value determined with plasma shape {self.data.build.r_cp_top=}"
             )
-        if build_variables.i_tf_inside_cs == 1:
+        if self.data.build.i_tf_inside_cs == 1:
             #  Radial position of vacuum vessel [m]
-            build_variables.r_vv_inboard_out = (
-                build_variables.r_tf_inboard_out
-                + build_variables.dr_cs
-                + build_variables.dr_cs_tf_gap
-                + build_variables.dr_cs_precomp
-                + build_variables.dr_tf_shld_gap
-                + build_variables.dr_shld_thermal_inboard
-                + build_variables.dr_shld_vv_gap_inboard
-                + build_variables.dr_vv_inboard
+            self.data.build.r_vv_inboard_out = (
+                self.data.build.r_tf_inboard_out
+                + self.data.build.dr_cs
+                + self.data.build.dr_cs_tf_gap
+                + self.data.build.dr_cs_precomp
+                + self.data.build.dr_tf_shld_gap
+                + self.data.build.dr_shld_thermal_inboard
+                + self.data.build.dr_shld_vv_gap_inboard
+                + self.data.build.dr_vv_inboard
             )
         else:
-            build_variables.r_vv_inboard_out = (
-                build_variables.r_tf_inboard_out
-                + build_variables.dr_tf_shld_gap
-                + build_variables.dr_shld_thermal_inboard
-                + build_variables.dr_shld_vv_gap_inboard
-                + build_variables.dr_vv_inboard
+            self.data.build.r_vv_inboard_out = (
+                self.data.build.r_tf_inboard_out
+                + self.data.build.dr_tf_shld_gap
+                + self.data.build.dr_shld_thermal_inboard
+                + self.data.build.dr_shld_vv_gap_inboard
+                + self.data.build.dr_vv_inboard
             )
         # Radial position of the inner side of inboard neutronic shield [m]
-        build_variables.r_sh_inboard_in = build_variables.r_vv_inboard_out
+        self.data.build.r_sh_inboard_in = self.data.build.r_vv_inboard_out
 
         # Radial position of the plasma facing side of inboard neutronic shield [m]
-        build_variables.r_sh_inboard_out = (
-            build_variables.r_sh_inboard_in + build_variables.dr_shld_inboard
+        self.data.build.r_sh_inboard_out = (
+            self.data.build.r_sh_inboard_in + self.data.build.dr_shld_inboard
         )
 
         #  Radial build to centre of plasma (should be equal to physics_variables.rmajor)
-        build_variables.rbld = (
-            build_variables.r_sh_inboard_out
-            + build_variables.dr_shld_blkt_gap
-            + build_variables.dr_blkt_inboard
-            + build_variables.dr_fw_inboard
-            + build_variables.dr_fw_plasma_gap_inboard
+        self.data.build.rbld = (
+            self.data.build.r_sh_inboard_out
+            + self.data.build.dr_shld_blkt_gap
+            + self.data.build.dr_blkt_inboard
+            + self.data.build.dr_fw_inboard
+            + self.data.build.dr_fw_plasma_gap_inboard
             + physics_variables.rminor
         )
 
         #  Radius to inner edge of inboard shield
-        build_variables.r_shld_inboard_inner = (
+        self.data.build.r_shld_inboard_inner = (
             physics_variables.rmajor
             - physics_variables.rminor
-            - build_variables.dr_fw_plasma_gap_inboard
-            - build_variables.dr_fw_inboard
-            - build_variables.dr_blkt_inboard
-            - build_variables.dr_shld_inboard
+            - self.data.build.dr_fw_plasma_gap_inboard
+            - self.data.build.dr_fw_inboard
+            - self.data.build.dr_blkt_inboard
+            - self.data.build.dr_shld_inboard
         )
 
         #  Radius to outer edge of outboard shield
-        build_variables.r_shld_outboard_outer = (
+        self.data.build.r_shld_outboard_outer = (
             physics_variables.rmajor
             + physics_variables.rminor
-            + build_variables.dr_fw_plasma_gap_outboard
-            + build_variables.dr_fw_outboard
-            + build_variables.dr_blkt_outboard
-            + build_variables.dr_shld_outboard
+            + self.data.build.dr_fw_plasma_gap_outboard
+            + self.data.build.dr_fw_outboard
+            + self.data.build.dr_blkt_outboard
+            + self.data.build.dr_shld_outboard
         )
 
         #  Thickness of outboard TF coil legs
         if tfcoil_variables.i_tf_sup != 1:
-            build_variables.dr_tf_outboard = (
-                build_variables.f_dr_tf_outboard_inboard * build_variables.dr_tf_inboard
+            self.data.build.dr_tf_outboard = (
+                self.data.build.f_dr_tf_outboard_inboard * self.data.build.dr_tf_inboard
             )
         else:
-            build_variables.dr_tf_outboard = build_variables.dr_tf_inboard
+            self.data.build.dr_tf_outboard = self.data.build.dr_tf_inboard
 
         #  Radius to centre of outboard TF coil legs
-        build_variables.r_tf_outboard_mid = (
-            build_variables.r_shld_outboard_outer
-            + build_variables.dr_shld_blkt_gap
-            + build_variables.dr_vv_outboard
-            + build_variables.gapomin
-            + build_variables.dr_shld_thermal_outboard
-            + build_variables.dr_tf_shld_gap
-            + 0.5e0 * build_variables.dr_tf_outboard
+        self.data.build.r_tf_outboard_mid = (
+            self.data.build.r_shld_outboard_outer
+            + self.data.build.dr_shld_blkt_gap
+            + self.data.build.dr_vv_outboard
+            + self.data.build.gapomin
+            + self.data.build.dr_shld_thermal_outboard
+            + self.data.build.dr_tf_shld_gap
+            + 0.5e0 * self.data.build.dr_tf_outboard
         )
 
-        # TF coil horizontal build_variables.dr_bore [m]
-        build_variables.dr_tf_inner_bore = (
-            build_variables.r_tf_outboard_mid - 0.5e0 * build_variables.dr_tf_outboard
-        ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.dr_tf_inboard)
+        # TF coil horizontal self.data.build.dr_bore [m]
+        self.data.build.dr_tf_inner_bore = (
+            self.data.build.r_tf_outboard_mid - 0.5e0 * self.data.build.dr_tf_outboard
+        ) - (self.data.build.r_tf_inboard_mid - 0.5e0 * self.data.build.dr_tf_inboard)
 
         (
             tfcoil_variables.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
-            build_variables.ripflag,
+            self.data.build.ripflag,
         ) = self.plasma_outboard_edge_toroidal_ripple(
             ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
@@ -1915,33 +1914,33 @@ class Build(Model):
         )
 
         #  If the tfcoil_variables.ripple is too large then move the outboard TF coil leg
-        if r_tf_outboard_midl > build_variables.r_tf_outboard_mid:
-            build_variables.r_tf_outboard_mid = r_tf_outboard_midl
-            build_variables.dr_shld_vv_gap_outboard = (
-                build_variables.r_tf_outboard_mid
-                - 0.5e0 * build_variables.dr_tf_outboard
-                - build_variables.dr_vv_outboard
-                - build_variables.r_shld_outboard_outer
-                - build_variables.dr_shld_thermal_outboard
-                - build_variables.dr_tf_shld_gap
-                - build_variables.dr_shld_blkt_gap
+        if r_tf_outboard_midl > self.data.build.r_tf_outboard_mid:
+            self.data.build.r_tf_outboard_mid = r_tf_outboard_midl
+            self.data.build.dr_shld_vv_gap_outboard = (
+                self.data.build.r_tf_outboard_mid
+                - 0.5e0 * self.data.build.dr_tf_outboard
+                - self.data.build.dr_vv_outboard
+                - self.data.build.r_shld_outboard_outer
+                - self.data.build.dr_shld_thermal_outboard
+                - self.data.build.dr_tf_shld_gap
+                - self.data.build.dr_shld_blkt_gap
             )
-            build_variables.dr_tf_inner_bore = (
-                build_variables.r_tf_outboard_mid
-                - 0.5e0 * build_variables.dr_tf_outboard
+            self.data.build.dr_tf_inner_bore = (
+                self.data.build.r_tf_outboard_mid
+                - 0.5e0 * self.data.build.dr_tf_outboard
             ) - (
-                build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.dr_tf_inboard
+                self.data.build.r_tf_inboard_mid - 0.5e0 * self.data.build.dr_tf_inboard
             )
         else:
-            build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
+            self.data.build.dr_shld_vv_gap_outboard = self.data.build.gapomin
 
         (
             tfcoil_variables.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
-            build_variables.ripflag,
+            self.data.build.ripflag,
         ) = self.plasma_outboard_edge_toroidal_ripple(
             ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
@@ -1960,7 +1959,7 @@ class Build(Model):
 
             po.oheadr(self.outfile, "Radial Build")
 
-            if build_variables.ripflag != 0:
+            if self.data.build.ripflag != 0:
                 po.ocmmnt(
                     self.outfile,
                     "(Ripple result may not be accurate, as the fit was outside",
@@ -1971,7 +1970,7 @@ class Build(Model):
                     "Ripple result may be inaccurate, as the fit has been extrapolated"
                 )
 
-                if build_variables.ripflag == 1:
+                if self.data.build.ripflag == 1:
                     diagnostic = (
                         tfcoil_variables.dx_tf_wp_primary_toroidal
                         * tfcoil_variables.n_tf_coils
@@ -1981,14 +1980,14 @@ class Build(Model):
                         "(TF coil ripple calculation) Dimensionless coil width X out of fitted range. %s",
                         diagnostic,
                     )
-                elif build_variables.ripflag == 2:
+                elif self.data.build.ripflag == 2:
                     logger.warning(
                         f"(TF coil ripple calculation) No of TF coils not between 16 and 20 inclusive {tfcoil_variables.n_tf_coils=}"
                     )
                 else:
                     diagnostic = (
                         physics_variables.rmajor + physics_variables.rminor
-                    ) / build_variables.r_tf_outboard_mid
+                    ) / self.data.build.r_tf_outboard_mid
 
                     logger.warning(
                         "(TF coil ripple calculation) (R+a)/rtot=%s out of fitted range.",
@@ -1999,7 +1998,7 @@ class Build(Model):
                 self.outfile,
                 "TF coil radial placement switch",
                 "(i_tf_inside_cs)",
-                build_variables.i_tf_inside_cs,
+                self.data.build.i_tf_inside_cs,
             )
             po.ovarrf(
                 self.outfile,
@@ -2009,7 +2008,7 @@ class Build(Model):
                 "OP ",
             )
 
-            if build_variables.i_tf_inside_cs == 1:
+            if self.data.build.i_tf_inside_cs == 1:
                 po.ocmmnt(
                     self.outfile,
                     (
@@ -2023,7 +2022,7 @@ class Build(Model):
                     ),
                 )
             if (
-                build_variables.i_tf_inside_cs == 1
+                self.data.build.i_tf_inside_cs == 1
                 and tfcoil_variables.i_tf_bucking >= 2
             ):
                 po.ocmmnt(
@@ -2038,153 +2037,153 @@ class Build(Model):
             radius = 0.0e0
             radial_build_data.append(["Device centreline", None, 0.0, radius])
             if (
-                build_variables.i_tf_inside_cs == 1
+                self.data.build.i_tf_inside_cs == 1
                 and tfcoil_variables.i_tf_bucking >= 2
             ):
-                radius += build_variables.dr_bore
+                radius += self.data.build.dr_bore
 
                 radial_build_data.append([
                     "Machine dr_bore wedge support cylinder",
                     "dr_bore",
-                    build_variables.dr_bore,
+                    self.data.build.dr_bore,
                     radius,
                 ])
             elif (
-                build_variables.i_tf_inside_cs == 1 and tfcoil_variables.i_tf_bucking < 2
+                self.data.build.i_tf_inside_cs == 1 and tfcoil_variables.i_tf_bucking < 2
             ):
-                radius += build_variables.dr_bore
+                radius += self.data.build.dr_bore
                 radial_build_data.append([
                     "Machine dr_bore hole",
                     "dr_bore",
-                    build_variables.dr_bore,
+                    self.data.build.dr_bore,
                     radius,
                 ])
             else:
-                radius += build_variables.dr_bore
+                radius += self.data.build.dr_bore
                 radial_build_data.append([
                     "Machine dr_bore",
                     "dr_bore",
-                    build_variables.dr_bore,
+                    self.data.build.dr_bore,
                     radius,
                 ])
-            if build_variables.i_tf_inside_cs == 1:
-                radius += build_variables.dr_tf_inboard
+            if self.data.build.i_tf_inside_cs == 1:
+                radius += self.data.build.dr_tf_inboard
                 radial_build_data.append([
                     "TF coil inboard leg (in dr_bore)",
                     "dr_tf_inboard",
-                    build_variables.dr_tf_inboard,
+                    self.data.build.dr_tf_inboard,
                     radius,
                 ])
 
-                radius += build_variables.dr_cs_tf_gap
+                radius += self.data.build.dr_cs_tf_gap
                 radial_build_data.append([
                     "CS precompresion to TF coil radial gap",
                     "dr_cs_tf_gap",
-                    build_variables.dr_cs_tf_gap,
+                    self.data.build.dr_cs_tf_gap,
                     radius,
                 ])
 
-            radius += build_variables.dr_cs
+            radius += self.data.build.dr_cs
             radial_build_data.append([
                 "Central solenoid",
                 "dr_cs",
-                build_variables.dr_cs,
+                self.data.build.dr_cs,
                 radius,
             ])
 
-            radius += build_variables.dr_cs_precomp
+            radius += self.data.build.dr_cs_precomp
             radial_build_data.append([
                 "CS precompression",
                 "dr_cs_precomp",
-                build_variables.dr_cs_precomp,
+                self.data.build.dr_cs_precomp,
                 radius,
             ])
-            if build_variables.i_tf_inside_cs == 0:
-                radius += build_variables.dr_cs_tf_gap
+            if self.data.build.i_tf_inside_cs == 0:
+                radius += self.data.build.dr_cs_tf_gap
                 radial_build_data.append([
                     "CS precompresion to TF coil radial gap",
                     "dr_cs_tf_gap",
-                    build_variables.dr_cs_tf_gap,
+                    self.data.build.dr_cs_tf_gap,
                     radius,
                 ])
 
-                radius += build_variables.dr_tf_inboard
+                radius += self.data.build.dr_tf_inboard
                 radial_build_data.append([
                     "TF coil inboard leg",
                     "dr_tf_inboard",
-                    build_variables.dr_tf_inboard,
+                    self.data.build.dr_tf_inboard,
                     radius,
                 ])
 
-            radius += build_variables.dr_tf_shld_gap
+            radius += self.data.build.dr_tf_shld_gap
             radial_build_data.append([
                 "TF coil inboard leg insulation gap",
                 "dr_tf_shld_gap",
-                build_variables.dr_tf_shld_gap,
+                self.data.build.dr_tf_shld_gap,
                 radius,
             ])
 
-            radius += build_variables.dr_shld_thermal_inboard
+            radius += self.data.build.dr_shld_thermal_inboard
             radial_build_data.append([
                 "Thermal shield, inboard",
                 "dr_shld_thermal_inboard",
-                build_variables.dr_shld_thermal_inboard,
+                self.data.build.dr_shld_thermal_inboard,
                 radius,
             ])
 
-            radius += build_variables.dr_shld_vv_gap_inboard
+            radius += self.data.build.dr_shld_vv_gap_inboard
             radial_build_data.append([
                 "Thermal shield to vessel radial gap",
                 "dr_shld_vv_gap_inboard",
-                build_variables.dr_shld_vv_gap_inboard,
+                self.data.build.dr_shld_vv_gap_inboard,
                 radius,
             ])
 
-            radius += build_variables.dr_vv_inboard
+            radius += self.data.build.dr_vv_inboard
             radial_build_data.append([
                 "Inboard vacuum vessel",
                 "dr_vv_inboard",
-                build_variables.dr_vv_inboard,
+                self.data.build.dr_vv_inboard,
                 radius,
             ])
 
-            radius += build_variables.dr_shld_inboard
+            radius += self.data.build.dr_shld_inboard
             radial_build_data.append([
                 "Inner radiation shield",
                 "dr_shld_inboard",
-                build_variables.dr_shld_inboard,
+                self.data.build.dr_shld_inboard,
                 radius,
             ])
 
-            radius += build_variables.dr_shld_blkt_gap
+            radius += self.data.build.dr_shld_blkt_gap
             radial_build_data.append([
                 "Gap",
                 "dr_shld_blkt_gap",
-                build_variables.dr_shld_blkt_gap,
+                self.data.build.dr_shld_blkt_gap,
                 radius,
             ])
 
-            radius += build_variables.dr_blkt_inboard
+            radius += self.data.build.dr_blkt_inboard
             radial_build_data.append([
                 "Inboard blanket",
                 "dr_blkt_inboard",
-                build_variables.dr_blkt_inboard,
+                self.data.build.dr_blkt_inboard,
                 radius,
             ])
 
-            radius += build_variables.dr_fw_inboard
+            radius += self.data.build.dr_fw_inboard
             radial_build_data.append([
                 "Inboard first wall",
                 "dr_fw_inboard",
-                build_variables.dr_fw_inboard,
+                self.data.build.dr_fw_inboard,
                 radius,
             ])
 
-            radius += build_variables.dr_fw_plasma_gap_inboard
+            radius += self.data.build.dr_fw_plasma_gap_inboard
             radial_build_data.append([
                 "Inboard scrape-off",
                 "dr_fw_plasma_gap_inboard",
-                build_variables.dr_fw_plasma_gap_inboard,
+                self.data.build.dr_fw_plasma_gap_inboard,
                 radius,
             ])
 
@@ -2204,83 +2203,83 @@ class Build(Model):
                 radius,
             ])
 
-            radius += build_variables.dr_fw_plasma_gap_outboard
+            radius += self.data.build.dr_fw_plasma_gap_outboard
             radial_build_data.append([
                 "Outboard scrape-off",
                 "dr_fw_plasma_gap_outboard",
-                build_variables.dr_fw_plasma_gap_outboard,
+                self.data.build.dr_fw_plasma_gap_outboard,
                 radius,
             ])
 
-            radius += build_variables.dr_fw_outboard
+            radius += self.data.build.dr_fw_outboard
             radial_build_data.append([
                 "Outboard first wall",
                 "dr_fw_outboard",
-                build_variables.dr_fw_outboard,
+                self.data.build.dr_fw_outboard,
                 radius,
             ])
 
-            radius += build_variables.dr_blkt_outboard
+            radius += self.data.build.dr_blkt_outboard
             radial_build_data.append([
                 "Outboard blanket",
                 "dr_blkt_outboard",
-                build_variables.dr_blkt_outboard,
+                self.data.build.dr_blkt_outboard,
                 radius,
             ])
 
-            radius += build_variables.dr_shld_blkt_gap
+            radius += self.data.build.dr_shld_blkt_gap
             radial_build_data.append([
                 "Gap",
                 "dr_shld_blkt_gap",
-                build_variables.dr_shld_blkt_gap,
+                self.data.build.dr_shld_blkt_gap,
                 radius,
             ])
 
-            radius += build_variables.dr_shld_outboard
+            radius += self.data.build.dr_shld_outboard
             radial_build_data.append([
                 "Outer radiation shield",
                 "dr_shld_outboard",
-                build_variables.dr_shld_outboard,
+                self.data.build.dr_shld_outboard,
                 radius,
             ])
 
-            radius += build_variables.dr_vv_outboard
+            radius += self.data.build.dr_vv_outboard
             radial_build_data.append([
                 "Outboard vacuum vessel",
                 "dr_vv_outboard",
-                build_variables.dr_vv_outboard,
+                self.data.build.dr_vv_outboard,
                 radius,
             ])
 
-            radius += build_variables.dr_shld_vv_gap_outboard
+            radius += self.data.build.dr_shld_vv_gap_outboard
             radial_build_data.append([
                 "Vessel to TF gap",
                 "dr_shld_vv_gap_outboard",
-                build_variables.dr_shld_vv_gap_outboard,
+                self.data.build.dr_shld_vv_gap_outboard,
                 radius,
             ])
 
-            radius += build_variables.dr_shld_thermal_outboard
+            radius += self.data.build.dr_shld_thermal_outboard
             radial_build_data.append([
                 "Ouboard thermal shield",
                 "dr_shld_thermal_outboard",
-                build_variables.dr_shld_thermal_outboard,
+                self.data.build.dr_shld_thermal_outboard,
                 radius,
             ])
 
-            radius += build_variables.dr_tf_shld_gap
+            radius += self.data.build.dr_tf_shld_gap
             radial_build_data.append([
                 "Gap",
                 "dr_tf_shld_gap",
-                build_variables.dr_tf_shld_gap,
+                self.data.build.dr_tf_shld_gap,
                 radius,
             ])
 
-            radius += build_variables.dr_tf_outboard
+            radius += self.data.build.dr_tf_outboard
             radial_build_data.append([
                 "TF coil outboard leg",
                 "dr_tf_outboard",
-                build_variables.dr_tf_outboard,
+                self.data.build.dr_tf_outboard,
                 radius,
             ])
 

@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    build_variables,
     current_drive_variables,
     divertor_variables,
     global_variables,
@@ -229,35 +228,43 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
     """
 
     monkeypatch.setattr(
-        build_variables, "dr_fw_inboard", nuclearheatingmagnetsparam.dr_fw_inboard
+        ccfe_hcpb.data.build, "dr_fw_inboard", nuclearheatingmagnetsparam.dr_fw_inboard
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_vv_inboard", nuclearheatingmagnetsparam.dr_vv_inboard
+        ccfe_hcpb.data.build, "dr_vv_inboard", nuclearheatingmagnetsparam.dr_vv_inboard
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_vv_outboard", nuclearheatingmagnetsparam.dr_vv_outboard
+        ccfe_hcpb.data.build, "dr_vv_outboard", nuclearheatingmagnetsparam.dr_vv_outboard
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_fw_outboard", nuclearheatingmagnetsparam.dr_fw_outboard
+        ccfe_hcpb.data.build, "dr_fw_outboard", nuclearheatingmagnetsparam.dr_fw_outboard
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_blkt_inboard", nuclearheatingmagnetsparam.dr_blkt_inboard
+        ccfe_hcpb.data.build,
+        "dr_blkt_inboard",
+        nuclearheatingmagnetsparam.dr_blkt_inboard,
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_blkt_outboard", nuclearheatingmagnetsparam.dr_blkt_outboard
+        ccfe_hcpb.data.build,
+        "dr_blkt_outboard",
+        nuclearheatingmagnetsparam.dr_blkt_outboard,
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_shld_inboard", nuclearheatingmagnetsparam.dr_shld_inboard
+        ccfe_hcpb.data.build,
+        "dr_shld_inboard",
+        nuclearheatingmagnetsparam.dr_shld_inboard,
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_shld_outboard", nuclearheatingmagnetsparam.dr_shld_outboard
+        ccfe_hcpb.data.build,
+        "dr_shld_outboard",
+        nuclearheatingmagnetsparam.dr_shld_outboard,
     )
 
     monkeypatch.setattr(
@@ -1480,28 +1487,28 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
         physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface
     )
     monkeypatch.setattr(
-        build_variables, "dr_blkt_inboard", componentmassesparam.dr_blkt_inboard
+        ccfe_hcpb.data.build, "dr_blkt_inboard", componentmassesparam.dr_blkt_inboard
     )
-    monkeypatch.setattr(build_variables, "blbuith", componentmassesparam.blbuith)
-    monkeypatch.setattr(build_variables, "blbmith", componentmassesparam.blbmith)
-    monkeypatch.setattr(build_variables, "blbpith", componentmassesparam.blbpith)
+    monkeypatch.setattr(ccfe_hcpb.data.build, "blbuith", componentmassesparam.blbuith)
+    monkeypatch.setattr(ccfe_hcpb.data.build, "blbmith", componentmassesparam.blbmith)
+    monkeypatch.setattr(ccfe_hcpb.data.build, "blbpith", componentmassesparam.blbpith)
     monkeypatch.setattr(
-        build_variables, "dr_blkt_outboard", componentmassesparam.dr_blkt_outboard
+        ccfe_hcpb.data.build, "dr_blkt_outboard", componentmassesparam.dr_blkt_outboard
     )
-    monkeypatch.setattr(build_variables, "blbuoth", componentmassesparam.blbuoth)
-    monkeypatch.setattr(build_variables, "blbmoth", componentmassesparam.blbmoth)
-    monkeypatch.setattr(build_variables, "blbpoth", componentmassesparam.blbpoth)
+    monkeypatch.setattr(ccfe_hcpb.data.build, "blbuoth", componentmassesparam.blbuoth)
+    monkeypatch.setattr(ccfe_hcpb.data.build, "blbmoth", componentmassesparam.blbmoth)
+    monkeypatch.setattr(ccfe_hcpb.data.build, "blbpoth", componentmassesparam.blbpoth)
     monkeypatch.setattr(
         ccfe_hcpb.data.first_wall, "a_fw_inboard", componentmassesparam.a_fw_inboard
     )
     monkeypatch.setattr(
-        build_variables, "dr_fw_inboard", componentmassesparam.dr_fw_inboard
+        ccfe_hcpb.data.build, "dr_fw_inboard", componentmassesparam.dr_fw_inboard
     )
     monkeypatch.setattr(
         ccfe_hcpb.data.first_wall, "a_fw_outboard", componentmassesparam.a_fw_outboard
     )
     monkeypatch.setattr(
-        build_variables, "dr_fw_outboard", componentmassesparam.dr_fw_outboard
+        ccfe_hcpb.data.build, "dr_fw_outboard", componentmassesparam.dr_fw_outboard
     )
     monkeypatch.setattr(
         ccfe_hcpb.data.first_wall, "a_fw_total", componentmassesparam.a_fw_total
