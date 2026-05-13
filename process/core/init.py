@@ -16,6 +16,7 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
+from process.data_structure.blanket_variables import BlktModelTypes
 from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.constraint_variables import init_constraint_variables
@@ -1164,7 +1165,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # CCFE HCPB Model
 
     if data_structure.stellarator_variables.istell == 0 and (
-        data.fwbs.i_blanket_type == 1
+        data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB
     ):
         fsum = data.fwbs.breeder_multiplier + data.fwbs.vfcblkt + data.fwbs.vfpblkt
         if fsum >= 1.0:

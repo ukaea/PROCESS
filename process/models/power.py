@@ -24,6 +24,7 @@ from process.data_structure import (
     primary_pumping_variables,
     tfcoil_variables,
 )
+from process.data_structure.blanket_variables import BlktModelTypes
 
 
 class PumpingPowerModelTypes(IntEnum):
@@ -1937,9 +1938,10 @@ class Power(Model):
         i_thermal_electric_conversion = ElectricConversionModelTypes(
             self.data.fwbs.i_thermal_electric_conversion
         )
+        i_blanket_type = BlktModelTypes(self.data.fwbs.i_blanket_type)
         if i_thermal_electric_conversion == ElectricConversionModelTypes.CCFE_HCPB_VALUE:
             #  CCFE HCPB Model
-            if self.data.fwbs.i_blanket_type == 1:
+            if i_blanket_type == BlktModelTypes.CCFE_HCPB:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants -
                 # Part 2: Engineering
@@ -1955,7 +1957,7 @@ class Power(Model):
             == ElectricConversionModelTypes.CCFE_HCPB_VALUE_WITH_DIVERTOR
         ):
             #  CCFE HCPB Model
-            if self.data.fwbs.i_blanket_type == 1:
+            if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
                 #  HCPB, efficiency taken from M. Kovari 2016
                 # "PROCESS": A systems code for fusion power plants -
                 # Part 2: Engineering
@@ -1976,7 +1978,7 @@ class Power(Model):
             == ElectricConversionModelTypes.STEAM_RANKINE_CYCLE
         ):
             #  CCFE HCPB Model
-            if self.data.fwbs.i_blanket_type == 1:
+            if self.data.fwbs.i_blanket_type == BlktModelTypes.CCFE_HCPB:
                 #  If coolant is helium, the steam cycle is assumed to be superheated
                 #  and a different correlation is used. The turbine inlet temperature
                 #  is assumed to be 20 degrees below the primary coolant outlet
