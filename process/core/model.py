@@ -43,6 +43,7 @@ class DataStructure:
     buildings: BuildingsData = initialise_later
     constraints: ConstraintData = initialise_later
     dcll: DCLLData = initialise_later
+    constraints: ConstraintData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):
