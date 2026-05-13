@@ -2041,7 +2041,7 @@ class Power(Model):
             )
 
         else:
-            logger.log(
+            logger.warning(
                 "i_thermal_electric_conversion does not appear to have a value"
                 "within its range (0-4)"
             )
