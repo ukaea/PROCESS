@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    constraint_variables,
     current_drive_variables,
     divertor_variables,
     heat_transport_variables,
@@ -2498,7 +2497,7 @@ def test_power2(power2param, monkeypatch, power):
     """
 
     monkeypatch.setattr(
-        constraint_variables,
+        power.data.constraints,
         "p_plant_electric_net_required_mw",
         power2param.p_plant_electric_net_required_mw,
     )

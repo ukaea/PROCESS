@@ -3,7 +3,6 @@
 import pytest
 
 from process.core.init import init_all_module_vars
-from process.data_structure import constraint_variables as ctv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
@@ -626,7 +625,7 @@ def test_cp_lifetime(monkeypatch, availability, i_tf_sup, exp):
     """
 
     monkeypatch.setattr(tfv, "i_tf_sup", i_tf_sup)
-    monkeypatch.setattr(ctv, "nflutfmax", 1.0e23)
+    monkeypatch.setattr(availability.data.constraints, "nflutfmax", 1.0e23)
     monkeypatch.setattr(availability.data.fwbs, "neut_flux_cp", 5.0e14)
     monkeypatch.setattr(availability.data.costs, "cpstflnc", 20.0)
     monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 5.0)

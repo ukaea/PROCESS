@@ -4,7 +4,6 @@ import numpy as np
 
 from process.core.model import DataStructure
 from process.data_structure import (
-    constraint_variables,
     rebco_variables,
     stellarator_configuration,
     stellarator_variables,
@@ -52,7 +51,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     coilcurrent = calculate_current()
 
     awp_rad, a_tf_wp_no_insulation, a_tf_wp_with_insulation, f_a_scu_of_wp = (
-        winding_pack_total_size(r_coil_major, r_coil_minor, coilcurrent)
+        winding_pack_total_size(r_coil_major, r_coil_minor, coilcurrent, data)
     )
 
     #######################################################################################
@@ -160,7 +159,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
             coppera_m2_max=rebco_variables.coppera_m2_max,
             f_a_scu_of_wp=f_a_scu_of_wp,
             f_vv_actual=f_vv_actual,
-            fiooic=constraint_variables.fiooic,
+            fiooic=data.constraints.fiooic,
             inductance=inductance,
             max_force_density=tfcoil_variables.max_force_density,
             max_force_density_mnm=max_force_density_mnm,
@@ -373,7 +372,7 @@ def calculate_current():
 
 
 def winding_pack_total_size(
-    r_coil_major: float, r_coil_minor: float, coilcurrent: float
+    r_coil_major: float, r_coil_minor: float, coilcurrent: float, data: DataStructure
 ):
     # Winding Pack total size:
 
@@ -422,7 +421,7 @@ def winding_pack_total_size(
         )  # Get here a temperature margin from tfcoil_variables.tmargtf.
 
     # The operation current density weighted with the global iop/icrit fraction
-    lhs[:] = constraint_variables.fiooic * jcrit_vector
+    lhs[:] = data.constraints.fiooic * jcrit_vector
 
     # Superconductor fraction in wp
     fraction_area_superconductor_of_wp = (

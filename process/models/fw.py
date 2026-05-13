@@ -8,7 +8,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    constraint_variables,
     divertor_variables,
     physics_variables,
 )
@@ -137,8 +136,8 @@ class FirstWall(Model):
                 physics_variables.p_plasma_rad_mw / self.data.first_wall.a_fw_total
             )
 
-        constraint_variables.pflux_fw_rad_max_mw = (
-            physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
+        self.data.constraints.pflux_fw_rad_max_mw = (
+            physics_variables.pflux_fw_rad_mw * self.data.constraints.f_fw_rad_max
         )
 
         # Power transported to the first wall by escaped alpha particles
@@ -807,21 +806,21 @@ class FirstWall(Model):
             self.outfile,
             "Peaking factor for radiation first-wall load",
             "(f_fw_rad_max)",
-            constraint_variables.f_fw_rad_max,
+            self.data.constraints.f_fw_rad_max,
             "IP ",
         )
         po.ovarre(
             self.outfile,
             "Maximum permitted radiation first-wall load (MW/m^2)",
             "(pflux_fw_rad_max)",
-            constraint_variables.pflux_fw_rad_max,
+            self.data.constraints.pflux_fw_rad_max,
             "IP ",
         )
         po.ovarre(
             self.outfile,
             "Peak radiation wall load (MW/m^2)",
             "(pflux_fw_rad_max_mw)",
-            constraint_variables.pflux_fw_rad_max_mw,
+            self.data.constraints.pflux_fw_rad_max_mw,
             "OP ",
         )
         po.ovarre(

@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    constraint_variables,
     numerics,
     pf_power_variables,
     pfcoil_variables,
@@ -1195,7 +1194,9 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
     """
 
     monkeypatch.setattr(
-        constraint_variables, "t_current_ramp_up_min", tohswgparam.t_current_ramp_up_min
+        pulse.data.constraints,
+        "t_current_ramp_up_min",
+        tohswgparam.t_current_ramp_up_min,
     )
 
     monkeypatch.setattr(pf_power_variables, "vpfskv", tohswgparam.vpfskv)
@@ -1240,7 +1241,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     pulse.tohswg(output=False)
 
-    assert constraint_variables.t_current_ramp_up_min == pytest.approx(
+    assert pulse.data.constraints.t_current_ramp_up_min == pytest.approx(
         tohswgparam.expected_tohsmn
     )
 

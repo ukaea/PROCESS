@@ -11,7 +11,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
-    constraint_variables,
     divertor_variables,
     global_variables,
     pfcoil_variables,
@@ -1978,7 +1977,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
                 cu_rrr=tfcoil_variables.rrr_tf_cu,
                 t_tf_quench_detection=tfcoil_variables.t_tf_quench_detection,
-                nflutfmax=constraint_variables.nflutfmax,
+                nflutfmax=self.data.constraints.nflutfmax,
             )
         )
 
@@ -3302,7 +3301,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
                 cu_rrr=tfcoil_variables.rrr_tf_cu,
                 t_tf_quench_detection=tfcoil_variables.t_tf_quench_detection,
-                nflutfmax=constraint_variables.nflutfmax,
+                nflutfmax=self.data.constraints.nflutfmax,
             )
         )
 

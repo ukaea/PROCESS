@@ -9,8 +9,8 @@ from scipy.optimize import root_scalar
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
-    constraint_variables,
     current_drive_variables,
     physics_variables,
     stellarator_variables,
@@ -124,12 +124,18 @@ class ConfinementRadiationLossModel(IntEnum):
         return obj
 
 
-class PlasmaConfinementTime:
+class PlasmaConfinementTime(Model):
     """Class to calculate plasma confinement time using various empirical scaling laws"""
 
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def output(self):
+        """This model doesn't have any output"""
+
+    def run(self):
+        """This model doesn't need to be run"""
 
     def calculate_confinement_time(
         self,
@@ -1385,7 +1391,7 @@ class PlasmaConfinementTime:
             self.outfile,
             "Lower limit on f_alpha_energy_confinement ((τ_α/τₑ)>)",  # noqa: RUF001
             "(f_alpha_energy_confinement_min)",
-            constraint_variables.f_alpha_energy_confinement_min,
+            self.data.constraints.f_alpha_energy_confinement_min,
         )
         po.oblnkl(self.outfile)
 

@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    constraint_variables,
     numerics,
     pf_power_variables,
     pfcoil_variables,
@@ -131,7 +130,7 @@ class Pulse(Model):
         #  Minimum plasma current ramp-up time (s)
         #  - corrected (bus resistance is not a function of pfcoil_variables.turns)
 
-        constraint_variables.t_current_ramp_up_min = (
+        self.data.constraints.t_current_ramp_up_min = (
             loh
             * (ioht2 - ioht1)
             / (
@@ -156,7 +155,7 @@ class Pulse(Model):
                 self.outfile,
                 "Minimum plasma current ramp-up time (s)",
                 "(t_current_ramp_up_min)",
-                constraint_variables.t_current_ramp_up_min,
+                self.data.constraints.t_current_ramp_up_min,
             )
 
     @staticmethod
