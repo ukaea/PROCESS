@@ -3199,6 +3199,64 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
         superconducting_tf_coil_variables.a_tf_croco_strand = a_tf_croco_strand
 
+        j_crit_sc, _ = superconductors.jcrit_rebco(
+            temp_conductor=tfcoil_variables.tftmp,
+            b_conductor=tfcoil_variables.b_tf_inboard_peak_with_ripple,
+        )
+
+        croco_strand_critical_current = (
+            j_crit_sc * superconducting_tf_coil_variables.a_tf_croco_strand
+        )
+
+        # Conductor properties
+        # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)/a_croco_strand
+        superconducting_tf_coil_variables.conductor_critical_current = (
+            croco_strand_critical_current * N_CROCO_STRANDS_TURN
+        )
+        # Area of core = area of strand
+        conductor_copper_bar_area = superconducting_tf_coil_variables.a_tf_croco_strand
+        conductor_copper_area = (
+            superconducting_tf_coil_variables.a_tf_croco_strand_copper_total
+            * N_CROCO_STRANDS_TURN
+            + conductor_copper_bar_area
+        )
+        superconducting_tf_coil_variables.conductor_copper_fraction = (
+            conductor_copper_area / superconducting_tf_coil_variables.conductor_area
+        )
+
+        # Helium area is set by the user.
+        # conductor_helium_area = cable_helium_fraction * tfcoil_variables.a_tf_turn_cable_space_no_void
+        conductor_helium_area = (
+            np.pi / 2.0 * superconducting_tf_coil_variables.dia_tf_turn_croco_cable**2
+        )
+        superconducting_tf_coil_variables.conductor_helium_fraction = (
+            conductor_helium_area / superconducting_tf_coil_variables.conductor_area
+        )
+
+        conductor_hastelloy_area = (
+            superconducting_tf_coil_variables.a_tf_croco_strand_hastelloy
+            * N_CROCO_STRANDS_TURN
+        )
+        superconducting_tf_coil_variables.conductor_hastelloy_fraction = (
+            conductor_hastelloy_area / superconducting_tf_coil_variables.conductor_area
+        )
+
+        conductor_solder_area = (
+            superconducting_tf_coil_variables.a_tf_croco_strand_solder
+            * N_CROCO_STRANDS_TURN
+        )
+        superconducting_tf_coil_variables.conductor_solder_fraction = (
+            conductor_solder_area / superconducting_tf_coil_variables.conductor_area
+        )
+
+        conductor_rebco_area = (
+            superconducting_tf_coil_variables.a_tf_croco_strand_rebco
+            * N_CROCO_STRANDS_TURN
+        )
+        superconducting_tf_coil_variables.conductor_rebco_fraction = (
+            conductor_rebco_area / superconducting_tf_coil_variables.conductor_area
+        )
+
         # Negative areas or fractions error reporting
         if (
             tfcoil_variables.a_tf_wp_conductor <= 0.0e0
