@@ -7,7 +7,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    buildings_variables,
     current_drive_variables,
     divertor_variables,
     numerics,
@@ -182,7 +181,7 @@ class Build(Model):
                 # Start at the top and work down.
 
                 vertical_build_upper = (
-                    buildings_variables.dz_tf_cryostat
+                    self.data.buildings.dz_tf_cryostat
                     + self.data.build.dr_tf_inboard
                     + self.data.build.dr_tf_shld_gap
                     + self.data.build.dz_shld_thermal
@@ -200,7 +199,7 @@ class Build(Model):
                 po.obuild(
                     self.outfile,
                     "Cryostat roof structure*",
-                    buildings_variables.dz_tf_cryostat,
+                    self.data.buildings.dz_tf_cryostat,
                     vertical_build_upper,
                     "(dz_tf_cryostat)",
                 )
@@ -208,9 +207,9 @@ class Build(Model):
                     self.mfile,
                     "Cryostat roof structure*",
                     "(dz_tf_cryostat)",
-                    buildings_variables.dz_tf_cryostat,
+                    self.data.buildings.dz_tf_cryostat,
                 )
-                vertical_build_upper -= buildings_variables.dz_tf_cryostat
+                vertical_build_upper -= self.data.buildings.dz_tf_cryostat
 
                 # Top of TF coil
                 tf_top = vertical_build_upper
@@ -447,11 +446,11 @@ class Build(Model):
                     tf_height - 2 * self.data.build.dr_tf_inboard
                 )
 
-                vertical_build_upper -= buildings_variables.dz_tf_cryostat
+                vertical_build_upper -= self.data.buildings.dz_tf_cryostat
                 po.obuild(
                     self.outfile,
                     "Cryostat floor structure**",
-                    buildings_variables.dz_tf_cryostat,
+                    self.data.buildings.dz_tf_cryostat,
                     vertical_build_upper,
                     "(dz_tf_cryostat)",
                 )
@@ -473,7 +472,7 @@ class Build(Model):
                 )
 
                 vbuild = (
-                    buildings_variables.dz_tf_cryostat
+                    self.data.buildings.dz_tf_cryostat
                     + self.data.build.dr_tf_inboard
                     + self.data.build.dr_tf_shld_gap
                     + self.data.build.dz_shld_thermal
@@ -493,7 +492,7 @@ class Build(Model):
                 po.obuild(
                     self.outfile,
                     "Cryostat roof structure*",
-                    buildings_variables.dz_tf_cryostat,
+                    self.data.buildings.dz_tf_cryostat,
                     vbuild,
                     "(dz_tf_cryostat)",
                 )
@@ -501,9 +500,9 @@ class Build(Model):
                     self.mfile,
                     "Cryostat roof structure*",
                     "(dz_tf_cryostat)",
-                    buildings_variables.dz_tf_cryostat,
+                    self.data.buildings.dz_tf_cryostat,
                 )
-                vbuild -= buildings_variables.dz_tf_cryostat
+                vbuild -= self.data.buildings.dz_tf_cryostat
 
                 # Top of TF coil
                 tf_top = vbuild
@@ -760,12 +759,12 @@ class Build(Model):
                     tf_height - 2 * self.data.build.dr_tf_inboard
                 )
 
-                vbuild -= buildings_variables.dz_tf_cryostat
+                vbuild -= self.data.buildings.dz_tf_cryostat
 
                 po.obuild(
                     self.outfile,
                     "Cryostat floor structure**",
-                    buildings_variables.dz_tf_cryostat,
+                    self.data.buildings.dz_tf_cryostat,
                     vbuild,
                     "(dz_tf_cryostat)",
                 )

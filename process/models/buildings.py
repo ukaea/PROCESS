@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    buildings_variables,
     current_drive_variables,
     divertor_variables,
     heat_transport_variables,
@@ -61,19 +60,19 @@ class Buildings(Model):
 
         # Calculate building areas and volumes
 
-        if buildings_variables.i_bldgs_size == 1:
+        if self.data.buildings.i_bldgs_size == 1:
             # Updated building estimates
             self.bldgs_sizes(output, tf_radial_dim, tf_vertical_dim)
 
         else:
             # Previous estimation work
             (
-                buildings_variables.cryvol,
-                buildings_variables.volrci,
-                buildings_variables.rbvol,
-                buildings_variables.rmbvol,
-                buildings_variables.wsvol,
-                buildings_variables.elevol,
+                self.data.buildings.cryvol,
+                self.data.buildings.volrci,
+                self.data.buildings.rbvol,
+                self.data.buildings.rmbvol,
+                self.data.buildings.wsvol,
+                self.data.buildings.elevol,
             ) = self.bldgs(
                 output,
                 pfcoil_variables.r_pf_coil_outer_max,
@@ -187,12 +186,12 @@ class Buildings(Model):
         # trcl : transportation clearance between components, m
         # row  : clearance to building wall for crane operation, m
         # 19.48258241468535 + 4 + max(13.764874193548387 - 4.7423258064516141, 17.123405859443331 - 2.9939411851091102) + 1 + 4 = 42.61204708901957
-        buildings_variables.wrbi = (
+        self.data.buildings.wrbi = (
             bmr
-            + buildings_variables.rxcl
+            + self.data.buildings.rxcl
             + sectl
-            + buildings_variables.trcl
-            + buildings_variables.row
+            + self.data.buildings.trcl
+            + self.data.buildings.row
         )
 
         # Calculate length to allow PF or cryostat laydown (m)
@@ -201,10 +200,10 @@ class Buildings(Model):
         layl = max(crr, pfr)
 
         # Diagonal length (m)
-        hy = bmr + buildings_variables.rxcl + sectl + buildings_variables.trcl + layl
+        hy = bmr + self.data.buildings.rxcl + sectl + self.data.buildings.trcl + layl
 
         # Angle between diagonal length and floor (m)
-        ang = (buildings_variables.wrbi - buildings_variables.trcl - layl) / hy
+        ang = (self.data.buildings.wrbi - self.data.buildings.trcl - layl) / hy
 
         # Cap angle at 1
         if abs(ang) > 1.0e0:
@@ -212,10 +211,10 @@ class Buildings(Model):
 
         # Length to allow laydown (m)
         drbi = (
-            buildings_variables.trcl
+            self.data.buildings.trcl
             + layl
             + hy * np.sin(np.arccos(ang))
-            + buildings_variables.wrbi
+            + self.data.buildings.wrbi
         )
 
         # Crane height based on maximum lift (m)
@@ -223,10 +222,10 @@ class Buildings(Model):
         #       Calculated if 0 is input
         # shmf : fraction of shield mass per TF coil to be moved in
         #        the maximum shield lift
-        if buildings_variables.wgt > 1.0e0:
-            wt = buildings_variables.wgt
+        if self.data.buildings.wgt > 1.0e0:
+            wt = self.data.buildings.wgt
         else:
-            wt = buildings_variables.shmf * shm / n_tf_coils
+            wt = self.data.buildings.shmf * shm / n_tf_coils
             wt = max(wt, 1.0e3 * pfm, 1.0e3 * tfm)
 
         # Crane height (m)
@@ -238,17 +237,17 @@ class Buildings(Model):
         # stcl : clearance above crane to roof, m
         # Additional tfh allows TF coil to be lifted right out
         hrbi = (
-            buildings_variables.clh2
+            self.data.buildings.clh2
             + 2.0e0 * tfh
-            + buildings_variables.dz_tf_cryostat
-            + buildings_variables.trcl
+            + self.data.buildings.dz_tf_cryostat
+            + self.data.buildings.trcl
             + crcl
-            + buildings_variables.stcl
+            + self.data.buildings.stcl
         )
 
         # Internal volume (m3)
         vrci = (
-            buildings_variables.rbvfac * 2.0e0 * buildings_variables.wrbi * drbi * hrbi
+            self.data.buildings.rbvfac * 2.0e0 * self.data.buildings.wrbi * drbi * hrbi
         )
         if np.isinf(vrci):
             logger.error("vrci is inf. Kludging to 1e10.")
@@ -258,10 +257,10 @@ class Buildings(Model):
         # rbwt : reactor building wall thickness, m
         # rbrt : reactor building roof thickness, m
         # fndt : foundation thickness, m
-        rbw = 2.0e0 * buildings_variables.wrbi + 2.0e0 * buildings_variables.rbwt
-        rbl = drbi + 2.0e0 * buildings_variables.rbwt
-        rbh = hrbi + buildings_variables.rbrt + buildings_variables.fndt
-        rbv = buildings_variables.rbvfac * rbw * rbl * rbh
+        rbw = 2.0e0 * self.data.buildings.wrbi + 2.0e0 * self.data.buildings.rbwt
+        rbl = drbi + 2.0e0 * self.data.buildings.rbwt
+        rbh = hrbi + self.data.buildings.rbrt + self.data.buildings.fndt
+        rbv = self.data.buildings.rbvfac * rbw * rbl * rbh
 
         # Maintenance building
         # The reactor maintenance building includes the hot cells, the
@@ -271,46 +270,46 @@ class Buildings(Model):
 
         # Transport corridor size
         # hcwt : hot cell wall thickness, m
-        tcw = shro - shri + 4.0e0 * buildings_variables.trcl
-        tcl = 5.0e0 * tcw + 2.0e0 * buildings_variables.hcwt
+        tcw = shro - shri + 4.0e0 * self.data.buildings.trcl
+        tcl = 5.0e0 * tcw + 2.0e0 * self.data.buildings.hcwt
 
         # Decontamination cell size
         dcw = 2.0e0 * tcw + 1.0e0
 
         # Hot cell size
         # hccl : clearance around components in hot cell, m
-        hcw = shro - shri + 3.0e0 * buildings_variables.hccl + 2.0e0
-        hcl = 3.0e0 * (shro - shri) + 4.0e0 * buildings_variables.hccl + tcw
+        hcw = shro - shri + 3.0e0 * self.data.buildings.hccl + 2.0e0
+        hcl = 3.0e0 * (shro - shri) + 4.0e0 * self.data.buildings.hccl + tcw
 
         # Maintenance building dimensions
-        rmbw = hcw + dcw + 3.0e0 * buildings_variables.hcwt
-        rmbl = hcl + 2.0e0 * buildings_variables.hcwt
+        rmbw = hcw + dcw + 3.0e0 * self.data.buildings.hcwt
+        rmbl = hcl + 2.0e0 * self.data.buildings.hcwt
 
         # Height
         # wgt2 : hot cell crane capacity (kg)
         #        Calculated if 0 is input
-        if buildings_variables.wgt2 > 1.0e0:
-            wgts = buildings_variables.wgt2
+        if self.data.buildings.wgt2 > 1.0e0:
+            wgts = self.data.buildings.wgt2
         else:
-            wgts = buildings_variables.shmf * shm / n_tf_coils
+            wgts = self.data.buildings.shmf * shm / n_tf_coils
 
         cran = 9.41e-6 * wgts + 5.1e0
         rmbh = (
             10.0e0
             + shh
-            + buildings_variables.trcl
+            + self.data.buildings.trcl
             + cran
-            + buildings_variables.stcl
-            + buildings_variables.fndt
+            + self.data.buildings.stcl
+            + self.data.buildings.fndt
         )
-        tch = shh + buildings_variables.stcl + buildings_variables.fndt
+        tch = shh + self.data.buildings.stcl + self.data.buildings.fndt
 
         # Volume
-        rmbv = buildings_variables.mbvfac * rmbw * rmbl * rmbh + tcw * tcl * tch
+        rmbv = self.data.buildings.mbvfac * rmbw * rmbl * rmbh + tcw * tcl * tch
 
         # Warm shop and hot cell gallery
         wsa = (rmbw + 7.0e0) * 20.0e0 + rmbl * 7.0e0
-        wsv = buildings_variables.wsvfac * wsa * rmbh
+        wsv = self.data.buildings.wsvfac * wsa * rmbh
 
         # Cryogenic building volume
         cryv = 55.0e0 * helpow**0.5
@@ -318,30 +317,30 @@ class Buildings(Model):
         # pibv : power injection building volume, m3
         # esbldgm3 is forced to be zero if no energy storage is required (i_pulsed_plant=0)
         elev = (
-            buildings_variables.tfcbv
-            + buildings_variables.pfbldgm3
-            + buildings_variables.esbldgm3
-            + buildings_variables.pibv
+            self.data.buildings.tfcbv
+            + self.data.buildings.pfbldgm3
+            + self.data.buildings.esbldgm3
+            + self.data.buildings.pibv
         )
 
         # Calculate effective floor area for ac power module
-        buildings_variables.a_plant_floor_effective = (
+        self.data.buildings.a_plant_floor_effective = (
             rbv
             + rmbv
             + wsv
-            + buildings_variables.triv
+            + self.data.buildings.triv
             + elev
-            + buildings_variables.conv
+            + self.data.buildings.conv
             + cryv
-            + buildings_variables.admv
-            + buildings_variables.shov
+            + self.data.buildings.admv
+            + self.data.buildings.shov
         ) / 6.0e0
-        buildings_variables.admvol = buildings_variables.admv
-        buildings_variables.shovol = buildings_variables.shov
-        buildings_variables.convol = buildings_variables.conv
+        self.data.buildings.admvol = self.data.buildings.admv
+        self.data.buildings.shovol = self.data.buildings.shov
+        self.data.buildings.convol = self.data.buildings.conv
 
         # Total volume of nuclear buildings
-        buildings_variables.volnucb = vrci + rmbv + wsv + buildings_variables.triv + cryv
+        self.data.buildings.volnucb = vrci + rmbv + wsv + self.data.buildings.triv + cryv
 
         # Output !
         # !!!!!!!!!
@@ -355,13 +354,13 @@ class Buildings(Model):
                 self.outfile,
                 "Dist from centre of torus to bldg wall (m)",
                 "(wrbi)",
-                buildings_variables.wrbi,
+                self.data.buildings.wrbi,
             )
             po.ovarre(
                 self.outfile,
                 "Effective floor area (m2)",
                 "(a_plant_floor_effective)",
-                buildings_variables.a_plant_floor_effective,
+                self.data.buildings.a_plant_floor_effective,
             )
             po.ovarre(self.outfile, "Reactor building volume (m3)", "(rbv)", rbv)
             po.ovarre(
@@ -372,30 +371,30 @@ class Buildings(Model):
                 self.outfile,
                 "Tritium building volume (m3)",
                 "(triv)",
-                buildings_variables.triv,
+                self.data.buildings.triv,
             )
             po.ovarre(self.outfile, "Electrical building volume (m3)", "(elev)", elev)
             po.ovarre(
                 self.outfile,
                 "Control building volume (m3)",
                 "(conv)",
-                buildings_variables.conv,
+                self.data.buildings.conv,
             )
             po.ovarre(self.outfile, "Cryogenics building volume (m3)", "(cryv)", cryv)
             po.ovarre(
                 self.outfile,
                 "Administration building volume (m3)",
                 "(admv)",
-                buildings_variables.admv,
+                self.data.buildings.admv,
             )
             po.ovarre(
-                self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov
+                self.outfile, "Shops volume (m3)", "(shov)", self.data.buildings.shov
             )
             po.ovarre(
                 self.outfile,
                 "Total volume of nuclear buildings (m3)",
                 "(volnucb)",
-                buildings_variables.volnucb,
+                self.data.buildings.volnucb,
             )
 
         return cryv, vrci, rbv, rmbv, wsv, elev
@@ -431,7 +430,7 @@ class Buildings(Model):
             tf_radial_dim,
         )
         # Allow for biological shielding around reactor
-        width_reactor_piece += buildings_variables.bioshld_thk
+        width_reactor_piece += self.data.buildings.bioshld_thk
 
         # Calculate key-width of building (m)
         # include radial width of largest component *twice*, to allow for construction;
@@ -439,34 +438,34 @@ class Buildings(Model):
         # clearance to building wall for crane operation
         key_width = (
             (2.0e0 * width_reactor_piece)
-            + buildings_variables.reactor_clrnc
-            + buildings_variables.transp_clrnc
-            + buildings_variables.crane_clrnc_h
+            + self.data.buildings.reactor_clrnc
+            + self.data.buildings.transp_clrnc
+            + self.data.buildings.crane_clrnc_h
         )
 
         # Width of reactor building
         # allows for laydown of large components during construction
-        buildings_variables.reactor_hall_w = 3.0e0 * key_width
+        self.data.buildings.reactor_hall_w = 3.0e0 * key_width
 
         # Length of reactor building
-        buildings_variables.reactor_hall_l = 3.0e0 * key_width
+        self.data.buildings.reactor_hall_l = 3.0e0 * key_width
 
         # Calculate vertical clearance required (above and below reactor):
         # include clearance around reactor, transportation clearance between components,
         # clearance from TF coil to cryostat, clearance beneath TF coil,
         # clearance to ceiling for crane operation, crane arm height
         height_clrnc = (
-            buildings_variables.reactor_clrnc
-            + buildings_variables.transp_clrnc
-            + buildings_variables.cryostat_clrnc
-            + buildings_variables.ground_clrnc
-            + buildings_variables.crane_clrnc_h
-            + buildings_variables.crane_arm_h
+            self.data.buildings.reactor_clrnc
+            + self.data.buildings.transp_clrnc
+            + self.data.buildings.cryostat_clrnc
+            + self.data.buildings.ground_clrnc
+            + self.data.buildings.crane_clrnc_h
+            + self.data.buildings.crane_arm_h
         )
 
         # Height of reactor building
         # include height of TF coil *twice*, to allow for construction/maintenance
-        buildings_variables.reactor_hall_h = (2.0e0 * tf_vertical_dim) + height_clrnc
+        self.data.buildings.reactor_hall_h = (2.0e0 * tf_vertical_dim) + height_clrnc
 
         # Heating and Current Drive facility
         # Dimensions based upon estimates from M. Henderson, HCD Development Group
@@ -476,51 +475,51 @@ class Buildings(Model):
             == CurrentDriveMethodType.NEUTRAL_BEAM
         ):
             # NBI technology will be situated within the reactor building
-            buildings_variables.reactor_hall_l = (
-                buildings_variables.reactor_hall_l
-                + buildings_variables.nbi_sys_l
-                + buildings_variables.reactor_clrnc
-                + buildings_variables.transp_clrnc
+            self.data.buildings.reactor_hall_l = (
+                self.data.buildings.reactor_hall_l
+                + self.data.buildings.nbi_sys_l
+                + self.data.buildings.reactor_clrnc
+                + self.data.buildings.transp_clrnc
             )
-            buildings_variables.reactor_hall_w = (
-                buildings_variables.reactor_hall_w
-                + buildings_variables.nbi_sys_w
-                + buildings_variables.reactor_clrnc
-                + buildings_variables.transp_clrnc
+            self.data.buildings.reactor_hall_w = (
+                self.data.buildings.reactor_hall_w
+                + self.data.buildings.nbi_sys_w
+                + self.data.buildings.reactor_clrnc
+                + self.data.buildings.transp_clrnc
             )
             hcd_building_area = 0.0e0
             hcd_building_vol = 0.0e0
         else:
             # Assume external building designed for EC or EBW is appropriate
             hcd_building_area = (
-                buildings_variables.hcd_building_l * buildings_variables.hcd_building_w
+                self.data.buildings.hcd_building_l * self.data.buildings.hcd_building_w
             )
-            hcd_building_vol = hcd_building_area * buildings_variables.hcd_building_h
+            hcd_building_vol = hcd_building_area * self.data.buildings.hcd_building_h
 
         # Fuel Cycle facilities: include within reactor building
         # Dimensions based upon estimates from W. Smith
-        buildings_variables.reactor_hall_l += buildings_variables.fc_building_l
-        buildings_variables.reactor_hall_w += buildings_variables.fc_building_w
+        self.data.buildings.reactor_hall_l += self.data.buildings.fc_building_l
+        self.data.buildings.reactor_hall_w += self.data.buildings.fc_building_w
 
         # Reactor hall internal footprint and volume
         reactor_hall_area = (
-            buildings_variables.reactor_hall_l * buildings_variables.reactor_hall_w
+            self.data.buildings.reactor_hall_l * self.data.buildings.reactor_hall_w
         )
-        reactor_hall_vol = reactor_hall_area * buildings_variables.reactor_hall_h
+        reactor_hall_vol = reactor_hall_area * self.data.buildings.reactor_hall_h
 
         # Reactor building external footprint and volume
         reactor_building_l = (
-            buildings_variables.reactor_hall_l
-            + 2.0e0 * buildings_variables.reactor_wall_thk
+            self.data.buildings.reactor_hall_l
+            + 2.0e0 * self.data.buildings.reactor_wall_thk
         )
         reactor_building_w = (
-            buildings_variables.reactor_hall_w
-            + 2.0e0 * buildings_variables.reactor_wall_thk
+            self.data.buildings.reactor_hall_w
+            + 2.0e0 * self.data.buildings.reactor_wall_thk
         )
         reactor_building_h = (
-            buildings_variables.reactor_hall_h
-            + buildings_variables.reactor_roof_thk
-            + buildings_variables.reactor_fndtn_thk
+            self.data.buildings.reactor_hall_h
+            + self.data.buildings.reactor_roof_thk
+            + self.data.buildings.reactor_fndtn_thk
         )
 
         reactor_building_area = reactor_building_l * reactor_building_w
@@ -531,16 +530,16 @@ class Buildings(Model):
         # Architecture proposed here is a basement directly beneath the reactor enabling the
         # downwards extraction of hot components. The footprint estimated here is oversized to
         # include allowance for a tunnel to the hot cell storage/maintenance building.
-        reactor_basement_l = buildings_variables.reactor_hall_w
-        reactor_basement_w = buildings_variables.reactor_hall_w
+        reactor_basement_l = self.data.buildings.reactor_hall_w
+        reactor_basement_w = self.data.buildings.reactor_hall_w
         reactor_basement_area = reactor_basement_l * reactor_basement_w
 
         # basement height still includes some clearances
         reactor_basement_h = (
             tf_vertical_dim
-            + buildings_variables.transp_clrnc
-            + buildings_variables.crane_clrnc_h
-            + buildings_variables.crane_arm_h
+            + self.data.buildings.transp_clrnc
+            + self.data.buildings.crane_clrnc_h
+            + self.data.buildings.crane_arm_h
         )
 
         reactor_basement_vol = reactor_basement_area * reactor_basement_h
@@ -554,8 +553,8 @@ class Buildings(Model):
         # These are simplifications of R. Gowland's estimates of Operational Active Waste Storage,
         # which assumes all in-vessel components used through the life of the plant will need storage.
         # The storage area required is derived from the sizes and number of components, allowing
-        # for a margin in component numbers as set by the quantity safety factor (buildings_variables.qnty_sfty_fac).
-        # Footprints and volumes required for storage include hot separation distance (buildings_variables.hot_sepdist).
+        # for a margin in component numbers as set by the quantity safety factor (self.data.buildings.qnty_sfty_fac).
+        # Footprints and volumes required for storage include hot separation distance (self.data.buildings.hot_sepdist).
 
         # Assumptions:
         # tokomak is toroidally segmented based on number of TF coils (tfcoil_variables.n_tf_coils);
@@ -595,18 +594,18 @@ class Buildings(Model):
                 )
             ) / tfcoil_variables.n_tf_coils
             # find footprint and volume for storing component
-            hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
-                max(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
+            hcomp_footprint = (hcomp_height + self.data.buildings.hot_sepdist) * (
+                max(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
             hcomp_vol = hcomp_footprint * (
-                min(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
+                min(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
             # required lifetime supply of components =
             #   ( number in build * (plant lifetime / component lifetime) ) * quantity safety factor
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
                 * (self.data.costs.life_plant / self.data.costs.life_plant)
-            ) * buildings_variables.qnty_sfty_fac
+            ) * self.data.buildings.qnty_sfty_fac
             # total storage space for required supply of inboard shield-blanket-wall
             ib_hotcell_vol = hcomp_req_supply * hcomp_vol
 
@@ -637,16 +636,16 @@ class Buildings(Model):
                     + self.data.build.dr_shld_outboard
                 )
             ) / tfcoil_variables.n_tf_coils
-            hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
-                max(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
+            hcomp_footprint = (hcomp_height + self.data.buildings.hot_sepdist) * (
+                max(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
             hcomp_vol = hcomp_footprint * (
-                min(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
+                min(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
                 * (self.data.costs.life_plant / self.data.costs.life_plant)
-            ) * buildings_variables.qnty_sfty_fac
+            ) * self.data.buildings.qnty_sfty_fac
             # total storage space for required supply of outboard wall-blanket-shield
             ob_hotcell_vol = hcomp_req_supply * hcomp_vol
         else:
@@ -659,16 +658,16 @@ class Buildings(Model):
             hcomp_height = divertor_variables.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
-            hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
-                max(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
+            hcomp_footprint = (hcomp_height + self.data.buildings.hot_sepdist) * (
+                max(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
             hcomp_vol = hcomp_footprint * (
-                min(hcomp_rad_thk, hcomp_tor_thk) + buildings_variables.hot_sepdist
+                min(hcomp_rad_thk, hcomp_tor_thk) + self.data.buildings.hot_sepdist
             )
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
                 * (self.data.costs.life_plant / self.data.costs.life_div_fpy)
-            ) * buildings_variables.qnty_sfty_fac
+            ) * self.data.buildings.qnty_sfty_fac
             # total storage space for required supply of divertor segments
             div_hotcell_vol = hcomp_req_supply * hcomp_vol
         else:
@@ -682,15 +681,15 @@ class Buildings(Model):
             else:
                 hcomp_rad_thk = self.data.build.dr_tf_inboard
 
-            hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
-                hcomp_rad_thk + buildings_variables.hot_sepdist
+            hcomp_footprint = (hcomp_height + self.data.buildings.hot_sepdist) * (
+                hcomp_rad_thk + self.data.buildings.hot_sepdist
             )
             hcomp_vol = hcomp_footprint * (
-                hcomp_rad_thk + buildings_variables.hot_sepdist
+                hcomp_rad_thk + self.data.buildings.hot_sepdist
             )
             hcomp_req_supply = (
                 self.data.costs.life_plant / self.data.costs.cplife
-            ) * buildings_variables.qnty_sfty_fac
+            ) * self.data.buildings.qnty_sfty_fac
             # total storage space for required supply of centre posts
             cp_hotcell_vol = hcomp_req_supply * hcomp_vol
         else:
@@ -699,20 +698,20 @@ class Buildings(Model):
         # building required internal volume and footprint
         hotcell_vol = ib_hotcell_vol + ob_hotcell_vol + div_hotcell_vol + cp_hotcell_vol
         # assumed building height based on R Gowland's estimates
-        hotcell_area = hotcell_vol / buildings_variables.hotcell_h
+        hotcell_area = hotcell_vol / self.data.buildings.hotcell_h
 
         # derive estimates for length and width by assuming a square building
         hotcell_l = hotcell_area**0.5
         hotcell_w = hotcell_l
 
         # external dimensions include same wall and roof thicknesses as reactor building
-        hotcell_area_ext = (hotcell_l + 2.0e0 * buildings_variables.reactor_wall_thk) * (
-            hotcell_w + 2.0e0 * buildings_variables.reactor_wall_thk
+        hotcell_area_ext = (hotcell_l + 2.0e0 * self.data.buildings.reactor_wall_thk) * (
+            hotcell_w + 2.0e0 * self.data.buildings.reactor_wall_thk
         )
         hotcell_vol_ext = hotcell_area_ext * (
-            buildings_variables.hotcell_h
-            + buildings_variables.reactor_roof_thk
-            + buildings_variables.reactor_fndtn_thk
+            self.data.buildings.hotcell_h
+            + self.data.buildings.reactor_roof_thk
+            + self.data.buildings.reactor_fndtn_thk
         )
 
         buildings_total_vol += hotcell_vol
@@ -723,23 +722,23 @@ class Buildings(Model):
 
         # Chemistry labs: includes RA, non-RA and environmental labs,
         # and chemical treatment facilities for coolant circuits
-        chemlab_area = buildings_variables.chemlab_l * buildings_variables.chemlab_w
-        chemlab_vol = chemlab_area * buildings_variables.chemlab_h
+        chemlab_area = self.data.buildings.chemlab_l * self.data.buildings.chemlab_w
+        chemlab_vol = chemlab_area * self.data.buildings.chemlab_h
 
         # Heat sink facilities, includes aux heat sink at heat energy island,
         # low temp and emergency heat sink facilities, ultimate heat sink facility
         # to sea/river/cooling towers, including pumping, chemical dosing and heat exchangers
         heat_sink_area = (
-            buildings_variables.heat_sink_l * buildings_variables.heat_sink_w
+            self.data.buildings.heat_sink_l * self.data.buildings.heat_sink_w
         )
-        heat_sink_vol = heat_sink_area * buildings_variables.heat_sink_h
+        heat_sink_vol = heat_sink_area * self.data.buildings.heat_sink_h
 
         # auxiliary buildings supporting tokamak processes & systems, includes non-RA
         # interfacing services such as, hydraulics, compressed air, chilled water...
         aux_build_area = (
-            buildings_variables.aux_build_l * buildings_variables.aux_build_w
+            self.data.buildings.aux_build_l * self.data.buildings.aux_build_w
         )
-        aux_build_vol = aux_build_area * buildings_variables.aux_build_h
+        aux_build_vol = aux_build_area * self.data.buildings.aux_build_h
 
         # Total auxiliary buildings supporting reactor processes & systems
         reactor_aux_area = chemlab_area + heat_sink_area + aux_build_area
@@ -752,14 +751,14 @@ class Buildings(Model):
         # based upon dimensions of comparable equipment at ITER site.
         # Steady state power trains:
         magnet_trains_area = (
-            buildings_variables.magnet_trains_l * buildings_variables.magnet_trains_w
+            self.data.buildings.magnet_trains_l * self.data.buildings.magnet_trains_w
         )
-        magnet_trains_vol = magnet_trains_area * buildings_variables.magnet_trains_h
+        magnet_trains_vol = magnet_trains_area * self.data.buildings.magnet_trains_h
         # Pulsed power for central solenoid
         magnet_pulse_area = (
-            buildings_variables.magnet_pulse_l * buildings_variables.magnet_pulse_w
+            self.data.buildings.magnet_pulse_l * self.data.buildings.magnet_pulse_w
         )
-        magnet_pulse_vol = magnet_pulse_area * buildings_variables.magnet_pulse_h
+        magnet_pulse_vol = magnet_pulse_area * self.data.buildings.magnet_pulse_h
 
         # Total power buildings areas and volumes
         power_buildings_area = hcd_building_area + magnet_trains_area + magnet_pulse_area
@@ -774,11 +773,11 @@ class Buildings(Model):
         # HP offices & Data Logging centre, Data Storage centre;
         # these values amalgamate multiple individual buildings.
         control_buildings_area = (
-            buildings_variables.control_buildings_l
-            * buildings_variables.control_buildings_w
+            self.data.buildings.control_buildings_l
+            * self.data.buildings.control_buildings_w
         )
         control_buildings_vol = (
-            control_buildings_area * buildings_variables.control_buildings_h
+            control_buildings_area * self.data.buildings.control_buildings_h
         )
 
         buildings_total_vol += control_buildings_vol
@@ -787,9 +786,9 @@ class Buildings(Model):
         # Values taken from W. Smith's estimates of necessary facility size:
         # 'hands on maintenance workshops for low RA dose equipment'
         warm_shop_area = (
-            buildings_variables.warm_shop_l * buildings_variables.warm_shop_w
+            self.data.buildings.warm_shop_l * self.data.buildings.warm_shop_w
         )
-        warm_shop_vol = warm_shop_area * buildings_variables.warm_shop_h
+        warm_shop_vol = warm_shop_area * self.data.buildings.warm_shop_h
 
         buildings_total_vol += warm_shop_vol
 
@@ -799,22 +798,22 @@ class Buildings(Model):
 
         # Maintenance workshops and clean rooms for components with *no* radiation
         # inventory; should include allowance for overhead gantry and crane access
-        workshop_area = buildings_variables.workshop_l * buildings_variables.workshop_w
-        workshop_vol = workshop_area * buildings_variables.workshop_h
+        workshop_area = self.data.buildings.workshop_l * self.data.buildings.workshop_w
+        workshop_vol = workshop_area * self.data.buildings.workshop_h
 
         # Robot construction, testing, mock-up facilities
         # To allow robots to be fully assembled, commissioned and tested
         # in mock-ups of the real environment. Height should allow for mock-up of
         # central column, but building also houses offices and classrooms.
-        robotics_area = buildings_variables.robotics_l * buildings_variables.robotics_w
-        robotics_vol = robotics_area * buildings_variables.robotics_h
+        robotics_area = self.data.buildings.robotics_l * self.data.buildings.robotics_w
+        robotics_vol = robotics_area * self.data.buildings.robotics_h
 
         # Maintenance control and inspection facilities: includes operations centre,
         # inbound inspection and QA storage facilities.
         maint_cont_area = (
-            buildings_variables.maint_cont_l * buildings_variables.maint_cont_w
+            self.data.buildings.maint_cont_l * self.data.buildings.maint_cont_w
         )
-        maint_cont_vol = maint_cont_area * buildings_variables.maint_cont_h
+        maint_cont_vol = maint_cont_area * self.data.buildings.maint_cont_h
 
         maintenance_area = workshop_area + robotics_area + maint_cont_area
         maintenance_vol = workshop_vol + robotics_vol + maint_cont_vol
@@ -825,19 +824,19 @@ class Buildings(Model):
         # Derived from W. Smith's estimates of necessary facilities and their sizes.
 
         # Cryogenic Buildings for Magnet and Fuel Cycle
-        cryomag_area = buildings_variables.cryomag_l * buildings_variables.cryomag_w
-        cryomag_vol = cryomag_area * buildings_variables.cryomag_h
+        cryomag_area = self.data.buildings.cryomag_l * self.data.buildings.cryomag_w
+        cryomag_vol = cryomag_area * self.data.buildings.cryomag_h
 
         # Magnet Cryo Storage Tanks
         cryostore_area = (
-            buildings_variables.cryostore_l * buildings_variables.cryostore_w
+            self.data.buildings.cryostore_l * self.data.buildings.cryostore_w
         )
-        cryostore_vol = cryostore_area * buildings_variables.cryostore_h
+        cryostore_vol = cryostore_area * self.data.buildings.cryostore_h
 
         # Site-Wide Auxiliary Cooling Water facility, including pumping,
         # chemical dosing, filtration and heat exchangers.
-        auxcool_area = buildings_variables.auxcool_l * buildings_variables.auxcool_w
-        auxcool_vol = auxcool_area * buildings_variables.auxcool_h
+        auxcool_area = self.data.buildings.auxcool_l * self.data.buildings.auxcool_w
+        auxcool_vol = auxcool_area * self.data.buildings.auxcool_h
 
         cryocool_area = cryomag_area + cryostore_area + auxcool_area
         cryocool_vol = cryomag_vol + cryostore_vol + auxcool_vol
@@ -850,18 +849,18 @@ class Buildings(Model):
 
         # Transformers and electrical distribution facilities; includes
         # main step down & step up transformers and substation, reactive power buildings
-        elecdist_area = buildings_variables.elecdist_l * buildings_variables.elecdist_w
-        elecdist_vol = elecdist_area * buildings_variables.elecdist_h
+        elecdist_area = self.data.buildings.elecdist_l * self.data.buildings.elecdist_w
+        elecdist_vol = elecdist_area * self.data.buildings.elecdist_h
 
         # Load centres (essential and non-essential supplies)
-        elecload_area = buildings_variables.elecload_l * buildings_variables.elecload_w
-        elecload_vol = elecload_area * buildings_variables.elecload_h
+        elecload_area = self.data.buildings.elecload_l * self.data.buildings.elecload_w
+        elecload_vol = elecload_area * self.data.buildings.elecload_h
 
         # Energy Storage Systems (batteries & flywheels) and back-up generators
         elecstore_area = (
-            buildings_variables.elecstore_l * buildings_variables.elecstore_w
+            self.data.buildings.elecstore_l * self.data.buildings.elecstore_w
         )
-        elecstore_vol = elecstore_area * buildings_variables.elecstore_h
+        elecstore_vol = elecstore_area * self.data.buildings.elecstore_h
 
         elec_buildings_area = elecdist_area + elecload_area + elecstore_area
         elec_buildings_vol = elecdist_vol + elecload_vol + elecstore_vol
@@ -875,9 +874,9 @@ class Buildings(Model):
         # and the design of a Steam Rankine cycle turbine building,
         # produced by Morsons as part of the Year 1 work.
         turbine_hall_area = (
-            buildings_variables.turbine_hall_l * buildings_variables.turbine_hall_w
+            self.data.buildings.turbine_hall_l * self.data.buildings.turbine_hall_w
         )
-        turbine_hall_vol = turbine_hall_area * buildings_variables.turbine_hall_h
+        turbine_hall_vol = turbine_hall_area * self.data.buildings.turbine_hall_h
 
         buildings_total_vol += turbine_hall_vol
 
@@ -887,32 +886,32 @@ class Buildings(Model):
         # Intermediate Level Waste
         # Radioactive waste melt, separation and size reduction facility
         ilw_smelter_area = (
-            buildings_variables.ilw_smelter_l * buildings_variables.ilw_smelter_w
+            self.data.buildings.ilw_smelter_l * self.data.buildings.ilw_smelter_w
         )
-        ilw_smelter_vol = ilw_smelter_area * buildings_variables.ilw_smelter_h
+        ilw_smelter_vol = ilw_smelter_area * self.data.buildings.ilw_smelter_h
         # ILW process and storage, amalgamated buildings
         ilw_storage_area = (
-            buildings_variables.ilw_storage_l * buildings_variables.ilw_storage_w
+            self.data.buildings.ilw_storage_l * self.data.buildings.ilw_storage_w
         )
-        ilw_storage_vol = ilw_storage_area * buildings_variables.ilw_storage_h
+        ilw_storage_vol = ilw_storage_area * self.data.buildings.ilw_storage_h
 
         # Low Level Waste process and storage, amalgamated buildings
         llw_storage_area = (
-            buildings_variables.llw_storage_l * buildings_variables.llw_storage_w
+            self.data.buildings.llw_storage_l * self.data.buildings.llw_storage_w
         )
-        llw_storage_vol = llw_storage_area * buildings_variables.llw_storage_h
+        llw_storage_vol = llw_storage_area * self.data.buildings.llw_storage_h
 
         # Hazardous Waste process and storage, amalgamated buildings
         hw_storage_area = (
-            buildings_variables.hw_storage_l * buildings_variables.hw_storage_w
+            self.data.buildings.hw_storage_l * self.data.buildings.hw_storage_w
         )
-        hw_storage_vol = hw_storage_area * buildings_variables.hw_storage_h
+        hw_storage_vol = hw_storage_area * self.data.buildings.hw_storage_h
 
         # Tritiated Waste Store
         tw_storage_area = (
-            buildings_variables.tw_storage_l * buildings_variables.tw_storage_w
+            self.data.buildings.tw_storage_l * self.data.buildings.tw_storage_w
         )
-        tw_storage_vol = tw_storage_area * buildings_variables.tw_storage_h
+        tw_storage_vol = tw_storage_area * self.data.buildings.tw_storage_h
 
         # Total waste buildings areas and volumes
         waste_buildings_area = (
@@ -940,28 +939,28 @@ class Buildings(Model):
         # Includes compressed air facility, common gas systems facility, bottled gas
         # storage compounds; these values amalgamate multiple individual buildings.
         gas_buildings_area = (
-            buildings_variables.gas_buildings_l * buildings_variables.gas_buildings_w
+            self.data.buildings.gas_buildings_l * self.data.buildings.gas_buildings_w
         )
-        gas_buildings_vol = gas_buildings_area * buildings_variables.gas_buildings_h
+        gas_buildings_vol = gas_buildings_area * self.data.buildings.gas_buildings_h
 
         # Water, Laundry & Drainage
         # Includes facilities for potable water, firewater, chilled water; PPE laundry &
         # Respiratory Protective Equipment cleaning; industrial drains & sewage
         # process and discharge; these values amalgamate multiple individual buildings.
         water_buildings_area = (
-            buildings_variables.water_buildings_l * buildings_variables.water_buildings_w
+            self.data.buildings.water_buildings_l * self.data.buildings.water_buildings_w
         )
         water_buildings_vol = (
-            water_buildings_area * buildings_variables.water_buildings_h
+            water_buildings_area * self.data.buildings.water_buildings_h
         )
 
         # Site Security & Safety
         # Includes Security Control Centre and Fire and Ambulance Garages;
         # these values amalgamate multiple individual buildings.
         sec_buildings_area = (
-            buildings_variables.sec_buildings_l * buildings_variables.sec_buildings_w
+            self.data.buildings.sec_buildings_l * self.data.buildings.sec_buildings_w
         )
-        sec_buildings_vol = sec_buildings_area * buildings_variables.sec_buildings_h
+        sec_buildings_vol = sec_buildings_area * self.data.buildings.sec_buildings_h
 
         buildings_total_vol = (
             buildings_total_vol
@@ -977,8 +976,8 @@ class Buildings(Model):
         # and site pass office, occupational health centre.
         # Amalgamates estimates of floor area for all individual buildings, uses average height.
         staff_buildings_vol = (
-            buildings_variables.staff_buildings_area
-            * buildings_variables.staff_buildings_h
+            self.data.buildings.staff_buildings_area
+            * self.data.buildings.staff_buildings_h
         )
 
         buildings_total_vol += staff_buildings_vol
@@ -986,10 +985,10 @@ class Buildings(Model):
         # Calculate 'effective floor area for AC power module'
         # This is the total floor area (m2) across the site, allowing for multiple floors
         # within buildings by assuming an average storey height of 6m:
-        buildings_variables.a_plant_floor_effective = buildings_total_vol / 6.0e0
+        self.data.buildings.a_plant_floor_effective = buildings_total_vol / 6.0e0
 
         # Total volume of nuclear buildings
-        buildings_variables.volnucb = reactor_build_totvol + hotcell_vol_ext
+        self.data.buildings.volnucb = reactor_build_totvol + hotcell_vol_ext
 
         # Output
         if output:
@@ -1010,19 +1009,19 @@ class Buildings(Model):
                 self.outfile,
                 "   Reactor hall length (m)",
                 "(reactor_hall_l)",
-                buildings_variables.reactor_hall_l,
+                self.data.buildings.reactor_hall_l,
             )
             po.ovarre(
                 self.outfile,
                 "   Reactor hall width (m)",
                 "(reactor_hall_w)",
-                buildings_variables.reactor_hall_w,
+                self.data.buildings.reactor_hall_w,
             )
             po.ovarre(
                 self.outfile,
                 "   Reactor hall height (m)",
                 "(reactor_hall_h)",
-                buildings_variables.reactor_hall_h,
+                self.data.buildings.reactor_hall_h,
             )
             if (
                 CurrentDriveModel(current_drive_variables.i_hcd_primary).method
@@ -1036,13 +1035,13 @@ class Buildings(Model):
                     self.outfile,
                     "      NBI system length (m)",
                     "(nbi_sys_l)",
-                    buildings_variables.nbi_sys_l,
+                    self.data.buildings.nbi_sys_l,
                 )
                 po.ovarre(
                     self.outfile,
                     "      NBI system width (m)",
                     "(nbi_sys_w)",
-                    buildings_variables.nbi_sys_w,
+                    self.data.buildings.nbi_sys_w,
                 )
 
             po.ovarre(
@@ -1132,24 +1131,24 @@ class Buildings(Model):
                     "(hcd_building_vol)",
                     hcd_building_vol,
                 )
-                if buildings_variables.i_bldgs_v == 1:
+                if self.data.buildings.i_bldgs_v == 1:
                     po.ovarre(
                         self.outfile,
                         "   HCD (EC/EBW) building length (m)",
                         "(hcd_building_l)",
-                        buildings_variables.hcd_building_l,
+                        self.data.buildings.hcd_building_l,
                     )
                     po.ovarre(
                         self.outfile,
                         "   HCD (EC/EBW) building width (m)",
                         "(hcd_building_w)",
-                        buildings_variables.hcd_building_w,
+                        self.data.buildings.hcd_building_w,
                     )
                     po.ovarre(
                         self.outfile,
                         "   HCD (EC/EBW) building height (m)",
                         "(hcd_building_h)",
-                        buildings_variables.hcd_building_h,
+                        self.data.buildings.hcd_building_h,
                     )
                 po.oblnkl(self.outfile)
             po.ovarre(
@@ -1164,24 +1163,24 @@ class Buildings(Model):
                 "(turbine_hall_vol)",
                 turbine_hall_vol,
             )
-            if buildings_variables.i_bldgs_v == 1:
+            if self.data.buildings.i_bldgs_v == 1:
                 po.ovarre(
                     self.outfile,
                     "   Turbine hall length (m)",
                     "(turbine_hall_l)",
-                    buildings_variables.turbine_hall_l,
+                    self.data.buildings.turbine_hall_l,
                 )
                 po.ovarre(
                     self.outfile,
                     "   Turbine hall width (m)",
                     "(turbine_hall_w)",
-                    buildings_variables.turbine_hall_w,
+                    self.data.buildings.turbine_hall_w,
                 )
                 po.ovarre(
                     self.outfile,
                     "   Turbine hall height (m)",
                     "(turbine_hall_h)",
-                    buildings_variables.turbine_hall_h,
+                    self.data.buildings.turbine_hall_h,
                 )
 
             po.oblnkl(self.outfile)
@@ -1189,16 +1188,16 @@ class Buildings(Model):
                 self.outfile,
                 "Effective floor area (m2)",
                 "(a_plant_floor_effective)",
-                buildings_variables.a_plant_floor_effective,
+                self.data.buildings.a_plant_floor_effective,
             )
             po.ovarre(
                 self.outfile,
                 "Total volume of nuclear buildings (m3)",
                 "(volnucb)",
-                buildings_variables.volnucb,
+                self.data.buildings.volnucb,
             )
 
-            if buildings_variables.i_bldgs_v == 1:
+            if self.data.buildings.i_bldgs_v == 1:
                 po.oblnkl(self.outfile)
                 # verbose output of building sizes, areas and volumes
                 po.ovarre(
@@ -1510,7 +1509,7 @@ class Buildings(Model):
                     self.outfile,
                     "Staff buildings footprint (m2)",
                     "(staff_buildings_area)",
-                    buildings_variables.staff_buildings_area,
+                    self.data.buildings.staff_buildings_area,
                 )
                 po.ovarre(
                     self.outfile,

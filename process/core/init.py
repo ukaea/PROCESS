@@ -16,7 +16,6 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.constraint_variables import init_constraint_variables
 from process.data_structure.current_drive_variables import init_current_drive_variables
 from process.data_structure.dcll_variables import init_dcll_module
@@ -257,7 +256,6 @@ def init_all_module_vars():
     """
     logging_model_handler.clear_logs()
     data_structure.numerics.init_numerics()
-    init_buildings_variables()
     init_divertor_variables()
     data_structure.global_variables.init_global_variables()
     init_heat_transport_variables()
@@ -382,7 +380,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if (
         data_structure.physics_variables.f_plasma_fuel_tritium < 1.0e-3
     ):  # tritium fraction is negligible
-        data_structure.buildings_variables.triv = 0.0
+        data.buildings.triv = 0.0
         data_structure.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
     if data_structure.impurity_radiation_module.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
@@ -810,7 +808,7 @@ def check_process(inputs, data):  # noqa: ARG001
     if data.pulse.i_pulsed_plant == 1:
         data_structure.global_variables.icase = "Pulsed tokamak model"
     else:
-        data_structure.buildings_variables.esbldgm3 = 0.0
+        data.buildings.esbldgm3 = 0.0
 
     # TF coil
     # -------

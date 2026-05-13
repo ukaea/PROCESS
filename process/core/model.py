@@ -3,6 +3,7 @@ from dataclasses import dataclass, fields
 
 from process.data_structure.blanket_variables import BlanketData
 from process.data_structure.build_variables import BuildData
+from process.data_structure.buildings_variables import BuildingsData
 from process.data_structure.ccfe_hcpb_variables import CCFEHCPBData
 from process.data_structure.cost_2015_variables import Cost2015Data
 from process.data_structure.cost_variables import CostData
@@ -37,6 +38,7 @@ class DataStructure:
     pulse: PulseData = initialise_later
     build: BuildData = initialise_later
     primary_pumping: PrimaryPumpingData = initialise_later
+    buildings: BuildingsData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

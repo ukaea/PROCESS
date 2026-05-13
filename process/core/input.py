@@ -187,9 +187,7 @@ INPUT_VARIABLES = {
     "fkzohm": InputVariable(data_structure.physics_variables, float, range=(0.5, 2.0)),
     "abktflnc": InputVariable("costs", float, range=(0.1, 100.0)),
     "adivflnc": InputVariable("costs", float, range=(0.1, 100.0)),
-    "admv": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0e4, 1.0e6)
-    ),
+    "admv": InputVariable("buildings", float, range=(1.0e4, 1.0e6)),
     "airtemp": InputVariable("water_use", float, range=(-15.0, 40.0)),
     "alfapf": InputVariable(data_structure.pfcoil_variables, float, range=(1e-12, 1.0)),
     "alstroh": InputVariable(
@@ -200,24 +198,12 @@ INPUT_VARIABLES = {
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
     ),
     "aplasmin": InputVariable("build", float, range=(0.01, 10.0)),
-    "aux_build_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "aux_build_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "aux_build_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "auxcool_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "auxcool_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "auxcool_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "aux_build_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "aux_build_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "aux_build_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "auxcool_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "auxcool_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "auxcool_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "p_hcd_injected_min_mw": InputVariable(
         data_structure.constraint_variables, float, range=(0.01, 100.0)
     ),
@@ -251,9 +237,7 @@ INPUT_VARIABLES = {
     "big_q_plasma_min": InputVariable(
         data_structure.constraint_variables, float, range=(0.01, 100.0)
     ),
-    "bioshld_thk": InputVariable(
-        data_structure.buildings_variables, float, range=(0.25, 25.0)
-    ),
+    "bioshld_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
     "bkt_life_csf": InputVariable("cs_fatigue", float, range=(0.0, 1.0)),
     "blbmith": InputVariable("build", float, range=(0.0, 2.0)),
     "blbmoth": InputVariable("build", float, range=(0.0, 2.0)),
@@ -309,34 +293,20 @@ INPUT_VARIABLES = {
     "f_t_plant_available": InputVariable("costs", float, range=(0.0, 1.0)),
     "chdzl": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "chdzu": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
-    "chemlab_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "chemlab_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "chemlab_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "chemlab_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "chemlab_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "chemlab_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "chrad": InputVariable(data_structure.ife_variables, float, range=(0.1, 20.0)),
     "cland": InputVariable("costs", float, range=(10.0, 100.0)),
-    "clh2": InputVariable(data_structure.buildings_variables, float, range=(0.0, 30.0)),
+    "clh2": InputVariable("buildings", float, range=(0.0, 30.0)),
     "j_cs_flat_top_end": InputVariable(
         data_structure.pfcoil_variables, float, range=(10000.0, 500000000.0)
     ),
     "conf_mag": InputVariable("costs", float, range=(0.9, 1.0)),
-    "control_buildings_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "control_buildings_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "control_buildings_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "conv": InputVariable(
-        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
-    ),
+    "control_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "control_buildings_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "control_buildings_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "conv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "coolp": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
     "copper_rrr": InputVariable(
         data_structure.rebco_variables, float, range=(1.0, 10000.0)
@@ -369,39 +339,19 @@ INPUT_VARIABLES = {
     "c_tf_turn_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(1.0, 1000000.0)
     ),
-    "crane_arm_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "crane_clrnc_h": InputVariable(
-        data_structure.buildings_variables, float, range=(0.0, 10.0)
-    ),
-    "crane_clrnc_v": InputVariable(
-        data_structure.buildings_variables, float, range=(0.0, 10.0)
-    ),
+    "crane_arm_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "crane_clrnc_h": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "crane_clrnc_v": InputVariable("buildings", float, range=(0.0, 10.0)),
     "dx_croco_strand_copper": InputVariable(
         data_structure.rebco_variables, float, range=(0.001, 0.1)
     ),
-    "cryomag_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "cryomag_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "cryomag_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "cryostat_clrnc": InputVariable(
-        data_structure.buildings_variables, float, range=(0.0, 10.0)
-    ),
-    "cryostore_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "cryostore_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "cryostore_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "cryomag_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "cryomag_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "cryomag_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "cryostat_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "cryostore_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "cryostore_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "cryostore_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "p_cryo_plant_electric_max_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.01, 200.0)
     ),
@@ -482,9 +432,7 @@ INPUT_VARIABLES = {
     "dtlife": InputVariable("costs", float, range=(0.0, 15.0)),
     "dtstor": InputVariable("pulse", float, range=(50.0, 500.0)),
     "dx_fw_module": InputVariable("fwbs", float, range=(0.0005, 0.1)),
-    "dz_tf_cryostat": InputVariable(
-        data_structure.buildings_variables, float, range=(0.0, 20.0)
-    ),
+    "dz_tf_cryostat": InputVariable("buildings", float, range=(0.0, 20.0)),
     "dztop": InputVariable(data_structure.tfcoil_variables, float, range=(-0.5, 0.5)),
     "edrive": InputVariable(
         data_structure.ife_variables, float, range=(100000.0, 5000000000.0)
@@ -495,37 +443,17 @@ INPUT_VARIABLES = {
     "ejima_coeff": InputVariable(
         data_structure.physics_variables, float, range=(0.1, 1.0)
     ),
-    "elecdist_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "elecdist_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "elecdist_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "elecload_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "elecload_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "elecload_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "elecstore_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "elecstore_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "elecstore_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "elecdist_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "elecdist_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "elecdist_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "elecload_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "elecload_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "elecload_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "elecstore_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "elecstore_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "elecstore_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "f_p_blkt_multiplication": InputVariable("fwbs", float, range=(1.0, 2.0)),
-    "esbldgm3": InputVariable(
-        data_structure.buildings_variables, float, range=(1000.0, 1000000.0)
-    ),
+    "esbldgm3": InputVariable("buildings", float, range=(1000.0, 1000000.0)),
     "eta_ecrh_injector_wall_plug": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
@@ -627,12 +555,8 @@ INPUT_VARIABLES = {
     "fblvd": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "fbreed": InputVariable(data_structure.ife_variables, float, range=(0.0, 0.999)),
     "fburn": InputVariable(data_structure.ife_variables, float, range=(0.01, 1.0)),
-    "fc_building_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "fc_building_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "fc_building_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "fc_building_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "fcap0": InputVariable("costs", float, range=(1.0, 1.5)),
     "fcap0cp": InputVariable("costs", float, range=(1.0, 1.5)),
     "fcdfuel": InputVariable("costs", float, range=(0.0, 1.0)),
@@ -688,7 +612,7 @@ INPUT_VARIABLES = {
     "fmgdmw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "fndt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "fndt": InputVariable("buildings", float, range=(0.0, 10.0)),
     "f_p_beam_orbit_loss": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 0.999)
     ),
@@ -739,44 +663,24 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.01, 10.0)
     ),
     "gapomin": InputVariable("build", float, range=(0.0, 10.0)),
-    "gas_buildings_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "gas_buildings_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "gas_buildings_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "ground_clrnc": InputVariable(
-        data_structure.buildings_variables, float, range=(0.0, 10.0)
-    ),
+    "gas_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "gas_buildings_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "gas_buildings_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "ground_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
     "n_ecrh_harmonic": InputVariable(
         data_structure.current_drive_variables, float, range=(1.0, 10.0)
     ),
     "dx_hts_tape_hastelloy": InputVariable(
         data_structure.rebco_variables, float, range=(1e-08, 0.001)
     ),
-    "hccl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "hcd_building_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "hcd_building_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "hcd_building_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "hcwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "heat_sink_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "heat_sink_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "heat_sink_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "hccl": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "hcd_building_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "hcd_building_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "hcd_building_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "hcwt": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "heat_sink_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "heat_sink_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "heat_sink_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "hfact": InputVariable(data_structure.physics_variables, float, range=(0.01, 10.0)),
     "pflux_div_heat_load_mw": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 10.0)
@@ -784,12 +688,8 @@ INPUT_VARIABLES = {
     "pflux_div_heat_load_max_mw": InputVariable(
         data_structure.divertor_variables, float, range=(0.1, 20.0)
     ),
-    "hot_sepdist": InputVariable(
-        data_structure.buildings_variables, float, range=(0.0, 10.0)
-    ),
-    "hotcell_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
+    "hot_sepdist": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "hotcell_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "p_blkt_coolant_pump_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
@@ -803,33 +703,15 @@ INPUT_VARIABLES = {
     "p_shld_coolant_pump_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
-    "hw_storage_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "hw_storage_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "hw_storage_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "ilw_smelter_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "ilw_smelter_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "ilw_smelter_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "ilw_storage_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "ilw_storage_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "ilw_storage_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "hw_storage_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "hw_storage_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "hw_storage_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "ilw_smelter_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "ilw_smelter_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "ilw_smelter_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "ilw_storage_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "ilw_storage_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "ilw_storage_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "ind_plasma_internal_norm": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 10.0)
     ),
@@ -857,45 +739,21 @@ INPUT_VARIABLES = {
     "lhat": InputVariable("reinke", float, range=(1.0, 15.0)),
     "f_blkt_li6_enrichment": InputVariable("fwbs", float, range=(7.4, 100.0)),
     "life_dpa": InputVariable("costs", float, range=(10.0, 100.0)),
-    "llw_storage_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "llw_storage_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "llw_storage_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "llw_storage_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "llw_storage_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "llw_storage_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "m_s_limit": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
-    "magnet_pulse_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "magnet_pulse_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "magnet_pulse_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "magnet_trains_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "magnet_trains_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "magnet_trains_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "maint_cont_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "maint_cont_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "maint_cont_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "magnet_pulse_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "magnet_pulse_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "magnet_pulse_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "magnet_trains_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "magnet_trains_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "magnet_trains_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "maint_cont_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "maint_cont_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "maint_cont_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "maintenance_fwbs": InputVariable("costs", float, range=(0.0, 1.0)),
     "maintenance_gen": InputVariable("costs", float, range=(0.0, 1.0)),
     "max_gyrotron_frequency": InputVariable(
@@ -912,7 +770,7 @@ INPUT_VARIABLES = {
     "pflux_fw_rad_max": InputVariable(
         data_structure.constraint_variables, float, range=(0.1, 10.0)
     ),
-    "mbvfac": InputVariable(data_structure.buildings_variables, float, range=(0.9, 3.0)),
+    "mbvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
     "mcdriv": InputVariable(data_structure.ife_variables, float, range=(0.1, 10.0)),
     "mvalim": InputVariable(
         data_structure.constraint_variables, float, range=(0.0, 1000.0)
@@ -924,12 +782,8 @@ INPUT_VARIABLES = {
     "n_tf_coil_turns": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 100.0)
     ),
-    "nbi_sys_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "nbi_sys_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "nbi_sys_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "nbi_sys_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "dx_beam_shield": InputVariable(
         data_structure.current_drive_variables, float, range=(0.01, 0.5)
     ),
@@ -968,9 +822,7 @@ INPUT_VARIABLES = {
     "pdrive": InputVariable(
         data_structure.ife_variables, float, range=(1000000.0, 200000000.0)
     ),
-    "pfbldgm3": InputVariable(
-        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
-    ),
+    "pfbldgm3": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "rho_pf_coil": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 0.0001)
     ),
@@ -981,9 +833,7 @@ INPUT_VARIABLES = {
     "p_hcd_secondary_extra_heat_mw": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1000.0)
     ),
-    "pibv": InputVariable(
-        data_structure.buildings_variables, float, range=(1000.0, 100000.0)
-    ),
+    "pibv": InputVariable("buildings", float, range=(1000.0, 100000.0)),
     "pifecr": InputVariable(data_structure.ife_variables, float, range=(0.0, 100.0)),
     "p_hcd_injected_max": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1000.0)
@@ -1048,9 +898,7 @@ INPUT_VARIABLES = {
     "q95_fixed": InputVariable(
         data_structure.constraint_variables, float, range=(1.0, 50.0)
     ),
-    "qnty_sfty_fac": InputVariable(
-        data_structure.buildings_variables, float, range=(0.0, 10.0)
-    ),
+    "qnty_sfty_fac": InputVariable("buildings", float, range=(0.0, 10.0)),
     "qnuc": InputVariable("fwbs", float, range=(0.0, 1000000.0)),
     "r_cp_top": InputVariable("build", float, range=(0.001, 10.0)),
     "rad_fraction_sol": InputVariable(
@@ -1058,33 +906,19 @@ INPUT_VARIABLES = {
     ),
     "radius_fw_channel": InputVariable("fwbs", float, range=(0.001, 0.5)),
     "outgrat_fw": InputVariable("vacuum", float, range=(1e-10, 1e-06)),
-    "rbrt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "rbvfac": InputVariable(data_structure.buildings_variables, float, range=(0.9, 3.0)),
-    "rbwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "rbrt": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "rbvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
+    "rbwt": InputVariable("buildings", float, range=(0.0, 10.0)),
     "radius_cp_coolant_channel": InputVariable(
         data_structure.tfcoil_variables, float, range=(1e-06, 1.0)
     ),
-    "reactor_clrnc": InputVariable(
-        data_structure.buildings_variables, float, range=(0.0, 10.0)
-    ),
-    "reactor_fndtn_thk": InputVariable(
-        data_structure.buildings_variables, float, range=(0.25, 25.0)
-    ),
-    "reactor_hall_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "reactor_hall_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "reactor_hall_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "reactor_roof_thk": InputVariable(
-        data_structure.buildings_variables, float, range=(0.25, 25.0)
-    ),
-    "reactor_wall_thk": InputVariable(
-        data_structure.buildings_variables, float, range=(0.25, 25.0)
-    ),
+    "reactor_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "reactor_fndtn_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
+    "reactor_hall_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "reactor_hall_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "reactor_hall_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "reactor_roof_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
+    "reactor_wall_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
     "dx_hts_tape_rebco": InputVariable(
         data_structure.rebco_variables,
         float,
@@ -1123,20 +957,14 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(0.1, 100.0)
     ),
     "rmajor": InputVariable(data_structure.physics_variables, float, range=(0.1, 50.0)),
-    "robotics_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "robotics_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "robotics_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "robotics_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "robotics_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "robotics_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "roughness_fw_channel": InputVariable("fwbs", float, range=(0.0, 0.01)),
     "dr_pf_tf_outboard_out_offset": InputVariable(
         data_structure.pfcoil_variables, float, range=(-3.0, 3.0)
     ),
-    "row": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "row": InputVariable("buildings", float, range=(0.0, 10.0)),
     "dr_pf_cs_middle_offset": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 3.0)
     ),
@@ -1146,16 +974,10 @@ INPUT_VARIABLES = {
     "rrr_tf_cu": InputVariable(
         data_structure.tfcoil_variables, float, range=(1.0, 1000.0)
     ),
-    "rxcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "sec_buildings_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "sec_buildings_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "sec_buildings_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "rxcl": InputVariable("buildings", float, range=(0.0, 10.0)),
+    "sec_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "sec_buildings_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "sec_buildings_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "sf_fast_fracture": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
     "sf_radial_crack": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
     "sf_vertical_crack": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
@@ -1167,10 +989,8 @@ INPUT_VARIABLES = {
     ),
     "dz_shld_lower": InputVariable("build", float, range=(0.0, 10.0)),
     "dz_shld_upper": InputVariable("build", float, range=(0.0, 10.0)),
-    "shmf": InputVariable(data_structure.buildings_variables, float, range=(0.0, 1.0)),
-    "shov": InputVariable(
-        data_structure.buildings_variables, float, range=(1000.0, 1000000.0)
-    ),
+    "shmf": InputVariable("buildings", float, range=(0.0, 1.0)),
+    "shov": InputVariable("buildings", float, range=(1000.0, 1000000.0)),
     "sig_tf_case_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
     ),
@@ -1185,13 +1005,11 @@ INPUT_VARIABLES = {
     "sombdr": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "somtdr": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "staff_buildings_area": InputVariable(
-        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
+        "buildings", float, range=(10000.0, 1000000.0)
     ),
-    "staff_buildings_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
+    "staff_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "startupratio": InputVariable("costs", float, range=(0.0, 10.0)),
-    "stcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "stcl": InputVariable("buildings", float, range=(0.0, 10.0)),
     "str_cs_con_res": InputVariable(
         data_structure.tfcoil_variables, float, range=(-0.02, 0.02)
     ),
@@ -1292,9 +1110,7 @@ INPUT_VARIABLES = {
     "temp_plasma_separatrix_kev": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 20.0)
     ),
-    "tfcbv": InputVariable(
-        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
-    ),
+    "tfcbv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "dx_tf_wp_insertion_gap": InputVariable(
         data_structure.tfcoil_variables, float, range=(1e-10, 0.1)
     ),
@@ -1346,39 +1162,23 @@ INPUT_VARIABLES = {
     ),
     "temp_vv_chamber_gas_burn_end": InputVariable("vacuum", float, range=(1.0, 1000.0)),
     "i_t_current_ramp_up": InputVariable("times", int, choices=[0, 1]),
-    "transp_clrnc": InputVariable(
-        data_structure.buildings_variables, float, range=(0.0, 10.0)
-    ),
+    "transp_clrnc": InputVariable("buildings", float, range=(0.0, 10.0)),
     "f_temp_plasma_ion_electron": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 2.0)
     ),
-    "trcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "trcl": InputVariable("buildings", float, range=(0.0, 10.0)),
     "triang": InputVariable(data_structure.physics_variables, float, range=(-1.0, 1.0)),
     "triang95": InputVariable(data_structure.physics_variables, float, range=(0.0, 1.0)),
     "p_tritium_plant_electric_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "triv": InputVariable(
-        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
-    ),
-    "turbine_hall_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "turbine_hall_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "turbine_hall_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "tw_storage_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "tw_storage_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "tw_storage_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "triv": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
+    "turbine_hall_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "turbine_hall_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "turbine_hall_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "tw_storage_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "tw_storage_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "tw_storage_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "u_unplanned_cp": InputVariable("costs", float, range=(0.0, 1.0)),
     "ucblbe": InputVariable("costs", float, range=(1.0, 1000.0)),
     "ucblbreed": InputVariable("costs", float, range=(1.0, 1000.0)),
@@ -1470,42 +1270,20 @@ INPUT_VARIABLES = {
     ),
     "walker_coefficient": InputVariable("cs_fatigue", float, range=(0.1, 10.0)),
     "wallpf": InputVariable("fwbs", float, range=(1.0, 2.0)),
-    "warm_shop_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "warm_shop_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "warm_shop_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "water_buildings_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "water_buildings_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "water_buildings_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
+    "warm_shop_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "warm_shop_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "warm_shop_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "water_buildings_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "water_buildings_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "water_buildings_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "watertemp": InputVariable("water_use", float, range=(0.0, 25.0)),
-    "wgt": InputVariable(
-        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
-    ),
-    "wgt2": InputVariable(
-        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
-    ),
+    "wgt": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
+    "wgt2": InputVariable("buildings", float, range=(10000.0, 1000000.0)),
     "windspeed": InputVariable("water_use", float, range=(0.0, 10.0)),
-    "workshop_h": InputVariable(
-        data_structure.buildings_variables, float, range=(1.0, 100.0)
-    ),
-    "workshop_l": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "workshop_w": InputVariable(
-        data_structure.buildings_variables, float, range=(10.0, 1000.0)
-    ),
-    "wsvfac": InputVariable(data_structure.buildings_variables, float, range=(0.9, 3.0)),
+    "workshop_h": InputVariable("buildings", float, range=(1.0, 100.0)),
+    "workshop_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "workshop_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
+    "wsvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
     "xi_ebw": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
@@ -1537,10 +1315,8 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, int, choices=[0, 1]
     ),
     "i_blanket_type": InputVariable("fwbs", int, choices=[1, 5]),
-    "i_bldgs_size": InputVariable(
-        data_structure.buildings_variables, int, choices=[0, 1]
-    ),
-    "i_bldgs_v": InputVariable(data_structure.buildings_variables, int, choices=[0, 1]),
+    "i_bldgs_size": InputVariable("buildings", int, choices=[0, 1]),
+    "i_bldgs_v": InputVariable("buildings", int, choices=[0, 1]),
     "i_blkt_inboard": InputVariable("fwbs", int, choices=[0, 1]),
     "i_bootstrap_current": InputVariable(
         data_structure.physics_variables, int, range=(0, 13)

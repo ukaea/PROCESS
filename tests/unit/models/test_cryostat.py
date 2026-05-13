@@ -4,13 +4,12 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    buildings_variables,
     pfcoil_variables,
 )
 
 
 @pytest.fixture
-def cryostat_fixture(process_models):
+def cryostat(process_models):
     """Fixture to get the Cryostat instance from process_models.
 
     :returns: initialised Cryostat object
@@ -131,9 +130,7 @@ class ExternalCryoGeometryParam(NamedTuple):
         ),
     ],
 )
-def test_external_cryo_geometry(
-    externalcryogeometryparam, monkeypatch, cryostat_fixture
-):
+def test_external_cryo_geometry(externalcryogeometryparam, monkeypatch, cryostat):
     """
     Automatically generated Regression Unit Test for external_cryo_geometry.
 
@@ -146,55 +143,49 @@ def test_external_cryo_geometry(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        cryostat_fixture.data.build,
+        cryostat.data.build,
         "f_z_cryostat",
         externalcryogeometryparam.f_z_cryostat,
     )
     monkeypatch.setattr(
-        cryostat_fixture.data.build,
+        cryostat.data.build,
         "z_tf_inside_half",
         externalcryogeometryparam.z_tf_inside_half,
     )
     monkeypatch.setattr(
-        cryostat_fixture.data.build,
+        cryostat.data.build,
         "dr_tf_inboard",
         externalcryogeometryparam.dr_tf_inboard,
     )
     monkeypatch.setattr(
-        cryostat_fixture.data.build, "dr_cryostat", externalcryogeometryparam.dr_cryostat
+        cryostat.data.build, "dr_cryostat", externalcryogeometryparam.dr_cryostat
     )
     monkeypatch.setattr(
-        cryostat_fixture.data.fwbs,
+        cryostat.data.fwbs,
         "r_cryostat_inboard",
         externalcryogeometryparam.r_cryostat_inboard,
     )
     monkeypatch.setattr(
-        cryostat_fixture.data.fwbs,
+        cryostat.data.fwbs,
         "dr_pf_cryostat",
         externalcryogeometryparam.dr_pf_cryostat,
     )
     monkeypatch.setattr(
-        cryostat_fixture.data.fwbs,
+        cryostat.data.fwbs,
         "z_cryostat_half_inside",
         externalcryogeometryparam.z_cryostat_half_inside,
     )
     monkeypatch.setattr(
-        cryostat_fixture.data.fwbs,
+        cryostat.data.fwbs,
         "vol_cryostat",
         externalcryogeometryparam.vol_cryostat,
     )
+    monkeypatch.setattr(cryostat.data.fwbs, "m_vv", externalcryogeometryparam.m_vv)
+    monkeypatch.setattr(cryostat.data.fwbs, "vol_vv", externalcryogeometryparam.vol_vv)
     monkeypatch.setattr(
-        cryostat_fixture.data.fwbs, "m_vv", externalcryogeometryparam.m_vv
+        cryostat.data.fwbs, "den_steel", externalcryogeometryparam.den_steel
     )
-    monkeypatch.setattr(
-        cryostat_fixture.data.fwbs, "vol_vv", externalcryogeometryparam.vol_vv
-    )
-    monkeypatch.setattr(
-        cryostat_fixture.data.fwbs, "den_steel", externalcryogeometryparam.den_steel
-    )
-    monkeypatch.setattr(
-        cryostat_fixture.data.fwbs, "dewmkg", externalcryogeometryparam.dewmkg
-    )
+    monkeypatch.setattr(cryostat.data.fwbs, "dewmkg", externalcryogeometryparam.dewmkg)
     monkeypatch.setattr(
         pfcoil_variables, "r_pf_coil_outer", externalcryogeometryparam.r_pf_coil_outer
     )
@@ -202,31 +193,33 @@ def test_external_cryo_geometry(
         pfcoil_variables, "z_pf_coil_upper", externalcryogeometryparam.z_pf_coil_upper
     )
     monkeypatch.setattr(
-        buildings_variables, "dz_tf_cryostat", externalcryogeometryparam.dz_tf_cryostat
+        cryostat.data.buildings,
+        "dz_tf_cryostat",
+        externalcryogeometryparam.dz_tf_cryostat,
     )
     monkeypatch.setattr(
-        cryostat_fixture.data.blanket,
+        cryostat.data.blanket,
         "dz_pf_cryostat",
         externalcryogeometryparam.dz_pf_cryostat,
     )
 
-    cryostat_fixture.external_cryo_geometry()
+    cryostat.external_cryo_geometry()
 
-    assert cryostat_fixture.data.fwbs.r_cryostat_inboard == pytest.approx(
+    assert cryostat.data.fwbs.r_cryostat_inboard == pytest.approx(
         externalcryogeometryparam.expected_r_cryostat_inboard
     )
-    assert cryostat_fixture.data.fwbs.z_cryostat_half_inside == pytest.approx(
+    assert cryostat.data.fwbs.z_cryostat_half_inside == pytest.approx(
         externalcryogeometryparam.expected_z_cryostat_half_inside
     )
-    assert cryostat_fixture.data.fwbs.vol_cryostat == pytest.approx(
+    assert cryostat.data.fwbs.vol_cryostat == pytest.approx(
         externalcryogeometryparam.expected_vol_cryostat
     )
-    assert cryostat_fixture.data.fwbs.dewmkg == pytest.approx(
+    assert cryostat.data.fwbs.dewmkg == pytest.approx(
         externalcryogeometryparam.expected_dewmkg
     )
-    assert buildings_variables.dz_tf_cryostat == pytest.approx(
+    assert cryostat.data.buildings.dz_tf_cryostat == pytest.approx(
         externalcryogeometryparam.expected_dz_tf_cryostat
     )
-    assert cryostat_fixture.data.blanket.dz_pf_cryostat == pytest.approx(
+    assert cryostat.data.blanket.dz_pf_cryostat == pytest.approx(
         externalcryogeometryparam.expected_dz_pf_cryostat
     )
