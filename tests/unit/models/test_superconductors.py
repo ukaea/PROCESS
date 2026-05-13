@@ -3,6 +3,7 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.models import superconductors
+from process.models.superconductors import CroCoCableGeometry
 
 
 class IterscParam(NamedTuple):
@@ -221,19 +222,18 @@ def test_hijc_rebco():
             1e-6,  # 1 um
             2e-6,  # 2 um
             3e-6,  # 3 um
-            (
-                0.008,  # dia_croco_strand_tape_region
-                pytest.approx(959.3950997769347, rel=1e-3),  # n_croco_strand_hts_tapes
-                pytest.approx(
+            CroCoCableGeometry(
+                dia_croco_strand_tape_region=0.008,
+                n_croco_strand_hts_tapes=pytest.approx(959.3950997769347, rel=1e-3),
+                a_croco_strand_copper_total=pytest.approx(
                     3.8934279435385194e-05, rel=1e-3
-                ),  # a_croco_strand_copper_total
-                pytest.approx(
-                    1.5989918329615573e-05, rel=1e-3
-                ),  # a_croco_strand_hastelloy
-                pytest.approx(1.8285645798205533e-05, rel=1e-3),  # a_croco_strand_solder
-                pytest.approx(5.329972776538525e-06, rel=1e-3),  # a_croco_strand_rebco
-                pytest.approx(7.85398e-5, rel=1e-3),  # croco_strand_area
-                pytest.approx(5.5556e-3, rel=1e-3),  # dr_hts_tape
+                ),
+                a_croco_strand_hastelloy=pytest.approx(1.5989918329615573e-05, rel=1e-3),
+                a_croco_strand_solder=pytest.approx(1.8285645798205533e-05, rel=1e-3),
+                a_croco_strand_rebco=pytest.approx(5.329972776538525e-06, rel=1e-3),
+                a_croco_strand=pytest.approx(7.85398e-5, rel=1e-3),
+                dr_hts_tape=pytest.approx(5.5556e-3, rel=1e-3),
+                dx_croco_strand_tape_stack=pytest.approx(0.005756370598661608, rel=1e-3),
             ),
         ),
         (
@@ -242,15 +242,20 @@ def test_hijc_rebco():
             1e-6,
             2e-6,
             3e-6,
-            (
-                0.0044,
-                pytest.approx(527.6673048773141, rel=1e-6),
-                pytest.approx(1.0921535531100803e-05, rel=1e-6),
-                pytest.approx(4.836950294708712e-06, rel=1e-6),
-                pytest.approx(5.531407853957174e-06, rel=1e-6),
-                pytest.approx(1.612316764902904e-06, rel=1e-6),
-                pytest.approx(2.2902210444669593e-05, rel=1e-6),
-                pytest.approx(0.0030555555555555553, rel=1e-6),
+            CroCoCableGeometry(
+                dia_croco_strand_tape_region=0.0044,
+                n_croco_strand_hts_tapes=pytest.approx(527.6673048773141, rel=1e-6),
+                a_croco_strand_copper_total=pytest.approx(
+                    1.0921535531100803e-05, rel=1e-6
+                ),
+                a_croco_strand_hastelloy=pytest.approx(4.836950294708712e-06, rel=1e-6),
+                a_croco_strand_solder=pytest.approx(5.531407853957174e-06, rel=1e-6),
+                a_croco_strand_rebco=pytest.approx(1.612316764902904e-06, rel=1e-6),
+                a_croco_strand=pytest.approx(2.2902210444669593e-05, rel=1e-6),
+                dr_hts_tape=pytest.approx(0.0030555555555555553, rel=1e-6),
+                dx_croco_strand_tape_stack=pytest.approx(
+                    0.0031660038292638847, rel=1e-6
+                ),
             ),
         ),
     ],
@@ -263,12 +268,11 @@ def test_calculate_croco_cable_geometry(
     dx_hts_tape_hastelloy,
     expected,
 ):
-    result = superconductors.calculate_croco_cable_geometry(
+    result: CroCoCableGeometry = superconductors.calculate_croco_cable_geometry(
         dia_croco_strand,
         dx_croco_strand_copper,
         dx_hts_tape_rebco,
         dx_hts_tape_copper,
         dx_hts_tape_hastelloy,
     )
-    for r, e in zip(result, expected, strict=True):
-        assert r == e
+    assert result == expected
