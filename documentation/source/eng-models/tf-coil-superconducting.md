@@ -652,6 +652,6 @@ WIP
 
 WIP
 
-### Superconductor properties | `supercon_croco()`
+### Superconductor properties | `tf_croco_superconductor_properties()`
 
 ### Quench voltage | `croco_voltage()`

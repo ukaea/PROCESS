@@ -3419,7 +3419,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             (
                 tfcoil_variables.j_tf_wp_critical,
                 tfcoil_variables.temp_tf_superconductor_margin,
-            ) = self.supercon_croco(
+            ) = self.tf_croco_superconductor_properties(
                 a_tf_turn,
                 tfcoil_variables.b_tf_inboard_peak_with_ripple,
                 tfcoil_variables.c_tf_turn,
@@ -3633,7 +3633,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             dx_tf_turn_cable_space_average=dx_tf_turn_cable_space_average,
         )
 
-    def supercon_croco(
+    def tf_croco_superconductor_properties(
         self, a_tf_turn, b_tf_inboard_peak_symmetric, iop, thelium, output: bool
     ):
         """TF superconducting CroCo conductor using REBCO tape
