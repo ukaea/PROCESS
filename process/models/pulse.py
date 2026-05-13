@@ -11,7 +11,6 @@ from process.data_structure import (
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
-    pulse_variables,
 )
 
 logger = logging.getLogger(__name__)
@@ -38,7 +37,7 @@ class Pulse(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-        if pulse_variables.i_pulsed_plant == 1:
+        if self.data.pulse.i_pulsed_plant == 1:
             self.tohswg(output=output)
 
             #  Burn time calculation
@@ -62,7 +61,7 @@ class Pulse(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-        if pulse_variables.i_pulsed_plant != 1:
+        if self.data.pulse.i_pulsed_plant != 1:
             return
 
         #  Current/turn in Central Solenoid at beginning of pulse (A/turn)
