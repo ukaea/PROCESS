@@ -473,7 +473,7 @@ class Vacuum(Model):
                 else:
                     logger.error(
                         f"Newton's method not converging; check fusion power, te "
-                        f"{physics_variables.p_fusion_total_mw} = "
+                        f"{physics_variables.p_fusion_total_mw=} "
                         f"{physics_variables.temp_plasma_electron_vol_avg_kev=}"
                     )
 
