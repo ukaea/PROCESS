@@ -1,3 +1,5 @@
+"""Module containing the Pulse class for pulsed reactor calculations."""
+
 import logging
 
 from process.core import constants
@@ -16,10 +18,13 @@ logger = logging.getLogger(__name__)
 
 
 class Pulse(Model):
+    """Class containing pulsed reactor calculations"""
+
     def __init__(self):
         self.outfile = constants.NOUT
 
     def output(self):
+        """Write the results to the main output file (OUT.DAT)."""
         self.run(output=True)
 
     def run(self, output: bool = False):
@@ -98,7 +103,8 @@ class Pulse(Model):
         )
 
         # rho = 1.5e0 * 2.62e-4 * pfbusl / albusa
-        #  I have removed the fudge factor of 1.5 but included it in the value of rhopfbus
+        # I have removed the fudge factor of 1.5 but included it in the value of
+        #  rhopfbus
         rho = pfcoil_variables.rhopfbus * pfbusl / (albusa / 10000)
 
         #  Central Solenoid power source emf (volts)
@@ -154,8 +160,8 @@ class Pulse(Model):
                 constraint_variables.t_current_ramp_up_min,
             )
 
+    @staticmethod
     def calculate_burn_time(
-        self,
         vs_cs_pf_total_burn: float,
         v_plasma_loop_burn: float,
         t_plant_pulse_fusion_ramp: float,
@@ -187,7 +193,8 @@ class Pulse(Model):
 
         if t_plant_pulse_burn < 0.0e0:
             logger.error(
-                "Negative burn time available; reduce t_plant_pulse_fusion_ramp or raise PF coil V-s capabilit. %s %s %s %s",
+                "Negative burn time available; reduce t_plant_pulse_fusion_ramp or "
+                "raise PF coil V-s capability. %s %s %s %s",
                 t_plant_pulse_burn,
                 vs_cs_pf_total_burn,
                 v_plasma_loop_burn,

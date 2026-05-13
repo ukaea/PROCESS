@@ -1,3 +1,5 @@
+"""Module containing support structure calculations"""
+
 import logging
 import math
 
@@ -27,6 +29,7 @@ class Structure(Model):
         self.outfile = constants.NOUT  # output file unit
 
     def output(self):
+        """Write the results to the main output file (OUT.DAT)."""
         self.run(output=True)
 
     def run(self, output: bool = False):
