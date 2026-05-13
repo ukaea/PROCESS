@@ -7625,9 +7625,6 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
             turn_width - 2 * (insulation_thickness + steel_thickness),
         ]
 
-        axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
-        axis.set_ylim(-turn_width * 0.05, turn_width * 1.05)
-
     axis.minorticks_on()
     axis.set_title("WP Turn Structure")
     axis.set_xlabel("r [m]")

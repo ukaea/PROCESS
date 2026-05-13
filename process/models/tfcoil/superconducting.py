@@ -22,7 +22,11 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.models import superconductors
-from process.models.superconductors import SuperconductorMaterial, SuperconductorModel
+from process.models.superconductors import (
+    N_CROCO_STRANDS_TURN,
+    SuperconductorMaterial,
+    SuperconductorModel,
+)
 from process.models.tfcoil import quench
 from process.models.tfcoil.base import TFCoil, TFPlasmaCaseType
 
@@ -3019,9 +3023,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         # Setting the WP turn geometry / areas
         if tfcoil_variables.i_tf_turns_integer == 0:
             # Non-ingeger number of turns
-            avg_turn_geometry = CROCOAveragedTurnGeometry
 
-            avg_turn_geometry = self.tf_croco_averaged_turn_geometry(
+            avg_turn_geometry: CROCOAveragedTurnGeometry = self.tf_croco_averaged_turn_geometry(
                 j_tf_wp=tfcoil_variables.j_tf_wp,
                 dx_tf_turn_steel=tfcoil_variables.dx_tf_turn_steel,
                 dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
@@ -3955,7 +3958,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             self.outfile,
             "Number of CroCo strands in the cable (fixed) ",
             "",
-            6,
+            N_CROCO_STRANDS_TURN,
             "OP ",
         )
         po.ovarre(
