@@ -227,11 +227,64 @@ i_tf_turn_type: int = None
 vv_stress_quench: float = None
 """The Tresca stress experienced by the Vacuum Vessel when the SCTF coil quenches [Pa]"""
 
+# REBCO tape and CroCo strand variables
+
+dx_tf_hts_tape_rebco: float = None
+"""thickness of REBCO layer in tape (m) (`iteration variable 138`)"""
+
+dx_tf_hts_tape_copper: float = None
+"""thickness of copper layer in tape (m) (`iteration variable 139`)"""
+
+dx_tf_hts_tape_hastelloy: float = None
+"""thickness of Hastelloy layer in tape (m)"""
+
+dr_tf_hts_tape: float = None
+"""Mean width of tape (m)"""
+
+dx_tf_hts_tape_total: float = None
+"""thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m)"""
+
+dia_tf_croco_strand_tape_region: float = None
+"""Inner diameter of CroCo strand tape region (m)"""
+
+dx_tf_croco_strand_copper: float = None
+"""Thickness of CroCo strand copper tube (m) (`iteration variable 158`)"""
+
+copper_rrr: float = None
+"""residual resistivity ratio copper in TF superconducting cable"""
+
+tf_coppera_m2: float = None
+"""TF coil current / copper area (A/m2)"""
+
+tf_coppera_m2_max: float = None
+"""Maximum TF coil current / copper area (A/m2)"""
+
+dx_tf_croco_strand_tape_stack: float = None
+"""Width / thickness of tape stack in CroCo strand (m)"""
+
+n_tf_croco_strand_hts_tapes: float = None
+"""Number of HTS tapes in CroCo strand"""
+
+a_tf_croco_strand_rebco: float = None
+"""Area of REBCO in CroCo strand (m2)"""
+
+a_tf_croco_strand_copper_total: float = None
+"""Area of copper in CroCo strand (includes tapes and outer tube) (m2)"""
+
+a_tf_croco_strand_hastelloy: float = None
+"""Area of Hastelloy in CroCo strand (m2)"""
+
+a_tf_croco_strand_solder: float = None
+"""Area of solder in CroCo strand (m2)"""
+
+a_tf_croco_strand: float = None
+"""Total area of a CroCo strand (m2)"""
+
 
 # croco_strand
 
-croco_strand_area: float = None
-croco_strand_critical_current: float = None
+tf_croco_strand_area: float = None
+tf_croco_strand_critical_current: float = None
 
 
 # conductor
@@ -328,7 +381,26 @@ def init_superconducting_tf_coil_variables():
         c_tf_turn_cables_critical, \
         j_tf_superconductor, \
         i_tf_turn_type, \
-        vv_stress_quench
+        vv_stress_quench, \
+        dx_tf_hts_tape_rebco, \
+        dx_tf_hts_tape_copper, \
+        dx_tf_hts_tape_hastelloy, \
+        dr_tf_hts_tape, \
+        dx_tf_hts_tape_total, \
+        dia_tf_croco_strand_tape_region, \
+        dx_tf_croco_strand_copper, \
+        copper_rrr, \
+        tf_coppera_m2, \
+        tf_coppera_m2_max, \
+        dx_tf_croco_strand_tape_stack, \
+        n_tf_croco_strand_hts_tapes, \
+        a_tf_croco_strand_rebco, \
+        a_tf_croco_strand_copper_total, \
+        a_tf_croco_strand_hastelloy, \
+        a_tf_croco_strand_solder, \
+        a_tf_croco_strand, \
+        tf_croco_strand_area, \
+        tf_croco_strand_critical_current
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -392,3 +464,23 @@ def init_superconducting_tf_coil_variables():
     j_tf_superconductor = 0.0
     i_tf_turn_type = 1
     vv_stress_quench = 0.0
+
+    dx_tf_hts_tape_rebco = 1.0e-6
+    dx_tf_hts_tape_copper = 100.0e-6
+    dx_tf_hts_tape_hastelloy = 50.0e-6
+    dr_tf_hts_tape = 4.0e-3
+    dx_tf_hts_tape_total = 6.5e-5
+    dia_tf_croco_strand_tape_region = 0.0
+    dx_tf_croco_strand_copper = 2.5e-3
+    copper_rrr = 100.0
+    tf_coppera_m2 = 0.0
+    tf_coppera_m2_max = 1.0e8
+    dx_tf_croco_strand_tape_stack = 0.0
+    n_tf_croco_strand_hts_tapes = 0.0
+    a_tf_croco_strand_rebco = 0.0
+    a_tf_croco_strand_copper_total = 0.0
+    a_tf_croco_strand_hastelloy = 0.0
+    a_tf_croco_strand_solder = 0.0
+    a_tf_croco_strand = 0.0
+    tf_croco_strand_area = 0.0
+    tf_croco_strand_critical_current = 0.0

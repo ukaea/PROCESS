@@ -7599,31 +7599,19 @@ def plot_tf_croco_turn(axis: plt.Axes, fig, mfile: MFile, scan: int):
                 r_centre=center_x + ring_radius * np.cos(angle),
                 z_centre=center_y + ring_radius * np.sin(angle),
                 dia_croco_strand=mfile.get("dia_tf_turn_croco_cable", scan=scan),
-                dx_croco_strand_copper=mfile.get("dx_croco_strand_copper", scan=scan),
-                dr_hts_tape=mfile.get("dr_hts_tape", scan=scan),
+                dx_croco_strand_copper=mfile.get("dx_tf_croco_strand_copper", scan=scan),
+                dr_hts_tape=mfile.get("dr_tf_hts_tape", scan=scan),
                 dx_croco_strand_tape_stack=mfile.get(
-                    "dx_croco_strand_tape_stack", scan=scan
+                    "dx_tf_croco_strand_tape_stack", scan=scan
                 ),
                 n_croco_strand_hts_tapes=mfile.get(
-                    "n_croco_strand_hts_tapes", scan=scan
+                    "n_tf_croco_strand_hts_tapes", scan=scan
                 ),
-                dx_hts_tape_rebco=mfile.get("dx_hts_tape_rebco", scan=scan),
-                dx_hts_tape_copper=mfile.get("dx_hts_tape_copper", scan=scan),
-                dx_hts_tape_hastelloy=mfile.get("dx_hts_tape_hastelloy", scan=scan),
+                dx_hts_tape_rebco=mfile.get("dx_tf_hts_tape_rebco", scan=scan),
+                dx_hts_tape_copper=mfile.get("dx_tf_hts_tape_copper", scan=scan),
+                dx_hts_tape_hastelloy=mfile.get("dx_tf_hts_tape_hastelloy", scan=scan),
                 show_legend=False,
             )
-
-        # Cable strand packing parameters
-        strand_diameter = mfile.get("dia_tf_turn_superconducting_cable", scan=scan)
-        void_fraction = mfile.get("f_a_tf_turn_cable_space_extra_void", scan=scan)
-
-        # Cable space bounds
-        cable_bounds = [
-            insulation_thickness + steel_thickness,
-            insulation_thickness + steel_thickness,
-            turn_width - 2 * (insulation_thickness + steel_thickness),
-            turn_width - 2 * (insulation_thickness + steel_thickness),
-        ]
 
     axis.minorticks_on()
     axis.set_title("WP Turn Structure")
@@ -12603,16 +12591,16 @@ def plot_tf_corc_cable_summary_box(axis, fig, mfile: MFile, scan: int):
     textstr_cable = (
         f"$\\mathbf{{CroCo \\ Cable:}}$\n \n"
         f"Cable diameter: {mfile.get('dia_tf_turn_croco_cable', scan=scan) * 1e3:,.4f} mm\n"
-        f"Copper width: {mfile.get('dx_croco_strand_copper', scan=scan) * 1e3:,.4f} mm\n"
-        f"Diameter of solder tape region: {mfile.get('dia_croco_strand_tape_region', scan=scan) * 1e3:,.4f} mm\n"
-        f"Height of tape stack: {mfile.get('dx_croco_strand_tape_stack', scan=scan) * 1e3:,.4f} mm\n"
-        f"Width of HTS tape / tape stack: {mfile.get('dr_hts_tape', scan=scan) * 1e3:,.4f} mm\n"
-        f"Number of HTS tape layers: {int(mfile.get('n_croco_strand_hts_tapes', scan=scan))}\n \n"
-        f"Total copper area: {mfile.get('a_croco_strand_copper_total', scan=scan) * 1e6:,.4f} mm²\n"
-        f"Total hastelloy area: {mfile.get('a_croco_strand_hastelloy', scan=scan) * 1e6:,.4f} mm²\n"
-        f"Total solder area: {mfile.get('a_croco_strand_solder', scan=scan) * 1e6:,.4f} mm²\n"
-        f"Total superconductor area: {mfile.get('a_croco_strand_rebco', scan=scan) * 1e6:,.4f} mm²\n"
-        f"Total strand area: {mfile.get('a_croco_strand', scan=scan) * 1e6:,.4f} mm²\n"
+        f"Copper width: {mfile.get('dx_tf_croco_strand_copper', scan=scan) * 1e3:,.4f} mm\n"
+        f"Diameter of solder tape region: {mfile.get('dia_tf_croco_strand_tape_region', scan=scan) * 1e3:,.4f} mm\n"
+        f"Height of tape stack: {mfile.get('dx_tf_croco_strand_tape_stack', scan=scan) * 1e3:,.4f} mm\n"
+        f"Width of HTS tape / tape stack: {mfile.get('dr_tf_hts_tape', scan=scan) * 1e3:,.4f} mm\n"
+        f"Number of HTS tape layers: {int(mfile.get('n_tf_croco_strand_hts_tapes', scan=scan))}\n \n"
+        f"Total copper area: {mfile.get('a_tf_croco_strand_copper_total', scan=scan) * 1e6:,.4f} mm²\n"
+        f"Total hastelloy area: {mfile.get('a_tf_croco_strand_hastelloy', scan=scan) * 1e6:,.4f} mm²\n"
+        f"Total solder area: {mfile.get('a_tf_croco_strand_solder', scan=scan) * 1e6:,.4f} mm²\n"
+        f"Total superconductor area: {mfile.get('a_tf_croco_strand_rebco', scan=scan) * 1e6:,.4f} mm²\n"
+        f"Total strand area: {mfile.get('a_tf_croco_strand', scan=scan) * 1e6:,.4f} mm²\n"
     )
 
     axis.text(
@@ -14891,17 +14879,19 @@ def main_plot(
                 r_centre=0.0,
                 z_centre=0.0,
                 dia_croco_strand=m_file.get("dia_tf_turn_croco_cable", scan=scan),
-                dx_croco_strand_copper=m_file.get("dx_croco_strand_copper", scan=scan),
-                dr_hts_tape=m_file.get("dr_hts_tape", scan=scan),
+                dx_croco_strand_copper=m_file.get(
+                    "dx_tf_croco_strand_copper", scan=scan
+                ),
+                dr_hts_tape=m_file.get("dr_tf_hts_tape", scan=scan),
                 dx_croco_strand_tape_stack=m_file.get(
-                    "dx_croco_strand_tape_stack", scan=scan
+                    "dx_tf_croco_strand_tape_stack", scan=scan
                 ),
                 n_croco_strand_hts_tapes=m_file.get(
-                    "n_croco_strand_hts_tapes", scan=scan
+                    "n_tf_croco_strand_hts_tapes", scan=scan
                 ),
-                dx_hts_tape_rebco=m_file.get("dx_hts_tape_rebco", scan=scan),
-                dx_hts_tape_copper=m_file.get("dx_hts_tape_copper", scan=scan),
-                dx_hts_tape_hastelloy=m_file.get("dx_hts_tape_hastelloy", scan=scan),
+                dx_hts_tape_rebco=m_file.get("dx_tf_hts_tape_rebco", scan=scan),
+                dx_hts_tape_copper=m_file.get("dx_tf_hts_tape_copper", scan=scan),
+                dx_hts_tape_hastelloy=m_file.get("dx_tf_hts_tape_hastelloy", scan=scan),
                 show_legend=True,
             )
             plot_tf_corc_cable_summary_box(plot_205, figs[25], m_file, scan)
@@ -14909,10 +14899,10 @@ def main_plot(
                 axis=figs[25].add_subplot(339),
                 r_left=0.0,
                 z_bottom=0.0,
-                dr_hts_tape=m_file.get("dr_hts_tape", scan=scan),
-                dx_hts_tape_rebco=m_file.get("dx_hts_tape_rebco", scan=scan),
-                dx_hts_tape_copper=m_file.get("dx_hts_tape_copper", scan=scan),
-                dx_hts_tape_hastelloy=m_file.get("dx_hts_tape_hastelloy", scan=scan),
+                dr_hts_tape=m_file.get("dr_tf_hts_tape", scan=scan),
+                dx_hts_tape_rebco=m_file.get("dx_tf_hts_tape_rebco", scan=scan),
+                dx_hts_tape_copper=m_file.get("dx_tf_hts_tape_copper", scan=scan),
+                dx_hts_tape_hastelloy=m_file.get("dx_tf_hts_tape_hastelloy", scan=scan),
                 show_legend=True,
             )
         elif (

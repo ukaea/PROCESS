@@ -9,7 +9,10 @@ import numpy as np
 from scipy import optimize
 
 from process.core.exceptions import ProcessValueError
-from process.data_structure import rebco_variables
+from process.data_structure import (
+    rebco_variables,
+    superconducting_tf_coil_variables,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -1148,15 +1151,15 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     croco_cable_geometry: CroCoCableGeometry = calculate_croco_cable_geometry(
         dia_croco_strand=dia_croco_strand,
         dx_croco_strand_copper=dx_croco_strand_copper,
-        dx_hts_tape_rebco=rebco_variables.dx_hts_tape_rebco,
-        dx_hts_tape_copper=rebco_variables.dx_hts_tape_copper,
-        dx_hts_tape_hastelloy=rebco_variables.dx_hts_tape_hastelloy,
+        dx_hts_tape_rebco=superconducting_tf_coil_variables.dx_tf_hts_tape_rebco,
+        dx_hts_tape_copper=superconducting_tf_coil_variables.dx_tf_hts_tape_copper,
+        dx_hts_tape_hastelloy=superconducting_tf_coil_variables.dx_tf_hts_tape_hastelloy,
     )
 
-    rebco_variables.dia_croco_strand_tape_region = (
+    superconducting_tf_coil_variables.dia_tf_croco_strand_tape_region = (
         croco_cable_geometry.dia_croco_strand_tape_region
     )
-    rebco_variables.n_croco_strand_hts_tapes = (
+    superconducting_tf_coil_variables.n_tf_croco_strand_hts_tapes = (
         croco_cable_geometry.n_croco_strand_hts_tapes
     )
     a_croco_strand_copper_total = croco_cable_geometry.a_croco_strand_copper_total
@@ -1164,16 +1167,20 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     a_croco_strand_solder = croco_cable_geometry.a_croco_strand_solder
     a_croco_strand_rebco = croco_cable_geometry.a_croco_strand_rebco
     a_croco_strand = croco_cable_geometry.a_croco_strand
-    rebco_variables.dr_hts_tape = croco_cable_geometry.dr_hts_tape
-    rebco_variables.dx_croco_strand_tape_stack = (
+    superconducting_tf_coil_variables.dr_tf_hts_tape = croco_cable_geometry.dr_hts_tape
+    superconducting_tf_coil_variables.dx_tf_croco_strand_tape_stack = (
         croco_cable_geometry.dx_croco_strand_tape_stack
     )
 
-    rebco_variables.a_croco_strand_copper_total = a_croco_strand_copper_total
-    rebco_variables.a_croco_strand_hastelloy = a_croco_strand_hastelloy
-    rebco_variables.a_croco_strand_solder = a_croco_strand_solder
-    rebco_variables.a_croco_strand_rebco = a_croco_strand_rebco
-    rebco_variables.a_croco_strand = a_croco_strand
+    superconducting_tf_coil_variables.a_croco_strand_copper_total = (
+        a_croco_strand_copper_total
+    )
+    superconducting_tf_coil_variables.a_tf_croco_strand_hastelloy = (
+        a_croco_strand_hastelloy
+    )
+    superconducting_tf_coil_variables.a_tf_croco_strand_solder = a_croco_strand_solder
+    superconducting_tf_coil_variables.a_tf_croco_strand_rebco = a_croco_strand_rebco
+    superconducting_tf_coil_variables.a_tf_croco_strand = a_croco_strand
 
     croco_strand_critical_current = j_crit_sc * a_croco_strand_rebco
 
@@ -1294,9 +1301,9 @@ def superconductor_current_density_margin(
             b_superconductor,
             bc20m,
             tc0m,
-            rebco_variables.dr_hts_tape,
-            rebco_variables.dx_hts_tape_rebco,
-            rebco_variables.dx_hts_tape_total,
+            rebco_variables.dr_tf_hts_tape,
+            rebco_variables.dx_tf_hts_tape_rebco,
+            rebco_variables.dx_tf_hts_tape_total,
         )[0],
     }
 

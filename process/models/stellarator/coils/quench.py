@@ -75,7 +75,7 @@ def calculate_quench_protection(coilcurrent, data: DataStructure):
     )
 
     # Also give the copper current density (copper A/m2) for REBCO quench calculations:
-    rebco_variables.coppera_m2 = (
+    rebco_variables.tf_coppera_m2 = (
         coilcurrent
         * 1.0e6
         / (
