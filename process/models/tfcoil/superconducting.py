@@ -1318,9 +1318,6 @@ class SuperconductingTFCoil(TFCoil):
 
         Raises
         ------
-        ValueError
-            If i_tf_wp_geom or i_tf_case_geom are not valid SuperconductingTFWPShapeType
-            or TFPlasmaCaseType, respectively.
         ProcessValueError
             If i_tf_wp_geom or i_tf_case_geom are not valid SuperconductingTFWPShapeType
             or TFPlasmaCaseType, respectively.
