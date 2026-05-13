@@ -8,7 +8,6 @@ from process.data_structure import (
     divertor_variables,
     heat_transport_variables,
     physics_variables,
-    primary_pumping_variables,
 )
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
 from process.models.engineering.ivc_functions import (
@@ -379,7 +378,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                     self.outfile,
                     "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
                     "(p_fw_blkt_coolant_pump_mw)",
-                    primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
+                    self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
                     "OP ",
                 )
 

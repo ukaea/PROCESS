@@ -20,7 +20,6 @@ from process.data_structure import (
     pfcoil_variables,
     physics_variables,
     power_variables,
-    primary_pumping_variables,
     tfcoil_variables,
 )
 
@@ -805,7 +804,7 @@ class Power(Model):
             PumpingPowerModelTypes.MECHANICAL,
             PumpingPowerModelTypes.MECHANICAL_WITH_PRESSURE_DROP,
         }:
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
+            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
                 heat_transport_variables.p_fw_coolant_pump_mw
                 + heat_transport_variables.p_blkt_coolant_pump_mw
             )
@@ -816,7 +815,7 @@ class Power(Model):
         # The difference should be lost as secondary heat.
 
         power_variables.p_fw_blkt_coolant_pump_elec_mw = (
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
             / self.data.fwbs.eta_coolant_pump_electric
         )
         power_variables.p_shld_coolant_pump_elec_mw = (
@@ -836,7 +835,7 @@ class Power(Model):
 
         # Total mechanical pump power needed (deposited in coolant)
         power_variables.p_coolant_pump_total_mw = (
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
             + heat_transport_variables.p_blkt_breeder_pump_mw
             + heat_transport_variables.p_shld_coolant_pump_mw
             + heat_transport_variables.p_div_coolant_pump_mw
@@ -884,7 +883,7 @@ class Power(Model):
                 + self.data.fwbs.p_fw_rad_total_mw
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 + heat_transport_variables.p_blkt_breeder_pump_mw
-                + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+                + self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
                 + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.p_beam_shine_through_mw
@@ -895,7 +894,7 @@ class Power(Model):
                 self.data.fwbs.p_fw_nuclear_heat_total_mw
                 + self.data.fwbs.p_fw_rad_total_mw
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
-                + primary_pumping_variables.p_fw_blkt_coolant_pump_mw
+                + self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
                 + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
                 + current_drive_variables.p_beam_shine_through_mw
@@ -1192,7 +1191,7 @@ class Power(Model):
             self.outfile,
             "Mechancial pumping power deposited in Blanket(s) and FW coolant [MW]",
             "(p_fw_blkt_coolant_pump_mw)",
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
+            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
         )
         po.ovarre(
             self.outfile,

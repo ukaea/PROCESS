@@ -8,7 +8,6 @@ from process.data_structure import (
     global_variables,
     heat_transport_variables,
     physics_variables,
-    primary_pumping_variables,
     tfcoil_variables,
 )
 
@@ -1036,22 +1035,26 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.p_plasma_separatrix_mw,
     )
 
-    monkeypatch.setattr(primary_pumping_variables, "p_he", powerflowcalcparam.p_he)
-
-    monkeypatch.setattr(primary_pumping_variables, "dp_he", powerflowcalcparam.dp_he)
+    monkeypatch.setattr(ccfe_hcpb.data.primary_pumping, "p_he", powerflowcalcparam.p_he)
 
     monkeypatch.setattr(
-        primary_pumping_variables, "gamma_he", powerflowcalcparam.gamma_he
-    )
-
-    monkeypatch.setattr(primary_pumping_variables, "t_in_bb", powerflowcalcparam.t_in_bb)
-
-    monkeypatch.setattr(
-        primary_pumping_variables, "t_out_bb", powerflowcalcparam.t_out_bb
+        ccfe_hcpb.data.primary_pumping, "dp_he", powerflowcalcparam.dp_he
     )
 
     monkeypatch.setattr(
-        primary_pumping_variables,
+        ccfe_hcpb.data.primary_pumping, "gamma_he", powerflowcalcparam.gamma_he
+    )
+
+    monkeypatch.setattr(
+        ccfe_hcpb.data.primary_pumping, "t_in_bb", powerflowcalcparam.t_in_bb
+    )
+
+    monkeypatch.setattr(
+        ccfe_hcpb.data.primary_pumping, "t_out_bb", powerflowcalcparam.t_out_bb
+    )
+
+    monkeypatch.setattr(
+        ccfe_hcpb.data.primary_pumping,
         "p_fw_blkt_coolant_pump_mw",
         powerflowcalcparam.p_fw_blkt_coolant_pump_mw,
     )
@@ -1078,7 +1081,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.expected_p_div_coolant_pump_mw
     )
 
-    assert primary_pumping_variables.p_fw_blkt_coolant_pump_mw == pytest.approx(
+    assert ccfe_hcpb.data.primary_pumping.p_fw_blkt_coolant_pump_mw == pytest.approx(
         powerflowcalcparam.expected_p_fw_blkt_coolant_pump_mw
     )
 

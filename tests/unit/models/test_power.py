@@ -16,7 +16,6 @@ from process.data_structure import (
     power_variables,
     tfcoil_variables,
 )
-from process.data_structure import primary_pumping_variables as ppv
 
 
 @pytest.fixture
@@ -2840,7 +2839,9 @@ def test_power2(power2param, monkeypatch, power):
     monkeypatch.setattr(tfcoil_variables, "eff_tf_cryo", power2param.eff_tf_cryo)
 
     monkeypatch.setattr(
-        ppv, "p_fw_blkt_coolant_pump_mw", power2param.p_fw_blkt_coolant_pump_mw
+        power.data.primary_pumping,
+        "p_fw_blkt_coolant_pump_mw",
+        power2param.p_fw_blkt_coolant_pump_mw,
     )
 
     monkeypatch.setattr(

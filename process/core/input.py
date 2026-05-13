@@ -448,24 +448,12 @@ INPUT_VARIABLES = {
     "dx_div_plate": InputVariable(
         data_structure.divertor_variables, float, range=(0.01, 1.0)
     ),
-    "dp_blkt": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
-    ),
-    "dp_fw": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
-    ),
-    "dp_fw_blkt": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
-    ),
-    "dp_he": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
-    ),
-    "dp_liq": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
-    ),
-    "f_p_fw_blkt_pump": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(0.0, 10.0)
-    ),
+    "dp_blkt": InputVariable("primary_pumping", float, range=(0.0, 10000000.0)),
+    "dp_fw": InputVariable("primary_pumping", float, range=(0.0, 10000000.0)),
+    "dp_fw_blkt": InputVariable("primary_pumping", float, range=(0.0, 10000000.0)),
+    "dp_he": InputVariable("primary_pumping", float, range=(0.0, 10000000.0)),
+    "dp_liq": InputVariable("primary_pumping", float, range=(0.0, 10000000.0)),
+    "f_p_fw_blkt_pump": InputVariable("primary_pumping", float, range=(0.0, 10.0)),
     "dr_blkt_inboard": InputVariable("build", float, range=(0.0, 10.0)),
     "dr_blkt_outboard": InputVariable("build", float, range=(0.0, 10.0)),
     "dr_bore": InputVariable("build", float, range=(0.0, 50.0)),
@@ -746,9 +734,7 @@ INPUT_VARIABLES = {
     "eta_cd_norm_ecrh": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
-    "gamma_he": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(1.0, 2.0)
-    ),
+    "gamma_he": InputVariable("primary_pumping", float, range=(1.0, 2.0)),
     "eta_cd_norm_hcd_primary_max": InputVariable(
         data_structure.constraint_variables, float, range=(0.01, 10.0)
     ),
@@ -972,9 +958,7 @@ INPUT_VARIABLES = {
     "outgasindex": InputVariable("vacuum", float, range=(1e-06, 1000.0)),
     "temp_blkt_coolant_out": InputVariable("fwbs", float, range=(450.0, 900.0)),
     "outlet_temp_liq": InputVariable("fwbs", float, range=(508.0, 1500.0)),
-    "p_he": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(0.0, 100000000.0)
-    ),
+    "p_he": InputVariable("primary_pumping", float, range=(0.0, 100000000.0)),
     "paris_coefficient": InputVariable("cs_fatigue", float, range=(1e-20, 10.0)),
     "paris_power_law": InputVariable("cs_fatigue", float, range=(1.0, 10.0)),
     "pres_vv_chamber_base": InputVariable("vacuum", float, range=(1e-08, 0.001)),
@@ -1237,15 +1221,11 @@ INPUT_VARIABLES = {
         "times", float, range=(0.0, 10000.0)
     ),
     "t_plant_pulse_fusion_ramp": InputVariable("times", float, range=(0.0, 10000.0)),
-    "t_in_bb": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
-    ),
+    "t_in_bb": InputVariable("primary_pumping", float, range=(200.0, 1000.0)),
     "t_tf_quench_detection": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 100.0)
     ),
-    "t_out_bb": InputVariable(
-        data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
-    ),
+    "t_out_bb": InputVariable("primary_pumping", float, range=(200.0, 1000.0)),
     "t_plant_pulse_coil_precharge": InputVariable("times", float, range=(0.0, 10000.0)),
     "t_plant_pulse_plasma_current_ramp_down": InputVariable(
         "times", float, range=(0.0, 10000.0)

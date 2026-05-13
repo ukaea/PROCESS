@@ -13,7 +13,6 @@ from process.data_structure import (
     divertor_variables,
     heat_transport_variables,
     physics_variables,
-    primary_pumping_variables,
     tfcoil_variables,
 )
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
@@ -836,11 +835,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             # Mechanical pumping power is calculated using specified pressure drop for
             # first wall and blanket circuit, including heat exchanger and pipes
             pfactor = (
-                primary_pumping_variables.p_he
-                / (primary_pumping_variables.p_he - primary_pumping_variables.dp_he)
+                self.data.primary_pumping.p_he
+                / (self.data.primary_pumping.p_he - self.data.primary_pumping.dp_he)
             ) ** (
-                (primary_pumping_variables.gamma_he - 1)
-                / primary_pumping_variables.gamma_he
+                (self.data.primary_pumping.gamma_he - 1)
+                / self.data.primary_pumping.gamma_he
             )
             # N.B. Currenlty i_p_coolant_pumping==3 uses seperate variables found in
             # primary_pumping_variables rather than self.data.fwbs.
@@ -850,9 +849,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             # i_p_coolant_pumping==2 are assumed to be the pressure at the
             # blanket oulet/pump inlet. The equation below is used for i_p_coolant_pumping==2:
             # pfactor = ((pressure+deltap)/pressure)**((gamma-1.0d0)/gamma)
-            t_in_compressor = primary_pumping_variables.t_in_bb / pfactor
+            t_in_compressor = self.data.primary_pumping.t_in_bb / pfactor
             dt_he = (
-                primary_pumping_variables.t_out_bb - primary_pumping_variables.t_in_bb
+                self.data.primary_pumping.t_out_bb - self.data.primary_pumping.t_in_bb
             )
             fpump = t_in_compressor / (self.data.fwbs.etaiso * dt_he) * (pfactor - 1)
             p_plasma = (
@@ -861,8 +860,8 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                 + self.data.fwbs.psurffwo
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
             )
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
-                primary_pumping_variables.f_p_fw_blkt_pump
+            self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
+                self.data.primary_pumping.f_p_fw_blkt_pump
                 * fpump
                 / (1 - fpump)
                 * p_plasma
@@ -891,7 +890,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     self.outfile,
                     "Pressure drop in FW and blanket coolant incl. hx and pipes (Pa)",
                     "(dp_he)",
-                    primary_pumping_variables.dp_he,
+                    self.data.primary_pumping.dp_he,
                 )
                 po.ovarre(
                     self.outfile,
@@ -918,26 +917,26 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
                     self.outfile,
                     "Coolant pump outlet/Inlet temperature of FW & blanket (K)",
                     "(t_in_bb)",
-                    primary_pumping_variables.t_in_bb,
+                    self.data.primary_pumping.t_in_bb,
                 )
                 po.ovarre(
                     self.outfile,
                     "Outlet temperature of FW & blanket (K)",
                     "(t_out_bb)",
-                    primary_pumping_variables.t_out_bb,
+                    self.data.primary_pumping.t_out_bb,
                 )
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
                     "(p_fw_blkt_coolant_pump_mw)",
-                    primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
+                    self.data.primary_pumping.p_fw_blkt_coolant_pump_mw,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Pumping power for FW and Blanket multiplier factor",
                     "(f_p_fw_blkt_pump)",
-                    primary_pumping_variables.f_p_fw_blkt_pump,
+                    self.data.primary_pumping.f_p_fw_blkt_pump,
                     "IP ",
                 )
                 po.ovarre(
