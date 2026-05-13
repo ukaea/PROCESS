@@ -9,19 +9,17 @@ from process.data_structure import (
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
-    pulse_variables,
 )
-from process.models.pulse import Pulse
 
 
 @pytest.fixture
-def pulse():
+def pulse(process_models):
     """Provides Pulse object for testing.
 
     :returns: initialised Pulse object
     :rtype: process.pulse.Pulse
     """
-    return Pulse()
+    return process_models.pulse
 
 
 class TohswgParam(NamedTuple):
@@ -1238,7 +1236,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     monkeypatch.setattr(numerics, "active_constraints", tohswgparam.active_constraints)
 
-    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", tohswgparam.i_pulsed_plant)
+    monkeypatch.setattr(pulse.data.pulse, "i_pulsed_plant", tohswgparam.i_pulsed_plant)
 
     pulse.tohswg(output=False)
 
@@ -1265,8 +1263,8 @@ def test_calculate_burn_time_valid(
     v_plasma_loop_burn,
     t_plant_pulse_fusion_ramp,
     expected,
+    pulse,
 ):
-    pulse = Pulse()
     result = pulse.calculate_burn_time(
         vs_cs_pf_total_burn=vs_cs_pf_total_burn,
         v_plasma_loop_burn=v_plasma_loop_burn,

@@ -16,7 +16,6 @@ from process.data_structure import (
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
-    pulse_variables,
     tfcoil_variables,
 )
 
@@ -3784,11 +3783,11 @@ def test_acc2253(acc2253param, monkeypatch, costs):
         acc2253param.p_plant_electric_net_mw,
     )
 
-    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", acc2253param.i_pulsed_plant)
+    monkeypatch.setattr(costs.data.pulse, "i_pulsed_plant", acc2253param.i_pulsed_plant)
 
-    monkeypatch.setattr(pulse_variables, "dtstor", acc2253param.dtstor)
+    monkeypatch.setattr(costs.data.pulse, "dtstor", acc2253param.dtstor)
 
-    monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
+    monkeypatch.setattr(costs.data.pulse, "istore", acc2253param.istore)
 
     monkeypatch.setattr(
         costs.data.times, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
@@ -5518,11 +5517,11 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs):
         acc2253param.p_plant_electric_net_mw,
     )
 
-    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", acc2253param.i_pulsed_plant)
+    monkeypatch.setattr(costs.data.pulse, "i_pulsed_plant", acc2253param.i_pulsed_plant)
 
-    monkeypatch.setattr(pulse_variables, "dtstor", acc2253param.dtstor)
+    monkeypatch.setattr(costs.data.pulse, "dtstor", acc2253param.dtstor)
 
-    monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
+    monkeypatch.setattr(costs.data.pulse, "istore", acc2253param.istore)
 
     monkeypatch.setattr(
         costs.data.times, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn

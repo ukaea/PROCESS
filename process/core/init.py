@@ -43,7 +43,6 @@ from process.data_structure.power_variables import init_power_variables
 from process.data_structure.primary_pumping_variables import (
     init_primary_pumping_variables,
 )
-from process.data_structure.pulse_variables import init_pulse_variables
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.scan_variables import init_scan_variables
 from process.data_structure.stellarator_variables import init_stellarator_variables
@@ -282,7 +281,6 @@ def init_all_module_vars():
     init_pf_power_variables()
     init_build_variables()
     init_constraint_variables()
-    init_pulse_variables()
     init_rebco_variables()
     init_dcll_module()
     init_power_variables()
@@ -821,7 +819,7 @@ def check_process(inputs, data):  # noqa: ARG001
             )
 
     #  Pulsed power plant model
-    if data_structure.pulse_variables.i_pulsed_plant == 1:
+    if data.pulse.i_pulsed_plant == 1:
         data_structure.global_variables.icase = "Pulsed tokamak model"
     else:
         data_structure.buildings_variables.esbldgm3 = 0.0

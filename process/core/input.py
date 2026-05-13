@@ -229,7 +229,7 @@ INPUT_VARIABLES = {
         data_structure.heat_transport_variables, float, range=(1000000.0, 10000000000.0)
     ),
     "bcritsc": InputVariable(data_structure.tfcoil_variables, float, range=(10.0, 50.0)),
-    "bctmp": InputVariable(data_structure.pulse_variables, float, range=(1.0, 800.0)),
+    "bctmp": InputVariable("pulse", float, range=(1.0, 800.0)),
     "e_beam_kev": InputVariable(
         data_structure.current_drive_variables, float, range=(1.0, 1000000.0)
     ),
@@ -528,7 +528,7 @@ INPUT_VARIABLES = {
     "drtop": InputVariable(data_structure.tfcoil_variables, float, range=(-1.5, 1.5)),
     "drveff": InputVariable(data_structure.ife_variables, float, range=(0.01, 1.0)),
     "dtlife": InputVariable("costs", float, range=(0.0, 15.0)),
-    "dtstor": InputVariable(data_structure.pulse_variables, float, range=(50.0, 500.0)),
+    "dtstor": InputVariable("pulse", float, range=(50.0, 500.0)),
     "dx_fw_module": InputVariable("fwbs", float, range=(0.0005, 0.1)),
     "dz_tf_cryostat": InputVariable(
         data_structure.buildings_variables, float, range=(0.0, 20.0)
@@ -1657,7 +1657,7 @@ INPUT_VARIABLES = {
     "i_plasma_wall_gap": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1]
     ),
-    "i_pulsed_plant": InputVariable(data_structure.pulse_variables, int, choices=[0, 1]),
+    "i_pulsed_plant": InputVariable("pulse", int, choices=[0, 1]),
     "i_q95_fixed": InputVariable(
         data_structure.constraint_variables, int, choices=[0, 1]
     ),
@@ -1747,7 +1747,7 @@ INPUT_VARIABLES = {
     ),
     "istell": InputVariable(data_structure.stellarator_variables, int, range=(0, 6)),
     "isthtr": InputVariable(data_structure.stellarator_variables, int, range=(1, 3)),
-    "istore": InputVariable(data_structure.pulse_variables, int, range=(1, 3)),
+    "istore": InputVariable("pulse", int, range=(1, 3)),
     "i_cs_superconductor": InputVariable(
         data_structure.pfcoil_variables, int, range=(1, 9)
     ),
@@ -1756,7 +1756,7 @@ INPUT_VARIABLES = {
     ),
     "itart": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
     "itartpf": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
-    "itcycl": InputVariable(data_structure.pulse_variables, int, range=(1, 3)),
+    "itcycl": InputVariable("pulse", int, range=(1, 3)),
     "i_pflux_fw_neutron": InputVariable(
         data_structure.physics_variables, int, range=(1, 2)
     ),

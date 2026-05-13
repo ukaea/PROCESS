@@ -16,7 +16,6 @@ from process.data_structure import (
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
-    pulse_variables,
     tfcoil_variables,
 )
 from process.models.tfcoil.base import TFConductorModel
@@ -2600,8 +2599,8 @@ class Costs(Model):
         #  Thermal storage options for a pulsed reactor
         #  See F/MPE/MOD/CAG/PROCESS/PULSE/0008 and 0014
 
-        if pulse_variables.i_pulsed_plant == 1:
-            if pulse_variables.istore == 1:
+        if self.data.pulse.i_pulsed_plant == 1:
+            if self.data.pulse.istore == 1:
                 #  Option 1 from ELECTROWATT report
                 #  Pulsed Fusion Reactor Study : AEA FUS 205
 
@@ -2623,7 +2622,7 @@ class Costs(Model):
                 #  Externally fired superheater
                 self.data.costs.c2253 += 29.0e0
 
-            elif pulse_variables.istore == 2:
+            elif self.data.pulse.istore == 2:
                 #  Option 2 from ELECTROWATT report
                 #  Pulsed Fusion Reactor Study : AEA FUS 205
 
@@ -2652,13 +2651,13 @@ class Costs(Model):
                 #  Increased cooling water system capacity
                 self.data.costs.c2253 += 18.0e0
 
-            elif pulse_variables.istore == 3:
+            elif self.data.pulse.istore == 3:
                 #  Simplistic approach that assumes that a large stainless steel
                 #  block acts as the thermal storage medium. No account is taken
                 #  of the cost of the piping within the block, etc.
                 #
                 #  shcss is the specific heat capacity of stainless steel (J/kg/K)
-                #  pulse_variables.dtstor is the maximum allowable temperature change in the
+                #  self.data.pulse.dtstor is the maximum allowable temperature change in the
                 #  stainless steel block (input)
 
                 shcss = 520.0e0
@@ -2666,15 +2665,15 @@ class Costs(Model):
                     self.data.costs.ucblss
                     * (heat_transport_variables.p_plant_primary_heat_mw * 1.0e6)
                     * self.data.times.t_plant_pulse_no_burn
-                    / (shcss * pulse_variables.dtstor)
+                    / (shcss * self.data.pulse.dtstor)
                 )
 
             else:
                 raise ProcessValueError(
-                    "Illegal value for istore", istore=pulse_variables.istore
+                    "Illegal value for istore", istore=self.data.pulse.istore
                 )
 
-        if pulse_variables.istore < 3:
+        if self.data.pulse.istore < 3:
             #  Scale self.data.costs.c2253 with net electric power
 
             self.data.costs.c2253 = (

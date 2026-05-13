@@ -24,7 +24,6 @@ from process.data_structure import (
     impurity_radiation_module,
     numerics,
     physics_variables,
-    pulse_variables,
     stellarator_variables,
 )
 from process.models.physics import impurity_radiation
@@ -430,7 +429,7 @@ class Physics(Model):
         # =======================================================
 
         # Set PF coil ramp times
-        if pulse_variables.i_pulsed_plant != 1:
+        if self.data.pulse.i_pulsed_plant != 1:
             if self.data.times.i_t_current_ramp_up == 0:
                 self.data.times.t_plant_pulse_plasma_current_ramp_up = (
                     physics_variables.plasma_current / 5.0e5
