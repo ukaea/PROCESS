@@ -10,7 +10,6 @@ from scipy import optimize
 
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
-    rebco_variables,
     superconducting_tf_coil_variables,
 )
 
@@ -1301,9 +1300,9 @@ def superconductor_current_density_margin(
             b_superconductor,
             bc20m,
             tc0m,
-            rebco_variables.dr_tf_hts_tape,
-            rebco_variables.dx_tf_hts_tape_rebco,
-            rebco_variables.dx_tf_hts_tape_total,
+            superconducting_tf_coil_variables.dr_tf_hts_tape,
+            superconducting_tf_coil_variables.dx_tf_hts_tape_rebco,
+            superconducting_tf_coil_variables.dx_tf_hts_tape_total,
         )[0],
     }
 

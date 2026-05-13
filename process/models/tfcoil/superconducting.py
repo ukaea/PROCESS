@@ -17,7 +17,6 @@ from process.data_structure import (
     global_variables,
     pfcoil_variables,
     physics_variables,
-    rebco_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
@@ -2460,9 +2459,9 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 b_conductor=b_tf_inboard_peak,
                 b_c20max=bc20m,
                 t_c0=tc0m,
-                dr_hts_tape=rebco_variables.dr_tf_hts_tape,
-                dx_hts_tape_rebco=rebco_variables.dx_tf_hts_tape_rebco,
-                dx_hts_tape_total=rebco_variables.dx_tf_hts_tape_total,
+                dr_hts_tape=superconducting_tf_coil_variables.dr_tf_hts_tape,
+                dx_hts_tape_rebco=superconducting_tf_coil_variables.dx_tf_hts_tape_rebco,
+                dx_hts_tape_total=superconducting_tf_coil_variables.dx_tf_hts_tape_total,
             )
             # Scale for the copper area fraction of the cable
             j_cables_critical = j_superconductor_critical * (

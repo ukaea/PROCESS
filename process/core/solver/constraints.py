@@ -1541,7 +1541,7 @@ def constraint_equation_75(constraint_registration, _data):
     """
     return leq(
         data_structure.rebco_variables.coppera_m2,
-        data_structure.rebco_variables.tf_coppera_m2_max,
+        data_structure.superconducting_tf_coil_variables.tf_coppera_m2_max,
         constraint_registration,
     )
 
