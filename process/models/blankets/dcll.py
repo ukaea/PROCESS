@@ -4,7 +4,6 @@ from process.core import (
 )
 from process.data_structure import (
     current_drive_variables,
-    dcll_variables,
     divertor_variables,
     heat_transport_variables,
     physics_variables,
@@ -490,35 +489,35 @@ class DCLL(InboardBlanket, OutboardBlanket):
         """
         # If there are FCIs then how much of the radial build is FCI?
         if self.data.fwbs.i_blkt_liquid_breeder_channel_type > 0:
-            dcll_variables.r_fci = (
+            self.data.dcll.r_fci = (
                 2 * self.data.fwbs.nopol * self.data.fwbs.th_wall_secondary
             )
         else:
-            dcll_variables.r_fci = 0.0
+            self.data.dcll.r_fci = 0.0
 
         # Back wall set 0.02m thickness but will vary BZ (structure and breeder) thickness
-        dcll_variables.bz_r_ib = self.data.build.blbuith - dcll_variables.r_fci
-        dcll_variables.bz_r_ob = self.data.build.blbuoth - dcll_variables.r_fci
+        self.data.dcll.bz_r_ib = self.data.build.blbuith - self.data.dcll.r_fci
+        self.data.dcll.bz_r_ob = self.data.build.blbuoth - self.data.dcll.r_fci
         # Back wall thickness (m)
-        dcll_variables.r_backwall = 2.0e-2
+        self.data.dcll.r_backwall = 2.0e-2
 
         # Manifold/BSS (m) also vars from elsewhere in process but set here
         self.data.build.blbmith = (
             self.data.build.dr_blkt_inboard
-            - dcll_variables.r_backwall
+            - self.data.dcll.r_backwall
             - self.data.build.blbuith
         )
         self.data.build.blbmoth = (
             self.data.build.dr_blkt_outboard
-            - dcll_variables.r_backwall
+            - self.data.dcll.r_backwall
             - self.data.build.blbuoth
         )
 
         # Fraction of EUROfer (volume composition for EURO + He structures)
-        dcll_variables.f_vol_stff_plates = 0.91
-        dcll_variables.f_vol_stl_bz_struct = 0.53
-        dcll_variables.f_vol_stl_back_wall = 0.86
-        dcll_variables.f_vol_stl_fw = 0.86
+        self.data.dcll.f_vol_stff_plates = 0.91
+        self.data.dcll.f_vol_stl_bz_struct = 0.53
+        self.data.dcll.f_vol_stl_back_wall = 0.86
+        self.data.dcll.f_vol_stl_fw = 0.86
 
         # Radial Fraction of BZ Liquid Breeder/Coolant (from DEMO)
         self.data.fwbs.r_f_liq_ib = 0.75
@@ -527,79 +526,79 @@ class DCLL(InboardBlanket, OutboardBlanket):
         self.data.fwbs.w_f_liq_ob = self.data.fwbs.r_f_liq_ib
 
         # Manifold/BSS Fractions
-        dcll_variables.f_vol_mfbss_stl = 0.5129
-        dcll_variables.f_vol_mfbss_he = 0.0435
-        dcll_variables.f_vol_mfbss_pbli = 0.4436
+        self.data.dcll.f_vol_mfbss_stl = 0.5129
+        self.data.dcll.f_vol_mfbss_he = 0.0435
+        self.data.dcll.f_vol_mfbss_pbli = 0.4436
 
         # Calculate Volumes
         if self.data.fwbs.i_blkt_inboard == 1:
             # IB and OB blanket
 
             # BZ
-            dcll_variables.vol_bz_struct = (
+            self.data.dcll.vol_bz_struct = (
                 self.data.fwbs.vol_blkt_inboard
-                * dcll_variables.bz_r_ib
+                * self.data.dcll.bz_r_ib
                 * (1 - self.data.fwbs.r_f_liq_ib)
                 / self.data.build.dr_blkt_inboard
             ) + (
                 self.data.fwbs.vol_blkt_outboard
-                * (dcll_variables.bz_r_ob * (1 - self.data.fwbs.r_f_liq_ob))
+                * (self.data.dcll.bz_r_ob * (1 - self.data.fwbs.r_f_liq_ob))
                 / self.data.build.dr_blkt_outboard
             )
             if self.data.fwbs.i_blkt_dual_coolant > 0:
                 self.data.fwbs.f_a_blkt_cooling_channels = (
-                    (1 - dcll_variables.f_vol_stl_bz_struct)
-                    * dcll_variables.vol_bz_struct
+                    (1 - self.data.dcll.f_vol_stl_bz_struct)
+                    * self.data.dcll.vol_bz_struct
                 ) / self.data.fwbs.vol_blkt_total
 
-            dcll_variables.vol_bz_liq = (
+            self.data.dcll.vol_bz_liq = (
                 self.data.fwbs.vol_blkt_inboard
-                * dcll_variables.bz_r_ib
+                * self.data.dcll.bz_r_ib
                 * self.data.fwbs.r_f_liq_ib
                 / self.data.build.dr_blkt_inboard
             ) + (
                 self.data.fwbs.vol_blkt_outboard
-                * dcll_variables.bz_r_ob
+                * self.data.dcll.bz_r_ob
                 * self.data.fwbs.r_f_liq_ob
                 / self.data.build.dr_blkt_outboard
             )
-            dcll_variables.vol_bz_liq_ib = (
+            self.data.dcll.vol_bz_liq_ib = (
                 self.data.fwbs.vol_blkt_inboard
-                * dcll_variables.bz_r_ib
+                * self.data.dcll.bz_r_ib
                 * self.data.fwbs.r_f_liq_ib
                 / self.data.build.dr_blkt_inboard
             )
-            dcll_variables.vol_bz_liq_ob = (
+            self.data.dcll.vol_bz_liq_ob = (
                 self.data.fwbs.vol_blkt_outboard
-                * dcll_variables.bz_r_ob
+                * self.data.dcll.bz_r_ob
                 * self.data.fwbs.r_f_liq_ob
                 / self.data.build.dr_blkt_outboard
             )
 
             if self.data.fwbs.i_blkt_liquid_breeder_channel_type > 0:
-                dcll_variables.vol_fci = (
+                self.data.dcll.vol_fci = (
                     self.data.fwbs.vol_blkt_inboard
-                    * dcll_variables.r_fci
+                    * self.data.dcll.r_fci
                     / self.data.build.dr_blkt_inboard
                 ) + (
                     self.data.fwbs.vol_blkt_outboard
-                    * dcll_variables.r_fci
+                    * self.data.dcll.r_fci
                     / self.data.build.dr_blkt_outboard
                 )
 
             # Back Wall
-            dcll_variables.vol_bw = (
+            self.data.dcll.vol_bw = (
                 self.data.fwbs.vol_blkt_inboard
-                * dcll_variables.r_backwall
+                * self.data.dcll.r_backwall
                 / self.data.build.dr_blkt_inboard
             ) + (
                 self.data.fwbs.vol_blkt_outboard
-                * dcll_variables.r_backwall
+                * self.data.dcll.r_backwall
                 / self.data.build.dr_blkt_outboard
             )
 
             # Manifold/BSS
-            dcll_variables.vol_bss = (
+            self.data.dcll.vol_bss = (
                 self.data.fwbs.vol_blkt_inboard
                 * self.data.build.blbmith
                 / self.data.build.dr_blkt_inboard
@@ -613,46 +612,46 @@ class DCLL(InboardBlanket, OutboardBlanket):
             # Only OB blanket
 
             # BZ
-            dcll_variables.vol_bz_struct = (
+            self.data.dcll.vol_bz_struct = (
                 self.data.fwbs.vol_blkt_outboard
-                * dcll_variables.bz_r_ob
+                * self.data.dcll.bz_r_ob
                 * (1 - self.data.fwbs.r_f_liq_ob)
                 / self.data.build.dr_blkt_outboard
             )
             if self.data.fwbs.i_blkt_dual_coolant > 0:
                 self.data.fwbs.f_a_blkt_cooling_channels = (
-                    (1 - dcll_variables.f_vol_stl_bz_struct)
-                    * dcll_variables.vol_bz_struct
+                    (1 - self.data.dcll.f_vol_stl_bz_struct)
+                    * self.data.dcll.vol_bz_struct
                 ) / self.data.fwbs.vol_blkt_total
 
-            dcll_variables.vol_bz_liq = (
+            self.data.dcll.vol_bz_liq = (
                 self.data.fwbs.vol_blkt_outboard
-                * dcll_variables.bz_r_ob
+                * self.data.dcll.bz_r_ob
                 * self.data.fwbs.r_f_liq_ob
                 / self.data.build.dr_blkt_outboard
             )
-            dcll_variables.vol_bz_liq_ob = (
+            self.data.dcll.vol_bz_liq_ob = (
                 self.data.fwbs.vol_blkt_outboard
-                * dcll_variables.bz_r_ob
+                * self.data.dcll.bz_r_ob
                 * self.data.fwbs.r_f_liq_ob
                 / self.data.build.dr_blkt_outboard
             )
             if self.data.fwbs.i_blkt_liquid_breeder_channel_type > 0:
-                dcll_variables.vol_fci = (
+                self.data.dcll.vol_fci = (
                     self.data.fwbs.vol_blkt_outboard
-                    * dcll_variables.r_fci
+                    * self.data.dcll.r_fci
                     / self.data.build.dr_blkt_outboard
                 )
 
             # Back Wall
-            dcll_variables.vol_bw = (
+            self.data.dcll.vol_bw = (
                 self.data.fwbs.vol_blkt_outboard
-                * dcll_variables.r_backwall
+                * self.data.dcll.r_backwall
                 / self.data.build.dr_blkt_outboard
             )
 
             # Manifold/BSS
-            dcll_variables.vol_bss = (
+            self.data.dcll.vol_bss = (
                 self.data.fwbs.vol_blkt_outboard
                 * self.data.build.blbmoth
                 / self.data.build.dr_blkt_outboard
@@ -660,47 +659,47 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         # Calculate masses
         # BZ
-        dcll_variables.wht_stl_struct = (
+        self.data.dcll.wht_stl_struct = (
             self.data.fwbs.den_steel
-            * dcll_variables.f_vol_stl_bz_struct
-            * dcll_variables.vol_bz_struct
+            * self.data.dcll.f_vol_stl_bz_struct
+            * self.data.dcll.vol_bz_struct
         )
-        dcll_variables.wht_cool_struct = (
+        self.data.dcll.wht_cool_struct = (
             self.data.fwbs.den_blkt_coolant
-            * (1 - dcll_variables.f_vol_stl_bz_struct)
-            * dcll_variables.vol_bz_struct
+            * (1 - self.data.dcll.f_vol_stl_bz_struct)
+            * self.data.dcll.vol_bz_struct
         )
-        self.data.fwbs.wht_liq = self.data.fwbs.den_liq * dcll_variables.vol_bz_liq
-        self.data.fwbs.wht_liq_ib = self.data.fwbs.den_liq * dcll_variables.vol_bz_liq_ib
-        self.data.fwbs.wht_liq_ob = self.data.fwbs.den_liq * dcll_variables.vol_bz_liq_ob
-        dcll_variables.wht_cer = self.data.fwbs.den_ceramic * dcll_variables.vol_fci
+        self.data.fwbs.wht_liq = self.data.fwbs.den_liq * self.data.dcll.vol_bz_liq
+        self.data.fwbs.wht_liq_ib = self.data.fwbs.den_liq * self.data.dcll.vol_bz_liq_ib
+        self.data.fwbs.wht_liq_ob = self.data.fwbs.den_liq * self.data.dcll.vol_bz_liq_ob
+        self.data.dcll.wht_cer = self.data.fwbs.den_ceramic * self.data.dcll.vol_fci
         # Back Wall
-        dcll_variables.wht_bw_stl = (
+        self.data.dcll.wht_bw_stl = (
             self.data.fwbs.den_steel
-            * dcll_variables.f_vol_stl_back_wall
-            * dcll_variables.vol_bw
+            * self.data.dcll.f_vol_stl_back_wall
+            * self.data.dcll.vol_bw
         )
-        dcll_variables.wht_bw_cool = (
+        self.data.dcll.wht_bw_cool = (
             self.data.fwbs.den_blkt_coolant
-            * (1 - dcll_variables.f_vol_stl_back_wall)
-            * dcll_variables.vol_bw
+            * (1 - self.data.dcll.f_vol_stl_back_wall)
+            * self.data.dcll.vol_bw
         )
 
         # Manifold/BSS
-        dcll_variables.wht_mfbss_stl = (
+        self.data.dcll.wht_mfbss_stl = (
             self.data.fwbs.den_steel
-            * dcll_variables.f_vol_mfbss_stl
-            * dcll_variables.vol_bss
+            * self.data.dcll.f_vol_mfbss_stl
+            * self.data.dcll.vol_bss
         )
-        dcll_variables.wht_mfbss_cool = (
+        self.data.dcll.wht_mfbss_cool = (
             self.data.fwbs.den_blkt_coolant
-            * dcll_variables.f_vol_mfbss_he
-            * dcll_variables.vol_bss
+            * self.data.dcll.f_vol_mfbss_he
+            * self.data.dcll.vol_bss
         )
-        dcll_variables.wht_mfbss_pbli = (
+        self.data.dcll.wht_mfbss_pbli = (
             self.data.fwbs.den_liq
-            * dcll_variables.f_vol_mfbss_pbli
-            * dcll_variables.vol_bss
+            * self.data.dcll.f_vol_mfbss_pbli
+            * self.data.dcll.vol_bss
         )
 
         # FW
@@ -710,18 +709,18 @@ class DCLL(InboardBlanket, OutboardBlanket):
             + self.data.first_wall.a_fw_outboard * self.data.build.dr_fw_outboard
         )
         # First wall mass, excluding armour (kg)
-        dcll_variables.fwmass_stl = (
+        self.data.dcll.fwmass_stl = (
             self.data.fwbs.den_steel
-            * dcll_variables.f_vol_stl_fw
+            * self.data.dcll.f_vol_stl_fw
             * self.data.fwbs.vol_fw_total
         )
-        dcll_variables.fwmass_cool = (
+        self.data.dcll.fwmass_cool = (
             self.data.fwbs.den_fw_coolant
-            * (1 - dcll_variables.f_vol_stl_fw)
+            * (1 - self.data.dcll.f_vol_stl_fw)
             * self.data.fwbs.vol_fw_total
         )
         self.data.fwbs.m_fw_total = (
-            dcll_variables.fwmass_stl + dcll_variables.fwmass_cool
+            self.data.dcll.fwmass_stl + self.data.dcll.fwmass_cool
         )
         # First wall armour volume (m^3)
         self.data.fwbs.fw_armour_vol = (
@@ -734,15 +733,15 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         # Total mass of blanket
         self.data.fwbs.m_blkt_total = (
-            dcll_variables.wht_stl_struct
-            + dcll_variables.wht_cool_struct
+            self.data.dcll.wht_stl_struct
+            + self.data.dcll.wht_cool_struct
             + self.data.fwbs.wht_liq
-            + dcll_variables.wht_bw_stl
-            + dcll_variables.wht_bw_cool
-            + dcll_variables.wht_mfbss_stl
-            + dcll_variables.wht_mfbss_cool
-            + dcll_variables.wht_mfbss_pbli
-            + dcll_variables.wht_cer
+            + self.data.dcll.wht_bw_stl
+            + self.data.dcll.wht_bw_cool
+            + self.data.dcll.wht_mfbss_stl
+            + self.data.dcll.wht_mfbss_cool
+            + self.data.dcll.wht_mfbss_pbli
+            + self.data.dcll.wht_cer
         )
 
         # Total mass of first wall and blanket
@@ -754,7 +753,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
 
         # Total mass of IB/OB segment
         if self.data.fwbs.i_blkt_inboard == 1:
-            dcll_variables.mass_segm_ib = (
+            self.data.dcll.mass_segm_ib = (
                 self.data.fwbs.m_blkt_total
                 * (self.data.fwbs.vol_blkt_inboard / self.data.fwbs.vol_blkt_total)
                 + self.data.fwbs.m_fw_total
@@ -774,7 +773,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 )
             ) / self.data.fwbs.n_blkt_inboard_modules_toroidal
 
-        dcll_variables.mass_segm_ob = (
+        self.data.dcll.mass_segm_ob = (
             self.data.fwbs.m_blkt_total
             * (self.data.fwbs.vol_blkt_outboard / self.data.fwbs.vol_blkt_total)
             + self.data.fwbs.m_fw_total
@@ -792,22 +791,22 @@ class DCLL(InboardBlanket, OutboardBlanket):
         ) / self.data.fwbs.n_blkt_outboard_modules_toroidal
 
         # Total FW/Structure Coolant Mass
-        dcll_variables.mass_cool_blanket = (
-            dcll_variables.fwmass_cool
-            + dcll_variables.wht_cool_struct
-            + dcll_variables.wht_bw_cool
-            + dcll_variables.wht_mfbss_cool
+        self.data.dcll.mass_cool_blanket = (
+            self.data.dcll.fwmass_cool
+            + self.data.dcll.wht_cool_struct
+            + self.data.dcll.wht_bw_cool
+            + self.data.dcll.wht_mfbss_cool
         )
         # Total Liquid Breeder/Coolant Mass
-        dcll_variables.mass_liq_blanket = (
-            self.data.fwbs.wht_liq + dcll_variables.wht_mfbss_pbli
+        self.data.dcll.mass_liq_blanket = (
+            self.data.fwbs.wht_liq + self.data.dcll.wht_mfbss_pbli
         )
         # Total Steel Mass
-        dcll_variables.mass_stl_blanket = (
-            dcll_variables.fwmass_stl
-            + dcll_variables.wht_stl_struct
-            + dcll_variables.wht_bw_stl
-            + dcll_variables.wht_mfbss_stl
+        self.data.dcll.mass_stl_blanket = (
+            self.data.dcll.fwmass_stl
+            + self.data.dcll.wht_stl_struct
+            + self.data.dcll.wht_bw_stl
+            + self.data.dcll.wht_mfbss_stl
         )
 
         # Mass of material =   density of material * fraction of material by volume * (
@@ -845,7 +844,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                     self.outfile,
                     "Blanket FCI Mass (kg)",
                     "(wht_cer)",
-                    dcll_variables.wht_cer,
+                    self.data.dcll.wht_cer,
                     "OP ",
                 )
             po.ovarre(
@@ -860,14 +859,14 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 self.outfile,
                 "Total mass for an inboard blanket segment (kg)",
                 "(mass_segm_ib)",
-                dcll_variables.mass_segm_ib,
+                self.data.dcll.mass_segm_ib,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Total mass for an outboard blanket segment (kg)",
                 "(mass_segm_ob)",
-                dcll_variables.mass_segm_ob,
+                self.data.dcll.mass_segm_ob,
                 "OP ",
             )
 
@@ -877,21 +876,21 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 self.outfile,
                 "Total FW/Structure Coolant Mass (kg)",
                 "(mass_cool_blanket)",
-                dcll_variables.mass_cool_blanket,
+                self.data.dcll.mass_cool_blanket,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Total Liquid Breeder/Coolant mass (kg)",
                 "(mass_liq_blanket)",
-                dcll_variables.mass_liq_blanket,
+                self.data.dcll.mass_liq_blanket,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Total Steel Mass (FW + Structure) (kg)",
                 "(mass_stl_blanket)",
-                dcll_variables.mass_stl_blanket,
+                self.data.dcll.mass_stl_blanket,
                 "OP ",
             )
             po.ovarre(

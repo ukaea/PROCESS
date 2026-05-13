@@ -4,7 +4,6 @@ import pytest
 
 from process.data_structure import (
     current_drive_variables,
-    dcll_variables,
     divertor_variables,
     physics_variables,
 )
@@ -919,89 +918,89 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcllmassesparam.n_blkt_outboard_modules_toroidal,
     )
 
-    monkeypatch.setattr(dcll_variables, "r_fci", dcllmassesparam.r_fci)
+    monkeypatch.setattr(dcll.data.dcll, "r_fci", dcllmassesparam.r_fci)
 
-    monkeypatch.setattr(dcll_variables, "r_backwall", dcllmassesparam.r_backwall)
+    monkeypatch.setattr(dcll.data.dcll, "r_backwall", dcllmassesparam.r_backwall)
 
-    monkeypatch.setattr(dcll_variables, "bz_r_ib", dcllmassesparam.bz_r_ib)
+    monkeypatch.setattr(dcll.data.dcll, "bz_r_ib", dcllmassesparam.bz_r_ib)
 
-    monkeypatch.setattr(dcll_variables, "bz_r_ob", dcllmassesparam.bz_r_ob)
+    monkeypatch.setattr(dcll.data.dcll, "bz_r_ob", dcllmassesparam.bz_r_ob)
 
     monkeypatch.setattr(
-        dcll_variables, "f_vol_stff_plates", dcllmassesparam.f_vol_stff_plates
+        dcll.data.dcll, "f_vol_stff_plates", dcllmassesparam.f_vol_stff_plates
     )
 
     monkeypatch.setattr(
-        dcll_variables, "f_vol_stl_bz_struct", dcllmassesparam.f_vol_stl_bz_struct
+        dcll.data.dcll, "f_vol_stl_bz_struct", dcllmassesparam.f_vol_stl_bz_struct
     )
 
     monkeypatch.setattr(
-        dcll_variables, "f_vol_stl_back_wall", dcllmassesparam.f_vol_stl_back_wall
+        dcll.data.dcll, "f_vol_stl_back_wall", dcllmassesparam.f_vol_stl_back_wall
     )
 
-    monkeypatch.setattr(dcll_variables, "f_vol_stl_fw", dcllmassesparam.f_vol_stl_fw)
+    monkeypatch.setattr(dcll.data.dcll, "f_vol_stl_fw", dcllmassesparam.f_vol_stl_fw)
 
     monkeypatch.setattr(
-        dcll_variables, "f_vol_mfbss_stl", dcllmassesparam.f_vol_mfbss_stl
+        dcll.data.dcll, "f_vol_mfbss_stl", dcllmassesparam.f_vol_mfbss_stl
     )
 
-    monkeypatch.setattr(dcll_variables, "f_vol_mfbss_he", dcllmassesparam.f_vol_mfbss_he)
+    monkeypatch.setattr(dcll.data.dcll, "f_vol_mfbss_he", dcllmassesparam.f_vol_mfbss_he)
 
     monkeypatch.setattr(
-        dcll_variables, "f_vol_mfbss_pbli", dcllmassesparam.f_vol_mfbss_pbli
+        dcll.data.dcll, "f_vol_mfbss_pbli", dcllmassesparam.f_vol_mfbss_pbli
     )
 
-    monkeypatch.setattr(dcll_variables, "vol_fci", dcllmassesparam.vol_fci)
+    monkeypatch.setattr(dcll.data.dcll, "vol_fci", dcllmassesparam.vol_fci)
 
-    monkeypatch.setattr(dcll_variables, "vol_bz_struct", dcllmassesparam.vol_bz_struct)
+    monkeypatch.setattr(dcll.data.dcll, "vol_bz_struct", dcllmassesparam.vol_bz_struct)
 
-    monkeypatch.setattr(dcll_variables, "vol_bz_liq", dcllmassesparam.vol_bz_liq)
+    monkeypatch.setattr(dcll.data.dcll, "vol_bz_liq", dcllmassesparam.vol_bz_liq)
 
-    monkeypatch.setattr(dcll_variables, "vol_bz_liq_ib", dcllmassesparam.vol_bz_liq_ib)
+    monkeypatch.setattr(dcll.data.dcll, "vol_bz_liq_ib", dcllmassesparam.vol_bz_liq_ib)
 
-    monkeypatch.setattr(dcll_variables, "vol_bz_liq_ob", dcllmassesparam.vol_bz_liq_ob)
+    monkeypatch.setattr(dcll.data.dcll, "vol_bz_liq_ob", dcllmassesparam.vol_bz_liq_ob)
 
-    monkeypatch.setattr(dcll_variables, "vol_bw", dcllmassesparam.vol_bw)
+    monkeypatch.setattr(dcll.data.dcll, "vol_bw", dcllmassesparam.vol_bw)
 
-    monkeypatch.setattr(dcll_variables, "vol_bss", dcllmassesparam.vol_bss)
+    monkeypatch.setattr(dcll.data.dcll, "vol_bss", dcllmassesparam.vol_bss)
 
-    monkeypatch.setattr(dcll_variables, "wht_cer", dcllmassesparam.wht_cer)
+    monkeypatch.setattr(dcll.data.dcll, "wht_cer", dcllmassesparam.wht_cer)
 
-    monkeypatch.setattr(dcll_variables, "wht_stl_struct", dcllmassesparam.wht_stl_struct)
+    monkeypatch.setattr(dcll.data.dcll, "wht_stl_struct", dcllmassesparam.wht_stl_struct)
 
     monkeypatch.setattr(
-        dcll_variables, "wht_cool_struct", dcllmassesparam.wht_cool_struct
+        dcll.data.dcll, "wht_cool_struct", dcllmassesparam.wht_cool_struct
     )
 
-    monkeypatch.setattr(dcll_variables, "wht_bw_stl", dcllmassesparam.wht_bw_stl)
+    monkeypatch.setattr(dcll.data.dcll, "wht_bw_stl", dcllmassesparam.wht_bw_stl)
 
-    monkeypatch.setattr(dcll_variables, "wht_bw_cool", dcllmassesparam.wht_bw_cool)
+    monkeypatch.setattr(dcll.data.dcll, "wht_bw_cool", dcllmassesparam.wht_bw_cool)
 
-    monkeypatch.setattr(dcll_variables, "wht_mfbss_stl", dcllmassesparam.wht_mfbss_stl)
+    monkeypatch.setattr(dcll.data.dcll, "wht_mfbss_stl", dcllmassesparam.wht_mfbss_stl)
 
-    monkeypatch.setattr(dcll_variables, "wht_mfbss_cool", dcllmassesparam.wht_mfbss_cool)
+    monkeypatch.setattr(dcll.data.dcll, "wht_mfbss_cool", dcllmassesparam.wht_mfbss_cool)
 
-    monkeypatch.setattr(dcll_variables, "wht_mfbss_pbli", dcllmassesparam.wht_mfbss_pbli)
+    monkeypatch.setattr(dcll.data.dcll, "wht_mfbss_pbli", dcllmassesparam.wht_mfbss_pbli)
 
-    monkeypatch.setattr(dcll_variables, "fwmass_stl", dcllmassesparam.fwmass_stl)
+    monkeypatch.setattr(dcll.data.dcll, "fwmass_stl", dcllmassesparam.fwmass_stl)
 
-    monkeypatch.setattr(dcll_variables, "fwmass_cool", dcllmassesparam.fwmass_cool)
-
-    monkeypatch.setattr(
-        dcll_variables, "mass_cool_blanket", dcllmassesparam.mass_cool_blanket
-    )
+    monkeypatch.setattr(dcll.data.dcll, "fwmass_cool", dcllmassesparam.fwmass_cool)
 
     monkeypatch.setattr(
-        dcll_variables, "mass_liq_blanket", dcllmassesparam.mass_liq_blanket
+        dcll.data.dcll, "mass_cool_blanket", dcllmassesparam.mass_cool_blanket
     )
 
     monkeypatch.setattr(
-        dcll_variables, "mass_stl_blanket", dcllmassesparam.mass_stl_blanket
+        dcll.data.dcll, "mass_liq_blanket", dcllmassesparam.mass_liq_blanket
     )
 
-    monkeypatch.setattr(dcll_variables, "mass_segm_ib", dcllmassesparam.mass_segm_ib)
+    monkeypatch.setattr(
+        dcll.data.dcll, "mass_stl_blanket", dcllmassesparam.mass_stl_blanket
+    )
 
-    monkeypatch.setattr(dcll_variables, "mass_segm_ob", dcllmassesparam.mass_segm_ob)
+    monkeypatch.setattr(dcll.data.dcll, "mass_segm_ib", dcllmassesparam.mass_segm_ib)
+
+    monkeypatch.setattr(dcll.data.dcll, "mass_segm_ob", dcllmassesparam.mass_segm_ob)
 
     dcll.dcll_masses(False)
 
@@ -1049,120 +1048,120 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcllmassesparam.expected_f_a_blkt_cooling_channels
     )
 
-    assert dcll_variables.r_fci == pytest.approx(dcllmassesparam.expected_r_fci)
+    assert dcll.data.dcll.r_fci == pytest.approx(dcllmassesparam.expected_r_fci)
 
-    assert dcll_variables.r_backwall == pytest.approx(
+    assert dcll.data.dcll.r_backwall == pytest.approx(
         dcllmassesparam.expected_r_backwall
     )
 
-    assert dcll_variables.bz_r_ib == pytest.approx(dcllmassesparam.expected_bz_r_ib)
+    assert dcll.data.dcll.bz_r_ib == pytest.approx(dcllmassesparam.expected_bz_r_ib)
 
-    assert dcll_variables.bz_r_ob == pytest.approx(dcllmassesparam.expected_bz_r_ob)
+    assert dcll.data.dcll.bz_r_ob == pytest.approx(dcllmassesparam.expected_bz_r_ob)
 
-    assert dcll_variables.f_vol_stff_plates == pytest.approx(
+    assert dcll.data.dcll.f_vol_stff_plates == pytest.approx(
         dcllmassesparam.expected_f_vol_stff_plates
     )
 
-    assert dcll_variables.f_vol_stl_bz_struct == pytest.approx(
+    assert dcll.data.dcll.f_vol_stl_bz_struct == pytest.approx(
         dcllmassesparam.expected_f_vol_stl_bz_struct
     )
 
-    assert dcll_variables.f_vol_stl_back_wall == pytest.approx(
+    assert dcll.data.dcll.f_vol_stl_back_wall == pytest.approx(
         dcllmassesparam.expected_f_vol_stl_back_wall
     )
 
-    assert dcll_variables.f_vol_stl_fw == pytest.approx(
+    assert dcll.data.dcll.f_vol_stl_fw == pytest.approx(
         dcllmassesparam.expected_f_vol_stl_fw
     )
 
-    assert dcll_variables.f_vol_mfbss_stl == pytest.approx(
+    assert dcll.data.dcll.f_vol_mfbss_stl == pytest.approx(
         dcllmassesparam.expected_f_vol_mfbss_stl
     )
 
-    assert dcll_variables.f_vol_mfbss_he == pytest.approx(
+    assert dcll.data.dcll.f_vol_mfbss_he == pytest.approx(
         dcllmassesparam.expected_f_vol_mfbss_he
     )
 
-    assert dcll_variables.f_vol_mfbss_pbli == pytest.approx(
+    assert dcll.data.dcll.f_vol_mfbss_pbli == pytest.approx(
         dcllmassesparam.expected_f_vol_mfbss_pbli
     )
 
-    assert dcll_variables.vol_fci == pytest.approx(dcllmassesparam.expected_vol_fci)
+    assert dcll.data.dcll.vol_fci == pytest.approx(dcllmassesparam.expected_vol_fci)
 
-    assert dcll_variables.vol_bz_struct == pytest.approx(
+    assert dcll.data.dcll.vol_bz_struct == pytest.approx(
         dcllmassesparam.expected_vol_bz_struct
     )
 
-    assert dcll_variables.vol_bz_liq == pytest.approx(
+    assert dcll.data.dcll.vol_bz_liq == pytest.approx(
         dcllmassesparam.expected_vol_bz_liq
     )
 
-    assert dcll_variables.vol_bz_liq_ib == pytest.approx(
+    assert dcll.data.dcll.vol_bz_liq_ib == pytest.approx(
         dcllmassesparam.expected_vol_bz_liq_ib
     )
 
-    assert dcll_variables.vol_bz_liq_ob == pytest.approx(
+    assert dcll.data.dcll.vol_bz_liq_ob == pytest.approx(
         dcllmassesparam.expected_vol_bz_liq_ob
     )
 
-    assert dcll_variables.vol_bw == pytest.approx(dcllmassesparam.expected_vol_bw)
+    assert dcll.data.dcll.vol_bw == pytest.approx(dcllmassesparam.expected_vol_bw)
 
-    assert dcll_variables.vol_bss == pytest.approx(dcllmassesparam.expected_vol_bss)
+    assert dcll.data.dcll.vol_bss == pytest.approx(dcllmassesparam.expected_vol_bss)
 
-    assert dcll_variables.wht_cer == pytest.approx(dcllmassesparam.expected_wht_cer)
+    assert dcll.data.dcll.wht_cer == pytest.approx(dcllmassesparam.expected_wht_cer)
 
-    assert dcll_variables.wht_stl_struct == pytest.approx(
+    assert dcll.data.dcll.wht_stl_struct == pytest.approx(
         dcllmassesparam.expected_wht_stl_struct
     )
 
-    assert dcll_variables.wht_cool_struct == pytest.approx(
+    assert dcll.data.dcll.wht_cool_struct == pytest.approx(
         dcllmassesparam.expected_wht_cool_struct
     )
 
-    assert dcll_variables.wht_bw_stl == pytest.approx(
+    assert dcll.data.dcll.wht_bw_stl == pytest.approx(
         dcllmassesparam.expected_wht_bw_stl
     )
 
-    assert dcll_variables.wht_bw_cool == pytest.approx(
+    assert dcll.data.dcll.wht_bw_cool == pytest.approx(
         dcllmassesparam.expected_wht_bw_cool
     )
 
-    assert dcll_variables.wht_mfbss_stl == pytest.approx(
+    assert dcll.data.dcll.wht_mfbss_stl == pytest.approx(
         dcllmassesparam.expected_wht_mfbss_stl
     )
 
-    assert dcll_variables.wht_mfbss_cool == pytest.approx(
+    assert dcll.data.dcll.wht_mfbss_cool == pytest.approx(
         dcllmassesparam.expected_wht_mfbss_cool
     )
 
-    assert dcll_variables.wht_mfbss_pbli == pytest.approx(
+    assert dcll.data.dcll.wht_mfbss_pbli == pytest.approx(
         dcllmassesparam.expected_wht_mfbss_pbli
     )
 
-    assert dcll_variables.fwmass_stl == pytest.approx(
+    assert dcll.data.dcll.fwmass_stl == pytest.approx(
         dcllmassesparam.expected_fwmass_stl
     )
 
-    assert dcll_variables.fwmass_cool == pytest.approx(
+    assert dcll.data.dcll.fwmass_cool == pytest.approx(
         dcllmassesparam.expected_fwmass_cool
     )
 
-    assert dcll_variables.mass_cool_blanket == pytest.approx(
+    assert dcll.data.dcll.mass_cool_blanket == pytest.approx(
         dcllmassesparam.expected_mass_cool_blanket
     )
 
-    assert dcll_variables.mass_liq_blanket == pytest.approx(
+    assert dcll.data.dcll.mass_liq_blanket == pytest.approx(
         dcllmassesparam.expected_mass_liq_blanket
     )
 
-    assert dcll_variables.mass_stl_blanket == pytest.approx(
+    assert dcll.data.dcll.mass_stl_blanket == pytest.approx(
         dcllmassesparam.expected_mass_stl_blanket
     )
 
-    assert dcll_variables.mass_segm_ib == pytest.approx(
+    assert dcll.data.dcll.mass_segm_ib == pytest.approx(
         dcllmassesparam.expected_mass_segm_ib
     )
 
-    assert dcll_variables.mass_segm_ob == pytest.approx(
+    assert dcll.data.dcll.mass_segm_ob == pytest.approx(
         dcllmassesparam.expected_mass_segm_ob
     )

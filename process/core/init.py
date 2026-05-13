@@ -17,7 +17,6 @@ from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.current_drive_variables import init_current_drive_variables
-from process.data_structure.dcll_variables import init_dcll_module
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.heat_transport_variables import (
     init_heat_transport_variables,
@@ -272,7 +271,6 @@ def init_all_module_vars():
     init_pfcoil_variables()
     init_pf_power_variables()
     init_rebco_variables()
-    init_dcll_module()
     init_power_variables()
     init_neoclassics_variables()
 

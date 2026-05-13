@@ -69,172 +69,109 @@ References
 Note: request for when CCFE Bluemira neutronics work is added: output maximum values, as well as average values, for wall neutronics calculation if possible.
 """
 
-r_fci: float = None
-"""Radial thickness of FCIs [m]"""
-
-r_backwall: float = None
-"""Radial thickness of backwall [m]"""
-
-bz_r_ib: float = None
-"""Radial BZ thickness [m]"""
-
-bz_r_ob: float = None
-"""Radial BZ thickness [m]"""
-
-f_vol_stff_plates: float = None
-"""Structure/coolant compositional fractions"""
-
-f_vol_stl_bz_struct: float = None
-"""Structure/coolant compositional fractions"""
-
-f_vol_stl_back_wall: float = None
-"""Structure/coolant compositional fractions"""
-
-f_vol_stl_fw: float = None
-"""Structure/coolant compositional fractions"""
-
-f_vol_mfbss_stl: float = None
-"""MF/BSS compositional fractions"""
-
-f_vol_mfbss_he: float = None
-"""MF/BSS compositional fractions"""
-
-f_vol_mfbss_pbli: float = None
-"""MF/BSS compositional fractions"""
-
-vol_fci: float = None
-"""Volume of FCIs [m^3]"""
-
-vol_bz_struct: float = None
-"""Volume of other BZ structure [m^3]"""
-
-vol_bz_liq: float = None
-"""Volume of liquid channels [m^3]"""
-
-vol_bz_liq_ib: float = None
-"""Volume of liquid channels [m^3]"""
-
-vol_bz_liq_ob: float = None
-"""Volume of liquid channels [m^3]"""
-
-vol_bw: float = None
-"""Volume of backwall [m^3]"""
-
-vol_bss: float = None
-"""Volume of MF/BSS [m^3]"""
-
-wht_cer: float = None
-"""BZ masses by composition [kg]"""
-
-wht_stl_struct: float = None
-"""BZ masses by composition [kg]"""
-
-wht_cool_struct: float = None
-"""BZ masses by composition [kg]"""
-
-wht_bw_stl: float = None
-"""Backwall masses by composition [kg]"""
-
-wht_bw_cool: float = None
-"""Backwall masses by composition [kg]"""
-
-wht_mfbss_stl: float = None
-"""MF/BSS masses by composition [kg]"""
-
-wht_mfbss_cool: float = None
-"""MF/BSS masses by composition [kg]"""
-
-wht_mfbss_pbli: float = None
-"""MF/BSS masses by composition [kg]"""
-
-fwmass_stl: float = None
-"""FW masses by composition [kg]"""
-
-fwmass_cool: float = None
-"""FW masses by composition [kg]"""
-
-mass_cool_blanket: float = None
-"""Total masses of material in blanket [kg]"""
-
-mass_liq_blanket: float = None
-"""Total masses of material in blanket [kg]"""
-
-mass_stl_blanket: float = None
-"""Total masses of material in blanket [kg]"""
-
-mass_segm_ib: float = None
-"""Total mass for an inboard/outboard reactor segment [kg]"""
-
-mass_segm_ob: float = None
-"""Total mass for an inboard/outboard reactor segment [kg]"""
+from dataclasses import dataclass
 
 
-def init_dcll_module():
-    global \
-        r_fci, \
-        r_backwall, \
-        bz_r_ib, \
-        bz_r_ob, \
-        f_vol_stff_plates, \
-        f_vol_stl_bz_struct, \
-        f_vol_stl_back_wall, \
-        f_vol_stl_fw, \
-        f_vol_mfbss_stl, \
-        f_vol_mfbss_he, \
-        f_vol_mfbss_pbli, \
-        vol_fci, \
-        vol_bz_struct, \
-        vol_bz_liq, \
-        vol_bz_liq_ib, \
-        vol_bz_liq_ob, \
-        vol_bw, \
-        vol_bss, \
-        wht_cer, \
-        wht_stl_struct, \
-        wht_cool_struct, \
-        wht_bw_stl, \
-        wht_bw_cool, \
-        wht_mfbss_stl, \
-        wht_mfbss_cool, \
-        wht_mfbss_pbli, \
-        fwmass_stl, \
-        fwmass_cool, \
-        mass_cool_blanket, \
-        mass_liq_blanket, \
-        mass_stl_blanket, \
-        mass_segm_ib, \
-        mass_segm_ob
+@dataclass
+class DCLLData:
+    r_fci: float = 0.0
+    """Radial thickness of FCIs [m]"""
 
-    r_fci = 0.0
-    r_backwall = 0.0
-    bz_r_ib = 0.0
-    bz_r_ob = 0.0
-    f_vol_stff_plates = 0.0
-    f_vol_stl_bz_struct = 0.0
-    f_vol_stl_back_wall = 0.0
-    f_vol_stl_fw = 0.0
-    f_vol_mfbss_stl = 0.0
-    f_vol_mfbss_he = 0.0
-    f_vol_mfbss_pbli = 0.0
-    vol_fci = 0.0
-    vol_bz_struct = 0.0
-    vol_bz_liq = 0.0
-    vol_bz_liq_ib = 0.0
-    vol_bz_liq_ob = 0.0
-    vol_bw = 0.0
-    vol_bss = 0.0
-    wht_cer = 0.0
-    wht_stl_struct = 0.0
-    wht_cool_struct = 0.0
-    wht_bw_stl = 0.0
-    wht_bw_cool = 0.0
-    wht_mfbss_stl = 0.0
-    wht_mfbss_cool = 0.0
-    wht_mfbss_pbli = 0.0
-    fwmass_stl = 0.0
-    fwmass_cool = 0.0
-    mass_cool_blanket = 0.0
-    mass_liq_blanket = 0.0
-    mass_stl_blanket = 0.0
-    mass_segm_ib = 0.0
-    mass_segm_ob = 0.0
+    r_backwall: float = 0.0
+    """Radial thickness of backwall [m]"""
+
+    bz_r_ib: float = 0.0
+    """Radial BZ thickness [m]"""
+
+    bz_r_ob: float = 0.0
+    """Radial BZ thickness [m]"""
+
+    f_vol_stff_plates: float = 0.0
+    """Structure/coolant compositional fractions"""
+
+    f_vol_stl_bz_struct: float = 0.0
+    """Structure/coolant compositional fractions"""
+
+    f_vol_stl_back_wall: float = 0.0
+    """Structure/coolant compositional fractions"""
+
+    f_vol_stl_fw: float = 0.0
+    """Structure/coolant compositional fractions"""
+
+    f_vol_mfbss_stl: float = 0.0
+    """MF/BSS compositional fractions"""
+
+    f_vol_mfbss_he: float = 0.0
+    """MF/BSS compositional fractions"""
+
+    f_vol_mfbss_pbli: float = 0.0
+    """MF/BSS compositional fractions"""
+
+    vol_fci: float = 0.0
+    """Volume of FCIs [m^3]"""
+
+    vol_bz_struct: float = 0.0
+    """Volume of other BZ structure [m^3]"""
+
+    vol_bz_liq: float = 0.0
+    """Volume of liquid channels [m^3]"""
+
+    vol_bz_liq_ib: float = 0.0
+    """Volume of liquid channels [m^3]"""
+
+    vol_bz_liq_ob: float = 0.0
+    """Volume of liquid channels [m^3]"""
+
+    vol_bw: float = 0.0
+    """Volume of backwall [m^3]"""
+
+    vol_bss: float = 0.0
+    """Volume of MF/BSS [m^3]"""
+
+    wht_cer: float = 0.0
+    """BZ masses by composition [kg]"""
+
+    wht_stl_struct: float = 0.0
+    """BZ masses by composition [kg]"""
+
+    wht_cool_struct: float = 0.0
+    """BZ masses by composition [kg]"""
+
+    wht_bw_stl: float = 0.0
+    """Backwall masses by composition [kg]"""
+
+    wht_bw_cool: float = 0.0
+    """Backwall masses by composition [kg]"""
+
+    wht_mfbss_stl: float = 0.0
+    """MF/BSS masses by composition [kg]"""
+
+    wht_mfbss_cool: float = 0.0
+    """MF/BSS masses by composition [kg]"""
+
+    wht_mfbss_pbli: float = 0.0
+    """MF/BSS masses by composition [kg]"""
+
+    fwmass_stl: float = 0.0
+    """FW masses by composition [kg]"""
+
+    fwmass_cool: float = 0.0
+    """FW masses by composition [kg]"""
+
+    mass_cool_blanket: float = 0.0
+    """Total masses of material in blanket [kg]"""
+
+    mass_liq_blanket: float = 0.0
+    """Total masses of material in blanket [kg]"""
+
+    mass_stl_blanket: float = 0.0
+    """Total masses of material in blanket [kg]"""
+
+    mass_segm_ib: float = 0.0
+    """Total mass for an inboard/outboard reactor segment [kg]"""
+
+    mass_segm_ob: float = 0.0
+    """Total mass for an inboard/outboard reactor segment [kg]"""
+
+
+CREATE_DICTS_FROM_DATACLASS = DCLLData

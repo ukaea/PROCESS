@@ -9,6 +9,7 @@ from process.data_structure.constraint_variables import ConstraintData
 from process.data_structure.cost_2015_variables import Cost2015Data
 from process.data_structure.cost_variables import CostData
 from process.data_structure.cs_fatigue_variables import CSFatigueData
+from process.data_structure.dcll_variables import DCLLData
 from process.data_structure.first_wall_variables import FirstWallData
 from process.data_structure.fwbs_variables import FWBSData
 from process.data_structure.primary_pumping_variables import PrimaryPumpingData
@@ -41,6 +42,7 @@ class DataStructure:
     primary_pumping: PrimaryPumpingData = initialise_later
     buildings: BuildingsData = initialise_later
     constraints: ConstraintData = initialise_later
+    dcll: DCLLData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):
