@@ -45,7 +45,6 @@ class DataStructure:
     buildings: BuildingsData = initialise_later
     constraints: ConstraintData = initialise_later
     dcll: DCLLData = initialise_later
-    constraints: ConstraintData = initialise_later
     current_drive: CurrentDriveData = initialise_later
     heat_transport: HeatTransportData = initialise_later
 
