@@ -58,8 +58,8 @@ ITERATION_VARIABLES = {
         1.0e3,
     ),
     12: IterationVariable("oacdcp", data_structure.tfcoil_variables, 1.0e5, 1.50e8),
-    13: IterationVariable("dr_tf_inboard", data_structure.build_variables, 0.1, 5.0),
-    16: IterationVariable("dr_cs", data_structure.build_variables, 0.01, 10.00),
+    13: IterationVariable("dr_tf_inboard", "build", 0.1, 5.0),
+    16: IterationVariable("dr_cs", "build", 0.01, 10.00),
     17: IterationVariable("t_plant_pulse_dwell", "times", 0.1, 1.0e8),
     18: IterationVariable("q95", data_structure.physics_variables, 2.0, 50.00),
     19: IterationVariable(
@@ -69,15 +69,15 @@ ITERATION_VARIABLES = {
         "temp_cp_average", data_structure.tfcoil_variables, 40.00, 573.0
     ),
     23: IterationVariable("fcoolcp", data_structure.tfcoil_variables, 0.1, 0.50),
-    29: IterationVariable("dr_bore", data_structure.build_variables, 0.1, 10.00),
-    31: IterationVariable("gapomin", data_structure.build_variables, 0.001, 1.0e1),
+    29: IterationVariable("dr_bore", "build", 0.1, 10.00),
+    31: IterationVariable("gapomin", "build", 0.001, 1.0e1),
     37: IterationVariable(
         "j_cs_flat_top_end", data_structure.pfcoil_variables, 1.0e5, 1.0e8
     ),
     41: IterationVariable(
         "f_j_cs_start_pulse_end_flat_top", data_structure.pfcoil_variables, 0.001, 1.0
     ),
-    42: IterationVariable("dr_cs_tf_gap", data_structure.build_variables, 0.001, 10.00),
+    42: IterationVariable("dr_cs_tf_gap", "build", 0.001, 10.00),
     44: IterationVariable(
         "f_c_plasma_non_inductive", data_structure.physics_variables, 0.001, 1.0
     ),
@@ -93,9 +93,7 @@ ITERATION_VARIABLES = {
         "f_a_tf_turn_cable_copper", data_structure.tfcoil_variables, 0.001, 1.0
     ),
     60: IterationVariable("c_tf_turn", data_structure.tfcoil_variables, 0.001, 4.0e4),
-    61: IterationVariable(
-        "dr_shld_vv_gap_inboard", data_structure.build_variables, 0.001, 10.00
-    ),
+    61: IterationVariable("dr_shld_vv_gap_inboard", "build", 0.001, 10.00),
     65: IterationVariable(
         "t_plant_pulse_plasma_current_ramp_up",
         "times",
@@ -108,28 +106,18 @@ ITERATION_VARIABLES = {
     70: IterationVariable(
         "vel_cp_coolant_midplane", data_structure.tfcoil_variables, 1.0, 1.0e2
     ),
-    73: IterationVariable(
-        "dr_fw_plasma_gap_inboard", data_structure.build_variables, 0.001, 10.00
-    ),
-    74: IterationVariable(
-        "dr_fw_plasma_gap_outboard", data_structure.build_variables, 0.001, 10.00
-    ),
-    75: IterationVariable(
-        "f_dr_tf_outboard_inboard", data_structure.build_variables, 0.200, 5.0
-    ),
+    73: IterationVariable("dr_fw_plasma_gap_inboard", "build", 0.001, 10.00),
+    74: IterationVariable("dr_fw_plasma_gap_outboard", "build", 0.001, 10.00),
+    75: IterationVariable("f_dr_tf_outboard_inboard", "build", 0.200, 5.0),
     81: IterationVariable("edrive", data_structure.ife_variables, 1.0e5, 5.0e7),
     82: IterationVariable("drveff", data_structure.ife_variables, 0.010, 1.0),
     83: IterationVariable("tgain", data_structure.ife_variables, 1.0, 500.0),
     84: IterationVariable("chrad", data_structure.ife_variables, 0.1, 20.00),
     85: IterationVariable("pdrive", data_structure.ife_variables, 1.0e6, 200.0e6),
-    90: IterationVariable("blbuith", data_structure.build_variables, 0.001, 2.0),
-    91: IterationVariable("blbuoth", data_structure.build_variables, 0.001, 2.0),
-    93: IterationVariable(
-        "dr_shld_inboard", data_structure.build_variables, 0.001, 10.00
-    ),
-    94: IterationVariable(
-        "dr_shld_outboard", data_structure.build_variables, 0.001, 10.00
-    ),
+    90: IterationVariable("blbuith", "build", 0.001, 2.0),
+    91: IterationVariable("blbuoth", "build", 0.001, 2.0),
+    93: IterationVariable("dr_shld_inboard", "build", 0.001, 10.00),
+    94: IterationVariable("dr_shld_outboard", "build", 0.001, 10.00),
     98: IterationVariable("f_blkt_li6_enrichment", "fwbs", 10.00, 100.0),
     104: IterationVariable("fcwr", data_structure.constraint_variables, 0.001, 1.0),
     108: IterationVariable("breeder_f", "fwbs", 0.060, 1.0),
@@ -265,7 +253,7 @@ ITERATION_VARIABLES = {
     158: IterationVariable(
         "dx_croco_strand_copper", data_structure.rebco_variables, 1.0e-3, 1.0e-1
     ),
-    162: IterationVariable("r_cp_top", data_structure.build_variables, 0.0010, 10.0),
+    162: IterationVariable("r_cp_top", "build", 0.0010, 10.0),
     169: IterationVariable(
         "te0_ecrh_achievable", data_structure.stellarator_variables, 1.0, 1.0e3
     ),

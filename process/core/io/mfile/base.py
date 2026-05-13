@@ -607,15 +607,13 @@ def get_mfile_initial_ixc_values(file_path: Path, data: DataStructure):
         ivar = data_structure.numerics.ixc[i].item()
 
         itv = iteration_variables.ITERATION_VARIABLES[ivar]
-
+        module = getattr(data, itv.module) if isinstance(itv.module, str) else itv.module
         iteration_variable_names.append(itv.name)
         if array := re.match(r"(\w+)\(([0-9]+)\)", itv.name):
             var_name = array.group(1)
             index = array.group(2)
-            iteration_variable_values.append(
-                getattr(itv.module, var_name)[int(index) - 1]
-            )
+            iteration_variable_values.append(getattr(module, var_name)[int(index) - 1])
         else:
-            iteration_variable_values.append(getattr(itv.module, itv.name))
+            iteration_variable_values.append(getattr(module, itv.name))
 
     return iteration_variable_names, iteration_variable_values

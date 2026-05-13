@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     current_drive_variables,
     divertor_variables,
@@ -1629,7 +1628,7 @@ class Costs(Model):
 
         #  Non-Central Solenoid coils
 
-        if build_variables.iohcl == 1:
+        if self.data.build.iohcl == 1:
             npf = pfcoil_variables.n_cs_pf_coils - 1
         else:
             npf = pfcoil_variables.n_cs_pf_coils
@@ -1717,7 +1716,7 @@ class Costs(Model):
 
         #  Central Solenoid
 
-        if build_variables.iohcl == 1:
+        if self.data.build.iohcl == 1:
             #  Superconductor ($/m)
             if self.data.costs.supercond_cost_model == 0:
                 #  Issue #328  Use CS conductor cross-sectional area (m2)

@@ -16,7 +16,6 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.constraint_variables import init_constraint_variables
 from process.data_structure.current_drive_variables import init_current_drive_variables
@@ -279,7 +278,6 @@ def init_all_module_vars():
     init_primary_pumping_variables()
     init_pfcoil_variables()
     init_pf_power_variables()
-    init_build_variables()
     init_constraint_variables()
     init_rebco_variables()
     init_dcll_module()
@@ -605,15 +603,9 @@ def check_process(inputs, data):  # noqa: ARG001
 
     if data_structure.physics_variables.i_single_null == 0:
         data_structure.divertor_variables.n_divertors = 2
-        data_structure.build_variables.dz_fw_plasma_gap = (
-            data_structure.build_variables.dz_xpoint_divertor
-        )
-        data_structure.build_variables.dz_shld_upper = (
-            data_structure.build_variables.dz_shld_lower
-        )
-        data_structure.build_variables.dz_vv_upper = (
-            data_structure.build_variables.dz_vv_lower
-        )
+        data.build.dz_fw_plasma_gap = data.build.dz_xpoint_divertor
+        data.build.dz_shld_upper = data.build.dz_shld_lower
+        data.build.dz_vv_upper = data.build.dz_vv_lower
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
         data_structure.divertor_variables.n_divertors = 1
@@ -760,9 +752,9 @@ def check_process(inputs, data):  # noqa: ARG001
 
         # Checking the CP TF top radius
         if (
-            abs(data_structure.build_variables.r_cp_top) > 0
+            abs(data.build.r_cp_top) > 0
             or (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 174).any()
-        ) and data_structure.build_variables.i_r_cp_top != 1:
+        ) and data.build.i_r_cp_top != 1:
             raise ProcessValidationError(
                 "To set the TF CP top value, you must use i_r_cp_top = 1"
             )
@@ -844,10 +836,10 @@ def check_process(inputs, data):  # noqa: ARG001
         )  # No dr_bore,dr_cs_tf_gap, dr_cs iteration
         and (
             abs(
-                data_structure.build_variables.dr_bore
-                + data_structure.build_variables.dr_cs_tf_gap
-                + data_structure.build_variables.dr_cs
-                + data_structure.build_variables.dr_cs_precomp
+                data.build.dr_bore
+                + data.build.dr_cs_tf_gap
+                + data.build.dr_cs
+                + data.build.dr_cs_precomp
             )
             <= 0
         )  # dr_bore + dr_cs_tf_gap + dr_cs = 0
@@ -899,7 +891,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # CS which is now outside it
     if (
         data_structure.tfcoil_variables.i_tf_bucking >= 2
-        and data_structure.build_variables.i_tf_inside_cs == 1
+        and data.build.i_tf_inside_cs == 1
     ):
         raise ProcessValidationError(
             "Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
@@ -909,7 +901,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # is used for bucked and wedged design
     if (
         data_structure.tfcoil_variables.i_tf_bucking >= 2
-        and data_structure.build_variables.i_cs_precomp == 1
+        and data.build.i_cs_precomp == 1
     ):
         raise ProcessValidationError(
             "No CS precompression structure for bucked and wedged, use i_cs_precomp = 0"
@@ -1156,7 +1148,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
     if data.fwbs.i_blkt_inboard == 0:
-        data_structure.build_variables.dr_blkt_inboard = 0.0
+        data.build.dr_blkt_inboard = 0.0
 
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model

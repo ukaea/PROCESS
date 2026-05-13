@@ -16,7 +16,6 @@ from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
-    build_variables,
     constraint_variables,
     current_drive_variables,
     divertor_variables,
@@ -1137,7 +1136,7 @@ class Scan:
             case 40:
                 numerics.boundu[134] = swp[iscn - 1]
             case 41:
-                build_variables.dr_blkt_outboard = swp[iscn - 1]
+                self.data.build.dr_blkt_outboard = swp[iscn - 1]
             case 42:
                 impurity_radiation_module.f_nd_impurity_electrons[8] = swp[iscn - 1]
                 impurity_radiation_module.f_nd_impurity_electron_array[8] = (
@@ -1167,15 +1166,15 @@ class Scan:
             case 54:
                 tfcoil_variables.b_crit_upper_nbti = swp[iscn - 1]
             case 55:
-                build_variables.dr_shld_inboard = swp[iscn - 1]
+                self.data.build.dr_shld_inboard = swp[iscn - 1]
             case 56:
                 heat_transport_variables.p_cryo_plant_electric_max_mw = swp[iscn - 1]
             case 57:
                 numerics.boundl[1] = swp[iscn - 1]
             case 58:
-                build_variables.dr_fw_plasma_gap_inboard = swp[iscn - 1]
+                self.data.build.dr_fw_plasma_gap_inboard = swp[iscn - 1]
             case 59:
-                build_variables.dr_fw_plasma_gap_outboard = swp[iscn - 1]
+                self.data.build.dr_fw_plasma_gap_outboard = swp[iscn - 1]
             case 60:
                 tfcoil_variables.sig_tf_wp_max = swp[iscn - 1]
             case 61:
@@ -1183,7 +1182,7 @@ class Scan:
             case 62:
                 pfcoil_variables.coheof = swp[iscn - 1]
             case 63:
-                build_variables.dr_cs = swp[iscn - 1]
+                self.data.build.dr_cs = swp[iscn - 1]
             case 64:
                 pfcoil_variables.ohhghf = swp[iscn - 1]
             case 65:

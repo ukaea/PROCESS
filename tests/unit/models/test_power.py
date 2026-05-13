@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     constraint_variables,
     current_drive_variables,
@@ -1766,7 +1765,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "iohcl", pfpwrparam.iohcl)
+    monkeypatch.setattr(power.data.build, "iohcl", pfpwrparam.iohcl)
 
     monkeypatch.setattr(heat_transport_variables, "peakmva", pfpwrparam.peakmva)
 

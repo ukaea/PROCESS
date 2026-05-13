@@ -9,8 +9,8 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     divertor_variables,
     physics_variables,
     stellarator_variables,
@@ -198,7 +198,7 @@ class PlasmaGeometryModelType(IntEnum):
         return self._triang95_model_
 
 
-class PlasmaGeom:
+class PlasmaGeom(Model):
     """Class for calculating plasma geometry parameters."""
 
     def __init__(self):
@@ -441,8 +441,8 @@ class PlasmaGeom:
 
         #  Scrape-off layer thicknesses
         if physics_variables.i_plasma_wall_gap == 0:
-            build_variables.dr_fw_plasma_gap_outboard = 0.1e0 * physics_variables.rminor
-            build_variables.dr_fw_plasma_gap_inboard = 0.1e0 * physics_variables.rminor
+            self.data.build.dr_fw_plasma_gap_outboard = 0.1e0 * physics_variables.rminor
+            self.data.build.dr_fw_plasma_gap_inboard = 0.1e0 * physics_variables.rminor
 
         # ======================================================================
 

@@ -11,7 +11,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
-    build_variables,
     constraint_variables,
     divertor_variables,
     global_variables,
@@ -128,14 +127,14 @@ class SuperconductingTFCoil(TFCoil):
                 int(tfcoil_variables.n_rad_per_layer),
                 int(tfcoil_variables.n_tf_wp_stress_layers),
                 int(tfcoil_variables.i_tf_bucking),
-                float(build_variables.r_tf_inboard_in),
-                build_variables.dr_bore,
-                build_variables.z_tf_inside_half,
+                float(self.data.build.r_tf_inboard_in),
+                self.data.build.dr_bore,
+                self.data.build.z_tf_inside_half,
                 pfcoil_variables.f_z_cs_tf_internal,
-                build_variables.dr_cs,
-                build_variables.i_tf_inside_cs,
-                build_variables.dr_tf_inboard,
-                build_variables.dr_cs_tf_gap,
+                self.data.build.dr_cs,
+                self.data.build.i_tf_inside_cs,
+                self.data.build.dr_tf_inboard,
+                self.data.build.dr_cs_tf_gap,
                 pfcoil_variables.i_pf_conductor,
                 pfcoil_variables.j_cs_flat_top_end,
                 pfcoil_variables.j_cs_pulse_start,
@@ -274,7 +273,7 @@ class SuperconductingTFCoil(TFCoil):
         wp_geometry = TFWPGeometry
         wp_geometry = self.superconducting_tf_wp_geometry(
             i_tf_wp_geom=tfcoil_variables.i_tf_wp_geom,
-            r_tf_inboard_in=build_variables.r_tf_inboard_in,
+            r_tf_inboard_in=self.data.build.r_tf_inboard_in,
             dr_tf_nose_case=tfcoil_variables.dr_tf_nose_case,
             dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
             tan_theta_coil=superconducting_tf_coil_variables.tan_theta_coil,
@@ -333,12 +332,12 @@ class SuperconductingTFCoil(TFCoil):
             a_tf_wp_with_insulation=superconducting_tf_coil_variables.a_tf_wp_with_insulation,
             a_tf_leg_outboard=tfcoil_variables.a_tf_leg_outboard,
             rad_tf_coil_inboard_toroidal_half=superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half,
-            r_tf_inboard_out=build_variables.r_tf_inboard_out,
+            r_tf_inboard_out=self.data.build.r_tf_inboard_out,
             tan_theta_coil=superconducting_tf_coil_variables.tan_theta_coil,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
             dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
-            r_tf_inboard_in=build_variables.r_tf_inboard_in,
+            r_tf_inboard_in=self.data.build.r_tf_inboard_in,
             dx_tf_side_case_min=tfcoil_variables.dx_tf_side_case_min,
             dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
         )
@@ -347,15 +346,15 @@ class SuperconductingTFCoil(TFCoil):
         self.tf_wp_currents()
 
         tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
-            dr_tf_inboard=build_variables.dr_tf_inboard,
+            dr_tf_inboard=self.data.build.dr_tf_inboard,
             r_tf_arc=tfcoil_variables.r_tf_arc,
             z_tf_arc=tfcoil_variables.z_tf_arc,
             itart=physics_variables.itart,
             i_tf_shape=tfcoil_variables.i_tf_shape,
-            z_tf_inside_half=build_variables.z_tf_inside_half,
-            dr_tf_outboard=build_variables.dr_tf_outboard,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
-            r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
+            z_tf_inside_half=self.data.build.z_tf_inside_half,
+            dr_tf_outboard=self.data.build.dr_tf_outboard,
+            r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
+            r_tf_inboard_mid=self.data.build.r_tf_inboard_mid,
         )
 
         (
@@ -387,7 +386,7 @@ class SuperconductingTFCoil(TFCoil):
             dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,
             rmajor=physics_variables.rmajor,
             b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
-            r_cp_top=build_variables.r_cp_top,
+            r_cp_top=self.data.build.r_cp_top,
             itart=physics_variables.itart,
             i_cp_joints=tfcoil_variables.i_cp_joints,
             f_vforce_inboard=tfcoil_variables.f_vforce_inboard,
@@ -780,37 +779,37 @@ class SuperconductingTFCoil(TFCoil):
         We assume vertical symmetry which is only true for double null
         machines.
         """
-        H_coil = build_variables.z_tf_inside_half + (build_variables.dr_tf_inboard / 2)
-        ri_coil = build_variables.r_tf_inboard_mid
-        ro_coil = build_variables.r_tf_outboard_mid
+        H_coil = self.data.build.z_tf_inside_half + (self.data.build.dr_tf_inboard / 2)
+        ri_coil = self.data.build.r_tf_inboard_mid
+        ro_coil = self.data.build.r_tf_outboard_mid
         # NOTE: rm is measured from the outside edge of the coil because thats where
         # the radius of the first ellipse is measured from
-        rm_coil = build_variables.r_tf_inboard_out + tfcoil_variables.tfa[0]
+        rm_coil = self.data.build.r_tf_inboard_out + tfcoil_variables.tfa[0]
 
         H_vv = (
-            build_variables.z_plasma_xpoint_upper
-            + build_variables.dz_xpoint_divertor
+            self.data.build.z_plasma_xpoint_upper
+            + self.data.build.dz_xpoint_divertor
             + divertor_variables.dz_divertor
-            + build_variables.dz_shld_upper
-            + (build_variables.dz_vv_upper / 2)
+            + self.data.build.dz_shld_upper
+            + (self.data.build.dz_vv_upper / 2)
         )
         # ri and ro for VV dont consider the shield widths
         # because it is assumed the shield is on the plasma side
         # of the VV
-        ri_vv = build_variables.r_vv_inboard_out - (build_variables.dr_vv_outboard / 2)
+        ri_vv = self.data.build.r_vv_inboard_out - (self.data.build.dr_vv_outboard / 2)
         ro_vv = (
-            build_variables.r_tf_outboard_mid
-            - (build_variables.dr_tf_outboard / 2)
-            - build_variables.dr_tf_shld_gap
-            - build_variables.dr_shld_thermal_outboard
-            - build_variables.dr_shld_vv_gap_outboard
-            - (build_variables.dr_vv_outboard / 2)
+            self.data.build.r_tf_outboard_mid
+            - (self.data.build.dr_tf_outboard / 2)
+            - self.data.build.dr_tf_shld_gap
+            - self.data.build.dr_shld_thermal_outboard
+            - self.data.build.dr_shld_vv_gap_outboard
+            - (self.data.build.dr_vv_outboard / 2)
         )
 
         # Assume the radius of the first ellipse of the VV is in the same proportion to
         # that of the plasma facing radii of the two structures
-        tf_vv_frac = build_variables.r_tf_inboard_out / build_variables.r_vv_inboard_out
-        rm_vv = build_variables.r_vv_inboard_out + (tfcoil_variables.tfa[0] * tf_vv_frac)
+        tf_vv_frac = self.data.build.r_tf_inboard_out / self.data.build.r_vv_inboard_out
+        rm_vv = self.data.build.r_vv_inboard_out + (tfcoil_variables.tfa[0] * tf_vv_frac)
 
         superconducting_tf_coil_variables.vv_stress_quench = vv_stress_on_quench(
             # TF shape
@@ -842,7 +841,7 @@ class SuperconductingTFCoil(TFCoil):
             i_op=superconducting_tf_coil_variables.c_tf_coil
             / tfcoil_variables.n_tf_coil_turns,
             # VV properties
-            d_vv=build_variables.dr_vv_shells,
+            d_vv=self.data.build.dr_vv_shells,
         )
 
     def peak_b_tf_inboard_with_ripple(
@@ -1383,8 +1382,8 @@ class SuperconductingTFCoil(TFCoil):
 
         # The length of the vertical section is that of the first (inboard) segment
         # = height of TF coil inner edge + (2 * coil thickness)
-        tfcoil_variables.cplen = (2.0e0 * build_variables.z_tf_inside_half) + (
-            2.0e0 * build_variables.dr_tf_inboard
+        tfcoil_variables.cplen = (2.0e0 * self.data.build.z_tf_inside_half) + (
+            2.0e0 * self.data.build.dr_tf_inboard
         )
 
         # The 2.2 factor is used as a scaling factor to fit
@@ -1773,14 +1772,14 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
                 int(tfcoil_variables.n_rad_per_layer),
                 int(tfcoil_variables.n_tf_wp_stress_layers),
                 int(tfcoil_variables.i_tf_bucking),
-                float(build_variables.r_tf_inboard_in),
-                build_variables.dr_bore,
-                build_variables.z_tf_inside_half,
+                float(self.data.build.r_tf_inboard_in),
+                self.data.build.dr_bore,
+                self.data.build.z_tf_inside_half,
                 pfcoil_variables.f_z_cs_tf_internal,
-                build_variables.dr_cs,
-                build_variables.i_tf_inside_cs,
-                build_variables.dr_tf_inboard,
-                build_variables.dr_cs_tf_gap,
+                self.data.build.dr_cs,
+                self.data.build.i_tf_inside_cs,
+                self.data.build.dr_tf_inboard,
+                self.data.build.dr_cs_tf_gap,
                 pfcoil_variables.i_pf_conductor,
                 pfcoil_variables.j_cs_flat_top_end,
                 pfcoil_variables.j_cs_pulse_start,
@@ -3103,14 +3102,14 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 int(tfcoil_variables.n_rad_per_layer),
                 int(tfcoil_variables.n_tf_wp_stress_layers),
                 int(tfcoil_variables.i_tf_bucking),
-                float(build_variables.r_tf_inboard_in),
-                build_variables.dr_bore,
-                build_variables.z_tf_inside_half,
+                float(self.data.build.r_tf_inboard_in),
+                self.data.build.dr_bore,
+                self.data.build.z_tf_inside_half,
                 pfcoil_variables.f_z_cs_tf_internal,
-                build_variables.dr_cs,
-                build_variables.i_tf_inside_cs,
-                build_variables.dr_tf_inboard,
-                build_variables.dr_cs_tf_gap,
+                self.data.build.dr_cs,
+                self.data.build.i_tf_inside_cs,
+                self.data.build.dr_tf_inboard,
+                self.data.build.dr_cs_tf_gap,
                 pfcoil_variables.i_pf_conductor,
                 pfcoil_variables.j_cs_flat_top_end,
                 pfcoil_variables.j_cs_pulse_start,

@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     divertor_variables,
     physics_variables,
 )
@@ -38,16 +37,16 @@ class Shield(Model):
     def run(self):
         """Run shield calculations."""
         self.data.blanket.dz_shld_half = self.calculate_shield_half_height(
-            z_plasma_xpoint_lower=build_variables.z_plasma_xpoint_lower,
-            dz_xpoint_divertor=build_variables.dz_xpoint_divertor,
+            z_plasma_xpoint_lower=self.data.build.z_plasma_xpoint_lower,
+            dz_xpoint_divertor=self.data.build.dz_xpoint_divertor,
             dz_divertor=divertor_variables.dz_divertor,
             n_divertors=divertor_variables.n_divertors,
-            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
-            dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
-            dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
-            dr_fw_inboard=build_variables.dr_fw_inboard,
-            dr_fw_outboard=build_variables.dr_fw_outboard,
-            dz_blkt_upper=build_variables.dz_blkt_upper,
+            z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,
+            dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
+            dr_fw_inboard=self.data.build.dr_fw_inboard,
+            dr_fw_outboard=self.data.build.dr_fw_outboard,
+            dz_blkt_upper=self.data.build.dz_blkt_upper,
         )
         # D-shaped blanket and shield
         if (
@@ -55,19 +54,19 @@ class Shield(Model):
             or self.data.fwbs.i_fw_blkt_vv_shape == FwBlktVVShape.D_SHAPED
         ):
             (
-                build_variables.a_shld_inboard_surface,
-                build_variables.a_shld_outboard_surface,
-                build_variables.a_shld_total_surface,
+                self.data.build.a_shld_inboard_surface,
+                self.data.build.a_shld_outboard_surface,
+                self.data.build.a_shld_total_surface,
             ) = self.calculate_dshaped_shield_areas(
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                dr_shld_inboard=build_variables.dr_shld_inboard,
-                dr_fw_inboard=build_variables.dr_fw_inboard,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                dr_shld_inboard=self.data.build.dr_shld_inboard,
+                dr_fw_inboard=self.data.build.dr_fw_inboard,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 rminor=physics_variables.rminor,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
-                dr_fw_outboard=build_variables.dr_fw_outboard,
-                dr_blkt_inboard=build_variables.dr_blkt_inboard,
-                dr_blkt_outboard=build_variables.dr_blkt_outboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
+                dr_fw_outboard=self.data.build.dr_fw_outboard,
+                dr_blkt_inboard=self.data.build.dr_blkt_inboard,
+                dr_blkt_outboard=self.data.build.dr_blkt_outboard,
                 dz_shld_half=self.data.blanket.dz_shld_half,
             )
 
@@ -76,34 +75,34 @@ class Shield(Model):
                 self.data.blanket.vol_shld_outboard,
                 self.data.fwbs.vol_shld_total,
             ) = self.calculate_dshaped_shield_volumes(
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                dr_shld_inboard=build_variables.dr_shld_inboard,
-                dr_fw_inboard=build_variables.dr_fw_inboard,
-                dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                dr_shld_inboard=self.data.build.dr_shld_inboard,
+                dr_fw_inboard=self.data.build.dr_fw_inboard,
+                dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
                 rminor=physics_variables.rminor,
-                dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
-                dr_fw_outboard=build_variables.dr_fw_outboard,
-                dr_blkt_inboard=build_variables.dr_blkt_inboard,
-                dr_blkt_outboard=build_variables.dr_blkt_outboard,
+                dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
+                dr_fw_outboard=self.data.build.dr_fw_outboard,
+                dr_blkt_inboard=self.data.build.dr_blkt_inboard,
+                dr_blkt_outboard=self.data.build.dr_blkt_outboard,
                 dz_shld_half=self.data.blanket.dz_shld_half,
-                dr_shld_outboard=build_variables.dr_shld_outboard,
-                dz_shld_upper=build_variables.dz_shld_upper,
+                dr_shld_outboard=self.data.build.dr_shld_outboard,
+                dz_shld_upper=self.data.build.dz_shld_upper,
             )
 
         else:
             (
-                build_variables.a_shld_inboard_surface,
-                build_variables.a_shld_outboard_surface,
-                build_variables.a_shld_total_surface,
+                self.data.build.a_shld_inboard_surface,
+                self.data.build.a_shld_outboard_surface,
+                self.data.build.a_shld_total_surface,
             ) = self.calculate_elliptical_shield_areas(
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
                 rmajor=physics_variables.rmajor,
                 triang=physics_variables.triang,
-                dr_shld_inboard=build_variables.dr_shld_inboard,
+                dr_shld_inboard=self.data.build.dr_shld_inboard,
                 rminor=physics_variables.rminor,
                 dz_shld_half=self.data.blanket.dz_shld_half,
-                dr_shld_outboard=build_variables.dr_shld_outboard,
+                dr_shld_outboard=self.data.build.dr_shld_outboard,
             )
 
             (
@@ -111,27 +110,27 @@ class Shield(Model):
                 self.data.blanket.vol_shld_outboard,
                 self.data.fwbs.vol_shld_total,
             ) = self.calculate_elliptical_shield_volumes(
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
                 rmajor=physics_variables.rmajor,
                 triang=physics_variables.triang,
-                dr_shld_inboard=build_variables.dr_shld_inboard,
+                dr_shld_inboard=self.data.build.dr_shld_inboard,
                 rminor=physics_variables.rminor,
                 dz_shld_half=self.data.blanket.dz_shld_half,
-                dr_shld_outboard=build_variables.dr_shld_outboard,
-                dz_shld_upper=build_variables.dz_shld_upper,
+                dr_shld_outboard=self.data.build.dr_shld_outboard,
+                dz_shld_upper=self.data.build.dz_shld_upper,
             )
 
         # Apply shield coverage factors
-        build_variables.a_shld_inboard_surface = (
-            self.data.fwbs.fvolsi * build_variables.a_shld_inboard_surface
+        self.data.build.a_shld_inboard_surface = (
+            self.data.fwbs.fvolsi * self.data.build.a_shld_inboard_surface
         )
-        build_variables.a_shld_outboard_surface = (
-            self.data.fwbs.fvolso * build_variables.a_shld_outboard_surface
+        self.data.build.a_shld_outboard_surface = (
+            self.data.fwbs.fvolso * self.data.build.a_shld_outboard_surface
         )
-        build_variables.a_shld_total_surface = (
-            build_variables.a_shld_inboard_surface
-            + build_variables.a_shld_outboard_surface
+        self.data.build.a_shld_total_surface = (
+            self.data.build.a_shld_inboard_surface
+            + self.data.build.a_shld_outboard_surface
         )
 
         self.data.blanket.vol_shld_inboard = (
@@ -447,21 +446,21 @@ class Shield(Model):
             self.outfile,
             "Area of inboard shield surface (m^2)",
             "(a_shld_inboard_surface)",
-            build_variables.a_shld_inboard_surface,
+            self.data.build.a_shld_inboard_surface,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Area of outboard shield surface (m^2)",
             "(a_shld_outboard_surface)",
-            build_variables.a_shld_outboard_surface,
+            self.data.build.a_shld_outboard_surface,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Total area of shield surface (m^2)",
             "(a_shld_total_surface)",
-            build_variables.a_shld_total_surface,
+            self.data.build.a_shld_total_surface,
             "OP ",
         )
         po.ovarrf(

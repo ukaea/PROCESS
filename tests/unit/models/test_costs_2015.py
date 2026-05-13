@@ -6,7 +6,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    build_variables,
     current_drive_variables,
     heat_transport_variables,
     pf_power_variables,
@@ -4576,15 +4575,15 @@ def test_calc_land_costs(calclandcostsparam, monkeypatch, costs2015):
     """
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_inner_bore", calclandcostsparam.dr_tf_inner_bore
+        costs2015.data.build, "dr_tf_inner_bore", calclandcostsparam.dr_tf_inner_bore
     )
 
     monkeypatch.setattr(
-        build_variables, "dh_tf_inner_bore", calclandcostsparam.dh_tf_inner_bore
+        costs2015.data.build, "dh_tf_inner_bore", calclandcostsparam.dh_tf_inner_bore
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_inboard", calclandcostsparam.dr_tf_inboard
+        costs2015.data.build, "dr_tf_inboard", calclandcostsparam.dr_tf_inboard
     )
 
     monkeypatch.setattr(
@@ -11372,13 +11371,13 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
     """
 
     monkeypatch.setattr(
-        build_variables,
+        costs2015.data.build,
         "r_shld_outboard_outer",
         calcnplantandvvcostsparam.r_shld_outboard_outer,
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_vv_outboard", calcnplantandvvcostsparam.dr_vv_outboard
+        costs2015.data.build, "dr_vv_outboard", calcnplantandvvcostsparam.dr_vv_outboard
     )
 
     monkeypatch.setattr(

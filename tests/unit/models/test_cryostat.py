@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     pfcoil_variables,
 )
@@ -147,16 +146,22 @@ def test_external_cryo_geometry(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        build_variables, "f_z_cryostat", externalcryogeometryparam.f_z_cryostat
+        cryostat_fixture.data.build,
+        "f_z_cryostat",
+        externalcryogeometryparam.f_z_cryostat,
     )
     monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", externalcryogeometryparam.z_tf_inside_half
+        cryostat_fixture.data.build,
+        "z_tf_inside_half",
+        externalcryogeometryparam.z_tf_inside_half,
     )
     monkeypatch.setattr(
-        build_variables, "dr_tf_inboard", externalcryogeometryparam.dr_tf_inboard
+        cryostat_fixture.data.build,
+        "dr_tf_inboard",
+        externalcryogeometryparam.dr_tf_inboard,
     )
     monkeypatch.setattr(
-        build_variables, "dr_cryostat", externalcryogeometryparam.dr_cryostat
+        cryostat_fixture.data.build, "dr_cryostat", externalcryogeometryparam.dr_cryostat
     )
     monkeypatch.setattr(
         cryostat_fixture.data.fwbs,

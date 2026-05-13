@@ -12,7 +12,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     buildings_variables,
     current_drive_variables,
     heat_transport_variables,
@@ -333,7 +332,7 @@ class Power(Model):
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
         ic = -1
         n_pf_coil_groups = pfcoil_variables.n_pf_coil_groups
-        if build_variables.iohcl != 0:
+        if self.data.build.iohcl != 0:
             n_pf_coil_groups += 1
 
         # Map PF group to representative circuit index (used for busbar I^2R per circuit)

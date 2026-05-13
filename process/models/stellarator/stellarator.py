@@ -14,7 +14,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     constraint_variables,
     current_drive_variables,
     divertor_variables,
@@ -515,20 +514,20 @@ class Stellarator(Model):
         #  Uses self.data.fwbs.fhole etc. to take account of gaps due to ports etc.
 
         r1 = physics_variables.rminor + 0.5e0 * (
-            build_variables.dr_fw_plasma_gap_inboard
-            + build_variables.dr_fw_inboard
-            + build_variables.dr_fw_plasma_gap_outboard
-            + build_variables.dr_fw_outboard
+            self.data.build.dr_fw_plasma_gap_inboard
+            + self.data.build.dr_fw_inboard
+            + self.data.build.dr_fw_plasma_gap_outboard
+            + self.data.build.dr_fw_outboard
         )
         if heat_transport_variables.ipowerflow == 0:
-            build_variables.a_blkt_total_surface = (
+            self.data.build.a_blkt_total_surface = (
                 physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
                 * (1.0e0 - self.data.fwbs.fhole)
             )
         else:
-            build_variables.a_blkt_total_surface = (
+            self.data.build.a_blkt_total_surface = (
                 physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
@@ -540,18 +539,18 @@ class Stellarator(Model):
                 )
             )
 
-        build_variables.a_blkt_inboard_surface = (
-            0.5e0 * build_variables.a_blkt_total_surface
+        self.data.build.a_blkt_inboard_surface = (
+            0.5e0 * self.data.build.a_blkt_total_surface
         )
-        build_variables.a_blkt_outboard_surface = (
-            0.5e0 * build_variables.a_blkt_total_surface
+        self.data.build.a_blkt_outboard_surface = (
+            0.5e0 * self.data.build.a_blkt_total_surface
         )
 
         self.data.fwbs.vol_blkt_inboard = (
-            build_variables.a_blkt_inboard_surface * build_variables.dr_blkt_inboard
+            self.data.build.a_blkt_inboard_surface * self.data.build.dr_blkt_inboard
         )
         self.data.fwbs.vol_blkt_outboard = (
-            build_variables.a_blkt_outboard_surface * build_variables.dr_blkt_outboard
+            self.data.build.a_blkt_outboard_surface * self.data.build.dr_blkt_outboard
         )
         self.data.fwbs.vol_blkt_total = (
             self.data.fwbs.vol_blkt_inboard + self.data.fwbs.vol_blkt_outboard
@@ -561,23 +560,23 @@ class Stellarator(Model):
         #  Uses fvolsi, self.data.fwbs.fvolso as area coverage factors
 
         r1 += 0.5e0 * (
-            build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
+            self.data.build.dr_blkt_inboard + self.data.build.dr_blkt_outboard
         )
-        build_variables.a_shld_total_surface = (
+        self.data.build.a_shld_total_surface = (
             physics_variables.a_plasma_surface * r1 / physics_variables.rminor
         )
-        build_variables.a_shld_inboard_surface = (
-            0.5e0 * build_variables.a_shld_total_surface * self.data.fwbs.fvolsi
+        self.data.build.a_shld_inboard_surface = (
+            0.5e0 * self.data.build.a_shld_total_surface * self.data.fwbs.fvolsi
         )
-        build_variables.a_shld_outboard_surface = (
-            0.5e0 * build_variables.a_shld_total_surface * self.data.fwbs.fvolso
+        self.data.build.a_shld_outboard_surface = (
+            0.5e0 * self.data.build.a_shld_total_surface * self.data.fwbs.fvolso
         )
 
         vol_shld_inboard = (
-            build_variables.a_shld_inboard_surface * build_variables.dr_shld_inboard
+            self.data.build.a_shld_inboard_surface * self.data.build.dr_shld_inboard
         )
         vol_shld_outboard = (
-            build_variables.a_shld_outboard_surface * build_variables.dr_shld_outboard
+            self.data.build.a_shld_outboard_surface * self.data.build.dr_shld_outboard
         )
         self.data.fwbs.vol_shld_total = vol_shld_inboard + vol_shld_outboard
 
@@ -694,7 +693,7 @@ class Stellarator(Model):
                 )
 
                 self.data.fwbs.p_blkt_nuclear_heat_total_mw = pneut2 * (
-                    1.0e0 - np.exp(-build_variables.dr_blkt_outboard / decaybl)
+                    1.0e0 - np.exp(-self.data.build.dr_blkt_outboard / decaybl)
                 )
 
                 #  Nuclear heating in the shield
@@ -811,8 +810,8 @@ class Stellarator(Model):
                             + 0.013165 * self.data.fwbs.coolp**3
                         ) - 20
 
-                bfwi = 0.5e0 * build_variables.dr_fw_inboard
-                bfwo = 0.5e0 * build_variables.dr_fw_outboard
+                bfwi = 0.5e0 * self.data.build.dr_fw_inboard
+                bfwo = 0.5e0 * self.data.build.dr_fw_outboard
 
                 f_a_fw_coolant_inboard = (
                     self.data.fwbs.radius_fw_channel
@@ -872,10 +871,10 @@ class Stellarator(Model):
                 #  Neutron power deposited in breeder zone (MW)
 
                 pnucbzi = pnucbsi * (
-                    1.0e0 - np.exp(-build_variables.dr_blkt_inboard / decaybzi)
+                    1.0e0 - np.exp(-self.data.build.dr_blkt_inboard / decaybzi)
                 )
                 pnucbzo = pnucbso * (
-                    1.0e0 - np.exp(-build_variables.dr_blkt_outboard / decaybzo)
+                    1.0e0 - np.exp(-self.data.build.dr_blkt_outboard / decaybzo)
                 )
 
                 #  Calculate coolant pumping powers from input fraction.
@@ -968,10 +967,10 @@ class Stellarator(Model):
                 #  Neutron power deposited in the shield (MW)
 
                 pnucshldi = pnucsi * (
-                    1.0e0 - np.exp(-build_variables.dr_shld_inboard / decayshldi)
+                    1.0e0 - np.exp(-self.data.build.dr_shld_inboard / decayshldi)
                 )
                 pnucshldo = pnucso * (
-                    1.0e0 - np.exp(-build_variables.dr_shld_outboard / decayshldo)
+                    1.0e0 - np.exp(-self.data.build.dr_shld_outboard / decayshldo)
                 )
 
                 self.data.fwbs.p_shld_nuclear_heat_mw = pnucshldi + pnucshldo
@@ -1078,18 +1077,18 @@ class Stellarator(Model):
         else:  # volume fractions proportional to sub-assembly thicknesses
             self.data.fwbs.m_blkt_steel_total = self.data.fwbs.den_steel * (
                 self.data.fwbs.vol_blkt_inboard
-                / build_variables.dr_blkt_inboard
+                / self.data.build.dr_blkt_inboard
                 * (
-                    build_variables.blbuith * self.data.fwbs.fblss
-                    + build_variables.blbmith * (1.0e0 - self.data.fwbs.fblhebmi)
-                    + build_variables.blbpith * (1.0e0 - self.data.fwbs.fblhebpi)
+                    self.data.build.blbuith * self.data.fwbs.fblss
+                    + self.data.build.blbmith * (1.0e0 - self.data.fwbs.fblhebmi)
+                    + self.data.build.blbpith * (1.0e0 - self.data.fwbs.fblhebpi)
                 )
                 + self.data.fwbs.vol_blkt_outboard
-                / build_variables.dr_blkt_outboard
+                / self.data.build.dr_blkt_outboard
                 * (
-                    build_variables.blbuoth * self.data.fwbs.fblss
-                    + build_variables.blbmoth * (1.0e0 - self.data.fwbs.fblhebmo)
-                    + build_variables.blbpoth * (1.0e0 - self.data.fwbs.fblhebpo)
+                    self.data.build.blbuoth * self.data.fwbs.fblss
+                    + self.data.build.blbmoth * (1.0e0 - self.data.fwbs.fblhebmo)
+                    + self.data.build.blbpoth * (1.0e0 - self.data.fwbs.fblhebpo)
                 )
             )
             self.data.fwbs.m_blkt_beryllium = (
@@ -1098,13 +1097,13 @@ class Stellarator(Model):
                 * (
                     (
                         self.data.fwbs.vol_blkt_inboard
-                        * build_variables.blbuith
-                        / build_variables.dr_blkt_inboard
+                        * self.data.build.blbuith
+                        / self.data.build.dr_blkt_inboard
                     )
                     + (
                         self.data.fwbs.vol_blkt_outboard
-                        * build_variables.blbuoth
-                        / build_variables.dr_blkt_outboard
+                        * self.data.build.blbuoth
+                        / self.data.build.dr_blkt_outboard
                     )
                 )
             )
@@ -1114,13 +1113,13 @@ class Stellarator(Model):
                 * (
                     (
                         self.data.fwbs.vol_blkt_inboard
-                        * build_variables.blbuith
-                        / build_variables.dr_blkt_inboard
+                        * self.data.build.blbuith
+                        / self.data.build.dr_blkt_inboard
                     )
                     + (
                         self.data.fwbs.vol_blkt_outboard
-                        * build_variables.blbuoth
-                        / build_variables.dr_blkt_outboard
+                        * self.data.build.blbuoth
+                        / self.data.build.dr_blkt_outboard
                     )
                 )
             )
@@ -1134,16 +1133,16 @@ class Stellarator(Model):
                 self.data.fwbs.vol_blkt_inboard
                 / self.data.fwbs.vol_blkt_total
                 * (  # inboard portion
-                    (build_variables.blbuith / build_variables.dr_blkt_inboard)
+                    (self.data.build.blbuith / self.data.build.dr_blkt_inboard)
                     * (
                         1.0e0
                         - self.data.fwbs.fblbe
                         - self.data.fwbs.fblbreed
                         - self.data.fwbs.fblss
                     )
-                    + (build_variables.blbmith / build_variables.dr_blkt_inboard)
+                    + (self.data.build.blbmith / self.data.build.dr_blkt_inboard)
                     * self.data.fwbs.fblhebmi
-                    + (build_variables.blbpith / build_variables.dr_blkt_inboard)
+                    + (self.data.build.blbpith / self.data.build.dr_blkt_inboard)
                     * self.data.fwbs.fblhebpi
                 )
             )
@@ -1151,16 +1150,16 @@ class Stellarator(Model):
                 self.data.fwbs.vol_blkt_outboard
                 / self.data.fwbs.vol_blkt_total
                 * (  # outboard portion
-                    (build_variables.blbuoth / build_variables.dr_blkt_outboard)
+                    (self.data.build.blbuoth / self.data.build.dr_blkt_outboard)
                     * (
                         1.0e0
                         - self.data.fwbs.fblbe
                         - self.data.fwbs.fblbreed
                         - self.data.fwbs.fblss
                     )
-                    + (build_variables.blbmoth / build_variables.dr_blkt_outboard)
+                    + (self.data.build.blbmoth / self.data.build.dr_blkt_outboard)
                     * self.data.fwbs.fblhebmo
-                    + (build_variables.blbpoth / build_variables.dr_blkt_outboard)
+                    + (self.data.build.blbpoth / self.data.build.dr_blkt_outboard)
                     * self.data.fwbs.fblhebpo
                 )
             )
@@ -1195,7 +1194,7 @@ class Stellarator(Model):
 
             self.data.fwbs.m_fw_total = (
                 self.data.first_wall.a_fw_total
-                * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
+                * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
                 / 2.0e0
                 * self.data.fwbs.den_steel
                 * (1.0e0 - self.data.fwbs.fwclfr)
@@ -1205,7 +1204,7 @@ class Stellarator(Model):
 
             coolvol += (
                 self.data.first_wall.a_fw_total
-                * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
+                * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
                 / 2.0e0
                 * self.data.fwbs.fwclfr
             )
@@ -1213,19 +1212,19 @@ class Stellarator(Model):
         else:
             self.data.fwbs.m_fw_total = self.data.fwbs.den_steel * (
                 self.data.first_wall.a_fw_inboard
-                * build_variables.dr_fw_inboard
+                * self.data.build.dr_fw_inboard
                 * (1.0e0 - f_a_fw_coolant_inboard)
                 + self.data.first_wall.a_fw_outboard
-                * build_variables.dr_fw_outboard
+                * self.data.build.dr_fw_outboard
                 * (1.0e0 - f_a_fw_coolant_outboard)
             )
             coolvol = (
                 coolvol
                 + self.data.first_wall.a_fw_inboard
-                * build_variables.dr_fw_inboard
+                * self.data.build.dr_fw_inboard
                 * f_a_fw_coolant_inboard
                 + self.data.first_wall.a_fw_outboard
-                * build_variables.dr_fw_outboard
+                * self.data.build.dr_fw_outboard
                 * f_a_fw_coolant_outboard
             )
 
@@ -1234,15 +1233,15 @@ class Stellarator(Model):
 
             self.data.fwbs.fwclfr = (
                 self.data.first_wall.a_fw_inboard
-                * build_variables.dr_fw_inboard
+                * self.data.build.dr_fw_inboard
                 * f_a_fw_coolant_inboard
                 + self.data.first_wall.a_fw_outboard
-                * build_variables.dr_fw_outboard
+                * self.data.build.dr_fw_outboard
                 * f_a_fw_coolant_outboard
             ) / (
                 self.data.first_wall.a_fw_total
                 * 0.5e0
-                * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
+                * (self.data.build.dr_fw_inboard + self.data.build.dr_fw_outboard)
             )
 
         #  Mass of coolant = volume * density at typical coolant
@@ -1264,8 +1263,8 @@ class Stellarator(Model):
         #  External cryostat outboard major radius (m)
 
         self.data.fwbs.r_cryostat_inboard = (
-            build_variables.r_tf_outboard_mid
-            + 0.5e0 * build_variables.dr_tf_outboard
+            self.data.build.r_tf_outboard_mid
+            + 0.5e0 * self.data.build.dr_tf_outboard
             + self.data.fwbs.dr_pf_cryostat
         )
         adewex = self.data.fwbs.r_cryostat_inboard - physics_variables.rmajor
@@ -1277,24 +1276,24 @@ class Stellarator(Model):
             * (np.pi**2)
             * physics_variables.rmajor
             * adewex
-            * build_variables.dr_cryostat
+            * self.data.build.dr_cryostat
         )
 
         #  Internal vacuum vessel volume
         #  self.data.fwbs.fvoldw accounts for ports, support, etc. additions
 
         r1 = physics_variables.rminor + 0.5e0 * (
-            build_variables.dr_fw_plasma_gap_inboard
-            + build_variables.dr_fw_inboard
-            + build_variables.dr_blkt_inboard
-            + build_variables.dr_shld_inboard
-            + build_variables.dr_fw_plasma_gap_outboard
-            + build_variables.dr_fw_outboard
-            + build_variables.dr_blkt_outboard
-            + build_variables.dr_shld_outboard
+            self.data.build.dr_fw_plasma_gap_inboard
+            + self.data.build.dr_fw_inboard
+            + self.data.build.dr_blkt_inboard
+            + self.data.build.dr_shld_inboard
+            + self.data.build.dr_fw_plasma_gap_outboard
+            + self.data.build.dr_fw_outboard
+            + self.data.build.dr_blkt_outboard
+            + self.data.build.dr_shld_outboard
         )
         self.data.fwbs.vol_vv = (
-            (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
+            (self.data.build.dr_vv_inboard + self.data.build.dr_vv_outboard)
             / 2.0e0
             * physics_variables.a_plasma_surface
             * r1
@@ -1341,19 +1340,19 @@ class Stellarator(Model):
                 self.outfile,
                 "Inboard shield thickness (m)",
                 "(dr_shld_inboard)",
-                build_variables.dr_shld_inboard,
+                self.data.build.dr_shld_inboard,
             )
             po.ovarre(
                 self.outfile,
                 "Outboard shield thickness (m)",
                 "(dr_shld_outboard)",
-                build_variables.dr_shld_outboard,
+                self.data.build.dr_shld_outboard,
             )
             po.ovarre(
                 self.outfile,
                 "Top shield thickness (m)",
                 "(dz_shld_upper)",
-                build_variables.dz_shld_upper,
+                self.data.build.dz_shld_upper,
             )
 
             if self.data.fwbs.blktmodel > 0:
@@ -1361,58 +1360,58 @@ class Stellarator(Model):
                     self.outfile,
                     "Inboard breeding zone thickness (m)",
                     "(blbuith)",
-                    build_variables.blbuith,
+                    self.data.build.blbuith,
                 )
                 po.ovarre(
                     self.outfile,
                     "Inboard box manifold thickness (m)",
                     "(blbmith)",
-                    build_variables.blbmith,
+                    self.data.build.blbmith,
                 )
                 po.ovarre(
                     self.outfile,
                     "Inboard back plate thickness (m)",
                     "(blbpith)",
-                    build_variables.blbpith,
+                    self.data.build.blbpith,
                 )
 
             po.ovarre(
                 self.outfile,
                 "Inboard blanket thickness (m)",
                 "(dr_blkt_inboard)",
-                build_variables.dr_blkt_inboard,
+                self.data.build.dr_blkt_inboard,
             )
             if self.data.fwbs.blktmodel > 0:
                 po.ovarre(
                     self.outfile,
                     "Outboard breeding zone thickness (m)",
                     "(blbuoth)",
-                    build_variables.blbuoth,
+                    self.data.build.blbuoth,
                 )
                 po.ovarre(
                     self.outfile,
                     "Outboard box manifold thickness (m)",
                     "(blbmoth)",
-                    build_variables.blbmoth,
+                    self.data.build.blbmoth,
                 )
                 po.ovarre(
                     self.outfile,
                     "Outboard back plate thickness (m)",
                     "(blbpoth)",
-                    build_variables.blbpoth,
+                    self.data.build.blbpoth,
                 )
 
             po.ovarre(
                 self.outfile,
                 "Outboard blanket thickness (m)",
                 "(dr_blkt_outboard)",
-                build_variables.dr_blkt_outboard,
+                self.data.build.dr_blkt_outboard,
             )
             po.ovarre(
                 self.outfile,
                 "Top blanket thickness (m)",
                 "(dz_blkt_upper)",
-                build_variables.dz_blkt_upper,
+                self.data.build.dz_blkt_upper,
             )
 
             if (heat_transport_variables.ipowerflow == 0) and (
@@ -1784,14 +1783,14 @@ class Stellarator(Model):
             # N.B. The vacuum vessel appears to be ignored
 
             dshieq = (
-                build_variables.dr_shld_inboard
-                + build_variables.dr_fw_inboard
-                + build_variables.dr_blkt_inboard
+                self.data.build.dr_shld_inboard
+                + self.data.build.dr_fw_inboard
+                + self.data.build.dr_blkt_inboard
             )
             dshoeq = (
-                build_variables.dr_shld_outboard
-                + build_variables.dr_fw_outboard
-                + build_variables.dr_blkt_outboard
+                self.data.build.dr_shld_outboard
+                + self.data.build.dr_fw_outboard
+                + self.data.build.dr_blkt_outboard
             )
 
             # Winding pack radial thickness, including groundwall insulation

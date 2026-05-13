@@ -2,8 +2,8 @@
 
 import numpy as np
 
+from process.core.model import DataStructure
 from process.data_structure import (
-    build_variables,
     physics_variables,
     rebco_variables,
     superconducting_tf_coil_variables,
@@ -11,7 +11,7 @@ from process.data_structure import (
 )
 
 
-def calculate_quench_protection(coilcurrent):
+def calculate_quench_protection(coilcurrent, data: DataStructure):
     """Calculate quench protecion limits for stellarator coils
     Includes calculation of the vacuum vessel force density, quench protection current density
     and max dump voltage during quench
@@ -28,20 +28,20 @@ def calculate_quench_protection(coilcurrent):
     rad_vv_in = (
         physics_variables.rmajor
         - physics_variables.rminor
-        - build_variables.dr_fw_plasma_gap_inboard
-        - build_variables.dr_fw_inboard
-        - build_variables.dr_blkt_inboard
-        - build_variables.dr_shld_blkt_gap
-        - build_variables.dr_shld_inboard
+        - data.build.dr_fw_plasma_gap_inboard
+        - data.build.dr_fw_inboard
+        - data.build.dr_blkt_inboard
+        - data.build.dr_shld_blkt_gap
+        - data.build.dr_shld_inboard
     )
     rad_vv_out = (
         physics_variables.rmajor
         + physics_variables.rminor
-        + build_variables.dr_fw_plasma_gap_outboard
-        + build_variables.dr_fw_outboard
-        + build_variables.dr_blkt_outboard
-        + build_variables.dr_shld_blkt_gap
-        + build_variables.dr_shld_outboard
+        + data.build.dr_fw_plasma_gap_outboard
+        + data.build.dr_fw_outboard
+        + data.build.dr_blkt_outboard
+        + data.build.dr_shld_blkt_gap
+        + data.build.dr_shld_outboard
     )
 
     # Stellarator version is working on the W7-X scaling, so we should actual use vv r_major
@@ -50,7 +50,7 @@ def calculate_quench_protection(coilcurrent):
     rad_vv = physics_variables.rmajor
 
     # MN/m^3
-    f_vv_actual = calculate_vv_max_force_density_from_W7X_scaling(rad_vv)
+    f_vv_actual = calculate_vv_max_force_density_from_W7X_scaling(rad_vv, data)
 
     # This approach merge stress model from tokamaks with induced force calculated from W7-X scaling
     a_vv = (rad_vv_out + rad_vv_in) / (rad_vv_out - rad_vv_in)
@@ -102,13 +102,18 @@ def calculate_quench_protection(coilcurrent):
     return f_vv_actual
 
 
-def calculate_vv_max_force_density_from_W7X_scaling(rad_vv: float) -> float:
+def calculate_vv_max_force_density_from_W7X_scaling(
+    rad_vv: float, data: DataStructure
+) -> float:
     """Actual VV force density from scaling [MN/m^3]
     Based on reference values from W-7X.
 
     Parameters
     ----------
     rad_vv:
+
+    data: DataStructure
+        data structure object
 
     Returns
     -------
@@ -140,7 +145,7 @@ def calculate_vv_max_force_density_from_W7X_scaling(rad_vv: float) -> float:
             * rmajor_ref
             / rad_vv
             * dr_vv_ref
-            / ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
+            / ((data.build.dr_vv_inboard + data.build.dr_vv_outboard) / 2)
         )
     )
 

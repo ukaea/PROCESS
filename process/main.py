@@ -727,6 +727,8 @@ class Models:
             self.structure,
             self.physics,
             self.pulse,
+            self.plasma_geom,
+            self.resistive_tf_coil,
         )
 
     def setup_data_structure(self):

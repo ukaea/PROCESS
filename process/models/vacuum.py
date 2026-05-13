@@ -9,7 +9,6 @@ from process.core import constants, process_output
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     divertor_variables,
     physics_variables,
     tfcoil_variables,
@@ -76,17 +75,17 @@ class Vacuum(Model):
                 physics_variables.rminor,
                 0.5e0
                 * (
-                    build_variables.dr_fw_plasma_gap_inboard
-                    + build_variables.dr_fw_plasma_gap_outboard
+                    self.data.build.dr_fw_plasma_gap_inboard
+                    + self.data.build.dr_fw_plasma_gap_outboard
                 ),
                 physics_variables.a_plasma_surface,
                 physics_variables.vol_plasma,
-                build_variables.dr_shld_outboard,
-                build_variables.dr_shld_inboard,
-                build_variables.dr_tf_inboard,
-                build_variables.r_shld_inboard_inner
-                - build_variables.dr_shld_vv_gap_inboard
-                - build_variables.dr_vv_inboard,
+                self.data.build.dr_shld_outboard,
+                self.data.build.dr_shld_inboard,
+                self.data.build.dr_tf_inboard,
+                self.data.build.r_shld_inboard_inner
+                - self.data.build.dr_shld_vv_gap_inboard
+                - self.data.build.dr_vv_inboard,
                 tfcoil_variables.n_tf_coils,
                 self.data.times.t_plant_pulse_dwell,
                 physics_variables.nd_plasma_electrons_vol_avg,
@@ -732,17 +731,17 @@ class VacuumVessel(Model):
     def run(self):
         """Routine to calculate the parameters of the vacuum vessel"""
         self.data.blanket.dz_vv_half = self.calculate_vessel_half_height(
-            z_tf_inside_half=build_variables.z_tf_inside_half,
-            dz_shld_vv_gap=build_variables.dz_shld_vv_gap,
-            dz_vv_lower=build_variables.dz_vv_lower,
+            z_tf_inside_half=self.data.build.z_tf_inside_half,
+            dz_shld_vv_gap=self.data.build.dz_shld_vv_gap,
+            dz_vv_lower=self.data.build.dz_vv_lower,
             n_divertors=divertor_variables.n_divertors,
-            dz_blkt_upper=build_variables.dz_blkt_upper,
-            dz_shld_upper=build_variables.dz_shld_upper,
-            z_plasma_xpoint_upper=build_variables.z_plasma_xpoint_upper,
-            dr_fw_plasma_gap_inboard=build_variables.dr_fw_plasma_gap_inboard,
-            dr_fw_plasma_gap_outboard=build_variables.dr_fw_plasma_gap_outboard,
-            dr_fw_inboard=build_variables.dr_fw_inboard,
-            dr_fw_outboard=build_variables.dr_fw_outboard,
+            dz_blkt_upper=self.data.build.dz_blkt_upper,
+            dz_shld_upper=self.data.build.dz_shld_upper,
+            z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,
+            dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
+            dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,
+            dr_fw_inboard=self.data.build.dr_fw_inboard,
+            dr_fw_outboard=self.data.build.dr_fw_outboard,
         )
         # D-shaped blanket and shield
         if (
@@ -754,13 +753,13 @@ class VacuumVessel(Model):
                 self.data.blanket.vol_vv_outboard,
                 self.data.fwbs.vol_vv,
             ) = self.calculate_dshaped_vessel_volumes(
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
                 dz_vv_half=self.data.blanket.dz_vv_half,
-                dr_vv_inboard=build_variables.dr_vv_inboard,
-                dr_vv_outboard=build_variables.dr_vv_outboard,
-                dz_vv_upper=build_variables.dz_vv_upper,
-                dz_vv_lower=build_variables.dz_vv_lower,
+                dr_vv_inboard=self.data.build.dr_vv_inboard,
+                dr_vv_outboard=self.data.build.dr_vv_outboard,
+                dz_vv_upper=self.data.build.dz_vv_upper,
+                dz_vv_lower=self.data.build.dz_vv_lower,
             )
         else:
             (
@@ -771,13 +770,13 @@ class VacuumVessel(Model):
                 rmajor=physics_variables.rmajor,
                 rminor=physics_variables.rminor,
                 triang=physics_variables.triang,
-                r_shld_inboard_inner=build_variables.r_shld_inboard_inner,
-                r_shld_outboard_outer=build_variables.r_shld_outboard_outer,
+                r_shld_inboard_inner=self.data.build.r_shld_inboard_inner,
+                r_shld_outboard_outer=self.data.build.r_shld_outboard_outer,
                 dz_vv_half=self.data.blanket.dz_vv_half,
-                dr_vv_inboard=build_variables.dr_vv_inboard,
-                dr_vv_outboard=build_variables.dr_vv_outboard,
-                dz_vv_upper=build_variables.dz_vv_upper,
-                dz_vv_lower=build_variables.dz_vv_lower,
+                dr_vv_inboard=self.data.build.dr_vv_inboard,
+                dr_vv_outboard=self.data.build.dr_vv_outboard,
+                dz_vv_upper=self.data.build.dz_vv_upper,
+                dz_vv_lower=self.data.build.dz_vv_lower,
             )
 
         # Apply vacuum vessel coverage factor

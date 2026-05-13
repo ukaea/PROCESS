@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    build_variables,
     current_drive_variables,
     dcll_variables,
     divertor_variables,
@@ -800,31 +799,31 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcll.data.first_wall, "a_fw_inboard", dcllmassesparam.a_fw_inboard
     )
 
-    monkeypatch.setattr(build_variables, "dr_fw_inboard", dcllmassesparam.dr_fw_inboard)
+    monkeypatch.setattr(dcll.data.build, "dr_fw_inboard", dcllmassesparam.dr_fw_inboard)
 
     monkeypatch.setattr(
         dcll.data.first_wall, "a_fw_outboard", dcllmassesparam.a_fw_outboard
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_fw_outboard", dcllmassesparam.dr_fw_outboard
+        dcll.data.build, "dr_fw_outboard", dcllmassesparam.dr_fw_outboard
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_blkt_inboard", dcllmassesparam.dr_blkt_inboard
+        dcll.data.build, "dr_blkt_inboard", dcllmassesparam.dr_blkt_inboard
     )
 
-    monkeypatch.setattr(build_variables, "blbuith", dcllmassesparam.blbuith)
+    monkeypatch.setattr(dcll.data.build, "blbuith", dcllmassesparam.blbuith)
 
-    monkeypatch.setattr(build_variables, "blbmith", dcllmassesparam.blbmith)
+    monkeypatch.setattr(dcll.data.build, "blbmith", dcllmassesparam.blbmith)
 
     monkeypatch.setattr(
-        build_variables, "dr_blkt_outboard", dcllmassesparam.dr_blkt_outboard
+        dcll.data.build, "dr_blkt_outboard", dcllmassesparam.dr_blkt_outboard
     )
 
-    monkeypatch.setattr(build_variables, "blbuoth", dcllmassesparam.blbuoth)
+    monkeypatch.setattr(dcll.data.build, "blbuoth", dcllmassesparam.blbuoth)
 
-    monkeypatch.setattr(build_variables, "blbmoth", dcllmassesparam.blbmoth)
+    monkeypatch.setattr(dcll.data.build, "blbmoth", dcllmassesparam.blbmoth)
 
     monkeypatch.setattr(
         physics_variables, "a_plasma_surface", dcllmassesparam.a_plasma_surface
@@ -1006,9 +1005,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     dcll.dcll_masses(False)
 
-    assert build_variables.blbmith == pytest.approx(dcllmassesparam.expected_blbmith)
+    assert dcll.data.build.blbmith == pytest.approx(dcllmassesparam.expected_blbmith)
 
-    assert build_variables.blbmoth == pytest.approx(dcllmassesparam.expected_blbmoth)
+    assert dcll.data.build.blbmoth == pytest.approx(dcllmassesparam.expected_blbmoth)
 
     assert dcll.data.fwbs.m_blkt_total == pytest.approx(
         dcllmassesparam.expected_m_blkt_total

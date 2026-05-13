@@ -16,7 +16,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    build_variables,
     global_variables,
     numerics,
     physics_variables,
@@ -24,7 +23,6 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.data_structure import build_variables as bv
 from process.models.superconductors import SuperconductorModel
 
 if TYPE_CHECKING:
@@ -133,12 +131,12 @@ class TFCoil(Model):
             tfc_sidewall_is_fraction=tfcoil_variables.tfc_sidewall_is_fraction,
             casths_fraction=tfcoil_variables.casths_fraction,
             n_tf_coils=tfcoil_variables.n_tf_coils,
-            dr_tf_inboard=build_variables.dr_tf_inboard,
+            dr_tf_inboard=self.data.build.dr_tf_inboard,
             dr_tf_nose_case=tfcoil_variables.dr_tf_nose_case,
-            r_tf_inboard_out=build_variables.r_tf_inboard_out,
-            r_tf_inboard_in=build_variables.r_tf_inboard_in,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
-            dr_tf_outboard=build_variables.dr_tf_outboard,
+            r_tf_inboard_out=self.data.build.r_tf_inboard_out,
+            r_tf_inboard_in=self.data.build.r_tf_inboard_in,
+            r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
+            dr_tf_outboard=self.data.build.dr_tf_outboard,
         )
 
         superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half = (
@@ -166,7 +164,7 @@ class TFCoil(Model):
         tfcoil_variables.dx_tf_side_case_min = global_tf_geometry.dx_tf_side_case_min
 
         tfcoil_variables.r_b_tf_inboard_peak = (
-            build_variables.r_tf_inboard_out
+            self.data.build.r_tf_inboard_out
             - tfcoil_variables.dr_tf_plasma_case
             - tfcoil_variables.dx_tf_wp_insulation
             - tfcoil_variables.dx_tf_wp_insertion_gap
@@ -195,17 +193,17 @@ class TFCoil(Model):
             i_tf_shape=tfcoil_variables.i_tf_shape,
             itart=physics_variables.itart,
             i_single_null=physics_variables.i_single_null,
-            r_tf_inboard_out=build_variables.r_tf_inboard_out,
-            r_cp_top=build_variables.r_cp_top,
+            r_tf_inboard_out=self.data.build.r_tf_inboard_out,
+            r_cp_top=self.data.build.r_cp_top,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
             r_tf_outboard_in=superconducting_tf_coil_variables.r_tf_outboard_in,
-            z_tf_inside_half=build_variables.z_tf_inside_half,
-            z_tf_top=build_variables.z_tf_top,
-            dr_tf_inboard=build_variables.dr_tf_inboard,
-            dr_tf_outboard=build_variables.dr_tf_outboard,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
-            r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
+            z_tf_inside_half=self.data.build.z_tf_inside_half,
+            z_tf_top=self.data.build.z_tf_top,
+            dr_tf_inboard=self.data.build.dr_tf_inboard,
+            dr_tf_outboard=self.data.build.dr_tf_outboard,
+            r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
+            r_tf_inboard_mid=self.data.build.r_tf_inboard_mid,
         )
 
     def output(self):
@@ -707,7 +705,7 @@ class TFCoil(Model):
 
         elif (
             tfcoil_variables.i_tf_bucking in {2, 3}
-            and build_variables.i_tf_inside_cs == 1
+            and self.data.build.i_tf_inside_cs == 1
         ):
             po.ocmmnt(
                 self.outfile,
@@ -716,7 +714,7 @@ class TFCoil(Model):
 
         elif (
             tfcoil_variables.i_tf_bucking in {2, 3}
-            and build_variables.i_tf_inside_cs == 0
+            and self.data.build.i_tf_inside_cs == 0
         ):
             po.ocmmnt(
                 self.outfile, "  -> TF in contact with CS (bucked and weged design)"
@@ -741,21 +739,21 @@ class TFCoil(Model):
             self.outfile,
             "Inboard leg centre radius (m)",
             "(r_tf_inboard_mid)",
-            build_variables.r_tf_inboard_mid,
+            self.data.build.r_tf_inboard_mid,
             "OP ",
         )
         po.ovarre(
             constants.MFILE,
             "Inboard leg inner radius (m)",
             "(r_tf_inboard_in)",
-            build_variables.r_tf_inboard_in,
+            self.data.build.r_tf_inboard_in,
             "OP ",
         )
         po.ovarre(
             constants.MFILE,
             "Inboard leg outer radius (m)",
             "(r_tf_inboard_out)",
-            build_variables.r_tf_inboard_out,
+            self.data.build.r_tf_inboard_out,
             "OP ",
         )
         po.ovarin(
@@ -804,7 +802,7 @@ class TFCoil(Model):
             self.outfile,
             "Outboard leg centre radius (m)",
             "(r_tf_outboard_mid)",
-            build_variables.r_tf_outboard_mid,
+            self.data.build.r_tf_outboard_mid,
             "OP ",
         )
         po.ovarin(
@@ -817,13 +815,13 @@ class TFCoil(Model):
             self.outfile,
             "Total inboard leg radial thickness (m)",
             "(dr_tf_inboard)",
-            build_variables.dr_tf_inboard,
+            self.data.build.dr_tf_inboard,
         )
         po.ovarre(
             self.outfile,
             "Total outboard leg radial thickness (m)",
             "(dr_tf_outboard)",
-            build_variables.dr_tf_outboard,
+            self.data.build.dr_tf_outboard,
         )
         po.ovarre(
             self.outfile,
@@ -850,21 +848,21 @@ class TFCoil(Model):
             self.outfile,
             "Maximum inboard edge height (m)",
             "(z_tf_inside_half)",
-            build_variables.z_tf_inside_half,
+            self.data.build.z_tf_inside_half,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Height to top of TF coil (m)",
             "(z_tf_top)",
-            build_variables.z_tf_top,
+            self.data.build.z_tf_top,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Height difference in upper and lower TF from midplane (m)",
             "(dz_tf_upper_lower_midplane)",
-            build_variables.dz_tf_upper_lower_midplane,
+            self.data.build.dz_tf_upper_lower_midplane,
             "OP ",
         )
         if physics_variables.itart == 1:
@@ -943,19 +941,19 @@ class TFCoil(Model):
                 self.outfile,
                 "TF coil centrepost outer radius at midplane (m)",
                 "(r_tf_inboard_out)",
-                build_variables.r_tf_inboard_out,
+                self.data.build.r_tf_inboard_out,
             )
             po.ovarre(
                 self.outfile,
                 "TF coil centrepost outer radius at its top (m)",
                 "(r_cp_top)",
-                build_variables.r_cp_top,
+                self.data.build.r_cp_top,
             )
             po.ovarre(
                 self.outfile,
                 "Top/miplane TF CP radius ratio (-)",
                 "(f_r_cp)",
-                build_variables.f_r_cp,
+                self.data.build.f_r_cp,
             )
             po.ovarre(
                 self.outfile,
@@ -967,7 +965,7 @@ class TFCoil(Model):
                 self.outfile,
                 "Distance from the midplane to the top of the centrepost (m)",
                 "(z_tf_inside_half + dr_tf_outboard)",
-                build_variables.z_tf_inside_half + build_variables.dr_tf_outboard,
+                self.data.build.z_tf_inside_half + self.data.build.dr_tf_outboard,
             )
 
         # Turn/WP gemoetry
@@ -1945,7 +1943,7 @@ class TFCoil(Model):
         # TF coil radial build
         po.osubhd(self.outfile, "Radial build of TF coil centre-line :")
 
-        radius = build_variables.r_tf_inboard_in
+        radius = self.data.build.r_tf_inboard_in
         po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
         # Radial build for SC TF coils
@@ -2039,7 +2037,7 @@ class TFCoil(Model):
             po.obuild(
                 self.outfile,
                 "Plasma side case max radius",
-                build_variables.r_tf_inboard_out,
+                self.data.build.r_tf_inboard_out,
                 radius,
                 "(r_tf_inboard_out)",
             )
@@ -2112,21 +2110,21 @@ class TFCoil(Model):
 
         # Radial build consistency check
         if not (
-            abs(radius - build_variables.r_tf_inboard_in - build_variables.dr_tf_inboard)
+            abs(radius - self.data.build.r_tf_inboard_in - self.data.build.dr_tf_inboard)
             < 10.0e0 * np.finfo(float(radius)).eps
         ):
             logger.error(
                 "TF coil dimensions are not consistent. Radius of plasma-facing side of inner leg should be "
-                f"{build_variables.r_tf_inboard_in + build_variables.dr_tf_inboard}m"
+                f"{self.data.build.r_tf_inboard_in + self.data.build.dr_tf_inboard}m"
             )
 
         tf_total_height = (
-            build_variables.dh_tf_inner_bore + 2 * build_variables.dr_tf_inboard
+            self.data.build.dh_tf_inner_bore + 2 * self.data.build.dr_tf_inboard
         )
         tf_total_width = (
-            build_variables.dr_tf_inner_bore
-            + build_variables.dr_tf_inboard
-            + build_variables.dr_tf_outboard
+            self.data.build.dr_tf_inner_bore
+            + self.data.build.dr_tf_inboard
+            + self.data.build.dr_tf_outboard
         )
         po.oblnkl(self.outfile)
         po.obuild(
@@ -2145,7 +2143,7 @@ class TFCoil(Model):
             # write(self.outfile,5)
 
             # Restart the radial build at bucking cylindre inner radius
-            radius = build_variables.r_tf_inboard_in
+            radius = self.data.build.r_tf_inboard_in
             po.obuild(self.outfile, "Innermost edge of TF coil", radius, radius)
 
             radius += tfcoil_variables.dr_tf_nose_case
@@ -2213,7 +2211,7 @@ class TFCoil(Model):
             )
 
             # Consistency check
-            if abs(radius - build_variables.r_cp_top) < np.finfo(float(radius)).eps:
+            if abs(radius - self.data.build.r_cp_top) < np.finfo(float(radius)).eps:
                 po.ocmmnt(self.outfile, "Top TF coil dimensions are consistent")
             else:
                 po.ocmmnt(self.outfile, "ERROR: TF coil dimensions are NOT consistent:")
@@ -2221,7 +2219,7 @@ class TFCoil(Model):
                     self.outfile,
                     "Radius of plasma-facing side of inner leg SHOULD BE [m]",
                     "",
-                    build_variables.r_cp_top,
+                    self.data.build.r_cp_top,
                 )
                 po.oblnkl(self.outfile)
 
@@ -2262,7 +2260,7 @@ class TFCoil(Model):
         # Vertical distance from the midplane to the top of the tapered section [m]
         if physics_variables.itart == 1:
             superconducting_tf_coil_variables.z_cp_top = (
-                build_variables.z_plasma_xpoint_upper + tfcoil_variables.dztop
+                self.data.build.z_plasma_xpoint_upper + tfcoil_variables.dztop
             )
 
         if (
@@ -2271,7 +2269,7 @@ class TFCoil(Model):
         ):
             tfcoil_variables.dx_tf_inboard_out_toroidal = (
                 2.0e0
-                * build_variables.r_cp_top
+                * self.data.build.r_cp_top
                 * np.sin(
                     superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half
                 )
@@ -2288,7 +2286,9 @@ class TFCoil(Model):
             tfcoil_variables.a_cp_cool * tfcoil_variables.n_tf_coils
         )  # Cooling cross-sectional area
         dcool = 2.0e0 * tfcoil_variables.radius_cp_coolant_channel  # Diameter
-        lcool = 2.0e0 * (bv.z_tf_inside_half + bv.dr_tf_outboard)  # Length
+        lcool = 2.0e0 * (
+            self.data.build.z_tf_inside_half + self.data.build.dr_tf_outboard
+        )  # Length
         tfcoil_variables.n_cp_coolant_channels_total = acool / (
             np.pi * tfcoil_variables.radius_cp_coolant_channel**2
         )  # Number
@@ -2297,7 +2297,7 @@ class TFCoil(Model):
         acpav = (
             0.5e0
             * tfcoil_variables.vol_cond_cp
-            / (bv.z_tf_inside_half + bv.dr_tf_outboard)
+            / (self.data.build.z_tf_inside_half + self.data.build.dr_tf_outboard)
             + acool
         )
         ro = (acpav / (np.pi * tfcoil_variables.n_cp_coolant_channels_total)) ** 0.5
@@ -3227,13 +3227,13 @@ class TFCoil(Model):
         """Subroutine to calculate the TF coil areas and masses"""
         # Surface areas (for cryo system) [m²]
         wbtf = (
-            build_variables.r_tf_inboard_out
+            self.data.build.r_tf_inboard_out
             * np.sin(superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half)
-            - build_variables.r_tf_inboard_in
+            - self.data.build.r_tf_inboard_in
             * superconducting_tf_coil_variables.tan_theta_coil
         )
         tfcoil_variables.tfocrn = (
-            build_variables.r_tf_inboard_in
+            self.data.build.r_tf_inboard_in
             * superconducting_tf_coil_variables.tan_theta_coil
         )
         tfcoil_variables.tficrn = tfcoil_variables.tfocrn + wbtf
@@ -3247,7 +3247,7 @@ class TFCoil(Model):
             * 2.0
             * np.pi
             * 0.5e0
-            * (build_variables.r_tf_inboard_mid + build_variables.r_tf_outboard_mid)
+            * (self.data.build.r_tf_inboard_mid + self.data.build.r_tf_outboard_mid)
         )
 
     @staticmethod
@@ -4037,8 +4037,8 @@ class TFCoil(Model):
         elif i_tf_stress_model in {0, 2}:
             # Extended plane strain calculation [Pa]
             # Issues #1414 and #998
-            # Permits build_variables.dr_bore >= 0, O(n) in layers
-            # If build_variables.dr_bore > 0, same result as generalized plane strain calculation
+            # Permits self.data.build.dr_bore >= 0, O(n) in layers
+            # If self.data.build.dr_bore > 0, same result as generalized plane strain calculation
 
             (
                 radial_array,
