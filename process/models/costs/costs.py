@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    buildings_variables,
     current_drive_variables,
     divertor_variables,
     heat_transport_variables,
@@ -1051,7 +1050,7 @@ class Costs(Model):
         self.data.costs.c212 = (
             1.0e-6
             * self.data.costs.ucrb
-            * buildings_variables.rbvol**exprb
+            * self.data.buildings.rbvol**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
 
@@ -1069,13 +1068,13 @@ class Costs(Model):
         self.data.costs.c2141 = (
             1.0e-6
             * self.data.costs.UCMB
-            * buildings_variables.rmbvol**exprb
+            * self.data.buildings.rmbvol**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
         self.data.costs.c2142 = (
             1.0e-6
             * self.data.costs.UCWS
-            * buildings_variables.wsvol**exprb
+            * self.data.buildings.wsvol**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
         self.data.costs.c214 = self.data.costs.c2141 + self.data.costs.c2142
@@ -1085,7 +1084,7 @@ class Costs(Model):
         self.data.costs.c215 = (
             1.0e-6
             * self.data.costs.UCTR
-            * buildings_variables.triv**exprb
+            * self.data.buildings.triv**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
 
@@ -1094,7 +1093,7 @@ class Costs(Model):
         self.data.costs.c216 = (
             1.0e-6
             * self.data.costs.UCEL
-            * buildings_variables.elevol**exprb
+            * self.data.buildings.elevol**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
 
@@ -1105,25 +1104,25 @@ class Costs(Model):
         self.data.costs.c2171 = (
             1.0e-6
             * self.data.costs.UCAD
-            * buildings_variables.admvol**exprb
+            * self.data.buildings.admvol**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
         self.data.costs.c2172 = (
             1.0e-6
             * self.data.costs.UCCO
-            * buildings_variables.convol**exprb
+            * self.data.buildings.convol**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
         self.data.costs.c2173 = (
             1.0e-6
             * self.data.costs.UCSH
-            * buildings_variables.shovol**exprb
+            * self.data.buildings.shovol**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
         self.data.costs.c2174 = (
             1.0e-6
             * self.data.costs.UCCR
-            * buildings_variables.cryvol**exprb
+            * self.data.buildings.cryvol**exprb
             * cmlsa[self.data.costs.lsa - 1]
         )
         self.data.costs.c217 = (
@@ -2387,7 +2386,7 @@ class Costs(Model):
                 * self.data.costs.UCDTC
                 * (
                     (cfrht / 1.0e4) ** 0.6e0
-                    * (buildings_variables.volrci + buildings_variables.wsvol)
+                    * (self.data.buildings.volrci + self.data.buildings.wsvol)
                 )
             )
         else:
@@ -2402,7 +2401,7 @@ class Costs(Model):
         self.data.costs.c2274 = (
             1.0e-6
             * self.data.costs.UCNBV
-            * (buildings_variables.volrci + buildings_variables.wsvol) ** 0.8e0
+            * (self.data.buildings.volrci + self.data.buildings.wsvol) ** 0.8e0
         )
 
         #  Apply Nth kind factor

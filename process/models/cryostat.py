@@ -4,7 +4,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    buildings_variables,
     pfcoil_variables,
 )
 
@@ -50,7 +49,7 @@ class Cryostat(Model):
         )
 
         # Vertical clearance between TF coil and cryostat (m)
-        buildings_variables.dz_tf_cryostat = self.data.fwbs.z_cryostat_half_inside - (
+        self.data.buildings.dz_tf_cryostat = self.data.fwbs.z_cryostat_half_inside - (
             self.data.build.z_tf_inside_half + self.data.build.dr_tf_inboard
         )
 

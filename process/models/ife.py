@@ -11,7 +11,6 @@ from process.core import constants, process_output
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    buildings_variables,
     heat_transport_variables,
     ife_variables,
     physics_variables,
@@ -925,8 +924,8 @@ class IFE(Model):
 
         ife_variables.v3dzu = (
             (ife_variables.zu6 + ife_variables.zl6)
-            + buildings_variables.trcl
-            + buildings_variables.stcl
+            + self.data.buildings.trcl
+            + self.data.buildings.stcl
             + 5.1
             + 9.41e-6 * 1.0e5
         )
@@ -2121,14 +2120,14 @@ class IFE(Model):
             + heat_transport_variables.p_tritium_plant_electric_mw
             + heat_transport_variables.p_hcd_electric_total_mw
             + basemw
-            + (buildings_variables.a_plant_floor_effective * pmwpm2)
+            + (self.data.buildings.a_plant_floor_effective * pmwpm2)
             + ife_variables.lipmw
         )
 
         # Total baseline power to facility loads, MW
 
         heat_transport_variables.p_plant_electric_base_total_mw = basemw + (
-            buildings_variables.a_plant_floor_effective * pmwpm2
+            self.data.buildings.a_plant_floor_effective * pmwpm2
         )
 
         # Estimate of the total low voltage power, MW
@@ -2154,7 +2153,7 @@ class IFE(Model):
             self.outfile,
             "Total floor space (m2)",
             "(a_plant_floor_effective)",
-            buildings_variables.a_plant_floor_effective,
+            self.data.buildings.a_plant_floor_effective,
         )
         process_output.ovarre(
             self.outfile, "Power/floor area (MW/m2)", "(pmwpm2)", pmwpm2
@@ -2245,18 +2244,18 @@ class IFE(Model):
         hrbi = ife_variables.zl7 + ife_variables.zu7
 
         # Distance from centre of device to wall
-        buildings_variables.wrbi = ife_variables.r7
+        self.data.buildings.wrbi = ife_variables.r7
 
         # Internal volume (square floor)
-        vrci = (2.0 * buildings_variables.wrbi) ** 2 * hrbi
+        vrci = (2.0 * self.data.buildings.wrbi) ** 2 * hrbi
 
         # External dimensions
         # RBWT = wall thickness
         # RBRT = roof thickness
         # FNDT = foundation thickness
-        rbw = 2.0 * (ife_variables.r7 + buildings_variables.rbwt)
+        rbw = 2.0 * (ife_variables.r7 + self.data.buildings.rbwt)
         rbl = rbw
-        rbh = hrbi + buildings_variables.rbrt + buildings_variables.fndt
+        rbh = hrbi + self.data.buildings.rbrt + self.data.buildings.fndt
 
         # External volume
         rbv = rbw * rbl * rbh
@@ -2275,8 +2274,8 @@ class IFE(Model):
 
         # Transport corridor size
 
-        tcw = ife_variables.r6 + 4.0 * buildings_variables.trcl
-        tcl = 5.0 * tcw + 2.0 * buildings_variables.hcwt
+        tcw = ife_variables.r6 + 4.0 * self.data.buildings.trcl
+        tcl = 5.0 * tcw + 2.0 * self.data.buildings.hcwt
 
         # Decontamination cell size
 
@@ -2284,22 +2283,22 @@ class IFE(Model):
 
         # Hot cell size
 
-        hcw = ife_variables.r6 + 3.0 * buildings_variables.hccl + 2.0
-        hcl = 3.0 * ife_variables.r6 + 4.0 * buildings_variables.hccl + tcw
+        hcw = ife_variables.r6 + 3.0 * self.data.buildings.hccl + 2.0
+        hcl = 3.0 * ife_variables.r6 + 4.0 * self.data.buildings.hccl + tcw
 
         # Radioactive waste treatment
         # rww = dcw
-        # rwl = hcl - dcl - buildings_variables.hcwt
+        # rwl = hcl - dcl - self.data.buildings.hcwt
 
         # Maintenance building dimensions
 
-        rmbw = hcw + dcw + 3.0 * buildings_variables.hcwt
-        rmbl = hcl + 2.0 * buildings_variables.hcwt
+        rmbw = hcw + dcw + 3.0 * self.data.buildings.hcwt
+        rmbl = hcl + 2.0 * self.data.buildings.hcwt
 
         # Height
 
-        if buildings_variables.wgt2 > 1.0:
-            wgts = buildings_variables.wgt2
+        if self.data.buildings.wgt2 > 1.0:
+            wgts = self.data.buildings.wgt2
         else:
             wgts = self.data.fwbs.whtshld
 
@@ -2307,13 +2306,13 @@ class IFE(Model):
         rmbh = (
             10.0
             + (ife_variables.zl6 + ife_variables.zu6)
-            + buildings_variables.trcl
+            + self.data.buildings.trcl
             + cran
             + 5.1
-            + buildings_variables.stcl
-            + buildings_variables.fndt
+            + self.data.buildings.stcl
+            + self.data.buildings.fndt
         )
-        tch = shh + buildings_variables.stcl + buildings_variables.fndt
+        tch = shh + self.data.buildings.stcl + self.data.buildings.fndt
 
         # Volume
 
@@ -2333,36 +2332,36 @@ class IFE(Model):
         # Electrical building volume
         # (set equal to power injection (i.e. driver) building volume)
 
-        elev = buildings_variables.pibv
+        elev = self.data.buildings.pibv
 
         # Calculate effective floor area for ac power module
 
-        buildings_variables.a_plant_floor_effective = (
+        self.data.buildings.a_plant_floor_effective = (
             rbv
             + rmbv
             + wsv
-            + buildings_variables.triv
+            + self.data.buildings.triv
             + elev
-            + buildings_variables.conv
+            + self.data.buildings.conv
             + cryv
-            + buildings_variables.admv
-            + buildings_variables.shov
+            + self.data.buildings.admv
+            + self.data.buildings.shov
         ) / 6.0
 
         # Convert local into global variables
 
-        buildings_variables.admvol = buildings_variables.admv
-        buildings_variables.convol = buildings_variables.conv
-        buildings_variables.elevol = elev
-        buildings_variables.rbvol = rbv
-        buildings_variables.rmbvol = rmbv
-        buildings_variables.shovol = buildings_variables.shov
-        buildings_variables.volrci = vrci
-        buildings_variables.wsvol = wsv
+        self.data.buildings.admvol = self.data.buildings.admv
+        self.data.buildings.convol = self.data.buildings.conv
+        self.data.buildings.elevol = elev
+        self.data.buildings.rbvol = rbv
+        self.data.buildings.rmbvol = rmbv
+        self.data.buildings.shovol = self.data.buildings.shov
+        self.data.buildings.volrci = vrci
+        self.data.buildings.wsvol = wsv
 
         # Total volume of nuclear buildings
 
-        buildings_variables.volnucb = vrci + rmbv + wsv + buildings_variables.triv + cryv
+        self.data.buildings.volnucb = vrci + rmbv + wsv + self.data.buildings.triv + cryv
 
         if not output:
             return
@@ -2375,13 +2374,13 @@ class IFE(Model):
             self.outfile,
             "Dist from device centre to bldg wall (m)",
             "(wrbi)",
-            buildings_variables.wrbi,
+            self.data.buildings.wrbi,
         )
         process_output.ovarre(
             self.outfile,
             "Effective floor area (m2)",
             "(a_plant_floor_effective)",
-            buildings_variables.a_plant_floor_effective,
+            self.data.buildings.a_plant_floor_effective,
         )
         process_output.ovarre(self.outfile, "Reactor building volume (m3)", "(rbv)", rbv)
         process_output.ovarre(
@@ -2392,7 +2391,7 @@ class IFE(Model):
             self.outfile,
             "Tritium building volume (m3)",
             "(triv)",
-            buildings_variables.triv,
+            self.data.buildings.triv,
         )
         process_output.ovarre(
             self.outfile, "Electrical building volume (m3)", "(elev)", elev
@@ -2401,7 +2400,7 @@ class IFE(Model):
             self.outfile,
             "Control building volume (m3)",
             "(conv)",
-            buildings_variables.conv,
+            self.data.buildings.conv,
         )
         process_output.ovarre(
             self.outfile, "Cryogenics building volume (m3)", "(cryv)", cryv
@@ -2410,16 +2409,16 @@ class IFE(Model):
             self.outfile,
             "Administration building volume (m3)",
             "(admv)",
-            buildings_variables.admv,
+            self.data.buildings.admv,
         )
         process_output.ovarre(
-            self.outfile, "Shops volume (m3)", "(shov)", buildings_variables.shov
+            self.outfile, "Shops volume (m3)", "(shov)", self.data.buildings.shov
         )
         process_output.ovarre(
             self.outfile,
             "Total volume of nuclear buildings (m3)",
             "(volnucb)",
-            buildings_variables.volnucb,
+            self.data.buildings.volnucb,
         )
 
     def ifevac(self):

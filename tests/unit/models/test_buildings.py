@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    buildings_variables,
     current_drive_variables,
     divertor_variables,
     pfcoil_variables,
@@ -446,231 +445,297 @@ class BldgsSizesParam(NamedTuple):
     ],
 )
 def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
-    monkeypatch.setattr(buildings_variables, "i_bldgs_v", bldgssizesparam.i_bldgs_v)
+    monkeypatch.setattr(buildings.data.buildings, "i_bldgs_v", bldgssizesparam.i_bldgs_v)
     monkeypatch.setattr(
-        buildings_variables,
+        buildings.data.buildings,
         "a_plant_floor_effective",
         bldgssizesparam.a_plant_floor_effective,
     )
-    monkeypatch.setattr(buildings_variables, "volnucb", bldgssizesparam.volnucb)
-    monkeypatch.setattr(buildings_variables, "bioshld_thk", bldgssizesparam.bioshld_thk)
+    monkeypatch.setattr(buildings.data.buildings, "volnucb", bldgssizesparam.volnucb)
     monkeypatch.setattr(
-        buildings_variables, "reactor_wall_thk", bldgssizesparam.reactor_wall_thk
+        buildings.data.buildings, "bioshld_thk", bldgssizesparam.bioshld_thk
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_roof_thk", bldgssizesparam.reactor_roof_thk
+        buildings.data.buildings, "reactor_wall_thk", bldgssizesparam.reactor_wall_thk
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_fndtn_thk", bldgssizesparam.reactor_fndtn_thk
+        buildings.data.buildings, "reactor_roof_thk", bldgssizesparam.reactor_roof_thk
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_clrnc", bldgssizesparam.reactor_clrnc
+        buildings.data.buildings, "reactor_fndtn_thk", bldgssizesparam.reactor_fndtn_thk
     )
     monkeypatch.setattr(
-        buildings_variables, "transp_clrnc", bldgssizesparam.transp_clrnc
+        buildings.data.buildings, "reactor_clrnc", bldgssizesparam.reactor_clrnc
     )
     monkeypatch.setattr(
-        buildings_variables, "cryostat_clrnc", bldgssizesparam.cryostat_clrnc
+        buildings.data.buildings, "transp_clrnc", bldgssizesparam.transp_clrnc
     )
     monkeypatch.setattr(
-        buildings_variables, "ground_clrnc", bldgssizesparam.ground_clrnc
+        buildings.data.buildings, "cryostat_clrnc", bldgssizesparam.cryostat_clrnc
     )
     monkeypatch.setattr(
-        buildings_variables, "crane_clrnc_h", bldgssizesparam.crane_clrnc_h
-    )
-    monkeypatch.setattr(buildings_variables, "crane_arm_h", bldgssizesparam.crane_arm_h)
-    monkeypatch.setattr(
-        buildings_variables, "reactor_hall_l", bldgssizesparam.reactor_hall_l
+        buildings.data.buildings, "ground_clrnc", bldgssizesparam.ground_clrnc
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_hall_w", bldgssizesparam.reactor_hall_w
+        buildings.data.buildings, "crane_clrnc_h", bldgssizesparam.crane_clrnc_h
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_hall_h", bldgssizesparam.reactor_hall_h
-    )
-    monkeypatch.setattr(buildings_variables, "nbi_sys_l", bldgssizesparam.nbi_sys_l)
-    monkeypatch.setattr(buildings_variables, "nbi_sys_w", bldgssizesparam.nbi_sys_w)
-    monkeypatch.setattr(
-        buildings_variables, "fc_building_l", bldgssizesparam.fc_building_l
+        buildings.data.buildings, "crane_arm_h", bldgssizesparam.crane_arm_h
     )
     monkeypatch.setattr(
-        buildings_variables, "fc_building_w", bldgssizesparam.fc_building_w
-    )
-    monkeypatch.setattr(buildings_variables, "warm_shop_l", bldgssizesparam.warm_shop_l)
-    monkeypatch.setattr(buildings_variables, "warm_shop_w", bldgssizesparam.warm_shop_w)
-    monkeypatch.setattr(buildings_variables, "warm_shop_h", bldgssizesparam.warm_shop_h)
-    monkeypatch.setattr(buildings_variables, "workshop_l", bldgssizesparam.workshop_l)
-    monkeypatch.setattr(buildings_variables, "workshop_w", bldgssizesparam.workshop_w)
-    monkeypatch.setattr(buildings_variables, "workshop_h", bldgssizesparam.workshop_h)
-    monkeypatch.setattr(buildings_variables, "robotics_l", bldgssizesparam.robotics_l)
-    monkeypatch.setattr(buildings_variables, "robotics_w", bldgssizesparam.robotics_w)
-    monkeypatch.setattr(buildings_variables, "robotics_h", bldgssizesparam.robotics_h)
-    monkeypatch.setattr(
-        buildings_variables, "maint_cont_l", bldgssizesparam.maint_cont_l
+        buildings.data.buildings, "reactor_hall_l", bldgssizesparam.reactor_hall_l
     )
     monkeypatch.setattr(
-        buildings_variables, "maint_cont_w", bldgssizesparam.maint_cont_w
+        buildings.data.buildings, "reactor_hall_w", bldgssizesparam.reactor_hall_w
     )
     monkeypatch.setattr(
-        buildings_variables, "maint_cont_h", bldgssizesparam.maint_cont_h
+        buildings.data.buildings, "reactor_hall_h", bldgssizesparam.reactor_hall_h
+    )
+    monkeypatch.setattr(buildings.data.buildings, "nbi_sys_l", bldgssizesparam.nbi_sys_l)
+    monkeypatch.setattr(buildings.data.buildings, "nbi_sys_w", bldgssizesparam.nbi_sys_w)
+    monkeypatch.setattr(
+        buildings.data.buildings, "fc_building_l", bldgssizesparam.fc_building_l
     )
     monkeypatch.setattr(
-        buildings_variables, "turbine_hall_l", bldgssizesparam.turbine_hall_l
+        buildings.data.buildings, "fc_building_w", bldgssizesparam.fc_building_w
     )
     monkeypatch.setattr(
-        buildings_variables, "turbine_hall_w", bldgssizesparam.turbine_hall_w
+        buildings.data.buildings, "warm_shop_l", bldgssizesparam.warm_shop_l
     )
     monkeypatch.setattr(
-        buildings_variables, "turbine_hall_h", bldgssizesparam.turbine_hall_h
+        buildings.data.buildings, "warm_shop_w", bldgssizesparam.warm_shop_w
     )
     monkeypatch.setattr(
-        buildings_variables, "gas_buildings_l", bldgssizesparam.gas_buildings_l
+        buildings.data.buildings, "warm_shop_h", bldgssizesparam.warm_shop_h
     )
     monkeypatch.setattr(
-        buildings_variables, "gas_buildings_w", bldgssizesparam.gas_buildings_w
+        buildings.data.buildings, "workshop_l", bldgssizesparam.workshop_l
     )
     monkeypatch.setattr(
-        buildings_variables, "gas_buildings_h", bldgssizesparam.gas_buildings_h
+        buildings.data.buildings, "workshop_w", bldgssizesparam.workshop_w
     )
     monkeypatch.setattr(
-        buildings_variables, "water_buildings_l", bldgssizesparam.water_buildings_l
+        buildings.data.buildings, "workshop_h", bldgssizesparam.workshop_h
     )
     monkeypatch.setattr(
-        buildings_variables, "water_buildings_w", bldgssizesparam.water_buildings_w
+        buildings.data.buildings, "robotics_l", bldgssizesparam.robotics_l
     )
     monkeypatch.setattr(
-        buildings_variables, "water_buildings_h", bldgssizesparam.water_buildings_h
+        buildings.data.buildings, "robotics_w", bldgssizesparam.robotics_w
     )
     monkeypatch.setattr(
-        buildings_variables, "sec_buildings_l", bldgssizesparam.sec_buildings_l
+        buildings.data.buildings, "robotics_h", bldgssizesparam.robotics_h
     )
     monkeypatch.setattr(
-        buildings_variables, "sec_buildings_w", bldgssizesparam.sec_buildings_w
+        buildings.data.buildings, "maint_cont_l", bldgssizesparam.maint_cont_l
     )
     monkeypatch.setattr(
-        buildings_variables, "sec_buildings_h", bldgssizesparam.sec_buildings_h
+        buildings.data.buildings, "maint_cont_w", bldgssizesparam.maint_cont_w
     )
     monkeypatch.setattr(
-        buildings_variables,
+        buildings.data.buildings, "maint_cont_h", bldgssizesparam.maint_cont_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "turbine_hall_l", bldgssizesparam.turbine_hall_l
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "turbine_hall_w", bldgssizesparam.turbine_hall_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "turbine_hall_h", bldgssizesparam.turbine_hall_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "gas_buildings_l", bldgssizesparam.gas_buildings_l
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "gas_buildings_w", bldgssizesparam.gas_buildings_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "gas_buildings_h", bldgssizesparam.gas_buildings_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "water_buildings_l", bldgssizesparam.water_buildings_l
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "water_buildings_w", bldgssizesparam.water_buildings_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "water_buildings_h", bldgssizesparam.water_buildings_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "sec_buildings_l", bldgssizesparam.sec_buildings_l
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "sec_buildings_w", bldgssizesparam.sec_buildings_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "sec_buildings_h", bldgssizesparam.sec_buildings_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings,
         "staff_buildings_area",
         bldgssizesparam.staff_buildings_area,
     )
     monkeypatch.setattr(
-        buildings_variables, "staff_buildings_h", bldgssizesparam.staff_buildings_h
+        buildings.data.buildings, "staff_buildings_h", bldgssizesparam.staff_buildings_h
     )
     monkeypatch.setattr(
-        buildings_variables, "hcd_building_l", bldgssizesparam.hcd_building_l
+        buildings.data.buildings, "hcd_building_l", bldgssizesparam.hcd_building_l
     )
     monkeypatch.setattr(
-        buildings_variables, "hcd_building_w", bldgssizesparam.hcd_building_w
+        buildings.data.buildings, "hcd_building_w", bldgssizesparam.hcd_building_w
     )
     monkeypatch.setattr(
-        buildings_variables, "hcd_building_h", bldgssizesparam.hcd_building_h
+        buildings.data.buildings, "hcd_building_h", bldgssizesparam.hcd_building_h
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_pulse_l", bldgssizesparam.magnet_pulse_l
+        buildings.data.buildings, "magnet_pulse_l", bldgssizesparam.magnet_pulse_l
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_pulse_w", bldgssizesparam.magnet_pulse_w
+        buildings.data.buildings, "magnet_pulse_w", bldgssizesparam.magnet_pulse_w
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_pulse_h", bldgssizesparam.magnet_pulse_h
+        buildings.data.buildings, "magnet_pulse_h", bldgssizesparam.magnet_pulse_h
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_trains_l", bldgssizesparam.magnet_trains_l
+        buildings.data.buildings, "magnet_trains_l", bldgssizesparam.magnet_trains_l
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_trains_w", bldgssizesparam.magnet_trains_w
+        buildings.data.buildings, "magnet_trains_w", bldgssizesparam.magnet_trains_w
     )
     monkeypatch.setattr(
-        buildings_variables, "magnet_trains_h", bldgssizesparam.magnet_trains_h
+        buildings.data.buildings, "magnet_trains_h", bldgssizesparam.magnet_trains_h
     )
     monkeypatch.setattr(
-        buildings_variables, "control_buildings_l", bldgssizesparam.control_buildings_l
+        buildings.data.buildings,
+        "control_buildings_l",
+        bldgssizesparam.control_buildings_l,
     )
     monkeypatch.setattr(
-        buildings_variables, "control_buildings_w", bldgssizesparam.control_buildings_w
+        buildings.data.buildings,
+        "control_buildings_w",
+        bldgssizesparam.control_buildings_w,
     )
     monkeypatch.setattr(
-        buildings_variables, "control_buildings_h", bldgssizesparam.control_buildings_h
+        buildings.data.buildings,
+        "control_buildings_h",
+        bldgssizesparam.control_buildings_h,
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_smelter_l", bldgssizesparam.ilw_smelter_l
+        buildings.data.buildings, "ilw_smelter_l", bldgssizesparam.ilw_smelter_l
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_smelter_w", bldgssizesparam.ilw_smelter_w
+        buildings.data.buildings, "ilw_smelter_w", bldgssizesparam.ilw_smelter_w
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_smelter_h", bldgssizesparam.ilw_smelter_h
+        buildings.data.buildings, "ilw_smelter_h", bldgssizesparam.ilw_smelter_h
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_storage_l", bldgssizesparam.ilw_storage_l
+        buildings.data.buildings, "ilw_storage_l", bldgssizesparam.ilw_storage_l
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_storage_w", bldgssizesparam.ilw_storage_w
+        buildings.data.buildings, "ilw_storage_w", bldgssizesparam.ilw_storage_w
     )
     monkeypatch.setattr(
-        buildings_variables, "ilw_storage_h", bldgssizesparam.ilw_storage_h
+        buildings.data.buildings, "ilw_storage_h", bldgssizesparam.ilw_storage_h
     )
     monkeypatch.setattr(
-        buildings_variables, "llw_storage_l", bldgssizesparam.llw_storage_l
+        buildings.data.buildings, "llw_storage_l", bldgssizesparam.llw_storage_l
     )
     monkeypatch.setattr(
-        buildings_variables, "llw_storage_w", bldgssizesparam.llw_storage_w
+        buildings.data.buildings, "llw_storage_w", bldgssizesparam.llw_storage_w
     )
     monkeypatch.setattr(
-        buildings_variables, "llw_storage_h", bldgssizesparam.llw_storage_h
+        buildings.data.buildings, "llw_storage_h", bldgssizesparam.llw_storage_h
     )
     monkeypatch.setattr(
-        buildings_variables, "hw_storage_l", bldgssizesparam.hw_storage_l
+        buildings.data.buildings, "hw_storage_l", bldgssizesparam.hw_storage_l
     )
     monkeypatch.setattr(
-        buildings_variables, "hw_storage_w", bldgssizesparam.hw_storage_w
+        buildings.data.buildings, "hw_storage_w", bldgssizesparam.hw_storage_w
     )
     monkeypatch.setattr(
-        buildings_variables, "hw_storage_h", bldgssizesparam.hw_storage_h
+        buildings.data.buildings, "hw_storage_h", bldgssizesparam.hw_storage_h
     )
     monkeypatch.setattr(
-        buildings_variables, "tw_storage_l", bldgssizesparam.tw_storage_l
+        buildings.data.buildings, "tw_storage_l", bldgssizesparam.tw_storage_l
     )
     monkeypatch.setattr(
-        buildings_variables, "tw_storage_w", bldgssizesparam.tw_storage_w
+        buildings.data.buildings, "tw_storage_w", bldgssizesparam.tw_storage_w
     )
     monkeypatch.setattr(
-        buildings_variables, "tw_storage_h", bldgssizesparam.tw_storage_h
+        buildings.data.buildings, "tw_storage_h", bldgssizesparam.tw_storage_h
     )
-    monkeypatch.setattr(buildings_variables, "auxcool_l", bldgssizesparam.auxcool_l)
-    monkeypatch.setattr(buildings_variables, "auxcool_w", bldgssizesparam.auxcool_w)
-    monkeypatch.setattr(buildings_variables, "auxcool_h", bldgssizesparam.auxcool_h)
-    monkeypatch.setattr(buildings_variables, "cryomag_l", bldgssizesparam.cryomag_l)
-    monkeypatch.setattr(buildings_variables, "cryomag_w", bldgssizesparam.cryomag_w)
-    monkeypatch.setattr(buildings_variables, "cryomag_h", bldgssizesparam.cryomag_h)
-    monkeypatch.setattr(buildings_variables, "cryostore_l", bldgssizesparam.cryostore_l)
-    monkeypatch.setattr(buildings_variables, "cryostore_w", bldgssizesparam.cryostore_w)
-    monkeypatch.setattr(buildings_variables, "cryostore_h", bldgssizesparam.cryostore_h)
-    monkeypatch.setattr(buildings_variables, "elecdist_l", bldgssizesparam.elecdist_l)
-    monkeypatch.setattr(buildings_variables, "elecdist_w", bldgssizesparam.elecdist_w)
-    monkeypatch.setattr(buildings_variables, "elecdist_h", bldgssizesparam.elecdist_h)
-    monkeypatch.setattr(buildings_variables, "elecstore_l", bldgssizesparam.elecstore_l)
-    monkeypatch.setattr(buildings_variables, "elecstore_w", bldgssizesparam.elecstore_w)
-    monkeypatch.setattr(buildings_variables, "elecstore_h", bldgssizesparam.elecstore_h)
-    monkeypatch.setattr(buildings_variables, "elecload_l", bldgssizesparam.elecload_l)
-    monkeypatch.setattr(buildings_variables, "elecload_w", bldgssizesparam.elecload_w)
-    monkeypatch.setattr(buildings_variables, "elecload_h", bldgssizesparam.elecload_h)
-    monkeypatch.setattr(buildings_variables, "chemlab_l", bldgssizesparam.chemlab_l)
-    monkeypatch.setattr(buildings_variables, "chemlab_w", bldgssizesparam.chemlab_w)
-    monkeypatch.setattr(buildings_variables, "chemlab_h", bldgssizesparam.chemlab_h)
-    monkeypatch.setattr(buildings_variables, "heat_sink_l", bldgssizesparam.heat_sink_l)
-    monkeypatch.setattr(buildings_variables, "heat_sink_w", bldgssizesparam.heat_sink_w)
-    monkeypatch.setattr(buildings_variables, "heat_sink_h", bldgssizesparam.heat_sink_h)
-    monkeypatch.setattr(buildings_variables, "aux_build_l", bldgssizesparam.aux_build_l)
-    monkeypatch.setattr(buildings_variables, "aux_build_w", bldgssizesparam.aux_build_w)
-    monkeypatch.setattr(buildings_variables, "aux_build_h", bldgssizesparam.aux_build_h)
+    monkeypatch.setattr(buildings.data.buildings, "auxcool_l", bldgssizesparam.auxcool_l)
+    monkeypatch.setattr(buildings.data.buildings, "auxcool_w", bldgssizesparam.auxcool_w)
+    monkeypatch.setattr(buildings.data.buildings, "auxcool_h", bldgssizesparam.auxcool_h)
+    monkeypatch.setattr(buildings.data.buildings, "cryomag_l", bldgssizesparam.cryomag_l)
+    monkeypatch.setattr(buildings.data.buildings, "cryomag_w", bldgssizesparam.cryomag_w)
+    monkeypatch.setattr(buildings.data.buildings, "cryomag_h", bldgssizesparam.cryomag_h)
     monkeypatch.setattr(
-        buildings_variables, "qnty_sfty_fac", bldgssizesparam.qnty_sfty_fac
+        buildings.data.buildings, "cryostore_l", bldgssizesparam.cryostore_l
     )
-    monkeypatch.setattr(buildings_variables, "hotcell_h", bldgssizesparam.hotcell_h)
-    monkeypatch.setattr(buildings_variables, "hot_sepdist", bldgssizesparam.hot_sepdist)
+    monkeypatch.setattr(
+        buildings.data.buildings, "cryostore_w", bldgssizesparam.cryostore_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "cryostore_h", bldgssizesparam.cryostore_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "elecdist_l", bldgssizesparam.elecdist_l
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "elecdist_w", bldgssizesparam.elecdist_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "elecdist_h", bldgssizesparam.elecdist_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "elecstore_l", bldgssizesparam.elecstore_l
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "elecstore_w", bldgssizesparam.elecstore_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "elecstore_h", bldgssizesparam.elecstore_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "elecload_l", bldgssizesparam.elecload_l
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "elecload_w", bldgssizesparam.elecload_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "elecload_h", bldgssizesparam.elecload_h
+    )
+    monkeypatch.setattr(buildings.data.buildings, "chemlab_l", bldgssizesparam.chemlab_l)
+    monkeypatch.setattr(buildings.data.buildings, "chemlab_w", bldgssizesparam.chemlab_w)
+    monkeypatch.setattr(buildings.data.buildings, "chemlab_h", bldgssizesparam.chemlab_h)
+    monkeypatch.setattr(
+        buildings.data.buildings, "heat_sink_l", bldgssizesparam.heat_sink_l
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "heat_sink_w", bldgssizesparam.heat_sink_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "heat_sink_h", bldgssizesparam.heat_sink_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "aux_build_l", bldgssizesparam.aux_build_l
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "aux_build_w", bldgssizesparam.aux_build_w
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "aux_build_h", bldgssizesparam.aux_build_h
+    )
+    monkeypatch.setattr(
+        buildings.data.buildings, "qnty_sfty_fac", bldgssizesparam.qnty_sfty_fac
+    )
+    monkeypatch.setattr(buildings.data.buildings, "hotcell_h", bldgssizesparam.hotcell_h)
+    monkeypatch.setattr(
+        buildings.data.buildings, "hot_sepdist", bldgssizesparam.hot_sepdist
+    )
     monkeypatch.setattr(
         current_drive_variables, "i_hcd_primary", bldgssizesparam.i_hcd_primary
     )
@@ -751,13 +816,13 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         output=False,
     )
 
-    assert buildings_variables.reactor_hall_l == pytest.approx(
+    assert buildings.data.buildings.reactor_hall_l == pytest.approx(
         bldgssizesparam.expected_reactor_hall_l
     )
-    assert buildings_variables.reactor_hall_w == pytest.approx(
+    assert buildings.data.buildings.reactor_hall_w == pytest.approx(
         bldgssizesparam.expected_reactor_hall_w
     )
-    assert buildings_variables.reactor_hall_h == pytest.approx(
+    assert buildings.data.buildings.reactor_hall_h == pytest.approx(
         bldgssizesparam.expected_reactor_hall_h
     )
 
@@ -949,41 +1014,43 @@ class BldgsParam(NamedTuple):
     ],
 )
 def test_bldgs(buildings, bldgsparam, monkeypatch):
-    monkeypatch.setattr(buildings_variables, "wrbi", bldgsparam.wrbi)
-    monkeypatch.setattr(buildings_variables, "rxcl", bldgsparam.rxcl)
-    monkeypatch.setattr(buildings_variables, "trcl", bldgsparam.trcl)
-    monkeypatch.setattr(buildings_variables, "row", bldgsparam.row)
-    monkeypatch.setattr(buildings_variables, "wgt", bldgsparam.wgt)
-    monkeypatch.setattr(buildings_variables, "shmf", bldgsparam.shmf)
-    monkeypatch.setattr(buildings_variables, "clh2", bldgsparam.clh2)
-    monkeypatch.setattr(buildings_variables, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat)
-    monkeypatch.setattr(buildings_variables, "stcl", bldgsparam.stcl)
-    monkeypatch.setattr(buildings_variables, "rbvfac", bldgsparam.rbvfac)
-    monkeypatch.setattr(buildings_variables, "rbwt", bldgsparam.rbwt)
-    monkeypatch.setattr(buildings_variables, "rbrt", bldgsparam.rbrt)
-    monkeypatch.setattr(buildings_variables, "fndt", bldgsparam.fndt)
-    monkeypatch.setattr(buildings_variables, "hcwt", bldgsparam.hcwt)
-    monkeypatch.setattr(buildings_variables, "hccl", bldgsparam.hccl)
-    monkeypatch.setattr(buildings_variables, "wgt2", bldgsparam.wgt2)
-    monkeypatch.setattr(buildings_variables, "mbvfac", bldgsparam.mbvfac)
-    monkeypatch.setattr(buildings_variables, "wsvfac", bldgsparam.wsvfac)
-    monkeypatch.setattr(buildings_variables, "tfcbv", bldgsparam.tfcbv)
-    monkeypatch.setattr(buildings_variables, "pfbldgm3", bldgsparam.pfbldgm3)
-    monkeypatch.setattr(buildings_variables, "esbldgm3", bldgsparam.esbldgm3)
-    monkeypatch.setattr(buildings_variables, "pibv", bldgsparam.pibv)
+    monkeypatch.setattr(buildings.data.buildings, "wrbi", bldgsparam.wrbi)
+    monkeypatch.setattr(buildings.data.buildings, "rxcl", bldgsparam.rxcl)
+    monkeypatch.setattr(buildings.data.buildings, "trcl", bldgsparam.trcl)
+    monkeypatch.setattr(buildings.data.buildings, "row", bldgsparam.row)
+    monkeypatch.setattr(buildings.data.buildings, "wgt", bldgsparam.wgt)
+    monkeypatch.setattr(buildings.data.buildings, "shmf", bldgsparam.shmf)
+    monkeypatch.setattr(buildings.data.buildings, "clh2", bldgsparam.clh2)
     monkeypatch.setattr(
-        buildings_variables,
+        buildings.data.buildings, "dz_tf_cryostat", bldgsparam.dz_tf_cryostat
+    )
+    monkeypatch.setattr(buildings.data.buildings, "stcl", bldgsparam.stcl)
+    monkeypatch.setattr(buildings.data.buildings, "rbvfac", bldgsparam.rbvfac)
+    monkeypatch.setattr(buildings.data.buildings, "rbwt", bldgsparam.rbwt)
+    monkeypatch.setattr(buildings.data.buildings, "rbrt", bldgsparam.rbrt)
+    monkeypatch.setattr(buildings.data.buildings, "fndt", bldgsparam.fndt)
+    monkeypatch.setattr(buildings.data.buildings, "hcwt", bldgsparam.hcwt)
+    monkeypatch.setattr(buildings.data.buildings, "hccl", bldgsparam.hccl)
+    monkeypatch.setattr(buildings.data.buildings, "wgt2", bldgsparam.wgt2)
+    monkeypatch.setattr(buildings.data.buildings, "mbvfac", bldgsparam.mbvfac)
+    monkeypatch.setattr(buildings.data.buildings, "wsvfac", bldgsparam.wsvfac)
+    monkeypatch.setattr(buildings.data.buildings, "tfcbv", bldgsparam.tfcbv)
+    monkeypatch.setattr(buildings.data.buildings, "pfbldgm3", bldgsparam.pfbldgm3)
+    monkeypatch.setattr(buildings.data.buildings, "esbldgm3", bldgsparam.esbldgm3)
+    monkeypatch.setattr(buildings.data.buildings, "pibv", bldgsparam.pibv)
+    monkeypatch.setattr(
+        buildings.data.buildings,
         "a_plant_floor_effective",
         bldgsparam.a_plant_floor_effective,
     )
-    monkeypatch.setattr(buildings_variables, "admvol", bldgsparam.admvol)
-    monkeypatch.setattr(buildings_variables, "triv", bldgsparam.triv)
-    monkeypatch.setattr(buildings_variables, "conv", bldgsparam.conv)
-    monkeypatch.setattr(buildings_variables, "admv", bldgsparam.admv)
-    monkeypatch.setattr(buildings_variables, "shov", bldgsparam.shov)
-    monkeypatch.setattr(buildings_variables, "shovol", bldgsparam.shovol)
-    monkeypatch.setattr(buildings_variables, "convol", bldgsparam.convol)
-    monkeypatch.setattr(buildings_variables, "volnucb", bldgsparam.volnucb)
+    monkeypatch.setattr(buildings.data.buildings, "admvol", bldgsparam.admvol)
+    monkeypatch.setattr(buildings.data.buildings, "triv", bldgsparam.triv)
+    monkeypatch.setattr(buildings.data.buildings, "conv", bldgsparam.conv)
+    monkeypatch.setattr(buildings.data.buildings, "admv", bldgsparam.admv)
+    monkeypatch.setattr(buildings.data.buildings, "shov", bldgsparam.shov)
+    monkeypatch.setattr(buildings.data.buildings, "shovol", bldgsparam.shovol)
+    monkeypatch.setattr(buildings.data.buildings, "convol", bldgsparam.convol)
+    monkeypatch.setattr(buildings.data.buildings, "volnucb", bldgsparam.volnucb)
 
     cryv, vrci, rbv, rmbv, wsv, elev = buildings.bldgs(
         output=False,
@@ -1002,14 +1069,14 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
         helpow=bldgsparam.helpow,
     )
 
-    assert buildings_variables.wrbi == pytest.approx(bldgsparam.expected_wrbi)
-    assert buildings_variables.a_plant_floor_effective == pytest.approx(
+    assert buildings.data.buildings.wrbi == pytest.approx(bldgsparam.expected_wrbi)
+    assert buildings.data.buildings.a_plant_floor_effective == pytest.approx(
         bldgsparam.expected_a_plant_floor_effective
     )
-    assert buildings_variables.admvol == pytest.approx(bldgsparam.expected_admvol)
-    assert buildings_variables.shovol == pytest.approx(bldgsparam.expected_shovol)
-    assert buildings_variables.convol == pytest.approx(bldgsparam.expected_convol)
-    assert buildings_variables.volnucb == pytest.approx(bldgsparam.expected_volnucb)
+    assert buildings.data.buildings.admvol == pytest.approx(bldgsparam.expected_admvol)
+    assert buildings.data.buildings.shovol == pytest.approx(bldgsparam.expected_shovol)
+    assert buildings.data.buildings.convol == pytest.approx(bldgsparam.expected_convol)
+    assert buildings.data.buildings.volnucb == pytest.approx(bldgsparam.expected_volnucb)
 
     assert cryv == pytest.approx(bldgsparam.expected_cryv)
     assert vrci == pytest.approx(bldgsparam.expected_vrci)

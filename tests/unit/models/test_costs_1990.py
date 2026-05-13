@@ -7,7 +7,6 @@ import pytest
 
 from process import data_structure
 from process.data_structure import (
-    buildings_variables,
     current_drive_variables,
     divertor_variables,
     heat_transport_variables,
@@ -172,8 +171,8 @@ def acc2273_param(**kwargs):
     # Default parameters
     defaults = {
         "f_plasma_fuel_tritium": 0.0001,
-        "volrci": data_structure.buildings_variables.volrci,
-        "wsvol": data_structure.buildings_variables.wsvol,
+        "volrci": 0.0,
+        "wsvol": 0.0,
         "expected": pytest.approx(0.0, abs=0.00001),
     }
 
@@ -216,8 +215,8 @@ def acc2273_fix(request, monkeypatch, costs):
 
     # Mock variables used by acc2273()
     # Some may be parameterised
-    monkeypatch.setattr(data_structure.buildings_variables, "wsvol", param["wsvol"])
-    monkeypatch.setattr(data_structure.buildings_variables, "volrci", param["volrci"])
+    monkeypatch.setattr(costs.data.buildings, "wsvol", param["wsvol"])
+    monkeypatch.setattr(costs.data.buildings, "volrci", param["volrci"])
     monkeypatch.setattr(
         physics_variables, "f_plasma_fuel_tritium", param["f_plasma_fuel_tritium"]
     )
@@ -248,8 +247,8 @@ def test_acc2274(monkeypatch, costs):
     :param monkeypatch: Mock fixture
     :type monkeypatch: object
     """
-    monkeypatch.setattr(data_structure.buildings_variables, "wsvol", 132304.1)
-    monkeypatch.setattr(data_structure.buildings_variables, "volrci", 1299783.4)
+    monkeypatch.setattr(costs.data.buildings, "wsvol", 132304.1)
+    monkeypatch.setattr(costs.data.buildings, "volrci", 1299783.4)
     monkeypatch.setattr(costs.data.costs, "fkind", 1)
     monkeypatch.setattr(costs.data.costs, "c2274", 0)
 
@@ -886,23 +885,23 @@ def test_acc21(acc21param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(buildings_variables, "shovol", acc21param.shovol)
+    monkeypatch.setattr(costs.data.buildings, "shovol", acc21param.shovol)
 
-    monkeypatch.setattr(buildings_variables, "triv", acc21param.triv)
+    monkeypatch.setattr(costs.data.buildings, "triv", acc21param.triv)
 
-    monkeypatch.setattr(buildings_variables, "elevol", acc21param.elevol)
+    monkeypatch.setattr(costs.data.buildings, "elevol", acc21param.elevol)
 
-    monkeypatch.setattr(buildings_variables, "rbvol", acc21param.rbvol)
+    monkeypatch.setattr(costs.data.buildings, "rbvol", acc21param.rbvol)
 
-    monkeypatch.setattr(buildings_variables, "cryvol", acc21param.cryvol)
+    monkeypatch.setattr(costs.data.buildings, "cryvol", acc21param.cryvol)
 
-    monkeypatch.setattr(buildings_variables, "rmbvol", acc21param.rmbvol)
+    monkeypatch.setattr(costs.data.buildings, "rmbvol", acc21param.rmbvol)
 
-    monkeypatch.setattr(buildings_variables, "admvol", acc21param.admvol)
+    monkeypatch.setattr(costs.data.buildings, "admvol", acc21param.admvol)
 
-    monkeypatch.setattr(buildings_variables, "convol", acc21param.convol)
+    monkeypatch.setattr(costs.data.buildings, "convol", acc21param.convol)
 
-    monkeypatch.setattr(buildings_variables, "wsvol", acc21param.wsvol)
+    monkeypatch.setattr(costs.data.buildings, "wsvol", acc21param.wsvol)
 
     monkeypatch.setattr(costs.data.costs, "ucrb", acc21param.ucrb)
 
@@ -4542,9 +4541,9 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(buildings_variables, "wsvol", acc2273param.wsvol)
+    monkeypatch.setattr(costs.data.buildings, "wsvol", acc2273param.wsvol)
 
-    monkeypatch.setattr(buildings_variables, "volrci", acc2273param.volrci)
+    monkeypatch.setattr(costs.data.buildings, "volrci", acc2273param.volrci)
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc2273param.fkind)
 
@@ -4615,9 +4614,9 @@ def test_acc2274_rut(acc2274param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(buildings_variables, "wsvol", acc2274param.wsvol)
+    monkeypatch.setattr(costs.data.buildings, "wsvol", acc2274param.wsvol)
 
-    monkeypatch.setattr(buildings_variables, "volrci", acc2274param.volrci)
+    monkeypatch.setattr(costs.data.buildings, "volrci", acc2274param.volrci)
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc2274param.fkind)
 

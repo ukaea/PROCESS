@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    buildings_variables,
     constraint_variables,
     current_drive_variables,
     divertor_variables,
@@ -1998,7 +1997,7 @@ def test_acpow(acpowparam, monkeypatch, power):
     """
 
     monkeypatch.setattr(
-        buildings_variables,
+        power.data.buildings,
         "a_plant_floor_effective",
         acpowparam.a_plant_floor_effective,
     )

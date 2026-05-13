@@ -12,7 +12,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    buildings_variables,
     current_drive_variables,
     heat_transport_variables,
     numerics,
@@ -1461,7 +1460,7 @@ class Power(Model):
             self.outfile,
             "Effective area of plant buildings floor [m^2]",
             "(a_plant_floor_effective)",
-            buildings_variables.a_plant_floor_effective,
+            self.data.buildings.a_plant_floor_effective,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -1625,7 +1624,7 @@ class Power(Model):
         #  Total baseline power to facility loads, MW
         heat_transport_variables.p_plant_electric_base_total_mw = (
             heat_transport_variables.p_plant_electric_base * 1.0e-6
-            + buildings_variables.a_plant_floor_effective
+            + self.data.buildings.a_plant_floor_effective
             * (heat_transport_variables.pflux_plant_floor_electric * 1.0e-3)
             / 1000.0e0
         )
@@ -2292,7 +2291,7 @@ class Power(Model):
             tfcoil_variables.tfckw,
             tfcoil_variables.len_tf_bus,
             tfcoil_variables.drarea,
-            buildings_variables.tfcbv,
+            self.data.buildings.tfcbv,
             heat_transport_variables.p_tf_electric_supplies_mw,
         ) = self.tfcpwr(
             output,
