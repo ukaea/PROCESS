@@ -13,6 +13,8 @@ from process.data_structure import rebco_variables
 
 logger = logging.getLogger(__name__)
 
+N_CROCO_STRANDS_TURN = 6
+
 
 class SuperconductorType(IntEnum):
     """Enumeration of superconductor types."""
@@ -1183,10 +1185,12 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     # Conductor properties
     # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)
     # /a_croco_strand
-    conductor_critical_current = croco_strand_critical_current * 6.0
+    conductor_critical_current = croco_strand_critical_current * N_CROCO_STRANDS_TURN
     # Area of core = area of strand
     conductor_copper_bar_area = a_croco_strand
-    conductor_copper_area = a_croco_strand_copper_total * 6.0 + conductor_copper_bar_area
+    conductor_copper_area = (
+        a_croco_strand_copper_total * N_CROCO_STRANDS_TURN + conductor_copper_bar_area
+    )
     conductor_copper_fraction = conductor_copper_area / conductor_area
 
     # Helium area is set by the user.
@@ -1194,13 +1198,13 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     conductor_helium_area = np.pi / 2.0 * dia_croco_strand**2
     conductor_helium_fraction = conductor_helium_area / conductor_area
 
-    conductor_hastelloy_area = a_croco_strand_hastelloy * 6.0
+    conductor_hastelloy_area = a_croco_strand_hastelloy * N_CROCO_STRANDS_TURN
     conductor_hastelloy_fraction = conductor_hastelloy_area / conductor_area
 
-    conductor_solder_area = a_croco_strand_solder * 6.0
+    conductor_solder_area = a_croco_strand_solder * N_CROCO_STRANDS_TURN
     conductor_solder_fraction = conductor_solder_area / conductor_area
 
-    conductor_rebco_area = a_croco_strand_rebco * 6.0
+    conductor_rebco_area = a_croco_strand_rebco * N_CROCO_STRANDS_TURN
     conductor_rebco_fraction = conductor_rebco_area / conductor_area
 
     return (
