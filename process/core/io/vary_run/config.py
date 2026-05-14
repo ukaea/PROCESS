@@ -1,7 +1,5 @@
 """
-Interfaces for Configuration values for programs
-- run_process.py
-- test_process.py
+Configuration for VaryRun.
 """
 
 import logging
@@ -15,6 +13,7 @@ from shutil import SameFileError, copy
 import click
 from numpy.random import default_rng
 
+from process import data_structure
 from process.core.io.in_dat import InDat
 from process.core.io.mfile import MFile
 from process.core.io.vary_run.tools import (
@@ -35,10 +34,10 @@ logger = logging.getLogger(__name__)
 class ProcessConfig:
     """Configuration parameters for PROCESS runs"""
 
+    or_in_dat: Path
+    """Original IN.DAT file"""
     wdir: Path = field(default_factory=Path.cwd)
     """Working directory"""
-    or_in_dat: Path = Path("IN.DAT")
-    """Original IN.DAT file"""
     niter: int = 10
     """(Maximum) number of iterations"""
     u_seed: int | None = None
@@ -51,7 +50,7 @@ iteration variables should get varied"""
     comment: str = " "
     """additional comment to be written into README.txt"""
     _filename: Path | None = None
-    """filename if supplied"""
+    """filename of .conf file if supplied"""
 
     @classmethod
     def from_file(cls, filename: str | Path, solver: str = "vmcon"):
@@ -97,7 +96,7 @@ iteration variables should get varied"""
             print(f"No comment in config file {filename}")
 
         return cls(
-            wdir, or_in_dat, niter, u_seed, factor, solver, comment or " ", filename
+            or_in_dat, wdir, niter, u_seed, factor, solver, comment or " ", filename
         )
 
     @staticmethod
@@ -146,15 +145,29 @@ iteration variables should get varied"""
         return self
 
     def __next__(self):
-        _neqns, itervars = get_neqns_itervars(wdir=self.wdir)
-        lbs, ubs = get_variable_range(itervars, self.factor, self.wdir)
+        _neqns, itervars = get_neqns_itervars(in_dat=self.infile, wdir=self.wdir)
+        lbs, ubs = get_variable_range(itervars, self.factor, self.infile, self.wdir)
+        self.run_process(self.wdir / self.infile, self.solver)
+        check_input_error(mfile=self.outfile, wdir=self.wdir)
+
         indat, mfile = self.infile, self.outfile
+
+        # See if converged
+        m_file = MFile(filename=self.wdir / mfile)
+        ifail = m_file.data["ifail"].get_scan(-1)
+
+        if ifail != 1:
+            print(f"VaryRun iteration {self._current_iteration} did not converge.\n")
+        else:
+            print(
+                f"PROCESS found a converged solution using VaryRun. The converging input file is {self._current_iteration}_IN.DAT\n"
+            )
+
         self._current_iteration += 1
         if self._current_iteration >= self.niter:
-            self.error_status2readme(mfile=mfile)
+            # Reached maximum number of iterations
+            self.error_status2readme(mfile=self.prev_outfile)
             raise StopIteration
-        self.run_process(self.wdir / indat, self.solver)
-        check_input_error(wdir=self.wdir, mfile=mfile)
 
         return indat, mfile, itervars, lbs, ubs
 
@@ -165,6 +178,14 @@ iteration variables should get varied"""
     @property
     def outfile(self):
         return self._base_output.format(self._current_iteration)
+
+    @property
+    def prev_outfile(self):
+        return self._base_output.format(self._current_iteration - 1)
+
+    @property
+    def initial_infile(self):
+        return self._base_input.format(0)
 
     def echo(self):
         """Echos the attributes of the class"""
@@ -186,7 +207,7 @@ iteration variables should get varied"""
         if not self.wdir.is_dir():
             self.wdir.mkdir(exist_ok=True, parents=True)
 
-        copy(self.or_in_dat, self.wdir / "0_IN.DAT")
+        copy(self.or_in_dat, self.wdir / self.initial_infile)
 
         if self._filename is not None:
             with suppress(SameFileError):
@@ -196,10 +217,7 @@ iteration variables should get varied"""
             "OUT.DAT",
             "MFILE.DAT",
             "README.txt",
-            "SolverTest.out",
             "process.log",
-            "uncertainties.nc",
-            "time.info",
         ):
             Path(self.wdir, file).unlink(missing_ok=True)
         for f in self.wdir.glob("*.pdf"):
@@ -212,20 +230,33 @@ iteration variables should get varied"""
         if self.comment != "":
             Path(self.wdir, "README.txt").write_text(self.comment)
 
-    def error_status2readme(self, mfile="MFILE.DAT"):
-        """Appends PROCESS outcome to README.txt"""
+    def error_status2readme(self, mfile):
+        """Appends PROCESS outcome to README.txt if reached maximum iterations"""
         m_file = MFile(filename=self.wdir / mfile)
 
-        error_status = (
-            f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
-            f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
-        )
+        try:
+            error_status = (
+                f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
+                f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
+            )
+        except KeyError:
+            error_status = "The MFILE is empty. PROCESS probably exited prematurely.\n"
+
+        ifail = m_file.data["ifail"].get_scan(-1)
+        if ifail != 1:
+            ifail_msg = f"PROCESS has been unable to find a converging input file within the chosen maximum number of iterations.\nYou could try increasing the maximum number of iterations (which is currently set to {self.niter}),\nchanging the factor within which the iteration variables are changed,\nor by changing the initial values of the iteration variables."
+        else:
+            ifail_msg = f"PROCESS found a converged solution using VaryRun. The converging input file is {self._current_iteration - 1}_IN.DAT"
 
         if self.comment != "":
             with open(Path(self.wdir, "README.txt"), "a") as readme:
                 readme.write(error_status)
+                readme.write(ifail_msg)
+            print(ifail_msg)
         else:
-            Path(self.wdir, "README.txt").write_text(error_status)
+            with open(Path(self.wdir, "README.txt"), "a") as readme:
+                readme.write(error_status)
+            print(ifail_msg)
 
     def modify_in_dat(self):
         """Modifies the original IN.DAT file"""
@@ -240,9 +271,14 @@ iteration variables should get varied"""
 
         self.modify_in_dat()
 
-        check_in_dat("0_IN.DAT")
+        check_in_dat(self.initial_infile)
 
         self.generator = default_rng(seed=self.u_seed)
+
+        data_structure.global_variables.output_prefix = str(
+            self.wdir / self.outfile.strip("MFILE.DAT")
+        )
+        data_structure.global_variables.fileprefix = str(self.wdir / self.infile)
 
     def run_process(self, input_path: Path, solver: str = "vmcon"):
         """Perform a single run of PROCESS, catching any errors.
@@ -330,8 +366,8 @@ class RunProcessConfig(ProcessConfig):
         del_icc = cls.get_attribute_csv_list(self._filename, "del_icc")
 
         return cls(
-            self.wdir,
             self.or_in_dat,
+            self.wdir,
             self.niter,
             self.u_seed,
             self.factor,
@@ -464,7 +500,7 @@ class RunProcessConfig(ProcessConfig):
 
     def modify_vars(self):
         """Modifies IN.DAT by adding, deleting and modifiying variables"""
-        in_dat = InDat(filename="0_IN.DAT")
+        in_dat = InDat(filename=self.initial_infile)
 
         # add and modify variables
         for key in self.dictvar:
@@ -482,10 +518,10 @@ class RunProcessConfig(ProcessConfig):
             else:
                 in_dat.remove_parameter(key)
 
-        in_dat.write_in_dat(output_filename=self.wdir / "0_IN.DAT")
+        in_dat.write_in_dat(output_filename=self.wdir / self.initial_infile)
 
     def modify_ixc(self):
-        """Modifies the array of iteration variables in IN.DAT"""
+        """Modifies the array of iteration variables in the IN.DAT"""
         # check that there is no variable in both lists
         if set(self.add_ixc).intersection(self.del_ixc) != set():
             logger.error(
@@ -494,7 +530,7 @@ class RunProcessConfig(ProcessConfig):
             )
             sys.exit()
 
-        in_dat = InDat(filename="0_IN.DAT")
+        in_dat = InDat(filename=self.wdir / self.initial_infile)
 
         for iter_var in self.add_ixc:
             in_dat.add_iteration_variable(int(iter_var))
@@ -502,7 +538,7 @@ class RunProcessConfig(ProcessConfig):
         for iter_var in self.del_ixc:
             in_dat.remove_iteration_variable(int(iter_var))
 
-        in_dat.write_in_dat(output_filename=self.wdir / "0_IN.DAT")
+        in_dat.write_in_dat(output_filename=self.wdir / self.initial_infile)
 
     def modify_icc(self):
         """Modifies the array of constraint equations in IN.DAT"""
@@ -514,7 +550,7 @@ class RunProcessConfig(ProcessConfig):
             )
             sys.exit()
 
-        in_dat = InDat(filename="0_IN.DAT")
+        in_dat = InDat(filename=self.wdir / self.initial_infile)
 
         for constr in self.add_icc:
             in_dat.add_constraint_equation(int(constr))
@@ -522,4 +558,4 @@ class RunProcessConfig(ProcessConfig):
         for constr in self.del_icc:
             in_dat.remove_constraint_equation(int(constr))
 
-        in_dat.write_in_dat(output_filename=self.wdir / "0_IN.DAT")
+        in_dat.write_in_dat(output_filename=self.wdir / self.initial_infile)

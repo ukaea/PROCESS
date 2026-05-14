@@ -588,7 +588,7 @@ def get_mfile_initial_ixc_values(file_path: Path, data: DataStructure):
     Parameters
     ----------
     file_path :
-        The path to the MFile to get the initial iteration variable values from.
+        The path to the input file to get the initial iteration variable values from.
 
     Notes
     -----
