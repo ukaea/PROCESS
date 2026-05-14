@@ -11,7 +11,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     physics_variables,
     stellarator_variables,
 )
@@ -1189,7 +1188,7 @@ class PlasmaConfinementTime(Model):
                 kappa=physics_variables.kappa,
                 kappa95=physics_variables.kappa95,
                 p_non_alpha_charged_mw=physics_variables.p_non_alpha_charged_mw,
-                p_hcd_injected_total_mw=current_drive_variables.p_hcd_injected_total_mw,
+                p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
                 plasma_current=physics_variables.plasma_current,
                 pden_plasma_core_rad_mw=physics_variables.pden_plasma_core_rad_mw,
                 rmajor=physics_variables.rmajor,
@@ -1216,7 +1215,7 @@ class PlasmaConfinementTime(Model):
             # (i.e. whether device is ignited)
             if physics_variables.i_plasma_ignited == 0:
                 fhz_value -= (
-                    current_drive_variables.p_hcd_injected_total_mw
+                    self.data.current_drive.p_hcd_injected_total_mw
                     / physics_variables.vol_plasma
                 )
 
@@ -1477,7 +1476,7 @@ class PlasmaConfinementTime(Model):
                 kappa=physics_variables.kappa,
                 kappa95=physics_variables.kappa95,
                 p_non_alpha_charged_mw=physics_variables.p_non_alpha_charged_mw,
-                p_hcd_injected_total_mw=current_drive_variables.p_hcd_injected_total_mw,
+                p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
                 plasma_current=physics_variables.plasma_current,
                 pden_plasma_core_rad_mw=physics_variables.pden_plasma_core_rad_mw,
                 rmajor=physics_variables.rmajor,

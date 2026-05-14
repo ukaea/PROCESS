@@ -16,7 +16,6 @@ from process.core.input import parse_input_file
 from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
-from process.data_structure.current_drive_variables import init_current_drive_variables
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.heat_transport_variables import (
     init_heat_transport_variables,
@@ -267,7 +266,6 @@ def init_all_module_vars():
     init_stellarator_variables()
     init_tfcoil_variables()
     constants.init_constants()
-    init_current_drive_variables()
     init_pfcoil_variables()
     init_pf_power_variables()
     init_rebco_variables()
@@ -1129,8 +1127,8 @@ def check_process(inputs, data):  # noqa: ARG001
         data_structure.pfcoil_variables.rho_pf_coil = 0.0
 
     # If there is no NBI, then hot beam density should be zero
-    if data_structure.current_drive_variables.i_hcd_calculations == 1:
-        if data_structure.current_drive_variables.i_hcd_primary not in {5, 8}:
+    if data.current_drive.i_hcd_calculations == 1:
+        if data.current_drive.i_hcd_primary not in {5, 8}:
             data_structure.physics_variables.f_nd_beam_electron = 0.0
     else:
         data_structure.physics_variables.f_nd_beam_electron = 0.0

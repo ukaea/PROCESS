@@ -53,7 +53,7 @@ ITERATION_VARIABLES = {
     10: IterationVariable("hfact", data_structure.physics_variables, 0.1, 3.0),
     11: IterationVariable(
         "p_hcd_primary_extra_heat_mw",
-        data_structure.current_drive_variables,
+        "current_drive",
         1.0e-3,
         1.0e3,
     ),
@@ -62,9 +62,7 @@ ITERATION_VARIABLES = {
     16: IterationVariable("dr_cs", "build", 0.01, 10.00),
     17: IterationVariable("t_plant_pulse_dwell", "times", 0.1, 1.0e8),
     18: IterationVariable("q95", data_structure.physics_variables, 2.0, 50.00),
-    19: IterationVariable(
-        "e_beam_kev", data_structure.current_drive_variables, 1.0, 1.0e6
-    ),
+    19: IterationVariable("e_beam_kev", "current_drive", 1.0, 1.0e6),
     20: IterationVariable(
         "temp_cp_average", data_structure.tfcoil_variables, 40.00, 573.0
     ),
@@ -81,7 +79,7 @@ ITERATION_VARIABLES = {
     44: IterationVariable(
         "f_c_plasma_non_inductive", data_structure.physics_variables, 0.001, 1.0
     ),
-    47: IterationVariable("feffcd", data_structure.current_drive_variables, 0.001, 1.0),
+    47: IterationVariable("feffcd", "current_drive", 0.001, 1.0),
     56: IterationVariable(
         "t_tf_superconductor_quench", data_structure.tfcoil_variables, 0.1, 100.0
     ),

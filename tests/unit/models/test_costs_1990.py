@@ -7,7 +7,6 @@ import pytest
 
 from process import data_structure
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     heat_transport_variables,
     ife_variables,
@@ -3042,23 +3041,23 @@ def test_acc223(acc223param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "fcdfuel", acc223param.fcdfuel)
 
     monkeypatch.setattr(
-        current_drive_variables,
+        costs.data.current_drive,
         "p_hcd_lowhyb_injected_total_mw",
         acc223param.p_hcd_lowhyb_injected_total_mw,
     )
 
     monkeypatch.setattr(
-        current_drive_variables, "i_hcd_primary", acc223param.i_hcd_primary
+        costs.data.current_drive, "i_hcd_primary", acc223param.i_hcd_primary
     )
 
     monkeypatch.setattr(
-        current_drive_variables,
+        costs.data.current_drive,
         "p_hcd_ecrh_injected_total_mw",
         acc223param.p_hcd_ecrh_injected_total_mw,
     )
 
     monkeypatch.setattr(
-        current_drive_variables, "p_beam_injected_mw", acc223param.p_beam_injected_mw
+        costs.data.current_drive, "p_beam_injected_mw", acc223param.p_beam_injected_mw
     )
 
     monkeypatch.setattr(ife_variables, "dcdrv2", acc223param.dcdrv2)

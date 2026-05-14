@@ -14,7 +14,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     global_variables,
     heat_transport_variables,
@@ -134,7 +133,7 @@ class Stellarator(Model):
             self.availability.run(output=True)
             self.physics.calculate_effective_charge_ionisation_profiles()
             self.physics.outplas()
-            st_heat(self, True)
+            st_heat(self, True, self.data)
             self.st_phys(True)
             st_denisty_limits(self, True)
 
@@ -633,7 +632,7 @@ class Stellarator(Model):
                     * (
                         self.data.fwbs.p_fw_nuclear_heat_total_mw
                         + self.data.fwbs.p_fw_rad_total_mw
-                        + current_drive_variables.p_beam_orbit_loss_mw
+                        + self.data.current_drive.p_beam_orbit_loss_mw
                     )
                 )
                 heat_transport_variables.p_blkt_coolant_pump_mw = (
@@ -897,7 +896,7 @@ class Stellarator(Model):
                             + p_fw_outboard_nuclear_heat_mw
                             + psurffwi
                             + psurffwo
-                            + current_drive_variables.p_beam_orbit_loss_mw
+                            + self.data.current_drive.p_beam_orbit_loss_mw
                         )
                     )
                     heat_transport_variables.p_blkt_coolant_pump_mw = (
@@ -2001,7 +2000,7 @@ class Stellarator(Model):
 
         #  Perform auxiliary power calculations
 
-        st_heat(self, False)
+        st_heat(self, False, self.data)
 
         #  Calculate fusion power
 
@@ -2026,7 +2025,7 @@ class Stellarator(Model):
         #  Calculate neutral beam slowing down effects
         #  If ignited, then ignore beam fusion effects
 
-        if (current_drive_variables.p_hcd_beam_injected_total_mw != 0.0e0) and (  # noqa: RUF069
+        if (self.data.current_drive.p_hcd_beam_injected_total_mw != 0.0e0) and (  # noqa: RUF069
             physics_variables.i_plasma_ignited == 0
         ):
             (
@@ -2037,14 +2036,14 @@ class Stellarator(Model):
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.b_plasma_total,
-                current_drive_variables.c_beam_total,
+                self.data.current_drive.c_beam_total,
                 physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_plasma_fuel_ions_vol_avg,
                 physics_variables.dlamie,
-                current_drive_variables.e_beam_kev,
+                self.data.current_drive.e_beam_kev,
                 physics_variables.f_plasma_fuel_deuterium,
                 physics_variables.f_plasma_fuel_tritium,
-                current_drive_variables.f_beam_tritium,
+                self.data.current_drive.f_beam_tritium,
                 physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.vol_plasma,
                 physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
@@ -2203,7 +2202,7 @@ class Stellarator(Model):
 
         if physics_variables.i_plasma_ignited == 0:
             # if not ignited add the auxiliary power
-            powht += current_drive_variables.p_hcd_injected_total_mw
+            powht += self.data.current_drive.p_hcd_injected_total_mw
 
         # Here the implementation sometimes leaves the accessible regime when p_plasma_rad_mw> powht which is unphysical and
         # is not taken care of by the rad module. We restrict the radiation power here by the heating power:
@@ -2265,7 +2264,7 @@ class Stellarator(Model):
             * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.p_hcd_injected_total_mw
+            + self.data.current_drive.p_hcd_injected_total_mw
         )
 
         #  Calculate transport losses and energy confinement time using the
@@ -2294,7 +2293,7 @@ class Stellarator(Model):
             physics_variables.kappa,
             physics_variables.kappa95,
             physics_variables.p_non_alpha_charged_mw,
-            current_drive_variables.p_hcd_injected_total_mw,
+            self.data.current_drive.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
             physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,

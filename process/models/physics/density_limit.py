@@ -14,8 +14,8 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     physics_variables,
 )
@@ -61,7 +61,7 @@ class DensityLimitModel(IntEnum):
         return self._full_name_
 
 
-class PlasmaDensityLimit:
+class PlasmaDensityLimit(Model):
     """Class to hold plasma density limit calculations for plasma processing."""
 
     def __init__(self):
@@ -80,7 +80,7 @@ class PlasmaDensityLimit:
             b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
             i_density_limit=physics_variables.i_density_limit,
             p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
-            p_hcd_injected_total_mw=current_drive_variables.p_hcd_injected_total_mw,
+            p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
             plasma_current=physics_variables.plasma_current,
             prn1=divertor_variables.prn1,
             qcyl=physics_variables.qstar,
@@ -620,7 +620,7 @@ class PlasmaDensityLimit:
             i_density_limit - 1
         ]
 
-    def output_density_limit_information(self):
+    def output(self):
         """Output density limit information to file."""
         po.oheadr(self.outfile, "Plasma density limits")
         po.ovarin(

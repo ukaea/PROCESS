@@ -3,7 +3,6 @@ import numpy as np
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     heat_transport_variables,
     pf_power_variables,
@@ -77,8 +76,8 @@ def objective_function(minmax: int, data: DataStructure) -> float:
             ) / 10.0
         case 5:
             objective_metric = physics_variables.p_fusion_total_mw / (
-                current_drive_variables.p_hcd_injected_total_mw
-                + current_drive_variables.p_beam_orbit_loss_mw
+                data.current_drive.p_hcd_injected_total_mw
+                + data.current_drive.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw
             )
         case 6:
@@ -96,7 +95,7 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         case 10:
             objective_metric = physics_variables.b_plasma_toroidal_on_axis
         case 11:
-            objective_metric = current_drive_variables.p_hcd_injected_total_mw
+            objective_metric = data.current_drive.p_hcd_injected_total_mw
         case 14:
             objective_metric = data.times.t_plant_pulse_burn / 2.0e4
         case 15:
@@ -112,8 +111,8 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         case 18:
             objective_metric = 1.0
         case 19:
-            objective_metric = -0.5 * (
-                current_drive_variables.big_q_plasma / 20.0
-            ) - 0.5 * (data.times.t_plant_pulse_burn / 7200.0)
+            objective_metric = -0.5 * (data.current_drive.big_q_plasma / 20.0) - 0.5 * (
+                data.times.t_plant_pulse_burn / 7200.0
+            )
 
     return objective_sign * objective_metric

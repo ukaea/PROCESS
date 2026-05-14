@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     global_variables,
     heat_transport_variables,
@@ -882,7 +881,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        current_drive_variables,
+        ccfe_hcpb.data.current_drive,
         "p_beam_orbit_loss_mw",
         powerflowcalcparam.p_beam_orbit_loss_mw,
     )

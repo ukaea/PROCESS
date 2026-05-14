@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     heat_transport_variables,
     ife_variables,
@@ -1869,7 +1868,7 @@ class Costs(Model):
             self.data.costs.c2231 = (
                 1.0e-6
                 * self.data.costs.ucech
-                * (1.0e6 * current_drive_variables.p_hcd_ecrh_injected_total_mw) ** exprf
+                * (1.0e6 * self.data.current_drive.p_hcd_ecrh_injected_total_mw) ** exprf
             )
 
             if self.data.costs.ifueltyp == 1:
@@ -1880,18 +1879,18 @@ class Costs(Model):
 
             #  Account 223.2 : Lower Hybrid or ICH
 
-            if current_drive_variables.i_hcd_primary != 2:
+            if self.data.current_drive.i_hcd_primary != 2:
                 self.data.costs.c2232 = (
                     1.0e-6
                     * self.data.costs.uclh
-                    * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
+                    * (1.0e6 * self.data.current_drive.p_hcd_lowhyb_injected_total_mw)
                     ** exprf
                 )
             else:
                 self.data.costs.c2232 = (
                     1.0e-6
                     * self.data.costs.ucich
-                    * (1.0e6 * current_drive_variables.p_hcd_lowhyb_injected_total_mw)
+                    * (1.0e6 * self.data.current_drive.p_hcd_lowhyb_injected_total_mw)
                     ** exprf
                 )
 
@@ -1909,7 +1908,7 @@ class Costs(Model):
                 self.data.costs.c2233 = (
                     1.0e-6
                     * self.data.costs.ucnbi
-                    * (1.0e6 * current_drive_variables.p_beam_injected_mw) ** exprf
+                    * (1.0e6 * self.data.current_drive.p_beam_injected_mw) ** exprf
                 )
 
             if self.data.costs.ifueltyp == 1:

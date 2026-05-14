@@ -16,7 +16,6 @@ from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     global_variables,
     heat_transport_variables,
@@ -1093,7 +1092,7 @@ class Scan:
             case 11:
                 physics_variables.beta_norm_max = swp[iscn - 1]
             case 12:
-                current_drive_variables.f_c_plasma_bootstrap_max = swp[iscn - 1]
+                self.data.current_drive.f_c_plasma_bootstrap_max = swp[iscn - 1]
             case 13:
                 numerics.boundu[9] = swp[iscn - 1]
             case 16:
@@ -1213,7 +1212,7 @@ class Scan:
             case 78:
                 self.data.costs.fkind = swp[iscn - 1]
             case 79:
-                current_drive_variables.eta_ecrh_injector_wall_plug = swp[iscn - 1]
+                self.data.current_drive.eta_ecrh_injector_wall_plug = swp[iscn - 1]
             case 80:
                 tfcoil_variables.fcoolcp = swp[iscn - 1]
             case 81:
