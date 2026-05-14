@@ -16,7 +16,6 @@ from process.core.log import logging_model_handler, show_errors
 from process.core.solver import constraints
 from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
-    constraint_variables,
     current_drive_variables,
     divertor_variables,
     global_variables,
@@ -1078,13 +1077,13 @@ class Scan:
             case 2:
                 divertor_variables.pflux_div_heat_load_max_mw = swp[iscn - 1]
             case 3:
-                constraint_variables.p_plant_electric_net_required_mw = swp[iscn - 1]
+                self.data.constraints.p_plant_electric_net_required_mw = swp[iscn - 1]
             case 4:
                 physics_variables.hfact = swp[iscn - 1]
             case 5:
                 tfcoil_variables.oacdcp = swp[iscn - 1]
             case 6:
-                constraint_variables.pflux_fw_neutron_max_mw = swp[iscn - 1]
+                self.data.constraints.pflux_fw_neutron_max_mw = swp[iscn - 1]
             case 7:
                 physics_variables.beamfus0 = swp[iscn - 1]
             case 9:
@@ -1100,13 +1099,13 @@ class Scan:
             case 16:
                 physics_variables.rmajor = swp[iscn - 1]
             case 17:
-                constraint_variables.b_tf_inboard_max = swp[iscn - 1]
+                self.data.constraints.b_tf_inboard_max = swp[iscn - 1]
             case 18:
-                constraint_variables.eta_cd_norm_hcd_primary_max = swp[iscn - 1]
+                self.data.constraints.eta_cd_norm_hcd_primary_max = swp[iscn - 1]
             case 19:
                 numerics.boundl[15] = swp[iscn - 1]
             case 20:
-                constraint_variables.t_burn_min = swp[iscn - 1]
+                self.data.constraints.t_burn_min = swp[iscn - 1]
             case 22:
                 if self.data.costs.i_plant_availability == 1:
                     raise ProcessValueError(
@@ -1114,19 +1113,19 @@ class Scan:
                     )
                 self.data.costs.f_t_plant_available = swp[iscn - 1]
             case 24:
-                constraint_variables.p_fusion_total_max_mw = swp[iscn - 1]
+                self.data.constraints.p_fusion_total_max_mw = swp[iscn - 1]
             case 25:
                 physics_variables.kappa = swp[iscn - 1]
             case 26:
                 physics_variables.triang = swp[iscn - 1]
             case 27:
-                constraint_variables.tbrmin = swp[iscn - 1]
+                self.data.constraints.tbrmin = swp[iscn - 1]
             case 28:
                 physics_variables.b_plasma_toroidal_on_axis = swp[iscn - 1]
             case 29:
                 impurity_radiation_module.coreradius = swp[iscn - 1]
             case 31:
-                constraint_variables.f_alpha_energy_confinement_min = swp[iscn - 1]
+                self.data.constraints.f_alpha_energy_confinement_min = swp[iscn - 1]
             case 32:
                 numerics.epsvmc = swp[iscn - 1]
             case 38:

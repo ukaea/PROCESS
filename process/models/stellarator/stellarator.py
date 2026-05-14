@@ -14,7 +14,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    constraint_variables,
     current_drive_variables,
     divertor_variables,
     global_variables,
@@ -2257,8 +2256,8 @@ class Stellarator(Model):
                 / self.data.first_wall.a_fw_total
             )
 
-        constraint_variables.pflux_fw_rad_max_mw = (
-            physics_variables.pflux_fw_rad_mw * constraint_variables.f_fw_rad_max
+        self.data.constraints.pflux_fw_rad_max_mw = (
+            physics_variables.pflux_fw_rad_mw * self.data.constraints.f_fw_rad_max
         )
 
         physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (

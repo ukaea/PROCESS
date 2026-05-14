@@ -11,7 +11,6 @@ from process.core import constants
 from process.core import process_output as op
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure, Model
-from process.data_structure import constraint_variables as ctv
 from process.data_structure import (
     pfcoil_variables,
     superconducting_tf_coil_variables,
@@ -2291,7 +2290,7 @@ class PFCoil(Model):
                     self.outfile,
                     "Minimum burn time (s)",
                     "(t_burn_min)",
-                    ctv.t_burn_min,
+                    self.data.constraints.t_burn_min,
                 )
                 op.ovarre(
                     self.outfile,
@@ -2358,10 +2357,18 @@ class PFCoil(Model):
             # Check whether CS coil is hitting any limits
             if (
                 abs(pfcoil_variables.j_cs_flat_top_end)
-                > 0.99e0 * abs(ctv.fjohc * pfcoil_variables.j_cs_critical_flat_top_end)
+                > 0.99e0
+                * abs(
+                    self.data.constraints.fjohc
+                    * pfcoil_variables.j_cs_critical_flat_top_end
+                )
             ) or (
                 abs(pfcoil_variables.j_cs_pulse_start)
-                > 0.99e0 * abs(ctv.fjohc0 * pfcoil_variables.j_cs_critical_pulse_start)
+                > 0.99e0
+                * abs(
+                    self.data.constraints.fjohc0
+                    * pfcoil_variables.j_cs_critical_pulse_start
+                )
             ):
                 pfcoil_variables.cslimit = True
 

@@ -7,7 +7,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import constraint_variables as ctv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
@@ -1332,7 +1331,7 @@ class Availability(Model):
                     self.outfile,
                     "Max fast neutron fluence on TF coil (n/m2)",
                     "(nflutfmax)",
-                    ctv.nflutfmax,
+                    self.data.constraints.nflutfmax,
                     "OP ",
                 )
                 po.ovarre(
@@ -1455,7 +1454,10 @@ class Availability(Model):
                 self.data.costs.life_plant
                 if self.data.fwbs.neut_flux_cp <= 0.0
                 else min(
-                    (ctv.nflutfmax / (self.data.fwbs.neut_flux_cp * YEAR_SECONDS)),
+                    (
+                        self.data.constraints.nflutfmax
+                        / (self.data.fwbs.neut_flux_cp * YEAR_SECONDS)
+                    ),
                     self.data.costs.life_plant,
                 )
             )

@@ -18,7 +18,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    constraint_variables,
     current_drive_variables,
     divertor_variables,
     impurity_radiation_module,
@@ -3030,12 +3029,15 @@ class BetaComponentLimits(IntEnum):
         return self._full_name_
 
 
-class PlasmaBeta:
+class PlasmaBeta(Model):
     """Class to hold plasma beta calculations for plasma processing."""
 
     def __init__(self):
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
+
+    def output(self):
+        """This model doesn't have any output"""
 
     @staticmethod
     def get_beta_norm_max_value(model: BetaNormMaxModel) -> float:
@@ -3783,7 +3785,7 @@ class PlasmaBeta:
             self.outfile,
             "Upper limit on volume averaged poloidal beta (⟨βₚ⟩<)",
             "(beta_poloidal_max)",
-            constraint_variables.beta_poloidal_max,
+            self.data.constraints.beta_poloidal_max,
             "IP",
         )
         po.ovarre(

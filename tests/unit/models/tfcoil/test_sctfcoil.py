@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    constraint_variables,
     divertor_variables,
     global_variables,
     physics_variables,
@@ -389,7 +388,9 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
         tfcoil_variables, "t_tf_quench_detection", superconparam.detection_time
     )
 
-    monkeypatch.setattr(constraint_variables, "nflutfmax", superconparam.fluence)
+    monkeypatch.setattr(
+        cicc_sctfcoil.data.constraints, "nflutfmax", superconparam.fluence
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,

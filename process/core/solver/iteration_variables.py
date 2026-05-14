@@ -119,7 +119,7 @@ ITERATION_VARIABLES = {
     93: IterationVariable("dr_shld_inboard", "build", 0.001, 10.00),
     94: IterationVariable("dr_shld_outboard", "build", 0.001, 10.00),
     98: IterationVariable("f_blkt_li6_enrichment", "fwbs", 10.00, 100.0),
-    104: IterationVariable("fcwr", data_structure.constraint_variables, 0.001, 1.0),
+    104: IterationVariable("fcwr", "constraints", 0.001, 1.0),
     108: IterationVariable("breeder_f", "fwbs", 0.060, 1.0),
     109: IterationVariable(
         "f_nd_alpha_electron", data_structure.physics_variables, 0.05, 0.15
