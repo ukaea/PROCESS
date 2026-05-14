@@ -3221,13 +3221,13 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         superconducting_tf_coil_variables.a_tf_turn_croco_copper_bar = (
             superconducting_tf_coil_variables.a_tf_croco_strand
         )
-        superconducting_tf_coil_variables.conductor_copper_area = (
+        superconducting_tf_coil_variables.a_tf_turn_croco_cable_space_copper = (
             superconducting_tf_coil_variables.a_tf_croco_strand_copper_total
             * N_CROCO_STRANDS_TURN
             + superconducting_tf_coil_variables.a_tf_turn_croco_copper_bar
         )
         superconducting_tf_coil_variables.conductor_copper_fraction = (
-            superconducting_tf_coil_variables.conductor_copper_area
+            superconducting_tf_coil_variables.a_tf_turn_croco_cable_space_copper
             / superconducting_tf_coil_variables.conductor_area
         )
 
@@ -3751,23 +3751,24 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             temp_conductor=temp_tf_peak, b_conductor=b_tf_inboard_peak
         )
 
-        superconducting_tf_coil_variables.cur_tf_tun_croco_strand_critical = (
+        superconducting_tf_coil_variables.cur_tf_turn_croco_strand_critical = (
             j_crit_sc * superconducting_tf_coil_variables.a_tf_croco_strand
         )
 
         # Conductor properties
         superconducting_tf_coil_variables.conductor_critical_current = (
-            superconducting_tf_coil_variables.cur_tf_tun_croco_strand_critical
+            superconducting_tf_coil_variables.cur_tf_turn_croco_strand_critical
             * N_CROCO_STRANDS_TURN
         )
 
         superconducting_tf_coil_variables.tf_coppera_m2 = (
-            cur_tf_turn / superconducting_tf_coil_variables.conductor_copper_area
+            cur_tf_turn
+            / superconducting_tf_coil_variables.a_tf_turn_croco_cable_space_copper
         )
 
         cur_critical = superconducting_tf_coil_variables.conductor_critical_current
         j_crit_cable = (
-            superconducting_tf_coil_variables.cur_tf_tun_croco_strand_critical
+            superconducting_tf_coil_variables.cur_tf_turn_croco_strand_critical
             / superconducting_tf_coil_variables.a_tf_croco_strand
         )
 
@@ -4128,7 +4129,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             self.outfile,
             "Total copper area of conductor, total (mm2)",
             "(a_tf_croco_strand_copper_total)",
-            superconducting_tf_coil_variables.conductor_copper_area,
+            superconducting_tf_coil_variables.a_tf_turn_croco_cable_space_copper,
             "OP ",
         )
         po.ovarre(
@@ -4172,8 +4173,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         po.ovarre(
             self.outfile,
             "Critical current of CroCo strand (A)",
-            "(cur_tf_tun_croco_strand_critical)",
-            superconducting_tf_coil_variables.cur_tf_tun_croco_strand_critical,
+            "(cur_tf_turn_croco_strand_critical)",
+            superconducting_tf_coil_variables.cur_tf_turn_croco_strand_critical,
             "OP ",
         )
         po.ovarre(
