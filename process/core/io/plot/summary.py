@@ -12582,6 +12582,7 @@ def plot_hts_tape_geometry(
         (dx_hts_tape_copper + dx_hts_tape_hastelloy + dx_hts_tape_rebco) * 1.1,
     )
     axis.minorticks_on()
+    axis.ticklabel_format(style="sci", axis="both", scilimits=(0, 0))
     if show_legend:
         axis.legend(loc="upper right")
 
@@ -14895,8 +14896,10 @@ def main_plot(
                 show_legend=True,
             )
             plot_tf_corc_cable_summary_box(plot_205, figs[25], m_file, scan)
+            ax_hts_tape = figs[25].add_subplot(339)
+            ax_hts_tape.set_position([0.75, 0.1, 0.2, 0.2])
             plot_hts_tape_geometry(
-                axis=figs[25].add_subplot(339),
+                axis=ax_hts_tape,
                 r_left=0.0,
                 z_bottom=0.0,
                 dr_hts_tape=m_file.get("dr_tf_hts_tape", scan=scan),
