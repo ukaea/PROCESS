@@ -99,6 +99,18 @@ class TFWPGeometry:
     a_tf_wp_ground_insulation: float
 
 
+@dataclass
+class TFSuperconductorLimits:
+    j_tf_wp_critical: float
+    j_superconductor_critical: float
+    f_c_tf_turn_operating_critical: float
+    j_superconductor: float
+    j_tf_coil_turn: float
+    bc20m: float
+    tc0m: float
+    c_turn_cables_critical: float
+
+
 class SuperconductingTFCoil(TFCoil):
     """Class for superconducting TF coil model, inheriting from the base TFCoil
     class.
@@ -1988,16 +2000,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             * tfcoil_variables.n_tf_coil_turns
         )
 
-        (
-            tfcoil_variables.j_tf_wp_critical,
-            superconducting_tf_coil_variables.j_tf_superconductor_critical,
-            superconducting_tf_coil_variables.f_c_tf_turn_operating_critical,
-            superconducting_tf_coil_variables.j_tf_superconductor,
-            superconducting_tf_coil_variables.j_tf_coil_turn,
-            superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain,
-            superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
-            superconducting_tf_coil_variables.c_tf_turn_cables_critical,
-        ) = self.tf_cable_in_conduit_superconductor_properties(
+        critical_superconductor_info: TFSuperconductorLimits = self.tf_cable_in_conduit_superconductor_properties(
             a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
             a_tf_turn=a_tf_turn,
             a_tf_turn_cable_space_effective=superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
@@ -2011,6 +2014,25 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
             bcritsc=tfcoil_variables.bcritsc,
             tcritsc=tfcoil_variables.tcritsc,
+        )
+
+        tfcoil_variables.j_tf_wp_critical = critical_superconductor_info.j_tf_wp_critical
+        superconducting_tf_coil_variables.j_tf_superconductor_critical = (
+            critical_superconductor_info.j_superconductor_critical
+        )
+        superconducting_tf_coil_variables.f_c_tf_turn_operating_critical = (
+            critical_superconductor_info.f_c_tf_turn_operating_critical
+        )
+        superconducting_tf_coil_variables.j_tf_superconductor = (
+            critical_superconductor_info.j_superconductor
+        )
+        superconducting_tf_coil_variables.j_tf_coil_turn = (
+            critical_superconductor_info.j_tf_coil_turn
+        )
+        superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain = critical_superconductor_info.bc20m
+        superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain = critical_superconductor_info.tc0m
+        superconducting_tf_coil_variables.c_tf_turn_cables_critical = (
+            critical_superconductor_info.c_tf_turn_cables_critical
         )
 
         if tfcoil_variables.i_str_wp == 0:
@@ -2082,7 +2104,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         temp_tf_coolant_peak_field: float,
         bcritsc: float,
         tcritsc: float,
-    ) -> tuple[float, float, float, float, float, float, float, float]:
+    ) -> TFSuperconductorLimits:
         """Calculates the properties of the TF superconducting conductor.
 
         Parameters
@@ -2127,29 +2149,15 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         Returns
         -------
-        type
-            tuple (float, float, float, float, float, float, float, float, float)
-            - j_tf_wp_critical (float): Critical winding pack current density (A/m²).
-            - j_superconductor_critical (float): Critical current density in
-              superconductor (A/m²).
-            - f_c_tf_turn_operating_critical (float): Ratio of
-              operating / critical current.
-            - j_superconductor_turn (float): Actual current density in
-              superconductor (A/m²).
-            - j_tf_coil_turn (float): Actual current density in superconductor (A/m²).
-            - b_tf_superconductor_critical_zero_temp_strain (float): Critical field at
-              zero temperature and strain (T).
-            - temp_tf_superconductor_critical_zero_field_strain (float): Critical
-              temperature at zero field and strain (K).
-            - c_tf_turn_cables_critical (float): Critical current in cable (A).
-
-        Raises
-        ------
-        ProcessValueError
-            If an invalid superconductor type is selected, including when
-            ``i_tf_superconductor`` is not a valid ``SuperconductorModel``
-            enum value.
-
+        TFSuperconductorLimits
+        - j_tf_wp_critical (float): Critical winding pack current density (A/m²).
+        - j_superconductor_critical (float): Critical current density in superconductor (A/m²).
+        - f_c_tf_turn_operating_critical (float): Ratio of operating / critical current.
+        - j_superconductor_turn (float): Actual current density in superconductor (A/m²).
+        - j_tf_coil_turn (float): Actual current density in superconductor (A/m²).
+        - b_tf_superconductor_critical_zero_temp_strain (float): Critical field at zero temperature and strain (T).
+        - temp_tf_superconductor_critical_zero_field_strain (float): Critical temperature at zero field and strain (K).
+        - c_tf_turn_cables_critical (float): Critical current in cable (A).
 
         Notes
         -----
@@ -2518,15 +2526,15 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
             """
             )
 
-        return (
-            j_tf_wp_critical,
-            j_superconductor_critical,
-            f_c_tf_turn_operating_critical,
-            j_superconductor,
-            j_tf_coil_turn,
-            bc20m,
-            tc0m,
-            c_turn_cables_critical,
+        return TFSuperconductorLimits(
+            j_tf_wp_critical=j_tf_wp_critical,
+            j_superconductor_critical=j_superconductor_critical,
+            f_c_tf_turn_operating_critical=f_c_tf_turn_operating_critical,
+            j_superconductor=j_superconductor,
+            j_tf_coil_turn=j_tf_coil_turn,
+            bc20m=bc20m,
+            tc0m=tc0m,
+            c_turn_cables_critical=c_turn_cables_critical,
         )
 
     @staticmethod
