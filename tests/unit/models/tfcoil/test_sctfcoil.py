@@ -356,7 +356,7 @@ class SuperconParam(NamedTuple):
         ),
     ],
 )
-def test_supercon(superconparam, monkeypatch, cicc_sctfcoil, sctfcoil):
+def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
     """
     Automatically generated Regression Unit Test for supercon.
 
@@ -388,7 +388,9 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil, sctfcoil):
         tfcoil_variables, "t_tf_quench_detection", superconparam.detection_time
     )
 
-    monkeypatch.setattr(sctfcoil.data.constraints, "nflutfmax", superconparam.fluence)
+    monkeypatch.setattr(
+        cicc_sctfcoil.data.constraints, "nflutfmax", superconparam.fluence
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
