@@ -2,7 +2,6 @@ import pytest
 
 from process.core import constants
 from process.data_structure import (
-    heat_transport_variables,
     physics_variables,
 )
 
@@ -49,11 +48,12 @@ def test_current_drive_primary_lower_hybrid(current_drive):
     assert current_drive.data.current_drive.f_c_plasma_hcd_primary == pytest.approx(
         0.2, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_primary_electric_mw == pytest.approx(
+    assert current_drive.data.heat_transport.p_hcd_primary_electric_mw == pytest.approx(
         96.00232726, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_secondary_electric_mw == pytest.approx(
-        0.0, rel=1e-6
+    assert (
+        current_drive.data.heat_transport.p_hcd_secondary_electric_mw
+        == pytest.approx(0.0, rel=1e-6)
     )
     assert current_drive.data.current_drive.p_hcd_injected_total_mw == pytest.approx(
         38.4009309, rel=1e-6
@@ -97,11 +97,12 @@ def test_current_drive_primary_lower_hybrid_with_heat(current_drive):
     assert current_drive.data.current_drive.f_c_plasma_hcd_primary == pytest.approx(
         0.2, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_primary_electric_mw == pytest.approx(
+    assert current_drive.data.heat_transport.p_hcd_primary_electric_mw == pytest.approx(
         108.50232725752629, rel=1e-6
     )  # Adjusted for extra heat
-    assert heat_transport_variables.p_hcd_secondary_electric_mw == pytest.approx(
-        0.0, rel=1e-6
+    assert (
+        current_drive.data.heat_transport.p_hcd_secondary_electric_mw
+        == pytest.approx(0.0, rel=1e-6)
     )
     assert current_drive.data.current_drive.p_hcd_injected_total_mw == pytest.approx(
         43.4009309, rel=1e-6
@@ -157,11 +158,12 @@ def test_current_drive_primary_neutral_beam(current_drive):
     assert current_drive.data.current_drive.f_c_plasma_hcd_primary == pytest.approx(
         0.2, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_primary_electric_mw == pytest.approx(
+    assert current_drive.data.heat_transport.p_hcd_primary_electric_mw == pytest.approx(
         197.74124248723396, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_secondary_electric_mw == pytest.approx(
-        0.0, rel=1e-6
+    assert (
+        current_drive.data.heat_transport.p_hcd_secondary_electric_mw
+        == pytest.approx(0.0, rel=1e-6)
     )
     assert current_drive.data.current_drive.p_hcd_injected_total_mw == pytest.approx(
         59.32237274617019, rel=1e-6
@@ -202,11 +204,12 @@ def test_current_drive_primary_electron_cyclotron(current_drive):
     assert current_drive.data.current_drive.f_c_plasma_hcd_primary == pytest.approx(
         0.2, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_primary_electric_mw == pytest.approx(
+    assert current_drive.data.heat_transport.p_hcd_primary_electric_mw == pytest.approx(
         17.71428571428571, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_secondary_electric_mw == pytest.approx(
-        0.0, rel=1e-6
+    assert (
+        current_drive.data.heat_transport.p_hcd_secondary_electric_mw
+        == pytest.approx(0.0, rel=1e-6)
     )
     assert current_drive.data.current_drive.p_hcd_injected_total_mw == pytest.approx(
         8.857142857142856, rel=1e-6
@@ -250,11 +253,12 @@ def test_current_drive_primary_ion_cyclotron(current_drive):
     assert current_drive.data.current_drive.f_c_plasma_hcd_primary == pytest.approx(
         0.2, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_primary_electric_mw == pytest.approx(
+    assert current_drive.data.heat_transport.p_hcd_primary_electric_mw == pytest.approx(
         337.4149659863946, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_secondary_electric_mw == pytest.approx(
-        0.0, rel=1e-6
+    assert (
+        current_drive.data.heat_transport.p_hcd_secondary_electric_mw
+        == pytest.approx(0.0, rel=1e-6)
     )
     assert current_drive.data.current_drive.p_hcd_injected_total_mw == pytest.approx(
         118.0952380952381, rel=1e-6
@@ -300,11 +304,12 @@ def test_current_drive_primary_electron_bernstein(current_drive):
     assert current_drive.data.current_drive.f_c_plasma_hcd_primary == pytest.approx(
         0.2, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_primary_electric_mw == pytest.approx(
+    assert current_drive.data.heat_transport.p_hcd_primary_electric_mw == pytest.approx(
         572.7156734979227, rel=1e-6
     )
-    assert heat_transport_variables.p_hcd_secondary_electric_mw == pytest.approx(
-        0.0, rel=1e-6
+    assert (
+        current_drive.data.heat_transport.p_hcd_secondary_electric_mw
+        == pytest.approx(0.0, rel=1e-6)
     )
     assert current_drive.data.current_drive.p_hcd_injected_total_mw == pytest.approx(
         257.72205307406523, rel=1e-6

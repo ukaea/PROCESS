@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    heat_transport_variables,
     impurity_radiation_module,
     physics_variables,
     stellarator_configuration,
@@ -622,7 +621,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(stellarator.data.fwbs, "dr_fw_wall", stbildparam.dr_fw_wall)
 
-    monkeypatch.setattr(heat_transport_variables, "ipowerflow", stbildparam.ipowerflow)
+    monkeypatch.setattr(
+        stellarator.data.heat_transport, "ipowerflow", stbildparam.ipowerflow
+    )
 
     monkeypatch.setattr(physics_variables, "rmajor", stbildparam.rmajor)
 

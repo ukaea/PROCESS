@@ -1,7 +1,6 @@
 from process.core import process_output as po
 from process.core.model import DataStructure
 from process.data_structure import (
-    heat_transport_variables,
     physics_variables,
     stellarator_configuration,
 )
@@ -171,7 +170,7 @@ def st_build(stellarator, f_output: bool, data: DataStructure):
         physics_variables.a_plasma_surface * awall / physics_variables.rminor
     )
 
-    if heat_transport_variables.ipowerflow == 0:
+    if data.heat_transport.ipowerflow == 0:
         data.first_wall.a_fw_total = (
             1.0e0 - data.fwbs.fhole
         ) * data.first_wall.a_fw_total

@@ -16,7 +16,6 @@ from process.core.model import Model
 from process.data_structure import (
     divertor_variables,
     global_variables,
-    heat_transport_variables,
     numerics,
     physics_variables,
     stellarator_configuration,
@@ -517,7 +516,7 @@ class Stellarator(Model):
             + self.data.build.dr_fw_plasma_gap_outboard
             + self.data.build.dr_fw_outboard
         )
-        if heat_transport_variables.ipowerflow == 0:
+        if self.data.heat_transport.ipowerflow == 0:
             self.data.build.a_blkt_total_surface = (
                 physics_variables.a_plasma_surface
                 * r1
@@ -594,7 +593,7 @@ class Stellarator(Model):
         if self.data.fwbs.blktmodel == 1:
             self.blanket_neutronics()
 
-            if heat_transport_variables.ipowerflow == 1:
+            if self.data.heat_transport.ipowerflow == 1:
                 self.data.fwbs.p_div_nuclear_heat_total_mw = (
                     physics_variables.p_neutron_total_mw
                     * self.data.fwbs.f_ster_div_single
@@ -627,24 +626,24 @@ class Stellarator(Model):
                     - self.data.fwbs.p_fw_hcd_rad_total_mw
                 )
 
-                heat_transport_variables.p_fw_coolant_pump_mw = (
-                    heat_transport_variables.f_p_fw_coolant_pump_total_heat
+                self.data.heat_transport.p_fw_coolant_pump_mw = (
+                    self.data.heat_transport.f_p_fw_coolant_pump_total_heat
                     * (
                         self.data.fwbs.p_fw_nuclear_heat_total_mw
                         + self.data.fwbs.p_fw_rad_total_mw
                         + self.data.current_drive.p_beam_orbit_loss_mw
                     )
                 )
-                heat_transport_variables.p_blkt_coolant_pump_mw = (
-                    heat_transport_variables.f_p_blkt_coolant_pump_total_heat
+                self.data.heat_transport.p_blkt_coolant_pump_mw = (
+                    self.data.heat_transport.f_p_blkt_coolant_pump_total_heat
                     * self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 )
-                heat_transport_variables.p_shld_coolant_pump_mw = (
-                    heat_transport_variables.f_p_shld_coolant_pump_total_heat
+                self.data.heat_transport.p_shld_coolant_pump_mw = (
+                    self.data.heat_transport.f_p_shld_coolant_pump_total_heat
                     * self.data.fwbs.p_shld_nuclear_heat_mw
                 )
-                heat_transport_variables.p_div_coolant_pump_mw = (
-                    heat_transport_variables.f_p_div_coolant_pump_total_heat
+                self.data.heat_transport.p_div_coolant_pump_mw = (
+                    self.data.heat_transport.f_p_div_coolant_pump_total_heat
                     * (
                         physics_variables.p_plasma_separatrix_mw
                         + self.data.fwbs.p_div_nuclear_heat_total_mw
@@ -666,7 +665,7 @@ class Stellarator(Model):
         else:
             self.data.fwbs.pnuc_cp = 0.0e0
 
-            if heat_transport_variables.ipowerflow == 0:
+            if self.data.heat_transport.ipowerflow == 0:
                 #  Energy-multiplied neutron power
 
                 pneut2 = (
@@ -713,7 +712,7 @@ class Stellarator(Model):
                     self.data.fwbs.p_tf_nuclear_heat_mw,
                 ) = self.sc_tf_coil_nuclear_heating_iter90()
 
-            else:  # heat_transport_variables.ipowerflow == 1
+            else:  # self.data.heat_transport.ipowerflow == 1
                 #  Neutron power incident on divertor (MW)
 
                 self.data.fwbs.p_div_nuclear_heat_total_mw = (
@@ -889,8 +888,8 @@ class Stellarator(Model):
                     #    Use input
                     pass
                 elif i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
-                    heat_transport_variables.p_fw_coolant_pump_mw = (
-                        heat_transport_variables.f_p_fw_coolant_pump_total_heat
+                    self.data.heat_transport.p_fw_coolant_pump_mw = (
+                        self.data.heat_transport.f_p_fw_coolant_pump_total_heat
                         * (
                             p_fw_inboard_nuclear_heat_mw
                             + p_fw_outboard_nuclear_heat_mw
@@ -899,8 +898,8 @@ class Stellarator(Model):
                             + self.data.current_drive.p_beam_orbit_loss_mw
                         )
                     )
-                    heat_transport_variables.p_blkt_coolant_pump_mw = (
-                        heat_transport_variables.f_p_blkt_coolant_pump_total_heat
+                    self.data.heat_transport.p_blkt_coolant_pump_mw = (
+                        self.data.heat_transport.f_p_blkt_coolant_pump_total_heat
                         * (
                             pnucbzi * self.data.fwbs.f_p_blkt_multiplication
                             + pnucbzo * self.data.fwbs.f_p_blkt_multiplication
@@ -912,7 +911,7 @@ class Stellarator(Model):
                     )
 
                 self.data.fwbs.p_blkt_multiplication_mw = (
-                    heat_transport_variables.f_p_blkt_coolant_pump_total_heat
+                    self.data.heat_transport.f_p_blkt_coolant_pump_total_heat
                     * (pnucbzi * self.data.fwbs.f_p_blkt_multiplication + pnucbzo)
                     * (self.data.fwbs.f_p_blkt_multiplication - 1.0e0)
                 )
@@ -981,14 +980,14 @@ class Stellarator(Model):
 
                 if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
                     #  Shield pumping power (MW)
-                    heat_transport_variables.p_shld_coolant_pump_mw = (
-                        heat_transport_variables.f_p_shld_coolant_pump_total_heat
+                    self.data.heat_transport.p_shld_coolant_pump_mw = (
+                        self.data.heat_transport.f_p_shld_coolant_pump_total_heat
                         * (pnucshldi + pnucshldo)
                     )
 
                     #  Divertor pumping power (MW)
-                    heat_transport_variables.p_div_coolant_pump_mw = (
-                        heat_transport_variables.f_p_div_coolant_pump_total_heat
+                    self.data.heat_transport.p_div_coolant_pump_mw = (
+                        self.data.heat_transport.f_p_div_coolant_pump_total_heat
                         * (
                             physics_variables.p_plasma_separatrix_mw
                             + self.data.fwbs.p_div_nuclear_heat_total_mw
@@ -1186,7 +1185,7 @@ class Stellarator(Model):
 
         self.data.fwbs.wpenshld = self.data.fwbs.whtshld
 
-        if heat_transport_variables.ipowerflow == 0:
+        if self.data.heat_transport.ipowerflow == 0:
             #  First wall mass
             #  (first wall area is calculated else:where)
 
@@ -1412,7 +1411,7 @@ class Stellarator(Model):
                 self.data.build.dz_blkt_upper,
             )
 
-            if (heat_transport_variables.ipowerflow == 0) and (
+            if (self.data.heat_transport.ipowerflow == 0) and (
                 self.data.fwbs.blktmodel == 0
             ):
                 po.osubhd(self.outfile, "Coil nuclear parameters :")
@@ -1617,7 +1616,7 @@ class Stellarator(Model):
                     self.data.fwbs.t_bl_y,
                 )
 
-            if (heat_transport_variables.ipowerflow == 1) and (
+            if (self.data.heat_transport.ipowerflow == 1) and (
                 self.data.fwbs.blktmodel == 0
             ):
                 po.oblnkl(self.outfile)
@@ -2116,7 +2115,7 @@ class Stellarator(Model):
                 * physics_variables.p_neutron_total_mw
                 / physics_variables.a_plasma_surface
             )
-        elif heat_transport_variables.ipowerflow == 0:
+        elif self.data.heat_transport.ipowerflow == 0:
             physics_variables.pflux_fw_neutron_mw = (
                 (1.0e0 - self.data.fwbs.fhole)
                 * physics_variables.p_neutron_total_mw
@@ -2237,7 +2236,7 @@ class Stellarator(Model):
                 * physics_variables.p_plasma_rad_mw
                 / physics_variables.a_plasma_surface
             )
-        elif heat_transport_variables.ipowerflow == 0:
+        elif self.data.heat_transport.ipowerflow == 0:
             physics_variables.pflux_fw_rad_mw = (
                 (1.0e0 - self.data.fwbs.fhole)
                 * physics_variables.p_plasma_rad_mw

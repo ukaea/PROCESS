@@ -5,7 +5,6 @@ import pytest
 
 from process.data_structure import (
     divertor_variables,
-    heat_transport_variables,
     numerics,
     pf_power_variables,
     pfcoil_variables,
@@ -1763,7 +1762,7 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(power.data.build, "iohcl", pfpwrparam.iohcl)
 
-    monkeypatch.setattr(heat_transport_variables, "peakmva", pfpwrparam.peakmva)
+    monkeypatch.setattr(power.data.heat_transport, "peakmva", pfpwrparam.peakmva)
 
     monkeypatch.setattr(pf_power_variables, "pfckts", pfpwrparam.pfckts)
 
@@ -1869,7 +1868,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     power.pfpwr(output=False)
 
-    assert heat_transport_variables.peakmva == pytest.approx(pfpwrparam.expected_peakmva)
+    assert power.data.heat_transport.peakmva == pytest.approx(
+        pfpwrparam.expected_peakmva
+    )
 
     assert pf_power_variables.pfckts == pytest.approx(pfpwrparam.expected_pfckts)
 
@@ -2001,62 +2002,62 @@ def test_acpow(acpowparam, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_plant_electric_base",
         acpowparam.p_plant_electric_base,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_cryo_plant_electric_mw",
         acpowparam.p_cryo_plant_electric_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", acpowparam.vachtmw)
+    monkeypatch.setattr(power.data.heat_transport, "vachtmw", acpowparam.vachtmw)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_tf_electric_supplies_mw",
         acpowparam.p_tf_electric_supplies_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_tritium_plant_electric_mw",
         acpowparam.p_tritium_plant_electric_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_hcd_electric_total_mw",
         acpowparam.p_hcd_electric_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "tlvpmw", acpowparam.tlvpmw)
+    monkeypatch.setattr(power.data.heat_transport, "tlvpmw", acpowparam.tlvpmw)
 
-    monkeypatch.setattr(heat_transport_variables, "peakmva", acpowparam.peakmva)
+    monkeypatch.setattr(power.data.heat_transport, "peakmva", acpowparam.peakmva)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_plant_electric_base_total_mw",
         acpowparam.p_plant_electric_base_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fmgdmw", acpowparam.fmgdmw)
+    monkeypatch.setattr(power.data.heat_transport, "fmgdmw", acpowparam.fmgdmw)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "pflux_plant_floor_electric",
         acpowparam.pflux_plant_floor_electric,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_coolant_pump_elec_total_mw",
         acpowparam.p_coolant_pump_elec_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "pacpmw", acpowparam.pacpmw)
+    monkeypatch.setattr(power.data.heat_transport, "pacpmw", acpowparam.pacpmw)
 
     monkeypatch.setattr(
         pf_power_variables,
@@ -2068,7 +2069,7 @@ def test_acpow(acpowparam, monkeypatch, power):
 
     power.acpow(output=False)
 
-    assert heat_transport_variables.pacpmw == pytest.approx(acpowparam.expected_pacpmw)
+    assert power.data.heat_transport.pacpmw == pytest.approx(acpowparam.expected_pacpmw)
 
 
 class Power2Param(NamedTuple):
@@ -2592,175 +2593,177 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_shld_coolant_pump_mw",
         power2param.p_shld_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_blkt_coolant_pump_mw",
         power2param.p_blkt_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_shld_secondary_heat_mw",
         power2param.p_shld_secondary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "f_p_shld_coolant_pump_total_heat",
         power2param.f_p_shld_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "temp_turbine_coolant_in",
         power2param.temp_turbine_coolant_in,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_plant_electric_net_mw",
         power2param.p_plant_electric_net_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "f_p_div_coolant_pump_total_heat",
         power2param.f_p_div_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "f_p_blkt_coolant_pump_total_heat",
         power2param.f_p_blkt_coolant_pump_total_heat,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", power2param.vachtmw)
+    monkeypatch.setattr(power.data.heat_transport, "vachtmw", power2param.vachtmw)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_div_coolant_pump_mw",
         power2param.p_div_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "n_primary_heat_exchangers",
         power2param.n_primary_heat_exchangers,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "helpow", power2param.helpow)
+    monkeypatch.setattr(power.data.heat_transport, "helpow", power2param.helpow)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_fw_coolant_pump_mw",
         power2param.p_fw_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_plant_electric_recirc_mw",
         power2param.p_plant_electric_recirc_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_plant_primary_heat_mw",
         power2param.p_plant_primary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "f_p_fw_coolant_pump_total_heat",
         power2param.f_p_fw_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_plant_electric_base_total_mw",
         power2param.p_plant_electric_base_total_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "i_shld_primary_heat", power2param.i_shld_primary_heat
+        power.data.heat_transport, "i_shld_primary_heat", power2param.i_shld_primary_heat
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_hcd_electric_total_mw",
         power2param.p_hcd_electric_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fachtmw", power2param.fachtmw)
+    monkeypatch.setattr(power.data.heat_transport, "fachtmw", power2param.fachtmw)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_plant_electric_gross_mw",
         power2param.p_plant_electric_gross_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_plant_secondary_heat_mw",
         power2param.p_plant_secondary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_tritium_plant_electric_mw",
         power2param.p_tritium_plant_electric_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_hcd_secondary_heat_mw",
         power2param.p_hcd_secondary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_tf_electric_supplies_mw",
         power2param.p_tf_electric_supplies_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_coolant_pump_elec_total_mw",
         power2param.p_coolant_pump_elec_total_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "eta_turbine", power2param.eta_turbine)
+    monkeypatch.setattr(
+        power.data.heat_transport, "eta_turbine", power2param.eta_turbine
+    )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_cryo_plant_electric_mw",
         power2param.p_cryo_plant_electric_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_div_secondary_heat_mw",
         power2param.p_div_secondary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_hcd_electric_loss_mw",
         power2param.p_hcd_electric_loss_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        power.data.heat_transport,
         "p_coolant_pump_loss_total_mw",
         power2param.p_coolant_pump_loss_total_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "helpow_cryal", power2param.helpow_cryal
+        power.data.heat_transport, "helpow_cryal", power2param.helpow_cryal
     )
 
     monkeypatch.setattr(
@@ -2909,23 +2912,23 @@ def test_power2(power2param, monkeypatch, power):
 
     power.plant_electric_production()
 
-    assert heat_transport_variables.p_plant_electric_net_mw == pytest.approx(
+    assert power.data.heat_transport.p_plant_electric_net_mw == pytest.approx(
         power2param.expected_p_plant_electric_net_mw
     )
 
-    assert heat_transport_variables.p_plant_electric_recirc_mw == pytest.approx(
+    assert power.data.heat_transport.p_plant_electric_recirc_mw == pytest.approx(
         power2param.expected_precircmw
     )
 
-    assert heat_transport_variables.fachtmw == pytest.approx(
+    assert power.data.heat_transport.fachtmw == pytest.approx(
         power2param.expected_fachtmw
     )
 
-    assert heat_transport_variables.p_plant_electric_gross_mw == pytest.approx(
+    assert power.data.heat_transport.p_plant_electric_gross_mw == pytest.approx(
         power2param.expected_p_plant_electric_gross_mw
     )
 
-    assert heat_transport_variables.p_plant_secondary_heat_mw == pytest.approx(
+    assert power.data.heat_transport.p_plant_secondary_heat_mw == pytest.approx(
         power2param.expected_p_plant_secondary_heat_mw
     )
 

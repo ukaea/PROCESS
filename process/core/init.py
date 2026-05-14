@@ -17,9 +17,6 @@ from process.core.log import logging_model_handler
 from process.core.solver import iteration_variables
 from process.core.solver.constraints import ConstraintManager
 from process.data_structure.divertor_variables import init_divertor_variables
-from process.data_structure.heat_transport_variables import (
-    init_heat_transport_variables,
-)
 from process.data_structure.ife_variables import init_ife_variables
 from process.data_structure.impurity_radiation_module import (
     init_impurity_radiation_module,
@@ -255,7 +252,6 @@ def init_all_module_vars():
     data_structure.numerics.init_numerics()
     init_divertor_variables()
     data_structure.global_variables.init_global_variables()
-    init_heat_transport_variables()
     init_ife_variables()
     init_impurity_radiation_module()
     init_pfcoil_module()
@@ -375,7 +371,7 @@ def check_process(inputs, data):  # noqa: ARG001
         data_structure.physics_variables.f_plasma_fuel_tritium < 1.0e-3
     ):  # tritium fraction is negligible
         data.buildings.triv = 0.0
-        data_structure.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
+        data.heat_transport.p_tritium_plant_electric_mw = 0.0
 
     if data_structure.impurity_radiation_module.f_nd_impurity_electrons[1] != 0.1:  # noqa: RUF069
         raise ProcessValidationError(

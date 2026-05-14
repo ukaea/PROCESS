@@ -5,7 +5,6 @@ import pytest
 from process.data_structure import (
     divertor_variables,
     global_variables,
-    heat_transport_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -969,49 +968,49 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(ccfe_hcpb.data.fwbs, "psurffwo", powerflowcalcparam.psurffwo)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        ccfe_hcpb.data.heat_transport,
         "p_fw_coolant_pump_mw",
         powerflowcalcparam.p_fw_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        ccfe_hcpb.data.heat_transport,
         "f_p_fw_coolant_pump_total_heat",
         powerflowcalcparam.f_p_fw_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        ccfe_hcpb.data.heat_transport,
         "p_blkt_coolant_pump_mw",
         powerflowcalcparam.p_blkt_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        ccfe_hcpb.data.heat_transport,
         "f_p_blkt_coolant_pump_total_heat",
         powerflowcalcparam.f_p_blkt_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        ccfe_hcpb.data.heat_transport,
         "p_shld_coolant_pump_mw",
         powerflowcalcparam.p_shld_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        ccfe_hcpb.data.heat_transport,
         "f_p_shld_coolant_pump_total_heat",
         powerflowcalcparam.f_p_shld_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        ccfe_hcpb.data.heat_transport,
         "p_div_coolant_pump_mw",
         powerflowcalcparam.p_div_coolant_pump_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        ccfe_hcpb.data.heat_transport,
         "f_p_div_coolant_pump_total_heat",
         powerflowcalcparam.f_p_div_coolant_pump_total_heat,
     )
@@ -1072,11 +1071,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.expected_psurffwo
     )
 
-    assert heat_transport_variables.p_shld_coolant_pump_mw == pytest.approx(
+    assert ccfe_hcpb.data.heat_transport.p_shld_coolant_pump_mw == pytest.approx(
         powerflowcalcparam.expected_p_shld_coolant_pump_mw
     )
 
-    assert heat_transport_variables.p_div_coolant_pump_mw == pytest.approx(
+    assert ccfe_hcpb.data.heat_transport.p_div_coolant_pump_mw == pytest.approx(
         powerflowcalcparam.expected_p_div_coolant_pump_mw
     )
 

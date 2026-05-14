@@ -8,7 +8,6 @@ import pytest
 from process import data_structure
 from process.data_structure import (
     divertor_variables,
-    heat_transport_variables,
     ife_variables,
     pf_power_variables,
     pfcoil_variables,
@@ -71,11 +70,11 @@ def acc2261_fix(costs, request, monkeypatch):
     # Mock variables used by acc2261()
     monkeypatch.setattr(costs.data.costs, "fkind", 1)
     monkeypatch.setattr(costs.data.costs, "lsa", 1)
-    monkeypatch.setattr(heat_transport_variables, "p_fw_div_heat_deposited_mw", 0.0)
+    monkeypatch.setattr(costs.data.heat_transport, "p_fw_div_heat_deposited_mw", 0.0)
     monkeypatch.setattr(costs.data.fwbs, "p_blkt_nuclear_heat_total_mw", 1558.0)
     monkeypatch.setattr(costs.data.fwbs, "p_shld_nuclear_heat_mw", 1.478)
-    monkeypatch.setattr(heat_transport_variables, "p_plant_primary_heat_mw", 2647.0)
-    monkeypatch.setattr(heat_transport_variables, "n_primary_heat_exchangers", 3)
+    monkeypatch.setattr(costs.data.heat_transport, "p_plant_primary_heat_mw", 2647.0)
+    monkeypatch.setattr(costs.data.heat_transport, "n_primary_heat_exchangers", 3)
     monkeypatch.setattr(costs.data.costs, "c2261", 0)
 
     # Parameterised mocks
@@ -104,11 +103,11 @@ def test_acc2262(monkeypatch, costs):
     # Mock module variables
     monkeypatch.setattr(costs.data.costs, "fkind", 1)
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
-    monkeypatch.setattr(heat_transport_variables, "p_hcd_electric_loss_mw", 76.5)
-    monkeypatch.setattr(heat_transport_variables, "p_cryo_plant_electric_mw", 39.936)
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", 0.5)
-    monkeypatch.setattr(heat_transport_variables, "p_tritium_plant_electric_mw", 15.0)
-    monkeypatch.setattr(heat_transport_variables, "fachtmw", 64.835)
+    monkeypatch.setattr(costs.data.heat_transport, "p_hcd_electric_loss_mw", 76.5)
+    monkeypatch.setattr(costs.data.heat_transport, "p_cryo_plant_electric_mw", 39.936)
+    monkeypatch.setattr(costs.data.heat_transport, "vachtmw", 0.5)
+    monkeypatch.setattr(costs.data.heat_transport, "p_tritium_plant_electric_mw", 15.0)
+    monkeypatch.setattr(costs.data.heat_transport, "fachtmw", 64.835)
     monkeypatch.setattr(costs.data.costs, "c2262", 0)
 
     costs.acc2262()
@@ -125,7 +124,7 @@ def test_acc2263(monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
     monkeypatch.setattr(costs.data.costs, "uccry", 9.3e4)
     monkeypatch.setattr(data_structure.tfcoil_variables, "tftmp", 4.5)
-    monkeypatch.setattr(heat_transport_variables, "helpow", 80.980e3)
+    monkeypatch.setattr(costs.data.heat_transport, "helpow", 80.980e3)
     monkeypatch.setattr(costs.data.costs, "c2263", 0)
 
     costs.acc2263()
@@ -425,7 +424,7 @@ def acc23_fix(request, monkeypatch, costs):
     monkeypatch.setattr(
         costs.data.fwbs, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
     )
-    monkeypatch.setattr(heat_transport_variables, "p_plant_electric_gross_mw", 1200.0)
+    monkeypatch.setattr(costs.data.heat_transport, "p_plant_electric_gross_mw", 1200.0)
     monkeypatch.setattr(costs.data.costs, "c23", 0)
 
     # Return the expected result for the given parameter list
@@ -464,8 +463,10 @@ def test_acc242(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
-    monkeypatch.setattr(heat_transport_variables, "pacpmw", 630.0)
-    monkeypatch.setattr(heat_transport_variables, "p_plant_electric_base_total_mw", 65.0)
+    monkeypatch.setattr(costs.data.heat_transport, "pacpmw", 630.0)
+    monkeypatch.setattr(
+        costs.data.heat_transport, "p_plant_electric_base_total_mw", 65.0
+    )
     monkeypatch.setattr(costs.data.costs, "c242", 0)
 
     costs.acc242()
@@ -479,7 +480,7 @@ def test_acc243(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(costs.data.costs, "lsa", 4)
-    monkeypatch.setattr(heat_transport_variables, "tlvpmw", 403.8)
+    monkeypatch.setattr(costs.data.heat_transport, "tlvpmw", 403.8)
     monkeypatch.setattr(costs.data.costs, "c243", 0)
 
     costs.acc243()
@@ -584,8 +585,8 @@ def acc26_param(**kwargs):
         "p_fusion_total_mw": 2000.0,
         "p_hcd_electric_total_mw": 250.0,
         "tfcmw": 50.0,
-        "p_plant_primary_heat_mw": heat_transport_variables.p_plant_primary_heat_mw,
-        "p_plant_electric_gross_mw": heat_transport_variables.p_plant_electric_gross_mw,
+        "p_plant_primary_heat_mw": 0.0,
+        "p_plant_electric_gross_mw": 0.0,
         "expected": pytest.approx(87.9, abs=0.01),
     }
 
@@ -607,7 +608,7 @@ def acc26_params():
         acc26_param(
             ireactor=1,
             p_fusion_total_mw=physics_variables.p_fusion_total_mw,
-            p_hcd_electric_total_mw=heat_transport_variables.p_hcd_electric_total_mw,
+            p_hcd_electric_total_mw=0.0,
             tfcmw=data_structure.tfcoil_variables.tfcmw,
             p_plant_primary_heat_mw=3000.0,
             p_plant_electric_gross_mw=700.0,
@@ -638,18 +639,18 @@ def acc26_fix(request, monkeypatch, costs):
         param["p_fusion_total_mw"],
     )
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_hcd_electric_total_mw",
         param["p_hcd_electric_total_mw"],
     )
     monkeypatch.setattr(data_structure.tfcoil_variables, "tfcmw", param["tfcmw"])
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_primary_heat_mw",
         param["p_plant_primary_heat_mw"],
     )
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_electric_gross_mw",
         param["p_plant_electric_gross_mw"],
     )
@@ -3647,7 +3648,7 @@ def test_acc2252(acc2252param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "ucpfps", acc2252param.ucpfps)
 
-    monkeypatch.setattr(heat_transport_variables, "peakmva", acc2252param.peakmva)
+    monkeypatch.setattr(costs.data.heat_transport, "peakmva", acc2252param.peakmva)
 
     monkeypatch.setattr(pf_power_variables, "ensxpfm", acc2252param.ensxpfm)
 
@@ -3769,13 +3770,13 @@ def test_acc2253(acc2253param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "fkind", acc2253param.fkind)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_primary_heat_mw",
         acc2253param.p_plant_primary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_electric_net_mw",
         acc2253param.p_plant_electric_net_mw,
     )
@@ -3983,19 +3984,19 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_primary_heat_mw",
         acc2261param.p_plant_primary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_fw_div_heat_deposited_mw",
         acc2261param.p_fw_div_heat_deposited_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "n_primary_heat_exchangers",
         acc2261param.n_primary_heat_exchangers,
     )
@@ -4122,23 +4123,23 @@ def test_acc2262_rut(acc2262param, monkeypatch, costs):
     monkeypatch.setattr(ife_variables, "tdspmw", acc2262param.tdspmw)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_hcd_electric_loss_mw",
         acc2262param.p_hcd_electric_loss_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "vachtmw", acc2262param.vachtmw)
+    monkeypatch.setattr(costs.data.heat_transport, "vachtmw", acc2262param.vachtmw)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_tritium_plant_electric_mw",
         acc2262param.p_tritium_plant_electric_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fachtmw", acc2262param.fachtmw)
+    monkeypatch.setattr(costs.data.heat_transport, "fachtmw", acc2262param.fachtmw)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_cryo_plant_electric_mw",
         acc2262param.p_cryo_plant_electric_mw,
     )
@@ -4226,7 +4227,7 @@ def test_acc2263_rut(acc2263param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "fkind", acc2263param.fkind)
 
-    monkeypatch.setattr(heat_transport_variables, "helpow", acc2263param.helpow)
+    monkeypatch.setattr(costs.data.heat_transport, "helpow", acc2263param.helpow)
 
     monkeypatch.setattr(tfcoil_variables, "temp_tf_cryo", acc2263param.temp_tf_cryo)
 
@@ -4805,7 +4806,7 @@ def test_acc23_rut(acc23param, monkeypatch, costs):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_electric_gross_mw",
         acc23param.p_plant_electric_gross_mw,
     )
@@ -4991,10 +4992,10 @@ def test_acc242_rut(acc242param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "lsa", acc242param.lsa)
 
-    monkeypatch.setattr(heat_transport_variables, "pacpmw", acc242param.pacpmw)
+    monkeypatch.setattr(costs.data.heat_transport, "pacpmw", acc242param.pacpmw)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_electric_base_total_mw",
         acc242param.p_plant_electric_base_total_mw,
     )
@@ -5056,7 +5057,7 @@ def test_acc243_rut(acc243param, monkeypatch, costs):
 
     monkeypatch.setattr(costs.data.costs, "lsa", acc243param.lsa)
 
-    monkeypatch.setattr(heat_transport_variables, "tlvpmw", acc243param.tlvpmw)
+    monkeypatch.setattr(costs.data.heat_transport, "tlvpmw", acc243param.tlvpmw)
 
     monkeypatch.setattr(costs.data.costs, "c24", acc243param.c24)
 
@@ -5291,19 +5292,19 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "lsa", acc26param.lsa)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_primary_heat_mw",
         acc26param.p_plant_primary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_hcd_electric_total_mw",
         acc26param.p_hcd_electric_total_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_electric_gross_mw",
         acc26param.p_plant_electric_gross_mw,
     )
@@ -5503,13 +5504,13 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs):
     monkeypatch.setattr(costs.data.costs, "fkind", acc2253param.fkind)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_primary_heat_mw",
         acc2253param.p_plant_primary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_electric_net_mw",
         acc2253param.p_plant_electric_net_mw,
     )
@@ -5916,7 +5917,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
     monkeypatch.setattr(ife_variables, "reprat", coelcparam.reprat)
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs.data.heat_transport,
         "p_plant_electric_net_mw",
         coelcparam.p_plant_electric_net_mw,
     )

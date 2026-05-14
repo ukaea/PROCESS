@@ -4,7 +4,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure import (
-    heat_transport_variables,
     physics_variables,
     stellarator_variables,
 )
@@ -57,7 +56,7 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
         data.current_drive.eta_hcd_primary_injector_wall_plug = (
             data.current_drive.eta_lowhyb_injector_wall_plug
         )
-        heat_transport_variables.p_hcd_electric_total_mw = (
+        data.heat_transport.p_hcd_electric_total_mw = (
             data.current_drive.p_hcd_injected_ions_mw
             + data.current_drive.p_hcd_injected_electrons_mw
         ) / data.current_drive.eta_hcd_primary_injector_wall_plug

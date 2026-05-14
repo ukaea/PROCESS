@@ -8,7 +8,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
     divertor_variables,
-    heat_transport_variables,
     ife_variables,
     pf_power_variables,
     pfcoil_variables,
@@ -2129,7 +2128,7 @@ class Costs(Model):
         <A HREF="pfpwr.html">pfpwr</A> routine from the plant power module.
         """
         self.data.costs.c22521 = (
-            1.0e-6 * self.data.costs.ucpfps * heat_transport_variables.peakmva
+            1.0e-6 * self.data.costs.ucpfps * self.data.heat_transport.peakmva
         )
         self.data.costs.c22521 = self.data.costs.fkind * self.data.costs.c22521
 
@@ -2225,7 +2224,7 @@ class Costs(Model):
             1.0e-6
             * self.data.costs.uchts[self.data.fwbs.i_blkt_coolant_type - 1]
             * (
-                (1.0e6 * heat_transport_variables.p_fw_div_heat_deposited_mw) ** exphts
+                (1.0e6 * self.data.heat_transport.p_fw_div_heat_deposited_mw) ** exphts
                 + (1.0e6 * self.data.fwbs.p_blkt_nuclear_heat_total_mw) ** exphts
                 + (1.0e6 * self.data.fwbs.p_shld_nuclear_heat_mw) ** exphts
             )
@@ -2239,11 +2238,11 @@ class Costs(Model):
         self.data.costs.chx = (
             1.0e-6
             * self.data.costs.UCPHX
-            * heat_transport_variables.n_primary_heat_exchangers
+            * self.data.heat_transport.n_primary_heat_exchangers
             * (
                 1.0e6
-                * heat_transport_variables.p_plant_primary_heat_mw
-                / heat_transport_variables.n_primary_heat_exchangers
+                * self.data.heat_transport.p_plant_primary_heat_mw
+                / self.data.heat_transport.n_primary_heat_exchangers
             )
             ** exphts
         )
@@ -2265,12 +2264,12 @@ class Costs(Model):
             1.0e-6
             * self.data.costs.UCAHTS
             * (
-                (1.0e6 * heat_transport_variables.p_hcd_electric_loss_mw) ** exphts
-                + (1.0e6 * heat_transport_variables.p_cryo_plant_electric_mw) ** exphts
-                + (1.0e6 * heat_transport_variables.vachtmw) ** exphts
-                + (1.0e6 * heat_transport_variables.p_tritium_plant_electric_mw)
+                (1.0e6 * self.data.heat_transport.p_hcd_electric_loss_mw) ** exphts
+                + (1.0e6 * self.data.heat_transport.p_cryo_plant_electric_mw) ** exphts
+                + (1.0e6 * self.data.heat_transport.vachtmw) ** exphts
+                + (1.0e6 * self.data.heat_transport.p_tritium_plant_electric_mw)
                 ** exphts
-                + (1.0e6 * heat_transport_variables.fachtmw) ** exphts
+                + (1.0e6 * self.data.heat_transport.fachtmw) ** exphts
             )
         )
 
@@ -2303,7 +2302,7 @@ class Costs(Model):
             * self.data.costs.uccry
             * 4.5e0
             / tfcoil_variables.temp_tf_cryo
-            * heat_transport_variables.helpow**expcry
+            * self.data.heat_transport.helpow**expcry
         )
 
         #  Apply Nth kind and safety factors
@@ -2434,7 +2433,7 @@ class Costs(Model):
             self.data.costs.c23 = (
                 1.0e-6
                 * self.data.costs.ucturb[self.data.fwbs.i_blkt_coolant_type - 1]
-                * (heat_transport_variables.p_plant_electric_gross_mw / 1200.0e0)
+                * (self.data.heat_transport.p_plant_electric_gross_mw / 1200.0e0)
                 ** exptpe
             )
 
@@ -2471,9 +2470,9 @@ class Costs(Model):
 
         #  Account 242 : Transformers
         self.data.costs.c242 = 1.0e-6 * (
-            self.data.costs.UCPP * (heat_transport_variables.pacpmw * 1.0e3) ** expepe
+            self.data.costs.UCPP * (self.data.heat_transport.pacpmw * 1.0e3) ** expepe
             + self.data.costs.UCAP
-            * (heat_transport_variables.p_plant_electric_base_total_mw * 1.0e3)
+            * (self.data.heat_transport.p_plant_electric_base_total_mw * 1.0e3)
         )
 
         #  Apply safety assurance factor
@@ -2490,7 +2489,7 @@ class Costs(Model):
         self.data.costs.c243 = (
             1.0e-6
             * self.data.costs.UCLV
-            * heat_transport_variables.tlvpmw
+            * self.data.heat_transport.tlvpmw
             * 1.0e3
             / 0.8e0
             * cmlsa[self.data.costs.lsa - 1]
@@ -2544,13 +2543,13 @@ class Costs(Model):
         if self.data.costs.ireactor == 0:
             pwrrej = (
                 physics_variables.p_fusion_total_mw
-                + heat_transport_variables.p_hcd_electric_total_mw
+                + self.data.heat_transport.p_hcd_electric_total_mw
                 + tfcoil_variables.tfcmw
             )
         else:
             pwrrej = (
-                heat_transport_variables.p_plant_primary_heat_mw
-                - heat_transport_variables.p_plant_electric_gross_mw
+                self.data.heat_transport.p_plant_primary_heat_mw
+                - self.data.heat_transport.p_plant_electric_gross_mw
             )
 
         # self.data.costs.uchrs - reference cost of heat rejection system [$]
@@ -2660,7 +2659,7 @@ class Costs(Model):
                 shcss = 520.0e0
                 self.data.costs.c2253 = (
                     self.data.costs.ucblss
-                    * (heat_transport_variables.p_plant_primary_heat_mw * 1.0e6)
+                    * (self.data.heat_transport.p_plant_primary_heat_mw * 1.0e6)
                     * self.data.times.t_plant_pulse_no_burn
                     / (shcss * self.data.pulse.dtstor)
                 )
@@ -2675,7 +2674,7 @@ class Costs(Model):
 
             self.data.costs.c2253 = (
                 self.data.costs.c2253
-                * heat_transport_variables.p_plant_electric_net_mw
+                * self.data.heat_transport.p_plant_electric_net_mw
                 / 1200.0e0
             )
 
@@ -2701,14 +2700,14 @@ class Costs(Model):
         if ife_variables.ife == 1:
             kwhpy = (
                 1.0e3
-                * heat_transport_variables.p_plant_electric_net_mw
+                * self.data.heat_transport.p_plant_electric_net_mw
                 * (24.0e0 * constants.N_DAY_YEAR)
                 * self.data.costs.f_t_plant_available
             )
         else:
             kwhpy = (
                 1.0e3
-                * heat_transport_variables.p_plant_electric_net_mw
+                * self.data.heat_transport.p_plant_electric_net_mw
                 * (24.0e0 * constants.N_DAY_YEAR)
                 * self.data.costs.f_t_plant_available
                 * self.data.times.t_plant_pulse_burn
@@ -2866,14 +2865,14 @@ class Costs(Model):
 
         #  Annual cost of operation and maintenance
 
-        if heat_transport_variables.p_plant_electric_net_mw < 0:
+        if self.data.heat_transport.p_plant_electric_net_mw < 0:
             sqrt_p_plant_electric_net_mw_1200 = 0.0
             logger.warning(
                 "p_plant_electric_net_mw has gone negative! Clamping it to 0 for the calculation of annoam and annwst (cost of maintenance and cost of waste)."
             )
         else:
             sqrt_p_plant_electric_net_mw_1200 = np.sqrt(
-                heat_transport_variables.p_plant_electric_net_mw / 1200.0e0
+                self.data.heat_transport.p_plant_electric_net_mw / 1200.0e0
             )
         annoam = (
             self.data.costs.ucoam[self.data.costs.lsa - 1]
@@ -2893,7 +2892,7 @@ class Costs(Model):
             #  Sum D-T fuel cost and He3 fuel cost
             annfuel = (
                 self.data.costs.ucfuel
-                * heat_transport_variables.p_plant_electric_net_mw
+                * self.data.heat_transport.p_plant_electric_net_mw
                 / 1200.0e0
                 + 1.0e-6
                 * physics_variables.f_plasma_fuel_helium3

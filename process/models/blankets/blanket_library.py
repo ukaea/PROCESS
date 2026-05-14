@@ -12,7 +12,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
     divertor_variables,
-    heat_transport_variables,
     physics_variables,
 )
 from process.models.build import FwBlktVVShape
@@ -2440,7 +2439,7 @@ class BlanketLibrary(Model):
             )
 
             # Mechanical pumping power for the first wall (MW)
-            heat_transport_variables.p_fw_coolant_pump_mw = self.coolant_pumping_power(
+            self.data.heat_transport.p_fw_coolant_pump_mw = self.coolant_pumping_power(
                 output=output,
                 i_liquid_breeder=1,
                 temp_coolant_pump_outlet=self.data.fwbs.temp_fw_coolant_in,
@@ -2454,7 +2453,7 @@ class BlanketLibrary(Model):
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.p_blkt_coolant_pump_mw = self.coolant_pumping_power(
+            self.data.heat_transport.p_blkt_coolant_pump_mw = self.coolant_pumping_power(
                 output=output,
                 i_liquid_breeder=1,
                 temp_coolant_pump_outlet=self.data.fwbs.temp_blkt_coolant_in,
@@ -2471,8 +2470,8 @@ class BlanketLibrary(Model):
 
             # Total mechanical pumping power (MW)
             self.data.primary_pumping.p_fw_blkt_coolant_pump_mw = (
-                heat_transport_variables.p_fw_coolant_pump_mw
-                + heat_transport_variables.p_blkt_coolant_pump_mw
+                self.data.heat_transport.p_fw_coolant_pump_mw
+                + self.data.heat_transport.p_blkt_coolant_pump_mw
             )
 
         # If the blanket has a liquid metal breeder...
@@ -2494,7 +2493,7 @@ class BlanketLibrary(Model):
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.p_blkt_breeder_pump_mw = self.coolant_pumping_power(
+            self.data.heat_transport.p_blkt_breeder_pump_mw = self.coolant_pumping_power(
                 output=output,
                 i_liquid_breeder=2,
                 temp_coolant_pump_outlet=self.data.fwbs.inlet_temp_liq,
@@ -2509,9 +2508,9 @@ class BlanketLibrary(Model):
                 label="Liquid Metal Breeder/Coolant",
             )
 
-            heat_transport_variables.htpmw_blkt_tot = (
+            self.data.heat_transport.htpmw_blkt_tot = (
                 self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
-                + heat_transport_variables.p_blkt_breeder_pump_mw
+                + self.data.heat_transport.p_blkt_breeder_pump_mw
             )
 
         if output:
@@ -2705,14 +2704,14 @@ class BlanketLibrary(Model):
                     self.outfile,
                     "Mechanical pumping power for FW (MW)",
                     "(p_fw_coolant_pump_mw)",
-                    heat_transport_variables.p_fw_coolant_pump_mw,
+                    self.data.heat_transport.p_fw_coolant_pump_mw,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for blanket (primary) coolant (MW)",
                     "(p_blkt_coolant_pump_mw)",
-                    heat_transport_variables.p_blkt_coolant_pump_mw,
+                    self.data.heat_transport.p_blkt_coolant_pump_mw,
                     "OP ",
                 )
             if self.data.fwbs.i_blkt_dual_coolant > 0:
@@ -2720,7 +2719,7 @@ class BlanketLibrary(Model):
                     self.outfile,
                     "Mechanical pumping power for blanket liquid breeder (MW)",
                     "(p_blkt_breeder_pump_mw)",
-                    heat_transport_variables.p_blkt_breeder_pump_mw,
+                    self.data.heat_transport.p_blkt_breeder_pump_mw,
                     "OP ",
                 )
             po.ovarre(
@@ -2735,21 +2734,21 @@ class BlanketLibrary(Model):
                     self.outfile,
                     "Total mechanical pumping power for FW, blanket and liquid metal breeder(MW)",
                     "(htpmw_blkt_tot)",
-                    heat_transport_variables.htpmw_blkt_tot,
+                    self.data.heat_transport.htpmw_blkt_tot,
                     "OP ",
                 )
             po.ovarre(
                 self.outfile,
                 "Pumping power for divertor (MW)",
                 "(p_div_coolant_pump_mw)",
-                heat_transport_variables.p_div_coolant_pump_mw,
+                self.data.heat_transport.p_div_coolant_pump_mw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Pumping power for shield and vacuum vessel (MW)",
                 "(p_shld_coolant_pump_mw)",
-                heat_transport_variables.p_shld_coolant_pump_mw,
+                self.data.heat_transport.p_shld_coolant_pump_mw,
                 "OP ",
             )
 
