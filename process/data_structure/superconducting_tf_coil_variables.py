@@ -284,7 +284,8 @@ a_tf_croco_strand: float = None
 # croco_strand
 
 tf_croco_strand_area: float = None
-tf_croco_strand_critical_current: float = None
+cur_tf_tun_croco_strand_critical: float = None
+"""Critical current in the TF turn CroCo strand (A)"""
 
 
 # conductor
@@ -401,7 +402,7 @@ def init_superconducting_tf_coil_variables():
         a_tf_croco_strand_solder, \
         a_tf_croco_strand, \
         tf_croco_strand_area, \
-        tf_croco_strand_critical_current
+        cur_tf_tun_croco_strand_critical
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -484,4 +485,4 @@ def init_superconducting_tf_coil_variables():
     a_tf_croco_strand_solder = 0.0
     a_tf_croco_strand = 0.0
     tf_croco_strand_area = 0.0
-    tf_croco_strand_critical_current = 0.0
+    cur_tf_tun_croco_strand_critical = 0.0
