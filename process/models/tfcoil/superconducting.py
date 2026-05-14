@@ -1617,10 +1617,8 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Setting the WP turn geometry / areas
         if tfcoil_variables.i_tf_turns_integer == 0:
-            avg_turn_geometry = CICCAveragedTurnGeometry
-
             # Non-ingeger number of turns
-            avg_turn_geometry = self.tf_cable_in_conduit_averaged_turn_geometry(
+            avg_turn_geometry: CICCAveragedTurnGeometry = self.tf_cable_in_conduit_averaged_turn_geometry(
                 j_tf_wp=tfcoil_variables.j_tf_wp,
                 dx_tf_turn_steel=tfcoil_variables.dx_tf_turn_steel,
                 dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
@@ -3257,21 +3255,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             superconducting_tf_coil_variables.a_tf_croco_strand
         )
 
-        j_crit_sc, _ = superconductors.jcrit_rebco(
-            temp_conductor=tfcoil_variables.tftmp,
-            b_conductor=tfcoil_variables.b_tf_inboard_peak_with_ripple,
-        )
-
-        superconducting_tf_coil_variables.croco_strand_critical_current = (
-            j_crit_sc * superconducting_tf_coil_variables.a_tf_croco_strand
-        )
-
-        # Conductor properties
-        # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)/a_croco_strand
-        superconducting_tf_coil_variables.conductor_critical_current = (
-            superconducting_tf_coil_variables.croco_strand_critical_current
-            * N_CROCO_STRANDS_TURN
-        )
         # Area of core = area of strand
         superconducting_tf_coil_variables.conductor_copper_bar_area = (
             superconducting_tf_coil_variables.a_tf_croco_strand
@@ -3322,6 +3305,57 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             superconducting_tf_coil_variables.conductor_rebco_area
             / superconducting_tf_coil_variables.conductor_area
         )
+
+        # Cross-sectional area per turn
+        a_tf_turn = tfcoil_variables.c_tf_total / (
+            tfcoil_variables.j_tf_wp
+            * tfcoil_variables.n_tf_coils
+            * tfcoil_variables.n_tf_coil_turns
+        )
+
+        if (
+            SuperconductorModel(tfcoil_variables.i_tf_sc_mat)
+            == SuperconductorModel.CROCO_REBCO
+        ):
+            superconductor_critical_properties: TFSuperconductorLimits = (
+                self.tf_croco_superconductor_properties(
+                    a_tf_turn=a_tf_turn,
+                    b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
+                    cur_tf_turn=tfcoil_variables.c_tf_turn,
+                    temp_tf_peak=tfcoil_variables.tftmp,
+                    i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
+                    output=output,
+                )
+            )
+
+            tfcoil_variables.j_tf_wp_critical = (
+                superconductor_critical_properties.j_tf_wp_critical
+            )
+            j_superconductor_critical = (
+                superconductor_critical_properties.j_superconductor_critical
+            )
+            superconducting_tf_coil_variables.f_c_tf_turn_operating_critical = (
+                superconductor_critical_properties.f_c_tf_turn_operating_critical
+            )
+            j_superconductor = superconductor_critical_properties.j_superconductor
+            superconducting_tf_coil_variables.j_tf_coil_turn = (
+                superconductor_critical_properties.j_tf_coil_turn
+            )
+
+            superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain = superconductor_critical_properties.bc20m
+            superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain = superconductor_critical_properties.tc0m
+            superconducting_tf_coil_variables.c_tf_turn_cables_critical = (
+                superconductor_critical_properties.c_turn_cables_critical
+            )
+
+            tfcoil_variables.v_tf_coil_dump_quench_kv = (
+                self.croco_voltage() / 1.0e3
+            )  # TFC Quench voltage in kV
+
+        if tfcoil_variables.i_str_wp == 0:
+            strain = tfcoil_variables.str_tf_con_res
+        else:
+            strain = tfcoil_variables.str_wp
 
         # Negative areas or fractions error reporting
         if (
@@ -3529,37 +3563,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         self.vv_stress_on_quench()
 
-        # Cross-sectional area per turn
-        a_tf_turn = tfcoil_variables.c_tf_total / (
-            tfcoil_variables.j_tf_wp
-            * tfcoil_variables.n_tf_coils
-            * tfcoil_variables.n_tf_coil_turns
-        )
-
-        if (
-            SuperconductorModel(tfcoil_variables.i_tf_sc_mat)
-            == SuperconductorModel.CROCO_REBCO
-        ):
-            (
-                tfcoil_variables.j_tf_wp_critical,
-                tfcoil_variables.temp_tf_superconductor_margin,
-            ) = self.tf_croco_superconductor_properties(
-                a_tf_turn,
-                tfcoil_variables.b_tf_inboard_peak_with_ripple,
-                tfcoil_variables.c_tf_turn,
-                tfcoil_variables.tftmp,
-                output=output,
-            )
-
-            tfcoil_variables.v_tf_coil_dump_quench_kv = (
-                self.croco_voltage() / 1.0e3
-            )  # TFC Quench voltage in kV
-
-        if tfcoil_variables.i_str_wp == 0:
-            strain = tfcoil_variables.str_tf_con_res
-        else:
-            strain = tfcoil_variables.str_wp
-
         # tfcoil_variables.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(
         #     i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
         #     j_superconductor=superconducting_tf_coil_variables.j_tf_superconductor,
@@ -3763,8 +3766,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         b_tf_inboard_peak: float,
         cur_tf_turn: float,
         temp_tf_peak: float,
+        i_tf_superconductor: int,
         output: bool,
-    ):
+    ) -> TFSuperconductorLimits:
         """TF superconducting CroCo conductor using REBCO tape
 
         Parameters
@@ -3780,15 +3784,27 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         output:
 
         """
-        j_crit_sc: float = 0.0
         #  Find critical current density in superconducting cable, j_crit_cable
-        j_crit_sc, _ = superconductors.jcrit_rebco(temp_tf_peak, b_tf_inboard_peak)
+        j_crit_sc, _, bc20m, tc0m = superconductors.jcrit_rebco(
+            temp_conductor=temp_tf_peak, b_conductor=b_tf_inboard_peak
+        )
+
+        superconducting_tf_coil_variables.croco_strand_critical_current = (
+            j_crit_sc * superconducting_tf_coil_variables.a_tf_croco_strand
+        )
+
+        # Conductor properties
+        # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)/a_croco_strand
+        superconducting_tf_coil_variables.conductor_critical_current = (
+            superconducting_tf_coil_variables.croco_strand_critical_current
+            * N_CROCO_STRANDS_TURN
+        )
 
         superconducting_tf_coil_variables.tf_coppera_m2 = (
             cur_tf_turn / superconducting_tf_coil_variables.conductor_copper_area
         )
 
-        icrit = superconducting_tf_coil_variables.conductor_critical_current
+        cur_critical = superconducting_tf_coil_variables.conductor_critical_current
         j_crit_cable = (
             superconducting_tf_coil_variables.croco_strand_critical_current
             / superconducting_tf_coil_variables.a_tf_croco_strand
@@ -3796,9 +3812,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
 
         # Critical current density in winding pack
         # a_tf_turn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
-        j_tf_wp_critical = icrit / a_tf_turn
+        j_tf_wp_critical = cur_critical / a_tf_turn
         #  Ratio of operating / critical current
-        iooic = cur_tf_turn / icrit
+        iooic = cur_tf_turn / cur_critical
         #  Operating current density
         jwdgop = cur_tf_turn / a_tf_turn
         #  Actual current density in superconductor,
@@ -3872,7 +3888,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 current_sharing_t,
                 "OP ",
             )
-            po.ovarre(self.outfile, "Critical current (A)", "(icrit)", icrit, "OP ")
             po.ovarre(
                 self.outfile,
                 "Actual current (A)",
@@ -3888,7 +3903,16 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
                 "OP ",
             )
 
-        return j_tf_wp_critical, tmarg
+        return TFSuperconductorLimits(
+            j_tf_wp_critical=j_tf_wp_critical,
+            j_superconductor_critical=j_crit_sc,
+            f_c_tf_turn_operating_critical=iooic,
+            j_superconductor=jsc,
+            j_tf_coil_turn=jwdgop,
+            bc20m=bc20m,
+            tc0m=tc0m,
+            c_turn_cables_critical=0.0,
+        )
 
     @staticmethod
     def tf_turn_croco_cable_space_properties(
