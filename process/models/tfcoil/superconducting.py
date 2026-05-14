@@ -3219,11 +3219,21 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         superconducting_tf_coil_variables.n_tf_croco_strand_hts_tapes = (
             croco_cable_geometry.n_croco_strand_hts_tapes
         )
-        a_tf_croco_strand_copper_total = croco_cable_geometry.a_croco_strand_copper_total
-        a_tf_croco_strand_hastelloy = croco_cable_geometry.a_croco_strand_hastelloy
-        a_tf_croco_strand_solder = croco_cable_geometry.a_croco_strand_solder
-        a_tf_croco_strand_rebco = croco_cable_geometry.a_croco_strand_rebco
-        a_tf_croco_strand = croco_cable_geometry.a_croco_strand
+        superconducting_tf_coil_variables.a_tf_croco_strand_copper_total = (
+            croco_cable_geometry.a_croco_strand_copper_total
+        )
+        superconducting_tf_coil_variables.a_tf_croco_strand_hastelloy = (
+            croco_cable_geometry.a_croco_strand_hastelloy
+        )
+        superconducting_tf_coil_variables.a_tf_croco_strand_solder = (
+            croco_cable_geometry.a_croco_strand_solder
+        )
+        superconducting_tf_coil_variables.a_tf_croco_strand_rebco = (
+            croco_cable_geometry.a_croco_strand_rebco
+        )
+        superconducting_tf_coil_variables.a_tf_croco_strand = (
+            croco_cable_geometry.a_croco_strand
+        )
         superconducting_tf_coil_variables.dr_tf_hts_tape = (
             croco_cable_geometry.dr_hts_tape
         )
@@ -3232,75 +3242,85 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
         superconducting_tf_coil_variables.a_tf_croco_strand_copper_total = (
-            a_tf_croco_strand_copper_total
+            superconducting_tf_coil_variables.a_tf_croco_strand_copper_total
         )
         superconducting_tf_coil_variables.a_tf_croco_strand_hastelloy = (
-            a_tf_croco_strand_hastelloy
+            superconducting_tf_coil_variables.a_tf_croco_strand_hastelloy
         )
         superconducting_tf_coil_variables.a_tf_croco_strand_solder = (
-            a_tf_croco_strand_solder
+            superconducting_tf_coil_variables.a_tf_croco_strand_solder
         )
         superconducting_tf_coil_variables.a_tf_croco_strand_rebco = (
-            a_tf_croco_strand_rebco
+            superconducting_tf_coil_variables.a_tf_croco_strand_rebco
         )
-        superconducting_tf_coil_variables.a_tf_croco_strand = a_tf_croco_strand
+        superconducting_tf_coil_variables.a_tf_croco_strand = (
+            superconducting_tf_coil_variables.a_tf_croco_strand
+        )
 
         j_crit_sc, _ = superconductors.jcrit_rebco(
             temp_conductor=tfcoil_variables.tftmp,
             b_conductor=tfcoil_variables.b_tf_inboard_peak_with_ripple,
         )
 
-        croco_strand_critical_current = (
+        superconducting_tf_coil_variables.croco_strand_critical_current = (
             j_crit_sc * superconducting_tf_coil_variables.a_tf_croco_strand
         )
 
         # Conductor properties
         # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)/a_croco_strand
         superconducting_tf_coil_variables.conductor_critical_current = (
-            croco_strand_critical_current * N_CROCO_STRANDS_TURN
+            superconducting_tf_coil_variables.croco_strand_critical_current
+            * N_CROCO_STRANDS_TURN
         )
         # Area of core = area of strand
-        conductor_copper_bar_area = superconducting_tf_coil_variables.a_tf_croco_strand
-        conductor_copper_area = (
+        superconducting_tf_coil_variables.conductor_copper_bar_area = (
+            superconducting_tf_coil_variables.a_tf_croco_strand
+        )
+        superconducting_tf_coil_variables.conductor_copper_area = (
             superconducting_tf_coil_variables.a_tf_croco_strand_copper_total
             * N_CROCO_STRANDS_TURN
-            + conductor_copper_bar_area
+            + superconducting_tf_coil_variables.conductor_copper_bar_area
         )
         superconducting_tf_coil_variables.conductor_copper_fraction = (
-            conductor_copper_area / superconducting_tf_coil_variables.conductor_area
+            superconducting_tf_coil_variables.conductor_copper_area
+            / superconducting_tf_coil_variables.conductor_area
         )
 
         # Helium area is set by the user.
         # conductor_helium_area = cable_helium_fraction * tfcoil_variables.a_tf_turn_cable_space_no_void
-        conductor_helium_area = (
+        superconducting_tf_coil_variables.conductor_helium_area = (
             np.pi / 2.0 * superconducting_tf_coil_variables.dia_tf_turn_croco_cable**2
         )
         superconducting_tf_coil_variables.conductor_helium_fraction = (
-            conductor_helium_area / superconducting_tf_coil_variables.conductor_area
+            superconducting_tf_coil_variables.conductor_helium_area
+            / superconducting_tf_coil_variables.conductor_area
         )
 
-        conductor_hastelloy_area = (
+        superconducting_tf_coil_variables.conductor_hastelloy_area = (
             superconducting_tf_coil_variables.a_tf_croco_strand_hastelloy
             * N_CROCO_STRANDS_TURN
         )
         superconducting_tf_coil_variables.conductor_hastelloy_fraction = (
-            conductor_hastelloy_area / superconducting_tf_coil_variables.conductor_area
+            superconducting_tf_coil_variables.conductor_hastelloy_area
+            / superconducting_tf_coil_variables.conductor_area
         )
 
-        conductor_solder_area = (
+        superconducting_tf_coil_variables.conductor_solder_area = (
             superconducting_tf_coil_variables.a_tf_croco_strand_solder
             * N_CROCO_STRANDS_TURN
         )
         superconducting_tf_coil_variables.conductor_solder_fraction = (
-            conductor_solder_area / superconducting_tf_coil_variables.conductor_area
+            superconducting_tf_coil_variables.conductor_solder_area
+            / superconducting_tf_coil_variables.conductor_area
         )
 
-        conductor_rebco_area = (
+        superconducting_tf_coil_variables.conductor_rebco_area = (
             superconducting_tf_coil_variables.a_tf_croco_strand_rebco
             * N_CROCO_STRANDS_TURN
         )
         superconducting_tf_coil_variables.conductor_rebco_fraction = (
-            conductor_rebco_area / superconducting_tf_coil_variables.conductor_area
+            superconducting_tf_coil_variables.conductor_rebco_area
+            / superconducting_tf_coil_variables.conductor_area
         )
 
         # Negative areas or fractions error reporting
@@ -3738,7 +3758,12 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
     def tf_croco_superconductor_properties(
-        self, a_tf_turn, b_tf_inboard_peak_symmetric, iop, thelium, output: bool
+        self,
+        a_tf_turn: float,
+        b_tf_inboard_peak: float,
+        cur_tf_turn: float,
+        temp_tf_peak: float,
+        output: bool,
     ):
         """TF superconducting CroCo conductor using REBCO tape
 
@@ -3746,43 +3771,21 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         ----------
         a_tf_turn :
 
-        b_tf_inboard_peak_symmetric :
+        b_tf_inboard_peak :
             Peak field at conductor (T)
-        iop :
+        cur_tf_turn :
             Operating current per turn (A)
-        thelium :
+        temp_tf_peak :
             He temperature at peak field point (K)
         output:
 
         """
         j_crit_sc: float = 0.0
         #  Find critical current density in superconducting cable, j_crit_cable
-        j_crit_sc, _ = superconductors.jcrit_rebco(thelium, b_tf_inboard_peak_symmetric)
-
-        (
-            superconducting_tf_coil_variables.a_tf_croco_strand,
-            superconducting_tf_coil_variables.croco_strand_critical_current,
-            superconducting_tf_coil_variables.conductor_copper_area,
-            superconducting_tf_coil_variables.conductor_copper_fraction,
-            superconducting_tf_coil_variables.conductor_copper_bar_area,
-            superconducting_tf_coil_variables.conductor_hastelloy_area,
-            superconducting_tf_coil_variables.conductor_hastelloy_fraction,
-            superconducting_tf_coil_variables.conductor_helium_area,
-            superconducting_tf_coil_variables.conductor_helium_fraction,
-            superconducting_tf_coil_variables.conductor_solder_area,
-            superconducting_tf_coil_variables.conductor_solder_fraction,
-            superconducting_tf_coil_variables.conductor_rebco_area,
-            superconducting_tf_coil_variables.conductor_rebco_fraction,
-            superconducting_tf_coil_variables.conductor_critical_current,
-        ) = superconductors.croco(
-            j_crit_sc,
-            superconducting_tf_coil_variables.conductor_area,
-            superconducting_tf_coil_variables.dia_tf_turn_croco_cable,
-            superconducting_tf_coil_variables.dx_tf_croco_strand_copper,
-        )
+        j_crit_sc, _ = superconductors.jcrit_rebco(temp_tf_peak, b_tf_inboard_peak)
 
         superconducting_tf_coil_variables.tf_coppera_m2 = (
-            iop / superconducting_tf_coil_variables.conductor_copper_area
+            cur_tf_turn / superconducting_tf_coil_variables.conductor_copper_area
         )
 
         icrit = superconducting_tf_coil_variables.conductor_critical_current
@@ -3795,9 +3798,9 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         # a_tf_turn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
         j_tf_wp_critical = icrit / a_tf_turn
         #  Ratio of operating / critical current
-        iooic = iop / icrit
+        iooic = cur_tf_turn / icrit
         #  Operating current density
-        jwdgop = iop / a_tf_turn
+        jwdgop = cur_tf_turn / a_tf_turn
         #  Actual current density in superconductor,
         # which should be equal to jcrit(thelium+tmarg)
 
@@ -3805,10 +3808,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         jsc = iooic * j_crit_sc
 
         # Temperature margin
-        current_sharing_t = superconductors.current_sharing_rebco(
-            b_tf_inboard_peak_symmetric, jsc
-        )
-        tmarg = current_sharing_t - thelium
+        current_sharing_t = superconductors.current_sharing_rebco(b_tf_inboard_peak, jsc)
+        tmarg = current_sharing_t - temp_tf_peak
         tfcoil_variables.temp_margin = (
             tmarg  # Only used in the availabilty routine - see comment to Issue #526
         )
@@ -3818,8 +3819,8 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             po.ovarre(
                 self.outfile,
                 "Helium temperature at peak field (= superconductor temperature) (K)",
-                "(thelium)",
-                thelium,
+                "(temp_tf_peak)",
+                temp_tf_peak,
             )
             po.ovarre(
                 self.outfile,
