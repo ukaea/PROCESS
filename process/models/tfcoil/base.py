@@ -3260,8 +3260,7 @@ class TFCoil(Model):
 
         return ind_tf_coil
 
-    @staticmethod
-    def generic_tf_coil_area_and_masses():
+    def generic_tf_coil_area_and_masses(self):
         """Subroutine to calculate the TF coil areas and masses"""
         # Surface areas (for cryo system) [m²]
         wbtf = (

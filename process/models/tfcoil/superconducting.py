@@ -806,8 +806,7 @@ class SuperconductingTFCoil(TFCoil):
 
         return j_tf_wp_quench_protection_max, v_tf_dump_voltage_peak
 
-    @staticmethod
-    def vv_stress_on_quench():
+    def vv_stress_on_quench(self):
         """Calculate the Tresca stress [Pa] of the Vacuum Vessel (VV)
         experienced when the TF coil quenches.
 

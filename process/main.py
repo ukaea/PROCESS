@@ -718,6 +718,7 @@ class Models:
             self.cryostat,
             self.fw,
             self.sctfcoil,
+            self.copper_tf_coil,
             self.cicc_sctfcoil,
             self.croco_sctfcoil,
             self.tfcoil,

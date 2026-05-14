@@ -272,8 +272,7 @@ class ResistiveTFCoil(TFCoil):
         if output:
             self.outtf()
 
-    @staticmethod
-    def res_tf_internal_geom():
+    def res_tf_internal_geom(self):
         """
         Resistive TF turn geometry, equivalent to winding_pack subroutines
         """
