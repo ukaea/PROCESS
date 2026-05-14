@@ -3241,12 +3241,12 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             / superconducting_tf_coil_variables.conductor_area
         )
 
-        superconducting_tf_coil_variables.conductor_hastelloy_area = (
+        superconducting_tf_coil_variables.a_tf_turn_croco_hastelloy = (
             superconducting_tf_coil_variables.a_tf_croco_strand_hastelloy
             * N_CROCO_STRANDS_TURN
         )
         superconducting_tf_coil_variables.conductor_hastelloy_fraction = (
-            superconducting_tf_coil_variables.conductor_hastelloy_area
+            superconducting_tf_coil_variables.a_tf_turn_croco_hastelloy
             / superconducting_tf_coil_variables.conductor_area
         )
 
@@ -4136,7 +4136,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             self.outfile,
             "Hastelloy area of conductor (mm2)",
             "(a_tf_croco_strand_hastelloy)",
-            superconducting_tf_coil_variables.conductor_hastelloy_area,
+            superconducting_tf_coil_variables.a_tf_turn_croco_hastelloy,
             "OP ",
         )
         po.ovarre(
