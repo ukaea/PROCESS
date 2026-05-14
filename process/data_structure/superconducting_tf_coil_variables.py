@@ -291,7 +291,8 @@ tf_croco_strand_critical_current: float = None
 
 conductor_copper_area: float = None
 conductor_copper_fraction: float = None
-conductor_copper_bar_area: float = None
+a_tf_turn_croco_copper_bar: float = None
+"""Area of the central copper strand in the CroCo TF turn [m²]"""
 conductor_hastelloy_area: float = None
 conductor_hastelloy_fraction: float = None
 conductor_helium_area: float = None

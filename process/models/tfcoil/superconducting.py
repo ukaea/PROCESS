@@ -1662,8 +1662,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
 
         else:
             # Integer number of turns
-            int_turn_geometry = CICCIntegerTurnGeometry
-            (int_turn_geometry) = self.tf_cable_in_conduit_integer_turn_geometry(
+            int_turn_geometry: CICCIntegerTurnGeometry = self.tf_cable_in_conduit_integer_turn_geometry(
                 dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
                 dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
                 dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
@@ -3166,43 +3165,6 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             croco_cable_space_geometry.conductor_jacket_fraction
         )
 
-        # superconducting_tf_coil_variables.dia_tf_turn_croco_cable = (
-        #     tfcoil_variables.t_conductor / 3.0e0
-        #     - tfcoil_variables.dx_tf_turn_steel * (2.0e0 / 3.0e0)
-        # )
-
-        # # Area of the full cable circle in the turn
-        # tfcoil_variables.a_tf_turn_cable_space_no_void = (
-        #     9.0e0
-        #     / 4.0e0
-        #     * np.pi
-        #     * superconducting_tf_coil_variables.dia_tf_turn_croco_cable**2
-        # )
-        # # Area of the full cable spac circle minus the central copper strand
-        # superconducting_tf_coil_variables.a_tf_turn_cable_space_effective = (
-        #     tfcoil_variables.a_tf_turn_cable_space_no_void
-        #     - 0.25e0
-        #     * np.pi
-        #     * superconducting_tf_coil_variables.dia_tf_turn_croco_cable**2
-        # )
-
-        # superconducting_tf_coil_variables.conductor_area = (
-        #     tfcoil_variables.t_conductor**2
-        # )  # does this not assume it's a sqaure???
-
-        # superconducting_tf_coil_variables.conductor_jacket_area = (
-        #     superconducting_tf_coil_variables.conductor_area
-        #     - tfcoil_variables.a_tf_turn_cable_space_no_void
-        # )
-        # tfcoil_variables.a_tf_turn_steel = (
-        #     superconducting_tf_coil_variables.conductor_jacket_area
-        # )
-
-        # superconducting_tf_coil_variables.conductor_jacket_fraction = (
-        #     superconducting_tf_coil_variables.conductor_jacket_area
-        #     / superconducting_tf_coil_variables.conductor_area
-        # )
-
         croco_cable_geometry: CroCoCableGeometry = calculate_croco_cable_geometry(
             dia_croco_strand=superconducting_tf_coil_variables.dia_tf_turn_croco_cable,
             dx_croco_strand_copper=superconducting_tf_coil_variables.dx_tf_croco_strand_copper,
@@ -3256,13 +3218,13 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )
 
         # Area of core = area of strand
-        superconducting_tf_coil_variables.conductor_copper_bar_area = (
+        superconducting_tf_coil_variables.a_tf_turn_croco_copper_bar = (
             superconducting_tf_coil_variables.a_tf_croco_strand
         )
         superconducting_tf_coil_variables.conductor_copper_area = (
             superconducting_tf_coil_variables.a_tf_croco_strand_copper_total
             * N_CROCO_STRANDS_TURN
-            + superconducting_tf_coil_variables.conductor_copper_bar_area
+            + superconducting_tf_coil_variables.a_tf_turn_croco_copper_bar
         )
         superconducting_tf_coil_variables.conductor_copper_fraction = (
             superconducting_tf_coil_variables.conductor_copper_area
@@ -4160,7 +4122,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
             self.outfile,
             "Area of central copper bar (mm2)",
             "(copper_bar_area)",
-            superconducting_tf_coil_variables.conductor_copper_bar_area,
+            superconducting_tf_coil_variables.a_tf_turn_croco_copper_bar,
             "OP ",
         )
         po.ovarre(
