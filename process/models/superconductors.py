@@ -118,7 +118,9 @@ class SuperconductorModel(IntEnum):
         return self._full_name_
 
 
-def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]:
+def jcrit_rebco(
+    temp_conductor: float, b_conductor: float
+) -> tuple[float, bool, float, float]:
     """Calculate the critical current density for a "REBCO" 2nd generation HTS
     superconductor.
 
@@ -131,11 +133,13 @@ def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]
 
     Returns
     -------
-    tuple[float, bool]
+    tuple[float, bool, float, float]
         A tuple containing:
         - j_critical: Critical current density in the superconductor (A/m²).
         - validity: A boolean indicating whether the input parameters are within the
                     valid range.
+        - b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
+        - temp_c0max: Critical temperature (K) at zero field and strain.
 
     Notes
     -----
@@ -196,7 +200,7 @@ def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]
         tcb = temp_c0max * (1 - (b_conductor / b_c20max) ** oneoveralpha)
         j_critical = -(temp_conductor - tcb)
 
-    return j_critical, validity
+    return j_critical, validity, b_c20max, temp_c0max
 
 
 def current_sharing_rebco(bfield, j):
@@ -216,7 +220,7 @@ def current_sharing_rebco(bfield, j):
     """
 
     def deltaj_rebco(temperature):
-        jcritical, _ = jcrit_rebco(temperature, bfield)
+        jcritical, _, _, _ = jcrit_rebco(temperature, bfield)
         return jcritical - j
 
     # No additional arguments are required for deltaj_rebco since it only has one
