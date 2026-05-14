@@ -639,19 +639,20 @@ class TFCoil(Model):
         )
 
     def outtf(self):
-        """Writes superconducting TF coil output to file
-
-        This routine writes the superconducting TF coil results
-        to the output file.
-        PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
+        """Writes generic TF coil parameters used by all types of TF coils to
+        the output file.
         """
         # General coil parameters
-        po.osubhd(self.outfile, "TF design")
+        po.oheadr(self.outfile, "General TF Coil Parameters")
         po.ovarin(
             self.outfile,
-            "Conductor technology",
+            "TF conductor technology",
             "(i_tf_sup)",
             tfcoil_variables.i_tf_sup,
+        )
+        po.ocmmnt(
+            self.outfile,
+            f"TF conductor model selected: {TFConductorModel(tfcoil_variables.i_tf_sup).name}",
         )
         po.ovarin(
             self.outfile,
