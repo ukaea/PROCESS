@@ -226,7 +226,7 @@ def constraint_equation_1(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(2, "MW/m³", "=")
-def constraint_equation_2(constraint_registration, _data):
+def constraint_equation_2(constraint_registration, data):
     """
 
      i_rad_loss: switch for radiation loss term usage in power balance (see User Guide):
@@ -271,7 +271,7 @@ def constraint_equation_2(constraint_registration, _data):
             * data_structure.physics_variables.pden_alpha_total_mw
             + data_structure.physics_variables.pden_non_alpha_charged_mw
             + data_structure.physics_variables.pden_plasma_ohmic_mw
-            + data_structure.current_drive_variables.p_hcd_injected_total_mw
+            + data.current_drive.p_hcd_injected_total_mw
             / data_structure.physics_variables.vol_plasma
         )
     else:
@@ -287,7 +287,7 @@ def constraint_equation_2(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(3, "MW/m³", "=")
-def constraint_equation_3(constraint_registration, _data):
+def constraint_equation_3(constraint_registration, data):
     """Global power balance equation for ions
     i_plasma_ignited: switch for ignition assumption
     - 0 do not assume plasma ignition;
@@ -310,7 +310,7 @@ def constraint_equation_3(constraint_registration, _data):
             (
                 data_structure.physics_variables.f_p_alpha_plasma_deposited
                 * data_structure.physics_variables.f_pden_alpha_ions_mw
-                + data_structure.current_drive_variables.p_hcd_injected_ions_mw
+                + data.current_drive.p_hcd_injected_ions_mw
                 / data_structure.physics_variables.vol_plasma
             ),
             constraint_registration,
@@ -331,7 +331,7 @@ def constraint_equation_3(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(4, "MW/m³", "=")
-def constraint_equation_4(constraint_registration, _data):
+def constraint_equation_4(constraint_registration, data):
     """Global power balance equation for electrons
 
     i_rad_loss: switch for radiation loss term usage in power balance
@@ -370,7 +370,7 @@ def constraint_equation_4(constraint_registration, _data):
             data_structure.physics_variables.f_p_alpha_plasma_deposited
             * data_structure.physics_variables.f_pden_alpha_electron_mw
             + data_structure.physics_variables.pden_ion_electron_equilibration_mw
-            + data_structure.current_drive_variables.p_hcd_injected_electrons_mw
+            + data.current_drive.p_hcd_injected_electrons_mw
             / data_structure.physics_variables.vol_plasma
         )
     else:
@@ -542,15 +542,15 @@ def constraint_equation_13(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(14, "", "=")
-def constraint_equation_14(constraint_registration, _data):
+def constraint_equation_14(constraint_registration, data):
     """Equation to fix number of NBI decay lengths to plasma centre
 
     n_beam_decay_lengths_core: neutral beam e-decay lengths to plasma centre
     n_beam_decay_lengths_core_required: permitted neutral beam e-decay lengths to plasma centre
     """
     return eq(
-        data_structure.current_drive_variables.n_beam_decay_lengths_core,
-        data_structure.current_drive_variables.n_beam_decay_lengths_core_required,
+        data.current_drive.n_beam_decay_lengths_core,
+        data.current_drive.n_beam_decay_lengths_core_required,
         constraint_registration,
     )
 
@@ -612,7 +612,7 @@ def constraint_equation_17(constraint_registration, data):
     """
     # Maximum possible power/vol_plasma that can be radiated (local)
     pradmaxpv = (
-        data_structure.current_drive_variables.p_hcd_injected_total_mw
+        data.current_drive.p_hcd_injected_total_mw
         / data_structure.physics_variables.vol_plasma
         + data_structure.physics_variables.pden_alpha_total_mw
         * data_structure.physics_variables.f_p_alpha_plasma_deposited
@@ -658,15 +658,15 @@ def constraint_equation_19(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(20, "m", "<=")
-def constraint_equation_20(constraint_registration, _data):
+def constraint_equation_20(constraint_registration, data):
     """Equation for neutral beam tangency radius upper limit
 
     radius_beam_tangency_max: maximum tangency radius for centreline of beam (m)
     radius_beam_tangency: neutral beam centreline tangency radius (m)
     """
     return leq(
-        data_structure.current_drive_variables.radius_beam_tangency,
-        data_structure.current_drive_variables.radius_beam_tangency_max,
+        data.current_drive.radius_beam_tangency,
+        data.current_drive.radius_beam_tangency_max,
         constraint_registration,
     )
 
@@ -867,7 +867,7 @@ def constraint_equation_28(constraint_registration, data):
         raise ProcessValueError("Do not use constraint 28 if i_plasma_ignited=1")
 
     return geq(
-        data_structure.current_drive_variables.big_q_plasma,
+        data.current_drive.big_q_plasma,
         data.constraints.big_q_plasma_min,
         constraint_registration,
     )
@@ -892,15 +892,15 @@ def constraint_equation_29(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(30, "MW", "<=")
-def constraint_equation_30(constraint_registration, _data):
+def constraint_equation_30(constraint_registration, data):
     """Equation for injection power upper limit
 
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
     p_hcd_injected_max: Maximum allowable value for injected power (MW)
     """
     return leq(
-        data_structure.current_drive_variables.p_hcd_injected_total_mw,
-        data_structure.current_drive_variables.p_hcd_injected_max,
+        data.current_drive.p_hcd_injected_total_mw,
+        data.current_drive.p_hcd_injected_max,
         constraint_registration,
     )
 
@@ -1004,7 +1004,7 @@ def constraint_equation_37(constraint_registration, data):
     eta_cd_norm_hcd_primary: normalised current drive efficiency (1.0e20 A/W-m²)
     """
     return leq(
-        data_structure.current_drive_variables.eta_cd_norm_hcd_primary,
+        data.current_drive.eta_cd_norm_hcd_primary,
         data.constraints.eta_cd_norm_hcd_primary_max,
         constraint_registration,
     )
@@ -1037,7 +1037,7 @@ def constraint_equation_40(constraint_registration, data):
     p_hcd_injected_min_mw: minimum auxiliary power (MW)
     """
     return geq(
-        data_structure.current_drive_variables.p_hcd_injected_total_mw,
+        data.current_drive.p_hcd_injected_total_mw,
         data.constraints.p_hcd_injected_min_mw,
         constraint_registration,
     )
@@ -1289,7 +1289,7 @@ def constraint_equation_59(constraint_registration, data):
     f_p_beam_shine_through: neutral beam shine-through fraction
     """
     return leq(
-        data_structure.current_drive_variables.f_p_beam_shine_through,
+        data.current_drive.f_p_beam_shine_through,
         data.constraints.f_p_beam_shine_through_max,
         constraint_registration,
     )
@@ -1498,7 +1498,7 @@ def constraint_equation_72(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(73, "MW", ">=")
-def constraint_equation_73(constraint_registration, _data):
+def constraint_equation_73(constraint_registration, data):
     """Lower limit to ensure separatrix power is greater than the L-H power + auxiliary power
     Related to constraint 15
 
@@ -1510,7 +1510,7 @@ def constraint_equation_73(constraint_registration, _data):
         data_structure.physics_variables.p_plasma_separatrix_mw,
         (
             data_structure.physics_variables.p_l_h_threshold_mw
-            + data_structure.current_drive_variables.p_hcd_injected_total_mw
+            + data.current_drive.p_hcd_injected_total_mw
         ),
         constraint_registration,
     )
@@ -1816,7 +1816,7 @@ def constraint_equation_90(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(91, "MW", ">=")
-def constraint_equation_91(constraint_registration, _data):
+def constraint_equation_91(constraint_registration, data):
     """Lower limit to ensure ECRH te is greater than required te for ignition
     at lower values for n and B. Or if the design point is ECRH heatable (if i_plasma_ignited==0)
     stellarators only (but in principle usable also for tokamaks).
@@ -1828,7 +1828,7 @@ def constraint_equation_91(constraint_registration, _data):
     if data_structure.physics_variables.i_plasma_ignited == 0:
         value = (
             data_structure.stellarator_variables.powerht_constraint
-            + data_structure.current_drive_variables.p_hcd_primary_extra_heat_mw
+            + data.current_drive.p_hcd_primary_extra_heat_mw
         )
     else:
         value = data_structure.stellarator_variables.powerht_constraint

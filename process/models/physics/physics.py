@@ -18,7 +18,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     impurity_radiation_module,
     numerics,
@@ -506,32 +505,32 @@ class Physics(Model):
         # ***************************** #
 
         # Pfirsch-Schlüter scaling for diamagnetic current
-        current_drive_variables.f_c_plasma_pfirsch_schluter_scene = ps_fraction_scene(
+        self.data.current_drive.f_c_plasma_pfirsch_schluter_scene = ps_fraction_scene(
             physics_variables.beta_total_vol_avg
         )
 
         if physics_variables.i_pfirsch_schluter_current == 1:
-            current_drive_variables.f_c_plasma_pfirsch_schluter = (
-                current_drive_variables.f_c_plasma_pfirsch_schluter_scene
+            self.data.current_drive.f_c_plasma_pfirsch_schluter = (
+                self.data.current_drive.f_c_plasma_pfirsch_schluter_scene
             )
 
         self.plasma_bootstrap_current.run()
 
         physics_variables.err242 = 0
         if (
-            current_drive_variables.f_c_plasma_bootstrap
-            > current_drive_variables.f_c_plasma_bootstrap_max
+            self.data.current_drive.f_c_plasma_bootstrap
+            > self.data.current_drive.f_c_plasma_bootstrap_max
         ) and physics_variables.i_bootstrap_current != 0:
-            current_drive_variables.f_c_plasma_bootstrap = min(
-                current_drive_variables.f_c_plasma_bootstrap,
-                current_drive_variables.f_c_plasma_bootstrap_max,
+            self.data.current_drive.f_c_plasma_bootstrap = min(
+                self.data.current_drive.f_c_plasma_bootstrap,
+                self.data.current_drive.f_c_plasma_bootstrap_max,
             )
             physics_variables.err242 = 1
 
-        current_drive_variables.f_c_plasma_internal = (
-            current_drive_variables.f_c_plasma_bootstrap
-            + current_drive_variables.f_c_plasma_diamagnetic
-            + current_drive_variables.f_c_plasma_pfirsch_schluter
+        self.data.current_drive.f_c_plasma_internal = (
+            self.data.current_drive.f_c_plasma_bootstrap
+            + self.data.current_drive.f_c_plasma_diamagnetic
+            + self.data.current_drive.f_c_plasma_pfirsch_schluter
         )
 
         # Plasma driven current fraction (Bootstrap + Diamagnetic
@@ -541,11 +540,11 @@ class Physics(Model):
         # the current drive proportion)
         physics_variables.err243 = 0
         if (
-            current_drive_variables.f_c_plasma_internal
+            self.data.current_drive.f_c_plasma_internal
             > physics_variables.f_c_plasma_non_inductive
         ):
-            current_drive_variables.f_c_plasma_internal = min(
-                current_drive_variables.f_c_plasma_internal,
+            self.data.current_drive.f_c_plasma_internal = min(
+                self.data.current_drive.f_c_plasma_internal,
                 physics_variables.f_c_plasma_non_inductive,
             )
             physics_variables.err243 = 1
@@ -557,12 +556,12 @@ class Physics(Model):
         #  Fraction of plasma current produced by auxiliary current drive
         physics_variables.f_c_plasma_auxiliary = (
             physics_variables.f_c_plasma_non_inductive
-            - current_drive_variables.f_c_plasma_internal
+            - self.data.current_drive.f_c_plasma_internal
         )
 
         # Auxiliary current drive power calculations
 
-        if current_drive_variables.i_hcd_calculations != 0:
+        if self.data.current_drive.i_hcd_calculations != 0:
             self.current_drive.current_drive()
 
         # ***************************** #
@@ -591,7 +590,7 @@ class Physics(Model):
 
         # Calculate neutral beam slowing down effects
         # If ignited, then ignore beam fusion effects
-        if (current_drive_variables.c_beam_total != 0.0e0) and (  # noqa: RUF069
+        if (self.data.current_drive.c_beam_total != 0.0e0) and (  # noqa: RUF069
             physics_variables.i_plasma_ignited == 0
         ):
             (
@@ -602,14 +601,14 @@ class Physics(Model):
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.b_plasma_total,
-                current_drive_variables.c_beam_total,
+                self.data.current_drive.c_beam_total,
                 physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_plasma_fuel_ions_vol_avg,
                 physics_variables.dlamie,
-                current_drive_variables.e_beam_kev,
+                self.data.current_drive.e_beam_kev,
                 physics_variables.f_plasma_fuel_deuterium,
                 physics_variables.f_plasma_fuel_tritium,
-                current_drive_variables.f_beam_tritium,
+                self.data.current_drive.f_beam_tritium,
                 physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.vol_plasma,
                 physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
@@ -758,7 +757,7 @@ class Physics(Model):
         # i.e. excludes neutrons and radiation, and also NBI orbit loss power,
         # which is assumed to be absorbed by the first wall
         pinj = (
-            current_drive_variables.p_hcd_injected_total_mw
+            self.data.current_drive.p_hcd_injected_total_mw
             if physics_variables.i_plasma_ignited == 0
             else 0.0
         )
@@ -851,7 +850,7 @@ class Physics(Model):
             kappa=physics_variables.kappa,
             kappa95=physics_variables.kappa95,
             p_non_alpha_charged_mw=physics_variables.p_non_alpha_charged_mw,
-            p_hcd_injected_total_mw=current_drive_variables.p_hcd_injected_total_mw,
+            p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
             plasma_current=physics_variables.plasma_current,
             pden_plasma_core_rad_mw=physics_variables.pden_plasma_core_rad_mw,
             rmajor=physics_variables.rmajor,
@@ -1014,7 +1013,7 @@ class Physics(Model):
             * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.p_hcd_injected_total_mw
+            + self.data.current_drive.p_hcd_injected_total_mw
         )
         physics_variables.f_p_plasma_separatrix_rad = (
             1.0e6
@@ -1099,8 +1098,7 @@ class Physics(Model):
         """
         return qstar / q0 - 1.0
 
-    @staticmethod
-    def plasma_composition():
+    def plasma_composition(self):
         """Calculates various plasma component fractional makeups.
 
         This subroutine determines the various plasma component fractional makeups.
@@ -1326,8 +1324,8 @@ class Physics(Model):
         # Average atomic masses of injected fuel species in the neutral beams
         # Only deuterium and tritium in the beams
         physics_variables.m_beam_amu = (
-            constants.M_DEUTERON_AMU * (1.0 - current_drive_variables.f_beam_tritium)
-        ) + (constants.M_TRITON_AMU * current_drive_variables.f_beam_tritium)
+            constants.M_DEUTERON_AMU * (1.0 - self.data.current_drive.f_beam_tritium)
+        ) + (constants.M_TRITON_AMU * self.data.current_drive.f_beam_tritium)
 
         # ======================================================================
 
@@ -1377,12 +1375,12 @@ class Physics(Model):
             + (4.0 * physics_variables.nd_plasma_alphas_vol_avg / constants.M_ALPHA_AMU)
             + (physics_variables.nd_plasma_protons_vol_avg / constants.M_PROTON_AMU)
             + (
-                (1.0 - current_drive_variables.f_beam_tritium)
+                (1.0 - self.data.current_drive.f_beam_tritium)
                 * physics_variables.nd_beam_ions
                 / constants.M_DEUTERON_AMU
             )
             + (
-                current_drive_variables.f_beam_tritium
+                self.data.current_drive.f_beam_tritium
                 * physics_variables.nd_beam_ions
                 / constants.M_TRITON_AMU
             )
@@ -1738,7 +1736,7 @@ class Physics(Model):
         po.oblnkl(self.outfile)
 
         if stellarator_variables.istell == 0:
-            self.density_limit.output_density_limit_information()
+            self.density_limit.output()
 
         po.oheadr(self.outfile, "Plasma Reactions :")
 
@@ -2235,14 +2233,14 @@ class Physics(Model):
             self.outfile,
             "Injection power to ions (MW)",
             "(p_hcd_injected_ions_mw)",
-            current_drive_variables.p_hcd_injected_ions_mw,
+            self.data.current_drive.p_hcd_injected_ions_mw,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Injection power to electrons (MW)",
             "(p_hcd_injected_electrons_mw)",
-            current_drive_variables.p_hcd_injected_electrons_mw,
+            self.data.current_drive.p_hcd_injected_electrons_mw,
             "OP ",
         )
         if physics_variables.i_plasma_ignited == 1:
@@ -3104,7 +3102,7 @@ class PlasmaBeta(Model):
         # R. D. Stambaugh scaling law
         physics_variables.beta_norm_max_stambaugh = (
             self.calculate_beta_norm_max_stambaugh(
-                f_c_plasma_bootstrap=current_drive_variables.f_c_plasma_bootstrap,
+                f_c_plasma_bootstrap=self.data.current_drive.f_c_plasma_bootstrap,
                 kappa=physics_variables.kappa,
                 aspect=physics_variables.aspect,
             )

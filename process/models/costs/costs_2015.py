@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     global_variables,
     heat_transport_variables,
     pf_power_variables,
@@ -494,7 +493,7 @@ class Costs2015(Model):
             28000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with neutral beam wall plug power (MW)
-        self.data.costs_2015.s_k[2] = current_drive_variables.pwpnb
+        self.data.costs_2015.s_k[2] = self.data.current_drive.pwpnb
         self.data.costs_2015.s_kref[2] = 120.0e0
         self.data.costs_2015.s_cost[2] = (
             self.data.costs_2015.s_cost_factor[2]
@@ -938,7 +937,7 @@ class Costs2015(Model):
         # Increased to 90 Mdollar because of press release
         self.data.costs_2015.s_cref[40] = 90.0e6
         #  Scale with total aux injected power (MW)
-        self.data.costs_2015.s_k[40] = current_drive_variables.p_hcd_injected_total_mw
+        self.data.costs_2015.s_k[40] = self.data.current_drive.p_hcd_injected_total_mw
         self.data.costs_2015.s_kref[40] = 50.0e0
         self.data.costs_2015.s_cost[40] = (
             self.data.costs_2015.s_cost_factor[40]
@@ -1106,7 +1105,7 @@ class Costs2015(Model):
         #  Cost of ITER NB H and CD
         self.data.costs_2015.s_cref[52] = 814.0e6
         #  Scale with total auxiliary injected power (MW)
-        self.data.costs_2015.s_k[52] = current_drive_variables.p_hcd_injected_total_mw
+        self.data.costs_2015.s_k[52] = self.data.current_drive.p_hcd_injected_total_mw
         self.data.costs_2015.s_kref[52] = 50.0e0
         self.data.costs_2015.s_cost[52] = (
             self.data.costs_2015.s_cost_factor[52]

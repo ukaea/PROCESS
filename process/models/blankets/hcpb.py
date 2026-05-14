@@ -9,7 +9,6 @@ from process.core import (
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     heat_transport_variables,
     physics_variables,
@@ -775,7 +774,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.data.fwbs.p_fw_rad_total_mw
             * self.data.first_wall.a_fw_outboard
             / self.data.first_wall.a_fw_total
-            + current_drive_variables.p_beam_orbit_loss_mw
+            + self.data.current_drive.p_beam_orbit_loss_mw
             + physics_variables.p_fw_alpha_mw
         )
         self.data.fwbs.psurffwi = self.data.fwbs.p_fw_rad_total_mw * (

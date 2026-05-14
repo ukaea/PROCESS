@@ -7,7 +7,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     numerics,
     pfcoil_variables,
@@ -49,17 +48,17 @@ class Build(Model):
         self.calculate_vertical_build(output=False)
 
         (
-            current_drive_variables.radius_beam_tangency,
-            current_drive_variables.radius_beam_tangency_max,
+            self.data.current_drive.radius_beam_tangency,
+            self.data.current_drive.radius_beam_tangency_max,
         ) = self.calculate_beam_port_size(
-            f_radius_beam_tangency_rmajor=current_drive_variables.f_radius_beam_tangency_rmajor,
+            f_radius_beam_tangency_rmajor=self.data.current_drive.f_radius_beam_tangency_rmajor,
             rmajor=physics_variables.rmajor,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             dx_tf_inboard_out_toroidal=tfcoil_variables.dx_tf_inboard_out_toroidal,
             dr_tf_outboard=self.data.build.dr_tf_outboard,
             r_tf_outboard_mid=self.data.build.r_tf_outboard_mid,
-            dx_beam_duct=current_drive_variables.dx_beam_duct,
-            dx_beam_shield=current_drive_variables.dx_beam_shield,
+            dx_beam_duct=self.data.current_drive.dx_beam_duct,
+            dx_beam_shield=self.data.current_drive.dx_beam_shield,
         )
 
     def calculate_beam_port_size(
@@ -2322,8 +2321,8 @@ class Build(Model):
 
             if (
                 CurrentDriveModel(
-                    current_drive_variables.i_hcd_primary
-                    or current_drive_variables.i_hcd_secondary
+                    self.data.current_drive.i_hcd_primary
+                    or self.data.current_drive.i_hcd_secondary
                 ).method
                 == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
@@ -2331,5 +2330,5 @@ class Build(Model):
                     self.mfile,
                     "Width of neutral beam duct where it passes between the TF coils (m)",
                     "(dx_beam_duct)",
-                    current_drive_variables.dx_beam_duct,
+                    self.data.current_drive.dx_beam_duct,
                 )

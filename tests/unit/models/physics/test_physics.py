@@ -7,27 +7,12 @@ import pytest
 
 from process.core import constants
 from process.data_structure import (
-    current_drive_variables,
     impurity_radiation_module,
     physics_variables,
 )
-from process.models.physics.bootstrap_current import PlasmaBootstrapCurrent
-from process.models.physics.confinement_time import PlasmaConfinementTime
-from process.models.physics.current_drive import (
-    CurrentDrive,
-    ElectronBernstein,
-    ElectronCyclotron,
-    IonCyclotron,
-    LowerHybrid,
-    NeutralBeam,
-)
-from process.models.physics.density_limit import PlasmaDensityLimit
-from process.models.physics.exhaust import PlasmaExhaust
 from process.models.physics.impurity_radiation import initialise_imprad
-from process.models.physics.l_h_transition import PlasmaConfinementTransition
 from process.models.physics.physics import (
     DetailedPhysics,
-    Physics,
     PlasmaBeta,
     PlasmaInductance,
     calculate_cylindrical_safety_factor,
@@ -35,41 +20,17 @@ from process.models.physics.physics import (
     res_diff_time,
     rether,
 )
-from process.models.physics.plasma_current import PlasmaCurrent, PlasmaDiamagneticCurrent
-from process.models.physics.plasma_fields import PlasmaFields
-from process.models.physics.plasma_geometry import PlasmaGeom
 from process.models.physics.plasma_profiles import PlasmaProfile
 
 
 @pytest.fixture
-def physics():
-    """Provides Physics object for testing.
+def physics(process_models):
+    """Fixture to get the Physics instance from process_models.
 
     :returns: initialised Physics object
     :rtype: process.physics.Physics
     """
-    return Physics(
-        PlasmaProfile(),
-        CurrentDrive(
-            PlasmaProfile(),
-            electron_cyclotron=ElectronCyclotron(plasma_profile=PlasmaProfile()),
-            ion_cyclotron=IonCyclotron(plasma_profile=PlasmaProfile()),
-            neutral_beam=NeutralBeam(plasma_profile=PlasmaProfile()),
-            electron_bernstein=ElectronBernstein(plasma_profile=PlasmaProfile()),
-            lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
-        ),
-        PlasmaBeta(),
-        PlasmaInductance(),
-        PlasmaDensityLimit(),
-        PlasmaExhaust(),
-        PlasmaBootstrapCurrent(plasma_profile=PlasmaProfile()),
-        PlasmaConfinementTime(),
-        PlasmaConfinementTransition(),
-        PlasmaCurrent(),
-        PlasmaFields(),
-        plasma_dia_current=PlasmaDiamagneticCurrent(),
-        plasma_geometry=PlasmaGeom(),
-    )
+    return process_models.physics
 
 
 def test_calculate_poloidal_beta():
@@ -1744,7 +1705,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     initialise_imprad()
 
     monkeypatch.setattr(
-        current_drive_variables, "f_beam_tritium", plasmacompositionparam.f_beam_tritium
+        physics.data.current_drive,
+        "f_beam_tritium",
+        plasmacompositionparam.f_beam_tritium,
     )
 
     monkeypatch.setattr(
@@ -3364,7 +3327,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     )
 
 
-def test_calculate_plasma_masses():
+def test_calculate_plasma_masses(physics):
     """Test calculate_plasma_masses()"""
     m_fuel_amu = 2.5
     m_ions_total_amu = 3.0
@@ -3380,7 +3343,7 @@ def test_calculate_plasma_masses():
         m_plasma_alpha,
         m_plasma_electron,
         m_plasma,
-    ) = Physics.calculate_plasma_masses(
+    ) = physics.calculate_plasma_masses(
         m_fuel_amu=m_fuel_amu,
         m_ions_total_amu=m_ions_total_amu,
         nd_plasma_ions_total_vol_avg=nd_plasma_ions_total_vol_avg,
@@ -3397,11 +3360,11 @@ def test_calculate_plasma_masses():
     assert m_plasma == pytest.approx(4.982528145131389e-05, abs=1e-30)
 
 
-def test_calculate_current_profile_index_wesson():
+def test_calculate_current_profile_index_wesson(physics):
     """Test calculate_current_profile_index_wesson()."""
     qstar = 3.5
     q0 = 1.5
-    result = Physics.calculate_current_profile_index_wesson(qstar, q0)
+    result = physics.calculate_current_profile_index_wesson(qstar, q0)
     assert result == pytest.approx(1.33333, abs=0.0001)
 
 

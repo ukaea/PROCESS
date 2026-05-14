@@ -11,13 +11,14 @@ import scipy as sp
 
 from process.core import constants
 from process.core.exceptions import ProcessValueError
+from process.core.model import Model
 from process.data_structure import divertor_variables, physics_variables
 from process.models.physics.profiles import NeProfile, PlasmaProfileShapeType, TeProfile
 
 logger = logging.getLogger(__name__)
 
 
-class PlasmaProfile:
+class PlasmaProfile(Model):
     """Plasma profile class. Initiates the electron density and electron temperature
     profiles and handles the required physics variables.
     """
@@ -46,6 +47,9 @@ class PlasmaProfile:
         profiles.
         """
         self.parameterise_plasma()
+
+    def output(self):
+        """This model doesn't have any output"""
 
     def parameterise_plasma(self):
         """Initializes the density and temperature

@@ -17,7 +17,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     physics_variables,
     stellarator_variables,
 )
@@ -1121,12 +1120,12 @@ class PlasmaDiamagneticCurrent(Model):
     def run(self):
         """Calculate plasma diamagnetic current fractions using scalings."""
         # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
-        current_drive_variables.f_c_plasma_diamagnetic_hender = (
+        self.data.current_drive.f_c_plasma_diamagnetic_hender = (
             self.diamagnetic_fraction_hender(physics_variables.beta_total_vol_avg)
         )
 
         # SCENE scaling for diamagnetic current
-        current_drive_variables.f_c_plasma_diamagnetic_scene = (
+        self.data.current_drive.f_c_plasma_diamagnetic_scene = (
             self.diamagnetic_fraction_scene(
                 physics_variables.beta_total_vol_avg,
                 physics_variables.q95,
@@ -1138,15 +1137,15 @@ class PlasmaDiamagneticCurrent(Model):
             physics_variables.i_diamagnetic_current
             == PlasmaDiamagneticCurrentModel.HENDER_ST_FIT
         ):
-            current_drive_variables.f_c_plasma_diamagnetic = (
-                current_drive_variables.f_c_plasma_diamagnetic_hender
+            self.data.current_drive.f_c_plasma_diamagnetic = (
+                self.data.current_drive.f_c_plasma_diamagnetic_hender
             )
         elif (
             physics_variables.i_diamagnetic_current
             == PlasmaDiamagneticCurrentModel.SCENE_FIT
         ):
-            current_drive_variables.f_c_plasma_diamagnetic = (
-                current_drive_variables.f_c_plasma_diamagnetic_scene
+            self.data.current_drive.f_c_plasma_diamagnetic = (
+                self.data.current_drive.f_c_plasma_diamagnetic_scene
             )
 
     def output(self):
@@ -1170,20 +1169,20 @@ class PlasmaDiamagneticCurrent(Model):
             self.outfile,
             "Diamagnetic fraction (Hender)",
             "(f_c_plasma_diamagnetic_hender)",
-            current_drive_variables.f_c_plasma_diamagnetic_hender,
+            self.data.current_drive.f_c_plasma_diamagnetic_hender,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Diamagnetic fraction (SCENE)",
             "(f_c_plasma_diamagnetic_scene)",
-            current_drive_variables.f_c_plasma_diamagnetic_scene,
+            self.data.current_drive.f_c_plasma_diamagnetic_scene,
             "OP ",
         )
         po.oblnkl(self.outfile)
         if (
             physics_variables.i_diamagnetic_current == PlasmaDiamagneticCurrentModel.NONE
-            and current_drive_variables.f_c_plasma_diamagnetic_scene > 0.01e0
+            and self.data.current_drive.f_c_plasma_diamagnetic_scene > 0.01e0
         ):
             # Error to show if diamagnetic current is above 1% but not used
             logger.error(

@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     heat_transport_variables,
     pfcoil_variables,
@@ -469,9 +468,9 @@ class Buildings(Model):
 
         # Heating and Current Drive facility
         # Dimensions based upon estimates from M. Henderson, HCD Development Group
-        # current_drive_variables.i_hcd_primary = switch for current drive model
+        # self.data.current_drive.i_hcd_primary = switch for current drive model
         if (
-            CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+            CurrentDriveModel(self.data.current_drive.i_hcd_primary).method
             == CurrentDriveMethodType.NEUTRAL_BEAM
         ):
             # NBI technology will be situated within the reactor building
@@ -1024,7 +1023,7 @@ class Buildings(Model):
                 self.data.buildings.reactor_hall_h,
             )
             if (
-                CurrentDriveModel(current_drive_variables.i_hcd_primary).method
+                CurrentDriveModel(self.data.current_drive.i_hcd_primary).method
                 == CurrentDriveMethodType.NEUTRAL_BEAM
             ):
                 po.ocmmnt(
@@ -1118,7 +1117,7 @@ class Buildings(Model):
                 hotcell_vol_ext,
             )
             po.oblnkl(self.outfile)
-            if current_drive_variables.i_hcd_primary not in {5, 8}:
+            if self.data.current_drive.i_hcd_primary not in {5, 8}:
                 po.ovarre(
                     self.outfile,
                     "HCD (EC/EBW) building footprint (m2)",

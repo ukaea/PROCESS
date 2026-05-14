@@ -617,12 +617,13 @@ class Models:
         self.fw = FirstWall()
         self.blanket_library = BlanketLibrary(fw=self.fw)
         self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
+        self.neutral_beam = NeutralBeam(plasma_profile=self.plasma_profile)
         self.current_drive = CurrentDrive(
             plasma_profile=self.plasma_profile,
             electron_cyclotron=ElectronCyclotron(plasma_profile=self.plasma_profile),
             ion_cyclotron=IonCyclotron(plasma_profile=self.plasma_profile),
             lower_hybrid=LowerHybrid(plasma_profile=self.plasma_profile),
-            neutral_beam=NeutralBeam(plasma_profile=self.plasma_profile),
+            neutral_beam=self.neutral_beam,
             electron_bernstein=ElectronBernstein(plasma_profile=self.plasma_profile),
         )
         self.plasma_beta = PlasmaBeta()
@@ -732,6 +733,12 @@ class Models:
             self.resistive_tf_coil,
             self.plasma_confinement,
             self.plasma_beta,
+            self.current_drive,
+            self.neutral_beam,
+            self.plasma_density_limit,
+            self.plasma_profile,
+            self.plasma_dia_current,
+            self.plasma_bootstrap_current,
         )
 
     def setup_data_structure(self):

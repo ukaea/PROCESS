@@ -6,7 +6,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    current_drive_variables,
     heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
@@ -2265,7 +2264,9 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(current_drive_variables, "pwpnb", calcbuildingcostsparam.pwpnb)
+    monkeypatch.setattr(
+        costs2015.data.current_drive, "pwpnb", calcbuildingcostsparam.pwpnb
+    )
 
     monkeypatch.setattr(
         pfcoil_variables,
@@ -15917,7 +15918,7 @@ def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, co
     """
 
     monkeypatch.setattr(
-        current_drive_variables,
+        costs2015.data.current_drive,
         "p_hcd_injected_total_mw",
         calcremainingsubsystemsparam.p_hcd_injected_total_mw,
     )

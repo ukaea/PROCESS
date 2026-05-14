@@ -12,7 +12,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    current_drive_variables,
     heat_transport_variables,
     numerics,
     pf_power_variables,
@@ -857,7 +856,7 @@ class Power(Model):
         # Heat lost in power supplies for heating and current drive
         heat_transport_variables.p_hcd_electric_loss_mw = (
             heat_transport_variables.p_hcd_electric_total_mw
-            - current_drive_variables.p_hcd_injected_total_mw
+            - self.data.current_drive.p_hcd_injected_total_mw
         )
 
         # Liquid metal breeder/coolant
@@ -883,9 +882,9 @@ class Power(Model):
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 + heat_transport_variables.p_blkt_breeder_pump_mw
                 + self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
-                + current_drive_variables.p_beam_orbit_loss_mw
+                + self.data.current_drive.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
-                + current_drive_variables.p_beam_shine_through_mw
+                + self.data.current_drive.p_beam_shine_through_mw
             )
         else:
             # No secondary liquid metal breeder/coolant
@@ -894,9 +893,9 @@ class Power(Model):
                 + self.data.fwbs.p_fw_rad_total_mw
                 + self.data.fwbs.p_blkt_nuclear_heat_total_mw
                 + self.data.primary_pumping.p_fw_blkt_coolant_pump_mw
-                + current_drive_variables.p_beam_orbit_loss_mw
+                + self.data.current_drive.p_beam_orbit_loss_mw
                 + physics_variables.p_fw_alpha_mw
-                + current_drive_variables.p_beam_shine_through_mw
+                + self.data.current_drive.p_beam_shine_through_mw
             )
 
         #  Total power deposited in first wall coolant (MW)
@@ -904,9 +903,9 @@ class Power(Model):
             self.data.fwbs.p_fw_nuclear_heat_total_mw
             + self.data.fwbs.p_fw_rad_total_mw
             + heat_transport_variables.p_fw_coolant_pump_mw
-            + current_drive_variables.p_beam_orbit_loss_mw
+            + self.data.current_drive.p_beam_orbit_loss_mw
             + physics_variables.p_fw_alpha_mw
-            + current_drive_variables.p_beam_shine_through_mw
+            + self.data.current_drive.p_beam_shine_through_mw
         )
 
         #  Total power deposited in blanket coolant (MW)
@@ -1122,13 +1121,13 @@ class Power(Model):
             self.outfile,
             "Neutral beam shine-through heat deposited in FW [MW]",
             "(p_beam_shine_through_mw)",
-            current_drive_variables.p_beam_shine_through_mw,
+            self.data.current_drive.p_beam_shine_through_mw,
         )
         po.ovarre(
             self.outfile,
             "Neutral beam orbit loss heat deposited in FW [MW]",
             "(p_beam_orbit_loss_mw)",
-            current_drive_variables.p_beam_orbit_loss_mw,
+            self.data.current_drive.p_beam_orbit_loss_mw,
         )
 
         po.ovarre(

@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     heat_transport_variables,
     numerics,
@@ -2507,7 +2506,7 @@ def test_power2(power2param, monkeypatch, power):
     monkeypatch.setattr(power.data.costs, "ireactor", power2param.ireactor)
 
     monkeypatch.setattr(
-        current_drive_variables,
+        power.data.current_drive,
         "p_hcd_injected_total_mw",
         power2param.p_hcd_injected_total_mw,
     )

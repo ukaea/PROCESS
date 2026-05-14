@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    current_drive_variables,
     divertor_variables,
     physics_variables,
 )
@@ -164,7 +163,7 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        current_drive_variables,
+        dcll.data.current_drive,
         "p_beam_orbit_loss_mw",
         dcllneutronicsandpowerparam.p_beam_orbit_loss_mw,
     )

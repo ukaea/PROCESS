@@ -1,6 +1,5 @@
 from process.core.model import DataStructure
 from process.data_structure import (
-    current_drive_variables,
     numerics,
     pfcoil_variables,
     physics_variables,
@@ -41,7 +40,7 @@ def st_init(data: DataStructure):
 
     #  Turn off current drive
 
-    current_drive_variables.i_hcd_calculations = 0
+    data.current_drive.i_hcd_calculations = 0
 
     #  Times for different phases
 
