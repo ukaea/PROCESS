@@ -2029,13 +2029,24 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain = critical_superconductor_info.bc20m
         superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain = critical_superconductor_info.tc0m
         superconducting_tf_coil_variables.c_tf_turn_cables_critical = (
-            critical_superconductor_info.c_tf_turn_cables_critical
+            critical_superconductor_info.c_turn_cables_critical
         )
 
         if tfcoil_variables.i_str_wp == 0:
             strain = tfcoil_variables.str_tf_con_res
         else:
             strain = tfcoil_variables.str_wp
+
+        tfcoil_variables.temp_tf_superconductor_margin = self.calculate_superconductor_temperature_margin(
+            i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
+            j_superconductor=superconducting_tf_coil_variables.j_tf_superconductor,
+            b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
+            strain=strain,
+            bc20m=superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain,
+            tc0m=superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
+            c0=1.0e10,
+            temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
+        )
 
         # Do current density protection calculation
         # Only setup for Nb3Sn at present.

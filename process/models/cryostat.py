@@ -111,14 +111,14 @@ class Cryostat(Model):
         )
         po.ovarrf(
             self.outfile,
-            "Cryostat structure volume (m^3)",
+            "Cryostat structure volume (m³)",
             "(vol_cryostat)",
             self.data.fwbs.vol_cryostat,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
-            "Cryostat internal volume (m^3)",
+            "Cryostat internal volume (m³)",
             "(vol_cryostat_internal)",
             self.data.fwbs.vol_cryostat_internal,
             "OP ",

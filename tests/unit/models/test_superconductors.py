@@ -145,7 +145,7 @@ def test_jcrit_nbti(jcritnbtiparam):
 
 
 def test_jcrit_rebco():
-    jcrit_rebco, validity = superconductors.jcrit_rebco(4.75, 7.0)
+    jcrit_rebco, validity, _, _ = superconductors.jcrit_rebco(4.75, 7.0)
 
     assert jcrit_rebco == pytest.approx(55870234414.171684)
     assert validity
