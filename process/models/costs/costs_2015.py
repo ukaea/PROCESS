@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
     global_variables,
-    heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
@@ -70,7 +69,7 @@ class Costs2015(Model):
 
         # Electrical output (given availability) for a whole year
         self.data.costs_2015.mean_electric_output = (
-            heat_transport_variables.p_plant_electric_net_mw * self.data.costs.cpfact
+            self.data.heat_transport.p_plant_electric_net_mw * self.data.costs.cpfact
         )
         self.data.costs_2015.annual_electric_output = (
             self.data.costs_2015.mean_electric_output * 24.0e0 * 365.25e0
@@ -415,7 +414,7 @@ class Costs2015(Model):
             self.outfile,
             "Net electric output (MW)",
             "(p_plant_electric_net_mw)",
-            heat_transport_variables.p_plant_electric_net_mw,
+            self.data.heat_transport.p_plant_electric_net_mw,
             "OP ",
         )
         po.ovarrf(
@@ -507,7 +506,7 @@ class Costs2015(Model):
             130000.0e0 * self.data.costs.light_build_cost_per_vol
         )
         # Scale with the total heat load on the cryoplant at ~4.5K (kW)
-        self.data.costs_2015.s_k[3] = heat_transport_variables.helpow / 1.0e3
+        self.data.costs_2015.s_k[3] = self.data.heat_transport.helpow / 1.0e3
         self.data.costs_2015.s_kref[3] = 61.0e0
         self.data.costs_2015.s_cost[3] = (
             self.data.costs_2015.s_cost_factor[3]
@@ -567,8 +566,8 @@ class Costs2015(Model):
         )
         # Scale with total thermal power removed from the core (MW)
         self.data.costs_2015.s_k[7] = (
-            heat_transport_variables.p_plant_primary_heat_mw
-            + heat_transport_variables.p_plant_secondary_heat_mw
+            self.data.heat_transport.p_plant_primary_heat_mw
+            + self.data.heat_transport.p_plant_secondary_heat_mw
         )
         self.data.costs_2015.s_kref[7] = 880.0e0
         self.data.costs_2015.s_cost[7] = (
@@ -840,7 +839,7 @@ class Costs2015(Model):
         #  ITER reference cost (2014 $)
         self.data.costs_2015.s_cref[32] = 86.0e6
         #  Scale with 4.5K cryopower (W)
-        self.data.costs_2015.s_k[32] = heat_transport_variables.helpow
+        self.data.costs_2015.s_k[32] = self.data.heat_transport.helpow
         self.data.costs_2015.s_kref[32] = 50.0e3
         self.data.costs_2015.s_cost[32] = (
             self.data.costs_2015.s_cost_factor[32]
@@ -868,7 +867,7 @@ class Costs2015(Model):
         #  Cost of reference energy conversion system (Rolls Royce)
         self.data.costs_2015.s_cref[34] = 511.0e6
         #  Scale with gross electric power (MWe)
-        self.data.costs_2015.s_k[34] = heat_transport_variables.p_plant_electric_gross_mw
+        self.data.costs_2015.s_k[34] = self.data.heat_transport.p_plant_electric_gross_mw
         self.data.costs_2015.s_kref[34] = 692.0e0
         self.data.costs_2015.s_cost[34] = (
             self.data.costs_2015.s_cost_factor[34]
@@ -953,8 +952,8 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[42] = 40.0e6
         #  Scale with total thermal power removed from fusion core (MW)
         self.data.costs_2015.s_k[42] = (
-            heat_transport_variables.p_plant_primary_heat_mw
-            + heat_transport_variables.p_plant_secondary_heat_mw
+            self.data.heat_transport.p_plant_primary_heat_mw
+            + self.data.heat_transport.p_plant_secondary_heat_mw
         )
         self.data.costs_2015.s_kref[42] = 550.0e0
         self.data.costs_2015.s_cost[42] = (
@@ -986,8 +985,8 @@ class Costs2015(Model):
         self.data.costs_2015.s_cref[44] = 724.0e6
         #  Scale with total thermal power removed from fusion core (MW)
         self.data.costs_2015.s_k[44] = (
-            heat_transport_variables.p_plant_primary_heat_mw
-            + heat_transport_variables.p_plant_secondary_heat_mw
+            self.data.heat_transport.p_plant_primary_heat_mw
+            + self.data.heat_transport.p_plant_secondary_heat_mw
         )
         self.data.costs_2015.s_kref[44] = 550.0e0
         self.data.costs_2015.s_cost[44] = (
@@ -1073,7 +1072,7 @@ class Costs2015(Model):
         #  Cost of ITER Cryoplant and distribution
         self.data.costs_2015.s_cref[50] = 397.0e6
         #  Scale with heat removal at 4.5 K approx (W)
-        self.data.costs_2015.s_k[50] = heat_transport_variables.helpow
+        self.data.costs_2015.s_k[50] = self.data.heat_transport.helpow
         self.data.costs_2015.s_kref[50] = 50000.0e0
         self.data.costs_2015.s_cost[50] = (
             self.data.costs_2015.s_cost_factor[50]

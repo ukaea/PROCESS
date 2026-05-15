@@ -4,7 +4,6 @@ from process.core import (
 )
 from process.data_structure import (
     divertor_variables,
-    heat_transport_variables,
     physics_variables,
 )
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
@@ -309,15 +308,15 @@ class DCLL(InboardBlanket, OutboardBlanket):
         if i_p_coolant_pumping == PumpingPowerModelTypes.FRACTION_OF_HEAT:
             # User sets mechanical pumping power directly
             (
-                heat_transport_variables.p_fw_coolant_pump_mw,
-                heat_transport_variables.p_blkt_coolant_pump_mw,
-                heat_transport_variables.p_shld_coolant_pump_mw,
-                heat_transport_variables.p_div_coolant_pump_mw,
+                self.data.heat_transport.p_fw_coolant_pump_mw,
+                self.data.heat_transport.p_blkt_coolant_pump_mw,
+                self.data.heat_transport.p_shld_coolant_pump_mw,
+                self.data.heat_transport.p_div_coolant_pump_mw,
             ) = pumping_powers_as_fractions(
-                f_p_fw_coolant_pump_total_heat=heat_transport_variables.f_p_fw_coolant_pump_total_heat,
-                f_p_blkt_coolant_pump_total_heat=heat_transport_variables.f_p_blkt_coolant_pump_total_heat,
-                f_p_shld_coolant_pump_total_heat=heat_transport_variables.f_p_shld_coolant_pump_total_heat,
-                f_p_div_coolant_pump_total_heat=heat_transport_variables.f_p_div_coolant_pump_total_heat,
+                f_p_fw_coolant_pump_total_heat=self.data.heat_transport.f_p_fw_coolant_pump_total_heat,
+                f_p_blkt_coolant_pump_total_heat=self.data.heat_transport.f_p_blkt_coolant_pump_total_heat,
+                f_p_shld_coolant_pump_total_heat=self.data.heat_transport.f_p_shld_coolant_pump_total_heat,
+                f_p_div_coolant_pump_total_heat=self.data.heat_transport.f_p_div_coolant_pump_total_heat,
                 p_fw_nuclear_heat_total_mw=self.data.fwbs.p_fw_nuclear_heat_total_mw,
                 psurffwi=self.data.fwbs.psurffwi,
                 psurffwo=self.data.fwbs.psurffwo,
@@ -336,8 +335,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
             # Mechanical pumping power is calculated for first wall and blanket
             self.thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
-            heat_transport_variables.p_div_coolant_pump_mw = (
-                heat_transport_variables.f_p_div_coolant_pump_total_heat
+            self.data.heat_transport.p_div_coolant_pump_mw = (
+                self.data.heat_transport.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
                     + self.data.fwbs.p_div_nuclear_heat_total_mw
@@ -346,8 +345,8 @@ class DCLL(InboardBlanket, OutboardBlanket):
             )
 
             # Shield power is negligible and this model doesn't have nuclear heating to the shield
-            heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.f_p_shld_coolant_pump_total_heat * 0.0
+            self.data.heat_transport.p_shld_coolant_pump_mw = (
+                self.data.heat_transport.f_p_shld_coolant_pump_total_heat * 0.0
             )
 
         if output:
@@ -361,14 +360,14 @@ class DCLL(InboardBlanket, OutboardBlanket):
                     self.outfile,
                     "Mechanical pumping power for first wall (MW)",
                     "(p_fw_coolant_pump_mw)",
-                    heat_transport_variables.p_fw_coolant_pump_mw,
+                    self.data.heat_transport.p_fw_coolant_pump_mw,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Mechanical pumping power for blanket (MW)",
                     "(p_blkt_coolant_pump_mw)",
-                    heat_transport_variables.p_blkt_coolant_pump_mw,
+                    self.data.heat_transport.p_blkt_coolant_pump_mw,
                     "OP ",
                 )
             else:
@@ -385,7 +384,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
                     self.outfile,
                     "Mechanical pumping power for liquid metal breeder (MW)",
                     "(p_blkt_breeder_pump_mw)",
-                    heat_transport_variables.p_blkt_breeder_pump_mw,
+                    self.data.heat_transport.p_blkt_breeder_pump_mw,
                     "OP ",
                 )
 
@@ -393,14 +392,14 @@ class DCLL(InboardBlanket, OutboardBlanket):
                 self.outfile,
                 "Mechanical pumping power for divertor (MW)",
                 "(p_div_coolant_pump_mw)",
-                heat_transport_variables.p_div_coolant_pump_mw,
+                self.data.heat_transport.p_div_coolant_pump_mw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for shield and vacuum vessel (MW)",
                 "(p_shld_coolant_pump_mw)",
-                heat_transport_variables.p_shld_coolant_pump_mw,
+                self.data.heat_transport.p_shld_coolant_pump_mw,
                 "OP ",
             )
 

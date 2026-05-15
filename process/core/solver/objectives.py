@@ -4,7 +4,6 @@ from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure import (
     divertor_variables,
-    heat_transport_variables,
     pf_power_variables,
     physics_variables,
     tfcoil_variables,
@@ -107,7 +106,7 @@ def objective_function(minmax: int, data: DataStructure) -> float:
                 data.times.t_plant_pulse_burn / 7200.0
             )
         case 17:
-            objective_metric = heat_transport_variables.p_plant_electric_net_mw / 500.0
+            objective_metric = data.heat_transport.p_plant_electric_net_mw / 500.0
         case 18:
             objective_metric = 1.0
         case 19:

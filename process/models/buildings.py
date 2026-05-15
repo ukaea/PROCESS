@@ -7,7 +7,6 @@ from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
     divertor_variables,
-    heat_transport_variables,
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
@@ -89,7 +88,7 @@ class Buildings(Model):
                 - self.data.build.dz_vv_lower,
                 self.data.fwbs.whtshld,
                 self.data.fwbs.r_cryostat_inboard,
-                heat_transport_variables.helpow,
+                self.data.heat_transport.helpow,
             )
 
     def bldgs(

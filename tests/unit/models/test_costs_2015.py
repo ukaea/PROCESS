@@ -6,7 +6,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
@@ -2275,19 +2274,19 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs2015.data.heat_transport,
         "p_plant_primary_heat_mw",
         calcbuildingcostsparam.p_plant_primary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs2015.data.heat_transport,
         "p_plant_secondary_heat_mw",
         calcbuildingcostsparam.p_plant_secondary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "helpow", calcbuildingcostsparam.helpow
+        costs2015.data.heat_transport, "helpow", calcbuildingcostsparam.helpow
     )
 
     monkeypatch.setattr(
@@ -11382,7 +11381,7 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "helpow", calcnplantandvvcostsparam.helpow
+        costs2015.data.heat_transport, "helpow", calcnplantandvvcostsparam.helpow
     )
 
     monkeypatch.setattr(
@@ -13633,7 +13632,7 @@ def test_calc_energy_conversion_system(
     """
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs2015.data.heat_transport,
         "p_plant_electric_gross_mw",
         calcenergyconversionsystemparam.p_plant_electric_gross_mw,
     )
@@ -15952,19 +15951,19 @@ def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, co
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs2015.data.heat_transport,
         "p_plant_primary_heat_mw",
         calcremainingsubsystemsparam.p_plant_primary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables,
+        costs2015.data.heat_transport,
         "p_plant_secondary_heat_mw",
         calcremainingsubsystemsparam.p_plant_secondary_heat_mw,
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "helpow", calcremainingsubsystemsparam.helpow
+        costs2015.data.heat_transport, "helpow", calcremainingsubsystemsparam.helpow
     )
 
     monkeypatch.setattr(costs2015.data.fwbs, "m_vv", calcremainingsubsystemsparam.m_vv)

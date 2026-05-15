@@ -13,7 +13,6 @@ from process.core import (
 from process.core.exceptions import ProcessError, ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    heat_transport_variables,
     physics_variables,
 )
 from process.models.physics.plasma_profiles import PlasmaProfile
@@ -1880,7 +1879,7 @@ class CurrentDrive(Model):
                 )
 
                 # Wall plug power
-                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                self.data.heat_transport.p_hcd_secondary_electric_mw = (
                     self.data.current_drive.p_hcd_secondary_injected_mw
                     + self.data.current_drive.p_hcd_secondary_extra_heat_mw
                 ) / self.data.current_drive.eta_lowhyb_injector_wall_plug
@@ -1906,7 +1905,7 @@ class CurrentDrive(Model):
                 )
 
                 # Wall plug power
-                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                self.data.heat_transport.p_hcd_secondary_electric_mw = (
                     self.data.current_drive.p_hcd_secondary_injected_mw
                     + self.data.current_drive.p_hcd_secondary_extra_heat_mw
                 ) / self.data.current_drive.eta_icrh_injector_wall_plug
@@ -1932,7 +1931,7 @@ class CurrentDrive(Model):
                 )
 
                 # Wall plug power
-                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                self.data.heat_transport.p_hcd_secondary_electric_mw = (
                     self.data.current_drive.p_hcd_secondary_injected_mw
                     + self.data.current_drive.p_hcd_secondary_extra_heat_mw
                 ) / self.data.current_drive.eta_ecrh_injector_wall_plug
@@ -1958,7 +1957,7 @@ class CurrentDrive(Model):
                 )
 
                 # Wall plug power
-                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                self.data.heat_transport.p_hcd_secondary_electric_mw = (
                     self.data.current_drive.p_hcd_secondary_injected_mw
                     + self.data.current_drive.p_hcd_secondary_extra_heat_mw
                 ) / self.data.current_drive.eta_ebw_injector_wall_plug
@@ -2027,7 +2026,7 @@ class CurrentDrive(Model):
                     / self.data.current_drive.eta_beam_injector_wall_plug
                 )  # neutral beam wall plug power
 
-                heat_transport_variables.p_hcd_secondary_electric_mw = (
+                self.data.heat_transport.p_hcd_secondary_electric_mw = (
                     self.data.current_drive.pwpnb
                 )
 
@@ -2067,7 +2066,7 @@ class CurrentDrive(Model):
                 )
 
                 # Wall plug power
-                heat_transport_variables.p_hcd_primary_electric_mw = (
+                self.data.heat_transport.p_hcd_primary_electric_mw = (
                     self.data.current_drive.p_hcd_primary_injected_mw
                     + self.data.current_drive.p_hcd_primary_extra_heat_mw
                 ) / self.data.current_drive.eta_lowhyb_injector_wall_plug
@@ -2093,7 +2092,7 @@ class CurrentDrive(Model):
                 )
 
                 # Wall plug power
-                heat_transport_variables.p_hcd_primary_electric_mw = (
+                self.data.heat_transport.p_hcd_primary_electric_mw = (
                     self.data.current_drive.p_hcd_primary_injected_mw
                     + self.data.current_drive.p_hcd_primary_extra_heat_mw
                 ) / self.data.current_drive.eta_icrh_injector_wall_plug
@@ -2125,7 +2124,7 @@ class CurrentDrive(Model):
                 )
 
                 # Wall plug to injector efficiency
-                heat_transport_variables.p_hcd_primary_electric_mw = (
+                self.data.heat_transport.p_hcd_primary_electric_mw = (
                     self.data.current_drive.p_hcd_primary_injected_mw
                     + self.data.current_drive.p_hcd_primary_extra_heat_mw
                 ) / self.data.current_drive.eta_ecrh_injector_wall_plug
@@ -2156,7 +2155,7 @@ class CurrentDrive(Model):
                 )
 
                 # Wall plug to injector efficiency
-                heat_transport_variables.p_hcd_primary_electric_mw = (
+                self.data.heat_transport.p_hcd_primary_electric_mw = (
                     self.data.current_drive.p_hcd_primary_injected_mw
                     + self.data.current_drive.p_hcd_primary_extra_heat_mw
                 ) / self.data.current_drive.eta_ebw_injector_wall_plug
@@ -2225,7 +2224,7 @@ class CurrentDrive(Model):
                 ) / self.data.current_drive.eta_beam_injector_wall_plug
 
                 # Neutral beam wall plug power
-                heat_transport_variables.p_hcd_primary_electric_mw = (
+                self.data.heat_transport.p_hcd_primary_electric_mw = (
                     self.data.current_drive.pwpnb
                 )
                 self.data.current_drive.eta_hcd_primary_injector_wall_plug = (
@@ -2276,14 +2275,14 @@ class CurrentDrive(Model):
             )
 
             # Total wall plug power for all heating systems
-            heat_transport_variables.p_hcd_electric_total_mw = (
-                heat_transport_variables.p_hcd_primary_electric_mw
-                + heat_transport_variables.p_hcd_secondary_electric_mw
+            self.data.heat_transport.p_hcd_electric_total_mw = (
+                self.data.heat_transport.p_hcd_primary_electric_mw
+                + self.data.heat_transport.p_hcd_secondary_electric_mw
             )
 
             # Reset injected power to zero for ignited plasma (fudge)
             if physics_variables.i_plasma_ignited == 1:
-                heat_transport_variables.p_hcd_electric_total_mw = 0.0e0
+                self.data.heat_transport.p_hcd_electric_total_mw = 0.0e0
 
             # Ratio of fusion to input (injection+ohmic) power
             self.data.current_drive.big_q_plasma = (
@@ -2500,7 +2499,7 @@ class CurrentDrive(Model):
             self.outfile,
             "Wall plug electric power of primary system",
             "(p_hcd_primary_electric_mw)",
-            heat_transport_variables.p_hcd_primary_electric_mw,
+            self.data.heat_transport.p_hcd_primary_electric_mw,
             "OP ",
         )
 
@@ -2724,7 +2723,7 @@ class CurrentDrive(Model):
             self.outfile,
             "Wall plug electric power of secondary system",
             "(p_hcd_secondary_electric_mw)",
-            heat_transport_variables.p_hcd_secondary_electric_mw,
+            self.data.heat_transport.p_hcd_secondary_electric_mw,
             "OP ",
         )
 

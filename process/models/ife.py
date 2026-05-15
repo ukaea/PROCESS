@@ -11,7 +11,6 @@ from process.core import constants, process_output
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    heat_transport_variables,
     ife_variables,
     physics_variables,
 )
@@ -1830,14 +1829,14 @@ class IFE(Model):
         # Primary nuclear heating (MW)
         # Total thermal power removed from fusion core
 
-        heat_transport_variables.priheat = (
+        self.data.heat_transport.priheat = (
             self.data.fwbs.f_p_blkt_multiplication * physics_variables.p_fusion_total_mw
         )
 
         # Useful (high-grade) thermal power (MW)
 
-        heat_transport_variables.p_plant_primary_heat_mw = (
-            heat_transport_variables.priheat * (1.0 - self.data.fwbs.fhole)
+        self.data.heat_transport.p_plant_primary_heat_mw = (
+            self.data.heat_transport.priheat * (1.0 - self.data.fwbs.fhole)
         )
 
         # Assume 0.24 of thermal power is intercepted by the first wall
@@ -1847,17 +1846,17 @@ class IFE(Model):
         # conventional blanket
 
         if ife_variables.ifetyp not in {3, 4}:
-            heat_transport_variables.p_fw_div_heat_deposited_mw = (
-                0.24 * heat_transport_variables.p_plant_primary_heat_mw
+            self.data.heat_transport.p_fw_div_heat_deposited_mw = (
+                0.24 * self.data.heat_transport.p_plant_primary_heat_mw
             )
             self.data.fwbs.p_blkt_nuclear_heat_total_mw = (
-                heat_transport_variables.p_plant_primary_heat_mw
-                - heat_transport_variables.p_fw_div_heat_deposited_mw
+                self.data.heat_transport.p_plant_primary_heat_mw
+                - self.data.heat_transport.p_fw_div_heat_deposited_mw
             )
         else:
-            heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
+            self.data.heat_transport.p_fw_div_heat_deposited_mw = 0.0
             self.data.fwbs.p_blkt_nuclear_heat_total_mw = (
-                heat_transport_variables.p_plant_primary_heat_mw
+                self.data.heat_transport.p_plant_primary_heat_mw
             )
 
         self.data.fwbs.p_shld_nuclear_heat_mw = 0.0
@@ -1865,35 +1864,35 @@ class IFE(Model):
         # Lost fusion power (MW)
 
         self.data.fwbs.pnucloss = (
-            heat_transport_variables.priheat
-            - heat_transport_variables.p_plant_primary_heat_mw
+            self.data.heat_transport.priheat
+            - self.data.heat_transport.p_plant_primary_heat_mw
         )  # = priheat*fhole
 
         # Number of primary heat exchangers
 
-        heat_transport_variables.n_primary_heat_exchangers = np.ceil(
-            heat_transport_variables.p_plant_primary_heat_mw / 1000.0
+        self.data.heat_transport.n_primary_heat_exchangers = np.ceil(
+            self.data.heat_transport.p_plant_primary_heat_mw / 1000.0
         )
 
         # Secondary heat (some of it... rest calculated in IFEPW2)
 
         # Wall plug driver power (MW)
 
-        heat_transport_variables.p_hcd_electric_total_mw = pdrvmw / ife_variables.etadrv
+        self.data.heat_transport.p_hcd_electric_total_mw = pdrvmw / ife_variables.etadrv
 
         # Waste driver power (MW)
 
-        heat_transport_variables.p_hcd_electric_loss_mw = (
-            heat_transport_variables.p_hcd_electric_total_mw - pdrvmw
+        self.data.heat_transport.p_hcd_electric_loss_mw = (
+            self.data.heat_transport.p_hcd_electric_total_mw - pdrvmw
         )
 
         # Cryogenic power (MW)
         # Cryogenic temperature is assumed to be 4.5K
 
-        heat_transport_variables.p_cryo_plant_electric_mw = ife_variables.pifecr
-        heat_transport_variables.helpow = (
+        self.data.heat_transport.p_cryo_plant_electric_mw = ife_variables.pifecr
+        self.data.heat_transport.helpow = (
             1.0e6
-            * heat_transport_variables.p_cryo_plant_electric_mw
+            * self.data.heat_transport.p_cryo_plant_electric_mw
             * (0.13 * 4.5)
             / (constants.TEMP_ROOM - 4.5)
         )
@@ -1915,51 +1914,51 @@ class IFE(Model):
              (Default value = False)
         """
         # Facility heat removal (p_plant_electric_base_total_mw calculated in IFEACP)
-        heat_transport_variables.fachtmw = (
-            heat_transport_variables.p_plant_electric_base_total_mw
+        self.data.heat_transport.fachtmw = (
+            self.data.heat_transport.p_plant_electric_base_total_mw
         )
 
         # Total secondary heat
-        heat_transport_variables.p_plant_secondary_heat_mw = (
-            heat_transport_variables.p_hcd_electric_loss_mw
+        self.data.heat_transport.p_plant_secondary_heat_mw = (
+            self.data.heat_transport.p_hcd_electric_loss_mw
             + self.data.fwbs.pnucloss
-            + heat_transport_variables.fachtmw
-            + heat_transport_variables.vachtmw
-            + heat_transport_variables.p_tritium_plant_electric_mw
+            + self.data.heat_transport.fachtmw
+            + self.data.heat_transport.vachtmw
+            + self.data.heat_transport.p_tritium_plant_electric_mw
             + ife_variables.tdspmw
             + ife_variables.tfacmw
-            + heat_transport_variables.p_cryo_plant_electric_mw
+            + self.data.heat_transport.p_cryo_plant_electric_mw
             + ife_variables.htpmw_ife
         )
 
         # Calculate powers relevant to a power-producing plant
         if self.data.costs.ireactor == 1:
             # Gross electric power
-            heat_transport_variables.p_plant_electric_gross_mw = (
-                heat_transport_variables.p_plant_primary_heat_mw
-                * heat_transport_variables.eta_turbine
+            self.data.heat_transport.p_plant_electric_gross_mw = (
+                self.data.heat_transport.p_plant_primary_heat_mw
+                * self.data.heat_transport.eta_turbine
             )
 
             # Balance of plant recirculating power fraction
-            heat_transport_variables.fgrosbop = min(
+            self.data.heat_transport.fgrosbop = min(
                 0.5,
                 (
                     ife_variables.fauxbop
-                    / (heat_transport_variables.p_plant_electric_gross_mw / 1000.0)
+                    / (self.data.heat_transport.p_plant_electric_gross_mw / 1000.0)
                     ** 0.6
                 ),
             )
 
             # Total recirculating power
-            heat_transport_variables.p_plant_electric_recirc_mw = (
-                heat_transport_variables.fgrosbop
-                * heat_transport_variables.p_plant_electric_gross_mw
-            ) + heat_transport_variables.pacpmw
+            self.data.heat_transport.p_plant_electric_recirc_mw = (
+                self.data.heat_transport.fgrosbop
+                * self.data.heat_transport.p_plant_electric_gross_mw
+            ) + self.data.heat_transport.pacpmw
 
             # Net electric power
-            heat_transport_variables.p_plant_electric_net_mw = (
-                heat_transport_variables.p_plant_electric_gross_mw
-                - heat_transport_variables.p_plant_electric_recirc_mw
+            self.data.heat_transport.p_plant_electric_net_mw = (
+                self.data.heat_transport.p_plant_electric_gross_mw
+                - self.data.heat_transport.p_plant_electric_recirc_mw
             )
 
             if not output:
@@ -1993,13 +1992,13 @@ class IFE(Model):
                 self.outfile,
                 "Driver wall plug power (MW)",
                 "(p_hcd_electric_total_mw)",
-                heat_transport_variables.p_hcd_electric_total_mw,
+                self.data.heat_transport.p_hcd_electric_total_mw,
             )
             process_output.ovarre(
                 self.outfile,
                 "First wall nuclear heating (MW)",
                 "(p_fw_div_heat_deposited_mw)",
-                heat_transport_variables.p_fw_div_heat_deposited_mw,
+                self.data.heat_transport.p_fw_div_heat_deposited_mw,
             )
             process_output.ovarre(
                 self.outfile,
@@ -2011,32 +2010,32 @@ class IFE(Model):
                 self.outfile,
                 "Primary heat (MW)",
                 "(p_plant_primary_heat_mw)",
-                heat_transport_variables.p_plant_primary_heat_mw,
+                self.data.heat_transport.p_plant_primary_heat_mw,
             )
             process_output.ovarre(
                 self.outfile,
                 "Secondary heat (MW)",
                 "(p_plant_secondary_heat_mw)",
-                heat_transport_variables.p_plant_secondary_heat_mw,
+                self.data.heat_transport.p_plant_secondary_heat_mw,
             )
             process_output.oblnkl(self.outfile)
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from driver power (MW)",
                 "(p_hcd_electric_loss_mw)",
-                heat_transport_variables.p_hcd_electric_loss_mw,
+                self.data.heat_transport.p_hcd_electric_loss_mw,
             )
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from cryogenic plant (MW)",
                 "(p_cryo_plant_electric_mw)",
-                heat_transport_variables.p_cryo_plant_electric_mw,
+                self.data.heat_transport.p_cryo_plant_electric_mw,
             )
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from vacuum pumps (MW)",
                 "(vachtmw)",
-                heat_transport_variables.vachtmw,
+                self.data.heat_transport.vachtmw,
             )
             process_output.ovarre(
                 self.outfile,
@@ -2054,19 +2053,19 @@ class IFE(Model):
                 self.outfile,
                 "Heat removal from tritium plant (MW)",
                 "(p_tritium_plant_electric_mw)",
-                heat_transport_variables.p_tritium_plant_electric_mw,
+                self.data.heat_transport.p_tritium_plant_electric_mw,
             )
             process_output.ovarre(
                 self.outfile,
                 "Heat removal from facilities (MW)",
                 "(fachtmw)",
-                heat_transport_variables.fachtmw,
+                self.data.heat_transport.fachtmw,
             )
             process_output.ovarin(
                 self.outfile,
                 "Number of primary heat exchangers",
                 "(n_primary_heat_exchangers)",
-                heat_transport_variables.n_primary_heat_exchangers,
+                self.data.heat_transport.n_primary_heat_exchangers,
             )
 
             if self.data.costs.ireactor == 1:
@@ -2075,19 +2074,19 @@ class IFE(Model):
                     self.outfile,
                     "Gross electric power (MW)",
                     "(p_plant_electric_gross_mw)",
-                    heat_transport_variables.p_plant_electric_gross_mw,
+                    self.data.heat_transport.p_plant_electric_gross_mw,
                 )
                 process_output.ovarre(
                     self.outfile,
                     "Net electric power (MW)",
                     "(p_plant_electric_net_mw)",
-                    heat_transport_variables.p_plant_electric_net_mw,
+                    self.data.heat_transport.p_plant_electric_net_mw,
                 )
                 process_output.ovarre(
                     self.outfile,
                     "Balance of plant aux. power fraction",
                     "(fgrosbop)",
-                    heat_transport_variables.fgrosbop,
+                    self.data.heat_transport.fgrosbop,
                 )
 
     def ifeacp(self, output: bool = False):
@@ -2103,22 +2102,22 @@ class IFE(Model):
         """
         # Facility base load, MW (loads not dependent on floor area)
 
-        basemw = heat_transport_variables.p_plant_electric_base * 1e-6
+        basemw = self.data.heat_transport.p_plant_electric_base * 1e-6
 
         # Power needed per floor area, MW/m2
 
-        pmwpm2 = heat_transport_variables.pflux_plant_floor_electric * 1e-6
+        pmwpm2 = self.data.heat_transport.pflux_plant_floor_electric * 1e-6
 
         # Total pulsed power system load, MW
 
-        heat_transport_variables.pacpmw = (
-            heat_transport_variables.p_cryo_plant_electric_mw
-            + heat_transport_variables.vachtmw
+        self.data.heat_transport.pacpmw = (
+            self.data.heat_transport.p_cryo_plant_electric_mw
+            + self.data.heat_transport.vachtmw
             + ife_variables.tdspmw
             + ife_variables.tfacmw
             + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
-            + heat_transport_variables.p_tritium_plant_electric_mw
-            + heat_transport_variables.p_hcd_electric_total_mw
+            + self.data.heat_transport.p_tritium_plant_electric_mw
+            + self.data.heat_transport.p_hcd_electric_total_mw
             + basemw
             + (self.data.buildings.a_plant_floor_effective * pmwpm2)
             + ife_variables.lipmw
@@ -2126,18 +2125,18 @@ class IFE(Model):
 
         # Total baseline power to facility loads, MW
 
-        heat_transport_variables.p_plant_electric_base_total_mw = basemw + (
+        self.data.heat_transport.p_plant_electric_base_total_mw = basemw + (
             self.data.buildings.a_plant_floor_effective * pmwpm2
         )
 
         # Estimate of the total low voltage power, MW
 
-        heat_transport_variables.tlvpmw = (
-            heat_transport_variables.p_plant_electric_base_total_mw
-            + heat_transport_variables.p_tritium_plant_electric_mw
+        self.data.heat_transport.tlvpmw = (
+            self.data.heat_transport.p_plant_electric_base_total_mw
+            + self.data.heat_transport.p_tritium_plant_electric_mw
             + (ife_variables.htpmw_ife * ife_variables.reprat / 6.0)
-            + heat_transport_variables.vachtmw
-            + 0.5 * heat_transport_variables.p_cryo_plant_electric_mw
+            + self.data.heat_transport.vachtmw
+            + 0.5 * self.data.heat_transport.p_cryo_plant_electric_mw
             + ife_variables.tfacmw
         )
 
@@ -2162,7 +2161,7 @@ class IFE(Model):
             self.outfile,
             "Driver power supplies (MW)",
             "(p_hcd_electric_total_mw)",
-            heat_transport_variables.p_hcd_electric_total_mw,
+            self.data.heat_transport.p_hcd_electric_total_mw,
         )
         process_output.ovarre(
             self.outfile,
@@ -2177,19 +2176,19 @@ class IFE(Model):
             self.outfile,
             "Tritium processing plant (MW)",
             "(p_tritium_plant_electric_mw)",
-            heat_transport_variables.p_tritium_plant_electric_mw,
+            self.data.heat_transport.p_tritium_plant_electric_mw,
         )
         process_output.ovarre(
             self.outfile,
             "Vacuum pump motors (MW)",
             "(vachtmw)",
-            heat_transport_variables.vachtmw,
+            self.data.heat_transport.vachtmw,
         )
         process_output.ovarre(
             self.outfile,
             "Cryogenic comp motors (MW)",
             "(p_cryo_plant_electric_mw)",
-            heat_transport_variables.p_cryo_plant_electric_mw,
+            self.data.heat_transport.p_cryo_plant_electric_mw,
         )
         process_output.ovarre(
             self.outfile,
@@ -2209,19 +2208,19 @@ class IFE(Model):
             self.outfile,
             "Total pulsed power (MW)",
             "(pacpmw)",
-            heat_transport_variables.pacpmw,
+            self.data.heat_transport.pacpmw,
         )
         process_output.ovarre(
             self.outfile,
             "Total base power reqd at all times (MW)",
             "(p_plant_electric_base_total_mw)",
-            heat_transport_variables.p_plant_electric_base_total_mw,
+            self.data.heat_transport.p_plant_electric_base_total_mw,
         )
         process_output.ovarre(
             self.outfile,
             "Total low voltage power (MW)",
             "(tlvpmw)",
-            heat_transport_variables.tlvpmw,
+            self.data.heat_transport.tlvpmw,
         )
 
     def ifebdg(self, output: bool = False):
@@ -2327,7 +2326,7 @@ class IFE(Model):
 
         # Cryogenic building volume
 
-        cryv = 55.0 * np.sqrt(heat_transport_variables.helpow)
+        cryv = 55.0 * np.sqrt(self.data.heat_transport.helpow)
 
         # Electrical building volume
         # (set equal to power injection (i.e. driver) building volume)

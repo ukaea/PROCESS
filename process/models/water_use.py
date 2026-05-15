@@ -5,7 +5,6 @@ import numpy as np
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import heat_transport_variables
 
 SECDAY = 86400e0
 
@@ -42,8 +41,8 @@ class WaterUse(Model):
         output :
             indicate whether output should be written to the output file, or not
         """
-        rejected_heat = heat_transport_variables.p_plant_primary_heat_mw * (
-            1 - heat_transport_variables.eta_turbine
+        rejected_heat = self.data.heat_transport.p_plant_primary_heat_mw * (
+            1 - self.data.heat_transport.eta_turbine
         )
 
         wastethermeng = rejected_heat * SECDAY

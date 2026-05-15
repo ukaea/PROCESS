@@ -18,7 +18,6 @@ from process.core.solver.solver_handler import SolverHandler
 from process.data_structure import (
     divertor_variables,
     global_variables,
-    heat_transport_variables,
     impurity_radiation_module,
     numerics,
     pfcoil_variables,
@@ -1166,7 +1165,7 @@ class Scan:
             case 55:
                 self.data.build.dr_shld_inboard = swp[iscn - 1]
             case 56:
-                heat_transport_variables.p_cryo_plant_electric_max_mw = swp[iscn - 1]
+                self.data.heat_transport.p_cryo_plant_electric_max_mw = swp[iscn - 1]
             case 57:
                 numerics.boundl[1] = swp[iscn - 1]
             case 58:
@@ -1206,7 +1205,7 @@ class Scan:
             case 75:
                 self.data.fwbs.dx_fw_module = swp[iscn - 1]
             case 76:
-                heat_transport_variables.eta_turbine = swp[iscn - 1]
+                self.data.heat_transport.eta_turbine = swp[iscn - 1]
             case 77:
                 self.data.costs.startupratio = swp[iscn - 1]
             case 78:

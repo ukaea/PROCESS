@@ -587,7 +587,7 @@ def constraint_equation_16(constraint_registration, data):
     p_plant_electric_net_required_mw: required net electric power (MW)
     """
     return geq(
-        data_structure.heat_transport_variables.p_plant_electric_net_mw,
+        data.heat_transport.p_plant_electric_net_mw,
         data.constraints.p_plant_electric_net_required_mw,
         constraint_registration,
     )
@@ -1757,15 +1757,15 @@ def constraint_equation_86(constraint_registration, _data):
 
 
 @ConstraintManager.register_constraint(87, "MW", "<=")
-def constraint_equation_87(constraint_registration, _data):
+def constraint_equation_87(constraint_registration, data):
     """Equation for TF coil cryogenic power upper limit
 
     p_cryo_plant_electric_mw: cryogenic plant power (MW)
     p_cryo_plant_electric_max_mw: Maximum cryogenic plant power (MW)
     """
     return leq(
-        data_structure.heat_transport_variables.p_cryo_plant_electric_mw,
-        data_structure.heat_transport_variables.p_cryo_plant_electric_max_mw,
+        data.heat_transport.p_cryo_plant_electric_mw,
+        data.heat_transport.p_cryo_plant_electric_max_mw,
         constraint_registration,
     )
 
