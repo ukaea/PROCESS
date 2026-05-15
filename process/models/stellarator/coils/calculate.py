@@ -5,7 +5,6 @@ import numpy as np
 from process.core.model import DataStructure
 from process.data_structure import (
     rebco_variables,
-    stellarator_configuration,
     tfcoil_variables,
 )
 from process.models.stellarator.coils import forces
@@ -74,7 +73,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
 
     calculate_plasma_facing_coil_area()
 
-    coil_coil_gap, _ = calculate_coil_coil_toroidal_gap(r_coil_major, r_coil_minor)
+    coil_coil_gap, _ = calculate_coil_coil_toroidal_gap(r_coil_major, r_coil_minor, data)
 
     calculate_coils_summary_variables(coilcurrent, r_coil_major, r_coil_minor, awp_rad)
 
@@ -84,24 +83,24 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     #  Coil dimensions
     data.build.z_tf_inside_half = (
         0.5e0
-        * stellarator_configuration.stella_config_maximal_coil_height
-        * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
+        * data.stellarator_config.stella_config_maximal_coil_height
+        * (r_coil_minor / data.stellarator_config.stella_config_coil_rminor)
     )  # [m] maximum half-height of coil
 
     # [m] estimated average length of a coil
     tfcoil_variables.len_tf_coil = (
-        stellarator_configuration.stella_config_coillength
-        * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
+        data.stellarator_config.stella_config_coillength
+        * (r_coil_minor / data.stellarator_config.stella_config_coil_rminor)
         / tfcoil_variables.n_tf_coils
     )
 
     # [m^2] Total surface area of toroidal shells covering coils
     tfcoil_variables.tfcryoarea = (
-        stellarator_configuration.stella_config_coilsurface
+        data.stellarator_config.stella_config_coilsurface
         * data.stellarator.f_st_rmajor
         * (
             data.stellarator.r_coil_minor
-            / stellarator_configuration.stella_config_coil_rminor
+            / data.stellarator_config.stella_config_coil_rminor
         )
         * 1.1e0
     )
@@ -109,7 +108,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
 
     # Minimal bending radius:
     min_bending_radius = (
-        stellarator_configuration.stella_config_min_bend_radius
+        data.stellarator_config.stella_config_min_bend_radius
         * data.stellarator.f_st_rmajor
         / (1.0 - tfcoil_variables.dr_tf_wp_with_insulation / (2.0 * r_coil_minor))
     )
@@ -229,7 +228,7 @@ def calculate_plasma_facing_coil_area():
     tfcoil_variables.tfsao = tfcoil_variables.tfsai
 
 
-def calculate_coil_coil_toroidal_gap(r_coil_major, r_coil_minor):
+def calculate_coil_coil_toroidal_gap(r_coil_major, r_coil_minor, data: DataStructure):
     """[m] Minimal distance in toroidal direction between two stellarator coils
     Consistency with coil width is checked in constraint equation 82
 
@@ -239,14 +238,17 @@ def calculate_coil_coil_toroidal_gap(r_coil_major, r_coil_minor):
 
     r_coil_minor :
 
+    data: DataStructure
+        data structure object
+
     """
     # [m] Toroidal gap between two coil filaments
     tfcoil_variables.toroidalgap = (
-        stellarator_configuration.stella_config_dmin
+        data.stellarator_config.stella_config_dmin
         * (r_coil_major - r_coil_minor)
         / (
-            stellarator_configuration.stella_config_coil_rmajor
-            - stellarator_configuration.stella_config_coil_rminor
+            data.stellarator_config.stella_config_coil_rmajor
+            - data.stellarator_config.stella_config_coil_rminor
         )
     )
     # Left-Over coil gap between two coils (m)
@@ -299,9 +301,9 @@ def calculate_inductance(r_coil_minor, data: DataStructure):
         data structure object
     """
     return (
-        stellarator_configuration.stella_config_inductance
+        data.stellarator_config.stella_config_inductance
         / data.stellarator.f_st_rmajor
-        * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
+        * (r_coil_minor / data.stellarator_config.stella_config_coil_rminor) ** 2
         * data.stellarator.f_st_n_coils**2
     )
 
@@ -319,9 +321,9 @@ def calculate_stored_magnetic_energy(r_coil_minor, data: DataStructure):
     tfcoil_variables.e_tf_magnetic_stored_total_gj = (
         0.5e0
         * (
-            stellarator_configuration.stella_config_inductance
+            data.stellarator_config.stella_config_inductance
             / data.stellarator.f_st_rmajor
-            * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
+            * (r_coil_minor / data.stellarator_config.stella_config_coil_rminor) ** 2
             * data.stellarator.f_st_n_coils**2
         )
         * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
@@ -364,12 +366,12 @@ def calculate_current(data: DataStructure):
     """
     coilcurrent = (
         data.stellarator.f_st_b
-        * stellarator_configuration.stella_config_i0
+        * data.stellarator_config.stella_config_i0
         * data.stellarator.f_st_rmajor
         / data.stellarator.f_st_n_coils
     )
     data.stellarator.f_st_i_total = (
-        coilcurrent / stellarator_configuration.stella_config_i0
+        coilcurrent / data.stellarator_config.stella_config_i0
     )
     return coilcurrent
 
@@ -404,6 +406,7 @@ def winding_pack_total_size(
             tfcoil_variables.n_tf_coils,
             r_coil_major,
             r_coil_minor,
+            data,
         )
         # Two margins can be applied for jcrit: direct or by temperature margin.
         # Temperature margin is implemented in the jcrit_vector definition,
@@ -439,7 +442,7 @@ def winding_pack_total_size(
 
     rhs[:] = coilcurrent / (
         wp_width_r**2
-        / stellarator_configuration.stella_config_wp_ratio
+        / data.stellarator_config.stella_config_wp_ratio
         * fraction_area_superconductor_of_wp
     )  # f_a_scu_of_wp should be the fraction of the sc that is in the winding pack.
 
@@ -464,11 +467,12 @@ def winding_pack_total_size(
         tfcoil_variables.n_tf_coils,
         r_coil_major,
         r_coil_minor,
+        data,
     )
 
     # Winding pack toroidal, radial cross-sections (m)
     awp_tor = (
-        wp_width_r_min / stellarator_configuration.stella_config_wp_ratio
+        wp_width_r_min / data.stellarator_config.stella_config_wp_ratio
     )  # Toroidal dimension
     awp_rad = wp_width_r_min  # Radial dimension
 
@@ -558,7 +562,7 @@ def calculate_vertical_ports(data: DataStructure):
     #  This is simplified for now and can be made more accurate in the future#
     data.stellarator.vporttmax = (
         0.4e0
-        * stellarator_configuration.stella_config_max_portsize_width
+        * data.stellarator_config.stella_config_max_portsize_width
         * data.stellarator.f_st_rmajor
         / data.stellarator.f_st_n_coils
     )  # This is not accurate yet. Needs more insight#
@@ -574,7 +578,7 @@ def calculate_horizontal_ports(data: DataStructure):
     #  Maximal toroidal port size (horizontal ports) (m)
     data.stellarator.hporttmax = (
         0.8e0
-        * stellarator_configuration.stella_config_max_portsize_width
+        * data.stellarator_config.stella_config_max_portsize_width
         * data.stellarator.f_st_rmajor
         / data.stellarator.f_st_n_coils
     )  # Factor 0.8 to take the variation with height into account

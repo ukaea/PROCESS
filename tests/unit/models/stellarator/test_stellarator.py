@@ -6,7 +6,6 @@ import pytest
 from process.data_structure import (
     impurity_radiation_module,
     physics_variables,
-    stellarator_configuration,
     tfcoil_variables,
 )
 from process.models.stellarator.build import st_build
@@ -148,13 +147,13 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        stellarator_configuration,
+        stellarator.data.stellarator_config,
         "stella_config_vol_plasma",
         stgeomparam.stella_config_vol_plasma,
     )
 
     monkeypatch.setattr(
-        stellarator_configuration,
+        stellarator.data.stellarator_config,
         "stella_config_plasma_surface",
         stgeomparam.stella_config_plasma_surface,
     )
@@ -637,19 +636,19 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        stellarator_configuration,
+        stellarator.data.stellarator_config,
         "stella_config_derivative_min_lcfs_coils_dist",
         stbildparam.stella_config_derivative_min_lcfs_coils_dist,
     )
 
     monkeypatch.setattr(
-        stellarator_configuration,
+        stellarator.data.stellarator_config,
         "stella_config_rminor_ref",
         stbildparam.stella_config_rminor_ref,
     )
 
     monkeypatch.setattr(
-        stellarator_configuration,
+        stellarator.data.stellarator_config,
         "stella_config_min_plasma_coil_distance",
         stbildparam.stella_config_min_plasma_coil_distance,
     )
@@ -882,19 +881,19 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        stellarator_configuration,
+        stellarator.data.stellarator_config,
         "stella_config_coilsurface",
         ststrcparam.stella_config_coilsurface,
     )
 
     monkeypatch.setattr(
-        stellarator_configuration,
+        stellarator.data.stellarator_config,
         "stella_config_coillength",
         ststrcparam.stella_config_coillength,
     )
 
     monkeypatch.setattr(
-        stellarator_configuration,
+        stellarator.data.stellarator_config,
         "stella_config_coil_rminor",
         1.0,
     )
@@ -960,9 +959,9 @@ def test_j_max_protect_am2():
     ) == pytest.approx(54919989.379449144)
 
 
-def test_bmax_from_awp(monkeypatch):
-    monkeypatch.setattr(stellarator_configuration, "stella_config_a1", 0.688)
-    monkeypatch.setattr(stellarator_configuration, "stella_config_a2", 0.025)
+def test_bmax_from_awp(stellarator, monkeypatch):
+    monkeypatch.setattr(stellarator.data.stellarator_config, "stella_config_a1", 0.688)
+    monkeypatch.setattr(stellarator.data.stellarator_config, "stella_config_a2", 0.025)
 
     assert bmax_from_awp(
         wp_width_radial=0.11792792792792792,
@@ -970,6 +969,7 @@ def test_bmax_from_awp(monkeypatch):
         n_tf_coils=50,
         r_coil_major=22.237837837837837,
         r_coil_minor=4.7171171171171169,
+        data=stellarator.data,
     ) == pytest.approx(39.193416982177489)
 
 
@@ -2116,7 +2116,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        stellarator_configuration,
+        stellarator.data.stellarator_config,
         "stella_config_rminor_ref",
         stcalceffchiparam.stella_config_rminor_ref,
     )
