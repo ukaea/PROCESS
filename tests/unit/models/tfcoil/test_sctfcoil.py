@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    divertor_variables,
     global_variables,
     physics_variables,
     superconducting_tf_coil_variables,
@@ -1590,7 +1589,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(sctfcoil.data.build, "dz_xpoint_divertor", 0.05)  # Baseline 2018
     monkeypatch.setattr(sctfcoil.data.build, "dz_shld_upper", 0.3)  # Baseline 2018
     monkeypatch.setattr(
-        divertor_variables, "dz_divertor", 2.05
+        sctfcoil.data.divertor, "dz_divertor", 2.05
     )  # chosen to achieve H_vv in Table 2
 
     monkeypatch.setattr(sctfcoil.data.build, "dr_tf_shld_gap", 0.05)  # Baseline 2018

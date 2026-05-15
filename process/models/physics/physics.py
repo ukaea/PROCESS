@@ -18,7 +18,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    divertor_variables,
     impurity_radiation_module,
     numerics,
     physics_variables,
@@ -804,7 +803,7 @@ class Physics(Model):
         # if double null configuration share the power
         # over the upper and lower divertor, where physics_variables.f_p_div_lower gives
         # the factor of power conducted to the lower divertor
-        if divertor_variables.n_divertors == 2:
+        if self.data.divertor.n_divertors == 2:
             physics_variables.p_div_lower_separatrix_mw = (
                 physics_variables.f_p_div_lower
                 * physics_variables.p_plasma_separatrix_mw
@@ -978,7 +977,7 @@ class Physics(Model):
                 )
             )
         )
-        if divertor_variables.n_divertors == 2:
+        if self.data.divertor.n_divertors == 2:
             # Double Null configuration
             # Find all the power fractions accross the targets
             # Taken from D3-D conventional divertor design
@@ -2110,7 +2109,7 @@ class Physics(Model):
                 physics_variables.lambdaio,
                 "OP ",
             )
-            if divertor_variables.n_divertors == 2:
+            if self.data.divertor.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
                     "Midplane seperation of the two magnetic closed flux surfaces (m)",
@@ -2140,7 +2139,7 @@ class Physics(Model):
                 physics_variables.flo,
                 "OP ",
             )
-            if divertor_variables.n_divertors == 2:
+            if self.data.divertor.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
                     "Fraction of power incident on the upper inner target",
@@ -2170,7 +2169,7 @@ class Physics(Model):
                 physics_variables.plomw,
                 "OP ",
             )
-            if divertor_variables.n_divertors == 2:
+            if self.data.divertor.n_divertors == 2:
                 po.ovarre(
                     self.outfile,
                     "Power incident on the upper innner target (MW)",

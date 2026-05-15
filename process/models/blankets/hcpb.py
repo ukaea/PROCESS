@@ -9,7 +9,6 @@ from process.core import (
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.data_structure import (
-    divertor_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -182,7 +181,7 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Solid angle fraction taken by the breeding blankets/shields
         f_geom_blanket = (
             1
-            - divertor_variables.n_divertors * self.data.fwbs.f_ster_div_single
+            - self.data.divertor.n_divertors * self.data.fwbs.f_ster_div_single
             - f_geom_cp
         )
 
@@ -266,9 +265,9 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Start adding components of the coolant mass:
         # Divertor coolant volume (m3)
         coolvol = (
-            divertor_variables.a_div_surface_total
-            * divertor_variables.f_vol_div_coolant
-            * divertor_variables.dx_div_plate
+            self.data.divertor.a_div_surface_total
+            * self.data.divertor.f_vol_div_coolant
+            * self.data.divertor.dx_div_plate
         )
 
         # Blanket coolant volume (m3)
@@ -316,20 +315,20 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
         # Component masses
 
         # Divertor mass (kg)
-        divertor_variables.a_div_surface_total = (
-            divertor_variables.fdiva
+        self.data.divertor.a_div_surface_total = (
+            self.data.divertor.fdiva
             * 2.0
             * np.pi
             * physics_variables.rmajor
             * physics_variables.rminor
         )
-        if divertor_variables.n_divertors == 2:
-            divertor_variables.a_div_surface_total *= 2.0
-        divertor_variables.m_div_plate = (
-            divertor_variables.a_div_surface_total
-            * divertor_variables.den_div_structure
-            * (1.0 - divertor_variables.f_vol_div_coolant)
-            * divertor_variables.dx_div_plate
+        if self.data.divertor.n_divertors == 2:
+            self.data.divertor.a_div_surface_total *= 2.0
+        self.data.divertor.m_div_plate = (
+            self.data.divertor.a_div_surface_total
+            * self.data.divertor.den_div_structure
+            * (1.0 - self.data.divertor.f_vol_div_coolant)
+            * self.data.divertor.dx_div_plate
         )
 
         # Shield mass (kg)
@@ -1611,11 +1610,11 @@ class CCFE_HCPB(OutboardBlanket, InboardBlanket):
             self.outfile,
             "Divertor area (m2)",
             "(a_div_surface_total)",
-            divertor_variables.a_div_surface_total,
+            self.data.divertor.a_div_surface_total,
         )
         po.ovarre(
             self.outfile,
             "Divertor mass (kg)",
             "(m_div_plate)",
-            divertor_variables.m_div_plate,
+            self.data.divertor.m_div_plate,
         )

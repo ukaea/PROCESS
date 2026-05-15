@@ -16,7 +16,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    divertor_variables,
     physics_variables,
 )
 
@@ -82,7 +81,7 @@ class PlasmaDensityLimit(Model):
             p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
             p_hcd_injected_total_mw=self.data.current_drive.p_hcd_injected_total_mw,
             plasma_current=physics_variables.plasma_current,
-            prn1=divertor_variables.prn1,
+            prn1=self.data.divertor.prn1,
             qcyl=physics_variables.qstar,
             q95=physics_variables.q95,
             rmajor=physics_variables.rmajor,

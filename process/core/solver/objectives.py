@@ -3,7 +3,6 @@ import numpy as np
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
 from process.data_structure import (
-    divertor_variables,
     pf_power_variables,
     physics_variables,
     tfcoil_variables,
@@ -90,7 +89,7 @@ def objective_function(minmax: int, data: DataStructure) -> float:
         case 8:
             objective_metric = physics_variables.aspect
         case 9:
-            objective_metric = divertor_variables.pflux_div_heat_load_mw
+            objective_metric = data.divertor.pflux_div_heat_load_mw
         case 10:
             objective_metric = physics_variables.b_plasma_toroidal_on_axis
         case 11:

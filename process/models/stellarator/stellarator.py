@@ -14,7 +14,6 @@ from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    divertor_variables,
     global_variables,
     numerics,
     physics_variables,
@@ -1009,27 +1008,27 @@ class Stellarator(Model):
                     self.data.fwbs.p_tf_nuclear_heat_mw = 0.0e0
 
         #  Divertor mass
-        #  N.B. divertor_variables.a_div_surface_total is calculated in stdiv after this point, so will
+        #  N.B. self.data.divertor.a_div_surface_total is calculated in stdiv after this point, so will
         #  be zero on first lap, hence the initial approximation
 
         if self.first_call_stfwbs:
-            divertor_variables.a_div_surface_total = 50.0e0
+            self.data.divertor.a_div_surface_total = 50.0e0
             self.first_call_stfwbs = False
 
-        divertor_variables.m_div_plate = (
-            divertor_variables.a_div_surface_total
-            * divertor_variables.den_div_structure
-            * (1.0e0 - divertor_variables.f_vol_div_coolant)
-            * divertor_variables.dx_div_plate
+        self.data.divertor.m_div_plate = (
+            self.data.divertor.a_div_surface_total
+            * self.data.divertor.den_div_structure
+            * (1.0e0 - self.data.divertor.f_vol_div_coolant)
+            * self.data.divertor.dx_div_plate
         )
 
         #  Start adding components of the coolant mass:
         #  Divertor coolant volume (m3)
 
         coolvol = (
-            divertor_variables.a_div_surface_total
-            * divertor_variables.f_vol_div_coolant
-            * divertor_variables.dx_div_plate
+            self.data.divertor.a_div_surface_total
+            * self.data.divertor.f_vol_div_coolant
+            * self.data.divertor.dx_div_plate
         )
 
         #  Blanket mass, excluding coolant
@@ -1699,13 +1698,13 @@ class Stellarator(Model):
                 self.outfile,
                 "Divertor area (m2)",
                 "(a_div_surface_total)",
-                divertor_variables.a_div_surface_total,
+                self.data.divertor.a_div_surface_total,
             )
             po.ovarre(
                 self.outfile,
                 "Divertor mass (kg)",
                 "(m_div_plate)",
-                divertor_variables.m_div_plate,
+                self.data.divertor.m_div_plate,
             )
 
     def sc_tf_coil_nuclear_heating_iter90(self):

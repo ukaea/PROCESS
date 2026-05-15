@@ -197,9 +197,7 @@ INPUT_VARIABLES = {
         data_structure.pfcoil_variables, float, range=(1000000.0, 100000000000.0)
     ),
     "amortization": InputVariable("costs", float, range=(1.0, 50.0)),
-    "anginc": InputVariable(
-        data_structure.divertor_variables, float, range=(0.0, 1.5707)
-    ),
+    "anginc": InputVariable("divertor", float, range=(0.0, 1.5707)),
     "aplasmin": InputVariable("build", float, range=(0.01, 10.0)),
     "aux_build_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "aux_build_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
@@ -219,16 +217,10 @@ INPUT_VARIABLES = {
     "bctmp": InputVariable("pulse", float, range=(1.0, 800.0)),
     "e_beam_kev": InputVariable("current_drive", float, range=(1.0, 1000000.0)),
     "dx_beam_duct": InputVariable("current_drive", float, range=(0.001, 5.0)),
-    "deg_div_field_plate": InputVariable(
-        data_structure.divertor_variables, float, range=(0.0, 360.0)
-    ),
+    "deg_div_field_plate": InputVariable("divertor", float, range=(0.0, 360.0)),
     "beta_poloidal_max": InputVariable("constraints", float, range=(0.01, 2.0)),
-    "betai": InputVariable(
-        data_structure.divertor_variables, float, range=(0.0, 1.5707)
-    ),
-    "betao": InputVariable(
-        data_structure.divertor_variables, float, range=(0.0, 1.5707)
-    ),
+    "betai": InputVariable("divertor", float, range=(0.0, 1.5707)),
+    "betao": InputVariable("divertor", float, range=(0.0, 1.5707)),
     "big_q_plasma_min": InputVariable("constraints", float, range=(0.01, 100.0)),
     "bioshld_thk": InputVariable("buildings", float, range=(0.25, 25.0)),
     "bkt_life_csf": InputVariable("cs_fatigue", float, range=(0.0, 1.0)),
@@ -373,18 +365,10 @@ INPUT_VARIABLES = {
     "dintrt": InputVariable("costs", float, range=(0.0, 0.1)),
     "discount_rate": InputVariable("costs", float, range=(0.0, 0.5)),
     "div_nref": InputVariable("costs", float, range=(1000.0, 100000000.0)),
-    "f_vol_div_coolant": InputVariable(
-        data_structure.divertor_variables, float, range=(0.0, 1.0)
-    ),
-    "den_div_structure": InputVariable(
-        data_structure.divertor_variables, float, range=(0.1, 100000.0)
-    ),
-    "dz_divertor": InputVariable(
-        data_structure.divertor_variables, float, range=(0.1, 5.0)
-    ),
-    "dx_div_plate": InputVariable(
-        data_structure.divertor_variables, float, range=(0.01, 1.0)
-    ),
+    "f_vol_div_coolant": InputVariable("divertor", float, range=(0.0, 1.0)),
+    "den_div_structure": InputVariable("divertor", float, range=(0.1, 100000.0)),
+    "dz_divertor": InputVariable("divertor", float, range=(0.1, 5.0)),
+    "dx_div_plate": InputVariable("divertor", float, range=(0.01, 1.0)),
     "dp_blkt": InputVariable("primary_pumping", float, range=(0.0, 10000000.0)),
     "dp_fw": InputVariable("primary_pumping", float, range=(0.0, 10000000.0)),
     "dp_fw_blkt": InputVariable("primary_pumping", float, range=(0.0, 10000000.0)),
@@ -554,7 +538,7 @@ INPUT_VARIABLES = {
     "fjohc": InputVariable("constraints", float, range=(0.001, 1.0)),
     "fjohc0": InputVariable("constraints", float, range=(0.001, 1.0)),
     "f_ster_div_single": InputVariable("fwbs", float, range=(0.0, 1.0)),
-    "fdiva": InputVariable(data_structure.divertor_variables, float, range=(0.1, 2.0)),
+    "fdiva": InputVariable("divertor", float, range=(0.1, 2.0)),
     "fdivwet": InputVariable(
         data_structure.stellarator_variables, float, range=(0.01, 1.0)
     ),
@@ -569,9 +553,7 @@ INPUT_VARIABLES = {
     "flpitch": InputVariable(
         data_structure.stellarator_variables, float, range=(0.0001, 0.01)
     ),
-    "f_div_flux_expansion": InputVariable(
-        data_structure.divertor_variables, float, range=(0.0, 10.0)
-    ),
+    "f_div_flux_expansion": InputVariable("divertor", float, range=(0.0, 10.0)),
     "fmgdmw": InputVariable("heat_transport", float, range=(0.0, 100.0)),
     "fndt": InputVariable("buildings", float, range=(0.0, 10.0)),
     "f_p_beam_orbit_loss": InputVariable("current_drive", float, range=(0.0, 0.999)),
@@ -635,12 +617,8 @@ INPUT_VARIABLES = {
     "heat_sink_l": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "heat_sink_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "hfact": InputVariable(data_structure.physics_variables, float, range=(0.01, 10.0)),
-    "pflux_div_heat_load_mw": InputVariable(
-        data_structure.divertor_variables, float, range=(0.0, 10.0)
-    ),
-    "pflux_div_heat_load_max_mw": InputVariable(
-        data_structure.divertor_variables, float, range=(0.1, 20.0)
-    ),
+    "pflux_div_heat_load_mw": InputVariable("divertor", float, range=(0.0, 10.0)),
+    "pflux_div_heat_load_max_mw": InputVariable("divertor", float, range=(0.1, 20.0)),
     "hot_sepdist": InputVariable("buildings", float, range=(0.0, 10.0)),
     "hotcell_h": InputVariable("buildings", float, range=(1.0, 100.0)),
     "p_blkt_coolant_pump_mw": InputVariable(
@@ -804,7 +782,7 @@ INPUT_VARIABLES = {
     "p_fusion_total_max_mw": InputVariable("constraints", float, range=(1.0, 10000.0)),
     "pres_div_chamber_burn": InputVariable("vacuum", float, range=(0.0, 10.0)),
     "pres_fw_coolant": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
-    "prn1": InputVariable(data_structure.divertor_variables, float, range=(0.0, 1.0)),
+    "prn1": InputVariable("divertor", float, range=(0.0, 1.0)),
     "psepbqarmax": InputVariable("constraints", float, range=(1.0, 50.0)),
     "pseprmax": InputVariable("constraints", float, range=(1.0, 60.0)),
     "ptargf": InputVariable("ife", float, range=(0.1, 100.0)),
@@ -1008,7 +986,7 @@ INPUT_VARIABLES = {
     ),
     "tcritsc": InputVariable(data_structure.tfcoil_variables, float, range=(1.0, 300.0)),
     "t_cycle_min": InputVariable("constraints", float, range=(0.001, 2000000.0)),
-    "tdiv": InputVariable(data_structure.divertor_variables, float, range=(0.1, 100.0)),
+    "tdiv": InputVariable("divertor", float, range=(0.1, 100.0)),
     "t_div_replace_yrs": InputVariable("costs", float, range=(0.01, 2.0)),
     "t_tf_superconductor_quench": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.1, 100.0)
@@ -1202,9 +1180,7 @@ INPUT_VARIABLES = {
     "workshop_w": InputVariable("buildings", float, range=(10.0, 1000.0)),
     "wsvfac": InputVariable("buildings", float, range=(0.9, 3.0)),
     "xi_ebw": InputVariable("current_drive", float, range=(0.0, 1.0)),
-    "xpertin": InputVariable(
-        data_structure.divertor_variables, float, range=(0.0, 10.0)
-    ),
+    "xpertin": InputVariable("divertor", float, range=(0.0, 10.0)),
     "zeff_max": InputVariable("constraints", float, range=(1.0, 10.0)),
     "blktmodel": InputVariable("fwbs", int, choices=[0, 1]),
     "blkttype": InputVariable("fwbs", int, choices=[1, 2, 3]),
@@ -1244,9 +1220,7 @@ INPUT_VARIABLES = {
     "i_diamagnetic_current": InputVariable(
         data_structure.physics_variables, int, choices=[0, 1, 2]
     ),
-    "i_div_heat_load": InputVariable(
-        data_structure.divertor_variables, int, choices=[0, 1, 2]
-    ),
+    "i_div_heat_load": InputVariable("divertor", int, choices=[0, 1, 2]),
     "i_l_h_threshold": InputVariable(
         data_structure.physics_variables, int, range=(1, 21)
     ),

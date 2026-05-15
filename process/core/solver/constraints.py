@@ -628,15 +628,15 @@ def constraint_equation_17(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(18, "MW/m²", "<=")
-def constraint_equation_18(constraint_registration, _data):
+def constraint_equation_18(constraint_registration, data):
     """Equation for divertor heat load upper limit
 
     pflux_div_heat_load_max_mw: heat load limit (MW/m²)
     pflux_div_heat_load_mw: divertor heat load (MW/m²)
     """
     return leq(
-        data_structure.divertor_variables.pflux_div_heat_load_mw,
-        data_structure.divertor_variables.pflux_div_heat_load_max_mw,
+        data.divertor.pflux_div_heat_load_mw,
+        data.divertor.pflux_div_heat_load_max_mw,
         constraint_registration,
     )
 

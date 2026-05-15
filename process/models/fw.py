@@ -7,10 +7,7 @@ from process.core import process_output as po
 from process.core.coolprop_interface import FluidProperties
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    divertor_variables,
-    physics_variables,
-)
+from process.data_structure import physics_variables
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
     calculate_pipe_bend_radius,
@@ -18,9 +15,7 @@ from process.models.engineering.ivc_functions import (
     eshellarea,
 )
 from process.models.engineering.materials import eurofer97_thermal_conductivity
-from process.models.engineering.pumping import (
-    gnielinski_heat_transfer_coefficient,
-)
+from process.models.engineering.pumping import gnielinski_heat_transfer_coefficient
 
 logger = logging.getLogger(__name__)
 
@@ -43,11 +38,11 @@ class FirstWall(Model):
         self.data.fwbs.dz_fw_half = self.calculate_first_wall_half_height(
             z_plasma_xpoint_lower=self.data.build.z_plasma_xpoint_lower,
             dz_xpoint_divertor=self.data.build.dz_xpoint_divertor,
-            dz_divertor=divertor_variables.dz_divertor,
+            dz_divertor=self.data.divertor.dz_divertor,
             dz_blkt_upper=self.data.build.dz_blkt_upper,
             z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,
             dz_fw_plasma_gap=self.data.build.dz_fw_plasma_gap,
-            n_divertors=divertor_variables.n_divertors,
+            n_divertors=self.data.divertor.n_divertors,
             dr_fw_inboard=self.data.build.dr_fw_inboard,
             dr_fw_outboard=self.data.build.dr_fw_outboard,
         )
@@ -87,7 +82,7 @@ class FirstWall(Model):
             self.data.first_wall.a_fw_outboard,
             self.data.first_wall.a_fw_total,
         ) = self.apply_first_wall_coverage_factors(
-            n_divertors=divertor_variables.n_divertors,
+            n_divertors=self.data.divertor.n_divertors,
             f_ster_div_single=self.data.fwbs.f_ster_div_single,
             f_a_fw_outboard_hcd=self.data.fwbs.f_a_fw_outboard_hcd,
             a_fw_inboard_full_coverage=self.data.first_wall.a_fw_inboard_full_coverage,
