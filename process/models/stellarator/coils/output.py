@@ -1,8 +1,5 @@
 from process.core import process_output as po
-from process.data_structure import (
-    stellarator_variables,
-    tfcoil_variables,
-)
+from process.data_structure import tfcoil_variables
 
 
 def write(
@@ -513,35 +510,35 @@ def write(
         stellarator.outfile,
         "Max toroidal size of vertical ports (m)",
         "(vporttmax)",
-        stellarator_variables.vporttmax,
+        data.stellarator.vporttmax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max poloidal size of vertical ports (m)",
         "(vportpmax)",
-        stellarator_variables.vportpmax,
+        data.stellarator.vportpmax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max area of vertical ports (m2)",
         "(vportamax)",
-        stellarator_variables.vportamax,
+        data.stellarator.vportamax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max toroidal size of horizontal ports (m)",
         "(hporttmax)",
-        stellarator_variables.hporttmax,
+        data.stellarator.hporttmax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max poloidal size of horizontal ports (m)",
         "(hportpmax)",
-        stellarator_variables.hportpmax,
+        data.stellarator.hportpmax,
     )
     po.ovarre(
         stellarator.outfile,
         "Max area of horizontal ports (m2)",
         "(hportamax)",
-        stellarator_variables.hportamax,
+        data.stellarator.hportamax,
     )

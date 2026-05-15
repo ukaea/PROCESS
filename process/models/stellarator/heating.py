@@ -3,10 +3,7 @@ import logging
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import DataStructure
-from process.data_structure import (
-    physics_variables,
-    stellarator_variables,
-)
+from process.data_structure import physics_variables
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +26,7 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
 
     """
     f_p_beam_injected_ions = None
-    if stellarator_variables.isthtr == 1:
+    if data.stellarator.isthtr == 1:
         data.current_drive.p_hcd_ecrh_injected_total_mw = (
             data.current_drive.p_hcd_primary_extra_heat_mw
         )
@@ -45,7 +42,7 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
             + data.current_drive.p_hcd_injected_electrons_mw
         ) / data.current_drive.eta_hcd_primary_injector_wall_plug
 
-    elif stellarator_variables.isthtr == 2:
+    elif data.stellarator.isthtr == 2:
         data.current_drive.p_hcd_lowhyb_injected_total_mw = (
             data.current_drive.p_hcd_primary_extra_heat_mw
         )
@@ -61,7 +58,7 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
             + data.current_drive.p_hcd_injected_electrons_mw
         ) / data.current_drive.eta_hcd_primary_injector_wall_plug
 
-    elif stellarator_variables.isthtr == 3:
+    elif data.stellarator.isthtr == 3:
         (
             _effnbss,
             f_p_beam_injected_ions,
@@ -90,10 +87,10 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
             + data.current_drive.p_hcd_injected_electrons_mw
         ) / data.current_drive.eta_hcd_primary_injector_wall_plug
     else:
-        logger.error(f"isthtr {stellarator_variables.isthtr}")
-        logger.error(f"isthtr type {type(stellarator_variables.isthtr)}")
+        logger.error(f"isthtr {data.stellarator.isthtr}")
+        logger.error(f"isthtr type {type(data.stellarator.isthtr)}")
         raise ProcessValueError(
-            "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
+            "Illegal value for isthtr", isthtr=data.stellarator.isthtr
         )
 
     #  Total injected power
@@ -139,11 +136,11 @@ def st_heat(stellarator, f_output: bool, data: DataStructure):
 def output(stellarator, data: DataStructure, f_p_beam_injected_ions=None):
     po.oheadr(stellarator.outfile, "Auxiliary Heating System")
 
-    if stellarator_variables.isthtr == 1:
+    if data.stellarator.isthtr == 1:
         po.ocmmnt(stellarator.outfile, "Electron Cyclotron Resonance Heating")
-    elif stellarator_variables.isthtr == 2:
+    elif data.stellarator.isthtr == 2:
         po.ocmmnt(stellarator.outfile, "Lower Hybrid Heating")
-    elif stellarator_variables.isthtr == 3:
+    elif data.stellarator.isthtr == 3:
         po.ocmmnt(stellarator.outfile, "Neutral Beam Injection Heating")
 
     if physics_variables.i_plasma_ignited == 1:

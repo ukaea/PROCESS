@@ -28,7 +28,6 @@ from process.data_structure.physics_variables import (
 )
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.scan_variables import init_scan_variables
-from process.data_structure.stellarator_variables import init_stellarator_variables
 from process.data_structure.superconducting_tf_coil_variables import (
     init_superconducting_tf_coil_variables,
 )
@@ -251,7 +250,6 @@ def init_all_module_vars():
     init_physics_variables()
     init_scan_variables()
     init_superconducting_tf_coil_variables()
-    init_stellarator_variables()
     init_tfcoil_variables()
     constants.init_constants()
     init_pf_power_variables()
@@ -1124,9 +1122,7 @@ def check_process(inputs, data):  # noqa: ARG001
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model
 
-    if data_structure.stellarator_variables.istell == 0 and (
-        data.fwbs.i_blanket_type == 1
-    ):
+    if data.stellarator.istell == 0 and (data.fwbs.i_blanket_type == 1):
         fsum = data.fwbs.breeder_multiplier + data.fwbs.vfcblkt + data.fwbs.vfpblkt
         if fsum >= 1.0:
             raise ProcessValidationError(
@@ -1246,5 +1242,5 @@ def set_active_constraints():
 def set_device_type(data):
     if data.ife.ife == 1:
         data_structure.global_variables.icase = "Inertial Fusion model"
-    elif data_structure.stellarator_variables.istell != 0:
+    elif data.stellarator.istell != 0:
         data_structure.global_variables.icase = "Stellarator model"

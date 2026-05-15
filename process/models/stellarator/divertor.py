@@ -6,7 +6,6 @@ from process.core.model import DataStructure
 from process.data_structure import (
     divertor_variables,
     physics_variables,
-    stellarator_variables,
 )
 
 
@@ -28,7 +27,7 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
     ----------
     Stellarator Divertor Model for the Systems Code PROCESS, F. Warmer, 21/06/2013
     """
-    Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch
+    Theta = data.stellarator.flpitch  # ~bmn [rad] field line pitch
     r = physics_variables.rmajor
     p_div = physics_variables.p_plasma_separatrix_mw
     alpha = divertor_variables.anginc
@@ -46,18 +45,16 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
     #  Island size (m)
 
     w_r = 4.0e0 * np.sqrt(
-        stellarator_variables.bmn
-        * r
-        / (stellarator_variables.shear * stellarator_variables.n_res)
+        data.stellarator.bmn * r / (data.stellarator.shear * data.stellarator.n_res)
     )
 
     #  Perpendicular (to plate) distance from X-point to divertor plate (m)
 
-    Delta = stellarator_variables.f_w * w_r
+    Delta = data.stellarator.f_w * w_r
 
     #  Length 'along' plasma (m)
 
-    l_p = 2 * np.pi * r * (stellarator_variables.m_res) / stellarator_variables.n_res
+    l_p = 2 * np.pi * r * (data.stellarator.m_res) / data.stellarator.n_res
 
     #  Connection length from X-point to divertor plate (m)
 
@@ -81,20 +78,20 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
 
     #  Total length of divertor plates (m)
 
-    l_t = 2.0e0 * stellarator_variables.n_res * l_d
+    l_t = 2.0e0 * data.stellarator.n_res * l_d
 
     #  Wetted area (m2)
 
     a_eff = l_t * l_q
 
-    #  Divertor plate width (m): assume total area is wetted area/stellarator_variables.fdivwet
+    #  Divertor plate width (m): assume total area is wetted area/data.stellarator.fdivwet
 
-    darea = a_eff / stellarator_variables.fdivwet
+    darea = a_eff / data.stellarator.fdivwet
     l_w = darea / l_t
 
     #  Divertor heat load (MW/m2)
 
-    q_div = stellarator_variables.f_asym * (p_div / a_eff)
+    q_div = data.stellarator.f_asym * (p_div / a_eff)
 
     #  Transfer to global variables
 
@@ -104,10 +101,10 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
     data.fwbs.f_ster_div_single = darea / data.first_wall.a_fw_total
 
     if f_output:
-        output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta)
+        output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta, data)
 
 
-def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
+def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta, data):
     """Outputs a summary of divertor-related parameters and results to the stellartor object.
         stellarator: An object containing stellarator configuration and output handle.
 
@@ -165,56 +162,56 @@ def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
         stellarator.outfile,
         "Radiated power fraction in SOL",
         "(f_rad)",
-        stellarator_variables.f_rad,
+        data.stellarator.f_rad,
     )
     po.ovarre(
         stellarator.outfile,
         "Heat load peaking factor",
         "(f_asym)",
-        stellarator_variables.f_asym,
+        data.stellarator.f_asym,
     )
     po.ovarin(
         stellarator.outfile,
         "Poloidal resonance number",
         "(m_res)",
-        stellarator_variables.m_res,
+        data.stellarator.m_res,
     )
     po.ovarin(
         stellarator.outfile,
         "Toroidal resonance number",
         "(n_res)",
-        stellarator_variables.n_res,
+        data.stellarator.n_res,
     )
     po.ovarre(
         stellarator.outfile,
         "Relative radial field perturbation",
         "(bmn)",
-        stellarator_variables.bmn,
+        data.stellarator.bmn,
     )
     po.ovarre(
         stellarator.outfile,
         "Field line pitch (rad)",
         "(flpitch)",
-        stellarator_variables.flpitch,
+        data.stellarator.flpitch,
     )
     po.ovarre(
         stellarator.outfile,
         "Island size fraction factor",
         "(f_w)",
-        stellarator_variables.f_w,
+        data.stellarator.f_w,
     )
     po.ovarre(
         stellarator.outfile,
-        "Magnetic stellarator_variables.shear (/m)",
+        "Magnetic data.stellarator.shear (/m)",
         "(shear)",
-        stellarator_variables.shear,
+        data.stellarator.shear,
     )
     po.ovarre(stellarator.outfile, "Divertor wetted area (m2)", "(A_eff)", a_eff)
     po.ovarre(
         stellarator.outfile,
         "Wetted area fraction of total plate area",
         "(fdivwet)",
-        stellarator_variables.fdivwet,
+        data.stellarator.fdivwet,
     )
     po.ovarre(stellarator.outfile, "Divertor plate length (m)", "(L_d)", l_d)
     po.ovarre(stellarator.outfile, "Divertor plate width (m)", "(L_w)", l_w)

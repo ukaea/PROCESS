@@ -269,7 +269,7 @@ class Caller:
 
         # Perform the various function calls
         # Stellarator caller
-        if data_structure.stellarator_variables.istell != 0:
+        if data.stellarator.istell != 0:
             self.models.stellarator.run()
             # TODO Is this return safe?
             return

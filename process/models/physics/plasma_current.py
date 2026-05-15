@@ -16,10 +16,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-    stellarator_variables,
-)
+from process.data_structure import physics_variables
 from process.models.physics.plasma_geometry import PlasmaGeometryModelType
 
 logger = logging.getLogger(__name__)
@@ -68,7 +65,7 @@ class PlasmaCurrentModel(IntEnum):
         return self._full_name_
 
 
-class PlasmaCurrent:
+class PlasmaCurrent(Model):
     """Class to hold plasma current calculations for plasma processing."""
 
     def __init__(self):
@@ -76,11 +73,14 @@ class PlasmaCurrent:
         self.outfile = constants.NOUT
         self.mfile = constants.MFILE
 
+    def run(self):
+        """This model doesn't need to be run"""
+
     def output(self) -> None:
         """Output plasma current and safety factor information."""
         po.oheadr(self.outfile, "Plasma Current and Safety Factor")
 
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             po.oblnkl(self.outfile)
             po.ovarin(
                 self.outfile,
@@ -148,7 +148,7 @@ class PlasmaCurrent:
                 "OP ",
             )
 
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             po.ovarrf(
                 self.outfile, "Safety factor on axis (q₀)", "(q0)", physics_variables.q0
             )
@@ -194,7 +194,7 @@ class PlasmaCurrent:
                 self.outfile,
                 "Rotational transform",
                 "(iotabar)",
-                stellarator_variables.iotabar,
+                self.data.stellarator.iotabar,
             )
 
     def calculate_plasma_current(

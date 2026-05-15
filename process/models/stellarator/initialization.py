@@ -2,7 +2,6 @@ from process.core.model import DataStructure
 from process.data_structure import (
     numerics,
     physics_variables,
-    stellarator_variables,
 )
 
 
@@ -13,7 +12,7 @@ def st_init(data: DataStructure):
     Many of these may override the values set in routine
 
     """
-    if stellarator_variables.istell == 0:
+    if data.stellarator.istell == 0:
         return
 
     numerics.boundu[0] = 40.0  # allow higher aspect ratio

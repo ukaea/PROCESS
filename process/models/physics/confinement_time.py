@@ -10,10 +10,7 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import (
-    physics_variables,
-    stellarator_variables,
-)
+from process.data_structure import physics_variables
 from process.models.physics.plasma_geometry import PlasmaGeom
 
 logger = logging.getLogger(__name__)
@@ -1395,7 +1392,7 @@ class PlasmaConfinementTime(Model):
         po.oblnkl(self.outfile)
 
         # Plot table of al the H-factor scalings and coparison values
-        self.output_confinement_comparison(istell=stellarator_variables.istell)
+        self.output_confinement_comparison(istell=self.data.stellarator.istell)
 
     def output_confinement_comparison(self, istell: int):
         """Routine to calculate ignition margin for different confinement scalings and

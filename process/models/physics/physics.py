@@ -22,7 +22,6 @@ from process.data_structure import (
     impurity_radiation_module,
     numerics,
     physics_variables,
-    stellarator_variables,
 )
 from process.models.physics import impurity_radiation
 from process.models.physics.plasma_geometry import PlasmaGeom
@@ -1726,7 +1725,7 @@ class Physics(Model):
         self.geometry.output()
 
         self.current.output()
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             self.fields.output()
 
         # Output beta information
@@ -1735,7 +1734,7 @@ class Physics(Model):
         self.output_temperature_density_profile_info()
         po.oblnkl(self.outfile)
 
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             self.density_limit.output()
 
         po.oheadr(self.outfile, "Plasma Reactions :")
@@ -2062,7 +2061,7 @@ class Physics(Model):
             "OP ",
         )
 
-        if stellarator_variables.istell != 0:
+        if self.data.stellarator.istell != 0:
             po.ovarre(
                 self.outfile,
                 "SOL radiation power as imposed by f_rad (MW)",
@@ -2087,7 +2086,7 @@ class Physics(Model):
             "OP ",
         )
 
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
@@ -2248,12 +2247,12 @@ class Physics(Model):
 
         self.exhaust.output()
 
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             self.plasma_transition.output_l_h_threshold_powers()
 
         self.confinement.output_confinement_time_info()
 
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             # Issues 363 Output dimensionless plasma parameters MDK
             po.osubhd(self.outfile, "Dimensionless plasma parameters")
             po.ocmmnt(self.outfile, "For definitions see")
@@ -2292,7 +2291,7 @@ class Physics(Model):
             po.oblnkl(self.outfile)
 
             self.inductance.output_volt_second_information()
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             self.plasma_bootstrap_current.output()
             self.dia_current.output()
 
@@ -2572,7 +2571,7 @@ class Physics(Model):
             physics_variables.nd_plasma_electron_line,
             "OP ",
         )
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             po.ovarre(
                 self.outfile,
                 "Greenwald fraction (f_GW)",
@@ -3880,7 +3879,7 @@ class PlasmaBeta(Model):
         )
         po.oblnkl(self.outfile)
 
-        if stellarator_variables.istell == 0:
+        if self.data.stellarator.istell == 0:
             if (
                 BetaNormMaxModel(physics_variables.i_beta_norm_max)
                 != BetaNormMaxModel.USER_INPUT

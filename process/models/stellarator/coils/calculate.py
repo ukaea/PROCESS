@@ -6,7 +6,6 @@ from process.core.model import DataStructure
 from process.data_structure import (
     rebco_variables,
     stellarator_configuration,
-    stellarator_variables,
     tfcoil_variables,
 )
 from process.models.stellarator.coils import forces
@@ -41,14 +40,14 @@ def st_coil(stellarator, output: bool, data: DataStructure):
         data structure object to provide model data
 
     """
-    r_coil_major = stellarator_variables.r_coil_major
-    r_coil_minor = stellarator_variables.r_coil_minor
+    r_coil_major = data.stellarator.r_coil_major
+    r_coil_minor = data.stellarator.r_coil_minor
 
     #######################################################################################
     calculate_winding_pack_geometry()
 
     # Total coil current (MA)
-    coilcurrent = calculate_current()
+    coilcurrent = calculate_current(data)
 
     awp_rad, a_tf_wp_no_insulation, a_tf_wp_with_insulation, f_a_scu_of_wp = (
         winding_pack_total_size(r_coil_major, r_coil_minor, coilcurrent, data)
@@ -60,8 +59,8 @@ def st_coil(stellarator, output: bool, data: DataStructure):
 
     #######################################################################################
     #  Port calculations
-    calculate_vertical_ports()
-    calculate_horizontal_ports()
+    calculate_vertical_ports(data)
+    calculate_horizontal_ports(data)
 
     #######################################################################################
     #  General Coil Geometry values
@@ -79,8 +78,8 @@ def st_coil(stellarator, output: bool, data: DataStructure):
 
     calculate_coils_summary_variables(coilcurrent, r_coil_major, r_coil_minor, awp_rad)
 
-    inductance = calculate_inductnace(r_coil_minor)
-    calculate_stored_magnetic_energy(r_coil_minor)
+    inductance = calculate_inductance(r_coil_minor, data)
+    calculate_stored_magnetic_energy(r_coil_minor, data)
 
     #  Coil dimensions
     data.build.z_tf_inside_half = (
@@ -99,9 +98,9 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     # [m^2] Total surface area of toroidal shells covering coils
     tfcoil_variables.tfcryoarea = (
         stellarator_configuration.stella_config_coilsurface
-        * stellarator_variables.f_st_rmajor
+        * data.stellarator.f_st_rmajor
         * (
-            stellarator_variables.r_coil_minor
+            data.stellarator.r_coil_minor
             / stellarator_configuration.stella_config_coil_rminor
         )
         * 1.1e0
@@ -111,7 +110,7 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     # Minimal bending radius:
     min_bending_radius = (
         stellarator_configuration.stella_config_min_bend_radius
-        * stellarator_variables.f_st_rmajor
+        * data.stellarator.f_st_rmajor
         / (1.0 - tfcoil_variables.dr_tf_wp_with_insulation / (2.0 * r_coil_minor))
     )
 
@@ -128,22 +127,22 @@ def st_coil(stellarator, output: bool, data: DataStructure):
     #
     #######################################################################################
     # Forces scaling #
-    forces.calculate_max_force_density(a_tf_wp_no_insulation)
+    forces.calculate_max_force_density(a_tf_wp_no_insulation, data)
     forces.calculate_maximum_stress()
 
     # Units: MN/m
-    max_force_density_mnm = forces.calculate_max_force_density_mnm()
+    max_force_density_mnm = forces.calculate_max_force_density_mnm(data)
     max_lateral_force_density = forces.calculate_max_lateral_force_density(
-        a_tf_wp_no_insulation
+        a_tf_wp_no_insulation, data
     )
     max_radial_force_density = forces.calculate_max_radial_force_density(
-        a_tf_wp_no_insulation
+        a_tf_wp_no_insulation, data
     )
     #
     # F = f*V = B*j*V \propto B/B0 * I/I0 * A0/A * A/A0 * len/len0
-    centering_force_max_mn = forces.calculate_centering_force_max_mn()
-    centering_force_min_mn = forces.calculate_centering_force_min_mn()
-    centering_force_avg_mn = forces.calculate_centering_force_avg_mn()
+    centering_force_max_mn = forces.calculate_centering_force_max_mn(data)
+    centering_force_min_mn = forces.calculate_centering_force_min_mn(data)
+    centering_force_avg_mn = forces.calculate_centering_force_avg_mn(data)
     #
     ####################################
 
@@ -289,37 +288,41 @@ def calculate_coils_summary_variables(coilcurrent, r_coil_major, r_coil_minor, a
     # useful for stellarators
 
 
-def calculate_inductnace(r_coil_minor):
+def calculate_inductance(r_coil_minor, data: DataStructure):
     """This uses the reference value for the inductance and scales it with a^2/R (toroid inductance scaling)
 
     Parameters
     ----------
     r_coil_minor :
 
+    data: DataStructure
+        data structure object
     """
     return (
         stellarator_configuration.stella_config_inductance
-        / stellarator_variables.f_st_rmajor
+        / data.stellarator.f_st_rmajor
         * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
-        * stellarator_variables.f_st_n_coils**2
+        * data.stellarator.f_st_n_coils**2
     )
 
 
-def calculate_stored_magnetic_energy(r_coil_minor):
+def calculate_stored_magnetic_energy(r_coil_minor, data: DataStructure):
     """[GJ] Total magnetic energy
 
     Parameters
     ----------
     r_coil_minor :
 
+    data: DataStructure
+        data structure object
     """
     tfcoil_variables.e_tf_magnetic_stored_total_gj = (
         0.5e0
         * (
             stellarator_configuration.stella_config_inductance
-            / stellarator_variables.f_st_rmajor
+            / data.stellarator.f_st_rmajor
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
-            * stellarator_variables.f_st_n_coils**2
+            * data.stellarator.f_st_n_coils**2
         )
         * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
         * 1.0e-9
@@ -353,19 +356,19 @@ def calculate_winding_pack_geometry():
     ) ** 2 - tfcoil_variables.a_tf_turn_cable_space_no_void
 
 
-def calculate_current():
+def calculate_current(data: DataStructure):
     """Recalculate the coil current from global stellarator configuration and variables:
     coilcurrent = f_b * stella_config_i0 * f_r / f_n
-    Update stellarator_variables.f_i
+    Update data.stellarator.f_i
 
     """
     coilcurrent = (
-        stellarator_variables.f_st_b
+        data.stellarator.f_st_b
         * stellarator_configuration.stella_config_i0
-        * stellarator_variables.f_st_rmajor
-        / stellarator_variables.f_st_n_coils
+        * data.stellarator.f_st_rmajor
+        / data.stellarator.f_st_n_coils
     )
-    stellarator_variables.f_st_i_total = (
+    data.stellarator.f_st_i_total = (
         coilcurrent / stellarator_configuration.stella_config_i0
     )
     return coilcurrent
@@ -549,43 +552,37 @@ def calculate_casing():
     tfcoil_variables.dx_tf_side_case_min = tfcoil_variables.dr_tf_nose_case
 
 
-def calculate_vertical_ports():
+def calculate_vertical_ports(data: DataStructure):
     #  Maximal toroidal port size (vertical ports) (m)
     #  The maximal distance is correct but the vertical extension of this port is not clear#
     #  This is simplified for now and can be made more accurate in the future#
-    stellarator_variables.vporttmax = (
+    data.stellarator.vporttmax = (
         0.4e0
         * stellarator_configuration.stella_config_max_portsize_width
-        * stellarator_variables.f_st_rmajor
-        / stellarator_variables.f_st_n_coils
+        * data.stellarator.f_st_rmajor
+        / data.stellarator.f_st_n_coils
     )  # This is not accurate yet. Needs more insight#
 
     #  Maximal poloidal port size (vertical ports) (m)
-    stellarator_variables.vportpmax = (
-        2.0 * stellarator_variables.vporttmax
-    )  # Simple approximation
+    data.stellarator.vportpmax = 2.0 * data.stellarator.vporttmax  # Simple approximation
 
     #  Maximal vertical port clearance area (m2)
-    stellarator_variables.vportamax = (
-        stellarator_variables.vporttmax * stellarator_variables.vportpmax
-    )
+    data.stellarator.vportamax = data.stellarator.vporttmax * data.stellarator.vportpmax
 
 
-def calculate_horizontal_ports():
+def calculate_horizontal_ports(data: DataStructure):
     #  Maximal toroidal port size (horizontal ports) (m)
-    stellarator_variables.hporttmax = (
+    data.stellarator.hporttmax = (
         0.8e0
         * stellarator_configuration.stella_config_max_portsize_width
-        * stellarator_variables.f_st_rmajor
-        / stellarator_variables.f_st_n_coils
+        * data.stellarator.f_st_rmajor
+        / data.stellarator.f_st_n_coils
     )  # Factor 0.8 to take the variation with height into account
 
     #  Maximal poloidal port size (horizontal ports) (m)
-    stellarator_variables.hportpmax = (
-        2.0e0 * stellarator_variables.hporttmax
+    data.stellarator.hportpmax = (
+        2.0e0 * data.stellarator.hporttmax
     )  # Simple approximation
 
     #  Maximal horizontal port clearance area (m2)
-    stellarator_variables.hportamax = (
-        stellarator_variables.hporttmax * stellarator_variables.hportpmax
-    )
+    data.stellarator.hportamax = data.stellarator.hporttmax * data.stellarator.hportpmax

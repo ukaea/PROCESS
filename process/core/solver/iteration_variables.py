@@ -246,9 +246,7 @@ ITERATION_VARIABLES = {
         "dx_croco_strand_copper", data_structure.rebco_variables, 1.0e-3, 1.0e-1
     ),
     162: IterationVariable("r_cp_top", "build", 0.0010, 10.0),
-    169: IterationVariable(
-        "te0_ecrh_achievable", data_structure.stellarator_variables, 1.0, 1.0e3
-    ),
+    169: IterationVariable("te0_ecrh_achievable", "stellarator", 1.0, 1.0e3),
     170: IterationVariable(
         "deg_div_field_plate", data_structure.divertor_variables, 0.49, 5.01
     ),
@@ -263,9 +261,7 @@ ITERATION_VARIABLES = {
     ),
     174: IterationVariable("triang", data_structure.physics_variables, 0.00, 1.00),
     175: IterationVariable("kappa", data_structure.physics_variables, 0.00, 10.00),
-    176: IterationVariable(
-        "f_st_coil_aspect", data_structure.stellarator_variables, 0.70, 1.30
-    ),
+    176: IterationVariable("f_st_coil_aspect", "stellarator", 0.70, 1.30),
 }
 
 

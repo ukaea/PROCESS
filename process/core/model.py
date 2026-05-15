@@ -20,6 +20,7 @@ from process.data_structure.power_variables import PowerData
 from process.data_structure.primary_pumping_variables import PrimaryPumpingData
 from process.data_structure.pulse_variables import PulseData
 from process.data_structure.reinke_variables import ReinkeData
+from process.data_structure.stellarator_variables import StellaratorData
 from process.data_structure.structure_variables import StructureData
 from process.data_structure.times_variables import TimesData
 from process.data_structure.vacuum_variables import VacuumData
@@ -53,6 +54,7 @@ class DataStructure:
     ife: IFEData = initialise_later
     pf_coil: PFCoilData = initialise_later
     power: PowerData = initialise_later
+    stellarator: StellaratorData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

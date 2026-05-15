@@ -244,9 +244,7 @@ INPUT_VARIABLES = {
     "pres_blkt_coolant": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
     "blpressure_liq": InputVariable("fwbs", float, range=(100000.0, 100000000.0)),
     "b_cs_limit_max": InputVariable("pf_coil", float, range=(0.01, 100.0)),
-    "bmn": InputVariable(
-        data_structure.stellarator_variables, float, range=(0.0001, 0.01)
-    ),
+    "bmn": InputVariable("stellarator", float, range=(0.0001, 0.01)),
     "b_tf_inboard_max": InputVariable("constraints", float, range=(0.1, 50.0)),
     "f_c_plasma_bootstrap_max": InputVariable(
         "current_drive", float, range=(-0.999, 0.999)
@@ -478,9 +476,7 @@ INPUT_VARIABLES = {
     "f_alpha_energy_confinement_min": InputVariable(
         "constraints", float, range=(1.0, 100.0)
     ),
-    "f_asym": InputVariable(
-        data_structure.stellarator_variables, float, range=(0.9, 2.0)
-    ),
+    "f_asym": InputVariable("stellarator", float, range=(0.9, 2.0)),
     "f_fw_peak": InputVariable("fwbs", float, range=(1.0, 100.0)),
     "f_fw_rad_max": InputVariable("constraints", float, range=(0.1, 10)),
     "f_nd_alpha_electron": InputVariable(
@@ -495,9 +491,7 @@ INPUT_VARIABLES = {
     "f_neut_shield": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "f_nuc_pow_bz_struct": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "f_r_cp": InputVariable("build", float, range=(1.0, 100.0)),
-    "f_rad": InputVariable(
-        data_structure.stellarator_variables, float, range=(0.0, 1.0)
-    ),
+    "f_rad": InputVariable("stellarator", float, range=(0.0, 1.0)),
     "f_sync_reflect": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
@@ -508,10 +502,8 @@ INPUT_VARIABLES = {
     "f_vforce_inboard": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "f_w": InputVariable(data_structure.stellarator_variables, float, range=(0.1, 1.0)),
-    "f_st_coil_aspect": InputVariable(
-        data_structure.stellarator_variables, float, range=(0.1, 10.0)
-    ),
+    "f_w": InputVariable("stellarator", float, range=(0.1, 1.0)),
+    "f_st_coil_aspect": InputVariable("stellarator", float, range=(0.1, 10.0)),
     "f_z_cryostat": InputVariable("build", float, range=(2.0, 10.0)),
     "fauxbop": InputVariable("ife", float, range=(0.0, 1.0)),
     "fblbe": InputVariable("fwbs", float, range=(0.0, 1.0)),
@@ -548,9 +540,7 @@ INPUT_VARIABLES = {
     "fjohc0": InputVariable("constraints", float, range=(0.001, 1.0)),
     "f_ster_div_single": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "fdiva": InputVariable(data_structure.divertor_variables, float, range=(0.1, 2.0)),
-    "fdivwet": InputVariable(
-        data_structure.stellarator_variables, float, range=(0.01, 1.0)
-    ),
+    "fdivwet": InputVariable("stellarator", float, range=(0.01, 1.0)),
     "feffcd": InputVariable("current_drive", float, range=(0.0, 20.0)),
     "f_a_fw_outboard_hcd": InputVariable("fwbs", float, range=(0.0, 1.0)),
     "fhole": InputVariable("fwbs", float, range=(0.0, 1.0)),
@@ -559,9 +549,7 @@ INPUT_VARIABLES = {
     "f_h_mode_margin": InputVariable("constraints", float, range=(0.001, 1000000.0)),
     "f_l_mode_margin": InputVariable("constraints", float, range=(0.001, 1000000.0)),
     "flirad": InputVariable("ife", float, range=(0.0, 10.0)),
-    "flpitch": InputVariable(
-        data_structure.stellarator_variables, float, range=(0.0001, 0.01)
-    ),
+    "flpitch": InputVariable("stellarator", float, range=(0.0001, 0.01)),
     "f_div_flux_expansion": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 10.0)
     ),
@@ -662,9 +650,7 @@ INPUT_VARIABLES = {
     ),
     "temp_blkt_coolant_in": InputVariable("fwbs", float, range=(200.0, 600.0)),
     "inlet_temp_liq": InputVariable("fwbs", float, range=(508.0, 1500.0)),
-    "iotabar": InputVariable(
-        data_structure.stellarator_variables, float, range=(0.1, 10.0)
-    ),
+    "iotabar": InputVariable("stellarator", float, range=(0.1, 10.0)),
     "j_tf_bus": InputVariable(
         data_structure.tfcoil_variables, float, range=(10000.0, 100000000.0)
     ),
@@ -697,7 +683,7 @@ INPUT_VARIABLES = {
     "maintenance_fwbs": InputVariable("costs", float, range=(0.0, 1.0)),
     "maintenance_gen": InputVariable("costs", float, range=(0.0, 1.0)),
     "max_gyrotron_frequency": InputVariable(
-        data_structure.stellarator_variables,
+        "stellarator",
         float,
         range=(1000000000.0, 100000000000000.0),
     ),
@@ -890,9 +876,7 @@ INPUT_VARIABLES = {
     "shdr": InputVariable("ife", float, range=(0.0, 10.0)),
     "shdzl": InputVariable("ife", float, range=(0.0, 10.0)),
     "shdzu": InputVariable("ife", float, range=(0.0, 10.0)),
-    "shear": InputVariable(
-        data_structure.stellarator_variables, float, range=(0.1, 10.0)
-    ),
+    "shear": InputVariable("stellarator", float, range=(0.1, 10.0)),
     "dz_shld_lower": InputVariable("build", float, range=(0.0, 10.0)),
     "dz_shld_upper": InputVariable("build", float, range=(0.0, 10.0)),
     "shmf": InputVariable("buildings", float, range=(0.0, 1.0)),
@@ -993,9 +977,7 @@ INPUT_VARIABLES = {
     "temp_plasma_electron_vol_avg_kev": InputVariable(
         data_structure.physics_variables, float, range=(1.0, 200.0)
     ),
-    "te0_ecrh_achievable": InputVariable(
-        data_structure.stellarator_variables, float, range=(1.0, 1000.0)
-    ),
+    "te0_ecrh_achievable": InputVariable("stellarator", float, range=(1.0, 1000.0)),
     "temp_cp_average": InputVariable(
         data_structure.tfcoil_variables, float, range=(4.0, 573.15)
     ),
@@ -1313,8 +1295,8 @@ INPUT_VARIABLES = {
     "i_pf_energy_storage_source": InputVariable(
         data_structure.pf_power_variables, int, range=(1, 3)
     ),
-    "istell": InputVariable(data_structure.stellarator_variables, int, range=(0, 6)),
-    "isthtr": InputVariable(data_structure.stellarator_variables, int, range=(1, 3)),
+    "istell": InputVariable("stellarator", int, range=(0, 6)),
+    "isthtr": InputVariable("stellarator", int, range=(1, 3)),
     "istore": InputVariable("pulse", int, range=(1, 3)),
     "i_cs_superconductor": InputVariable("pf_coil", int, range=(1, 9)),
     "i_pf_superconductor": InputVariable("pf_coil", int, range=(1, 9)),
@@ -1325,7 +1307,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, int, range=(1, 2)
     ),
     "lsa": InputVariable("costs", int, range=(1, 4)),
-    "m_res": InputVariable(data_structure.stellarator_variables, int, range=(1, 10)),
+    "m_res": InputVariable("stellarator", int, range=(1, 10)),
     "n_tf_wp_layers": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 100)
     ),
@@ -1339,7 +1321,7 @@ INPUT_VARIABLES = {
     "n_rad_per_layer": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 500)
     ),
-    "n_res": InputVariable(data_structure.stellarator_variables, int, range=(3, 6)),
+    "n_res": InputVariable("stellarator", int, range=(3, 6)),
     "n_tf_graded_layers": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 20)
     ),
