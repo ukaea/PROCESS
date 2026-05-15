@@ -1064,7 +1064,7 @@ class TFCoil(Model):
             self.outfile,
             "Total stored energy in TF coils (J)",
             "(e_tf_magnetic_stored_total)",
-            superconducting_tf_coil_variables.e_tf_magnetic_stored_total,
+            tfcoil_variables.e_tf_magnetic_stored_total,
             "OP ",
         )
         po.ovarre(
