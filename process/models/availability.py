@@ -8,7 +8,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import divertor_variables as dv
-from process.data_structure import ife_variables as ifev
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.models.tfcoil.base import TFConductorModel
@@ -87,7 +86,7 @@ class Availability(Model):
             indicate whether output should be written to the output file, or not
         """
         # Full power lifetime (in years)
-        if ifev.ife != 1:
+        if self.data.ife.ife != 1:
             # Calculate DPA per FPY - based on neutronics-derived fusion power relation to DEMO blanket lifetime provided by Matti Coleman
             # Detailed and cited in T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
             # https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
@@ -199,7 +198,7 @@ class Availability(Model):
         )
 
         # Modify lifetimes to take account of the availability
-        if ifev.ife != 1:
+        if self.data.ife.ife != 1:
             # First wall / blanket
             if self.data.fwbs.life_blkt_fpy < self.data.costs.life_plant:
                 self.data.fwbs.life_blkt_fpy = min(
@@ -407,7 +406,7 @@ class Availability(Model):
         )
 
         # Modify lifetimes to take account of the availability
-        if ifev.ife != 1:
+        if self.data.ife.ife != 1:
             # First wall / blanket
             if self.data.fwbs.life_blkt_fpy < self.data.costs.life_plant:
                 self.data.fwbs.life_blkt_fpy = min(
@@ -1269,7 +1268,7 @@ class Availability(Model):
         )
 
         # Modify lifetimes to take account of the availability
-        if ifev.ife != 1:
+        if self.data.ife.ife != 1:
             # First wall / blanket
             if self.data.fwbs.life_blkt_fpy < self.data.costs.life_plant:
                 self.data.fwbs.life_blkt_fpy = min(

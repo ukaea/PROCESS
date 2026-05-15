@@ -1187,11 +1187,11 @@ def constraint_equation_48(constraint_registration, data):
 
 
 @ConstraintManager.register_constraint(50, "Hz", "<=")
-def constraint_equation_50(constraint_registration, _data):
+def constraint_equation_50(constraint_registration, data):
     """IFE option: Equation for repetition rate upper limit"""
     return leq(
-        data_structure.ife_variables.reprat,
-        data_structure.ife_variables.rrmax,
+        data.ife.reprat,
+        data.ife.rrmax,
         constraint_registration,
     )
 
@@ -1223,7 +1223,7 @@ def constraint_equation_52(constraint_registration, data):
     tbr: tritium breeding ratio
     tbrmin: minimum tritium breeding ratio
     """
-    if data_structure.ife_variables.ife != 1:
+    if data.ife.ife != 1:
         raise ProcessValueError(
             "Constraint 52 is only supported when running the IFE model"
         )
