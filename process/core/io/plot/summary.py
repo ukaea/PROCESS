@@ -46,8 +46,8 @@ from process.models.geometry.vacuum_vessel import (
     vacuum_vessel_geometry_double_null,
     vacuum_vessel_geometry_single_null,
 )
-from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.pfcoil import CSCoil
+from process.models.physics.bootstrap_current import BootstrapCurrentFractionModel
 from process.models.physics.confinement_time import (
     ConfinementTimeModel,
     PlasmaConfinementTime,
