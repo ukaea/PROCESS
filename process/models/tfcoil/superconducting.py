@@ -121,7 +121,7 @@ class SuperconductingTFCoil(TFCoil):
 
     def output(self):
         """Output routine for superconducting TF coil model."""
-        self.outtf()
+        self.output_general_tf_info()
         self.run_base_superconducting_tf()
         self.output_tf_superconductor_info()
 
@@ -456,6 +456,32 @@ class SuperconductingTFCoil(TFCoil):
             f"{SuperconductorModel(tfcoil_variables.i_tf_sc_mat).full_name}",
         )
 
+        po.ovarin(
+            self.outfile,
+            "Superconducting TF coil turn type",
+            "(i_tf_turn_type)",
+            superconducting_tf_coil_variables.i_tf_turn_type,
+        )
+        po.ovarin(
+            self.outfile,
+            "WP shape selection switch",
+            "(i_tf_wp_geom)",
+            tfcoil_variables.i_tf_wp_geom,
+        )
+
+        po.ovarin(
+            self.outfile,
+            "Superconducting TF coil turn type",
+            "(i_tf_turn_type)",
+            superconducting_tf_coil_variables.i_tf_turn_type,
+        )
+        po.ovarin(
+            self.outfile,
+            "WP shape selection switch",
+            "(i_tf_wp_geom)",
+            tfcoil_variables.i_tf_wp_geom,
+        )
+
         po.ovarre(
             self.outfile,
             "Critical field at zero temperature and strain (T)",
@@ -542,6 +568,13 @@ class SuperconductingTFCoil(TFCoil):
             "Critical current density in winding pack (A/m2)",
             "(j_tf_wp_critical)",
             tfcoil_variables.j_tf_wp_critical,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Winding pack current density (A/m2)",
+            "(j_tf_wp)",
+            tfcoil_variables.j_tf_wp,
             "OP ",
         )
         po.ovarre(
@@ -2084,7 +2117,7 @@ class CICCSuperconductingTFCoil(SuperconductingTFCoil):
         )  # TFC Quench voltage in kV
 
         if output:
-            self.outtf()
+            self.output_general_tf_info()
 
     @staticmethod
     def tf_cable_in_conduit_superconductor_properties(
@@ -3572,7 +3605,7 @@ class CROCOSuperconductingTFCoil(SuperconductingTFCoil):
         )  # TFC Quench voltage in kV
 
         if output:
-            self.outtf()
+            self.output_general_tf_info()
             self.output_croco_info()
 
     def tf_croco_averaged_turn_geometry(
