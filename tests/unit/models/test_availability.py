@@ -3,7 +3,6 @@
 import pytest
 
 from process.core.init import init_all_module_vars
-from process.data_structure import divertor_variables as dv
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 
@@ -41,7 +40,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
     monkeypatch.setattr(availability.data.costs, "life_dpa", 40.0)
     monkeypatch.setattr(availability.data.costs, "adivflnc", 8.0)
-    monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
+    monkeypatch.setattr(availability.data.divertor, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(availability.data.times, "t_plant_pulse_total", 5.0)
     monkeypatch.setattr(availability.data.costs, "i_plant_availability", 0)
     monkeypatch.setattr(availability.data.costs, "f_t_plant_available", 0.8)
@@ -199,7 +198,7 @@ def calc_u_planned_fix(availability, request, monkeypatch):
     # Mock all module variables used by calc_u_planned()
     # Some are parameterised
     monkeypatch.setattr(
-        dv,
+        availability.data.divertor,
         "pflux_div_heat_load_mw",
         param["pflux_div_heat_load_mw"],
     )
@@ -598,7 +597,7 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(availability.data.times, "t_plant_pulse_burn", 5.0)
     monkeypatch.setattr(availability.data.times, "t_plant_pulse_total", 9000.0)
     monkeypatch.setattr(availability.data.costs, "adivflnc", 10.0)
-    monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
+    monkeypatch.setattr(availability.data.divertor, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(availability.data.costs, "ibkt_life", 0)
     monkeypatch.setattr(availability.data.costs, "abktflnc", 10.0)
     monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 10.0)
@@ -646,7 +645,7 @@ def test_divertor_lifetime(monkeypatch, availability):
     """
 
     monkeypatch.setattr(availability.data.costs, "adivflnc", 100.0)
-    monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
+    monkeypatch.setattr(availability.data.divertor, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(availability.data.costs, "life_plant", 30.0)
 
     divlife_obs = availability.divertor_lifetime()

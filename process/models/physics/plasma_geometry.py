@@ -11,7 +11,6 @@ from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
 from process.data_structure import (
-    divertor_variables,
     physics_variables,
     stellarator_variables,
 )
@@ -526,16 +525,16 @@ class PlasmaGeom(Model):
         po.oheadr(self.outfile, "Plasma Geometry")
 
         if stellarator_variables.istell == 0:
-            if divertor_variables.n_divertors == 0:
+            if self.data.divertor.n_divertors == 0:
                 po.ocmmnt(self.outfile, "Plasma configuration = limiter")
-            elif divertor_variables.n_divertors == 1:
+            elif self.data.divertor.n_divertors == 1:
                 po.ocmmnt(self.outfile, "Plasma configuration = single null divertor")
-            elif divertor_variables.n_divertors == 2:
+            elif self.data.divertor.n_divertors == 2:
                 po.ocmmnt(self.outfile, "Plasma configuration = double null divertor")
             else:
                 raise ProcessValueError(
                     "Illegal value of n_divertors",
-                    n_divertors=divertor_variables.n_divertors,
+                    n_divertors=self.data.divertor.n_divertors,
                 )
         else:
             po.ocmmnt(self.outfile, "Plasma configuration = stellarator")

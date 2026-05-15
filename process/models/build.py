@@ -7,7 +7,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    divertor_variables,
     numerics,
     pfcoil_variables,
     physics_variables,
@@ -187,7 +186,7 @@ class Build(Model):
                     + self.data.build.dz_shld_vv_gap
                     + self.data.build.dz_vv_upper
                     + self.data.build.dz_shld_upper
-                    + divertor_variables.dz_divertor
+                    + self.data.divertor.dz_divertor
                     + self.data.build.dz_xpoint_divertor
                     + self.data.build.z_plasma_xpoint_upper
                 )
@@ -290,7 +289,7 @@ class Build(Model):
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
-                    divertor_variables.dz_divertor,
+                    self.data.divertor.dz_divertor,
                     vertical_build_upper,
                     "(dz_divertor)",
                 )
@@ -298,9 +297,9 @@ class Build(Model):
                     self.mfile,
                     "Divertor structure vertical thickness (m)",
                     "(dz_divertor)",
-                    divertor_variables.dz_divertor,
+                    self.data.divertor.dz_divertor,
                 )
-                vertical_build_upper -= divertor_variables.dz_divertor
+                vertical_build_upper -= self.data.divertor.dz_divertor
 
                 po.obuild(
                     self.outfile,
@@ -364,11 +363,11 @@ class Build(Model):
                     self.data.build.dz_xpoint_divertor,
                 )
 
-                vertical_build_upper -= divertor_variables.dz_divertor
+                vertical_build_upper -= self.data.divertor.dz_divertor
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
-                    divertor_variables.dz_divertor,
+                    self.data.divertor.dz_divertor,
                     vertical_build_upper,
                     "(dz_divertor)",
                 )
@@ -376,7 +375,7 @@ class Build(Model):
                     self.mfile,
                     "Divertor structure vertical thickness (m)",
                     "(dz_divertor)",
-                    divertor_variables.dz_divertor,
+                    self.data.divertor.dz_divertor,
                 )
 
                 vertical_build_upper -= self.data.build.dz_shld_lower
@@ -677,11 +676,11 @@ class Build(Model):
                     self.data.build.dz_xpoint_divertor,
                 )
 
-                vbuild -= divertor_variables.dz_divertor
+                vbuild -= self.data.divertor.dz_divertor
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
-                    divertor_variables.dz_divertor,
+                    self.data.divertor.dz_divertor,
                     vbuild,
                     "(dz_divertor)",
                 )
@@ -689,7 +688,7 @@ class Build(Model):
                     self.mfile,
                     "Divertor structure vertical thickness (m)",
                     "(dz_divertor)",
-                    divertor_variables.dz_divertor,
+                    self.data.divertor.dz_divertor,
                 )
 
                 vbuild -= self.data.build.dz_shld_lower
@@ -797,7 +796,7 @@ class Build(Model):
         self.data.build.z_tf_inside_half = (
             self.data.build.z_plasma_xpoint_upper
             + self.data.build.dz_xpoint_divertor
-            + divertor_variables.dz_divertor
+            + self.data.divertor.dz_divertor
             + self.data.build.dz_shld_lower
             + self.data.build.dz_vv_lower
             + self.data.build.dz_shld_vv_gap
@@ -903,36 +902,36 @@ class Build(Model):
 
         # Position of inner plate ends
         rplti = rspi + (self.data.build.plleni / 2.0e0) * np.cos(
-            thetai + divertor_variables.betai
+            thetai + self.data.divertor.betai
         )
         zplti = zspi + (self.data.build.plleni / 2.0e0) * np.sin(
-            thetai + divertor_variables.betai
+            thetai + self.data.divertor.betai
         )
         rplbi = rspi - (self.data.build.plleni / 2.0e0) * np.cos(
-            thetai + divertor_variables.betai
+            thetai + self.data.divertor.betai
         )
         zplbi = zspi - (self.data.build.plleni / 2.0e0) * np.sin(
-            thetai + divertor_variables.betai
+            thetai + self.data.divertor.betai
         )
 
         # Position of outer plate ends
         rplto = self.data.build.rspo - (self.data.build.plleno / 2.0e0) * np.cos(
-            thetao + divertor_variables.betao
+            thetao + self.data.divertor.betao
         )
         zplto = zspo + (self.data.build.plleno / 2.0e0) * np.sin(
-            thetao + divertor_variables.betao
+            thetao + self.data.divertor.betao
         )
         rplbo = self.data.build.rspo + (self.data.build.plleno / 2.0e0) * np.cos(
-            thetao + divertor_variables.betao
+            thetao + self.data.divertor.betao
         )
         zplbo = zspo - (self.data.build.plleno / 2.0e0) * np.sin(
-            thetao + divertor_variables.betao
+            thetao + self.data.divertor.betao
         )
 
         divht = max(zplti, zplto) - min(zplbo, zplbi)
 
         if output:
-            if divertor_variables.n_divertors == 1:
+            if self.data.divertor.n_divertors == 1:
                 po.oheadr(self.outfile, "Divertor build and plasma position")
                 po.ocmmnt(self.outfile, "Divertor Configuration = Single Null Divertor")
                 po.oblnkl(self.outfile)
@@ -1029,13 +1028,13 @@ class Build(Model):
                     self.outfile,
                     "Poloidal plane angle between inner leg and plate (rad)",
                     "(betai)",
-                    divertor_variables.betai,
+                    self.data.divertor.betai,
                 )
                 po.ovarrf(
                     self.outfile,
                     "Poloidal plane angle between outer leg and plate (rad)",
                     "(betao)",
-                    divertor_variables.betao,
+                    self.data.divertor.betao,
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1145,7 +1144,7 @@ class Build(Model):
                     "OP ",
                 )
 
-            elif divertor_variables.n_divertors == 2:
+            elif self.data.divertor.n_divertors == 2:
                 po.oheadr(self.outfile, "Divertor build and plasma position")
                 po.ocmmnt(self.outfile, "Divertor Configuration = Double Null Divertor")
                 po.oblnkl(self.outfile)
@@ -1247,13 +1246,13 @@ class Build(Model):
                     self.outfile,
                     "Poloidal plane angle between inner leg and plate (rad)",
                     "(betai)",
-                    divertor_variables.betai,
+                    self.data.divertor.betai,
                 )
                 po.ovarrf(
                     self.outfile,
                     "Poloidal plane angle between outer leg and plate (rad)",
                     "(betao)",
-                    divertor_variables.betao,
+                    self.data.divertor.betao,
                 )
                 po.ovarrf(
                     self.outfile,

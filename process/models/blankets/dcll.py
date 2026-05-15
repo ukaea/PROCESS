@@ -3,7 +3,6 @@ from process.core import (
     process_output as po,
 )
 from process.data_structure import (
-    divertor_variables,
     physics_variables,
 )
 from process.models.blankets.blanket_library import InboardBlanket, OutboardBlanket
@@ -144,7 +143,7 @@ class DCLL(InboardBlanket, OutboardBlanket):
         output: bool
 
         """
-        if divertor_variables.n_divertors == 2:
+        if self.data.divertor.n_divertors == 2:
             # Double null configuration
             covf = (
                 1

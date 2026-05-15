@@ -7,7 +7,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.exceptions import ProcessValueError
 from process.core.model import Model
-from process.data_structure import divertor_variables as dv
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.models.tfcoil.base import TFConductorModel
@@ -137,7 +136,9 @@ class Availability(Model):
 
             # TODO Issue #834
             # Add a test for pflux_div_heat_load_mw=0
-            dv.pflux_div_heat_load_mw = max(dv.pflux_div_heat_load_mw, 1.0e-10)
+            self.data.divertor.pflux_div_heat_load_mw = max(
+                self.data.divertor.pflux_div_heat_load_mw, 1.0e-10
+            )
 
             # Divertor lifetime (years)
             self.data.costs.life_div_fpy = self.divertor_lifetime()
@@ -1486,7 +1487,7 @@ class Availability(Model):
         return max(
             0.0,
             min(
-                self.data.costs.adivflnc / dv.pflux_div_heat_load_mw,
+                self.data.costs.adivflnc / self.data.divertor.pflux_div_heat_load_mw,
                 self.data.costs.life_plant,
             ),
         )

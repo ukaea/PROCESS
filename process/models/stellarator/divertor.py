@@ -4,7 +4,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import DataStructure
 from process.data_structure import (
-    divertor_variables,
     physics_variables,
     stellarator_variables,
 )
@@ -31,9 +30,9 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
     Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch
     r = physics_variables.rmajor
     p_div = physics_variables.p_plasma_separatrix_mw
-    alpha = divertor_variables.anginc
-    xi_p = divertor_variables.xpertin
-    T_scrape = divertor_variables.tdiv
+    alpha = data.divertor.anginc
+    xi_p = data.divertor.xpertin
+    T_scrape = data.divertor.tdiv
 
     #  Scrape-off temperature in Joules
 
@@ -98,16 +97,16 @@ def st_div(stellarator, f_output: bool, data: DataStructure):
 
     #  Transfer to global variables
 
-    divertor_variables.pflux_div_heat_load_mw = q_div
-    divertor_variables.a_div_surface_total = darea
+    data.divertor.pflux_div_heat_load_mw = q_div
+    data.divertor.a_div_surface_total = darea
 
     data.fwbs.f_ster_div_single = darea / data.first_wall.a_fw_total
 
     if f_output:
-        output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta)
+        output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta, data)
 
 
-def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
+def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta, data: DataStructure):
     """Outputs a summary of divertor-related parameters and results to the stellartor object.
         stellarator: An object containing stellarator configuration and output handle.
 
@@ -147,19 +146,19 @@ def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
         stellarator.outfile,
         "Angle of incidence (deg)",
         "(anginc)",
-        divertor_variables.anginc * 180.0e0 / np.pi,
+        data.divertor.anginc * 180.0e0 / np.pi,
     )
     po.ovarre(
         stellarator.outfile,
         "Perp. heat transport coefficient (m2/s)",
         "(xpertin)",
-        divertor_variables.xpertin,
+        data.divertor.xpertin,
     )
     po.ovarre(
         stellarator.outfile,
         "Divertor plasma temperature (eV)",
         "(tdiv)",
-        divertor_variables.tdiv,
+        data.divertor.tdiv,
     )
     po.ovarre(
         stellarator.outfile,
@@ -231,5 +230,5 @@ def output(stellarator, a_eff, l_d, l_w, f_x, l_q, w_r, Delta):
         stellarator.outfile,
         "Peak heat load (MW/m2)",
         "(pflux_div_heat_load_mw)",
-        divertor_variables.pflux_div_heat_load_mw,
+        data.divertor.pflux_div_heat_load_mw,
     )

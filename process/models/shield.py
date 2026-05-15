@@ -5,10 +5,7 @@ import logging
 from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    divertor_variables,
-    physics_variables,
-)
+from process.data_structure import physics_variables
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import (
     dshellarea,
@@ -39,8 +36,8 @@ class Shield(Model):
         self.data.blanket.dz_shld_half = self.calculate_shield_half_height(
             z_plasma_xpoint_lower=self.data.build.z_plasma_xpoint_lower,
             dz_xpoint_divertor=self.data.build.dz_xpoint_divertor,
-            dz_divertor=divertor_variables.dz_divertor,
-            n_divertors=divertor_variables.n_divertors,
+            dz_divertor=self.data.divertor.dz_divertor,
+            n_divertors=self.data.divertor.n_divertors,
             z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,
             dr_fw_plasma_gap_inboard=self.data.build.dr_fw_plasma_gap_inboard,
             dr_fw_plasma_gap_outboard=self.data.build.dr_fw_plasma_gap_outboard,

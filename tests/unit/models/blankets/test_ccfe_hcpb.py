@@ -3,7 +3,6 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.data_structure import (
-    divertor_variables,
     global_variables,
     physics_variables,
     tfcoil_variables,
@@ -1016,7 +1015,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        divertor_variables, "n_divertors", powerflowcalcparam.n_divertors
+        ccfe_hcpb.data.divertor, "n_divertors", powerflowcalcparam.n_divertors
     )
 
     monkeypatch.setattr(
@@ -1462,27 +1461,31 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(
-        divertor_variables,
+        ccfe_hcpb.data.divertor,
         "a_div_surface_total",
         componentmassesparam.a_div_surface_total,
     )
     monkeypatch.setattr(
-        divertor_variables, "f_vol_div_coolant", componentmassesparam.f_vol_div_coolant
+        ccfe_hcpb.data.divertor,
+        "f_vol_div_coolant",
+        componentmassesparam.f_vol_div_coolant,
     )
     monkeypatch.setattr(
-        divertor_variables, "dx_div_plate", componentmassesparam.dx_div_plate
+        ccfe_hcpb.data.divertor, "dx_div_plate", componentmassesparam.dx_div_plate
     )
-    monkeypatch.setattr(divertor_variables, "fdiva", componentmassesparam.fdiva)
+    monkeypatch.setattr(ccfe_hcpb.data.divertor, "fdiva", componentmassesparam.fdiva)
     monkeypatch.setattr(
-        divertor_variables, "m_div_plate", componentmassesparam.m_div_plate
+        ccfe_hcpb.data.divertor, "m_div_plate", componentmassesparam.m_div_plate
     )
     monkeypatch.setattr(
-        divertor_variables, "den_div_structure", componentmassesparam.den_div_structure
+        ccfe_hcpb.data.divertor,
+        "den_div_structure",
+        componentmassesparam.den_div_structure,
     )
     monkeypatch.setattr(physics_variables, "rminor", componentmassesparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", componentmassesparam.rmajor)
     monkeypatch.setattr(
-        divertor_variables, "n_divertors", componentmassesparam.n_divertors
+        ccfe_hcpb.data.divertor, "n_divertors", componentmassesparam.n_divertors
     )
     monkeypatch.setattr(
         physics_variables, "a_plasma_surface", componentmassesparam.a_plasma_surface
@@ -1630,10 +1633,10 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
 
     ccfe_hcpb.component_masses()
 
-    assert divertor_variables.a_div_surface_total == pytest.approx(
+    assert ccfe_hcpb.data.divertor.a_div_surface_total == pytest.approx(
         componentmassesparam.expected_a_div_surface_total
     )
-    assert divertor_variables.m_div_plate == pytest.approx(
+    assert ccfe_hcpb.data.divertor.m_div_plate == pytest.approx(
         componentmassesparam.expected_m_div_plate
     )
     assert ccfe_hcpb.data.fwbs.m_blkt_beryllium == pytest.approx(

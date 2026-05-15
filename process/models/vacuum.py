@@ -8,11 +8,7 @@ import numpy as np
 from process.core import constants, process_output
 from process.core import process_output as po
 from process.core.model import Model
-from process.data_structure import (
-    divertor_variables,
-    physics_variables,
-    tfcoil_variables,
-)
+from process.data_structure import physics_variables, tfcoil_variables
 from process.models.build import FwBlktVVShape
 from process.models.engineering.ivc_functions import dshellvol, eshellvol
 
@@ -89,7 +85,7 @@ class Vacuum(Model):
                 tfcoil_variables.n_tf_coils,
                 self.data.times.t_plant_pulse_dwell,
                 physics_variables.nd_plasma_electrons_vol_avg,
-                divertor_variables.n_divertors,
+                self.data.divertor.n_divertors,
                 qtorus,
                 gasld,
                 output=output,
@@ -734,7 +730,7 @@ class VacuumVessel(Model):
             z_tf_inside_half=self.data.build.z_tf_inside_half,
             dz_shld_vv_gap=self.data.build.dz_shld_vv_gap,
             dz_vv_lower=self.data.build.dz_vv_lower,
-            n_divertors=divertor_variables.n_divertors,
+            n_divertors=self.data.divertor.n_divertors,
             dz_blkt_upper=self.data.build.dz_blkt_upper,
             dz_shld_upper=self.data.build.dz_shld_upper,
             z_plasma_xpoint_upper=self.data.build.z_plasma_xpoint_upper,

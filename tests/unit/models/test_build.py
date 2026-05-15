@@ -2,10 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import (
-    divertor_variables,
-    physics_variables,
-)
+from process.data_structure import physics_variables
 
 
 @pytest.fixture
@@ -110,9 +107,9 @@ def test_divgeom(divgeomparam, monkeypatch, build):
 
     monkeypatch.setattr(build.data.build, "plsepo", divgeomparam.plsepo)
 
-    monkeypatch.setattr(divertor_variables, "betao", divgeomparam.betao)
+    monkeypatch.setattr(build.data.divertor, "betao", divgeomparam.betao)
 
-    monkeypatch.setattr(divertor_variables, "betai", divgeomparam.betai)
+    monkeypatch.setattr(build.data.divertor, "betai", divgeomparam.betai)
 
     monkeypatch.setattr(physics_variables, "itart", divgeomparam.itart)
 
@@ -120,7 +117,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
 
     monkeypatch.setattr(physics_variables, "rminor", divgeomparam.rminor)
 
-    monkeypatch.setattr(divertor_variables, "n_divertors", divgeomparam.n_divertors)
+    monkeypatch.setattr(build.data.divertor, "n_divertors", divgeomparam.n_divertors)
 
     monkeypatch.setattr(physics_variables, "kappa", divgeomparam.kappa)
 

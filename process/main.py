@@ -740,6 +740,7 @@ class Models:
             self.plasma_profile,
             self.plasma_dia_current,
             self.plasma_bootstrap_current,
+            self.plasma_exhaust,
         )
 
     def setup_data_structure(self):

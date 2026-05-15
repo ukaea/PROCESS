@@ -11,6 +11,7 @@ from process.data_structure.cost_variables import CostData
 from process.data_structure.cs_fatigue_variables import CSFatigueData
 from process.data_structure.current_drive_variables import CurrentDriveData
 from process.data_structure.dcll_variables import DCLLData
+from process.data_structure.divertor_variables import DivertorData
 from process.data_structure.first_wall_variables import FirstWallData
 from process.data_structure.fwbs_variables import FWBSData
 from process.data_structure.heat_transport_variables import HeatTransportData
@@ -49,6 +50,7 @@ class DataStructure:
     current_drive: CurrentDriveData = initialise_later
     heat_transport: HeatTransportData = initialise_later
     ife: IFEData = initialise_later
+    divertor: DivertorData = initialise_later
 
     def __post_init__(self):
         for f in fields(self):

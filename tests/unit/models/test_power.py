@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    divertor_variables,
     numerics,
     pf_power_variables,
     pfcoil_variables,
@@ -2796,7 +2795,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "p_fw_alpha_mw", power2param.p_fw_alpha_mw)
 
-    monkeypatch.setattr(divertor_variables, "n_divertors", power2param.n_divertors)
+    monkeypatch.setattr(power.data.divertor, "n_divertors", power2param.n_divertors)
 
     monkeypatch.setattr(
         physics_variables, "p_plasma_ohmic_mw", power2param.p_plasma_ohmic_mw

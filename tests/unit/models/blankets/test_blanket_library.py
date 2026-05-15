@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
-    divertor_variables,
     physics_variables,
 )
 
@@ -590,7 +589,9 @@ def test_apply_coverage_factors(applycoveragefactorsparam, monkeypatch, blanket_
         blanket_library.data.fwbs, "fvolso", applycoveragefactorsparam.fvolso
     )
     monkeypatch.setattr(
-        divertor_variables, "n_divertors", applycoveragefactorsparam.n_divertors
+        blanket_library.data.divertor,
+        "n_divertors",
+        applycoveragefactorsparam.n_divertors,
     )
 
     blanket_library.apply_coverage_factors()

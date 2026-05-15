@@ -6,7 +6,6 @@ from process.core import constants
 from process.core import process_output as po
 from process.core.model import Model
 from process.data_structure import (
-    divertor_variables,
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
@@ -653,7 +652,7 @@ class Buildings(Model):
         # Divertor
         # Note: this estimation developed before the divertor design has been finalised
         if self.data.costs.life_div_fpy != 0.0e0:  # noqa: RUF069
-            hcomp_height = divertor_variables.dz_divertor
+            hcomp_height = self.data.divertor.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
             hcomp_footprint = (hcomp_height + self.data.buildings.hot_sepdist) * (
