@@ -15,6 +15,7 @@ from process.models.tfcoil.superconducting import (
     CICCAveragedTurnGeometry,
     CICCIntegerTurnGeometry,
     SuperconductingTFCoil,
+    TFSuperconductorLimits,
 )
 
 
@@ -434,16 +435,7 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
 
     monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
 
-    (
-        j_tf_wp_critical,
-        j_superconductor_critical,
-        f_c_tf_turn_operating_critical,
-        j_superconductor,
-        j_tf_coil_turn,
-        bc20m,
-        tc0m,
-        c_turn_cables_critical,
-    ) = cicc_sctfcoil.tf_cable_in_conduit_superconductor_properties(
+    tf_limits: TFSuperconductorLimits = cicc_sctfcoil.tf_cable_in_conduit_superconductor_properties(
         i_tf_superconductor=superconparam.i_tf_superconductor,
         a_tf_turn_cable_space=superconparam.a_tf_turn_cable_space,
         a_tf_turn=superconparam.a_tf_turn,
@@ -459,25 +451,31 @@ def test_supercon(superconparam, monkeypatch, cicc_sctfcoil):
         tcritsc=superconparam.tcritsc,
     )
 
-    assert j_superconductor == pytest.approx(superconparam.expected_j_superconductor)
+    assert tf_limits.j_superconductor == pytest.approx(
+        superconparam.expected_j_superconductor
+    )
 
-    assert j_tf_wp_critical == pytest.approx(superconparam.expected_j_tf_wp_critical)
+    assert tf_limits.j_tf_wp_critical == pytest.approx(
+        superconparam.expected_j_tf_wp_critical
+    )
 
-    assert j_superconductor_critical == pytest.approx(
+    assert tf_limits.j_superconductor_critical == pytest.approx(
         superconparam.expected_j_superconductor_critical
     )
 
-    assert f_c_tf_turn_operating_critical == pytest.approx(
+    assert tf_limits.f_c_tf_turn_operating_critical == pytest.approx(
         superconparam.expected_f_c_tf_turn_operating_critical
     )
 
-    assert j_tf_coil_turn == pytest.approx(superconparam.expected_j_tf_coil_turn)
+    assert tf_limits.j_tf_coil_turn == pytest.approx(
+        superconparam.expected_j_tf_coil_turn
+    )
 
-    assert bc20m == pytest.approx(superconparam.expected_bc20m)
+    assert tf_limits.bc20m == pytest.approx(superconparam.expected_bc20m)
 
-    assert tc0m == pytest.approx(superconparam.expected_tc0m)
+    assert tf_limits.tc0m == pytest.approx(superconparam.expected_tc0m)
 
-    assert c_turn_cables_critical == pytest.approx(
+    assert tf_limits.c_turn_cables_critical == pytest.approx(
         superconparam.expected_c_turn_cables_critical
     )
 
@@ -1241,8 +1239,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     dx_tf_turn_cable_space_average: Any = None
 
-    i_tf_sc_mat: Any = None
-
     j_tf_wp: Any = None
 
     dx_tf_turn_steel: Any = None
@@ -1283,7 +1279,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dr_tf_turn=0,
             dx_tf_turn=0,
             dx_tf_turn_cable_space_average=0,
-            i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
             dx_tf_turn_steel=0.0080000000000000019,
             dx_tf_turn_insulation=0.00080000000000000004,
@@ -1309,7 +1304,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dr_tf_turn=0.049532469413859428,
             dx_tf_turn=0.049532469413859428,
             dx_tf_turn_cable_space_average=0.031932469413859424,
-            i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
             dx_tf_turn_steel=0.0080000000000000019,
             dx_tf_turn_insulation=0.00080000000000000004,
@@ -1335,7 +1329,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dr_tf_turn=0.05872,
             dx_tf_turn=0.05872,
             dx_tf_turn_cable_space_average=0.04109,
-            i_tf_sc_mat=1,
             j_tf_wp=2.301e07,
             dx_tf_turn_steel=8.015e-03,
             dx_tf_turn_insulation=8.0e-4,
@@ -1361,7 +1354,6 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dr_tf_turn=0.05872,
             dx_tf_turn=0.05872,
             dx_tf_turn_cable_space_average=0.04109,
-            i_tf_sc_mat=1,
             j_tf_wp=2.673e07,
             dx_tf_turn_steel=8.148e-03,
             dx_tf_turn_insulation=8.0e-4,
@@ -1399,7 +1391,6 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
         j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
         dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
         dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
-        i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
         dx_tf_turn_general=tfaveragedturngeomparam.dx_tf_turn_general,
         c_tf_turn=tfaveragedturngeomparam.c_tf_turn,
         i_dx_tf_turn_general_input=tfaveragedturngeomparam.i_dx_tf_turn_general_input,

@@ -304,7 +304,7 @@ def test_tf_global_geometry(
                 pytest.approx(12.4),  # b_tf_inboard_peak_symmetric
                 pytest.approx(154999999.93042317),  # c_tf_total
                 pytest.approx(9687499.995651448),  # c_tf_coil
-                pytest.approx(193749999.91302896),  # oacdcp
+                pytest.approx(193749999.91302896),  # j_tf_coil_full_area
             ),
         ),
         (
@@ -317,7 +317,7 @@ def test_tf_global_geometry(
                 pytest.approx(8.333333333),  # b_tf_inboard_peak_symmetric
                 pytest.approx(74999999.9663338),  # c_tf_total
                 pytest.approx(6249999.997194484),  # c_tf_coil
-                pytest.approx(149999999.9326676),  # oacdcp
+                pytest.approx(149999999.9326676),  # j_tf_coil_full_area
             ),
         ),
     ],

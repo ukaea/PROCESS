@@ -39,7 +39,7 @@ nsweep: int = None
 <LI> 2  pflux_div_heat_load_max_mw
 <LI> 3  p_plant_electric_net_required_mw
 <LI> 4  hfact
-<LI> 5  oacdcp
+<LI> 5  j_tf_coil_full_area
 <LI> 6  pflux_fw_neutron_max_mw
 <LI> 7  beamfus0
 <LI> 8  NOT USED

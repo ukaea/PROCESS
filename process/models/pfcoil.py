@@ -4193,7 +4193,7 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
 
     elif isumat == 6:
         # "REBCO" 2nd generation HTS superconductor in CrCo strand
-        j_crit_sc, _ = superconductors.jcrit_rebco(thelium, bmax)
+        j_crit_sc, _, _, _ = superconductors.jcrit_rebco(thelium, bmax)
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
         j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
@@ -4223,9 +4223,9 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
             bmax,
             bc20m,
             tc0m,
-            rcv.dr_hts_tape,
-            rcv.dx_hts_tape_rebco,
-            rcv.dx_hts_tape_total,
+            superconducting_tf_coil_variables.dr_tf_hts_tape,
+            superconducting_tf_coil_variables.dx_tf_hts_tape_rebco,
+            superconducting_tf_coil_variables.dx_tf_hts_tape_total,
         )
         # A0 calculated for tape cross section already
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable

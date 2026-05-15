@@ -1,6 +1,7 @@
 """Module for superconductor types, materials, and models."""
 
 import logging
+from dataclasses import dataclass
 from enum import IntEnum
 from types import DynamicClassAttribute
 
@@ -8,9 +9,13 @@ import numpy as np
 from scipy import optimize
 
 from process.core.exceptions import ProcessValueError
-from process.data_structure import rebco_variables
+from process.data_structure import (
+    superconducting_tf_coil_variables,
+)
 
 logger = logging.getLogger(__name__)
+
+N_CROCO_STRANDS_TURN = 6
 
 
 class SuperconductorType(IntEnum):
@@ -113,7 +118,9 @@ class SuperconductorModel(IntEnum):
         return self._full_name_
 
 
-def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]:
+def jcrit_rebco(
+    temp_conductor: float, b_conductor: float
+) -> tuple[float, bool, float, float]:
     """Calculate the critical current density for a "REBCO" 2nd generation HTS
     superconductor.
 
@@ -126,11 +133,13 @@ def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]
 
     Returns
     -------
-    tuple[float, bool]
+    tuple[float, bool, float, float]
         A tuple containing:
         - j_critical: Critical current density in the superconductor (A/m²).
         - validity: A boolean indicating whether the input parameters are within the
                     valid range.
+        - b_c20max: Upper critical field (T) for the superconductor at zero temperature and strain.
+        - temp_c0max: Critical temperature (K) at zero field and strain.
 
     Notes
     -----
@@ -191,7 +200,7 @@ def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]
         tcb = temp_c0max * (1 - (b_conductor / b_c20max) ** oneoveralpha)
         j_critical = -(temp_conductor - tcb)
 
-    return j_critical, validity
+    return j_critical, validity, b_c20max, temp_c0max
 
 
 def current_sharing_rebco(bfield, j):
@@ -211,7 +220,7 @@ def current_sharing_rebco(bfield, j):
     """
 
     def deltaj_rebco(temperature):
-        jcritical, _ = jcrit_rebco(temperature, bfield)
+        jcritical, _, _, _ = jcrit_rebco(temperature, bfield)
         return jcritical - j
 
     # No additional arguments are required for deltaj_rebco since it only has one
@@ -1026,22 +1035,26 @@ def bottura_scaling(
     return j_scaling, b_critical, temp_critical
 
 
+@dataclass
+class CroCoCableGeometry:
+    dia_croco_strand_tape_region: float
+    n_croco_strand_hts_tapes: float
+    a_croco_strand_copper_total: float
+    a_croco_strand_hastelloy: float
+    a_croco_strand_solder: float
+    a_croco_strand_rebco: float
+    a_croco_strand: float
+    dr_hts_tape: float
+    dx_croco_strand_tape_stack: float
+
+
 def calculate_croco_cable_geometry(
     dia_croco_strand: float,
     dx_croco_strand_copper: float,
     dx_hts_tape_rebco: float,
     dx_hts_tape_copper: float,
     dx_hts_tape_hastelloy: float,
-) -> tuple[
-    float,  # dia_croco_strand_tape_region
-    float,  # n_croco_strand_hts_tapes
-    float,  # a_croco_strand_copper_total
-    float,  # a_croco_strand_hastelloy
-    float,  # a_croco_strand_solder
-    float,  # a_croco_strand_rebco
-    float,  # a_croco_strand
-    float,  # dr_hts_tape
-]:
+) -> CroCoCableGeometry:
     """Calculate geometry and areas for a CroCo cable strand.
 
     Parameters
@@ -1059,16 +1072,16 @@ def calculate_croco_cable_geometry(
 
     Returns
     -------
-    tuple[float, float, float, float, float, float, float, float]
-        Tuple containing:
-        - dia_croco_strand_tape_region: Inner diameter of CroCo strand tape region (m)
-        - n_croco_strand_hts_tapes: Number of HTS tapes in CroCo strand
-        - a_croco_strand_copper_total: Total copper area in CroCo strand (m²)
-        - a_croco_strand_hastelloy: Total Hastelloy area in CroCo strand (m²)
-        - a_croco_strand_solder: Total solder area in CroCo strand (m²)
-        - a_croco_strand_rebco: Total REBCO area in CroCo strand (m²)
-        - a_croco_strand: Total area of CroCo strand (m²)
-        - dr_hts_tape: Width of the tape (m)
+    CroCoCableGeometry
+    - dia_croco_strand_tape_region: Inner diameter of CroCo strand tape region (m)
+    - n_croco_strand_hts_tapes: Number of HTS tapes in CroCo strand
+    - a_croco_strand_copper_total: Total copper area in CroCo strand (m²)
+    - a_croco_strand_hastelloy: Total Hastelloy area in CroCo strand (m²)
+    - a_croco_strand_solder: Total solder area in CroCo strand (m²)
+    - a_croco_strand_rebco: Total REBCO area in CroCo strand (m²)
+    - a_croco_strand: Total area of CroCo strand (m²)
+    - dr_hts_tape: Width of the tape (m)
+    - dx_croco_strand_tape_stack: Height of the tape stack in the CroCo strand (m)
     """
     # Calculate the inner diameter of the CroCo strand tape region
     dia_croco_strand_tape_region = dia_croco_strand - 2.0 * dx_croco_strand_copper
@@ -1109,97 +1122,16 @@ def calculate_croco_cable_geometry(
     # Total area of the CroCo strand
     a_croco_strand = np.pi / 4.0 * dia_croco_strand**2
 
-    return (
-        dia_croco_strand_tape_region,
-        n_croco_strand_hts_tapes,
-        a_croco_strand_copper_total,
-        a_croco_strand_hastelloy,
-        a_croco_strand_solder,
-        a_croco_strand_rebco,
-        a_croco_strand,
-        dr_hts_tape,
-    )
-
-
-def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
-    """'CroCo' (cross-conductor) strand and cable design for
-    'REBCO' 2nd generation HTS superconductor
-    Updated 13/11/18 using data from Lewandowska et al 2018.
-
-    Parameters
-    ----------
-    j_crit_sc :
-
-    conductor_area :
-
-    dia_croco_strand :
-
-    dx_croco_strand_copper :
-
-    """
-    (
-        rebco_variables.dia_croco_strand_tape_region,
-        rebco_variables.n_croco_strand_hts_tapes,
-        a_croco_strand_copper_total,
-        a_croco_strand_hastelloy,
-        a_croco_strand_solder,
-        a_croco_strand_rebco,
-        a_croco_strand,
-        rebco_variables.dr_hts_tape,
-    ) = calculate_croco_cable_geometry(
-        dia_croco_strand,
-        dx_croco_strand_copper,
-        rebco_variables.dx_hts_tape_rebco,
-        rebco_variables.dx_hts_tape_copper,
-        rebco_variables.dx_hts_tape_hastelloy,
-    )
-
-    rebco_variables.a_croco_strand_copper_total = a_croco_strand_copper_total
-    rebco_variables.a_croco_strand_hastelloy = a_croco_strand_hastelloy
-    rebco_variables.a_croco_strand_solder = a_croco_strand_solder
-    rebco_variables.a_croco_strand_rebco = a_croco_strand_rebco
-    rebco_variables.a_croco_strand = a_croco_strand
-
-    croco_strand_critical_current = j_crit_sc * a_croco_strand_rebco
-
-    # Conductor properties
-    # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)
-    # /a_croco_strand
-    conductor_critical_current = croco_strand_critical_current * 6.0
-    # Area of core = area of strand
-    conductor_copper_bar_area = a_croco_strand
-    conductor_copper_area = a_croco_strand_copper_total * 6.0 + conductor_copper_bar_area
-    conductor_copper_fraction = conductor_copper_area / conductor_area
-
-    # Helium area is set by the user.
-    # conductor_helium_area = cable_helium_fraction * conductor_acs
-    conductor_helium_area = np.pi / 2.0 * dia_croco_strand**2
-    conductor_helium_fraction = conductor_helium_area / conductor_area
-
-    conductor_hastelloy_area = a_croco_strand_hastelloy * 6.0
-    conductor_hastelloy_fraction = conductor_hastelloy_area / conductor_area
-
-    conductor_solder_area = a_croco_strand_solder * 6.0
-    conductor_solder_fraction = conductor_solder_area / conductor_area
-
-    conductor_rebco_area = a_croco_strand_rebco * 6.0
-    conductor_rebco_fraction = conductor_rebco_area / conductor_area
-
-    return (
-        a_croco_strand,
-        croco_strand_critical_current,
-        conductor_copper_area,
-        conductor_copper_fraction,
-        conductor_copper_bar_area,
-        conductor_hastelloy_area,
-        conductor_hastelloy_fraction,
-        conductor_helium_area,
-        conductor_helium_fraction,
-        conductor_solder_area,
-        conductor_solder_fraction,
-        conductor_rebco_area,
-        conductor_rebco_fraction,
-        conductor_critical_current,
+    return CroCoCableGeometry(
+        dia_croco_strand_tape_region=dia_croco_strand_tape_region,
+        n_croco_strand_hts_tapes=n_croco_strand_hts_tapes,
+        a_croco_strand_copper_total=a_croco_strand_copper_total,
+        a_croco_strand_hastelloy=a_croco_strand_hastelloy,
+        a_croco_strand_solder=a_croco_strand_solder,
+        a_croco_strand_rebco=a_croco_strand_rebco,
+        a_croco_strand=a_croco_strand,
+        dr_hts_tape=dr_hts_tape,
+        dx_croco_strand_tape_stack=dx_croco_strand_tape_stack,
     )
 
 
@@ -1277,9 +1209,9 @@ def superconductor_current_density_margin(
             b_superconductor,
             bc20m,
             tc0m,
-            rebco_variables.dr_hts_tape,
-            rebco_variables.dx_hts_tape_rebco,
-            rebco_variables.dx_hts_tape_total,
+            superconducting_tf_coil_variables.dr_tf_hts_tape,
+            superconducting_tf_coil_variables.dx_tf_hts_tape_rebco,
+            superconducting_tf_coil_variables.dx_tf_hts_tape_total,
         )[0],
     }
 

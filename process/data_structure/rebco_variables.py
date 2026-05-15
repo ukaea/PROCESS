@@ -1,4 +1,4 @@
-dx_hts_tape_rebco: float = None
+dx_tf_hts_tape_rebco: float = None
 """thickness of REBCO layer in tape (m) (`iteration variable 138`)"""
 
 dx_hts_tape_copper: float = None
@@ -13,8 +13,6 @@ dr_hts_tape: float = None
 dx_hts_tape_total: float = None
 """thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m)"""
 
-dia_croco_strand: float = None
-"""Outer diameter of CroCo strand (m)"""
 
 dia_croco_strand_tape_region: float = None
 """Inner diameter of CroCo strand tape region (m)"""
@@ -62,11 +60,10 @@ a_croco_strand: float = None
 def init_rebco_variables():
     """Initialise the REBCO variables"""
     global \
-        dx_hts_tape_rebco, \
+        dx_tf_hts_tape_rebco, \
         dx_hts_tape_copper, \
         dx_hts_tape_hastelloy, \
         dr_hts_tape, \
-        dia_croco_strand, \
         dia_croco_strand_tape_region, \
         dx_croco_strand_copper, \
         copper_rrr, \
@@ -83,11 +80,11 @@ def init_rebco_variables():
         copperaoh_m2_max, \
         copperaoh_m2
 
-    dx_hts_tape_rebco = 1.0e-6
+    dx_tf_hts_tape_rebco = 1.0e-6
     dx_hts_tape_copper = 100.0e-6
     dx_hts_tape_hastelloy = 50.0e-6
     dr_hts_tape = 4.0e-3
-    dia_croco_strand = 0.0
+
     dia_croco_strand_tape_region = 0.0
     dx_croco_strand_copper = 2.5e-3
     copper_rrr = 100.0

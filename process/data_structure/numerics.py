@@ -208,7 +208,7 @@ lablxc: list[str] = None
 * ( 9) NOT USED
 * (10) hfact
 * (11) p_hcd_primary_extra_heat_mw
-* (12) oacdcp
+* (12) j_tf_coil_full_area
 * (13) dr_tf_inboard (NOT RECOMMENDED)
 * (14) NOT USED
 * (15) NOT USED
@@ -333,8 +333,8 @@ lablxc: list[str] = None
 * (135) f_nd_impurity_electrons(13) :  Xenon density fraction relative to electron density
 * (136) f_nd_impurity_electrons(14) :  Tungsten density fraction relative to electron density
 * (137) NOT USED
-* (138) dx_hts_tape_rebco : thickness of REBCO layer in tape (m)
-* (139) dx_hts_tape_copper : thickness of copper layer in tape (m)
+* (138) dx_tf_hts_tape_rebco : thickness of REBCO layer in tape (m)
+* (139) dx_tf_hts_tape_copper : thickness of copper layer in tape (m)
 * (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
 * (141) NOT USED
 * (142) nd_plasma_separatrix_electron : electron density at separatrix [m-3]
@@ -353,7 +353,7 @@ lablxc: list[str] = None
 * (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)
 * (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)
 * (157) NOT USED
-* (158) dx_croco_strand_copper : Thickness of CroCo copper tube (m)
+* (158) dx_tf_croco_strand_copper : Thickness of CroCo copper tube (m)
 * (159) NOT USED
 * (160) NOT USED
 * (161) NOT USED

@@ -197,8 +197,8 @@ def write(
     po.ovarre(
         stellarator.outfile,
         "Overall current density (A/m2)",
-        "(oacdcp)",
-        tfcoil_variables.oacdcp,
+        "(j_tf_coil_full_area)",
+        tfcoil_variables.j_tf_coil_full_area,
     )
     po.ovarre(
         stellarator.outfile,

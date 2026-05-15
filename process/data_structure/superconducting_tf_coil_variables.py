@@ -27,22 +27,22 @@ c_tf_coil: float = None
 
 a_tf_wp_with_insulation: float = None
 """Total cross-sectional area of winding pack including
-GW insulation and insertion gap [m2]
+GW insulation and insertion gap [m²]
 """
 
 
 a_tf_wp_no_insulation: float = None
 """Total cross-sectional area of winding pack without
-ground insulation and insertion gap [m2]
+ground insulation and insertion gap [m²]
 """
 
 
 a_tf_coil_inboard_steel: float = None
-"""Inboard coil steel coil cross-sectional area [m2]"""
+"""Inboard coil steel coil cross-sectional area [m²]"""
 
 
 a_tf_coil_inboard_insulation: float = None
-"""Inboard coil insulation cross-section per coil [m2]"""
+"""Inboard coil insulation cross-section per coil [m²]"""
 
 
 f_a_tf_coil_inboard_steel: float = None
@@ -108,27 +108,27 @@ dx_tf_side_case_average: float = None
 
 
 a_tf_plasma_case: float = None
-"""Front casing area [m2]"""
+"""Front casing area [m²]"""
 
 
 a_tf_coil_nose_case: float = None
-"""Nose casing area [m2]"""
+"""Nose casing area [m²]"""
 
 
 a_tf_wp_ground_insulation: float = None
-"""Inboard mid-plane cross-section area of the WP ground insulation [m2]"""
+"""Inboard mid-plane cross-section area of the WP ground insulation [m²]"""
 
 
 a_leg_ins: float = None
-"""TF ouboard leg turn insulation area per coil [m2]"""
+"""TF ouboard leg turn insulation area per coil [m²]"""
 
 
 a_leg_gr_ins: float = None
-"""TF outboard leg ground insulation area per coil [m2]"""
+"""TF outboard leg ground insulation area per coil [m²]"""
 
 
 a_leg_cond: float = None
-"""Exact TF ouboard leg conductor area [m2]"""
+"""Exact TF ouboard leg conductor area [m²]"""
 
 
 rad_tf_coil_inboard_toroidal_half: float = None
@@ -172,7 +172,7 @@ radius_tf_turn_cable_space_corners: float = None
 
 
 a_tf_turn_cable_space_effective: float = None
-"""True cable area of WP turn. This includes the removal of the cooling pipe [m^2] """
+"""True cable area of WP turn. This includes the removal of the cooling pipe [m²] """
 
 vforce_inboard_tot: float = None
 """Total inboard vertical tension (all coils) [N]"""
@@ -182,6 +182,9 @@ dr_tf_wp_no_insulation: float = None
 
 dia_tf_turn_superconducting_cable: float = None
 """Diameter of the superconducting cable in the TF turn [m]"""
+
+dia_tf_turn_croco_cable: float = None
+"""Diameter of the Croco cable in the TF turn [m]"""
 
 n_tf_turn_superconducting_cables: int = None
 """Number of superconducting cables in the TF turn"""
@@ -193,13 +196,13 @@ len_tf_superconductor_total: float = None
 """Total length of superconducting cable in all TF coils [m]"""
 
 j_tf_superconductor_critical: float = None
-"""Critical current density of the superconducting cable [A/m^2]"""
+"""Critical current density of the superconducting cable [A/m²]"""
 
 f_c_tf_turn_operating_critical: float = None
 """Ratio of the TF operating current to the critical current"""
 
 j_tf_coil_turn: float = None
-"""Current density in the TF coil turn [A/m^2]"""
+"""Current density in the TF coil turn [A/m²]"""
 
 b_tf_superconductor_critical_zero_temp_strain: float = None
 """Critical magnetic field of the superconducting cable at zero temperature and strain [T]"""
@@ -211,10 +214,10 @@ f_a_tf_turn_cable_space_cooling: float = None
 """Fraction of usable turn cable space area used for cooling"""
 
 c_tf_turn_cables_critical: float = None
-"""Critical current density in the turn cables [A/m^2]"""
+"""Critical current density in the turn cables [A/m²]"""
 
 j_tf_superconductor: float = None
-"""Current density in the superconducting cable [A/m^2]"""
+"""Current density in the superconducting cable [A/m²]"""
 
 i_tf_turn_type: int = None
 """Switch for TF turn geometry type"""
@@ -224,19 +227,74 @@ i_tf_turn_type: int = None
 vv_stress_quench: float = None
 """The Tresca stress experienced by the Vacuum Vessel when the SCTF coil quenches [Pa]"""
 
+# REBCO tape and CroCo strand variables
+
+dx_tf_hts_tape_rebco: float = None
+"""thickness of REBCO layer in tape (m) (`iteration variable 138`)"""
+
+dx_tf_hts_tape_copper: float = None
+"""thickness of copper layer in tape (m) (`iteration variable 139`)"""
+
+dx_tf_hts_tape_hastelloy: float = None
+"""thickness of Hastelloy layer in tape (m)"""
+
+dr_tf_hts_tape: float = None
+"""Mean width of tape (m)"""
+
+dx_tf_hts_tape_total: float = None
+"""thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m)"""
+
+dia_tf_croco_strand_tape_region: float = None
+"""Inner diameter of CroCo strand tape region (m)"""
+
+dx_tf_croco_strand_copper: float = None
+"""Thickness of CroCo strand copper tube (m) (`iteration variable 158`)"""
+
+copper_rrr: float = None
+"""residual resistivity ratio copper in TF superconducting cable"""
+
+tf_coppera_m2: float = None
+"""TF coil current / copper area (A/m²)"""
+
+tf_coppera_m2_max: float = None
+"""Maximum TF coil current / copper area (A/m²)"""
+
+dx_tf_croco_strand_tape_stack: float = None
+"""Width / thickness of tape stack in CroCo strand (m)"""
+
+n_tf_croco_strand_hts_tapes: float = None
+"""Number of HTS tapes in CroCo strand"""
+
+a_tf_croco_strand_rebco: float = None
+"""Area of REBCO in CroCo strand (m²)"""
+
+a_tf_croco_strand_copper_total: float = None
+"""Area of copper in CroCo strand (includes tapes and outer tube) (m²)"""
+
+a_tf_croco_strand_hastelloy: float = None
+"""Area of Hastelloy in CroCo strand (m²)"""
+
+a_tf_croco_strand_solder: float = None
+"""Area of solder in CroCo strand (m²)"""
+
+a_tf_croco_strand: float = None
+"""Total area of a CroCo strand (m²)"""
+
 
 # croco_strand
 
-croco_strand_area: float = None
-croco_strand_critical_current: float = None
+tf_croco_strand_area: float = None
+cur_tf_turn_croco_strand_critical: float = None
+"""Critical current in the TF turn CroCo strand (A)"""
 
 
 # conductor
 
-conductor_copper_area: float = None
+a_tf_turn_croco_cable_space_copper: float = None
 conductor_copper_fraction: float = None
-conductor_copper_bar_area: float = None
-conductor_hastelloy_area: float = None
+a_tf_turn_croco_copper_bar: float = None
+"""Area of the central copper strand in the CroCo TF turn [m²]"""
+a_tf_turn_croco_hastelloy: float = None
 conductor_hastelloy_fraction: float = None
 conductor_helium_area: float = None
 conductor_helium_fraction: float = None
@@ -247,7 +305,6 @@ conductor_jacket_fraction: float = None
 conductor_rebco_area: float = None
 conductor_rebco_fraction: float = None
 conductor_critical_current: float = None
-conductor_acs: float = None
 conductor_area: float = None
 """Area of cable space inside jacket"""
 
@@ -257,8 +314,6 @@ t1: float = None
 time2: float = None
 
 tau2: float = None
-
-e_tf_magnetic_stored_total: float = None
 
 is_leg_cp_temp_same: int = None
 
@@ -308,11 +363,11 @@ def init_superconducting_tf_coil_variables():
         t1, \
         time2, \
         tau2, \
-        e_tf_magnetic_stored_total, \
         radius_tf_turn_cable_space_corners, \
         a_tf_turn_cable_space_effective, \
         dr_tf_wp_no_insulation, \
         dia_tf_turn_superconducting_cable, \
+        dia_tf_turn_croco_cable, \
         n_tf_turn_superconducting_cables, \
         len_tf_coil_superconductor, \
         len_tf_superconductor_total, \
@@ -325,7 +380,26 @@ def init_superconducting_tf_coil_variables():
         c_tf_turn_cables_critical, \
         j_tf_superconductor, \
         i_tf_turn_type, \
-        vv_stress_quench
+        vv_stress_quench, \
+        dx_tf_hts_tape_rebco, \
+        dx_tf_hts_tape_copper, \
+        dx_tf_hts_tape_hastelloy, \
+        dr_tf_hts_tape, \
+        dx_tf_hts_tape_total, \
+        dia_tf_croco_strand_tape_region, \
+        dx_tf_croco_strand_copper, \
+        copper_rrr, \
+        tf_coppera_m2, \
+        tf_coppera_m2_max, \
+        dx_tf_croco_strand_tape_stack, \
+        n_tf_croco_strand_hts_tapes, \
+        a_tf_croco_strand_rebco, \
+        a_tf_croco_strand_copper_total, \
+        a_tf_croco_strand_hastelloy, \
+        a_tf_croco_strand_solder, \
+        a_tf_croco_strand, \
+        tf_croco_strand_area, \
+        cur_tf_turn_croco_strand_critical
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -370,11 +444,11 @@ def init_superconducting_tf_coil_variables():
     t1 = 0.0
     time2 = 0.0
     tau2 = 0.0
-    e_tf_magnetic_stored_total = 0.0
     radius_tf_turn_cable_space_corners = 0.0
     a_tf_turn_cable_space_effective = 0.0
     dr_tf_wp_no_insulation = 0.0
     dia_tf_turn_superconducting_cable = 0.00073
+    dia_tf_turn_croco_cable = 0.0
     n_tf_turn_superconducting_cables = 0
     len_tf_coil_superconductor = 0.0
     len_tf_superconductor_total = 0.0
@@ -388,3 +462,23 @@ def init_superconducting_tf_coil_variables():
     j_tf_superconductor = 0.0
     i_tf_turn_type = 1
     vv_stress_quench = 0.0
+
+    dx_tf_hts_tape_rebco = 1.0e-6
+    dx_tf_hts_tape_copper = 100.0e-6
+    dx_tf_hts_tape_hastelloy = 50.0e-6
+    dr_tf_hts_tape = 4.0e-3
+    dx_tf_hts_tape_total = 6.5e-5
+    dia_tf_croco_strand_tape_region = 0.0
+    dx_tf_croco_strand_copper = 2.5e-3
+    copper_rrr = 100.0
+    tf_coppera_m2 = 0.0
+    tf_coppera_m2_max = 1.0e8
+    dx_tf_croco_strand_tape_stack = 0.0
+    n_tf_croco_strand_hts_tapes = 0.0
+    a_tf_croco_strand_rebco = 0.0
+    a_tf_croco_strand_copper_total = 0.0
+    a_tf_croco_strand_hastelloy = 0.0
+    a_tf_croco_strand_solder = 0.0
+    a_tf_croco_strand = 0.0
+    tf_croco_strand_area = 0.0
+    cur_tf_turn_croco_strand_critical = 0.0
