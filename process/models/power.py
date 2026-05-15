@@ -14,11 +14,11 @@ from process.core.model import Model
 from process.data_structure import (
     numerics,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     power_variables,
     tfcoil_variables,
 )
+from process.data_structure.pfcoil_variables import NGC2
 
 
 class PumpingPowerModelTypes(IntEnum):
@@ -298,22 +298,22 @@ class Power(Model):
         """
         # Local aliases for readability (no functional change)
         t_pulse_cumulative = self.data.times.t_pulse_cumulative  # [s]
-        c_pf_coil_turn = pfcoil_variables.c_pf_coil_turn  # [A]
-        ind_pf_cs_plasma_mutual = pfcoil_variables.ind_pf_cs_plasma_mutual  # [H]
+        c_pf_coil_turn = self.data.pf_coil.c_pf_coil_turn  # [A]
+        ind_pf_cs_plasma_mutual = self.data.pf_coil.ind_pf_cs_plasma_mutual  # [H]
         f_p_pf_energy_store_loss = (
             pf_power_variables.f_p_pf_energy_store_loss
         )  # [unitless]
-        n_pf_cs_plasma_circuits = pfcoil_variables.n_pf_cs_plasma_circuits  # [unitless]
+        n_pf_cs_plasma_circuits = self.data.pf_coil.n_pf_cs_plasma_circuits  # [unitless]
 
-        powpfii = np.zeros((pfcoil_variables.NGC2,))
-        res_pf_coil = np.zeros((pfcoil_variables.NGC2,))
-        res_pf_circuit_total = np.zeros((pfcoil_variables.NGC2,))
-        albusa = np.zeros((pfcoil_variables.NGC2,))
-        res_pf_bus = np.zeros((pfcoil_variables.NGC2,))
-        v_pf_circuit_peak = np.zeros((pfcoil_variables.NGC2,))
-        p_pf_circuit_resistive_peak = np.zeros((pfcoil_variables.NGC2,))
-        vpfi = np.zeros((pfcoil_variables.NGC2,))
-        psmva = np.zeros((pfcoil_variables.NGC2,))
+        powpfii = np.zeros((NGC2,))
+        res_pf_coil = np.zeros((NGC2,))
+        res_pf_circuit_total = np.zeros((NGC2,))
+        albusa = np.zeros((NGC2,))
+        res_pf_bus = np.zeros((NGC2,))
+        v_pf_circuit_peak = np.zeros((NGC2,))
+        p_pf_circuit_resistive_peak = np.zeros((NGC2,))
+        vpfi = np.zeros((NGC2,))
+        psmva = np.zeros((NGC2,))
         poloidalenergy = np.zeros((6,))
         inductxcurrent = np.zeros((6,))
         pfdissipation = np.zeros((5,))
@@ -327,7 +327,7 @@ class Power(Model):
         #  PF coil resistive power requirements
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
         ic = -1
-        n_pf_coil_groups = pfcoil_variables.n_pf_coil_groups
+        n_pf_coil_groups = self.data.pf_coil.n_pf_coil_groups
         if self.data.build.iohcl != 0:
             n_pf_coil_groups += 1
 
@@ -338,14 +338,14 @@ class Power(Model):
         pfbuspwr = 0.0e0
 
         for a_pf_bus_cm in range(n_pf_coil_groups):
-            ic += pfcoil_variables.n_pf_coils_in_group[a_pf_bus_cm]
+            ic += self.data.pf_coil.n_pf_coils_in_group[a_pf_bus_cm]
             pf_group_circuit_index[a_pf_bus_cm] = ic
 
             #  Section area of aluminium bussing for circuit (cm**2)
-            #  pfcoil_variables.c_pf_coil_turn_peak_input : max current per turn of
+            #  self.data.pf_coil.c_pf_coil_turn_peak_input : max current per turn of
             # coil (A)
             albusa[a_pf_bus_cm] = (
-                abs(pfcoil_variables.c_pf_coil_turn_peak_input[ic]) / 100.0e0
+                abs(self.data.pf_coil.c_pf_coil_turn_peak_input[ic]) / 100.0e0
             )
 
             #  Resistance of bussing for circuit (ohm)
@@ -354,35 +354,35 @@ class Power(Model):
             #  I have removed the fudge factor of 1.5 but included it in the value
             # of rhopfbus
             res_pf_bus[a_pf_bus_cm] = (
-                pfcoil_variables.rhopfbus * pfbusl / (albusa[a_pf_bus_cm] / 10000)
+                self.data.pf_coil.rhopfbus * pfbusl / (albusa[a_pf_bus_cm] / 10000)
             )
 
             #  Total PF coil resistance (during burn)
-            #  pfcoil_variables.c_pf_cs_coils_peak_ma : maximum current in coil (A)
+            #  self.data.pf_coil.c_pf_cs_coils_peak_ma : maximum current in coil (A)
             res_pf_coil[a_pf_bus_cm] = (
-                pfcoil_variables.rho_pf_coil
+                self.data.pf_coil.rho_pf_coil
                 * 2.0e0
                 * np.pi
-                * pfcoil_variables.r_pf_coil_middle[ic]
+                * self.data.pf_coil.r_pf_coil_middle[ic]
                 * abs(
-                    pfcoil_variables.j_pf_coil_wp_peak[ic]
+                    self.data.pf_coil.j_pf_coil_wp_peak[ic]
                     / (
-                        (1.0e0 - pfcoil_variables.f_a_pf_coil_void[ic])
+                        (1.0e0 - self.data.pf_coil.f_a_pf_coil_void[ic])
                         * 1.0e6
-                        * pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
+                        * self.data.pf_coil.c_pf_cs_coils_peak_ma[ic]
                     )
                 )
-                * pfcoil_variables.n_pf_coil_turns[ic] ** 2
-                * pfcoil_variables.n_pf_coils_in_group[a_pf_bus_cm]
+                * self.data.pf_coil.n_pf_coil_turns[ic] ** 2
+                * self.data.pf_coil.n_pf_coils_in_group[a_pf_bus_cm]
             )
 
             res_pf_circuit_total[a_pf_bus_cm] = (
                 res_pf_coil[a_pf_bus_cm] + res_pf_bus[a_pf_bus_cm]
             )  # total resistance of circuit (ohms)
             cptburn = (
-                pfcoil_variables.c_pf_coil_turn_peak_input[ic]
-                * pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic]
-                / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
+                self.data.pf_coil.c_pf_coil_turn_peak_input[ic]
+                * self.data.pf_coil.c_pf_cs_coil_pulse_end_ma[ic]
+                / self.data.pf_coil.c_pf_cs_coils_peak_ma[ic]
             )
             v_pf_circuit_peak[a_pf_bus_cm] = (
                 abs(cptburn) * res_pf_circuit_total[a_pf_bus_cm]
@@ -401,18 +401,18 @@ class Power(Model):
         delktim = self.data.times.t_plant_pulse_plasma_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
-        #  pfcoil_variables.c_pf_coil_turn(i,j) : current per turn of coil i at (end)
+        #  self.data.pf_coil.c_pf_coil_turn(i,j) : current per turn of coil i at (end)
         # time period j (A)
         powpfi = 0.0e0
         powpfr = 0.0e0
         powpfr2 = 0.0e0
 
-        #  pfcoil_variables.n_pf_cs_plasma_circuits : total number of PF coils
+        #  self.data.pf_coil.n_pf_cs_plasma_circuits : total number of PF coils
         # (including Central Solenoid and plasma) plasma is #n_pf_cs_plasma_circuits,
-        # and Central Solenoid is #(pfcoil_variables.n_pf_cs_plasma_circuits-1)
-        # pfcoil_variables.ind_pf_cs_plasma_mutual(i,j)
+        # and Central Solenoid is #(self.data.pf_coil.n_pf_cs_plasma_circuits-1)
+        # self.data.pf_coil.ind_pf_cs_plasma_mutual(i,j)
         # : mutual inductance between coil i and j
-        for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits):
+        for idx_circuit in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
             powpfii[idx_circuit] = 0.0e0
             vpfi[idx_circuit] = 0.0e0
 
@@ -420,11 +420,11 @@ class Power(Model):
         poloidalenergy[:] = 0.0e0
         for idx_group in range(n_pf_coil_groups):  # Loop over all groups of PF coils.
             for _ in range(
-                pfcoil_variables.n_pf_coils_in_group[idx_group]
+                self.data.pf_coil.n_pf_coils_in_group[idx_group]
             ):  # Loop over all coils in each group
                 idx_pf_coil += 1
                 inductxcurrent[:] = 0.0e0
-                for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits):
+                for idx_circuit in range(self.data.pf_coil.n_pf_cs_plasma_circuits):
                     #  Voltage in circuit idx_pf_coil due to change in current from
                     # circuit idx_circuit
                     vpfij = (
@@ -467,13 +467,13 @@ class Power(Model):
                 # self.data.times.t_pulse_cumulative(3) and
                 # self.data.times.t_pulse_cumulative(5) respectively (MW)
                 powpfr += (
-                    pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
+                    self.data.pf_coil.n_pf_coil_turns[idx_pf_coil]
                     * c_pf_coil_turn[idx_pf_coil, 2]
                     * res_pf_circuit_total[idx_group]
                     / 1.0e6
                 )
                 powpfr2 += (
-                    pfcoil_variables.n_pf_coil_turns[idx_pf_coil]
+                    self.data.pf_coil.n_pf_coil_turns[idx_pf_coil]
                     * c_pf_coil_turn[idx_pf_coil, 4]
                     * res_pf_circuit_total[idx_group]
                     / 1.0e6
@@ -548,17 +548,17 @@ class Power(Model):
 
         pf_power_variables.vpfskv = 20.0e0
         pf_power_variables.pfckts = (
-            pfcoil_variables.n_pf_cs_plasma_circuits - 2
+            self.data.pf_coil.n_pf_cs_plasma_circuits - 2
         ) + 6.0e0
         pf_power_variables.spfbusl = pfbusl * pf_power_variables.pfckts
         pf_power_variables.acptmax = 0.0e0
         pf_power_variables.spsmva = 0.0e0
 
-        for idx_circuit in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
+        for idx_circuit in range(self.data.pf_coil.n_pf_cs_plasma_circuits - 1):
             #  Power supply MVA for each PF circuit
             psmva[idx_circuit] = 1.0e-6 * abs(
                 vpfi[idx_circuit]
-                * pfcoil_variables.c_pf_coil_turn_peak_input[idx_circuit]
+                * self.data.pf_coil.c_pf_coil_turn_peak_input[idx_circuit]
             )
 
             #  Sum of the power supply MVA of the PF circuits
@@ -567,19 +567,19 @@ class Power(Model):
             #  Average of the maximum currents in the PF circuits, kA
             pf_power_variables.acptmax += (
                 1.0e-3
-                * abs(pfcoil_variables.c_pf_coil_turn_peak_input[idx_circuit])
+                * abs(self.data.pf_coil.c_pf_coil_turn_peak_input[idx_circuit])
                 / pf_power_variables.pfckts
             )
 
         #  PF wall plug power dissipated in power supply for ohmic heating (MW)
         #  This is additional to that required for moving stored energy around
         # p_pf_electric_supplies_mw = physics_variables.p_plasma_ohmic_mw
-        # / pfcoil_variables.etapsu
+        # / self.data.pf_coil.etapsu
         wall_plug_ohmicmw = physics_variables.p_plasma_ohmic_mw * (
-            1.0e0 / pfcoil_variables.etapsu - 1.0e0
+            1.0e0 / self.data.pf_coil.etapsu - 1.0e0
         )
         # Total mean wall plug power dissipated in PFC and CS power supplies. Issue #713
-        pfcoil_variables.p_pf_electric_supplies_mw = wall_plug_ohmicmw + pfpowermw
+        self.data.pf_coil.p_pf_electric_supplies_mw = wall_plug_ohmicmw + pfpowermw
 
         #  Output Section
         if output == 0:
@@ -630,7 +630,7 @@ class Power(Model):
             self.outfile,
             "Efficiency of transfer of PF stored energy into or out of storage",
             "(etapsu)",
-            pfcoil_variables.etapsu,
+            self.data.pf_coil.etapsu,
         )
         po.ocmmnt(
             self.outfile,
@@ -1030,7 +1030,7 @@ class Power(Model):
         tfcoil_variables.cryo_cool_req = 0.0e0
 
         # Superconductors TF/PF cryogenic cooling
-        if tfcoil_variables.i_tf_sup == 1 or pfcoil_variables.i_pf_conductor == 0:
+        if tfcoil_variables.i_tf_sup == 1 or self.data.pf_coil.i_pf_conductor == 0:
             # self.data.heat_transport.helpow calculation
             self.data.heat_transport.helpow = self.cryo(
                 tfcoil_variables.i_tf_sup,
@@ -1496,7 +1496,7 @@ class Power(Model):
             self.outfile,
             "Electric power demand for PF coil system [MWe]",
             "(p_pf_electric_supplies_mw)",
-            pfcoil_variables.p_pf_electric_supplies_mw,
+            self.data.pf_coil.p_pf_electric_supplies_mw,
         )
         po.ovarre(
             self.outfile,
@@ -1643,7 +1643,7 @@ class Power(Model):
             + self.data.heat_transport.p_tf_electric_supplies_mw
             + self.data.heat_transport.p_tritium_plant_electric_mw
             + self.data.heat_transport.vachtmw
-            + pfcoil_variables.p_pf_electric_supplies_mw
+            + self.data.pf_coil.p_pf_electric_supplies_mw
         )
 
         # Total secondary heat not used for electricity production, but which
@@ -1735,7 +1735,7 @@ class Power(Model):
             p_tritium_plant_electric_mw=self.data.heat_transport.p_tritium_plant_electric_mw,
             vachtmw=self.data.heat_transport.vachtmw,
             p_tf_electric_supplies_mw=self.data.heat_transport.p_tf_electric_supplies_mw,
-            p_pf_electric_supplies_mw=pfcoil_variables.p_pf_electric_supplies_mw,
+            p_pf_electric_supplies_mw=self.data.pf_coil.p_pf_electric_supplies_mw,
             p_coolant_pump_elec_total_mw=self.data.heat_transport.p_coolant_pump_elec_total_mw,
             p_hcd_electric_total_mw=self.data.heat_transport.p_hcd_electric_total_mw,
             p_fusion_total_mw=physics_variables.p_fusion_total_mw,

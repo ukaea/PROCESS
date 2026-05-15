@@ -8,7 +8,6 @@ from process.core.model import Model
 from process.data_structure import (
     numerics,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
 )
 
@@ -42,7 +41,7 @@ class Pulse(Model):
             #  Burn time calculation
 
             self.data.times.t_plant_pulse_burn = self.calculate_burn_time(
-                vs_cs_pf_total_burn=pfcoil_variables.vs_cs_pf_total_burn,
+                vs_cs_pf_total_burn=self.data.pf_coil.vs_cs_pf_total_burn,
                 v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
                 t_plant_pulse_fusion_ramp=self.data.times.t_plant_pulse_fusion_ramp,
             )
@@ -65,23 +64,23 @@ class Pulse(Model):
 
         #  Current/turn in Central Solenoid at beginning of pulse (A/turn)
 
-        ioht1 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.n_cs_pf_coils - 1, 1]
+        ioht1 = self.data.pf_coil.c_pf_coil_turn[self.data.pf_coil.n_cs_pf_coils - 1, 1]
 
         #  Current/turn in Central Solenoid at start of flat-top (A/turn)
 
-        ioht2 = pfcoil_variables.c_pf_coil_turn[pfcoil_variables.n_cs_pf_coils - 1, 2]
+        ioht2 = self.data.pf_coil.c_pf_coil_turn[self.data.pf_coil.n_cs_pf_coils - 1, 2]
 
         #  Central Solenoid resistance (ohms)
 
-        if pfcoil_variables.i_pf_conductor == 0:
+        if self.data.pf_coil.i_pf_conductor == 0:
             r = 0.0e0
         else:
             r = (
-                pfcoil_variables.p_cs_resistive_flat_top
+                self.data.pf_coil.p_cs_resistive_flat_top
                 / (
                     1.0e6
-                    * pfcoil_variables.c_pf_cs_coils_peak_ma[
-                        pfcoil_variables.n_cs_pf_coils - 1
+                    * self.data.pf_coil.c_pf_cs_coils_peak_ma[
+                        self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                 )
                 ** 2
@@ -93,8 +92,8 @@ class Pulse(Model):
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
         albusa = (
             abs(
-                pfcoil_variables.c_pf_coil_turn_peak_input[
-                    pfcoil_variables.n_cs_pf_coils - 1
+                self.data.pf_coil.c_pf_coil_turn_peak_input[
+                    self.data.pf_coil.n_cs_pf_coils - 1
                 ]
             )
             / 100.0e0
@@ -103,7 +102,7 @@ class Pulse(Model):
         # rho = 1.5e0 * 2.62e-4 * pfbusl / albusa
         # I have removed the fudge factor of 1.5 but included it in the value of
         #  rhopfbus
-        rho = pfcoil_variables.rhopfbus * pfbusl / (albusa / 10000)
+        rho = self.data.pf_coil.rhopfbus * pfbusl / (albusa / 10000)
 
         #  Central Solenoid power source emf (volts)
 
@@ -111,15 +110,15 @@ class Pulse(Model):
 
         #  Mutual inductance between Central Solenoid and plasma (H)
 
-        m = pfcoil_variables.ind_pf_cs_plasma_mutual[
-            pfcoil_variables.n_cs_pf_coils - 1,
-            pfcoil_variables.n_pf_cs_plasma_circuits - 1,
+        m = self.data.pf_coil.ind_pf_cs_plasma_mutual[
+            self.data.pf_coil.n_cs_pf_coils - 1,
+            self.data.pf_coil.n_pf_cs_plasma_circuits - 1,
         ]
 
         #  Self inductance of Central Solenoid (H)
 
-        loh = pfcoil_variables.ind_pf_cs_plasma_mutual[
-            pfcoil_variables.n_cs_pf_coils - 1, pfcoil_variables.n_cs_pf_coils - 1
+        loh = self.data.pf_coil.ind_pf_cs_plasma_mutual[
+            self.data.pf_coil.n_cs_pf_coils - 1, self.data.pf_coil.n_cs_pf_coils - 1
         ]
 
         #  Maximum rate of change of plasma current (A/s)
@@ -128,7 +127,7 @@ class Pulse(Model):
         ipdot = 0.0455e0 * physics_variables.plasma_current
 
         #  Minimum plasma current ramp-up time (s)
-        #  - corrected (bus resistance is not a function of pfcoil_variables.turns)
+        #  - corrected (bus resistance is not a function of self.data.pf_coil.turns)
 
         self.data.constraints.t_current_ramp_up_min = (
             loh
@@ -137,8 +136,8 @@ class Pulse(Model):
                 ioht2
                 * (
                     r
-                    * pfcoil_variables.n_pf_coil_turns[
-                        pfcoil_variables.n_cs_pf_coils - 1
+                    * self.data.pf_coil.n_pf_coil_turns[
+                        self.data.pf_coil.n_cs_pf_coils - 1
                     ]
                     + rho
                 )

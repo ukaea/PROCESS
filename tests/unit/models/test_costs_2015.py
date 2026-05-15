@@ -7,7 +7,6 @@ import pytest
 
 from process.data_structure import (
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -2268,7 +2267,7 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
     )
 
     monkeypatch.setattr(
-        pfcoil_variables,
+        costs2015.data.pf_coil,
         "r_pf_coil_outer_max",
         calcbuildingcostsparam.r_pf_coil_outer_max,
     )
@@ -15941,7 +15940,7 @@ def test_calc_remaining_subsystems(calcremainingsubsystemsparam, monkeypatch, co
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "itr_sum", calcremainingsubsystemsparam.itr_sum
+        costs2015.data.pf_coil, "itr_sum", calcremainingsubsystemsparam.itr_sum
     )
 
     monkeypatch.setattr(

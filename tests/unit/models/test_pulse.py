@@ -6,7 +6,6 @@ import pytest
 from process.data_structure import (
     numerics,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
 )
 
@@ -1202,31 +1201,39 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
     monkeypatch.setattr(pf_power_variables, "vpfskv", tohswgparam.vpfskv)
 
     monkeypatch.setattr(
-        pfcoil_variables, "n_pf_cs_plasma_circuits", tohswgparam.n_pf_cs_plasma_circuits
+        pulse.data.pf_coil,
+        "n_pf_cs_plasma_circuits",
+        tohswgparam.n_pf_cs_plasma_circuits,
     )
 
-    monkeypatch.setattr(pfcoil_variables, "i_pf_conductor", tohswgparam.i_pf_conductor)
+    monkeypatch.setattr(pulse.data.pf_coil, "i_pf_conductor", tohswgparam.i_pf_conductor)
 
-    monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", tohswgparam.n_cs_pf_coils)
+    monkeypatch.setattr(pulse.data.pf_coil, "n_cs_pf_coils", tohswgparam.n_cs_pf_coils)
 
     monkeypatch.setattr(
-        pfcoil_variables, "p_cs_resistive_flat_top", tohswgparam.p_cs_resistive_flat_top
+        pulse.data.pf_coil,
+        "p_cs_resistive_flat_top",
+        tohswgparam.p_cs_resistive_flat_top,
     )
 
     monkeypatch.setattr(
-        pfcoil_variables, "ind_pf_cs_plasma_mutual", tohswgparam.ind_pf_cs_plasma_mutual
+        pulse.data.pf_coil,
+        "ind_pf_cs_plasma_mutual",
+        tohswgparam.ind_pf_cs_plasma_mutual,
     )
 
-    monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", tohswgparam.c_pf_coil_turn)
+    monkeypatch.setattr(pulse.data.pf_coil, "c_pf_coil_turn", tohswgparam.c_pf_coil_turn)
 
     monkeypatch.setattr(
-        pfcoil_variables, "c_pf_cs_coils_peak_ma", tohswgparam.c_pf_cs_coils_peak_ma
+        pulse.data.pf_coil, "c_pf_cs_coils_peak_ma", tohswgparam.c_pf_cs_coils_peak_ma
     )
 
-    monkeypatch.setattr(pfcoil_variables, "n_pf_coil_turns", tohswgparam.n_pf_coil_turns)
+    monkeypatch.setattr(
+        pulse.data.pf_coil, "n_pf_coil_turns", tohswgparam.n_pf_coil_turns
+    )
 
     monkeypatch.setattr(
-        pfcoil_variables,
+        pulse.data.pf_coil,
         "c_pf_coil_turn_peak_input",
         tohswgparam.c_pf_coil_turn_peak_input,
     )
